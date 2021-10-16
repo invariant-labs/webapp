@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1920"
+   height="1920"
+   viewBox="0 0 507.99999 508.00001"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="Wykrzyknik.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     units="px"
+     inkscape:zoom="0.35355339"
+     inkscape:cx="1368.9587"
+     inkscape:cy="568.51385"
+     inkscape:window-width="2560"
+     inkscape:window-height="1346"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <rect
+       x="842.96875"
+       y="-494.53125"
+       width="1366.7998"
+       height="1122.1615"
+       id="rect25933" />
+  </defs>
+  <g
+     inkscape:label="Warstwa 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#fbfbfb;stroke-width:0.637128;fill-opacity:1"
+       d="m 238.70757,507.75013 c -14.82047,-1.0681 -31.45428,-3.63763 -44.978,-6.94816 C 101.51816,478.22903 29.6864,406.41002 7.10946,314.21478 1.93103,293.06817 0.13229,277.53264 0.13229,253.9551 c 0,-23.57755 1.79874,-39.11308 6.97717,-60.25969 C 29.6864,101.50024 101.51816,29.681246 193.72957,7.1082996 214.88,1.9307906 230.41829,0.13229264 253.99999,0.13229264 c 23.58172,0 39.12001,1.79849796 60.27035,6.97600696 92.21148,22.5729464 164.04319,94.3919404 186.6202,186.5871104 5.17834,21.14661 6.97717,36.68214 6.97717,60.25969 0,23.57754 -1.79883,39.11307 -6.97717,60.25968 -22.57731,92.1966 -94.38945,163.99656 -186.6202,186.58855 -19.17075,4.69587 -35.39556,6.70466 -56.44724,6.98872 -8.5861,0.11584 -17.18808,0.097 -19.11553,-0.0451 z M 282.67328,378.18402 V 348.2417 h -30.26627 -30.26628 v 29.94232 29.94241 h 30.26628 30.26627 z m 0,-175.5132 V 91.50188 h -30.26627 -30.26628 v 111.16894 111.16902 h 30.26628 30.26627 z"
+       id="path108341" />
+  </g>
+</svg>
