@@ -91,6 +91,12 @@ export const colors = {
     yellowGray: '#919575',
     yellowWeak: '#abc35a',
     yellowStrong: '#c3f43e'
+  },
+  invariantV2: { // TODO: names are temporary, change later
+    green1: '#9CE752',
+    green2: '#9DD46D',
+    violet1: '#7748D8',
+    violet2: '#7F5EC2'
   }
 }
 
@@ -191,7 +197,7 @@ export const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: 'Be Vietnam',
+    fontFamily: 'Mukita',
     fontWeightRegular: 600,
     h1: typography.heading1,
     h2: typography.heading2,
