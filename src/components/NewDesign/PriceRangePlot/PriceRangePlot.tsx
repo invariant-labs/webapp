@@ -27,7 +27,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
     return (data[currentIndex].x >= plotMin) && (data[currentIndex].x <= plotMax)
       ? (
         <rect
-          x={(currentIndex - plotMin) * unitLen}
+          x={(data[currentIndex].x - plotMin) * unitLen}
           y={0}
           width={2}
           height={innerHeight}
@@ -60,7 +60,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
           id: 'default',
           data
         }]}
-        curve='linear'
+        curve='monotoneX'
         margin={{ top: 20, right: 30, bottom: 30, left: 30 }}
         colors={colors.invariantV2.green2}
         axisTop={null}
@@ -90,7 +90,16 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
           'areas',
           'lines',
           currentLayer,
-          Brush(leftRangeIndex, rightRangeIndex, plotMax - plotMin, () => {}, () => {}),
+          Brush(
+            data[leftRangeIndex].x,
+            data[rightRangeIndex].x,
+            (position) => {
+            },
+            (position) => {
+            },
+            plotMin,
+            plotMax
+          ),
           'axes',
           'legends'
         ]}

@@ -10,7 +10,6 @@ export interface HandleProps {
   fill: string
   onDrop: (position: number) => void
   isStart?: boolean
-  unitLen: number
   onStart: () => void
 }
 
@@ -22,7 +21,6 @@ export const Handle: React.FC<HandleProps> = ({
   fill,
   onDrop,
   isStart = false,
-  unitLen,
   onStart
 }) => {
   const classes = useStyles()
@@ -52,8 +50,7 @@ export const Handle: React.FC<HandleProps> = ({
   const endDrag = () => {
     if (drag) {
       setDrag(false)
-      onDrop(Math.round(currentPosition / unitLen))
-      setCurrentPosition(Math.round(currentPosition / unitLen) * unitLen)
+      onDrop(currentPosition)
     }
   }
 
@@ -111,47 +108,51 @@ export const Handle: React.FC<HandleProps> = ({
 export const Brush = (
   leftPosition: number,
   rightPosition: number,
-  dataLength: number,
   onLeftDrop: (position: number) => void,
-  onRightDrop: (position: number) => void
+  onRightDrop: (position: number) => void,
+  plotMin: number,
+  plotMax: number
 ): React.FC<CustomLayerProps> => ({ innerHeight, innerWidth }) => {
-  const unitLen = innerWidth / (dataLength - 1)
+  const unitLen = innerWidth / (plotMax - plotMin)
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [reverse, setReverse] = useState(false)
-  const start = (
-    <Handle
-      key='start'
-      height={innerHeight}
-      position={leftPosition * unitLen}
-      minPosition={0}
-      maxPosition={(rightPosition - 1) * unitLen}
-      fill='#0000ff'
-      onDrop={(position) => {
-        onLeftDrop(position)
-        setReverse(false)
-      }}
-      isStart
-      unitLen={unitLen}
-      onStart={() => { setReverse(true) }}
-    />
-  )
+  const start = (leftPosition >= plotMin) && (leftPosition <= plotMax)
+    ? (
+      <Handle
+        key='start'
+        height={innerHeight}
+        position={(leftPosition - plotMin) * unitLen}
+        minPosition={Math.max(0, -plotMin * unitLen)}
+        maxPosition={((rightPosition - plotMin) * unitLen) - 0.001}
+        fill='#0000ff'
+        onDrop={(position) => {
+          onLeftDrop(position / innerWidth)
+          setReverse(false)
+        }}
+        isStart
+        onStart={() => { setReverse(true) }}
+      />
+    )
+    : null
 
-  const end = (
-    <Handle
-      key='end'
-      height={innerHeight}
-      position={rightPosition * unitLen}
-      minPosition={(leftPosition + 1) * unitLen}
-      maxPosition={innerWidth}
-      fill='#ff0000'
-      onDrop={(position) => {
-        onRightDrop(position)
-        setReverse(true)
-      }}
-      unitLen={unitLen}
-      onStart={() => { setReverse(false) }}
-    />
-  )
+  const end = (rightPosition >= plotMin) && (rightPosition <= plotMax)
+    ? (
+      <Handle
+        key='end'
+        height={innerHeight}
+        position={(rightPosition - plotMin) * unitLen}
+        minPosition={((leftPosition - plotMin) * unitLen) + 0.001}
+        maxPosition={innerWidth}
+        fill='#ff0000'
+        onDrop={(position) => {
+          onRightDrop(position / innerWidth)
+          setReverse(true)
+        }}
+        onStart={() => { setReverse(false) }}
+      />
+    )
+    : null
+
   return (
     <>
       {reverse ? end : start}
