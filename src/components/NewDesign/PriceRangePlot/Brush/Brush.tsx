@@ -1,7 +1,7 @@
 import { CustomLayerProps } from '@nivo/line'
 import React, { useState, useEffect, useRef, MouseEventHandler } from 'react'
 import useStyles from './style'
-import { ActiveMaxHandle, ActiveMinHandle } from './svgHandles'
+import { MaxHandle, MinHandle } from './svgHandles'
 
 export interface HandleProps {
   height: number
@@ -11,6 +11,7 @@ export interface HandleProps {
   onDrop: (position: number) => void
   isStart?: boolean
   onStart: () => void
+  disabled?: boolean
 }
 
 export const Handle: React.FC<HandleProps> = ({
@@ -20,7 +21,8 @@ export const Handle: React.FC<HandleProps> = ({
   maxPosition,
   onDrop,
   isStart = false,
-  onStart
+  onStart,
+  disabled = false
 }) => {
   const classes = useStyles()
   const [drag, setDrag] = useState(false)
@@ -73,20 +75,30 @@ export const Handle: React.FC<HandleProps> = ({
     <>
       {
         isStart
-          ? <ActiveMinHandle className={classes.handle} height={height} x={currentPosition - 37} />
-          : <ActiveMaxHandle className={classes.handle} height={height} x={currentPosition + 2} />
+          ? <MinHandle
+            height={height}
+            x={currentPosition - 37}
+            fill={disabled ? '#4D4757' : '#7748D8'}
+            textColor={disabled ? '#B3AEBD' : '#FFFFFF'}
+          />
+          : <MaxHandle
+            height={height}
+            x={currentPosition + 2}
+            fill={disabled ? '#4D4757' : '#7748D8'}
+            textColor={disabled ? '#B3AEBD' : '#FFFFFF'}
+          />
       }
       <rect
-        className={classes.handle}
+        className={!disabled ? classes.handle : undefined}
         ref={handleRef}
         x={isStart || drag ? currentPosition - 40 : currentPosition}
         y={0}
         width={drag ? 82 : 42}
         height={height}
-        onMouseDown={startDrag}
-        onMouseUp={endDrag}
-        onMouseMove={dragHandler}
-        onMouseLeave={endDrag}
+        onMouseDown={!disabled ? startDrag : undefined}
+        onMouseUp={!disabled ? endDrag : undefined}
+        onMouseMove={!disabled ? dragHandler : undefined}
+        onMouseLeave={!disabled ? endDrag : undefined}
         fill='transparent'
       />
     </>
@@ -99,7 +111,8 @@ export const Brush = (
   onLeftDrop: (position: number) => void,
   onRightDrop: (position: number) => void,
   plotMin: number,
-  plotMax: number
+  plotMax: number,
+  disabled: boolean = false
 ): React.FC<CustomLayerProps> => ({ innerHeight, innerWidth }) => {
   const unitLen = innerWidth / (plotMax - plotMin)
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -118,6 +131,7 @@ export const Brush = (
         }}
         isStart
         onStart={() => { setReverse(true) }}
+        disabled={disabled}
       />
     )
     : null
@@ -135,6 +149,7 @@ export const Brush = (
           setReverse(true)
         }}
         onStart={() => { setReverse(false) }}
+        disabled={disabled}
       />
     )
     : null
