@@ -1,7 +1,7 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   headerButton: {
     background: colors.invariant.headerButton,
     color: colors.white.main,
@@ -47,11 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'none',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    ...typography.subtitle1,
-
-    [theme.breakpoints.down('sm')]: {
-      ...typography.body3
-    }
+    ...typography.subtitle1
   },
   disabled: {
     opacity: 0.5
@@ -62,11 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   startIcon: {
     marginLeft: 0,
-    marginTop: 2,
-
-    [theme.breakpoints.down('xs')]: {
-      marginRight: 2
-    }
+    marginTop: 2
   },
   endIcon: {
     minWidth: 20,
