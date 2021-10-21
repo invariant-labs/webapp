@@ -4,8 +4,8 @@ import { colors, typography } from '@static/theme'
 const useStyles = makeStyles(() => ({
   button: {
     minWidth: 67,
-    backgroundColor: colors.invariant.headerButton,
-    color: colors.navy.navBar,
+    backgroundColor: 'transparent',
+    color: colors.white.main,
     height: 32,
     borderRadius: 10,
     ...typography.subtitle2,
@@ -13,13 +13,13 @@ const useStyles = makeStyles(() => ({
     boxShadow: 'none',
     margin: '4px',
     '&:hover': {
-      background: colors.navy.button,
+      background: colors.invariant.headerButton,
       color: colors.navy.veryLightGrey,
       ...typography.subtitle1
     }
   },
   active: {
-    background: colors.navy.button,
+    background: colors.invariant.headerButton,
     color: colors.navy.veryLightGrey,
     ...typography.subtitle1
   },

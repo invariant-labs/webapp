@@ -19,6 +19,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     '&:hover': {
       background: colors.invariant.violetStrong
+    },
+    '&:active': {
+      '& #downIcon': {
+        transform: 'rotateX(180deg)'
+      }
     }
   },
   headerButtonConnect: {

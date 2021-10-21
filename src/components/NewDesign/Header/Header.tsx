@@ -106,12 +106,12 @@ export const Header: React.FC<IHeader> = ({
             className={buttonClasses.headerButton}
             variant='contained'
             classes={{ disabled: buttonClasses.disabled }}
-            endIcon={<KeyboardArrowDownIcon />}>
+            endIcon={<KeyboardArrowDownIcon id='downIcon' />}>
             Devnet
           </Button>
           {!walletConnected ? (
             <ChangeWalletButton
-              name={isSmDown ? 'My wallet' : 'Connect'}
+              name={isSmDown ? 'My wallet' : 'Connect wallet'}
               options={[
                 WalletType.PHANTOM,
                 WalletType.SOLLET,
