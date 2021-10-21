@@ -2,6 +2,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import PriceRangePlot from './PriceRangePlot'
 import { colors } from '@static/theme'
+import { useState } from '@storybook/client-api'
 
 const ticksToData = () => {
   const ticks = [
@@ -32,16 +33,22 @@ const ticksToData = () => {
 
 const data = ticksToData()
 
-storiesOf('stats/priceRangePlot', module).add('ticks', () => (
-  <PriceRangePlot
-    data={data}
-    leftRangeIndex={100}
-    rightRangeIndex={200}
-    currentIndex={140}
-    onChangeRange={(left, right) => {
-      console.log(left)
-      console.log(right)
-    }}
-    style={{ width: 600, height: 300, backgroundColor: colors.navy.component }}
-  />
-))
+storiesOf('stats/priceRangePlot', module).add('ticks', () => {
+  const [leftRange, setLeftRange] = useState(100)
+  const [rightRange, setRightRange] = useState(200)
+  return (
+    <PriceRangePlot
+      data={data}
+      leftRangeIndex={leftRange}
+      rightRangeIndex={rightRange}
+      currentIndex={140}
+      onChangeRange={(left, right) => {
+        console.log(left)
+        console.log(right)
+        setLeftRange(left)
+        setRightRange(right)
+      }}
+      style={{ width: 600, height: 300, backgroundColor: colors.navy.component }}
+    />
+  )
+})

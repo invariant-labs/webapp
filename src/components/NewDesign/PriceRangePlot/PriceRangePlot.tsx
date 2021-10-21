@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Layer, ResponsiveLine } from '@nivo/line'
 import { colors } from '@static/theme'
 import { Button, Grid } from '@material-ui/core'
@@ -49,6 +49,18 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
     setPlotMax(plotMax - (diff / 6))
   }
 
+  const nearestPriceIndex = (price: number) => {
+    let nearest = 0
+
+    for (let i = 1; i < data.length; i++) {
+      if (Math.abs(data[i].x - price) < Math.abs(data[nearest].x - price)) {
+        nearest = i
+      }
+    }
+
+    return nearest
+  }
+
   return (
     <Grid container className={classNames(classes.container, className)} style={style}>
       <Grid container item className={classes.zoomButtonsWrapper} direction='column' justifyContent='space-between'>
@@ -94,8 +106,16 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
             data[leftRangeIndex].x,
             data[rightRangeIndex].x,
             (position) => {
+              onChangeRange(
+                nearestPriceIndex(plotMin + (position * (plotMax - plotMin))),
+                rightRangeIndex
+              )
             },
             (position) => {
+              onChangeRange(
+                leftRangeIndex,
+                nearestPriceIndex(plotMin + (position * (plotMax - plotMin)))
+              )
             },
             plotMin,
             plotMax
