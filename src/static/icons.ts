@@ -10,6 +10,7 @@ import mainnet from './svg/mainnet.svg'
 import devnet from './svg/devnet.svg'
 import testnet from './svg/testnet.svg'
 import logo from './png/invariant-logo.png'
+import logo_title from './svg/Logo.svg'
 
 const icons: { [key: string]: string } = {
   USDT: xUSDIcon,
@@ -24,7 +25,8 @@ const icons: { [key: string]: string } = {
   Mainnet: mainnet,
   Devnet: devnet,
   Testnet: testnet,
-  Logo: logo
+  Logo: logo,
+  Logo_Title: logo_title
 }
 
 export default icons
