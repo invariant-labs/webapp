@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   zoomIcon: {
-    width: 16,
+    width: 14,
     height: 'auto',
     fill: '#000000'
   },
@@ -25,7 +25,6 @@ const useStyles = makeStyles(() => ({
     height: 18,
     backgroundColor: colors.invariantV2.green2,
     borderRadius: 3,
-    fontSize: 16,
     padding: 0
   },
   zoomButtonsWrapper: {

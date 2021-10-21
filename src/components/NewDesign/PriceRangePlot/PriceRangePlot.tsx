@@ -3,8 +3,8 @@ import { ResponsiveLine } from '@nivo/line'
 import { colors } from '@static/theme'
 import { Button, Grid } from '@material-ui/core'
 import classNames from 'classnames'
-import ZoomInIcon from '@material-ui/icons/ZoomIn'
-import ZoomOutIcon from '@material-ui/icons/ZoomOut'
+import ZoomInIcon from '@static/svg/zoom-in-icon.svg'
+import ZoomOutIcon from '@static/svg/zoom-out-icon.svg'
 import Brush from './Brush/Brush'
 import useStyles from './style'
 
@@ -51,8 +51,12 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
   return (
     <Grid container className={classNames(classes.container, className)} style={style}>
       <Grid container item className={classes.zoomButtonsWrapper} direction='column' justifyContent='space-between'>
-        <Button className={classes.zoomButton} onClick={zoomPlus}><ZoomInIcon className={classes.zoomIcon}/></Button>
-        <Button className={classes.zoomButton} onClick={zoomMinus}><ZoomOutIcon className={classes.zoomIcon} /></Button>
+        <Button className={classes.zoomButton} onClick={zoomPlus}>
+          <img src={ZoomInIcon} className={classes.zoomIcon}/>
+        </Button>
+        <Button className={classes.zoomButton} onClick={zoomMinus}>
+          <img src={ZoomOutIcon} className={classes.zoomIcon} />
+        </Button>
       </Grid>
       <ResponsiveLine
         data={[{
@@ -83,6 +87,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
         areaOpacity={0.3}
         legends={[]}
         isInteractive={false}
+        animate={false}
         role="application"
         layers={[
           'grid',
