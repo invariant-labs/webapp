@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
     color: 'white',
     border: '1px solid #34303B',
     borderRadius: 5,
-    padding: '25px 10px',
+    padding: '25px 10px 23px 10px',
     marginBottom: 15,
     '&::placeholder': {
       color: '#4D4757',
@@ -122,7 +122,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   tokenName: {
-    color: colors.navy.veryLightGrey,
+    color: '#FFFFFF',
     fontSize: 20,
     lineHeight: '20px'
   },
@@ -130,7 +130,7 @@ const useStyles = makeStyles(() => ({
 
   },
   tokenDescrpiption: {
-    color: colors.navy.grey,
+    color: '#FFFFFF',
     fontSize: 12,
     lineHeight: '16px',
     whiteSpace: 'nowrap'
@@ -166,12 +166,12 @@ const useStyles = makeStyles(() => ({
     }
   },
   scrollbarThumb: {
-    background: colors.green.main,
+    background: '#7748D8',
     borderRadius: 10,
     width: 5
   },
   scrollbarTrack: {
-    background: colors.navy.navButton,
+    background: '#2D2932',
     borderRadius: 10,
     height: '98%',
     margin: 5,

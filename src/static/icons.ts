@@ -2,11 +2,12 @@ import xUSDIcon from './icons/xusd.svg'
 import WSOLIcon from './icons/wsol.svg'
 import USDCIcon from './icons/usdc.svg'
 import phantomIcon from './svg/phantom.svg'
-import xSOLIcon from './svg/solcoin.svg'
-import xBTCIcon from './svg/bitcoin.svg'
-import xETHIcon from './svg/ethcoin.svg'
-import xFTTIcon from './svg/fttcoin.svg'
-import xSNYIcon from './svg/snycoin.svg'
+import USDIcon from './svg/xusd-coin.svg'
+import SOLIcon from './svg/solcoin.svg'
+import BTCIcon from './svg/bitcoin.svg'
+import ETHIcon from './svg/ethcoin.svg'
+import FTTIcon from './svg/fttcoin.svg'
+import SNYIcon from './svg/snycoin.svg'
 import solletIcon from './svg/sollet.svg'
 import mathIcon from './svg/MathWallet.svg'
 import solflareIcon from './svg/solflare.svg'
@@ -18,8 +19,7 @@ import dogeIcon from './svg/dogecoin.svg'
 import logo from './png/invariant-logo.png'
 
 const icons: { [key: string]: string } = {
-  USDT: xUSDIcon,
-  SOL: WSOLIcon,
+  USDT: USDIcon,
   stSOL: WSOLIcon,
   USDC: USDCIcon,
   phantom: phantomIcon,
@@ -31,12 +31,12 @@ const icons: { [key: string]: string } = {
   Devnet: devnet,
   Testnet: testnet,
   DOGE: dogeIcon,
-  xSOL: xSOLIcon,
-  xBTC: xBTCIcon,
-  xETH: xETHIcon,
-  xFTT: xFTTIcon,
-  xSNY: xSNYIcon,
-  xUSD: xUSDIcon,
+  SOL: SOLIcon,
+  BTC: BTCIcon,
+  ETH: ETHIcon,
+  FTT: FTTIcon,
+  SNY: SNYIcon,
+  USD: USDIcon,
   Logo: logo
 }
 
