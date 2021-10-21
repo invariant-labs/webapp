@@ -3,7 +3,7 @@ import { Button, Typography } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import useStyles from './style'
 import { blurContent, unblurContent } from '@consts/uiUtils'
-import ConnectWallet from '@components/NewDesign/Modals/ConnectWallet/ConnectWallet'
+import ConnectWallet from '@components/Modals/ConnectWallet/ConnectWallet'
 import { WalletType } from '@web3/wallet'
 
 export interface IProps {

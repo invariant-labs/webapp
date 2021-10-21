@@ -9,7 +9,7 @@ import clearIcon from './svg/clear.svg'
 import mainnet from './svg/mainnet.svg'
 import devnet from './svg/devnet.svg'
 import testnet from './svg/testnet.svg'
-import logo from './png/invariant-logo.png'
+import logo from './svg/Logo.svg'
 
 const icons: { [key: string]: string } = {
   USDT: xUSDIcon,

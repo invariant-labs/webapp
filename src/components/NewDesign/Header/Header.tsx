@@ -1,25 +1,12 @@
 import React from 'react'
 import { PublicKey } from '@solana/web3.js'
-import {
-  Grid,
-  CardMedia,
-  IconButton,
-  Divider,
-  Hidden,
-  Button,
-  useMediaQuery,
-  Typography
-} from '@material-ui/core'
-import { Menu } from '@material-ui/icons'
+import { Grid, CardMedia, Hidden, Button } from '@material-ui/core'
+
 import NavbarButton from '@components/NewDesign/Navbar/Button'
 import ChangeWalletButton from '@components/NewDesign/HeaderButton/ChangeWalletButton'
-
-import RoutesModal from '@components/NewDesign/Modals/RoutesModal/RoutesModal'
-import { blurContent, unblurContent } from '@consts/uiUtils'
 import { NetworkType } from '@consts/static'
 import { Link } from 'react-router-dom'
 import { WalletType } from '@web3/wallet'
-import { theme } from '@static/theme'
 import useButtonStyles from '../HeaderButton/style'
 import icons from '@static/icons'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
@@ -49,13 +36,8 @@ export const Header: React.FC<IHeader> = ({
 }) => {
   const classes = useStyles()
   const buttonClasses = useButtonStyles()
-  const isSmDown = useMediaQuery(theme.breakpoints.down('sm'))
-
   const routes = ['swap', 'pool']
   const [activePath, setActive] = React.useState(landing)
-
-  const [routesModalOpen, setRoutesModalOpen] = React.useState(false)
-  const [routesModalAnchor, setRoutesModalAnchor] = React.useState<HTMLButtonElement | null>(null)
 
   React.useEffect(() => {
     // if there will be no redirects, get rid of this
@@ -74,7 +56,6 @@ export const Header: React.FC<IHeader> = ({
       <Grid container className={classes.root} alignItems='center'>
         <Grid className={classes.left} alignItems='center'>
           <CardMedia className={classes.logo} image={icons.Logo} />
-          <Typography className={classes.logoName}>Invariant</Typography>
         </Grid>
         <Hidden smDown>
           <Grid alignItems='center' className={classes.routers}>
@@ -111,7 +92,7 @@ export const Header: React.FC<IHeader> = ({
           </Button>
           {!walletConnected ? (
             <ChangeWalletButton
-              name={isSmDown ? 'My wallet' : 'Connect wallet'}
+              name={'Connect wallet'}
               options={[
                 WalletType.PHANTOM,
                 WalletType.SOLLET,
@@ -121,15 +102,12 @@ export const Header: React.FC<IHeader> = ({
               onSelect={onWalletSelect}
               connected={walletConnected}
               onDisconnect={onDisconnectWallet}
-              hideArrow={isSmDown}
             />
           ) : (
             <ChangeWalletButton
-              name={`${address
+              name={`${address.toString()}...${address
                 .toString()
-                .substr(0, isSmDown ? 2 : 6)}...${address
-                .toString()
-                .substr(address.toString().length - (isSmDown ? 2 : 3), isSmDown ? 2 : 3)}`}
+                .substr(address.toString().length - 3, 3)}`}
               options={[
                 WalletType.PHANTOM,
                 WalletType.SOLLET,
@@ -138,7 +116,6 @@ export const Header: React.FC<IHeader> = ({
               ]}
               onSelect={onWalletSelect}
               connected={walletConnected}
-              hideArrow={isSmDown}
               onDisconnect={onDisconnectWallet}
               startIcon={
                 <CardMedia
@@ -149,35 +126,6 @@ export const Header: React.FC<IHeader> = ({
             />
           )}
         </Grid>
-        <Hidden mdUp>
-          <Grid item container className={classes.mobileRight} wrap='nowrap' alignItems='center'>
-            <Divider orientation='vertical' className={classes.verticalDivider} />
-            <IconButton
-              className={classes.dehazeButton}
-              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-                setRoutesModalAnchor(event.currentTarget)
-                setRoutesModalOpen(true)
-                blurContent()
-              }}>
-              <Menu className={classes.dehazeIcon} />
-            </IconButton>
-            <RoutesModal
-              routes={routes}
-              anchorEl={routesModalAnchor}
-              open={routesModalOpen}
-              current={activePath}
-              onSelect={(selected: string) => {
-                setActive(selected)
-                setRoutesModalOpen(false)
-                unblurContent()
-              }}
-              handleClose={() => {
-                setRoutesModalOpen(false)
-                unblurContent()
-              }}
-            />
-          </Grid>
-        </Hidden>
       </Grid>
     </>
   )

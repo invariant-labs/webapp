@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     borderRadius: 10,
     textTransform: 'none',
-    ...typography.subtitle1,
+    ...typography.subtitle2,
     height: 40,
     minWidth: 110,
 
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingInline: 12,
     borderRadius: 10,
     textTransform: 'none',
-    ...typography.subtitle1,
+    ...typography.subtitle2,
     height: 40,
     minWidth: 110,
 
