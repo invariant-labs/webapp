@@ -91,9 +91,9 @@ export const Handle: React.FC<HandleProps> = ({
       <rect
         className={classes.handle}
         ref={handleRef}
-        x={currentPosition - 40}
+        x={isStart || drag ? currentPosition - 40 : currentPosition}
         y={0}
-        width={82}
+        width={drag ? 82 : 42}
         height={height}
         onMouseDown={startDrag}
         onMouseUp={endDrag}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Layer, ResponsiveLine } from '@nivo/line'
+import { ResponsiveLine } from '@nivo/line'
 import { colors } from '@static/theme'
 import { Button, Grid } from '@material-ui/core'
 import classNames from 'classnames'
@@ -21,21 +21,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
 
   const [plotMin, setPlotMin] = useState(0)
   const [plotMax, setPlotMax] = useState(data[currentIndex].x * 3)
-
-  const currentLayer: Layer = ({ innerWidth, innerHeight }) => {
-    const unitLen = innerWidth / (plotMax - plotMin)
-    return (data[currentIndex].x >= plotMin) && (data[currentIndex].x <= plotMax)
-      ? (
-        <rect
-          x={(data[currentIndex].x - plotMin) * unitLen}
-          y={0}
-          width={2}
-          height={innerHeight}
-          fill='#00ff00'
-        />
-      )
-      : null
-  }
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -101,7 +86,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
           'markers',
           'areas',
           'lines',
-          currentLayer,
           Brush(
             data[leftRangeIndex].x,
             data[rightRangeIndex].x,

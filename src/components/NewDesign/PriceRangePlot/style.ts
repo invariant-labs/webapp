@@ -7,22 +7,17 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
     '& g > text': {
       stroke: 'none',
-      fill: '#FFFFFF!important',
-      fontFamily: 'Be Vietnam!important',
+      fill: '#746E7C!important',
+      fontFamily: 'Mukta!important',
       [theme.breakpoints.down('sm')]: {
-        fontSize: '7px!important'
+        fontSize: '8px!important'
       }
     }
   },
-  current: {
-    background: colors.red.error,
-    height: '100%',
-    marginLeft: '50%'
-  },
   zoomButton: {
     minWidth: 0,
-    width: 20,
-    height: 17,
+    width: 21,
+    height: 18,
     backgroundColor: colors.invariantV2.green2,
     borderRadius: 3
   },
@@ -30,8 +25,8 @@ const useStyles = makeStyles(() => ({
     position: 'absolute',
     top: 10,
     right: 10,
-    maxWidth: 20,
-    height: 40,
+    maxWidth: 21,
+    height: 42,
     zIndex: 10
   }
 }))
