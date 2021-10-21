@@ -87,10 +87,13 @@ export const colors = {
   invariant: {
     violetStrong: '#3d00cc',
     violetWeak: '#562cb2',
+    violetButton: '#7748D8',
     violetGray: '#7b6e8c',
     yellowGray: '#919575',
     yellowWeak: '#abc35a',
-    yellowStrong: '#c3f43e'
+    yellowStrong: '#c3f43e',
+    headerButton: '#34303B',
+    background: '#171717'
   }
 }
 
@@ -191,7 +194,7 @@ export const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: 'Be Vietnam',
+    fontFamily: 'Mukta',
     fontWeightRegular: 600,
     h1: typography.heading1,
     h2: typography.heading2,
