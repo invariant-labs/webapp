@@ -14,12 +14,19 @@ const useStyles = makeStyles(() => ({
       }
     }
   },
+  zoomIcon: {
+    width: 16,
+    height: 'auto',
+    fill: '#000000'
+  },
   zoomButton: {
     minWidth: 0,
     width: 21,
     height: 18,
     backgroundColor: colors.invariantV2.green2,
-    borderRadius: 3
+    borderRadius: 3,
+    fontSize: 16,
+    padding: 0
   },
   zoomButtonsWrapper: {
     position: 'absolute',
