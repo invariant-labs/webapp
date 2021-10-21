@@ -1,13 +1,13 @@
 import { CustomLayerProps } from '@nivo/line'
 import React, { useState, useEffect, useRef, MouseEventHandler } from 'react'
 import useStyles from './style'
+import { ActiveMaxHandle, ActiveMinHandle } from './svgHandles'
 
 export interface HandleProps {
   height: number
   position: number
   minPosition: number
   maxPosition: number
-  fill: string
   onDrop: (position: number) => void
   isStart?: boolean
   onStart: () => void
@@ -18,7 +18,6 @@ export const Handle: React.FC<HandleProps> = ({
   position,
   minPosition,
   maxPosition,
-  fill,
   onDrop,
   isStart = false,
   onStart
@@ -72,22 +71,11 @@ export const Handle: React.FC<HandleProps> = ({
 
   return (
     <>
-      <rect
-        className={classes.handle}
-        x={currentPosition}
-        y={0}
-        width={2}
-        height={height}
-        fill={fill}
-      />
-      <rect
-        className={classes.handle}
-        x={isStart ? currentPosition - 10 : currentPosition + 2}
-        y={0}
-        width={10}
-        height={30}
-        fill={fill}
-      />
+      {
+        isStart
+          ? <ActiveMinHandle className={classes.handle} height={height} x={currentPosition - 37} />
+          : <ActiveMaxHandle className={classes.handle} height={height} x={currentPosition + 2} />
+      }
       <rect
         className={classes.handle}
         ref={handleRef}
@@ -124,7 +112,6 @@ export const Brush = (
         position={(leftPosition - plotMin) * unitLen}
         minPosition={Math.max(0, -plotMin * unitLen)}
         maxPosition={((rightPosition - plotMin) * unitLen) - 0.001}
-        fill='#0000ff'
         onDrop={(position) => {
           onLeftDrop(position / innerWidth)
           setReverse(false)
@@ -143,7 +130,6 @@ export const Brush = (
         position={(rightPosition - plotMin) * unitLen}
         minPosition={((leftPosition - plotMin) * unitLen) + 0.001}
         maxPosition={innerWidth}
-        fill='#ff0000'
         onDrop={(position) => {
           onRightDrop(position / innerWidth)
           setReverse(true)
