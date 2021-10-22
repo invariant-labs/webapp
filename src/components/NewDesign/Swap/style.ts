@@ -10,19 +10,30 @@ const useStyles = makeStyles(() => ({
   },
   tokenComponentTextContainer: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    paddingBottom: 8,
+    position: 'relative'
   },
   tokenComponentText: {
     color: '#746E7C',
     lineHeight: '12px',
     fontSize: 12
   },
-  arrowText: {
-    color: colors.navy.veryLightGrey,
-    marginTop: 8,
-    marginBottom: 16,
-    textAlign: 'center',
-    ...typography.body1
+  swapArrowBox: {
+    backgroundColor: '#34303B',
+    padding: '12px 10px',
+    width: 'max-content',
+    borderRadius: '100%',
+    position: 'absolute',
+    zIndex: 2,
+    left: '50%',
+    top: '0%',
+    transform: 'translateX(-50%) translateY(-45%)',
+    cursor: 'pointer'
+  },
+  swapArrows: {
+    width: 36,
+    height: 24
   },
   rateText: {
     color: colors.navy.veryLightGrey,
@@ -87,7 +98,8 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     height: 60,
     fontSize: 16,
-    color: '#ffffff'
+    color: '#ffffff',
+    cursor: 'pointer'
   }
 }))
 

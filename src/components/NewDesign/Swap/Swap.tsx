@@ -8,6 +8,7 @@ import { OutlinedButton } from '@components/NewDesign/OutlinedButton/OutlinedBut
 import ExchangeAmountInput from '@components/NewDesign/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import useStyles from './style'
 import { Status } from '@reducers/solanaWallet'
+import SwapArrows from '@static/svg/swap-arrows.svg'
 
 export interface SwapToken {
   balance: BN
@@ -151,6 +152,9 @@ export const Swap: React.FC<ISwap> = ({
         onSelect={(chosen: number) => setTokenFromIndex(chosen)}
       />
       <Box className={classes.tokenComponentTextContainer}>
+        <Box className={classes.swapArrowBox}>
+          <CardMedia image={SwapArrows} className={classes.swapArrows} />
+        </Box>
         <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
         <Typography className={classes.tokenComponentText}>Balance: 0.0</Typography>
       </Box>
@@ -192,7 +196,7 @@ export const Swap: React.FC<ISwap> = ({
       ) : null}
       <Box className={classes.transactionDetails} onClick={() => setCollapsed(!collapsed)}>
         <Typography className={classes.transactionDetailsHeader}>See transaction details</Typography>
-        <ExpandMoreIcon style={{ color: '#746E7C' }} />
+        <ExpandMoreIcon style={{ color: '#746E7C', rotate: collapsed ? '-180deg' : '0deg', transition: 'all .4s' }} />
       </Box>
       <Grid container className={classes.transactionDetailsInfo} style={{
         maxHeight: collapsed ? '300px' : '0',

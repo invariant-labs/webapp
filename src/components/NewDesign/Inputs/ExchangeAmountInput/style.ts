@@ -5,11 +5,11 @@ const useStyles = makeStyles(() => ({
     background: '#1C1C1C',
     color: '#746E7C',
     borderRadius: 5,
-    padding: 17,
+    padding: '15px 17px',
     fontSize: 30,
     fontWeight: 'normal',
     width: '100%',
-    marginBottom: 24
+    marginBottom: 16
   },
   maxButton: {
     fontSize: 16,
@@ -20,7 +20,10 @@ const useStyles = makeStyles(() => ({
     borderRadius: 3,
     padding: '7px 0',
     backgroundColor: '#9DD46D',
-    background: 'radial-gradient(118.38% 303.54% at 3.96% 118.38%, rgba(119, 72, 216, 0.1) 0%, rgba(119, 72, 216, 0) 100%), radial-gradient(57.34% 103.84% at 50% 0%, rgba(156, 231, 90, 0.1) 0%, rgba(156, 231, 90, 0) 100%)'
+    background: 'radial-gradient(118.38% 303.54% at 3.96% 118.38%, rgba(119, 72, 216, 0.1) 0%, rgba(119, 72, 216, 0) 100%), radial-gradient(57.34% 103.84% at 50% 0%, rgba(156, 231, 90, 0.1) 0%, rgba(156, 231, 90, 0) 100%)',
+    '&:hover': {
+      backgroundColor: '#7748D8'
+    }
   },
   select: {
     marginRight: 20
