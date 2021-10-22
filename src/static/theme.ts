@@ -93,7 +93,9 @@ export const colors = {
     yellowWeak: '#abc35a',
     yellowStrong: '#c3f43e',
     headerButton: '#34303B',
-    background: '#171717'
+    background: '#171717',
+    modalBackList: '#141216',
+    modalBack: '#1B191F'
   }
 }
 
