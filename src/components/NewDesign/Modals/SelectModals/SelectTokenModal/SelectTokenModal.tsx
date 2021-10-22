@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Typography, Popover, Grid, CardMedia, Box, Button } from '@material-ui/core'
 import CustomScrollbar from '../CustomScrollbar'
 import icons from '@static/icons'
 import useStyles from '../style'
 import searchIcon from '@static/svg/lupa.svg'
-import { printBN, showPrefix } from '@consts/utils'
 import { BN } from '@project-serum/anchor'
 export interface ISelectTokenModal {
   tokens: Array<{ symbol: string; balance?: BN; decimals?: number }>
@@ -26,33 +25,21 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   onSelect
 }) => {
   const classes = useStyles()
+  const [value, setValue] = useState<string>('')
 
   const descrpitionForSymbol: { [key: string]: string } = {
     SOL: 'Solana',
     USDC: 'USD Coin',
-    USDT: 'Tether'
+    USDT: 'Tether',
+    BTC: 'Bitcoin',
+    USD: 'Dollar',
+    FTT: 'Asset',
+    ETH: 'Ethereum'
+
   }
 
-  const formatNumbers = (value: string) => {
-    const num = Number(value)
-
-    if (num < 10) {
-      return num.toFixed(6)
-    }
-
-    if (num < 1000) {
-      return num.toFixed(4)
-    }
-
-    if (num < 10000) {
-      return num.toFixed(2)
-    }
-
-    if (num < 1000000) {
-      return (num / 1000).toFixed(2)
-    }
-
-    return (num / 1000000).toFixed(2)
+  const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value)
   }
 
   return (
@@ -78,14 +65,14 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
           <Button className={classes.selectTokenClose}></Button>
         </Grid>
         <Grid container className={classes.inputControl}>
-          <input className={classes.selectTokenInput} placeholder='Search token name or address' />
-          <CardMedia src={searchIcon} className={classes.inputIcon} />
+          <input className={classes.selectTokenInput} placeholder='Search token name or address' onChange={searchToken}/>
+          <CardMedia image={searchIcon} className={classes.inputIcon} />
         </Grid>
         <Grid container className={classes.commonTokens}>
           <Typography component='h2' className={classes.commonTokensHeader}>Commonly used</Typography>
           <Grid className={classes.commonTokensList}>
             {commonTokens.map((token) => (
-              <Box className={classes.commonTokenItem}>
+              <Box className={classes.commonTokenItem} key={token.symbol} >
                 <CardMedia
                   className={classes.commonTokenIcon}
                   image={icons[token.symbol] ?? icons.USDT}
@@ -97,7 +84,9 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
         </Grid>
         <Box className={classes.tokenList}>
           <CustomScrollbar>
-            {tokens.map((token, index) => (
+            {tokens.filter(token => {
+              return token.symbol.toLowerCase().includes(value)
+            }).map((token, index) => (
               <Grid
                 container
                 key={`tokens-${token.symbol}`}
@@ -120,14 +109,6 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                     {descrpitionForSymbol[token.symbol] ?? 'Asset'}
                   </Typography>
                 </Grid>
-                {typeof token.balance !== 'undefined' && typeof token.decimals !== 'undefined' ? (
-                  <Grid item style={{ marginLeft: 'auto', marginRight: 5 }}>
-                    <Typography className={classes.tokenBalance}>
-                      Balance: {formatNumbers(printBN(token.balance, token.decimals))}
-                      {showPrefix(+printBN(token.balance, token.decimals))}
-                    </Typography>
-                  </Grid>
-                ) : null}
               </Grid>
             ))}
           </CustomScrollbar>

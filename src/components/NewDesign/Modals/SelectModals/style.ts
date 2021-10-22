@@ -56,11 +56,10 @@ const useStyles = makeStyles(() => ({
   },
   inputIcon: {
     position: 'absolute',
-    width: 13,
-    height: 13,
+    width: 12.2,
+    height: 13.5,
     right: '12px',
-    top: '28px',
-    zIndex: 4
+    top: '28px'
   },
   commonTokens: {
     display: 'flex',
@@ -90,7 +89,9 @@ const useStyles = makeStyles(() => ({
   commonTokenIcon: {
     width: 18,
     height: 18,
-    margin: '0 6px 2px 0'
+    margin: '0 6px 2px 0',
+    borderRadius: '50%',
+    boxShadow: '0px 0px 5px rgba(216, 255, 181, 0.5)'
   },
   root: {
     background: colors.navy.component,
@@ -139,7 +140,9 @@ const useStyles = makeStyles(() => ({
     width: 30,
     height: 30,
     marginLeft: 6,
-    marginRight: 14
+    marginRight: 14,
+    borderRadius: '50%',
+    boxShadow: '0px 0px 10px rgba(216, 255, 181, 0.5)'
   },
   tokenBalance: {
     ...typography.subtitle2,
