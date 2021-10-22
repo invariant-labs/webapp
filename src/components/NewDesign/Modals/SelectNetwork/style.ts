@@ -26,6 +26,9 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       background: '#2A2932',
       color: colors.white.main,
+      '& $icon': {
+        opacity: 1
+      },
 
       '& $dotIcon': {
         display: 'grid'
@@ -41,22 +44,21 @@ const useStyles = makeStyles(() => ({
     color: '#9DD46D',
     display: 'none'
   },
-  icon: {
-    width: 27,
-    height: 27,
-    display: 'inline',
-    float: 'left',
-    marginRight: 8
-  },
   name: {
     textTransform: 'capitalize',
-    ...typography.subtitle2,
-    fontWeight: 400,
-    float: 'left'
+    ...typography.subtitle2
   },
   paper: {
     background: 'transparent',
     boxShadow: 'none'
+  },
+  icon: {
+    width: 16,
+    height: 16,
+    display: 'inline',
+    float: 'left',
+    marginRight: 8,
+    opacity: 1
   }
 }))
 
