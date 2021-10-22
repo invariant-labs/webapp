@@ -18,7 +18,7 @@ const onSwap = (fromToken: PublicKey, toToken: PublicKey, amount: BN) => {
   console.log(fromToken, toToken, amount)
 }
 
-const tokens = 'xUSD Dogecoin SOL FFT ETH 1INCH AAVE AERGO AETH AKRO'.split(' ').map(
+const tokens = 'SOL BTC USD FTT ETH'.split(' ').map(
   (i): SwapToken => {
     return { ...defaultToken, symbol: i }
   }

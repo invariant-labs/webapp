@@ -2,7 +2,7 @@ import { Input } from '@material-ui/core'
 import React, { CSSProperties, useRef } from 'react'
 import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
-import Select from '@components/Inputs/Select/Select'
+import Select from '@components/NewDesign/Inputs/Select/Select'
 import useStyles from './style'
 import { BN } from '@project-serum/anchor'
 

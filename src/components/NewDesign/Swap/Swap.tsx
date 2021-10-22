@@ -2,9 +2,10 @@ import React, { useEffect } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { printBN, printBNtoBN } from '@consts/utils'
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, Typography, Box, CardMedia, TextField } from '@material-ui/core'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { OutlinedButton } from '@components/NewDesign/OutlinedButton/OutlinedButton'
-import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
+import ExchangeAmountInput from '@components/NewDesign/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import useStyles from './style'
 import { Status } from '@reducers/solanaWallet'
 
@@ -39,6 +40,7 @@ export const Swap: React.FC<ISwap> = ({
   const [tokenToIndex, setTokenToIndex] = React.useState<number | null>(null)
   const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [amountTo, setAmountTo] = React.useState<string>('')
+  const [collapsed, setCollapsed] = React.useState<boolean>(false)
 
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
     const decimalChange = 10 ** (assetFor.decimal - assetIn.decimal)
@@ -91,7 +93,7 @@ export const Swap: React.FC<ISwap> = ({
     }
 
     if (tokenFromIndex === null || tokenToIndex === null) {
-      return 'Select tokens'
+      return 'Swap tokens'
     }
 
     if (!isPairExisting(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
@@ -118,7 +120,10 @@ export const Swap: React.FC<ISwap> = ({
 
   return (
     <Grid container className={classes.root} direction='column'>
-      <Typography className={classes.tokenComponentText}>Swap</Typography>
+      <Box className={classes.tokenComponentTextContainer}>
+        <Typography className={classes.tokenComponentText}>From</Typography>
+        <Typography className={classes.tokenComponentText}>Balance: 1204.5 SNY</Typography>
+      </Box>
 
       <ExchangeAmountInput
         value={amountFrom}
@@ -145,9 +150,10 @@ export const Swap: React.FC<ISwap> = ({
         current={tokenFromIndex !== null ? tokens[tokenFromIndex].symbol : null}
         onSelect={(chosen: number) => setTokenFromIndex(chosen)}
       />
-
-      <Typography className={classes.arrowText}>▼</Typography>
-
+      <Box className={classes.tokenComponentTextContainer}>
+        <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
+        <Typography className={classes.tokenComponentText}>Balance: 0.0</Typography>
+      </Box>
       <ExchangeAmountInput
         value={amountTo}
         setValue={value => {
@@ -184,7 +190,26 @@ export const Swap: React.FC<ISwap> = ({
           {tokens[tokenFromIndex].symbol}
         </Typography>
       ) : null}
-
+      <Box className={classes.transactionDetails} onClick={() => setCollapsed(!collapsed)}>
+        <Typography className={classes.transactionDetailsHeader}>See transaction details</Typography>
+        <ExpandMoreIcon style={{ color: '#746E7C' }} />
+      </Box>
+      <Grid container className={classes.transactionDetailsInfo} style={{
+        maxHeight: collapsed ? '300px' : '0',
+        opacity: collapsed ? 1 : 0,
+        marginBottom: collapsed ? 16 : 0,
+        padding: collapsed ? 16 : '0 16px'
+      }}>
+        <Grid className={classes.detailsInfoWrapper}>
+          <Typography component='p'>Fee: 0.01%</Typography>
+          <Typography component='p'>Exchange rate: 0.00001 xUSD</Typography>
+          <Typography component='p'>Slippage tolerance:</Typography>
+          <Box>
+            <input placeholder='0.50%' className={classes.detailsInfoForm} />
+            <button className={classes.detailsInfoBtn}>Auto</button>
+          </Box>
+        </Grid>
+      </Grid>
       <OutlinedButton
         name={getButtonMessage()}
         color='secondary'

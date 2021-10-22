@@ -1,12 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   general: {
     borderRadius: 10,
     textAlign: 'center',
     textTransform: 'none',
-    ...typography.body1,
+    fontSize: 16,
     transition: 'all 500ms ease',
     padding: '10px 19px',
     '&:hover': {
@@ -14,12 +13,8 @@ const useStyles = makeStyles(() => ({
     }
   },
   disabled: {
-    background: `${colors.navy.navButton} !important`,
-    color: `${colors.navy.background} !important`
-  },
-  label: {
-    position: 'relative',
-    top: -2
+    background: '#7748D8 !important',
+    color: '#ffffff !important'
   }
 }))
 
