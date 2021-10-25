@@ -38,7 +38,7 @@ export const colors = {
     light: '#9DA0AE', // v2.0 text
     mid: '#4C4C67', // v2.0
     upperMid: '#343446', // v2.0
-    dark: '#1E202E', // v2.0 background
+    dark: '#1E202E', // v2.0 backgrounds
     background: '#1C1C29', // v2.0
     component: '#272735' // v2.0
   },
@@ -94,7 +94,20 @@ export const colors = {
     yellowStrong: '#c3f43e',
     headerButton: '#34303B',
     background: '#171717',
-    component: '#27262B'
+    logoGreen: '#9CE75A',
+    logoPurple: '#7748D8',
+    background2: '#0B090D',
+    accent1: '#7748D8',
+    accent2: '#9DD46D',
+    componentOut1: '#27262B',
+    componentOut2: '#34303B',
+    componentOut3: '#4D4757',
+    componentOut4: '#222126',
+    componentIn1: '#171717',
+    componentIn2: '#1C1B1E',
+    lightInfoText: '#7F768F',
+    darkInfoText: '#1C1D1C',
+    error: '#DB5757'
   }
 }
 
@@ -176,6 +189,99 @@ export const typography = {
   }
 }
 
+export const newTypography = {
+  heading1: {
+    fontSize: 30,
+    lineHeight: '49px',
+    fontWeight: 700
+  },
+  heading2: {
+    fontSize: 30,
+    lineHeight: '49px',
+    fontWeight: 400
+  },
+  heading3: {
+    fontSize: 25,
+    lineHeight: '40px',
+    fontWeight: 600
+  },
+  heading4: {
+    fontSize: 20,
+    lineHeight: '35px',
+    fontWeight: 600
+  },
+  heading5: {
+    fontSize: 20,
+    lineHeight: '30px',
+    fontWeight: 600
+  },
+  body1: {
+    fontSize: 16,
+    lineHeight: '28px',
+    fontWeight: 600
+  },
+  body2: {
+    fontSize: 16,
+    lineHeight: '35px',
+    fontWeight: 400
+  },
+  body3: {
+    fontSize: 14,
+    lineHeight: '24px',
+    fontWeight: 400
+  },
+  subtitle1: {
+    fontSize: 16,
+    lineHeight: '24px',
+    fontWeight: 800
+  },
+  subtitle2: {
+    fontSize: 16,
+    lineHeight: '24px',
+    fontWeight: 600
+  },
+  body4: {
+    fontSize: 13,
+    lineHeight: '20px',
+    fontWeight: 600
+  },
+  caption1: {
+    fontSize: 11,
+    lineHeight: '16px',
+    fontWeight: 600
+  },
+  caption2: {
+    fontSize: 11,
+    lineHeight: '16px',
+    fontWeight: 800
+  },
+  caption3: {
+    fontSize: 9,
+    lineHeight: '14px',
+    fontWeight: 600
+  },
+  caption4: {
+    fontSize: 9,
+    lineHeight: '14px',
+    fontWeight: 800
+  },
+  label1: {
+    fontSize: 12,
+    lineHeight: '24px',
+    fontWeight: 400
+  },
+  label2: {
+    fontSize: 12,
+    lineHeight: '24px',
+    fontWeight: 600
+  },
+  label3: {
+    fontSize: 10,
+    lineHeight: '24px',
+    fontWeight: 400
+  }
+}
+
 export const theme = createTheme({
   palette: {
     primary: {
@@ -205,7 +311,24 @@ export const theme = createTheme({
     subtitle1: typography.subtitle1,
     subtitle2: typography.subtitle2,
     body2: typography.body4,
-    caption: typography.caption1
+    caption: typography.caption1,
+    newTypography: {
+      fontFamily: 'Mukta',
+      fontWeightRegular: 600,
+      h1: newTypography.heading1,
+      h2: newTypography.heading2,
+      h3: newTypography.heading3,
+      h4: newTypography.heading4,
+      body1: newTypography.body1,
+      body2: newTypography.body2,
+      body3: newTypography.body3,
+      subtitle1: newTypography.subtitle1,
+      subtitle2: newTypography.subtitle2,
+      caption: newTypography.caption1,
+      label1: newTypography.label1,
+      label2: newTypography.label2,
+      label3: newTypography.label3
+    }
   },
   overrides: {
     MuiInputBase: {

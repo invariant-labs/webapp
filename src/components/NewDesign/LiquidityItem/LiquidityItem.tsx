@@ -23,12 +23,12 @@ export const LiquidityItem: React.FC<IProp> = ({ data }) => {
       <Grid className={classes.leftGrid}>
         <Grid className={classes.iconsGrid}>
           <img className={classes.icon} src={icons[`${data.name1}Icon`]} alt={data.name1} />
-          <img className={classes.icon} src={icons.ArrowIcon} alt={'Arrow'} />
+          <img className={classes.arrowIcon} src={icons.ArrowIcon} alt={'Arrow'} />
           <img className={classes.icon} src={icons[`${data.name2}Icon`]} alt={data.name2} />
         </Grid>
         <Grid className={classes.namesGrid}>
           <Typography className={classes.name}>BTC</Typography>
-          <Typography id='pauza' className={classes.name}>
+          <Typography id='pause' className={classes.name}>
             -
           </Typography>
           <Typography className={classes.name}>SNY</Typography>

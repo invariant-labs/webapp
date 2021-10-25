@@ -1,14 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { LiquidityItem } from './LiquidityItem'
-interface ILiquidityItem {
-  active: boolean
-  name1: string
-  name2: string
-  fee: number
-  min: number
-  max: number
-}
 storiesOf('liquidityPosition/items', module)
   .add('itemActive', () => {
     return (

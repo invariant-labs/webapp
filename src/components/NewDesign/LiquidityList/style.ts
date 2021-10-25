@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -11,8 +12,7 @@ const useStyles = makeStyles(() => ({
     paddingBottom: '30px'
   },
   title: {
-    fontSize: 20,
-    lineHeight: '40px',
+    ...newTypography.heading4,
     fontWeight: 500,
     display: 'flex',
     justifyContent: 'center',
@@ -20,11 +20,9 @@ const useStyles = makeStyles(() => ({
   },
   button: {
     color: '#FFFFFF',
-    fontSize: 16,
-    lineHeight: '40px',
-    fontWeight: 600,
+    ...newTypography.body1,
     textTransform: 'none',
-    background: '#7748D8',
+    background: colors.invariant.accent1,
     borderRadius: '10px'
   }
 }))

@@ -1,9 +1,9 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
-    background: colors.invariant.component,
+    background: colors.invariant.componentOut1,
     borderRadius: '10px',
     padding: '20px 17px',
     display: 'flex',
@@ -15,27 +15,29 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center'
   },
-  icon: {},
+  icon: {
+    width: '40px'
+  },
+  arrowIcon: {
+    width: '25px'
+  },
   namesGrid: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingLeft: 20,
-    '& #pauza': {
+    '& #pause': {
       padding: ' 0px 3px'
     }
   },
   name: {
-    ...typography.heading2,
+    ...newTypography.heading1,
     color: '#FFFFFF'
   },
   leftGrid: {
     display: 'flex',
     flexDirection: 'row'
-  },
-  pauseIcon: {
-    color: '#FFFFFF'
   },
   rightGrid: {
     display: 'flex',
@@ -43,11 +45,9 @@ const useStyles = makeStyles(() => ({
     padding: '3px 0'
   },
   text: {
-    fontSize: 16,
-    lineHeight: '28px',
-    fontWeight: 600,
-    color: '#7F768F',
-    backgroundColor: '#34303B',
+    ...newTypography.body1,
+    color: colors.invariant.lightInfoText,
+    backgroundColor: colors.invariant.componentOut2,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -69,17 +69,15 @@ const useStyles = makeStyles(() => ({
     }
   },
   button: {
-    backgroundColor: '#9DD46D',
-    color: '#34303B',
-    fontSize: 16,
-    lineHeight: '28px',
-    fontWeight: 600,
+    backgroundColor: colors.invariant.accent2,
+    color: colors.invariant.componentOut2,
+    ...newTypography.body1,
     '&[id=active]': {
       textTransform: 'none'
     },
     '&[id=closed]': {
-      backgroundColor: '#34303B',
-      color: '#7F768F',
+      backgroundColor: colors.invariant.componentOut2,
+      color: colors.invariant.lightInfoText,
       textTransform: 'none'
     }
   }
