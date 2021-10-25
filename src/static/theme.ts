@@ -85,9 +85,18 @@ export const colors = {
     '807ADC': '#807ADC'
   },
   invariant: {
+    violetStrong: '#3d00cc',
+    violetWeak: '#562cb2',
+    violetButton: '#7748D8',
+    violetGray: '#7b6e8c',
+    yellowGray: '#919575',
+    yellowWeak: '#abc35a',
+    yellowStrong: '#c3f43e',
+    headerButton: '#34303B',
+    background: '#171717',
     logoGreen: '#9CE75A',
     logoPurple: '#7748D8',
-    background: '#0B090D',
+    background2: '#0B090D',
     accent1: '#7748D8',
     accent2: '#9DD46D',
     componentOut1: '#27262B',
@@ -103,6 +112,84 @@ export const colors = {
 }
 
 export const typography = {
+  heading1: {
+    fontSize: 40,
+    lineHeight: '49px',
+    fontWeight: 800
+  },
+  heading2: {
+    fontSize: 32,
+    lineHeight: '40px',
+    fontWeight: 800
+  },
+  heading3: {
+    fontSize: 27,
+    lineHeight: '35px',
+    fontWeight: 800
+  },
+  heading4: {
+    fontSize: 24,
+    lineHeight: '33px',
+    fontWeight: 800
+  },
+  heading5: {
+    fontSize: 20,
+    lineHeight: '30px',
+    fontWeight: 600
+  },
+  body1: {
+    fontSize: 22,
+    lineHeight: '30px',
+    fontWeight: 800
+  },
+  body2: {
+    fontSize: 22,
+    lineHeight: '30px',
+    fontWeight: 600
+  },
+  subtitle1: {
+    fontSize: 16,
+    lineHeight: '24px',
+    fontWeight: 800
+  },
+  subtitle2: {
+    fontSize: 16,
+    lineHeight: '24px',
+    fontWeight: 600
+  },
+  body3: {
+    fontSize: 13,
+    lineHeight: '20px',
+    fontWeight: 800
+  },
+  body4: {
+    fontSize: 13,
+    lineHeight: '20px',
+    fontWeight: 600
+  },
+  caption1: {
+    fontSize: 11,
+    lineHeight: '16px',
+    fontWeight: 600
+  },
+  caption2: {
+    fontSize: 11,
+    lineHeight: '16px',
+    fontWeight: 800
+  },
+  caption3: {
+    fontSize: 9,
+    lineHeight: '14px',
+    fontWeight: 600
+  },
+  caption4: {
+    fontSize: 9,
+    lineHeight: '14px',
+    fontWeight: 800
+  }
+}
+
+export const newTypography = {
   heading1: {
     fontSize: 30,
     lineHeight: '49px',
@@ -210,7 +297,7 @@ export const theme = createTheme({
       secondary: '#030313'
     },
     error: {
-      main: '#DB5757'
+      main: '#E15757'
     }
   },
   typography: {
@@ -220,15 +307,28 @@ export const theme = createTheme({
     h2: typography.heading2,
     h3: typography.heading3,
     h4: typography.heading4,
-    body1: typography.body1,
-    body2: typography.body2,
-    body3: typography.body3,
+    body1: typography.body2,
     subtitle1: typography.subtitle1,
     subtitle2: typography.subtitle2,
+    body2: typography.body4,
     caption: typography.caption1,
-    label1: typography.label1,
-    label2: typography.label2,
-    label3: typography.label3
+    newTypography: {
+      fontFamily: 'Mukta',
+      fontWeightRegular: 600,
+      h1: newTypography.heading1,
+      h2: newTypography.heading2,
+      h3: newTypography.heading3,
+      h4: newTypography.heading4,
+      body1: newTypography.body1,
+      body2: newTypography.body2,
+      body3: newTypography.body3,
+      subtitle1: newTypography.subtitle1,
+      subtitle2: newTypography.subtitle2,
+      caption: newTypography.caption1,
+      label1: newTypography.label1,
+      label2: newTypography.label2,
+      label3: newTypography.label3
+    }
   },
   overrides: {
     MuiInputBase: {
