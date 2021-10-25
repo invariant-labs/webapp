@@ -1,4 +1,5 @@
 import { CustomLayerProps } from '@nivo/line'
+import { colors } from '@static/theme'
 import React, { useState, useEffect, useRef, MouseEventHandler } from 'react'
 import useStyles from './style'
 import { MaxHandle, MinHandle } from './svgHandles'
@@ -78,14 +79,14 @@ export const Handle: React.FC<HandleProps> = ({
           ? <MinHandle
             height={height}
             x={currentPosition - 37}
-            fill={disabled ? '#4D4757' : '#7748D8'}
-            textColor={disabled ? '#B3AEBD' : '#FFFFFF'}
+            fill={disabled ? colors.invariant.componentOut3 : colors.invariant.accent1}
+            textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
           />
           : <MaxHandle
             height={height}
             x={currentPosition + 2}
-            fill={disabled ? '#4D4757' : '#7748D8'}
-            textColor={disabled ? '#B3AEBD' : '#FFFFFF'}
+            fill={disabled ? colors.invariant.componentOut3 : colors.invariant.accent1}
+            textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
           />
       }
       <rect
