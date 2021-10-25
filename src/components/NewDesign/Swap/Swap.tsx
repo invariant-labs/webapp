@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { printBN, printBNtoBN } from '@consts/utils'
-import { Grid, Typography, Box, CardMedia, TextField } from '@material-ui/core'
+import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { OutlinedButton } from '@components/NewDesign/OutlinedButton/OutlinedButton'
 import ExchangeAmountInput from '@components/NewDesign/Inputs/ExchangeAmountInput/ExchangeAmountInput'
@@ -42,6 +42,7 @@ export const Swap: React.FC<ISwap> = ({
   const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [amountTo, setAmountTo] = React.useState<string>('')
   const [collapsed, setCollapsed] = React.useState<boolean>(false)
+  const [swap, setSwap] = React.useState<boolean | null>(null)
 
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
     const decimalChange = 10 ** (assetFor.decimal - assetIn.decimal)
@@ -128,6 +129,7 @@ export const Swap: React.FC<ISwap> = ({
 
       <ExchangeAmountInput
         value={amountFrom}
+        style={{ transform: swap !== null ? swap ? 'translateY(100px)' : 'translateY(-100px)' : '' }}
         setValue={value => {
           if (value.match(/^\d*\.?\d*$/)) {
             setAmountFrom(value)
@@ -153,7 +155,10 @@ export const Swap: React.FC<ISwap> = ({
       />
       <Box className={classes.tokenComponentTextContainer}>
         <Box className={classes.swapArrowBox}>
-          <CardMedia image={SwapArrows} className={classes.swapArrows} />
+          <CardMedia image={SwapArrows} className={classes.swapArrows} onClick={() => {
+            swap !== null ? setSwap(!swap) : setSwap(true)
+            console.log(swap)
+          }} />
         </Box>
         <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
         <Typography className={classes.tokenComponentText}>Balance: 0.0</Typography>
@@ -196,7 +201,13 @@ export const Swap: React.FC<ISwap> = ({
       ) : null}
       <Box className={classes.transactionDetails} onClick={() => setCollapsed(!collapsed)}>
         <Typography className={classes.transactionDetailsHeader}>See transaction details</Typography>
-        <ExpandMoreIcon style={{ color: '#746E7C', rotate: collapsed ? '-180deg' : '0deg', transition: 'all .4s' }} />
+        <ExpandMoreIcon style={{
+          color: '#746E7C',
+          rotate: collapsed ? '-180deg' : '0deg',
+          transition: 'all .4s'
+        }}
+        onClick={() => setCollapsed(!collapsed)}
+        />
       </Box>
       <Grid container className={classes.transactionDetailsInfo} style={{
         maxHeight: collapsed ? '300px' : '0',
