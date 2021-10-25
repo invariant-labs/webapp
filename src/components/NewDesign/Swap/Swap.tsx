@@ -155,9 +155,11 @@ export const Swap: React.FC<ISwap> = ({
       />
       <Box className={classes.tokenComponentTextContainer}>
         <Box className={classes.swapArrowBox}>
-          <CardMedia image={SwapArrows} className={classes.swapArrows} onClick={() => {
-            swap !== null ? setSwap(!swap) : setSwap(true)
-          }} />
+          <CardMedia image={SwapArrows}
+            style={{ transform: swap !== null ? swap ? 'rotate(180deg)' : 'rotate(0deg)' : '' }}
+            className={classes.swapArrows} onClick={() => {
+              swap !== null ? setSwap(!swap) : setSwap(true)
+            }} />
         </Box>
         <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
         <Typography className={classes.tokenComponentText}>Balance: 0.0</Typography>

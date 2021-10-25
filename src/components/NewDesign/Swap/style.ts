@@ -33,7 +33,8 @@ const useStyles = makeStyles(() => ({
   },
   swapArrows: {
     width: 36,
-    height: 24
+    height: 24,
+    transition: '.4s all'
   },
   rateText: {
     color: colors.navy.veryLightGrey,

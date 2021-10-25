@@ -18,9 +18,6 @@ const useStyles = makeStyles(() => ({
     '& svg': {
       padding: 0
     }
-  },
-  startIcon: {
-
   }
 }))
 
