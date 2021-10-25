@@ -17,6 +17,7 @@ import devnet from './svg/devnet.svg'
 import testnet from './svg/testnet.svg'
 import dogeIcon from './svg/dogecoin.svg'
 import logo from './png/invariant-logo.png'
+import logo_title from './svg/Logo.svg'
 
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
@@ -37,7 +38,8 @@ const icons: { [key: string]: string } = {
   FTT: FTTIcon,
   SNY: SNYIcon,
   USD: USDIcon,
-  Logo: logo
+  Logo: logo,
+  Logo_Title: logo_title
 }
 
 export default icons
