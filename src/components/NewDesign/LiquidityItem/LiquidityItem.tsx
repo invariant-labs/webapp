@@ -5,7 +5,7 @@ import SuccessIcon from '@material-ui/icons/CheckCircleOutlineOutlined'
 import FailedIcon from '@material-ui/icons/HighlightOffOutlined'
 import useStyle from './style'
 
-interface IProp {
+interface ILiquidityItem {
   active: boolean
   name1: string
   name2: string
@@ -13,15 +13,18 @@ interface IProp {
   min: number
   max: number
 }
-export const LiquidityItem: React.FC<IProp> = ({ active, name1, name2, fee, max, min }) => {
+interface IProp {
+  data: ILiquidityItem
+}
+export const LiquidityItem: React.FC<IProp> = ({ data }) => {
   const classes = useStyle()
   return (
     <Grid className={classes.root}>
       <Grid className={classes.leftGrid}>
         <Grid className={classes.iconsGrid}>
-          <img className={classes.icon} src={icons[`${name1}Icon`]} alt={name1} />
+          <img className={classes.icon} src={icons[`${data.name1}Icon`]} alt={data.name1} />
           <img className={classes.icon} src={icons.ArrowIcon} alt={'Arrow'} />
-          <img className={classes.icon} src={icons[`${name2}Icon`]} alt={'SNY'} />
+          <img className={classes.icon} src={icons[`${data.name2}Icon`]} alt={data.name2} />
         </Grid>
         <Grid className={classes.namesGrid}>
           <Typography className={classes.name}>BTC</Typography>
@@ -34,7 +37,7 @@ export const LiquidityItem: React.FC<IProp> = ({ active, name1, name2, fee, max,
       <Grid className={classes.rightGrid}>
         <Grid className={classes.rangeGrid}>
           <Typography id='fee' className={classes.text}>
-            {fee}% fee
+            {data.fee}% fee
           </Typography>
         </Grid>
         <Grid className={classes.rangeGrid}>
@@ -42,7 +45,7 @@ export const LiquidityItem: React.FC<IProp> = ({ active, name1, name2, fee, max,
             Min
           </Button>
           <Typography id='min' className={classes.text}>
-            {min} SNY per xUSD
+            {data.min} SNY per xUSD
           </Typography>
         </Grid>
         <Grid className={classes.rangeGrid}>
@@ -50,10 +53,10 @@ export const LiquidityItem: React.FC<IProp> = ({ active, name1, name2, fee, max,
             Max
           </Button>
           <Typography id='max' className={classes.text}>
-            {max} SNY per xUSD
+            {data.max} SNY per xUSD
           </Typography>
         </Grid>
-        {active ? (
+        {data.active ? (
           <Button
             id='active'
             className={classes.button}
