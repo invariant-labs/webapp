@@ -33,7 +33,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
     USDT: 'Tether',
     BTC: 'Bitcoin',
     USD: 'Dollar',
-    FTT: 'Asset',
+    FTT: 'FTX Token',
     ETH: 'Ethereum'
 
   }
