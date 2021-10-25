@@ -61,7 +61,7 @@ const useStyles = makeStyles(() => ({
     },
 
     '& $dotIcon': {
-      display: 'grid'
+      display: 'block'
     }
   }
 }))
