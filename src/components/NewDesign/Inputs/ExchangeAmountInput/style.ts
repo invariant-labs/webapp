@@ -5,11 +5,12 @@ const useStyles = makeStyles(() => ({
     background: '#1C1C1C',
     color: '#746E7C',
     borderRadius: 5,
-    padding: '15px 17px',
+    padding: '10px 15px',
     fontSize: 30,
     fontWeight: 'normal',
     width: '100%',
-    marginBottom: 16
+    marginBottom: 16,
+    transition: 'all .4s'
   },
   maxButton: {
     fontSize: 16,

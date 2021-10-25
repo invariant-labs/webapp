@@ -129,7 +129,7 @@ export const Swap: React.FC<ISwap> = ({
 
       <ExchangeAmountInput
         value={amountFrom}
-        style={{ transform: swap !== null ? swap ? 'translateY(100px)' : 'translateY(-100px)' : '' }}
+        style={{ transform: swap !== null ? swap ? 'translateY(104px)' : 'translateY(0px)' : '' }}
         setValue={value => {
           if (value.match(/^\d*\.?\d*$/)) {
             setAmountFrom(value)
@@ -157,7 +157,6 @@ export const Swap: React.FC<ISwap> = ({
         <Box className={classes.swapArrowBox}>
           <CardMedia image={SwapArrows} className={classes.swapArrows} onClick={() => {
             swap !== null ? setSwap(!swap) : setSwap(true)
-            console.log(swap)
           }} />
         </Box>
         <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
@@ -165,6 +164,7 @@ export const Swap: React.FC<ISwap> = ({
       </Box>
       <ExchangeAmountInput
         value={amountTo}
+        style={{ transform: swap !== null ? swap ? 'translateY(-104px)' : 'translateY(0px)' : '' }}
         setValue={value => {
           if (value.match(/^\d*\.?\d*$/)) {
             setAmountTo(value)

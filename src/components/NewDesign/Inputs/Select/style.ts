@@ -7,13 +7,12 @@ const useStyles = makeStyles(() => ({
     borderRadius: 3,
     fontSize: 16,
     backgroundColor: '#34303B',
-    padding: 0,
-    width: 'min-content'
+    minWidth: 80,
+    padding: '6px 10px'
   },
   icon: {
-    minWidth: 14,
-    height: 14,
-    marginLeft: 10
+    minWidth: 18,
+    height: 18
   },
   endIcon: {
     '& svg': {
@@ -21,7 +20,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   startIcon: {
-    marginRight: 6
+
   }
 }))
 
