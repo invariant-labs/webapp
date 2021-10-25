@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
     padding: 8
   },
   listItem: {
-    color: colors.invariant.componentOut2,
+    color: colors.invariant.lightInfoText,
     borderRadius: 5,
     padding: '3px 7px',
     width: '100%',
