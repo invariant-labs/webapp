@@ -18,9 +18,10 @@ export interface IPriceRangePlot {
   onChangeRange: (left: number, right: number) => void
   style?: React.CSSProperties
   className?: string
+  disabled?: boolean
 }
 
-export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex, rightRangeIndex, currentIndex, onChangeRange, style, className }) => {
+export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex, rightRangeIndex, currentIndex, onChangeRange, style, className, disabled = false }) => {
   const classes = useStyles()
 
   const [plotMin, setPlotMin] = useState(0)
@@ -50,6 +51,33 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
     setPlotMax(plotMax - (diff / 6))
   }
 
+  const getCurrentLessThanRange = () => {
+    if (data[leftRangeIndex].x < plotMin || disabled) {
+      return []
+    }
+
+    return data.slice(Math.max(0, nearestPriceIndex(plotMin) - 1), Math.min(leftRangeIndex, nearestPriceIndex(plotMax)) + 1)
+  }
+
+  const getCurrentRange = () => {
+    if (disabled) {
+      return data.slice(Math.max(0, nearestPriceIndex(plotMin) - 1), Math.min(data.length, nearestPriceIndex(plotMax)) + 1)
+    }
+    if (data[leftRangeIndex].x > plotMax || data[rightRangeIndex].x < plotMin) {
+      return []
+    }
+
+    return data.slice(Math.max(leftRangeIndex, nearestPriceIndex(plotMin)), Math.min(rightRangeIndex, nearestPriceIndex(plotMax)) + 1)
+  }
+
+  const getCurrentGreaterThanRange = () => {
+    if (data[rightRangeIndex].x > plotMax || disabled) {
+      return []
+    }
+
+    return data.slice(Math.max(rightRangeIndex, nearestPriceIndex(plotMin) - 1), Math.min(data.length, nearestPriceIndex(plotMax)) + 1)
+  }
+
   return (
     <Grid container className={classNames(classes.container, className)} style={style}>
       <Grid container item className={classes.zoomButtonsWrapper} direction='column' justifyContent='space-between'>
@@ -61,13 +89,27 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
         </Button>
       </Grid>
       <ResponsiveLine
-        data={[{
-          id: 'default',
-          data
-        }]}
+        data={[
+          {
+            id: 'less than range',
+            data: getCurrentLessThanRange()
+          },
+          {
+            id: 'range',
+            data: getCurrentRange()
+          },
+          {
+            id: 'greater than range',
+            data: getCurrentGreaterThanRange()
+          }
+        ]}
         curve='monotoneX'
         margin={{ top: 10, right: 20, bottom: 20, left: 20 }}
-        colors={colors.invariantV2.green2}
+        colors={[
+          colors.invariantV2.violet2,
+          colors.invariantV2.green2,
+          colors.invariantV2.violet2
+        ]}
         axisTop={null}
         axisRight={null}
         axisLeft={null}
@@ -111,7 +153,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
               )
             },
             plotMin,
-            plotMax
+            plotMax,
+            disabled
           ),
           'axes',
           'legends'

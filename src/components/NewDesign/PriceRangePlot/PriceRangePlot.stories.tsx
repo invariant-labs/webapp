@@ -32,22 +32,43 @@ const ticksToData = () => {
 
 const data = ticksToData()
 
-storiesOf('stats/priceRangePlot', module).add('ticks', () => {
-  const [leftRange, setLeftRange] = useState(100)
-  const [rightRange, setRightRange] = useState(200)
-  return (
-    <PriceRangePlot
-      data={data}
-      leftRangeIndex={leftRange}
-      rightRangeIndex={rightRange}
-      currentIndex={140}
-      onChangeRange={(left, right) => {
-        console.log(left)
-        console.log(right)
-        setLeftRange(left)
-        setRightRange(right)
-      }}
-      style={{ width: 600, height: 300, backgroundColor: '#1C1B1E' }}
-    />
-  )
-})
+storiesOf('stats/priceRangePlot', module)
+  .add('ticks', () => {
+    const [leftRange, setLeftRange] = useState(100)
+    const [rightRange, setRightRange] = useState(200)
+    return (
+      <PriceRangePlot
+        data={data}
+        leftRangeIndex={leftRange}
+        rightRangeIndex={rightRange}
+        currentIndex={140}
+        onChangeRange={(left, right) => {
+          console.log(left)
+          console.log(right)
+          setLeftRange(left)
+          setRightRange(right)
+        }}
+        style={{ width: 600, height: 300, backgroundColor: '#1C1B1E' }}
+      />
+    )
+  })
+  .add('disabled', () => {
+    const [leftRange, setLeftRange] = useState(100)
+    const [rightRange, setRightRange] = useState(200)
+    return (
+      <PriceRangePlot
+        data={data}
+        leftRangeIndex={leftRange}
+        rightRangeIndex={rightRange}
+        currentIndex={140}
+        onChangeRange={(left, right) => {
+          console.log(left)
+          console.log(right)
+          setLeftRange(left)
+          setRightRange(right)
+        }}
+        style={{ width: 600, height: 300, backgroundColor: '#1C1B1E' }}
+        disabled
+      />
+    )
+  })
