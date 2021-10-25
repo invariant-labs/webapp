@@ -4,6 +4,7 @@ import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 import { ExitToApp } from '@material-ui/icons'
 import { WalletType } from '@web3/wallet'
 import icons from '@static/icons'
+import classNames from 'classnames'
 import useStyles from './style'
 export interface IConnectWalletModal {
   options: WalletType[]
@@ -13,6 +14,7 @@ export interface IConnectWalletModal {
   callDisconect: () => void
   connected: boolean
   onSelect: (wallet: WalletType) => void
+  active: WalletType
 }
 export const ConnectWallet: React.FC<IConnectWalletModal> = ({
   options,
@@ -21,7 +23,8 @@ export const ConnectWallet: React.FC<IConnectWalletModal> = ({
   handleClose,
   callDisconect,
   connected,
-  onSelect
+  onSelect,
+  active
 }) => {
   const classes = useStyles()
 
@@ -53,7 +56,7 @@ export const ConnectWallet: React.FC<IConnectWalletModal> = ({
             <Grid
               item
               key={option}
-              className={classes.listItem}
+              className={classNames(classes.listItem, option === active ? classes.active : null)}
               onClick={() => {
                 onSelect(option)
                 handleClose()

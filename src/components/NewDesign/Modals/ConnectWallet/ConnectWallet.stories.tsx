@@ -14,6 +14,7 @@ storiesOf('modals/newconnectWallet', module)
       connected={false}
       anchorEl={null}
       onSelect={wallet => action(`chosen: ${wallet}`)()}
+      active={WalletType.PHANTOM}
     />
   ))
   .add('withDisconnect', () => (
@@ -25,5 +26,6 @@ storiesOf('modals/newconnectWallet', module)
       connected={true}
       anchorEl={null}
       onSelect={wallet => action(`chosen: ${wallet}`)()}
+      active={WalletType.PHANTOM}
     />
   ))

@@ -24,12 +24,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     '&:hover': {
-      background: '#2A2932',
-      color: colors.white.main,
-
-      '& $dotIcon': {
-        display: 'grid'
-      }
+      background: '#2A293260'
     }
   },
   title: {
@@ -57,6 +52,17 @@ const useStyles = makeStyles(() => ({
   paper: {
     background: 'transparent',
     boxShadow: 'none'
+  },
+  active: {
+    background: '#2A2932',
+    color: colors.white.main,
+    '& $icon': {
+      opacity: 1
+    },
+
+    '& $dotIcon': {
+      display: 'grid'
+    }
   }
 }))
 
