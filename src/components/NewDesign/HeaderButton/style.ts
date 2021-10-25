@@ -1,15 +1,15 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   headerButton: {
-    background: colors.invariant.headerButton,
+    background: colors.invariant.componentOut2,
     color: colors.white.main,
     paddingInline: 12,
 
     borderRadius: 10,
     textTransform: 'none',
-    ...typography.subtitle2,
+    ...newTypography.body1,
     height: 40,
     minWidth: 110,
 
@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => ({
     paddingInline: 12,
     borderRadius: 10,
     textTransform: 'none',
-    ...typography.subtitle2,
+    ...newTypography.body1,
     height: 40,
     minWidth: 110,
 
@@ -47,7 +47,7 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    ...typography.subtitle1
+    ...newTypography.body1
   },
   disabled: {
     opacity: 0.5

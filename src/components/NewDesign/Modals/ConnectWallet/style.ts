@@ -1,52 +1,52 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
-    background: colors.invariant.modalBack,
+    background: colors.invariant.componentOut4,
     width: 170,
     borderRadius: 10,
-    marginTop: 14,
+    marginTop: 8,
     padding: 15
   },
   list: {
-    background: colors.invariant.modalBackList,
+    background: colors.invariant.componentIn1,
     borderRadius: 5,
-    marginTop: 13,
+    marginTop: 7,
     padding: 8
   },
   listItem: {
-    color: '#746E7C',
+    color: colors.invariant.componentOut2,
     borderRadius: 5,
-    padding: 8,
+    padding: '3px 7px',
     width: '100%',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     '&:hover': {
-      background: '#2A293260'
+      background: `${colors.invariant.componentOut2}60`,
+      color: colors.white.main
     }
   },
   title: {
-    ...typography.subtitle2
+    ...newTypography.body1
   },
   dotIcon: {
     width: 12,
     marginLeft: 'auto',
-    color: '#9DD46D',
+    color: colors.invariant.accent2,
     display: 'none'
   },
   icon: {
-    width: 27,
-    height: 27,
+    width: 20,
+    height: 20,
     display: 'inline',
     float: 'left',
     marginRight: 8
   },
   name: {
     textTransform: 'capitalize',
-    ...typography.subtitle2,
-    fontWeight: 400,
+    ...newTypography.body2,
     float: 'left'
   },
   paper: {
@@ -54,7 +54,7 @@ const useStyles = makeStyles(() => ({
     boxShadow: 'none'
   },
   active: {
-    background: '#2A2932',
+    background: colors.invariant.componentOut2,
     color: colors.white.main,
     '& $icon': {
       opacity: 1
