@@ -1,31 +1,29 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   modal: {
     height: '100vh'
   },
   root: {
-    background: '#1B191F',
+    background: colors.invariant.componentOut4,
     width: 340,
     borderRadius: 10,
     margin: '10% auto ',
-    padding: 15,
+    padding: '10px 15px 20px 15px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
   },
   title: {
     color: colors.white.main,
-    ...typography.subtitle2
+    ...newTypography.body1
   },
   desc: {
-    fontSize: '14px',
-    lineHeight: '16px',
-    fontWeight: 400,
-    color: '#746E7C',
+    ...newTypography.body3,
+    color: colors.invariant.lightInfoText,
     textAlign: 'center',
-    padding: 12
+    padding: 8
   },
   buttons: {
     display: 'flex',
@@ -34,16 +32,20 @@ const useStyles = makeStyles(() => ({
     paddingTop: 17
   },
   buttonCancel: {
-    backgroundColor: '#746E7C',
+    backgroundColor: colors.invariant.lightInfoText,
+    color: colors.invariant.darkInfoText,
     width: 120,
-    ...typography.subtitle2,
-    textTransform: 'capitalize'
+    ...newTypography.body1,
+    textTransform: 'capitalize',
+    padding: '3px 16px'
   },
   buttonClaim: {
-    backgroundColor: '#9DD46D',
+    backgroundColor: colors.invariant.accent2,
+    color: colors.invariant.darkInfoText,
     width: 120,
-    ...typography.subtitle2,
-    textTransform: 'capitalize'
+    ...newTypography.body1,
+    textTransform: 'capitalize',
+    padding: '3px 16px'
   }
 }))
 

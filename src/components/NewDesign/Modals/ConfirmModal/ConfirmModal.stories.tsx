@@ -2,7 +2,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { ConfirmModal } from './ConfirmModal'
 
-storiesOf('modals/newconnectWallet', module).add('default', () => (
+storiesOf('modals/newconfirmation', module).add('default', () => (
   <ConfirmModal
     title={'Claim confirmation'}
     desc={
