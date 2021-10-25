@@ -4,24 +4,29 @@ import React from 'react'
 interface IProp {
   title: string
   desc: string
+  action1: string
+  action2: string
+  handleAction1: () => void
+  handleAction2: () => void
+  open: boolean
 }
 
-export const ConfirmModal: React.FC<IProp> = ({ title, desc }) => {
+export const ConfirmModal: React.FC<IProp> = ({
+  title,
+  desc,
+  action1,
+  action2,
+  handleAction1,
+  handleAction2,
+  open
+}) => {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(true)
 
-  const handleClose = () => {
-    setOpen(false)
-  }
-  const handleClaim = () => {
-    console.log('claim')
-    handleClose()
-  }
   return (
     <Modal
       className={classes.modal}
       open={open}
-      onClose={handleClose}
+      onClose={handleAction1}
       disableAutoFocus
       disableEnforceFocus
       disablePortal>
@@ -29,11 +34,11 @@ export const ConfirmModal: React.FC<IProp> = ({ title, desc }) => {
         <Typography className={classes.title}>{title}</Typography>
         <Typography className={classes.desc}>{desc}</Typography>
         <Grid className={classes.buttons}>
-          <Button className={classes.buttonCancel} variant='contained' onClick={handleClose}>
-            Cancel
+          <Button className={classes.buttonCancel} variant='contained' onClick={handleAction1}>
+            {action1}
           </Button>
-          <Button className={classes.buttonClaim} variant='contained' onClick={handleClaim}>
-            Claim
+          <Button className={classes.buttonClaim} variant='contained' onClick={handleAction2}>
+            {action2}
           </Button>
         </Grid>
       </Grid>

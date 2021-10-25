@@ -21,6 +21,7 @@ const useStyles = makeStyles(() => ({
   },
   desc: {
     ...newTypography.body3,
+    lineHeight: '16px',
     color: colors.invariant.lightInfoText,
     textAlign: 'center',
     padding: 8
