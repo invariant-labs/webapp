@@ -4,7 +4,7 @@ import RangeInput from './RangeInput'
 import { useState } from '@storybook/client-api'
 
 storiesOf('stats/rangeInput', module).add('default', () => {
-  const [val, setVal] = useState(100)
+  const [val, setVal] = useState('100')
   return (
     <div style={{
       backgroundColor: '#000000',
@@ -16,8 +16,10 @@ storiesOf('stats/rangeInput', module).add('default', () => {
         tokenFromSymbol='BAT'
         tokenToSymbol='ETH'
         currentValue={val}
-        decreaseValue={() => { setVal(val - 1) }}
-        increaseValue={() => { setVal(val + 1) }}
+        decreaseValue={() => { setVal((+val - 0.01).toFixed(2).toString()) }}
+        increaseValue={() => { setVal((+val + 0.01).toFixed(2).toString()) }}
+        setValue={(value) => { setVal(value) }}
+        onBlur={() => { setVal(((+val).toFixed(2)).toString()) }}
         style={{ width: 200, maxHeight: 300, margin: 'auto' }}
       />
     </div>

@@ -40,7 +40,13 @@ const useStyles = makeStyles(() => ({
     color: colors.white.main,
     ...newTypography.body2,
     lineHeight: 24,
-    textAlign: 'center'
+    borderBlock: `1px solid ${colors.invariant.componentOut2}`,
+    backgroundColor: colors.invariant.componentIn1,
+    height: 30,
+
+    '& $input': {
+      textAlign: 'center'
+    }
   }
 }))
 
