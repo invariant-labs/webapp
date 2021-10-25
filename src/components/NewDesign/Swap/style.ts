@@ -77,6 +77,7 @@ const useStyles = makeStyles(() => ({
   },
   detailsInfoForm: {
     border: '1px solid #34303B',
+    color: '#FFFFFF',
     borderRadius: 5,
     backgroundColor: '#141216',
     padding: '8px 8px',

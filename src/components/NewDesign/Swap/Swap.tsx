@@ -34,7 +34,7 @@ export const Swap: React.FC<ISwap> = ({
   getIsXToY
 }) => {
   const classes = useStyles()
-
+  console.log(tokens)
   const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
     tokens.length ? 0 : null
   )
@@ -123,8 +123,10 @@ export const Swap: React.FC<ISwap> = ({
   return (
     <Grid container className={classes.root} direction='column'>
       <Box className={classes.tokenComponentTextContainer}>
-        <Typography className={classes.tokenComponentText}>From</Typography>
-        <Typography className={classes.tokenComponentText}>Balance: 1204.5 SNY</Typography>
+        <Typography className={classes.tokenComponentText}>Est.: </Typography>
+        <Typography className={classes.tokenComponentText}>
+          Balance: {tokenFromIndex !== null ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal) : '0'}
+        </Typography>
       </Box>
 
       <ExchangeAmountInput
@@ -162,7 +164,11 @@ export const Swap: React.FC<ISwap> = ({
             }} />
         </Box>
         <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
-        <Typography className={classes.tokenComponentText}>Balance: 0.0</Typography>
+        <Typography className={classes.tokenComponentText}>
+          Balance: {tokenToIndex !== null
+            ? printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal)
+            : '0'}
+        </Typography>
       </Box>
       <ExchangeAmountInput
         value={amountTo}

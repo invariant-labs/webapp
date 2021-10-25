@@ -23,8 +23,9 @@ const tokens = 'SOL BTC USD FTT ETH'.split(' ').map(
     return { ...defaultToken, symbol: i }
   }
 )
-tokens[0].balance = new BN(100).mul(new BN(10000))
-tokens[1].balance = new BN(10).mul(new BN(10000))
+
+tokens[0].balance = new BN(100).mul(new BN(34786))
+tokens[1].balance = new BN(10).mul(new BN(126))
 
 storiesOf('newUi/swap', module)
   .addDecorator(withKnobs)
