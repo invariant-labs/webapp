@@ -23,12 +23,12 @@ const useStyles = makeStyles(() => ({
     minWidth: 0,
     width: 21,
     height: 18,
-    backgroundColor: colors.invariantV2.green2,
+    backgroundColor: colors.invariant.accent2,
     borderRadius: 3,
     padding: 0,
 
     '&:hover': {
-      backgroundColor: colors.invariantV2.green1
+      backgroundColor: colors.invariant.logoGreen
     }
   },
   zoomButtonsWrapper: {
