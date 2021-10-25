@@ -13,6 +13,9 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     height: '100%'
   },
+  img: {
+    paddingBottom: 25
+  },
   blur: {
     width: '100%',
     height: '100%',

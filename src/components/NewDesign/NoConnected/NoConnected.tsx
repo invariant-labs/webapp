@@ -7,7 +7,7 @@ export const NoConnected: React.FC = () => {
   return (
     <Grid className={classes.blur}>
       <Grid className={classes.root}>
-        <img src={icons.NoConnected} />
+        <img className={classes.img} src={icons.NoConnected} />
         <Typography className={classes.desc}>Wallet is not connected.</Typography>
         <Typography className={classes.desc}>You cannot add new liquidity position.</Typography>
         <Button className={classes.button} variant='contained'>
