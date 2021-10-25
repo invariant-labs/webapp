@@ -55,7 +55,7 @@ export const Header: React.FC<IHeader> = ({
     <>
       <Grid container className={classes.root} alignItems='center'>
         <Grid className={classes.left} alignItems='center'>
-          <CardMedia className={classes.logo} image={icons.Logo_Title} />
+          <CardMedia className={classes.logo} image={icons.LogoTitle} />
         </Grid>
         <Hidden smDown>
           <Grid alignItems='center' className={classes.routers}>

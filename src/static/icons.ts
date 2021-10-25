@@ -10,8 +10,10 @@ import mainnet from './svg/mainnet.svg'
 import devnet from './svg/devnet.svg'
 import testnet from './svg/testnet.svg'
 import logo from './png/invariant-logo.png'
-import logo_title from './svg/Logo.svg'
-
+import logoTitle from './svg/Logo.svg'
+import BTC from './svg/btc-ic.svg'
+import SNY from './svg/sny-ic.svg'
+import arrow from './svg/arrow.svg'
 const icons: { [key: string]: string } = {
   USDT: xUSDIcon,
   SOL: WSOLIcon,
@@ -26,7 +28,10 @@ const icons: { [key: string]: string } = {
   Devnet: devnet,
   Testnet: testnet,
   Logo: logo,
-  Logo_Title: logo_title
+  LogoTitle: logoTitle,
+  BTCIcon: BTC,
+  SNYIcon: SNY,
+  ArrowIcon: arrow
 }
 
 export default icons

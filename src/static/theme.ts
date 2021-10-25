@@ -93,7 +93,8 @@ export const colors = {
     yellowWeak: '#abc35a',
     yellowStrong: '#c3f43e',
     headerButton: '#34303B',
-    background: '#171717'
+    background: '#171717',
+    component: '#27262B'
   }
 }
 
