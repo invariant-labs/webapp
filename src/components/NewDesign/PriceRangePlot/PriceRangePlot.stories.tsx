@@ -1,7 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import PriceRangePlot from './PriceRangePlot'
-import { colors } from '@static/theme'
 import { useState } from '@storybook/client-api'
 
 const ticksToData = () => {
@@ -48,7 +47,7 @@ storiesOf('stats/priceRangePlot', module).add('ticks', () => {
         setLeftRange(left)
         setRightRange(right)
       }}
-      style={{ width: 600, height: 300, backgroundColor: colors.navy.component }}
+      style={{ width: 600, height: 300, backgroundColor: '#1C1B1E' }}
     />
   )
 })

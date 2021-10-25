@@ -25,7 +25,11 @@ const useStyles = makeStyles(() => ({
     height: 18,
     backgroundColor: colors.invariantV2.green2,
     borderRadius: 3,
-    padding: 0
+    padding: 0,
+
+    '&:hover': {
+      backgroundColor: colors.invariantV2.green1
+    }
   },
   zoomButtonsWrapper: {
     position: 'absolute',

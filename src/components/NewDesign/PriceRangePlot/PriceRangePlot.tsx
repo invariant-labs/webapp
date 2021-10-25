@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { ResponsiveLine } from '@nivo/line'
+// @ts-expect-error
+import { linearGradientDef } from '@nivo/core'
 import { colors } from '@static/theme'
 import { Button, Grid } from '@material-ui/core'
 import classNames from 'classnames'
@@ -24,18 +26,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
   const [plotMin, setPlotMin] = useState(0)
   const [plotMax, setPlotMax] = useState(data[currentIndex].x * 3)
 
-  const zoomMinus = () => {
-    const diff = plotMax - plotMin
-    setPlotMin(plotMin - (diff / 4))
-    setPlotMax(plotMax + (diff / 4))
-  }
-
-  const zoomPlus = () => {
-    const diff = plotMax - plotMin
-    setPlotMin(plotMin + (diff / 6))
-    setPlotMax(plotMax - (diff / 6))
-  }
-
   const nearestPriceIndex = (price: number) => {
     let nearest = 0
 
@@ -46,6 +36,18 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
     }
 
     return nearest
+  }
+
+  const zoomMinus = () => {
+    const diff = plotMax - plotMin
+    setPlotMin(plotMin - (diff / 4))
+    setPlotMax(plotMax + (diff / 4))
+  }
+
+  const zoomPlus = () => {
+    const diff = plotMax - plotMin
+    setPlotMin(plotMin + (diff / 6))
+    setPlotMax(plotMax - (diff / 6))
   }
 
   return (
@@ -64,7 +66,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
           data
         }]}
         curve='monotoneX'
-        margin={{ top: 20, right: 30, bottom: 30, left: 30 }}
+        margin={{ top: 10, right: 20, bottom: 20, left: 20 }}
         colors={colors.invariantV2.green2}
         axisTop={null}
         axisRight={null}
@@ -84,7 +86,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
         enableGridY={false}
         enablePoints={false}
         enableArea={true}
-        areaOpacity={0.3}
         legends={[]}
         isInteractive={false}
         animate={false}
@@ -114,6 +115,19 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex
           ),
           'axes',
           'legends'
+        ]}
+        defs={[
+          linearGradientDef('gradient', [
+            { offset: 0, color: 'inherit' },
+            { offset: 25, color: 'inherit' },
+            { offset: 100, color: 'inherit', opacity: 0 }
+          ])
+        ]}
+        fill={[
+          {
+            match: '*',
+            id: 'gradient'
+          }
         ]}
       />
     </Grid>
