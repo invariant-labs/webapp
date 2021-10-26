@@ -1,5 +1,5 @@
 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="mainnet" filter="url(#filter0_d_25:920)">
+<g id="mainnet" filter="url(#filter0_d_25920)">
 <circle id="Ellipse 10" cx="11" cy="11" r="7.75" stroke="#9DD46D" stroke-width="0.5"/>
 <path id="Vector 34" d="M11 3.34778V18.6521" stroke="#9DD46D" stroke-width="0.5"/>
 <path id="Vector 35" d="M3.34766 11.3478H18.652" stroke="#9DD46D" stroke-width="0.5"/>
@@ -9,7 +9,7 @@
 <path id="Vector 39" d="M5.78271 5.78265C9.26098 8.56529 13.4349 8.56529 16.9131 6.13054" stroke="#9DD46D" stroke-width="0.5"/>
 </g>
 <defs>
-<filter id="filter0_d_25:920" x="0" y="0" width="22" height="22" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="filter0_d_25920" x="0" y="0" width="22" height="22" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset/>
