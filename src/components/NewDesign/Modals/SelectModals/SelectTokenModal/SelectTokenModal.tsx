@@ -7,7 +7,7 @@ import searchIcon from '@static/svg/lupa.svg'
 import { BN } from '@project-serum/anchor'
 export interface ISelectTokenModal {
   tokens: Array<{ symbol: string; balance?: BN; decimals?: number }>
-  commonTokens: Array<{ symbol: string; balance?: BN; decimals?: number }>
+  commonTokens: Array<{ symbol: string }>
   open: boolean
   handleClose: () => void
   anchorEl: HTMLButtonElement | null

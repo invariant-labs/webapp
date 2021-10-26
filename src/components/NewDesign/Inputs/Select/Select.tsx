@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, CardMedia } from '@material-ui/core'
 import { blurContent, unblurContent } from '@consts/uiUtils'
-import SelectTokenModal from '@components/Modals/SelectModals/SelectTokenModal/SelectTokenModal'
+import SelectTokenModal from '@components/NewDesign/Modals/SelectModals/SelectTokenModal/SelectTokenModal'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import icons from '@static/icons'
 import classNames from 'classnames'
@@ -58,6 +58,7 @@ export const Select: React.FC<ISelectModal> = ({
       </Button>
       <SelectTokenModal
         tokens={tokens}
+        commonTokens={[{ symbol: 'SNY' }, { symbol: 'BTC' }, { symbol: 'ETH' }, { symbol: 'DOGE' }]}
         open={open}
         centered={centered}
         anchorEl={anchorEl}
