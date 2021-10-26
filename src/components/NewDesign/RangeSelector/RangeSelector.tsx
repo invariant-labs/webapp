@@ -81,10 +81,10 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               changeRangeHandler(Math.max(0, leftRange - 1), rightRange)
             }}
             increaseValue={() => {
-              changeRangeHandler(Math.min(data.length - 1, leftRange + 1), rightRange)
+              changeRangeHandler(Math.min(rightRange - 1, leftRange + 1), rightRange)
             }}
             onBlur={() => {
-              changeRangeHandler(nearestPriceIndex(+leftInput), rightRange)
+              changeRangeHandler(Math.min(rightRange - 1, nearestPriceIndex(+leftInput)), rightRange)
             }}
           />
           <RangeInput
@@ -95,13 +95,13 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             currentValue={rightInput}
             setValue={setRightInput}
             decreaseValue={() => {
-              changeRangeHandler(leftRange, Math.max(0, rightRange - 1))
+              changeRangeHandler(leftRange, Math.max(leftRange + 1, rightRange - 1))
             }}
             increaseValue={() => {
               changeRangeHandler(leftRange, Math.min(data.length - 1, rightRange + 1))
             }}
             onBlur={() => {
-              changeRangeHandler(leftRange, nearestPriceIndex(+rightInput))
+              changeRangeHandler(leftRange, Math.max(leftRange + 1, nearestPriceIndex(+rightInput)))
             }}
           />
         </Grid>

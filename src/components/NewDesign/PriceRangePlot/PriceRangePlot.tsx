@@ -113,7 +113,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           }
         ]}
         curve='monotoneX'
-        margin={{ top: 10, right: 20, bottom: 20, left: 20 }}
+        margin={{ top: 25, right: 20, bottom: 20, left: 20 }}
         colors={[
           colors.invariant.accent1,
           colors.invariant.accent2,
