@@ -1,6 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import RangeSelector from './RangeSelector'
+import { action } from '@storybook/addon-actions'
 
 const ticksToData = () => {
   const ticks = [
@@ -38,8 +39,7 @@ storiesOf('position/rangeSelector', module).add('setter', () => (
     tokenFromSymbol='BAT'
     tokenToSymbol='ETH'
     onChangeRange={(left, right) => {
-      console.log(left)
-      console.log(right)
+      action(`range indexes: ${left} - ${right}`)()
     }}
   />
 ))

@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
     height: 240
   },
   subheader: {
-    ...newTypography.body1,
+    ...newTypography.body2,
     marginBlock: 12,
     color: colors.white.main
   },
@@ -37,10 +37,12 @@ const useStyles = makeStyles(() => ({
   },
   button: {
     width: 169,
+    height: 25,
     ...newTypography.body3,
     color: colors.white.main,
     backgroundColor: colors.invariant.componentOut2,
-    borderRadius: 3
+    borderRadius: 3,
+    textTransform: 'none'
   }
 }))
 
