@@ -15,7 +15,7 @@ export interface IPriceRangePlot {
   leftRangeIndex: number,
   rightRangeIndex: number,
   currentIndex: number,
-  onChangeRange: (left: number, right: number) => void
+  onChangeRange?: (left: number, right: number) => void
   style?: React.CSSProperties
   className?: string
   disabled?: boolean
@@ -150,13 +150,13 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
             data[leftRangeIndex].x,
             data[rightRangeIndex].x,
             (position) => {
-              onChangeRange(
+              onChangeRange?.(
                 nearestPriceIndex(plotMin + (position * (plotMax - plotMin))),
                 rightRangeIndex
               )
             },
             (position) => {
-              onChangeRange(
+              onChangeRange?.(
                 leftRangeIndex,
                 nearestPriceIndex(plotMin + (position * (plotMax - plotMin)))
               )

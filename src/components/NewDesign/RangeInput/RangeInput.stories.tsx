@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react'
 import RangeInput from './RangeInput'
 import { useState } from '@storybook/client-api'
 
-storiesOf('stats/rangeInput', module).add('default', () => {
+storiesOf('position/rangeInput', module).add('default', () => {
   const [val, setVal] = useState('100')
   return (
     <div style={{
