@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 import { WalletType } from '@web3/wallet'
 import useButtonStyles from '../HeaderButton/style'
 import icons from '@static/icons'
-
+import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 import useStyles from './style'
 import SelectNetworkButton from '../HeaderButton/SelectNetworkButton'
 
@@ -56,7 +56,7 @@ export const Header: React.FC<IHeader> = ({
     <>
       <Grid container className={classes.root} alignItems='center'>
         <Grid className={classes.left} alignItems='center'>
-          <CardMedia className={classes.logo} image={icons.Logo_Title} />
+          <CardMedia className={classes.logo} image={icons.LogoTitle} />
         </Grid>
         <Hidden smDown>
           <Grid alignItems='center' className={classes.routers}>
@@ -86,11 +86,7 @@ export const Header: React.FC<IHeader> = ({
           )}
           <SelectNetworkButton
             name={typeOfNetwork}
-            networks={[
-              { name: NetworkType.MAINNET, network: SolanaNetworks.MAIN_SERUM },
-              { name: NetworkType.DEVNET, network: SolanaNetworks.DEV },
-              { name: NetworkType.TESTNET, network: SolanaNetworks.TEST }
-            ]}
+            networks={[{ name: NetworkType.DEVNET, network: SolanaNetworks.DEV }]}
             onSelect={chosen => {
               onNetworkSelect(chosen)
             }}
@@ -122,12 +118,7 @@ export const Header: React.FC<IHeader> = ({
               onSelect={onWalletSelect}
               connected={walletConnected}
               onDisconnect={onDisconnectWallet}
-              startIcon={
-                <CardMedia
-                  className={classes.connectedWalletIcon}
-                  image={icons[names[typeOfWallet]]}
-                />
-              }
+              startIcon={<DotIcon className={classes.connectedWalletIcon} />}
             />
           )}
         </Grid>

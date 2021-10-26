@@ -60,7 +60,7 @@ export const ConnectWallet: React.FC<IConnectWalletModal> = ({
               key={option}
               className={classNames(
                 classes.listItem,
-                connected ? (option === active ? classes.active : null) : null
+                connected && option === active ? classes.active : null
               )}
               onClick={() => {
                 onSelect(option)

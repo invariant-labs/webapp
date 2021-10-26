@@ -10,6 +10,7 @@ const useStyles = makeStyles(() => ({
     borderRadius: 10,
     textTransform: 'none',
     ...newTypography.body1,
+    fontWeight: 400,
     height: 40,
     minWidth: 110,
 
@@ -43,6 +44,19 @@ const useStyles = makeStyles(() => ({
       background: colors.invariant.violetWeak
     }
   },
+  headerButtonConnected: {
+    background: colors.invariant.componentOut2,
+    color: colors.white.main,
+    paddingInline: 12,
+    borderRadius: 10,
+    textTransform: 'none',
+    ...newTypography.body1,
+    height: 40,
+    minWidth: 110,
+    '&:hover': {
+      background: colors.invariant.componentOut3
+    }
+  },
   headerButtonTextEllipsis: {
     textTransform: 'none',
     overflow: 'hidden',
@@ -58,7 +72,7 @@ const useStyles = makeStyles(() => ({
   },
   startIcon: {
     marginLeft: 0,
-    marginTop: 2
+    marginBottom: 1
   },
   endIcon: {
     minWidth: 20,

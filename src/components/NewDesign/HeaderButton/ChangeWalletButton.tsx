@@ -4,7 +4,7 @@ import useStyles from './style'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import ConnectWallet from '@components/NewDesign/Modals/ConnectWallet/ConnectWallet'
 import { WalletType } from '@web3/wallet'
-
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 export interface IProps {
   name: string
   options: WalletType[]
@@ -12,6 +12,7 @@ export interface IProps {
   connected: boolean
   startIcon?: JSX.Element
   onDisconnect: () => void
+  hideArrow?: boolean
 }
 export const ChangeWalletButton: React.FC<IProps> = ({
   name,
@@ -19,10 +20,10 @@ export const ChangeWalletButton: React.FC<IProps> = ({
   onSelect,
   connected,
   startIcon,
+  hideArrow,
   onDisconnect
 }) => {
   const classes = useStyles()
-
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
   const [activeWallet, setActiveWallet] = React.useState(WalletType.PHANTOM)
@@ -46,7 +47,7 @@ export const ChangeWalletButton: React.FC<IProps> = ({
   return (
     <>
       <Button
-        className={classes.headerButtonConnect}
+        className={connected ? classes.headerButtonConnected : classes.headerButtonConnect}
         variant='contained'
         classes={{
           disabled: classes.disabled,
@@ -54,7 +55,10 @@ export const ChangeWalletButton: React.FC<IProps> = ({
           endIcon: classes.innerEndIcon
         }}
         onClick={handleClick}
-        startIcon={startIcon}>
+        startIcon={startIcon}
+        endIcon={
+          connected && !hideArrow ? <ExpandMoreIcon className={classes.endIcon} /> : undefined
+        }>
         <Typography className={classes.headerButtonTextEllipsis}>{name}</Typography>
       </Button>
       <ConnectWallet
