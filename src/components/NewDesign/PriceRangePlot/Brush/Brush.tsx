@@ -5,6 +5,7 @@ import useStyles from './style'
 import { MaxHandle, MinHandle } from './svgHandles'
 
 export interface HandleProps {
+  plotWidth: number
   height: number
   position: number
   minPosition: number
@@ -16,6 +17,7 @@ export interface HandleProps {
 }
 
 export const Handle: React.FC<HandleProps> = ({
+  plotWidth,
   height,
   position,
   minPosition,
@@ -92,9 +94,13 @@ export const Handle: React.FC<HandleProps> = ({
       <rect
         className={!disabled ? classes.handle : undefined}
         ref={handleRef}
-        x={isStart || drag ? currentPosition - 40 : currentPosition}
+        x={
+          isStart
+            ? currentPosition - (drag ? plotWidth : 40)
+            : currentPosition
+        }
         y={0}
-        width={drag ? 82 : 42}
+        width={drag ? (2 * plotWidth) + 2 : 42}
         height={height}
         onMouseDown={!disabled ? startDrag : undefined}
         onMouseUp={!disabled ? endDrag : undefined}
@@ -122,6 +128,7 @@ export const Brush = (
     ? (
       <Handle
         key='start'
+        plotWidth={innerWidth}
         height={innerHeight}
         position={(leftPosition - plotMin) * unitLen}
         minPosition={Math.max(0, -plotMin * unitLen)}
@@ -141,6 +148,7 @@ export const Brush = (
     ? (
       <Handle
         key='end'
+        plotWidth={innerWidth}
         height={innerHeight}
         position={(rightPosition - plotMin) * unitLen}
         minPosition={((leftPosition - plotMin) * unitLen) + 0.001}

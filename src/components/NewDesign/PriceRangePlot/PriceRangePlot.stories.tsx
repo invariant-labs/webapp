@@ -2,6 +2,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import PriceRangePlot from './PriceRangePlot'
 import { useState } from '@storybook/client-api'
+import { action } from '@storybook/addon-actions'
 
 const ticksToData = () => {
   const ticks = [
@@ -43,8 +44,7 @@ storiesOf('stats/priceRangePlot', module)
         rightRangeIndex={rightRange}
         currentIndex={140}
         onChangeRange={(left, right) => {
-          console.log(left)
-          console.log(right)
+          action(`range indexes: ${left} - ${right}`)()
           setLeftRange(left)
           setRightRange(right)
         }}

@@ -21,7 +21,16 @@ export interface IPriceRangePlot {
   disabled?: boolean
 }
 
-export const PriceRangePlot: React.FC<IPriceRangePlot> = ({ data, leftRangeIndex, rightRangeIndex, currentIndex, onChangeRange, style, className, disabled = false }) => {
+export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
+  data,
+  leftRangeIndex,
+  rightRangeIndex,
+  currentIndex,
+  onChangeRange,
+  style,
+  className,
+  disabled = false
+}) => {
   const classes = useStyles()
 
   const [plotMin, setPlotMin] = useState(0)
