@@ -225,7 +225,7 @@ export const Swap: React.FC<ISwap> = ({
         <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
         <Typography className={classes.tokenComponentText}>
           Balance: {tokenToIndex !== null
-            ? printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal)
+            ? printBN(tokenY[tokenToIndex].balance, tokenY[tokenToIndex].decimal)
             : '0'}
         </Typography>
       </Box>
@@ -241,9 +241,9 @@ export const Swap: React.FC<ISwap> = ({
         placeholder={'0.0'}
         onMaxClick={() => {
           if (tokenFromIndex !== null && tokenToIndex !== null) {
-            setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+            setAmountFrom(printBN(tokenY[tokenFromIndex].balance, tokenY[tokenFromIndex].decimal))
             updateEstimatedAmount(
-              printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal)
+              printBN(tokenY[tokenFromIndex].balance, tokenY[tokenFromIndex].decimal)
             )
           }
         }}
