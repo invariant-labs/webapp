@@ -9,6 +9,7 @@ import ExchangeAmountInput from '@components/NewDesign/Inputs/ExchangeAmountInpu
 import useStyles from './style'
 import { Status } from '@reducers/solanaWallet'
 import SwapArrows from '@static/svg/swap-arrows.svg'
+import { PRICE_DECIMAL } from '@consts/static'
 
 export interface SwapToken {
   balance: BN
@@ -17,9 +18,22 @@ export interface SwapToken {
   assetAddress: PublicKey
 }
 
+export interface Pools {
+  tokenX: {
+    _bn: PublicKey
+  }
+  tokenY: {
+    _bn: PublicKey
+  }
+  sqrtPrice: {
+    v: BN
+  }
+}
+
 export interface ISwap {
   walletStatus: Status
   tokens: SwapToken[]
+  pools: Pools[]
   onSwap: (fromToken: PublicKey, toToken: PublicKey, amount: BN) => void
   isPairExisting: (fromToken: PublicKey, toToken: PublicKey) => boolean
   getPriceProportion: (fromToken: PublicKey, toToken: PublicKey) => BN
@@ -28,13 +42,13 @@ export interface ISwap {
 export const Swap: React.FC<ISwap> = ({
   walletStatus,
   tokens,
+  pools,
   onSwap,
   isPairExisting,
   getPriceProportion,
   getIsXToY
 }) => {
   const classes = useStyles()
-  console.log(tokens)
   const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
     tokens.length ? 0 : null
   )
@@ -43,6 +57,7 @@ export const Swap: React.FC<ISwap> = ({
   const [amountTo, setAmountTo] = React.useState<string>('')
   const [collapsed, setCollapsed] = React.useState<boolean>(false)
   const [swap, setSwap] = React.useState<boolean | null>(null)
+  const [tokenY, setTokenY] = React.useState<SwapToken[]>(tokens)
 
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
     const decimalChange = 10 ** (assetFor.decimal - assetIn.decimal)
@@ -67,6 +82,45 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   useEffect(() => {
+    if (tokenFromIndex === null) {
+
+    } else {
+      let pairs = pools.map((pool) => {
+        return tokens[tokenFromIndex].assetAddress.toString() === pool.tokenX._bn.toString()
+          ? getTokenByPubKey(pool.tokenY._bn.toString())
+          : tokens[tokenFromIndex].assetAddress.toString() === pool.tokenY._bn.toString()
+            ? getTokenByPubKey(pool.tokenX._bn.toString())
+            : null
+      })
+      pairs = pairs.filter((pair) => {
+        return pair !== null
+      })
+      setTokenToIndex(null)
+      setTokenY(pairs.map((pair) => {
+        return pair[0]
+      }))
+    }
+  }, [tokenFromIndex])
+
+  useEffect(() => {
+    if (tokenFromIndex === null || tokenToIndex === null) {
+
+    } else {
+      console.log('tokenA: ', tokens[tokenFromIndex].symbol)
+      console.log('tokenB: ', tokenY[tokenToIndex].symbol)
+      const pairIndex = pools.map((pool, index) => {
+        return (tokens[tokenFromIndex].assetAddress.toString() === pool.tokenX._bn.toString() &&
+        tokenY[tokenToIndex].assetAddress.toString() === pool.tokenY._bn.toString()) ||
+       (tokenY[tokenToIndex].assetAddress.toString() === pool.tokenX._bn.toString() &&
+        tokens[tokenFromIndex].assetAddress.toString() === pool.tokenY._bn.toString())
+          ? index : 0
+      })
+      console.log(printBN(pools[pairIndex[1]].sqrtPrice.v.div(new BN(10 ** PRICE_DECIMAL))
+        .mul(pools[pairIndex[1]].sqrtPrice.v.div(new BN(10 ** PRICE_DECIMAL))), 0))
+    }
+  }, [tokenToIndex])
+
+  useEffect(() => {
     updateEstimatedAmount()
 
     if (tokenFromIndex !== null && tokenToIndex === null) {
@@ -87,6 +141,11 @@ export const Swap: React.FC<ISwap> = ({
         calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex], amount ?? amountFrom)
       )
     }
+  }
+  const getTokenByPubKey = (key: string): SwapToken[] => {
+    return tokens.filter((token) => {
+      return token.assetAddress.toString() === key
+    })
   }
 
   const getButtonMessage = () => {
@@ -188,12 +247,12 @@ export const Swap: React.FC<ISwap> = ({
             )
           }
         }}
-        tokens={tokens.map(({ symbol, balance, decimal }) => ({
+        tokens={tokenY.map(({ symbol, balance, decimal }) => ({
           symbol,
           balance,
           decimals: decimal
         }))}
-        current={tokenToIndex !== null ? tokens[tokenToIndex].symbol : null}
+        current={tokenToIndex !== null ? tokenY[tokenToIndex].symbol : null}
         onSelect={(chosen: number) => {
           setTokenToIndex(chosen)
           updateEstimatedAmount()
