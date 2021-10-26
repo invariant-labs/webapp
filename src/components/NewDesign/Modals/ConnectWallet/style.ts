@@ -26,6 +26,15 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       background: `${colors.invariant.componentOut2}60`,
       color: colors.white.main
+    },
+    '&:first-child': {
+      marginBottom: '4px'
+    },
+    '&:not(:first-child)': {
+      margin: '4px 0'
+    },
+    '&:last-child': {
+      marginTop: '4px'
     }
   },
   title: {
@@ -47,7 +56,8 @@ const useStyles = makeStyles(() => ({
   name: {
     textTransform: 'capitalize',
     ...newTypography.body2,
-    float: 'left'
+    float: 'left',
+    paddingTop: '2px'
   },
   paper: {
     background: 'transparent',

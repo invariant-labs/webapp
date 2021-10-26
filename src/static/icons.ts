@@ -18,9 +18,9 @@ import testnet from './svg/testnet.svg'
 import dogeIcon from './svg/dogecoin.svg'
 import logo from './png/invariant-logo.png'
 import logo_title from './svg/Logo.svg'
-import mainnet_icon from './svg/mainnet2.svg'
-import devnet_icon from './svg/dev-net.svg'
-import testnet_icon from './svg/test-net.svg'
+import mainnetIcon from './svg/mainNet.svg'
+import devnetIcon from './svg/devNet.svg'
+import testnetIcon from './svg/testNet.svg'
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
   stSOL: WSOLIcon,
@@ -42,9 +42,9 @@ const icons: { [key: string]: string } = {
   USD: USDIcon,
   Logo: logo,
   Logo_Title: logo_title,
-  Mainnet_Icon: mainnet_icon,
-  Devnet_Icon: devnet_icon,
-  Testnet_Icon: testnet_icon
+  MainnetIcon: mainnetIcon,
+  DevnetIcon: devnetIcon,
+  TestnetIcon: testnetIcon
 }
 
 export default icons

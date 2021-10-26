@@ -4,13 +4,14 @@ import { Grid, CardMedia, Hidden, Button } from '@material-ui/core'
 
 import NavbarButton from '@components/NewDesign/Navbar/Button'
 import ChangeWalletButton from '@components/NewDesign/HeaderButton/ChangeWalletButton'
-import { NetworkType } from '@consts/static'
+import { NetworkType, SolanaNetworks } from '@consts/static'
 import { Link } from 'react-router-dom'
 import { WalletType } from '@web3/wallet'
 import useButtonStyles from '../HeaderButton/style'
 import icons from '@static/icons'
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
+
 import useStyles from './style'
+import SelectNetworkButton from '../HeaderButton/SelectNetworkButton'
 
 export interface IHeader {
   address: PublicKey
@@ -83,13 +84,17 @@ export const Header: React.FC<IHeader> = ({
               Faucet
             </Button>
           )}
-          <Button
-            className={buttonClasses.headerButton}
-            variant='contained'
-            classes={{ disabled: buttonClasses.disabled }}
-            endIcon={<KeyboardArrowDownIcon id='downIcon' />}>
-            Devnet
-          </Button>
+          <SelectNetworkButton
+            name={typeOfNetwork}
+            networks={[
+              { name: NetworkType.MAINNET, network: SolanaNetworks.MAIN_SERUM },
+              { name: NetworkType.DEVNET, network: SolanaNetworks.DEV },
+              { name: NetworkType.TESTNET, network: SolanaNetworks.TEST }
+            ]}
+            onSelect={chosen => {
+              onNetworkSelect(chosen)
+            }}
+          />
           {!walletConnected ? (
             <ChangeWalletButton
               name={'Connect wallet'}

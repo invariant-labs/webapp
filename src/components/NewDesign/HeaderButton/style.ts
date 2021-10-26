@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
     },
 
     '&:hover': {
-      background: colors.invariant.violetStrong
+      background: colors.invariant.componentOut3
     },
     '&:active': {
       '& #downIcon': {
@@ -40,7 +40,7 @@ const useStyles = makeStyles(() => ({
       marginRight: 15
     },
     '&:hover': {
-      background: colors.invariant.violetStrong
+      background: colors.invariant.violetWeak
     }
   },
   headerButtonTextEllipsis: {

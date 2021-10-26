@@ -1,9 +1,8 @@
 import React from 'react'
 import { Button, Typography } from '@material-ui/core'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import useStyles from './style'
 import { blurContent, unblurContent } from '@consts/uiUtils'
-import ConnectWallet from '@components/Modals/ConnectWallet/ConnectWallet'
+import ConnectWallet from '@components/NewDesign/Modals/ConnectWallet/ConnectWallet'
 import { WalletType } from '@web3/wallet'
 
 export interface IProps {
@@ -12,7 +11,6 @@ export interface IProps {
   onSelect: (chosen: WalletType) => void
   connected: boolean
   startIcon?: JSX.Element
-  hideArrow?: boolean
   onDisconnect: () => void
 }
 export const ChangeWalletButton: React.FC<IProps> = ({
@@ -21,14 +19,13 @@ export const ChangeWalletButton: React.FC<IProps> = ({
   onSelect,
   connected,
   startIcon,
-  hideArrow,
   onDisconnect
 }) => {
   const classes = useStyles()
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
-
+  const [activeWallet, setActiveWallet] = React.useState(WalletType.PHANTOM)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
     blurContent()
@@ -57,10 +54,7 @@ export const ChangeWalletButton: React.FC<IProps> = ({
           endIcon: classes.innerEndIcon
         }}
         onClick={handleClick}
-        startIcon={startIcon}
-        endIcon={
-          connected && !hideArrow ? <ExpandMoreIcon className={classes.endIcon} /> : undefined
-        }>
+        startIcon={startIcon}>
         <Typography className={classes.headerButtonTextEllipsis}>{name}</Typography>
       </Button>
       <ConnectWallet
@@ -71,6 +65,8 @@ export const ChangeWalletButton: React.FC<IProps> = ({
         onSelect={onSelect}
         callDisconect={handleDisconnect}
         connected={connected}
+        active={activeWallet}
+        setActive={setActiveWallet}
       />
     </>
   )

@@ -2,7 +2,6 @@ import React from 'react'
 import { Typography, Popover, Grid } from '@material-ui/core'
 import { NetworkType, SolanaNetworks } from '@consts/static'
 import icons from '@static/icons'
-import MainIcon from '@static/svg/main-net.svg'
 import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 import classNames from 'classnames'
 import useStyles from './style'
@@ -17,6 +16,7 @@ export interface ISelectNetworkModal {
   onSelect: (wallet: NetworkType) => void
   handleClose: () => void
   active: NetworkType
+  setActive: (network: NetworkType) => void
 }
 export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
   networks,
@@ -24,7 +24,8 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
   open,
   onSelect,
   handleClose,
-  active
+  active,
+  setActive
 }) => {
   const classes = useStyles()
   return (
@@ -51,9 +52,10 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
               key={`networks-${name}`}
               onClick={() => {
                 onSelect(name)
+                setActive(name)
                 handleClose()
               }}>
-              <img className={classes.icon} src={icons[`${name}`]} alt={`${name} icon`} />
+              <img className={classes.icon} src={icons[`${name}Icon`]} alt={`${name} icon`} />
 
               <Typography className={classes.name}>{name}</Typography>
               <DotIcon className={classes.dotIcon} />
