@@ -28,6 +28,21 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
 
+  const [plotMin, setPlotMin] = useState(0)
+  const [plotMax, setPlotMax] = useState(data[midPriceIndex].x * 3)
+
+  const zoomMinus = () => {
+    const diff = plotMax - plotMin
+    setPlotMin(plotMin - (diff / 4))
+    setPlotMax(plotMax + (diff / 4))
+  }
+
+  const zoomPlus = () => {
+    const diff = plotMax - plotMin
+    setPlotMin(plotMin + (diff / 6))
+    setPlotMax(plotMax - (diff / 6))
+  }
+
   const changeRangeHandler = (left: number, right: number) => {
     setLeftRange(left)
     setRightRange(right)
@@ -52,10 +67,13 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         <PriceRangePlot
           className={classes.plot}
           data={data}
-          currentIndex={midPriceIndex}
           onChangeRange={changeRangeHandler}
           leftRangeIndex={leftRange}
           rightRangeIndex={rightRange}
+          plotMin={plotMin}
+          plotMax={plotMax}
+          zoomMinus={zoomMinus}
+          zoomPlus={zoomPlus}
         />
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container direction='row' justifyContent='space-between' className={classes.inputs}>
@@ -102,6 +120,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 midPriceIndex / 2,
                 Math.min(3 * midPriceIndex / 2, data.length - 1)
               )
+              setPlotMin(0)
+              setPlotMax(data[midPriceIndex].x * 3)
             }}
           >
             Reset range

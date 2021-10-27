@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { ResponsiveLine } from '@nivo/line'
 // @ts-expect-error
 import { linearGradientDef } from '@nivo/core'
@@ -15,39 +15,30 @@ export interface IPriceRangePlot {
   data: Array<{ x: number; y: number }>
   leftRangeIndex: number,
   rightRangeIndex: number,
-  currentIndex: number,
   onChangeRange?: (left: number, right: number) => void
   style?: React.CSSProperties
   className?: string
   disabled?: boolean
+  plotMin: number
+  plotMax: number
+  zoomMinus: () => void
+  zoomPlus: () => void
 }
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   data,
   leftRangeIndex,
   rightRangeIndex,
-  currentIndex,
   onChangeRange,
   style,
   className,
-  disabled = false
+  disabled = false,
+  plotMin,
+  plotMax,
+  zoomMinus,
+  zoomPlus
 }) => {
   const classes = useStyles()
-
-  const [plotMin, setPlotMin] = useState(0)
-  const [plotMax, setPlotMax] = useState(data[currentIndex].x * 3)
-
-  const zoomMinus = () => {
-    const diff = plotMax - plotMin
-    setPlotMin(plotMin - (diff / 4))
-    setPlotMax(plotMax + (diff / 4))
-  }
-
-  const zoomPlus = () => {
-    const diff = plotMax - plotMin
-    setPlotMin(plotMin + (diff / 6))
-    setPlotMax(plotMax - (diff / 6))
-  }
 
   const getCurrentLessThanRange = () => {
     if (data[leftRangeIndex].x < plotMin || disabled) {
