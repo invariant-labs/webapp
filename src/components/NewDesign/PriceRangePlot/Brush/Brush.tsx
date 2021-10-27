@@ -74,28 +74,34 @@ export const Handle: React.FC<HandleProps> = ({
     }
   }
 
+  const isReversed = () => isStart
+    ? currentPosition < 30
+    : plotWidth - currentPosition < 30
+
   return (
     <>
       {
         isStart
           ? <MinHandle
             height={height}
-            x={currentPosition - 37}
+            x={!isReversed() ? currentPosition - 37 : currentPosition}
             fill={disabled ? colors.invariant.componentOut3 : colors.invariant.accent1}
             textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
+            isReversed={isReversed()}
           />
           : <MaxHandle
             height={height}
-            x={currentPosition + 2}
+            x={!isReversed() ? currentPosition : currentPosition - 37}
             fill={disabled ? colors.invariant.componentOut3 : colors.invariant.accent1}
             textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
+            isReversed={isReversed()}
           />
       }
       <rect
         className={!disabled ? classes.handle : undefined}
         ref={handleRef}
         x={
-          isStart
+          (isStart && !isReversed()) || (!isStart && isReversed())
             ? currentPosition - (drag ? plotWidth : 40)
             : currentPosition
         }
