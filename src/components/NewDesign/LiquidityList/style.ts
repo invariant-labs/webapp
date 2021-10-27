@@ -3,6 +3,7 @@ import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
+    marginTop: 65,
     width: '1100px'
   },
   header: {
@@ -12,6 +13,7 @@ const useStyles = makeStyles(() => ({
     paddingBottom: '30px'
   },
   title: {
+    color: '#FFFFFF',
     ...newTypography.heading4,
     fontWeight: 500,
     display: 'flex',

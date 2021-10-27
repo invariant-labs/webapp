@@ -53,33 +53,32 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     borderRadius: '5px'
   },
+  feeText: {
+    minWidth: '110px'
+  },
+  minText: {
+    minWidth: '175px'
+  },
+  maxText: {
+    minWidth: '175px'
+  },
 
   rangeGrid: {
     display: 'flex',
     flexDirection: 'row',
-    paddingRight: 10,
-    '& #fee': {
-      minWidth: '110px'
-    },
-    '& #min': {
-      minWidth: '175px'
-    },
-    '& #max': {
-      minWidth: '175px'
-    }
+    paddingRight: 10
   },
   button: {
     backgroundColor: colors.invariant.accent2,
     color: colors.invariant.componentOut2,
     ...newTypography.body1,
-    '&[id=active]': {
-      textTransform: 'none'
-    },
-    '&[id=closed]': {
-      backgroundColor: colors.invariant.componentOut2,
-      color: colors.invariant.lightInfoText,
-      textTransform: 'none'
-    }
+    textTransform: 'none'
+  },
+  closed: {
+    backgroundColor: colors.invariant.componentOut2,
+    color: colors.invariant.lightInfoText,
+    ...newTypography.body1,
+    textTransform: 'none'
   }
 }))
 export default useStyles

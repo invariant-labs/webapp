@@ -5,28 +5,24 @@ storiesOf('liquidityPosition/items', module)
   .add('itemActive', () => {
     return (
       <LiquidityItem
-        data={{
-          active: true,
-          name1: 'BTC',
-          name2: 'SNY',
-          min: 2149.6,
-          max: 149.6,
-          fee: 0.05
-        }}
+        active={true}
+        nameToSwap={'BTC'}
+        nameFromSwap={'SNY'}
+        min={2149.6}
+        max={149.6}
+        fee={0.05}
       />
     )
   })
   .add('itemClose', () => {
     return (
       <LiquidityItem
-        data={{
-          active: false,
-          name1: 'BTC',
-          name2: 'SNY',
-          min: 2149.6,
-          max: 149.6,
-          fee: 0.05
-        }}
+        active={false}
+        nameToSwap={'BTC'}
+        nameFromSwap={'SNY'}
+        min={2149.6}
+        max={149.6}
+        fee={0.05}
       />
     )
   })

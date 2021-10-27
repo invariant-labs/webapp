@@ -18,8 +18,6 @@ import testnet from './svg/testnet.svg'
 import dogeIcon from './svg/dogecoin.svg'
 import logo from './png/invariant-logo.png'
 import logoTitle from './svg/Logo.svg'
-import BTC from './svg/btc-ic.svg'
-import SNY from './svg/sny-ic.svg'
 import arrow from './svg/arrow.svg'
 import NoCon from './svg/no-connected.svg'
 const icons: { [key: string]: string } = {
