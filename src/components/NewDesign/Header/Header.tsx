@@ -79,7 +79,7 @@ export const Header: React.FC<IHeader> = ({
             <Button
               className={buttonClasses.headerButton}
               variant='contained'
-              classes={{ disabled: buttonClasses.disabled }}
+              classes={{ disabled: buttonClasses.disabled, label: buttonClasses.label }}
               onClick={onFaucet}>
               Faucet
             </Button>

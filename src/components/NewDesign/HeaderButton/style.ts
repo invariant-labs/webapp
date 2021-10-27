@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
     borderRadius: 10,
     textTransform: 'none',
     ...newTypography.body1,
-    fontWeight: 400,
+    lineHeight: '22px',
     height: 40,
     minWidth: 110,
 
@@ -26,6 +26,9 @@ const useStyles = makeStyles(() => ({
         transform: 'rotateX(180deg)'
       }
     }
+  },
+  label: {
+    paddingTop: 2
   },
   headerButtonConnect: {
     background: colors.invariant.violetButton,
@@ -72,14 +75,15 @@ const useStyles = makeStyles(() => ({
   },
   startIcon: {
     marginLeft: 0,
-    marginBottom: 1
+    marginBottom: 3
   },
   endIcon: {
     minWidth: 20,
     marginTop: 2
   },
   innerEndIcon: {
-    marginLeft: 0
+    marginLeft: 0,
+    marginBottom: 3
   }
 }))
 

@@ -40,7 +40,7 @@ export const SelectNetworkButton: React.FC<IProps> = ({
       <Button
         className={classes.headerButton}
         variant='contained'
-        classes={{ disabled: classes.disabled }}
+        classes={{ disabled: classes.disabled, label: classes.label }}
         disabled={disabled}
         endIcon={<KeyboardArrowDownIcon id='downIcon' />}
         onClick={handleClick}>

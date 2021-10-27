@@ -52,7 +52,8 @@ export const ChangeWalletButton: React.FC<IProps> = ({
         classes={{
           disabled: classes.disabled,
           startIcon: classes.startIcon,
-          endIcon: classes.innerEndIcon
+          endIcon: classes.innerEndIcon,
+          label: classes.label
         }}
         onClick={handleClick}
         startIcon={startIcon}
