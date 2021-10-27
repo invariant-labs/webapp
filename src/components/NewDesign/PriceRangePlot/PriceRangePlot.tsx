@@ -45,7 +45,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       return []
     }
 
-    return data.slice(Math.max(0, nearestPriceIndex(plotMin, data) - 5), Math.min(leftRangeIndex, nearestPriceIndex(plotMax, data)) + 5)
+    return data.slice(Math.max(0, nearestPriceIndex(plotMin, data) - 5), Math.min(leftRangeIndex + 1, nearestPriceIndex(plotMax, data) + 5))
   }
 
   const getCurrentRange = () => {
@@ -56,7 +56,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       return []
     }
 
-    return data.slice(Math.max(leftRangeIndex, nearestPriceIndex(plotMin, data) - 5), Math.min(rightRangeIndex, nearestPriceIndex(plotMax, data)) + 5)
+    return data.slice(Math.max(leftRangeIndex, nearestPriceIndex(plotMin, data) - 5), Math.min(rightRangeIndex + 1, nearestPriceIndex(plotMax, data) + 5))
   }
 
   const getCurrentGreaterThanRange = () => {
@@ -64,7 +64,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       return []
     }
 
-    return data.slice(Math.max(rightRangeIndex, nearestPriceIndex(plotMin, data) - 5), Math.min(data.length, nearestPriceIndex(plotMax, data)) + 5)
+    return data.slice(Math.max(rightRangeIndex, nearestPriceIndex(plotMin, data) - 5), Math.min(data.length, nearestPriceIndex(plotMax, data) + 5))
   }
 
   return (
