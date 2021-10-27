@@ -151,7 +151,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         defs={[
           linearGradientDef('gradient', [
             { offset: 0, color: 'inherit' },
-            { offset: 25, color: 'inherit' },
+            { offset: 50, color: 'inherit' },
             { offset: 100, color: 'inherit', opacity: 0 }
           ])
         ]}
