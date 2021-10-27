@@ -45,18 +45,18 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       return []
     }
 
-    return data.slice(Math.max(0, nearestPriceIndex(plotMin, data) - 1), Math.min(leftRangeIndex, nearestPriceIndex(plotMax, data)) + 1)
+    return data.slice(Math.max(0, nearestPriceIndex(plotMin, data) - 5), Math.min(leftRangeIndex, nearestPriceIndex(plotMax, data)) + 5)
   }
 
   const getCurrentRange = () => {
     if (disabled) {
-      return data.slice(Math.max(0, nearestPriceIndex(plotMin, data) - 1), Math.min(data.length, nearestPriceIndex(plotMax, data)) + 1)
+      return data.slice(Math.max(0, nearestPriceIndex(plotMin, data) - 5), Math.min(data.length, nearestPriceIndex(plotMax, data)) + 5)
     }
     if (data[leftRangeIndex].x > plotMax || data[rightRangeIndex].x < plotMin) {
       return []
     }
 
-    return data.slice(Math.max(leftRangeIndex, nearestPriceIndex(plotMin, data)), Math.min(rightRangeIndex, nearestPriceIndex(plotMax, data)) + 1)
+    return data.slice(Math.max(leftRangeIndex, nearestPriceIndex(plotMin, data) - 5), Math.min(rightRangeIndex, nearestPriceIndex(plotMax, data)) + 5)
   }
 
   const getCurrentGreaterThanRange = () => {
@@ -64,7 +64,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       return []
     }
 
-    return data.slice(Math.max(rightRangeIndex, nearestPriceIndex(plotMin, data) - 1), Math.min(data.length, nearestPriceIndex(plotMax, data)) + 1)
+    return data.slice(Math.max(rightRangeIndex, nearestPriceIndex(plotMin, data) - 5), Math.min(data.length, nearestPriceIndex(plotMax, data)) + 5)
   }
 
   return (
@@ -92,7 +92,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
             data: getCurrentGreaterThanRange()
           }
         ]}
-        curve='catmullRom'
+        curve='natural'
         margin={{ top: 25, bottom: 15 }}
         colors={[
           colors.invariant.accent1,
