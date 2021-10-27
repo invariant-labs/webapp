@@ -113,6 +113,11 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           min: plotMin,
           max: plotMax
         }}
+        yScale={{
+          type: 'linear',
+          min: 0,
+          max: Math.max(...(data.map(element => element.y)))
+        }}
         enableGridX={false}
         enableGridY={false}
         enablePoints={false}
