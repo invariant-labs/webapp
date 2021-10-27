@@ -75,8 +75,8 @@ export const Handle: React.FC<HandleProps> = ({
   }
 
   const isReversed = () => isStart
-    ? currentPosition < 30
-    : plotWidth - currentPosition < 30
+    ? currentPosition < 37
+    : plotWidth - currentPosition < 37
 
   return (
     <>
@@ -130,6 +130,7 @@ export const Brush = (
   const unitLen = innerWidth / (plotMax - plotMin)
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [reverse, setReverse] = useState(false)
+
   const start = (leftPosition >= plotMin) && (leftPosition <= plotMax)
     ? (
       <Handle
@@ -141,7 +142,9 @@ export const Brush = (
         maxPosition={((rightPosition - plotMin) * unitLen) - 0.001}
         onDrop={(position) => {
           onLeftDrop(position / innerWidth)
-          setReverse(false)
+          if (((leftPosition - plotMin) * unitLen) < 37) {
+            setReverse(false)
+          }
         }}
         isStart
         onStart={() => { setReverse(true) }}
@@ -161,7 +164,9 @@ export const Brush = (
         maxPosition={innerWidth}
         onDrop={(position) => {
           onRightDrop(position / innerWidth)
-          setReverse(true)
+          if (innerWidth - ((rightPosition - plotMin) * unitLen) < 37) {
+            setReverse(true)
+          }
         }}
         onStart={() => { setReverse(false) }}
         disabled={disabled}
