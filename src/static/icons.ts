@@ -43,8 +43,6 @@ const icons: { [key: string]: string } = {
   USD: USDIcon,
   Logo: logo,
   LogoTitle: logoTitle,
-  BTCIcon: BTC,
-  SNYIcon: SNY,
   ArrowIcon: arrow,
   NoConnected: NoCon
 }
