@@ -36,7 +36,7 @@ export const Handle: React.FC<HandleProps> = ({
 
   useEffect(() => {
     setCurrentPosition(position)
-  }, [position])
+  }, [position, drag])
 
   const startDrag: MouseEventHandler<SVGRectElement> = (event) => {
     onStart()
