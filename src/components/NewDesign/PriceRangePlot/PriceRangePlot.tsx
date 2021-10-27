@@ -130,15 +130,17 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
             data[leftRangeIndex].x,
             data[rightRangeIndex].x,
             (position) => {
+              const nearest = nearestPriceIndex(plotMin + (position * (plotMax - plotMin)), data)
               onChangeRange?.(
-                nearestPriceIndex(plotMin + (position * (plotMax - plotMin)), data),
+                nearest === rightRangeIndex ? rightRangeIndex - 1 : nearest,
                 rightRangeIndex
               )
             },
             (position) => {
+              const nearest = nearestPriceIndex(plotMin + (position * (plotMax - plotMin)), data)
               onChangeRange?.(
                 leftRangeIndex,
-                nearestPriceIndex(plotMin + (position * (plotMax - plotMin)), data)
+                nearest === leftRangeIndex ? leftRangeIndex + 1 : nearest
               )
             },
             plotMin,
