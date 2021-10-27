@@ -1,15 +1,16 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   headerButton: {
-    background: colors.invariant.headerButton,
+    background: colors.invariant.componentOut2,
     color: colors.white.main,
     paddingInline: 12,
 
     borderRadius: 10,
     textTransform: 'none',
-    ...typography.subtitle2,
+    ...newTypography.body1,
+    lineHeight: '22px',
     height: 40,
     minWidth: 110,
 
@@ -18,7 +19,7 @@ const useStyles = makeStyles(() => ({
     },
 
     '&:hover': {
-      background: colors.invariant.violetStrong
+      background: colors.invariant.componentOut3
     },
     '&:active': {
       '& #downIcon': {
@@ -26,13 +27,16 @@ const useStyles = makeStyles(() => ({
       }
     }
   },
+  label: {
+    paddingTop: 2
+  },
   headerButtonConnect: {
     background: colors.invariant.violetButton,
     color: colors.white.main,
     paddingInline: 12,
     borderRadius: 10,
     textTransform: 'none',
-    ...typography.subtitle2,
+    ...newTypography.body1,
     height: 40,
     minWidth: 110,
 
@@ -40,14 +44,27 @@ const useStyles = makeStyles(() => ({
       marginRight: 15
     },
     '&:hover': {
-      background: colors.invariant.violetStrong
+      background: colors.invariant.violetWeak
+    }
+  },
+  headerButtonConnected: {
+    background: colors.invariant.componentOut2,
+    color: colors.white.main,
+    paddingInline: 12,
+    borderRadius: 10,
+    textTransform: 'none',
+    ...newTypography.body1,
+    height: 40,
+    minWidth: 110,
+    '&:hover': {
+      background: colors.invariant.componentOut3
     }
   },
   headerButtonTextEllipsis: {
     textTransform: 'none',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    ...typography.subtitle1
+    ...newTypography.body1
   },
   disabled: {
     opacity: 0.5
@@ -58,14 +75,15 @@ const useStyles = makeStyles(() => ({
   },
   startIcon: {
     marginLeft: 0,
-    marginTop: 2
+    marginBottom: 3
   },
   endIcon: {
     minWidth: 20,
     marginTop: 2
   },
   innerEndIcon: {
-    marginLeft: 0
+    marginLeft: 0,
+    marginBottom: 3
   }
 }))
 

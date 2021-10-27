@@ -1,0 +1,22 @@
+<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="mainnet" filter="url(#filter0_d_25920)">
+<circle id="Ellipse 10" cx="11" cy="11" r="7.75" stroke="#9DD46D" stroke-width="0.5"/>
+<path id="Vector 34" d="M11 3.34778V18.6521" stroke="#9DD46D" stroke-width="0.5"/>
+<path id="Vector 35" d="M3.34766 11.3478H18.652" stroke="#9DD46D" stroke-width="0.5"/>
+<path id="Vector 36" d="M11.0006 3.34778C5.43505 5.78256 4.39143 14.826 11.0006 18.6521" stroke="#9DD46D" stroke-width="0.5"/>
+<path id="Vector 37" d="M11.3475 3.34778C16.9131 5.78256 17.9567 14.826 11.3475 18.6521" stroke="#9DD46D" stroke-width="0.5"/>
+<path id="Vector 38" d="M16.5654 16.5652C13.0872 13.7826 8.91326 13.7826 5.43499 16.2174" stroke="#9DD46D" stroke-width="0.5"/>
+<path id="Vector 39" d="M5.78271 5.78265C9.26098 8.56529 13.4349 8.56529 16.9131 6.13054" stroke="#9DD46D" stroke-width="0.5"/>
+</g>
+<defs>
+<filter id="filter0_d_25920" x="0" y="0" width="22" height="22" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.738349 0 0 0 0 1 0 0 0 0 0.51 0 0 0 0.8 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_25:920"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_25:920" result="shape"/>
+</filter>
+</defs>
+</svg>
