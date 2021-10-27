@@ -101,12 +101,16 @@ export const Handle: React.FC<HandleProps> = ({
         className={!disabled ? classes.handle : undefined}
         ref={handleRef}
         x={
-          (isStart && !isReversed()) || (!isStart && isReversed())
-            ? currentPosition - (drag ? plotWidth : 40)
-            : currentPosition
+          drag
+            ? 0
+            : (
+              (isStart && !isReversed()) || (!isStart && isReversed())
+                ? currentPosition - 40
+                : currentPosition
+            )
         }
         y={0}
-        width={drag ? (2 * plotWidth) + 2 : 42}
+        width={drag ? plotWidth : 42}
         height={height}
         onMouseDown={!disabled ? startDrag : undefined}
         onMouseUp={!disabled ? endDrag : undefined}

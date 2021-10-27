@@ -112,7 +112,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
             data: getCurrentGreaterThanRange()
           }
         ]}
-        curve='monotoneX'
+        curve='catmullRom'
         margin={{ top: 25, bottom: 15 }}
         colors={[
           colors.invariant.accent1,
