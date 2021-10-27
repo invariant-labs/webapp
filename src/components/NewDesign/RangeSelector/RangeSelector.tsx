@@ -58,7 +58,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       midPriceIndex / 2,
       Math.min(3 * midPriceIndex / 2, data.length - 1)
     )
-  }, [data])
+  }, [tokenFromSymbol, tokenToSymbol])
 
   return (
     <Grid container className={classes.wrapper}>
