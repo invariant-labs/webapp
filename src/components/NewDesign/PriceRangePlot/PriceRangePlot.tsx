@@ -9,6 +9,7 @@ import ZoomInIcon from '@static/svg/zoom-in-icon.svg'
 import ZoomOutIcon from '@static/svg/zoom-out-icon.svg'
 import Brush from './Brush/Brush'
 import useStyles from './style'
+import { nearestPriceIndex } from '@consts/utils'
 
 export interface IPriceRangePlot {
   data: Array<{ x: number; y: number }>
@@ -36,18 +37,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   const [plotMin, setPlotMin] = useState(0)
   const [plotMax, setPlotMax] = useState(data[currentIndex].x * 3)
 
-  const nearestPriceIndex = (price: number) => {
-    let nearest = 0
-
-    for (let i = 1; i < data.length; i++) {
-      if (Math.abs(data[i].x - price) < Math.abs(data[nearest].x - price)) {
-        nearest = i
-      }
-    }
-
-    return nearest
-  }
-
   const zoomMinus = () => {
     const diff = plotMax - plotMin
     setPlotMin(plotMin - (diff / 4))
@@ -65,18 +54,18 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       return []
     }
 
-    return data.slice(Math.max(0, nearestPriceIndex(plotMin) - 1), Math.min(leftRangeIndex, nearestPriceIndex(plotMax)) + 1)
+    return data.slice(Math.max(0, nearestPriceIndex(plotMin, data) - 1), Math.min(leftRangeIndex, nearestPriceIndex(plotMax, data)) + 1)
   }
 
   const getCurrentRange = () => {
     if (disabled) {
-      return data.slice(Math.max(0, nearestPriceIndex(plotMin) - 1), Math.min(data.length, nearestPriceIndex(plotMax)) + 1)
+      return data.slice(Math.max(0, nearestPriceIndex(plotMin, data) - 1), Math.min(data.length, nearestPriceIndex(plotMax, data)) + 1)
     }
     if (data[leftRangeIndex].x > plotMax || data[rightRangeIndex].x < plotMin) {
       return []
     }
 
-    return data.slice(Math.max(leftRangeIndex, nearestPriceIndex(plotMin)), Math.min(rightRangeIndex, nearestPriceIndex(plotMax)) + 1)
+    return data.slice(Math.max(leftRangeIndex, nearestPriceIndex(plotMin, data)), Math.min(rightRangeIndex, nearestPriceIndex(plotMax, data)) + 1)
   }
 
   const getCurrentGreaterThanRange = () => {
@@ -84,7 +73,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       return []
     }
 
-    return data.slice(Math.max(rightRangeIndex, nearestPriceIndex(plotMin) - 1), Math.min(data.length, nearestPriceIndex(plotMax)) + 1)
+    return data.slice(Math.max(rightRangeIndex, nearestPriceIndex(plotMin, data) - 1), Math.min(data.length, nearestPriceIndex(plotMax, data)) + 1)
   }
 
   return (
@@ -151,14 +140,14 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
             data[rightRangeIndex].x,
             (position) => {
               onChangeRange?.(
-                nearestPriceIndex(plotMin + (position * (plotMax - plotMin))),
+                nearestPriceIndex(plotMin + (position * (plotMax - plotMin)), data),
                 rightRangeIndex
               )
             },
             (position) => {
               onChangeRange?.(
                 leftRangeIndex,
-                nearestPriceIndex(plotMin + (position * (plotMax - plotMin)))
+                nearestPriceIndex(plotMin + (position * (plotMax - plotMin)), data)
               )
             },
             plotMin,

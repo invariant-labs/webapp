@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import PriceRangePlot from '@components/NewDesign/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/NewDesign/RangeInput/RangeInput'
 import useStyles from './style'
+import { nearestPriceIndex } from '@consts/utils'
 
 export interface IRangeSelector {
   data: Array<{ x: number; y: number }>
@@ -44,18 +45,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     )
   }, [data])
 
-  const nearestPriceIndex = (price: number) => {
-    let nearest = 0
-
-    for (let i = 1; i < data.length; i++) {
-      if (Math.abs(data[i].x - price) < Math.abs(data[nearest].x - price)) {
-        nearest = i
-      }
-    }
-
-    return nearest
-  }
-
   return (
     <Grid container className={classes.wrapper}>
       <Typography className={classes.header}>Price range</Typography>
@@ -84,7 +73,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               changeRangeHandler(Math.min(rightRange - 1, leftRange + 1), rightRange)
             }}
             onBlur={() => {
-              changeRangeHandler(Math.min(rightRange - 1, nearestPriceIndex(+leftInput)), rightRange)
+              changeRangeHandler(Math.min(rightRange - 1, nearestPriceIndex(+leftInput, data)), rightRange)
             }}
           />
           <RangeInput
@@ -101,7 +90,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               changeRangeHandler(leftRange, Math.min(data.length - 1, rightRange + 1))
             }}
             onBlur={() => {
-              changeRangeHandler(leftRange, Math.max(leftRange + 1, nearestPriceIndex(+rightInput)))
+              changeRangeHandler(leftRange, Math.max(leftRange + 1, nearestPriceIndex(+rightInput, data)))
             }}
           />
         </Grid>
