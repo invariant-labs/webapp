@@ -1,0 +1,19 @@
+<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="devnet" filter="url(#filter0_d_25928)">
+<circle id="Ellipse 11" cx="11" cy="11" r="7.75" stroke="#9DD46D" stroke-width="0.5"/>
+<path id="Vector 40" d="M8.56532 8.56519L5.78271 11.3478L8.56532 14.1304" stroke="#9DD46D" stroke-width="0.5"/>
+<path id="Vector 41" d="M13.4347 8.56519L16.2173 11.3478L13.4347 14.1304" stroke="#9DD46D" stroke-width="0.5"/>
+<path id="Vector 42" d="M12.0437 7.17395L9.60889 15.5218" stroke="#9DD46D" stroke-width="0.5"/>
+</g>
+<defs>
+<filter id="filter0_d_25928" x="0" y="0" width="22" height="22" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.738349 0 0 0 0 1 0 0 0 0 0.51 0 0 0 0.8 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_25:928"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_25:928" result="shape"/>
+</filter>
+</defs>
+</svg>
