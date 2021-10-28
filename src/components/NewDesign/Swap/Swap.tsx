@@ -73,11 +73,9 @@ export const Swap: React.FC<ISwap> = ({
   useEffect(() => {
     updateEstimatedAmount()
 
-    if (tokenFromIndex !== null && tokenToIndex === null) {
+    if ((tokenFromIndex !== null && tokenToIndex === null)) {
       setAmountFrom('0.000000')
     }
-    console.log('token From', tokenFromIndex)
-    console.log('token To', tokenToIndex)
   }, [tokenToIndex, tokenFromIndex])
 
   useEffect(() => {
@@ -166,7 +164,7 @@ export const Swap: React.FC<ISwap> = ({
       <Box className={classes.tokenComponentTextContainer}>
         <Typography className={classes.tokenComponentText}>Est.: </Typography>
         <Typography className={classes.tokenComponentText}>
-          Balance: {tokenFromIndex !== null
+          Balance: {tokenFromIndex !== null && tokenToIndex !== null
             ? swap
               ? printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal)
               : printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal) : '0'}
@@ -184,11 +182,16 @@ export const Swap: React.FC<ISwap> = ({
         }}
         placeholder={'0.0'}
         onMaxClick={() => {
-          if (tokenFromIndex !== null) {
-            setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
-            updateEstimatedAmount(
-              printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal)
-            )
+          if (tokenToIndex !== null && tokenFromIndex !== null) {
+            if (swap) {
+              setAmountTo(printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal))
+              updateFromEstimatedAmount(
+                printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal)
+              )
+            } else {
+              setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+            }
           }
         }}
         tokens={tokens.map(({ symbol, balance, decimal }) => ({
@@ -213,7 +216,7 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
         <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
         <Typography className={classes.tokenComponentText}>
-          Balance: {tokenToIndex !== null
+          Balance: {tokenToIndex !== null && tokenFromIndex !== null
             ? swap
               ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal)
               : printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal) : '0'}
@@ -230,11 +233,16 @@ export const Swap: React.FC<ISwap> = ({
         }}
         placeholder={'0.0'}
         onMaxClick={() => {
-          if (tokenToIndex !== null) {
-            setAmountTo(printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal))
-            updateFromEstimatedAmount(
-              printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal)
-            )
+          if (tokenToIndex !== null && tokenFromIndex !== null) {
+            if (swap) {
+              setAmountTo(printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal))
+              updateFromEstimatedAmount(
+                printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal)
+              )
+            } else {
+              setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+            }
           }
         }}
         tokens={tokens.map(({ symbol, balance, decimal }) => ({

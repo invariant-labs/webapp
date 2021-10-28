@@ -52,7 +52,7 @@ tokens[0].balance = new BN(100).mul(new BN(34786))
 tokens[0].assetAddress = new PublicKey('35P5P6ZGKUN6wqxrX4VdLRrGbzkrfvhyNs4iqk1vDxAx')
 tokens[1].assetAddress = new PublicKey('CYPdUAp8KshzJ2a45kzgy3fr4UTiyrEGE998rA7wzFR6')
 tokens[2].assetAddress = new PublicKey('23AQ2kRxqT1fk47q6G8YcKrpx4VhWeUvKHuRijT61qSD')
-tokens[1].balance = new BN(10).mul(new BN(126))
+tokens[1].balance = new BN(100).mul(new BN(126))
 tokens[2].balance = new BN(10).mul(new BN(5342))
 
 storiesOf('newUi/swap', module)
