@@ -4,7 +4,7 @@ import React from 'react'
 import { SinglePositionDetails } from './SinglePositionDetails'
 
 storiesOf('singlePosition/leftComponent', module).add('closed', () => (
-  <Grid style={{ background: '#1C1B1E', width: '520px' }}>
+  <Grid style={{ background: '#1C1B1E', width: '540px', height: '500px', padding: '20px' }}>
     <SinglePositionDetails
       data={{
         active: true,

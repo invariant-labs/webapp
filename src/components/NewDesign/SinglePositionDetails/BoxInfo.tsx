@@ -12,8 +12,11 @@ export const BoxInfo: React.FC<{
   const classes = useStyles()
   return (
     <Grid className={classes.boxInfo}>
-      <Typography> {title}</Typography>
-      <AnimatedNumber value={value} />
+      <Typography className={classes.title}> {title}</Typography>
+      <Grid container>
+        <Typography className={classes.titleValue}>$</Typography>
+        <AnimatedNumber className={classes.titleValue} value={value} duration={500} />
+      </Grid>
       <Grid className={classes.tokenGrid}>
         <Grid className={classes.tokenArea}>
           <Grid className={classes.token}>

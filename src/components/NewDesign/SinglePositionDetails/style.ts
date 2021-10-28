@@ -72,8 +72,12 @@ const useStyles = makeStyles(() => ({
     width: '16px'
   },
   boxInfo: {
-    color: colors.invariant.componentIn2,
-    borderRadius: '8px'
+    backgroundColor: colors.invariant.componentIn2,
+    borderRadius: '8px',
+    padding: 20,
+    '&:not(:last-child)': {
+      marginBottom: 24
+    }
   },
   title: {
     ...newTypography.body1,
@@ -81,30 +85,42 @@ const useStyles = makeStyles(() => ({
   },
   titleValue: {
     ...newTypography.heading3,
-    color: colors.white.main
+    color: colors.white.main,
+    fontFamily: 'Mukta'
   },
   tokenGrid: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    paddingTop: 10
   },
   tokenArea: {
     backgroundColor: colors.invariant.componentOut2,
     borderRadius: '5px',
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    '&:not(:last-child)': {
+      marginRight: 20
+    }
   },
   token: {
     backgroundColor: colors.invariant.componentOut3,
     borderRadius: '5px',
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    padding: '6px 10px'
   },
   tokenName: {
     color: colors.invariant.lightInfoText
   },
   tokenValue: {
-    color: colors.white.main
+    color: colors.white.main,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: 15
   }
 }))
 
