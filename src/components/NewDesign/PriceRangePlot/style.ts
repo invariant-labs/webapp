@@ -33,8 +33,8 @@ const useStyles = makeStyles(() => ({
   },
   zoomButtonsWrapper: {
     position: 'absolute',
-    top: 10,
-    right: 10,
+    top: 0,
+    right: 0,
     maxWidth: 21,
     height: 42,
     zIndex: 10
