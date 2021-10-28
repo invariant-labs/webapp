@@ -92,8 +92,6 @@ export const colors = {
     yellowGray: '#919575',
     yellowWeak: '#abc35a',
     yellowStrong: '#c3f43e',
-    headerButton: '#34303B',
-    background: '#171717',
     logoGreen: '#9CE75A',
     logoPurple: '#7748D8',
     background2: '#0B090D',
@@ -222,7 +220,7 @@ export const newTypography = {
   },
   body2: {
     fontSize: 16,
-    lineHeight: '35px',
+    lineHeight: '28px',
     fontWeight: 400
   },
   body3: {

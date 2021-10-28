@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
+import { colors } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -19,7 +20,11 @@ const useStyles = makeStyles(() => ({
   connectedWalletIcon: {
     minWidth: 21,
     height: 21,
-    marginRight: 0
+    marginRight: 0,
+    color: colors.invariant.accent2,
+    '& >circle': {
+      boxShadow: '0px 0px 10px rgba(157, 212, 109, 0.5)'
+    }
   },
 
   left: {
