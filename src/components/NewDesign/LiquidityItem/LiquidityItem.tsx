@@ -3,9 +3,8 @@ import React from 'react'
 import icons from '@static/icons'
 import SuccessIcon from '@material-ui/icons/CheckCircleOutlineOutlined'
 import FailedIcon from '@material-ui/icons/HighlightOffOutlined'
-import useStyle from './style'
 import classNames from 'classnames'
-
+import useStyle from './style'
 interface ILiquidityItem {
   active: boolean
   nameToSwap: string
@@ -61,17 +60,12 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
           </Typography>
         </Grid>
         <Grid
-          {...(active
-            ? { className: classNames(classes.activeText, classes.greenArea) }
-            : {
-                className: classNames(classes.rangeGrid, classes.closedText)
-              })}>
-          <Typography
-            {...(active
-              ? { className: classes.greenTextArea }
-              : {
-                  className: classes.text
-                })}>
+          className={
+            active
+              ? classNames(classes.activeText, classes.greenArea)
+              : classNames(classes.rangeGrid, classes.closedText)
+          }>
+          <Typography className={active ? classes.greenTextArea : classes.text}>
             {active ? (
               <>
                 <SuccessIcon className={classes.iconText} /> Active

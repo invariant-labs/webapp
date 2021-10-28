@@ -190,12 +190,12 @@ export const typography = {
 export const newTypography = {
   heading1: {
     fontSize: 30,
-    lineHeight: '49px',
+    lineHeight: '50px',
     fontWeight: 700
   },
   heading2: {
     fontSize: 30,
-    lineHeight: '49px',
+    lineHeight: '50px',
     fontWeight: 400
   },
   heading3: {

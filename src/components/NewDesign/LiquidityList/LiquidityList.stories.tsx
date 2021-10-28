@@ -3,6 +3,9 @@ import { storiesOf } from '@storybook/react'
 import { LiquidityList } from './LiquidityList'
 import { Grid } from '@material-ui/core'
 storiesOf('liquidityPosition/list', module).add('default', () => {
+  const handleClick = () => {
+    console.log('actionButton add Position')
+  }
   return (
     <Grid style={{ backgroundColor: '#1C1B1E', justifyContent: 'center', display: 'flex' }}>
       <LiquidityList
@@ -40,6 +43,7 @@ storiesOf('liquidityPosition/list', module).add('default', () => {
             fee: 0.05
           }
         ]}
+        handleClick={handleClick}
       />
     </Grid>
   )

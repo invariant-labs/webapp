@@ -14,12 +14,10 @@ interface ILiquidityItem {
 }
 interface IProp {
   data: ILiquidityItem[]
+  handleClick: () => void
 }
 
-const handleClick = () => {
-  console.log('actionButton add Position')
-}
-export const LiquidityList: React.FC<IProp> = ({ data }) => {
+export const LiquidityList: React.FC<IProp> = ({ data, handleClick }) => {
   const classes = useStyle()
   return (
     <Grid className={classes.root}>

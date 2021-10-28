@@ -5,7 +5,7 @@ const useStyles = makeStyles(() => ({
   root: {
     background: colors.invariant.componentOut1,
     borderRadius: '10px',
-    padding: '20px 17px',
+    padding: '15px 17px',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
