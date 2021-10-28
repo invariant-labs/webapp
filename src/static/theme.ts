@@ -38,7 +38,7 @@ export const colors = {
     light: '#9DA0AE', // v2.0 text
     mid: '#4C4C67', // v2.0
     upperMid: '#343446', // v2.0
-    dark: '#1E202E', // v2.0 background
+    dark: '#1E202E', // v2.0 backgrounds
     background: '#1C1C29', // v2.0
     component: '#272735' // v2.0
   },
@@ -190,12 +190,12 @@ export const typography = {
 export const newTypography = {
   heading1: {
     fontSize: 30,
-    lineHeight: '49px',
+    lineHeight: '50px',
     fontWeight: 700
   },
   heading2: {
     fontSize: 30,
-    lineHeight: '49px',
+    lineHeight: '50px',
     fontWeight: 400
   },
   heading3: {
