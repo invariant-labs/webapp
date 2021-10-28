@@ -43,6 +43,7 @@ const useStyles = makeStyles(() => ({
     borderBlock: `1px solid ${colors.invariant.componentOut2}`,
     backgroundColor: colors.invariant.componentIn1,
     height: 30,
+    paddingInline: 5,
 
     '& $input': {
       textAlign: 'center'

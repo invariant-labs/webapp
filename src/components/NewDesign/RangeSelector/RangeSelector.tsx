@@ -32,15 +32,19 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [plotMax, setPlotMax] = useState(data[midPriceIndex].x * 2)
 
   const zoomMinus = () => {
-    const diff = plotMax - plotMin
-    setPlotMin(plotMin - (diff / 4))
-    setPlotMax(plotMax + (diff / 4))
+    if (plotMax <= data[data.length - 1].x) {
+      const diff = plotMax - plotMin
+      setPlotMin(plotMin - (diff / 4))
+      setPlotMax(plotMax + (diff / 4))
+    }
   }
 
   const zoomPlus = () => {
     const diff = plotMax - plotMin
-    setPlotMin(plotMin + (diff / 6))
-    setPlotMax(plotMax - (diff / 6))
+    if (data.length >= 2 && diff >= data[2].x - data[1].x) {
+      setPlotMin(plotMin + (diff / 6))
+      setPlotMax(plotMax - (diff / 6))
+    }
   }
 
   const changeRangeHandler = (left: number, right: number) => {
