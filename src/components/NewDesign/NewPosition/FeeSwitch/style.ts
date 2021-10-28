@@ -10,10 +10,15 @@ export const useStyles = makeStyles(() => ({
 }))
 
 export const useTabsStyles = makeStyles(() => ({
-  root: { overflow: 'visible' },
+  root: {
+    overflow: 'visible',
+    padding: 8,
+    height: 28,
+    minHeight: 28
+  },
   indicator: {
-    height: '100%',
-    borderRadius: 10,
+    height: 28,
+    borderRadius: 3,
     backgroundColor: colors.invariant.componentOut2
   },
   scrollable: {
@@ -23,15 +28,16 @@ export const useTabsStyles = makeStyles(() => ({
     color: 'white'
   },
   flexContainer: {
-    justifyContent: 'space-around'
+    justifyContent: 'space-between'
   }
 }))
 
 export const useSingleTabStyles = makeStyles(() => ({
   root: {
     zIndex: 1,
-    textTransform: 'capitalize',
+    textTransform: 'none',
     ...newTypography.body2,
+    height: 28,
     minHeight: 28,
     minWidth: 101,
     color: colors.invariant.componentOut3,

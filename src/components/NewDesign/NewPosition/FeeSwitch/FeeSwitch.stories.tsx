@@ -2,11 +2,12 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import FeeSwitch from './FeeSwitch'
 
-storiesOf('stats/rangeInput', module).add('default', () => {
+storiesOf('position/feeSwitch', module).add('default', () => {
   return (
     <div style={{
       backgroundColor: '#000000',
-      paddingBlock: 20
+      padding: 20,
+      width: 400
     }}>
       <FeeSwitch
         setFeeValue={(val) => { console.log(val) }}
