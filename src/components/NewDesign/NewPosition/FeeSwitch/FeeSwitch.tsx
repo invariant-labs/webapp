@@ -22,18 +22,16 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({ setFeeValue }) => {
   }
 
   return (
-    <Grid>
-      <Grid>
-        <Tabs
-          value={current}
-          onChange={handleChange}
-          variant='scrollable'
-          scrollButtons='off'
-          TabIndicatorProps={{ children: <span /> }}
-          classes={tabsClasses}>
-          {feeTiers.map((tier) => <Tab disableRipple label={`${tier}% fee`} classes={singleTabClasses} />)}
-        </Tabs>
-      </Grid>
+    <Grid className={classes.wrapper}>
+      <Tabs
+        value={current}
+        onChange={handleChange}
+        variant='scrollable'
+        scrollButtons='off'
+        TabIndicatorProps={{ children: <span /> }}
+        classes={tabsClasses}>
+        {feeTiers.map((tier) => <Tab disableRipple label={`${tier}% fee`} classes={singleTabClasses} />)}
+      </Tabs>
     </Grid>
   )
 }
