@@ -18,6 +18,7 @@ import testnet from './svg/testnet.svg'
 import dogeIcon from './svg/dogecoin.svg'
 import logo from './png/invariant-logo.png'
 import logoTitle from './svg/Logo.svg'
+import arrow from './svg/arrow.svg'
 import mainnetIcon from './svg/mainNet.svg'
 import devnetIcon from './svg/devNet.svg'
 import testnetIcon from './svg/testNet.svg'
@@ -42,6 +43,7 @@ const icons: { [key: string]: string } = {
   USD: USDIcon,
   Logo: logo,
   LogoTitle: logoTitle,
+  ArrowIcon: arrow,
   MainnetIcon: mainnetIcon,
   DevnetIcon: devnetIcon,
   TestnetIcon: testnetIcon
