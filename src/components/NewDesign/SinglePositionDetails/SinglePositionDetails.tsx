@@ -3,7 +3,9 @@ import icons from '@static/icons'
 import classNames from 'classnames'
 import React from 'react'
 import FailedIcon from '@material-ui/icons/HighlightOffOutlined'
+
 import useStyles from './style'
+import { BoxInfo } from './BoxInfo'
 interface ILiquidityItem {
   active: boolean
   nameToSwap: string
@@ -17,6 +19,7 @@ interface IProp {
   liquidity: number
   unclaimedFee: number
 }
+
 export const SinglePositionDetails: React.FC<IProp> = ({ data, liquidity, unclaimedFee }) => {
   const classes = useStyles()
   return (
@@ -30,22 +33,43 @@ export const SinglePositionDetails: React.FC<IProp> = ({ data, liquidity, unclai
             src={icons[`${data.nameFromSwap}`]}
             alt={data.nameFromSwap}
           />
+          <Grid className={classes.namesGrid}>
+            <Typography className={classes.name}>{data.nameToSwap}</Typography>
+            <Typography id='pause' className={classes.name}>
+              -
+            </Typography>
+            <Typography className={classes.name}>{data.nameFromSwap}</Typography>
+          </Grid>
         </Grid>
+
         <Grid className={classes.headerText}>
           <Grid className={classes.rangeGrid}>
             <Typography className={classNames(classes.text, classes.feeText)}>
               {data.fee}% fee
             </Typography>
           </Grid>
-          <Grid className={classes.rangeGrid}>
-            <Typography className={classNames(classes.text, classes.closedText)}>
+          <Grid className={classNames(classes.rangeGrid, classes.closedText)}>
+            <Typography className={classes.text}>
               <FailedIcon />
               Closed
             </Typography>
           </Grid>
         </Grid>
       </Grid>
-      <Grid></Grid>
+      <Grid className={classes.bottomGrid}>
+        <BoxInfo
+          title={'Liquidity'}
+          value={liquidity}
+          nameToSwap={data.nameToSwap}
+          nameFromSwap={data.nameFromSwap}
+        />
+        <BoxInfo
+          title={'Unclaimed fees'}
+          value={unclaimedFee}
+          nameToSwap={data.nameToSwap}
+          nameFromSwap={data.nameFromSwap}
+        />
+      </Grid>
     </Grid>
   )
 }
