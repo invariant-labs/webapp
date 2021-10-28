@@ -14,14 +14,12 @@ interface ILiquidityItem {
 }
 interface IProp {
   data: ILiquidityItem[]
-  actionMin: () => void
-  actionMax: () => void
 }
 
 const handleClick = () => {
   console.log('actionButton add Position')
 }
-export const LiquidityList: React.FC<IProp> = ({ data, actionMin, actionMax }) => {
+export const LiquidityList: React.FC<IProp> = ({ data }) => {
   const classes = useStyle()
   return (
     <Grid className={classes.root}>
@@ -37,7 +35,7 @@ export const LiquidityList: React.FC<IProp> = ({ data, actionMin, actionMax }) =
       </Grid>
       <Grid>
         {data.map(element => (
-          <LiquidityItem data={element} actionMin={actionMin} actionMax={actionMax} />
+          <LiquidityItem {...element} />
         ))}
       </Grid>
     </Grid>

@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
   },
   name: {
     ...newTypography.heading1,
-    color: '#FFFFFF'
+    color: colors.white.main
   },
   leftGrid: {
     display: 'flex',
@@ -42,7 +42,8 @@ const useStyles = makeStyles(() => ({
   rightGrid: {
     display: 'flex',
     flexDirection: 'row',
-    padding: '3px 0'
+    padding: '3px 0',
+    alignItems: 'center'
   },
   text: {
     ...newTypography.body1,
@@ -51,7 +52,9 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: '5px'
+    borderRadius: '5px',
+    maxHeight: 35,
+    padding: '4px 16px 3px 16px'
   },
   feeText: {
     minWidth: '110px'
@@ -63,22 +66,44 @@ const useStyles = makeStyles(() => ({
     minWidth: '175px'
   },
 
+  activeText: {
+    width: '100px',
+    paddingLeft: 0,
+    paddingRight: 0
+  },
+
   rangeGrid: {
     display: 'flex',
     flexDirection: 'row',
     paddingRight: 10
   },
-  button: {
+  closedText: {
+    width: '100px',
+    paddingRight: 0
+  },
+  greenArea: {
     backgroundColor: colors.invariant.accent2,
+    minWidth: '60px',
+    borderRadius: '5px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    maxHeight: 35,
+    padding: '3px 0'
+  },
+  greenTextArea: {
     color: colors.invariant.componentOut2,
     ...newTypography.body1,
-    textTransform: 'none'
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
-  closed: {
-    backgroundColor: colors.invariant.componentOut2,
-    color: colors.invariant.lightInfoText,
-    ...newTypography.body1,
-    textTransform: 'none'
+
+  iconText: {
+    paddingRight: 10,
+    width: 19,
+    height: 19
   }
 }))
 export default useStyles

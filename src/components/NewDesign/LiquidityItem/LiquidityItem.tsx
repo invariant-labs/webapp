@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import React from 'react'
 import icons from '@static/icons'
 import SuccessIcon from '@material-ui/icons/CheckCircleOutlineOutlined'
@@ -14,65 +14,75 @@ interface ILiquidityItem {
   min: number
   max: number
 }
-interface IProp {
-  data: ILiquidityItem
-  actionMin: () => void
-  actionMax: () => void
-}
-export const LiquidityItem: React.FC<IProp> = ({ data, actionMax, actionMin }) => {
+export const LiquidityItem: React.FC<ILiquidityItem> = ({
+  active,
+  nameToSwap,
+  nameFromSwap,
+  fee,
+  min,
+  max
+}) => {
   const classes = useStyle()
   return (
     <Grid className={classes.root}>
       <Grid className={classes.leftGrid}>
         <Grid className={classes.iconsGrid}>
-          <img className={classes.icon} src={icons[`${data.nameToSwap}`]} alt={data.nameToSwap} />
+          <img className={classes.icon} src={icons[`${nameToSwap}`]} alt={nameToSwap} />
           <img className={classes.arrowIcon} src={icons.ArrowIcon} alt={'Arrow'} />
-          <img
-            className={classes.icon}
-            src={icons[`${data.nameFromSwap}`]}
-            alt={data.nameFromSwap}
-          />
+          <img className={classes.icon} src={icons[`${nameFromSwap}`]} alt={nameFromSwap} />
         </Grid>
         <Grid className={classes.namesGrid}>
-          <Typography className={classes.name}>{data.nameToSwap}</Typography>
+          <Typography className={classes.name}>{nameToSwap}</Typography>
           <Typography id='pause' className={classes.name}>
             -
           </Typography>
-          <Typography className={classes.name}>{data.nameFromSwap}</Typography>
+          <Typography className={classes.name}>{nameFromSwap}</Typography>
         </Grid>
       </Grid>
       <Grid className={classes.rightGrid}>
         <Grid className={classes.rangeGrid}>
-          <Typography className={classNames(classes.text, classes.feeText)}>
-            {data.fee}% fee
-          </Typography>
+          <Typography className={classNames(classes.text, classes.feeText)}>{fee}% fee</Typography>
         </Grid>
         <Grid className={classes.rangeGrid}>
-          <Button className={classes.button} variant='contained' onClick={actionMin}>
-            MIN
-          </Button>
+          <Grid className={classes.greenArea}>
+            <Typography className={classes.greenTextArea}>MIN</Typography>
+          </Grid>
+
           <Typography className={classNames(classes.text, classes.minText)}>
-            {data.min} SNY per xUSD
+            {min} SNY per xUSD
           </Typography>
         </Grid>
         <Grid className={classes.rangeGrid}>
-          <Button className={classes.button} variant='contained' onClick={actionMax}>
-            MAX
-          </Button>
+          <Grid className={classes.greenArea}>
+            <Typography className={classes.greenTextArea}>MAX</Typography>
+          </Grid>
           <Typography className={classNames(classes.text, classes.maxText)}>
-            {data.max} SNY per xUSD
+            {max} SNY per xUSD
           </Typography>
         </Grid>
-        <Button
-          {...(data.active
-            ? { className: classes.button, startIcon: <SuccessIcon /> }
+        <Grid
+          {...(active
+            ? { className: classNames(classes.activeText, classes.greenArea) }
             : {
-                className: classes.closed,
-                startIcon: <FailedIcon />
-              })}
-          variant='contained'>
-          {data.active ? 'Active' : 'Closed'}
-        </Button>
+                className: classNames(classes.rangeGrid, classes.closedText)
+              })}>
+          <Typography
+            {...(active
+              ? { className: classes.greenTextArea }
+              : {
+                  className: classes.text
+                })}>
+            {active ? (
+              <>
+                <SuccessIcon className={classes.iconText} /> Active
+              </>
+            ) : (
+              <>
+                <FailedIcon className={classes.iconText} /> Closed
+              </>
+            )}
+          </Typography>
+        </Grid>
       </Grid>
     </Grid>
   )

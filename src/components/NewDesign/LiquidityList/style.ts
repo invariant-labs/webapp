@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
     paddingBottom: '30px'
   },
   title: {
-    color: '#FFFFFF',
+    color: colors.white.main,
     ...newTypography.heading4,
     fontWeight: 500,
     display: 'flex',
@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center'
   },
   button: {
-    color: '#FFFFFF',
+    color: colors.white.main,
     ...newTypography.body1,
     textTransform: 'none',
     background: colors.invariant.accent1,

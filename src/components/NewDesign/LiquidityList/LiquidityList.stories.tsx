@@ -40,8 +40,6 @@ storiesOf('liquidityPosition/list', module).add('default', () => {
             fee: 0.05
           }
         ]}
-        actionMin={() => console.log('clicked min button')}
-        actionMax={() => console.log('clicked max button')}
       />
     </Grid>
   )
