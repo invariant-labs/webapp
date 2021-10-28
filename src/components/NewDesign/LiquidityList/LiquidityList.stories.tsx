@@ -43,7 +43,7 @@ storiesOf('liquidityPosition/list', module).add('default', () => {
             fee: 0.05
           }
         ]}
-        handleClick={handleClick}
+        onAddPositionClick={handleClick}
       />
     </Grid>
   )

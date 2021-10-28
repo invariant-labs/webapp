@@ -14,10 +14,10 @@ interface ILiquidityItem {
 }
 interface IProp {
   data: ILiquidityItem[]
-  handleClick: () => void
+  onAddPositionClick: () => void
 }
 
-export const LiquidityList: React.FC<IProp> = ({ data, handleClick }) => {
+export const LiquidityList: React.FC<IProp> = ({ data, onAddPositionClick }) => {
   const classes = useStyle()
   return (
     <Grid className={classes.root}>
@@ -27,7 +27,7 @@ export const LiquidityList: React.FC<IProp> = ({ data, handleClick }) => {
           className={classes.button}
           variant='contained'
           startIcon={<AddIcon />}
-          onClick={handleClick}>
+          onClick={onAddPositionClick}>
           Add Position
         </Button>
       </Grid>
