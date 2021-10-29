@@ -24,7 +24,8 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     borderRadius: '5px',
     maxHeight: 35,
-    padding: '4px 16px 3px 16px'
+    padding: '4px 0px 3px 0px',
+    width: '100%'
   },
   rangeGrid: {
     display: 'flex',
@@ -39,7 +40,8 @@ const useStyles = makeStyles(() => ({
   headerText: {
     display: 'flex',
     flexDirection: 'row',
-    paddingTop: '3px'
+    paddingTop: '3px',
+    alignItems: 'center'
   },
   feeText: {
     minWidth: '110px'
@@ -69,7 +71,8 @@ const useStyles = makeStyles(() => ({
     borderRadius: '10px'
   },
   iconSmall: {
-    width: '16px'
+    width: '16px',
+    marginRight: 5
   },
   boxInfo: {
     backgroundColor: colors.invariant.componentIn2,
@@ -87,6 +90,18 @@ const useStyles = makeStyles(() => ({
     ...newTypography.heading3,
     color: colors.white.main,
     fontFamily: 'Mukta'
+  },
+  violetButton: {
+    backgroundColor: colors.invariant.accent1,
+    borderRadius: '5px',
+    textTransform: 'none',
+    color: colors.white.main,
+    minWidth: 140,
+    maxHeight: '35px',
+    ...newTypography.body1,
+    '&:hover': {
+      background: colors.invariant.componentOut3
+    }
   },
   tokenGrid: {
     display: 'flex',
@@ -110,17 +125,30 @@ const useStyles = makeStyles(() => ({
     borderRadius: '5px',
     display: 'flex',
     flexDirection: 'row',
-    padding: '6px 10px'
+    padding: '3px 12px'
   },
   tokenName: {
-    color: colors.invariant.lightInfoText
+    color: colors.invariant.lightInfoText,
+    ...newTypography.body1
   },
   tokenValue: {
     color: colors.white.main,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingRight: 15
+    paddingRight: 15,
+    ...newTypography.body1
+  },
+  closeButton: {
+    color: colors.invariant.componentOut2,
+    background: colors.invariant.accent2,
+    maxHeight: '35px',
+    textTransform: 'none',
+    '&:hover': {
+      background: colors.invariant.accent2,
+      boxShadow: '0px 0px 15px rgba(157, 212, 109, 0.4)',
+      transform: 'scale(1.15)'
+    }
   }
 }))
 

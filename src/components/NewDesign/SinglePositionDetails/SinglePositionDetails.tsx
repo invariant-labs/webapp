@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@material-ui/core'
+import { Button, Grid, Typography } from '@material-ui/core'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import React from 'react'
@@ -18,9 +18,23 @@ interface IProp {
   data: ILiquidityItem
   liquidity: number
   unclaimedFee: number
+  onClickClaimFee: () => void
+  liqValueTokenToSwap: number
+  liqValueTokenFromSwap: number
+  unclaimValueTokenToSwap: number
+  unclaimValueTokenFromSwap: number
 }
 
-export const SinglePositionDetails: React.FC<IProp> = ({ data, liquidity, unclaimedFee }) => {
+export const SinglePositionDetails: React.FC<IProp> = ({
+  data,
+  liquidity,
+  unclaimedFee,
+  onClickClaimFee,
+  liqValueTokenFromSwap,
+  liqValueTokenToSwap,
+  unclaimValueTokenFromSwap,
+  unclaimValueTokenToSwap
+}) => {
   const classes = useStyles()
   return (
     <Grid className={classes.root}>
@@ -48,12 +62,18 @@ export const SinglePositionDetails: React.FC<IProp> = ({ data, liquidity, unclai
               {data.fee}% fee
             </Typography>
           </Grid>
-          <Grid className={classNames(classes.rangeGrid, classes.closedText)}>
-            <Typography className={classes.text}>
-              <FailedIcon />
-              Closed
-            </Typography>
-          </Grid>
+          {data.active ? (
+            <Button className={classes.closeButton} variant='contained'>
+              Close position
+            </Button>
+          ) : (
+            <Grid className={classNames(classes.rangeGrid, classes.closedText)}>
+              <Typography className={classes.text}>
+                <FailedIcon />
+                Closed
+              </Typography>
+            </Grid>
+          )}
         </Grid>
       </Grid>
       <Grid className={classes.bottomGrid}>
@@ -62,12 +82,17 @@ export const SinglePositionDetails: React.FC<IProp> = ({ data, liquidity, unclai
           value={liquidity}
           nameToSwap={data.nameToSwap}
           nameFromSwap={data.nameFromSwap}
+          valueTokenToSwap={liqValueTokenToSwap}
+          valueTokenFromSwap={liqValueTokenFromSwap}
         />
         <BoxInfo
           title={'Unclaimed fees'}
           value={unclaimedFee}
           nameToSwap={data.nameToSwap}
           nameFromSwap={data.nameFromSwap}
+          onClickClaimFee={onClickClaimFee}
+          valueTokenToSwap={unclaimValueTokenToSwap}
+          valueTokenFromSwap={unclaimValueTokenFromSwap}
         />
       </Grid>
     </Grid>
