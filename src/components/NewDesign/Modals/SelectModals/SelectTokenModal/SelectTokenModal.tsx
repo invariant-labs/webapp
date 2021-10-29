@@ -4,9 +4,8 @@ import CustomScrollbar from '../CustomScrollbar'
 import icons from '@static/icons'
 import useStyles from '../style'
 import searchIcon from '@static/svg/lupa.svg'
-import { BN } from '@project-serum/anchor'
 export interface ISelectTokenModal {
-  tokens: Array<{ symbol: string; balance?: BN; decimals?: number }>
+  tokens: Array<{ symbol: string } | null>
   commonTokens: Array<{ symbol: string }>
   open: boolean
   handleClose: () => void
@@ -40,6 +39,13 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
 
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
+  }
+
+  const tokenIndex = (name: string) => {
+    return 'SOL BTC USD FTT ETH'.split(' ').findIndex((token) => {
+      return token === name
+    }
+    )
   }
 
   return (
@@ -84,33 +90,34 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
         </Grid>
         <Box className={classes.tokenList}>
           <CustomScrollbar>
-            {tokens.filter(token => {
-              return token.symbol.toLowerCase().includes(value)
-            }).map((token, index) => (
+            { tokens ? tokens.filter(token => {
+              return token ? token.symbol.toLowerCase().includes(value)
+                : null
+            }).map((token) => (
               <Grid
                 container
-                key={`tokens-${token.symbol}`}
+                key={token ? `tokens-${token.symbol}` : ''}
                 className={classes.tokenItem}
                 alignItems='center'
                 wrap='nowrap'
                 onClick={() => {
-                  onSelect(index)
+                  onSelect(tokenIndex(token ? token.symbol : ''))
                   handleClose()
                 }}>
                 <Grid item>
                   <CardMedia
                     className={classes.tokenIcon}
-                    image={icons[token.symbol] ?? icons.USDT}
+                    image={token ? icons[token.symbol] : ''}
                   />{' '}
                 </Grid>
                 <Grid item className={classes.tokenData}>
-                  <Typography className={classes.tokenName}>{token.symbol}</Typography>
+                  <Typography className={classes.tokenName}>{token ? token.symbol : ''}</Typography>
                   <Typography className={classes.tokenDescrpiption}>
-                    {descrpitionForSymbol[token.symbol] ?? 'Asset'}
+                    {token ? descrpitionForSymbol[token.symbol] ?? 'Asset' : ''}
                   </Typography>
                 </Grid>
               </Grid>
-            ))}
+            )) : null }
           </CustomScrollbar>
         </Box>
       </Grid>

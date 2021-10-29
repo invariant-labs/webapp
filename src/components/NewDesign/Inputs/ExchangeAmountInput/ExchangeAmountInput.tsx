@@ -4,7 +4,6 @@ import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import Select from '@components/NewDesign/Inputs/Select/Select'
 import useStyles from './style'
-import { BN } from '@project-serum/anchor'
 
 interface IProps {
   setValue: (value: string) => void
@@ -15,7 +14,7 @@ interface IProps {
   style?: CSSProperties,
   onMaxClick: () => void,
   current: string | null
-  tokens: Array<{ symbol: string; balance?: BN; decimals?: number }>
+  tokens: Array<{ symbol: string } | null>
   onSelect: (chosen: number) => void
 }
 

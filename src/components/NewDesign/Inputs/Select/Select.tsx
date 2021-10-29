@@ -6,13 +6,12 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import useStyles from './style'
-import { BN } from '@project-serum/anchor'
 
 export interface ISelectModal {
   name?: string
   current: string | null
   centered?: boolean
-  tokens: Array<{ symbol: string; balance?: BN; decimals?: number }>
+  tokens: Array<{ symbol: string } | null>
   onSelect: (chosen: number) => void
   className?: string
 }
@@ -43,7 +42,6 @@ export const Select: React.FC<ISelectModal> = ({
     <>
       <Button
         className={classNames(classes.button, className)}
-        classes={{ startIcon: classes.startIcon }}
         color='primary'
         variant='contained'
         onClick={handleClick}
