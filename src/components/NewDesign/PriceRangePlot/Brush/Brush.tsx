@@ -36,7 +36,7 @@ export const Handle: React.FC<HandleProps> = ({
 
   useEffect(() => {
     setCurrentPosition(position)
-  }, [position])
+  }, [position, drag])
 
   const startDrag: MouseEventHandler<SVGRectElement> = (event) => {
     onStart()
@@ -74,33 +74,43 @@ export const Handle: React.FC<HandleProps> = ({
     }
   }
 
+  const isReversed = () => isStart
+    ? currentPosition < 37
+    : plotWidth - currentPosition < 37
+
   return (
     <>
       {
         isStart
           ? <MinHandle
             height={height}
-            x={currentPosition - 37}
+            x={!isReversed() ? currentPosition - 37 : currentPosition}
             fill={disabled ? colors.invariant.componentOut3 : colors.invariant.accent1}
             textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
+            isReversed={isReversed()}
           />
           : <MaxHandle
             height={height}
-            x={currentPosition + 2}
+            x={!isReversed() ? currentPosition : currentPosition - 37}
             fill={disabled ? colors.invariant.componentOut3 : colors.invariant.accent1}
             textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
+            isReversed={isReversed()}
           />
       }
       <rect
         className={!disabled ? classes.handle : undefined}
         ref={handleRef}
         x={
-          isStart
-            ? currentPosition - (drag ? plotWidth : 40)
-            : currentPosition
+          drag
+            ? 0
+            : (
+              (isStart && !isReversed()) || (!isStart && isReversed())
+                ? currentPosition - 40
+                : currentPosition
+            )
         }
         y={0}
-        width={drag ? (2 * plotWidth) + 2 : 42}
+        width={drag ? plotWidth : 42}
         height={height}
         onMouseDown={!disabled ? startDrag : undefined}
         onMouseUp={!disabled ? endDrag : undefined}
@@ -124,6 +134,7 @@ export const Brush = (
   const unitLen = innerWidth / (plotMax - plotMin)
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [reverse, setReverse] = useState(false)
+
   const start = (leftPosition >= plotMin) && (leftPosition <= plotMax)
     ? (
       <Handle
@@ -135,7 +146,9 @@ export const Brush = (
         maxPosition={((rightPosition - plotMin) * unitLen) - 0.001}
         onDrop={(position) => {
           onLeftDrop(position / innerWidth)
-          setReverse(false)
+          if (((leftPosition - plotMin) * unitLen) < 37) {
+            setReverse(false)
+          }
         }}
         isStart
         onStart={() => { setReverse(true) }}
@@ -155,7 +168,9 @@ export const Brush = (
         maxPosition={innerWidth}
         onDrop={(position) => {
           onRightDrop(position / innerWidth)
-          setReverse(true)
+          if (innerWidth - ((rightPosition - plotMin) * unitLen) < 37) {
+            setReverse(true)
+          }
         }}
         onStart={() => { setReverse(false) }}
         disabled={disabled}
