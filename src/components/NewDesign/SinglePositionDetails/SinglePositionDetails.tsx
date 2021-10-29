@@ -69,7 +69,7 @@ export const SinglePositionDetails: React.FC<IProp> = ({
           ) : (
             <Grid className={classNames(classes.rangeGrid, classes.closedText)}>
               <Typography className={classes.text}>
-                <FailedIcon />
+                <FailedIcon className={classes.iconText} />
                 Closed
               </Typography>
             </Grid>

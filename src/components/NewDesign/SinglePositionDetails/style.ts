@@ -149,6 +149,12 @@ const useStyles = makeStyles(() => ({
       boxShadow: '0px 0px 15px rgba(157, 212, 109, 0.4)',
       transform: 'scale(1.15)'
     }
+  },
+  iconText: {
+    paddingRight: 10,
+    paddingBottom: 3,
+    width: 19,
+    height: 19
   }
 }))
 
