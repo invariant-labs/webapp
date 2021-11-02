@@ -4,7 +4,7 @@ import useStyles from './style'
 
 export interface IPositionSettings {
   open: boolean
-  anchorEl: HTMLButtonElement | null
+  anchorEl: Element | null
   handleClose: () => void
   slippageTolerance: number
   onChangeSlippageTolerance: (tolerance: number) => void
@@ -41,11 +41,14 @@ export const PositionSettings: React.FC<IPositionSettings> = ({
 
         <Typography className={classes.label}>Slippage tolerance</Typography>
         <Input
+          type={'text'}
+          disableUnderline={true}
           className={classes.valueInput}
           endAdornment={(
             <Button
               className={classes.autoButton}
               onClick={autoSetSlippageTolerance}
+              disableRipple
             >
               Auto
             </Button>
