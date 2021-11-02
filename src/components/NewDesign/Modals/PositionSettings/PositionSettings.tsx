@@ -1,5 +1,5 @@
 import { Button, Grid, Input, Popover, Typography } from '@material-ui/core'
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import useStyles from './style'
 
 export interface IPositionSettings {
@@ -24,6 +24,10 @@ export const PositionSettings: React.FC<IPositionSettings> = ({
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [inputValue, setInputValue] = useState(`${slippageTolerance}%`)
+
+  useEffect(() => {
+    setInputValue(`${slippageTolerance}%`)
+  }, [slippageTolerance])
   const onChangeToleranceInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const regex = /^\d*\.?\d*\%?$/
     if (e.target.value === '' || regex.test(e.target.value)) {
