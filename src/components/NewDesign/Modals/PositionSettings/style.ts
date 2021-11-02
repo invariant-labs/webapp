@@ -22,7 +22,13 @@ const useStyles = makeStyles(() => ({
     ...newTypography.label3,
     color: colors.white.main
   },
-  valueInput: {},
+  valueInput: {
+    padding: 9,
+    height: 35,
+    border: `1px solid ${colors.invariant.componentOut2}`,
+    borderRadius: 5,
+    ...newTypography.body2
+  },
   autoButton: {
     width: 32,
     minWidth: 32,
