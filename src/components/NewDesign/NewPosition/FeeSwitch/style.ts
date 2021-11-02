@@ -24,9 +24,6 @@ export const useTabsStyles = makeStyles(() => ({
   scrollable: {
     overflow: 'visible'
   },
-  scrollButtons: {
-    color: 'white'
-  },
   flexContainer: {
     justifyContent: 'space-between'
   }
