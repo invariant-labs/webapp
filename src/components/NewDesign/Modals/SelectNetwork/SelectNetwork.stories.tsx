@@ -18,5 +18,8 @@ storiesOf('modals/newselectNetwork', module).add('default', () => (
     onSelect={(selected: string) => action('chosen: ' + selected)()}
     anchorEl={null}
     active={NetworkType.TESTNET}
+    setActive={(network: NetworkType) => {
+      console.log(network)
+    }}
   />
 ))

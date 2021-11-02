@@ -20,5 +20,6 @@ storiesOf('stats/rangeSetter', module).add('setter', () => (
       console.log(left)
       console.log(right)
     }}
+    isSol={false}
   />
 ))
