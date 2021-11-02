@@ -22,6 +22,7 @@ storiesOf('singlePosition/leftComponent', module)
         liqValueTokenFromSwap={20.99703}
         unclaimValueTokenToSwap={2.19703}
         unclaimValueTokenFromSwap={9.19703}
+        closePosition={() => console.log('close position')}
       />
     </Grid>
   ))
@@ -43,6 +44,7 @@ storiesOf('singlePosition/leftComponent', module)
         liqValueTokenFromSwap={20.99703}
         unclaimValueTokenToSwap={2.19703}
         unclaimValueTokenFromSwap={9.19703}
+        closePosition={() => console.log('close position')}
       />
     </Grid>
   ))

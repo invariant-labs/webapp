@@ -144,6 +144,7 @@ const useStyles = makeStyles(() => ({
     background: colors.invariant.accent2,
     maxHeight: '35px',
     textTransform: 'none',
+    transition: '500ms',
     '&:hover': {
       background: colors.invariant.accent2,
       boxShadow: '0px 0px 15px rgba(157, 212, 109, 0.4)',

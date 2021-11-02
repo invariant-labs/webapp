@@ -19,6 +19,7 @@ interface IProp {
   liquidity: number
   unclaimedFee: number
   onClickClaimFee: () => void
+  closePosition: () => void
   liqValueTokenToSwap: number
   liqValueTokenFromSwap: number
   unclaimValueTokenToSwap: number
@@ -30,6 +31,7 @@ export const SinglePositionDetails: React.FC<IProp> = ({
   liquidity,
   unclaimedFee,
   onClickClaimFee,
+  closePosition,
   liqValueTokenFromSwap,
   liqValueTokenToSwap,
   unclaimValueTokenFromSwap,
@@ -63,7 +65,7 @@ export const SinglePositionDetails: React.FC<IProp> = ({
             </Typography>
           </Grid>
           {data.active ? (
-            <Button className={classes.closeButton} variant='contained'>
+            <Button className={classes.closeButton} variant='contained' onClick={closePosition}>
               Close position
             </Button>
           ) : (
