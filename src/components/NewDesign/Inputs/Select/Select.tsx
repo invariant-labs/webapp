@@ -11,7 +11,7 @@ export interface ISelectModal {
   name?: string
   current: string | null
   centered?: boolean
-  tokens: Array<{ symbol: string } | null>
+  tokens: Array<{ symbol: string, name: string, icon: string }> | null
   onSelect: (chosen: number) => void
   className?: string
 }
@@ -56,7 +56,12 @@ export const Select: React.FC<ISelectModal> = ({
       </Button>
       <SelectTokenModal
         tokens={tokens}
-        commonTokens={[{ symbol: 'SNY' }, { symbol: 'BTC' }, { symbol: 'ETH' }, { symbol: 'DOGE' }]}
+        commonTokens={[
+          { symbol: 'SNY', name: 'Synthetify', icon: 'synthetify' },
+          { symbol: 'BTC', name: 'Bitcoin', icon: 'bitcoin' },
+          { symbol: 'ETH', name: 'Ethereum', icon: 'ethereum' },
+          { symbol: 'DOGE', name: 'Doge Coin', icon: 'doge' }
+        ]}
         open={open}
         centered={centered}
         anchorEl={anchorEl}

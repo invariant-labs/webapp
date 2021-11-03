@@ -22,11 +22,8 @@ export const OutlinedButton: React.FC<IProps> = ({
   onClick,
   color = 'primary',
   className,
-  style,
   disabled = false,
   startIcon,
-  fontWeight = 'bold',
-  padding,
   labelClassName
 }) => {
   const classes = useStyles()
@@ -39,8 +36,7 @@ export const OutlinedButton: React.FC<IProps> = ({
       disabled={disabled}
       type={onClick ? 'button' : 'submit'}
       startIcon={startIcon}
-      onClick={onClick}
-      style={{ fontWeight, padding, ...style }}>
+      onClick={onClick}>
       {name}
     </Button>
   )

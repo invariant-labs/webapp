@@ -1,9 +1,9 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
-    background: 'rgba(36, 35, 41, 0.8)',
+    background: colors.invariant.componentOut4,
     borderRadius: 10,
     padding: '22px 24px',
     width: 500
@@ -11,36 +11,39 @@ const useStyles = makeStyles(() => ({
   tokenComponentTextContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    paddingBottom: 8,
     position: 'relative'
   },
   tokenComponentText: {
-    color: '#746E7C',
-    lineHeight: '12px',
-    fontSize: 12
+    color: colors.invariant.lightInfoText,
+    ...newTypography.label1
+  },
+  amountInput: {
+    border: '1px solid #34303B',
+    backgroundColor: colors.invariant.componentIn2
   },
   swapArrowBox: {
-    backgroundColor: '#34303B',
-    padding: '12px 10px',
+    backgroundColor: colors.invariant.componentOut2,
+    padding: '10px 10px',
     width: 'max-content',
     borderRadius: '100%',
     position: 'absolute',
     zIndex: 2,
     left: '50%',
     top: '0%',
-    transform: 'translateX(-50%) translateY(-45%)',
+    transform: 'translateX(-50%) translateY(-40%)',
     cursor: 'pointer'
   },
   swapArrows: {
-    width: 36,
-    height: 24,
+    width: 42,
+    height: 28,
+    margin: 4,
     transition: '.4s all'
   },
   rateText: {
-    color: colors.navy.veryLightGrey,
+    color: colors.invariant.lightInfoText,
     marginTop: 16,
     textAlign: 'right',
-    ...typography.subtitle1
+    ...newTypography.subtitle1
   },
   transactionDetails: {
     display: 'flex',
@@ -50,15 +53,14 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer'
   },
   transactionDetailsHeader: {
-    color: '#746E7C',
-    lineHeight: '12px',
-    fontSize: 12,
+    color: colors.invariant.lightInfoText,
+    ...newTypography.label1,
     cursor: 'pointer'
   },
   transactionDetailsInfo: {
     maxHeight: 300,
     transition: 'all .4s',
-    backgroundColor: '#1C1C1C',
+    backgroundColor: colors.invariant.componentIn2,
     width: '100%',
     overflow: 'hidden',
     display: 'flex',
@@ -68,8 +70,7 @@ const useStyles = makeStyles(() => ({
     marginBottom: 16,
     borderRadius: 5,
     '& p': {
-      fontSize: 16,
-      lineHeight: '28px'
+      ...newTypography.body1
     }
   },
   detailsInfoWrapper: {
@@ -83,14 +84,14 @@ const useStyles = makeStyles(() => ({
     padding: '8px 8px',
     marginTop: '8px',
     '&::placeholder': {
-      color: '#4D4757'
+      color: colors.invariant.lightInfoText
     },
     '&:focus': {
       outline: 'none'
     }
   },
   detailsInfoBtn: {
-    backgroundColor: '#9DD46D',
+    backgroundColor: colors.invariant.accent2,
     borderRadius: 5,
     border: 'none',
     padding: '8px 10px',
@@ -98,8 +99,8 @@ const useStyles = makeStyles(() => ({
   },
   swapButton: {
     width: '100%',
-    height: 60,
-    fontSize: 16,
+    height: 48,
+    ...newTypography.body1,
     color: '#ffffff',
     cursor: 'pointer'
   }

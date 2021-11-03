@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   popover: {
@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
   },
   container: {
     padding: 30,
-    backgroundColor: '#1B191F',
+    backgroundColor: colors.invariant.componentOut4,
     width: 500
   },
   selectTokenHeader: {
@@ -24,6 +24,8 @@ const useStyles = makeStyles(() => ({
   },
   selectTokenClose: {
     position: 'relative',
+    minWidth: 0,
+    height: 20,
     '&:after': {
       content: '"\u2715"',
       fontSize: 25,
@@ -145,7 +147,7 @@ const useStyles = makeStyles(() => ({
     boxShadow: '0px 0px 10px rgba(216, 255, 181, 0.5)'
   },
   tokenBalance: {
-    ...typography.subtitle2,
+    ...newTypography.subtitle2,
     color: colors.navy.grey,
     whiteSpace: 'nowrap'
   },
@@ -161,7 +163,7 @@ const useStyles = makeStyles(() => ({
     borderRadius: 10,
     width: '100%',
     marginBottom: 20,
-    ...typography.body2
+    ...newTypography.body2
   },
   hideScroll: {
     '& > *:first-child': {

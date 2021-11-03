@@ -5,8 +5,8 @@ import icons from '@static/icons'
 import useStyles from '../style'
 import searchIcon from '@static/svg/lupa.svg'
 export interface ISelectTokenModal {
-  tokens: Array<{ symbol: string } | null>
-  commonTokens: Array<{ symbol: string }>
+  tokens: Array<{ symbol: string, name: string, icon: string }> | null
+  commonTokens: Array<{ symbol: string, name: string, icon: string }>
   open: boolean
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
@@ -68,7 +68,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
       <Grid container className={classes.container}>
         <Grid className={classes.selectTokenHeader}>
           <Typography component='h1'>Select a token</Typography>
-          <Button className={classes.selectTokenClose}></Button>
+          <Button className={classes.selectTokenClose} onClick={handleClose}></Button>
         </Grid>
         <Grid container className={classes.inputControl}>
           <input className={classes.selectTokenInput} placeholder='Search token name or address' onChange={searchToken}/>

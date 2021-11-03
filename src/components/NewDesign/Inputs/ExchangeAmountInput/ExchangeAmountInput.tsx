@@ -14,7 +14,7 @@ interface IProps {
   style?: CSSProperties,
   onMaxClick: () => void,
   current: string | null
-  tokens: Array<{ symbol: string } | null>
+  tokens: Array<{ symbol: string, name: string, icon: string }> | null
   onSelect: (chosen: number) => void
 }
 
@@ -36,7 +36,7 @@ export const AmountInput: React.FC<IProps> = ({
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const regex = /^\d*\.?\d*$/
-    if (e.target.value === '' || e.target.value === 'Max' || regex.test(e.target.value)) {
+    if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value
       const caretPosition = e.target.selectionStart
 

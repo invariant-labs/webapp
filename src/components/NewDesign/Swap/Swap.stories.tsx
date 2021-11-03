@@ -11,29 +11,33 @@ const defaultToken = {
   symbol: '',
   balance: new BN(0),
   decimal: 6,
+  name: '',
+  icon: '',
   assetAddress: new PublicKey(0)
 }
 const pools: Pools[] = [
   {
-    tokenX: {
-      _bn: new PublicKey('35P5P6ZGKUN6wqxrX4VdLRrGbzkrfvhyNs4iqk1vDxAx')
-    },
-    tokenY: {
-      _bn: new PublicKey('CYPdUAp8KshzJ2a45kzgy3fr4UTiyrEGE998rA7wzFR6')
-    },
+    tokenX: new PublicKey('35P5P6ZGKUN6wqxrX4VdLRrGbzkrfvhyNs4iqk1vDxAx'),
+    tokenY: new PublicKey('CYPdUAp8KshzJ2a45kzgy3fr4UTiyrEGE998rA7wzFR6'),
     sqrtPrice: {
       v: new BN(105324532453400)
+    },
+    fee: 0.01,
+    exchangeRate: {
+      val: new BN(1),
+      scale: 6
     }
   },
   {
-    tokenX: {
-      _bn: new PublicKey('35P5P6ZGKUN6wqxrX4VdLRrGbzkrfvhyNs4iqk1vDxAx')
-    },
-    tokenY: {
-      _bn: new PublicKey('23AQ2kRxqT1fk47q6G8YcKrpx4VhWeUvKHuRijT61qSD')
-    },
+    tokenX: new PublicKey('35P5P6ZGKUN6wqxrX4VdLRrGbzkrfvhyNs4iqk1vDxAx'),
+    tokenY: new PublicKey('23AQ2kRxqT1fk47q6G8YcKrpx4VhWeUvKHuRijT61qSD'),
     sqrtPrice: {
       v: new BN(4004325324500)
+    },
+    fee: 0.1,
+    exchangeRate: {
+      val: new BN(1),
+      scale: 6
     }
   }
 ]
@@ -44,7 +48,7 @@ const onSwap = (fromToken: PublicKey, toToken: PublicKey, amount: BN) => {
 
 const tokens = 'SOL BTC USD FTT ETH'.split(' ').map(
   (i): SwapToken => {
-    return { ...defaultToken, symbol: i }
+    return { ...defaultToken, symbol: i, name: i, icon: i }
   }
 )
 

@@ -1,3 +1,4 @@
+import { colors, newTypography } from '@static/theme'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
@@ -5,11 +6,12 @@ const useStyles = makeStyles(() => ({
     borderRadius: 10,
     textAlign: 'center',
     textTransform: 'none',
-    fontSize: 16,
+    ...newTypography.body1,
+    backgroundColor: colors.invariant.accent1,
     transition: 'all 500ms ease',
     padding: '10px 19px',
     '&:hover': {
-      opacity: 0.9
+      backgroundColor: colors.invariant.accent2
     }
   },
   disabled: {
