@@ -56,12 +56,8 @@ export const Select: React.FC<ISelectModal> = ({
       </Button>
       <SelectTokenModal
         tokens={tokens}
-        commonTokens={[
-          { symbol: 'SNY', name: 'Synthetify', icon: 'synthetify' },
-          { symbol: 'BTC', name: 'Bitcoin', icon: 'bitcoin' },
-          { symbol: 'ETH', name: 'Ethereum', icon: 'ethereum' },
-          { symbol: 'DOGE', name: 'Doge Coin', icon: 'doge' }
-        ]}
+        commonTokens={tokens ? tokens.slice(0, 4)
+          : [{ symbol: 'SOL', name: 'Solana', icon: 'solana' }]}
         open={open}
         centered={centered}
         anchorEl={anchorEl}

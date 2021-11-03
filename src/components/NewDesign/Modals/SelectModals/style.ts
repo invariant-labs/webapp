@@ -40,16 +40,17 @@ const useStyles = makeStyles(() => ({
     }
   },
   selectTokenInput: {
-    backgroundColor: '#141216',
+    backgroundColor: colors.invariant.componentIn1,
     width: '100%',
     position: 'relative',
     color: 'white',
-    border: '1px solid #34303B',
+    border: '1px solid',
+    borderColor: colors.invariant.componentOut2,
     borderRadius: 5,
     padding: '25px 10px 23px 10px',
     marginBottom: 15,
     '&::placeholder': {
-      color: '#4D4757',
+      color: colors.invariant.componentOut3,
       fontSize: 16
     },
     '&:focus': {
@@ -70,7 +71,7 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 14
   },
   commonTokensHeader: {
-    fontSize: 16
+    ...newTypography.body2
   },
   commonTokensList: {
     display: 'flex'
@@ -80,12 +81,13 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
     justifyContent: 'center',
     alignItems: 'center',
-    border: '1px solid #34303B',
+    border: '1px solid',
+    borderColor: colors.invariant.componentOut2,
     borderRadius: 3,
     padding: '7px 7px 2px 7px',
     marginRight: 10,
     '& p': {
-      fontSize: 16
+      ...newTypography.body2
     }
   },
   commonTokenIcon: {
@@ -95,18 +97,9 @@ const useStyles = makeStyles(() => ({
     borderRadius: '50%',
     boxShadow: '0px 0px 5px rgba(216, 255, 181, 0.5)'
   },
-  root: {
-    background: colors.navy.component,
-    width: 456,
-    borderRadius: 10,
-    marginTop: 20,
-    marginBottom: 3,
-    paddingInline: 15,
-    paddingBlock: 20
-  },
   tokenList: {
     borderRadius: 10,
-    background: '#141216',
+    background: colors.invariant.componentIn1,
     width: 451,
     height: 352,
     padding: '8px 0 8px 8px',
@@ -121,20 +114,17 @@ const useStyles = makeStyles(() => ({
     padding: '9px 0px 9px 12px',
 
     '&:hover': {
-      background: '#2A2932'
+      background: colors.invariant.componentOut2
     }
   },
   tokenName: {
     color: '#FFFFFF',
-    fontSize: 20,
+    ...newTypography.heading4,
     lineHeight: '20px'
-  },
-  tokenData: {
-
   },
   tokenDescrpiption: {
     color: '#FFFFFF',
-    fontSize: 12,
+    ...newTypography.label1,
     lineHeight: '16px',
     whiteSpace: 'nowrap'
   },
@@ -148,22 +138,12 @@ const useStyles = makeStyles(() => ({
   },
   tokenBalance: {
     ...newTypography.subtitle2,
-    color: colors.navy.grey,
+    color: colors.invariant.componentIn1,
     whiteSpace: 'nowrap'
   },
   searchIcon: {
-    color: colors.navy.grey,
+    color: colors.invariant.componentOut3,
     margin: 10
-  },
-  searchInput: {
-    background: colors.navy.dark,
-    color: colors.navy.grey,
-    height: 46,
-    paddingLeft: 16,
-    borderRadius: 10,
-    width: '100%',
-    marginBottom: 20,
-    ...newTypography.body2
   },
   hideScroll: {
     '& > *:first-child': {
@@ -171,7 +151,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   scrollbarThumb: {
-    background: '#7748D8',
+    background: colors.invariant.accent1,
     borderRadius: 10,
     width: 5
   },

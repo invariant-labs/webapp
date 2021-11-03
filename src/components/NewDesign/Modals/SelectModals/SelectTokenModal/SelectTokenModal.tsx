@@ -78,7 +78,12 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
           <Typography component='h2' className={classes.commonTokensHeader}>Commonly used</Typography>
           <Grid className={classes.commonTokensList}>
             {commonTokens.map((token) => (
-              <Box className={classes.commonTokenItem} key={token.symbol} >
+              <Box className={classes.commonTokenItem}
+                key={token.symbol}
+                onClick={() => {
+                  onSelect(tokenIndex(token ? token.symbol : ''))
+                  handleClose()
+                }} >
                 <CardMedia
                   className={classes.commonTokenIcon}
                   image={icons[token.symbol] ?? icons.USDT}
@@ -110,7 +115,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                     image={token ? icons[token.symbol] : ''}
                   />{' '}
                 </Grid>
-                <Grid item className={classes.tokenData}>
+                <Grid item>
                   <Typography className={classes.tokenName}>{token ? token.symbol : ''}</Typography>
                   <Typography className={classes.tokenDescrpiption}>
                     {token ? descrpitionForSymbol[token.symbol] ?? 'Asset' : ''}
