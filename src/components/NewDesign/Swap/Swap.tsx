@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { printBN, printBNtoBN } from '@consts/utils'
+import { printBN, printBNtoBN, transformBN } from '@consts/utils'
 import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { OutlinedButton } from '@components/NewDesign/OutlinedButton/OutlinedButton'
@@ -26,7 +26,10 @@ export interface Pools {
   sqrtPrice: {
     v: BN
   }
-  fee: number
+  fee: {
+    val: BN,
+    scale: number
+  }
   exchangeRate: {
     val: BN,
     scale: number
@@ -59,7 +62,7 @@ export const Swap: React.FC<ISwap> = ({
   const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
   const [slippTolerance, setSlippTolerance] = React.useState<string>('')
   // const firstUpdate = useRef(true)
-
+  const inputRef = useRef<HTMLInputElement>(null)
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
     // TODO: solution if 0 => change to 1
     if (priceProportion.eqn(0)) {
@@ -102,8 +105,11 @@ export const Swap: React.FC<ISwap> = ({
       })
       if (pairIndex !== -1) {
         setPriceProportion(pools[pairIndex].sqrtPrice.v.div(new BN(10 ** PRICE_DECIMAL))
-          .mul(pools[pairIndex].sqrtPrice.v.div(new BN(10 ** PRICE_DECIMAL))))
+          .mul(pools[pairIndex].sqrtPrice.v
+            .div(new BN(10 ** PRICE_DECIMAL)))
+          .mul(new BN(1)))
         setPoolIndex(pairIndex)
+        console.log(printBN(new BN(10 ** pools[pairIndex].fee.scale).sub(new BN(1)), pools[pairIndex].fee.scale))
       }
     }
   }, [tokenToIndex, tokenFromIndex, swap])
@@ -125,7 +131,6 @@ export const Swap: React.FC<ISwap> = ({
     })
   }
   const getIsXToY = (fromToken: PublicKey, toToken: PublicKey) => {
-    console.log(fromToken, toToken)
     const swapPool = pools.find(
       pool =>
         (fromToken.toString() === pool.tokenX.toString() &&
@@ -148,6 +153,39 @@ export const Swap: React.FC<ISwap> = ({
       setAmountFrom(
         calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex], amount ?? amountFrom)
       )
+    }
+  }
+
+  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const regex = /^\d*\.?\d*$/
+    if (e.target.value === '' || regex.test(e.target.value)) {
+      const startValue = e.target.value
+      const caretPosition = e.target.selectionStart
+
+      let parsed = e.target.value
+      const zerosRegex = /^0+\d+\.?\d*$/
+      if (zerosRegex.test(parsed)) {
+        parsed = parsed.replace(/^0+/, '')
+      }
+
+      const dotRegex = /^\.\d*$/
+      if (dotRegex.test(parsed)) {
+        parsed = `0${parsed}`
+      }
+
+      const diff = startValue.length - parsed.length
+
+      setSlippTolerance(parsed)
+      if (caretPosition !== null && parsed !== startValue) {
+        setTimeout(() => {
+          if (inputRef.current) {
+            inputRef.current.selectionStart = Math.max(caretPosition - diff, 0)
+            inputRef.current.selectionEnd = Math.max(caretPosition - diff, 0)
+          }
+        }, 0)
+      }
+    } else if (!regex.test(e.target.value)) {
+      setSlippTolerance('')
     }
   }
 
@@ -187,8 +225,6 @@ export const Swap: React.FC<ISwap> = ({
         return 'Insufficient balance'
       }
     }
-    
-
     return 'Swap'
   }
 
@@ -328,12 +364,12 @@ export const Swap: React.FC<ISwap> = ({
         padding: collapsed ? 16 : '0 16px'
       }}>
         <Grid className={classes.detailsInfoWrapper}>
-          <Typography component='p'>Fee: {pools[poolIndex ?? 0].fee}</Typography>
-          <Typography component='p'>Exchange rate: {printBN(pools[poolIndex ?? 0].exchangeRate.val, pools[poolIndex ?? 0].exchangeRate.scale)} </Typography>
+          <Typography component='p'>Fee: {printBN(pools[poolIndex ?? 0].fee.val, pools[poolIndex ?? 0].fee.scale)} %</Typography>
+          <Typography component='p'>Exchange rate: {printBN(pools[poolIndex ?? 0].exchangeRate.val, pools[poolIndex ?? 0].exchangeRate.scale)} xUSD</Typography>
           <Typography component='p'>Slippage tolerance:</Typography>
           <Box>
             <input placeholder='0.50%' className={classes.detailsInfoForm} type={'text'} value={slippTolerance} onChange={(e) => {
-              setSlippTolerance(e.target.value)
+              allowOnlyDigitsAndTrimUnnecessaryZeros(e)
             }}/>
             <button className={classes.detailsInfoBtn}>Auto</button>
           </Box>

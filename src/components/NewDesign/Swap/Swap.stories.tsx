@@ -22,7 +22,10 @@ const pools: Pools[] = [
     sqrtPrice: {
       v: new BN(105324532453400)
     },
-    fee: 0.01,
+    fee: {
+      val: new BN(2),
+      scale: 3
+    },
     exchangeRate: {
       val: new BN(1),
       scale: 6
@@ -34,7 +37,10 @@ const pools: Pools[] = [
     sqrtPrice: {
       v: new BN(4004325324500)
     },
-    fee: 0.1,
+    fee: {
+      val: new BN(1),
+      scale: 2
+    },
     exchangeRate: {
       val: new BN(1),
       scale: 6
