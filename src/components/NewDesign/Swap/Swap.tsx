@@ -57,6 +57,7 @@ export const Swap: React.FC<ISwap> = ({
   const [priceProportion, setPriceProportion] = React.useState<BN>(new BN(1))
   const [tokenY, setTokenY] = React.useState<SwapToken[] | null>(null)
   const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
+  const [slippTolerance, setSlippTolerance] = React.useState<string>('')
   // const firstUpdate = useRef(true)
 
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
@@ -169,14 +170,24 @@ export const Swap: React.FC<ISwap> = ({
     ) {
       return 'Insufficient trade volume'
     }
-
-    if (
-      printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal).gt(
-        tokens[tokenFromIndex].balance
-      )
-    ) {
-      return 'Insufficient balance'
+    if (swap) {
+      if (
+        printBNtoBN(amountTo, tokens[tokenToIndex].decimal).gt(
+          tokens[tokenToIndex].balance
+        )
+      ) {
+        return 'Insufficient balance'
+      }
+    } else {
+      if (
+        printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal).gt(
+          tokens[tokenFromIndex].balance
+        )
+      ) {
+        return 'Insufficient balance'
+      }
     }
+    
 
     return 'Swap'
   }
@@ -321,7 +332,9 @@ export const Swap: React.FC<ISwap> = ({
           <Typography component='p'>Exchange rate: {printBN(pools[poolIndex ?? 0].exchangeRate.val, pools[poolIndex ?? 0].exchangeRate.scale)} </Typography>
           <Typography component='p'>Slippage tolerance:</Typography>
           <Box>
-            <input placeholder='0.50%' className={classes.detailsInfoForm} />
+            <input placeholder='0.50%' className={classes.detailsInfoForm} type={'text'} value={slippTolerance} onChange={(e) => {
+              setSlippTolerance(e.target.value)
+            }}/>
             <button className={classes.detailsInfoBtn}>Auto</button>
           </Box>
         </Grid>
