@@ -38,7 +38,7 @@ export const colors = {
     light: '#9DA0AE', // v2.0 text
     mid: '#4C4C67', // v2.0
     upperMid: '#343446', // v2.0
-    dark: '#1E202E', // v2.0 background
+    dark: '#1E202E', // v2.0 backgrounds
     background: '#1C1C29', // v2.0
     component: '#272735' // v2.0
   },
@@ -92,8 +92,6 @@ export const colors = {
     yellowGray: '#919575',
     yellowWeak: '#abc35a',
     yellowStrong: '#c3f43e',
-    headerButton: '#34303B',
-    background: '#171717',
     logoGreen: '#9CE75A',
     logoPurple: '#7748D8',
     background2: '#0B090D',
@@ -192,12 +190,12 @@ export const typography = {
 export const newTypography = {
   heading1: {
     fontSize: 30,
-    lineHeight: '49px',
+    lineHeight: '50px',
     fontWeight: 700
   },
   heading2: {
     fontSize: 30,
-    lineHeight: '49px',
+    lineHeight: '50px',
     fontWeight: 400
   },
   heading3: {
@@ -222,7 +220,7 @@ export const newTypography = {
   },
   body2: {
     fontSize: 16,
-    lineHeight: '35px',
+    lineHeight: '28px',
     fontWeight: 400
   },
   body3: {
