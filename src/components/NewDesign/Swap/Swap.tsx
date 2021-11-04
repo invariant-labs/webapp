@@ -1,14 +1,16 @@
 import React, { useEffect, useRef } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { printBN, printBNtoBN, transformBN } from '@consts/utils'
+import { printBN, printBNtoBN } from '@consts/utils'
 import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { OutlinedButton } from '@components/NewDesign/OutlinedButton/OutlinedButton'
+import Slippage from '@components/NewDesign/Swap/slippage/Slippage'
 import ExchangeAmountInput from '@components/NewDesign/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import useStyles from './style'
 import { Status } from '@reducers/solanaWallet'
 import SwapArrows from '@static/svg/swap-arrows.svg'
+import infoIcon from '@static/svg/info.svg'
+import settingIcon from '@static/svg/settings.svg'
 import { PRICE_DECIMAL } from '@consts/static'
 
 export interface SwapToken {
@@ -55,14 +57,13 @@ export const Swap: React.FC<ISwap> = ({
   const [tokenToIndex, setTokenToIndex] = React.useState<number | null>(null)
   const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [amountTo, setAmountTo] = React.useState<string>('')
-  const [collapsed, setCollapsed] = React.useState<boolean>(false)
   const [swap, setSwap] = React.useState<boolean | null>(null)
   const [priceProportion, setPriceProportion] = React.useState<BN>(new BN(1))
   const [tokenY, setTokenY] = React.useState<SwapToken[] | null>(null)
   const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
   const [slippTolerance, setSlippTolerance] = React.useState<string>('')
+  const [settings, setSettings] = React.useState<boolean>(false)
   // const firstUpdate = useRef(true)
-  const inputRef = useRef<HTMLInputElement>(null)
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
     // TODO: solution if 0 => change to 1
     if (priceProportion.eqn(0)) {
@@ -156,39 +157,6 @@ export const Swap: React.FC<ISwap> = ({
     }
   }
 
-  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const regex = /^\d*\.?\d*$/
-    if (e.target.value === '' || regex.test(e.target.value)) {
-      const startValue = e.target.value
-      const caretPosition = e.target.selectionStart
-
-      let parsed = e.target.value
-      const zerosRegex = /^0+\d+\.?\d*$/
-      if (zerosRegex.test(parsed)) {
-        parsed = parsed.replace(/^0+/, '')
-      }
-
-      const dotRegex = /^\.\d*$/
-      if (dotRegex.test(parsed)) {
-        parsed = `0${parsed}`
-      }
-
-      const diff = startValue.length - parsed.length
-
-      setSlippTolerance(parsed)
-      if (caretPosition !== null && parsed !== startValue) {
-        setTimeout(() => {
-          if (inputRef.current) {
-            inputRef.current.selectionStart = Math.max(caretPosition - diff, 0)
-            inputRef.current.selectionEnd = Math.max(caretPosition - diff, 0)
-          }
-        }, 0)
-      }
-    } else if (!regex.test(e.target.value)) {
-      setSlippTolerance('')
-    }
-  }
-
   const getButtonMessage = () => {
     if (walletStatus !== Status.Initialized) {
       return 'Please connect wallet'
@@ -228,168 +196,172 @@ export const Swap: React.FC<ISwap> = ({
     return 'Swap'
   }
 
-  return (
-    <Grid container className={classes.root} direction='column'>
-      <Box className={classes.tokenComponentTextContainer}>
-        <Typography className={classes.tokenComponentText}>Est.: </Typography>
-        <Typography className={classes.tokenComponentText}>
-          Balance: {tokenFromIndex !== null
-            ? swap
-              ? printBN(tokens[tokenToIndex ?? 0].balance, tokens[tokenToIndex ?? 0].decimal)
-              : printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal) : '0'}
-        </Typography>
-      </Box>
-      <ExchangeAmountInput
-        value={amountFrom}
-        className={classes.amountInput}
-        style={{ transform: swap !== null ? swap ? 'translateY(104px)' : 'translateY(0px)' : '' }}
-        setValue={value => {
-          if (value.match(/^\d*\.?\d*$/)) {
-            setAmountFrom(value)
-            updateEstimatedAmount(value)
-          }
-        }}
-        placeholder={'0.0'}
-        onMaxClick={() => {
-          if (tokenToIndex !== null && tokenFromIndex !== null) {
-            if (swap) {
-              setAmountTo(printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal))
-              updateFromEstimatedAmount(
-                printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal)
-              )
-            } else {
-              setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
-              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
-            }
-          }
-        }}
-        tokens={swap ? tokenY.map(({ symbol, name, icon }) => ({
-          symbol,
-          name,
-          icon
-        }))
-          : tokens.map(({ symbol, name, icon }) => ({
-            symbol,
-            name,
-            icon
-          }))}
-        current={tokenFromIndex !== null ? tokens[tokenFromIndex].symbol : null}
-        onSelect={(chosen: number) => setTokenFromIndex(chosen)}
-      />
-      <Box className={classes.tokenComponentTextContainer}>
-        <Box className={classes.swapArrowBox}>
-          <CardMedia image={SwapArrows}
-            style={{ transform: swap !== null ? swap ? 'rotate(180deg)' : 'rotate(0deg)' : '' }}
-            className={classes.swapArrows} onClick={() => {
-              if (tokenToIndex !== null) {
-                swap !== null ? setSwap(!swap) : setSwap(true)
-              } else {
+  const setSlippage = (slippage: string): void => {
+    setSlippTolerance(slippage)
+  }
 
-              }
-            }} />
+  return (
+    <Grid container>
+      <Grid container className={classes.header}>
+        <Typography component='h1'>Swap tokens</Typography>
+        <CardMedia image={settingIcon} className={classes.settingsIcon} onClick={() => setSettings(!settings)}/>
+        <Grid className={classes.slippage} >
+          <Slippage open={settings} setSlippage={setSlippage}/>
+        </Grid>
+      </Grid>
+      <Grid container className={classes.root} direction='column'>
+        <Box className={classes.tokenComponentTextContainer}>
+          <Typography className={classes.tokenComponentText}>Est.: </Typography>
+          <Typography className={classes.tokenComponentText}>
+          Balance: {tokenFromIndex !== null
+              ? swap
+                ? printBN(tokens[tokenToIndex ?? 0].balance, tokens[tokenToIndex ?? 0].decimal)
+                : printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal) : '0'}
+          </Typography>
         </Box>
-        <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
-        <Typography className={classes.tokenComponentText}>
-          Balance: {tokenToIndex !== null
-            ? swap
-              ? printBN(tokens[tokenFromIndex ?? 0].balance, tokens[tokenFromIndex ?? 0].decimal)
-              : printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal) : '0'}
-        </Typography>
-      </Box>
-      <ExchangeAmountInput
-        value={amountTo}
-        className={classes.amountInput}
-        style={{ transform: swap !== null ? swap ? 'translateY(-104px)' : 'translateY(0px)' : '' }}
-        setValue={value => {
-          if (value.match(/^\d*\.?\d*$/)) {
-            setAmountTo(value)
-            updateFromEstimatedAmount(value)
-          }
-        }}
-        placeholder={'0.0'}
-        onMaxClick={() => {
-          if (tokenToIndex !== null && tokenFromIndex !== null) {
-            if (swap) {
-              setAmountTo(printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal))
-              updateFromEstimatedAmount(
-                printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal)
-              )
-            } else {
-              setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
-              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+        <ExchangeAmountInput
+          value={amountFrom}
+          className={classes.amountInput}
+          style={{ transform: swap !== null ? swap ? 'translateY(104px)' : 'translateY(0px)' : '' }}
+          setValue={value => {
+            if (value.match(/^\d*\.?\d*$/)) {
+              setAmountFrom(value)
+              updateEstimatedAmount(value)
             }
-          }
-        }}
-        tokens={swap ? tokens.map(({ symbol, name, icon }) => ({
-          symbol,
-          name,
-          icon
-        }))
-          : tokenY ? tokenY.map(({ symbol, name, icon }) => ({
+          }}
+          placeholder={'0.0'}
+          onMaxClick={() => {
+            if (tokenToIndex !== null && tokenFromIndex !== null) {
+              if (swap) {
+                setAmountTo(printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal))
+                updateFromEstimatedAmount(
+                  printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal)
+                )
+              } else {
+                setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+                updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+              }
+            }
+          }}
+          tokens={swap ? tokenY.map(({ symbol, name, icon }) => ({
             symbol,
             name,
             icon
           }))
-            : null}
-        current={tokenToIndex !== null ? tokens[tokenToIndex].symbol : null}
-        onSelect={(chosen: number) => {
-          setTokenToIndex(chosen)
-          updateEstimatedAmount()
-        }}
-      />
-
-      {tokenFromIndex !== null && tokenToIndex !== null && getButtonMessage() === 'Swap' ? (
-        <Typography className={classes.rateText}>
-          1 {swap ? tokens[tokenToIndex].symbol : tokens[tokenFromIndex].symbol } ={' '}
-          {swap ? calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex], '1')
-            : calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], '1')}{' '}
-          {swap ? tokens[tokenFromIndex].symbol : tokens[tokenToIndex].symbol}
-        </Typography>
-      ) : null}
-
-      <Box className={classes.transactionDetails} onClick={() => setCollapsed(!collapsed)}>
-        <Typography className={classes.transactionDetailsHeader}>See transaction details</Typography>
-        <ExpandMoreIcon style={{
-          color: '#746E7C',
-          rotate: collapsed ? '-180deg' : '0deg',
-          transition: 'all .4s'
-        }}
-        onClick={() => setCollapsed(!collapsed)}
+            : tokens.map(({ symbol, name, icon }) => ({
+              symbol,
+              name,
+              icon
+            }))}
+          current={tokenFromIndex !== null ? tokens[tokenFromIndex].symbol : null}
+          onSelect={(chosen: number) => setTokenFromIndex(chosen)}
         />
-      </Box>
-      <Grid container className={classes.transactionDetailsInfo} style={{
-        maxHeight: collapsed ? '300px' : '0',
-        opacity: collapsed ? 1 : 0,
-        marginBottom: collapsed ? 16 : 0,
-        padding: collapsed ? 16 : '0 16px'
-      }}>
-        <Grid className={classes.detailsInfoWrapper}>
-          <Typography component='p'>Fee: {printBN(pools[poolIndex ?? 0].fee.val, pools[poolIndex ?? 0].fee.scale)} %</Typography>
-          <Typography component='p'>Exchange rate: {printBN(pools[poolIndex ?? 0].exchangeRate.val, pools[poolIndex ?? 0].exchangeRate.scale)} xUSD</Typography>
-          <Typography component='p'>Slippage tolerance:</Typography>
-          <Box>
-            <input placeholder='0.50%' className={classes.detailsInfoForm} type={'text'} value={slippTolerance} onChange={(e) => {
-              allowOnlyDigitsAndTrimUnnecessaryZeros(e)
-            }}/>
-            <button className={classes.detailsInfoBtn}>Auto</button>
-          </Box>
-        </Grid>
-      </Grid>
-      <OutlinedButton
-        name={getButtonMessage()}
-        color='secondary'
-        className={classes.swapButton}
-        disabled={getButtonMessage() !== 'Swap'}
-        onClick={() => {
-          if (tokenFromIndex === null || tokenToIndex === null) return
+        <Box className={classes.tokenComponentTextContainer}>
+          <Box className={classes.swapArrowBox}>
+            <CardMedia image={SwapArrows}
+              style={{ transform: swap !== null ? swap ? 'rotate(180deg)' : 'rotate(0deg)' : '' }}
+              className={classes.swapArrows} onClick={() => {
+                if (tokenToIndex !== null) {
+                  swap !== null ? setSwap(!swap) : setSwap(true)
+                } else {
 
-          onSwap(
-            tokens[tokenFromIndex].assetAddress,
-            tokens[tokenToIndex].assetAddress,
-            printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal)
-          )
-        }}
-      />
+                }
+              }} />
+          </Box>
+          <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
+          <Typography className={classes.tokenComponentText}>
+          Balance: {tokenToIndex !== null
+              ? swap
+                ? printBN(tokens[tokenFromIndex ?? 0].balance, tokens[tokenFromIndex ?? 0].decimal)
+                : printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal) : '0'}
+          </Typography>
+        </Box>
+        <ExchangeAmountInput
+          value={amountTo}
+          className={classes.amountInput}
+          style={{ transform: swap !== null ? swap ? 'translateY(-104px)' : 'translateY(0px)' : '' }}
+          setValue={value => {
+            if (value.match(/^\d*\.?\d*$/)) {
+              setAmountTo(value)
+              updateFromEstimatedAmount(value)
+            }
+          }}
+          placeholder={'0.0'}
+          onMaxClick={() => {
+            if (tokenToIndex !== null && tokenFromIndex !== null) {
+              if (swap) {
+                setAmountTo(printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal))
+                updateFromEstimatedAmount(
+                  printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal)
+                )
+              } else {
+                setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+                updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+              }
+            }
+          }}
+          tokens={swap ? tokens.map(({ symbol, name, icon }) => ({
+            symbol,
+            name,
+            icon
+          }))
+            : tokenY ? tokenY.map(({ symbol, name, icon }) => ({
+              symbol,
+              name,
+              icon
+            }))
+              : null}
+          current={tokenToIndex !== null ? tokens[tokenToIndex].symbol : null}
+          onSelect={(chosen: number) => {
+            setTokenToIndex(chosen)
+            updateEstimatedAmount()
+          }}
+        />
+        <Box className={classes.transactionDetails}>
+          <Grid className={classes.transactionDetailsWrapper}>
+            <Typography className={classes.transactionDetailsHeader}>See transaction details</Typography>
+            <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }}/>
+            <Grid container className={classes.transactionDetailsInfo} >
+              <Grid className={classes.detailsInfoWrapper}>
+                <Typography component='h2'>Transaction details</Typography>
+                <Typography component='p'>
+                Fee: <Typography component='span'>
+                    {printBN(pools[poolIndex ?? 0].fee.val, pools[poolIndex ?? 0].fee.scale)} %
+                  </Typography>
+                </Typography>
+                <Typography component='p'>
+                Exchange rate: <Typography component='span'>
+                    {printBN(pools[poolIndex ?? 0].exchangeRate.val, pools[poolIndex ?? 0].exchangeRate.scale)} xUSD
+                  </Typography>
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          {tokenFromIndex !== null && tokenToIndex !== null && getButtonMessage() === 'Swap' ? (
+            <Typography className={classes.rateText}>
+          1 {swap ? tokens[tokenToIndex].symbol : tokens[tokenFromIndex].symbol } ={' '}
+              {swap ? calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex], '1')
+                : calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], '1')}{' '}
+              {swap ? tokens[tokenFromIndex].symbol : tokens[tokenToIndex].symbol}
+            </Typography>
+          ) : null}
+        </Box>
+        <OutlinedButton
+          name={getButtonMessage()}
+          color='secondary'
+          className={classes.swapButton}
+          disabled={getButtonMessage() !== 'Swap'}
+          onClick={() => {
+            if (tokenFromIndex === null || tokenToIndex === null) return
+
+            onSwap(
+              tokens[tokenFromIndex].assetAddress,
+              tokens[tokenToIndex].assetAddress,
+              printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal)
+            )
+          }}
+        />
+      </Grid>
     </Grid>
   )
 }

@@ -2,6 +2,27 @@ import { makeStyles } from '@material-ui/core/styles'
 import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: 500,
+    position: 'relative',
+    paddingBottom: 28,
+    '& h1': {
+      ...newTypography.heading4,
+      color: '#FFFFFF'
+    }
+  },
+  settingsIcon: {
+    width: 20,
+    height: 20
+  },
+  slippage: {
+    position: 'absolute',
+    right: -310,
+    top: 10
+  },
   root: {
     background: colors.invariant.componentOut4,
     borderRadius: 10,
@@ -41,16 +62,25 @@ const useStyles = makeStyles(() => ({
   },
   rateText: {
     color: colors.invariant.lightInfoText,
-    marginTop: 16,
     textAlign: 'right',
-    ...newTypography.subtitle1
+    ...newTypography.label1
   },
   transactionDetails: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'start',
+    justifyContent: 'space-between',
     marginBottom: 8,
-    cursor: 'pointer'
+    position: 'relative'
+  },
+  transactionDetailsWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '&:hover': {
+      '& $transactionDetailsInfo': {
+        opacity: 1
+      }
+    }
   },
   transactionDetailsHeader: {
     color: colors.invariant.lightInfoText,
@@ -58,10 +88,14 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer'
   },
   transactionDetailsInfo: {
-    maxHeight: 300,
+    position: 'absolute',
+    top: 5,
+    right: 85,
+    opacity: 0,
+    zIndex: 3,
     transition: 'all .4s',
     backgroundColor: colors.invariant.componentIn2,
-    width: '100%',
+    width: 250,
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
@@ -74,28 +108,17 @@ const useStyles = makeStyles(() => ({
     }
   },
   detailsInfoWrapper: {
-    height: 'auto'
-  },
-  detailsInfoForm: {
-    border: '1px solid #34303B',
-    color: '#FFFFFF',
-    borderRadius: 5,
-    backgroundColor: '#141216',
-    padding: '8px 8px',
-    marginTop: '8px',
-    '&::placeholder': {
-      color: colors.invariant.lightInfoText
+    height: 'auto',
+    '& h2': {
+      ...newTypography.body1
     },
-    '&:focus': {
-      outline: 'none'
+    '& p': {
+      ...newTypography.body3
+    },
+    '& span': {
+      ...newTypography.label1,
+      color: colors.invariant.lightInfoText
     }
-  },
-  detailsInfoBtn: {
-    backgroundColor: colors.invariant.accent2,
-    borderRadius: 5,
-    border: 'none',
-    padding: '8px 10px',
-    marginLeft: -25
   },
   swapButton: {
     width: '100%',
