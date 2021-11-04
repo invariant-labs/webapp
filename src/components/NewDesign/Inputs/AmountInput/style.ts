@@ -20,6 +20,7 @@ const useStyles = makeStyles(() => ({
     height: 26,
     minWidth: 51,
     width: 'fit-content',
+    flexShrink: 0,
     paddingInline: 5,
     borderRadius: 3,
     backgroundColor: colors.invariant.componentOut2

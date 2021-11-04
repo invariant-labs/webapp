@@ -28,3 +28,14 @@ storiesOf('newInputs/amount', module)
       />
     </div>
   ))
+  .add('long currency', () => (
+    <div style={{ backgroundColor: colors.navy.component, padding: '10px', width: 400 }}>
+      <AmountInput
+        setValue={() => {}}
+        placeholder={'0.0'}
+        currency={'AERGO'}
+        onMaxClick={() => {}}
+        currencyIconSrc={icons.SNY}
+      />
+    </div>
+  ))

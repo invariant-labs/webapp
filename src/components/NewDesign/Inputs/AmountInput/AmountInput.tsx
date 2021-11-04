@@ -66,7 +66,7 @@ export const AmountInput: React.FC<IProps> = ({
       placeholder={placeholder}
       onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
       startAdornment={(
-        <Grid className={classes.currency} container justifyContent='center' alignItems='center'>
+        <Grid className={classes.currency} container justifyContent='center' alignItems='center' wrap='nowrap'>
           {
             currency !== null
               ? (
