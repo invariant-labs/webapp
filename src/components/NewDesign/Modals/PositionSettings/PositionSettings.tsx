@@ -29,23 +29,23 @@ export const PositionSettings: React.FC<IPositionSettings> = ({
     setInputValue(`${slippageTolerance}%`)
   }, [slippageTolerance])
   const onChangeToleranceInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const regex = /^\d*\.?\d*\%?$/
+    const regex = /^\d*\.?\d*%?$/
     if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value
       const caretPosition = e.target.selectionStart
 
       let parsed = e.target.value
-      const zerosRegex = /^0+\d+\.?\d*\%?$/
+      const zerosRegex = /^0+\d+\.?\d*%?$/
       if (zerosRegex.test(parsed)) {
         parsed = parsed.replace(/^0+/, '')
       }
 
-      const dotRegex = /^\.\d*\%?$/
+      const dotRegex = /^\.\d*%?$/
       if (dotRegex.test(parsed)) {
         parsed = `0${parsed}`
       }
 
-      const percentRegex = /\%$/
+      const percentRegex = /%$/
       if (!percentRegex.test(parsed)) {
         parsed = `${parsed}%`
       }
