@@ -87,7 +87,7 @@ export const PositionSettings: React.FC<IPositionSettings> = ({
 
         <Typography className={classes.label}>Slippage tolerance</Typography>
         <Input
-          ref={inputRef}
+          inputRef={inputRef}
           type={'text'}
           disableUnderline={true}
           className={classes.valueInput}
