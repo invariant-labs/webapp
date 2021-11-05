@@ -3,7 +3,10 @@ import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
-    background: 'transparent'
+    background: 'transparent',
+    '& > *': {
+      backgroundColor: 'transparent'
+    }
   },
   detailsWrapper: {
     display: 'flex',

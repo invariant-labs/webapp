@@ -5,7 +5,7 @@ export const useStyles = makeStyles(() => ({
   transactionDetailsInfo: {
     position: 'absolute',
     top: 5,
-    right: 85,
+    right: 70,
     opacity: 1,
     zIndex: 1,
     transition: 'all .3s',

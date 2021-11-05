@@ -55,7 +55,8 @@ const Slippage: React.FC<Props> = ({ open, setSlippage, handleClose, anchorEl })
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'right'
-      }}>
+      }}
+      style={{ backgroundColor: 'green important!' }}>
       <Grid container className={classes.detailsWrapper}>
         <Grid container>
           <Typography component='h2'>Swap Transaction Settings</Typography>

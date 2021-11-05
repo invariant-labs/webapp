@@ -202,7 +202,7 @@ export const Swap: React.FC<ISwap> = ({
 
   const setSlippage = (slippage: string): void => {
     setSlippTolerance(slippage)
-    console.log(slippage)
+    console.log(slippTolerance)
   }
 
   const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
