@@ -1,11 +1,13 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { printBN, printBNtoBN } from '@consts/utils'
+import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
 import { OutlinedButton } from '@components/NewDesign/OutlinedButton/OutlinedButton'
 import Slippage from '@components/NewDesign/Swap/slippage/Slippage'
 import ExchangeAmountInput from '@components/NewDesign/Inputs/ExchangeAmountInput/ExchangeAmountInput'
+import TransactionDetails from '@components/NewDesign/Swap/transactionDetails/TransactionDetails'
 import useStyles from './style'
 import { Status } from '@reducers/solanaWallet'
 import SwapArrows from '@static/svg/swap-arrows.svg'
@@ -55,6 +57,7 @@ export const Swap: React.FC<ISwap> = ({
     tokens.length ? 0 : null
   )
   const [tokenToIndex, setTokenToIndex] = React.useState<number | null>(null)
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [amountTo, setAmountTo] = React.useState<string>('')
   const [swap, setSwap] = React.useState<boolean | null>(null)
@@ -63,6 +66,7 @@ export const Swap: React.FC<ISwap> = ({
   const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
   const [slippTolerance, setSlippTolerance] = React.useState<string>('')
   const [settings, setSettings] = React.useState<boolean>(false)
+  const [details, setDetails] = React.useState<boolean>(false)
   // const firstUpdate = useRef(true)
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
     // TODO: solution if 0 => change to 1
@@ -108,7 +112,7 @@ export const Swap: React.FC<ISwap> = ({
         setPriceProportion(pools[pairIndex].sqrtPrice.v.div(new BN(10 ** PRICE_DECIMAL))
           .mul(pools[pairIndex].sqrtPrice.v
             .div(new BN(10 ** PRICE_DECIMAL)))
-          .mul(new BN(1)))
+          .mul(pools[pairIndex].fee.val).div(new BN(10 ** pools[pairIndex].fee.scale)))
         setPoolIndex(pairIndex)
         console.log(printBN(new BN(10 ** pools[pairIndex].fee.scale).sub(new BN(1)), pools[pairIndex].fee.scale))
       }
@@ -198,15 +202,33 @@ export const Swap: React.FC<ISwap> = ({
 
   const setSlippage = (slippage: string): void => {
     setSlippTolerance(slippage)
+    console.log(slippage)
   }
 
+  const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+    blurContent()
+    setSettings(true)
+  }
+
+  const hoverDetails = () => {
+    setDetails(!details)
+  }
+
+  const handleCloseSettings = () => {
+    unblurContent()
+    setSettings(false)
+  }
   return (
     <Grid container>
       <Grid container className={classes.header}>
         <Typography component='h1'>Swap tokens</Typography>
-        <CardMedia image={settingIcon} className={classes.settingsIcon} onClick={() => setSettings(!settings)}/>
+        <CardMedia image={settingIcon} className={classes.settingsIcon} onClick={handleClickSettings}/>
         <Grid className={classes.slippage} >
-          <Slippage open={settings} setSlippage={setSlippage}/>
+          <Slippage open={settings}
+            setSlippage={setSlippage}
+            handleClose={handleCloseSettings}
+            anchorEl={anchorEl}/>
         </Grid>
       </Grid>
       <Grid container className={classes.root} direction='column'>
@@ -318,25 +340,14 @@ export const Swap: React.FC<ISwap> = ({
           }}
         />
         <Box className={classes.transactionDetails}>
-          <Grid className={classes.transactionDetailsWrapper}>
+          <Grid className={classes.transactionDetailsWrapper} onMouseEnter={hoverDetails} onMouseLeave={hoverDetails}>
             <Typography className={classes.transactionDetailsHeader}>See transaction details</Typography>
             <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }}/>
-            <Grid container className={classes.transactionDetailsInfo} >
-              <Grid className={classes.detailsInfoWrapper}>
-                <Typography component='h2'>Transaction details</Typography>
-                <Typography component='p'>
-                Fee: <Typography component='span'>
-                    {printBN(pools[poolIndex ?? 0].fee.val, pools[poolIndex ?? 0].fee.scale)} %
-                  </Typography>
-                </Typography>
-                <Typography component='p'>
-                Exchange rate: <Typography component='span'>
-                    {printBN(pools[poolIndex ?? 0].exchangeRate.val, pools[poolIndex ?? 0].exchangeRate.scale)} xUSD
-                  </Typography>
-                </Typography>
-              </Grid>
-            </Grid>
           </Grid>
+          <TransactionDetails
+            open={details}
+            pool={pools[poolIndex ?? 0].fee}
+          />
           {tokenFromIndex !== null && tokenToIndex !== null && getButtonMessage() === 'Swap' ? (
             <Typography className={classes.rateText}>
           1 {swap ? tokens[tokenToIndex].symbol : tokens[tokenFromIndex].symbol } ={' '}

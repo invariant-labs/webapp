@@ -16,12 +16,11 @@ const useStyles = makeStyles(() => ({
   },
   settingsIcon: {
     width: 20,
-    height: 20
+    height: 20,
+    cursor: 'pointer'
   },
   slippage: {
-    position: 'absolute',
-    right: -310,
-    top: 10
+    position: 'absolute'
   },
   root: {
     background: colors.invariant.componentOut4,
@@ -86,39 +85,6 @@ const useStyles = makeStyles(() => ({
     color: colors.invariant.lightInfoText,
     ...newTypography.label1,
     cursor: 'pointer'
-  },
-  transactionDetailsInfo: {
-    position: 'absolute',
-    top: 5,
-    right: 85,
-    opacity: 0,
-    zIndex: 3,
-    transition: 'all .4s',
-    backgroundColor: colors.invariant.componentIn2,
-    width: 250,
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-    color: '#ffffff',
-    padding: 16,
-    marginBottom: 16,
-    borderRadius: 5,
-    '& p': {
-      ...newTypography.body1
-    }
-  },
-  detailsInfoWrapper: {
-    height: 'auto',
-    '& h2': {
-      ...newTypography.body1
-    },
-    '& p': {
-      ...newTypography.body3
-    },
-    '& span': {
-      ...newTypography.label1,
-      color: colors.invariant.lightInfoText
-    }
   },
   swapButton: {
     width: '100%',

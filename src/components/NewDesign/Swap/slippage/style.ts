@@ -2,6 +2,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
+  root: {
+    background: 'transparent'
+  },
   detailsWrapper: {
     display: 'flex',
     flexDirection: 'column',

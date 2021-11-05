@@ -1,13 +1,15 @@
 import React from 'react'
-import { Typography, Box, Grid, Button } from '@material-ui/core'
+import { Typography, Box, Grid, Button, Popover } from '@material-ui/core'
 import useStyles from './style'
 
 interface Props {
   open: boolean
   setSlippage: (slippage: string) => void
+  handleClose: () => void
+  anchorEl: HTMLButtonElement | null
 }
 
-const Slippage: React.FC<Props> = ({ open, setSlippage }) => {
+const Slippage: React.FC<Props> = ({ open, setSlippage, handleClose, anchorEl }) => {
   const classes = useStyles()
   const [slippTolerance, setSlippTolerance] = React.useState<string>('')
   const inputRef = React.useRef<HTMLInputElement>(null)
@@ -45,19 +47,30 @@ const Slippage: React.FC<Props> = ({ open, setSlippage }) => {
   }
 
   return (
-    <Grid container className={classes.detailsWrapper}>
-      <Grid container>
-        <Typography component='h2'>Swap Transaction Settings</Typography>
-        <Button className={classes.selectTokenClose} ></Button>
+    <Popover
+      open={open}
+      onClose={handleClose}
+      classes={{ root: classes.root }}
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right'
+      }}>
+      <Grid container className={classes.detailsWrapper}>
+        <Grid container>
+          <Typography component='h2'>Swap Transaction Settings</Typography>
+          <Button className={classes.selectTokenClose} onClick={handleClose} ></Button>
+        </Grid>
+        <Typography component='p'>Slippage tolerance:</Typography>
+        <Box>
+          <input placeholder='0.50%' className={classes.detailsInfoForm} type={'text'} value={slippTolerance} onChange={(e) => {
+            allowOnlyDigitsAndTrimUnnecessaryZeros(e)
+            setSlippage(e.target.value)
+          }}/>
+          <button className={classes.detailsInfoBtn}>Auto</button>
+        </Box>
       </Grid>
-      <Typography component='p'>Slippage tolerance:</Typography>
-      <Box>
-        <input placeholder='0.50%' className={classes.detailsInfoForm} type={'text'} value={slippTolerance} onChange={(e) => {
-          allowOnlyDigitsAndTrimUnnecessaryZeros(e)
-        }}/>
-        <button className={classes.detailsInfoBtn}>Auto</button>
-      </Box>
-    </Grid>
+    </Popover>
   )
 }
 export default Slippage
