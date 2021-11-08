@@ -18,11 +18,12 @@ const useStyles = makeStyles(() => ({
     borderRadius: 8,
     backgroundColor: colors.invariant.componentIn2,
     padding: 16,
+    paddingTop: 10,
     width: '100%'
   },
   inputLabel: {
     ...newTypography.label3,
-    lineHeight: 16,
+    lineHeight: '16px',
     color: colors.invariant.lightInfoText,
     marginBottom: 3
   },
@@ -39,9 +40,12 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.accent1,
     color: colors.white.main,
     ...newTypography.body1,
+    textTransform: 'none',
+    marginTop: 18,
 
     '&:hover': {
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`
+      boxShadow: `0 0 15px ${colors.invariant.accent1}`,
+      backgroundColor: colors.invariant.accent1
     }
   }
 }))

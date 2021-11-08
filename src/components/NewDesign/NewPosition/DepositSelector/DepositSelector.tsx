@@ -26,23 +26,23 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   const [token1Index, setToken1Index] = useState<number | null>(null)
   const [token2Index, setToken2Index] = useState<number | null>(null)
 
-  const [token1Deposit, setToken1Deposit] = useState<string>('0.0')
-  const [token2Deposit, setToken2Deposit] = useState<string>('0.0')
+  const [token1Deposit, setToken1Deposit] = useState<string>('')
+  const [token2Deposit, setToken2Deposit] = useState<string>('')
 
   return (
-    <Grid className={classes.wrapper}>
+    <Grid container className={classes.wrapper}>
       <Typography className={classes.sectionTitle}>Tokens</Typography>
-      <Grid className={classes.selects}>
-        <Grid className={classes.selectWrapper}>
-          <Typography className={classes.inputLabel}>Pair token 01</Typography>
+      <Grid container className={classes.sectionWrapper} style={{ marginBottom: 8 }}>
+        <Grid container className={classes.selects} direction='row' justifyContent='space-between'>
+          <Grid className={classes.selectWrapper}>
+            <Typography className={classes.inputLabel}>Pair token 01</Typography>
+          </Grid>
+
+          <Grid className={classes.selectWrapper}>
+            <Typography className={classes.inputLabel}>Pair token 02</Typography>
+          </Grid>
         </Grid>
 
-        <Grid className={classes.selectWrapper}>
-          <Typography className={classes.inputLabel}>Pair token 02</Typography>
-        </Grid>
-      </Grid>
-
-      <Grid className={classes.sectionWrapper}>
         <Typography className={classes.inputLabel}>Fee</Typography>
         <FeeSwitch
           setFeeValue={setFeeValue}
@@ -50,7 +50,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       </Grid>
 
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
-      <Grid className={classes.sectionWrapper}>
+      <Grid container className={classes.sectionWrapper}>
         <Typography className={classes.inputLabel}>Pair token 01 amount</Typography>
         <AmountInput
           currency={token1Index !== null ? tokens[token1Index].symbol : null}
