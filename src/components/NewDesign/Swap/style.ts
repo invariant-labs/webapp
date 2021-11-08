@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => ({
     ...newTypography.label1
   },
   amountInput: {
-    border: '1px solid #34303B',
+    border: `1px solid ${colors.invariant.componentOut2}`,
     backgroundColor: colors.invariant.componentIn2
   },
   swapArrowBox: {

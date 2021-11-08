@@ -68,7 +68,7 @@ const Slippage: React.FC<Props> = ({ open, setSlippage, handleClose, anchorEl })
             allowOnlyDigitsAndTrimUnnecessaryZeros(e)
             setSlippage(e.target.value)
           }}/>
-          <button className={classes.detailsInfoBtn}>Auto</button>
+          <button className={classes.detailsInfoBtn} onClick={() => setSlippTolerance('1')}>Auto</button>
         </Box>
       </Grid>
     </Popover>

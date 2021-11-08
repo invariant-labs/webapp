@@ -6,7 +6,7 @@ import useStyles from '../style'
 import searchIcon from '@static/svg/lupa.svg'
 export interface ISelectTokenModal {
   tokens: Array<{ symbol: string, name: string, icon: string }> | null
-  commonTokens: Array<{ symbol: string, name: string, icon: string }>
+  commonTokens: Array<{ symbol: string, name: string, icon: string }> | null
   open: boolean
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
@@ -16,7 +16,7 @@ export interface ISelectTokenModal {
 
 export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   tokens,
-  commonTokens,
+  // commonTokens,
   open,
   handleClose,
   anchorEl,
@@ -74,7 +74,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
           <input className={classes.selectTokenInput} placeholder='Search token name or address' onChange={searchToken}/>
           <CardMedia image={searchIcon} className={classes.inputIcon} />
         </Grid>
-        <Grid container className={classes.commonTokens}>
+        {/* <Grid container className={classes.commonTokens}>
           <Typography component='h2' className={classes.commonTokensHeader}>Commonly used</Typography>
           <Grid className={classes.commonTokensList}>
             {commonTokens.map((token) => (
@@ -92,7 +92,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
               </Box>
             ))}
           </Grid>
-        </Grid>
+        </Grid> */}
         <Box className={classes.tokenList}>
           <CustomScrollbar>
             { tokens ? tokens.filter(token => {

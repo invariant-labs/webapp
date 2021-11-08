@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { printBN, printBNtoBN, transformBN } from '@consts/utils'
+import { printBN, printBNtoBN } from '@consts/utils'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
 import { OutlinedButton } from '@components/NewDesign/OutlinedButton/OutlinedButton'
@@ -67,6 +67,7 @@ export const Swap: React.FC<ISwap> = ({
   const [slippTolerance, setSlippTolerance] = React.useState<string>('')
   const [settings, setSettings] = React.useState<boolean>(false)
   const [details, setDetails] = React.useState<boolean>(false)
+  // const [pairIndex, setPairIndex] = React.useState<number>(0)
 
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
     // TODO: solution if 0 => change to 1
@@ -108,11 +109,11 @@ export const Swap: React.FC<ISwap> = ({
        (tokens[tokenToIndex].assetAddress.toString() === pool.tokenX.toString() &&
         tokens[tokenFromIndex].assetAddress.toString() === pool.tokenY.toString())
       })
+      // setPairIndex(pairIndex)
       if (pairIndex !== -1) {
         setPriceProportion(pools[pairIndex].sqrtPrice.v.div(new BN(10 ** PRICE_DECIMAL))
           .mul(pools[pairIndex].sqrtPrice.v
-            .div(new BN(10 ** PRICE_DECIMAL)))
-          .mul(pools[pairIndex].fee.val).div(new BN(10 ** pools[pairIndex].fee.scale)))
+            .div(new BN(10 ** PRICE_DECIMAL))))
         setPoolIndex(pairIndex)
         console.log(printBN(new BN(10 ** pools[pairIndex].fee.scale).sub(new BN(1)), pools[pairIndex].fee.scale))
       }
@@ -265,12 +266,22 @@ export const Swap: React.FC<ISwap> = ({
               }
             }
           }}
-          tokens={swap ? tokenY.map(({ symbol, name, icon }) => ({
+          tokens={swap ? tokenY.map((
+            {
+              symbol,
+              name,
+              icon
+            }) => ({
             symbol,
             name,
             icon
           }))
-            : tokens.map(({ symbol, name, icon }) => ({
+            : tokens.map((
+              {
+                symbol,
+                name,
+                icon
+              }) => ({
               symbol,
               name,
               icon
@@ -281,12 +292,18 @@ export const Swap: React.FC<ISwap> = ({
         <Box className={classes.tokenComponentTextContainer}>
           <Box className={classes.swapArrowBox}>
             <CardMedia image={SwapArrows}
-              style={{ transform: swap !== null ? swap ? 'rotate(180deg)' : 'rotate(0deg)' : '' }}
+              style={
+                {
+                  transform: swap !== null
+                    ? swap
+                      ? 'rotate(180deg)'
+                      : 'rotate(0deg)'
+                    : ''
+                }
+              }
               className={classes.swapArrows} onClick={() => {
                 if (tokenToIndex !== null) {
                   swap !== null ? setSwap(!swap) : setSwap(true)
-                } else {
-
                 }
               }} />
           </Box>
@@ -301,7 +318,15 @@ export const Swap: React.FC<ISwap> = ({
         <ExchangeAmountInput
           value={amountTo}
           className={classes.amountInput}
-          style={{ transform: swap !== null ? swap ? 'translateY(-104px)' : 'translateY(0px)' : '' }}
+          style={
+            {
+              transform: swap !== null
+                ? swap
+                  ? 'translateY(-104px)'
+                  : 'translateY(0px)'
+                : ''
+            }
+          }
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountTo(value)
