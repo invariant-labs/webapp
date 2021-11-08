@@ -1,5 +1,5 @@
 import { Button, Grid, Input, Typography } from '@material-ui/core'
-import React, { useRef } from 'react'
+import React, { useRef, CSSProperties } from 'react'
 import useStyles from './style'
 
 interface IProps {
@@ -9,6 +9,7 @@ interface IProps {
   value?: string
   placeholder?: string
   onMaxClick: () => void
+  style?: CSSProperties
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -17,7 +18,8 @@ export const AmountInput: React.FC<IProps> = ({
   value,
   setValue,
   placeholder,
-  onMaxClick
+  onMaxClick,
+  style
 }) => {
   const classes = useStyles()
 
@@ -82,6 +84,7 @@ export const AmountInput: React.FC<IProps> = ({
       endAdornment={(
         <Button className={classes.maxButton} onClick={onMaxClick}>Max</Button>
       )}
+      style={style}
     />
   )
 }
