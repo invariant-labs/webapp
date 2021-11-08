@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 28,
     '& h1': {
       ...newTypography.heading4,
-      color: '#FFFFFF'
+      color: colors.white.main
     }
   },
   settingsIcon: {
@@ -90,7 +90,7 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     height: 48,
     ...newTypography.body1,
-    color: '#ffffff',
+    color: colors.white.main,
     cursor: 'pointer'
   }
 }))

@@ -118,12 +118,12 @@ const useStyles = makeStyles(() => ({
     }
   },
   tokenName: {
-    color: '#FFFFFF',
+    color: colors.white.main,
     ...newTypography.heading4,
     lineHeight: '20px'
   },
   tokenDescrpiption: {
-    color: '#FFFFFF',
+    color: colors.white.main,
     ...newTypography.label1,
     lineHeight: '16px',
     whiteSpace: 'nowrap'

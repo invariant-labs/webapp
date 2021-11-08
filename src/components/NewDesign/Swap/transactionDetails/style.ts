@@ -15,7 +15,7 @@ export const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
-    color: '#ffffff',
+    color: colors.white.main,
     padding: 16,
     marginBottom: 16,
     borderRadius: 5,

@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.componentOut4,
     padding: 18,
     borderRadius: 10,
-    color: '#FFFFFF',
+    color: colors.white.main,
     '& h2': {
       ...newTypography.heading4
     },
@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
   },
   detailsInfoForm: {
     border: '1px solid #34303B',
-    color: '#FFFFFF',
+    color: colors.white.main,
     borderRadius: 5,
     width: '93%',
     backgroundColor: '#141216',

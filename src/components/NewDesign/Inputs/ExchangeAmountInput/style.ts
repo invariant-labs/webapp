@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 const useStyles = makeStyles(() => ({
   amountInput: {
     background: colors.invariant.componentIn2,
-    color: '#FFFFFF',
+    color: colors.white.main,
     borderRadius: 5,
     padding: '10px 15px',
     fontSize: 30,
@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
   input: {
     paddingTop: 4,
     '&:focus': {
-      color: '#FFFFFF'
+      color: colors.white.main
     }
   },
   label: {
