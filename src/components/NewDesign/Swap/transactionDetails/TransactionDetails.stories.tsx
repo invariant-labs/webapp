@@ -12,6 +12,7 @@ storiesOf('newUi/swap', module)
       <TransactionDetails
         open={true}
         pool={{ val: new BN(1), scale: 3 }}
+        exchangeRate={{ val: '0.4321', symbol: 'SNY' }}
       />
     </div>
   ))

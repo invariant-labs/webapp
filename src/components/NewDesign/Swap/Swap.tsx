@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { printBN, printBNtoBN } from '@consts/utils'
+import { printBN, printBNtoBN, transformBN } from '@consts/utils'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
 import { OutlinedButton } from '@components/NewDesign/OutlinedButton/OutlinedButton'
@@ -67,7 +67,7 @@ export const Swap: React.FC<ISwap> = ({
   const [slippTolerance, setSlippTolerance] = React.useState<string>('')
   const [settings, setSettings] = React.useState<boolean>(false)
   const [details, setDetails] = React.useState<boolean>(false)
-  // const firstUpdate = useRef(true)
+
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
     // TODO: solution if 0 => change to 1
     if (priceProportion.eqn(0)) {
@@ -344,10 +344,18 @@ export const Swap: React.FC<ISwap> = ({
             <Typography className={classes.transactionDetailsHeader}>See transaction details</Typography>
             <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }}/>
           </Grid>
-          <TransactionDetails
-            open={details}
-            pool={pools[poolIndex ?? 0].fee}
-          />
+          {tokenFromIndex !== null && tokenToIndex !== null && getButtonMessage() === 'Swap'
+            ? <TransactionDetails
+              open={details}
+              pool={pools[poolIndex ?? 0].fee}
+              exchangeRate={{
+                val: swap
+                  ? calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex], '1')
+                  : calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], '1'),
+                symbol: swap ? tokens[tokenFromIndex].symbol : tokens[tokenToIndex].symbol
+              }}
+            />
+            : null}
           {tokenFromIndex !== null && tokenToIndex !== null && getButtonMessage() === 'Swap' ? (
             <Typography className={classes.rateText}>
           1 {swap ? tokens[tokenToIndex].symbol : tokens[tokenFromIndex].symbol } ={' '}
