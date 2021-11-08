@@ -10,10 +10,12 @@ storiesOf('singlePosition/rightComponent', module)
     const amount = 235
 
     return (
-      <LiquidationRangeInfo
-        label={label}
-        amount={amount}
-        toToken={toToken}
-        fromToken={fromToken}/>
+      <div style={{ width: 228 }}>
+        <LiquidationRangeInfo
+          label={label}
+          amount={amount}
+          toToken={toToken}
+          fromToken={fromToken}/>
+      </div>
     )
   })
