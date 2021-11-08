@@ -1,7 +1,7 @@
 import { Button, Grid, Typography } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import PriceRangePlot from '@components/NewDesign/PriceRangePlot/PriceRangePlot'
-import RangeInput from '@components/NewDesign/RangeInput/RangeInput'
+import RangeInput from '@components/NewDesign/Inputs/RangeInput/RangeInput'
 import useStyles from './style'
 import { nearestPriceIndex } from '@consts/utils'
 
