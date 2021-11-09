@@ -10,6 +10,7 @@ interface IProps {
   placeholder?: string
   onMaxClick: () => void
   style?: CSSProperties
+  blocked?: boolean
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -19,7 +20,8 @@ export const AmountInput: React.FC<IProps> = ({
   setValue,
   placeholder,
   onMaxClick,
-  style
+  style,
+  blocked = false
 }) => {
   const classes = useStyles()
 
@@ -59,33 +61,46 @@ export const AmountInput: React.FC<IProps> = ({
   }
 
   return (
-    <Input
-      inputRef={inputRef}
-      className={classes.root}
-      type={'text'}
-      value={value}
-      disableUnderline={true}
-      placeholder={placeholder}
-      onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-      startAdornment={(
-        <Grid className={classes.currency} container justifyContent='center' alignItems='center' wrap='nowrap'>
-          {
-            currency !== null
-              ? (
-                <>
-                  <img alt='' src={currencyIconSrc} className={classes.currencyIcon}/>
-                  <Typography className={classes.currencySymbol}>{currency}</Typography>
-                </>
-              )
-              : <Typography className={classes.noCurrencyText}>Select</Typography>
-          }
-        </Grid>
-      )}
-      endAdornment={(
-        <Button className={classes.maxButton} onClick={onMaxClick}>Max</Button>
-      )}
-      style={style}
-    />
+    <Grid container className={classes.wrapper}>
+      <Input
+        inputRef={inputRef}
+        className={classes.root}
+        type={'text'}
+        value={value}
+        disableUnderline={true}
+        placeholder={placeholder}
+        onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
+        startAdornment={(
+          <Grid className={classes.currency} container justifyContent='center' alignItems='center' wrap='nowrap'>
+            {
+              currency !== null
+                ? (
+                  <>
+                    <img alt='' src={currencyIconSrc} className={classes.currencyIcon}/>
+                    <Typography className={classes.currencySymbol}>{currency}</Typography>
+                  </>
+                )
+                : <Typography className={classes.noCurrencyText}>Select</Typography>
+            }
+          </Grid>
+        )}
+        endAdornment={(
+          <Button className={classes.maxButton} onClick={onMaxClick}>Max</Button>
+        )}
+        style={style}
+      />
+
+      {
+        blocked && (
+          <>
+            <Grid className={classes.blocker} />
+            <Grid container className={classes.blockedInfoWrapper} justifyContent='center' alignItems='center'>
+              <Typography className={classes.blockedInfo}>Price outside range. Single-asset deposit only.</Typography>
+            </Grid>
+          </>
+        )
+      }
+    </Grid>
   )
 }
 export default AmountInput

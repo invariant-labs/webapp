@@ -2,6 +2,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
+  wrapper: {
+    position: 'relative'
+  },
   root: {
     width: '100%',
     height: 44,
@@ -52,6 +55,27 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       backgroundColor: colors.invariant.logoGreen
     }
+  },
+  blocker: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 11,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(11, 12, 13, 0.88)',
+    filter: 'blur(4px) brightness(0.4)'
+  },
+  blockedInfoWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 12,
+    height: '100%'
+  },
+  blockedInfo: {
+    ...newTypography.body1,
+    color: colors.invariant.lightInfoText
   }
 }))
 

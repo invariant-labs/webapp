@@ -11,6 +11,7 @@ export interface IRangeSelector {
   tokenFromSymbol: string
   tokenToSymbol: string
   onChangeRange: (leftIndex: number, rightIndex: number) => void
+  blocked?: boolean
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -18,7 +19,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   midPriceIndex,
   tokenFromSymbol,
   tokenToSymbol,
-  onChangeRange
+  onChangeRange,
+  blocked = false
 }) => {
   const classes = useStyles()
 
@@ -142,6 +144,17 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             Set full range
           </Button>
         </Grid>
+
+        {
+          blocked && (
+            <>
+              <Grid className={classes.blocker} />
+              <Grid container className={classes.blockedInfoWrapper} justifyContent='center' alignItems='center'>
+                <Typography className={classes.blockedInfo}>Select tokens to set price range.</Typography>
+              </Grid>
+            </>
+          )
+        }
       </Grid>
     </Grid>
   )

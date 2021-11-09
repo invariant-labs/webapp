@@ -39,3 +39,14 @@ storiesOf('newInputs/amount', module)
       />
     </div>
   ))
+  .add('blocked', () => (
+    <div style={{ backgroundColor: colors.navy.component, padding: '10px', width: 400 }}>
+      <AmountInput
+        setValue={() => {}}
+        placeholder={'0.0'}
+        currency={null}
+        onMaxClick={() => {}}
+        blocked
+      />
+    </div>
+  ))

@@ -15,7 +15,12 @@ const useStyles = makeStyles(() => ({
   settings: {
     height: 40,
     width: 'fit-content',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    transition: 'filter 300ms',
+
+    '&:hover': {
+      filter: 'brightness(2)'
+    }
   },
   settingsIcon: {
     width: 20,
