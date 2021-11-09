@@ -14,7 +14,8 @@ const useStyles = makeStyles(() => ({
   },
   settings: {
     height: 40,
-    width: 'fit-content'
+    width: 'fit-content',
+    cursor: 'pointer'
   },
   settingsIcon: {
     width: 20,

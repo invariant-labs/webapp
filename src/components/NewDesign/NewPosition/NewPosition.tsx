@@ -61,7 +61,7 @@ export const INewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Grid>
 
-      <Grid container direction='row'>
+      <Grid container direction='row' justifyContent='space-between'>
         <DepositSelector
           tokens={tokens}
           setPositionTokens={(index1, index2) => {
