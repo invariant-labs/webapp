@@ -11,9 +11,10 @@ interface IProps {
   onMaxClick: () => void
   style?: CSSProperties
   blocked?: boolean
+  blockerInfo?: string
 }
 
-export const AmountInput: React.FC<IProps> = ({
+export const DepositAmountInput: React.FC<IProps> = ({
   currency,
   currencyIconSrc,
   value,
@@ -21,7 +22,8 @@ export const AmountInput: React.FC<IProps> = ({
   placeholder,
   onMaxClick,
   style,
-  blocked = false
+  blocked = false,
+  blockerInfo
 }) => {
   const classes = useStyles()
 
@@ -95,7 +97,7 @@ export const AmountInput: React.FC<IProps> = ({
           <>
             <Grid className={classes.blocker} />
             <Grid container className={classes.blockedInfoWrapper} justifyContent='center' alignItems='center'>
-              <Typography className={classes.blockedInfo}>Price outside range. Single-asset deposit only.</Typography>
+              <Typography className={classes.blockedInfo}>{blockerInfo}</Typography>
             </Grid>
           </>
         )
@@ -103,4 +105,4 @@ export const AmountInput: React.FC<IProps> = ({
     </Grid>
   )
 }
-export default AmountInput
+export default DepositAmountInput

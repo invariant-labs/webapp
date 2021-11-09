@@ -1,4 +1,4 @@
-import AmountInput from '@components/NewDesign/Inputs/AmountInput/AmountInput'
+import DepositAmountInput from '@components/NewDesign/Inputs/DepositAmountInput/DepositAmountInput'
 import { Button, Grid, Typography } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
@@ -52,7 +52,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
       <Grid container className={classes.sectionWrapper}>
         <Typography className={classes.inputLabel}>Pair token 01 amount</Typography>
-        <AmountInput
+        <DepositAmountInput
           currency={token1Index !== null ? tokens[token1Index].symbol : null}
           currencyIconSrc={token1Index !== null ? tokens[token1Index].icon : undefined}
           value={token1Deposit}
@@ -65,7 +65,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         />
 
         <Typography className={classes.inputLabel}>Pair token 02 amount</Typography>
-        <AmountInput
+        <DepositAmountInput
           currency={token2Index !== null ? tokens[token2Index].symbol : null}
           currencyIconSrc={token2Index !== null ? tokens[token2Index].icon : undefined}
           value={token2Deposit}

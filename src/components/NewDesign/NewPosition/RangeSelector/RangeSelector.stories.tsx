@@ -52,5 +52,6 @@ storiesOf('position/rangeSelector', module).add('setter', () => (
       action(`range indexes: ${left} - ${right}`)()
     }}
     blocked
+    blockerInfo='Select tokens to set price range.'
   />
 ))
