@@ -45,6 +45,26 @@ export const INewPosition: React.FC<INewPosition> = ({
   const [token1Index, setToken1Index] = useState<number | null>(null)
   const [token2Index, setToken2Index] = useState<number | null>(null)
 
+  const setInputBlockerInfo = (isIndexNull: boolean, isSingleAsset: boolean) => {
+    if (isIndexNull) {
+      return 'Select token.'
+    }
+
+    if (isSingleAsset) {
+      return 'Current price outside range. Single-asset deposit only.'
+    }
+
+    return ''
+  }
+
+  const setRangeBlockerInfo = (isAnyIndexNull: boolean) => {
+    if (isAnyIndexNull) {
+      return 'Select tokens to set price range.'
+    }
+
+    return ''
+  }
+
   return (
     <Grid container className={classes.wrapper}>
       <Grid container className={classes.top} direction='row' justifyContent='space-between' alignItems='center'>
@@ -90,6 +110,14 @@ export const INewPosition: React.FC<INewPosition> = ({
               }
             }
           }
+          token1InputState={{
+            blocked: token1Index === null || rightRange < midPriceIndex,
+            blockerInfo: setInputBlockerInfo(token1Index === null, rightRange < midPriceIndex)
+          }}
+          token2InputState={{
+            blocked: token2Index === null || leftRange > midPriceIndex,
+            blockerInfo: setInputBlockerInfo(token2Index === null, leftRange > midPriceIndex)
+          }}
         />
 
         <RangeSelector
@@ -103,6 +131,8 @@ export const INewPosition: React.FC<INewPosition> = ({
               setRightRange(right)
             }
           }
+          blocked={token1Index === null || token2Index === null}
+          blockerInfo={setRangeBlockerInfo(token1Index === null || token2Index === null)}
         />
       </Grid>
 

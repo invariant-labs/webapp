@@ -63,7 +63,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
   }
 
   return (
-    <Grid container className={classes.wrapper}>
+    <Grid container className={classes.wrapper} style={style}>
       <Input
         inputRef={inputRef}
         className={classes.root}
@@ -89,13 +89,12 @@ export const DepositAmountInput: React.FC<IProps> = ({
         endAdornment={(
           <Button className={classes.maxButton} onClick={onMaxClick}>Max</Button>
         )}
-        style={style}
       />
 
       {
         blocked && (
           <>
-            <Grid className={classes.blocker} />
+            <Grid container className={classes.blocker} />
             <Grid container className={classes.blockedInfoWrapper} justifyContent='center' alignItems='center'>
               <Typography className={classes.blockedInfo}>{blockerInfo}</Typography>
             </Grid>

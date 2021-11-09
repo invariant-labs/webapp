@@ -4,6 +4,11 @@ import React, { useState, useEffect } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
 import useStyles from './style'
 
+export interface InputState {
+  blocked: boolean
+  blockerInfo?: string
+}
+
 export interface IDepositSelector {
   tokens: Array<{ symbol: string, name: string, icon: string }>
   setPositionTokens: (token1Index: number | null, token2index: number | null) => void
@@ -11,6 +16,8 @@ export interface IDepositSelector {
   onAddLiquidity: (token1Deposit: number, token2Deposit: number) => void
   token1Max: number
   token2Max: number
+  token1InputState: InputState
+  token2InputState: InputState
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -19,7 +26,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   setFeeValue,
   onAddLiquidity,
   token1Max,
-  token2Max
+  token2Max,
+  token1InputState,
+  token2InputState
 }) => {
   const classes = useStyles()
 
@@ -62,6 +71,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           style={{
             marginBottom: 8
           }}
+          {...token1InputState}
         />
 
         <Typography className={classes.inputLabel}>Pair token 02 amount</Typography>
@@ -72,6 +82,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           setValue={setToken2Deposit}
           placeholder='0.0'
           onMaxClick={() => { setToken2Deposit(token2Max.toString()) }}
+          {...token2InputState}
         />
       </Grid>
 
