@@ -21,13 +21,15 @@ export interface INewPosition {
     feeTier: number,
     slippageTolerance: number
   ) => void
+  onChangePositionTokens: (token1Index: number | null, token2index: number | null) => void
 }
 
 export const INewPosition: React.FC<INewPosition> = ({
   tokens,
   data,
   midPriceIndex,
-  addLiquidityHandler
+  addLiquidityHandler,
+  onChangePositionTokens
 }) => {
   const classes = useStyles()
 
@@ -67,6 +69,7 @@ export const INewPosition: React.FC<INewPosition> = ({
           setPositionTokens={(index1, index2) => {
             setToken1Index(index1)
             setToken2Index(index2)
+            onChangePositionTokens(index1, index2)
           }}
           setFeeValue={setFeeTier}
           token1Max={token1Index !== null ? tokens[token1Index].walletAmount : 0}

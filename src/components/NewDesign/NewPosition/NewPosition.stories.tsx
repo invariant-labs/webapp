@@ -38,6 +38,7 @@ storiesOf('position/newPosition', module).add('new', () => (
       data={data}
       midPriceIndex={140}
       addLiquidityHandler={() => {}}
+      onChangePositionTokens={() => {}}
     />
   </div>
 ))

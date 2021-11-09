@@ -30,7 +30,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   const [token2Deposit, setToken2Deposit] = useState<string>('')
 
   return (
-    <Grid container className={classes.wrapper}>
+    <Grid container direction='column' className={classes.wrapper}>
       <Typography className={classes.sectionTitle}>Tokens</Typography>
       <Grid container className={classes.sectionWrapper} style={{ marginBottom: 8 }}>
         <Grid container className={classes.selects} direction='row' justifyContent='space-between'>
