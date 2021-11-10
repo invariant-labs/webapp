@@ -15,8 +15,8 @@ const useStyles = makeStyles(() => ({
     }
   },
   disabled: {
-    background: '#7748D8 !important',
-    color: '#ffffff !important'
+    background: `${colors.invariant.componentOut3} !important`,
+    color: `${colors.white.main} !important`
   }
 }))
 

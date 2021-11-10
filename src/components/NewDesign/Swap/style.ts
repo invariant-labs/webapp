@@ -45,17 +45,17 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.componentOut2,
     padding: '10px 10px',
     width: 'max-content',
-    borderRadius: '100%',
+    borderRadius: '50%',
     position: 'absolute',
     zIndex: 2,
     left: '50%',
     top: '0%',
-    transform: 'translateX(-50%) translateY(-40%)',
+    transform: 'translateX(-50%) translateY(-45%)',
     cursor: 'pointer'
   },
   swapArrows: {
     width: 42,
-    height: 28,
+    height: 33,
     margin: 4,
     transition: '.4s all'
   },

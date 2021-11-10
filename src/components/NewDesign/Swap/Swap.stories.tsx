@@ -20,7 +20,8 @@ const pools: Pools[] = [
     tokenX: new PublicKey('35P5P6ZGKUN6wqxrX4VdLRrGbzkrfvhyNs4iqk1vDxAx'),
     tokenY: new PublicKey('CYPdUAp8KshzJ2a45kzgy3fr4UTiyrEGE998rA7wzFR6'),
     sqrtPrice: {
-      v: new BN(105324532453400)
+      v: new BN(2),
+      scale: 0
     },
     fee: {
       val: new BN(2),
@@ -35,7 +36,8 @@ const pools: Pools[] = [
     tokenX: new PublicKey('35P5P6ZGKUN6wqxrX4VdLRrGbzkrfvhyNs4iqk1vDxAx'),
     tokenY: new PublicKey('23AQ2kRxqT1fk47q6G8YcKrpx4VhWeUvKHuRijT61qSD'),
     sqrtPrice: {
-      v: new BN(4004325324500)
+      v: new BN(4),
+      scale: 0
     },
     fee: {
       val: new BN(1),

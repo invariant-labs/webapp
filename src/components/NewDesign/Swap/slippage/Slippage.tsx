@@ -56,7 +56,7 @@ const Slippage: React.FC<Props> = ({ open, setSlippage, handleClose, anchorEl })
         vertical: 'bottom',
         horizontal: 'right'
       }}
-      style={{ backgroundColor: 'green important!' }}>
+    >
       <Grid container className={classes.detailsWrapper}>
         <Grid container>
           <Typography component='h2'>Swap Transaction Settings</Typography>
@@ -64,7 +64,7 @@ const Slippage: React.FC<Props> = ({ open, setSlippage, handleClose, anchorEl })
         </Grid>
         <Typography component='p'>Slippage tolerance:</Typography>
         <Box>
-          <input placeholder='0.50%' className={classes.detailsInfoForm} type={'text'} value={slippTolerance} onChange={(e) => {
+          <input placeholder='1%' className={classes.detailsInfoForm} type={'text'} value={slippTolerance} onChange={(e) => {
             allowOnlyDigitsAndTrimUnnecessaryZeros(e)
             setSlippage(e.target.value)
           }}/>
