@@ -22,6 +22,11 @@ export interface INewPosition {
     slippageTolerance: number
   ) => void
   onChangePositionTokens: (token1Index: number | null, token2index: number | null) => void
+  isCurrentPoolExisting: boolean
+  calcCurrentPoolProportion: (
+    leftRangeTickIndex: number,
+    rightRangeTickIndex: number
+  ) => number
 }
 
 export const INewPosition: React.FC<INewPosition> = ({
@@ -29,7 +34,9 @@ export const INewPosition: React.FC<INewPosition> = ({
   data,
   midPriceIndex,
   addLiquidityHandler,
-  onChangePositionTokens
+  onChangePositionTokens,
+  isCurrentPoolExisting,
+  calcCurrentPoolProportion
 }) => {
   const classes = useStyles()
 
@@ -57,12 +64,23 @@ export const INewPosition: React.FC<INewPosition> = ({
     return ''
   }
 
-  const setRangeBlockerInfo = (isAnyIndexNull: boolean) => {
-    if (isAnyIndexNull) {
+  const setRangeBlockerInfo = () => {
+    if (token1Index === null || token2Index === null) {
       return 'Select tokens to set price range.'
     }
 
+    if (!isCurrentPoolExisting) {
+      return 'Pool is not existing'
+    }
+
     return ''
+  }
+
+  const noRangePlaceholderProps = {
+    data: Array(10).fill(1).map((_e, index) => ({ x: index, y: index })),
+    midPriceIndex: 5,
+    tokenFromSymbol: 'ABC',
+    tokenToSymbol: 'XYZ'
   }
 
   return (
@@ -118,13 +136,12 @@ export const INewPosition: React.FC<INewPosition> = ({
             blocked: token2Index === null || leftRange > midPriceIndex,
             blockerInfo: setInputBlockerInfo(token2Index === null, leftRange > midPriceIndex)
           }}
+          calcCurrentPoolProportion={calcCurrentPoolProportion}
+          leftRangeTickIndex={leftRange}
+          rightRangeTickIndex={rightRange}
         />
 
         <RangeSelector
-          data={data}
-          midPriceIndex={midPriceIndex}
-          tokenFromSymbol={token1Index !== null ? tokens[token1Index].symbol : 'ABC'}
-          tokenToSymbol={token2Index !== null ? tokens[token2Index].symbol : 'XYZ'}
           onChangeRange={
             (left, right) => {
               setLeftRange(left)
@@ -132,7 +149,19 @@ export const INewPosition: React.FC<INewPosition> = ({
             }
           }
           blocked={token1Index === null || token2Index === null}
-          blockerInfo={setRangeBlockerInfo(token1Index === null || token2Index === null)}
+          blockerInfo={setRangeBlockerInfo()}
+          {
+          ...(
+            token1Index === null || token2Index === null || !isCurrentPoolExisting
+              ? noRangePlaceholderProps
+              : {
+                data,
+                midPriceIndex,
+                tokenFromSymbol: tokens[token1Index].symbol,
+                tokenToSymbol: tokens[token2Index].symbol
+              }
+          )
+          }
         />
       </Grid>
 

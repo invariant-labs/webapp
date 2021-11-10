@@ -17,5 +17,8 @@ storiesOf('position/depositSelector', module).add('deposit', () => (
       blocked: true,
       blockerInfo: 'Select token.'
     }}
+    leftRangeTickIndex={100}
+    rightRangeTickIndex={200}
+    calcCurrentPoolProportion={() => 1}
   />
 ))

@@ -1,4 +1,5 @@
 import { Button, Grid, Input, Popover, Typography } from '@material-ui/core'
+import { Close } from '@material-ui/icons'
 import React, { useRef, useState, useEffect } from 'react'
 import useStyles from './style'
 
@@ -28,6 +29,7 @@ export const PositionSettings: React.FC<IPositionSettings> = ({
   useEffect(() => {
     setInputValue(`${slippageTolerance}%`)
   }, [slippageTolerance])
+
   const onChangeToleranceInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const regex = /^\d*\.?\d*%?$/
     if (e.target.value === '' || regex.test(e.target.value)) {
@@ -83,7 +85,10 @@ export const PositionSettings: React.FC<IPositionSettings> = ({
       }}
     >
       <Grid className={classes.root}>
-        <Typography className={classes.header}>Liquidity Position Settings</Typography>
+        <Grid className={classes.headerRow} container direction='row' justifyContent='space-between' alignItems='center'>
+          <Typography className={classes.header}>Liquidity Position Settings</Typography>
+          <Close className={classes.closeIcon} onClick={handleClose} />
+        </Grid>
 
         <Typography className={classes.label}>Slippage tolerance</Typography>
         <Input

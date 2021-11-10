@@ -18,6 +18,12 @@ export interface IDepositSelector {
   token2Max: number
   token1InputState: InputState
   token2InputState: InputState
+  calcCurrentPoolProportion: (
+    leftRangeTickIndex: number,
+    rightRangeTickIndex: number
+  ) => number
+  leftRangeTickIndex: number,
+  rightRangeTickIndex: number
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -28,7 +34,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   token1Max,
   token2Max,
   token1InputState,
-  token2InputState
+  token2InputState,
+  calcCurrentPoolProportion,
+  leftRangeTickIndex,
+  rightRangeTickIndex
 }) => {
   const classes = useStyles()
 
@@ -37,6 +46,16 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
   const [token1Deposit, setToken1Deposit] = useState<string>('')
   const [token2Deposit, setToken2Deposit] = useState<string>('')
+
+  useEffect(() => {
+    if (!token1InputState.blocked && !token2InputState.blocked) {
+      if (+token1Deposit !== 0) {
+        setToken2Deposit((+token1Deposit * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
+      } else if (+token2Deposit !== 0) {
+        setToken1Deposit((+token2Deposit * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
+      }
+    }
+  }, [leftRangeTickIndex, rightRangeTickIndex])
 
   return (
     <Grid container direction='column' className={classes.wrapper}>
@@ -65,7 +84,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           currency={token1Index !== null ? tokens[token1Index].symbol : null}
           currencyIconSrc={token1Index !== null ? tokens[token1Index].icon : undefined}
           value={token1Deposit}
-          setValue={setToken1Deposit}
+          setValue={(value) => {
+            setToken1Deposit(value)
+            setToken2Deposit((+value * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
+          }}
           placeholder='0.0'
           onMaxClick={() => { setToken1Deposit(token1Max.toString()) }}
           style={{
@@ -79,7 +101,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           currency={token2Index !== null ? tokens[token2Index].symbol : null}
           currencyIconSrc={token2Index !== null ? tokens[token2Index].icon : undefined}
           value={token2Deposit}
-          setValue={setToken2Deposit}
+          setValue={(value) => {
+            setToken2Deposit(value)
+            setToken1Deposit((+value / calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
+          }}
           placeholder='0.0'
           onMaxClick={() => { setToken2Deposit(token2Max.toString()) }}
           {...token2InputState}

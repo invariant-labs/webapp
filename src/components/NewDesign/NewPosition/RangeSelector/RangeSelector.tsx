@@ -63,8 +63,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   useEffect(() => {
     changeRangeHandler(
-      midPriceIndex / 2,
-      Math.min(3 * midPriceIndex / 2, data.length - 1)
+      Math.round(midPriceIndex / 2),
+      Math.min(Math.round(3 * midPriceIndex / 2), data.length - 1)
     )
   }, [tokenFromSymbol, tokenToSymbol])
 

@@ -39,6 +39,8 @@ storiesOf('position/newPosition', module).add('new', () => (
       midPriceIndex={140}
       addLiquidityHandler={() => {}}
       onChangePositionTokens={() => {}}
+      isCurrentPoolExisting={false}
+      calcCurrentPoolProportion={() => 1}
     />
   </div>
 ))
