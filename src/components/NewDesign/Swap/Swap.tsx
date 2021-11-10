@@ -20,7 +20,7 @@ export interface SwapToken {
   symbol: string
   assetAddress: PublicKey
   name: string
-  icon: string
+  logoURI: string
 }
 
 export interface Pools {
