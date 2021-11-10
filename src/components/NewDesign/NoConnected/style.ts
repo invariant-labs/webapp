@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
   },
   button: {
     marginTop: 20,
-    color: '#FFFFFF',
+    color: colors.white.main,
     background: colors.invariant.accent1,
     ...newTypography.body1
   }
