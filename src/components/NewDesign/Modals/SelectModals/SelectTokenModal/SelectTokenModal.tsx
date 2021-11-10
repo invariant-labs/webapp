@@ -26,17 +26,6 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   const classes = useStyles()
   const [value, setValue] = useState<string>('')
 
-  const descrpitionForSymbol: { [key: string]: string } = {
-    SOL: 'Solana',
-    USDC: 'USD Coin',
-    USDT: 'Tether',
-    BTC: 'Bitcoin',
-    USD: 'Dollar',
-    FTT: 'FTX Token',
-    ETH: 'Ethereum'
-
-  }
-
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
   }
@@ -115,7 +104,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                 <Grid item>
                   <Typography className={classes.tokenName}>{token ? token.symbol : ''}</Typography>
                   <Typography className={classes.tokenDescrpiption}>
-                    {token ? descrpitionForSymbol[token.symbol] ?? 'Asset' : ''}
+                    {token ? token.name : ''}
                   </Typography>
                 </Grid>
               </Grid>
