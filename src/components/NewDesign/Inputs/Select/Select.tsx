@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, CardMedia } from '@material-ui/core'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import SelectTokenModal from '@components/NewDesign/Modals/SelectModals/SelectTokenModal/SelectTokenModal'
+import { SwapToken } from '@components/NewDesign/Swap/Swap'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import icons from '@static/icons'
 import classNames from 'classnames'
@@ -9,9 +10,9 @@ import useStyles from './style'
 
 export interface ISelectModal {
   name?: string
-  current: string | null
+  current: SwapToken | null
   centered?: boolean
-  tokens: Array<{ symbol: string, name: string, logoURI: string }> | null
+  tokens: Array<{ symbol: string, name: string, logoURI: string }>
   onSelect: (name: string) => void
   className?: string
 }
@@ -47,12 +48,12 @@ export const Select: React.FC<ISelectModal> = ({
         onClick={handleClick}
         startIcon={
           !current ? null : (
-            <CardMedia className={classes.icon} image={icons[current] ?? icons.SNY} />
+            <CardMedia className={classes.icon} image={current.logoURI ?? icons.SNY} />
           )
         }
         endIcon={<ExpandMoreIcon className={classes.endIcon} />}
       >
-        <span style={{ whiteSpace: 'nowrap' }}>{!current ? name : current}</span>
+        <span style={{ whiteSpace: 'nowrap' }}>{!current ? name : current.symbol}</span>
       </Button>
       <SelectTokenModal
         tokens={tokens}

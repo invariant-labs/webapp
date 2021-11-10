@@ -38,15 +38,15 @@ const useStyles = makeStyles(() => ({
       transform: 'translateY(-50%)'
     },
     '&:hover': {
-      backgroundColor: '#1B191F'
+      backgroundColor: colors.invariant.componentOut4
     }
   },
   detailsInfoForm: {
-    border: '1px solid #34303B',
+    border: `1px solid ${colors.invariant.componentOut2}`,
     color: colors.white.main,
     borderRadius: 5,
     width: '93%',
-    backgroundColor: '#141216',
+    backgroundColor: colors.invariant.componentIn2,
     padding: '10px 8px',
     '&::placeholder': {
       color: colors.invariant.lightInfoText

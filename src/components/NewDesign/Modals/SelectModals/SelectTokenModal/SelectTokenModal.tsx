@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { Typography, Popover, Grid, CardMedia, Box, Button } from '@material-ui/core'
 import CustomScrollbar from '../CustomScrollbar'
-import icons from '@static/icons'
 import useStyles from '../style'
 import searchIcon from '@static/svg/lupa.svg'
 export interface ISelectTokenModal {
-  tokens: Array<{ symbol: string, name: string, icon: string }> | null
-  commonTokens: Array<{ symbol: string, name: string, icon: string }> | null
+  tokens: Array<{ symbol: string, name: string, logoURI: string }>
+  commonTokens: Array<{ symbol: string, name: string, logoURI: string }>
   open: boolean
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
@@ -60,6 +59,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
           <input className={classes.selectTokenInput} placeholder='Search token name or address' onChange={searchToken}/>
           <CardMedia image={searchIcon} className={classes.inputIcon} />
         </Grid>
+        {/* TODO: create a common tokens list */}
         {/* <Grid container className={classes.commonTokens}>
           <Typography component='h2' className={classes.commonTokensHeader}>Commonly used</Typography>
           <Grid className={classes.commonTokensList}>
@@ -98,7 +98,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                 <Grid item>
                   <CardMedia
                     className={classes.tokenIcon}
-                    image={token ? icons[token.symbol] : ''}
+                    image={token ? token.logoURI : ''}
                   />{' '}
                 </Grid>
                 <Grid item>

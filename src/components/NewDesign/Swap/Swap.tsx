@@ -62,7 +62,7 @@ export const Swap: React.FC<ISwap> = ({
   const [amountTo, setAmountTo] = React.useState<string>('')
   const [tax, setTax] = React.useState<number>(0)
   const [swap, setSwap] = React.useState<boolean | null>(null)
-  const [tokenY, setTokenY] = React.useState<SwapToken[] | null>(null)
+  const [tokensY, setTokensY] = React.useState<SwapToken[]>(tokens)
   const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
   const [slippTolerance, setSlippTolerance] = React.useState<string>('')
   const [settings, setSettings] = React.useState<boolean>(false)
@@ -103,7 +103,7 @@ export const Swap: React.FC<ISwap> = ({
           return getSwapPoolIndex(token.assetAddress, tokens[tokenFromIndex].assetAddress) !== -1
         }
       })
-      setTokenY(tokensY)
+      setTokensY(tokensY)
     }
     if (tokenToIndex !== null && tokenFromIndex !== null) {
       const pairIndex = pools.findIndex((pool) => {
@@ -183,14 +183,9 @@ export const Swap: React.FC<ISwap> = ({
     ) {
       return 'Insufficient trade volume'
     }
-    if (swap) {
-      if (
-        printBNtoBN(amountTo, tokens[tokenToIndex].decimal).gt(
-          tokens[tokenToIndex].balance
-        )
-      ) {
-        return 'Insufficient balance'
-      }
+    if (swap && printBNtoBN(amountTo, tokens[tokenToIndex].decimal).gt(
+      tokens[tokenToIndex].balance)) {
+      return 'Insufficient balance'
     } else {
       if (
         printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal).gt(
@@ -230,7 +225,8 @@ export const Swap: React.FC<ISwap> = ({
           <Slippage open={settings}
             setSlippage={setSlippage}
             handleClose={handleCloseSettings}
-            anchorEl={anchorEl}/>
+            anchorEl={anchorEl}
+            defaultSlippage={'1'}/>
         </Grid>
       </Grid>
       <Grid container className={classes.root} direction='column'>
@@ -250,7 +246,7 @@ export const Swap: React.FC<ISwap> = ({
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountFrom(value)
-              updateEstimatedAmount((+value * tax).toString())
+              updateEstimatedAmount(value)
             }
           }}
           placeholder={'0.0'}
@@ -265,32 +261,13 @@ export const Swap: React.FC<ISwap> = ({
               }
             }
           }}
-          tokens={swap ? tokenY.map((
-            {
-              symbol,
-              name,
-              logoURI
-            }) => ({
-            symbol,
-            name,
-            logoURI
-          }))
-            : tokens.map((
-              {
-                symbol,
-                name,
-                logoURI
-              }) => ({
-              symbol,
-              name,
-              logoURI
-            }))}
+          tokens={swap ? tokensY
+            : tokens }
           current={
             tokenFromIndex !== null
-              ? tokens[tokenFromIndex].symbol
+              ? tokens[tokenFromIndex]
               : null}
           onSelect={(name: string) => {
-            console.log(name)
             setTokenFromIndex(
               tokens.findIndex((token) => {
                 return name === token.symbol
@@ -341,7 +318,7 @@ export const Swap: React.FC<ISwap> = ({
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountTo(value)
-              updateFromEstimatedAmount((+value * tax).toString())
+              updateFromEstimatedAmount(value)
             }
           }}
           placeholder={'0.0'}
@@ -356,18 +333,12 @@ export const Swap: React.FC<ISwap> = ({
               }
             }
           }}
-          tokens={swap ? tokens.map(({ symbol, name, logoURI }) => ({
-            symbol,
-            name,
-            logoURI
-          }))
-            : tokenY ? tokenY.map(({ symbol, name, logoURI }) => ({
-              symbol,
-              name,
-              logoURI
-            }))
+          tokens={swap ? tokens
+            : tokensY }
+          current={
+            tokenToIndex !== null
+              ? tokens[tokenToIndex]
               : null}
-          current={tokenToIndex !== null ? tokens[tokenToIndex].symbol : null}
           onSelect={(name: string) => {
             setTokenToIndex(
               tokens.findIndex((token) => {
@@ -384,7 +355,7 @@ export const Swap: React.FC<ISwap> = ({
           {tokenFromIndex !== null && tokenToIndex !== null && getButtonMessage() === 'Swap'
             ? <TransactionDetails
               open={details}
-              pool={pools[poolIndex ?? 0].fee}
+              fee={pools[poolIndex ?? 0].fee}
               exchangeRate={{
                 val: swap
                   ? calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex], '1')
@@ -395,10 +366,14 @@ export const Swap: React.FC<ISwap> = ({
             : null}
           {tokenFromIndex !== null && tokenToIndex !== null ? (
             <Typography className={classes.rateText}>
-          1 {swap ? tokens[tokenToIndex].symbol : tokens[tokenFromIndex].symbol } ={' '}
-              {swap ? calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex], '1')
+          1 {swap ? tokens[tokenToIndex].symbol
+                : tokens[tokenFromIndex].symbol } = {' '}
+              {swap
+                ? calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex], '1')
                 : calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], '1')}{' '}
-              {swap ? tokens[tokenFromIndex].symbol : tokens[tokenToIndex].symbol}
+              {swap
+                ? tokens[tokenFromIndex].symbol
+                : tokens[tokenToIndex].symbol}
             </Typography>
           ) : null}
         </Box>

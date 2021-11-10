@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import Select from '@components/NewDesign/Inputs/Select/Select'
 import useStyles from './style'
+import { SwapToken } from '@components/NewDesign/Swap/Swap'
 
 interface IProps {
   setValue: (value: string) => void
@@ -13,8 +14,8 @@ interface IProps {
   placeholder?: string
   style?: CSSProperties,
   onMaxClick: () => void,
-  current: string | null
-  tokens: Array<{ symbol: string, name: string, logoURI: string }> | null
+  current: SwapToken | null
+  tokens: Array<{ symbol: string, name: string, logoURI: string }>
   onSelect: (name: string) => void
 }
 

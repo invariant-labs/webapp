@@ -7,9 +7,16 @@ interface Props {
   setSlippage: (slippage: string) => void
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
+  defaultSlippage: string
 }
 
-const Slippage: React.FC<Props> = ({ open, setSlippage, handleClose, anchorEl }) => {
+const Slippage: React.FC<Props> = ({
+  open,
+  setSlippage,
+  handleClose,
+  anchorEl,
+  defaultSlippage
+}) => {
   const classes = useStyles()
   const [slippTolerance, setSlippTolerance] = React.useState<string>('')
   const inputRef = React.useRef<HTMLInputElement>(null)
@@ -68,7 +75,7 @@ const Slippage: React.FC<Props> = ({ open, setSlippage, handleClose, anchorEl })
             allowOnlyDigitsAndTrimUnnecessaryZeros(e)
             setSlippage(e.target.value)
           }}/>
-          <button className={classes.detailsInfoBtn} onClick={() => setSlippTolerance('1')}>Auto</button>
+          <button className={classes.detailsInfoBtn} onClick={() => setSlippTolerance(defaultSlippage)}>Auto</button>
         </Box>
       </Grid>
     </Popover>

@@ -6,11 +6,11 @@ import { useStyles } from './style'
 
 interface IProps {
   open: boolean
-  pool: {val: BN, scale: number}
+  fee: {val: BN, scale: number}
   exchangeRate: {val: string, symbol: string}
 }
 
-const TransactionDetails: React.FC<IProps> = ({ open, pool, exchangeRate }) => {
+const TransactionDetails: React.FC<IProps> = ({ open, fee, exchangeRate }) => {
   const classes = useStyles()
   return (
     <Grid container className={classes.transactionDetailsInfo} style={{ opacity: open ? '1' : '0', zIndex: open ? 1 : 0 }}>
@@ -18,7 +18,7 @@ const TransactionDetails: React.FC<IProps> = ({ open, pool, exchangeRate }) => {
         <Typography component='h2'>Transaction details</Typography>
         <Typography component='p'>
                 Fee: <Typography component='span'>
-            {printBN(pool.val, pool.scale)} %
+            {printBN(fee.val, fee.scale)} %
           </Typography>
         </Typography>
         <Typography component='p'>

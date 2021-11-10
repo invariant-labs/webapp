@@ -53,7 +53,7 @@ const tokens: SwapToken[] = [
     symbol: 'SOL',
     assetAddress: new PublicKey('So11111111111111111111111111111111111111112'),
     name: 'Wrapped Solana',
-    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/mai…mainnet/So11111111111111111111111111111111111111112/logo.png'
+    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
   },
   {
     balance: new BN(100).mul(new BN(126)),
@@ -69,7 +69,7 @@ const tokens: SwapToken[] = [
     symbol: 'USDC',
     assetAddress: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
     name: 'USD coin',
-    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/mai…ainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
+    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
   }
 ]
 
