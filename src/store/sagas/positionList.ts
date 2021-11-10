@@ -1,6 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 import { call, SagaGenerator, takeLatest } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
+import { Pair } from '@invariant-labs/sdk'
 
 export function* fetchPositionList(owner: PublicKey) {
   const marketProgram = yield* call(getMarketProgram)
@@ -13,13 +14,12 @@ export function* fetchPositionList(owner: PublicKey) {
   // action set position list
 }
 
-export function* fetchPool(tokenX: PublicKey, tokenY: PublicKey): SagaGenerator<string> {
+export function* fetchPool(pair: Pair): SagaGenerator<string> {
   const marketProgram = yield* call(getMarketProgram)
 
   const result = yield* call(
     [marketProgram, marketProgram.getPool],
-    new PublicKey(tokenX.toBuffer()),
-    new PublicKey(tokenY.toBuffer())
+    pair
   )
   console.log(result)
   return ''
