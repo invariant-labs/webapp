@@ -33,6 +33,20 @@ const useStyles = makeStyles(() => ({
   selectWrapper: {
     width: 170
   },
+  customSelect: {
+    width: '100%',
+    justifyContent: 'flex-start',
+    border: `1px solid ${colors.invariant.componentOut2}`,
+    backgroundColor: colors.invariant.componentIn1,
+
+    '& .selectArrow': {
+      marginLeft: 'auto'
+    },
+
+    '&:hover': {
+      backgroundColor: colors.invariant.componentIn2
+    }
+  },
   addButton: {
     width: '100%',
     height: 40,

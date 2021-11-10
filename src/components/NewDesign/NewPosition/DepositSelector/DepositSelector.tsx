@@ -70,11 +70,12 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               tokens={tokens}
               current={token1Index !== null ? tokens[token1Index] : null}
               onSelect={(name) => {
-                const index = tokens.findIndex((e) => e.name === name)
+                const index = tokens.findIndex((e) => e.symbol === name)
                 setToken1Index(index)
                 setPositionTokens(index, token2Index)
               }}
               centered
+              className={classes.customSelect}
             />
           </Grid>
 
@@ -84,11 +85,12 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               tokens={tokens}
               current={token2Index !== null ? tokens[token2Index] : null}
               onSelect={(name) => {
-                const index = tokens.findIndex((e) => e.name === name)
+                const index = tokens.findIndex((e) => e.symbol === name)
                 setToken2Index(index)
                 setPositionTokens(token1Index, index)
               }}
               centered
+              className={classes.customSelect}
             />
           </Grid>
         </Grid>

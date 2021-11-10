@@ -52,6 +52,9 @@ export const Select: React.FC<ISelectModal> = ({
           )
         }
         endIcon={<ExpandMoreIcon className={classes.endIcon} />}
+        classes={{
+          endIcon: 'selectArrow'
+        }}
       >
         <span style={{ whiteSpace: 'nowrap' }}>{!current ? name : current.symbol}</span>
       </Button>

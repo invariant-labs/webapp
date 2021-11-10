@@ -74,7 +74,7 @@ const useStyles = makeStyles(() => ({
     height: '100%'
   },
   blockedInfo: {
-    ...newTypography.body1,
+    ...newTypography.body4,
     color: colors.invariant.lightInfoText
   }
 }))

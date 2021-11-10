@@ -72,7 +72,7 @@ export const INewPosition: React.FC<INewPosition> = ({
     }
 
     if (!isCurrentPoolExisting) {
-      return 'Pool is not existing'
+      return 'Pool is not existing.'
     }
 
     return ''
@@ -150,7 +150,7 @@ export const INewPosition: React.FC<INewPosition> = ({
               setRightRange(right)
             }
           }
-          blocked={token1Index === null || token2Index === null}
+          blocked={token1Index === null || token2Index === null || !isCurrentPoolExisting}
           blockerInfo={setRangeBlockerInfo()}
           {
           ...(
