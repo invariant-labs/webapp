@@ -1,5 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
+import { MOCK_TOKENS, Pair } from '@invariant-labs/sdk'
+import { FEE_TIERS } from '@invariant-labs/sdk/lib/network'
 
 declare global {
   interface Window {
@@ -18,20 +20,23 @@ export interface Token {
 export const PRICE_DECIMAL = 12
 export const USDC = {
   symbol: 'USDC',
-  address: new PublicKey('35P5P6ZGKUN6wqxrX4VdLRrGbzkrfvhyNs4iqk1vDxAx'),
+  address: new PublicKey(MOCK_TOKENS.USDC),
   decimal: 6
 }
 export const USDT = {
   symbol: 'USDT',
-  address: new PublicKey('CYPdUAp8KshzJ2a45kzgy3fr4UTiyrEGE998rA7wzFR6'),
+  address: new PublicKey(MOCK_TOKENS.USDT),
   decimal: 6
 }
 export const SOL = {
   symbol: 'SOL',
-  address: new PublicKey('23AQ2kRxqT1fk47q6G8YcKrpx4VhWeUvKHuRijT61qSD'),
+  address: new PublicKey(MOCK_TOKENS.SOL),
   decimal: 9
 }
 export const tokens = [USDC, USDT, SOL]
+export const PAIRS: [Pair] = [
+  new Pair(USDC.address, USDT.address, FEE_TIERS[0])
+]
 
 enum SolanaNetworks {
   DEV = 'https://solana--devnet.datahub.figment.io/apikey/d2f60ac272929a3f43bd3bc05149d279',
