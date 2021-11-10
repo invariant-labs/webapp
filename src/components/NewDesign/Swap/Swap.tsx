@@ -269,21 +269,21 @@ export const Swap: React.FC<ISwap> = ({
             {
               symbol,
               name,
-              icon
+              logoURI
             }) => ({
             symbol,
             name,
-            icon
+            logoURI
           }))
             : tokens.map((
               {
                 symbol,
                 name,
-                icon
+                logoURI
               }) => ({
               symbol,
               name,
-              icon
+              logoURI
             }))}
           current={
             tokenFromIndex !== null
@@ -356,15 +356,15 @@ export const Swap: React.FC<ISwap> = ({
               }
             }
           }}
-          tokens={swap ? tokens.map(({ symbol, name, icon }) => ({
+          tokens={swap ? tokens.map(({ symbol, name, logoURI }) => ({
             symbol,
             name,
-            icon
+            logoURI
           }))
-            : tokenY ? tokenY.map(({ symbol, name, icon }) => ({
+            : tokenY ? tokenY.map(({ symbol, name, logoURI }) => ({
               symbol,
               name,
-              icon
+              logoURI
             }))
               : null}
           current={tokenToIndex !== null ? tokens[tokenToIndex].symbol : null}

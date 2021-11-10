@@ -14,7 +14,7 @@ interface IProps {
   style?: CSSProperties,
   onMaxClick: () => void,
   current: string | null
-  tokens: Array<{ symbol: string, name: string, icon: string }> | null
+  tokens: Array<{ symbol: string, name: string, logoURI: string }> | null
   onSelect: (name: string) => void
 }
 

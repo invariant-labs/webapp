@@ -11,7 +11,7 @@ export interface ISelectModal {
   name?: string
   current: string | null
   centered?: boolean
-  tokens: Array<{ symbol: string, name: string, icon: string }> | null
+  tokens: Array<{ symbol: string, name: string, logoURI: string }> | null
   onSelect: (name: string) => void
   className?: string
 }
@@ -57,7 +57,7 @@ export const Select: React.FC<ISelectModal> = ({
       <SelectTokenModal
         tokens={tokens}
         commonTokens={tokens ? tokens.slice(0, 4)
-          : [{ symbol: 'SOL', name: 'Solana', icon: 'solana' }]}
+          : [{ symbol: 'SOL', name: 'Solana', logoURI: 'solana' }]}
         open={open}
         centered={centered}
         anchorEl={anchorEl}
