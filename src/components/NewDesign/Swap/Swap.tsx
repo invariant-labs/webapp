@@ -9,6 +9,7 @@ import { OutlinedButton } from '@components/NewDesign/OutlinedButton/OutlinedBut
 import Slippage from '@components/NewDesign/Swap/slippage/Slippage'
 import ExchangeAmountInput from '@components/NewDesign/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import TransactionDetails from '@components/NewDesign/Swap/transactionDetails/TransactionDetails'
+import { PRICE_DECIMAL } from '@consts/static'
 import useStyles from './style'
 import { Status } from '@reducers/solanaWallet'
 import SwapArrows from '@static/svg/swap-arrows.svg'
@@ -60,6 +61,7 @@ export const Swap: React.FC<ISwap> = ({
   const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
     tokens.length ? 0 : null
   )
+  console.log(tokenFromIndex)
   const [tokenToIndex, setTokenToIndex] = React.useState<number | null>(null)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [amountFrom, setAmountFrom] = React.useState<string>('')
@@ -75,13 +77,10 @@ export const Swap: React.FC<ISwap> = ({
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
     let amountOut: BN = new BN(0)
     let priceProportion = new BN(0)
-    if (priceProportion.eqn(0)) {
-      priceProportion = new BN(1)
-    }
     if (tokenToIndex !== null && tokenFromIndex !== null) {
       if (poolIndex !== -1 && poolIndex !== null) {
         priceProportion = pools[poolIndex].sqrtPrice.v
-          .div(new BN(10 ** 12))
+          .div(new BN(10 ** PRICE_DECIMAL))
           .pow(new BN(2))
         if (assetIn.assetAddress.toString() === pools[poolIndex].tokenX.toString()) {
           amountOut = printBNtoBN(amount, assetIn.decimal).mul(priceProportion)
@@ -119,7 +118,7 @@ export const Swap: React.FC<ISwap> = ({
       })
       setPoolIndex(pairIndex)
       if (pairIndex !== -1) {
-        setTax(1 - +printBN(pools[pairIndex].fee.v, 12))
+        setTax(1 - +printBN(pools[pairIndex].fee.v, PRICE_DECIMAL))
       }
     }
   }, [tokenToIndex, tokenFromIndex])
