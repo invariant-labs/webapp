@@ -6,9 +6,11 @@ import DepositSelector from './DepositSelector/DepositSelector'
 import RangeSelector from './RangeSelector/RangeSelector'
 import settingsIcon from '@static/svg/settings_ic.svg'
 import useStyles from './style'
+import { SwapToken } from '../Swap/Swap'
+import { printBN } from '@consts/utils'
 
 export interface INewPosition {
-  tokens: Array<{ symbol: string, name: string, icon: string, walletAmount: number, address: PublicKey }>
+  tokens: SwapToken[]
   data: Array<{ x: number; y: number }>
   midPriceIndex: number
   addLiquidityHandler: (
@@ -110,14 +112,14 @@ export const INewPosition: React.FC<INewPosition> = ({
             onChangePositionTokens(index1, index2)
           }}
           setFeeValue={setFeeTier}
-          token1Max={token1Index !== null ? tokens[token1Index].walletAmount : 0}
-          token2Max={token2Index !== null ? tokens[token2Index].walletAmount : 0}
+          token1Max={token1Index !== null ? +printBN(tokens[token1Index].balance, tokens[token1Index].decimal) : 0}
+          token2Max={token2Index !== null ? +printBN(tokens[token2Index].balance, tokens[token2Index].decimal) : 0}
           onAddLiquidity={
             (token1Amount, token2Amount) => {
               if (token1Index !== null && token2Index !== null) {
                 addLiquidityHandler(
-                  tokens[token1Index].address,
-                  tokens[token2Index].address,
+                  tokens[token1Index].assetAddress,
+                  tokens[token2Index].assetAddress,
                   token1Amount,
                   token2Amount,
                   leftRange,

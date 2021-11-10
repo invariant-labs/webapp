@@ -1,4 +1,6 @@
 import DepositAmountInput from '@components/NewDesign/Inputs/DepositAmountInput/DepositAmountInput'
+import Select from '@components/NewDesign/Inputs/Select/Select'
+import { SwapToken } from '@components/NewDesign/Swap/Swap'
 import { Button, Grid, Typography } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
@@ -10,7 +12,7 @@ export interface InputState {
 }
 
 export interface IDepositSelector {
-  tokens: Array<{ symbol: string, name: string, icon: string }>
+  tokens: SwapToken[]
   setPositionTokens: (token1Index: number | null, token2index: number | null) => void
   setFeeValue: (value: number) => void
   onAddLiquidity: (token1Deposit: number, token2Deposit: number) => void
@@ -55,7 +57,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         setToken1Deposit((+token2Deposit * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
       }
     }
-  }, [leftRangeTickIndex, rightRangeTickIndex])
+  }, [leftRangeTickIndex, rightRangeTickIndex, calcCurrentPoolProportion, token1Index, token2Index])
 
   return (
     <Grid container direction='column' className={classes.wrapper}>
@@ -64,10 +66,30 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         <Grid container className={classes.selects} direction='row' justifyContent='space-between'>
           <Grid className={classes.selectWrapper}>
             <Typography className={classes.inputLabel}>Pair token 01</Typography>
+            <Select
+              tokens={tokens}
+              current={token1Index !== null ? tokens[token1Index] : null}
+              onSelect={(name) => {
+                const index = tokens.findIndex((e) => e.name === name)
+                setToken1Index(index)
+                setPositionTokens(index, token2Index)
+              }}
+              centered
+            />
           </Grid>
 
           <Grid className={classes.selectWrapper}>
             <Typography className={classes.inputLabel}>Pair token 02</Typography>
+            <Select
+              tokens={tokens}
+              current={token2Index !== null ? tokens[token2Index] : null}
+              onSelect={(name) => {
+                const index = tokens.findIndex((e) => e.name === name)
+                setToken2Index(index)
+                setPositionTokens(token1Index, index)
+              }}
+              centered
+            />
           </Grid>
         </Grid>
 
@@ -82,14 +104,17 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         <Typography className={classes.inputLabel}>Pair token 01 amount</Typography>
         <DepositAmountInput
           currency={token1Index !== null ? tokens[token1Index].symbol : null}
-          currencyIconSrc={token1Index !== null ? tokens[token1Index].icon : undefined}
+          currencyIconSrc={token1Index !== null ? tokens[token1Index].logoURI : undefined}
           value={token1Deposit}
           setValue={(value) => {
             setToken1Deposit(value)
             setToken2Deposit((+value * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
           }}
           placeholder='0.0'
-          onMaxClick={() => { setToken1Deposit(token1Max.toString()) }}
+          onMaxClick={() => {
+            setToken1Deposit(token1Max.toString())
+            setToken2Deposit((token1Max * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
+          }}
           style={{
             marginBottom: 8
           }}
@@ -99,14 +124,17 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         <Typography className={classes.inputLabel}>Pair token 02 amount</Typography>
         <DepositAmountInput
           currency={token2Index !== null ? tokens[token2Index].symbol : null}
-          currencyIconSrc={token2Index !== null ? tokens[token2Index].icon : undefined}
+          currencyIconSrc={token2Index !== null ? tokens[token2Index].logoURI : undefined}
           value={token2Deposit}
           setValue={(value) => {
             setToken2Deposit(value)
             setToken1Deposit((+value / calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
           }}
           placeholder='0.0'
-          onMaxClick={() => { setToken2Deposit(token2Max.toString()) }}
+          onMaxClick={() => {
+            setToken2Deposit(token2Max.toString())
+            setToken1Deposit((token2Max / calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
+          }}
           {...token2InputState}
         />
       </Grid>
