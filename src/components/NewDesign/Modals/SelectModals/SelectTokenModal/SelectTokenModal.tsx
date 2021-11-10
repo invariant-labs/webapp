@@ -11,7 +11,7 @@ export interface ISelectTokenModal {
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
   centered?: boolean
-  onSelect: (index: number) => void
+  onSelect: (name: string) => void
 }
 
 export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
@@ -42,10 +42,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   }
 
   const tokenIndex = (name: string) => {
-    return 'SOL BTC USD FTT ETH'.split(' ').findIndex((token) => {
-      return token === name
-    }
-    )
+    return name
   }
 
   return (

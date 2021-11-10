@@ -289,7 +289,14 @@ export const Swap: React.FC<ISwap> = ({
             tokenFromIndex !== null
               ? tokens[tokenFromIndex].symbol
               : null}
-          onSelect={(chosen: number) => setTokenFromIndex(chosen)}
+          onSelect={(name: string) => {
+            console.log(name)
+            setTokenFromIndex(
+              tokens.findIndex((token) => {
+                return name === token.symbol
+              })
+            )
+          }}
         />
         <Box className={classes.tokenComponentTextContainer}>
           <Box className={classes.swapArrowBox}>
@@ -361,8 +368,11 @@ export const Swap: React.FC<ISwap> = ({
             }))
               : null}
           current={tokenToIndex !== null ? tokens[tokenToIndex].symbol : null}
-          onSelect={(chosen: number) => {
-            setTokenToIndex(chosen)
+          onSelect={(name: string) => {
+            setTokenToIndex(
+              tokens.findIndex((token) => {
+                return name === token.symbol
+              }))
             updateEstimatedAmount()
           }}
         />

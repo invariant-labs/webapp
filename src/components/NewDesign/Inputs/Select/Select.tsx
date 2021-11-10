@@ -12,7 +12,7 @@ export interface ISelectModal {
   current: string | null
   centered?: boolean
   tokens: Array<{ symbol: string, name: string, icon: string }> | null
-  onSelect: (chosen: number) => void
+  onSelect: (name: string) => void
   className?: string
 }
 export const Select: React.FC<ISelectModal> = ({
