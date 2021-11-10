@@ -6,7 +6,7 @@ import { useStyles } from './style'
 
 interface IProps {
   open: boolean
-  fee: {val: BN, scale: number}
+  fee: {v: BN}
   exchangeRate: {val: string, symbol: string}
 }
 
@@ -18,7 +18,7 @@ const TransactionDetails: React.FC<IProps> = ({ open, fee, exchangeRate }) => {
         <Typography component='h2'>Transaction details</Typography>
         <Typography component='p'>
                 Fee: <Typography component='span'>
-            {printBN(fee.val, fee.scale)} %
+            {printBN(fee.v, 12)} %
           </Typography>
         </Typography>
         <Typography component='p'>

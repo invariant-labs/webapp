@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { printBN, printBNtoBN } from '@consts/utils'
+import { PoolStructure } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
 import { OutlinedButton } from '@components/NewDesign/OutlinedButton/OutlinedButton'
@@ -26,6 +27,9 @@ export interface SwapToken {
 export interface Pools {
   tokenX: PublicKey
   tokenY: PublicKey
+  tokenXReserve: PublicKey;
+  tokenYReserve: PublicKey;
+  tickSpacing: number;
   sqrtPrice: {
     v: BN
     scale: number
@@ -43,7 +47,7 @@ export interface Pools {
 export interface ISwap {
   walletStatus: Status
   tokens: SwapToken[]
-  pools: Pools[]
+  pools: PoolStructure[]
   onSwap: (fromToken: PublicKey, toToken: PublicKey, amount: BN) => void
 }
 export const Swap: React.FC<ISwap> = ({
@@ -77,7 +81,7 @@ export const Swap: React.FC<ISwap> = ({
     if (tokenToIndex !== null && tokenFromIndex !== null) {
       if (poolIndex !== -1 && poolIndex !== null) {
         priceProportion = pools[poolIndex].sqrtPrice.v
-          .div(new BN(10 ** pools[poolIndex].sqrtPrice.scale))
+          .div(new BN(10 ** 12))
           .pow(new BN(2))
         if (assetIn.assetAddress.toString() === pools[poolIndex].tokenX.toString()) {
           amountOut = printBNtoBN(amount, assetIn.decimal).mul(priceProportion)
@@ -115,7 +119,7 @@ export const Swap: React.FC<ISwap> = ({
       })
       setPoolIndex(pairIndex)
       if (pairIndex !== -1) {
-        setTax(1 - +printBN(pools[pairIndex].fee.val, pools[pairIndex].fee.scale))
+        setTax(1 - +printBN(pools[pairIndex].fee.v, 12))
       }
     }
   }, [tokenToIndex, tokenFromIndex])
