@@ -30,6 +30,7 @@ export interface INewPosition {
     rightRangeTickIndex: number
   ) => number
   feeTiers: number[]
+  initialSlippageTolerance: number
 }
 
 export const INewPosition: React.FC<INewPosition> = ({
@@ -40,7 +41,8 @@ export const INewPosition: React.FC<INewPosition> = ({
   onChangePositionTokens,
   isCurrentPoolExisting,
   calcCurrentPoolProportion,
-  feeTiers
+  feeTiers,
+  initialSlippageTolerance
 }) => {
   const classes = useStyles()
 
@@ -176,7 +178,7 @@ export const INewPosition: React.FC<INewPosition> = ({
         handleClose={() => { setSettingsOpen(false) }}
         slippageTolerance={slippageTolerance}
         onChangeSlippageTolerance={setSlippageTolerance}
-        autoSetSlippageTolerance={() => { setSlippageTolerance(1) }}
+        autoSetSlippageTolerance={() => { setSlippageTolerance(initialSlippageTolerance) }}
       />
     </Grid>
   )
