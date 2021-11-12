@@ -217,16 +217,16 @@ export const Swap: React.FC<ISwap> = ({
   }
   const updateEstimatedAmount = (amount: string | null = null) => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      setAmountTo(
-        calculateSwapOutAmountTax(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountTo)
-      )
+      swap
+        ? setAmountFrom(calculateSwapOutAmountTax(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountTo))
+        : setAmountTo(calculateSwapOutAmountTax(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountTo))
     }
   }
   const updateFromEstimatedAmount = (amount: string | null = null) => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      setAmountFrom(
-        calculateSwapOutAmountTaxReversed(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountFrom)
-      )
+      swap
+        ? setAmountTo(calculateSwapOutAmountTaxReversed(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountFrom))
+        : setAmountFrom(calculateSwapOutAmountTaxReversed(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountFrom))
     }
   }
 
@@ -312,7 +312,9 @@ export const Swap: React.FC<ISwap> = ({
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountFrom(value)
-              updateEstimatedAmount(value)
+              swap
+                ? updateFromEstimatedAmount(value)
+                : updateEstimatedAmount(value)
             }
           }}
           placeholder={'0.0'}
@@ -384,7 +386,9 @@ export const Swap: React.FC<ISwap> = ({
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountTo(value)
-              updateFromEstimatedAmount(value)
+              swap
+                ? updateEstimatedAmount(value)
+                : updateFromEstimatedAmount(value)
             }
           }}
           placeholder={'0.0'}
