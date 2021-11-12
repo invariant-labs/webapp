@@ -55,6 +55,7 @@ export const Select: React.FC<ISelectModal> = ({
         classes={{
           endIcon: 'selectArrow'
         }}
+        disableRipple
       >
         <span style={{ whiteSpace: 'nowrap' }}>{!current ? name : current.symbol}</span>
       </Button>

@@ -38,6 +38,8 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'flex-start',
     border: `1px solid ${colors.invariant.componentOut2}`,
     backgroundColor: colors.invariant.componentIn1,
+    borderRadius: 5,
+    paddingInline: 13,
 
     '& .selectArrow': {
       marginLeft: 'auto'
