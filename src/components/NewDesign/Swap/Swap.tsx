@@ -74,13 +74,9 @@ export const Swap: React.FC<ISwap> = ({
   const [details, setDetails] = React.useState<boolean>(false)
 
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
-    console.log()
-    console.log('amount on calculate: ', amount)
-    console.log('tax:', printBN(tax.v, 12))
     let amountOut: BN = new BN(0)
     let priceProportion = new BN(0)
     const taxAmonut = printBNtoBN((1 - +printBN(tax.v, 12)).toString(), 12)
-    console.log(taxAmonut)
     if (tokenToIndex !== null && tokenFromIndex !== null) {
       if (poolIndex !== -1 && poolIndex !== null) {
         priceProportion = pools[poolIndex].sqrtPrice.v
@@ -88,13 +84,10 @@ export const Swap: React.FC<ISwap> = ({
           .mul(pools[poolIndex].sqrtPrice.v.div(new BN(10 ** PRICE_DECIMAL)))
         if (assetIn.assetAddress.toString() === pools[poolIndex].tokenX.toString()) {
           amountOut = printBNtoBN(amount, assetIn.decimal).mul(priceProportion)
-          console.log('true')
         } else {
           amountOut = printBNtoBN(amount, assetIn.decimal).div(priceProportion)
-          console.log('false')
         }
       }
-      console.log(printBN(amountOut, assetFor.decimal))
     }
     return printBN(amountOut, assetFor.decimal)
   }
@@ -181,7 +174,6 @@ export const Swap: React.FC<ISwap> = ({
       setPoolIndex(pairIndex)
       if (pairIndex !== -1) {
         setTax({ v: pools[pairIndex].fee.v })
-        console.log(1 - +printBN(pools[pairIndex].fee.v, PRICE_DECIMAL))
       }
     }
   }, [tokenToIndex, tokenFromIndex, pools.length])
@@ -355,8 +347,6 @@ export const Swap: React.FC<ISwap> = ({
                 setTokenToIndex(tmp)
                 tokens = tokensY
                 setTokensY(tokensTmp)
-                console.log(tokenFromIndex)
-                console.log(tokenToIndex)
               }} />
           </Box>
           <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>

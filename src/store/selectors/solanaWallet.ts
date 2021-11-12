@@ -39,7 +39,9 @@ export interface SwapToken {
   balance: BN
   decimal: number
   symbol: string
-  assetAddress: PublicKey
+  assetAddress: PublicKey,
+  name: string,
+  logoURI: string
 }
 
 export const swapTokens = createSelector(accounts, (allAccounts) => {
