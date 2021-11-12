@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { printBN, printBNtoBN, transformBN } from '@consts/utils'
+import { printBN, printBNtoBN } from '@consts/utils'
 import { Decimal, PoolStructure } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
@@ -186,16 +186,13 @@ export const Swap: React.FC<ISwap> = ({
     }
   }, [tokenToIndex, tokenFromIndex, pools.length])
 
-  useEffect(() => {
-    swap ? setTokenToIndex(tokenToIndex) : setTokenToIndex(null)
-    setSwap(false)
-  }, [tokenFromIndex])
+  // useEffect(() => {
+  //   swap ? setTokenToIndex(tokenToIndex) : setTokenToIndex(null)
+  // }, [tokenFromIndex])
 
-  useEffect(() => {
-    swap ? setTokenFromIndex(null) : setTokenFromIndex(tokenFromIndex)
-    setSwap(false)
-  }, [tokenToIndex])
-
+  // useEffect(() => {
+  //   swap ? setTokenFromIndex(null) : setTokenFromIndex(tokenFromIndex)
+  // }, [tokenToIndex])
   const getSwapPoolIndex = (fromToken: PublicKey, toToken: PublicKey) => {
     return pools.findIndex((pool) => {
       return (
@@ -217,16 +214,16 @@ export const Swap: React.FC<ISwap> = ({
   }
   const updateEstimatedAmount = (amount: string | null = null) => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      swap
-        ? setAmountFrom(calculateSwapOutAmountTax(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountTo))
-        : setAmountTo(calculateSwapOutAmountTax(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountTo))
+      setAmountTo(
+        calculateSwapOutAmountTax(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountTo)
+      )
     }
   }
   const updateFromEstimatedAmount = (amount: string | null = null) => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      swap
-        ? setAmountTo(calculateSwapOutAmountTaxReversed(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountFrom))
-        : setAmountFrom(calculateSwapOutAmountTaxReversed(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountFrom))
+      setAmountFrom(
+        calculateSwapOutAmountTaxReversed(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountFrom)
+      )
     }
   }
 
@@ -300,33 +297,24 @@ export const Swap: React.FC<ISwap> = ({
           <Typography className={classes.tokenComponentText}>Est.: </Typography>
           <Typography className={classes.tokenComponentText}>
           Balance: {tokenFromIndex !== null
-              ? swap
-                ? printBN(tokens[tokenToIndex ?? 0].balance, tokens[tokenToIndex ?? 0].decimal)
-                : printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal) : '0'}
+              ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal) : '0'}
           </Typography>
         </Box>
         <ExchangeAmountInput
           value={amountFrom}
           className={classes.amountInput}
-          style={{ transform: swap !== null ? swap ? 'translateY(104px)' : 'translateY(0px)' : '' }}
+          style={{ transform: swap !== null ? swap ? 'translateY(0px)' : 'translateY(0px)' : '' }}
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountFrom(value)
-              swap
-                ? updateFromEstimatedAmount(value)
-                : updateEstimatedAmount(value)
+              updateEstimatedAmount(value)
             }
           }}
           placeholder={'0.0'}
           onMaxClick={() => {
             if (tokenToIndex !== null && tokenFromIndex !== null) {
-              if (swap) {
-                setAmountTo(printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal))
-                updateFromEstimatedAmount(printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal))
-              } else {
-                setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
-                updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
-              }
+              setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
             }
           }}
           tokens={swap ? tokensY
@@ -361,14 +349,20 @@ export const Swap: React.FC<ISwap> = ({
                     ? setSwap(!swap)
                     : setSwap(true)
                 }
+                const tmp = tokenFromIndex
+                const tokensTmp = tokens
+                setTokenFromIndex(tokenToIndex)
+                setTokenToIndex(tmp)
+                tokens = tokensY
+                setTokensY(tokensTmp)
+                console.log(tokenFromIndex)
+                console.log(tokenToIndex)
               }} />
           </Box>
           <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
           <Typography className={classes.tokenComponentText}>
           Balance: {tokenToIndex !== null
-              ? swap
-                ? printBN(tokens[tokenFromIndex ?? 0].balance, tokens[tokenFromIndex ?? 0].decimal)
-                : printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal) : '0'}
+              ? printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal) : '0'}
           </Typography>
         </Box>
         <ExchangeAmountInput
@@ -378,7 +372,7 @@ export const Swap: React.FC<ISwap> = ({
             {
               transform: swap !== null
                 ? swap
-                  ? 'translateY(-104px)'
+                  ? 'translateY(0px)'
                   : 'translateY(0px)'
                 : ''
             }
@@ -386,21 +380,14 @@ export const Swap: React.FC<ISwap> = ({
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountTo(value)
-              swap
-                ? updateEstimatedAmount(value)
-                : updateFromEstimatedAmount(value)
+              updateFromEstimatedAmount(value)
             }
           }}
           placeholder={'0.0'}
           onMaxClick={() => {
             if (tokenToIndex !== null && tokenFromIndex !== null) {
-              if (swap) {
-                setAmountTo(printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal))
-                updateFromEstimatedAmount(printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal))
-              } else {
-                setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
-                updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
-              }
+              setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
             }
           }}
           tokens={swap ? tokens
