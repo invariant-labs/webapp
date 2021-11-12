@@ -16,7 +16,6 @@ export interface ISelectNetworkModal {
   onSelect: (wallet: NetworkType) => void
   handleClose: () => void
   active: NetworkType
-  setActive: (network: NetworkType) => void
 }
 export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
   networks,
@@ -24,8 +23,7 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
   open,
   onSelect,
   handleClose,
-  active,
-  setActive
+  active
 }) => {
   const classes = useStyles()
   return (
@@ -52,7 +50,6 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
               key={`networks-${name}`}
               onClick={() => {
                 onSelect(name)
-                setActive(name)
                 handleClose()
               }}>
               <img className={classes.icon} src={icons[`${name}Icon`]} alt={`${name} icon`} />

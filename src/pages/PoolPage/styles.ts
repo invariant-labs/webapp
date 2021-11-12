@@ -1,15 +1,13 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { makeStyles } from '@material-ui/core/styles'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
     minHeight: '85vh',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.invariant.violetWeak
-  },
-  item: {}
+    backgroundColor: 'transparent'
+  }
 }))
 
 export default useStyles
