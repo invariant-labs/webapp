@@ -1,7 +1,6 @@
 import React from 'react'
 import { PublicKey } from '@solana/web3.js'
-import { Grid, CardMedia, Hidden, Button } from '@material-ui/core'
-
+import { Grid, CardMedia, Button } from '@material-ui/core'
 import NavbarButton from '@components/NewDesign/Navbar/Button'
 import ChangeWalletButton from '@components/NewDesign/HeaderButton/ChangeWalletButton'
 import { NetworkType, SolanaNetworks } from '@consts/static'
@@ -47,27 +46,24 @@ export const Header: React.FC<IHeader> = ({
 
   return (
     <>
-      <Grid container className={classes.root} alignItems='center'>
-        <Grid className={classes.left} alignItems='center'>
-          <CardMedia className={classes.logo} image={icons.LogoTitle} />
-        </Grid>
-        <Hidden smDown>
-          <Grid alignItems='center' className={classes.routers}>
-            {routes.map(path => (
-              <Link key={`path-${path}`} to={`/${path}`} className={classes.link}>
-                <NavbarButton
-                  name={path}
-                  onClick={() => {
-                    setActive(path)
-                  }}
-                  active={path === activePath}
-                />
-              </Link>
-            ))}
-          </Grid>
-        </Hidden>
+      <Grid container className={classes.root} alignItems='center' justifyContent='space-between'>
+        <CardMedia className={classes.logo} image={icons.LogoTitle} />
 
-        <Grid item className={classes.buttons} wrap='nowrap' alignItems='center'>
+        <Grid className={classes.routers} style={{ marginLeft: `${!walletConnected ? 0 : 132}px` }}>
+          {routes.map(path => (
+            <Link key={`path-${path}`} to={`/${path}`} className={classes.link}>
+              <NavbarButton
+                name={path}
+                onClick={() => {
+                  setActive(path)
+                }}
+                active={path === activePath}
+              />
+            </Link>
+          ))}
+        </Grid>
+
+        <Grid item className={classes.buttons}>
           {(typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) && (
             <Button
               className={buttonClasses.headerButton}
