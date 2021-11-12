@@ -66,6 +66,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       Math.round(midPriceIndex / 2),
       Math.min(Math.round(3 * midPriceIndex / 2), data.length - 1)
     )
+    setPlotMin(0)
+    setPlotMax(data[midPriceIndex].x * 2)
   }, [tokenFromSymbol, tokenToSymbol])
 
   return (

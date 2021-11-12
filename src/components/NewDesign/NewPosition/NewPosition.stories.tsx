@@ -70,7 +70,7 @@ storiesOf('position/newPosition', module).add('new', () => (
       addLiquidityHandler={() => {}}
       onChangePositionTokens={() => {}}
       isCurrentPoolExisting={true}
-      calcCurrentPoolProportion={() => 1}
+      calcCurrentPoolProportion={() => 2}
     />
   </div>
 )).add('noPool', () => (
