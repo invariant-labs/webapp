@@ -8,6 +8,7 @@ import settingsIcon from '@static/svg/settings_ic.svg'
 import useStyles from './style'
 import { SwapToken } from '../Swap/Swap'
 import { printBN } from '@consts/utils'
+import { BN } from '@project-serum/anchor'
 
 export interface INewPosition {
   tokens: SwapToken[]
@@ -16,8 +17,8 @@ export interface INewPosition {
   addLiquidityHandler: (
     token1: PublicKey,
     token2: PublicKey,
-    token1Amount: number,
-    token2Amount: number,
+    token1Amount: BN,
+    token2Amount: BN,
     leftTickIndex: number,
     rightTickIndex: number,
     feeTier: number,
@@ -58,11 +59,7 @@ export const INewPosition: React.FC<INewPosition> = ({
   const [token1Index, setToken1Index] = useState<number | null>(null)
   const [token2Index, setToken2Index] = useState<number | null>(null)
 
-  const setInputBlockerInfo = (isIndexNull: boolean, isSingleAsset: boolean) => {
-    if (isIndexNull) {
-      return 'Select token.'
-    }
-
+  const setInputBlockerInfo = (isSingleAsset: boolean) => {
     if (isSingleAsset) {
       return 'Current price outside range. Single-asset deposit only.'
     }
@@ -76,7 +73,7 @@ export const INewPosition: React.FC<INewPosition> = ({
     }
 
     if (!isCurrentPoolExisting) {
-      return 'Pool is not existing.'
+      return 'Pool is not existent.'
     }
 
     return ''
@@ -135,17 +132,18 @@ export const INewPosition: React.FC<INewPosition> = ({
             }
           }
           token1InputState={{
-            blocked: token1Index === null || rightRange < midPriceIndex,
-            blockerInfo: setInputBlockerInfo(token1Index === null, rightRange < midPriceIndex)
+            blocked: token1Index !== null && token2Index !== null && rightRange < midPriceIndex,
+            blockerInfo: setInputBlockerInfo(rightRange < midPriceIndex)
           }}
           token2InputState={{
-            blocked: token2Index === null || leftRange > midPriceIndex,
-            blockerInfo: setInputBlockerInfo(token2Index === null, leftRange > midPriceIndex)
+            blocked: token1Index !== null && token2Index !== null && leftRange > midPriceIndex,
+            blockerInfo: setInputBlockerInfo(leftRange > midPriceIndex)
           }}
           calcCurrentPoolProportion={calcCurrentPoolProportion}
           leftRangeTickIndex={leftRange}
           rightRangeTickIndex={rightRange}
           feeTiers={feeTiers}
+          isCurrentPoolExisting={isCurrentPoolExisting}
         />
 
         <RangeSelector

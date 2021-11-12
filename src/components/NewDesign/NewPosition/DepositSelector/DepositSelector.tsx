@@ -1,7 +1,9 @@
 import DepositAmountInput from '@components/NewDesign/Inputs/DepositAmountInput/DepositAmountInput'
 import Select from '@components/NewDesign/Inputs/Select/Select'
 import { SwapToken } from '@components/NewDesign/Swap/Swap'
+import { printBNtoBN } from '@consts/utils'
 import { Button, Grid, Typography } from '@material-ui/core'
+import { BN } from '@project-serum/anchor'
 import React, { useState, useEffect } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
 import useStyles from './style'
@@ -15,7 +17,7 @@ export interface IDepositSelector {
   tokens: SwapToken[]
   setPositionTokens: (token1Index: number | null, token2index: number | null) => void
   setFeeValue: (value: number) => void
-  onAddLiquidity: (token1Deposit: number, token2Deposit: number) => void
+  onAddLiquidity: (token1Deposit: BN, token2Deposit: BN) => void
   token1Max: number
   token2Max: number
   token1InputState: InputState
@@ -27,6 +29,7 @@ export interface IDepositSelector {
   leftRangeTickIndex: number
   rightRangeTickIndex: number
   feeTiers: number[]
+  isCurrentPoolExisting: boolean
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -41,7 +44,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   calcCurrentPoolProportion,
   leftRangeTickIndex,
   rightRangeTickIndex,
-  feeTiers
+  feeTiers,
+  isCurrentPoolExisting
 }) => {
   const classes = useStyles()
 
@@ -50,6 +54,26 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
   const [token1Deposit, setToken1Deposit] = useState<string>('')
   const [token2Deposit, setToken2Deposit] = useState<string>('')
+
+  const getButtonMessage = () => {
+    if (token1Index === null || token2Index === null) {
+      return 'Select tokens'
+    }
+
+    if (!isCurrentPoolExisting) {
+      return 'Pool is not existent'
+    }
+
+    if (printBNtoBN(token1Deposit, tokens[token1Index].decimal).gt(tokens[token1Index].balance)) {
+      return 'You don\'t have enough token 01'
+    }
+
+    if (printBNtoBN(token2Deposit, tokens[token2Index].decimal).gt(tokens[token2Index].balance)) {
+      return 'You don\'t have enough token 02'
+    }
+
+    return 'Add Liquidity'
+  }
 
   useEffect(() => {
     if (!token1InputState.blocked && !token2InputState.blocked) {
@@ -146,9 +170,16 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
       <Button
         className={classes.addButton}
-        onClick={() => { onAddLiquidity(+token1Deposit, +token2Deposit) }}
+        onClick={() => {
+          if (token1Index === null || token2Index === null) {
+            return
+          }
+
+          onAddLiquidity(printBNtoBN(token1Deposit, tokens[token1Index].decimal), printBNtoBN(token2Deposit, tokens[token2Index].decimal))
+        }}
+        disabled={getButtonMessage() !== 'Add Liquidity'}
       >
-        Add Liquidity
+        {getButtonMessage()}
       </Button>
     </Grid>
   )

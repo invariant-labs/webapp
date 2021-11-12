@@ -62,6 +62,11 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       boxShadow: `0 0 15px ${colors.invariant.accent1}`,
       backgroundColor: colors.invariant.accent1
+    },
+
+    '&:disabled': {
+      backgroundColor: colors.invariant.componentOut3,
+      color: colors.invariant.lightInfoText
     }
   }
 }))
