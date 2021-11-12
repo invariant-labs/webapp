@@ -10,6 +10,7 @@ import { Pair } from '@invariant-labs/sdk'
 import { MAX_U64 } from '@consts/static'
 import BN from 'bn.js'
 import { getConnection } from './connection'
+import { FEE_TIERS } from '@invariant-labs/sdk/lib/network'
 
 export function* handleSwap(): Generator {
   try {
@@ -45,7 +46,7 @@ export function* handleSwap(): Generator {
       toAddress = yield* call(createAccount, swapData.toToken)
     }
     const swapTx = yield* call([marketProgram, marketProgram.swapTransaction],
-      new Pair(swapPool.tokenX, swapPool.tokenY),
+      new Pair(swapPool.tokenX, swapPool.tokenY, FEE_TIERS[0]),
       isXtoY,
       swapData.amount,
       isXtoY ? new BN(0) : MAX_U64,
