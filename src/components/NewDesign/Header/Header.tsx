@@ -45,13 +45,6 @@ export const Header: React.FC<IHeader> = ({
     setActive(landing)
   }, [landing])
 
-  const names = {
-    [WalletType.PHANTOM]: 'phantom',
-    [WalletType.SOLLET]: 'sollet',
-    [WalletType.MATH]: 'math wallet',
-    [WalletType.SOLFLARE]: 'solflare'
-  }
-
   return (
     <>
       <Grid container className={classes.root} alignItems='center'>
@@ -106,9 +99,9 @@ export const Header: React.FC<IHeader> = ({
             />
           ) : (
             <ChangeWalletButton
-              name={`${address.toString()}...${address
+              name={`${address.toString().substr(0, 15)}...${address
                 .toString()
-                .substr(address.toString().length - 3, 3)}`}
+                .substr(address.toString().length - 4, 4)}`}
               options={[
                 WalletType.PHANTOM,
                 WalletType.SOLLET,
@@ -119,6 +112,7 @@ export const Header: React.FC<IHeader> = ({
               connected={walletConnected}
               onDisconnect={onDisconnectWallet}
               startIcon={<DotIcon className={classes.connectedWalletIcon} />}
+              activeWallet={typeOfWallet}
             />
           )}
         </Grid>

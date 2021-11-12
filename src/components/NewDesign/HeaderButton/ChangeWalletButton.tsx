@@ -13,6 +13,7 @@ export interface IProps {
   startIcon?: JSX.Element
   onDisconnect: () => void
   hideArrow?: boolean
+  activeWallet?: WalletType
 }
 export const ChangeWalletButton: React.FC<IProps> = ({
   name,
@@ -21,12 +22,12 @@ export const ChangeWalletButton: React.FC<IProps> = ({
   connected,
   startIcon,
   hideArrow,
-  onDisconnect
+  onDisconnect,
+  activeWallet
 }) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
-  const [activeWallet, setActiveWallet] = React.useState(WalletType.PHANTOM)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
     blurContent()
@@ -71,7 +72,6 @@ export const ChangeWalletButton: React.FC<IProps> = ({
         callDisconect={handleDisconnect}
         connected={connected}
         active={activeWallet}
-        setActive={setActiveWallet}
       />
     </>
   )
