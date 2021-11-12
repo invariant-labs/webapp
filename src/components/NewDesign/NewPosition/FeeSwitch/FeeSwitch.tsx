@@ -4,17 +4,17 @@ import useStyles, { useSingleTabStyles, useTabsStyles } from './style'
 
 export interface IFeeSwitch {
   setFeeValue: (value: number) => void
+  showOnlyPercents?: boolean
+  feeTiers: number[]
 }
 
-export const FeeSwitch: React.FC<IFeeSwitch> = ({ setFeeValue }) => {
+export const FeeSwitch: React.FC<IFeeSwitch> = ({ setFeeValue, showOnlyPercents = false, feeTiers }) => {
   const classes = useStyles()
 
   const [current, setCurrent] = useState(0)
 
-  const singleTabClasses = useSingleTabStyles()
   const tabsClasses = useTabsStyles()
-
-  const feeTiers = [0.05, 0.3, 1]
+  const singleTabClasses = useSingleTabStyles()
 
   const handleChange = (_: React.ChangeEvent<{}>, newValue: number) => {
     setCurrent(newValue)
@@ -30,7 +30,17 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({ setFeeValue }) => {
         scrollButtons='off'
         TabIndicatorProps={{ children: <span /> }}
         classes={tabsClasses}>
-        {feeTiers.map((tier) => <Tab disableRipple label={`${tier}% fee`} classes={singleTabClasses} />)}
+        {feeTiers.map((tier, index) =>
+          <Tab
+            key={index}
+            disableRipple
+            label={showOnlyPercents ? `${tier}%` : `${tier}% fee`}
+            classes={singleTabClasses}
+            style={{
+              minWidth: `calc(${feeTiers.length === 0 ? 0 : 100 / feeTiers.length}%)`
+            }}
+          />
+        )}
       </Tabs>
     </Grid>
   )

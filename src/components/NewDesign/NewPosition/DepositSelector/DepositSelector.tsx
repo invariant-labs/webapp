@@ -24,8 +24,9 @@ export interface IDepositSelector {
     leftRangeTickIndex: number,
     rightRangeTickIndex: number
   ) => number
-  leftRangeTickIndex: number,
+  leftRangeTickIndex: number
   rightRangeTickIndex: number
+  feeTiers: number[]
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -39,7 +40,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   token2InputState,
   calcCurrentPoolProportion,
   leftRangeTickIndex,
-  rightRangeTickIndex
+  rightRangeTickIndex,
+  feeTiers
 }) => {
   const classes = useStyles()
 
@@ -98,6 +100,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         <Typography className={classes.inputLabel}>Fee</Typography>
         <FeeSwitch
           setFeeValue={setFeeValue}
+          feeTiers={feeTiers}
         />
       </Grid>
 

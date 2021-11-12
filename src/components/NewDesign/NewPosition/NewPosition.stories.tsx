@@ -71,6 +71,7 @@ storiesOf('position/newPosition', module).add('new', () => (
       onChangePositionTokens={() => {}}
       isCurrentPoolExisting={true}
       calcCurrentPoolProportion={() => 2}
+      feeTiers={[0.05, 0.3, 1]}
     />
   </div>
 )).add('noPool', () => (
@@ -83,6 +84,7 @@ storiesOf('position/newPosition', module).add('new', () => (
       onChangePositionTokens={() => {}}
       isCurrentPoolExisting={false}
       calcCurrentPoolProportion={() => 1}
+      feeTiers={[0.05, 0.3, 1]}
     />
   </div>
 ))

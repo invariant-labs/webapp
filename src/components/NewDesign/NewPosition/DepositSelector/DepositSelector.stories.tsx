@@ -50,5 +50,6 @@ storiesOf('position/depositSelector', module).add('deposit', () => (
     leftRangeTickIndex={100}
     rightRangeTickIndex={200}
     calcCurrentPoolProportion={() => 1}
+    feeTiers={[0.05, 0.3, 1]}
   />
 ))

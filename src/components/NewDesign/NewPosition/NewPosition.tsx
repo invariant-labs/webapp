@@ -29,6 +29,7 @@ export interface INewPosition {
     leftRangeTickIndex: number,
     rightRangeTickIndex: number
   ) => number
+  feeTiers: number[]
 }
 
 export const INewPosition: React.FC<INewPosition> = ({
@@ -38,7 +39,8 @@ export const INewPosition: React.FC<INewPosition> = ({
   addLiquidityHandler,
   onChangePositionTokens,
   isCurrentPoolExisting,
-  calcCurrentPoolProportion
+  calcCurrentPoolProportion,
+  feeTiers
 }) => {
   const classes = useStyles()
 
@@ -141,6 +143,7 @@ export const INewPosition: React.FC<INewPosition> = ({
           calcCurrentPoolProportion={calcCurrentPoolProportion}
           leftRangeTickIndex={leftRange}
           rightRangeTickIndex={rightRange}
+          feeTiers={feeTiers}
         />
 
         <RangeSelector

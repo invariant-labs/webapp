@@ -36,7 +36,6 @@ export const useSingleTabStyles = makeStyles(() => ({
     ...newTypography.body2,
     height: 28,
     minHeight: 28,
-    minWidth: 101,
     color: colors.invariant.componentOut3,
 
     '&:hover': {
