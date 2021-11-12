@@ -1,4 +1,4 @@
-import Swap from '@components/NewDesign/Swap/Swap'
+import { Swap } from '@components/NewDesign/Swap/Swap'
 import { BN } from '@project-serum/anchor'
 import { MOCK_TOKENS } from '@invariant-labs/sdk'
 import { pools } from '@selectors/pools'
@@ -19,7 +19,7 @@ export const WrappedSwap = () => {
       symbol: 'USDC',
       assetAddress: new PublicKey(MOCK_TOKENS.USDC),
       name: 'USD coin',
-      logoURI: `https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png`
+      logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
     },
     {
       balance: new BN(100).mul(new BN(34786)),

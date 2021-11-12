@@ -6,6 +6,7 @@ import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { toBlur } from '@consts/uiUtils'
 import { Status } from '@reducers/solanaWallet'
+import { publicKey } from '@project-serum/anchor/dist/utils'
 
 const pools: Pools[] = [
   {
@@ -22,7 +23,10 @@ const pools: Pools[] = [
     exchangeRate: {
       val: new BN(1),
       scale: 6
-    }
+    },
+    tickSpacing: 4,
+    tokenXReserve: new PublicKey('So11111111111111111111111111111111111111112'),
+    tokenYReserve: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E')
   },
   {
     tokenX: new PublicKey('So11111111111111111111111111111111111111112'),
@@ -38,7 +42,10 @@ const pools: Pools[] = [
     exchangeRate: {
       val: new BN(1),
       scale: 6
-    }
+    },
+    tickSpacing: 4,
+    tokenXReserve: new PublicKey('So11111111111111111111111111111111111111112'),
+    tokenYReserve: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
   }
 ]
 

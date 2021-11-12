@@ -2,6 +2,7 @@ import { printBN } from '@consts/utils'
 import { Grid, Typography } from '@material-ui/core'
 import BN from 'bn.js'
 import React from 'react'
+import { PRICE_DECIMAL } from '@consts/static'
 import { useStyles } from './style'
 
 interface IProps {
