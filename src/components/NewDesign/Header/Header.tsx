@@ -44,12 +44,14 @@ export const Header: React.FC<IHeader> = ({
     setActive(landing)
   }, [landing])
 
+  const routesRef = React.useRef<HTMLButtonElement>(null)
+
   return (
     <>
       <Grid container className={classes.root} alignItems='center' justifyContent='space-between'>
         <CardMedia className={classes.logo} image={icons.LogoTitle} />
 
-        <Grid className={classes.routers} style={{ marginLeft: `${!walletConnected ? 0 : 132}px` }}>
+        <Grid className={classes.routers} innerRef={routesRef} style={{ position: 'absolute', left: `calc(50% - ${(routesRef.current?.offsetWidth ?? 0) / 2}px)` }}>
           {routes.map(path => (
             <Link key={`path-${path}`} to={`/${path}`} className={classes.link}>
               <NavbarButton
