@@ -9,7 +9,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import { NetworkType } from '@consts/static'
 
 export interface IProps {
-  name: string
+  name: NetworkType
   networks: ISelectNetwork[]
   onSelect: (chosen: NetworkType) => void
   disabled?: boolean
@@ -23,7 +23,6 @@ export const SelectNetworkButton: React.FC<IProps> = ({
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
-  const [activeNetwork, setActiveNetwork] = React.useState(NetworkType.DEVNET)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
     blurContent()
@@ -52,8 +51,7 @@ export const SelectNetworkButton: React.FC<IProps> = ({
         anchorEl={anchorEl}
         onSelect={onSelect}
         handleClose={handleClose}
-        active={activeNetwork}
-        setActive={setActiveNetwork}
+        active={name}
       />
     </>
   )

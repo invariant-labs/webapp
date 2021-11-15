@@ -8,7 +8,7 @@ export const SwapPage: React.FC = () => {
 
   return (
     <Grid container className={classes.container}>
-      <Grid item className={classes.item}>
+      <Grid item>
         <WrappedSwap />
       </Grid>
     </Grid>
