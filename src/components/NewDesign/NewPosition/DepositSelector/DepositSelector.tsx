@@ -23,7 +23,8 @@ export interface IDepositSelector {
   token2InputState: InputState
   calcCurrentPoolProportion: (
     leftRangeTickIndex: number,
-    rightRangeTickIndex: number
+    rightRangeTickIndex: number,
+    byX: boolean
   ) => number
   leftRangeTickIndex: number
   rightRangeTickIndex: number
@@ -77,9 +78,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   useEffect(() => {
     if (!token1InputState.blocked && !token2InputState.blocked) {
       if (+token1Deposit !== 0) {
-        setToken2Deposit((+token1Deposit * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
+        setToken2Deposit((+token1Deposit * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex, true)).toString())
       } else if (+token2Deposit !== 0) {
-        setToken1Deposit((+token2Deposit * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
+        setToken1Deposit((+token2Deposit * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex, false)).toString())
       }
     }
   }, [leftRangeTickIndex, rightRangeTickIndex, calcCurrentPoolProportion, token1Index, token2Index])
@@ -139,12 +140,12 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           value={token1Deposit}
           setValue={(value) => {
             setToken1Deposit(value)
-            setToken2Deposit((+value * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
+            setToken2Deposit((+value * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex, true)).toString())
           }}
           placeholder='0.0'
           onMaxClick={() => {
             setToken1Deposit(token1Max.toString())
-            setToken2Deposit((token1Max * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
+            setToken2Deposit((token1Max * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex, true)).toString())
           }}
           style={{
             marginBottom: 8
@@ -159,12 +160,12 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           value={token2Deposit}
           setValue={(value) => {
             setToken2Deposit(value)
-            setToken1Deposit((+value / calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
+            setToken1Deposit((+value / calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex, false)).toString())
           }}
           placeholder='0.0'
           onMaxClick={() => {
             setToken2Deposit(token2Max.toString())
-            setToken1Deposit((token2Max / calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex)).toString())
+            setToken1Deposit((token2Max / calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex, false)).toString())
           }}
           {...token2InputState}
         />

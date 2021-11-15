@@ -24,7 +24,8 @@ export interface INewPosition {
   isCurrentPoolExisting: boolean
   calcCurrentPoolProportion: (
     leftRangeTickIndex: number,
-    rightRangeTickIndex: number
+    rightRangeTickIndex: number,
+    byX: boolean
   ) => number
   feeTiers: number[]
   initialSlippageTolerance: number
