@@ -5,10 +5,12 @@ import { PayloadType } from './types'
 
 export interface IPoolsStore {
   pools: PoolStructure[]
+  ticks: Array<{x: number, y: number}>
 }
 
 export const defaultState: IPoolsStore = {
-  pools: []
+  pools: [],
+  ticks: []
 }
 
 export const poolsSliceName = 'pools'
@@ -20,7 +22,12 @@ const poolsSlice = createSlice({
       state.pools = action.payload
       return state
     },
-    getPoolsData(_state, _action: PayloadAction<Pair[]>) {}
+    getPoolsData(_state, _action: PayloadAction<Pair[]>) {},
+    setTicks(state, action: PayloadAction<Array<{x: number, y: number}>>) {
+      state.ticks = action.payload
+      return state
+    },
+    getCurrentTicks(_state, _action: PayloadAction<{ index: number }>) {}
   }
 })
 
