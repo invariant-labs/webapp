@@ -8,15 +8,12 @@ import useStyles from './style'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
 import { printBN } from '@consts/utils'
-import { Decimal } from '@invariant-labs/sdk/src/market'
 
 export interface INewPosition {
   tokens: SwapToken[]
   data: Array<{ x: number; y: number }>
   midPriceIndex: number
   addLiquidityHandler: (
-    token1Amount: BN,
-    token2Amount: BN,
     leftTickIndex: number,
     rightTickIndex: number,
     slippageTolerance: number
@@ -29,10 +26,7 @@ export interface INewPosition {
     leftRangeTickIndex: number,
     rightRangeTickIndex: number,
     byX: boolean
-  ) => {
-    liquidity: Decimal,
-    amount: BN
-  }
+  ) => BN
   feeTiers: number[]
   initialSlippageTolerance: number
 }
@@ -115,11 +109,9 @@ export const INewPosition: React.FC<INewPosition> = ({
             onChangePositionTokens(index1, index2, fee)
           }}
           onAddLiquidity={
-            (token1Amount, token2Amount) => {
+            () => {
               if (token1Index !== null && token2Index !== null) {
                 addLiquidityHandler(
-                  token1Amount,
-                  token2Amount,
                   leftRange,
                   rightRange,
                   slippageTolerance
@@ -144,10 +136,10 @@ export const INewPosition: React.FC<INewPosition> = ({
               const result = calcAmountAndLiquidity(amount, midPriceIndex, left, right, byX)
 
               if (byX) {
-                return printBN(result.amount, tokens[token1Index].decimal)
+                return printBN(result, tokens[token1Index].decimal)
               }
 
-              return printBN(result.amount, tokens[token2Index].decimal)
+              return printBN(result, tokens[token2Index].decimal)
             }
           }
           leftRangeTickIndex={leftRange}

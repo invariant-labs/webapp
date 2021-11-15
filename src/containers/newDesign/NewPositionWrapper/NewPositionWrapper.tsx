@@ -8,6 +8,8 @@ import { FEE_DECIMAL, FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { printBN } from '@consts/utils'
 import { pools, ticks } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/tick'
+import BN from 'bn.js'
+import { Decimal } from '@invariant-labs/sdk/lib/market'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -17,6 +19,7 @@ export const NewPositionWrapper = () => {
   const ticksData = useSelector(ticks)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
+  const [liquidity, setLiquidity] = useState<Decimal>({ v: new BN(0) })
 
   return (
     <NewPosition
@@ -48,19 +51,15 @@ export const NewPositionWrapper = () => {
       calcAmountAndLiquidity={(amount, current, left, right, byX) => {
         if (byX) {
           const result = getLiquidityByX(amount, current, left, right, true)
+          setLiquidity(result.liquidity)
 
-          return {
-            liquidity: result.liquidity,
-            amount: result.y
-          }
+          return result.y
         }
 
         const result = getLiquidityByY(amount, current, left, right, true)
+        setLiquidity(result.liquidity)
 
-        return {
-          liquidity: result.liquidity,
-          amount: result.x
-        }
+        return result.x
       }}
       initialSlippageTolerance={1}
     />

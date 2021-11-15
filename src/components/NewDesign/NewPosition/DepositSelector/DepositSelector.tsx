@@ -16,7 +16,7 @@ export interface InputState {
 export interface IDepositSelector {
   tokens: SwapToken[]
   setPositionTokens: (token1Index: number | null, token2index: number | null, feeTierIndex: number) => void
-  onAddLiquidity: (token1Deposit: BN, token2Deposit: BN) => void
+  onAddLiquidity: () => void
   token1InputState: InputState
   token2InputState: InputState
   calcAmount: (
@@ -182,13 +182,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
       <Button
         className={classes.addButton}
-        onClick={() => {
-          if (token1Index === null || token2Index === null) {
-            return
-          }
-
-          onAddLiquidity(printBNtoBN(token1Deposit, tokens[token1Index].decimal), printBNtoBN(token2Deposit, tokens[token2Index].decimal))
-        }}
+        onClick={onAddLiquidity}
         disabled={getButtonMessage() !== 'Add Liquidity'}
       >
         {getButtonMessage()}
