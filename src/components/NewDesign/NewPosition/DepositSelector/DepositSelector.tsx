@@ -1,7 +1,7 @@
 import DepositAmountInput from '@components/NewDesign/Inputs/DepositAmountInput/DepositAmountInput'
 import Select from '@components/NewDesign/Inputs/Select/Select'
 import { SwapToken } from '@components/NewDesign/Swap/Swap'
-import { printBNtoBN } from '@consts/utils'
+import { printBN, printBNtoBN } from '@consts/utils'
 import { Button, Grid, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
 import React, { useState, useEffect } from 'react'
@@ -17,15 +17,14 @@ export interface IDepositSelector {
   tokens: SwapToken[]
   setPositionTokens: (token1Index: number | null, token2index: number | null, feeTierIndex: number) => void
   onAddLiquidity: (token1Deposit: BN, token2Deposit: BN) => void
-  token1Max: number
-  token2Max: number
   token1InputState: InputState
   token2InputState: InputState
-  calcCurrentPoolProportion: (
+  calcAmount: (
+    amount: BN,
     leftRangeTickIndex: number,
     rightRangeTickIndex: number,
     byX: boolean
-  ) => number
+  ) => string
   leftRangeTickIndex: number
   rightRangeTickIndex: number
   feeTiers: number[]
@@ -36,11 +35,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   tokens,
   setPositionTokens,
   onAddLiquidity,
-  token1Max,
-  token2Max,
   token1InputState,
   token2InputState,
-  calcCurrentPoolProportion,
+  calcAmount,
   leftRangeTickIndex,
   rightRangeTickIndex,
   feeTiers,
@@ -76,14 +73,14 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   }
 
   useEffect(() => {
-    if (!token1InputState.blocked && !token2InputState.blocked) {
+    if (!token1InputState.blocked && !token2InputState.blocked && token1Index !== null && token2Index !== null) {
       if (+token1Deposit !== 0) {
-        setToken2Deposit((+token1Deposit * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex, true)).toString())
+        setToken2Deposit(calcAmount(printBNtoBN(token1Deposit, tokens[token1Index].decimal), leftRangeTickIndex, rightRangeTickIndex, true))
       } else if (+token2Deposit !== 0) {
-        setToken1Deposit((+token2Deposit * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex, false)).toString())
+        setToken1Deposit(calcAmount(printBNtoBN(token2Deposit, tokens[token2Index].decimal), leftRangeTickIndex, rightRangeTickIndex, false))
       }
     }
-  }, [leftRangeTickIndex, rightRangeTickIndex, calcCurrentPoolProportion, token1Index, token2Index])
+  }, [leftRangeTickIndex, rightRangeTickIndex, calcAmount, token1Index, token2Index])
 
   return (
     <Grid container direction='column' className={classes.wrapper}>
@@ -139,13 +136,19 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           currencyIconSrc={token1Index !== null ? tokens[token1Index].logoURI : undefined}
           value={token1Deposit}
           setValue={(value) => {
+            if (token1Index === null) {
+              return
+            }
             setToken1Deposit(value)
-            setToken2Deposit((+value * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex, true)).toString())
+            setToken2Deposit(calcAmount(printBNtoBN(token1Deposit, tokens[token1Index].decimal), leftRangeTickIndex, rightRangeTickIndex, true))
           }}
           placeholder='0.0'
           onMaxClick={() => {
-            setToken1Deposit(token1Max.toString())
-            setToken2Deposit((token1Max * calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex, true)).toString())
+            if (token1Index === null) {
+              return
+            }
+            setToken1Deposit(printBN(tokens[token1Index].balance, tokens[token1Index].decimal))
+            setToken2Deposit(calcAmount(printBNtoBN(token1Deposit, tokens[token1Index].decimal), leftRangeTickIndex, rightRangeTickIndex, true))
           }}
           style={{
             marginBottom: 8
@@ -159,13 +162,19 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           currencyIconSrc={token2Index !== null ? tokens[token2Index].logoURI : undefined}
           value={token2Deposit}
           setValue={(value) => {
+            if (token2Index === null) {
+              return
+            }
             setToken2Deposit(value)
-            setToken1Deposit((+value / calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex, false)).toString())
+            setToken1Deposit(calcAmount(printBNtoBN(token2Deposit, tokens[token2Index].decimal), leftRangeTickIndex, rightRangeTickIndex, false))
           }}
           placeholder='0.0'
           onMaxClick={() => {
-            setToken2Deposit(token2Max.toString())
-            setToken1Deposit((token2Max / calcCurrentPoolProportion(leftRangeTickIndex, rightRangeTickIndex, false)).toString())
+            if (token2Index === null) {
+              return
+            }
+            setToken2Deposit(printBN(tokens[token2Index].balance, tokens[token2Index].decimal))
+            setToken1Deposit(calcAmount(printBNtoBN(token2Deposit, tokens[token2Index].decimal), leftRangeTickIndex, rightRangeTickIndex, false))
           }}
           {...token2InputState}
         />

@@ -5,9 +5,10 @@ import DepositSelector from './DepositSelector/DepositSelector'
 import RangeSelector from './RangeSelector/RangeSelector'
 import settingsIcon from '@static/svg/settings_ic.svg'
 import useStyles from './style'
-import { printBN } from '@consts/utils'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
+import { printBN } from '@consts/utils'
+import { Decimal } from '@invariant-labs/sdk/src/market'
 
 export interface INewPosition {
   tokens: SwapToken[]
@@ -22,11 +23,16 @@ export interface INewPosition {
   ) => void
   onChangePositionTokens: (token1Index: number | null, token2index: number | null, feeTierIndex: number) => void
   isCurrentPoolExisting: boolean
-  calcCurrentPoolProportion: (
+  calcAmountAndLiquidity: (
+    amount: BN,
+    currentTickIndex: number,
     leftRangeTickIndex: number,
     rightRangeTickIndex: number,
     byX: boolean
-  ) => number
+  ) => {
+    liquidity: Decimal,
+    amount: BN
+  }
   feeTiers: number[]
   initialSlippageTolerance: number
 }
@@ -38,7 +44,7 @@ export const INewPosition: React.FC<INewPosition> = ({
   addLiquidityHandler,
   onChangePositionTokens,
   isCurrentPoolExisting,
-  calcCurrentPoolProportion,
+  calcAmountAndLiquidity,
   feeTiers,
   initialSlippageTolerance
 }) => {
@@ -108,8 +114,6 @@ export const INewPosition: React.FC<INewPosition> = ({
             setToken2Index(index2)
             onChangePositionTokens(index1, index2, fee)
           }}
-          token1Max={token1Index !== null ? +printBN(tokens[token1Index].balance, tokens[token1Index].decimal) : 0}
-          token2Max={token2Index !== null ? +printBN(tokens[token2Index].balance, tokens[token2Index].decimal) : 0}
           onAddLiquidity={
             (token1Amount, token2Amount) => {
               if (token1Index !== null && token2Index !== null) {
@@ -131,7 +135,21 @@ export const INewPosition: React.FC<INewPosition> = ({
             blocked: token1Index !== null && token2Index !== null && leftRange > midPriceIndex,
             blockerInfo: setInputBlockerInfo(leftRange > midPriceIndex)
           }}
-          calcCurrentPoolProportion={calcCurrentPoolProportion}
+          calcAmount={
+            (amount, left, right, byX) => {
+              if (token1Index === null || token2Index === null) {
+                return '0.0'
+              }
+
+              const result = calcAmountAndLiquidity(amount, midPriceIndex, left, right, byX)
+
+              if (byX) {
+                return printBN(result.amount, tokens[token1Index].decimal)
+              }
+
+              return printBN(result.amount, tokens[token2Index].decimal)
+            }
+          }
           leftRangeTickIndex={leftRange}
           rightRangeTickIndex={rightRange}
           feeTiers={feeTiers}

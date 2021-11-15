@@ -7,6 +7,7 @@ import { swapTokens } from '@selectors/solanaWallet'
 import { FEE_DECIMAL, FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { printBN } from '@consts/utils'
 import { pools, ticks } from '@selectors/pools'
+import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/tick'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -44,7 +45,23 @@ export const NewPositionWrapper = () => {
         dispatch(actions.position({}))
       }}
       isCurrentPoolExisting={poolIndex !== null}
-      calcCurrentPoolProportion={() => 1}
+      calcAmountAndLiquidity={(amount, current, left, right, byX) => {
+        if (byX) {
+          const result = getLiquidityByX(amount, current, left, right, true)
+
+          return {
+            liquidity: result.liquidity,
+            amount: result.y
+          }
+        }
+
+        const result = getLiquidityByY(amount, current, left, right, true)
+
+        return {
+          liquidity: result.liquidity,
+          amount: result.x
+        }
+      }}
       initialSlippageTolerance={1}
     />
   )

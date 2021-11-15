@@ -70,7 +70,10 @@ storiesOf('position/newPosition', module).add('new', () => (
       addLiquidityHandler={() => {}}
       onChangePositionTokens={() => {}}
       isCurrentPoolExisting={true}
-      calcCurrentPoolProportion={() => 2}
+      calcAmountAndLiquidity={() => ({
+        liquidity: { v: new BN(1) },
+        amount: new BN(1)
+      })}
       feeTiers={[0.05, 0.3, 1]}
       initialSlippageTolerance={1}
     />
@@ -84,7 +87,10 @@ storiesOf('position/newPosition', module).add('new', () => (
       addLiquidityHandler={() => {}}
       onChangePositionTokens={() => {}}
       isCurrentPoolExisting={false}
-      calcCurrentPoolProportion={() => 1}
+      calcAmountAndLiquidity={() => ({
+        liquidity: { v: new BN(1) },
+        amount: new BN(1)
+      })}
       feeTiers={[0.05, 0.3, 1]}
       initialSlippageTolerance={1}
     />
