@@ -1,30 +1,26 @@
 import { Grid, Typography } from '@material-ui/core'
-import { PublicKey } from '@solana/web3.js'
 import React, { useState, useRef } from 'react'
 import PositionSettings from '../Modals/PositionSettings/PositionSettings'
 import DepositSelector from './DepositSelector/DepositSelector'
 import RangeSelector from './RangeSelector/RangeSelector'
 import settingsIcon from '@static/svg/settings_ic.svg'
 import useStyles from './style'
-import { SwapToken } from '../Swap/Swap'
 import { printBN } from '@consts/utils'
 import { BN } from '@project-serum/anchor'
+import { SwapToken } from '@selectors/solanaWallet'
 
 export interface INewPosition {
   tokens: SwapToken[]
   data: Array<{ x: number; y: number }>
   midPriceIndex: number
   addLiquidityHandler: (
-    token1: PublicKey,
-    token2: PublicKey,
     token1Amount: BN,
     token2Amount: BN,
     leftTickIndex: number,
     rightTickIndex: number,
-    feeTier: number,
     slippageTolerance: number
   ) => void
-  onChangePositionTokens: (token1Index: number | null, token2index: number | null) => void
+  onChangePositionTokens: (token1Index: number | null, token2index: number | null, feeTierIndex: number) => void
   isCurrentPoolExisting: boolean
   calcCurrentPoolProportion: (
     leftRangeTickIndex: number,
@@ -51,7 +47,6 @@ export const INewPosition: React.FC<INewPosition> = ({
 
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false)
   const [slippageTolerance, setSlippageTolerance] = useState<number>(1)
-  const [feeTier, setFeeTier] = useState<number>(0.05)
 
   const [leftRange, setLeftRange] = useState(0)
   const [rightRange, setRightRange] = useState(0)
@@ -107,25 +102,21 @@ export const INewPosition: React.FC<INewPosition> = ({
       <Grid container direction='row' justifyContent='space-between'>
         <DepositSelector
           tokens={tokens}
-          setPositionTokens={(index1, index2) => {
+          setPositionTokens={(index1, index2, fee) => {
             setToken1Index(index1)
             setToken2Index(index2)
-            onChangePositionTokens(index1, index2)
+            onChangePositionTokens(index1, index2, fee)
           }}
-          setFeeValue={setFeeTier}
           token1Max={token1Index !== null ? +printBN(tokens[token1Index].balance, tokens[token1Index].decimal) : 0}
           token2Max={token2Index !== null ? +printBN(tokens[token2Index].balance, tokens[token2Index].decimal) : 0}
           onAddLiquidity={
             (token1Amount, token2Amount) => {
               if (token1Index !== null && token2Index !== null) {
                 addLiquidityHandler(
-                  tokens[token1Index].assetAddress,
-                  tokens[token2Index].assetAddress,
                   token1Amount,
                   token2Amount,
                   leftRange,
                   rightRange,
-                  feeTier,
                   slippageTolerance
                 )
               }

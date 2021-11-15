@@ -36,7 +36,6 @@ storiesOf('position/depositSelector', module).add('deposit', () => (
   <DepositSelector
     tokens={tokens}
     setPositionTokens={() => {}}
-    setFeeValue={() => {}}
     onAddLiquidity={() => {}}
     token1Max={5}
     token2Max={20}

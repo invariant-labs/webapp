@@ -15,8 +15,7 @@ export interface InputState {
 
 export interface IDepositSelector {
   tokens: SwapToken[]
-  setPositionTokens: (token1Index: number | null, token2index: number | null) => void
-  setFeeValue: (value: number) => void
+  setPositionTokens: (token1Index: number | null, token2index: number | null, feeTierIndex: number) => void
   onAddLiquidity: (token1Deposit: BN, token2Deposit: BN) => void
   token1Max: number
   token2Max: number
@@ -35,7 +34,6 @@ export interface IDepositSelector {
 export const DepositSelector: React.FC<IDepositSelector> = ({
   tokens,
   setPositionTokens,
-  setFeeValue,
   onAddLiquidity,
   token1Max,
   token2Max,
@@ -51,6 +49,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
   const [token1Index, setToken1Index] = useState<number | null>(null)
   const [token2Index, setToken2Index] = useState<number | null>(null)
+  const [feeTierIndex, setFeeTierIndex] = useState<number>(0)
 
   const [token1Deposit, setToken1Deposit] = useState<string>('')
   const [token2Deposit, setToken2Deposit] = useState<string>('')
@@ -98,7 +97,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               onSelect={(name) => {
                 const index = tokens.findIndex((e) => e.symbol === name)
                 setToken1Index(index)
-                setPositionTokens(index, token2Index)
+                setPositionTokens(index, token2Index, feeTierIndex)
               }}
               centered
               className={classes.customSelect}
@@ -113,7 +112,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               onSelect={(name) => {
                 const index = tokens.findIndex((e) => e.symbol === name)
                 setToken2Index(index)
-                setPositionTokens(token1Index, index)
+                setPositionTokens(token1Index, index, feeTierIndex)
               }}
               centered
               className={classes.customSelect}
@@ -123,7 +122,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
         <Typography className={classes.inputLabel}>Fee</Typography>
         <FeeSwitch
-          setFeeValue={setFeeValue}
+          onSelect={(fee) => {
+            setFeeTierIndex(fee)
+            setPositionTokens(token1Index, token2Index, fee)
+          }}
           feeTiers={feeTiers}
         />
       </Grid>

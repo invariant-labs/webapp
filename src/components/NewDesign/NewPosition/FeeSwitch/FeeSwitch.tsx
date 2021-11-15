@@ -3,12 +3,12 @@ import { Grid, Tab, Tabs } from '@material-ui/core'
 import useStyles, { useSingleTabStyles, useTabsStyles } from './style'
 
 export interface IFeeSwitch {
-  setFeeValue: (value: number) => void
+  onSelect: (value: number) => void
   showOnlyPercents?: boolean
   feeTiers: number[]
 }
 
-export const FeeSwitch: React.FC<IFeeSwitch> = ({ setFeeValue, showOnlyPercents = false, feeTiers }) => {
+export const FeeSwitch: React.FC<IFeeSwitch> = ({ onSelect, showOnlyPercents = false, feeTiers }) => {
   const classes = useStyles()
 
   const [current, setCurrent] = useState(0)
@@ -18,7 +18,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({ setFeeValue, showOnlyPercents 
 
   const handleChange = (_: React.ChangeEvent<{}>, newValue: number) => {
     setCurrent(newValue)
-    setFeeValue(feeTiers[newValue])
+    onSelect(newValue)
   }
 
   return (
