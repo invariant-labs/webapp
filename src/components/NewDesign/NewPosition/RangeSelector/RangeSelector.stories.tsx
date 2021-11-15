@@ -42,4 +42,16 @@ storiesOf('position/rangeSelector', module).add('setter', () => (
       action(`range indexes: ${left} - ${right}`)()
     }}
   />
+)).add('blocked', () => (
+  <RangeSelector
+    data={data}
+    midPriceIndex={140}
+    tokenFromSymbol='BAT'
+    tokenToSymbol='ETH'
+    onChangeRange={(left, right) => {
+      action(`range indexes: ${left} - ${right}`)()
+    }}
+    blocked
+    blockerInfo='Select tokens to set price range.'
+  />
 ))
