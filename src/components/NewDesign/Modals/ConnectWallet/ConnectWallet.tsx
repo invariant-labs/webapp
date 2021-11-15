@@ -15,7 +15,6 @@ export interface IConnectWalletModal {
   connected: boolean
   onSelect: (wallet: WalletType) => void
   active?: WalletType
-  setActive: (wallet: WalletType) => void
 }
 export const ConnectWallet: React.FC<IConnectWalletModal> = ({
   options,
@@ -25,8 +24,7 @@ export const ConnectWallet: React.FC<IConnectWalletModal> = ({
   callDisconect,
   connected,
   onSelect,
-  active = 'defaul',
-  setActive
+  active = 'default'
 }) => {
   const classes = useStyles()
 
@@ -64,7 +62,6 @@ export const ConnectWallet: React.FC<IConnectWalletModal> = ({
               )}
               onClick={() => {
                 onSelect(option)
-                setActive(option)
                 handleClose()
               }}>
               <img className={classes.icon} src={icons[names[option]]} alt={`${option} icon}`} />

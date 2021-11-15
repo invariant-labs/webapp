@@ -10,6 +10,8 @@ body {
   font-family: 'Mukta';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #562cb2;
+  background: radial-gradient(118.38% 303.54% at 3.96% 118.38%, rgba(119, 72, 216, 0.1) 0%, rgba(119, 72, 216, 0) 100%), radial-gradient(57.34% 103.84% at 50% 0%, rgba(156, 231, 90, 0.1) 0%, rgba(156, 231, 90, 0) 100%);
+  background-color: #0B090D;
   letter-spacing: -0.03em;
+  min-height: 100vh;
 }
