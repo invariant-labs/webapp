@@ -76,7 +76,6 @@ export const Swap: React.FC<ISwap> = ({
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
     let amountOut: BN = new BN(0)
     let priceProportion = new BN(0)
-    const taxAmonut = printBNtoBN((1 - +printBN(tax.v, 12)).toString(), 12)
     if (tokenToIndex !== null && tokenFromIndex !== null) {
       if (poolIndex !== -1 && poolIndex !== null) {
         priceProportion = pools[poolIndex].sqrtPrice.v
@@ -92,13 +91,18 @@ export const Swap: React.FC<ISwap> = ({
     return printBN(amountOut, assetFor.decimal)
   }
   const calculateSwapOutAmountTax = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
+    console.log('pool index', poolIndex)
+    console.log(assetIn)
+    console.log(amount)
     let amountOut: BN = new BN(0)
     let priceProportion = new BN(0)
     if (poolIndex !== -1 && poolIndex !== null) {
-      priceProportion = pools[poolIndex].sqrtPrice.v
-        .div(new BN(10 ** PRICE_DECIMAL))
-        .mul(pools[poolIndex].sqrtPrice.v.div(new BN(10 ** PRICE_DECIMAL)))
+      // priceProportion = pools[poolIndex].sqrtPrice.v
+      //   .div(new BN(10 ** PRICE_DECIMAL))
+      //   .mul(pools[poolIndex].sqrtPrice.v.div(new BN(10 ** PRICE_DECIMAL)))
+      priceProportion = new BN(1)
 
+      console.log(printBN(priceProportion, 0))
       if (assetIn.assetAddress.toString() === pools[poolIndex].tokenX.toString()) {
         amountOut = printBNtoBN(amount, assetIn.decimal).mul(priceProportion)
       } else {
@@ -111,6 +115,7 @@ export const Swap: React.FC<ISwap> = ({
     }
 
     const decimalChange = 10 ** (assetFor.decimal - assetIn.decimal)
+    console.log('price decimal', decimalChange)
 
     if (decimalChange < 1) {
       return printBN(amountOut.div(new BN(1 / decimalChange)), assetFor.decimal)
@@ -209,6 +214,7 @@ export const Swap: React.FC<ISwap> = ({
       setAmountTo(
         calculateSwapOutAmountTax(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountTo)
       )
+      console.log('To input amount', calculateSwapOutAmountTax(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountTo))
     }
   }
   const updateFromEstimatedAmount = (amount: string | null = null) => {
@@ -411,7 +417,7 @@ export const Swap: React.FC<ISwap> = ({
               }}
             />
             : null}
-          {tokenFromIndex !== null && tokenToIndex !== null ? (
+          {tokenFromIndex !== null && tokenToIndex !== null && getButtonMessage() === 'Swap' ? (
             <Typography className={classes.rateText}>
           1 {swap ? tokens[tokenToIndex].symbol
                 : tokens[tokenFromIndex].symbol } = {' '}

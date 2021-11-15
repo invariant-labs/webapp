@@ -5,7 +5,7 @@ import { FeeTier, PoolStructure } from '@invariant-labs/sdk/lib/market'
 import { Pair } from '@invariant-labs/sdk'
 import { actions, TokensPair } from '@reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { FEE_TIERS } from '@invariant-labs/sdk/lib/network'
+import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
 
 // getting pool from SDK: market.get(pair)
 export function* fetchPool(tokenX: PublicKey, tokenY: PublicKey, feeTier: FeeTier): SagaGenerator<string> {

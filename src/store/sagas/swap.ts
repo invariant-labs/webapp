@@ -10,7 +10,7 @@ import { Pair } from '@invariant-labs/sdk'
 import { MAX_U64 } from '@consts/static'
 import BN from 'bn.js'
 import { getConnection } from './connection'
-import { FEE_TIERS } from '@invariant-labs/sdk/lib/network'
+import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
 
 export function* handleSwap(): Generator {
   try {

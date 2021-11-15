@@ -1,7 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { MOCK_TOKENS, Pair } from '@invariant-labs/sdk'
-import { FEE_TIERS } from '@invariant-labs/sdk/lib/network'
+import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
 
 declare global {
   interface Window {
