@@ -17,7 +17,7 @@ const LiquidationRangeInfo: React.FC<ILiquidationRangeInfo> = ({
 }) => {
   const classes = useStyles()
   return (
-    <Grid className={classes.infoAmountDes}>
+    <Grid>
       <Grid className={classes.infoTypeSwap}>
         <Grid className={classes.infoType}>
           <Typography component='span' className={classes.infoTypeLabel}>{label}</Typography>

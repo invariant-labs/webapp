@@ -14,9 +14,6 @@ const useStyles = makeStyles(() => ({
     borderRadius: 5,
     lineHeight: '35px'
   },
-  infoAmountDes: {
-
-  },
   infoType: {
     backgroundColor: colors.invariant.componentOut3,
     borderRadius: 5,
@@ -30,7 +27,7 @@ const useStyles = makeStyles(() => ({
     width: '100%'
   },
   infoAmount: {
-    color: '#FFFFFF',
+    color: colors.white.main,
     paddingRight: 5,
     ...newTypography.body1,
     lineHeight: '35px'
