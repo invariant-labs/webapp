@@ -135,11 +135,7 @@ export const INewPosition: React.FC<INewPosition> = ({
 
               const result = calcAmountAndLiquidity(amount, midPriceIndex, left, right, byX)
 
-              if (byX) {
-                return printBN(result, tokens[token1Index].decimal)
-              }
-
-              return printBN(result, tokens[token2Index].decimal)
+              return printBN(result, tokens[byX ? token1Index : token2Index].decimal)
             }
           }
           leftRangeTickIndex={leftRange}
