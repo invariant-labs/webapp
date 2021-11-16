@@ -60,12 +60,16 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<{ poolIndex: nu
       allPools[poolIndex].currentTickIndex - 100,
       allPools[poolIndex].currentTickIndex + 100
     )
+
+    let currentLiquidity = 0
     const ticksData = ticks.map((tick) => {
       const sqrt = +printBN(tick.sqrtPrice.v, PRICE_DECIMAL)
 
+      currentLiquidity += +printBN(tick.liquidityChange.v, PRICE_DECIMAL)
+
       return {
         x: sqrt ** sqrt,
-        y: +printBN(tick.liquidityChange.v, PRICE_DECIMAL)
+        y: currentLiquidity
       }
     })
     yield put(actions.setPlotTicks(ticksData))
