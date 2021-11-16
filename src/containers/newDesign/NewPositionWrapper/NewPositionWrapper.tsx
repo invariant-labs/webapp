@@ -1,22 +1,22 @@
 import React, { useState } from 'react'
 import NewPosition from '@components/NewDesign/NewPosition/NewPosition'
-import { actions } from '@reducers/position'
-import { actions as poolsActions } from '@reducers/pools'
+import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
 import { swapTokens } from '@selectors/solanaWallet'
 import { FEE_DECIMAL, FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { printBN } from '@consts/utils'
-import { pools, ticks } from '@selectors/pools'
+import { pools } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/tick'
 import BN from 'bn.js'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { plotTicks } from '@selectors/positions'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
 
   const tokens = useSelector(swapTokens)
   const allPools = useSelector(pools)
-  const ticksData = useSelector(ticks)
+  const ticksData = useSelector(plotTicks)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
   const [liquidity, setLiquidity] = useState<Decimal>({ v: new BN(0) })
@@ -37,7 +37,7 @@ export const NewPositionWrapper = () => {
             )
 
             setPoolIndex(index !== -1 ? index : null)
-            dispatch(poolsActions.getCurrentTicks({ index }))
+            dispatch(actions.getCurrentPlotTicks({ poolIndex: index }))
           }
         }
       }
