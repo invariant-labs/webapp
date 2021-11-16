@@ -10,6 +10,7 @@ import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/tick'
 import BN from 'bn.js'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { plotTicks } from '@selectors/positions'
+import { Pair } from '@invariant-labs/sdk'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -44,8 +45,19 @@ export const NewPositionWrapper = () => {
       feeTiers={FEE_TIERS.map((tier) => +printBN(tier.fee, FEE_DECIMAL))}
       data={ticksData}
       midPriceIndex={poolIndex !== null ? allPools[poolIndex].currentTickIndex : 0}
-      addLiquidityHandler={() => {
-        dispatch(actions.position({}))
+      addLiquidityHandler={(leftTickIndex, rightTickIndex, _slippageTolerance) => {
+        if (poolIndex === null) {
+          return
+        }
+
+        dispatch(actions.initPosition({
+          pair: new Pair(allPools[poolIndex].tokenX, allPools[poolIndex].tokenY, { fee: allPools[poolIndex].fee.v }),
+          userTokenX: allPools[poolIndex].tokenX,
+          userTokenY: allPools[poolIndex].tokenY,
+          lowerTick: leftTickIndex,
+          upperTick: rightTickIndex,
+          liquidityDelta: liquidity
+        }))
       }}
       isCurrentPoolExisting={poolIndex !== null}
       calcAmountAndLiquidity={(amount, current, left, right, byX) => {
