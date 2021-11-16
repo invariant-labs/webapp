@@ -11,6 +11,7 @@ import BN from 'bn.js'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { plotTicks } from '@selectors/positions'
 import { Pair } from '@invariant-labs/sdk'
+import { useEffect } from '@storybook/client-api'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -21,6 +22,15 @@ export const NewPositionWrapper = () => {
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
   const [liquidity, setLiquidity] = useState<Decimal>({ v: new BN(0) })
+  const [midPriceIndex, setMidPriceIndex] = useState<number>(0)
+
+  useEffect(() => {
+    if (poolIndex !== null) {
+      const index = ticksData.findIndex((tick) => tick.index === allPools[poolIndex].currentTickIndex)
+
+      setMidPriceIndex(index === -1 ? 0 : index)
+    }
+  }, [ticksData])
 
   return (
     <NewPosition
@@ -44,7 +54,7 @@ export const NewPositionWrapper = () => {
       }
       feeTiers={FEE_TIERS.map((tier) => +printBN(tier.fee, FEE_DECIMAL))}
       data={ticksData}
-      midPriceIndex={poolIndex !== null ? allPools[poolIndex].currentTickIndex : 0}
+      midPriceIndex={midPriceIndex}
       addLiquidityHandler={(leftTickIndex, rightTickIndex, _slippageTolerance) => {
         if (poolIndex === null) {
           return
@@ -62,13 +72,13 @@ export const NewPositionWrapper = () => {
       isCurrentPoolExisting={poolIndex !== null}
       calcAmountAndLiquidity={(amount, current, left, right, byX) => {
         if (byX) {
-          const result = getLiquidityByX(amount, current, left, right, true)
+          const result = getLiquidityByX(amount, current, ticksData[left].index, ticksData[right].index, true)
           setLiquidity(result.liquidity)
 
           return result.y
         }
 
-        const result = getLiquidityByY(amount, current, left, right, true)
+        const result = getLiquidityByY(amount, current, ticksData[left].index, ticksData[right].index, true)
         setLiquidity(result.liquidity)
 
         return result.x

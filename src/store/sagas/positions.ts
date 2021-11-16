@@ -8,7 +8,7 @@ import { Transaction } from '@solana/web3.js'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { InitPosition } from '@invariant-labs/sdk/lib/market'
 import { pools } from '@selectors/pools'
-import { Pair } from '@invariant-labs/sdk'
+import { MAX_TICK, MIN_TICK, Pair } from '@invariant-labs/sdk'
 import { printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 
@@ -57,8 +57,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<{ poolIndex: nu
     const ticks = yield* call(
       [marketProgram, marketProgram.getInitializedTicksInRange],
       new Pair(allPools[poolIndex].tokenX, allPools[poolIndex].tokenY, { fee: allPools[poolIndex].fee.v }),
-      allPools[poolIndex].currentTickIndex - 100,
-      allPools[poolIndex].currentTickIndex + 100
+      Math.max(allPools[poolIndex].currentTickIndex - (100 * allPools[poolIndex].tickSpacing), MIN_TICK),
+      Math.min(allPools[poolIndex].currentTickIndex + (100 * allPools[poolIndex].tickSpacing), MAX_TICK)
     )
 
     let currentLiquidity = 0
@@ -69,7 +69,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<{ poolIndex: nu
 
       return {
         x: sqrt ** sqrt,
-        y: currentLiquidity
+        y: currentLiquidity,
+        index: tick.index
       }
     })
     yield put(actions.setPlotTicks(ticksData))
