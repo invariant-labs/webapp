@@ -20,7 +20,7 @@ export interface INewPosition {
   ) => void
   onChangePositionTokens: (token1Index: number | null, token2index: number | null, feeTierIndex: number) => void
   isCurrentPoolExisting: boolean
-  calcAmountAndLiquidity: (
+  calcAmount: (
     amount: BN,
     currentTickIndex: number,
     leftRangeTickIndex: number,
@@ -38,7 +38,7 @@ export const INewPosition: React.FC<INewPosition> = ({
   addLiquidityHandler,
   onChangePositionTokens,
   isCurrentPoolExisting,
-  calcAmountAndLiquidity,
+  calcAmount,
   feeTiers,
   initialSlippageTolerance
 }) => {
@@ -133,7 +133,7 @@ export const INewPosition: React.FC<INewPosition> = ({
                 return '0.0'
               }
 
-              const result = calcAmountAndLiquidity(amount, midPriceIndex, left, right, byX)
+              const result = calcAmount(amount, midPriceIndex, left, right, byX)
 
               return printBN(result, tokens[byX ? token1Index : token2Index].decimal)
             }

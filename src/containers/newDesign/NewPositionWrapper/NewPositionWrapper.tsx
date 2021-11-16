@@ -7,11 +7,11 @@ import { FEE_DECIMAL, FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { printBN } from '@consts/utils'
 import { pools } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/tick'
-import BN from 'bn.js'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { plotTicks } from '@selectors/positions'
 import { Pair } from '@invariant-labs/sdk'
 import { useEffect } from '@storybook/client-api'
+import { BN } from '@project-serum/anchor'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -70,15 +70,15 @@ export const NewPositionWrapper = () => {
         }))
       }}
       isCurrentPoolExisting={poolIndex !== null}
-      calcAmountAndLiquidity={(amount, current, left, right, byX) => {
+      calcAmount={(amount, current, left, right, byX) => {
         if (byX) {
-          const result = getLiquidityByX(amount, current, ticksData[left].index, ticksData[right].index, true)
+          const result = getLiquidityByX(amount, ticksData[current].index, ticksData[left].index, ticksData[right].index, true)
           setLiquidity(result.liquidity)
 
           return result.y
         }
 
-        const result = getLiquidityByY(amount, current, ticksData[left].index, ticksData[right].index, true)
+        const result = getLiquidityByY(amount, ticksData[current].index, ticksData[left].index, ticksData[right].index, true)
         setLiquidity(result.liquidity)
 
         return result.x
