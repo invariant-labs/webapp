@@ -166,7 +166,7 @@ export const INewPosition: React.FC<INewPosition> = ({
           blockerInfo={setRangeBlockerInfo()}
           {
           ...(
-            token1Index === null || token2Index === null || !isCurrentPoolExisting || data.length === 0
+            token1Index === null || token2Index === null || !isCurrentPoolExisting || data.length === 0 || ticksLoading
               ? noRangePlaceholderProps
               : {
                 data,

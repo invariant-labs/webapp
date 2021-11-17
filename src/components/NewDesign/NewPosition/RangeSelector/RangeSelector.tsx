@@ -35,6 +35,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [plotMin, setPlotMin] = useState(0)
   const [plotMax, setPlotMax] = useState(data[midPriceIndex].x * 2)
 
+  const [waiting, setWaiting] = useState(false)
+
   const zoomMinus = () => {
     if (plotMax <= data[data.length - 1].x) {
       const diff = plotMax - plotMin
@@ -62,13 +64,23 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   useEffect(() => {
-    changeRangeHandler(
-      Math.round(midPriceIndex / 2),
-      Math.min(Math.round(3 * midPriceIndex / 2), data.length - 1)
-    )
-    setPlotMin(0)
-    setPlotMax(data[midPriceIndex].x * 2)
-  }, [tokenFromSymbol, tokenToSymbol])
+    if (!waiting) {
+      changeRangeHandler(
+        Math.round(midPriceIndex / 2),
+        Math.min(Math.round(3 * midPriceIndex / 2), data.length - 1)
+      )
+      setPlotMin(0)
+      setPlotMax(data[midPriceIndex].x * 2)
+    }
+  }, [waiting])
+
+  useEffect(() => {
+    if (blocked && !waiting) {
+      setWaiting(true)
+    } else if (!blocked && waiting) {
+      setWaiting(false)
+    }
+  }, [blocked])
 
   return (
     <Grid container className={classes.wrapper}>

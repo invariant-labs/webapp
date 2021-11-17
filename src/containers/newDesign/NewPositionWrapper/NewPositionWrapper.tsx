@@ -88,6 +88,8 @@ export const NewPositionWrapper = () => {
           return result.y
         }
 
+        console.log([ticksData[isXtoY ? left : right].index, ticksData[isXtoY ? right : left].index, ticksData[current].index])
+
         const result = getLiquidityByY(amount, ticksData[isXtoY ? left : right].index, ticksData[isXtoY ? right : left].index, ticksData[current].index, true)
         setLiquidity(result.liquidity)
 
