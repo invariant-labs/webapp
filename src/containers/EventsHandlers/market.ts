@@ -24,7 +24,7 @@ const MarketEvents = () => {
     const connectEvents = () => {
       console.log('actions.getPoolsData([PAIRS[0]])')
       dispatch(
-        actions.getPoolsData([PAIRS[0]])
+        actions.getPoolsData(PAIRS)
       )
     }
 

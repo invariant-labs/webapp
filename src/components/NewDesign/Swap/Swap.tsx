@@ -89,15 +89,17 @@ export const Swap: React.FC<ISwap> = ({
         priceProportion = new BN(2)
       }
     }
+    console.log('assetIn dec: ', assetIn.decimal, 'assetFor dec: ', assetFor.decimal)
     if (assetFor.decimal >= assetIn.decimal) {
       const decimalChange = new BN(10).pow(new BN(assetFor.decimal - assetIn.decimal))
-      return printBN(amountOut.mul(new BN(decimalChange)), assetFor.decimal)
+      return printBN(amountOut.mul(decimalChange), assetFor.decimal)
     } else {
-      const decimalChange = new BN(10).pow(new BN(assetIn.decimal - assetFor.decimal - setBalanceDecimal(assetIn.decimal)))
-      return printBN(amountOut.div(new BN(decimalChange)), assetIn.decimal)
+      const decimalChange = new BN(10).pow(new BN(assetIn.decimal - assetFor.decimal))
+      return printBN(amountOut.div(decimalChange), assetFor.decimal)
     }
   }
   const calculateSwapOutAmountTax = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
+    console.log(pools[1].sqrtPrice.v.toString(), assetFor.symbol)
     let amountOut: BN = new BN(0)
     let priceProportion = new BN(0)
     if (poolIndex !== -1 && poolIndex !== null) {
@@ -118,10 +120,10 @@ export const Swap: React.FC<ISwap> = ({
     }
     if (assetFor.decimal >= assetIn.decimal) {
       const decimalChange = new BN(10).pow(new BN(assetFor.decimal - assetIn.decimal))
-      return printBN(amountOut.mul(new BN(decimalChange)), assetFor.decimal)
+      return printBN(amountOut.mul(decimalChange), assetFor.decimal)
     } else {
-      const decimalChange = new BN(10).pow(new BN(assetIn.decimal - assetFor.decimal - setBalanceDecimal(assetIn.decimal)))
-      return printBN(amountOut.div(new BN(decimalChange)), assetIn.decimal)
+      const decimalChange = new BN(10).pow(new BN(assetIn.decimal - assetFor.decimal))
+      return printBN(amountOut.div(decimalChange), assetFor.decimal)
     }
   }
 
@@ -131,7 +133,7 @@ export const Swap: React.FC<ISwap> = ({
     let priceProportion = new BN(0)
     if (poolIndex !== -1 && poolIndex !== null) {
       priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
-      if (+printBN(pools[poolIndex].sqrtPrice.v, DEC) < 1) {
+      if (+printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL) < 1) {
         priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
         if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
           amountOut = printBNtoBN(amount, assetIn.decimal).mul(priceProportion).div(DENOMINATOR)
@@ -148,29 +150,15 @@ export const Swap: React.FC<ISwap> = ({
       console.log('amount after fees', printBN(amountOut, 6))
     }
     if (assetFor.decimal >= assetIn.decimal) {
-      console.log('for > in')
       const decimalChange = new BN(10).pow(new BN(assetFor.decimal - assetIn.decimal))
-      return printBN(amountOut.mul(new BN(decimalChange)), assetFor.decimal)
+      return printBN(amountOut.mul(decimalChange), assetFor.decimal)
     } else {
-      console.log('for < in')
-      console.log('asset in decimal: ', assetIn.decimal)
-      console.log('balance decimal: ', setBalanceDecimal(assetIn.decimal))
-      const decimalChange = new BN(10).pow(new BN(assetIn.decimal - assetFor.decimal - setBalanceDecimal(assetIn.decimal)))
-      return printBN(amountOut.div(new BN(decimalChange)), assetIn.decimal)
+      const decimalChange = new BN(10).pow(new BN(assetIn.decimal - assetFor.decimal))
+      return printBN(amountOut.div(decimalChange), assetFor.decimal)
     }
   }
 
   const setBalanceDecimal = (dec: number): number => {
-    if (dec > 6) {
-      return dec - 6
-    } else if (dec === 6) {
-      return 6
-    } else {
-      return 6 + dec
-    }
-  }
-
-  const setBalanceDecimal2 = (dec: number): number => {
     if (dec > 6) {
       return dec - (dec - 6)
     } else if (dec === 6) {
@@ -307,7 +295,7 @@ export const Swap: React.FC<ISwap> = ({
           <Typography className={classes.tokenComponentText}>Est.: </Typography>
           <Typography className={classes.tokenComponentText}>
           Balance: {tokenFromIndex !== null
-              ? printBN(tokens[tokenFromIndex].balance, setBalanceDecimal2(tokens[tokenFromIndex].decimal)) : '0'}
+              ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal) : '0'}
           </Typography>
         </Box>
         <ExchangeAmountInput
@@ -323,8 +311,8 @@ export const Swap: React.FC<ISwap> = ({
           placeholder={'0.0'}
           onMaxClick={() => {
             if (tokenToIndex !== null && tokenFromIndex !== null) {
-              setAmountFrom(printBN(tokens[tokenFromIndex].balance, setBalanceDecimal2(tokens[tokenFromIndex].decimal)))
-              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, setBalanceDecimal2(tokens[tokenFromIndex].decimal)))
+              setAmountFrom(printBN(tokens[tokenFromIndex].balance, setBalanceDecimal(tokens[tokenFromIndex].decimal)))
+              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, setBalanceDecimal(tokens[tokenFromIndex].decimal)))
             }
           }}
           tokens={ tokens }
@@ -369,7 +357,7 @@ export const Swap: React.FC<ISwap> = ({
           <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
           <Typography className={classes.tokenComponentText}>
           Balance: {tokenToIndex !== null
-              ? printBN(tokens[tokenToIndex].balance, setBalanceDecimal2(tokens[tokenToIndex].decimal)) : '0'}
+              ? printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal) : '0'}
           </Typography>
         </Box>
         <ExchangeAmountInput
@@ -393,8 +381,8 @@ export const Swap: React.FC<ISwap> = ({
           placeholder={'0.0'}
           onMaxClick={() => {
             if (tokenToIndex !== null && tokenFromIndex !== null) {
-              setAmountFrom(printBN(tokens[tokenFromIndex].balance, setBalanceDecimal2(tokens[tokenFromIndex].decimal)))
-              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, setBalanceDecimal2(tokens[tokenFromIndex].decimal)))
+              setAmountFrom(printBN(tokens[tokenFromIndex].balance, setBalanceDecimal(tokens[tokenFromIndex].decimal)))
+              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, setBalanceDecimal(tokens[tokenFromIndex].decimal)))
             }
           }}
           tokens={ tokensY }
