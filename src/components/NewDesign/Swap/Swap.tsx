@@ -78,7 +78,7 @@ export const Swap: React.FC<ISwap> = ({
     let priceProportion = new BN(0)
     if (poolIndex !== -1 && poolIndex !== null) {
       priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
-      if (+printBN(pools[poolIndex].sqrtPrice.v, 12) < 1) {
+      if (+printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL) < 1) {
         priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
         if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
           amountOut = printBNtoBN(amount, assetIn.decimal).mul(priceProportion).div(DENOMINATOR)
@@ -102,7 +102,7 @@ export const Swap: React.FC<ISwap> = ({
     let priceProportion = new BN(0)
     if (poolIndex !== -1 && poolIndex !== null) {
       priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
-      if (+printBN(pools[poolIndex].sqrtPrice.v, 12) < 1) {
+      if (+printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL) < 1) {
         priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
         if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
           amountOut = printBNtoBN(amount, assetIn.decimal).mul(priceProportion).div(DENOMINATOR)
@@ -131,7 +131,7 @@ export const Swap: React.FC<ISwap> = ({
     let priceProportion = new BN(0)
     if (poolIndex !== -1 && poolIndex !== null) {
       priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
-      if (+printBN(pools[poolIndex].sqrtPrice.v, 12) < 1) {
+      if (+printBN(pools[poolIndex].sqrtPrice.v, DEC) < 1) {
         priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
         if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
           amountOut = printBNtoBN(amount, assetIn.decimal).mul(priceProportion).div(DENOMINATOR)
@@ -195,10 +195,10 @@ export const Swap: React.FC<ISwap> = ({
     if (tokenToIndex !== null && tokenFromIndex !== null) {
       const pairIndex = pools.findIndex((pool) => {
         return (
-          tokens[tokenFromIndex].assetAddress.toString() === pool.tokenX.toString() &&
-          tokens[tokenToIndex].assetAddress.toString() === pool.tokenY.toString()) ||
-          (tokens[tokenToIndex].assetAddress.toString() === pool.tokenX.toString() &&
-          tokens[tokenFromIndex].assetAddress.toString() === pool.tokenY.toString())
+          tokens[tokenFromIndex].assetAddress.equals(pool.tokenX) &&
+          tokens[tokenToIndex].assetAddress.equals(pool.tokenY)) ||
+          (tokens[tokenToIndex].assetAddress.equals(pool.tokenX) &&
+          tokens[tokenFromIndex].assetAddress.equals(pool.tokenY))
       })
       setPoolIndex(pairIndex)
     }
@@ -214,19 +214,19 @@ export const Swap: React.FC<ISwap> = ({
   const getSwapPoolIndex = (fromToken: PublicKey, toToken: PublicKey) => {
     return pools.findIndex((pool) => {
       return (
-        (pool.tokenX.toString() === fromToken.toString() &&
-        pool.tokenY.toString() === toToken.toString()) ||
-        (pool.tokenX.toString() === toToken.toString() &&
-        pool.tokenY.toString() === fromToken.toString()))
+        (pool.tokenX.equals(fromToken) &&
+        pool.tokenY.equals(toToken)) ||
+        (pool.tokenX.equals(toToken) &&
+        pool.tokenY.equals(fromToken)))
     })
   }
   const getIsXToY = (fromToken: PublicKey, toToken: PublicKey) => {
     const swapPool = pools.find(
       pool =>
-        (fromToken.toString() === pool.tokenX.toString() &&
-          toToken.toString() === pool.tokenY.toString()) ||
-        (fromToken.toString() === pool.tokenY.toString() &&
-          toToken.toString() === pool.tokenX.toString())
+        (fromToken.equals(pool.tokenX) &&
+          toToken.equals(pool.tokenY)) ||
+        (fromToken.equals(pool.tokenY) &&
+          toToken.equals(pool.tokenX))
     )
     return !!swapPool
   }

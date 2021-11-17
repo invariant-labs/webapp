@@ -21,7 +21,7 @@ export const PRICE_DECIMAL = 12
 export const USDC = {
   symbol: 'USDC',
   address: new PublicKey(MOCK_TOKENS.USDC),
-  decimal: 6,
+  decimal: 7,
   name: 'USD Coin',
   logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
 }
