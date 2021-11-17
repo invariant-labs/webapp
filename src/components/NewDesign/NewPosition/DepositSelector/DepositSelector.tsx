@@ -125,6 +125,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             setPositionTokens(token1Index, token2Index, fee)
           }}
           feeTiers={feeTiers}
+          showOnlyPercents
         />
       </Grid>
 

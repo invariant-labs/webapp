@@ -72,10 +72,11 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<{ poolIndex: nu
         y: currentLiquidity,
         index: tick.index
       }
-    })
+    }).sort((a, b) => a.index - b.index)
     yield put(actions.setPlotTicks(ticksData))
   } catch (error) {
     console.log(error)
+    yield put(actions.plotTicksFail())
   }
 }
 export function* initPositionHandler(): Generator {

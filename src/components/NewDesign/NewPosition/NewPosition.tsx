@@ -29,6 +29,7 @@ export interface INewPosition {
   ) => BN
   feeTiers: number[]
   initialSlippageTolerance: number
+  ticksLoading: boolean
 }
 
 export const INewPosition: React.FC<INewPosition> = ({
@@ -40,7 +41,8 @@ export const INewPosition: React.FC<INewPosition> = ({
   isCurrentPoolExisting,
   calcAmount,
   feeTiers,
-  initialSlippageTolerance
+  initialSlippageTolerance,
+  ticksLoading
 }) => {
   const classes = useStyles()
 
@@ -70,6 +72,14 @@ export const INewPosition: React.FC<INewPosition> = ({
 
     if (!isCurrentPoolExisting) {
       return 'Pool is not existent.'
+    }
+
+    if (ticksLoading) {
+      return 'Loading data...'
+    }
+
+    if (data.length === 0) {
+      return 'Cannot get necessary data. Try later.'
     }
 
     return ''
@@ -151,11 +161,11 @@ export const INewPosition: React.FC<INewPosition> = ({
               setRightRange(right)
             }
           }
-          blocked={token1Index === null || token2Index === null || !isCurrentPoolExisting}
+          blocked={token1Index === null || token2Index === null || !isCurrentPoolExisting || data.length === 0 || ticksLoading}
           blockerInfo={setRangeBlockerInfo()}
           {
           ...(
-            token1Index === null || token2Index === null || !isCurrentPoolExisting
+            token1Index === null || token2Index === null || !isCurrentPoolExisting || data.length === 0
               ? noRangePlaceholderProps
               : {
                 data,

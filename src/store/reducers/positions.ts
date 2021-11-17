@@ -7,12 +7,20 @@ export interface PlotTickData {
   y: number,
   index: number
 }
+
+export interface PlotTicks {
+  data: PlotTickData[],
+  loading: boolean
+}
 export interface IPositionsStore {
-  plotTicks: PlotTickData[]
+  plotTicks: PlotTicks
 }
 
 export const defaultState: IPositionsStore = {
-  plotTicks: []
+  plotTicks: {
+    data: [],
+    loading: false
+  }
 }
 
 export const positionsSliceName = 'positions'
@@ -24,10 +32,19 @@ const positionsSlice = createSlice({
       return state
     },
     setPlotTicks(state, action: PayloadAction<PlotTickData[]>) {
-      state.plotTicks = action.payload
+      state.plotTicks.data = action.payload
+      state.plotTicks.loading = false
       return state
     },
-    getCurrentPlotTicks(_state, _action: PayloadAction<{ poolIndex: number }>) {}
+    plotTicksFail(state) {
+      state.plotTicks.data = []
+      state.plotTicks.loading = false
+      return state
+    },
+    getCurrentPlotTicks(state, _action: PayloadAction<{ poolIndex: number }>) {
+      state.plotTicks.loading = true
+      return state
+    }
   }
 })
 

@@ -127,8 +127,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             className={classes.button}
             onClick={() => {
               changeRangeHandler(
-                midPriceIndex / 2,
-                Math.min(3 * midPriceIndex / 2, data.length - 1)
+                Math.round(midPriceIndex / 2),
+                Math.min(Math.round(3 * midPriceIndex / 2), data.length - 1)
               )
               setPlotMin(0)
               setPlotMax(data[midPriceIndex].x * 2)
