@@ -20,6 +20,11 @@ export interface InitPositionData extends Omit<InitPosition, 'owner' | 'userToke
   poolIndex: number
 }
 
+export interface GetCurrentTicksData {
+  poolIndex: number,
+  isXtoY: boolean
+}
+
 export const defaultState: IPositionsStore = {
   plotTicks: {
     data: [],
@@ -45,7 +50,7 @@ const positionsSlice = createSlice({
       state.plotTicks.loading = false
       return state
     },
-    getCurrentPlotTicks(state, _action: PayloadAction<{ poolIndex: number }>) {
+    getCurrentPlotTicks(state, _action: PayloadAction<GetCurrentTicksData>) {
       state.plotTicks.loading = true
       return state
     }

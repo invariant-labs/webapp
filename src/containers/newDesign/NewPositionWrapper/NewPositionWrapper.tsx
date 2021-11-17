@@ -22,6 +22,7 @@ export const NewPositionWrapper = () => {
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
   const [liquidity, setLiquidity] = useState<Decimal>({ v: new BN(0) })
   const [midPriceIndex, setMidPriceIndex] = useState<number>(0)
+  const [isXtoY, setIsXtoY] = useState<boolean>(true)
 
   useEffect(() => {
     if (poolIndex !== null) {
@@ -49,7 +50,11 @@ export const NewPositionWrapper = () => {
             setPoolIndex(index !== -1 ? index : null)
 
             if (index !== -1) {
-              dispatch(actions.getCurrentPlotTicks({ poolIndex: index }))
+              dispatch(actions.getCurrentPlotTicks({
+                poolIndex: index,
+                isXtoY: allPools[index].tokenX.equals(tokens[token1].assetAddress)
+              }))
+              setIsXtoY(allPools[index].tokenX.equals(tokens[token1].assetAddress))
             }
           }
         }
@@ -64,8 +69,8 @@ export const NewPositionWrapper = () => {
 
         dispatch(actions.initPosition({
           poolIndex,
-          lowerTick: leftTickIndex,
-          upperTick: rightTickIndex,
+          lowerTick: isXtoY ? leftTickIndex : rightTickIndex,
+          upperTick: isXtoY ? rightTickIndex : leftTickIndex,
           liquidityDelta: liquidity
         }))
       }}
@@ -77,13 +82,13 @@ export const NewPositionWrapper = () => {
 
         const byX = tokenAddress.equals(allPools[poolIndex].tokenX)
         if (byX) {
-          const result = getLiquidityByX(amount, ticksData[left].index, ticksData[right].index, ticksData[current].index, true)
+          const result = getLiquidityByX(amount, ticksData[isXtoY ? left : right].index, ticksData[isXtoY ? right : left].index, ticksData[current].index, true)
           setLiquidity(result.liquidity)
 
           return result.y
         }
 
-        const result = getLiquidityByY(amount, ticksData[left].index, ticksData[right].index, ticksData[current].index, true)
+        const result = getLiquidityByY(amount, ticksData[isXtoY ? left : right].index, ticksData[isXtoY ? right : left].index, ticksData[current].index, true)
         setLiquidity(result.liquidity)
 
         return result.x

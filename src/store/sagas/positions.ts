@@ -3,7 +3,7 @@ import { actions as snackbarsActions } from '@reducers/snackbars'
 import { createAccount, getWallet } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
 import { getConnection } from './connection'
-import { actions, InitPositionData } from '@reducers/positions'
+import { actions, GetCurrentTicksData, InitPositionData } from '@reducers/positions'
 import { Transaction } from '@solana/web3.js'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { pools } from '@selectors/pools'
@@ -78,7 +78,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     )
   }
 }
-export function* handleGetCurrentPlotTicks(action: PayloadAction<{ poolIndex: number }>): Generator {
+export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicksData>): Generator {
   try {
     const marketProgram = yield* call(getMarketProgram)
     const allPools = yield* select(pools)
@@ -97,11 +97,11 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<{ poolIndex: nu
       currentLiquidity += +printBN(tick.liquidityChange.v, PRICE_DECIMAL)
 
       return {
-        x: sqrt ** sqrt,
+        x: action.payload.isXtoY ? sqrt ** sqrt : 1 / (sqrt ** sqrt),
         y: currentLiquidity,
         index: tick.index
       }
-    }).sort((a, b) => a.index - b.index)
+    }).sort((a, b) => a.x - b.x)
     yield put(actions.setPlotTicks(ticksData))
   } catch (error) {
     console.log(error)
