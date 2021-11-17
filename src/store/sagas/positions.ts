@@ -1,24 +1,53 @@
 import { call, put, takeEvery, select, all, spawn } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import { getWallet } from './wallet'
+import { createAccount, getWallet } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
 import { getConnection } from './connection'
-import { actions } from '@reducers/positions'
+import { actions, InitPositionData } from '@reducers/positions'
 import { Transaction } from '@solana/web3.js'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { InitPosition } from '@invariant-labs/sdk/lib/market'
 import { pools } from '@selectors/pools'
 import { MAX_TICK, MIN_TICK, Pair } from '@invariant-labs/sdk'
 import { printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
+import { accounts } from '@selectors/solanaWallet'
 
-export function* handleInitPosition(action: PayloadAction<Omit<InitPosition, 'owner'>>): Generator {
+export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
     const connection = yield* call(getConnection)
     const wallet = yield* call(getWallet)
     const marketProgram = yield* call(getMarketProgram)
+
+    const allPools = yield* select(pools)
+    const tokensAccounts = yield* select(accounts)
+
+    let userTokenX = tokensAccounts[allPools[action.payload.poolIndex].tokenX.toString()]
+      ? tokensAccounts[allPools[action.payload.poolIndex].tokenX.toString()].address
+      : null
+
+    if (userTokenX === null) {
+      userTokenX = yield* call(createAccount, allPools[action.payload.poolIndex].tokenX)
+    }
+
+    let userTokenY = tokensAccounts[allPools[action.payload.poolIndex].tokenY.toString()]
+      ? tokensAccounts[allPools[action.payload.poolIndex].tokenY.toString()].address
+      : null
+
+    if (userTokenY === null) {
+      userTokenY = yield* call(createAccount, allPools[action.payload.poolIndex].tokenY)
+    }
+
     const initPositionIx = yield* call([marketProgram, marketProgram.initPositionInstruction], {
-      ...action.payload,
+      pair: new Pair(
+        allPools[action.payload.poolIndex].tokenX,
+        allPools[action.payload.poolIndex].tokenY,
+        { fee: allPools[action.payload.poolIndex].fee.v }
+      ),
+      userTokenX,
+      userTokenY,
+      lowerTick: action.payload.lowerTick,
+      upperTick: action.payload.upperTick,
+      liquidityDelta: action.payload.liquidityDelta,
       owner: wallet.publicKey
     })
     const tx = new Transaction().add(initPositionIx)

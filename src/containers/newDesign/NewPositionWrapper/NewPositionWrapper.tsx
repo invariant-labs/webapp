@@ -9,7 +9,6 @@ import { pools } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/tick'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { plotTicks } from '@selectors/positions'
-import { Pair } from '@invariant-labs/sdk'
 import { BN } from '@project-serum/anchor'
 import { PRICE_DECIMAL } from '@consts/static'
 
@@ -64,24 +63,27 @@ export const NewPositionWrapper = () => {
         }
 
         dispatch(actions.initPosition({
-          pair: new Pair(allPools[poolIndex].tokenX, allPools[poolIndex].tokenY, { fee: allPools[poolIndex].fee.v }),
-          userTokenX: allPools[poolIndex].tokenX,
-          userTokenY: allPools[poolIndex].tokenY,
+          poolIndex,
           lowerTick: leftTickIndex,
           upperTick: rightTickIndex,
           liquidityDelta: liquidity
         }))
       }}
       isCurrentPoolExisting={poolIndex !== null}
-      calcAmount={(amount, current, left, right, byX) => {
+      calcAmount={(amount, current, left, right, tokenAddress) => {
+        if (poolIndex === null) {
+          return new BN(0)
+        }
+
+        const byX = tokenAddress.equals(allPools[poolIndex].tokenX)
         if (byX) {
-          const result = getLiquidityByX(amount, ticksData[current].index, ticksData[left].index, ticksData[right].index, true)
+          const result = getLiquidityByX(amount, ticksData[left].index, ticksData[right].index, ticksData[current].index, true)
           setLiquidity(result.liquidity)
 
           return result.y
         }
 
-        const result = getLiquidityByY(amount, ticksData[current].index, ticksData[left].index, ticksData[right].index, true)
+        const result = getLiquidityByY(amount, ticksData[left].index, ticksData[right].index, ticksData[current].index, true)
         setLiquidity(result.liquidity)
 
         return result.x

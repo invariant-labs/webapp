@@ -4,6 +4,7 @@ import { SwapToken } from '@components/NewDesign/Swap/Swap'
 import { printBN, printBNtoBN } from '@consts/utils'
 import { Button, Grid, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
+import { PublicKey } from '@solana/web3.js'
 import React, { useState, useEffect } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
 import useStyles from './style'
@@ -23,7 +24,8 @@ export interface IDepositSelector {
     amount: BN,
     leftRangeTickIndex: number,
     rightRangeTickIndex: number,
-    byX: boolean
+    byFirst: boolean,
+    tokenAddress: PublicKey
   ) => string
   leftRangeTickIndex: number
   rightRangeTickIndex: number
@@ -75,12 +77,12 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   useEffect(() => {
     if (!token1InputState.blocked && !token2InputState.blocked && token1Index !== null && token2Index !== null) {
       if (+token1Deposit !== 0) {
-        setToken2Deposit(calcAmount(printBNtoBN(token1Deposit, tokens[token1Index].decimal), leftRangeTickIndex, rightRangeTickIndex, true))
+        setToken2Deposit(calcAmount(printBNtoBN(token1Deposit, tokens[token1Index].decimal), leftRangeTickIndex, rightRangeTickIndex, true, tokens[token1Index].assetAddress))
       } else if (+token2Deposit !== 0) {
-        setToken1Deposit(calcAmount(printBNtoBN(token2Deposit, tokens[token2Index].decimal), leftRangeTickIndex, rightRangeTickIndex, false))
+        setToken1Deposit(calcAmount(printBNtoBN(token2Deposit, tokens[token2Index].decimal), leftRangeTickIndex, rightRangeTickIndex, false, tokens[token2Index].assetAddress))
       }
     }
-  }, [leftRangeTickIndex, rightRangeTickIndex, calcAmount, token1Index, token2Index])
+  }, [leftRangeTickIndex, rightRangeTickIndex, token1Index, token2Index])
 
   return (
     <Grid container direction='column' className={classes.wrapper}>
@@ -141,7 +143,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               return
             }
             setToken1Deposit(value)
-            setToken2Deposit(calcAmount(printBNtoBN(token1Deposit, tokens[token1Index].decimal), leftRangeTickIndex, rightRangeTickIndex, true))
+            setToken2Deposit(calcAmount(printBNtoBN(value, tokens[token1Index].decimal), leftRangeTickIndex, rightRangeTickIndex, true, tokens[token1Index].assetAddress))
           }}
           placeholder='0.0'
           onMaxClick={() => {
@@ -149,7 +151,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               return
             }
             setToken1Deposit(printBN(tokens[token1Index].balance, tokens[token1Index].decimal))
-            setToken2Deposit(calcAmount(printBNtoBN(token1Deposit, tokens[token1Index].decimal), leftRangeTickIndex, rightRangeTickIndex, true))
+            setToken2Deposit(calcAmount(tokens[token1Index].balance, leftRangeTickIndex, rightRangeTickIndex, true, tokens[token1Index].assetAddress))
           }}
           style={{
             marginBottom: 8
@@ -167,7 +169,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               return
             }
             setToken2Deposit(value)
-            setToken1Deposit(calcAmount(printBNtoBN(token2Deposit, tokens[token2Index].decimal), leftRangeTickIndex, rightRangeTickIndex, false))
+            setToken1Deposit(calcAmount(printBNtoBN(value, tokens[token2Index].decimal), leftRangeTickIndex, rightRangeTickIndex, false, tokens[token2Index].assetAddress))
           }}
           placeholder='0.0'
           onMaxClick={() => {
@@ -175,7 +177,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               return
             }
             setToken2Deposit(printBN(tokens[token2Index].balance, tokens[token2Index].decimal))
-            setToken1Deposit(calcAmount(printBNtoBN(token2Deposit, tokens[token2Index].decimal), leftRangeTickIndex, rightRangeTickIndex, false))
+            setToken1Deposit(calcAmount(tokens[token2Index].balance, leftRangeTickIndex, rightRangeTickIndex, false, tokens[token2Index].assetAddress))
           }}
           {...token2InputState}
         />

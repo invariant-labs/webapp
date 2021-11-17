@@ -16,6 +16,10 @@ export interface IPositionsStore {
   plotTicks: PlotTicks
 }
 
+export interface InitPositionData extends Omit<InitPosition, 'owner' | 'userTokenX' | 'userTokenY' | 'pair'> {
+  poolIndex: number
+}
+
 export const defaultState: IPositionsStore = {
   plotTicks: {
     data: [],
@@ -28,7 +32,7 @@ const positionsSlice = createSlice({
   name: 'positions',
   initialState: defaultState,
   reducers: {
-    initPosition(state, _action: PayloadAction<Omit<InitPosition, 'owner'>>) {
+    initPosition(state, _action: PayloadAction<InitPositionData>) {
       return state
     },
     setPlotTicks(state, action: PayloadAction<PlotTickData[]>) {

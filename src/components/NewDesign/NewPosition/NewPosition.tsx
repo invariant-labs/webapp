@@ -8,6 +8,7 @@ import useStyles from './style'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
 import { printBN } from '@consts/utils'
+import { PublicKey } from '@solana/web3.js'
 
 export interface INewPosition {
   tokens: SwapToken[]
@@ -25,7 +26,7 @@ export interface INewPosition {
     currentTickIndex: number,
     leftRangeTickIndex: number,
     rightRangeTickIndex: number,
-    byX: boolean
+    tokenAddress: PublicKey
   ) => BN
   feeTiers: number[]
   initialSlippageTolerance: number
@@ -138,14 +139,14 @@ export const INewPosition: React.FC<INewPosition> = ({
             blockerInfo: setInputBlockerInfo(leftRange > midPriceIndex)
           }}
           calcAmount={
-            (amount, left, right, byX) => {
+            (amount, left, right, byFirst, tokenAddress) => {
               if (token1Index === null || token2Index === null) {
                 return '0.0'
               }
 
-              const result = calcAmount(amount, midPriceIndex, left, right, byX)
+              const result = calcAmount(amount, midPriceIndex, left, right, tokenAddress)
 
-              return printBN(result, tokens[byX ? token1Index : token2Index].decimal)
+              return printBN(result, tokens[byFirst ? token1Index : token2Index].decimal)
             }
           }
           leftRangeTickIndex={leftRange}
