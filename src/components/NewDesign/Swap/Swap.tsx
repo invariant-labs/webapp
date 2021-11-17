@@ -73,81 +73,48 @@ export const Swap: React.FC<ISwap> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [details, setDetails] = React.useState<boolean>(false)
 
-  const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
-    let amountOut: BN = new BN(0)
-    let priceProportion = new BN(0)
-    if (poolIndex !== -1 && poolIndex !== null) {
-      priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
-      if (+printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL) < 1) {
-        priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
-        if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
-          amountOut = printBNtoBN(amount, assetIn.decimal).mul(priceProportion).div(DENOMINATOR)
-        } else {
-          amountOut = printBNtoBN(amount, assetIn.decimal).mul(DENOMINATOR).div(priceProportion)
-        }
-      } else {
-        priceProportion = new BN(2)
-      }
-    }
-    console.log('assetIn dec: ', assetIn.decimal, 'assetFor dec: ', assetFor.decimal)
-    if (assetFor.decimal >= assetIn.decimal) {
-      const decimalChange = new BN(10).pow(new BN(assetFor.decimal - assetIn.decimal))
-      return printBN(amountOut.mul(decimalChange), assetFor.decimal)
-    } else {
-      const decimalChange = new BN(10).pow(new BN(assetIn.decimal - assetFor.decimal))
-      return printBN(amountOut.div(decimalChange), assetFor.decimal)
-    }
-  }
-  const calculateSwapOutAmountTax = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
-    console.log(pools[1].sqrtPrice.v.toString(), assetFor.symbol)
-    let amountOut: BN = new BN(0)
-    let priceProportion = new BN(0)
-    if (poolIndex !== -1 && poolIndex !== null) {
-      priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
-      if (+printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL) < 1) {
-        priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
-        if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
-          amountOut = printBNtoBN(amount, assetIn.decimal).mul(priceProportion).div(DENOMINATOR)
-        } else {
-          amountOut = printBNtoBN(amount, assetIn.decimal).mul(DENOMINATOR).div(priceProportion)
-        }
-      } else {
-        priceProportion = new BN(2)
-      }
-      amountOut = amountOut.sub(
-        amountOut.mul(pools[poolIndex].fee.v).div(DENOMINATOR)
-      )
-    }
-    if (assetFor.decimal >= assetIn.decimal) {
-      const decimalChange = new BN(10).pow(new BN(assetFor.decimal - assetIn.decimal))
-      return printBN(amountOut.mul(decimalChange), assetFor.decimal)
-    } else {
-      const decimalChange = new BN(10).pow(new BN(assetIn.decimal - assetFor.decimal))
-      return printBN(amountOut.div(decimalChange), assetFor.decimal)
-    }
+  enum feeOption {
+    FEE = 'fee',
+    REVERSED = 'reversed'
   }
 
-  const calculateSwapOutAmountTaxReversed = (assetIn: SwapToken, assetFor: SwapToken, amount: string) => {
-    console.log('token in: ', assetIn.decimal, 'token for: ', assetFor.decimal)
+  const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string, fee: string = 'noFee') => {
     let amountOut: BN = new BN(0)
     let priceProportion = new BN(0)
     if (poolIndex !== -1 && poolIndex !== null) {
-      priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
+      priceProportion = pools[poolIndex].sqrtPrice.v
+        .mul(pools[poolIndex].sqrtPrice.v)
+        .div(DENOMINATOR)
       if (+printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL) < 1) {
-        priceProportion = pools[poolIndex].sqrtPrice.v.mul(pools[poolIndex].sqrtPrice.v).div(DENOMINATOR)
         if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
-          amountOut = printBNtoBN(amount, assetIn.decimal).mul(priceProportion).div(DENOMINATOR)
+          amountOut = printBNtoBN(amount, assetIn.decimal)
+            .mul(priceProportion)
+            .div(DENOMINATOR)
         } else {
-          amountOut = printBNtoBN(amount, assetIn.decimal).mul(DENOMINATOR).div(priceProportion)
+          amountOut = printBNtoBN(amount, assetIn.decimal)
+            .mul(DENOMINATOR)
+            .div(priceProportion)
         }
       } else {
-        priceProportion = new BN(2)
+        if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
+          amountOut = printBNtoBN(amount, assetIn.decimal)
+            .mul(priceProportion)
+            .div(DENOMINATOR)
+        } else {
+          amountOut = printBNtoBN(amount, assetIn.decimal)
+            .mul(DENOMINATOR)
+            .div(priceProportion)
+        }
       }
-      amountOut = amountOut.add(
-        amountOut.mul(pools[poolIndex].fee.v).div(new BN(10 ** PRICE_DECIMAL))
-      )
-
-      console.log('amount after fees', printBN(amountOut, 6))
+      if (fee === feeOption.FEE) {
+        amountOut = amountOut.sub(
+          amountOut.mul(pools[poolIndex].fee.v).div(DENOMINATOR)
+        )
+      } else if (fee === feeOption.REVERSED) {
+        amountOut = amountOut.add(
+          amountOut.mul(pools[poolIndex].fee.v).div(new BN(10 ** PRICE_DECIMAL))
+        )
+      }
     }
     if (assetFor.decimal >= assetIn.decimal) {
       const decimalChange = new BN(10).pow(new BN(assetFor.decimal - assetIn.decimal))
@@ -158,15 +125,6 @@ export const Swap: React.FC<ISwap> = ({
     }
   }
 
-  const setBalanceDecimal = (dec: number): number => {
-    if (dec > 6) {
-      return dec - (dec - 6)
-    } else if (dec === 6) {
-      return 6
-    } else {
-      return dec + (dec - 6)
-    }
-  }
   useEffect(() => {
     updateEstimatedAmount(amountTo)
     setAmountFrom(amountTo)
@@ -221,15 +179,14 @@ export const Swap: React.FC<ISwap> = ({
   const updateEstimatedAmount = (amount: string | null = null) => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       setAmountTo(
-        calculateSwapOutAmountTax(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountTo)
+        calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountTo, feeOption.FEE)
       )
-      console.log('To input amount', calculateSwapOutAmountTax(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountTo))
     }
   }
   const updateFromEstimatedAmount = (amount: string | null = null) => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       setAmountFrom(
-        calculateSwapOutAmountTaxReversed(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountFrom)
+        calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex], amount ?? amountFrom, feeOption.REVERSED)
       )
     }
   }
@@ -253,12 +210,11 @@ export const Swap: React.FC<ISwap> = ({
       return 'Insufficient trade volume'
     }
     if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal).gt(
-      printBNtoBN(printBN(tokens[tokenFromIndex].balance, 6), tokens[tokenFromIndex].decimal))) {
+      printBNtoBN(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal), tokens[tokenFromIndex].decimal))) {
       return 'Insufficient balance'
     }
     return 'Swap'
   }
-
   const setSlippage = (slippage: string): void => {
     setSlippTolerance(slippage)
   }
@@ -311,8 +267,8 @@ export const Swap: React.FC<ISwap> = ({
           placeholder={'0.0'}
           onMaxClick={() => {
             if (tokenToIndex !== null && tokenFromIndex !== null) {
-              setAmountFrom(printBN(tokens[tokenFromIndex].balance, setBalanceDecimal(tokens[tokenFromIndex].decimal)))
-              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, setBalanceDecimal(tokens[tokenFromIndex].decimal)))
+              setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
             }
           }}
           tokens={ tokens }
@@ -381,8 +337,8 @@ export const Swap: React.FC<ISwap> = ({
           placeholder={'0.0'}
           onMaxClick={() => {
             if (tokenToIndex !== null && tokenFromIndex !== null) {
-              setAmountFrom(printBN(tokens[tokenFromIndex].balance, setBalanceDecimal(tokens[tokenFromIndex].decimal)))
-              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, setBalanceDecimal(tokens[tokenFromIndex].decimal)))
+              setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
             }
           }}
           tokens={ tokensY }
