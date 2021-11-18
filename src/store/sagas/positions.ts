@@ -61,7 +61,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       userTokenY = yield* call(createAccount, allPools[action.payload.poolIndex].tokenY)
     }
 
-    const initPositionIx = yield* call([marketProgram, marketProgram.initPositionInstruction], {
+    const tx = yield* call([marketProgram, marketProgram.initPositionTx], {
       pair: new Pair(
         allPools[action.payload.poolIndex].tokenX,
         allPools[action.payload.poolIndex].tokenY,
@@ -75,7 +75,6 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       owner: wallet.publicKey
     })
 
-    const tx = new Transaction().add(initPositionIx)
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
