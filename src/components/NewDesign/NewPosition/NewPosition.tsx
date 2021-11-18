@@ -58,14 +58,6 @@ export const INewPosition: React.FC<INewPosition> = ({
   const [token1Index, setToken1Index] = useState<number | null>(null)
   const [token2Index, setToken2Index] = useState<number | null>(null)
 
-  const setInputBlockerInfo = (isSingleAsset: boolean) => {
-    if (isSingleAsset) {
-      return 'Current price outside range. Single-asset deposit only.'
-    }
-
-    return ''
-  }
-
   const setRangeBlockerInfo = () => {
     if (token1Index === null || token2Index === null) {
       return 'Select tokens to set price range.'
@@ -131,12 +123,12 @@ export const INewPosition: React.FC<INewPosition> = ({
             }
           }
           token1InputState={{
-            blocked: token1Index !== null && token2Index !== null && rightRange < midPriceIndex,
-            blockerInfo: setInputBlockerInfo(rightRange < midPriceIndex)
+            blocked: !ticksLoading && token1Index !== null && token2Index !== null && rightRange <= midPriceIndex,
+            blockerInfo: 'Range only for single-asset deposit.'
           }}
           token2InputState={{
-            blocked: token1Index !== null && token2Index !== null && leftRange > midPriceIndex,
-            blockerInfo: setInputBlockerInfo(leftRange > midPriceIndex)
+            blocked: !ticksLoading && token1Index !== null && token2Index !== null && leftRange >= midPriceIndex,
+            blockerInfo: 'Range only for single-asset deposit.'
           }}
           calcAmount={
             (amount, left, right, byFirst, tokenAddress) => {

@@ -22,7 +22,6 @@ export const NewPositionWrapper = () => {
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
   const [liquidity, setLiquidity] = useState<Decimal>({ v: new BN(0) })
   const [midPriceIndex, setMidPriceIndex] = useState<number>(0)
-  const [isXtoY, setIsXtoY] = useState<boolean>(true)
 
   useEffect(() => {
     if (poolIndex !== null) {
@@ -54,7 +53,6 @@ export const NewPositionWrapper = () => {
                 poolIndex: index,
                 isXtoY: allPools[index].tokenX.equals(tokens[token1].assetAddress)
               }))
-              setIsXtoY(allPools[index].tokenX.equals(tokens[token1].assetAddress))
             }
           }
         }
@@ -67,10 +65,13 @@ export const NewPositionWrapper = () => {
           return
         }
 
+        const lowerTick = Math.min(leftTickIndex, rightTickIndex)
+        const upperTick = Math.max(leftTickIndex, rightTickIndex)
+
         dispatch(actions.initPosition({
           poolIndex,
-          lowerTick: isXtoY ? leftTickIndex : rightTickIndex,
-          upperTick: isXtoY ? rightTickIndex : leftTickIndex,
+          lowerTick,
+          upperTick,
           liquidityDelta: liquidity
         }))
       }}
@@ -81,19 +82,27 @@ export const NewPositionWrapper = () => {
         }
 
         const byX = tokenAddress.equals(allPools[poolIndex].tokenX)
-        if (byX) {
-          const result = getLiquidityByX(amount, ticksData[isXtoY ? left : right].index, ticksData[isXtoY ? right : left].index, ticksData[current].index, true)
+        const lowerTick = Math.min(ticksData[left].index, ticksData[right].index)
+        const upperTick = Math.max(ticksData[left].index, ticksData[right].index)
+
+        try {
+          if (byX) {
+            const result = getLiquidityByX(amount, lowerTick, upperTick, ticksData[current].index, true)
+            setLiquidity(result.liquidity)
+
+            return result.y
+          }
+
+          const result = getLiquidityByY(amount, lowerTick, upperTick, ticksData[current].index, true)
           setLiquidity(result.liquidity)
 
-          return result.y
+          return result.x
+        } catch (error) {
+          const result = (byX ? getLiquidityByY : getLiquidityByX)(amount, lowerTick, upperTick, ticksData[current].index, true)
+          setLiquidity(result.liquidity)
         }
 
-        console.log([ticksData[isXtoY ? left : right].index, ticksData[isXtoY ? right : left].index, ticksData[current].index])
-
-        const result = getLiquidityByY(amount, ticksData[isXtoY ? left : right].index, ticksData[isXtoY ? right : left].index, ticksData[current].index, true)
-        setLiquidity(result.liquidity)
-
-        return result.x
+        return new BN(0)
       }}
       initialSlippageTolerance={1}
       ticksLoading={ticksLoading}
