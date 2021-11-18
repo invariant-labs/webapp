@@ -116,28 +116,19 @@ export const Swap: React.FC<ISwap> = ({
         )
       }
     }
+    console.log('amountOut in function', amountOut.toString())
     if (assetFor.decimal >= assetIn.decimal) {
-      const decimalChange = new BN(10).pow(new BN(assetFor.decimal - assetIn.decimal))
-      return printBN(amountOut.mul(decimalChange), assetFor.decimal)
+      return printBN(amountOut, assetFor.decimal)
     } else {
-      const decimalChange = new BN(10).pow(new BN(assetIn.decimal - assetFor.decimal))
-      return printBN(amountOut.div(decimalChange), assetFor.decimal)
+      return printBN(amountOut, assetFor.decimal)
     }
   }
 
   useEffect(() => {
-    updateEstimatedAmount(amountTo)
-    setAmountFrom(amountTo)
+    updateEstimatedAmount()
+  }, [poolIndex])
 
-    if ((tokenFromIndex !== null && tokenToIndex === null)) {
-      setAmountFrom('0.000000')
-    }
-    if (tokenFromIndex !== null) {
-      const tokensY = tokens.filter((token) => {
-        return getSwapPoolIndex(token.assetAddress, tokens[tokenFromIndex].assetAddress) !== -1
-      })
-      setTokensY(tokensY)
-    }
+  useEffect(() => {
     if (tokenToIndex !== null && tokenFromIndex !== null) {
       const pairIndex = pools.findIndex((pool) => {
         return (
@@ -148,15 +139,18 @@ export const Swap: React.FC<ISwap> = ({
       })
       setPoolIndex(pairIndex)
     }
+
+    if ((tokenFromIndex !== null && tokenToIndex === null)) {
+      setAmountFrom('0.000000')
+    }
+    if (tokenFromIndex !== null) {
+      const tokensY = tokens.filter((token) => {
+        return getSwapPoolIndex(token.assetAddress, tokens[tokenFromIndex].assetAddress) !== -1
+      })
+      setTokensY(tokensY)
+    }
   }, [tokenToIndex, tokenFromIndex, pools.length])
 
-  // useEffect(() => {
-  //   swap ? setTokenToIndex(tokenToIndex) : setTokenToIndex(null)
-  // }, [tokenFromIndex])
-
-  // useEffect(() => {
-  //   swap ? setTokenFromIndex(null) : setTokenFromIndex(tokenFromIndex)
-  // }, [tokenToIndex])
   const getSwapPoolIndex = (fromToken: PublicKey, toToken: PublicKey) => {
     return pools.findIndex((pool) => {
       return (
@@ -177,9 +171,10 @@ export const Swap: React.FC<ISwap> = ({
     return !!swapPool
   }
   const updateEstimatedAmount = (amount: string | null = null) => {
+    console.log('inside updateEstimatedAmonut', tokenFromIndex, tokenToIndex)
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       setAmountTo(
-        calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountTo, feeOption.FEE)
+        calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountFrom, feeOption.FEE)
       )
     }
   }
@@ -351,6 +346,7 @@ export const Swap: React.FC<ISwap> = ({
               tokens.findIndex((token) => {
                 return name === token.symbol
               }))
+            console.log('set to Index token')
             updateEstimatedAmount()
           }}
         />
