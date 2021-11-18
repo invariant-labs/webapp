@@ -18,7 +18,8 @@ const useStyles = makeStyles(() => ({
     borderRadius: 8,
     backgroundColor: colors.invariant.componentIn2,
     padding: 16,
-    width: '100%'
+    width: '100%',
+    position: 'relative'
   },
   plot: {
     width: '100%',
@@ -43,6 +44,27 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.componentOut2,
     borderRadius: 3,
     textTransform: 'none'
+  },
+  blocker: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 11,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(11, 12, 13, 0.8)',
+    filter: 'blur(4px) brightness(0.4)'
+  },
+  blockedInfoWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 12,
+    height: '100%'
+  },
+  blockedInfo: {
+    ...newTypography.heading4,
+    color: colors.invariant.lightInfoText
   }
 }))
 

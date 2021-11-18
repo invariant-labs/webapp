@@ -1,7 +1,7 @@
 import { Button, Grid, Typography } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import PriceRangePlot from '@components/NewDesign/PriceRangePlot/PriceRangePlot'
-import RangeInput from '@components/NewDesign/RangeInput/RangeInput'
+import RangeInput from '@components/NewDesign/Inputs/RangeInput/RangeInput'
 import useStyles from './style'
 import { nearestPriceIndex } from '@consts/utils'
 
@@ -11,6 +11,8 @@ export interface IRangeSelector {
   tokenFromSymbol: string
   tokenToSymbol: string
   onChangeRange: (leftIndex: number, rightIndex: number) => void
+  blocked?: boolean
+  blockerInfo?: string
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -18,7 +20,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   midPriceIndex,
   tokenFromSymbol,
   tokenToSymbol,
-  onChangeRange
+  onChangeRange,
+  blocked = false,
+  blockerInfo
 }) => {
   const classes = useStyles()
 
@@ -59,9 +63,11 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   useEffect(() => {
     changeRangeHandler(
-      midPriceIndex / 2,
-      Math.min(3 * midPriceIndex / 2, data.length - 1)
+      Math.round(midPriceIndex / 2),
+      Math.min(Math.round(3 * midPriceIndex / 2), data.length - 1)
     )
+    setPlotMin(0)
+    setPlotMax(data[midPriceIndex].x * 2)
   }, [tokenFromSymbol, tokenToSymbol])
 
   return (
@@ -142,6 +148,17 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             Set full range
           </Button>
         </Grid>
+
+        {
+          blocked && (
+            <>
+              <Grid className={classes.blocker} />
+              <Grid container className={classes.blockedInfoWrapper} justifyContent='center' alignItems='center'>
+                <Typography className={classes.blockedInfo}>{blockerInfo}</Typography>
+              </Grid>
+            </>
+          )
+        }
       </Grid>
     </Grid>
   )
