@@ -68,20 +68,23 @@ const PositionDetailsWrapper: React.FC<IProps> = ({
           unclaimValueTokenFromSwap={unclaimValueTokenFromSwap}
         />
       </Grid>
-      <SinglePositionPlot
-        data={detailsData}
-        leftRangeIndex={leftRangeIndex}
-        rightRangeIndex={rightRangeIndex}
-        style={style}
-        disabled
-        plotMin={plotMin}
-        plotMax={plotMax}
-        zoomMinus={zoomMinus}
-        zoomPlus={zoomPlus}
-        currentPrice={currentPrice}
-        fromToken={fromToken}
-        toToken={toToken}
-      />
+      <Grid>
+        <SinglePositionPlot
+          data={detailsData}
+          leftRangeIndex={leftRangeIndex}
+          rightRangeIndex={rightRangeIndex}
+          style={style}
+          disabled
+          plotMin={plotMin}
+          plotMax={plotMax}
+          zoomMinus={zoomMinus}
+          zoomPlus={zoomPlus}
+          currentPrice={currentPrice}
+          fromToken={fromToken}
+          toToken={toToken}
+          className={classes.zoom}
+        />
+      </Grid>
     </Grid>
   )
 }

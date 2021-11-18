@@ -1,5 +1,6 @@
 import React from 'react'
 import { Grid, Typography, Card } from '@material-ui/core'
+import classNames from 'classnames'
 import PriceRangePlot from '@components/NewDesign/PriceRangePlot/PriceRangePlot'
 import LiquidationRangeInfo from '@components/NewDesign/LiquidationRangeInfo/LiquidationRangeInfo'
 import useStyles from './style'
@@ -16,7 +17,8 @@ export interface ISinglePositionPlot {
   rightRangeIndex: number,
   currentPrice: number,
   fromToken: string,
-  toToken: string
+  toToken: string,
+  className?: string
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -30,7 +32,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   rightRangeIndex,
   currentPrice,
   fromToken,
-  toToken
+  toToken,
+  className
 }) => {
   const classes = useStyles()
   return (
@@ -48,7 +51,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           style={style}
           disabled
           leftRangeIndex={leftRangeIndex}
-          rightRangeIndex={rightRangeIndex}/>
+          rightRangeIndex={rightRangeIndex}
+          className={className}/>
       </Grid>
       <Grid className={classes.minMaxInfo}>
         <LiquidationRangeInfo

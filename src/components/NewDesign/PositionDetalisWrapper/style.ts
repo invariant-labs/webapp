@@ -7,7 +7,13 @@ const useStyles = makeStyles(() => ({
     width: 1058
   },
   positionDetails: {
-    paddingRight: 20
+    paddingRight: 20,
+    display: 'flex',
+    alignItems: 'end'
+  },
+  zoom: {
+    right: 15,
+    top: 15
   }
 }))
 
