@@ -116,7 +116,6 @@ export const Swap: React.FC<ISwap> = ({
         )
       }
     }
-    console.log('amountOut in function', amountOut.toString())
     if (assetFor.decimal >= assetIn.decimal) {
       return printBN(amountOut, assetFor.decimal)
     } else {
@@ -171,7 +170,6 @@ export const Swap: React.FC<ISwap> = ({
     return !!swapPool
   }
   const updateEstimatedAmount = (amount: string | null = null) => {
-    console.log('inside updateEstimatedAmonut', tokenFromIndex, tokenToIndex)
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       setAmountTo(
         calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountFrom, feeOption.FEE)
@@ -346,7 +344,6 @@ export const Swap: React.FC<ISwap> = ({
               tokens.findIndex((token) => {
                 return name === token.symbol
               }))
-            console.log('set to Index token')
             updateEstimatedAmount()
           }}
         />
