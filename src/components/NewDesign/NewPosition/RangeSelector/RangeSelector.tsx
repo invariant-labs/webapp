@@ -38,7 +38,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [waiting, setWaiting] = useState(false)
 
   const zoomMinus = () => {
-    if (plotMax <= data[data.length - 1].x) {
+    if (plotMin > data[0].x || plotMax < data[data.length - 1].x) {
       const diff = plotMax - plotMin
       setPlotMin(plotMin - (diff / 4))
       setPlotMax(plotMax + (diff / 4))
@@ -47,7 +47,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const zoomPlus = () => {
     const diff = plotMax - plotMin
-    if (data.length >= 2 && diff >= data[2].x - data[1].x) {
+    if (data.length >= 2 && diff >= data[1].x - data[0].x) {
       setPlotMin(plotMin + (diff / 6))
       setPlotMax(plotMax - (diff / 6))
     }
@@ -69,8 +69,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         Math.round(midPriceIndex / 2),
         Math.min(Math.round(3 * midPriceIndex / 2), data.length - 1)
       )
-      setPlotMin(0)
-      setPlotMax(data[midPriceIndex].x * 2)
+      setPlotMin(data[0].x)
+      setPlotMax(data[0].x + ((data[midPriceIndex].x - data[0].x) * 2))
     }
   }, [waiting])
 
@@ -142,8 +142,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 Math.round(midPriceIndex / 2),
                 Math.min(Math.round(3 * midPriceIndex / 2), data.length - 1)
               )
-              setPlotMin(0)
-              setPlotMax(data[midPriceIndex].x * 2)
+              setPlotMin(data[0].x)
+              setPlotMax(data[0].x + ((data[midPriceIndex].x - data[0].x) * 2))
             }}
           >
             Reset range
