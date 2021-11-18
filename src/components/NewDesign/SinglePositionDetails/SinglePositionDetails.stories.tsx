@@ -1,7 +1,7 @@
 import { Grid } from '@material-ui/core'
 import { storiesOf } from '@storybook/react'
 import React from 'react'
-import { SinglePositionDetails } from './SinglePositionDetails'
+import SinglePositionDetails from './SinglePositionDetails'
 
 storiesOf('singlePosition/leftComponent', module)
   .add('closed', () => (

@@ -6,7 +6,7 @@ import FailedIcon from '@material-ui/icons/HighlightOffOutlined'
 
 import useStyles from './style'
 import { BoxInfo } from './BoxInfo'
-interface ILiquidityItem {
+export interface ILiquidityItem {
   active: boolean
   nameToSwap: string
   nameFromSwap: string
@@ -26,7 +26,7 @@ interface IProp {
   unclaimValueTokenFromSwap: number
 }
 
-export const SinglePositionDetails: React.FC<IProp> = ({
+const SinglePositionDetails: React.FC<IProp> = ({
   data,
   liquidity,
   unclaimedFee,
@@ -100,3 +100,5 @@ export const SinglePositionDetails: React.FC<IProp> = ({
     </Grid>
   )
 }
+
+export default SinglePositionDetails
