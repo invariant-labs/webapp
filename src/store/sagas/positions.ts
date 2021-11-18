@@ -11,12 +11,36 @@ import { MAX_TICK, MIN_TICK, Pair } from '@invariant-labs/sdk'
 import { printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { accounts } from '@selectors/solanaWallet'
+import { positionList } from '@selectors/positions'
+
+export function* createPositionList(): Generator {
+  const connection = yield* call(getConnection)
+  const wallet = yield* call(getWallet)
+  const marketProgram = yield* call(getMarketProgram)
+
+  const createPositionListIx = yield* call([marketProgram, marketProgram.createPositionListInstruction], wallet.publicKey)
+  const tx = new Transaction().add(createPositionListIx)
+
+  const blockhash = yield* call([connection, connection.getRecentBlockhash])
+  tx.recentBlockhash = blockhash.blockhash
+  tx.feePayer = wallet.publicKey
+  const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+
+  yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
+    skipPreflight: true
+  })
+}
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
     const connection = yield* call(getConnection)
     const wallet = yield* call(getWallet)
     const marketProgram = yield* call(getMarketProgram)
+
+    const list = yield* select(positionList)
+    if (typeof list === 'undefined') {
+      yield* call(createPositionList)
+    }
 
     const allPools = yield* select(pools)
     const tokensAccounts = yield* select(accounts)
@@ -50,6 +74,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       liquidityDelta: action.payload.liquidityDelta,
       owner: wallet.publicKey
     })
+
     const tx = new Transaction().add(initPositionIx)
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
@@ -105,18 +130,38 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     yield put(actions.setPlotTicks(ticksData))
   } catch (error) {
     console.log(error)
-    yield put(actions.plotTicksFail())
+    yield put(actions.setPlotTicks([]))
   }
 }
+
+export function* fetchPositionList(): Generator {
+  try {
+    const marketProgram = yield* call(getMarketProgram)
+    const wallet = yield* call(getWallet)
+
+    const positionData = yield* call(
+      [marketProgram, marketProgram.getPositionList],
+      wallet.publicKey
+    )
+
+    yield put(actions.setPositionList(positionData))
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export function* initPositionHandler(): Generator {
   yield* takeEvery(actions.initPosition, handleInitPosition)
 }
 export function* getCurrentPlotTicksHandler(): Generator {
   yield* takeEvery(actions.getCurrentPlotTicks, handleGetCurrentPlotTicks)
 }
+export function* fetchPositionListHandler(): Generator {
+  yield* takeEvery(actions.getPositionList, fetchPositionList)
+}
 
 export function* positionsSaga(): Generator {
   yield all(
-    [initPositionHandler, getCurrentPlotTicksHandler].map(spawn)
+    [initPositionHandler, getCurrentPlotTicksHandler, fetchPositionListHandler].map(spawn)
   )
 }
