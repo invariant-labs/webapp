@@ -156,6 +156,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           style={{
             marginBottom: 8
           }}
+          onBlur={() => {
+            if (token1Index !== null && token2Index !== null && token1Deposit.length === 0) {
+              setToken1Deposit('0.0')
+            }
+          }}
           {...token1InputState}
         />
 
@@ -178,6 +183,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             }
             setToken2Deposit(printBN(tokens[token2Index].balance, tokens[token2Index].decimal))
             setToken1Deposit(calcAmount(tokens[token2Index].balance, leftRangeTickIndex, rightRangeTickIndex, false, tokens[token2Index].assetAddress))
+          }}
+          onBlur={() => {
+            if (token1Index !== null && token2Index !== null && token2Deposit.length === 0) {
+              setToken2Deposit('0.0')
+            }
           }}
           {...token2InputState}
         />
