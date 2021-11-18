@@ -52,7 +52,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     if (disabled) {
       return data.slice(Math.max(0, nearestPriceIndex(plotMin, data) - 5), Math.min(data.length, nearestPriceIndex(plotMax, data)) + 5)
     }
-    if (data[leftRangeIndex].x > plotMax || data[rightRangeIndex].x < plotMin) {
+    if (leftRangeIndex > data.length || rightRangeIndex > data.length || data[leftRangeIndex].x > plotMax || data[rightRangeIndex].x < plotMin) {
       return []
     }
 
@@ -60,7 +60,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   }
 
   const getCurrentGreaterThanRange = () => {
-    if (data[rightRangeIndex].x > plotMax || disabled) {
+    if (rightRangeIndex > data.length || data[rightRangeIndex].x > plotMax || disabled) {
       return []
     }
 
@@ -131,26 +131,32 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'markers',
           'areas',
           'lines',
-          Brush(
-            data[leftRangeIndex].x,
-            data[rightRangeIndex].x,
-            (position) => {
-              const nearest = nearestPriceIndex(plotMin + (position * (plotMax - plotMin)), data)
-              onChangeRange?.(
-                nearest === rightRangeIndex ? rightRangeIndex - 1 : nearest,
-                rightRangeIndex
-              )
-            },
-            (position) => {
-              const nearest = nearestPriceIndex(plotMin + (position * (plotMax - plotMin)), data)
-              onChangeRange?.(
-                leftRangeIndex,
-                nearest === leftRangeIndex ? leftRangeIndex + 1 : nearest
-              )
-            },
-            plotMin,
-            plotMax,
-            disabled
+          ...(
+            leftRangeIndex <= data.length && rightRangeIndex <= data.length
+              ? [
+                Brush(
+                  data[leftRangeIndex].x,
+                  data[rightRangeIndex].x,
+                  (position) => {
+                    const nearest = nearestPriceIndex(plotMin + (position * (plotMax - plotMin)), data)
+                    onChangeRange?.(
+                      nearest === rightRangeIndex ? rightRangeIndex - 1 : nearest,
+                      rightRangeIndex
+                    )
+                  },
+                  (position) => {
+                    const nearest = nearestPriceIndex(plotMin + (position * (plotMax - plotMin)), data)
+                    onChangeRange?.(
+                      leftRangeIndex,
+                      nearest === leftRangeIndex ? leftRangeIndex + 1 : nearest
+                    )
+                  },
+                  plotMin,
+                  plotMax,
+                  disabled
+                )
+              ]
+              : []
           ),
           'axes',
           'legends'
