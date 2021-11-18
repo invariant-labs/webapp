@@ -92,6 +92,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           onChangeRange={changeRangeHandler}
           leftRangeIndex={leftRange}
           rightRangeIndex={rightRange}
+          midPriceIndex={midPriceIndex}
           plotMin={plotMin}
           plotMax={plotMax}
           zoomMinus={zoomMinus}

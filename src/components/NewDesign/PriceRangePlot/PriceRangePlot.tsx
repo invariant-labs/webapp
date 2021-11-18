@@ -1,5 +1,5 @@
 import React from 'react'
-import { ResponsiveLine } from '@nivo/line'
+import { Layer, ResponsiveLine } from '@nivo/line'
 // @ts-expect-error
 import { linearGradientDef } from '@nivo/core'
 import { colors } from '@static/theme'
@@ -13,8 +13,9 @@ import { nearestPriceIndex } from '@consts/utils'
 
 export interface IPriceRangePlot {
   data: Array<{ x: number; y: number }>
-  leftRangeIndex: number,
-  rightRangeIndex: number,
+  midPriceIndex: number
+  leftRangeIndex: number
+  rightRangeIndex: number
   onChangeRange?: (left: number, right: number) => void
   style?: React.CSSProperties
   className?: string
@@ -29,6 +30,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   data,
   leftRangeIndex,
   rightRangeIndex,
+  midPriceIndex,
   onChangeRange,
   style,
   className,
@@ -65,6 +67,19 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     }
 
     return data.slice(Math.max(rightRangeIndex, nearestPriceIndex(plotMin, data) - 5), Math.min(data.length, nearestPriceIndex(plotMax, data) + 5))
+  }
+
+  const currentLayer: Layer = ({ innerWidth, innerHeight }) => {
+    const unitLen = innerWidth / (plotMax - plotMin)
+    return (
+      <rect
+        x={(data[midPriceIndex].x - plotMin) * unitLen}
+        y={0}
+        width={2}
+        height={innerHeight}
+        fill={colors.invariant.componentOut3}
+      />
+    )
   }
 
   return (
@@ -127,6 +142,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         animate={false}
         role="application"
         layers={[
+          currentLayer,
           'grid',
           'markers',
           'areas',
