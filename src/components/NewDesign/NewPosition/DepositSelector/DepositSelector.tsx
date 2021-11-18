@@ -1,11 +1,11 @@
 import DepositAmountInput from '@components/NewDesign/Inputs/DepositAmountInput/DepositAmountInput'
 import Select from '@components/NewDesign/Inputs/Select/Select'
 import { SwapToken } from '@components/NewDesign/Swap/Swap'
-import { printBN, printBNtoBN } from '@consts/utils'
+import { getScaleFromString, printBN, printBNtoBN } from '@consts/utils'
 import { Button, Grid, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
 import useStyles from './style'
 
@@ -54,13 +54,21 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   const [token1Deposit, setToken1Deposit] = useState<string>('')
   const [token2Deposit, setToken2Deposit] = useState<string>('')
 
-  const getButtonMessage = () => {
+  const getButtonMessage = useCallback(() => {
     if (token1Index === null || token2Index === null) {
       return 'Select tokens'
     }
 
     if (!isCurrentPoolExisting) {
       return 'Pool is not existent'
+    }
+
+    if (getScaleFromString(token1Deposit) > tokens[token1Index].decimal) {
+      return 'Invalid value of token 01'
+    }
+
+    if (getScaleFromString(token2Deposit) > tokens[token2Index].decimal) {
+      return 'Invalid value of token 02'
     }
 
     if (printBNtoBN(token1Deposit, tokens[token1Index].decimal).gt(tokens[token1Index].balance)) {
@@ -72,7 +80,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
 
     return 'Add Liquidity'
-  }
+  }, [token1Index, token2Index, token1Deposit, token2Deposit, tokens, isCurrentPoolExisting])
 
   useEffect(() => {
     if (!token1InputState.blocked && !token2InputState.blocked && token1Index !== null && token2Index !== null) {

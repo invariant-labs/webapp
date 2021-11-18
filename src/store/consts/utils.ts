@@ -133,3 +133,13 @@ export const nearestPriceIndex = (price: number, data: Array<{ x: number; y: num
 
   return nearest
 }
+
+export const getScaleFromString = (value: string): number => {
+  const parts = value.split('.')
+
+  if ((parts?.length ?? 0) < 2) {
+    return 0
+  }
+
+  return parts[1]?.length ?? 0
+}
