@@ -195,7 +195,7 @@ export const Swap: React.FC<ISwap> = ({
     }
 
     if (!getIsXToY(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
-      return 'Pair does not exist'
+      return 'No route found'
     }
 
     if (
