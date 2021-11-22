@@ -34,11 +34,12 @@ export const AmountInput: React.FC<IProps> = ({
   onSelect
 }) => {
   const classes = useStyles()
-  console.log(decimal)
+
   const inputRef = useRef<HTMLInputElement>(null)
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const regex = /^\d*\.?\d{0,4}$/
+    const test = `^\\d*\\.?\\d{0,${decimal}}$`
+    const regex = new RegExp(test, 'g')
     if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value
       const caretPosition = e.target.selectionStart
