@@ -38,15 +38,16 @@ storiesOf('position/depositSelector', module).add('deposit', () => (
     setPositionTokens={() => {}}
     onAddLiquidity={() => {}}
     token1InputState={{
+      value: '1',
+      setValue: () => {},
       blocked: false
     }}
     token2InputState={{
+      value: '',
+      setValue: () => {},
       blocked: true,
       blockerInfo: 'Select token.'
     }}
-    leftRangeTickIndex={100}
-    rightRangeTickIndex={200}
-    calcAmount={() => '1'}
     feeTiers={[0.05, 0.3, 1]}
     isCurrentPoolExisting={true}
   />

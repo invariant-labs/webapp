@@ -90,16 +90,22 @@ export const NewPositionWrapper = () => {
             const result = getLiquidityByX(amount, lowerTick, upperTick, ticksData[current].index, true)
             setLiquidity(result.liquidity)
 
+            console.log(amount.toString(), 'y', result.y.toString(), lowerTick, upperTick, result.liquidity.v.toString())
+
             return result.y
           }
 
           const result = getLiquidityByY(amount, lowerTick, upperTick, ticksData[current].index, true)
           setLiquidity(result.liquidity)
 
+          console.log(amount.toString(), 'x', result.x.toString(), lowerTick, upperTick, result.liquidity.v.toString())
+
           return result.x
         } catch (error) {
           const result = (byX ? getLiquidityByY : getLiquidityByX)(amount, lowerTick, upperTick, ticksData[current].index, true)
           setLiquidity(result.liquidity)
+
+          console.log(amount.toString(), 'err', lowerTick, upperTick, result.liquidity.v.toString())
         }
 
         return new BN(0)
