@@ -83,11 +83,18 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   }, [token1Index, token2Index, token1Deposit, token2Deposit, tokens, isCurrentPoolExisting])
 
   useEffect(() => {
-    if (!token1InputState.blocked && !token2InputState.blocked && token1Index !== null && token2Index !== null) {
-      if (+token1Deposit !== 0) {
-        setToken2Deposit(calcAmount(printBNtoBN(token1Deposit, tokens[token1Index].decimal), leftRangeTickIndex, rightRangeTickIndex, true, tokens[token1Index].assetAddress))
-      } else if (+token2Deposit !== 0) {
-        setToken1Deposit(calcAmount(printBNtoBN(token2Deposit, tokens[token2Index].decimal), leftRangeTickIndex, rightRangeTickIndex, false, tokens[token2Index].assetAddress))
+    if (token1Index !== null && token2Index !== null) {
+      const newToken2Deposit = calcAmount(printBNtoBN(token1Deposit, tokens[token1Index].decimal), leftRangeTickIndex, rightRangeTickIndex, true, tokens[token1Index].assetAddress)
+
+      if (!token1InputState.blocked && !token2InputState.blocked && +token1Deposit !== 0) {
+        setToken2Deposit(newToken2Deposit)
+        return
+      }
+
+      const newToken1Deposit = calcAmount(printBNtoBN(token2Deposit, tokens[token2Index].decimal), leftRangeTickIndex, rightRangeTickIndex, false, tokens[token2Index].assetAddress)
+
+      if (!token1InputState.blocked && !token2InputState.blocked && +token2Deposit !== 0) {
+        setToken1Deposit(newToken1Deposit)
       }
     }
   }, [leftRangeTickIndex, rightRangeTickIndex, token1Index, token2Index])
