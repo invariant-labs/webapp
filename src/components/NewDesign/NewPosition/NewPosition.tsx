@@ -79,8 +79,8 @@ export const INewPosition: React.FC<INewPosition> = ({
   }
 
   const noRangePlaceholderProps = {
-    data: Array(10).fill(1).map((_e, index) => ({ x: index, y: index })),
-    midPriceIndex: 5,
+    data: Array(100).fill(1).map((_e, index) => ({ x: index, y: index })),
+    midPriceIndex: 50,
     tokenFromSymbol: 'ABC',
     tokenToSymbol: 'XYZ'
   }

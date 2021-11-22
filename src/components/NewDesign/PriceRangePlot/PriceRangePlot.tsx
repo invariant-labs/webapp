@@ -43,7 +43,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   const classes = useStyles()
 
   const getCurrentLessThanRange = () => {
-    if (data[leftRangeIndex].x < plotMin || disabled) {
+    if (leftRangeIndex > data.length || data[leftRangeIndex].x < plotMin || disabled) {
       return []
     }
 

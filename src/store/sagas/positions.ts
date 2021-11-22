@@ -3,13 +3,14 @@ import { actions as snackbarsActions } from '@reducers/snackbars'
 import { createAccount, getWallet } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
 import { getConnection } from './connection'
-import { actions, GetCurrentTicksData, InitPositionData } from '@reducers/positions'
+import { actions, GetCurrentTicksData, InitPositionData, PlotTickData } from '@reducers/positions'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { pools } from '@selectors/pools'
-import { MAX_TICK, MIN_TICK, Pair } from '@invariant-labs/sdk'
+import { calculate_price_sqrt, MAX_TICK, MIN_TICK, Pair } from '@invariant-labs/sdk'
 import { printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { accounts } from '@selectors/solanaWallet'
+import { Tick } from '@invariant-labs/sdk/lib/market'
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
@@ -81,26 +82,65 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
   try {
     const marketProgram = yield* call(getMarketProgram)
     const allPools = yield* select(pools)
+
     const poolIndex = action.payload.poolIndex
+    const minTick = Math.max(allPools[poolIndex].currentTickIndex - (100 * allPools[poolIndex].tickSpacing), MIN_TICK)
+    const maxTick = Math.min(allPools[poolIndex].currentTickIndex + (100 * allPools[poolIndex].tickSpacing), MAX_TICK)
+
     const ticks = yield* call(
       [marketProgram, marketProgram.getInitializedTicksInRange],
       new Pair(allPools[poolIndex].tokenX, allPools[poolIndex].tokenY, { fee: allPools[poolIndex].fee.v }),
-      Math.max(allPools[poolIndex].currentTickIndex - (100 * allPools[poolIndex].tickSpacing), MIN_TICK),
-      Math.min(allPools[poolIndex].currentTickIndex + (100 * allPools[poolIndex].tickSpacing), MAX_TICK)
+      minTick,
+      maxTick
     )
 
-    let currentLiquidity = 0
-    const ticksData = ticks.map((tick) => {
-      const sqrt = +printBN(tick.sqrtPrice.v, PRICE_DECIMAL)
+    let ticksData: PlotTickData[]
 
-      currentLiquidity += +printBN(tick.liquidityChange.v, PRICE_DECIMAL)
+    if (ticks.length === 201) {
+      let currentLiquidity = 0
+      ticksData = ticks.map((tick) => {
+        const sqrt = +printBN(tick.sqrtPrice.v, PRICE_DECIMAL)
 
-      return {
-        x: action.payload.isXtoY ? sqrt ** sqrt : 1 / (sqrt ** sqrt),
-        y: currentLiquidity,
-        index: tick.index
+        currentLiquidity += +printBN(tick.liquidityChange.v, PRICE_DECIMAL)
+
+        return {
+          x: action.payload.isXtoY ? sqrt ** sqrt : 1 / (sqrt ** sqrt),
+          y: currentLiquidity,
+          index: tick.index
+        }
+      }).sort((a, b) => a.x - b.x)
+    } else {
+      ticksData = []
+
+      for (let i = minTick; i <= maxTick; i += allPools[poolIndex].tickSpacing) {
+        const sqrtDecimal = calculate_price_sqrt(i)
+        const sqrt = +printBN(sqrtDecimal.v, PRICE_DECIMAL)
+
+        ticksData.push({
+          x: action.payload.isXtoY ? sqrt ** sqrt : 1 / (sqrt ** sqrt),
+          y: 0,
+          index: i
+        })
       }
-    }).sort((a, b) => a.x - b.x)
+
+      const ticksObj: { [key: string]: Tick } = {}
+      ticks.forEach((tick) => {
+        ticksObj[tick.index.toString()] = tick
+      })
+
+      let currentLiquidity = 0
+      ticksData = ticksData.map((data) => {
+        if (ticksObj[data.index.toString()]) {
+          currentLiquidity += +printBN(ticksObj[data.index.toString()].liquidityChange.v, PRICE_DECIMAL)
+        }
+
+        return {
+          ...data,
+          y: currentLiquidity
+        }
+      }).sort((a, b) => a.x - b.x)
+    }
+
     yield put(actions.setPlotTicks(ticksData))
   } catch (error) {
     console.log(error)
