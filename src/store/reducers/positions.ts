@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PayloadType } from '@reducers/types'
-import { InitPosition, PositionList } from '@invariant-labs/sdk/lib/market'
+import { InitPosition } from '@invariant-labs/sdk/lib/market'
 
 export interface PlotTickData {
   x: number,
@@ -14,7 +14,6 @@ export interface PlotTicks {
 }
 export interface IPositionsStore {
   plotTicks: PlotTicks
-  positionList: PositionList | undefined
 }
 
 export interface InitPositionData extends Omit<InitPosition, 'owner' | 'userTokenX' | 'userTokenY' | 'pair'> {
@@ -30,8 +29,7 @@ export const defaultState: IPositionsStore = {
   plotTicks: {
     data: [],
     loading: false
-  },
-  positionList: undefined
+  }
 }
 
 export const positionsSliceName = 'positions'
@@ -49,12 +47,6 @@ const positionsSlice = createSlice({
     },
     getCurrentPlotTicks(state, _action: PayloadAction<GetCurrentTicksData>) {
       state.plotTicks.loading = true
-      return state
-    },
-    getPositionList() {
-    },
-    setPositionList(state, action: PayloadAction<PositionList>) {
-      state.positionList = action.payload
       return state
     }
   }
