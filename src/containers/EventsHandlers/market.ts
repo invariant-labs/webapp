@@ -7,7 +7,7 @@ import { MOCK_TOKENS } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
 import { getMarketProgramSync } from '@web3/programs/amm'
 import { pools } from '@selectors/pools'
-import { FEE_TIERS } from '@invariant-labs/sdk/lib/network'
+import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
 import { PAIRS } from '@consts/static'
 
 const MarketEvents = () => {
