@@ -65,8 +65,8 @@ export const NewPositionWrapper = () => {
           return
         }
 
-        const lowerTick = Math.min(leftTickIndex, rightTickIndex)
-        const upperTick = Math.max(leftTickIndex, rightTickIndex)
+        const lowerTick = Math.min(ticksData[leftTickIndex].index, ticksData[rightTickIndex].index)
+        const upperTick = Math.max(ticksData[leftTickIndex].index, ticksData[rightTickIndex].index)
 
         dispatch(actions.initPosition({
           poolIndex,
