@@ -1,6 +1,5 @@
 import React from 'react'
 import { Grid, Typography, Card } from '@material-ui/core'
-import classNames from 'classnames'
 import PriceRangePlot from '@components/NewDesign/PriceRangePlot/PriceRangePlot'
 import LiquidationRangeInfo from '@components/NewDesign/LiquidationRangeInfo/LiquidationRangeInfo'
 import useStyles from './style'

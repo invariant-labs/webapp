@@ -12,8 +12,10 @@ const useStyles = makeStyles(() => ({
     alignItems: 'end'
   },
   zoom: {
-    right: 15,
-    top: 15
+    '& .zoomBtns': {
+      top: 15,
+      right: 15
+    }
   }
 }))
 
