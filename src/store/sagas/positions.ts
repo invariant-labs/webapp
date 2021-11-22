@@ -150,15 +150,42 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
   }
 }
 
+export function* handleGetPositionsList() {
+  try {
+    const marketProgram = yield* call(getMarketProgram)
+    const wallet = yield* call(getWallet)
+
+    const { head } = yield* call(
+      [marketProgram, marketProgram.getPositionList],
+      wallet.publicKey
+    )
+
+    const list = yield* call(
+      [marketProgram, marketProgram.getPositionsFromRange],
+      wallet.publicKey,
+      0,
+      head - 1
+    )
+
+    yield put(actions.setPositionsList(list))
+  } catch (error) {
+    console.log(error)
+    yield put(actions.setPositionsList([]))
+  }
+}
+
 export function* initPositionHandler(): Generator {
   yield* takeEvery(actions.initPosition, handleInitPosition)
 }
 export function* getCurrentPlotTicksHandler(): Generator {
   yield* takeEvery(actions.getCurrentPlotTicks, handleGetCurrentPlotTicks)
 }
+export function* getPositionsListHandler(): Generator {
+  yield* takeEvery(actions.getPositionsList, handleGetPositionsList)
+}
 
 export function* positionsSaga(): Generator {
   yield all(
-    [initPositionHandler, getCurrentPlotTicksHandler].map(spawn)
+    [initPositionHandler, getCurrentPlotTicksHandler, getPositionsListHandler].map(spawn)
   )
 }

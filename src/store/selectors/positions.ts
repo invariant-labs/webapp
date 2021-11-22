@@ -3,8 +3,8 @@ import { keySelectors, AnyProps } from './helpers'
 
 const store = (s: AnyProps) => s[positionsSliceName] as IPositionsStore
 
-export const { plotTicks } = keySelectors(store, ['plotTicks'])
+export const { plotTicks, positionsList } = keySelectors(store, ['plotTicks', 'positionsList'])
 
-export const positionsSelectors = { plotTicks }
+export const positionsSelectors = { plotTicks, positionsList }
 
 export default positionsSelectors
