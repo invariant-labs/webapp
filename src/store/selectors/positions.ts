@@ -7,7 +7,7 @@ import { pools } from './pools'
 
 const store = (s: AnyProps) => s[positionsSliceName] as IPositionsStore
 
-export const { plotTicks, positionsList } = keySelectors(store, ['plotTicks', 'positionsList'])
+export const { positionsList } = keySelectors(store, ['positionsList'])
 
 export const positionsWithPoolsData = createSelector(
   pools,
@@ -40,6 +40,6 @@ export const positionsWithPoolsData = createSelector(
   }
 )
 
-export const positionsSelectors = { plotTicks, positionsList }
+export const positionsSelectors = { positionsList }
 
 export default positionsSelectors
