@@ -5,7 +5,6 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     minHeight: '85vh',
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'transparent'
   }
 }))

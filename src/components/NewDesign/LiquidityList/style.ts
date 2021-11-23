@@ -25,7 +25,11 @@ const useStyles = makeStyles(() => ({
     ...newTypography.body1,
     textTransform: 'none',
     background: colors.invariant.accent1,
-    borderRadius: '10px'
+    borderRadius: '10px',
+    height: 40
+  },
+  buttonText: {
+    WebkitPaddingBefore: '2px'
   }
 }))
 export default useStyles

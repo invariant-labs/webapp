@@ -48,7 +48,7 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
           </Grid>
 
           <Typography className={classNames(classes.text, classes.minText)}>
-            {min} SNY per xUSD
+            {min} {nameToSwap} per {nameFromSwap}
           </Typography>
         </Grid>
         <Grid className={classes.rangeGrid}>
@@ -56,7 +56,7 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
             <Typography className={classes.greenTextArea}>MAX</Typography>
           </Grid>
           <Typography className={classNames(classes.text, classes.maxText)}>
-            {max} SNY per xUSD
+            {max} {nameToSwap} per {nameFromSwap}
           </Typography>
         </Grid>
         <Grid
@@ -65,17 +65,16 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
               ? classNames(classes.activeText, classes.greenArea)
               : classNames(classes.rangeGrid, classes.closedText)
           }>
-          <Typography className={active ? classes.greenTextArea : classes.text}>
-            {active ? (
-              <>
-                <SuccessIcon className={classes.iconText} /> Active
-              </>
-            ) : (
-              <>
-                <FailedIcon className={classes.iconText} /> Closed
-              </>
-            )}
-          </Typography>
+          {active ? (
+            <>
+              <SuccessIcon className={classes.iconText} />
+              <Typography className={classes.greenTextArea}>Active</Typography>
+            </>
+          ) : (
+            <Typography className={classes.text}>
+              <FailedIcon className={classes.iconText} /> Closed
+            </Typography>
+          )}
         </Grid>
       </Grid>
     </Grid>

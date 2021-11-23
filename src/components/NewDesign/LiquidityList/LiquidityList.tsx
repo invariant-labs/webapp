@@ -28,7 +28,7 @@ export const LiquidityList: React.FC<IProp> = ({ data, onAddPositionClick }) => 
           variant='contained'
           startIcon={<AddIcon />}
           onClick={onAddPositionClick}>
-          Add Position
+          <span className={classes.buttonText}>Add Position</span>
         </Button>
       </Grid>
       <Grid>

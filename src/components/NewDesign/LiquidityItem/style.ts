@@ -97,7 +97,8 @@ const useStyles = makeStyles(() => ({
     ...newTypography.body1,
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    WebkitPaddingBefore: '2px'
   },
 
   iconText: {
