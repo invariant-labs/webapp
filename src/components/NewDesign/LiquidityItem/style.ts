@@ -54,9 +54,10 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     borderRadius: '5px',
     maxHeight: 35,
-    padding: '4px 16px 3px 16px'
+    padding: '4px 0 3px 0'
   },
   feeText: {
+    width: 110,
     maxWidth: 110
   },
   minText: {
