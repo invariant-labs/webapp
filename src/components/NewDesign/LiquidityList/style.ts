@@ -3,7 +3,7 @@ import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
-    width: '1100px'
+    width: '970px'
   },
   header: {
     display: 'flex',

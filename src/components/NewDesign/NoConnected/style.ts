@@ -3,8 +3,8 @@ import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   container: {
-    width: '1140px',
-    height: '600px',
+    width: '1000px',
+    height: '370px',
     position: 'absolute',
     top: -10,
     zIndex: 4
@@ -23,8 +23,8 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 25
   },
   blur: {
-    width: '1140px',
-    height: '600px',
+    width: '1000px',
+    height: '370px',
     backgroundColor: 'rgba(12, 11, 13, 0.8)',
     filter: 'blur(4px) brightness(0.4)',
     position: 'absolute',
@@ -41,7 +41,13 @@ const useStyles = makeStyles(() => ({
     marginTop: 20,
     color: colors.white.main,
     background: colors.invariant.accent1,
-    ...newTypography.body1
+    ...newTypography.body1,
+    textTransform: 'none',
+
+    '&:hover': {
+      background: colors.invariant.accent1,
+      boxShadow: `0 0 15px ${colors.invariant.accent1}`
+    }
   }
 }))
 
