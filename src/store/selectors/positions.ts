@@ -9,6 +9,11 @@ const store = (s: AnyProps) => s[positionsSliceName] as IPositionsStore
 
 export const { positionsList } = keySelectors(store, ['positionsList'])
 
+export const isLoadingPositionsList = createSelector(
+  positionsList,
+  (s) => s.loading
+)
+
 export const positionsWithPoolsData = createSelector(
   pools,
   positionsList,

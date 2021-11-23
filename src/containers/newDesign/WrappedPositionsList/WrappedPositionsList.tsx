@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { LiquidityList } from '@components/NewDesign/LiquidityList/LiquidityList'
-import { positionsWithPoolsData } from '@selectors/positions'
+import { isLoadingPositionsList, positionsWithPoolsData } from '@selectors/positions'
 import { useHistory } from 'react-router-dom'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt } from '@invariant-labs/sdk'
@@ -9,6 +9,7 @@ import { printBN } from '@consts/utils'
 
 export const WrappedPositionsList: React.FC = () => {
   const list = useSelector(positionsWithPoolsData)
+  const isLoading = useSelector(isLoadingPositionsList)
   const history = useHistory()
 
   const maxDecimals = (value: number): number => {
@@ -50,6 +51,7 @@ export const WrappedPositionsList: React.FC = () => {
           max: +(max.toFixed(maxDecimals(max)))
         }
       })}
+      loading={isLoading}
     />
   )
 }
