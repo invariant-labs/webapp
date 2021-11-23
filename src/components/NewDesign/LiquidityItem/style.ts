@@ -57,13 +57,15 @@ const useStyles = makeStyles(() => ({
     padding: '4px 16px 3px 16px'
   },
   feeText: {
-    minWidth: '110px'
+    maxWidth: 110
   },
   minText: {
-    minWidth: '175px'
+    width: 175,
+    maxWidth: 175
   },
   maxText: {
-    minWidth: '175px'
+    width: 175,
+    maxWidth: 175
   },
 
   activeText: {

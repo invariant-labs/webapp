@@ -26,7 +26,12 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     background: colors.invariant.accent1,
     borderRadius: '10px',
-    height: 40
+    height: 40,
+
+    '&:hover': {
+      background: colors.invariant.accent1,
+      boxShadow: `0 0 15px ${colors.invariant.accent1}`
+    }
   },
   buttonText: {
     WebkitPaddingBefore: '2px'
