@@ -23,8 +23,10 @@ export const WrappedPositionsList: React.FC = () => {
 
         return {
           active: true,
-          nameToSwap: position.tokenXSymbol,
-          nameFromSwap: position.tokenYSymbol,
+          nameToSwap: position.tokenX.symbol,
+          nameFromSwap: position.tokenY.symbol,
+          iconToSwap: position.tokenX.logoURI,
+          iconFromSwap: position.tokenY.logoURI,
           fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
           min: +(Math.min(lowerSqrt ** 2, upperSqrt ** 2).toFixed(4)),
           max: +(Math.max(lowerSqrt ** 2, upperSqrt ** 2).toFixed(4))

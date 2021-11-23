@@ -8,6 +8,8 @@ interface ILiquidityItem {
   active: boolean
   nameToSwap: string
   nameFromSwap: string
+  iconToSwap: string
+  iconFromSwap: string
   fee: number
   min: number
   max: number

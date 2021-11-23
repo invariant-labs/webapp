@@ -30,12 +30,12 @@ export const positionsWithPoolsData = createSelector(
     return list.map((position) => ({
       ...position,
       poolData: poolsByKey[position.pool.toString()],
-      tokenXSymbol: tokensByKey[
+      tokenX: tokensByKey[
         poolsByKey[position.pool.toString()].tokenX.toString()
-      ].symbol,
-      tokenYSymbol: tokensByKey[
+      ],
+      tokenY: tokensByKey[
         poolsByKey[position.pool.toString()].tokenY.toString()
-      ].symbol
+      ]
     }))
   }
 )

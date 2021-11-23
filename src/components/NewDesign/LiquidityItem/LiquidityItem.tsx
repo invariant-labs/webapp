@@ -9,6 +9,8 @@ interface ILiquidityItem {
   active: boolean
   nameToSwap: string
   nameFromSwap: string
+  iconToSwap: string
+  iconFromSwap: string
   fee: number
   min: number
   max: number
@@ -17,6 +19,8 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
   active,
   nameToSwap,
   nameFromSwap,
+  iconToSwap,
+  iconFromSwap,
   fee,
   min,
   max
@@ -26,9 +30,9 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
     <Grid className={classes.root}>
       <Grid className={classes.leftGrid}>
         <Grid className={classes.iconsGrid}>
-          <img className={classes.icon} src={icons[`${nameToSwap}`]} alt={nameToSwap} />
+          <img className={classes.icon} src={iconToSwap} alt={nameToSwap} />
           <img className={classes.arrowIcon} src={icons.ArrowIcon} alt={'Arrow'} />
-          <img className={classes.icon} src={icons[`${nameFromSwap}`]} alt={nameFromSwap} />
+          <img className={classes.icon} src={iconFromSwap} alt={nameFromSwap} />
         </Grid>
         <Grid className={classes.namesGrid}>
           <Typography className={classes.name}>{nameToSwap}</Typography>
