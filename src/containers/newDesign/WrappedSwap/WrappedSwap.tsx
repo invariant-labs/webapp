@@ -12,12 +12,14 @@ export const WrappedSwap = () => {
   const tokensList = useSelector(swapTokens)
   return (
     <Swap
-      onSwap={(fromToken, toToken, amount) => {
+      onSwap={(fromToken, toToken, amount, slippage, price) => {
         dispatch(
           actions.swap({
             fromToken,
             toToken,
-            amount
+            amount,
+            slippage,
+            price
           })
         )
       }}

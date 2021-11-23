@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { printBN, printBNtoBN } from '@consts/utils'
-import { PoolStructure } from '@invariant-labs/sdk/lib/market'
+import { Decimal, PoolStructure } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
 import { OutlinedButton } from '@components/NewDesign/OutlinedButton/OutlinedButton'
@@ -16,6 +16,7 @@ import SwapArrows from '@static/svg/swap-arrows.svg'
 import infoIcon from '@static/svg/info.svg'
 import settingIcon from '@static/svg/settings.svg'
 import { DENOMINATOR } from '@invariant-labs/sdk'
+import { fromFee } from '@invariant-labs/sdk/lib/utils'
 
 export interface SwapToken {
   balance: BN
@@ -50,7 +51,11 @@ export interface ISwap {
   walletStatus: Status
   tokens: SwapToken[]
   pools: PoolStructure[]
-  onSwap: (fromToken: PublicKey, toToken: PublicKey, amount: BN) => void
+  onSwap: (fromToken: PublicKey,
+    toToken: PublicKey,
+    amount: BN,
+    slippage: Decimal,
+    price: Decimal) => void,
 }
 export const Swap: React.FC<ISwap> = ({
   walletStatus,
@@ -69,9 +74,9 @@ export const Swap: React.FC<ISwap> = ({
   const [swap, setSwap] = React.useState<boolean | null>(null)
   const [tokensY, setTokensY] = React.useState<SwapToken[]>(tokens)
   const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
-  const [slippTolerance, setSlippTolerance] = React.useState<string>('')
+  const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const [settings, setSettings] = React.useState<boolean>(false)
-  const [details, setDetails] = React.useState<boolean>(false)
+  const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
 
   enum feeOption {
     FEE = 'fee',
@@ -220,7 +225,7 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   const hoverDetails = () => {
-    setDetails(!details)
+    setDetailsOpen(!detailsOpen)
   }
 
   const handleCloseSettings = () => {
@@ -357,7 +362,7 @@ export const Swap: React.FC<ISwap> = ({
           </Grid>
           {tokenFromIndex !== null && tokenToIndex !== null && getButtonMessage() === 'Swap'
             ? <TransactionDetails
-              open={details}
+              open={detailsOpen}
               fee={{ v: poolIndex !== -1 && poolIndex !== null ? pools[poolIndex].fee.v : new BN(0) }}
               exchangeRate={{
                 val: calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], '1'),
@@ -368,6 +373,7 @@ export const Swap: React.FC<ISwap> = ({
           {tokenFromIndex !== null && tokenToIndex !== null && getButtonMessage() === 'Swap' ? (
             <Typography className={classes.rateText}>
           1 {tokens[tokenFromIndex].symbol } = {' '}
+              {/* tutaj będzie zmiana 1 na wartość odpowiadającą ilości tokenów */}
               {calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], '1')}{' '}
               {tokens[tokenToIndex].symbol}
             </Typography>
@@ -380,11 +386,12 @@ export const Swap: React.FC<ISwap> = ({
           disabled={getButtonMessage() !== 'Swap'}
           onClick={() => {
             if (tokenFromIndex === null || tokenToIndex === null) return
-
             onSwap(
               tokens[tokenFromIndex].assetAddress,
               tokens[tokenToIndex].assetAddress,
-              printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal)
+              printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal),
+              { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
+              { v: poolIndex !== null ? pools[poolIndex].sqrtPrice.v : new BN(1) }
             )
           }}
         />

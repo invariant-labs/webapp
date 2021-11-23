@@ -36,6 +36,12 @@ export const tokenAccount = (tokenAddress: PublicKey) =>
     }
   })
 
+export const tokenAccountsAddress = () =>
+  createSelector(accounts, tokenAccounts => {
+    return Object.values(tokenAccounts).map(item => {
+      return item.address
+    })
+  })
 export interface SwapToken {
   balance: BN
   decimal: number
