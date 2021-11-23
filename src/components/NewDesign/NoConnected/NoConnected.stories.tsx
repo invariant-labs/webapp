@@ -5,7 +5,11 @@ import { NoConnected } from './NoConnected'
 storiesOf('liquidityPosition/noconnected', module).add('default', () => {
   return (
     <div style={{ background: '#F7F7F7', height: '100vh', width: '100vw' }}>
-      <NoConnected />
+      <NoConnected
+        onConnect={() => {}}
+        onDisconnect={() => {}}
+        descCustomText='No liquidity positions to show.'
+      />
     </div>
   )
 })

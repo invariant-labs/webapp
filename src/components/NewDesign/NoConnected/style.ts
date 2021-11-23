@@ -2,13 +2,19 @@ import { makeStyles } from '@material-ui/core/styles'
 import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
+  container: {
+    width: '1140px',
+    height: '600px',
+    position: 'absolute',
+    top: -10,
+    zIndex: 4
+  },
   root: {
     zIndex: 10,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'relative',
     paddingBottom: 25,
     width: '100%',
     height: '100%'
@@ -17,9 +23,13 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 25
   },
   blur: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(12, 11, 13, 0.8)'
+    width: '1140px',
+    height: '600px',
+    backgroundColor: 'rgba(12, 11, 13, 0.8)',
+    filter: 'blur(4px) brightness(0.4)',
+    position: 'absolute',
+    top: -10,
+    zIndex: 3
   },
   desc: {
     ...newTypography.body1,

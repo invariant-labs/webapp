@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@reducers/positions'
 import useStyles from './styles'
 import { Status } from '@reducers/solanaConnection'
-import { Status as WalletStatus } from '@reducers/solanaWallet'
+import { Status as WalletStatus, actions as walletActions } from '@reducers/solanaWallet'
 import solanaConnectionSelector from '@selectors/solanaConnection'
 import { status } from '@selectors/solanaWallet'
 import WrappedPositionsList from '@containers/newDesign/WrappedPositionsList/WrappedPositionsList'
+import { NoConnected } from '@components/NewDesign/NoConnected/NoConnected'
 
 export const ListPage: React.FC = () => {
   const classes = useStyles()
@@ -23,9 +24,14 @@ export const ListPage: React.FC = () => {
 
   return (
     <Grid container className={classes.container}>
-      <Grid item>
-        <WrappedPositionsList />
-      </Grid>
+      <WrappedPositionsList />
+      {walletStatus !== WalletStatus.Initialized && (
+        <NoConnected
+          onConnect={(type) => { dispatch(walletActions.connect(type)) }}
+          onDisconnect={() => { dispatch(walletActions.disconnect()) }}
+          descCustomText='No liquidity positions to show.'
+        />
+      )}
     </Grid>
   )
 }
