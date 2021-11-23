@@ -30,6 +30,10 @@ const positionsSlice = createSlice({
     getPositionsList(state) {
       state.positionsList.loading = true
       return state
+    },
+    resetState(state) {
+      state = defaultState
+      return state
     }
   }
 })

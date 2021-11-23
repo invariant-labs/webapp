@@ -35,6 +35,11 @@ const useStyles = makeStyles(() => ({
   },
   buttonText: {
     WebkitPaddingBefore: '2px'
+  },
+  noPositionsText: {
+    ...newTypography.heading1,
+    textAlign: 'center',
+    color: colors.white.main
   }
 }))
 export default useStyles

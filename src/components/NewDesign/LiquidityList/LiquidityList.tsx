@@ -33,9 +33,11 @@ export const LiquidityList: React.FC<IProp> = ({ data, onAddPositionClick }) => 
         </Button>
       </Grid>
       <Grid>
-        {data.map(element => (
-          <LiquidityItem {...element} />
-        ))}
+        {
+          data.length > 0
+            ? data.map(element => (<LiquidityItem {...element} />))
+            : <Typography className={classes.noPositionsText}>Currently you have no liquidity positions.</Typography>
+        }
       </Grid>
     </Grid>
   )
