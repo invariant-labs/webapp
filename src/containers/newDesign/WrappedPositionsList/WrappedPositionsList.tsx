@@ -22,7 +22,6 @@ export const WrappedPositionsList: React.FC = () => {
         const upperSqrt = +printBN(upperSqrtDec.v, PRICE_DECIMAL)
 
         return {
-          active: true,
           nameToSwap: position.tokenX.symbol,
           nameFromSwap: position.tokenY.symbol,
           iconToSwap: position.tokenX.logoURI,

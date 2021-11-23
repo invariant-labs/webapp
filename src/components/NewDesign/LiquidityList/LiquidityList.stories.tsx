@@ -11,7 +11,6 @@ storiesOf('liquidityPosition/list', module).add('default', () => {
       <LiquidityList
         data={[
           {
-            active: false,
             nameToSwap: 'BTC',
             nameFromSwap: 'SNY',
             iconToSwap: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
@@ -21,7 +20,6 @@ storiesOf('liquidityPosition/list', module).add('default', () => {
             fee: 0.05
           },
           {
-            active: true,
             nameToSwap: 'BTC',
             nameFromSwap: 'SNY',
             iconToSwap: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
@@ -31,7 +29,6 @@ storiesOf('liquidityPosition/list', module).add('default', () => {
             fee: 0.05
           },
           {
-            active: false,
             nameToSwap: 'BTC',
             nameFromSwap: 'SNY',
             iconToSwap: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
@@ -41,7 +38,6 @@ storiesOf('liquidityPosition/list', module).add('default', () => {
             fee: 0.05
           },
           {
-            active: true,
             nameToSwap: 'BTC',
             nameFromSwap: 'SNY',
             iconToSwap: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',

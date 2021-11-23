@@ -5,7 +5,6 @@ import AddIcon from '@material-ui/icons/AddOutlined'
 import { LiquidityItem } from '../LiquidityItem/LiquidityItem'
 import useStyle from './style'
 interface ILiquidityItem {
-  active: boolean
   nameToSwap: string
   nameFromSwap: string
   iconToSwap: string

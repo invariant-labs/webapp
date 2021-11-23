@@ -1,12 +1,9 @@
 import { Grid, Typography } from '@material-ui/core'
 import React from 'react'
 import icons from '@static/icons'
-import SuccessIcon from '@material-ui/icons/CheckCircleOutlineOutlined'
-import FailedIcon from '@material-ui/icons/HighlightOffOutlined'
 import classNames from 'classnames'
 import useStyle from './style'
 interface ILiquidityItem {
-  active: boolean
   nameToSwap: string
   nameFromSwap: string
   iconToSwap: string
@@ -16,7 +13,6 @@ interface ILiquidityItem {
   max: number
 }
 export const LiquidityItem: React.FC<ILiquidityItem> = ({
-  active,
   nameToSwap,
   nameFromSwap,
   iconToSwap,
@@ -62,23 +58,6 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
           <Typography className={classNames(classes.text, classes.maxText)}>
             {max} {nameToSwap} per {nameFromSwap}
           </Typography>
-        </Grid>
-        <Grid
-          className={
-            active
-              ? classNames(classes.activeText, classes.greenArea)
-              : classNames(classes.rangeGrid, classes.closedText)
-          }>
-          {active ? (
-            <>
-              <SuccessIcon className={classes.iconText} />
-              <Typography className={classes.greenTextArea}>Active</Typography>
-            </>
-          ) : (
-            <Typography className={classes.text}>
-              <FailedIcon className={classes.iconText} /> Closed
-            </Typography>
-          )}
         </Grid>
       </Grid>
     </Grid>

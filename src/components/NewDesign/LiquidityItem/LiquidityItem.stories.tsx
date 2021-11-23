@@ -2,24 +2,9 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { LiquidityItem } from './LiquidityItem'
 storiesOf('liquidityPosition/items', module)
-  .add('itemActive', () => {
+  .add('item', () => {
     return (
       <LiquidityItem
-        active={true}
-        nameToSwap={'BTC'}
-        nameFromSwap={'SNY'}
-        iconToSwap='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
-        iconFromSwap='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
-        min={2149.6}
-        max={149.6}
-        fee={0.05}
-      />
-    )
-  })
-  .add('itemClose', () => {
-    return (
-      <LiquidityItem
-        active={false}
         nameToSwap={'BTC'}
         nameFromSwap={'SNY'}
         iconToSwap='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
