@@ -105,7 +105,8 @@ export const colors = {
     componentIn2: '#1C1B1E',
     lightInfoText: '#7F768F',
     darkInfoText: '#1C1D1C',
-    error: '#DB5757'
+    error: '#DB5757',
+    warning: '#EFD063'
   }
 }
 

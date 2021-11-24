@@ -1,17 +1,16 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
-    width: 73,
+    width: 47,
     height: 33,
-    backgroundColor: colors.navy.grey,
+    backgroundColor: 'transparent',
     borderRadius: 6,
     marginRight: 16,
-    paddingTop: 3,
     border: 'none',
-    color: colors.navy.navButton,
-    ...typography.subtitle1,
+    color: colors.invariant.lightInfoText,
+    ...newTypography.body3,
     cursor: 'pointer',
     transition: '0.2s all cubic-bezier(0.25, 0.46, 0.45, 0.94)',
     backfaceVisibility: 'hidden',
