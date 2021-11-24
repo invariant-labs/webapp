@@ -23,7 +23,6 @@ export interface INewPosition {
   isCurrentPoolExisting: boolean
   calcAmount: (
     amount: BN,
-    currentTickIndex: number,
     leftRangeTickIndex: number,
     rightRangeTickIndex: number,
     tokenAddress: PublicKey
@@ -88,13 +87,13 @@ export const INewPosition: React.FC<INewPosition> = ({
     tokenToSymbol: 'XYZ'
   }
 
-  const getOtherTokenAmount = (amount: BN, left: number, right: number, byFirst: boolean, tokenAddress: PublicKey) => {
+  const getOtherTokenAmount = (amount: BN, left: number, right: number, byFirst: boolean) => {
     const printIndex = byFirst ? token1Index : token2Index
     if (printIndex === null) {
       return '0.0'
     }
 
-    const result = calcAmount(amount, midPriceIndex, left, right, tokenAddress)
+    const result = calcAmount(amount, left, right, tokens[printIndex].assetAddress)
 
     return printBN(result, tokens[printIndex].decimal)
   }
@@ -125,8 +124,8 @@ export const INewPosition: React.FC<INewPosition> = ({
             setToken2Index(index2)
             onChangePositionTokens(index1, index2, fee)
 
-            if (index1 !== null) {
-              const amount = getOtherTokenAmount(printBNtoBN(token1Deposit, tokens[index1].decimal), leftRange, rightRange, true, tokens[index1].assetAddress)
+            if (index1 !== null && rightRange > midPriceIndex) {
+              const amount = getOtherTokenAmount(printBNtoBN(token1Deposit, tokens[index1].decimal), leftRange, rightRange, true)
 
               if (index2 !== null && +token1Deposit !== 0) {
                 setToken2Deposit(amount)
@@ -135,8 +134,8 @@ export const INewPosition: React.FC<INewPosition> = ({
               }
             }
 
-            if (index2 !== null) {
-              const amount = getOtherTokenAmount(printBNtoBN(token2Deposit, tokens[index2].decimal), leftRange, rightRange, false, tokens[index2].assetAddress)
+            if (index2 !== null && leftRange < midPriceIndex) {
+              const amount = getOtherTokenAmount(printBNtoBN(token2Deposit, tokens[index2].decimal), leftRange, rightRange, false)
 
               if (index1 !== null && +token2Deposit !== 0) {
                 setToken1Deposit(amount)
@@ -161,7 +160,7 @@ export const INewPosition: React.FC<INewPosition> = ({
                 return
               }
               setToken1Deposit(value)
-              setToken2Deposit(getOtherTokenAmount(printBNtoBN(value, tokens[token1Index].decimal), leftRange, rightRange, true, tokens[token1Index].assetAddress))
+              setToken2Deposit(getOtherTokenAmount(printBNtoBN(value, tokens[token1Index].decimal), leftRange, rightRange, true))
             },
             blocked: !ticksLoading && token1Index !== null && token2Index !== null && rightRange <= midPriceIndex,
             blockerInfo: 'Range only for single-asset deposit.'
@@ -173,7 +172,7 @@ export const INewPosition: React.FC<INewPosition> = ({
                 return
               }
               setToken2Deposit(value)
-              setToken1Deposit(getOtherTokenAmount(printBNtoBN(value, tokens[token2Index].decimal), leftRange, rightRange, false, tokens[token2Index].assetAddress))
+              setToken1Deposit(getOtherTokenAmount(printBNtoBN(value, tokens[token2Index].decimal), leftRange, rightRange, false))
             },
             blocked: !ticksLoading && token1Index !== null && token2Index !== null && leftRange >= midPriceIndex,
             blockerInfo: 'Range only for single-asset deposit.'
@@ -188,8 +187,8 @@ export const INewPosition: React.FC<INewPosition> = ({
               setLeftRange(left)
               setRightRange(right)
 
-              if (token1Index !== null) {
-                const amount = getOtherTokenAmount(printBNtoBN(token1Deposit, tokens[token1Index].decimal), left, right, true, tokens[token1Index].assetAddress)
+              if (token1Index !== null && right > midPriceIndex) {
+                const amount = getOtherTokenAmount(printBNtoBN(token1Deposit, tokens[token1Index].decimal), left, right, true)
 
                 if (token2Index !== null && +token1Deposit !== 0) {
                   setToken2Deposit(amount)
@@ -198,8 +197,8 @@ export const INewPosition: React.FC<INewPosition> = ({
                 }
               }
 
-              if (token2Index !== null) {
-                const amount = getOtherTokenAmount(printBNtoBN(token2Deposit, tokens[token2Index].decimal), left, right, false, tokens[token2Index].assetAddress)
+              if (token2Index !== null && left < midPriceIndex) {
+                const amount = getOtherTokenAmount(printBNtoBN(token2Deposit, tokens[token2Index].decimal), left, right, false)
 
                 if (token1Index !== null && +token2Deposit !== 0) {
                   setToken1Deposit(amount)
