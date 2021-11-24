@@ -12,6 +12,7 @@ import { PublicKey } from '@solana/web3.js'
 
 export interface INewPosition {
   tokens: SwapToken[]
+  tokensB: SwapToken[]
   data: Array<{ x: number; y: number }>
   midPriceIndex: number
   addLiquidityHandler: (
@@ -34,6 +35,7 @@ export interface INewPosition {
 
 export const INewPosition: React.FC<INewPosition> = ({
   tokens,
+  tokensB,
   data,
   midPriceIndex,
   addLiquidityHandler,
@@ -119,6 +121,7 @@ export const INewPosition: React.FC<INewPosition> = ({
       <Grid container direction='row' justifyContent='space-between'>
         <DepositSelector
           tokens={tokens}
+          tokensB={tokensB}
           setPositionTokens={(index1, index2, fee) => {
             setTokenAIndex(index1)
             setTokenBIndex(index2)

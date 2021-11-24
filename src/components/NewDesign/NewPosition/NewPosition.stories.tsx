@@ -65,6 +65,7 @@ storiesOf('position/newPosition', module).add('new', () => (
   <div style={{ backgroundColor: '#000000', padding: 20, width: 'fit-content' }}>
     <NewPosition
       tokens={tokens}
+      tokensB={tokens}
       data={data}
       midPriceIndex={140}
       addLiquidityHandler={() => {}}
@@ -80,6 +81,7 @@ storiesOf('position/newPosition', module).add('new', () => (
   <div style={{ backgroundColor: '#000000', padding: 20, width: 'fit-content' }}>
     <NewPosition
       tokens={tokens}
+      tokensB={tokens}
       data={data}
       midPriceIndex={140}
       addLiquidityHandler={() => {}}

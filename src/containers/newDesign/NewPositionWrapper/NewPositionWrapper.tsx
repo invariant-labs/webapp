@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import NewPosition from '@components/NewDesign/NewPosition/NewPosition'
 import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
-import { swapTokens } from '@selectors/solanaWallet'
+import { SwapToken, swapTokens } from '@selectors/solanaWallet'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { printBN } from '@consts/utils'
 import { pools } from '@selectors/pools'
@@ -21,11 +21,34 @@ export const NewPositionWrapper = () => {
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
-  const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
-  const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
-
   const [liquidity, setLiquidity] = useState<Decimal>({ v: new BN(0) })
   const [midPriceIndex, setMidPriceIndex] = useState<number>(0)
+
+  const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
+  const [tokensB, setTokensB] = useState<SwapToken[]>([])
+
+  useEffect(() => {
+    if (tokenAIndex === null) {
+      return
+    }
+
+    const tokensByKey: Record<string, SwapToken> = tokens.reduce((prev, token) => {
+      return {
+        [token.address.toString()]: token,
+        ...prev
+      }
+    }, {})
+
+    const poolsForTokenA = allPools.filter((pool) => pool.tokenX.equals(tokens[tokenAIndex].assetAddress) || pool.tokenY.equals(tokens[tokenAIndex].assetAddress))
+
+    setTokensB(
+      poolsForTokenA.map(
+        (pool) => tokensByKey[pool.tokenX.equals(tokens[tokenAIndex].assetAddress) ? pool.tokenY.toString() : pool.tokenX.toString()]
+      )
+    )
+
+    console.log('dupa')
+  }, [tokenAIndex, allPools.length])
 
   useEffect(() => {
     if (poolIndex !== null) {
@@ -38,8 +61,10 @@ export const NewPositionWrapper = () => {
   return (
     <NewPosition
       tokens={tokens}
+      tokensB={tokensB}
       onChangePositionTokens={
         (tokenA, tokenB, fee) => {
+          setTokenAIndex(tokenA)
           if (tokenA !== null && tokenB !== null) {
             const index = allPools.findIndex(
               (pool) =>
@@ -51,8 +76,6 @@ export const NewPositionWrapper = () => {
             )
 
             setPoolIndex(index !== -1 ? index : null)
-            setTokenAIndex(tokenA)
-            setTokenBIndex(tokenB)
 
             if (index !== -1) {
               dispatch(actions.getCurrentPlotTicks({

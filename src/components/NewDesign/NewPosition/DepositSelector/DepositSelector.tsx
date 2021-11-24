@@ -16,6 +16,7 @@ export interface InputState {
 
 export interface IDepositSelector {
   tokens: SwapToken[]
+  tokensB: SwapToken[]
   setPositionTokens: (tokenAIndex: number | null, tokenBindex: number | null, feeTierIndex: number) => void
   onAddLiquidity: () => void
   tokenAInputState: InputState
@@ -26,6 +27,7 @@ export interface IDepositSelector {
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
   tokens,
+  tokensB,
   setPositionTokens,
   onAddLiquidity,
   tokenAInputState,
@@ -90,7 +92,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           <Grid className={classes.selectWrapper}>
             <Typography className={classes.inputLabel}>Pair token 02</Typography>
             <Select
-              tokens={tokens}
+              tokens={tokensB}
               current={tokenBIndex !== null ? tokens[tokenBIndex] : null}
               onSelect={(name) => {
                 const index = tokens.findIndex((e) => e.symbol === name)

@@ -35,6 +35,7 @@ const tokens: SwapToken[] = [
 storiesOf('position/depositSelector', module).add('deposit', () => (
   <DepositSelector
     tokens={tokens}
+    tokensB={tokens}
     setPositionTokens={() => {}}
     onAddLiquidity={() => {}}
     tokenAInputState={{
