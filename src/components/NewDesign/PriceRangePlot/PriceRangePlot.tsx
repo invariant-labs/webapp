@@ -107,7 +107,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
             data: getCurrentGreaterThanRange()
           }
         ]}
-        curve='natural'
+        curve='basis'
         margin={{ top: 25, bottom: 15 }}
         colors={[
           colors.invariant.accent1,
