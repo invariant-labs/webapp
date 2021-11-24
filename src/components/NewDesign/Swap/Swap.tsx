@@ -238,7 +238,7 @@ export const Swap: React.FC<ISwap> = ({
             setSlippage={setSlippage}
             handleClose={handleCloseSettings}
             anchorEl={anchorEl}
-            defaultSlippage={'1'}/>
+            defaultSlippage={slippTolerance}/>
         </Grid>
       </Grid>
       <Grid container className={classes.root} direction='column'>
