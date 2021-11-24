@@ -10,7 +10,7 @@ import { Pair } from '@invariant-labs/sdk'
 import { getConnection } from './connection'
 import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
 
-export function* HandleSwap(): Generator {
+export function* handleSwap(): Generator {
   try {
     const allPools = yield* select(pools)
     const swapData = yield* select(swap)
@@ -84,5 +84,5 @@ export function* HandleSwap(): Generator {
   }
 }
 export function* swapHandler(): Generator {
-  yield* takeEvery(actions.swap, HandleSwap)
+  yield* takeEvery(actions.swap, handleSwap)
 }

@@ -117,15 +117,11 @@ export const Swap: React.FC<ISwap> = ({
         )
       } else if (fee === feeOption.REVERSED) {
         amountOut = amountOut.add(
-          amountOut.mul(pools[poolIndex].fee.v).div(new BN(10 ** PRICE_DECIMAL))
+          amountOut.mul(pools[poolIndex].fee.v).div((new BN(10)).pow(new BN(PRICE_DECIMAL)))
         )
       }
     }
-    if (assetFor.decimal >= assetIn.decimal) {
-      return printBN(amountOut, assetFor.decimal)
-    } else {
-      return printBN(amountOut, assetFor.decimal)
-    }
+    return printBN(amountOut, assetFor.decimal)
   }
 
   useEffect(() => {
