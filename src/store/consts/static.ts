@@ -16,6 +16,8 @@ export interface Token {
   symbol: string
   address: PublicKey
   decimal: number
+  name: string
+  logoURI: string
 }
 export const PRICE_DECIMAL = 12
 export const USDC = {
