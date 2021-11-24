@@ -1,5 +1,6 @@
 import { DEFAULT_PUBLICKEY } from '@consts/static'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
@@ -22,7 +23,7 @@ export const defaultState: ISwapStore = {
     fromToken: DEFAULT_PUBLICKEY,
     toToken: DEFAULT_PUBLICKEY,
     amount: new BN(0),
-    slippage: { v: new BN(1000) },
+    slippage: { v: fromFee(new BN(1000)) },
     price: { v: new BN(1) }
   }
 }

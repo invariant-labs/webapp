@@ -238,7 +238,7 @@ export const Swap: React.FC<ISwap> = ({
             setSlippage={setSlippage}
             handleClose={handleCloseSettings}
             anchorEl={anchorEl}
-            defaultSlippage={'1'}/>
+            defaultSlippage={slippTolerance}/>
         </Grid>
       </Grid>
       <Grid container className={classes.root} direction='column'>
@@ -381,6 +381,7 @@ export const Swap: React.FC<ISwap> = ({
           className={classes.swapButton}
           disabled={getButtonMessage() !== 'Swap'}
           onClick={() => {
+            console.log(slippTolerance)
             if (tokenFromIndex === null || tokenToIndex === null) return
             onSwap(
               tokens[tokenFromIndex].assetAddress,
