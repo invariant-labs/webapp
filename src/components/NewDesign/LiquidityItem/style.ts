@@ -54,16 +54,19 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     borderRadius: '5px',
     maxHeight: 35,
-    padding: '4px 16px 3px 16px'
+    padding: '4px 0 3px 0'
   },
   feeText: {
-    minWidth: '110px'
+    width: 110,
+    maxWidth: 110
   },
   minText: {
-    minWidth: '175px'
+    width: 175,
+    maxWidth: 175
   },
   maxText: {
-    minWidth: '175px'
+    width: 175,
+    maxWidth: 175
   },
 
   activeText: {
@@ -97,7 +100,8 @@ const useStyles = makeStyles(() => ({
     ...newTypography.body1,
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    WebkitPaddingBefore: '2px'
   },
 
   iconText: {

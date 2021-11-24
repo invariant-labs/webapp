@@ -3,8 +3,7 @@ import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
-    marginTop: 65,
-    width: '1100px'
+    width: '970px'
   },
   header: {
     display: 'flex',
@@ -25,7 +24,24 @@ const useStyles = makeStyles(() => ({
     ...newTypography.body1,
     textTransform: 'none',
     background: colors.invariant.accent1,
-    borderRadius: '10px'
+    borderRadius: '10px',
+    height: 40,
+
+    '&:hover': {
+      background: colors.invariant.accent1,
+      boxShadow: `0 0 15px ${colors.invariant.accent1}`
+    }
+  },
+  buttonText: {
+    WebkitPaddingBefore: '2px'
+  },
+  noPositionsText: {
+    ...newTypography.heading1,
+    textAlign: 'center',
+    color: colors.white.main
+  },
+  list: {
+    position: 'relative'
   }
 }))
 export default useStyles

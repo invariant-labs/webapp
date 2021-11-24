@@ -1,22 +1,22 @@
 import { Grid, Typography } from '@material-ui/core'
 import React from 'react'
 import icons from '@static/icons'
-import SuccessIcon from '@material-ui/icons/CheckCircleOutlineOutlined'
-import FailedIcon from '@material-ui/icons/HighlightOffOutlined'
 import classNames from 'classnames'
 import useStyle from './style'
 interface ILiquidityItem {
-  active: boolean
   nameToSwap: string
   nameFromSwap: string
+  iconToSwap: string
+  iconFromSwap: string
   fee: number
   min: number
   max: number
 }
 export const LiquidityItem: React.FC<ILiquidityItem> = ({
-  active,
   nameToSwap,
   nameFromSwap,
+  iconToSwap,
+  iconFromSwap,
   fee,
   min,
   max
@@ -26,9 +26,9 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
     <Grid className={classes.root}>
       <Grid className={classes.leftGrid}>
         <Grid className={classes.iconsGrid}>
-          <img className={classes.icon} src={icons[`${nameToSwap}`]} alt={nameToSwap} />
+          <img className={classes.icon} src={iconToSwap} alt={nameToSwap} />
           <img className={classes.arrowIcon} src={icons.ArrowIcon} alt={'Arrow'} />
-          <img className={classes.icon} src={icons[`${nameFromSwap}`]} alt={nameFromSwap} />
+          <img className={classes.icon} src={iconFromSwap} alt={nameFromSwap} />
         </Grid>
         <Grid className={classes.namesGrid}>
           <Typography className={classes.name}>{nameToSwap}</Typography>
@@ -48,7 +48,7 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
           </Grid>
 
           <Typography className={classNames(classes.text, classes.minText)}>
-            {min} SNY per xUSD
+            {min} {nameToSwap} per {nameFromSwap}
           </Typography>
         </Grid>
         <Grid className={classes.rangeGrid}>
@@ -56,25 +56,7 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
             <Typography className={classes.greenTextArea}>MAX</Typography>
           </Grid>
           <Typography className={classNames(classes.text, classes.maxText)}>
-            {max} SNY per xUSD
-          </Typography>
-        </Grid>
-        <Grid
-          className={
-            active
-              ? classNames(classes.activeText, classes.greenArea)
-              : classNames(classes.rangeGrid, classes.closedText)
-          }>
-          <Typography className={active ? classes.greenTextArea : classes.text}>
-            {active ? (
-              <>
-                <SuccessIcon className={classes.iconText} /> Active
-              </>
-            ) : (
-              <>
-                <FailedIcon className={classes.iconText} /> Closed
-              </>
-            )}
+            {max} {nameToSwap} per {nameFromSwap}
           </Typography>
         </Grid>
       </Grid>
