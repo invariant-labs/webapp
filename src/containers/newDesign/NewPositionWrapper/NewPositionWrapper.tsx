@@ -20,6 +20,10 @@ export const NewPositionWrapper = () => {
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
+
+  const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
+  const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
+
   const [liquidity, setLiquidity] = useState<Decimal>({ v: new BN(0) })
   const [midPriceIndex, setMidPriceIndex] = useState<number>(0)
 
@@ -35,23 +39,25 @@ export const NewPositionWrapper = () => {
     <NewPosition
       tokens={tokens}
       onChangePositionTokens={
-        (token1, token2, fee) => {
-          if (token1 !== null && token2 !== null) {
+        (tokenA, tokenB, fee) => {
+          if (tokenA !== null && tokenB !== null) {
             const index = allPools.findIndex(
               (pool) =>
                 pool.fee.v.eq(FEE_TIERS[fee].fee) &&
                 (
-                  (pool.tokenX.equals(tokens[token1].assetAddress) && pool.tokenY.equals(tokens[token2].assetAddress)) ||
-                  (pool.tokenX.equals(tokens[token2].assetAddress) && pool.tokenY.equals(tokens[token1].assetAddress))
+                  (pool.tokenX.equals(tokens[tokenA].assetAddress) && pool.tokenY.equals(tokens[tokenB].assetAddress)) ||
+                  (pool.tokenX.equals(tokens[tokenB].assetAddress) && pool.tokenY.equals(tokens[tokenA].assetAddress))
                 )
             )
 
             setPoolIndex(index !== -1 ? index : null)
+            setTokenAIndex(tokenA)
+            setTokenBIndex(tokenB)
 
             if (index !== -1) {
               dispatch(actions.getCurrentPlotTicks({
                 poolIndex: index,
-                isXtoY: allPools[index].tokenX.equals(tokens[token1].assetAddress)
+                isXtoY: allPools[index].tokenX.equals(tokens[tokenA].assetAddress)
               }))
             }
           }

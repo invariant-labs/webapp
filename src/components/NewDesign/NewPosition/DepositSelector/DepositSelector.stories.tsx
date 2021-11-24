@@ -37,12 +37,12 @@ storiesOf('position/depositSelector', module).add('deposit', () => (
     tokens={tokens}
     setPositionTokens={() => {}}
     onAddLiquidity={() => {}}
-    token1InputState={{
+    tokenAInputState={{
       value: '1',
       setValue: () => {},
       blocked: false
     }}
-    token2InputState={{
+    tokenBInputState={{
       value: '',
       setValue: () => {},
       blocked: true,

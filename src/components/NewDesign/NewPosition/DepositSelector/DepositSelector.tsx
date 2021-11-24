@@ -16,10 +16,10 @@ export interface InputState {
 
 export interface IDepositSelector {
   tokens: SwapToken[]
-  setPositionTokens: (token1Index: number | null, token2index: number | null, feeTierIndex: number) => void
+  setPositionTokens: (tokenAIndex: number | null, tokenBindex: number | null, feeTierIndex: number) => void
   onAddLiquidity: () => void
-  token1InputState: InputState
-  token2InputState: InputState
+  tokenAInputState: InputState
+  tokenBInputState: InputState
   feeTiers: number[]
   isCurrentPoolExisting: boolean
 }
@@ -28,19 +28,19 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   tokens,
   setPositionTokens,
   onAddLiquidity,
-  token1InputState,
-  token2InputState,
+  tokenAInputState,
+  tokenBInputState,
   feeTiers,
   isCurrentPoolExisting
 }) => {
   const classes = useStyles()
 
-  const [token1Index, setToken1Index] = useState<number | null>(null)
-  const [token2Index, setToken2Index] = useState<number | null>(null)
+  const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
+  const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
   const [feeTierIndex, setFeeTierIndex] = useState<number>(0)
 
   const getButtonMessage = useCallback(() => {
-    if (token1Index === null || token2Index === null) {
+    if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens'
     }
 
@@ -48,24 +48,24 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'Pool is not existent'
     }
 
-    if (getScaleFromString(token1InputState.value) > tokens[token1Index].decimal) {
+    if (getScaleFromString(tokenAInputState.value) > tokens[tokenAIndex].decimal) {
       return 'Invalid value of token 01'
     }
 
-    if (getScaleFromString(token2InputState.value) > tokens[token2Index].decimal) {
+    if (getScaleFromString(tokenBInputState.value) > tokens[tokenBIndex].decimal) {
       return 'Invalid value of token 02'
     }
 
-    if (printBNtoBN(token1InputState.value, tokens[token1Index].decimal).gt(tokens[token1Index].balance)) {
+    if (printBNtoBN(tokenAInputState.value, tokens[tokenAIndex].decimal).gt(tokens[tokenAIndex].balance)) {
       return 'You don\'t have enough token 01'
     }
 
-    if (printBNtoBN(token2InputState.value, tokens[token2Index].decimal).gt(tokens[token2Index].balance)) {
+    if (printBNtoBN(tokenBInputState.value, tokens[tokenBIndex].decimal).gt(tokens[tokenBIndex].balance)) {
       return 'You don\'t have enough token 02'
     }
 
     return 'Add Liquidity'
-  }, [token1Index, token2Index, token1InputState.value, token2InputState.value, tokens, isCurrentPoolExisting])
+  }, [tokenAIndex, tokenBIndex, tokenAInputState.value, tokenBInputState.value, tokens, isCurrentPoolExisting])
 
   return (
     <Grid container direction='column' className={classes.wrapper}>
@@ -76,11 +76,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             <Typography className={classes.inputLabel}>Pair token 01</Typography>
             <Select
               tokens={tokens}
-              current={token1Index !== null ? tokens[token1Index] : null}
+              current={tokenAIndex !== null ? tokens[tokenAIndex] : null}
               onSelect={(name) => {
                 const index = tokens.findIndex((e) => e.symbol === name)
-                setToken1Index(index)
-                setPositionTokens(index, token2Index, feeTierIndex)
+                setTokenAIndex(index)
+                setPositionTokens(index, tokenBIndex, feeTierIndex)
               }}
               centered
               className={classes.customSelect}
@@ -91,11 +91,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             <Typography className={classes.inputLabel}>Pair token 02</Typography>
             <Select
               tokens={tokens}
-              current={token2Index !== null ? tokens[token2Index] : null}
+              current={tokenBIndex !== null ? tokens[tokenBIndex] : null}
               onSelect={(name) => {
                 const index = tokens.findIndex((e) => e.symbol === name)
-                setToken2Index(index)
-                setPositionTokens(token1Index, index, feeTierIndex)
+                setTokenBIndex(index)
+                setPositionTokens(tokenAIndex, index, feeTierIndex)
               }}
               centered
               className={classes.customSelect}
@@ -107,7 +107,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         <FeeSwitch
           onSelect={(fee) => {
             setFeeTierIndex(fee)
-            setPositionTokens(token1Index, token2Index, fee)
+            setPositionTokens(tokenAIndex, tokenBIndex, fee)
           }}
           feeTiers={feeTiers}
           showOnlyPercents
@@ -118,43 +118,43 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       <Grid container className={classes.sectionWrapper}>
         <Typography className={classes.inputLabel}>Pair token 01 amount</Typography>
         <DepositAmountInput
-          currency={token1Index !== null ? tokens[token1Index].symbol : null}
-          currencyIconSrc={token1Index !== null ? tokens[token1Index].logoURI : undefined}
+          currency={tokenAIndex !== null ? tokens[tokenAIndex].symbol : null}
+          currencyIconSrc={tokenAIndex !== null ? tokens[tokenAIndex].logoURI : undefined}
           placeholder='0.0'
           onMaxClick={() => {
-            if (token1Index === null) {
+            if (tokenAIndex === null) {
               return
             }
-            token1InputState.setValue(printBN(tokens[token1Index].balance, tokens[token1Index].decimal))
+            tokenAInputState.setValue(printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimal))
           }}
           style={{
             marginBottom: 8
           }}
           onBlur={() => {
-            if (token1Index !== null && token2Index !== null && token1InputState.value.length === 0) {
-              token1InputState.setValue('0.0')
+            if (tokenAIndex !== null && tokenBIndex !== null && tokenAInputState.value.length === 0) {
+              tokenAInputState.setValue('0.0')
             }
           }}
-          {...token1InputState}
+          {...tokenAInputState}
         />
 
         <Typography className={classes.inputLabel}>Pair token 02 amount</Typography>
         <DepositAmountInput
-          currency={token2Index !== null ? tokens[token2Index].symbol : null}
-          currencyIconSrc={token2Index !== null ? tokens[token2Index].logoURI : undefined}
+          currency={tokenBIndex !== null ? tokens[tokenBIndex].symbol : null}
+          currencyIconSrc={tokenBIndex !== null ? tokens[tokenBIndex].logoURI : undefined}
           placeholder='0.0'
           onMaxClick={() => {
-            if (token2Index === null) {
+            if (tokenBIndex === null) {
               return
             }
-            token2InputState.setValue(printBN(tokens[token2Index].balance, tokens[token2Index].decimal))
+            tokenBInputState.setValue(printBN(tokens[tokenBIndex].balance, tokens[tokenBIndex].decimal))
           }}
           onBlur={() => {
-            if (token1Index !== null && token2Index !== null && token2InputState.value.length === 0) {
-              token2InputState.setValue('0.0')
+            if (tokenAIndex !== null && tokenBIndex !== null && tokenBInputState.value.length === 0) {
+              tokenBInputState.setValue('0.0')
             }
           }}
-          {...token2InputState}
+          {...tokenBInputState}
         />
       </Grid>
 
