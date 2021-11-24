@@ -3,6 +3,11 @@ import { storiesOf } from '@storybook/react'
 import { useState } from '@storybook/client-api'
 import PositionDetailsWrapper from './positionDetailsWrapper'
 
+interface liqTokens {
+  symbol: string,
+  logoURI: string
+}
+
 const ticksToData = () => {
   const ticks = [
     { index: 90, delta: 10 },
@@ -48,6 +53,16 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
       setPlotMin(plotMin + (diff / 6))
       setPlotMax(plotMax - (diff / 6))
     }
+    const tokens: liqTokens[] = [
+      {
+        symbol: 'SNY',
+        logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png'
+      },
+      {
+        symbol: 'BTC',
+        logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
+      }
+    ]
     return (
       <PositionDetailsWrapper
         detailsData={data}
@@ -61,11 +76,13 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
         zoomPlus={zoomPlus}
         currentPrice={300}
         fromToken={'SNY'}
-        toToken={'xUSD'}
+        toToken={'BTC'}
         positionData={{
           active: false,
           nameToSwap: 'BTC',
+          iconToSwap: tokens[0].logoURI,
           nameFromSwap: 'SNY',
+          iconFromSwap: tokens[1].logoURI,
           min: 2149.6,
           max: 149.6,
           fee: 0.05

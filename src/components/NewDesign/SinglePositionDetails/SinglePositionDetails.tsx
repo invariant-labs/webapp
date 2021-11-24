@@ -9,7 +9,9 @@ import { BoxInfo } from './BoxInfo'
 export interface ILiquidityItem {
   active: boolean
   nameToSwap: string
+  iconToSwap: string
   nameFromSwap: string
+  iconFromSwap: string
   fee: number
   min: number
   max: number
@@ -42,11 +44,11 @@ const SinglePositionDetails: React.FC<IProp> = ({
     <Grid className={classes.root}>
       <Grid className={classes.header}>
         <Grid className={classes.iconsGrid}>
-          <img className={classes.icon} src={icons[`${data.nameToSwap}`]} alt={data.nameToSwap} />
+          <img className={classes.icon} src={data.iconToSwap} alt={data.nameToSwap} />
           <img className={classes.arrowIcon} src={icons.ArrowIcon} alt={'Arrow'} />
           <img
             className={classes.icon}
-            src={icons[`${data.nameFromSwap}`]}
+            src={data.iconFromSwap}
             alt={data.nameFromSwap}
           />
           <Grid className={classes.namesGrid}>
@@ -83,7 +85,9 @@ const SinglePositionDetails: React.FC<IProp> = ({
           title={'Liquidity'}
           value={liquidity}
           nameToSwap={data.nameToSwap}
+          iconToSwap={data.iconToSwap}
           nameFromSwap={data.nameFromSwap}
+          iconFromSwap={data.iconFromSwap}
           valueTokenToSwap={liqValueTokenToSwap}
           valueTokenFromSwap={liqValueTokenFromSwap}
         />
@@ -91,7 +95,9 @@ const SinglePositionDetails: React.FC<IProp> = ({
           title={'Unclaimed fees'}
           value={unclaimedFee}
           nameToSwap={data.nameToSwap}
+          iconToSwap={data.iconToSwap}
           nameFromSwap={data.nameFromSwap}
+          iconFromSwap={data.iconFromSwap}
           onClickClaimFee={onClickClaimFee}
           valueTokenToSwap={unclaimValueTokenToSwap}
           valueTokenFromSwap={unclaimValueTokenFromSwap}
