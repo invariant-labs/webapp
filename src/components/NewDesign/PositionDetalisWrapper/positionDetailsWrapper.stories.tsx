@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react'
 import { useState } from '@storybook/client-api'
 import PositionDetailsWrapper from './positionDetailsWrapper'
 
-interface liqTokens {
+export interface liqTokens {
   symbol: string,
   logoURI: string
 }
@@ -55,12 +55,12 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
     }
     const tokens: liqTokens[] = [
       {
-        symbol: 'SNY',
-        logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png'
-      },
-      {
         symbol: 'BTC',
         logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
+      },
+      {
+        symbol: 'SNY',
+        logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png'
       }
     ]
     return (

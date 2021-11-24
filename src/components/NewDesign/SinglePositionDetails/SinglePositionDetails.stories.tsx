@@ -2,6 +2,18 @@ import { Grid } from '@material-ui/core'
 import { storiesOf } from '@storybook/react'
 import React from 'react'
 import SinglePositionDetails from './SinglePositionDetails'
+import { liqTokens } from './../PositionDetalisWrapper/positionDetailsWrapper.stories'
+
+const tokens: liqTokens[] = [
+  {
+    symbol: 'BTC',
+    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
+  },
+  {
+    symbol: 'SNY',
+    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png'
+  }
+]
 
 storiesOf('singlePosition/leftComponent', module)
   .add('closed', () => (
@@ -10,6 +22,8 @@ storiesOf('singlePosition/leftComponent', module)
         data={{
           active: false,
           nameToSwap: 'BTC',
+          iconToSwap: tokens[0].logoURI,
+          iconFromSwap: tokens[1].logoURI,
           nameFromSwap: 'SNY',
           min: 2149.6,
           max: 149.6,
@@ -32,6 +46,8 @@ storiesOf('singlePosition/leftComponent', module)
         data={{
           active: true,
           nameToSwap: 'BTC',
+          iconToSwap: tokens[0].logoURI,
+          iconFromSwap: tokens[1].logoURI,
           nameFromSwap: 'SNY',
           min: 2149.6,
           max: 149.6,
