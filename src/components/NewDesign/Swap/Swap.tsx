@@ -381,7 +381,6 @@ export const Swap: React.FC<ISwap> = ({
           className={classes.swapButton}
           disabled={getButtonMessage() !== 'Swap'}
           onClick={() => {
-            console.log(slippTolerance)
             if (tokenFromIndex === null || tokenToIndex === null) return
             onSwap(
               tokens[tokenFromIndex].assetAddress,
