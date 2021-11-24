@@ -1,15 +1,21 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { LiquidityList } from '@components/NewDesign/LiquidityList/LiquidityList'
 import { isLoadingPositionsList, positionsWithPoolsData } from '@selectors/positions'
 import { useHistory } from 'react-router-dom'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt } from '@invariant-labs/sdk'
 import { printBN } from '@consts/utils'
+import { Status, actions } from '@reducers/solanaWallet'
+import { status } from '@selectors/solanaWallet'
 
 export const WrappedPositionsList: React.FC = () => {
+  const dispatch = useDispatch()
+
   const list = useSelector(positionsWithPoolsData)
   const isLoading = useSelector(isLoadingPositionsList)
+  const walletStatus = useSelector(status)
+
   const history = useHistory()
 
   const maxDecimals = (value: number): number => {
@@ -52,6 +58,12 @@ export const WrappedPositionsList: React.FC = () => {
         }
       })}
       loading={isLoading}
+      showNoConnected={walletStatus !== Status.Initialized}
+      noConnectedBlockerProps={{
+        onConnect: (type) => { dispatch(actions.connect(type)) },
+        onDisconnect: () => { dispatch(actions.disconnect()) },
+        descCustomText: 'No liquidity positions to show.'
+      }}
     />
   )
 }

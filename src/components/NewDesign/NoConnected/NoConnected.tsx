@@ -5,12 +5,12 @@ import { WalletType } from '@web3/wallet'
 import React from 'react'
 import useStyles from './style'
 
-export interface IProps {
+export interface INoConnected {
   onConnect: (type: WalletType) => void
   onDisconnect: () => void
   descCustomText?: string
 }
-export const NoConnected: React.FC<IProps> = ({ onConnect, onDisconnect, descCustomText }) => {
+export const NoConnected: React.FC<INoConnected> = ({ onConnect, onDisconnect, descCustomText }) => {
   const classes = useStyles()
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)

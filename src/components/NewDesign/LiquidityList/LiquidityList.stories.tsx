@@ -48,6 +48,10 @@ storiesOf('liquidityPosition/list', module).add('default', () => {
           }
         ]}
         onAddPositionClick={handleClick}
+        noConnectedBlockerProps={{
+          onConnect: () => {},
+          onDisconnect: () => {}
+        }}
       />
     </Grid>
   )

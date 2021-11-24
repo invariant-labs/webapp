@@ -6,7 +6,6 @@ const useStyles = makeStyles(() => ({
     width: '1000px',
     height: '370px',
     position: 'absolute',
-    top: -10,
     zIndex: 4
   },
   root: {
@@ -28,7 +27,6 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'rgba(12, 11, 13, 0.8)',
     filter: 'blur(4px) brightness(0.4)',
     position: 'absolute',
-    top: -10,
     zIndex: 3
   },
   desc: {

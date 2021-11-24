@@ -39,6 +39,9 @@ const useStyles = makeStyles(() => ({
     ...newTypography.heading1,
     textAlign: 'center',
     color: colors.white.main
+  },
+  list: {
+    position: 'relative'
   }
 }))
 export default useStyles

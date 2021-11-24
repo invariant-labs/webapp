@@ -4,6 +4,7 @@ import AddIcon from '@material-ui/icons/AddOutlined'
 
 import { LiquidityItem } from '../LiquidityItem/LiquidityItem'
 import useStyle from './style'
+import { INoConnected, NoConnected } from '../NoConnected/NoConnected'
 interface ILiquidityItem {
   nameToSwap: string
   nameFromSwap: string
@@ -17,9 +18,11 @@ interface IProp {
   data: ILiquidityItem[]
   onAddPositionClick: () => void
   loading?: boolean
+  showNoConnected?: boolean
+  noConnectedBlockerProps: INoConnected
 }
 
-export const LiquidityList: React.FC<IProp> = ({ data, onAddPositionClick, loading = false }) => {
+export const LiquidityList: React.FC<IProp> = ({ data, onAddPositionClick, loading = false, showNoConnected = false, noConnectedBlockerProps }) => {
   const classes = useStyle()
   return (
     <Grid className={classes.root}>
@@ -33,7 +36,8 @@ export const LiquidityList: React.FC<IProp> = ({ data, onAddPositionClick, loadi
           <span className={classes.buttonText}>Add Position</span>
         </Button>
       </Grid>
-      <Grid>
+      <Grid className={classes.list}>
+        {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         {
           data.length > 0
             ? data.map(element => (<LiquidityItem {...element} />))
