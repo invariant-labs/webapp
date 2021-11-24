@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { SwapPage } from './SwapPage/SwapPage'
 import { useDispatch, useSelector } from 'react-redux'
-
+import { ListPage } from './ListPage/ListPage'
 import { toBlur } from '@consts/uiUtils'
 import { PoolPage } from './PoolPage/PoolPage'
 import { Status } from '@reducers/solanaWallet'
@@ -27,6 +27,7 @@ export const PagesRouter: React.FC = () => {
         <Switch>
           <Route path='/swap' component={SwapPage} />
           <Route path={'/pool'} component={PoolPage} />
+          <Route path={'/positions'} component={ListPage} />
           <Route path='*'>
             <Redirect to='/swap'>
               <SwapPage />

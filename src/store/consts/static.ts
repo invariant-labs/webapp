@@ -16,22 +16,30 @@ export interface Token {
   symbol: string
   address: PublicKey
   decimal: number
+  name: string
+  logoURI: string
 }
 export const PRICE_DECIMAL = 12
 export const USDC = {
   symbol: 'USDC',
   address: new PublicKey(MOCK_TOKENS.USDC),
-  decimal: 6
+  decimal: 6,
+  name: 'USD Coin',
+  logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
 }
 export const USDT = {
   symbol: 'USDT',
   address: new PublicKey(MOCK_TOKENS.USDT),
-  decimal: 6
+  decimal: 6,
+  name: 'Theter USD',
+  logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
 }
 export const SOL = {
   symbol: 'SOL',
   address: new PublicKey(MOCK_TOKENS.SOL),
-  decimal: 9
+  decimal: 9,
+  name: 'Wrapped Solana',
+  logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
 }
 export const tokens = [USDC, USDT, SOL]
 export const PAIRS: [Pair] = [

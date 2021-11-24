@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   label: {
-    paddingTop: 2
+    WebkitPaddingBefore: '2px'
   },
   headerButtonConnect: {
     background: colors.invariant.violetButton,
