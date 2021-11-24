@@ -3,7 +3,7 @@ import Select from '@components/NewDesign/Inputs/Select/Select'
 import { SwapToken } from '@components/NewDesign/Swap/Swap'
 import { getScaleFromString, printBN, printBNtoBN } from '@consts/utils'
 import { Button, Grid, Typography } from '@material-ui/core'
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
 import useStyles from './style'
 
@@ -68,6 +68,16 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
     return 'Add Liquidity'
   }, [tokenAIndex, tokenBIndex, tokenAInputState.value, tokenBInputState.value, tokens, isCurrentPoolExisting])
+
+  useEffect(() => {
+    if (tokenAIndex !== null && tokenBIndex !== null && !(tokensB.find((token) => token.symbol === tokens[tokenAIndex].symbol))) {
+      const indexB = tokensB.length
+        ? tokens.findIndex((token) => token.symbol === tokensB[0].symbol)
+        : null
+      setTokenBIndex(indexB)
+      setPositionTokens(tokenAIndex, indexB, feeTierIndex)
+    }
+  }, [tokensB])
 
   return (
     <Grid container direction='column' className={classes.wrapper}>

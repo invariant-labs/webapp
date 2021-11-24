@@ -46,8 +46,6 @@ export const NewPositionWrapper = () => {
         (pool) => tokensByKey[pool.tokenX.equals(tokens[tokenAIndex].assetAddress) ? pool.tokenY.toString() : pool.tokenX.toString()]
       )
     )
-
-    console.log('dupa')
   }, [tokenAIndex, allPools.length])
 
   useEffect(() => {
