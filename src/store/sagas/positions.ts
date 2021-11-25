@@ -107,7 +107,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       const sqrt = +printBN(tick.sqrtPrice.v, PRICE_DECIMAL)
 
       ticksData.push({
-        x: action.payload.isXtoY ? sqrt ** sqrt : 1 / (sqrt ** sqrt),
+        x: action.payload.isXtoY ? sqrt ** 2 : 1 / (sqrt ** 2),
         y: +printBN(tick.liqudity, PRICE_DECIMAL),
         index: tick.index
       })
@@ -118,7 +118,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
           const newSqrt = +printBN(newSqrtDecimal.v, PRICE_DECIMAL)
 
           ticksData.push({
-            x: action.payload.isXtoY ? newSqrt ** newSqrt : 1 / (newSqrt ** newSqrt),
+            x: action.payload.isXtoY ? newSqrt ** 2 : 1 / (newSqrt ** 2),
             y: +printBN(tick.liqudity, PRICE_DECIMAL),
             index: i
           })

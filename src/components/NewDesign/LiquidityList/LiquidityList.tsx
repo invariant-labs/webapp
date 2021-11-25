@@ -6,10 +6,10 @@ import { LiquidityItem } from '../LiquidityItem/LiquidityItem'
 import useStyle from './style'
 import { INoConnected, NoConnected } from '../NoConnected/NoConnected'
 interface ILiquidityItem {
-  nameToSwap: string
-  nameFromSwap: string
-  iconToSwap: string
-  iconFromSwap: string
+  tokenXName: string
+  tokenYName: string
+  tokenXIcon: string
+  tokenYIcon: string
   fee: number
   min: number
   max: number
