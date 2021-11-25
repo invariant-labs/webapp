@@ -138,6 +138,7 @@ export const NewPositionWrapper = () => {
         return new BN(0)
       }}
       ticksLoading={ticksLoading}
+      isTokenXFirst={poolIndex !== null && tokenAIndex !== null && allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)}
     />
   )
 }

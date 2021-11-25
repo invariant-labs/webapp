@@ -27,6 +27,7 @@ export interface INewPosition {
   ) => BN
   feeTiers: number[]
   ticksLoading: boolean
+  isTokenXFirst: boolean
 }
 
 export const INewPosition: React.FC<INewPosition> = ({
@@ -39,7 +40,8 @@ export const INewPosition: React.FC<INewPosition> = ({
   isCurrentPoolExisting,
   calcAmount,
   feeTiers,
-  ticksLoading
+  ticksLoading,
+  isTokenXFirst
 }) => {
   const classes = useStyles()
 
@@ -140,7 +142,7 @@ export const INewPosition: React.FC<INewPosition> = ({
               setTokenADeposit(value)
               setTokenBDeposit(getOtherTokenAmount(printBNtoBN(value, tokens[tokenAIndex].decimal), leftRange, rightRange, true))
             },
-            blocked: !ticksLoading && tokenAIndex !== null && tokenBIndex !== null && rightRange <= midPriceIndex,
+            blocked: !ticksLoading && tokenAIndex !== null && tokenBIndex !== null && (isTokenXFirst ? rightRange <= midPriceIndex : rightRange < midPriceIndex),
             blockerInfo: 'Range only for single-asset deposit.'
           }}
           tokenBInputState={{
@@ -152,7 +154,7 @@ export const INewPosition: React.FC<INewPosition> = ({
               setTokenBDeposit(value)
               setTokenADeposit(getOtherTokenAmount(printBNtoBN(value, tokens[tokenBIndex].decimal), leftRange, rightRange, false))
             },
-            blocked: !ticksLoading && tokenAIndex !== null && tokenBIndex !== null && leftRange >= midPriceIndex,
+            blocked: !ticksLoading && tokenAIndex !== null && tokenBIndex !== null && (isTokenXFirst ? leftRange > midPriceIndex : leftRange >= midPriceIndex),
             blockerInfo: 'Range only for single-asset deposit.'
           }}
           feeTiers={feeTiers}
