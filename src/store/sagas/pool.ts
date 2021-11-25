@@ -36,7 +36,6 @@ export function* fetchTicksForPool(
     from,
     to
   )
-  console.log(ticks)
   return ''
 }
 
@@ -45,7 +44,7 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
 
   try {
     const pools: PoolWithAddress[] = []
-
+    console.log(action.payload)
     for (let i = 0; i < action.payload.length; i++) {
       const poolData = yield* call(
         [marketProgram, marketProgram.getPool],
