@@ -40,13 +40,17 @@ export const LiquidityList: React.FC<IProp> = ({ data, onAddPositionClick, loadi
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         {
           data.length > 0
-            ? data.map(element => (<LiquidityItem {...element} />))
+            ? data.map((element, index) => (<LiquidityItem key={index} {...element} />))
             : (
               <Typography className={classes.noPositionsText}>
                 {
                   loading
                     ? 'Loading...'
-                    : 'Currently you have no liquidity positions.'
+                    : (
+                      !showNoConnected
+                        ? 'Currently you have no liquidity positions.'
+                        : ''
+                    )
                 }
               </Typography>
             )

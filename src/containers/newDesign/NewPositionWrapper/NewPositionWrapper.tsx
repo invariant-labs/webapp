@@ -114,7 +114,7 @@ export const NewPositionWrapper = () => {
 
         try {
           if (byX) {
-            const result = getLiquidityByX(amount, lowerTick, upperTick, ticksData[midPriceIndex].index, true)
+            const result = getLiquidityByX(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
             setLiquidity(result.liquidity)
 
             console.log(amount.toString(), 'y', result.y.toString(), lowerTick, upperTick, result.liquidity.v.toString())
@@ -122,14 +122,14 @@ export const NewPositionWrapper = () => {
             return result.y
           }
 
-          const result = getLiquidityByY(amount, lowerTick, upperTick, ticksData[midPriceIndex].index, true)
+          const result = getLiquidityByY(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
           setLiquidity(result.liquidity)
 
           console.log(amount.toString(), 'x', result.x.toString(), lowerTick, upperTick, result.liquidity.v.toString())
 
           return result.x
         } catch (error) {
-          const result = (byX ? getLiquidityByY : getLiquidityByX)(amount, lowerTick, upperTick, ticksData[midPriceIndex].index, true)
+          const result = (byX ? getLiquidityByY : getLiquidityByX)(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
           setLiquidity(result.liquidity)
 
           console.log(amount.toString(), 'err', lowerTick, upperTick, result.liquidity.v.toString())
