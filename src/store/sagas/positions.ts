@@ -113,7 +113,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       })
 
       if (index < ticks.length - 1 && ticks[index + 1].index - ticks[index].index > allPools[poolIndex].tickSpacing) {
-        for (let i = ticks[index].index; i < ticks[index + 1].index; i += allPools[poolIndex].tickSpacing) {
+        for (let i = ticks[index].index + allPools[poolIndex].tickSpacing; i < ticks[index + 1].index; i += allPools[poolIndex].tickSpacing) {
           const newSqrtDecimal = calculate_price_sqrt(i)
           const newSqrt = +printBN(newSqrtDecimal.v, PRICE_DECIMAL)
 
