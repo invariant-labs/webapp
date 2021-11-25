@@ -32,11 +32,13 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
 
-  const [plotMin, setPlotMin] = useState(0)
-  const [plotMax, setPlotMax] = useState(data[midPriceIndex].x * 2)
+  const [plotMin, setPlotMin] = useState(Math.max(midPriceIndex - 15, 0))
+  const [plotMax, setPlotMax] = useState(Math.min(midPriceIndex + 15, data.length - 1))
+
+  const [waiting, setWaiting] = useState(false)
 
   const zoomMinus = () => {
-    if (plotMax <= data[data.length - 1].x) {
+    if (plotMin > data[0].x || plotMax < data[data.length - 1].x) {
       const diff = plotMax - plotMin
       setPlotMin(plotMin - (diff / 4))
       setPlotMax(plotMax + (diff / 4))
@@ -45,7 +47,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const zoomPlus = () => {
     const diff = plotMax - plotMin
-    if (data.length >= 2 && diff >= data[2].x - data[1].x) {
+    if (data.length >= 2 && diff >= data[1].x - data[0].x) {
       setPlotMin(plotMin + (diff / 6))
       setPlotMax(plotMax - (diff / 6))
     }
@@ -61,14 +63,28 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     onChangeRange(left, right)
   }
 
-  useEffect(() => {
+  const resetPlot = () => {
     changeRangeHandler(
-      Math.round(midPriceIndex / 2),
-      Math.min(Math.round(3 * midPriceIndex / 2), data.length - 1)
+      Math.max(midPriceIndex - 10, 0),
+      Math.min(midPriceIndex + 10, data.length - 1)
     )
-    setPlotMin(0)
-    setPlotMax(data[midPriceIndex].x * 2)
-  }, [tokenFromSymbol, tokenToSymbol])
+    setPlotMin(data[Math.max(midPriceIndex - 15, 0)].x)
+    setPlotMax(data[Math.min(midPriceIndex + 15, data.length - 1)].x)
+  }
+
+  useEffect(() => {
+    if (!waiting) {
+      resetPlot()
+    }
+  }, [waiting])
+
+  useEffect(() => {
+    if (blocked && !waiting) {
+      setWaiting(true)
+    } else if (!blocked && waiting) {
+      setWaiting(false)
+    }
+  }, [blocked])
 
   return (
     <Grid container className={classes.wrapper}>
@@ -80,6 +96,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           onChangeRange={changeRangeHandler}
           leftRangeIndex={leftRange}
           rightRangeIndex={rightRange}
+          midPriceIndex={midPriceIndex}
           plotMin={plotMin}
           plotMax={plotMax}
           zoomMinus={zoomMinus}
@@ -125,14 +142,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         <Grid container direction='row' justifyContent='space-between'>
           <Button
             className={classes.button}
-            onClick={() => {
-              changeRangeHandler(
-                midPriceIndex / 2,
-                Math.min(3 * midPriceIndex / 2, data.length - 1)
-              )
-              setPlotMin(0)
-              setPlotMax(data[midPriceIndex].x * 2)
-            }}
+            onClick={resetPlot}
           >
             Reset range
           </Button>

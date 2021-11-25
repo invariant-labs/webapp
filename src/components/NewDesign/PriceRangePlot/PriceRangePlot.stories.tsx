@@ -57,6 +57,7 @@ storiesOf('position/priceRangePlot', module)
         data={data}
         leftRangeIndex={leftRange}
         rightRangeIndex={rightRange}
+        midPriceIndex={150}
         onChangeRange={(left, right) => {
           action(`range indexes: ${left} - ${right}`)()
           setLeftRange(left)
@@ -91,6 +92,7 @@ storiesOf('position/priceRangePlot', module)
         data={data}
         leftRangeIndex={100}
         rightRangeIndex={200}
+        midPriceIndex={150}
         style={{ width: 600, height: 300, backgroundColor: '#1C1B1E' }}
         disabled
         plotMin={plotMin}

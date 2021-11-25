@@ -48,10 +48,10 @@ export const WrappedPositionsList: React.FC = () => {
         const max = Math.max(lowerSqrt ** 2, upperSqrt ** 2)
 
         return {
-          nameToSwap: position.tokenX.symbol,
-          nameFromSwap: position.tokenY.symbol,
-          iconToSwap: position.tokenX.logoURI,
-          iconFromSwap: position.tokenY.logoURI,
+          tokenXName: position.tokenX.symbol,
+          tokenYName: position.tokenY.symbol,
+          tokenXIcon: position.tokenX.logoURI,
+          tokenYIcon: position.tokenY.logoURI,
           fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
           min: +(min.toFixed(maxDecimals(min))),
           max: +(max.toFixed(maxDecimals(max)))

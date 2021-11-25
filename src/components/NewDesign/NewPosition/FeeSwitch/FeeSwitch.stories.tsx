@@ -11,7 +11,7 @@ storiesOf('position/feeSwitch', module)
         width: 400
       }}>
         <FeeSwitch
-          setFeeValue={(val) => { console.log(val) }}
+          onSelect={(val) => { console.log(val) }}
           feeTiers={[0.05, 0.3, 1]}
         />
       </div>
@@ -24,7 +24,7 @@ storiesOf('position/feeSwitch', module)
         width: 400
       }}>
         <FeeSwitch
-          setFeeValue={(val) => { console.log(val) }}
+          onSelect={(val) => { console.log(val) }}
           feeTiers={[0.05, 0.3, 1]}
           showOnlyPercents
         />
