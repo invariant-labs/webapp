@@ -65,28 +65,32 @@ storiesOf('position/newPosition', module).add('new', () => (
   <div style={{ backgroundColor: '#000000', padding: 20, width: 'fit-content' }}>
     <NewPosition
       tokens={tokens}
+      tokensB={tokens}
       data={data}
       midPriceIndex={140}
       addLiquidityHandler={() => {}}
       onChangePositionTokens={() => {}}
       isCurrentPoolExisting={true}
-      calcCurrentPoolProportion={() => 2}
+      calcAmount={() => new BN(1)}
       feeTiers={[0.05, 0.3, 1]}
-      initialSlippageTolerance={1}
+      ticksLoading={false}
+      isTokenXFirst={true}
     />
   </div>
 )).add('noPool', () => (
   <div style={{ backgroundColor: '#000000', padding: 20, width: 'fit-content' }}>
     <NewPosition
       tokens={tokens}
+      tokensB={tokens}
       data={data}
       midPriceIndex={140}
       addLiquidityHandler={() => {}}
       onChangePositionTokens={() => {}}
       isCurrentPoolExisting={false}
-      calcCurrentPoolProportion={() => 1}
+      calcAmount={() => new BN(1)}
       feeTiers={[0.05, 0.3, 1]}
-      initialSlippageTolerance={1}
+      ticksLoading={false}
+      isTokenXFirst={true}
     />
   </div>
 ))

@@ -4,19 +4,19 @@ import icons from '@static/icons'
 import classNames from 'classnames'
 import useStyle from './style'
 interface ILiquidityItem {
-  nameToSwap: string
-  nameFromSwap: string
-  iconToSwap: string
-  iconFromSwap: string
+  tokenXName: string
+  tokenYName: string
+  tokenXIcon: string
+  tokenYIcon: string
   fee: number
   min: number
   max: number
 }
 export const LiquidityItem: React.FC<ILiquidityItem> = ({
-  nameToSwap,
-  nameFromSwap,
-  iconToSwap,
-  iconFromSwap,
+  tokenXName,
+  tokenYName,
+  tokenXIcon,
+  tokenYIcon,
   fee,
   min,
   max
@@ -26,16 +26,16 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
     <Grid className={classes.root}>
       <Grid className={classes.leftGrid}>
         <Grid className={classes.iconsGrid}>
-          <img className={classes.icon} src={iconToSwap} alt={nameToSwap} />
+          <img className={classes.icon} src={tokenXIcon} alt={tokenXName} />
           <img className={classes.arrowIcon} src={icons.ArrowIcon} alt={'Arrow'} />
-          <img className={classes.icon} src={iconFromSwap} alt={nameFromSwap} />
+          <img className={classes.icon} src={tokenYIcon} alt={tokenYName} />
         </Grid>
         <Grid className={classes.namesGrid}>
-          <Typography className={classes.name}>{nameToSwap}</Typography>
+          <Typography className={classes.name}>{tokenXName}</Typography>
           <Typography id='pause' className={classes.name}>
             -
           </Typography>
-          <Typography className={classes.name}>{nameFromSwap}</Typography>
+          <Typography className={classes.name}>{tokenYName}</Typography>
         </Grid>
       </Grid>
       <Grid className={classes.rightGrid}>
@@ -48,7 +48,7 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
           </Grid>
 
           <Typography className={classNames(classes.text, classes.minText)}>
-            {min} {nameToSwap} per {nameFromSwap}
+            {min} {tokenYName} per {tokenXName}
           </Typography>
         </Grid>
         <Grid className={classes.rangeGrid}>
@@ -56,7 +56,7 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
             <Typography className={classes.greenTextArea}>MAX</Typography>
           </Grid>
           <Typography className={classNames(classes.text, classes.maxText)}>
-            {max} {nameToSwap} per {nameFromSwap}
+            {max} {tokenYName} per {tokenXName}
           </Typography>
         </Grid>
       </Grid>

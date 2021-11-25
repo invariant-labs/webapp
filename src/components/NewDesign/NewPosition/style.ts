@@ -5,31 +5,10 @@ const useStyles = makeStyles(() => ({
   wrapper: {
     width: 882
   },
-  top: {
-    marginBottom: 18
-  },
   title: {
     color: colors.white.main,
-    ...newTypography.heading4
-  },
-  settings: {
-    height: 40,
-    width: 'fit-content',
-    cursor: 'pointer',
-    transition: 'filter 300ms',
-
-    '&:hover': {
-      filter: 'brightness(2)'
-    }
-  },
-  settingsIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 9
-  },
-  settingsText: {
-    color: colors.invariant.lightInfoText,
-    ...newTypography.body3
+    ...newTypography.heading4,
+    marginBottom: 18
   }
 }))
 

@@ -12,6 +12,7 @@ interface IProps {
   style?: CSSProperties
   blocked?: boolean
   blockerInfo?: string
+  onBlur?: () => void
 }
 
 export const DepositAmountInput: React.FC<IProps> = ({
@@ -23,7 +24,8 @@ export const DepositAmountInput: React.FC<IProps> = ({
   onMaxClick,
   style,
   blocked = false,
-  blockerInfo
+  blockerInfo,
+  onBlur
 }) => {
   const classes = useStyles()
 
@@ -89,6 +91,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
         endAdornment={(
           <Button className={classes.maxButton} onClick={onMaxClick}>Max</Button>
         )}
+        onBlur={onBlur}
       />
 
       {
