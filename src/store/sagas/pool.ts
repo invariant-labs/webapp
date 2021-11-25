@@ -19,7 +19,6 @@ export function* fetchPool(tokenX: PublicKey, tokenY: PublicKey, feeTier: FeeTie
       feeTier
     )
   )
-  console.log(result)
   return ''
 }
 export function* fetchTicksForPool(
@@ -44,7 +43,6 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
 
   try {
     const pools: PoolWithAddress[] = []
-    console.log(action.payload)
     for (let i = 0; i < action.payload.length; i++) {
       const poolData = yield* call(
         [marketProgram, marketProgram.getPool],

@@ -35,7 +35,7 @@ export const USDT = {
   logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
 }
 export const SOL = {
-  symbol: 'SOL',
+  symbol: 'wSOL',
   address: new PublicKey(MOCK_TOKENS.SOL),
   decimal: 9,
   name: 'Wrapped Solana',

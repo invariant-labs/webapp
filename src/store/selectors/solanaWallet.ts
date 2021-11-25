@@ -56,7 +56,7 @@ export const swapTokens = createSelector(accounts, balance, (allAccounts, solBal
     ...token,
     assetAddress: token.address,
     balance: token.address.equals(new PublicKey(MOCK_TOKENS.SOL))
-      ? solBalance
+      ? allAccounts[token.address.toString()]?.balance ?? 0
       : allAccounts[token.address.toString()]?.balance ?? 0
   }))
 })

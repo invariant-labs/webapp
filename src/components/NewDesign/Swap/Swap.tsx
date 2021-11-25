@@ -25,6 +25,7 @@ export interface SwapToken {
   assetAddress: PublicKey
   name: string
   logoURI: string
+  address: PublicKey
 }
 
 export interface Pools {
