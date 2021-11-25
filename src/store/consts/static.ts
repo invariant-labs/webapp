@@ -1,5 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
+import { MOCK_TOKENS, Pair } from '@invariant-labs/sdk'
+import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
 
 declare global {
   interface Window {
@@ -14,24 +16,36 @@ export interface Token {
   symbol: string
   address: PublicKey
   decimal: number
+  name: string
+  logoURI: string
 }
 export const PRICE_DECIMAL = 12
 export const USDC = {
   symbol: 'USDC',
-  address: new PublicKey('35P5P6ZGKUN6wqxrX4VdLRrGbzkrfvhyNs4iqk1vDxAx'),
-  decimal: 6
+  address: new PublicKey(MOCK_TOKENS.USDC),
+  decimal: 6,
+  name: 'USD Coin',
+  logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
 }
 export const USDT = {
   symbol: 'USDT',
-  address: new PublicKey('CYPdUAp8KshzJ2a45kzgy3fr4UTiyrEGE998rA7wzFR6'),
-  decimal: 6
+  address: new PublicKey(MOCK_TOKENS.USDT),
+  decimal: 6,
+  name: 'Theter USD',
+  logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
 }
 export const SOL = {
-  symbol: 'SOL',
-  address: new PublicKey('23AQ2kRxqT1fk47q6G8YcKrpx4VhWeUvKHuRijT61qSD'),
-  decimal: 9
+  symbol: 'wSOL',
+  address: new PublicKey(MOCK_TOKENS.SOL),
+  decimal: 9,
+  name: 'Wrapped Solana',
+  logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
 }
 export const tokens = [USDC, USDT, SOL]
+export const PAIRS: Pair[] = [
+  new Pair(USDC.address, USDT.address, FEE_TIERS[0]),
+  new Pair(USDC.address, SOL.address, FEE_TIERS[0])
+]
 
 enum SolanaNetworks {
   DEV = 'https://solana--devnet.datahub.figment.io/apikey/d2f60ac272929a3f43bd3bc05149d279',

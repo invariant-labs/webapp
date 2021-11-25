@@ -121,3 +121,25 @@ export const formatNumbers = (value: string) => {
 
   return (num / 1000000000).toFixed(2)
 }
+
+export const nearestPriceIndex = (price: number, data: Array<{ x: number; y: number }>) => {
+  let nearest = 0
+
+  for (let i = 1; i < data.length; i++) {
+    if (Math.abs(data[i].x - price) < Math.abs(data[nearest].x - price)) {
+      nearest = i
+    }
+  }
+
+  return nearest
+}
+
+export const getScaleFromString = (value: string): number => {
+  const parts = value.split('.')
+
+  if ((parts?.length ?? 0) < 2) {
+    return 0
+  }
+
+  return parts[1]?.length ?? 0
+}

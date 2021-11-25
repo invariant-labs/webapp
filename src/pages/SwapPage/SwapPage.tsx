@@ -1,5 +1,5 @@
 import React from 'react'
-import WrappedSwap from '@containers/WrappedSwap/WrappedSwap'
+import WrappedSwap from '@containers/newDesign/WrappedSwap/WrappedSwap'
 import useStyles from './styles'
 import { Grid } from '@material-ui/core'
 
@@ -8,7 +8,7 @@ export const SwapPage: React.FC = () => {
 
   return (
     <Grid container className={classes.container}>
-      <Grid item className={classes.item}>
+      <Grid item>
         <WrappedSwap />
       </Grid>
     </Grid>

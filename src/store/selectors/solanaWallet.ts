@@ -3,7 +3,8 @@ import { createSelector } from '@reduxjs/toolkit'
 import { ISolanaWallet, solanaWalletSliceName, ITokenAccount } from '@reducers/solanaWallet'
 import { keySelectors, AnyProps } from './helpers'
 import { PublicKey } from '@solana/web3.js'
-import { DEFAULT_PUBLICKEY, tokens } from '@consts/static'
+import { tokens } from '@consts/static'
+import { MOCK_TOKENS } from '@invariant-labs/sdk'
 
 const store = (s: AnyProps) => s[solanaWalletSliceName] as ISolanaWallet
 
@@ -16,7 +17,7 @@ export const { address, balance, accounts, status } = keySelectors(store, [
 
 export const tokenBalance = (tokenAddress: PublicKey) =>
   createSelector(accounts, balance, (tokensAccounts, solBalance) => {
-    if (tokenAddress.equals(DEFAULT_PUBLICKEY)) {
+    if (tokenAddress.equals(new PublicKey(MOCK_TOKENS.SOL))) {
       return { balance: solBalance, decimals: 9 }
     } else {
       if (!tokensAccounts[tokenAddress.toString()]) {
@@ -35,14 +36,22 @@ export const tokenAccount = (tokenAddress: PublicKey) =>
     }
   })
 
+export const tokenAccountsAddress = () =>
+  createSelector(accounts, tokenAccounts => {
+    return Object.values(tokenAccounts).map(item => {
+      return item.address
+    })
+  })
 export interface SwapToken {
   balance: BN
   decimal: number
   symbol: string
-  assetAddress: PublicKey
+  assetAddress: PublicKey,
+  name: string,
+  logoURI: string
 }
 
-export const swapTokens = createSelector(accounts, (allAccounts) => {
+export const swapTokens = createSelector(accounts, balance, (allAccounts, solBalance) => {
   return tokens.map((token) => ({
     ...token,
     assetAddress: token.address,

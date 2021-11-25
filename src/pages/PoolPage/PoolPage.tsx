@@ -1,5 +1,5 @@
 import React from 'react'
-import NewPositionWrapper from '@containers/NewPositionWrapper/NewPositionWrapper'
+import NewPositionWrapper from '@containers/newDesign/NewPositionWrapper/NewPositionWrapper'
 import { Grid } from '@material-ui/core'
 import useStyles from './styles'
 
@@ -8,7 +8,7 @@ export const PoolPage: React.FC = () => {
 
   return (
     <Grid container className={classes.container}>
-      <Grid item className={classes.item}>
+      <Grid item>
         <NewPositionWrapper />
       </Grid>
     </Grid>

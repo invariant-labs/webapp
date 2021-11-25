@@ -1,15 +1,15 @@
+import { Pair } from '@invariant-labs/sdk'
 import { PoolStructure } from '@invariant-labs/sdk/lib/market'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
 import { PayloadType } from './types'
 
-export interface TokensPair {
-  tokenX: PublicKey
-  tokenY: PublicKey
+export interface PoolWithAddress extends PoolStructure {
+  address: PublicKey
 }
 
 export interface IPoolsStore {
-  pools: PoolStructure[]
+  pools: PoolWithAddress[]
 }
 
 export const defaultState: IPoolsStore = {
@@ -21,11 +21,11 @@ const poolsSlice = createSlice({
   name: poolsSliceName,
   initialState: defaultState,
   reducers: {
-    setPools(state, action: PayloadAction<PoolStructure[]>) {
+    setPools(state, action: PayloadAction<PoolWithAddress[]>) {
       state.pools = action.payload
       return state
     },
-    getPoolsData(_state, _action: PayloadAction<TokensPair[]>) {}
+    getPoolsData(_state, _action: PayloadAction<Pair[]>) {}
   }
 })
 

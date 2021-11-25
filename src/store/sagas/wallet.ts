@@ -15,6 +15,7 @@ import { getSolanaWallet, connectWallet, disconnectWallet, WalletType } from '@w
 import { Account, PublicKey, SystemProgram, Transaction } from '@solana/web3.js'
 import { Token, ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { actions as snackbarsActions } from '@reducers/snackbars'
+import { actions as positionsActions } from '@reducers/positions'
 import { Status } from '@reducers/solanaConnection'
 import { BN } from '@project-serum/anchor'
 import { tou64 } from '@consts/utils'
@@ -288,6 +289,7 @@ export function* handleDisconnect(): Generator {
     yield* call(disconnectWallet)
     yield call([sessionStorage, sessionStorage.removeItem], 'INVARIANT_SESSION_WALLET')
     yield* put(actions.resetState())
+    yield* put(positionsActions.resetState())
   } catch (error) {
     console.log(error)
   }

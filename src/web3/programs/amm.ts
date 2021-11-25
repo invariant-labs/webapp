@@ -20,7 +20,6 @@ export const getMarketProgram = async (): Promise<Market> => {
   const net = solanaNetworktoProgramNetwork(solanaNetwork)
 
   _market = new Market(net, getSolanaWallet(), getSolanaConnection(solanaNetwork), MarketProgramId)
-
   return _market
 }
 
