@@ -18,7 +18,7 @@ const Slippage: React.FC<Props> = ({
   defaultSlippage
 }) => {
   const classes = useStyles()
-  const [slippTolerance, setSlippTolerance] = React.useState<string>('')
+  const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const inputRef = React.useRef<HTMLInputElement>(null)
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -53,6 +53,22 @@ const Slippage: React.FC<Props> = ({
     }
   }
 
+  const checkSlippage: React.ChangeEventHandler<HTMLInputElement> = e => {
+    if (Number(e.target.value) > 50) {
+      setSlippTolerance('50.00')
+    } else if (Number(e.target.value) < 0 || isNaN(Number(e.target.value))) {
+      setSlippTolerance('00.00')
+    } else {
+      const test = '^\\d*\\.?\\d{0,2}$'
+      const regex = new RegExp(test, 'g')
+      if (regex.test(e.target.value)) {
+        setSlippTolerance(e.target.value)
+      } else {
+        setSlippTolerance(Number(e.target.value).toFixed(2))
+      }
+    }
+  }
+
   return (
     <Popover
       open={open}
@@ -73,8 +89,13 @@ const Slippage: React.FC<Props> = ({
         <Box>
           <input placeholder='1%' className={classes.detailsInfoForm} type={'text'} value={slippTolerance} onChange={(e) => {
             allowOnlyDigitsAndTrimUnnecessaryZeros(e)
-            setSlippage(e.target.value)
-          }}/>
+            checkSlippage(e)
+          }}
+          onBlur={() => {
+            setSlippTolerance(Number(slippTolerance).toFixed(2))
+            setSlippage(slippTolerance)
+          }}
+          />
           <button className={classes.detailsInfoBtn} onClick={() => setSlippTolerance(defaultSlippage)}>Auto</button>
         </Box>
       </Grid>
