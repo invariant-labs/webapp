@@ -87,7 +87,7 @@ export const NewPositionWrapper = () => {
       feeTiers={FEE_TIERS.map((tier) => +printBN(tier.fee, PRICE_DECIMAL - 2))}
       data={ticksData}
       midPriceIndex={midPriceIndex}
-      addLiquidityHandler={(leftTickIndex, rightTickIndex, _slippageTolerance) => {
+      addLiquidityHandler={(leftTickIndex, rightTickIndex) => {
         if (poolIndex === null) {
           return
         }
@@ -137,7 +137,6 @@ export const NewPositionWrapper = () => {
 
         return new BN(0)
       }}
-      initialSlippageTolerance={1}
       ticksLoading={ticksLoading}
     />
   )

@@ -43,7 +43,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   const classes = useStyles()
 
   const getCurrentLessThanRange = () => {
-    if (leftRangeIndex > data.length || data[leftRangeIndex].x < plotMin || disabled) {
+    if (leftRangeIndex > data.length - 1 || data[leftRangeIndex].x < plotMin || disabled) {
       return []
     }
 
@@ -54,7 +54,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     if (disabled) {
       return data.slice(Math.max(0, nearestPriceIndex(plotMin, data) - 5), Math.min(data.length, nearestPriceIndex(plotMax, data)) + 5)
     }
-    if (leftRangeIndex > data.length || rightRangeIndex > data.length || data[leftRangeIndex].x > plotMax || data[rightRangeIndex].x < plotMin) {
+    if (leftRangeIndex > data.length - 1 || rightRangeIndex > data.length - 1 || data[leftRangeIndex].x > plotMax || data[rightRangeIndex].x < plotMin) {
       return []
     }
 
@@ -62,7 +62,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   }
 
   const getCurrentGreaterThanRange = () => {
-    if (rightRangeIndex > data.length || data[rightRangeIndex].x > plotMax || disabled) {
+    if (rightRangeIndex > data.length - 1 || data[rightRangeIndex].x > plotMax || disabled) {
       return []
     }
 
@@ -148,7 +148,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'areas',
           'lines',
           ...(
-            leftRangeIndex <= data.length && rightRangeIndex <= data.length
+            leftRangeIndex < data.length && rightRangeIndex < data.length
               ? [
                 Brush(
                   data[leftRangeIndex].x,

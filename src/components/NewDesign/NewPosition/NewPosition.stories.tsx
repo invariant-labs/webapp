@@ -73,7 +73,6 @@ storiesOf('position/newPosition', module).add('new', () => (
       isCurrentPoolExisting={true}
       calcAmount={() => new BN(1)}
       feeTiers={[0.05, 0.3, 1]}
-      initialSlippageTolerance={1}
       ticksLoading={false}
     />
   </div>
@@ -89,7 +88,6 @@ storiesOf('position/newPosition', module).add('new', () => (
       isCurrentPoolExisting={false}
       calcAmount={() => new BN(1)}
       feeTiers={[0.05, 0.3, 1]}
-      initialSlippageTolerance={1}
       ticksLoading={false}
     />
   </div>
