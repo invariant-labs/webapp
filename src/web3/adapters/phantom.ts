@@ -51,7 +51,6 @@ export class PhantomWalletAdapter extends EventEmitter implements WalletAdapter 
     if (!this._provider) {
       return transaction
     }
-
     return await this._provider.signTransaction(transaction)
   }
 
