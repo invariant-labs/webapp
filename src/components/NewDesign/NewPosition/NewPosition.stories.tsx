@@ -4,6 +4,7 @@ import NewPosition from './NewPosition'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
+import { PlotTickData } from '@reducers/positions'
 
 const ticksToData = () => {
   const ticks = [
@@ -17,7 +18,7 @@ const ticksToData = () => {
     { index: 260, delta: -20 },
     { index: 280, delta: -40 }
   ]
-  const fields: Array<{ x: number; y: number }> = []
+  const fields: PlotTickData[] = []
 
   let currentLiquidity = 10
   for (let i = 0; i < 10000; i += 1) {
@@ -26,7 +27,7 @@ const ticksToData = () => {
       ticks.shift()
     }
 
-    fields.push({ x: i, y: currentLiquidity })
+    fields.push({ x: i, y: currentLiquidity, index: i })
   }
 
   return fields
@@ -75,6 +76,7 @@ storiesOf('position/newPosition', module).add('new', () => (
       feeTiers={[0.05, 0.3, 1]}
       ticksLoading={false}
       isTokenXFirst={true}
+      onZoomOutOfData={() => {}}
     />
   </div>
 )).add('noPool', () => (
@@ -91,6 +93,7 @@ storiesOf('position/newPosition', module).add('new', () => (
       feeTiers={[0.05, 0.3, 1]}
       ticksLoading={false}
       isTokenXFirst={true}
+      onZoomOutOfData={() => {}}
     />
   </div>
 ))

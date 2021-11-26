@@ -4,15 +4,17 @@ import PriceRangePlot from '@components/NewDesign/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/NewDesign/Inputs/RangeInput/RangeInput'
 import useStyles from './style'
 import { nearestPriceIndex } from '@consts/utils'
+import { PlotTickData } from '@reducers/positions'
 
 export interface IRangeSelector {
-  data: Array<{ x: number; y: number }>
+  data: PlotTickData[]
   midPriceIndex: number
   tokenFromSymbol: string
   tokenToSymbol: string
   onChangeRange: (leftIndex: number, rightIndex: number) => void
   blocked?: boolean
   blockerInfo?: string
+  onZoomOutOfData: (min: number, max: number) => void
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -22,12 +24,16 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   tokenToSymbol,
   onChangeRange,
   blocked = false,
-  blockerInfo
+  blockerInfo,
+  onZoomOutOfData
 }) => {
   const classes = useStyles()
 
   const [leftRange, setLeftRange] = useState(0)
   const [rightRange, setRightRange] = useState(0)
+
+  const [leftRangeCompareIndex, setLeftRangeCompareIndex] = useState(0)
+  const [rightRangeCompareIndex, setRightRangeCompareIndex] = useState(0)
 
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
@@ -38,10 +44,13 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [waiting, setWaiting] = useState(false)
 
   const zoomMinus = () => {
-    if (plotMin > data[0].x || plotMax < data[data.length - 1].x) {
-      const diff = plotMax - plotMin
-      setPlotMin(plotMin - (diff / 4))
-      setPlotMax(plotMax + (diff / 4))
+    const diff = plotMax - plotMin
+    const newMin = plotMin - (diff / 4)
+    const newMax = plotMax + (diff / 4)
+    setPlotMin(newMin)
+    setPlotMax(newMax)
+    if (newMin < data[0].x || newMax > data[data.length - 1].x) {
+      onZoomOutOfData(newMin, newMax)
     }
   }
 
@@ -56,6 +65,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const changeRangeHandler = (left: number, right: number) => {
     setLeftRange(left)
     setRightRange(right)
+
+    setLeftRangeCompareIndex(data[left].index)
+    setRightRangeCompareIndex(data[right].index)
 
     setLeftInput(data[left].x.toString())
     setRightInput(data[right].x.toString())
@@ -85,6 +97,17 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       setWaiting(false)
     }
   }, [blocked])
+
+  useEffect(() => {
+    if (!waiting) {
+      const newLeft = data.findIndex((tick) => tick.index === leftRangeCompareIndex)
+      const newRight = data.findIndex((tick) => tick.index === rightRangeCompareIndex)
+
+      if (newLeft !== -1 && newRight !== -1) {
+        changeRangeHandler(newLeft, newRight)
+      }
+    }
+  }, [data.length])
 
   return (
     <Grid container className={classes.wrapper}>

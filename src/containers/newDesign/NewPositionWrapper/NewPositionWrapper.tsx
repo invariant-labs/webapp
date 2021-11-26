@@ -139,6 +139,16 @@ export const NewPositionWrapper = () => {
       }}
       ticksLoading={ticksLoading}
       isTokenXFirst={poolIndex !== null && tokenAIndex !== null && allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)}
+      onZoomOutOfData={(min, max) => {
+        if (poolIndex !== null && tokenAIndex !== null) {
+          dispatch(actions.getCurrentPlotTicks({
+            poolIndex,
+            isXtoY: allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
+            min,
+            max
+          }))
+        }
+      }}
     />
   )
 }

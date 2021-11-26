@@ -7,11 +7,12 @@ import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
 import { printBN, printBNtoBN } from '@consts/utils'
 import { PublicKey } from '@solana/web3.js'
+import { PlotTickData } from '@reducers/positions'
 
 export interface INewPosition {
   tokens: SwapToken[]
   tokensB: SwapToken[]
-  data: Array<{ x: number; y: number }>
+  data: PlotTickData[]
   midPriceIndex: number
   addLiquidityHandler: (
     leftTickIndex: number,
@@ -28,6 +29,7 @@ export interface INewPosition {
   feeTiers: number[]
   ticksLoading: boolean
   isTokenXFirst: boolean
+  onZoomOutOfData: (min: number, max: number) => void
 }
 
 export const INewPosition: React.FC<INewPosition> = ({
@@ -41,7 +43,8 @@ export const INewPosition: React.FC<INewPosition> = ({
   calcAmount,
   feeTiers,
   ticksLoading,
-  isTokenXFirst
+  isTokenXFirst,
+  onZoomOutOfData
 }) => {
   const classes = useStyles()
 
@@ -75,7 +78,7 @@ export const INewPosition: React.FC<INewPosition> = ({
   }
 
   const noRangePlaceholderProps = {
-    data: Array(100).fill(1).map((_e, index) => ({ x: index, y: index })),
+    data: Array(100).fill(1).map((_e, index) => ({ x: index, y: index, index })),
     midPriceIndex: 50,
     tokenFromSymbol: 'ABC',
     tokenToSymbol: 'XYZ'
@@ -200,6 +203,7 @@ export const INewPosition: React.FC<INewPosition> = ({
               }
           )
           }
+          onZoomOutOfData={onZoomOutOfData}
         />
       </Grid>
     </Grid>

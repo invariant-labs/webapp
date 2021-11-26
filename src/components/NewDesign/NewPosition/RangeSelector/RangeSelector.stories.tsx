@@ -2,6 +2,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import RangeSelector from './RangeSelector'
 import { action } from '@storybook/addon-actions'
+import { PlotTickData } from '@reducers/positions'
 
 const ticksToData = () => {
   const ticks = [
@@ -15,7 +16,7 @@ const ticksToData = () => {
     { index: 260, delta: -20 },
     { index: 280, delta: -40 }
   ]
-  const fields: Array<{ x: number; y: number }> = []
+  const fields: PlotTickData[] = []
 
   let currentLiquidity = 10
   for (let i = 0; i < 10000; i += 1) {
@@ -24,7 +25,7 @@ const ticksToData = () => {
       ticks.shift()
     }
 
-    fields.push({ x: i, y: currentLiquidity })
+    fields.push({ x: i, y: currentLiquidity, index: i })
   }
 
   return fields
@@ -41,6 +42,7 @@ storiesOf('position/rangeSelector', module).add('setter', () => (
     onChangeRange={(left, right) => {
       action(`range indexes: ${left} - ${right}`)()
     }}
+    onZoomOutOfData={() => {}}
   />
 )).add('blocked', () => (
   <RangeSelector
@@ -53,5 +55,6 @@ storiesOf('position/rangeSelector', module).add('setter', () => (
     }}
     blocked
     blockerInfo='Select tokens to set price range.'
+    onZoomOutOfData={() => {}}
   />
 ))
