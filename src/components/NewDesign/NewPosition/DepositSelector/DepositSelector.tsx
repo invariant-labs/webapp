@@ -1,6 +1,6 @@
 import DepositAmountInput from '@components/NewDesign/Inputs/DepositAmountInput/DepositAmountInput'
 import Select from '@components/NewDesign/Inputs/Select/Select'
-import { SwapToken } from '@components/NewDesign/Swap/Swap'
+import { SwapToken } from '@selectors/solanaWallet'
 import { getScaleFromString, printBN, printBNtoBN } from '@consts/utils'
 import { Button, Grid, Typography } from '@material-ui/core'
 import React, { useState, useCallback, useEffect } from 'react'

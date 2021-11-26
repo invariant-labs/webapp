@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import DepositSelector from './DepositSelector'
-import { SwapToken } from '@components/NewDesign/Swap/Swap'
+import { SwapToken } from '@selectors/solanaWallet'
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 

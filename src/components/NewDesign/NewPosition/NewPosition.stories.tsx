@@ -2,7 +2,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import NewPosition from './NewPosition'
 import { BN } from '@project-serum/anchor'
-import { SwapToken } from '../Swap/Swap'
+import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
 
 const ticksToData = () => {
