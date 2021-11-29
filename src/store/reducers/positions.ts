@@ -68,6 +68,12 @@ const positionsSlice = createSlice({
       state.positionsList.loading = true
       return state
     },
+    claimFee(state, _action: PayloadAction<number>) {
+      return state
+    },
+    closePosition(state, _action: PayloadAction<number>) {
+      return state
+    },
     resetState(state) {
       state = defaultState
       return state

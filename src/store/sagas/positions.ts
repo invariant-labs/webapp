@@ -11,6 +11,8 @@ import { printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { accounts } from '@selectors/solanaWallet'
 import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
+import { Transaction } from '@solana/web3.js'
+import { positionsWithPoolsData } from '@selectors/positions'
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
@@ -157,19 +159,162 @@ export function* handleGetPositionsList() {
   }
 }
 
+export function* handleClaimFee(action: PayloadAction<number>) {
+  try {
+    const connection = yield* call(getConnection)
+    const marketProgram = yield* call(getMarketProgram)
+    const wallet = yield* call(getWallet)
+
+    const allPositionsData = yield* select(positionsWithPoolsData)
+    const tokensAccounts = yield* select(accounts)
+
+    const positionForIndex = allPositionsData[action.payload].poolData
+
+    let userTokenX = tokensAccounts[positionForIndex.tokenX.toString()]
+      ? tokensAccounts[positionForIndex.tokenX.toString()].address
+      : null
+
+    if (userTokenX === null) {
+      userTokenX = yield* call(createAccount, positionForIndex.tokenX)
+    }
+
+    let userTokenY = tokensAccounts[positionForIndex.tokenY.toString()]
+      ? tokensAccounts[positionForIndex.tokenY.toString()].address
+      : null
+
+    if (userTokenY === null) {
+      userTokenY = yield* call(createAccount, positionForIndex.tokenY)
+    }
+
+    const ix = yield* call([marketProgram, marketProgram.claimFeeInstruction], {
+      pair: new Pair(
+        positionForIndex.tokenX,
+        positionForIndex.tokenY,
+        { fee: positionForIndex.fee.v }
+      ),
+      userTokenX,
+      userTokenY,
+      owner: wallet.publicKey,
+      index: action.payload
+    })
+
+    const tx = new Transaction().add(ix)
+
+    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    tx.recentBlockhash = blockhash.blockhash
+    tx.feePayer = wallet.publicKey
+    const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+
+    yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
+      skipPreflight: true
+    })
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Position added successfully.',
+        variant: 'success',
+        persist: false
+      })
+    )
+  } catch (error) {
+    console.log(error)
+    yield put(
+      snackbarsActions.add({
+        message: 'Failed to claim fee. Please try again.',
+        variant: 'error',
+        persist: false
+      })
+    )
+  }
+}
+
+export function* handleClosePosition(action: PayloadAction<number>) {
+  try {
+    const connection = yield* call(getConnection)
+    const marketProgram = yield* call(getMarketProgram)
+    const wallet = yield* call(getWallet)
+
+    const allPositionsData = yield* select(positionsWithPoolsData)
+    const tokensAccounts = yield* select(accounts)
+
+    const positionForIndex = allPositionsData[action.payload].poolData
+
+    let userTokenX = tokensAccounts[positionForIndex.tokenX.toString()]
+      ? tokensAccounts[positionForIndex.tokenX.toString()].address
+      : null
+
+    if (userTokenX === null) {
+      userTokenX = yield* call(createAccount, positionForIndex.tokenX)
+    }
+
+    let userTokenY = tokensAccounts[positionForIndex.tokenY.toString()]
+      ? tokensAccounts[positionForIndex.tokenY.toString()].address
+      : null
+
+    if (userTokenY === null) {
+      userTokenY = yield* call(createAccount, positionForIndex.tokenY)
+    }
+
+    const ix = yield* call([marketProgram, marketProgram.removePositionInstruction],
+      new Pair(
+        positionForIndex.tokenX,
+        positionForIndex.tokenY,
+        { fee: positionForIndex.fee.v }
+      ),
+      wallet.publicKey,
+      action.payload,
+      userTokenX,
+      userTokenY
+    )
+
+    const tx = new Transaction().add(ix)
+
+    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    tx.recentBlockhash = blockhash.blockhash
+    tx.feePayer = wallet.publicKey
+    const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+
+    yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
+      skipPreflight: true
+    })
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Position closed successfully.',
+        variant: 'success',
+        persist: false
+      })
+    )
+  } catch (error) {
+    console.log(error)
+    yield put(
+      snackbarsActions.add({
+        message: 'Failed to close position. Please try again.',
+        variant: 'error',
+        persist: false
+      })
+    )
+  }
+}
+
 export function* initPositionHandler(): Generator {
   yield* takeEvery(actions.initPosition, handleInitPosition)
 }
 export function* getCurrentPlotTicksHandler(): Generator {
   yield* takeEvery(actions.getCurrentPlotTicks, handleGetCurrentPlotTicks)
 }
-
 export function* getPositionsListHandler(): Generator {
   yield* takeEvery(actions.getPositionsList, handleGetPositionsList)
+}
+export function* claimFeeHandler(): Generator {
+  yield* takeEvery(actions.claimFee, handleClaimFee)
+}
+export function* closePositionHandler(): Generator {
+  yield* takeEvery(actions.closePosition, handleClosePosition)
 }
 
 export function* positionsSaga(): Generator {
   yield all(
-    [initPositionHandler, getCurrentPlotTicksHandler, getPositionsListHandler].map(spawn)
+    [initPositionHandler, getCurrentPlotTicksHandler, getPositionsListHandler, claimFeeHandler].map(spawn)
   )
 }
