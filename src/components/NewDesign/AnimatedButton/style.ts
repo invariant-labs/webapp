@@ -36,7 +36,10 @@ const useStyles = makeStyles(() => ({
   },
   '@keyframes slide-end': {
     '0%': {
-      left: '-45%'
+      left: '-50%'
+    },
+    '80%': {
+      left: '-35%'
     },
     '100%': {
       left: 0
@@ -46,6 +49,7 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     height: '100%',
     position: 'absolute',
+    padding: 0,
     zIndex: 1,
     top: 0,
     left: '-100%',
@@ -55,15 +59,29 @@ const useStyles = makeStyles(() => ({
     position: 'absolute',
     width: '100%',
     height: '100%',
+    left: '-50%',
+    padding: 0,
     zIndex: 1,
     top: '0%',
-    animation: '$slide-start 3s ease-in',
+    animation: '$slide-start .4s ease-in',
     transition: 'all .2s',
     backgroundColor: colors.invariant.accent1
+  },
+  backgroundApproved: {
+    top: 0,
+    left: '0%',
+    padding: 0,
+    position: 'absolute',
+    animation: '$slide-end 1.5s'
   },
   buttonContent: {
     position: 'relative',
     zIndex: 4
+  },
+  gifContent: {
+    position: 'relative',
+    zIndex: 4,
+    width: 20
   }
 }))
 
