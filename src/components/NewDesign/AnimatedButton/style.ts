@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     ...newTypography.body1,
     backgroundColor: colors.invariant.accent1,
     color: colors.white.main,
-    transition: 'background-color 500ms ease',
+    transition: 'background-color 0ms ease',
     padding: '10px 19px',
     position: 'relative',
     overflow: 'hidden',
@@ -69,10 +69,10 @@ const useStyles = makeStyles(() => ({
   },
   backgroundApproved: {
     top: 0,
-    left: '0%',
+    left: '-50%',
     padding: 0,
     position: 'absolute',
-    animation: '$slide-end 1.5s'
+    animation: '$slide-end 2s'
   },
   buttonContent: {
     position: 'relative',

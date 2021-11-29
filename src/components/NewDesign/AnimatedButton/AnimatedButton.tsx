@@ -1,14 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@material-ui/core'
 import successGif from '@static/gif/successAnimation.gif'
 import errorGif from '@static/gif/errorAnimation.gif'
 import useStyles from './style'
 
+export type ProgressState = 'progress' | 'approved' | 'success' | 'failed' | 'none'
+
 interface Props {
   content: string
   disabled?: boolean
-  result: boolean
-  approve: boolean
+  progress: ProgressState
 }
 
 const timeout = async (delay: number) => {
@@ -19,46 +20,49 @@ const timeout = async (delay: number) => {
 const AnimatedButton: React.FC<Props> = ({
   content,
   disabled = false,
-  result: resault = false,
-  approve
+  progress
 }) => {
-  const [animation, setAnimation] = useState<boolean>(false)
-  const [approved, setApproved] = useState<boolean>(approve)
+  const [animationState, setAnimationState] = useState<ProgressState>('none')
   const classes = useStyles()
-  const elRef = useRef() as React.MutableRefObject<HTMLInputElement>
   useEffect(() => {
+    console.log(progress)
     const approvedFunc = async () => {
-      console.log(approved)
-      if (approved) {
+      if (progress === 'success' || progress === 'failed') {
+        setAnimationState('approved')
         await timeout(2000)
-        setAnimation(false)
+        setAnimationState(progress)
         await timeout(2000)
-        setApproved(false)
+        setAnimationState('none')
       }
     }
     approvedFunc()
-  }, [approved])
+      .then(() => {})
+      .catch(() => {})
+  }, [progress])
   const getMessage = () => {
-    if (!animation && !approved) {
+    if (animationState === 'none') {
       return <p className={classes.buttonContent}>{content}</p>
     }
 
-    if (!animation && approved && resault) {
-      return <img className={classes.gifContent} src={successGif}/>
-    } else if (!animation && approved && !resault) {
-      return <img className={classes.gifContent} src={errorGif}/>
+    if (animationState === 'progress' || animationState === 'approved') {
+      return <p className={classes.buttonContent}>In progress..</p>
     }
 
-    if ((animation && !approved) || (animation && approved)) {
-      return <p className={classes.buttonContent}>In progress..</p>
+    if (animationState === 'success') {
+      return <img className={classes.gifContent} src={successGif}/>
+    }
+
+    if (animationState === 'failed') {
+      return <img className={classes.gifContent} src={errorGif}/>
     }
   }
 
   const getClasses = () => {
-    if (approved) {
-      return `${classes.button} ${classes.backgroundApproved}`
-    } else if (animation) {
+    if (animationState === 'progress') {
       return `${classes.button} ${classes.backgroundRelease}`
+    }
+    if (animationState === 'approved') {
+      return `${classes.button} ${classes.backgroundApproved}`
     }
   }
   return (
@@ -66,12 +70,12 @@ const AnimatedButton: React.FC<Props> = ({
       <Button
         disabled={disabled}
         variant='contained'
-        className={animation ? `${classes.button} ${classes.buttonRelease}` : classes.button}
-        onClick={async () => {
-          setAnimation(true)
+        className={animationState === 'progress' || animationState === 'approved' ? `${classes.button} ${classes.buttonRelease}` : classes.button}
+        onClick={() => {
+          setAnimationState('progress')
         }}
       >
-        <div className={getClasses()} ref={elRef}>
+        <div className={getClasses()} >
         </div>
         {getMessage()}
       </Button>
