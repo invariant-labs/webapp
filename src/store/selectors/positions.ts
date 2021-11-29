@@ -1,4 +1,5 @@
-import { Token, tokens } from '@consts/static'
+import { PRICE_DECIMAL, Token, tokens } from '@consts/static'
+import { printBNtoBN } from '@consts/utils'
 import { PoolWithAddress } from '@reducers/pools'
 import { createSelector } from 'reselect'
 import { IPositionsStore, positionsSliceName } from '../reducers/positions'
@@ -43,6 +44,11 @@ export const positionsWithPoolsData = createSelector(
       ]
     }))
   }
+)
+
+export const singlePositionData = (id: number) => createSelector(
+  positionsWithPoolsData,
+  (positions) => positions.find((position) => position.id.eq(printBNtoBN(id.toString(), PRICE_DECIMAL)))
 )
 
 export const positionsSelectors = { positionsList, plotTicks }
