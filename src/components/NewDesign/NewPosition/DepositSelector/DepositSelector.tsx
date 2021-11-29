@@ -1,7 +1,7 @@
 import DepositAmountInput from '@components/NewDesign/Inputs/DepositAmountInput/DepositAmountInput'
 import Select from '@components/NewDesign/Inputs/Select/Select'
 import { SwapToken } from '@selectors/solanaWallet'
-import { getScaleFromString, printBN, printBNtoBN } from '@consts/utils'
+import { printBN, printBNtoBN } from '@consts/utils'
 import { Button, Grid, Typography } from '@material-ui/core'
 import React, { useState, useCallback, useEffect } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
@@ -12,6 +12,7 @@ export interface InputState {
   setValue: (value: string) => void
   blocked: boolean
   blockerInfo?: string
+  decimalsLimit: number
 }
 
 export interface IDepositSelector {
@@ -48,14 +49,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
     if (!isCurrentPoolExisting) {
       return 'Pool is not existent'
-    }
-
-    if (getScaleFromString(tokenAInputState.value) > tokens[tokenAIndex].decimal) {
-      return 'Invalid value of token 01'
-    }
-
-    if (getScaleFromString(tokenBInputState.value) > tokens[tokenBIndex].decimal) {
-      return 'Invalid value of token 02'
     }
 
     if (printBNtoBN(tokenAInputState.value, tokens[tokenAIndex].decimal).gt(tokens[tokenAIndex].balance)) {

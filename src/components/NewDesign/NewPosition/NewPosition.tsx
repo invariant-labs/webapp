@@ -166,7 +166,8 @@ export const INewPosition: React.FC<INewPosition> = ({
               setTokenBDeposit(getOtherTokenAmount(printBNtoBN(value, tokens[tokenAIndex].decimal), leftRange, rightRange, true))
             },
             blocked: !ticksLoading && tokenAIndex !== null && tokenBIndex !== null && (isTokenXFirst ? rightRange <= midPriceIndex : rightRange < midPriceIndex),
-            blockerInfo: 'Range only for single-asset deposit.'
+            blockerInfo: 'Range only for single-asset deposit.',
+            decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimal : 0
           }}
           tokenBInputState={{
             value: tokenBDeposit,
@@ -178,7 +179,8 @@ export const INewPosition: React.FC<INewPosition> = ({
               setTokenADeposit(getOtherTokenAmount(printBNtoBN(value, tokens[tokenBIndex].decimal), leftRange, rightRange, false))
             },
             blocked: !ticksLoading && tokenAIndex !== null && tokenBIndex !== null && (isTokenXFirst ? leftRange > midPriceIndex : leftRange >= midPriceIndex),
-            blockerInfo: 'Range only for single-asset deposit.'
+            blockerInfo: 'Range only for single-asset deposit.',
+            decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimal : 0
           }}
           feeTiers={feeTiers}
           isCurrentPoolExisting={isCurrentPoolExisting}
