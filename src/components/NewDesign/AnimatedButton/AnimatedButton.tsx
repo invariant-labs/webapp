@@ -13,11 +13,6 @@ interface Props {
   onClick: () => void
 }
 
-// const timeout = async (delay: number) => {
-//   return await new Promise((resolve) => setTimeout(resolve, delay))
-//     .catch(err => console.log(err))
-// }
-
 const AnimatedButton: React.FC<Props> = ({
   content,
   disabled = false,
@@ -25,15 +20,7 @@ const AnimatedButton: React.FC<Props> = ({
   onClick
 }) => {
   const classes = useStyles()
-  // useEffect(() => {
-  //   console.log(progress)
-  //   const approvedFunc = async () => {
-  //     setAnimationState(progress)
-  //   }
-  //   approvedFunc()
-  //     .then(() => {})
-  //     .catch(() => {})
-  // }, [progress])
+
   const getMessage = () => {
     if (progress === 'none') {
       return <p className={classes.buttonContent}>{content}</p>
