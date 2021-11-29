@@ -11,6 +11,7 @@ import { calcTicksAmountInRange, logBase, printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { accounts } from '@selectors/solanaWallet'
 import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
+import { plotTicks } from '@selectors/positions'
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
@@ -87,7 +88,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     const allPools = yield* select(pools)
 
     const poolIndex = action.payload.poolIndex
-    const toRequest = typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined'
+    let toRequest = typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined'
       ? calcTicksAmountInRange(
         action.payload.isXtoY ? action.payload.min : 1 / action.payload.max,
         action.payload.isXtoY ? action.payload.max : 1 / action.payload.min,
@@ -96,7 +97,13 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       : 200
 
     if (toRequest > TICK_LIMIT * 2) {
-      return
+      const { data } = yield* select(plotTicks)
+
+      if (data.length < TICK_LIMIT * 2) {
+        toRequest = TICK_LIMIT * 2
+      } else {
+        return
+      }
     }
 
     const rawTicks = yield* call(
