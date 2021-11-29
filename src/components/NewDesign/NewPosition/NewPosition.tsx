@@ -104,7 +104,7 @@ export const INewPosition: React.FC<INewPosition> = ({
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
-      <Link to='/positions' style={{ textDecoration: 'none' }}>
+      <Link to='/pool' style={{ textDecoration: 'none' }}>
         <Grid
           className={classes.back}
           container
