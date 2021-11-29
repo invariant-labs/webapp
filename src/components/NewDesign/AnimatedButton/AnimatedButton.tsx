@@ -44,6 +44,7 @@ const AnimatedButton: React.FC<Props> = ({
     if (progress === 'approved') {
       return `${classes.button} ${classes.backgroundApproved}`
     }
+    return ''
   }
   return (
     <div>
