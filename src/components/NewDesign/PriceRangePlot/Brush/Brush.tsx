@@ -122,17 +122,28 @@ export const Handle: React.FC<HandleProps> = ({
   )
 }
 
-export const Brush = (
+export interface InnerBrushProps extends CustomLayerProps {
   leftPosition: number,
   rightPosition: number,
   onLeftDrop: (position: number) => void,
   onRightDrop: (position: number) => void,
   plotMin: number,
   plotMax: number,
-  disabled: boolean = false
-): React.FC<CustomLayerProps> => ({ innerHeight, innerWidth }) => {
+  disabled: boolean
+}
+
+export const InnerBrush: React.FC<InnerBrushProps> = ({
+  innerHeight,
+  innerWidth,
+  leftPosition,
+  rightPosition,
+  onLeftDrop,
+  onRightDrop,
+  plotMin,
+  plotMax,
+  disabled
+}) => {
   const unitLen = innerWidth / (plotMax - plotMin)
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [reverse, setReverse] = useState(false)
 
   const start = (leftPosition >= plotMin) && (leftPosition <= plotMax)
@@ -186,5 +197,26 @@ export const Brush = (
     </>
   )
 }
+
+export const Brush = (
+  leftPosition: number,
+  rightPosition: number,
+  onLeftDrop: (position: number) => void,
+  onRightDrop: (position: number) => void,
+  plotMin: number,
+  plotMax: number,
+  disabled: boolean = false
+): React.FC<CustomLayerProps> => (layerProps) => (
+  <InnerBrush
+    leftPosition={leftPosition}
+    rightPosition={rightPosition}
+    onLeftDrop={onLeftDrop}
+    onRightDrop={onRightDrop}
+    plotMin={plotMin}
+    plotMax={plotMax}
+    disabled={disabled}
+    {...layerProps}
+  />
+)
 
 export default Brush

@@ -1,4 +1,6 @@
 import { DEFAULT_PUBLICKEY } from '@consts/static'
+import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
@@ -7,7 +9,9 @@ import { PayloadType } from './types'
 export interface Swap {
   fromToken: PublicKey
   toToken: PublicKey
-  amount: BN
+  amount: BN,
+  slippage: Decimal,
+  price: Decimal
 }
 
 export interface ISwapStore {
@@ -18,7 +22,9 @@ export const defaultState: ISwapStore = {
   swap: {
     fromToken: DEFAULT_PUBLICKEY,
     toToken: DEFAULT_PUBLICKEY,
-    amount: new BN(0)
+    amount: new BN(0),
+    slippage: { v: fromFee(new BN(1000)) },
+    price: { v: new BN(1) }
   }
 }
 

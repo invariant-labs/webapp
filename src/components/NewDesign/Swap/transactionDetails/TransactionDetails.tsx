@@ -2,6 +2,7 @@ import { printBN } from '@consts/utils'
 import { Grid, Typography } from '@material-ui/core'
 import BN from 'bn.js'
 import React from 'react'
+import { PRICE_DECIMAL } from '@consts/static'
 import { useStyles } from './style'
 
 interface IProps {
@@ -18,7 +19,7 @@ const TransactionDetails: React.FC<IProps> = ({ open, fee, exchangeRate }) => {
         <Typography component='h2'>Transaction details</Typography>
         <Typography component='p'>
                 Fee: <Typography component='span'>
-            {printBN(fee.v, 12)} %
+            {printBN(fee.v, PRICE_DECIMAL)} %
           </Typography>
         </Typography>
         <Typography component='p'>

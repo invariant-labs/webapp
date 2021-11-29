@@ -11,6 +11,7 @@ interface IProps {
   value?: string
   error?: string | null
   className?: string
+  decimal: number
   placeholder?: string
   style?: CSSProperties,
   onMaxClick: () => void,
@@ -24,6 +25,7 @@ export const AmountInput: React.FC<IProps> = ({
   setValue,
   error,
   className,
+  decimal,
   placeholder,
   style,
   onMaxClick,
@@ -36,7 +38,9 @@ export const AmountInput: React.FC<IProps> = ({
   const inputRef = useRef<HTMLInputElement>(null)
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const regex = /^\d*\.?\d*$/
+    const onlyNumbersRegex = /^\d*\.?\d*$/
+    const test = `^\\d*\\.?\\d{0,${decimal}}$`
+    const regex = new RegExp(test, 'g')
     if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value
       const caretPosition = e.target.selectionStart
@@ -63,8 +67,10 @@ export const AmountInput: React.FC<IProps> = ({
           }
         }, 0)
       }
-    } else if (!regex.test(e.target.value)) {
+    } else if (!onlyNumbersRegex.test(e.target.value)) {
       setValue('')
+    } else if (!regex.test(e.target.value)) {
+      setValue(e.target.value.slice(0, e.target.value.length - 1))
     }
   }
 

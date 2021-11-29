@@ -7,15 +7,13 @@ import { createAccount, getWallet } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
 import { pools } from '@selectors/pools'
 import { Pair } from '@invariant-labs/sdk'
-import { MAX_U64 } from '@consts/static'
-import BN from 'bn.js'
 import { getConnection } from './connection'
+import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
 
 export function* handleSwap(): Generator {
   try {
     const allPools = yield* select(pools)
     const swapData = yield* select(swap)
-
     const swapPool = allPools.find((pool) =>
       (swapData.fromToken.toString() === pool.tokenX.toString() && swapData.toToken.toString() === pool.tokenY.toString()) ||
       (swapData.fromToken.toString() === pool.tokenY.toString() && swapData.toToken.toString() === pool.tokenX.toString())
@@ -45,13 +43,17 @@ export function* handleSwap(): Generator {
       toAddress = yield* call(createAccount, swapData.toToken)
     }
     const swapTx = yield* call([marketProgram, marketProgram.swapTransaction],
-      new Pair(swapPool.tokenX, swapPool.tokenY),
-      isXtoY,
-      swapData.amount,
-      isXtoY ? new BN(0) : MAX_U64,
-      isXtoY ? fromAddress : toAddress,
-      isXtoY ? toAddress : fromAddress,
-      wallet.publicKey
+      {
+        pair: new Pair(swapData.fromToken, swapData.toToken, FEE_TIERS[0]),
+        XtoY: isXtoY,
+        amount: swapData.amount,
+        knownPrice: swapData.price,
+        slippage: swapData.slippage,
+        accountX: isXtoY ? fromAddress : toAddress,
+        accountY: isXtoY ? toAddress : fromAddress,
+        byAmountIn: true,
+        owner: wallet.publicKey
+      }
     )
     const connection = yield* call(getConnection)
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
