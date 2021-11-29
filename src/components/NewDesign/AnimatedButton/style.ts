@@ -72,7 +72,8 @@ const useStyles = makeStyles(() => ({
     left: '-50%',
     padding: 0,
     position: 'absolute',
-    animation: '$slide-end 2s'
+    animation: '$slide-end 2s',
+    animationFillMode: 'forwards'
   },
   buttonContent: {
     position: 'relative',
@@ -82,6 +83,12 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
     zIndex: 4,
     width: 20
+  },
+  btnStories: {
+    padding: '8px 14px',
+    backgroundColor: colors.invariant.accent2,
+    border: 'none',
+    margin: '10px 14px 10px 0'
   }
 }))
 
