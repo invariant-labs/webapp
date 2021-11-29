@@ -34,9 +34,7 @@ const AnimatedButton: React.FC<Props> = ({
       return <img className={classes.gifContent} src={successGif}/>
     }
 
-    if (progress === 'failed') {
-      return <img className={classes.gifContent} src={errorGif}/>
-    }
+    return <img className={classes.gifContent} src={errorGif}/>
   }
 
   const getClasses = () => {
