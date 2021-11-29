@@ -2,13 +2,15 @@ import { Grid, Typography } from '@material-ui/core'
 import React, { useState } from 'react'
 import DepositSelector from './DepositSelector/DepositSelector'
 import RangeSelector from './RangeSelector/RangeSelector'
-import useStyles from './style'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
 import { printBN, printBNtoBN } from '@consts/utils'
 import { PublicKey } from '@solana/web3.js'
 import { PlotTickData } from '@reducers/positions'
 import { INoConnected, NoConnected } from '../NoConnected/NoConnected'
+import { Link } from 'react-router-dom'
+import backIcon from '@static/svg/back-arrow.svg'
+import useStyles from './style'
 
 export interface INewPosition {
   tokens: SwapToken[]
@@ -101,7 +103,19 @@ export const INewPosition: React.FC<INewPosition> = ({
   }
 
   return (
-    <Grid container className={classes.wrapper}>
+    <Grid container className={classes.wrapper} direction='column'>
+      <Link to='/positions' style={{ textDecoration: 'none' }}>
+        <Grid
+          className={classes.back}
+          container
+          item
+          alignItems='center'
+        >
+          <img className={classes.backIcon} src={backIcon} />
+          <Typography className={classes.backText}>Back to Liquidity Positions List</Typography>
+        </Grid>
+      </Link>
+
       <Typography className={classes.title}>Add new liquidity position</Typography>
 
       <Grid container direction='row' justifyContent='space-between' className={classes.row}>
