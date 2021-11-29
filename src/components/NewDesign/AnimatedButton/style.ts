@@ -4,13 +4,14 @@ import { colors, newTypography } from '@static/theme'
 const useStyles = makeStyles(() => ({
   button: {
     borderRadius: 10,
-    width: 300,
-    height: 70,
+    width: 381,
+    height: 35,
     textAlign: 'center',
     textTransform: 'none',
     ...newTypography.body1,
     backgroundColor: colors.invariant.accent1,
-    transition: 'all 500ms ease',
+    color: colors.white.main,
+    transition: 'background-color 500ms ease',
     padding: '10px 19px',
     position: 'relative',
     overflow: 'hidden',
@@ -25,14 +26,16 @@ const useStyles = makeStyles(() => ({
       backgroundColor: colors.invariant.componentOut4
     }
   },
-  '@keyframes slide': {
+  '@keyframes slide-start': {
     '0%': {
       left: '-100%'
     },
-    '20%': {
+    '100%': {
       left: '-50%'
-    },
-    '60%': {
+    }
+  },
+  '@keyframes slide-end': {
+    '0%': {
       left: '-45%'
     },
     '100%': {
@@ -54,7 +57,7 @@ const useStyles = makeStyles(() => ({
     height: '100%',
     zIndex: 1,
     top: '0%',
-    animation: '$slide 3s ease-in',
+    animation: '$slide-start 3s ease-in',
     transition: 'all .2s',
     backgroundColor: colors.invariant.accent1
   },

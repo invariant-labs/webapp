@@ -1,9 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { Button } from '@material-ui/core'
 import useStyles from './style'
-import classNames from 'classnames'
-import { sleep } from '@invariant-labs/sdk'
-import { ContactSupportOutlined } from '@material-ui/icons'
 
 interface Props {
   content: string
@@ -28,9 +25,6 @@ const AnimatedButton: React.FC<Props> = ({
           setAnimation(false)
         }, 5000)
       }}
-      // onMouseLeave={() => {
-      //   elRef.current.style.left = '-100%'
-      // }}
     >
       <div className={animation ? classes.backgroundRelease : classes.background} ref={elRef}>
       </div>

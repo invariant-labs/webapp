@@ -8,6 +8,6 @@ storiesOf('buttons/AnimatedButtons', module)
   .addDecorator(withKnobs)
   .add('primary', () => (
     <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
-      <AnimateButton content={'test'} />
+      <AnimateButton content={'Add liquidity'} />
     </div>
   ))
