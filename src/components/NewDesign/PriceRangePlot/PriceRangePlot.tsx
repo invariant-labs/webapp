@@ -84,7 +84,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
   return (
     <Grid container className={classNames(classes.container, className)} style={style}>
-      <Grid container item className={classes.zoomButtonsWrapper} direction='column' justifyContent='space-between'>
+      <Grid container item className={classNames(classes.zoomButtonsWrapper, 'zoomBtns')} direction='column' justifyContent='space-between'>
         <Button className={classes.zoomButton} onClick={zoomPlus} disableRipple>
           <img src={ZoomInIcon} className={classes.zoomIcon}/>
         </Button>
