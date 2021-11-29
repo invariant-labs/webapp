@@ -8,6 +8,7 @@ import { SwapToken } from '@selectors/solanaWallet'
 import { printBN, printBNtoBN } from '@consts/utils'
 import { PublicKey } from '@solana/web3.js'
 import { PlotTickData } from '@reducers/positions'
+import { INoConnected, NoConnected } from '../NoConnected/NoConnected'
 
 export interface INewPosition {
   tokens: SwapToken[]
@@ -30,6 +31,8 @@ export interface INewPosition {
   ticksLoading: boolean
   isTokenXFirst: boolean
   onZoomOutOfData: (min: number, max: number) => void
+  showNoConnected?: boolean
+  noConnectedBlockerProps: INoConnected
 }
 
 export const INewPosition: React.FC<INewPosition> = ({
@@ -44,7 +47,9 @@ export const INewPosition: React.FC<INewPosition> = ({
   feeTiers,
   ticksLoading,
   isTokenXFirst,
-  onZoomOutOfData
+  onZoomOutOfData,
+  showNoConnected,
+  noConnectedBlockerProps
 }) => {
   const classes = useStyles()
 
@@ -99,7 +104,8 @@ export const INewPosition: React.FC<INewPosition> = ({
     <Grid container className={classes.wrapper}>
       <Typography className={classes.title}>Add new liquidity position</Typography>
 
-      <Grid container direction='row' justifyContent='space-between'>
+      <Grid container direction='row' justifyContent='space-between' className={classes.row}>
+        {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
           tokens={tokens}
           tokensB={tokensB}

@@ -77,6 +77,10 @@ storiesOf('position/newPosition', module).add('new', () => (
       ticksLoading={false}
       isTokenXFirst={true}
       onZoomOutOfData={() => {}}
+      noConnectedBlockerProps={{
+        onConnect: () => {},
+        onDisconnect: () => {}
+      }}
     />
   </div>
 )).add('noPool', () => (
@@ -94,6 +98,10 @@ storiesOf('position/newPosition', module).add('new', () => (
       ticksLoading={false}
       isTokenXFirst={true}
       onZoomOutOfData={() => {}}
+      noConnectedBlockerProps={{
+        onConnect: () => {},
+        onDisconnect: () => {}
+      }}
     />
   </div>
 ))

@@ -9,6 +9,13 @@ const useStyles = makeStyles(() => ({
     color: colors.white.main,
     ...newTypography.heading4,
     marginBottom: 18
+  },
+  row: {
+    position: 'relative',
+
+    '& .noConnectedLayer': {
+      height: '100%'
+    }
   }
 }))
 
