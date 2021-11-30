@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Header from '@components/NewDesign/Header/Header'
+import Header from '@components/Header/Header'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { WalletType } from '@web3/wallet'

@@ -1,5 +1,5 @@
 import React from 'react'
-import WrappedSwap from '@containers/newDesign/WrappedSwap/WrappedSwap'
+import WrappedSwap from '@containers/WrappedSwap/WrappedSwap'
 import useStyles from './styles'
 import { Grid } from '@material-ui/core'
 

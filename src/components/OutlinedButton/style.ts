@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
   general: {
@@ -7,19 +7,16 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     textTransform: 'none',
     ...typography.body1,
+    backgroundColor: colors.invariant.accent1,
     transition: 'all 500ms ease',
     padding: '10px 19px',
     '&:hover': {
-      opacity: 0.9
+      backgroundColor: colors.invariant.accent2
     }
   },
   disabled: {
-    background: `${colors.navy.navButton} !important`,
-    color: `${colors.navy.background} !important`
-  },
-  label: {
-    position: 'relative',
-    top: -2
+    background: `${colors.invariant.componentOut3} !important`,
+    color: `${colors.white.main} !important`
   }
 }))
 

@@ -27,3 +27,9 @@ storiesOf('buttons/OutlinedButton', module)
       <OutlinedButton name='Mint' disabled={true} color='secondary' onClick={action('clicked')} />
     </div>
   ))
+  .add('animated', () => (
+    <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
+      <OutlinedButton name='Mint' disabled={false} color='secondary'
+      />
+    </div>
+  ))
