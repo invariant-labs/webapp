@@ -14,7 +14,7 @@ interface IProps {
 
 const percentValueDisplay = (amount: Decimal): {value: BN, decimal: number} => {
   const amountLength = amount.v.toString().length - 1
-  const amountDec = PRICE_DECIMAL - amountLength
+  const amountDec = PRICE_DECIMAL - amountLength - 2
   const amountValue = amount.v.div(new BN(new BN(10).pow(new BN(amountLength))))
   return {
     value: amountValue,

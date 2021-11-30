@@ -130,6 +130,10 @@ export const Swap: React.FC<ISwap> = ({
   }, [poolIndex])
 
   useEffect(() => {
+    console.log(slippTolerance)
+  }, [slippTolerance])
+
+  useEffect(() => {
     updateEstimatedAmount()
     if (tokenToIndex !== null && tokenFromIndex !== null) {
       const pairIndex = pools.findIndex((pool) => {
@@ -241,7 +245,7 @@ export const Swap: React.FC<ISwap> = ({
             setSlippage={setSlippage}
             handleClose={handleCloseSettings}
             anchorEl={anchorEl}
-            defaultSlippage={slippTolerance}/>
+            defaultSlippage={'1'}/>
         </Grid>
       </Grid>
       <Grid container className={classes.root} direction='column'>
