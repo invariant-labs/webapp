@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { useState } from '@storybook/client-api'
-import PositionDetailsWrapper from './positionDetailsWrapper'
+import PositionDetails from './PositionDetails'
 
 export interface liqTokens {
   symbol: string,
@@ -64,7 +64,7 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
       }
     ]
     return (
-      <PositionDetailsWrapper
+      <PositionDetails
         detailsData={data}
         leftRangeIndex={100}
         rightRangeIndex={200}

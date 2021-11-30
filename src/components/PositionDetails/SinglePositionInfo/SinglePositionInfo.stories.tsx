@@ -1,8 +1,8 @@
 import { Grid } from '@material-ui/core'
 import { storiesOf } from '@storybook/react'
 import React from 'react'
-import SinglePositionDetails from './SinglePositionDetails'
-import { liqTokens } from '@components/PositionDetalisWrapper/positionDetailsWrapper.stories'
+import SinglePositionInfo from './SinglePositionInfo'
+import { liqTokens } from '@components/PositionDetails/PositionDetails.stories'
 
 const tokens: liqTokens[] = [
   {
@@ -18,7 +18,7 @@ const tokens: liqTokens[] = [
 storiesOf('singlePosition/leftComponent', module)
   .add('closed', () => (
     <Grid style={{ background: '#1C1B1E', width: '540px', height: '500px', padding: '20px' }}>
-      <SinglePositionDetails
+      <SinglePositionInfo
         data={{
           active: false,
           nameToSwap: 'BTC',
@@ -42,7 +42,7 @@ storiesOf('singlePosition/leftComponent', module)
   ))
   .add('active', () => (
     <Grid style={{ background: '#1C1B1E', width: '540px', height: '500px', padding: '20px' }}>
-      <SinglePositionDetails
+      <SinglePositionInfo
         data={{
           active: true,
           nameToSwap: 'BTC',

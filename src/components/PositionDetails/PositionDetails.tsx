@@ -1,6 +1,6 @@
 import React from 'react'
-import SinglePositionDetails, { ILiquidityItem } from '@components/PositionDetalisWrapper/SinglePositionDetails/SinglePositionDetails'
-import SinglePositionPlot from '@components/PositionDetalisWrapper/SinglePositionPlot/SinglePositionPlot'
+import SinglePositionInfo, { ILiquidityItem } from '@components/PositionDetails/SinglePositionInfo/SinglePositionInfo'
+import SinglePositionPlot from '@components/PositionDetails/SinglePositionPlot/SinglePositionPlot'
 import { Grid } from '@material-ui/core'
 import useStyles from './style'
 
@@ -28,7 +28,7 @@ interface IProps {
   unclaimValueTokenFromSwap: number
 }
 
-const PositionDetailsWrapper: React.FC<IProps> = ({
+const PositionDetails: React.FC<IProps> = ({
   detailsData,
   plotMin,
   plotMax,
@@ -55,7 +55,7 @@ const PositionDetailsWrapper: React.FC<IProps> = ({
   return (
     <Grid className={classes.wrapperContainer}>
       <Grid className={classes.positionDetails}>
-        <SinglePositionDetails
+        <SinglePositionInfo
           data={positionData}
           liquidity={liquidity}
           unclaimedFee={unclaimedFee}
@@ -88,4 +88,4 @@ const PositionDetailsWrapper: React.FC<IProps> = ({
   )
 }
 
-export default PositionDetailsWrapper
+export default PositionDetails

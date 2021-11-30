@@ -28,7 +28,7 @@ interface IProp {
   unclaimValueTokenFromSwap: number
 }
 
-const SinglePositionDetails: React.FC<IProp> = ({
+const SinglePositionInfo: React.FC<IProp> = ({
   data,
   liquidity,
   unclaimedFee,
@@ -107,4 +107,4 @@ const SinglePositionDetails: React.FC<IProp> = ({
   )
 }
 
-export default SinglePositionDetails
+export default SinglePositionInfo
