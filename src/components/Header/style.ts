@@ -1,99 +1,34 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { colors } from '@static/theme'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
-    background: colors.invariant.violetGray,
-    paddingRight: 0,
-    height: 74,
-
-    [theme.breakpoints.down('sm')]: {
-      height: 54
-    }
+    width: '100%',
+    padding: '0 150px',
+    height: 70
   },
   logo: {
-    width: 80,
-    height: 80,
-    marginLeft: 15,
-
-    [theme.breakpoints.down('sm')]: {
-      width: 60,
-      height: 60,
-      marginInline: 5
-    }
+    minWidth: 150,
+    height: 40
   },
-  divider: {
-    background: colors.invariant.violetWeak
-  },
-  verticalDivider: {
-    background: colors.invariant.violetWeak,
-    height: 50,
-    marginInline: 25,
-
-    [theme.breakpoints.down('sm')]: {
-      height: 36,
-      margin: 0
-    }
+  routers: {
+    background: 'radial-gradient(140% 140% at 50.43% 0%, #18161D 0%, rgba(24, 22, 29, 0) 100%)',
+    borderRadius: '10px'
   },
   connectedWalletIcon: {
     minWidth: 21,
     height: 21,
-    marginRight: 0
-  },
-  dehazeButton: {
-    borderRadius: 10,
-    padding: 4,
-    paddingTop: 1,
-    paddingBottom: 1,
-    marginLeft: 5,
-
-    '&:hover': {
-      background: colors.invariant.violetGray
+    marginRight: 0,
+    color: colors.invariant.accent2,
+    '& >circle': {
+      boxShadow: '0px 0px 10px rgba(157, 212, 109, 0.5)'
     }
-  },
-  dehazeIcon: {
-    width: 45,
-    height: 'auto',
-    fill: colors.invariant.violetWeak
-  },
-  dotsButton: {
-    borderRadius: 10,
-    padding: '0px 2px',
-    marginRight: 25,
-
-    '&:hover': {
-      background: colors.invariant.violetStrong
-    },
-
-    '& $dehazeIcon': {
-      fill: colors.invariant.violetStrong
-    }
-  },
-  left: {
-    maxWidth: 121,
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: 66
-    }
-  },
-  right: {
-    maxWidth: 125
-  },
-  mobileRight: {
-    maxWidth: 66
   },
   buttons: {
-    justifyContent: 'flex-end',
-
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'space-evenly'
-    }
+    justifyContent: 'flex-end'
   },
   link: {
-    textDecoration: 'none',
-
-    '&:not(:last-child)': {
-      marginRight: 15
-    }
+    textDecoration: 'none'
   }
 }))
 

@@ -5,7 +5,7 @@ import { action } from '@storybook/addon-actions'
 import { withKnobs } from '@storybook/addon-knobs'
 import { colors } from '@static/theme'
 
-storiesOf('navbar/buttons', module)
+storiesOf('newnavbar/buttons', module)
   .addDecorator(withKnobs)
   .add('buttons', () => (
     <div style={{ backgroundColor: colors.black.header, padding: '10px' }}>

@@ -1,23 +1,23 @@
-import { colors, typography } from '@static/theme'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
   button: {
     textTransform: 'none',
     boxShadow: 'none',
-    borderRadius: 10,
-    ...typography.body1,
-    minWidth: 164,
-    height: 42,
-    backgroundColor: colors.navy.navButton,
-    paddingInline: 0
+    borderRadius: 3,
+    fontSize: 16,
+    backgroundColor: '#34303B',
+    minWidth: 80,
+    padding: '6px 10px'
   },
   icon: {
-    minWidth: 30,
-    height: 30
+    minWidth: 18,
+    height: 18
   },
-  startIcon: {
-    marginRight: 6
+  endIcon: {
+    '& svg': {
+      padding: 0
+    }
   }
 }))
 

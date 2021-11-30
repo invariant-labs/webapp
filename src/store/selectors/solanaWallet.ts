@@ -51,7 +51,7 @@ export interface SwapToken {
   logoURI: string
 }
 
-export const swapTokens = createSelector(accounts, balance, (allAccounts, solBalance) => {
+export const swapTokens = createSelector(accounts, (allAccounts) => {
   return tokens.map((token) => ({
     ...token,
     assetAddress: token.address,

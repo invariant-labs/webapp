@@ -4,8 +4,8 @@ import { SwapPage } from './SwapPage/SwapPage'
 import { useDispatch, useSelector } from 'react-redux'
 import { ListPage } from './ListPage/ListPage'
 import { toBlur } from '@consts/uiUtils'
-import { PoolPage } from './PoolPage/PoolPage'
 import { Status as WalletStatus } from '@reducers/solanaWallet'
+import { NewPositionPage } from './NewPositionPage/NewPositionPage'
 import EventsHandlers from '@containers/EventsHandlers'
 import HeaderWrapper from '@containers/HeaderWrapper/HeaderWrapper'
 import solanaConnectionSelector from '@selectors/solanaConnection'
@@ -36,8 +36,8 @@ export const PagesRouter: React.FC = () => {
         <HeaderWrapper />
         <Switch>
           <Route path='/swap' component={SwapPage} />
-          <Route path={'/pool'} component={PoolPage} />
-          <Route path={'/positions'} component={ListPage} />
+          <Route path={'/newPosition'} component={NewPositionPage} />
+          <Route path={'/pool'} component={ListPage} />
           <Route path='*'>
             <Redirect to='/swap'>
               <SwapPage />

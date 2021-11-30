@@ -3,18 +3,18 @@ import { PayloadType } from '@reducers/types'
 import { Position, InitPosition } from '@invariant-labs/sdk/lib/market'
 
 export interface PositionsListStore {
-  list: Position[],
+  list: Position[]
   loading: boolean
 }
 
 export interface PlotTickData {
-  x: number,
-  y: number,
+  x: number
+  y: number
   index: number
 }
 
 export interface PlotTicks {
-  data: PlotTickData[],
+  data: PlotTickData[]
   loading: boolean
 }
 export interface IPositionsStore {
@@ -27,8 +27,10 @@ export interface InitPositionData extends Omit<InitPosition, 'owner' | 'userToke
 }
 
 export interface GetCurrentTicksData {
-  poolIndex: number,
+  poolIndex: number
   isXtoY: boolean
+  min?: number
+  max?: number
 }
 
 export const defaultState: IPositionsStore = {
@@ -55,8 +57,10 @@ const positionsSlice = createSlice({
       state.plotTicks.loading = false
       return state
     },
-    getCurrentPlotTicks(state, _action: PayloadAction<GetCurrentTicksData>) {
-      state.plotTicks.loading = true
+    getCurrentPlotTicks(state, action: PayloadAction<GetCurrentTicksData>) {
+      if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
+        state.plotTicks.loading = true
+      }
       return state
     },
     setPositionsList(state, action: PayloadAction<Position[]>) {

@@ -1,51 +1,70 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   headerButton: {
-    background: colors.invariant.yellowWeak,
-    color: colors.invariant.violetWeak,
+    background: colors.invariant.componentOut2,
+    color: colors.white.main,
     paddingInline: 12,
-    paddingBottom: '9px',
+
     borderRadius: 10,
     textTransform: 'none',
-    ...typography.subtitle1,
-    height: 44,
+    ...typography.body1,
+    lineHeight: '22px',
+    height: 40,
     minWidth: 110,
 
     '&:not(:last-child)': {
       marginRight: 15
     },
 
-    [theme.breakpoints.down('sm')]: {
-      paddingInline: 0,
-      minWidth: 'unset',
-      width: 110,
-      height: 36,
-      ...typography.body3,
-
-      '&:not(:last-child)': {
-        marginRight: 0
-      }
-    },
-
-    [theme.breakpoints.down('xs')]: {
-      width: 72
-    },
-
     '&:hover': {
-      background: colors.invariant.violetStrong
+      background: colors.invariant.componentOut3
+    },
+    '&:active': {
+      '& #downIcon': {
+        transform: 'rotateX(180deg)'
+      }
+    }
+  },
+  label: {
+    WebkitPaddingBefore: '2px'
+  },
+  headerButtonConnect: {
+    background: colors.invariant.logoPurple,
+    color: colors.white.main,
+    paddingInline: 12,
+    borderRadius: 10,
+    textTransform: 'none',
+    ...typography.body1,
+    height: 40,
+    minWidth: 110,
+
+    '&:not(:last-child)': {
+      marginRight: 15
+    },
+    '&:hover': {
+      background: colors.invariant.violetWeak
+    }
+  },
+  headerButtonConnected: {
+    background: colors.invariant.componentOut2,
+    color: colors.white.main,
+    paddingInline: 12,
+    borderRadius: 10,
+    textTransform: 'none',
+    ...typography.body1,
+    height: 40,
+    minWidth: 110,
+    '&:hover': {
+      background: colors.invariant.componentOut3
     }
   },
   headerButtonTextEllipsis: {
     textTransform: 'none',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    ...typography.subtitle1,
-
-    [theme.breakpoints.down('sm')]: {
-      ...typography.body3
-    }
+    ...typography.body1
   },
   disabled: {
     opacity: 0.5
@@ -56,18 +75,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   startIcon: {
     marginLeft: 0,
-    marginTop: 2,
-
-    [theme.breakpoints.down('xs')]: {
-      marginRight: 2
-    }
+    marginBottom: 3
   },
   endIcon: {
     minWidth: 20,
     marginTop: 2
   },
   innerEndIcon: {
-    marginLeft: 0
+    marginLeft: 0,
+    marginBottom: 3
   }
 }))
 

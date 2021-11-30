@@ -3,25 +3,25 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   button: {
-    minWidth: 93,
-    backgroundColor: 'rgba(0, 0, 0, 0)',
-    color: colors.navy.navBar,
-    height: 44,
+    minWidth: 67,
+    backgroundColor: 'transparent',
+    color: colors.invariant.lightInfoText,
+    height: 32,
     borderRadius: 10,
-    ...typography.subtitle2,
+    ...typography.body1,
     textTransform: 'capitalize',
     boxShadow: 'none',
-    paddingBottom: '8px',
+    margin: '4px',
     '&:hover': {
-      background: colors.navy.button,
-      color: colors.navy.veryLightGrey,
-      ...typography.subtitle1
+      background: colors.invariant.componentOut2,
+      color: colors.white.main,
+      ...typography.body1
     }
   },
   active: {
-    background: colors.navy.button,
-    color: colors.navy.veryLightGrey,
-    ...typography.subtitle1
+    background: colors.invariant.componentOut2,
+    color: colors.white.main,
+    ...typography.body1
   },
   disabled: {
     opacity: 1
