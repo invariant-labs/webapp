@@ -57,7 +57,7 @@ export const Select: React.FC<ISelectModal> = ({
         }}
         disableRipple
       >
-        <span style={{ whiteSpace: 'nowrap' }}>{!current ? name : current.symbol}</span>
+        <span style={{ whiteSpace: 'nowrap' }} className={classes.tokenName}>{!current ? name : current.symbol}</span>
       </Button>
       <SelectTokenModal
         tokens={tokens}
