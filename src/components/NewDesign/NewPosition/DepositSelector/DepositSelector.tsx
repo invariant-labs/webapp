@@ -48,7 +48,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
 
     if (!isCurrentPoolExisting) {
-      return 'Pool is not existent'
+      return 'Pool does not exist'
     }
 
     if (printBNtoBN(tokenAInputState.value, tokens[tokenAIndex].decimal).gt(tokens[tokenAIndex].balance)) {

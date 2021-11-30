@@ -70,7 +70,7 @@ export const INewPosition: React.FC<INewPosition> = ({
     }
 
     if (!isCurrentPoolExisting) {
-      return 'Pool is not existent.'
+      return 'Pool does not exist'
     }
 
     if (ticksLoading) {
