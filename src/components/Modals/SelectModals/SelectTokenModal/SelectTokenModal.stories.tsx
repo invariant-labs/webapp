@@ -4,13 +4,15 @@ import { withKnobs } from '@storybook/addon-knobs'
 import SelectTokenModal from '@components/Modals/SelectModals/SelectTokenModal/SelectTokenModal'
 import { action } from '@storybook/addon-actions'
 
-const tokens = 'SNY USDC Dogecoin SOL USD FFT ETH 1INCH AAVE AERGO AETH AKRO'.split(' ').map(symbol => ({ symbol }))
+const tokens = 'SOL BTC USD FTT ETH'.split(' ').map(symbol => ({ symbol }))
+const commonTokens = 'SNY BTC ETH DOGE'.split(' ').map(symbol => ({ symbol }))
 
-storiesOf('modals/selectToken', module)
+storiesOf('newModals/selectToken', module)
   .addDecorator(withKnobs)
   .add('default', () => (
     <SelectTokenModal
       tokens={tokens}
+      commonTokens={commonTokens}
       open={true}
       handleClose={() => {}}
       anchorEl={null}

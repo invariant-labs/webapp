@@ -7,7 +7,7 @@ import { Status } from '@reducers/solanaConnection'
 import { Status as WalletStatus } from '@reducers/solanaWallet'
 import solanaConnectionSelector from '@selectors/solanaConnection'
 import { status } from '@selectors/solanaWallet'
-import WrappedPositionsList from '@containers/newDesign/WrappedPositionsList/WrappedPositionsList'
+import WrappedPositionsList from '@containers/WrappedPositionsList/WrappedPositionsList'
 
 export const ListPage: React.FC = () => {
   const classes = useStyles()

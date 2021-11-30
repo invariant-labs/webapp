@@ -133,3 +133,22 @@ export const nearestPriceIndex = (price: number, data: Array<{ x: number; y: num
 
   return nearest
 }
+
+export const getScaleFromString = (value: string): number => {
+  const parts = value.split('.')
+
+  if ((parts?.length ?? 0) < 2) {
+    return 0
+  }
+
+  return parts[1]?.length ?? 0
+}
+
+export const logBase = (x: number, b: number): number => Math.log(x) / Math.log(b)
+
+export const calcTicksAmountInRange = (min: number, max: number, tickSpacing: number): number => {
+  const minIndex = logBase(min, 1.0001)
+  const maxIndex = logBase(max, 1.0001)
+
+  return Math.ceil((maxIndex - minIndex) / tickSpacing)
+}

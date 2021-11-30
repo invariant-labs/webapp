@@ -2,6 +2,8 @@ import React from 'react'
 import { Typography, Popover, Grid } from '@material-ui/core'
 import { NetworkType, SolanaNetworks } from '@consts/static'
 import icons from '@static/icons'
+import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
+import classNames from 'classnames'
 import useStyles from './style'
 export interface ISelectNetwork {
   name: NetworkType
@@ -13,16 +15,17 @@ export interface ISelectNetworkModal {
   anchorEl: HTMLButtonElement | null
   onSelect: (wallet: NetworkType) => void
   handleClose: () => void
+  active: NetworkType
 }
 export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
   networks,
   anchorEl,
   open,
   onSelect,
-  handleClose
+  handleClose,
+  active
 }) => {
   const classes = useStyles()
-
   return (
     <Popover
       open={open}
@@ -37,21 +40,25 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
         vertical: 'top',
         horizontal: 'center'
       }}>
-      <Grid className={classes.root} container alignContent='space-around' direction='column'>
-        {networks.map(({ name, network }) => (
-          <Grid
-            item
-            key={`networks-${name}`}
-            className={classes.listItem}
-            onClick={() => {
-              onSelect(name)
-              handleClose()
-            }}>
-            <img className={classes.icon} src={icons[name]} alt={`${name} icon}`} />
-            <Typography className={classes.name}>{name}</Typography>
-            <Typography className={classes.network}>{network}</Typography>
-          </Grid>
-        ))}
+      <Grid className={classes.root}>
+        <Typography className={classes.title}>Select a network</Typography>
+        <Grid className={classes.list} container alignContent='space-around' direction='column'>
+          {networks.map(({ name }) => (
+            <Grid
+              className={classNames(classes.listItem, name === active ? classes.active : null)}
+              item
+              key={`networks-${name}`}
+              onClick={() => {
+                onSelect(name)
+                handleClose()
+              }}>
+              <img className={classes.icon} src={icons[`${name}Icon`]} alt={`${name} icon`} />
+
+              <Typography className={classes.name}>{name}</Typography>
+              <DotIcon className={classes.dotIcon} />
+            </Grid>
+          ))}
+        </Grid>
       </Grid>
     </Popover>
   )
