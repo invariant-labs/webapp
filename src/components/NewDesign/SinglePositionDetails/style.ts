@@ -125,6 +125,7 @@ const useStyles = makeStyles(() => ({
     borderRadius: '5px',
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
     padding: '3px 12px'
   },
   tokenName: {

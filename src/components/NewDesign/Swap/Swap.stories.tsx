@@ -6,7 +6,6 @@ import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { toBlur } from '@consts/uiUtils'
 import { Status } from '@reducers/solanaWallet'
-import { publicKey } from '@project-serum/anchor/dist/utils'
 
 const pools: Pools[] = [
   {
