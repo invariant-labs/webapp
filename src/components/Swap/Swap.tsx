@@ -296,11 +296,9 @@ export const Swap: React.FC<ISwap> = ({
                 }
               }
               className={classes.swapArrows} onClick={() => {
-                if (tokenToIndex !== null) {
-                  swap !== null
-                    ? setSwap(!swap)
-                    : setSwap(true)
-                }
+                swap !== null
+                  ? setSwap(!swap)
+                  : setSwap(true)
                 const tmp = tokenFromIndex
                 const tokensTmp = tokens
                 setTokenFromIndex(tokenToIndex)
