@@ -11,6 +11,17 @@ export const colors = {
     header: '#1A1D28', // v2.0 header
     card: '#28242E' // v2.0 card color
   },
+  blue: {
+    accent: '#072E5A',
+    subtle: 'rgba(7,46,90,0.1)',
+    deepAccent: 'rgba(7,46,90,0.5)',
+    base: '#0B2545',
+    light: '#66AFF5',
+    neon: '#08F7FE',
+    astel: '#48ADF1',
+    bastille: '#1E1A23',
+    charade: '#272735' // v2.0 component
+  },
   green: {
     main: '#00F9BB',
     button: '#40BFA0',
