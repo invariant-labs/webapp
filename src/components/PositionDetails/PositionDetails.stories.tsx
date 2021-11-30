@@ -59,10 +59,10 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
         fromToken={'SNY'}
         toToken={'BTC'}
         positionData={{
-          nameToSwap: 'BTC',
-          iconToSwap: tokens[0].logoURI,
-          nameFromSwap: 'SNY',
-          iconFromSwap: tokens[1].logoURI,
+          tokenXName: 'BTC',
+          tokenXIcon: tokens[0].logoURI,
+          tokenYName: 'SNY',
+          tokenYIcon: tokens[1].logoURI,
           min: 2149.6,
           max: 149.6,
           fee: 0.05

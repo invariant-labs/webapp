@@ -50,10 +50,10 @@ const PositionDetails: React.FC<IProps> = ({
           data={positionData}
           onClickClaimFee={onClickClaimFee}
           closePosition={closePosition}
-          liqValueTokenToSwap={liqValueTokenToSwap}
-          liqValueTokenFromSwap={liqValueTokenFromSwap}
-          unclaimValueTokenToSwap={unclaimValueTokenToSwap}
-          unclaimValueTokenFromSwap={unclaimValueTokenFromSwap}
+          tokenXLiqValue={liqValueTokenToSwap}
+          tokenYLiqValue={liqValueTokenFromSwap}
+          tokenXClaimValue={unclaimValueTokenToSwap}
+          tokenYClaimValue={unclaimValueTokenFromSwap}
         />
       </Grid>
       <Grid>

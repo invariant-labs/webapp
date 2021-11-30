@@ -5,10 +5,10 @@ import React from 'react'
 import { BoxInfo } from './BoxInfo'
 import useStyles from './style'
 export interface ILiquidityItem {
-  nameToSwap: string
-  iconToSwap: string
-  nameFromSwap: string
-  iconFromSwap: string
+  tokenXName: string
+  tokenXIcon: string
+  tokenYName: string
+  tokenYIcon: string
   fee: number
   min: number
   max: number
@@ -17,39 +17,39 @@ interface IProp {
   data: ILiquidityItem
   onClickClaimFee: () => void
   closePosition: () => void
-  liqValueTokenToSwap: number
-  liqValueTokenFromSwap: number
-  unclaimValueTokenToSwap: number
-  unclaimValueTokenFromSwap: number
+  tokenXLiqValue: number
+  tokenYLiqValue: number
+  tokenXClaimValue: number
+  tokenYClaimValue: number
 }
 
 const SinglePositionInfo: React.FC<IProp> = ({
   data,
   onClickClaimFee,
   closePosition,
-  liqValueTokenFromSwap,
-  liqValueTokenToSwap,
-  unclaimValueTokenFromSwap,
-  unclaimValueTokenToSwap
+  tokenYLiqValue,
+  tokenXLiqValue,
+  tokenYClaimValue,
+  tokenXClaimValue
 }) => {
   const classes = useStyles()
   return (
     <Grid className={classes.root}>
       <Grid className={classes.header}>
         <Grid className={classes.iconsGrid}>
-          <img className={classes.icon} src={data.iconToSwap} alt={data.nameToSwap} />
+          <img className={classes.icon} src={data.tokenXIcon} alt={data.tokenXName} />
           <img className={classes.arrowIcon} src={icons.ArrowIcon} alt={'Arrow'} />
           <img
             className={classes.icon}
-            src={data.iconFromSwap}
-            alt={data.nameFromSwap}
+            src={data.tokenYIcon}
+            alt={data.tokenYName}
           />
           <Grid className={classes.namesGrid}>
-            <Typography className={classes.name}>{data.nameToSwap}</Typography>
+            <Typography className={classes.name}>{data.tokenXName}</Typography>
             <Typography id='pause' className={classes.name}>
               -
             </Typography>
-            <Typography className={classes.name}>{data.nameFromSwap}</Typography>
+            <Typography className={classes.name}>{data.tokenYName}</Typography>
           </Grid>
         </Grid>
 
@@ -67,22 +67,22 @@ const SinglePositionInfo: React.FC<IProp> = ({
       <Grid className={classes.bottomGrid}>
         <BoxInfo
           title={'Liquidity'}
-          nameToSwap={data.nameToSwap}
-          iconToSwap={data.iconToSwap}
-          nameFromSwap={data.nameFromSwap}
-          iconFromSwap={data.iconFromSwap}
-          valueTokenToSwap={liqValueTokenToSwap}
-          valueTokenFromSwap={liqValueTokenFromSwap}
+          tokenXName={data.tokenXName}
+          tokenXIcon={data.tokenXIcon}
+          tokenYName={data.tokenYName}
+          tokenYIcon={data.tokenYIcon}
+          tokenXValue={tokenXLiqValue}
+          tokenYValue={tokenYLiqValue}
         />
         <BoxInfo
           title={'Unclaimed fees'}
-          nameToSwap={data.nameToSwap}
-          iconToSwap={data.iconToSwap}
-          nameFromSwap={data.nameFromSwap}
-          iconFromSwap={data.iconFromSwap}
-          onClickClaimFee={onClickClaimFee}
-          valueTokenToSwap={unclaimValueTokenToSwap}
-          valueTokenFromSwap={unclaimValueTokenFromSwap}
+          tokenXName={data.tokenXName}
+          tokenXIcon={data.tokenXIcon}
+          tokenYName={data.tokenYName}
+          tokenYIcon={data.tokenYIcon}
+          onClickButton={onClickClaimFee}
+          tokenXValue={tokenXClaimValue}
+          tokenYValue={tokenYClaimValue}
         />
       </Grid>
     </Grid>
