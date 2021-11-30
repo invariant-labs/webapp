@@ -1,15 +1,18 @@
 import React from 'react'
 import { Grid } from '@material-ui/core'
-import { useDispatch, useSelector } from 'react-redux'
-import { actions } from '@reducers/positions'
 import useStyles from './styles'
+import { SinglePositionWrapper } from '@containers/SinglePositionWrapper/SinglePositionWrapper'
 
-export const ListPage: React.FC = () => {
+export interface IProps {
+  id: string
+}
+
+export const SinglePositionPage: React.FC<IProps> = ({ id }) => {
   const classes = useStyles()
-  const dispatch = useDispatch()
 
   return (
     <Grid container className={classes.container}>
+      <SinglePositionWrapper id={id} />
     </Grid>
   )
 }

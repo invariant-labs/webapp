@@ -13,7 +13,7 @@ import { nearestPriceIndex } from '@consts/utils'
 
 export interface IPriceRangePlot {
   data: Array<{ x: number; y: number }>
-  midPriceIndex: number
+  midPriceIndex?: number
   leftRangeIndex: number
   rightRangeIndex: number
   onChangeRange?: (left: number, right: number) => void
@@ -70,6 +70,10 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   }
 
   const currentLayer: Layer = ({ innerWidth, innerHeight }) => {
+    if (typeof midPriceIndex === 'undefined') {
+      return null
+    }
+
     const unitLen = innerWidth / (plotMax - plotMin)
     return (
       <rect
