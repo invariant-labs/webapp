@@ -130,10 +130,6 @@ export const Swap: React.FC<ISwap> = ({
   }, [poolIndex])
 
   useEffect(() => {
-    console.log(slippTolerance)
-  }, [slippTolerance])
-
-  useEffect(() => {
     updateEstimatedAmount()
     if (tokenToIndex !== null && tokenFromIndex !== null) {
       const pairIndex = pools.findIndex((pool) => {
