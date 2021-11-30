@@ -23,7 +23,6 @@ const percentValueDisplay = (amount: Decimal): {value: BN, decimal: number} => {
 }
 
 const TransactionDetails: React.FC<IProps> = ({ open, fee, exchangeRate }) => {
-  console.log(fee.v.div(new BN(new BN(10).pow(new BN(fee.v.toString().length - 1)))).toString())
   const percent = percentValueDisplay(fee)
   const classes = useStyles()
   return (

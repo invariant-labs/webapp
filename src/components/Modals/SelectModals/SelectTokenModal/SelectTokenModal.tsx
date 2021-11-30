@@ -5,7 +5,7 @@ import useStyles from '../style'
 import searchIcon from '@static/svg/lupa.svg'
 export interface ISelectTokenModal {
   tokens: Array<{ symbol: string, name: string, logoURI: string }>
-  commonTokens: Array<{ symbol: string, name: string, logoURI: string }>
+  // commonTokens: Array<{ symbol: string, name: string, logoURI: string }>
   open: boolean
   handleClose: () => void
   anchorEl: HTMLButtonElement | null

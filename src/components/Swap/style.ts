@@ -23,6 +23,11 @@ const useStyles = makeStyles(() => ({
     height: 20,
     cursor: 'pointer'
   },
+  settingsIconBtn: {
+    padding: 0,
+    margin: 0,
+    minWidth: 'auto'
+  },
   slippage: {
     position: 'absolute'
   },

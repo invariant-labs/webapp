@@ -4,7 +4,7 @@ import { BN } from '@project-serum/anchor'
 import { printBN, printBNtoBN } from '@consts/utils'
 import { Decimal, PoolStructure } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
-import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
+import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import Slippage from '@components/Swap/slippage/Slippage'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
@@ -233,7 +233,9 @@ export const Swap: React.FC<ISwap> = ({
     <Grid container className={classes.swapWrapper}>
       <Grid container className={classes.header}>
         <Typography component='h1'>Swap tokens</Typography>
-        <CardMedia image={settingIcon} className={classes.settingsIcon} onClick={handleClickSettings}/>
+        <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
+          <CardMedia image={settingIcon} className={classes.settingsIcon} />
+        </Button>
         <Grid className={classes.slippage}>
           <Slippage open={settings}
             setSlippage={setSlippage}
