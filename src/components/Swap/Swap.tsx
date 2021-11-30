@@ -254,8 +254,9 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
         <ExchangeAmountInput
           value={amountFrom}
+          key={swap?.toString()}
           decimal={tokenFromIndex !== null ? tokens[tokenFromIndex].decimal : 6}
-          className={classes.amountInput}
+          className={swap !== null ? `${classes.amountInput} ${classes.amountInputDown}` : `${classes.amountInput}`}
           style={{ transform: swap !== null ? swap ? 'translateY(0px)' : 'translateY(0px)' : '' }}
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
@@ -315,7 +316,8 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
         <ExchangeAmountInput
           value={amountTo}
-          className={classes.amountInput}
+          key={tokenToIndex?.toString()}
+          className={swap !== null ? `${classes.amountInput} ${classes.amountInputUp}` : `${classes.amountInput}`}
           decimal={tokenToIndex !== null ? tokens[tokenToIndex].decimal : 6}
           style={
             {
