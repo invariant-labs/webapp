@@ -6,17 +6,13 @@ import useStyles from './style'
 
 interface IProps {
   detailsData: Array<{ x: number; y: number }>
-  plotMin: number
-  plotMax: number
-  zoomMinus: () => void
-  zoomPlus: () => void
-  disabled?: boolean
   style?: React.CSSProperties
-  leftRangeIndex: number,
-  rightRangeIndex: number,
-  currentPrice: number,
-  fromToken: string,
-  toToken: string,
+  leftRangeIndex: number
+  rightRangeIndex: number
+  midPriceIndex: number
+  currentPrice: number
+  fromToken: string
+  toToken: string
   positionData: ILiquidityItem
   onClickClaimFee: () => void
   closePosition: () => void
@@ -24,17 +20,15 @@ interface IProps {
   liqValueTokenFromSwap: number
   unclaimValueTokenToSwap: number
   unclaimValueTokenFromSwap: number
+  onZoomOutOfData: (min: number, max: number) => void
 }
 
 const PositionDetails: React.FC<IProps> = ({
   detailsData,
-  plotMin,
-  plotMax,
-  zoomMinus,
-  zoomPlus,
   style,
   leftRangeIndex,
   rightRangeIndex,
+  midPriceIndex,
   currentPrice,
   fromToken,
   toToken,
@@ -44,7 +38,8 @@ const PositionDetails: React.FC<IProps> = ({
   liqValueTokenToSwap,
   liqValueTokenFromSwap,
   unclaimValueTokenToSwap,
-  unclaimValueTokenFromSwap
+  unclaimValueTokenFromSwap,
+  onZoomOutOfData
 
 }) => {
   const classes = useStyles()
@@ -66,16 +61,12 @@ const PositionDetails: React.FC<IProps> = ({
           data={detailsData}
           leftRangeIndex={leftRangeIndex}
           rightRangeIndex={rightRangeIndex}
+          midPriceIndex={midPriceIndex}
           style={style}
-          disabled
-          plotMin={plotMin}
-          plotMax={plotMax}
-          zoomMinus={zoomMinus}
-          zoomPlus={zoomPlus}
           currentPrice={currentPrice}
           fromToken={fromToken}
           toToken={toToken}
-          className={classes.zoom}
+          onZoomOutOfData={onZoomOutOfData}
         />
       </Grid>
     </Grid>

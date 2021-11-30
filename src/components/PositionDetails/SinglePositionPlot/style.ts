@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.componentOut3,
     color: colors.invariant.lightInfoText,
     textAlign: 'center',
-    '& p' : {
+    '& p': {
       ...typography.body1,
       textTransform: 'uppercase',
       lineHeight: '35px'
@@ -43,7 +43,13 @@ const useStyles = makeStyles(() => ({
     },
     '& p': {
       color: colors.invariant.lightInfoText,
-      ...typography.body1,
+      ...typography.body1
+    }
+  },
+  zoom: {
+    '& .zoomBtns': {
+      top: 15,
+      right: 15
     }
   }
 }))

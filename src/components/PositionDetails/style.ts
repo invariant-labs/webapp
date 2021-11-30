@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, theme } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   wrapperContainer: {
@@ -10,12 +9,6 @@ const useStyles = makeStyles(() => ({
     paddingRight: 20,
     display: 'flex',
     alignItems: 'end'
-  },
-  zoom: {
-    '& .zoomBtns': {
-      top: 15,
-      right: 15
-    }
   }
 }))
 

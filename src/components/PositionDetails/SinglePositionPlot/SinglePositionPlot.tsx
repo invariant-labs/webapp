@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Grid, Typography, Card } from '@material-ui/core'
 import PriceRangePlot from '@components/PriceRangePlot/PriceRangePlot'
 import LiquidationRangeInfo from '@components/LiquidationRangeInfo/LiquidationRangeInfo'
@@ -6,35 +6,51 @@ import useStyles from './style'
 
 export interface ISinglePositionPlot {
   data: Array<{ x: number; y: number }>
-  plotMin: number
-  plotMax: number
-  zoomMinus: () => void
-  zoomPlus: () => void
-  disabled?: boolean
   style?: React.CSSProperties
-  leftRangeIndex: number,
-  rightRangeIndex: number,
-  currentPrice: number,
-  fromToken: string,
-  toToken: string,
-  className?: string
+  leftRangeIndex: number
+  rightRangeIndex: number
+  midPriceIndex: number
+  currentPrice: number
+  fromToken: string
+  toToken: string
+  onZoomOutOfData: (min: number, max: number) => void
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   data,
-  plotMin,
-  plotMax,
-  zoomMinus,
-  zoomPlus,
   style,
   leftRangeIndex,
   rightRangeIndex,
+  midPriceIndex,
   currentPrice,
   fromToken,
   toToken,
-  className
+  onZoomOutOfData
 }) => {
   const classes = useStyles()
+
+  const [plotMin, setPlotMin] = useState(Math.max(midPriceIndex - 15, 0))
+  const [plotMax, setPlotMax] = useState(Math.min(midPriceIndex + 15, data.length - 1))
+
+  const zoomMinus = () => {
+    const diff = plotMax - plotMin
+    const newMin = plotMin - (diff / 4)
+    const newMax = plotMax + (diff / 4)
+    setPlotMin(newMin)
+    setPlotMax(newMax)
+    if (newMin < data[0].x || newMax > data[data.length - 1].x) {
+      onZoomOutOfData(newMin, newMax)
+    }
+  }
+
+  const zoomPlus = () => {
+    const diff = plotMax - plotMin
+    if (data.length >= 2 && diff >= data[1].x - data[0].x) {
+      setPlotMin(plotMin + (diff / 6))
+      setPlotMax(plotMax - (diff / 6))
+    }
+  }
+
   return (
     <Grid className={classes.root}>
       <Typography component='h1' className={classes.header}>
@@ -51,7 +67,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           disabled
           leftRangeIndex={leftRangeIndex}
           rightRangeIndex={rightRangeIndex}
-          className={className}/>
+          midPriceIndex={midPriceIndex}
+          className={classes.zoom}/>
       </Grid>
       <Grid className={classes.minMaxInfo}>
         <LiquidationRangeInfo
