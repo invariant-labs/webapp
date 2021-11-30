@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 export const useStyles = makeStyles(() => ({
   transactionDetailsInfo: {
@@ -20,19 +20,19 @@ export const useStyles = makeStyles(() => ({
     marginBottom: 16,
     borderRadius: 5,
     '& p': {
-      ...newTypography.body1
+      ...typography.body1
     }
   },
   detailsInfoWrapper: {
     height: 'auto',
     '& h2': {
-      ...newTypography.body1
+      ...typography.body1
     },
     '& p': {
-      ...newTypography.body3
+      ...typography.body3
     },
     '& span': {
-      ...newTypography.label1,
+      ...typography.label1,
       color: colors.invariant.lightInfoText
     }
   }

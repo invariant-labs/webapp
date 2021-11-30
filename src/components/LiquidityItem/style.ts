@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   name: {
-    ...newTypography.heading1,
+    ...typography.heading1,
     color: colors.white.main
   },
   leftGrid: {
@@ -46,7 +46,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center'
   },
   text: {
-    ...newTypography.body1,
+    ...typography.body1,
     color: colors.invariant.lightInfoText,
     backgroundColor: colors.invariant.componentOut2,
     display: 'flex',
@@ -97,7 +97,7 @@ const useStyles = makeStyles(() => ({
   },
   greenTextArea: {
     color: colors.invariant.componentOut2,
-    ...newTypography.body1,
+    ...typography.body1,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',

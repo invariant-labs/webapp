@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -16,10 +16,10 @@ const useStyles = makeStyles(() => ({
     borderRadius: 10,
     color: colors.white.main,
     '& h2': {
-      ...newTypography.heading4
+      ...typography.heading4
     },
     '& p': {
-      ...newTypography.label1
+      ...typography.label1
 
     }
   },

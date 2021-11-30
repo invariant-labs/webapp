@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   popover: {
@@ -71,7 +71,7 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 14
   },
   commonTokensHeader: {
-    ...newTypography.body2
+    ...typography.body2
   },
   commonTokensList: {
     display: 'flex'
@@ -87,7 +87,7 @@ const useStyles = makeStyles(() => ({
     padding: '7px 7px 2px 7px',
     marginRight: 10,
     '& p': {
-      ...newTypography.body2
+      ...typography.body2
     }
   },
   commonTokenIcon: {
@@ -119,12 +119,12 @@ const useStyles = makeStyles(() => ({
   },
   tokenName: {
     color: colors.white.main,
-    ...newTypography.heading4,
+    ...typography.heading4,
     lineHeight: '20px'
   },
   tokenDescrpiption: {
     color: colors.white.main,
-    ...newTypography.label1,
+    ...typography.label1,
     lineHeight: '16px',
     whiteSpace: 'nowrap'
   },
@@ -137,7 +137,7 @@ const useStyles = makeStyles(() => ({
     boxShadow: '0px 0px 10px rgba(216, 255, 181, 0.5)'
   },
   tokenBalance: {
-    ...newTypography.subtitle2,
+    ...typography.subtitle2,
     color: colors.invariant.componentIn1,
     whiteSpace: 'nowrap'
   },

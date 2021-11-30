@@ -1,4 +1,4 @@
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({

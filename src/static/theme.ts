@@ -50,7 +50,6 @@ export const colors = {
   },
   invariant: {
     violetWeak: '#562cb2',
-    violetButton: '#7748D8',
     logoGreen: '#9CE75A',
     logoPurple: '#7748D8',
     background2: '#0B090D',
@@ -68,7 +67,7 @@ export const colors = {
   }
 }
 
-export const newTypography = {
+export const typography = {
   heading1: {
     fontSize: 30,
     lineHeight: '50px',
@@ -182,19 +181,19 @@ export const theme = createTheme({
   typography: {
     fontFamily: 'Mukta',
     fontWeightRegular: 600,
-    h1: newTypography.heading1,
-    h2: newTypography.heading2,
-    h3: newTypography.heading3,
-    h4: newTypography.heading4,
-    body1: newTypography.body1,
-    body2: newTypography.body2,
-    body3: newTypography.body3,
-    subtitle1: newTypography.subtitle1,
-    subtitle2: newTypography.subtitle2,
-    caption: newTypography.caption1,
-    label1: newTypography.label1,
-    label2: newTypography.label2,
-    label3: newTypography.label3
+    h1: typography.heading1,
+    h2: typography.heading2,
+    h3: typography.heading3,
+    h4: typography.heading4,
+    body1: typography.body1,
+    body2: typography.body2,
+    body3: typography.body3,
+    subtitle1: typography.subtitle1,
+    subtitle2: typography.subtitle2,
+    caption: typography.caption1,
+    label1: typography.label1,
+    label2: typography.label2,
+    label3: typography.label3
   },
   overrides: {
     MuiInputBase: {

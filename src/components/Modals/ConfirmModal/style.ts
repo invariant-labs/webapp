@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   modal: {
@@ -17,10 +17,10 @@ const useStyles = makeStyles(() => ({
   },
   title: {
     color: colors.white.main,
-    ...newTypography.body1
+    ...typography.body1
   },
   desc: {
-    ...newTypography.body3,
+    ...typography.body3,
     lineHeight: '16px',
     color: colors.invariant.lightInfoText,
     textAlign: 'center',
@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.lightInfoText,
     color: colors.invariant.darkInfoText,
     width: 120,
-    ...newTypography.body1,
+    ...typography.body1,
     textTransform: 'capitalize',
     padding: '3px 16px'
   },
@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.accent2,
     color: colors.invariant.darkInfoText,
     width: 120,
-    ...newTypography.body1,
+    ...typography.body1,
     textTransform: 'capitalize',
     padding: '3px 16px'
   }

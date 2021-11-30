@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
     width: '25px'
   },
   text: {
-    ...newTypography.body1,
+    ...typography.body1,
     color: colors.invariant.lightInfoText,
     backgroundColor: colors.invariant.componentOut2,
     display: 'flex',
@@ -61,7 +61,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   name: {
-    ...newTypography.heading1,
+    ...typography.heading1,
     color: colors.white.main
   },
   bottomGrid: {
@@ -83,11 +83,11 @@ const useStyles = makeStyles(() => ({
     }
   },
   title: {
-    ...newTypography.body1,
+    ...typography.body1,
     color: colors.white.main
   },
   titleValue: {
-    ...newTypography.heading3,
+    ...typography.heading3,
     color: colors.white.main,
     fontFamily: 'Mukta'
   },
@@ -98,7 +98,7 @@ const useStyles = makeStyles(() => ({
     color: colors.white.main,
     minWidth: 140,
     maxHeight: '35px',
-    ...newTypography.body1,
+    ...typography.body1,
     '&:hover': {
       background: colors.invariant.componentOut3
     }
@@ -130,7 +130,7 @@ const useStyles = makeStyles(() => ({
   },
   tokenName: {
     color: colors.invariant.lightInfoText,
-    ...newTypography.body1
+    ...typography.body1
   },
   tokenValue: {
     color: colors.white.main,
@@ -138,7 +138,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     paddingRight: 15,
-    ...newTypography.body1
+    ...typography.body1
   },
   closeButton: {
     color: colors.invariant.componentOut2,

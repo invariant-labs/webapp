@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   wrapper: {
@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
     border: `1px solid ${colors.invariant.componentOut2}`,
     borderRadius: 5,
     padding: 9,
-    ...newTypography.body2,
+    ...typography.body2,
 
     '& $input': {
       paddingInline: 8,
@@ -34,18 +34,18 @@ const useStyles = makeStyles(() => ({
     marginRight: 3
   },
   currencySymbol: {
-    ...newTypography.body3,
+    ...typography.body3,
     color: colors.white.main,
     marginTop: 1
   },
   noCurrencyText: {
-    ...newTypography.body3,
+    ...typography.body3,
     color: colors.invariant.lightInfoText
   },
   maxButton: {
     backgroundColor: colors.invariant.accent2,
     color: colors.invariant.darkInfoText,
-    ...newTypography.body3,
+    ...typography.body3,
     borderRadius: 3,
     width: 40,
     minWidth: 40,
@@ -74,7 +74,7 @@ const useStyles = makeStyles(() => ({
     height: '100%'
   },
   blockedInfo: {
-    ...newTypography.body4,
+    ...typography.body4,
     color: colors.invariant.lightInfoText
   }
 }))

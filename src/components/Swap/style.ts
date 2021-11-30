@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   swapWrapper: {
@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
     paddingBottom: 28,
     '& h1': {
-      ...newTypography.heading4,
+      ...typography.heading4,
       color: colors.white.main
     }
   },
@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
   },
   tokenComponentText: {
     color: colors.invariant.lightInfoText,
-    ...newTypography.label1
+    ...typography.label1
   },
   amountInput: {
     border: `1px solid ${colors.invariant.componentOut2}`,
@@ -66,7 +66,7 @@ const useStyles = makeStyles(() => ({
   rateText: {
     color: colors.invariant.lightInfoText,
     textAlign: 'right',
-    ...newTypography.label1
+    ...typography.label1
   },
   transactionDetails: {
     display: 'flex',
@@ -87,13 +87,13 @@ const useStyles = makeStyles(() => ({
   },
   transactionDetailsHeader: {
     color: colors.invariant.lightInfoText,
-    ...newTypography.label1,
+    ...typography.label1,
     cursor: 'pointer'
   },
   swapButton: {
     width: '100%',
     height: 48,
-    ...newTypography.body1,
+    ...typography.body1,
     color: colors.white.main,
     cursor: 'pointer'
   }

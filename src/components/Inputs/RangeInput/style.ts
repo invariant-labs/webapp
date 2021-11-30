@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   data: {
@@ -10,11 +10,11 @@ const useStyles = makeStyles(() => ({
   },
   label: {
     color: colors.white.main,
-    ...newTypography.label2
+    ...typography.label2
   },
   tokens: {
     color: colors.invariant.lightInfoText,
-    ...newTypography.label1
+    ...typography.label1
   },
   controls: {
     marginTop: 5
@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => ({
   },
   value: {
     color: colors.white.main,
-    ...newTypography.body2,
+    ...typography.body2,
     lineHeight: 24,
     borderBlock: `1px solid ${colors.invariant.componentOut2}`,
     backgroundColor: colors.invariant.componentIn1,
