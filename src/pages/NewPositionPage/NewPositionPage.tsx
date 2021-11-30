@@ -3,7 +3,7 @@ import NewPositionWrapper from '@containers/newDesign/NewPositionWrapper/NewPosi
 import { Grid } from '@material-ui/core'
 import useStyles from './styles'
 
-export const PoolPage: React.FC = () => {
+export const NewPositionPage: React.FC = () => {
   const classes = useStyles()
 
   return (

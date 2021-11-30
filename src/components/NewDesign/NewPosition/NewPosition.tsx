@@ -2,16 +2,20 @@ import { Grid, Typography } from '@material-ui/core'
 import React, { useState } from 'react'
 import DepositSelector from './DepositSelector/DepositSelector'
 import RangeSelector from './RangeSelector/RangeSelector'
-import useStyles from './style'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
 import { printBN, printBNtoBN } from '@consts/utils'
 import { PublicKey } from '@solana/web3.js'
+import { PlotTickData } from '@reducers/positions'
+import { INoConnected, NoConnected } from '../NoConnected/NoConnected'
+import { Link } from 'react-router-dom'
+import backIcon from '@static/svg/back-arrow.svg'
+import useStyles from './style'
 
 export interface INewPosition {
   tokens: SwapToken[]
   tokensB: SwapToken[]
-  data: Array<{ x: number; y: number }>
+  data: PlotTickData[]
   midPriceIndex: number
   addLiquidityHandler: (
     leftTickIndex: number,
@@ -28,6 +32,9 @@ export interface INewPosition {
   feeTiers: number[]
   ticksLoading: boolean
   isTokenXFirst: boolean
+  onZoomOutOfData: (min: number, max: number) => void
+  showNoConnected?: boolean
+  noConnectedBlockerProps: INoConnected
 }
 
 export const INewPosition: React.FC<INewPosition> = ({
@@ -41,7 +48,10 @@ export const INewPosition: React.FC<INewPosition> = ({
   calcAmount,
   feeTiers,
   ticksLoading,
-  isTokenXFirst
+  isTokenXFirst,
+  onZoomOutOfData,
+  showNoConnected,
+  noConnectedBlockerProps
 }) => {
   const classes = useStyles()
 
@@ -60,7 +70,7 @@ export const INewPosition: React.FC<INewPosition> = ({
     }
 
     if (!isCurrentPoolExisting) {
-      return 'Pool is not existent.'
+      return 'Pool does not exist'
     }
 
     if (ticksLoading) {
@@ -75,14 +85,14 @@ export const INewPosition: React.FC<INewPosition> = ({
   }
 
   const noRangePlaceholderProps = {
-    data: Array(100).fill(1).map((_e, index) => ({ x: index, y: index })),
+    data: Array(100).fill(1).map((_e, index) => ({ x: index, y: index, index })),
     midPriceIndex: 50,
     tokenFromSymbol: 'ABC',
     tokenToSymbol: 'XYZ'
   }
 
   const getOtherTokenAmount = (amount: BN, left: number, right: number, byFirst: boolean) => {
-    const printIndex = byFirst ? tokenAIndex : tokenBIndex
+    const printIndex = byFirst ? tokenBIndex : tokenAIndex
     if (printIndex === null) {
       return '0.0'
     }
@@ -93,10 +103,23 @@ export const INewPosition: React.FC<INewPosition> = ({
   }
 
   return (
-    <Grid container className={classes.wrapper}>
+    <Grid container className={classes.wrapper} direction='column'>
+      <Link to='/pool' style={{ textDecoration: 'none' }}>
+        <Grid
+          className={classes.back}
+          container
+          item
+          alignItems='center'
+        >
+          <img className={classes.backIcon} src={backIcon} />
+          <Typography className={classes.backText}>Back to Liquidity Positions List</Typography>
+        </Grid>
+      </Link>
+
       <Typography className={classes.title}>Add new liquidity position</Typography>
 
-      <Grid container direction='row' justifyContent='space-between'>
+      <Grid container direction='row' justifyContent='space-between' className={classes.row}>
+        {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
           tokens={tokens}
           tokensB={tokensB}
@@ -143,7 +166,8 @@ export const INewPosition: React.FC<INewPosition> = ({
               setTokenBDeposit(getOtherTokenAmount(printBNtoBN(value, tokens[tokenAIndex].decimal), leftRange, rightRange, true))
             },
             blocked: !ticksLoading && tokenAIndex !== null && tokenBIndex !== null && (isTokenXFirst ? rightRange <= midPriceIndex : rightRange < midPriceIndex),
-            blockerInfo: 'Range only for single-asset deposit.'
+            blockerInfo: 'Range only for single-asset deposit.',
+            decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimal : 0
           }}
           tokenBInputState={{
             value: tokenBDeposit,
@@ -155,7 +179,8 @@ export const INewPosition: React.FC<INewPosition> = ({
               setTokenADeposit(getOtherTokenAmount(printBNtoBN(value, tokens[tokenBIndex].decimal), leftRange, rightRange, false))
             },
             blocked: !ticksLoading && tokenAIndex !== null && tokenBIndex !== null && (isTokenXFirst ? leftRange > midPriceIndex : leftRange >= midPriceIndex),
-            blockerInfo: 'Range only for single-asset deposit.'
+            blockerInfo: 'Range only for single-asset deposit.',
+            decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimal : 0
           }}
           feeTiers={feeTiers}
           isCurrentPoolExisting={isCurrentPoolExisting}
@@ -200,6 +225,7 @@ export const INewPosition: React.FC<INewPosition> = ({
               }
           )
           }
+          onZoomOutOfData={onZoomOutOfData}
         />
       </Grid>
     </Grid>

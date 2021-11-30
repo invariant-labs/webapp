@@ -2,6 +2,7 @@ import ConnectWallet from '@components/NewDesign/Modals/ConnectWallet/ConnectWal
 import { Button, Grid, Typography } from '@material-ui/core'
 import icons from '@static/icons'
 import { WalletType } from '@web3/wallet'
+import classNames from 'classnames'
 import React from 'react'
 import useStyles from './style'
 
@@ -31,8 +32,8 @@ export const NoConnected: React.FC<INoConnected> = ({ onConnect, onDisconnect, d
 
   return (
     <>
-      <Grid className={classes.blur} />
-      <Grid className={classes.container}>
+      <Grid className={classNames(classes.blur, 'noConnectedLayer')} />
+      <Grid className={classNames(classes.container, 'noConnectedLayer')}>
         <Grid className={classes.root}>
           <img className={classes.img} src={icons.NoConnected} />
           <Typography className={classes.desc}>Wallet is not connected.</Typography>

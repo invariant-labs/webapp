@@ -6,7 +6,7 @@ const useStyles = makeStyles(() => ({
     width: '1000px',
     height: '370px',
     position: 'absolute',
-    zIndex: 4
+    zIndex: 14
   },
   root: {
     zIndex: 10,
@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'rgba(12, 11, 13, 0.8)',
     filter: 'blur(4px) brightness(0.4)',
     position: 'absolute',
-    zIndex: 3
+    zIndex: 13
   },
   desc: {
     ...newTypography.body1,

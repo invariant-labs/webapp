@@ -73,7 +73,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     const unitLen = innerWidth / (plotMax - plotMin)
     return (
       <rect
-        x={(data[midPriceIndex].x - plotMin) * unitLen}
+        x={(data[midPriceIndex <= data.length - 1 ? midPriceIndex : 0].x - plotMin) * unitLen}
         y={0}
         width={2}
         height={innerHeight}

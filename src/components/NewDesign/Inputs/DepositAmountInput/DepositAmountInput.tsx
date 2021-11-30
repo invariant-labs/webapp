@@ -1,3 +1,4 @@
+import { getScaleFromString } from '@consts/utils'
 import { Button, Grid, Input, Typography } from '@material-ui/core'
 import React, { useRef, CSSProperties } from 'react'
 import useStyles from './style'
@@ -12,6 +13,7 @@ interface IProps {
   style?: CSSProperties
   blocked?: boolean
   blockerInfo?: string
+  decimalsLimit: number
   onBlur?: () => void
 }
 
@@ -25,7 +27,8 @@ export const DepositAmountInput: React.FC<IProps> = ({
   style,
   blocked = false,
   blockerInfo,
-  onBlur
+  onBlur,
+  decimalsLimit
 }) => {
   const classes = useStyles()
 
@@ -46,6 +49,12 @@ export const DepositAmountInput: React.FC<IProps> = ({
       const dotRegex = /^\.\d*$/
       if (dotRegex.test(parsed)) {
         parsed = `0${parsed}`
+      }
+
+      if (getScaleFromString(parsed) > decimalsLimit) {
+        const parts = parsed.split('.')
+
+        parsed = parts[0] + '.' + parts[1].slice(0, decimalsLimit)
       }
 
       const diff = startValue.length - parsed.length

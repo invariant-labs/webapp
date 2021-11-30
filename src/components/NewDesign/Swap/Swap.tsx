@@ -396,3 +396,5 @@ export const Swap: React.FC<ISwap> = ({
     </Grid>
   )
 }
+
+export default Swap

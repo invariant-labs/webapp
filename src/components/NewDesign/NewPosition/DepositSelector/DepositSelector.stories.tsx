@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import DepositSelector from './DepositSelector'
-import { SwapToken } from '@components/NewDesign/Swap/Swap'
+import { SwapToken } from '@selectors/solanaWallet'
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 
@@ -41,13 +41,15 @@ storiesOf('position/depositSelector', module).add('deposit', () => (
     tokenAInputState={{
       value: '1',
       setValue: () => {},
-      blocked: false
+      blocked: false,
+      decimalsLimit: 6
     }}
     tokenBInputState={{
       value: '',
       setValue: () => {},
       blocked: true,
-      blockerInfo: 'Select token.'
+      blockerInfo: 'Select token.',
+      decimalsLimit: 8
     }}
     feeTiers={[0.05, 0.3, 1]}
     isCurrentPoolExisting={true}

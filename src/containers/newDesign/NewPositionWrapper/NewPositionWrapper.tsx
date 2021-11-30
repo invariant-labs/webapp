@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import NewPosition from '@components/NewDesign/NewPosition/NewPosition'
 import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
-import { SwapToken, swapTokens } from '@selectors/solanaWallet'
+import { SwapToken, swapTokens, status } from '@selectors/solanaWallet'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { printBN } from '@consts/utils'
 import { pools } from '@selectors/pools'
@@ -11,11 +11,13 @@ import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { plotTicks } from '@selectors/positions'
 import { BN } from '@project-serum/anchor'
 import { PRICE_DECIMAL } from '@consts/static'
+import { Status, actions as walletActions } from '@reducers/solanaWallet'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
 
   const tokens = useSelector(swapTokens)
+  const walletStatus = useSelector(status)
   const allPools = useSelector(pools)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
 
@@ -139,6 +141,22 @@ export const NewPositionWrapper = () => {
       }}
       ticksLoading={ticksLoading}
       isTokenXFirst={poolIndex !== null && tokenAIndex !== null && allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)}
+      onZoomOutOfData={(min, max) => {
+        if (poolIndex !== null && tokenAIndex !== null) {
+          dispatch(actions.getCurrentPlotTicks({
+            poolIndex,
+            isXtoY: allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
+            min,
+            max
+          }))
+        }
+      }}
+      showNoConnected={walletStatus !== Status.Initialized}
+      noConnectedBlockerProps={{
+        onConnect: (type) => { dispatch(walletActions.connect(type)) },
+        onDisconnect: () => { dispatch(walletActions.disconnect()) },
+        descCustomText: 'Cannot add any liquidity.'
+      }}
     />
   )
 }
