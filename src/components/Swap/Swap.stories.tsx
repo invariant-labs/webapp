@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
-import Swap, { SwapToken } from './Swap'
+import Swap, { SwapToken, Pools } from './Swap'
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { toBlur } from '@consts/uiUtils'
