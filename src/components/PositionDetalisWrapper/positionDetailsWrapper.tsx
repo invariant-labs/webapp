@@ -1,6 +1,6 @@
 import React from 'react'
-import SinglePositionDetails, { ILiquidityItem } from '@components/SinglePositionDetails/SinglePositionDetails'
-import SinglePositionPlot from '@components/SinglePositionDetails/SinglePositionPlot/SinglePositionPlot'
+import SinglePositionDetails, { ILiquidityItem } from '@components/PositionDetalisWrapper/SinglePositionDetails/SinglePositionDetails'
+import SinglePositionPlot from '@components/PositionDetalisWrapper/SinglePositionPlot/SinglePositionPlot'
 import { Grid } from '@material-ui/core'
 import useStyles from './style'
 
