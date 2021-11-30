@@ -36,7 +36,7 @@ export const Header: React.FC<IHeader> = ({
 }) => {
   const classes = useStyles()
   const buttonClasses = useButtonStyles()
-  const routes = ['swap', 'pool', 'positions']
+  const routes = ['swap', 'pool']
   const [activePath, setActive] = React.useState(landing)
 
   React.useEffect(() => {

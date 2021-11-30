@@ -14,6 +14,7 @@ storiesOf('newInputs/amount', module)
         placeholder={'0.0'}
         currency={null}
         onMaxClick={() => {}}
+        decimalsLimit={6}
       />
     </div>
   ))
@@ -25,6 +26,7 @@ storiesOf('newInputs/amount', module)
         currency={'SNY'}
         onMaxClick={() => {}}
         currencyIconSrc={icons.SNY}
+        decimalsLimit={6}
       />
     </div>
   ))
@@ -36,6 +38,7 @@ storiesOf('newInputs/amount', module)
         currency={'AERGO'}
         onMaxClick={() => {}}
         currencyIconSrc={icons.SNY}
+        decimalsLimit={6}
       />
     </div>
   ))
@@ -48,6 +51,7 @@ storiesOf('newInputs/amount', module)
         onMaxClick={() => {}}
         blocked
         blockerInfo='Price outside range. Single-asset deposit only.'
+        decimalsLimit={6}
       />
     </div>
   ))

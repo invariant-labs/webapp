@@ -36,7 +36,7 @@ export const WrappedPositionsList: React.FC = () => {
 
   return (
     <LiquidityList
-      onAddPositionClick={() => { history.push('/pool') }}
+      onAddPositionClick={() => { history.push('/newPosition') }}
       data={list.map((position) => {
         const lowerSqrtDec = calculate_price_sqrt(position.lowerTickIndex)
         const upperSqrtDec = calculate_price_sqrt(position.upperTickIndex)
