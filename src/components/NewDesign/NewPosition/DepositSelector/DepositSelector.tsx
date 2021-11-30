@@ -52,11 +52,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
 
     if (printBNtoBN(tokenAInputState.value, tokens[tokenAIndex].decimal).gt(tokens[tokenAIndex].balance)) {
-      return 'You don\'t have enough token 01'
+      return 'You don\'t have enough token A'
     }
 
     if (printBNtoBN(tokenBInputState.value, tokens[tokenBIndex].decimal).gt(tokens[tokenBIndex].balance)) {
-      return 'You don\'t have enough token 02'
+      return 'You don\'t have enough token B'
     }
 
     return 'Add Liquidity'
@@ -78,7 +78,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       <Grid container className={classes.sectionWrapper} style={{ marginBottom: 8 }}>
         <Grid container className={classes.selects} direction='row' justifyContent='space-between'>
           <Grid className={classes.selectWrapper}>
-            <Typography className={classes.inputLabel}>Pair token 01</Typography>
+            <Typography className={classes.inputLabel}>Pair token A</Typography>
             <Select
               tokens={tokens}
               current={tokenAIndex !== null ? tokens[tokenAIndex] : null}
@@ -93,7 +93,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           </Grid>
 
           <Grid className={classes.selectWrapper}>
-            <Typography className={classes.inputLabel}>Pair token 02</Typography>
+            <Typography className={classes.inputLabel}>Pair token B</Typography>
             <Select
               tokens={tokensB}
               current={tokenBIndex !== null ? tokens[tokenBIndex] : null}
@@ -121,7 +121,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
       <Grid container className={classes.sectionWrapper}>
-        <Typography className={classes.inputLabel}>Pair token 01 amount</Typography>
+        <Typography className={classes.inputLabel}>Pair token A amount</Typography>
         <DepositAmountInput
           currency={tokenAIndex !== null ? tokens[tokenAIndex].symbol : null}
           currencyIconSrc={tokenAIndex !== null ? tokens[tokenAIndex].logoURI : undefined}
@@ -143,7 +143,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           {...tokenAInputState}
         />
 
-        <Typography className={classes.inputLabel}>Pair token 02 amount</Typography>
+        <Typography className={classes.inputLabel}>Pair token B amount</Typography>
         <DepositAmountInput
           currency={tokenBIndex !== null ? tokens[tokenBIndex].symbol : null}
           currencyIconSrc={tokenBIndex !== null ? tokens[tokenBIndex].logoURI : undefined}

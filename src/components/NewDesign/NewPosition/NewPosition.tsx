@@ -92,7 +92,7 @@ export const INewPosition: React.FC<INewPosition> = ({
   }
 
   const getOtherTokenAmount = (amount: BN, left: number, right: number, byFirst: boolean) => {
-    const printIndex = byFirst ? tokenAIndex : tokenBIndex
+    const printIndex = byFirst ? tokenBIndex : tokenAIndex
     if (printIndex === null) {
       return '0.0'
     }
