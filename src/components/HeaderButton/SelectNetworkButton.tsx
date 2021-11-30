@@ -37,7 +37,7 @@ export const SelectNetworkButton: React.FC<IProps> = ({
       <Button
         className={classes.headerButton}
         variant='contained'
-        classes={{ disabled: classes.disabled, label: classes.label }}
+        classes={{ disabled: classes.disabled }}
         disabled={disabled}
         onClick={handleClick}>
         {name}

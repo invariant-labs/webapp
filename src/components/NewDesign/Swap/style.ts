@@ -18,6 +18,11 @@ const useStyles = makeStyles(() => ({
       color: colors.white.main
     }
   },
+  settingsIconBtn: {
+    padding: 0,
+    margin: 0,
+    minWidth: 'auto'
+  },
   settingsIcon: {
     width: 20,
     height: 20,
