@@ -18,8 +18,6 @@ interface IProps {
   fromToken: string,
   toToken: string,
   positionData: ILiquidityItem
-  liquidity: number
-  unclaimedFee: number
   onClickClaimFee: () => void
   closePosition: () => void
   liqValueTokenToSwap: number
@@ -41,8 +39,6 @@ const PositionDetails: React.FC<IProps> = ({
   fromToken,
   toToken,
   positionData,
-  liquidity,
-  unclaimedFee,
   onClickClaimFee,
   closePosition,
   liqValueTokenToSwap,
@@ -57,8 +53,6 @@ const PositionDetails: React.FC<IProps> = ({
       <Grid className={classes.positionDetails}>
         <SinglePositionInfo
           data={positionData}
-          liquidity={liquidity}
-          unclaimedFee={unclaimedFee}
           onClickClaimFee={onClickClaimFee}
           closePosition={closePosition}
           liqValueTokenToSwap={liqValueTokenToSwap}

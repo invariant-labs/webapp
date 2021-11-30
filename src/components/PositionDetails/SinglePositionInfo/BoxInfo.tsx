@@ -1,14 +1,13 @@
 import React from 'react'
 import useStyles from './style'
 import { Button, Grid, Typography } from '@material-ui/core'
-import AnimatedNumber from '@components/AnimatedNumber'
+
 export const BoxInfo: React.FC<{
   nameToSwap: string
   iconToSwap: string
   nameFromSwap: string
   iconFromSwap: string
   title: string
-  value: number
   onClickClaimFee?: () => void
   valueTokenToSwap: number
   valueTokenFromSwap: number
@@ -18,7 +17,6 @@ export const BoxInfo: React.FC<{
   nameToSwap,
   iconToSwap,
   title,
-  value,
   onClickClaimFee,
   valueTokenFromSwap,
   valueTokenToSwap
@@ -35,15 +33,6 @@ export const BoxInfo: React.FC<{
         ) : null}
       </Grid>
 
-      <Grid container>
-        <Typography className={classes.titleValue}>$</Typography>
-        <AnimatedNumber
-          className={classes.titleValue}
-          value={value}
-          duration={500}
-          formatValue={(value: string) => Number(value).toFixed(6)}
-        />
-      </Grid>
       <Grid className={classes.tokenGrid}>
         <Grid className={classes.tokenArea}>
           <Grid className={classes.token}>

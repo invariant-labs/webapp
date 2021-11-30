@@ -78,7 +78,6 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
         fromToken={'SNY'}
         toToken={'BTC'}
         positionData={{
-          active: false,
           nameToSwap: 'BTC',
           iconToSwap: tokens[0].logoURI,
           nameFromSwap: 'SNY',
@@ -87,8 +86,6 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
           max: 149.6,
           fee: 0.05
         }}
-        liquidity={458302.48}
-        unclaimedFee={44522.6789}
         onClickClaimFee={() => console.log('thanks from claiming')}
         liqValueTokenToSwap={2.19703}
         liqValueTokenFromSwap={20.99703}

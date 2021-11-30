@@ -20,7 +20,6 @@ storiesOf('singlePosition/leftComponent', module)
     <Grid style={{ background: '#1C1B1E', width: '540px', height: '500px', padding: '20px' }}>
       <SinglePositionInfo
         data={{
-          active: false,
           nameToSwap: 'BTC',
           iconToSwap: tokens[0].logoURI,
           iconFromSwap: tokens[1].logoURI,
@@ -29,8 +28,6 @@ storiesOf('singlePosition/leftComponent', module)
           max: 149.6,
           fee: 0.05
         }}
-        liquidity={458302.48}
-        unclaimedFee={44522.6789}
         onClickClaimFee={() => console.log('thanks from claiming')}
         liqValueTokenToSwap={2.19703}
         liqValueTokenFromSwap={20.99703}
@@ -44,7 +41,6 @@ storiesOf('singlePosition/leftComponent', module)
     <Grid style={{ background: '#1C1B1E', width: '540px', height: '500px', padding: '20px' }}>
       <SinglePositionInfo
         data={{
-          active: true,
           nameToSwap: 'BTC',
           iconToSwap: tokens[0].logoURI,
           iconFromSwap: tokens[1].logoURI,
@@ -53,8 +49,6 @@ storiesOf('singlePosition/leftComponent', module)
           max: 149.6,
           fee: 0.05
         }}
-        liquidity={458302.48}
-        unclaimedFee={44522.6789}
         onClickClaimFee={() => console.log('thanks from claiming')}
         liqValueTokenToSwap={2.19703}
         liqValueTokenFromSwap={20.99703}

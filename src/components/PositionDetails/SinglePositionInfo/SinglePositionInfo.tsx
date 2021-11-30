@@ -2,12 +2,9 @@ import { Button, Grid, Typography } from '@material-ui/core'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import React from 'react'
-import FailedIcon from '@material-ui/icons/HighlightOffOutlined'
-
-import useStyles from './style'
 import { BoxInfo } from './BoxInfo'
+import useStyles from './style'
 export interface ILiquidityItem {
-  active: boolean
   nameToSwap: string
   iconToSwap: string
   nameFromSwap: string
@@ -18,8 +15,6 @@ export interface ILiquidityItem {
 }
 interface IProp {
   data: ILiquidityItem
-  liquidity: number
-  unclaimedFee: number
   onClickClaimFee: () => void
   closePosition: () => void
   liqValueTokenToSwap: number
@@ -30,8 +25,6 @@ interface IProp {
 
 const SinglePositionInfo: React.FC<IProp> = ({
   data,
-  liquidity,
-  unclaimedFee,
   onClickClaimFee,
   closePosition,
   liqValueTokenFromSwap,
@@ -66,24 +59,14 @@ const SinglePositionInfo: React.FC<IProp> = ({
               {data.fee}% fee
             </Typography>
           </Grid>
-          {data.active ? (
-            <Button className={classes.closeButton} variant='contained' onClick={closePosition}>
+          <Button className={classes.closeButton} variant='contained' onClick={closePosition}>
               Close position
-            </Button>
-          ) : (
-            <Grid className={classNames(classes.rangeGrid, classes.closedText)}>
-              <Typography className={classes.text}>
-                <FailedIcon className={classes.iconText} />
-                Closed
-              </Typography>
-            </Grid>
-          )}
+          </Button>
         </Grid>
       </Grid>
       <Grid className={classes.bottomGrid}>
         <BoxInfo
           title={'Liquidity'}
-          value={liquidity}
           nameToSwap={data.nameToSwap}
           iconToSwap={data.iconToSwap}
           nameFromSwap={data.nameFromSwap}
@@ -93,7 +76,6 @@ const SinglePositionInfo: React.FC<IProp> = ({
         />
         <BoxInfo
           title={'Unclaimed fees'}
-          value={unclaimedFee}
           nameToSwap={data.nameToSwap}
           iconToSwap={data.iconToSwap}
           nameFromSwap={data.nameFromSwap}
