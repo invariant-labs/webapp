@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
     fontSize: 16,
     backgroundColor: '#34303B',
     minWidth: 80,
-    padding: '6px 10px'
+    padding: '2px 10px'
   },
   icon: {
     minWidth: 18,

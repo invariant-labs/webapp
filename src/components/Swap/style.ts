@@ -1,10 +1,13 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   swapWrapper: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    [theme.breakpoints.down('xs')]: {
+      padding: '0 16px'
+    }
   },
   header: {
     display: 'flex',
