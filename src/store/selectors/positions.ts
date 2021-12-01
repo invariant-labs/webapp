@@ -26,7 +26,7 @@ export const positionsWithPoolsData = createSelector(
       }
     }, {})
 
-    const poolsByKey: Record<string, PoolWithAddress & { poolIndex: number}> = allPools.reduce((prev, pool, index) => {
+    const poolsByKey: Record<string, PoolWithAddress & { poolIndex: number }> = allPools.reduce((prev, pool, index) => {
       return {
         [pool.address.toString()]: pool,
         poolIndex: index,
@@ -34,7 +34,7 @@ export const positionsWithPoolsData = createSelector(
       }
     }, {})
 
-    return list.map((position) => ({
+    return list.map((position, index) => ({
       ...position,
       poolData: poolsByKey[position.pool.toString()],
       tokenX: tokensByKey[
@@ -42,7 +42,8 @@ export const positionsWithPoolsData = createSelector(
       ],
       tokenY: tokensByKey[
         poolsByKey[position.pool.toString()].tokenY.toString()
-      ]
+      ],
+      positionIndex: index
     }))
   }
 )

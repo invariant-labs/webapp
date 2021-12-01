@@ -82,10 +82,10 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             }
           }}
           onClickClaimFee={() => {
-            dispatch(actions.claimFee(id))
+            dispatch(actions.claimFee(position.positionIndex))
           }}
           closePosition={() => {
-            dispatch(actions.closePosition(id))
+            dispatch(actions.closePosition(position.positionIndex))
           }}
           tokenXLiqValue={+printBN(position.tokensOwedX.v, position.tokenX.decimal)}
           tokenYLiqValue={+printBN(position.tokensOwedY.v, position.tokenY.decimal)}
