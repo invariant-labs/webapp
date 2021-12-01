@@ -43,7 +43,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   const classes = useStyles()
 
   const getCurrentLessThanRange = () => {
-    if (leftRangeIndex > data.length - 1 || data[leftRangeIndex].x < plotMin || disabled) {
+    if (disabled || leftRangeIndex > data.length - 1 || data[leftRangeIndex].x < plotMin) {
       return []
     }
 
@@ -62,7 +62,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   }
 
   const getCurrentGreaterThanRange = () => {
-    if (rightRangeIndex > data.length - 1 || data[rightRangeIndex].x > plotMax || disabled) {
+    if (disabled || rightRangeIndex > data.length - 1 || data[rightRangeIndex].x > plotMax) {
       return []
     }
 
@@ -155,8 +155,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
             leftRangeIndex < data.length && rightRangeIndex < data.length
               ? [
                 Brush(
-                  data[leftRangeIndex].x,
-                  data[rightRangeIndex].x,
+                  data[leftRangeIndex]?.x,
+                  data[rightRangeIndex]?.x,
                   (position) => {
                     const nearest = nearestPriceIndex(plotMin + (position * (plotMax - plotMin)), data)
                     onChangeRange?.(
