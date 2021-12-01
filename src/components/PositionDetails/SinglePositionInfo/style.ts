@@ -117,7 +117,7 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     justifyContent: 'space-between',
     '&:not(:last-child)': {
-      marginRight: 20
+      marginBottom: 8
     }
   },
   token: {

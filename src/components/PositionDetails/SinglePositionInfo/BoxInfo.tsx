@@ -33,7 +33,7 @@ export const BoxInfo: React.FC<{
         ) : null}
       </Grid>
 
-      <Grid className={classes.tokenGrid}>
+      <Grid className={classes.tokenGrid} container direction='column'>
         <Grid className={classes.tokenArea}>
           <Grid className={classes.token}>
             <img className={classes.iconSmall} src={tokenXIcon} alt={tokenXName} />
