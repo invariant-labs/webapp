@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -9,13 +9,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 6,
     border: 'none',
     color: colors.invariant.lightInfoText,
-    ...typography.body1,
+    fontSize: 14,
+    fontWeight: 600,
     cursor: 'pointer',
     transition: '0.2s all cubic-bezier(0.25, 0.46, 0.45, 0.94)',
     backfaceVisibility: 'hidden',
     fontSmoothing: 'subpixel-antialiased',
     '&:hover': {
-      transform: 'scale(1.1)'
+      transform: 'scale(1.15) translateY(0px)'
     },
     [theme.breakpoints.down('xs')]: {
       width: 36,
@@ -27,6 +28,26 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingBottom: 17,
       paddingRight: 36
     }
+  },
+  closeButton: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 30,
+    '& img': {
+      width: 16,
+      transition: '.2s all ease-in',
+      cursor: 'pointer',
+      '&:hover': {
+        transform: 'scale(1.1)'
+      }
+    }
+  },
+  detailsWrapper: {
+    display: 'flex',
+    alignItems: 'center'
   }
 }))
 

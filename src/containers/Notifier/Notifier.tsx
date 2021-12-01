@@ -1,5 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import icons from '@static/icons'
 import { useSnackbar } from 'notistack'
 import { actions } from '@reducers/snackbars'
 import { snackbars } from '@selectors/snackbars'
@@ -36,39 +37,44 @@ const Notifier = () => {
         if (key && displayed.includes(key)) return
         const action = () =>
           txid && (
-            <button
-              className={classes.button}
-              onClick={() => {
-                if (
-                  currentNetwork.toLocaleLowerCase() !== 'mainnet' &&
+            <div className={classes.detailsWrapper}>
+              <button
+                className={classes.button}
+                onClick={() => {
+                  if (
+                    currentNetwork.toLocaleLowerCase() !== 'mainnet' &&
                   txid !== undefined &&
                   !isAccount
-                ) {
-                  window.open(
-                    'https://explorer.solana.com/tx/' +
+                  ) {
+                    window.open(
+                      'https://explorer.solana.com/tx/' +
                       txid +
                       '?cluster=' +
                       currentNetwork.toLowerCase()
-                  )
-                } else if (
-                  currentNetwork.toLocaleLowerCase() === 'mainnet' &&
+                    )
+                  } else if (
+                    currentNetwork.toLocaleLowerCase() === 'mainnet' &&
                   txid !== undefined &&
                   !isAccount
-                ) {
-                  window.open('https://explorer.solana.com/tx/' + txid)
-                } else if (currentNetwork.toLocaleLowerCase() !== 'mainnet' && isAccount) {
-                  window.open(
-                    'https://explorer.solana.com/address/' +
+                  ) {
+                    window.open('https://explorer.solana.com/tx/' + txid)
+                  } else if (currentNetwork.toLocaleLowerCase() !== 'mainnet' && isAccount) {
+                    window.open(
+                      'https://explorer.solana.com/address/' +
                       txid +
                       '?cluster=' +
                       currentNetwork.toLowerCase()
-                  )
-                } else if (currentNetwork.toLocaleLowerCase() === 'mainnet' && isAccount) {
-                  window.open('https://explorer.solana.com/address/' + txid)
-                }
-              }}>
-              <span>Details</span>
-            </button>
+                    )
+                  } else if (currentNetwork.toLocaleLowerCase() === 'mainnet' && isAccount) {
+                    window.open('https://explorer.solana.com/address/' + txid)
+                  }
+                }}>
+                <span>Details</span>
+              </button>
+              <button className={classes.closeButton} onClick={() => closeSnackbar(key)}>
+                <img src={icons.closeIcon}></img>
+              </button>
+            </div>
           )
 
         // display snackbar using notistack
