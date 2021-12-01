@@ -56,8 +56,8 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
         rightRangeIndex={200}
         style={{ width: 600, height: 212, backgroundColor: '#1C1B1E', borderRadius: 10 }}
         currentPrice={300}
-        fromToken={'SNY'}
-        toToken={'BTC'}
+        tokenY={'SNY'}
+        tokenX={'BTC'}
         positionData={{
           tokenXName: 'BTC',
           tokenXIcon: tokens[0].logoURI,
@@ -68,10 +68,10 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
           fee: 0.05
         }}
         onClickClaimFee={() => console.log('thanks from claiming')}
-        liqValueTokenToSwap={2.19703}
-        liqValueTokenFromSwap={20.99703}
-        unclaimValueTokenToSwap={2.19703}
-        unclaimValueTokenFromSwap={9.19703}
+        tokenXLiqValue={2.19703}
+        tokenYLiqValue={20.99703}
+        tokenXClaimValue={2.19703}
+        tokenYClaimValue={9.19703}
         closePosition={() => console.log('close position')}
         onZoomOutOfData={() => {}}
       />

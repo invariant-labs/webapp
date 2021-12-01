@@ -11,15 +11,15 @@ interface IProps {
   rightRangeIndex: number
   midPriceIndex: number
   currentPrice: number
-  fromToken: string
-  toToken: string
+  tokenY: string
+  tokenX: string
   positionData: ILiquidityItem
   onClickClaimFee: () => void
   closePosition: () => void
-  liqValueTokenToSwap: number
-  liqValueTokenFromSwap: number
-  unclaimValueTokenToSwap: number
-  unclaimValueTokenFromSwap: number
+  tokenXLiqValue: number
+  tokenYLiqValue: number
+  tokenXClaimValue: number
+  tokenYClaimValue: number
   onZoomOutOfData: (min: number, max: number) => void
 }
 
@@ -30,15 +30,15 @@ const PositionDetails: React.FC<IProps> = ({
   rightRangeIndex,
   midPriceIndex,
   currentPrice,
-  fromToken,
-  toToken,
+  tokenY,
+  tokenX,
   positionData,
   onClickClaimFee,
   closePosition,
-  liqValueTokenToSwap,
-  liqValueTokenFromSwap,
-  unclaimValueTokenToSwap,
-  unclaimValueTokenFromSwap,
+  tokenXLiqValue,
+  tokenYLiqValue,
+  tokenXClaimValue,
+  tokenYClaimValue,
   onZoomOutOfData
 
 }) => {
@@ -50,10 +50,10 @@ const PositionDetails: React.FC<IProps> = ({
           data={positionData}
           onClickClaimFee={onClickClaimFee}
           closePosition={closePosition}
-          tokenXLiqValue={liqValueTokenToSwap}
-          tokenYLiqValue={liqValueTokenFromSwap}
-          tokenXClaimValue={unclaimValueTokenToSwap}
-          tokenYClaimValue={unclaimValueTokenFromSwap}
+          tokenXLiqValue={tokenXLiqValue}
+          tokenYLiqValue={tokenYLiqValue}
+          tokenXClaimValue={tokenXClaimValue}
+          tokenYClaimValue={tokenYClaimValue}
         />
       </Grid>
       <Grid>
@@ -64,8 +64,8 @@ const PositionDetails: React.FC<IProps> = ({
           midPriceIndex={midPriceIndex}
           style={style}
           currentPrice={currentPrice}
-          fromToken={fromToken}
-          toToken={toToken}
+          tokenY={tokenY}
+          tokenX={tokenX}
           onZoomOutOfData={onZoomOutOfData}
         />
       </Grid>

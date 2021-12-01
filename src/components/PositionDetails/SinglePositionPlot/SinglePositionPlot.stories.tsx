@@ -41,8 +41,8 @@ storiesOf('singlePosition/rightComponent', module)
         midPriceIndex={150}
         style={{ width: 600, height: 212, backgroundColor: '#1C1B1E', borderRadius: 10 }}
         currentPrice={300}
-        fromToken={'SNY'}
-        toToken={'xUSD'}
+        tokenY={'SNY'}
+        tokenX={'xUSD'}
         onZoomOutOfData={() => {}}
       />
     )

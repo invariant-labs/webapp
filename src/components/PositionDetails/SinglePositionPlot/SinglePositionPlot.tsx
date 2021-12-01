@@ -11,8 +11,8 @@ export interface ISinglePositionPlot {
   rightRangeIndex: number
   midPriceIndex: number
   currentPrice: number
-  fromToken: string
-  toToken: string
+  tokenY: string
+  tokenX: string
   onZoomOutOfData: (min: number, max: number) => void
 }
 
@@ -23,8 +23,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   rightRangeIndex,
   midPriceIndex,
   currentPrice,
-  fromToken,
-  toToken,
+  tokenY,
+  tokenX,
   onZoomOutOfData
 }) => {
   const classes = useStyles()
@@ -74,13 +74,13 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         <LiquidationRangeInfo
           label='min'
           amount={leftRangeIndex}
-          toToken={toToken}
-          fromToken={fromToken}/>
+          toToken={tokenX}
+          fromToken={tokenY}/>
         <LiquidationRangeInfo
           label='max'
           amount={rightRangeIndex}
-          toToken={toToken}
-          fromToken={fromToken}/>
+          toToken={tokenX}
+          fromToken={tokenY}/>
       </Grid>
       <Grid>
         <Card className={classes.currentPriceLabel}>
@@ -91,7 +91,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
             <Typography component='span'>
               {currentPrice}
             </Typography>
-            {fromToken} per {toToken}
+            {tokenY} per {tokenX}
           </Typography>
         </Card>
       </Grid>
