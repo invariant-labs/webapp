@@ -59,8 +59,8 @@ const Slippage: React.FC<Props> = ({
     } else if (Number(e.target.value) < 0 || isNaN(Number(e.target.value))) {
       setSlippTolerance('00.00')
     } else {
-      const test = '^\\d*\\.?\\d{0,2}$'
-      const regex = new RegExp(test, 'g')
+      const onlyTwoDigits = '^\\d*\\.?\\d{0,2}$'
+      const regex = new RegExp(onlyTwoDigits, 'g')
       if (regex.test(e.target.value)) {
         setSlippTolerance(e.target.value)
       } else {
@@ -91,12 +91,18 @@ const Slippage: React.FC<Props> = ({
             allowOnlyDigitsAndTrimUnnecessaryZeros(e)
             checkSlippage(e)
           }}
+          ref={inputRef}
           onBlur={() => {
             setSlippTolerance(Number(slippTolerance).toFixed(2))
             setSlippage(slippTolerance)
           }}
           />
-          <button className={classes.detailsInfoBtn} onClick={() => setSlippTolerance(defaultSlippage)}>Auto</button>
+          <button
+            className={classes.detailsInfoBtn}
+            onClick={() => {
+              setSlippTolerance(defaultSlippage)
+              setSlippage(defaultSlippage)
+            }}>Auto</button>
         </Box>
       </Grid>
     </Popover>
