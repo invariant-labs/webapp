@@ -10,10 +10,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 10,
     ...typography.body1,
     maxWidth: 350,
+    padding: '6px 16px',
     maxHeight: 64,
+    minWidth: 100,
     '& SVG': {
       color: colors.invariant.accent2,
-      marginTop: 4,
+      marginTop: -2,
       [theme.breakpoints.down('xs')]: {
         marginTop: 2
       }
@@ -35,9 +37,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.body1,
     maxWidth: 350,
     maxHeight: 64,
+    minWidth: 100,
     '& SVG': {
       color: colors.invariant.error,
-      marginTop: 4,
+      marginTop: -2,
       [theme.breakpoints.down('xs')]: {
         marginTop: 2
       }
@@ -59,9 +62,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.body1,
     maxWidth: 350,
     maxHeight: 64,
+    minWidth: 100,
     '& SVG': {
       color: colors.invariant.lightInfoText,
-      marginTop: 4,
+      marginTop: -2,
       [theme.breakpoints.down('xs')]: {
         marginTop: 2
       }
@@ -83,9 +87,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.body1,
     maxWidth: 350,
     maxHeight: 64,
+    minWidth: 100,
     '& SVG': {
       color: colors.invariant.warning,
-      marginTop: 4,
+      marginTop: -2,
       [theme.breakpoints.down('xs')]: {
         marginTop: 2
       }

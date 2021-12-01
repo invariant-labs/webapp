@@ -9,7 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import Notifier from '@containers/Notifier/Notifier'
 import PagesRouter from './pages/PagesRouter'
-import Snackbar from '@components/NewDesign/Snackbar/Snackbar'
+import Snackbar from '@components/Snackbar/Snackbar'
 
 setConfig({
   reloadHooks: false
