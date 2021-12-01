@@ -54,7 +54,8 @@ export const WrappedPositionsList: React.FC = () => {
           tokenYIcon: position.tokenY.logoURI,
           fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
           min: +(min.toFixed(maxDecimals(min))),
-          max: +(max.toFixed(maxDecimals(max)))
+          max: +(max.toFixed(maxDecimals(max))),
+          id: position.id.toString()
         }
       })}
       loading={isLoading}
