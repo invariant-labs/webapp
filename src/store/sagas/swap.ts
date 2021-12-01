@@ -61,7 +61,7 @@ export function* handleSwap(): Generator {
     swapTx.feePayer = wallet.publicKey
 
     const signedTx = yield* call([wallet, wallet.signTransaction], swapTx)
-    yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
+    const signature = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: true
     })
 
@@ -69,7 +69,8 @@ export function* handleSwap(): Generator {
       snackbarsActions.add({
         message: 'Tokens swapped successfully.',
         variant: 'success',
-        persist: false
+        persist: false,
+        txid: signature
       })
     )
   } catch (error) {
