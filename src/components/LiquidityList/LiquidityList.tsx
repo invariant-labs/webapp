@@ -43,7 +43,7 @@ export const LiquidityList: React.FC<IProp> = ({ data, onAddPositionClick, loadi
         {
           data.length > 0
             ? data.map((element, index) => (
-              <Link to={`/position/${element.id}`} key={index}>
+              <Link to={`/position/${element.id}`} key={index} style={{ textDecoration: 'none' }}>
                 <LiquidityItem {...element} />
               </Link>
             ))
