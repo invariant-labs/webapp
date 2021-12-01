@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@reducers/positions'
 import { isLoadingPositionsList, plotTicks, singlePositionData } from '@selectors/positions'
@@ -18,6 +18,16 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
+
+  useEffect(() => {
+    if (position) {
+      console.log(position)
+      dispatch(actions.getCurrentPlotTicks({
+        poolIndex: position.poolData.poolIndex,
+        isXtoY: true
+      }))
+    }
+  }, [position])
 
   const midPriceIndex = useMemo(() => ticksData.findIndex((tick) => tick.index === position?.poolData.currentTickIndex), [ticksData.length, position?.id])
   const leftRangeIndex = useMemo(() => ticksData.findIndex((tick) => tick.index === position?.lowerTickIndex), [ticksData.length, position?.id])
@@ -43,6 +53,15 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
     return 0
   }, [position?.upperTickIndex])
+  const current = useMemo(() => {
+    if (position) {
+      const sqrt = +printBN(position.poolData.sqrtPrice.v, PRICE_DECIMAL)
+
+      return sqrt ** 2
+    }
+
+    return 0
+  }, [position])
 
   const maxDecimals = (value: number): number => {
     if (value >= 10000) {
@@ -68,7 +87,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           midPriceIndex={midPriceIndex}
           leftRangeIndex={leftRangeIndex}
           rightRangeIndex={rightRangeIndex}
-          currentPrice={0}
+          currentPrice={current}
           tokenY={position.tokenX.symbol}
           tokenX={position.tokenY.symbol}
           onZoomOutOfData={(min, max) => {
@@ -100,6 +119,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             min: +(min.toFixed(maxDecimals(min))),
             max: +(max.toFixed(maxDecimals(max)))
           }}
+          loadingTicks={ticksLoading}
         />
       )
       : (

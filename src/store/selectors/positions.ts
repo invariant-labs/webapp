@@ -15,6 +15,10 @@ export const isLoadingPositionsList = createSelector(
   (s) => s.loading
 )
 
+export interface PoolWithAddressAndIndex extends PoolWithAddress {
+  poolIndex: number
+}
+
 export const positionsWithPoolsData = createSelector(
   pools,
   positionsList,
@@ -26,10 +30,12 @@ export const positionsWithPoolsData = createSelector(
       }
     }, {})
 
-    const poolsByKey: Record<string, PoolWithAddress & { poolIndex: number }> = allPools.reduce((prev, pool, index) => {
+    const poolsByKey: Record<string, PoolWithAddressAndIndex> = allPools.reduce((prev, pool, index) => {
       return {
-        [pool.address.toString()]: pool,
-        poolIndex: index,
+        [pool.address.toString()]: {
+          ...pool,
+          poolIndex: index
+        },
         ...prev
       }
     }, {})
