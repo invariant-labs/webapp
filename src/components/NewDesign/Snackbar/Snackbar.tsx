@@ -18,7 +18,6 @@ export const Snackbar: React.FC<ISnackbarProps> = ({ children, maxSnack }) => {
         variantWarning: classes.warning,
         variantInfo: classes.info
       }}
-      autoHideDuration={9999999999}
     >
       {children}
     </SnackbarProvider>

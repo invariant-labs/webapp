@@ -3,20 +3,19 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
-    width: 47,
-    height: 33,
+    height: 30,
     backgroundColor: 'transparent',
+    textTransform: 'uppercase',
     borderRadius: 6,
-    marginRight: 16,
     border: 'none',
     color: colors.invariant.lightInfoText,
-    ...typography.body3,
+    ...typography.body1,
     cursor: 'pointer',
     transition: '0.2s all cubic-bezier(0.25, 0.46, 0.45, 0.94)',
     backfaceVisibility: 'hidden',
     fontSmoothing: 'subpixel-antialiased',
     '&:hover': {
-      transform: 'scale(1.1) translateY(1px)'
+      transform: 'scale(1.1)'
     },
     [theme.breakpoints.down('xs')]: {
       width: 36,

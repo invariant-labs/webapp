@@ -31,7 +31,7 @@ const Notifier = () => {
           closeSnackbar(key)
           return
         }
-
+        console.log(key && displayed.includes(key))
         // do nothing if snackbar is already displayed
         if (key && displayed.includes(key)) return
         const action = () =>
