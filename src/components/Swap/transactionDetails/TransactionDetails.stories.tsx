@@ -11,7 +11,7 @@ storiesOf('newUi/swap', module)
     <div style={{ width: 800 }} id={toBlur}>
       <TransactionDetails
         open={true}
-        fee={{ val: new BN(1), scale: 3 }}
+        fee={{ v: new BN(1000) }}
         exchangeRate={{ val: '0.4321', symbol: 'SNY' }}
       />
     </div>
