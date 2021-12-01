@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   success: {
@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderWidth: 1,
     borderColor: colors.invariant.lightInfoText,
     borderRadius: 10,
-    ...newTypography.body1,
+    ...typography.body1,
     maxWidth: 350,
     maxHeight: 64,
     '& SVG': {
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.body2,
+      ...typography.body2,
       maxWidth: 255,
       maxHeight: 32,
       padding: '0px 8px 5px 4px'
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: colors.invariant.lightInfoText,
     borderRadius: 10,
     padding: 10,
-    ...newTypography.body1,
+    ...typography.body1,
     maxWidth: 350,
     maxHeight: 64,
     '& SVG': {
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.body2,
+      ...typography.body2,
       maxWidth: 255,
       maxHeight: 32,
       padding: '0px 8px 5px 4px'
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: colors.invariant.lightInfoText,
     borderRadius: 10,
     padding: 10,
-    ...newTypography.body1,
+    ...typography.body1,
     maxWidth: 350,
     maxHeight: 64,
     '& SVG': {
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.body2,
+      ...typography.body2,
       maxWidth: 255,
       maxHeight: 32,
       padding: '0px 8px 5px 4px'
@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: colors.invariant.lightInfoText,
     borderRadius: 10,
     padding: 10,
-    ...newTypography.body1,
+    ...typography.body1,
     maxWidth: 350,
     maxHeight: 64,
     '& SVG': {
@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.body2,
+      ...typography.body2,
       maxWidth: 255,
       maxHeight: 32,
       padding: '0px 8px 5px 4px'
