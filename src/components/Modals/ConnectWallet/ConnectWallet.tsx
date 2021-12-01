@@ -1,10 +1,11 @@
 import React from 'react'
 import { Typography, Popover, Grid } from '@material-ui/core'
-import useStyles from './style'
+import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 import { ExitToApp } from '@material-ui/icons'
 import { WalletType } from '@web3/wallet'
 import icons from '@static/icons'
-
+import classNames from 'classnames'
+import useStyles from './style'
 export interface IConnectWalletModal {
   options: WalletType[]
   open: boolean
@@ -13,6 +14,7 @@ export interface IConnectWalletModal {
   callDisconect: () => void
   connected: boolean
   onSelect: (wallet: WalletType) => void
+  active?: WalletType
 }
 export const ConnectWallet: React.FC<IConnectWalletModal> = ({
   options,
@@ -21,7 +23,8 @@ export const ConnectWallet: React.FC<IConnectWalletModal> = ({
   handleClose,
   callDisconect,
   connected,
-  onSelect
+  onSelect,
+  active = 'default'
 }) => {
   const classes = useStyles()
 
@@ -46,27 +49,34 @@ export const ConnectWallet: React.FC<IConnectWalletModal> = ({
         vertical: 'top',
         horizontal: 'center'
       }}>
-      <Grid className={classes.root} container alignContent='space-around' direction='column'>
-        {options.map(option => (
-          <Grid
-            item
-            key={option}
-            className={classes.listItem}
-            onClick={() => {
-              onSelect(option)
-              handleClose()
-            }}>
-            <img className={classes.icon} src={icons[names[option]]} alt={`${option} icon}`} />
-            <Typography className={classes.name}>{names[option]}</Typography>
-          </Grid>
-        ))}
+      <Grid className={classes.root}>
+        <Typography className={classes.title}>Connect a wallet</Typography>
+        <Grid className={classes.list} container alignContent='space-around' direction='column'>
+          {options.map(option => (
+            <Grid
+              item
+              key={option}
+              className={classNames(
+                classes.listItem,
+                connected && option === active ? classes.active : null
+              )}
+              onClick={() => {
+                onSelect(option)
+                handleClose()
+              }}>
+              <img className={classes.icon} src={icons[names[option]]} alt={`${option} icon}`} />
+              <Typography className={classes.name}>{names[option]}</Typography>
+              <DotIcon className={classes.dotIcon} />
+            </Grid>
+          ))}
 
-        {connected ? (
-          <Grid item className={classes.listItem} onClick={callDisconect}>
-            <ExitToApp className={classes.icon} />
-            <Typography className={classes.name}>Disconnect</Typography>
-          </Grid>
-        ) : null}
+          {connected ? (
+            <Grid item className={classes.listItem} onClick={callDisconect}>
+              <ExitToApp className={classes.icon} />
+              <Typography className={classes.name}>Disconnect</Typography>
+            </Grid>
+          ) : null}
+        </Grid>
       </Grid>
     </Popover>
   )

@@ -2,9 +2,9 @@ import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { SwapPage } from './SwapPage/SwapPage'
 import { useDispatch, useSelector } from 'react-redux'
-
+import { ListPage } from './ListPage/ListPage'
 import { toBlur } from '@consts/uiUtils'
-import { PoolPage } from './PoolPage/PoolPage'
+import { NewPositionPage } from './NewPositionPage/NewPositionPage'
 import { Status } from '@reducers/solanaWallet'
 import EventsHandlers from '@containers/EventsHandlers'
 import HeaderWrapper from '@containers/HeaderWrapper/HeaderWrapper'
@@ -26,7 +26,8 @@ export const PagesRouter: React.FC = () => {
         <HeaderWrapper />
         <Switch>
           <Route path='/swap' component={SwapPage} />
-          <Route path={'/pool'} component={PoolPage} />
+          <Route path={'/newPosition'} component={NewPositionPage} />
+          <Route path={'/pool'} component={ListPage} />
           <Route path='*'>
             <Redirect to='/swap'>
               <SwapPage />

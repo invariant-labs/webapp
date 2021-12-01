@@ -20,9 +20,8 @@ const MarketEvents = () => {
     }
 
     const connectEvents = () => {
-      console.log('actions.getPoolsData([PAIRS[0]])')
       dispatch(
-        actions.getPoolsData([PAIRS[0]])
+        actions.getPoolsData(PAIRS)
       )
     }
 
@@ -35,13 +34,13 @@ const MarketEvents = () => {
     }
 
     const connectEvents = () => {
-      allPools.forEach(pool => {
+      allPools.forEach((pool) => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         marketProgram.onPoolChange(pool.tokenX, pool.tokenY, FEE_TIERS[0], _poolStructure => {
           // TODO: update for specific
           dispatch(
             dispatch(
-              actions.getPoolsData([PAIRS[0]])
+              actions.getPoolsData(PAIRS)
             )
           )
         })

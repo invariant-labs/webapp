@@ -1,11 +1,11 @@
 import { call, SagaGenerator, takeLatest, put } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
 import { PublicKey } from '@solana/web3.js'
-import { FeeTier, PoolStructure } from '@invariant-labs/sdk/lib/market'
+import { FeeTier } from '@invariant-labs/sdk/lib/market'
 import { Pair } from '@invariant-labs/sdk'
-import { actions, TokensPair } from '@reducers/pools'
+import { actions, PoolWithAddress } from '@reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { FEE_TIERS } from '@invariant-labs/sdk/lib/network'
+import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
 
 // getting pool from SDK: market.get(pair)
 export function* fetchPool(tokenX: PublicKey, tokenY: PublicKey, feeTier: FeeTier): SagaGenerator<string> {
@@ -19,7 +19,6 @@ export function* fetchPool(tokenX: PublicKey, tokenY: PublicKey, feeTier: FeeTie
       feeTier
     )
   )
-  console.log(result)
   return ''
 }
 export function* fetchTicksForPool(
@@ -36,7 +35,6 @@ export function* fetchTicksForPool(
     from,
     to
   )
-  console.log(ticks)
   return ''
 }
 
@@ -44,14 +42,17 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
   const marketProgram = yield* call(getMarketProgram)
 
   try {
-    const pools: PoolStructure[] = []
-
+    const pools: PoolWithAddress[] = []
     for (let i = 0; i < action.payload.length; i++) {
       const poolData = yield* call(
         [marketProgram, marketProgram.getPool],
         action.payload[i]
       )
-      pools.push(poolData)
+      const address = yield* call([action.payload[i], action.payload[i].getAddress], marketProgram.program.programId)
+      pools.push({
+        ...poolData,
+        address
+      })
     }
 
     yield* put(actions.setPools(pools))

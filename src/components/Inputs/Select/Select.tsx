@@ -2,22 +2,22 @@ import React from 'react'
 import { Button, CardMedia } from '@material-ui/core'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import SelectTokenModal from '@components/Modals/SelectModals/SelectTokenModal/SelectTokenModal'
+import { SwapToken } from '@selectors/solanaWallet'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import useStyles from './style'
-import { BN } from '@project-serum/anchor'
 
 export interface ISelectModal {
   name?: string
-  current: string | null
+  current: SwapToken | null
   centered?: boolean
-  tokens: Array<{ symbol: string; balance?: BN; decimals?: number }>
-  onSelect: (chosen: number) => void
+  tokens: Array<{ symbol: string, name: string, logoURI: string }>
+  onSelect: (name: string) => void
   className?: string
 }
 export const Select: React.FC<ISelectModal> = ({
-  name = 'Select token',
+  name = 'Select',
   current,
   centered,
   tokens,
@@ -43,21 +43,26 @@ export const Select: React.FC<ISelectModal> = ({
     <>
       <Button
         className={classNames(classes.button, className)}
-        classes={{ startIcon: classes.startIcon }}
         color='primary'
         variant='contained'
         onClick={handleClick}
         startIcon={
           !current ? null : (
-            <CardMedia className={classes.icon} image={icons[current] ?? icons.SNY} />
+            <CardMedia className={classes.icon} image={current.logoURI ?? icons.SNY} />
           )
         }
-        endIcon={<ExpandMoreIcon style={{ minWidth: 20, marginLeft: -8, marginRight: -4 }} />}
+        endIcon={<ExpandMoreIcon className={classes.endIcon} />}
+        classes={{
+          endIcon: 'selectArrow'
+        }}
+        disableRipple
       >
-        <span style={{ position: 'relative', top: -1, whiteSpace: 'nowrap' }}>{!current ? name : current}</span>
+        <span style={{ whiteSpace: 'nowrap' }}>{!current ? name : current.symbol}</span>
       </Button>
       <SelectTokenModal
         tokens={tokens}
+        commonTokens={tokens ? tokens.slice(0, 4)
+          : [{ symbol: 'SOL', name: 'Solana', logoURI: 'solana' }]}
         open={open}
         centered={centered}
         anchorEl={anchorEl}
