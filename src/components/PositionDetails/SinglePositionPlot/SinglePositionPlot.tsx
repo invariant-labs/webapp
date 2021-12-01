@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Grid, Typography, Card } from '@material-ui/core'
 import PriceRangePlot from '@components/PriceRangePlot/PriceRangePlot'
-import LiquidationRangeInfo from '@components/LiquidationRangeInfo/LiquidationRangeInfo'
+import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
 import useStyles from './style'
+import { ILiquidityItem } from '../SinglePositionInfo/SinglePositionInfo'
 
 export interface ISinglePositionPlot {
   data: Array<{ x: number; y: number }>
@@ -14,6 +15,8 @@ export interface ISinglePositionPlot {
   tokenY: string
   tokenX: string
   onZoomOutOfData: (min: number, max: number) => void
+  loadingTicks: boolean
+  positionData: ILiquidityItem
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -25,12 +28,21 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   currentPrice,
   tokenY,
   tokenX,
-  onZoomOutOfData
+  onZoomOutOfData,
+  loadingTicks,
+  positionData
 }) => {
   const classes = useStyles()
 
-  const [plotMin, setPlotMin] = useState(Math.max(midPriceIndex - 15, 0))
-  const [plotMax, setPlotMax] = useState(Math.min(midPriceIndex + 15, data.length - 1))
+  const [plotMin, setPlotMin] = useState(data[Math.max(midPriceIndex - 15, 0)].x)
+  const [plotMax, setPlotMax] = useState(data[Math.min(midPriceIndex + 15, data.length - 1)].x)
+
+  useEffect(() => {
+    if (!loadingTicks) {
+      setPlotMin(data[Math.max(midPriceIndex - 15, 0)].x)
+      setPlotMax(data[Math.min(midPriceIndex + 15, data.length - 1)].x)
+    }
+  }, [loadingTicks])
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -73,14 +85,14 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
       <Grid className={classes.minMaxInfo}>
         <LiquidationRangeInfo
           label='min'
-          amount={leftRangeIndex}
-          toToken={tokenX}
-          fromToken={tokenY}/>
+          amount={positionData.min}
+          tokenX={tokenX}
+          tokenY={tokenY}/>
         <LiquidationRangeInfo
           label='max'
-          amount={rightRangeIndex}
-          toToken={tokenX}
-          fromToken={tokenY}/>
+          amount={positionData.max}
+          tokenX={tokenX}
+          tokenY={tokenY}/>
       </Grid>
       <Grid>
         <Card className={classes.currentPriceLabel}>
@@ -91,7 +103,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
             <Typography component='span'>
               {currentPrice}
             </Typography>
-            {tokenY} per {tokenX}
+            {tokenX} per {tokenY}
           </Typography>
         </Card>
       </Grid>

@@ -38,8 +38,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
 
-  const [plotMin, setPlotMin] = useState(Math.max(midPriceIndex - 15, 0))
-  const [plotMax, setPlotMax] = useState(Math.min(midPriceIndex + 15, data.length - 1))
+  const [plotMin, setPlotMin] = useState(data[Math.max(midPriceIndex - 15, 0)].x)
+  const [plotMax, setPlotMax] = useState(data[Math.min(midPriceIndex + 15, data.length - 1)].x)
 
   const [waiting, setWaiting] = useState(false)
 

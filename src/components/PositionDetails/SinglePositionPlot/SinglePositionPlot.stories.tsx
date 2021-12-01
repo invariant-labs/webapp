@@ -1,6 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import SinglePositionPlot from './SinglePositionPlot'
+import { tokens } from '@consts/static'
 
 const ticksToData = () => {
   const ticks = [
@@ -44,6 +45,16 @@ storiesOf('singlePosition/rightComponent', module)
         tokenY={'SNY'}
         tokenX={'xUSD'}
         onZoomOutOfData={() => {}}
+        loadingTicks={false}
+        positionData={{
+          tokenXName: 'BTC',
+          tokenXIcon: tokens[0].logoURI,
+          tokenYIcon: tokens[1].logoURI,
+          tokenYName: 'SNY',
+          min: 2149.6,
+          max: 149.6,
+          fee: 0.05
+        }}
       />
     )
   })

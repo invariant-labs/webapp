@@ -74,6 +74,7 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
         tokenYClaimValue={9.19703}
         closePosition={() => console.log('close position')}
         onZoomOutOfData={() => {}}
+        loadingTicks={false}
       />
     )
   })
