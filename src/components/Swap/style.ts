@@ -1,7 +1,29 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
+  '@keyframes slide-down': {
+    '0%': {
+      top: 0
+    },
+    '50%': {
+      top: 60
+    },
+    '100%': {
+      top: 0
+    }
+  },
+  '@keyframes slide-up': {
+    '0%': {
+      top: 0
+    },
+    '50%': {
+      top: -60
+    },
+    '100%': {
+      top: 0
+    }
+  },
   swapWrapper: {
     display: 'flex',
     flexDirection: 'column',
@@ -26,6 +48,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 20,
     cursor: 'pointer'
   },
+  settingsIconBtn: {
+    padding: 0,
+    margin: 0,
+    minWidth: 'auto'
+  },
   slippage: {
     position: 'absolute'
   },
@@ -45,8 +72,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.label1
   },
   amountInput: {
+    position: 'relative',
     border: `1px solid ${colors.invariant.componentOut2}`,
     backgroundColor: colors.invariant.componentIn2
+  },
+  amountInputDown: {
+    animation: '$slide-down .3s'
+  },
+  amountInputUp: {
+    animation: '$slide-up .3s'
   },
   swapArrowBox: {
     backgroundColor: colors.invariant.componentOut2,

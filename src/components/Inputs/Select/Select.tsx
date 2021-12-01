@@ -57,12 +57,12 @@ export const Select: React.FC<ISelectModal> = ({
         }}
         disableRipple
       >
-        <span style={{ whiteSpace: 'nowrap' }}>{!current ? name : current.symbol}</span>
+        <span style={{ whiteSpace: 'nowrap' }} className={classes.tokenName}>{!current ? name : current.symbol}</span>
       </Button>
       <SelectTokenModal
         tokens={tokens}
-        commonTokens={tokens ? tokens.slice(0, 4)
-          : [{ symbol: 'SOL', name: 'Solana', logoURI: 'solana' }]}
+        // commonTokens={tokens ? tokens.slice(0, 4)
+        //   : [{ symbol: 'SOL', name: 'Solana', logoURI: 'solana' }]}
         open={open}
         centered={centered}
         anchorEl={anchorEl}

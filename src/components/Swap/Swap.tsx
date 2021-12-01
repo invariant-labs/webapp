@@ -4,7 +4,7 @@ import { BN } from '@project-serum/anchor'
 import { printBN, printBNtoBN } from '@consts/utils'
 import { Decimal, PoolStructure } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
-import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
+import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import Slippage from '@components/Swap/slippage/Slippage'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
@@ -233,13 +233,15 @@ export const Swap: React.FC<ISwap> = ({
     <Grid container className={classes.swapWrapper}>
       <Grid container className={classes.header}>
         <Typography component='h1'>Swap tokens</Typography>
-        <CardMedia image={settingIcon} className={classes.settingsIcon} onClick={handleClickSettings}/>
+        <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
+          <CardMedia image={settingIcon} className={classes.settingsIcon} />
+        </Button>
         <Grid className={classes.slippage}>
           <Slippage open={settings}
             setSlippage={setSlippage}
             handleClose={handleCloseSettings}
             anchorEl={anchorEl}
-            defaultSlippage={slippTolerance}/>
+            defaultSlippage={'1'}/>
         </Grid>
       </Grid>
       <Grid container className={classes.root} direction='column'>
@@ -252,8 +254,9 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
         <ExchangeAmountInput
           value={amountFrom}
+          key={swap?.toString()}
           decimal={tokenFromIndex !== null ? tokens[tokenFromIndex].decimal : 6}
-          className={classes.amountInput}
+          className={swap !== null ? `${classes.amountInput} ${classes.amountInputDown}` : `${classes.amountInput}`}
           style={{ transform: swap !== null ? swap ? 'translateY(0px)' : 'translateY(0px)' : '' }}
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
@@ -294,11 +297,9 @@ export const Swap: React.FC<ISwap> = ({
                 }
               }
               className={classes.swapArrows} onClick={() => {
-                if (tokenToIndex !== null) {
-                  swap !== null
-                    ? setSwap(!swap)
-                    : setSwap(true)
-                }
+                swap !== null
+                  ? setSwap(!swap)
+                  : setSwap(true)
                 const tmp = tokenFromIndex
                 const tokensTmp = tokens
                 setTokenFromIndex(tokenToIndex)
@@ -315,7 +316,8 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
         <ExchangeAmountInput
           value={amountTo}
-          className={classes.amountInput}
+          key={tokenToIndex?.toString()}
+          className={swap !== null ? `${classes.amountInput} ${classes.amountInputUp}` : `${classes.amountInput}`}
           decimal={tokenToIndex !== null ? tokens[tokenToIndex].decimal : 6}
           style={
             {
