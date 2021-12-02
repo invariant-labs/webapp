@@ -1,4 +1,4 @@
-import { colors, typography } from '@static/theme'
+import { colors } from '@static/theme'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
@@ -6,7 +6,7 @@ const useStyles = makeStyles(() => ({
     background: colors.invariant.componentIn2,
     color: colors.white.main,
     borderRadius: 5,
-    padding: '10px 15px',
+    padding: '8px 15px',
     fontSize: 30,
     fontWeight: 'normal',
     width: '100%',
@@ -16,8 +16,8 @@ const useStyles = makeStyles(() => ({
   maxButton: {
     fontSize: 16,
     color: colors.invariant.componentIn2,
-    width: 84,
-    height: 40,
+    minWidth: 55,
+    height: 32,
     fontWeight: 400,
     borderRadius: 3,
     padding: '7px 0',
