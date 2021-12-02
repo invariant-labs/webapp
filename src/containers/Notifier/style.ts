@@ -1,23 +1,22 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
-    width: 73,
-    height: 33,
-    backgroundColor: colors.navy.grey,
+    height: 30,
+    backgroundColor: 'transparent',
+    textTransform: 'uppercase',
     borderRadius: 6,
-    marginRight: 16,
-    paddingTop: 3,
     border: 'none',
-    color: colors.navy.navButton,
-    ...typography.subtitle1,
+    color: colors.invariant.lightInfoText,
+    fontSize: 14,
+    fontWeight: 600,
     cursor: 'pointer',
     transition: '0.2s all cubic-bezier(0.25, 0.46, 0.45, 0.94)',
     backfaceVisibility: 'hidden',
     fontSmoothing: 'subpixel-antialiased',
     '&:hover': {
-      transform: 'scale(1.1) translateY(1px)'
+      transform: 'scale(1.15) translateY(0px)'
     },
     [theme.breakpoints.down('xs')]: {
       width: 36,
@@ -29,6 +28,26 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingBottom: 17,
       paddingRight: 36
     }
+  },
+  closeButton: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 30,
+    '& img': {
+      width: 16,
+      transition: '.2s all ease-in',
+      cursor: 'pointer',
+      '&:hover': {
+        transform: 'scale(1.1)'
+      }
+    }
+  },
+  detailsWrapper: {
+    display: 'flex',
+    alignItems: 'center'
   }
 }))
 

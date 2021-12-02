@@ -12,6 +12,7 @@ export interface Swap {
   amount: BN,
   slippage: Decimal,
   price: Decimal
+  txid?: string
 }
 
 export interface ISwapStore {
@@ -24,7 +25,8 @@ export const defaultState: ISwapStore = {
     toToken: DEFAULT_PUBLICKEY,
     amount: new BN(0),
     slippage: { v: fromFee(new BN(1000)) },
-    price: { v: new BN(1) }
+    price: { v: new BN(1) },
+    txid: 'test'
   }
 }
 
@@ -33,7 +35,7 @@ const swapSlice = createSlice({
   name: swapSliceName,
   initialState: defaultState,
   reducers: {
-    swap(state, action: PayloadAction<Swap>) {
+    swap(state, action: PayloadAction<Omit<Swap, 'txid'>>) {
       state.swap = action.payload
       return state
     }

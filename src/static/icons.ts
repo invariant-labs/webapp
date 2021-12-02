@@ -27,6 +27,7 @@ import githubIcon from './svg/githubCircle.svg'
 import telegramIcon from './svg/telegramCircle.svg'
 import twitterIcon from './svg/twitterCircle.svg'
 import discordIcon from './svg/discordCircle.svg'
+import closeIcon from './svg/closeIcon.svg'
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
   stSOL: WSOLIcon,
@@ -56,7 +57,8 @@ const icons: { [key: string]: string } = {
   GithubIcon: githubIcon,
   TelegramIcon: telegramIcon,
   TwitterIcon: twitterIcon,
-  DiscordIcon: discordIcon
+  DiscordIcon: discordIcon,
+  closeIcon: closeIcon
 }
 
 export default icons
