@@ -23,6 +23,10 @@ import NoCon from './svg/no-connected.svg'
 import mainnetIcon from './svg/mainNet.svg'
 import devnetIcon from './svg/devNet.svg'
 import testnetIcon from './svg/testNet.svg'
+import githubIcon from './svg/githubCircle.svg'
+import telegramIcon from './svg/telegramCircle.svg'
+import twitterIcon from './svg/twitterCircle.svg'
+import discordIcon from './svg/discordCircle.svg'
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
   stSOL: WSOLIcon,
@@ -48,7 +52,11 @@ const icons: { [key: string]: string } = {
   NoConnected: NoCon,
   MainnetIcon: mainnetIcon,
   DevnetIcon: devnetIcon,
-  TestnetIcon: testnetIcon
+  TestnetIcon: testnetIcon,
+  GithubIcon: githubIcon,
+  TelegramIcon: telegramIcon,
+  TwitterIcon: twitterIcon,
+  DiscordIcon: discordIcon
 }
 
 export default icons
