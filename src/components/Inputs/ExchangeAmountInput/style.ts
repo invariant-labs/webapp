@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
   maxButton: {
     fontSize: 16,
     color: colors.invariant.componentIn2,
-    width: 84,
+    minWidth: 55,
     height: 32,
     fontWeight: 400,
     borderRadius: 3,

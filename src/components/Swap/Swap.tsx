@@ -297,15 +297,17 @@ export const Swap: React.FC<ISwap> = ({
                 }
               }
               className={classes.swapArrows} onClick={() => {
-                swap !== null
-                  ? setSwap(!swap)
-                  : setSwap(true)
-                const tmp = tokenFromIndex
-                const tokensTmp = tokens
-                setTokenFromIndex(tokenToIndex)
-                setTokenToIndex(tmp)
-                tokens = tokensY
-                setTokensY(tokensTmp)
+                setTimeout(() => {
+                  swap !== null
+                    ? setSwap(!swap)
+                    : setSwap(true)
+                  const tmp = tokenFromIndex
+                  const tokensTmp = tokens
+                  setTokenFromIndex(tokenToIndex)
+                  setTokenToIndex(tmp)
+                  tokens = tokensY
+                  setTokensY(tokensTmp)
+                }, 500)
               }} />
           </Box>
           <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
