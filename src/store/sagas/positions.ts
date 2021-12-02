@@ -258,7 +258,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
     yield put(
       snackbarsActions.add({
-        message: 'Position added successfully.',
+        message: 'Fee claimed successfully.',
         variant: 'success',
         persist: false
       })
@@ -362,6 +362,6 @@ export function* closePositionHandler(): Generator {
 
 export function* positionsSaga(): Generator {
   yield all(
-    [initPositionHandler, getCurrentPlotTicksHandler, getPositionsListHandler, claimFeeHandler].map(spawn)
+    [initPositionHandler, getCurrentPlotTicksHandler, getPositionsListHandler, claimFeeHandler, closePositionHandler].map(spawn)
   )
 }

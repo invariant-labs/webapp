@@ -7,12 +7,15 @@ import { Typography } from '@material-ui/core'
 import { printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt } from '@invariant-labs/sdk'
+import useStyles from './style'
 
 export interface IProps {
   id: string
 }
 
 export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
+  const classes = useStyles()
+
   const dispatch = useDispatch()
 
   const position = useSelector(singlePositionData(id))
@@ -123,8 +126,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       )
       : (
         isLoadingList || ticksLoading
-          ? <Typography>Loading...</Typography>
-          : <Typography>Position does not exist in your list.</Typography>
+          ? <Typography className={classes.placeholderText}>Loading...</Typography>
+          : <Typography className={classes.placeholderText}>Position does not exist in your list.</Typography>
       )
   )
 }
