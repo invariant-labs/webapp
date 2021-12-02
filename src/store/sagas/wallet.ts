@@ -133,7 +133,6 @@ export function* getCollateralTokenAirdrop(
     if (accountAddress == null) {
       accountAddress = yield* call(createAccount, collateralTokenProgram.publicKey)
     }
-    console.log(accountAddress)
     const ix = Token.createMintToInstruction(
       TOKEN_PROGRAM_ID,
       collateral,
