@@ -105,9 +105,9 @@ export function* handleAirdrop(): Generator {
       }
     }
   }
-  yield* call(getCollateralTokenAirdrop, USDC.address, 100 * 10 ** USDC.decimal)
-  yield* call(getCollateralTokenAirdrop, USDT.address, 100 * 10 ** USDT.decimal)
-  yield* call(getCollateralTokenAirdrop, SOL.address, 10 ** SOL.decimal)
+  yield* call(getCollateralTokenAirdrop, collateralsAddresses, collateralsQuantities)
+  // yield* call(getCollateralTokenAirdrop, USDT.address, 100 * 10 ** USDT.decimal)
+  // yield* call(getCollateralTokenAirdrop, SOL.address, 10 ** SOL.decimal)
   yield put(
     snackbarsActions.add({
       message: 'You will soon receive airdrop',
@@ -116,28 +116,35 @@ export function* handleAirdrop(): Generator {
     })
   )
 }
+const collateralsAddresses: PublicKey[] = [USDC.address, USDT.address, SOL.address]
+const collateralsQuantities: number[] = [100 * 10 ** USDC.decimal, 100 * 10 ** USDT.decimal, 100 * 10 ** SOL.decimal]
 export function* getCollateralTokenAirdrop(
-  collateralTokenAddress: PublicKey,
-  quantity: number
+  collateralsAddresses: PublicKey[],
+  collateralsQuantities: number[]
 ): Generator {
   const wallet = yield* call(getWallet)
   const tokensAccounts = yield* select(accounts)
-  const collateralTokenProgram = yield* call(getToken, collateralTokenAddress)
-  let accountAddress = tokensAccounts[collateralTokenAddress.toString()]
-    ? tokensAccounts[collateralTokenAddress.toString()].address
-    : null
-  if (accountAddress == null) {
-    accountAddress = yield* call(createAccount, collateralTokenProgram.publicKey)
+  const instructions: Transaction[] = []
+  for (const collateral of collateralsAddresses) {
+    const collateralTokenProgram = yield* call(getToken, collateral)
+    let accountAddress = tokensAccounts[collateral.toString()]
+      ? tokensAccounts[collateral.toString()].address
+      : null
+    if (accountAddress == null) {
+      accountAddress = yield* call(createAccount, collateralTokenProgram.publicKey)
+    }
+    console.log(accountAddress)
+    const ix = Token.createMintToInstruction(
+      TOKEN_PROGRAM_ID,
+      collateral,
+      accountAddress,
+      airdropAdmin.publicKey,
+      [],
+      collateralsQuantities[0]
+    )
+    instructions.push(new Transaction().add(ix))
   }
-  const ix = Token.createMintToInstruction(
-    TOKEN_PROGRAM_ID,
-    collateralTokenAddress,
-    accountAddress,
-    airdropAdmin.publicKey,
-    [],
-    quantity
-  )
-  const tx = new Transaction().add(ix)
+  const tx = new Transaction().add(instructions[0], instructions[1], instructions[2])
   const connection = yield* call(getConnection)
   const blockhash = yield* call([connection, connection.getRecentBlockhash])
   tx.feePayer = wallet.publicKey
