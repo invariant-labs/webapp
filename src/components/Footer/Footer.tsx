@@ -9,22 +9,22 @@ export const Footer = () => {
   return (
     <Grid className={classes.footer}>
       <Grid className={classes.footerItem} >
-        <a href={social.github}>
+        <a href={social.github} className={classes.footerLink} target='_blank'>
           <img src={icons.GithubIcon} alt={'github icon'}/>
         </a>
       </Grid>
       <Grid className={classes.footerItem} >
-        <a href={social.telegram}>
+        <a href={social.telegram} className={classes.footerLink} target='_blank'>
           <img src={icons.TelegramIcon} alt={'telegram icon'} />
         </a>
       </Grid>
       <Grid className={classes.footerItem} >
-        <a href={social.twitter}>
+        <a href={social.twitter} className={classes.footerLink} target='_blank'>
           <img src={icons.TwitterIcon} alt={'twitter icon'} />
         </a>
       </Grid>
       <Grid className={classes.footerItem} >
-        <a href={social.discord}>
+        <a href={social.discord} className={classes.footerLink} target='_blank'>
           <img src={icons.DiscordIcon} alt={'discord icon'} />
         </a>
       </Grid>
