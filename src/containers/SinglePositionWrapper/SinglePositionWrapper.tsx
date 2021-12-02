@@ -21,7 +21,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   useEffect(() => {
     if (position) {
-      console.log(position)
       dispatch(actions.getCurrentPlotTicks({
         poolIndex: position.poolData.poolIndex,
         isXtoY: true
@@ -83,7 +82,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     !isLoadingList && !ticksLoading && position
       ? (
         <PositionDetails
-          style={{ width: 600, height: 212, backgroundColor: '#1C1B1E', borderRadius: 10 }}
           detailsData={ticksData}
           midPriceIndex={midPriceIndex}
           leftRangeIndex={leftRangeIndex}

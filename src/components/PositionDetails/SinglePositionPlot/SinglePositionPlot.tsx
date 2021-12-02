@@ -7,7 +7,6 @@ import { ILiquidityItem } from '../SinglePositionInfo/SinglePositionInfo'
 
 export interface ISinglePositionPlot {
   data: Array<{ x: number; y: number }>
-  style?: React.CSSProperties
   leftRangeIndex: number
   rightRangeIndex: number
   midPriceIndex: number
@@ -21,7 +20,6 @@ export interface ISinglePositionPlot {
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   data,
-  style,
   leftRangeIndex,
   rightRangeIndex,
   midPriceIndex,
@@ -64,7 +62,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   }
 
   return (
-    <Grid className={classes.root}>
+    <Grid item className={classes.root}>
       <Typography component='h1' className={classes.header}>
         Price range
       </Typography>
@@ -75,12 +73,11 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           plotMax={plotMax}
           zoomMinus={zoomMinus}
           zoomPlus={zoomPlus}
-          style={style}
           disabled
           leftRangeIndex={leftRangeIndex}
           rightRangeIndex={rightRangeIndex}
           midPriceIndex={midPriceIndex}
-          className={classes.zoom}/>
+          className={classes.plot}/>
       </Grid>
       <Grid className={classes.minMaxInfo}>
         <LiquidationRangeInfo

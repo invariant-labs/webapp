@@ -6,7 +6,6 @@ import useStyles from './style'
 
 interface IProps {
   detailsData: Array<{ x: number; y: number }>
-  style?: React.CSSProperties
   leftRangeIndex: number
   rightRangeIndex: number
   midPriceIndex: number
@@ -26,7 +25,6 @@ interface IProps {
 
 const PositionDetails: React.FC<IProps> = ({
   detailsData,
-  style,
   leftRangeIndex,
   rightRangeIndex,
   midPriceIndex,
@@ -63,7 +61,6 @@ const PositionDetails: React.FC<IProps> = ({
           leftRangeIndex={leftRangeIndex}
           rightRangeIndex={rightRangeIndex}
           midPriceIndex={midPriceIndex}
-          style={style}
           currentPrice={currentPrice}
           tokenY={tokenY}
           tokenX={tokenX}

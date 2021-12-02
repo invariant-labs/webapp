@@ -46,7 +46,12 @@ const useStyles = makeStyles(() => ({
       ...typography.body1
     }
   },
-  zoom: {
+  plot: {
+    width: 471,
+    height: 207,
+    backgroundColor: '#1C1B1E',
+    borderRadius: 10,
+
     '& .zoomBtns': {
       top: 15,
       right: 15
