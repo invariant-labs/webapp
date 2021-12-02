@@ -1,14 +1,18 @@
 import { colors, typography } from '@static/theme'
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, Theme } from '@material-ui/core'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   footer: {
     width: '100%',
     position: 'fixed',
     bottom: 35,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    [theme.breakpoints.down('md')]: {
+      position: 'unset',
+      paddingTop: 40
+    }
   },
   footerItem: {
     margin: '0 10px',
