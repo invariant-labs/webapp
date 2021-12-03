@@ -32,7 +32,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         isXtoY: true
       }))
     }
-  }, [position])
+  }, [position?.id])
 
   const midPriceIndex = useMemo(() => ticksData.findIndex((tick) => tick.index === position?.poolData.currentTickIndex), [ticksData.length, position?.id])
   const leftRangeIndex = useMemo(() => ticksData.findIndex((tick) => tick.index === position?.lowerTickIndex), [ticksData.length, position?.id])
