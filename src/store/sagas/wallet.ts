@@ -25,7 +25,6 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { accounts, address, status } from '@selectors/solanaWallet'
 import { DEFAULT_PUBLICKEY, SOL, USDC, USDT } from '@consts/static'
 import airdropAdmin from '@consts/airdropAdmin'
-import { text } from '@storybook/addon-knobs'
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
   return wallet
