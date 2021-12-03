@@ -26,7 +26,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
 
   useEffect(() => {
-    if (position) {
+    if (position && !(ticksData?.length)) {
       dispatch(actions.getCurrentPlotTicks({
         poolIndex: position.poolData.poolIndex,
         isXtoY: true

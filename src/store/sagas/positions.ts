@@ -263,6 +263,8 @@ export function* handleClaimFee(action: PayloadAction<number>) {
         persist: false
       })
     )
+
+    yield put(actions.getSinglePosition(action.payload))
   } catch (error) {
     console.log(error)
     yield put(
@@ -348,6 +350,26 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
   }
 }
 
+export function* handleGetSinglePosition(action: PayloadAction<number>) {
+  try {
+    const marketProgram = yield* call(getMarketProgram)
+    const wallet = yield* call(getWallet)
+
+    const position = yield* call(
+      [marketProgram, marketProgram.getPosition],
+      wallet.publicKey,
+      action.payload
+    )
+
+    yield put(actions.setSinglePosition({
+      index: action.payload,
+      position
+    }))
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export function* initPositionHandler(): Generator {
   yield* takeEvery(actions.initPosition, handleInitPosition)
 }
@@ -363,9 +385,12 @@ export function* claimFeeHandler(): Generator {
 export function* closePositionHandler(): Generator {
   yield* takeEvery(actions.closePosition, handleClosePosition)
 }
+export function* getSinglePositionHandler(): Generator {
+  yield* takeEvery(actions.getSinglePosition, handleGetSinglePosition)
+}
 
 export function* positionsSaga(): Generator {
   yield all(
-    [initPositionHandler, getCurrentPlotTicksHandler, getPositionsListHandler, claimFeeHandler, closePositionHandler].map(spawn)
+    [initPositionHandler, getCurrentPlotTicksHandler, getPositionsListHandler, claimFeeHandler, closePositionHandler, getSinglePositionHandler].map(spawn)
   )
 }
