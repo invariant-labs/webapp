@@ -333,6 +333,8 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       })
     )
 
+    yield put(actions.getPositionsList())
+
     action.payload.onSuccess()
   } catch (error) {
     console.log(error)
