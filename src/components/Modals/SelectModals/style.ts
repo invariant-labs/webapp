@@ -1,15 +1,21 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   popover: {
     marginTop: 'calc(50vh - 258px)',
-    marginLeft: 'calc(50vw - 231px)'
+    marginLeft: 'calc(50vw - 231px)',
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 'calc(50vw - 206px)'
+    }
   },
   container: {
     padding: 30,
     backgroundColor: colors.invariant.componentOut4,
-    width: 500
+    width: 500,
+    [theme.breakpoints.down('xs')]: {
+      width: 410
+    }
   },
   selectTokenHeader: {
     width: '100%',
