@@ -3,7 +3,7 @@ import { actions as snackbarsActions } from '@reducers/snackbars'
 import { createAccount, getWallet } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
 import { getConnection } from './connection'
-import { actions, GetCurrentTicksData, InitPositionData, PlotTickData } from '@reducers/positions'
+import { actions, ClosePositionData, GetCurrentTicksData, InitPositionData, PlotTickData } from '@reducers/positions'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { pools } from '@selectors/pools'
 import { calculate_price_sqrt, MAX_TICK, MIN_TICK, Pair, TICK_LIMIT } from '@invariant-labs/sdk'
@@ -275,7 +275,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
   }
 }
 
-export function* handleClosePosition(action: PayloadAction<number>) {
+export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
   try {
     const connection = yield* call(getConnection)
     const marketProgram = yield* call(getMarketProgram)
@@ -284,7 +284,7 @@ export function* handleClosePosition(action: PayloadAction<number>) {
     const allPositionsData = yield* select(positionsWithPoolsData)
     const tokensAccounts = yield* select(accounts)
 
-    const positionForIndex = allPositionsData[action.payload].poolData
+    const positionForIndex = allPositionsData[action.payload.positionIndex].poolData
 
     let userTokenX = tokensAccounts[positionForIndex.tokenX.toString()]
       ? tokensAccounts[positionForIndex.tokenX.toString()].address
@@ -309,7 +309,7 @@ export function* handleClosePosition(action: PayloadAction<number>) {
         { fee: positionForIndex.fee.v }
       ),
       wallet.publicKey,
-      action.payload,
+      action.payload.positionIndex,
       userTokenX,
       userTokenY
     )
@@ -332,6 +332,8 @@ export function* handleClosePosition(action: PayloadAction<number>) {
         persist: false
       })
     )
+
+    action.payload.onSuccess()
   } catch (error) {
     console.log(error)
     yield put(

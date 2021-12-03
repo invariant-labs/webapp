@@ -1,4 +1,5 @@
 import React, { useMemo, useEffect } from 'react'
+import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@reducers/positions'
 import { isLoadingPositionsList, plotTicks, singlePositionData } from '@selectors/positions'
@@ -15,6 +16,8 @@ export interface IProps {
 
 export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const classes = useStyles()
+
+  const history = useHistory()
 
   const dispatch = useDispatch()
 
@@ -106,10 +109,15 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             dispatch(actions.claimFee(position.positionIndex))
           }}
           closePosition={() => {
-            dispatch(actions.closePosition(position.positionIndex))
+            dispatch(actions.closePosition({
+              positionIndex: position.positionIndex,
+              onSuccess: () => {
+                history.push('/pool')
+              }
+            }))
           }}
-          tokenXLiqValue={+printBN(position.tokensOwedX.v, position.tokenX.decimal)}
-          tokenYLiqValue={+printBN(position.tokensOwedY.v, position.tokenY.decimal)}
+          tokenXLiqValue={0}
+          tokenYLiqValue={0}
           tokenXClaimValue={+printBN(position.tokensOwedX.v, position.tokenX.decimal)}
           tokenYClaimValue={+printBN(position.tokensOwedY.v, position.tokenY.decimal)}
           positionData={{

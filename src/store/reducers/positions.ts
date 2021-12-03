@@ -33,6 +33,11 @@ export interface GetCurrentTicksData {
   max?: number
 }
 
+export interface ClosePositionData {
+  positionIndex: number,
+  onSuccess: () => void
+}
+
 export const defaultState: IPositionsStore = {
   plotTicks: {
     data: [],
@@ -75,7 +80,7 @@ const positionsSlice = createSlice({
     claimFee(state, _action: PayloadAction<number>) {
       return state
     },
-    closePosition(state, _action: PayloadAction<number>) {
+    closePosition(state, _action: PayloadAction<ClosePositionData>) {
       return state
     },
     resetState(state) {
