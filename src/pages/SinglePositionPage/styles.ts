@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'transparent',
     marginTop: 65,
     marginInline: 'auto',
-    width: 1058
+    width: 1004
   },
   back: {
     height: 24,
@@ -29,6 +29,25 @@ const useStyles = makeStyles(() => ({
     color: colors.invariant.lightInfoText,
     WebkitPaddingBefore: '2px',
     ...typography.body2
+  },
+  button: {
+    color: colors.white.main,
+    ...typography.body1,
+    textTransform: 'none',
+    background: colors.invariant.accent1,
+    borderRadius: '10px',
+    height: 40,
+
+    '&:hover': {
+      background: colors.invariant.accent1,
+      boxShadow: `0 0 15px ${colors.invariant.accent1}`
+    }
+  },
+  buttonText: {
+    WebkitPaddingBefore: '2px'
+  },
+  top: {
+    marginBottom: 16
   }
 }))
 
