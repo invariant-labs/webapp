@@ -6,9 +6,10 @@ const useStyles = makeStyles(() => ({
     width: 1058
   },
   positionDetails: {
-    paddingRight: 20,
+    marginRight: 24,
     display: 'flex',
-    alignItems: 'end'
+    alignItems: 'end',
+    width: 461
   }
 }))
 
