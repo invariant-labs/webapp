@@ -11,8 +11,24 @@ import { calcTicksAmountInRange, logBase, printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { accounts } from '@selectors/solanaWallet'
 import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
-import { Transaction } from '@solana/web3.js'
+import { Transaction, Connection } from '@solana/web3.js'
 import { positionsWithPoolsData, plotTicks } from '@selectors/positions'
+
+export function* hasTransactionSucceed(connection: Connection, txid: string): Generator {
+  while (true) {
+    const status = yield* call([connection, connection.getSignatureStatus], txid)
+
+    if (status.value?.confirmationStatus === 'confirmed' || status.value?.confirmationStatus === 'finalized') {
+      break
+    }
+
+    yield* call(sleep, 500)
+  }
+
+  const details = yield* call([connection, connection.getConfirmedTransaction], txid, 'confirmed')
+
+  return !details?.meta?.err || details.meta.err === null
+}
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
@@ -60,17 +76,31 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
-    yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
+    const txid = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: true
     })
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Position added successfully.',
-        variant: 'success',
-        persist: false
-      })
-    )
+    const hasSucceed = yield* call(hasTransactionSucceed, connection, txid)
+
+    if (!hasSucceed) {
+      yield put(
+        snackbarsActions.add({
+          message: 'Position adding failed. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Position added successfully.',
+          variant: 'success',
+          persist: false,
+          txid
+        })
+      )
+    }
   } catch (error) {
     console.log(error)
     yield put(
