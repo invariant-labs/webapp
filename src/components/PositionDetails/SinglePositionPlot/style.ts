@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
   },
   header: {
     ...typography.body1,
-    color: '#FFFFFF',
+    color: colors.white.main,
     paddingBottom: 14
   },
   plotWrapper: {
@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.componentOut2,
     textAlign: 'center',
     '& span': {
-      color: '#FFFFFF',
+      color: colors.white.main,
       ...typography.body1,
       lineHeight: '35px',
       paddingRight: 5
@@ -49,7 +49,7 @@ const useStyles = makeStyles(() => ({
   plot: {
     width: 471,
     height: 207,
-    backgroundColor: '#1C1B1E',
+    backgroundColor: colors.invariant.componentIn2,
     borderRadius: 10,
 
     '& .zoomBtns': {
