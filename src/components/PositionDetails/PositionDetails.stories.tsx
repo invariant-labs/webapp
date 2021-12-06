@@ -54,7 +54,6 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
         leftRangeIndex={100}
         midPriceIndex={150}
         rightRangeIndex={200}
-        style={{ width: 600, height: 212, backgroundColor: '#1C1B1E', borderRadius: 10 }}
         currentPrice={300}
         tokenY={'SNY'}
         tokenX={'BTC'}
