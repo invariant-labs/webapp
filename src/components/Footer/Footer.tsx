@@ -28,6 +28,11 @@ export const Footer = () => {
           <img src={icons.DiscordIcon} alt={'discord icon'} />
         </a>
       </Grid>
+      <Grid className={classes.footerItem} >
+        <a href={social.medium} className={classes.footerLink} target='_blank'>
+          <img src={icons.mediumIcon} alt={'medium icon'} />
+        </a>
+      </Grid>
     </Grid>
   )
 }

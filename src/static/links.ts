@@ -1,6 +1,7 @@
 export const social = {
-  twitter: 'https://twitter.com/synthetify',
+  twitter: 'https://twitter.com/invariant_labs',
   github: 'https://github.com/invariant-labs',
-  discord: '',
-  telegram: ''
+  discord: 'https://discord.gg/yfwdmfEX',
+  telegram: '',
+  medium: ''
 }

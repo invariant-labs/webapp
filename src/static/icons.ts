@@ -26,6 +26,7 @@ import testnetIcon from './svg/testNet.svg'
 import githubIcon from './svg/githubCircle.svg'
 import telegramIcon from './svg/telegramCircle.svg'
 import twitterIcon from './svg/twitterCircle.svg'
+import mediumIcon from './svg/mediumCircle.svg'
 import discordIcon from './svg/discordCircle.svg'
 import closeIcon from './svg/closeIcon.svg'
 const icons: { [key: string]: string } = {
@@ -58,6 +59,7 @@ const icons: { [key: string]: string } = {
   TelegramIcon: telegramIcon,
   TwitterIcon: twitterIcon,
   DiscordIcon: discordIcon,
+  mediumIcon: mediumIcon,
   closeIcon: closeIcon
 }
 
