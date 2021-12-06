@@ -13,11 +13,11 @@ export const Footer = () => {
           <img src={icons.GithubIcon} alt={'github icon'}/>
         </a>
       </Grid>
-      <Grid className={classes.footerItem} >
+      {/* <Grid className={classes.footerItem} >
         <a href={social.telegram} className={classes.footerLink} target='_blank'>
           <img src={icons.TelegramIcon} alt={'telegram icon'} />
         </a>
-      </Grid>
+      </Grid> */}
       <Grid className={classes.footerItem} >
         <a href={social.twitter} className={classes.footerLink} target='_blank'>
           <img src={icons.TwitterIcon} alt={'twitter icon'} />
@@ -28,11 +28,11 @@ export const Footer = () => {
           <img src={icons.DiscordIcon} alt={'discord icon'} />
         </a>
       </Grid>
-      <Grid className={classes.footerItem} >
+      {/* <Grid className={classes.footerItem} >
         <a href={social.medium} className={classes.footerLink} target='_blank'>
           <img src={icons.mediumIcon} alt={'medium icon'} />
         </a>
-      </Grid>
+      </Grid> */}
     </Grid>
   )
 }
