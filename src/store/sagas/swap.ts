@@ -8,7 +8,7 @@ import { getMarketProgram } from '@web3/programs/amm'
 import { pools } from '@selectors/pools'
 import { Pair } from '@invariant-labs/sdk'
 import { getConnection } from './connection'
-import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
+import { FEE_TIERS, calculateAveragePrice, SimulateSwapPrice } from '@invariant-labs/sdk/src/utils'
 import { hasTransactionSucceed } from './positions'
 
 export function* handleSwap(): Generator {
@@ -43,6 +43,23 @@ export function* handleSwap(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, swapData.toToken)
     }
+    const tickMap = yield* call([marketProgram, marketProgram.getTickmap],
+      new Pair(swapData.fromToken, swapData.toToken, FEE_TIERS[0])
+    )
+    const testVar: SimulateSwapPrice = {
+      pair: new Pair(swapData.fromToken, swapData.toToken, FEE_TIERS[0]),
+      xToY: isXtoY,
+      byAmonutIn: true,
+      swapAmount: swapData.amount,
+      currentPrice: swapData.price,
+      slippage: swapData.slippage,
+      pool: allPools[0],
+      tickmap: tickMap,
+      market: marketProgram
+    }
+    console.log(calculateAveragePrice(
+      testVar
+    ))
     const swapTx = yield* call([marketProgram, marketProgram.swapTransaction],
       {
         pair: new Pair(swapData.fromToken, swapData.toToken, FEE_TIERS[0]),
