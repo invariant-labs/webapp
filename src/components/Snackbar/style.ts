@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 10,
     padding: 10,
     ...typography.body1,
-    maxWidth: 350,
+    maxWidth: 450,
     maxHeight: 64,
     minWidth: 100,
     '& SVG': {
