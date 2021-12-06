@@ -9,6 +9,7 @@ import { pools } from '@selectors/pools'
 import { Pair } from '@invariant-labs/sdk'
 import { getConnection } from './connection'
 import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
+import { hasTransactionSucceed } from './positions'
 
 export function* handleSwap(): Generator {
   try {
@@ -65,14 +66,27 @@ export function* handleSwap(): Generator {
       skipPreflight: true
     })
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Tokens swapped successfully.',
-        variant: 'success',
-        persist: false,
-        txid: signature
-      })
-    )
+    const hasSucceed = yield* call(hasTransactionSucceed, connection, signature)
+
+    if (!hasSucceed) {
+      yield put(
+        snackbarsActions.add({
+          message: 'Tokens swapping failed. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: signature
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Tokens swapped successfully.',
+          variant: 'success',
+          persist: false,
+          txid: signature
+        })
+      )
+    }
   } catch (error) {
     console.log(error)
     yield put(

@@ -40,6 +40,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.componentIn1,
     borderRadius: 5,
     paddingInline: 13,
+    height: 44,
 
     '& .selectArrow': {
       marginLeft: 'auto'
