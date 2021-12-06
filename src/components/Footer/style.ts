@@ -17,8 +17,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   footerItem: {
     margin: '0 10px',
     opacity: '.5',
+    transition: '.2s all',
     '&:hover': {
-      opacity: 1
+      opacity: 1,
+      transform: 'scale(1.1) rotate(10deg)'
     }
   },
   footerLink: {
