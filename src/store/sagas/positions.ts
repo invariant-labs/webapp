@@ -282,17 +282,31 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
-    yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
+    const txid = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: true
     })
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Fee claimed successfully.',
-        variant: 'success',
-        persist: false
-      })
-    )
+    const hasSucceed = yield* call(hasTransactionSucceed, connection, txid)
+
+    if (!hasSucceed) {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to claim fee. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Fee claimed successfully.',
+          variant: 'success',
+          persist: false,
+          txid
+        })
+      )
+    }
 
     yield put(actions.getSinglePosition(action.payload))
   } catch (error) {
@@ -353,19 +367,33 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
-    yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
+    const txid = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: true
     })
 
     yield* call(sleep, 3000)
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Position closed successfully.',
-        variant: 'success',
-        persist: false
-      })
-    )
+    const hasSucceed = yield* call(hasTransactionSucceed, connection, txid)
+
+    if (!hasSucceed) {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to close position. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Position closed successfully.',
+          variant: 'success',
+          persist: false,
+          txid
+        })
+      )
+    }
 
     yield put(actions.getPositionsList())
 
