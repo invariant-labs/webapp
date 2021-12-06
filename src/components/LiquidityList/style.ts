@@ -3,7 +3,8 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
-    width: '970px'
+    width: '970px',
+    minHeight: '70vh'
   },
   header: {
     display: 'flex',
