@@ -327,6 +327,8 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       skipPreflight: true
     })
 
+    yield* call(sleep, 3000)
+
     yield put(
       snackbarsActions.add({
         message: 'Position closed successfully.',
@@ -334,8 +336,6 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
         persist: false
       })
     )
-
-    yield* call(sleep, 3000)
 
     yield put(actions.getPositionsList())
 
