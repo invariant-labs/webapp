@@ -3,9 +3,10 @@ import { makeStyles } from '@material-ui/core/styles'
 const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
-    minHeight: '60vh',
+    minHeight: '70vh',
+    marginTop: '65px',
     justifyContent: 'center',
-    alignItems: 'end',
+    alignItems: 'center',
     backgroundColor: 'transparent'
   }
 }))

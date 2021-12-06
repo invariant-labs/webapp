@@ -4,15 +4,10 @@ import { makeStyles, Theme } from '@material-ui/core'
 const useStyles = makeStyles((theme: Theme) => ({
   footer: {
     width: '100%',
-    position: 'fixed',
-    bottom: 35,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    [theme.breakpoints.down('md')]: {
-      position: 'unset',
-      paddingTop: 40
-    }
+    padding: '35px 0'
   },
   footerItem: {
     margin: '0 10px',
