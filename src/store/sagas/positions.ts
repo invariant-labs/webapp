@@ -1,6 +1,6 @@
 import { call, put, takeEvery, select, all, spawn, takeLatest } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import { createAccount, getWallet } from './wallet'
+import { createAccount, getWallet, sleep } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
 import { getConnection } from './connection'
 import { actions, ClosePositionData, GetCurrentTicksData, InitPositionData, PlotTickData } from '@reducers/positions'
@@ -334,6 +334,8 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
         persist: false
       })
     )
+
+    yield* call(sleep, 3000)
 
     yield put(actions.getPositionsList())
 
