@@ -9,6 +9,7 @@ import { printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt } from '@invariant-labs/sdk'
 import useStyles from './style'
+import { getX, getY } from '@invariant-labs/sdk/src/math'
 
 export interface IProps {
   id: string
@@ -66,7 +67,36 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
 
     return 0
-  }, [position])
+  }, [position?.id])
+
+  const tokenXLiquidity = useMemo(() => {
+    if (position) {
+      try {
+        return +printBN(
+          getX(position.liquidity.v, calculate_price_sqrt(position.upperTickIndex).v, position.poolData.sqrtPrice.v),
+          PRICE_DECIMAL
+        )
+      } catch (error) {
+        return 0
+      }
+    }
+
+    return 0
+  }, [position?.id])
+  const tokenYLiquidity = useMemo(() => {
+    if (position) {
+      try {
+        return +printBN(
+          getY(position.liquidity.v, position.poolData.sqrtPrice.v, calculate_price_sqrt(position.lowerTickIndex).v),
+          PRICE_DECIMAL
+        )
+      } catch (error) {
+        return 0
+      }
+    }
+
+    return 0
+  }, [position?.id])
 
   const maxDecimals = (value: number): number => {
     if (value >= 10000) {
@@ -116,8 +146,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
               }
             }))
           }}
-          tokenXLiqValue={0}
-          tokenYLiqValue={0}
+          tokenXLiqValue={tokenXLiquidity}
+          tokenYLiqValue={tokenYLiquidity}
           tokenXClaimValue={+printBN(position.tokensOwedX.v, position.tokenX.decimal)}
           tokenYClaimValue={+printBN(position.tokensOwedY.v, position.tokenY.decimal)}
           positionData={{
