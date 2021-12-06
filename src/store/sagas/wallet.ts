@@ -12,7 +12,7 @@ import {
 import { actions, PayloadTypes } from '@reducers/solanaWallet'
 import { getConnection } from './connection'
 import { getSolanaWallet, connectWallet, disconnectWallet, WalletType } from '@web3/wallet'
-import { Account, PublicKey, SystemProgram, Transaction } from '@solana/web3.js'
+import { Account, PublicKey, SystemProgram, Transaction, TransactionInstruction } from '@solana/web3.js'
 import { Token, ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as positionsActions } from '@reducers/positions'
@@ -105,9 +105,9 @@ export function* handleAirdrop(): Generator {
       }
     }
   }
-  yield* call(getCollateralTokenAirdrop, USDC.address, 100 * 10 ** USDC.decimal)
-  yield* call(getCollateralTokenAirdrop, USDT.address, 100 * 10 ** USDT.decimal)
-  yield* call(getCollateralTokenAirdrop, SOL.address, 10 ** SOL.decimal)
+  const tokensAddresses: PublicKey[] = [USDC.address, USDT.address, SOL.address]
+  const collateralsQuantities: number[] = [100 * 10 ** USDC.decimal, 100 * 10 ** USDT.decimal, 10 ** SOL.decimal]
+  yield* call(getCollateralTokenAirdrop, tokensAddresses, collateralsQuantities)
   yield put(
     snackbarsActions.add({
       message: 'You will soon receive airdrop',
@@ -116,28 +116,46 @@ export function* handleAirdrop(): Generator {
     })
   )
 }
+
+export function* setEmptyAccounts(
+  collateralsAddresses: PublicKey[]
+): Generator {
+  const tokensAccounts = yield* select(accounts)
+  const acc: PublicKey[] = []
+  for (const collateral of collateralsAddresses) {
+    const collateralTokenProgram = yield* call(getToken, collateral)
+    const accountAddress = tokensAccounts[collateral.toString()]
+      ? tokensAccounts[collateral.toString()].address
+      : null
+    if (accountAddress == null) {
+      acc.push(collateralTokenProgram.publicKey)
+    }
+  }
+  if (acc.length !== 0) {
+    yield* call(createMultipleAccounts, acc)
+  }
+}
+
 export function* getCollateralTokenAirdrop(
-  collateralTokenAddress: PublicKey,
-  quantity: number
+  collateralsAddresses: PublicKey[],
+  collateralsQuantities: number[]
 ): Generator {
   const wallet = yield* call(getWallet)
+  const instructions: TransactionInstruction[] = []
+  yield* call(setEmptyAccounts, collateralsAddresses)
   const tokensAccounts = yield* select(accounts)
-  const collateralTokenProgram = yield* call(getToken, collateralTokenAddress)
-  let accountAddress = tokensAccounts[collateralTokenAddress.toString()]
-    ? tokensAccounts[collateralTokenAddress.toString()].address
-    : null
-  if (accountAddress == null) {
-    accountAddress = yield* call(createAccount, collateralTokenProgram.publicKey)
+  for (const [index, collateral] of collateralsAddresses.entries()) {
+    instructions.push(
+      Token.createMintToInstruction(
+        TOKEN_PROGRAM_ID,
+        collateral,
+        tokensAccounts[collateral.toString()].address,
+        airdropAdmin.publicKey,
+        [],
+        collateralsQuantities[index]
+      ))
   }
-  const ix = Token.createMintToInstruction(
-    TOKEN_PROGRAM_ID,
-    collateralTokenAddress,
-    accountAddress,
-    airdropAdmin.publicKey,
-    [],
-    quantity
-  )
-  const tx = new Transaction().add(ix)
+  const tx = instructions.reduce((tx, ix) => tx.add(ix), new Transaction())
   const connection = yield* call(getConnection)
   const blockhash = yield* call([connection, connection.getRecentBlockhash])
   tx.feePayer = wallet.publicKey
@@ -178,6 +196,7 @@ export function* signAndSend(wallet: WalletAdapter, tx: Transaction): SagaGenera
   const signature = yield* call([connection, connection.sendRawTransaction], signedTx.serialize())
   return signature
 }
+
 export function* createAccount(tokenAddress: PublicKey): SagaGenerator<PublicKey> {
   const wallet = yield* call(getWallet)
   const associatedAccount = yield* call(
@@ -207,6 +226,47 @@ export function* createAccount(tokenAddress: PublicKey): SagaGenerator<PublicKey
   )
   yield* call(sleep, 1000) // Give time to subscribe to new token
   return associatedAccount
+}
+
+export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerator<PublicKey[]> {
+  const wallet = yield* call(getWallet)
+  const ixs: TransactionInstruction[] = []
+  const associatedAccs: PublicKey[] = []
+
+  for (const address of tokenAddress) {
+    const associatedAccount = yield* call(
+      Token.getAssociatedTokenAddress,
+      ASSOCIATED_TOKEN_PROGRAM_ID,
+      TOKEN_PROGRAM_ID,
+      address,
+      wallet.publicKey
+    )
+    associatedAccs.push(associatedAccount)
+    const ix = Token.createAssociatedTokenAccountInstruction(
+      ASSOCIATED_TOKEN_PROGRAM_ID,
+      TOKEN_PROGRAM_ID,
+      address,
+      associatedAccount,
+      wallet.publicKey,
+      wallet.publicKey
+    )
+    ixs.push(ix)
+  }
+  yield* call(signAndSend, wallet, ixs.reduce((tx, ix) => tx.add(ix), new Transaction()))
+  for (const [index, address] of tokenAddress.entries()) {
+    const token = yield* call(getTokenDetails, tokenAddress[index].toString())
+    yield* put(
+      actions.addTokenAccount({
+        programId: address,
+        balance: new BN(0),
+        address: associatedAccs[index],
+        decimals: token.decimals
+      })
+    )
+    // Give time to subscribe to new token
+    yield* call(sleep, 1000)
+  }
+  return associatedAccs
 }
 
 export function* init(): Generator {
