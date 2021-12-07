@@ -85,15 +85,17 @@ export const Header: React.FC<IHeader> = ({
         </Hidden>
 
         <Grid item className={classes.buttons}>
-          {(typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) && (
-            <Button
-              className={buttonClasses.headerButton}
-              variant='contained'
-              classes={{ disabled: buttonClasses.disabled, label: buttonClasses.label }}
-              onClick={onFaucet}>
-              Faucet
-            </Button>
-          )}
+          <Hidden xsDown>
+            {(typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) && (
+              <Button
+                className={buttonClasses.headerButton}
+                variant='contained'
+                classes={{ label: buttonClasses.label }}
+                onClick={onFaucet}>
+                Faucet
+              </Button>
+            )}
+          </Hidden>
           <SelectNetworkButton
             name={typeOfNetwork}
             networks={[{ name: NetworkType.DEVNET, network: SolanaNetworks.DEV }]}
@@ -152,6 +154,7 @@ export const Header: React.FC<IHeader> = ({
               setRoutesModalOpen(false)
               unblurContent()
             }}
+            onFaucet={(typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) && isXsDown ? onFaucet : undefined}
           />
         </Hidden>
       </Grid>

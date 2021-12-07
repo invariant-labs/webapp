@@ -10,6 +10,7 @@ export interface IRoutesModal {
   handleClose: () => void
   onSelect: (selected: string) => void
   current?: string
+  onFaucet?: () => void
 }
 export const RoutesModal: React.FC<IRoutesModal> = ({
   routes,
@@ -17,7 +18,8 @@ export const RoutesModal: React.FC<IRoutesModal> = ({
   anchorEl,
   handleClose,
   onSelect,
-  current
+  current,
+  onFaucet
 }) => {
   const classes = useStyles()
 
@@ -54,6 +56,20 @@ export const RoutesModal: React.FC<IRoutesModal> = ({
             </Link>
           </Grid>
         ))}
+        {onFaucet && (
+          <Grid
+            item
+            className={classes.listItem}
+            onClick={() => {
+              onFaucet()
+              handleClose()
+            }}
+          >
+            <Typography className={classes.name}>
+              Faucet
+            </Typography>
+          </Grid>
+        )}
       </Grid>
     </Popover>
   )
