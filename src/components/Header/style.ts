@@ -1,10 +1,24 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, theme } from '@static/theme'
+import { colors } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    margin: 'auto',
+    maxWidth: 1920,
     paddingInline: 150,
-    height: 70
+    height: 70,
+
+    [theme.breakpoints.down('lg')]: {
+      paddingInline: 103
+    },
+
+    [theme.breakpoints.down('md')]: {
+      paddingInline: 24
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      paddingInline: 16
+    }
   },
   logo: {
     minWidth: 150,
