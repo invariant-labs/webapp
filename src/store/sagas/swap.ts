@@ -1,4 +1,4 @@
-import { call, put, select, takeEvery } from 'typed-redux-saga'
+import { all, call, put, select, spawn, takeEvery } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions } from '@reducers/swap'
 import { swap } from '@selectors/swap'
@@ -10,6 +10,47 @@ import { Pair } from '@invariant-labs/sdk'
 import { getConnection } from './connection'
 import { FEE_TIERS, calculateAveragePrice, SimulateSwapPrice } from '@invariant-labs/sdk/src/utils'
 import { hasTransactionSucceed } from './positions'
+
+export function* handleSimulate(): Generator {
+  try {
+    const allPools = yield* select(pools)
+    console.log(allPools)
+    console.log('saga simulate')
+    const swapData = yield* select(swap)
+    console.log('swap', swapData)
+    const marketProgram = yield* call(getMarketProgram)
+    const swapPool = allPools.find((pool) =>
+      (swapData.fromToken.toString() === pool.tokenX.toString() && swapData.toToken.toString() === pool.tokenY.toString()) ||
+        (swapData.fromToken.toString() === pool.tokenY.toString() && swapData.toToken.toString() === pool.tokenX.toString())
+    )
+
+    if (!swapPool) {
+      return
+    }
+
+    const isXtoY = swapData.fromToken.toString() === swapPool.tokenX.toString() && swapData.toToken.toString() === swapPool.tokenY.toString()
+    const tickMap = yield* call([marketProgram, marketProgram.getTickmap],
+      new Pair(swapData.fromToken, swapData.toToken, FEE_TIERS[0])
+    )
+    console.log('sagas')
+    const testVar: SimulateSwapPrice = {
+      pair: new Pair(swapData.fromToken, swapData.toToken, FEE_TIERS[0]),
+      xToY: isXtoY,
+      byAmonutIn: true,
+      swapAmount: swapData.simulatePrice,
+      currentPrice: swapData.price,
+      slippage: swapData.slippage,
+      pool: allPools[0],
+      tickmap: tickMap,
+      market: marketProgram
+    }
+    console.log(calculateAveragePrice(
+      testVar
+    ))
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 export function* handleSwap(): Generator {
   try {
@@ -43,23 +84,7 @@ export function* handleSwap(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, swapData.toToken)
     }
-    const tickMap = yield* call([marketProgram, marketProgram.getTickmap],
-      new Pair(swapData.fromToken, swapData.toToken, FEE_TIERS[0])
-    )
-    const testVar: SimulateSwapPrice = {
-      pair: new Pair(swapData.fromToken, swapData.toToken, FEE_TIERS[0]),
-      xToY: isXtoY,
-      byAmonutIn: true,
-      swapAmount: swapData.amount,
-      currentPrice: swapData.price,
-      slippage: swapData.slippage,
-      pool: allPools[0],
-      tickmap: tickMap,
-      market: marketProgram
-    }
-    console.log(calculateAveragePrice(
-      testVar
-    ))
+    console.log(123)
     const swapTx = yield* call([marketProgram, marketProgram.swapTransaction],
       {
         pair: new Pair(swapData.fromToken, swapData.toToken, FEE_TIERS[0]),
@@ -115,6 +140,13 @@ export function* handleSwap(): Generator {
     )
   }
 }
+export function* simulateHandler(): Generator {
+  yield* takeEvery(actions.simulate, handleSimulate)
+}
 export function* swapHandler(): Generator {
   yield* takeEvery(actions.swap, handleSwap)
+}
+
+export function* swapSaga(): Generator {
+  yield all([simulateHandler, swapHandler].map(spawn))
 }

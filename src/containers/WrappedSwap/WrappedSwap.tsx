@@ -12,15 +12,23 @@ export const WrappedSwap = () => {
   const tokensList = useSelector(swapTokens)
   return (
     <Swap
-      onSwap={(fromToken, toToken, amount, slippage, price) => {
+      onSwap={(fromToken, toToken, amount, slippage, price, simulatePrice) => {
         dispatch(
           actions.swap({
             fromToken,
             toToken,
             amount,
             slippage,
-            price
+            price,
+            simulatePrice
           })
+        )
+      }}
+      onSimulate={(simulatePrice) => {
+        dispatch(
+          actions.simulate(
+            simulatePrice
+          )
         )
       }}
       walletStatus={walletStatus}

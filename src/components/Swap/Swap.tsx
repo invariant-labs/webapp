@@ -56,13 +56,18 @@ export interface ISwap {
     toToken: PublicKey,
     amount: BN,
     slippage: Decimal,
-    price: Decimal) => void,
+    price: Decimal,
+    simulatePrice: BN) => void,
+  onSimulate: (
+    simulatePrice: BN
+  ) => void
 }
 export const Swap: React.FC<ISwap> = ({
   walletStatus,
   tokens,
   pools,
-  onSwap
+  onSwap,
+  onSimulate
 }) => {
   const classes = useStyles()
   const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
@@ -78,6 +83,7 @@ export const Swap: React.FC<ISwap> = ({
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const [settings, setSettings] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
+  const [simulatePrice, setSimulatePrice] = React.useState<string>('')
 
   enum feeOption {
     FEE = 'fee',
@@ -128,6 +134,12 @@ export const Swap: React.FC<ISwap> = ({
   useEffect(() => {
     updateEstimatedAmount()
   }, [poolIndex])
+
+  useEffect(() => {
+    tokenFromIndex !== null
+      ? onSimulate(printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal))
+      : console.log(123)
+  }, [amountFrom])
 
   useEffect(() => {
     updateEstimatedAmount()
@@ -390,7 +402,8 @@ export const Swap: React.FC<ISwap> = ({
               tokens[tokenToIndex].assetAddress,
               printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal),
               { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
-              { v: poolIndex !== null ? pools[poolIndex].sqrtPrice.v : new BN(1) }
+              { v: poolIndex !== null ? pools[poolIndex].sqrtPrice.v : new BN(1) },
+              printBNtoBN(simulatePrice, tokens[tokenFromIndex].decimal)
             )
           }}
         />
