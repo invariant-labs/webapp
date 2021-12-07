@@ -6,7 +6,6 @@ const useStyles = makeStyles(() => ({
     background: colors.invariant.componentOut2,
     color: colors.white.main,
     paddingInline: 12,
-
     borderRadius: 10,
     textTransform: 'none',
     ...typography.body1,
@@ -64,7 +63,8 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    ...typography.body1
+    ...typography.body1,
+    whiteSpace: 'nowrap'
   },
   disabled: {
     opacity: 0.5

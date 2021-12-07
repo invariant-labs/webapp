@@ -31,7 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   routers: {
     background: 'radial-gradient(140% 140% at 50.43% 0%, #18161D 0%, rgba(24, 22, 29, 0) 100%)',
     borderRadius: '10px',
-    transition: 'left 300ms'
+    transition: 'left 300ms',
+    width: 'fit-content'
   },
   connectedWalletIcon: {
     minWidth: 21,
@@ -43,10 +44,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   buttons: {
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    flex: '1 0 0%',
+    minWidth: 'fit-content',
+
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'center'
+    }
   },
   link: {
-    textDecoration: 'none'
+    textDecoration: 'none',
+    minWidth: 'fit-content'
   },
   menu: {
     width: 40,
@@ -66,6 +74,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover $menu': {
       filter: 'brightness(2)'
     }
+  },
+  leftSide: {
+    flex: '1 0 0%'
   }
 }))
 

@@ -27,6 +27,7 @@ export interface IHeader {
   onFaucet?: () => void
   onDisconnectWallet: () => void
 }
+
 export const Header: React.FC<IHeader> = ({
   address,
   onNetworkSelect,
@@ -57,9 +58,11 @@ export const Header: React.FC<IHeader> = ({
 
   return (
     <Grid container>
-      <Grid container className={classes.root} alignItems='center' justifyContent='space-between'>
+      <Grid container className={classes.root} direction='row' alignItems='center' wrap='nowrap'>
         <Hidden smDown>
-          <CardMedia className={classes.logo} image={icons.LogoTitle} />
+          <Grid container item className={classes.leftSide} justifyContent='flex-start'>
+            <CardMedia className={classes.logo} image={icons.LogoTitle} />
+          </Grid>
         </Hidden>
 
         <Hidden mdUp>
@@ -67,7 +70,7 @@ export const Header: React.FC<IHeader> = ({
         </Hidden>
 
         <Hidden smDown>
-          <Grid className={classes.routers}>
+          <Grid container item className={classes.routers} wrap='nowrap'>
             {routes.map(path => (
               <Link key={`path-${path}`} to={`/${path}`} className={classes.link}>
                 <NavbarButton
@@ -82,7 +85,7 @@ export const Header: React.FC<IHeader> = ({
           </Grid>
         </Hidden>
 
-        <Grid item className={classes.buttons}>
+        <Grid container item className={classes.buttons} wrap='nowrap'>
           <Hidden xsDown>
             {(typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) && (
               <Button
