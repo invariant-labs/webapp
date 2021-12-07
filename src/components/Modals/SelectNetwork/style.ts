@@ -1,64 +1,75 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
-    background: colors.navy.component,
-    width: 171,
-    height: 188,
+    background: colors.invariant.componentOut4,
+    width: 170,
     borderRadius: 10,
-    marginTop: 13,
-    paddingTop: 12,
-    [theme.breakpoints.down('md')]: {
-      marginTop: 24
-    }
+    marginTop: 8,
+    padding: 15
+  },
+  list: {
+    background: colors.invariant.componentIn1,
+    borderRadius: 5,
+    marginTop: 7,
+    padding: 8
   },
   listItem: {
-    color: colors.navy.grey,
-    borderRadius: 8,
-    padding: '4px 4px 4px 8px',
-    width: 147,
-    height: 52,
+    color: colors.invariant.lightInfoText,
+    borderRadius: 5,
+    padding: '3px 7px',
+    width: '100%',
     cursor: 'pointer',
-    '&:nth-child(2)': {
-      margin: '4px 0px'
-    },
+    display: 'flex',
+    alignItems: 'center',
     '&:hover': {
-      background: colors.navy.navButton,
-      color: colors.navy.veryLightGrey,
-      '& $icon': {
-        opacity: 1
-      },
-      '& $name': {
-        ...typography.subtitle1
-      },
-      '& $network': {
-        color: '#9D9CEE'
-      }
+      background: `${colors.invariant.componentOut2}60`,
+      color: colors.white.main
+    },
+    '&:first-child': {
+      marginBottom: '4px'
+    },
+    '&:not(:first-child)': {
+      margin: '4px 0'
+    },
+    '&:last-child': {
+      marginTop: '4px'
     }
+  },
+  title: {
+    ...typography.body1
+  },
+  dotIcon: {
+    width: 12,
+    marginLeft: 'auto',
+    color: colors.invariant.accent2,
+    display: 'none'
   },
   name: {
     textTransform: 'capitalize',
-    ...typography.subtitle1
-  },
-  network: {
-    ...typography.caption1,
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-    color: colors.navy.info
+    ...typography.body2,
+    paddingTop: '1px'
   },
   paper: {
     background: 'transparent',
     boxShadow: 'none'
   },
   icon: {
-    width: 20,
-    height: 20,
-    display: 'inline',
     float: 'left',
-    margin: '3px 8px 0px 1px',
-    opacity: 0.6
+    marginRight: 8,
+    opacity: 1
+  },
+  active: {
+    background: colors.invariant.componentOut2,
+    color: colors.white.main,
+    '& $icon': {
+      opacity: 1
+    },
+
+    '& $dotIcon': {
+      display: 'block'
+    }
   }
 }))
 

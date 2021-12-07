@@ -1,23 +1,32 @@
-import { colors, typography } from '@static/theme'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   button: {
     textTransform: 'none',
     boxShadow: 'none',
-    borderRadius: 10,
-    ...typography.body1,
-    minWidth: 164,
-    height: 42,
-    backgroundColor: colors.navy.navButton,
-    paddingInline: 0
+    borderRadius: 3,
+    fontSize: 16,
+    minWidth: 80,
+    backgroundColor: '#34303B',
+    padding: '2px 10px',
+    [theme.breakpoints.down('xs')]: {
+      minWidth: 90
+    }
+  },
+  tokenName: {
+    position: 'relative',
+    top: 1
   },
   icon: {
-    minWidth: 30,
-    height: 30
-  },
-  startIcon: {
+    minWidth: 18,
+    height: 18,
     marginRight: 6
+  },
+  endIcon: {
+    width: '2em',
+    marginLeft: 6,
+    '& svg': {
+    }
   }
 }))
 

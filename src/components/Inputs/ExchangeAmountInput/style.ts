@@ -1,29 +1,40 @@
+import { colors } from '@static/theme'
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   amountInput: {
-    background: colors.navy.dark,
-    color: colors.navy.grey,
-    borderRadius: 10,
-    paddingInline: 10,
-    height: 64,
+    background: colors.invariant.componentIn2,
+    color: colors.white.main,
+    borderRadius: 5,
+    padding: '8px 15px',
     fontSize: 30,
-    fontWeight: 600,
-    width: '100%'
+    fontWeight: 'normal',
+    width: '100%',
+    marginBottom: 16,
+    transition: 'all .4s'
   },
   maxButton: {
-    ...typography.body1,
-    width: 84,
-    height: 40,
-    borderRadius: 5,
-    marginLeft: 8
+    fontSize: 16,
+    color: colors.invariant.componentIn2,
+    minWidth: 55,
+    height: 32,
+    fontWeight: 400,
+    borderRadius: 3,
+    padding: '7px 0',
+    backgroundColor: colors.invariant.accent2,
+    background: 'radial-gradient(118.38% 303.54% at 3.96% 118.38%, rgba(119, 72, 216, 0.1) 0%, rgba(119, 72, 216, 0) 100%), radial-gradient(57.34% 103.84% at 50% 0%, rgba(156, 231, 90, 0.1) 0%, rgba(156, 231, 90, 0) 100%)',
+    '&:hover': {
+      backgroundColor: colors.invariant.accent1
+    }
   },
   select: {
-    marginRight: 24
+    marginRight: 20
   },
   input: {
-    paddingTop: 4
+    paddingTop: 4,
+    '&:focus': {
+      color: colors.white.main
+    }
   },
   label: {
     top: -1

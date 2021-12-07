@@ -1,16 +1,34 @@
-import { call, put, takeEvery, select, all, spawn } from 'typed-redux-saga'
+import { call, put, takeEvery, select, all, spawn, takeLatest } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import { createAccount, getWallet } from './wallet'
+import { createAccount, getWallet, sleep } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
 import { getConnection } from './connection'
 import { actions, GetCurrentTicksData, InitPositionData, PlotTickData } from '@reducers/positions'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { pools } from '@selectors/pools'
-import { calculate_price_sqrt, Pair } from '@invariant-labs/sdk'
-import { printBN } from '@consts/utils'
+import { calculate_price_sqrt, MAX_TICK, MIN_TICK, Pair, TICK_LIMIT } from '@invariant-labs/sdk'
+import { calcTicksAmountInRange, logBase, printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { accounts } from '@selectors/solanaWallet'
 import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
+import { plotTicks } from '@selectors/positions'
+import { Connection } from '@solana/web3.js'
+
+export function* hasTransactionSucceed(connection: Connection, txid: string): Generator {
+  while (true) {
+    const status = yield* call([connection, connection.getSignatureStatus], txid)
+
+    if (status.value?.confirmationStatus === 'confirmed' || status.value?.confirmationStatus === 'finalized') {
+      break
+    }
+
+    yield* call(sleep, 500)
+  }
+
+  const details = yield* call([connection, connection.getConfirmedTransaction], txid, 'confirmed')
+
+  return !details?.meta?.err || details.meta.err === null
+}
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
@@ -58,17 +76,31 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
-    yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
+    const txid = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: true
     })
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Position added successfully.',
-        variant: 'success',
-        persist: false
-      })
-    )
+    const hasSucceed = yield* call(hasTransactionSucceed, connection, txid)
+
+    if (!hasSucceed) {
+      yield put(
+        snackbarsActions.add({
+          message: 'Position adding failed. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Position added successfully.',
+          variant: 'success',
+          persist: false,
+          txid
+        })
+      )
+    }
   } catch (error) {
     console.log(error)
     yield put(
@@ -87,11 +119,28 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     const allPools = yield* select(pools)
 
     const poolIndex = action.payload.poolIndex
+    let toRequest = typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined'
+      ? calcTicksAmountInRange(
+        action.payload.isXtoY ? action.payload.min : 1 / action.payload.max,
+        action.payload.isXtoY ? action.payload.max : 1 / action.payload.min,
+        allPools[poolIndex].tickSpacing
+      )
+      : 200
+
+    if (toRequest > TICK_LIMIT * 2) {
+      const { data } = yield* select(plotTicks)
+
+      if (data.length < TICK_LIMIT * 2) {
+        toRequest = TICK_LIMIT * 2
+      } else {
+        return
+      }
+    }
 
     const rawTicks = yield* call(
       [marketProgram, marketProgram.getClosestTicks],
       new Pair(allPools[poolIndex].tokenX, allPools[poolIndex].tokenY, { fee: allPools[poolIndex].fee.v }),
-      200
+      toRequest
     )
 
     const parsedTicks = parseLiquidityOnTicks(rawTicks, allPools[poolIndex])
@@ -126,10 +175,40 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       }
     })
 
+    if (typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined' && ticksData.length < toRequest) {
+      const minTick = Math.max(MIN_TICK, logBase(action.payload.isXtoY ? action.payload.min : 1 / action.payload.max, 1.0001))
+
+      for (let i = ticks[0].index - allPools[poolIndex].tickSpacing; i >= minTick; i -= allPools[poolIndex].tickSpacing) {
+        const newSqrtDecimal = calculate_price_sqrt(i)
+        const newSqrt = +printBN(newSqrtDecimal.v, PRICE_DECIMAL)
+
+        ticksData.push({
+          x: action.payload.isXtoY ? newSqrt ** 2 : 1 / (newSqrt ** 2),
+          y: 0,
+          index: i
+        })
+      }
+
+      const maxTick = Math.min(MAX_TICK, logBase(action.payload.isXtoY ? action.payload.max : 1 / action.payload.min, 1.0001))
+
+      for (let i = ticks[ticks.length - 1].index + allPools[poolIndex].tickSpacing; i < maxTick; i += allPools[poolIndex].tickSpacing) {
+        const newSqrtDecimal = calculate_price_sqrt(i)
+        const newSqrt = +printBN(newSqrtDecimal.v, PRICE_DECIMAL)
+
+        ticksData.push({
+          x: action.payload.isXtoY ? newSqrt ** 2 : 1 / (newSqrt ** 2),
+          y: 0,
+          index: i
+        })
+      }
+    }
+
     yield put(actions.setPlotTicks(ticksData.sort((a, b) => a.x - b.x)))
   } catch (error) {
     console.log(error)
-    yield put(actions.setPlotTicks([]))
+    if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
+      yield put(actions.setPlotTicks([]))
+    }
   }
 }
 
@@ -161,7 +240,7 @@ export function* initPositionHandler(): Generator {
   yield* takeEvery(actions.initPosition, handleInitPosition)
 }
 export function* getCurrentPlotTicksHandler(): Generator {
-  yield* takeEvery(actions.getCurrentPlotTicks, handleGetCurrentPlotTicks)
+  yield* takeLatest(actions.getCurrentPlotTicks, handleGetCurrentPlotTicks)
 }
 
 export function* getPositionsListHandler(): Generator {
