@@ -39,7 +39,7 @@ export const Header: React.FC<IHeader> = ({
   onFaucet,
   onDisconnectWallet
 }) => {
-  const classes = useStyles()
+  const classes = useStyles({ connected: walletConnected })
   const buttonClasses = useButtonStyles()
 
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))

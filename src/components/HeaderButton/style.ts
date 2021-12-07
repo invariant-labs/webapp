@@ -60,7 +60,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'none',
     ...typography.body1,
     height: 40,
-    minWidth: 130,
+    minWidth: 221,
+
+    [theme.breakpoints.only('md')]: {
+      minWidth: 137,
+      width: 221
+    },
 
     [theme.breakpoints.down('xs')]: {
       minWidth: 100,
