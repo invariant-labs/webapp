@@ -1,6 +1,6 @@
 import React from 'react'
 import { PublicKey } from '@solana/web3.js'
-import { Grid, CardMedia, Button } from '@material-ui/core'
+import { Grid, CardMedia, Button, Hidden } from '@material-ui/core'
 import NavbarButton from '@components/Navbar/Button'
 import ChangeWalletButton from '@components/HeaderButton/ChangeWalletButton'
 import { NetworkType, SolanaNetworks } from '@consts/static'
@@ -51,19 +51,21 @@ export const Header: React.FC<IHeader> = ({
       <Grid container className={classes.root} alignItems='center' justifyContent='space-between'>
         <CardMedia className={classes.logo} image={icons.LogoTitle} />
 
-        <Grid className={classes.routers} innerRef={routesRef} style={{ position: 'absolute', left: `calc(50% - ${(routesRef.current?.offsetWidth ?? 0) / 2}px)` }}>
-          {routes.map(path => (
-            <Link key={`path-${path}`} to={`/${path}`} className={classes.link}>
-              <NavbarButton
-                name={path}
-                onClick={() => {
-                  setActive(path)
-                }}
-                active={path === activePath}
-              />
-            </Link>
-          ))}
-        </Grid>
+        <Hidden smDown>
+          <Grid className={classes.routers} innerRef={routesRef} style={{ position: 'absolute', left: `calc(50% - ${(routesRef.current?.offsetWidth ?? 0) / 2}px)` }}>
+            {routes.map(path => (
+              <Link key={`path-${path}`} to={`/${path}`} className={classes.link}>
+                <NavbarButton
+                  name={path}
+                  onClick={() => {
+                    setActive(path)
+                  }}
+                  active={path === activePath}
+                />
+              </Link>
+            ))}
+          </Grid>
+        </Hidden>
 
         <Grid item className={classes.buttons}>
           {(typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) && (
@@ -82,37 +84,26 @@ export const Header: React.FC<IHeader> = ({
               onNetworkSelect(chosen)
             }}
           />
-          {!walletConnected ? (
-            <ChangeWalletButton
-              name={'Connect wallet'}
-              options={[
-                WalletType.PHANTOM,
-                WalletType.SOLLET,
-                WalletType.MATH,
-                WalletType.SOLFLARE
-              ]}
-              onSelect={onWalletSelect}
-              connected={walletConnected}
-              onDisconnect={onDisconnectWallet}
-            />
-          ) : (
-            <ChangeWalletButton
-              name={`${address.toString().substr(0, 15)}...${address
-                .toString()
-                .substr(address.toString().length - 4, 4)}`}
-              options={[
-                WalletType.PHANTOM,
-                WalletType.SOLLET,
-                WalletType.MATH,
-                WalletType.SOLFLARE
-              ]}
-              onSelect={onWalletSelect}
-              connected={walletConnected}
-              onDisconnect={onDisconnectWallet}
-              startIcon={<DotIcon className={classes.connectedWalletIcon} />}
-              activeWallet={typeOfWallet}
-            />
-          )}
+          <ChangeWalletButton
+            name={
+              walletConnected
+                ? `${address.toString().substr(0, 15)}...${address
+                    .toString()
+                    .substr(address.toString().length - 4, 4)}`
+                : 'Connect wallet'
+            }
+            options={[
+              WalletType.PHANTOM,
+              WalletType.SOLLET,
+              WalletType.MATH,
+              WalletType.SOLFLARE
+            ]}
+            onSelect={onWalletSelect}
+            connected={walletConnected}
+            onDisconnect={onDisconnectWallet}
+            startIcon={walletConnected ? <DotIcon className={classes.connectedWalletIcon} /> : undefined}
+            activeWallet={walletConnected ? typeOfWallet : undefined}
+          />
         </Grid>
       </Grid>
     </>
