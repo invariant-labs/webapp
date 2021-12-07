@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   headerButton: {
     background: colors.invariant.componentOut2,
     color: colors.white.main,
@@ -11,10 +11,11 @@ const useStyles = makeStyles(() => ({
     ...typography.body1,
     lineHeight: '22px',
     height: 40,
-    minWidth: 110,
+    width: 130,
+    minWidth: 94,
 
     '&:not(:last-child)': {
-      marginRight: 15
+      marginRight: 12
     },
 
     '&:hover': {
@@ -37,10 +38,15 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     ...typography.body1,
     height: 40,
-    minWidth: 110,
+    minWidth: 130,
+
+    [theme.breakpoints.down('xs')]: {
+      minWidth: 100,
+      width: 130
+    },
 
     '&:not(:last-child)': {
-      marginRight: 15
+      marginRight: 12
     },
     '&:hover': {
       background: colors.invariant.violetWeak
@@ -54,7 +60,13 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     ...typography.body1,
     height: 40,
-    minWidth: 110,
+    minWidth: 130,
+
+    [theme.breakpoints.down('xs')]: {
+      minWidth: 100,
+      width: 130
+    },
+
     '&:hover': {
       background: colors.invariant.componentOut3
     }

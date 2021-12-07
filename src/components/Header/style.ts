@@ -26,7 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   logoShort: {
     minWidth: 40,
-    height: 30
+    height: 30,
+    marginRight: 8
   },
   routers: {
     background: 'radial-gradient(140% 140% at 50.43% 0%, #18161D 0%, rgba(24, 22, 29, 0) 100%)',
@@ -45,8 +46,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttons: {
     justifyContent: 'flex-end',
-    flex: '1 0 0%',
-    minWidth: 'fit-content',
+    flex: '1 1 0%',
+
+    [theme.breakpoints.between('md', 'lg')]: {
+      minWidth: 350
+    },
 
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'center'
@@ -68,6 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: 1,
     height: 45,
     transition: 'background 300ms',
+    marginLeft: 8,
     '&:hover': {
       background: colors.invariant.componentOut2
     },
@@ -76,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   leftSide: {
-    flex: '1 0 0%'
+    flex: '1 1 0%'
   }
 }))
 
