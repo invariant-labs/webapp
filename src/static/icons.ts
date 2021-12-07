@@ -23,6 +23,11 @@ import NoCon from './svg/no-connected.svg'
 import mainnetIcon from './svg/mainNet.svg'
 import devnetIcon from './svg/devNet.svg'
 import testnetIcon from './svg/testNet.svg'
+import githubIcon from './svg/githubCircle.svg'
+import telegramIcon from './svg/telegramCircle.svg'
+import twitterIcon from './svg/twitterCircle.svg'
+import mediumIcon from './svg/mediumCircle.svg'
+import discordIcon from './svg/discordCircle.svg'
 import closeIcon from './svg/closeIcon.svg'
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
@@ -50,6 +55,11 @@ const icons: { [key: string]: string } = {
   MainnetIcon: mainnetIcon,
   DevnetIcon: devnetIcon,
   TestnetIcon: testnetIcon,
+  GithubIcon: githubIcon,
+  TelegramIcon: telegramIcon,
+  TwitterIcon: twitterIcon,
+  DiscordIcon: discordIcon,
+  mediumIcon: mediumIcon,
   closeIcon: closeIcon
 }
 

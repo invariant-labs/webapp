@@ -10,6 +10,7 @@ import EventsHandlers from '@containers/EventsHandlers'
 import HeaderWrapper from '@containers/HeaderWrapper/HeaderWrapper'
 import solanaConnectionSelector from '@selectors/solanaConnection'
 import { actions as solanaConnectionActions } from '@reducers/solanaConnection'
+import Footer from '@components/Footer/Footer'
 
 export const PagesRouter: React.FC = () => {
   const dispatch = useDispatch()
@@ -34,6 +35,7 @@ export const PagesRouter: React.FC = () => {
             </Redirect>
           </Route>
         </Switch>
+        <Footer />
       </div>
     </Router>
   )
