@@ -4,19 +4,20 @@ import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import Select from '@components/Inputs/Select/Select'
 import useStyles from './style'
-import { BN } from '@project-serum/anchor'
+import { SwapToken } from '@components/Swap/Swap'
 
 interface IProps {
   setValue: (value: string) => void
   value?: string
   error?: string | null
   className?: string
+  decimal: number
   placeholder?: string
   style?: CSSProperties,
   onMaxClick: () => void,
-  current: string | null
-  tokens: Array<{ symbol: string; balance?: BN; decimals?: number }>
-  onSelect: (chosen: number) => void
+  current: SwapToken | null
+  tokens: Array<{ symbol: string, name: string, logoURI: string }>
+  onSelect: (name: string) => void
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -24,6 +25,7 @@ export const AmountInput: React.FC<IProps> = ({
   setValue,
   error,
   className,
+  decimal,
   placeholder,
   style,
   onMaxClick,
@@ -36,8 +38,10 @@ export const AmountInput: React.FC<IProps> = ({
   const inputRef = useRef<HTMLInputElement>(null)
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const regex = /^\d*\.?\d*$/
-    if (e.target.value === '' || e.target.value === 'Max' || regex.test(e.target.value)) {
+    const onlyNumbersRegex = /^\d*\.?\d*$/
+    const test = `^\\d*\\.?\\d{0,${decimal}}$`
+    const regex = new RegExp(test, 'g')
+    if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value
       const caretPosition = e.target.selectionStart
 
@@ -63,8 +67,10 @@ export const AmountInput: React.FC<IProps> = ({
           }
         }, 0)
       }
-    } else if (!regex.test(e.target.value)) {
+    } else if (!onlyNumbersRegex.test(e.target.value)) {
       setValue('')
+    } else if (!regex.test(e.target.value)) {
+      setValue(e.target.value.slice(0, e.target.value.length - 1))
     }
   }
 

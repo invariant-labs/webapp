@@ -3,103 +3,100 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   success: {
-    backgroundColor: colors.navy.navButton,
+    backgroundColor: colors.invariant.componentOut2,
     borderStyle: 'solid',
-    borderWidth: 0,
-    borderLeftWidth: 10,
-    borderColor: colors.green.snackbar,
+    borderWidth: 1,
+    borderColor: colors.invariant.lightInfoText,
     borderRadius: 10,
-    padding: 10,
-    ...typography.heading5,
-    maxWidth: 500,
-    maxHeight: 65,
-    paddingBottom: 12,
+    ...typography.body1,
+    maxWidth: 350,
+    padding: '6px 16px',
+    maxHeight: 64,
+    minWidth: 100,
     '& SVG': {
-      color: colors.green.snackbar,
-      marginTop: 4,
+      color: colors.invariant.accent2,
+      marginTop: -2,
       [theme.breakpoints.down('xs')]: {
         marginTop: 2
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.caption1,
+      ...typography.body2,
       maxWidth: 255,
       maxHeight: 32,
       padding: '0px 8px 5px 4px'
     }
   },
   error: {
-    backgroundColor: colors.navy.navButton,
+    backgroundColor: colors.invariant.componentOut2,
     borderStyle: 'solid',
-    borderWidth: 0,
-    borderLeftWidth: 10,
-    borderColor: colors.red.snackbar,
+    borderWidth: 1,
+    borderColor: colors.invariant.lightInfoText,
     borderRadius: 10,
     padding: 10,
-    ...typography.heading5,
-    maxHeight: 65,
-    paddingBottom: 12,
+    ...typography.body1,
+    maxWidth: 450,
+    maxHeight: 64,
+    minWidth: 100,
     '& SVG': {
-      color: colors.red.snackbar,
-      marginTop: 4,
+      color: colors.invariant.error,
+      marginTop: -2,
       [theme.breakpoints.down('xs')]: {
         marginTop: 2
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.caption1,
+      ...typography.body2,
       maxWidth: 255,
       maxHeight: 32,
       padding: '0px 8px 5px 4px'
     }
   },
   info: {
-    backgroundColor: colors.navy.navButton,
+    backgroundColor: colors.invariant.componentOut2,
     borderStyle: 'solid',
-    borderWidth: 0,
-    borderLeftWidth: 10,
-    borderColor: colors.blue.astel,
+    borderWidth: 1,
+    borderColor: colors.invariant.lightInfoText,
     borderRadius: 10,
     padding: 10,
-    ...typography.heading5,
-    maxWidth: 500,
-    maxHeight: 65,
-    paddingBottom: 12,
+    ...typography.body1,
+    maxWidth: 350,
+    maxHeight: 64,
+    minWidth: 100,
     '& SVG': {
-      color: colors.blue.astel,
-      marginTop: 4,
+      color: colors.invariant.lightInfoText,
+      marginTop: -2,
       [theme.breakpoints.down('xs')]: {
         marginTop: 2
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.caption1,
+      ...typography.body2,
       maxWidth: 255,
       maxHeight: 32,
       padding: '0px 8px 5px 4px'
     }
   },
   warning: {
-    backgroundColor: colors.navy.navButton,
+    backgroundColor: colors.invariant.componentOut2,
     borderStyle: 'solid',
-    borderWidth: 0,
-    borderLeftWidth: 10,
-    borderColor: colors.yellow.neon,
+    borderWidth: 1,
+    borderColor: colors.invariant.lightInfoText,
     borderRadius: 10,
     padding: 10,
-    ...typography.heading5,
-    maxWidth: 500,
-    maxHeight: 65,
-    paddingBottom: 12,
+    ...typography.body1,
+    maxWidth: 350,
+    maxHeight: 64,
+    minWidth: 100,
     '& SVG': {
-      color: colors.yellow.neon,
-      marginTop: 4,
+      color: colors.invariant.warning,
+      marginTop: -2,
       [theme.breakpoints.down('xs')]: {
         marginTop: 2
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.caption1,
+      ...typography.body2,
       maxWidth: 255,
       maxHeight: 32,
       padding: '0px 8px 5px 4px'

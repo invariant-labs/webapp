@@ -5,7 +5,6 @@ import { withKnobs } from '@storybook/addon-knobs'
 import { toBlur } from '@consts/uiUtils'
 import { Typography } from '@material-ui/core'
 import { colors } from '@static/theme'
-import HeaderButton from './HeaderButton'
 import SelectNetworkButton from './SelectNetworkButton'
 import ChangeWalletButton from './ChangeWalletButton'
 import { WalletType } from '@web3/wallet'
@@ -14,13 +13,8 @@ import { NetworkType, SolanaNetworks } from '@consts/static'
 const loremIpsum =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 
-storiesOf('buttons/HeaderButton', module)
+storiesOf('buttons/newHeaderButton', module)
   .addDecorator(withKnobs)
-  .add('headerDefault', () => (
-    <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
-      <HeaderButton name='Click me' />
-    </div>
-  ))
   .add('selectWallet', () => (
     <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
       <ChangeWalletButton
@@ -54,11 +48,8 @@ storiesOf('buttons/HeaderButton', module)
   .add('selectNetwork', () => (
     <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
       <SelectNetworkButton
-        name='Mainnet'
-        networks={[
-          { name: NetworkType.TESTNET, network: SolanaNetworks.TEST },
-          { name: NetworkType.LOCALNET, network: SolanaNetworks.LOCAL }
-        ]}
+        name={NetworkType.DEVNET}
+        networks={[{ name: NetworkType.DEVNET, network: SolanaNetworks.DEV }, { name: NetworkType.MAINNET, network: SolanaNetworks.MAIN }]}
         onSelect={(chosen: string) => action(`chosen: ${chosen}`)()}
       />
     </div>

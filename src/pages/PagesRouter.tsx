@@ -4,12 +4,13 @@ import { SwapPage } from './SwapPage/SwapPage'
 import { useDispatch, useSelector } from 'react-redux'
 import { ListPage } from './ListPage/ListPage'
 import { toBlur } from '@consts/uiUtils'
-import { PoolPage } from './PoolPage/PoolPage'
+import { NewPositionPage } from './NewPositionPage/NewPositionPage'
 import { Status } from '@reducers/solanaWallet'
 import EventsHandlers from '@containers/EventsHandlers'
 import HeaderWrapper from '@containers/HeaderWrapper/HeaderWrapper'
 import solanaConnectionSelector from '@selectors/solanaConnection'
 import { actions as solanaConnectionActions } from '@reducers/solanaConnection'
+import Footer from '@components/Footer/Footer'
 
 export const PagesRouter: React.FC = () => {
   const dispatch = useDispatch()
@@ -26,14 +27,15 @@ export const PagesRouter: React.FC = () => {
         <HeaderWrapper />
         <Switch>
           <Route path='/swap' component={SwapPage} />
-          <Route path={'/pool'} component={PoolPage} />
-          <Route path={'/positions'} component={ListPage} />
+          <Route path={'/newPosition'} component={NewPositionPage} />
+          <Route path={'/pool'} component={ListPage} />
           <Route path='*'>
             <Redirect to='/swap'>
               <SwapPage />
             </Redirect>
           </Route>
         </Switch>
+        <Footer />
       </div>
     </Router>
   )
