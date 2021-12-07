@@ -55,8 +55,6 @@ export const Header: React.FC<IHeader> = ({
     setActive(landing)
   }, [landing])
 
-  const routesRef = React.useRef<HTMLButtonElement>(null)
-
   return (
     <Grid container>
       <Grid container className={classes.root} alignItems='center' justifyContent='space-between'>
@@ -69,7 +67,7 @@ export const Header: React.FC<IHeader> = ({
         </Hidden>
 
         <Hidden smDown>
-          <Grid className={classes.routers} innerRef={routesRef} style={{ position: 'absolute', left: `calc(50% - ${(routesRef.current?.offsetWidth ?? 0) / 2}px)` }}>
+          <Grid className={classes.routers}>
             {routes.map(path => (
               <Link key={`path-${path}`} to={`/${path}`} className={classes.link}>
                 <NavbarButton
