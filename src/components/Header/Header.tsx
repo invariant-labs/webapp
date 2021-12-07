@@ -46,6 +46,10 @@ export const Header: React.FC<IHeader> = ({
 
   const routes = ['swap', 'pool']
 
+  const otherRoutesToHighlight: Record<string, string[]> = {
+    pool: ['newPosition', 'position']
+  }
+
   const [activePath, setActive] = React.useState(landing)
 
   const [routesModalOpen, setRoutesModalOpen] = React.useState(false)
@@ -78,7 +82,7 @@ export const Header: React.FC<IHeader> = ({
                   onClick={() => {
                     setActive(path)
                   }}
-                  active={path === activePath}
+                  active={path === activePath || !!(otherRoutesToHighlight[path]?.includes(activePath))}
                 />
               </Link>
             ))}

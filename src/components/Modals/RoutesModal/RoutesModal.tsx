@@ -23,6 +23,10 @@ export const RoutesModal: React.FC<IRoutesModal> = ({
 }) => {
   const classes = useStyles()
 
+  const otherRoutesToHighlight: Record<string, string[]> = {
+    pool: ['newPosition', 'position']
+  }
+
   return (
     <Popover
       classes={{ paper: classes.paper }}
@@ -50,7 +54,7 @@ export const RoutesModal: React.FC<IRoutesModal> = ({
             <Link
               to={`/${route}`}
               className={classes.link}>
-              <Typography className={current === route ? classes.current : classes.name}>
+              <Typography className={current === route || !!(current && otherRoutesToHighlight[route]?.includes(current)) ? classes.current : classes.name}>
                 {route}
               </Typography>
             </Link>
