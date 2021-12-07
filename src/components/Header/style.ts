@@ -1,15 +1,18 @@
-import { makeStyles } from '@material-ui/core/styles'
-import { colors } from '@static/theme'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { colors, theme } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: '100%',
-    padding: '0 150px',
+    paddingInline: 150,
     height: 70
   },
   logo: {
     minWidth: 150,
     height: 40
+  },
+  logoShort: {
+    minWidth: 40,
+    height: 30
   },
   routers: {
     background: 'radial-gradient(140% 140% at 50.43% 0%, #18161D 0%, rgba(24, 22, 29, 0) 100%)',
@@ -29,6 +32,25 @@ const useStyles = makeStyles(() => ({
   },
   link: {
     textDecoration: 'none'
+  },
+  menu: {
+    width: 40,
+    height: 25,
+    transition: 'filter 300ms'
+  },
+  menuButton: {
+    borderRadius: 10,
+    padding: 6,
+    paddingTop: 1,
+    paddingBottom: 1,
+    height: 45,
+    transition: 'background 300ms',
+    '&:hover': {
+      background: colors.invariant.componentOut2
+    },
+    '&:hover $menu': {
+      filter: 'brightness(2)'
+    }
   }
 }))
 
