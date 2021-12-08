@@ -10,6 +10,7 @@ import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt } from '@invariant-labs/sdk'
 import useStyles from './style'
 import { getX, getY } from '@invariant-labs/sdk/src/math'
+import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
 
 export interface IProps {
   id: string
@@ -74,7 +75,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       try {
         return +printBN(
           getX(position.liquidity.v, calculate_price_sqrt(position.upperTickIndex).v, position.poolData.sqrtPrice.v),
-          PRICE_DECIMAL
+          PRICE_DECIMAL + position.tokenX.decimal
         )
       } catch (error) {
         return 0
@@ -88,7 +89,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       try {
         return +printBN(
           getY(position.liquidity.v, position.poolData.sqrtPrice.v, calculate_price_sqrt(position.lowerTickIndex).v),
-          PRICE_DECIMAL
+          PRICE_DECIMAL + position.tokenY.decimal
         )
       } catch (error) {
         return 0
@@ -113,6 +114,23 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
     return 4
   }
+
+  const [tokenXClaim, tokenYClaim] = useMemo(() => {
+    if (position) {
+      const [bnX, bnY] = calculateClaimAmount({
+        position,
+        feeGrowthInsideX: position.feeGrowthInsideX,
+        feeGrowthInsideY: position.feeGrowthInsideY
+      })
+
+      return [
+        +printBN(bnX, PRICE_DECIMAL + position.tokenX.decimal),
+        +printBN(bnY, PRICE_DECIMAL + position.tokenY.decimal)
+      ]
+    }
+
+    return [0, 0]
+  }, [position?.id])
 
   return (
     !isLoadingList && !ticksLoading && position
@@ -148,8 +166,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           }}
           tokenXLiqValue={tokenXLiquidity}
           tokenYLiqValue={tokenYLiquidity}
-          tokenXClaimValue={+printBN(position.tokensOwedX.v, position.tokenX.decimal)}
-          tokenYClaimValue={+printBN(position.tokensOwedY.v, position.tokenY.decimal)}
+          tokenXClaimValue={tokenXClaim}
+          tokenYClaimValue={tokenYClaim}
           positionData={{
             tokenXName: position.tokenX.symbol,
             tokenYName: position.tokenY.symbol,
