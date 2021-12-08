@@ -1,5 +1,5 @@
-import { Grid, Typography } from '@material-ui/core'
-import React from 'react'
+import { Grid, Hidden, Typography } from '@material-ui/core'
+import React, { useMemo } from 'react'
 import icons from '@static/icons'
 import useStyle from './style'
 
@@ -28,11 +28,31 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
   value
 }) => {
   const classes = useStyle()
+
+  const feeFragment = useMemo(() => (
+    <Grid container item className={classes.fee} justifyContent='center' alignItems='center'>
+      <Typography className={classes.infoText}>
+        {fee}% fee
+      </Typography>
+    </Grid>
+  ), [fee])
+
+  const valueFragment = useMemo(() => (
+    <Grid container item className={classes.value} justifyContent='space-between' alignItems='center' wrap='nowrap'>
+      <Typography className={classes.infoText}>Value</Typography>
+      <Grid className={classes.infoCenter} container item justifyContent='center'>
+        <Typography className={classes.greenText}>
+          {value} {tokenXName}
+        </Typography>
+      </Grid>
+    </Grid>
+  ), [value, tokenXName])
+
   return (
     <Grid className={classes.root} container direction='row' alignItems='center'>
       <Grid container item className={classes.icons} alignItems='center'>
         <img className={classes.tokenIcon} src={tokenXIcon} alt={tokenXName} />
-        <img className={classes.arrows} src={icons.ArrowIcon} alt={'Arrow'} />
+        <img className={classes.arrows} src={icons.ArrowIcon} alt='Arrow' />
         <img className={classes.tokenIcon} src={tokenYIcon} alt={tokenYName} />
       </Grid>
 
@@ -40,17 +60,23 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
         {tokenXName} - {tokenYName}
       </Typography>
 
+      <Hidden mdUp>
+        {feeFragment}
+      </Hidden>
+
       <Grid container item className={classes.liquidity} justifyContent='center' alignItems='center'>
         <Typography className={classes.infoText}>
           {tokenXLiq} {tokenXName} - {tokenYLiq} {tokenYName}
         </Typography>
       </Grid>
 
-      <Grid container item className={classes.fee} justifyContent='center' alignItems='center'>
-        <Typography className={classes.infoText}>
-          {fee}% fee
-        </Typography>
-      </Grid>
+      <Hidden smDown>
+        {feeFragment}
+      </Hidden>
+
+      <Hidden mdUp>
+        {valueFragment}
+      </Hidden>
 
       <Grid container item className={classes.minMax} justifyContent='space-between' alignItems='center' wrap='nowrap'>
         <Typography className={classes.greenText}>MIN-MAX</Typography>
@@ -61,14 +87,9 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
         </Grid>
       </Grid>
 
-      <Grid container item className={classes.value} justifyContent='space-between' alignItems='center' wrap='nowrap'>
-        <Typography className={classes.infoText}>Value</Typography>
-        <Grid className={classes.infoCenter} container item justifyContent='center'>
-          <Typography className={classes.greenText}>
-            {value} {tokenXName}
-          </Typography>
-        </Grid>
-      </Grid>
+      <Hidden smDown>
+        {valueFragment}
+      </Hidden>
     </Grid>
   )
 }
