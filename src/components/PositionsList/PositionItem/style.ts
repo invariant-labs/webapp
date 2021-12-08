@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     background: colors.invariant.componentOut1,
     borderRadius: 10,
@@ -41,15 +41,21 @@ const useStyles = makeStyles(() => ({
     background: colors.invariant.componentOut2,
     borderRadius: 5,
     height: 35,
-    marginRight: 8,
-    width: 170
+    width: 170,
+
+    '&:not(:last-child)': {
+      marginRight: 8
+    }
   },
   fee: {
     background: colors.invariant.componentOut2,
     borderRadius: 5,
     height: 35,
-    marginRight: 8,
-    width: 90
+    width: 90,
+
+    '&:not(:last-child)': {
+      marginRight: 8
+    }
   },
   infoCenter: {
     flex: '1 1 0%'
@@ -58,16 +64,34 @@ const useStyles = makeStyles(() => ({
     background: colors.invariant.componentOut2,
     borderRadius: 5,
     height: 35,
-    marginRight: 8,
     width: 331,
-    paddingInline: 10
+    paddingInline: 10,
+
+    '&:not(:last-child)': {
+      marginRight: 8
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    }
   },
   value: {
     background: colors.invariant.componentOut2,
     borderRadius: 5,
     height: 35,
     width: 164,
-    paddingInline: 12
+    paddingInline: 12,
+
+    '&:not(:last-child)': {
+      marginRight: 8
+    }
+  },
+  mdInfo: {
+    width: 'fit-content',
+
+    [theme.breakpoints.only('md')]: {
+      flexWrap: 'nowrap'
+    }
   }
 }))
 

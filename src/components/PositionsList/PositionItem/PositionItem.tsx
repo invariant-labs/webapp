@@ -35,7 +35,7 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
         {fee}% fee
       </Typography>
     </Grid>
-  ), [fee])
+  ), [fee, classes])
 
   const valueFragment = useMemo(() => (
     <Grid container item className={classes.value} justifyContent='space-between' alignItems='center' wrap='nowrap'>
@@ -46,7 +46,7 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
         </Typography>
       </Grid>
     </Grid>
-  ), [value, tokenXName])
+  ), [value, tokenXName, classes])
 
   return (
     <Grid className={classes.root} container direction='row' alignItems='center'>
@@ -64,32 +64,34 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
         {feeFragment}
       </Hidden>
 
-      <Grid container item className={classes.liquidity} justifyContent='center' alignItems='center'>
-        <Typography className={classes.infoText}>
-          {tokenXLiq} {tokenXName} - {tokenYLiq} {tokenYName}
-        </Typography>
-      </Grid>
-
-      <Hidden smDown>
-        {feeFragment}
-      </Hidden>
-
-      <Hidden mdUp>
-        {valueFragment}
-      </Hidden>
-
-      <Grid container item className={classes.minMax} justifyContent='space-between' alignItems='center' wrap='nowrap'>
-        <Typography className={classes.greenText}>MIN-MAX</Typography>
-        <Grid className={classes.infoCenter} container item justifyContent='center'>
+      <Grid container item className={classes.mdInfo} direction='row'>
+        <Grid container item className={classes.liquidity} justifyContent='center' alignItems='center'>
           <Typography className={classes.infoText}>
-            {min} - {max} {tokenXName} per {tokenYName}
+            {tokenXLiq} {tokenXName} - {tokenYLiq} {tokenYName}
           </Typography>
         </Grid>
-      </Grid>
 
-      <Hidden smDown>
-        {valueFragment}
-      </Hidden>
+        <Hidden smDown>
+          {feeFragment}
+        </Hidden>
+
+        <Hidden mdUp>
+          {valueFragment}
+        </Hidden>
+
+        <Grid container item className={classes.minMax} justifyContent='space-between' alignItems='center' wrap='nowrap'>
+          <Typography className={classes.greenText}>MIN - MAX</Typography>
+          <Grid className={classes.infoCenter} container item justifyContent='center'>
+            <Typography className={classes.infoText}>
+              {min} - {max} {tokenXName} per {tokenYName}
+            </Typography>
+          </Grid>
+        </Grid>
+
+        <Hidden smDown>
+          {valueFragment}
+        </Hidden>
+      </Grid>
     </Grid>
   )
 }
