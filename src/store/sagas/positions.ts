@@ -143,6 +143,35 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       toRequest
     )
 
+    if (rawTicks.length === 0) {
+      const ticks: PlotTickData[] = []
+
+      const minTick = Math.max(MIN_TICK, allPools[poolIndex].currentTickIndex - (100 * allPools[poolIndex].tickSpacing))
+      for (let i = allPools[poolIndex].currentTickIndex; i >= minTick; i -= allPools[poolIndex].tickSpacing) {
+        const newSqrtDecimal = calculate_price_sqrt(i)
+        const newSqrt = +printBN(newSqrtDecimal.v, PRICE_DECIMAL)
+
+        ticks.push({
+          x: action.payload.isXtoY ? newSqrt ** 2 : 1 / (newSqrt ** 2),
+          y: 0,
+          index: i
+        })
+      }
+
+      const maxTick = Math.min(MAX_TICK, allPools[poolIndex].currentTickIndex + (100 * allPools[poolIndex].tickSpacing))
+      for (let i = allPools[poolIndex].currentTickIndex + allPools[poolIndex].tickSpacing; i <= maxTick; i += allPools[poolIndex].tickSpacing) {
+        const newSqrtDecimal = calculate_price_sqrt(i)
+        const newSqrt = +printBN(newSqrtDecimal.v, PRICE_DECIMAL)
+
+        ticks.push({
+          x: action.payload.isXtoY ? newSqrt ** 2 : 1 / (newSqrt ** 2),
+          y: 0,
+          index: i
+        })
+      }
+      return yield put(actions.setPlotTicks(ticks.sort((a, b) => a.x - b.x)))
+    }
+
     const parsedTicks = parseLiquidityOnTicks(rawTicks, allPools[poolIndex])
 
     const ticks = rawTicks.map((raw, index) => ({
