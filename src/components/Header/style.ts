@@ -73,9 +73,8 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
   },
   menuButton: {
     borderRadius: 10,
-    padding: 6,
-    paddingTop: 1,
-    paddingBottom: 1,
+    paddingInline: 6,
+    paddingBlock: 1,
     height: 45,
     transition: 'background 300ms',
     marginLeft: 8,
