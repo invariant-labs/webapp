@@ -52,18 +52,22 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
         </Typography>
       </Grid>
 
-      <Grid container item className={classes.minMax} justifyContent='space-between' alignItems='center'>
+      <Grid container item className={classes.minMax} justifyContent='space-between' alignItems='center' wrap='nowrap'>
         <Typography className={classes.greenText}>MIN-MAX</Typography>
-        <Typography className={classes.infoText}>
-          {min} - {max} {tokenXName} per {tokenYName}
-        </Typography>
+        <Grid className={classes.infoCenter} container item justifyContent='center'>
+          <Typography className={classes.infoText}>
+            {min} - {max} {tokenXName} per {tokenYName}
+          </Typography>
+        </Grid>
       </Grid>
 
-      <Grid container item className={classes.value} justifyContent='space-between' alignItems='center'>
+      <Grid container item className={classes.value} justifyContent='space-between' alignItems='center' wrap='nowrap'>
         <Typography className={classes.infoText}>Value</Typography>
-        <Typography className={classes.greenText}>
-          {value} {tokenXName}
-        </Typography>
+        <Grid className={classes.infoCenter} container item justifyContent='center'>
+          <Typography className={classes.greenText}>
+            {value} {tokenXName}
+          </Typography>
+        </Grid>
       </Grid>
     </Grid>
   )

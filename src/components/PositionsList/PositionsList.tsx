@@ -30,7 +30,7 @@ export const PositionsList: React.FC<IProp> = ({ data, onAddPositionClick, loadi
   const classes = useStyle()
   return (
     <Grid className={classes.root}>
-      <Grid className={classes.header}>
+      <Grid className={classes.header} container direction='row' justifyContent='space-between' alignItems='center'>
         <Typography className={classes.title}>Your Liquidity Positions</Typography>
         <Button
           className={classes.button}

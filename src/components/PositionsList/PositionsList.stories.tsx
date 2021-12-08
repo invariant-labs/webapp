@@ -7,7 +7,7 @@ storiesOf('positionsList/list', module).add('default', () => {
     console.log('actionButton add Position')
   }
   return (
-    <Grid style={{ backgroundColor: '#1C1B1E', justifyContent: 'center', display: 'flex' }}>
+    <Grid style={{ backgroundColor: '#1C1B1E', justifyContent: 'center', display: 'flex', paddingInline: 20 }}>
       <PositionsList
         data={[
           {

@@ -29,11 +29,13 @@ const useStyles = makeStyles(() => ({
   },
   infoText: {
     ...typography.body1,
-    color: colors.invariant.lightInfoText
+    color: colors.invariant.lightInfoText,
+    whiteSpace: 'nowrap'
   },
   greenText: {
     ...typography.body1,
-    color: colors.invariant.accent2
+    color: colors.invariant.accent2,
+    whiteSpace: 'nowrap'
   },
   liquidity: {
     background: colors.invariant.componentOut2,
@@ -48,6 +50,9 @@ const useStyles = makeStyles(() => ({
     height: 35,
     marginRight: 8,
     width: 90
+  },
+  infoCenter: {
+    flex: '1 1 0%'
   },
   minMax: {
     background: colors.invariant.componentOut2,
