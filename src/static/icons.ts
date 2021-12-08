@@ -1,4 +1,3 @@
-import xUSDIcon from './icons/xusd.svg'
 import WSOLIcon from './icons/wsol.svg'
 import USDCIcon from './icons/usdc.svg'
 import phantomIcon from './svg/phantom.svg'
@@ -16,13 +15,18 @@ import mainnet from './svg/mainnet.svg'
 import devnet from './svg/devnet.svg'
 import testnet from './svg/testnet.svg'
 import dogeIcon from './svg/dogecoin.svg'
-import logo from './png/invariant-logo.png'
 import logoTitle from './svg/Logo.svg'
+import logoShort from './svg/LogoShort.svg'
 import arrow from './svg/arrow.svg'
 import NoCon from './svg/no-connected.svg'
 import mainnetIcon from './svg/mainNet.svg'
 import devnetIcon from './svg/devNet.svg'
 import testnetIcon from './svg/testNet.svg'
+import githubIcon from './svg/githubCircle.svg'
+import telegramIcon from './svg/telegramCircle.svg'
+import twitterIcon from './svg/twitterCircle.svg'
+import mediumIcon from './svg/mediumCircle.svg'
+import discordIcon from './svg/discordCircle.svg'
 import closeIcon from './svg/closeIcon.svg'
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
@@ -43,13 +47,18 @@ const icons: { [key: string]: string } = {
   FTT: FTTIcon,
   SNY: SNYIcon,
   USD: USDIcon,
-  Logo: logo,
+  LogoShort: logoShort,
   LogoTitle: logoTitle,
   ArrowIcon: arrow,
   NoConnected: NoCon,
   MainnetIcon: mainnetIcon,
   DevnetIcon: devnetIcon,
   TestnetIcon: testnetIcon,
+  GithubIcon: githubIcon,
+  TelegramIcon: telegramIcon,
+  TwitterIcon: twitterIcon,
+  DiscordIcon: discordIcon,
+  mediumIcon: mediumIcon,
   closeIcon: closeIcon
 }
 

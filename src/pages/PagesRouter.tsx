@@ -14,6 +14,7 @@ import { actions } from '@reducers/positions'
 import { status } from '@selectors/solanaWallet'
 import { SinglePositionPage } from './SinglePositionPage/SinglePositionPage'
 import { pools } from '@selectors/pools'
+import Footer from '@components/Footer/Footer'
 
 export const PagesRouter: React.FC = () => {
   const dispatch = useDispatch()
@@ -51,6 +52,7 @@ export const PagesRouter: React.FC = () => {
             </Redirect>
           </Route>
         </Switch>
+        <Footer />
       </div>
     </Router>
   )
