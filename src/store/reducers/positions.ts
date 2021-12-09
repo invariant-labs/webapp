@@ -16,6 +16,7 @@ export interface PlotTickData {
 export interface PlotTicks {
   data: PlotTickData[]
   loading: boolean
+  maxReached: boolean
 }
 export interface IPositionsStore {
   plotTicks: PlotTicks
@@ -43,10 +44,16 @@ export interface SetPositionData {
   position: Position
 }
 
+export interface SetCurrentTicksData {
+  data: PlotTickData[]
+  maxReached: boolean
+}
+
 export const defaultState: IPositionsStore = {
   plotTicks: {
     data: [],
-    loading: false
+    loading: false,
+    maxReached: false
   },
   positionsList: {
     list: [],
@@ -62,8 +69,9 @@ const positionsSlice = createSlice({
     initPosition(state, _action: PayloadAction<InitPositionData>) {
       return state
     },
-    setPlotTicks(state, action: PayloadAction<PlotTickData[]>) {
-      state.plotTicks.data = action.payload
+    setPlotTicks(state, action: PayloadAction<SetCurrentTicksData>) {
+      state.plotTicks.data = action.payload.data
+      state.plotTicks.maxReached = action.payload.maxReached
       state.plotTicks.loading = false
       return state
     },

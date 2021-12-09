@@ -1,5 +1,10 @@
+import { calculate_price_sqrt, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
+import { PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
+import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
+import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
+import { PRICE_DECIMAL } from './static'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -151,4 +156,75 @@ export const calcTicksAmountInRange = (min: number, max: number, tickSpacing: nu
   const maxIndex = logBase(max, 1.0001)
 
   return Math.ceil((maxIndex - minIndex) / tickSpacing)
+}
+
+export const createLiquidityPlot = (
+  rawTicks: Tick[],
+  pool: PoolStructure,
+  isXtoY: boolean
+) => {
+  const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(rawTicks, pool) : []
+
+  const ticks = rawTicks.map((raw, index) => ({
+    ...raw,
+    liqudity: parsedTicks[index].liquidity
+  }))
+
+  const ticksData: PlotTickData[] = []
+
+  ticks.forEach((tick, index) => {
+    const sqrt = +printBN(tick.sqrtPrice.v, PRICE_DECIMAL)
+
+    ticksData.push({
+      x: isXtoY ? sqrt ** 2 : 1 / (sqrt ** 2),
+      y: +printBN(tick.liqudity, PRICE_DECIMAL),
+      index: tick.index
+    })
+
+    if (index < ticks.length - 1 && ticks[index + 1].index - ticks[index].index > pool.tickSpacing) {
+      for (let i = ticks[index].index + pool.tickSpacing; i < ticks[index + 1].index; i += pool.tickSpacing) {
+        const newSqrtDecimal = calculate_price_sqrt(i)
+        const newSqrt = +printBN(newSqrtDecimal.v, PRICE_DECIMAL)
+
+        ticksData.push({
+          x: isXtoY ? newSqrt ** 2 : 1 / (newSqrt ** 2),
+          y: +printBN(tick.liqudity, PRICE_DECIMAL),
+          index: i
+        })
+      }
+    }
+  })
+
+  if (!ticksData.length) {
+    const sqrt = +printBN(pool.sqrtPrice.v, PRICE_DECIMAL)
+    ticksData.push({
+      x: isXtoY ? sqrt ** 2 : 1 / (sqrt ** 2),
+      y: 0,
+      index: pool.currentTickIndex
+    })
+  }
+
+  for (let i = (ticks.length ? ticks[0].index : pool.currentTickIndex) - pool.tickSpacing; i >= MIN_TICK; i -= pool.tickSpacing) {
+    const newSqrtDecimal = calculate_price_sqrt(i)
+    const newSqrt = +printBN(newSqrtDecimal.v, PRICE_DECIMAL)
+
+    ticksData.push({
+      x: isXtoY ? newSqrt ** 2 : 1 / (newSqrt ** 2),
+      y: 0,
+      index: i
+    })
+  }
+
+  for (let i = (ticks.length ? ticks[ticks.length - 1].index : pool.currentTickIndex) + pool.tickSpacing; i <= MAX_TICK; i += pool.tickSpacing) {
+    const newSqrtDecimal = calculate_price_sqrt(i)
+    const newSqrt = +printBN(newSqrtDecimal.v, PRICE_DECIMAL)
+
+    ticksData.push({
+      x: isXtoY ? newSqrt ** 2 : 1 / (newSqrt ** 2),
+      y: 0,
+      index: i
+    })
+  }
+
+  return ticksData.sort((a, b) => a.x - b.x)
 }
