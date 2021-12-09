@@ -120,6 +120,7 @@ export const NewPositionWrapper = () => {
             setLiquidity(result.liquidity)
 
             console.log('x:', amount.toString(), 'y:', result.y.toString(), 'ticks:', lowerTick, upperTick, 'liquidity', result.liquidity.v.toString())
+            console.log(tokenAIndex !== null && tokens[tokenAIndex].assetAddress.equals(allPools[poolIndex].tokenX) ? 'First token is x' : 'Second token is x')
 
             return result.y
           }
@@ -128,6 +129,7 @@ export const NewPositionWrapper = () => {
           setLiquidity(result.liquidity)
 
           console.log('y:', amount.toString(), 'x:', result.x.toString(), 'ticks:', lowerTick, upperTick, 'liquidity', result.liquidity.v.toString())
+          console.log(tokenAIndex !== null && tokens[tokenAIndex].assetAddress.equals(allPools[poolIndex].tokenX) ? 'First token is x' : 'Second token is x')
 
           return result.x
         } catch (error) {
@@ -135,6 +137,7 @@ export const NewPositionWrapper = () => {
           setLiquidity(result.liquidity)
 
           console.log('err', byX ? 'x:' : 'y:', amount.toString(), 'ticks:', lowerTick, upperTick, 'liquidity:', result.liquidity.v.toString())
+          console.log(tokenAIndex !== null && tokens[tokenAIndex].assetAddress.equals(allPools[poolIndex].tokenX) ? 'First token is x' : 'Second token is x')
         }
 
         return new BN(0)
