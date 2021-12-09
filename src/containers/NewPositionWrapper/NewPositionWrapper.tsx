@@ -119,7 +119,7 @@ export const NewPositionWrapper = () => {
             const result = getLiquidityByX(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
             setLiquidity(result.liquidity)
 
-            console.log(amount.toString(), 'y', result.y.toString(), lowerTick, upperTick, result.liquidity.v.toString())
+            console.log('x:', amount.toString(), 'y:', result.y.toString(), 'ticks:', lowerTick, upperTick, 'liquidity', result.liquidity.v.toString())
 
             return result.y
           }
@@ -127,14 +127,14 @@ export const NewPositionWrapper = () => {
           const result = getLiquidityByY(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
           setLiquidity(result.liquidity)
 
-          console.log(amount.toString(), 'x', result.x.toString(), lowerTick, upperTick, result.liquidity.v.toString())
+          console.log('y:', amount.toString(), 'x:', result.x.toString(), 'ticks:', lowerTick, upperTick, 'liquidity', result.liquidity.v.toString())
 
           return result.x
         } catch (error) {
           const result = (byX ? getLiquidityByY : getLiquidityByX)(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
           setLiquidity(result.liquidity)
 
-          console.log(amount.toString(), 'err', lowerTick, upperTick, result.liquidity.v.toString())
+          console.log('err', byX ? 'x:' : 'y:', amount.toString(), 'ticks:', lowerTick, upperTick, 'liquidity:', result.liquidity.v.toString())
         }
 
         return new BN(0)
