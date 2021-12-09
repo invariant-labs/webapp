@@ -11,6 +11,7 @@ import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import useStyles from './style'
 import { getX, getY } from '@invariant-labs/sdk/src/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
+import { BN } from '@project-serum/anchor'
 
 export interface IProps {
   id: string
@@ -43,9 +44,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const min = useMemo(() => {
     if (position) {
       const sqrtDec = calculate_price_sqrt(position.lowerTickIndex)
-      const sqrt = +printBN(sqrtDec.v, PRICE_DECIMAL)
+      const price = sqrtDec.v.mul(sqrtDec.v).div(DENOMINATOR).div(new BN(10 ** position.tokenX.decimal))
 
-      return sqrt ** 2
+      return +printBN(price, position.tokenY.decimal)
     }
 
     return 0
@@ -53,18 +54,18 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const max = useMemo(() => {
     if (position) {
       const sqrtDec = calculate_price_sqrt(position.upperTickIndex)
-      const sqrt = +printBN(sqrtDec.v, PRICE_DECIMAL)
+      const price = sqrtDec.v.mul(sqrtDec.v).div(DENOMINATOR).div(new BN(10 ** position.tokenX.decimal))
 
-      return sqrt ** 2
+      return +printBN(price, position.tokenY.decimal)
     }
 
     return 0
   }, [position?.upperTickIndex])
   const current = useMemo(() => {
     if (position) {
-      const sqrt = +printBN(position.poolData.sqrtPrice.v, PRICE_DECIMAL)
+      const price = position.poolData.sqrtPrice.v.mul(position.poolData.sqrtPrice.v).div(DENOMINATOR).div(new BN(10 ** position.tokenX.decimal))
 
-      return sqrt ** 2
+      return +printBN(price, position.tokenY.decimal)
     }
 
     return 0
@@ -112,7 +113,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       return 2
     }
 
-    return 4
+    return 5
   }
 
   const [tokenXClaim, tokenYClaim] = useMemo(() => {

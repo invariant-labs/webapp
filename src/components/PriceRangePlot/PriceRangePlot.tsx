@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Layer, ResponsiveLine } from '@nivo/line'
 // @ts-expect-error
 import { linearGradientDef } from '@nivo/core'
@@ -42,15 +42,15 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 }) => {
   const classes = useStyles()
 
-  const getCurrentLessThanRange = () => {
+  const currentLessThanRange = useMemo(() => {
     if (disabled || leftRangeIndex > data.length - 1 || data[leftRangeIndex].x < plotMin) {
       return []
     }
 
     return data.slice(Math.max(0, nearestPriceIndex(plotMin, data) - 5), Math.min(leftRangeIndex + 1, nearestPriceIndex(plotMax, data) + 5))
-  }
+  }, [disabled, leftRangeIndex, data, plotMin, plotMax])
 
-  const getCurrentRange = () => {
+  const currentRange = useMemo(() => {
     if (disabled) {
       return data.slice(Math.max(0, nearestPriceIndex(plotMin, data) - 5), Math.min(data.length, nearestPriceIndex(plotMax, data)) + 5)
     }
@@ -59,15 +59,15 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     }
 
     return data.slice(Math.max(leftRangeIndex, nearestPriceIndex(plotMin, data) - 5), Math.min(rightRangeIndex + 1, nearestPriceIndex(plotMax, data) + 5))
-  }
+  }, [disabled, data, leftRangeIndex, rightRangeIndex, plotMin, plotMax])
 
-  const getCurrentGreaterThanRange = () => {
+  const currentGreaterThanRange = useMemo(() => {
     if (disabled || rightRangeIndex > data.length - 1 || data[rightRangeIndex].x > plotMax) {
       return []
     }
 
     return data.slice(Math.max(rightRangeIndex, nearestPriceIndex(plotMin, data) - 5), Math.min(data.length, nearestPriceIndex(plotMax, data) + 5))
-  }
+  }, [disabled, data, rightRangeIndex, plotMin, plotMax])
 
   const currentLayer: Layer = ({ innerWidth, innerHeight }) => {
     if (typeof midPriceIndex === 'undefined' || midPriceIndex < 0 || midPriceIndex >= data.length) {
@@ -100,15 +100,15 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         data={[
           {
             id: 'less than range',
-            data: getCurrentLessThanRange()
+            data: currentLessThanRange
           },
           {
             id: 'range',
-            data: getCurrentRange()
+            data: currentRange
           },
           {
             id: 'greater than range',
-            data: getCurrentGreaterThanRange()
+            data: currentGreaterThanRange
           }
         ]}
         curve='basis'
