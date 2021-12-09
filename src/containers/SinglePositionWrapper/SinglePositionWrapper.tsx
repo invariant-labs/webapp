@@ -7,7 +7,7 @@ import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
 import { printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
-import { calculate_price_sqrt } from '@invariant-labs/sdk'
+import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import useStyles from './style'
 import { getX, getY } from '@invariant-labs/sdk/src/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
@@ -74,8 +74,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (position) {
       try {
         return +printBN(
-          getX(position.liquidity.v, calculate_price_sqrt(position.upperTickIndex).v, position.poolData.sqrtPrice.v),
-          PRICE_DECIMAL + position.tokenX.decimal
+          getX(position.liquidity.v, calculate_price_sqrt(position.upperTickIndex).v, position.poolData.sqrtPrice.v).div(DENOMINATOR),
+          position.tokenX.decimal
         )
       } catch (error) {
         return 0
@@ -88,8 +88,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (position) {
       try {
         return +printBN(
-          getY(position.liquidity.v, position.poolData.sqrtPrice.v, calculate_price_sqrt(position.lowerTickIndex).v),
-          PRICE_DECIMAL + position.tokenY.decimal
+          getY(position.liquidity.v, position.poolData.sqrtPrice.v, calculate_price_sqrt(position.lowerTickIndex).v).div(DENOMINATOR),
+          position.tokenY.decimal
         )
       } catch (error) {
         return 0
@@ -124,8 +124,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       })
 
       return [
-        +printBN(bnX, PRICE_DECIMAL + position.tokenX.decimal),
-        +printBN(bnY, PRICE_DECIMAL + position.tokenY.decimal)
+        +printBN(bnX.div(DENOMINATOR), position.tokenX.decimal),
+        +printBN(bnY.div(DENOMINATOR), position.tokenY.decimal)
       ]
     }
 
