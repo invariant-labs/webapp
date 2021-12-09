@@ -5,13 +5,12 @@ import { actions } from '@reducers/positions'
 import { isLoadingPositionsList, plotTicks, singlePositionData } from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
-import { printBN } from '@consts/utils'
+import { calcYPerXPrice, printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import useStyles from './style'
 import { getX, getY } from '@invariant-labs/sdk/src/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
-import { BN } from '@project-serum/anchor'
 
 export interface IProps {
   id: string
@@ -41,35 +40,24 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const leftRangeIndex = useMemo(() => ticksData.findIndex((tick) => tick.index === position?.lowerTickIndex), [ticksData.length, position?.id])
   const rightRangeIndex = useMemo(() => ticksData.findIndex((tick) => tick.index === position?.upperTickIndex), [ticksData.length, position?.id])
 
-  const min = useMemo(() => {
-    if (position) {
-      const sqrtDec = calculate_price_sqrt(position.lowerTickIndex)
-      const price = sqrtDec.v.mul(sqrtDec.v).div(DENOMINATOR).div(new BN(10 ** position.tokenX.decimal))
-
-      return +printBN(price, position.tokenY.decimal)
-    }
-
-    return 0
-  }, [position?.lowerTickIndex])
-  const max = useMemo(() => {
-    if (position) {
-      const sqrtDec = calculate_price_sqrt(position.upperTickIndex)
-      const price = sqrtDec.v.mul(sqrtDec.v).div(DENOMINATOR).div(new BN(10 ** position.tokenX.decimal))
-
-      return +printBN(price, position.tokenY.decimal)
-    }
-
-    return 0
-  }, [position?.upperTickIndex])
-  const current = useMemo(() => {
-    if (position) {
-      const price = position.poolData.sqrtPrice.v.mul(position.poolData.sqrtPrice.v).div(DENOMINATOR).div(new BN(10 ** position.tokenX.decimal))
-
-      return +printBN(price, position.tokenY.decimal)
-    }
-
-    return 0
-  }, [position?.id])
+  const min = useMemo(
+    () => position
+      ? calcYPerXPrice(calculate_price_sqrt(position.lowerTickIndex).v, position.tokenX.decimal, position.tokenY.decimal)
+      : 0,
+    [position?.lowerTickIndex]
+  )
+  const max = useMemo(
+    () => position
+      ? calcYPerXPrice(calculate_price_sqrt(position.upperTickIndex).v, position.tokenX.decimal, position.tokenY.decimal)
+      : 0,
+    [position?.upperTickIndex]
+  )
+  const current = useMemo(
+    () => position
+      ? calcYPerXPrice(position.poolData.sqrtPrice.v, position.tokenX.decimal, position.tokenY.decimal)
+      : 0,
+    [position?.id]
+  )
 
   const tokenXLiquidity = useMemo(() => {
     if (position) {
@@ -100,22 +88,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     return 0
   }, [position?.id])
 
-  const maxDecimals = (value: number): number => {
-    if (value >= 10000) {
-      return 0
-    }
-
-    if (value >= 1000) {
-      return 1
-    }
-
-    if (value >= 100) {
-      return 2
-    }
-
-    return 5
-  }
-
   const [tokenXClaim, tokenYClaim] = useMemo(() => {
     if (position) {
       const [bnX, bnY] = calculateClaimAmount({
@@ -132,6 +104,22 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
     return [0, 0]
   }, [position?.id])
+
+  const maxDecimals = (value: number): number => {
+    if (value >= 10000) {
+      return 0
+    }
+
+    if (value >= 1000) {
+      return 1
+    }
+
+    if (value >= 100) {
+      return 2
+    }
+
+    return 5
+  }
 
   return (
     !isLoadingList && !ticksLoading && position
