@@ -2,9 +2,9 @@ import { Button, Grid, Typography } from '@material-ui/core'
 import React, { useState, useEffect, useMemo } from 'react'
 import PriceRangePlot from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
-import useStyles from './style'
 import { nearestPriceIndex } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
+import useStyles from './style'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -61,9 +61,12 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const zoomPlus = () => {
     const diff = plotMax - plotMin
-    if (data.length >= 2 && diff >= data[1].x - data[0].x) {
-      setPlotMin(plotMin + (diff / 6))
-      setPlotMax(plotMax - (diff / 6))
+    const newMin = plotMin + (diff / 6)
+    const newMax = plotMax - (diff / 6)
+
+    if (Math.abs(nearestPriceIndex(newMin, data) - nearestPriceIndex(newMax, data)) >= 4) {
+      setPlotMin(newMin)
+      setPlotMax(newMax)
     }
   }
 
