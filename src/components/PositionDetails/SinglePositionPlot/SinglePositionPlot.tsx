@@ -34,17 +34,17 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   const classes = useStyles()
 
   const initSideDist = useMemo(() => Math.min(
-    data[midPriceIndex].x - data[Math.max(midPriceIndex - 15, 0)].x,
-    data[Math.min(midPriceIndex + 15, data.length - 1)].x - data[midPriceIndex].x
+    (data[midPriceIndex]?.x ?? 0) - data[Math.max(midPriceIndex - 15, 0)].x,
+    data[Math.min(midPriceIndex + 15, data.length - 1)].x - (data[midPriceIndex]?.x ?? 0)
   ), [data, midPriceIndex])
 
-  const [plotMin, setPlotMin] = useState(data[midPriceIndex].x - initSideDist)
-  const [plotMax, setPlotMax] = useState(data[midPriceIndex].x + initSideDist)
+  const [plotMin, setPlotMin] = useState((data[midPriceIndex]?.x ?? 0) - initSideDist)
+  const [plotMax, setPlotMax] = useState((data[midPriceIndex]?.x ?? 0) + initSideDist)
 
   useEffect(() => {
     if (!loadingTicks) {
-      setPlotMin(data[midPriceIndex].x - initSideDist)
-      setPlotMax(data[midPriceIndex].x + initSideDist)
+      setPlotMin((data[midPriceIndex]?.x ?? 0) - initSideDist)
+      setPlotMax((data[midPriceIndex]?.x ?? 0) + initSideDist)
     }
   }, [loadingTicks])
 
