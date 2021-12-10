@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from '@material-ui/core'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import PriceRangePlot from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import useStyles from './style'
@@ -38,8 +38,13 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
 
-  const [plotMin, setPlotMin] = useState(data[Math.max(midPriceIndex - 15, 0)].x)
-  const [plotMax, setPlotMax] = useState(data[Math.min(midPriceIndex + 15, data.length - 1)].x)
+  const initSideDist = useMemo(() => Math.min(
+    data[midPriceIndex].x - data[Math.max(midPriceIndex - 15, 0)].x,
+    data[Math.min(midPriceIndex + 15, data.length - 1)].x - data[midPriceIndex].x
+  ), [data, midPriceIndex])
+
+  const [plotMin, setPlotMin] = useState(data[midPriceIndex].x - initSideDist)
+  const [plotMax, setPlotMax] = useState(data[midPriceIndex].x + initSideDist)
 
   const [waiting, setWaiting] = useState(false)
 
@@ -80,8 +85,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       Math.max(midPriceIndex - 10, 0),
       Math.min(midPriceIndex + 10, data.length - 1)
     )
-    setPlotMin(data[Math.max(midPriceIndex - 15, 0)].x)
-    setPlotMax(data[Math.min(midPriceIndex + 15, data.length - 1)].x)
+    setPlotMin(data[midPriceIndex].x - initSideDist)
+    setPlotMax(data[midPriceIndex].x + initSideDist)
   }
 
   useEffect(() => {
