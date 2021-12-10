@@ -114,13 +114,15 @@ export const NewPositionWrapper = () => {
         const lowerTick = Math.min(ticksData[left].index, ticksData[right].index)
         const upperTick = Math.max(ticksData[left].index, ticksData[right].index)
 
+        console.log('liquidity calc by:', tokenAddress.toString())
+        console.log('pool token x:', allPools[poolIndex].tokenX.toString())
+
         try {
           if (byX) {
             const result = getLiquidityByX(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
             setLiquidity(result.liquidity)
 
             console.log('x:', amount.toString(), 'y:', result.y.toString(), 'ticks:', lowerTick, upperTick, 'liquidity', result.liquidity.v.toString())
-            console.log(tokenAIndex !== null && tokens[tokenAIndex].assetAddress.equals(allPools[poolIndex].tokenX) ? 'First token is x' : 'Second token is x')
 
             return result.y
           }
@@ -129,7 +131,6 @@ export const NewPositionWrapper = () => {
           setLiquidity(result.liquidity)
 
           console.log('y:', amount.toString(), 'x:', result.x.toString(), 'ticks:', lowerTick, upperTick, 'liquidity', result.liquidity.v.toString())
-          console.log(tokenAIndex !== null && tokens[tokenAIndex].assetAddress.equals(allPools[poolIndex].tokenX) ? 'First token is x' : 'Second token is x')
 
           return result.x
         } catch (error) {
@@ -137,7 +138,6 @@ export const NewPositionWrapper = () => {
           setLiquidity(result.liquidity)
 
           console.log('err', byX ? 'x:' : 'y:', amount.toString(), 'ticks:', lowerTick, upperTick, 'liquidity:', result.liquidity.v.toString())
-          console.log(tokenAIndex !== null && tokens[tokenAIndex].assetAddress.equals(allPools[poolIndex].tokenX) ? 'First token is x' : 'Second token is x')
         }
 
         return new BN(0)
