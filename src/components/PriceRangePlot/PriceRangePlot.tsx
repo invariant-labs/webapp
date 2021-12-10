@@ -93,7 +93,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       return pointsOmitter(
         data.slice(
           Math.max(0, nearestPriceIndex(plotMin, data) - 5),
-          Math.min(data.length, nearestPriceIndex(plotMax, data)) + 5
+          Math.min(data.length, nearestPriceIndex(plotMax, data) + 5)
         )
       )
     }

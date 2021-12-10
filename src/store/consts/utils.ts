@@ -233,5 +233,5 @@ export const createLiquidityPlot = (
     })
   }
 
-  return ticksData.sort((a, b) => a.x - b.x)
+  return ticksData.filter((tick) => tick.x !== Infinity).sort((a, b) => a.x - b.x)
 }
