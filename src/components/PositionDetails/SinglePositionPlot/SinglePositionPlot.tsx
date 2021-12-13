@@ -109,7 +109,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
             <Typography component='span'>
               {currentPrice}
             </Typography>
-            {tokenX} per {tokenY}
+            {tokenY} per {tokenX}
           </Typography>
         </Card>
       </Grid>

@@ -32,9 +32,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [leftRange, setLeftRange] = useState(0)
   const [rightRange, setRightRange] = useState(0)
 
-  const [leftRangeCompareIndex, setLeftRangeCompareIndex] = useState(0)
-  const [rightRangeCompareIndex, setRightRangeCompareIndex] = useState(0)
-
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
 
@@ -74,9 +71,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     setLeftRange(left)
     setRightRange(right)
 
-    setLeftRangeCompareIndex(data[left].index)
-    setRightRangeCompareIndex(data[right].index)
-
     setLeftInput(data[left].x.toString())
     setRightInput(data[right].x.toString())
 
@@ -105,17 +99,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       setWaiting(false)
     }
   }, [blocked])
-
-  useEffect(() => {
-    if (!waiting) {
-      const newLeft = data.findIndex((tick) => tick.index === leftRangeCompareIndex)
-      const newRight = data.findIndex((tick) => tick.index === rightRangeCompareIndex)
-
-      if (newLeft !== -1 && newRight !== -1) {
-        changeRangeHandler(newLeft, newRight)
-      }
-    }
-  }, [data.length])
 
   return (
     <Grid container className={classes.wrapper}>

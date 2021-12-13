@@ -24,7 +24,7 @@ const LiquidationRangeInfo: React.FC<ILiquidationRangeInfo> = ({
         </Grid>
         <Grid className={classes.infoSwap}>
           <Typography component='span' className={classes.infoAmount}>{amount}</Typography>
-          <Typography component='p' className={classes.infoSwapToken}>{tokenX} per {tokenY}</Typography>
+          <Typography component='p' className={classes.infoSwapToken}>{tokenY} per {tokenX}</Typography>
         </Grid>
       </Grid>
     </Grid>

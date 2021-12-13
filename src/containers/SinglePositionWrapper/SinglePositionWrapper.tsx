@@ -28,7 +28,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
 
   useEffect(() => {
-    if (position && !(ticksData?.length)) {
+    if (position) {
       dispatch(actions.getCurrentPlotTicks({
         poolIndex: position.poolData.poolIndex,
         isXtoY: true
@@ -130,8 +130,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           leftRangeIndex={leftRangeIndex}
           rightRangeIndex={rightRangeIndex}
           currentPrice={current}
-          tokenY={position.tokenX.symbol}
-          tokenX={position.tokenY.symbol}
+          tokenY={position.tokenY.symbol}
+          tokenX={position.tokenX.symbol}
           onZoomOutOfData={(min, max) => {
             if (position) {
               dispatch(actions.getCurrentPlotTicks({
