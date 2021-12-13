@@ -188,7 +188,7 @@ export const createLiquidityPlot = (
       x: isXtoY
         ? price
         : (
-          price === 0
+          price !== 0
             ? 1 / price
             : Number.MAX_SAFE_INTEGER
         ),
@@ -204,7 +204,7 @@ export const createLiquidityPlot = (
           x: isXtoY
             ? price
             : (
-              price === 0
+              price !== 0
                 ? 1 / price
                 : Number.MAX_SAFE_INTEGER
             ),
@@ -222,7 +222,7 @@ export const createLiquidityPlot = (
       x: isXtoY
         ? price
         : (
-          price === 0
+          price !== 0
             ? 1 / price
             : Number.MAX_SAFE_INTEGER
         ),
@@ -238,7 +238,7 @@ export const createLiquidityPlot = (
       x: isXtoY
         ? price
         : (
-          price === 0
+          price !== 0
             ? 1 / price
             : Number.MAX_SAFE_INTEGER
         ),
@@ -254,7 +254,7 @@ export const createLiquidityPlot = (
       x: isXtoY
         ? price
         : (
-          price === 0
+          price !== 0
             ? 1 / price
             : Number.MAX_SAFE_INTEGER
         ),
