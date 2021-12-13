@@ -185,7 +185,13 @@ export const createLiquidityPlot = (
     const price = calcYPerXPrice(tick.sqrtPrice.v, tokenXDecimal, tokenYDecimal)
 
     ticksData.push({
-      x: isXtoY ? price : 1 / price,
+      x: isXtoY
+        ? price
+        : (
+          price === 0
+            ? 1 / price
+            : Number.MAX_SAFE_INTEGER
+        ),
       y: +printBN(tick.liqudity, PRICE_DECIMAL),
       index: tick.index
     })
@@ -195,7 +201,13 @@ export const createLiquidityPlot = (
         const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
 
         ticksData.push({
-          x: isXtoY ? price : 1 / price,
+          x: isXtoY
+            ? price
+            : (
+              price === 0
+                ? 1 / price
+                : Number.MAX_SAFE_INTEGER
+            ),
           y: +printBN(tick.liqudity, PRICE_DECIMAL),
           index: i
         })
@@ -207,7 +219,13 @@ export const createLiquidityPlot = (
     const price = calcYPerXPrice(pool.sqrtPrice.v, tokenXDecimal, tokenYDecimal)
 
     ticksData.push({
-      x: isXtoY ? price : 1 / price,
+      x: isXtoY
+        ? price
+        : (
+          price === 0
+            ? 1 / price
+            : Number.MAX_SAFE_INTEGER
+        ),
       y: 0,
       index: pool.currentTickIndex
     })
@@ -217,7 +235,13 @@ export const createLiquidityPlot = (
     const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
 
     ticksData.push({
-      x: isXtoY ? price : 1 / price,
+      x: isXtoY
+        ? price
+        : (
+          price === 0
+            ? 1 / price
+            : Number.MAX_SAFE_INTEGER
+        ),
       y: 0,
       index: i
     })
@@ -227,11 +251,17 @@ export const createLiquidityPlot = (
     const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
 
     ticksData.push({
-      x: isXtoY ? price : 1 / price,
+      x: isXtoY
+        ? price
+        : (
+          price === 0
+            ? 1 / price
+            : Number.MAX_SAFE_INTEGER
+        ),
       y: 0,
       index: i
     })
   }
 
-  return ticksData.filter((tick) => tick.x !== Infinity).sort((a, b) => a.x - b.x)
+  return ticksData.sort((a, b) => a.x - b.x)
 }
