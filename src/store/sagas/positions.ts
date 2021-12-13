@@ -67,8 +67,6 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       owner: wallet.publicKey
     })
 
-    console.log(action.payload.lowerTick, action.payload.upperTick, action.payload.liquidityDelta.v.toString())
-
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
@@ -149,8 +147,6 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     )
 
     const ticksData = createLiquidityPlot(rawTicks, allPools[poolIndex], action.payload.isXtoY)
-
-    console.log(rawTicks.length, toRequest)
 
     yield put(actions.setPlotTicks({
       data: ticksData,
