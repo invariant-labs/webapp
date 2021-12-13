@@ -44,7 +44,6 @@ storiesOf('singlePosition/rightComponent', module)
         tokenY={'SNY'}
         tokenX={'xUSD'}
         onZoomOutOfData={() => {}}
-        loadingTicks={false}
         positionData={{
           tokenXName: 'BTC',
           tokenXIcon: tokens[0].logoURI,

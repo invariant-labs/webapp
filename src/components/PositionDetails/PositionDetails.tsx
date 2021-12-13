@@ -20,7 +20,6 @@ interface IProps {
   tokenXClaimValue: number
   tokenYClaimValue: number
   onZoomOutOfData: (min: number, max: number) => void
-  loadingTicks: boolean
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -38,8 +37,7 @@ const PositionDetails: React.FC<IProps> = ({
   tokenYLiqValue,
   tokenXClaimValue,
   tokenYClaimValue,
-  onZoomOutOfData,
-  loadingTicks
+  onZoomOutOfData
 }) => {
   const classes = useStyles()
   return (
@@ -65,7 +63,6 @@ const PositionDetails: React.FC<IProps> = ({
           tokenY={tokenY}
           tokenX={tokenX}
           onZoomOutOfData={onZoomOutOfData}
-          loadingTicks={loadingTicks}
           positionData={positionData}
         />
       </Grid>

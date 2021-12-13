@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Grid, Typography, Card } from '@material-ui/core'
 import PriceRangePlot from '@components/PriceRangePlot/PriceRangePlot'
 import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
@@ -15,7 +15,6 @@ export interface ISinglePositionPlot {
   tokenY: string
   tokenX: string
   onZoomOutOfData: (min: number, max: number) => void
-  loadingTicks: boolean
   positionData: ILiquidityItem
 }
 
@@ -28,25 +27,24 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   tokenY,
   tokenX,
   onZoomOutOfData,
-  loadingTicks,
   positionData
 }) => {
   const classes = useStyles()
 
-  const initSideDist = useMemo(() => Math.min(
-    (data[midPriceIndex]?.x ?? 0) - data[Math.max(midPriceIndex - 15, 0)].x,
-    data[Math.min(midPriceIndex + 15, data.length - 1)].x - (data[midPriceIndex]?.x ?? 0)
-  ), [data, midPriceIndex])
-
-  const [plotMin, setPlotMin] = useState((data[midPriceIndex]?.x ?? 0) - initSideDist)
-  const [plotMax, setPlotMax] = useState((data[midPriceIndex]?.x ?? 0) + initSideDist)
+  const [plotMin, setPlotMin] = useState(0)
+  const [plotMax, setPlotMax] = useState(1)
 
   useEffect(() => {
-    if (!loadingTicks) {
-      setPlotMin((data[midPriceIndex]?.x ?? 0) - initSideDist)
-      setPlotMax((data[midPriceIndex]?.x ?? 0) + initSideDist)
+    if (midPriceIndex > -1) {
+      const initSideDist = Math.min(
+        data[midPriceIndex].x - data[Math.max(midPriceIndex - 15, 0)].x,
+        data[Math.min(midPriceIndex + 15, data.length - 1)].x - data[midPriceIndex].x
+      )
+
+      setPlotMin(data[midPriceIndex].x - initSideDist)
+      setPlotMax(data[midPriceIndex].x + initSideDist)
     }
-  }, [loadingTicks])
+  }, [data.length, midPriceIndex])
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin

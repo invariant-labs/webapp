@@ -77,10 +77,6 @@ export const INewPosition: React.FC<INewPosition> = ({
       return 'Loading data...'
     }
 
-    if (data.length === 0) {
-      return 'Cannot get necessary data. Try later.'
-    }
-
     return ''
   }
 

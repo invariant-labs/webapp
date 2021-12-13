@@ -166,7 +166,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             min: +(min.toFixed(maxDecimals(min))),
             max: +(max.toFixed(maxDecimals(max)))
           }}
-          loadingTicks={ticksLoading}
         />
       )
       : (

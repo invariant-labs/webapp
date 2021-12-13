@@ -112,9 +112,10 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 }
 
 export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicksData>): Generator {
+  const allPools = yield* select(pools)
+
   try {
     const marketProgram = yield* call(getMarketProgram)
-    const allPools = yield* select(pools)
 
     const poolIndex = action.payload.poolIndex
     let toRequest = typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined'
@@ -155,12 +156,10 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     }))
   } catch (error) {
     console.log(error)
-    if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
-      yield put(actions.setPlotTicks({
-        data: [],
-        maxReached: false
-      }))
-    }
+    yield put(actions.setPlotTicks({
+      data: createLiquidityPlot([], allPools[action.payload.poolIndex], action.payload.isXtoY),
+      maxReached: false
+    }))
   }
 }
 
