@@ -17,7 +17,7 @@ export const SinglePositionPage: React.FC<IProps> = ({ id }) => {
 
   return (
     <Grid container className={classes.container} direction='column'>
-      <Grid className={classes.top} container justifyContent='space-between'>
+      <Grid className={classes.top} container justifyContent='space-between' alignItems='center'>
         <Link to='/pool' style={{ textDecoration: 'none' }}>
           <Grid
             className={classes.back}

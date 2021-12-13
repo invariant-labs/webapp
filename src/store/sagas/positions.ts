@@ -374,6 +374,8 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
       index: action.payload,
       position
     }))
+
+    yield put(actions.getCurrentPositionRangeTicks(position.id.toString()))
   } catch (error) {
     console.log(error)
   }

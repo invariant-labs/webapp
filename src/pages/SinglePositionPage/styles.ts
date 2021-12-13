@@ -12,7 +12,6 @@ const useStyles = makeStyles(() => ({
   },
   back: {
     height: 24,
-    marginBottom: 18,
     width: 'fit-content',
     transition: 'filter 300ms',
 
