@@ -10,7 +10,7 @@ import { Pair, TICK_LIMIT } from '@invariant-labs/sdk'
 import { calcTicksAmountInRange, createLiquidityPlot } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
 import { Transaction, Connection } from '@solana/web3.js'
-import { positionsWithPoolsData, plotTicks } from '@selectors/positions'
+import { positionsWithPoolsData, plotTicks, singlePositionData } from '@selectors/positions'
 
 export function* hasTransactionSucceed(connection: Connection, txid: string): Generator {
   while (true) {
@@ -383,6 +383,43 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
   }
 }
 
+export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<string>) {
+  try {
+    const marketProgram = yield* call(getMarketProgram)
+
+    const positionData = yield* select(singlePositionData(action.payload))
+
+    if (typeof positionData === 'undefined') {
+      return
+    }
+
+    const pair = new Pair(
+      positionData.poolData.tokenX,
+      positionData.poolData.tokenY,
+      { fee: positionData.poolData.fee.v }
+    )
+
+    const lowerTick = yield* call(
+      [marketProgram, marketProgram.getTick],
+      pair,
+      positionData.lowerTickIndex
+    )
+
+    const upperTick = yield* call(
+      [marketProgram, marketProgram.getTick],
+      pair,
+      positionData.upperTickIndex
+    )
+
+    yield put(actions.setCurrentPositionRangeTicks({
+      lowerTick,
+      upperTick
+    }))
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export function* initPositionHandler(): Generator {
   yield* takeEvery(actions.initPosition, handleInitPosition)
 }
@@ -401,9 +438,12 @@ export function* closePositionHandler(): Generator {
 export function* getSinglePositionHandler(): Generator {
   yield* takeEvery(actions.getSinglePosition, handleGetSinglePosition)
 }
+export function* getCurrentPositionRangeTicksHandler(): Generator {
+  yield* takeEvery(actions.getCurrentPositionRangeTicks, handleGetCurrentPositionRangeTicks)
+}
 
 export function* positionsSaga(): Generator {
   yield all(
-    [initPositionHandler, getCurrentPlotTicksHandler, getPositionsListHandler, claimFeeHandler, closePositionHandler, getSinglePositionHandler].map(spawn)
+    [initPositionHandler, getCurrentPlotTicksHandler, getPositionsListHandler, claimFeeHandler, closePositionHandler, getSinglePositionHandler, getCurrentPositionRangeTicksHandler].map(spawn)
   )
 }

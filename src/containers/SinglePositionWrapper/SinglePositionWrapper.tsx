@@ -2,7 +2,7 @@ import React, { useMemo, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@reducers/positions'
-import { isLoadingPositionsList, plotTicks, singlePositionData } from '@selectors/positions'
+import { currentPositionRangeTicks, isLoadingPositionsList, plotTicks, singlePositionData } from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
 import { calcYPerXPrice, printBN } from '@consts/utils'
@@ -10,7 +10,7 @@ import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import useStyles from './style'
 import { getX, getY } from '@invariant-labs/sdk/src/math'
-import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
+import { calculateClaimAmount, calculateFeeGrowthInside } from '@invariant-labs/sdk/src/utils'
 
 export interface IProps {
   id: string
@@ -26,9 +26,11 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
+  const { lowerTick, upperTick } = useSelector(currentPositionRangeTicks)
 
   useEffect(() => {
     if (position) {
+      dispatch(actions.getCurrentPositionRangeTicks(id))
       dispatch(actions.getCurrentPlotTicks({
         poolIndex: position.poolData.poolIndex,
         isXtoY: true
@@ -89,21 +91,29 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }, [position?.id])
 
   const [tokenXClaim, tokenYClaim] = useMemo(() => {
-    if (position) {
+    if (position && (typeof lowerTick !== 'undefined') && (typeof upperTick !== 'undefined')) {
+      const [growthX, growthY] = calculateFeeGrowthInside({
+        tickLower: lowerTick,
+        tickUpper: upperTick,
+        tickCurrent: position.poolData.currentTickIndex,
+        feeGrowthGlobalX: position.poolData.feeGrowthGlobalX,
+        feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
+      })
+
       const [bnX, bnY] = calculateClaimAmount({
         position,
-        feeGrowthInsideX: position.feeGrowthInsideX,
-        feeGrowthInsideY: position.feeGrowthInsideY
+        feeGrowthInsideX: { v: growthX },
+        feeGrowthInsideY: { v: growthY }
       })
 
       return [
-        +printBN(bnX.div(DENOMINATOR), position.tokenX.decimal),
-        +printBN(bnY.div(DENOMINATOR), position.tokenY.decimal)
+        +printBN(bnX, position.tokenX.decimal),
+        +printBN(bnY, position.tokenY.decimal)
       ]
     }
 
     return [0, 0]
-  }, [position?.id])
+  }, [position?.id, lowerTick, upperTick])
 
   const maxDecimals = (value: number): number => {
     if (value >= 10000) {
