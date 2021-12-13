@@ -10,13 +10,14 @@ import Slippage from '@components/Swap/slippage/Slippage'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import TransactionDetails from '@components/Swap/transactionDetails/TransactionDetails'
 import { PRICE_DECIMAL } from '@consts/static'
-import useStyles from './style'
+import { Swap as SwapData } from '@reducers/swap'
 import { Status } from '@reducers/solanaWallet'
 import SwapArrows from '@static/svg/swap-arrows.svg'
 import infoIcon from '@static/svg/info.svg'
 import settingIcon from '@static/svg/settings.svg'
 import { DENOMINATOR } from '@invariant-labs/sdk'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
+import useStyles from './style'
 
 export interface SwapToken {
   balance: BN
@@ -50,16 +51,23 @@ export interface Pools {
 
 export interface ISwap {
   walletStatus: Status
+  swapData: SwapData
   tokens: SwapToken[]
   pools: PoolStructure[]
-  onSwap: (fromToken: PublicKey,
-    toToken: PublicKey,
-    amount: BN,
+  onSwap: (
     slippage: Decimal,
     price: Decimal,
-    simulatePrice: BN) => void,
+    simulate: {
+      simulatePrice: BN,
+      fromToken: PublicKey,
+      toToken: PublicKey,
+      amount: BN
+    }) => void,
   onSimulate: (
-    simulatePrice: BN
+    simulatePrice: BN,
+    fromToken: PublicKey,
+    toToken: PublicKey,
+    amount: BN
   ) => void
 }
 export const Swap: React.FC<ISwap> = ({
@@ -67,9 +75,18 @@ export const Swap: React.FC<ISwap> = ({
   tokens,
   pools,
   onSwap,
-  onSimulate
+  onSimulate,
+  swapData
 }) => {
   const classes = useStyles()
+  enum feeOption {
+    FEE = 'fee',
+    REVERSED = 'reversed'
+  }
+  enum inputTarget {
+    FROM = 'from',
+    TO = 'to'
+  }
   const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
     tokens.length ? 0 : null
   )
@@ -83,16 +100,12 @@ export const Swap: React.FC<ISwap> = ({
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const [settings, setSettings] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
-  const [simulatePrice, setSimulatePrice] = React.useState<string>('')
-
-  enum feeOption {
-    FEE = 'fee',
-    REVERSED = 'reversed'
-  }
+  const [inputRef, setInputRef] = React.useState<string>(inputTarget.FROM)
 
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string, fee: string = 'noFee') => {
-    let amountOut: BN = new BN(0)
-    let priceProportion = new BN(0)
+    let amountOut: BN = printBNtoBN(amount, assetIn.decimal)
+    //  const swapRate = +amount / +amountFrom
+    let priceProportion: BN = new BN(0)
     if (poolIndex !== -1 && poolIndex !== null) {
       priceProportion = pools[poolIndex].sqrtPrice.v
         .mul(pools[poolIndex].sqrtPrice.v)
@@ -128,7 +141,7 @@ export const Swap: React.FC<ISwap> = ({
         )
       }
     }
-    return printBN(amountOut, assetFor.decimal)
+    return ({ amountOut: printBN(amountOut, assetFor.decimal), swapRate: printBN(priceProportion, PRICE_DECIMAL) })
   }
 
   useEffect(() => {
@@ -136,10 +149,51 @@ export const Swap: React.FC<ISwap> = ({
   }, [poolIndex])
 
   useEffect(() => {
-    tokenFromIndex !== null
-      ? onSimulate(printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal))
-      : console.log(123)
-  }, [amountFrom])
+    setInputRef(inputTarget.FROM)
+  }, [swap])
+
+  useEffect(() => {
+    if (tokenFromIndex !== null && tokenToIndex !== null) {
+      if (inputRef === inputTarget.FROM) {
+        const simulatePrice = calculateSwapOutAmount(
+          tokens[tokenFromIndex],
+          tokens[tokenToIndex],
+          printBN(swapData.simulate.amount, tokens[tokenFromIndex].decimal)
+        )
+        onSimulate(
+          printBNtoBN(simulatePrice.amountOut, tokens[tokenFromIndex].decimal),
+          tokens[tokenFromIndex].address,
+          tokens[tokenToIndex].address,
+          printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal))
+      } else {
+        const simulatePrice = calculateSwapOutAmount(
+          tokens[tokenToIndex],
+          tokens[tokenFromIndex],
+          printBN(swapData.simulate.amount, tokens[tokenFromIndex].decimal)
+        )
+        onSimulate(
+          printBNtoBN(simulatePrice.amountOut, tokens[tokenToIndex].decimal),
+          tokens[tokenToIndex].address,
+          tokens[tokenFromIndex].address,
+          printBNtoBN(amountTo, tokens[tokenToIndex].decimal))
+      }
+      // i think this has to be changed, we will see with simulate
+    }
+  }, [amountFrom, amountTo, tokenToIndex, tokenFromIndex])
+
+  useEffect(() => {
+    if (tokenFromIndex !== null && tokenToIndex !== null) {
+      inputRef === inputTarget.FROM
+        ? setAmountTo(
+          calculateSwapOutAmount(tokens[tokenFromIndex],
+            tokens[tokenToIndex],
+            printBN(swapData.simulate.amount, tokens[tokenFromIndex].decimal) ?? amountFrom, feeOption.FEE).amountOut)
+        : setAmountFrom(
+          calculateSwapOutAmount(tokens[tokenFromIndex],
+            tokens[tokenToIndex],
+            printBN(swapData.simulate.amount, tokens[tokenFromIndex].decimal) ?? amountFrom, feeOption.REVERSED).amountOut)
+    }
+  }, [swapData.simulate.simulatePrice])
 
   useEffect(() => {
     updateEstimatedAmount()
@@ -184,20 +238,22 @@ export const Swap: React.FC<ISwap> = ({
     )
     return !!swapPool
   }
-  const updateEstimatedAmount = (amount: string | null = null) => {
+  const updateEstimatedAmount = () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       setAmountTo(
-        calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], amount ?? amountFrom, feeOption.FEE)
-      )
+        calculateSwapOutAmount(tokens[tokenFromIndex],
+          tokens[tokenToIndex],
+          printBN(swapData.price.v, tokens[tokenFromIndex].decimal) ?? amountFrom, feeOption.FEE).amountOut)
     }
   }
-  const updateFromEstimatedAmount = (amount: string | null = null) => {
-    if (tokenFromIndex !== null && tokenToIndex !== null) {
-      setAmountFrom(
-        calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex], amount ?? amountFrom, feeOption.REVERSED)
-      )
-    }
-  }
+  // const updateFromEstimatedAmount = (amount: string | null = null) => {
+  //   if (tokenFromIndex !== null && tokenToIndex !== null) {
+  //     setAmountFrom(
+  //       calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex], amount ?? amountFrom, feeOption.REVERSED)
+  //       // printBN(swapData.price.v, 0)
+  //     )
+  //   }
+  // }
 
   const getButtonMessage = () => {
     if (walletStatus !== Status.Initialized) {
@@ -273,14 +329,15 @@ export const Swap: React.FC<ISwap> = ({
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountFrom(value)
-              updateEstimatedAmount(value)
+              // updateEstimatedAmount(value)
+              setInputRef(inputTarget.FROM)
             }
           }}
           placeholder={'0.0'}
           onMaxClick={() => {
             if (tokenToIndex !== null && tokenFromIndex !== null) {
               setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
-              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+              // updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
             }
           }}
           tokens={ tokens }
@@ -343,14 +400,15 @@ export const Swap: React.FC<ISwap> = ({
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountTo(value)
-              updateFromEstimatedAmount(value)
+              // updateFromEstimatedAmount(value)
+              setInputRef(inputTarget.TO)
             }
           }}
           placeholder={'0.0'}
           onMaxClick={() => {
             if (tokenToIndex !== null && tokenFromIndex !== null) {
               setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
-              updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
+              // updateEstimatedAmount(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
             }
           }}
           tokens={ tokensY }
@@ -376,7 +434,7 @@ export const Swap: React.FC<ISwap> = ({
               open={detailsOpen}
               fee={{ v: poolIndex !== -1 && poolIndex !== null ? pools[poolIndex].fee.v : new BN(0) }}
               exchangeRate={{
-                val: calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], '1'),
+                val: Number(printBN(swapData.price.v, PRICE_DECIMAL)).toFixed(tokens[tokenToIndex].decimal),
                 symbol: tokens[tokenToIndex].symbol
               }}
             />
@@ -385,7 +443,7 @@ export const Swap: React.FC<ISwap> = ({
             <Typography className={classes.rateText}>
           1 {tokens[tokenFromIndex].symbol } = {' '}
               {/* tutaj będzie zmiana 1 na wartość odpowiadającą ilości tokenów */}
-              {calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], '1')}{' '}
+              {Number(printBN(swapData.price.v, PRICE_DECIMAL)).toFixed(tokens[tokenToIndex].decimal)}{' '}
               {tokens[tokenToIndex].symbol}
             </Typography>
           ) : null}
@@ -398,12 +456,14 @@ export const Swap: React.FC<ISwap> = ({
           onClick={() => {
             if (tokenFromIndex === null || tokenToIndex === null) return
             onSwap(
-              tokens[tokenFromIndex].assetAddress,
-              tokens[tokenToIndex].assetAddress,
-              printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal),
               { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
-              { v: poolIndex !== null ? pools[poolIndex].sqrtPrice.v : new BN(1) },
-              printBNtoBN(simulatePrice, tokens[tokenFromIndex].decimal)
+              { v: swapData.price.v },
+              {
+                simulatePrice: printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal),
+                fromToken: tokens[tokenFromIndex].address,
+                toToken: tokens[tokenToIndex].address,
+                amount: printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal)
+              }
             )
           }}
         />

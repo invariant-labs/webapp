@@ -34,7 +34,7 @@ export const getMarketProgramSync = (): Market => {
     (market) => {
       _market = market
     }
-  )
+  ).catch(err => console.log(err))
 
   return _market
 }
