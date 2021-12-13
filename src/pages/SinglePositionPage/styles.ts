@@ -4,11 +4,11 @@ import { colors, typography } from '@static/theme'
 const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
-    justifyContent: 'center',
     backgroundColor: 'transparent',
     marginTop: 65,
     marginInline: 'auto',
-    width: 1004
+    width: 1004,
+    minHeight: '70vh'
   },
   back: {
     height: 24,

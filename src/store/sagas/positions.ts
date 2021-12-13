@@ -98,6 +98,8 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
           txid
         })
       )
+
+      yield put(actions.getPositionsList())
     }
   } catch (error) {
     console.log(error)

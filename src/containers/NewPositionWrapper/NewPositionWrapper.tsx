@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useMemo } from 'react'
 import NewPosition from '@components/NewPosition/NewPosition'
 import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
@@ -24,14 +24,22 @@ export const NewPositionWrapper = () => {
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
   const [liquidity, setLiquidity] = useState<Decimal>({ v: new BN(0) })
-  const [midPriceIndex, setMidPriceIndex] = useState<number>(0)
+
+  const midPriceIndex = useMemo(() => {
+    if (poolIndex !== null) {
+      const index = ticksData.findIndex((tick) => tick.index === allPools[poolIndex].currentTickIndex)
+
+      return index === -1 ? 0 : index
+    }
+
+    return 0
+  }, [ticksData.length, poolIndex])
 
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
-  const [tokensB, setTokensB] = useState<SwapToken[]>([])
 
-  useEffect(() => {
+  const tokensB = useMemo(() => {
     if (tokenAIndex === null) {
-      return
+      return []
     }
 
     const tokensByKey: Record<string, SwapToken> = tokens.reduce((prev, token) => {
@@ -43,20 +51,10 @@ export const NewPositionWrapper = () => {
 
     const poolsForTokenA = allPools.filter((pool) => pool.tokenX.equals(tokens[tokenAIndex].assetAddress) || pool.tokenY.equals(tokens[tokenAIndex].assetAddress))
 
-    setTokensB(
-      poolsForTokenA.map(
-        (pool) => tokensByKey[pool.tokenX.equals(tokens[tokenAIndex].assetAddress) ? pool.tokenY.toString() : pool.tokenX.toString()]
-      )
+    return poolsForTokenA.map(
+      (pool) => tokensByKey[pool.tokenX.equals(tokens[tokenAIndex].assetAddress) ? pool.tokenY.toString() : pool.tokenX.toString()]
     )
   }, [tokenAIndex, allPools.length])
-
-  useEffect(() => {
-    if (poolIndex !== null) {
-      const index = ticksData.findIndex((tick) => tick.index === allPools[poolIndex].currentTickIndex)
-
-      setMidPriceIndex(index === -1 ? 0 : index)
-    }
-  }, [ticksData])
 
   return (
     <NewPosition

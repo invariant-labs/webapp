@@ -122,7 +122,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }
 
   return (
-    !isLoadingList && !ticksLoading && position
+    !isLoadingList && !ticksLoading && position && ticksData.length
       ? (
         <PositionDetails
           detailsData={ticksData}
