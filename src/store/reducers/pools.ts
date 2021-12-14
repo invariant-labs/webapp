@@ -12,6 +12,11 @@ export interface IPoolsStore {
   pools: PoolWithAddress[]
 }
 
+export interface UpdatePool {
+  index: number
+  poolStructure: PoolStructure
+}
+
 export const defaultState: IPoolsStore = {
   pools: []
 }
@@ -23,6 +28,13 @@ const poolsSlice = createSlice({
   reducers: {
     setPools(state, action: PayloadAction<PoolWithAddress[]>) {
       state.pools = action.payload
+      return state
+    },
+    updatePool(state, action: PayloadAction<UpdatePool>) {
+      state.pools[action.payload.index] = {
+        address: state.pools[action.payload.index].address,
+        ...action.payload.poolStructure
+      }
       return state
     },
     getPoolsData(_state, _action: PayloadAction<Pair[]>) {}

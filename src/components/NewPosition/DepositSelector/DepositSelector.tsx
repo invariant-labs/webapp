@@ -59,6 +59,13 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'You don\'t have enough token B'
     }
 
+    if (
+      (!tokenAInputState.blocked && +tokenAInputState.value === 0) ||
+      (!tokenBInputState.blocked && +tokenBInputState.value === 0)
+    ) {
+      return 'Liquidity must be greater than 0'
+    }
+
     return 'Add Liquidity'
   }, [tokenAIndex, tokenBIndex, tokenAInputState.value, tokenBInputState.value, tokens, isCurrentPoolExisting])
 
