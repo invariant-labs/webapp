@@ -83,7 +83,7 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
           <Typography className={classes.greenText}>MIN - MAX</Typography>
           <Grid className={classes.infoCenter} container item justifyContent='center'>
             <Typography className={classes.infoText}>
-              {min} - {max} {tokenXName} per {tokenYName}
+              {min} - {max} {tokenYName} per {tokenXName}
             </Typography>
           </Grid>
         </Grid>
