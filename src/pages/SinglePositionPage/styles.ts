@@ -34,8 +34,9 @@ const useStyles = makeStyles(() => ({
     ...typography.body1,
     textTransform: 'none',
     background: colors.invariant.accent1,
-    borderRadius: '10px',
+    borderRadius: 5,
     height: 40,
+    width: 168,
 
     '&:hover': {
       background: colors.invariant.accent1,

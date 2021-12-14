@@ -8,7 +8,6 @@ const useStyles = makeStyles(() => ({
   positionDetails: {
     marginRight: 24,
     display: 'flex',
-    alignItems: 'end',
     width: 461
   }
 }))

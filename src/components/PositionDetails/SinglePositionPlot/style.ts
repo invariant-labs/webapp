@@ -5,6 +5,7 @@ const useStyles = makeStyles(() => ({
   root: {
     backgroundColor: colors.invariant.componentOut4,
     padding: 24,
+    paddingTop: 18,
     borderRadius: 10,
     width: 519
   },

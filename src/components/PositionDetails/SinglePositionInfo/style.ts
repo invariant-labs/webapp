@@ -62,7 +62,8 @@ const useStyles = makeStyles(() => ({
   },
   name: {
     ...typography.heading3,
-    color: colors.white.main
+    color: colors.white.main,
+    lineHeight: '35px'
   },
   bottomGrid: {
     background: colors.invariant.componentOut4,
@@ -100,7 +101,8 @@ const useStyles = makeStyles(() => ({
     maxHeight: '35px',
     ...typography.body1,
     '&:hover': {
-      background: colors.invariant.componentOut3
+      background: colors.invariant.accent1,
+      boxShadow: `0 0 15px ${colors.invariant.accent1}`
     }
   },
   tokenGrid: {
@@ -150,8 +152,7 @@ const useStyles = makeStyles(() => ({
     paddingInline: 0,
     '&:hover': {
       background: colors.invariant.accent2,
-      boxShadow: '0px 0px 15px rgba(157, 212, 109, 0.4)',
-      transform: 'scale(1.15)'
+      boxShadow: `0px 0px 15px ${colors.invariant.accent2}`
     }
   },
   iconText: {
