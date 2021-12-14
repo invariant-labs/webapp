@@ -58,7 +58,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     () => position
       ? calcYPerXPrice(position.poolData.sqrtPrice.v, position.tokenX.decimal, position.tokenY.decimal)
       : 0,
-    [position?.id]
+    [position]
   )
 
   const tokenXLiquidity = useMemo(() => {
@@ -74,7 +74,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
 
     return 0
-  }, [position?.id])
+  }, [position])
   const tokenYLiquidity = useMemo(() => {
     if (position) {
       try {
@@ -88,7 +88,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
 
     return 0
-  }, [position?.id])
+  }, [position])
 
   const [tokenXClaim, tokenYClaim] = useMemo(() => {
     if (position && (typeof lowerTick !== 'undefined') && (typeof upperTick !== 'undefined')) {
@@ -108,7 +108,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
 
     return [0, 0]
-  }, [position?.id, lowerTick, upperTick])
+  }, [position, lowerTick, upperTick])
 
   const maxDecimals = (value: number): number => {
     if (value >= 10000) {
