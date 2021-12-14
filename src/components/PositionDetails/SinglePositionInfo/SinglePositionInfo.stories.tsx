@@ -1,8 +1,8 @@
 import { Grid } from '@material-ui/core'
 import { storiesOf } from '@storybook/react'
 import React from 'react'
-import SinglePositionDetails from './SinglePositionDetails'
-import { liqTokens } from '@components/PositionDetalisWrapper/positionDetailsWrapper.stories'
+import SinglePositionInfo from './SinglePositionInfo'
+import { liqTokens } from '@components/PositionDetails/PositionDetails.stories'
 
 const tokens: liqTokens[] = [
   {
@@ -18,48 +18,42 @@ const tokens: liqTokens[] = [
 storiesOf('singlePosition/leftComponent', module)
   .add('closed', () => (
     <Grid style={{ background: '#1C1B1E', width: '540px', height: '500px', padding: '20px' }}>
-      <SinglePositionDetails
+      <SinglePositionInfo
         data={{
-          active: false,
-          nameToSwap: 'BTC',
-          iconToSwap: tokens[0].logoURI,
-          iconFromSwap: tokens[1].logoURI,
-          nameFromSwap: 'SNY',
+          tokenXName: 'BTC',
+          tokenXIcon: tokens[0].logoURI,
+          tokenYIcon: tokens[1].logoURI,
+          tokenYName: 'SNY',
           min: 2149.6,
           max: 149.6,
           fee: 0.05
         }}
-        liquidity={458302.48}
-        unclaimedFee={44522.6789}
         onClickClaimFee={() => console.log('thanks from claiming')}
-        liqValueTokenToSwap={2.19703}
-        liqValueTokenFromSwap={20.99703}
-        unclaimValueTokenToSwap={2.19703}
-        unclaimValueTokenFromSwap={9.19703}
+        tokenXLiqValue={2.19703}
+        tokenYLiqValue={20.99703}
+        tokenXClaimValue={2.19703}
+        tokenYClaimValue={9.19703}
         closePosition={() => console.log('close position')}
       />
     </Grid>
   ))
   .add('active', () => (
     <Grid style={{ background: '#1C1B1E', width: '540px', height: '500px', padding: '20px' }}>
-      <SinglePositionDetails
+      <SinglePositionInfo
         data={{
-          active: true,
-          nameToSwap: 'BTC',
-          iconToSwap: tokens[0].logoURI,
-          iconFromSwap: tokens[1].logoURI,
-          nameFromSwap: 'SNY',
+          tokenXName: 'BTC',
+          tokenXIcon: tokens[0].logoURI,
+          tokenYIcon: tokens[1].logoURI,
+          tokenYName: 'SNY',
           min: 2149.6,
           max: 149.6,
           fee: 0.05
         }}
-        liquidity={458302.48}
-        unclaimedFee={44522.6789}
         onClickClaimFee={() => console.log('thanks from claiming')}
-        liqValueTokenToSwap={2.19703}
-        liqValueTokenFromSwap={20.99703}
-        unclaimValueTokenToSwap={2.19703}
-        unclaimValueTokenFromSwap={9.19703}
+        tokenXLiqValue={2.19703}
+        tokenYLiqValue={20.99703}
+        tokenXClaimValue={2.19703}
+        tokenYClaimValue={9.19703}
         closePosition={() => console.log('close position')}
       />
     </Grid>

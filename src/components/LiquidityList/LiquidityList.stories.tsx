@@ -17,7 +17,8 @@ storiesOf('liquidityPosition/list', module).add('default', () => {
             tokenYIcon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
             min: 2149.6,
             max: 149.6,
-            fee: 0.05
+            fee: 0.05,
+            id: '1'
           },
           {
             tokenXName: 'BTC',
@@ -26,7 +27,8 @@ storiesOf('liquidityPosition/list', module).add('default', () => {
             tokenYIcon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
             min: 2149.6,
             max: 149.6,
-            fee: 0.05
+            fee: 0.05,
+            id: '2'
           },
           {
             tokenXName: 'BTC',
@@ -35,7 +37,8 @@ storiesOf('liquidityPosition/list', module).add('default', () => {
             tokenYIcon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
             min: 2149.6,
             max: 149.6,
-            fee: 0.05
+            fee: 0.05,
+            id: '3'
           },
           {
             tokenXName: 'BTC',
@@ -44,7 +47,8 @@ storiesOf('liquidityPosition/list', module).add('default', () => {
             tokenYIcon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
             min: 2149.6,
             max: 149.6,
-            fee: 0.05
+            fee: 0.05,
+            id: '4'
           }
         ]}
         onAddPositionClick={handleClick}

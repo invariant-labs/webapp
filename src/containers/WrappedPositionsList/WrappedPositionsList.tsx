@@ -5,7 +5,7 @@ import { isLoadingPositionsList, positionsWithPoolsData } from '@selectors/posit
 import { useHistory } from 'react-router-dom'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt } from '@invariant-labs/sdk'
-import { printBN } from '@consts/utils'
+import { calcYPerXPrice, printBN } from '@consts/utils'
 import { Status, actions } from '@reducers/solanaWallet'
 import { status } from '@selectors/solanaWallet'
 
@@ -31,21 +31,18 @@ export const WrappedPositionsList: React.FC = () => {
       return 2
     }
 
-    return 4
+    return 5
   }
 
   return (
     <LiquidityList
       onAddPositionClick={() => { history.push('/newPosition') }}
       data={list.map((position) => {
-        const lowerSqrtDec = calculate_price_sqrt(position.lowerTickIndex)
-        const upperSqrtDec = calculate_price_sqrt(position.upperTickIndex)
+        const lowerPrice = calcYPerXPrice(calculate_price_sqrt(position.lowerTickIndex).v, position.tokenX.decimal, position.tokenY.decimal)
+        const upperPrice = calcYPerXPrice(calculate_price_sqrt(position.upperTickIndex).v, position.tokenX.decimal, position.tokenY.decimal)
 
-        const lowerSqrt = +printBN(lowerSqrtDec.v, PRICE_DECIMAL)
-        const upperSqrt = +printBN(upperSqrtDec.v, PRICE_DECIMAL)
-
-        const min = Math.min(lowerSqrt ** 2, upperSqrt ** 2)
-        const max = Math.max(lowerSqrt ** 2, upperSqrt ** 2)
+        const min = Math.min(lowerPrice, upperPrice)
+        const max = Math.max(lowerPrice, upperPrice)
 
         return {
           tokenXName: position.tokenX.symbol,
@@ -54,7 +51,8 @@ export const WrappedPositionsList: React.FC = () => {
           tokenYIcon: position.tokenY.logoURI,
           fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
           min: +(min.toFixed(maxDecimals(min))),
-          max: +(max.toFixed(maxDecimals(max)))
+          max: +(max.toFixed(maxDecimals(max))),
+          id: position.id.toString()
         }
       })}
       loading={isLoading}

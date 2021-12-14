@@ -48,7 +48,7 @@ export const PAIRS: Pair[] = [
 ]
 
 enum SolanaNetworks {
-  DEV = 'https://solana--devnet.datahub.figment.io/apikey/d2f60ac272929a3f43bd3bc05149d279',
+  DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',
   MAIN = 'https://api.mainnet-beta.solana.com',
   MAIN_SERUM = 'https://solana-api.projectserum.com',

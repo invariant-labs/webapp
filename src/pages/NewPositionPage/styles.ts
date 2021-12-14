@@ -5,7 +5,8 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    marginTop: 65
+    marginTop: 65,
+    minHeight: '70vh'
   }
 }))
 
