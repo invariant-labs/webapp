@@ -60,7 +60,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
 
     if (
-      (!tokenAInputState.blocked && +tokenAInputState.value === 0) ||
+      (!tokenAInputState.blocked && +tokenAInputState.value === 0) &&
       (!tokenBInputState.blocked && +tokenBInputState.value === 0)
     ) {
       return 'Liquidity must be greater than 0'
