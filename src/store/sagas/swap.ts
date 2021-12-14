@@ -10,7 +10,7 @@ import { Pair } from '@invariant-labs/sdk'
 import { getConnection } from './connection'
 import { FEE_TIERS, calculateAveragePrice, SimulateSwapPrice } from '@invariant-labs/sdk/src/utils'
 import { hasTransactionSucceed } from './positions'
-import { printBN } from '@consts/utils'
+import BN from 'bn.js'
 
 export function* handleSimulate(): Generator {
   try {
@@ -28,29 +28,35 @@ export function* handleSimulate(): Generator {
     if (!swapPool) {
       return
     }
-    console.log('pool', swapPool)
-    console.log('amount', simulate.amount.toString())
-    console.log('simulate price', simulate.simulatePrice)
     const isXtoY = simulate.fromToken.toString() === swapPool.tokenX.toString() && simulate.toToken.toString() === swapPool.tokenY.toString()
     const tickMap = yield* call([marketProgram, marketProgram.getTickmap],
       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0])
     )
+    if (simulate.amount.gt(new BN(0))) {
+      console.log('sqrtPrice: ', simulate.simulatePrice.toString())
+      const simulateObject: SimulateSwapPrice = {
+        pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
+        xToY: isXtoY,
+        byAmountIn: true, // to jest jeszcze do zrobienia
+        swapAmount: simulate.amount,
+        currentPrice: { v: simulate.simulatePrice },
+        slippage: slippage,
+        pool: swapPool,
+        tickmap: tickMap,
+        market: marketProgram
+      }
 
-    const testVar: SimulateSwapPrice = {
-      pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
-      xToY: isXtoY,
-      byAmountIn: true, // to jest jeszcze do zrobienia
-      swapAmount: simulate.amount,
-      currentPrice: { v: simulate.simulatePrice }, //
-      slippage: slippage,
-      pool: swapPool,
-      tickmap: tickMap,
-      market: marketProgram
+      console.log(simulateObject.currentPrice.v.toString())
+
+      yield put(
+        swapActions.changePrice(calculateAveragePrice(simulateObject))
+      )
+      console.log(calculateAveragePrice(simulateObject).v.toString())
+    } else {
+      yield put(
+        swapActions.changePrice({ v: new BN(0) })
+      )
     }
-    yield put(
-      swapActions.changePrice(calculateAveragePrice(testVar))
-    )
-    console.log(printBN(calculateAveragePrice(testVar).v, 12))
   } catch (error) {
     console.log(error)
   }

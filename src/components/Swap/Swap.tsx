@@ -18,6 +18,8 @@ import settingIcon from '@static/svg/settings.svg'
 import { DENOMINATOR } from '@invariant-labs/sdk'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './style'
+import { ContactSupportOutlined } from '@material-ui/icons'
+import { sqrt } from '@invariant-labs/sdk/lib/math'
 
 export interface SwapToken {
   balance: BN
@@ -103,10 +105,19 @@ export const Swap: React.FC<ISwap> = ({
   const [inputRef, setInputRef] = React.useState<string>(inputTarget.FROM)
 
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string, fee: string = 'noFee') => {
+    let sqrtPrice = new BN(0)
+    let sqrtPricePow: number
     let amountOut: BN = printBNtoBN(amount, assetIn.decimal)
-    //  const swapRate = +amount / +amountFrom
     let priceProportion: BN = new BN(0)
     if (poolIndex !== -1 && poolIndex !== null) {
+      if (!assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
+        sqrtPricePow = 1 / Math.pow(+printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL), 2)
+        sqrtPrice = printBNtoBN(sqrtPricePow.toString(), 18)
+        console.log(123)
+      } else {
+        sqrtPrice = pools[poolIndex].sqrtPrice.v.pow(new BN(2))
+      }
+      // użyć tego price proportion w wyliczeniach poniżej jako sqrtPrice
       priceProportion = pools[poolIndex].sqrtPrice.v
         .mul(pools[poolIndex].sqrtPrice.v)
         .div(DENOMINATOR)
@@ -141,7 +152,7 @@ export const Swap: React.FC<ISwap> = ({
         )
       }
     }
-    return ({ amountOut: printBN(amountOut, assetFor.decimal), swapRate: printBN(priceProportion, PRICE_DECIMAL) })
+    return ({ amountOut: printBN(amountOut, assetFor.decimal), swapRate: printBNtoBN(sqrtPrice.toString(), PRICE_DECIMAL) })
   }
 
   useEffect(() => {
@@ -161,7 +172,7 @@ export const Swap: React.FC<ISwap> = ({
           printBN(swapData.simulate.amount, tokens[tokenFromIndex].decimal)
         )
         onSimulate(
-          printBNtoBN(simulatePrice.amountOut, tokens[tokenFromIndex].decimal),
+          simulatePrice.swapRate,
           tokens[tokenFromIndex].address,
           tokens[tokenToIndex].address,
           printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal))
@@ -172,7 +183,7 @@ export const Swap: React.FC<ISwap> = ({
           printBN(swapData.simulate.amount, tokens[tokenFromIndex].decimal)
         )
         onSimulate(
-          printBNtoBN(simulatePrice.amountOut, tokens[tokenToIndex].decimal),
+          simulatePrice.swapRate,
           tokens[tokenToIndex].address,
           tokens[tokenFromIndex].address,
           printBNtoBN(amountTo, tokens[tokenToIndex].decimal))
@@ -443,7 +454,7 @@ export const Swap: React.FC<ISwap> = ({
             <Typography className={classes.rateText}>
           1 {tokens[tokenFromIndex].symbol } = {' '}
               {/* tutaj będzie zmiana 1 na wartość odpowiadającą ilości tokenów */}
-              {Number(printBN(swapData.price.v, PRICE_DECIMAL)).toFixed(tokens[tokenToIndex].decimal)}{' '}
+              {Number(printBN(swapData.price.v, PRICE_DECIMAL - (tokens[tokenFromIndex].decimal - tokens[tokenToIndex].decimal))).toFixed(tokens[tokenToIndex].decimal)}{' '}
               {tokens[tokenToIndex].symbol}
             </Typography>
           ) : null}
