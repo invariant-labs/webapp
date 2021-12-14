@@ -27,14 +27,16 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const isLoadingList = useSelector(isLoadingPositionsList)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
   const { lowerTick, upperTick } = useSelector(currentPositionRangeTicks)
-
   useEffect(() => {
-    if (position) {
-      dispatch(actions.getCurrentPositionRangeTicks(id))
+    if (position && ticksData.length === 0) {
       dispatch(actions.getCurrentPlotTicks({
         poolIndex: position.poolData.poolIndex,
         isXtoY: true
       }))
+    }
+
+    if (position) {
+      dispatch(actions.getCurrentPositionRangeTicks(id))
     }
   }, [position?.id])
 
