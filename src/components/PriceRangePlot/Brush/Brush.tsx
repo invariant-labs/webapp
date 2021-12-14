@@ -123,8 +123,8 @@ export const Handle: React.FC<HandleProps> = ({
 }
 
 export interface InnerBrushProps extends CustomLayerProps {
-  leftPosition: number,
-  rightPosition: number,
+  leftPosition?: number,
+  rightPosition?: number,
   onLeftDrop: (position: number) => void,
   onRightDrop: (position: number) => void,
   plotMin: number,
@@ -146,7 +146,7 @@ export const InnerBrush: React.FC<InnerBrushProps> = ({
   const unitLen = innerWidth / (plotMax - plotMin)
   const [reverse, setReverse] = useState(false)
 
-  const start = (leftPosition >= plotMin) && (leftPosition <= plotMax)
+  const start = (typeof leftPosition !== 'undefined') && (leftPosition >= plotMin) && (leftPosition <= plotMax)
     ? (
       <Handle
         key='start'
@@ -154,7 +154,11 @@ export const InnerBrush: React.FC<InnerBrushProps> = ({
         height={innerHeight}
         position={(leftPosition - plotMin) * unitLen}
         minPosition={Math.max(0, -plotMin * unitLen)}
-        maxPosition={((rightPosition - plotMin) * unitLen) - 0.001}
+        maxPosition={
+          (typeof rightPosition !== 'undefined')
+            ? ((rightPosition - plotMin) * unitLen) - 0.001
+            : innerWidth
+        }
         onDrop={(position) => {
           onLeftDrop(position / innerWidth)
           if (((leftPosition - plotMin) * unitLen) < 37) {
@@ -168,14 +172,18 @@ export const InnerBrush: React.FC<InnerBrushProps> = ({
     )
     : null
 
-  const end = (rightPosition >= plotMin) && (rightPosition <= plotMax)
+  const end = (typeof rightPosition !== 'undefined') && (rightPosition >= plotMin) && (rightPosition <= plotMax)
     ? (
       <Handle
         key='end'
         plotWidth={innerWidth}
         height={innerHeight}
         position={(rightPosition - plotMin) * unitLen}
-        minPosition={((leftPosition - plotMin) * unitLen) + 0.001}
+        minPosition={
+          (typeof leftPosition !== 'undefined')
+            ? ((leftPosition - plotMin) * unitLen) + 0.001
+            : Math.max(0, -plotMin * unitLen)
+        }
         maxPosition={innerWidth}
         onDrop={(position) => {
           onRightDrop(position / innerWidth)

@@ -10,10 +10,10 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center'
   },
   icon: {
-    width: '40px'
+    width: '35px'
   },
   arrowIcon: {
-    width: '25px'
+    width: '22px'
   },
   text: {
     ...typography.body1,
@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center'
   },
   feeText: {
-    minWidth: '110px'
+    minWidth: '90px'
   },
   closedText: {
     width: '100px',
@@ -55,14 +55,15 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft: 20,
+    paddingLeft: 8,
     '& #pause': {
       padding: ' 0px 3px'
     }
   },
   name: {
-    ...typography.heading1,
-    color: colors.white.main
+    ...typography.heading3,
+    color: colors.white.main,
+    lineHeight: '35px'
   },
   bottomGrid: {
     background: colors.invariant.componentOut4,
@@ -100,7 +101,8 @@ const useStyles = makeStyles(() => ({
     maxHeight: '35px',
     ...typography.body1,
     '&:hover': {
-      background: colors.invariant.componentOut3
+      background: colors.invariant.accent1,
+      boxShadow: `0 0 15px ${colors.invariant.accent1}`
     }
   },
   tokenGrid: {
@@ -117,7 +119,7 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     justifyContent: 'space-between',
     '&:not(:last-child)': {
-      marginRight: 20
+      marginBottom: 8
     }
   },
   token: {
@@ -144,12 +146,13 @@ const useStyles = makeStyles(() => ({
     color: colors.invariant.componentOut2,
     background: colors.invariant.accent2,
     maxHeight: '35px',
+    minWidth: 114,
     textTransform: 'none',
     transition: '500ms',
+    paddingInline: 0,
     '&:hover': {
       background: colors.invariant.accent2,
-      boxShadow: '0px 0px 15px rgba(157, 212, 109, 0.4)',
-      transform: 'scale(1.15)'
+      boxShadow: `0px 0px 15px ${colors.invariant.accent2}`
     }
   },
   iconText: {

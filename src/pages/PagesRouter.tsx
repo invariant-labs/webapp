@@ -4,22 +4,35 @@ import { SwapPage } from './SwapPage/SwapPage'
 import { useDispatch, useSelector } from 'react-redux'
 import { ListPage } from './ListPage/ListPage'
 import { toBlur } from '@consts/uiUtils'
+import { Status as WalletStatus } from '@reducers/solanaWallet'
 import { NewPositionPage } from './NewPositionPage/NewPositionPage'
-import { Status } from '@reducers/solanaWallet'
 import EventsHandlers from '@containers/EventsHandlers'
 import HeaderWrapper from '@containers/HeaderWrapper/HeaderWrapper'
 import solanaConnectionSelector from '@selectors/solanaConnection'
-import { actions as solanaConnectionActions } from '@reducers/solanaConnection'
+import { actions as solanaConnectionActions, Status } from '@reducers/solanaConnection'
+import { actions } from '@reducers/positions'
+import { status } from '@selectors/solanaWallet'
+import { SinglePositionPage } from './SinglePositionPage/SinglePositionPage'
+import { pools } from '@selectors/pools'
 import Footer from '@components/Footer/Footer'
 
 export const PagesRouter: React.FC = () => {
   const dispatch = useDispatch()
   const signerStatus = useSelector(solanaConnectionSelector.status)
+  const walletStatus = useSelector(status)
+  const allPools = useSelector(pools)
 
   useEffect(() => {
     // dispatch(providerActions.initProvider())
     dispatch(solanaConnectionActions.initSolanaConnection())
   }, [dispatch])
+
+  useEffect(() => {
+    if (signerStatus === Status.Initialized && walletStatus === WalletStatus.Initialized && allPools.length > 0) {
+      dispatch(actions.getPositionsList())
+    }
+  }, [signerStatus, walletStatus, allPools.length])
+
   return (
     <Router>
       {signerStatus === Status.Initialized && <EventsHandlers />}
@@ -29,6 +42,10 @@ export const PagesRouter: React.FC = () => {
           <Route path='/swap' component={SwapPage} />
           <Route path={'/newPosition'} component={NewPositionPage} />
           <Route path={'/pool'} component={ListPage} />
+          <Route
+            path={'/position/:id'}
+            render={({ match }) => <SinglePositionPage id={match.params.id} />}
+          />
           <Route path='*'>
             <Redirect to='/swap'>
               <SwapPage />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useMemo } from 'react'
 import NewPosition from '@components/NewPosition/NewPosition'
 import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
@@ -24,14 +24,22 @@ export const NewPositionWrapper = () => {
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
   const [liquidity, setLiquidity] = useState<Decimal>({ v: new BN(0) })
-  const [midPriceIndex, setMidPriceIndex] = useState<number>(0)
+
+  const midPriceIndex = useMemo(() => {
+    if (poolIndex !== null) {
+      const index = ticksData.findIndex((tick) => tick.index === allPools[poolIndex].currentTickIndex)
+
+      return index === -1 ? 0 : index
+    }
+
+    return 0
+  }, [ticksData.length, poolIndex])
 
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
-  const [tokensB, setTokensB] = useState<SwapToken[]>([])
 
-  useEffect(() => {
+  const tokensB = useMemo(() => {
     if (tokenAIndex === null) {
-      return
+      return []
     }
 
     const tokensByKey: Record<string, SwapToken> = tokens.reduce((prev, token) => {
@@ -43,20 +51,10 @@ export const NewPositionWrapper = () => {
 
     const poolsForTokenA = allPools.filter((pool) => pool.tokenX.equals(tokens[tokenAIndex].assetAddress) || pool.tokenY.equals(tokens[tokenAIndex].assetAddress))
 
-    setTokensB(
-      poolsForTokenA.map(
-        (pool) => tokensByKey[pool.tokenX.equals(tokens[tokenAIndex].assetAddress) ? pool.tokenY.toString() : pool.tokenX.toString()]
-      )
+    return poolsForTokenA.map(
+      (pool) => tokensByKey[pool.tokenX.equals(tokens[tokenAIndex].assetAddress) ? pool.tokenY.toString() : pool.tokenX.toString()]
     )
   }, [tokenAIndex, allPools.length])
-
-  useEffect(() => {
-    if (poolIndex !== null) {
-      const index = ticksData.findIndex((tick) => tick.index === allPools[poolIndex].currentTickIndex)
-
-      setMidPriceIndex(index === -1 ? 0 : index)
-    }
-  }, [ticksData])
 
   return (
     <NewPosition
@@ -114,12 +112,15 @@ export const NewPositionWrapper = () => {
         const lowerTick = Math.min(ticksData[left].index, ticksData[right].index)
         const upperTick = Math.max(ticksData[left].index, ticksData[right].index)
 
+        console.log('liquidity calc by:', tokenAddress.toString())
+        console.log('pool token x:', allPools[poolIndex].tokenX.toString())
+
         try {
           if (byX) {
             const result = getLiquidityByX(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
             setLiquidity(result.liquidity)
 
-            console.log(amount.toString(), 'y', result.y.toString(), lowerTick, upperTick, result.liquidity.v.toString())
+            console.log('x:', amount.toString(), 'y:', result.y.toString(), 'ticks:', lowerTick, upperTick, 'liquidity', result.liquidity.v.toString())
 
             return result.y
           }
@@ -127,14 +128,14 @@ export const NewPositionWrapper = () => {
           const result = getLiquidityByY(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
           setLiquidity(result.liquidity)
 
-          console.log(amount.toString(), 'x', result.x.toString(), lowerTick, upperTick, result.liquidity.v.toString())
+          console.log('y:', amount.toString(), 'x:', result.x.toString(), 'ticks:', lowerTick, upperTick, 'liquidity', result.liquidity.v.toString())
 
           return result.x
         } catch (error) {
           const result = (byX ? getLiquidityByY : getLiquidityByX)(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
           setLiquidity(result.liquidity)
 
-          console.log(amount.toString(), 'err', lowerTick, upperTick, result.liquidity.v.toString())
+          console.log('err', byX ? 'x:' : 'y:', amount.toString(), 'ticks:', lowerTick, upperTick, 'liquidity:', result.liquidity.v.toString())
         }
 
         return new BN(0)

@@ -19,7 +19,7 @@ export const getMarketProgram = async (): Promise<Market> => {
   const solanaNetwork = getSolanaNetwork()
   const net = solanaNetworktoProgramNetwork(solanaNetwork)
 
-  _market = new Market(net, getSolanaWallet(), getSolanaConnection(solanaNetwork), MarketProgramId)
+  _market = await Market.build(net, getSolanaWallet(), getSolanaConnection(solanaNetwork), MarketProgramId)
   return _market
 }
 
@@ -30,7 +30,11 @@ export const getMarketProgramSync = (): Market => {
   const solanaNetwork = getSolanaNetwork()
   const net = solanaNetworktoProgramNetwork(solanaNetwork)
 
-  _market = new Market(net, getSolanaWallet(), getSolanaConnection(solanaNetwork), MarketProgramId)
+  Market.build(net, getSolanaWallet(), getSolanaConnection(solanaNetwork), MarketProgramId).then(
+    (market) => {
+      _market = market
+    }
+  ).catch((err) => { console.log(err) })
 
   return _market
 }
