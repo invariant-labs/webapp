@@ -9,23 +9,48 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     '&:not(:last-child)': {
       marginBottom: 20
+    },
+
+    '&:hover': {
+      background: colors.invariant.componentOut4
+    },
+
+    [theme.breakpoints.down('md')]: {
+      padding: 16
     }
   },
   icons: {
     marginRight: 20,
-    width: 'fit-content'
+    width: 'fit-content',
+
+    [theme.breakpoints.down('md')]: {
+      marginRight: 12
+    }
   },
   tokenIcon: {
-    width: 40
+    width: 40,
+
+    [theme.breakpoints.down('md')]: {
+      width: 33
+    }
   },
   arrows: {
-    width: 25
+    width: 25,
+
+    [theme.breakpoints.down('md')]: {
+      width: 20
+    }
   },
   names: {
     marginRight: 20,
     ...typography.heading1,
     color: colors.white.main,
-    lineHeight: '40px'
+    lineHeight: '40px',
+
+    [theme.breakpoints.down('md')]: {
+      ...typography.heading3,
+      lineHeight: '33px'
+    }
   },
   infoText: {
     ...typography.body1,
@@ -42,20 +67,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 5,
     height: 35,
     width: 170,
-
-    '&:not(:last-child)': {
-      marginRight: 8
-    }
+    marginRight: 8
   },
   fee: {
     background: colors.invariant.componentOut2,
     borderRadius: 5,
     height: 35,
     width: 90,
-
-    '&:not(:last-child)': {
-      marginRight: 8
-    }
+    marginRight: 8
   },
   infoCenter: {
     flex: '1 1 0%'
@@ -66,10 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 35,
     width: 331,
     paddingInline: 10,
-
-    '&:not(:last-child)': {
-      marginRight: 8
-    },
+    marginRight: 8,
 
     [theme.breakpoints.down('sm')]: {
       width: '100%'
@@ -80,17 +96,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 5,
     height: 35,
     width: 164,
-    paddingInline: 12,
-
-    '&:not(:last-child)': {
-      marginRight: 8
-    }
+    paddingInline: 12
   },
   mdInfo: {
     width: 'fit-content',
 
-    [theme.breakpoints.only('md')]: {
-      flexWrap: 'nowrap'
+    [theme.breakpoints.down('md')]: {
+      flexWrap: 'nowrap',
+      marginTop: 16,
+      width: '100%'
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      flexWrap: 'wrap',
+      marginTop: 18
     }
   }
 }))
