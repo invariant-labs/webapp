@@ -10,7 +10,7 @@ import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import useStyles from './style'
 import { getX, getY } from '@invariant-labs/sdk/src/math'
-import { calculateClaimAmount, calculateFeeGrowthInside } from '@invariant-labs/sdk/src/utils'
+import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
 
 export interface IProps {
   id: string
@@ -92,7 +92,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const [tokenXClaim, tokenYClaim] = useMemo(() => {
     if (position && (typeof lowerTick !== 'undefined') && (typeof upperTick !== 'undefined')) {
-      const [growthX, growthY] = calculateFeeGrowthInside({
+      const [bnX, bnY] = calculateClaimAmount({
+        position,
         tickLower: lowerTick,
         tickUpper: upperTick,
         tickCurrent: position.poolData.currentTickIndex,
@@ -100,15 +101,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
       })
 
-      const [bnX, bnY] = calculateClaimAmount({
-        position,
-        feeGrowthInsideX: { v: growthX },
-        feeGrowthInsideY: { v: growthY }
-      })
-
       return [
-        +printBN(bnX, position.tokenX.decimal),
-        +printBN(bnY, position.tokenY.decimal)
+        +printBN(bnX.div(DENOMINATOR), position.tokenX.decimal),
+        +printBN(bnY.div(DENOMINATOR), position.tokenY.decimal)
       ]
     }
 
