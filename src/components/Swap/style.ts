@@ -132,7 +132,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 48,
     ...typography.body1,
     color: colors.white.main,
-    cursor: 'pointer'
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: `${colors.invariant.accent1}`,
+      boxShadow: '0px 0px 20px -10px white'
+    }
   }
 }))
 
