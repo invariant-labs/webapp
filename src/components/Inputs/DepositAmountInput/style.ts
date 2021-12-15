@@ -51,9 +51,9 @@ const useStyles = makeStyles(() => ({
     minWidth: 40,
     height: 26,
     textTransform: 'none',
-
     '&:hover': {
-      backgroundColor: colors.invariant.logoGreen
+      backgroundColor: colors.invariant.logoGreen,
+      boxShadow: '0px 0px 20px -10px white'
     }
   },
   blocker: {
