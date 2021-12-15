@@ -20,8 +20,7 @@ storiesOf('positionsList/list', module).add('default', () => {
             fee: 0.05,
             tokenXLiq: 5000,
             tokenYLiq: 300.20,
-            value: 10000.45,
-            id: '1'
+            value: 10000.45
           },
           {
             tokenXName: 'BTC',
@@ -33,8 +32,7 @@ storiesOf('positionsList/list', module).add('default', () => {
             fee: 0.05,
             tokenXLiq: 5000,
             tokenYLiq: 300.20,
-            value: 10000.45,
-            id: '2'
+            value: 10000.45
           },
           {
             tokenXName: 'BTC',
@@ -46,8 +44,7 @@ storiesOf('positionsList/list', module).add('default', () => {
             fee: 0.05,
             tokenXLiq: 5000,
             tokenYLiq: 300.20,
-            value: 10000.45,
-            id: '3'
+            value: 10000.45
           },
           {
             tokenXName: 'BTC',
@@ -59,8 +56,7 @@ storiesOf('positionsList/list', module).add('default', () => {
             fee: 0.05,
             tokenXLiq: 5000,
             tokenYLiq: 300.20,
-            value: 10000.45,
-            id: '4'
+            value: 10000.45
           }
         ]}
         onAddPositionClick={handleClick}

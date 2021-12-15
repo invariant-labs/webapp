@@ -17,7 +17,6 @@ interface ILiquidityItem {
   min: number
   max: number
   value: number
-  id: string
 }
 
 interface IProp {
@@ -46,7 +45,7 @@ export const PositionsList: React.FC<IProp> = ({ data, onAddPositionClick, loadi
         {
           data.length > 0
             ? data.map((element, index) => (
-              <Link to={`/position/${element.id}`} key={index} style={{ textDecoration: 'none' }}>
+              <Link to={`/position/${index}`} key={index} style={{ textDecoration: 'none' }}>
                 <PositionItem key={index} {...element} />
               </Link>
             ))

@@ -375,13 +375,13 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
       position
     }))
 
-    yield put(actions.getCurrentPositionRangeTicks(position.id.toString()))
+    yield put(actions.getCurrentPositionRangeTicks(action.payload))
   } catch (error) {
     console.log(error)
   }
 }
 
-export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<string>) {
+export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<number>) {
   try {
     const marketProgram = yield* call(getMarketProgram)
 
