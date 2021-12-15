@@ -5,6 +5,7 @@ import AddIcon from '@material-ui/icons/AddOutlined'
 import { LiquidityItem } from '@components/LiquidityItem/LiquidityItem'
 import useStyle from './style'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
+import { Link } from 'react-router-dom'
 interface ILiquidityItem {
   tokenXName: string
   tokenYName: string
@@ -13,6 +14,7 @@ interface ILiquidityItem {
   fee: number
   min: number
   max: number
+  id: string
 }
 interface IProp {
   data: ILiquidityItem[]
@@ -40,7 +42,11 @@ export const LiquidityList: React.FC<IProp> = ({ data, onAddPositionClick, loadi
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         {
           data.length > 0
-            ? data.map((element, index) => (<LiquidityItem key={index} {...element} />))
+            ? data.map((element, index) => (
+              <Link to={`/position/${element.id}`} key={index} style={{ textDecoration: 'none' }}>
+                <LiquidityItem {...element} />
+              </Link>
+            ))
             : (
               <Typography className={classes.noPositionsText}>
                 {

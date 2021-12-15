@@ -380,7 +380,7 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
         <OutlinedButton
           name={getButtonMessage()}
-          color='secondary'
+          color='primary'
           className={classes.swapButton}
           disabled={getButtonMessage() !== 'Swap'}
           onClick={() => {

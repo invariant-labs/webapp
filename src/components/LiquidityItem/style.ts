@@ -9,7 +9,11 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: '20px'
+    marginBottom: '20px',
+
+    '&:hover': {
+      background: colors.invariant.componentOut4
+    }
   },
   iconsGrid: {
     display: 'flex',

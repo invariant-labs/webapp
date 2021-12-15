@@ -48,7 +48,7 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
           </Grid>
 
           <Typography className={classNames(classes.text, classes.minText)}>
-            {min} {tokenYName} per {tokenXName}
+            {min} {tokenXName} per {tokenYName}
           </Typography>
         </Grid>
         <Grid className={classes.rangeGrid}>
@@ -56,7 +56,7 @@ export const LiquidityItem: React.FC<ILiquidityItem> = ({
             <Typography className={classes.greenTextArea}>MAX</Typography>
           </Grid>
           <Typography className={classNames(classes.text, classes.maxText)}>
-            {max} {tokenYName} per {tokenXName}
+            {max} {tokenXName} per {tokenYName}
           </Typography>
         </Grid>
       </Grid>

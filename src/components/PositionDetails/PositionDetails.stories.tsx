@@ -1,7 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { useState } from '@storybook/client-api'
-import PositionDetailsWrapper from './positionDetailsWrapper'
+import PositionDetails from './PositionDetails'
 
 export interface liqTokens {
   symbol: string,
@@ -39,20 +38,6 @@ const data = ticksToData()
 
 storiesOf('position wrapper/positionDetailsWrapper', module)
   .add('default', () => {
-    const [plotMin, setPlotMin] = useState(0)
-    const [plotMax, setPlotMax] = useState(data[140].x * 3)
-
-    const zoomMinus = () => {
-      const diff = plotMax - plotMin
-      setPlotMin(plotMin - (diff / 4))
-      setPlotMax(plotMax + (diff / 4))
-    }
-
-    const zoomPlus = () => {
-      const diff = plotMax - plotMin
-      setPlotMin(plotMin + (diff / 6))
-      setPlotMax(plotMax - (diff / 6))
-    }
     const tokens: liqTokens[] = [
       {
         symbol: 'BTC',
@@ -64,37 +49,30 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
       }
     ]
     return (
-      <PositionDetailsWrapper
+      <PositionDetails
         detailsData={data}
         leftRangeIndex={100}
+        midPriceIndex={150}
         rightRangeIndex={200}
-        style={{ width: 600, height: 212, backgroundColor: '#1C1B1E', borderRadius: 10 }}
-        disabled
-        plotMin={plotMin}
-        plotMax={plotMax}
-        zoomMinus={zoomMinus}
-        zoomPlus={zoomPlus}
         currentPrice={300}
-        fromToken={'SNY'}
-        toToken={'BTC'}
+        tokenY={'SNY'}
+        tokenX={'BTC'}
         positionData={{
-          active: false,
-          nameToSwap: 'BTC',
-          iconToSwap: tokens[0].logoURI,
-          nameFromSwap: 'SNY',
-          iconFromSwap: tokens[1].logoURI,
+          tokenXName: 'BTC',
+          tokenXIcon: tokens[0].logoURI,
+          tokenYName: 'SNY',
+          tokenYIcon: tokens[1].logoURI,
           min: 2149.6,
           max: 149.6,
           fee: 0.05
         }}
-        liquidity={458302.48}
-        unclaimedFee={44522.6789}
         onClickClaimFee={() => console.log('thanks from claiming')}
-        liqValueTokenToSwap={2.19703}
-        liqValueTokenFromSwap={20.99703}
-        unclaimValueTokenToSwap={2.19703}
-        unclaimValueTokenFromSwap={9.19703}
+        tokenXLiqValue={2.19703}
+        tokenYLiqValue={20.99703}
+        tokenXClaimValue={2.19703}
+        tokenYClaimValue={9.19703}
         closePosition={() => console.log('close position')}
+        onZoomOutOfData={() => {}}
       />
     )
   })

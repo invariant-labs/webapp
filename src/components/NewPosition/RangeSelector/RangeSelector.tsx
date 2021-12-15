@@ -1,10 +1,10 @@
 import { Button, Grid, Typography } from '@material-ui/core'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import PriceRangePlot from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
-import useStyles from './style'
 import { nearestPriceIndex } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
+import useStyles from './style'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -32,14 +32,16 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [leftRange, setLeftRange] = useState(0)
   const [rightRange, setRightRange] = useState(0)
 
-  const [leftRangeCompareIndex, setLeftRangeCompareIndex] = useState(0)
-  const [rightRangeCompareIndex, setRightRangeCompareIndex] = useState(0)
-
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
 
-  const [plotMin, setPlotMin] = useState(Math.max(midPriceIndex - 15, 0))
-  const [plotMax, setPlotMax] = useState(Math.min(midPriceIndex + 15, data.length - 1))
+  const initSideDist = useMemo(() => Math.min(
+    data[midPriceIndex].x - data[Math.max(midPriceIndex - 15, 0)].x,
+    data[Math.min(midPriceIndex + 15, data.length - 1)].x - data[midPriceIndex].x
+  ), [data, midPriceIndex])
+
+  const [plotMin, setPlotMin] = useState(data[midPriceIndex].x - initSideDist)
+  const [plotMax, setPlotMax] = useState(data[midPriceIndex].x + initSideDist)
 
   const [waiting, setWaiting] = useState(false)
 
@@ -56,18 +58,18 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const zoomPlus = () => {
     const diff = plotMax - plotMin
-    if (data.length >= 2 && diff >= data[1].x - data[0].x) {
-      setPlotMin(plotMin + (diff / 6))
-      setPlotMax(plotMax - (diff / 6))
+    const newMin = plotMin + (diff / 6)
+    const newMax = plotMax - (diff / 6)
+
+    if (Math.abs(nearestPriceIndex(newMin, data) - nearestPriceIndex(newMax, data)) >= 4) {
+      setPlotMin(newMin)
+      setPlotMax(newMax)
     }
   }
 
   const changeRangeHandler = (left: number, right: number) => {
     setLeftRange(left)
     setRightRange(right)
-
-    setLeftRangeCompareIndex(data[left].index)
-    setRightRangeCompareIndex(data[right].index)
 
     setLeftInput(data[left].x.toString())
     setRightInput(data[right].x.toString())
@@ -80,8 +82,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       Math.max(midPriceIndex - 10, 0),
       Math.min(midPriceIndex + 10, data.length - 1)
     )
-    setPlotMin(data[Math.max(midPriceIndex - 15, 0)].x)
-    setPlotMax(data[Math.min(midPriceIndex + 15, data.length - 1)].x)
+    setPlotMin(data[midPriceIndex].x - initSideDist)
+    setPlotMax(data[midPriceIndex].x + initSideDist)
   }
 
   useEffect(() => {
@@ -97,17 +99,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       setWaiting(false)
     }
   }, [blocked])
-
-  useEffect(() => {
-    if (!waiting) {
-      const newLeft = data.findIndex((tick) => tick.index === leftRangeCompareIndex)
-      const newRight = data.findIndex((tick) => tick.index === rightRangeCompareIndex)
-
-      if (newLeft !== -1 && newRight !== -1) {
-        changeRangeHandler(newLeft, newRight)
-      }
-    }
-  }, [data.length])
 
   return (
     <Grid container className={classes.wrapper}>
