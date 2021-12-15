@@ -23,7 +23,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const dispatch = useDispatch()
 
-  const position = useSelector(singlePositionData(+id))
+  const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
   const { lowerTick, upperTick } = useSelector(currentPositionRangeTicks)
@@ -36,7 +36,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
 
     if (position) {
-      dispatch(actions.getCurrentPositionRangeTicks(position.positionIndex))
+      dispatch(actions.getCurrentPositionRangeTicks(id))
     }
   }, [position?.id])
 
