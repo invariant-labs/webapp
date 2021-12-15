@@ -82,7 +82,7 @@ export const WrappedPositionsList: React.FC = () => {
           tokenXLiq: +(tokenXLiq.toFixed(maxDecimals(tokenXLiq))),
           tokenYLiq: +(tokenYLiq.toFixed(maxDecimals(tokenYLiq))),
           value: +(value.toFixed(maxDecimals(value))),
-          id: position.id.toString()
+          id: position.id.toString() + '_' + position.pool.toString()
         }
       })}
       loading={isLoading}
