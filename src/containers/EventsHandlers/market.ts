@@ -5,7 +5,6 @@ import { Status } from '@reducers/solanaConnection'
 import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
 import { pools } from '@selectors/pools'
-import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
 import { PAIRS } from '@consts/static'
 
 const MarketEvents = () => {
@@ -34,21 +33,21 @@ const MarketEvents = () => {
     }
 
     const connectEvents = () => {
-      allPools.forEach((pool) => {
+      allPools.forEach((pool, index) => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        marketProgram.onPoolChange(pool.tokenX, pool.tokenY, FEE_TIERS[0], _poolStructure => {
-          // TODO: update for specific
+        marketProgram.onPoolChange(pool.tokenX, pool.tokenY, { fee: pool.fee.v }, poolStructure => {
           dispatch(
-            dispatch(
-              actions.getPoolsData(PAIRS)
-            )
+            actions.updatePool({
+              index,
+              poolStructure
+            })
           )
         })
       })
     }
 
     connectEvents()
-  }, [dispatch, allPools, networkStatus])
+  }, [dispatch, allPools.length, networkStatus])
 
   return null
 }

@@ -5,6 +5,7 @@ import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
 import { PlotTickData } from '@reducers/positions'
+import { MemoryRouter } from 'react-router'
 
 const ticksToData = () => {
   const ticks = [
@@ -62,46 +63,48 @@ const tokens: SwapToken[] = [
   }
 ]
 
-storiesOf('position/newPosition', module).add('new', () => (
-  <div style={{ backgroundColor: '#000000', padding: 20, width: 'fit-content' }}>
-    <NewPosition
-      tokens={tokens}
-      tokensB={tokens}
-      data={data}
-      midPriceIndex={140}
-      addLiquidityHandler={() => {}}
-      onChangePositionTokens={() => {}}
-      isCurrentPoolExisting={true}
-      calcAmount={() => new BN(1)}
-      feeTiers={[0.05, 0.3, 1]}
-      ticksLoading={false}
-      isTokenXFirst={true}
-      onZoomOutOfData={() => {}}
-      noConnectedBlockerProps={{
-        onConnect: () => {},
-        onDisconnect: () => {}
-      }}
-    />
-  </div>
-)).add('noPool', () => (
-  <div style={{ backgroundColor: '#000000', padding: 20, width: 'fit-content' }}>
-    <NewPosition
-      tokens={tokens}
-      tokensB={tokens}
-      data={data}
-      midPriceIndex={140}
-      addLiquidityHandler={() => {}}
-      onChangePositionTokens={() => {}}
-      isCurrentPoolExisting={false}
-      calcAmount={() => new BN(1)}
-      feeTiers={[0.05, 0.3, 1]}
-      ticksLoading={false}
-      isTokenXFirst={true}
-      onZoomOutOfData={() => {}}
-      noConnectedBlockerProps={{
-        onConnect: () => {},
-        onDisconnect: () => {}
-      }}
-    />
-  </div>
-))
+storiesOf('position/newPosition', module)
+  .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
+  .add('new', () => (
+    <div style={{ backgroundColor: '#000000', padding: 20, width: 'fit-content' }}>
+      <NewPosition
+        tokens={tokens}
+        tokensB={tokens}
+        data={data}
+        midPriceIndex={140}
+        addLiquidityHandler={() => {}}
+        onChangePositionTokens={() => {}}
+        isCurrentPoolExisting={true}
+        calcAmount={() => new BN(1)}
+        feeTiers={[0.05, 0.3, 1]}
+        ticksLoading={false}
+        isTokenXFirst={true}
+        onZoomOutOfData={() => {}}
+        noConnectedBlockerProps={{
+          onConnect: () => {},
+          onDisconnect: () => {}
+        }}
+      />
+    </div>
+  )).add('noPool', () => (
+    <div style={{ backgroundColor: '#000000', padding: 20, width: 'fit-content' }}>
+      <NewPosition
+        tokens={tokens}
+        tokensB={tokens}
+        data={data}
+        midPriceIndex={140}
+        addLiquidityHandler={() => {}}
+        onChangePositionTokens={() => {}}
+        isCurrentPoolExisting={false}
+        calcAmount={() => new BN(1)}
+        feeTiers={[0.05, 0.3, 1]}
+        ticksLoading={false}
+        isTokenXFirst={true}
+        onZoomOutOfData={() => {}}
+        noConnectedBlockerProps={{
+          onConnect: () => {},
+          onDisconnect: () => {}
+        }}
+      />
+    </div>
+  ))

@@ -1,4 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
+import { colors } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -9,6 +10,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 80,
     backgroundColor: '#34303B',
     padding: '2px 10px',
+    '&:hover': {
+      backgroundColor: colors.invariant.componentOut3
+    },
     [theme.breakpoints.down('xs')]: {
       minWidth: 90
     }

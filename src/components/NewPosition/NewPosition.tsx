@@ -77,10 +77,6 @@ export const INewPosition: React.FC<INewPosition> = ({
       return 'Loading data...'
     }
 
-    if (data.length === 0) {
-      return 'Cannot get necessary data. Try later.'
-    }
-
     return ''
   }
 
@@ -93,11 +89,12 @@ export const INewPosition: React.FC<INewPosition> = ({
 
   const getOtherTokenAmount = (amount: BN, left: number, right: number, byFirst: boolean) => {
     const printIndex = byFirst ? tokenBIndex : tokenAIndex
-    if (printIndex === null) {
+    const calcIndex = byFirst ? tokenAIndex : tokenBIndex
+    if (printIndex === null || calcIndex === null) {
       return '0.0'
     }
 
-    const result = calcAmount(amount, left, right, tokens[printIndex].assetAddress)
+    const result = calcAmount(amount, left, right, tokens[calcIndex].assetAddress)
 
     return printBN(result, tokens[printIndex].decimal)
   }

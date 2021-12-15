@@ -39,6 +39,7 @@ storiesOf('ui/newHeader', module)
             landing='staking'
             onDisconnectWallet={action('disconnect')}
             typeOfNetwork={NetworkType.DEVNET}
+            onFaucet={() => { console.log('Faucet') }}
           />
         </div>
       </div>
