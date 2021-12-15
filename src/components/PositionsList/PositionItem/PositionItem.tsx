@@ -38,20 +38,24 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
   ), [value, tokenXName, classes])
 
   return (
-    <Grid className={classes.root} container direction='row' alignItems='center'>
-      <Grid container item className={classes.icons} alignItems='center'>
-        <img className={classes.tokenIcon} src={tokenXIcon} alt={tokenXName} />
-        <img className={classes.arrows} src={icons.ArrowIcon} alt='Arrow' />
-        <img className={classes.tokenIcon} src={tokenYIcon} alt={tokenYName} />
+    <Grid className={classes.root} container direction='row' alignItems='center' justifyContent='space-between'>
+      <Grid container item className={classes.mdTop} direction='row' wrap='nowrap'>
+        <Grid container item className={classes.iconsAndNames} alignItems='center' wrap='nowrap'>
+          <Grid container item className={classes.icons} alignItems='center' wrap='nowrap'>
+            <img className={classes.tokenIcon} src={tokenXIcon} alt={tokenXName} />
+            <img className={classes.arrows} src={icons.ArrowIcon} alt='Arrow' />
+            <img className={classes.tokenIcon} src={tokenYIcon} alt={tokenYName} />
+          </Grid>
+
+          <Typography className={classes.names}>
+            {tokenXName} - {tokenYName}
+          </Typography>
+        </Grid>
+
+        <Hidden mdUp>
+          {feeFragment}
+        </Hidden>
       </Grid>
-
-      <Typography className={classes.names}>
-        {tokenXName} - {tokenYName}
-      </Typography>
-
-      <Hidden mdUp>
-        {feeFragment}
-      </Hidden>
 
       <Grid container item className={classes.mdInfo} direction='row'>
         <Grid container item className={classes.liquidity} justifyContent='center' alignItems='center'>

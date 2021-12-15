@@ -32,6 +32,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('md')]: {
       width: 33
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      width: 25
     }
   },
   arrows: {
@@ -39,17 +43,26 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('md')]: {
       width: 20
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      width: 15
     }
   },
   names: {
-    marginRight: 20,
     ...typography.heading1,
     color: colors.white.main,
     lineHeight: '40px',
+    whiteSpace: 'nowrap',
 
     [theme.breakpoints.down('md')]: {
       ...typography.heading3,
       lineHeight: '33px'
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.heading4,
+      lineHeight: '25px'
     }
   },
   infoText: {
@@ -67,14 +80,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 5,
     height: 35,
     width: 170,
-    marginRight: 8
+    marginRight: 8,
+
+    [theme.breakpoints.down('md')]: {
+      flex: '1 1 0%'
+    }
   },
   fee: {
     background: colors.invariant.componentOut2,
     borderRadius: 5,
     height: 35,
     width: 90,
-    marginRight: 8
+    marginRight: 8,
+
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 0
+    }
   },
   infoCenter: {
     flex: '1 1 0%'
@@ -88,7 +109,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 8,
 
     [theme.breakpoints.down('sm')]: {
-      width: '100%'
+      width: '100%',
+      marginRight: 0,
+      marginTop: 8
     }
   },
   value: {
@@ -96,7 +119,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 5,
     height: 35,
     width: 164,
-    paddingInline: 12
+    paddingInline: 12,
+
+    [theme.breakpoints.down('xs')]: {
+      width: 144,
+      paddingInline: 6
+    }
   },
   mdInfo: {
     width: 'fit-content',
@@ -108,9 +136,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('sm')]: {
-      flexWrap: 'wrap',
-      marginTop: 18
+      flexWrap: 'wrap'
     }
+  },
+  mdTop: {
+    width: 'fit-content',
+
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+      justifyContent: 'space-between'
+    }
+  },
+  iconsAndNames: {
+    width: 'fit-content'
   }
 }))
 

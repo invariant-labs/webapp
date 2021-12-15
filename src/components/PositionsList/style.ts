@@ -3,7 +3,7 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: 1200,
+    width: 1122,
 
     [theme.breakpoints.down('md')]: {
       width: '100%'
