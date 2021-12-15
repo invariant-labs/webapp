@@ -24,6 +24,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.accent1,
     borderRadius: 10,
     height: 40,
+    width: 130,
+    paddingInline: 0,
 
     '&:hover': {
       background: colors.invariant.accent1,

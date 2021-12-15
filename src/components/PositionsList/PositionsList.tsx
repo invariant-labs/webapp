@@ -1,6 +1,5 @@
 import { Button, Grid, Typography } from '@material-ui/core'
 import React from 'react'
-import AddIcon from '@material-ui/icons/AddOutlined'
 import { PositionItem } from './PositionItem/PositionItem'
 import useStyle from './style'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
@@ -36,9 +35,8 @@ export const PositionsList: React.FC<IProp> = ({ data, onAddPositionClick, loadi
         <Button
           className={classes.button}
           variant='contained'
-          startIcon={<AddIcon />}
           onClick={onAddPositionClick}>
-          <span className={classes.buttonText}>Add Position</span>
+          <span className={classes.buttonText}>+ Add Position</span>
         </Button>
       </Grid>
       <Grid className={classes.list}>
