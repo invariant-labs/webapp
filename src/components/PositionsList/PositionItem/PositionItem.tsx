@@ -1,8 +1,61 @@
-import { Grid, Hidden, Typography } from '@material-ui/core'
+import { Grid, Hidden, Typography, useMediaQuery } from '@material-ui/core'
 import React, { useMemo } from 'react'
 import icons from '@static/icons'
 import { ILiquidityItem } from '../PositionsList'
+import AnimatedNumber from '@components/AnimatedNumber'
+import { formatNumbers, FormatNumberThreshold, PrefixConfig, showPrefix } from '@consts/utils'
+import { theme } from '@static/theme'
 import useStyle from './style'
+
+const shorterThresholds: FormatNumberThreshold[] = [
+  {
+    value: 100,
+    decimals: 2
+  },
+  {
+    value: 1000,
+    decimals: 1
+  },
+  {
+    value: 10000,
+    decimals: 1,
+    divider: 1000
+  },
+  {
+    value: 1000000,
+    decimals: 0,
+    divider: 1000
+  },
+  {
+    value: 10000000,
+    decimals: 1,
+    divider: 1000000
+  },
+  {
+    value: 1000000000,
+    decimals: 0,
+    divider: 1000000
+  },
+  {
+    value: 10000000000,
+    decimals: 1,
+    divider: 1000000000
+  }
+]
+
+const minMaxShorterThresholds: FormatNumberThreshold[] = [
+  {
+    value: 10,
+    decimals: 3
+  },
+  ...shorterThresholds
+]
+
+const shorterPrefixConfig: PrefixConfig = {
+  B: 1000000000,
+  M: 1000000,
+  K: 1000
+}
 
 export const PositionItem: React.FC<ILiquidityItem> = ({
   tokenXName,
@@ -18,6 +71,9 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
 }) => {
   const classes = useStyle()
 
+  const isXs = useMediaQuery(theme.breakpoints.down('xs'))
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'))
+
   const feeFragment = useMemo(() => (
     <Grid container item className={classes.fee} justifyContent='center' alignItems='center'>
       <Typography className={classes.infoText}>
@@ -31,11 +87,12 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
       <Typography className={classes.infoText}>Value</Typography>
       <Grid className={classes.infoCenter} container item justifyContent='center'>
         <Typography className={classes.greenText}>
-          {value} {tokenXName}
+          <AnimatedNumber value={value} duration={300} formatValue={formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)} />
+          {showPrefix(value, isXs || isDesktop ? shorterPrefixConfig : undefined)} {tokenXName}
         </Typography>
       </Grid>
     </Grid>
-  ), [value, tokenXName, classes])
+  ), [value, tokenXName, classes, isXs, isDesktop])
 
   return (
     <Grid className={classes.root} container direction='row' alignItems='center' justifyContent='space-between'>
@@ -60,7 +117,9 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
       <Grid container item className={classes.mdInfo} direction='row'>
         <Grid container item className={classes.liquidity} justifyContent='center' alignItems='center'>
           <Typography className={classes.infoText}>
-            {tokenXLiq} {tokenXName} - {tokenYLiq} {tokenYName}
+            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(tokenXLiq.toString())}{showPrefix(tokenXLiq, isXs || isDesktop ? shorterPrefixConfig : undefined)} {tokenXName}
+            {' - '}
+            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(tokenYLiq.toString())}{showPrefix(tokenYLiq, isXs || isDesktop ? shorterPrefixConfig : undefined)} {tokenYName}
           </Typography>
         </Grid>
 
@@ -76,7 +135,9 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
           <Typography className={classes.greenText}>MIN - MAX</Typography>
           <Grid className={classes.infoCenter} container item justifyContent='center'>
             <Typography className={classes.infoText}>
-              {min} - {max} {tokenYName} per {tokenXName}
+              {formatNumbers(isXs || isDesktop ? minMaxShorterThresholds : undefined)(min.toString())}{showPrefix(min, isXs || isDesktop ? shorterPrefixConfig : undefined)}
+              {' - '}
+              {formatNumbers(isXs || isDesktop ? minMaxShorterThresholds : undefined)(max.toString())}{showPrefix(max, isXs || isDesktop ? shorterPrefixConfig : undefined)} {tokenYName} per {tokenXName}
             </Typography>
           </Grid>
         </Grid>

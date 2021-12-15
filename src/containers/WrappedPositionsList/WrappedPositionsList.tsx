@@ -19,22 +19,6 @@ export const WrappedPositionsList: React.FC = () => {
 
   const history = useHistory()
 
-  const maxDecimals = (value: number): number => {
-    if (value >= 10000) {
-      return 0
-    }
-
-    if (value >= 1000) {
-      return 1
-    }
-
-    if (value >= 100) {
-      return 2
-    }
-
-    return 5
-  }
-
   return (
     <PositionsList
       onAddPositionClick={() => { history.push('/newPosition') }}
@@ -77,11 +61,11 @@ export const WrappedPositionsList: React.FC = () => {
           tokenXIcon: position.tokenX.logoURI,
           tokenYIcon: position.tokenY.logoURI,
           fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
-          min: +(min.toFixed(maxDecimals(min))),
-          max: +(max.toFixed(maxDecimals(max))),
-          tokenXLiq: +(tokenXLiq.toFixed(maxDecimals(tokenXLiq))),
-          tokenYLiq: +(tokenYLiq.toFixed(maxDecimals(tokenYLiq))),
-          value: +(value.toFixed(maxDecimals(value))),
+          min,
+          max,
+          tokenXLiq,
+          tokenYLiq,
+          value,
           id: position.id.toString() + '_' + position.pool.toString()
         }
       })}

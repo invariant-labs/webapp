@@ -86,45 +86,77 @@ export const removeTickerPrefix = (ticker: string, prefix: string[] = ['x', '$']
 }
 const zeroPad = (num: string, places: number) => num.padStart(places, '0')
 
-export const showPrefix = (nr: number) => {
-  if (nr >= 10000) {
-    if (nr >= 1000000) {
-      if (nr >= 1000000000) {
-        return 'B'
-      } else {
-        return 'M'
-      }
-    } else {
-      return 'K'
-    }
-  } else {
-    return ''
-  }
+export interface PrefixConfig {
+  B?: number
+  M?: number
+  K?: number
 }
 
-export const formatNumbers = (value: string) => {
+const defaultPrefixConfig: PrefixConfig = {
+  B: 1000000000,
+  M: 1000000,
+  K: 10000
+}
+
+export const showPrefix = (nr: number, config: PrefixConfig = defaultPrefixConfig): string => {
+  if (typeof config.B !== 'undefined' && nr >= config.B) {
+    return 'B'
+  }
+
+  if (typeof config.M !== 'undefined' && nr >= config.M) {
+    return 'M'
+  }
+
+  if (typeof config.K !== 'undefined' && nr >= config.K) {
+    return 'K'
+  }
+
+  return ''
+}
+
+export interface FormatNumberThreshold {
+  value: number
+  decimals: number
+  divider?: number
+}
+
+const defaultThresholds: FormatNumberThreshold[] = [
+  {
+    value: 10,
+    decimals: 4
+  },
+  {
+    value: 1000,
+    decimals: 2
+  },
+  {
+    value: 10000,
+    decimals: 1
+  },
+  {
+    value: 1000000,
+    decimals: 2,
+    divider: 1000
+  },
+  {
+    value: 1000000000,
+    decimals: 2,
+    divider: 1000000
+  },
+  {
+    value: Infinity,
+    decimals: 2,
+    divider: 1000000000
+  }
+]
+
+export const formatNumbers = (thresholds: FormatNumberThreshold[] = defaultThresholds) => (value: string) => {
   const num = Number(value)
+  const threshold = thresholds.sort((a, b) => a.value - b.value).find((thr) => num < thr.value)
 
-  if (num < 10) {
-    return num.toFixed(4)
-  }
-
-  if (num < 1000) {
-    return num.toFixed(2)
-  }
-
-  if (num < 10000) {
-    return num.toFixed(1)
-  }
-
-  if (num < 1000000) {
-    return (num / 1000).toFixed(2)
-  }
-  if (num < 1000000000) {
-    return (num / 1000000).toFixed(2)
-  }
-
-  return (num / 1000000000).toFixed(2)
+  return threshold
+    ? (num / (threshold.divider ?? 1)).toFixed(threshold.decimals)
+    : value
 }
 
 export const nearestPriceIndex = (price: number, data: Array<{ x: number; y: number }>) => {
