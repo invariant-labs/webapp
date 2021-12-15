@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'transparent',
     marginTop: 65,
     paddingInline: 94,
+    minHeight: '70vh',
 
     [theme.breakpoints.down('md')]: {
       paddingInline: 80

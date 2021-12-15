@@ -5,7 +5,7 @@ import useStyle from './style'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Link } from 'react-router-dom'
 
-interface ILiquidityItem {
+export interface ILiquidityItem {
   tokenXName: string
   tokenYName: string
   tokenXIcon: string
@@ -43,7 +43,7 @@ export const PositionsList: React.FC<IProp> = ({ data, onAddPositionClick, loadi
         {
           data.length > 0
             ? data.map((element, index) => (
-              <Link to={`/position/${index}`} key={index} style={{ textDecoration: 'none' }}>
+              <Link to={`/position/${index}`} key={index} className={classes.itemLink}>
                 <PositionItem key={index} {...element} />
               </Link>
             ))

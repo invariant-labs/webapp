@@ -42,6 +42,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   list: {
     position: 'relative'
+  },
+  itemLink: {
+    textDecoration: 'none',
+
+    '&:not(:last-child)': {
+      display: 'block',
+      marginBottom: 20,
+
+      [theme.breakpoints.down('sm')]: {
+        marginBottom: 16
+      }
+    }
   }
 }))
 

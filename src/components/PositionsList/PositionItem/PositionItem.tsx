@@ -1,20 +1,9 @@
 import { Grid, Hidden, Typography } from '@material-ui/core'
 import React, { useMemo } from 'react'
 import icons from '@static/icons'
+import { ILiquidityItem } from '../PositionsList'
 import useStyle from './style'
 
-interface ILiquidityItem {
-  tokenXName: string
-  tokenYName: string
-  tokenXIcon: string
-  tokenYIcon: string
-  tokenXLiq: number
-  tokenYLiq: number
-  fee: number
-  min: number
-  max: number
-  value: number
-}
 export const PositionItem: React.FC<ILiquidityItem> = ({
   tokenXName,
   tokenYName,
