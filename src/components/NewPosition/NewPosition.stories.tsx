@@ -84,6 +84,7 @@ storiesOf('position/newPosition', module)
           onConnect: () => {},
           onDisconnect: () => {}
         }}
+        progress='none'
       />
     </div>
   )).add('noPool', () => (
@@ -105,6 +106,7 @@ storiesOf('position/newPosition', module)
           onConnect: () => {},
           onDisconnect: () => {}
         }}
+        progress='none'
       />
     </div>
   ))
