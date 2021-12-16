@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('sm')]: {
-      width: 30,
-      height: 30
+      width: 40,
+      height: 40
     }
   },
   zoomButtonsWrapper: {
@@ -52,8 +52,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'row',
-      maxWidth: 72,
-      height: 30
+      maxWidth: 92,
+      height: 40
     }
   }
 }))

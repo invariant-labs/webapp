@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 240,
 
     [theme.breakpoints.down('sm')]: {
-      height: 205
+      height: 215
     }
   },
   subheader: {
