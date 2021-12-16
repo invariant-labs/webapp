@@ -1,20 +1,33 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   data: {
     height: 25,
     paddingInline: 8,
     backgroundColor: colors.invariant.componentOut2,
-    borderRadius: 3
+    borderRadius: 3,
+
+    [theme.breakpoints.down('sm')]: {
+      height: 35
+    }
   },
   label: {
     color: colors.white.main,
-    ...typography.label2
+    ...typography.label2,
+
+    [theme.breakpoints.down('sm')]: {
+      ...typography.body1
+    }
   },
   tokens: {
     color: colors.invariant.lightInfoText,
-    ...typography.label1
+    ...typography.label1,
+
+    [theme.breakpoints.down('sm')]: {
+      marginInline: 'auto',
+      ...typography.body2
+    }
   },
   controls: {
     marginTop: 5
@@ -29,6 +42,12 @@ const useStyles = makeStyles(() => ({
 
     '&:hover': {
       backgroundColor: colors.invariant.logoGreen
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 40,
+      width: 40,
+      height: 40
     }
   },
   buttonIcon: {
@@ -48,6 +67,10 @@ const useStyles = makeStyles(() => ({
 
     '& $input': {
       textAlign: 'center'
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      height: 40
     }
   }
 }))
