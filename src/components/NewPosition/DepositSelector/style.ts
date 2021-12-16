@@ -22,13 +22,13 @@ const useStyles = makeStyles(() => ({
     width: '100%'
   },
   inputLabel: {
-    ...typography.label3,
+    ...typography.body3,
     lineHeight: '16px',
     color: colors.invariant.lightInfoText,
     marginBottom: 3
   },
   selects: {
-    marginBottom: 3
+    marginBottom: 10
   },
   selectWrapper: {
     flex: '1 1 0%',

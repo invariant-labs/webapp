@@ -143,7 +143,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             tokenAInputState.setValue(printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimal))
           }}
           style={{
-            marginBottom: 8
+            marginBottom: 10
           }}
           onBlur={() => {
             if (tokenAIndex !== null && tokenBIndex !== null && tokenAInputState.value.length === 0) {
