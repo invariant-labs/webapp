@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import NewPosition from '@components/NewPosition/NewPosition'
 import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,10 +8,11 @@ import { printBN } from '@consts/utils'
 import { pools } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
-import { plotTicks } from '@selectors/positions'
+import { initPosition, plotTicks } from '@selectors/positions'
 import { BN } from '@project-serum/anchor'
 import { PRICE_DECIMAL } from '@consts/static'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
+import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -19,11 +20,32 @@ export const NewPositionWrapper = () => {
   const tokens = useSelector(swapTokens)
   const walletStatus = useSelector(status)
   const allPools = useSelector(pools)
+  const { success, inProgress } = useSelector(initPosition)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
   const [liquidity, setLiquidity] = useState<Decimal>({ v: new BN(0) })
+
+  const [progress, setProgress] = useState<ProgressState>('none')
+
+  useEffect(() => {
+    setProgress('none')
+  }, [poolIndex])
+
+  useEffect(() => {
+    if (!inProgress && progress === 'progress') {
+      setProgress('approved')
+
+      setTimeout(() => {
+        setProgress(success ? 'success' : 'failed')
+      }, 2000)
+
+      setTimeout(() => {
+        setProgress('none')
+      }, 4000)
+    }
+  }, [success, inProgress])
 
   const midPriceIndex = useMemo(() => {
     if (poolIndex !== null) {
@@ -92,6 +114,10 @@ export const NewPositionWrapper = () => {
           return
         }
 
+        if (progress === 'none') {
+          setProgress('progress')
+        }
+
         const lowerTick = Math.min(ticksData[leftTickIndex].index, ticksData[rightTickIndex].index)
         const upperTick = Math.max(ticksData[leftTickIndex].index, ticksData[rightTickIndex].index)
 
@@ -158,6 +184,7 @@ export const NewPositionWrapper = () => {
         onDisconnect: () => { dispatch(walletActions.disconnect()) },
         descCustomText: 'Cannot add any liquidity.'
       }}
+      progress={progress}
     />
   )
 }

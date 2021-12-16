@@ -11,8 +11,9 @@ import { calcTicksAmountInRange, createLiquidityPlot } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
 import { Transaction, Connection } from '@solana/web3.js'
 import { positionsWithPoolsData, plotTicks, singlePositionData } from '@selectors/positions'
+import { CallEffect } from 'redux-saga/effects'
 
-export function* hasTransactionSucceed(connection: Connection, txid: string): Generator {
+export function* hasTransactionSucceed(connection: Connection, txid: string): Generator<CallEffect, boolean> {
   while (true) {
     const status = yield* call([connection, connection.getSignatureStatus], txid)
 
@@ -78,6 +79,8 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 
     const hasSucceed = yield* call(hasTransactionSucceed, connection, txid)
 
+    yield put(actions.setInitPositionSuccess(hasSucceed))
+
     if (!hasSucceed) {
       yield put(
         snackbarsActions.add({
@@ -101,6 +104,9 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     }
   } catch (error) {
     console.log(error)
+
+    yield put(actions.setInitPositionSuccess(false))
+
     yield put(
       snackbarsActions.add({
         message: 'Failed to send. Please try again.',

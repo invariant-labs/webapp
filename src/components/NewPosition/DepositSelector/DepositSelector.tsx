@@ -2,10 +2,11 @@ import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmo
 import Select from '@components/Inputs/Select/Select'
 import { SwapToken } from '@selectors/solanaWallet'
 import { printBN, printBNtoBN } from '@consts/utils'
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import React, { useState, useCallback, useEffect } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
 import classNames from 'classnames'
+import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import useStyles from './style'
 
 export interface InputState {
@@ -26,6 +27,7 @@ export interface IDepositSelector {
   feeTiers: number[]
   isCurrentPoolExisting: boolean
   className?: string
+  progress: ProgressState
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -37,7 +39,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   tokenBInputState,
   feeTiers,
   isCurrentPoolExisting,
-  className
+  className,
+  progress
 }) => {
   const classes = useStyles()
 
@@ -173,13 +176,13 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         />
       </Grid>
 
-      <Button
+      <AnimatedButton
         className={classes.addButton}
         onClick={onAddLiquidity}
         disabled={getButtonMessage() !== 'Add Liquidity'}
-      >
-        {getButtonMessage()}
-      </Button>
+        content={getButtonMessage()}
+        progress={progress}
+      />
     </Grid>
   )
 }

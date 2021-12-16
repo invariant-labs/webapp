@@ -7,7 +7,7 @@ import { pools } from './pools'
 
 const store = (s: AnyProps) => s[positionsSliceName] as IPositionsStore
 
-export const { positionsList, plotTicks, currentPositionRangeTicks } = keySelectors(store, ['positionsList', 'plotTicks', 'currentPositionRangeTicks'])
+export const { positionsList, plotTicks, currentPositionRangeTicks, initPosition } = keySelectors(store, ['positionsList', 'plotTicks', 'currentPositionRangeTicks', 'initPosition'])
 
 export const isLoadingPositionsList = createSelector(
   positionsList,
@@ -58,6 +58,6 @@ export const singlePositionData = (id: string) => createSelector(
   (positions) => positions.find((position) => id === (position.id.toString() + '_' + position.pool.toString()))
 )
 
-export const positionsSelectors = { positionsList, plotTicks, currentPositionRangeTicks }
+export const positionsSelectors = { positionsList, plotTicks, currentPositionRangeTicks, initPosition }
 
 export default positionsSelectors

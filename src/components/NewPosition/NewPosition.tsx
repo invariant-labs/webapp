@@ -10,6 +10,7 @@ import { PlotTickData } from '@reducers/positions'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Link } from 'react-router-dom'
 import backIcon from '@static/svg/back-arrow.svg'
+import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import useStyles from './style'
 
 export interface INewPosition {
@@ -35,6 +36,7 @@ export interface INewPosition {
   onZoomOutOfData: (min: number, max: number) => void
   showNoConnected?: boolean
   noConnectedBlockerProps: INoConnected
+  progress: ProgressState
 }
 
 export const INewPosition: React.FC<INewPosition> = ({
@@ -51,7 +53,8 @@ export const INewPosition: React.FC<INewPosition> = ({
   isTokenXFirst,
   onZoomOutOfData,
   showNoConnected,
-  noConnectedBlockerProps
+  noConnectedBlockerProps,
+  progress
 }) => {
   const classes = useStyles()
 
@@ -182,6 +185,7 @@ export const INewPosition: React.FC<INewPosition> = ({
           }}
           feeTiers={feeTiers}
           isCurrentPoolExisting={isCurrentPoolExisting}
+          progress={progress}
         />
 
         <RangeSelector
