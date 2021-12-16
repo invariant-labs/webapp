@@ -39,7 +39,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column'
+      flexDirection: 'column',
+
+      '& .noConnectedInfo': {
+        justifyContent: 'flex-start',
+        paddingTop: 60
+      }
     }
   },
   deposit: {
