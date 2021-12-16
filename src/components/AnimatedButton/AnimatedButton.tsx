@@ -2,6 +2,7 @@ import React from 'react'
 import { Button } from '@material-ui/core'
 import successGif from '@static/gif/successAnimation.gif'
 import errorGif from '@static/gif/errorAnimation.gif'
+import classNames from 'classnames'
 import useStyles from './style'
 
 export type ProgressState = 'progress' | 'approved' | 'success' | 'failed' | 'none'
@@ -11,13 +12,15 @@ interface Props {
   disabled?: boolean
   progress: ProgressState
   onClick: () => void
+  className?: string
 }
 
 const AnimatedButton: React.FC<Props> = ({
   content,
   disabled = false,
   progress,
-  onClick
+  onClick,
+  className
 }) => {
   const classes = useStyles()
 
@@ -51,7 +54,7 @@ const AnimatedButton: React.FC<Props> = ({
       <Button
         disabled={disabled}
         variant='contained'
-        className={progress === 'progress' || progress === 'approved' ? `${classes.button} ${classes.buttonRelease}` : classes.button}
+        className={classNames(classes.button, progress === 'progress' || progress === 'approved' ? classes.buttonRelease : undefined, className)}
         onClick={onClick}
       >
         <div className={getClasses()} >

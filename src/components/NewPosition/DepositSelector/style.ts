@@ -56,12 +56,6 @@ const useStyles = makeStyles(() => ({
   },
   addButton: {
     width: '100%',
-    height: 40,
-    borderRadius: 5,
-    backgroundColor: colors.invariant.accent1,
-    color: colors.white.main,
-    ...typography.body1,
-    textTransform: 'none',
     marginTop: 18,
 
     '&:hover': {

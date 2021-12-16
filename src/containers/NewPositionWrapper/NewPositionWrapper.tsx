@@ -39,11 +39,11 @@ export const NewPositionWrapper = () => {
 
       setTimeout(() => {
         setProgress(success ? 'success' : 'failed')
-      }, 2000)
+      }, 1500)
 
       setTimeout(() => {
         setProgress('none')
-      }, 4000)
+      }, 3000)
     }
   }, [success, inProgress])
 
