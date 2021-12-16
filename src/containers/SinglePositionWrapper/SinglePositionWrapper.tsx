@@ -112,22 +112,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     return [0, 0]
   }, [position, lowerTick, upperTick])
 
-  const maxDecimals = (value: number): number => {
-    if (value >= 10000) {
-      return 0
-    }
-
-    if (value >= 1000) {
-      return 1
-    }
-
-    if (value >= 100) {
-      return 2
-    }
-
-    return 5
-  }
-
   return (
     !isLoadingList && !ticksLoading && position && ticksData.length
       ? (
@@ -170,8 +154,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             tokenXIcon: position.tokenX.logoURI,
             tokenYIcon: position.tokenY.logoURI,
             fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
-            min: +(min.toFixed(maxDecimals(min))),
-            max: +(max.toFixed(maxDecimals(max)))
+            min,
+            max
           }}
         />
       )
