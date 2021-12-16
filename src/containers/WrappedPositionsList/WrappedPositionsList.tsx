@@ -29,8 +29,6 @@ export const WrappedPositionsList: React.FC = () => {
         const min = Math.min(lowerPrice, upperPrice)
         const max = Math.max(lowerPrice, upperPrice)
 
-        console.log(position)
-
         let tokenXLiq, tokenYLiq
 
         try {

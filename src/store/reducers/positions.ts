@@ -18,6 +18,11 @@ export interface PlotTicks {
   loading: boolean
   maxReached: boolean
 }
+
+export interface InitPositionStore {
+  inProgress: boolean
+  success: boolean
+}
 export interface IPositionsStore {
   plotTicks: PlotTicks
   positionsList: PositionsListStore
@@ -25,6 +30,7 @@ export interface IPositionsStore {
     lowerTick?: Tick
     upperTick?: Tick
   }
+  initPosition: InitPositionStore
 }
 
 export interface InitPositionData extends Omit<InitPosition, 'owner' | 'userTokenX' | 'userTokenY' | 'pair'> {
@@ -66,6 +72,10 @@ export const defaultState: IPositionsStore = {
   currentPositionRangeTicks: {
     lowerTick: undefined,
     upperTick: undefined
+  },
+  initPosition: {
+    inProgress: false,
+    success: false
   }
 }
 
@@ -75,6 +85,12 @@ const positionsSlice = createSlice({
   initialState: defaultState,
   reducers: {
     initPosition(state, _action: PayloadAction<InitPositionData>) {
+      state.initPosition.inProgress = true
+      return state
+    },
+    setInitPositionSuccess(state, action: PayloadAction<boolean>) {
+      state.initPosition.inProgress = false
+      state.initPosition.success = action.payload
       return state
     },
     setPlotTicks(state, action: PayloadAction<SetCurrentTicksData>) {

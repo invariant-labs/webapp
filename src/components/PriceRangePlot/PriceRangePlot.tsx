@@ -2,8 +2,8 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import { Layer, ResponsiveLine } from '@nivo/line'
 // @ts-expect-error
 import { linearGradientDef } from '@nivo/core'
-import { colors } from '@static/theme'
-import { Button, Grid } from '@material-ui/core'
+import { colors, theme } from '@static/theme'
+import { Button, Grid, useMediaQuery } from '@material-ui/core'
 import classNames from 'classnames'
 import ZoomInIcon from '@static/svg/zoom-in-icon.svg'
 import ZoomOutIcon from '@static/svg/zoom-out-icon.svg'
@@ -41,6 +41,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   zoomPlus
 }) => {
   const classes = useStyles()
+
+  const isSmDown = useMediaQuery(theme.breakpoints.down('sm'))
 
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -142,7 +144,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
   return (
     <Grid container className={classNames(classes.container, className)} style={style} innerRef={containerRef}>
-      <Grid container item className={classNames(classes.zoomButtonsWrapper, 'zoomBtns')} direction='column' justifyContent='space-between'>
+      <Grid container item className={classNames(classes.zoomButtonsWrapper, 'zoomBtns')} justifyContent='space-between'>
         <Button className={classes.zoomButton} onClick={zoomPlus} disableRipple>
           <img src={ZoomInIcon} className={classes.zoomIcon}/>
         </Button>
@@ -166,7 +168,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           }
         ]}
         curve='basis'
-        margin={{ top: 25, bottom: 15 }}
+        margin={{ top: isSmDown ? 55 : 25, bottom: 15 }}
         colors={[
           colors.invariant.accent1,
           colors.invariant.accent2,
