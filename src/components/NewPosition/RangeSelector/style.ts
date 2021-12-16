@@ -23,7 +23,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   plot: {
     width: '100%',
-    height: 240
+    height: 240,
+
+    [theme.breakpoints.down('sm')]: {
+      height: 205
+    }
   },
   subheader: {
     ...typography.body2,

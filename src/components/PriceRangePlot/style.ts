@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles'
-import { colors, theme } from '@static/theme'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { colors } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
     height: '100%',
     position: 'relative',
@@ -9,6 +9,7 @@ const useStyles = makeStyles(() => ({
       stroke: 'none',
       fill: '#746E7C!important',
       fontFamily: 'Mukta!important',
+
       [theme.breakpoints.down('sm')]: {
         fontSize: '8px!important'
       }
@@ -17,7 +18,11 @@ const useStyles = makeStyles(() => ({
   zoomIcon: {
     width: 14,
     height: 'auto',
-    fill: '#000000'
+    fill: '#000000',
+
+    [theme.breakpoints.down('sm')]: {
+      width: 20
+    }
   },
   zoomButton: {
     minWidth: 0,
@@ -29,6 +34,11 @@ const useStyles = makeStyles(() => ({
 
     '&:hover': {
       backgroundColor: colors.invariant.logoGreen
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      width: 30,
+      height: 30
     }
   },
   zoomButtonsWrapper: {
@@ -37,7 +47,14 @@ const useStyles = makeStyles(() => ({
     right: 0,
     maxWidth: 21,
     height: 42,
-    zIndex: 10
+    zIndex: 10,
+    flexDirection: 'column',
+
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'row',
+      maxWidth: 72,
+      height: 30
+    }
   }
 }))
 
