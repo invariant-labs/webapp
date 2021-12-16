@@ -44,6 +44,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.componentIn1,
     height: 30,
     paddingInline: 5,
+    flex: '1 1 0%',
 
     '& $input': {
       textAlign: 'center'

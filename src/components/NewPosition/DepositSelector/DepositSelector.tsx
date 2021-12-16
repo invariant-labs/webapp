@@ -5,6 +5,7 @@ import { printBN, printBNtoBN } from '@consts/utils'
 import { Button, Grid, Typography } from '@material-ui/core'
 import React, { useState, useCallback, useEffect } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
+import classNames from 'classnames'
 import useStyles from './style'
 
 export interface InputState {
@@ -24,6 +25,7 @@ export interface IDepositSelector {
   tokenBInputState: InputState
   feeTiers: number[]
   isCurrentPoolExisting: boolean
+  className?: string
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -34,7 +36,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   tokenAInputState,
   tokenBInputState,
   feeTiers,
-  isCurrentPoolExisting
+  isCurrentPoolExisting,
+  className
 }) => {
   const classes = useStyles()
 
@@ -80,7 +83,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   }, [tokensB])
 
   return (
-    <Grid container direction='column' className={classes.wrapper}>
+    <Grid container direction='column' className={classNames(classes.wrapper, className)}>
       <Typography className={classes.sectionTitle}>Tokens</Typography>
       <Grid container className={classes.sectionWrapper} style={{ marginBottom: 8 }}>
         <Grid container className={classes.selects} direction='row' justifyContent='space-between'>

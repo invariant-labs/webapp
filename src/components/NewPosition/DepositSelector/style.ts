@@ -7,7 +7,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.componentOut4,
     padding: 24,
     paddingTop: 16,
-    width: 429
+    flex: '1 1 0%'
   },
   sectionTitle: {
     ...typography.body1,
@@ -31,7 +31,11 @@ const useStyles = makeStyles(() => ({
     marginBottom: 3
   },
   selectWrapper: {
-    width: 170
+    flex: '1 1 0%',
+
+    '&:first-child': {
+      marginRight: 8
+    }
   },
   customSelect: {
     width: '100%',

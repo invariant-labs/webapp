@@ -1,13 +1,13 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     borderRadius: 10,
     backgroundColor: colors.invariant.componentOut4,
     padding: 24,
     paddingTop: 16,
-    width: 429
+    flex: '1 1 0%'
   },
   header: {
     ...typography.body1,
@@ -31,19 +31,46 @@ const useStyles = makeStyles(() => ({
     color: colors.white.main
   },
   inputs: {
-    marginBottom: 15
+    marginBottom: 15,
+    flexDirection: 'row',
+
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column'
+    }
   },
   input: {
-    width: 169
+    flex: '1 1 0%',
+
+    '&:first-child': {
+      marginRight: 8
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      '&:first-child': {
+        marginRight: 0,
+        marginBottom: 8
+      }
+    }
   },
   button: {
-    width: 169,
+    flex: '1 1 0%',
     height: 25,
     ...typography.body3,
     color: colors.white.main,
     backgroundColor: colors.invariant.componentOut2,
     borderRadius: 3,
-    textTransform: 'none'
+    textTransform: 'none',
+
+    '&:first-child': {
+      marginRight: 8
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      '&:first-child': {
+        marginRight: 0,
+        marginBottom: 8
+      }
+    }
   },
   blocker: {
     position: 'absolute',
@@ -65,6 +92,13 @@ const useStyles = makeStyles(() => ({
   blockedInfo: {
     ...typography.heading4,
     color: colors.invariant.lightInfoText
+  },
+  buttons: {
+    flexDirection: 'row',
+
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column'
+    }
   }
 }))
 

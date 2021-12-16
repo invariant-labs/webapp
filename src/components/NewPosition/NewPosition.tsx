@@ -115,9 +115,10 @@ export const INewPosition: React.FC<INewPosition> = ({
 
       <Typography className={classes.title}>Add new liquidity position</Typography>
 
-      <Grid container direction='row' justifyContent='space-between' className={classes.row}>
+      <Grid container className={classes.row}>
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
+          className={classes.deposit}
           tokens={tokens}
           tokensB={tokensB}
           setPositionTokens={(index1, index2, fee) => {
