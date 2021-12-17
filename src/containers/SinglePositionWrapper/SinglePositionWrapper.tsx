@@ -26,17 +26,14 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
-  const { lowerTick, upperTick } = useSelector(currentPositionRangeTicks)
+  const { lowerTick, upperTick, loading: rangeTicksLoading } = useSelector(currentPositionRangeTicks)
   useEffect(() => {
-    if (position && ticksData.length === 0) {
+    if (position?.id) {
+      dispatch(actions.getCurrentPositionRangeTicks(id))
       dispatch(actions.getCurrentPlotTicks({
         poolIndex: position.poolData.poolIndex,
         isXtoY: true
       }))
-    }
-
-    if (position) {
-      dispatch(actions.getCurrentPositionRangeTicks(id))
     }
   }, [position?.id])
 
@@ -113,7 +110,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }, [position, lowerTick, upperTick])
 
   return (
-    !isLoadingList && !ticksLoading && position && ticksData.length
+    !isLoadingList && !ticksLoading && !rangeTicksLoading && position
       ? (
         <PositionDetails
           detailsData={ticksData}
@@ -162,9 +159,13 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         />
       )
       : (
-        isLoadingList || ticksLoading
+        isLoadingList || ticksLoading || rangeTicksLoading
           ? <Typography className={classes.placeholderText}>Loading...</Typography>
-          : <Typography className={classes.placeholderText}>Position does not exist in your list.</Typography>
+          : (
+            !position
+              ? <Typography className={classes.placeholderText}>Position does not exist in your list.</Typography>
+              : null
+          )
       )
   )
 }

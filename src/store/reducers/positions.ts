@@ -23,13 +23,16 @@ export interface InitPositionStore {
   inProgress: boolean
   success: boolean
 }
+
+export interface CurrentPositionRangeTicksStore {
+  lowerTick?: Tick
+  upperTick?: Tick
+  loading: boolean
+}
 export interface IPositionsStore {
   plotTicks: PlotTicks
   positionsList: PositionsListStore
-  currentPositionRangeTicks: {
-    lowerTick?: Tick
-    upperTick?: Tick
-  }
+  currentPositionRangeTicks: CurrentPositionRangeTicksStore
   initPosition: InitPositionStore
 }
 
@@ -71,7 +74,8 @@ export const defaultState: IPositionsStore = {
   },
   currentPositionRangeTicks: {
     lowerTick: undefined,
-    upperTick: undefined
+    upperTick: undefined,
+    loading: false
   },
   initPosition: {
     inProgress: false,
@@ -122,10 +126,14 @@ const positionsSlice = createSlice({
       return state
     },
     getCurrentPositionRangeTicks(state, _action: PayloadAction<string>) {
+      state.currentPositionRangeTicks.loading = true
       return state
     },
     setCurrentPositionRangeTicks(state, action: PayloadAction<{ lowerTick: Tick, upperTick: Tick }>) {
-      state.currentPositionRangeTicks = action.payload
+      state.currentPositionRangeTicks = {
+        ...action.payload,
+        loading: false
+      }
       return state
     },
     claimFee(state, _action: PayloadAction<number>) {
