@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     backgroundColor: 'transparent',
     paddingInline: 200,
-    marginTop: 65,
+    marginTop: 45,
     minHeight: '70vh',
 
     [theme.breakpoints.down('md')]: {

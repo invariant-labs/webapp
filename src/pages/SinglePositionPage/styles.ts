@@ -3,7 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     backgroundColor: 'transparent',
-    marginTop: 65,
+    marginTop: 45,
     paddingInline: 138,
     minHeight: '70vh',
 

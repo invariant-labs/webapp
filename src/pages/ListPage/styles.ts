@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    marginTop: 65,
+    marginTop: 45,
     paddingInline: 94,
     minHeight: '70vh',
 
