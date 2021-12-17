@@ -59,8 +59,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 10,
 
     '& .zoomBtns': {
-      top: 15,
-      right: 15
+      top: 10,
+      right: 10
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      height: 253
     }
   }
 }))
