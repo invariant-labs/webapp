@@ -15,6 +15,7 @@ storiesOf('positionsList/item', module)
         max={149.6}
         fee={0.05}
         value={10000.45}
+        id='dd'
       />
     )
   })
