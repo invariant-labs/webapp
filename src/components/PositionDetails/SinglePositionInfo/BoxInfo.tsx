@@ -1,6 +1,7 @@
 import React from 'react'
-import useStyles from './style'
 import { Button, Grid, Typography } from '@material-ui/core'
+import AnimatedNumber from '@components/AnimatedNumber'
+import useStyles from './style'
 
 export const BoxInfo: React.FC<{
   tokenXName: string
@@ -39,7 +40,9 @@ export const BoxInfo: React.FC<{
             <img className={classes.iconSmall} src={tokenXIcon} alt={tokenXName} />
             <Typography className={classes.tokenName}>{tokenXName}</Typography>
           </Grid>
-          <Typography className={classes.tokenValue}>{tokenXValue}</Typography>
+          <Typography className={classes.tokenValue}>
+            <AnimatedNumber value={tokenXValue} duration={300} />
+          </Typography>
         </Grid>
 
         <Grid className={classes.tokenArea}>
@@ -47,7 +50,9 @@ export const BoxInfo: React.FC<{
             <img className={classes.iconSmall} src={tokenYIcon} alt={tokenYName} />
             <Typography className={classes.tokenName}>{tokenYName}</Typography>
           </Grid>
-          <Typography className={classes.tokenValue}>{tokenYValue}</Typography>
+          <Typography className={classes.tokenValue}>
+            <AnimatedNumber value={tokenYValue} duration={300} />
+          </Typography>
         </Grid>
       </Grid>
     </Grid>
