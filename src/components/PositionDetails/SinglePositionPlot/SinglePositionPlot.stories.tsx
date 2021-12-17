@@ -51,7 +51,9 @@ storiesOf('singlePosition/rightComponent', module)
           tokenYName: 'SNY',
           min: 2149.6,
           max: 149.6,
-          fee: 0.05
+          fee: 0.05,
+          tokenXDecimal: 6,
+          tokenYDecimal: 6
         }}
       />
     )

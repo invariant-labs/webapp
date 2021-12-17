@@ -1,13 +1,13 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    width: '100%',
     backgroundColor: colors.invariant.componentOut4,
     padding: 24,
     paddingTop: 18,
-    borderRadius: 10,
-    width: 519
+    borderRadius: 10
   },
   header: {
     ...typography.body1,
@@ -21,7 +21,12 @@ const useStyles = makeStyles(() => ({
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gridGap: '15px',
-    paddingBottom: 25
+    paddingBottom: 25,
+
+    [theme.breakpoints.down('xs')]: {
+      gridTemplateColumns: '1fr',
+      gridGap: '8px'
+    }
   },
   currentPriceLabel: {
     backgroundColor: colors.invariant.componentOut3,
@@ -48,14 +53,18 @@ const useStyles = makeStyles(() => ({
     }
   },
   plot: {
-    width: 471,
+    width: '100%',
     height: 207,
     backgroundColor: colors.invariant.componentIn2,
     borderRadius: 10,
 
     '& .zoomBtns': {
-      top: 15,
-      right: 15
+      top: 10,
+      right: 10
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      height: 253
     }
   }
 }))

@@ -9,6 +9,8 @@ export interface ILiquidityItem {
   tokenXIcon: string
   tokenYName: string
   tokenYIcon: string
+  tokenXDecimal: number
+  tokenYDecimal: number
   fee: number
   min: number
   max: number
@@ -69,8 +71,10 @@ const SinglePositionInfo: React.FC<IProp> = ({
           title={'Liquidity'}
           tokenXName={data.tokenXName}
           tokenXIcon={data.tokenXIcon}
+          tokenXDecimal={data.tokenXDecimal}
           tokenYName={data.tokenYName}
           tokenYIcon={data.tokenYIcon}
+          tokenYDecimal={data.tokenYDecimal}
           tokenXValue={tokenXLiqValue}
           tokenYValue={tokenYLiqValue}
         />
@@ -78,8 +82,10 @@ const SinglePositionInfo: React.FC<IProp> = ({
           title={'Unclaimed fees'}
           tokenXName={data.tokenXName}
           tokenXIcon={data.tokenXIcon}
+          tokenXDecimal={data.tokenXDecimal}
           tokenYName={data.tokenYName}
           tokenYIcon={data.tokenYIcon}
+          tokenYDecimal={data.tokenXDecimal}
           onClickButton={onClickClaimFee}
           tokenXValue={tokenXClaimValue}
           tokenYValue={tokenYClaimValue}

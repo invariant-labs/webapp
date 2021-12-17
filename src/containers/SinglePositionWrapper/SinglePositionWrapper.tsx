@@ -26,17 +26,14 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
-  const { lowerTick, upperTick } = useSelector(currentPositionRangeTicks)
+  const { lowerTick, upperTick, loading: rangeTicksLoading } = useSelector(currentPositionRangeTicks)
   useEffect(() => {
-    if (position && ticksData.length === 0) {
+    if (position?.id) {
+      dispatch(actions.getCurrentPositionRangeTicks(id))
       dispatch(actions.getCurrentPlotTicks({
         poolIndex: position.poolData.poolIndex,
         isXtoY: true
       }))
-    }
-
-    if (position) {
-      dispatch(actions.getCurrentPositionRangeTicks(id))
     }
   }, [position?.id])
 
@@ -112,24 +109,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     return [0, 0]
   }, [position, lowerTick, upperTick])
 
-  const maxDecimals = (value: number): number => {
-    if (value >= 10000) {
-      return 0
-    }
-
-    if (value >= 1000) {
-      return 1
-    }
-
-    if (value >= 100) {
-      return 2
-    }
-
-    return 5
-  }
-
   return (
-    !isLoadingList && !ticksLoading && position && ticksData.length
+    !isLoadingList && !ticksLoading && !rangeTicksLoading && position
       ? (
         <PositionDetails
           detailsData={ticksData}
@@ -169,16 +150,22 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             tokenYName: position.tokenY.symbol,
             tokenXIcon: position.tokenX.logoURI,
             tokenYIcon: position.tokenY.logoURI,
+            tokenXDecimal: position.tokenX.decimal,
+            tokenYDecimal: position.tokenY.decimal,
             fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
-            min: +(min.toFixed(maxDecimals(min))),
-            max: +(max.toFixed(maxDecimals(max)))
+            min,
+            max
           }}
         />
       )
       : (
-        isLoadingList || ticksLoading
+        isLoadingList || ticksLoading || rangeTicksLoading
           ? <Typography className={classes.placeholderText}>Loading...</Typography>
-          : <Typography className={classes.placeholderText}>Position does not exist in your list.</Typography>
+          : (
+            !position
+              ? <Typography className={classes.placeholderText}>Position does not exist in your list.</Typography>
+              : null
+          )
       )
   )
 }
