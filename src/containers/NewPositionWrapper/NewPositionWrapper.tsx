@@ -47,17 +47,17 @@ export const NewPositionWrapper = () => {
     }
   }, [success, inProgress])
 
+  const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
+
   const midPriceIndex = useMemo(() => {
-    if (poolIndex !== null) {
+    if (poolIndex !== null && !ticksLoading) {
       const index = ticksData.findIndex((tick) => tick.index === allPools[poolIndex].currentTickIndex)
 
       return index === -1 ? 0 : index
     }
 
     return 0
-  }, [ticksData.length, poolIndex])
-
-  const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
+  }, [ticksLoading, poolIndex, tokenAIndex])
 
   const tokensB = useMemo(() => {
     if (tokenAIndex === null) {
