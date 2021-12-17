@@ -3,27 +3,22 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   button: {
-    borderRadius: 10,
-    width: 381,
-    height: 35,
+    height: 40,
+    borderRadius: 5,
     textAlign: 'center',
     textTransform: 'none',
     ...typography.body1,
     backgroundColor: colors.invariant.accent1,
     color: colors.white.main,
     transition: 'background-color 0ms ease',
-    padding: '10px 19px',
     position: 'relative',
     overflow: 'hidden',
-    zIndex: 4,
-    '&:hover': {
-      backgroundColor: colors.invariant.componentOut4
-    }
+    zIndex: 4
   },
   buttonRelease: {
     backgroundColor: colors.invariant.componentOut4,
     '&:hover': {
-      backgroundColor: colors.invariant.componentOut4
+      backgroundColor: `${colors.invariant.componentOut4} !important`
     }
   },
   '@keyframes slide-start': {
@@ -70,9 +65,11 @@ const useStyles = makeStyles(() => ({
   backgroundApproved: {
     top: 0,
     left: '-50%',
+    width: '100%',
+    height: '100%',
     padding: 0,
     position: 'absolute',
-    animation: '$slide-end 2s',
+    animation: '$slide-end 1.5s',
     animationFillMode: 'forwards'
   },
   buttonContent: {

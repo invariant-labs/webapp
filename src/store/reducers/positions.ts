@@ -18,13 +18,22 @@ export interface PlotTicks {
   loading: boolean
   maxReached: boolean
 }
+
+export interface InitPositionStore {
+  inProgress: boolean
+  success: boolean
+}
+
+export interface CurrentPositionRangeTicksStore {
+  lowerTick?: Tick
+  upperTick?: Tick
+  loading: boolean
+}
 export interface IPositionsStore {
   plotTicks: PlotTicks
   positionsList: PositionsListStore
-  currentPositionRangeTicks: {
-    lowerTick?: Tick
-    upperTick?: Tick
-  }
+  currentPositionRangeTicks: CurrentPositionRangeTicksStore
+  initPosition: InitPositionStore
 }
 
 export interface InitPositionData extends Omit<InitPosition, 'owner' | 'userTokenX' | 'userTokenY' | 'pair'> {
@@ -65,7 +74,12 @@ export const defaultState: IPositionsStore = {
   },
   currentPositionRangeTicks: {
     lowerTick: undefined,
-    upperTick: undefined
+    upperTick: undefined,
+    loading: false
+  },
+  initPosition: {
+    inProgress: false,
+    success: false
   }
 }
 
@@ -75,6 +89,12 @@ const positionsSlice = createSlice({
   initialState: defaultState,
   reducers: {
     initPosition(state, _action: PayloadAction<InitPositionData>) {
+      state.initPosition.inProgress = true
+      return state
+    },
+    setInitPositionSuccess(state, action: PayloadAction<boolean>) {
+      state.initPosition.inProgress = false
+      state.initPosition.success = action.payload
       return state
     },
     setPlotTicks(state, action: PayloadAction<SetCurrentTicksData>) {
@@ -106,10 +126,14 @@ const positionsSlice = createSlice({
       return state
     },
     getCurrentPositionRangeTicks(state, _action: PayloadAction<string>) {
+      state.currentPositionRangeTicks.loading = true
       return state
     },
     setCurrentPositionRangeTicks(state, action: PayloadAction<{ lowerTick: Tick, upperTick: Tick }>) {
-      state.currentPositionRangeTicks = action.payload
+      state.currentPositionRangeTicks = {
+        ...action.payload,
+        loading: false
+      }
       return state
     },
     claimFee(state, _action: PayloadAction<number>) {

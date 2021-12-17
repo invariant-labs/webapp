@@ -37,6 +37,7 @@ export const useSingleTabStyles = makeStyles(() => ({
     height: 28,
     minHeight: 28,
     color: colors.invariant.componentOut3,
+    paddingInline: 0,
 
     '&:hover': {
       color: colors.invariant.lightInfoText

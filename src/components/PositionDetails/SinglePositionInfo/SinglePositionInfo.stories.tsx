@@ -23,6 +23,8 @@ storiesOf('singlePosition/leftComponent', module)
           tokenXName: 'BTC',
           tokenXIcon: tokens[0].logoURI,
           tokenYIcon: tokens[1].logoURI,
+          tokenXDecimal: 6,
+          tokenYDecimal: 6,
           tokenYName: 'SNY',
           min: 2149.6,
           max: 149.6,
@@ -45,6 +47,8 @@ storiesOf('singlePosition/leftComponent', module)
           tokenXIcon: tokens[0].logoURI,
           tokenYIcon: tokens[1].logoURI,
           tokenYName: 'SNY',
+          tokenXDecimal: 6,
+          tokenYDecimal: 6,
           min: 2149.6,
           max: 149.6,
           fee: 0.05
