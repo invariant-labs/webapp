@@ -153,6 +153,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             tokenYName: position.tokenY.symbol,
             tokenXIcon: position.tokenX.logoURI,
             tokenYIcon: position.tokenY.logoURI,
+            tokenXDecimal: position.tokenX.decimal,
+            tokenYDecimal: position.tokenY.decimal,
             fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
             min,
             max

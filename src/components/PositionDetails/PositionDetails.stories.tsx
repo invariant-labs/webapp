@@ -64,6 +64,8 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
           tokenXIcon: tokens[0].logoURI,
           tokenYName: 'SNY',
           tokenYIcon: tokens[1].logoURI,
+          tokenXDecimal: 6,
+          tokenYDecimal: 6,
           min: 2149.6,
           max: 149.6,
           fee: 0.05
