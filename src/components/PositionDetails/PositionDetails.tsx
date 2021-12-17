@@ -47,7 +47,7 @@ const PositionDetails: React.FC<IProps> = ({
   const history = useHistory()
 
   return (
-    <Grid container className={classes.wrapperContainer}>
+    <Grid container className={classes.wrapperContainer} wrap='nowrap'>
       <Grid className={classes.positionDetails} container item direction='column'>
         <Link to='/pool' style={{ textDecoration: 'none' }}>
           <Grid

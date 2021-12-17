@@ -15,8 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 24,
 
     [theme.breakpoints.down('md')]: {
-      width: '100%',
-      flex: '1 1 0%'
+      width: '100%'
     },
 
     [theme.breakpoints.down('sm')]: {
@@ -27,8 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   right: {
     width: 517,
     [theme.breakpoints.down('md')]: {
-      width: '100%',
-      flex: '1 1 0%'
+      width: '100%'
     }
   },
   back: {
