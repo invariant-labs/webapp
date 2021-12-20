@@ -56,17 +56,7 @@ const useStyles = makeStyles(() => ({
   },
   addButton: {
     width: '100%',
-    marginTop: 18,
-
-    '&:hover': {
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`,
-      backgroundColor: colors.invariant.accent1
-    },
-
-    '&:disabled': {
-      backgroundColor: colors.invariant.componentOut3,
-      color: colors.invariant.lightInfoText
-    }
+    marginTop: 18
   }
 }))
 

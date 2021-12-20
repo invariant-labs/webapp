@@ -63,8 +63,10 @@ export function* handleSwap(): Generator {
 
     const signedTx = yield* call([wallet, wallet.signTransaction], swapTx)
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
-      skipPreflight: true
+      skipPreflight: false
     })
+
+    yield put(actions.setSwapSuccess(!!txid.length))
 
     if (!txid.length) {
       yield put(
@@ -87,6 +89,9 @@ export function* handleSwap(): Generator {
     }
   } catch (error) {
     console.log(error)
+
+    yield put(actions.setSwapSuccess(false))
+
     yield put(
       snackbarsActions.add({
         message: 'Failed to send. Please try again.',

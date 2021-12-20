@@ -56,7 +56,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
-      skipPreflight: true
+      skipPreflight: false
     })
 
     yield put(actions.setInitPositionSuccess(!!txid.length))
@@ -218,7 +218,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
-      skipPreflight: true
+      skipPreflight: false
     })
 
     if (!txid.length) {
@@ -301,7 +301,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
-      skipPreflight: true
+      skipPreflight: false
     })
 
     yield* call(sleep, 3000)

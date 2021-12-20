@@ -2,6 +2,7 @@ import { createTheme } from '@material-ui/core/styles'
 
 export const colors = {
   black: {
+    full: '#000000',
     background: '#1B1C2A', // v2.0
     light: '#090B1B',
     kinda: '#1A1A1A',

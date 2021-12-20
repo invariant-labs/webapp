@@ -26,7 +26,7 @@ const TransactionDetails: React.FC<IProps> = ({ open, fee, exchangeRate }) => {
   const percent = percentValueDisplay(fee)
   const classes = useStyles()
   return (
-    <Grid container className={classes.transactionDetailsInfo} style={{ opacity: open ? '1' : '0', zIndex: open ? 1 : 0 }}>
+    <Grid container className={classes.transactionDetailsInfo} style={{ opacity: open ? '1' : '0', zIndex: open ? 10 : 0 }}>
       <Grid className={classes.detailsInfoWrapper}>
         <Typography component='h2'>Transaction details</Typography>
         <Typography component='p'>
