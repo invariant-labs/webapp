@@ -142,14 +142,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   swapButton: {
     width: '100%',
-    height: 48,
-    ...typography.body1,
-    color: colors.white.main,
-    cursor: 'pointer',
-    '&:hover': {
-      backgroundColor: `${colors.invariant.accent1}`,
-      boxShadow: '0px 0px 20px -10px white'
-    }
+    height: 48
   }
 }))
 

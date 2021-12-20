@@ -13,6 +13,8 @@ export interface Swap {
   slippage: Decimal,
   price: Decimal
   txid?: string
+  inProgress?: boolean
+  success?: boolean
 }
 
 export interface ISwapStore {
@@ -26,7 +28,9 @@ export const defaultState: ISwapStore = {
     amount: new BN(0),
     slippage: { v: fromFee(new BN(1000)) },
     price: { v: new BN(1) },
-    txid: 'test'
+    txid: 'test',
+    inProgress: false,
+    success: false
   }
 }
 
@@ -36,7 +40,15 @@ const swapSlice = createSlice({
   initialState: defaultState,
   reducers: {
     swap(state, action: PayloadAction<Omit<Swap, 'txid'>>) {
-      state.swap = action.payload
+      state.swap = {
+        ...action.payload,
+        inProgress: true
+      }
+      return state
+    },
+    setSwapSuccess(state, action: PayloadAction<boolean>) {
+      state.swap.inProgress = false
+      state.swap.success = action.payload
       return state
     }
   }
