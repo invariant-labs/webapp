@@ -337,6 +337,15 @@ export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): 
     case WalletType.SOLFLARE:
       enumWallet = 'solflare'
       break
+    case WalletType.COIN98:
+      enumWallet = 'coin98'
+      break
+    case WalletType.SLOPE:
+      enumWallet = 'slope'
+      break
+    case WalletType.CLOVER:
+      enumWallet = 'clover'
+      break
     default:
       enumWallet = 'phantom'
   }
