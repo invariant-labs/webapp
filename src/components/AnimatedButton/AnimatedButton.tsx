@@ -5,7 +5,7 @@ import errorGif from '@static/gif/errorAnimation.gif'
 import classNames from 'classnames'
 import useStyles from './style'
 
-export type ProgressState = 'progress' | 'approved' | 'success' | 'failed' | 'none'
+export type ProgressState = 'progress' | 'approvedWithSuccess' | 'approvedWithFail' | 'success' | 'failed' | 'none'
 
 interface Props {
   content: string
@@ -29,7 +29,7 @@ const AnimatedButton: React.FC<Props> = ({
       return <p className={classes.buttonContent}>{content}</p>
     }
 
-    if (progress === 'progress' || progress === 'approved') {
+    if (progress === 'progress' || progress === 'approvedWithSuccess' || progress === 'approvedWithFail') {
       return <p className={classes.buttonContent}>In progress..</p>
     }
 
@@ -44,8 +44,11 @@ const AnimatedButton: React.FC<Props> = ({
     if (progress === 'progress') {
       return `${classes.button} ${classes.backgroundRelease}`
     }
-    if (progress === 'approved') {
-      return `${classes.button} ${classes.backgroundApproved}`
+    if (progress === 'approvedWithSuccess') {
+      return `${classes.button} ${classes.backgroundApprovedWithSuccess}`
+    }
+    if (progress === 'approvedWithFail') {
+      return `${classes.button} ${classes.backgroundApprovedWithFail}`
     }
     return ''
   }
@@ -54,7 +57,12 @@ const AnimatedButton: React.FC<Props> = ({
       <Button
         disabled={disabled}
         variant='contained'
-        className={classNames(classes.button, progress === 'progress' || progress === 'approved' ? classes.buttonRelease : undefined, className)}
+        className={classNames(
+          classes.button,
+          progress === 'progress' || progress === 'approvedWithSuccess' || progress === 'approvedWithFail' || progress === 'failed'
+            ? classes.buttonRelease
+            : undefined,
+          className)}
         onClick={onClick}
       >
         <div className={getClasses()} >

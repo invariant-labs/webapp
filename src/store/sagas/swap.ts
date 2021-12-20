@@ -66,6 +66,8 @@ export function* handleSwap(): Generator {
       skipPreflight: false
     })
 
+    yield put(actions.setSwapSuccess(!!txid.length))
+
     if (!txid.length) {
       yield put(
         snackbarsActions.add({
@@ -87,6 +89,9 @@ export function* handleSwap(): Generator {
     }
   } catch (error) {
     console.log(error)
+
+    yield put(actions.setSwapSuccess(false))
+
     yield put(
       snackbarsActions.add({
         message: 'Failed to send. Please try again.',
