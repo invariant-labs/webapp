@@ -79,6 +79,8 @@ export const Swap: React.FC<ISwap> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
 
+  const [rotates, setRotates] = React.useState<number>(0)
+
   enum feeOption {
     FEE = 'fee',
     REVERSED = 'reversed'
@@ -289,14 +291,12 @@ export const Swap: React.FC<ISwap> = ({
             <img src={SwapArrows}
               style={
                 {
-                  transform: swap !== null
-                    ? swap
-                      ? 'rotate(180deg)'
-                      : 'rotate(0deg)'
-                    : ''
+                  transform: `rotate(${rotates * 180}deg)`
                 }
               }
-              className={classes.swapArrows} onClick={() => {
+              className={classes.swapArrows}
+              onClick={() => {
+                setRotates(rotates + 1)
                 swap !== null
                   ? setSwap(!swap)
                   : setSwap(true)

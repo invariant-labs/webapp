@@ -8,7 +8,6 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     ...typography.body1,
     backgroundColor: colors.invariant.accent1,
-    transition: 'all 500ms ease',
     padding: '10px 14px',
     '&:hover': {
       backgroundColor: colors.invariant.accent2
