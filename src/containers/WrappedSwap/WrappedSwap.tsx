@@ -17,7 +17,6 @@ export const WrappedSwap = () => {
   const [progress, setProgress] = useState<ProgressState>('none')
 
   useEffect(() => {
-    console.log('dupa')
     if (!inProgress && progress === 'progress') {
       setProgress('approved')
 
@@ -34,6 +33,7 @@ export const WrappedSwap = () => {
   return (
     <Swap
       onSwap={(fromToken, toToken, amount, slippage, price) => {
+        setProgress('progress')
         dispatch(
           actions.swap({
             fromToken,
