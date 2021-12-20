@@ -13,7 +13,17 @@ const useStyles = makeStyles(() => ({
     transition: 'background-color 0ms ease',
     position: 'relative',
     overflow: 'hidden',
-    zIndex: 4
+    zIndex: 4,
+
+    '&:hover': {
+      backgroundColor: `${colors.invariant.accent1}`,
+      boxShadow: '0px 0px 20px -10px white'
+    },
+
+    '&:disabled': {
+      backgroundColor: colors.invariant.componentOut3,
+      color: colors.invariant.background2
+    }
   },
   buttonRelease: {
     backgroundColor: colors.invariant.componentOut4,
