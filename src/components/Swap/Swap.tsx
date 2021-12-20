@@ -236,7 +236,7 @@ export const Swap: React.FC<ISwap> = ({
       <Grid container className={classes.header}>
         <Typography component='h1'>Swap tokens</Typography>
         <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
-          <CardMedia image={settingIcon} className={classes.settingsIcon} />
+          <img src={settingIcon} className={classes.settingsIcon} />
         </Button>
         <Grid className={classes.slippage}>
           <Slippage open={settings}
