@@ -1,32 +1,31 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: '970px',
-    minHeight: '70vh'
+    width: 1122,
+
+    [theme.breakpoints.down('md')]: {
+      width: '100%'
+    }
   },
   header: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingBottom: '30px'
+    paddingBottom: 30
   },
   title: {
     color: colors.white.main,
     ...typography.heading4,
-    fontWeight: 500,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    fontWeight: 500
   },
   button: {
     color: colors.white.main,
     ...typography.body1,
     textTransform: 'none',
     background: colors.invariant.accent1,
-    borderRadius: '10px',
+    borderRadius: 10,
     height: 40,
+    width: 130,
+    paddingInline: 0,
 
     '&:hover': {
       background: colors.invariant.accent1,
@@ -43,6 +42,19 @@ const useStyles = makeStyles(() => ({
   },
   list: {
     position: 'relative'
+  },
+  itemLink: {
+    textDecoration: 'none',
+
+    '&:not(:last-child)': {
+      display: 'block',
+      marginBottom: 20,
+
+      [theme.breakpoints.down('sm')]: {
+        marginBottom: 16
+      }
+    }
   }
 }))
+
 export default useStyles

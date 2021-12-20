@@ -3,27 +3,32 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   button: {
-    borderRadius: 10,
-    width: 381,
-    height: 35,
+    height: 40,
+    borderRadius: 5,
     textAlign: 'center',
     textTransform: 'none',
     ...typography.body1,
     backgroundColor: colors.invariant.accent1,
     color: colors.white.main,
     transition: 'background-color 0ms ease',
-    padding: '10px 19px',
     position: 'relative',
     overflow: 'hidden',
     zIndex: 4,
+
     '&:hover': {
-      backgroundColor: colors.invariant.componentOut4
+      backgroundColor: `${colors.invariant.accent1}`,
+      boxShadow: '0px 0px 20px -10px white'
+    },
+
+    '&:disabled': {
+      backgroundColor: colors.invariant.componentOut3,
+      color: colors.invariant.background2
     }
   },
   buttonRelease: {
     backgroundColor: colors.invariant.componentOut4,
     '&:hover': {
-      backgroundColor: colors.invariant.componentOut4
+      backgroundColor: `${colors.invariant.componentOut4} !important`
     }
   },
   '@keyframes slide-start': {
@@ -34,7 +39,7 @@ const useStyles = makeStyles(() => ({
       left: '-50%'
     }
   },
-  '@keyframes slide-end': {
+  '@keyframes slide-end-success': {
     '0%': {
       left: '-50%'
     },
@@ -43,6 +48,17 @@ const useStyles = makeStyles(() => ({
     },
     '100%': {
       left: 0
+    }
+  },
+  '@keyframes slide-end-fail': {
+    '0%': {
+      left: '-50%'
+    },
+    '80%': {
+      left: '-65%'
+    },
+    '100%': {
+      left: '-100%'
     }
   },
   background: {
@@ -67,12 +83,24 @@ const useStyles = makeStyles(() => ({
     transition: 'all .2s',
     backgroundColor: colors.invariant.accent1
   },
-  backgroundApproved: {
+  backgroundApprovedWithSuccess: {
     top: 0,
     left: '-50%',
+    width: '100%',
+    height: '100%',
     padding: 0,
     position: 'absolute',
-    animation: '$slide-end 2s',
+    animation: '$slide-end-success 1.5s',
+    animationFillMode: 'forwards'
+  },
+  backgroundApprovedWithFail: {
+    top: 0,
+    left: '-50%',
+    width: '100%',
+    height: '100%',
+    padding: 0,
+    position: 'absolute',
+    animation: '$slide-end-fail 1.5s',
     animationFillMode: 'forwards'
   },
   buttonContent: {

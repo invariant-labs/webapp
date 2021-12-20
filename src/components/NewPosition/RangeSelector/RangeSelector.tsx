@@ -117,7 +117,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           zoomPlus={zoomPlus}
         />
         <Typography className={classes.subheader}>Set price range</Typography>
-        <Grid container direction='row' justifyContent='space-between' className={classes.inputs}>
+        <Grid container className={classes.inputs}>
           <RangeInput
             className={classes.input}
             label='Min price'
@@ -153,7 +153,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             }}
           />
         </Grid>
-        <Grid container direction='row' justifyContent='space-between'>
+        <Grid container className={classes.buttons}>
           <Button
             className={classes.button}
             onClick={resetPlot}

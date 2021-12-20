@@ -53,5 +53,6 @@ storiesOf('position/depositSelector', module).add('deposit', () => (
     }}
     feeTiers={[0.05, 0.3, 1]}
     isCurrentPoolExisting={true}
+    progress='none'
   />
 ))
