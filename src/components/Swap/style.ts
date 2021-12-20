@@ -59,7 +59,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     background: colors.invariant.componentOut4,
     borderRadius: 10,
-    padding: '22px 24px',
+    paddingInline: 24,
+    paddingBottom: 22,
+    paddingTop: 16,
     width: 500
   },
   tokenComponentTextContainer: {
@@ -92,7 +94,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     left: '50%',
     top: '0%',
     transform: 'translateX(-50%) translateY(-40%)',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    transition: 'background-color 200ms',
+
+    '&:hover': {
+      backgroundColor: colors.invariant.componentOut3
+    }
   },
   swapArrows: {
     width: 32,
