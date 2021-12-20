@@ -163,7 +163,7 @@ export function* getCollateralTokenAirdrop(
   tx.sign(airdropAdmin)
   const signedTx = yield* call([wallet, wallet.signTransaction], tx)
   yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
-    skipPreflight: false
+    skipPreflight: true
   })
 
   console.log('Token Airdroped')
