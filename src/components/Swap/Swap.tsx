@@ -307,7 +307,7 @@ export const Swap: React.FC<ISwap> = ({
             <img src={SwapArrows}
               style={
                 {
-                  transform: `rotate(${rotates * 180}deg)`
+                  transform: `rotate(${-rotates * 180}deg)`
                 }
               }
               className={classes.swapArrows}
