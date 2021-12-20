@@ -18,7 +18,7 @@ export const WrappedSwap = () => {
 
   useEffect(() => {
     if (!inProgress && progress === 'progress') {
-      setProgress('approved')
+      setProgress(success ? 'approvedWithSuccess' : 'approvedWithFail')
 
       setTimeout(() => {
         setProgress(success ? 'success' : 'failed')

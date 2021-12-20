@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
       left: '-50%'
     }
   },
-  '@keyframes slide-end': {
+  '@keyframes slide-end-success': {
     '0%': {
       left: '-50%'
     },
@@ -48,6 +48,17 @@ const useStyles = makeStyles(() => ({
     },
     '100%': {
       left: 0
+    }
+  },
+  '@keyframes slide-end-fail': {
+    '0%': {
+      left: '-50%'
+    },
+    '80%': {
+      left: '-65%'
+    },
+    '100%': {
+      left: '-100%'
     }
   },
   background: {
@@ -72,14 +83,24 @@ const useStyles = makeStyles(() => ({
     transition: 'all .2s',
     backgroundColor: colors.invariant.accent1
   },
-  backgroundApproved: {
+  backgroundApprovedWithSuccess: {
     top: 0,
     left: '-50%',
     width: '100%',
     height: '100%',
     padding: 0,
     position: 'absolute',
-    animation: '$slide-end 1.5s',
+    animation: '$slide-end-success 1.5s',
+    animationFillMode: 'forwards'
+  },
+  backgroundApprovedWithFail: {
+    top: 0,
+    left: '-50%',
+    width: '100%',
+    height: '100%',
+    padding: 0,
+    position: 'absolute',
+    animation: '$slide-end-fail 1.5s',
     animationFillMode: 'forwards'
   },
   buttonContent: {
