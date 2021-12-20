@@ -63,7 +63,7 @@ export function* handleSwap(): Generator {
 
     const signedTx = yield* call([wallet, wallet.signTransaction], swapTx)
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
-      skipPreflight: true
+      skipPreflight: false
     })
 
     if (!txid.length) {
