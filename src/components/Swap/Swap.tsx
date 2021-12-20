@@ -246,7 +246,7 @@ export const Swap: React.FC<ISwap> = ({
       </Grid>
       <Grid container className={classes.root} direction='column'>
         <Box className={classes.tokenComponentTextContainer}>
-          <Typography className={classes.tokenComponentText}>Est.: </Typography>
+          <Typography className={classes.tokenComponentText}>From: </Typography>
           <Typography className={classes.tokenComponentText}>
           Balance: {tokenFromIndex !== null
               ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal) : '0'}
@@ -286,7 +286,7 @@ export const Swap: React.FC<ISwap> = ({
         />
         <Box className={classes.tokenComponentTextContainer}>
           <Box className={classes.swapArrowBox}>
-            <CardMedia image={SwapArrows}
+            <img src={SwapArrows}
               style={
                 {
                   transform: swap !== null

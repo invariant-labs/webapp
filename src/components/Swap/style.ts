@@ -84,20 +84,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   swapArrowBox: {
     backgroundColor: colors.invariant.componentOut2,
-    padding: '10px 10px',
-    width: 'max-content',
+    width: 50,
+    height: 50,
     borderRadius: '50%',
     position: 'absolute',
     zIndex: 2,
     left: '50%',
     top: '0%',
-    transform: 'translateX(-50%) translateY(-45%)',
+    transform: 'translateX(-50%) translateY(-40%)',
     cursor: 'pointer'
   },
   swapArrows: {
-    width: 42,
-    height: 33,
-    margin: 4,
+    width: 32,
+    height: 24,
+    marginBlock: 13,
+    marginInline: 9,
     transition: '.4s all'
   },
   rateText: {
