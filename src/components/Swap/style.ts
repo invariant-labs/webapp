@@ -46,7 +46,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   settingsIcon: {
     width: 20,
     height: 20,
-    cursor: 'pointer'
+    cursor: 'pointer',
+    transition: 'filter 100ms',
+
+    '&:hover': {
+      filter: 'brightness(1.5)'
+    }
   },
   settingsIconBtn: {
     padding: 0,
@@ -59,7 +64,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     background: colors.invariant.componentOut4,
     borderRadius: 10,
-    padding: '22px 24px',
+    paddingInline: 24,
+    paddingBottom: 22,
+    paddingTop: 16,
     width: 500
   },
   tokenComponentTextContainer: {
@@ -84,20 +91,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   swapArrowBox: {
     backgroundColor: colors.invariant.componentOut2,
-    padding: '10px 10px',
-    width: 'max-content',
+    width: 50,
+    height: 50,
     borderRadius: '50%',
     position: 'absolute',
     zIndex: 2,
     left: '50%',
     top: '0%',
-    transform: 'translateX(-50%) translateY(-45%)',
-    cursor: 'pointer'
+    transform: 'translateX(-50%) translateY(-40%)',
+    cursor: 'pointer',
+    transition: 'background-color 200ms',
+
+    '&:hover': {
+      backgroundColor: colors.invariant.componentOut3
+    }
   },
   swapArrows: {
-    width: 42,
-    height: 33,
-    margin: 4,
+    width: 32,
+    height: 24,
+    marginBlock: 13,
+    marginInline: 9,
     transition: '.4s all'
   },
   rateText: {

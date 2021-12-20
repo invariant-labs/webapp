@@ -18,7 +18,7 @@ export const HeaderWrapper: React.FC = () => {
   const [typeOfWallet, setTypeOfWallet] = useState<WalletType>(WalletType.PHANTOM)
   useEffect(() => {
     let enumWallet = WalletType.PHANTOM
-    const sessionWallet = sessionStorage.getItem('INVARIANT_SESSION_WALLET')
+    const sessionWallet = localStorage.getItem('INVARIANT_SESSION_WALLET')
     if (
       sessionWallet === 'phantom' ||
       sessionWallet === 'sollet' ||

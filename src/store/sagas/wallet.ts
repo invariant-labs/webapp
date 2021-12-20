@@ -340,14 +340,14 @@ export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): 
     default:
       enumWallet = 'phantom'
   }
-  yield call([sessionStorage, sessionStorage.setItem], 'INVARIANT_SESSION_WALLET', enumWallet)
+  yield call([localStorage, localStorage.setItem], 'INVARIANT_SESSION_WALLET', enumWallet)
   yield* call(init)
 }
 
 export function* handleDisconnect(): Generator {
   try {
     yield* call(disconnectWallet)
-    yield call([sessionStorage, sessionStorage.removeItem], 'INVARIANT_SESSION_WALLET')
+    yield call([localStorage, localStorage.removeItem], 'INVARIANT_SESSION_WALLET')
     yield* put(actions.resetState())
     yield* put(positionsActions.resetState())
   } catch (error) {

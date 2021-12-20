@@ -79,6 +79,8 @@ export const Swap: React.FC<ISwap> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
 
+  const [rotates, setRotates] = React.useState<number>(0)
+
   enum feeOption {
     FEE = 'fee',
     REVERSED = 'reversed'
@@ -234,7 +236,7 @@ export const Swap: React.FC<ISwap> = ({
       <Grid container className={classes.header}>
         <Typography component='h1'>Swap tokens</Typography>
         <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
-          <CardMedia image={settingIcon} className={classes.settingsIcon} />
+          <img src={settingIcon} className={classes.settingsIcon} />
         </Button>
         <Grid className={classes.slippage}>
           <Slippage open={settings}
@@ -246,7 +248,7 @@ export const Swap: React.FC<ISwap> = ({
       </Grid>
       <Grid container className={classes.root} direction='column'>
         <Box className={classes.tokenComponentTextContainer}>
-          <Typography className={classes.tokenComponentText}>Est.: </Typography>
+          <Typography className={classes.tokenComponentText}>From: </Typography>
           <Typography className={classes.tokenComponentText}>
           Balance: {tokenFromIndex !== null
               ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal) : '0'}
@@ -285,28 +287,29 @@ export const Swap: React.FC<ISwap> = ({
           }}
         />
         <Box className={classes.tokenComponentTextContainer}>
-          <Box className={classes.swapArrowBox}>
-            <CardMedia image={SwapArrows}
+          <Box
+            className={classes.swapArrowBox}
+            onClick={() => {
+              setRotates(rotates + 1)
+              swap !== null
+                ? setSwap(!swap)
+                : setSwap(true)
+              const tmp = tokenFromIndex
+              const tokensTmp = tokens
+              setTokenFromIndex(tokenToIndex)
+              setTokenToIndex(tmp)
+              tokens = tokensY
+              setTokensY(tokensTmp)
+            }}
+          >
+            <img src={SwapArrows}
               style={
                 {
-                  transform: swap !== null
-                    ? swap
-                      ? 'rotate(180deg)'
-                      : 'rotate(0deg)'
-                    : ''
+                  transform: `rotate(${rotates * 180}deg)`
                 }
               }
-              className={classes.swapArrows} onClick={() => {
-                swap !== null
-                  ? setSwap(!swap)
-                  : setSwap(true)
-                const tmp = tokenFromIndex
-                const tokensTmp = tokens
-                setTokenFromIndex(tokenToIndex)
-                setTokenToIndex(tmp)
-                tokens = tokensY
-                setTokensY(tokensTmp)
-              }} />
+              className={classes.swapArrows}
+            />
           </Box>
           <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
           <Typography className={classes.tokenComponentText}>
@@ -359,7 +362,7 @@ export const Swap: React.FC<ISwap> = ({
             <Typography className={classes.transactionDetailsHeader}>See transaction details</Typography>
             <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }}/>
           </Grid>
-          {tokenFromIndex !== null && tokenToIndex !== null && getButtonMessage() === 'Swap'
+          {tokenFromIndex !== null && tokenToIndex !== null
             ? <TransactionDetails
               open={detailsOpen}
               fee={{ v: poolIndex !== -1 && poolIndex !== null ? pools[poolIndex].fee.v : new BN(0) }}
@@ -369,7 +372,7 @@ export const Swap: React.FC<ISwap> = ({
               }}
             />
             : null}
-          {tokenFromIndex !== null && tokenToIndex !== null && getButtonMessage() === 'Swap' ? (
+          {tokenFromIndex !== null && tokenToIndex !== null ? (
             <Typography className={classes.rateText}>
           1 {tokens[tokenFromIndex].symbol } = {' '}
               {/* tutaj będzie zmiana 1 na wartość odpowiadającą ilości tokenów */}
