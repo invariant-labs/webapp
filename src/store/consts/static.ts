@@ -2,6 +2,7 @@ import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { MOCK_TOKENS, Pair } from '@invariant-labs/sdk'
 import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
+import icons from '@static/icons'
 
 declare global {
   interface Window {
@@ -41,10 +42,18 @@ export const SOL = {
   name: 'Wrapped Solana',
   logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
 }
-export const tokens = [USDC, USDT, SOL]
+export const ANA = {
+  symbol: 'ANA',
+  address: new PublicKey(MOCK_TOKENS.ANA),
+  decimal: 6,
+  name: 'Nirvana',
+  logoURI: icons.ANA
+}
+export const tokens = [USDC, USDT, SOL, ANA]
 export const PAIRS: Pair[] = [
   new Pair(USDC.address, USDT.address, FEE_TIERS[0]),
-  new Pair(USDC.address, SOL.address, FEE_TIERS[0])
+  new Pair(USDC.address, SOL.address, FEE_TIERS[0]),
+  new Pair(USDC.address, ANA.address, FEE_TIERS[0])
 ]
 
 enum SolanaNetworks {
