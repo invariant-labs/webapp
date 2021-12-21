@@ -3,7 +3,9 @@ name: preview
 on:
   push:
     branches:
-      types: [main, staging, dev]
+      - main
+      - dev
+      - staging
   pull_request:
     types: [opened, synchronize, reopened]
 
