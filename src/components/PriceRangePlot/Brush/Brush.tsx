@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import { CustomLayerProps } from '@nivo/line'
 import { colors } from '@static/theme'
 import React, { useState, useEffect, useRef, MouseEventHandler } from 'react'
@@ -38,7 +39,7 @@ export const Handle: React.FC<HandleProps> = ({
     setCurrentPosition(position)
   }, [position, drag])
 
-  const startDrag: MouseEventHandler<SVGRectElement> = (event) => {
+  const startDrag: MouseEventHandler<SVGRectElement> = event => {
     onStart()
     setDrag(true)
     if (handleRef.current) {
@@ -58,56 +59,52 @@ export const Handle: React.FC<HandleProps> = ({
     }
   }
 
-  const dragHandler: MouseEventHandler<SVGRectElement> = (event) => {
+  const dragHandler: MouseEventHandler<SVGRectElement> = event => {
     if (drag && handleRef.current) {
       event.preventDefault()
       event.stopPropagation()
       const CTM = handleRef.current.getScreenCTM()
 
       if (CTM) {
-        const x = ((event.clientX - CTM.e) / CTM.a) - offset
+        const x = (event.clientX - CTM.e) / CTM.a - offset
 
-        if ((x >= minPosition) && (x <= maxPosition)) {
+        if (x >= minPosition && x <= maxPosition) {
           setCurrentPosition(x)
         }
       }
     }
   }
 
-  const isReversed = () => isStart
-    ? currentPosition < 37
-    : plotWidth - currentPosition < 37
+  const isReversed = () => (isStart ? currentPosition < 37 : plotWidth - currentPosition < 37)
 
   return (
     <>
-      {
-        isStart
-          ? <MinHandle
-            height={height}
-            x={!isReversed() ? currentPosition - 37 : currentPosition}
-            fill={disabled ? colors.invariant.componentOut3 : colors.invariant.accent1}
-            textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
-            isReversed={isReversed()}
-          />
-          : <MaxHandle
-            height={height}
-            x={!isReversed() ? currentPosition : currentPosition - 37}
-            fill={disabled ? colors.invariant.componentOut3 : colors.invariant.accent1}
-            textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
-            isReversed={isReversed()}
-          />
-      }
+      {isStart ? (
+        <MinHandle
+          height={height}
+          x={!isReversed() ? currentPosition - 37 : currentPosition}
+          fill={disabled ? colors.invariant.componentOut3 : colors.invariant.accent1}
+          textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
+          isReversed={isReversed()}
+        />
+      ) : (
+        <MaxHandle
+          height={height}
+          x={!isReversed() ? currentPosition : currentPosition - 37}
+          fill={disabled ? colors.invariant.componentOut3 : colors.invariant.accent1}
+          textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
+          isReversed={isReversed()}
+        />
+      )}
       <rect
         className={!disabled ? classes.handle : undefined}
         ref={handleRef}
         x={
           drag
             ? 0
-            : (
-              (isStart && !isReversed()) || (!isStart && isReversed())
-                ? currentPosition - 40
-                : currentPosition
-            )
+            : (isStart && !isReversed()) || (!isStart && isReversed())
+            ? currentPosition - 40
+            : currentPosition
         }
         y={0}
         width={drag ? plotWidth : 42}
@@ -123,12 +120,12 @@ export const Handle: React.FC<HandleProps> = ({
 }
 
 export interface InnerBrushProps extends CustomLayerProps {
-  leftPosition?: number,
-  rightPosition?: number,
-  onLeftDrop: (position: number) => void,
-  onRightDrop: (position: number) => void,
-  plotMin: number,
-  plotMax: number,
+  leftPosition?: number
+  rightPosition?: number
+  onLeftDrop: (position: number) => void
+  onRightDrop: (position: number) => void
+  plotMin: number
+  plotMax: number
   disabled: boolean
 }
 
@@ -146,8 +143,8 @@ export const InnerBrush: React.FC<InnerBrushProps> = ({
   const unitLen = innerWidth / (plotMax - plotMin)
   const [reverse, setReverse] = useState(false)
 
-  const start = (typeof leftPosition !== 'undefined') && (leftPosition >= plotMin) && (leftPosition <= plotMax)
-    ? (
+  const start =
+    typeof leftPosition !== 'undefined' && leftPosition >= plotMin && leftPosition <= plotMax ? (
       <Handle
         key='start'
         plotWidth={innerWidth}
@@ -155,47 +152,49 @@ export const InnerBrush: React.FC<InnerBrushProps> = ({
         position={(leftPosition - plotMin) * unitLen}
         minPosition={Math.max(0, -plotMin * unitLen)}
         maxPosition={
-          (typeof rightPosition !== 'undefined')
-            ? ((rightPosition - plotMin) * unitLen) - 0.001
+          typeof rightPosition !== 'undefined'
+            ? (rightPosition - plotMin) * unitLen - 0.001
             : innerWidth
         }
-        onDrop={(position) => {
+        onDrop={position => {
           onLeftDrop(position / innerWidth)
-          if (((leftPosition - plotMin) * unitLen) < 37) {
+          if ((leftPosition - plotMin) * unitLen < 37) {
             setReverse(false)
           }
         }}
         isStart
-        onStart={() => { setReverse(true) }}
+        onStart={() => {
+          setReverse(true)
+        }}
         disabled={disabled}
       />
-    )
-    : null
+    ) : null
 
-  const end = (typeof rightPosition !== 'undefined') && (rightPosition >= plotMin) && (rightPosition <= plotMax)
-    ? (
+  const end =
+    typeof rightPosition !== 'undefined' && rightPosition >= plotMin && rightPosition <= plotMax ? (
       <Handle
         key='end'
         plotWidth={innerWidth}
         height={innerHeight}
         position={(rightPosition - plotMin) * unitLen}
         minPosition={
-          (typeof leftPosition !== 'undefined')
-            ? ((leftPosition - plotMin) * unitLen) + 0.001
+          typeof leftPosition !== 'undefined'
+            ? (leftPosition - plotMin) * unitLen + 0.001
             : Math.max(0, -plotMin * unitLen)
         }
         maxPosition={innerWidth}
-        onDrop={(position) => {
+        onDrop={position => {
           onRightDrop(position / innerWidth)
-          if (innerWidth - ((rightPosition - plotMin) * unitLen) < 37) {
+          if (innerWidth - (rightPosition - plotMin) * unitLen < 37) {
             setReverse(true)
           }
         }}
-        onStart={() => { setReverse(false) }}
+        onStart={() => {
+          setReverse(false)
+        }}
         disabled={disabled}
       />
-    )
-    : null
+    ) : null
 
   return (
     <>
@@ -206,25 +205,28 @@ export const InnerBrush: React.FC<InnerBrushProps> = ({
   )
 }
 
-export const Brush = (
-  leftPosition: number,
-  rightPosition: number,
-  onLeftDrop: (position: number) => void,
-  onRightDrop: (position: number) => void,
-  plotMin: number,
-  plotMax: number,
-  disabled: boolean = false
-): React.FC<CustomLayerProps> => (layerProps) => (
-  <InnerBrush
-    leftPosition={leftPosition}
-    rightPosition={rightPosition}
-    onLeftDrop={onLeftDrop}
-    onRightDrop={onRightDrop}
-    plotMin={plotMin}
-    plotMax={plotMax}
-    disabled={disabled}
-    {...layerProps}
-  />
-)
+export const Brush =
+  (
+    leftPosition: number,
+    rightPosition: number,
+    onLeftDrop: (position: number) => void,
+    onRightDrop: (position: number) => void,
+    plotMin: number,
+    plotMax: number,
+    disabled: boolean = false
+  ): React.FC<CustomLayerProps> =>
+  layerProps =>
+    (
+      <InnerBrush
+        leftPosition={leftPosition}
+        rightPosition={rightPosition}
+        onLeftDrop={onLeftDrop}
+        onRightDrop={onRightDrop}
+        plotMin={plotMin}
+        plotMax={plotMax}
+        disabled={disabled}
+        {...layerProps}
+      />
+    )
 
 export default Brush
