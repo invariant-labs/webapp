@@ -46,36 +46,36 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const maxVal = useMemo(() => Math.max(...(data.map(element => element.y))), [data])
+  const maxVal = useMemo(() => Math.max(...data.map(element => element.y)), [data])
 
-  const pointsOmitter = useCallback((data: Array<{ x: number; y: number }>) => {
-    if (containerRef.current === null) {
-      return data
-    }
-
-    const minXDist = containerRef.current.offsetWidth / 100000
-    const minYChange = containerRef.current.offsetHeight / 1000
-
-    const dataAfterOmit: Array<{ x: number; y: number }> = []
-
-    data.forEach((tick, index) => {
-      if (
-        index === 0 ||
-        index === (data.length - 1) ||
-        (
-          dataAfterOmit.length > 0 &&
-          (
-            ((tick.x - dataAfterOmit[dataAfterOmit.length - 1].x) / (plotMax - plotMin)) >= minXDist ||
-            (Math.abs(tick.y - dataAfterOmit[dataAfterOmit.length - 1].y) / maxVal) >= minYChange
-          )
-        )
-      ) {
-        dataAfterOmit.push(tick)
+  const pointsOmitter = useCallback(
+    (data: Array<{ x: number; y: number }>) => {
+      if (containerRef.current === null) {
+        return data
       }
-    })
 
-    return dataAfterOmit
-  }, [containerRef.current, plotMin, plotMax, maxVal])
+      const minXDist = containerRef.current.offsetWidth / 100000
+      const minYChange = containerRef.current.offsetHeight / 1000
+
+      const dataAfterOmit: Array<{ x: number; y: number }> = []
+
+      data.forEach((tick, index) => {
+        if (
+          index === 0 ||
+          index === data.length - 1 ||
+          (dataAfterOmit.length > 0 &&
+            ((tick.x - dataAfterOmit[dataAfterOmit.length - 1].x) / (plotMax - plotMin) >=
+              minXDist ||
+              Math.abs(tick.y - dataAfterOmit[dataAfterOmit.length - 1].y) / maxVal >= minYChange))
+        ) {
+          dataAfterOmit.push(tick)
+        }
+      })
+
+      return dataAfterOmit
+    },
+    [containerRef.current, plotMin, plotMax, maxVal]
+  )
 
   const currentLessThanRange = useMemo(() => {
     if (disabled || leftRangeIndex > data.length - 1 || data[leftRangeIndex].x < plotMin) {
@@ -100,7 +100,12 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       )
     }
 
-    if (leftRangeIndex > data.length - 1 || rightRangeIndex > data.length - 1 || data[leftRangeIndex].x > plotMax || data[rightRangeIndex].x < plotMin) {
+    if (
+      leftRangeIndex > data.length - 1 ||
+      rightRangeIndex > data.length - 1 ||
+      data[leftRangeIndex].x > plotMax ||
+      data[rightRangeIndex].x < plotMin
+    ) {
       return []
     }
 
@@ -143,10 +148,18 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   }
 
   return (
-    <Grid container className={classNames(classes.container, className)} style={style} innerRef={containerRef}>
-      <Grid container item className={classNames(classes.zoomButtonsWrapper, 'zoomBtns')} justifyContent='space-between'>
+    <Grid
+      container
+      className={classNames(classes.container, className)}
+      style={style}
+      innerRef={containerRef}>
+      <Grid
+        container
+        item
+        className={classNames(classes.zoomButtonsWrapper, 'zoomBtns')}
+        justifyContent='space-between'>
         <Button className={classes.zoomButton} onClick={zoomPlus} disableRipple>
-          <img src={ZoomInIcon} className={classes.zoomIcon}/>
+          <img src={ZoomInIcon} className={classes.zoomIcon} />
         </Button>
         <Button className={classes.zoomButton} onClick={zoomMinus} disableRipple>
           <img src={ZoomOutIcon} className={classes.zoomIcon} />
@@ -169,11 +182,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         ]}
         curve='basis'
         margin={{ top: isSmDown ? 55 : 25, bottom: 15 }}
-        colors={[
-          colors.invariant.accent1,
-          colors.invariant.accent2,
-          colors.invariant.accent1
-        ]}
+        colors={[colors.invariant.accent1, colors.invariant.accent2, colors.invariant.accent1]}
         axisTop={null}
         axisRight={null}
         axisLeft={null}
@@ -200,28 +209,33 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         legends={[]}
         isInteractive={false}
         animate={false}
-        role="application"
+        role='application'
         layers={[
           currentLayer,
           'grid',
           'markers',
           'areas',
           'lines',
-          ...(
-            leftRangeIndex < data.length && rightRangeIndex < data.length
-              ? [
+          ...(leftRangeIndex < data.length && rightRangeIndex < data.length
+            ? [
                 Brush(
                   data[leftRangeIndex]?.x,
                   data[rightRangeIndex]?.x,
-                  (position) => {
-                    const nearest = nearestPriceIndex(plotMin + (position * (plotMax - plotMin)), data)
+                  position => {
+                    const nearest = nearestPriceIndex(
+                      plotMin + position * (plotMax - plotMin),
+                      data
+                    )
                     onChangeRange?.(
                       nearest === rightRangeIndex ? rightRangeIndex - 1 : nearest,
                       rightRangeIndex
                     )
                   },
-                  (position) => {
-                    const nearest = nearestPriceIndex(plotMin + (position * (plotMax - plotMin)), data)
+                  position => {
+                    const nearest = nearestPriceIndex(
+                      plotMin + position * (plotMax - plotMin),
+                      data
+                    )
                     onChangeRange?.(
                       leftRangeIndex,
                       nearest === leftRangeIndex ? leftRangeIndex + 1 : nearest
@@ -232,8 +246,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
                   disabled
                 )
               ]
-              : []
-          ),
+            : []),
           'axes',
           'legends'
         ]}
