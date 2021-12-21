@@ -297,3 +297,61 @@ export const createLiquidityPlot = (
 
   return ticksData.sort((a, b) => a.x - b.x)
 }
+
+export const createPlaceholderLiquidityPlot = (
+  pool: PoolStructure,
+  isXtoY: boolean,
+  yValueToFill: number
+) => {
+  const tokenXDecimal = tokens.find((token) => token.address.equals(pool.tokenX))?.decimal ?? 0
+  const tokenYDecimal = tokens.find((token) => token.address.equals(pool.tokenY))?.decimal ?? 0
+
+  const ticksData: PlotTickData[] = []
+  const price = calcYPerXPrice(pool.sqrtPrice.v, tokenXDecimal, tokenYDecimal)
+
+  ticksData.push({
+    x: isXtoY
+      ? price
+      : (
+        price !== 0
+          ? 1 / price
+          : Number.MAX_SAFE_INTEGER
+      ),
+    y: yValueToFill,
+    index: pool.currentTickIndex
+  })
+
+  for (let i = pool.currentTickIndex - pool.tickSpacing; i >= MIN_TICK; i -= pool.tickSpacing) {
+    const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
+
+    ticksData.push({
+      x: isXtoY
+        ? price
+        : (
+          price !== 0
+            ? 1 / price
+            : Number.MAX_SAFE_INTEGER
+        ),
+      y: yValueToFill,
+      index: i
+    })
+  }
+
+  for (let i = pool.currentTickIndex + pool.tickSpacing; i <= MAX_TICK; i += pool.tickSpacing) {
+    const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
+
+    ticksData.push({
+      x: isXtoY
+        ? price
+        : (
+          price !== 0
+            ? 1 / price
+            : Number.MAX_SAFE_INTEGER
+        ),
+      y: yValueToFill,
+      index: i
+    })
+  }
+
+  return ticksData.sort((a, b) => a.x - b.x)
+}
