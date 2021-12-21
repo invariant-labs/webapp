@@ -1,11 +1,6 @@
 name: preview
 
 on:
-  push:
-    branches:
-      - main
-      - dev
-      - staging
   pull_request:
     types: [opened, synchronize, reopened]
 
