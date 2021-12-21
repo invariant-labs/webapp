@@ -32,12 +32,12 @@ export function* handleSimulate(): Generator {
     const tickMap = yield* call([marketProgram, marketProgram.getTickmap],
       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0])
     )
+    console.log('sqrt price to simulation: ', simulate.simulatePrice.toString())
     if (simulate.amount.gt(new BN(0))) {
-      console.log('sqrtPrice: ', simulate.simulatePrice.toString())
       const simulateObject: SimulateSwapPrice = {
         pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
         xToY: isXtoY,
-        byAmountIn: true, // to jest jeszcze do zrobienia
+        byAmountIn: false, // to jest jeszcze do zrobienia
         swapAmount: simulate.amount,
         currentPrice: { v: simulate.simulatePrice },
         slippage: slippage,
@@ -46,12 +46,10 @@ export function* handleSimulate(): Generator {
         market: marketProgram
       }
 
-      console.log(simulateObject.currentPrice.v.toString())
-
       yield put(
         swapActions.changePrice(calculateAveragePrice(simulateObject))
       )
-      console.log(calculateAveragePrice(simulateObject).v.toString())
+      // console.log('simulate price: ', calculateAveragePrice(simulateObject).v.toString())
     } else {
       yield put(
         swapActions.changePrice({ v: new BN(0) })

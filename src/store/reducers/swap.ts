@@ -34,7 +34,7 @@ export const defaultSimulate: Simulate = {
 export const defaultState: ISwapStore = {
   swap: {
     slippage: { v: fromFee(new BN(1000)) },
-    price: { v: new BN(1) },
+    price: { v: new BN(0) },
     txid: 'test',
     simulate: defaultSimulate
   }

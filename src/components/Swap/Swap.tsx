@@ -18,8 +18,6 @@ import settingIcon from '@static/svg/settings.svg'
 import { DENOMINATOR } from '@invariant-labs/sdk'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './style'
-import { ContactSupportOutlined } from '@material-ui/icons'
-import { sqrt } from '@invariant-labs/sdk/lib/math'
 
 export interface SwapToken {
   balance: BN
@@ -107,52 +105,63 @@ export const Swap: React.FC<ISwap> = ({
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken, amount: string, fee: string = 'noFee') => {
     let sqrtPrice = new BN(0)
     let sqrtPricePow: number
-    let amountOut: BN = printBNtoBN(amount, assetIn.decimal)
-    let priceProportion: BN = new BN(0)
+    let amountOut: number = 0
+    const decimalDiff: number = PRICE_DECIMAL - (assetIn.decimal - assetFor.decimal)
+    let priceProportion: number = 0
     if (poolIndex !== -1 && poolIndex !== null) {
       if (!assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
-        sqrtPricePow = 1 / Math.pow(+printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL), 2)
-        sqrtPrice = printBNtoBN(sqrtPricePow.toString(), 18)
-        console.log(123)
+        sqrtPricePow = +printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL) * +printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL)
+        console.log(new BN((1 / sqrtPricePow) * (10 ** PRICE_DECIMAL)).toString())
+        sqrtPrice = new BN((1 / sqrtPricePow) * (10 ** decimalDiff))
       } else {
         sqrtPrice = pools[poolIndex].sqrtPrice.v.pow(new BN(2))
+        console.log(printBN(sqrtPrice, decimalDiff))
       }
       // użyć tego price proportion w wyliczeniach poniżej jako sqrtPrice
-      priceProportion = pools[poolIndex].sqrtPrice.v
-        .mul(pools[poolIndex].sqrtPrice.v)
-        .div(DENOMINATOR)
-      if (+printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL) < 1) {
-        if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
-          amountOut = printBNtoBN(amount, assetIn.decimal)
-            .mul(priceProportion)
-            .div(DENOMINATOR)
-        } else {
-          amountOut = printBNtoBN(amount, assetIn.decimal)
-            .mul(DENOMINATOR)
-            .div(priceProportion)
-        }
+      if (swapData.price.v.gt(new BN(0))) {
+        priceProportion = +printBN(swapData.price.v, decimalDiff)
       } else {
-        if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
-          amountOut = printBNtoBN(amount, assetIn.decimal)
-            .mul(priceProportion)
-            .div(DENOMINATOR)
-        } else {
-          amountOut = printBNtoBN(amount, assetIn.decimal)
-            .mul(DENOMINATOR)
-            .div(priceProportion)
-        }
+        priceProportion = Number(printBN(pools[poolIndex].sqrtPrice.v
+          .mul(pools[poolIndex].sqrtPrice.v)
+          .div(DENOMINATOR), decimalDiff))
       }
-      if (fee === feeOption.FEE) {
-        amountOut = amountOut.sub(
-          amountOut.mul(pools[poolIndex].fee.v).div(DENOMINATOR)
-        )
-      } else if (fee === feeOption.REVERSED) {
-        amountOut = amountOut.add(
-          amountOut.mul(pools[poolIndex].fee.v).div((new BN(10)).pow(new BN(PRICE_DECIMAL)))
-        )
-      }
+      // console.log('price proportion calc: ', priceProportion)
+      amountOut = Number(amount) * priceProportion
+      // if (+printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL) < 1) {
+      //   if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
+      //     amountOut = printBNtoBN(amount, assetIn.decimal)
+      //       .mul(priceProportion)
+      //       .div(DENOMINATOR)
+      //   } else {
+      //     amountOut = printBNtoBN(amount, assetIn.decimal)
+      //       .mul(DENOMINATOR)
+      //       .div(priceProportion)
+      //   }
+      // } else {
+      //   if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
+      //     amountOut = printBNtoBN(amount, assetIn.decimal)
+      //       .mul(priceProportion)
+      //       .div(DENOMINATOR)
+      //   } else {
+      //     amountOut = printBNtoBN(amount, assetIn.decimal)
+      //       .mul(DENOMINATOR)
+      //       .div(priceProportion)
+      //   }
+      // }
+
+      // ZAMIENIĆ BN NA NUMBER PRZY LICZENIU TAX PONIŻEJ
+
+      // if (fee === feeOption.FEE) {
+      //   amountOut = amountOut.sub(
+      //     amountOut.mul(pools[poolIndex].fee.v).div(DENOMINATOR)
+      //   )
+      // } else if (fee === feeOption.REVERSED) {
+      //   amountOut = amountOut.add(
+      //     amountOut.mul(pools[poolIndex].fee.v).div((new BN(10)).pow(new BN(PRICE_DECIMAL)))
+      //   )
+      // }
     }
-    return ({ amountOut: printBN(amountOut, assetFor.decimal), swapRate: printBNtoBN(sqrtPrice.toString(), PRICE_DECIMAL) })
+    return ({ amountOut: amountOut.toFixed(assetFor.decimal), swapRate: printBNtoBN(sqrtPrice.toString(), decimalDiff) })
   }
 
   useEffect(() => {
