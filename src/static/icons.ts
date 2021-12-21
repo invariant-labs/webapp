@@ -31,11 +31,13 @@ import closeIcon from './svg/closeIcon.svg'
 import coin98Icon from './svg/coin98.svg'
 import slope from './svg/slope.svg'
 import clover from './svg/clover.svg'
+import ANAIcon from './icons/ana.svg'
 
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
   stSOL: WSOLIcon,
   USDC: USDCIcon,
+  ANA: ANAIcon,
   phantom: phantomIcon,
   sollet: solletIcon,
   'math wallet': mathIcon,
