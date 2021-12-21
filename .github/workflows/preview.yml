@@ -1,10 +1,25 @@
 name: preview
 
 on:
+  push:
+    branches:
+      types: [main, staging, dev]
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: install
+        run: npm i
+      - name: lint
+        run: npm run lint
+      - name: build
+        run: npm run build
+
   upload:
     runs-on: ubuntu-latest
     steps:
