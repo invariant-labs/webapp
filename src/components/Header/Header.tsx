@@ -44,7 +44,7 @@ export const Header: React.FC<IHeader> = ({
 
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
 
-  const routes = ['swap', 'pool']
+  const routes = ['swap', 'pool', 'IDO']
 
   const otherRoutesToHighlight: Record<string, RegExp[]> = {
     pool: [/^newPosition$/, /^position\/*/]
@@ -82,7 +82,11 @@ export const Header: React.FC<IHeader> = ({
                   onClick={() => {
                     setActive(path)
                   }}
-                  active={path === activePath || (!!otherRoutesToHighlight[path] && otherRoutesToHighlight[path].some((pathRegex) => pathRegex.test(activePath)))}
+                  active={
+                    path === activePath ||
+                    (!!otherRoutesToHighlight[path] &&
+                      otherRoutesToHighlight[path].some(pathRegex => pathRegex.test(activePath)))
+                  }
                 />
               </Link>
             ))}
@@ -112,24 +116,17 @@ export const Header: React.FC<IHeader> = ({
             name={
               walletConnected
                 ? `${address.toString().substr(0, isXsDown ? 8 : 15)}...${
-                    !isXsDown
-                      ? address
-                        .toString()
-                        .substr(address.toString().length - 4, 4)
-                      : ''
+                    !isXsDown ? address.toString().substr(address.toString().length - 4, 4) : ''
                   }`
                 : 'Connect wallet'
             }
-            options={[
-              WalletType.PHANTOM,
-              WalletType.SOLLET,
-              WalletType.MATH,
-              WalletType.SOLFLARE
-            ]}
+            options={[WalletType.PHANTOM, WalletType.SOLLET, WalletType.MATH, WalletType.SOLFLARE]}
             onSelect={onWalletSelect}
             connected={walletConnected}
             onDisconnect={onDisconnectWallet}
-            startIcon={walletConnected ? <DotIcon className={classes.connectedWalletIcon} /> : undefined}
+            startIcon={
+              walletConnected ? <DotIcon className={classes.connectedWalletIcon} /> : undefined
+            }
             activeWallet={walletConnected ? typeOfWallet : undefined}
           />
         </Grid>
@@ -141,8 +138,7 @@ export const Header: React.FC<IHeader> = ({
               setRoutesModalAnchor(event.currentTarget)
               setRoutesModalOpen(true)
               blurContent()
-            }}
-          >
+            }}>
             <CardMedia className={classes.menu} image={Hamburger} />
           </IconButton>
           <RoutesModal
@@ -159,7 +155,12 @@ export const Header: React.FC<IHeader> = ({
               setRoutesModalOpen(false)
               unblurContent()
             }}
-            onFaucet={(typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) && isXsDown ? onFaucet : undefined}
+            onFaucet={
+              (typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) &&
+              isXsDown
+                ? onFaucet
+                : undefined
+            }
           />
         </Hidden>
       </Grid>

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import { SwapPage } from './SwapPage/SwapPage'
 import { useDispatch, useSelector } from 'react-redux'
 import { ListPage } from './ListPage/ListPage'
+import { IDOPage } from './IdoPage/IdoPage'
 import { toBlur } from '@consts/uiUtils'
 import { Status as WalletStatus } from '@reducers/solanaWallet'
 import { NewPositionPage } from './NewPositionPage/NewPositionPage'
@@ -28,7 +29,11 @@ export const PagesRouter: React.FC = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (signerStatus === Status.Initialized && walletStatus === WalletStatus.Initialized && allPools.length > 0) {
+    if (
+      signerStatus === Status.Initialized &&
+      walletStatus === WalletStatus.Initialized &&
+      allPools.length > 0
+    ) {
       dispatch(actions.getPositionsList())
     }
   }, [signerStatus, walletStatus, allPools.length])
@@ -42,6 +47,7 @@ export const PagesRouter: React.FC = () => {
           <Route path='/swap' component={SwapPage} />
           <Route path={'/newPosition'} component={NewPositionPage} />
           <Route path={'/pool'} component={ListPage} />
+          <Route path={'/IDO'} component={IDOPage} />
           <Route
             path={'/position/:id'}
             render={({ match }) => <SinglePositionPage id={match.params.id} />}
