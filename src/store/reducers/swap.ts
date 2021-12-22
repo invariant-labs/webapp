@@ -22,6 +22,8 @@ export interface Simulate {
   amount: BN
 
   txid?: string
+  inProgress?: boolean
+  success?: boolean
 }
 
 export interface ISwapStore {

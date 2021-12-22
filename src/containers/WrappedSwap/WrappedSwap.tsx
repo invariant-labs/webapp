@@ -45,14 +45,12 @@ export const WrappedSwap = () => {
       }}
       onSimulate={(simulatePrice, fromToken, toToken, amount) => {
         dispatch(
-          actions.simulate(
-            {
-              simulatePrice,
-              fromToken,
-              toToken,
-              amount
-            }
-          )
+          actions.simulate({
+            simulatePrice,
+            fromToken,
+            toToken,
+            amount
+          })
         )
       }}
       walletStatus={walletStatus}

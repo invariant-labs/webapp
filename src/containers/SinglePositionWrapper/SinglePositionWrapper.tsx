@@ -1,8 +1,14 @@
+/* eslint-disable @typescript-eslint/indent */
 import React, { useMemo, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@reducers/positions'
-import { currentPositionRangeTicks, isLoadingPositionsList, plotTicks, singlePositionData } from '@selectors/positions'
+import {
+  currentPositionRangeTicks,
+  isLoadingPositionsList,
+  plotTicks,
+  singlePositionData
+} from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
 import { calcYPerXPrice, printBN } from '@consts/utils'
@@ -26,37 +32,67 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
-  const { lowerTick, upperTick, loading: rangeTicksLoading } = useSelector(currentPositionRangeTicks)
+  const {
+    lowerTick,
+    upperTick,
+    loading: rangeTicksLoading
+  } = useSelector(currentPositionRangeTicks)
   useEffect(() => {
     if (position?.id) {
       dispatch(actions.getCurrentPositionRangeTicks(id))
-      dispatch(actions.getCurrentPlotTicks({
-        poolIndex: position.poolData.poolIndex,
-        isXtoY: true
-      }))
+      dispatch(
+        actions.getCurrentPlotTicks({
+          poolIndex: position.poolData.poolIndex,
+          isXtoY: true
+        })
+      )
     }
   }, [position?.id])
 
-  const midPriceIndex = useMemo(() => ticksData.findIndex((tick) => tick.index === position?.poolData.currentTickIndex), [ticksData.length, position?.id])
-  const leftRangeIndex = useMemo(() => ticksData.findIndex((tick) => tick.index === position?.lowerTickIndex), [ticksData.length, position?.id])
-  const rightRangeIndex = useMemo(() => ticksData.findIndex((tick) => tick.index === position?.upperTickIndex), [ticksData.length, position?.id])
+  const midPriceIndex = useMemo(
+    () => ticksData.findIndex(tick => tick.index === position?.poolData.currentTickIndex),
+    [ticksData.length, position?.id]
+  )
+  const leftRangeIndex = useMemo(
+    () => ticksData.findIndex(tick => tick.index === position?.lowerTickIndex),
+    [ticksData.length, position?.id]
+  )
+  const rightRangeIndex = useMemo(
+    () => ticksData.findIndex(tick => tick.index === position?.upperTickIndex),
+    [ticksData.length, position?.id]
+  )
 
   const min = useMemo(
-    () => position
-      ? calcYPerXPrice(calculate_price_sqrt(position.lowerTickIndex).v, position.tokenX.decimal, position.tokenY.decimal)
-      : 0,
+    () =>
+      position
+        ? calcYPerXPrice(
+            calculate_price_sqrt(position.lowerTickIndex).v,
+            position.tokenX.decimal,
+            position.tokenY.decimal
+          )
+        : 0,
     [position?.lowerTickIndex]
   )
   const max = useMemo(
-    () => position
-      ? calcYPerXPrice(calculate_price_sqrt(position.upperTickIndex).v, position.tokenX.decimal, position.tokenY.decimal)
-      : 0,
+    () =>
+      position
+        ? calcYPerXPrice(
+            calculate_price_sqrt(position.upperTickIndex).v,
+            position.tokenX.decimal,
+            position.tokenY.decimal
+          )
+        : 0,
     [position?.upperTickIndex]
   )
   const current = useMemo(
-    () => position
-      ? calcYPerXPrice(position.poolData.sqrtPrice.v, position.tokenX.decimal, position.tokenY.decimal)
-      : 0,
+    () =>
+      position
+        ? calcYPerXPrice(
+            position.poolData.sqrtPrice.v,
+            position.tokenX.decimal,
+            position.tokenY.decimal
+          )
+        : 0,
     [position]
   )
 
@@ -64,7 +100,11 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (position) {
       try {
         return +printBN(
-          getX(position.liquidity.v, calculate_price_sqrt(position.upperTickIndex).v, position.poolData.sqrtPrice.v).div(DENOMINATOR),
+          getX(
+            position.liquidity.v,
+            calculate_price_sqrt(position.upperTickIndex).v,
+            position.poolData.sqrtPrice.v
+          ).div(DENOMINATOR),
           position.tokenX.decimal
         )
       } catch (error) {
@@ -78,7 +118,11 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (position) {
       try {
         return +printBN(
-          getY(position.liquidity.v, position.poolData.sqrtPrice.v, calculate_price_sqrt(position.lowerTickIndex).v).div(DENOMINATOR),
+          getY(
+            position.liquidity.v,
+            position.poolData.sqrtPrice.v,
+            calculate_price_sqrt(position.lowerTickIndex).v
+          ).div(DENOMINATOR),
           position.tokenY.decimal
         )
       } catch (error) {
@@ -90,7 +134,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }, [position])
 
   const [tokenXClaim, tokenYClaim] = useMemo(() => {
-    if (position && (typeof lowerTick !== 'undefined') && (typeof upperTick !== 'undefined')) {
+    if (position && typeof lowerTick !== 'undefined' && typeof upperTick !== 'undefined') {
       const [bnX, bnY] = calculateClaimAmount({
         position,
         tickLower: lowerTick,
@@ -109,63 +153,61 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     return [0, 0]
   }, [position, lowerTick, upperTick])
 
-  return (
-    !isLoadingList && !ticksLoading && !rangeTicksLoading && position
-      ? (
-        <PositionDetails
-          detailsData={ticksData}
-          midPriceIndex={midPriceIndex}
-          leftRangeIndex={leftRangeIndex}
-          rightRangeIndex={rightRangeIndex}
-          currentPrice={current}
-          tokenY={position.tokenY.symbol}
-          tokenX={position.tokenX.symbol}
-          onZoomOutOfData={(min, max) => {
-            if (position) {
-              dispatch(actions.getCurrentPlotTicks({
-                poolIndex: position.poolData.poolIndex,
-                isXtoY: true,
-                min,
-                max
-              }))
-            }
-          }}
-          onClickClaimFee={() => {
-            dispatch(actions.claimFee(position.positionIndex))
-          }}
-          closePosition={() => {
-            dispatch(actions.closePosition({
-              positionIndex: position.positionIndex,
-              onSuccess: () => {
-                history.push('/pool')
-              }
-            }))
-          }}
-          tokenXLiqValue={tokenXLiquidity}
-          tokenYLiqValue={tokenYLiquidity}
-          tokenXClaimValue={tokenXClaim}
-          tokenYClaimValue={tokenYClaim}
-          positionData={{
-            tokenXName: position.tokenX.symbol,
-            tokenYName: position.tokenY.symbol,
-            tokenXIcon: position.tokenX.logoURI,
-            tokenYIcon: position.tokenY.logoURI,
-            tokenXDecimal: position.tokenX.decimal,
-            tokenYDecimal: position.tokenY.decimal,
-            fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
-            min,
-            max
-          }}
-        />
-      )
-      : (
-        isLoadingList || ticksLoading || rangeTicksLoading
-          ? <Typography className={classes.placeholderText}>Loading...</Typography>
-          : (
-            !position
-              ? <Typography className={classes.placeholderText}>Position does not exist in your list.</Typography>
-              : null
+  return !isLoadingList && !ticksLoading && !rangeTicksLoading && position ? (
+    <PositionDetails
+      detailsData={ticksData}
+      midPriceIndex={midPriceIndex}
+      leftRangeIndex={leftRangeIndex}
+      rightRangeIndex={rightRangeIndex}
+      currentPrice={current}
+      tokenY={position.tokenY.symbol}
+      tokenX={position.tokenX.symbol}
+      onZoomOutOfData={(min, max) => {
+        if (position) {
+          dispatch(
+            actions.getCurrentPlotTicks({
+              poolIndex: position.poolData.poolIndex,
+              isXtoY: true,
+              min,
+              max
+            })
           )
-      )
-  )
+        }
+      }}
+      onClickClaimFee={() => {
+        dispatch(actions.claimFee(position.positionIndex))
+      }}
+      closePosition={() => {
+        dispatch(
+          actions.closePosition({
+            positionIndex: position.positionIndex,
+            onSuccess: () => {
+              history.push('/pool')
+            }
+          })
+        )
+      }}
+      tokenXLiqValue={tokenXLiquidity}
+      tokenYLiqValue={tokenYLiquidity}
+      tokenXClaimValue={tokenXClaim}
+      tokenYClaimValue={tokenYClaim}
+      positionData={{
+        tokenXName: position.tokenX.symbol,
+        tokenYName: position.tokenY.symbol,
+        tokenXIcon: position.tokenX.logoURI,
+        tokenYIcon: position.tokenY.logoURI,
+        tokenXDecimal: position.tokenX.decimal,
+        tokenYDecimal: position.tokenY.decimal,
+        fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
+        min,
+        max
+      }}
+    />
+  ) : isLoadingList || ticksLoading || rangeTicksLoading ? (
+    <Typography className={classes.placeholderText}>Loading...</Typography>
+  ) : !position ? (
+    <Typography className={classes.placeholderText}>
+      Position does not exist in your list.
+    </Typography>
+  ) : null
 }

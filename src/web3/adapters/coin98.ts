@@ -7,20 +7,18 @@ import bs58 from 'bs58'
 type Coin98Event = 'disconnect' | 'connect'
 
 interface Coin98Provider {
-  publicKey?: PublicKey;
-  isConnected?: boolean;
-  autoApprove?: boolean;
-  signTransaction: (transaction: Transaction) => Promise<Transaction>;
-  signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>;
-  connect: () => Promise<Boolean>;
-  disconnect: () => Promise<void>;
-  on: (event: Coin98Event, handler: (args: any) => void) => void;
-  request: (arg: any) => Promise<any>;
+  publicKey?: PublicKey
+  isConnected?: boolean
+  autoApprove?: boolean
+  signTransaction: (transaction: Transaction) => Promise<Transaction>
+  signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>
+  connect: () => Promise<Boolean>
+  disconnect: () => Promise<void>
+  on: (event: Coin98Event, handler: (args: any) => void) => void
+  request: (arg: any) => Promise<any>
 }
 
-export class Coin98WalletAdapter
-  extends EventEmitter
-  implements WalletAdapter {
+export class Coin98WalletAdapter extends EventEmitter implements WalletAdapter {
   _provider: Coin98Provider | undefined
   constructor() {
     super()
@@ -35,9 +33,7 @@ export class Coin98WalletAdapter
     return false
   }
 
-  async signAllTransactions(
-    transactions: Transaction[]
-  ): Promise<Transaction[]> {
+  async signAllTransactions(transactions: Transaction[]): Promise<Transaction[]> {
     if (!this._provider) {
       return transactions
     }
