@@ -76,10 +76,6 @@ export const INewPosition: React.FC<INewPosition> = ({
       return 'Pool does not exist'
     }
 
-    if (ticksLoading) {
-      return 'Loading data...'
-    }
-
     return ''
   }
 
@@ -128,24 +124,6 @@ export const INewPosition: React.FC<INewPosition> = ({
             setTokenAIndex(index1)
             setTokenBIndex(index2)
             onChangePositionTokens(index1, index2, fee)
-
-            if (index1 !== null && rightRange > midPriceIndex) {
-              const amount = getOtherTokenAmount(printBNtoBN(tokenADeposit, tokens[index1].decimal), leftRange, rightRange, true)
-
-              if (index2 !== null && +tokenADeposit !== 0) {
-                setTokenBDeposit(amount)
-
-                return
-              }
-            }
-
-            if (index2 !== null && leftRange < midPriceIndex) {
-              const amount = getOtherTokenAmount(printBNtoBN(tokenBDeposit, tokens[index2].decimal), leftRange, rightRange, false)
-
-              if (index1 !== null && +tokenBDeposit !== 0) {
-                setTokenADeposit(amount)
-              }
-            }
           }}
           onAddLiquidity={
             () => {
@@ -166,7 +144,7 @@ export const INewPosition: React.FC<INewPosition> = ({
               setTokenADeposit(value)
               setTokenBDeposit(getOtherTokenAmount(printBNtoBN(value, tokens[tokenAIndex].decimal), leftRange, rightRange, true))
             },
-            blocked: !ticksLoading && tokenAIndex !== null && tokenBIndex !== null && (isTokenXFirst ? rightRange <= midPriceIndex : rightRange < midPriceIndex),
+            blocked: tokenAIndex !== null && tokenBIndex !== null && (isTokenXFirst ? rightRange <= midPriceIndex : rightRange < midPriceIndex),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimal : 0
           }}
@@ -179,7 +157,7 @@ export const INewPosition: React.FC<INewPosition> = ({
               setTokenBDeposit(value)
               setTokenADeposit(getOtherTokenAmount(printBNtoBN(value, tokens[tokenBIndex].decimal), leftRange, rightRange, false))
             },
-            blocked: !ticksLoading && tokenAIndex !== null && tokenBIndex !== null && (isTokenXFirst ? leftRange > midPriceIndex : leftRange >= midPriceIndex),
+            blocked: tokenAIndex !== null && tokenBIndex !== null && (isTokenXFirst ? leftRange > midPriceIndex : leftRange >= midPriceIndex),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimal : 0
           }}
@@ -213,11 +191,11 @@ export const INewPosition: React.FC<INewPosition> = ({
               }
             }
           }
-          blocked={tokenAIndex === null || tokenBIndex === null || !isCurrentPoolExisting || data.length === 0 || ticksLoading}
+          blocked={tokenAIndex === null || tokenBIndex === null || !isCurrentPoolExisting || data.length === 0}
           blockerInfo={setRangeBlockerInfo()}
           {
           ...(
-            tokenAIndex === null || tokenBIndex === null || !isCurrentPoolExisting || data.length === 0 || ticksLoading
+            tokenAIndex === null || tokenBIndex === null || !isCurrentPoolExisting || data.length === 0
               ? noRangePlaceholderProps
               : {
                 data,
@@ -228,6 +206,7 @@ export const INewPosition: React.FC<INewPosition> = ({
           )
           }
           onZoomOutOfData={onZoomOutOfData}
+          ticksLoading={ticksLoading}
         />
       </Grid>
     </Grid>
