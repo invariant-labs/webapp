@@ -118,28 +118,28 @@ const IDO: React.FC = () => {
           </Box>
         </Box>
         <Box className={classes.containerInfoDark}>
-          <Typography className={classes.labelInfo}>Sale period ends in</Typography>
+          <Typography className={classes.labelInfo}>Grace period ends in</Typography>
           <Box className={classes.wrapperInfo}>
             <CardMedia image={watchIcon} className={classes.icon} />
             <Typography className={classes.textInfo}>32:29:27</Typography>
           </Box>
         </Box>
         <Box className={classes.containerInfo}>
-          <Typography className={classes.labelInfo}>Sale period ends in</Typography>
+          <Typography className={classes.labelInfo}>SOL Contributed</Typography>
           <Box className={classes.wrapperInfo}>
             <CardMedia image={solanaIcon} className={classes.solIcon} />
             <Typography className={classes.textInfo}>15:30:33</Typography>
           </Box>
         </Box>
         <Box className={classes.containerInfoDark}>
-          <Typography className={classes.labelInfo}>Sale period ends in</Typography>
+          <Typography className={classes.labelInfo}>Estimated token price</Typography>
           <Box className={classes.wrapperInfo}>
             <CardMedia image={dollarIcon} className={classes.solIcon} />
             <Typography className={classes.textInfo}>218.839</Typography>
           </Box>
         </Box>
         <Box className={classes.containerInfo}>
-          <Typography className={classes.labelInfo}>Sale period ends in</Typography>
+          <Typography className={classes.labelInfo}>INVARIANT for sale</Typography>
           <Box className={classes.wrapperInfo}>
             <CardMedia image={invariantIcon} className={classes.solIcon} />
             <Typography className={classes.textInfo}>20 000 000</Typography>
