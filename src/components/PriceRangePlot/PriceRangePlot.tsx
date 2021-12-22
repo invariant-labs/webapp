@@ -218,7 +218,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'lines',
           ...(leftRangeIndex < data.length && rightRangeIndex < data.length
             ? [
-              Brush(
+                Brush(
                   data[leftRangeIndex]?.x,
                   data[rightRangeIndex]?.x,
                   position => {
@@ -244,8 +244,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
                   plotMin,
                   plotMax,
                   disabled
-              )
-            ]
+                )
+              ]
             : []),
           'axes',
           'legends'

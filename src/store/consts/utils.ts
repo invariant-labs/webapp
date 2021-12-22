@@ -297,10 +297,10 @@ export const createPlaceholderLiquidityPlot = (
     x: isXtoY
       ? price
       : (
-        price !== 0
-          ? 1 / price
-          : Number.MAX_SAFE_INTEGER
-      ),
+          price !== 0
+            ? 1 / price
+            : Number.MAX_SAFE_INTEGER
+        ),
     y: yValueToFill,
     index: pool.currentTickIndex
   })
@@ -312,10 +312,10 @@ export const createPlaceholderLiquidityPlot = (
       x: isXtoY
         ? price
         : (
-          price !== 0
-            ? 1 / price
-            : Number.MAX_SAFE_INTEGER
-        ),
+            price !== 0
+              ? 1 / price
+              : Number.MAX_SAFE_INTEGER
+          ),
       y: yValueToFill,
       index: i
     })
@@ -328,10 +328,10 @@ export const createPlaceholderLiquidityPlot = (
       x: isXtoY
         ? price
         : (
-          price !== 0
-            ? 1 / price
-            : Number.MAX_SAFE_INTEGER
-        ),
+            price !== 0
+              ? 1 / price
+              : Number.MAX_SAFE_INTEGER
+          ),
       y: yValueToFill,
       index: i
     })

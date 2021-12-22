@@ -225,11 +225,11 @@ export const NewPosition: React.FC<INewPosition> = ({
           data.length === 0
             ? noRangePlaceholderProps
             : {
-              data,
-              midPriceIndex,
-              tokenFromSymbol: tokens[tokenAIndex].symbol,
-              tokenToSymbol: tokens[tokenBIndex].symbol
-            })}
+                data,
+                midPriceIndex,
+                tokenFromSymbol: tokens[tokenAIndex].symbol,
+                tokenToSymbol: tokens[tokenBIndex].symbol
+              })}
           onZoomOutOfData={onZoomOutOfData}
           ticksLoading={ticksLoading}
         />
