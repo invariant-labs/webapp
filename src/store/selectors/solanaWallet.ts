@@ -5,6 +5,7 @@ import { keySelectors, AnyProps } from './helpers'
 import { PublicKey } from '@solana/web3.js'
 import { tokens } from '@consts/static'
 import { MOCK_TOKENS } from '@invariant-labs/sdk'
+import { network } from './solanaConnection'
 
 const store = (s: AnyProps) => s[solanaWalletSliceName] as ISolanaWallet
 
@@ -51,8 +52,8 @@ export interface SwapToken {
   logoURI: string
 }
 
-export const swapTokens = createSelector(accounts, (allAccounts) => {
-  return tokens.map((token) => ({
+export const swapTokens = createSelector(accounts, network, (allAccounts, networkType) => {
+  return tokens[networkType].map((token) => ({
     ...token,
     assetAddress: token.address,
     balance: allAccounts[token.address.toString()]?.balance ?? 0
