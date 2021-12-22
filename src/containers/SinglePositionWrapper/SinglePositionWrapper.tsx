@@ -5,7 +5,7 @@ import { actions } from '@reducers/positions'
 import { currentPositionRangeTicks, isLoadingPositionsList, plotTicks, singlePositionData } from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
-import { calcYPerXPrice, printBN } from '@consts/utils'
+import { calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import useStyles from './style'
@@ -25,14 +25,15 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
-  const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
+  const { data: ticksData } = useSelector(plotTicks)
   const { lowerTick, upperTick, loading: rangeTicksLoading } = useSelector(currentPositionRangeTicks)
   useEffect(() => {
     if (position?.id) {
       dispatch(actions.getCurrentPositionRangeTicks(id))
       dispatch(actions.getCurrentPlotTicks({
         poolIndex: position.poolData.poolIndex,
-        isXtoY: true
+        isXtoY: true,
+        tmpData: createPlaceholderLiquidityPlot(position.poolData, true, 10)
       }))
     }
   }, [position?.id])
@@ -110,7 +111,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }, [position, lowerTick, upperTick])
 
   return (
-    !isLoadingList && !ticksLoading && !rangeTicksLoading && position
+    !isLoadingList && !rangeTicksLoading && position
       ? (
         <PositionDetails
           detailsData={ticksData}
@@ -159,7 +160,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         />
       )
       : (
-        isLoadingList || ticksLoading || rangeTicksLoading
+        isLoadingList || rangeTicksLoading
           ? <Typography className={classes.placeholderText}>Loading...</Typography>
           : (
             !position
