@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import PriceRangePlot from './PriceRangePlot'
@@ -42,14 +43,14 @@ storiesOf('position/priceRangePlot', module)
 
     const zoomMinus = () => {
       const diff = plotMax - plotMin
-      setPlotMin(plotMin as number - (diff / 4))
-      setPlotMax(plotMax as number + (diff / 4))
+      setPlotMin(plotMin - (diff / 4))
+      setPlotMax(plotMax + (diff / 4))
     }
 
     const zoomPlus = () => {
       const diff = plotMax - plotMin
-      setPlotMin(plotMin as number + (diff / 6))
-      setPlotMax(plotMax as number - (diff / 6))
+      setPlotMin(plotMin + (diff / 6))
+      setPlotMax(plotMax - (diff / 6))
     }
 
     return (
@@ -77,14 +78,14 @@ storiesOf('position/priceRangePlot', module)
 
     const zoomMinus = () => {
       const diff = plotMax - plotMin
-      setPlotMin(plotMin as number - (diff / 4))
-      setPlotMax(plotMax as number + (diff / 4))
+      setPlotMin(plotMin - (diff / 4))
+      setPlotMax(plotMax + (diff / 4))
     }
 
     const zoomPlus = () => {
       const diff = plotMax - plotMin
-      setPlotMin(plotMin as number + (diff / 6))
-      setPlotMax(plotMax as number - (diff / 6))
+      setPlotMin(plotMin + (diff / 6))
+      setPlotMax(plotMax - (diff / 6))
     }
 
     return (
