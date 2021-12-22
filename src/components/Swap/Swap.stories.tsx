@@ -120,6 +120,7 @@ storiesOf('newUi/swap', module)
         tokens={tokens}
         onSwap={onSwap}
         pools={pools}
+        progress='none'
       />
     </div>
   ))

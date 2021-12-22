@@ -10,6 +10,7 @@ import { Pair } from '@invariant-labs/sdk'
 import { getConnection } from './connection'
 import { FEE_TIERS, calculateAveragePrice, SimulateSwapPrice } from '@invariant-labs/sdk/src/utils'
 import { hasTransactionSucceed } from './positions'
+import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import BN from 'bn.js'
 
 export function* handleSimulate(): Generator {
@@ -117,19 +118,19 @@ export function* handleSwap(): Generator {
     swapTx.feePayer = wallet.publicKey
 
     const signedTx = yield* call([wallet, wallet.signTransaction], swapTx)
-    const signature = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
-      skipPreflight: true
+    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+      skipPreflight: false
     })
 
-    const hasSucceed = yield* call(hasTransactionSucceed, connection, signature)
+    yield put(swapActions.setSwapSuccess(!!txid.length))
 
-    if (!hasSucceed) {
+    if (!txid.length) {
       yield put(
         snackbarsActions.add({
           message: 'Tokens swapping failed. Please try again.',
           variant: 'error',
           persist: false,
-          txid: signature
+          txid
         })
       )
     } else {
@@ -138,12 +139,15 @@ export function* handleSwap(): Generator {
           message: 'Tokens swapped successfully.',
           variant: 'success',
           persist: false,
-          txid: signature
+          txid
         })
       )
     }
   } catch (error) {
     console.log(error)
+
+    yield put(swapActions.setSwapSuccess(false))
+
     yield put(
       snackbarsActions.add({
         message: 'Failed to send. Please try again.',

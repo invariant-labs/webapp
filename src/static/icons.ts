@@ -28,14 +28,23 @@ import twitterIcon from './svg/twitterCircle.svg'
 import mediumIcon from './svg/mediumCircle.svg'
 import discordIcon from './svg/discordCircle.svg'
 import closeIcon from './svg/closeIcon.svg'
+import coin98Icon from './svg/coin98.svg'
+import slope from './svg/slope.svg'
+import clover from './svg/clover.svg'
+import ANAIcon from './icons/ana.svg'
+
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
   stSOL: WSOLIcon,
   USDC: USDCIcon,
+  ANA: ANAIcon,
   phantom: phantomIcon,
   sollet: solletIcon,
   'math wallet': mathIcon,
   solflare: solflareIcon,
+  coin98: coin98Icon,
+  slope: slope,
+  clover: clover,
   clear: clearIcon,
   Mainnet: mainnet,
   Devnet: devnet,

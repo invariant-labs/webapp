@@ -1,16 +1,17 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    width: '100%',
     backgroundColor: colors.invariant.componentOut4,
     padding: 24,
-    borderRadius: 10,
-    width: 519
+    paddingTop: 18,
+    borderRadius: 10
   },
   header: {
     ...typography.body1,
-    color: '#FFFFFF',
+    color: colors.white.main,
     paddingBottom: 14
   },
   plotWrapper: {
@@ -20,13 +21,18 @@ const useStyles = makeStyles(() => ({
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gridGap: '15px',
-    paddingBottom: 25
+    paddingBottom: 25,
+
+    [theme.breakpoints.down('xs')]: {
+      gridTemplateColumns: '1fr',
+      gridGap: '8px'
+    }
   },
   currentPriceLabel: {
     backgroundColor: colors.invariant.componentOut3,
     color: colors.invariant.lightInfoText,
     textAlign: 'center',
-    '& p' : {
+    '& p': {
       ...typography.body1,
       textTransform: 'uppercase',
       lineHeight: '35px'
@@ -36,14 +42,29 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.componentOut2,
     textAlign: 'center',
     '& span': {
-      color: '#FFFFFF',
+      color: colors.white.main,
       ...typography.body1,
       lineHeight: '35px',
       paddingRight: 5
     },
     '& p': {
       color: colors.invariant.lightInfoText,
-      ...typography.body1,
+      ...typography.body1
+    }
+  },
+  plot: {
+    width: '100%',
+    height: 207,
+    backgroundColor: colors.invariant.componentIn2,
+    borderRadius: 10,
+
+    '& .zoomBtns': {
+      top: 10,
+      right: 10
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      height: 253
     }
   }
 }))

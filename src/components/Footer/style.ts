@@ -1,7 +1,7 @@
 import { colors, typography } from '@static/theme'
-import { makeStyles, Theme } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   footer: {
     width: '100%',
     display: 'flex',
@@ -22,6 +22,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     display: 'flex',
     alignItems: 'center'
+  },
+  tooltip: {
+    ...typography.label2,
+    color: colors.invariant.lightInfoText,
+    background: colors.black.full,
+    borderRadius: 12,
+    height: 24,
+    width: 59,
+    padding: 0,
+    textAlign: 'center'
   }
 }))
 

@@ -1,5 +1,10 @@
+import { calculate_price_sqrt, DENOMINATOR, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
+import { PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
+import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
+import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
+import { PRICE_DECIMAL, tokens } from './static'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -81,45 +86,77 @@ export const removeTickerPrefix = (ticker: string, prefix: string[] = ['x', '$']
 }
 const zeroPad = (num: string, places: number) => num.padStart(places, '0')
 
-export const showPrefix = (nr: number) => {
-  if (nr >= 10000) {
-    if (nr >= 1000000) {
-      if (nr >= 1000000000) {
-        return 'B'
-      } else {
-        return 'M'
-      }
-    } else {
-      return 'K'
-    }
-  } else {
-    return ''
-  }
+export interface PrefixConfig {
+  B?: number
+  M?: number
+  K?: number
 }
 
-export const formatNumbers = (value: string) => {
+const defaultPrefixConfig: PrefixConfig = {
+  B: 1000000000,
+  M: 1000000,
+  K: 10000
+}
+
+export const showPrefix = (nr: number, config: PrefixConfig = defaultPrefixConfig): string => {
+  if (typeof config.B !== 'undefined' && nr >= config.B) {
+    return 'B'
+  }
+
+  if (typeof config.M !== 'undefined' && nr >= config.M) {
+    return 'M'
+  }
+
+  if (typeof config.K !== 'undefined' && nr >= config.K) {
+    return 'K'
+  }
+
+  return ''
+}
+
+export interface FormatNumberThreshold {
+  value: number
+  decimals: number
+  divider?: number
+}
+
+const defaultThresholds: FormatNumberThreshold[] = [
+  {
+    value: 10,
+    decimals: 4
+  },
+  {
+    value: 1000,
+    decimals: 2
+  },
+  {
+    value: 10000,
+    decimals: 1
+  },
+  {
+    value: 1000000,
+    decimals: 2,
+    divider: 1000
+  },
+  {
+    value: 1000000000,
+    decimals: 2,
+    divider: 1000000
+  },
+  {
+    value: Infinity,
+    decimals: 2,
+    divider: 1000000000
+  }
+]
+
+export const formatNumbers = (thresholds: FormatNumberThreshold[] = defaultThresholds) => (value: string) => {
   const num = Number(value)
+  const threshold = thresholds.sort((a, b) => a.value - b.value).find((thr) => num < thr.value)
 
-  if (num < 10) {
-    return num.toFixed(4)
-  }
-
-  if (num < 1000) {
-    return num.toFixed(2)
-  }
-
-  if (num < 10000) {
-    return num.toFixed(1)
-  }
-
-  if (num < 1000000) {
-    return (num / 1000).toFixed(2)
-  }
-  if (num < 1000000000) {
-    return (num / 1000000).toFixed(2)
-  }
-
-  return (num / 1000000000).toFixed(2)
+  return threshold
+    ? (num / (threshold.divider ?? 1)).toFixed(threshold.decimals)
+    : value
 }
 
 export const nearestPriceIndex = (price: number, data: Array<{ x: number; y: number }>) => {
@@ -151,4 +188,112 @@ export const calcTicksAmountInRange = (min: number, max: number, tickSpacing: nu
   const maxIndex = logBase(max, 1.0001)
 
   return Math.ceil((maxIndex - minIndex) / tickSpacing)
+}
+
+export const calcYPerXPrice = (sqrtPrice: BN, xDecimal: number, yDecimal: number): number => {
+  const price = sqrtPrice.mul(sqrtPrice).div(DENOMINATOR).div(new BN(10 ** xDecimal))
+
+  return +printBN(price, yDecimal)
+}
+
+export const createLiquidityPlot = (
+  rawTicks: Tick[],
+  pool: PoolStructure,
+  isXtoY: boolean
+) => {
+  const tokenXDecimal = tokens.find((token) => token.address.equals(pool.tokenX))?.decimal ?? 0
+  const tokenYDecimal = tokens.find((token) => token.address.equals(pool.tokenY))?.decimal ?? 0
+
+  const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(rawTicks, pool) : []
+
+  const ticks = rawTicks.map((raw, index) => ({
+    ...raw,
+    liqudity: parsedTicks[index].liquidity
+  }))
+
+  const ticksData: PlotTickData[] = []
+
+  ticks.forEach((tick, index) => {
+    const price = calcYPerXPrice(tick.sqrtPrice.v, tokenXDecimal, tokenYDecimal)
+
+    ticksData.push({
+      x: isXtoY
+        ? price
+        : (
+          price !== 0
+            ? 1 / price
+            : Number.MAX_SAFE_INTEGER
+        ),
+      y: +printBN(tick.liqudity, PRICE_DECIMAL),
+      index: tick.index
+    })
+
+    if (index < ticks.length - 1 && ticks[index + 1].index - ticks[index].index > pool.tickSpacing) {
+      for (let i = ticks[index].index + pool.tickSpacing; i < ticks[index + 1].index; i += pool.tickSpacing) {
+        const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
+
+        ticksData.push({
+          x: isXtoY
+            ? price
+            : (
+              price !== 0
+                ? 1 / price
+                : Number.MAX_SAFE_INTEGER
+            ),
+          y: +printBN(tick.liqudity, PRICE_DECIMAL),
+          index: i
+        })
+      }
+    }
+  })
+
+  if (!ticksData.length) {
+    const price = calcYPerXPrice(pool.sqrtPrice.v, tokenXDecimal, tokenYDecimal)
+
+    ticksData.push({
+      x: isXtoY
+        ? price
+        : (
+          price !== 0
+            ? 1 / price
+            : Number.MAX_SAFE_INTEGER
+        ),
+      y: 0,
+      index: pool.currentTickIndex
+    })
+  }
+
+  for (let i = (ticks.length ? ticks[0].index : pool.currentTickIndex) - pool.tickSpacing; i >= MIN_TICK; i -= pool.tickSpacing) {
+    const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
+
+    ticksData.push({
+      x: isXtoY
+        ? price
+        : (
+          price !== 0
+            ? 1 / price
+            : Number.MAX_SAFE_INTEGER
+        ),
+      y: 0,
+      index: i
+    })
+  }
+
+  for (let i = (ticks.length ? ticks[ticks.length - 1].index : pool.currentTickIndex) + pool.tickSpacing; i <= MAX_TICK; i += pool.tickSpacing) {
+    const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
+
+    ticksData.push({
+      x: isXtoY
+        ? price
+        : (
+          price !== 0
+            ? 1 / price
+            : Number.MAX_SAFE_INTEGER
+        ),
+      y: 0,
+      index: i
+    })
+  }
+
+  return ticksData.sort((a, b) => a.x - b.x)
 }

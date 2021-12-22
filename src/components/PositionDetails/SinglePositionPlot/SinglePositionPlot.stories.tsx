@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { useState } from '@storybook/client-api'
 import SinglePositionPlot from './SinglePositionPlot'
+import { tokens } from '@consts/static'
 
 const ticksToData = () => {
   const ticks = [
@@ -34,34 +34,27 @@ const data = ticksToData()
 
 storiesOf('singlePosition/rightComponent', module)
   .add('plot', () => {
-    const [plotMin, setPlotMin] = useState(0)
-    const [plotMax, setPlotMax] = useState(data[140].x * 3)
-
-    const zoomMinus = () => {
-      const diff = plotMax - plotMin
-      setPlotMin(plotMin - (diff / 4))
-      setPlotMax(plotMax + (diff / 4))
-    }
-
-    const zoomPlus = () => {
-      const diff = plotMax - plotMin
-      setPlotMin(plotMin + (diff / 6))
-      setPlotMax(plotMax - (diff / 6))
-    }
     return (
       <SinglePositionPlot
         data={data}
         leftRangeIndex={100}
         rightRangeIndex={200}
-        style={{ width: 600, height: 212, backgroundColor: '#1C1B1E', borderRadius: 10 }}
-        disabled
-        plotMin={plotMin}
-        plotMax={plotMax}
-        zoomMinus={zoomMinus}
-        zoomPlus={zoomPlus}
+        midPriceIndex={150}
         currentPrice={300}
-        fromToken={'SNY'}
-        toToken={'xUSD'}
+        tokenY={'SNY'}
+        tokenX={'xUSD'}
+        onZoomOutOfData={() => {}}
+        positionData={{
+          tokenXName: 'BTC',
+          tokenXIcon: tokens[0].logoURI,
+          tokenYIcon: tokens[1].logoURI,
+          tokenYName: 'SNY',
+          min: 2149.6,
+          max: 149.6,
+          fee: 0.05,
+          tokenXDecimal: 6,
+          tokenYDecimal: 6
+        }}
       />
     )
   })

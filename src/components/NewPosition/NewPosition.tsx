@@ -10,6 +10,7 @@ import { PlotTickData } from '@reducers/positions'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Link } from 'react-router-dom'
 import backIcon from '@static/svg/back-arrow.svg'
+import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import useStyles from './style'
 
 export interface INewPosition {
@@ -35,6 +36,7 @@ export interface INewPosition {
   onZoomOutOfData: (min: number, max: number) => void
   showNoConnected?: boolean
   noConnectedBlockerProps: INoConnected
+  progress: ProgressState
 }
 
 export const INewPosition: React.FC<INewPosition> = ({
@@ -51,7 +53,8 @@ export const INewPosition: React.FC<INewPosition> = ({
   isTokenXFirst,
   onZoomOutOfData,
   showNoConnected,
-  noConnectedBlockerProps
+  noConnectedBlockerProps,
+  progress
 }) => {
   const classes = useStyles()
 
@@ -77,10 +80,6 @@ export const INewPosition: React.FC<INewPosition> = ({
       return 'Loading data...'
     }
 
-    if (data.length === 0) {
-      return 'Cannot get necessary data. Try later.'
-    }
-
     return ''
   }
 
@@ -93,11 +92,12 @@ export const INewPosition: React.FC<INewPosition> = ({
 
   const getOtherTokenAmount = (amount: BN, left: number, right: number, byFirst: boolean) => {
     const printIndex = byFirst ? tokenBIndex : tokenAIndex
-    if (printIndex === null) {
+    const calcIndex = byFirst ? tokenAIndex : tokenBIndex
+    if (printIndex === null || calcIndex === null) {
       return '0.0'
     }
 
-    const result = calcAmount(amount, left, right, tokens[printIndex].assetAddress)
+    const result = calcAmount(amount, left, right, tokens[calcIndex].assetAddress)
 
     return printBN(result, tokens[printIndex].decimal)
   }
@@ -118,9 +118,10 @@ export const INewPosition: React.FC<INewPosition> = ({
 
       <Typography className={classes.title}>Add new liquidity position</Typography>
 
-      <Grid container direction='row' justifyContent='space-between' className={classes.row}>
+      <Grid container className={classes.row}>
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
+          className={classes.deposit}
           tokens={tokens}
           tokensB={tokensB}
           setPositionTokens={(index1, index2, fee) => {
@@ -184,6 +185,7 @@ export const INewPosition: React.FC<INewPosition> = ({
           }}
           feeTiers={feeTiers}
           isCurrentPoolExisting={isCurrentPoolExisting}
+          progress={progress}
         />
 
         <RangeSelector

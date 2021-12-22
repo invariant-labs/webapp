@@ -2,9 +2,11 @@ import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmo
 import Select from '@components/Inputs/Select/Select'
 import { SwapToken } from '@selectors/solanaWallet'
 import { printBN, printBNtoBN } from '@consts/utils'
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import React, { useState, useCallback, useEffect } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
+import classNames from 'classnames'
+import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import useStyles from './style'
 
 export interface InputState {
@@ -24,6 +26,8 @@ export interface IDepositSelector {
   tokenBInputState: InputState
   feeTiers: number[]
   isCurrentPoolExisting: boolean
+  className?: string
+  progress: ProgressState
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -34,7 +38,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   tokenAInputState,
   tokenBInputState,
   feeTiers,
-  isCurrentPoolExisting
+  isCurrentPoolExisting,
+  className,
+  progress
 }) => {
   const classes = useStyles()
 
@@ -59,6 +65,13 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'You don\'t have enough token B'
     }
 
+    if (
+      (!tokenAInputState.blocked && +tokenAInputState.value === 0) &&
+      (!tokenBInputState.blocked && +tokenBInputState.value === 0)
+    ) {
+      return 'Liquidity must be greater than 0'
+    }
+
     return 'Add Liquidity'
   }, [tokenAIndex, tokenBIndex, tokenAInputState.value, tokenBInputState.value, tokens, isCurrentPoolExisting])
 
@@ -73,7 +86,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   }, [tokensB])
 
   return (
-    <Grid container direction='column' className={classes.wrapper}>
+    <Grid container direction='column' className={classNames(classes.wrapper, className)}>
       <Typography className={classes.sectionTitle}>Tokens</Typography>
       <Grid container className={classes.sectionWrapper} style={{ marginBottom: 8 }}>
         <Grid container className={classes.selects} direction='row' justifyContent='space-between'>
@@ -133,7 +146,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             tokenAInputState.setValue(printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimal))
           }}
           style={{
-            marginBottom: 8
+            marginBottom: 10
           }}
           onBlur={() => {
             if (tokenAIndex !== null && tokenBIndex !== null && tokenAInputState.value.length === 0) {
@@ -163,13 +176,13 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         />
       </Grid>
 
-      <Button
+      <AnimatedButton
         className={classes.addButton}
         onClick={onAddLiquidity}
         disabled={getButtonMessage() !== 'Add Liquidity'}
-      >
-        {getButtonMessage()}
-      </Button>
+        content={getButtonMessage()}
+        progress={progress}
+      />
     </Grid>
   )
 }

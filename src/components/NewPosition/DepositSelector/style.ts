@@ -7,7 +7,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.componentOut4,
     padding: 24,
     paddingTop: 16,
-    width: 429
+    flex: '1 1 0%'
   },
   sectionTitle: {
     ...typography.body1,
@@ -22,16 +22,20 @@ const useStyles = makeStyles(() => ({
     width: '100%'
   },
   inputLabel: {
-    ...typography.label3,
+    ...typography.body3,
     lineHeight: '16px',
     color: colors.invariant.lightInfoText,
     marginBottom: 3
   },
   selects: {
-    marginBottom: 3
+    marginBottom: 10
   },
   selectWrapper: {
-    width: 170
+    flex: '1 1 0%',
+
+    '&:first-child': {
+      marginRight: 8
+    }
   },
   customSelect: {
     width: '100%',
@@ -52,23 +56,7 @@ const useStyles = makeStyles(() => ({
   },
   addButton: {
     width: '100%',
-    height: 40,
-    borderRadius: 5,
-    backgroundColor: colors.invariant.accent1,
-    color: colors.white.main,
-    ...typography.body1,
-    textTransform: 'none',
-    marginTop: 18,
-
-    '&:hover': {
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`,
-      backgroundColor: colors.invariant.accent1
-    },
-
-    '&:disabled': {
-      backgroundColor: colors.invariant.componentOut3,
-      color: colors.invariant.lightInfoText
-    }
+    marginTop: 18
   }
 }))
 

@@ -3,7 +3,7 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   container: {
-    width: '1000px',
+    width: '100%',
     height: '370px',
     position: 'absolute',
     zIndex: 14
@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 25
   },
   blur: {
-    width: '1000px',
+    width: '100%',
     height: '370px',
     backgroundColor: 'rgba(12, 11, 13, 0.8)',
     filter: 'blur(4px) brightness(0.4)',

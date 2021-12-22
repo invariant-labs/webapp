@@ -7,12 +7,16 @@ import { pools } from './pools'
 
 const store = (s: AnyProps) => s[positionsSliceName] as IPositionsStore
 
-export const { positionsList, plotTicks } = keySelectors(store, ['positionsList', 'plotTicks'])
+export const { positionsList, plotTicks, currentPositionRangeTicks, initPosition } = keySelectors(store, ['positionsList', 'plotTicks', 'currentPositionRangeTicks', 'initPosition'])
 
 export const isLoadingPositionsList = createSelector(
   positionsList,
   (s) => s.loading
 )
+
+export interface PoolWithAddressAndIndex extends PoolWithAddress {
+  poolIndex: number
+}
 
 export const positionsWithPoolsData = createSelector(
   pools,
@@ -25,14 +29,17 @@ export const positionsWithPoolsData = createSelector(
       }
     }, {})
 
-    const poolsByKey: Record<string, PoolWithAddress> = allPools.reduce((prev, pool) => {
+    const poolsByKey: Record<string, PoolWithAddressAndIndex> = allPools.reduce((prev, pool, index) => {
       return {
-        [pool.address.toString()]: pool,
+        [pool.address.toString()]: {
+          ...pool,
+          poolIndex: index
+        },
         ...prev
       }
     }, {})
 
-    return list.map((position) => ({
+    return list.map((position, index) => ({
       ...position,
       poolData: poolsByKey[position.pool.toString()],
       tokenX: tokensByKey[
@@ -40,11 +47,17 @@ export const positionsWithPoolsData = createSelector(
       ],
       tokenY: tokensByKey[
         poolsByKey[position.pool.toString()].tokenY.toString()
-      ]
+      ],
+      positionIndex: index
     }))
   }
 )
 
-export const positionsSelectors = { positionsList, plotTicks }
+export const singlePositionData = (id: string) => createSelector(
+  positionsWithPoolsData,
+  (positions) => positions.find((position) => id === (position.id.toString() + '_' + position.pool.toString()))
+)
+
+export const positionsSelectors = { positionsList, plotTicks, currentPositionRangeTicks, initPosition }
 
 export default positionsSelectors

@@ -46,8 +46,8 @@ export const Header: React.FC<IHeader> = ({
 
   const routes = ['swap', 'pool']
 
-  const otherRoutesToHighlight: Record<string, string[]> = {
-    pool: ['newPosition', 'position']
+  const otherRoutesToHighlight: Record<string, RegExp[]> = {
+    pool: [/^newPosition$/, /^position\/*/]
   }
 
   const [activePath, setActive] = React.useState(landing)
@@ -82,7 +82,7 @@ export const Header: React.FC<IHeader> = ({
                   onClick={() => {
                     setActive(path)
                   }}
-                  active={path === activePath || !!(otherRoutesToHighlight[path]?.includes(activePath))}
+                  active={path === activePath || (!!otherRoutesToHighlight[path] && otherRoutesToHighlight[path].some((pathRegex) => pathRegex.test(activePath)))}
                 />
               </Link>
             ))}
@@ -124,7 +124,10 @@ export const Header: React.FC<IHeader> = ({
               WalletType.PHANTOM,
               WalletType.SOLLET,
               WalletType.MATH,
-              WalletType.SOLFLARE
+              WalletType.SOLFLARE,
+              WalletType.COIN98,
+              WalletType.SLOPE,
+              WalletType.CLOVER
             ]}
             onSelect={onWalletSelect}
             connected={walletConnected}

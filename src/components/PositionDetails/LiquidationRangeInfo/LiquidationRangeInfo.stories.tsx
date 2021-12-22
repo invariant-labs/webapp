@@ -1,6 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import LiquidationRangeInfo from '@components/LiquidationRangeInfo/LiquidationRangeInfo'
+import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
 
 storiesOf('singlePosition/rightComponent', module)
   .add('rangeInfo', () => {
@@ -14,8 +14,8 @@ storiesOf('singlePosition/rightComponent', module)
         <LiquidationRangeInfo
           label={label}
           amount={amount}
-          toToken={toToken}
-          fromToken={fromToken}/>
+          tokenX={toToken}
+          tokenY={fromToken}/>
       </div>
     )
   })

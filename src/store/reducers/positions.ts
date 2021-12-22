@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PayloadType } from '@reducers/types'
-import { Position, InitPosition } from '@invariant-labs/sdk/lib/market'
+import { Position, InitPosition, Tick } from '@invariant-labs/sdk/lib/market'
 
 export interface PositionsListStore {
   list: Position[]
@@ -16,10 +16,24 @@ export interface PlotTickData {
 export interface PlotTicks {
   data: PlotTickData[]
   loading: boolean
+  maxReached: boolean
+}
+
+export interface InitPositionStore {
+  inProgress: boolean
+  success: boolean
+}
+
+export interface CurrentPositionRangeTicksStore {
+  lowerTick?: Tick
+  upperTick?: Tick
+  loading: boolean
 }
 export interface IPositionsStore {
   plotTicks: PlotTicks
   positionsList: PositionsListStore
+  currentPositionRangeTicks: CurrentPositionRangeTicksStore
+  initPosition: InitPositionStore
 }
 
 export interface InitPositionData extends Omit<InitPosition, 'owner' | 'userTokenX' | 'userTokenY' | 'pair'> {
@@ -33,14 +47,39 @@ export interface GetCurrentTicksData {
   max?: number
 }
 
+export interface ClosePositionData {
+  positionIndex: number,
+  onSuccess: () => void
+}
+
+export interface SetPositionData {
+  index: number,
+  position: Position
+}
+
+export interface SetCurrentTicksData {
+  data: PlotTickData[]
+  maxReached: boolean
+}
+
 export const defaultState: IPositionsStore = {
   plotTicks: {
     data: [],
-    loading: false
+    loading: false,
+    maxReached: false
   },
   positionsList: {
     list: [],
     loading: false
+  },
+  currentPositionRangeTicks: {
+    lowerTick: undefined,
+    upperTick: undefined,
+    loading: false
+  },
+  initPosition: {
+    inProgress: false,
+    success: false
   }
 }
 
@@ -50,10 +89,17 @@ const positionsSlice = createSlice({
   initialState: defaultState,
   reducers: {
     initPosition(state, _action: PayloadAction<InitPositionData>) {
+      state.initPosition.inProgress = true
       return state
     },
-    setPlotTicks(state, action: PayloadAction<PlotTickData[]>) {
-      state.plotTicks.data = action.payload
+    setInitPositionSuccess(state, action: PayloadAction<boolean>) {
+      state.initPosition.inProgress = false
+      state.initPosition.success = action.payload
+      return state
+    },
+    setPlotTicks(state, action: PayloadAction<SetCurrentTicksData>) {
+      state.plotTicks.data = action.payload.data
+      state.plotTicks.maxReached = action.payload.maxReached
       state.plotTicks.loading = false
       return state
     },
@@ -70,6 +116,30 @@ const positionsSlice = createSlice({
     },
     getPositionsList(state) {
       state.positionsList.loading = true
+      return state
+    },
+    getSinglePosition(state, _action: PayloadAction<number>) {
+      return state
+    },
+    setSinglePosition(state, action: PayloadAction<SetPositionData>) {
+      state.positionsList.list[action.payload.index] = action.payload.position
+      return state
+    },
+    getCurrentPositionRangeTicks(state, _action: PayloadAction<string>) {
+      state.currentPositionRangeTicks.loading = true
+      return state
+    },
+    setCurrentPositionRangeTicks(state, action: PayloadAction<{ lowerTick: Tick, upperTick: Tick }>) {
+      state.currentPositionRangeTicks = {
+        ...action.payload,
+        loading: false
+      }
+      return state
+    },
+    claimFee(state, _action: PayloadAction<number>) {
+      return state
+    },
+    closePosition(state, _action: PayloadAction<ClosePositionData>) {
       return state
     },
     resetState(state) {

@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     position: 'relative'
   },
@@ -17,6 +17,13 @@ const useStyles = makeStyles(() => ({
     '& $input': {
       paddingInline: 8,
       paddingTop: 7
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      height: 51,
+      '& $input': {
+        paddingTop: 10
+      }
     }
   },
   currency: {
@@ -26,7 +33,12 @@ const useStyles = makeStyles(() => ({
     flexShrink: 0,
     paddingInline: 5,
     borderRadius: 3,
-    backgroundColor: colors.invariant.componentOut2
+    backgroundColor: colors.invariant.componentOut2,
+
+    [theme.breakpoints.down('sm')]: {
+      height: 34,
+      minWidth: 67
+    }
   },
   currencyIcon: {
     minWidth: 14,
@@ -51,9 +63,15 @@ const useStyles = makeStyles(() => ({
     minWidth: 40,
     height: 26,
     textTransform: 'none',
-
     '&:hover': {
-      backgroundColor: colors.invariant.logoGreen
+      backgroundColor: colors.invariant.logoGreen,
+      boxShadow: '0px 0px 20px -10px white'
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      width: 50,
+      minWidth: 50,
+      height: 34
     }
   },
   blocker: {
