@@ -5,12 +5,12 @@ import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/Exchange
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@components/Swap/Swap'
-import Vector from '../VectorLogo/Vector'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import watchIcon from '@static/svg/watch.svg'
 import solanaIcon from '@static/svg/solanaToken.svg'
 import dollarIcon from '@static/svg/dollarToken.svg'
 import invariantIcon from '@static/svg/invariantToken.svg'
+import invariantLogo from '@static/svg/invariantLogo.svg'
 const IDO: React.FC = () => {
   const classes = useStyles()
   const getButtonMessage = () => {
@@ -87,7 +87,7 @@ const IDO: React.FC = () => {
               <Typography className={classes.tokenComponentText}>Deposited amount:</Typography>
             </Grid>
             <Box className={classes.valueBox}>
-              <Vector />
+              <CardMedia image={invariantLogo} className={classes.iconLogo} />
               <Box className={classes.infoContainer}>
                 <Box>
                   <Typography className={classes.depositAmouted}>46.643 xUSD</Typography>

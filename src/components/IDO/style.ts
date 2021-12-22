@@ -23,6 +23,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: 0
     }
   },
+  iconLogo: {
+    width: 38,
+    height: 29
+  },
   icon: {
     width: 15,
     height: 15,
@@ -138,7 +142,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   valueBox: {
     display: 'flex',
     width: '100%',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
+    alignItems: 'center'
   },
   infoContainer: {
     width: '70%'
