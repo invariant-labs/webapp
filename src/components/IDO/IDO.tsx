@@ -1,8 +1,8 @@
-import * as React from 'react'
+import React, { useEffect } from 'react'
 import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
 import useStyles from './style'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
-
+import { printBN } from '@consts/utils'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import watchIcon from '@static/svg/watch.svg'
 import solanaIcon from '@static/svg/solanaToken.svg'
@@ -20,10 +20,16 @@ const IDO: React.FC<IIDO> = ({ tokens }) => {
   const getButtonMessage = () => {
     return 'Connect a wallet'
   }
-
+  const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
     tokens.length ? 0 : null
   )
+
+  useEffect(() => {
+    if (tokenFromIndex !== null) {
+      setAmountFrom('0.000000')
+    }
+  }, [])
   return (
     <Grid container className={classes.containerIDO}>
       <Grid sm={12} item className={classes.header}>
@@ -36,14 +42,23 @@ const IDO: React.FC<IIDO> = ({ tokens }) => {
               <Typography component='h2'>Deposit your SOL</Typography>
             </Grid>
             <Box className={classes.tokenComponentTextContainer}>
-              <Typography className={classes.tokenComponentText}>Est.: 56.0278$</Typography>
-              <Typography className={classes.tokenComponentText}>Balance: 1004.5 SOL </Typography>
+              <Typography className={classes.tokenComponentText}>Est.: </Typography>
+              <Typography className={classes.tokenComponentText}>
+                Balance:
+                {tokenFromIndex !== null
+                  ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal)
+                  : '0'}{' '}
+              </Typography>
             </Box>
             <ExchangeAmountInput
-              setValue={() => {}}
+              value={amountFrom}
+              setValue={value => {
+                if (value.match(/^\d*\.?\d*$/)) {
+                  setAmountFrom(value)
+                }
+              }}
               decimal={6}
               placeholder={'0.0'}
-              onMaxClick={() => {}}
               current={tokenFromIndex !== null ? tokens[tokenFromIndex] : null}
               tokens={tokens}
               onSelect={(name: string) => {
@@ -52,6 +67,13 @@ const IDO: React.FC<IIDO> = ({ tokens }) => {
                     return name === token.symbol
                   })
                 )
+              }}
+              onMaxClick={() => {
+                if (tokenFromIndex !== null) {
+                  setAmountFrom(
+                    printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal)
+                  )
+                }
               }}
             />
             <Grid>
