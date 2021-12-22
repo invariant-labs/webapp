@@ -40,11 +40,13 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   useEffect(() => {
     if (position?.id) {
       dispatch(actions.getCurrentPositionRangeTicks(id))
-      dispatch(actions.getCurrentPlotTicks({
-        poolIndex: position.poolData.poolIndex,
-        isXtoY: true,
-        tmpData: createPlaceholderLiquidityPlot(position.poolData, true, 10)
-      }))
+      dispatch(
+        actions.getCurrentPlotTicks({
+          poolIndex: position.poolData.poolIndex,
+          isXtoY: true,
+          tmpData: createPlaceholderLiquidityPlot(position.poolData, true, 10)
+        })
+      )
     }
   }, [position?.id])
 
@@ -152,60 +154,61 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     return [0, 0]
   }, [position, lowerTick, upperTick])
 
-  return !isLoadingList && !rangeTicksLoading && position
-      ? (
-        <PositionDetails
-          detailsData={ticksData}
-          midPriceIndex={midPriceIndex}
-          leftRangeIndex={leftRangeIndex}
-          rightRangeIndex={rightRangeIndex}
-          currentPrice={current}
-          tokenY={position.tokenY.symbol}
-          tokenX={position.tokenX.symbol}
-          onZoomOutOfData={(min, max) => {
-            if (position) {
-              dispatch(actions.getCurrentPlotTicks({
-                poolIndex: position.poolData.poolIndex,
-                isXtoY: true,
-                min,
-                max
-              }))
+  return !isLoadingList && !rangeTicksLoading && position ? (
+    <PositionDetails
+      detailsData={ticksData}
+      midPriceIndex={midPriceIndex}
+      leftRangeIndex={leftRangeIndex}
+      rightRangeIndex={rightRangeIndex}
+      currentPrice={current}
+      tokenY={position.tokenY.symbol}
+      tokenX={position.tokenX.symbol}
+      onZoomOutOfData={(min, max) => {
+        if (position) {
+          dispatch(
+            actions.getCurrentPlotTicks({
+              poolIndex: position.poolData.poolIndex,
+              isXtoY: true,
+              min,
+              max
+            })
+          )
+        }
+      }}
+      onClickClaimFee={() => {
+        dispatch(actions.claimFee(position.positionIndex))
+      }}
+      closePosition={() => {
+        dispatch(
+          actions.closePosition({
+            positionIndex: position.positionIndex,
+            onSuccess: () => {
+              history.push('/pool')
             }
-          }}
-          onClickClaimFee={() => {
-            dispatch(actions.claimFee(position.positionIndex))
-          }}
-          closePosition={() => {
-            dispatch(actions.closePosition({
-              positionIndex: position.positionIndex,
-              onSuccess: () => {
-                history.push('/pool')
-              }
-            }))
-          }}
-          tokenXLiqValue={tokenXLiquidity}
-          tokenYLiqValue={tokenYLiquidity}
-          tokenXClaimValue={tokenXClaim}
-          tokenYClaimValue={tokenYClaim}
-          positionData={{
-            tokenXName: position.tokenX.symbol,
-            tokenYName: position.tokenY.symbol,
-            tokenXIcon: position.tokenX.logoURI,
-            tokenYIcon: position.tokenY.logoURI,
-            tokenXDecimal: position.tokenX.decimal,
-            tokenYDecimal: position.tokenY.decimal,
-            fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
-            min,
-            max
-          }}
-        />
-      )
-      : (
-        isLoadingList || rangeTicksLoading
-          ? <Typography className={classes.placeholderText}>Loading...</Typography>
-          : (
-            !position
-              ? <Typography className={classes.placeholderText}>Position does not exist in your list.</Typography>
-              : null)
+          })
         )
+      }}
+      tokenXLiqValue={tokenXLiquidity}
+      tokenYLiqValue={tokenYLiquidity}
+      tokenXClaimValue={tokenXClaim}
+      tokenYClaimValue={tokenYClaim}
+      positionData={{
+        tokenXName: position.tokenX.symbol,
+        tokenYName: position.tokenY.symbol,
+        tokenXIcon: position.tokenX.logoURI,
+        tokenYIcon: position.tokenY.logoURI,
+        tokenXDecimal: position.tokenX.decimal,
+        tokenYDecimal: position.tokenY.decimal,
+        fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
+        min,
+        max
+      }}
+    />
+  ) : isLoadingList || rangeTicksLoading ? (
+    <Typography className={classes.placeholderText}>Loading...</Typography>
+  ) : !position ? (
+    <Typography className={classes.placeholderText}>
+      Position does not exist in your list.
+    </Typography>
+  ) : null
 }

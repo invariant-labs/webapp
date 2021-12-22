@@ -144,7 +144,10 @@ export const NewPosition: React.FC<INewPosition> = ({
                 )
               )
             },
-            blocked: tokenAIndex !== null && tokenBIndex !== null && (isTokenXFirst ? rightRange <= midPriceIndex : rightRange < midPriceIndex),
+            blocked:
+              tokenAIndex !== null &&
+              tokenBIndex !== null &&
+              (isTokenXFirst ? rightRange <= midPriceIndex : rightRange < midPriceIndex),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimal : 0
           }}
@@ -164,7 +167,10 @@ export const NewPosition: React.FC<INewPosition> = ({
                 )
               )
             },
-            blocked: tokenAIndex !== null && tokenBIndex !== null && (isTokenXFirst ? leftRange > midPriceIndex : leftRange >= midPriceIndex),
+            blocked:
+              tokenAIndex !== null &&
+              tokenBIndex !== null &&
+              (isTokenXFirst ? leftRange > midPriceIndex : leftRange >= midPriceIndex),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimal : 0
           }}
@@ -206,18 +212,24 @@ export const NewPosition: React.FC<INewPosition> = ({
               }
             }
           }}
-          blocked={tokenAIndex === null || tokenBIndex === null || !isCurrentPoolExisting || data.length === 0}
+          blocked={
+            tokenAIndex === null ||
+            tokenBIndex === null ||
+            !isCurrentPoolExisting ||
+            data.length === 0
+          }
           blockerInfo={setRangeBlockerInfo()}
-          {
-          ...(
-            tokenAIndex === null || tokenBIndex === null || !isCurrentPoolExisting || data.length === 0
-              ? noRangePlaceholderProps
-              : {
-                data,
-                midPriceIndex,
-                tokenFromSymbol: tokens[tokenAIndex].symbol,
-                tokenToSymbol: tokens[tokenBIndex].symbol
-              })}
+          {...(tokenAIndex === null ||
+          tokenBIndex === null ||
+          !isCurrentPoolExisting ||
+          data.length === 0
+            ? noRangePlaceholderProps
+            : {
+              data,
+              midPriceIndex,
+              tokenFromSymbol: tokens[tokenAIndex].symbol,
+              tokenToSymbol: tokens[tokenBIndex].symbol
+            })}
           onZoomOutOfData={onZoomOutOfData}
           ticksLoading={ticksLoading}
         />
