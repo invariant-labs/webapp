@@ -27,41 +27,41 @@ interface IProp {
   noConnectedBlockerProps: INoConnected
 }
 
-export const PositionsList: React.FC<IProp> = ({ data, onAddPositionClick, loading = false, showNoConnected = false, noConnectedBlockerProps }) => {
+export const PositionsList: React.FC<IProp> = ({
+  data,
+  onAddPositionClick,
+  loading = false,
+  showNoConnected = false,
+  noConnectedBlockerProps
+}) => {
   const classes = useStyle()
   return (
     <Grid className={classes.root}>
-      <Grid className={classes.header} container direction='row' justifyContent='space-between' alignItems='center'>
+      <Grid
+        className={classes.header}
+        container
+        direction='row'
+        justifyContent='space-between'
+        alignItems='center'>
         <Typography className={classes.title}>Your Liquidity Positions</Typography>
-        <Button
-          className={classes.button}
-          variant='contained'
-          onClick={onAddPositionClick}>
+        <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
           <span className={classes.buttonText}>+ Add Position</span>
         </Button>
       </Grid>
       <Grid className={classes.list}>
-        {
-          data.length > 0
-            ? data.map((element, index) => (
-              <Link to={`/position/${element.id}`} key={index} className={classes.itemLink}>
-                <PositionItem key={index} {...element} />
-              </Link>
-            ))
-            : (
-              showNoConnected
-                ? <NoConnected {...noConnectedBlockerProps} />
-                : (
-                  <Typography className={classes.noPositionsText}>
-                    {
-                      loading
-                        ? 'Loading...'
-                        : 'Currently you have no liquidity positions.'
-                    }
-                  </Typography>
-                )
-            )
-        }
+        {data.length > 0 ? (
+          data.map((element, index) => (
+            <Link to={`/position/${element.id}`} key={index} className={classes.itemLink}>
+              <PositionItem key={index} {...element} />
+            </Link>
+          ))
+        ) : showNoConnected ? (
+          <NoConnected {...noConnectedBlockerProps} />
+        ) : (
+          <Typography className={classes.noPositionsText}>
+            {loading ? 'Loading...' : 'Currently you have no liquidity positions.'}
+          </Typography>
+        )}
       </Grid>
     </Grid>
   )

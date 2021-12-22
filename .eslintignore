@@ -4,3 +4,4 @@ config-overrides.js
 build
 dist 
 vite.config.ts
+.eslintrc.js

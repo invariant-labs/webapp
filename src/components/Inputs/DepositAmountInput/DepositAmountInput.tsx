@@ -34,7 +34,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const regex = /^\d*\.?\d*$/
     if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value
@@ -83,36 +83,43 @@ export const DepositAmountInput: React.FC<IProps> = ({
         disableUnderline={true}
         placeholder={placeholder}
         onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-        startAdornment={(
-          <Grid className={classes.currency} container justifyContent='center' alignItems='center' wrap='nowrap'>
-            {
-              currency !== null
-                ? (
-                  <>
-                    <img alt='' src={currencyIconSrc} className={classes.currencyIcon}/>
-                    <Typography className={classes.currencySymbol}>{currency}</Typography>
-                  </>
-                )
-                : <Typography className={classes.noCurrencyText}>Select</Typography>
-            }
+        startAdornment={
+          <Grid
+            className={classes.currency}
+            container
+            justifyContent='center'
+            alignItems='center'
+            wrap='nowrap'>
+            {currency !== null ? (
+              <>
+                <img alt='' src={currencyIconSrc} className={classes.currencyIcon} />
+                <Typography className={classes.currencySymbol}>{currency}</Typography>
+              </>
+            ) : (
+              <Typography className={classes.noCurrencyText}>Select</Typography>
+            )}
           </Grid>
-        )}
-        endAdornment={(
-          <Button className={classes.maxButton} onClick={onMaxClick}>Max</Button>
-        )}
+        }
+        endAdornment={
+          <Button className={classes.maxButton} onClick={onMaxClick}>
+            Max
+          </Button>
+        }
         onBlur={onBlur}
       />
 
-      {
-        blocked && (
-          <>
-            <Grid container className={classes.blocker} />
-            <Grid container className={classes.blockedInfoWrapper} justifyContent='center' alignItems='center'>
-              <Typography className={classes.blockedInfo}>{blockerInfo}</Typography>
-            </Grid>
-          </>
-        )
-      }
+      {blocked && (
+        <>
+          <Grid container className={classes.blocker} />
+          <Grid
+            container
+            className={classes.blockedInfoWrapper}
+            justifyContent='center'
+            alignItems='center'>
+            <Typography className={classes.blockedInfo}>{blockerInfo}</Typography>
+          </Grid>
+        </>
+      )}
     </Grid>
   )
 }
