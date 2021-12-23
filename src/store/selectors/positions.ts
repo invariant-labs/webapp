@@ -1,6 +1,5 @@
 import { Token, tokens } from '@consts/static'
 import { PoolWithAddress } from '@reducers/pools'
-import BN from 'bn.js'
 import { createSelector } from 'reselect'
 import { IPositionsStore, positionsSliceName } from '../reducers/positions'
 import { keySelectors, AnyProps } from './helpers'
@@ -8,7 +7,7 @@ import { pools } from './pools'
 
 const store = (s: AnyProps) => s[positionsSliceName] as IPositionsStore
 
-export const { positionsList, plotTicks, currentPositionRangeTicks } = keySelectors(store, ['positionsList', 'plotTicks', 'currentPositionRangeTicks'])
+export const { positionsList, plotTicks, currentPositionRangeTicks, initPosition } = keySelectors(store, ['positionsList', 'plotTicks', 'currentPositionRangeTicks', 'initPosition'])
 
 export const isLoadingPositionsList = createSelector(
   positionsList,
@@ -56,9 +55,9 @@ export const positionsWithPoolsData = createSelector(
 
 export const singlePositionData = (id: string) => createSelector(
   positionsWithPoolsData,
-  (positions) => positions.find((position) => position.id.eq(new BN(id)))
+  (positions) => positions.find((position) => id === (position.id.toString() + '_' + position.pool.toString()))
 )
 
-export const positionsSelectors = { positionsList, plotTicks, currentPositionRangeTicks }
+export const positionsSelectors = { positionsList, plotTicks, currentPositionRangeTicks, initPosition }
 
 export default positionsSelectors

@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '100%'
   },
@@ -10,10 +10,18 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center'
   },
   icon: {
-    width: '35px'
+    width: 35,
+
+    [theme.breakpoints.down('xs')]: {
+      width: 22
+    }
   },
   arrowIcon: {
-    width: '22px'
+    width: 22,
+
+    [theme.breakpoints.down('xs')]: {
+      width: 15
+    }
   },
   text: {
     ...typography.body1,
@@ -44,7 +52,11 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center'
   },
   feeText: {
-    minWidth: '90px'
+    minWidth: 90,
+
+    [theme.breakpoints.down('xs')]: {
+      minWidth: 84
+    }
   },
   closedText: {
     width: '100px',
@@ -58,12 +70,20 @@ const useStyles = makeStyles(() => ({
     paddingLeft: 8,
     '& #pause': {
       padding: ' 0px 3px'
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: 4
     }
   },
   name: {
     ...typography.heading3,
     color: colors.white.main,
-    lineHeight: '35px'
+    lineHeight: '35px',
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.body1
+    }
   },
   bottomGrid: {
     background: colors.invariant.componentOut4,
@@ -98,11 +118,17 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     color: colors.white.main,
     minWidth: 140,
-    maxHeight: '35px',
+    maxHeight: 35,
     ...typography.body1,
     '&:hover': {
       background: colors.invariant.accent1,
       boxShadow: `0 0 15px ${colors.invariant.accent1}`
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.label2,
+      maxHeight: 28,
+      minWidth: 105
     }
   },
   tokenGrid: {
@@ -153,6 +179,11 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       background: colors.invariant.accent2,
       boxShadow: `0px 0px 15px ${colors.invariant.accent2}`
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.label2,
+      minWidth: 84
     }
   },
   iconText: {

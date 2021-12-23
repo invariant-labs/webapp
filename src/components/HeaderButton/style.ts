@@ -48,8 +48,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:not(:last-child)': {
       marginRight: 12
     },
+
     '&:hover': {
-      background: colors.invariant.violetWeak
+      boxShadow: `0 0 15px ${colors.invariant.accent1}`,
+      backgroundColor: colors.invariant.accent1
     }
   },
   headerButtonConnected: {

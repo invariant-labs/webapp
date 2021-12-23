@@ -120,7 +120,15 @@ export const Header: React.FC<IHeader> = ({
                   }`
                 : 'Connect wallet'
             }
-            options={[WalletType.PHANTOM, WalletType.SOLLET, WalletType.MATH, WalletType.SOLFLARE]}
+            options={[
+              WalletType.PHANTOM,
+              WalletType.SOLLET,
+              WalletType.MATH,
+              WalletType.SOLFLARE,
+              WalletType.COIN98,
+              WalletType.SLOPE,
+              WalletType.CLOVER
+            ]}
             onSelect={onWalletSelect}
             connected={walletConnected}
             onDisconnect={onDisconnectWallet}

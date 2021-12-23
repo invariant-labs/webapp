@@ -337,17 +337,26 @@ export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): 
     case WalletType.SOLFLARE:
       enumWallet = 'solflare'
       break
+    case WalletType.COIN98:
+      enumWallet = 'coin98'
+      break
+    case WalletType.SLOPE:
+      enumWallet = 'slope'
+      break
+    case WalletType.CLOVER:
+      enumWallet = 'clover'
+      break
     default:
       enumWallet = 'phantom'
   }
-  yield call([sessionStorage, sessionStorage.setItem], 'INVARIANT_SESSION_WALLET', enumWallet)
+  yield call([localStorage, localStorage.setItem], 'INVARIANT_SESSION_WALLET', enumWallet)
   yield* call(init)
 }
 
 export function* handleDisconnect(): Generator {
   try {
     yield* call(disconnectWallet)
-    yield call([sessionStorage, sessionStorage.removeItem], 'INVARIANT_SESSION_WALLET')
+    yield call([localStorage, localStorage.removeItem], 'INVARIANT_SESSION_WALLET')
     yield* put(actions.resetState())
     yield* put(positionsActions.resetState())
   } catch (error) {

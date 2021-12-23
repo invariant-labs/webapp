@@ -5,18 +5,18 @@ import { printBN, printBNtoBN } from '@consts/utils'
 import { Decimal, PoolStructure } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
-import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import Slippage from '@components/Swap/slippage/Slippage'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import TransactionDetails from '@components/Swap/transactionDetails/TransactionDetails'
 import { PRICE_DECIMAL } from '@consts/static'
-import useStyles from './style'
 import { Status } from '@reducers/solanaWallet'
 import SwapArrows from '@static/svg/swap-arrows.svg'
 import infoIcon from '@static/svg/info.svg'
 import settingIcon from '@static/svg/settings.svg'
 import { DENOMINATOR } from '@invariant-labs/sdk'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
+import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import useStyles from './style'
 
 export interface SwapToken {
   balance: BN
@@ -56,13 +56,15 @@ export interface ISwap {
     toToken: PublicKey,
     amount: BN,
     slippage: Decimal,
-    price: Decimal) => void,
+    price: Decimal) => void
+  progress: ProgressState
 }
 export const Swap: React.FC<ISwap> = ({
   walletStatus,
   tokens,
   pools,
-  onSwap
+  onSwap,
+  progress
 }) => {
   const classes = useStyles()
   const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
@@ -78,6 +80,8 @@ export const Swap: React.FC<ISwap> = ({
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const [settings, setSettings] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
+
+  const [rotates, setRotates] = React.useState<number>(0)
 
   enum feeOption {
     FEE = 'fee',
@@ -234,7 +238,7 @@ export const Swap: React.FC<ISwap> = ({
       <Grid container className={classes.header}>
         <Typography component='h1'>Swap tokens</Typography>
         <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
-          <CardMedia image={settingIcon} className={classes.settingsIcon} />
+          <img src={settingIcon} className={classes.settingsIcon} />
         </Button>
         <Grid className={classes.slippage}>
           <Slippage open={settings}
@@ -246,7 +250,7 @@ export const Swap: React.FC<ISwap> = ({
       </Grid>
       <Grid container className={classes.root} direction='column'>
         <Box className={classes.tokenComponentTextContainer}>
-          <Typography className={classes.tokenComponentText}>Est.: </Typography>
+          <Typography className={classes.tokenComponentText}>From: </Typography>
           <Typography className={classes.tokenComponentText}>
           Balance: {tokenFromIndex !== null
               ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal) : '0'}
@@ -285,28 +289,29 @@ export const Swap: React.FC<ISwap> = ({
           }}
         />
         <Box className={classes.tokenComponentTextContainer}>
-          <Box className={classes.swapArrowBox}>
-            <CardMedia image={SwapArrows}
+          <Box
+            className={classes.swapArrowBox}
+            onClick={() => {
+              setRotates(rotates + 1)
+              swap !== null
+                ? setSwap(!swap)
+                : setSwap(true)
+              const tmp = tokenFromIndex
+              const tokensTmp = tokens
+              setTokenFromIndex(tokenToIndex)
+              setTokenToIndex(tmp)
+              tokens = tokensY
+              setTokensY(tokensTmp)
+            }}
+          >
+            <img src={SwapArrows}
               style={
                 {
-                  transform: swap !== null
-                    ? swap
-                      ? 'rotate(180deg)'
-                      : 'rotate(0deg)'
-                    : ''
+                  transform: `rotate(${-rotates * 180}deg)`
                 }
               }
-              className={classes.swapArrows} onClick={() => {
-                swap !== null
-                  ? setSwap(!swap)
-                  : setSwap(true)
-                const tmp = tokenFromIndex
-                const tokensTmp = tokens
-                setTokenFromIndex(tokenToIndex)
-                setTokenToIndex(tmp)
-                tokens = tokensY
-                setTokensY(tokensTmp)
-              }} />
+              className={classes.swapArrows}
+            />
           </Box>
           <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
           <Typography className={classes.tokenComponentText}>
@@ -359,7 +364,7 @@ export const Swap: React.FC<ISwap> = ({
             <Typography className={classes.transactionDetailsHeader}>See transaction details</Typography>
             <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }}/>
           </Grid>
-          {tokenFromIndex !== null && tokenToIndex !== null && getButtonMessage() === 'Swap'
+          {tokenFromIndex !== null && tokenToIndex !== null
             ? <TransactionDetails
               open={detailsOpen}
               fee={{ v: poolIndex !== -1 && poolIndex !== null ? pools[poolIndex].fee.v : new BN(0) }}
@@ -369,7 +374,7 @@ export const Swap: React.FC<ISwap> = ({
               }}
             />
             : null}
-          {tokenFromIndex !== null && tokenToIndex !== null && getButtonMessage() === 'Swap' ? (
+          {tokenFromIndex !== null && tokenToIndex !== null ? (
             <Typography className={classes.rateText}>
           1 {tokens[tokenFromIndex].symbol } = {' '}
               {/* tutaj będzie zmiana 1 na wartość odpowiadającą ilości tokenów */}
@@ -378,9 +383,8 @@ export const Swap: React.FC<ISwap> = ({
             </Typography>
           ) : null}
         </Box>
-        <OutlinedButton
-          name={getButtonMessage()}
-          color='primary'
+        <AnimatedButton
+          content={getButtonMessage()}
           className={classes.swapButton}
           disabled={getButtonMessage() !== 'Swap'}
           onClick={() => {
@@ -393,6 +397,7 @@ export const Swap: React.FC<ISwap> = ({
               { v: poolIndex !== null ? pools[poolIndex].sqrtPrice.v : new BN(1) }
             )
           }}
+          progress={progress}
         />
       </Grid>
     </Grid>

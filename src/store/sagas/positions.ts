@@ -9,24 +9,8 @@ import { pools } from '@selectors/pools'
 import { Pair, TICK_LIMIT } from '@invariant-labs/sdk'
 import { calcTicksAmountInRange, createLiquidityPlot } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
-import { Transaction, Connection } from '@solana/web3.js'
+import { Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
 import { positionsWithPoolsData, plotTicks, singlePositionData } from '@selectors/positions'
-
-export function* hasTransactionSucceed(connection: Connection, txid: string): Generator {
-  while (true) {
-    const status = yield* call([connection, connection.getSignatureStatus], txid)
-
-    if (status.value?.confirmationStatus === 'confirmed' || status.value?.confirmationStatus === 'finalized') {
-      break
-    }
-
-    yield* call(sleep, 500)
-  }
-
-  const details = yield* call([connection, connection.getConfirmedTransaction], txid, 'confirmed')
-
-  return !details?.meta?.err || details.meta.err === null
-}
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
@@ -71,14 +55,13 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
-
-    const txid = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
-      skipPreflight: true
+    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+      skipPreflight: false
     })
 
-    const hasSucceed = yield* call(hasTransactionSucceed, connection, txid)
+    yield put(actions.setInitPositionSuccess(!!txid.length))
 
-    if (!hasSucceed) {
+    if (!txid.length) {
       yield put(
         snackbarsActions.add({
           message: 'Position adding failed. Please try again.',
@@ -101,6 +84,9 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     }
   } catch (error) {
     console.log(error)
+
+    yield put(actions.setInitPositionSuccess(false))
+
     yield put(
       snackbarsActions.add({
         message: 'Failed to send. Please try again.',
@@ -231,13 +217,11 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
-    const txid = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
-      skipPreflight: true
+    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+      skipPreflight: false
     })
 
-    const hasSucceed = yield* call(hasTransactionSucceed, connection, txid)
-
-    if (!hasSucceed) {
+    if (!txid.length) {
       yield put(
         snackbarsActions.add({
           message: 'Failed to claim fee. Please try again.',
@@ -316,15 +300,13 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
-    const txid = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
-      skipPreflight: true
+    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+      skipPreflight: false
     })
 
     yield* call(sleep, 3000)
 
-    const hasSucceed = yield* call(hasTransactionSucceed, connection, txid)
-
-    if (!hasSucceed) {
+    if (!txid.length) {
       yield put(
         snackbarsActions.add({
           message: 'Failed to close position. Please try again.',

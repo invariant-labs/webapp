@@ -1,53 +1,23 @@
-import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    display: 'flex',
     backgroundColor: 'transparent',
-    marginTop: 65,
-    marginInline: 'auto',
-    width: 1004,
-    minHeight: '70vh'
-  },
-  back: {
-    height: 24,
-    width: 'fit-content',
-    transition: 'filter 300ms',
+    marginTop: 45,
+    paddingInline: 138,
+    minHeight: '70vh',
 
-    '&:hover': {
-      filter: 'brightness(2)'
-    }
-  },
-  backIcon: {
-    width: 22,
-    height: 24,
-    marginRight: 12
-  },
-  backText: {
-    color: colors.invariant.lightInfoText,
-    WebkitPaddingBefore: '2px',
-    ...typography.body2
-  },
-  button: {
-    color: colors.white.main,
-    ...typography.body1,
-    textTransform: 'none',
-    background: colors.invariant.accent1,
-    borderRadius: 5,
-    height: 40,
-    width: 168,
+    [theme.breakpoints.down('md')]: {
+      paddingInline: 36
+    },
 
-    '&:hover': {
-      background: colors.invariant.accent1,
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`
+    [theme.breakpoints.down('sm')]: {
+      paddingInline: 40
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      paddingInline: 16
     }
-  },
-  buttonText: {
-    WebkitPaddingBefore: '2px'
-  },
-  top: {
-    marginBottom: 16
   }
 }))
 

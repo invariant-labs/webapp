@@ -34,7 +34,7 @@ export const NoConnected: React.FC<INoConnected> = ({ onConnect, onDisconnect, d
     <>
       <Grid className={classNames(classes.blur, 'noConnectedLayer')} />
       <Grid className={classNames(classes.container, 'noConnectedLayer')}>
-        <Grid className={classes.root}>
+        <Grid className={classNames(classes.root, 'noConnectedInfo')}>
           <img className={classes.img} src={icons.NoConnected} />
           <Typography className={classes.desc}>Wallet is not connected.</Typography>
           {descCustomText?.length && <Typography className={classes.desc}>{descCustomText}</Typography>}
@@ -48,7 +48,10 @@ export const NoConnected: React.FC<INoConnected> = ({ onConnect, onDisconnect, d
           WalletType.PHANTOM,
           WalletType.SOLLET,
           WalletType.MATH,
-          WalletType.SOLFLARE
+          WalletType.SOLFLARE,
+          WalletType.COIN98,
+          WalletType.SLOPE,
+          WalletType.CLOVER
         ]}
         open={open}
         anchorEl={anchorEl}

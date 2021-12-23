@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     width: 882
   },
@@ -32,9 +32,27 @@ const useStyles = makeStyles(() => ({
   },
   row: {
     position: 'relative',
+    flexDirection: 'row',
 
     '& .noConnectedLayer': {
       height: '100%'
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+
+      '& .noConnectedInfo': {
+        justifyContent: 'flex-start',
+        paddingTop: 60
+      }
+    }
+  },
+  deposit: {
+    marginRight: 24,
+
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: 24,
+      marginRight: 0
     }
   }
 }))

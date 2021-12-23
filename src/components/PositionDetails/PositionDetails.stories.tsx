@@ -1,6 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import PositionDetails from './PositionDetails'
+import { MemoryRouter } from 'react-router'
 
 export interface liqTokens {
   symbol: string,
@@ -37,6 +38,7 @@ const ticksToData = () => {
 const data = ticksToData()
 
 storiesOf('position wrapper/positionDetailsWrapper', module)
+  .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
   .add('default', () => {
     const tokens: liqTokens[] = [
       {
@@ -62,6 +64,8 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
           tokenXIcon: tokens[0].logoURI,
           tokenYName: 'SNY',
           tokenYIcon: tokens[1].logoURI,
+          tokenXDecimal: 6,
+          tokenYDecimal: 6,
           min: 2149.6,
           max: 149.6,
           fee: 0.05

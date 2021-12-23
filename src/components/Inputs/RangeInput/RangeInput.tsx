@@ -72,7 +72,7 @@ export const RangeInput: React.FC<IRangeInput> = ({
         <Typography className={classes.label}>{label}</Typography>
         <Typography className={classes.tokens}>{tokenToSymbol} per {tokenFromSymbol}</Typography>
       </Grid>
-      <Grid className={classes.controls} container direction='row' justifyContent='space-between' alignItems='center' wrap='nowrap'>
+      <Grid className={classes.controls} container direction='row' alignItems='center' wrap='nowrap'>
         <Button className={classes.button} onClick={decreaseValue} disableRipple>
           <Remove className={classes.buttonIcon} />
         </Button>
