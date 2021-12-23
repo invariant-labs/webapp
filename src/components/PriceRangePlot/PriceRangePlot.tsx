@@ -24,6 +24,7 @@ export interface IPriceRangePlot {
   plotMax: number
   zoomMinus: () => void
   zoomPlus: () => void
+  loading?: boolean
 }
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
@@ -38,7 +39,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   plotMin,
   plotMax,
   zoomMinus,
-  zoomPlus
+  zoomPlus,
+  loading
 }) => {
   const classes = useStyles()
 
@@ -147,6 +149,33 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     )
   }
 
+  const lazyLoadingLayer: Layer = ({ innerWidth, innerHeight }) => {
+    if (!loading) {
+      return null
+    }
+
+    return (
+      <svg
+        width={innerWidth}
+        height={innerHeight + 5}
+        viewBox={`0 0 ${innerWidth} ${innerHeight + 5}`}
+        fill='none'
+        xmlns='http://www.w3.org/2000/svg'
+        x={0}
+        y={-5}>
+        <rect x={0} y={0} width='100%' height='100%' fill={`${colors.white.main}10`} />
+        <text
+          x='50%'
+          y='50%'
+          dominant-baseline='middle'
+          text-anchor='middle'
+          className={classes.loadingText}>
+          Loading liquidity data...
+        </text>
+      </svg>
+    )
+  }
+
   return (
     <Grid
       container
@@ -216,6 +245,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'markers',
           'areas',
           'lines',
+          lazyLoadingLayer,
           ...(leftRangeIndex < data.length && rightRangeIndex < data.length
             ? [
                 Brush(

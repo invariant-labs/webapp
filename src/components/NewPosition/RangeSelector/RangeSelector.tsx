@@ -107,6 +107,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           plotMax={plotMax}
           zoomMinus={zoomMinus}
           zoomPlus={zoomPlus}
+          loading={ticksLoading}
         />
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>
