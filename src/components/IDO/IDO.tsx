@@ -22,6 +22,7 @@ export interface IIDO {
   walletStatus: Status
   claimable: Boolean
   withdrawable: Boolean
+  currencyInfo: ICurrencyData
 }
 interface ICurrencyData {
   bitcoin: ICurrencyObject
@@ -41,7 +42,8 @@ const IDO: React.FC<IIDO> = ({
   valueOfInvariantTokens,
   walletStatus,
   claimable,
-  withdrawable
+  withdrawable,
+  currencyInfo
 }) => {
   const classes = useStyles()
 
@@ -53,7 +55,6 @@ const IDO: React.FC<IIDO> = ({
   const [totalSolContributed, setTotalSolContributed] = React.useState<number>(0)
   const [tokenPrice, setTokenPrice] = React.useState<number>(0)
   const [invariantForSale, setInvariantForSale] = React.useState<number>(0)
-  const [currencyData, setCurrencyData] = React.useState<ICurrencyData>({})
 
   const getButtonMessage = (): string => {
     if (walletStatus !== Status.Initialized) {
@@ -114,24 +115,6 @@ const IDO: React.FC<IIDO> = ({
     return x.toLocaleString('pl-PL')
   }
 
-  useEffect(() => {
-    const apiUrl =
-      'https://api.coingecko.com/api/v3/simple/price?ids=tether%2Csolana%2Cethereum%2Cbitcoin&vs_currencies=usd'
-
-    const fetchData = async () => {
-      try {
-        const response = await fetch(apiUrl)
-        const json = await response.json()
-        setCurrencyData(json)
-        console.log(await json)
-      } catch (error) {
-        console.log('error', error)
-      }
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    fetchData()
-  }, [])
   return (
     <Grid container className={classes.containerIDO}>
       <Grid sm={12} item className={classes.header}>
@@ -191,23 +174,23 @@ const IDO: React.FC<IIDO> = ({
                 </Box>
                 <Box className={classes.boxInfo}>
                   <Typography className={classes.valueInfo}>
-                    {currencyData.tether?.usd > 0
-                      ? `${(totalDeposited / currencyData.tether?.usd).toFixed(2)} USD`
+                    {currencyInfo.tether?.usd > 0
+                      ? `${(totalDeposited / currencyInfo.tether?.usd).toFixed(2)} USD`
                       : '0.0 USD'}
                   </Typography>
                   <Typography className={classes.valueInfo}>
-                    {currencyData.solana?.usd > 0
-                      ? `${(totalDeposited / currencyData.solana?.usd).toFixed(2)} SOL`
+                    {currencyInfo.solana?.usd > 0
+                      ? `${(totalDeposited / currencyInfo.solana?.usd).toFixed(2)} SOL`
                       : '0.0 SOL'}
                   </Typography>
                   <Typography className={classes.valueInfo}>
-                    {currencyData.ethereum?.usd > 0
-                      ? `${(totalDeposited / currencyData.ethereum?.usd).toFixed(4)} xETH`
+                    {currencyInfo.ethereum?.usd > 0
+                      ? `${(totalDeposited / currencyInfo.ethereum?.usd).toFixed(4)} xETH`
                       : '0.0 xETH'}
                   </Typography>
                   <Typography className={classes.valueInfo}>
-                    {currencyData.bitcoin?.usd > 0
-                      ? `${(totalDeposited / currencyData.bitcoin?.usd).toFixed(4)} xBTC`
+                    {currencyInfo.bitcoin?.usd > 0
+                      ? `${(totalDeposited / currencyInfo.bitcoin?.usd).toFixed(4)} xBTC`
                       : '0.0 xBTC'}
                   </Typography>
                 </Box>

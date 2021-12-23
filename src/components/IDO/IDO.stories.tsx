@@ -7,7 +7,7 @@ import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { Status } from '@reducers/solanaWallet'
 
-const DUMMY_DATA: IIDO = {
+const idoProps: IIDO = {
   tokens: [
     {
       balance: new BN(100).mul(new BN(34786)),
@@ -46,13 +46,29 @@ const DUMMY_DATA: IIDO = {
   valueOfInvariantTokens: 20000000,
   walletStatus: Status.Initialized,
   withdrawable: false,
-  claimable: false
+  claimable: false,
+  currencyInfo: {
+    bitcoin: {
+      usd: 50793
+    },
+    ethereum: {
+      usd: 4110.94
+    },
+    tether: {
+      usd: 1
+    },
+    solana: {
+      usd: 189.6
+    }
+  }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 
 storiesOf('newUi/IDO', module)
   .addDecorator(withKnobs)
   .add('default', () => (
     <div style={{ width: 800 }} id={toBlur}>
-      <IDO {...DUMMY_DATA} />
+      <IDO {...idoProps} />
     </div>
   ))
