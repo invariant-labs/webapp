@@ -4,7 +4,10 @@ import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
-import { NetworkType, PRICE_DECIMAL, tokens } from './static'
+import { NetworkType, PRICE_DECIMAL, Token, tokens } from './static'
+import mainnetList from './tokenLists/mainnet.json'
+import devnetList from './tokenLists/devnet.json'
+import { PublicKey } from '@solana/web3.js'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -199,8 +202,8 @@ export const calcYPerXPrice = (sqrtPrice: BN, xDecimal: number, yDecimal: number
 }
 
 export const createLiquidityPlot = (rawTicks: Tick[], pool: PoolStructure, isXtoY: boolean, networkType: NetworkType) => {
-  const tokenXDecimal = tokens[networkType].find(token => token.address.equals(pool.tokenX))?.decimal ?? 0
-  const tokenYDecimal = tokens[networkType].find(token => token.address.equals(pool.tokenY))?.decimal ?? 0
+  const tokenXDecimal = tokens[networkType].find(token => token.address.equals(pool.tokenX))?.decimals ?? 0
+  const tokenYDecimal = tokens[networkType].find(token => token.address.equals(pool.tokenY))?.decimals ?? 0
 
   const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(rawTicks, pool) : []
 
@@ -288,8 +291,8 @@ export const createPlaceholderLiquidityPlot = (
   yValueToFill: number,
   networkType: NetworkType
 ) => {
-  const tokenXDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenX))?.decimal ?? 0
-  const tokenYDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenY))?.decimal ?? 0
+  const tokenXDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenX))?.decimals ?? 0
+  const tokenYDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenY))?.decimals ?? 0
 
   const ticksData: PlotTickData[] = []
   const price = calcYPerXPrice(pool.sqrtPrice.v, tokenXDecimal, tokenYDecimal)
@@ -339,4 +342,31 @@ export const createPlaceholderLiquidityPlot = (
   }
 
   return ticksData.sort((a, b) => a.x - b.x)
+}
+
+export const getNetworkTokensList = (networkType: NetworkType): Token[] => {
+  let list: Array<{
+    symbol: string
+    address: string
+    decimals: number
+    name: string
+    logoURI: string
+  }>
+  switch (networkType) {
+    case NetworkType.MAINNET:
+      list = mainnetList.tokens
+      break
+    case NetworkType.DEVNET:
+      list = devnetList.tokens
+      break
+    default:
+      list = []
+  }
+
+  const tokensList: Token[] = list.map((token) => ({
+    ...token,
+    address: new PublicKey(token.address)
+  }))
+
+  return tokensList.sort((a, b) => a.symbol.toLowerCase().localeCompare(b.symbol.toLowerCase()))
 }

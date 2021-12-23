@@ -98,7 +98,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
     const result = calcAmount(amount, left, right, tokens[calcIndex].assetAddress)
 
-    return printBN(result, tokens[printIndex].decimal)
+    return printBN(result, tokens[printIndex].decimals)
   }
 
   return (
@@ -137,7 +137,7 @@ export const NewPosition: React.FC<INewPosition> = ({
               setTokenADeposit(value)
               setTokenBDeposit(
                 getOtherTokenAmount(
-                  printBNtoBN(value, tokens[tokenAIndex].decimal),
+                  printBNtoBN(value, tokens[tokenAIndex].decimals),
                   leftRange,
                   rightRange,
                   true
@@ -149,7 +149,7 @@ export const NewPosition: React.FC<INewPosition> = ({
               tokenBIndex !== null &&
               (isTokenXFirst ? rightRange <= midPriceIndex : rightRange < midPriceIndex),
             blockerInfo: 'Range only for single-asset deposit.',
-            decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimal : 0
+            decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimals : 0
           }}
           tokenBInputState={{
             value: tokenBDeposit,
@@ -160,7 +160,7 @@ export const NewPosition: React.FC<INewPosition> = ({
               setTokenBDeposit(value)
               setTokenADeposit(
                 getOtherTokenAmount(
-                  printBNtoBN(value, tokens[tokenBIndex].decimal),
+                  printBNtoBN(value, tokens[tokenBIndex].decimals),
                   leftRange,
                   rightRange,
                   false
@@ -172,7 +172,7 @@ export const NewPosition: React.FC<INewPosition> = ({
               tokenBIndex !== null &&
               (isTokenXFirst ? leftRange > midPriceIndex : leftRange >= midPriceIndex),
             blockerInfo: 'Range only for single-asset deposit.',
-            decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimal : 0
+            decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimals : 0
           }}
           feeTiers={feeTiers}
           isCurrentPoolExisting={isCurrentPoolExisting}
@@ -186,7 +186,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
             if (tokenAIndex !== null && right > midPriceIndex) {
               const amount = getOtherTokenAmount(
-                printBNtoBN(tokenADeposit, tokens[tokenAIndex].decimal),
+                printBNtoBN(tokenADeposit, tokens[tokenAIndex].decimals),
                 left,
                 right,
                 true
@@ -201,7 +201,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
             if (tokenBIndex !== null && left < midPriceIndex) {
               const amount = getOtherTokenAmount(
-                printBNtoBN(tokenBDeposit, tokens[tokenBIndex].decimal),
+                printBNtoBN(tokenBDeposit, tokens[tokenBIndex].decimals),
                 left,
                 right,
                 false

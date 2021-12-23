@@ -57,11 +57,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'Pool does not exist'
     }
 
-    if (printBNtoBN(tokenAInputState.value, tokens[tokenAIndex].decimal).gt(tokens[tokenAIndex].balance)) {
+    if (printBNtoBN(tokenAInputState.value, tokens[tokenAIndex].decimals).gt(tokens[tokenAIndex].balance)) {
       return 'You don\'t have enough token A'
     }
 
-    if (printBNtoBN(tokenBInputState.value, tokens[tokenBIndex].decimal).gt(tokens[tokenBIndex].balance)) {
+    if (printBNtoBN(tokenBInputState.value, tokens[tokenBIndex].decimals).gt(tokens[tokenBIndex].balance)) {
       return 'You don\'t have enough token B'
     }
 
@@ -143,7 +143,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             if (tokenAIndex === null) {
               return
             }
-            tokenAInputState.setValue(printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimal))
+            tokenAInputState.setValue(printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimals))
           }}
           style={{
             marginBottom: 10
@@ -165,7 +165,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             if (tokenBIndex === null) {
               return
             }
-            tokenBInputState.setValue(printBN(tokens[tokenBIndex].balance, tokens[tokenBIndex].decimal))
+            tokenBInputState.setValue(printBN(tokens[tokenBIndex].balance, tokens[tokenBIndex].decimals))
           }}
           onBlur={() => {
             if (tokenAIndex !== null && tokenBIndex !== null && tokenBInputState.value.length === 0) {

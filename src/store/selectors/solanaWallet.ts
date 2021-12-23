@@ -45,7 +45,7 @@ export const tokenAccountsAddress = () =>
   })
 export interface SwapToken {
   balance: BN
-  decimal: number
+  decimals: number
   symbol: string
   assetAddress: PublicKey,
   name: string,

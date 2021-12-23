@@ -23,8 +23,8 @@ export const WrappedPositionsList: React.FC = () => {
     <PositionsList
       onAddPositionClick={() => { history.push('/newPosition') }}
       data={list.map((position) => {
-        const lowerPrice = calcYPerXPrice(calculate_price_sqrt(position.lowerTickIndex).v, position.tokenX.decimal, position.tokenY.decimal)
-        const upperPrice = calcYPerXPrice(calculate_price_sqrt(position.upperTickIndex).v, position.tokenX.decimal, position.tokenY.decimal)
+        const lowerPrice = calcYPerXPrice(calculate_price_sqrt(position.lowerTickIndex).v, position.tokenX.decimals, position.tokenY.decimals)
+        const upperPrice = calcYPerXPrice(calculate_price_sqrt(position.upperTickIndex).v, position.tokenX.decimals, position.tokenY.decimals)
 
         const min = Math.min(lowerPrice, upperPrice)
         const max = Math.max(lowerPrice, upperPrice)
@@ -34,7 +34,7 @@ export const WrappedPositionsList: React.FC = () => {
         try {
           tokenXLiq = +printBN(
             getX(position.liquidity.v, calculate_price_sqrt(position.upperTickIndex).v, position.poolData.sqrtPrice.v).div(DENOMINATOR),
-            position.tokenX.decimal
+            position.tokenX.decimals
           )
         } catch (error) {
           tokenXLiq = 0
@@ -43,13 +43,13 @@ export const WrappedPositionsList: React.FC = () => {
         try {
           tokenYLiq = +printBN(
             getY(position.liquidity.v, position.poolData.sqrtPrice.v, calculate_price_sqrt(position.lowerTickIndex).v).div(DENOMINATOR),
-            position.tokenY.decimal
+            position.tokenY.decimals
           )
         } catch (error) {
           tokenYLiq = 0
         }
 
-        const currentPrice = calcYPerXPrice(position.poolData.sqrtPrice.v, position.tokenX.decimal, position.tokenY.decimal)
+        const currentPrice = calcYPerXPrice(position.poolData.sqrtPrice.v, position.tokenX.decimals, position.tokenY.decimals)
 
         const value = tokenXLiq + (tokenYLiq / currentPrice)
 
