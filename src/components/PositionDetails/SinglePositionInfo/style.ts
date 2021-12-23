@@ -159,11 +159,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '3px 12px'
   },
   tokenName: {
-    color: colors.invariant.lightInfoText,
+    color: colors.white.main,
     ...typography.body1
   },
   tokenValue: {
-    color: colors.white.main,
+    color: colors.invariant.lightInfoText,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -176,7 +176,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxHeight: '35px',
     minWidth: 114,
     textTransform: 'none',
-    transition: '500ms',
+    transition: '300ms',
     paddingInline: 0,
     '&:hover': {
       background: colors.invariant.accent2,
