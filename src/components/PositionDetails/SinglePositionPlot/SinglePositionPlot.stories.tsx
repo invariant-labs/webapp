@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import SinglePositionPlot from './SinglePositionPlot'
-import { tokens } from '@consts/static'
+import { NetworkType, tokens } from '@consts/static'
 
 const ticksToData = () => {
   const ticks = [
@@ -46,8 +46,8 @@ storiesOf('singlePosition/rightComponent', module)
         onZoomOutOfData={() => {}}
         positionData={{
           tokenXName: 'BTC',
-          tokenXIcon: tokens[0].logoURI,
-          tokenYIcon: tokens[1].logoURI,
+          tokenXIcon: tokens[NetworkType.DEVNET][0].logoURI,
+          tokenYIcon: tokens[NetworkType.DEVNET][1].logoURI,
           tokenYName: 'SNY',
           min: 2149.6,
           max: 149.6,
