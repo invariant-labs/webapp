@@ -4,7 +4,7 @@ import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
 import { SwapToken, swapTokens, status } from '@selectors/solanaWallet'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { printBN } from '@consts/utils'
+import { createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { pools } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
@@ -13,6 +13,7 @@ import { BN } from '@project-serum/anchor'
 import { PRICE_DECIMAL } from '@consts/static'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import { network } from '@selectors/solanaConnection'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -22,6 +23,7 @@ export const NewPositionWrapper = () => {
   const allPools = useSelector(pools)
   const { success, inProgress } = useSelector(initPosition)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
+  const networkType = useSelector(network)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
@@ -50,14 +52,14 @@ export const NewPositionWrapper = () => {
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
 
   const midPriceIndex = useMemo(() => {
-    if (poolIndex !== null && !ticksLoading) {
+    if (poolIndex !== null && ticksData.length) {
       const index = ticksData.findIndex((tick) => tick.index === allPools[poolIndex].currentTickIndex)
 
       return index === -1 ? 0 : index
     }
 
     return 0
-  }, [ticksLoading, poolIndex, tokenAIndex])
+  }, [ticksData.length, poolIndex, tokenAIndex])
 
   const tokensB = useMemo(() => {
     if (tokenAIndex === null) {
@@ -100,7 +102,8 @@ export const NewPositionWrapper = () => {
             if (index !== -1) {
               dispatch(actions.getCurrentPlotTicks({
                 poolIndex: index,
-                isXtoY: allPools[index].tokenX.equals(tokens[tokenA].assetAddress)
+                isXtoY: allPools[index].tokenX.equals(tokens[tokenA].assetAddress),
+                tmpData: createPlaceholderLiquidityPlot(allPools[index], allPools[index].tokenX.equals(tokens[tokenA].assetAddress), 10, networkType)
               }))
             }
           }

@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from '@material-ui/core'
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import PriceRangePlot from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import { nearestPriceIndex } from '@consts/utils'
@@ -15,6 +15,7 @@ export interface IRangeSelector {
   blocked?: boolean
   blockerInfo?: string
   onZoomOutOfData: (min: number, max: number) => void
+  ticksLoading: boolean
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -25,7 +26,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   onChangeRange,
   blocked = false,
   blockerInfo,
-  onZoomOutOfData
+  onZoomOutOfData,
+  ticksLoading
 }) => {
   const classes = useStyles()
 
@@ -35,15 +37,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
 
-  const initSideDist = useMemo(() => Math.min(
-    data[midPriceIndex].x - data[Math.max(midPriceIndex - 15, 0)].x,
-    data[Math.min(midPriceIndex + 15, data.length - 1)].x - data[midPriceIndex].x
-  ), [data, midPriceIndex])
-
-  const [plotMin, setPlotMin] = useState(data[midPriceIndex].x - initSideDist)
-  const [plotMax, setPlotMax] = useState(data[midPriceIndex].x + initSideDist)
-
-  const [waiting, setWaiting] = useState(false)
+  const [plotMin, setPlotMin] = useState(0)
+  const [plotMax, setPlotMax] = useState(1)
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -78,6 +73,11 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   const resetPlot = () => {
+    const initSideDist = Math.min(
+      data[midPriceIndex].x - data[Math.max(midPriceIndex - 15, 0)].x,
+      data[Math.min(midPriceIndex + 15, data.length - 1)].x - data[midPriceIndex].x
+    )
+
     changeRangeHandler(
       Math.max(midPriceIndex - 10, 0),
       Math.min(midPriceIndex + 10, data.length - 1)
@@ -87,18 +87,10 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   useEffect(() => {
-    if (!waiting) {
+    if (ticksLoading) {
       resetPlot()
     }
-  }, [waiting])
-
-  useEffect(() => {
-    if (blocked && !waiting) {
-      setWaiting(true)
-    } else if (!blocked && waiting) {
-      setWaiting(false)
-    }
-  }, [blocked])
+  }, [ticksLoading])
 
   return (
     <Grid container className={classes.wrapper}>
@@ -115,6 +107,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           plotMax={plotMax}
           zoomMinus={zoomMinus}
           zoomPlus={zoomPlus}
+          loading={ticksLoading}
         />
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>

@@ -112,7 +112,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
         action.payload.isXtoY ? action.payload.max : 1 / action.payload.min,
         allPools[poolIndex].tickSpacing
       )
-      : 200
+      : 30
 
     if (isNaN(toRequest)) {
       return

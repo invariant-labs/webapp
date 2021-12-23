@@ -55,6 +55,7 @@ storiesOf('singlePosition/rightComponent', module)
           tokenXDecimal: 6,
           tokenYDecimal: 6
         }}
+        ticksLoading={false}
       />
     )
   })
