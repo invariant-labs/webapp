@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import PriceRangePlot from './PriceRangePlot'

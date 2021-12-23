@@ -11,6 +11,7 @@ import { calcTicksAmountInRange, createLiquidityPlot } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
 import { Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
 import { positionsWithPoolsData, plotTicks, singlePositionData } from '@selectors/positions'
+import { network } from '@selectors/solanaConnection'
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
@@ -99,6 +100,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 
 export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicksData>): Generator {
   const allPools = yield* select(pools)
+  const networkType = yield* select(network)
 
   try {
     const marketProgram = yield* call(getMarketProgram)
@@ -110,7 +112,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
         action.payload.isXtoY ? action.payload.max : 1 / action.payload.min,
         allPools[poolIndex].tickSpacing
       )
-      : 200
+      : 30
 
     if (isNaN(toRequest)) {
       return
@@ -132,7 +134,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       toRequest
     )
 
-    const ticksData = createLiquidityPlot(rawTicks, allPools[poolIndex], action.payload.isXtoY)
+    const ticksData = createLiquidityPlot(rawTicks, allPools[poolIndex], action.payload.isXtoY, networkType)
 
     yield put(actions.setPlotTicks({
       data: ticksData,
@@ -141,7 +143,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
   } catch (error) {
     console.log(error)
     yield put(actions.setPlotTicks({
-      data: createLiquidityPlot([], allPools[action.payload.poolIndex], action.payload.isXtoY),
+      data: createLiquidityPlot([], allPools[action.payload.poolIndex], action.payload.isXtoY, networkType),
       maxReached: false
     }))
   }
