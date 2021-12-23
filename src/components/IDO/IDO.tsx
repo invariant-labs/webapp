@@ -14,21 +14,61 @@ import { SwapToken } from '@components/Swap/Swap'
 export interface IIDO {
   tokens: SwapToken[]
 }
+interface ICurrencyData {
+  bitcoin: ICurrencyObject
+  tether: ICurrencyObject
+  solana: ICurrencyObject
+  ethereum: ICurrencyObject
+}
+interface ICurrencyObject {
+  usd: number
+}
 
 const IDO: React.FC<IIDO> = ({ tokens }) => {
   const classes = useStyles()
   const getButtonMessage = () => {
     return 'Connect a wallet'
   }
-  const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
     tokens.length ? 0 : null
   )
+  const [amountFrom, setAmountFrom] = React.useState<string>('')
+  const [totalDeposited, setTotalDeposited] = React.useState<number>(0)
+  const [totalSolContributed, setTotalSolContributed] = React.useState<number>(0)
+  const [tokenPrice, setTokenPrice] = React.useState<number>(0)
+  const [invariantForSale, setInvariantForSale] = React.useState<number>(0)
+  const [currencyData, setCurrencyData] = React.useState<ICurrencyData>({})
 
   useEffect(() => {
     if (tokenFromIndex !== null) {
       setAmountFrom('0.000000')
     }
+    setTotalDeposited(45.32)
+    setTotalSolContributed(122124846)
+    setTokenPrice(218.839)
+    setInvariantForSale(20000000)
+  }, [])
+
+  function numberWithSpaces(x: number) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+  }
+  useEffect(() => {
+    const apiUrl =
+      'https://api.coingecko.com/api/v3/simple/price?ids=tether%2Csolana%2Cethereum%2Cbitcoin&vs_currencies=usd'
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch(apiUrl)
+        const json = await response.json()
+        setCurrencyData(json)
+        console.log(await json)
+      } catch (error) {
+        console.log('error', error)
+      }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fetchData()
   }, [])
   return (
     <Grid container className={classes.containerIDO}>
@@ -83,13 +123,26 @@ const IDO: React.FC<IIDO> = ({ tokens }) => {
               <CardMedia image={invariantLogo} className={classes.iconLogo} />
               <Box className={classes.infoContainer}>
                 <Box>
-                  <Typography className={classes.depositAmouted}>46.643 xUSD</Typography>
+                  <Typography className={classes.depositAmouted}>
+                    {totalDeposited.toFixed(2)} xUSD
+                  </Typography>
                 </Box>
                 <Box className={classes.boxInfo}>
-                  <Typography className={classes.valueInfo}>47.43 USD</Typography>
-                  <Typography className={classes.valueInfo}> 0.0432 SOL</Typography>
-                  <Typography className={classes.valueInfo}> 0.0000 xETH</Typography>
-                  <Typography className={classes.valueInfo}>0.0000 xBTC</Typography>
+                  <Typography className={classes.valueInfo}>
+                    {(totalDeposited / currencyData.tether?.usd).toFixed(2)}
+                    USD
+                  </Typography>
+                  <Typography className={classes.valueInfo}>
+                    {' '}
+                    {(totalDeposited / currencyData.solana?.usd).toFixed(2)} SOL
+                  </Typography>
+                  <Typography className={classes.valueInfo}>
+                    {' '}
+                    {(totalDeposited / currencyData.ethereum?.usd).toFixed(4)}xETH
+                  </Typography>
+                  <Typography className={classes.valueInfo}>
+                    {(totalDeposited / currencyData.bitcoin?.usd).toFixed(4)} xBTC
+                  </Typography>
                 </Box>
               </Box>
             </Box>
@@ -121,21 +174,25 @@ const IDO: React.FC<IIDO> = ({ tokens }) => {
           <Typography className={classes.labelInfo}>SOL Contributed</Typography>
           <Box className={classes.wrapperInfo}>
             <CardMedia image={solanaIcon} className={classes.solIcon} />
-            <Typography className={classes.textInfo}>15:30:33</Typography>
+            <Typography className={classes.textInfo}>
+              {numberWithSpaces(totalSolContributed)}
+            </Typography>
           </Box>
         </Box>
         <Box className={classes.containerInfoDark}>
           <Typography className={classes.labelInfo}>Estimated token price</Typography>
           <Box className={classes.wrapperInfo}>
             <CardMedia image={dollarIcon} className={classes.solIcon} />
-            <Typography className={classes.textInfo}>218.839</Typography>
+            <Typography className={classes.textInfo}>{tokenPrice}</Typography>
           </Box>
         </Box>
         <Box className={classes.containerInfo}>
           <Typography className={classes.labelInfo}>INVARIANT for sale</Typography>
           <Box className={classes.wrapperInfo}>
             <CardMedia image={invariantIcon} className={classes.solIcon} />
-            <Typography className={classes.textInfo}>20 000 000</Typography>
+            <Typography className={classes.textInfo}>
+              {numberWithSpaces(invariantForSale)}
+            </Typography>
           </Box>
         </Box>
       </Grid>
