@@ -10,6 +10,7 @@ import dollarIcon from '@static/svg/dollarToken.svg'
 import invariantIcon from '@static/svg/invariantToken.svg'
 import invariantLogo from '@static/svg/invariantLogo.svg'
 import { SwapToken } from '@components/Swap/Swap'
+import AnimatedNumber from '@components/AnimatedNumber'
 
 export interface IIDO {
   tokens: SwapToken[]
@@ -39,6 +40,8 @@ const IDO: React.FC<IIDO> = ({ tokens }) => {
   const [invariantForSale, setInvariantForSale] = React.useState<number>(0)
   const [currencyData, setCurrencyData] = React.useState<ICurrencyData>({})
 
+  const formatValue = (value: number): string => value.toFixed(0)
+
   useEffect(() => {
     if (tokenFromIndex !== null) {
       setAmountFrom('0.000000')
@@ -52,6 +55,7 @@ const IDO: React.FC<IIDO> = ({ tokens }) => {
   function numberWithSpaces(x: number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
   }
+
   useEffect(() => {
     const apiUrl =
       'https://api.coingecko.com/api/v3/simple/price?ids=tether%2Csolana%2Cethereum%2Cbitcoin&vs_currencies=usd'
@@ -160,14 +164,22 @@ const IDO: React.FC<IIDO> = ({ tokens }) => {
           <Typography className={classes.labelInfo}>Sale period ends in</Typography>
           <Box className={classes.wrapperInfo}>
             <CardMedia image={watchIcon} className={classes.icon} />
-            <Typography className={classes.textInfo}>15:30:33</Typography>
+            <Typography className={classes.textInfo}>
+              <AnimatedNumber value={15} formatValue={formatValue} />:
+              <AnimatedNumber value={30} formatValue={formatValue} />:
+              <AnimatedNumber value={33} formatValue={formatValue} />
+            </Typography>
           </Box>
         </Box>
         <Box className={classes.containerInfoDark}>
           <Typography className={classes.labelInfo}>Grace period ends in</Typography>
           <Box className={classes.wrapperInfo}>
             <CardMedia image={watchIcon} className={classes.icon} />
-            <Typography className={classes.textInfo}>32:29:27</Typography>
+            <Typography className={classes.textInfo}>
+              <AnimatedNumber value={32} formatValue={formatValue} />:
+              <AnimatedNumber value={29} formatValue={formatValue} />:
+              <AnimatedNumber value={27} formatValue={formatValue} />
+            </Typography>
           </Box>
         </Box>
         <Box className={classes.containerInfo}>
