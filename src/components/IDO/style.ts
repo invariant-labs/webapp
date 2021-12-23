@@ -48,7 +48,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   containerIDO: {
     display: 'flex',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
+    maxWidth: 700
   },
   header: {
     display: 'flex',
@@ -93,15 +94,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   containerInfo: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    minHeight: 64
   },
   containerInfoDark: {
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: colors.invariant.darkInfoText,
+    minHeight: 64,
+    padding: '7px 0px',
     [theme.breakpoints.down('xs')]: {
       margin: '5px 0',
-      padding: '7px'
+      padding: '7px 0'
     }
   },
   info: {
@@ -142,7 +146,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   infoContainer: {
-    width: '80%'
+    width: '80%',
+    marginLeft: 5
   },
   vector: {
     flexGrow: 1
@@ -160,10 +165,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.lightInfoText,
     ...typography.label1,
     [theme.breakpoints.down('sm')]: {
-      fontSize: 10
+      fontSize: 11
     },
     [theme.breakpoints.down('xs')]: {
       fontSize: 8
+    },
+    [theme.breakpoints.down(320)]: {
+      fontSize: 7
     }
   },
   boxInfo: {
