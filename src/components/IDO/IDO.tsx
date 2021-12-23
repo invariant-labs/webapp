@@ -53,7 +53,7 @@ const IDO: React.FC<IIDO> = ({ tokens }) => {
   }, [])
 
   function numberWithSpaces(x: number) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+    return x.toLocaleString('pl-PL')
   }
 
   useEffect(() => {
