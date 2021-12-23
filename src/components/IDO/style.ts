@@ -49,7 +49,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   containerIDO: {
     display: 'flex',
     justifyContent: 'space-evenly',
-    maxWidth: 700
+    maxWidth: 700,
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: 800
+    }
   },
   header: {
     display: 'flex',
@@ -164,14 +167,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   valueInfo: {
     color: colors.invariant.lightInfoText,
     ...typography.label1,
+    [theme.breakpoints.down('md')]: {
+      fontSize: 13
+    },
     [theme.breakpoints.down('sm')]: {
       fontSize: 11
     },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 8
+    [theme.breakpoints.down(400)]: {
+      fontSize: 10
+    },
+    [theme.breakpoints.down(350)]: {
+      fontSize: 9
     },
     [theme.breakpoints.down(320)]: {
-      fontSize: 7
+      fontSize: 8
     }
   },
   boxInfo: {
