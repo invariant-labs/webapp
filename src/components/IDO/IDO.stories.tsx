@@ -5,6 +5,7 @@ import { toBlur } from '@consts/uiUtils'
 import React from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
+import { Status } from '@reducers/solanaWallet'
 
 const DUMMY_DATA: IIDO = {
   tokens: [
@@ -42,7 +43,10 @@ const DUMMY_DATA: IIDO = {
   totalDeposit: 46.643,
   totalSolContribute: 122124846,
   priceOfToken: 218.839,
-  valueOfInvariantTokens: 20000000
+  valueOfInvariantTokens: 20000000,
+  walletStatus: Status.Initialized,
+  withdrawable: false,
+  claimable: false
 }
 
 storiesOf('newUi/IDO', module)

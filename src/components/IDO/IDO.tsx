@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
 import useStyles from './style'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
-import { printBN } from '@consts/utils'
+import { printBN, printBNtoBN } from '@consts/utils'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import watchIcon from '@static/svg/watch.svg'
 import solanaIcon from '@static/svg/solanaToken.svg'
@@ -11,6 +11,7 @@ import invariantIcon from '@static/svg/invariantToken.svg'
 import invariantLogo from '@static/svg/invariantLogo.svg'
 import { SwapToken } from '@components/Swap/Swap'
 import AnimatedNumber from '@components/AnimatedNumber'
+import { Status } from '@reducers/solanaWallet'
 
 export interface IIDO {
   tokens: SwapToken[]
@@ -18,6 +19,9 @@ export interface IIDO {
   totalSolContribute: number
   priceOfToken: number
   valueOfInvariantTokens: number
+  walletStatus: Status
+  claimable: Boolean
+  withdrawable: Boolean
 }
 interface ICurrencyData {
   bitcoin: ICurrencyObject
@@ -34,12 +38,13 @@ const IDO: React.FC<IIDO> = ({
   totalDeposit,
   totalSolContribute,
   priceOfToken,
-  valueOfInvariantTokens
+  valueOfInvariantTokens,
+  walletStatus,
+  claimable,
+  withdrawable
 }) => {
   const classes = useStyles()
-  const getButtonMessage = () => {
-    return 'Connect a wallet'
-  }
+
   const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
     tokens.length ? 0 : null
   )
@@ -49,6 +54,49 @@ const IDO: React.FC<IIDO> = ({
   const [tokenPrice, setTokenPrice] = React.useState<number>(0)
   const [invariantForSale, setInvariantForSale] = React.useState<number>(0)
   const [currencyData, setCurrencyData] = React.useState<ICurrencyData>({})
+
+  const getButtonMessage = (): string => {
+    if (walletStatus !== Status.Initialized) {
+      return 'Connect a wallet'
+    }
+
+    if (tokenFromIndex === null || tokenFromIndex === null) {
+      return 'Deposit'
+    }
+
+    if (withdrawable === true) {
+      return 'Withdraw'
+    }
+
+    if (claimable === true) {
+      return 'Claim'
+    }
+
+    if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal).eqn(0)) {
+      return 'Insufficient trade volume'
+    }
+    if (
+      printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal).gt(
+        printBNtoBN(
+          printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal),
+          tokens[tokenFromIndex].decimal
+        )
+      )
+    ) {
+      return 'Insufficient balance'
+    }
+    return 'Deposit'
+  }
+
+  const getHeaderMessage = (): string => {
+    if (claimable === true) {
+      return 'Claim your SOL'
+    } else if (withdrawable === true) {
+      return 'Withdraw your SOL'
+    } else {
+      return 'Deposit your SOL'
+    }
+  }
 
   const formatValue = (value: number): string => value.toFixed(0)
 
@@ -93,7 +141,7 @@ const IDO: React.FC<IIDO> = ({
         <Box>
           <Grid className={classes.root}>
             <Grid className={classes.header}>
-              <Typography component='h2'>Deposit your SOL</Typography>
+              <Typography component='h2'>{getHeaderMessage()}</Typography>
             </Grid>
             <Box className={classes.tokenComponentTextContainer}>
               <Typography className={classes.tokenComponentText}>Est.: </Typography>
@@ -168,6 +216,10 @@ const IDO: React.FC<IIDO> = ({
             <OutlinedButton
               name={getButtonMessage()}
               className={classes.buttonBuy}
+              disabled={
+                getButtonMessage() === 'Insufficient trade volume' ||
+                getButtonMessage() === 'Insufficient balance'
+              }
               color='primary'
               onClick={() => {}}
             />
