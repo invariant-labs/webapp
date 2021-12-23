@@ -14,6 +14,10 @@ import AnimatedNumber from '@components/AnimatedNumber'
 
 export interface IIDO {
   tokens: SwapToken[]
+  totalDeposit: number
+  totalSolContribute: number
+  priceOfToken: number
+  valueOfInvariantTokens: number
 }
 interface ICurrencyData {
   bitcoin: ICurrencyObject
@@ -25,7 +29,13 @@ interface ICurrencyObject {
   usd: number
 }
 
-const IDO: React.FC<IIDO> = ({ tokens }) => {
+const IDO: React.FC<IIDO> = ({
+  tokens,
+  totalDeposit,
+  totalSolContribute,
+  priceOfToken,
+  valueOfInvariantTokens
+}) => {
   const classes = useStyles()
   const getButtonMessage = () => {
     return 'Connect a wallet'
@@ -46,10 +56,10 @@ const IDO: React.FC<IIDO> = ({ tokens }) => {
     if (tokenFromIndex !== null) {
       setAmountFrom('0.000000')
     }
-    setTotalDeposited(45.32)
-    setTotalSolContributed(122124846)
-    setTokenPrice(218.839)
-    setInvariantForSale(20000000)
+    setTotalDeposited(totalDeposit)
+    setTotalSolContributed(totalSolContribute)
+    setTokenPrice(priceOfToken)
+    setInvariantForSale(valueOfInvariantTokens)
   }, [])
 
   function numberWithSpaces(x: number) {
