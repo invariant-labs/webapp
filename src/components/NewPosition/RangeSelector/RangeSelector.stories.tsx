@@ -43,6 +43,7 @@ storiesOf('position/rangeSelector', module).add('setter', () => (
       action(`range indexes: ${left} - ${right}`)()
     }}
     onZoomOutOfData={() => {}}
+    ticksLoading={false}
   />
 )).add('blocked', () => (
   <RangeSelector
@@ -56,5 +57,6 @@ storiesOf('position/rangeSelector', module).add('setter', () => (
     blocked
     blockerInfo='Select tokens to set price range.'
     onZoomOutOfData={() => {}}
+    ticksLoading={false}
   />
 ))

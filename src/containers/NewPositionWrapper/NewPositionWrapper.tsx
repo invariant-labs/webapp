@@ -13,6 +13,7 @@ import { BN } from '@project-serum/anchor'
 import { PRICE_DECIMAL } from '@consts/static'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import { network } from '@selectors/solanaConnection'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -22,6 +23,7 @@ export const NewPositionWrapper = () => {
   const allPools = useSelector(pools)
   const { success, inProgress } = useSelector(initPosition)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
+  const networkType = useSelector(network)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
@@ -101,7 +103,7 @@ export const NewPositionWrapper = () => {
               dispatch(actions.getCurrentPlotTicks({
                 poolIndex: index,
                 isXtoY: allPools[index].tokenX.equals(tokens[tokenA].assetAddress),
-                tmpData: createPlaceholderLiquidityPlot(allPools[index], allPools[index].tokenX.equals(tokens[tokenA].assetAddress), 10)
+                tmpData: createPlaceholderLiquidityPlot(allPools[index], allPools[index].tokenX.equals(tokens[tokenA].assetAddress), 10, networkType)
               }))
             }
           }

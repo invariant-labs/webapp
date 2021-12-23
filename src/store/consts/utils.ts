@@ -285,10 +285,11 @@ export const createLiquidityPlot = (rawTicks: Tick[], pool: PoolStructure, isXto
 export const createPlaceholderLiquidityPlot = (
   pool: PoolStructure,
   isXtoY: boolean,
-  yValueToFill: number
+  yValueToFill: number,
+  networkType: NetworkType
 ) => {
-  const tokenXDecimal = tokens.find((token) => token.address.equals(pool.tokenX))?.decimal ?? 0
-  const tokenYDecimal = tokens.find((token) => token.address.equals(pool.tokenY))?.decimal ?? 0
+  const tokenXDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenX))?.decimal ?? 0
+  const tokenYDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenY))?.decimal ?? 0
 
   const ticksData: PlotTickData[] = []
   const price = calcYPerXPrice(pool.sqrtPrice.v, tokenXDecimal, tokenYDecimal)

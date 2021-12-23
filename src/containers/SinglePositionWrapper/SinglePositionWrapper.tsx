@@ -17,6 +17,7 @@ import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import useStyles from './style'
 import { getX, getY } from '@invariant-labs/sdk/src/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
+import { network } from '@selectors/solanaConnection'
 
 export interface IProps {
   id: string
@@ -31,12 +32,14 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
-  const { data: ticksData } = useSelector(plotTicks)
+  const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
   const {
     lowerTick,
     upperTick,
     loading: rangeTicksLoading
   } = useSelector(currentPositionRangeTicks)
+  const networkType = useSelector(network)
+
   useEffect(() => {
     if (position?.id) {
       dispatch(actions.getCurrentPositionRangeTicks(id))
@@ -44,7 +47,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         actions.getCurrentPlotTicks({
           poolIndex: position.poolData.poolIndex,
           isXtoY: true,
-          tmpData: createPlaceholderLiquidityPlot(position.poolData, true, 10)
+          tmpData: createPlaceholderLiquidityPlot(position.poolData, true, 10, networkType)
         })
       )
     }
@@ -203,6 +206,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         min,
         max
       }}
+      ticksLoading={ticksLoading}
     />
   ) : isLoadingList || rangeTicksLoading ? (
     <Typography className={classes.placeholderText}>Loading...</Typography>
