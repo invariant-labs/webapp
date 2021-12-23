@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { status } from '@selectors/solanaConnection'
+import { network, status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
 import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
@@ -11,6 +11,7 @@ const MarketEvents = () => {
   const dispatch = useDispatch()
   const marketProgram = getMarketProgramSync()
   const networkStatus = useSelector(status)
+  const networkType = useSelector(network)
   const allPools = useSelector(pools)
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const MarketEvents = () => {
 
     const connectEvents = () => {
       dispatch(
-        actions.getPoolsData(PAIRS)
+        actions.getPoolsData(PAIRS[networkType])
       )
     }
 

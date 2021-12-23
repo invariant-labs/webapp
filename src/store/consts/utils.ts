@@ -4,7 +4,7 @@ import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
-import { PRICE_DECIMAL, tokens } from './static'
+import { NetworkType, PRICE_DECIMAL, tokens } from './static'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -198,9 +198,9 @@ export const calcYPerXPrice = (sqrtPrice: BN, xDecimal: number, yDecimal: number
   return +printBN(price, yDecimal)
 }
 
-export const createLiquidityPlot = (rawTicks: Tick[], pool: PoolStructure, isXtoY: boolean) => {
-  const tokenXDecimal = tokens.find(token => token.address.equals(pool.tokenX))?.decimal ?? 0
-  const tokenYDecimal = tokens.find(token => token.address.equals(pool.tokenY))?.decimal ?? 0
+export const createLiquidityPlot = (rawTicks: Tick[], pool: PoolStructure, isXtoY: boolean, networkType: NetworkType) => {
+  const tokenXDecimal = tokens[networkType].find(token => token.address.equals(pool.tokenX))?.decimal ?? 0
+  const tokenYDecimal = tokens[networkType].find(token => token.address.equals(pool.tokenY))?.decimal ?? 0
 
   const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(rawTicks, pool) : []
 
