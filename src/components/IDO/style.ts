@@ -40,10 +40,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   IDOWrapper: {
     display: 'flex',
     flexDirection: 'column',
-    width: '90%',
+    width: '80%',
     [theme.breakpoints.down('xs')]: {
-      width: '80%',
-      margin: '0 auto'
+      margin: '0 auto',
+      width: '90%'
     }
   },
   containerIDO: {
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: colors.white.main
     },
     [theme.breakpoints.down('xs')]: {
-      width: '80%'
+      width: '90%'
     }
   },
   root: {
@@ -93,11 +93,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   containerInfo: {
     display: 'flex',
-    flexDirection: 'column',
-    [theme.breakpoints.down('xs')]: {
-      margin: '5px 0',
-      padding: '5px'
-    }
+    flexDirection: 'column'
   },
   containerInfoDark: {
     display: 'flex',
@@ -114,7 +110,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
-    width: '80%',
+    width: '90%',
     [theme.breakpoints.down('xs')]: {
       marginTop: 30
     }
@@ -146,7 +142,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   infoContainer: {
-    width: '70%'
+    width: '80%'
   },
   vector: {
     flexGrow: 1
@@ -162,7 +158,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   valueInfo: {
     color: colors.invariant.lightInfoText,
-    ...typography.label1
+    ...typography.label1,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 10
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 8
+    }
   },
   boxInfo: {
     display: 'flex',
