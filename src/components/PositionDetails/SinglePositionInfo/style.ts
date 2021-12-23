@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     width: 35,
+    borderRadius: '100%',
 
     [theme.breakpoints.down('xs')]: {
       width: 22
@@ -93,7 +94,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   iconSmall: {
     width: '16px',
-    marginRight: 5
+    marginRight: 5,
+    borderRadius: '100%'
   },
   boxInfo: {
     backgroundColor: colors.invariant.componentIn2,
