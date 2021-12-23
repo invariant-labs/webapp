@@ -143,24 +143,19 @@ const IDO: React.FC<IIDO> = ({
                 </Box>
                 <Box className={classes.boxInfo}>
                   <Typography className={classes.valueInfo}>
-                    {currencyData.tether?.usd > 0
-                      ? `${(totalDeposited / currencyData.tether?.usd).toFixed(2)} USD`
-                      : '0.0 USD'}
+                    {(totalDeposited / currencyData.tether?.usd).toFixed(2)}
+                    USD
                   </Typography>
                   <Typography className={classes.valueInfo}>
-                    {currencyData.solana?.usd > 0
-                      ? `${(totalDeposited / currencyData.solana?.usd).toFixed(2)} SOL`
-                      : '0.0 SOL'}
+                    {' '}
+                    {(totalDeposited / currencyData.solana?.usd).toFixed(2)} SOL
                   </Typography>
                   <Typography className={classes.valueInfo}>
-                    {currencyData.ethereum?.usd > 0
-                      ? `${(totalDeposited / currencyData.ethereum?.usd).toFixed(4)} xETH`
-                      : '0.0 xETH'}
+                    {' '}
+                    {(totalDeposited / currencyData.ethereum?.usd).toFixed(4)}xETH
                   </Typography>
                   <Typography className={classes.valueInfo}>
-                    {currencyData.bitcoin?.usd > 0
-                      ? `${(totalDeposited / currencyData.bitcoin?.usd).toFixed(4)} xBTC`
-                      : '0.0 xBTC'}
+                    {(totalDeposited / currencyData.bitcoin?.usd).toFixed(4)} xBTC
                   </Typography>
                 </Box>
               </Box>
