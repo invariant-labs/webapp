@@ -51,10 +51,6 @@ const IDO: React.FC<IIDO> = ({
     tokens.length ? 0 : null
   )
   const [amountFrom, setAmountFrom] = React.useState<string>('')
-  const [totalDeposited, setTotalDeposited] = React.useState<number>(0)
-  const [totalSolContributed, setTotalSolContributed] = React.useState<number>(0)
-  const [tokenPrice, setTokenPrice] = React.useState<number>(0)
-  const [invariantForSale, setInvariantForSale] = React.useState<number>(0)
 
   const getButtonMessage = (): string => {
     if (walletStatus !== Status.Initialized) {
@@ -105,10 +101,6 @@ const IDO: React.FC<IIDO> = ({
     if (tokenFromIndex !== null) {
       setAmountFrom('0.000000')
     }
-    setTotalDeposited(totalDeposit)
-    setTotalSolContributed(totalSolContribute)
-    setTokenPrice(priceOfToken)
-    setInvariantForSale(valueOfInvariantTokens)
   }, [])
 
   function numberWithSpaces(x: number) {
@@ -169,28 +161,28 @@ const IDO: React.FC<IIDO> = ({
               <Box className={classes.infoContainer}>
                 <Box>
                   <Typography className={classes.depositAmouted}>
-                    {totalDeposited.toFixed(2)} xUSD
+                    {totalDeposit.toFixed(2)} xUSD
                   </Typography>
                 </Box>
                 <Box className={classes.boxInfo}>
                   <Typography className={classes.valueInfo}>
                     {currencyInfo.tether?.usd > 0
-                      ? `${(totalDeposited / currencyInfo.tether?.usd).toFixed(2)} USD`
+                      ? `${(totalDeposit / currencyInfo.tether?.usd).toFixed(2)} USD`
                       : '0.0 USD'}
                   </Typography>
                   <Typography className={classes.valueInfo}>
                     {currencyInfo.solana?.usd > 0
-                      ? `${(totalDeposited / currencyInfo.solana?.usd).toFixed(2)} SOL`
+                      ? `${(totalDeposit / currencyInfo.solana?.usd).toFixed(2)} SOL`
                       : '0.0 SOL'}
                   </Typography>
                   <Typography className={classes.valueInfo}>
                     {currencyInfo.ethereum?.usd > 0
-                      ? `${(totalDeposited / currencyInfo.ethereum?.usd).toFixed(4)} xETH`
+                      ? `${(totalDeposit / currencyInfo.ethereum?.usd).toFixed(4)} xETH`
                       : '0.0 xETH'}
                   </Typography>
                   <Typography className={classes.valueInfo}>
                     {currencyInfo.bitcoin?.usd > 0
-                      ? `${(totalDeposited / currencyInfo.bitcoin?.usd).toFixed(4)} xBTC`
+                      ? `${(totalDeposit / currencyInfo.bitcoin?.usd).toFixed(4)} xBTC`
                       : '0.0 xBTC'}
                   </Typography>
                 </Box>
@@ -204,7 +196,7 @@ const IDO: React.FC<IIDO> = ({
                 getButtonMessage() === 'Insufficient balance'
               }
               color='primary'
-              onClick={() => {}}
+              onClick={() => { }}
             />
           </Grid>
         </Box>
@@ -237,7 +229,7 @@ const IDO: React.FC<IIDO> = ({
           <Box className={classes.wrapperInfo}>
             <CardMedia image={solanaIcon} className={classes.solIcon} />
             <Typography className={classes.textInfo}>
-              {numberWithSpaces(totalSolContributed)}
+              {numberWithSpaces(totalSolContribute)}
             </Typography>
           </Box>
         </Box>
@@ -245,7 +237,7 @@ const IDO: React.FC<IIDO> = ({
           <Typography className={classes.labelInfo}>Estimated token price</Typography>
           <Box className={classes.wrapperInfo}>
             <CardMedia image={dollarIcon} className={classes.solIcon} />
-            <Typography className={classes.textInfo}>{tokenPrice}</Typography>
+            <Typography className={classes.textInfo}>{priceOfToken}</Typography>
           </Box>
         </Box>
         <Box className={classes.containerInfo}>
@@ -253,7 +245,7 @@ const IDO: React.FC<IIDO> = ({
           <Box className={classes.wrapperInfo}>
             <CardMedia image={invariantIcon} className={classes.solIcon} />
             <Typography className={classes.textInfo}>
-              {numberWithSpaces(invariantForSale)}
+              {numberWithSpaces(valueOfInvariantTokens)}
             </Typography>
           </Box>
         </Box>
