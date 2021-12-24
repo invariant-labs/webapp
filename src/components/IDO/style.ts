@@ -131,17 +131,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.lightInfoText,
     ...typography.body3
   },
-  amountInput: {
-    position: 'relative',
-    border: `1px solid ${colors.invariant.componentOut2}`,
-    backgroundColor: colors.invariant.componentIn2
-  },
-  amountInputDown: {
-    animation: '$slide-down .3s'
-  },
-  amountInputUp: {
-    animation: '$slide-up .3s'
-  },
   valueBox: {
     display: 'flex',
     width: '100%',
@@ -152,17 +141,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '80%',
     marginLeft: 5
   },
-  vector: {
-    flexGrow: 1
-  },
   depositAmouted: {
     color: colors.white.main,
     ...typography.heading4
-  },
-  transactionDetailsHeader: {
-    color: colors.invariant.lightInfoText,
-    ...typography.label1,
-    cursor: 'pointer'
   },
   valueInfo: {
     color: colors.invariant.lightInfoText,
@@ -186,9 +167,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   boxInfo: {
     display: 'flex',
     justifyContent: 'space-between'
-  },
-  outlinedButton: {
-    marginTop: '30px'
   },
   buttonBuy: {
     marginTop: '20px',
