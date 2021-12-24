@@ -63,12 +63,27 @@ const idoProps: IIDO = {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
+
 
 storiesOf('newUi/IDO', module)
   .addDecorator(withKnobs)
-  .add('default', () => (
+  .add('connect', () => (
+    <div style={{ width: 800 }} id={toBlur}>
+      <IDO {...idoProps} walletStatus={Status.Uninitialized} />
+    </div>
+  ))
+  .add('deposit', () => (
     <div style={{ width: 800 }} id={toBlur}>
       <IDO {...idoProps} />
+    </div>
+  ))
+  .add('claim', () => (
+    <div style={{ width: 800 }} id={toBlur}>
+      <IDO {...idoProps} claimable={true} />
+    </div>
+  ))
+  .add('withdraw', () => (
+    <div style={{ width: 800 }} id={toBlur}>
+      <IDO {...idoProps} withdrawable={true} />
     </div>
   ))
