@@ -60,10 +60,18 @@ const idoProps: IIDO = {
     solana: {
       usd: 189.6
     }
+  },
+  saleEnd: {
+    hours: 15,
+    minutes: 30,
+    seconds: 33
+  },
+  graceEnd: {
+    hours: 32,
+    minutes: 29,
+    seconds: 27
   }
 }
-
-
 
 storiesOf('newUi/IDO', module)
   .addDecorator(withKnobs)

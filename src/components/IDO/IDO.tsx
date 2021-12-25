@@ -23,6 +23,8 @@ export interface IIDO {
   claimable: Boolean
   withdrawable: Boolean
   currencyInfo: ICurrencyData
+  saleEnd: ITime
+  graceEnd: ITime
 }
 interface ICurrencyData {
   bitcoin: ICurrencyObject
@@ -34,7 +36,13 @@ interface ICurrencyObject {
   usd: number
 }
 
-const IDO: React.FC<IIDO> = ({
+interface ITime {
+  hours: number
+  minutes: number
+  seconds: number
+}
+
+const IDO: React.FC<any> = ({
   tokens,
   totalDeposit,
   totalSolContribute,
@@ -43,7 +51,9 @@ const IDO: React.FC<IIDO> = ({
   walletStatus,
   claimable,
   withdrawable,
-  currencyInfo
+  currencyInfo,
+  saleEnd,
+  graceEnd
 }) => {
   const classes = useStyles()
 
@@ -140,7 +150,7 @@ const IDO: React.FC<IIDO> = ({
               tokens={tokens}
               onSelect={(name: string) => {
                 setTokenFromIndex(
-                  tokens.findIndex(token => {
+                  tokens.findIndex((token: { symbol: string }) => {
                     return name === token.symbol
                   })
                 )
@@ -207,9 +217,9 @@ const IDO: React.FC<IIDO> = ({
           <Box className={classes.wrapperInfo}>
             <CardMedia image={watchIcon} className={classes.icon} />
             <Typography className={classes.textInfo}>
-              <AnimatedNumber value={15} formatValue={formatValue} />:
-              <AnimatedNumber value={30} formatValue={formatValue} />:
-              <AnimatedNumber value={33} formatValue={formatValue} />
+              <AnimatedNumber value={saleEnd.hours} formatValue={formatValue} />:
+              <AnimatedNumber value={saleEnd.minutes} formatValue={formatValue} />:
+              <AnimatedNumber value={saleEnd.seconds} formatValue={formatValue} />
             </Typography>
           </Box>
         </Box>
@@ -218,9 +228,9 @@ const IDO: React.FC<IIDO> = ({
           <Box className={classes.wrapperInfo}>
             <CardMedia image={watchIcon} className={classes.icon} />
             <Typography className={classes.textInfo}>
-              <AnimatedNumber value={32} formatValue={formatValue} />:
-              <AnimatedNumber value={29} formatValue={formatValue} />:
-              <AnimatedNumber value={27} formatValue={formatValue} />
+              <AnimatedNumber value={graceEnd.hours} formatValue={formatValue} />:
+              <AnimatedNumber value={graceEnd.minutes} formatValue={formatValue} />:
+              <AnimatedNumber value={graceEnd.seconds} formatValue={formatValue} />
             </Typography>
           </Box>
         </Box>
