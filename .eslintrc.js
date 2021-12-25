@@ -1,7 +1,8 @@
 module.exports = {
   extends: ['standard-with-typescript'],
   parserOptions: {
-    project: './tsconfig.json'
+    project: './tsconfig.json',
+    "warnOnUnsupportedTypeScriptVersion": false
   },
   parser: '@typescript-eslint/parser',
   plugins: ['react-hooks'],
