@@ -70,7 +70,80 @@ const idoProps: IIDO = {
     hours: 32,
     minutes: 29,
     seconds: 27
-  }
+  },
+  pools: [
+    {
+      tokenX: new PublicKey('So11111111111111111111111111111111111111112'),
+      tokenY: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+      tokenXReserve: new PublicKey('So11111111111111111111111111111111111111112'),
+      tokenYReserve: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+      tickSpacing: 4,
+      sqrtPrice: {
+        v: new BN(2)
+      },
+      fee: {
+        v: new BN(2)
+      },
+      liquidity: {
+        v: new BN(23)
+      },
+      currentTickIndex: 5,
+      tickmap: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+      feeGrowthGlobalX: {
+        v: new BN(2)
+      },
+      feeGrowthGlobalY: {
+        v: new BN(2)
+      },
+      feeProtocolTokenX: {
+        v: new BN(2)
+      },
+      feeProtocolTokenY: {
+        v: new BN(2)
+      },
+      bump: 255,
+      nonce: 254,
+      authority: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E')
+    },
+    {
+      tokenX: new PublicKey('So11111111111111111111111111111111111111112'),
+      tokenY: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+      tokenXReserve: new PublicKey('So11111111111111111111111111111111111111112'),
+      tokenYReserve: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+      tickSpacing: 4,
+      sqrtPrice: {
+        v: new BN(4)
+      },
+      fee: {
+        v: new BN(1)
+      },
+      liquidity: {
+        v: new BN(21)
+      },
+      currentTickIndex: 5,
+      tickmap: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+      feeGrowthGlobalX: {
+        v: new BN(2)
+      },
+      feeGrowthGlobalY: {
+        v: new BN(2)
+      },
+      feeProtocolTokenX: {
+        v: new BN(2)
+      },
+      feeProtocolTokenY: {
+        v: new BN(2)
+      },
+      bump: 255,
+      nonce: 254,
+      authority: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E')
+    }
+  ],
+  onSwap: (fromToken: PublicKey, toToken: PublicKey, amount: BN) => {
+    console.log(fromToken, toToken, amount)
+  },
+  slippTolerance: '1',
+  tokenToIndex: 1
 }
 
 storiesOf('newUi/IDO', module)
