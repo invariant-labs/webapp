@@ -14,7 +14,7 @@ import invariantLogo from '@static/svg/invariantLogo.svg'
 import { SwapToken } from '@components/Swap/Swap'
 import AnimatedNumber from '@components/AnimatedNumber'
 import { Status } from '@reducers/solanaWallet'
-
+import { useTimer } from './IDO.stories'
 export interface IIDO {
   tokens: SwapToken[]
   totalDeposit: number
@@ -76,6 +76,14 @@ const IDO: React.FC<any> = ({
     tokens.length ? 0 : null
   )
   const [amountFrom, setAmountFrom] = React.useState<string>('')
+  const [saleEndTime] = useTimer(saleEnd.hours, saleEnd.minutes, saleEnd.seconds)
+  const [graceEndTime] = useTimer(graceEnd.hours, graceEnd.minutes, graceEnd.seconds)
+
+  useEffect(() => {
+    if (tokenFromIndex !== null) {
+      setAmountFrom('0.000000')
+    }
+  }, [tokenFromIndex])
 
   const getButtonMessage = (): string => {
     if (walletStatus !== Status.Initialized) {
@@ -109,7 +117,6 @@ const IDO: React.FC<any> = ({
     }
     return 'Deposit'
   }
-
   const getHeaderMessage = (): string => {
     if (claimable === true) {
       return 'Claim your SOL'
@@ -119,15 +126,12 @@ const IDO: React.FC<any> = ({
       return 'Deposit your SOL'
     }
   }
-
-  const formatValue = (value: number): string => value.toFixed(0)
-
-  useEffect(() => {
-    if (tokenFromIndex !== null) {
-      setAmountFrom('0.000000')
+  const formatHour = (value: number): string => {
+    if (value <= 9) {
+      return `0${value.toFixed(0)}`
     }
-  }, [tokenFromIndex])
-
+    return value.toFixed(0)
+  }
   function numberWithSpaces(x: number) {
     return x.toLocaleString('pl-PL')
   }
@@ -246,10 +250,10 @@ const IDO: React.FC<any> = ({
           <Typography className={classes.labelInfo}>Sale period ends in</Typography>
           <Box className={classes.wrapperInfo}>
             <CardMedia image={watchIcon} className={classes.icon} />
-            <Typography className={classes.textInfo}>
-              <AnimatedNumber value={saleEnd.hours} formatValue={formatValue} />:
-              <AnimatedNumber value={saleEnd.minutes} formatValue={formatValue} />:
-              <AnimatedNumber value={saleEnd.seconds} formatValue={formatValue} />
+            <Typography className={classes.textTime}>
+              <AnimatedNumber value={saleEndTime.hours} formatValue={formatHour} />:
+              <AnimatedNumber value={saleEndTime.minutes} formatValue={formatHour} />:
+              <AnimatedNumber value={saleEndTime.seconds} formatValue={formatHour} />
             </Typography>
           </Box>
         </Box>
@@ -257,10 +261,10 @@ const IDO: React.FC<any> = ({
           <Typography className={classes.labelInfo}>Grace period ends in</Typography>
           <Box className={classes.wrapperInfo}>
             <CardMedia image={watchIcon} className={classes.icon} />
-            <Typography className={classes.textInfo}>
-              <AnimatedNumber value={graceEnd.hours} formatValue={formatValue} />:
-              <AnimatedNumber value={graceEnd.minutes} formatValue={formatValue} />:
-              <AnimatedNumber value={graceEnd.seconds} formatValue={formatValue} />
+            <Typography className={classes.textTime}>
+              <AnimatedNumber value={graceEndTime.hours} formatValue={formatHour} />:
+              <AnimatedNumber value={graceEndTime.minutes} formatValue={formatHour} />:
+              <AnimatedNumber value={graceEndTime.seconds} formatValue={formatHour} />
             </Typography>
           </Box>
         </Box>

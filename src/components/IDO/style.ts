@@ -90,6 +90,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.white.main,
     marginLeft: 5
   },
+  textTime: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: colors.white.main,
+    marginLeft: 5,
+    width: 70
+  },
   wrapperInfo: {
     display: 'flex',
     alignItems: 'center',
