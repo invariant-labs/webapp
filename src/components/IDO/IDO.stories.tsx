@@ -71,79 +71,28 @@ const idoProps: IIDO = {
     minutes: 29,
     seconds: 27
   },
-  pools: [
-    {
-      tokenX: new PublicKey('So11111111111111111111111111111111111111112'),
-      tokenY: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-      tokenXReserve: new PublicKey('So11111111111111111111111111111111111111112'),
-      tokenYReserve: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-      tickSpacing: 4,
-      sqrtPrice: {
-        v: new BN(2)
-      },
-      fee: {
-        v: new BN(2)
-      },
-      liquidity: {
-        v: new BN(23)
-      },
-      currentTickIndex: 5,
-      tickmap: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-      feeGrowthGlobalX: {
-        v: new BN(2)
-      },
-      feeGrowthGlobalY: {
-        v: new BN(2)
-      },
-      feeProtocolTokenX: {
-        v: new BN(2)
-      },
-      feeProtocolTokenY: {
-        v: new BN(2)
-      },
-      bump: 255,
-      nonce: 254,
-      authority: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E')
-    },
-    {
-      tokenX: new PublicKey('So11111111111111111111111111111111111111112'),
-      tokenY: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
-      tokenXReserve: new PublicKey('So11111111111111111111111111111111111111112'),
-      tokenYReserve: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
-      tickSpacing: 4,
-      sqrtPrice: {
-        v: new BN(4)
-      },
-      fee: {
-        v: new BN(1)
-      },
-      liquidity: {
-        v: new BN(21)
-      },
-      currentTickIndex: 5,
-      tickmap: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-      feeGrowthGlobalX: {
-        v: new BN(2)
-      },
-      feeGrowthGlobalY: {
-        v: new BN(2)
-      },
-      feeProtocolTokenX: {
-        v: new BN(2)
-      },
-      feeProtocolTokenY: {
-        v: new BN(2)
-      },
-      bump: 255,
-      nonce: 254,
-      authority: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E')
-    }
-  ],
-  onSwap: (fromToken: PublicKey, toToken: PublicKey, amount: BN) => {
-    console.log(fromToken, toToken, amount)
+  onDeposit: (token: PublicKey, amount: BN) => {
+    console.log('Deposit tokens')
+    console.log(token, amount)
   },
-  slippTolerance: '1',
-  tokenToIndex: 1
+  onClaim: (token: PublicKey, amount: BN) => {
+    console.log('Claim tokens')
+    console.log(token, amount)
+  },
+  onWithdraw: (token: PublicKey, amount: BN) => {
+    console.log('Withdraw tokens')
+    console.log(token, amount)
+  },
+  idoToken: {
+    balance: new BN(100).mul(new BN(34786)),
+    decimal: 6,
+    symbol: 'INV',
+    assetAddress: new PublicKey('So11111111111111111111111111111111111111112'),
+    name: 'INVARIANT',
+    logoURI:
+      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
+    address: new PublicKey('So11111111111111111111111111111111111111112')
+  }
 }
 
 storiesOf('newUi/IDO', module)

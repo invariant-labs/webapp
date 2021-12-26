@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
 import { PublicKey } from '@solana/web3.js'
-import { Decimal, PoolStructure } from '@invariant-labs/sdk/lib/market'
 import { BN } from '@project-serum/anchor'
 import useStyles from './style'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
@@ -15,7 +14,6 @@ import invariantLogo from '@static/svg/invariantLogo.svg'
 import { SwapToken } from '@components/Swap/Swap'
 import AnimatedNumber from '@components/AnimatedNumber'
 import { Status } from '@reducers/solanaWallet'
-import { fromFee } from '@invariant-labs/sdk/lib/utils'
 
 export interface IIDO {
   tokens: SwapToken[]
@@ -29,14 +27,16 @@ export interface IIDO {
   currencyInfo: ICurrencyData
   saleEnd: ITime
   graceEnd: ITime
-  pools: PoolStructure[]
-  slippTolerance: string
-  tokenToIndex: number
-  onSwap: (fromToken: PublicKey,
-    toToken: PublicKey,
-    amount: BN,
-    slippage: Decimal,
-    price: Decimal) => void
+  idoToken: object
+  onClaim: (
+    token: PublicKey,
+    amount: BN) => void
+  onDeposit: (
+    token: PublicKey,
+    amount: BN) => void
+  onWithdraw: (
+    token: PublicKey,
+    amount: BN) => void
 }
 interface ICurrencyData {
   bitcoin: ICurrencyObject
@@ -66,16 +66,15 @@ const IDO: React.FC<any> = ({
   currencyInfo,
   saleEnd,
   graceEnd,
-  onSwap,
-  pools,
-  slippTolerance,
-  tokenToIndex // this props should be a index of INVARIANT
+  onClaim,
+  onDeposit,
+  onWithdraw,
+  idoToken // this props should be a data about INVARIANT
 }) => {
   const classes = useStyles()
   const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
     tokens.length ? 0 : null
   )
-  const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
   const [amountFrom, setAmountFrom] = React.useState<string>('')
 
   const getButtonMessage = (): string => {
@@ -83,7 +82,7 @@ const IDO: React.FC<any> = ({
       return 'Connect a wallet'
     }
 
-    if (tokenFromIndex === null || tokenToIndex === null) {
+    if (tokenFromIndex === null || idoToken === null) {
       return 'Deposit'
     }
 
@@ -124,21 +123,10 @@ const IDO: React.FC<any> = ({
   const formatValue = (value: number): string => value.toFixed(0)
 
   useEffect(() => {
-    if (tokenToIndex !== null && tokenFromIndex !== null) {
-      const pairIndex = pools.findIndex((pool: { tokenX: PublicKey; tokenY: PublicKey }) => {
-        return (
-          tokens[tokenFromIndex].assetAddress.equals(pool.tokenX) &&
-          tokens[tokenToIndex].assetAddress.equals(pool.tokenY)) ||
-          (tokens[tokenToIndex].assetAddress.equals(pool.tokenX) &&
-          tokens[tokenFromIndex].assetAddress.equals(pool.tokenY))
-      })
-      setPoolIndex(pairIndex)
-    }
-
     if (tokenFromIndex !== null) {
       setAmountFrom('0.000000')
     }
-  }, [tokenToIndex, tokenFromIndex, pools.length])
+  }, [tokenFromIndex])
 
   function numberWithSpaces(x: number) {
     return x.toLocaleString('pl-PL')
@@ -183,7 +171,7 @@ const IDO: React.FC<any> = ({
                 )
               }}
               onMaxClick={() => {
-                if (tokenToIndex !== null && tokenFromIndex !== null) {
+                if (tokenFromIndex !== null) {
                   setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal))
                 }
               }}
@@ -232,17 +220,20 @@ const IDO: React.FC<any> = ({
               }
               color='primary'
               onClick={() => {
-                if (tokenFromIndex === null || tokenToIndex === null) {
-                  console.log('Select tokens for the transaction')
+                if (tokenFromIndex === null) {
+                  console.log('Select token for the transaction')
                 } else if (getButtonMessage() === 'Connect a wallet') {
                   console.log('Connect a Wallet')
+                } else if (getButtonMessage() === 'Claim') {
+                  onClaim(idoToken.assetAddress,
+                    printBNtoBN(amountFrom, idoToken.assetAddress.decimal))
+                } else if (getButtonMessage() === 'Withdraw') {
+                  onWithdraw(tokens[tokenFromIndex].assetAddress,
+                    printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal))
                 } else {
-                  onSwap(
+                  onDeposit(
                     tokens[tokenFromIndex].assetAddress,
-                    tokens[tokenToIndex].assetAddress,
-                    printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal),
-                    { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
-                    { v: poolIndex !== null ? pools[poolIndex].sqrtPrice.v : new BN(1) }
+                    printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal)
                   )
                 }
               }}
