@@ -32,7 +32,7 @@ export const USDT_DEV = {
   symbol: 'USDT',
   address: new PublicKey(MOCK_TOKENS.USDT),
   decimal: 6,
-  name: 'Theter USD',
+  name: 'Tether USD',
   logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
 }
 export const SOL_DEV = {

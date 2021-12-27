@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenIcon: {
     width: 40,
+    borderRadius: '100%',
 
     [theme.breakpoints.down('md')]: {
       width: 33
