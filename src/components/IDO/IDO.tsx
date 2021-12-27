@@ -14,7 +14,7 @@ import invariantLogo from '@static/svg/invariantLogo.svg'
 import { SwapToken } from '@components/Swap/Swap'
 import AnimatedNumber from '@components/AnimatedNumber'
 import { Status } from '@reducers/solanaWallet'
-import { useTimer } from './IDO.stories'
+import { useTimer } from './timerHook'
 export interface IIDO {
   tokens: SwapToken[]
   totalDeposit: number
