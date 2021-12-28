@@ -4,7 +4,7 @@ import CustomScrollbar from '../CustomScrollbar'
 import useStyles from '../style'
 import searchIcon from '@static/svg/lupa.svg'
 export interface ISelectTokenModal {
-  tokens: Array<{ symbol: string, name: string, logoURI: string }>
+  tokens: Array<{ symbol: string; name: string; logoURI: string }>
   // commonTokens: Array<{ symbol: string, name: string, logoURI: string }>
   open: boolean
   handleClose: () => void
@@ -51,12 +51,16 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
       }}>
       {' '}
       <Grid container className={classes.container}>
+        <Button className={classes.selectTokenClose} onClick={handleClose}></Button>
         <Grid className={classes.selectTokenHeader}>
           <Typography component='h1'>Select a token</Typography>
-          <Button className={classes.selectTokenClose} onClick={handleClose}></Button>
         </Grid>
         <Grid container className={classes.inputControl}>
-          <input className={classes.selectTokenInput} placeholder='Search token name or address' onChange={searchToken}/>
+          <input
+            className={classes.selectTokenInput}
+            placeholder='Search token name or address'
+            onChange={searchToken}
+          />
           <CardMedia image={searchIcon} className={classes.inputIcon} />
         </Grid>
         {/* TODO: create a common tokens list */}
@@ -81,34 +85,39 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
         </Grid> */}
         <Box className={classes.tokenList}>
           <CustomScrollbar>
-            { tokens ? tokens.filter(token => {
-              return token ? token.symbol.toLowerCase().includes(value)
-                : null
-            }).map((token) => (
-              <Grid
-                container
-                key={token ? `tokens-${token.symbol}` : ''}
-                className={classes.tokenItem}
-                alignItems='center'
-                wrap='nowrap'
-                onClick={() => {
-                  onSelect(tokenIndex(token ? token.symbol : ''))
-                  handleClose()
-                }}>
-                <Grid item>
-                  <CardMedia
-                    className={classes.tokenIcon}
-                    image={token ? token.logoURI : ''}
-                  />{' '}
-                </Grid>
-                <Grid item>
-                  <Typography className={classes.tokenName}>{token ? token.symbol : ''}</Typography>
-                  <Typography className={classes.tokenDescrpiption}>
-                    {token ? token.name : ''}
-                  </Typography>
-                </Grid>
-              </Grid>
-            )) : null }
+            {tokens
+              ? tokens
+                  .filter(token => {
+                    return token ? token.symbol.toLowerCase().includes(value) : null
+                  })
+                  .map(token => (
+                    <Grid
+                      container
+                      key={token ? `tokens-${token.symbol}` : ''}
+                      className={classes.tokenItem}
+                      alignItems='center'
+                      wrap='nowrap'
+                      onClick={() => {
+                        onSelect(tokenIndex(token ? token.symbol : ''))
+                        handleClose()
+                      }}>
+                      <Grid item>
+                        <CardMedia
+                          className={classes.tokenIcon}
+                          image={token ? token.logoURI : ''}
+                        />{' '}
+                      </Grid>
+                      <Grid item>
+                        <Typography className={classes.tokenName}>
+                          {token ? token.symbol : ''}
+                        </Typography>
+                        <Typography className={classes.tokenDescrpiption}>
+                          {token ? token.name : ''}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  ))
+              : null}
           </CustomScrollbar>
         </Box>
       </Grid>

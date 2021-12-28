@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selectTokenHeader: {
     width: '100%',
-    paddingBottom: 20,
+    paddingBottom: 5,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between'
@@ -29,12 +29,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative'
   },
   selectTokenClose: {
-    position: 'relative',
+    position: 'absolute',
+    top: 15,
+    right: 12,
     minWidth: 0,
     height: 20,
     '&:after': {
       content: '"\u2715"',
-      fontSize: 25,
+      fontSize: 22,
       position: 'absolute',
       color: 'white',
       top: '50%',
@@ -48,16 +50,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   selectTokenInput: {
     backgroundColor: colors.invariant.componentIn1,
     width: '100%',
+    fontSize: 16,
+    fontWeight: 600,
     position: 'relative',
     color: 'white',
     border: '1px solid',
     borderColor: colors.invariant.componentOut2,
     borderRadius: 5,
-    padding: '25px 10px 23px 10px',
+    padding: '18px 10px 17px 10px',
     marginBottom: 15,
     '&::placeholder': {
       color: colors.invariant.componentOut3,
-      fontSize: 16
+      fontSize: 16,
+      fontWeight: 600
     },
     '&:focus': {
       outline: 'none'
@@ -65,10 +70,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inputIcon: {
     position: 'absolute',
-    width: 12.2,
-    height: 13.5,
+    width: 24,
+    height: 26,
     right: '12px',
-    top: '28px'
+    top: '14px'
   },
   commonTokens: {
     display: 'flex',
