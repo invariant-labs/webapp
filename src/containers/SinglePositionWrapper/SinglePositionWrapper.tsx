@@ -34,8 +34,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
   const {
     lowerTick,
-    upperTick,
-    loading: rangeTicksLoading
+    upperTick
   } = useSelector(currentPositionRangeTicks)
 
   useEffect(() => {
@@ -154,7 +153,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     return [0, 0]
   }, [position, lowerTick, upperTick])
 
-  return !isLoadingList && !rangeTicksLoading && position ? (
+  return !isLoadingList && position ? (
     <PositionDetails
       detailsData={ticksData}
       midPriceIndex={midPriceIndex}
@@ -205,7 +204,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       }}
       ticksLoading={ticksLoading}
     />
-  ) : isLoadingList || rangeTicksLoading ? (
+  ) : isLoadingList ? (
     <Typography className={classes.placeholderText}>Loading...</Typography>
   ) : !position ? (
     <Typography className={classes.placeholderText}>

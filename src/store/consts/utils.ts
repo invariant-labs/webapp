@@ -207,15 +207,9 @@ export const multiplicityGreaterThan = (arg: number, spacing: number): number =>
 }
 
 export const arrayIndexFromTickIndex = (index: number, spacing: number): number => {
-  const lowest = multiplicityLowerThan(MIN_TICK, spacing)
+  const lowest = multiplicityGreaterThan(MIN_TICK, spacing)
 
   return (index - lowest) / spacing
-}
-
-export const tickIndexFromArrayIndex = (num: number, spacing: number): number => {
-  const lowest = multiplicityLowerThan(MIN_TICK, spacing)
-
-  return (num * spacing) + lowest
 }
 
 export const createLiquidityPlot = (rawTicks: Tick[], pool: PoolStructure, isXtoY: boolean, networkType: NetworkType) => {
