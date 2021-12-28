@@ -109,6 +109,7 @@ const positionsSlice = createSlice({
       return state
     },
     getCurrentPlotTicks(state, _action: PayloadAction<GetCurrentTicksData>) {
+      state.plotTicks.loading = false
       return state
     },
     setPositionsList(state, action: PayloadAction<Position[]>) {
