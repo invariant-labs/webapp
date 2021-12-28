@@ -45,7 +45,6 @@ export interface GetCurrentTicksData {
   isXtoY: boolean
   min?: number
   max?: number
-  tmpData?: PlotTickData[]
 }
 
 export interface ClosePositionData {
@@ -104,14 +103,12 @@ const positionsSlice = createSlice({
       state.plotTicks.loading = false
       return state
     },
-    getCurrentPlotTicks(state, action: PayloadAction<GetCurrentTicksData>) {
-      if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
-        state.plotTicks.loading = true
-      }
-
-      if (typeof action.payload.tmpData !== 'undefined') {
-        state.plotTicks.data = action.payload.tmpData
-      }
+    setPlotTicksLoading(state, action: PayloadAction<PlotTickData[]>) {
+      state.plotTicks.data = action.payload
+      state.plotTicks.loading = true
+      return state
+    },
+    getCurrentPlotTicks(state, _action: PayloadAction<GetCurrentTicksData>) {
       return state
     },
     setPositionsList(state, action: PayloadAction<Position[]>) {

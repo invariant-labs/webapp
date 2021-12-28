@@ -7,7 +7,7 @@ import { actions, ClosePositionData, GetCurrentTicksData, InitPositionData } fro
 import { PayloadAction } from '@reduxjs/toolkit'
 import { pools } from '@selectors/pools'
 import { Pair, TICK_LIMIT } from '@invariant-labs/sdk'
-import { calcTicksAmountInRange, createLiquidityPlot } from '@consts/utils'
+import { calcTicksAmountInRange, createLiquidityPlot, createPlaceholderLiquidityPlot } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
 import { Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
 import { positionsWithPoolsData, plotTicks, singlePositionData } from '@selectors/positions'
@@ -106,6 +106,17 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     const marketProgram = yield* call(getMarketProgram)
 
     const poolIndex = action.payload.poolIndex
+
+    if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
+      yield put(actions.setPlotTicksLoading(
+        createPlaceholderLiquidityPlot(
+          allPools[poolIndex],
+          action.payload.isXtoY,
+          10,
+          networkType
+        )
+      ))
+    }
     let toRequest = typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined'
       ? calcTicksAmountInRange(
         action.payload.isXtoY ? action.payload.min : 1 / action.payload.max,
@@ -142,10 +153,17 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     }))
   } catch (error) {
     console.log(error)
-    yield put(actions.setPlotTicks({
-      data: createLiquidityPlot([], allPools[action.payload.poolIndex], action.payload.isXtoY, networkType),
-      maxReached: false
-    }))
+    if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
+      yield put(actions.setPlotTicks({
+        data: createPlaceholderLiquidityPlot(
+          allPools[action.payload.poolIndex],
+          action.payload.isXtoY,
+          10,
+          networkType
+        ),
+        maxReached: false
+      }))
+    }
   }
 }
 
