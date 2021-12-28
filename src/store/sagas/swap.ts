@@ -11,7 +11,6 @@ import { getConnection } from './connection'
 import { FEE_TIERS, calculateAveragePrice, SimulateSwapPrice } from '@invariant-labs/sdk/src/utils'
 import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import BN from 'bn.js'
-import { printBN } from '@consts/utils'
 
 export function* handleSimulate(): Generator {
   try {
@@ -33,12 +32,11 @@ export function* handleSimulate(): Generator {
     const tickMap = yield* call([marketProgram, marketProgram.getTickmap],
       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0])
     )
-    console.log('sqrt price to simulation: ', printBN(simulate.simulatePrice, 12))
     if (simulate.amount.gt(new BN(0))) {
       const simulateObject: SimulateSwapPrice = {
         pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
         xToY: isXtoY,
-        byAmountIn: false, // to jest jeszcze do zrobienia
+        byAmountIn: true, // to jest jeszcze do zrobienia
         swapAmount: simulate.amount,
         currentPrice: { v: simulate.simulatePrice },
         slippage: slippage,

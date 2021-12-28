@@ -109,8 +109,8 @@ export const Swap: React.FC<ISwap> = ({
     fee: string = 'noFee'
   ) => {
     let sqrtPrice: BN = new BN(0)
-    let amountOut,
-      priceProportion: number = 0
+    let amountOut: number = 0
+    let priceProportion: number = 0
     const decimalDiff: number = PRICE_DECIMAL + (assetIn.decimal - assetFor.decimal)
     if (poolIndex !== -1 && poolIndex !== null) {
       let sqrtPricePow: number =
@@ -175,7 +175,7 @@ export const Swap: React.FC<ISwap> = ({
     console.log('printBNtoBN sqrtPrice: ', printBNtoBN(sqrtPrice.toString(), 0).toString())
     return {
       amountOut: amountOut.toFixed(assetFor.decimal),
-      swapRate: printBNtoBN(sqrtPrice.toString(), decimalDiff)
+      swapRate: printBNtoBN(sqrtPrice.toString(), 0)
     }
   }
 
