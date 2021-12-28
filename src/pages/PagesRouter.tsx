@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { SwapPage } from './SwapPage/SwapPage'
+import { IdoPage } from './IdoPage/IdoPage'
 import { useDispatch, useSelector } from 'react-redux'
 import { ListPage } from './ListPage/ListPage'
 import { toBlur } from '@consts/uiUtils'
@@ -40,6 +41,7 @@ export const PagesRouter: React.FC = () => {
         <HeaderWrapper />
         <Switch>
           <Route path='/swap' component={SwapPage} />
+          <Route path='/ido' component={IdoPage} />
           <Route path={'/newPosition'} component={NewPositionPage} />
           <Route path={'/pool'} component={ListPage} />
           <Route

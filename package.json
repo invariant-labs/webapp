@@ -25,7 +25,9 @@
     "@types/redux-persist": "^4.3.1",
     "@vitejs/plugin-react-refresh": "^1.3.4",
     "animated-number-react": "0.1.1",
+    "awesome-typescript-loader": "^5.2.1",
     "axios": "^0.21.4",
+    "babel-preset-es2015": "^6.24.1",
     "binance-api-node": "^0.11.12",
     "buffer": "^6.0.3",
     "classnames": "^2.2.6",
@@ -60,7 +62,6 @@
     "storybook-builder-vite": "0.0.12",
     "stream-browserify": "^3.0.0",
     "typed-redux-saga": "^1.2.0",
-    "typescript": "^4.2.4",
     "vite": "2.6.5",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.2",
@@ -94,6 +95,8 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.16.5",
+    "@babel/preset-react": "^7.16.5",
     "@hookform/error-message": "^0.0.3",
     "@hookform/resolvers": "^0.1.0",
     "@storybook/addon-actions": "^6.2.9",
@@ -124,6 +127,7 @@
     "@types/storybook__react": "^5.2.1",
     "@types/yup": "^0.29.3",
     "@typescript-eslint/eslint-plugin": "^3.7.1",
+    "@vitejs/plugin-react": "1.0.5",
     "dotenv-webpack": "^7.0.3",
     "eslint": "6.6.0",
     "eslint-config-standard": "^14.1.1",
@@ -135,8 +139,10 @@
     "eslint-plugin-standard": "^4.0.1",
     "prettier": "^2.1.0",
     "prettier-config-standard": "^1.0.1",
-    "react-app-rewired": "^2.1.6",
+    "react-app-rewired": "^2.1.9",
     "storybook-addon-material-ui": "^0.9.0-alpha.21",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.4",
     "vite-aliases": "^0.8.2"
   }
 }
