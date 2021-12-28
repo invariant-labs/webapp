@@ -78,12 +78,25 @@ const IDO: React.FC<any> = ({
   const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [saleEndTime] = useTimer(saleEnd.hours, saleEnd.minutes, saleEnd.seconds)
   const [graceEndTime] = useTimer(graceEnd.hours, graceEnd.minutes, graceEnd.seconds)
-
+  const [saleFinished, setSaleFinished] = React.useState<boolean>(false)
+  const [graceFinished, setGraceFinished] = React.useState<boolean>(false)
   useEffect(() => {
     if (tokenFromIndex !== null) {
       setAmountFrom('0.000000')
     }
   }, [tokenFromIndex])
+
+  useEffect(() => {
+    if (saleEndTime.hours === 0 && saleEndTime.minutes === 0 && saleEndTime.seconds === 0) {
+      setSaleFinished(true)
+    }
+  }, [saleEndTime.seconds])
+
+  useEffect(() => {
+    if (graceEndTime.hours === 0 && graceEndTime.minutes === 0 && graceEndTime.seconds === 0) {
+      setGraceFinished(true)
+    }
+  }, [graceEndTime.seconds])
 
   const getButtonMessage = (): string => {
     if (walletStatus !== Status.Initialized) {
@@ -248,25 +261,33 @@ const IDO: React.FC<any> = ({
       <Grid item sm={4} className={classes.info}>
         <Box className={classes.containerInfo}>
           <Typography className={classes.labelInfo}>Sale period ends in</Typography>
-          <Box className={classes.wrapperInfo}>
-            <CardMedia image={watchIcon} className={classes.icon} />
-            <Typography className={classes.textTime}>
-              <AnimatedNumber value={saleEndTime.hours} formatValue={formatHour} />:
-              <AnimatedNumber value={saleEndTime.minutes} formatValue={formatHour} />:
-              <AnimatedNumber value={saleEndTime.seconds} formatValue={formatHour} />
-            </Typography>
-          </Box>
+          {saleFinished ? (
+            <Typography className={classes.textInfo}>Finished</Typography>
+          ) : (
+            <Box className={classes.wrapperInfo}>
+              <CardMedia image={watchIcon} className={classes.icon} />
+              <Typography className={classes.textTime}>
+                <AnimatedNumber value={saleEndTime.hours} formatValue={formatHour} />:
+                <AnimatedNumber value={saleEndTime.minutes} formatValue={formatHour} />:
+                <AnimatedNumber value={saleEndTime.seconds} formatValue={formatHour} />
+              </Typography>
+            </Box>
+          )}
         </Box>
         <Box className={classes.containerInfoDark}>
           <Typography className={classes.labelInfo}>Grace period ends in</Typography>
-          <Box className={classes.wrapperInfo}>
-            <CardMedia image={watchIcon} className={classes.icon} />
-            <Typography className={classes.textTime}>
-              <AnimatedNumber value={graceEndTime.hours} formatValue={formatHour} />:
-              <AnimatedNumber value={graceEndTime.minutes} formatValue={formatHour} />:
-              <AnimatedNumber value={graceEndTime.seconds} formatValue={formatHour} />
-            </Typography>
-          </Box>
+          {graceFinished ? (
+            <Typography className={classes.textInfo}>Finished</Typography>
+          ) : (
+            <Box className={classes.wrapperInfo}>
+              <CardMedia image={watchIcon} className={classes.icon} />
+              <Typography className={classes.textTime}>
+                <AnimatedNumber value={graceEndTime.hours} formatValue={formatHour} />:
+                <AnimatedNumber value={graceEndTime.minutes} formatValue={formatHour} />:
+                <AnimatedNumber value={graceEndTime.seconds} formatValue={formatHour} />
+              </Typography>
+            </Box>
+          )}
         </Box>
         <Box className={classes.containerInfo}>
           <Typography className={classes.labelInfo}>SOL Contributed</Typography>
