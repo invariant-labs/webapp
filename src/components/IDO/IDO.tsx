@@ -226,7 +226,7 @@ const IDO: React.FC<any> = ({
               onClick={() => {
                 if (tokenFromIndex === null) {
                   console.log('Select token for the transaction')
-                } else if (getButtonMessage() === 'Connect a wallet') {
+                } else if (walletStatus !== Status.Initialized) {
                   console.log('Connect a Wallet')
                 } else if (getButtonMessage() === 'Claim') {
                   onClaim(idoToken.assetAddress,
