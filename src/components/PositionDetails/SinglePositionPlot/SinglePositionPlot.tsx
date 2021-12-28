@@ -16,6 +16,7 @@ export interface ISinglePositionPlot {
   tokenX: string
   onZoomOutOfData: (min: number, max: number) => void
   positionData: ILiquidityItem
+  ticksLoading: boolean
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -27,7 +28,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   tokenY,
   tokenX,
   onZoomOutOfData,
-  positionData
+  positionData,
+  ticksLoading
 }) => {
   const classes = useStyles()
 
@@ -84,7 +86,9 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           leftRangeIndex={leftRangeIndex}
           rightRangeIndex={rightRangeIndex}
           midPriceIndex={midPriceIndex}
-          className={classes.plot}/>
+          className={classes.plot}
+          loading={ticksLoading}
+        />
       </Grid>
       <Grid className={classes.minMaxInfo}>
         <LiquidationRangeInfo

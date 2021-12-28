@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     width: 35,
+    borderRadius: '100%',
 
     [theme.breakpoints.down('xs')]: {
       width: 22
@@ -93,7 +94,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   iconSmall: {
     width: '16px',
-    marginRight: 5
+    marginRight: 5,
+    borderRadius: '100%'
   },
   boxInfo: {
     backgroundColor: colors.invariant.componentIn2,
@@ -157,11 +159,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '3px 12px'
   },
   tokenName: {
-    color: colors.invariant.lightInfoText,
+    color: colors.white.main,
     ...typography.body1
   },
   tokenValue: {
-    color: colors.white.main,
+    color: colors.invariant.lightInfoText,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -174,7 +176,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxHeight: '35px',
     minWidth: 114,
     textTransform: 'none',
-    transition: '500ms',
+    transition: '300ms',
     paddingInline: 0,
     '&:hover': {
       background: colors.invariant.accent2,

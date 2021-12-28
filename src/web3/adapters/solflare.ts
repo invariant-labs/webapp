@@ -69,7 +69,7 @@ export class SolflareWalletAdapter extends EventEmitter implements WalletAdapter
       this.emit('connect')
     })
 
-    return this._provider.connect()
+    return await this._provider.connect()
   }
 
   disconnect() {

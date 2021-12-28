@@ -12,7 +12,13 @@ import {
 import { actions, PayloadTypes } from '@reducers/solanaWallet'
 import { getConnection } from './connection'
 import { getSolanaWallet, connectWallet, disconnectWallet, WalletType } from '@web3/wallet'
-import { Account, PublicKey, SystemProgram, Transaction, TransactionInstruction } from '@solana/web3.js'
+import {
+  Account,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction
+} from '@solana/web3.js'
 import { Token, ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as positionsActions } from '@reducers/positions'
@@ -23,8 +29,9 @@ import { WalletAdapter } from '@web3/adapters/types'
 import { getTokenDetails } from './token'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { accounts, address, status } from '@selectors/solanaWallet'
-import { DEFAULT_PUBLICKEY, SOL, USDC, USDT } from '@consts/static'
+import { airdropQuantities, airdropTokens, DEFAULT_PUBLICKEY } from '@consts/static'
 import airdropAdmin from '@consts/airdropAdmin'
+import { network } from '@selectors/solanaConnection'
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
   return wallet
@@ -87,6 +94,7 @@ export function* handleAirdrop(): Generator {
   }
 
   const connection = yield* call(getConnection)
+  const networkType = yield* select(network)
   const wallet = yield* call(getWallet)
   let balance = yield* call([connection, connection.getBalance], wallet.publicKey)
   if (balance < 0.05 * 1e9) {
@@ -105,9 +113,8 @@ export function* handleAirdrop(): Generator {
       }
     }
   }
-  const tokensAddresses: PublicKey[] = [USDC.address, USDT.address, SOL.address]
-  const collateralsQuantities: number[] = [100 * 10 ** USDC.decimal, 100 * 10 ** USDT.decimal, 10 ** SOL.decimal]
-  yield* call(getCollateralTokenAirdrop, tokensAddresses, collateralsQuantities)
+
+  yield* call(getCollateralTokenAirdrop, airdropTokens[networkType], airdropQuantities[networkType])
   yield put(
     snackbarsActions.add({
       message: 'You will soon receive airdrop',
@@ -117,9 +124,7 @@ export function* handleAirdrop(): Generator {
   )
 }
 
-export function* setEmptyAccounts(
-  collateralsAddresses: PublicKey[]
-): Generator {
+export function* setEmptyAccounts(collateralsAddresses: PublicKey[]): Generator {
   const tokensAccounts = yield* select(accounts)
   const acc: PublicKey[] = []
   for (const collateral of collateralsAddresses) {
@@ -153,7 +158,8 @@ export function* getCollateralTokenAirdrop(
         airdropAdmin.publicKey,
         [],
         collateralsQuantities[index]
-      ))
+      )
+    )
   }
   const tx = instructions.reduce((tx, ix) => tx.add(ix), new Transaction())
   const connection = yield* call(getConnection)
@@ -252,7 +258,11 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
     )
     ixs.push(ix)
   }
-  yield* call(signAndSend, wallet, ixs.reduce((tx, ix) => tx.add(ix), new Transaction()))
+  yield* call(
+    signAndSend,
+    wallet,
+    ixs.reduce((tx, ix) => tx.add(ix), new Transaction())
+  )
   for (const [index, address] of tokenAddress.entries()) {
     const token = yield* call(getTokenDetails, tokenAddress[index].toString())
     yield* put(

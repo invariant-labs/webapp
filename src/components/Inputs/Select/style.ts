@@ -24,7 +24,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   icon: {
     minWidth: 18,
     height: 18,
-    marginRight: 6
+    marginRight: 6,
+    borderRadius: '100%'
   },
   endIcon: {
     width: '2em',
