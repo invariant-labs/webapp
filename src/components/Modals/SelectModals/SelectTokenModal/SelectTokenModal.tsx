@@ -91,10 +91,10 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
             {tokens
               ? tokens
                   .filter(token => {
-                    return token
-                      ? token.symbol.toLowerCase().includes(value) ||
-                          token.name.toLowerCase().includes(value)
-                      : ''
+                    return (
+                      token.symbol.toLowerCase().includes(value) ||
+                      token.name.toLowerCase().includes(value)
+                    )
                   })
                   .map(token => (
                     <Grid
