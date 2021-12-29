@@ -10,14 +10,14 @@ const useStyles = makeStyles(() => ({
     ...typography.body1,
     backgroundColor: colors.invariant.accent1,
     color: colors.white.main,
-    transition: 'background-color 0ms ease',
+    transition: 'background-color 0ms ease, box-shadow 500ms linear',
     position: 'relative',
     overflow: 'hidden',
     zIndex: 4,
 
     '&:hover': {
       backgroundColor: `${colors.invariant.accent1}`,
-      boxShadow: '0px 0px 20px -10px white'
+      boxShadow: `0px 0px 15px ${colors.invariant.accent1}`
     },
 
     '&:disabled': {

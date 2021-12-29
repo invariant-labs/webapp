@@ -50,14 +50,14 @@ export const NewPositionWrapper = () => {
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
 
   const midPriceIndex = useMemo(() => {
-    if (poolIndex !== null && !ticksLoading) {
+    if (poolIndex !== null && ticksData.length) {
       const index = ticksData.findIndex((tick) => tick.index === allPools[poolIndex].currentTickIndex)
 
       return index === -1 ? 0 : index
     }
 
     return 0
-  }, [ticksLoading, poolIndex, tokenAIndex])
+  }, [ticksData.length, poolIndex, tokenAIndex, ticksLoading])
 
   const tokensB = useMemo(() => {
     if (tokenAIndex === null) {

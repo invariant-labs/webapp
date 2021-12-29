@@ -16,6 +16,7 @@ export interface ISinglePositionPlot {
   tokenX: string
   onZoomOutOfData: (min: number, max: number) => void
   positionData: ILiquidityItem
+  ticksLoading: boolean
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -27,7 +28,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   tokenY,
   tokenX,
   onZoomOutOfData,
-  positionData
+  positionData,
+  ticksLoading
 }) => {
   const classes = useStyles()
 
@@ -35,7 +37,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   const [plotMax, setPlotMax] = useState(1)
 
   useEffect(() => {
-    if (midPriceIndex > -1) {
+    if (midPriceIndex > -1 && ticksLoading) {
       const initSideDist = Math.min(
         data[midPriceIndex].x - data[Math.max(midPriceIndex - 15, 0)].x,
         data[Math.min(midPriceIndex + 15, data.length - 1)].x - data[midPriceIndex].x
@@ -44,7 +46,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
       setPlotMin(data[midPriceIndex].x - initSideDist)
       setPlotMax(data[midPriceIndex].x + initSideDist)
     }
-  }, [data.length, midPriceIndex])
+  }, [ticksLoading, midPriceIndex])
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -84,7 +86,9 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           leftRangeIndex={leftRangeIndex}
           rightRangeIndex={rightRangeIndex}
           midPriceIndex={midPriceIndex}
-          className={classes.plot}/>
+          className={classes.plot}
+          loading={ticksLoading}
+        />
       </Grid>
       <Grid className={classes.minMaxInfo}>
         <LiquidationRangeInfo

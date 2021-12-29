@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, CardMedia } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import SelectTokenModal from '@components/Modals/SelectModals/SelectTokenModal/SelectTokenModal'
 import { SwapToken } from '@selectors/solanaWallet'
@@ -48,7 +48,7 @@ export const Select: React.FC<ISelectModal> = ({
         onClick={handleClick}
         startIcon={
           !current ? null : (
-            <CardMedia className={classes.icon} image={current.logoURI ?? icons.SNY} />
+            <img className={classes.icon} src={current.logoURI ?? icons.SNY} />
           )
         }
         endIcon={<ExpandMoreIcon className={classes.endIcon} />}

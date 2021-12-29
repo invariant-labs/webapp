@@ -4,6 +4,7 @@ import { createSelector } from 'reselect'
 import { IPositionsStore, positionsSliceName } from '../reducers/positions'
 import { keySelectors, AnyProps } from './helpers'
 import { pools } from './pools'
+import { network } from './solanaConnection'
 
 const store = (s: AnyProps) => s[positionsSliceName] as IPositionsStore
 
@@ -21,8 +22,9 @@ export interface PoolWithAddressAndIndex extends PoolWithAddress {
 export const positionsWithPoolsData = createSelector(
   pools,
   positionsList,
-  (allPools, { list }) => {
-    const tokensByKey: Record<string, Token> = tokens.reduce((prev, token) => {
+  network,
+  (allPools, { list }, networkType) => {
+    const tokensByKey: Record<string, Token> = tokens[networkType].reduce((prev, token) => {
       return {
         [token.address.toString()]: token,
         ...prev

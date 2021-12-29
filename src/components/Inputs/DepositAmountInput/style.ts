@@ -43,7 +43,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   currencyIcon: {
     minWidth: 14,
     height: 14,
-    marginRight: 3
+    marginRight: 3,
+    borderRadius: '100%'
   },
   currencySymbol: {
     ...typography.body3,
