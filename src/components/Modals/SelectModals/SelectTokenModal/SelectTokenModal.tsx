@@ -2,8 +2,9 @@
 import React, { useState } from 'react'
 import { Typography, Popover, Grid, CardMedia, Box, Button } from '@material-ui/core'
 import CustomScrollbar from '../CustomScrollbar'
-import useStyles from '../style'
 import searchIcon from '@static/svg/lupa.svg'
+import useStyles from '../style'
+
 export interface ISelectTokenModal {
   tokens: Array<{ symbol: string; name: string; logoURI: string }>
   // commonTokens: Array<{ symbol: string, name: string, logoURI: string }>

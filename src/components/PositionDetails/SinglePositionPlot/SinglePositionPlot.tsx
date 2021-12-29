@@ -37,7 +37,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   const [plotMax, setPlotMax] = useState(1)
 
   useEffect(() => {
-    if (midPriceIndex > -1) {
+    if (midPriceIndex > -1 && ticksLoading) {
       const initSideDist = Math.min(
         data[midPriceIndex].x - data[Math.max(midPriceIndex - 15, 0)].x,
         data[Math.min(midPriceIndex + 15, data.length - 1)].x - data[midPriceIndex].x
@@ -46,7 +46,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
       setPlotMin(data[midPriceIndex].x - initSideDist)
       setPlotMax(data[midPriceIndex].x + initSideDist)
     }
-  }, [data.length, midPriceIndex])
+  }, [ticksLoading, midPriceIndex])
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
