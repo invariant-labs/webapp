@@ -27,7 +27,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   const [value, setValue] = useState<string>('')
 
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
+    setValue(e.target.value.toLowerCase())
   }
 
   const tokenIndex = (name: string) => {
