@@ -11,13 +11,12 @@ import {
 } from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
-import { calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
+import { calcYPerXPrice, printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import useStyles from './style'
 import { getX, getY } from '@invariant-labs/sdk/src/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
-import { network } from '@selectors/solanaConnection'
 
 export interface IProps {
   id: string
@@ -35,10 +34,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
   const {
     lowerTick,
-    upperTick,
-    loading: rangeTicksLoading
+    upperTick
   } = useSelector(currentPositionRangeTicks)
-  const networkType = useSelector(network)
 
   useEffect(() => {
     if (position?.id) {
@@ -46,8 +43,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       dispatch(
         actions.getCurrentPlotTicks({
           poolIndex: position.poolData.poolIndex,
-          isXtoY: true,
-          tmpData: createPlaceholderLiquidityPlot(position.poolData, true, 10, networkType)
+          isXtoY: true
         })
       )
     }
@@ -157,7 +153,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     return [0, 0]
   }, [position, lowerTick, upperTick])
 
-  return !isLoadingList && !rangeTicksLoading && position ? (
+  return !isLoadingList && position ? (
     <PositionDetails
       detailsData={ticksData}
       midPriceIndex={midPriceIndex}
@@ -208,7 +204,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       }}
       ticksLoading={ticksLoading}
     />
-  ) : isLoadingList || rangeTicksLoading ? (
+  ) : isLoadingList ? (
     <Typography className={classes.placeholderText}>Loading...</Typography>
   ) : !position ? (
     <Typography className={classes.placeholderText}>
