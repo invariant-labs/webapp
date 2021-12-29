@@ -92,9 +92,8 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
               ? tokens
                   .filter(token => {
                     return token
-                      ? token.symbol.toLowerCase().includes(value)
-                        ? token.symbol.toLowerCase().includes(value)
-                        : token.name.toLowerCase().includes(value)
+                      ? token.symbol.toLowerCase().includes(value) ||
+                          token.name.toLowerCase().includes(value)
                       : ''
                   })
                   .map(token => (
