@@ -1,7 +1,7 @@
 import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
 import Select from '@components/Inputs/Select/Select'
 import { SwapToken } from '@selectors/solanaWallet'
-import { printBN, printBNtoBN } from '@consts/utils'
+import { getScaleFromString, printBN, printBNtoBN } from '@consts/utils'
 import { Grid, Typography } from '@material-ui/core'
 import React, { useState, useCallback, useEffect } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
@@ -74,6 +74,26 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
     return 'Add Liquidity'
   }, [tokenAIndex, tokenBIndex, tokenAInputState.value, tokenBInputState.value, tokens, isCurrentPoolExisting])
+
+  useEffect(() => {
+    if (tokenAIndex !== null) {
+      if (getScaleFromString(tokenAInputState.value) > tokens[tokenAIndex].decimal) {
+        const parts = tokenAInputState.value.split('.')
+
+        tokenAInputState.setValue(parts[0] + '.' + parts[1].slice(0, tokens[tokenAIndex].decimal))
+      }
+    }
+  }, [tokenAIndex])
+
+  useEffect(() => {
+    if (tokenBIndex !== null) {
+      if (getScaleFromString(tokenBInputState.value) > tokens[tokenBIndex].decimal) {
+        const parts = tokenBInputState.value.split('.')
+
+        tokenAInputState.setValue(parts[0] + '.' + parts[1].slice(0, tokens[tokenBIndex].decimal))
+      }
+    }
+  }, [tokenBIndex])
 
   useEffect(() => {
     if (tokenAIndex !== null && tokenBIndex !== null && !(tokensB.find((token) => token.symbol === tokens[tokenAIndex].symbol))) {
