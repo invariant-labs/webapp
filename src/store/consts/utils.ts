@@ -314,19 +314,17 @@ export const getNetworkTokensList = (networkType: NetworkType): Token[] => {
   }>
   switch (networkType) {
     case NetworkType.MAINNET:
-      list = mainnetList.tokens
+      list = mainnetList
       break
     case NetworkType.DEVNET:
-      list = devnetList.tokens
+      list = devnetList
       break
     default:
       list = []
   }
 
-  const tokensList: Token[] = list.map((token) => ({
+  return list.map((token) => ({
     ...token,
     address: new PublicKey(token.address)
   }))
-
-  return tokensList.sort((a, b) => a.symbol.toLowerCase().localeCompare(b.symbol.toLowerCase()))
 }

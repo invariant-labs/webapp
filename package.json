@@ -73,7 +73,8 @@
     "fix": "eslint --fix --fix-type suggestion --ext .js,.ts,.tsx .",
     "storybook": "start-storybook -p 9009 -c .storybook watch-css -s public",
     "build-storybook": "build-storybook -s public",
-    "build": "vite build"
+    "build": "vite build",
+    "update-mainnet-list": "node ./fetchMainnetList.js"
   },
   "eslintConfig": {
     "extends": "react-app"
