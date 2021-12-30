@@ -5,13 +5,12 @@ import { getMarketProgram } from '@web3/programs/amm'
 import { getConnection } from './connection'
 import { actions, ClosePositionData, GetCurrentTicksData, InitPositionData } from '@reducers/positions'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { pools } from '@selectors/pools'
+import { pools, tokens } from '@selectors/pools'
 import { Pair, TICK_LIMIT } from '@invariant-labs/sdk'
 import { calcTicksAmountInRange, createLiquidityPlot, createPlaceholderLiquidityPlot } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
 import { Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
 import { positionsWithPoolsData, plotTicks, singlePositionData } from '@selectors/positions'
-import { network } from '@selectors/solanaConnection'
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
@@ -100,7 +99,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 
 export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicksData>): Generator {
   const allPools = yield* select(pools)
-  const networkType = yield* select(network)
+  const allTokens = yield* select(tokens)
 
   try {
     const marketProgram = yield* call(getMarketProgram)
@@ -113,7 +112,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
           allPools[poolIndex],
           action.payload.isXtoY,
           10,
-          networkType
+          allTokens
         )
       ))
     }
@@ -145,7 +144,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       toRequest
     )
 
-    const ticksData = createLiquidityPlot(rawTicks, allPools[poolIndex], action.payload.isXtoY, networkType)
+    const ticksData = createLiquidityPlot(rawTicks, allPools[poolIndex], action.payload.isXtoY, allTokens)
 
     yield put(actions.setPlotTicks({
       data: ticksData,
@@ -159,7 +158,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
           allPools[action.payload.poolIndex],
           action.payload.isXtoY,
           10,
-          networkType
+          allTokens
         ),
         maxReached: false
       }))

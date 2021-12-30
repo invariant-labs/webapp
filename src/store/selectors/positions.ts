@@ -1,10 +1,9 @@
-import { Token, tokens } from '@consts/static'
+import { Token } from '@consts/static'
 import { PoolWithAddress } from '@reducers/pools'
 import { createSelector } from 'reselect'
 import { IPositionsStore, positionsSliceName } from '../reducers/positions'
 import { keySelectors, AnyProps } from './helpers'
-import { pools } from './pools'
-import { network } from './solanaConnection'
+import { pools, tokens } from './pools'
 
 const store = (s: AnyProps) => s[positionsSliceName] as IPositionsStore
 
@@ -22,9 +21,9 @@ export interface PoolWithAddressAndIndex extends PoolWithAddress {
 export const positionsWithPoolsData = createSelector(
   pools,
   positionsList,
-  network,
-  (allPools, { list }, networkType) => {
-    const tokensByKey: Record<string, Token> = tokens[networkType].reduce((prev, token) => {
+  tokens,
+  (allPools, { list }, tokens) => {
+    const tokensByKey: Record<string, Token> = tokens.reduce((prev, token) => {
       return {
         [token.address.toString()]: token,
         ...prev

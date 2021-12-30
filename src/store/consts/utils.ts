@@ -4,7 +4,7 @@ import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
-import { NetworkType, PRICE_DECIMAL, Token, tokens } from './static'
+import { NetworkType, PRICE_DECIMAL, Token } from './static'
 import mainnetList from './tokenLists/mainnet.json'
 import devnetList from './tokenLists/devnet.json'
 import { PublicKey } from '@solana/web3.js'
@@ -215,9 +215,9 @@ export const arrayIndexFromTickIndex = (index: number, spacing: number): number 
   return (index - lowest) / spacing
 }
 
-export const createLiquidityPlot = (rawTicks: Tick[], pool: PoolStructure, isXtoY: boolean, networkType: NetworkType) => {
-  const tokenXDecimal = tokens[networkType].find(token => token.address.equals(pool.tokenX))?.decimals ?? 0
-  const tokenYDecimal = tokens[networkType].find(token => token.address.equals(pool.tokenY))?.decimals ?? 0
+export const createLiquidityPlot = (rawTicks: Tick[], pool: PoolStructure, isXtoY: boolean, tokens: Token[]) => {
+  const tokenXDecimal = tokens.find(token => token.address.equals(pool.tokenX))?.decimals ?? 0
+  const tokenYDecimal = tokens.find(token => token.address.equals(pool.tokenY))?.decimals ?? 0
 
   const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(rawTicks, pool) : []
 
@@ -275,10 +275,10 @@ export const createPlaceholderLiquidityPlot = (
   pool: PoolStructure,
   isXtoY: boolean,
   yValueToFill: number,
-  networkType: NetworkType
+  tokens: Token[]
 ) => {
-  const tokenXDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenX))?.decimals ?? 0
-  const tokenYDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenY))?.decimals ?? 0
+  const tokenXDecimal = tokens.find((token) => token.address.equals(pool.tokenX))?.decimals ?? 0
+  const tokenYDecimal = tokens.find((token) => token.address.equals(pool.tokenY))?.decimals ?? 0
 
   const ticksData: PlotTickData[] = []
 
