@@ -74,7 +74,7 @@
     "storybook": "start-storybook -p 9009 -c .storybook watch-css -s public",
     "build-storybook": "build-storybook -s public",
     "build": "vite build",
-    "update-mainnet-list": "node ./fetchMainnetList.js"
+    "update-mainnet-list": "node ./src/fetchMainnetList.js"
   },
   "eslintConfig": {
     "extends": "react-app"
