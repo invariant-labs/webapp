@@ -28,7 +28,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   const [value, setValue] = useState<string>('')
 
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
+    setValue(e.target.value.toLowerCase())
   }
 
   const tokenIndex = (name: string) => {
@@ -62,6 +62,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
             className={classes.selectTokenInput}
             placeholder='Search token name or address'
             onChange={searchToken}
+            value={value}
           />
           <CardMedia image={searchIcon} className={classes.inputIcon} />
         </Grid>
@@ -90,7 +91,10 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
             {tokens
               ? tokens
                   .filter(token => {
-                    return token ? token.symbol.toLowerCase().includes(value) : null
+                    return (
+                      token.symbol.toLowerCase().includes(value) ||
+                      token.name.toLowerCase().includes(value)
+                    )
                   })
                   .map(token => (
                     <Grid
@@ -101,6 +105,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                       wrap='nowrap'
                       onClick={() => {
                         onSelect(tokenIndex(token ? token.symbol : ''))
+                        setValue('')
                         handleClose()
                       }}>
                       <Grid item>
