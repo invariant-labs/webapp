@@ -77,20 +77,20 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
   useEffect(() => {
     if (tokenAIndex !== null) {
-      if (getScaleFromString(tokenAInputState.value) > tokens[tokenAIndex].decimal) {
+      if (getScaleFromString(tokenAInputState.value) > tokens[tokenAIndex].decimals) {
         const parts = tokenAInputState.value.split('.')
 
-        tokenAInputState.setValue(parts[0] + '.' + parts[1].slice(0, tokens[tokenAIndex].decimal))
+        tokenAInputState.setValue(parts[0] + '.' + parts[1].slice(0, tokens[tokenAIndex].decimals))
       }
     }
   }, [tokenAIndex])
 
   useEffect(() => {
     if (tokenBIndex !== null) {
-      if (getScaleFromString(tokenBInputState.value) > tokens[tokenBIndex].decimal) {
+      if (getScaleFromString(tokenBInputState.value) > tokens[tokenBIndex].decimals) {
         const parts = tokenBInputState.value.split('.')
 
-        tokenAInputState.setValue(parts[0] + '.' + parts[1].slice(0, tokens[tokenBIndex].decimal))
+        tokenAInputState.setValue(parts[0] + '.' + parts[1].slice(0, tokens[tokenBIndex].decimals))
       }
     }
   }, [tokenBIndex])
