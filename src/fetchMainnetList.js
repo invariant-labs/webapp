@@ -6,7 +6,7 @@ new TokenListProvider().resolve().then((tokens) => {
   fs.writeFileSync(
     './src/store/consts/tokenLists/mainnet.json',
     JSON.stringify(
-      tokenList.sort((a, b) => a.symbol.toLowerCase().localeCompare(b.symbol.toLowerCase()))
+      tokenList.filter((token) => token.chainId === 101).sort((a, b) => a.symbol.toLowerCase().localeCompare(b.symbol.toLowerCase()))
     )
   )
 }).catch((error) => { console.log(error) })
