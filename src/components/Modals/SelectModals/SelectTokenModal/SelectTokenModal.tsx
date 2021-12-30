@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import React, { useState } from 'react'
 import { Typography, Popover, Grid, CardMedia, Box, Button } from '@material-ui/core'
 import CustomScrollbar from '../CustomScrollbar'
@@ -52,9 +53,9 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
       }}>
       {' '}
       <Grid container className={classes.container}>
+        <Button className={classes.selectTokenClose} onClick={handleClose}></Button>
         <Grid className={classes.selectTokenHeader}>
           <Typography component='h1'>Select a token</Typography>
-          <Button className={classes.selectTokenClose} onClick={handleClose}></Button>
         </Grid>
         <Grid container className={classes.inputControl}>
           <input
