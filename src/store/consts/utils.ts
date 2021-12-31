@@ -190,12 +190,11 @@ export const calcTicksAmountInRange = (min: number, max: number, tickSpacing: nu
 }
 
 export const calcYPerXPrice = (sqrtPrice: BN, xDecimal: number, yDecimal: number): number => {
-  const price = sqrtPrice
-    .mul(sqrtPrice)
-    .div(DENOMINATOR)
-    .div(new BN(10 ** xDecimal))
+  const proportion = sqrtPrice.mul(sqrtPrice).div(DENOMINATOR)
 
-  return +printBN(price, yDecimal)
+  const amount = printBNtoBN('1', xDecimal).mul(proportion).div(DENOMINATOR)
+
+  return +printBN(amount, yDecimal)
 }
 
 export const multiplicityLowerThan = (arg: number, spacing: number): number => {

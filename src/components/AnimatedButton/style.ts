@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
     ...typography.body1,
     backgroundColor: colors.invariant.accent1,
     color: colors.white.main,
-    transition: 'background-color 0ms ease, box-shadow 500ms linear',
+    transition: 'background-color 0ms ease, box-shadow 150ms linear',
     position: 'relative',
     overflow: 'hidden',
     zIndex: 4,
