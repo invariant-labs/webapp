@@ -212,7 +212,39 @@ export const arrayIndexFromTickIndex = (index: number, spacing: number): number 
   return (index - lowest) / spacing
 }
 
-export const createLiquidityPlot = (rawTicks: Tick[], pool: PoolStructure, isXtoY: boolean, networkType: NetworkType) => {
+
+const macroCalcPrices = (min: number, max: number, spacing: number, isXtoY: boolean, yValueToFill: number, tokenXDecimal: number, tokenYDecimal: number): Promise<PlotTickData[]> => {
+  return new Promise(
+    resolve => {
+      setTimeout(
+        () => {
+          const ticksData: PlotTickData[] = []
+
+          for (let i = min; i <= max; i += spacing) {
+            const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
+        
+            ticksData.push({
+              x: isXtoY
+                ? price
+                : (
+                    price !== 0
+                      ? 1 / price
+                      : Number.MAX_SAFE_INTEGER
+                  ),
+              y: yValueToFill,
+              index: i
+            })
+          }
+
+          resolve(ticksData)
+        },
+        0
+      )
+    }
+  )
+}
+
+export const createLiquidityPlot = async (rawTicks: Tick[], pool: PoolStructure, isXtoY: boolean, networkType: NetworkType) => {
   const tokenXDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenX))?.decimal ?? 0
   const tokenYDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenY))?.decimal ?? 0
 
@@ -223,26 +255,25 @@ export const createLiquidityPlot = (rawTicks: Tick[], pool: PoolStructure, isXto
     liqudity: parsedTicks[index].liquidity
   }))
 
-  const ticksData: PlotTickData[] = []
+  let ticksData: PlotTickData[] = []
 
   const min = multiplicityGreaterThan(MIN_TICK, pool.tickSpacing)
   const max = multiplicityLowerThan(MAX_TICK, pool.tickSpacing)
 
-  for (let i = min; i <= max; i += pool.tickSpacing) {
-    const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
+  for (let i = min; i <= max; i += pool.tickSpacing * 10000) {
+    const newData = await macroCalcPrices(
+      i,
+      Math.min(i + pool.tickSpacing * 10000, max),
+      pool.tickSpacing,
+      isXtoY,
+      0,
+      tokenXDecimal,
+      tokenYDecimal
+    )
 
-    ticksData.push({
-      x: isXtoY
-        ? price
-        : (
-            price !== 0
-              ? 1 / price
-              : Number.MAX_SAFE_INTEGER
-          ),
-      y: 0,
-      index: i
-    })
+    ticksData = [...ticksData, ...newData]
   }
+
 
   ticks.forEach((tick, index) => {
     const arrayIndex = arrayIndexFromTickIndex(tick.index, pool.tickSpacing)
@@ -268,7 +299,7 @@ export const createLiquidityPlot = (rawTicks: Tick[], pool: PoolStructure, isXto
   return isXtoY ? ticksData : ticksData.reverse()
 }
 
-export const createPlaceholderLiquidityPlot = (
+export const createPlaceholderLiquidityPlot = async (
   pool: PoolStructure,
   isXtoY: boolean,
   yValueToFill: number,
@@ -277,25 +308,23 @@ export const createPlaceholderLiquidityPlot = (
   const tokenXDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenX))?.decimal ?? 0
   const tokenYDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenY))?.decimal ?? 0
 
-  const ticksData: PlotTickData[] = []
+  let ticksData: PlotTickData[] = []
 
   const min = multiplicityGreaterThan(MIN_TICK, pool.tickSpacing)
   const max = multiplicityLowerThan(MAX_TICK, pool.tickSpacing)
 
-  for (let i = min; i <= max; i += pool.tickSpacing) {
-    const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
+  for (let i = min; i <= max; i += pool.tickSpacing * 10000) {
+    const newData = await macroCalcPrices(
+      i,
+      Math.min(i + pool.tickSpacing * 10000, max),
+      pool.tickSpacing,
+      isXtoY,
+      yValueToFill,
+      tokenXDecimal,
+      tokenYDecimal
+    )
 
-    ticksData.push({
-      x: isXtoY
-        ? price
-        : (
-            price !== 0
-              ? 1 / price
-              : Number.MAX_SAFE_INTEGER
-          ),
-      y: yValueToFill,
-      index: i
-    })
+    ticksData = [...ticksData, ...newData]
   }
 
   return isXtoY ? ticksData : ticksData.reverse()

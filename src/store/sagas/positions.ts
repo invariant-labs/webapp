@@ -108,13 +108,15 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     const poolIndex = action.payload.poolIndex
 
     if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
+      const plot = yield* call(
+        createPlaceholderLiquidityPlot,
+        allPools[poolIndex],
+        action.payload.isXtoY,
+        10,
+        networkType
+      )
       yield put(actions.setPlotTicksLoading(
-        createPlaceholderLiquidityPlot(
-          allPools[poolIndex],
-          action.payload.isXtoY,
-          10,
-          networkType
-        )
+        plot
       ))
     }
     let toRequest = typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined'
@@ -145,7 +147,9 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       toRequest
     )
 
-    const ticksData = createLiquidityPlot(rawTicks, allPools[poolIndex], action.payload.isXtoY, networkType)
+    const ticksData = yield* call(
+      createLiquidityPlot, rawTicks, allPools[poolIndex], action.payload.isXtoY, networkType
+    )
 
     yield put(actions.setPlotTicks({
       data: ticksData,
@@ -154,13 +158,15 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
   } catch (error) {
     console.log(error)
     if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
+      const data = yield* call(
+        createPlaceholderLiquidityPlot,
+        allPools[action.payload.poolIndex],
+        action.payload.isXtoY,
+        10,
+        networkType
+      )
       yield put(actions.setPlotTicks({
-        data: createPlaceholderLiquidityPlot(
-          allPools[action.payload.poolIndex],
-          action.payload.isXtoY,
-          10,
-          networkType
-        ),
+        data,
         maxReached: false
       }))
     }
