@@ -263,10 +263,10 @@ export const createLiquidityPlot = async (
   const min = multiplicityGreaterThan(MIN_TICK, pool.tickSpacing)
   const max = multiplicityLowerThan(MAX_TICK, pool.tickSpacing)
 
-  for (let i = min; i <= max; i += pool.tickSpacing * 10000) {
+  for (let i = min; i <= max; i += pool.tickSpacing * 50000) {
     const newData = await macroCalcPrices(
       i,
-      Math.min(i + pool.tickSpacing * 10000, max),
+      Math.min(i + pool.tickSpacing * 50000, max),
       pool.tickSpacing,
       isXtoY,
       0,
@@ -317,10 +317,10 @@ export const createPlaceholderLiquidityPlot = async (
   const min = multiplicityGreaterThan(MIN_TICK, pool.tickSpacing)
   const max = multiplicityLowerThan(MAX_TICK, pool.tickSpacing)
 
-  for (let i = min; i <= max; i += pool.tickSpacing * 10000) {
+  for (let i = min; i <= max; i += pool.tickSpacing * 50000) {
     const newData = await macroCalcPrices(
       i,
-      Math.min(i + pool.tickSpacing * 10000, max),
+      Math.min(i + pool.tickSpacing * 50000, max),
       pool.tickSpacing,
       isXtoY,
       yValueToFill,
