@@ -13,11 +13,11 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
   try {
     const pools: PoolWithAddress[] = []
     for (let i = 0; i < action.payload.length; i++) {
-      const poolData = yield* call(
-        [marketProgram, marketProgram.getPool],
-        action.payload[i]
+      const poolData = yield* call([marketProgram, marketProgram.getPool], action.payload[i])
+      const address = yield* call(
+        [action.payload[i], action.payload[i].getAddress],
+        marketProgram.program.programId
       )
-      const address = yield* call([action.payload[i], action.payload[i].getAddress], marketProgram.program.programId)
       pools.push({
         ...poolData,
         address

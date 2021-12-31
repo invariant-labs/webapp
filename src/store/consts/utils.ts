@@ -149,14 +149,14 @@ const defaultThresholds: FormatNumberThreshold[] = [
   }
 ]
 
-export const formatNumbers = (thresholds: FormatNumberThreshold[] = defaultThresholds) => (value: string) => {
-  const num = Number(value)
-  const threshold = thresholds.sort((a, b) => a.value - b.value).find((thr) => num < thr.value)
+export const formatNumbers =
+  (thresholds: FormatNumberThreshold[] = defaultThresholds) =>
+  (value: string) => {
+    const num = Number(value)
+    const threshold = thresholds.sort((a, b) => a.value - b.value).find(thr => num < thr.value)
 
-  return threshold
-    ? (num / (threshold.divider ?? 1)).toFixed(threshold.decimals)
-    : value
-}
+    return threshold ? (num / (threshold.divider ?? 1)).toFixed(threshold.decimals) : value
+  }
 
 export const nearestPriceIndex = (price: number, data: Array<{ x: number; y: number }>) => {
   let nearest = 0
@@ -212,41 +212,44 @@ export const arrayIndexFromTickIndex = (index: number, spacing: number): number 
   return (index - lowest) / spacing
 }
 
+const macroCalcPrices = async (
+  min: number,
+  max: number,
+  spacing: number,
+  isXtoY: boolean,
+  yValueToFill: number,
+  tokenXDecimal: number,
+  tokenYDecimal: number
+): Promise<PlotTickData[]> => {
+  return await new Promise(resolve => {
+    setTimeout(() => {
+      const ticksData: PlotTickData[] = []
 
-const macroCalcPrices = (min: number, max: number, spacing: number, isXtoY: boolean, yValueToFill: number, tokenXDecimal: number, tokenYDecimal: number): Promise<PlotTickData[]> => {
-  return new Promise(
-    resolve => {
-      setTimeout(
-        () => {
-          const ticksData: PlotTickData[] = []
+      for (let i = min; i <= max; i += spacing) {
+        const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
 
-          for (let i = min; i <= max; i += spacing) {
-            const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
-        
-            ticksData.push({
-              x: isXtoY
-                ? price
-                : (
-                    price !== 0
-                      ? 1 / price
-                      : Number.MAX_SAFE_INTEGER
-                  ),
-              y: yValueToFill,
-              index: i
-            })
-          }
+        ticksData.push({
+          x: isXtoY ? price : price !== 0 ? 1 / price : Number.MAX_SAFE_INTEGER,
+          y: yValueToFill,
+          index: i
+        })
+      }
 
-          resolve(ticksData)
-        },
-        0
-      )
-    }
-  )
+      resolve(ticksData)
+    }, 0)
+  })
 }
 
-export const createLiquidityPlot = async (rawTicks: Tick[], pool: PoolStructure, isXtoY: boolean, networkType: NetworkType) => {
-  const tokenXDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenX))?.decimal ?? 0
-  const tokenYDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenY))?.decimal ?? 0
+export const createLiquidityPlot = async (
+  rawTicks: Tick[],
+  pool: PoolStructure,
+  isXtoY: boolean,
+  networkType: NetworkType
+) => {
+  const tokenXDecimal =
+    tokens[networkType].find(token => token.address.equals(pool.tokenX))?.decimal ?? 0
+  const tokenYDecimal =
+    tokens[networkType].find(token => token.address.equals(pool.tokenY))?.decimal ?? 0
 
   const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(rawTicks, pool) : []
 
@@ -273,7 +276,6 @@ export const createLiquidityPlot = async (rawTicks: Tick[], pool: PoolStructure,
 
     ticksData = [...ticksData, ...newData]
   }
-
 
   ticks.forEach((tick, index) => {
     const arrayIndex = arrayIndexFromTickIndex(tick.index, pool.tickSpacing)
@@ -305,8 +307,10 @@ export const createPlaceholderLiquidityPlot = async (
   yValueToFill: number,
   networkType: NetworkType
 ) => {
-  const tokenXDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenX))?.decimal ?? 0
-  const tokenYDecimal = tokens[networkType].find((token) => token.address.equals(pool.tokenY))?.decimal ?? 0
+  const tokenXDecimal =
+    tokens[networkType].find(token => token.address.equals(pool.tokenX))?.decimal ?? 0
+  const tokenYDecimal =
+    tokens[networkType].find(token => token.address.equals(pool.tokenY))?.decimal ?? 0
 
   let ticksData: PlotTickData[] = []
 
