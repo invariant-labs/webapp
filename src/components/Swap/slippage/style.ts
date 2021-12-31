@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: colors.invariant.componentOut4,
-    padding: 18,
+    padding: 12,
     borderRadius: 10,
     color: colors.white.main,
     '& h2': {
@@ -27,12 +27,12 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
     minWidth: 0,
     height: 20,
-    marginLeft: 40,
+    marginLeft: 20,
     '&:after': {
       content: '"\u2715"',
       fontSize: 25,
       position: 'absolute',
-      color: 'white',
+      color: colors.invariant.lightInfoText,
       top: '90%',
       right: '0%',
       transform: 'translateY(-50%)'
