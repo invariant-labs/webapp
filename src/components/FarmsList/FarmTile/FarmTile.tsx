@@ -28,39 +28,40 @@ export const FarmTile: React.FC<IFarm> = ({
   const classes = useStyle()
 
   return (
-    <Grid className={classes.root}>
-      <Grid className={classes.top}>
+    <Grid className={classes.root} container direction='column'>
+      <Grid className={classes.top} container direction='row' justifyContent='space-between'>
         <Grid>
-          <img src={tokenX.logoURI} className={classes.icon} />
-          <img src={tokenY.logoURI} className={classes.icon} />
+          <Grid>
+            <img src={tokenX.logoURI} className={classes.icon} />
+            <img src={tokenY.logoURI} className={classes.icon} />
+          </Grid>
+          <Typography className={classes.names}>{tokenX.symbol}-{tokenY.symbol}</Typography>
         </Grid>
-        <Typography className={classes.names}>{tokenX.symbol}-{tokenY.symbol}</Typography>
         <Grid>
           <DotIcon className={classNames(classes.dot, isActive ? classes.greenDot : classes.greyDot)} />
           <Typography className={classNames(classes.activity, isActive ? classes.greenText : classes.greyText)}>{isActive ? 'Active' : 'Inactive'}</Typography>
         </Grid>
       </Grid>
-      <Grid className={classes.infoRow}>
+      <Grid className={classes.infoRow} container direction='row' justifyContent='space-between'>
         <Typography className={classes.label}>APY:</Typography>
         <Typography className={classes.value}>{apyPercent}%</Typography>
       </Grid>
-      <Grid className={classes.infoRow}>
+      <Grid className={classes.infoRow} container direction='row' justifyContent='space-between'>
         <Typography className={classes.label}>Total Staked:</Typography>
-        <Typography className={classes.value}>{totalStaked}</Typography>
+        <Typography className={classes.value}>{totalStaked} {tokenX.symbol}</Typography>
       </Grid>
-      <Grid className={classes.infoRow}>
+      <Grid className={classes.infoRow} container direction='row' justifyContent='space-between'>
         <Typography className={classes.label}>Liquidity:</Typography>
-        <Typography className={classes.value}>{liquidity}</Typography>
+        <Typography className={classes.value}>{liquidity} {tokenX.symbol}</Typography>
       </Grid>
       <Link className={classes.link} to={`/farms/${farmId}`}>
-        <a>
-          <Button
-            className={classes.button}
-            disabled={!isActive}
-          >
-            Stake
-          </Button>
-        </a>
+        <Button
+          className={classes.button}
+          disabled={!isActive}
+          type='button'
+        >
+          Stake
+        </Button>
       </Link>
     </Grid>
   )

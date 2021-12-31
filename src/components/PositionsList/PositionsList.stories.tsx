@@ -2,7 +2,10 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { PositionsList } from './PositionsList'
 import { Grid } from '@material-ui/core'
-storiesOf('positionsList/list', module).add('default', () => {
+import { MemoryRouter } from 'react-router-dom'
+storiesOf('positionsList/list', module)
+.addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
+.add('default', () => {
   const handleClick = () => {
     console.log('actionButton add Position')
   }
