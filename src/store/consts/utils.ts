@@ -333,3 +333,8 @@ export const createPlaceholderLiquidityPlot = async (
 
   return isXtoY ? ticksData : ticksData.reverse()
 }
+
+export const nearestTickIndex = (price: number) => {
+  const log = logBase(price, 1.0001)
+  return Math.round(log)
+}

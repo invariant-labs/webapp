@@ -4,6 +4,7 @@ import { storiesOf } from '@storybook/react'
 import PriceRangePlot from './PriceRangePlot'
 import { useState } from '@storybook/client-api'
 import { action } from '@storybook/addon-actions'
+import { PlotTickData } from '@reducers/positions'
 
 const ticksToData = () => {
   const ticks = [
@@ -17,7 +18,7 @@ const ticksToData = () => {
     { index: 260, delta: -20 },
     { index: 280, delta: -40 }
   ]
-  const fields: Array<{ x: number; y: number }> = []
+  const fields: PlotTickData[] = []
 
   let currentLiquidity = 10
   for (let i = 0; i < 10000; i += 1) {
@@ -26,7 +27,7 @@ const ticksToData = () => {
       ticks.shift()
     }
 
-    fields.push({ x: i, y: currentLiquidity })
+    fields.push({ x: i, y: currentLiquidity, index: i })
   }
 
   return fields
@@ -43,22 +44,22 @@ storiesOf('position/priceRangePlot', module)
 
     const zoomMinus = () => {
       const diff = plotMax - plotMin
-      setPlotMin(plotMin - (diff / 4))
-      setPlotMax(plotMax + (diff / 4))
+      setPlotMin(plotMin - diff / 4)
+      setPlotMax(plotMax + diff / 4)
     }
 
     const zoomPlus = () => {
       const diff = plotMax - plotMin
-      setPlotMin(plotMin + (diff / 6))
-      setPlotMax(plotMax - (diff / 6))
+      setPlotMin(plotMin + diff / 6)
+      setPlotMax(plotMax - diff / 6)
     }
 
     return (
       <PriceRangePlot
         data={data}
-        leftRangeIndex={leftRange}
-        rightRangeIndex={rightRange}
-        midPriceIndex={150}
+        leftRange={leftRange}
+        rightRange={rightRange}
+        midPrice={150}
         onChangeRange={(left, right) => {
           action(`range indexes: ${left} - ${right}`)()
           setLeftRange(left)
@@ -78,22 +79,22 @@ storiesOf('position/priceRangePlot', module)
 
     const zoomMinus = () => {
       const diff = plotMax - plotMin
-      setPlotMin(plotMin - (diff / 4))
-      setPlotMax(plotMax + (diff / 4))
+      setPlotMin(plotMin - diff / 4)
+      setPlotMax(plotMax + diff / 4)
     }
 
     const zoomPlus = () => {
       const diff = plotMax - plotMin
-      setPlotMin(plotMin + (diff / 6))
-      setPlotMax(plotMax - (diff / 6))
+      setPlotMin(plotMin + diff / 6)
+      setPlotMax(plotMax - diff / 6)
     }
 
     return (
       <PriceRangePlot
         data={data}
-        leftRangeIndex={100}
-        rightRangeIndex={200}
-        midPriceIndex={150}
+        leftRange={100}
+        rightRange={200}
+        midPrice={150}
         style={{ width: 600, height: 300, backgroundColor: '#1C1B1E' }}
         disabled
         plotMin={plotMin}

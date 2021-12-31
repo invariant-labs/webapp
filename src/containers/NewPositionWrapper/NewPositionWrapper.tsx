@@ -51,7 +51,7 @@ export const NewPositionWrapper = () => {
 
   const midPriceIndex = useMemo(() => {
     if (poolIndex !== null && ticksData.length) {
-      const index = ticksData.findIndex((tick) => tick.index === allPools[poolIndex].currentTickIndex)
+      const index = ticksData.findIndex(tick => tick.index === allPools[poolIndex].currentTickIndex)
 
       return index === -1 ? 0 : index
     }
@@ -71,10 +71,19 @@ export const NewPositionWrapper = () => {
       }
     }, {})
 
-    const poolsForTokenA = allPools.filter((pool) => pool.tokenX.equals(tokens[tokenAIndex].assetAddress) || pool.tokenY.equals(tokens[tokenAIndex].assetAddress))
+    const poolsForTokenA = allPools.filter(
+      pool =>
+        pool.tokenX.equals(tokens[tokenAIndex].assetAddress) ||
+        pool.tokenY.equals(tokens[tokenAIndex].assetAddress)
+    )
 
     return poolsForTokenA.map(
-      (pool) => tokensByKey[pool.tokenX.equals(tokens[tokenAIndex].assetAddress) ? pool.tokenY.toString() : pool.tokenX.toString()]
+      pool =>
+        tokensByKey[
+          pool.tokenX.equals(tokens[tokenAIndex].assetAddress)
+            ? pool.tokenY.toString()
+            : pool.tokenX.toString()
+        ]
     )
   }, [tokenAIndex, allPools.length])
 
@@ -82,31 +91,31 @@ export const NewPositionWrapper = () => {
     <NewPosition
       tokens={tokens}
       tokensB={tokensB}
-      onChangePositionTokens={
-        (tokenA, tokenB, fee) => {
-          setTokenAIndex(tokenA)
-          if (tokenA !== null && tokenB !== null) {
-            const index = allPools.findIndex(
-              (pool) =>
-                pool.fee.v.eq(FEE_TIERS[fee].fee) &&
-                (
-                  (pool.tokenX.equals(tokens[tokenA].assetAddress) && pool.tokenY.equals(tokens[tokenB].assetAddress)) ||
-                  (pool.tokenX.equals(tokens[tokenB].assetAddress) && pool.tokenY.equals(tokens[tokenA].assetAddress))
-                )
-            )
+      onChangePositionTokens={(tokenA, tokenB, fee) => {
+        setTokenAIndex(tokenA)
+        if (tokenA !== null && tokenB !== null) {
+          const index = allPools.findIndex(
+            pool =>
+              pool.fee.v.eq(FEE_TIERS[fee].fee) &&
+              ((pool.tokenX.equals(tokens[tokenA].assetAddress) &&
+                pool.tokenY.equals(tokens[tokenB].assetAddress)) ||
+                (pool.tokenX.equals(tokens[tokenB].assetAddress) &&
+                  pool.tokenY.equals(tokens[tokenA].assetAddress)))
+          )
 
-            setPoolIndex(index !== -1 ? index : null)
+          setPoolIndex(index !== -1 ? index : null)
 
-            if (index !== -1) {
-              dispatch(actions.getCurrentPlotTicks({
+          if (index !== -1) {
+            dispatch(
+              actions.getCurrentPlotTicks({
                 poolIndex: index,
                 isXtoY: allPools[index].tokenX.equals(tokens[tokenA].assetAddress)
-              }))
-            }
+              })
+            )
           }
         }
-      }
-      feeTiers={FEE_TIERS.map((tier) => +printBN(tier.fee, PRICE_DECIMAL - 2))}
+      }}
+      feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, PRICE_DECIMAL - 2))}
       data={ticksData}
       midPriceIndex={midPriceIndex}
       addLiquidityHandler={(leftTickIndex, rightTickIndex) => {
@@ -121,12 +130,14 @@ export const NewPositionWrapper = () => {
         const lowerTick = Math.min(ticksData[leftTickIndex].index, ticksData[rightTickIndex].index)
         const upperTick = Math.max(ticksData[leftTickIndex].index, ticksData[rightTickIndex].index)
 
-        dispatch(actions.initPosition({
-          poolIndex,
-          lowerTick,
-          upperTick,
-          liquidityDelta: liquidity
-        }))
+        dispatch(
+          actions.initPosition({
+            poolIndex,
+            lowerTick,
+            upperTick,
+            liquidityDelta: liquidity
+          })
+        )
       }}
       isCurrentPoolExisting={poolIndex !== null}
       calcAmount={(amount, left, right, tokenAddress) => {
@@ -143,45 +154,102 @@ export const NewPositionWrapper = () => {
 
         try {
           if (byX) {
-            const result = getLiquidityByX(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
+            const result = getLiquidityByX(
+              amount,
+              lowerTick,
+              upperTick,
+              allPools[poolIndex].sqrtPrice,
+              true
+            )
             setLiquidity(result.liquidity)
 
-            console.log('x:', amount.toString(), 'y:', result.y.toString(), 'ticks:', lowerTick, upperTick, 'liquidity', result.liquidity.v.toString())
+            console.log(
+              'x:',
+              amount.toString(),
+              'y:',
+              result.y.toString(),
+              'ticks:',
+              lowerTick,
+              upperTick,
+              'liquidity',
+              result.liquidity.v.toString()
+            )
 
             return result.y
           }
 
-          const result = getLiquidityByY(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
+          const result = getLiquidityByY(
+            amount,
+            lowerTick,
+            upperTick,
+            allPools[poolIndex].sqrtPrice,
+            true
+          )
           setLiquidity(result.liquidity)
 
-          console.log('y:', amount.toString(), 'x:', result.x.toString(), 'ticks:', lowerTick, upperTick, 'liquidity', result.liquidity.v.toString())
+          console.log(
+            'y:',
+            amount.toString(),
+            'x:',
+            result.x.toString(),
+            'ticks:',
+            lowerTick,
+            upperTick,
+            'liquidity',
+            result.liquidity.v.toString()
+          )
 
           return result.x
         } catch (error) {
-          const result = (byX ? getLiquidityByY : getLiquidityByX)(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
+          const result = (byX ? getLiquidityByY : getLiquidityByX)(
+            amount,
+            lowerTick,
+            upperTick,
+            allPools[poolIndex].sqrtPrice,
+            true
+          )
           setLiquidity(result.liquidity)
 
-          console.log('err', byX ? 'x:' : 'y:', amount.toString(), 'ticks:', lowerTick, upperTick, 'liquidity:', result.liquidity.v.toString())
+          console.log(
+            'err',
+            byX ? 'x:' : 'y:',
+            amount.toString(),
+            'ticks:',
+            lowerTick,
+            upperTick,
+            'liquidity:',
+            result.liquidity.v.toString()
+          )
         }
 
         return new BN(0)
       }}
       ticksLoading={ticksLoading}
-      isTokenXFirst={poolIndex !== null && tokenAIndex !== null && allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)}
+      isTokenXFirst={
+        poolIndex !== null &&
+        tokenAIndex !== null &&
+        allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
+      }
       onZoomOutOfData={(min, max) => {
         if (poolIndex !== null && tokenAIndex !== null) {
-          dispatch(actions.getCurrentPlotTicks({
-            poolIndex,
-            isXtoY: allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
-            min,
-            max
-          }))
+          dispatch(
+            actions.getCurrentPlotTicks({
+              poolIndex,
+              isXtoY: allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
+              min,
+              max
+            })
+          )
         }
       }}
       showNoConnected={walletStatus !== Status.Initialized}
       noConnectedBlockerProps={{
-        onConnect: (type) => { dispatch(walletActions.connect(type)) },
-        onDisconnect: () => { dispatch(walletActions.disconnect()) },
+        onConnect: type => {
+          dispatch(walletActions.connect(type))
+        },
+        onDisconnect: () => {
+          dispatch(walletActions.disconnect())
+        },
         descCustomText: 'Cannot add any liquidity.'
       }}
       progress={progress}

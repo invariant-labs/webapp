@@ -83,9 +83,9 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           zoomMinus={zoomMinus}
           zoomPlus={zoomPlus}
           disabled
-          leftRangeIndex={leftRangeIndex}
-          rightRangeIndex={rightRangeIndex}
-          midPriceIndex={midPriceIndex}
+          leftRange={leftRangeIndex}
+          rightRange={rightRangeIndex}
+          midPrice={midPriceIndex}
           className={classes.plot}
           loading={ticksLoading}
         />
