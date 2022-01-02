@@ -71,7 +71,7 @@ storiesOf('position/newPosition', module)
         tokens={tokens}
         tokensB={tokens}
         data={data}
-        midPriceIndex={140}
+        midPrice={140}
         addLiquidityHandler={() => {}}
         onChangePositionTokens={() => {}}
         isCurrentPoolExisting={true}
@@ -93,7 +93,7 @@ storiesOf('position/newPosition', module)
         tokens={tokens}
         tokensB={tokens}
         data={data}
-        midPriceIndex={140}
+        midPrice={140}
         addLiquidityHandler={() => {}}
         onChangePositionTokens={() => {}}
         isCurrentPoolExisting={false}

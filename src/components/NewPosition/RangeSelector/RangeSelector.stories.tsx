@@ -36,7 +36,7 @@ const data = ticksToData()
 storiesOf('position/rangeSelector', module).add('setter', () => (
   <RangeSelector
     data={data}
-    midPriceIndex={140}
+    midPrice={140}
     tokenFromSymbol='BAT'
     tokenToSymbol='ETH'
     onChangeRange={(left, right) => {
@@ -48,7 +48,7 @@ storiesOf('position/rangeSelector', module).add('setter', () => (
 )).add('blocked', () => (
   <RangeSelector
     data={data}
-    midPriceIndex={140}
+    midPrice={140}
     tokenFromSymbol='BAT'
     tokenToSymbol='ETH'
     onChangeRange={(left, right) => {

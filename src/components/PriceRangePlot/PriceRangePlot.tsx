@@ -12,13 +12,13 @@ import useStyles from './style'
 import { nearestPriceIndex, nearestTickIndex } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 
-export type PositionData = Omit<PlotTickData, 'y'>
+export type TickPlotPositionData = Omit<PlotTickData, 'y'>
 
 export interface IPriceRangePlot {
   data: PlotTickData[]
-  midPrice?: PositionData
-  leftRange: PositionData
-  rightRange: PositionData
+  midPrice?: TickPlotPositionData
+  leftRange: TickPlotPositionData
+  rightRange: TickPlotPositionData
   onChangeRange?: (left: number, right: number) => void
   style?: React.CSSProperties
   className?: string
@@ -29,6 +29,9 @@ export interface IPriceRangePlot {
   zoomPlus: () => void
   loading?: boolean
   isXtoY: boolean
+  xDecimal: number
+  yDecimal: number
+  tickSpacing: number
 }
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
@@ -45,7 +48,10 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   zoomMinus,
   zoomPlus,
   loading,
-  isXtoY
+  isXtoY,
+  xDecimal,
+  yDecimal,
+  tickSpacing
 }) => {
   const classes = useStyles()
 
@@ -99,7 +105,12 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       })
     }
 
-    return pointsOmitter(rangeData)
+    return pointsOmitter(
+      rangeData.slice(
+        Math.max(0, nearestPriceIndex(plotMin, rangeData) - 5),
+        Math.min(rangeData.length, nearestPriceIndex(plotMax, rangeData) + 5)
+      )
+    )
   }, [disabled, leftRange, data, plotMin, plotMax, pointsOmitter])
 
   const currentRange = useMemo(() => {
@@ -116,25 +127,45 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       return []
     }
 
+    const lessThan = data.filter(tick => tick.x <= leftRange.x).length
     const rangeData = data.filter(tick => tick.x >= leftRange.x && tick.x <= rightRange.x)
 
-    if (rangeData[0].x > rightRange.x) {
-      rangeData.unshift({
-        x: rightRange.x,
-        y: data[data.length - rangeData.length - 1].y ?? rangeData[0].y,
-        index: rightRange.index
-      })
-    }
-
-    if (rangeData[rangeData.length - 1].x < leftRange.x) {
+    if (!rangeData.length) {
       rangeData.push({
         x: leftRange.x,
-        y: rangeData[rangeData.length - 1].y,
+        y: data[lessThan - 1].y,
         index: leftRange.index
       })
+
+      rangeData.push({
+        x: rightRange.x,
+        y: data[lessThan - 1].y,
+        index: rightRange.index
+      })
+    } else {
+      if (rangeData[0].x > leftRange.x) {
+        rangeData.unshift({
+          x: leftRange.x,
+          y: data[lessThan - 1].y,
+          index: leftRange.index
+        })
+      }
+  
+      if (rangeData[rangeData.length - 1].x < rightRange.x) {
+        rangeData.push({
+          x: rightRange.x,
+          y: rangeData[rangeData.length - 1].y,
+          index: leftRange.index
+        })
+      }
     }
 
-    return pointsOmitter(rangeData)
+    return pointsOmitter(
+      rangeData.slice(
+        Math.max(0, nearestPriceIndex(plotMin, rangeData) - 5),
+        Math.min(rangeData.length, nearestPriceIndex(plotMax, rangeData) + 5)
+      )
+    )
   }, [disabled, data, leftRange, rightRange, plotMin, plotMax, pointsOmitter])
 
   const currentGreaterThanRange = useMemo(() => {
@@ -147,12 +178,17 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     if (rangeData[0].x > rightRange.x) {
       rangeData.unshift({
         x: rightRange.x,
-        y: data[data.length - rangeData.length - 1].y ?? rangeData[0].y,
+        y: data[data.length - rangeData.length - 1]?.y ?? rangeData[0].y,
         index: rightRange.index
       })
     }
 
-    return pointsOmitter(rangeData)
+    return pointsOmitter(
+      rangeData.slice(
+        Math.max(0, nearestPriceIndex(plotMin, rangeData) - 5),
+        Math.min(rangeData.length, nearestPriceIndex(plotMax, rangeData) + 5)
+      )
+    )
   }, [disabled, data, rightRange, plotMin, plotMax, pointsOmitter])
 
   const currentLayer: Layer = ({ innerWidth, innerHeight }) => {
@@ -273,17 +309,17 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
             leftRange.x,
             rightRange.x,
             position => {
-              const nearest = nearestTickIndex(plotMin + position * (plotMax - plotMin))
+              const nearest = nearestTickIndex(plotMin + position * (plotMax - plotMin), tickSpacing, isXtoY, xDecimal, yDecimal)
               onChangeRange?.(
-                nearest === rightRange.index ? rightRange.index - 1 : nearest,
+                nearest === rightRange.index ? rightRange.index - (isXtoY ? tickSpacing : -tickSpacing) : nearest,
                 rightRange.index
               )
             },
             position => {
-              const nearest = nearestTickIndex(plotMin + position * (plotMax - plotMin))
+              const nearest = nearestTickIndex(plotMin + position * (plotMax - plotMin), tickSpacing, isXtoY, xDecimal, yDecimal)
               onChangeRange?.(
                 leftRange.index,
-                nearest === leftRange.index ? leftRange.index + 1 : nearest
+                nearest === leftRange.index ? leftRange.index + (isXtoY ? tickSpacing : -tickSpacing) : nearest
               )
             },
             plotMin,

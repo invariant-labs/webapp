@@ -4,7 +4,7 @@ import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
 import { SwapToken, swapTokens, status } from '@selectors/solanaWallet'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { printBN } from '@consts/utils'
+import { calcPrice, printBN } from '@consts/utils'
 import { pools } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
@@ -48,16 +48,55 @@ export const NewPositionWrapper = () => {
   }, [success, inProgress])
 
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
+  const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
 
-  const midPriceIndex = useMemo(() => {
-    if (poolIndex !== null && ticksData.length) {
-      const index = ticksData.findIndex(tick => tick.index === allPools[poolIndex].currentTickIndex)
+  const isXtoY = useMemo(() => {
+    if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
+      return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
+    }
+    return true 
+  }, [poolIndex, tokenAIndex])
 
-      return index === -1 ? 0 : index
+  const xDecimal = useMemo(() => {
+    if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
+      return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress) ? tokens[tokenAIndex].decimal : tokens[tokenBIndex].decimal
+    }
+    return 0 
+  }, [poolIndex, tokenAIndex])
+
+  const yDecimal = useMemo(() => {
+    if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
+      return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress) ? tokens[tokenBIndex].decimal : tokens[tokenAIndex].decimal
+    }
+    return 0 
+  }, [poolIndex, tokenAIndex])
+
+  const tickSpacing = useMemo(() => {
+    if (poolIndex !== null) {
+      return allPools[poolIndex].tickSpacing
     }
 
     return 0
-  }, [ticksData.length, poolIndex, tokenAIndex, ticksLoading])
+  }, [poolIndex, tokenAIndex])
+
+  const midPrice = useMemo(() => {
+    if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
+      return {
+        index: allPools[poolIndex].currentTickIndex,
+        x: calcPrice(
+          allPools[poolIndex].currentTickIndex,
+          allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
+          allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress) ? tokens[tokenAIndex].decimal : tokens[tokenBIndex].decimal,
+          allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress) ? tokens[tokenBIndex].decimal : tokens[tokenAIndex].decimal
+        )
+      }
+    }
+
+    return {
+      index: 0,
+      x: 0
+    }
+  }, [poolIndex, tokenAIndex])
 
   const tokensB = useMemo(() => {
     if (tokenAIndex === null) {
@@ -93,6 +132,7 @@ export const NewPositionWrapper = () => {
       tokensB={tokensB}
       onChangePositionTokens={(tokenA, tokenB, fee) => {
         setTokenAIndex(tokenA)
+        setTokenBIndex(tokenB)
         if (tokenA !== null && tokenB !== null) {
           const index = allPools.findIndex(
             pool =>
@@ -117,7 +157,7 @@ export const NewPositionWrapper = () => {
       }}
       feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, PRICE_DECIMAL - 2))}
       data={ticksData}
-      midPriceIndex={midPriceIndex}
+      midPrice={midPrice}
       addLiquidityHandler={(leftTickIndex, rightTickIndex) => {
         if (poolIndex === null) {
           return
@@ -127,8 +167,8 @@ export const NewPositionWrapper = () => {
           setProgress('progress')
         }
 
-        const lowerTick = Math.min(ticksData[leftTickIndex].index, ticksData[rightTickIndex].index)
-        const upperTick = Math.max(ticksData[leftTickIndex].index, ticksData[rightTickIndex].index)
+        const lowerTick = Math.min(leftTickIndex, rightTickIndex)
+        const upperTick = Math.max(leftTickIndex, rightTickIndex)
 
         dispatch(
           actions.initPosition({
@@ -146,8 +186,8 @@ export const NewPositionWrapper = () => {
         }
 
         const byX = tokenAddress.equals(allPools[poolIndex].tokenX)
-        const lowerTick = Math.min(ticksData[left].index, ticksData[right].index)
-        const upperTick = Math.max(ticksData[left].index, ticksData[right].index)
+        const lowerTick = Math.min(left, right)
+        const upperTick = Math.max(left, right)
 
         console.log('liquidity calc by:', tokenAddress.toString())
         console.log('pool token x:', allPools[poolIndex].tokenX.toString())
@@ -253,6 +293,10 @@ export const NewPositionWrapper = () => {
         descCustomText: 'Cannot add any liquidity.'
       }}
       progress={progress}
+      isXtoY={isXtoY}
+      tickSpacing={tickSpacing}
+      xDecimal={xDecimal}
+      yDecimal={yDecimal}
     />
   )
 }

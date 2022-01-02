@@ -311,29 +311,63 @@ export const createPlaceholderLiquidityPlot = async (
   const tokenYDecimal =
     tokens[networkType].find(token => token.address.equals(pool.tokenY))?.decimal ?? 0
 
-  let ticksData: PlotTickData[] = []
+  const ticksData: PlotTickData[] = []
 
   const min = multiplicityGreaterThan(MIN_TICK, pool.tickSpacing)
   const max = multiplicityLowerThan(MAX_TICK, pool.tickSpacing)
 
-  for (let i = min; i <= max; i += pool.tickSpacing * 50000) {
-    const newData = await macroCalcPrices(
-      i,
-      Math.min(i + pool.tickSpacing * 50000, max),
-      pool.tickSpacing,
-      isXtoY,
-      yValueToFill,
-      tokenXDecimal,
-      tokenYDecimal
-    )
+  const minPrice = calcYPerXPrice(calculate_price_sqrt(min).v, tokenXDecimal, tokenYDecimal)
 
-    ticksData = [...ticksData, ...newData]
-  }
+  ticksData.push({
+    x: isXtoY ? minPrice : minPrice !== 0 ? 1 / minPrice : Number.MAX_SAFE_INTEGER,
+    y: yValueToFill,
+    index: min
+  })
+
+  const maxPrice = calcYPerXPrice(calculate_price_sqrt(max).v, tokenXDecimal, tokenYDecimal)
+
+  ticksData.push({
+    x: isXtoY ? maxPrice : maxPrice !== 0 ? 1 / maxPrice : Number.MAX_SAFE_INTEGER,
+    y: yValueToFill,
+    index: max
+  })
 
   return isXtoY ? ticksData : ticksData.reverse()
 }
 
-export const nearestTickIndex = (price: number) => {
-  const log = logBase(price, 1.0001)
-  return Math.round(log)
+export const getPrimaryUnitsPrice = (price: number, isXtoY: boolean, xDecimal: number, yDecimal: number) => {
+  let xToYPrice = isXtoY ? price : 1 / price
+
+  return xToYPrice * (10 ** (yDecimal - xDecimal))
+}
+
+export const nearestMultiplicity = (arg: number, spacing: number) => {
+  const greater = multiplicityGreaterThan(arg, spacing)
+  const lower = multiplicityLowerThan(arg, spacing)
+
+  return Math.abs(greater - arg) < Math.abs(lower - arg)
+    ? Math.min(greater, multiplicityLowerThan(MAX_TICK, spacing))
+    : Math.max(lower, multiplicityGreaterThan(MIN_TICK, spacing))
+}
+
+export const nearestTickIndex = (price: number, spacing: number, isXtoY: boolean, xDecimal: number, yDecimal: number) => {
+  const base = Math.max(price, calcPrice(isXtoY ? MIN_TICK : MAX_TICK, isXtoY, xDecimal, yDecimal))
+  const primaryUnitsPrice = getPrimaryUnitsPrice(base, isXtoY, xDecimal, yDecimal)
+  const log = logBase(primaryUnitsPrice, 1.0001)
+  return nearestMultiplicity(Math.round(log), spacing)
+}
+
+export const calcTicksAmountInRange2 = (min: number, max: number, tickSpacing: number, isXtoY: boolean, xDecimal: number, yDecimal: number): number => {
+  const primaryUnitsMin = getPrimaryUnitsPrice(min, isXtoY, xDecimal, yDecimal)
+  const primaryUnitsMax = getPrimaryUnitsPrice(max, isXtoY, xDecimal, yDecimal)
+  const minIndex = logBase(primaryUnitsMin, 1.0001)
+  const maxIndex = logBase(primaryUnitsMax, 1.0001)
+
+  return Math.ceil((maxIndex - minIndex) / tickSpacing)
+}
+
+export const calcPrice = (index: number, isXtoY: boolean, xDecimal: number, yDecimal: number) => {
+  const price = calcYPerXPrice(calculate_price_sqrt(index).v, xDecimal, yDecimal)
+
+  return isXtoY ? price : price !== 0 ? 1 / price : Number.MAX_SAFE_INTEGER
 }
