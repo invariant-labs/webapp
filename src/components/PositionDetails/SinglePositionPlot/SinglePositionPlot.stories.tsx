@@ -37,9 +37,9 @@ storiesOf('singlePosition/rightComponent', module)
     return (
       <SinglePositionPlot
         data={data}
-        leftRangeIndex={100}
-        rightRangeIndex={200}
-        midPriceIndex={150}
+        leftRange={100}
+        rightRange={200}
+        midPrice={150}
         currentPrice={300}
         tokenY={'SNY'}
         tokenX={'xUSD'}

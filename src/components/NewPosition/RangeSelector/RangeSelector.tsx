@@ -7,7 +7,6 @@ import {
   calcTicksAmountInRange2,
   multiplicityGreaterThan,
   multiplicityLowerThan,
-  nearestPriceIndex,
   nearestTickIndex
 } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
@@ -63,9 +62,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     const newMax = plotMax + diff / 4
     setPlotMin(newMin)
     setPlotMax(newMax)
-    // if (newMin < data[0].x || newMax > data[data.length - 1].x) {
-    //   onZoomOutOfData(newMin, newMax)
-    // }
+    if (newMin < data[1].x || newMax > data[data.length - 2].x) {
+      onZoomOutOfData(newMin, newMax)
+    }
   }
 
   const zoomPlus = () => {

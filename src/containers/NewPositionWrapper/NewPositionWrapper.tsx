@@ -84,19 +84,10 @@ export const NewPositionWrapper = () => {
   }, [poolIndex, tokenAIndex])
 
   const midPrice = useMemo(() => {
-    if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
+    if (poolIndex !== null) {
       return {
         index: allPools[poolIndex].currentTickIndex,
-        x: calcPrice(
-          allPools[poolIndex].currentTickIndex,
-          allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
-          allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
-            ? tokens[tokenAIndex].decimal
-            : tokens[tokenBIndex].decimal,
-          allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
-            ? tokens[tokenBIndex].decimal
-            : tokens[tokenAIndex].decimal
-        )
+        x: calcPrice(allPools[poolIndex].currentTickIndex, isXtoY, xDecimal, yDecimal)
       }
     }
 
@@ -104,7 +95,7 @@ export const NewPositionWrapper = () => {
       index: 0,
       x: 0
     }
-  }, [poolIndex, tokenAIndex])
+  }, [poolIndex, isXtoY, xDecimal, yDecimal])
 
   const tokensB = useMemo(() => {
     if (tokenAIndex === null) {

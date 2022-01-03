@@ -53,9 +53,9 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
     return (
       <PositionDetails
         detailsData={data}
-        leftRangeIndex={100}
-        midPriceIndex={150}
-        rightRangeIndex={200}
+        leftRange={100}
+        midPrice={150}
+        rightRange={200}
         currentPrice={300}
         tokenY={'SNY'}
         tokenX={'BTC'}
