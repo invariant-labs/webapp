@@ -196,7 +196,10 @@ export const NewPosition: React.FC<INewPosition> = ({
             setLeftRange(left)
             setRightRange(right)
 
-            if (tokenAIndex !== null && (isXtoY ? right > midPrice.index : right < midPrice.index)) {
+            if (
+              tokenAIndex !== null &&
+              (isXtoY ? right > midPrice.index : right < midPrice.index)
+            ) {
               const amount = getOtherTokenAmount(
                 printBNtoBN(tokenADeposit, tokens[tokenAIndex].decimal),
                 left,

@@ -33,30 +33,46 @@ const ticksToData = () => {
 
 const data = ticksToData()
 
-storiesOf('position/rangeSelector', module).add('setter', () => (
-  <RangeSelector
-    data={data}
-    midPrice={140}
-    tokenFromSymbol='BAT'
-    tokenToSymbol='ETH'
-    onChangeRange={(left, right) => {
-      action(`range indexes: ${left} - ${right}`)()
-    }}
-    onZoomOutOfData={() => {}}
-    ticksLoading={false}
-  />
-)).add('blocked', () => (
-  <RangeSelector
-    data={data}
-    midPrice={140}
-    tokenFromSymbol='BAT'
-    tokenToSymbol='ETH'
-    onChangeRange={(left, right) => {
-      action(`range indexes: ${left} - ${right}`)()
-    }}
-    blocked
-    blockerInfo='Select tokens to set price range.'
-    onZoomOutOfData={() => {}}
-    ticksLoading={false}
-  />
-))
+storiesOf('position/rangeSelector', module)
+  .add('setter', () => (
+    <RangeSelector
+      data={data}
+      midPrice={{
+        x: 140,
+        index: 140
+      }}
+      tokenFromSymbol='BAT'
+      tokenToSymbol='ETH'
+      onChangeRange={(left, right) => {
+        action(`range indexes: ${left} - ${right}`)()
+      }}
+      onZoomOutOfData={() => {}}
+      ticksLoading={false}
+      xDecimal={6}
+      yDecimal={6}
+      tickSpacing={1}
+      isXtoY={true}
+    />
+  ))
+  .add('blocked', () => (
+    <RangeSelector
+      data={data}
+      midPrice={{
+        x: 140,
+        index: 140
+      }}
+      tokenFromSymbol='BAT'
+      tokenToSymbol='ETH'
+      onChangeRange={(left, right) => {
+        action(`range indexes: ${left} - ${right}`)()
+      }}
+      blocked
+      blockerInfo='Select tokens to set price range.'
+      onZoomOutOfData={() => {}}
+      ticksLoading={false}
+      xDecimal={6}
+      yDecimal={6}
+      tickSpacing={1}
+      isXtoY={true}
+    />
+  ))

@@ -43,7 +43,8 @@ const tokens: SwapToken[] = [
     symbol: 'SOL',
     assetAddress: new PublicKey('So11111111111111111111111111111111111111112'),
     name: 'Wrapped Solana',
-    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
+    logoURI:
+      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
   },
   {
     balance: new BN(100).mul(new BN(126)),
@@ -51,7 +52,8 @@ const tokens: SwapToken[] = [
     symbol: 'BTC',
     assetAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
     name: 'BTC',
-    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
+    logoURI:
+      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
   },
   {
     balance: new BN(10).mul(new BN(5342)),
@@ -59,7 +61,8 @@ const tokens: SwapToken[] = [
     symbol: 'USDC',
     assetAddress: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
     name: 'USD coin',
-    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
+    logoURI:
+      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
   }
 ]
 
@@ -71,42 +74,55 @@ storiesOf('position/newPosition', module)
         tokens={tokens}
         tokensB={tokens}
         data={data}
-        midPrice={140}
+        midPrice={{
+          x: 140,
+          index: 140
+        }}
         addLiquidityHandler={() => {}}
         onChangePositionTokens={() => {}}
         isCurrentPoolExisting={true}
         calcAmount={() => new BN(1)}
         feeTiers={[0.05, 0.3, 1]}
         ticksLoading={false}
-        isTokenXFirst={true}
         onZoomOutOfData={() => {}}
         noConnectedBlockerProps={{
           onConnect: () => {},
           onDisconnect: () => {}
         }}
         progress='none'
+        xDecimal={6}
+        yDecimal={6}
+        tickSpacing={1}
+        isXtoY={true}
       />
     </div>
-  )).add('noPool', () => (
+  ))
+  .add('noPool', () => (
     <div style={{ backgroundColor: '#000000', padding: 20, width: 'fit-content' }}>
       <NewPosition
         tokens={tokens}
         tokensB={tokens}
         data={data}
-        midPrice={140}
+        midPrice={{
+          x: 140,
+          index: 140
+        }}
         addLiquidityHandler={() => {}}
         onChangePositionTokens={() => {}}
         isCurrentPoolExisting={false}
         calcAmount={() => new BN(1)}
         feeTiers={[0.05, 0.3, 1]}
         ticksLoading={false}
-        isTokenXFirst={true}
         onZoomOutOfData={() => {}}
         noConnectedBlockerProps={{
           onConnect: () => {},
           onDisconnect: () => {}
         }}
         progress='none'
+        xDecimal={6}
+        yDecimal={6}
+        tickSpacing={1}
+        isXtoY={true}
       />
     </div>
   ))

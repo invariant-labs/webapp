@@ -2,9 +2,10 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import PositionDetails from './PositionDetails'
 import { MemoryRouter } from 'react-router'
+import { PlotTickData } from '@reducers/positions'
 
 export interface liqTokens {
-  symbol: string,
+  symbol: string
   logoURI: string
 }
 
@@ -20,7 +21,7 @@ const ticksToData = () => {
     { index: 260, delta: -20 },
     { index: 280, delta: -40 }
   ]
-  const fields: Array<{ x: number; y: number }> = []
+  const fields: PlotTickData[] = []
 
   let currentLiquidity = 10
   for (let i = 0; i < 10000; i += 1) {
@@ -29,7 +30,7 @@ const ticksToData = () => {
       ticks.shift()
     }
 
-    fields.push({ x: i, y: currentLiquidity })
+    fields.push({ x: i, y: currentLiquidity, index: i })
   }
 
   return fields
@@ -43,19 +44,30 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
     const tokens: liqTokens[] = [
       {
         symbol: 'BTC',
-        logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
+        logoURI:
+          'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
       },
       {
         symbol: 'SNY',
-        logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png'
+        logoURI:
+          'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png'
       }
     ]
     return (
       <PositionDetails
         detailsData={data}
-        leftRange={100}
-        midPrice={150}
-        rightRange={200}
+        leftRange={{
+          x: 100,
+          index: 100
+        }}
+        rightRange={{
+          x: 200,
+          index: 200
+        }}
+        midPrice={{
+          x: 140,
+          index: 140
+        }}
         currentPrice={300}
         tokenY={'SNY'}
         tokenX={'BTC'}
@@ -78,6 +90,9 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
         closePosition={() => console.log('close position')}
         onZoomOutOfData={() => {}}
         ticksLoading={false}
+        xDecimal={6}
+        yDecimal={6}
+        tickSpacing={1}
       />
     )
   })

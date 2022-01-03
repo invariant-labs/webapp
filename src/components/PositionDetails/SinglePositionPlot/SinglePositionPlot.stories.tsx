@@ -2,6 +2,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import SinglePositionPlot from './SinglePositionPlot'
 import { NetworkType, tokens } from '@consts/static'
+import { PlotTickData } from '@reducers/positions'
 
 const ticksToData = () => {
   const ticks = [
@@ -15,7 +16,7 @@ const ticksToData = () => {
     { index: 260, delta: -20 },
     { index: 280, delta: -40 }
   ]
-  const fields: Array<{ x: number; y: number }> = []
+  const fields: PlotTickData[] = []
 
   let currentLiquidity = 10
   for (let i = 0; i < 10000; i += 1) {
@@ -24,7 +25,7 @@ const ticksToData = () => {
       ticks.shift()
     }
 
-    fields.push({ x: i, y: currentLiquidity })
+    fields.push({ x: i, y: currentLiquidity, index: i })
   }
 
   return fields
@@ -32,30 +33,41 @@ const ticksToData = () => {
 
 const data = ticksToData()
 
-storiesOf('singlePosition/rightComponent', module)
-  .add('plot', () => {
-    return (
-      <SinglePositionPlot
-        data={data}
-        leftRange={100}
-        rightRange={200}
-        midPrice={150}
-        currentPrice={300}
-        tokenY={'SNY'}
-        tokenX={'xUSD'}
-        onZoomOutOfData={() => {}}
-        positionData={{
-          tokenXName: 'BTC',
-          tokenXIcon: tokens[NetworkType.DEVNET][0].logoURI,
-          tokenYIcon: tokens[NetworkType.DEVNET][1].logoURI,
-          tokenYName: 'SNY',
-          min: 2149.6,
-          max: 149.6,
-          fee: 0.05,
-          tokenXDecimal: 6,
-          tokenYDecimal: 6
-        }}
-        ticksLoading={false}
-      />
-    )
-  })
+storiesOf('singlePosition/rightComponent', module).add('plot', () => {
+  return (
+    <SinglePositionPlot
+      data={data}
+      leftRange={{
+        x: 100,
+        index: 100
+      }}
+      rightRange={{
+        x: 200,
+        index: 200
+      }}
+      midPrice={{
+        x: 140,
+        index: 140
+      }}
+      currentPrice={300}
+      tokenY={'SNY'}
+      tokenX={'xUSD'}
+      onZoomOutOfData={() => {}}
+      positionData={{
+        tokenXName: 'BTC',
+        tokenXIcon: tokens[NetworkType.DEVNET][0].logoURI,
+        tokenYIcon: tokens[NetworkType.DEVNET][1].logoURI,
+        tokenYName: 'SNY',
+        min: 2149.6,
+        max: 149.6,
+        fee: 0.05,
+        tokenXDecimal: 6,
+        tokenYDecimal: 6
+      }}
+      ticksLoading={false}
+      xDecimal={6}
+      yDecimal={6}
+      tickSpacing={1}
+    />
+  )
+})
