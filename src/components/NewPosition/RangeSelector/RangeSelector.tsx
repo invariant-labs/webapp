@@ -4,7 +4,7 @@ import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import {
   calcPrice,
-  calcTicksAmountInRange2,
+  calcTicksAmountInRange,
   multiplicityGreaterThan,
   multiplicityLowerThan,
   nearestTickIndex
@@ -73,7 +73,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     const newMax = plotMax - diff / 6
 
     if (
-      calcTicksAmountInRange2(
+      calcTicksAmountInRange(
         Math.max(newMin, 0),
         newMax,
         tickSpacing,

@@ -21,6 +21,7 @@ import { accounts } from '@selectors/solanaWallet'
 import { Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
 import { positionsWithPoolsData, plotTicks, singlePositionData } from '@selectors/positions'
 import { network } from '@selectors/solanaConnection'
+import { tokens } from '@consts/static'
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
@@ -129,9 +130,14 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     let toRequest =
       typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined'
         ? calcTicksAmountInRange(
-            action.payload.isXtoY ? action.payload.min : 1 / action.payload.max,
-            action.payload.isXtoY ? action.payload.max : 1 / action.payload.min,
-            allPools[poolIndex].tickSpacing
+            action.payload.min,
+            action.payload.max,
+            allPools[poolIndex].tickSpacing,
+            action.payload.isXtoY,
+            tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenX))
+              ?.decimal ?? 0,
+            tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenY))
+              ?.decimal ?? 0
           )
         : 30
 

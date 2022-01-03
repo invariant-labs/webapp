@@ -182,13 +182,6 @@ export const getScaleFromString = (value: string): number => {
 
 export const logBase = (x: number, b: number): number => Math.log(x) / Math.log(b)
 
-export const calcTicksAmountInRange = (min: number, max: number, tickSpacing: number): number => {
-  const minIndex = logBase(min, 1.0001)
-  const maxIndex = logBase(max, 1.0001)
-
-  return Math.ceil((maxIndex - minIndex) / tickSpacing)
-}
-
 export const calcYPerXPrice = (sqrtPrice: BN, xDecimal: number, yDecimal: number): number => {
   const proportion = sqrtPrice.mul(sqrtPrice).div(DENOMINATOR)
 
@@ -358,7 +351,7 @@ export const nearestTickIndex = (
   return nearestMultiplicity(Math.round(log), spacing)
 }
 
-export const calcTicksAmountInRange2 = (
+export const calcTicksAmountInRange = (
   min: number,
   max: number,
   tickSpacing: number,
