@@ -191,11 +191,11 @@ export const calcYPerXPrice = (sqrtPrice: BN, xDecimal: number, yDecimal: number
 }
 
 export const multiplicityLowerThan = (arg: number, spacing: number): number => {
-  return arg - (Math.abs(arg) % Math.abs(spacing))
+  return arg >= 0 ? arg - (arg % spacing) : arg - (spacing - (-arg % spacing))
 }
 
 export const multiplicityGreaterThan = (arg: number, spacing: number): number => {
-  return arg + (Math.abs(arg) % Math.abs(spacing))
+  return arg >= 0 ? arg + (arg % spacing) : arg + (spacing - (-arg % spacing))
 }
 
 export const createLiquidityPlot = async (

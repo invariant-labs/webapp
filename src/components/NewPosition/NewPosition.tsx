@@ -36,7 +36,6 @@ export interface INewPosition {
   ) => BN
   feeTiers: number[]
   ticksLoading: boolean
-  isTokenXFirst: boolean
   onZoomOutOfData: (min: number, max: number) => void
   showNoConnected?: boolean
   noConnectedBlockerProps: INoConnected
@@ -58,7 +57,6 @@ export const NewPosition: React.FC<INewPosition> = ({
   calcAmount,
   feeTiers,
   ticksLoading,
-  isTokenXFirst,
   onZoomOutOfData,
   showNoConnected,
   noConnectedBlockerProps,
@@ -161,7 +159,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
-              (isTokenXFirst ? rightRange <= midPrice.index : rightRange < midPrice.index),
+              (isXtoY ? rightRange <= midPrice.index : rightRange > midPrice.index),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimal : 0
           }}
@@ -184,7 +182,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
-              (isTokenXFirst ? leftRange > midPrice.index : leftRange >= midPrice.index),
+              (isXtoY ? leftRange > midPrice.index : leftRange <= midPrice.index),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimal : 0
           }}
@@ -198,7 +196,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             setLeftRange(left)
             setRightRange(right)
 
-            if (tokenAIndex !== null && right > midPrice.index) {
+            if (tokenAIndex !== null && (isXtoY ? right > midPrice.index : right < midPrice.index)) {
               const amount = getOtherTokenAmount(
                 printBNtoBN(tokenADeposit, tokens[tokenAIndex].decimal),
                 left,
@@ -213,7 +211,7 @@ export const NewPosition: React.FC<INewPosition> = ({
               }
             }
 
-            if (tokenBIndex !== null && left < midPrice.index) {
+            if (tokenBIndex !== null && (isXtoY ? left < midPrice.index : left > midPrice.index)) {
               const amount = getOtherTokenAmount(
                 printBNtoBN(tokenBDeposit, tokens[tokenBIndex].decimal),
                 left,
