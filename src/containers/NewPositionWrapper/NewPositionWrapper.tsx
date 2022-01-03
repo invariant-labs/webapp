@@ -54,21 +54,25 @@ export const NewPositionWrapper = () => {
     if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
       return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
     }
-    return true 
+    return true
   }, [poolIndex, tokenAIndex])
 
   const xDecimal = useMemo(() => {
     if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
-      return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress) ? tokens[tokenAIndex].decimal : tokens[tokenBIndex].decimal
+      return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
+        ? tokens[tokenAIndex].decimal
+        : tokens[tokenBIndex].decimal
     }
-    return 0 
+    return 0
   }, [poolIndex, tokenAIndex])
 
   const yDecimal = useMemo(() => {
     if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
-      return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress) ? tokens[tokenBIndex].decimal : tokens[tokenAIndex].decimal
+      return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
+        ? tokens[tokenBIndex].decimal
+        : tokens[tokenAIndex].decimal
     }
-    return 0 
+    return 0
   }, [poolIndex, tokenAIndex])
 
   const tickSpacing = useMemo(() => {
@@ -86,8 +90,12 @@ export const NewPositionWrapper = () => {
         x: calcPrice(
           allPools[poolIndex].currentTickIndex,
           allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
-          allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress) ? tokens[tokenAIndex].decimal : tokens[tokenBIndex].decimal,
-          allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress) ? tokens[tokenBIndex].decimal : tokens[tokenAIndex].decimal
+          allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
+            ? tokens[tokenAIndex].decimal
+            : tokens[tokenBIndex].decimal,
+          allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
+            ? tokens[tokenBIndex].decimal
+            : tokens[tokenAIndex].decimal
         )
       }
     }

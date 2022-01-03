@@ -335,10 +335,15 @@ export const createPlaceholderLiquidityPlot = async (
   return isXtoY ? ticksData : ticksData.reverse()
 }
 
-export const getPrimaryUnitsPrice = (price: number, isXtoY: boolean, xDecimal: number, yDecimal: number) => {
-  let xToYPrice = isXtoY ? price : 1 / price
+export const getPrimaryUnitsPrice = (
+  price: number,
+  isXtoY: boolean,
+  xDecimal: number,
+  yDecimal: number
+) => {
+  const xToYPrice = isXtoY ? price : 1 / price
 
-  return xToYPrice * (10 ** (yDecimal - xDecimal))
+  return xToYPrice * 10 ** (yDecimal - xDecimal)
 }
 
 export const nearestMultiplicity = (arg: number, spacing: number) => {
@@ -350,14 +355,27 @@ export const nearestMultiplicity = (arg: number, spacing: number) => {
     : Math.max(lower, multiplicityGreaterThan(MIN_TICK, spacing))
 }
 
-export const nearestTickIndex = (price: number, spacing: number, isXtoY: boolean, xDecimal: number, yDecimal: number) => {
+export const nearestTickIndex = (
+  price: number,
+  spacing: number,
+  isXtoY: boolean,
+  xDecimal: number,
+  yDecimal: number
+) => {
   const base = Math.max(price, calcPrice(isXtoY ? MIN_TICK : MAX_TICK, isXtoY, xDecimal, yDecimal))
   const primaryUnitsPrice = getPrimaryUnitsPrice(base, isXtoY, xDecimal, yDecimal)
   const log = logBase(primaryUnitsPrice, 1.0001)
   return nearestMultiplicity(Math.round(log), spacing)
 }
 
-export const calcTicksAmountInRange2 = (min: number, max: number, tickSpacing: number, isXtoY: boolean, xDecimal: number, yDecimal: number): number => {
+export const calcTicksAmountInRange2 = (
+  min: number,
+  max: number,
+  tickSpacing: number,
+  isXtoY: boolean,
+  xDecimal: number,
+  yDecimal: number
+): number => {
   const primaryUnitsMin = getPrimaryUnitsPrice(min, isXtoY, xDecimal, yDecimal)
   const primaryUnitsMax = getPrimaryUnitsPrice(max, isXtoY, xDecimal, yDecimal)
   const minIndex = logBase(primaryUnitsMin, 1.0001)

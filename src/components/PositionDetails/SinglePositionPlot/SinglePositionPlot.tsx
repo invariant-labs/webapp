@@ -50,8 +50,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
-    const newMin = plotMin - (diff / 4)
-    const newMax = plotMax + (diff / 4)
+    const newMin = plotMin - diff / 4
+    const newMax = plotMax + diff / 4
     setPlotMin(newMin)
     setPlotMax(newMax)
     if (newMin < data[0].x || newMax > data[data.length - 1].x) {
@@ -61,8 +61,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
 
   const zoomPlus = () => {
     const diff = plotMax - plotMin
-    const newMin = plotMin + (diff / 6)
-    const newMax = plotMax - (diff / 6)
+    const newMin = plotMin + diff / 6
+    const newMax = plotMax - diff / 6
 
     if (Math.abs(nearestPriceIndex(newMin, data) - nearestPriceIndex(newMax, data)) >= 4) {
       setPlotMin(newMin)
@@ -95,12 +95,14 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           label='min'
           amount={positionData.min}
           tokenX={tokenX}
-          tokenY={tokenY}/>
+          tokenY={tokenY}
+        />
         <LiquidationRangeInfo
           label='max'
           amount={positionData.max}
           tokenX={tokenX}
-          tokenY={tokenY}/>
+          tokenY={tokenY}
+        />
       </Grid>
       <Grid>
         <Card className={classes.currentPriceLabel}>
@@ -108,9 +110,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         </Card>
         <Card className={classes.currentPriceAmonut}>
           <Typography component='p'>
-            <Typography component='span'>
-              {currentPrice}
-            </Typography>
+            <Typography component='span'>{currentPrice}</Typography>
             {tokenY} per {tokenX}
           </Typography>
         </Card>

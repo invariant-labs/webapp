@@ -2,7 +2,14 @@ import { Button, Grid, Typography } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
-import { calcPrice, calcTicksAmountInRange2, multiplicityGreaterThan, multiplicityLowerThan, nearestPriceIndex, nearestTickIndex } from '@consts/utils'
+import {
+  calcPrice,
+  calcTicksAmountInRange2,
+  multiplicityGreaterThan,
+  multiplicityLowerThan,
+  nearestPriceIndex,
+  nearestTickIndex
+} from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import useStyles from './style'
 import { MIN_TICK } from '@invariant-labs/sdk'
@@ -52,8 +59,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
-    const newMin = plotMin - (diff / 4)
-    const newMax = plotMax + (diff / 4)
+    const newMin = plotMin - diff / 4
+    const newMax = plotMax + diff / 4
     setPlotMin(newMin)
     setPlotMax(newMax)
     // if (newMin < data[0].x || newMax > data[data.length - 1].x) {
@@ -63,10 +70,19 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const zoomPlus = () => {
     const diff = plotMax - plotMin
-    const newMin = plotMin + (diff / 6)
-    const newMax = plotMax - (diff / 6)
+    const newMin = plotMin + diff / 6
+    const newMax = plotMax - diff / 6
 
-    if (calcTicksAmountInRange2(Math.max(newMin, 0), newMax, tickSpacing, isXtoY, xDecimal, yDecimal) >= 4) {
+    if (
+      calcTicksAmountInRange2(
+        Math.max(newMin, 0),
+        newMax,
+        tickSpacing,
+        isXtoY,
+        xDecimal,
+        yDecimal
+      ) >= 4
+    ) {
       setPlotMin(newMin)
       setPlotMax(newMax)
     }
@@ -84,17 +100,31 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const resetPlot = () => {
     const initSideDist = Math.abs(
-      midPrice.x - calcPrice(
-        Math.max(multiplicityGreaterThan(MIN_TICK, tickSpacing), midPrice.index - (tickSpacing * 15)),
-        isXtoY,
-        xDecimal,
-        yDecimal
-      )
+      midPrice.x -
+        calcPrice(
+          Math.max(
+            multiplicityGreaterThan(MIN_TICK, tickSpacing),
+            midPrice.index - tickSpacing * 15
+          ),
+          isXtoY,
+          xDecimal,
+          yDecimal
+        )
     )
 
     changeRangeHandler(
-      isXtoY ? Math.max(multiplicityGreaterThan(MIN_TICK, tickSpacing), midPrice.index - (tickSpacing * 10)) : Math.min(multiplicityLowerThan(MAX_TICK, tickSpacing), midPrice.index + (tickSpacing * 10)),
-      isXtoY ? Math.min(multiplicityLowerThan(MAX_TICK, tickSpacing), midPrice.index + (tickSpacing * 10)) : Math.max(multiplicityGreaterThan(MIN_TICK, tickSpacing), midPrice.index - (tickSpacing * 10))
+      isXtoY
+        ? Math.max(
+            multiplicityGreaterThan(MIN_TICK, tickSpacing),
+            midPrice.index - tickSpacing * 10
+          )
+        : Math.min(multiplicityLowerThan(MAX_TICK, tickSpacing), midPrice.index + tickSpacing * 10),
+      isXtoY
+        ? Math.min(multiplicityLowerThan(MAX_TICK, tickSpacing), midPrice.index + tickSpacing * 10)
+        : Math.max(
+            multiplicityGreaterThan(MIN_TICK, tickSpacing),
+            midPrice.index - tickSpacing * 10
+          )
     )
     setPlotMin(midPrice.x - initSideDist)
     setPlotMax(midPrice.x + initSideDist)
@@ -157,8 +187,14 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             }}
             onBlur={() => {
               const newLeft = isXtoY
-                ? Math.min(rightRange - tickSpacing, nearestTickIndex(+leftInput, tickSpacing, isXtoY, xDecimal, yDecimal))
-                : Math.max(rightRange + tickSpacing, nearestTickIndex(+leftInput, tickSpacing, isXtoY, xDecimal, yDecimal))
+                ? Math.min(
+                    rightRange - tickSpacing,
+                    nearestTickIndex(+leftInput, tickSpacing, isXtoY, xDecimal, yDecimal)
+                  )
+                : Math.max(
+                    rightRange + tickSpacing,
+                    nearestTickIndex(+leftInput, tickSpacing, isXtoY, xDecimal, yDecimal)
+                  )
 
               changeRangeHandler(newLeft, rightRange)
             }}
@@ -184,42 +220,50 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             }}
             onBlur={() => {
               const newRight = isXtoY
-                ? Math.max(leftRange + tickSpacing, nearestTickIndex(+rightInput, tickSpacing, isXtoY, xDecimal, yDecimal))
-                : Math.min(leftRange - tickSpacing, nearestTickIndex(+rightInput, tickSpacing, isXtoY, xDecimal, yDecimal))
+                ? Math.max(
+                    leftRange + tickSpacing,
+                    nearestTickIndex(+rightInput, tickSpacing, isXtoY, xDecimal, yDecimal)
+                  )
+                : Math.min(
+                    leftRange - tickSpacing,
+                    nearestTickIndex(+rightInput, tickSpacing, isXtoY, xDecimal, yDecimal)
+                  )
               changeRangeHandler(leftRange, newRight)
             }}
           />
         </Grid>
         <Grid container className={classes.buttons}>
-          <Button
-            className={classes.button}
-            onClick={resetPlot}
-          >
+          <Button className={classes.button} onClick={resetPlot}>
             Reset range
           </Button>
           <Button
             className={classes.button}
             onClick={() => {
               changeRangeHandler(
-                isXtoY ? multiplicityGreaterThan(MIN_TICK, tickSpacing) : multiplicityLowerThan(MAX_TICK, tickSpacing),
-                isXtoY ? multiplicityLowerThan(MAX_TICK, tickSpacing) : multiplicityGreaterThan(MIN_TICK, tickSpacing)
+                isXtoY
+                  ? multiplicityGreaterThan(MIN_TICK, tickSpacing)
+                  : multiplicityLowerThan(MAX_TICK, tickSpacing),
+                isXtoY
+                  ? multiplicityLowerThan(MAX_TICK, tickSpacing)
+                  : multiplicityGreaterThan(MIN_TICK, tickSpacing)
               )
-            }}
-          >
+            }}>
             Set full range
           </Button>
         </Grid>
 
-        {
-          blocked && (
-            <>
-              <Grid className={classes.blocker} />
-              <Grid container className={classes.blockedInfoWrapper} justifyContent='center' alignItems='center'>
-                <Typography className={classes.blockedInfo}>{blockerInfo}</Typography>
-              </Grid>
-            </>
-          )
-        }
+        {blocked && (
+          <>
+            <Grid className={classes.blocker} />
+            <Grid
+              container
+              className={classes.blockedInfoWrapper}
+              justifyContent='center'
+              alignItems='center'>
+              <Typography className={classes.blockedInfo}>{blockerInfo}</Typography>
+            </Grid>
+          </>
+        )}
       </Grid>
     </Grid>
   )

@@ -150,7 +150,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           index: leftRange.index
         })
       }
-  
+
       if (rangeData[rangeData.length - 1].x < rightRange.x) {
         rangeData.push({
           x: rightRange.x,
@@ -309,17 +309,33 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
             leftRange.x,
             rightRange.x,
             position => {
-              const nearest = nearestTickIndex(plotMin + position * (plotMax - plotMin), tickSpacing, isXtoY, xDecimal, yDecimal)
+              const nearest = nearestTickIndex(
+                plotMin + position * (plotMax - plotMin),
+                tickSpacing,
+                isXtoY,
+                xDecimal,
+                yDecimal
+              )
               onChangeRange?.(
-                nearest === rightRange.index ? rightRange.index - (isXtoY ? tickSpacing : -tickSpacing) : nearest,
+                nearest === rightRange.index
+                  ? rightRange.index - (isXtoY ? tickSpacing : -tickSpacing)
+                  : nearest,
                 rightRange.index
               )
             },
             position => {
-              const nearest = nearestTickIndex(plotMin + position * (plotMax - plotMin), tickSpacing, isXtoY, xDecimal, yDecimal)
+              const nearest = nearestTickIndex(
+                plotMin + position * (plotMax - plotMin),
+                tickSpacing,
+                isXtoY,
+                xDecimal,
+                yDecimal
+              )
               onChangeRange?.(
                 leftRange.index,
-                nearest === leftRange.index ? leftRange.index + (isXtoY ? tickSpacing : -tickSpacing) : nearest
+                nearest === leftRange.index
+                  ? leftRange.index + (isXtoY ? tickSpacing : -tickSpacing)
+                  : nearest
               )
             },
             plotMin,
