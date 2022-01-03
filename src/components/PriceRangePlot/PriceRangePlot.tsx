@@ -68,7 +68,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       }
 
       const minXDist = containerRef.current.offsetWidth / 100000
-      const minYChange = containerRef.current.offsetHeight / 1000
+      const minYChange = containerRef.current.offsetHeight / 100000
 
       const dataAfterOmit: Array<{ x: number; y: number }> = []
 
@@ -155,7 +155,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         rangeData.push({
           x: rightRange.x,
           y: rangeData[rangeData.length - 1].y,
-          index: leftRange.index
+          index: rightRange.index
         })
       }
     }
