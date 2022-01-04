@@ -13,6 +13,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { pools } from '@selectors/pools'
 import { Pair, TICK_LIMIT } from '@invariant-labs/sdk'
 import {
+  calcPrice,
   calcTicksAmountInRange,
   createLiquidityPlot,
   createPlaceholderLiquidityPlot
@@ -163,6 +164,28 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       toRequest
     )
 
+    const lowerTickPrice = rawTicks.length
+      ? calcPrice(
+          rawTicks[0].index,
+          action.payload.isXtoY,
+          tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenX))
+            ?.decimal ?? 0,
+          tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenY))
+            ?.decimal ?? 0
+        )
+      : 0
+
+    const upperTickPrice = rawTicks.length
+      ? calcPrice(
+          rawTicks[rawTicks.length - 1].index,
+          action.payload.isXtoY,
+          tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenX))
+            ?.decimal ?? 0,
+          tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenY))
+            ?.decimal ?? 0
+        )
+      : 0
+
     const ticksData = yield* call(
       createLiquidityPlot,
       rawTicks,
@@ -174,7 +197,9 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     yield put(
       actions.setPlotTicks({
         data: ticksData,
-        maxReached: rawTicks.length < toRequest
+        maxReached: rawTicks.length < toRequest,
+        minPriceFetch: Math.min(lowerTickPrice, upperTickPrice),
+        maxPriceFetch: Math.max(lowerTickPrice, upperTickPrice)
       })
     )
   } catch (error) {

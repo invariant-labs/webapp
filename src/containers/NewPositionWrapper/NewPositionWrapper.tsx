@@ -21,7 +21,13 @@ export const NewPositionWrapper = () => {
   const walletStatus = useSelector(status)
   const allPools = useSelector(pools)
   const { success, inProgress } = useSelector(initPosition)
-  const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
+  const {
+    data: ticksData,
+    loading: ticksLoading,
+    maxReached,
+    maxPriceFetch,
+    minPriceFetch
+  } = useSelector(plotTicks)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
@@ -264,13 +270,20 @@ export const NewPositionWrapper = () => {
         return new BN(0)
       }}
       ticksLoading={ticksLoading}
-      onZoomOutOfData={(min, max) => {
-        if (poolIndex !== null && tokenAIndex !== null) {
+      onZoomOut={(min, max) => {
+        if (
+          poolIndex !== null &&
+          tokenAIndex !== null &&
+          !ticksLoading &&
+          !maxReached &&
+          ((typeof minPriceFetch !== 'undefined' && Math.max(min, 0) < minPriceFetch) ||
+            (typeof maxPriceFetch !== 'undefined' && max > maxPriceFetch))
+        ) {
           dispatch(
             actions.getCurrentPlotTicks({
               poolIndex,
               isXtoY: allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
-              min,
+              min: Math.max(min, 0),
               max
             })
           )

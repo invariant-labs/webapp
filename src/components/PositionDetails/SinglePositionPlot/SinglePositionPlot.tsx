@@ -3,15 +3,10 @@ import { Grid, Typography, Card } from '@material-ui/core'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
 import { ILiquidityItem } from '../SinglePositionInfo/SinglePositionInfo'
-import {
-  calcPrice,
-  spacingMultiplicityGte,
-  nearestPriceIndex,
-  calcTicksAmountInRange
-} from '@consts/utils'
-import useStyles from './style'
+import { calcPrice, spacingMultiplicityGte, calcTicksAmountInRange } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
+import useStyles from './style'
 
 export interface ISinglePositionPlot {
   data: PlotTickData[]
@@ -21,7 +16,7 @@ export interface ISinglePositionPlot {
   currentPrice: number
   tokenY: string
   tokenX: string
-  onZoomOutOfData: (min: number, max: number) => void
+  onZoomOut: (min: number, max: number) => void
   positionData: ILiquidityItem
   ticksLoading: boolean
   xDecimal: number
@@ -37,7 +32,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   currentPrice,
   tokenY,
   tokenX,
-  onZoomOutOfData,
+  onZoomOut,
   positionData,
   ticksLoading,
   xDecimal,
@@ -73,9 +68,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     const newMax = plotMax + diff / 4
     setPlotMin(newMin)
     setPlotMax(newMax)
-    // if (newMin < data[1].x || newMax > data[data.length - 2].x) {
-    //   onZoomOutOfData(newMin, newMax)
-    // }
+    onZoomOut(newMin, newMax)
   }
 
   const zoomPlus = () => {

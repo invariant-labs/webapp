@@ -17,6 +17,8 @@ export interface PlotTicks {
   data: PlotTickData[]
   loading: boolean
   maxReached: boolean
+  minPriceFetch?: number
+  maxPriceFetch?: number
 }
 
 export interface InitPositionStore {
@@ -36,7 +38,8 @@ export interface IPositionsStore {
   initPosition: InitPositionStore
 }
 
-export interface InitPositionData extends Omit<InitPosition, 'owner' | 'userTokenX' | 'userTokenY' | 'pair'> {
+export interface InitPositionData
+  extends Omit<InitPosition, 'owner' | 'userTokenX' | 'userTokenY' | 'pair'> {
   poolIndex: number
 }
 
@@ -48,25 +51,29 @@ export interface GetCurrentTicksData {
 }
 
 export interface ClosePositionData {
-  positionIndex: number,
+  positionIndex: number
   onSuccess: () => void
 }
 
 export interface SetPositionData {
-  index: number,
+  index: number
   position: Position
 }
 
 export interface SetCurrentTicksData {
   data: PlotTickData[]
   maxReached: boolean
+  minPriceFetch?: number
+  maxPriceFetch?: number
 }
 
 export const defaultState: IPositionsStore = {
   plotTicks: {
     data: [],
     loading: false,
-    maxReached: false
+    maxReached: false,
+    minPriceFetch: 0,
+    maxPriceFetch: 0
   },
   positionsList: {
     list: [],
@@ -101,6 +108,13 @@ const positionsSlice = createSlice({
       state.plotTicks.data = action.payload.data
       state.plotTicks.maxReached = action.payload.maxReached
       state.plotTicks.loading = false
+      if (
+        typeof action.payload.minPriceFetch !== 'undefined' &&
+        typeof action.payload.maxPriceFetch !== 'undefined'
+      ) {
+        state.plotTicks.minPriceFetch = action.payload.minPriceFetch
+        state.plotTicks.maxPriceFetch = action.payload.maxPriceFetch
+      }
       return state
     },
     setPlotTicksLoading(state, action: PayloadAction<PlotTickData[]>) {
@@ -132,7 +146,10 @@ const positionsSlice = createSlice({
       state.currentPositionRangeTicks.loading = true
       return state
     },
-    setCurrentPositionRangeTicks(state, action: PayloadAction<{ lowerTick: Tick, upperTick: Tick }>) {
+    setCurrentPositionRangeTicks(
+      state,
+      action: PayloadAction<{ lowerTick: Tick; upperTick: Tick }>
+    ) {
       state.currentPositionRangeTicks = {
         ...action.payload,
         loading: false

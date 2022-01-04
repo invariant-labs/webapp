@@ -46,7 +46,7 @@ storiesOf('position/rangeSelector', module)
       onChangeRange={(left, right) => {
         action(`range indexes: ${left} - ${right}`)()
       }}
-      onZoomOutOfData={() => {}}
+      onZoomOut={() => {}}
       ticksLoading={false}
       xDecimal={6}
       yDecimal={6}
@@ -68,7 +68,7 @@ storiesOf('position/rangeSelector', module)
       }}
       blocked
       blockerInfo='Select tokens to set price range.'
-      onZoomOutOfData={() => {}}
+      onZoomOut={() => {}}
       ticksLoading={false}
       xDecimal={6}
       yDecimal={6}

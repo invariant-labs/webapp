@@ -10,9 +10,9 @@ import {
   nearestTickIndex
 } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
-import useStyles from './style'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
+import useStyles from './style'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -22,7 +22,7 @@ export interface IRangeSelector {
   onChangeRange: (leftIndex: number, rightIndex: number) => void
   blocked?: boolean
   blockerInfo?: string
-  onZoomOutOfData: (min: number, max: number) => void
+  onZoomOut: (min: number, max: number) => void
   ticksLoading: boolean
   isXtoY: boolean
   xDecimal: number
@@ -38,7 +38,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   onChangeRange,
   blocked = false,
   blockerInfo,
-  onZoomOutOfData,
+  onZoomOut,
   ticksLoading,
   isXtoY,
   xDecimal,
@@ -62,9 +62,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     const newMax = plotMax + diff / 4
     setPlotMin(newMin)
     setPlotMax(newMax)
-    // if (newMin < data[1].x || newMax > data[data.length - 2].x) {
-    //   onZoomOutOfData(newMin, newMax)
-    // }
+    onZoomOut(newMin, newMax)
   }
 
   const zoomPlus = () => {

@@ -88,7 +88,7 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
         tokenXClaimValue={2.19703}
         tokenYClaimValue={9.19703}
         closePosition={() => console.log('close position')}
-        onZoomOutOfData={() => {}}
+        onZoomOut={() => {}}
         ticksLoading={false}
         xDecimal={6}
         yDecimal={6}
