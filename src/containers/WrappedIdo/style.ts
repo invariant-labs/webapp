@@ -1,8 +1,20 @@
 import { makeStyles } from '@material-ui/core'
 
+const leftContainerWidthDesk: string = '408px'
+const leftContainerWidthMob: string = '336px'
+const leftInsideWidthDesk: string = '360px'
+const leftInsideWidthMob: string = '288px'
+const rightContainerWidthDesk: string = '240px'
+const rightContainerWidthMob: string = '336px'
+const rightElementHeightDesk: string = '68px'
+const colorLight: string = 'white'
+const colorDark: string = '#7F768F'
+const backgroundColorDark: string = '#9DD46D'
+const backgroundColorDarker: string = '#1C1B1E'
+
 export const useStyles = makeStyles({
   idoTitle: {
-    color: 'white',
+    color: colorLight,
     fontSize: '20px',
     paddingBottom: '28px'
   },
@@ -16,57 +28,37 @@ export const useStyles = makeStyles({
     }
   },
   leftGrid: {
-    width: '408px',
+    width: leftContainerWidthDesk,
     borderRadius: '10px',
     height: '340px',
     background: '#222126',
     marginRight: '10px',
     '@media (max-width: 780px)': {
-      maxWidth: '336px',
+      maxWidth: leftContainerWidthMob,
       marginBottom: '20px',
       marginRight: '0px'
     }
   },
   idoLeft1: {
-    width: '360px',
+    width: leftInsideWidthDesk,
     alignSelf: 'center',
-    color: 'white',
+    color: colorLight,
     '@media (max-width: 780px)': {
-      width: '288px'
-    }
-  },
-  idoLeft2: {
-    color: 'white',
-    alignSelf: 'center',
-    '@media (max-width: 780px)': {
-      width: '288px'
+      width: leftInsideWidthMob
     }
   },
   idoLeft21: {
   },
   idoLeft211: {
     fontSize: '14px',
-    color: '#7F768F'
-  },
-  idoLeft212: {
-    fontSize: '14px',
-    color: '#7F768F'
-  },
-  idoLeft22: {
-    backgroundColor: '#1C1B1E',
-    width: '360px',
-    border: '1px solid #34303B',
-    borderRadius: '5px',
-    maxHeight: '63px'
-  },
-  idoLeft221: {
+    color: colorDark
   },
   idoLeft222: {
     fontSize: '30px',
-    color: '#7F768F'
+    color: colorDark
   },
   idoLeft223: {
-    backgroundColor: '#9DD46D',
+    backgroundColor: backgroundColorDark,
     height: '32px',
     padding: '7px 0',
     color: '#1C1B1E',
@@ -75,131 +67,91 @@ export const useStyles = makeStyles({
     minWidth: '55px'
   },
   idoLeft3: {
-    width: '360px',
+    width: leftInsideWidthDesk,
     alignSelf: 'center',
-    color: 'white',
+    color: colorLight,
     '@media (max-width: 780px)': {
-      width: '288px'
+      width: leftInsideWidthMob
     }
   },
   idoLeft31: {
     fontSize: '14px',
-    color: '#7F768F'
+    color: colorDark
   },
   idoLeft32: {
-    width: '360px',
+    width: leftInsideWidthDesk,
     display: 'flex',
     flexDirection: 'row'
   },
   idoLeft33: {
-    color: 'white'
+    height: '24px',
+    width: '50px',
+    paddingTop: '10px'
+    // color: colorDark
   },
   idoLeft34: {
+    paddingLeft: '10px'
   },
   idoLeft35: {
-    color: 'white'
+    color: colorLight
   },
   idoLeft36: {
+    width: '85%',
+    lineHeight: '0px'
   },
   idoLeft361: {
     fontSize: '14px',
-    color: '#7F768F'
-  },
-  idoLeft362: {
-    fontSize: '14px',
-    color: '#7F768F'
-  },
-  idoLeft363: {
-    fontSize: '14px',
-    color: '#7F768F'
-  },
-  idoLeft364: {
-    fontSize: '14px',
-    color: '#7F768F'
+    color: colorDark
   },
   idoLeft4: {
     display: 'flex',
-    width: '360px',
+    width: leftInsideWidthDesk,
     alignSelf: 'center',
     borderRadius: '5px',
     '@media (max-width: 780px)': {
-      width: '288px'
+      width: leftInsideWidthMob
     }
   },
   rightGrid: {
-    width: '240px',
+    width: rightContainerWidthDesk,
     borderRadius: '10px',
-    height: '340px',
+    // height: '340px',
     background: '#222126',
     '@media (max-width: 780px)': {
-      width: '408px',
-      maxWidth: '336px'
+      width: rightContainerWidthMob
     }
   },
   rightGrid1: {
     textAlign: 'center',
 
-    height: '68px'
+    height: rightElementHeightDesk
   },
   rightGrid11: {
-    color: '#7F768F',
-    fontSize: '14px'
-
+    color: colorDark,
+    fontSize: '14px',
+    height: '40%'
   },
   rightGrid12: {
     fontSize: '20px',
-    color: 'white'
+    color: colorLight
   },
   rightGrid2: {
     textAlign: 'center',
 
     backgroundColor: '#1C1B1E',
-    height: '68px'
-  },
-  rightGrid21: {
-    color: '#7F768F',
-    fontSize: '14px'
-  },
-  rightGrid22: {
-    fontSize: '20px',
-    color: 'white'
+    height: rightElementHeightDesk
   },
   rightGrid3: {
     textAlign: 'center',
-
-    height: '68px'
-  },
-  rightGrid31: {
-    color: '#7F768F',
-    fontSize: '14px'
-  },
-  rightGrid32: {
-    fontSize: '20px',
-    color: 'white'
+    height: rightElementHeightDesk
   },
   rightGrid4: {
     textAlign: 'center',
-    backgroundColor: '#1C1B1E',
-    height: '68px'
-  },
-  rightGrid41: {
-    color: '#7F768F',
-    fontSize: '14px'
-  },
-  rightGrid42: {
-    fontSize: '20px',
-    color: 'white'
+    backgroundColor: backgroundColorDarker,
+    height: rightElementHeightDesk
   },
   rightGrid5: {
-    height: '68px',
+    height: rightElementHeightDesk,
     textAlign: 'center'
-  },
-  rightGrid51: {
-    color: '#7F768F',
-    fontSize: '14px'
-  },
-  rightGrid52: {
-    fontSize: '20px',
-    color: 'white'
   }
 })
