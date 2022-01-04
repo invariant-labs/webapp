@@ -190,11 +190,11 @@ export const calcYPerXPrice = (sqrtPrice: BN, xDecimal: number, yDecimal: number
   return amount.toNumber() / 10 ** yDecimal
 }
 
-export const multiplicityLowerThan = (arg: number, spacing: number): number => {
+export const spacingMultiplicityLowerThan = (arg: number, spacing: number): number => {
   return arg >= 0 ? arg - (arg % spacing) : arg - (spacing - (-arg % spacing))
 }
 
-export const multiplicityGreaterThan = (arg: number, spacing: number): number => {
+export const spacingMultiplicityGreaterThan = (arg: number, spacing: number): number => {
   return arg >= 0 ? arg + (arg % spacing) : arg + (spacing - (-arg % spacing))
 }
 
@@ -208,7 +208,6 @@ export const createLiquidityPlot = async (
     tokens[networkType].find(token => token.address.equals(pool.tokenX))?.decimal ?? 0
   const tokenYDecimal =
     tokens[networkType].find(token => token.address.equals(pool.tokenY))?.decimal ?? 0
-
   const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(rawTicks, pool) : []
 
   const ticks = rawTicks.map((raw, index) => ({
@@ -218,8 +217,8 @@ export const createLiquidityPlot = async (
 
   const ticksData: PlotTickData[] = []
 
-  const min = multiplicityGreaterThan(MIN_TICK, pool.tickSpacing)
-  const max = multiplicityLowerThan(MAX_TICK, pool.tickSpacing)
+  const min = spacingMultiplicityGreaterThan(MIN_TICK, pool.tickSpacing)
+  const max = spacingMultiplicityLowerThan(MAX_TICK, pool.tickSpacing)
 
   if (ticks[0].index !== min) {
     const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
@@ -296,8 +295,8 @@ export const createPlaceholderLiquidityPlot = async (
 
   const ticksData: PlotTickData[] = []
 
-  const min = multiplicityGreaterThan(MIN_TICK, pool.tickSpacing)
-  const max = multiplicityLowerThan(MAX_TICK, pool.tickSpacing)
+  const min = spacingMultiplicityGreaterThan(MIN_TICK, pool.tickSpacing)
+  const max = spacingMultiplicityLowerThan(MAX_TICK, pool.tickSpacing)
 
   const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
 
@@ -329,13 +328,13 @@ export const getPrimaryUnitsPrice = (
   return xToYPrice * 10 ** (yDecimal - xDecimal)
 }
 
-export const nearestMultiplicity = (arg: number, spacing: number) => {
-  const greater = multiplicityGreaterThan(arg, spacing)
-  const lower = multiplicityLowerThan(arg, spacing)
+export const nearestSpacingMultiplicity = (arg: number, spacing: number) => {
+  const greater = spacingMultiplicityGreaterThan(arg, spacing)
+  const lower = spacingMultiplicityLowerThan(arg, spacing)
 
   return Math.abs(greater - arg) < Math.abs(lower - arg)
-    ? Math.min(greater, multiplicityLowerThan(MAX_TICK, spacing))
-    : Math.max(lower, multiplicityGreaterThan(MIN_TICK, spacing))
+    ? Math.min(greater, spacingMultiplicityLowerThan(MAX_TICK, spacing))
+    : Math.max(lower, spacingMultiplicityGreaterThan(MIN_TICK, spacing))
 }
 
 export const nearestTickIndex = (
@@ -348,7 +347,7 @@ export const nearestTickIndex = (
   const base = Math.max(price, calcPrice(isXtoY ? MIN_TICK : MAX_TICK, isXtoY, xDecimal, yDecimal))
   const primaryUnitsPrice = getPrimaryUnitsPrice(base, isXtoY, xDecimal, yDecimal)
   const log = logBase(primaryUnitsPrice, 1.0001)
-  return nearestMultiplicity(Math.round(log), spacing)
+  return nearestSpacingMultiplicity(Math.round(log), spacing)
 }
 
 export const calcTicksAmountInRange = (

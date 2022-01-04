@@ -3,7 +3,7 @@ import { Grid, Typography, Card } from '@material-ui/core'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
 import { ILiquidityItem } from '../SinglePositionInfo/SinglePositionInfo'
-import { calcPrice, multiplicityGreaterThan, nearestPriceIndex } from '@consts/utils'
+import { calcPrice, spacingMultiplicityGreaterThan, nearestPriceIndex } from '@consts/utils'
 import useStyles from './style'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
@@ -49,7 +49,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
       midPrice.x -
         calcPrice(
           Math.max(
-            multiplicityGreaterThan(MIN_TICK, tickSpacing),
+            spacingMultiplicityGreaterThan(MIN_TICK, tickSpacing),
             midPrice.index - tickSpacing * 15
           ),
           true,

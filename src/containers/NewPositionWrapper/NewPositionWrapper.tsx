@@ -81,7 +81,7 @@ export const NewPositionWrapper = () => {
     }
 
     return 0
-  }, [poolIndex, tokenAIndex])
+  }, [poolIndex])
 
   const midPrice = useMemo(() => {
     if (poolIndex !== null) {
