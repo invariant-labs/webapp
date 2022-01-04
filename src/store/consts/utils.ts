@@ -189,11 +189,19 @@ export const calcYPerXPrice = (sqrtPrice: BN, xDecimal: number, yDecimal: number
   return proportion / 10 ** (yDecimal - xDecimal)
 }
 
-export const spacingMultiplicityLowerThan = (arg: number, spacing: number): number => {
+export const spacingMultiplicityLte = (arg: number, spacing: number): number => {
+  if (Math.abs(arg % spacing) === 0) {
+    return arg
+  }
+
   return arg >= 0 ? arg - (arg % spacing) : arg - (spacing - (-arg % spacing))
 }
 
-export const spacingMultiplicityGreaterThan = (arg: number, spacing: number): number => {
+export const spacingMultiplicityGte = (arg: number, spacing: number): number => {
+  if (Math.abs(arg % spacing) === 0) {
+    return arg
+  }
+
   return arg >= 0 ? arg + (arg % spacing) : arg + (spacing - (-arg % spacing))
 }
 
@@ -216,8 +224,8 @@ export const createLiquidityPlot = async (
 
   const ticksData: PlotTickData[] = []
 
-  const min = spacingMultiplicityGreaterThan(MIN_TICK, pool.tickSpacing)
-  const max = spacingMultiplicityLowerThan(MAX_TICK, pool.tickSpacing)
+  const min = spacingMultiplicityGte(MIN_TICK, pool.tickSpacing)
+  const max = spacingMultiplicityLte(MAX_TICK, pool.tickSpacing)
 
   if (ticks[0].index !== min) {
     const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
@@ -294,8 +302,8 @@ export const createPlaceholderLiquidityPlot = async (
 
   const ticksData: PlotTickData[] = []
 
-  const min = spacingMultiplicityGreaterThan(MIN_TICK, pool.tickSpacing)
-  const max = spacingMultiplicityLowerThan(MAX_TICK, pool.tickSpacing)
+  const min = spacingMultiplicityGte(MIN_TICK, pool.tickSpacing)
+  const max = spacingMultiplicityLte(MAX_TICK, pool.tickSpacing)
 
   const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
 
@@ -328,12 +336,12 @@ export const getPrimaryUnitsPrice = (
 }
 
 export const nearestSpacingMultiplicity = (arg: number, spacing: number) => {
-  const greater = spacingMultiplicityGreaterThan(arg, spacing)
-  const lower = spacingMultiplicityLowerThan(arg, spacing)
+  const greater = spacingMultiplicityGte(arg, spacing)
+  const lower = spacingMultiplicityLte(arg, spacing)
 
   return Math.abs(greater - arg) < Math.abs(lower - arg)
-    ? Math.min(greater, spacingMultiplicityLowerThan(MAX_TICK, spacing))
-    : Math.max(lower, spacingMultiplicityGreaterThan(MIN_TICK, spacing))
+    ? Math.min(greater, spacingMultiplicityLte(MAX_TICK, spacing))
+    : Math.max(lower, spacingMultiplicityGte(MIN_TICK, spacing))
 }
 
 export const nearestTickIndex = (
@@ -345,8 +353,8 @@ export const nearestTickIndex = (
 ) => {
   const base = Math.max(price, calcPrice(isXtoY ? MIN_TICK : MAX_TICK, isXtoY, xDecimal, yDecimal))
   const primaryUnitsPrice = getPrimaryUnitsPrice(base, isXtoY, xDecimal, yDecimal)
-  const log = logBase(primaryUnitsPrice, 1.0001)
-  return nearestSpacingMultiplicity(Math.round(log), spacing)
+  const log = Math.round(logBase(primaryUnitsPrice, 1.0001))
+  return nearestSpacingMultiplicity(log, spacing)
 }
 
 export const calcTicksAmountInRange = (

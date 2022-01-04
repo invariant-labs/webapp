@@ -5,7 +5,7 @@ import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeIn
 import { ILiquidityItem } from '../SinglePositionInfo/SinglePositionInfo'
 import {
   calcPrice,
-  spacingMultiplicityGreaterThan,
+  spacingMultiplicityGte,
   nearestPriceIndex,
   calcTicksAmountInRange
 } from '@consts/utils'
@@ -54,7 +54,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
       midPrice.x -
         calcPrice(
           Math.max(
-            spacingMultiplicityGreaterThan(MIN_TICK, tickSpacing),
+            spacingMultiplicityGte(MIN_TICK, tickSpacing),
             midPrice.index - tickSpacing * 15
           ),
           true,
