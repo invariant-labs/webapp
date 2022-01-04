@@ -3,7 +3,12 @@ import { Grid, Typography, Card } from '@material-ui/core'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
 import { ILiquidityItem } from '../SinglePositionInfo/SinglePositionInfo'
-import { calcPrice, spacingMultiplicityGreaterThan, nearestPriceIndex } from '@consts/utils'
+import {
+  calcPrice,
+  spacingMultiplicityGreaterThan,
+  nearestPriceIndex,
+  calcTicksAmountInRange
+} from '@consts/utils'
 import useStyles from './style'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
@@ -68,9 +73,9 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     const newMax = plotMax + diff / 4
     setPlotMin(newMin)
     setPlotMax(newMax)
-    if (newMin < data[1].x || newMax > data[data.length - 2].x) {
-      onZoomOutOfData(newMin, newMax)
-    }
+    // if (newMin < data[1].x || newMax > data[data.length - 2].x) {
+    //   onZoomOutOfData(newMin, newMax)
+    // }
   }
 
   const zoomPlus = () => {
@@ -78,7 +83,10 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     const newMin = plotMin + diff / 6
     const newMax = plotMax - diff / 6
 
-    if (Math.abs(nearestPriceIndex(newMin, data) - nearestPriceIndex(newMax, data)) >= 4) {
+    if (
+      calcTicksAmountInRange(Math.max(newMin, 0), newMax, tickSpacing, true, xDecimal, yDecimal) >=
+      4
+    ) {
       setPlotMin(newMin)
       setPlotMax(newMax)
     }

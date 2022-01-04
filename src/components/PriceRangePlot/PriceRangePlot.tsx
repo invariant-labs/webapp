@@ -97,6 +97,10 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
     const rangeData = data.filter(tick => tick.x <= leftRange.x)
 
+    if (!rangeData.length) {
+      return []
+    }
+
     if (rangeData[rangeData.length - 1].x < leftRange.x) {
       rangeData.push({
         x: leftRange.x,
@@ -146,7 +150,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       if (rangeData[0].x > leftRange.x) {
         rangeData.unshift({
           x: leftRange.x,
-          y: data[lessThan - 1].y,
+          y: rangeData[0].y,
           index: leftRange.index
         })
       }
@@ -175,10 +179,14 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
     const rangeData = data.filter(tick => tick.x >= rightRange.x)
 
+    if (!rangeData.length) {
+      return []
+    }
+
     if (rangeData[0].x > rightRange.x) {
       rangeData.unshift({
         x: rightRange.x,
-        y: data[data.length - rangeData.length - 1]?.y ?? rangeData[0].y,
+        y: rangeData[0].y,
         index: rightRange.index
       })
     }

@@ -183,11 +183,10 @@ export const getScaleFromString = (value: string): number => {
 export const logBase = (x: number, b: number): number => Math.log(x) / Math.log(b)
 
 export const calcYPerXPrice = (sqrtPrice: BN, xDecimal: number, yDecimal: number): number => {
-  const proportion = sqrtPrice.mul(sqrtPrice).div(DENOMINATOR)
+  const sqrt = +printBN(sqrtPrice, PRICE_DECIMAL)
+  const proportion = sqrt * sqrt
 
-  const amount = printBNtoBN('1', xDecimal).mul(proportion).div(DENOMINATOR)
-
-  return amount.toNumber() / 10 ** yDecimal
+  return proportion / 10 ** (yDecimal - xDecimal)
 }
 
 export const spacingMultiplicityLowerThan = (arg: number, spacing: number): number => {
