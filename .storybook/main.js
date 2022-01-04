@@ -1,6 +1,5 @@
 const path = require('path')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
-const reactRefresh = require('@vitejs/plugin-react-refresh')
 
 const resolve = item => {
   return path.join(__dirname, '../', item)
