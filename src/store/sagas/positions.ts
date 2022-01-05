@@ -126,6 +126,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
         networkType
       )
       yield put(actions.setPlotTicksLoading(plot))
+    } else {
+      yield call(sleep, 3000) // cooldown for case when user spams zooming out to make sure unnecesary requests will be cancelled
     }
     let toRequest =
       typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined'
