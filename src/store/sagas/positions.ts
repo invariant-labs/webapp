@@ -118,16 +118,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
 
     const poolIndex = action.payload.poolIndex
 
-    if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
-      const plot = createPlaceholderLiquidityPlot(
-        allPools[poolIndex],
-        action.payload.isXtoY,
-        10,
-        networkType
-      )
-      yield put(actions.setPlotTicksLoading(plot))
-    } else {
-      yield call(sleep, 3000) // cooldown for case when user spams zooming out to make sure unnecesary requests will be cancelled
+    if (typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined') {
+      yield call(sleep, 3000) // cooldown period for case when user spams zooming out to make sure unnecesary requests will be cancelled
     }
     let toRequest =
       typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined'
@@ -206,15 +198,20 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     console.log(error)
     if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
       const data = createPlaceholderLiquidityPlot(
-        allPools[action.payload.poolIndex],
         action.payload.isXtoY,
         10,
-        networkType
+        allPools[action.payload.poolIndex].tickSpacing,
+        tokens[networkType].find(token =>
+          token.address.equals(allPools[action.payload.poolIndex].tokenX)
+        )?.decimal ?? 0,
+        tokens[networkType].find(token =>
+          token.address.equals(allPools[action.payload.poolIndex].tokenY)
+        )?.decimal ?? 0
       )
       yield put(
         actions.setPlotTicks({
           data,
-          maxReached: false
+          maxReached: true
         })
       )
     }

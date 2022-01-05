@@ -117,13 +117,8 @@ const positionsSlice = createSlice({
       }
       return state
     },
-    setPlotTicksLoading(state, action: PayloadAction<PlotTickData[]>) {
-      state.plotTicks.data = action.payload
-      state.plotTicks.loading = true
-      return state
-    },
     getCurrentPlotTicks(state, _action: PayloadAction<GetCurrentTicksData>) {
-      state.plotTicks.loading = false
+      state.plotTicks.loading = true
       return state
     },
     setPositionsList(state, action: PayloadAction<Position[]>) {

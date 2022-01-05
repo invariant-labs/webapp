@@ -298,20 +298,16 @@ export const createLiquidityPlot = (
 }
 
 export const createPlaceholderLiquidityPlot = (
-  pool: PoolStructure,
   isXtoY: boolean,
   yValueToFill: number,
-  networkType: NetworkType
+  tickSpacing: number,
+  tokenXDecimal: number,
+  tokenYDecimal: number
 ) => {
-  const tokenXDecimal =
-    tokens[networkType].find(token => token.address.equals(pool.tokenX))?.decimal ?? 0
-  const tokenYDecimal =
-    tokens[networkType].find(token => token.address.equals(pool.tokenY))?.decimal ?? 0
-
   const ticksData: PlotTickData[] = []
 
-  const min = spacingMultiplicityGte(MIN_TICK, pool.tickSpacing)
-  const max = spacingMultiplicityLte(MAX_TICK, pool.tickSpacing)
+  const min = spacingMultiplicityGte(MIN_TICK, tickSpacing)
+  const max = spacingMultiplicityLte(MAX_TICK, tickSpacing)
 
   const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
 

@@ -4,7 +4,7 @@ import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
 import { SwapToken, swapTokens, status } from '@selectors/solanaWallet'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { calcPrice, printBN } from '@consts/utils'
+import { calcPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { pools } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
@@ -131,6 +131,14 @@ export const NewPositionWrapper = () => {
     )
   }, [tokenAIndex, allPools.length])
 
+  const data = useMemo(() => {
+    if (ticksLoading) {
+      return createPlaceholderLiquidityPlot(isXtoY, 10, tickSpacing, xDecimal, yDecimal)
+    }
+
+    return ticksData
+  }, [ticksData, ticksLoading, isXtoY, tickSpacing, xDecimal, yDecimal])
+
   return (
     <NewPosition
       tokens={tokens}
@@ -161,7 +169,7 @@ export const NewPositionWrapper = () => {
         }
       }}
       feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, PRICE_DECIMAL - 2))}
-      data={ticksData}
+      data={data}
       midPrice={midPrice}
       addLiquidityHandler={(leftTickIndex, rightTickIndex) => {
         if (poolIndex === null) {

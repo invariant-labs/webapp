@@ -10,7 +10,7 @@ import {
 } from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
-import { calcPrice, calcYPerXPrice, printBN } from '@consts/utils'
+import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import useStyles from './style'
@@ -197,9 +197,23 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     return [0, 0]
   }, [position, lowerTick, upperTick])
 
+  const data = useMemo(() => {
+    if (ticksLoading && position) {
+      return createPlaceholderLiquidityPlot(
+        true,
+        10,
+        position.poolData.tickSpacing,
+        position.tokenX.decimal,
+        position.tokenY.decimal
+      )
+    }
+
+    return ticksData
+  }, [ticksData, ticksLoading, position?.id])
+
   return !isLoadingList && position ? (
     <PositionDetails
-      detailsData={ticksData}
+      detailsData={data}
       midPrice={midPrice}
       leftRange={leftRange}
       rightRange={rightRange}
