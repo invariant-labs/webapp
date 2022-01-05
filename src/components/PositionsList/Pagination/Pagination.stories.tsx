@@ -3,8 +3,8 @@ import { storiesOf } from '@storybook/react'
 import { colors } from '@static/theme'
 import { PaginationList } from './Pagination'
 
-const handleChange = (e: React.ChangeEvent<unknown>, page: number): void => {
-  console.log(e, page)
+const handleChange = (page: number): void => {
+  console.log(page)
 }
 
 storiesOf('positionsList/pagination', module).add('pagination', () => (

@@ -6,7 +6,7 @@ import { theme } from '@static/theme'
 export interface IProps {
   pages: number
   defaultPage: number
-  handleChangePage: (event: React.ChangeEvent<unknown>, page: number) => void
+  handleChangePage: (page: number) => void
 }
 
 export const PaginationList: React.FC<IProps> = ({ pages, defaultPage, handleChangePage }) => {
@@ -18,7 +18,7 @@ export const PaginationList: React.FC<IProps> = ({ pages, defaultPage, handleCha
         count={pages}
         shape='rounded'
         defaultPage={defaultPage}
-        onChange={(e, page) => handleChangePage(e, page)}
+        onChange={(e, page) => handleChangePage(page)}
         siblingCount={matches ? 0 : 1}
       />
     </div>
