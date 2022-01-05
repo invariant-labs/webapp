@@ -1,7 +1,8 @@
 import React from 'react'
 import { Pagination } from '@material-ui/lab'
 import useStyle from './style'
-import { useWindowWidth } from '@react-hook/window-size'
+import { useMediaQuery } from '@material-ui/core'
+import { theme } from '@static/theme'
 export interface IProps {
   pages: number
   defaultPage: number
@@ -10,7 +11,7 @@ export interface IProps {
 
 export const PaginationList: React.FC<IProps> = ({ pages, defaultPage, handleChangePage }) => {
   const classes = useStyle()
-  const onlyWidth = useWindowWidth()
+  const matches = useMediaQuery(theme.breakpoints.down('xs'))
   return (
     <div className={classes.root}>
       <Pagination
@@ -18,7 +19,7 @@ export const PaginationList: React.FC<IProps> = ({ pages, defaultPage, handleCha
         shape='rounded'
         defaultPage={defaultPage}
         onChange={(e, page) => handleChangePage(e, page)}
-        siblingCount={onlyWidth > 600 ? 1 : 0}
+        siblingCount={matches ? 0 : 1}
       />
     </div>
   )
