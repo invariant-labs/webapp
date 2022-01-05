@@ -115,8 +115,12 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
 
   const poolIndex = action.payload.poolIndex
 
-  const xDecimal = tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenX))?.decimal ?? 0
-  const yDecimal = tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenY))?.decimal ?? 0
+  const xDecimal =
+    tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenX))?.decimal ??
+    0
+  const yDecimal =
+    tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenY))?.decimal ??
+    0
 
   try {
     const marketProgram = yield* call(getMarketProgram)
@@ -159,21 +163,11 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     )
 
     const lowerTickPrice = rawTicks.length
-      ? calcPrice(
-          rawTicks[0].index,
-          action.payload.isXtoY,
-          xDecimal,
-          yDecimal
-        )
+      ? calcPrice(rawTicks[0].index, action.payload.isXtoY, xDecimal, yDecimal)
       : 0
 
     const upperTickPrice = rawTicks.length
-      ? calcPrice(
-          rawTicks[rawTicks.length - 1].index,
-          action.payload.isXtoY,
-          xDecimal,
-          yDecimal
-        )
+      ? calcPrice(rawTicks[rawTicks.length - 1].index, action.payload.isXtoY, xDecimal, yDecimal)
       : 0
 
     const ticksData = createLiquidityPlot(
