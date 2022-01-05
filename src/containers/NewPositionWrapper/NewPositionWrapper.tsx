@@ -4,7 +4,7 @@ import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
 import { SwapToken, swapTokens, status } from '@selectors/solanaWallet'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { printBN } from '@consts/utils'
+import { calcPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { pools } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
@@ -21,7 +21,13 @@ export const NewPositionWrapper = () => {
   const walletStatus = useSelector(status)
   const allPools = useSelector(pools)
   const { success, inProgress } = useSelector(initPosition)
-  const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
+  const {
+    data: ticksData,
+    loading: ticksLoading,
+    maxReached,
+    currentMaxPriceFetched,
+    currentMinPriceFetched
+  } = useSelector(plotTicks)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
@@ -48,16 +54,54 @@ export const NewPositionWrapper = () => {
   }, [success, inProgress])
 
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
+  const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
 
-  const midPriceIndex = useMemo(() => {
-    if (poolIndex !== null && ticksData.length) {
-      const index = ticksData.findIndex((tick) => tick.index === allPools[poolIndex].currentTickIndex)
+  const isXtoY = useMemo(() => {
+    if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
+      return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
+    }
+    return true
+  }, [poolIndex, tokenAIndex])
 
-      return index === -1 ? 0 : index
+  const xDecimal = useMemo(() => {
+    if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
+      return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
+        ? tokens[tokenAIndex].decimal
+        : tokens[tokenBIndex].decimal
+    }
+    return 0
+  }, [poolIndex, tokenAIndex])
+
+  const yDecimal = useMemo(() => {
+    if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
+      return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
+        ? tokens[tokenBIndex].decimal
+        : tokens[tokenAIndex].decimal
+    }
+    return 0
+  }, [poolIndex, tokenAIndex])
+
+  const tickSpacing = useMemo(() => {
+    if (poolIndex !== null) {
+      return allPools[poolIndex].tickSpacing
     }
 
     return 0
-  }, [ticksData.length, poolIndex, tokenAIndex, ticksLoading])
+  }, [poolIndex])
+
+  const midPrice = useMemo(() => {
+    if (poolIndex !== null) {
+      return {
+        index: allPools[poolIndex].currentTickIndex,
+        x: calcPrice(allPools[poolIndex].currentTickIndex, isXtoY, xDecimal, yDecimal)
+      }
+    }
+
+    return {
+      index: 0,
+      x: 0
+    }
+  }, [poolIndex, isXtoY, xDecimal, yDecimal])
 
   const tokensB = useMemo(() => {
     if (tokenAIndex === null) {
@@ -71,44 +115,62 @@ export const NewPositionWrapper = () => {
       }
     }, {})
 
-    const poolsForTokenA = allPools.filter((pool) => pool.tokenX.equals(tokens[tokenAIndex].assetAddress) || pool.tokenY.equals(tokens[tokenAIndex].assetAddress))
+    const poolsForTokenA = allPools.filter(
+      pool =>
+        pool.tokenX.equals(tokens[tokenAIndex].assetAddress) ||
+        pool.tokenY.equals(tokens[tokenAIndex].assetAddress)
+    )
 
     return poolsForTokenA.map(
-      (pool) => tokensByKey[pool.tokenX.equals(tokens[tokenAIndex].assetAddress) ? pool.tokenY.toString() : pool.tokenX.toString()]
+      pool =>
+        tokensByKey[
+          pool.tokenX.equals(tokens[tokenAIndex].assetAddress)
+            ? pool.tokenY.toString()
+            : pool.tokenX.toString()
+        ]
     )
   }, [tokenAIndex, allPools.length])
+
+  const data = useMemo(() => {
+    if (ticksLoading) {
+      return createPlaceholderLiquidityPlot(isXtoY, 10, tickSpacing, xDecimal, yDecimal)
+    }
+
+    return ticksData
+  }, [ticksData, ticksLoading, isXtoY, tickSpacing, xDecimal, yDecimal])
 
   return (
     <NewPosition
       tokens={tokens}
       tokensB={tokensB}
-      onChangePositionTokens={
-        (tokenA, tokenB, fee) => {
-          setTokenAIndex(tokenA)
-          if (tokenA !== null && tokenB !== null) {
-            const index = allPools.findIndex(
-              (pool) =>
-                pool.fee.v.eq(FEE_TIERS[fee].fee) &&
-                (
-                  (pool.tokenX.equals(tokens[tokenA].assetAddress) && pool.tokenY.equals(tokens[tokenB].assetAddress)) ||
-                  (pool.tokenX.equals(tokens[tokenB].assetAddress) && pool.tokenY.equals(tokens[tokenA].assetAddress))
-                )
-            )
+      onChangePositionTokens={(tokenA, tokenB, fee) => {
+        setTokenAIndex(tokenA)
+        setTokenBIndex(tokenB)
+        if (tokenA !== null && tokenB !== null) {
+          const index = allPools.findIndex(
+            pool =>
+              pool.fee.v.eq(FEE_TIERS[fee].fee) &&
+              ((pool.tokenX.equals(tokens[tokenA].assetAddress) &&
+                pool.tokenY.equals(tokens[tokenB].assetAddress)) ||
+                (pool.tokenX.equals(tokens[tokenB].assetAddress) &&
+                  pool.tokenY.equals(tokens[tokenA].assetAddress)))
+          )
 
-            setPoolIndex(index !== -1 ? index : null)
+          setPoolIndex(index !== -1 ? index : null)
 
-            if (index !== -1) {
-              dispatch(actions.getCurrentPlotTicks({
+          if (index !== -1) {
+            dispatch(
+              actions.getCurrentPlotTicks({
                 poolIndex: index,
                 isXtoY: allPools[index].tokenX.equals(tokens[tokenA].assetAddress)
-              }))
-            }
+              })
+            )
           }
         }
-      }
-      feeTiers={FEE_TIERS.map((tier) => +printBN(tier.fee, PRICE_DECIMAL - 2))}
-      data={ticksData}
-      midPriceIndex={midPriceIndex}
+      }}
+      feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, PRICE_DECIMAL - 2))}
+      data={data}
+      midPrice={midPrice}
       addLiquidityHandler={(leftTickIndex, rightTickIndex) => {
         if (poolIndex === null) {
           return
@@ -118,73 +180,139 @@ export const NewPositionWrapper = () => {
           setProgress('progress')
         }
 
-        const lowerTick = Math.min(ticksData[leftTickIndex].index, ticksData[rightTickIndex].index)
-        const upperTick = Math.max(ticksData[leftTickIndex].index, ticksData[rightTickIndex].index)
+        const lowerTick = Math.min(leftTickIndex, rightTickIndex)
+        const upperTick = Math.max(leftTickIndex, rightTickIndex)
 
-        dispatch(actions.initPosition({
-          poolIndex,
-          lowerTick,
-          upperTick,
-          liquidityDelta: liquidity
-        }))
+        dispatch(
+          actions.initPosition({
+            poolIndex,
+            lowerTick,
+            upperTick,
+            liquidityDelta: liquidity
+          })
+        )
       }}
       isCurrentPoolExisting={poolIndex !== null}
       calcAmount={(amount, left, right, tokenAddress) => {
-        if (poolIndex === null) {
+        if (poolIndex === null || isNaN(left) || isNaN(right)) {
           return new BN(0)
         }
 
         const byX = tokenAddress.equals(allPools[poolIndex].tokenX)
-        const lowerTick = Math.min(ticksData[left].index, ticksData[right].index)
-        const upperTick = Math.max(ticksData[left].index, ticksData[right].index)
+        const lowerTick = Math.min(left, right)
+        const upperTick = Math.max(left, right)
 
         console.log('liquidity calc by:', tokenAddress.toString())
         console.log('pool token x:', allPools[poolIndex].tokenX.toString())
 
         try {
           if (byX) {
-            const result = getLiquidityByX(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
+            const result = getLiquidityByX(
+              amount,
+              lowerTick,
+              upperTick,
+              allPools[poolIndex].sqrtPrice,
+              true
+            )
             setLiquidity(result.liquidity)
 
-            console.log('x:', amount.toString(), 'y:', result.y.toString(), 'ticks:', lowerTick, upperTick, 'liquidity', result.liquidity.v.toString())
+            console.log(
+              'x:',
+              amount.toString(),
+              'y:',
+              result.y.toString(),
+              'ticks:',
+              lowerTick,
+              upperTick,
+              'liquidity',
+              result.liquidity.v.toString()
+            )
 
             return result.y
           }
 
-          const result = getLiquidityByY(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
+          const result = getLiquidityByY(
+            amount,
+            lowerTick,
+            upperTick,
+            allPools[poolIndex].sqrtPrice,
+            true
+          )
           setLiquidity(result.liquidity)
 
-          console.log('y:', amount.toString(), 'x:', result.x.toString(), 'ticks:', lowerTick, upperTick, 'liquidity', result.liquidity.v.toString())
+          console.log(
+            'y:',
+            amount.toString(),
+            'x:',
+            result.x.toString(),
+            'ticks:',
+            lowerTick,
+            upperTick,
+            'liquidity',
+            result.liquidity.v.toString()
+          )
 
           return result.x
         } catch (error) {
-          const result = (byX ? getLiquidityByY : getLiquidityByX)(amount, lowerTick, upperTick, allPools[poolIndex].sqrtPrice, true)
+          const result = (byX ? getLiquidityByY : getLiquidityByX)(
+            amount,
+            lowerTick,
+            upperTick,
+            allPools[poolIndex].sqrtPrice,
+            true
+          )
           setLiquidity(result.liquidity)
 
-          console.log('err', byX ? 'x:' : 'y:', amount.toString(), 'ticks:', lowerTick, upperTick, 'liquidity:', result.liquidity.v.toString())
+          console.log(
+            'err',
+            byX ? 'x:' : 'y:',
+            amount.toString(),
+            'ticks:',
+            lowerTick,
+            upperTick,
+            'liquidity:',
+            result.liquidity.v.toString()
+          )
         }
 
         return new BN(0)
       }}
       ticksLoading={ticksLoading}
-      isTokenXFirst={poolIndex !== null && tokenAIndex !== null && allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)}
-      onZoomOutOfData={(min, max) => {
-        if (poolIndex !== null && tokenAIndex !== null) {
-          dispatch(actions.getCurrentPlotTicks({
-            poolIndex,
-            isXtoY: allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
-            min,
-            max
-          }))
+      onZoomOut={(min, max) => {
+        if (
+          poolIndex !== null &&
+          tokenAIndex !== null &&
+          !ticksLoading &&
+          !maxReached &&
+          ((typeof currentMinPriceFetched !== 'undefined' &&
+            Math.max(min, 0) < currentMinPriceFetched) ||
+            (typeof currentMaxPriceFetched !== 'undefined' && max > currentMaxPriceFetched))
+        ) {
+          dispatch(
+            actions.getCurrentPlotTicks({
+              poolIndex,
+              isXtoY: allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
+              min: Math.max(min, 0),
+              max
+            })
+          )
         }
       }}
       showNoConnected={walletStatus !== Status.Initialized}
       noConnectedBlockerProps={{
-        onConnect: (type) => { dispatch(walletActions.connect(type)) },
-        onDisconnect: () => { dispatch(walletActions.disconnect()) },
+        onConnect: type => {
+          dispatch(walletActions.connect(type))
+        },
+        onDisconnect: () => {
+          dispatch(walletActions.disconnect())
+        },
         descCustomText: 'Cannot add any liquidity.'
       }}
       progress={progress}
+      isXtoY={isXtoY}
+      tickSpacing={tickSpacing}
+      xDecimal={xDecimal}
+      yDecimal={yDecimal}
     />
   )
 }
