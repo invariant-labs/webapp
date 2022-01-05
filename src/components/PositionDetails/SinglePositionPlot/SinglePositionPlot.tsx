@@ -1,35 +1,43 @@
 import React, { useState, useEffect } from 'react'
 import { Grid, Typography, Card } from '@material-ui/core'
-import PriceRangePlot from '@components/PriceRangePlot/PriceRangePlot'
+import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
 import { ILiquidityItem } from '../SinglePositionInfo/SinglePositionInfo'
-import { nearestPriceIndex } from '@consts/utils'
+import { calcPrice, spacingMultiplicityGte, calcTicksAmountInRange } from '@consts/utils'
+import { PlotTickData } from '@reducers/positions'
+import { MIN_TICK } from '@invariant-labs/sdk'
 import useStyles from './style'
 
 export interface ISinglePositionPlot {
-  data: Array<{ x: number; y: number }>
-  leftRangeIndex: number
-  rightRangeIndex: number
-  midPriceIndex: number
+  data: PlotTickData[]
+  leftRange: TickPlotPositionData
+  rightRange: TickPlotPositionData
+  midPrice: TickPlotPositionData
   currentPrice: number
   tokenY: string
   tokenX: string
-  onZoomOutOfData: (min: number, max: number) => void
+  onZoomOut: (min: number, max: number) => void
   positionData: ILiquidityItem
   ticksLoading: boolean
+  xDecimal: number
+  yDecimal: number
+  tickSpacing: number
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   data,
-  leftRangeIndex,
-  rightRangeIndex,
-  midPriceIndex,
+  leftRange,
+  rightRange,
+  midPrice,
   currentPrice,
   tokenY,
   tokenX,
-  onZoomOutOfData,
+  onZoomOut,
   positionData,
-  ticksLoading
+  ticksLoading,
+  xDecimal,
+  yDecimal,
+  tickSpacing
 }) => {
   const classes = useStyles()
 
@@ -37,34 +45,41 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   const [plotMax, setPlotMax] = useState(1)
 
   useEffect(() => {
-    if (midPriceIndex > -1 && ticksLoading) {
-      const initSideDist = Math.min(
-        data[midPriceIndex].x - data[Math.max(midPriceIndex - 15, 0)].x,
-        data[Math.min(midPriceIndex + 15, data.length - 1)].x - data[midPriceIndex].x
-      )
+    const initSideDist = Math.abs(
+      midPrice.x -
+        calcPrice(
+          Math.max(
+            spacingMultiplicityGte(MIN_TICK, tickSpacing),
+            midPrice.index - tickSpacing * 15
+          ),
+          true,
+          xDecimal,
+          yDecimal
+        )
+    )
 
-      setPlotMin(data[midPriceIndex].x - initSideDist)
-      setPlotMax(data[midPriceIndex].x + initSideDist)
-    }
-  }, [ticksLoading, midPriceIndex])
+    setPlotMin(midPrice.x - initSideDist)
+    setPlotMax(midPrice.x + initSideDist)
+  }, [ticksLoading, midPrice])
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
-    const newMin = plotMin - (diff / 4)
-    const newMax = plotMax + (diff / 4)
+    const newMin = plotMin - diff / 4
+    const newMax = plotMax + diff / 4
     setPlotMin(newMin)
     setPlotMax(newMax)
-    if (newMin < data[0].x || newMax > data[data.length - 1].x) {
-      onZoomOutOfData(newMin, newMax)
-    }
+    onZoomOut(newMin, newMax)
   }
 
   const zoomPlus = () => {
     const diff = plotMax - plotMin
-    const newMin = plotMin + (diff / 6)
-    const newMax = plotMax - (diff / 6)
+    const newMin = plotMin + diff / 6
+    const newMax = plotMax - diff / 6
 
-    if (Math.abs(nearestPriceIndex(newMin, data) - nearestPriceIndex(newMax, data)) >= 4) {
+    if (
+      calcTicksAmountInRange(Math.max(newMin, 0), newMax, tickSpacing, true, xDecimal, yDecimal) >=
+      4
+    ) {
       setPlotMin(newMin)
       setPlotMax(newMax)
     }
@@ -83,11 +98,15 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           zoomMinus={zoomMinus}
           zoomPlus={zoomPlus}
           disabled
-          leftRangeIndex={leftRangeIndex}
-          rightRangeIndex={rightRangeIndex}
-          midPriceIndex={midPriceIndex}
+          leftRange={leftRange}
+          rightRange={rightRange}
+          midPrice={midPrice}
           className={classes.plot}
           loading={ticksLoading}
+          isXtoY
+          tickSpacing={tickSpacing}
+          xDecimal={xDecimal}
+          yDecimal={yDecimal}
         />
       </Grid>
       <Grid className={classes.minMaxInfo}>
@@ -95,12 +114,14 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           label='min'
           amount={positionData.min}
           tokenX={tokenX}
-          tokenY={tokenY}/>
+          tokenY={tokenY}
+        />
         <LiquidationRangeInfo
           label='max'
           amount={positionData.max}
           tokenX={tokenX}
-          tokenY={tokenY}/>
+          tokenY={tokenY}
+        />
       </Grid>
       <Grid>
         <Card className={classes.currentPriceLabel}>
@@ -108,9 +129,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         </Card>
         <Card className={classes.currentPriceAmonut}>
           <Typography component='p'>
-            <Typography component='span'>
-              {currentPrice}
-            </Typography>
+            <Typography component='span'>{currentPrice}</Typography>
             {tokenY} per {tokenX}
           </Typography>
         </Card>
