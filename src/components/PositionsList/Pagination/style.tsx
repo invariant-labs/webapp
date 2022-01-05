@@ -1,29 +1,35 @@
 import { makeStyles } from '@material-ui/core'
+import { colors } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
     '& .MuiPaginationItem-icon': {
-      color: 'black',
+      color: colors.black.full,
       width: 30,
       height: 30
     },
     '& .MuiPaginationItem-page': {
-      color: '#4D4757'
+      color: colors.invariant.componentOut3,
+      fontSize: 20
     },
     '& .MuiPaginationItem-ellipsis': {
-      color: '#4D4757'
+      color: colors.invariant.componentOut3
     },
     '& .Mui-selected': {
-      color: '#9DD46D'
+      color: colors.invariant.accent2
     },
     '& .MuiPaginationItem-page.Mui-selected': {
-      backgroundColor: 'transparent'
+      backgroundColor: 'transaprent'
     },
     '& li:first-child button': {
-      backgroundColor: '#9DD46D'
+      backgroundColor: colors.invariant.accent2,
+      minWidth: 40,
+      minHeight: 40
     },
     '& li:last-child button': {
-      backgroundColor: '#9DD46D'
+      backgroundColor: colors.invariant.accent2,
+      minWidth: 40,
+      minHeight: 40
     }
   }
 }))
