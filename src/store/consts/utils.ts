@@ -1,4 +1,4 @@
-import { calculate_price_sqrt, DENOMINATOR, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
+import { calculate_price_sqrt, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
 import { PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
@@ -182,33 +182,27 @@ export const getScaleFromString = (value: string): number => {
 
 export const logBase = (x: number, b: number): number => Math.log(x) / Math.log(b)
 
-export const calcTicksAmountInRange = (min: number, max: number, tickSpacing: number): number => {
-  const minIndex = logBase(min, 1.0001)
-  const maxIndex = logBase(max, 1.0001)
-
-  return Math.ceil((maxIndex - minIndex) / tickSpacing)
-}
-
 export const calcYPerXPrice = (sqrtPrice: BN, xDecimal: number, yDecimal: number): number => {
-  const proportion = sqrtPrice.mul(sqrtPrice).div(DENOMINATOR)
+  const sqrt = +printBN(sqrtPrice, PRICE_DECIMAL)
+  const proportion = sqrt * sqrt
 
-  const amount = printBNtoBN('1', xDecimal).mul(proportion).div(DENOMINATOR)
-
-  return +printBN(amount, yDecimal)
+  return proportion / 10 ** (yDecimal - xDecimal)
 }
 
-export const multiplicityLowerThan = (arg: number, spacing: number): number => {
-  return arg - (Math.abs(arg) % Math.abs(spacing))
+export const spacingMultiplicityLte = (arg: number, spacing: number): number => {
+  if (Math.abs(arg % spacing) === 0) {
+    return arg
+  }
+
+  return arg >= 0 ? arg - (arg % spacing) : arg - (spacing - (-arg % spacing))
 }
 
-export const multiplicityGreaterThan = (arg: number, spacing: number): number => {
-  return arg + (Math.abs(arg) % Math.abs(spacing))
-}
+export const spacingMultiplicityGte = (arg: number, spacing: number): number => {
+  if (Math.abs(arg % spacing) === 0) {
+    return arg
+  }
 
-export const arrayIndexFromTickIndex = (index: number, spacing: number): number => {
-  const lowest = multiplicityGreaterThan(MIN_TICK, spacing)
-
-  return (index - lowest) / spacing
+  return arg >= 0 ? arg + (arg % spacing) : arg + (spacing - (-arg % spacing))
 }
 
 export const createLiquidityPlot = (
@@ -221,7 +215,6 @@ export const createLiquidityPlot = (
     tokens[networkType].find(token => token.address.equals(pool.tokenX))?.decimal ?? 0
   const tokenYDecimal =
     tokens[networkType].find(token => token.address.equals(pool.tokenY))?.decimal ?? 0
-
   const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(rawTicks, pool) : []
 
   const ticks = rawTicks.map((raw, index) => ({
@@ -231,68 +224,161 @@ export const createLiquidityPlot = (
 
   const ticksData: PlotTickData[] = []
 
-  const min = multiplicityGreaterThan(MIN_TICK, pool.tickSpacing)
-  const max = multiplicityLowerThan(MAX_TICK, pool.tickSpacing)
+  const min = spacingMultiplicityGte(MIN_TICK, pool.tickSpacing)
+  const max = spacingMultiplicityLte(MAX_TICK, pool.tickSpacing)
 
-  for (let i = min; i <= max; i += pool.tickSpacing) {
-    const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
+  if (!ticks.length || ticks[0].index !== min) {
+    const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
 
     ticksData.push({
-      x: isXtoY ? price : price !== 0 ? 1 / price : Number.MAX_SAFE_INTEGER,
+      x: minPrice,
       y: 0,
-      index: i
+      index: min
     })
   }
 
-  ticks.forEach((tick, index) => {
-    const arrayIndex = arrayIndexFromTickIndex(tick.index, pool.tickSpacing)
-
-    ticksData[arrayIndex].y = +printBN(tick.liqudity, PRICE_DECIMAL)
-
-    if (
-      index < ticks.length - 1 &&
-      ticks[index + 1].index - ticks[index].index > pool.tickSpacing
-    ) {
-      for (
-        let i = ticks[index].index + pool.tickSpacing;
-        i < ticks[index + 1].index;
-        i += pool.tickSpacing
-      ) {
-        const innerArrayIndex = arrayIndexFromTickIndex(i, pool.tickSpacing)
-
-        ticksData[innerArrayIndex].y = +printBN(tick.liqudity, PRICE_DECIMAL)
-      }
+  ticks.forEach((tick, i) => {
+    if (i === 0 && tick.index - pool.tickSpacing > min) {
+      const price = calcPrice(tick.index - pool.tickSpacing, isXtoY, tokenXDecimal, tokenYDecimal)
+      ticksData.push({
+        x: price,
+        y: 0,
+        index: tick.index - pool.tickSpacing
+      })
+    } else if (i > 0 && tick.index - pool.tickSpacing > ticks[i - 1].index) {
+      const price = calcPrice(tick.index - pool.tickSpacing, isXtoY, tokenXDecimal, tokenYDecimal)
+      ticksData.push({
+        x: price,
+        y: +printBN(ticks[i - 1].liqudity, PRICE_DECIMAL),
+        index: tick.index - pool.tickSpacing
+      })
     }
+
+    const price = calcPrice(tick.index, isXtoY, tokenXDecimal, tokenYDecimal)
+    ticksData.push({
+      x: price,
+      y: +printBN(ticks[i].liqudity, PRICE_DECIMAL),
+      index: tick.index
+    })
   })
+
+  if (!ticks.length) {
+    const maxPrice = calcPrice(max, isXtoY, tokenXDecimal, tokenYDecimal)
+
+    ticksData.push({
+      x: maxPrice,
+      y: 0,
+      index: max
+    })
+  } else if (ticks[ticks.length - 1].index !== max) {
+    if (max - ticks[ticks.length - 1].index > pool.tickSpacing) {
+      const price = calcPrice(
+        ticks[ticks.length - 1].index + pool.tickSpacing,
+        isXtoY,
+        tokenXDecimal,
+        tokenYDecimal
+      )
+      ticksData.push({
+        x: price,
+        y: 0,
+        index: ticks[ticks.length - 1].index + pool.tickSpacing
+      })
+    }
+
+    const maxPrice = calcPrice(max, isXtoY, tokenXDecimal, tokenYDecimal)
+
+    ticksData.push({
+      x: maxPrice,
+      y: 0,
+      index: max
+    })
+  }
 
   return isXtoY ? ticksData : ticksData.reverse()
 }
 
 export const createPlaceholderLiquidityPlot = (
-  pool: PoolStructure,
   isXtoY: boolean,
   yValueToFill: number,
-  networkType: NetworkType
+  tickSpacing: number,
+  tokenXDecimal: number,
+  tokenYDecimal: number
 ) => {
-  const tokenXDecimal =
-    tokens[networkType].find(token => token.address.equals(pool.tokenX))?.decimal ?? 0
-  const tokenYDecimal =
-    tokens[networkType].find(token => token.address.equals(pool.tokenY))?.decimal ?? 0
-
   const ticksData: PlotTickData[] = []
 
-  const min = multiplicityGreaterThan(MIN_TICK, pool.tickSpacing)
-  const max = multiplicityLowerThan(MAX_TICK, pool.tickSpacing)
+  const min = spacingMultiplicityGte(MIN_TICK, tickSpacing)
+  const max = spacingMultiplicityLte(MAX_TICK, tickSpacing)
 
-  for (let i = min; i <= max; i += pool.tickSpacing) {
-    const price = calcYPerXPrice(calculate_price_sqrt(i).v, tokenXDecimal, tokenYDecimal)
+  const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
 
-    ticksData.push({
-      x: isXtoY ? price : price !== 0 ? 1 / price : Number.MAX_SAFE_INTEGER,
-      y: yValueToFill,
-      index: i
-    })
-  }
+  ticksData.push({
+    x: minPrice,
+    y: yValueToFill,
+    index: min
+  })
+
+  const maxPrice = calcPrice(max, isXtoY, tokenXDecimal, tokenYDecimal)
+
+  ticksData.push({
+    x: maxPrice,
+    y: yValueToFill,
+    index: max
+  })
 
   return isXtoY ? ticksData : ticksData.reverse()
+}
+
+export const getPrimaryUnitsPrice = (
+  price: number,
+  isXtoY: boolean,
+  xDecimal: number,
+  yDecimal: number
+) => {
+  const xToYPrice = isXtoY ? price : 1 / price
+
+  return xToYPrice * 10 ** (yDecimal - xDecimal)
+}
+
+export const nearestSpacingMultiplicity = (arg: number, spacing: number) => {
+  const greater = spacingMultiplicityGte(arg, spacing)
+  const lower = spacingMultiplicityLte(arg, spacing)
+
+  return Math.abs(greater - arg) < Math.abs(lower - arg)
+    ? Math.min(greater, spacingMultiplicityLte(MAX_TICK, spacing))
+    : Math.max(lower, spacingMultiplicityGte(MIN_TICK, spacing))
+}
+
+export const nearestTickIndex = (
+  price: number,
+  spacing: number,
+  isXtoY: boolean,
+  xDecimal: number,
+  yDecimal: number
+) => {
+  const base = Math.max(price, calcPrice(isXtoY ? MIN_TICK : MAX_TICK, isXtoY, xDecimal, yDecimal))
+  const primaryUnitsPrice = getPrimaryUnitsPrice(base, isXtoY, xDecimal, yDecimal)
+  const log = Math.round(logBase(primaryUnitsPrice, 1.0001))
+  return nearestSpacingMultiplicity(log, spacing)
+}
+
+export const calcTicksAmountInRange = (
+  min: number,
+  max: number,
+  tickSpacing: number,
+  isXtoY: boolean,
+  xDecimal: number,
+  yDecimal: number
+): number => {
+  const primaryUnitsMin = getPrimaryUnitsPrice(min, isXtoY, xDecimal, yDecimal)
+  const primaryUnitsMax = getPrimaryUnitsPrice(max, isXtoY, xDecimal, yDecimal)
+  const minIndex = logBase(primaryUnitsMin, 1.0001)
+  const maxIndex = logBase(primaryUnitsMax, 1.0001)
+
+  return Math.ceil(Math.abs(maxIndex - minIndex) / tickSpacing)
+}
+
+export const calcPrice = (index: number, isXtoY: boolean, xDecimal: number, yDecimal: number) => {
+  const price = calcYPerXPrice(calculate_price_sqrt(index).v, xDecimal, yDecimal)
+
+  return isXtoY ? price : price !== 0 ? 1 / price : Number.MAX_SAFE_INTEGER
 }
