@@ -18,7 +18,7 @@ export const PaginationList: React.FC<IProps> = ({ pages, defaultPage, handleCha
         count={pages}
         shape='rounded'
         defaultPage={defaultPage}
-        onChange={(e, page) => handleChangePage(page)}
+        onChange={(_e, page) => handleChangePage(page)}
         siblingCount={matches ? 0 : 1}
       />
     </div>
