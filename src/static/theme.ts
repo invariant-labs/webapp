@@ -28,7 +28,8 @@ export const colors = {
     button: '#40BFA0',
     hover: 'rgba(0,249,187,0.15)',
     pastel: '#8AF7E4',
-    snackbar: '#4BB724'
+    snackbar: '#4BB724',
+    shine: '#AEE57E'
   },
   white: {
     main: '#FFFFFF'
