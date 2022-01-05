@@ -3,15 +3,26 @@ import { actions as snackbarsActions } from '@reducers/snackbars'
 import { createAccount, getWallet, sleep } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
 import { getConnection } from './connection'
-import { actions, ClosePositionData, GetCurrentTicksData, InitPositionData } from '@reducers/positions'
+import {
+  actions,
+  ClosePositionData,
+  GetCurrentTicksData,
+  InitPositionData
+} from '@reducers/positions'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { pools } from '@selectors/pools'
 import { Pair, TICK_LIMIT } from '@invariant-labs/sdk'
-import { calcTicksAmountInRange, createLiquidityPlot, createPlaceholderLiquidityPlot } from '@consts/utils'
+import {
+  calcPrice,
+  calcTicksAmountInRange,
+  createLiquidityPlot,
+  createPlaceholderLiquidityPlot
+} from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
 import { Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
 import { positionsWithPoolsData, plotTicks, singlePositionData } from '@selectors/positions'
 import { network } from '@selectors/solanaConnection'
+import { tokens } from '@consts/static'
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
@@ -102,28 +113,32 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
   const allPools = yield* select(pools)
   const networkType = yield* select(network)
 
+  const poolIndex = action.payload.poolIndex
+
+  const xDecimal =
+    tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenX))?.decimal ??
+    0
+  const yDecimal =
+    tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenY))?.decimal ??
+    0
+
   try {
     const marketProgram = yield* call(getMarketProgram)
 
-    const poolIndex = action.payload.poolIndex
-
-    if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
-      yield put(actions.setPlotTicksLoading(
-        createPlaceholderLiquidityPlot(
-          allPools[poolIndex],
-          action.payload.isXtoY,
-          10,
-          networkType
-        )
-      ))
+    if (typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined') {
+      yield call(sleep, 3000) // cooldown period for case when user spams zooming out to make sure unnecesary requests will be cancelled
     }
-    let toRequest = typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined'
-      ? calcTicksAmountInRange(
-        action.payload.isXtoY ? action.payload.min : 1 / action.payload.max,
-        action.payload.isXtoY ? action.payload.max : 1 / action.payload.min,
-        allPools[poolIndex].tickSpacing
-      )
-      : 30
+    let toRequest =
+      typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined'
+        ? calcTicksAmountInRange(
+            action.payload.min,
+            action.payload.max,
+            allPools[poolIndex].tickSpacing,
+            action.payload.isXtoY,
+            xDecimal,
+            yDecimal
+          )
+        : 30
 
     if (isNaN(toRequest)) {
       return
@@ -141,28 +156,51 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
 
     const rawTicks = yield* call(
       [marketProgram, marketProgram.getClosestTicks],
-      new Pair(allPools[poolIndex].tokenX, allPools[poolIndex].tokenY, { fee: allPools[poolIndex].fee.v }),
+      new Pair(allPools[poolIndex].tokenX, allPools[poolIndex].tokenY, {
+        fee: allPools[poolIndex].fee.v
+      }),
       toRequest
     )
 
-    const ticksData = createLiquidityPlot(rawTicks, allPools[poolIndex], action.payload.isXtoY, networkType)
+    const lowerTickPrice = rawTicks.length
+      ? calcPrice(rawTicks[0].index, action.payload.isXtoY, xDecimal, yDecimal)
+      : 0
 
-    yield put(actions.setPlotTicks({
-      data: ticksData,
-      maxReached: rawTicks.length < toRequest
-    }))
+    const upperTickPrice = rawTicks.length
+      ? calcPrice(rawTicks[rawTicks.length - 1].index, action.payload.isXtoY, xDecimal, yDecimal)
+      : 0
+
+    const ticksData = createLiquidityPlot(
+      rawTicks,
+      allPools[poolIndex],
+      action.payload.isXtoY,
+      networkType
+    )
+
+    yield put(
+      actions.setPlotTicks({
+        data: ticksData,
+        maxReached: rawTicks.length < toRequest,
+        currentMinPriceFetched: Math.min(lowerTickPrice, upperTickPrice),
+        currentMaxPriceFetched: Math.max(lowerTickPrice, upperTickPrice)
+      })
+    )
   } catch (error) {
     console.log(error)
     if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
-      yield put(actions.setPlotTicks({
-        data: createPlaceholderLiquidityPlot(
-          allPools[action.payload.poolIndex],
-          action.payload.isXtoY,
-          10,
-          networkType
-        ),
-        maxReached: false
-      }))
+      const data = createPlaceholderLiquidityPlot(
+        action.payload.isXtoY,
+        10,
+        allPools[poolIndex].tickSpacing,
+        xDecimal,
+        yDecimal
+      )
+      yield put(
+        actions.setPlotTicks({
+          data,
+          maxReached: true
+        })
+      )
     }
   }
 }
@@ -172,10 +210,7 @@ export function* handleGetPositionsList() {
     const marketProgram = yield* call(getMarketProgram)
     const wallet = yield* call(getWallet)
 
-    const { head } = yield* call(
-      [marketProgram, marketProgram.getPositionList],
-      wallet.publicKey
-    )
+    const { head } = yield* call([marketProgram, marketProgram.getPositionList], wallet.publicKey)
 
     const list = yield* call(
       [marketProgram, marketProgram.getPositionsFromRange],
@@ -219,11 +254,9 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     }
 
     const ix = yield* call([marketProgram, marketProgram.claimFeeInstruction], {
-      pair: new Pair(
-        positionForIndex.tokenX,
-        positionForIndex.tokenY,
-        { fee: positionForIndex.fee.v }
-      ),
+      pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
+        fee: positionForIndex.fee.v
+      }),
       userTokenX,
       userTokenY,
       owner: wallet.publicKey,
@@ -301,12 +334,9 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
     }
 
-    const ix = yield* call([marketProgram, marketProgram.removePositionInstruction],
-      new Pair(
-        positionForIndex.tokenX,
-        positionForIndex.tokenY,
-        { fee: positionForIndex.fee.v }
-      ),
+    const ix = yield* call(
+      [marketProgram, marketProgram.removePositionInstruction],
+      new Pair(positionForIndex.tokenX, positionForIndex.tokenY, { fee: positionForIndex.fee.v }),
       wallet.publicKey,
       action.payload.positionIndex,
       userTokenX,
@@ -372,10 +402,12 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
       action.payload
     )
 
-    yield put(actions.setSinglePosition({
-      index: action.payload,
-      position
-    }))
+    yield put(
+      actions.setSinglePosition({
+        index: action.payload,
+        position
+      })
+    )
 
     yield put(actions.getCurrentPositionRangeTicks(position.id.toString()))
   } catch (error) {
@@ -393,11 +425,9 @@ export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<string
       return
     }
 
-    const pair = new Pair(
-      positionData.poolData.tokenX,
-      positionData.poolData.tokenY,
-      { fee: positionData.poolData.fee.v }
-    )
+    const pair = new Pair(positionData.poolData.tokenX, positionData.poolData.tokenY, {
+      fee: positionData.poolData.fee.v
+    })
 
     const lowerTick = yield* call(
       [marketProgram, marketProgram.getTick],
@@ -411,10 +441,12 @@ export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<string
       positionData.upperTickIndex
     )
 
-    yield put(actions.setCurrentPositionRangeTicks({
-      lowerTick,
-      upperTick
-    }))
+    yield put(
+      actions.setCurrentPositionRangeTicks({
+        lowerTick,
+        upperTick
+      })
+    )
   } catch (error) {
     console.log(error)
   }
@@ -444,6 +476,14 @@ export function* getCurrentPositionRangeTicksHandler(): Generator {
 
 export function* positionsSaga(): Generator {
   yield all(
-    [initPositionHandler, getCurrentPlotTicksHandler, getPositionsListHandler, claimFeeHandler, closePositionHandler, getSinglePositionHandler, getCurrentPositionRangeTicksHandler].map(spawn)
+    [
+      initPositionHandler,
+      getCurrentPlotTicksHandler,
+      getPositionsListHandler,
+      claimFeeHandler,
+      closePositionHandler,
+      getSinglePositionHandler,
+      getCurrentPositionRangeTicksHandler
+    ].map(spawn)
   )
 }
