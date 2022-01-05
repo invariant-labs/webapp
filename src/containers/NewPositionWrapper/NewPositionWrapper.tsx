@@ -66,8 +66,8 @@ export const NewPositionWrapper = () => {
   const xDecimal = useMemo(() => {
     if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
       return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
-        ? tokens[tokenAIndex].decimal
-        : tokens[tokenBIndex].decimal
+        ? tokens[tokenAIndex].decimals
+        : tokens[tokenBIndex].decimals
     }
     return 0
   }, [poolIndex, tokenAIndex])
@@ -75,8 +75,8 @@ export const NewPositionWrapper = () => {
   const yDecimal = useMemo(() => {
     if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
       return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
-        ? tokens[tokenBIndex].decimal
-        : tokens[tokenAIndex].decimal
+        ? tokens[tokenBIndex].decimals
+        : tokens[tokenAIndex].decimals
     }
     return 0
   }, [poolIndex, tokenAIndex])

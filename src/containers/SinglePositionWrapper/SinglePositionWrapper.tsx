@@ -58,8 +58,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         x: calcPrice(
           position.poolData.currentTickIndex,
           true,
-          position.tokenX.decimal,
-          position.tokenY.decimal
+          position.tokenX.decimals,
+          position.tokenY.decimals
         )
       }
     }
@@ -76,8 +76,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         x: calcPrice(
           position.lowerTickIndex,
           true,
-          position.tokenX.decimal,
-          position.tokenY.decimal
+          position.tokenX.decimals,
+          position.tokenY.decimals
         )
       }
     }
@@ -94,8 +94,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         x: calcPrice(
           position.upperTickIndex,
           true,
-          position.tokenX.decimal,
-          position.tokenY.decimal
+          position.tokenX.decimals,
+          position.tokenY.decimals
         )
       }
     }
@@ -203,8 +203,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         true,
         10,
         position.poolData.tickSpacing,
-        position.tokenX.decimal,
-        position.tokenY.decimal
+        position.tokenX.decimals,
+        position.tokenY.decimals
       )
     }
 
@@ -269,8 +269,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       }}
       ticksLoading={ticksLoading}
       tickSpacing={position?.poolData.tickSpacing ?? 1}
-      xDecimal={position?.tokenX.decimal ?? 0}
-      yDecimal={position?.tokenY.decimal ?? 0}
+      xDecimal={position?.tokenX.decimals ?? 0}
+      yDecimal={position?.tokenY.decimals ?? 0}
     />
   ) : isLoadingList ? (
     <Typography className={classes.placeholderText}>Loading...</Typography>
