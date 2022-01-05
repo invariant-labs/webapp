@@ -11,13 +11,16 @@ import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Link } from 'react-router-dom'
 import backIcon from '@static/svg/back-arrow.svg'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import { MIN_TICK } from '@invariant-labs/sdk'
+import { MAX_TICK } from '@invariant-labs/sdk/src'
+import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import useStyles from './style'
 
 export interface INewPosition {
   tokens: SwapToken[]
   tokensB: SwapToken[]
   data: PlotTickData[]
-  midPriceIndex: number
+  midPrice: TickPlotPositionData
   addLiquidityHandler: (leftTickIndex: number, rightTickIndex: number) => void
   onChangePositionTokens: (
     tokenAIndex: number | null,
@@ -33,37 +36,44 @@ export interface INewPosition {
   ) => BN
   feeTiers: number[]
   ticksLoading: boolean
-  isTokenXFirst: boolean
-  onZoomOutOfData: (min: number, max: number) => void
+  onZoomOut: (min: number, max: number) => void
   showNoConnected?: boolean
   noConnectedBlockerProps: INoConnected
   progress: ProgressState
+  isXtoY: boolean
+  xDecimal: number
+  yDecimal: number
+  tickSpacing: number
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
   tokens,
   tokensB,
   data,
-  midPriceIndex,
+  midPrice,
   addLiquidityHandler,
   onChangePositionTokens,
   isCurrentPoolExisting,
   calcAmount,
   feeTiers,
   ticksLoading,
-  isTokenXFirst,
-  onZoomOutOfData,
+  onZoomOut,
   showNoConnected,
   noConnectedBlockerProps,
-  progress
+  progress,
+  isXtoY,
+  xDecimal,
+  yDecimal,
+  tickSpacing
 }) => {
   const classes = useStyles()
 
-  const [leftRange, setLeftRange] = useState(0)
-  const [rightRange, setRightRange] = useState(0)
+  const [leftRange, setLeftRange] = useState(MIN_TICK)
+  const [rightRange, setRightRange] = useState(MAX_TICK)
 
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
   const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
+  const [fee, setFee] = useState<number>(0)
 
   const [tokenADeposit, setTokenADeposit] = useState<string>('')
   const [tokenBDeposit, setTokenBDeposit] = useState<string>('')
@@ -84,9 +94,12 @@ export const NewPosition: React.FC<INewPosition> = ({
     data: Array(100)
       .fill(1)
       .map((_e, index) => ({ x: index, y: index, index })),
-    midPriceIndex: 50,
-    tokenFromSymbol: 'ABC',
-    tokenToSymbol: 'XYZ'
+    midPrice: {
+      x: 50,
+      index: 50
+    },
+    tokenASymbol: 'ABC',
+    tokenBSymbol: 'XYZ'
   }
 
   const getOtherTokenAmount = (amount: BN, left: number, right: number, byFirst: boolean) => {
@@ -121,6 +134,7 @@ export const NewPosition: React.FC<INewPosition> = ({
           setPositionTokens={(index1, index2, fee) => {
             setTokenAIndex(index1)
             setTokenBIndex(index2)
+            setFee(fee)
             onChangePositionTokens(index1, index2, fee)
           }}
           onAddLiquidity={() => {
@@ -147,7 +161,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
-              (isTokenXFirst ? rightRange <= midPriceIndex : rightRange < midPriceIndex),
+              (isXtoY ? rightRange <= midPrice.index : rightRange > midPrice.index),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimals : 0
           }}
@@ -170,7 +184,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
-              (isTokenXFirst ? leftRange > midPriceIndex : leftRange >= midPriceIndex),
+              (isXtoY ? leftRange > midPrice.index : leftRange <= midPrice.index),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimals : 0
           }}
@@ -184,7 +198,10 @@ export const NewPosition: React.FC<INewPosition> = ({
             setLeftRange(left)
             setRightRange(right)
 
-            if (tokenAIndex !== null && right > midPriceIndex) {
+            if (
+              tokenAIndex !== null &&
+              (isXtoY ? right > midPrice.index : right < midPrice.index)
+            ) {
               const amount = getOtherTokenAmount(
                 printBNtoBN(tokenADeposit, tokens[tokenAIndex].decimals),
                 left,
@@ -199,7 +216,7 @@ export const NewPosition: React.FC<INewPosition> = ({
               }
             }
 
-            if (tokenBIndex !== null && left < midPriceIndex) {
+            if (tokenBIndex !== null && (isXtoY ? left < midPrice.index : left > midPrice.index)) {
               const amount = getOtherTokenAmount(
                 printBNtoBN(tokenBDeposit, tokens[tokenBIndex].decimals),
                 left,
@@ -226,12 +243,17 @@ export const NewPosition: React.FC<INewPosition> = ({
             ? noRangePlaceholderProps
             : {
                 data,
-                midPriceIndex,
-                tokenFromSymbol: tokens[tokenAIndex].symbol,
-                tokenToSymbol: tokens[tokenBIndex].symbol
+                midPrice,
+                tokenASymbol: tokens[tokenAIndex].symbol,
+                tokenBSymbol: tokens[tokenBIndex].symbol
               })}
-          onZoomOutOfData={onZoomOutOfData}
+          onZoomOut={onZoomOut}
           ticksLoading={ticksLoading}
+          isXtoY={isXtoY}
+          tickSpacing={tickSpacing}
+          xDecimal={xDecimal}
+          yDecimal={yDecimal}
+          fee={fee}
         />
       </Grid>
     </Grid>

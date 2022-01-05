@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import React, { useMemo, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,7 +10,7 @@ import {
 } from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
-import { calcYPerXPrice, printBN } from '@consts/utils'
+import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import useStyles from './style'
@@ -31,11 +30,14 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
-  const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
   const {
-    lowerTick,
-    upperTick
-  } = useSelector(currentPositionRangeTicks)
+    data: ticksData,
+    loading: ticksLoading,
+    maxReached,
+    currentMaxPriceFetched,
+    currentMinPriceFetched
+  } = useSelector(plotTicks)
+  const { lowerTick, upperTick } = useSelector(currentPositionRangeTicks)
 
   useEffect(() => {
     if (position?.id) {
@@ -49,18 +51,60 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
   }, [position?.id])
 
-  const midPriceIndex = useMemo(
-    () => ticksData.findIndex(tick => tick.index === position?.poolData.currentTickIndex),
-    [ticksData.length, position?.id]
-  )
-  const leftRangeIndex = useMemo(
-    () => ticksData.findIndex(tick => tick.index === position?.lowerTickIndex),
-    [ticksData.length, position?.id]
-  )
-  const rightRangeIndex = useMemo(
-    () => ticksData.findIndex(tick => tick.index === position?.upperTickIndex),
-    [ticksData.length, position?.id]
-  )
+  const midPrice = useMemo(() => {
+    if (position) {
+      return {
+        index: position.poolData.currentTickIndex,
+        x: calcPrice(
+          position.poolData.currentTickIndex,
+          true,
+          position.tokenX.decimal,
+          position.tokenY.decimal
+        )
+      }
+    }
+
+    return {
+      index: 0,
+      x: 0
+    }
+  }, [position?.id])
+  const leftRange = useMemo(() => {
+    if (position) {
+      return {
+        index: position.lowerTickIndex,
+        x: calcPrice(
+          position.lowerTickIndex,
+          true,
+          position.tokenX.decimal,
+          position.tokenY.decimal
+        )
+      }
+    }
+
+    return {
+      index: 0,
+      x: 0
+    }
+  }, [position?.id])
+  const rightRange = useMemo(() => {
+    if (position) {
+      return {
+        index: position.upperTickIndex,
+        x: calcPrice(
+          position.upperTickIndex,
+          true,
+          position.tokenX.decimal,
+          position.tokenY.decimal
+        )
+      }
+    }
+
+    return {
+      index: 0,
+      x: 0
+    }
+  }, [position?.id])
 
   const min = useMemo(
     () =>
@@ -153,17 +197,38 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     return [0, 0]
   }, [position, lowerTick, upperTick])
 
+  const data = useMemo(() => {
+    if (ticksLoading && position) {
+      return createPlaceholderLiquidityPlot(
+        true,
+        10,
+        position.poolData.tickSpacing,
+        position.tokenX.decimal,
+        position.tokenY.decimal
+      )
+    }
+
+    return ticksData
+  }, [ticksData, ticksLoading, position?.id])
+
   return !isLoadingList && position ? (
     <PositionDetails
-      detailsData={ticksData}
-      midPriceIndex={midPriceIndex}
-      leftRangeIndex={leftRangeIndex}
-      rightRangeIndex={rightRangeIndex}
+      detailsData={data}
+      midPrice={midPrice}
+      leftRange={leftRange}
+      rightRange={rightRange}
       currentPrice={current}
       tokenY={position.tokenY.symbol}
       tokenX={position.tokenX.symbol}
-      onZoomOutOfData={(min, max) => {
-        if (position) {
+      onZoomOut={(min, max) => {
+        if (
+          position &&
+          !ticksLoading &&
+          !maxReached &&
+          ((typeof currentMinPriceFetched !== 'undefined' &&
+            Math.max(min, 0) < currentMinPriceFetched) ||
+            (typeof currentMaxPriceFetched !== 'undefined' && max > currentMaxPriceFetched))
+        ) {
           dispatch(
             actions.getCurrentPlotTicks({
               poolIndex: position.poolData.poolIndex,
@@ -203,6 +268,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         max
       }}
       ticksLoading={ticksLoading}
+      tickSpacing={position?.poolData.tickSpacing ?? 1}
+      xDecimal={position?.tokenX.decimal ?? 0}
+      yDecimal={position?.tokenY.decimal ?? 0}
     />
   ) : isLoadingList ? (
     <Typography className={classes.placeholderText}>Loading...</Typography>

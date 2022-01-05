@@ -6,6 +6,8 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['react-hooks'],
   rules: {
+    indent: 'off',
+    '@typescript-eslint/indent': 'off',
     'multiline-ternary': 'off',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'off',

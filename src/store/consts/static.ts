@@ -26,21 +26,32 @@ export const USDC_DEV: Token = {
   address: new PublicKey(MOCK_TOKENS.USDC),
   decimals: 6,
   name: 'USD Coin',
-  logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
 }
 export const USDT_DEV: Token = {
   symbol: 'USDT',
   address: new PublicKey(MOCK_TOKENS.USDT),
   decimals: 6,
   name: 'Tether USD',
-  logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
 }
 export const SOL_DEV: Token = {
   symbol: 'wSOL',
   address: new PublicKey(MOCK_TOKENS.SOL),
   decimals: 9,
   name: 'Wrapped Solana',
-  logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
+}
+export const MSOL_DEV = {
+  symbol: 'mSOL',
+  address: new PublicKey(MOCK_TOKENS.MSOL),
+  decimals: 9,
+  name: 'Marinade Solana',
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png'
 }
 export const ANA_DEV: Token = {
   symbol: 'ANA',
@@ -75,7 +86,7 @@ const DEFAULT_PUBLICKEY = new PublicKey(0)
 const MAX_U64 = new BN('18446744073709551615')
 
 export const tokens: Record<NetworkType, Token[]> = {
-  Devnet: [USDC_DEV, USDT_DEV, SOL_DEV, ANA_DEV],
+  Devnet: [USDC_DEV, USDT_DEV, SOL_DEV, ANA_DEV, MSOL_DEV],
   Mainnet: [],
   Testnet: [],
   Localnet: []
@@ -85,7 +96,8 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
   Devnet: [
     new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[0]),
     new Pair(USDC_DEV.address, SOL_DEV.address, FEE_TIERS[0]),
-    new Pair(USDC_DEV.address, ANA_DEV.address, FEE_TIERS[0])
+    new Pair(USDC_DEV.address, ANA_DEV.address, FEE_TIERS[0]),
+    new Pair(SOL_DEV.address, MSOL_DEV.address, FEE_TIERS[0])
   ],
   Testnet: [],
   Mainnet: [],
@@ -93,7 +105,7 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
 }
 
 export const airdropTokens: Record<NetworkType, PublicKey[]> = {
-  Devnet: [USDC_DEV.address, USDT_DEV.address, SOL_DEV.address],
+  Devnet: [USDC_DEV.address, USDT_DEV.address, SOL_DEV.address, MSOL_DEV.address],
   Mainnet: [],
   Testnet: [],
   Localnet: []
@@ -103,7 +115,8 @@ export const airdropQuantities: Record<NetworkType, number[]> = {
   Devnet: [
     100 * 10 ** USDC_DEV.decimals,
     100 * 10 ** USDT_DEV.decimals,
-    10 ** SOL_DEV.decimals
+    10 ** SOL_DEV.decimals,
+    10 ** MSOL_DEV.decimals
   ],
   Mainnet: [],
   Testnet: [],
