@@ -113,10 +113,13 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
   const allPools = yield* select(pools)
   const networkType = yield* select(network)
 
+  const poolIndex = action.payload.poolIndex
+
+  const xDecimal = tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenX))?.decimal ?? 0
+  const yDecimal = tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenY))?.decimal ?? 0
+
   try {
     const marketProgram = yield* call(getMarketProgram)
-
-    const poolIndex = action.payload.poolIndex
 
     if (typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined') {
       yield call(sleep, 3000) // cooldown period for case when user spams zooming out to make sure unnecesary requests will be cancelled
@@ -128,10 +131,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
             action.payload.max,
             allPools[poolIndex].tickSpacing,
             action.payload.isXtoY,
-            tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenX))
-              ?.decimal ?? 0,
-            tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenY))
-              ?.decimal ?? 0
+            xDecimal,
+            yDecimal
           )
         : 30
 
@@ -161,10 +162,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       ? calcPrice(
           rawTicks[0].index,
           action.payload.isXtoY,
-          tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenX))
-            ?.decimal ?? 0,
-          tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenY))
-            ?.decimal ?? 0
+          xDecimal,
+          yDecimal
         )
       : 0
 
@@ -172,10 +171,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       ? calcPrice(
           rawTicks[rawTicks.length - 1].index,
           action.payload.isXtoY,
-          tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenX))
-            ?.decimal ?? 0,
-          tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenY))
-            ?.decimal ?? 0
+          xDecimal,
+          yDecimal
         )
       : 0
 
@@ -200,13 +197,9 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       const data = createPlaceholderLiquidityPlot(
         action.payload.isXtoY,
         10,
-        allPools[action.payload.poolIndex].tickSpacing,
-        tokens[networkType].find(token =>
-          token.address.equals(allPools[action.payload.poolIndex].tokenX)
-        )?.decimal ?? 0,
-        tokens[networkType].find(token =>
-          token.address.equals(allPools[action.payload.poolIndex].tokenY)
-        )?.decimal ?? 0
+        allPools[poolIndex].tickSpacing,
+        xDecimal,
+        yDecimal
       )
       yield put(
         actions.setPlotTicks({
