@@ -119,8 +119,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     const poolIndex = action.payload.poolIndex
 
     if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
-      const plot = yield* call(
-        createPlaceholderLiquidityPlot,
+      const plot = createPlaceholderLiquidityPlot(
         allPools[poolIndex],
         action.payload.isXtoY,
         10,
@@ -186,8 +185,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
         )
       : 0
 
-    const ticksData = yield* call(
-      createLiquidityPlot,
+    const ticksData = createLiquidityPlot(
       rawTicks,
       allPools[poolIndex],
       action.payload.isXtoY,
@@ -205,8 +203,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
   } catch (error) {
     console.log(error)
     if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
-      const data = yield* call(
-        createPlaceholderLiquidityPlot,
+      const data = createPlaceholderLiquidityPlot(
         allPools[action.payload.poolIndex],
         action.payload.isXtoY,
         10,

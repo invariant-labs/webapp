@@ -205,7 +205,7 @@ export const spacingMultiplicityGte = (arg: number, spacing: number): number => 
   return arg >= 0 ? arg + (arg % spacing) : arg + (spacing - (-arg % spacing))
 }
 
-export const createLiquidityPlot = async (
+export const createLiquidityPlot = (
   rawTicks: Tick[],
   pool: PoolStructure,
   isXtoY: boolean,
@@ -227,7 +227,7 @@ export const createLiquidityPlot = async (
   const min = spacingMultiplicityGte(MIN_TICK, pool.tickSpacing)
   const max = spacingMultiplicityLte(MAX_TICK, pool.tickSpacing)
 
-  if (ticks[0].index !== min) {
+  if (!ticks.length || ticks[0].index !== min) {
     const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
 
     ticksData.push({
@@ -262,7 +262,15 @@ export const createLiquidityPlot = async (
     })
   })
 
-  if (ticks[ticks.length - 1].index !== max) {
+  if (!ticks.length) {
+    const maxPrice = calcPrice(max, isXtoY, tokenXDecimal, tokenYDecimal)
+
+    ticksData.push({
+      x: maxPrice,
+      y: 0,
+      index: max
+    })
+  } else if (ticks[ticks.length - 1].index !== max) {
     if (max - ticks[ticks.length - 1].index > pool.tickSpacing) {
       const price = calcPrice(
         ticks[ticks.length - 1].index + pool.tickSpacing,
@@ -289,7 +297,7 @@ export const createLiquidityPlot = async (
   return isXtoY ? ticksData : ticksData.reverse()
 }
 
-export const createPlaceholderLiquidityPlot = async (
+export const createPlaceholderLiquidityPlot = (
   pool: PoolStructure,
   isXtoY: boolean,
   yValueToFill: number,

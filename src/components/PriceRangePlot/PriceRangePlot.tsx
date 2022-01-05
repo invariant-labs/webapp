@@ -63,12 +63,12 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
   const pointsOmitter = useCallback(
     (data: Array<{ x: number; y: number }>) => {
-      if (containerRef.current === null) {
+      if (containerRef.current === null || data.length <= 1000) {
         return data
       }
 
       const minXDist = containerRef.current.offsetWidth / 100000
-      const minYChange = containerRef.current.offsetHeight / 100000
+      const minYChange = containerRef.current.offsetHeight / 1000
 
       const dataAfterOmit: Array<{ x: number; y: number }> = []
 

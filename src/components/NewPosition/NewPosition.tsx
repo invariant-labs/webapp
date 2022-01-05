@@ -11,10 +11,10 @@ import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Link } from 'react-router-dom'
 import backIcon from '@static/svg/back-arrow.svg'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
-import useStyles from './style'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
+import useStyles from './style'
 
 export interface INewPosition {
   tokens: SwapToken[]
@@ -73,6 +73,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
   const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
+  const [fee, setFee] = useState<number>(0)
 
   const [tokenADeposit, setTokenADeposit] = useState<string>('')
   const [tokenBDeposit, setTokenBDeposit] = useState<string>('')
@@ -133,6 +134,7 @@ export const NewPosition: React.FC<INewPosition> = ({
           setPositionTokens={(index1, index2, fee) => {
             setTokenAIndex(index1)
             setTokenBIndex(index2)
+            setFee(fee)
             onChangePositionTokens(index1, index2, fee)
           }}
           onAddLiquidity={() => {
@@ -251,6 +253,7 @@ export const NewPosition: React.FC<INewPosition> = ({
           tickSpacing={tickSpacing}
           xDecimal={xDecimal}
           yDecimal={yDecimal}
+          fee={fee}
         />
       </Grid>
     </Grid>

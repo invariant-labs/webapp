@@ -186,7 +186,7 @@ export const NewPositionWrapper = () => {
       }}
       isCurrentPoolExisting={poolIndex !== null}
       calcAmount={(amount, left, right, tokenAddress) => {
-        if (poolIndex === null) {
+        if (poolIndex === null || isNaN(left) || isNaN(right)) {
           return new BN(0)
         }
 

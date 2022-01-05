@@ -19,6 +19,7 @@ export interface IRangeSelector {
   midPrice: TickPlotPositionData
   tokenASymbol: string
   tokenBSymbol: string
+  fee: number
   onChangeRange: (leftIndex: number, rightIndex: number) => void
   blocked?: boolean
   blockerInfo?: string
@@ -35,6 +36,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   midPrice,
   tokenASymbol,
   tokenBSymbol,
+  fee,
   onChangeRange,
   blocked = false,
   blockerInfo,
@@ -125,10 +127,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   useEffect(() => {
-    if (ticksLoading) {
-      resetPlot()
-    }
-  }, [ticksLoading])
+    resetPlot()
+  }, [tokenASymbol, tokenBSymbol, fee])
 
   return (
     <Grid container className={classes.wrapper}>

@@ -37,6 +37,7 @@ storiesOf('position/rangeSelector', module)
       yDecimal={6}
       tickSpacing={1}
       isXtoY={true}
+      fee={0}
     />
   ))
   .add('blocked', () => (
@@ -59,5 +60,6 @@ storiesOf('position/rangeSelector', module)
       yDecimal={6}
       tickSpacing={4}
       isXtoY={true}
+      fee={0}
     />
   ))
