@@ -34,8 +34,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     data: ticksData,
     loading: ticksLoading,
     maxReached,
-    maxPriceFetch,
-    minPriceFetch
+    currentMaxPriceFetched,
+    currentMinPriceFetched
   } = useSelector(plotTicks)
   const { lowerTick, upperTick } = useSelector(currentPositionRangeTicks)
 
@@ -211,8 +211,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           position &&
           !ticksLoading &&
           !maxReached &&
-          ((typeof minPriceFetch !== 'undefined' && Math.max(min, 0) < minPriceFetch) ||
-            (typeof maxPriceFetch !== 'undefined' && max > maxPriceFetch))
+          ((typeof currentMinPriceFetched !== 'undefined' &&
+            Math.max(min, 0) < currentMinPriceFetched) ||
+            (typeof currentMaxPriceFetched !== 'undefined' && max > currentMaxPriceFetched))
         ) {
           dispatch(
             actions.getCurrentPlotTicks({

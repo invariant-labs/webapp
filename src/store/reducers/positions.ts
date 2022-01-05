@@ -17,8 +17,8 @@ export interface PlotTicks {
   data: PlotTickData[]
   loading: boolean
   maxReached: boolean
-  minPriceFetch?: number
-  maxPriceFetch?: number
+  currentMinPriceFetched?: number
+  currentMaxPriceFetched?: number
 }
 
 export interface InitPositionStore {
@@ -63,8 +63,8 @@ export interface SetPositionData {
 export interface SetCurrentTicksData {
   data: PlotTickData[]
   maxReached: boolean
-  minPriceFetch?: number
-  maxPriceFetch?: number
+  currentMinPriceFetched?: number
+  currentMaxPriceFetched?: number
 }
 
 export const defaultState: IPositionsStore = {
@@ -72,8 +72,8 @@ export const defaultState: IPositionsStore = {
     data: [],
     loading: false,
     maxReached: false,
-    minPriceFetch: 0,
-    maxPriceFetch: 0
+    currentMinPriceFetched: 0,
+    currentMaxPriceFetched: 0
   },
   positionsList: {
     list: [],
@@ -109,11 +109,11 @@ const positionsSlice = createSlice({
       state.plotTicks.maxReached = action.payload.maxReached
       state.plotTicks.loading = false
       if (
-        typeof action.payload.minPriceFetch !== 'undefined' &&
-        typeof action.payload.maxPriceFetch !== 'undefined'
+        typeof action.payload.currentMinPriceFetched !== 'undefined' &&
+        typeof action.payload.currentMaxPriceFetched !== 'undefined'
       ) {
-        state.plotTicks.minPriceFetch = action.payload.minPriceFetch
-        state.plotTicks.maxPriceFetch = action.payload.maxPriceFetch
+        state.plotTicks.currentMinPriceFetched = action.payload.currentMinPriceFetched
+        state.plotTicks.currentMaxPriceFetched = action.payload.currentMaxPriceFetched
       }
       return state
     },

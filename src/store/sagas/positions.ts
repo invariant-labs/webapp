@@ -198,8 +198,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       actions.setPlotTicks({
         data: ticksData,
         maxReached: rawTicks.length < toRequest,
-        minPriceFetch: Math.min(lowerTickPrice, upperTickPrice),
-        maxPriceFetch: Math.max(lowerTickPrice, upperTickPrice)
+        currentMinPriceFetched: Math.min(lowerTickPrice, upperTickPrice),
+        currentMaxPriceFetched: Math.max(lowerTickPrice, upperTickPrice)
       })
     )
   } catch (error) {
