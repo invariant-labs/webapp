@@ -17,8 +17,8 @@ import useStyles from './style'
 export interface IRangeSelector {
   data: PlotTickData[]
   midPrice: TickPlotPositionData
-  tokenFromSymbol: string
-  tokenToSymbol: string
+  tokenASymbol: string
+  tokenBSymbol: string
   onChangeRange: (leftIndex: number, rightIndex: number) => void
   blocked?: boolean
   blockerInfo?: string
@@ -33,8 +33,8 @@ export interface IRangeSelector {
 export const RangeSelector: React.FC<IRangeSelector> = ({
   data,
   midPrice,
-  tokenFromSymbol,
-  tokenToSymbol,
+  tokenASymbol,
+  tokenBSymbol,
   onChangeRange,
   blocked = false,
   blockerInfo,
@@ -162,8 +162,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           <RangeInput
             className={classes.input}
             label='Min price'
-            tokenFromSymbol={tokenFromSymbol}
-            tokenToSymbol={tokenToSymbol}
+            tokenFromSymbol={tokenASymbol}
+            tokenToSymbol={tokenBSymbol}
             currentValue={leftInput}
             setValue={setLeftInput}
             decreaseValue={() => {
@@ -196,8 +196,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           <RangeInput
             className={classes.input}
             label='Max price'
-            tokenFromSymbol={tokenFromSymbol}
-            tokenToSymbol={tokenToSymbol}
+            tokenFromSymbol={tokenASymbol}
+            tokenToSymbol={tokenBSymbol}
             currentValue={rightInput}
             setValue={setRightInput}
             decreaseValue={() => {

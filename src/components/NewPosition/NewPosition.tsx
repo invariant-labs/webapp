@@ -57,7 +57,7 @@ export const NewPosition: React.FC<INewPosition> = ({
   calcAmount,
   feeTiers,
   ticksLoading,
-  onZoomOut: onZoomOut,
+  onZoomOut,
   showNoConnected,
   noConnectedBlockerProps,
   progress,
@@ -97,8 +97,8 @@ export const NewPosition: React.FC<INewPosition> = ({
       x: 50,
       index: 50
     },
-    tokenFromSymbol: 'ABC',
-    tokenToSymbol: 'XYZ'
+    tokenASymbol: 'ABC',
+    tokenBSymbol: 'XYZ'
   }
 
   const getOtherTokenAmount = (amount: BN, left: number, right: number, byFirst: boolean) => {
@@ -242,8 +242,8 @@ export const NewPosition: React.FC<INewPosition> = ({
             : {
                 data,
                 midPrice,
-                tokenFromSymbol: tokens[tokenAIndex].symbol,
-                tokenToSymbol: tokens[tokenBIndex].symbol
+                tokenASymbol: tokens[tokenAIndex].symbol,
+                tokenBSymbol: tokens[tokenBIndex].symbol
               })}
           onZoomOut={onZoomOut}
           ticksLoading={ticksLoading}

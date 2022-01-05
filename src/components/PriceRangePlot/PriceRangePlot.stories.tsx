@@ -4,43 +4,27 @@ import { storiesOf } from '@storybook/react'
 import PriceRangePlot from './PriceRangePlot'
 import { useState } from '@storybook/client-api'
 import { action } from '@storybook/addon-actions'
-import { PlotTickData } from '@reducers/positions'
+import { calcPrice } from '@consts/utils'
+import { MIN_TICK, MAX_TICK } from '@invariant-labs/sdk'
 
-const ticksToData = () => {
-  const ticks = [
-    { index: 90, delta: 10 },
-    { index: 110, delta: 30 },
-    { index: 160, delta: 60 },
-    { index: 170, delta: 20 },
-    { index: 210, delta: -20 },
-    { index: 220, delta: -10 },
-    { index: 230, delta: -30 },
-    { index: 260, delta: -20 },
-    { index: 280, delta: -40 }
-  ]
-  const fields: PlotTickData[] = []
-
-  let currentLiquidity = 10
-  for (let i = 0; i < 10000; i += 1) {
-    if (ticks.length > 0 && i > ticks[0].index) {
-      currentLiquidity += ticks[0].delta
-      ticks.shift()
-    }
-
-    fields.push({ x: i, y: currentLiquidity, index: i })
+const data = [
+  {
+    x: calcPrice(MIN_TICK, true, 6, 6),
+    y: 10,
+    index: MIN_TICK
+  },
+  {
+    x: calcPrice(MAX_TICK, true, 6, 6),
+    y: 10,
+    index: MAX_TICK
   }
-
-  return fields
-}
-
-const data = ticksToData()
-
+]
 storiesOf('position/priceRangePlot', module)
   .add('ticks', () => {
-    const [leftRange, setLeftRange] = useState(100)
-    const [rightRange, setRightRange] = useState(200)
+    const [leftRange, setLeftRange] = useState(-1000)
+    const [rightRange, setRightRange] = useState(2000)
     const [plotMin, setPlotMin] = useState(0)
-    const [plotMax, setPlotMax] = useState(data[140].x * 3)
+    const [plotMax, setPlotMax] = useState(calcPrice(150, true, 6, 6) * 3)
 
     const zoomMinus = () => {
       const diff = plotMax - plotMin
@@ -57,9 +41,18 @@ storiesOf('position/priceRangePlot', module)
     return (
       <PriceRangePlot
         data={data}
-        leftRange={leftRange}
-        rightRange={rightRange}
-        midPrice={150}
+        leftRange={{
+          x: calcPrice(leftRange, true, 6, 6),
+          index: leftRange
+        }}
+        rightRange={{
+          x: calcPrice(rightRange, true, 6, 6),
+          index: rightRange
+        }}
+        midPrice={{
+          x: calcPrice(150, true, 6, 6),
+          index: 150
+        }}
         onChangeRange={(left, right) => {
           action(`range indexes: ${left} - ${right}`)()
           setLeftRange(left)
@@ -70,12 +63,16 @@ storiesOf('position/priceRangePlot', module)
         plotMax={plotMax}
         zoomMinus={zoomMinus}
         zoomPlus={zoomPlus}
+        xDecimal={6}
+        yDecimal={6}
+        tickSpacing={4}
+        isXtoY={true}
       />
     )
   })
   .add('disabled', () => {
     const [plotMin, setPlotMin] = useState(0)
-    const [plotMax, setPlotMax] = useState(data[140].x * 3)
+    const [plotMax, setPlotMax] = useState(calcPrice(150, true, 6, 6) * 3)
 
     const zoomMinus = () => {
       const diff = plotMax - plotMin
@@ -92,15 +89,28 @@ storiesOf('position/priceRangePlot', module)
     return (
       <PriceRangePlot
         data={data}
-        leftRange={100}
-        rightRange={200}
-        midPrice={150}
+        leftRange={{
+          x: calcPrice(-1000, true, 6, 6),
+          index: -1000
+        }}
+        rightRange={{
+          x: calcPrice(2000, true, 6, 6),
+          index: 2000
+        }}
+        midPrice={{
+          x: calcPrice(150, true, 6, 6),
+          index: 150
+        }}
         style={{ width: 600, height: 300, backgroundColor: '#1C1B1E' }}
         disabled
         plotMin={plotMin}
         plotMax={plotMax}
         zoomMinus={zoomMinus}
         zoomPlus={zoomPlus}
+        xDecimal={6}
+        yDecimal={6}
+        tickSpacing={4}
+        isXtoY={true}
       />
     )
   })

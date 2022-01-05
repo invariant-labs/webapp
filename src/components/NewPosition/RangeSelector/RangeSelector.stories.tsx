@@ -2,47 +2,32 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import RangeSelector from './RangeSelector'
 import { action } from '@storybook/addon-actions'
-import { PlotTickData } from '@reducers/positions'
+import { calcPrice } from '@consts/utils'
+import { MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
 
-const ticksToData = () => {
-  const ticks = [
-    { index: 90, delta: 10 },
-    { index: 110, delta: 30 },
-    { index: 160, delta: 60 },
-    { index: 170, delta: 20 },
-    { index: 210, delta: -20 },
-    { index: 220, delta: -10 },
-    { index: 230, delta: -30 },
-    { index: 260, delta: -20 },
-    { index: 280, delta: -40 }
-  ]
-  const fields: PlotTickData[] = []
-
-  let currentLiquidity = 10
-  for (let i = 0; i < 10000; i += 1) {
-    if (ticks.length > 0 && i > ticks[0].index) {
-      currentLiquidity += ticks[0].delta
-      ticks.shift()
-    }
-
-    fields.push({ x: i, y: currentLiquidity, index: i })
+const data = [
+  {
+    x: calcPrice(MIN_TICK, true, 6, 6),
+    y: 10,
+    index: MIN_TICK
+  },
+  {
+    x: calcPrice(MAX_TICK, true, 6, 6),
+    y: 10,
+    index: MAX_TICK
   }
-
-  return fields
-}
-
-const data = ticksToData()
+]
 
 storiesOf('position/rangeSelector', module)
   .add('setter', () => (
     <RangeSelector
       data={data}
       midPrice={{
-        x: 140,
+        x: calcPrice(140, true, 6, 6),
         index: 140
       }}
-      tokenFromSymbol='BAT'
-      tokenToSymbol='ETH'
+      tokenASymbol='BAT'
+      tokenBSymbol='ETH'
       onChangeRange={(left, right) => {
         action(`range indexes: ${left} - ${right}`)()
       }}
@@ -58,11 +43,11 @@ storiesOf('position/rangeSelector', module)
     <RangeSelector
       data={data}
       midPrice={{
-        x: 140,
+        x: calcPrice(140, true, 6, 6),
         index: 140
       }}
-      tokenFromSymbol='BAT'
-      tokenToSymbol='ETH'
+      tokenASymbol='BAT'
+      tokenBSymbol='ETH'
       onChangeRange={(left, right) => {
         action(`range indexes: ${left} - ${right}`)()
       }}
@@ -72,7 +57,7 @@ storiesOf('position/rangeSelector', module)
       ticksLoading={false}
       xDecimal={6}
       yDecimal={6}
-      tickSpacing={1}
+      tickSpacing={4}
       isXtoY={true}
     />
   ))
