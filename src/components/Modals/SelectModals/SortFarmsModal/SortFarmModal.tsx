@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import { Typography, Popover, Grid, CardMedia, Box, Button } from '@material-ui/core'
+import { Popover, Grid, CardMedia, Box, Button } from '@material-ui/core'
 import useStyles from '../style'
 import { SortItem } from '@components/Inputs/SortSelect/SortSelect'
 import CustomScrollbar from '../CustomScrollbar'
-import classNames from 'classnames'
 
 export interface ISelectSortFarmsModal {
   sortItems: SortItem[]
@@ -24,36 +23,33 @@ export const SelectSortFarmsModal: React.FC<ISelectSortFarmsModal> = ({
   anchorEl
 }) => {
   const classes = useStyles()
-  const [value, setValue] = useState<string>('')
-  const buttons =
-    sortItems &&
-    sortItems.map(sortItem => (
-      <Grid
-        container
-        key={sortItem ? `sortItem-${sortItem.name}` : ''}
-        className={onlyText ? classes.filterItemText : classes.filterItem}
-        alignItems='center'
-        wrap='nowrap'
-        onClick={() => {
-          setValue('')
-          handleClose()
-        }}>
-        <Button
-          className={classes.button}
-          color='primary'
-          variant='contained'
-          startIcon={
-            !sortItem ? null : <CardMedia image={sortItem.icon} className={classes.filterIcon} />
-          }
-          disableRipple>
-          <span
-            style={{ whiteSpace: 'nowrap' }}
-            className={onlyText ? classes.filterNameText : classes.filterName}>
-            {sortItem.name}
-          </span>
-        </Button>
-      </Grid>
-    ))
+  const buttons = sortItems?.map(sortItem => (
+    <Grid
+      container
+      key={sortItem ? `sortItem-${sortItem.name}` : ''}
+      className={onlyText ? classes.filterItemText : classes.filterItem}
+      alignItems='center'
+      wrap='nowrap'
+      onClick={() => {
+        handleClose()
+        onSelect(sortItem.name)
+      }}>
+      <Button
+        className={classes.button}
+        color='primary'
+        variant='contained'
+        startIcon={
+          !sortItem ? null : <CardMedia image={sortItem.icon} className={classes.filterIcon} />
+        }
+        disableRipple>
+        <span
+          style={{ whiteSpace: 'nowrap' }}
+          className={onlyText ? classes.filterNameText : classes.filterName}>
+          {sortItem.name}
+        </span>
+      </Button>
+    </Grid>
+  ))
 
   return (
     <Popover

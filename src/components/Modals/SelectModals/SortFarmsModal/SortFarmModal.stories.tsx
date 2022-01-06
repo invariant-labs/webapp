@@ -5,7 +5,6 @@ import { action } from '@storybook/addon-actions'
 import { SortItem } from '@components/Inputs/SortSelect/SortSelect'
 import SortFarmModal from './SortFarmModal'
 import icons from '@static/icons'
-import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 
 const activity: SortItem[] = [
   {

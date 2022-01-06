@@ -1,10 +1,8 @@
 import React from 'react'
-import { Button, ListItemAvatar } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import icons from '@static/icons'
 import classNames from 'classnames'
 import useStyles from './style'
-import { blurContent, unblurContent } from '@consts/uiUtils'
 import SelectSortFarmsModal from '@components/Modals/SelectModals/SortFarmsModal/SortFarmModal'
 
 export interface SortItem {
@@ -41,7 +39,6 @@ export const SortSelect: React.FC<ISortSelectModal> = ({
   }
 
   const handleClose = () => {
-    unblurContent()
     setOpen(false)
   }
 
