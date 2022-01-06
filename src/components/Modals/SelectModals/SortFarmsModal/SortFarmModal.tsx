@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Popover, Grid, CardMedia, Box, Button } from '@material-ui/core'
 import useStyles from '../style'
 import { SortItem } from '@components/Inputs/SortSelect/SortSelect'
