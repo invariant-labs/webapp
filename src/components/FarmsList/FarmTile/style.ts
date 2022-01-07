@@ -19,7 +19,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   infoRow: {},
   label: {},
   value: {},
-  link: {},
+  link: {
+    textDecoration: 'none'
+  },
   button: {
     width: '100%',
     height: 40,
