@@ -97,7 +97,8 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
     new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[0]),
     new Pair(USDC_DEV.address, SOL_DEV.address, FEE_TIERS[0]),
     new Pair(USDC_DEV.address, ANA_DEV.address, FEE_TIERS[0]),
-    new Pair(SOL_DEV.address, MSOL_DEV.address, FEE_TIERS[0])
+    new Pair(SOL_DEV.address, MSOL_DEV.address, FEE_TIERS[0]),
+    new Pair(USDC_DEV.address, SOL_DEV.address, FEE_TIERS[1])
   ],
   Testnet: [],
   Mainnet: [],
