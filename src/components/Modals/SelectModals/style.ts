@@ -193,6 +193,85 @@ const useStyles = makeStyles((theme: Theme) => ({
   secondIcon: {
     marginLeft: -15,
     marginRight: 14
+  },
+  button: {
+    ...typography.body2,
+    padding: 0,
+    textTransform: 'none',
+    boxShadow: 'none',
+    borderRadius: 5,
+    backgroundColor: colors.invariant.componentOut1,
+    height: 26,
+    width: '100%',
+    textAlign: 'center',
+    marginTop: 4,
+    '&:hover': {
+      backgroundColor: colors.invariant.componentOut2,
+      boxShadow: 'none',
+      color: colors.white.main
+    },
+    '&:hover span': {
+      color: colors.white.main
+    }
+  },
+  filterList: {
+    borderRadius: 5,
+    background: colors.invariant.componentOut1,
+    minWidth: 100,
+    height: 102,
+    padding: 4,
+    overflowY: 'hidden'
+  },
+  filterListText: {
+    borderRadius: 5,
+    background: colors.invariant.componentOut1,
+    minWidth: 115,
+    height: 102,
+    padding: 4,
+    overflowY: 'hidden'
+  },
+  filterItem: {
+    margin: '2px 0',
+    borderRadius: 5,
+    cursor: 'pointer',
+    position: 'relative',
+    '&:hover': {
+      background: colors.invariant.componentOut1
+    }
+  },
+  filterItemText: {
+    margin: '2px 0',
+    borderRadius: 5,
+    cursor: 'pointer',
+    position: 'relative',
+    '&:hover': {
+      background: colors.invariant.componentOut1
+    }
+  },
+  filterNameText: {
+    position: 'absolute',
+    left: 6,
+    color: colors.invariant.lightInfoText,
+    ...typography.body2
+  },
+  filterName: {
+    color: colors.invariant.lightInfoText,
+    position: 'absolute',
+    left: 28,
+    ...typography.body2
+  },
+  filterIcon: {
+    width: 10,
+    height: 10,
+    position: 'absolute',
+    left: 5,
+    top: 8
+  },
+  popoverSort: {
+    background: 'transparent',
+    boxShadow: 'none',
+    minWidth: 102,
+    position: 'absolute'
   }
 }))
 
