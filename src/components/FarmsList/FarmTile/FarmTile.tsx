@@ -30,8 +30,8 @@ export const FarmTile: React.FC<IFarm> = ({
   return (
     <Grid className={classes.root} container direction='column'>
       <Grid className={classes.top} container direction='row' justifyContent='space-between'>
-        <Grid>
-          <Grid>
+        <Grid className={classes.flexWrapper}>
+          <Grid className={classes.icons}>
             <img src={tokenX.logoURI} className={classes.icon} />
             <img src={tokenY.logoURI} className={classes.icon} />
           </Grid>
@@ -39,7 +39,7 @@ export const FarmTile: React.FC<IFarm> = ({
             {tokenX.symbol}-{tokenY.symbol}
           </Typography>
         </Grid>
-        <Grid>
+        <Grid className={classes.flexWrapper}>
           <DotIcon
             className={classNames(classes.dot, isActive ? classes.greenDot : classes.greyDot)}
           />
@@ -52,17 +52,17 @@ export const FarmTile: React.FC<IFarm> = ({
           </Typography>
         </Grid>
       </Grid>
-      <Grid className={classes.infoRow} container direction='row' justifyContent='space-between'>
+      <Grid container direction='row' justifyContent='space-between'>
         <Typography className={classes.label}>APY:</Typography>
         <Typography className={classes.value}>{apyPercent}%</Typography>
       </Grid>
-      <Grid className={classes.infoRow} container direction='row' justifyContent='space-between'>
+      <Grid container direction='row' justifyContent='space-between'>
         <Typography className={classes.label}>Total Staked:</Typography>
         <Typography className={classes.value}>
           {totalStaked} {tokenX.symbol}
         </Typography>
       </Grid>
-      <Grid className={classes.infoRow} container direction='row' justifyContent='space-between'>
+      <Grid container direction='row' justifyContent='space-between'>
         <Typography className={classes.label}>Liquidity:</Typography>
         <Typography className={classes.value}>
           {liquidity} {tokenX.symbol}
