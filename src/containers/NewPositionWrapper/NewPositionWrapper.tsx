@@ -110,7 +110,7 @@ export const NewPositionWrapper = () => {
 
     const tokensByKey: Record<string, SwapToken> = tokens.reduce((prev, token) => {
       return {
-        [token.address.toString()]: token,
+        [token.assetAddress.toString()]: token,
         ...prev
       }
     }, {})
@@ -121,7 +121,7 @@ export const NewPositionWrapper = () => {
         pool.tokenY.equals(tokens[tokenAIndex].assetAddress)
     )
 
-    return poolsForTokenA.map(
+    const notUnique = poolsForTokenA.map(
       pool =>
         tokensByKey[
           pool.tokenX.equals(tokens[tokenAIndex].assetAddress)
@@ -129,6 +129,15 @@ export const NewPositionWrapper = () => {
             : pool.tokenX.toString()
         ]
     )
+
+    const unique: Record<string, SwapToken> = notUnique.reduce((prev, token) => {
+      return {
+        [token.assetAddress.toString()]: token,
+        ...prev
+      }
+    }, {})
+
+    return Object.values(unique)
   }, [tokenAIndex, allPools.length])
 
   const data = useMemo(() => {
