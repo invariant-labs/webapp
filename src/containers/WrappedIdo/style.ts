@@ -20,23 +20,23 @@ export const useStyles = makeStyles({
   },
   idoWrapper: {
     color: 'primary',
-    display: 'flex',
-    flexDirection: 'row',
-    '@media (max-width: 780px)': {
-      flexDirection: 'column',
-      justifyContent: 'flex-end'
-    }
+    // display: 'flex',
+    // flexDirection: 'row',
+    // '@media (max-width: 780px)': {
+    //   flexDirection: 'column',
+    //   justifyContent: 'flex-end'
+    // }
   },
   leftGrid: {
     width: leftContainerWidthDesk,
     borderRadius: '10px',
     height: '340px',
     background: '#222126',
-    marginRight: '10px',
+    // marginRight: '10px',
     '@media (max-width: 780px)': {
       maxWidth: leftContainerWidthMob,
-      marginBottom: '20px',
-      marginRight: '0px'
+      // marginBottom: '20px',
+      // marginRight: '0px'
     }
   },
   idoLeft1: {
@@ -46,6 +46,16 @@ export const useStyles = makeStyles({
     '@media (max-width: 780px)': {
       width: leftInsideWidthMob
     }
+  },
+  idoLeft12: {
+    width: '17px',
+    height: '17px'
+    // paddingTop: '10px'
+  },
+  idoLeft121: {
+    width: '22px',
+    height: '16px'
+    // paddingTop: '10px'
   },
   idoLeft21: {
   },

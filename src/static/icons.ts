@@ -31,7 +31,9 @@ import closeIcon from './svg/closeIcon.svg'
 import coin98Icon from './svg/coin98.svg'
 import slope from './svg/slope.svg'
 import clover from './svg/clover.svg'
+import logoIdo from './svg/logoIdo.svg'
 
+// clock
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
   stSOL: WSOLIcon,
@@ -56,6 +58,7 @@ const icons: { [key: string]: string } = {
   USD: USDIcon,
   LogoShort: logoShort,
   LogoTitle: logoTitle,
+  LogoIdo: logoIdo,
   ArrowIcon: arrow,
   NoConnected: NoCon,
   MainnetIcon: mainnetIcon,

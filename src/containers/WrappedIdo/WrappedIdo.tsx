@@ -26,10 +26,6 @@ export const WrappedIdo = () => {
   const [estTokenPrice, setEstTokenPrice] = useState(218.839)
   const [INVForSale, setINVForSale] = useState('20 000 000')
 
-
-
-
-
   // dummy
   const onSelect = () => {
     console.log('dummy select')
@@ -53,10 +49,10 @@ export const WrappedIdo = () => {
   }
 
   return (
-    <Grid container direction="row" spacing={2}>
+    <Grid container direction="row" >
       <Typography className={classes.idoTitle} >IDO</Typography>
 
-      <Box className={classes.idoWrapper}>
+      <Grid spacing={2} className={classes.idoWrapper}>
         <Grid container direction='column' justifyContent="space-evenly" className={classes.leftGrid}>
           <Typography variant="h3" className={classes.idoLeft1}>Deposit your SOL</Typography>
 
@@ -80,8 +76,8 @@ export const WrappedIdo = () => {
 
             <Box className={classes.idoLeft32}>
 
-              <Grid className={classes.idoLeft33}>
-                <CardMedia className={classes.idoLeft33} image={icons.LogoShort} />
+              <Grid >
+                <CardMedia className={classes.idoLeft33} image={icons.LogoIdo} />
               </Grid>
 
               <Grid container direction='column' justifyContent="space-evenly" className={classes.idoLeft34}>
@@ -107,45 +103,40 @@ export const WrappedIdo = () => {
           <Grid className={classes.rightGrid1}>
             <Typography className={classes.rightGrid11} variant="h4">Sale period ends in</Typography>
             <Grid container direction="row" alignItems="center" justifyContent="center" className={classes.rightGrid12}>
-              <AccessTimeIcon />
-              <Typography variant="h4">{`${salePeriod}`}</Typography>
+   <AccessTimeIcon className={classes.idoLeft12} />              <Typography variant="h4">{`${salePeriod}`}</Typography>
             </Grid>
           </Grid>
 
           <Grid className={classes.rightGrid2}>
             <Typography className={classes.rightGrid11} variant="h4" >Grace period ends in</Typography>
             <Grid container direction="row" alignItems="center" justifyContent="center" className={classes.rightGrid12}>
-              <AccessTimeIcon />
-              <Typography variant="h4">{`${gracePeriod}`}</Typography>
+              <AccessTimeIcon className={classes.idoLeft12} />              <Typography variant="h4">{`${gracePeriod}`}</Typography>
             </Grid>
           </Grid>
 
           <Grid className={classes.rightGrid3}>
             <Typography className={classes.rightGrid11} variant="h4">SOL contributed</Typography>
             <Grid container direction="row" alignItems="center" justifyContent="center" className={classes.rightGrid12}>
-              {/* <AccessTimeIcon /> */}
-              <Typography variant="h4">{`${SOLContributed}`}</Typography>
+              <CardMedia className={classes.idoLeft12} image={icons.SOL} />              <Typography variant="h4">{`${SOLContributed}`}</Typography>
             </Grid>
           </Grid>
 
           <Grid className={classes.rightGrid4}>
             <Typography className={classes.rightGrid11} variant="h4">Estimated token price</Typography>
             <Grid container direction="row" alignItems="center" justifyContent="center" className={classes.rightGrid12}>
-              {/* <AccessTimeIcon /> */}
-              <Typography variant="h4">{`${estTokenPrice}`}</Typography>
+              <CardMedia className={classes.idoLeft12} image={icons.USD} />              <Typography variant="h4">{`${estTokenPrice}`}</Typography>
             </Grid>
           </Grid>
 
           <Grid className={classes.rightGrid5}>
             <Typography className={classes.rightGrid11} variant="h4">INVARIANT for sale</Typography>
             <Grid container direction="row" alignItems="center" justifyContent="center" className={classes.rightGrid12}>
-              {/* <AccessTimeIcon /> */}
-              <Typography variant="h4">{`${INVForSale}`}</Typography>
+              <CardMedia className={classes.idoLeft121} image={icons.LogoShort} />              <Typography variant="h4">{`${INVForSale}`}</Typography>
             </Grid>
           </Grid>
 
         </Grid>
-      </Box>
+      </Grid>
     </Grid>
 
   )
