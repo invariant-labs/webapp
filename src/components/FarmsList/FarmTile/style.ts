@@ -42,17 +42,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   dot: {
     height: 16,
     minWidth: 16,
+    color: colors.invariant.lightInfoText,
 
     [theme.breakpoints.down('xs')]: {
       height: 12,
       minWidth: 12
     }
   },
-  greenDot: {
-    color: colors.invariant.accent2
-  },
-  greyDot: {
-    color: colors.invariant.lightInfoText
+  gifDot: {
+    width: 23,
+    height: 23,
+
+    [theme.breakpoints.down('xs')]: {
+      height: 17,
+      width: 17
+    }
   },
   greenText: {
     color: colors.invariant.accent2

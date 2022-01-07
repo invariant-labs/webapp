@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 import useStyle from './style'
 import classNames from 'classnames'
+import activeGif from '@static/gif/Active.gif'
 
 export interface IFarm {
   isActive?: boolean
@@ -40,9 +41,11 @@ export const FarmTile: React.FC<IFarm> = ({
           </Typography>
         </Grid>
         <Grid className={classes.flexWrapper}>
-          <DotIcon
-            className={classNames(classes.dot, isActive ? classes.greenDot : classes.greyDot)}
-          />
+          {isActive ? (
+            <img className={classes.gifDot} src={activeGif} />
+          ) : (
+            <DotIcon className={classes.dot} />
+          )}
           <Typography
             className={classNames(
               classes.activity,
