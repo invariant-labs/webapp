@@ -49,13 +49,39 @@ const useStyles = makeStyles((theme: Theme) => ({
       minWidth: 12
     }
   },
-  gifDot: {
-    width: 23,
-    height: 23,
+  '@keyframes pulse': {
+    '0%': {
+      opacity: 0
+    },
+
+    '100%': {
+      opacity: 1
+    }
+  },
+  pulseDot: {
+    height: 12,
+    width: 12,
+    backgroundColor: colors.invariant.accent2,
+    borderRadius: '50%',
+    marginRight: 6,
+    position: 'relative',
 
     [theme.breakpoints.down('xs')]: {
-      height: 17,
-      width: 17
+      height: 9,
+      width: 9
+    },
+
+    '&::before': {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      borderRadius: '50%',
+      content: '""',
+      display: 'block',
+      boxShadow: '0 0 2px 4px rgba(157, 212, 109, 0.25)',
+      animation: '$pulse 2s infinite'
     }
   },
   greenText: {

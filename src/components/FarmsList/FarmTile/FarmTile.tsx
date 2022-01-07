@@ -41,11 +41,7 @@ export const FarmTile: React.FC<IFarm> = ({
           </Typography>
         </Grid>
         <Grid className={classes.flexWrapper}>
-          {isActive ? (
-            <img className={classes.gifDot} src={activeGif} />
-          ) : (
-            <DotIcon className={classes.dot} />
-          )}
+          {isActive ? <Grid className={classes.pulseDot} /> : <DotIcon className={classes.dot} />}
           <Typography
             className={classNames(
               classes.activity,
