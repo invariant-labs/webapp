@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 import useStyle from './style'
 import classNames from 'classnames'
-import activeGif from '@static/gif/Active.gif'
 
 export interface IFarm {
   isActive?: boolean
