@@ -256,6 +256,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   filterName: {
     color: colors.invariant.lightInfoText,
+    position: 'absolute',
+    left: 28,
     ...typography.body2
   },
   filterIcon: {

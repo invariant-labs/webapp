@@ -55,7 +55,7 @@ export const SortSelect: React.FC<ISortSelectModal> = ({
         }}
         disableRipple>
         <span style={{ whiteSpace: 'nowrap' }} className={classes.tokenName}>
-          {onlyText ? (!current ? name : current.value) : !current ? name : current.name}
+          {!current ? name : onlyText ? current.value : current.name}
         </span>
       </Button>
       <SelectSortFarmsModal
