@@ -1,8 +1,11 @@
 import { makeStyles } from '@material-ui/core'
 
 const leftContainerWidthDesk: string = '408px'
+const leftContainerHeightDesk: string = '340px'
 const leftContainerWidthMob: string = '336px'
 const leftInsideWidthDesk: string = '360px'
+
+const leftInsideWidthTitle: string = '340px'
 const leftInsideWidthMob: string = '288px'
 const rightContainerWidthDesk: string = '240px'
 const rightContainerWidthMob: string = '336px'
@@ -16,10 +19,12 @@ export const useStyles = makeStyles({
   idoTitle: {
     color: colorLight,
     fontSize: '20px',
-    paddingBottom: '28px'
+       width: '230px',
+    maxHeight: '12px'
+    // paddingBottom: '28px'
   },
   idoWrapper: {
-    color: 'primary',
+    color: 'primary'
     // display: 'flex',
     // flexDirection: 'row',
     // '@media (max-width: 780px)': {
@@ -28,9 +33,12 @@ export const useStyles = makeStyles({
     // }
   },
   leftGrid: {
+    display: 'flex',
+    flexDirection: 'column',
     width: leftContainerWidthDesk,
     borderRadius: '10px',
-    height: '340px',
+    maxHeight: leftContainerHeightDesk,
+    maxWidth: leftContainerWidthDesk,
     background: '#222126',
     // marginRight: '10px',
     '@media (max-width: 780px)': {
@@ -39,13 +47,34 @@ export const useStyles = makeStyles({
       // marginRight: '0px'
     }
   },
-  idoLeft1: {
-    width: leftInsideWidthDesk,
+  // idoLeftTitle: {
+  //   width: '230px',
+  //   maxHeight: '12px',
+  //   fontSize: '20px'
+  // },
+  idoLeftTitle: {
+    width: leftInsideWidthTitle,
+    // alignSelf: 'center',
+    marginLeft: '24px',
+    color: colorLight,
+    '@media (max-width: 780px)': {
+      width: leftInsideWidthMob
+    }
+  },
+  idoLeftDeposit: {
+      width: leftInsideWidthDesk,
     alignSelf: 'center',
     color: colorLight,
     '@media (max-width: 780px)': {
       width: leftInsideWidthMob
     }
+  },
+  idoLeftAmountInput: {
+    // width: leftInsideWidthDesk,
+    // height: '63px',
+    // paddingLeft: '16px'
+    marginBottom: '0px',
+    border: '1px solid #34303B'
   },
   idoLeft12: {
     width: '17px',

@@ -49,21 +49,21 @@ export const WrappedIdo = () => {
   }
 
   return (
-    <Grid container direction="row" >
-      <Typography className={classes.idoTitle} >IDO</Typography>
+    // <Grid container direction="column" spacing={2} >
+      // <Typography className={classes.idoTitle} >IDO</Typography>
 
-      <Grid spacing={2} className={classes.idoWrapper}>
-        <Grid container direction='column' justifyContent="space-evenly" className={classes.leftGrid}>
-          <Typography variant="h3" className={classes.idoLeft1}>Deposit your SOL</Typography>
+      <Grid container spacing={1} className={classes.idoWrapper}>
+        <Grid xs={8} justifyContent="space-evenly" className={classes.leftGrid}>
+          <Typography variant="h3" className={classes.idoLeftTitle}>Deposit your SOL</Typography>
 
-          <Grid className={classes.idoLeft1}>
+          <Grid className={classes.idoLeftDeposit} >
 
             <Grid container direction='row' justifyContent="space-between" className={classes.idoLeft21}>
               <Grid className={classes.idoLeft211}>{`Est.: ${est}$`}</Grid>
               <Grid className={classes.idoLeft211}>{`Balance: ${balance} SOL`}</Grid>
             </Grid>
 
-            <Grid >
+            <Grid className={classes.idoLeftAmountInput}>
               <AmountInput decimal={4} onMaxClick={onMaxClick}
                 value={inputValue} tokens={[]} onSelect={onSelect} setValue={setValue} current={null} />
 
@@ -98,7 +98,7 @@ export const WrappedIdo = () => {
           <OutlinedButton className={classes.idoLeft4} name='Connect a wallet' color='primary' onClick={handleConnectWallet}/>
         </Grid>
 
-        <Grid container direction='column' justifyContent="space-evenly" className={classes.rightGrid}>
+        <Grid container direction='column' justifyContent="space-evenly" className={classes.rightGrid} xs={4}>
 
           <Grid className={classes.rightGrid1}>
             <Typography className={classes.rightGrid11} variant="h4">Sale period ends in</Typography>
@@ -137,7 +137,7 @@ export const WrappedIdo = () => {
 
         </Grid>
       </Grid>
-    </Grid>
+    
 
   )
 }
