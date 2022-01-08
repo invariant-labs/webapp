@@ -15,10 +15,10 @@ export const WrappedIdo = () => {
   const [inputValue, setInputValue] = useState<string | undefined>('0.00000')
   const [depositedXUSD, setDepositedXUSD] = useState(46.643)
 
-  const [depositedUSD, setDepositedUSD] = useState(47.43)
-  const [depositedSOL, setDepositedSOL] = useState(0.0432)
-  const [depositedXSOL, setDepositedXSOL] = useState(0.0000)
-  const [depositedXBTC, setDepositedXBTC] = useState(0.0000)
+  const [depositedUSD, setDepositedUSD] = useState('47.43')
+  const [depositedSOL, setDepositedSOL] = useState('0.0432')
+  const [depositedXSOL, setDepositedXSOL] = useState('0.0000')
+  const [depositedXBTC, setDepositedXBTC] = useState('0.0000')
 
   const [salePeriod, setSalePeriod] = useState('15:30:33')
   const [gracePeriod, setGracePeriod] = useState('32:29:27')
@@ -34,7 +34,7 @@ export const WrappedIdo = () => {
   // dummy
   const onMaxClick = () => {
     console.log('dummy max value')
-    setInputValue('999999')
+    setInputValue(balance.toString())
   }
 
   // dummy
@@ -49,30 +49,33 @@ export const WrappedIdo = () => {
   }
 
   return (
-    // <Grid container direction="column" spacing={2} >
-      // <Typography className={classes.idoTitle} >IDO</Typography>
+    <Grid container className={classes.idoWrapper} >
+      <Grid container className={classes.header}>
+          <Typography className={classes.idoTitle} >IDO</Typography>
+      </Grid>
+      
 
-      <Grid container spacing={1} className={classes.idoWrapper}>
-        <Grid xs={8} justifyContent="space-evenly" className={classes.leftGrid}>
+      <Grid container spacing={0} justifyContent="space-between"  className={classes.idoGridWrapper}>
+        <Grid justifyContent="space-evenly" className={classes.leftGrid}>
           <Typography variant="h3" className={classes.idoLeftTitle}>Deposit your SOL</Typography>
 
           <Grid className={classes.idoLeftDeposit} >
 
             <Grid container direction='row' justifyContent="space-between" className={classes.idoLeft21}>
-              <Grid className={classes.idoLeft211}>{`Est.: ${est}$`}</Grid>
-              <Grid className={classes.idoLeft211}>{`Balance: ${balance} SOL`}</Grid>
+              <Typography className={classes.idoLeft211}><span className={classes.idoLeft211bold}> Est.:</span>{` ${est}$`}</Typography>
+              <Typography className={classes.idoLeft211}><span className={classes.idoLeft211bold}> Balance:</span>{` ${balance} SOL`}</Typography>
             </Grid>
 
             <Grid className={classes.idoLeftAmountInput}>
-              <AmountInput decimal={4} onMaxClick={onMaxClick}
+              <AmountInput className={classes.idoAmountInput} decimal={5} onMaxClick={onMaxClick}
                 value={inputValue} tokens={[]} onSelect={onSelect} setValue={setValue} current={null} />
 
             </Grid>
 
           </Grid>
-
+ <Grid className={classes.idoLeft31}>Deposited amount:</Grid>
           <Grid className={classes.idoLeft3}>
-            <Grid className={classes.idoLeft31}>Deposited amount:</Grid>
+           
 
             <Box className={classes.idoLeft32}>
 
@@ -80,15 +83,15 @@ export const WrappedIdo = () => {
                 <CardMedia className={classes.idoLeft33} image={icons.LogoIdo} />
               </Grid>
 
-              <Grid container direction='column' justifyContent="space-evenly" className={classes.idoLeft34}>
+              <Grid container direction='column' className={classes.idoLeft34}>
 
                 <Typography variant="h4" className={classes.idoLeft35}>{`${depositedXUSD} xUSD`}</Typography>
 
-                <Grid container justifyContent="space-between" className={classes.idoLeft36}>
-                  <Grid className={classes.idoLeft361}>{`${depositedUSD} USD`}</Grid>
-                  <Grid className={classes.idoLeft361}>{`${depositedSOL} SOL`}</Grid>
-                  <Grid className={classes.idoLeft361}>{`${depositedXSOL} xSOL`}</Grid>
-                  <Grid className={classes.idoLeft361}>{`${depositedXBTC} xBTC`}</Grid>
+                <Grid container direction='row' justifyContent='space-between' className={classes.idoLeft36}>
+                  <Typography className={classes.idoLeft361}>{`${depositedUSD} USD`}</Typography>
+                  <Typography className={classes.idoLeft361}>{`${depositedSOL} SOL`}</Typography>
+                  <Typography className={classes.idoLeft361}>{`${depositedXSOL} xSOL`}</Typography>
+                  <Typography className={classes.idoLeft361}>{`${depositedXBTC} xBTC`}</Typography>
                 </Grid>
 
               </Grid>
@@ -98,47 +101,52 @@ export const WrappedIdo = () => {
           <OutlinedButton className={classes.idoLeft4} name='Connect a wallet' color='primary' onClick={handleConnectWallet}/>
         </Grid>
 
-        <Grid container direction='column' justifyContent="space-evenly" className={classes.rightGrid} xs={4}>
+        <Grid container direction='column' justifyContent="space-evenly" className={classes.rightGrid} >
 
           <Grid className={classes.rightGrid1}>
             <Typography className={classes.rightGrid11} variant="h4">Sale period ends in</Typography>
             <Grid container direction="row" alignItems="center" justifyContent="center" className={classes.rightGrid12}>
-   <AccessTimeIcon className={classes.idoLeft12} />              <Typography variant="h4">{`${salePeriod}`}</Typography>
+   <AccessTimeIcon className={classes.rightGrid12a} />             
+    <Typography className={classes.rightGrid13} variant="h4">{`${salePeriod}`}</Typography>
             </Grid>
           </Grid>
 
           <Grid className={classes.rightGrid2}>
             <Typography className={classes.rightGrid11} variant="h4" >Grace period ends in</Typography>
             <Grid container direction="row" alignItems="center" justifyContent="center" className={classes.rightGrid12}>
-              <AccessTimeIcon className={classes.idoLeft12} />              <Typography variant="h4">{`${gracePeriod}`}</Typography>
+              <AccessTimeIcon className={classes.rightGrid12a} />              
+              <Typography className={classes.rightGrid13} variant="h4">{`${gracePeriod}`}</Typography>
             </Grid>
           </Grid>
 
           <Grid className={classes.rightGrid3}>
             <Typography className={classes.rightGrid11} variant="h4">SOL contributed</Typography>
             <Grid container direction="row" alignItems="center" justifyContent="center" className={classes.rightGrid12}>
-              <CardMedia className={classes.idoLeft12} image={icons.SOL} />              <Typography variant="h4">{`${SOLContributed}`}</Typography>
+              <CardMedia className={classes.rightGrid12a} image={icons.SOL} />              
+              <Typography className={classes.rightGrid13} variant="h4">{`${SOLContributed}`}</Typography>
             </Grid>
           </Grid>
 
           <Grid className={classes.rightGrid4}>
             <Typography className={classes.rightGrid11} variant="h4">Estimated token price</Typography>
             <Grid container direction="row" alignItems="center" justifyContent="center" className={classes.rightGrid12}>
-              <CardMedia className={classes.idoLeft12} image={icons.USD} />              <Typography variant="h4">{`${estTokenPrice}`}</Typography>
+              <CardMedia className={classes.rightGrid12a} image={icons.USD} />             
+              <Typography className={classes.rightGrid13} variant="h4">{`${estTokenPrice}`}</Typography>
             </Grid>
           </Grid>
 
           <Grid className={classes.rightGrid5}>
             <Typography className={classes.rightGrid11} variant="h4">INVARIANT for sale</Typography>
             <Grid container direction="row" alignItems="center" justifyContent="center" className={classes.rightGrid12}>
-              <CardMedia className={classes.idoLeft121} image={icons.LogoShort} />              <Typography variant="h4">{`${INVForSale}`}</Typography>
+              <CardMedia className={classes.rightGrid12b} image={icons.LogoShort} />              
+              <Typography className={classes.rightGrid13} variant="h4">{`${INVForSale}`}</Typography>
             </Grid>
           </Grid>
 
         </Grid>
       </Grid>
     
-
+  </Grid>
   )
 }
 

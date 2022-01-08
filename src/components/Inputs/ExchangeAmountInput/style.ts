@@ -28,7 +28,8 @@ const useStyles = makeStyles(() => ({
     }
   },
   select: {
-    marginRight: 20
+    marginRight: '8px',
+    minWidth: '80px'
   },
   input: {
     paddingTop: 4,
