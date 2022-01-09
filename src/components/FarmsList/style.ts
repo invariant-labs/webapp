@@ -3,10 +3,7 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: 436,
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
+    width: 436
   },
   header: {
     paddingBottom: 10
