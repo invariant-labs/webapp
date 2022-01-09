@@ -6,7 +6,7 @@ import useStyle from './style'
 
 export interface IFarmList {
   title: string
-  data: Array<IFarm>
+  data: IFarm[]
 }
 export const FarmList: React.FC<IFarmList> = ({ title, data }) => {
   const classes = useStyle()
