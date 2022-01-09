@@ -12,9 +12,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: 10
   },
   title: {
-    color: colors.white.main,
     ...typography.heading4,
-    fontWeight: 500
+    color: colors.white.main
   },
   tile: {
     marginBottom: 20
