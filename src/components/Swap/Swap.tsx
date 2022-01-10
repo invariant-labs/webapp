@@ -282,7 +282,9 @@ export const Swap: React.FC<ISwap> = ({ walletStatus, tokens, pools, onSwap, pro
           placeholder={'0.0'}
           onMaxClick={() => {
             if (tokenToIndex !== null && tokenFromIndex !== null) {
-              setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals))
+              setAmountFrom(
+                printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
+              )
               updateEstimatedAmount(
                 printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
               )
@@ -348,7 +350,9 @@ export const Swap: React.FC<ISwap> = ({ walletStatus, tokens, pools, onSwap, pro
           placeholder={'0.0'}
           onMaxClick={() => {
             if (tokenToIndex !== null && tokenFromIndex !== null) {
-              setAmountFrom(printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals))
+              setAmountFrom(
+                printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
+              )
               updateEstimatedAmount(
                 printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
               )
