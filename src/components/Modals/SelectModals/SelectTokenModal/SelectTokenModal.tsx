@@ -71,7 +71,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
           token.symbol.toLowerCase().includes(value) || token.name.toLowerCase().includes(value)
         )
       }),
-    [value]
+    [value, tokens]
   )
 
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
