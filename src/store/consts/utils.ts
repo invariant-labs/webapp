@@ -212,11 +212,9 @@ export const createLiquidityPlot = (
   rawTicks: Tick[],
   pool: PoolStructure,
   isXtoY: boolean,
-  tokens: Token[]
+  tokenXDecimal: number,
+  tokenYDecimal: number
 ) => {
-  const tokenXDecimal = tokens.find(token => token.address.equals(pool.tokenX))?.decimals ?? 0
-  const tokenYDecimal = tokens.find(token => token.address.equals(pool.tokenY))?.decimals ?? 0
-
   const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(rawTicks, pool) : []
 
   const ticks = rawTicks.map((raw, index) => ({
@@ -330,7 +328,7 @@ export const createPlaceholderLiquidityPlot = (
   return isXtoY ? ticksData : ticksData.reverse()
 }
 
-export const getNetworkTokensList = (networkType: NetworkType): Token[] => {
+export const getNetworkTokensList = (networkType: NetworkType): Record<string, Token> => {
   let list: Array<{
     symbol: string
     address: string
@@ -349,10 +347,16 @@ export const getNetworkTokensList = (networkType: NetworkType): Token[] => {
       list = []
   }
 
-  return list.map(token => ({
-    ...token,
-    address: new PublicKey(token.address)
-  }))
+  return list.reduce(
+    (all, token) => ({
+      ...all,
+      [token.address]: {
+        ...token,
+        address: new PublicKey(token.address)
+      }
+    }),
+    {}
+  )
 }
 
 export const getPrimaryUnitsPrice = (

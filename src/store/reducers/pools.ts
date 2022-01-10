@@ -10,7 +10,7 @@ export interface PoolWithAddress extends PoolStructure {
 }
 
 export interface IPoolsStore {
-  tokens: Token[]
+  tokens: Record<string, Token>
   pools: PoolWithAddress[]
 }
 
@@ -20,7 +20,7 @@ export interface UpdatePool {
 }
 
 export const defaultState: IPoolsStore = {
-  tokens: [],
+  tokens: {},
   pools: []
 }
 
@@ -29,7 +29,7 @@ const poolsSlice = createSlice({
   name: poolsSliceName,
   initialState: defaultState,
   reducers: {
-    setTokens(state, action: PayloadAction<Token[]>) {
+    setTokens(state, action: PayloadAction<Record<string, Token>>) {
       state.tokens = action.payload
       return state
     },

@@ -46,13 +46,13 @@ export interface SwapToken {
   balance: BN
   decimals: number
   symbol: string
-  assetAddress: PublicKey,
-  name: string,
+  assetAddress: PublicKey
+  name: string
   logoURI: string
 }
 
 export const swapTokens = createSelector(accounts, tokens, (allAccounts, tokens) => {
-  return tokens.map((token) => ({
+  return Object.values(tokens).map(token => ({
     ...token,
     assetAddress: token.address,
     balance: allAccounts[token.address.toString()]?.balance ?? 0

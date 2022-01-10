@@ -113,10 +113,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
 
   const poolIndex = action.payload.poolIndex
 
-  const xDecimal =
-    allTokens.find(token => token.address.equals(allPools[poolIndex].tokenX))?.decimals ?? 0
-  const yDecimal =
-    allTokens.find(token => token.address.equals(allPools[poolIndex].tokenY))?.decimals ?? 0
+  const xDecimal = allTokens[allPools[poolIndex].tokenX.toString()].decimals
+  const yDecimal = allTokens[allPools[poolIndex].tokenY.toString()].decimals
 
   try {
     const marketProgram = yield* call(getMarketProgram)
@@ -170,7 +168,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       rawTicks,
       allPools[poolIndex],
       action.payload.isXtoY,
-      allTokens
+      xDecimal,
+      yDecimal
     )
 
     yield put(
