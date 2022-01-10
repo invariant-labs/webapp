@@ -4,9 +4,17 @@ import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
-import { NetworkType, PRICE_DECIMAL, Token } from './static'
+import {
+  ANA_DEV,
+  MSOL_DEV,
+  NetworkType,
+  PRICE_DECIMAL,
+  SOL_DEV,
+  Token,
+  USDC_DEV,
+  USDT_DEV
+} from './static'
 import mainnetList from './tokenLists/mainnet.json'
-import devnetList from './tokenLists/devnet.json'
 import { PublicKey } from '@solana/web3.js'
 
 export const tou64 = (amount: BN | String) => {
@@ -338,25 +346,27 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
   }>
   switch (networkType) {
     case NetworkType.MAINNET:
-      list = mainnetList
-      break
+      return mainnetList.reduce(
+        (all, token) => ({
+          ...all,
+          [token.address]: {
+            ...token,
+            address: new PublicKey(token.address)
+          }
+        }),
+        {}
+      )
     case NetworkType.DEVNET:
-      list = devnetList
-      break
-    default:
-      list = []
-  }
-
-  return list.reduce(
-    (all, token) => ({
-      ...all,
-      [token.address]: {
-        ...token,
-        address: new PublicKey(token.address)
+      return {
+        [USDC_DEV.address.toString()]: USDC_DEV,
+        [USDT_DEV.address.toString()]: USDT_DEV,
+        [SOL_DEV.address.toString()]: SOL_DEV,
+        [ANA_DEV.address.toString()]: ANA_DEV,
+        [MSOL_DEV.address.toString()]: MSOL_DEV
       }
-    }),
-    {}
-  )
+    default:
+      return {}
+  }
 }
 
 export const getPrimaryUnitsPrice = (
