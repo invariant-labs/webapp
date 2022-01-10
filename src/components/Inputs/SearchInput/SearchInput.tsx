@@ -1,43 +1,36 @@
-import React, { useRef } from 'react'
-import { Button } from '@material-ui/core'
+import React from 'react'
+import { InputAdornment, InputBase } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
-import classNames from 'classnames'
 import useStyles from './style'
 
 export interface ISearchInput {
   name?: string
-  centered?: boolean
   className?: string
+  value: string
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export const SearchInput: React.FC<ISearchInput> = ({ className, handleChange }) => {
+export const SearchInput: React.FC<ISearchInput> = ({ handleChange, value }) => {
   const classes = useStyles()
-  const inputEl = useRef<HTMLInputElement>(null)
-  const onButtonClick = () => {
-    if (inputEl.current !== null) {
-      inputEl.current.focus()
-    }
-  }
   return (
     <>
-      <Button
-        className={classNames(classes.button, className)}
-        color='primary'
-        variant='contained'
-        onClick={onButtonClick}
-        endIcon={<SearchIcon className={classes.endIcon} />}
-        classes={{
-          endIcon: 'selectArrow'
+      <InputBase
+        type={'text'}
+        value={value}
+        className={classes.input}
+        onChange={handleChange}
+        placeholder='Search'
+        inputProps={{
+          style: {
+            padding: '5px 15px 2px 5px'
+          }
         }}
-        disableRipple>
-        <input
-          type={'text'}
-          className={classes.input}
-          placeholder={'Search'}
-          onChange={handleChange}
-          ref={inputEl}></input>
-      </Button>
+        endAdornment={
+          <InputAdornment position='end'>
+            <SearchIcon className={classes.endIcon} />
+          </InputAdornment>
+        }
+      />
     </>
   )
 }

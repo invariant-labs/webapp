@@ -25,7 +25,7 @@ export const FarmList: React.FC<IFarmList> = ({ title, data }) => {
         justifyContent='space-between'
         alignItems='center'>
         <Typography className={classes.title}>{title}</Typography>
-        <SearchInput handleChange={handleChangeInput} />
+        <SearchInput handleChange={handleChangeInput} value={value} />
       </Grid>
       <Grid>
         {data.length > 0
