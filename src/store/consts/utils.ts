@@ -337,13 +337,6 @@ export const createPlaceholderLiquidityPlot = (
 }
 
 export const getNetworkTokensList = (networkType: NetworkType): Record<string, Token> => {
-  let list: Array<{
-    symbol: string
-    address: string
-    decimals: number
-    name: string
-    logoURI: string
-  }>
   switch (networkType) {
     case NetworkType.MAINNET:
       return mainnetList.reduce(
