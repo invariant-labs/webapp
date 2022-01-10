@@ -8,7 +8,7 @@ import { calcYPerXPrice, printBN } from '@consts/utils'
 import { Status, actions } from '@reducers/solanaWallet'
 import { status } from '@selectors/solanaWallet'
 import { PositionsList } from '@components/PositionsList/PositionsList'
-import { getX, getY } from '@invariant-labs/sdk/lib/math'
+import { getDeltaX, getDeltaY } from '@invariant-labs/sdk/lib/math'
 
 export const WrappedPositionsList: React.FC = () => {
   const dispatch = useDispatch()
@@ -21,10 +21,20 @@ export const WrappedPositionsList: React.FC = () => {
 
   return (
     <PositionsList
-      onAddPositionClick={() => { history.push('/newPosition') }}
-      data={list.map((position) => {
-        const lowerPrice = calcYPerXPrice(calculate_price_sqrt(position.lowerTickIndex).v, position.tokenX.decimal, position.tokenY.decimal)
-        const upperPrice = calcYPerXPrice(calculate_price_sqrt(position.upperTickIndex).v, position.tokenX.decimal, position.tokenY.decimal)
+      onAddPositionClick={() => {
+        history.push('/newPosition')
+      }}
+      data={list.map(position => {
+        const lowerPrice = calcYPerXPrice(
+          calculate_price_sqrt(position.lowerTickIndex).v,
+          position.tokenX.decimal,
+          position.tokenY.decimal
+        )
+        const upperPrice = calcYPerXPrice(
+          calculate_price_sqrt(position.upperTickIndex).v,
+          position.tokenX.decimal,
+          position.tokenY.decimal
+        )
 
         const min = Math.min(lowerPrice, upperPrice)
         const max = Math.max(lowerPrice, upperPrice)
@@ -33,7 +43,12 @@ export const WrappedPositionsList: React.FC = () => {
 
         try {
           tokenXLiq = +printBN(
-            getX(position.liquidity.v, calculate_price_sqrt(position.upperTickIndex).v, position.poolData.sqrtPrice.v).div(DENOMINATOR),
+            getDeltaX(
+              calculate_price_sqrt(position.upperTickIndex),
+              position.poolData.sqrtPrice,
+              position.liquidity,
+              true
+            ).v.div(DENOMINATOR),
             position.tokenX.decimal
           )
         } catch (error) {
@@ -42,16 +57,25 @@ export const WrappedPositionsList: React.FC = () => {
 
         try {
           tokenYLiq = +printBN(
-            getY(position.liquidity.v, position.poolData.sqrtPrice.v, calculate_price_sqrt(position.lowerTickIndex).v).div(DENOMINATOR),
+            getDeltaY(
+              position.poolData.sqrtPrice,
+              calculate_price_sqrt(position.lowerTickIndex),
+              position.liquidity,
+              true
+            ).v.div(DENOMINATOR),
             position.tokenY.decimal
           )
         } catch (error) {
           tokenYLiq = 0
         }
 
-        const currentPrice = calcYPerXPrice(position.poolData.sqrtPrice.v, position.tokenX.decimal, position.tokenY.decimal)
+        const currentPrice = calcYPerXPrice(
+          position.poolData.sqrtPrice.v,
+          position.tokenX.decimal,
+          position.tokenY.decimal
+        )
 
-        const value = tokenXLiq + (tokenYLiq / currentPrice)
+        const value = tokenXLiq + tokenYLiq / currentPrice
 
         return {
           tokenXName: position.tokenX.symbol,
@@ -70,8 +94,12 @@ export const WrappedPositionsList: React.FC = () => {
       loading={isLoading}
       showNoConnected={walletStatus !== Status.Initialized}
       noConnectedBlockerProps={{
-        onConnect: (type) => { dispatch(actions.connect(type)) },
-        onDisconnect: () => { dispatch(actions.disconnect()) },
+        onConnect: type => {
+          dispatch(actions.connect(type))
+        },
+        onDisconnect: () => {
+          dispatch(actions.disconnect())
+        },
         descCustomText: 'No liquidity positions to show.'
       }}
     />

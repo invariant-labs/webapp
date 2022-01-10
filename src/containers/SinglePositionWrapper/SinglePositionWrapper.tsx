@@ -14,7 +14,7 @@ import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } fr
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import useStyles from './style'
-import { getX, getY } from '@invariant-labs/sdk/src/math'
+import { getDeltaX, getDeltaY } from '@invariant-labs/sdk/src/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
 
 export interface IProps {
@@ -144,11 +144,12 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (position) {
       try {
         return +printBN(
-          getX(
-            position.liquidity.v,
-            calculate_price_sqrt(position.upperTickIndex).v,
-            position.poolData.sqrtPrice.v
-          ).div(DENOMINATOR),
+          getDeltaX(
+            calculate_price_sqrt(position.upperTickIndex),
+            position.poolData.sqrtPrice,
+            position.liquidity,
+            true
+          ).v.div(DENOMINATOR),
           position.tokenX.decimal
         )
       } catch (error) {
@@ -162,11 +163,12 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (position) {
       try {
         return +printBN(
-          getY(
-            position.liquidity.v,
-            position.poolData.sqrtPrice.v,
-            calculate_price_sqrt(position.lowerTickIndex).v
-          ).div(DENOMINATOR),
+          getDeltaY(
+            position.poolData.sqrtPrice,
+            calculate_price_sqrt(position.lowerTickIndex),
+            position.liquidity,
+            true
+          ).v.div(DENOMINATOR),
           position.tokenY.decimal
         )
       } catch (error) {
