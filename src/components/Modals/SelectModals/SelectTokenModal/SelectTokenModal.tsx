@@ -62,7 +62,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   const classes = useStyles()
   const [value, setValue] = useState<string>('')
 
-  const outerRef = useRef<any>(null)
+  const outerRef = useRef<HTMLElement>(null)
 
   const filteredTokens = useMemo(
     () =>
