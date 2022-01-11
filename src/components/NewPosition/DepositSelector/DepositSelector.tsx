@@ -62,6 +62,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
 
     if (
+      !tokenAInputState.blocked &&
       printBNtoBN(tokenAInputState.value, tokens[tokenAIndex].decimals).gt(
         tokens[tokenAIndex].balance
       )
@@ -70,6 +71,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
 
     if (
+      !tokenBInputState.blocked &&
       printBNtoBN(tokenBInputState.value, tokens[tokenBIndex].decimals).gt(
         tokens[tokenBIndex].balance
       )

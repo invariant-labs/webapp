@@ -59,6 +59,20 @@ export const swapTokens = createSelector(accounts, tokens, (allAccounts, tokens)
   }))
 })
 
+export const swapTokensDict = createSelector(accounts, tokens, (allAccounts, tokens) => {
+  const swapTokens: Record<string, SwapToken> = {}
+
+  Object.entries(tokens).forEach(([key, val]) => {
+    swapTokens[key] = {
+      ...val,
+      assetAddress: val.address,
+      balance: allAccounts[key]?.balance ?? 0
+    }
+  })
+
+  return swapTokens
+})
+
 export type TokenAccounts = ITokenAccount & {
   symbol: string
   usdValue: BN
