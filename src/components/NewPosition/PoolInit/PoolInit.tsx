@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Button, Grid, Input, Typography } from '@material-ui/core'
 import React, { useState } from 'react'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import {
@@ -11,7 +11,7 @@ import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import useStyles from './style'
 
-export interface IRangeSelector {
+export interface IPoolInit {
   tokenASymbol: string
   tokenBSymbol: string
   onChangeRange: (leftIndex: number, rightIndex: number) => void
@@ -21,7 +21,7 @@ export interface IRangeSelector {
   tickSpacing: number
 }
 
-export const RangeSelector: React.FC<IRangeSelector> = ({
+export const PoolInit: React.FC<IPoolInit> = ({
   tokenASymbol,
   tokenBSymbol,
   onChangeRange,
@@ -37,6 +37,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
+
+  const [midPriceInput, setMidPriceInput] = useState('')
+  const [midPrice, setMidPrice] = useState(MIN_TICK)
 
   const changeRangeHandler = (left: number, right: number) => {
     setLeftRange(left)
@@ -54,6 +57,19 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     <Grid container className={classes.wrapper}>
       <Typography className={classes.header}>Starting price</Typography>
       <Grid container className={classes.innerWrapper}>
+        <Grid>
+          <Typography>
+            This pool does not exist yet. Select a pair of tokens, then choose a fee. Enter the amount of Token A, then Token B and press the button.
+          </Typography>
+        </Grid>
+
+        <Input />
+
+        <Grid>
+          <Typography>{tokenBSymbol} starting price: </Typography>
+
+          <Typography>{calcPrice(midPrice, isXtoY, xDecimal, yDecimal)} {tokenASymbol}</Typography>
+        </Grid>
 
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>
@@ -148,4 +164,4 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   )
 }
 
-export default RangeSelector
+export default PoolInit
