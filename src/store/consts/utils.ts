@@ -4,7 +4,18 @@ import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
-import { NetworkType, PRICE_DECIMAL, tokens } from './static'
+import {
+  ANA_DEV,
+  MSOL_DEV,
+  NetworkType,
+  PRICE_DECIMAL,
+  SOL_DEV,
+  Token,
+  USDC_DEV,
+  USDT_DEV
+} from './static'
+import mainnetList from './tokenLists/mainnet.json'
+import { PublicKey } from '@solana/web3.js'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -209,12 +220,9 @@ export const createLiquidityPlot = (
   rawTicks: Tick[],
   pool: PoolStructure,
   isXtoY: boolean,
-  networkType: NetworkType
+  tokenXDecimal: number,
+  tokenYDecimal: number
 ) => {
-  const tokenXDecimal =
-    tokens[networkType].find(token => token.address.equals(pool.tokenX))?.decimal ?? 0
-  const tokenYDecimal =
-    tokens[networkType].find(token => token.address.equals(pool.tokenY))?.decimal ?? 0
   const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(rawTicks, pool) : []
 
   const ticks = rawTicks.map((raw, index) => ({
@@ -326,6 +334,32 @@ export const createPlaceholderLiquidityPlot = (
   })
 
   return isXtoY ? ticksData : ticksData.reverse()
+}
+
+export const getNetworkTokensList = (networkType: NetworkType): Record<string, Token> => {
+  switch (networkType) {
+    case NetworkType.MAINNET:
+      return mainnetList.reduce(
+        (all, token) => ({
+          ...all,
+          [token.address]: {
+            ...token,
+            address: new PublicKey(token.address)
+          }
+        }),
+        {}
+      )
+    case NetworkType.DEVNET:
+      return {
+        [USDC_DEV.address.toString()]: USDC_DEV,
+        [USDT_DEV.address.toString()]: USDT_DEV,
+        [SOL_DEV.address.toString()]: SOL_DEV,
+        [ANA_DEV.address.toString()]: ANA_DEV,
+        [MSOL_DEV.address.toString()]: MSOL_DEV
+      }
+    default:
+      return {}
+  }
 }
 
 export const getPrimaryUnitsPrice = (

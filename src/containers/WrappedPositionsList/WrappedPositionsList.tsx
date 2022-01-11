@@ -26,13 +26,13 @@ export const WrappedPositionsList: React.FC = () => {
       data={list.map(position => {
         const lowerPrice = calcYPerXPrice(
           calculate_price_sqrt(position.lowerTickIndex).v,
-          position.tokenX.decimal,
-          position.tokenY.decimal
+          position.tokenX.decimals,
+          position.tokenY.decimals
         )
         const upperPrice = calcYPerXPrice(
           calculate_price_sqrt(position.upperTickIndex).v,
-          position.tokenX.decimal,
-          position.tokenY.decimal
+          position.tokenX.decimals,
+          position.tokenY.decimals
         )
 
         const min = Math.min(lowerPrice, upperPrice)
@@ -48,7 +48,7 @@ export const WrappedPositionsList: React.FC = () => {
               position.liquidity,
               true
             ),
-            position.tokenX.decimal
+            position.tokenX.decimals
           )
         } catch (error) {
           tokenXLiq = 0
@@ -62,7 +62,7 @@ export const WrappedPositionsList: React.FC = () => {
               position.liquidity,
               true
             ),
-            position.tokenY.decimal
+            position.tokenY.decimals
           )
         } catch (error) {
           tokenYLiq = 0
@@ -70,8 +70,8 @@ export const WrappedPositionsList: React.FC = () => {
 
         const currentPrice = calcYPerXPrice(
           position.poolData.sqrtPrice.v,
-          position.tokenX.decimal,
-          position.tokenY.decimal
+          position.tokenX.decimals,
+          position.tokenY.decimals
         )
 
         const value = tokenXLiq + tokenYLiq / currentPrice
