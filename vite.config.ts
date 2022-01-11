@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite'
 import { ViteAliases } from 'vite-aliases'
-import reactRefresh from '@vitejs/plugin-react-refresh'
+import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [
-    reactRefresh(),
+    react(),
     ViteAliases({
       adjustDuplicates: true,
       depth: 4

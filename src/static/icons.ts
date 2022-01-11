@@ -32,6 +32,9 @@ import coin98Icon from './svg/coin98.svg'
 import slope from './svg/slope.svg'
 import clover from './svg/clover.svg'
 import ANAIcon from './icons/ana.svg'
+import activeIcon from './svg/active.svg'
+import inactiveIcon from './svg/inactive.svg'
+import allIcon from './svg/all.svg'
 
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
@@ -68,7 +71,10 @@ const icons: { [key: string]: string } = {
   TwitterIcon: twitterIcon,
   DiscordIcon: discordIcon,
   mediumIcon: mediumIcon,
-  closeIcon: closeIcon
+  closeIcon: closeIcon,
+  activeIcon: activeIcon,
+  inactiveIcon: inactiveIcon,
+  allIcon: allIcon
 }
 
 export default icons

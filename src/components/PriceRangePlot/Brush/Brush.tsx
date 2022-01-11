@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { CustomLayerProps } from '@nivo/line'
 import { colors } from '@static/theme'
-import React, { useState, useEffect, useRef, MouseEventHandler } from 'react'
+import React, { useState, useEffect, useRef, PointerEventHandler } from 'react'
 import useStyles from './style'
 import { MaxHandle, MinHandle } from './svgHandles'
 
@@ -39,7 +39,7 @@ export const Handle: React.FC<HandleProps> = ({
     setCurrentPosition(position)
   }, [position, drag])
 
-  const startDrag: MouseEventHandler<SVGRectElement> = event => {
+  const startDrag: PointerEventHandler<SVGRectElement> = event => {
     onStart()
     setDrag(true)
     if (handleRef.current) {
@@ -59,7 +59,7 @@ export const Handle: React.FC<HandleProps> = ({
     }
   }
 
-  const dragHandler: MouseEventHandler<SVGRectElement> = event => {
+  const dragHandler: PointerEventHandler<SVGRectElement> = event => {
     if (drag && handleRef.current) {
       event.preventDefault()
       event.stopPropagation()
@@ -109,10 +109,10 @@ export const Handle: React.FC<HandleProps> = ({
         y={0}
         width={drag ? plotWidth : 42}
         height={height}
-        onMouseDown={!disabled ? startDrag : undefined}
-        onMouseUp={!disabled ? endDrag : undefined}
-        onMouseMove={!disabled ? dragHandler : undefined}
-        onMouseLeave={!disabled ? endDrag : undefined}
+        onPointerDown={!disabled ? startDrag : undefined}
+        onPointerUp={!disabled ? endDrag : undefined}
+        onPointerMove={!disabled ? dragHandler : undefined}
+        onPointerLeave={!disabled ? endDrag : undefined}
         fill='transparent'
       />
     </>
