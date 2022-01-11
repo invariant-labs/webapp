@@ -10,12 +10,18 @@ import {
 } from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
-import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
+import {
+  calcPrice,
+  calcYPerXPrice,
+  createPlaceholderLiquidityPlot,
+  getDeltaX,
+  getDeltaY,
+  printBN
+} from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
-import useStyles from './style'
-import { getDeltaX, getDeltaY } from '@invariant-labs/sdk/src/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
+import useStyles from './style'
 
 export interface IProps {
   id: string
@@ -149,7 +155,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             position.poolData.sqrtPrice,
             position.liquidity,
             true
-          ).v.div(DENOMINATOR),
+          ),
           position.tokenX.decimal
         )
       } catch (error) {
@@ -168,7 +174,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             calculate_price_sqrt(position.lowerTickIndex),
             position.liquidity,
             true
-          ).v.div(DENOMINATOR),
+          ),
           position.tokenY.decimal
         )
       } catch (error) {

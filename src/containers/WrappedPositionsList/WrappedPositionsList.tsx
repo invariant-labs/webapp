@@ -3,12 +3,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import { isLoadingPositionsList, positionsWithPoolsData } from '@selectors/positions'
 import { useHistory } from 'react-router-dom'
 import { PRICE_DECIMAL } from '@consts/static'
-import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
-import { calcYPerXPrice, printBN } from '@consts/utils'
+import { calculate_price_sqrt } from '@invariant-labs/sdk'
+import { calcYPerXPrice, getDeltaX, getDeltaY, printBN } from '@consts/utils'
 import { Status, actions } from '@reducers/solanaWallet'
 import { status } from '@selectors/solanaWallet'
 import { PositionsList } from '@components/PositionsList/PositionsList'
-import { getDeltaX, getDeltaY } from '@invariant-labs/sdk/lib/math'
 
 export const WrappedPositionsList: React.FC = () => {
   const dispatch = useDispatch()
@@ -48,7 +47,7 @@ export const WrappedPositionsList: React.FC = () => {
               position.poolData.sqrtPrice,
               position.liquidity,
               true
-            ).v.div(DENOMINATOR),
+            ),
             position.tokenX.decimal
           )
         } catch (error) {
@@ -62,7 +61,7 @@ export const WrappedPositionsList: React.FC = () => {
               calculate_price_sqrt(position.lowerTickIndex),
               position.liquidity,
               true
-            ).v.div(DENOMINATOR),
+            ),
             position.tokenY.decimal
           )
         } catch (error) {

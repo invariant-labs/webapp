@@ -1,5 +1,5 @@
-import { calculate_price_sqrt, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
-import { PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
+import { calculate_price_sqrt, DENOMINATOR, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
+import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
@@ -381,4 +381,52 @@ export const calcPrice = (index: number, isXtoY: boolean, xDecimal: number, yDec
   const price = calcYPerXPrice(calculate_price_sqrt(index).v, xDecimal, yDecimal)
 
   return isXtoY ? price : price !== 0 ? 1 / price : Number.MAX_SAFE_INTEGER
+}
+
+// TODO: temporarily copied, remove later
+export const getDeltaX = (
+  priceA: Decimal,
+  priceB: Decimal,
+  liquidity: Decimal,
+  up: boolean
+): BN => {
+  let deltaPrice: Decimal
+  if (priceA.v.gt(priceB.v)) {
+    deltaPrice = { v: priceA.v.sub(priceB.v) }
+  } else {
+    deltaPrice = { v: priceB.v.sub(priceA.v) }
+  }
+
+  const nominator: Decimal = { v: liquidity.v.mul(deltaPrice.v).div(DENOMINATOR) }
+
+  if (up) {
+    return nominator.v
+      .add(priceA.v.mul(priceB.v).div(DENOMINATOR).subn(1))
+      .div(priceA.v.mul(priceB.v).div(DENOMINATOR))
+  } else {
+    return nominator.v.div(priceA.v.mul(priceB.v).add(DENOMINATOR.subn(1)).div(DENOMINATOR))
+  }
+}
+
+export const getDeltaY = (
+  priceA: Decimal,
+  priceB: Decimal,
+  liquidity: Decimal,
+  up: boolean
+): BN => {
+  let deltaPrice: Decimal
+  if (priceA.v.gt(priceB.v)) {
+    deltaPrice = { v: priceA.v.sub(priceB.v) }
+  } else {
+    deltaPrice = { v: priceB.v.sub(priceA.v) }
+  }
+
+  if (up) {
+    return liquidity.v
+      .mul(deltaPrice.v)
+      .add(DENOMINATOR.mul(DENOMINATOR).subn(1))
+      .div(DENOMINATOR.mul(DENOMINATOR))
+  } else {
+    return liquidity.v.mul(deltaPrice.v).div(DENOMINATOR.mul(DENOMINATOR))
+  }
 }
