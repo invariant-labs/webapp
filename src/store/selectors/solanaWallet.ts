@@ -3,9 +3,8 @@ import { createSelector } from '@reduxjs/toolkit'
 import { ISolanaWallet, solanaWalletSliceName, ITokenAccount } from '@reducers/solanaWallet'
 import { keySelectors, AnyProps } from './helpers'
 import { PublicKey } from '@solana/web3.js'
-import { tokens } from '@consts/static'
 import { MOCK_TOKENS } from '@invariant-labs/sdk'
-import { network } from './solanaConnection'
+import { tokens } from './pools'
 
 const store = (s: AnyProps) => s[solanaWalletSliceName] as ISolanaWallet
 
@@ -45,19 +44,33 @@ export const tokenAccountsAddress = () =>
   })
 export interface SwapToken {
   balance: BN
-  decimal: number
+  decimals: number
   symbol: string
-  assetAddress: PublicKey,
-  name: string,
+  assetAddress: PublicKey
+  name: string
   logoURI: string
 }
 
-export const swapTokens = createSelector(accounts, network, (allAccounts, networkType) => {
-  return tokens[networkType].map((token) => ({
+export const swapTokens = createSelector(accounts, tokens, (allAccounts, tokens) => {
+  return Object.values(tokens).map(token => ({
     ...token,
     assetAddress: token.address,
     balance: allAccounts[token.address.toString()]?.balance ?? 0
   }))
+})
+
+export const swapTokensDict = createSelector(accounts, tokens, (allAccounts, tokens) => {
+  const swapTokens: Record<string, SwapToken> = {}
+
+  Object.entries(tokens).forEach(([key, val]) => {
+    swapTokens[key] = {
+      ...val,
+      assetAddress: val.address,
+      balance: allAccounts[key]?.balance ?? 0
+    }
+  })
+
+  return swapTokens
 })
 
 export type TokenAccounts = ITokenAccount & {

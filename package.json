@@ -53,6 +53,7 @@
     "react-redux": "^7.2.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
+    "react-window": "^1.8.6",
     "redux": "4.0.5",
     "redux-actions": "^2.6.5",
     "redux-persist": "^6.0.0",
@@ -75,7 +76,8 @@
     "fix": "eslint --fix --fix-type suggestion --ext .js,.ts,.tsx .",
     "storybook": "start-storybook -p 9009 -c .storybook watch-css -s public",
     "build-storybook": "build-storybook -s public",
-    "build": "vite build"
+    "build": "vite build",
+    "update-mainnet-list": "node ./src/fetchMainnetList.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -118,6 +120,7 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/react-router-native": "^5.1.0",
     "@types/react-test-renderer": "16.9.2",
+    "@types/react-window": "^1.8.5",
     "@types/redux-actions": "^2.6.1",
     "@types/redux-saga": "^0.10.5",
     "@types/storybook__addon-knobs": "^5.2.1",
