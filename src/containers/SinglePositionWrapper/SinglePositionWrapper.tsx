@@ -14,8 +14,8 @@ import {
   calcPrice,
   calcYPerXPrice,
   createPlaceholderLiquidityPlot,
-  getDeltaX,
-  getDeltaY,
+  getX,
+  getY,
   printBN
 } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
@@ -150,12 +150,12 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (position) {
       try {
         return +printBN(
-          getDeltaX(
-            calculate_price_sqrt(position.upperTickIndex),
-            position.poolData.sqrtPrice,
-            position.liquidity,
-            true
-          ),
+          getX(
+            position.liquidity.v,
+            calculate_price_sqrt(position.upperTickIndex).v,
+            position.poolData.sqrtPrice.v,
+            calculate_price_sqrt(position.lowerTickIndex).v
+          ).div(DENOMINATOR),
           position.tokenX.decimals
         )
       } catch (error) {
@@ -169,12 +169,12 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (position) {
       try {
         return +printBN(
-          getDeltaY(
-            position.poolData.sqrtPrice,
-            calculate_price_sqrt(position.lowerTickIndex),
-            position.liquidity,
-            true
-          ),
+          getY(
+            position.liquidity.v,
+            calculate_price_sqrt(position.upperTickIndex).v,
+            position.poolData.sqrtPrice.v,
+            calculate_price_sqrt(position.lowerTickIndex).v
+          ).div(DENOMINATOR),
           position.tokenY.decimals
         )
       } catch (error) {

@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { isLoadingPositionsList, positionsWithPoolsData } from '@selectors/positions'
 import { useHistory } from 'react-router-dom'
 import { PRICE_DECIMAL } from '@consts/static'
-import { calculate_price_sqrt } from '@invariant-labs/sdk'
-import { calcYPerXPrice, getDeltaX, getDeltaY, printBN } from '@consts/utils'
+import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
+import { calcYPerXPrice, getX, getY, printBN } from '@consts/utils'
 import { Status, actions } from '@reducers/solanaWallet'
 import { status } from '@selectors/solanaWallet'
 import { PositionsList } from '@components/PositionsList/PositionsList'
@@ -42,12 +42,12 @@ export const WrappedPositionsList: React.FC = () => {
 
         try {
           tokenXLiq = +printBN(
-            getDeltaX(
-              calculate_price_sqrt(position.upperTickIndex),
-              position.poolData.sqrtPrice,
-              position.liquidity,
-              true
-            ),
+            getX(
+              position.liquidity.v,
+              calculate_price_sqrt(position.upperTickIndex).v,
+              position.poolData.sqrtPrice.v,
+              calculate_price_sqrt(position.lowerTickIndex).v
+            ).div(DENOMINATOR),
             position.tokenX.decimals
           )
         } catch (error) {
@@ -56,12 +56,12 @@ export const WrappedPositionsList: React.FC = () => {
 
         try {
           tokenYLiq = +printBN(
-            getDeltaY(
-              position.poolData.sqrtPrice,
-              calculate_price_sqrt(position.lowerTickIndex),
-              position.liquidity,
-              true
-            ),
+            getY(
+              position.liquidity.v,
+              calculate_price_sqrt(position.upperTickIndex).v,
+              position.poolData.sqrtPrice.v,
+              calculate_price_sqrt(position.lowerTickIndex).v
+            ).div(DENOMINATOR),
             position.tokenY.decimals
           )
         } catch (error) {

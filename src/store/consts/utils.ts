@@ -1,5 +1,5 @@
 import { calculate_price_sqrt, DENOMINATOR, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
-import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
+import { PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
@@ -418,49 +418,58 @@ export const calcPrice = (index: number, isXtoY: boolean, xDecimal: number, yDec
 }
 
 // TODO: temporarily copied, remove later
-export const getDeltaX = (
-  priceA: Decimal,
-  priceB: Decimal,
-  liquidity: Decimal,
-  up: boolean
+export const getX = (
+  liquidity: BN,
+  upperSqrtPrice: BN,
+  currentSqrtPrice: BN,
+  lowerSqrtPrice: BN
 ): BN => {
-  let deltaPrice: Decimal
-  if (priceA.v.gt(priceB.v)) {
-    deltaPrice = { v: priceA.v.sub(priceB.v) }
-  } else {
-    deltaPrice = { v: priceB.v.sub(priceA.v) }
+  if (
+    upperSqrtPrice.lte(new BN(0)) ||
+    currentSqrtPrice.lte(new BN(0)) ||
+    lowerSqrtPrice.lte(new BN(0))
+  ) {
+    throw new Error('Price cannot be lower or equal 0')
   }
 
-  const nominator: Decimal = { v: liquidity.v.mul(deltaPrice.v).div(DENOMINATOR) }
+  let denominator: BN
+  let nominator: BN
 
-  if (up) {
-    return nominator.v
-      .add(priceA.v.mul(priceB.v).div(DENOMINATOR).subn(1))
-      .div(priceA.v.mul(priceB.v).div(DENOMINATOR))
+  if (currentSqrtPrice.gte(upperSqrtPrice)) {
+    return new BN(0)
+  } else if (currentSqrtPrice.lt(lowerSqrtPrice)) {
+    denominator = lowerSqrtPrice.mul(upperSqrtPrice).div(DENOMINATOR)
+    nominator = upperSqrtPrice.sub(lowerSqrtPrice)
   } else {
-    return nominator.v.div(priceA.v.mul(priceB.v).add(DENOMINATOR.subn(1)).div(DENOMINATOR))
+    denominator = upperSqrtPrice.mul(currentSqrtPrice).div(DENOMINATOR)
+    nominator = upperSqrtPrice.sub(currentSqrtPrice)
   }
+
+  return liquidity.mul(nominator).div(denominator)
 }
 
-export const getDeltaY = (
-  priceA: Decimal,
-  priceB: Decimal,
-  liquidity: Decimal,
-  up: boolean
+export const getY = (
+  liquidity: BN,
+  upperSqrtPrice: BN,
+  currentSqrtPrice: BN,
+  lowerSqrtPrice: BN
 ): BN => {
-  let deltaPrice: Decimal
-  if (priceA.v.gt(priceB.v)) {
-    deltaPrice = { v: priceA.v.sub(priceB.v) }
-  } else {
-    deltaPrice = { v: priceB.v.sub(priceA.v) }
+  if (
+    lowerSqrtPrice.lte(new BN(0)) ||
+    currentSqrtPrice.lte(new BN(0)) ||
+    upperSqrtPrice.lte(new BN(0))
+  ) {
+    throw new Error('Price cannot be 0')
   }
 
-  if (up) {
-    return liquidity.v
-      .mul(deltaPrice.v)
-      .add(DENOMINATOR.mul(DENOMINATOR).subn(1))
-      .div(DENOMINATOR.mul(DENOMINATOR))
+  let difference: BN
+  if (currentSqrtPrice.lt(lowerSqrtPrice)) {
+    return new BN(0)
+  } else if (currentSqrtPrice.gte(upperSqrtPrice)) {
+    difference = upperSqrtPrice.sub(lowerSqrtPrice)
   } else {
-    return liquidity.v.mul(deltaPrice.v).div(DENOMINATOR.mul(DENOMINATOR))
+    difference = currentSqrtPrice.sub(lowerSqrtPrice)
   }
+
+  return liquidity.mul(difference).div(DENOMINATOR)
 }
