@@ -16,31 +16,31 @@ declare global {
 export interface Token {
   symbol: string
   address: PublicKey
-  decimal: number
+  decimals: number
   name: string
   logoURI: string
 }
 export const PRICE_DECIMAL = 12
-export const USDC_DEV = {
+export const USDC_DEV: Token = {
   symbol: 'USDC',
   address: new PublicKey(MOCK_TOKENS.USDC),
-  decimal: 6,
+  decimals: 6,
   name: 'USD Coin',
   logoURI:
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
 }
-export const USDT_DEV = {
+export const USDT_DEV: Token = {
   symbol: 'USDT',
   address: new PublicKey(MOCK_TOKENS.USDT),
-  decimal: 6,
+  decimals: 6,
   name: 'Tether USD',
   logoURI:
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
 }
-export const SOL_DEV = {
+export const SOL_DEV: Token = {
   symbol: 'wSOL',
   address: new PublicKey(MOCK_TOKENS.SOL),
-  decimal: 9,
+  decimals: 9,
   name: 'Wrapped Solana',
   logoURI:
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
@@ -48,15 +48,15 @@ export const SOL_DEV = {
 export const MSOL_DEV = {
   symbol: 'mSOL',
   address: new PublicKey(MOCK_TOKENS.MSOL),
-  decimal: 9,
+  decimals: 9,
   name: 'Marinade Solana',
   logoURI:
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png'
 }
-export const ANA_DEV = {
+export const ANA_DEV: Token = {
   symbol: 'ANA',
   address: new PublicKey(MOCK_TOKENS.ANA),
-  decimal: 6,
+  decimals: 6,
   name: 'Nirvana',
   logoURI: icons.ANA
 }
@@ -108,10 +108,10 @@ export const airdropTokens: Record<NetworkType, PublicKey[]> = {
 
 export const airdropQuantities: Record<NetworkType, number[]> = {
   Devnet: [
-    100 * 10 ** USDC_DEV.decimal,
-    100 * 10 ** USDT_DEV.decimal,
-    10 ** SOL_DEV.decimal,
-    10 ** SOL_DEV.decimal
+    100 * 10 ** USDC_DEV.decimals,
+    100 * 10 ** USDT_DEV.decimals,
+    10 ** SOL_DEV.decimals,
+    10 ** MSOL_DEV.decimals
   ],
   Mainnet: [],
   Testnet: [],

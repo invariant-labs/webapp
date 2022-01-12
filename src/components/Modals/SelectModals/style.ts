@@ -113,7 +113,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.componentIn1,
     width: 451,
     height: 352,
-    padding: '8px 0 8px 8px',
+    padding: 8,
     overflowY: 'hidden'
   },
   tokenItem: {

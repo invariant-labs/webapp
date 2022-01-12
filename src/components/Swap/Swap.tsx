@@ -21,7 +21,7 @@ import useStyles from './style'
 
 export interface SwapToken {
   balance: BN
-  decimal: number
+  decimals: number
   symbol: string
   assetAddress: PublicKey
   name: string
@@ -315,14 +315,14 @@ export const Swap: React.FC<ISwap> = ({
       return 'No route found'
     }
 
-    if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal).eqn(0)) {
+    if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {
       return 'Insufficient trade volume'
     }
     if (
-      printBNtoBN(amountFrom, tokens[tokenFromIndex].decimal).gt(
+      printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).gt(
         printBNtoBN(
-          printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal),
-          tokens[tokenFromIndex].decimal
+          printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals),
+          tokens[tokenFromIndex].decimals
         )
       )
     ) {
@@ -371,14 +371,14 @@ export const Swap: React.FC<ISwap> = ({
           <Typography className={classes.tokenComponentText}>
             Balance:{' '}
             {tokenFromIndex !== null
-              ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimal)
+              ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
               : '0'}
           </Typography>
         </Box>
         <ExchangeAmountInput
           value={amountFrom}
           key={swap?.toString()}
-          decimal={tokenFromIndex !== null ? tokens[tokenFromIndex].decimal : 6}
+          decimal={tokenFromIndex !== null ? tokens[tokenFromIndex].decimals : 6}
           className={
             swap !== null
               ? `${classes.amountInput} ${classes.amountInputDown}`
@@ -434,7 +434,7 @@ export const Swap: React.FC<ISwap> = ({
           <Typography className={classes.tokenComponentText}>
             Balance:{' '}
             {tokenToIndex !== null
-              ? printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimal)
+              ? printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimals)
               : '0'}
           </Typography>
         </Box>
@@ -446,7 +446,7 @@ export const Swap: React.FC<ISwap> = ({
               ? `${classes.amountInput} ${classes.amountInputUp}`
               : `${classes.amountInput}`
           }
-          decimal={tokenToIndex !== null ? tokens[tokenToIndex].decimal : 6}
+          decimal={tokenToIndex !== null ? tokens[tokenToIndex].decimals : 6}
           style={{
             transform: swap !== null ? (swap ? 'translateY(0px)' : 'translateY(0px)') : ''
           }}
