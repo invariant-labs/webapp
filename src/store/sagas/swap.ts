@@ -8,7 +8,7 @@ import { getMarketProgram } from '@web3/programs/amm'
 import { pools } from '@selectors/pools'
 import { Pair } from '@invariant-labs/sdk'
 import { getConnection } from './connection'
-import { FEE_TIERS, calculateAveragePrice, SimulateSwapPrice } from '@invariant-labs/sdk/src/utils'
+import { FEE_TIERS, simulateSwap, SimulateSwapPrice } from '@invariant-labs/sdk/src/utils'
 import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import BN from 'bn.js'
 
@@ -35,6 +35,7 @@ export function* handleSimulate(): Generator {
       [marketProgram, marketProgram.getTickmap],
       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0])
     )
+    console.log(tickMap)
     if (simulate.amount.gt(new BN(0))) {
       const simulateObject: SimulateSwapPrice = {
         pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
@@ -48,8 +49,8 @@ export function* handleSimulate(): Generator {
         market: marketProgram
       }
 
-      yield put(swapActions.changePrice(calculateAveragePrice(simulateObject)))
-      // console.log('simulate price: ', calculateAveragePrice(simulateObject).v.toString())
+      // yield put(swapActions.changePrice(calculateAveragePrice(simulateObject)))
+      // console.log('simulate price: ', simulateSwap(simulateObject).accumulatedAmountOut)
     } else {
       yield put(swapActions.changePrice({ v: new BN(0) }))
     }
