@@ -20,9 +20,7 @@ const MarketEvents = () => {
     }
 
     const connectEvents = () => {
-      dispatch(
-        actions.getPoolsData(PAIRS[networkType])
-      )
+      dispatch(actions.getPoolsData(PAIRS[networkType]))
     }
 
     connectEvents()

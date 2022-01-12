@@ -8,9 +8,15 @@ import { getMarketProgram } from '@web3/programs/amm'
 import { pools } from '@selectors/pools'
 import { Pair } from '@invariant-labs/sdk'
 import { getConnection } from './connection'
-import { FEE_TIERS, simulateSwap, SimulateSwapPrice } from '@invariant-labs/sdk/src/utils'
+import {
+  FEE_TIERS,
+  simulateSwap,
+  SimulateSwapInterface,
+  SimulateSwapPrice
+} from '@invariant-labs/sdk/src/utils'
 import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import BN from 'bn.js'
+import { Tick } from '@invariant-labs/sdk/src/market'
 
 export function* handleSimulate(): Generator {
   try {
@@ -35,9 +41,21 @@ export function* handleSimulate(): Generator {
       [marketProgram, marketProgram.getTickmap],
       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0])
     )
-    console.log(tickMap)
+    const ticksArray = yield* call(
+      [marketProgram, marketProgram.getClosestTicks],
+      new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
+      Infinity,
+      undefined,
+      isXtoY ? 'down' : 'up'
+    )
+    let ticks: Map<number, Tick> = new Map<number, Tick>()
+
+    for (var tick of ticksArray) {
+      ticks.set(tick.index, tick)
+    }
+    console.log(new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]))
     if (simulate.amount.gt(new BN(0))) {
-      const simulateObject: SimulateSwapPrice = {
+      const simulateObject: SimulateSwapInterface = {
         pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
         xToY: isXtoY,
         byAmountIn: true, // to jest jeszcze do zrobienia
@@ -45,12 +63,13 @@ export function* handleSimulate(): Generator {
         currentPrice: { v: simulate.simulatePrice },
         slippage: slippage,
         pool: swapPool,
+        ticks: ticks,
         tickmap: tickMap,
         market: marketProgram
       }
 
       // yield put(swapActions.changePrice(calculateAveragePrice(simulateObject)))
-      // console.log('simulate price: ', simulateSwap(simulateObject).accumulatedAmountOut)
+      console.log('simulate price: ', simulateSwap(simulateObject).accumulatedAmountOut)
     } else {
       yield put(swapActions.changePrice({ v: new BN(0) }))
     }
