@@ -3,8 +3,8 @@ import { storiesOf } from '@storybook/react'
 import PoolInit from './PoolInit'
 import { action } from '@storybook/addon-actions'
 
-storiesOf('position/poolInit', module)
-  .add('setter', () => (
+storiesOf('position/poolInit', module).add('setter', () => (
+  <div style={{ width: 500 }}>
     <PoolInit
       tokenASymbol='BAT'
       tokenBSymbol='ETH'
@@ -16,4 +16,5 @@ storiesOf('position/poolInit', module)
       tickSpacing={1}
       isXtoY={true}
     />
-  ))
+  </div>
+))

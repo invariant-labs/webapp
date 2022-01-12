@@ -1,5 +1,5 @@
-import { Button, Grid, Input, Typography } from '@material-ui/core'
-import React, { useState } from 'react'
+import { Button, Grid, Typography } from '@material-ui/core'
+import React, { useState, useEffect } from 'react'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import {
   calcPrice,
@@ -9,6 +9,7 @@ import {
 } from '@consts/utils'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
+import SimpleInput from '@components/Inputs/SimpleInput/SimpleInput'
 import useStyles from './style'
 
 export interface IPoolInit {
@@ -41,6 +42,10 @@ export const PoolInit: React.FC<IPoolInit> = ({
   const [midPriceInput, setMidPriceInput] = useState('')
   const [midPrice, setMidPrice] = useState(MIN_TICK)
 
+  useEffect(() => {
+    setMidPrice(nearestTickIndex(+midPriceInput, tickSpacing, isXtoY, xDecimal, yDecimal))
+  }, [midPriceInput])
+
   const changeRangeHandler = (left: number, right: number) => {
     setLeftRange(left)
     setRightRange(right)
@@ -56,19 +61,26 @@ export const PoolInit: React.FC<IPoolInit> = ({
   return (
     <Grid container className={classes.wrapper}>
       <Typography className={classes.header}>Starting price</Typography>
-      <Grid container className={classes.innerWrapper}>
+      <Grid container className={classes.innerWrapper} direction='column'>
         <Grid>
           <Typography>
-            This pool does not exist yet. Select a pair of tokens, then choose a fee. Enter the amount of Token A, then Token B and press the button.
+            This pool does not exist yet. Select a pair of tokens, then choose a fee. Enter the
+            amount of Token A, then Token B and press the button.
           </Typography>
         </Grid>
 
-        <Input />
+        <SimpleInput
+          setValue={setMidPriceInput}
+          value={midPriceInput}
+          decimal={isXtoY ? xDecimal : yDecimal}
+        />
 
         <Grid>
           <Typography>{tokenBSymbol} starting price: </Typography>
 
-          <Typography>{calcPrice(midPrice, isXtoY, xDecimal, yDecimal)} {tokenASymbol}</Typography>
+          <Typography>
+            {calcPrice(midPrice, isXtoY, xDecimal, yDecimal)} {tokenASymbol}
+          </Typography>
         </Grid>
 
         <Typography className={classes.subheader}>Set price range</Typography>
