@@ -82,7 +82,11 @@ export const Header: React.FC<IHeader> = ({
                   onClick={() => {
                     setActive(path)
                   }}
-                  active={path === activePath || (!!otherRoutesToHighlight[path] && otherRoutesToHighlight[path].some((pathRegex) => pathRegex.test(activePath)))}
+                  active={
+                    path === activePath ||
+                    (!!otherRoutesToHighlight[path] &&
+                      otherRoutesToHighlight[path].some(pathRegex => pathRegex.test(activePath)))
+                  }
                 />
               </Link>
             ))}
@@ -103,7 +107,10 @@ export const Header: React.FC<IHeader> = ({
           </Hidden>
           <SelectNetworkButton
             name={typeOfNetwork}
-            networks={[{ name: NetworkType.DEVNET, network: SolanaNetworks.DEV }]}
+            networks={[
+              { name: NetworkType.DEVNET, network: SolanaNetworks.DEV }
+              // { name: NetworkType.MAINNET, network: SolanaNetworks.MAIN }
+            ]}
             onSelect={chosen => {
               onNetworkSelect(chosen)
             }}
@@ -112,11 +119,7 @@ export const Header: React.FC<IHeader> = ({
             name={
               walletConnected
                 ? `${address.toString().substr(0, isXsDown ? 8 : 15)}...${
-                    !isXsDown
-                      ? address
-                        .toString()
-                        .substr(address.toString().length - 4, 4)
-                      : ''
+                    !isXsDown ? address.toString().substr(address.toString().length - 4, 4) : ''
                   }`
                 : 'Connect wallet'
             }
@@ -132,7 +135,9 @@ export const Header: React.FC<IHeader> = ({
             onSelect={onWalletSelect}
             connected={walletConnected}
             onDisconnect={onDisconnectWallet}
-            startIcon={walletConnected ? <DotIcon className={classes.connectedWalletIcon} /> : undefined}
+            startIcon={
+              walletConnected ? <DotIcon className={classes.connectedWalletIcon} /> : undefined
+            }
             activeWallet={walletConnected ? typeOfWallet : undefined}
           />
         </Grid>
@@ -144,8 +149,7 @@ export const Header: React.FC<IHeader> = ({
               setRoutesModalAnchor(event.currentTarget)
               setRoutesModalOpen(true)
               blurContent()
-            }}
-          >
+            }}>
             <CardMedia className={classes.menu} image={Hamburger} />
           </IconButton>
           <RoutesModal
@@ -162,7 +166,12 @@ export const Header: React.FC<IHeader> = ({
               setRoutesModalOpen(false)
               unblurContent()
             }}
-            onFaucet={(typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) && isXsDown ? onFaucet : undefined}
+            onFaucet={
+              (typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) &&
+              isXsDown
+                ? onFaucet
+                : undefined
+            }
           />
         </Hidden>
       </Grid>

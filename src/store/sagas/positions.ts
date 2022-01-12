@@ -10,7 +10,7 @@ import {
   InitPositionData
 } from '@reducers/positions'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { pools } from '@selectors/pools'
+import { pools, tokens } from '@selectors/pools'
 import { Pair, TICK_LIMIT } from '@invariant-labs/sdk'
 import {
   calcPrice,
@@ -21,8 +21,6 @@ import {
 import { accounts } from '@selectors/solanaWallet'
 import { Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
 import { positionsWithPoolsData, plotTicks, singlePositionData } from '@selectors/positions'
-import { network } from '@selectors/solanaConnection'
-import { tokens } from '@consts/static'
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
@@ -111,16 +109,12 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 
 export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicksData>): Generator {
   const allPools = yield* select(pools)
-  const networkType = yield* select(network)
+  const allTokens = yield* select(tokens)
 
   const poolIndex = action.payload.poolIndex
 
-  const xDecimal =
-    tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenX))?.decimal ??
-    0
-  const yDecimal =
-    tokens[networkType].find(token => token.address.equals(allPools[poolIndex].tokenY))?.decimal ??
-    0
+  const xDecimal = allTokens[allPools[poolIndex].tokenX.toString()].decimals
+  const yDecimal = allTokens[allPools[poolIndex].tokenY.toString()].decimals
 
   try {
     const marketProgram = yield* call(getMarketProgram)
@@ -174,7 +168,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       rawTicks,
       allPools[poolIndex],
       action.payload.isXtoY,
-      networkType
+      xDecimal,
+      yDecimal
     )
 
     yield put(
