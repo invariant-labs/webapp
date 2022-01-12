@@ -74,6 +74,35 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'
     }
+  },
+  infoWrapper: {
+    border: `1px solid ${colors.invariant.lightInfoText}`,
+    borderRadius: 10,
+    padding: 16,
+    backgroundColor: colors.invariant.componentOut2,
+    marginBottom: 16
+  },
+  info: {
+    color: colors.white.main,
+    ...typography.body2
+  },
+  midPrice: {
+    marginBottom: 8
+  },
+  priceWrapper: {
+    backgroundColor: colors.invariant.componentOut2,
+    paddingInline: 12,
+    paddingBlock: 4,
+    borderRadius: 8,
+    marginBottom: 48
+  },
+  priceLabel: {
+    ...typography.body2,
+    color: colors.invariant.lightInfoText
+  },
+  priceValue: {
+    ...typography.body1,
+    color: colors.white.main
   }
 }))
 

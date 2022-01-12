@@ -5,12 +5,15 @@ import {
   calcPrice,
   spacingMultiplicityGte,
   spacingMultiplicityLte,
-  nearestTickIndex
+  nearestTickIndex,
+  formatNumbers,
+  showPrefix
 } from '@consts/utils'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import SimpleInput from '@components/Inputs/SimpleInput/SimpleInput'
 import useStyles from './style'
+import AnimatedNumber from '@components/AnimatedNumber'
 
 export interface IPoolInit {
   tokenASymbol: string
@@ -62,8 +65,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
     <Grid container className={classes.wrapper}>
       <Typography className={classes.header}>Starting price</Typography>
       <Grid container className={classes.innerWrapper} direction='column'>
-        <Grid>
-          <Typography>
+        <Grid className={classes.infoWrapper}>
+          <Typography className={classes.info}>
             This pool does not exist yet. Select a pair of tokens, then choose a fee. Enter the
             amount of Token A, then Token B and press the button.
           </Typography>
@@ -73,13 +76,26 @@ export const PoolInit: React.FC<IPoolInit> = ({
           setValue={setMidPriceInput}
           value={midPriceInput}
           decimal={isXtoY ? xDecimal : yDecimal}
+          className={classes.midPrice}
+          placeholder='0.0'
         />
 
-        <Grid>
-          <Typography>{tokenBSymbol} starting price: </Typography>
+        <Grid
+          className={classes.priceWrapper}
+          container
+          justifyContent='space-between'
+          alignItems='center'>
+          <Typography className={classes.priceLabel}>{tokenBSymbol} starting price: </Typography>
 
-          <Typography>
-            {calcPrice(midPrice, isXtoY, xDecimal, yDecimal)} {tokenASymbol}
+          <Typography className={classes.priceValue}>
+            <AnimatedNumber
+              value={calcPrice(midPrice, isXtoY, xDecimal, yDecimal).toFixed(
+                isXtoY ? xDecimal : yDecimal
+              )}
+              duration={300}
+              formatValue={formatNumbers()}
+            />
+            {showPrefix(calcPrice(midPrice, isXtoY, xDecimal, yDecimal))} {tokenASymbol}
           </Typography>
         </Grid>
 
