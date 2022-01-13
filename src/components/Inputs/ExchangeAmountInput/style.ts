@@ -17,7 +17,6 @@ const useStyles = makeStyles(() => ({
   maxButton: {
     fontSize: 16,
     color: colors.invariant.componentIn2,
-    minWidth: 55,
     height: 32,
     fontWeight: 400,
     borderRadius: 3,
@@ -31,7 +30,7 @@ const useStyles = makeStyles(() => ({
   },
   select: {
     marginRight: '7px',
-    minWidth: '80px'
+    minWidth: '73px'
   },
   input: {
     paddingTop: 7,

@@ -1,5 +1,6 @@
 import { makeStyles, Theme } from '@material-ui/core'
 import { colors, typography } from '@static/theme'
+import { nth } from 'lodash'
 
 export const useStyles = makeStyles((theme: Theme) => ({
   title: {
@@ -26,40 +27,39 @@ export const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   gridWrapper: {
+    display: 'flex',
     flexDirection: 'row',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column'
     }
   },
   leftGrid: {
-    width: '408px',
+    maxwidth: '408px',
+    minWidth: '336 px',
     borderRadius: '10px',
     maxHeight: '340px',
     display: 'flex',
     flexDirection: 'column',
     background: colors.invariant.componentOut4,
     [theme.breakpoints.down('xs')]: {
-      maxWidth: '336px',
+      width: '336px',
       alignSelf: 'center'
     }
   },
   leftTitle: {
+    minWidth: '288px',
     marginLeft: '24px',
     marginTop: '14px',
-    marginBottom: '30px',
+    marginBottom: '20px',
     ...typography.heading3,
-    color: colors.white.main,
-    [theme.breakpoints.down('xs')]: {
-      width: '288px'
-    }
+    color: colors.white.main
   },
   leftImputGrid: {
-    width: '360px',
+    minWidth: '288px',
+    maxWidth: '360px',
+    margin: '0px 24px',
     alignSelf: 'center',
-    color: colors.white.main,
-    [theme.breakpoints.down('xs')]: {
-      width: '288px'
-    }
+    color: colors.white.main
   },
   amountInput: {
     border: `1px solid ${colors.invariant.componentOut2}`
@@ -72,12 +72,11 @@ export const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 600
   },
   leftDepositedWrapper: {
-    width: '360px',
-    alignSelf: 'center',
-    color: colors.white.main,
-    [theme.breakpoints.down('xs')]: {
-      width: '288px'
-    }
+    minWidth: '288px',
+    maxWidth: '360px',
+    alignSelf: 'start',
+    marginLeft: '24px',
+    color: colors.white.main
   },
   leftDepositedTxt: {
     marginTop: '14px',
@@ -90,17 +89,12 @@ export const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row'
   },
-  leftDepositedWrapper3: {
-    width: '85%',
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
-  },
+  leftDepositedWrapper3: {},
   leftLogo: {
     width: '38px',
     height: '29px',
     marginTop: '16px',
-    marginRight: '8px'
+    marginRight: '16px'
   },
   leftDepositedValueTxt: {
     marginTop: '8px',
@@ -113,33 +107,29 @@ export const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.lightInfoText
   },
   leftConnectBtn: {
-    width: '360px',
+    maxWidth: '360px',
+    minWidth: '288px',
     display: 'flex',
-    marginTop: '36px',
-    marginBottom: '24px',
-    alignSelf: 'center',
-    borderRadius: '5px',
-    [theme.breakpoints.down('xs')]: {
-      width: '288px'
-    }
+    margin: '36px 24px 24px 24px',
+    borderRadius: '5px'
   },
   rightGrid: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
-    width: '240px',
+    minWidth: '216px',
+    maxWidth: '240px',
     borderRadius: '10px',
     marginLeft: '16px',
-    background: colors.invariant.componentOut4,
+    backgroundColor: colors.invariant.componentOut4,
+    // '& :nth-child(odd)': {
+    //   backgroundColor: colors.invariant.componentIn2
+    // },
     [theme.breakpoints.down('xs')]: {
       minWidth: '336px',
       marginTop: '24px',
       marginLeft: '0px',
       alignSelf: 'center'
-    },
-    '@media (min-width: 601px) and (max-width: 700px)': {
-      width: '216px',
-      marginLeft: '16px'
     }
   },
   rightGridBoxOdd: {

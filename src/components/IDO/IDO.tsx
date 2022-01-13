@@ -10,7 +10,7 @@ export const IDO = () => {
   const classes = useStyles()
   const [est, setEst] = useState<string>(' ')
   const [balance, setBalance] = useState<string>(' ')
-  const [inputValue, setInputValue] = useState<string | undefined>(' ')
+  const [inputValue, setInputValue] = useState<string | undefined>('')
   const [depositedXUSD, setDepositedXUSD] = useState<string>(' ')
   const [depositedUSD, setDepositedUSD] = useState<string>(' ')
   const [depositedSOL, setDepositedSOL] = useState<string>(' ')
@@ -25,7 +25,7 @@ export const IDO = () => {
   useEffect(() => {
     setEst('56.0278')
     setBalance('1004.5')
-    setInputValue('0.00000')
+    setInputValue('')
     setDepositedXUSD('46.643')
     setDepositedUSD('47.43')
     setDepositedSOL('0.0432')
@@ -39,11 +39,11 @@ export const IDO = () => {
   }, [])
 
   return (
-    <Grid container className={classes.wrapper} >
-      <Grid container className={classes.header}>
+    <Grid className={classes.wrapper} >
+      <Grid className={classes.header}>
         <Typography component='h1' className={classes.title} >IDO</Typography>
       </Grid>
-      <Grid container className={classes.gridWrapper}>
+      <Grid className={classes.gridWrapper}>
         <Grid className={classes.leftGrid}>
           <Typography className={classes.leftTitle}>Deposit your SOL</Typography>
           <Grid className={classes.leftImputGrid}>
@@ -52,8 +52,8 @@ export const IDO = () => {
               <Typography className={classes.leftImputTxt}><span className={classes.leftImputTxtBold}> Balance:</span>{` ${balance} SOL`}</Typography>
             </Grid>
             <Grid>
-              <AmountInput className={classes.amountInput} decimal={5} onMaxClick={()=>balance}
-                value={inputValue} tokens={[]} onSelect={()=>console.log("selected")} setValue={()=>console.log('value')} current={null} />
+              <AmountInput className={classes.amountInput} decimal={5} onMaxClick={()=>setInputValue(balance)} placeholder={'0.00000'}
+                value={inputValue} tokens={[]} onSelect={() => console.log("selected")} setValue={(e) => setInputValue(e)} current={null}/>
             </Grid>
           </Grid>
           <Typography className={classes.leftDepositedTxt}>Deposited amount:</Typography>
@@ -75,7 +75,7 @@ export const IDO = () => {
           </Grid>
           <OutlinedButton className={classes.leftConnectBtn} name='Connect a wallet' color='primary' onClick={()=>console.log("clicked")}/>
         </Grid>
-        <Grid container className={classes.rightGrid} >
+        <Grid className={classes.rightGrid} >
           <Grid className={classes.rightGridBoxOdd}>
             <Typography className={classes.rightGridTxt} variant="h4">Sale period ends in</Typography>
             <Grid container direction="row" alignItems="center" justifyContent="center" >
