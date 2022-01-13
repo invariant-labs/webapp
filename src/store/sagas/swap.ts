@@ -34,6 +34,7 @@ export function* handleSimulate(): Generator {
     if (!swapPool) {
       return
     }
+    console.log(swapPool)
     const isXtoY =
       simulate.fromToken.toString() === swapPool.tokenX.toString() &&
       simulate.toToken.toString() === swapPool.tokenY.toString()
@@ -48,12 +49,19 @@ export function* handleSimulate(): Generator {
       undefined,
       isXtoY ? 'down' : 'up'
     )
+    const test = new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0])
+    console.log('pool sqrt price: ', swapPool.sqrtPrice.v.toString())
+    console.log('slippage: ', slippage.v.toString())
+    console.log('XtoY: ', isXtoY)
+    console.log('tickmap: ', tickMap)
     let ticks: Map<number, Tick> = new Map<number, Tick>()
 
-    for (var tick of ticksArray) {
-      ticks.set(tick.index, tick)
+    if (ticks.size === 0) {
+      for (var tick of ticksArray) {
+        ticks.set(tick.index, tick)
+      }
     }
-    console.log(new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]))
+
     if (simulate.amount.gt(new BN(0))) {
       const simulateObject: SimulateSwapInterface = {
         pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),

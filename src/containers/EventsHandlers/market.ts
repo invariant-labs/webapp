@@ -21,6 +21,7 @@ const MarketEvents = () => {
     }
 
     const connectEvents = () => {
+      dispatch(actions.setTokens(getNetworkTokensList(networkType)))
       dispatch(actions.getPoolsData(PAIRS[networkType]))
     }
 
