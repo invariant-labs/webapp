@@ -78,6 +78,7 @@ export const colors = {
     darkInfoText: '#1C1D1C',
     error: '#DB5757',
     warning: '#EFD063',
+    // after UI changes we will delete unnecessary vars
     pink: '#EF84F5',
     green: '#2EE09A',
     dark: '#040B22',
@@ -87,7 +88,6 @@ export const colors = {
     textGrey: '#27262B',
     text: '#FFFFFF',
     Error: '#FB555F'
-    // after UI changes we will delete unnecessary vars
   }
 }
 
