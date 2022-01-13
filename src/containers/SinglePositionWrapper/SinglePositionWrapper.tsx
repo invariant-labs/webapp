@@ -10,12 +10,18 @@ import {
 } from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
-import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
+import {
+  calcPrice,
+  calcYPerXPrice,
+  createPlaceholderLiquidityPlot,
+  getX,
+  getY,
+  printBN
+} from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
-import useStyles from './style'
-import { getX, getY } from '@invariant-labs/sdk/src/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
+import useStyles from './style'
 
 export interface IProps {
   id: string
@@ -58,8 +64,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         x: calcPrice(
           position.poolData.currentTickIndex,
           true,
-          position.tokenX.decimal,
-          position.tokenY.decimal
+          position.tokenX.decimals,
+          position.tokenY.decimals
         )
       }
     }
@@ -76,8 +82,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         x: calcPrice(
           position.lowerTickIndex,
           true,
-          position.tokenX.decimal,
-          position.tokenY.decimal
+          position.tokenX.decimals,
+          position.tokenY.decimals
         )
       }
     }
@@ -94,8 +100,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         x: calcPrice(
           position.upperTickIndex,
           true,
-          position.tokenX.decimal,
-          position.tokenY.decimal
+          position.tokenX.decimals,
+          position.tokenY.decimals
         )
       }
     }
@@ -111,8 +117,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       position
         ? calcYPerXPrice(
             calculate_price_sqrt(position.lowerTickIndex).v,
-            position.tokenX.decimal,
-            position.tokenY.decimal
+            position.tokenX.decimals,
+            position.tokenY.decimals
           )
         : 0,
     [position?.lowerTickIndex]
@@ -122,8 +128,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       position
         ? calcYPerXPrice(
             calculate_price_sqrt(position.upperTickIndex).v,
-            position.tokenX.decimal,
-            position.tokenY.decimal
+            position.tokenX.decimals,
+            position.tokenY.decimals
           )
         : 0,
     [position?.upperTickIndex]
@@ -133,8 +139,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       position
         ? calcYPerXPrice(
             position.poolData.sqrtPrice.v,
-            position.tokenX.decimal,
-            position.tokenY.decimal
+            position.tokenX.decimals,
+            position.tokenY.decimals
           )
         : 0,
     [position]
@@ -147,9 +153,10 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           getX(
             position.liquidity.v,
             calculate_price_sqrt(position.upperTickIndex).v,
-            position.poolData.sqrtPrice.v
+            position.poolData.sqrtPrice.v,
+            calculate_price_sqrt(position.lowerTickIndex).v
           ).div(DENOMINATOR),
-          position.tokenX.decimal
+          position.tokenX.decimals
         )
       } catch (error) {
         return 0
@@ -164,10 +171,11 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         return +printBN(
           getY(
             position.liquidity.v,
+            calculate_price_sqrt(position.upperTickIndex).v,
             position.poolData.sqrtPrice.v,
             calculate_price_sqrt(position.lowerTickIndex).v
           ).div(DENOMINATOR),
-          position.tokenY.decimal
+          position.tokenY.decimals
         )
       } catch (error) {
         return 0
@@ -189,8 +197,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       })
 
       return [
-        +printBN(bnX.div(DENOMINATOR), position.tokenX.decimal),
-        +printBN(bnY.div(DENOMINATOR), position.tokenY.decimal)
+        +printBN(bnX.div(DENOMINATOR), position.tokenX.decimals),
+        +printBN(bnY.div(DENOMINATOR), position.tokenY.decimals)
       ]
     }
 
@@ -203,8 +211,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         true,
         10,
         position.poolData.tickSpacing,
-        position.tokenX.decimal,
-        position.tokenY.decimal
+        position.tokenX.decimals,
+        position.tokenY.decimals
       )
     }
 
@@ -261,16 +269,16 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         tokenYName: position.tokenY.symbol,
         tokenXIcon: position.tokenX.logoURI,
         tokenYIcon: position.tokenY.logoURI,
-        tokenXDecimal: position.tokenX.decimal,
-        tokenYDecimal: position.tokenY.decimal,
+        tokenXDecimal: position.tokenX.decimals,
+        tokenYDecimal: position.tokenY.decimals,
         fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
         min,
         max
       }}
       ticksLoading={ticksLoading}
       tickSpacing={position?.poolData.tickSpacing ?? 1}
-      xDecimal={position?.tokenX.decimal ?? 0}
-      yDecimal={position?.tokenY.decimal ?? 0}
+      xDecimal={position?.tokenX.decimals ?? 0}
+      yDecimal={position?.tokenY.decimals ?? 0}
     />
   ) : isLoadingList ? (
     <Typography className={classes.placeholderText}>Loading...</Typography>
