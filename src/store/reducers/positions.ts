@@ -117,8 +117,10 @@ const positionsSlice = createSlice({
       }
       return state
     },
-    getCurrentPlotTicks(state, _action: PayloadAction<GetCurrentTicksData>) {
-      state.plotTicks.loading = true
+    getCurrentPlotTicks(state, action: PayloadAction<GetCurrentTicksData>) {
+      if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
+        state.plotTicks.loading = true
+      }
       return state
     },
     setPositionsList(state, action: PayloadAction<Position[]>) {
