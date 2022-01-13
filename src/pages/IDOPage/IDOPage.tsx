@@ -1,5 +1,5 @@
 import React from 'react'
-import WrappedSwap from '@containers/WrappedSwap/WrappedSwap'
+import WrappedIDO from '@containers/WrappedIDO/WrappedIDO'
 import useStyles from './styles'
 import { Grid } from '@material-ui/core'
 
@@ -9,7 +9,7 @@ export const IDOPage: React.FC = () => {
   return (
     <Grid container className={classes.container}>
       <Grid item>
-        <WrappedSwap />
+        <WrappedIDO />
       </Grid>
     </Grid>
   )
