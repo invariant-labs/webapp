@@ -28,30 +28,29 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     const wallet = yield* call(getWallet)
     const marketProgram = yield* call(getMarketProgram)
 
-    const allPools = yield* select(pools)
     const tokensAccounts = yield* select(accounts)
 
-    let userTokenX = tokensAccounts[allPools[action.payload.poolIndex].tokenX.toString()]
-      ? tokensAccounts[allPools[action.payload.poolIndex].tokenX.toString()].address
+    let userTokenX = tokensAccounts[action.payload.tokenX.toString()]
+      ? tokensAccounts[action.payload.tokenX.toString()].address
       : null
 
     if (userTokenX === null) {
-      userTokenX = yield* call(createAccount, allPools[action.payload.poolIndex].tokenX)
+      userTokenX = yield* call(createAccount, action.payload.tokenX)
     }
 
-    let userTokenY = tokensAccounts[allPools[action.payload.poolIndex].tokenY.toString()]
-      ? tokensAccounts[allPools[action.payload.poolIndex].tokenY.toString()].address
+    let userTokenY = tokensAccounts[action.payload.tokenY.toString()]
+      ? tokensAccounts[action.payload.tokenY.toString()].address
       : null
 
     if (userTokenY === null) {
-      userTokenY = yield* call(createAccount, allPools[action.payload.poolIndex].tokenY)
+      userTokenY = yield* call(createAccount, action.payload.tokenY)
     }
 
     const tx = yield* call([marketProgram, marketProgram.initPositionTx], {
       pair: new Pair(
-        allPools[action.payload.poolIndex].tokenX,
-        allPools[action.payload.poolIndex].tokenY,
-        { fee: allPools[action.payload.poolIndex].fee.v }
+        action.payload.tokenX,
+        action.payload.tokenY,
+        { fee: action.payload.fee }
       ),
       userTokenX,
       userTokenY,
