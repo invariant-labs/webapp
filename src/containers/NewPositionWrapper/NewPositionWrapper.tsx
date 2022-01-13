@@ -170,7 +170,8 @@ export const NewPositionWrapper = () => {
             fee,
             lowerTick,
             upperTick,
-            liquidityDelta: liquidity
+            liquidityDelta: liquidity,
+            initPool: poolIndex !== null
           })
         )
       }}
@@ -184,16 +185,33 @@ export const NewPositionWrapper = () => {
         const lowerTick = Math.min(left, right)
         const upperTick = Math.max(left, right)
 
+        console.log('liquidity calc by:', tokenAddress.toString())
+        console.log('pool token x:', tokens[isXtoY ? tokenAIndex : tokenBIndex].assetAddress.toString())
+        console.log('curr sqrts:', calculate_price_sqrt(midPrice.index).v.toNumber(), poolIndex !== null ? allPools[poolIndex].sqrtPrice.v.toNumber() : 0)
+        console.log('curr indexes:', midPrice.index, poolIndex !== null ? allPools[poolIndex].currentTickIndex : 0)
+
         try {
           if (byX) {
             const result = getLiquidityByX(
               amount,
               lowerTick,
               upperTick,
-              calculate_price_sqrt(midPrice.index),
+              poolIndex !== null ? allPools[poolIndex].sqrtPrice : calculate_price_sqrt(midPrice.index),
               true
             )
             setLiquidity(result.liquidity)
+
+            console.log(
+              'x:',
+              amount.toString(),
+              'y:',
+              result.y.toString(),
+              'ticks:',
+              lowerTick,
+              upperTick,
+              'liquidity',
+              result.liquidity.v.toString()
+            )
 
             return result.y
           }
@@ -202,10 +220,22 @@ export const NewPositionWrapper = () => {
             amount,
             lowerTick,
             upperTick,
-            calculate_price_sqrt(midPrice.index),
+            poolIndex !== null ? allPools[poolIndex].sqrtPrice : calculate_price_sqrt(midPrice.index),
             true
           )
           setLiquidity(result.liquidity)
+
+          console.log(
+            'y:',
+            amount.toString(),
+            'x:',
+            result.x.toString(),
+            'ticks:',
+            lowerTick,
+            upperTick,
+            'liquidity',
+            result.liquidity.v.toString()
+          )
 
           return result.x
         } catch (error) {
@@ -213,10 +243,21 @@ export const NewPositionWrapper = () => {
             amount,
             lowerTick,
             upperTick,
-            calculate_price_sqrt(midPrice.index),
+            poolIndex !== null ? allPools[poolIndex].sqrtPrice : calculate_price_sqrt(midPrice.index),
             true
           )
           setLiquidity(result.liquidity)
+
+          console.log(
+            'err',
+            byX ? 'x:' : 'y:',
+            amount.toString(),
+            'ticks:',
+            lowerTick,
+            upperTick,
+            'liquidity:',
+            result.liquidity.v.toString()
+          )
         }
 
         return new BN(0)
