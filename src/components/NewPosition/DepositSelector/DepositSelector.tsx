@@ -19,7 +19,6 @@ export interface InputState {
 
 export interface IDepositSelector {
   tokens: SwapToken[]
-  tokensB: SwapToken[]
   setPositionTokens: (
     tokenAIndex: number | null,
     tokenBindex: number | null,
@@ -29,20 +28,17 @@ export interface IDepositSelector {
   tokenAInputState: InputState
   tokenBInputState: InputState
   feeTiers: number[]
-  isCurrentPoolExisting: boolean
   className?: string
   progress: ProgressState
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
   tokens,
-  tokensB,
   setPositionTokens,
   onAddLiquidity,
   tokenAInputState,
   tokenBInputState,
   feeTiers,
-  isCurrentPoolExisting,
   className,
   progress
 }) => {
@@ -55,10 +51,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   const getButtonMessage = useCallback(() => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens'
-    }
-
-    if (!isCurrentPoolExisting) {
-      return 'Pool does not exist'
     }
 
     if (
@@ -89,14 +81,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
 
     return 'Add Liquidity'
-  }, [
-    tokenAIndex,
-    tokenBIndex,
-    tokenAInputState.value,
-    tokenBInputState.value,
-    tokens,
-    isCurrentPoolExisting
-  ])
+  }, [tokenAIndex, tokenBIndex, tokenAInputState.value, tokenBInputState.value, tokens])
 
   useEffect(() => {
     if (tokenAIndex !== null) {
@@ -117,20 +102,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       }
     }
   }, [tokenBIndex])
-
-  useEffect(() => {
-    if (
-      tokenAIndex !== null &&
-      tokenBIndex !== null &&
-      !tokensB.find(token => token.symbol === tokens[tokenAIndex].symbol)
-    ) {
-      const indexB = tokensB.length
-        ? tokens.findIndex(token => token.symbol === tokensB[0].symbol)
-        : null
-      setTokenBIndex(indexB)
-      setPositionTokens(tokenAIndex, indexB, feeTierIndex)
-    }
-  }, [tokensB])
 
   return (
     <Grid container direction='column' className={classNames(classes.wrapper, className)}>
@@ -155,7 +126,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           <Grid className={classes.selectWrapper}>
             <Typography className={classes.inputLabel}>Pair token B</Typography>
             <Select
-              tokens={tokensB}
+              tokens={tokens}
               current={tokenBIndex !== null ? tokens[tokenBIndex] : null}
               onSelect={name => {
                 const index = tokens.findIndex(e => e.symbol === name)

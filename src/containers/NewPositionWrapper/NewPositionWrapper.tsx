@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react'
 import NewPosition from '@components/NewPosition/NewPosition'
 import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
-import { SwapToken, swapTokens, status, swapTokensDict } from '@selectors/solanaWallet'
+import { swapTokens, status } from '@selectors/solanaWallet'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { calcPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { pools } from '@selectors/pools'
@@ -13,12 +13,12 @@ import { BN } from '@project-serum/anchor'
 import { PRICE_DECIMAL } from '@consts/static'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
 
   const tokens = useSelector(swapTokens)
-  const tokensDict = useSelector(swapTokensDict)
   const walletStatus = useSelector(status)
   const allPools = useSelector(pools)
   const { success, inProgress } = useSelector(initPosition)
@@ -90,49 +90,26 @@ export const NewPositionWrapper = () => {
     return 0
   }, [poolIndex])
 
-  const midPrice = useMemo(() => {
+  const [midPrice, setMidPrice] = useState<TickPlotPositionData>({
+    index: 0,
+    x: 1
+  })
+
+  useEffect(() => {
     if (poolIndex !== null) {
-      return {
+      setMidPrice({
         index: allPools[poolIndex].currentTickIndex,
         x: calcPrice(allPools[poolIndex].currentTickIndex, isXtoY, xDecimal, yDecimal)
-      }
+      })
+
+      return
     }
 
-    return {
+    setMidPrice({
       index: 0,
-      x: 0
-    }
+      x: 1
+    })
   }, [poolIndex, isXtoY, xDecimal, yDecimal])
-
-  const tokensB = useMemo(() => {
-    if (tokenAIndex === null) {
-      return []
-    }
-
-    const poolsForTokenA = allPools.filter(
-      pool =>
-        pool.tokenX.equals(tokens[tokenAIndex].assetAddress) ||
-        pool.tokenY.equals(tokens[tokenAIndex].assetAddress)
-    )
-
-    const notUnique = poolsForTokenA.map(
-      pool =>
-        tokensDict[
-          pool.tokenX.equals(tokens[tokenAIndex].assetAddress)
-            ? pool.tokenY.toString()
-            : pool.tokenX.toString()
-        ]
-    )
-
-    const unique: Record<string, SwapToken> = notUnique.reduce((prev, token) => {
-      return {
-        [token.assetAddress.toString()]: token,
-        ...prev
-      }
-    }, {})
-
-    return Object.values(unique)
-  }, [tokenAIndex, allPools.length])
 
   const data = useMemo(() => {
     if (ticksLoading) {
@@ -145,7 +122,6 @@ export const NewPositionWrapper = () => {
   return (
     <NewPosition
       tokens={tokens}
-      tokensB={tokensB}
       onChangePositionTokens={(tokenA, tokenB, fee) => {
         setTokenAIndex(tokenA)
         setTokenBIndex(tokenB)
@@ -174,6 +150,7 @@ export const NewPositionWrapper = () => {
       feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, PRICE_DECIMAL - 2))}
       data={data}
       midPrice={midPrice}
+      setMidPrice={setMidPrice}
       addLiquidityHandler={(leftTickIndex, rightTickIndex) => {
         if (poolIndex === null) {
           return

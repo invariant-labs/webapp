@@ -23,6 +23,8 @@ export interface IPoolInit {
   xDecimal: number
   yDecimal: number
   tickSpacing: number
+  midPrice: number
+  onChangeMidPrice: (mid: number) => void
 }
 
 export const PoolInit: React.FC<IPoolInit> = ({
@@ -32,7 +34,9 @@ export const PoolInit: React.FC<IPoolInit> = ({
   isXtoY,
   xDecimal,
   yDecimal,
-  tickSpacing
+  tickSpacing,
+  midPrice,
+  onChangeMidPrice
 }) => {
   const classes = useStyles()
 
@@ -43,10 +47,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
   const [rightInput, setRightInput] = useState('')
 
   const [midPriceInput, setMidPriceInput] = useState('')
-  const [midPrice, setMidPrice] = useState(MIN_TICK)
-
   useEffect(() => {
-    setMidPrice(nearestTickIndex(+midPriceInput, tickSpacing, isXtoY, xDecimal, yDecimal))
+    onChangeMidPrice(nearestTickIndex(+midPriceInput, tickSpacing, isXtoY, xDecimal, yDecimal))
   }, [midPriceInput])
 
   const changeRangeHandler = (left: number, right: number) => {

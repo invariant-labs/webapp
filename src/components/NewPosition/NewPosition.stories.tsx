@@ -57,12 +57,12 @@ storiesOf('position/newPosition', module)
     <div style={{ backgroundColor: '#000000', padding: 20, width: 'fit-content' }}>
       <NewPosition
         tokens={tokens}
-        tokensB={tokens}
         data={data}
         midPrice={{
           x: calcPrice(140, true, 6, 6),
           index: 140
         }}
+        setMidPrice={() => {}}
         addLiquidityHandler={() => {}}
         onChangePositionTokens={() => {}}
         isCurrentPoolExisting={true}
@@ -86,12 +86,12 @@ storiesOf('position/newPosition', module)
     <div style={{ backgroundColor: '#000000', padding: 20, width: 'fit-content' }}>
       <NewPosition
         tokens={tokens}
-        tokensB={tokens}
         data={data}
         midPrice={{
           x: calcPrice(140, true, 6, 6),
           index: 140
         }}
+        setMidPrice={() => {}}
         addLiquidityHandler={() => {}}
         onChangePositionTokens={() => {}}
         isCurrentPoolExisting={false}
