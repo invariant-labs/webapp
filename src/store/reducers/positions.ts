@@ -118,10 +118,7 @@ const positionsSlice = createSlice({
       return state
     },
     getCurrentPlotTicks(state, action: PayloadAction<GetCurrentTicksData>) {
-      if (
-        typeof action.payload.min === 'undefined' &&
-        typeof action.payload.max === 'undefined'
-      ) {
+      if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
         state.plotTicks.loading = true
       }
       return state
