@@ -77,7 +77,17 @@ export const colors = {
     lightInfoText: '#7F768F',
     darkInfoText: '#1C1D1C',
     error: '#DB5757',
-    warning: '#EFD063'
+    warning: '#EFD063',
+    // after UI changes we will delete unnecessary vars
+    pink: '#EF84F5',
+    green: '#2EE09A',
+    dark: '#040B22',
+    component: '#202946',
+    light: '#3A466B',
+    black: '#010514',
+    textGrey: '#27262B',
+    text: '#FFFFFF',
+    Error: '#FB555F'
   }
 }
 
@@ -170,6 +180,69 @@ export const typography = {
   label3: {
     fontSize: 10,
     lineHeight: '24px',
+    fontWeight: 400
+  }
+}
+
+export const newTypography = {
+  heading1: {
+    fontSize: 32,
+    lineHeight: '36px',
+    fontWeight: 700
+  },
+  heading2: {
+    fontSize: 28,
+    lineHeight: '32px',
+    fontWeight: 700
+  },
+  heading3: {
+    fontSize: 24,
+    lineHeight: '28px',
+    fontWeight: 700
+  },
+  heading4: {
+    fontSize: 20,
+    lineHeight: '24px',
+    fontWeight: 700
+  },
+  body1: {
+    fontSize: 16,
+    lineHeight: '20px',
+    fontWeight: 700
+  },
+  body2: {
+    fontSize: 16,
+    lineHeight: '20px',
+    fontWeight: 400
+  },
+  caption1: {
+    fontSize: 14,
+    lineHeight: '17px',
+    fontWeight: 700
+  },
+  caption2: {
+    fontSize: 14,
+    lineHeight: '17px',
+    fontWeight: 400
+  },
+  caption3: {
+    fontSize: 12,
+    lineHeight: '15px',
+    fontWeight: 700
+  },
+  caption4: {
+    fontSize: 12,
+    lineHeight: '16px',
+    fontWeight: 400
+  },
+  tiny1: {
+    fontSize: 10,
+    lineHeight: '13px',
+    fontWeight: 700
+  },
+  tiny2: {
+    fontSize: 10,
+    lineHeight: '13px',
     fontWeight: 400
   }
 }
