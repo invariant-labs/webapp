@@ -260,7 +260,10 @@ export const NewPosition: React.FC<INewPosition> = ({
           progress={progress}
         />
 
-        {isCurrentPoolExisting && tokenAIndex !== tokenBIndex ? (
+        {isCurrentPoolExisting ||
+        tokenAIndex === null ||
+        tokenBIndex === null ||
+        tokenAIndex === tokenBIndex ? (
           <RangeSelector
             onChangeRange={onChangeRange}
             blocked={
@@ -270,7 +273,10 @@ export const NewPosition: React.FC<INewPosition> = ({
               data.length === 0
             }
             blockerInfo={setRangeBlockerInfo()}
-            {...(tokenAIndex === null || tokenBIndex === null || data.length === 0
+            {...(tokenAIndex === null ||
+            tokenBIndex === null ||
+            tokenAIndex === tokenBIndex ||
+            data.length === 0
               ? noRangePlaceholderProps
               : {
                   data,
