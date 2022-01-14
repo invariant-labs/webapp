@@ -19,7 +19,7 @@ import {
   printBN
 } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
-import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
 import useStyles from './style'
 
@@ -116,7 +116,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     () =>
       position
         ? calcYPerXPrice(
-            calculate_price_sqrt(position.lowerTickIndex).v,
+            calculatePriceSqrt(position.lowerTickIndex).v,
             position.tokenX.decimals,
             position.tokenY.decimals
           )
@@ -127,7 +127,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     () =>
       position
         ? calcYPerXPrice(
-            calculate_price_sqrt(position.upperTickIndex).v,
+            calculatePriceSqrt(position.upperTickIndex).v,
             position.tokenX.decimals,
             position.tokenY.decimals
           )
@@ -152,9 +152,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         return +printBN(
           getX(
             position.liquidity.v,
-            calculate_price_sqrt(position.upperTickIndex).v,
+            calculatePriceSqrt(position.upperTickIndex).v,
             position.poolData.sqrtPrice.v,
-            calculate_price_sqrt(position.lowerTickIndex).v
+            calculatePriceSqrt(position.lowerTickIndex).v
           ).div(DENOMINATOR),
           position.tokenX.decimals
         )
@@ -171,9 +171,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         return +printBN(
           getY(
             position.liquidity.v,
-            calculate_price_sqrt(position.upperTickIndex).v,
+            calculatePriceSqrt(position.upperTickIndex).v,
             position.poolData.sqrtPrice.v,
-            calculate_price_sqrt(position.lowerTickIndex).v
+            calculatePriceSqrt(position.lowerTickIndex).v
           ).div(DENOMINATOR),
           position.tokenY.decimals
         )
