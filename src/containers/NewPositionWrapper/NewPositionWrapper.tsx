@@ -14,7 +14,7 @@ import { PRICE_DECIMAL } from '@consts/static'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
-import { calculate_price_sqrt } from '@invariant-labs/sdk'
+import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { feeToTickSpacing } from '@invariant-labs/sdk/src/utils'
 
 export const NewPositionWrapper = () => {
@@ -205,7 +205,7 @@ export const NewPositionWrapper = () => {
               upperTick,
               poolIndex !== null
                 ? allPools[poolIndex].sqrtPrice
-                : calculate_price_sqrt(midPrice.index),
+                : calculatePriceSqrt(midPrice.index),
               true
             )
             setLiquidity(result.liquidity)
@@ -229,9 +229,7 @@ export const NewPositionWrapper = () => {
             amount,
             lowerTick,
             upperTick,
-            poolIndex !== null
-              ? allPools[poolIndex].sqrtPrice
-              : calculate_price_sqrt(midPrice.index),
+            poolIndex !== null ? allPools[poolIndex].sqrtPrice : calculatePriceSqrt(midPrice.index),
             true
           )
           setLiquidity(result.liquidity)
@@ -254,9 +252,7 @@ export const NewPositionWrapper = () => {
             amount,
             lowerTick,
             upperTick,
-            poolIndex !== null
-              ? allPools[poolIndex].sqrtPrice
-              : calculate_price_sqrt(midPrice.index),
+            poolIndex !== null ? allPools[poolIndex].sqrtPrice : calculatePriceSqrt(midPrice.index),
             true
           )
           setLiquidity(result.liquidity)
