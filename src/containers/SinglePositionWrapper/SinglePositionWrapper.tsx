@@ -197,8 +197,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       })
 
       return [
-        +printBN(bnX.div(DENOMINATOR), position.tokenX.decimals),
-        +printBN(bnY.div(DENOMINATOR), position.tokenY.decimals)
+        +printBN(bnX.div(DENOMINATOR).div(DENOMINATOR), position.tokenX.decimals),
+        +printBN(bnY.div(DENOMINATOR).div(DENOMINATOR), position.tokenY.decimals)
       ]
     }
 
