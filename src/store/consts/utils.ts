@@ -1,4 +1,4 @@
-import { calculate_price_sqrt, DENOMINATOR, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, DENOMINATOR, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
 import { PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
@@ -415,7 +415,7 @@ export const calcTicksAmountInRange = (
 }
 
 export const calcPrice = (index: number, isXtoY: boolean, xDecimal: number, yDecimal: number) => {
-  const price = calcYPerXPrice(calculate_price_sqrt(index).v, xDecimal, yDecimal)
+  const price = calcYPerXPrice(calculatePriceSqrt(index).v, xDecimal, yDecimal)
 
   return isXtoY ? price : price !== 0 ? 1 / price : Number.MAX_SAFE_INTEGER
 }
