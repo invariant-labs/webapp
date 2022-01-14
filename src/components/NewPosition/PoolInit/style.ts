@@ -78,7 +78,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   infoWrapper: {
     border: `1px solid ${colors.invariant.lightInfoText}`,
     borderRadius: 10,
-    padding: 16,
+    paddingInline: 16,
+    paddingBlock: 8,
     backgroundColor: colors.invariant.componentOut2,
     marginBottom: 16
   },
@@ -94,7 +95,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingInline: 12,
     paddingBlock: 4,
     borderRadius: 8,
-    marginBottom: 48
+    marginBottom: 36
   },
   priceLabel: {
     ...typography.body2,

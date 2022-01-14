@@ -53,6 +53,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'Select tokens'
     }
 
+    if (tokenAIndex === tokenBIndex) {
+      return 'Select different tokens'
+    }
+
     if (
       !tokenAInputState.blocked &&
       printBNtoBN(tokenAInputState.value, tokens[tokenAIndex].decimals).gt(
