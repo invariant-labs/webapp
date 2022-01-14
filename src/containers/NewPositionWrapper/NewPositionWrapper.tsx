@@ -61,14 +61,17 @@ export const NewPositionWrapper = () => {
 
   const isXtoY = useMemo(() => {
     if (tokenAIndex !== null && tokenBIndex !== null) {
-      return tokens[tokenAIndex].assetAddress.toString() < tokens[tokenBIndex].assetAddress.toString()
+      return (
+        tokens[tokenAIndex].assetAddress.toString() < tokens[tokenBIndex].assetAddress.toString()
+      )
     }
     return true
   }, [tokenAIndex, tokenBIndex])
 
   const xDecimal = useMemo(() => {
     if (tokenAIndex !== null && tokenBIndex !== null) {
-      return tokens[tokenAIndex].assetAddress.toString() < tokens[tokenBIndex].assetAddress.toString()
+      return tokens[tokenAIndex].assetAddress.toString() <
+        tokens[tokenBIndex].assetAddress.toString()
         ? tokens[tokenAIndex].decimals
         : tokens[tokenBIndex].decimals
     }
@@ -77,7 +80,8 @@ export const NewPositionWrapper = () => {
 
   const yDecimal = useMemo(() => {
     if (tokenAIndex !== null && tokenBIndex !== null) {
-      return tokens[tokenAIndex].assetAddress.toString() < tokens[tokenBIndex].assetAddress.toString()
+      return tokens[tokenAIndex].assetAddress.toString() <
+        tokens[tokenBIndex].assetAddress.toString()
         ? tokens[tokenBIndex].decimals
         : tokens[tokenAIndex].decimals
     }
@@ -181,14 +185,17 @@ export const NewPositionWrapper = () => {
           return new BN(0)
         }
 
-        const byX = tokenAddress.equals(isXtoY ? tokens[tokenAIndex].assetAddress : tokens[tokenBIndex].assetAddress)
+        const byX = tokenAddress.equals(
+          isXtoY ? tokens[tokenAIndex].assetAddress : tokens[tokenBIndex].assetAddress
+        )
         const lowerTick = Math.min(left, right)
         const upperTick = Math.max(left, right)
 
         console.log('liquidity calc by:', tokenAddress.toString())
-        console.log('pool token x:', tokens[isXtoY ? tokenAIndex : tokenBIndex].assetAddress.toString())
-        console.log('curr sqrts:', calculate_price_sqrt(midPrice.index).v.toNumber(), poolIndex !== null ? allPools[poolIndex].sqrtPrice.v.toNumber() : 0)
-        console.log('curr indexes:', midPrice.index, poolIndex !== null ? allPools[poolIndex].currentTickIndex : 0)
+        console.log(
+          'pool token x:',
+          tokens[isXtoY ? tokenAIndex : tokenBIndex].assetAddress.toString()
+        )
 
         try {
           if (byX) {
@@ -196,7 +203,9 @@ export const NewPositionWrapper = () => {
               amount,
               lowerTick,
               upperTick,
-              poolIndex !== null ? allPools[poolIndex].sqrtPrice : calculate_price_sqrt(midPrice.index),
+              poolIndex !== null
+                ? allPools[poolIndex].sqrtPrice
+                : calculate_price_sqrt(midPrice.index),
               true
             )
             setLiquidity(result.liquidity)
@@ -220,7 +229,9 @@ export const NewPositionWrapper = () => {
             amount,
             lowerTick,
             upperTick,
-            poolIndex !== null ? allPools[poolIndex].sqrtPrice : calculate_price_sqrt(midPrice.index),
+            poolIndex !== null
+              ? allPools[poolIndex].sqrtPrice
+              : calculate_price_sqrt(midPrice.index),
             true
           )
           setLiquidity(result.liquidity)
@@ -243,7 +254,9 @@ export const NewPositionWrapper = () => {
             amount,
             lowerTick,
             upperTick,
-            poolIndex !== null ? allPools[poolIndex].sqrtPrice : calculate_price_sqrt(midPrice.index),
+            poolIndex !== null
+              ? allPools[poolIndex].sqrtPrice
+              : calculate_price_sqrt(midPrice.index),
             true
           )
           setLiquidity(result.liquidity)
