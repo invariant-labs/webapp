@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react'
 import NewPosition from '@components/NewPosition/NewPosition'
 import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
-import { SwapToken, swapTokens, status, swapTokensDict } from '@selectors/solanaWallet'
+import { SwapToken, swapTokens, status } from '@selectors/solanaWallet'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { calcPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { pools } from '@selectors/pools'
@@ -18,7 +18,6 @@ export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
 
   const tokens = useSelector(swapTokens)
-  const tokensDict = useSelector(swapTokensDict)
   const walletStatus = useSelector(status)
   const allPools = useSelector(pools)
   const { success, inProgress } = useSelector(initPosition)
@@ -67,8 +66,8 @@ export const NewPositionWrapper = () => {
   const xDecimal = useMemo(() => {
     if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
       return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
-        ? tokens[tokenAIndex].decimals
-        : tokens[tokenBIndex].decimals
+        ? tokens[tokenAIndex].decimal
+        : tokens[tokenBIndex].decimal
     }
     return 0
   }, [poolIndex, tokenAIndex])
@@ -76,8 +75,8 @@ export const NewPositionWrapper = () => {
   const yDecimal = useMemo(() => {
     if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
       return allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress)
-        ? tokens[tokenBIndex].decimals
-        : tokens[tokenAIndex].decimals
+        ? tokens[tokenBIndex].decimal
+        : tokens[tokenAIndex].decimal
     }
     return 0
   }, [poolIndex, tokenAIndex])
@@ -109,29 +108,27 @@ export const NewPositionWrapper = () => {
       return []
     }
 
+    const tokensByKey: Record<string, SwapToken> = tokens.reduce((prev, token) => {
+      return {
+        [token.address.toString()]: token,
+        ...prev
+      }
+    }, {})
+
     const poolsForTokenA = allPools.filter(
       pool =>
         pool.tokenX.equals(tokens[tokenAIndex].assetAddress) ||
         pool.tokenY.equals(tokens[tokenAIndex].assetAddress)
     )
 
-    const notUnique = poolsForTokenA.map(
+    return poolsForTokenA.map(
       pool =>
-        tokensDict[
+        tokensByKey[
           pool.tokenX.equals(tokens[tokenAIndex].assetAddress)
             ? pool.tokenY.toString()
             : pool.tokenX.toString()
         ]
     )
-
-    const unique: Record<string, SwapToken> = notUnique.reduce((prev, token) => {
-      return {
-        [token.assetAddress.toString()]: token,
-        ...prev
-      }
-    }, {})
-
-    return Object.values(unique)
   }, [tokenAIndex, allPools.length])
 
   const data = useMemo(() => {

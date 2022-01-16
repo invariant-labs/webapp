@@ -1,4 +1,3 @@
-import { Token } from '@consts/static'
 import { Pair } from '@invariant-labs/sdk'
 import { PoolStructure } from '@invariant-labs/sdk/lib/market'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
@@ -10,7 +9,6 @@ export interface PoolWithAddress extends PoolStructure {
 }
 
 export interface IPoolsStore {
-  tokens: Record<string, Token>
   pools: PoolWithAddress[]
 }
 
@@ -20,7 +18,6 @@ export interface UpdatePool {
 }
 
 export const defaultState: IPoolsStore = {
-  tokens: {},
   pools: []
 }
 
@@ -29,10 +26,6 @@ const poolsSlice = createSlice({
   name: poolsSliceName,
   initialState: defaultState,
   reducers: {
-    setTokens(state, action: PayloadAction<Record<string, Token>>) {
-      state.tokens = action.payload
-      return state
-    },
     setPools(state, action: PayloadAction<PoolWithAddress[]>) {
       state.pools = action.payload
       return state

@@ -2,13 +2,7 @@ import React from 'react'
 import { Scrollbars } from 'rc-scrollbars'
 import useStyles from './style'
 
-export interface IProps {
-  onScroll?: (e: React.UIEvent<HTMLElement>) => void
-  ref?: React.LegacyRef<Scrollbars>
-  style?: React.CSSProperties
-}
-
-export const CustonScrollbar: React.FC<IProps> = props => {
+export const CustonScrollbar: React.FC<{}> = props => {
   const classes = useStyles()
 
   return (

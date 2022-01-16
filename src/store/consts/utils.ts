@@ -1,21 +1,10 @@
-import { calculate_price_sqrt, DENOMINATOR, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
+import { calculate_price_sqrt, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
 import { PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
-import {
-  ANA_DEV,
-  MSOL_DEV,
-  NetworkType,
-  PRICE_DECIMAL,
-  SOL_DEV,
-  Token,
-  USDC_DEV,
-  USDT_DEV
-} from './static'
-import mainnetList from './tokenLists/mainnet.json'
-import { PublicKey } from '@solana/web3.js'
+import { NetworkType, PRICE_DECIMAL, tokens } from './static'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -220,9 +209,12 @@ export const createLiquidityPlot = (
   rawTicks: Tick[],
   pool: PoolStructure,
   isXtoY: boolean,
-  tokenXDecimal: number,
-  tokenYDecimal: number
+  networkType: NetworkType
 ) => {
+  const tokenXDecimal =
+    tokens[networkType].find(token => token.address.equals(pool.tokenX))?.decimal ?? 0
+  const tokenYDecimal =
+    tokens[networkType].find(token => token.address.equals(pool.tokenY))?.decimal ?? 0
   const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(rawTicks, pool) : []
 
   const ticks = rawTicks.map((raw, index) => ({
@@ -336,32 +328,6 @@ export const createPlaceholderLiquidityPlot = (
   return isXtoY ? ticksData : ticksData.reverse()
 }
 
-export const getNetworkTokensList = (networkType: NetworkType): Record<string, Token> => {
-  switch (networkType) {
-    case NetworkType.MAINNET:
-      return mainnetList.reduce(
-        (all, token) => ({
-          ...all,
-          [token.address]: {
-            ...token,
-            address: new PublicKey(token.address)
-          }
-        }),
-        {}
-      )
-    case NetworkType.DEVNET:
-      return {
-        [USDC_DEV.address.toString()]: USDC_DEV,
-        [USDT_DEV.address.toString()]: USDT_DEV,
-        [SOL_DEV.address.toString()]: SOL_DEV,
-        [ANA_DEV.address.toString()]: ANA_DEV,
-        [MSOL_DEV.address.toString()]: MSOL_DEV
-      }
-    default:
-      return {}
-  }
-}
-
 export const getPrimaryUnitsPrice = (
   price: number,
   isXtoY: boolean,
@@ -377,12 +343,9 @@ export const nearestSpacingMultiplicity = (arg: number, spacing: number) => {
   const greater = spacingMultiplicityGte(arg, spacing)
   const lower = spacingMultiplicityLte(arg, spacing)
 
-  const nearest = Math.abs(greater - arg) < Math.abs(lower - arg) ? greater : lower
-
-  return Math.max(
-    Math.min(nearest, spacingMultiplicityLte(MAX_TICK, spacing)),
-    spacingMultiplicityGte(MIN_TICK, spacing)
-  )
+  return Math.abs(greater - arg) < Math.abs(lower - arg)
+    ? Math.min(greater, spacingMultiplicityLte(MAX_TICK, spacing))
+    : Math.max(lower, spacingMultiplicityGte(MIN_TICK, spacing))
 }
 
 export const nearestTickIndex = (
@@ -418,61 +381,4 @@ export const calcPrice = (index: number, isXtoY: boolean, xDecimal: number, yDec
   const price = calcYPerXPrice(calculate_price_sqrt(index).v, xDecimal, yDecimal)
 
   return isXtoY ? price : price !== 0 ? 1 / price : Number.MAX_SAFE_INTEGER
-}
-
-// TODO: temporarily copied, remove later
-export const getX = (
-  liquidity: BN,
-  upperSqrtPrice: BN,
-  currentSqrtPrice: BN,
-  lowerSqrtPrice: BN
-): BN => {
-  if (
-    upperSqrtPrice.lte(new BN(0)) ||
-    currentSqrtPrice.lte(new BN(0)) ||
-    lowerSqrtPrice.lte(new BN(0))
-  ) {
-    throw new Error('Price cannot be lower or equal 0')
-  }
-
-  let denominator: BN
-  let nominator: BN
-
-  if (currentSqrtPrice.gte(upperSqrtPrice)) {
-    return new BN(0)
-  } else if (currentSqrtPrice.lt(lowerSqrtPrice)) {
-    denominator = lowerSqrtPrice.mul(upperSqrtPrice).div(DENOMINATOR)
-    nominator = upperSqrtPrice.sub(lowerSqrtPrice)
-  } else {
-    denominator = upperSqrtPrice.mul(currentSqrtPrice).div(DENOMINATOR)
-    nominator = upperSqrtPrice.sub(currentSqrtPrice)
-  }
-
-  return liquidity.mul(nominator).div(denominator)
-}
-
-export const getY = (
-  liquidity: BN,
-  upperSqrtPrice: BN,
-  currentSqrtPrice: BN,
-  lowerSqrtPrice: BN
-): BN => {
-  if (
-    lowerSqrtPrice.lte(new BN(0)) ||
-    currentSqrtPrice.lte(new BN(0)) ||
-    upperSqrtPrice.lte(new BN(0))
-  ) {
-    throw new Error('Price cannot be 0')
-  }
-
-  let difference: BN
-  if (currentSqrtPrice.lt(lowerSqrtPrice)) {
-    return new BN(0)
-  } else if (currentSqrtPrice.gte(upperSqrtPrice)) {
-    difference = upperSqrtPrice.sub(lowerSqrtPrice)
-  } else {
-    difference = currentSqrtPrice.sub(lowerSqrtPrice)
-  }
-
-  return liquidity.mul(difference).div(DENOMINATOR)
 }

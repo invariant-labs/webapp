@@ -6,7 +6,6 @@ import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
 import { pools } from '@selectors/pools'
 import { PAIRS } from '@consts/static'
-import { getNetworkTokensList } from '@consts/utils'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -21,8 +20,9 @@ const MarketEvents = () => {
     }
 
     const connectEvents = () => {
-      dispatch(actions.setTokens(getNetworkTokensList(networkType)))
-      dispatch(actions.getPoolsData(PAIRS[networkType]))
+      dispatch(
+        actions.getPoolsData(PAIRS[networkType])
+      )
     }
 
     connectEvents()
