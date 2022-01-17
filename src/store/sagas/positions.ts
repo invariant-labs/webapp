@@ -19,14 +19,58 @@ import {
   createPlaceholderLiquidityPlot
 } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
-import { Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
+import { Transaction, sendAndConfirmRawTransaction, Keypair, PublicKey } from '@solana/web3.js'
 import { positionsWithPoolsData, plotTicks, singlePositionData } from '@selectors/positions'
+import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { BN } from '@project-serum/anchor'
+
+export function* createPool(
+  tokenX: PublicKey,
+  tokenY: PublicKey,
+  fee: BN,
+  initTick?: number
+): Generator {
+  const connection = yield* call(getConnection)
+  const wallet = yield* call(getWallet)
+  const marketProgram = yield* call(getMarketProgram)
+
+  const tokenXDetails = new Token(connection, tokenX, TOKEN_PROGRAM_ID, new Keypair())
+  const tokenYDetails = new Token(connection, tokenY, TOKEN_PROGRAM_ID, new Keypair())
+  const { transaction: tx, signer } = yield* call([marketProgram, marketProgram.createPoolTx], {
+    pair: new Pair(tokenX, tokenY, { fee: fee }),
+    tokenX: tokenXDetails,
+    tokenY: tokenYDetails,
+    protocolFee: {
+      v: fee
+    },
+    initTick: initTick
+  })
+  const blockhash = yield* call([connection, connection.getRecentBlockhash])
+  tx.recentBlockhash = blockhash.blockhash
+  tx.feePayer = wallet.publicKey
+  const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+  signedTx.partialSign(signer)
+
+  yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+    skipPreflight: false
+  })
+}
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
     const connection = yield* call(getConnection)
     const wallet = yield* call(getWallet)
     const marketProgram = yield* call(getMarketProgram)
+
+    if (action.payload.initPool) {
+      yield* call(
+        createPool,
+        action.payload.tokenX,
+        action.payload.tokenY,
+        action.payload.fee,
+        action.payload.initTick
+      )
+    }
 
     const tokensAccounts = yield* select(accounts)
 
@@ -47,11 +91,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     }
 
     const tx = yield* call([marketProgram, marketProgram.initPositionTx], {
-      pair: new Pair(
-        action.payload.tokenX,
-        action.payload.tokenY,
-        { fee: action.payload.fee }
-      ),
+      pair: new Pair(action.payload.tokenX, action.payload.tokenY, { fee: action.payload.fee }),
       userTokenX,
       userTokenY,
       lowerTick: action.payload.lowerTick,
@@ -64,6 +104,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false
     })

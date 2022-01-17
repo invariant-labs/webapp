@@ -46,6 +46,7 @@ export interface InitPositionData
   tokenY: PublicKey
   fee: BN
   initPool?: boolean
+  initTick?: number
 }
 
 export interface GetCurrentTicksData {

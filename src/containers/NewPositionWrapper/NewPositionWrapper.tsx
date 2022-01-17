@@ -175,7 +175,8 @@ export const NewPositionWrapper = () => {
             lowerTick,
             upperTick,
             liquidityDelta: liquidity,
-            initPool: poolIndex !== null
+            initPool: poolIndex === null,
+            initTick: poolIndex === null ? midPrice.index : undefined
           })
         )
       }}
