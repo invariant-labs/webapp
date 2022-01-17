@@ -1,9 +1,10 @@
 import { Button, Grid, Typography } from '@material-ui/core'
-import React from 'react'
+import React, { useState } from 'react'
 import { PositionItem } from './PositionItem/PositionItem'
 import useStyle from './style'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Link } from 'react-router-dom'
+import { PaginationList } from './Pagination/Pagination'
 
 export interface ILiquidityItem {
   tokenXName: string
@@ -35,6 +36,28 @@ export const PositionsList: React.FC<IProp> = ({
   noConnectedBlockerProps
 }) => {
   const classes = useStyle()
+  const [page, setPage] = useState(1)
+  const itemsPerPage = 6
+  const handleChangePagination = (page: number): void => {
+    setPage(page)
+  }
+  function paginator(current_page: number, per_page_items: number) {
+    let page = current_page || 1,
+      per_page = per_page_items || 10,
+      offset = (page - 1) * per_page,
+      paginatedItems = data.slice(offset).slice(0, per_page_items),
+      total_pages = Math.ceil(data.length / per_page)
+
+    return {
+      page: page,
+      per_page: per_page,
+      pre_page: page - 1 ? page - 1 : null,
+      next_page: total_pages > page ? page + 1 : null,
+      total: data.length,
+      total_pages: total_pages,
+      data: paginatedItems
+    }
+  }
   return (
     <Grid className={classes.root}>
       <Grid
@@ -50,7 +73,7 @@ export const PositionsList: React.FC<IProp> = ({
       </Grid>
       <Grid className={classes.list}>
         {data.length > 0 ? (
-          data.map((element, index) => (
+          paginator(page, itemsPerPage).data.map((element, index) => (
             <Link to={`/position/${element.id}`} key={index} className={classes.itemLink}>
               <PositionItem key={index} {...element} />
             </Link>
@@ -63,6 +86,13 @@ export const PositionsList: React.FC<IProp> = ({
           </Typography>
         )}
       </Grid>
+      {paginator(page, itemsPerPage).total_pages > 1 ? (
+        <PaginationList
+          pages={paginator(page, itemsPerPage).total_pages}
+          defaultPage={1}
+          handleChangePage={handleChangePagination}
+        />
+      ) : null}
     </Grid>
   )
 }
