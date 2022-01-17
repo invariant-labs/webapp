@@ -19,9 +19,9 @@ const MarketEvents = () => {
     if (networkStatus !== Status.Initialized) {
       return
     }
-
     const connectEvents = () => {
       dispatch(actions.setTokens(getNetworkTokensList(networkType)))
+
       dispatch(actions.getPoolsData(PAIRS[networkType]))
     }
 

@@ -122,7 +122,7 @@ export const Swap: React.FC<ISwap> = ({
       }
       // użyć tego price proportion w wyliczeniach poniżej jako sqrtPrice
       if (swapData.price.v.gt(new BN(0))) {
-        priceProportion = +printBN(swapData.price.v, decimalDiff)
+        priceProportion = +printBN(swapData.price.v, assetFor.decimals)
       } else {
         priceProportion = Number(
           printBN(
@@ -131,7 +131,7 @@ export const Swap: React.FC<ISwap> = ({
           )
         )
       }
-      amountOut = Number(amount) * priceProportion
+      amountOut = Number(amount) * Number(printBN(sqrtPrice, PRICE_DECIMAL))
       // if (+printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL) < 1) {
       //   if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
       //     amountOut = printBNtoBN(amount, assetIn.decimal)
@@ -495,7 +495,7 @@ export const Swap: React.FC<ISwap> = ({
                 v: poolIndex !== -1 && poolIndex !== null ? pools[poolIndex].fee.v : new BN(0)
               }}
               exchangeRate={{
-                val: Number(printBN(swapData.price.v, PRICE_DECIMAL)).toFixed(
+                val: Number(printBN(swapData.price.v, tokens[tokenToIndex].decimals)).toFixed(
                   tokens[tokenToIndex].decimals
                 ),
                 symbol: tokens[tokenToIndex].symbol
@@ -506,12 +506,9 @@ export const Swap: React.FC<ISwap> = ({
             <Typography className={classes.rateText}>
               1 {tokens[tokenFromIndex].symbol} ={' '}
               {/* tutaj będzie zmiana 1 na wartość odpowiadającą ilości tokenów */}
-              {Number(
-                printBN(
-                  swapData.price.v,
-                  PRICE_DECIMAL - (tokens[tokenFromIndex].decimals - tokens[tokenToIndex].decimals)
-                )
-              ).toFixed(tokens[tokenToIndex].decimals)}{' '}
+              {Number(printBN(swapData.price.v, tokens[tokenToIndex].decimals)).toFixed(
+                tokens[tokenToIndex].decimals
+              )}{' '}
               {tokens[tokenToIndex].symbol}
             </Typography>
           ) : null}

@@ -8,15 +8,12 @@ import { getMarketProgram } from '@web3/programs/amm'
 import { pools } from '@selectors/pools'
 import { Pair } from '@invariant-labs/sdk'
 import { getConnection } from './connection'
-import {
-  FEE_TIERS,
-  simulateSwap,
-  SimulateSwapInterface,
-  SimulateSwapPrice
-} from '@invariant-labs/sdk/src/utils'
+import { FEE_TIERS, simulateSwap, SimulateSwapInterface } from '@invariant-labs/sdk/src/utils'
 import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import BN from 'bn.js'
 import { Tick } from '@invariant-labs/sdk/src/market'
+import { PRICE_DECIMAL } from '@consts/static'
+import { printBN } from '@consts/utils'
 
 export function* handleSimulate(): Generator {
   try {
@@ -30,11 +27,11 @@ export function* handleSimulate(): Generator {
         (simulate.fromToken.toString() === pool.tokenY.toString() &&
           simulate.toToken.toString() === pool.tokenX.toString())
     )
+    console.log('sqrtPrice to simulate: ', printBN(simulate.simulatePrice, PRICE_DECIMAL))
 
     if (!swapPool) {
       return
     }
-    console.log(swapPool)
     const isXtoY =
       simulate.fromToken.toString() === swapPool.tokenX.toString() &&
       simulate.toToken.toString() === swapPool.tokenY.toString()
@@ -50,10 +47,6 @@ export function* handleSimulate(): Generator {
       isXtoY ? 'down' : 'up'
     )
     const test = new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0])
-    console.log('pool sqrt price: ', swapPool.sqrtPrice.v.toString())
-    console.log('slippage: ', slippage.v.toString())
-    console.log('XtoY: ', isXtoY)
-    console.log('tickmap: ', tickMap)
     let ticks: Map<number, Tick> = new Map<number, Tick>()
 
     if (ticks.size === 0) {
@@ -66,7 +59,7 @@ export function* handleSimulate(): Generator {
       const simulateObject: SimulateSwapInterface = {
         pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
         xToY: isXtoY,
-        byAmountIn: true, // to jest jeszcze do zrobienia
+        byAmountIn: false, // to jest jeszcze do zrobienia
         swapAmount: simulate.amount,
         currentPrice: { v: simulate.simulatePrice },
         slippage: slippage,
@@ -76,10 +69,10 @@ export function* handleSimulate(): Generator {
         market: marketProgram
       }
 
-      // yield put(swapActions.changePrice(calculateAveragePrice(simulateObject)))
+      yield put(swapActions.changePrice(simulateSwap(simulateObject).accumulatedAmountOut))
       console.log('simulate price: ', simulateSwap(simulateObject).accumulatedAmountOut)
     } else {
-      yield put(swapActions.changePrice({ v: new BN(0) }))
+      yield put(swapActions.changePrice(new BN(0)))
     }
   } catch (error) {
     console.log(error)
@@ -132,9 +125,7 @@ export function* handleSwap(): Generator {
       knownPrice: price,
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
-      accountY: isXtoY ? toAddress : fromAddress,
-      byAmountIn: true,
-      owner: wallet.publicKey
+      accountY: isXtoY ? toAddress : fromAddress
     })
     const connection = yield* call(getConnection)
     const blockhash = yield* call([connection, connection.getRecentBlockhash])

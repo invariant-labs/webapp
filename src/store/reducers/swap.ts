@@ -66,8 +66,8 @@ const swapSlice = createSlice({
       state.swap.simulate = action.payload
       return state
     },
-    changePrice(state, action: PayloadAction<Decimal>) {
-      state.swap.price = action.payload
+    changePrice(state, action: PayloadAction<BN>) {
+      state.swap.price.v = action.payload
       return state
     }
   }

@@ -93,7 +93,11 @@ export const tokens: Record<NetworkType, Token[]> = {
 }
 
 export const PAIRS: Record<NetworkType, Pair[]> = {
-  Devnet: [new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[0])],
+  Devnet: [
+    new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[0]),
+    new Pair(USDC_DEV.address, SOL_DEV.address, FEE_TIERS[0]),
+    new Pair(MSOL_DEV.address, SOL_DEV.address, FEE_TIERS[0])
+  ],
   Testnet: [],
   Mainnet: [],
   Localnet: []
