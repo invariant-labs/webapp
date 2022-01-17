@@ -11,7 +11,7 @@ import { getConnection } from './connection'
 import { FEE_TIERS, simulateSwap, SimulateSwapInterface } from '@invariant-labs/sdk/src/utils'
 import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import BN from 'bn.js'
-import { Tick } from '@invariant-labs/sdk/src/market'
+import { Swap, Tick } from '@invariant-labs/sdk/src/market'
 import { PRICE_DECIMAL } from '@consts/static'
 import { printBN } from '@consts/utils'
 
@@ -57,7 +57,7 @@ export function* handleSimulate(): Generator {
       const simulateObject: SimulateSwapInterface = {
         pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
         xToY: isXtoY,
-        byAmountIn: false,
+        byAmountIn: true,
         swapAmount: simulate.amount,
         currentPrice: { v: simulate.simulatePrice },
         slippage: slippage,
@@ -66,9 +66,8 @@ export function* handleSimulate(): Generator {
         tickmap: tickMap,
         market: marketProgram
       }
-
-      yield put(swapActions.changePrice(simulateSwap(simulateObject).accumulatedAmountOut))
-      console.log('simulate price: ', simulateSwap(simulateObject).accumulatedAmountOut)
+      const swapSimulateResault = simulateSwap(simulateObject)
+      yield put(swapActions.changePrice(swapSimulateResault.accumulatedAmountOut))
     } else {
       yield put(swapActions.changePrice(new BN(0)))
     }
@@ -82,7 +81,7 @@ export function* handleSwap(): Generator {
     const allPools = yield* select(pools)
     const { slippage, price, simulate } = yield* select(swap)
     console.log('amount', simulate.amount.toString())
-    console.log('price', price.v.toString())
+    console.log('price', printBN(price.v, 6))
     const swapPool = allPools.find(
       pool =>
         (simulate.fromToken.toString() === pool.tokenX.toString() &&
@@ -116,14 +115,17 @@ export function* handleSwap(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, simulate.toToken)
     }
+    console.log('amount to swap: ', simulate.amount)
     const swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
       pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
-      XtoY: isXtoY,
+      xToY: isXtoY,
       amount: simulate.amount,
       knownPrice: price,
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
-      accountY: isXtoY ? toAddress : fromAddress
+      accountY: isXtoY ? toAddress : fromAddress,
+      byAmountIn: true,
+      owner: wallet.publicKey
     })
     const connection = yield* call(getConnection)
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
