@@ -328,14 +328,15 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
     }
 
-    const ix = yield* call(
-      [marketProgram, marketProgram.removePositionInstruction],
-      new Pair(positionForIndex.tokenX, positionForIndex.tokenY, { fee: positionForIndex.fee.v }),
-      wallet.publicKey,
-      action.payload.positionIndex,
+    const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {
+      pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
+        fee: positionForIndex.fee.v
+      }),
+      owner: wallet.publicKey,
+      index: action.payload.positionIndex,
       userTokenX,
       userTokenY
-    )
+    })
 
     const tx = new Transaction().add(ix)
 
