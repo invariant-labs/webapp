@@ -41,6 +41,8 @@ export interface IPositionsStore {
 export interface InitPositionData
   extends Omit<InitPosition, 'owner' | 'userTokenX' | 'userTokenY' | 'pair'> {
   poolIndex: number
+  xAmount: number
+  yAmount: number
 }
 
 export interface GetCurrentTicksData {

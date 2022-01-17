@@ -51,27 +51,39 @@ export interface SwapToken {
   logoURI: string
 }
 
-export const swapTokens = createSelector(accounts, tokens, (allAccounts, tokens) => {
-  return Object.values(tokens).map(token => ({
-    ...token,
-    assetAddress: token.address,
-    balance: allAccounts[token.address.toString()]?.balance ?? 0
-  }))
-})
+export const swapTokens = createSelector(
+  accounts,
+  tokens,
+  balance,
+  (allAccounts, tokens, solBalance) => {
+    return Object.values(tokens).map(token => ({
+      ...token,
+      assetAddress: token.address,
+      balance:
+        token.symbol === 'SOL' ? solBalance : allAccounts[token.address.toString()]?.balance ?? 0
+    }))
+  }
+)
 
-export const swapTokensDict = createSelector(accounts, tokens, (allAccounts, tokens) => {
-  const swapTokens: Record<string, SwapToken> = {}
+export const swapTokensDict = createSelector(
+  accounts,
+  tokens,
+  balance,
+  (allAccounts, tokens, solBalance) => {
+    const swapTokens: Record<string, SwapToken> = {}
 
-  Object.entries(tokens).forEach(([key, val]) => {
-    swapTokens[key] = {
-      ...val,
-      assetAddress: val.address,
-      balance: allAccounts[key]?.balance ?? 0
-    }
-  })
+    Object.entries(tokens).forEach(([key, val]) => {
+      swapTokens[key] = {
+        ...val,
+        assetAddress: val.address,
+        balance:
+          val.symbol === 'SOL' ? solBalance : allAccounts[val.address.toString()]?.balance ?? 0
+      }
+    })
 
-  return swapTokens
-})
+    return swapTokens
+  }
+)
 
 export type TokenAccounts = ITokenAccount & {
   symbol: string
