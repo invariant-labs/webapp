@@ -120,7 +120,6 @@ export const Swap: React.FC<ISwap> = ({
       } else {
         sqrtPrice = new BN(sqrtPricePow * 10 ** decimalDiff)
       }
-      // użyć tego price proportion w wyliczeniach poniżej jako sqrtPrice
       if (swapData.price.v.gt(new BN(0))) {
         priceProportion = +printBN(swapData.price.v, assetFor.decimals)
       } else {
@@ -131,47 +130,13 @@ export const Swap: React.FC<ISwap> = ({
           )
         )
       }
-      amountOut = Number(amount) * Number(printBN(sqrtPrice, PRICE_DECIMAL))
-      // if (+printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL) < 1) {
-      //   if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
-      //     amountOut = printBNtoBN(amount, assetIn.decimal)
-      //       .mul(priceProportion)
-      //       .div(DENOMINATOR)
-      //   } else {
-      //     amountOut = printBNtoBN(amount, assetIn.decimal)
-      //       .mul(DENOMINATOR)
-      //       .div(priceProportion)
-      //   }
-      // } else {
-      //   if (assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
-      //     amountOut = printBNtoBN(amount, assetIn.decimal)
-      //       .mul(priceProportion)
-      //       .div(DENOMINATOR)
-      //   } else {
-      //     amountOut = printBNtoBN(amount, assetIn.decimal)
-      //       .mul(DENOMINATOR)
-      //       .div(priceProportion)
-      //   }
-      // }
-
-      // ZAMIENIĆ BN NA NUMBER PRZY LICZENIU TAX PONIŻEJ
-
-      // if (fee === feeOption.FEE) {
-      //   amountOut = amountOut.sub(
-      //     amountOut.mul(pools[poolIndex].fee.v).div(DENOMINATOR)
-      //   )
-      // } else if (fee === feeOption.REVERSED) {
-      //   amountOut = amountOut.add(
-      //     amountOut.mul(pools[poolIndex].fee.v).div((new BN(10)).pow(new BN(PRICE_DECIMAL)))
-      //   )
-      // }
+      amountOut = Number(printBN(swapData.price.v, 6))
       if (fee === feeOption.FEE) {
         amountOut = amountOut - amountOut * +printBN(pools[poolIndex].fee.v, PRICE_DECIMAL)
       } else if (fee === feeOption.REVERSED) {
         amountOut = amountOut + amountOut * +printBN(pools[poolIndex].fee.v, PRICE_DECIMAL)
       }
     }
-    // console.log('printBNtoBN sqrtPrice: ', printBNtoBN(sqrtPrice.toString(), 0).toString())
     return {
       amountOut: amountOut.toFixed(assetFor.decimals),
       swapRate: printBNtoBN(sqrtPrice.toString(), 0)
@@ -213,7 +178,6 @@ export const Swap: React.FC<ISwap> = ({
           printBNtoBN(amountTo, tokens[tokenToIndex].decimals)
         )
       }
-      // i think this has to be changed, we will see with simulate
     }
   }, [amountFrom, amountTo, tokenToIndex, tokenFromIndex])
 
@@ -237,7 +201,7 @@ export const Swap: React.FC<ISwap> = ({
             ).amountOut
           )
     }
-  }, [swapData.simulate.simulatePrice])
+  }, [swapData.price])
 
   useEffect(() => {
     updateEstimatedAmount()

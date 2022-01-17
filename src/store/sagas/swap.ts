@@ -27,7 +27,6 @@ export function* handleSimulate(): Generator {
         (simulate.fromToken.toString() === pool.tokenY.toString() &&
           simulate.toToken.toString() === pool.tokenX.toString())
     )
-    console.log('sqrtPrice to simulate: ', printBN(simulate.simulatePrice, PRICE_DECIMAL))
 
     if (!swapPool) {
       return
@@ -54,12 +53,11 @@ export function* handleSimulate(): Generator {
         ticks.set(tick.index, tick)
       }
     }
-
     if (simulate.amount.gt(new BN(0))) {
       const simulateObject: SimulateSwapInterface = {
         pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
         xToY: isXtoY,
-        byAmountIn: false, // to jest jeszcze do zrobienia
+        byAmountIn: false,
         swapAmount: simulate.amount,
         currentPrice: { v: simulate.simulatePrice },
         slippage: slippage,
