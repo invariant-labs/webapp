@@ -1,4 +1,4 @@
-import { calculatePriceSqrt, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, DENOMINATOR, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
 import { PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
