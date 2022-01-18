@@ -16,7 +16,7 @@ const MarketEvents = () => {
   const allPools = useSelector(pools)
 
   useEffect(() => {
-    if (networkStatus !== Status.Initialized) {
+    if (networkStatus !== Status.Initialized || !marketProgram) {
       return
     }
     const connectEvents = () => {
@@ -26,10 +26,10 @@ const MarketEvents = () => {
     }
 
     connectEvents()
-  }, [dispatch, networkStatus])
+  }, [dispatch, networkStatus, marketProgram])
 
   useEffect(() => {
-    if (networkStatus !== Status.Initialized) {
+    if (networkStatus !== Status.Initialized || !marketProgram) {
       return
     }
 
@@ -48,7 +48,7 @@ const MarketEvents = () => {
     }
 
     connectEvents()
-  }, [dispatch, allPools.length, networkStatus])
+  }, [dispatch, allPools.length, networkStatus, marketProgram])
 
   return null
 }
