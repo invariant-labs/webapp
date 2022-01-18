@@ -7,7 +7,7 @@ import * as serviceWorker from './serviceWorker'
 import { runSagas } from './store/index'
 
 const metaImage: string = `https://${
-  process.env.NEXT_PUBLIC_VERCEL_URL ?? 'invariant.app'
+  process.env.VERCEL_URL ?? 'invariant.app'
 }/favicon-192x192.png`
 
 ReactDOM.render(
