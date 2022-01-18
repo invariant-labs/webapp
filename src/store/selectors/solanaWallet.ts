@@ -5,7 +5,7 @@ import { keySelectors, AnyProps } from './helpers'
 import { PublicKey } from '@solana/web3.js'
 import { MOCK_TOKENS } from '@invariant-labs/sdk'
 import { tokens } from './pools'
-import { MAINNET_SOL_ADDRESS } from '@consts/static'
+import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 
 const store = (s: AnyProps) => s[solanaWalletSliceName] as ISolanaWallet
 
@@ -61,7 +61,7 @@ export const swapTokens = createSelector(
       ...token,
       assetAddress: token.address,
       balance:
-        token.address.toString() === MAINNET_SOL_ADDRESS
+        token.address.toString() === WRAPPED_SOL_ADDRESS
           ? solBalance
           : allAccounts[token.address.toString()]?.balance ?? 0
     }))
@@ -80,7 +80,7 @@ export const swapTokensDict = createSelector(
         ...val,
         assetAddress: val.address,
         balance:
-          val.address.toString() === MAINNET_SOL_ADDRESS
+          val.address.toString() === WRAPPED_SOL_ADDRESS
             ? solBalance
             : allAccounts[val.address.toString()]?.balance ?? 0
       }

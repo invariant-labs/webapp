@@ -124,6 +124,6 @@ export const airdropQuantities: Record<NetworkType, number[]> = {
   Localnet: []
 }
 
-export const MAINNET_SOL_ADDRESS = 'So11111111111111111111111111111111111111112'
+export const WRAPPED_SOL_ADDRESS = 'So11111111111111111111111111111111111111112'
 
 export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, MAINNET_RPCS, NetworkType }

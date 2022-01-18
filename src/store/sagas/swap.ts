@@ -11,7 +11,7 @@ import { getConnection } from './connection'
 import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
 import { Keypair, sendAndConfirmRawTransaction, SystemProgram, Transaction } from '@solana/web3.js'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { MAINNET_SOL_ADDRESS } from '@consts/static'
+import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 
 export function* handleSwapWithSOL(): Generator {
   try {
@@ -54,7 +54,7 @@ export function* handleSwapWithSOL(): Generator {
       fromPubkey: wallet.publicKey,
       toPubkey: wrappedSolAccount.publicKey,
       lamports:
-        allTokens[swapData.fromToken.toString()].address.toString() === MAINNET_SOL_ADDRESS
+        allTokens[swapData.fromToken.toString()].address.toString() === WRAPPED_SOL_ADDRESS
           ? swapData.amount.toNumber()
           : 0
     })
@@ -75,7 +75,7 @@ export function* handleSwapWithSOL(): Generator {
     )
 
     let fromAddress =
-      allTokens[swapData.fromToken.toString()].address.toString() === MAINNET_SOL_ADDRESS
+      allTokens[swapData.fromToken.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[swapData.fromToken.toString()]
         ? tokensAccounts[swapData.fromToken.toString()].address
@@ -84,7 +84,7 @@ export function* handleSwapWithSOL(): Generator {
       fromAddress = yield* call(createAccount, swapData.fromToken)
     }
     let toAddress =
-      allTokens[swapData.toToken.toString()].address.toString() === MAINNET_SOL_ADDRESS
+      allTokens[swapData.toToken.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[swapData.toToken.toString()]
         ? tokensAccounts[swapData.toToken.toString()].address
@@ -104,7 +104,7 @@ export function* handleSwapWithSOL(): Generator {
       owner: wallet.publicKey
     })
     const tx =
-      allTokens[swapData.fromToken.toString()].address.toString() === MAINNET_SOL_ADDRESS
+      allTokens[swapData.fromToken.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? new Transaction().add(createIx).add(transferIx).add(initIx).add(swapTx).add(unwrapIx)
         : new Transaction().add(createIx).add(initIx).add(swapTx).add(unwrapIx)
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
@@ -158,8 +158,8 @@ export function* handleSwap(): Generator {
     const swapData = yield* select(swap)
 
     if (
-      allTokens[swapData.fromToken.toString()].address.toString() === MAINNET_SOL_ADDRESS ||
-      allTokens[swapData.toToken.toString()].address.toString() === MAINNET_SOL_ADDRESS
+      allTokens[swapData.fromToken.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
+      allTokens[swapData.toToken.toString()].address.toString() === WRAPPED_SOL_ADDRESS
     ) {
       return yield* call(handleSwapWithSOL)
     }
