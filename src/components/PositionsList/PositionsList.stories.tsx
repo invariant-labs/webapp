@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { PositionsList } from './PositionsList'
 import { Grid } from '@material-ui/core'
