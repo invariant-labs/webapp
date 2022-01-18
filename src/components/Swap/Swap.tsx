@@ -105,7 +105,6 @@ export const Swap: React.FC<ISwap> = ({
   const calculateSwapOutAmount = (
     assetIn: SwapToken,
     assetFor: SwapToken,
-    amount: string,
     fee: string = 'noFee'
   ) => {
     let sqrtPrice: BN = new BN(0)
@@ -113,7 +112,7 @@ export const Swap: React.FC<ISwap> = ({
     let priceProportion: number = 0
     const decimalDiff: number = PRICE_DECIMAL + (assetIn.decimals - assetFor.decimals)
     if (poolIndex !== -1 && poolIndex !== null) {
-      let sqrtPricePow: number =
+      const sqrtPricePow: number =
         +printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL) *
         +printBN(pools[poolIndex].sqrtPrice.v, PRICE_DECIMAL)
       if (!assetIn.assetAddress.equals(pools[poolIndex].tokenX)) {
@@ -188,20 +187,12 @@ export const Swap: React.FC<ISwap> = ({
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       inputRef === inputTarget.FROM
         ? setAmountTo(
-            calculateSwapOutAmount(
-              tokens[tokenFromIndex],
-              tokens[tokenToIndex],
-              printBN(swapData.simulate.amount, tokens[tokenFromIndex].decimals) ?? amountFrom,
-              feeOption.FEE
-            ).amountOut
+            calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], feeOption.FEE)
+              .amountOut
           )
         : setAmountFrom(
-            calculateSwapOutAmount(
-              tokens[tokenFromIndex],
-              tokens[tokenToIndex],
-              printBN(swapData.simulate.amount, tokens[tokenFromIndex].decimals) ?? amountFrom,
-              feeOption.REVERSED
-            ).amountOut
+            calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], feeOption.REVERSED)
+              .amountOut
           )
     }
   }, [swapData.price])
@@ -250,12 +241,8 @@ export const Swap: React.FC<ISwap> = ({
   const updateEstimatedAmount = () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       setAmountTo(
-        calculateSwapOutAmount(
-          tokens[tokenFromIndex],
-          tokens[tokenToIndex],
-          printBN(swapData.price.v, tokens[tokenFromIndex].decimals) ?? amountFrom,
-          feeOption.FEE
-        ).amountOut
+        calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], feeOption.FEE)
+          .amountOut
       )
     }
   }

@@ -11,9 +11,7 @@ import { getConnection } from './connection'
 import { FEE_TIERS, simulateSwap, SimulateSwapInterface } from '@invariant-labs/sdk/src/utils'
 import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import BN from 'bn.js'
-import { Swap, Tick } from '@invariant-labs/sdk/src/market'
-import { PRICE_DECIMAL } from '@consts/static'
-import { printBN } from '@consts/utils'
+import { Tick } from '@invariant-labs/sdk/src/market'
 
 export function* handleSimulate(): Generator {
   try {
@@ -45,11 +43,10 @@ export function* handleSimulate(): Generator {
       undefined,
       isXtoY ? 'down' : 'up'
     )
-    const test = new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0])
-    let ticks: Map<number, Tick> = new Map<number, Tick>()
+    const ticks: Map<number, Tick> = new Map<number, Tick>()
 
     if (ticks.size === 0) {
-      for (var tick of ticksArray) {
+      for (const tick of ticksArray) {
         ticks.set(tick.index, tick)
       }
     }
