@@ -20,22 +20,19 @@ export function* handleSimulate(): Generator {
     const marketProgram = yield* call(getMarketProgram)
     const swapPool = allPools.find(
       pool =>
-        (simulate.fromToken.toString() === pool.tokenX.toString() &&
-          simulate.toToken.toString() === pool.tokenY.toString()) ||
-        (simulate.fromToken.toString() === pool.tokenY.toString() &&
-          simulate.toToken.toString() === pool.tokenX.toString())
+        (simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)) ||
+        (simulate.fromToken.equals(pool.tokenY) && simulate.toToken.equals(pool.tokenX))
     )
-
     if (!swapPool) {
       return
     }
     const isXtoY =
-      simulate.fromToken.toString() === swapPool.tokenX.toString() &&
-      simulate.toToken.toString() === swapPool.tokenY.toString()
+      simulate.fromToken.equals(swapPool.tokenX) && simulate.toToken.equals(swapPool.tokenY)
     const tickMap = yield* call(
       [marketProgram, marketProgram.getTickmap],
       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0])
     )
+    console.log('before ticks array')
     const ticksArray = yield* call(
       [marketProgram, marketProgram.getClosestTicks],
       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
@@ -43,13 +40,14 @@ export function* handleSimulate(): Generator {
       undefined,
       isXtoY ? 'down' : 'up'
     )
+    console.log('after ticks array')
     const ticks: Map<number, Tick> = new Map<number, Tick>()
-
     if (ticks.size === 0) {
       for (const tick of ticksArray) {
         ticks.set(tick.index, tick)
       }
     }
+
     if (simulate.amount.gt(new BN(0))) {
       const simulateObject: SimulateSwapInterface = {
         pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),

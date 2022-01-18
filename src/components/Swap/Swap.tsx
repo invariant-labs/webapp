@@ -64,6 +64,7 @@ export interface ISwap {
       amount: BN
     }
   ) => void
+  initPool: (init: boolean) => void
   onSimulate: (simulatePrice: BN, fromToken: PublicKey, toToken: PublicKey, amount: BN) => void
   progress: ProgressState
 }
@@ -72,6 +73,7 @@ export const Swap: React.FC<ISwap> = ({
   tokens,
   pools,
   onSwap,
+  initPool,
   onSimulate,
   swapData,
   progress
@@ -133,11 +135,11 @@ export const Swap: React.FC<ISwap> = ({
 
       amountOut = Number(printBN(swapData.price.v, assetFor.decimals))
       setSwapRate(priceProportion)
-      if (fee === feeOption.FEE) {
-        amountOut = amountOut - amountOut * +printBN(pools[poolIndex].fee.v, PRICE_DECIMAL)
-      } else if (fee === feeOption.REVERSED) {
-        amountOut = amountOut + amountOut * +printBN(pools[poolIndex].fee.v, PRICE_DECIMAL)
-      }
+      // if (fee === feeOption.FEE) {
+      //   amountOut = amountOut - amountOut * +printBN(pools[poolIndex].fee.v, PRICE_DECIMAL)
+      // } else if (fee === feeOption.REVERSED) {
+      //   amountOut = amountOut + amountOut * +printBN(pools[poolIndex].fee.v, PRICE_DECIMAL)
+      // }
     }
     return {
       amountOut: amountOut.toFixed(assetFor.decimals),
