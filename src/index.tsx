@@ -6,7 +6,9 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { runSagas } from './store/index'
 
-const metaImage: string = `https://${process.env.VERCEL_URL ?? 'invariant.app'}/favicon-192x192.png`
+const metaImage: string = `https://${
+  process.env.VITE_VERCEL_URL ?? 'invariant.app'
+}/favicon-192x192.png`
 
 ReactDOM.render(
   <React.StrictMode>
