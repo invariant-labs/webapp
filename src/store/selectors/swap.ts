@@ -14,6 +14,7 @@ export const getTokensAddresses = createSelector(swap, swapState => {
   ) {
     return { fromToken: DEFAULT_PUBLIC_KEY, toToken: DEFAULT_PUBLIC_KEY }
   }
+
   return { fromToken: swapState.simulate.fromToken, toToken: swapState.simulate.toToken }
 })
 
