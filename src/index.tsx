@@ -1,12 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-
+import { Helmet } from 'react-helmet'
 import './index.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { runSagas } from './store/index'
+
+const metaImage: string = `https://${
+  process.env.NEXT_PUBLIC_VERCEL_URL ?? 'invariant.app'
+}/favicon-192x192.png`
+
 ReactDOM.render(
   <React.StrictMode>
+    <Helmet>
+      <meta property='og:image' content={metaImage} />
+      <meta property='twitter:image' content={metaImage} />
+    </Helmet>
     <App />
   </React.StrictMode>,
   document.getElementById('root')
