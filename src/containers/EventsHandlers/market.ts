@@ -8,7 +8,7 @@ import { pools, initPool, poolTicks } from '@selectors/pools'
 import { PAIRS } from '@consts/static'
 import { getNetworkTokensList } from '@consts/utils'
 import { getTokensAddresses } from '@selectors/swap'
-import { Pair } from '@invariant-labs/sdk'
+import { FEE_TIER, Pair } from '@invariant-labs/sdk'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -58,8 +58,14 @@ const MarketEvents = () => {
     if (networkStatus !== Status.Initialized || !marketProgram || !initPool) {
       return
     }
+    // ostatnia rzecz do zrobienia
     poolTicksArray.map(tick => {
-      marketProgram.onTickChange(new Pair(swapTokensAddress.fromToken, swapTokensAddress.toToken))
+      marketProgram.onTickChange(new Pair(fromToken, toToken, FEE_TIER[0]), tick.index, (tickObject) => {
+        dispatch(actions.setTicks({
+          tick.index,
+          tickObject
+        }))
+      })
     })
   }, [initPoolInfo, networkStatus, marketProgram])
 
