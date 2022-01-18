@@ -1,4 +1,4 @@
-import { call, takeLatest, put, select, takeEvery } from 'typed-redux-saga'
+import { call, takeLatest, put, select, takeEvery, spawn, all } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
 import { swap } from '@selectors/swap'
 import { Pair } from '@invariant-labs/sdk'
@@ -34,6 +34,7 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
 
 export function* fetchPoolTicks(action: PayloadAction<boolean>) {
   const marketProgram = yield* call(getMarketProgram)
+  console.log(123)
   const { simulate } = yield* select(swap)
   try {
     const ticksArray = yield* call(
@@ -45,6 +46,7 @@ export function* fetchPoolTicks(action: PayloadAction<boolean>) {
     )
     yield* put(actions.setTicks(ticksArray))
   } catch (error) {
+    console.log('error !!')
     console.log(error)
   }
 }
@@ -54,5 +56,9 @@ export function* getPoolsDataHandler(): Generator {
 }
 
 export function* ticksHandler(): Generator {
-  yield* takeEvery(actions.initPool, fetchPoolTicks)
+  yield* takeLatest(actions.initPool, fetchPoolTicks)
+}
+
+export function* poolSaga(): Generator {
+  yield all([fetchPoolsData, fetchPoolTicks].map(spawn))
 }

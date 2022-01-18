@@ -202,6 +202,7 @@ export const Swap: React.FC<ISwap> = ({
   useEffect(() => {
     updateEstimatedAmount()
     if (tokenToIndex !== null && tokenFromIndex !== null) {
+      initPool(true)
       const pairIndex = pools.findIndex(pool => {
         return (
           (tokens[tokenFromIndex].assetAddress.equals(pool.tokenX) &&

@@ -32,7 +32,6 @@ export function* handleSimulate(): Generator {
       [marketProgram, marketProgram.getTickmap],
       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0])
     )
-    console.log('before ticks array')
     const ticksArray = yield* call(
       [marketProgram, marketProgram.getClosestTicks],
       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
@@ -40,7 +39,6 @@ export function* handleSimulate(): Generator {
       undefined,
       isXtoY ? 'down' : 'up'
     )
-    console.log('after ticks array')
     const ticks: Map<number, Tick> = new Map<number, Tick>()
     if (ticks.size === 0) {
       for (const tick of ticksArray) {
