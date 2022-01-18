@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '16px',
     color: colors.invariant.lightInfoText,
     marginBottom: 3
+  },
+  button: {
+    marginTop: 20
   }
 }))
 

@@ -4,24 +4,50 @@ import { AccessTimeOutlined } from '@material-ui/icons'
 import useStyles from './style'
 import React from 'react'
 import { colors } from '@static/theme'
+import { liqTokens } from '@components/PositionDetails/PositionDetails.stories'
+import { ReactNode } from 'hoist-non-react-statics/node_modules/@types/react'
 
-export const SaleDetails = () => {
+interface ITokensDetails extends liqTokens {
+  value?: string
+}
+
+export interface ISaleDetails {
+  salePeriod: string
+  gracePeriod: string
+  tokens: ITokensDetails[]
+  tokenPrice: string
+  invariantPrice: string
+}
+
+interface ISaleDetailsList {
+  title?: string
+  icon?: string | ReactNode
+  value?: string
+}
+
+export const SaleDetails: React.FC<ISaleDetails> = ({
+  salePeriod,
+  gracePeriod,
+  tokens,
+  tokenPrice,
+  invariantPrice
+}) => {
   const classes = useStyles()
 
-  const data = [
-    { title: 'Sale period ends in', icon: AccessTimeOutlined, value: '15:30:33' },
-    { title: 'Grace period ends in', icon: AccessTimeOutlined, value: '32:13:45' },
+  const data: ISaleDetailsList[] = [
+    { title: 'Sale period ends in', icon: AccessTimeOutlined, value: salePeriod },
+    { title: 'Grace period ends in', icon: AccessTimeOutlined, value: gracePeriod },
     {
-      title: 'SOL conributed',
-      icon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
-      value: '122 452 443'
+      title: `${tokens[2].symbol} conributed`,
+      icon: tokens[2].logoURI,
+      value: tokens[2].value
     },
     {
       title: 'Estimated token price',
       icon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png',
-      value: '211.345'
+      value: tokenPrice
     },
-    { title: 'INVARIANT for sale', icon: icons.LogoShort, value: '20 000 000' }
+    { title: 'INVARIANT for sale', icon: icons.LogoShort, value: invariantPrice }
   ]
   return (
     <Grid className={classes.list}>
