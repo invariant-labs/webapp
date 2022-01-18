@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { storiesOf } from '@storybook/react'
-import { ILiquidityItem, PositionsList } from './PositionsList'
+import { PositionsList } from './PositionsList'
 import { Grid } from '@material-ui/core'
 import { MemoryRouter } from 'react-router-dom'
-import { PaginationList } from './Pagination/Pagination'
 
 const data = [
   {
@@ -71,13 +70,8 @@ const data = [
 storiesOf('positionsList/list', module)
   .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
   .add('default', () => {
-    const [page, setPage] = useState(1)
-    const itemsPerPage = 2
     const handleClick = () => {
       console.log('actionButton add Position')
-    }
-    const handleChangePagination = (page: number): void => {
-      setPage(page)
     }
     return (
       <Grid
