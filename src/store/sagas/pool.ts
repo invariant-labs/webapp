@@ -4,7 +4,6 @@ import { swap } from '@selectors/swap'
 import { Pair } from '@invariant-labs/sdk'
 import { actions, PoolWithAddress } from '@reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { Tick } from '@invariant-labs/sdk/src/market'
 import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
 
 // getting pool from SDK: market.get(pair)
@@ -36,7 +35,7 @@ export function* fetchPoolTicks() {
   const marketProgram = yield* call(getMarketProgram)
   const { simulate } = yield* select(swap)
   try {
-    let ticksArray = yield* call(
+    const ticksArray = yield* call(
       [marketProgram, marketProgram.getClosestTicks],
       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
       8,

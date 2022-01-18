@@ -1,4 +1,3 @@
-import { createSelector } from '@reduxjs/toolkit'
 import { IPoolsStore, poolsSliceName } from '../reducers/pools'
 import { keySelectors, AnyProps } from './helpers'
 

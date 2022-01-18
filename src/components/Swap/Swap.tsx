@@ -79,10 +79,6 @@ export const Swap: React.FC<ISwap> = ({
   progress
 }) => {
   const classes = useStyles()
-  enum feeOption {
-    FEE = 'fee',
-    REVERSED = 'reversed'
-  }
   enum inputTarget {
     FROM = 'from',
     TO = 'to'
@@ -104,11 +100,7 @@ export const Swap: React.FC<ISwap> = ({
   const [inputRef, setInputRef] = React.useState<string>(inputTarget.FROM)
 
   const [rotates, setRotates] = React.useState<number>(0)
-  const calculateSwapOutAmount = (
-    assetIn: SwapToken,
-    assetFor: SwapToken,
-    fee: string = 'noFee'
-  ) => {
+  const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken) => {
     let sqrtPrice: BN = new BN(0)
     let amountOut: number = 0
     let priceProportion: number = 0
@@ -153,11 +145,7 @@ export const Swap: React.FC<ISwap> = ({
   useEffect(() => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       if (inputRef === inputTarget.FROM) {
-        const simulatePrice = calculateSwapOutAmount(
-          tokens[tokenFromIndex],
-          tokens[tokenToIndex],
-          printBN(swapData.simulate.amount, tokens[tokenFromIndex].decimals)
-        )
+        const simulatePrice = calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex])
         onSimulate(
           simulatePrice.sqrtPrice,
           tokens[tokenFromIndex].address,
@@ -165,11 +153,7 @@ export const Swap: React.FC<ISwap> = ({
           printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals)
         )
       } else {
-        const simulatePrice = calculateSwapOutAmount(
-          tokens[tokenToIndex],
-          tokens[tokenFromIndex],
-          printBN(swapData.simulate.amount, tokens[tokenFromIndex].decimals)
-        )
+        const simulatePrice = calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex])
         onSimulate(
           simulatePrice.sqrtPrice,
           tokens[tokenToIndex].address,
@@ -184,12 +168,10 @@ export const Swap: React.FC<ISwap> = ({
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       inputRef === inputTarget.FROM
         ? setAmountTo(
-            calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], feeOption.FEE)
-              .amountOut
+            calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut
           )
         : setAmountFrom(
-            calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], feeOption.REVERSED)
-              .amountOut
+            calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut
           )
     }
   }, [swapData.price])
@@ -238,10 +220,7 @@ export const Swap: React.FC<ISwap> = ({
   }
   const updateEstimatedAmount = () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      setAmountTo(
-        calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex], feeOption.FEE)
-          .amountOut
-      )
+      setAmountTo(calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut)
     }
   }
 
