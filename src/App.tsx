@@ -10,6 +10,7 @@ import { persistStore } from 'redux-persist'
 import Notifier from '@containers/Notifier/Notifier'
 import PagesRouter from './pages/PagesRouter'
 import Snackbar from '@components/Snackbar/Snackbar'
+import { Helmet } from 'react-helmet'
 
 setConfig({
   reloadHooks: false
@@ -17,8 +18,16 @@ setConfig({
 const App: React.FC = () => {
   const persistor = persistStore(store)
 
+  const metaImage: string = `https://${
+    process.env.VITE_VERCEL_URL ?? 'invariant.app'
+  }/favicon-192x192.png`
+
   return (
     <Provider store={store}>
+      <Helmet>
+        <meta property='og:image' content={metaImage} />
+        <meta property='twitter:image' content={metaImage} />
+      </Helmet>
       <PersistGate loading={null} persistor={persistor}>
         <ThemeProvider theme={theme}>
           <Snackbar maxSnack={99}>
