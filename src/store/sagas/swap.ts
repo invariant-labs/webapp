@@ -80,14 +80,10 @@ export function* handleSwap(): Generator {
   try {
     const allPools = yield* select(pools)
     const { slippage, price, simulate } = yield* select(swap)
-    console.log('amount', simulate.amount.toString())
-    console.log('price', printBN(price.v, 6))
     const swapPool = allPools.find(
       pool =>
-        (simulate.fromToken.toString() === pool.tokenX.toString() &&
-          simulate.toToken.toString() === pool.tokenY.toString()) ||
-        (simulate.fromToken.toString() === pool.tokenY.toString() &&
-          simulate.toToken.toString() === pool.tokenX.toString())
+        (simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)) ||
+        (simulate.fromToken.equals(pool.tokenY) && simulate.toToken.equals(pool.tokenX))
     )
 
     if (!swapPool) {
@@ -95,8 +91,7 @@ export function* handleSwap(): Generator {
     }
 
     const isXtoY =
-      simulate.fromToken.toString() === swapPool.tokenX.toString() &&
-      simulate.toToken.toString() === swapPool.tokenY.toString()
+      simulate.fromToken.equals(swapPool.tokenX) && simulate.toToken.equals(swapPool.tokenY)
 
     const wallet = yield* call(getWallet)
 
@@ -115,7 +110,6 @@ export function* handleSwap(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, simulate.toToken)
     }
-    console.log('amount to swap: ', simulate.amount)
     const swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
       pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
       xToY: isXtoY,

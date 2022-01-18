@@ -92,7 +92,7 @@ export const Swap: React.FC<ISwap> = ({
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [amountTo, setAmountTo] = React.useState<string>('')
-  const [swapRate, setSwapRate] = React.useState<BN>(new BN(0))
+  const [swapRate, setSwapRate] = React.useState<number>(0)
   const [swap, setSwap] = React.useState<boolean | null>(null)
   const [tokensY, setTokensY] = React.useState<SwapToken[]>(tokens)
   const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
@@ -131,7 +131,9 @@ export const Swap: React.FC<ISwap> = ({
           )
         )
       }
-      amountOut = Number(printBN(swapData.price.v, assetIn.decimals))
+
+      amountOut = Number(printBN(swapData.price.v, assetFor.decimals))
+      setSwapRate(priceProportion)
       if (fee === feeOption.FEE) {
         amountOut = amountOut - amountOut * +printBN(pools[poolIndex].fee.v, PRICE_DECIMAL)
       } else if (fee === feeOption.REVERSED) {
@@ -140,7 +142,7 @@ export const Swap: React.FC<ISwap> = ({
     }
     return {
       amountOut: amountOut.toFixed(assetFor.decimals),
-      swapRate: printBNtoBN(sqrtPrice.toString(), 0)
+      sqrtPrice: printBNtoBN(sqrtPrice.toString(), 0)
     }
   }
 
@@ -161,7 +163,7 @@ export const Swap: React.FC<ISwap> = ({
           printBN(swapData.simulate.amount, tokens[tokenFromIndex].decimals)
         )
         onSimulate(
-          simulatePrice.swapRate,
+          simulatePrice.sqrtPrice,
           tokens[tokenFromIndex].address,
           tokens[tokenToIndex].address,
           printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals)
@@ -173,7 +175,7 @@ export const Swap: React.FC<ISwap> = ({
           printBN(swapData.simulate.amount, tokens[tokenFromIndex].decimals)
         )
         onSimulate(
-          simulatePrice.swapRate,
+          simulatePrice.sqrtPrice,
           tokens[tokenToIndex].address,
           tokens[tokenFromIndex].address,
           printBNtoBN(amountTo, tokens[tokenToIndex].decimals)
@@ -288,6 +290,7 @@ export const Swap: React.FC<ISwap> = ({
   }
   const setSlippage = (slippage: string): void => {
     setSlippTolerance(slippage)
+    console.log(slippage.toString())
   }
 
   const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -461,11 +464,7 @@ export const Swap: React.FC<ISwap> = ({
           ) : null}
           {tokenFromIndex !== null && tokenToIndex !== null ? (
             <Typography className={classes.rateText}>
-              1 {tokens[tokenFromIndex].symbol} ={' '}
-              {/* tutaj będzie zmiana 1 na wartość odpowiadającą ilości tokenów */}
-              {Number(printBN(swapData.price.v, tokens[tokenToIndex].decimals)).toFixed(
-                tokens[tokenToIndex].decimals
-              )}{' '}
+              1 {tokens[tokenFromIndex].symbol} = {swapRate.toFixed(tokens[tokenToIndex].decimals)}{' '}
               {tokens[tokenToIndex].symbol}
             </Typography>
           ) : null}
@@ -478,7 +477,7 @@ export const Swap: React.FC<ISwap> = ({
             if (tokenFromIndex === null || tokenToIndex === null) return
             onSwap(
               { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
-              { v: printBNtoBN(amountTo, tokens[tokenToIndex].decimals) },
+              { v: poolIndex !== null ? pools[poolIndex].sqrtPrice.v : new BN(1) },
               {
                 simulatePrice: printBNtoBN(amountFrom, 0),
                 fromToken: tokens[tokenFromIndex].address,
