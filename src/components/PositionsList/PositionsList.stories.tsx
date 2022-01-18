@@ -68,23 +68,6 @@ const data = [
   }
 ]
 
-function paginator(data: ILiquidityItem[], currentPage: number, perPageItems: number) {
-  const page = currentPage || 1
-  const perPage = perPageItems || 10
-  const offset = (page - 1) * perPage
-  const paginatedItems = data.slice(offset).slice(0, perPageItems)
-  const totalPages = Math.ceil(data.length / perPage)
-
-  return {
-    page: page,
-    perPage: perPage,
-    prePage: page - 1 ? page - 1 : null,
-    nextPage: totalPages > page ? page + 1 : null,
-    total: data.length,
-    totalPages: totalPages,
-    data: paginatedItems
-  }
-}
 storiesOf('positionsList/list', module)
   .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
   .add('default', () => {
@@ -107,20 +90,14 @@ storiesOf('positionsList/list', module)
           paddingInline: 20
         }}>
         <PositionsList
-          data={paginator(data, page, itemsPerPage).data}
+          data={data}
           onAddPositionClick={handleClick}
+          itemsPerPage={2}
           noConnectedBlockerProps={{
             onConnect: () => {},
             onDisconnect: () => {}
           }}
         />
-        {paginator(data, page, itemsPerPage).totalPages > 1 ? (
-          <PaginationList
-            pages={paginator(data, page, itemsPerPage).totalPages}
-            defaultPage={1}
-            handleChangePage={handleChangePagination}
-          />
-        ) : null}
       </Grid>
     )
   })
