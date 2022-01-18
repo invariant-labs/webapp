@@ -22,6 +22,7 @@ import { accounts } from '@selectors/solanaWallet'
 import { Transaction, sendAndConfirmRawTransaction, Keypair, SystemProgram } from '@solana/web3.js'
 import { positionsWithPoolsData, plotTicks, singlePositionData } from '@selectors/positions'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { MAINNET_SOL_ADDRESS } from '@consts/static'
 
 export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
   try {
@@ -47,7 +48,8 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       fromPubkey: wallet.publicKey,
       toPubkey: wrappedSolAccount.publicKey,
       lamports:
-        allTokens[allPools[data.poolIndex].tokenX.toString()].symbol === 'SOL'
+        allTokens[allPools[data.poolIndex].tokenX.toString()].address.toString() ===
+        MAINNET_SOL_ADDRESS
           ? data.xAmount
           : data.yAmount
     })
@@ -68,7 +70,8 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     )
 
     let userTokenX =
-      allTokens[allPools[data.poolIndex].tokenX.toString()].symbol === 'SOL'
+      allTokens[allPools[data.poolIndex].tokenX.toString()].address.toString() ===
+      MAINNET_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[allPools[data.poolIndex].tokenX.toString()]
         ? tokensAccounts[allPools[data.poolIndex].tokenX.toString()].address
@@ -79,7 +82,8 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     }
 
     let userTokenY =
-      allTokens[allPools[data.poolIndex].tokenY.toString()].symbol === 'SOL'
+      allTokens[allPools[data.poolIndex].tokenY.toString()].address.toString() ===
+      MAINNET_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[allPools[data.poolIndex].tokenY.toString()]
         ? tokensAccounts[allPools[data.poolIndex].tokenY.toString()].address
@@ -160,8 +164,10 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     const allTokens = yield* select(tokens)
 
     if (
-      allTokens[allPools[action.payload.poolIndex].tokenX.toString()].symbol === 'SOL' ||
-      allTokens[allPools[action.payload.poolIndex].tokenY.toString()].symbol === 'SOL'
+      allTokens[allPools[action.payload.poolIndex].tokenX.toString()].address.toString() ===
+        MAINNET_SOL_ADDRESS ||
+      allTokens[allPools[action.payload.poolIndex].tokenY.toString()].address.toString() ===
+        MAINNET_SOL_ADDRESS
     ) {
       return yield* call(handleInitPositionWithSOL, action.payload)
     }
@@ -400,7 +406,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     const positionForIndex = allPositionsData[positionIndex].poolData
 
     let userTokenX =
-      allTokens[positionForIndex.tokenX.toString()].symbol === 'SOL'
+      allTokens[positionForIndex.tokenX.toString()].address.toString() === MAINNET_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenX.toString()]
         ? tokensAccounts[positionForIndex.tokenX.toString()].address
@@ -411,7 +417,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     }
 
     let userTokenY =
-      allTokens[positionForIndex.tokenY.toString()].symbol === 'SOL'
+      allTokens[positionForIndex.tokenY.toString()].address.toString() === MAINNET_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenY.toString()]
         ? tokensAccounts[positionForIndex.tokenY.toString()].address
@@ -482,8 +488,8 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     const positionForIndex = allPositionsData[action.payload].poolData
 
     if (
-      allTokens[positionForIndex.tokenX.toString()].symbol === 'SOL' ||
-      allTokens[positionForIndex.tokenY.toString()].symbol === 'SOL'
+      allTokens[positionForIndex.tokenX.toString()].address.toString() === MAINNET_SOL_ADDRESS ||
+      allTokens[positionForIndex.tokenY.toString()].address.toString() === MAINNET_SOL_ADDRESS
     ) {
       return yield* call(handleClaimFeeWithSOL, action.payload)
     }
@@ -602,7 +608,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     const positionForIndex = allPositionsData[data.positionIndex].poolData
 
     let userTokenX =
-      allTokens[positionForIndex.tokenX.toString()].symbol === 'SOL'
+      allTokens[positionForIndex.tokenX.toString()].address.toString() === MAINNET_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenX.toString()]
         ? tokensAccounts[positionForIndex.tokenX.toString()].address
@@ -613,7 +619,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     }
 
     let userTokenY =
-      allTokens[positionForIndex.tokenY.toString()].symbol === 'SOL'
+      allTokens[positionForIndex.tokenY.toString()].address.toString() === MAINNET_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenY.toString()]
         ? tokensAccounts[positionForIndex.tokenY.toString()].address
@@ -688,8 +694,8 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     const positionForIndex = allPositionsData[action.payload.positionIndex].poolData
 
     if (
-      allTokens[positionForIndex.tokenX.toString()].symbol === 'SOL' ||
-      allTokens[positionForIndex.tokenY.toString()].symbol === 'SOL'
+      allTokens[positionForIndex.tokenX.toString()].address.toString() === MAINNET_SOL_ADDRESS ||
+      allTokens[positionForIndex.tokenY.toString()].address.toString() === MAINNET_SOL_ADDRESS
     ) {
       return yield* call(handleClosePositionWithSOL, action.payload)
     }
