@@ -54,7 +54,9 @@ export function* handleSwapWithSOL(): Generator {
       fromPubkey: wallet.publicKey,
       toPubkey: wrappedSolAccount.publicKey,
       lamports:
-        allTokens[swapData.fromToken.toString()].address.toString() === MAINNET_SOL_ADDRESS ? swapData.amount.toNumber() : 0
+        allTokens[swapData.fromToken.toString()].address.toString() === MAINNET_SOL_ADDRESS
+          ? swapData.amount.toNumber()
+          : 0
     })
 
     const initIx = Token.createInitAccountInstruction(
