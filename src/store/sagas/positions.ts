@@ -116,6 +116,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+    signedTx.partialSign(wrappedSolAccount)
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false
     })
@@ -443,6 +444,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+    signedTx.partialSign(wrappedSolAccount)
 
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false
@@ -645,6 +647,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+    signedTx.partialSign(wrappedSolAccount)
 
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false

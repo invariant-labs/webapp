@@ -112,6 +112,7 @@ export function* handleSwapWithSOL(): Generator {
     tx.feePayer = wallet.publicKey
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+    signedTx.partialSign(wrappedSolAccount)
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false
     })

@@ -38,7 +38,7 @@ export const USDT_DEV: Token = {
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
 }
 export const SOL_DEV: Token = {
-  symbol: 'wSOL',
+  symbol: 'SOL',
   address: new PublicKey(MOCK_TOKENS.SOL),
   decimals: 9,
   name: 'Wrapped Solana',
@@ -59,6 +59,14 @@ export const ANA_DEV: Token = {
   decimals: 6,
   name: 'Nirvana',
   logoURI: icons.ANA
+}
+export const WSOL_DEV: Token = {
+  symbol: 'WSOL',
+  address: new PublicKey(MOCK_TOKENS.WSOL),
+  decimals: 9,
+  name: 'Wrapped Solana',
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
 }
 
 enum SolanaNetworks {
@@ -97,8 +105,9 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
     new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[0]),
     new Pair(USDC_DEV.address, SOL_DEV.address, FEE_TIERS[0]),
     // new Pair(USDC_DEV.address, ANA_DEV.address, FEE_TIERS[0]),
-    new Pair(SOL_DEV.address, MSOL_DEV.address, FEE_TIERS[0])
+    new Pair(SOL_DEV.address, MSOL_DEV.address, FEE_TIERS[0]),
     // new Pair(USDC_DEV.address, SOL_DEV.address, FEE_TIERS[1])
+    new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[0])
   ],
   Testnet: [],
   Mainnet: [],
