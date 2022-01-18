@@ -68,8 +68,8 @@ const data = [
   }
 ]
 
-export function paginator(data: Array<ILiquidityItem>, currentPage: number, perPageItems: number) {
-  let page = currentPage || 1,
+function paginator(data: ILiquidityItem[], currentPage: number, perPageItems: number) {
+  const page = currentPage || 1,
     perPage = perPageItems || 10,
     offset = (page - 1) * perPage,
     paginatedItems = data.slice(offset).slice(0, perPageItems),

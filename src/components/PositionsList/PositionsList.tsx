@@ -42,12 +42,12 @@ export const PositionsList: React.FC<IProp> = ({
     setPage(page)
   }
   function paginator(data: Array<ILiquidityItem>, currentPage: number, perPageItems: number) {
-    let page = currentPage || 1,
+    const page = currentPage || 1,
       perPage = perPageItems || 10,
       offset = (page - 1) * perPage,
       paginatedItems = data.slice(offset).slice(0, perPageItems),
       totalPages = Math.ceil(data.length / perPage)
-  
+
     return {
       page: page,
       perPage: perPage,
