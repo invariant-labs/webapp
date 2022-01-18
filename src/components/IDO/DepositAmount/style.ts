@@ -7,14 +7,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.lightInfoText,
     marginBottom: 3
   },
+  currencyInputLabel: {
+    ...typography.body3,
+    color: colors.invariant.lightInfoText,
+    marginRight: 16,
+    fontSize: 12
+  },
   title: {
     color: colors.white.main,
     ...typography.heading4
   },
-  logoShort: {
-    minWidth: 40,
-    height: 30,
-    marginRight: 8
+  logo: {
+    width: 42,
+    height: 32
   }
 }))
 

@@ -9,17 +9,15 @@ export const DepositAmount = () => {
   return (
     <Grid>
       <Typography className={classes.inputLabel}>Deposited Amount:</Typography>
-      <Grid container direction='row'>
-        <Grid>
-          <CardMedia className={classes.logoShort} src={icons.LogoShort} />
-        </Grid>
+      <Grid container direction='row' justifyContent='space-between' alignItems='center'>
+        <CardMedia component='img' className={classes.logo} src={icons.LogoShort} />
         <Grid>
           <Typography className={classes.title}>46.673 xUSD</Typography>
           <Grid container justifyContent='space-between' direction='row'>
-            <Typography className={classes.inputLabel}>47.34 USD</Typography>
-            <Typography className={classes.inputLabel}>0.0456 SOL</Typography>
-            <Typography className={classes.inputLabel}>0.00004 xETH</Typography>
-            <Typography className={classes.inputLabel}>0.00313 xBTC</Typography>
+            <Typography className={classes.currencyInputLabel}>47.34 USD</Typography>
+            <Typography className={classes.currencyInputLabel}>0.0456 SOL</Typography>
+            <Typography className={classes.currencyInputLabel}>0.00004 xETH</Typography>
+            <Typography className={classes.currencyInputLabel}>0.00313 xBTC</Typography>
           </Grid>
         </Grid>
       </Grid>
