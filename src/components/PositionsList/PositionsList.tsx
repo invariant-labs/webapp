@@ -41,20 +41,20 @@ export const PositionsList: React.FC<IProp> = ({
   const handleChangePagination = (page: number): void => {
     setPage(page)
   }
-  function paginator(current_page: number, per_page_items: number) {
-    let page = current_page || 1,
-      per_page = per_page_items || 10,
-      offset = (page - 1) * per_page,
-      paginatedItems = data.slice(offset).slice(0, per_page_items),
-      total_pages = Math.ceil(data.length / per_page)
-
+  function paginator(data: Array<ILiquidityItem>, currentPage: number, perPageItems: number) {
+    let page = currentPage || 1,
+      perPage = perPageItems || 10,
+      offset = (page - 1) * perPage,
+      paginatedItems = data.slice(offset).slice(0, perPageItems),
+      totalPages = Math.ceil(data.length / perPage)
+  
     return {
       page: page,
-      per_page: per_page,
-      pre_page: page - 1 ? page - 1 : null,
-      next_page: total_pages > page ? page + 1 : null,
+      perPage: perPage,
+      prePage: page - 1 ? page - 1 : null,
+      nextPage: totalPages > page ? page + 1 : null,
       total: data.length,
-      total_pages: total_pages,
+      totalPages: totalPages,
       data: paginatedItems
     }
   }
@@ -73,7 +73,7 @@ export const PositionsList: React.FC<IProp> = ({
       </Grid>
       <Grid className={classes.list}>
         {data.length > 0 ? (
-          paginator(page, itemsPerPage).data.map((element, index) => (
+          paginator(data, page, itemsPerPage).data.map((element, index) => (
             <Link to={`/position/${element.id}`} key={index} className={classes.itemLink}>
               <PositionItem key={index} {...element} />
             </Link>
@@ -86,9 +86,9 @@ export const PositionsList: React.FC<IProp> = ({
           </Typography>
         )}
       </Grid>
-      {paginator(page, itemsPerPage).total_pages > 1 ? (
+      {paginator(data, page, itemsPerPage).totalPages > 1 ? (
         <PaginationList
-          pages={paginator(page, itemsPerPage).total_pages}
+          pages={paginator(data, page, itemsPerPage).totalPages}
           defaultPage={1}
           handleChangePage={handleChangePagination}
         />

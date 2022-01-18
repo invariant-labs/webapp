@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { storiesOf } from '@storybook/react'
-import { PositionsList } from './PositionsList'
+import { ILiquidityItem, PositionsList } from './PositionsList'
 import { Grid } from '@material-ui/core'
 import { MemoryRouter } from 'react-router-dom'
 import { PaginationList } from './Pagination/Pagination'
@@ -68,20 +68,20 @@ const data = [
   }
 ]
 
-function paginator(current_page: number, per_page_items: number) {
-  let page = current_page || 1
-  let per_page = per_page_items || 10
-  let offset = (page - 1) * per_page
-  let paginatedItems = data.slice(offset).slice(0, per_page_items)
-  let total_pages = Math.ceil(data.length / per_page)
+export function paginator(data: Array<ILiquidityItem>, currentPage: number, perPageItems: number) {
+  let page = currentPage || 1,
+    perPage = perPageItems || 10,
+    offset = (page - 1) * perPage,
+    paginatedItems = data.slice(offset).slice(0, perPageItems),
+    totalPages = Math.ceil(data.length / perPage)
 
   return {
     page: page,
-    per_page: per_page,
-    pre_page: page - 1 ? page - 1 : null,
-    next_page: total_pages > page ? page + 1 : null,
+    perPage: perPage,
+    prePage: page - 1 ? page - 1 : null,
+    nextPage: totalPages > page ? page + 1 : null,
     total: data.length,
-    total_pages: total_pages,
+    totalPages: totalPages,
     data: paginatedItems
   }
 }
@@ -107,16 +107,16 @@ storiesOf('positionsList/list', module)
           paddingInline: 20
         }}>
         <PositionsList
-          data={paginator(page, itemsPerPage).data}
+          data={paginator(data, page, itemsPerPage).data}
           onAddPositionClick={handleClick}
           noConnectedBlockerProps={{
             onConnect: () => {},
             onDisconnect: () => {}
           }}
         />
-        {paginator(page, itemsPerPage).total_pages > 1 ? (
+        {paginator(data, page, itemsPerPage).totalPages > 1 ? (
           <PaginationList
-            pages={paginator(page, itemsPerPage).total_pages}
+            pages={paginator(data, page, itemsPerPage).totalPages}
             defaultPage={1}
             handleChangePage={handleChangePagination}
           />
