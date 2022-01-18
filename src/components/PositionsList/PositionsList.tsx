@@ -41,7 +41,7 @@ export const PositionsList: React.FC<IProp> = ({
   const handleChangePagination = (page: number): void => {
     setPage(page)
   }
-  function paginator(data: Array<ILiquidityItem>, currentPage: number, perPageItems: number) {
+  function paginator(data: ILiquidityItem[], currentPage: number, perPageItems: number) {
     const page = currentPage || 1,
       perPage = perPageItems || 10,
       offset = (page - 1) * perPage,
