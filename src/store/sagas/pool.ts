@@ -32,22 +32,30 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
   }
 }
 
-export function* fetchPoolTicks(action: PayloadAction<boolean>) {
+export function* fetchPoolTicks() {
   const marketProgram = yield* call(getMarketProgram)
-  console.log(123)
   const { simulate } = yield* select(swap)
   try {
-    const ticksArray = yield* call(
+    let ticksArray = yield* call(
       [marketProgram, marketProgram.getClosestTicks],
       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
-      Infinity,
+      8,
       undefined,
       'down'
     )
-    yield* put(actions.setTicks(ticksArray))
+    const ticksArrayUp = yield* call(
+      [marketProgram, marketProgram.getClosestTicks],
+      new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
+      8,
+      undefined,
+      'up'
+    )
+
+    yield* put(actions.setTicks(ticksArray.concat(ticksArrayUp)))
+    return ticksArray.concat(ticksArrayUp)
   } catch (error) {
-    console.log('error !!')
     console.log(error)
+    return []
   }
 }
 
@@ -56,9 +64,9 @@ export function* getPoolsDataHandler(): Generator {
 }
 
 export function* ticksHandler(): Generator {
-  yield* takeLatest(actions.initPool, fetchPoolTicks)
+  yield* takeEvery(actions.initPool, fetchPoolTicks)
 }
 
-export function* poolSaga(): Generator {
-  yield all([fetchPoolsData, fetchPoolTicks].map(spawn))
+export function* poolsSaga(): Generator {
+  yield* all([getPoolsDataHandler, ticksHandler].map(spawn))
 }

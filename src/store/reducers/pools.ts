@@ -22,6 +22,11 @@ export interface UpdatePool {
   poolStructure: PoolStructure
 }
 
+export interface UpdateTicks {
+  index: number
+  tick: Tick
+}
+
 export const defaultState: IPoolsStore = {
   tokens: {},
   pools: [],
@@ -56,6 +61,10 @@ const poolsSlice = createSlice({
         ...action.payload.poolStructure
       }
       return state
+    },
+    updateTicks(state, action: PayloadAction<UpdateTicks>) {
+      state.poolTicks[state.poolTicks.findIndex(e => e.index === action.payload.index)] =
+        action.payload.tick
     },
     getPoolsData(_state, _action: PayloadAction<Pair[]>) {}
   }

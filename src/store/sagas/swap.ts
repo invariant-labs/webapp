@@ -1,6 +1,7 @@
 import { all, call, put, select, spawn, takeEvery } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
+import { fetchPoolTicks } from '@sagas/pool'
 import { swap } from '@selectors/swap'
 import { accounts } from '@selectors/solanaWallet'
 import { createAccount, getWallet } from './wallet'
@@ -32,13 +33,7 @@ export function* handleSimulate(): Generator {
       [marketProgram, marketProgram.getTickmap],
       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0])
     )
-    const ticksArray = yield* call(
-      [marketProgram, marketProgram.getClosestTicks],
-      new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
-      Infinity,
-      undefined,
-      isXtoY ? 'down' : 'up'
-    )
+    const ticksArray = yield* call(fetchPoolTicks)
     const ticks: Map<number, Tick> = new Map<number, Tick>()
     if (ticks.size === 0) {
       for (const tick of ticksArray) {
