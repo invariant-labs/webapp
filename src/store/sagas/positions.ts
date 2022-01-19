@@ -41,7 +41,7 @@ export function* createPool(
     tokenX: tokenXDetails,
     tokenY: tokenYDetails,
     protocolFee: {
-      v: fee
+      v: new BN(1000)
     },
     initTick: initTick
   })
