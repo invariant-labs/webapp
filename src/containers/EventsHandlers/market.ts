@@ -66,7 +66,7 @@ const MarketEvents = () => {
       return
     }
     const connectEvents = async () => {
-      allPools.map((pool, indexPool) => {
+      allPools.forEach((pool, indexPool) => {
         if (
           subscribedTick.findIndex(
             e =>
@@ -82,22 +82,24 @@ const MarketEvents = () => {
           toToken: toToken.toString(),
           indexPool
         })
-        // eslint-disable-next-line array-callback-return
         R.forEachObj(poolTicksArray, tick => {
-          tick.map(singleTick => {
-            marketProgram.onTickChange(
-              new Pair(pool.tokenX, pool.tokenY, FEE_TIERS[0]),
-              singleTick.index,
-              tickObject => {
-                dispatch(
-                  actions.updateTicks({
-                    poolIndex: indexPool.toString(),
-                    index: singleTick.index,
-                    tick: tickObject
-                  })
-                )
-              }
-            )
+          tick.forEach(singleTick => {
+            marketProgram
+              .onTickChange(
+                new Pair(pool.tokenX, pool.tokenY, FEE_TIERS[0]),
+                singleTick.index,
+                tickObject => {
+                  dispatch(
+                    actions.updateTicks({
+                      poolIndex: indexPool.toString(),
+                      index: singleTick.index,
+                      tick: tickObject
+                    })
+                  )
+                }
+              )
+              .then(() => {})
+              .catch(() => {})
           })
         })
       })
