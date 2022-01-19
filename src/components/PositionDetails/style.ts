@@ -53,7 +53,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.black,
     ...newTypography.body1,
     textTransform: 'none',
-    background: 'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    background:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
     borderRadius: 14,
     height: 40,
     width: 130,

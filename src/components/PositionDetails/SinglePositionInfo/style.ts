@@ -116,7 +116,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'Mukta'
   },
   violetButton: {
-    background: 'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    background:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
     borderRadius: '11px',
     textTransform: 'none',
     color: colors.invariant.dark,

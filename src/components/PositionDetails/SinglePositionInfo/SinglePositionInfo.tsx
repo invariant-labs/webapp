@@ -50,11 +50,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
         <Grid className={classes.iconsGrid}>
           <img className={classes.icon} src={data.tokenXIcon} alt={data.tokenXName} />
           <img className={classes.arrowIcon} src={icons.ArrowIcon} alt={'Arrow'} />
-          <img
-            className={classes.icon}
-            src={data.tokenYIcon}
-            alt={data.tokenYName}
-          />
+          <img className={classes.icon} src={data.tokenYIcon} alt={data.tokenYName} />
           <Grid className={classes.namesGrid}>
             <Typography className={classes.name}>{data.tokenXName}</Typography>
             <Typography id='pause' className={classes.name}>
@@ -71,7 +67,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
             </Typography>
           </Grid>
           <Button className={classes.closeButton} variant='contained' onClick={closePosition}>
-              Close position
+            Close position
           </Button>
         </Grid>
       </Grid>

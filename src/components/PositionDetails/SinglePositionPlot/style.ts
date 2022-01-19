@@ -73,7 +73,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 253
     }
   }
-
 }))
 
 export default useStyles

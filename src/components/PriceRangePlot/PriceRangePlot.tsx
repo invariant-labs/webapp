@@ -218,15 +218,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
   const bottomLineLayer: Layer = ({ innerWidth, innerHeight }) => {
     const bottomLine = innerHeight
-    return (
-      <rect
-        x={0}
-        y={bottomLine}
-        width={innerWidth}
-        height={1}
-        fill={colors.invariant.light}
-      />
-    )
+    return <rect x={0} y={bottomLine} width={innerWidth} height={1} fill={colors.invariant.light} />
   }
 
   const lazyLoadingLayer: Layer = ({ innerWidth, innerHeight }) => {
