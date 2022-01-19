@@ -9,6 +9,7 @@ import { PayloadType } from './types'
 export interface Swap {
   slippage: Decimal
   price: Decimal
+  knownPrice: Decimal
   txid?: string
   simulate: Simulate
   inProgress?: boolean
@@ -41,6 +42,7 @@ export const defaultState: ISwapStore = {
   swap: {
     slippage: { v: fromFee(new BN(1000)) },
     price: { v: new BN(0) },
+    knownPrice: { v: new BN(0) },
     simulate: defaultSimulate
   }
 }

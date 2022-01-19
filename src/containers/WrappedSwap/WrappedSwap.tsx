@@ -34,12 +34,13 @@ export const WrappedSwap = () => {
 
   return (
     <Swap
-      onSwap={(slippage, price, simulate) => {
+      onSwap={(slippage, price, knownPrice, simulate) => {
         setProgress('progress')
         dispatch(
           actions.swap({
             slippage,
             price,
+            knownPrice,
             simulate
           })
         )

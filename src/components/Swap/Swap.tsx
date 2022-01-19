@@ -57,6 +57,7 @@ export interface ISwap {
   onSwap: (
     slippage: Decimal,
     price: Decimal,
+    knownPrice: Decimal,
     simulate: {
       simulatePrice: BN
       fromToken: PublicKey
@@ -115,7 +116,7 @@ export const Swap: React.FC<ISwap> = ({
         sqrtPrice = new BN(sqrtPricePow * 10 ** decimalDiff)
       }
       if (swapData.price.v.gt(new BN(0))) {
-        priceProportion = +printBN(swapData.price.v, assetFor.decimals)
+        priceProportion = +printBN(swapData.price.v, assetFor.decimals) / +amountFrom
       } else {
         priceProportion = Number(
           printBN(
@@ -124,9 +125,8 @@ export const Swap: React.FC<ISwap> = ({
           )
         )
       }
-
       amountOut = Number(printBN(swapData.price.v, assetFor.decimals))
-      setSwapRate(priceProportion)
+      setSwapRate(Number(printBN(sqrtPrice, PRICE_DECIMAL)))
     }
     return {
       amountOut: amountOut.toFixed(assetFor.decimals),
@@ -171,7 +171,7 @@ export const Swap: React.FC<ISwap> = ({
             calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut
           )
         : setAmountFrom(
-            calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut
+            calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex]).amountOut
           )
     }
   }, [swapData.price])
@@ -440,6 +440,12 @@ export const Swap: React.FC<ISwap> = ({
             if (tokenFromIndex === null || tokenToIndex === null) return
             onSwap(
               { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
+              {
+                v:
+                  inputRef === inputTarget.FROM
+                    ? printBNtoBN(amountTo, tokens[tokenToIndex].decimals)
+                    : printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals)
+              },
               { v: poolIndex !== null ? pools[poolIndex].sqrtPrice.v : new BN(1) },
               {
                 simulatePrice: printBNtoBN(amountFrom, 0),

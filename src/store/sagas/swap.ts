@@ -40,7 +40,6 @@ export function* handleSimulate(): Generator {
         ticks.set(tick.index, tick)
       }
     }
-
     if (simulate.amount.gt(new BN(0))) {
       const simulateObject: SimulateSwapInterface = {
         pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
@@ -67,7 +66,7 @@ export function* handleSimulate(): Generator {
 export function* handleSwap(): Generator {
   try {
     const allPools = yield* select(pools)
-    const { slippage, price, simulate } = yield* select(swap)
+    const { slippage, knownPrice, simulate } = yield* select(swap)
     const swapPool = allPools.find(
       pool =>
         (simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)) ||
@@ -102,7 +101,7 @@ export function* handleSwap(): Generator {
       pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
       xToY: isXtoY,
       amount: simulate.amount,
-      knownPrice: price,
+      knownPrice: knownPrice,
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
       accountY: isXtoY ? toAddress : fromAddress,
