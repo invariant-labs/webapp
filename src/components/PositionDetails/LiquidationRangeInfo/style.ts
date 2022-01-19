@@ -1,22 +1,23 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   infoTypeLabel: {
     textTransform: 'uppercase',
-    color: colors.invariant.lightInfoText,
-    ...typography.body1,
+    color: '#A9B6BF',
+    ...newTypography.body2,
     lineHeight: '35px'
+
   },
   infoTypeSwap: {
     display: 'flex',
-    backgroundColor: colors.invariant.componentOut2,
-    borderRadius: 5,
+    backgroundColor: '#111931',
+    borderRadius: 13,
     lineHeight: '35px'
   },
   infoType: {
-    backgroundColor: colors.invariant.componentOut3,
-    borderRadius: 5,
+    backgroundColor: colors.invariant.light,
+    borderRadius: 13,
     textAlign: 'center',
     width: 61
   },
@@ -27,9 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%'
   },
   infoAmount: {
-    color: colors.white.main,
+    color: colors.invariant.text,
     paddingRight: 5,
-    ...typography.body1,
+    ...newTypography.body1,
     lineHeight: '35px',
 
     [theme.breakpoints.only('md')]: {

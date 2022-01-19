@@ -78,6 +78,10 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
         xDecimal={6}
         yDecimal={6}
         tickSpacing={1}
+        tokenXBalance={102460.3445}
+        tokenYBalance={460.3445}
+        tokenXUSDValue={205341.4361}
+        tokenYUSDValue={6205341.4361}
       />
     )
   })

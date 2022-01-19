@@ -1,5 +1,7 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+// import { Block } from '@material-ui/icons'
+import { colors, newTypography } from '@static/theme'
+// import { findLastIndex } from 'lodash'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -19,21 +21,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   arrowIcon: {
     width: 22,
+    marginRight: 8,
+    marginLeft: 8,
 
     [theme.breakpoints.down('xs')]: {
       width: 15
     }
   },
   text: {
-    ...typography.body1,
-    color: colors.invariant.lightInfoText,
-    backgroundColor: colors.invariant.componentOut2,
+    ...newTypography.body1,
+    color: '#A9B6BF',
+    backgroundColor: colors.invariant.component,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: '5px',
-    maxHeight: 35,
-    padding: '4px 0px 3px 0px',
+    borderRadius: '12px',
+    height: 36,
     width: '100%'
   },
   rangeGrid: {
@@ -49,7 +52,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   headerText: {
     display: 'flex',
     flexDirection: 'row',
-    paddingTop: '3px',
     alignItems: 'center'
   },
   feeText: {
@@ -78,57 +80,56 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   name: {
-    ...typography.heading3,
-    color: colors.white.main,
-    lineHeight: '35px',
+    ...newTypography.heading3,
+    color: colors.invariant.text,
+    lineHeight: '28px',
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.body1
+      ...newTypography.body1
     }
   },
   bottomGrid: {
-    background: colors.invariant.componentOut4,
+    background: colors.invariant.component,
     marginTop: 20,
     padding: 24,
-    borderRadius: '10px'
+    borderRadius: '24px'
   },
   iconSmall: {
-    width: '16px',
-    marginRight: 5,
+    width: '20px',
+    height: '20px',
+    marginRight: 8,
     borderRadius: '100%'
   },
   boxInfo: {
-    backgroundColor: colors.invariant.componentIn2,
-    borderRadius: '8px',
-    padding: 20,
+    borderRadius: '16px',
     '&:not(:last-child)': {
-      marginBottom: 24
+      marginBottom: 26
     }
   },
   title: {
-    ...typography.body1,
-    color: colors.white.main
+    ...newTypography.heading4,
+    color: colors.invariant.text
   },
   titleValue: {
-    ...typography.heading3,
+    ...newTypography.heading3,
     color: colors.white.main,
     fontFamily: 'Mukta'
   },
   violetButton: {
-    backgroundColor: colors.invariant.accent1,
-    borderRadius: '5px',
+    background: 'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    borderRadius: '11px',
     textTransform: 'none',
-    color: colors.white.main,
-    minWidth: 140,
-    maxHeight: 35,
-    ...typography.body1,
+    color: colors.invariant.dark,
+    width: 116,
+    height: 32,
+    ...newTypography.body1,
     '&:hover': {
-      background: colors.invariant.accent1,
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`
+      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
+      boxShadow: `0 0 16px ${colors.invariant.pink}`
     },
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.label2,
+      ...newTypography.body1,
       maxHeight: 28,
       minWidth: 105
     }
@@ -137,54 +138,82 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 10
+    paddingTop: 14,
+    '&:not(:last-child)': {
+      paddingTop: 24
+    }
   },
   tokenArea: {
-    backgroundColor: colors.invariant.componentOut2,
-    borderRadius: '5px',
-    display: 'flex',
+    backgroundColor: '#111931',
+    borderRadius: '16px',
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
+    padding: 12,
     '&:not(:last-child)': {
       marginBottom: 8
     }
+    // '&:not(:first-child)': {
+    //   display: 'flex'
+    // }
+  },
+  tokenAreaUpperPart: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  tokenAreaLowerPart: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 16
   },
   token: {
-    backgroundColor: colors.invariant.componentOut3,
-    borderRadius: '5px',
+    backgroundColor: colors.invariant.light,
+    borderRadius: '12px',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: '3px 12px'
+    padding: '8px 13px'
   },
   tokenName: {
-    color: colors.white.main,
-    ...typography.body1
+    color: '#A9B6BF',
+    ...newTypography.heading4,
+    fontWeight: 400
   },
   tokenValue: {
-    color: colors.invariant.lightInfoText,
+    color: '#A9B6BF',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingRight: 15,
-    ...typography.body1
+    ...newTypography.heading2
+  },
+  tokenBalance: {
+    color: '#A9B6BF',
+    ...newTypography.caption2
+  },
+  tokenUSDValue: {
+    color: '#A9B6BF',
+    ...newTypography.caption2
   },
   closeButton: {
-    color: colors.invariant.componentOut2,
-    background: colors.invariant.accent2,
-    maxHeight: '35px',
-    minWidth: 114,
+    color: '#111931',
+    background: 'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)',
+    height: 36,
+    width: '116px',
     textTransform: 'none',
     transition: '300ms',
     paddingInline: 0,
+    borderRadius: '12px',
+    ...newTypography.body1,
+
     '&:hover': {
-      background: colors.invariant.accent2,
-      boxShadow: `0px 0px 15px ${colors.invariant.accent2}`
+      background: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
+      boxShadow: `0px 0px 8px ${colors.invariant.green}`
     },
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.label2,
+      ...newTypography.body1,
       minWidth: 84
     }
   },

@@ -1,4 +1,5 @@
 import { Button, Grid, Typography } from '@material-ui/core'
+// import { balance, tokenBalance } from '@selectors/solanaWallet'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import React from 'react'
@@ -23,6 +24,10 @@ interface IProp {
   tokenYLiqValue: number
   tokenXClaimValue: number
   tokenYClaimValue: number
+  tokenXBalance: number
+  tokenYBalance: number
+  tokenXUSDValue?: number
+  tokenYUSDValue?: number
 }
 
 const SinglePositionInfo: React.FC<IProp> = ({
@@ -32,7 +37,11 @@ const SinglePositionInfo: React.FC<IProp> = ({
   tokenYLiqValue,
   tokenXLiqValue,
   tokenYClaimValue,
-  tokenXClaimValue
+  tokenXClaimValue,
+  tokenXBalance,
+  tokenYBalance,
+  tokenXUSDValue,
+  tokenYUSDValue
 }) => {
   const classes = useStyles()
   return (
@@ -72,11 +81,15 @@ const SinglePositionInfo: React.FC<IProp> = ({
           tokenXName={data.tokenXName}
           tokenXIcon={data.tokenXIcon}
           tokenXDecimal={data.tokenXDecimal}
+          tokenXBalance={tokenXBalance}
           tokenYName={data.tokenYName}
           tokenYIcon={data.tokenYIcon}
           tokenYDecimal={data.tokenYDecimal}
+          tokenYBalance={tokenYBalance}
           tokenXValue={tokenXLiqValue}
+          tokenXUSDValue={tokenXUSDValue}
           tokenYValue={tokenYLiqValue}
+          tokenYUSDValue={tokenYUSDValue}
         />
         <BoxInfo
           title={'Unclaimed fees'}

@@ -211,7 +211,20 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         y={0}
         width={2}
         height={innerHeight}
-        fill={colors.invariant.componentOut3}
+        fill={colors.invariant.light}
+      />
+    )
+  }
+
+  const bottomLineLayer: Layer = ({ innerWidth, innerHeight }) => {
+    const bottomLine = innerHeight
+    return (
+      <rect
+        x={0}
+        y={bottomLine}
+        width={innerWidth}
+        height={1}
+        fill={colors.invariant.light}
       />
     )
   }
@@ -278,7 +291,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         ]}
         curve='basis'
         margin={{ top: isSmDown ? 55 : 25, bottom: 15 }}
-        colors={[colors.invariant.accent1, colors.invariant.accent2, colors.invariant.accent1]}
+        colors={[colors.invariant.green, colors.invariant.green, colors.invariant.green]}
         axisTop={null}
         axisRight={null}
         axisLeft={null}
@@ -308,6 +321,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         role='application'
         layers={[
           currentLayer,
+          bottomLineLayer,
           'grid',
           'markers',
           'areas',

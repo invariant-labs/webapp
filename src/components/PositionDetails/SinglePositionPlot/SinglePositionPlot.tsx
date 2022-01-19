@@ -123,7 +123,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           tokenY={tokenY}
         />
       </Grid>
-      <Grid>
+      <Grid className={classes.currentPriceContainer}>
         <Card className={classes.currentPriceLabel}>
           <Typography component='p'>current price</Typography>
         </Card>

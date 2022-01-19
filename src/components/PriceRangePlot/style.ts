@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   zoomIcon: {
-    width: 14,
+    width: 18,
     height: 'auto',
     fill: '#000000',
 
@@ -26,14 +26,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   zoomButton: {
     minWidth: 0,
-    width: 21,
-    height: 18,
-    backgroundColor: colors.invariant.accent2,
-    borderRadius: 3,
+    width: 28,
+    height: 28,
+    backgroundColor: colors.invariant.green,
+    borderRadius: 5,
     padding: 0,
+    '&:not(:last-child)': {
+      marginBottom: 8
+    },
 
     '&:hover': {
-      backgroundColor: colors.invariant.logoGreen
+      backgroundColor: colors.invariant.green
     },
 
     [theme.breakpoints.down('sm')]: {
@@ -45,11 +48,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     top: 0,
     right: 0,
-    maxWidth: 21,
+    maxWidth: 28,
     height: 42,
     zIndex: 10,
-    flexDirection: 'column',
-
+    // flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'row',
       maxWidth: 92,

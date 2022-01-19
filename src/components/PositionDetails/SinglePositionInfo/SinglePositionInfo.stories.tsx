@@ -35,6 +35,10 @@ storiesOf('singlePosition/leftComponent', module)
         tokenYLiqValue={20.99703}
         tokenXClaimValue={2.19703}
         tokenYClaimValue={9.19703}
+        tokenXBalance={102460.3445}
+        tokenYBalance={460.3445}
+        tokenXUSDValue={205341.4361}
+        tokenYUSDValue={6205341.4361}
         closePosition={() => console.log('close position')}
       />
     </Grid>
@@ -58,6 +62,10 @@ storiesOf('singlePosition/leftComponent', module)
         tokenYLiqValue={20.99703}
         tokenXClaimValue={2.19703}
         tokenYClaimValue={9.19703}
+        tokenXBalance={102460.3445}
+        tokenYBalance={460.3445}
+        tokenXUSDValue={205341.4361}
+        tokenYUSDValue={6205341.4361}
         closePosition={() => console.log('close position')}
       />
     </Grid>
