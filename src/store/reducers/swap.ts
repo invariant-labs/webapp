@@ -21,10 +21,9 @@ export interface Simulate {
   fromToken: PublicKey
   toToken: PublicKey
   amount: BN
-
+  success: boolean
   txid?: string
   inProgress?: boolean
-  success?: boolean
 }
 
 export interface ISwapStore {
@@ -35,7 +34,8 @@ export const defaultSimulate: Simulate = {
   simulatePrice: new BN(0),
   fromToken: DEFAULT_PUBLICKEY,
   toToken: DEFAULT_PUBLICKEY,
-  amount: new BN(0)
+  amount: new BN(0),
+  success: false
 }
 
 export const defaultState: ISwapStore = {
@@ -67,6 +67,9 @@ const swapSlice = createSlice({
     simulate(state, action: PayloadAction<Simulate>) {
       state.swap.simulate = action.payload
       return state
+    },
+    simulateSuccess(state, action: PayloadAction<boolean>) {
+      state.swap.simulate.success = action.payload
     },
     changePrice(state, action: PayloadAction<BN>) {
       state.swap.price.v = action.payload

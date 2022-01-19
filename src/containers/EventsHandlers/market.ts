@@ -59,7 +59,6 @@ const MarketEvents = () => {
   }, [dispatch, allPools.length, networkStatus, marketProgram])
 
   useEffect(() => {
-    console.log(Object.values(poolTicksArray).length)
     if (
       networkStatus !== Status.Initialized ||
       !marketProgram ||
@@ -68,8 +67,6 @@ const MarketEvents = () => {
       return
     }
     const connectEvents = async () => {
-      console.log(allPools)
-      console.log(poolTicksArray)
       allPools.map((pool, indexPool) => {
         if (
           subscribedTick.findIndex(

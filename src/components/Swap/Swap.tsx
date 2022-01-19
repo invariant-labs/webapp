@@ -63,21 +63,28 @@ export interface ISwap {
       fromToken: PublicKey
       toToken: PublicKey
       amount: BN
+      success: boolean
     }
   ) => void
-  initPool: (init: boolean) => void
-  onSimulate: (simulatePrice: BN, fromToken: PublicKey, toToken: PublicKey, amount: BN) => void
+  onSimulate: (
+    simulatePrice: BN,
+    fromToken: PublicKey,
+    toToken: PublicKey,
+    amount: BN,
+    success: boolean
+  ) => void
   progress: ProgressState
+  poolInit: boolean
 }
 export const Swap: React.FC<ISwap> = ({
   walletStatus,
   tokens,
   pools,
   onSwap,
-  initPool,
   onSimulate,
   swapData,
-  progress
+  progress,
+  poolInit
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -87,6 +94,7 @@ export const Swap: React.FC<ISwap> = ({
   const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
     tokens.length ? 0 : null
   )
+
   const [tokenToIndex, setTokenToIndex] = React.useState<number | null>(null)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [amountFrom, setAmountFrom] = React.useState<string>('')
@@ -150,7 +158,8 @@ export const Swap: React.FC<ISwap> = ({
           simulatePrice.sqrtPrice,
           tokens[tokenFromIndex].address,
           tokens[tokenToIndex].address,
-          printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals)
+          printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),
+          true
         )
       } else {
         const simulatePrice = calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex])
@@ -158,7 +167,8 @@ export const Swap: React.FC<ISwap> = ({
           simulatePrice.sqrtPrice,
           tokens[tokenToIndex].address,
           tokens[tokenFromIndex].address,
-          printBNtoBN(amountTo, tokens[tokenToIndex].decimals)
+          printBNtoBN(amountTo, tokens[tokenToIndex].decimals),
+          true
         )
       }
     }
@@ -179,7 +189,6 @@ export const Swap: React.FC<ISwap> = ({
   useEffect(() => {
     updateEstimatedAmount()
     if (tokenToIndex !== null && tokenFromIndex !== null) {
-      initPool(true)
       const pairIndex = pools.findIndex(pool => {
         return (
           (tokens[tokenFromIndex].assetAddress.equals(pool.tokenX) &&
@@ -236,9 +245,14 @@ export const Swap: React.FC<ISwap> = ({
     if (!getIsXToY(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
       return 'No route found'
     }
-
+    if (!poolInit) {
+      return 'Loading...'
+    }
     if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {
       return 'Insufficient trade volume'
+    }
+    if (!swapData.simulate.success) {
+      return 'Too many tokens to exchange'
     }
     if (
       printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).gt(
@@ -451,7 +465,8 @@ export const Swap: React.FC<ISwap> = ({
                 simulatePrice: printBNtoBN(amountFrom, 0),
                 fromToken: tokens[tokenFromIndex].address,
                 toToken: tokens[tokenToIndex].address,
-                amount: printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals)
+                amount: printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),
+                success: true
               }
             )
           }}

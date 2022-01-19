@@ -1,5 +1,5 @@
 import { Swap } from '@components/Swap/Swap'
-import { pools } from '@selectors/pools'
+import { initPool, pools } from '@selectors/pools'
 import { swap as swapPool } from '@selectors/swap'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,6 +13,7 @@ export const WrappedSwap = () => {
   const walletStatus = useSelector(status)
   const swap = useSelector(swapPool)
   const allPools = useSelector(pools)
+  const poolInit = useSelector(initPool)
   const tokensList = useSelector(swapTokens)
   const { success, inProgress } = useSelector(swapPool)
 
@@ -45,16 +46,14 @@ export const WrappedSwap = () => {
           })
         )
       }}
-      initPool={init => {
-        dispatch(poolActions.initPool(init))
-      }}
-      onSimulate={(simulatePrice, fromToken, toToken, amount) => {
+      onSimulate={(simulatePrice, fromToken, toToken, amount, success) => {
         dispatch(
           actions.simulate({
             simulatePrice,
             fromToken,
             toToken,
-            amount
+            amount,
+            success
           })
         )
       }}
@@ -63,6 +62,7 @@ export const WrappedSwap = () => {
       pools={allPools}
       swapData={swap}
       progress={progress}
+      poolInit={poolInit}
     />
   )
 }

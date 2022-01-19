@@ -1,6 +1,5 @@
 import { call, takeLatest, put, select, takeEvery, spawn, all } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
-import { swap } from '@selectors/swap'
 import { Pair } from '@invariant-labs/sdk'
 import { actions, PoolWithAddress } from '@reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -25,7 +24,6 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
         [action.payload[i], action.payload[i].getAddress],
         marketProgram.program.programId
       )
-      console.log(poolData)
       pools.push({
         ...poolData,
         address
@@ -53,6 +51,7 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
       ticks = ticksArray.concat(ticksArrayUp)
       yield* put(actions.setTicks({ index: i, tickStructure: ticks }))
     }
+    yield* put(actions.initPool(true))
   } catch (error) {
     console.log(error)
   }
