@@ -15,7 +15,7 @@ export interface iTick {
 
 export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
   const marketProgram = yield* call(getMarketProgram)
-
+  let allTicks = {}
   try {
     const pools: PoolWithAddress[] = []
     let ticks: Tick[] = []
@@ -30,6 +30,12 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
         ...poolData,
         address
       })
+    }
+
+    yield* put(actions.setPools(pools))
+
+    for (let i = 0; i < action.payload.length; i++) {
+      const poolData = yield* call([marketProgram, marketProgram.getPool], action.payload[i])
       const ticksArray = yield* call(
         [marketProgram, marketProgram.getClosestTicks],
         new Pair(poolData.tokenX, poolData.tokenY, FEE_TIERS[0]),
@@ -47,48 +53,11 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
       ticks = ticksArray.concat(ticksArrayUp)
       yield* put(actions.setTicks({ index: i, tickStructure: ticks }))
     }
-
-    yield* put(actions.setPools(pools))
   } catch (error) {
     console.log(error)
   }
 }
 
-// export function* fetchPoolTicks() {
-//   const marketProgram = yield* call(getMarketProgram)
-//   const { simulate } = yield* select(swap)
-//   try {
-//     const ticksArray = yield* call(
-//       [marketProgram, marketProgram.getClosestTicks],
-//       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
-//       8,
-//       undefined,
-//       'down'
-//     )
-//     const ticksArrayUp = yield* call(
-//       [marketProgram, marketProgram.getClosestTicks],
-//       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
-//       8,
-//       undefined,
-//       'up'
-//     )
-
-//     yield* put(actions.setTicks(ticksArray.concat(ticksArrayUp)))
-//     return ticksArray.concat(ticksArrayUp)
-//   } catch (error) {
-//     console.log(error)
-//     return []
-//   }
-// }
-
 export function* getPoolsDataHandler(): Generator {
   yield* takeLatest(actions.getPoolsData, fetchPoolsData)
 }
-
-// export function* ticksHandler(): Generator {
-//   yield* takeEvery(actions.initPool, fetchPoolTicks)
-// }
-
-// export function* poolsSaga(): Generator {
-//   yield* all([getPoolsDataHandler, ticksHandler].map(spawn))
-// }

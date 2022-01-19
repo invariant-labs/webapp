@@ -71,7 +71,6 @@ const MarketEvents = () => {
       console.log(allPools)
       console.log(poolTicksArray)
       allPools.map((pool, indexPool) => {
-        console.log(subscribedTick)
         if (
           subscribedTick.findIndex(
             e =>
@@ -82,7 +81,6 @@ const MarketEvents = () => {
         ) {
           return
         }
-        console.log('before sub')
         subscribedTick.push({
           fromToken: pool.tokenX.toString(),
           toToken: toToken.toString(),
@@ -95,7 +93,6 @@ const MarketEvents = () => {
               new Pair(pool.tokenX, pool.tokenY, FEE_TIERS[0]),
               singleTick.index,
               tickObject => {
-                console.log('change!', singleTick.index, 'pool number: ', indexPool)
                 dispatch(
                   actions.updateTicks({
                     poolIndex: indexPool.toString(),
@@ -107,7 +104,6 @@ const MarketEvents = () => {
             )
           })
         })
-        console.log('after sub')
       })
     }
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
