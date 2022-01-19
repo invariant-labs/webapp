@@ -450,7 +450,7 @@ export const Swap: React.FC<ISwap> = ({
         <AnimatedButton
           content={getButtonMessage()}
           className={classes.swapButton}
-          disabled={getButtonMessage() !== 'Swap'}
+          disabled={getButtonMessage() !== 'Swap' || progress !== 'none'}
           onClick={() => {
             if (tokenFromIndex === null || tokenToIndex === null) return
             onSwap(

@@ -61,7 +61,7 @@ export function* handleSimulate(): Generator {
     }
   } catch (error) {
     yield put(swapActions.simulateSuccess(false))
-    // console.log(error)
+    console.log(error)
   }
 }
 
@@ -99,7 +99,7 @@ export function* handleSwap(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, simulate.toToken)
     }
-    const swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
+    const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
       pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
       xToY: isXtoY,
       amount: simulate.amount,
