@@ -4,9 +4,10 @@ import { colors, typography } from '@static/theme'
 const useStyles = makeStyles((theme: Theme) => ({
   list: {
     borderRadius: 10,
-    padding: 24,
-    paddingTop: 16,
-    flex: '1 1 0%'
+
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    }
 
     // '&:first-child': {
     //   borderTopLeftRadius: 10,
@@ -20,7 +21,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   listItem: {
     alignItems: 'center',
     padding: 16,
-    width: 240
+    width: 240,
+
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    }
   },
   inputLabel: {
     ...typography.body3,

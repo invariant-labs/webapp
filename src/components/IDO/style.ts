@@ -3,7 +3,8 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    width: 882
+    width: 672,
+    padding: 24
   },
   row: {
     position: 'relative',

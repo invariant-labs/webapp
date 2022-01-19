@@ -16,7 +16,7 @@ storiesOf('IDO/IDOComponents', module)
   .addDecorator(withKnobs)
   .add('depositAmount', () => {
     return (
-      <div style={{ width: 400, background: '#1C1B1E', padding: 20, borderRadius: 10 }}>
+      <div style={{ maxWidth: 400, background: '#1C1B1E', padding: 20, borderRadius: 10 }}>
         <DepositAmount currencyRates={currencyData} />
       </div>
     )

@@ -1,7 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
-import { toBlur } from '@consts/uiUtils'
 import { MemoryRouter } from 'react-router'
 import { IDO } from './IDO'
 import { Grid } from '@material-ui/core'
@@ -86,6 +85,7 @@ const saleDetailsData: ISaleDetails = {
 storiesOf('IDO/IDODeposit', module)
   .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
   .addDecorator(withKnobs)
+  .add('IDO', () => <IDO saleDetails={saleDetailsData} depositDetails={depositDetailsData} />)
   .add('IDOPage', () => {
     return (
       <Grid
@@ -95,9 +95,8 @@ storiesOf('IDO/IDODeposit', module)
         alignItems='center'
         style={{
           background: '#0B090D',
-          height: '100vh',
-          margin: '-16px',
-          width: '100vw'
+          minHeight: '100vh',
+          margin: '-16px'
         }}>
         <Header
           address={DEFAULT_PUBLICKEY}
@@ -112,9 +111,7 @@ storiesOf('IDO/IDODeposit', module)
           onDisconnectWallet={action('disconnect')}
           typeOfNetwork={NetworkType.MAINNET}
         />
-        {/* <Grid container justifyContent='center'> */}
         <IDO saleDetails={saleDetailsData} depositDetails={depositDetailsData} />
-        {/* </Grid> */}
         <Footer />
       </Grid>
     )

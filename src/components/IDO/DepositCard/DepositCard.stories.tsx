@@ -51,10 +51,9 @@ const currencyData: IDepositAmount['currencyRates'] = [
 storiesOf('IDO/IDOComponents', module)
   .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
   .addDecorator(withKnobs)
-  .add('depositCard', () => {
-    return (
-      <div style={{ width: 400, background: '#1C1B1E', padding: 20, borderRadius: 10 }}>
-        <DepositCard currencyRates={currencyData} tokens={tokens} />
-      </div>
-    )
-  })
+  .add('depositCard', () => <DepositCard currencyRates={currencyData} tokens={tokens} />)
+  .add('depositCardInContainer', () => (
+    <div style={{ maxWidth: 500, background: '#1C1B1E', padding: 20, borderRadius: 10 }}>
+      <DepositCard currencyRates={currencyData} tokens={tokens} />
+    </div>
+  ))

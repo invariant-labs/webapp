@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 24,
     paddingTop: 16,
     flex: '1 1 0%',
-    margin: '16px 24px 24px 0',
+    marginRight: 24,
     justifyContent: 'space-between'
   },
   title: {

@@ -10,7 +10,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   currencyInputLabel: {
     ...typography.body3,
     color: colors.invariant.lightInfoText,
-    marginRight: 16,
     fontSize: 12
   },
   title: {
@@ -19,7 +18,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   logo: {
     width: 42,
-    height: 32
+    height: 32,
+    marginRight: 16
   }
 }))
 

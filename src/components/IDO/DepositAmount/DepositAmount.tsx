@@ -14,9 +14,9 @@ export const DepositAmount: React.FC<IDepositAmount> = ({ currencyRates }) => {
   return (
     <Grid>
       <Typography className={classes.inputLabel}>Deposited Amount:</Typography>
-      <Grid container direction='row' justifyContent='space-between' alignItems='center'>
+      <Grid container direction='row' alignItems='center'>
         <CardMedia component='img' className={classes.logo} src={icons.LogoShort} />
-        <Grid>
+        <Grid style={{ flex: '1 1 0%' }}>
           <Typography className={classes.title}>
             {mainCurrency.value} x{mainCurrency.currency}
           </Typography>
