@@ -80,6 +80,7 @@ export const colors = {
     warning: '#EFD063',
     // after UI changes we will delete unnecessary vars
     pink: '#EF84F5',
+    purple: '#9C3EBD',
     green: '#2EE09A',
     dark: '#040B22',
     component: '#202946',
