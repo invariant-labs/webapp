@@ -11,7 +11,6 @@ import { getNetworkTokensList } from '@consts/utils'
 import { getTokensAddresses } from '@selectors/swap'
 import { Pair } from '@invariant-labs/sdk'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { all } from 'redux-saga/effects'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -85,7 +84,7 @@ const MarketEvents = () => {
         })
         // eslint-disable-next-line array-callback-return
         R.forEachObj(poolTicksArray, tick => {
-          tick.map((singleTick, index) => {
+          tick.map(singleTick => {
             marketProgram.onTickChange(
               new Pair(pool.tokenX, pool.tokenY, FEE_TIERS[0]),
               singleTick.index,

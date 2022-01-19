@@ -4,7 +4,6 @@ import { swap as swapPool } from '@selectors/swap'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@reducers/swap'
-import { actions as poolActions } from '@reducers/pools'
 import { status, swapTokens } from '@selectors/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 

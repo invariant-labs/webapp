@@ -112,6 +112,7 @@ export const Swap: React.FC<ISwap> = ({
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken) => {
     let sqrtPrice: BN = new BN(0)
     let amountOut: number = 0
+    // trunk-ignore(eslint/@typescript-eslint/no-unused-vars-experimental)
     let priceProportion: number = 0
     const decimalDiff: number = PRICE_DECIMAL + (assetIn.decimals - assetFor.decimals)
     if (poolIndex !== -1 && poolIndex !== null) {

@@ -2,18 +2,16 @@ import { all, call, put, select, spawn, takeEvery } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
 import { swap } from '@selectors/swap'
-import { poolTicks } from '@selectors/pools'
+import { poolTicks, pools } from '@selectors/pools'
 import { accounts } from '@selectors/solanaWallet'
 import { createAccount, getWallet } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
-import { pools } from '@selectors/pools'
 import { Pair } from '@invariant-labs/sdk'
 import { getConnection } from './connection'
 import { FEE_TIERS, simulateSwap, SimulateSwapInterface } from '@invariant-labs/sdk/src/utils'
 import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import BN from 'bn.js'
 import { Tick } from '@invariant-labs/sdk/src/market'
-import { pull } from 'lodash'
 
 export function* handleSimulate(): Generator {
   try {
@@ -63,7 +61,7 @@ export function* handleSimulate(): Generator {
     }
   } catch (error) {
     yield put(swapActions.simulateSuccess(false))
-    console.log(error)
+    // console.log(error)
   }
 }
 
@@ -146,7 +144,7 @@ export function* handleSwap(): Generator {
   } catch (error) {
     console.log(error)
 
-    // yield put(swapActions.setSwapSuccess(false))
+    yield put(swapActions.setSwapSuccess(false))
 
     yield put(
       snackbarsActions.add({
