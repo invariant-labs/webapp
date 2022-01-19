@@ -1,8 +1,8 @@
 import { all, call, put, select, spawn, takeEvery } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
-import { fetchPoolTicks } from '@sagas/pool'
 import { swap } from '@selectors/swap'
+import { poolTicks } from '@selectors/pools'
 import { accounts } from '@selectors/solanaWallet'
 import { createAccount, getWallet } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
@@ -17,6 +17,7 @@ import { Tick } from '@invariant-labs/sdk/src/market'
 export function* handleSimulate(): Generator {
   try {
     const allPools = yield* select(pools)
+    const ticksArray = yield* select(poolTicks)
     const { slippage, simulate } = yield* select(swap)
     const marketProgram = yield* call(getMarketProgram)
     const swapPool = allPools.find(
@@ -27,16 +28,16 @@ export function* handleSimulate(): Generator {
     if (!swapPool) {
       return
     }
+    const poolIndex = allPools.findIndex(e => e === swapPool)
     const isXtoY =
       simulate.fromToken.equals(swapPool.tokenX) && simulate.toToken.equals(swapPool.tokenY)
     const tickMap = yield* call(
       [marketProgram, marketProgram.getTickmap],
       new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0])
     )
-    const ticksArray = yield* call(fetchPoolTicks)
     const ticks: Map<number, Tick> = new Map<number, Tick>()
     if (ticks.size === 0) {
-      for (const tick of ticksArray) {
+      for (const tick of ticksArray[poolIndex]) {
         ticks.set(tick.index, tick)
       }
     }

@@ -13,7 +13,7 @@ export interface PoolWithAddress extends PoolStructure {
 export interface IPoolsStore {
   tokens: Record<string, Token>
   pools: PoolWithAddress[]
-  poolTicks: Tick[]
+  poolTicks: { [key in string]: Tick[] }
   initPool: boolean
 }
 
@@ -22,7 +22,13 @@ export interface UpdatePool {
   poolStructure: PoolStructure
 }
 
+export interface UpdateTick {
+  index: number
+  tickStructure: Tick[]
+}
+
 export interface UpdateTicks {
+  poolIndex: string
   index: number
   tick: Tick
 }
@@ -30,7 +36,7 @@ export interface UpdateTicks {
 export const defaultState: IPoolsStore = {
   tokens: {},
   pools: [],
-  poolTicks: [],
+  poolTicks: {},
   initPool: false
 }
 
@@ -51,8 +57,8 @@ const poolsSlice = createSlice({
       state.pools = action.payload
       return state
     },
-    setTicks(state, action: PayloadAction<Tick[]>) {
-      state.poolTicks = action.payload
+    setTicks(state, action: PayloadAction<UpdateTick>) {
+      state.poolTicks[action.payload.index] = action.payload.tickStructure
       return state
     },
     updatePool(state, action: PayloadAction<UpdatePool>) {
@@ -63,9 +69,11 @@ const poolsSlice = createSlice({
       return state
     },
     updateTicks(state, action: PayloadAction<UpdateTicks>) {
-      state.poolTicks[state.poolTicks.findIndex(e => e.index === action.payload.index)] =
-        action.payload.tick
+      state.poolTicks[action.payload.poolIndex][
+        state.poolTicks[action.payload.poolIndex].findIndex(e => e.index === action.payload.index)
+      ] = action.payload.tick
     },
+
     getPoolsData(_state, _action: PayloadAction<Pair[]>) {}
   }
 })
