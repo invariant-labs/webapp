@@ -41,7 +41,6 @@ export interface INewPosition {
   ) => BN
   feeTiers: number[]
   ticksLoading: boolean
-  onZoomOut: (min: number, max: number) => void
   showNoConnected?: boolean
   noConnectedBlockerProps: INoConnected
   progress: ProgressState
@@ -62,7 +61,6 @@ export const NewPosition: React.FC<INewPosition> = ({
   calcAmount,
   feeTiers,
   ticksLoading,
-  onZoomOut,
   showNoConnected,
   noConnectedBlockerProps,
   progress,
@@ -261,7 +259,6 @@ export const NewPosition: React.FC<INewPosition> = ({
                 tokenASymbol: tokens[tokenAIndex].symbol,
                 tokenBSymbol: tokens[tokenBIndex].symbol
               })}
-          onZoomOut={onZoomOut}
           ticksLoading={ticksLoading}
           isXtoY={isXtoY}
           tickSpacing={tickSpacing}

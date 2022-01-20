@@ -37,7 +37,6 @@ storiesOf('singlePosition/rightComponent', module).add('plot', () => {
       currentPrice={300}
       tokenY={'SNY'}
       tokenX={'xUSD'}
-      onZoomOut={() => {}}
       positionData={{
         tokenXName: 'BTC',
         tokenXIcon: tokens[NetworkType.DEVNET][0].logoURI,
