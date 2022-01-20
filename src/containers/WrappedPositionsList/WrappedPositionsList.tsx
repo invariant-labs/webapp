@@ -92,6 +92,7 @@ export const WrappedPositionsList: React.FC = () => {
       })}
       loading={isLoading}
       showNoConnected={walletStatus !== Status.Initialized}
+      itemsPerPage={6}
       noConnectedBlockerProps={{
         onConnect: type => {
           dispatch(actions.connect(type))
