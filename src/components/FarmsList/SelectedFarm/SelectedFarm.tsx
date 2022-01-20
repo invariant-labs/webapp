@@ -150,7 +150,9 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                 />
               </Typography>
             </Grid>
-            <Button className={classes.claimRewards} onClick={claimRewards}>Claim Rewards</Button>
+            <Button className={classes.claimRewards} onClick={claimRewards}>
+              Claim Rewards
+            </Button>
           </Grid>
           <Grid justifyContent='space-between' direction='row'>
             <Box className={classes.labelGrid}>
