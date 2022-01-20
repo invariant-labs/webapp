@@ -5,8 +5,9 @@ import { withKnobs } from '@storybook/addon-knobs'
 import { SwapToken } from '@components/Swap/Swap'
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
-import { DepositCard } from './DepositCard'
+import DepositCard, { IActionType } from './DepositCard'
 import { IDepositAmount } from '../DepositAmount/DepositAmount'
+import { action } from '@storybook/addon-actions'
 
 const tokens: SwapToken[] = [
   {
@@ -48,12 +49,44 @@ const currencyData: IDepositAmount['currencyRates'] = [
   { currency: 'BTC', value: '0.00022' }
 ]
 
-storiesOf('IDO/IDOComponents', module)
+storiesOf('IDO/IDOComponents/depositCard', module)
   .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
   .addDecorator(withKnobs)
-  .add('depositCard', () => <DepositCard currencyRates={currencyData} tokens={tokens} />)
+  .add('depositCard', () => (
+    <DepositCard
+      currencyRates={currencyData}
+      tokens={tokens}
+      onTokenChange={(name: string) => action(name)()}
+    />
+  ))
+  .add('withdrawCard', () => (
+    <DepositCard
+      currencyRates={currencyData}
+      actionType={IActionType.Withdraw}
+      onActionType={action(`Successful ${IActionType.Withdraw}`)}
+      tokens={tokens}
+      onTokenChange={(name: string) => action(name)()}
+      walletConnected
+    />
+  ))
+  .add('claimCard', () => (
+    <DepositCard
+      currencyRates={currencyData}
+      actionType={IActionType.Claim}
+      onActionType={action(`Successful ${IActionType.Claim}`)}
+      tokens={tokens}
+      onTokenChange={(name: string) => action(name)()}
+      walletConnected
+    />
+  ))
   .add('depositCardInContainer', () => (
     <div style={{ maxWidth: 500, background: '#1C1B1E', padding: 20, borderRadius: 10 }}>
-      <DepositCard currencyRates={currencyData} tokens={tokens} />
+      <DepositCard
+        currencyRates={currencyData}
+        tokens={tokens}
+        onTokenChange={(name: string) => action(name)()}
+        walletConnected
+        onActionType={action(`Successful ${IActionType.Deposit}`)}
+      />
     </div>
   ))

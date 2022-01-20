@@ -1,8 +1,8 @@
 import React from 'react'
-import { storiesOf } from '@storybook/react'
-import { DepositAmount, IDepositAmount } from './DepositAmount'
-import { MemoryRouter } from 'react-router'
 import { withKnobs } from '@storybook/addon-knobs'
+import { storiesOf } from '@storybook/react'
+import { MemoryRouter } from 'react-router'
+import DepositAmount, { IDepositAmount } from './DepositAmount'
 
 const currencyData: IDepositAmount['currencyRates'] = [
   { currency: 'USD', value: '47.22' },

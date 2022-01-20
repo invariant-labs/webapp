@@ -4,24 +4,16 @@ import { colors, typography } from '@static/theme'
 const useStyles = makeStyles((theme: Theme) => ({
   list: {
     borderRadius: 10,
+    overflow: 'hidden',
+    width: 240,
 
     [theme.breakpoints.down('sm')]: {
       width: '100%'
     }
-
-    // '&:first-child': {
-    //   borderTopLeftRadius: 10,
-    //   borderTopRightRadius: 10
-    // },
-    // '&:last-child': {
-    //   borderBottomLeftRadius: 10,
-    //   borderBottomRightRadius: 10
-    // }
   },
   listItem: {
     alignItems: 'center',
     padding: 16,
-    width: 240,
 
     [theme.breakpoints.down('sm')]: {
       width: '100%'
@@ -37,10 +29,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.heading4
   },
   icon: {
-    width: 15,
     height: 15,
     margin: '0 8px',
-    color: colors.white.main,
+    color: colors.white.main
+  },
+  invariantIcon: {
+    width: 19
+  },
+  tokenIcon: {
+    width: 15,
     borderRadius: '50%'
   },
   listData: {

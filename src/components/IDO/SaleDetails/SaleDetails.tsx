@@ -1,34 +1,34 @@
-import { CardMedia, Grid, Typography } from '@material-ui/core'
-import icons from '@static/icons'
-import { AccessTimeOutlined } from '@material-ui/icons'
-import useStyles from './style'
 import React from 'react'
+import useStyles from './style'
+import icons from '@static/icons'
+import classNames from 'classnames'
 import { colors } from '@static/theme'
 import { liqTokens } from '@components/PositionDetails/PositionDetails.stories'
-import { ReactNode } from 'hoist-non-react-statics/node_modules/@types/react'
+import { CardMedia, Grid, Typography } from '@material-ui/core'
+import { AccessTimeOutlined, SvgIconComponent } from '@material-ui/icons'
 
 interface ITokensDetails extends liqTokens {
-  value?: string
+  value: string
 }
 
 export interface ISaleDetails {
   salePeriod: string
   gracePeriod: string
-  tokens: ITokensDetails[]
+  token: ITokensDetails
   tokenPrice: string
   invariantPrice: string
 }
 
 interface ISaleDetailsList {
-  title?: string
-  icon?: string | ReactNode
-  value?: string
+  title: string
+  icon: string | SvgIconComponent
+  value: string
 }
 
-export const SaleDetails: React.FC<ISaleDetails> = ({
+const SaleDetails: React.FC<ISaleDetails> = ({
   salePeriod,
   gracePeriod,
-  tokens,
+  token,
   tokenPrice,
   invariantPrice
 }) => {
@@ -38,9 +38,9 @@ export const SaleDetails: React.FC<ISaleDetails> = ({
     { title: 'Sale period ends in', icon: AccessTimeOutlined, value: salePeriod },
     { title: 'Grace period ends in', icon: AccessTimeOutlined, value: gracePeriod },
     {
-      title: `${tokens[2].symbol} conributed`,
-      icon: tokens[2].logoURI,
-      value: tokens[2].value
+      title: `${token.symbol} conributed`,
+      icon: token.logoURI,
+      value: token.value
     },
     {
       title: 'Estimated token price',
@@ -52,8 +52,8 @@ export const SaleDetails: React.FC<ISaleDetails> = ({
   return (
     <Grid className={classes.list}>
       {data.map((item, index) => {
-        const isStringIcon = typeof item.icon === 'string'
-        const Icon = !isStringIcon && item.icon
+        const isIconURL = typeof item.icon === 'string'
+        const Icon = item.icon
         return (
           <Grid
             container
@@ -62,16 +62,19 @@ export const SaleDetails: React.FC<ISaleDetails> = ({
             className={classes.listItem}
             style={{
               backgroundColor:
-                index % 2 ? colors.invariant.componentOut2 : colors.invariant.componentOut1,
-              borderTopLeftRadius: index === 0 ? 10 : 0,
-              borderTopRightRadius: index === 0 ? 10 : 0,
-              borderBottomRightRadius: index === data.length - 1 ? 10 : 0,
-              borderBottomLeftRadius: index === data.length - 1 ? 10 : 0
+                index % 2 ? colors.invariant.componentOut2 : colors.invariant.componentOut1
             }}>
             <Typography className={classes.inputLabel}>{item.title}</Typography>
             <Grid container direction='row' className={classes.listData}>
-              {isStringIcon ? (
-                <CardMedia component='img' className={classes.icon} src={item.icon} />
+              {isIconURL ? (
+                <CardMedia
+                  component='img'
+                  className={classNames(
+                    classes.icon,
+                    item.value === invariantPrice ? classes.invariantIcon : classes.tokenIcon
+                  )}
+                  src={item.icon as string}
+                />
               ) : (
                 <Icon className={classes.icon} />
               )}
@@ -83,3 +86,5 @@ export const SaleDetails: React.FC<ISaleDetails> = ({
     </Grid>
   )
 }
+
+export default SaleDetails

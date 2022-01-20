@@ -1,13 +1,12 @@
-import { Grid, Typography, CardMedia } from '@material-ui/core'
+import React from 'react'
 import icons from '@static/icons'
 import useStyles from './style'
-import React from 'react'
+import { Grid, Typography, CardMedia } from '@material-ui/core'
 
 export interface IDepositAmount {
   currencyRates: { currency: string; value: string }[]
 }
-
-export const DepositAmount: React.FC<IDepositAmount> = ({ currencyRates }) => {
+const DepositAmount: React.FC<IDepositAmount> = ({ currencyRates }) => {
   const classes = useStyles()
 
   const mainCurrency = currencyRates[0]
@@ -32,3 +31,5 @@ export const DepositAmount: React.FC<IDepositAmount> = ({ currencyRates }) => {
     </Grid>
   )
 }
+
+export default DepositAmount

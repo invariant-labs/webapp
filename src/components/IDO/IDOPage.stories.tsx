@@ -1,18 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { storiesOf } from '@storybook/react'
+import { action } from '@storybook/addon-actions'
 import { withKnobs } from '@storybook/addon-knobs'
 import { MemoryRouter } from 'react-router'
-import { IDO } from './IDO'
+import { BN } from '@project-serum/anchor'
+import { PublicKey } from '@solana/web3.js'
+import { DEFAULT_PUBLICKEY, NetworkType } from '@consts/static'
 import { Grid } from '@material-ui/core'
 import Header from '../Header/Header'
-import { DEFAULT_PUBLICKEY, NetworkType } from '@consts/static'
-import { action } from '@storybook/addon-actions'
 import { WalletType } from '@web3/wallet'
 import Footer from '@components/Footer/Footer'
 import { ISaleDetails } from './SaleDetails/SaleDetails'
-import { BN } from '@project-serum/anchor'
-import { PublicKey } from '@solana/web3.js'
 import { IDepositCard } from './DepositCard/DepositCard'
+import IDO from './IDO'
 
 const depositDetailsData: IDepositCard = {
   tokens: [
@@ -52,32 +52,19 @@ const depositDetailsData: IDepositCard = {
     { currency: 'SOL', value: '0.0323' },
     { currency: 'ETH', value: '0.324231' },
     { currency: 'BTC', value: '0.00022' }
-  ]
+  ],
+  onTokenChange: (name: string) => console.log(name)
 }
 
 const saleDetailsData: ISaleDetails = {
   salePeriod: '15:30:33',
   gracePeriod: '32:13:45',
-  tokens: [
-    {
-      symbol: 'BTC',
-      logoURI:
-        'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png',
-      value: '122 452 443'
-    },
-    {
-      symbol: 'SNY',
-      logoURI:
-        'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png',
-      value: '122 452 443 532'
-    },
-    {
-      symbol: 'SOL',
-      logoURI:
-        'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
-      value: '122 443'
-    }
-  ],
+  token: {
+    symbol: 'SOL',
+    logoURI:
+      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
+    value: '122 443'
+  },
   tokenPrice: '211.345',
   invariantPrice: '20 000 000'
 }
@@ -85,8 +72,18 @@ const saleDetailsData: ISaleDetails = {
 storiesOf('IDO/IDODeposit', module)
   .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
   .addDecorator(withKnobs)
-  .add('IDO', () => <IDO saleDetails={saleDetailsData} depositDetails={depositDetailsData} />)
+  .add('IDO', () => (
+    <IDO
+      saleDetails={saleDetailsData}
+      depositDetails={depositDetailsData}
+      walletConnected={false}
+      onWalletConnect={action('connected')}
+    />
+  ))
   .add('IDOPage', () => {
+    const [isConnected, setConnected] = useState<boolean>(false)
+
+    const handleConnect = () => setConnected(true)
     return (
       <Grid
         container
@@ -105,13 +102,19 @@ storiesOf('IDO/IDODeposit', module)
           }}
           onWalletSelect={(chosen: WalletType) => {
             action(`wallet changed to: ${chosen}`)()
+            setConnected(true)
           }}
-          walletConnected={false}
+          walletConnected={isConnected}
           landing='staking'
           onDisconnectWallet={action('disconnect')}
           typeOfNetwork={NetworkType.MAINNET}
         />
-        <IDO saleDetails={saleDetailsData} depositDetails={depositDetailsData} />
+        <IDO
+          walletConnected={isConnected}
+          saleDetails={saleDetailsData}
+          depositDetails={depositDetailsData}
+          onWalletConnect={handleConnect}
+        />
         <Footer />
       </Grid>
     )
