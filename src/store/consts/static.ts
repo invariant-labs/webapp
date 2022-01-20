@@ -104,7 +104,7 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
   Devnet: [
     new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[0]),
     new Pair(USDC_DEV.address, SOL_DEV.address, FEE_TIERS[0]),
-    new Pair(SOL_DEV.address, MSOL_DEV.address, FEE_TIERS[0]),
+    new Pair(MSOL_DEV.address, SOL_DEV.address, FEE_TIERS[0]),
     new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[1]),
     new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[2]),
     new Pair(MSOL_DEV.address, WSOL_DEV.address, FEE_TIERS[0])

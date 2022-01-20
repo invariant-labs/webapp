@@ -71,6 +71,7 @@
   "scripts": {
     "vite": "vite",
     "serve": "vite serve",
+    "preview": "vite preview",
     "lint": "eslint --ext .js,.ts,.tsx .",
     "fix": "eslint --fix --fix-type suggestion --ext .js,.ts,.tsx .",
     "storybook": "start-storybook -p 9009 -c .storybook watch-css -s public",
