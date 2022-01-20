@@ -1,10 +1,11 @@
-import { call, takeLatest, put } from 'typed-redux-saga'
+import { call, takeLatest, put, select } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
 import { Market, Pair } from '@invariant-labs/sdk'
 import { actions, PoolWithAddress } from '@reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { PAIRS } from '@consts/static'
 import { Tick } from '@invariant-labs/sdk/src/market'
+import { network } from '@selectors/solanaConnection'
 
 export interface iTick {
   index: Tick[]
@@ -14,9 +15,9 @@ export interface iTick {
 
 export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
   const marketProgram = yield* call(getMarketProgram)
+  const networkType = yield* select(network)
   try {
     const pools: PoolWithAddress[] = []
-    let ticks: Tick[] = []
     for (let i = 0; i < action.payload.length; i++) {
       const poolData = yield* call([marketProgram, marketProgram.getPool], action.payload[i])
       const address = yield* call(
@@ -30,9 +31,11 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
     }
 
     yield* put(actions.setPools(pools))
-    for (let i = 0; i < PAIRS.Devnet.length; i++) {
-      const poolData = yield* call([marketProgram, marketProgram.getPool], action.payload[i])
-      const ticksArray = yield* call([marketProgram, marketProgram.getAllTicks], PAIRS.Devnet[i])
+    for (let i = 0; i < PAIRS[networkType].length; i++) {
+      const ticksArray = yield* call(
+        [marketProgram, marketProgram.getAllTicks],
+        PAIRS[networkType][i]
+      )
 
       yield* put(actions.setTicks({ index: i, tickStructure: ticksArray }))
     }

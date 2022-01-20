@@ -22,18 +22,20 @@ export function* handleSimulate(): Generator {
     const networkType = yield* select(network)
     const { slippage, simulate } = yield* select(swap)
     const marketProgram = yield* call(getMarketProgram)
-    let poolIndexes: number[] = []
+    const poolIndexes: number[] = []
     const swapPool = PAIRS[networkType].filter(
       pool =>
         (simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)) ||
         (simulate.fromToken.equals(pool.tokenY) && simulate.toToken.equals(pool.tokenX))
     )
-    PAIRS.Devnet.map((pair, index) => {
+    // trunk-ignore(eslint/array-callback-return)
+    PAIRS[networkType].map((pair, index) => {
       if (
         (simulate.fromToken.equals(pair.tokenX) && simulate.toToken.equals(pair.tokenY)) ||
         (simulate.fromToken.equals(pair.tokenY) && simulate.toToken.equals(pair.tokenX))
-      )
+      ) {
         poolIndexes.push(index)
+      }
     })
     if (!swapPool) {
       return
