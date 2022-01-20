@@ -14,6 +14,7 @@ import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import BN from 'bn.js'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { network } from '@selectors/solanaConnection'
+import { action } from '@storybook/addon-actions'
 
 export function* handleSimulate(): Generator {
   try {
@@ -56,7 +57,7 @@ export function* handleSimulate(): Generator {
       }
       if (simulate.amount.gt(new BN(0))) {
         const simulateObject: SimulateSwapInterface = {
-          pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
+          pair: new Pair(pool.tokenX, pool.tokenY, pool.feeTier),
           xToY: isXtoY,
           byAmountIn: true,
           swapAmount: simulate.amount,
@@ -69,7 +70,9 @@ export function* handleSimulate(): Generator {
         }
         const swapSimulateResault = simulateSwap(simulateObject)
         if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
+          console.log('zmiana indeksu na: ', poolIndexes[i])
           swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
+          yield put(swapActions.setPoolIndex(poolIndexes[i]))
         }
         yield put(swapActions.simulateSuccess(true))
       } else {
@@ -87,7 +90,11 @@ export function* handleSimulate(): Generator {
 export function* handleSwap(): Generator {
   try {
     const allPools = yield* select(pools)
-    const { slippage, knownPrice, simulate } = yield* select(swap)
+    const networkType = yield* select(network)
+    const { slippage, knownPrice, simulate, poolIndex } = yield* select(swap)
+    const wallet = yield* call(getWallet)
+    const tokensAccounts = yield* select(accounts)
+    const marketProgram = yield* call(getMarketProgram)
     const swapPool = allPools.find(
       pool =>
         (simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)) ||
@@ -101,11 +108,6 @@ export function* handleSwap(): Generator {
     const isXtoY =
       simulate.fromToken.equals(swapPool.tokenX) && simulate.toToken.equals(swapPool.tokenY)
 
-    const wallet = yield* call(getWallet)
-
-    const tokensAccounts = yield* select(accounts)
-    const marketProgram = yield* call(getMarketProgram)
-
     let fromAddress = tokensAccounts[simulate.fromToken.toString()]
       ? tokensAccounts[simulate.fromToken.toString()].address
       : null
@@ -118,11 +120,13 @@ export function* handleSwap(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, simulate.toToken)
     }
+    console.log(poolIndex)
+    console.log('swap amount: ', simulate.amount.toString())
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
-      pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
+      pair: new Pair(simulate.fromToken, simulate.toToken, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,
       amount: simulate.amount,
-      knownPrice: knownPrice,
+      knownPrice: { v: simulate.simulatePrice },
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
       accountY: isXtoY ? toAddress : fromAddress,

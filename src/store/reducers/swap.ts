@@ -10,6 +10,7 @@ export interface Swap {
   slippage: Decimal
   price: Decimal
   knownPrice: Decimal
+  poolIndex: number
   txid?: string
   simulate: Simulate
   inProgress?: boolean
@@ -43,6 +44,7 @@ export const defaultState: ISwapStore = {
     slippage: { v: fromFee(new BN(1000)) },
     price: { v: new BN(0) },
     knownPrice: { v: new BN(0) },
+    poolIndex: 0,
     simulate: defaultSimulate
   }
 }
@@ -70,6 +72,11 @@ const swapSlice = createSlice({
     },
     simulateSuccess(state, action: PayloadAction<boolean>) {
       state.swap.simulate.success = action.payload
+      return state
+    },
+    setPoolIndex(state, action: PayloadAction<number>) {
+      state.swap.poolIndex = action.payload
+      return state
     },
     changePrice(state, action: PayloadAction<BN>) {
       state.swap.price.v = action.payload

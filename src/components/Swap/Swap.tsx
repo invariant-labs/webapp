@@ -64,7 +64,8 @@ export interface ISwap {
       toToken: PublicKey
       amount: BN
       success: boolean
-    }
+    },
+    poolIndex: number
   ) => void
   onSimulate: (
     simulatePrice: BN,
@@ -162,7 +163,13 @@ export const Swap: React.FC<ISwap> = ({
           printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),
           true
         )
-      } else {
+      }
+    }
+  }, [amountFrom, tokenToIndex, tokenFromIndex])
+
+  useEffect(() => {
+    if (tokenFromIndex !== null && tokenToIndex !== null) {
+      if (inputRef === inputTarget.TO) {
         const simulatePrice = calculateSwapOutAmount(tokens[tokenToIndex], tokens[tokenFromIndex])
         onSimulate(
           simulatePrice.sqrtPrice,
@@ -173,7 +180,7 @@ export const Swap: React.FC<ISwap> = ({
         )
       }
     }
-  }, [amountFrom, amountTo, tokenToIndex, tokenFromIndex])
+  }, [amountTo, tokenToIndex, tokenFromIndex])
 
   useEffect(() => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
@@ -468,7 +475,8 @@ export const Swap: React.FC<ISwap> = ({
                 toToken: tokens[tokenToIndex].address,
                 amount: printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),
                 success: true
-              }
+              },
+              swapData.poolIndex
             )
           }}
           progress={progress}

@@ -1,6 +1,6 @@
 import { call, takeLatest, put, select } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
-import { Market, Pair } from '@invariant-labs/sdk'
+import { Pair } from '@invariant-labs/sdk'
 import { actions, PoolWithAddress } from '@reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { PAIRS } from '@consts/static'
@@ -36,7 +36,6 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
         [marketProgram, marketProgram.getAllTicks],
         PAIRS[networkType][i]
       )
-
       yield* put(actions.setTicks({ index: i, tickStructure: ticksArray }))
     }
     yield* put(actions.initPool(true))
