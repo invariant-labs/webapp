@@ -3,6 +3,7 @@ import { getMarketProgram } from '@web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
 import { actions, PoolWithAddress } from '@reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
+import { PAIRS } from '@consts/static'
 import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
 import { Tick } from '@invariant-labs/sdk/src/market'
 
@@ -30,19 +31,18 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
     }
 
     yield* put(actions.setPools(pools))
-
-    for (let i = 0; i < action.payload.length; i++) {
+    for (let i = 0; i < PAIRS.Devnet.length; i++) {
       const poolData = yield* call([marketProgram, marketProgram.getPool], action.payload[i])
       const ticksArray = yield* call(
         [marketProgram, marketProgram.getClosestTicks],
-        new Pair(poolData.tokenX, poolData.tokenY, FEE_TIERS[0]),
+        new Pair(PAIRS.Devnet[i].tokenX, PAIRS.Devnet[i].tokenY, PAIRS.Devnet[i].feeTier),
         8,
         undefined,
         'down'
       )
       const ticksArrayUp = yield* call(
         [marketProgram, marketProgram.getClosestTicks],
-        new Pair(poolData.tokenX, poolData.tokenY, FEE_TIERS[0]),
+        new Pair(PAIRS.Devnet[i].tokenX, PAIRS.Devnet[i].tokenY, PAIRS.Devnet[i].feeTier),
         8,
         undefined,
         'up'

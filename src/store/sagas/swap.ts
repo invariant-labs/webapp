@@ -3,6 +3,7 @@ import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
 import { swap } from '@selectors/swap'
 import { poolTicks, pools } from '@selectors/pools'
+import { PAIRS } from '@consts/static'
 import { accounts } from '@selectors/solanaWallet'
 import { createAccount, getWallet } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
@@ -19,45 +20,62 @@ export function* handleSimulate(): Generator {
     const ticksArray = yield* select(poolTicks)
     const { slippage, simulate } = yield* select(swap)
     const marketProgram = yield* call(getMarketProgram)
-    const swapPool = allPools.find(
+    let poolIndexes: number[] = []
+    const swapPool = PAIRS.Devnet.filter(
       pool =>
         (simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)) ||
         (simulate.fromToken.equals(pool.tokenY) && simulate.toToken.equals(pool.tokenX))
     )
+    PAIRS.Devnet.map((pair, index) => {
+      if (
+        (simulate.fromToken.equals(pair.tokenX) && simulate.toToken.equals(pair.tokenY)) ||
+        (simulate.fromToken.equals(pair.tokenY) && simulate.toToken.equals(pair.tokenX))
+      )
+        poolIndexes.push(index)
+    })
+
+    console.log('pool indexes: ', poolIndexes)
+    console.log('swap pools: ', swapPool)
     if (!swapPool) {
       return
     }
-    const poolIndex = allPools.findIndex(e => e === swapPool)
-    const isXtoY =
-      simulate.fromToken.equals(swapPool.tokenX) && simulate.toToken.equals(swapPool.tokenY)
-    const tickMap = yield* call(
-      [marketProgram, marketProgram.getTickmap],
-      new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0])
-    )
-    const ticks: Map<number, Tick> = new Map<number, Tick>()
-    if (ticks.size === 0) {
-      for (const tick of ticksArray[poolIndex]) {
-        ticks.set(tick.index, tick)
+    console.log(swapPool)
+    for (const pool of swapPool) {
+      let i = 0
+      console.log('iteracja: ', i)
+      const isXtoY = simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)
+      const tickMap = yield* call(
+        [marketProgram, marketProgram.getTickmap],
+        new Pair(pool.tokenX, pool.tokenY, pool.feeTier)
+      )
+      const ticks: Map<number, Tick> = new Map<number, Tick>()
+      if (ticks.size === 0) {
+        for (const tick of ticksArray[i]) {
+          ticks.set(tick.index, tick)
+        }
       }
-    }
-    if (simulate.amount.gt(new BN(0))) {
-      const simulateObject: SimulateSwapInterface = {
-        pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
-        xToY: isXtoY,
-        byAmountIn: true,
-        swapAmount: simulate.amount,
-        currentPrice: { v: simulate.simulatePrice },
-        slippage: slippage,
-        pool: swapPool,
-        ticks: ticks,
-        tickmap: tickMap,
-        market: marketProgram
+      if (simulate.amount.gt(new BN(0))) {
+        const simulateObject: SimulateSwapInterface = {
+          pair: new Pair(simulate.fromToken, simulate.toToken, FEE_TIERS[0]),
+          xToY: isXtoY,
+          byAmountIn: true,
+          swapAmount: simulate.amount,
+          currentPrice: { v: simulate.simulatePrice },
+          slippage: slippage,
+          pool: allPools[i],
+          ticks: ticks,
+          tickmap: tickMap,
+          market: marketProgram
+        }
+        const swapSimulateResault = simulateSwap(simulateObject)
+        console.log('my amount: ', simulate.amount.toString())
+        console.log('simulate amount: ', swapSimulateResault.accumulatedAmountIn.toString())
+        yield put(swapActions.changePrice(swapSimulateResault.accumulatedAmountOut))
+        yield put(swapActions.simulateSuccess(true))
+      } else {
+        yield put(swapActions.changePrice(new BN(0)))
       }
-      const swapSimulateResault = simulateSwap(simulateObject)
-      yield put(swapActions.changePrice(swapSimulateResault.accumulatedAmountOut))
-      yield put(swapActions.simulateSuccess(true))
-    } else {
-      yield put(swapActions.changePrice(new BN(0)))
+      i++
     }
   } catch (error) {
     yield put(swapActions.simulateSuccess(false))
@@ -110,6 +128,7 @@ export function* handleSwap(): Generator {
       byAmountIn: true,
       owner: wallet.publicKey
     })
+    console.log('swap amount: ', simulate.amount.toString())
     const connection = yield* call(getConnection)
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     swapTx.recentBlockhash = blockhash.blockhash
