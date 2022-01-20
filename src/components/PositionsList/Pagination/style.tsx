@@ -1,10 +1,17 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, Theme } from '@material-ui/core'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    width: 1122,
+    display: 'flex',
+    justifyContent: 'end',
+    [theme.breakpoints.down('md')]: {
+      width: '100%'
+    },
     '& .MuiPagination-ul': {
-      flexWrap: 'nowrap'
+      flexWrap: 'nowrap',
+      margin: '10px 0 10px'
     },
     '& .MuiPaginationItem-icon': {
       color: colors.black.full
