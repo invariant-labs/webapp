@@ -19,6 +19,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.accent2,
     textTransform: 'none',
     boxShadow: '0px 0px 20px -8px white',
+    [theme.breakpoints.down('xs')]: {
+      width: '50%',
+      height: 40
+    },
     '&:hover': {
       boxShadow: '0px 0px 20px -8px white',
       backgroundColor: colors.invariant.accent2
@@ -33,6 +37,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '7px 0',
     textTransform: 'none',
     backgroundColor: colors.invariant.componentIn2,
+    [theme.breakpoints.down('xs')]: {
+      width: '50%',
+      height: 40
+    },
     '&:hover': {
       boxShadow: '0px 0px 20px -8px white'
     }
@@ -47,6 +55,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.accent1,
     boxShadow: '0px 0px 20px -8px white',
     textTransform: 'none',
+    [theme.breakpoints.down('xs')]: {
+      width: '50%',
+      height: 40
+    },
     '&:hover': {
       boxShadow: '0px 0px 20px -8px white',
       backgroundColor: colors.invariant.accent1
@@ -57,7 +69,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.lightInfoText
   },
   top: {
-    marginBottom: 20
+    marginBottom: 20,
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column'
+    }
   },
   labelGrid: {
     display: 'flex',
@@ -65,12 +82,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 36
   },
   greenText: {
-    color: colors.invariant.accent2
+    color: colors.invariant.accent2,
+    [theme.breakpoints.down('xs')]: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      marginTop: 10
+    }
   },
   label: {
     color: colors.white.main,
     ...typography.body1,
     fontWeight: 400
+  },
+  infoText: {
+    ...typography.body1,
+    color: colors.invariant.lightInfoText
   },
   value: {
     color: colors.white.main,
@@ -92,7 +118,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.white.main,
     '&:hover': {
       backgroundColor: colors.invariant.accent1,
-      boxShadow: `0px 0px 15px ${colors.invariant.accent2}`
+      boxShadow: `0px 0px 15px ${colors.invariant.accent1}`
+    }
+  },
+  buttonContainer: {
+    backgroundColor: '#1C1B1E',
+    borderRadius: 6,
+    width: 184,
+    [theme.breakpoints.down('xs')]: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      width: '100%'
     }
   },
   buttonUnstake: {
@@ -119,9 +155,41 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.body1,
     backgroundColor: colors.invariant.accent2,
     color: colors.white.main,
+    [theme.breakpoints.down('xs')]: {
+      ...typography.body3,
+      minWidth: 105
+    },
     '&:hover': {
       backgroundColor: `${colors.invariant.accent2}`,
       boxShadow: `0px 0px 15px ${colors.invariant.accent2}`
+    }
+  },
+  infoContainer: {
+    marginBottom: 20,
+    display: 'flex',
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      maxHeight: 200
+    }
+  },
+  boxLeft: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '50%',
+    flexDirection: 'column',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
+    }
+  },
+  boxRight: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '50%',
+    flexDirection: 'column',
+    textAlign: 'right',
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'left',
+      width: '100%'
     }
   },
   tokenArea: {
