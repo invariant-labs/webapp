@@ -437,12 +437,10 @@ export const Swap: React.FC<ISwap> = ({
             <TransactionDetails
               open={detailsOpen}
               fee={{
-                v: poolIndex !== -1 && poolIndex !== null ? pools[poolIndex].fee.v : new BN(0)
+                v: pools[swapData.poolIndex].fee.v
               }}
               exchangeRate={{
-                val: Number(printBN(swapData.price.v, tokens[tokenToIndex].decimals)).toFixed(
-                  tokens[tokenToIndex].decimals
-                ),
+                val: swapRate.toFixed(tokens[tokenToIndex].decimals),
                 symbol: tokens[tokenToIndex].symbol
               }}
             />
