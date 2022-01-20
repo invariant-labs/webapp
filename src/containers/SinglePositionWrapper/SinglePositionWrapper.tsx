@@ -36,10 +36,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
-  const {
-    data: ticksData,
-    loading: ticksLoading
-  } = useSelector(plotTicks)
+  const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
   const { lowerTick, upperTick } = useSelector(currentPositionRangeTicks)
 
   useEffect(() => {

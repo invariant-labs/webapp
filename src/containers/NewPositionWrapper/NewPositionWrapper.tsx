@@ -22,10 +22,7 @@ export const NewPositionWrapper = () => {
   const walletStatus = useSelector(status)
   const allPools = useSelector(pools)
   const { success, inProgress } = useSelector(initPosition)
-  const {
-    data: ticksData,
-    loading: ticksLoading
-  } = useSelector(plotTicks)
+  const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
