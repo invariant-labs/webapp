@@ -1,51 +1,98 @@
 import { Box, Button, Grid, OutlinedInput, Typography } from '@material-ui/core'
-import React from 'react'
-import { Token } from '@consts/static'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
 import useStyle from './style'
 import AnimatedNumber from '@components/AnimatedNumber'
+import { CallMissedSharp } from '@material-ui/icons'
 
-export const SelectedFarm: React.FC<any> = ({}) => {
+interface ISelectedFarm {
+  value: number
+  staked: number
+  pair: string
+  currency: string
+  currencyPrice: number
+}
+
+export const SelectedFarm: React.FC<ISelectedFarm> = ({
+  value,
+  staked,
+  pair,
+  currency,
+  currencyPrice
+}) => {
   const classes = useStyle()
-
+  const [activeValue, SetActiveValue] = useState('stake')
+  const handleButtonStake = (value: string) => {
+    SetActiveValue(value)
+    console.log(value)
+  }
   return (
     <Grid className={classes.root} container direction='column'>
       <Grid className={classes.top} container direction='row' justifyContent='space-between'>
         <Box>
-          <Button className={classes.disableButton}>Stake</Button>
-          <Button className={classes.unstakeButton}>Unstake</Button>
+          <Button
+            onClick={() => handleButtonStake('stake')}
+            className={activeValue === 'stake' ? classes.stakeButton : classes.disableButton}>
+            Stake
+          </Button>
+          <Button
+            onClick={() => handleButtonStake('unstake')}
+            className={activeValue === 'unstake' ? classes.unstakeButton : classes.disableButton}>
+            Unstake
+          </Button>
         </Box>
         <Typography className={classes.greenText}>
           Unclaimed rewards:
           <Typography display='inline' component='span' className={classes.value}>
-            2 345.34 SNY
+            {value} {currency}
           </Typography>
         </Typography>
       </Grid>
-      <Grid style={{ display: 'flex' }}>
-        <Grid className={classes.tokenArea}>
-          <Grid className={classes.token}>
-            <Typography className={classes.tokenName}>SNY</Typography>
-          </Grid>
-          <Typography className={classes.tokenValue}>
-            <AnimatedNumber
-              value={2345.24}
-              duration={300}
-              formatValue={(value: string) => Number(value).toFixed(2)}
-            />
+      {activeValue === 'stake' ? (
+        <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography className={classes.stakeLabel}>Total Staked:</Typography>{' '}
+          <Typography display='inline' component='span' className={classes.value}>
+            {value} {currency}
           </Typography>
+          <Typography className={classes.stakeLabel}>Total Staked: 233 345 xBTC - xUSD</Typography>
         </Grid>
-        <Button className={classes.claimRewards}>Claim Rewards</Button>
-      </Grid>
-      <Grid justifyContent='space-between' direction='row'>
-        <Box className={classes.labelGrid}>
-          <Typography className={classes.labelText}>Staked: 233 345 xBTC - xUSD</Typography>
-          <Typography className={classes.labelText}>2 345.34 SNY = $5 234.34</Typography>
-        </Box>
-      </Grid>
-      <Button className={classes.button} type='button'>
-        Unstake
-      </Button>
+      ) : (
+        <>
+          <Grid style={{ display: 'flex' }}>
+            <Grid className={classes.tokenArea}>
+              <Grid className={classes.token}>
+                <Typography className={classes.tokenName}>{currency}</Typography>
+              </Grid>
+              <Typography className={classes.tokenValue}>
+                <AnimatedNumber
+                  value={value}
+                  duration={300}
+                  formatValue={(value: string) => Number(value).toFixed(2)}
+                />
+              </Typography>
+            </Grid>
+            <Button className={classes.claimRewards}>Claim Rewards</Button>
+          </Grid>
+          <Grid justifyContent='space-between' direction='row'>
+            <Box className={classes.labelGrid}>
+              <Typography className={classes.labelText}>
+                Staked: {staked} {pair}{' '}
+              </Typography>
+              <Typography className={classes.labelText}>
+                {value} {currency} = $ {value * currencyPrice}
+              </Typography>
+            </Box>
+          </Grid>
+        </>
+      )}
+      {activeValue === 'stake' ? (
+        <Button className={classes.buttonStake} type='button'>
+          Stake
+        </Button>
+      ) : (
+        <Button className={classes.buttonUnstake} type='button'>
+          Unstake
+        </Button>
+      )}
     </Grid>
   )
 }

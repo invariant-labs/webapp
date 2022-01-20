@@ -46,8 +46,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '7px 0',
     backgroundColor: colors.invariant.accent1,
     boxShadow: '0px 0px 20px -8px white',
+    textTransform: 'none',
     '&:hover': {
-      boxShadow: '0px 0px 20px -8px white'
+      boxShadow: '0px 0px 20px -8px white',
+      backgroundColor: colors.invariant.accent1
     }
   },
   labelText: {
@@ -80,7 +82,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 20,
     textDecoration: 'none'
   },
-  button: {
+  buttonStake: {
+    width: '100%',
+    height: 40,
+    borderRadius: 5,
+    textTransform: 'none',
+    ...typography.body1,
+    backgroundColor: colors.invariant.accent1,
+    color: colors.white.main,
+    '&:hover': {
+      backgroundColor: colors.invariant.accent1,
+      boxShadow: `0px 0px 15px ${colors.invariant.accent2}`
+    }
+  },
+  buttonUnstake: {
     width: '100%',
     height: 40,
     borderRadius: 5,
@@ -92,6 +107,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: `${colors.invariant.accent2}`,
       boxShadow: `0px 0px 15px ${colors.invariant.accent2}`
     }
+  },
+  stakeLabel: {
+    ...typography.body3
   },
   claimRewards: {
     width: 120,
@@ -138,7 +156,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     padding: '0 15px'
-  },
+  }
 }))
 
 export default useStyles
