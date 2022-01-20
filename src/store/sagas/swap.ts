@@ -13,15 +13,17 @@ import { FEE_TIERS, simulateSwap, SimulateSwapInterface } from '@invariant-labs/
 import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import BN from 'bn.js'
 import { Tick } from '@invariant-labs/sdk/src/market'
+import { network } from '@selectors/solanaConnection'
 
 export function* handleSimulate(): Generator {
   try {
     const allPools = yield* select(pools)
     const ticksArray = yield* select(poolTicks)
+    const networkType = yield* select(network)
     const { slippage, simulate } = yield* select(swap)
     const marketProgram = yield* call(getMarketProgram)
     let poolIndexes: number[] = []
-    const swapPool = PAIRS.Devnet.filter(
+    const swapPool = PAIRS[networkType].filter(
       pool =>
         (simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)) ||
         (simulate.fromToken.equals(pool.tokenY) && simulate.toToken.equals(pool.tokenX))
