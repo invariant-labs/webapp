@@ -84,9 +84,12 @@ export const colors = {
     green: '#2EE09A',
     dark: '#040B22',
     component: '#202946',
+    componentHover: '#2A365C',
+    componentDark: '#111931',
     light: '#3A466B',
     black: '#010514',
     textGrey: '#27262B',
+    textLightGrey: '#A9B6BF',
     text: '#FFFFFF',
     Error: '#FB555F'
   }
