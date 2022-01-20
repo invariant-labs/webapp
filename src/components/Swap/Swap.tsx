@@ -468,7 +468,7 @@ export const Swap: React.FC<ISwap> = ({
               },
               { v: poolIndex !== null ? pools[poolIndex].sqrtPrice.v : new BN(1) },
               {
-                simulatePrice: new BN(swapRate * (10 ** PRICE_DECIMAL)),
+                simulatePrice: new BN(swapRate * 10 ** PRICE_DECIMAL),
                 fromToken: tokens[tokenFromIndex].address,
                 toToken: tokens[tokenToIndex].address,
                 amount: printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),

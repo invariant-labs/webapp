@@ -118,21 +118,9 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
   ],
   Testnet: [],
   Mainnet: [
-    new Pair(
-      MAINNET_ADRESSES.USDC,
-      MAINNET_ADRESSES.USDT,
-      FEE_TIERS[0]
-    ),
-    new Pair(
-      MAINNET_ADRESSES.USDC,
-      MAINNET_ADRESSES.UST,
-      FEE_TIERS[0]
-    ),
-    new Pair(
-      MAINNET_ADRESSES.USDC,
-      MAINNET_ADRESSES.SOL,
-      FEE_TIERS[1]
-    )
+    new Pair(MAINNET_ADRESSES.USDC, MAINNET_ADRESSES.USDT, FEE_TIERS[0]),
+    new Pair(MAINNET_ADRESSES.USDC, MAINNET_ADRESSES.UST, FEE_TIERS[0]),
+    new Pair(MAINNET_ADRESSES.USDC, MAINNET_ADRESSES.SOL, FEE_TIERS[1])
   ],
   Localnet: []
 }
