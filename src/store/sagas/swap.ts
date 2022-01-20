@@ -35,13 +35,9 @@ export function* handleSimulate(): Generator {
       )
         poolIndexes.push(index)
     })
-
-    console.log('pool indexes: ', poolIndexes)
-    console.log('swap pools: ', swapPool)
     if (!swapPool) {
       return
     }
-    console.log(swapPool)
     let i = 0
     let swapSimulateRouterAmount: BN = new BN(0)
     for (const pool of swapPool) {
