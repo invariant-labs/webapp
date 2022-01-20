@@ -9,12 +9,11 @@ import { createAccount, getWallet } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
 import { getConnection } from './connection'
-import { FEE_TIERS, simulateSwap, SimulateSwapInterface } from '@invariant-labs/sdk/src/utils'
+import { simulateSwap, SimulateSwapInterface } from '@invariant-labs/sdk/src/utils'
 import { sendAndConfirmRawTransaction } from '@solana/web3.js'
 import BN from 'bn.js'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { network } from '@selectors/solanaConnection'
-import { action } from '@storybook/addon-actions'
 
 export function* handleSimulate(): Generator {
   try {
@@ -91,7 +90,7 @@ export function* handleSwap(): Generator {
   try {
     const allPools = yield* select(pools)
     const networkType = yield* select(network)
-    const { slippage, knownPrice, simulate, poolIndex } = yield* select(swap)
+    const { slippage, simulate, poolIndex } = yield* select(swap)
     const wallet = yield* call(getWallet)
     const tokensAccounts = yield* select(accounts)
     const marketProgram = yield* call(getMarketProgram)
