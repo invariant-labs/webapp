@@ -100,6 +100,13 @@ export const tokens: Record<NetworkType, Token[]> = {
   Localnet: []
 }
 
+const MAINNET_ADRESSES = {
+  USDC: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+  USDT: new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'),
+  UST: new PublicKey('9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i'),
+  SOL: new PublicKey('So11111111111111111111111111111111111111112')
+}
+
 export const PAIRS: Record<NetworkType, Pair[]> = {
   Devnet: [
     new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[0]),
@@ -110,7 +117,23 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
     new Pair(MSOL_DEV.address, WSOL_DEV.address, FEE_TIERS[0])
   ],
   Testnet: [],
-  Mainnet: [],
+  Mainnet: [
+    new Pair(
+      MAINNET_ADRESSES.USDC,
+      MAINNET_ADRESSES.USDT,
+      FEE_TIERS[0]
+    ),
+    new Pair(
+      MAINNET_ADRESSES.USDC,
+      MAINNET_ADRESSES.UST,
+      FEE_TIERS[0]
+    ),
+    new Pair(
+      MAINNET_ADRESSES.USDC,
+      MAINNET_ADRESSES.SOL,
+      FEE_TIERS[1]
+    )
+  ],
   Localnet: []
 }
 
