@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import { CustomLayerProps } from '@nivo/line'
 import { colors } from '@static/theme'
 import React, { useState, useEffect, useRef, PointerEventHandler } from 'react'
@@ -84,7 +83,7 @@ export const Handle: React.FC<HandleProps> = ({
           height={height}
           x={!isReversed() ? currentPosition - 37 : currentPosition}
           fill={disabled ? colors.invariant.light : colors.invariant.light}
-          textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
+          textColor={disabled ? colors.invariant.textGrey : colors.invariant.text}
           isReversed={isReversed()}
         />
       ) : (
@@ -92,7 +91,7 @@ export const Handle: React.FC<HandleProps> = ({
           height={height}
           x={!isReversed() ? currentPosition : currentPosition - 37}
           fill={disabled ? colors.invariant.light : colors.invariant.light}
-          textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
+          textColor={disabled ? colors.invariant.textGrey : colors.invariant.text}
           isReversed={isReversed()}
         />
       )}

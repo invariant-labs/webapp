@@ -1,5 +1,4 @@
 import { Button, Grid, Typography } from '@material-ui/core'
-// import { balance, tokenBalance } from '@selectors/solanaWallet'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import React from 'react'

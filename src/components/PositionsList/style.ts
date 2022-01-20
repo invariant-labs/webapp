@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -10,26 +10,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   header: {
-    paddingBottom: 30
+    paddingBottom: 28
   },
   title: {
-    color: colors.white.main,
-    ...typography.heading4,
-    fontWeight: 500
+    color: colors.invariant.text,
+    ...newTypography.heading4,
+    fontWeight: 700
   },
   button: {
-    color: colors.white.main,
-    ...typography.body1,
+    color: '#111931',
+    ...newTypography.body1,
     textTransform: 'none',
-    background: colors.invariant.accent1,
-    borderRadius: 10,
+    background:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    borderRadius: 14,
     height: 40,
     width: 130,
     paddingInline: 0,
 
     '&:hover': {
-      background: colors.invariant.accent1,
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`
+      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%);',
+      boxShadow: `0 0 16px ${colors.invariant.pink}`
     }
   },
   buttonText: {

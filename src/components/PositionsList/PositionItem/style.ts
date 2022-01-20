@@ -1,10 +1,10 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    background: colors.invariant.componentOut1,
-    borderRadius: 10,
+    background: colors.invariant.component,
+    borderRadius: 24,
     padding: 20,
 
     '&:not(:last-child)': {
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:hover': {
-      background: colors.invariant.componentOut4
+      background: colors.invariant.component
     },
 
     [theme.breakpoints.down('md')]: {
@@ -51,18 +51,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   names: {
-    ...typography.heading1,
-    color: colors.white.main,
-    lineHeight: '40px',
+    ...newTypography.heading1,
+    color: colors.invariant.text,
+    lineHeight: '32px',
     whiteSpace: 'nowrap',
 
     [theme.breakpoints.down('md')]: {
-      ...typography.heading3,
+      ...newTypography.heading3,
       lineHeight: '33px'
     },
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.heading4,
+      ...newTypography.heading4,
       lineHeight: '25px'
     }
   },

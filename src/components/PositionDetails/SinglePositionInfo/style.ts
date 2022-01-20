@@ -1,7 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-// import { Block } from '@material-ui/icons'
 import { colors, newTypography } from '@static/theme'
-// import { findLastIndex } from 'lodash'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -25,12 +23,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 8,
 
     [theme.breakpoints.down('xs')]: {
-      width: 15
+      width: 15,
+      marginRight: 4,
+      marginLeft: 4
     }
   },
   text: {
     ...newTypography.body1,
-    color: '#A9B6BF',
+    color: colors.invariant.textGrey,
     backgroundColor: colors.invariant.component,
     display: 'flex',
     justifyContent: 'center',
@@ -112,12 +112,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   titleValue: {
     ...newTypography.heading3,
-    color: colors.white.main,
+    color: colors.invariant.text,
     fontFamily: 'Mukta'
   },
   violetButton: {
-    background:
-      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    background: colors.invariant.pinkLinearGradient,
     borderRadius: '11px',
     textTransform: 'none',
     color: colors.invariant.dark,
@@ -125,7 +124,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 32,
     ...newTypography.body1,
     '&:hover': {
-      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
+      background: colors.invariant.pinkLinearGradient,
       boxShadow: `0 0 16px ${colors.invariant.pink}`
     },
 
@@ -145,7 +144,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   tokenArea: {
-    backgroundColor: '#111931',
+    backgroundColor: colors.invariant.dark,
     borderRadius: '16px',
     flexDirection: 'row',
     width: '100%',
@@ -154,9 +153,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:not(:last-child)': {
       marginBottom: 8
     }
-    // '&:not(:first-child)': {
-    //   display: 'flex'
-    // }
   },
   tokenAreaUpperPart: {
     display: 'flex',
@@ -178,12 +174,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '8px 13px'
   },
   tokenName: {
-    color: '#A9B6BF',
+    color: colors.invariant.textGrey,
     ...newTypography.heading4,
     fontWeight: 400
   },
   tokenValue: {
-    color: '#A9B6BF',
+    color: colors.invariant.textGrey,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -198,8 +194,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...newTypography.caption2
   },
   closeButton: {
-    color: '#111931',
-    background: 'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)',
+    color: colors.invariant.dark,
+    background: colors.invariant.greenLinearGradient,
     height: 36,
     width: '116px',
     textTransform: 'none',
@@ -209,7 +205,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...newTypography.body1,
 
     '&:hover': {
-      background: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
+      background: colors.invariant.greenLinearGradient,
       boxShadow: `0px 0px 8px ${colors.invariant.green}`
     },
 

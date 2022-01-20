@@ -81,13 +81,17 @@ export const colors = {
     // after UI changes we will delete unnecessary vars
     pink: '#EF84F5',
     green: '#2EE09A',
-    dark: '#040B22',
+    dark: '#111931',
     component: '#202946',
     light: '#3A466B',
     black: '#010514',
-    textGrey: '#27262B',
+    textGrey: '#A9B6BF',
     text: '#FFFFFF',
-    Error: '#FB555F'
+    Error: '#FB555F',
+    pinkLinearGradient:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    greenLinearGradient:
+      'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)'
   }
 }
 
