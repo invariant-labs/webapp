@@ -38,10 +38,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const isLoadingList = useSelector(isLoadingPositionsList)
   const {
     data: ticksData,
-    loading: ticksLoading,
-    maxReached,
-    currentMaxPriceFetched,
-    currentMinPriceFetched
+    loading: ticksLoading
   } = useSelector(plotTicks)
   const { lowerTick, upperTick } = useSelector(currentPositionRangeTicks)
 
@@ -228,25 +225,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       currentPrice={current}
       tokenY={position.tokenY.symbol}
       tokenX={position.tokenX.symbol}
-      onZoomOut={(min, max) => {
-        if (
-          position &&
-          !ticksLoading &&
-          !maxReached &&
-          ((typeof currentMinPriceFetched !== 'undefined' &&
-            Math.max(min, 0) < currentMinPriceFetched) ||
-            (typeof currentMaxPriceFetched !== 'undefined' && max > currentMaxPriceFetched))
-        ) {
-          dispatch(
-            actions.getCurrentPlotTicks({
-              poolIndex: position.poolData.poolIndex,
-              isXtoY: true,
-              min,
-              max
-            })
-          )
-        }
-      }}
       onClickClaimFee={() => {
         dispatch(actions.claimFee(position.positionIndex))
       }}

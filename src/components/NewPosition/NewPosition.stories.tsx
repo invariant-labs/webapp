@@ -69,7 +69,6 @@ storiesOf('position/newPosition', module)
         calcAmount={() => new BN(1)}
         feeTiers={[0.05, 0.3, 1]}
         ticksLoading={false}
-        onZoomOut={() => {}}
         noConnectedBlockerProps={{
           onConnect: () => {},
           onDisconnect: () => {}
@@ -98,7 +97,6 @@ storiesOf('position/newPosition', module)
         calcAmount={() => new BN(1)}
         feeTiers={[0.05, 0.3, 1]}
         ticksLoading={false}
-        onZoomOut={() => {}}
         noConnectedBlockerProps={{
           onConnect: () => {},
           onDisconnect: () => {}
