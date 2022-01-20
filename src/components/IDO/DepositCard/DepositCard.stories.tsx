@@ -5,7 +5,7 @@ import { withKnobs } from '@storybook/addon-knobs'
 import { SwapToken } from '@components/Swap/Swap'
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
-import DepositCard, { IActionType } from './DepositCard'
+import DepositCard, { IActionType, IAmountInput } from './DepositCard'
 import { IDepositAmount } from '../DepositAmount/DepositAmount'
 import { action } from '@storybook/addon-actions'
 
@@ -42,6 +42,15 @@ const tokens: SwapToken[] = [
   }
 ]
 
+const amountInputData: IAmountInput = {
+  setValue: () => {},
+  decimal: 6,
+  placeholder: '0.0',
+  onMaxClick: () => {},
+  tokens: tokens,
+  current: tokens[0]
+}
+
 const currencyData: IDepositAmount['currencyRates'] = [
   { currency: 'USD', value: '47.22' },
   { currency: 'SOL', value: '0.0323' },
@@ -55,8 +64,8 @@ storiesOf('IDO/IDOComponents/depositCard', module)
   .add('depositCard', () => (
     <DepositCard
       currencyRates={currencyData}
-      tokens={tokens}
       onTokenChange={(name: string) => action(name)()}
+      amountInputData={amountInputData}
     />
   ))
   .add('withdrawCard', () => (
@@ -64,9 +73,9 @@ storiesOf('IDO/IDOComponents/depositCard', module)
       currencyRates={currencyData}
       actionType={IActionType.Withdraw}
       onActionType={action(`Successful ${IActionType.Withdraw}`)}
-      tokens={tokens}
       onTokenChange={(name: string) => action(name)()}
       walletConnected
+      amountInputData={amountInputData}
     />
   ))
   .add('claimCard', () => (
@@ -74,19 +83,19 @@ storiesOf('IDO/IDOComponents/depositCard', module)
       currencyRates={currencyData}
       actionType={IActionType.Claim}
       onActionType={action(`Successful ${IActionType.Claim}`)}
-      tokens={tokens}
       onTokenChange={(name: string) => action(name)()}
       walletConnected
+      amountInputData={amountInputData}
     />
   ))
   .add('depositCardInContainer', () => (
     <div style={{ maxWidth: 500, background: '#1C1B1E', padding: 20, borderRadius: 10 }}>
       <DepositCard
         currencyRates={currencyData}
-        tokens={tokens}
         onTokenChange={(name: string) => action(name)()}
         walletConnected
         onActionType={action(`Successful ${IActionType.Deposit}`)}
+        amountInputData={amountInputData}
       />
     </div>
   ))
