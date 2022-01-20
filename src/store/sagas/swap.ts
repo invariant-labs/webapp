@@ -40,9 +40,9 @@ export function* handleSimulate(): Generator {
       return
     }
     console.log(swapPool)
+    let i = 0
+    let swapSimulateRouterAmount: BN = new BN(0)
     for (const pool of swapPool) {
-      let i = 0
-      console.log('iteracja: ', i)
       const isXtoY = simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)
       const tickMap = yield* call(
         [marketProgram, marketProgram.getTickmap],
@@ -62,21 +62,22 @@ export function* handleSimulate(): Generator {
           swapAmount: simulate.amount,
           currentPrice: { v: simulate.simulatePrice },
           slippage: slippage,
-          pool: allPools[i],
+          pool: allPools[poolIndexes[i]],
           ticks: ticks,
           tickmap: tickMap,
           market: marketProgram
         }
         const swapSimulateResault = simulateSwap(simulateObject)
-        console.log('my amount: ', simulate.amount.toString())
-        console.log('simulate amount: ', swapSimulateResault.accumulatedAmountIn.toString())
-        yield put(swapActions.changePrice(swapSimulateResault.accumulatedAmountOut))
+        if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
+          swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
+        }
         yield put(swapActions.simulateSuccess(true))
       } else {
         yield put(swapActions.changePrice(new BN(0)))
       }
       i++
     }
+    yield put(swapActions.changePrice(swapSimulateRouterAmount))
   } catch (error) {
     yield put(swapActions.simulateSuccess(false))
     console.log(error)
