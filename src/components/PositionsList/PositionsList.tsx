@@ -1,10 +1,11 @@
 import { Button, Grid, Typography, InputAdornment, InputBase } from '@material-ui/core'
-import React from 'react'
+import React, { useState } from 'react'
 import { PositionItem } from './PositionItem/PositionItem'
 import useStyle from './style'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Link } from 'react-router-dom'
 import SearchIcon from '@material-ui/icons/Search'
+import { PaginationList } from './Pagination/Pagination'
 
 export interface ILiquidityItem {
   tokenXName: string
@@ -26,6 +27,7 @@ interface IProp {
   loading?: boolean
   showNoConnected?: boolean
   noConnectedBlockerProps: INoConnected
+  itemsPerPage: number
 }
 
 export const PositionsList: React.FC<IProp> = ({
@@ -33,9 +35,27 @@ export const PositionsList: React.FC<IProp> = ({
   onAddPositionClick,
   loading = false,
   showNoConnected = false,
-  noConnectedBlockerProps
+  noConnectedBlockerProps,
+  itemsPerPage
 }) => {
   const classes = useStyle()
+  const [page, setPage] = useState(1)
+  const handleChangePagination = (page: number): void => {
+    setPage(page)
+  }
+  function paginator(currentPage: number) {
+    const page = currentPage || 1
+    const perPage = itemsPerPage || 10
+    const offset = (page - 1) * perPage
+    const paginatedItems = data.slice(offset).slice(0, itemsPerPage)
+    const totalPages = Math.ceil(data.length / perPage)
+
+    return {
+      page: page,
+      totalPages: totalPages,
+      data: paginatedItems
+    }
+  }
   return (
     <Grid className={classes.root}>
       <Grid
@@ -66,7 +86,7 @@ export const PositionsList: React.FC<IProp> = ({
       </Grid>
       <Grid className={classes.list}>
         {data.length > 0 ? (
-          data.map((element, index) => (
+          paginator(page).data.map((element, index) => (
             <Link to={`/position/${element.id}`} key={index} className={classes.itemLink}>
               <PositionItem key={index} {...element} />
             </Link>
@@ -79,6 +99,13 @@ export const PositionsList: React.FC<IProp> = ({
           </Typography>
         )}
       </Grid>
+      {Math.ceil(data.length / itemsPerPage) > 1 ? (
+        <PaginationList
+          pages={paginator(page).totalPages}
+          defaultPage={1}
+          handleChangePage={handleChangePagination}
+        />
+      ) : null}
     </Grid>
   )
 }

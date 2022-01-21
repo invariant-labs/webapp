@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { isLoadingPositionsList, positionsWithPoolsData } from '@selectors/positions'
 import { useHistory } from 'react-router-dom'
 import { PRICE_DECIMAL } from '@consts/static'
-import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import { calcYPerXPrice, getX, getY, printBN } from '@consts/utils'
 import { Status, actions } from '@reducers/solanaWallet'
 import { status } from '@selectors/solanaWallet'
@@ -25,12 +25,12 @@ export const WrappedPositionsList: React.FC = () => {
       }}
       data={list.map(position => {
         const lowerPrice = calcYPerXPrice(
-          calculate_price_sqrt(position.lowerTickIndex).v,
+          calculatePriceSqrt(position.lowerTickIndex).v,
           position.tokenX.decimals,
           position.tokenY.decimals
         )
         const upperPrice = calcYPerXPrice(
-          calculate_price_sqrt(position.upperTickIndex).v,
+          calculatePriceSqrt(position.upperTickIndex).v,
           position.tokenX.decimals,
           position.tokenY.decimals
         )
@@ -44,9 +44,9 @@ export const WrappedPositionsList: React.FC = () => {
           tokenXLiq = +printBN(
             getX(
               position.liquidity.v,
-              calculate_price_sqrt(position.upperTickIndex).v,
+              calculatePriceSqrt(position.upperTickIndex).v,
               position.poolData.sqrtPrice.v,
-              calculate_price_sqrt(position.lowerTickIndex).v
+              calculatePriceSqrt(position.lowerTickIndex).v
             ).div(DENOMINATOR),
             position.tokenX.decimals
           )
@@ -58,9 +58,9 @@ export const WrappedPositionsList: React.FC = () => {
           tokenYLiq = +printBN(
             getY(
               position.liquidity.v,
-              calculate_price_sqrt(position.upperTickIndex).v,
+              calculatePriceSqrt(position.upperTickIndex).v,
               position.poolData.sqrtPrice.v,
-              calculate_price_sqrt(position.lowerTickIndex).v
+              calculatePriceSqrt(position.lowerTickIndex).v
             ).div(DENOMINATOR),
             position.tokenY.decimals
           )
@@ -92,6 +92,7 @@ export const WrappedPositionsList: React.FC = () => {
       })}
       loading={isLoading}
       showNoConnected={walletStatus !== Status.Initialized}
+      itemsPerPage={6}
       noConnectedBlockerProps={{
         onConnect: type => {
           dispatch(actions.connect(type))

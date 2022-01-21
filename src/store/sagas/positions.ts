@@ -11,16 +11,11 @@ import {
 } from '@reducers/positions'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { pools, tokens } from '@selectors/pools'
-import { Pair, TICK_LIMIT } from '@invariant-labs/sdk'
-import {
-  calcPrice,
-  calcTicksAmountInRange,
-  createLiquidityPlot,
-  createPlaceholderLiquidityPlot
-} from '@consts/utils'
+import { Pair } from '@invariant-labs/sdk'
+import { createLiquidityPlot, createPlaceholderLiquidityPlot } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
 import { Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
-import { positionsWithPoolsData, plotTicks, singlePositionData } from '@selectors/positions'
+import { positionsWithPoolsData, singlePositionData } from '@selectors/positions'
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
@@ -119,50 +114,12 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
   try {
     const marketProgram = yield* call(getMarketProgram)
 
-    if (typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined') {
-      yield call(sleep, 3000) // cooldown period for case when user spams zooming out to make sure unnecesary requests will be cancelled
-    }
-    let toRequest =
-      typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined'
-        ? calcTicksAmountInRange(
-            action.payload.min,
-            action.payload.max,
-            allPools[poolIndex].tickSpacing,
-            action.payload.isXtoY,
-            xDecimal,
-            yDecimal
-          )
-        : 30
-
-    if (isNaN(toRequest)) {
-      return
-    }
-
-    if (toRequest > TICK_LIMIT * 2) {
-      const { maxReached } = yield* select(plotTicks)
-
-      if (!maxReached) {
-        toRequest = TICK_LIMIT * 2
-      } else {
-        return
-      }
-    }
-
     const rawTicks = yield* call(
-      [marketProgram, marketProgram.getClosestTicks],
+      [marketProgram, marketProgram.getAllTicks],
       new Pair(allPools[poolIndex].tokenX, allPools[poolIndex].tokenY, {
         fee: allPools[poolIndex].fee.v
-      }),
-      toRequest
+      })
     )
-
-    const lowerTickPrice = rawTicks.length
-      ? calcPrice(rawTicks[0].index, action.payload.isXtoY, xDecimal, yDecimal)
-      : 0
-
-    const upperTickPrice = rawTicks.length
-      ? calcPrice(rawTicks[rawTicks.length - 1].index, action.payload.isXtoY, xDecimal, yDecimal)
-      : 0
 
     const ticksData = createLiquidityPlot(
       rawTicks,
@@ -172,31 +129,17 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       yDecimal
     )
 
-    yield put(
-      actions.setPlotTicks({
-        data: ticksData,
-        maxReached: rawTicks.length < toRequest,
-        currentMinPriceFetched: Math.min(lowerTickPrice, upperTickPrice),
-        currentMaxPriceFetched: Math.max(lowerTickPrice, upperTickPrice)
-      })
-    )
+    yield put(actions.setPlotTicks(ticksData))
   } catch (error) {
     console.log(error)
-    if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
-      const data = createPlaceholderLiquidityPlot(
-        action.payload.isXtoY,
-        10,
-        allPools[poolIndex].tickSpacing,
-        xDecimal,
-        yDecimal
-      )
-      yield put(
-        actions.setPlotTicks({
-          data,
-          maxReached: true
-        })
-      )
-    }
+    const data = createPlaceholderLiquidityPlot(
+      action.payload.isXtoY,
+      10,
+      allPools[poolIndex].tickSpacing,
+      xDecimal,
+      yDecimal
+    )
+    yield put(actions.setPlotTicks(data))
   }
 }
 
@@ -329,14 +272,15 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
     }
 
-    const ix = yield* call(
-      [marketProgram, marketProgram.removePositionInstruction],
-      new Pair(positionForIndex.tokenX, positionForIndex.tokenY, { fee: positionForIndex.fee.v }),
-      wallet.publicKey,
-      action.payload.positionIndex,
+    const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {
+      pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
+        fee: positionForIndex.fee.v
+      }),
+      owner: wallet.publicKey,
+      index: action.payload.positionIndex,
       userTokenX,
       userTokenY
-    )
+    })
 
     const tx = new Transaction().add(ix)
 
