@@ -165,7 +165,7 @@ export const Swap: React.FC<ISwap> = ({
             },
             tokens[tokenFromIndex].address,
             tokens[tokenToIndex].address,
-            printBNtoBN(amountFrom, tokens[tokenToIndex].decimals),
+            printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),
             simulatePrice.sqrtPrice
           )
         )
@@ -187,7 +187,7 @@ export const Swap: React.FC<ISwap> = ({
             },
             tokens[tokenToIndex].address,
             tokens[tokenFromIndex].address,
-            printBNtoBN(amountFrom, tokens[tokenToIndex].decimals),
+            printBNtoBN(amountTo, tokens[tokenToIndex].decimals),
             simulatePrice.sqrtPrice
           )
         )

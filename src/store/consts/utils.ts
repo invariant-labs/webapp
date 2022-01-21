@@ -561,7 +561,6 @@ export const handleSimulate = async (
             poolIndex = poolIndexes[i]
           }
         } catch (error) {
-          console.log(error)
           i++
           continue
         }
