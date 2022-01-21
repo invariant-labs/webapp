@@ -19,13 +19,13 @@ storiesOf('position/feeSwitch', module)
   }).add('onlyPercents', () => {
     return (
       <div style={{
-        backgroundColor: '#000000',
+        backgroundColor: '#202946',
         padding: 20,
-        width: 400
+        width: 416
       }}>
         <FeeSwitch
           onSelect={(val) => { console.log(val) }}
-          feeTiers={[0.05, 0.3, 1]}
+          feeTiers={[0.02, 0.04, 0.1, 0.3, 1]}
           showOnlyPercents
         />
       </div>

@@ -63,3 +63,23 @@ storiesOf('Inputs/select', module)
       />
     </div>
   ))
+  .add('newStyle - token', () => (
+    <div style={{ backgroundColor: colors.invariant.component, padding: '100px' }}>
+      <Select
+        current={null}
+        name='Select&nbsp; a token'
+        tokens={tokens}
+        onSelect={(chosen: string) => action(`chosen index: ${chosen}`)()}
+      />
+    </div>
+  ))
+  .add('newStyleSelected - token', () => (
+    <div style={{ backgroundColor: colors.invariant.component, padding: '100px' }}>
+      <Select
+        current={tokens[0]}
+        name='Select a &nbsp;token'
+        tokens={tokens}
+        onSelect={(chosen: string) => action(`chosen index: ${chosen}`)()}
+      />
+    </div>
+  ))

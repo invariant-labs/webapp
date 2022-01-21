@@ -1,11 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 export const useStyles = makeStyles(() => ({
   wrapper: {
     width: '100%',
     borderRadius: 5,
-    backgroundColor: colors.invariant.componentIn1
+    backgroundColor: colors.invariant.componentBcg
   }
 }))
 
@@ -19,7 +19,7 @@ export const useTabsStyles = makeStyles(() => ({
   indicator: {
     height: 28,
     borderRadius: 3,
-    backgroundColor: colors.invariant.componentOut2
+    backgroundColor: colors.invariant.light
   },
   scrollable: {
     overflow: 'visible'
@@ -33,18 +33,22 @@ export const useSingleTabStyles = makeStyles(() => ({
   root: {
     zIndex: 1,
     textTransform: 'none',
-    ...typography.body2,
+    ...newTypography.body2,
     height: 28,
     minHeight: 28,
-    color: colors.invariant.componentOut3,
+    color: colors.invariant.light,
     paddingInline: 0,
 
     '&:hover': {
-      color: colors.invariant.lightInfoText
+      color: colors.invariant.lightHover,
+      backgroundColor: colors.invariant.light,
+      height: 28,
+      borderRadius: 3
+
     }
   },
   selected: {
-    ...typography.body1,
+    ...newTypography.body1,
     color: colors.white.main,
     transition: 'color 300ms',
 

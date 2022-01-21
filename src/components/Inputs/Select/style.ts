@@ -5,13 +5,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     textTransform: 'none',
     boxShadow: 'none',
-    borderRadius: 3,
-    fontSize: 16,
+    borderRadius: '13px',
+    fontSize: '20px',
     minWidth: 80,
-    backgroundColor: '#34303B',
+    fontWeight: 'normal',
+    backgroundColor: '#111931',
+    fontFamily: 'Mukta',
     padding: '2px 10px',
+    // lineHeight: '24px',
     '&:hover': {
-      backgroundColor: colors.invariant.componentOut3
+      backgroundColor: colors.invariant.light
     },
     [theme.breakpoints.down('xs')]: {
       minWidth: 90
