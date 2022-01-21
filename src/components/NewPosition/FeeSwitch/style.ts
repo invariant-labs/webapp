@@ -4,7 +4,7 @@ import { colors, newTypography } from '@static/theme'
 export const useStyles = makeStyles(() => ({
   wrapper: {
     width: '100%',
-    borderRadius: 5,
+    borderRadius: 13,
     backgroundColor: colors.invariant.componentBcg
   }
 }))
@@ -13,12 +13,13 @@ export const useTabsStyles = makeStyles(() => ({
   root: {
     overflow: 'visible',
     padding: 8,
-    height: 28,
-    minHeight: 28
+    height: 36,
+    minHeight: 36,
+    margin: '0px 7px'
   },
   indicator: {
-    height: 28,
-    borderRadius: 3,
+    height: 36,
+    borderRadius: 10,
     backgroundColor: colors.invariant.light
   },
   scrollable: {
@@ -33,22 +34,21 @@ export const useSingleTabStyles = makeStyles(() => ({
   root: {
     zIndex: 1,
     textTransform: 'none',
-    ...newTypography.body2,
-    height: 28,
-    minHeight: 28,
+    ...newTypography.body3,
+    height: 36,
+    minHeight: 36,
     color: colors.invariant.light,
     paddingInline: 0,
 
     '&:hover': {
       color: colors.invariant.lightHover,
       backgroundColor: colors.invariant.light,
-      height: 28,
-      borderRadius: 3
-
+      height: 36,
+      borderRadius: 10
     }
   },
   selected: {
-    ...newTypography.body1,
+    ...newTypography.heading4,
     color: colors.white.main,
     transition: 'color 300ms',
 

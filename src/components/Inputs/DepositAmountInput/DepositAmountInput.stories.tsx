@@ -8,7 +8,7 @@ import icons from '@static/icons'
 storiesOf('newInputs/amount', module)
   .addDecorator(withKnobs)
   .add('default', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px', width: 400 }}>
+    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
       <DepositAmountInput
         setValue={() => {}}
         placeholder={'0.0'}
@@ -19,7 +19,7 @@ storiesOf('newInputs/amount', module)
     </div>
   ))
   .add('currency', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px', width: 400 }}>
+    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
       <DepositAmountInput
         setValue={() => {}}
         placeholder={'0.0'}
@@ -31,7 +31,7 @@ storiesOf('newInputs/amount', module)
     </div>
   ))
   .add('long currency', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px', width: 400 }}>
+    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
       <DepositAmountInput
         setValue={() => {}}
         placeholder={'0.0'}
@@ -43,7 +43,7 @@ storiesOf('newInputs/amount', module)
     </div>
   ))
   .add('blocked', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px', width: 400 }}>
+    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
       <DepositAmountInput
         setValue={() => {}}
         placeholder={'0.0'}

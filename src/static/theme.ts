@@ -217,6 +217,11 @@ export const newTypography = {
     lineHeight: '20px',
     fontWeight: 400
   },
+  body3: {
+    fontSize: 20,
+    lineHeight: '24px',
+    fontWeight: 400
+  },
   caption1: {
     fontSize: 14,
     lineHeight: '17px',

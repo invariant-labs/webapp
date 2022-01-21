@@ -44,40 +44,20 @@ const tokens: SwapToken[] = [
 storiesOf('Inputs/select', module)
   .addDecorator(withKnobs)
   .add('default - token', () => (
-    <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
+    <div style={{ backgroundColor: colors.invariant.component, padding: '100px' }}>
       <Select
         current={null}
-        name='Select&nbsp;token'
+        name='Select&nbsp;a&nbsp;token'
         tokens={tokens}
         onSelect={(chosen: string) => action(`chosen index: ${chosen}`)()}
       />
     </div>
   ))
   .add('chosen - token', () => (
-    <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
-      <Select
-        current={tokens[0]}
-        name='Select&nbsp;token'
-        tokens={tokens}
-        onSelect={(chosen: string) => action(`chosen index: ${chosen}`)()}
-      />
-    </div>
-  ))
-  .add('newStyle - token', () => (
-    <div style={{ backgroundColor: colors.invariant.component, padding: '100px' }}>
-      <Select
-        current={null}
-        name='Select&nbsp; a token'
-        tokens={tokens}
-        onSelect={(chosen: string) => action(`chosen index: ${chosen}`)()}
-      />
-    </div>
-  ))
-  .add('newStyleSelected - token', () => (
     <div style={{ backgroundColor: colors.invariant.component, padding: '100px' }}>
       <Select
         current={tokens[0]}
-        name='Select a &nbsp;token'
+        name='Select&nbsp;a&nbsp;token'
         tokens={tokens}
         onSelect={(chosen: string) => action(`chosen index: ${chosen}`)()}
       />

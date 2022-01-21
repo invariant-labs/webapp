@@ -8,7 +8,11 @@ export interface IFeeSwitch {
   feeTiers: number[]
 }
 
-export const FeeSwitch: React.FC<IFeeSwitch> = ({ onSelect, showOnlyPercents = false, feeTiers }) => {
+export const FeeSwitch: React.FC<IFeeSwitch> = ({
+  onSelect,
+  showOnlyPercents = false,
+  feeTiers
+}) => {
   const classes = useStyles()
 
   const [current, setCurrent] = useState(0)
@@ -30,7 +34,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({ onSelect, showOnlyPercents = f
         scrollButtons='off'
         TabIndicatorProps={{ children: <span /> }}
         classes={tabsClasses}>
-        {feeTiers.map((tier, index) =>
+        {feeTiers.map((tier, index) => (
           <Tab
             key={index}
             disableRipple
@@ -40,7 +44,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({ onSelect, showOnlyPercents = f
               minWidth: `calc(${feeTiers.length === 0 ? 0 : 100 / feeTiers.length}%)`
             }}
           />
-        )}
+        ))}
       </Tabs>
     </Grid>
   )

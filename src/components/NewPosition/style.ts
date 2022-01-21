@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 12
   },
   backText: {
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.lightHover,
     WebkitPaddingBefore: '2px',
     ...typography.body2
   },
