@@ -23,6 +23,7 @@ import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
 import { getMarketProgramSync } from '@web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
+import { Error } from '@material-ui/icons'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -485,7 +486,7 @@ export const getY = (
   return liquidity.mul(difference).div(DENOMINATOR)
 }
 
-export const handleSimulate = (
+export const handleSimulate = async (
   pools: PoolStructure[],
   poolTicks: { [key in string]: Tick[] },
   networkType: NetworkType,
@@ -494,17 +495,19 @@ export const handleSimulate = (
   toToken: PublicKey,
   amount: BN,
   currentPrice: BN
-): {
+): Promise<{
   amountOut: BN
   simulateSuccess: boolean
   poolIndex: number
-} => {
+}> => {
   try {
     const marketProgram = getMarketProgramSync()
     let simulateSuccess: boolean = false
     let poolIndex: number = 0
     let i: number = 0
     const poolIndexes: number[] = []
+    console.log(fromToken.toString(), toToken.toString())
+    console.log(amount.toString())
     const swapPool = PAIRS[networkType].filter(
       pool =>
         (fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)) ||
@@ -522,15 +525,14 @@ export const handleSimulate = (
     if (!swapPool) {
       return { amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 }
     }
+    console.log(poolIndexes)
 
     let swapSimulateRouterAmount: BN = new BN(0)
     for (const pool of swapPool) {
       const isXtoY = fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)
-      const tickMap = marketProgram
-        .getTickmap(new Pair(pool.tokenX, pool.tokenY, pool.feeTier))
-        .then(res => {
-          return res
-        })
+      const tickMap = await marketProgram.getTickmap(
+        new Pair(pool.tokenX, pool.tokenY, pool.feeTier)
+      )
 
       const ticks: Map<number, Tick> = new Map<number, Tick>()
       if (ticks.size === 0) {
@@ -551,10 +553,17 @@ export const handleSimulate = (
           tickmap: tickMap,
           market: marketProgram
         }
-        const swapSimulateResault = simulateSwap(simulateObject)
-        if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
-          swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
-          poolIndex = poolIndexes[i]
+        try {
+          const swapSimulateResault = simulateSwap(simulateObject)
+          console.log('amount simulate: ', swapSimulateResault.accumulatedAmountOut.toString())
+          if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
+            swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
+            poolIndex = poolIndexes[i]
+          }
+        } catch (error) {
+          console.log(error)
+          i++
+          continue
         }
         simulateSuccess = true
       } else {
@@ -568,7 +577,7 @@ export const handleSimulate = (
       poolIndex: poolIndex
     }
   } catch (error) {
-    return { amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 }
     console.log(error)
+    return { amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 }
   }
 }

@@ -44,6 +44,7 @@ export function* handleSimulate(): Generator {
     let swapSimulateRouterAmount: BN = new BN(0)
     for (const pool of swapPool) {
       const isXtoY = simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)
+
       const tickMap = yield* call(
         [marketProgram, marketProgram.getTickmap],
         new Pair(pool.tokenX, pool.tokenY, pool.feeTier)
@@ -68,8 +69,8 @@ export function* handleSimulate(): Generator {
           market: marketProgram
         }
         const swapSimulateResault = simulateSwap(simulateObject)
+        console.log(swapSimulateResault.accumulatedAmountOut)
         if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
-          console.log('zmiana indeksu na: ', poolIndexes[i])
           swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
           yield put(swapActions.setPoolIndex(poolIndexes[i]))
         }
