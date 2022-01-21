@@ -40,6 +40,11 @@ export const PositionsList: React.FC<IProp> = ({
 }) => {
   const classes = useStyle()
   const [page, setPage] = useState(1)
+
+  // begining of Search  Bar
+
+  // const [query, setQuery] = useState('')
+  // const filteredData = query.length === 0 ? data : data.filter(data => data.tokenXName.toLowerCase()) || data.filter(data => data.tokenYName.toLowerCase())
   const handleChangePagination = (page: number): void => {
     setPage(page)
   }
@@ -78,6 +83,9 @@ export const PositionsList: React.FC<IProp> = ({
                 <SearchIcon />
               </InputAdornment>
             }
+            // onChange={e => {
+            //   setQuery(e.target.value)
+            // }}
           />
         </Grid>
         <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>

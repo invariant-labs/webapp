@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   icons: {
-    marginRight: 25,
+    marginRight: 12,
     width: 'fit-content',
 
     [theme.breakpoints.down('md')]: {

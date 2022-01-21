@@ -43,7 +43,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.black,
     border: '1px solid #202946',
     color: colors.invariant.light,
-    ...newTypography.body2
+    ...newTypography.body2,
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: 12
+    }
   },
   button: {
     color: colors.invariant.dark,
