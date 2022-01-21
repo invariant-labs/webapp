@@ -1,6 +1,10 @@
 import { calculatePriceSqrt, DENOMINATOR, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
-import { PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
-import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
+import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
+import {
+  parseLiquidityOnTicks,
+  SimulateSwapInterface,
+  simulateSwap
+} from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
@@ -8,6 +12,7 @@ import {
   ANA_DEV,
   MSOL_DEV,
   NetworkType,
+  PAIRS,
   PRICE_DECIMAL,
   SOL_DEV,
   Token,
@@ -16,6 +21,8 @@ import {
 } from './static'
 import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
+import { getMarketProgramSync } from '@web3/programs/amm'
+import { Pair } from '@invariant-labs/sdk'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -476,4 +483,90 @@ export const getY = (
   }
 
   return liquidity.mul(difference).div(DENOMINATOR)
+}
+
+export const handleSimulate = (
+  pools: PoolStructure[],
+  poolTicks: { [key in string]: Tick[] },
+  networkType: NetworkType,
+  slippage: Decimal,
+  fromToken: PublicKey,
+  toToken: PublicKey,
+  amount: BN,
+  currentPrice: BN
+): {
+  amountOut: BN
+  simulateSuccess: boolean
+  poolIndex: number
+} => {
+  try {
+    // const allPools = yield * select(pools)
+    // const ticksArray = yield * select(poolTicks)
+    // const networkType = yield * select(network)
+    // const { slippage, simulate } = yield * select(swap)
+    const marketProgram = getMarketProgramSync()
+    let simulateSuccess: boolean = false
+    let poolIndex: number = 0
+    let i: number = 0
+    let amountOut: BN = new BN(0)
+    const poolIndexes: number[] = []
+    const swapPool = PAIRS[networkType].filter(
+      pool =>
+        (fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)) ||
+        (fromToken.equals(pool.tokenY) && toToken.equals(pool.tokenX))
+    )
+    // trunk-ignore(eslint/array-callback-return)
+    PAIRS[networkType].map((pair, index) => {
+      if (
+        (fromToken.equals(pair.tokenX) && toToken.equals(pair.tokenY)) ||
+        (fromToken.equals(pair.tokenY) && toToken.equals(pair.tokenX))
+      ) {
+        poolIndexes.push(index)
+      }
+    })
+    if (!swapPool) {
+      return { amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 }
+    }
+
+    let swapSimulateRouterAmount: BN = new BN(0)
+    for (const pool of swapPool) {
+      const isXtoY = fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)
+      const tickMap = marketProgram.getTickmap(new Pair(pool.tokenX, pool.tokenY, pool.feeTier))
+
+      const ticks: Map<number, Tick> = new Map<number, Tick>()
+      if (ticks.size === 0) {
+        for (const tick of poolTicks[i]) {
+          ticks.set(tick.index, tick)
+        }
+      }
+      if (amount.gt(new BN(0))) {
+        const simulateObject: SimulateSwapInterface = {
+          pair: new Pair(pool.tokenX, pool.tokenY, pool.feeTier),
+          xToY: isXtoY,
+          byAmountIn: true,
+          swapAmount: amount,
+          currentPrice: { v: currentPrice },
+          slippage: slippage,
+          pool: pools[poolIndexes[i]],
+          ticks: ticks,
+          tickmap: tickMap,
+          market: marketProgram
+        }
+        const swapSimulateResault = simulateSwap(simulateObject)
+        if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
+          swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
+          poolIndex = poolIndexes[i]
+        }
+        simulateSuccess = true
+      } else {
+        amountOut = new BN(0)
+      }
+      i++
+    }
+    return { amountOut: amountOut, simulateSuccess: simulateSuccess, poolIndex: poolIndex }
+    yield put(swapActions.changePrice(swapSimulateRouterAmount))
+  } catch (error) {
+    yield put(swapActions.simulateSuccess(false))
+    console.log(error)
+  }
 }
