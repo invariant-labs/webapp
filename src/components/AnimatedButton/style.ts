@@ -1,13 +1,13 @@
 import { makeStyles } from '@material-ui/core'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   button: {
     height: 40,
-    borderRadius: 5,
+    borderRadius: 16,
     textAlign: 'center',
     textTransform: 'none',
-    ...typography.body1,
+    ...newTypography.body1,
     backgroundColor: colors.invariant.accent1,
     color: colors.white.main,
     transition: 'background-color 0ms ease, box-shadow 150ms linear',
@@ -21,8 +21,8 @@ const useStyles = makeStyles(() => ({
     },
 
     '&:disabled': {
-      backgroundColor: colors.invariant.componentOut3,
-      color: colors.invariant.background2
+      backgroundColor: colors.invariant.light,
+      color: colors.invariant.componentBcg
     }
   },
   buttonRelease: {

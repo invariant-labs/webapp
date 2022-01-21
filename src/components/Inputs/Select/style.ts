@@ -12,9 +12,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.componentBcg,
     fontFamily: 'Mukta',
     padding: '2px 10px',
-    // lineHeight: '24px',
+    color: colors.invariant.light,
     '&:hover': {
-      backgroundColor: colors.invariant.light
+      backgroundColor: colors.invariant.light,
+      color: colors.invariant.lightHover
     },
     [theme.breakpoints.down('xs')]: {
       minWidth: 90
