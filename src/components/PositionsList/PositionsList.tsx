@@ -1,9 +1,10 @@
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Button, Grid, Typography, InputAdornment, InputBase } from '@material-ui/core'
 import React from 'react'
 import { PositionItem } from './PositionItem/PositionItem'
 import useStyle from './style'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Link } from 'react-router-dom'
+import SearchIcon from '@material-ui/icons/Search'
 
 export interface ILiquidityItem {
   tokenXName: string
@@ -43,7 +44,22 @@ export const PositionsList: React.FC<IProp> = ({
         direction='row'
         justifyContent='space-between'
         alignItems='center'>
-        <Typography className={classes.title}>Your Liquidity Positions</Typography>
+        <Grid>
+          <Grid className={classes.titleBar}>
+            <Typography className={classes.title}>Your Liquidity Positions</Typography>
+            <Typography className={classes.positionsNumber}>{data.length}</Typography>
+          </Grid>
+          <InputBase
+            type={'text'}
+            className={classes.searchBar}
+            placeholder='Search position'
+            endAdornment={
+              <InputAdornment position='end'>
+                <SearchIcon />
+              </InputAdornment>
+            }
+          />
+        </Grid>
         <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
           <span className={classes.buttonText}>+ Add Position</span>
         </Button>
