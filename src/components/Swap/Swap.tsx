@@ -14,7 +14,6 @@ import { Status } from '@reducers/solanaWallet'
 import SwapArrows from '@static/svg/swap-arrows.svg'
 import infoIcon from '@static/svg/info.svg'
 import settingIcon from '@static/svg/settings.svg'
-import { DENOMINATOR } from '@invariant-labs/sdk'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import useStyles from './style'
@@ -85,7 +84,6 @@ export const Swap: React.FC<ISwap> = ({
   tokens,
   pools,
   onSwap,
-  onSimulate,
   swapData,
   progress,
   poolInit,
@@ -189,10 +187,12 @@ export const Swap: React.FC<ISwap> = ({
     }
   }
   useEffect(() => {
+    // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
     setSimulateAmount()
   }, [amountFrom, tokenToIndex, tokenFromIndex])
 
   useEffect(() => {
+    // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
     setSimulateAmount()
   }, [amountTo, tokenToIndex, tokenFromIndex])
 

@@ -1,4 +1,4 @@
-import { calculatePriceSqrt, DENOMINATOR, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, DENOMINATOR, MAX_TICK, MIN_TICK, Pair } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import {
   parseLiquidityOnTicks,
@@ -22,7 +22,6 @@ import {
 import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
 import { getMarketProgramSync } from '@web3/programs/amm'
-import { Pair } from '@invariant-labs/sdk'
 import { Error } from '@material-ui/icons'
 
 export const tou64 = (amount: BN | String) => {
