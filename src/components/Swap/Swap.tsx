@@ -151,7 +151,7 @@ export const Swap: React.FC<ISwap> = ({
     setInputRef(inputTarget.FROM)
   }, [swap])
 
-  const setSimulateAmountFrom = async () => {
+  const setSimulateAmount = async () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       if (inputRef === inputTarget.FROM) {
         const simulatePrice = calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex])
@@ -169,13 +169,7 @@ export const Swap: React.FC<ISwap> = ({
             simulatePrice.sqrtPrice
           )
         )
-      }
-    }
-  }
-
-  const setSimulateAmountTo = async () => {
-    if (tokenFromIndex !== null && tokenToIndex !== null) {
-      if (inputRef === inputTarget.TO) {
+      } else if (inputRef === inputTarget.TO) {
         const simulatePrice = calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex])
         setSimulateResult(
           await handleSimulate(
@@ -195,11 +189,11 @@ export const Swap: React.FC<ISwap> = ({
     }
   }
   useEffect(() => {
-    setSimulateAmountFrom()
+    setSimulateAmount()
   }, [amountFrom, tokenToIndex, tokenFromIndex])
 
   useEffect(() => {
-    setSimulateAmountTo()
+    setSimulateAmount()
   }, [amountTo, tokenToIndex, tokenFromIndex])
 
   useEffect(() => {
