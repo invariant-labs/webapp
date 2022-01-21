@@ -500,15 +500,10 @@ export const handleSimulate = (
   poolIndex: number
 } => {
   try {
-    // const allPools = yield * select(pools)
-    // const ticksArray = yield * select(poolTicks)
-    // const networkType = yield * select(network)
-    // const { slippage, simulate } = yield * select(swap)
     const marketProgram = getMarketProgramSync()
     let simulateSuccess: boolean = false
     let poolIndex: number = 0
     let i: number = 0
-    let amountOut: BN = new BN(0)
     const poolIndexes: number[] = []
     const swapPool = PAIRS[networkType].filter(
       pool =>
@@ -531,7 +526,11 @@ export const handleSimulate = (
     let swapSimulateRouterAmount: BN = new BN(0)
     for (const pool of swapPool) {
       const isXtoY = fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)
-      const tickMap = marketProgram.getTickmap(new Pair(pool.tokenX, pool.tokenY, pool.feeTier))
+      const tickMap = marketProgram
+        .getTickmap(new Pair(pool.tokenX, pool.tokenY, pool.feeTier))
+        .then(res => {
+          return res
+        })
 
       const ticks: Map<number, Tick> = new Map<number, Tick>()
       if (ticks.size === 0) {
@@ -559,14 +558,17 @@ export const handleSimulate = (
         }
         simulateSuccess = true
       } else {
-        amountOut = new BN(0)
+        swapSimulateRouterAmount = new BN(0)
       }
       i++
     }
-    return { amountOut: amountOut, simulateSuccess: simulateSuccess, poolIndex: poolIndex }
-    yield put(swapActions.changePrice(swapSimulateRouterAmount))
+    return {
+      amountOut: swapSimulateRouterAmount,
+      simulateSuccess: simulateSuccess,
+      poolIndex: poolIndex
+    }
   } catch (error) {
-    yield put(swapActions.simulateSuccess(false))
+    return { amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 }
     console.log(error)
   }
 }
