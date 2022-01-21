@@ -527,7 +527,6 @@ export const handleSimulate = async (
     let swapSimulateRouterAmount: BN = new BN(0)
     for (const pool of swapPool) {
       const isXtoY = fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)
-      console.log(isXtoY)
       const tickMap = await marketProgram.getTickmap(
         new Pair(pool.tokenX, pool.tokenY, pool.feeTier)
       )
@@ -553,7 +552,6 @@ export const handleSimulate = async (
         }
         try {
           const swapSimulateResault = simulateSwap(simulateObject)
-          console.log(swapSimulateResault.accumulatedAmountOut.toString())
           if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
             swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
             poolIndex = poolIndexes[i]
@@ -568,7 +566,6 @@ export const handleSimulate = async (
       }
       i++
     }
-    console.log('INDEX', poolIndex)
     return {
       amountOut: swapSimulateRouterAmount,
       simulateSuccess: simulateSuccess,

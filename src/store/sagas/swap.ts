@@ -69,7 +69,6 @@ export function* handleSimulate(): Generator {
           market: marketProgram
         }
         const swapSimulateResault = simulateSwap(simulateObject)
-        console.log(swapSimulateResault.accumulatedAmountOut)
         if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
           swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
           yield put(swapActions.setPoolIndex(poolIndexes[i]))
@@ -120,11 +119,6 @@ export function* handleSwap(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, simulate.toToken)
     }
-    console.log(poolIndex)
-    console.log('swap amount: ', simulate.amount.toString())
-    console.log(slippage.v.toString())
-    console.log('known price', simulate.simulatePrice.toString())
-    console.log(simulate.fromToken.toString(), simulate.toToken.toString())
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
       pair: new Pair(simulate.fromToken, simulate.toToken, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,
@@ -136,7 +130,6 @@ export function* handleSwap(): Generator {
       byAmountIn: true,
       owner: wallet.publicKey
     })
-    console.log('swap amount: ', simulate.amount.toString())
     const connection = yield* call(getConnection)
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     swapTx.recentBlockhash = blockhash.blockhash
