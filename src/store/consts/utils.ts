@@ -1,4 +1,11 @@
-import { calculatePriceSqrt, DENOMINATOR, MAX_TICK, MIN_TICK, Pair } from '@invariant-labs/sdk'
+import {
+  calculatePriceSqrt,
+  DENOMINATOR,
+  MAX_TICK,
+  MIN_TICK,
+  Pair,
+  TICK_LIMIT
+} from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import {
   parseLiquidityOnTicks,
@@ -213,7 +220,7 @@ export const spacingMultiplicityLte = (arg: number, spacing: number): number => 
     return arg
   }
 
-  return arg >= 0 ? arg - (arg % spacing) : arg - (spacing - (-arg % spacing))
+  return arg >= 0 ? arg - (arg % spacing) : arg + (arg % spacing)
 }
 
 export const spacingMultiplicityGte = (arg: number, spacing: number): number => {
@@ -221,7 +228,7 @@ export const spacingMultiplicityGte = (arg: number, spacing: number): number => 
     return arg
   }
 
-  return arg >= 0 ? arg + (arg % spacing) : arg + (spacing - (-arg % spacing))
+  return arg >= 0 ? arg + (arg % spacing) : arg - (arg % spacing)
 }
 
 export const createLiquidityPlot = (
@@ -241,8 +248,8 @@ export const createLiquidityPlot = (
 
   const ticksData: PlotTickData[] = []
 
-  const min = spacingMultiplicityGte(MIN_TICK, pool.tickSpacing)
-  const max = spacingMultiplicityLte(MAX_TICK, pool.tickSpacing)
+  const min = minSpacingMultiplicity(pool.tickSpacing)
+  const max = maxSpacingMultiplicity(pool.tickSpacing)
 
   if (!ticks.length || ticks[0].index !== min) {
     const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
@@ -323,8 +330,8 @@ export const createPlaceholderLiquidityPlot = (
 ) => {
   const ticksData: PlotTickData[] = []
 
-  const min = spacingMultiplicityGte(MIN_TICK, tickSpacing)
-  const max = spacingMultiplicityLte(MAX_TICK, tickSpacing)
+  const min = minSpacingMultiplicity(tickSpacing)
+  const max = maxSpacingMultiplicity(tickSpacing)
 
   const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
 
@@ -390,8 +397,8 @@ export const nearestSpacingMultiplicity = (arg: number, spacing: number) => {
   const nearest = Math.abs(greater - arg) < Math.abs(lower - arg) ? greater : lower
 
   return Math.max(
-    Math.min(nearest, spacingMultiplicityLte(MAX_TICK, spacing)),
-    spacingMultiplicityGte(MIN_TICK, spacing)
+    Math.min(nearest, maxSpacingMultiplicity(spacing)),
+    minSpacingMultiplicity(spacing)
   )
 }
 
@@ -577,4 +584,12 @@ export const handleSimulate = async (
     console.log(error)
     return { amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 }
   }
+}
+
+export const minSpacingMultiplicity = (spacing: number) => {
+  return Math.max(spacingMultiplicityGte(MIN_TICK, spacing), -(TICK_LIMIT - 2) * spacing)
+}
+
+export const maxSpacingMultiplicity = (spacing: number) => {
+  return Math.min(spacingMultiplicityLte(MAX_TICK, spacing), (TICK_LIMIT - 2) * spacing)
 }
