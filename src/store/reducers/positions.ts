@@ -16,9 +16,6 @@ export interface PlotTickData {
 export interface PlotTicks {
   data: PlotTickData[]
   loading: boolean
-  maxReached: boolean
-  currentMinPriceFetched?: number
-  currentMaxPriceFetched?: number
 }
 
 export interface InitPositionStore {
@@ -41,13 +38,13 @@ export interface IPositionsStore {
 export interface InitPositionData
   extends Omit<InitPosition, 'owner' | 'userTokenX' | 'userTokenY' | 'pair'> {
   poolIndex: number
+  xAmount: number
+  yAmount: number
 }
 
 export interface GetCurrentTicksData {
   poolIndex: number
   isXtoY: boolean
-  min?: number
-  max?: number
 }
 
 export interface ClosePositionData {
@@ -60,20 +57,10 @@ export interface SetPositionData {
   position: Position
 }
 
-export interface SetCurrentTicksData {
-  data: PlotTickData[]
-  maxReached: boolean
-  currentMinPriceFetched?: number
-  currentMaxPriceFetched?: number
-}
-
 export const defaultState: IPositionsStore = {
   plotTicks: {
     data: [],
-    loading: false,
-    maxReached: false,
-    currentMinPriceFetched: 0,
-    currentMaxPriceFetched: 0
+    loading: false
   },
   positionsList: {
     list: [],
@@ -104,23 +91,13 @@ const positionsSlice = createSlice({
       state.initPosition.success = action.payload
       return state
     },
-    setPlotTicks(state, action: PayloadAction<SetCurrentTicksData>) {
-      state.plotTicks.data = action.payload.data
-      state.plotTicks.maxReached = action.payload.maxReached
+    setPlotTicks(state, action: PayloadAction<PlotTickData[]>) {
+      state.plotTicks.data = action.payload
       state.plotTicks.loading = false
-      if (
-        typeof action.payload.currentMinPriceFetched !== 'undefined' &&
-        typeof action.payload.currentMaxPriceFetched !== 'undefined'
-      ) {
-        state.plotTicks.currentMinPriceFetched = action.payload.currentMinPriceFetched
-        state.plotTicks.currentMaxPriceFetched = action.payload.currentMaxPriceFetched
-      }
       return state
     },
-    getCurrentPlotTicks(state, action: PayloadAction<GetCurrentTicksData>) {
-      if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
-        state.plotTicks.loading = true
-      }
+    getCurrentPlotTicks(state, _action: PayloadAction<GetCurrentTicksData>) {
+      state.plotTicks.loading = true
       return state
     },
     setPositionsList(state, action: PayloadAction<Position[]>) {
