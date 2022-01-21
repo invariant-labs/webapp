@@ -45,6 +45,7 @@ export function* handleSimulate(): Generator {
     let swapSimulateRouterAmount: BN = new BN(0)
     for (const pool of swapPool) {
       const isXtoY = simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)
+
       const tickMap = yield* call(
         [marketProgram, marketProgram.getTickmap],
         new Pair(pool.tokenX, pool.tokenY, pool.feeTier)
@@ -70,7 +71,6 @@ export function* handleSimulate(): Generator {
         }
         const swapSimulateResault = simulateSwap(simulateObject)
         if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
-          console.log('zmiana indeksu na: ', poolIndexes[i])
           swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
           yield put(swapActions.setPoolIndex(poolIndexes[i]))
         }
@@ -269,8 +269,6 @@ export function* handleSwap(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, simulate.toToken)
     }
-    console.log(poolIndex)
-    console.log('swap amount: ', simulate.amount.toString())
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
       pair: new Pair(simulate.fromToken, simulate.toToken, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,
@@ -282,7 +280,6 @@ export function* handleSwap(): Generator {
       byAmountIn: true,
       owner: wallet.publicKey
     })
-    console.log('swap amount: ', simulate.amount.toString())
     const connection = yield* call(getConnection)
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     swapTx.recentBlockhash = blockhash.blockhash
