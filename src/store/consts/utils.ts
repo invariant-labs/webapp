@@ -223,7 +223,8 @@ export const createLiquidityPlot = (
   tokenXDecimal: number,
   tokenYDecimal: number
 ) => {
-  const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(rawTicks, pool) : []
+  const sortedTicks = rawTicks.sort((a, b) => a.index - b.index)
+  const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(sortedTicks, pool) : []
 
   const ticks = rawTicks.map((raw, index) => ({
     ...raw,
