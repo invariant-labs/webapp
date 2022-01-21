@@ -5,6 +5,7 @@ import { keySelectors, AnyProps } from './helpers'
 import { PublicKey } from '@solana/web3.js'
 import { MOCK_TOKENS } from '@invariant-labs/sdk'
 import { tokens } from './pools'
+import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 
 const store = (s: AnyProps) => s[solanaWalletSliceName] as ISolanaWallet
 
@@ -51,27 +52,43 @@ export interface SwapToken {
   logoURI: string
 }
 
-export const swapTokens = createSelector(accounts, tokens, (allAccounts, tokens) => {
-  return Object.values(tokens).map(token => ({
-    ...token,
-    assetAddress: token.address,
-    balance: allAccounts[token.address.toString()]?.balance ?? 0
-  }))
-})
+export const swapTokens = createSelector(
+  accounts,
+  tokens,
+  balance,
+  (allAccounts, tokens, solBalance) => {
+    return Object.values(tokens).map(token => ({
+      ...token,
+      assetAddress: token.address,
+      balance:
+        token.address.toString() === WRAPPED_SOL_ADDRESS
+          ? solBalance
+          : allAccounts[token.address.toString()]?.balance ?? 0
+    }))
+  }
+)
 
-export const swapTokensDict = createSelector(accounts, tokens, (allAccounts, tokens) => {
-  const swapTokens: Record<string, SwapToken> = {}
+export const swapTokensDict = createSelector(
+  accounts,
+  tokens,
+  balance,
+  (allAccounts, tokens, solBalance) => {
+    const swapTokens: Record<string, SwapToken> = {}
 
-  Object.entries(tokens).forEach(([key, val]) => {
-    swapTokens[key] = {
-      ...val,
-      assetAddress: val.address,
-      balance: allAccounts[key]?.balance ?? 0
-    }
-  })
+    Object.entries(tokens).forEach(([key, val]) => {
+      swapTokens[key] = {
+        ...val,
+        assetAddress: val.address,
+        balance:
+          val.address.toString() === WRAPPED_SOL_ADDRESS
+            ? solBalance
+            : allAccounts[val.address.toString()]?.balance ?? 0
+      }
+    })
 
-  return swapTokens
-})
+    return swapTokens
+  }
+)
 
 export type TokenAccounts = ITokenAccount & {
   symbol: string

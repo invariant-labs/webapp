@@ -17,7 +17,8 @@ import {
   SOL_DEV,
   Token,
   USDC_DEV,
-  USDT_DEV
+  USDT_DEV,
+  WSOL_DEV
 } from './static'
 import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
@@ -363,7 +364,8 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
         [USDT_DEV.address.toString()]: USDT_DEV,
         [SOL_DEV.address.toString()]: SOL_DEV,
         [ANA_DEV.address.toString()]: ANA_DEV,
-        [MSOL_DEV.address.toString()]: MSOL_DEV
+        [MSOL_DEV.address.toString()]: MSOL_DEV,
+        [WSOL_DEV.address.toString()]: WSOL_DEV
       }
     default:
       return {}

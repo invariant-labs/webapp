@@ -38,7 +38,7 @@ export const USDT_DEV: Token = {
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
 }
 export const SOL_DEV: Token = {
-  symbol: 'wSOL',
+  symbol: 'SOL',
   address: new PublicKey(MOCK_TOKENS.SOL),
   decimals: 9,
   name: 'Wrapped Solana',
@@ -59,6 +59,14 @@ export const ANA_DEV: Token = {
   decimals: 6,
   name: 'Nirvana',
   logoURI: icons.ANA
+}
+export const WSOL_DEV: Token = {
+  symbol: 'WSOL',
+  address: new PublicKey(MOCK_TOKENS.WSOL),
+  decimals: 9,
+  name: 'Wrapped Solana',
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
 }
 
 enum SolanaNetworks {
@@ -92,16 +100,26 @@ export const tokens: Record<NetworkType, Token[]> = {
   Localnet: []
 }
 
+const MAINNET_ADRESSES = {
+  USDC: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+  USDT: new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'),
+  UST: new PublicKey('9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i'),
+  SOL: new PublicKey('So11111111111111111111111111111111111111112')
+}
+
 export const PAIRS: Record<NetworkType, Pair[]> = {
   Devnet: [
     new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[0]),
-    new Pair(USDC_DEV.address, SOL_DEV.address, FEE_TIERS[0]),
-    new Pair(MSOL_DEV.address, SOL_DEV.address, FEE_TIERS[0]),
-    new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[1]),
-    new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[2])
+    new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[0]),
+    new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[1]),
+    new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[2])
   ],
   Testnet: [],
-  Mainnet: [],
+  Mainnet: [
+    new Pair(MAINNET_ADRESSES.USDC, MAINNET_ADRESSES.USDT, FEE_TIERS[0]),
+    new Pair(MAINNET_ADRESSES.USDC, MAINNET_ADRESSES.UST, FEE_TIERS[0]),
+    new Pair(MAINNET_ADRESSES.USDC, MAINNET_ADRESSES.SOL, FEE_TIERS[1])
+  ],
   Localnet: []
 }
 
@@ -123,5 +141,7 @@ export const airdropQuantities: Record<NetworkType, number[]> = {
   Testnet: [],
   Localnet: []
 }
+
+export const WRAPPED_SOL_ADDRESS = 'So11111111111111111111111111111111111111112'
 
 export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, MAINNET_RPCS, NetworkType }
