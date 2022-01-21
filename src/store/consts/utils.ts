@@ -502,12 +502,11 @@ export const handleSimulate = async (
 }> => {
   try {
     const marketProgram = getMarketProgramSync()
+
     let simulateSuccess: boolean = false
     let poolIndex: number = 0
     let i: number = 0
     const poolIndexes: number[] = []
-    console.log(fromToken.toString(), toToken.toString())
-    console.log(amount.toString())
     const swapPool = PAIRS[networkType].filter(
       pool =>
         (fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)) ||
@@ -525,11 +524,11 @@ export const handleSimulate = async (
     if (!swapPool) {
       return { amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 }
     }
-    console.log(poolIndexes)
 
     let swapSimulateRouterAmount: BN = new BN(0)
     for (const pool of swapPool) {
       const isXtoY = fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)
+      console.log(isXtoY)
       const tickMap = await marketProgram.getTickmap(
         new Pair(pool.tokenX, pool.tokenY, pool.feeTier)
       )
@@ -555,7 +554,7 @@ export const handleSimulate = async (
         }
         try {
           const swapSimulateResault = simulateSwap(simulateObject)
-          console.log('amount simulate: ', swapSimulateResault.accumulatedAmountOut.toString())
+          console.log(swapSimulateResault.accumulatedAmountOut.toString())
           if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
             swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
             poolIndex = poolIndexes[i]
@@ -570,6 +569,7 @@ export const handleSimulate = async (
       }
       i++
     }
+    console.log('INDEX', poolIndex)
     return {
       amountOut: swapSimulateRouterAmount,
       simulateSuccess: simulateSuccess,

@@ -122,6 +122,9 @@ export function* handleSwap(): Generator {
     }
     console.log(poolIndex)
     console.log('swap amount: ', simulate.amount.toString())
+    console.log(slippage.v.toString())
+    console.log('known price', simulate.simulatePrice.toString())
+    console.log(simulate.fromToken.toString(), simulate.toToken.toString())
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
       pair: new Pair(simulate.fromToken, simulate.toToken, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,

@@ -200,7 +200,6 @@ export const Swap: React.FC<ISwap> = ({
 
   useEffect(() => {
     setSimulateAmountTo()
-    console.log(simulateResult.amountOut.toString())
   }, [amountTo, tokenToIndex, tokenFromIndex])
 
   useEffect(() => {
@@ -486,7 +485,8 @@ export const Swap: React.FC<ISwap> = ({
               },
               { v: poolIndex !== null ? pools[poolIndex].sqrtPrice.v : new BN(1) },
               {
-                simulatePrice: printBNtoBN(amountFrom, 0),
+                simulatePrice: calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex])
+                  .sqrtPrice,
                 fromToken: tokens[tokenFromIndex].address,
                 toToken: tokens[tokenToIndex].address,
                 amount: printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),
