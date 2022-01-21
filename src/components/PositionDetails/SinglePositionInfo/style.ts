@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('xs')]: {
       width: 15,
-      marginRight: 4,
-      marginLeft: 4
+      marginRight: 2,
+      marginLeft: 2
     }
   },
   text: {
@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '28px',
 
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.body1
+      ...newTypography.heading4
     }
   },
   bottomGrid: {
@@ -210,8 +210,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.body1,
-      minWidth: 84
+      width: 84,
+      fontSize: 12
     }
   },
   iconText: {
