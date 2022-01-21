@@ -3,7 +3,7 @@ import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   button: {
-    height: 40,
+    height: 44,
     borderRadius: 16,
     textAlign: 'center',
     textTransform: 'none',

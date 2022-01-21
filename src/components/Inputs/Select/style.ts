@@ -9,8 +9,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '20px',
     minWidth: 80,
     fontWeight: 'normal',
-    backgroundColor: colors.invariant.componentBcg,
     fontFamily: 'Mukta',
+    backgroundColor: colors.invariant.componentBcg,
     padding: '2px 10px',
     color: colors.invariant.light,
     '&:hover': {

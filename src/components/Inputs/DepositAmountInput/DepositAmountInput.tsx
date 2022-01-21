@@ -83,7 +83,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
         disableUnderline={true}
         placeholder={placeholder}
         onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-        startAdornment={
+        startAdornment={<>
           <Grid
             className={classes.currency}
             container
@@ -97,8 +97,10 @@ export const DepositAmountInput: React.FC<IProps> = ({
               </>
             ) : (
               <Typography className={classes.noCurrencyText}>Select</Typography>
-            )}
+              )}
           </Grid>
+          {/* <Typography className={classes.caption2}>Balance: </Typography> */}
+              </>
         }
         endAdornment={
           <Button className={classes.maxButton} onClick={onMaxClick}>
@@ -107,7 +109,6 @@ export const DepositAmountInput: React.FC<IProps> = ({
         }
         onBlur={onBlur}
       />
-
       {blocked && (
         <>
           <Grid container className={classes.blocker} />
