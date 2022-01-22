@@ -1,24 +1,82 @@
 import { makeStyles } from '@material-ui/core'
-import { colors } from '@static/theme'
+import { CenterFocusStrong } from '@material-ui/icons'
+import { colors, newTypography } from '@static/theme'
+import { color } from '@storybook/addon-knobs'
 
 const useStyles = makeStyles(() => ({
-  maxButton: {
-    fontSize: 16,
-    color: colors.invariant.componentIn2,
-    minWidth: 55,
-    height: 32,
-    fontWeight: 400,
-    borderRadius: 3,
-    padding: '7px 0',
-    backgroundColor: colors.invariant.accent2,
-    background:
-      'radial-gradient(118.38% 303.54% at 3.96% 118.38%, rgba(119, 72, 216, 0.1) 0%, rgba(119, 72, 216, 0) 100%), radial-gradient(57.34% 103.84% at 50% 0%, rgba(156, 231, 90, 0.1) 0%, rgba(156, 231, 90, 0) 100%)',
-    '&:hover': {
-      boxShadow: '0px 0px 20px -8px white'
-    }
+  container: {
+    backgroundColor: colors.invariant.componentDark,
+    boxSizing: 'border-box',
+    padding: '12px 12px 6px 12px',
+    borderRadius: '16px',
+    width: '368px',
+    height: '84px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between'
   },
-  label: {
-    top: -1
+  spaceBetween: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  input: {
+    backgroundColor: colors.invariant.light,
+    borderRadius: '12px',
+    height: '36px',
+    width: '86px',
+    padding: '6px'
+  },
+  value: {
+    fontFamily: 'Mukta',
+    ...newTypography.heading2,
+    color: colors.invariant.text
+  },
+  maxButton: {
+    fontFamily: 'Mukta',
+    ...newTypography.tiny2,
+    color: colors.invariant.dark,
+    padding: '1px',
+    margin: '0 4px',
+    width: 26,
+    height: 14,
+    borderRadius: 4,
+    backgroundColor: colors.invariant.green,
+    border: 'none'
+  },
+  balance: {
+    fontFamily: 'Mukta',
+    ...newTypography.caption2,
+    color: colors.invariant.textLightGrey,
+    display: 'flex',
+    alignItems: 'center'
+  },
+  rightBottom: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  percentGeneral: {
+    fontFamily: 'Mukta',
+    ...newTypography.tiny1,
+    padding: '2px',
+    width: 39,
+    height: 16,
+    textAlign: 'center',
+    boxSizing: 'border-box',
+    borderRadius: '5px'
+  },
+  percentPlus: {
+    color: colors.invariant.green,
+    backgroundColor: `${colors.invariant.green}20`
+  },
+  percentMinus: {
+    color: colors.invariant.error,
+    backgroundColor: `${colors.invariant.error}20`
+  },
+  bigNumberRightBottom: {
+    fontFamily: 'Mukta',
+    ...newTypography.caption2,
+    color: colors.invariant.textLightGrey,
+    marginLeft: '5px'
   }
 }))
 

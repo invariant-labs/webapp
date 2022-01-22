@@ -1,7 +1,6 @@
 import React from 'react'
 import useStyles from './style'
-import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
-import { Input } from '@material-ui/core'
+import { Input, Button } from '@material-ui/core'
 
 interface IProps {
   value: number
@@ -23,28 +22,30 @@ export const IDOInput: React.FC<IProps> = ({
   const classes = useStyles()
 
   return (
-    <>
-      <div>
-        <Input></Input>
-        <p>{value}</p>
+    <div className={classes.container}>
+      <div className={classes.spaceBetween}>
+        <Input className={classes.input}></Input>
+        <span className={classes.value}>{value}</span>
       </div>
-      <div>
-        <div>
-          Balance: {balanceValue.toLocaleString()} SNY
-          <OutlinedButton
-            name='Max'
-            color='primary'
-            onClick={onMaxClick}
-            className={classes.maxButton}
-            labelClassName={classes.label}
-          />
+      <div className={classes.spaceBetween}>
+        <div className={classes.balance}>
+          Balance: {balanceValue} SNY
+          <button name='Max' onClick={onMaxClick} className={classes.maxButton}>
+            Max
+          </button>
         </div>
-        <div>
-          <div>{changePercent}</div>
-          ~${bigNumberRightBottom.toLocaleString()}
+        <div className={classes.rightBottom}>
+          <div
+            className={`${classes.percentGeneral} ${
+              changePercent > 0 ? classes.percentPlus : classes.percentMinus
+            }`}
+          >
+            {changePercent.toString().replace('-', '- ')}%
+          </div>
+          <span className={classes.bigNumberRightBottom}>~ ${bigNumberRightBottom}</span>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

@@ -7,13 +7,11 @@ import IDOInput from './IDOInput'
 storiesOf('inputs/IDOInput', module)
   .addDecorator(withKnobs)
   .add('default', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
-      <IDOInput
-        value={0.000001}
-        balanceValue={102460.3445}
-        changePercent={-4.14}
-        bigNumberRightBottom={205341.4361}
-        onMaxClick={() => {}}
-      />
-    </div>
+    <IDOInput
+      value={0.000001}
+      balanceValue={'102 460.3445'}
+      changePercent={-4.14}
+      bigNumberRightBottom={'205 341.4361'}
+      onMaxClick={() => {}}
+    />
   ))
