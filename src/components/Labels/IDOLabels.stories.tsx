@@ -38,7 +38,7 @@ storiesOf('labels/IDOLabels', module)
       <div>
         <IDOLabels
           title='SOL Contributed'
-          icon='src/static/svg/clockWhite.svg'
+          icon='src/static/svg/blueElipse.svg'
           someValue='122 124 846'
         />
       </div>
@@ -51,7 +51,7 @@ storiesOf('labels/IDOLabels', module)
         <IDOLabels
           className={classes.middleDark}
           title='Estimated token price'
-          icon='src/static/svg/clockWhite.svg'
+          icon='src/static/svg/blueElipse.svg'
           someValue='218.839'
         />
       </div>
@@ -67,6 +67,52 @@ storiesOf('labels/IDOLabels', module)
           icon='/src/static/svg/LogoShort.svg'
           someValue='20 000 000'
         />
+      </div>
+    )
+  })
+  .add('labelFull', () => {
+    const classes = useStyle()
+    return (
+      <div>
+        <div>
+          <IDOLabels
+            className={classes.top}
+            title='Sale period ends in'
+            icon='/src/static/svg/clockWhite.svg'
+            someValue='15:30:33'
+          />
+        </div>
+        <div>
+          <IDOLabels
+            className={classes.middleDark}
+            title='Grace period ends in'
+            icon='src/static/svg/clockWhite.svg'
+            someValue='32:29:27'
+          />
+        </div>
+        <div>
+          <IDOLabels
+            title='SOL Contributed'
+            icon='src/static/svg/blueElipse.svg'
+            someValue='122 124 846'
+          />
+        </div>
+        <div>
+          <IDOLabels
+            className={classes.middleDark}
+            title='Estimated token price'
+            icon='src/static/svg/blueElipse.svg'
+            someValue='218.839'
+          />
+        </div>
+        <div>
+          <IDOLabels
+            className={classes.bottom}
+            title='INVARIANT for sale'
+            icon='/src/static/svg/LogoShort.svg'
+            someValue='20 000 000'
+          />
+        </div>
       </div>
     )
   })
