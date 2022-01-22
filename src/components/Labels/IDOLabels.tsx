@@ -7,9 +7,9 @@ export interface IProps {
   style?: React.CSSProperties
   title: ReactElement | string
   icon: string
-  someValue: string
+  value: string
 }
-export const IDOLabels: React.FC<IProps> = ({ className, title, icon, someValue }) => {
+export const IDOLabels: React.FC<IProps> = ({ className, title, icon, value }) => {
   const classes = useStyle()
 
   return (
@@ -17,7 +17,7 @@ export const IDOLabels: React.FC<IProps> = ({ className, title, icon, someValue 
       <label className={classes.title}>{title}</label>
       <div>
         <img className={classes.icon} src={icon} />
-        <span className={classes.value}>{someValue}</span>
+        <span className={classes.value}>{value}</span>
       </div>
     </div>
   )

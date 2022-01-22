@@ -14,7 +14,7 @@ storiesOf('labels/IDOLabels', module)
           className={classes.top}
           title='Sale period ends in'
           icon='/src/static/svg/clockWhite.svg'
-          someValue='15:30:33'
+          value='15:30:33'
         />
       </div>
     )
@@ -27,7 +27,7 @@ storiesOf('labels/IDOLabels', module)
           className={classes.middleDark}
           title='Grace period ends in'
           icon='src/static/svg/clockWhite.svg'
-          someValue='32:29:27'
+          value='32:29:27'
         />
       </div>
     )
@@ -39,7 +39,7 @@ storiesOf('labels/IDOLabels', module)
         <IDOLabels
           title='SOL Contributed'
           icon='src/static/svg/blueElipse.svg'
-          someValue='122 124 846'
+          value='122 124 846'
         />
       </div>
     )
@@ -52,7 +52,7 @@ storiesOf('labels/IDOLabels', module)
           className={classes.middleDark}
           title='Estimated token price'
           icon='src/static/svg/blueElipse.svg'
-          someValue='218.839'
+          value='218.839'
         />
       </div>
     )
@@ -65,7 +65,7 @@ storiesOf('labels/IDOLabels', module)
           className={classes.bottom}
           title='INVARIANT for sale'
           icon='/src/static/svg/LogoShort.svg'
-          someValue='20 000 000'
+          value='20 000 000'
         />
       </div>
     )
@@ -79,7 +79,7 @@ storiesOf('labels/IDOLabels', module)
             className={classes.top}
             title='Sale period ends in'
             icon='/src/static/svg/clockWhite.svg'
-            someValue='15:30:33'
+            value='15:30:33'
           />
         </div>
         <div>
@@ -87,14 +87,14 @@ storiesOf('labels/IDOLabels', module)
             className={classes.middleDark}
             title='Grace period ends in'
             icon='src/static/svg/clockWhite.svg'
-            someValue='32:29:27'
+            value='32:29:27'
           />
         </div>
         <div>
           <IDOLabels
             title='SOL Contributed'
             icon='src/static/svg/blueElipse.svg'
-            someValue='122 124 846'
+            value='122 124 846'
           />
         </div>
         <div>
@@ -102,7 +102,7 @@ storiesOf('labels/IDOLabels', module)
             className={classes.middleDark}
             title='Estimated token price'
             icon='src/static/svg/blueElipse.svg'
-            someValue='218.839'
+            value='218.839'
           />
         </div>
         <div>
@@ -110,7 +110,7 @@ storiesOf('labels/IDOLabels', module)
             className={classes.bottom}
             title='INVARIANT for sale'
             icon='/src/static/svg/LogoShort.svg'
-            someValue='20 000 000'
+            value='20 000 000'
           />
         </div>
       </div>
