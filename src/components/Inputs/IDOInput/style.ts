@@ -1,7 +1,5 @@
 import { makeStyles } from '@material-ui/core'
-import { CenterFocusStrong } from '@material-ui/icons'
 import { colors, newTypography } from '@static/theme'
-import { color } from '@storybook/addon-knobs'
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -9,7 +7,6 @@ const useStyles = makeStyles(() => ({
     boxSizing: 'border-box',
     padding: '12px 12px 6px 12px',
     borderRadius: '16px',
-    width: '368px',
     height: '84px',
     display: 'flex',
     flexDirection: 'column',
@@ -48,11 +45,15 @@ const useStyles = makeStyles(() => ({
     ...newTypography.caption2,
     color: colors.invariant.textLightGrey,
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexFlow: 'wrap',
+    width: '200px'
   },
   rightBottom: {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    flexFlow: 'wrap',
+    justifyContent: 'flex-end'
   },
   percentGeneral: {
     fontFamily: 'Mukta',
