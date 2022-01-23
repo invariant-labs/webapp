@@ -7,6 +7,7 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     textTransform: 'none',
     ...typography.body1,
+    color: colors.invariant.dark,
     background: `linear-gradient(180deg, ${colors.invariant.pink}80 0%, ${colors.invariant.purple}80 100%)`,
     padding: '13px auto 14px auto',
     width: '368px',

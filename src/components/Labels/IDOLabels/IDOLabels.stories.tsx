@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
-import { IDOLabels } from '@components/Labels/IDOLabels'
+import { IDOLabels } from '@components/Labels/IDOLabels/IDOLabels'
 import useStyle from './style'
 
 storiesOf('labels/IDOLabels', module)

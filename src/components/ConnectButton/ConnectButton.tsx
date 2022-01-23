@@ -39,3 +39,5 @@ export const ConnectButton: React.FC<IProps> = ({
     </Button>
   )
 }
+
+export default ConnectButton

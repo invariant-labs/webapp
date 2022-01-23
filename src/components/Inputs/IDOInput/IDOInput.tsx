@@ -1,6 +1,6 @@
 import React from 'react'
 import useStyles from './style'
-import { Input, Button } from '@material-ui/core'
+import { Input } from '@material-ui/core'
 
 interface IProps {
   value: number

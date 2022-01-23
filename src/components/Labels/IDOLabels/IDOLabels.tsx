@@ -22,3 +22,5 @@ export const IDOLabels: React.FC<IProps> = ({ className, title, icon, value }) =
     </div>
   )
 }
+
+export default IDOLabels
