@@ -15,8 +15,8 @@ interface IProps {
   blockerInfo?: string
   decimalsLimit: number
   onBlur?: () => void
-  delta: number
-  dollars: number
+  percentageChange: number
+  usdValue: number
 }
 
 export const DepositAmountInput: React.FC<IProps> = ({
@@ -31,8 +31,8 @@ export const DepositAmountInput: React.FC<IProps> = ({
   blockerInfo,
   onBlur,
   decimalsLimit,
-  delta = 4.15,
-  dollars = 205341.43
+  percentageChange = 4.15,
+  usdValue = 205341.43
 }) => {
   const classes = useStyles()
 
@@ -129,8 +129,8 @@ export const DepositAmountInput: React.FC<IProps> = ({
             <>
               {currency ? (
                 <>
-                  <Typography className={classes.percentage}>{delta}%</Typography>
-                  <Typography className={classes.caption2}>~ ${dollars}</Typography>
+                  <Typography className={classes.percentage}>{percentageChange}%</Typography>
+                  <Typography className={classes.caption2}>~ ${usdValue}</Typography>
                 </>
               ) : (
                 <Typography className={classes.noData}>No data</Typography>

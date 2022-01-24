@@ -135,6 +135,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   return (
     <Grid container direction='column' className={classNames(classes.wrapper, className)}>
       <Typography className={classes.sectionTitle}>Tokens</Typography>
+
       <Grid container className={classes.sectionWrapper} style={{ marginBottom: 8 }}>
         <Grid container className={classes.selects} direction='row' justifyContent='space-between'>
           <Grid className={classes.selectWrapper}>
@@ -179,8 +180,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
       <Grid container className={classes.sectionWrapper}>
         <DepositAmountInput
-          delta={4.15}
-          dollars={205341.43}
+          percentageChange={4.15}
+          usdValue={205341.43}
           currency={tokenAIndex !== null ? tokens[tokenAIndex].symbol : null}
           currencyIconSrc={tokenAIndex !== null ? tokens[tokenAIndex].logoURI : undefined}
           placeholder='0.0'
@@ -208,8 +209,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         />
 
         <DepositAmountInput
-          delta={4.15}
-          dollars={205341.43}
+          percentageChange={4.15}
+          usdValue={205341.43}
           currency={tokenBIndex !== null ? tokens[tokenBIndex].symbol : null}
           currencyIconSrc={tokenBIndex !== null ? tokens[tokenBIndex].logoURI : undefined}
           placeholder='0.0'

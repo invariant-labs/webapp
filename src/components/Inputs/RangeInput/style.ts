@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...newTypography.body1,
 
     [theme.breakpoints.down('sm')]: {
-    ...newTypography.body1
+      ...newTypography.body1
     }
   },
   tokens: {
@@ -61,7 +61,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.white.main,
     ...newTypography.body3,
     lineHeight: 24,
-    // borderBlock: `1px solid ${colors.invariant.componentOut2}`,
     backgroundColor: colors.invariant.componentBcg,
     height: 36,
     paddingInline: 5,

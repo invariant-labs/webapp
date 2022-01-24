@@ -17,7 +17,6 @@ const useStyles = makeStyles(() => ({
   sectionWrapper: {
     borderRadius: 8,
     backgroundColor: colors.invariant.component,
-    // padding: 16,
     paddingTop: 0,
     width: '100%'
   },

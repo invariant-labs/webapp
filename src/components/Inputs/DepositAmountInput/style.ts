@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     backgroundColor: colors.invariant.componentBcg,
     borderRadius: 20,
-    padding: 12,
+    padding: '12px 12px 6px 12px',
     ...newTypography.heading2,
     display: 'grid',
     gridTemplateAreas: `
@@ -21,8 +21,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     `,
 
     '& $input': {
-      // paddingInline: 8,
-      // paddingTop: 7,
       color: colors.invariant.light,
       textAlign: 'end',
       ...newTypography.heading2
@@ -40,7 +38,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 83,
     width: 'fit-content',
     flexShrink: 0,
-    // paddingInline: 5,
     borderRadius: 11,
     backgroundColor: colors.invariant.light,
     padding: '6px 12px 6px 12px',
