@@ -104,6 +104,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 600,
     marginLeft: 4
   },
+  spacing: {
+    marginLeft: 2
+  },
   link: {
     marginTop: 20,
     textDecoration: 'none'

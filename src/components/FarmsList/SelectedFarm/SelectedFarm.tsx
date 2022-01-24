@@ -58,7 +58,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
               duration={300}
               formatValue={(value: string) => Number(value).toFixed(2)}
             />
-            {currency}
+            <Typography display='inline' component='span' className={classes.spacing} >{currency}</Typography>
           </Typography>
         </Typography>
       </Grid>
@@ -74,7 +74,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                     duration={300}
                     formatValue={(value: string) => Number(value).toFixed(2)}
                   />
-                  {currency}
+                  <span className={classes.spacing}>{currency}</span>
                 </Typography>
               </Typography>
               <Typography className={classes.infoText}>
@@ -109,7 +109,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                     duration={300}
                     formatValue={(value: string) => Number(value).toFixed(2)}
                   />
-                  {currency}
+                  <span className={classes.spacing}>{currency}</span>
                 </Typography>
               </Typography>
               <Typography className={classes.infoText}>
@@ -120,7 +120,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                     duration={300}
                     formatValue={(value: string) => Number(value).toFixed(2)}
                   />
-                  {currency}
+                  <span className={classes.spacing}>{currency}</span>
                 </Typography>
               </Typography>
               <Typography className={classes.infoText}>
@@ -131,7 +131,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                     duration={300}
                     formatValue={(value: string) => Number(value).toFixed(2)}
                   />
-                  {currency}
+                  <span className={classes.spacing}>{currency}</span>
                 </Typography>
               </Typography>
             </Box>
