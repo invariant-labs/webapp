@@ -55,7 +55,8 @@ const tokens: SwapToken[] = [
 storiesOf('position/newPosition', module)
   .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
   .add('new', () => (
-    <div style={{ backgroundColor: colors.invariant.componentBcg, padding: 20, width: 'fit-content' }}>
+    <div
+      style={{ backgroundColor: colors.invariant.componentBcg, padding: 20, width: 'fit-content' }}>
       <NewPosition
         tokens={tokens}
         tokensB={tokens}
@@ -83,7 +84,8 @@ storiesOf('position/newPosition', module)
     </div>
   ))
   .add('noPool', () => (
-    <div style={{ backgroundColor: colors.invariant.componentBcg, padding: 20, width: 'fit-content' }}>
+    <div
+      style={{ backgroundColor: colors.invariant.componentBcg, padding: 20, width: 'fit-content' }}>
       <NewPosition
         tokens={tokens}
         tokensB={tokens}

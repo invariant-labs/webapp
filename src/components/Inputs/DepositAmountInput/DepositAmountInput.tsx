@@ -75,66 +75,64 @@ export const DepositAmountInput: React.FC<IProps> = ({
 
   return (
     <Grid container className={classes.wrapper} style={style}>
-
-      <div className= {classes.root}>
-      <Grid
-            className={classes.currency}
-            container
-            justifyContent='center'
-            alignItems='center'
-            wrap='nowrap'>
-            {currency !== null ? (
-              <>
-                <img alt='' src={currencyIconSrc} className={classes.currencyIcon} />
-                <Typography className={classes.currencySymbol}>{currency}</Typography>
-              </>
-            ) : (
-              <Typography className={classes.noCurrencyText}>Select</Typography>
-              )}
+      <div className={classes.root}>
+        <Grid
+          className={classes.currency}
+          container
+          justifyContent='center'
+          alignItems='center'
+          wrap='nowrap'>
+          {currency !== null ? (
+            <>
+              <img alt='' src={currencyIconSrc} className={classes.currencyIcon} />
+              <Typography className={classes.currencySymbol}>{currency}</Typography>
+            </>
+          ) : (
+            <Typography className={classes.noCurrencyText}>Select</Typography>
+          )}
         </Grid>
 
         <Grid
-            className={classes.balance}
-            container
-            // justifyContent='center'
-            alignItems='center'
-            wrap='nowrap'
-          >
-            {
-              <>
-              <Typography className={classes.caption2}>Balance:  102 460.3445 SNY</Typography>
+          className={classes.balance}
+          container
+          // justifyContent='center'
+          alignItems='center'
+          wrap='nowrap'>
+          {
+            <>
+              <Typography className={classes.caption2}>Balance: 102 460.3445 SNY</Typography>
               <Button className={classes.maxButton} onClick={onMaxClick}>
-                      Max
+                Max
               </Button>
-              </>
-            }
-          </Grid>
-          <Grid
-            className={classes.percentages}
-            container
-            // justifyContent='center'
-            alignItems='center'
-            wrap='nowrap'
-          >
-            {
-              <>
-          <Typography className={classes.percentage}>- 4.14%</Typography>
-          <Typography className={classes.caption2}>~ $205 341.4361</Typography>
-              </>
-            }
-          </Grid>
+            </>
+          }
+        </Grid>
+        <Grid
+          className={classes.percentages}
+          container
+          // justifyContent='center'
+          alignItems='center'
+          wrap='nowrap'>
+          {
+            <>
+              <Typography className={classes.percentage}>- 4.14%</Typography>
+              <Typography className={classes.caption2}>~ $205 341.4361</Typography>
+            </>
+          }
+        </Grid>
 
-          <Input
-        inputRef={inputRef}
-        // className={classes.root}
-        type={'text'}
-        value={value}
-        disableUnderline={true}
-        placeholder={placeholder}
-        onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-        onBlur={onBlur}/>
+        <Input
+          inputRef={inputRef}
+          // className={classes.root}
+          type={'text'}
+          value={value}
+          disableUnderline={true}
+          placeholder={placeholder}
+          onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
+          onBlur={onBlur}
+        />
       </div>
-    {/*
+      {/*
       <Input
         inputRef={inputRef}
         className={classes.root}

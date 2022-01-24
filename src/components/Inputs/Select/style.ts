@@ -34,8 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   endIcon: {
     width: '2em',
     marginLeft: 6,
-    '& svg': {
-    }
+    '& svg': {}
   }
 }))
 
