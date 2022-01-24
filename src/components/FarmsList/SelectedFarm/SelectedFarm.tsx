@@ -27,7 +27,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
   liquidity,
   stake,
   unstake,
-  claimRewards,
+  claimRewards
 }) => {
   const classes = useStyle()
   const [activeValue, SetActiveValue] = useState('stake')
@@ -58,7 +58,9 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
               duration={300}
               formatValue={(value: string) => Number(value).toFixed(2)}
             />
-            <Typography display='inline' component='span' className={classes.spacing} >{currency}</Typography>
+            <Typography display='inline' component='span' className={classes.spacing}>
+              {currency}
+            </Typography>
           </Typography>
         </Typography>
       </Grid>
@@ -177,7 +179,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
           </Button>
         </>
       )}
-    </Grid >
+    </Grid>
   )
 }
 
