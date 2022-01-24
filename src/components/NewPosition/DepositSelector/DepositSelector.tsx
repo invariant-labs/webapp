@@ -138,7 +138,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       <Grid container className={classes.sectionWrapper} style={{ marginBottom: 8 }}>
         <Grid container className={classes.selects} direction='row' justifyContent='space-between'>
           <Grid className={classes.selectWrapper}>
-            {/* <Typography className={classes.inputLabel}>Pair token A</Typography> */}
             <Select
               tokens={tokens}
               current={tokenAIndex !== null ? tokens[tokenAIndex] : null}
@@ -153,7 +152,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           </Grid>
 
           <Grid className={classes.selectWrapper}>
-            {/* <Typography className={classes.inputLabel}>Pair token B</Typography> */}
             <Select
               tokens={tokensB}
               current={tokenBIndex !== null ? tokens[tokenBIndex] : null}
@@ -168,7 +166,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           </Grid>
         </Grid>
 
-        {/* <Typography className={classes.inputLabel}>Fee</Typography> */}
         <FeeSwitch
           onSelect={fee => {
             setFeeTierIndex(fee)
@@ -181,7 +178,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
       <Grid container className={classes.sectionWrapper}>
-        {/* <Typography className={classes.inputLabel}>Pair token A amount</Typography> */}
         <DepositAmountInput
           delta={4.15}
           dollars={205341.43}
@@ -211,7 +207,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           {...tokenAInputState}
         />
 
-        {/* <Typography className={classes.inputLabel}>Pair token B amount</Typography> */}
         <DepositAmountInput
           delta={4.15}
           dollars={205341.43}

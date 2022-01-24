@@ -5,7 +5,8 @@ export const useStyles = makeStyles(() => ({
   wrapper: {
     width: '100%',
     borderRadius: 13,
-    backgroundColor: colors.invariant.componentBcg
+    backgroundColor: colors.invariant.componentBcg,
+    marginBottom: 40
   }
 }))
 

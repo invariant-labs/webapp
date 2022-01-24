@@ -7,7 +7,7 @@ storiesOf('position/rangeInput', module).add('default', () => {
   const [val, setVal] = useState('100')
   return (
     <div style={{
-      backgroundColor: '#000000',
+      backgroundColor: '#202946',
       width: 400,
       paddingBlock: 20
     }}>

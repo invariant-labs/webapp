@@ -133,7 +133,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
                   <Typography className={classes.caption2}>~ ${dollars}</Typography>
                 </>
               ) : (
-                <Typography className={classes.noData}>No Data</Typography>
+                <Typography className={classes.noData}>No data</Typography>
               )}
             </>
           }

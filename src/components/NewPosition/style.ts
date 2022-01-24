@@ -3,7 +3,7 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    width: 882
+    width: 952
   },
   back: {
     height: 24,
@@ -31,6 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 18
   },
   row: {
+    minWidth: 464,
+    minHeight: 504,
     position: 'relative',
     flexDirection: 'row',
 

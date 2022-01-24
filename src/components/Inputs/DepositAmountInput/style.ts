@@ -4,7 +4,9 @@ import { colors, newTypography } from '@static/theme'
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     position: 'relative',
-    height: 84
+    height: 84,
+    minWidth: 416,
+    marginBottom: 16
   },
   root: {
     width: '100%',
@@ -19,8 +21,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     `,
 
     '& $input': {
-      paddingInline: 8,
-      paddingTop: 7,
+      // paddingInline: 8,
+      // paddingTop: 7,
       color: colors.invariant.light,
       textAlign: 'end',
       ...newTypography.heading2
@@ -35,16 +37,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   currency: {
     height: 36,
-    minWidth: 86,
+    minWidth: 83,
     width: 'fit-content',
     flexShrink: 0,
-    paddingInline: 5,
+    // paddingInline: 5,
     borderRadius: 11,
     backgroundColor: colors.invariant.light,
+    padding: '6px 12px 6px 12px',
 
     [theme.breakpoints.down('sm')]: {
       height: 36,
-      minWidth: 86
+      minWidth: 83
     }
   },
   balance: {
@@ -113,7 +116,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   noData: {
-    color: 'yellow',
+    color: colors.invariant.warning,
     ...newTypography.caption2
   },
   blocker: {

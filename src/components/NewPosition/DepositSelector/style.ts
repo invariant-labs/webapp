@@ -11,14 +11,14 @@ const useStyles = makeStyles(() => ({
   },
   sectionTitle: {
     ...newTypography.heading4,
-    marginBottom: 6,
+    marginBottom: 28,
     color: colors.white.main
   },
   sectionWrapper: {
     borderRadius: 8,
     backgroundColor: colors.invariant.component,
-    padding: 16,
-    paddingTop: 10,
+    // padding: 16,
+    paddingTop: 0,
     width: '100%'
   },
   inputLabel: {
