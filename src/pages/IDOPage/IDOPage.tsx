@@ -47,6 +47,8 @@ export const IDOPage: React.FC = () => {
   const IDOInputData: IIDOInputProps = {
     currencyIcon: '/src/static/svg/blueElipse.svg',
     currencyShort: 'SNY',
+    onChange: () => {},
+    inputValue: 0.000001,
     balanceCurrency: 'SNY',
     balanceValue: '102 460.3445',
     changePercent: -4.14,

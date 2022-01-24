@@ -8,6 +8,8 @@ storiesOf('inputs/IDOInput', module)
   .add('default', () => (
     <IDOInput
       currencyIcon='/src/static/svg/blueElipse.svg'
+      onChange={() => {}}
+      inputValue={0.000001}
       currencyShort='SNY'
       balanceCurrency='SNY'
       balanceValue='102 460.3445'

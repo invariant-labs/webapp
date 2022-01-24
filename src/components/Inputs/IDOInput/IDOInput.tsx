@@ -5,6 +5,8 @@ import useStyles from './style'
 export interface IIDOInputProps {
   currencyIcon: string
   currencyShort: string
+  onChange: (value: number) => void
+  inputValue?: number
   balanceValue: number | string
   balanceCurrency: string
   changePercent: number
@@ -16,6 +18,8 @@ export interface IIDOInputProps {
 export const IDOInput: React.FC<IIDOInputProps> = ({
   currencyIcon,
   currencyShort,
+  onChange,
+  inputValue,
   balanceValue,
   balanceCurrency,
   changePercent,
@@ -23,6 +27,9 @@ export const IDOInput: React.FC<IIDOInputProps> = ({
   onMaxClick
 }) => {
   const classes = useStyles()
+  const onChangeInput = (value: any) => {
+    onChange(Number(value))
+  }
 
   return (
     <div className={classes.container}>
@@ -31,7 +38,13 @@ export const IDOInput: React.FC<IIDOInputProps> = ({
           <img className={classes.currencyIcon} src={currencyIcon}></img>
           {currencyShort}
         </div>
-        <Input className={classes.input}></Input>
+        <Input
+          type='number'
+          onChange={onChangeInput}
+          classes={{ input: classes.input }}
+          placeholder='0.00000'
+          value={inputValue}
+        ></Input>
       </div>
       <div className={classes.spaceBetween}>
         <div className={classes.balance}>

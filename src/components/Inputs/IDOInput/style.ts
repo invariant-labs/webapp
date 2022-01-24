@@ -37,7 +37,8 @@ const useStyles = makeStyles(() => ({
     fontFamily: 'Mukta',
     ...newTypography.heading2,
     color: colors.invariant.text,
-    textAlign: 'right'
+    textAlign: 'right',
+    height: '34px'
   },
   maxButton: {
     fontFamily: 'Mukta',

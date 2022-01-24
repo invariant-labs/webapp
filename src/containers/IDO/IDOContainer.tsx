@@ -19,6 +19,8 @@ export const IDOContainer: React.FC<IIDOContainerProps> = container => {
       <IDOInput
         currencyIcon={container.IDOInput.currencyIcon}
         currencyShort={container.IDOInput.currencyShort}
+        inputValue={container.IDOInput.inputValue}
+        onChange={container.IDOInput.onChange}
         balanceValue={container.IDOInput.balanceValue}
         balanceCurrency={container.IDOInput.balanceCurrency}
         changePercent={container.IDOInput.changePercent}
