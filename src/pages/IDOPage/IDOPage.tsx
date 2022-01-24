@@ -4,9 +4,9 @@ import { default as useStylesLabel } from '@components/Labels/IDOLabels/style'
 import { Grid } from '@material-ui/core'
 import { IDOContainer } from '@containers/IDO/IDOContainer'
 import { IDOLabelsFull } from '@components/Labels/IDOLabels/IDOLabelsFull'
-import { IIDOInputProps } from '@components/Inputs/IDOInput/IDOInput'
-import { IIDOInsidesProps } from '@components/IDO/Insides/IDOInsides'
-import { IWideButtonProps } from '@components/WideButton/WideButton'
+import IDOInput, { IIDOInputProps } from '@components/Inputs/IDOInput/IDOInput'
+import { IDOInsides, IIDOInsidesProps } from '../../components/IDO/Insides/IDOInsides'
+import WideButton, { IWideButtonProps } from '@components/WideButton/WideButton'
 
 export const IDOPage: React.FC = () => {
   const classes = useStyles()
@@ -64,18 +64,34 @@ export const IDOPage: React.FC = () => {
     valuexBTC: '0.0000'
   }
 
-  const IWideButtonData: IWideButtonProps = {
+  const wideButtonData: IWideButtonProps = {
     name: 'Connect a wallet'
   }
 
   return (
     <Grid container className={classes.container}>
       <Grid item>
-        <IDOContainer
-          IDOInput={IDOInputData}
-          IDOInsides={IDOInsidesData}
-          IWideButton={IWideButtonData}
-        />
+        <IDOContainer containerTitle='Deposit your SOL'>
+          <IDOInput
+            currencyIcon={IDOInputData.currencyIcon}
+            currencyShort={IDOInputData.currencyShort}
+            inputValue={IDOInputData.inputValue}
+            onChange={IDOInputData.onChange}
+            balanceValue={IDOInputData.balanceValue}
+            balanceCurrency={IDOInputData.balanceCurrency}
+            changePercent={IDOInputData.changePercent}
+            bigNumberRightBottom={IDOInputData.bigNumberRightBottom}
+            onMaxClick={IDOInputData.onMaxClick}
+          />
+          <IDOInsides
+            valuexUSD={IDOInsidesData.valuexUSD}
+            valueUSD={IDOInsidesData.valueUSD}
+            valueSOL={IDOInsidesData.valueSOL}
+            valuexETH={IDOInsidesData.valuexETH}
+            valuexBTC={IDOInsidesData.valuexBTC}
+          />
+          <WideButton name={wideButtonData.name} />
+        </IDOContainer>
       </Grid>
       <Grid item>
         <IDOLabelsFull labels={IDOLabelsData} />
