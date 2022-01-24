@@ -27,7 +27,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
   liquidity,
   stake,
   unstake,
-  claimRewards
+  claimRewards,
 }) => {
   const classes = useStyle()
   const [activeValue, SetActiveValue] = useState('stake')
@@ -63,78 +63,83 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
         </Typography>
       </Grid>
       {activeValue === 'stake' ? (
-        <Grid className={classes.infoContainer}>
-          <Box className={classes.boxLeft}>
-            <Typography className={classes.infoText}>
-              Total Staked:
-              <Typography display='inline' component='span' className={classes.value}>
-                <AnimatedNumber
-                  value={value}
-                  duration={300}
-                  formatValue={(value: string) => Number(value).toFixed(2)}
-                />
-                {currency}
+        <>
+          <Grid className={classes.infoContainer}>
+            <Box className={classes.boxLeft}>
+              <Typography className={classes.infoText}>
+                Total Staked:
+                <Typography display='inline' component='span' className={classes.value}>
+                  <AnimatedNumber
+                    value={value}
+                    duration={300}
+                    formatValue={(value: string) => Number(value).toFixed(2)}
+                  />
+                  {currency}
+                </Typography>
               </Typography>
-            </Typography>
-            <Typography className={classes.infoText}>
-              APY:
-              <Typography display='inline' component='span' className={classes.value}>
-                <AnimatedNumber
-                  value={apy}
-                  duration={300}
-                  formatValue={(value: string) => Number(value).toFixed(1)}
-                />
-                %
+              <Typography className={classes.infoText}>
+                APY:
+                <Typography display='inline' component='span' className={classes.value}>
+                  <AnimatedNumber
+                    value={apy}
+                    duration={300}
+                    formatValue={(value: string) => Number(value).toFixed(1)}
+                  />
+                  %
+                </Typography>
               </Typography>
-            </Typography>
-            <Typography className={classes.infoText}>
-              Liquidity:
-              <Typography display='inline' component='span' className={classes.value}>
-                $
-                <AnimatedNumber
-                  value={liquidity}
-                  duration={300}
-                  formatValue={(value: string) => Number(value).toFixed(0)}
-                />
+              <Typography className={classes.infoText}>
+                Liquidity:
+                <Typography display='inline' component='span' className={classes.value}>
+                  $
+                  <AnimatedNumber
+                    value={liquidity}
+                    duration={300}
+                    formatValue={(value: string) => Number(value).toFixed(0)}
+                  />
+                </Typography>
               </Typography>
-            </Typography>
-          </Box>
-          <Box className={classes.boxRight}>
-            <Typography className={classes.infoText}>
-              Total Staked:
-              <Typography display='inline' component='span' className={classes.value}>
-                <AnimatedNumber
-                  value={value}
-                  duration={300}
-                  formatValue={(value: string) => Number(value).toFixed(2)}
-                />
-                {currency}
+            </Box>
+            <Box className={classes.boxRight}>
+              <Typography className={classes.infoText}>
+                Total Staked:
+                <Typography display='inline' component='span' className={classes.value}>
+                  <AnimatedNumber
+                    value={value}
+                    duration={300}
+                    formatValue={(value: string) => Number(value).toFixed(2)}
+                  />
+                  {currency}
+                </Typography>
               </Typography>
-            </Typography>
-            <Typography className={classes.infoText}>
-              Total Staked:
-              <Typography display='inline' component='span' className={classes.value}>
-                <AnimatedNumber
-                  value={value}
-                  duration={300}
-                  formatValue={(value: string) => Number(value).toFixed(2)}
-                />
-                {currency}
+              <Typography className={classes.infoText}>
+                Total Staked:
+                <Typography display='inline' component='span' className={classes.value}>
+                  <AnimatedNumber
+                    value={value}
+                    duration={300}
+                    formatValue={(value: string) => Number(value).toFixed(2)}
+                  />
+                  {currency}
+                </Typography>
               </Typography>
-            </Typography>
-            <Typography className={classes.infoText}>
-              Total Staked:
-              <Typography display='inline' component='span' className={classes.value}>
-                <AnimatedNumber
-                  value={value}
-                  duration={300}
-                  formatValue={(value: string) => Number(value).toFixed(2)}
-                />
-                {currency}
+              <Typography className={classes.infoText}>
+                Total Staked:
+                <Typography display='inline' component='span' className={classes.value}>
+                  <AnimatedNumber
+                    value={value}
+                    duration={300}
+                    formatValue={(value: string) => Number(value).toFixed(2)}
+                  />
+                  {currency}
+                </Typography>
               </Typography>
-            </Typography>
-          </Box>
-        </Grid>
+            </Box>
+          </Grid>
+          <Button className={classes.buttonStake} type='button' onClick={stake}>
+            Stake
+          </Button>
+        </>
       ) : (
         <>
           <Grid style={{ display: 'flex' }}>
@@ -167,18 +172,12 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
               </Typography>
             </Box>
           </Grid>
+          <Button className={classes.buttonUnstake} type='button' onClick={unstake}>
+            Unstake
+          </Button>
         </>
       )}
-      {activeValue === 'stake' ? (
-        <Button className={classes.buttonStake} type='button' onClick={stake}>
-          Stake
-        </Button>
-      ) : (
-        <Button className={classes.buttonUnstake} type='button' onClick={unstake}>
-          Unstake
-        </Button>
-      )}
-    </Grid>
+    </Grid >
   )
 }
 
