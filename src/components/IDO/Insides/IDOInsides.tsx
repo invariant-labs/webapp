@@ -2,15 +2,15 @@ import IDOInput from '@components/Inputs/IDOInput/IDOInput'
 import React from 'react'
 import useStyle from './style'
 
-interface IProps {
-  valuexUSD: number
-  valueUSD: number
-  valueSOL: number
+export interface IIDOInsidesProps {
+  valuexUSD: number | string
+  valueUSD: number | string
+  valueSOL: number | string
   valuexETH: number | string
   valuexBTC: number | string
 }
 
-export const IDOInsides: React.FC<IProps> = ({
+export const IDOInsides: React.FC<IIDOInsidesProps> = ({
   valuexUSD,
   valueUSD,
   valueSOL,

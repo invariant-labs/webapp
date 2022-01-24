@@ -2,14 +2,14 @@ import React, { ReactElement } from 'react'
 import classNames from 'classnames'
 import useStyle from './style'
 
-export interface IProps {
+export interface IIDOLabelsProps {
   className?: string
   style?: React.CSSProperties
   title: ReactElement | string
   icon: string
   value: string
 }
-export const IDOLabels: React.FC<IProps> = ({ className, title, icon, value }) => {
+export const IDOLabels: React.FC<IIDOLabelsProps> = ({ className, title, icon, value }) => {
   const classes = useStyle()
 
   return (

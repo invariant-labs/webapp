@@ -16,17 +16,28 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'space-between'
   },
-  input: {
+  currency: {
+    fontFamily: 'Mukta',
+    fontSize: 16,
+    lineHeight: '20px',
+    fontWeight: 400,
+    color: colors.invariant.text,
     backgroundColor: colors.invariant.light,
+    boxSizing: 'border-box',
     borderRadius: '12px',
     height: '36px',
-    width: '86px',
-    padding: '6px'
+    width: '85px',
+    padding: '6px',
+    display: 'flex',
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
-  value: {
+  currencyIcon: { height: '20px' },
+  input: {
     fontFamily: 'Mukta',
     ...newTypography.heading2,
-    color: colors.invariant.text
+    color: colors.invariant.text,
+    textAlign: 'right'
   },
   maxButton: {
     fontFamily: 'Mukta',

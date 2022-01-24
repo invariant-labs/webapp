@@ -1,35 +1,41 @@
+import { Input } from '@material-ui/core'
 import React from 'react'
 import useStyles from './style'
-import { Input } from '@material-ui/core'
 
-interface IProps {
-  value: number
+export interface IIDOInputProps {
+  currencyIcon: string
+  currencyShort: string
   balanceValue: number | string
+  balanceCurrency: string
   changePercent: number
   bigNumberRightBottom: number | string
   onMaxClick: () => void
   className?: string
 }
 
-export const IDOInput: React.FC<IProps> = ({
-  value,
+export const IDOInput: React.FC<IIDOInputProps> = ({
+  currencyIcon,
+  currencyShort,
   balanceValue,
+  balanceCurrency,
   changePercent,
   bigNumberRightBottom,
-  onMaxClick,
-  className
+  onMaxClick
 }) => {
   const classes = useStyles()
 
   return (
     <div className={classes.container}>
       <div className={classes.spaceBetween}>
+        <div className={classes.currency}>
+          <img className={classes.currencyIcon} src={currencyIcon}></img>
+          {currencyShort}
+        </div>
         <Input className={classes.input}></Input>
-        <span className={classes.value}>{value}</span>
       </div>
       <div className={classes.spaceBetween}>
         <div className={classes.balance}>
-          Balance: {balanceValue} SNY
+          Balance: {balanceValue} {balanceCurrency}
           <button name='Max' onClick={onMaxClick} className={classes.maxButton}>
             Max
           </button>

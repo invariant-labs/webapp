@@ -1,31 +1,39 @@
 import React from 'react'
-import IDOInput from '@components/Inputs/IDOInput/IDOInput'
-import { IDOInsides } from '../../components/IDO/Insides/IDOInsides'
-import ConnectButton from '@components/ConnectButton/ConnectButton'
+import IDOInput, { IIDOInputProps } from '@components/Inputs/IDOInput/IDOInput'
+import { IDOInsides, IIDOInsidesProps } from '../../components/IDO/Insides/IDOInsides'
+import WideButton, { IWideButtonProps } from '@components/WideButton/WideButton'
 import useStyles from './style'
 
-export const IDOContainer = () => {
+export interface IIDOContainerProps {
+  IDOInput: IIDOInputProps
+  IDOInsides: IIDOInsidesProps
+  IWideButton: IWideButtonProps
+}
+
+export const IDOContainer: React.FC<IIDOContainerProps> = container => {
   const classes = useStyles()
 
   return (
     <div className={classes.idoContainer}>
       <h1 className={classes.header}>Deposit your SOL</h1>
       <IDOInput
-        value={0.000001}
-        balanceValue={'102 460.3445'}
-        changePercent={-4.14}
-        bigNumberRightBottom={'205 341.4361'}
-        onMaxClick={() => {}}
+        currencyIcon={container.IDOInput.currencyIcon}
+        currencyShort={container.IDOInput.currencyShort}
+        balanceValue={container.IDOInput.balanceValue}
+        balanceCurrency={container.IDOInput.balanceCurrency}
+        changePercent={container.IDOInput.changePercent}
+        bigNumberRightBottom={container.IDOInput.bigNumberRightBottom}
+        onMaxClick={container.IDOInput.onMaxClick}
       />
 
       <IDOInsides
-        valuexUSD={46.643}
-        valueUSD={47.43}
-        valueSOL={0.0432}
-        valuexETH={'0.0000'}
-        valuexBTC={'0.0000'}
+        valuexUSD={container.IDOInsides.valuexUSD}
+        valueUSD={container.IDOInsides.valueUSD}
+        valueSOL={container.IDOInsides.valueSOL}
+        valuexETH={container.IDOInsides.valuexETH}
+        valuexBTC={container.IDOInsides.valuexBTC}
       />
-      <ConnectButton name={'Connect a wallet'} />
+      <WideButton name={container.IWideButton.name} />
     </div>
   )
 }
