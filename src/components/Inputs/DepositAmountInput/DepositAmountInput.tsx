@@ -96,11 +96,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
           )}
         </Grid>
 
-        <Grid
-          className={classes.balance}
-          container
-          alignItems='center'
-          wrap='nowrap'>
+        <Grid className={classes.balance} container alignItems='center' wrap='nowrap'>
           {
             <>
               <Typography className={classes.caption2}>
