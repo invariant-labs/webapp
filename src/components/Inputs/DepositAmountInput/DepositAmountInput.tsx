@@ -99,7 +99,6 @@ export const DepositAmountInput: React.FC<IProps> = ({
         <Grid
           className={classes.balance}
           container
-          // justifyContent='center'
           alignItems='center'
           wrap='nowrap'>
           {
