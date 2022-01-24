@@ -100,12 +100,21 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: colors.invariant.green,
       boxShadow: '0px 0px 20px -10px white'
     },
-
     [theme.breakpoints.down('sm')]: {
       width: 26,
       minWidth: 26,
       height: 14
     }
+  },
+  maxButtonNotActive: {
+    backgroundColor: colors.invariant.light,
+    '&:hover': {
+      backgroundColor: colors.invariant.light
+    }
+  },
+  noData: {
+    color: 'yellow',
+    ...newTypography.caption2
   },
   blocker: {
     position: 'absolute',

@@ -100,8 +100,8 @@ export const DepositAmountInput: React.FC<IProps> = ({
           wrap='nowrap'>
           {
             <>
-              <Typography className={classes.caption2}>Balance: 102 460.3445 SNY</Typography>
-              <Button className={classes.maxButton} onClick={onMaxClick}>
+              <Typography className={classes.caption2}>Balance: {currency ? `102 460.3445 ${currency}` : '- -'}</Typography>
+              <Button className={currency ? classes.maxButton : `${classes.maxButton} ${classes.maxButtonNotActive}`} onClick={onMaxClick}>
                 Max
               </Button>
             </>
@@ -113,12 +113,12 @@ export const DepositAmountInput: React.FC<IProps> = ({
           // justifyContent='center'
           alignItems='center'
           wrap='nowrap'>
-          {
-            <>
-              <Typography className={classes.percentage}>- 4.14%</Typography>
-              <Typography className={classes.caption2}>~ $205 341.4361</Typography>
+          {<>{currency ? <>
+            <Typography className={classes.percentage}>- 4.14%</Typography>
+            <Typography className={classes.caption2}>~ $205 341.4361</Typography>
             </>
-          }
+            : <Typography className={classes.noData}>No Data</Typography>
+            }</>}
         </Grid>
 
         <Input
