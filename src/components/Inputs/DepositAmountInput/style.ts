@@ -22,7 +22,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingInline: 8,
       paddingTop: 7,
       color: colors.invariant.light,
-      textAlign: 'end'
+      textAlign: 'end',
+      ...newTypography.heading2
     },
 
     [theme.breakpoints.down('sm')]: {
@@ -63,7 +64,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 39,
     textAlign: 'center',
     marginRight: 3,
-    height: 16
+    height: 16,
+    lineHeight: '16px'
   },
   currencyIcon: {
     minWidth: 20,
