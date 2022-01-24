@@ -30,22 +30,15 @@ export function* createPool(
   const wallet = yield* call(getWallet)
   const marketProgram = yield* call(getMarketProgram)
 
-  const tokenXDetails = new Token(connection, tokenX, TOKEN_PROGRAM_ID, new Keypair())
-  const tokenYDetails = new Token(connection, tokenY, TOKEN_PROGRAM_ID, new Keypair())
-  const { transaction: tx, signer } = yield* call([marketProgram, marketProgram.createPoolTx], {
+  const { transaction: tx, signers } = yield* call([marketProgram, marketProgram.createPoolTx], {
     pair: new Pair(tokenX, tokenY, { fee: fee }),
-    tokenX: tokenXDetails,
-    tokenY: tokenYDetails,
-    protocolFee: {
-      v: new BN(1000)
-    },
     initTick: initTick
   })
   const blockhash = yield* call([connection, connection.getRecentBlockhash])
   tx.recentBlockhash = blockhash.blockhash
   tx.feePayer = wallet.publicKey
   const signedTx = yield* call([wallet, wallet.signTransaction], tx)
-  signedTx.partialSign(signer)
+  signedTx.partialSign(...signers)
 
   yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
     skipPreflight: false
