@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.white.main
   },
   caption2: {
-    ...newTypography.tiny2,
+    ...newTypography.caption2,
     color: colors.invariant.lightHover
   },
   maxButton: {

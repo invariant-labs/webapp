@@ -183,6 +183,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       <Grid container className={classes.sectionWrapper}>
         {/* <Typography className={classes.inputLabel}>Pair token A amount</Typography> */}
         <DepositAmountInput
+          delta={4.15}
+          dollars={205341.43}
           currency={tokenAIndex !== null ? tokens[tokenAIndex].symbol : null}
           currencyIconSrc={tokenAIndex !== null ? tokens[tokenAIndex].logoURI : undefined}
           placeholder='0.0'
@@ -211,6 +213,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
         {/* <Typography className={classes.inputLabel}>Pair token B amount</Typography> */}
         <DepositAmountInput
+          delta={4.15}
+          dollars={205341.43}
           currency={tokenBIndex !== null ? tokens[tokenBIndex].symbol : null}
           currencyIconSrc={tokenBIndex !== null ? tokens[tokenBIndex].logoURI : undefined}
           placeholder='0.0'

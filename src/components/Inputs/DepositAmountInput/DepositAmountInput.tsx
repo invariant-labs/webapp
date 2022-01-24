@@ -15,6 +15,8 @@ interface IProps {
   blockerInfo?: string
   decimalsLimit: number
   onBlur?: () => void
+  delta: number
+  dollars: number
 }
 
 export const DepositAmountInput: React.FC<IProps> = ({
@@ -28,7 +30,9 @@ export const DepositAmountInput: React.FC<IProps> = ({
   blocked = false,
   blockerInfo,
   onBlur,
-  decimalsLimit
+  decimalsLimit,
+  delta = 4.15,
+  dollars = 205341.43
 }) => {
   const classes = useStyles()
 
@@ -100,8 +104,16 @@ export const DepositAmountInput: React.FC<IProps> = ({
           wrap='nowrap'>
           {
             <>
-              <Typography className={classes.caption2}>Balance: {currency ? `102 460.3445 ${currency}` : '- -'}</Typography>
-              <Button className={currency ? classes.maxButton : `${classes.maxButton} ${classes.maxButtonNotActive}`} onClick={onMaxClick}>
+              <Typography className={classes.caption2}>
+                Balance: {currency ? `102 460.3445 ${currency}` : '- -'}
+              </Typography>
+              <Button
+                className={
+                  currency
+                    ? classes.maxButton
+                    : `${classes.maxButton} ${classes.maxButtonNotActive}`
+                }
+                onClick={onMaxClick}>
                 Max
               </Button>
             </>
@@ -113,12 +125,18 @@ export const DepositAmountInput: React.FC<IProps> = ({
           // justifyContent='center'
           alignItems='center'
           wrap='nowrap'>
-          {<>{currency ? <>
-            <Typography className={classes.percentage}>- 4.14%</Typography>
-            <Typography className={classes.caption2}>~ $205 341.4361</Typography>
+          {
+            <>
+              {currency ? (
+                <>
+                  <Typography className={classes.percentage}>{delta}%</Typography>
+                  <Typography className={classes.caption2}>~ ${dollars}</Typography>
+                </>
+              ) : (
+                <Typography className={classes.noData}>No Data</Typography>
+              )}
             </>
-            : <Typography className={classes.noData}>No Data</Typography>
-            }</>}
+          }
         </Grid>
 
         <Input

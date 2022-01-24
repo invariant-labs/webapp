@@ -15,6 +15,8 @@ storiesOf('newInputs/amount', module)
         currency={null}
         onMaxClick={() => {}}
         decimalsLimit={6}
+        delta={4.15}
+        dollars={205341.43}
       />
     </div>
   ))
@@ -27,6 +29,8 @@ storiesOf('newInputs/amount', module)
         onMaxClick={() => {}}
         currencyIconSrc={icons.SNY}
         decimalsLimit={6}
+        delta={4.15}
+        dollars={205341.43}
       />
     </div>
   ))
@@ -39,6 +43,8 @@ storiesOf('newInputs/amount', module)
         onMaxClick={() => {}}
         currencyIconSrc={icons.SNY}
         decimalsLimit={6}
+        delta={4.15}
+        dollars={205341.43}
       />
     </div>
   ))
@@ -52,6 +58,8 @@ storiesOf('newInputs/amount', module)
         blocked
         blockerInfo='Price outside range. Single-asset deposit only.'
         decimalsLimit={6}
+        delta={4.15}
+        dollars={205341.43}
       />
     </div>
   ))

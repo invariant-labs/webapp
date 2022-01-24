@@ -8,22 +8,23 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     textTransform: 'none',
     ...newTypography.body1,
-    backgroundColor: colors.invariant.accent1,
-    // background: 'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    backgroundColor: colors.invariant.pink,
     color: colors.invariant.componentBcg,
+    background:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
     transition: 'background-color 0ms ease, box-shadow 150ms linear',
     position: 'relative',
     overflow: 'hidden',
     zIndex: 4,
 
     '&:hover': {
-      backgroundColor: `${colors.invariant.accent1}`,
-      boxShadow: `0px 0px 15px ${colors.invariant.accent1}`
+      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)'
     },
 
     '&:disabled': {
       backgroundColor: colors.invariant.light,
-      color: colors.invariant.componentBcg
+      color: colors.invariant.componentBcg,
+      background: 'none'
     }
   },
   buttonRelease: {
