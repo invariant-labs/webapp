@@ -16,7 +16,6 @@ export interface ISinglePositionPlot {
   currentPrice: number
   tokenY: string
   tokenX: string
-  onZoomOut: (min: number, max: number) => void
   positionData: ILiquidityItem
   ticksLoading: boolean
   xDecimal: number
@@ -32,7 +31,6 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   currentPrice,
   tokenY,
   tokenX,
-  onZoomOut,
   positionData,
   ticksLoading,
   xDecimal,
@@ -68,7 +66,6 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     const newMax = plotMax + diff / 4
     setPlotMin(newMin)
     setPlotMax(newMax)
-    onZoomOut(newMin, newMax)
   }
 
   const zoomPlus = () => {

@@ -22,7 +22,12 @@ export interface INewPosition {
   data: PlotTickData[]
   midPrice: TickPlotPositionData
   setMidPrice: (mid: TickPlotPositionData) => void
-  addLiquidityHandler: (leftTickIndex: number, rightTickIndex: number) => void
+  addLiquidityHandler: (
+    leftTickIndex: number,
+    rightTickIndex: number,
+    xAmount: number,
+    yAmount: number
+  ) => void
   onChangePositionTokens: (
     tokenAIndex: number | null,
     tokenBindex: number | null,
@@ -37,7 +42,6 @@ export interface INewPosition {
   ) => BN
   feeTiers: number[]
   ticksLoading: boolean
-  onZoomOut: (min: number, max: number) => void
   showNoConnected?: boolean
   noConnectedBlockerProps: INoConnected
   progress: ProgressState
@@ -58,7 +62,6 @@ export const NewPosition: React.FC<INewPosition> = ({
   calcAmount,
   feeTiers,
   ticksLoading,
-  onZoomOut,
   showNoConnected,
   noConnectedBlockerProps,
   progress,
@@ -207,7 +210,16 @@ export const NewPosition: React.FC<INewPosition> = ({
           }}
           onAddLiquidity={() => {
             if (tokenAIndex !== null && tokenBIndex !== null) {
-              addLiquidityHandler(leftRange, rightRange)
+              addLiquidityHandler(
+                leftRange,
+                rightRange,
+                isXtoY
+                  ? +tokenADeposit * 10 ** tokens[tokenAIndex].decimals
+                  : +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals,
+                isXtoY
+                  ? +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals
+                  : +tokenADeposit * 10 ** tokens[tokenAIndex].decimals
+              )
             }
           }}
           tokenAInputState={{
@@ -275,7 +287,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             blockerInfo={setRangeBlockerInfo()}
             {...(tokenAIndex === null ||
             tokenBIndex === null ||
-            tokenAIndex === tokenBIndex ||
+            !isCurrentPoolExisting ||
             data.length === 0
               ? noRangePlaceholderProps
               : {
@@ -284,7 +296,6 @@ export const NewPosition: React.FC<INewPosition> = ({
                   tokenASymbol: tokens[tokenAIndex].symbol,
                   tokenBSymbol: tokens[tokenBIndex].symbol
                 })}
-            onZoomOut={onZoomOut}
             ticksLoading={ticksLoading}
             isXtoY={isXtoY}
             tickSpacing={tickSpacing}

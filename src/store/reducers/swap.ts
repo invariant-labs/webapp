@@ -7,30 +7,45 @@ import { PublicKey } from '@solana/web3.js'
 import { PayloadType } from './types'
 
 export interface Swap {
-  fromToken: PublicKey
-  toToken: PublicKey
-  amount: BN,
-  slippage: Decimal,
+  slippage: Decimal
   price: Decimal
+  knownPrice: Decimal
+  poolIndex: number
   txid?: string
+  simulate: Simulate
   inProgress?: boolean
   success?: boolean
+}
+
+export interface Simulate {
+  simulatePrice: BN
+  fromToken: PublicKey
+  toToken: PublicKey
+  amount: BN
+  success: boolean
+  txid?: string
+  inProgress?: boolean
 }
 
 export interface ISwapStore {
   swap: Swap
 }
 
+export const defaultSimulate: Simulate = {
+  simulatePrice: new BN(0),
+  fromToken: DEFAULT_PUBLICKEY,
+  toToken: DEFAULT_PUBLICKEY,
+  amount: new BN(0),
+  success: false
+}
+
 export const defaultState: ISwapStore = {
   swap: {
-    fromToken: DEFAULT_PUBLICKEY,
-    toToken: DEFAULT_PUBLICKEY,
-    amount: new BN(0),
     slippage: { v: fromFee(new BN(1000)) },
-    price: { v: new BN(1) },
-    txid: 'test',
-    inProgress: false,
-    success: false
+    price: { v: new BN(0) },
+    knownPrice: { v: new BN(0) },
+    poolIndex: 0,
+    simulate: defaultSimulate
   }
 }
 
@@ -49,6 +64,22 @@ const swapSlice = createSlice({
     setSwapSuccess(state, action: PayloadAction<boolean>) {
       state.swap.inProgress = false
       state.swap.success = action.payload
+      return state
+    },
+    simulate(state, action: PayloadAction<Simulate>) {
+      state.swap.simulate = action.payload
+      return state
+    },
+    simulateSuccess(state, action: PayloadAction<boolean>) {
+      state.swap.simulate.success = action.payload
+      return state
+    },
+    setPoolIndex(state, action: PayloadAction<number>) {
+      state.swap.poolIndex = action.payload
+      return state
+    },
+    changePrice(state, action: PayloadAction<BN>) {
+      state.swap.price.v = action.payload
       return state
     }
   }
