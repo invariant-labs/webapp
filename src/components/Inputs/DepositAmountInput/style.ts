@@ -3,20 +3,26 @@ import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    position: 'relative'
+    position: 'relative',
+    height: 84
   },
   root: {
     width: '100%',
-    height: 84,
     backgroundColor: colors.invariant.componentBcg,
-    border: 'none',
     borderRadius: 20,
     padding: 12,
     ...newTypography.heading2,
+    display: 'grid',
+    gridTemplateAreas: `
+    "select amount"
+    "balance percentages"
+    `,
 
     '& $input': {
       paddingInline: 8,
-      paddingTop: 7
+      paddingTop: 7,
+      color: colors.invariant.light,
+      textAlign: 'end'
     },
 
     [theme.breakpoints.down('sm')]: {
@@ -40,6 +46,25 @@ const useStyles = makeStyles((theme: Theme) => ({
       minWidth: 86
     }
   },
+  balance: {
+    gridArea: 'balance',
+    height: 17
+  },
+  percentages: {
+    gridArea: 'percentages',
+    justifyContent: 'end',
+    height: 17
+  },
+  percentage: {
+    color: colors.invariant.Error,
+    ...newTypography.tiny1,
+    backgroundColor: 'rgba(251, 85, 95, 0.2)',
+    borderRadius: 5,
+    width: 39,
+    textAlign: 'center',
+    marginRight: 3,
+    height: 16
+  },
   currencyIcon: {
     minWidth: 20,
     height: 20,
@@ -55,6 +80,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...newTypography.body3,
     color: colors.white.main
   },
+  caption2: {
+    ...newTypography.tiny2,
+    color: colors.invariant.lightHover
+  },
   maxButton: {
     backgroundColor: colors.invariant.green,
     color: colors.invariant.componentBcg,
@@ -64,6 +93,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 26,
     height: 14,
     textTransform: 'none',
+    marginLeft: 3,
     '&:hover': {
       backgroundColor: colors.invariant.green,
       boxShadow: '0px 0px 20px -10px white'
