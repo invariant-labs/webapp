@@ -46,6 +46,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 36,
       minWidth: 86
     }
+
+    
   },
   balance: {
     gridArea: 'balance',
