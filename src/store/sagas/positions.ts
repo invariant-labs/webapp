@@ -343,7 +343,7 @@ export function* handleGetPositionsList() {
       yield* put(poolsActions.getSinglePoolData(address))
     }
 
-    yield* call(sleep, 30000)
+    yield* call(sleep, 1000)
     yield* put(actions.setPositionsList(list))
   } catch (error) {
     console.log(error)

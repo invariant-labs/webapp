@@ -1,4 +1,4 @@
-import { call, takeLatest, put, select, all, spawn } from 'typed-redux-saga'
+import { call, takeLatest, put, select, all, spawn, takeEvery } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
 import { actions, PoolWithAddress } from '@reducers/pools'
@@ -8,7 +8,6 @@ import { Tick } from '@invariant-labs/sdk/src/market'
 import { network } from '@selectors/solanaConnection'
 import { PublicKey } from '@solana/web3.js'
 import { PoolStructure } from '@invariant-labs/sdk/lib/market'
-
 export interface iTick {
   index: Tick[]
 }
@@ -66,7 +65,7 @@ export function* fetchSinglePoolData(action: PayloadAction<PublicKey>) {
 }
 
 export function* getSinglePoolDataHandler(): Generator {
-  yield* takeLatest(actions.getSinglePoolData, fetchSinglePoolData)
+  yield* takeEvery(actions.getSinglePoolData, fetchSinglePoolData)
 }
 
 export function* getPoolsDataHandler(): Generator {
