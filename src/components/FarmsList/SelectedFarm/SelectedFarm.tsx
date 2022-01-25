@@ -9,23 +9,21 @@ export interface ISelectedFarm {
   staked: number
   pair: string
   currencyPrice: number
+  rewardsToken: string
   apy: number
   liquidity: number
-  stake: () => void
-  unstake: () => void
-  claimRewards: () => void
+  handleFarm: (action: string) => void
 }
 
 export const SelectedFarm: React.FC<ISelectedFarm> = ({
   value,
   staked,
   pair,
+  rewardsToken,
   currencyPrice,
   apy,
   liquidity,
-  stake,
-  unstake,
-  claimRewards
+  handleFarm
 }) => {
   const classes = useStyle()
   const [activeValue, SetActiveValue] = useState('stake')
@@ -57,7 +55,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
               formatValue={(value: string) => Number(value).toFixed(2)}
             />
             <Typography display='inline' component='span' className={classes.spacing}>
-              {pair}
+              {rewardsToken}
             </Typography>
           </Typography>
         </Typography>
@@ -136,7 +134,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
               </Typography>
             </Box>
           </Grid>
-          <Button className={classes.buttonStake} type='button' onClick={stake}>
+          <Button className={classes.buttonStake} type='button' onClick={() => handleFarm('stake')}>
             Stake
           </Button>
         </>
@@ -155,7 +153,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                 />
               </Typography>
             </Grid>
-            <Button className={classes.claimRewards} onClick={claimRewards}>
+            <Button className={classes.claimRewards} onClick={() => handleFarm('claimRewards')}>
               Claim Rewards
             </Button>
           </Grid>
@@ -163,7 +161,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
             <Box className={classes.labelGrid}>
               <Typography className={classes.labelText}>
                 Staked:
-                {staked} {pair}
+                <span className={classes.stakedValue}>{staked}</span> {pair}
               </Typography>
               <Typography className={classes.labelText}>
                 {isXsDown
@@ -172,7 +170,10 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
               </Typography>
             </Box>
           </Grid>
-          <Button className={classes.buttonUnstake} type='button' onClick={unstake}>
+          <Button
+            className={classes.buttonUnstake}
+            type='button'
+            onClick={() => handleFarm('unstake')}>
             Unstake
           </Button>
         </>

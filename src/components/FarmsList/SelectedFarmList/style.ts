@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
   header: {
     ...typography.heading3,
     color: colors.white.main,
-    marginBottom: 5
+    marginTop: 10
   },
   title: {
     ...typography.heading4,
@@ -23,6 +23,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center'
   },
+  containers: { marginTop: 20 },
   value: {
     ...newTypography.body1,
     color: colors.white.main,
@@ -32,12 +33,13 @@ const useStyles = makeStyles(() => ({
   },
   bigIcon: {
     width: 32,
-    height: 32
+    height: 32,
+    marginRight: 6
   },
   smallIcon: {
     width: 17,
     height: 17,
-    marginBottom: 2
+    margin: '0 6px'
   }
 }))
 

@@ -8,7 +8,8 @@ export interface ISelectedFarmList {
   rewards: string
   iconTokenX: string
   iconTokenY: string
-  iconSNY: string
+  iconRewardToken: string
+  rewardsTokenSymbol: string
   data: ISelectedFarm[]
 }
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
@@ -17,7 +18,8 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   rewards,
   iconTokenX,
   iconTokenY,
-  iconSNY
+  iconRewardToken,
+  rewardsTokenSymbol
 }) => {
   const classes = useStyle()
   return (
@@ -52,24 +54,23 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
             component='span'
             className={classes.value}
             style={{ display: 'flex', alignItems: 'center' }}>
-            <img src={iconSNY} alt={'SNY token icon'} className={classes.smallIcon} /> {rewards} /
-            day
+            <img src={iconRewardToken} alt={'Reward token icon'} className={classes.smallIcon} />{' '}
+            {rewards} {rewardsTokenSymbol} / day
           </Typography>
         </Typography>
       </Grid>
-      <Grid>
+      <Grid className={classes.containers}>
         {data.map(element => (
           <div className={classes.tile}>
             <SelectedFarm
               value={element.value}
               staked={element.staked}
               pair={element.pair}
+              rewardsToken={element.rewardsToken}
               currencyPrice={element.currencyPrice}
               apy={element.apy}
               liquidity={element.liquidity}
-              stake={element.stake}
-              unstake={element.unstake}
-              claimRewards={element.claimRewards}
+              handleFarm={element.handleFarm}
             />
           </div>
         ))}

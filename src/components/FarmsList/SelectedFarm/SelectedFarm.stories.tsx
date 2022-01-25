@@ -8,13 +8,11 @@ storiesOf('farmsList/selectedFarm', module).add('tile', () => {
         value={2345.34}
         staked={233345}
         pair={'xBTC - xUSD'}
-        currency={'SNY'}
+        rewardsToken={'SNY'}
         currencyPrice={2}
         apy={1}
         liquidity={457}
-        stake={() => {}}
-        unstake={() => {}}
-        claimRewards={() => {}}
+        handleFarm={() => {}}
       />
     </div>
   )

@@ -19,46 +19,47 @@ storiesOf('farmsList/selectedFarm', module)
         }}>
         <SelectedFarmList
           title={'xBTC - xUSD'}
-          rewards={'2 233.35 SNY'}
-          iconTokenX={icons.BTC}
-          iconTokenY={icons.USD}
-          iconSNY={icons.SNY}
+          rewards={'2 233.35'}
+          rewardsTokenSymbol={'SNY'}
+          iconTokenX={
+            'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
+          }
+          iconTokenY={
+            'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
+          }
+          iconRewardToken={
+            'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
+          }
           data={[
             {
               value: 2345.34,
               staked: 233345,
               pair: 'xBTC - xUSD',
-              currency: 'SNY',
+              rewardsToken: 'SNY',
               currencyPrice: 2,
               apy: 1,
               liquidity: 457,
-              stake: () => {},
-              unstake: () => {},
-              claimRewards: () => {}
+              handleFarm: () => {}
             },
             {
               value: 2345.34,
               staked: 233345,
               pair: 'xBTC - xUSD',
-              currency: 'SNY',
+              rewardsToken: 'SNY',
               currencyPrice: 2,
               apy: 1,
               liquidity: 457,
-              stake: () => {},
-              unstake: () => {},
-              claimRewards: () => {}
+              handleFarm: () => {}
             },
             {
               value: 2345.34,
               staked: 233345,
               pair: 'xBTC - xUSD',
-              currency: 'SNY',
+              rewardsToken: 'SNY',
               currencyPrice: 2,
               apy: 1,
               liquidity: 457,
-              stake: () => {},
-              unstake: () => {},
-              claimRewards: () => {}
+              handleFarm: () => {}
             }
           ]}
         />

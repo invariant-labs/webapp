@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.accent2,
     textTransform: 'none',
     boxShadow: '0px 0px 20px -8px white',
+    color: colors.black.full,
     [theme.breakpoints.down('xs')]: {
       width: '50%',
       height: 40
@@ -27,6 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       boxShadow: '0px 0px 20px -8px white',
       backgroundColor: colors.invariant.accent2
     }
+  },
+  stakedValue: {
+    marginLeft: 2
   },
   disableButton: {
     fontSize: 16,
@@ -37,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '7px 0',
     textTransform: 'none',
     backgroundColor: colors.invariant.componentIn2,
+    color: colors.invariant.lightInfoText,
     [theme.breakpoints.down('xs')]: {
       width: '50%',
       height: 40
@@ -55,6 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.accent1,
     boxShadow: '0px 0px 20px -8px white',
     textTransform: 'none',
+    color: colors.white.main,
     [theme.breakpoints.down('xs')]: {
       width: '50%',
       height: 40
@@ -141,7 +147,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'none',
     ...typography.body1,
     backgroundColor: colors.invariant.accent2,
-    color: colors.white.main,
+    color: colors.black.full,
     '&:hover': {
       backgroundColor: `${colors.invariant.accent2}`,
       boxShadow: `0px 0px 15px ${colors.invariant.accent2}`
@@ -157,7 +163,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'none',
     ...typography.body1,
     backgroundColor: colors.invariant.accent2,
-    color: colors.white.main,
+    color: colors.black.full,
     [theme.breakpoints.down('xs')]: {
       ...typography.body3,
       minWidth: 105
