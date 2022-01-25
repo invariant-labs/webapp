@@ -49,6 +49,7 @@ export interface INewPosition {
   xDecimal: number
   yDecimal: number
   tickSpacing: number
+  isWaitingForNewPool: boolean
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -68,7 +69,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   isXtoY,
   xDecimal,
   yDecimal,
-  tickSpacing
+  tickSpacing,
+  isWaitingForNewPool
 }) => {
   const classes = useStyles()
 
@@ -89,6 +91,10 @@ export const NewPosition: React.FC<INewPosition> = ({
 
     if (tokenAIndex === tokenBIndex) {
       return "Token A can't be the same as token B"
+    }
+
+    if (isWaitingForNewPool) {
+      return 'Loading pool info...'
     }
 
     return ''
@@ -275,20 +281,23 @@ export const NewPosition: React.FC<INewPosition> = ({
         {isCurrentPoolExisting ||
         tokenAIndex === null ||
         tokenBIndex === null ||
-        tokenAIndex === tokenBIndex ? (
+        tokenAIndex === tokenBIndex ||
+        isWaitingForNewPool ? (
           <RangeSelector
             onChangeRange={onChangeRange}
             blocked={
               tokenAIndex === null ||
               tokenBIndex === null ||
               tokenAIndex === tokenBIndex ||
-              data.length === 0
+              data.length === 0 ||
+              isWaitingForNewPool
             }
             blockerInfo={setRangeBlockerInfo()}
             {...(tokenAIndex === null ||
             tokenBIndex === null ||
             !isCurrentPoolExisting ||
-            data.length === 0
+            data.length === 0 ||
+            isWaitingForNewPool
               ? noRangePlaceholderProps
               : {
                   data,

@@ -36,6 +36,8 @@ export function* fetchPoolData(action: PayloadAction<Pair>) {
     }
     yield* put(actions.initPool(true))
   } catch (error) {
+    yield* put(actions.poolAddingFailed())
+
     console.log(error)
   }
 }

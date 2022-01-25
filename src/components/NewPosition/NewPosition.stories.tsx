@@ -78,6 +78,7 @@ storiesOf('position/newPosition', module)
         yDecimal={6}
         tickSpacing={1}
         isXtoY={true}
+        isWaitingForNewPool={false}
       />
     </div>
   ))
@@ -106,6 +107,7 @@ storiesOf('position/newPosition', module)
         yDecimal={6}
         tickSpacing={4}
         isXtoY={true}
+        isWaitingForNewPool={false}
       />
     </div>
   ))
