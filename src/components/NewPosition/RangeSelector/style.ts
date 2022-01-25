@@ -1,23 +1,23 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, typography, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     borderRadius: 10,
-    backgroundColor: colors.invariant.componentOut4,
+    backgroundColor: colors.invariant.component,
     padding: 24,
     paddingTop: 16,
     flex: '1 1 0%'
   },
   header: {
-    ...typography.body1,
+    ...newTypography.heading4,
     marginBottom: 6,
     color: colors.white.main
   },
   innerWrapper: {
     borderRadius: 8,
-    backgroundColor: colors.invariant.componentIn2,
-    padding: 16,
+    backgroundColor: colors.invariant.component,
+    // padding: 16,
     width: '100%',
     position: 'relative'
   },
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   subheader: {
-    ...typography.body2,
+    ...newTypography.heading4,
     marginBlock: 12,
     color: colors.white.main
   },
@@ -58,12 +58,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     flex: '1 1 0%',
-    height: 25,
-    ...typography.body3,
+    // height: 25,
+    ...newTypography.body2,
     color: colors.white.main,
-    backgroundColor: colors.invariant.componentOut2,
-    borderRadius: 3,
+    // backgroundColor: colors.invariant.componentOut2,
+    // borderRadius: 3,
     textTransform: 'none',
+    height: 36,
+    paddingInline: 8,
+    backgroundColor: colors.invariant.light,
+    borderRadius: 11,
 
     '&:first-child': {
       marginRight: 8
