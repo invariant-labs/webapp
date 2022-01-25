@@ -18,6 +18,8 @@ import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import useStyles from './style'
 import { Tick } from '@invariant-labs/sdk/src/market'
+import { PoolWithAddress } from '@reducers/pools'
+import { sleep } from '@sagas/wallet'
 
 export interface SwapToken {
   balance: BN
@@ -53,27 +55,16 @@ export interface ISwap {
   walletStatus: Status
   swapData: SwapData
   tokens: SwapToken[]
-  pools: PoolStructure[]
+  pools: PoolWithAddress[]
   onSwap: (
     slippage: Decimal,
-    price: Decimal,
     knownPrice: Decimal,
-    simulate: {
-      simulatePrice: BN
-      fromToken: PublicKey
-      toToken: PublicKey
-      amount: BN
-      success: boolean
-    },
-    poolIndex: number
+    tokenFrom: PublicKey,
+    tokenTo: PublicKey,
+    poolIndex: number,
+    amount: BN
   ) => void
-  onSimulate: (
-    simulatePrice: BN,
-    fromToken: PublicKey,
-    toToken: PublicKey,
-    amount: BN,
-    success: boolean
-  ) => void
+  onSetPair: (tokenFrom: PublicKey, tokenTo: PublicKey) => void
   progress: ProgressState
   poolInit: boolean
   poolTicks: { [x: string]: Tick[] }
@@ -84,6 +75,7 @@ export const Swap: React.FC<ISwap> = ({
   tokens,
   pools,
   onSwap,
+  onSetPair,
   swapData,
   progress,
   poolInit,
@@ -106,9 +98,11 @@ export const Swap: React.FC<ISwap> = ({
   const [swapRate, setSwapRate] = React.useState<number>(0)
   const [swap, setSwap] = React.useState<boolean | null>(null)
   const [tokensY, setTokensY] = React.useState<SwapToken[]>(tokens)
+  const [rotates, setRotates] = React.useState<number>(0)
   const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const [settings, setSettings] = React.useState<boolean>(false)
+  const [throttle, setThrottle] = React.useState<boolean>(true)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
   const [inputRef, setInputRef] = React.useState<string>(inputTarget.FROM)
   const [simulateResult, setSimulateResult] = React.useState<{
@@ -117,7 +111,6 @@ export const Swap: React.FC<ISwap> = ({
     poolIndex: number
   }>({ amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 })
 
-  const [rotates, setRotates] = React.useState<number>(0)
   const calculateSwapOutAmount = (assetIn: SwapToken, assetFor: SwapToken) => {
     let sqrtPrice: BN = new BN(0)
     let amountOut: number = 0
@@ -142,6 +135,10 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   useEffect(() => {
+    console.log('amout changed to: ', simulateResult.amountOut.toString())
+  }, simulateResult)
+
+  useEffect(() => {
     updateEstimatedAmount()
   }, [poolIndex])
 
@@ -151,8 +148,12 @@ export const Swap: React.FC<ISwap> = ({
 
   const setSimulateAmount = async () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      if (inputRef === inputTarget.FROM) {
+      setThrottle(false)
+      await sleep(1500)
+      setThrottle(true)
+      if (inputRef === inputTarget.FROM && +amountFrom) {
         const simulatePrice = calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex])
+
         setSimulateResult(
           await handleSimulate(
             pools,
@@ -167,8 +168,9 @@ export const Swap: React.FC<ISwap> = ({
             simulatePrice.sqrtPrice
           )
         )
-      } else if (inputRef === inputTarget.TO) {
+      } else if (inputRef === inputTarget.TO && +amountTo) {
         const simulatePrice = calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex])
+
         setSimulateResult(
           await handleSimulate(
             pools,
@@ -177,15 +179,20 @@ export const Swap: React.FC<ISwap> = ({
             {
               v: fromFee(new BN(Number(+slippTolerance * 1000)))
             },
-            tokens[tokenToIndex].address,
             tokens[tokenFromIndex].address,
-            printBNtoBN(amountTo, tokens[tokenToIndex].decimals),
+            tokens[tokenToIndex].address,
+            printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),
             simulatePrice.sqrtPrice
           )
         )
       }
     }
   }
+  useEffect(() => {
+    if (tokenFromIndex !== null && tokenToIndex !== null) {
+      onSetPair(tokens[tokenFromIndex].address, tokens[tokenToIndex].address)
+    }
+  }, [tokenFromIndex, tokenToIndex])
   useEffect(() => {
     // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
     setSimulateAmount()
@@ -241,6 +248,7 @@ export const Swap: React.FC<ISwap> = ({
       )
     })
   }
+
   const getIsXToY = (fromToken: PublicKey, toToken: PublicKey) => {
     const swapPool = pools.find(
       pool =>
@@ -267,7 +275,7 @@ export const Swap: React.FC<ISwap> = ({
     if (!getIsXToY(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
       return 'No route found'
     }
-    if (!poolInit) {
+    if (!poolInit || !throttle) {
       return 'Loading...'
     }
     if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {
@@ -471,22 +479,11 @@ export const Swap: React.FC<ISwap> = ({
             if (tokenFromIndex === null || tokenToIndex === null) return
             onSwap(
               { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
-              {
-                v:
-                  inputRef === inputTarget.FROM
-                    ? printBNtoBN(amountTo, tokens[tokenToIndex].decimals)
-                    : printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals)
-              },
-              { v: poolIndex !== null ? pools[poolIndex].sqrtPrice.v : new BN(1) },
-              {
-                simulatePrice: calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex])
-                  .sqrtPrice,
-                fromToken: tokens[tokenFromIndex].address,
-                toToken: tokens[tokenToIndex].address,
-                amount: printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),
-                success: true
-              },
-              simulateResult.poolIndex
+              { v: calculateSwapOutAmount(tokens[tokenFromIndex], tokens[tokenToIndex]).sqrtPrice },
+              tokens[tokenFromIndex].address,
+              tokens[tokenToIndex].address,
+              simulateResult.poolIndex,
+              simulateResult.amountOut
             )
           }}
           progress={progress}
