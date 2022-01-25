@@ -92,6 +92,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('md')]: {
+      top: 615,
       width: '100%',
       height: '586px'
     }
@@ -104,12 +105,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '464px',
     height: '548px',
     zIndex: 12,
+
     [theme.breakpoints.down('sm')]: {
       width: '100%',
       height: '100%'
     },
 
     [theme.breakpoints.down('md')]: {
+      top: 615,
       width: '100%',
       height: '586px'
     }

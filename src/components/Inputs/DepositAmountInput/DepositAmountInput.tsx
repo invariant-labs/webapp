@@ -129,7 +129,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
         <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>
           {
             <>
-              {currency ? (
+              {usdValue ? (
                 <>
                   <Typography className={classes.percentage}>{percentageChange}%</Typography>
                   <Typography className={classes.caption2}>~ ${usdValue}</Typography>

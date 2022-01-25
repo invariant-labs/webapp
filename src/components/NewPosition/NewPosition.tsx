@@ -203,6 +203,9 @@ export const NewPosition: React.FC<INewPosition> = ({
           feeTiers={feeTiers}
           isCurrentPoolExisting={isCurrentPoolExisting}
           progress={progress}
+          balanceValue={''}
+          percentageChange={0}
+          usdValue={0}
         />
 
         <RangeSelector
