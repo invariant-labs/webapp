@@ -1,4 +1,4 @@
-import { call, put, takeEvery, select, all, spawn, takeLatest } from 'typed-redux-saga'
+import { call, put, takeEvery, take, select, all, spawn, takeLatest } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as poolsActions } from '@reducers/pools'
 import { createAccount, getWallet, sleep } from './wallet'
@@ -339,11 +339,10 @@ export function* handleGetPositionsList() {
 
     const pools = (new Set(list.map((pos) => pos.pool)))
 
-    for (const address of pools) {
-      yield* put(poolsActions.getSinglePoolData(address))
-    }
+    yield* put(poolsActions.getPoolsDataForPositions(Array.from(pools)))
 
-    yield* call(sleep, 1000)
+    yield* take(poolsActions.addPoolsForPositions)
+
     yield* put(actions.setPositionsList(list))
   } catch (error) {
     console.log(error)

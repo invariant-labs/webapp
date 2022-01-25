@@ -1,4 +1,4 @@
-import { call, takeLatest, put, select, all, spawn, takeEvery } from 'typed-redux-saga'
+import { call, put, select, all, spawn, takeEvery, takeLatest } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
 import { actions, PoolWithAddress } from '@reducers/pools'
@@ -12,26 +12,21 @@ export interface iTick {
   index: Tick[]
 }
 
-// getting pool from SDK: market.get(pair)
-
-export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
+export function* fetchPoolData(action: PayloadAction<Pair>) {
   const marketProgram = yield* call(getMarketProgram)
   const networkType = yield* select(network)
   try {
-    const pools: PoolWithAddress[] = []
-    for (let i = 0; i < action.payload.length; i++) {
-      const poolData = yield* call([marketProgram, marketProgram.getPool], action.payload[i])
-      const address = yield* call(
-        [action.payload[i], action.payload[i].getAddress],
-        marketProgram.program.programId
-      )
-      pools.push({
-        ...poolData,
-        address
-      })
-    }
+    const poolData = yield* call([marketProgram, marketProgram.getPool], action.payload)
+    const address = yield* call(
+      [action.payload, action.payload.getAddress],
+      marketProgram.program.programId
+    )
 
-    yield* put(actions.setPools(pools))
+    yield* put(actions.addPool({
+      ...poolData,
+      address
+    }))
+
     for (let i = 0; i < PAIRS[networkType].length; i++) {
       const ticksArray = yield* call(
         [marketProgram, marketProgram.getAllTicks],
@@ -45,38 +40,44 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
   }
 }
 
-const fetchPool = async (address: PublicKey) => {
+const fetchPoolFromAddress = async (address: PublicKey) => {
   const marketProgram = await getMarketProgram()
 
   return (await marketProgram.program.account.pool.fetch(address)) as PoolStructure
 }
 
-export function* fetchSinglePoolData(action: PayloadAction<PublicKey>) {
+export function* fetchPoolsDataForPositions(action: PayloadAction<PublicKey[]>) {
   try {
-    const poolData: PoolStructure = yield* call(fetchPool, action.payload)
+    const newPools: PoolWithAddress[] = []
 
-    yield* put(actions.addPool({
-      ...poolData,
-      address: action.payload
-    }))
+    for (const address of action.payload) {
+      const poolData: PoolStructure = yield* call(fetchPoolFromAddress, address)
+
+      newPools.push({
+        ...poolData,
+        address
+      })
+    }
+
+    yield* put(actions.addPoolsForPositions(newPools))
   } catch (error) {
     console.log(error)
   }
 }
 
-export function* getSinglePoolDataHandler(): Generator {
-  yield* takeEvery(actions.getSinglePoolData, fetchSinglePoolData)
+export function* getPoolsDataForPositionsHandler(): Generator {
+  yield* takeEvery(actions.getPoolsDataForPositions, fetchPoolsDataForPositions)
 }
 
-export function* getPoolsDataHandler(): Generator {
-  yield* takeLatest(actions.getPoolsData, fetchPoolsData)
+export function* getPoolDataHandler(): Generator {
+  yield* takeLatest(actions.getPoolData, fetchPoolData)
 }
 
 export function* poolsSaga(): Generator {
   yield all(
     [
-      getPoolsDataHandler,
-      getSinglePoolDataHandler
+      getPoolDataHandler,
+      getPoolsDataForPositionsHandler
     ].map(spawn)
   )
 }

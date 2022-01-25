@@ -6,7 +6,6 @@ import { Status } from '@reducers/solanaConnection'
 import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
 import { pools, poolTicks } from '@selectors/pools'
-import { PAIRS } from '@consts/static'
 import { getNetworkTokensList } from '@consts/utils'
 import { getTokensAddresses } from '@selectors/swap'
 import { Pair } from '@invariant-labs/sdk'
@@ -29,7 +28,6 @@ const MarketEvents = () => {
     }
     const connectEvents = () => {
       dispatch(actions.setTokens(getNetworkTokensList(networkType)))
-      dispatch(actions.getPoolsData(PAIRS[networkType]))
     }
 
     connectEvents()
