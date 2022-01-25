@@ -4,7 +4,7 @@ import useStyle from './style'
 import AnimatedNumber from '@components/AnimatedNumber'
 import { theme } from '@static/theme'
 
-interface ISelectedFarm {
+export interface ISelectedFarm {
   value: number
   staked: number
   pair: string

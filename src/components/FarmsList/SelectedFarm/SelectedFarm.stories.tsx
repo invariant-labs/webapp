@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { SelectedFarm } from './SelectedFarm'
-storiesOf('farmsList/selectedFarm', module).add('stake', () => {
+storiesOf('farmsList/selectedFarm', module).add('tile', () => {
   return (
     <div style={{ width: 500, height: 500 }}>
       <SelectedFarm
