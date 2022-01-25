@@ -13,15 +13,19 @@ const useStyles = makeStyles(() => ({
     boxShadow: 'none',
     margin: '4px',
     '&:hover': {
-      background: colors.invariant.componentOut2,
-      color: colors.white.main,
+      background: 'transparent',
+      color: '#A9B6BF',
       ...typography.body1
     }
   },
   active: {
-    background: colors.invariant.componentOut2,
+    background: colors.invariant.light,
     color: colors.white.main,
-    ...typography.body1
+    ...typography.body1,
+    '&:hover': {
+      background: colors.invariant.light,
+      color: colors.white.main
+     }
   },
   disabled: {
     opacity: 1

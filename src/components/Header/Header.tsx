@@ -44,7 +44,7 @@ export const Header: React.FC<IHeader> = ({
 
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
 
-  const routes = ['swap', 'pool']
+  const routes = ['pool','swap']
 
   const otherRoutesToHighlight: Record<string, RegExp[]> = {
     pool: [/^newPosition$/, /^position\/*/]
@@ -100,7 +100,8 @@ export const Header: React.FC<IHeader> = ({
                 className={buttonClasses.headerButton}
                 variant='contained'
                 classes={{ label: buttonClasses.label }}
-                onClick={onFaucet}>
+                onClick={onFaucet}
+                >
                 Faucet
               </Button>
             )}

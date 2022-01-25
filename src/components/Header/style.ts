@@ -30,7 +30,6 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
     marginRight: 8
   },
   routers: {
-    background: 'radial-gradient(140% 140% at 50.43% 0%, #18161D 0%, rgba(24, 22, 29, 0) 100%)',
     borderRadius: '10px',
     transition: 'left 300ms',
     width: 'fit-content'
@@ -39,7 +38,7 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
     minWidth: 21,
     height: 21,
     marginRight: 0,
-    color: colors.invariant.accent2,
+    color: colors.invariant.green,
     '& >circle': {
       boxShadow: '0px 0px 10px rgba(157, 212, 109, 0.5)'
     }
