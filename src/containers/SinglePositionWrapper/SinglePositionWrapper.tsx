@@ -19,7 +19,7 @@ import {
   printBN
 } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
-import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
 import useStyles from './style'
 
@@ -36,13 +36,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
-  const {
-    data: ticksData,
-    loading: ticksLoading,
-    maxReached,
-    currentMaxPriceFetched,
-    currentMinPriceFetched
-  } = useSelector(plotTicks)
+  const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
   const { lowerTick, upperTick } = useSelector(currentPositionRangeTicks)
 
   useEffect(() => {
@@ -116,7 +110,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     () =>
       position
         ? calcYPerXPrice(
-            calculate_price_sqrt(position.lowerTickIndex).v,
+            calculatePriceSqrt(position.lowerTickIndex).v,
             position.tokenX.decimals,
             position.tokenY.decimals
           )
@@ -127,7 +121,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     () =>
       position
         ? calcYPerXPrice(
-            calculate_price_sqrt(position.upperTickIndex).v,
+            calculatePriceSqrt(position.upperTickIndex).v,
             position.tokenX.decimals,
             position.tokenY.decimals
           )
@@ -152,9 +146,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         return +printBN(
           getX(
             position.liquidity.v,
-            calculate_price_sqrt(position.upperTickIndex).v,
+            calculatePriceSqrt(position.upperTickIndex).v,
             position.poolData.sqrtPrice.v,
-            calculate_price_sqrt(position.lowerTickIndex).v
+            calculatePriceSqrt(position.lowerTickIndex).v
           ).div(DENOMINATOR),
           position.tokenX.decimals
         )
@@ -171,9 +165,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         return +printBN(
           getY(
             position.liquidity.v,
-            calculate_price_sqrt(position.upperTickIndex).v,
+            calculatePriceSqrt(position.upperTickIndex).v,
             position.poolData.sqrtPrice.v,
-            calculate_price_sqrt(position.lowerTickIndex).v
+            calculatePriceSqrt(position.lowerTickIndex).v
           ).div(DENOMINATOR),
           position.tokenY.decimals
         )
@@ -197,8 +191,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       })
 
       return [
-        +printBN(bnX.div(DENOMINATOR), position.tokenX.decimals),
-        +printBN(bnY.div(DENOMINATOR), position.tokenY.decimals)
+        +printBN(bnX.div(DENOMINATOR).div(DENOMINATOR), position.tokenX.decimals),
+        +printBN(bnY.div(DENOMINATOR).div(DENOMINATOR), position.tokenY.decimals)
       ]
     }
 
@@ -228,25 +222,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       currentPrice={current}
       tokenY={position.tokenY.symbol}
       tokenX={position.tokenX.symbol}
-      onZoomOut={(min, max) => {
-        if (
-          position &&
-          !ticksLoading &&
-          !maxReached &&
-          ((typeof currentMinPriceFetched !== 'undefined' &&
-            Math.max(min, 0) < currentMinPriceFetched) ||
-            (typeof currentMaxPriceFetched !== 'undefined' && max > currentMaxPriceFetched))
-        ) {
-          dispatch(
-            actions.getCurrentPlotTicks({
-              poolIndex: position.poolData.poolIndex,
-              isXtoY: true,
-              min,
-              max
-            })
-          )
-        }
-      }}
       onClickClaimFee={() => {
         dispatch(actions.claimFee(position.positionIndex))
       }}

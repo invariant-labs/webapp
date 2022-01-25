@@ -15,16 +15,21 @@ export function* handleSwap(): Generator {
   try {
     const allPools = yield* select(pools)
     const swapData = yield* select(swap)
-    const swapPool = allPools.find((pool) =>
-      (swapData.fromToken.toString() === pool.tokenX.toString() && swapData.toToken.toString() === pool.tokenY.toString()) ||
-      (swapData.fromToken.toString() === pool.tokenY.toString() && swapData.toToken.toString() === pool.tokenX.toString())
+    const swapPool = allPools.find(
+      pool =>
+        (swapData.fromToken.toString() === pool.tokenX.toString() &&
+          swapData.toToken.toString() === pool.tokenY.toString()) ||
+        (swapData.fromToken.toString() === pool.tokenY.toString() &&
+          swapData.toToken.toString() === pool.tokenX.toString())
     )
 
     if (!swapPool) {
       return
     }
 
-    const isXtoY = swapData.fromToken.toString() === swapPool.tokenX.toString() && swapData.toToken.toString() === swapPool.tokenY.toString()
+    const isXtoY =
+      swapData.fromToken.toString() === swapPool.tokenX.toString() &&
+      swapData.toToken.toString() === swapPool.tokenY.toString()
 
     const wallet = yield* call(getWallet)
 
@@ -43,19 +48,17 @@ export function* handleSwap(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, swapData.toToken)
     }
-    const swapTx = yield* call([marketProgram, marketProgram.swapTransaction],
-      {
-        pair: new Pair(swapData.fromToken, swapData.toToken, FEE_TIERS[0]),
-        XtoY: isXtoY,
-        amount: swapData.amount,
-        knownPrice: swapData.price,
-        slippage: swapData.slippage,
-        accountX: isXtoY ? fromAddress : toAddress,
-        accountY: isXtoY ? toAddress : fromAddress,
-        byAmountIn: true,
-        owner: wallet.publicKey
-      }
-    )
+    const swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
+      pair: new Pair(swapData.fromToken, swapData.toToken, FEE_TIERS[0]),
+      xToY: isXtoY,
+      amount: swapData.amount,
+      knownPrice: swapData.price,
+      slippage: swapData.slippage,
+      accountX: isXtoY ? fromAddress : toAddress,
+      accountY: isXtoY ? toAddress : fromAddress,
+      byAmountIn: true,
+      owner: wallet.publicKey
+    })
     const connection = yield* call(getConnection)
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     swapTx.recentBlockhash = blockhash.blockhash

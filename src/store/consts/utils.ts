@@ -1,4 +1,4 @@
-import { calculate_price_sqrt, DENOMINATOR, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, DENOMINATOR, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
 import { PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
@@ -223,7 +223,8 @@ export const createLiquidityPlot = (
   tokenXDecimal: number,
   tokenYDecimal: number
 ) => {
-  const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(rawTicks, pool) : []
+  const sortedTicks = rawTicks.sort((a, b) => a.index - b.index)
+  const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(sortedTicks, pool) : []
 
   const ticks = rawTicks.map((raw, index) => ({
     ...raw,
@@ -415,7 +416,7 @@ export const calcTicksAmountInRange = (
 }
 
 export const calcPrice = (index: number, isXtoY: boolean, xDecimal: number, yDecimal: number) => {
-  const price = calcYPerXPrice(calculate_price_sqrt(index).v, xDecimal, yDecimal)
+  const price = calcYPerXPrice(calculatePriceSqrt(index).v, xDecimal, yDecimal)
 
   return isXtoY ? price : price !== 0 ? 1 / price : Number.MAX_SAFE_INTEGER
 }

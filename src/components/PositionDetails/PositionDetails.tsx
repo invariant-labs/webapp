@@ -26,7 +26,6 @@ interface IProps {
   tokenYLiqValue: number
   tokenXClaimValue: number
   tokenYClaimValue: number
-  onZoomOut: (min: number, max: number) => void
   ticksLoading: boolean
   xDecimal: number
   yDecimal: number
@@ -48,7 +47,6 @@ const PositionDetails: React.FC<IProps> = ({
   tokenYLiqValue,
   tokenXClaimValue,
   tokenYClaimValue,
-  onZoomOut,
   ticksLoading,
   xDecimal,
   yDecimal,
@@ -109,7 +107,6 @@ const PositionDetails: React.FC<IProps> = ({
           currentPrice={currentPrice}
           tokenY={tokenY}
           tokenX={tokenX}
-          onZoomOut={onZoomOut}
           positionData={positionData}
           ticksLoading={ticksLoading}
           tickSpacing={tickSpacing}
