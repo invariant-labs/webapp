@@ -12,10 +12,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'Mukta',
     backgroundColor: colors.invariant.componentBcg,
     padding: '2px 10px',
-    color: colors.invariant.light,
     '&:hover': {
-      backgroundColor: colors.invariant.light,
-      color: colors.invariant.lightHover
+      backgroundColor: colors.invariant.light
     },
     [theme.breakpoints.down('xs')]: {
       minWidth: 90
@@ -23,7 +21,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenName: {
     position: 'relative',
-    top: 1
+    top: 1,
+    color: colors.white.main
   },
   icon: {
     minWidth: 18,

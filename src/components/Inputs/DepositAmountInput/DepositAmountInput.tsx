@@ -15,9 +15,9 @@ interface IProps {
   blockerInfo?: string
   decimalsLimit: number
   onBlur?: () => void
-  percentageChange: number
-  usdValue: number
-  balanceValue: string
+  percentageChange?: number
+  usdValue?: number
+  balanceValue?: string
 }
 
 export const DepositAmountInput: React.FC<IProps> = ({
@@ -112,7 +112,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
           {
             <>
               <Typography className={classes.caption2}>
-                Balance: {currency ? `${balanceValue} ${currency}` : '- -'}
+                Balance: {currency ? `${balanceValue || ''} ${currency}` : '- -'}
               </Typography>
               <Button
                 className={
@@ -135,7 +135,9 @@ export const DepositAmountInput: React.FC<IProps> = ({
                   <Typography className={classes.caption2}>~ ${usdValue}</Typography>
                 </>
               ) : (
-                <Typography className={classes.noData}>No data</Typography>
+                <Typography className={classes.noData}>
+                  <div className={classes.noDataIcon}>?</div>No data
+                </Typography>
               )}
             </>
           }

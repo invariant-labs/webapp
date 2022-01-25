@@ -96,13 +96,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   maxButton: {
     backgroundColor: colors.invariant.green,
     color: colors.invariant.componentBcg,
-    ...newTypography.tiny1,
+    ...newTypography.tiny2,
     borderRadius: 3,
     width: 26,
     minWidth: 26,
     height: 14,
     textTransform: 'none',
-    marginLeft: 3,
+    marginLeft: 4,
     '&:hover': {
       backgroundColor: colors.invariant.green,
       boxShadow: '0px 0px 20px -10px white'
@@ -121,7 +121,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noData: {
     color: colors.invariant.warning,
-    ...newTypography.caption2
+    ...newTypography.caption2,
+    display: 'grid',
+    gap: 5.45,
+    gridAutoFlow: 'column'
+  },
+  noDataIcon: {
+    height: 9.5,
+    width: 9.5,
+    border: '1px solid #EFD063',
+    color: colors.invariant.warning,
+    borderRadius: '50%',
+    fontSize: 8,
+    lineHeight: '10px',
+    fontWeight: 400,
+    textAlign: 'center',
+    alignSelf: 'center'
   },
   blocker: {
     position: 'absolute',

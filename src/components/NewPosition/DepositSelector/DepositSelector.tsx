@@ -32,9 +32,9 @@ export interface IDepositSelector {
   isCurrentPoolExisting: boolean
   className?: string
   progress: ProgressState
-  balanceValue: string
-  percentageChange: number
-  usdValue: number
+  percentageChange?: number
+  usdValue?: number
+  balanceValue?: string
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -48,8 +48,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   isCurrentPoolExisting,
   className,
   progress,
-  percentageChange = 4.15,
-  usdValue = 205341.43
+  percentageChange,
+  usdValue
 }) => {
   const classes = useStyles()
 
@@ -199,7 +199,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             )
           }}
           balanceValue={
-            tokenAIndex ? printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimals) : ''
+            tokenAIndex !== null
+              ? printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimals)
+              : ''
           }
           style={{
             marginBottom: 10
@@ -231,7 +233,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             )
           }}
           balanceValue={
-            tokenBIndex ? printBN(tokens[tokenBIndex].balance, tokens[tokenBIndex].decimals) : ''
+            tokenBIndex !== null
+              ? printBN(tokens[tokenBIndex].balance, tokens[tokenBIndex].decimals)
+              : ''
           }
           onBlur={() => {
             if (
