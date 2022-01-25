@@ -218,7 +218,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenName: {
     color: colors.white.main,
-    ...typography.body1
+    ...typography.body1,
+    [theme.breakpoints.down('xs')]: {
+      ...typography.body3
+    }
   },
   tokenValue: {
     ...newTypography.heading4,

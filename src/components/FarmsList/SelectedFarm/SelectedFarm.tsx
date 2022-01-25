@@ -8,7 +8,6 @@ export interface ISelectedFarm {
   value: number
   staked: number
   pair: string
-  currency: string
   currencyPrice: number
   apy: number
   liquidity: number
@@ -21,7 +20,6 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
   value,
   staked,
   pair,
-  currency,
   currencyPrice,
   apy,
   liquidity,
@@ -59,7 +57,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
               formatValue={(value: string) => Number(value).toFixed(2)}
             />
             <Typography display='inline' component='span' className={classes.spacing}>
-              {currency}
+              {pair}
             </Typography>
           </Typography>
         </Typography>
@@ -76,7 +74,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                     duration={300}
                     formatValue={(value: string) => Number(value).toFixed(2)}
                   />
-                  <span className={classes.spacing}>{currency}</span>
+                  <span className={classes.spacing}>{pair}</span>
                 </Typography>
               </Typography>
               <Typography className={classes.infoText}>
@@ -111,7 +109,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                     duration={300}
                     formatValue={(value: string) => Number(value).toFixed(2)}
                   />
-                  <span className={classes.spacing}>{currency}</span>
+                  <span className={classes.spacing}>{pair}</span>
                 </Typography>
               </Typography>
               <Typography className={classes.infoText}>
@@ -122,7 +120,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                     duration={300}
                     formatValue={(value: string) => Number(value).toFixed(2)}
                   />
-                  <span className={classes.spacing}>{currency}</span>
+                  <span className={classes.spacing}>{pair}</span>
                 </Typography>
               </Typography>
               <Typography className={classes.infoText}>
@@ -133,7 +131,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                     duration={300}
                     formatValue={(value: string) => Number(value).toFixed(2)}
                   />
-                  <span className={classes.spacing}>{currency}</span>
+                  <span className={classes.spacing}>{pair}</span>
                 </Typography>
               </Typography>
             </Box>
@@ -147,7 +145,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
           <Grid style={{ display: 'flex' }}>
             <Grid className={classes.tokenArea}>
               <Grid className={classes.token}>
-                <Typography className={classes.tokenName}>{currency}</Typography>
+                <Typography className={classes.tokenName}>{pair}</Typography>
               </Grid>
               <Typography className={classes.tokenValue}>
                 <AnimatedNumber
@@ -170,7 +168,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
               <Typography className={classes.labelText}>
                 {isXsDown
                   ? `$ ${value * currencyPrice}`
-                  : `${value} ${currency} = $ ${value * currencyPrice}`}
+                  : `${value} ${pair} = $ ${value * currencyPrice}`}
               </Typography>
             </Box>
           </Grid>

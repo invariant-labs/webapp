@@ -64,7 +64,6 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
               value={element.value}
               staked={element.staked}
               pair={element.pair}
-              currency={element.currency}
               currencyPrice={element.currencyPrice}
               apy={element.apy}
               liquidity={element.liquidity}
