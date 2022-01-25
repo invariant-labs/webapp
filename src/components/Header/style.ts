@@ -1,5 +1,6 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors } from '@static/theme'
+import { color } from '@storybook/addon-knobs'
 
 const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
   root: {
@@ -30,6 +31,7 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
     marginRight: 8
   },
   routers: {
+    backgroundColor: colors.invariant.black,
     borderRadius: '10px',
     transition: 'left 300ms',
     width: 'fit-content'

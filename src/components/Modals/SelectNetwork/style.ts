@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     '&:hover': {
-      background: `${colors.invariant.componentOut2}60`,
+      background: `${colors.invariant.light}60`,
       color: colors.white.main
     },
     '&:first-child': {
