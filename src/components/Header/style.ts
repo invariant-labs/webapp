@@ -63,12 +63,12 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
   }),
   link: {
     textDecoration: 'none',
-    minWidth: 'fit-content'
+    minWidth: 'fit-content',
   },
   menu: {
     width: 40,
     height: 25,
-    transition: 'filter 300ms'
+    transition: 'filter 300ms',
   },
   menuButton: {
     borderRadius: 10,
@@ -82,7 +82,7 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
     },
     '&:hover $menu': {
       filter: 'brightness(2)'
-    }
+    },
   },
   leftSide: {
     flex: '1 1 0%'
