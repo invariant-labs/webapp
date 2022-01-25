@@ -65,7 +65,7 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
   }),
   link: {
     textDecoration: 'none',
-    minWidth: 'fit-content',
+    minWidth: 'fit-content'
   },
   menu: {
     width: 40,
