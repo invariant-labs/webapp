@@ -32,6 +32,9 @@ export interface IDepositSelector {
   isCurrentPoolExisting: boolean
   className?: string
   progress: ProgressState
+  balanceValue: string
+  percentageChange: number
+  usdValue: number
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -44,7 +47,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   feeTiers,
   isCurrentPoolExisting,
   className,
-  progress
+  progress,
+  percentageChange = 4.15,
+  usdValue = 205341.43
 }) => {
   const classes = useStyles()
 
@@ -180,8 +185,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
       <Grid container className={classes.sectionWrapper}>
         <DepositAmountInput
-          percentageChange={4.15}
-          usdValue={205341.43}
+          percentageChange={percentageChange}
+          usdValue={usdValue}
           currency={tokenAIndex !== null ? tokens[tokenAIndex].symbol : null}
           currencyIconSrc={tokenAIndex !== null ? tokens[tokenAIndex].logoURI : undefined}
           placeholder='0.0'
@@ -193,6 +198,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimals)
             )
           }}
+          balanceValue={
+            tokenAIndex ? printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimals) : ''
+          }
           style={{
             marginBottom: 10
           }}
@@ -209,8 +217,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         />
 
         <DepositAmountInput
-          percentageChange={4.15}
-          usdValue={205341.43}
+          percentageChange={percentageChange}
+          usdValue={usdValue}
           currency={tokenBIndex !== null ? tokens[tokenBIndex].symbol : null}
           currencyIconSrc={tokenBIndex !== null ? tokens[tokenBIndex].logoURI : undefined}
           placeholder='0.0'
@@ -222,6 +230,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               printBN(tokens[tokenBIndex].balance, tokens[tokenBIndex].decimals)
             )
           }}
+          balanceValue={
+            tokenBIndex ? printBN(tokens[tokenBIndex].balance, tokens[tokenBIndex].decimals) : ''
+          }
           onBlur={() => {
             if (
               tokenAIndex !== null &&

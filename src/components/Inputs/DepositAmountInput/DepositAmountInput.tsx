@@ -17,6 +17,7 @@ interface IProps {
   onBlur?: () => void
   percentageChange: number
   usdValue: number
+  balanceValue: string
 }
 
 export const DepositAmountInput: React.FC<IProps> = ({
@@ -31,8 +32,9 @@ export const DepositAmountInput: React.FC<IProps> = ({
   blockerInfo,
   onBlur,
   decimalsLimit,
-  percentageChange = 4.15,
-  usdValue = 205341.43
+  percentageChange,
+  usdValue,
+  balanceValue
 }) => {
   const classes = useStyles()
 
@@ -98,7 +100,6 @@ export const DepositAmountInput: React.FC<IProps> = ({
           </Grid>
           <Input
             inputRef={inputRef}
-            // className={classes.root}
             type={'text'}
             value={value}
             disableUnderline={true}
@@ -111,7 +112,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
           {
             <>
               <Typography className={classes.caption2}>
-                Balance: {currency ? `102 460.3445 ${currency}` : '- -'}
+                Balance: {currency ? `${balanceValue} ${currency}` : '- -'}
               </Typography>
               <Button
                 className={
@@ -125,12 +126,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
             </>
           }
         </Grid>
-        <Grid
-          className={classes.percentages}
-          container
-          // justifyContent='center'
-          alignItems='center'
-          wrap='nowrap'>
+        <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>
           {
             <>
               {currency ? (
@@ -145,67 +141,6 @@ export const DepositAmountInput: React.FC<IProps> = ({
           }
         </Grid>
       </div>
-      {/*
-      <Input
-        inputRef={inputRef}
-        className={classes.root}
-        type={'text'}
-        value={value}
-        disableUnderline={true}
-        placeholder={placeholder}
-        onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-        startAdornment={<>
-          <Grid
-            className={classes.currency}
-            container
-            justifyContent='center'
-            alignItems='center'
-            wrap='nowrap'>
-            {currency !== null ? (
-              <>
-                <img alt='' src={currencyIconSrc} className={classes.currencyIcon} />
-                <Typography className={classes.currencySymbol}>{currency}</Typography>
-              </>
-            ) : (
-              <Typography className={classes.noCurrencyText}>Select</Typography>
-              )}
-          </Grid>
-          <Grid
-            className={classes.balance}
-            container
-            // justifyContent='center'
-            alignItems='center'
-            wrap='nowrap'
-          >
-            {
-              <>
-              <Typography className={classes.caption2}>Balance:  102 460.3445 SNY</Typography>
-              <Button className={classes.maxButton} onClick={onMaxClick}>
-                      Max
-              </Button>
-              </>
-            }
-          </Grid>
-          </>
-        }
-        endAdornment={<>
-          <Grid
-            className={classes.percentages}
-            container
-            // justifyContent='center'
-            alignItems='center'
-            wrap='nowrap'
-          >
-            {
-              <>
-          <Typography className={classes.percentage}>- 4.14%</Typography>
-          <Typography className={classes.caption2}>~ $205 341.4361</Typography>
-              </>
-            }
-          </Grid>
-          </>}
-        onBlur={onBlur}
-      /> */}
       {blocked && (
         <>
           <Grid container className={classes.blocker} />

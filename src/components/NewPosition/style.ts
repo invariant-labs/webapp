@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
+      minWidth: 0,
 
       '& .noConnectedInfo': {
         justifyContent: 'flex-start',

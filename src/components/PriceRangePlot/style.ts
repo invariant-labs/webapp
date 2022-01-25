@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fill: '#111931',
 
     [theme.breakpoints.down('sm')]: {
-      width: 18
+      width: 22
     }
   },
   zoomButton: {
@@ -33,12 +33,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
 
     '&:hover': {
-      backgroundColor: colors.invariant.green
+      backgroundColor: colors.invariant.green,
+      boxShadow: `0 0 10px ${colors.invariant.green}`
     },
 
     [theme.breakpoints.down('sm')]: {
-      width: 28,
-      height: 28
+      width: 40,
+      height: 40
     }
   },
   zoomButtonsWrapper: {

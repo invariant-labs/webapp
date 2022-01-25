@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography, newTypography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   innerWrapper: {
     borderRadius: 8,
     backgroundColor: colors.invariant.component,
-    // padding: 16,
     width: '100%',
     position: 'relative'
   },
@@ -58,11 +57,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     flex: '1 1 0%',
-    // height: 25,
     ...newTypography.body2,
     color: colors.white.main,
-    // backgroundColor: colors.invariant.componentOut2,
-    // borderRadius: 3,
     textTransform: 'none',
     height: 36,
     paddingInline: 8,
@@ -83,23 +79,45 @@ const useStyles = makeStyles((theme: Theme) => ({
   blocker: {
     position: 'absolute',
     top: 0,
-    left: 0,
+    right: 0,
     zIndex: 11,
-    width: '100%',
-    height: '100%',
+    width: '464px',
+    height: '548px',
     backgroundColor: 'rgba(11, 12, 13, 0.8)',
-    filter: 'blur(4px) brightness(0.4)'
+    filter: 'blur(4px) brightness(0.4)',
+
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      height: '100%'
+    },
+
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+      height: '586px'
+    }
   },
+
   blockedInfoWrapper: {
     position: 'absolute',
     top: 0,
-    left: 0,
+    right: 0,
+    width: '464px',
+    height: '548px',
     zIndex: 12,
-    height: '100%'
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      height: '100%'
+    },
+
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+      height: '586px'
+    }
   },
+
   blockedInfo: {
-    ...typography.heading4,
-    color: colors.invariant.lightInfoText
+    ...newTypography.heading4,
+    color: colors.invariant.lightHover
   },
   buttons: {
     flexDirection: 'row',

@@ -4,9 +4,12 @@ import { colors, newTypography } from '@static/theme'
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     position: 'relative',
-    // height: 84,
     minWidth: 416,
-    marginBottom: 16
+    marginBottom: 16,
+
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 0
+    }
   },
   root: {
     width: '100%',
@@ -139,7 +142,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   blockedInfo: {
     ...newTypography.body2,
-    color: colors.invariant.light
+    color: colors.invariant.lightHover
   }
 }))
 

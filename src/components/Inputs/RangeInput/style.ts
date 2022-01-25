@@ -41,15 +41,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 10,
     backgroundColor: 'rgba(46,224,154,0.8)',
     padding: 0,
+    zIndex: 1,
 
     '&:hover': {
-      backgroundColor: colors.invariant.green
+      backgroundColor: colors.invariant.green,
+      boxShadow: `0 0 10px ${colors.invariant.green}`
     },
 
     [theme.breakpoints.down('sm')]: {
-      minWidth: 36,
-      width: 36,
-      height: 36
+      minWidth: 40,
+      width: 40,
+      height: 40
     }
   },
   buttonIcon: {
