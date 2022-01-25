@@ -78,7 +78,7 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
     transition: 'background 300ms',
     marginLeft: 8,
     '&:hover': {
-      background: colors.invariant.componentOut2
+      background: 'transparent'
     },
     '&:hover $menu': {
       filter: 'brightness(2)'
