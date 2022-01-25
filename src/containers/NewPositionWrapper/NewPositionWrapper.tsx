@@ -168,7 +168,7 @@ export const NewPositionWrapper = () => {
       feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, PRICE_DECIMAL - 2))}
       data={data}
       midPrice={midPrice}
-      addLiquidityHandler={(leftTickIndex, rightTickIndex) => {
+      addLiquidityHandler={(leftTickIndex, rightTickIndex, xAmount, yAmount) => {
         if (poolIndex === null) {
           return
         }
@@ -185,7 +185,9 @@ export const NewPositionWrapper = () => {
             poolIndex,
             lowerTick,
             upperTick,
-            liquidityDelta: liquidity
+            liquidityDelta: liquidity,
+            xAmount,
+            yAmount
           })
         )
       }}

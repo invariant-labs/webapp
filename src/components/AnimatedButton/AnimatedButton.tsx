@@ -2,6 +2,7 @@ import React from 'react'
 import { Button } from '@material-ui/core'
 import successGif from '@static/gif/successAnimation.gif'
 import errorGif from '@static/gif/errorAnimation.gif'
+import loadingAnimation from '@static/gif/loading.gif'
 import classNames from 'classnames'
 import useStyles from './style'
 
@@ -79,7 +80,13 @@ const AnimatedButton: React.FC<Props> = ({
         )}
         onClick={onClick}>
         <div className={getClasses()}></div>
-        {getMessage()}
+        {progress === 'progress' ||
+        progress === 'approvedWithSuccess' ||
+        progress === 'approvedWithFail' ? (
+          <img src={loadingAnimation} style={{ height: '100%', width: 40, zIndex: 10 }}></img>
+        ) : (
+          getMessage()
+        )}
       </Button>
     </div>
   )

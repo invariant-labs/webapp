@@ -1,6 +1,17 @@
-import { calculatePriceSqrt, DENOMINATOR, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
-import { PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
-import { parseLiquidityOnTicks } from '@invariant-labs/sdk/src/utils'
+import {
+  calculatePriceSqrt,
+  DENOMINATOR,
+  MAX_TICK,
+  MIN_TICK,
+  Pair,
+  TICK_LIMIT
+} from '@invariant-labs/sdk'
+import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
+import {
+  parseLiquidityOnTicks,
+  SimulateSwapInterface,
+  simulateSwap
+} from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
@@ -8,14 +19,18 @@ import {
   ANA_DEV,
   MSOL_DEV,
   NetworkType,
+  PAIRS,
   PRICE_DECIMAL,
   SOL_DEV,
   Token,
   USDC_DEV,
-  USDT_DEV
+  USDT_DEV,
+  WSOL_DEV
 } from './static'
 import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
+import { getMarketProgramSync } from '@web3/programs/amm'
+import { Error } from '@material-ui/icons'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -205,7 +220,7 @@ export const spacingMultiplicityLte = (arg: number, spacing: number): number => 
     return arg
   }
 
-  return arg >= 0 ? arg - (arg % spacing) : arg - (spacing - (-arg % spacing))
+  return arg >= 0 ? arg - (arg % spacing) : arg + (arg % spacing)
 }
 
 export const spacingMultiplicityGte = (arg: number, spacing: number): number => {
@@ -213,7 +228,7 @@ export const spacingMultiplicityGte = (arg: number, spacing: number): number => 
     return arg
   }
 
-  return arg >= 0 ? arg + (arg % spacing) : arg + (spacing - (-arg % spacing))
+  return arg >= 0 ? arg + (arg % spacing) : arg - (arg % spacing)
 }
 
 export const createLiquidityPlot = (
@@ -233,8 +248,8 @@ export const createLiquidityPlot = (
 
   const ticksData: PlotTickData[] = []
 
-  const min = spacingMultiplicityGte(MIN_TICK, pool.tickSpacing)
-  const max = spacingMultiplicityLte(MAX_TICK, pool.tickSpacing)
+  const min = minSpacingMultiplicity(pool.tickSpacing)
+  const max = maxSpacingMultiplicity(pool.tickSpacing)
 
   if (!ticks.length || ticks[0].index !== min) {
     const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
@@ -315,8 +330,8 @@ export const createPlaceholderLiquidityPlot = (
 ) => {
   const ticksData: PlotTickData[] = []
 
-  const min = spacingMultiplicityGte(MIN_TICK, tickSpacing)
-  const max = spacingMultiplicityLte(MAX_TICK, tickSpacing)
+  const min = minSpacingMultiplicity(tickSpacing)
+  const max = maxSpacingMultiplicity(tickSpacing)
 
   const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
 
@@ -356,7 +371,8 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
         [USDT_DEV.address.toString()]: USDT_DEV,
         [SOL_DEV.address.toString()]: SOL_DEV,
         [ANA_DEV.address.toString()]: ANA_DEV,
-        [MSOL_DEV.address.toString()]: MSOL_DEV
+        [MSOL_DEV.address.toString()]: MSOL_DEV,
+        [WSOL_DEV.address.toString()]: WSOL_DEV
       }
     default:
       return {}
@@ -381,8 +397,8 @@ export const nearestSpacingMultiplicity = (arg: number, spacing: number) => {
   const nearest = Math.abs(greater - arg) < Math.abs(lower - arg) ? greater : lower
 
   return Math.max(
-    Math.min(nearest, spacingMultiplicityLte(MAX_TICK, spacing)),
-    spacingMultiplicityGte(MIN_TICK, spacing)
+    Math.min(nearest, maxSpacingMultiplicity(spacing)),
+    minSpacingMultiplicity(spacing)
   )
 }
 
@@ -476,4 +492,104 @@ export const getY = (
   }
 
   return liquidity.mul(difference).div(DENOMINATOR)
+}
+
+export const handleSimulate = async (
+  pools: PoolStructure[],
+  poolTicks: { [key in string]: Tick[] },
+  networkType: NetworkType,
+  slippage: Decimal,
+  fromToken: PublicKey,
+  toToken: PublicKey,
+  amount: BN,
+  currentPrice: BN
+): Promise<{
+  amountOut: BN
+  simulateSuccess: boolean
+  poolIndex: number
+}> => {
+  try {
+    const marketProgram = getMarketProgramSync()
+
+    let simulateSuccess: boolean = false
+    let poolIndex: number = 0
+    let i: number = 0
+    const poolIndexes: number[] = []
+    const swapPool = PAIRS[networkType].filter(
+      pool =>
+        (fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)) ||
+        (fromToken.equals(pool.tokenY) && toToken.equals(pool.tokenX))
+    )
+    // trunk-ignore(eslint/array-callback-return)
+    PAIRS[networkType].map((pair, index) => {
+      if (
+        (fromToken.equals(pair.tokenX) && toToken.equals(pair.tokenY)) ||
+        (fromToken.equals(pair.tokenY) && toToken.equals(pair.tokenX))
+      ) {
+        poolIndexes.push(index)
+      }
+    })
+    if (!swapPool) {
+      return { amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 }
+    }
+
+    let swapSimulateRouterAmount: BN = new BN(0)
+    for (const pool of swapPool) {
+      const isXtoY = fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)
+      const tickMap = await marketProgram.getTickmap(
+        new Pair(pool.tokenX, pool.tokenY, pool.feeTier)
+      )
+
+      const ticks: Map<number, Tick> = new Map<number, Tick>()
+      if (ticks.size === 0) {
+        for (const tick of poolTicks[i]) {
+          ticks.set(tick.index, tick)
+        }
+      }
+      if (amount.gt(new BN(0))) {
+        const simulateObject: SimulateSwapInterface = {
+          pair: new Pair(pool.tokenX, pool.tokenY, pool.feeTier),
+          xToY: isXtoY,
+          byAmountIn: true,
+          swapAmount: amount,
+          currentPrice: { v: currentPrice },
+          slippage: slippage,
+          pool: pools[poolIndexes[i]],
+          ticks: ticks,
+          tickmap: tickMap,
+          market: marketProgram
+        }
+        try {
+          const swapSimulateResault = simulateSwap(simulateObject)
+          if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
+            swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
+            poolIndex = poolIndexes[i]
+          }
+        } catch (error) {
+          i++
+          continue
+        }
+        simulateSuccess = true
+      } else {
+        swapSimulateRouterAmount = new BN(0)
+      }
+      i++
+    }
+    return {
+      amountOut: swapSimulateRouterAmount,
+      simulateSuccess: simulateSuccess,
+      poolIndex: poolIndex
+    }
+  } catch (error) {
+    console.log(error)
+    return { amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 }
+  }
+}
+
+export const minSpacingMultiplicity = (spacing: number) => {
+  return Math.max(spacingMultiplicityGte(MIN_TICK, spacing), -(TICK_LIMIT - 2) * spacing)
+}
+
+export const maxSpacingMultiplicity = (spacing: number) => {
+  return Math.min(spacingMultiplicityLte(MAX_TICK, spacing), (TICK_LIMIT - 2) * spacing)
 }
