@@ -3,20 +3,20 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
-    background: colors.invariant.componentOut4,
+    background: colors.invariant.component,
     width: 170,
     borderRadius: 10,
     marginTop: 8,
     padding: 15
   },
   list: {
-    background: colors.invariant.componentIn1,
     borderRadius: 5,
     marginTop: 7,
     padding: 8
   },
   listItem: {
     color: colors.invariant.lightInfoText,
+    background: colors.invariant.component,
     borderRadius: 5,
     padding: '3px 7px',
     width: '100%',
@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     '&:hover': {
-      background: `${colors.invariant.light}60`,
+      background: colors.invariant.light,
       color: colors.white.main
     },
     '&:first-child': {
@@ -61,7 +61,7 @@ const useStyles = makeStyles(() => ({
     opacity: 1
   },
   active: {
-    background: colors.invariant.componentOut2,
+    background: colors.invariant.light,
     color: colors.white.main,
     '& $icon': {
       opacity: 1

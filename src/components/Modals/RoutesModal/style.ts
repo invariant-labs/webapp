@@ -3,7 +3,7 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
-    background: colors.invariant.componentOut4,
+    background: colors.invariant.component,
     width: 160,
     borderRadius: 10,
     marginTop: 24,
@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
       marginBottom: 8
     },
     '&:hover': {
-      background: colors.invariant.componentOut2,
+      background: 'transparent',
       '& $name': {
         color: colors.white.main,
         ...typography.heading4
