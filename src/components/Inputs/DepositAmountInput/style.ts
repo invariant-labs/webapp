@@ -4,7 +4,7 @@ import { colors, newTypography } from '@static/theme'
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     position: 'relative',
-    height: 84,
+    // height: 84,
     minWidth: 416,
     marginBottom: 16
   },
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...newTypography.heading2,
     display: 'grid',
     gridTemplateAreas: `
-    "select amount"
+    "select select"
     "balance percentages"
     `,
 
@@ -32,6 +32,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingTop: 12
       }
     }
+  },
+  inputContainer: {
+    gridColumn: '1/-1',
+    display: 'flex'
   },
   currency: {
     height: 36,

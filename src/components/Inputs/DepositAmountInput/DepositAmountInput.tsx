@@ -80,22 +80,33 @@ export const DepositAmountInput: React.FC<IProps> = ({
   return (
     <Grid container className={classes.wrapper} style={style}>
       <div className={classes.root}>
-        <Grid
-          className={classes.currency}
-          container
-          justifyContent='center'
-          alignItems='center'
-          wrap='nowrap'>
-          {currency !== null ? (
-            <>
-              <img alt='' src={currencyIconSrc} className={classes.currencyIcon} />
-              <Typography className={classes.currencySymbol}>{currency}</Typography>
-            </>
-          ) : (
-            <Typography className={classes.noCurrencyText}>Select</Typography>
-          )}
-        </Grid>
-
+        <div className={classes.inputContainer}>
+          <Grid
+            className={classes.currency}
+            container
+            justifyContent='center'
+            alignItems='center'
+            wrap='nowrap'>
+            {currency !== null ? (
+              <>
+                <img alt='' src={currencyIconSrc} className={classes.currencyIcon} />
+                <Typography className={classes.currencySymbol}>{currency}</Typography>
+              </>
+            ) : (
+              <Typography className={classes.noCurrencyText}>Select</Typography>
+            )}
+          </Grid>
+          <Input
+            inputRef={inputRef}
+            // className={classes.root}
+            type={'text'}
+            value={value}
+            disableUnderline={true}
+            placeholder={placeholder}
+            onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
+            onBlur={onBlur}
+          />
+        </div>
         <Grid className={classes.balance} container alignItems='center' wrap='nowrap'>
           {
             <>
@@ -133,17 +144,6 @@ export const DepositAmountInput: React.FC<IProps> = ({
             </>
           }
         </Grid>
-
-        <Input
-          inputRef={inputRef}
-          // className={classes.root}
-          type={'text'}
-          value={value}
-          disableUnderline={true}
-          placeholder={placeholder}
-          onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-          onBlur={onBlur}
-        />
       </div>
       {/*
       <Input
