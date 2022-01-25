@@ -21,7 +21,8 @@ export const colors = {
     neon: '#08F7FE',
     astel: '#48ADF1',
     bastille: '#1E1A23',
-    charade: '#272735' // v2.0 component
+    charade: '#272735',// v2.0 component
+    deep: '4B5983'
   },
   green: {
     main: '#00F9BB',
@@ -82,6 +83,7 @@ export const colors = {
     pink: '#EF84F5',
     green: '#2EE09A',
     dark: '#040B22',
+    newDark: '#111931',
     component: '#202946',
     light: '#3A466B',
     black: '#010514',

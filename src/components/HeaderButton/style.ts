@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   headerButtonConnect: {
     background: 'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
-    color: colors.white.main,
+    color: colors.invariant.newDark,
     paddingInline: 12,
     borderRadius: 10,
     textTransform: 'none',

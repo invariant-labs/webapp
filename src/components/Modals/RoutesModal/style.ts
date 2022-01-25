@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
       marginBottom: 8
     },
     '&:hover': {
-      background: 'transparent',
+      background: colors.invariant.light,
       '& $name': {
         color: colors.white.main,
         ...typography.heading4
