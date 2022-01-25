@@ -1,4 +1,4 @@
-import { call, takeLatest, put, select } from 'typed-redux-saga'
+import { call, takeLatest, put, select, all, spawn } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
 import { actions, PoolWithAddress } from '@reducers/pools'
@@ -6,6 +6,8 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { PAIRS } from '@consts/static'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { network } from '@selectors/solanaConnection'
+import { PublicKey } from '@solana/web3.js'
+import { PoolStructure } from '@invariant-labs/sdk/lib/market'
 
 export interface iTick {
   index: Tick[]
@@ -44,6 +46,38 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
   }
 }
 
+const fetchPool = async (address: PublicKey) => {
+  const marketProgram = await getMarketProgram()
+
+  return (await marketProgram.program.account.pool.fetch(address)) as PoolStructure
+}
+
+export function* fetchSinglePoolData(action: PayloadAction<PublicKey>) {
+  try {
+    const poolData: PoolStructure = yield* call(fetchPool, action.payload)
+
+    yield* put(actions.addPool({
+      ...poolData,
+      address: action.payload
+    }))
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export function* getSinglePoolDataHandler(): Generator {
+  yield* takeLatest(actions.getSinglePoolData, fetchSinglePoolData)
+}
+
 export function* getPoolsDataHandler(): Generator {
   yield* takeLatest(actions.getPoolsData, fetchPoolsData)
+}
+
+export function* poolsSaga(): Generator {
+  yield all(
+    [
+      getPoolsDataHandler,
+      getSinglePoolDataHandler
+    ].map(spawn)
+  )
 }

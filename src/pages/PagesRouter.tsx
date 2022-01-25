@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { SwapPage } from './SwapPage/SwapPage'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,6 +21,7 @@ export const PagesRouter: React.FC = () => {
   const signerStatus = useSelector(solanaConnectionSelector.status)
   const walletStatus = useSelector(status)
   const allPools = useSelector(pools)
+  const [getPositionsCalled, setGetPositionsCalled] = useState(false)
 
   useEffect(() => {
     // dispatch(providerActions.initProvider())
@@ -28,8 +29,9 @@ export const PagesRouter: React.FC = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (signerStatus === Status.Initialized && walletStatus === WalletStatus.Initialized && allPools.length > 0) {
+    if (signerStatus === Status.Initialized && walletStatus === WalletStatus.Initialized && allPools.length > 0 && !getPositionsCalled) {
       dispatch(actions.getPositionsList())
+      setGetPositionsCalled(true)
     }
   }, [signerStatus, walletStatus, allPools.length])
 

@@ -1,5 +1,6 @@
 import { call, put, takeEvery, select, all, spawn, takeLatest } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
+import { actions as poolsActions } from '@reducers/pools'
 import { createAccount, getWallet, sleep } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
 import { getConnection } from './connection'
@@ -336,10 +337,17 @@ export function* handleGetPositionsList() {
       head - 1
     )
 
-    yield put(actions.setPositionsList(list))
+    const pools = (new Set(list.map((pos) => pos.pool)))
+
+    for (const address of pools) {
+      yield* put(poolsActions.getSinglePoolData(address))
+    }
+
+    yield* call(sleep, 30000)
+    yield* put(actions.setPositionsList(list))
   } catch (error) {
     console.log(error)
-    yield put(actions.setPositionsList([]))
+    yield* put(actions.setPositionsList([]))
   }
 }
 
@@ -825,7 +833,7 @@ export function* getCurrentPlotTicksHandler(): Generator {
   yield* takeLatest(actions.getCurrentPlotTicks, handleGetCurrentPlotTicks)
 }
 export function* getPositionsListHandler(): Generator {
-  yield* takeEvery(actions.getPositionsList, handleGetPositionsList)
+  yield* takeLatest(actions.getPositionsList, handleGetPositionsList)
 }
 export function* claimFeeHandler(): Generator {
   yield* takeEvery(actions.claimFee, handleClaimFee)

@@ -1,10 +1,10 @@
 import { all, spawn } from 'redux-saga/effects'
 import { connectionSaga } from './connection'
-import { getPoolsDataHandler } from './pool'
+import { poolsSaga } from './pool'
 import { swapSaga } from './swap'
 import { walletSaga } from './wallet'
 import { positionsSaga } from '@sagas/positions'
 export function* rootSaga(): Generator {
-  yield all([connectionSaga, walletSaga, swapSaga, positionsSaga, getPoolsDataHandler].map(spawn))
+  yield all([connectionSaga, walletSaga, swapSaga, positionsSaga, poolsSaga].map(spawn))
 }
 export default rootSaga

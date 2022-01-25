@@ -68,13 +68,17 @@ const poolsSlice = createSlice({
       }
       return state
     },
+    addPool(state, action: PayloadAction<PoolWithAddress>) {
+      state.pools.push(action.payload)
+      return state
+    },
     updateTicks(state, action: PayloadAction<UpdateTicks>) {
       state.poolTicks[action.payload.poolIndex][
         state.poolTicks[action.payload.poolIndex].findIndex(e => e.index === action.payload.index)
       ] = action.payload.tick
     },
-
-    getPoolsData(_state, _action: PayloadAction<Pair[]>) {}
+    getPoolsData(_state, _action: PayloadAction<Pair[]>) {},
+    getSinglePoolData(_state, _action: PayloadAction<PublicKey>) {}
   }
 })
 
