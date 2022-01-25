@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     '& g > text': {
       stroke: 'none',
-      fill: '#746E7C!important',
+      fill: '#A9B6BF!important',
       fontFamily: 'Mukta!important',
 
       [theme.breakpoints.down('sm')]: {

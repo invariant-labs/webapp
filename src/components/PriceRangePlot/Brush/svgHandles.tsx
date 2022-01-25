@@ -1,3 +1,4 @@
+import { colors } from '@static/theme'
 import React from 'react'
 
 export interface ISVGHandle {
@@ -25,8 +26,8 @@ export const LeftHandle: React.FC<Pick<ISVGHandle, 'height' | 'fill'>> = ({ heig
   <>
     <path d={`M36 ${height}V0`} stroke={fill} strokeWidth="2"/>
     <path d="M0 4C0 1.79086 1.79086 0 4 0H37V20H4C1.79086 20 0 18.2091 0 16V4Z" fill={fill} />
-    <path d="M5 5V15" stroke="white" strokeOpacity="0.5"/>
-    <path d="M8 5V15" stroke="white" strokeOpacity="0.5"/>
+    <path d="M5 5V15" stroke={colors.invariant.dark} strokeOpacity="0.5"/>
+    <path d="M8 5V15" stroke={colors.invariant.dark} strokeOpacity="0.5"/>
   </>
 )
 
@@ -34,8 +35,8 @@ export const RightHandle: React.FC<Pick<ISVGHandle, 'height' | 'fill'>> = ({ hei
   <>
     <path d={`M1 ${height}V0`} stroke={fill} strokeWidth="2"/>
     <path d="M37 4C37 1.79086 35.2091 0 33 0H0V20H33C35.2091 20 37 18.2091 37 16V4Z" fill={fill}/>
-    <path d="M29 5V15" stroke="white" strokeOpacity="0.5"/>
-    <path d="M32 5V15" stroke="white" strokeOpacity="0.5"/>
+    <path d="M29 5V15" stroke={colors.invariant.dark} strokeOpacity="0.5"/>
+    <path d="M32 5V15" stroke={colors.invariant.dark} strokeOpacity="0.5"/>
   </>
 )
 
