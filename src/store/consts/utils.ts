@@ -1,6 +1,5 @@
 import {
   calculatePriceSqrt,
-  DENOMINATOR,
   MAX_TICK,
   MIN_TICK,
   Pair,
@@ -30,7 +29,6 @@ import {
 import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
 import { getMarketProgramSync } from '@web3/programs/amm'
-import { Error } from '@material-ui/icons'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -435,63 +433,6 @@ export const calcPrice = (index: number, isXtoY: boolean, xDecimal: number, yDec
   const price = calcYPerXPrice(calculatePriceSqrt(index).v, xDecimal, yDecimal)
 
   return isXtoY ? price : price !== 0 ? 1 / price : Number.MAX_SAFE_INTEGER
-}
-
-// TODO: temporarily copied, remove later
-export const getX = (
-  liquidity: BN,
-  upperSqrtPrice: BN,
-  currentSqrtPrice: BN,
-  lowerSqrtPrice: BN
-): BN => {
-  if (
-    upperSqrtPrice.lte(new BN(0)) ||
-    currentSqrtPrice.lte(new BN(0)) ||
-    lowerSqrtPrice.lte(new BN(0))
-  ) {
-    throw new Error('Price cannot be lower or equal 0')
-  }
-
-  let denominator: BN
-  let nominator: BN
-
-  if (currentSqrtPrice.gte(upperSqrtPrice)) {
-    return new BN(0)
-  } else if (currentSqrtPrice.lt(lowerSqrtPrice)) {
-    denominator = lowerSqrtPrice.mul(upperSqrtPrice).div(DENOMINATOR)
-    nominator = upperSqrtPrice.sub(lowerSqrtPrice)
-  } else {
-    denominator = upperSqrtPrice.mul(currentSqrtPrice).div(DENOMINATOR)
-    nominator = upperSqrtPrice.sub(currentSqrtPrice)
-  }
-
-  return liquidity.mul(nominator).div(denominator)
-}
-
-export const getY = (
-  liquidity: BN,
-  upperSqrtPrice: BN,
-  currentSqrtPrice: BN,
-  lowerSqrtPrice: BN
-): BN => {
-  if (
-    lowerSqrtPrice.lte(new BN(0)) ||
-    currentSqrtPrice.lte(new BN(0)) ||
-    upperSqrtPrice.lte(new BN(0))
-  ) {
-    throw new Error('Price cannot be 0')
-  }
-
-  let difference: BN
-  if (currentSqrtPrice.lt(lowerSqrtPrice)) {
-    return new BN(0)
-  } else if (currentSqrtPrice.gte(upperSqrtPrice)) {
-    difference = upperSqrtPrice.sub(lowerSqrtPrice)
-  } else {
-    difference = currentSqrtPrice.sub(lowerSqrtPrice)
-  }
-
-  return liquidity.mul(difference).div(DENOMINATOR)
 }
 
 export const handleSimulate = async (

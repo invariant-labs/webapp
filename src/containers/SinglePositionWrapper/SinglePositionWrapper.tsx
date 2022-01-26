@@ -14,14 +14,13 @@ import {
   calcPrice,
   calcYPerXPrice,
   createPlaceholderLiquidityPlot,
-  getX,
-  getY,
   printBN
 } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculatePriceSqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
 import useStyles from './style'
+import { getX, getY } from '@invariant-labs/sdk/lib/math'
 
 export interface IProps {
   id: string
@@ -191,8 +190,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       })
 
       return [
-        +printBN(bnX.div(DENOMINATOR).div(DENOMINATOR), position.tokenX.decimals),
-        +printBN(bnY.div(DENOMINATOR).div(DENOMINATOR), position.tokenY.decimals)
+        +printBN(bnX, position.tokenX.decimals),
+        +printBN(bnY, position.tokenY.decimals)
       ]
     }
 
