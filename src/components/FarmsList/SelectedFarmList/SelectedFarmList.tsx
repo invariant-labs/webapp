@@ -70,7 +70,6 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
               currencyPrice={element.currencyPrice}
               apy={element.apy}
               liquidity={element.liquidity}
-              handleFarm={element.handleFarm}
             />
           </div>
         ))}

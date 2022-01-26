@@ -3,7 +3,6 @@ import { storiesOf } from '@storybook/react'
 import { Grid } from '@material-ui/core'
 import { MemoryRouter } from 'react-router'
 import SelectedFarmList from './SelectedFarmList'
-import icons from '@static/icons'
 
 storiesOf('farmsList/selectedFarm', module)
   .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
@@ -38,8 +37,7 @@ storiesOf('farmsList/selectedFarm', module)
               rewardsToken: 'SNY',
               currencyPrice: 2,
               apy: 1,
-              liquidity: 457,
-              handleFarm: () => {}
+              liquidity: 457
             },
             {
               value: 2345.34,
@@ -48,8 +46,7 @@ storiesOf('farmsList/selectedFarm', module)
               rewardsToken: 'SNY',
               currencyPrice: 2,
               apy: 1,
-              liquidity: 457,
-              handleFarm: () => {}
+              liquidity: 457
             },
             {
               value: 2345.34,
@@ -58,8 +55,7 @@ storiesOf('farmsList/selectedFarm', module)
               rewardsToken: 'SNY',
               currencyPrice: 2,
               apy: 1,
-              liquidity: 457,
-              handleFarm: () => {}
+              liquidity: 457
             }
           ]}
         />

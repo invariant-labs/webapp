@@ -12,7 +12,6 @@ export interface ISelectedFarm {
   rewardsToken: string
   apy: number
   liquidity: number
-  handleFarm: (action: string) => void
 }
 
 export const SelectedFarm: React.FC<ISelectedFarm> = ({
@@ -22,11 +21,13 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
   rewardsToken,
   currencyPrice,
   apy,
-  liquidity,
-  handleFarm
+  liquidity
 }) => {
   const classes = useStyle()
   const [activeValue, SetActiveValue] = useState('stake')
+  const handleFarm = (type: string): void => {
+    console.log(type)
+  }
   const handleButtonStake = (value: string) => {
     SetActiveValue(value)
   }
