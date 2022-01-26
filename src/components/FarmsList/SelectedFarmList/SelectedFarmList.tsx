@@ -22,9 +22,6 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   rewardsTokenSymbol
 }) => {
   const classes = useStyle()
-  const handleFarm = (type: string): void => {
-    console.log(type)
-  }
   return (
     <Grid className={classes.root}>
       <Grid
@@ -73,7 +70,6 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
               currencyPrice={element.currencyPrice}
               apy={element.apy}
               liquidity={element.liquidity}
-              handleFarm={handleFarm}
             />
           </div>
         ))}

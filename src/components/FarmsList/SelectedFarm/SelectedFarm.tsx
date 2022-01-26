@@ -12,7 +12,6 @@ export interface ISelectedFarm {
   rewardsToken: string
   apy: number
   liquidity: number
-  handleFarm?: (type: string) => void
 }
 
 export const SelectedFarm: React.FC<ISelectedFarm> = ({
@@ -22,11 +21,13 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
   rewardsToken,
   currencyPrice,
   apy,
-  liquidity,
-  handleFarm
+  liquidity
 }) => {
   const classes = useStyle()
   const [activeValue, SetActiveValue] = useState('stake')
+  const handleFarm = (type: string): void => {
+    console.log(type)
+  }
   const handleButtonStake = (value: string) => {
     SetActiveValue(value)
   }
@@ -134,14 +135,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
               </Typography>
             </Box>
           </Grid>
-          <Button
-            className={classes.buttonStake}
-            type='button'
-            onClick={() => {
-              if (handleFarm !== undefined) {
-                handleFarm('stake')
-              }
-            }}>
+          <Button className={classes.buttonStake} type='button' onClick={() => handleFarm('stake')}>
             Stake
           </Button>
         </>
@@ -160,13 +154,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                 />
               </Typography>
             </Grid>
-            <Button
-              className={classes.claimRewards}
-              onClick={() => {
-                if (handleFarm !== undefined) {
-                  handleFarm('claimRewards')
-                }
-              }}>
+            <Button className={classes.claimRewards} onClick={() => handleFarm('claimRewards')}>
               Claim Rewards
             </Button>
           </Grid>
@@ -186,11 +174,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
           <Button
             className={classes.buttonUnstake}
             type='button'
-            onClick={() => {
-              if (handleFarm !== undefined) {
-                handleFarm('unstake')
-              }
-            }}>
+            onClick={() => handleFarm('unstake')}>
             Unstake
           </Button>
         </>

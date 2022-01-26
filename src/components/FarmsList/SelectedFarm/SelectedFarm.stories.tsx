@@ -2,9 +2,6 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { SelectedFarm } from './SelectedFarm'
 storiesOf('farmsList/selectedFarm', module).add('tile', () => {
-  const handleFarm = (type: string): void => {
-    console.log(type)
-  }
   return (
     <div style={{ width: 500, height: 500 }}>
       <SelectedFarm
@@ -15,7 +12,7 @@ storiesOf('farmsList/selectedFarm', module).add('tile', () => {
         currencyPrice={2}
         apy={1}
         liquidity={457}
-        handleFarm={handleFarm}
+        handleFarm={() => {}}
       />
     </div>
   )
