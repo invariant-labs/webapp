@@ -11,6 +11,7 @@ const useStyles = makeStyles(() => ({
   },
   listItem: {
     paddingTop: 2,
+    color: colors.invariant.lightGrey,
     borderRadius: 11,
     textAlign: 'center',
     width: '100%',
