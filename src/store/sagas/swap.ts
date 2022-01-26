@@ -62,6 +62,33 @@ export function* handleSwapWithSOL(): Generator {
       wallet.publicKey
     )
 
+    const initialTx =
+      allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+        ? new Transaction().add(createIx).add(transferIx).add(initIx)
+        : new Transaction().add(createIx).add(initIx)
+    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    initialTx.recentBlockhash = initialBlockhash.blockhash
+    initialTx.feePayer = wallet.publicKey
+
+    const initialSignedTx = yield* call([wallet, wallet.signTransaction], initialTx)
+    initialSignedTx.partialSign(wrappedSolAccount)
+    const initialTxid = yield* call(sendAndConfirmRawTransaction, connection, initialSignedTx.serialize(), {
+      skipPreflight: false
+    })
+
+    if (!initialTxid.length) {
+      yield put(swapActions.setSwapSuccess(false))
+
+      return yield put(
+        snackbarsActions.add({
+          message: 'SOL wrapping failed. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: initialTxid
+        })
+      )
+    }
+
     const unwrapIx = Token.createCloseAccountInstruction(
       TOKEN_PROGRAM_ID,
       wrappedSolAccount.publicKey,
@@ -99,29 +126,47 @@ export function* handleSwapWithSOL(): Generator {
       byAmountIn: true,
       owner: wallet.publicKey
     })
-    const tx =
-      allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
-        ? new Transaction().add(createIx).add(transferIx).add(initIx).add(swapTx).add(unwrapIx)
-        : new Transaction().add(createIx).add(initIx).add(swapTx).add(unwrapIx)
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
-    tx.recentBlockhash = blockhash.blockhash
-    tx.feePayer = wallet.publicKey
+    const swapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    swapTx.recentBlockhash = swapBlockhash.blockhash
+    swapTx.feePayer = wallet.publicKey
 
-    const signedTx = yield* call([wallet, wallet.signTransaction], tx)
-    signedTx.partialSign(wrappedSolAccount)
-    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+    const swapSignedTx = yield* call([wallet, wallet.signTransaction], swapTx)
+    const swapTxid = yield* call(sendAndConfirmRawTransaction, connection, swapSignedTx.serialize(), {
       skipPreflight: false
     })
 
-    yield put(swapActions.setSwapSuccess(!!txid.length))
+    if (!swapTxid.length) {
+      yield put(swapActions.setSwapSuccess(false))
 
-    if (!txid.length) {
-      yield put(
+      return yield put(
         snackbarsActions.add({
-          message: 'Tokens swapping failed. Please try again.',
+          message: 'Tokens swapping failed. Please unwrap wrapped SOL in your wallet and try again.',
           variant: 'error',
           persist: false,
-          txid
+          txid: swapTxid
+        })
+      )
+    }
+
+    const unwrapTx = new Transaction().add(unwrapIx)
+    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
+    unwrapTx.feePayer = wallet.publicKey
+
+    const unwrapSignedTx = yield* call([wallet, wallet.signTransaction], unwrapTx)
+    const unwrapTxid = yield* call(sendAndConfirmRawTransaction, connection, unwrapSignedTx.serialize(), {
+      skipPreflight: false
+    })
+
+    yield put(swapActions.setSwapSuccess(true))
+
+    if (!unwrapTxid.length) {
+      yield put(
+        snackbarsActions.add({
+          message: 'Tokens swapped successfully, but wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
+          variant: 'error',
+          persist: false,
+          txid: unwrapTxid
         })
       )
     } else {
@@ -130,7 +175,7 @@ export function* handleSwapWithSOL(): Generator {
           message: 'Tokens swapped successfully.',
           variant: 'success',
           persist: false,
-          txid
+          txid: swapTxid
         })
       )
     }
@@ -141,7 +186,7 @@ export function* handleSwapWithSOL(): Generator {
 
     yield put(
       snackbarsActions.add({
-        message: 'Failed to send. Please try again.',
+        message: 'Failed to send. Please unwrap wrapped SOL in your wallet if you have any and try again.',
         variant: 'error',
         persist: false
       })
