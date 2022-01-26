@@ -24,9 +24,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     `,
 
     '& $input': {
-      color: colors.invariant.light,
+      color: colors.white.main,
       textAlign: 'end',
       ...newTypography.heading2
+    },
+
+    '& $input::placeholder': {
+      color: colors.invariant.light
     },
 
     [theme.breakpoints.down('sm')]: {
