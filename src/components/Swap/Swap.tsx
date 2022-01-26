@@ -20,6 +20,7 @@ import useStyles from './style'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PoolWithAddress } from '@reducers/pools'
 import { findPairs } from '@consts/utils'
+import SwapPage from 'src/pages/SwapPage/SwapPage'
 export interface SwapToken {
   balance: BN
   decimals: number
@@ -191,6 +192,7 @@ export const Swap: React.FC<ISwap> = ({
   }, [tokenToIndex, tokenFromIndex, pools.length])
 
   const getKnownPrice = (assetIn: SwapToken, assetFor: SwapToken) => {
+    let swapRate: number = 0
     let knownPrice: BN = new BN(0)
     let amountOut: number = 0
     const decimalDiff: number = PRICE_DECIMAL + (assetIn.decimals - assetFor.decimals)
@@ -203,9 +205,10 @@ export const Swap: React.FC<ISwap> = ({
       } else {
         knownPrice = new BN(sqrtPricePow * 10 ** decimalDiff)
       }
-
+      swapRate = +printBN(simulateResult.amountOut, assetFor.decimals) / Number(amountFrom)
       amountOut = Number(printBN(simulateResult.amountOut, assetFor.decimals))
-      setSwapRate(Number(printBN(knownPrice, PRICE_DECIMAL)))
+      console.log('amount from: ', +printBN(simulateResult.amountOut, assetIn.decimals))
+      setSwapRate(swapRate)
     }
     return {
       amountOut: amountOut.toFixed(assetFor.decimals),
@@ -464,7 +467,7 @@ export const Swap: React.FC<ISwap> = ({
             <TransactionDetails
               open={detailsOpen}
               fee={{
-                v: pools[swapData.poolIndex].fee.v
+                v: pools[simulateResult.poolIndex].fee.v
               }}
               exchangeRate={{
                 val: swapRate.toFixed(tokens[tokenToIndex].decimals),

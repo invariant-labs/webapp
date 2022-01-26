@@ -556,15 +556,14 @@ export const handleSimulate = async (
       })
       if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
         poolIndex = findPoolIndex(pool.address, pools)
-        console.log(poolIndex)
+        console.log('index pool:', poolIndex)
         swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
       }
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) {}
   }
   if (swapSimulateRouterAmount.eq(new BN(0))) {
     return { amountOut: swapSimulateRouterAmount, poolIndex: poolIndex, simulateSuccess: false }
   }
+  console.log('pool index final: ', poolIndex)
   return { amountOut: swapSimulateRouterAmount, poolIndex: poolIndex, simulateSuccess: true }
 }
