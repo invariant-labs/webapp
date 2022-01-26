@@ -41,7 +41,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
             label={showOnlyPercents ? `${tier}%` : `${tier}% fee`}
             classes={singleTabClasses}
             style={{
-              minWidth: `calc(${feeTiers.length === 0 ? 0 : 100 / feeTiers.length}%)`
+              minWidth: `calc(${feeTiers.length === 0 ? 0 : 100 / feeTiers.length}% - 7px)`
             }}
           />
         ))}

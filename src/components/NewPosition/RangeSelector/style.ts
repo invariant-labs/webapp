@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: 0,
     zIndex: 11,
     width: '464px',
-    height: '550px',
+    height: '541px',
     backgroundColor: 'rgba(11, 12, 13, 0.8)',
     filter: 'blur(1px) brightness(0.4)',
 
@@ -92,9 +92,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('md')]: {
-      top: 615,
+      top: 606,
       width: '100%',
-      height: '586px'
+      height: '590px'
     }
   },
 
@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: 0,
     right: 0,
     width: '464px',
-    height: '548px',
+    height: '541px',
     zIndex: 12,
 
     [theme.breakpoints.down('sm')]: {
@@ -112,9 +112,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('md')]: {
-      top: 615,
+      top: 606,
       width: '100%',
-      height: '586px'
+      height: '590px'
     }
   },
 

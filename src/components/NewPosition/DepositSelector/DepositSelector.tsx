@@ -32,9 +32,10 @@ export interface IDepositSelector {
   isCurrentPoolExisting: boolean
   className?: string
   progress: ProgressState
-  percentageChange?: number
-  usdValue?: number
-  balanceValue?: string
+  percentageChangeA?: number
+  usdValueA?: number
+  percentageChangeB?: number
+  usdValueB?: number
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -48,8 +49,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   isCurrentPoolExisting,
   className,
   progress,
-  percentageChange,
-  usdValue
+  percentageChangeA,
+  usdValueA,
+  percentageChangeB,
+  usdValueB
 }) => {
   const classes = useStyles()
 
@@ -185,8 +188,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
       <Grid container className={classes.sectionWrapper}>
         <DepositAmountInput
-          percentageChange={percentageChange}
-          usdValue={usdValue}
+          percentageChange={percentageChangeA}
+          usdValue={usdValueA}
           currency={tokenAIndex !== null ? tokens[tokenAIndex].symbol : null}
           currencyIconSrc={tokenAIndex !== null ? tokens[tokenAIndex].logoURI : undefined}
           placeholder='0.0'
@@ -219,8 +222,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         />
 
         <DepositAmountInput
-          percentageChange={percentageChange}
-          usdValue={usdValue}
+          percentageChange={percentageChangeB}
+          usdValue={usdValueB}
           currency={tokenBIndex !== null ? tokens[tokenBIndex].symbol : null}
           currencyIconSrc={tokenBIndex !== null ? tokens[tokenBIndex].logoURI : undefined}
           placeholder='0.0'

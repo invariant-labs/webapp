@@ -13,10 +13,10 @@ export const useStyles = makeStyles(() => ({
 export const useTabsStyles = makeStyles(() => ({
   root: {
     overflow: 'visible',
-    padding: 8,
     height: 36,
     minHeight: 36,
-    margin: '0px 7px'
+    margin: '4px 7px',
+    borderRadius: 10
   },
   indicator: {
     height: 36,
@@ -24,7 +24,7 @@ export const useTabsStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.light
   },
   scrollable: {
-    overflow: 'visible'
+    overflow: 'hidden'
   },
   flexContainer: {
     justifyContent: 'space-between'
@@ -40,12 +40,19 @@ export const useSingleTabStyles = makeStyles(() => ({
     minHeight: 36,
     color: colors.invariant.light,
     paddingInline: 0,
+    minWidth: 50,
+    width: 50,
+    marginRight: '7px',
 
     '&:hover': {
       color: colors.invariant.lightHover,
       backgroundColor: colors.invariant.light,
       height: 36,
       borderRadius: 10
+    },
+
+    '&:last-of-type': {
+      marginRight: 0
     }
   },
   selected: {
