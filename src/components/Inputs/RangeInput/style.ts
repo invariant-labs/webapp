@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   controls: {
-    marginTop: 5,
+    // marginTop: 5,
     backgroundColor: colors.invariant.componentBcg,
     borderRadius: 10
   },

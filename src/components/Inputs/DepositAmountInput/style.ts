@@ -85,7 +85,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   currencySymbol: {
     ...newTypography.body3,
     color: colors.white.main
-    // marginTop: 1
   },
   noCurrencyText: {
     ...newTypography.body3,
