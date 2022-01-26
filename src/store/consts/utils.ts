@@ -489,7 +489,19 @@ export const getY = (
   return liquidity.mul(difference).div(DENOMINATOR)
 }
 
-export const findPool = (tokenFrom: PublicKey, tokenTo: PublicKey, pairs: PoolWithAddress[]) => {
+export const findPoolIndex = (
+  fromToken: PublicKey,
+  toToken: PublicKey,
+  pools: PoolWithAddress[]
+) => {
+  return pools.findIndex(
+    pool =>
+      (fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)) ||
+      (fromToken.equals(pool.tokenY) && toToken.equals(pool.tokenX))
+  )
+}
+
+export const findPairs = (tokenFrom: PublicKey, tokenTo: PublicKey, pairs: PoolWithAddress[]) => {
   return pairs.filter(
     pool =>
       (tokenFrom.equals(pool.tokenX) && tokenTo.equals(pool.tokenY)) ||
@@ -497,19 +509,9 @@ export const findPool = (tokenFrom: PublicKey, tokenTo: PublicKey, pairs: PoolWi
   )
 }
 
-export const filterPool = (pools: PoolWithAddress[], fromToken: PublicKey, toToken: PublicKey) => {
-  return pools.filter(pool => {
-    return (
-      (fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)) ||
-      (fromToken.equals(pool.tokenY) && toToken.equals(pool.tokenX))
-    )
-  })
-}
-
 export const handleSimulate = async (
   pools: PoolWithAddress[],
   poolTicks: { [key in string]: Tick[] },
-  networkType: NetworkType,
   slippage: Decimal,
   fromToken: PublicKey,
   toToken: PublicKey,
@@ -517,7 +519,7 @@ export const handleSimulate = async (
   currentPrice: BN
 ): Promise<{ amountOut: BN; poolIndex: number; simulateSuccess: boolean }> => {
   const marketProgram = getMarketProgramSync()
-  const filteredPools = filterPool(pools, fromToken, toToken)
+  const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(0)
 
   filteredPools.map(async pool => {
@@ -534,7 +536,7 @@ export const handleSimulate = async (
       }
     }
     try {
-      const swapSimulateResault = simulateSwap({
+      const swapSimulateResault = await simulateSwap({
         pair: new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
         xToY: isXtoY,
         byAmountIn: true,
@@ -548,13 +550,16 @@ export const handleSimulate = async (
       })
       console.log(swapSimulateResault.accumulatedAmountOut.toString())
       if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
-        console.log('rewrite')
         swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
       }
-    } catch (error) {}
-    if (swapSimulateRouterAmount.eq(new BN(0))) {
-      return { amountOut: swapSimulateRouterAmount, poolIndex: 1, simulateSuccess: false }
+    } catch (error) {
+      console.log(error)
     }
   })
+  console.log(swapSimulateRouterAmount)
+  if (swapSimulateRouterAmount.eq(new BN(0))) {
+    return { amountOut: swapSimulateRouterAmount, poolIndex: 1, simulateSuccess: false }
+  }
+
   return { amountOut: swapSimulateRouterAmount, poolIndex: 1, simulateSuccess: true }
 }

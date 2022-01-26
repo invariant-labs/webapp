@@ -6,14 +6,18 @@ import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { toBlur } from '@consts/uiUtils'
 import { Status } from '@reducers/solanaWallet'
-import { PoolStructure } from '@invariant-labs/sdk/lib/market'
+import { DEFAULT_PUBLIC_KEY } from '@invariant-labs/sdk/lib/market'
+import { PoolWithAddress } from '@reducers/pools'
+import { Decimal } from '@invariant-labs/sdk/src/market'
 
-const pools: PoolStructure[] = [
+const pools: PoolWithAddress[] = [
   {
     tokenX: new PublicKey('So11111111111111111111111111111111111111112'),
     tokenY: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
     tokenXReserve: new PublicKey('So11111111111111111111111111111111111111112'),
     tokenYReserve: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+    feeReceiver: DEFAULT_PUBLIC_KEY,
+    positionIterator: new BN(0),
     tickSpacing: 4,
     sqrtPrice: {
       v: new BN(2)
@@ -21,6 +25,7 @@ const pools: PoolStructure[] = [
     fee: {
       v: new BN(2)
     },
+    protocolFee: { v: new BN(0) },
     liquidity: {
       v: new BN(23)
     },
@@ -32,12 +37,8 @@ const pools: PoolStructure[] = [
     feeGrowthGlobalY: {
       v: new BN(2)
     },
-    feeProtocolTokenX: {
-      v: new BN(2)
-    },
-    feeProtocolTokenY: {
-      v: new BN(2)
-    },
+    feeProtocolTokenX: new BN(2),
+    feeProtocolTokenY: new BN(2),
     bump: 255,
     lastTimestamp: new BN(2),
     oracleAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
@@ -45,13 +46,16 @@ const pools: PoolStructure[] = [
     secondsPerLiquidityGlobal: {
       v: new BN(2)
     },
-    startTimestamp: new BN(2)
+    startTimestamp: new BN(2),
+    address: DEFAULT_PUBLIC_KEY
   },
   {
     tokenX: new PublicKey('So11111111111111111111111111111111111111112'),
     tokenY: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
     tokenXReserve: new PublicKey('So11111111111111111111111111111111111111112'),
     tokenYReserve: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+    feeReceiver: DEFAULT_PUBLIC_KEY,
+    positionIterator: new BN(0),
     tickSpacing: 4,
     sqrtPrice: {
       v: new BN(4)
@@ -59,6 +63,7 @@ const pools: PoolStructure[] = [
     fee: {
       v: new BN(1)
     },
+    protocolFee: { v: new BN(0) },
     liquidity: {
       v: new BN(21)
     },
@@ -70,12 +75,8 @@ const pools: PoolStructure[] = [
     feeGrowthGlobalY: {
       v: new BN(2)
     },
-    feeProtocolTokenX: {
-      v: new BN(2)
-    },
-    feeProtocolTokenY: {
-      v: new BN(2)
-    },
+    feeProtocolTokenX: new BN(2),
+    feeProtocolTokenY: new BN(2),
     bump: 255,
     lastTimestamp: new BN(2),
     oracleAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
@@ -83,12 +84,20 @@ const pools: PoolStructure[] = [
     secondsPerLiquidityGlobal: {
       v: new BN(2)
     },
-    startTimestamp: new BN(2)
+    startTimestamp: new BN(2),
+    address: DEFAULT_PUBLIC_KEY
   }
 ]
 
-const onSwap = (fromToken: PublicKey, toToken: PublicKey, amount: BN) => {
-  console.log(fromToken, toToken, amount)
+const onSwap = (
+  slippage: Decimal,
+  knownPrice: Decimal,
+  tokenFrom: PublicKey,
+  tokenTo: PublicKey,
+  poolIndex: number,
+  amount: BN
+) => {
+  console.log(tokenFrom, tokenTo, amount)
 }
 
 const tokens: SwapToken[] = [
@@ -134,6 +143,7 @@ storiesOf('newUi/swap', module)
         onSwap={onSwap}
         pools={pools}
         progress='none'
+        poolInit={true}
       />
     </div>
   ))

@@ -11,8 +11,7 @@ import { getNetworkTokensList } from '@consts/utils'
 import { swap } from '@selectors/swap'
 import { Pair } from '@invariant-labs/sdk'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { findPool } from '@consts/utils'
-import { put } from 'redux-saga/effects'
+import { findPairs } from '@consts/utils'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -114,27 +113,13 @@ const MarketEvents = () => {
 
   useEffect(() => {
     if (tokenFrom && tokenTo) {
-      const pools = findPool(tokenFrom, tokenTo, allPools)
-      console.log(pools)
+      const pools = findPairs(tokenFrom, tokenTo, allPools)
 
       pools.map(pool => {
         marketProgram.getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v })).then(res => {
           dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
         })
       })
-
-      // pools.forEach(pool => {
-      //   const isPoolTick = Object.keys(poolTicksArray).filter(key => {
-      //     return key === pool.address.toString()
-      //   })
-      //   if (isPoolTick.length === 0) {
-      //     const ticks = marketProgram
-      //       .getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v }))
-      //       .then(res => {
-      //         dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
-      //       })
-      //   }
-      // })
     }
   }, [tokenFrom, tokenTo])
 

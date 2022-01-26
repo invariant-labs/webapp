@@ -31,13 +31,6 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
     }
 
     yield* put(actions.setPools(pools))
-    // for (let i = 0; i < PAIRS[networkType].length; i++) {
-    //   const ticksArray = yield* call(
-    //     [marketProgram, marketProgram.getAllTicks],
-    //     PAIRS[networkType][i]
-    //   )
-    //   yield* put(actions.setTicks({ index: i, tickStructure: ticksArray }))
-    // }
     yield* put(actions.initPool(true))
   } catch (error) {
     console.log(error)

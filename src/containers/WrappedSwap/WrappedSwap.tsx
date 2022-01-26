@@ -65,7 +65,6 @@ export const WrappedSwap = () => {
       progress={progress}
       poolInit={poolInit}
       poolTicks={poolTicksArray}
-      networkType={networkType}
     />
   )
 }
