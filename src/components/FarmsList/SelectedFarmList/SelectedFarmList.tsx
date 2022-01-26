@@ -60,9 +60,10 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
         </Typography>
       </Grid>
       <Grid className={classes.containers}>
-        {data.map(element => (
+        {data.map((element, index) => (
           <div className={classes.tile}>
             <SelectedFarm
+              key={index}
               value={element.value}
               staked={element.staked}
               pair={element.pair}
@@ -70,6 +71,7 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
               currencyPrice={element.currencyPrice}
               apy={element.apy}
               liquidity={element.liquidity}
+              action={'stake'}
             />
           </div>
         ))}

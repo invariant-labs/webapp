@@ -12,7 +12,7 @@ storiesOf('farmsList/selectedFarm', module).add('tile', () => {
         currencyPrice={2}
         apy={1}
         liquidity={457}
-        handleFarm={() => {}}
+        action={'stake'}
       />
     </div>
   )
