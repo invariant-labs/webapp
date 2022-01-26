@@ -1,4 +1,4 @@
-import { call, takeLatest, put, select } from 'typed-redux-saga'
+import { call, takeLatest, put } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
 import { actions, PoolWithAddress } from '@reducers/pools'
