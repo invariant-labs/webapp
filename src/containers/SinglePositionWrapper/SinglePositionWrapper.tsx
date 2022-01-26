@@ -10,12 +10,7 @@ import {
 } from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
-import {
-  calcPrice,
-  calcYPerXPrice,
-  createPlaceholderLiquidityPlot,
-  printBN
-} from '@consts/utils'
+import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculatePriceSqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
@@ -192,10 +187,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
       })
 
-      return [
-        +printBN(bnX, position.tokenX.decimals),
-        +printBN(bnY, position.tokenY.decimals)
-      ]
+      return [+printBN(bnX, position.tokenX.decimals), +printBN(bnY, position.tokenY.decimals)]
     }
 
     return [0, 0]

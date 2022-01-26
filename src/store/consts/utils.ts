@@ -1,10 +1,4 @@
-import {
-  calculatePriceSqrt,
-  MAX_TICK,
-  MIN_TICK,
-  Pair,
-  TICK_LIMIT
-} from '@invariant-labs/sdk'
+import { calculatePriceSqrt, MAX_TICK, MIN_TICK, Pair, TICK_LIMIT } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import {
   parseLiquidityOnTicks,
