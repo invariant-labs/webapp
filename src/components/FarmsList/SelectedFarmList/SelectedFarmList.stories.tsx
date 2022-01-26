@@ -58,6 +58,15 @@ storiesOf('farmsList/selectedFarm', module)
               liquidity: 457
             }
           ]}
+          stakeHandler={(id: string) => {
+            console.log(id)
+          }}
+          unstakeHandler={(id: string) => {
+            console.log(id)
+          }}
+          claimRewardHandler={(id: string) => {
+            console.log(id)
+          }}
         />
       </Grid>
     )

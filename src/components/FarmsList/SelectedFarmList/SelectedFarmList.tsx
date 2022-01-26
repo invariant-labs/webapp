@@ -11,6 +11,9 @@ export interface ISelectedFarmList {
   iconRewardToken: string
   rewardsTokenSymbol: string
   data: ISelectedFarm[]
+  stakeHandler: (id: string) => void
+  unstakeHandler: (id: string) => void
+  claimRewardHandler: (id: string) => void
 }
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   title,
@@ -19,7 +22,10 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   iconTokenX,
   iconTokenY,
   iconRewardToken,
-  rewardsTokenSymbol
+  rewardsTokenSymbol,
+  stakeHandler,
+  unstakeHandler,
+  claimRewardHandler
 }) => {
   const classes = useStyle()
   return (
@@ -72,6 +78,9 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
               apy={element.apy}
               liquidity={element.liquidity}
               action={'stake'}
+              onStake={stakeHandler}
+              onUnstake={unstakeHandler}
+              onClaimReward={claimRewardHandler}
             />
           </div>
         ))}

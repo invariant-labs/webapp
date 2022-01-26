@@ -13,6 +13,9 @@ export interface ISelectedFarm {
   apy: number
   liquidity: number
   action?: string
+  onStake?: (id: string) => void
+  onUnstake?: (id: string) => void
+  onClaimReward?: (id: string) => void
 }
 
 export const SelectedFarm: React.FC<ISelectedFarm> = ({
@@ -23,13 +26,13 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
   currencyPrice,
   apy,
   liquidity,
-  action
+  action,
+  onStake,
+  onUnstake,
+  onClaimReward
 }) => {
   const classes = useStyle()
   const [activeValue, SetActiveValue] = useState(action)
-  const handleFarm = (type: string): void => {
-    console.log(type)
-  }
   const handleButtonStake = (value: string) => {
     SetActiveValue(value)
   }
@@ -137,7 +140,14 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
               </Typography>
             </Box>
           </Grid>
-          <Button className={classes.buttonStake} type='button' onClick={() => handleFarm('stake')}>
+          <Button
+            className={classes.buttonStake}
+            type='button'
+            onClick={() => {
+              if (onStake !== undefined) {
+                onStake('stake')
+              }
+            }}>
             Stake
           </Button>
         </>
@@ -156,7 +166,13 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                 />
               </Typography>
             </Grid>
-            <Button className={classes.claimRewards} onClick={() => handleFarm('claimRewards')}>
+            <Button
+              className={classes.claimRewards}
+              onClick={() => {
+                if (onClaimReward !== undefined) {
+                  onClaimReward('id')
+                }
+              }}>
               Claim Rewards
             </Button>
           </Grid>
@@ -176,7 +192,11 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
           <Button
             className={classes.buttonUnstake}
             type='button'
-            onClick={() => handleFarm('unstake')}>
+            onClick={() => {
+              if (onUnstake !== undefined) {
+                onUnstake('unstake')
+              }
+            }}>
             Unstake
           </Button>
         </>

@@ -13,6 +13,15 @@ storiesOf('farmsList/selectedFarm', module).add('tile', () => {
         apy={1}
         liquidity={457}
         action={'stake'}
+        onStake={(id: string): void => {
+          console.log(id)
+        }}
+        onUnstake={(id: string): void => {
+          console.log(id)
+        }}
+        onClaimReward={(id: string): void => {
+          console.log(id)
+        }}
       />
     </div>
   )
