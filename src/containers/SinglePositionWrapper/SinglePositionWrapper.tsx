@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@reducers/positions'
@@ -38,8 +38,11 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
   const { lowerTick, upperTick } = useSelector(currentPositionRangeTicks)
 
+  const [ticksDataRequested, setTicksDataRequested] = useState<boolean>(false)
+
   useEffect(() => {
-    if (position?.id) {
+    if (position?.id && !ticksDataRequested) {
+      setTicksDataRequested(true)
       dispatch(actions.getCurrentPositionRangeTicks(id))
       dispatch(
         actions.getCurrentPlotTicks({
