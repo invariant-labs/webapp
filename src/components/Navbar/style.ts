@@ -5,7 +5,7 @@ const useStyles = makeStyles(() => ({
   button: {
     minWidth: 67,
     backgroundColor: 'transparent',
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.light,
     height: 32,
     borderRadius: 10,
     ...typography.body1,
