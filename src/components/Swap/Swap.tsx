@@ -19,7 +19,6 @@ import AnimatedButton, { ProgressState } from '@components/AnimatedButton/Animat
 import useStyles from './style'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PoolWithAddress } from '@reducers/pools'
-import { sleep } from '@invariant-labs/sdk/src/utils'
 
 export interface SwapToken {
   balance: BN
@@ -109,6 +108,9 @@ export const Swap: React.FC<ISwap> = ({
     poolIndex: number
   }>({ amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 })
 
+  const timeoutRef = useRef<number>(0)
+  const lastCallTimestampRef = useRef<number>(0)
+
   useEffect(() => {
     updateEstimatedAmount()
   }, [poolIndex])
@@ -122,15 +124,33 @@ export const Swap: React.FC<ISwap> = ({
       onSetPair(tokens[tokenFromIndex].address, tokens[tokenToIndex].address)
     }
   }, [tokenFromIndex, tokenToIndex])
-  useEffect(() => {
-    // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
-    setSimulateAmount()
-  }, [amountFrom, tokenToIndex, tokenFromIndex])
 
-  useEffect(() => {
-    // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
-    setSimulateAmount()
-  }, [amountTo, tokenToIndex, tokenFromIndex])
+  const simulateWithTimeout = () => {
+    setThrottle(true)
+
+    if (Date.now() - lastCallTimestampRef.current >= 750) {
+      lastCallTimestampRef.current = Date.now()
+      const timeout = setTimeout(() => {
+        setSimulateAmount().finally(() => {
+          setThrottle(false)
+        })
+      }, 750)
+      timeoutRef.current = timeout
+    } else {
+      clearTimeout(timeoutRef.current)
+      const timeout = setTimeout(() => {
+        setSimulateAmount().finally(() => {
+          setThrottle(false)
+        })
+      }, Date.now() - lastCallTimestampRef.current)
+      lastCallTimestampRef.current = Date.now()
+      timeoutRef.current = timeout
+    }
+  }
+
+  useEffect(simulateWithTimeout, [amountFrom, tokenToIndex, tokenFromIndex])
+
+  useEffect(simulateWithTimeout, [amountTo, tokenToIndex, tokenFromIndex])
 
   useEffect(() => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
@@ -252,7 +272,7 @@ export const Swap: React.FC<ISwap> = ({
     if (!getIsXToY(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
       return 'No route found'
     }
-    if (!poolInit || !throttle) {
+    if (!poolInit || throttle) {
       return 'Loading...'
     }
     if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {
