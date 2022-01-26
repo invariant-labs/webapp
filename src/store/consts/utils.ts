@@ -552,6 +552,7 @@ export const handleSimulate = async (
         tickmap: tickMap,
         market: marketProgram
       })
+      console.log(swapSimulateResault.amountPerTick.length)
       if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
         poolIndex = findPoolIndex(pool.address, pools)
         swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut

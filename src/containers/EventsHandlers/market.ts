@@ -10,7 +10,6 @@ import { PAIRS } from '@consts/static'
 import { getNetworkTokensList, findPairs } from '@consts/utils'
 import { swap } from '@selectors/swap'
 import { Pair } from '@invariant-labs/sdk'
-import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
