@@ -6,7 +6,7 @@ export const useStyles = makeStyles(() => ({
     width: '100%',
     borderRadius: 13,
     backgroundColor: colors.invariant.componentBcg,
-    marginBottom: 40
+    marginBottom: 32
   }
 }))
 

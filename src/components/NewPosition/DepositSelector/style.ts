@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
   },
   sectionTitle: {
     ...newTypography.heading4,
-    marginBottom: 28,
+    marginBottom: 24,
     color: colors.white.main
   },
   sectionWrapper: {
