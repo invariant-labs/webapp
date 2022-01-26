@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: 0,
     zIndex: 11,
     width: '464px',
-    height: '541px',
+    height: '525px',
     backgroundColor: 'rgba(11, 12, 13, 0.8)',
     filter: 'blur(0px) brightness(0.4)',
     borderRadius: 11,
@@ -95,9 +95,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: '100%'
     },
     [theme.breakpoints.down('md')]: {
-      top: 606,
+      top: 590,
       width: '100%',
-      height: '590px'
+      height: 641
     }
   },
 
