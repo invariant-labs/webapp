@@ -112,7 +112,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
           {
             <>
               <Typography className={classes.caption2}>
-                Balance: {currency ? `${balanceValue || ''} ${currency}` : '- -'}
+                Balance: {currency ? `${balanceValue || '0'} ${currency}` : '- -'}
               </Typography>
               <Button
                 className={
@@ -129,15 +129,27 @@ export const DepositAmountInput: React.FC<IProps> = ({
         <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>
           {
             <>
-              {usdValue ? (
+              {currency && !usdValue ? (
+                <Typography className={classes.noData}>
+                  <div className={classes.noDataIcon}>?</div>No data
+                </Typography>
+              ) : (
+                ''
+              )}
+
+              {currency && usdValue ? (
                 <>
                   <Typography className={classes.percentage}>{percentageChange}%</Typography>
                   <Typography className={classes.caption2}>~ ${usdValue}</Typography>
                 </>
               ) : (
-                <Typography className={classes.noData}>
-                  <div className={classes.noDataIcon}>?</div>No data
-                </Typography>
+                ''
+              )}
+
+              {!currency && !usdValue ? (
+                <Typography className={classes.caption2}>-</Typography>
+              ) : (
+                ''
               )}
             </>
           }
