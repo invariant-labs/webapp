@@ -34,8 +34,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.white.main
   },
   inputs: {
-    marginBottom: 15,
+    marginBottom: 20,
     flexDirection: 'row',
+    gap: 16,
 
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'
@@ -43,6 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   input: {
     flex: '1 1 0%',
+    gap: 12,
 
     '&:first-child': {
       marginRight: 8
@@ -60,6 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...newTypography.body2,
     color: colors.white.main,
     textTransform: 'none',
+    width: 200,
     height: 36,
     paddingInline: 8,
     backgroundColor: colors.invariant.light,
@@ -123,6 +126,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttons: {
     flexDirection: 'row',
+    gap: 16,
+    alignItems: 'center',
 
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'

@@ -47,7 +47,7 @@ storiesOf('Inputs/select', module)
     <div style={{ backgroundColor: colors.invariant.component, padding: '100px' }}>
       <Select
         current={null}
-        name='Select&nbsp;a&nbsp;token'
+        name='Select a token'
         tokens={tokens}
         onSelect={(chosen: string) => action(`chosen index: ${chosen}`)()}
       />
@@ -57,7 +57,7 @@ storiesOf('Inputs/select', module)
     <div style={{ backgroundColor: colors.invariant.component, padding: '100px' }}>
       <Select
         current={tokens[0]}
-        name='Select&nbsp;a&nbsp;token'
+        name='Select a token'
         tokens={tokens}
         onSelect={(chosen: string) => action(`chosen index: ${chosen}`)()}
       />

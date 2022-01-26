@@ -42,11 +42,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inputContainer: {
     gridColumn: '1/-1',
-    display: 'flex'
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   currency: {
     height: 36,
-    minWidth: 83,
+    minWidth: 85,
     width: 'fit-content',
     flexShrink: 0,
     borderRadius: 11,
@@ -56,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('sm')]: {
       height: 36,
-      minWidth: 83
+      minWidth: 85
     }
   },
   percentages: {
@@ -78,13 +79,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   currencyIcon: {
     minWidth: 20,
     height: 20,
-    marginRight: 3,
+    marginRight: 8,
     borderRadius: '100%'
   },
   currencySymbol: {
     ...newTypography.body3,
-    color: colors.white.main,
-    marginTop: 1
+    color: colors.white.main
+    // marginTop: 1
   },
   noCurrencyText: {
     ...newTypography.body3,
@@ -94,7 +95,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   balance: {
     gridArea: 'balance',
     height: 17,
-    cursor: 'default'
+    cursor: 'pointer'
   },
   caption2: {
     ...newTypography.caption2,
@@ -112,7 +113,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 26,
     height: 14,
     textTransform: 'none',
-    cursor: 'default',
     marginLeft: 4,
     marginBottom: 1.5,
     background: ' rgba(46, 224, 154, 0.8)',
