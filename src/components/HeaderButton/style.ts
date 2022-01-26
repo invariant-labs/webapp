@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   headerButtonConnected: {
-    background: '#4B5983',
+    background: colors.blue.deep,
     color: colors.white.main,
     paddingInline: 12,
     borderRadius: 10,
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:hover': {
-      background: '#4B5983'
+      background: colors.blue.deep
     }
   },
   headerButtonTextEllipsis: {

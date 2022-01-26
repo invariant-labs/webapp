@@ -80,7 +80,7 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
     transition: 'background 300ms',
     marginLeft: 8,
     '&:hover': {
-      background: 'transparent',
+      background: 'transparent'
     },
     '&:hover $menu': {
       filter: 'brightness(2)'

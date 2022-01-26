@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
     margin: '4px',
     '&:hover': {
       background: 'transparent',
-      color: '#A9B6BF',
+      color: colors.invariant.lightGrey,
       ...typography.body1
     }
   },

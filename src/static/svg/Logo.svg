@@ -31,6 +31,6 @@
         </g>
     </g>
     <defs>
-        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-27.8025,29.961,-29.961,-27.8025,4968.38,81.643)"><stop offset="0" style="stop-color:rgb(119,72,216);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(119,72,216);stop-opacity:0"/></linearGradient>
+        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-27.8025,29.961,-29.961,-27.8025,4968.38,81.643)"><stop offset="0" style="stop-color:#EF84F5;stop-opacity:1"/><stop offset="1" style="stop-color:#EF84F5;stop-opacity:0"/></linearGradient>
     </defs>
 </svg>

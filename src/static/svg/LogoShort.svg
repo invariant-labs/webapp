@@ -4,8 +4,8 @@
 <path fill-rule="evenodd" clip-rule="evenodd" d="M23.6907 0.54541L21.0903 4.56422L27.0563 13.7883H31.4339L40.0001 0.54541H23.6907Z" fill="url(#paint0_linear_1113_873)"/>
 <defs>
 <linearGradient id="paint0_linear_1113_873" x1="33.773" y1="0.54541" x2="23.42" y2="11.4283" gradientUnits="userSpaceOnUse">
-<stop stop-color="#7748D8"/>
-<stop offset="1" stop-color="#7748D8" stop-opacity="0"/>
+<stop stop-color="#EF84F5"/>
+<stop offset="1" stop-color="#EF84F5" stop-opacity="0"/>
 </linearGradient>
 </defs>
 </svg>

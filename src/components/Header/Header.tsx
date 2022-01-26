@@ -100,8 +100,7 @@ export const Header: React.FC<IHeader> = ({
                 className={buttonClasses.headerButton}
                 variant='contained'
                 classes={{ label: buttonClasses.label }}
-                onClick={onFaucet}
-                >
+                onClick={onFaucet}>
                 Faucet
               </Button>
             )}
