@@ -71,7 +71,7 @@ const useStyles = makeStyles(() => ({
     zIndex: 1,
     top: 0,
     left: '-100%',
-    backgroundColor: colors.invariant.accent1
+    backgroundColor: colors.invariant.pink
   },
   backgroundRelease: {
     position: 'absolute',
@@ -83,7 +83,7 @@ const useStyles = makeStyles(() => ({
     top: '0%',
     animation: '$slide-start .4s ease-in',
     transition: 'all .2s',
-    backgroundColor: colors.invariant.accent1
+    backgroundColor: colors.invariant.pink
   },
   backgroundApprovedWithSuccess: {
     top: 0,
@@ -116,7 +116,7 @@ const useStyles = makeStyles(() => ({
   },
   btnStories: {
     padding: '8px 14px',
-    backgroundColor: colors.invariant.accent2,
+    backgroundColor: colors.invariant.green,
     border: 'none',
     margin: '10px 14px 10px 0'
   }
