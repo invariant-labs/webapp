@@ -45,7 +45,7 @@ export const BoxInfo: React.FC<{
             <Typography className={classes.tokenName}>{tokenXName}</Typography>
           </Grid>
           <Typography className={classes.tokenValue}>
-            <AnimatedNumber value={tokenXValue} duration={300} formatValue={(value: string) => Number(value).toFixed(tokenXDecimal)} />
+            <AnimatedNumber value={tokenXValue} duration={300} formatValue={(value: string) => (Number(value) < 10 ** -tokenXDecimal ? 0 : Number(value)).toFixed(tokenXDecimal)} />
           </Typography>
         </Grid>
 
@@ -55,7 +55,7 @@ export const BoxInfo: React.FC<{
             <Typography className={classes.tokenName}>{tokenYName}</Typography>
           </Grid>
           <Typography className={classes.tokenValue}>
-            <AnimatedNumber value={tokenYValue} duration={300} formatValue={(value: string) => Number(value).toFixed(tokenYDecimal)} />
+            <AnimatedNumber value={tokenYValue} duration={300} formatValue={(value: string) => (Number(value) < 10 ** -tokenYDecimal ? 0 : Number(value)).toFixed(tokenYDecimal)} />
           </Typography>
         </Grid>
       </Grid>
