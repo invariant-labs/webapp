@@ -26,6 +26,7 @@ import { getMarketProgramSync } from '@web3/programs/amm'
 import { Error } from '@material-ui/icons'
 import { useState } from 'react'
 import { PoolWithAddress } from '@reducers/pools'
+import { findIndex } from 'lodash'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -518,11 +519,13 @@ export const handleSimulate = async (
   amount: BN,
   currentPrice: BN
 ): Promise<{ amountOut: BN; poolIndex: number; simulateSuccess: boolean }> => {
+  await setTimeout(() => {}, 1000)
   const marketProgram = getMarketProgramSync()
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(0)
+  let poolIndex: number = 0
 
-  filteredPools.map(async pool => {
+  for (const pool of filteredPools) {
     const isXtoY = fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)
 
     const tickMap = await marketProgram.getTickmap(
@@ -548,18 +551,14 @@ export const handleSimulate = async (
         tickmap: tickMap,
         market: marketProgram
       })
-      console.log(swapSimulateResault.accumulatedAmountOut.toString())
       if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
+        poolIndex = findPoolIndex(pool.tokenX, pool.tokenY, pools)
         swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
       }
-    } catch (error) {
-      console.log(error)
-    }
-  })
-  console.log(swapSimulateRouterAmount)
-  if (swapSimulateRouterAmount.eq(new BN(0))) {
-    return { amountOut: swapSimulateRouterAmount, poolIndex: 1, simulateSuccess: false }
+    } catch (error) {}
   }
-
-  return { amountOut: swapSimulateRouterAmount, poolIndex: 1, simulateSuccess: true }
+  if (swapSimulateRouterAmount.eq(new BN(0))) {
+    return { amountOut: swapSimulateRouterAmount, poolIndex: poolIndex, simulateSuccess: false }
+  }
+  return { amountOut: swapSimulateRouterAmount, poolIndex: poolIndex, simulateSuccess: true }
 }

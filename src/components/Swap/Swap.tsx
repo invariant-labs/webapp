@@ -8,7 +8,7 @@ import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
 import Slippage from '@components/Swap/slippage/Slippage'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import TransactionDetails from '@components/Swap/transactionDetails/TransactionDetails'
-import { NetworkType, PRICE_DECIMAL } from '@consts/static'
+import { PRICE_DECIMAL } from '@consts/static'
 import { Swap as SwapData } from '@reducers/swap'
 import { Status } from '@reducers/solanaWallet'
 import SwapArrows from '@static/svg/swap-arrows.svg'
@@ -19,6 +19,7 @@ import AnimatedButton, { ProgressState } from '@components/AnimatedButton/Animat
 import useStyles from './style'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PoolWithAddress } from '@reducers/pools'
+import { sleep } from '@invariant-labs/sdk/src/utils'
 
 export interface SwapToken {
   balance: BN
@@ -99,6 +100,7 @@ export const Swap: React.FC<ISwap> = ({
   const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const [settings, setSettings] = React.useState<boolean>(false)
+  const [throttle, setThrottle] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
   const [inputRef, setInputRef] = React.useState<string>(inputTarget.FROM)
   const [simulateResult, setSimulateResult] = React.useState<{
@@ -188,7 +190,7 @@ export const Swap: React.FC<ISwap> = ({
 
   const setSimulateAmount = async () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      if (inputRef === inputTarget.FROM && +amountFrom) {
+      if (inputRef === inputTarget.FROM) {
         const simulatePrice = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex])
 
         setSimulateResult(
@@ -204,7 +206,7 @@ export const Swap: React.FC<ISwap> = ({
             simulatePrice.knownPrice
           )
         )
-      } else if (inputRef === inputTarget.TO && +amountTo) {
+      } else if (inputRef === inputTarget.TO) {
         const simulatePrice = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex])
 
         setSimulateResult(
@@ -250,7 +252,7 @@ export const Swap: React.FC<ISwap> = ({
     if (!getIsXToY(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
       return 'No route found'
     }
-    if (!poolInit) {
+    if (!poolInit || !throttle) {
       return 'Loading...'
     }
     if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {
@@ -457,7 +459,7 @@ export const Swap: React.FC<ISwap> = ({
               tokens[tokenFromIndex].address,
               tokens[tokenToIndex].address,
               simulateResult.poolIndex,
-              simulateResult.amountOut
+              printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals)
             )
           }}
           progress={progress}
