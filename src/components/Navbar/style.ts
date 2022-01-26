@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       background: colors.invariant.light,
       color: colors.white.main
-     }
+    }
   },
   disabled: {
     opacity: 1
