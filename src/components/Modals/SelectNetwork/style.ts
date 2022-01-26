@@ -5,19 +5,18 @@ const useStyles = makeStyles(() => ({
   root: {
     background: colors.invariant.component,
     width: 170,
-    borderRadius: 10,
+    borderRadius: 20,
     marginTop: 8,
-    padding: 15
+    padding: 8
   },
   list: {
     borderRadius: 5,
-    marginTop: 7,
-    padding: 8
+    marginTop: 7
   },
   listItem: {
     color: colors.invariant.lightInfoText,
     background: colors.invariant.component,
-    borderRadius: 5,
+    borderRadius: 11,
     padding: '3px 7px',
     width: '100%',
     cursor: 'pointer',
@@ -38,12 +37,13 @@ const useStyles = makeStyles(() => ({
     }
   },
   title: {
-    ...typography.body1
+    ...typography.body1,
+    margin: 10
   },
   dotIcon: {
     width: 12,
     marginLeft: 'auto',
-    color: colors.invariant.accent2,
+    color: colors.invariant.green,
     display: 'none'
   },
   name: {

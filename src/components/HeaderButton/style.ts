@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   headerButtonConnected: {
-    background: colors.blue.deep,
+    background: colors.invariant.light,
     color: colors.white.main,
     paddingInline: 12,
     borderRadius: 10,
