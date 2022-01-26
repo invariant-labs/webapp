@@ -490,7 +490,11 @@ export const getY = (
   return liquidity.mul(difference).div(DENOMINATOR)
 }
 
-export const findPoolIndex = (
+export const findPoolIndex = (address: PublicKey, pools: PoolWithAddress[]) => {
+  return pools.findIndex(pool => pool.address.equals(address))
+}
+
+export const findPairIndex = (
   fromToken: PublicKey,
   toToken: PublicKey, // do naprawy!!!
   pools: PoolWithAddress[]
@@ -551,10 +555,13 @@ export const handleSimulate = async (
         market: marketProgram
       })
       if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
-        poolIndex = findPoolIndex(pool.tokenX, pool.tokenY, pools)
+        poolIndex = findPoolIndex(pool.address, pools)
+        console.log(poolIndex)
         swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   }
   if (swapSimulateRouterAmount.eq(new BN(0))) {
     return { amountOut: swapSimulateRouterAmount, poolIndex: poolIndex, simulateSuccess: false }

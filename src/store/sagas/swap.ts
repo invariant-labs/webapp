@@ -91,8 +91,6 @@ export function* handleSwapWithSOL(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, tokenTo)
     }
-    console.log(poolIndex)
-    console.log('swap amount: ', amount.toString())
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
       pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,
@@ -195,7 +193,6 @@ export function* handleSwap(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, tokenTo)
     }
-    console.log('swap amount: ', amount)
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
       pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,

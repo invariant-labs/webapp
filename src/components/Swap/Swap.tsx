@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { printBN, printBNtoBN, handleSimulate, findPoolIndex } from '@consts/utils'
+import { printBN, printBNtoBN, handleSimulate, findPoolIndex, findPairIndex } from '@consts/utils'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
@@ -137,13 +137,13 @@ export const Swap: React.FC<ISwap> = ({
   const simulateWithTimeout = () => {
     setThrottle(true)
 
-    if (Date.now() - lastCallTimestampRef.current >= 1500) {
+    if (Date.now() - lastCallTimestampRef.current >= 750) {
       lastCallTimestampRef.current = Date.now()
       const timeout = setTimeout(() => {
         setSimulateAmount().finally(() => {
           setThrottle(false)
         })
-      }, 1500)
+      }, 750)
       timeoutRef.current = timeout
     } else {
       clearTimeout(timeoutRef.current)
@@ -184,7 +184,7 @@ export const Swap: React.FC<ISwap> = ({
     }
     if (tokenFromIndex !== null) {
       const tokensY = tokens.filter(token => {
-        return findPoolIndex(token.assetAddress, tokens[tokenFromIndex].assetAddress, pools) !== -1
+        return findPairIndex(token.assetAddress, tokens[tokenFromIndex].assetAddress, pools) !== -1
       })
       setTokensY(tokensY)
     }
