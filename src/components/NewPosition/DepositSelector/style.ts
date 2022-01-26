@@ -27,6 +27,7 @@ const useStyles = makeStyles(() => ({
     marginBottom: 3
   },
   selects: {
+    gap: 12,
     marginBottom: 10
   },
   selectWrapper: {

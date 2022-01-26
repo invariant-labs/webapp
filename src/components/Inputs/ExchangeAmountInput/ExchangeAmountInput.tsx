@@ -13,10 +13,10 @@ interface IProps {
   className?: string
   decimal: number
   placeholder?: string
-  style?: CSSProperties,
-  onMaxClick: () => void,
+  style?: CSSProperties
+  onMaxClick: () => void
   current: SwapToken | null
-  tokens: Array<{ symbol: string, name: string, logoURI: string }>
+  tokens: Array<{ symbol: string; name: string; logoURI: string }>
   onSelect: (name: string) => void
 }
 
@@ -37,7 +37,7 @@ export const AmountInput: React.FC<IProps> = ({
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const onlyNumbersRegex = /^\d*\.?\d*$/
     const test = `^\\d*\\.?\\d{0,${decimal}}$`
     const regex = new RegExp(test, 'g')
@@ -86,7 +86,7 @@ export const AmountInput: React.FC<IProps> = ({
       disableUnderline={true}
       placeholder={placeholder}
       onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-      endAdornment={(
+      endAdornment={
         <OutlinedButton
           name='Max'
           color='primary'
@@ -94,8 +94,8 @@ export const AmountInput: React.FC<IProps> = ({
           className={classes.maxButton}
           labelClassName={classes.label}
         />
-      )}
-      startAdornment={(
+      }
+      startAdornment={
         <Select
           centered={true}
           tokens={tokens}
@@ -103,7 +103,7 @@ export const AmountInput: React.FC<IProps> = ({
           current={current}
           className={classes.select}
         />
-      )}
+      }
     />
   )
 }
