@@ -84,7 +84,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '464px',
     height: '541px',
     backgroundColor: 'rgba(11, 12, 13, 0.8)',
-    filter: 'blur(1px) brightness(0.4)',
+    filter: 'blur(0px) brightness(0.4)',
+    borderRadius: 11,
 
     [theme.breakpoints.down('sm')]: {
       width: '100%',
