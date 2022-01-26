@@ -108,13 +108,12 @@ export const DepositAmountInput: React.FC<IProps> = ({
             onBlur={onBlur}
           />
         </div>
-        <Grid className={classes.balance} container alignItems='center' wrap='nowrap'>
+        <Grid className={classes.balance} container alignItems='center' wrap='nowrap' onClick={onMaxClick}>
           {
             <>
-              <Typography className={classes.caption2}>
+              <Typography className={classes.caption2} >
                 Balance: {currency ? `${balanceValue || '0'} ${currency}` : '- -'}
-              </Typography>
-              <Button
+                <Button
                 className={
                   currency
                     ? classes.maxButton
@@ -123,6 +122,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
                 onClick={onMaxClick}>
                 Max
               </Button>
+              </Typography>
             </>
           }
         </Grid>

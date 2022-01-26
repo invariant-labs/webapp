@@ -15,7 +15,7 @@ export const useTabsStyles = makeStyles(() => ({
     overflow: 'visible',
     height: 36,
     minHeight: 36,
-    margin: '4px 7px',
+    margin: '4px 4px',
     borderRadius: 10
   },
   indicator: {

@@ -52,15 +52,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 11,
     backgroundColor: colors.invariant.light,
     padding: '6px 12px 6px 12px',
+    cursor: 'default',
 
     [theme.breakpoints.down('sm')]: {
       height: 36,
       minWidth: 83
     }
-  },
-  balance: {
-    gridArea: 'balance',
-    height: 17
   },
   percentages: {
     gridArea: 'percentages',
@@ -91,23 +88,37 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noCurrencyText: {
     ...newTypography.body3,
-    color: colors.white.main
+    color: colors.white.main,
+    cursor: 'default'
+  },
+  balance: {
+    gridArea: 'balance',
+    height: 17,
+    cursor: 'default'
   },
   caption2: {
     ...newTypography.caption2,
-    color: colors.invariant.lightHover
+    color: colors.invariant.lightHover,
+
+    '&:hover': {
+      color: colors.white.main
+    }
   },
   maxButton: {
-    backgroundColor: colors.invariant.green,
     color: colors.invariant.componentBcg,
     ...newTypography.tiny2,
-    borderRadius: 3,
+    borderRadius: 4,
     width: 26,
     minWidth: 26,
     height: 14,
     textTransform: 'none',
+    cursor: 'default',
     marginLeft: 4,
+    marginBottom: 1.5,
+    background: ' rgba(46, 224, 154, 0.8)',
+
     '&:hover': {
+      background: 'none',
       backgroundColor: colors.invariant.green,
       boxShadow: '0px 0px 20px -10px white'
     },
@@ -120,7 +131,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   maxButtonNotActive: {
     backgroundColor: colors.invariant.light,
     '&:hover': {
-      backgroundColor: colors.invariant.light
+      backgroundColor: colors.invariant.light,
+      cursor: 'default'
     }
   },
   noData: {
@@ -128,7 +140,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...newTypography.caption2,
     display: 'grid',
     gap: 5.45,
-    gridAutoFlow: 'column'
+    gridAutoFlow: 'column',
+    cursor: 'default'
   },
   noDataIcon: {
     height: 9.5,
@@ -140,7 +153,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '10px',
     fontWeight: 400,
     textAlign: 'center',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    cursor: 'default'
   },
   blocker: {
     position: 'absolute',
