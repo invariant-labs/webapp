@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:hover': {
-      background: '#4B5983'
+      background: colors.blue.deep
     },
     '&:active': {
       '& #downIcon': {
