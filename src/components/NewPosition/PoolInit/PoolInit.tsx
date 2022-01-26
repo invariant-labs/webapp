@@ -3,14 +3,12 @@ import React, { useState, useEffect } from 'react'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import {
   calcPrice,
-  spacingMultiplicityGte,
-  spacingMultiplicityLte,
   nearestTickIndex,
   formatNumbers,
-  showPrefix
+  showPrefix,
+  minSpacingMultiplicity,
+  maxSpacingMultiplicity
 } from '@consts/utils'
-import { MIN_TICK } from '@invariant-labs/sdk'
-import { MAX_TICK } from '@invariant-labs/sdk/src'
 import SimpleInput from '@components/Inputs/SimpleInput/SimpleInput'
 import useStyles from './style'
 import AnimatedNumber from '@components/AnimatedNumber'
@@ -40,8 +38,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
 }) => {
   const classes = useStyles()
 
-  const [leftRange, setLeftRange] = useState(MIN_TICK)
-  const [rightRange, setRightRange] = useState(MAX_TICK)
+  const [leftRange, setLeftRange] = useState(minSpacingMultiplicity(tickSpacing))
+  const [rightRange, setRightRange] = useState(maxSpacingMultiplicity(tickSpacing))
 
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
@@ -112,8 +110,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
             setValue={setLeftInput}
             decreaseValue={() => {
               const newLeft = isXtoY
-                ? Math.max(spacingMultiplicityGte(MIN_TICK, tickSpacing), leftRange - tickSpacing)
-                : Math.min(spacingMultiplicityLte(MAX_TICK, tickSpacing), leftRange + tickSpacing)
+                ? Math.max(minSpacingMultiplicity(tickSpacing), leftRange - tickSpacing)
+                : Math.min(maxSpacingMultiplicity(tickSpacing), leftRange + tickSpacing)
               changeRangeHandler(newLeft, rightRange)
             }}
             increaseValue={() => {
@@ -152,8 +150,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
             }}
             increaseValue={() => {
               const newRight = isXtoY
-                ? Math.min(spacingMultiplicityLte(MAX_TICK, tickSpacing), rightRange + tickSpacing)
-                : Math.max(spacingMultiplicityGte(MIN_TICK, tickSpacing), rightRange - tickSpacing)
+                ? Math.min(maxSpacingMultiplicity(tickSpacing), rightRange + tickSpacing)
+                : Math.max(minSpacingMultiplicity(tickSpacing), rightRange - tickSpacing)
               changeRangeHandler(leftRange, newRight)
             }}
             onBlur={() => {
@@ -178,12 +176,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
             className={classes.button}
             onClick={() => {
               changeRangeHandler(
-                isXtoY
-                  ? spacingMultiplicityGte(MIN_TICK, tickSpacing)
-                  : spacingMultiplicityLte(MAX_TICK, tickSpacing),
-                isXtoY
-                  ? spacingMultiplicityLte(MAX_TICK, tickSpacing)
-                  : spacingMultiplicityGte(MIN_TICK, tickSpacing)
+                isXtoY ? minSpacingMultiplicity(tickSpacing) : maxSpacingMultiplicity(tickSpacing),
+                isXtoY ? maxSpacingMultiplicity(tickSpacing) : minSpacingMultiplicity(tickSpacing)
               )
             }}>
             Set full range
