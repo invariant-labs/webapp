@@ -11,7 +11,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   container: {
     padding: 30,
-    backgroundColor: colors.invariant.componentOut4,
+    backgroundColor: colors.invariant.component,
+    borderRadius: '24px',
     width: 500,
     [theme.breakpoints.down('xs')]: {
       width: 410
@@ -48,20 +49,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   selectTokenInput: {
-    backgroundColor: colors.invariant.componentIn1,
+    backgroundColor: colors.invariant.newDark,
     width: '100%',
     fontSize: 16,
     fontWeight: 600,
     position: 'relative',
     color: 'white',
-    border: '1px solid',
-    borderColor: colors.invariant.componentOut2,
-    borderRadius: 5,
+    border: 'none',
+    borderRadius: 20,
     padding: '18px 10px 17px 10px',
     marginBottom: 15,
     '&::placeholder': {
-      color: colors.invariant.componentOut3,
+      color: colors.invariant.light,
       fontSize: 16,
+      fontFamily: 'Mukta',
       fontWeight: 600
     },
     '&:focus': {
@@ -110,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenList: {
     borderRadius: 10,
-    background: colors.invariant.componentIn1,
+    background: colors.invariant.component,
     width: 451,
     height: 352,
     padding: 8,
@@ -125,27 +126,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '9px 0px 9px 12px',
 
     '&:hover': {
-      background: colors.invariant.componentOut2
+      background: colors.invariant.light
     }
   },
   tokenName: {
     color: colors.white.main,
     ...typography.heading4,
-    lineHeight: '20px'
+    fontWeight: 700,
+    lineHeight: '20px',
+    fontSize: '24px'
   },
   tokenDescrpiption: {
-    color: colors.white.main,
+    color: colors.invariant.lightGrey,
     ...typography.label1,
     lineHeight: '16px',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    fontSize: '14px'
   },
   tokenIcon: {
     width: 30,
     height: 30,
     marginLeft: 6,
     marginRight: 14,
-    borderRadius: '50%',
-    boxShadow: '0px 0px 10px rgba(216, 255, 181, 0.5)'
+    borderRadius: '50%'
   },
   tokenBalance: {
     ...typography.subtitle2,
@@ -162,12 +165,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   scrollbarThumb: {
-    background: colors.invariant.accent1,
+    background: colors.invariant.pink,
     borderRadius: 10,
     width: 5
   },
   scrollbarTrack: {
-    background: '#2D2932',
+    background: colors.invariant.newDark,
     borderRadius: 10,
     height: '98%',
     margin: 5,
