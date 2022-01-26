@@ -3,29 +3,29 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
-    background: colors.invariant.componentOut4,
+    background: colors.invariant.component,
     width: 170,
-    borderRadius: 10,
+    borderRadius: 20,
     marginTop: 8,
-    padding: 15
-  },
-  list: {
-    background: colors.invariant.componentIn1,
-    borderRadius: 5,
-    marginTop: 7,
     padding: 8
   },
-  listItem: {
-    color: colors.invariant.lightInfoText,
+  list: {
+    background: 'transparent',
     borderRadius: 5,
+    marginTop: 7,
+    padding: 2
+  },
+  listItem: {
+    color: colors.invariant.lightGrey,
+    borderRadius: 11,
     padding: '3px 7px',
     width: '100%',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     '&:hover': {
-      background: `${colors.invariant.componentOut2}60`,
-      color: colors.white.main
+      color: colors.white.main,
+      background: colors.invariant.light
     },
     '&:first-child': {
       marginBottom: '4px'
@@ -38,12 +38,13 @@ const useStyles = makeStyles(() => ({
     }
   },
   title: {
-    ...typography.body1
+    ...typography.body1,
+    margin: 10
   },
   dotIcon: {
     width: 12,
     marginLeft: 'auto',
-    color: colors.invariant.accent2,
+    color: colors.invariant.green,
     display: 'none'
   },
   icon: {
@@ -64,7 +65,7 @@ const useStyles = makeStyles(() => ({
     boxShadow: 'none'
   },
   active: {
-    background: colors.invariant.componentOut2,
+    background: colors.invariant.light,
     color: colors.white.main,
     '& $icon': {
       opacity: 1
