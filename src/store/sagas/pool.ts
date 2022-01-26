@@ -3,9 +3,7 @@ import { getMarketProgram } from '@web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
 import { actions, PoolWithAddress } from '@reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { PAIRS } from '@consts/static'
 import { Tick } from '@invariant-labs/sdk/src/market'
-import { network } from '@selectors/solanaConnection'
 
 export interface iTick {
   index: Tick[]
@@ -15,7 +13,6 @@ export interface iTick {
 
 export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
   const marketProgram = yield* call(getMarketProgram)
-  const networkType = yield* select(network)
   try {
     const pools: PoolWithAddress[] = []
     for (let i = 0; i < action.payload.length; i++) {

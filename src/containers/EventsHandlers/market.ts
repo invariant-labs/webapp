@@ -7,11 +7,10 @@ import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
 import { pools, poolTicks } from '@selectors/pools'
 import { PAIRS } from '@consts/static'
-import { getNetworkTokensList } from '@consts/utils'
+import { getNetworkTokensList, findPairs } from '@consts/utils'
 import { swap } from '@selectors/swap'
 import { Pair } from '@invariant-labs/sdk'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { findPairs } from '@consts/utils'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -81,7 +80,7 @@ const MarketEvents = () => {
           }
           subscribedTick.push({
             fromToken: pool.tokenX.toString(),
-            toToken: tokenTo.toString(),
+            toToken: pool.tokenY.toString(),
             indexPool
           })
           R.forEachObj(poolTicksArray, tick => {
@@ -115,7 +114,7 @@ const MarketEvents = () => {
     if (tokenFrom && tokenTo) {
       const pools = findPairs(tokenFrom, tokenTo, allPools)
 
-      pools.map(pool => {
+      pools.forEach(pool => {
         marketProgram.getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v })).then(res => {
           dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
         })

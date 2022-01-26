@@ -1,4 +1,3 @@
-import { DEFAULT_PUBLICKEY } from '@consts/static'
 import { Decimal, DEFAULT_PUBLIC_KEY } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import { BN } from '@project-serum/anchor'

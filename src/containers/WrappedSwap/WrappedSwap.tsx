@@ -12,7 +12,6 @@ export const WrappedSwap = () => {
   const dispatch = useDispatch()
   const walletStatus = useSelector(status)
   const swap = useSelector(swapPool)
-  const networkType = useSelector(network)
   const poolTicksArray = useSelector(poolTicks)
   const allPools = useSelector(pools)
   const poolInit = useSelector(initPool)

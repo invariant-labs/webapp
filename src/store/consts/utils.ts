@@ -7,11 +7,7 @@ import {
   TICK_LIMIT
 } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
-import {
-  parseLiquidityOnTicks,
-  SimulateSwapInterface,
-  simulateSwap
-} from '@invariant-labs/sdk/src/utils'
+import { parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
@@ -19,7 +15,6 @@ import {
   ANA_DEV,
   MSOL_DEV,
   NetworkType,
-  PAIRS,
   PRICE_DECIMAL,
   SOL_DEV,
   Token,
@@ -31,9 +26,7 @@ import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
 import { getMarketProgramSync } from '@web3/programs/amm'
 import { Error } from '@material-ui/icons'
-import { useState } from 'react'
 import { PoolWithAddress } from '@reducers/pools'
-import { findIndex } from 'lodash'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -563,7 +556,6 @@ export const handleSimulate = async (
       })
       if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
         poolIndex = findPoolIndex(pool.address, pools)
-        console.log('index pool:', poolIndex)
         swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
       }
     } catch (error) {}
@@ -571,7 +563,6 @@ export const handleSimulate = async (
   if (swapSimulateRouterAmount.eq(new BN(0))) {
     return { amountOut: swapSimulateRouterAmount, poolIndex: poolIndex, simulateSuccess: false }
   }
-  console.log('pool index final: ', poolIndex)
   return { amountOut: swapSimulateRouterAmount, poolIndex: poolIndex, simulateSuccess: true }
 }
 

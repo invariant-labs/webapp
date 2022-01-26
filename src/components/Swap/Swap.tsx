@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { printBN, printBNtoBN, handleSimulate, findPoolIndex, findPairIndex } from '@consts/utils'
+import { printBN, printBNtoBN, handleSimulate, findPairIndex, findPairs } from '@consts/utils'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
@@ -19,8 +19,6 @@ import AnimatedButton, { ProgressState } from '@components/AnimatedButton/Animat
 import useStyles from './style'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PoolWithAddress } from '@reducers/pools'
-import { findPairs } from '@consts/utils'
-import SwapPage from 'src/pages/SwapPage/SwapPage'
 export interface SwapToken {
   balance: BN
   decimals: number
@@ -75,7 +73,6 @@ export const Swap: React.FC<ISwap> = ({
   pools,
   onSwap,
   onSetPair,
-  swapData,
   progress,
   poolInit,
   poolTicks
@@ -122,7 +119,6 @@ export const Swap: React.FC<ISwap> = ({
     }
   }, [tokenFromIndex, tokenToIndex])
   useEffect(() => {
-    // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
     if (inputRef === inputTarget.FROM) {
       simulateWithTimeout()
     }
@@ -132,7 +128,6 @@ export const Swap: React.FC<ISwap> = ({
     if (inputRef === inputTarget.TO) {
       simulateWithTimeout()
     }
-    // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
   }, [amountTo, tokenToIndex, tokenFromIndex])
 
   const simulateWithTimeout = () => {
@@ -207,7 +202,6 @@ export const Swap: React.FC<ISwap> = ({
       }
       swapRate = +printBN(simulateResult.amountOut, assetFor.decimals) / Number(amountFrom)
       amountOut = Number(printBN(simulateResult.amountOut, assetFor.decimals))
-      console.log('amount from: ', +printBN(simulateResult.amountOut, assetIn.decimals))
       setSwapRate(swapRate)
     }
     return {
@@ -218,8 +212,8 @@ export const Swap: React.FC<ISwap> = ({
 
   const setSimulateAmount = async () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      let pair = findPairs(tokens[tokenFromIndex].address, tokens[tokenToIndex].address, pools)[0]
-      let indexPool = Object.keys(poolTicks).filter(key => {
+      const pair = findPairs(tokens[tokenFromIndex].address, tokens[tokenToIndex].address, pools)[0]
+      const indexPool = Object.keys(poolTicks).filter(key => {
         return key === pair.address.toString()
       })
       if (indexPool.length === 0) {

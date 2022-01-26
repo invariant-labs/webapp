@@ -97,7 +97,7 @@ const onSwap = (
   poolIndex: number,
   amount: BN
 ) => {
-  console.log(tokenFrom, tokenTo, amount)
+  console.log(tokenFrom, tokenTo, amount, slippage, knownPrice, poolIndex)
 }
 
 const tokens: SwapToken[] = [
