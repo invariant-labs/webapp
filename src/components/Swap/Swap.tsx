@@ -19,8 +19,7 @@ import AnimatedButton, { ProgressState } from '@components/AnimatedButton/Animat
 import useStyles from './style'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PoolWithAddress } from '@reducers/pools'
-import { sleep } from '@invariant-labs/sdk/src/utils'
-
+import { findPairs } from '@consts/utils'
 export interface SwapToken {
   balance: BN
   decimals: number
@@ -100,7 +99,6 @@ export const Swap: React.FC<ISwap> = ({
   const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const [settings, setSettings] = React.useState<boolean>(false)
-  const [throttle, setThrottle] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
   const [inputRef, setInputRef] = React.useState<string>(inputTarget.FROM)
   const [simulateResult, setSimulateResult] = React.useState<{
@@ -110,12 +108,8 @@ export const Swap: React.FC<ISwap> = ({
   }>({ amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 })
 
   useEffect(() => {
-    updateEstimatedAmount()
-  }, [poolIndex])
-
-  // useEffect(() => {
-  //   setInputRef(inputTarget.FROM)
-  // }, [swap]) // do usunięcia, sprawdzić co sie stanie
+    setInputRef(inputTarget.FROM)
+  }, [swap]) // do usunięcia, sprawdzić co sie stanie
 
   useEffect(() => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
@@ -124,12 +118,16 @@ export const Swap: React.FC<ISwap> = ({
   }, [tokenFromIndex, tokenToIndex])
   useEffect(() => {
     // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
-    setSimulateAmount()
+    if (inputRef === inputTarget.FROM) {
+      setSimulateAmount()
+    }
   }, [amountFrom, tokenToIndex, tokenFromIndex])
 
   useEffect(() => {
+    if (inputRef === inputTarget.TO) {
+      setSimulateAmount()
+    }
     // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
-    setSimulateAmount()
   }, [amountTo, tokenToIndex, tokenFromIndex])
 
   useEffect(() => {
@@ -190,6 +188,13 @@ export const Swap: React.FC<ISwap> = ({
 
   const setSimulateAmount = async () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
+      let pair = findPairs(tokens[tokenFromIndex].address, tokens[tokenToIndex].address, pools)[0]
+      let indexPool = Object.keys(poolTicks).filter(key => {
+        return key === pair.address.toString()
+      })
+      if (indexPool.length === 0) {
+        return
+      }
       if (inputRef === inputTarget.FROM) {
         const simulatePrice = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex])
 
@@ -216,9 +221,9 @@ export const Swap: React.FC<ISwap> = ({
             {
               v: fromFee(new BN(Number(+slippTolerance * 1000)))
             },
-            tokens[tokenFromIndex].address,
             tokens[tokenToIndex].address,
-            printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),
+            tokens[tokenFromIndex].address,
+            printBNtoBN(amountTo, tokens[tokenToIndex].decimals),
             simulatePrice.knownPrice
           )
         )
@@ -252,7 +257,7 @@ export const Swap: React.FC<ISwap> = ({
     if (!getIsXToY(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
       return 'No route found'
     }
-    if (!poolInit || !throttle) {
+    if (!poolInit) {
       return 'Loading...'
     }
     if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {

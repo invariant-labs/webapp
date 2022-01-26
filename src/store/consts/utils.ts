@@ -492,7 +492,7 @@ export const getY = (
 
 export const findPoolIndex = (
   fromToken: PublicKey,
-  toToken: PublicKey,
+  toToken: PublicKey, // do naprawy!!!
   pools: PoolWithAddress[]
 ) => {
   return pools.findIndex(
@@ -519,7 +519,6 @@ export const handleSimulate = async (
   amount: BN,
   currentPrice: BN
 ): Promise<{ amountOut: BN; poolIndex: number; simulateSuccess: boolean }> => {
-  await setTimeout(() => {}, 1000)
   const marketProgram = getMarketProgramSync()
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(0)
