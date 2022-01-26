@@ -536,10 +536,8 @@ export const handleSimulate = async (
     )
 
     const ticks: Map<number, Tick> = new Map<number, Tick>()
-    if (ticks.size === 0) {
-      for (const tick of poolTicks[pool.address.toString()]) {
-        ticks.set(tick.index, tick)
-      }
+    for (const tick of poolTicks[pool.address.toString()]) {
+      ticks.set(tick.index, tick)
     }
     try {
       const swapSimulateResault = await simulateSwap({

@@ -87,9 +87,10 @@ const MarketEvents = () => {
             tick.forEach(singleTick => {
               marketProgram
                 .onTickChange(
-                  new Pair(pool.tokenX, pool.tokenY, FEE_TIERS[0]),
+                  new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
                   singleTick.index,
                   tickObject => {
+                    console.log('update tick: ', singleTick.index)
                     dispatch(
                       actions.updateTicks({
                         poolIndex: indexPool.toString(),
