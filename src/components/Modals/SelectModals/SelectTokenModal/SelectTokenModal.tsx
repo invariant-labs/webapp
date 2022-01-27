@@ -4,9 +4,10 @@ import CustomScrollbar from '../CustomScrollbar'
 import searchIcon from '@static/svg/lupa.svg'
 import { FixedSizeList as List } from 'react-window'
 import useStyles from '../style'
+import { BN } from '@project-serum/anchor'
 
 export interface ISelectTokenModal {
-  tokens: Array<{ symbol: string; name: string; logoURI: string }>
+  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN }>
   // commonTokens: Array<{ symbol: string, name: string, logoURI: string }>
   open: boolean
   handleClose: () => void
@@ -109,6 +110,26 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
           />
           <CardMedia image={searchIcon} className={classes.inputIcon} />
         </Grid>
+        {/* Testing element for styling */}
+        <Grid container className={classes.commonTokens}>
+          <Grid className={classes.commonTokensList}>
+            <Box className={classes.commonTokenItem}>
+                <CardMedia
+                  className={classes.commonTokenIcon}/>
+                <Typography component='p'> xBTC </Typography>
+            </Box>
+            <Box className={classes.commonTokenItem}>
+                <CardMedia
+                  className={classes.commonTokenIcon}/>
+                <Typography component='p'> xSNY </Typography>
+            </Box>
+            <Box className={classes.commonTokenItem}>
+                <CardMedia
+                  className={classes.commonTokenIcon}/>
+                <Typography component='p'> SOL </Typography>
+            </Box>
+           </Grid>
+        </Grid>
         {/* TODO: create a common tokens list */}
         {/* <Grid container className={classes.commonTokens}>
           <Typography component='h2' className={classes.commonTokensHeader}>Commonly used</Typography>
@@ -157,9 +178,16 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                   <Grid item>
                     <CardMedia className={classes.tokenIcon} image={token.logoURI} />{' '}
                   </Grid>
-                  <Grid item>
+                  <Grid item
+                   style={{
+                    marginRight: '60px',
+                    width: '170px'
+                    }}>
                     <Typography className={classes.tokenName}>{token.symbol}</Typography>
                     <Typography className={classes.tokenDescrpiption}>{token.name}</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography className={classes.tokenBalance}>  Balance: 1.25 {/*{token.balance}*/} </Typography>
                   </Grid>
                 </Grid>
               )

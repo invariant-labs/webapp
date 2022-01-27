@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selectTokenHeader: {
     width: '100%',
-    paddingBottom: 5,
+    paddingBottom: 10,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between'
@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selectTokenClose: {
     position: 'absolute',
-    top: 15,
-    right: 12,
+    top: 34,
+    right: 25,
     minWidth: 0,
     height: 20,
     '&:after': {
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       transform: 'translateY(-50%)'
     },
     '&:hover': {
-      backgroundColor: '#1B191F'
+      backgroundColor: 'transparent'
     }
   },
   selectTokenInput: {
@@ -57,13 +57,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
     border: 'none',
     borderRadius: 20,
-    padding: '18px 10px 17px 10px',
+    padding: '18px 10px 17px 15px',
     marginBottom: 15,
     '&::placeholder': {
       color: colors.invariant.light,
       fontSize: 16,
       fontFamily: 'Mukta',
-      fontWeight: 600
+      fontWeight: 400
     },
     '&:focus': {
       outline: 'none'
@@ -73,14 +73,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     width: 24,
     height: 26,
-    right: '12px',
+    right: '28px',
     top: '14px'
   },
   commonTokens: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'start',
-    paddingBottom: 14
+    paddingBottom: 14,
+    borderBottom: '1px solid #3A466B'
   },
   commonTokensHeader: {
     ...typography.body2
@@ -93,38 +94,39 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     justifyContent: 'center',
     alignItems: 'center',
-    border: '1px solid',
-    borderColor: colors.invariant.componentOut2,
-    borderRadius: 3,
-    padding: '7px 7px 2px 7px',
+    background: colors.invariant.newDark,
+    borderRadius: 12,
+    padding: '4px 10px',
     marginRight: 10,
+    '&:hover': {
+      background: colors.invariant.light
+    },
     '& p': {
       ...typography.body2
     }
   },
   commonTokenIcon: {
-    width: 18,
-    height: 18,
-    margin: '0 6px 2px 0',
+    width: 24,
+    height: 24,
+    background: 'radial-gradient(#9AC8E9, #5B8DC8)',
     borderRadius: '50%',
-    boxShadow: '0px 0px 5px rgba(216, 255, 181, 0.5)'
+    marginRight: '8px'
+    // boxShadow: '0px 0px 5px rgba(216, 255, 181, 0.5)'
   },
   tokenList: {
     borderRadius: 10,
     background: colors.invariant.component,
     width: 451,
     height: 352,
-    padding: 8,
+    padding: '8px 0',
     overflowY: 'hidden'
   },
   tokenItem: {
     margin: '0 0 2px 0',
-    borderRadius: 10,
+    borderRadius: 24,
     width: 431,
     height: 70,
     cursor: 'pointer',
-    padding: '9px 0px 9px 12px',
-
     '&:hover': {
       background: colors.invariant.light
     }
@@ -144,19 +146,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '14px'
   },
   tokenIcon: {
-    width: 30,
-    height: 30,
+    width: 36,
+    height: 36,
     marginLeft: 6,
     marginRight: 14,
     borderRadius: '50%'
   },
   tokenBalance: {
     ...typography.subtitle2,
-    color: colors.invariant.componentIn1,
+    color: colors.invariant.lightGrey,
+    fontSize: 16,
+    fontWeight: 400,
     whiteSpace: 'nowrap'
   },
   searchIcon: {
-    color: colors.invariant.componentOut3,
+    color: colors.invariant.light,
     margin: 10
   },
   hideScroll: {
@@ -173,7 +177,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.newDark,
     borderRadius: 10,
     height: '98%',
-    margin: 5,
     float: 'right',
     width: 5
   },
