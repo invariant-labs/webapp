@@ -134,13 +134,13 @@ export const Swap: React.FC<ISwap> = ({
   const simulateWithTimeout = () => {
     setThrottle(true)
 
-    if (Date.now() - lastCallTimestampRef.current >= 300) {
+    if (Date.now() - lastCallTimestampRef.current >= 400) {
       lastCallTimestampRef.current = Date.now()
       const timeout = setTimeout(() => {
         setSimulateAmount().finally(() => {
           setThrottle(false)
         })
-      }, 300)
+      }, 400)
       timeoutRef.current = timeout
     } else {
       clearTimeout(timeoutRef.current)
@@ -277,20 +277,11 @@ export const Swap: React.FC<ISwap> = ({
     if (tokenFromIndex === null || tokenToIndex === null) {
       return 'Choose pair'
     }
-    if (!getIsXToY(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
-      return 'No route found'
-    }
-    if (+amountTo === 0) {
-      return 'too low amount to swap'
-    }
     if (!poolInit || throttle) {
       return 'Loading'
     }
-    if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {
-      return 'Insufficient trade volume'
-    }
-    if (!simulateResult.simulateSuccess) {
-      return 'Too many tokens to exchange'
+    if (!getIsXToY(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
+      return 'No route found'
     }
     if (
       printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).gt(
@@ -302,6 +293,17 @@ export const Swap: React.FC<ISwap> = ({
     ) {
       return 'Insufficient balance'
     }
+    if (!simulateResult.simulateSuccess) {
+      return 'Too many tokens to exchange'
+    }
+    if (+amountTo === 0) {
+      return 'too low amount to swap'
+    }
+
+    if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {
+      return 'Insufficient trade volume'
+    }
+
     return 'Swap'
   }
   const setSlippage = (slippage: string): void => {
@@ -473,7 +475,9 @@ export const Swap: React.FC<ISwap> = ({
               }}
             />
           ) : null}
-          {tokenFromIndex !== null && tokenToIndex !== null ? (
+          {tokenFromIndex !== null &&
+          tokenToIndex !== null &&
+          getStateMessage() !== 'too low amount to swap' ? (
             <ExchangeRate
               tokenFromSymbol={tokens[tokenFromIndex].symbol}
               tokenToSymbol={tokens[tokenToIndex].symbol}
