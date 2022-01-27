@@ -558,9 +558,7 @@ export const handleSimulate = async (
         poolIndex = findPoolIndex(pool.address, pools)
         swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
       }
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) {}
   }
   if (swapSimulateRouterAmount.lt(new BN(0))) {
     return { amountOut: new BN(0), poolIndex: poolIndex, simulateSuccess: false }
