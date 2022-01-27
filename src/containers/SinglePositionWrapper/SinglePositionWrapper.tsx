@@ -31,13 +31,13 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
-  const { lowerTick, upperTick } = useSelector(currentPositionRangeTicks)
+  const { lowerTick, upperTick, loading: rangeTicksLoading } = useSelector(currentPositionRangeTicks)
 
-  const [ticksDataRequested, setTicksDataRequested] = useState<boolean>(false)
+  const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
 
   useEffect(() => {
-    if (position?.id && !ticksDataRequested) {
-      setTicksDataRequested(true)
+    if (position?.id && waitingForTicksData === null) {
+      setWaitingForTicksData(true)
       dispatch(actions.getCurrentPositionRangeTicks(id))
       dispatch(
         actions.getCurrentPlotTicks({
@@ -47,6 +47,12 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       )
     }
   }, [position?.id])
+
+  useEffect(() => {
+    if (waitingForTicksData === true && rangeTicksLoading) {
+      setWaitingForTicksData(false)
+    }
+  }, [rangeTicksLoading])
 
   const midPrice = useMemo(() => {
     if (position) {
@@ -177,7 +183,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }, [position])
 
   const [tokenXClaim, tokenYClaim] = useMemo(() => {
-    if (position && typeof lowerTick !== 'undefined' && typeof upperTick !== 'undefined') {
+    if (position && typeof lowerTick !== 'undefined' && typeof upperTick !== 'undefined' && waitingForTicksData === false) {
       const [bnX, bnY] = calculateClaimAmount({
         position,
         tickLower: lowerTick,
@@ -191,7 +197,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
 
     return [0, 0]
-  }, [position, lowerTick, upperTick])
+  }, [position, lowerTick, upperTick, waitingForTicksData])
 
   const data = useMemo(() => {
     if (ticksLoading && position) {
