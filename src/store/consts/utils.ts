@@ -9,7 +9,6 @@ import {
   MSOL_DEV,
   NetworkType,
   PRICE_DECIMAL,
-  SOL_DEV,
   Token,
   USDC_DEV,
   USDT_DEV,
