@@ -11,24 +11,167 @@ import {
 } from '@reducers/positions'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { pools, tokens } from '@selectors/pools'
-import { Pair, TICK_LIMIT } from '@invariant-labs/sdk'
-import {
-  calcPrice,
-  calcTicksAmountInRange,
-  createLiquidityPlot,
-  createPlaceholderLiquidityPlot
-} from '@consts/utils'
+import { Pair } from '@invariant-labs/sdk'
+import { createLiquidityPlot, createPlaceholderLiquidityPlot } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
-import { Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
-import { positionsWithPoolsData, plotTicks, singlePositionData } from '@selectors/positions'
+import { Transaction, sendAndConfirmRawTransaction, Keypair, SystemProgram } from '@solana/web3.js'
+import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { positionsWithPoolsData, singlePositionData } from '@selectors/positions'
 
-export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
+export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
   try {
     const connection = yield* call(getConnection)
     const wallet = yield* call(getWallet)
     const marketProgram = yield* call(getMarketProgram)
 
     const allPools = yield* select(pools)
+    const tokensAccounts = yield* select(accounts)
+    const allTokens = yield* select(tokens)
+
+    const wrappedSolAccount = Keypair.generate()
+
+    const createIx = SystemProgram.createAccount({
+      fromPubkey: wallet.publicKey,
+      newAccountPubkey: wrappedSolAccount.publicKey,
+      lamports: yield* call(Token.getMinBalanceRentForExemptAccount, connection),
+      space: 165,
+      programId: TOKEN_PROGRAM_ID
+    })
+
+    const transferIx = SystemProgram.transfer({
+      fromPubkey: wallet.publicKey,
+      toPubkey: wrappedSolAccount.publicKey,
+      lamports:
+        allTokens[allPools[data.poolIndex].tokenX.toString()].address.toString() ===
+        WRAPPED_SOL_ADDRESS
+          ? data.xAmount
+          : data.yAmount
+    })
+
+    const initIx = Token.createInitAccountInstruction(
+      TOKEN_PROGRAM_ID,
+      NATIVE_MINT,
+      wrappedSolAccount.publicKey,
+      wallet.publicKey
+    )
+
+    const unwrapIx = Token.createCloseAccountInstruction(
+      TOKEN_PROGRAM_ID,
+      wrappedSolAccount.publicKey,
+      wallet.publicKey,
+      wallet.publicKey,
+      []
+    )
+
+    let userTokenX =
+      allTokens[allPools[data.poolIndex].tokenX.toString()].address.toString() ===
+      WRAPPED_SOL_ADDRESS
+        ? wrappedSolAccount.publicKey
+        : tokensAccounts[allPools[data.poolIndex].tokenX.toString()]
+        ? tokensAccounts[allPools[data.poolIndex].tokenX.toString()].address
+        : null
+
+    if (userTokenX === null) {
+      userTokenX = yield* call(createAccount, allPools[data.poolIndex].tokenX)
+    }
+
+    let userTokenY =
+      allTokens[allPools[data.poolIndex].tokenY.toString()].address.toString() ===
+      WRAPPED_SOL_ADDRESS
+        ? wrappedSolAccount.publicKey
+        : tokensAccounts[allPools[data.poolIndex].tokenY.toString()]
+        ? tokensAccounts[allPools[data.poolIndex].tokenY.toString()].address
+        : null
+
+    if (userTokenY === null) {
+      userTokenY = yield* call(createAccount, allPools[data.poolIndex].tokenY)
+    }
+
+    const initPositionTx = yield* call([marketProgram, marketProgram.initPositionTx], {
+      pair: new Pair(allPools[data.poolIndex].tokenX, allPools[data.poolIndex].tokenY, {
+        fee: allPools[data.poolIndex].fee.v
+      }),
+      userTokenX,
+      userTokenY,
+      lowerTick: data.lowerTick,
+      upperTick: data.upperTick,
+      liquidityDelta: data.liquidityDelta,
+      owner: wallet.publicKey
+    })
+
+    const tx = new Transaction()
+      .add(createIx)
+      .add(transferIx)
+      .add(initIx)
+      .add(initPositionTx)
+      .add(unwrapIx)
+
+    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    tx.recentBlockhash = blockhash.blockhash
+    tx.feePayer = wallet.publicKey
+    const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+    signedTx.partialSign(wrappedSolAccount)
+    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+      skipPreflight: false
+    })
+
+    yield put(actions.setInitPositionSuccess(!!txid.length))
+
+    if (!txid.length) {
+      yield put(
+        snackbarsActions.add({
+          message: 'Position adding failed. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Position added successfully.',
+          variant: 'success',
+          persist: false,
+          txid
+        })
+      )
+
+      yield put(actions.getPositionsList())
+    }
+  } catch (error) {
+    console.log(error)
+
+    yield put(actions.setInitPositionSuccess(false))
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Failed to send. Please try again.',
+        variant: 'error',
+        persist: false
+      })
+    )
+  }
+}
+
+export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
+  try {
+    const allPools = yield* select(pools)
+    const allTokens = yield* select(tokens)
+
+    if (
+      allTokens[allPools[action.payload.poolIndex].tokenX.toString()].address.toString() ===
+        WRAPPED_SOL_ADDRESS ||
+      allTokens[allPools[action.payload.poolIndex].tokenY.toString()].address.toString() ===
+        WRAPPED_SOL_ADDRESS
+    ) {
+      return yield* call(handleInitPositionWithSOL, action.payload)
+    }
+
+    const connection = yield* call(getConnection)
+    const wallet = yield* call(getWallet)
+    const marketProgram = yield* call(getMarketProgram)
+
     const tokensAccounts = yield* select(accounts)
 
     let userTokenX = tokensAccounts[allPools[action.payload.poolIndex].tokenX.toString()]
@@ -119,50 +262,12 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
   try {
     const marketProgram = yield* call(getMarketProgram)
 
-    if (typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined') {
-      yield call(sleep, 3000) // cooldown period for case when user spams zooming out to make sure unnecesary requests will be cancelled
-    }
-    let toRequest =
-      typeof action.payload.min !== 'undefined' && typeof action.payload.max !== 'undefined'
-        ? calcTicksAmountInRange(
-            action.payload.min,
-            action.payload.max,
-            allPools[poolIndex].tickSpacing,
-            action.payload.isXtoY,
-            xDecimal,
-            yDecimal
-          )
-        : 30
-
-    if (isNaN(toRequest)) {
-      return
-    }
-
-    if (toRequest > TICK_LIMIT * 2) {
-      const { maxReached } = yield* select(plotTicks)
-
-      if (!maxReached) {
-        toRequest = TICK_LIMIT * 2
-      } else {
-        return
-      }
-    }
-
     const rawTicks = yield* call(
-      [marketProgram, marketProgram.getClosestTicks],
+      [marketProgram, marketProgram.getAllTicks],
       new Pair(allPools[poolIndex].tokenX, allPools[poolIndex].tokenY, {
         fee: allPools[poolIndex].fee.v
-      }),
-      toRequest
+      })
     )
-
-    const lowerTickPrice = rawTicks.length
-      ? calcPrice(rawTicks[0].index, action.payload.isXtoY, xDecimal, yDecimal)
-      : 0
-
-    const upperTickPrice = rawTicks.length
-      ? calcPrice(rawTicks[rawTicks.length - 1].index, action.payload.isXtoY, xDecimal, yDecimal)
-      : 0
 
     const ticksData = createLiquidityPlot(
       rawTicks,
@@ -172,31 +277,17 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       yDecimal
     )
 
-    yield put(
-      actions.setPlotTicks({
-        data: ticksData,
-        maxReached: rawTicks.length < toRequest,
-        currentMinPriceFetched: Math.min(lowerTickPrice, upperTickPrice),
-        currentMaxPriceFetched: Math.max(lowerTickPrice, upperTickPrice)
-      })
-    )
+    yield put(actions.setPlotTicks(ticksData))
   } catch (error) {
     console.log(error)
-    if (typeof action.payload.min === 'undefined' && typeof action.payload.max === 'undefined') {
-      const data = createPlaceholderLiquidityPlot(
-        action.payload.isXtoY,
-        10,
-        allPools[poolIndex].tickSpacing,
-        xDecimal,
-        yDecimal
-      )
-      yield put(
-        actions.setPlotTicks({
-          data,
-          maxReached: true
-        })
-      )
-    }
+    const data = createPlaceholderLiquidityPlot(
+      action.payload.isXtoY,
+      10,
+      allPools[poolIndex].tickSpacing,
+      xDecimal,
+      yDecimal
+    )
+    yield put(actions.setPlotTicks(data))
   }
 }
 
@@ -221,7 +312,7 @@ export function* handleGetPositionsList() {
   }
 }
 
-export function* handleClaimFee(action: PayloadAction<number>) {
+export function* handleClaimFeeWithSOL(positionIndex: number) {
   try {
     const connection = yield* call(getConnection)
     const marketProgram = yield* call(getMarketProgram)
@@ -229,8 +320,130 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
     const allPositionsData = yield* select(positionsWithPoolsData)
     const tokensAccounts = yield* select(accounts)
+    const allTokens = yield* select(tokens)
 
+    const wrappedSolAccount = Keypair.generate()
+
+    const createIx = SystemProgram.createAccount({
+      fromPubkey: wallet.publicKey,
+      newAccountPubkey: wrappedSolAccount.publicKey,
+      lamports: yield* call(Token.getMinBalanceRentForExemptAccount, connection),
+      space: 165,
+      programId: TOKEN_PROGRAM_ID
+    })
+
+    const initIx = Token.createInitAccountInstruction(
+      TOKEN_PROGRAM_ID,
+      NATIVE_MINT,
+      wrappedSolAccount.publicKey,
+      wallet.publicKey
+    )
+
+    const unwrapIx = Token.createCloseAccountInstruction(
+      TOKEN_PROGRAM_ID,
+      wrappedSolAccount.publicKey,
+      wallet.publicKey,
+      wallet.publicKey,
+      []
+    )
+
+    const positionForIndex = allPositionsData[positionIndex].poolData
+
+    let userTokenX =
+      allTokens[positionForIndex.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+        ? wrappedSolAccount.publicKey
+        : tokensAccounts[positionForIndex.tokenX.toString()]
+        ? tokensAccounts[positionForIndex.tokenX.toString()].address
+        : null
+
+    if (userTokenX === null) {
+      userTokenX = yield* call(createAccount, positionForIndex.tokenX)
+    }
+
+    let userTokenY =
+      allTokens[positionForIndex.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+        ? wrappedSolAccount.publicKey
+        : tokensAccounts[positionForIndex.tokenY.toString()]
+        ? tokensAccounts[positionForIndex.tokenY.toString()].address
+        : null
+
+    if (userTokenY === null) {
+      userTokenY = yield* call(createAccount, positionForIndex.tokenY)
+    }
+
+    const ix = yield* call([marketProgram, marketProgram.claimFeeInstruction], {
+      pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
+        fee: positionForIndex.fee.v
+      }),
+      userTokenX,
+      userTokenY,
+      owner: wallet.publicKey,
+      index: positionIndex
+    })
+
+    const tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
+
+    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    tx.recentBlockhash = blockhash.blockhash
+    tx.feePayer = wallet.publicKey
+    const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+    signedTx.partialSign(wrappedSolAccount)
+
+    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+      skipPreflight: false
+    })
+
+    if (!txid.length) {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to claim fee. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Fee claimed successfully.',
+          variant: 'success',
+          persist: false,
+          txid
+        })
+      )
+    }
+
+    yield put(actions.getSinglePosition(positionIndex))
+  } catch (error) {
+    console.log(error)
+    yield put(
+      snackbarsActions.add({
+        message: 'Failed to claim fee. Please try again.',
+        variant: 'error',
+        persist: false
+      })
+    )
+  }
+}
+
+export function* handleClaimFee(action: PayloadAction<number>) {
+  try {
+    const allTokens = yield* select(tokens)
+    const allPositionsData = yield* select(positionsWithPoolsData)
     const positionForIndex = allPositionsData[action.payload].poolData
+
+    if (
+      allTokens[positionForIndex.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
+      allTokens[positionForIndex.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+    ) {
+      return yield* call(handleClaimFeeWithSOL, action.payload)
+    }
+
+    const connection = yield* call(getConnection)
+    const marketProgram = yield* call(getMarketProgram)
+    const wallet = yield* call(getWallet)
+
+    const tokensAccounts = yield* select(accounts)
 
     let userTokenX = tokensAccounts[positionForIndex.tokenX.toString()]
       ? tokensAccounts[positionForIndex.tokenX.toString()].address
@@ -302,7 +515,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
   }
 }
 
-export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
+export function* handleClosePositionWithSOL(data: ClosePositionData) {
   try {
     const connection = yield* call(getConnection)
     const marketProgram = yield* call(getMarketProgram)
@@ -310,8 +523,134 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
 
     const allPositionsData = yield* select(positionsWithPoolsData)
     const tokensAccounts = yield* select(accounts)
+    const allTokens = yield* select(tokens)
 
+    const wrappedSolAccount = Keypair.generate()
+
+    const createIx = SystemProgram.createAccount({
+      fromPubkey: wallet.publicKey,
+      newAccountPubkey: wrappedSolAccount.publicKey,
+      lamports: yield* call(Token.getMinBalanceRentForExemptAccount, connection),
+      space: 165,
+      programId: TOKEN_PROGRAM_ID
+    })
+
+    const initIx = Token.createInitAccountInstruction(
+      TOKEN_PROGRAM_ID,
+      NATIVE_MINT,
+      wrappedSolAccount.publicKey,
+      wallet.publicKey
+    )
+
+    const unwrapIx = Token.createCloseAccountInstruction(
+      TOKEN_PROGRAM_ID,
+      wrappedSolAccount.publicKey,
+      wallet.publicKey,
+      wallet.publicKey,
+      []
+    )
+
+    const positionForIndex = allPositionsData[data.positionIndex].poolData
+
+    let userTokenX =
+      allTokens[positionForIndex.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+        ? wrappedSolAccount.publicKey
+        : tokensAccounts[positionForIndex.tokenX.toString()]
+        ? tokensAccounts[positionForIndex.tokenX.toString()].address
+        : null
+
+    if (userTokenX === null) {
+      userTokenX = yield* call(createAccount, positionForIndex.tokenX)
+    }
+
+    let userTokenY =
+      allTokens[positionForIndex.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+        ? wrappedSolAccount.publicKey
+        : tokensAccounts[positionForIndex.tokenY.toString()]
+        ? tokensAccounts[positionForIndex.tokenY.toString()].address
+        : null
+
+    if (userTokenY === null) {
+      userTokenY = yield* call(createAccount, positionForIndex.tokenY)
+    }
+
+    const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {
+      pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
+        fee: positionForIndex.fee.v
+      }),
+      owner: wallet.publicKey,
+      index: data.positionIndex,
+      userTokenX,
+      userTokenY
+    })
+
+    const tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
+
+    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    tx.recentBlockhash = blockhash.blockhash
+    tx.feePayer = wallet.publicKey
+    const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+    signedTx.partialSign(wrappedSolAccount)
+
+    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+      skipPreflight: false
+    })
+
+    yield* call(sleep, 3000)
+
+    if (!txid.length) {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to close position. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Position closed successfully.',
+          variant: 'success',
+          persist: false,
+          txid
+        })
+      )
+    }
+
+    yield put(actions.getPositionsList())
+
+    data.onSuccess()
+  } catch (error) {
+    console.log(error)
+    yield put(
+      snackbarsActions.add({
+        message: 'Failed to close position. Please try again.',
+        variant: 'error',
+        persist: false
+      })
+    )
+  }
+}
+
+export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
+  try {
+    const allTokens = yield* select(tokens)
+    const allPositionsData = yield* select(positionsWithPoolsData)
     const positionForIndex = allPositionsData[action.payload.positionIndex].poolData
+
+    if (
+      allTokens[positionForIndex.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
+      allTokens[positionForIndex.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+    ) {
+      return yield* call(handleClosePositionWithSOL, action.payload)
+    }
+
+    const connection = yield* call(getConnection)
+    const marketProgram = yield* call(getMarketProgram)
+    const wallet = yield* call(getWallet)
+
+    const tokensAccounts = yield* select(accounts)
 
     let userTokenX = tokensAccounts[positionForIndex.tokenX.toString()]
       ? tokensAccounts[positionForIndex.tokenX.toString()].address
@@ -329,14 +668,15 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
     }
 
-    const ix = yield* call(
-      [marketProgram, marketProgram.removePositionInstruction],
-      new Pair(positionForIndex.tokenX, positionForIndex.tokenY, { fee: positionForIndex.fee.v }),
-      wallet.publicKey,
-      action.payload.positionIndex,
+    const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {
+      pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
+        fee: positionForIndex.fee.v
+      }),
+      owner: wallet.publicKey,
+      index: action.payload.positionIndex,
       userTokenX,
       userTokenY
-    )
+    })
 
     const tx = new Transaction().add(ix)
 

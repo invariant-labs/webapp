@@ -5,9 +5,9 @@ import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import {
   calcPrice,
   calcTicksAmountInRange,
-  spacingMultiplicityGte,
-  spacingMultiplicityLte,
-  nearestTickIndex
+  nearestTickIndex,
+  maxSpacingMultiplicity,
+  minSpacingMultiplicity
 } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
@@ -23,7 +23,6 @@ export interface IRangeSelector {
   onChangeRange: (leftIndex: number, rightIndex: number) => void
   blocked?: boolean
   blockerInfo?: string
-  onZoomOut: (min: number, max: number) => void
   ticksLoading: boolean
   isXtoY: boolean
   xDecimal: number
@@ -40,7 +39,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   onChangeRange,
   blocked = false,
   blockerInfo,
-  onZoomOut,
   ticksLoading,
   isXtoY,
   xDecimal,
@@ -64,7 +62,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     const newMax = plotMax + diff / 4
     setPlotMin(newMin)
     setPlotMax(newMax)
-    onZoomOut(newMin, newMax)
   }
 
   const zoomPlus = () => {
@@ -101,10 +98,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     const initSideDist = Math.abs(
       midPrice.x -
         calcPrice(
-          Math.max(
-            spacingMultiplicityGte(MIN_TICK, tickSpacing),
-            midPrice.index - tickSpacing * 15
-          ),
+          Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 15),
           isXtoY,
           xDecimal,
           yDecimal
@@ -113,14 +107,11 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
     changeRangeHandler(
       isXtoY
-        ? Math.max(spacingMultiplicityGte(MIN_TICK, tickSpacing), midPrice.index - tickSpacing * 10)
-        : Math.min(
-            spacingMultiplicityLte(MAX_TICK, tickSpacing),
-            midPrice.index + tickSpacing * 10
-          ),
+        ? Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 10)
+        : Math.min(maxSpacingMultiplicity(tickSpacing), midPrice.index + tickSpacing * 10),
       isXtoY
-        ? Math.min(spacingMultiplicityLte(MAX_TICK, tickSpacing), midPrice.index + tickSpacing * 10)
-        : Math.max(spacingMultiplicityGte(MIN_TICK, tickSpacing), midPrice.index - tickSpacing * 10)
+        ? Math.min(maxSpacingMultiplicity(tickSpacing), midPrice.index + tickSpacing * 10)
+        : Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 10)
     )
     setPlotMin(midPrice.x - initSideDist)
     setPlotMax(midPrice.x + initSideDist)
@@ -168,8 +159,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             setValue={setLeftInput}
             decreaseValue={() => {
               const newLeft = isXtoY
-                ? Math.max(spacingMultiplicityGte(MIN_TICK, tickSpacing), leftRange - tickSpacing)
-                : Math.min(spacingMultiplicityLte(MAX_TICK, tickSpacing), leftRange + tickSpacing)
+                ? Math.max(minSpacingMultiplicity(tickSpacing), leftRange - tickSpacing)
+                : Math.min(maxSpacingMultiplicity(tickSpacing), leftRange + tickSpacing)
               changeRangeHandler(newLeft, rightRange)
             }}
             increaseValue={() => {
@@ -208,8 +199,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             }}
             increaseValue={() => {
               const newRight = isXtoY
-                ? Math.min(spacingMultiplicityLte(MAX_TICK, tickSpacing), rightRange + tickSpacing)
-                : Math.max(spacingMultiplicityGte(MIN_TICK, tickSpacing), rightRange - tickSpacing)
+                ? Math.min(maxSpacingMultiplicity(tickSpacing), rightRange + tickSpacing)
+                : Math.max(minSpacingMultiplicity(tickSpacing), rightRange - tickSpacing)
               changeRangeHandler(leftRange, newRight)
             }}
             onBlur={() => {
@@ -234,12 +225,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             className={classes.button}
             onClick={() => {
               changeRangeHandler(
-                isXtoY
-                  ? spacingMultiplicityGte(MIN_TICK, tickSpacing)
-                  : spacingMultiplicityLte(MAX_TICK, tickSpacing),
-                isXtoY
-                  ? spacingMultiplicityLte(MAX_TICK, tickSpacing)
-                  : spacingMultiplicityGte(MIN_TICK, tickSpacing)
+                isXtoY ? minSpacingMultiplicity(tickSpacing) : maxSpacingMultiplicity(tickSpacing),
+                isXtoY ? maxSpacingMultiplicity(tickSpacing) : minSpacingMultiplicity(tickSpacing)
               )
             }}>
             Set full range

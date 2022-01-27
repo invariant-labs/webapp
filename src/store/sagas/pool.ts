@@ -1,15 +1,18 @@
 import { call, takeLatest, put } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
-
 import { Pair } from '@invariant-labs/sdk'
 import { actions, PoolWithAddress } from '@reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
+import { Tick } from '@invariant-labs/sdk/src/market'
+
+export interface iTick {
+  index: Tick[]
+}
 
 // getting pool from SDK: market.get(pair)
 
 export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
   const marketProgram = yield* call(getMarketProgram)
-
   try {
     const pools: PoolWithAddress[] = []
     for (let i = 0; i < action.payload.length; i++) {
@@ -25,6 +28,7 @@ export function* fetchPoolsData(action: PayloadAction<Pair[]>) {
     }
 
     yield* put(actions.setPools(pools))
+    yield* put(actions.initPool(true))
   } catch (error) {
     console.log(error)
   }

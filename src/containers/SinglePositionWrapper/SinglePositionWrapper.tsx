@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@reducers/positions'
@@ -10,18 +10,12 @@ import {
 } from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
-import {
-  calcPrice,
-  calcYPerXPrice,
-  createPlaceholderLiquidityPlot,
-  getX,
-  getY,
-  printBN
-} from '@consts/utils'
+import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { PRICE_DECIMAL } from '@consts/static'
-import { calculate_price_sqrt, DENOMINATOR } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
 import useStyles from './style'
+import { getX, getY } from '@invariant-labs/sdk/lib/math'
 
 export interface IProps {
   id: string
@@ -36,17 +30,18 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
+  const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
   const {
-    data: ticksData,
-    loading: ticksLoading,
-    maxReached,
-    currentMaxPriceFetched,
-    currentMinPriceFetched
-  } = useSelector(plotTicks)
-  const { lowerTick, upperTick } = useSelector(currentPositionRangeTicks)
+    lowerTick,
+    upperTick,
+    loading: rangeTicksLoading
+  } = useSelector(currentPositionRangeTicks)
+
+  const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
 
   useEffect(() => {
-    if (position?.id) {
+    if (position?.id && waitingForTicksData === null) {
+      setWaitingForTicksData(true)
       dispatch(actions.getCurrentPositionRangeTicks(id))
       dispatch(
         actions.getCurrentPlotTicks({
@@ -56,6 +51,12 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       )
     }
   }, [position?.id])
+
+  useEffect(() => {
+    if (waitingForTicksData === true && rangeTicksLoading) {
+      setWaitingForTicksData(false)
+    }
+  }, [rangeTicksLoading])
 
   const midPrice = useMemo(() => {
     if (position) {
@@ -116,7 +117,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     () =>
       position
         ? calcYPerXPrice(
-            calculate_price_sqrt(position.lowerTickIndex).v,
+            calculatePriceSqrt(position.lowerTickIndex).v,
             position.tokenX.decimals,
             position.tokenY.decimals
           )
@@ -127,7 +128,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     () =>
       position
         ? calcYPerXPrice(
-            calculate_price_sqrt(position.upperTickIndex).v,
+            calculatePriceSqrt(position.upperTickIndex).v,
             position.tokenX.decimals,
             position.tokenY.decimals
           )
@@ -152,9 +153,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         return +printBN(
           getX(
             position.liquidity.v,
-            calculate_price_sqrt(position.upperTickIndex).v,
+            calculatePriceSqrt(position.upperTickIndex).v,
             position.poolData.sqrtPrice.v,
-            calculate_price_sqrt(position.lowerTickIndex).v
+            calculatePriceSqrt(position.lowerTickIndex).v
           ).div(DENOMINATOR),
           position.tokenX.decimals
         )
@@ -171,9 +172,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         return +printBN(
           getY(
             position.liquidity.v,
-            calculate_price_sqrt(position.upperTickIndex).v,
+            calculatePriceSqrt(position.upperTickIndex).v,
             position.poolData.sqrtPrice.v,
-            calculate_price_sqrt(position.lowerTickIndex).v
+            calculatePriceSqrt(position.lowerTickIndex).v
           ).div(DENOMINATOR),
           position.tokenY.decimals
         )
@@ -186,7 +187,12 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }, [position])
 
   const [tokenXClaim, tokenYClaim] = useMemo(() => {
-    if (position && typeof lowerTick !== 'undefined' && typeof upperTick !== 'undefined') {
+    if (
+      position &&
+      typeof lowerTick !== 'undefined' &&
+      typeof upperTick !== 'undefined' &&
+      waitingForTicksData === false
+    ) {
       const [bnX, bnY] = calculateClaimAmount({
         position,
         tickLower: lowerTick,
@@ -196,14 +202,11 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
       })
 
-      return [
-        +printBN(bnX.div(DENOMINATOR), position.tokenX.decimals),
-        +printBN(bnY.div(DENOMINATOR), position.tokenY.decimals)
-      ]
+      return [+printBN(bnX, position.tokenX.decimals), +printBN(bnY, position.tokenY.decimals)]
     }
 
     return [0, 0]
-  }, [position, lowerTick, upperTick])
+  }, [position, lowerTick, upperTick, waitingForTicksData])
 
   const data = useMemo(() => {
     if (ticksLoading && position) {
@@ -228,25 +231,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       currentPrice={current}
       tokenY={position.tokenY.symbol}
       tokenX={position.tokenX.symbol}
-      onZoomOut={(min, max) => {
-        if (
-          position &&
-          !ticksLoading &&
-          !maxReached &&
-          ((typeof currentMinPriceFetched !== 'undefined' &&
-            Math.max(min, 0) < currentMinPriceFetched) ||
-            (typeof currentMaxPriceFetched !== 'undefined' && max > currentMaxPriceFetched))
-        ) {
-          dispatch(
-            actions.getCurrentPlotTicks({
-              poolIndex: position.poolData.poolIndex,
-              isXtoY: true,
-              min,
-              max
-            })
-          )
-        }
-      }}
       onClickClaimFee={() => {
         dispatch(actions.claimFee(position.positionIndex))
       }}

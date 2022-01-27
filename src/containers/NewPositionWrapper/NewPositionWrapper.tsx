@@ -22,13 +22,7 @@ export const NewPositionWrapper = () => {
   const walletStatus = useSelector(status)
   const allPools = useSelector(pools)
   const { success, inProgress } = useSelector(initPosition)
-  const {
-    data: ticksData,
-    loading: ticksLoading,
-    maxReached,
-    currentMaxPriceFetched,
-    currentMinPriceFetched
-  } = useSelector(plotTicks)
+  const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
@@ -174,7 +168,7 @@ export const NewPositionWrapper = () => {
       feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, PRICE_DECIMAL - 2))}
       data={data}
       midPrice={midPrice}
-      addLiquidityHandler={(leftTickIndex, rightTickIndex) => {
+      addLiquidityHandler={(leftTickIndex, rightTickIndex, xAmount, yAmount) => {
         if (poolIndex === null) {
           return
         }
@@ -191,7 +185,9 @@ export const NewPositionWrapper = () => {
             poolIndex,
             lowerTick,
             upperTick,
-            liquidityDelta: liquidity
+            liquidityDelta: liquidity,
+            xAmount,
+            yAmount
           })
         )
       }}
@@ -281,26 +277,6 @@ export const NewPositionWrapper = () => {
         return new BN(0)
       }}
       ticksLoading={ticksLoading}
-      onZoomOut={(min, max) => {
-        if (
-          poolIndex !== null &&
-          tokenAIndex !== null &&
-          !ticksLoading &&
-          !maxReached &&
-          ((typeof currentMinPriceFetched !== 'undefined' &&
-            Math.max(min, 0) < currentMinPriceFetched) ||
-            (typeof currentMaxPriceFetched !== 'undefined' && max > currentMaxPriceFetched))
-        ) {
-          dispatch(
-            actions.getCurrentPlotTicks({
-              poolIndex,
-              isXtoY: allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
-              min: Math.max(min, 0),
-              max
-            })
-          )
-        }
-      }}
       showNoConnected={walletStatus !== Status.Initialized}
       noConnectedBlockerProps={{
         onConnect: type => {
