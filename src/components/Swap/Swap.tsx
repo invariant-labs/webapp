@@ -373,7 +373,7 @@ export const Swap: React.FC<ISwap> = ({
             }
           }}
           tokens={tokens}
-          current={tokenFromIndex !== null ? tokens[tokenFromIndex] : tokens[0]}
+          current={tokenFromIndex !== null ? tokens[tokenFromIndex] : null}
           onSelect={(name: string) => {
             setTokenFromIndex(
               tokens.findIndex(token => {
@@ -478,7 +478,7 @@ export const Swap: React.FC<ISwap> = ({
               tokenToSymbol={tokens[tokenToIndex].symbol}
               amount={swapRate}
               tokenToDecimals={tokens[tokenToIndex].decimals}
-              loading={getStateMessage() === 'Loading' ? true : false}></ExchangeRate>
+              loading={getStateMessage() === 'Loading'}></ExchangeRate>
           ) : null}
         </Box>
         <AnimatedButton

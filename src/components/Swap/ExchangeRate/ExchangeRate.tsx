@@ -1,11 +1,9 @@
 import { Grid, Typography } from '@material-ui/core'
-import { BN } from '@project-serum/anchor'
-import { PublicKey } from '@solana/web3.js'
 import loadingAnimation from '@static/gif/loading.gif'
 import React from 'react'
 import useStyles from './style'
 
-type iProps = {
+interface iProps {
   tokenFromSymbol: string
   tokenToSymbol: string
   amount: number
