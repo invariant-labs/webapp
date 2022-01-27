@@ -108,7 +108,6 @@ export const Swap: React.FC<ISwap> = ({
   }>({ amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 })
 
   const timeoutRef = useRef<number>(0)
-  const lastCallTimestampRef = useRef<number>(0)
 
   useEffect(() => {
     setInputRef(inputTarget.FROM)
@@ -134,24 +133,13 @@ export const Swap: React.FC<ISwap> = ({
   const simulateWithTimeout = () => {
     setThrottle(true)
 
-    if (Date.now() - lastCallTimestampRef.current >= 400) {
-      lastCallTimestampRef.current = Date.now()
-      const timeout = setTimeout(() => {
-        setSimulateAmount().finally(() => {
-          setThrottle(false)
-        })
-      }, 400)
-      timeoutRef.current = timeout
-    } else {
-      clearTimeout(timeoutRef.current)
-      const timeout = setTimeout(() => {
-        setSimulateAmount().finally(() => {
-          setThrottle(false)
-        })
-      }, Date.now() - lastCallTimestampRef.current)
-      lastCallTimestampRef.current = Date.now()
-      timeoutRef.current = timeout
-    }
+    clearTimeout(timeoutRef.current)
+    const timeout = setTimeout(() => {
+      setSimulateAmount().finally(() => {
+        setThrottle(false)
+      })
+    }, 500)
+    timeoutRef.current = timeout
   }
 
   useEffect(() => {
