@@ -19,6 +19,7 @@ import AnimatedButton, { ProgressState } from '@components/AnimatedButton/Animat
 import useStyles from './style'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PoolWithAddress } from '@reducers/pools'
+import ExchangeRate from './ExchangeRate/ExchangeRate'
 export interface SwapToken {
   balance: BN
   decimals: number
@@ -133,13 +134,13 @@ export const Swap: React.FC<ISwap> = ({
   const simulateWithTimeout = () => {
     setThrottle(true)
 
-    if (Date.now() - lastCallTimestampRef.current >= 750) {
+    if (Date.now() - lastCallTimestampRef.current >= 300) {
       lastCallTimestampRef.current = Date.now()
       const timeout = setTimeout(() => {
         setSimulateAmount().finally(() => {
           setThrottle(false)
         })
-      }, 750)
+      }, 300)
       timeoutRef.current = timeout
     } else {
       clearTimeout(timeoutRef.current)
@@ -269,7 +270,7 @@ export const Swap: React.FC<ISwap> = ({
     }
   }
 
-  const getButtonMessage = () => {
+  const getStateMessage = () => {
     if (walletStatus !== Status.Initialized) {
       return 'Please connect wallet'
     }
@@ -282,7 +283,7 @@ export const Swap: React.FC<ISwap> = ({
       return 'No route found'
     }
     if (!poolInit || throttle) {
-      return 'Loading...'
+      return 'Loading'
     }
     if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {
       return 'Insufficient trade volume'
@@ -372,7 +373,7 @@ export const Swap: React.FC<ISwap> = ({
             }
           }}
           tokens={tokens}
-          current={tokenFromIndex !== null ? tokens[tokenFromIndex] : null}
+          current={tokenFromIndex !== null ? tokens[tokenFromIndex] : tokens[0]}
           onSelect={(name: string) => {
             setTokenFromIndex(
               tokens.findIndex(token => {
@@ -380,6 +381,7 @@ export const Swap: React.FC<ISwap> = ({
               })
             )
           }}
+          disabled={tokenFromIndex === null}
         />
         <Box className={classes.tokenComponentTextContainer}>
           <Box
@@ -446,6 +448,7 @@ export const Swap: React.FC<ISwap> = ({
             )
             updateEstimatedAmount()
           }}
+          disabled={tokenFromIndex === null}
         />
         <Box className={classes.transactionDetails}>
           <Grid
@@ -470,16 +473,18 @@ export const Swap: React.FC<ISwap> = ({
             />
           ) : null}
           {tokenFromIndex !== null && tokenToIndex !== null ? (
-            <Typography className={classes.rateText}>
-              1 {tokens[tokenFromIndex].symbol} = {swapRate.toFixed(tokens[tokenToIndex].decimals)}{' '}
-              {tokens[tokenToIndex].symbol}
-            </Typography>
+            <ExchangeRate
+              tokenFromSymbol={tokens[tokenFromIndex].symbol}
+              tokenToSymbol={tokens[tokenToIndex].symbol}
+              amount={swapRate}
+              tokenToDecimals={tokens[tokenToIndex].decimals}
+              loading={getStateMessage() === 'Loading' ? true : false}></ExchangeRate>
           ) : null}
         </Box>
         <AnimatedButton
-          content={getButtonMessage()}
+          content={getStateMessage()}
           className={classes.swapButton}
-          disabled={getButtonMessage() !== 'Swap' || progress !== 'none'}
+          disabled={getStateMessage() !== 'Swap' || progress !== 'none'}
           onClick={() => {
             if (tokenFromIndex === null || tokenToIndex === null) return
             onSwap(
