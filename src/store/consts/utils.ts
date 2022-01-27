@@ -527,6 +527,7 @@ export const handleSimulate = async (
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(0)
   let poolIndex: number = 0
+  console.log('amonut to swap: ', amount.toString())
 
   for (const pool of filteredPools) {
     const isXtoY = fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)
@@ -541,7 +542,6 @@ export const handleSimulate = async (
     }
     try {
       const swapSimulateResault = await simulateSwap({
-        pair: new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
         xToY: isXtoY,
         byAmountIn: true,
         swapAmount: amount,
@@ -549,9 +549,11 @@ export const handleSimulate = async (
         slippage: slippage,
         pool: pool,
         ticks: ticks,
-        tickmap: tickMap,
-        market: marketProgram
+        tickmap: tickMap
       })
+
+      console.log('amonut out: ', printBN(swapSimulateResault.accumulatedAmountOut, 12))
+      console.log('amonut fee: ', printBN(swapSimulateResault.accumulatedFee, 12))
       if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
         poolIndex = findPoolIndex(pool.address, pools)
         swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut

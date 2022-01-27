@@ -112,7 +112,7 @@ export const Swap: React.FC<ISwap> = ({
 
   useEffect(() => {
     setInputRef(inputTarget.FROM)
-  }, [swap]) // do usunięcia, sprawdzić co sie stanie
+  }, [swap])
 
   useEffect(() => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
@@ -123,13 +123,13 @@ export const Swap: React.FC<ISwap> = ({
     if (inputRef === inputTarget.FROM) {
       simulateWithTimeout()
     }
-  }, [amountFrom, tokenToIndex, tokenFromIndex])
+  }, [amountFrom, tokenToIndex, tokenFromIndex, slippTolerance])
 
   useEffect(() => {
     if (inputRef === inputTarget.TO) {
       simulateWithTimeout()
     }
-  }, [amountTo, tokenToIndex, tokenFromIndex])
+  }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance])
 
   const simulateWithTimeout = () => {
     setThrottle(true)
@@ -274,13 +274,14 @@ export const Swap: React.FC<ISwap> = ({
     if (walletStatus !== Status.Initialized) {
       return 'Please connect wallet'
     }
-
     if (tokenFromIndex === null || tokenToIndex === null) {
       return 'Choose pair'
     }
-
     if (!getIsXToY(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
       return 'No route found'
+    }
+    if (+amountTo === 0) {
+      return 'too low amount to swap'
     }
     if (!poolInit || throttle) {
       return 'Loading'
