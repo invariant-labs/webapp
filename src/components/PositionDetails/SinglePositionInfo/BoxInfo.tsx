@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button, Grid, Typography } from '@material-ui/core'
-import AnimatedNumber from '@components/AnimatedNumber'
 import useStyles from './style'
 
 export const BoxInfo: React.FC<{
@@ -45,7 +44,10 @@ export const BoxInfo: React.FC<{
             <Typography className={classes.tokenName}>{tokenXName}</Typography>
           </Grid>
           <Typography className={classes.tokenValue}>
-            <AnimatedNumber value={tokenXValue} duration={300} formatValue={(value: string) => Number(value).toFixed(tokenXDecimal)} />
+            {(Math.abs(Number(tokenXValue)) < 10 ** -tokenXDecimal
+              ? 0
+              : Number(tokenXValue)
+            ).toFixed(tokenXDecimal)}
           </Typography>
         </Grid>
 
@@ -55,7 +57,10 @@ export const BoxInfo: React.FC<{
             <Typography className={classes.tokenName}>{tokenYName}</Typography>
           </Grid>
           <Typography className={classes.tokenValue}>
-            <AnimatedNumber value={tokenYValue} duration={300} formatValue={(value: string) => Number(value).toFixed(tokenYDecimal)} />
+            {(Math.abs(Number(tokenYValue)) < 10 ** -tokenYDecimal
+              ? 0
+              : Number(tokenYValue)
+            ).toFixed(tokenYDecimal)}
           </Typography>
         </Grid>
       </Grid>
