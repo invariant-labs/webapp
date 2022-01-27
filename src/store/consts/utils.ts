@@ -25,7 +25,6 @@ import {
 import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
 import { getMarketProgramSync } from '@web3/programs/amm'
-import { Error } from '@material-ui/icons'
 import { PoolWithAddress } from '@reducers/pools'
 
 export const tou64 = (amount: BN | String) => {
@@ -551,7 +550,7 @@ export const handleSimulate = async (
         tickmap: tickMap
       })
       if (swapSimulateResault.amountPerTick.length >= 8) {
-        throw 'too large amount'
+        throw new Error('too large amount')
       }
 
       if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
