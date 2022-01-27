@@ -1,10 +1,6 @@
 import { calculatePriceSqrt, MAX_TICK, MIN_TICK, Pair, TICK_LIMIT } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
-import {
-  parseLiquidityOnTicks,
-  SimulateSwapInterface,
-  simulateSwap
-} from '@invariant-labs/sdk/src/utils'
+import { DENOMINATOR, parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
@@ -12,7 +8,6 @@ import {
   ANA_DEV,
   MSOL_DEV,
   NetworkType,
-  PAIRS,
   PRICE_DECIMAL,
   SOL_DEV,
   Token,
@@ -23,6 +18,7 @@ import {
 import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
 import { getMarketProgramSync } from '@web3/programs/amm'
+import { PoolWithAddress } from '@reducers/pools'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -429,96 +425,137 @@ export const calcPrice = (index: number, isXtoY: boolean, xDecimal: number, yDec
   return isXtoY ? price : price !== 0 ? 1 / price : Number.MAX_SAFE_INTEGER
 }
 
+// TODO: temporarily copied, remove later
+export const getX = (
+  liquidity: BN,
+  upperSqrtPrice: BN,
+  currentSqrtPrice: BN,
+  lowerSqrtPrice: BN
+): BN => {
+  if (
+    upperSqrtPrice.lte(new BN(0)) ||
+    currentSqrtPrice.lte(new BN(0)) ||
+    lowerSqrtPrice.lte(new BN(0))
+  ) {
+    throw new Error('Price cannot be lower or equal 0')
+  }
+
+  let denominator: BN
+  let nominator: BN
+
+  if (currentSqrtPrice.gte(upperSqrtPrice)) {
+    return new BN(0)
+  } else if (currentSqrtPrice.lt(lowerSqrtPrice)) {
+    denominator = lowerSqrtPrice.mul(upperSqrtPrice).div(DENOMINATOR)
+    nominator = upperSqrtPrice.sub(lowerSqrtPrice)
+  } else {
+    denominator = upperSqrtPrice.mul(currentSqrtPrice).div(DENOMINATOR)
+    nominator = upperSqrtPrice.sub(currentSqrtPrice)
+  }
+
+  return liquidity.mul(nominator).div(denominator)
+}
+
+export const getY = (
+  liquidity: BN,
+  upperSqrtPrice: BN,
+  currentSqrtPrice: BN,
+  lowerSqrtPrice: BN
+): BN => {
+  if (
+    lowerSqrtPrice.lte(new BN(0)) ||
+    currentSqrtPrice.lte(new BN(0)) ||
+    upperSqrtPrice.lte(new BN(0))
+  ) {
+    throw new Error('Price cannot be 0')
+  }
+
+  let difference: BN
+  if (currentSqrtPrice.lt(lowerSqrtPrice)) {
+    return new BN(0)
+  } else if (currentSqrtPrice.gte(upperSqrtPrice)) {
+    difference = upperSqrtPrice.sub(lowerSqrtPrice)
+  } else {
+    difference = currentSqrtPrice.sub(lowerSqrtPrice)
+  }
+
+  return liquidity.mul(difference).div(DENOMINATOR)
+}
+
+export const findPoolIndex = (address: PublicKey, pools: PoolWithAddress[]) => {
+  return pools.findIndex(pool => pool.address.equals(address))
+}
+
+export const findPairIndex = (
+  fromToken: PublicKey,
+  toToken: PublicKey, // do naprawy!!!
+  pools: PoolWithAddress[]
+) => {
+  return pools.findIndex(
+    pool =>
+      (fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)) ||
+      (fromToken.equals(pool.tokenY) && toToken.equals(pool.tokenX))
+  )
+}
+
+export const findPairs = (tokenFrom: PublicKey, tokenTo: PublicKey, pairs: PoolWithAddress[]) => {
+  return pairs.filter(
+    pool =>
+      (tokenFrom.equals(pool.tokenX) && tokenTo.equals(pool.tokenY)) ||
+      (tokenFrom.equals(pool.tokenY) && tokenTo.equals(pool.tokenX))
+  )
+}
+
 export const handleSimulate = async (
-  pools: PoolStructure[],
+  pools: PoolWithAddress[],
   poolTicks: { [key in string]: Tick[] },
-  networkType: NetworkType,
   slippage: Decimal,
   fromToken: PublicKey,
   toToken: PublicKey,
   amount: BN,
   currentPrice: BN
-): Promise<{
-  amountOut: BN
-  simulateSuccess: boolean
-  poolIndex: number
-}> => {
-  try {
-    const marketProgram = getMarketProgramSync()
+): Promise<{ amountOut: BN; poolIndex: number; simulateSuccess: boolean }> => {
+  const marketProgram = getMarketProgramSync()
+  const filteredPools = findPairs(fromToken, toToken, pools)
+  let swapSimulateRouterAmount: BN = new BN(-1)
+  let poolIndex: number = 0
 
-    let simulateSuccess: boolean = false
-    let poolIndex: number = 0
-    let i: number = 0
-    const poolIndexes: number[] = []
-    const swapPool = PAIRS[networkType].filter(
-      pool =>
-        (fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)) ||
-        (fromToken.equals(pool.tokenY) && toToken.equals(pool.tokenX))
+  for (const pool of filteredPools) {
+    const isXtoY = fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)
+
+    const tickMap = await marketProgram.getTickmap(
+      new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v })
     )
-    // trunk-ignore(eslint/array-callback-return)
-    PAIRS[networkType].map((pair, index) => {
-      if (
-        (fromToken.equals(pair.tokenX) && toToken.equals(pair.tokenY)) ||
-        (fromToken.equals(pair.tokenY) && toToken.equals(pair.tokenX))
-      ) {
-        poolIndexes.push(index)
-      }
-    })
-    if (!swapPool) {
-      return { amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 }
-    }
 
-    let swapSimulateRouterAmount: BN = new BN(0)
-    for (const pool of swapPool) {
-      const isXtoY = fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)
-      const tickMap = await marketProgram.getTickmap(
-        new Pair(pool.tokenX, pool.tokenY, pool.feeTier)
-      )
+    const ticks: Map<number, Tick> = new Map<number, Tick>()
+    for (const tick of poolTicks[pool.address.toString()]) {
+      ticks.set(tick.index, tick)
+    }
+    try {
+      const swapSimulateResault = await simulateSwap({
+        xToY: isXtoY,
+        byAmountIn: true,
+        swapAmount: amount,
+        currentPrice: { v: currentPrice },
+        slippage: slippage,
+        pool: pool,
+        ticks: ticks,
+        tickmap: tickMap
+      })
+      if (swapSimulateResault.amountPerTick.length >= 8) {
+        throw new Error('too large amount')
+      }
 
-      const ticks: Map<number, Tick> = new Map<number, Tick>()
-      if (ticks.size === 0) {
-        for (const tick of poolTicks[i]) {
-          ticks.set(tick.index, tick)
-        }
+      if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
+        poolIndex = findPoolIndex(pool.address, pools)
+        swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
       }
-      if (amount.gt(new BN(0))) {
-        const simulateObject: SimulateSwapInterface = {
-          pair: new Pair(pool.tokenX, pool.tokenY, pool.feeTier),
-          xToY: isXtoY,
-          byAmountIn: true,
-          swapAmount: amount,
-          currentPrice: { v: currentPrice },
-          slippage: slippage,
-          pool: pools[poolIndexes[i]],
-          ticks: ticks,
-          tickmap: tickMap,
-          market: marketProgram
-        }
-        try {
-          const swapSimulateResault = simulateSwap(simulateObject)
-          if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
-            swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
-            poolIndex = poolIndexes[i]
-          }
-        } catch (error) {
-          i++
-          continue
-        }
-        simulateSuccess = true
-      } else {
-        swapSimulateRouterAmount = new BN(0)
-      }
-      i++
-    }
-    return {
-      amountOut: swapSimulateRouterAmount,
-      simulateSuccess: simulateSuccess,
-      poolIndex: poolIndex
-    }
-  } catch (error) {
-    console.log(error)
-    return { amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 }
+    } catch (error) {}
   }
+  if (swapSimulateRouterAmount.lt(new BN(0))) {
+    return { amountOut: new BN(0), poolIndex: poolIndex, simulateSuccess: false }
+  }
+  return { amountOut: swapSimulateRouterAmount, poolIndex: poolIndex, simulateSuccess: true }
 }
 
 export const minSpacingMultiplicity = (spacing: number) => {

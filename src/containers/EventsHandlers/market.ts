@@ -7,18 +7,17 @@ import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
 import { pools, poolTicks } from '@selectors/pools'
 import { PAIRS } from '@consts/static'
-import { getNetworkTokensList } from '@consts/utils'
-import { getTokensAddresses } from '@selectors/swap'
+import { getNetworkTokensList, findPairs } from '@consts/utils'
+import { swap } from '@selectors/swap'
 import { Pair } from '@invariant-labs/sdk'
-import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
   const marketProgram = getMarketProgramSync()
+  const { tokenFrom, tokenTo } = useSelector(swap)
   const networkStatus = useSelector(status)
   const networkType = useSelector(network)
   const allPools = useSelector(pools)
-  const { fromToken, toToken } = useSelector(getTokensAddresses)
   const poolTicksArray = useSelector(poolTicks)
   const [subscribedTick, _setSubscribeTick] = useState<
     Array<{ fromToken: string; toToken: string; indexPool: number }>
@@ -66,47 +65,63 @@ const MarketEvents = () => {
       return
     }
     const connectEvents = async () => {
-      allPools.forEach((pool, indexPool) => {
-        if (
-          subscribedTick.findIndex(
-            e =>
-              ((e.fromToken === fromToken.toString() && e.toToken === toToken.toString()) ||
-                (e.toToken === fromToken.toString() && e.fromToken === toToken.toString())) &&
-              e.indexPool === indexPool
-          ) !== -1
-        ) {
-          return
-        }
-        subscribedTick.push({
-          fromToken: pool.tokenX.toString(),
-          toToken: toToken.toString(),
-          indexPool
-        })
-        R.forEachObj(poolTicksArray, tick => {
-          tick.forEach(singleTick => {
-            marketProgram
-              .onTickChange(
-                new Pair(pool.tokenX, pool.tokenY, FEE_TIERS[0]),
-                singleTick.index,
-                tickObject => {
-                  dispatch(
-                    actions.updateTicks({
-                      poolIndex: indexPool.toString(),
-                      index: singleTick.index,
-                      tick: tickObject
-                    })
-                  )
-                }
-              )
-              .then(() => {})
-              .catch(() => {})
+      if (tokenFrom && tokenTo) {
+        allPools.forEach((pool, indexPool) => {
+          if (
+            subscribedTick.findIndex(
+              e =>
+                ((e.fromToken === tokenFrom.toString() && e.toToken === tokenTo.toString()) ||
+                  (e.toToken === tokenFrom.toString() && e.fromToken === tokenTo.toString())) &&
+                e.indexPool === indexPool
+            ) !== -1
+          ) {
+            return
+          }
+          subscribedTick.push({
+            fromToken: pool.tokenX.toString(),
+            toToken: pool.tokenY.toString(),
+            indexPool
+          })
+          R.forEachObj(poolTicksArray, tick => {
+            tick.forEach(singleTick => {
+              marketProgram
+                .onTickChange(
+                  new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
+                  singleTick.index,
+                  tickObject => {
+                    console.log('update tick: ', singleTick.index)
+                    dispatch(
+                      actions.updateTicks({
+                        poolIndex: indexPool.toString(),
+                        index: singleTick.index,
+                        tick: tickObject
+                      })
+                    )
+                  }
+                )
+                .then(() => {})
+                .catch(() => {})
+            })
           })
         })
-      })
+      }
     }
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     connectEvents()
   }, [networkStatus, marketProgram, Object.values(allPools).length])
+
+  useEffect(() => {
+    if (tokenFrom && tokenTo) {
+      const pools = findPairs(tokenFrom, tokenTo, allPools)
+
+      pools.forEach(pool => {
+        // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
+        marketProgram.getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v })).then(res => {
+          dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
+        })
+      })
+    }
+  }, [tokenFrom, tokenTo])
 
   return null
 }

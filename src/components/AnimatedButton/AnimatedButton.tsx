@@ -82,8 +82,9 @@ const AnimatedButton: React.FC<Props> = ({
         <div className={getClasses()}></div>
         {progress === 'progress' ||
         progress === 'approvedWithSuccess' ||
-        progress === 'approvedWithFail' ? (
-          <img src={loadingAnimation} style={{ height: '100%', width: 40, zIndex: 10 }}></img>
+        progress === 'approvedWithFail' ||
+        content === 'Loading' ? (
+          <img src={loadingAnimation} style={{ height: '100%', width: 25, zIndex: 10 }}></img>
         ) : (
           getMessage()
         )}
