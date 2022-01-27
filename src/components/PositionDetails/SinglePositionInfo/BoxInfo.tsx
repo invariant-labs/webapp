@@ -44,7 +44,10 @@ export const BoxInfo: React.FC<{
             <Typography className={classes.tokenName}>{tokenXName}</Typography>
           </Grid>
           <Typography className={classes.tokenValue}>
-            {(Math.abs(Number(tokenXValue)) < 10 ** -tokenXDecimal ? 0 : Number(tokenXValue)).toFixed(tokenXDecimal)}
+            {(Math.abs(Number(tokenXValue)) < 10 ** -tokenXDecimal
+              ? 0
+              : Number(tokenXValue)
+            ).toFixed(tokenXDecimal)}
           </Typography>
         </Grid>
 
@@ -54,7 +57,10 @@ export const BoxInfo: React.FC<{
             <Typography className={classes.tokenName}>{tokenYName}</Typography>
           </Grid>
           <Typography className={classes.tokenValue}>
-            {(Math.abs(Number(tokenYValue)) < 10 ** -tokenYDecimal ? 0 : Number(tokenYValue)).toFixed(tokenYDecimal)}
+            {(Math.abs(Number(tokenYValue)) < 10 ** -tokenYDecimal
+              ? 0
+              : Number(tokenYValue)
+            ).toFixed(tokenYDecimal)}
           </Typography>
         </Grid>
       </Grid>

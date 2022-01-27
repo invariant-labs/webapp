@@ -31,7 +31,11 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
-  const { lowerTick, upperTick, loading: rangeTicksLoading } = useSelector(currentPositionRangeTicks)
+  const {
+    lowerTick,
+    upperTick,
+    loading: rangeTicksLoading
+  } = useSelector(currentPositionRangeTicks)
 
   const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
 
@@ -183,7 +187,12 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }, [position])
 
   const [tokenXClaim, tokenYClaim] = useMemo(() => {
-    if (position && typeof lowerTick !== 'undefined' && typeof upperTick !== 'undefined' && waitingForTicksData === false) {
+    if (
+      position &&
+      typeof lowerTick !== 'undefined' &&
+      typeof upperTick !== 'undefined' &&
+      waitingForTicksData === false
+    ) {
       const [bnX, bnY] = calculateClaimAmount({
         position,
         tickLower: lowerTick,

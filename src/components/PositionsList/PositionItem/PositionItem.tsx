@@ -73,28 +73,43 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
   const isXs = useMediaQuery(theme.breakpoints.down('xs'))
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'))
 
-  const feeFragment = useMemo(() => (
-    <Grid container item className={classes.fee} justifyContent='center' alignItems='center'>
-      <Typography className={classes.infoText}>
-        {fee}% fee
-      </Typography>
-    </Grid>
-  ), [fee, classes])
-
-  const valueFragment = useMemo(() => (
-    <Grid container item className={classes.value} justifyContent='space-between' alignItems='center' wrap='nowrap'>
-      <Typography className={classes.infoText}>Value</Typography>
-      <Grid className={classes.infoCenter} container item justifyContent='center'>
-        <Typography className={classes.greenText}>
-          {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(value.toString())}
-          {showPrefix(value, isXs || isDesktop ? shorterPrefixConfig : undefined)} {tokenXName}
-        </Typography>
+  const feeFragment = useMemo(
+    () => (
+      <Grid container item className={classes.fee} justifyContent='center' alignItems='center'>
+        <Typography className={classes.infoText}>{fee}% fee</Typography>
       </Grid>
-    </Grid>
-  ), [value, tokenXName, classes, isXs, isDesktop])
+    ),
+    [fee, classes]
+  )
+
+  const valueFragment = useMemo(
+    () => (
+      <Grid
+        container
+        item
+        className={classes.value}
+        justifyContent='space-between'
+        alignItems='center'
+        wrap='nowrap'>
+        <Typography className={classes.infoText}>Value</Typography>
+        <Grid className={classes.infoCenter} container item justifyContent='center'>
+          <Typography className={classes.greenText}>
+            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(value.toString())}
+            {showPrefix(value, isXs || isDesktop ? shorterPrefixConfig : undefined)} {tokenXName}
+          </Typography>
+        </Grid>
+      </Grid>
+    ),
+    [value, tokenXName, classes, isXs, isDesktop]
+  )
 
   return (
-    <Grid className={classes.root} container direction='row' alignItems='center' justifyContent='space-between'>
+    <Grid
+      className={classes.root}
+      container
+      direction='row'
+      alignItems='center'
+      justifyContent='space-between'>
       <Grid container item className={classes.mdTop} direction='row' wrap='nowrap'>
         <Grid container item className={classes.iconsAndNames} alignItems='center' wrap='nowrap'>
           <Grid container item className={classes.icons} alignItems='center' wrap='nowrap'>
@@ -108,42 +123,56 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
           </Typography>
         </Grid>
 
-        <Hidden mdUp>
-          {feeFragment}
-        </Hidden>
+        <Hidden mdUp>{feeFragment}</Hidden>
       </Grid>
 
       <Grid container item className={classes.mdInfo} direction='row'>
-        <Grid container item className={classes.liquidity} justifyContent='center' alignItems='center'>
+        <Grid
+          container
+          item
+          className={classes.liquidity}
+          justifyContent='center'
+          alignItems='center'>
           <Typography className={classes.infoText}>
-            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(tokenXLiq.toString())}{showPrefix(tokenXLiq, isXs || isDesktop ? shorterPrefixConfig : undefined)} {tokenXName}
+            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(tokenXLiq.toString())}
+            {showPrefix(tokenXLiq, isXs || isDesktop ? shorterPrefixConfig : undefined)}{' '}
+            {tokenXName}
             {' - '}
-            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(tokenYLiq.toString())}{showPrefix(tokenYLiq, isXs || isDesktop ? shorterPrefixConfig : undefined)} {tokenYName}
+            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(tokenYLiq.toString())}
+            {showPrefix(tokenYLiq, isXs || isDesktop ? shorterPrefixConfig : undefined)}{' '}
+            {tokenYName}
           </Typography>
         </Grid>
 
-        <Hidden smDown>
-          {feeFragment}
-        </Hidden>
+        <Hidden smDown>{feeFragment}</Hidden>
 
-        <Hidden mdUp>
-          {valueFragment}
-        </Hidden>
+        <Hidden mdUp>{valueFragment}</Hidden>
 
-        <Grid container item className={classes.minMax} justifyContent='space-between' alignItems='center' wrap='nowrap'>
+        <Grid
+          container
+          item
+          className={classes.minMax}
+          justifyContent='space-between'
+          alignItems='center'
+          wrap='nowrap'>
           <Typography className={classes.greenText}>MIN - MAX</Typography>
           <Grid className={classes.infoCenter} container item justifyContent='center'>
             <Typography className={classes.infoText}>
-              {formatNumbers(isXs || isDesktop ? minMaxShorterThresholds : undefined)(min.toString())}{showPrefix(min, isXs || isDesktop ? shorterPrefixConfig : undefined)}
+              {formatNumbers(isXs || isDesktop ? minMaxShorterThresholds : undefined)(
+                min.toString()
+              )}
+              {showPrefix(min, isXs || isDesktop ? shorterPrefixConfig : undefined)}
               {' - '}
-              {formatNumbers(isXs || isDesktop ? minMaxShorterThresholds : undefined)(max.toString())}{showPrefix(max, isXs || isDesktop ? shorterPrefixConfig : undefined)} {tokenYName} per {tokenXName}
+              {formatNumbers(isXs || isDesktop ? minMaxShorterThresholds : undefined)(
+                max.toString()
+              )}
+              {showPrefix(max, isXs || isDesktop ? shorterPrefixConfig : undefined)} {tokenYName}{' '}
+              per {tokenXName}
             </Typography>
           </Grid>
         </Grid>
 
-        <Hidden smDown>
-          {valueFragment}
-        </Hidden>
+        <Hidden smDown>{valueFragment}</Hidden>
       </Grid>
     </Grid>
   )
