@@ -49,7 +49,7 @@ export const BoxInfo: React.FC<{
               value={tokenXValue}
               duration={300}
               formatValue={(value: string) =>
-                (Number(value) < 10 ** -tokenXDecimal ? 0 : Number(value)).toFixed(tokenXDecimal)
+                (Math.abs(Number(value)) < 10 ** -tokenXDecimal ? 0 : Number(value)).toFixed(tokenXDecimal)
               }
             />
           </Typography>
@@ -65,7 +65,7 @@ export const BoxInfo: React.FC<{
               value={tokenYValue}
               duration={300}
               formatValue={(value: string) =>
-                (Number(value) < 10 ** -tokenYDecimal ? 0 : Number(value)).toFixed(tokenYDecimal)
+                (Math.abs(Number(value)) < 10 ** -tokenYDecimal ? 0 : Number(value)).toFixed(tokenYDecimal)
               }
             />
           </Typography>
