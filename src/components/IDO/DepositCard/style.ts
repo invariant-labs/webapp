@@ -9,7 +9,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 16,
     flex: '1 1 0%',
     marginRight: 24,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('md')]: {
+      minWidth: '336px',
+      marginRight: 16
+    },
+    [theme.breakpoints.down('xs')]: {
+      minWidth: '100%'
+    }
   },
   title: {
     color: colors.white.main,

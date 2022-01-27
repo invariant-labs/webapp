@@ -10,7 +10,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   currencyInputLabel: {
     ...typography.body3,
     color: colors.invariant.lightInfoText,
-    fontSize: 12
+    fontSize: 12,
+    letterSpacing: '-0.03em'
   },
   title: {
     color: colors.white.main,

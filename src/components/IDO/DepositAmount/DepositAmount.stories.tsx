@@ -7,8 +7,8 @@ import DepositAmount, { IDepositAmount } from './DepositAmount'
 const currencyData: IDepositAmount['currencyRates'] = [
   { currency: 'USD', value: '47.22' },
   { currency: 'SOL', value: '0.0323' },
-  { currency: 'ETH', value: '0.324231' },
-  { currency: 'BTC', value: '0.00022' }
+  { currency: 'ETH', value: '0.324' },
+  { currency: 'BTC', value: '0.000' }
 ]
 
 storiesOf('IDO/IDOComponents', module)

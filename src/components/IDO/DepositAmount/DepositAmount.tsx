@@ -19,7 +19,11 @@ const DepositAmount: React.FC<IDepositAmount> = ({ currencyRates }) => {
           <Typography className={classes.title}>
             {mainCurrency.value} x{mainCurrency.currency}
           </Typography>
-          <Grid container justifyContent='space-between' direction='row'>
+          <Grid
+            container
+            justifyContent='space-between'
+            direction='row'
+            style={{ maxWidth: '240px' }}>
             {currencyRates.map(data => (
               <Typography key={data.currency} className={classes.currencyInputLabel}>
                 {data.value} {data.currency}

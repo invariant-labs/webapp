@@ -51,15 +51,15 @@ const depositDetailsData: IDepositCard = {
   currencyRates: [
     { currency: 'USD', value: '47.22' },
     { currency: 'SOL', value: '0.0323' },
-    { currency: 'ETH', value: '0.324231' },
-    { currency: 'BTC', value: '0.00022' }
+    { currency: 'ETH', value: '0.324' },
+    { currency: 'BTC', value: '0.000' }
   ],
   onTokenChange: (name: string) => console.log(name),
   amountInputData: {
-    setValue: () => {},
+    setValue: () => console.log('value was set'),
     decimal: 6,
     placeholder: '0.0',
-    onMaxClick: () => {},
+    onMaxClick: () => console.log('Max button clicked'),
     tokens: tokens,
     current: tokens[0]
   }

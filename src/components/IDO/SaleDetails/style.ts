@@ -5,17 +5,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   list: {
     borderRadius: 10,
     overflow: 'hidden',
-    width: 240,
+    flex: '1 1 0%',
+    maxWidth: 240,
 
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      maxWidth: '100%'
     }
   },
   listItem: {
     alignItems: 'center',
     padding: 16,
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       width: '100%'
     }
   },
@@ -30,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     height: 15,
-    margin: '0 8px',
+    marginRight: '8px',
     color: colors.white.main
   },
   invariantIcon: {

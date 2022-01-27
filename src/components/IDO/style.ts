@@ -3,14 +3,16 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    width: 672,
-    padding: 24
+    maxWidth: 664,
+    padding: 16,
+    [theme.breakpoints.down('xs')]: {
+      padding: 50
+    }
   },
   row: {
     position: 'relative',
     flexDirection: 'row',
-
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       flexDirection: 'column'
     }
   },
@@ -20,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 18
   },
   deposit: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       marginBottom: 24,
       marginRight: 0
     }

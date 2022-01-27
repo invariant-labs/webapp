@@ -55,8 +55,6 @@ const DepositCard: React.FC<IDepositCard> = ({
     [IActionType.Withdraw]: 'Withdraw'
   }
 
-  console.log(amountInputData.current)
-
   return (
     <Grid container className={classNames(classes.card, className)} direction='column'>
       <Typography className={classes.title}>{`${

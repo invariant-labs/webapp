@@ -43,10 +43,10 @@ const tokens: SwapToken[] = [
 ]
 
 const amountInputData: IAmountInput = {
-  setValue: () => {},
+  setValue: () => console.log('value was set'),
   decimal: 6,
   placeholder: '0.0',
-  onMaxClick: () => {},
+  onMaxClick: () => console.log('Max button clicked'),
   tokens: tokens,
   current: tokens[0]
 }
