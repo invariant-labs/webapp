@@ -1,12 +1,13 @@
 import React, { ReactElement } from 'react'
 import { CardMedia, PropTypes } from '@material-ui/core';
 import { AccessTime } from "@material-ui/icons";
-import { FontWeightProperty, PaddingProperty } from 'csstype'
-import { IdoLabel } from "src/components/IDO/IdoLabel/IdoLabel"
-import classNames from 'classnames'
-import { ClassNames } from '@emotion/core'
-import invariantLogo from "public/logo192.png";
+import { FontWeightProperty, PaddingProperty } from 'csstype';
+import { IdoLabel } from "/src/components/IDO/IdoLabel/IdoLabel";
+import { IdoLabelTimer } from "/src/components/IDO/IdoLabelTimer/IdoLabelTimer"
+import classNames from 'classnames';
+import { ClassNames } from '@emotion/core';
 import { Meta } from '@storybook/react';
+import invariantLogo from "/src/static/png/invariant-logo.png";
 import { boolean } from 'yup';
 
 
@@ -28,7 +29,13 @@ export interface IProps {
   isDarkBg?:boolean
   hasBottomBorder?:boolean
   hasTopBorder?:boolean
-  logoSrc?:string | null
+  logoSrc?:string | null,
+  endSalePeriod : string, 
+  endGracePeriod: string, 
+  solAmountContributed :string, 
+  estimatedTokenPrice:string, 
+  invariantForSale: string,
+
 }
 
 export const Panel: React.FC<IProps> = ({
@@ -44,17 +51,22 @@ export const Panel: React.FC<IProps> = ({
   logoSrc= null,
   disabled = false,
   startIcon,
-  labelClassName
+  labelClassName,
+  endSalePeriod, 
+  endGracePeriod, 
+  solAmountContributed, 
+  estimatedTokenPrice, 
+  invariantForSale,
 }) => {
 
 return(
     <div>
 
-<IdoLabel name="Sale period ends in" amount= "15:30:33" logoSrc="clock" hasTopBorder={true} />
-<IdoLabel name="Grace period ends in" amount= "32:29:27" logoSrc="clock" isDarkBg={true} />
-<IdoLabel name="SOL Contributed" amount= "122 124 846" />
-<IdoLabel name="Estimated token price" amount= "218.839" isDarkBg={true}/>
-<IdoLabel name="Invariant for sale" amount= "20 000 000" logoSrc = {invariantLogo} hasBottomBorder={true} />
+<IdoLabelTimer name ="End Sale Period" periodEnd= {endSalePeriod} logoSrc= "clock" hasTopBorder={true}/>
+<IdoLabelTimer name ="End Grace Period" periodEnd= {endGracePeriod} logoSrc= "clock" isDarkBg={true} />
+<IdoLabel name= "Sol Contributed" amount= {solAmountContributed} />
+<IdoLabel name= "Estimated Token Price"  amount= {estimatedTokenPrice} isDarkBg={true}/>
+<IdoLabel name ="Invariant For Sale" amount= {invariantForSale} logoSrc= {invariantLogo} hasBottomBorder={true}/>
 </div>
 )
 }

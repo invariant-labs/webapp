@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import { Button, PropTypes } from '@material-ui/core'
 import { FontWeightProperty, PaddingProperty } from 'csstype'
 import classNames from 'classnames'
@@ -7,6 +7,9 @@ import useStyles from './style'
 export interface IProps {
   name: ReactElement | string
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  balance: number
+  conversionRate: number
+  valueChange: number
   color?: PropTypes.Color
   className?: string
   style?: React.CSSProperties
@@ -20,18 +23,33 @@ export interface IProps {
 export const IdoInput: React.FC<IProps> = ({
   name,
   onClick,
+  balance,
+  conversionRate,
+  valueChange,
   color = 'primary',
   className,
   disabled = false,
   startIcon,
   labelClassName
 }) => {
+
+
+let [chosenAmount, setChosenAmount] = useState(0.0001)
+let [usdValue, setUsdValue] = useState(0)
+
+useEffect( () =>  { 
+if (balance >=chosenAmount){
+let multiplication:number = chosenAmount*conversionRate; 
+setUsdValue(parseFloat(multiplication.toFixed(4)))
+} 
+},[chosenAmount,conversionRate])
+
   const classes = useStyles()
   return (
     <div className= {classNames(classes.inputWrapper, className)}>
-    <div className={classNames(classes.firstRow, className)}> <div className= {classNames(classes.coinName, className)} > <div className= {classNames(classes.ellipse, className)}> </div> <h1 className={classNames(classes.SNY, className)}> SNY </h1>         </div> <div className= {classNames(classes.displayValue, className)}> <h1> 0000001 </h1> </div> </div>
+    <div className={classNames(classes.firstRow, className)}> <div className= {classNames(classes.coinName, className)} > <div className= {classNames(classes.ellipse, className)}> </div> <h1 className={classNames(classes.SNY, className)}> SNY </h1>         </div> <div className= {classNames(classes.displayValue, className)}> <input className ={classNames(classes.displayValue,className)} type="number" placeholder= "0.00001" min= "0.0001" max={balance} step="0.0001" onChange={(el) => balance >= parseInt(el.target.value) && setChosenAmount(parseFloat(el.target.value))} value= {parseFloat(chosenAmount.toString())} autoFocus={false} /> </div> </div> 
 
-    <div className = {classNames(classes.firstRow, className)}> <div style={{display:"flex", flexDirection:"row", justifyContent:"center", alignItems:"center"}}> <p className={classNames(classes.balanceText, className)}> Balance: 102 460.3445 SNY </p> <button className= {classNames(classes.maxButton, className)} children ="Max" /> </div> <div className = {classNames(classes.firstRow, className)}> <p className = {classNames(classes.valueChange, className)} children ="-2.41%"/> <p> ~$205.4345 </p> </div> </div>
+    <div className = {classNames(classes.firstRow, className)}> <div style={{display:"flex", flexDirection:"row", justifyContent:"center", alignItems:"center"}}> <p className={classNames(classes.balanceText, className)}> Balance: {balance} SNY </p> <button className= {classNames(classes.maxButton, className)} children ="Max" onClick= {()=> setChosenAmount(balance)} /> </div> <div className = {classNames(classes.firstRow, className)}> <p className = {valueChange>=0 ? classNames(classes.posValueChange, className) : classNames(classes.negValueChange, className)}> {valueChange}% </p> <p> ~${ balance >=chosenAmount ? usdValue : "Unavailable"} </p> </div> </div>
 
       </div>
   )

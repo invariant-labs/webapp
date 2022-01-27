@@ -1,17 +1,17 @@
 
 import { storiesOf } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
-import { IdoLabel } from '@components/IDO/IdoLabel/IdoLabel'
+import { IdoLabelTimer} from '@components/IDO/IdoLabelTimer/IdoLabelTimer'
 import { action } from '@storybook/addon-actions'
 import { colors } from '@static/theme'
 import invariantLogo from "/src/static/png/invariant-logo.png"
 
-storiesOf('IDO/IdoLabel4', module)
+storiesOf('IDO/IdoLabelTimer', module)
   .addDecorator(withKnobs)
   .add('default', () => (
     <div>
 
-<IdoLabel name="Estimated token price" amount= "218.839" isDarkBg={true} />
+<IdoLabelTimer name="Grace period ends in" periodEnd= "22 Feb 2022 23:59:00 GMT" logoSrc="clock" isDarkBg={true} />
 
 
         
@@ -20,7 +20,7 @@ storiesOf('IDO/IdoLabel4', module)
   .add('hover', () => (
     <div >
 
-<IdoLabel name="Estimated token price" amount= "218.839" />
+<IdoLabelTimer name="Grace period ends in" periodEnd= "22 Feb 2022 23:59:00 GMT" logoSrc="clock"  />
 
 
     </div>

@@ -8,6 +8,8 @@ display:"flex", flexDirection: "column", alignItems:"center", justifyContent:"ce
 
 backgroundColor: "#2A365C",
 width:"230px",
+height:"80px",
+
 
 '&:hover': {
     backgroundColor: "#202946"
@@ -23,6 +25,9 @@ outerCardCenterDark:{
   
   backgroundColor: "#202946",
   width:"230px",
+  height:"80px",
+
+
   '&:hover': {
       backgroundColor: "#111931"
 
@@ -55,7 +60,7 @@ letterSpacing: "-0.03em"
       color:"white",
       fontStyle: "normal",
         fontWeight: "bold",
-        fontSize: "calc(14px+2vw)",
+        fontSize: "14px",
         lineHeight: "24px",
         letterSpacing: "-0.03em"
   },

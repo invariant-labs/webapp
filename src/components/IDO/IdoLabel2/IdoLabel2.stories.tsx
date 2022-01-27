@@ -1,7 +1,7 @@
-import React from 'react'
+
 import { storiesOf } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
-import { IdoLabel2} from '@components/IDO/IdoLabel2/IdoLabel2'
+import { IdoLabel} from '@components/IDO/IdoLabel/IdoLabel'
 import { action } from '@storybook/addon-actions'
 import { colors } from '@static/theme'
 import invariantLogo from "/src/static/png/invariant-logo.png"
@@ -11,7 +11,7 @@ storiesOf('IDO/IdoLabel2', module)
   .add('default', () => (
     <div>
 
-<IdoLabel2 name="Grace period ends in" amount= "32:29:27" logoSrc="clock" isDarkBg={true} />
+<IdoLabel name="Grace period ends in" amount= "32:29:27" logoSrc="clock" isDarkBg={true} />
 
 
         
@@ -20,7 +20,7 @@ storiesOf('IDO/IdoLabel2', module)
   .add('hover', () => (
     <div >
 
-<IdoLabel2 name="Grace period ends in" amount= "32:29:17" logoSrc="clock"  />
+<IdoLabel name="Grace period ends in" amount= "32:29:17" logoSrc="clock"  />
 
 
     </div>

@@ -95,9 +95,9 @@ width:"368px", borderRadius: "16px"
 
   },
 
-  valueChange :{
-    color:`${colors.invariant.error}`,
-    backgroundColor: "rgba(251,85,95, 0.2)",
+  posValueChange :{
+    color:colors.invariant.green,
+    backgroundColor: "rgba(46, 224, 154, 0.2)",
     padding:"5px",
     borderRadius: "5px",
     fontWeight: "bold",
@@ -110,14 +110,34 @@ width:"368px", borderRadius: "16px"
 
   },
 
+  negValueChange:{
+
+    color:colors.invariant.error,
+    backgroundColor: "rgba(251,85,95, 0.2)",
+    padding:"5px",
+    borderRadius: "5px",
+    fontWeight: "bold",
+    fontSize: "14px",
+    lineHeight: "13px",
+    marginRight: "10px",
+    display:"flex",
+    alignSelf:"center"
+
+  },
+
   displayValue:{
     fontFamily: "Mukta",
     fontStyle: "normal",
     fontWeight: "bold",
-    fontSize: "28px",
+    fontSize: "36px",
     lineHeight: "32px",
     textAlign: "right",
     letterSpacing: "-0.03em",
+    width: "250px",
+    height: "100px",
+    color: "white",
+    backgroundColor: "#111931",
+    border: "solid 0px #111931"
   }
 
   ,disabled: {
