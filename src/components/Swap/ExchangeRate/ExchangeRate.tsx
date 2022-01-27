@@ -31,9 +31,11 @@ const ExchangeRate: React.FC<iProps> = ({
     )
   }
   return (
-    <Typography>
-      <Typography className={classes.rateText}>{setLoading()}</Typography>
-    </Typography>
+    <Grid>
+      <Typography component='h5' className={classes.rateText}>
+        {setLoading()}
+      </Typography>
+    </Grid>
   )
 }
 

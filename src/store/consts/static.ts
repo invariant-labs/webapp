@@ -94,7 +94,7 @@ const DEFAULT_PUBLICKEY = new PublicKey(0)
 const MAX_U64 = new BN('18446744073709551615')
 
 export const tokens: Record<NetworkType, Token[]> = {
-  Devnet: [USDC_DEV, USDT_DEV, SOL_DEV, ANA_DEV, MSOL_DEV],
+  Devnet: [USDC_DEV, USDT_DEV, ANA_DEV, MSOL_DEV],
   Mainnet: [],
   Testnet: [],
   Localnet: []

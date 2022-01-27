@@ -357,7 +357,6 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
       return {
         [USDC_DEV.address.toString()]: USDC_DEV,
         [USDT_DEV.address.toString()]: USDT_DEV,
-        [SOL_DEV.address.toString()]: SOL_DEV,
         [ANA_DEV.address.toString()]: ANA_DEV,
         [MSOL_DEV.address.toString()]: MSOL_DEV,
         [WSOL_DEV.address.toString()]: WSOL_DEV
