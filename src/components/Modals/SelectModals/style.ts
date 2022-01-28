@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selectTokenHeader: {
     width: '100%',
-    paddingBottom: 10,
+    paddingBottom: 12,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between'

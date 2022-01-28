@@ -111,7 +111,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
           />
           <CardMedia image={searchIcon} className={classes.inputIcon} />
         </Grid>
-        {/* Testing element for 'common tokens'styling */}
+        {/* Testing elements for 'common tokens'styling */}
         <Grid container className={classes.commonTokens}>
           <Grid className={classes.commonTokensList}>
             <Box className={classes.commonTokenItem}>
