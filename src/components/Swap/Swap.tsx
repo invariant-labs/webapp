@@ -8,7 +8,7 @@ import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
 import Slippage from '@components/Swap/slippage/Slippage'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import TransactionDetails from '@components/Swap/transactionDetails/TransactionDetails'
-import { PRICE_DECIMAL } from '@consts/static'
+import { PRICE_DECIMAL, WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { Swap as SwapData } from '@reducers/swap'
 import { Status } from '@reducers/solanaWallet'
 import SwapArrows from '@static/svg/swap-arrows.svg'
@@ -67,6 +67,7 @@ export interface ISwap {
   progress: ProgressState
   poolInit: boolean
   poolTicks: { [x: string]: Tick[] }
+  fullSolBalance: BN
 }
 export const Swap: React.FC<ISwap> = ({
   walletStatus,
@@ -76,7 +77,8 @@ export const Swap: React.FC<ISwap> = ({
   onSetPair,
   progress,
   poolInit,
-  poolTicks
+  poolTicks,
+  fullSolBalance
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -285,7 +287,7 @@ export const Swap: React.FC<ISwap> = ({
       return 'Too many tokens to exchange'
     }
     if (+amountTo === 0) {
-      return 'too low amount to swap'
+      return 'Too low amount to swap'
     }
 
     if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {
@@ -335,7 +337,12 @@ export const Swap: React.FC<ISwap> = ({
           <Typography className={classes.tokenComponentText}>
             Balance:{' '}
             {tokenFromIndex !== null
-              ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
+              ? printBN(
+                  tokens[tokenFromIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
+                    ? fullSolBalance
+                    : tokens[tokenFromIndex].balance,
+                  tokens[tokenFromIndex].decimals
+                )
               : '0'}
           </Typography>
         </Box>
@@ -399,7 +406,12 @@ export const Swap: React.FC<ISwap> = ({
           <Typography className={classes.tokenComponentText}>
             Balance:{' '}
             {tokenToIndex !== null
-              ? printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimals)
+              ? printBN(
+                  tokens[tokenToIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
+                    ? fullSolBalance
+                    : tokens[tokenToIndex].balance,
+                  tokens[tokenToIndex].decimals
+                )
               : '0'}
           </Typography>
         </Box>
@@ -465,7 +477,7 @@ export const Swap: React.FC<ISwap> = ({
           ) : null}
           {tokenFromIndex !== null &&
           tokenToIndex !== null &&
-          getStateMessage() !== 'too low amount to swap' ? (
+          getStateMessage() !== 'Too low amount to swap' ? (
             <ExchangeRate
               tokenFromSymbol={tokens[tokenFromIndex].symbol}
               tokenToSymbol={tokens[tokenToIndex].symbol}

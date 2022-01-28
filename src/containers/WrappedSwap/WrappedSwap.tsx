@@ -4,7 +4,7 @@ import { swap as swapPool } from '@selectors/swap'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@reducers/swap'
-import { status, swapTokens } from '@selectors/solanaWallet'
+import { balance, status, swapTokens } from '@selectors/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 
 export const WrappedSwap = () => {
@@ -16,6 +16,7 @@ export const WrappedSwap = () => {
   const poolInit = useSelector(initPool)
   const tokensList = useSelector(swapTokens)
   const { success, inProgress } = useSelector(swapPool)
+  const fullSolBalance = useSelector(balance)
 
   const [progress, setProgress] = useState<ProgressState>('none')
 
@@ -63,6 +64,7 @@ export const WrappedSwap = () => {
       progress={progress}
       poolInit={poolInit}
       poolTicks={poolTicksArray}
+      fullSolBalance={fullSolBalance}
     />
   )
 }
