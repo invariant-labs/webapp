@@ -162,7 +162,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.lightGrey,
     fontSize: 16,
     fontWeight: 400,
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 14
+    }
   },
   searchIcon: {
     color: colors.invariant.light,
