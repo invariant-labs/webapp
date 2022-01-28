@@ -59,7 +59,7 @@ const depositDetailsData: IDepositCard = {
     setValue: () => console.log('value was set'),
     decimal: 6,
     placeholder: '0.0',
-    onMaxClick: () => console.log('Max button clicked'),
+    onMaxClick: () => alert('Max button clicked'),
     tokens: tokens,
     current: tokens[0]
   }

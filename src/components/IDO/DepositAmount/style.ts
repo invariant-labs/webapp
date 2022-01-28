@@ -11,7 +11,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.body3,
     color: colors.invariant.lightInfoText,
     fontSize: 12,
-    letterSpacing: '-0.03em'
+    letterSpacing: '-0.03em',
+    marginRight: '8px',
+    [theme.breakpoints.down('xs')]: {
+      marginRight: '6px'
+    },
+    '&:last-child': {
+      marginRight: 0
+    }
   },
   title: {
     color: colors.white.main,

@@ -6,6 +6,7 @@ import { Grid, Typography, CardMedia } from '@material-ui/core'
 export interface IDepositAmount {
   currencyRates: { currency: string; value: string }[]
 }
+
 const DepositAmount: React.FC<IDepositAmount> = ({ currencyRates }) => {
   const classes = useStyles()
 
@@ -19,11 +20,7 @@ const DepositAmount: React.FC<IDepositAmount> = ({ currencyRates }) => {
           <Typography className={classes.title}>
             {mainCurrency.value} x{mainCurrency.currency}
           </Typography>
-          <Grid
-            container
-            justifyContent='space-between'
-            direction='row'
-            style={{ maxWidth: '240px' }}>
+          <Grid container justifyContent='flex-start' direction='row' style={{ maxWidth: '240px' }}>
             {currencyRates.map(data => (
               <Typography key={data.currency} className={classes.currencyInputLabel}>
                 {data.value} {data.currency}
