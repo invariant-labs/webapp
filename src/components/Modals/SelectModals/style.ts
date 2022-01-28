@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   container: {
-    padding: 30,
+    padding: 24,
     backgroundColor: colors.invariant.component,
     borderRadius: '24px',
     width: 500,
@@ -25,14 +25,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between'
   },
+  selectTokenTitle: {
+    fontSize: 20,
+    fontWeight: 700
+  },
   inputControl: {
     width: '100%',
     position: 'relative'
   },
   selectTokenClose: {
     position: 'absolute',
-    top: 34,
-    right: 25,
+    top: 30,
+    right: 22,
     minWidth: 0,
     height: 20,
     '&:after': {
@@ -87,7 +91,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.body2
   },
   commonTokensList: {
-    display: 'flex'
+    display: 'flex',
+    flexWrap: 'wrap'
   },
   commonTokenItem: {
     display: 'flex',
@@ -96,8 +101,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     background: colors.invariant.newDark,
     borderRadius: 12,
-    padding: '4px 10px',
-    marginRight: 10,
+    padding: '6px 12px',
+    margin: '5px 10px 5px 0px',
     '&:hover': {
       background: colors.invariant.light
     },

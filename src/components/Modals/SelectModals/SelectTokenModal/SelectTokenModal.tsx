@@ -5,9 +5,10 @@ import searchIcon from '@static/svg/lupa.svg'
 import { FixedSizeList as List } from 'react-window'
 import useStyles from '../style'
 import { BN } from '@project-serum/anchor'
+import { printBN } from '@consts/utils'
 
 export interface ISelectTokenModal {
-  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN }>
+  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
   // commonTokens: Array<{ symbol: string, name: string, logoURI: string }>
   open: boolean
   handleClose: () => void
@@ -99,7 +100,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
       <Grid container className={classes.container}>
         <Button className={classes.selectTokenClose} onClick={handleClose}></Button>
         <Grid className={classes.selectTokenHeader}>
-          <Typography component='h1'>Select a token</Typography>
+          <Typography className={classes.selectTokenTitle}>Select a token</Typography>
         </Grid>
         <Grid container className={classes.inputControl}>
           <input
@@ -110,9 +111,24 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
           />
           <CardMedia image={searchIcon} className={classes.inputIcon} />
         </Grid>
-        {/* Testing element for styling */}
+        {/* Testing element for 'common tokens'styling */}
         <Grid container className={classes.commonTokens}>
           <Grid className={classes.commonTokensList}>
+            <Box className={classes.commonTokenItem}>
+                <CardMedia
+                  className={classes.commonTokenIcon}/>
+                <Typography component='p'> xBTC </Typography>
+            </Box>
+            <Box className={classes.commonTokenItem}>
+                <CardMedia
+                  className={classes.commonTokenIcon}/>
+                <Typography component='p'> xSNY </Typography>
+            </Box>
+            <Box className={classes.commonTokenItem}>
+                <CardMedia
+                  className={classes.commonTokenIcon}/>
+                <Typography component='p'> SOL </Typography>
+            </Box>
             <Box className={classes.commonTokenItem}>
                 <CardMedia
                   className={classes.commonTokenIcon}/>
@@ -180,14 +196,17 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                   </Grid>
                   <Grid item
                    style={{
-                    marginRight: '60px',
+                    marginRight: '20px',
                     width: '170px'
                     }}>
                     <Typography className={classes.tokenName}>{token.symbol}</Typography>
                     <Typography className={classes.tokenDescrpiption}>{token.name}</Typography>
                   </Grid>
                   <Grid item>
-                    <Typography className={classes.tokenBalance}>  Balance: 1.25 {/*{token.balance}*/} </Typography>
+                    <Typography className={classes.tokenBalance}> Balance:{' '}
+                      {token.balance !== null ? printBN(token.balance, token.decimals)
+                      : '0'}
+                    </Typography>
                   </Grid>
                 </Grid>
               )
