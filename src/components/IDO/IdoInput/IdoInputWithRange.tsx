@@ -20,7 +20,7 @@ export interface IProps {
   labelClassName?: string
 }
 
-export const IdoInput: React.FC<IProps> = ({
+export const IdoInputWithRange: React.FC<IProps> = ({
   name,
   onClick,
   balance,
@@ -49,9 +49,10 @@ setUsdValue(parseFloat(multiplication.toFixed(4)))
     <div className= {classNames(classes.inputWrapper, className)}>
     <div className={classNames(classes.firstRow, className)}> <div className= {classNames(classes.coinName, className)} > <div className= {classNames(classes.ellipse, className)}> </div> <h1 className={classNames(classes.SNY, className)}> SNY </h1>         </div> <div className= {classNames(classes.displayValue, className)}> <input className ={classNames(classes.displayValue,className)} type="number" placeholder= "0.00001" min= "0.0000" max={balance} step="0.0001" onChange={(el) => balance >= parseInt(el.target.value) && setChosenAmount(parseFloat(el.target.value))} value= {parseFloat(chosenAmount.toString())} autoFocus={false} /> </div> </div> 
 
-    <div className = {classNames(classes.firstRow, className)}> <div style={{display:"flex", flexDirection:"row", justifyContent:"center", alignItems:"center"}}> <p className={classNames(classes.balanceText, className)}> Balance: {balance} SNY </p> <button className= {classNames(classes.maxButton, className)} children ="Max" onClick= {()=> setChosenAmount(balance)} /> </div> <div className = {classNames(classes.firstRow, className)}> <p className = {valueChange>=0 ? classNames(classes.posValueChange, className) : classNames(classes.negValueChange, className)}> {valueChange}% </p> <p> ~${ balance >=chosenAmount ? usdValue : "Unavailable"} </p> </div> </div>
+<div className= "rangeSelector" style={{display:"flex", flexDirection: "row",justifySelf:"flex-end", alignSelf:"flex-end" }}> <input type="range" min= "0.0000" max = {balance} onChange ={(el) => balance >= parseInt(el.target.value) && setChosenAmount(parseFloat(el.target.value))} value= {parseFloat(chosenAmount.toString())} /> </div>
+
+    <div className = {classNames(classes.firstRow, className)}> <div style={{display:"flex", flexDirection:"row", justifyContent:"center", alignItems:"center"}}> <p className={classNames(classes.balanceText, className)}> Balance: {balance} SNY </p> <button className= {classNames(classes.maxButton, className)} children ="Max" onClick= {()=> setChosenAmount(balance)} /> </div> <div className = {classNames(classes.firstRow, className)}> <p className = {valueChange>=0 ? classNames(classes.posValueChange, className) : classNames(classes.negValueChange, className)}> {valueChange}% </p> <p> ~${ balance >=chosenAmount ? usdValue : "Insufficient Funds"} </p> </div> </div>
 
       </div>
   )
 }
-

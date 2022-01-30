@@ -8,7 +8,7 @@ import useStyles from "./style";
 
 import { IdoDepositSol } from "/src/components/IDO/IdoDepositSol/IdoDepositSol"
 import { ConnectWalletButton } from "/src/components/IDO/ConnectWalletButton/ConnectWalletButton"
-import { IdoInput } from "/src/components/IDO/IdoInput/IdoInput"
+import { IdoInputWithRange } from "/src/components/IDO/IdoInput/IdoInputWithRange"
 
 import classNames from 'classnames';
 import { ClassNames } from '@emotion/core';
@@ -46,7 +46,7 @@ export interface IProps {
 
 
 
-export const IdoTwoPanel: React.FC<IProps> = ({
+export const IdoTwoPanelWithRange: React.FC<IProps> = ({
   name,
   amount,
   isDarkBg=false,
@@ -81,7 +81,7 @@ return(
 
 
 <div style={{ backgroundColor: "#111931",  borderRadius:"24px",padding:"0px 10px" }}>
-<IdoInput name="Ido Input" color='secondary' balance ={5000} conversionRate = {15.5} valueChange={2.41} />
+<IdoInputWithRange name="Ido Input" color='secondary' balance ={5000} conversionRate = {15.5} valueChange={2.41} />
 </div>
 
 <IdoDepositSol/>

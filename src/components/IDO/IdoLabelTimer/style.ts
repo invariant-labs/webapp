@@ -46,6 +46,7 @@ marginRight:"2%"
 
   grayText:{
       color:"#A9B6BF",
+      marginTop:"-5px",
 
       fontFamily: "Mukta",
 fontStyle: "normal",

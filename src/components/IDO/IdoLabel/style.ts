@@ -21,7 +21,8 @@ height:"80px",
 
 outerCardCenterDark:{
 
-  display:"flex", flexDirection: "column", alignItems:"center", justifyContent:"center", textAlign:"center",
+  display:"flex", flexDirection: "column", alignItems:"center", justifyItems:"flex-start", justifyContent:"space-between", textAlign:"center",
+  
   backgroundColor: "#202946",
   width:"230px",
   height:"80px",
@@ -44,6 +45,8 @@ marginRight:"2%"
 
   grayText:{
       color:"#A9B6BF",
+      marginTop:"-5px",
+
 
       fontFamily: "Mukta",
 fontStyle: "normal",
