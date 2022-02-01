@@ -4,20 +4,19 @@ import { swap as swapPool } from '@selectors/swap'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@reducers/swap'
-import { network } from '@selectors/solanaConnection'
-import { status, swapTokens } from '@selectors/solanaWallet'
+import { balance, status, swapTokens } from '@selectors/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 
 export const WrappedSwap = () => {
   const dispatch = useDispatch()
   const walletStatus = useSelector(status)
   const swap = useSelector(swapPool)
-  const networkType = useSelector(network)
   const poolTicksArray = useSelector(poolTicks)
   const allPools = useSelector(pools)
   const poolInit = useSelector(initPool)
   const tokensList = useSelector(swapTokens)
   const { success, inProgress } = useSelector(swapPool)
+  const fullSolBalance = useSelector(balance)
 
   const [progress, setProgress] = useState<ProgressState>('none')
 
@@ -37,26 +36,24 @@ export const WrappedSwap = () => {
 
   return (
     <Swap
-      onSwap={(slippage, price, knownPrice, simulate, poolIndex) => {
+      onSwap={(slippage, knownPrice, tokenFrom, tokenTo, poolIndex, amount) => {
         setProgress('progress')
         dispatch(
           actions.swap({
             slippage,
-            price,
             knownPrice,
-            simulate,
-            poolIndex
+            poolIndex,
+            tokenFrom,
+            tokenTo,
+            amount
           })
         )
       }}
-      onSimulate={(simulatePrice, fromToken, toToken, amount, success) => {
+      onSetPair={(tokenFrom, tokenTo) => {
         dispatch(
-          actions.simulate({
-            simulatePrice,
-            fromToken,
-            toToken,
-            amount,
-            success
+          actions.setPair({
+            tokenFrom,
+            tokenTo
           })
         )
       }}
@@ -67,7 +64,7 @@ export const WrappedSwap = () => {
       progress={progress}
       poolInit={poolInit}
       poolTicks={poolTicksArray}
-      networkType={networkType}
+      fullSolBalance={fullSolBalance}
     />
   )
 }

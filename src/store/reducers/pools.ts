@@ -24,7 +24,7 @@ export interface UpdatePool {
 }
 
 export interface UpdateTick {
-  index: number
+  index: string
   tickStructure: Tick[]
 }
 
