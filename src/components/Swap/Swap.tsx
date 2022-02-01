@@ -151,6 +151,7 @@ export const Swap: React.FC<ISwap> = ({
 
   useEffect(() => {
     updateEstimatedAmount()
+
     if (tokenToIndex !== null && tokenFromIndex !== null) {
       const pairIndex = pools.findIndex(pool => {
         return (
@@ -161,11 +162,6 @@ export const Swap: React.FC<ISwap> = ({
         )
       })
       setPoolIndex(pairIndex)
-    }
-
-    if (tokenFromIndex !== null && tokenToIndex !== null) {
-      setAmountFrom('')
-      setAmountTo('')
     }
     if (tokenFromIndex !== null) {
       const tokensY = tokens.filter(token => {
@@ -379,6 +375,7 @@ export const Swap: React.FC<ISwap> = ({
                 return name === token.symbol
               })
             )
+            setAmountFrom('')
           }}
           disabled={tokenFromIndex === null}
         />
@@ -451,6 +448,7 @@ export const Swap: React.FC<ISwap> = ({
               })
             )
             updateEstimatedAmount()
+            setAmountTo('')
           }}
           disabled={tokenFromIndex === null}
         />
