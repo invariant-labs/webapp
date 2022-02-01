@@ -61,7 +61,8 @@ export interface ISwap {
     tokenFrom: PublicKey,
     tokenTo: PublicKey,
     poolIndex: number,
-    amount: BN
+    amount: BN,
+    byAmountIn: boolean
   ) => void
   onSetPair: (tokenFrom: PublicKey, tokenTo: PublicKey) => void
   progress: ProgressState
@@ -94,7 +95,7 @@ export const Swap: React.FC<ISwap> = ({
   const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [amountTo, setAmountTo] = React.useState<string>('')
   const [swapRate, setSwapRate] = React.useState<number>(0)
-  const [swap, setSwap] = React.useState<boolean | null>(null)
+  const [swap, setSwap] = React.useState<boolean>(false)
   const [tokensY, setTokensY] = React.useState<SwapToken[]>(tokens)
   const [rotates, setRotates] = React.useState<number>(0)
   const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
@@ -110,10 +111,6 @@ export const Swap: React.FC<ISwap> = ({
   }>({ amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 })
 
   const timeoutRef = useRef<number>(0)
-
-  useEffect(() => {
-    setInputRef(inputTarget.FROM)
-  }, [swap])
 
   useEffect(() => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
@@ -191,7 +188,12 @@ export const Swap: React.FC<ISwap> = ({
       } else {
         knownPrice = new BN(sqrtPricePow * 10 ** decimalDiff)
       }
-      swapRate = +printBN(simulateResult.amountOut, assetFor.decimals) / Number(amountFrom)
+      console.log('resault: ', +printBN(simulateResult.amountOut, assetFor.decimals))
+      console.log('amonut from: ', Number(amountFrom))
+      swapRate =
+        +printBN(simulateResult.amountOut, assetFor.decimals) /
+        Number(inputRef === inputTarget.FROM ? amountFrom : amountTo)
+      console.log(swapRate)
       amountOut = Number(printBN(simulateResult.amountOut, assetFor.decimals))
       setSwapRate(swapRate)
     }
@@ -212,7 +214,8 @@ export const Swap: React.FC<ISwap> = ({
       }
       if (inputRef === inputTarget.FROM) {
         const simulatePrice = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex])
-
+        console.log(printBNtoBN(amountFrom, tokens[tokenToIndex].decimals).toString())
+        console.log('simulate price: ', simulatePrice.knownPrice.toString())
         setSimulateResult(
           await handleSimulate(
             pools,
@@ -223,12 +226,14 @@ export const Swap: React.FC<ISwap> = ({
             tokens[tokenFromIndex].address,
             tokens[tokenToIndex].address,
             printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),
-            simulatePrice.knownPrice
+            simulatePrice.knownPrice,
+            true
           )
         )
       } else if (inputRef === inputTarget.TO) {
-        const simulatePrice = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex])
-
+        const simulatePrice = getKnownPrice(tokens[tokenToIndex], tokens[tokenFromIndex])
+        console.log(printBNtoBN(amountTo, tokens[tokenToIndex].decimals).toString())
+        console.log('simulate price: ', simulatePrice.knownPrice.toString())
         setSimulateResult(
           await handleSimulate(
             pools,
@@ -236,10 +241,11 @@ export const Swap: React.FC<ISwap> = ({
             {
               v: fromFee(new BN(Number(+slippTolerance * 1000)))
             },
-            tokens[tokenToIndex].address,
             tokens[tokenFromIndex].address,
+            tokens[tokenToIndex].address,
             printBNtoBN(amountTo, tokens[tokenToIndex].decimals),
-            simulatePrice.knownPrice
+            simulatePrice.knownPrice,
+            false
           )
         )
       }
@@ -368,6 +374,7 @@ export const Swap: React.FC<ISwap> = ({
               setAmountFrom(
                 printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
               )
+              setInputRef(inputTarget.FROM)
             }
           }}
           tokens={tokens}
@@ -498,7 +505,10 @@ export const Swap: React.FC<ISwap> = ({
               tokens[tokenFromIndex].address,
               tokens[tokenToIndex].address,
               simulateResult.poolIndex,
-              printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals)
+              inputRef === inputTarget.FROM
+                ? printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals)
+                : printBNtoBN(amountTo, tokens[tokenToIndex].decimals),
+              inputRef === inputTarget.FROM ? true : false
             )
           }}
           progress={progress}
