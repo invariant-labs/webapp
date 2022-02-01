@@ -20,7 +20,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 16,
     borderRadius: 5,
     [theme.breakpoints.down('sm')]: {
-      right: 170
+      left: 105
     },
     '& p': {
       ...typography.body1
