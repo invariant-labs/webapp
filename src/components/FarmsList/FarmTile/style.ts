@@ -4,9 +4,12 @@ import { colors, typography } from '@static/theme'
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     borderRadius: 10,
-    backgroundColor: colors.invariant.componentOut1,
+    backgroundColor: colors.invariant.component,
     padding: 24,
-    paddingTop: 16
+    paddingTop: 16,
+    [theme.breakpoints.down('xs')]: {
+      padding: 16
+    }
   },
   top: {
     marginBottom: 10
@@ -28,7 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 16,
 
     [theme.breakpoints.down('xs')]: {
-      width: 58
+      width: 58,
+      marginRight: 8
     }
   },
   names: {
@@ -105,7 +109,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   label: {
     color: colors.invariant.lightInfoText,
     ...typography.heading4,
-    fontWeight: 400
+    fontWeight: 400,
+    letterSpacing: '0.03em'
   },
   value: {
     color: colors.white.main,
@@ -118,15 +123,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     width: '100%',
     height: 40,
-    borderRadius: 5,
+    borderRadius: '16px',
     textTransform: 'none',
     ...typography.body1,
-    backgroundColor: colors.invariant.accent1,
-    color: colors.white.main,
-
+    background: 'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)',
+    color: colors.black.full,
     '&:hover': {
-      backgroundColor: `${colors.invariant.accent1}`,
-      boxShadow: `0px 0px 15px ${colors.invariant.accent1}`
+      background: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
+      boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
 
     '&:disabled': {
@@ -137,7 +141,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:hover:disabled': {
-      backgroundColor: `${colors.invariant.componentOut2} !important`,
+      backgroundColor: `${colors.invariant.componentOut2}`,
       pointerEvents: 'auto !important',
       boxShadow: 'unset'
     }

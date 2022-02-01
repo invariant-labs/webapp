@@ -7,6 +7,7 @@ import { theme } from '../src/static/theme'
 import { StylesProvider } from '@material-ui/core'
 import { MemoryRouter } from 'react-router'
 import { withMaterialStyles } from './decorators'
+import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport'
 addDecorator(muiTheme([theme]))
 addDecorator(withMaterialStyles)
 // addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
@@ -17,3 +18,29 @@ addParameters({
   ],
   options: { theme: themes.dark }
 })
+
+const customViewports = {
+  small375: {
+    name: 'small',
+    styles: {
+      width: '375px',
+      height: '963px'
+    }
+  },
+  mid600: {
+    name: 'mid',
+    styles: {
+      width: '533px',
+      height: '600px'
+    }
+  }
+}
+
+export const parameters = {
+  viewport: {
+    viewports: {
+      ...MINIMAL_VIEWPORTS,
+      ...customViewports
+    }
+  }
+}
