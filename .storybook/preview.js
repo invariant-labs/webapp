@@ -23,7 +23,7 @@ const customViewports = {
   small375: {
     name: 'small',
     styles: {
-      width: '375px',
+      width: '360px',
       height: '963px'
     }
   },

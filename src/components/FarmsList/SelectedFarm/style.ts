@@ -239,7 +239,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.white.main,
     ...typography.body1,
     [theme.breakpoints.down('xs')]: {
-      ...typography.body3
+      ...newTypography.body2
     }
   },
   tokenValue: {
@@ -248,7 +248,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '0 15px'
+    padding: '0 15px',
+    [theme.breakpoints.down('xs')]: {
+      ...newTypography.body2,
+      paddingLeft: 4
+    }
   }
 }))
 
