@@ -31,6 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     '& $input': {
       color: colors.white.main,
+      position: 'relative',
+      top: -5,
       textAlign: 'end',
       ...newTypography.heading2
     },
@@ -122,7 +124,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 14,
     textTransform: 'none',
     marginLeft: 4,
-    marginBottom: 1.5,
+    marginTop: 1,
     background: ' rgba(46, 224, 154, 0.8)',
 
     '&:hover': {
@@ -133,7 +135,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       width: 26,
       minWidth: 26,
-      height: 14
+      height: 14,
+      marginTop: 2
     }
   },
   maxButtonNotActive: {

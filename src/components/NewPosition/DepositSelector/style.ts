@@ -3,6 +3,7 @@ import { colors, newTypography, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   wrapper: {
+    height: 540,
     borderRadius: 10,
     backgroundColor: colors.invariant.component,
     padding: 24,
@@ -56,7 +57,7 @@ const useStyles = makeStyles(() => ({
   },
   addButton: {
     width: '100%',
-    marginTop: 44
+    marginTop: 24
   }
 }))
 

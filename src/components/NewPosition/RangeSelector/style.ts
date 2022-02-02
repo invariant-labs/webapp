@@ -3,6 +3,7 @@ import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
+    height: 540,
     borderRadius: 10,
     backgroundColor: colors.invariant.component,
     padding: 24,
@@ -88,7 +89,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: 0,
     zIndex: 11,
     width: '464px',
-    height: '525px',
+    height: '541px',
     backgroundColor: 'rgba(11, 12, 13, 0.8)',
     filter: 'blur(0px) brightness(0.4)',
     borderRadius: 11,
