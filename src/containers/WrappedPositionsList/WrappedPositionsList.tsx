@@ -4,10 +4,11 @@ import { isLoadingPositionsList, positionsWithPoolsData } from '@selectors/posit
 import { useHistory } from 'react-router-dom'
 import { PRICE_DECIMAL } from '@consts/static'
 import { calculatePriceSqrt, DENOMINATOR } from '@invariant-labs/sdk'
-import { calcYPerXPrice, getX, getY, printBN } from '@consts/utils'
+import { calcYPerXPrice, printBN } from '@consts/utils'
 import { Status, actions } from '@reducers/solanaWallet'
 import { status } from '@selectors/solanaWallet'
 import { PositionsList } from '@components/PositionsList/PositionsList'
+import { getX, getY } from '@invariant-labs/sdk/lib/math'
 
 export const WrappedPositionsList: React.FC = () => {
   const dispatch = useDispatch()

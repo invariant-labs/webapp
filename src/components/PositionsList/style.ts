@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.dark,
     ...newTypography.body1,
     textTransform: 'none',
-    background: colors.invariant.pinkLinearGradient,
+    background: colors.invariant.pink,
     borderRadius: 14,
     height: 40,
     width: 130,

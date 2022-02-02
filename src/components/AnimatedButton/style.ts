@@ -1,28 +1,25 @@
 import { makeStyles } from '@material-ui/core'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   button: {
-    height: 40,
-    borderRadius: 5,
+    height: 44,
+    borderRadius: 16,
     textAlign: 'center',
     textTransform: 'none',
-    ...typography.body1,
-    backgroundColor: colors.invariant.accent1,
-    color: colors.white.main,
+    ...newTypography.body1,
+    color: colors.invariant.componentBcg,
+    background:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
     transition: 'background-color 0ms ease, box-shadow 150ms linear',
     position: 'relative',
     overflow: 'hidden',
     zIndex: 4,
 
-    '&:hover': {
-      backgroundColor: `${colors.invariant.accent1}`,
-      boxShadow: `0px 0px 15px ${colors.invariant.accent1}`
-    },
-
     '&:disabled': {
-      backgroundColor: colors.invariant.componentOut3,
-      color: colors.invariant.background2
+      backgroundColor: colors.invariant.light,
+      color: colors.invariant.componentBcg,
+      background: 'none'
     }
   },
   buttonRelease: {
@@ -69,7 +66,7 @@ const useStyles = makeStyles(() => ({
     zIndex: 1,
     top: 0,
     left: '-100%',
-    backgroundColor: colors.invariant.accent1
+    backgroundColor: colors.invariant.pink
   },
   backgroundRelease: {
     position: 'absolute',
@@ -81,7 +78,7 @@ const useStyles = makeStyles(() => ({
     top: '0%',
     animation: '$slide-start .4s ease-in',
     transition: 'all .2s',
-    backgroundColor: colors.invariant.accent1
+    backgroundColor: colors.invariant.pink
   },
   backgroundApprovedWithSuccess: {
     top: 0,
@@ -114,7 +111,7 @@ const useStyles = makeStyles(() => ({
   },
   btnStories: {
     padding: '8px 14px',
-    backgroundColor: colors.invariant.accent2,
+    backgroundColor: colors.invariant.green,
     border: 'none',
     margin: '10px 14px 10px 0'
   }

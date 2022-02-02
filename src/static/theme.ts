@@ -21,7 +21,8 @@ export const colors = {
     neon: '#08F7FE',
     astel: '#48ADF1',
     bastille: '#1E1A23',
-    charade: '#272735' // v2.0 component
+    charade: '#272735', // v2.0 component
+    deep: '#4B5983'
   },
   green: {
     main: '#00F9BB',
@@ -80,12 +81,17 @@ export const colors = {
     warning: '#EFD063',
     // after UI changes we will delete unnecessary vars
     pink: '#EF84F5',
+    violet: '#9C3EBD',
     green: '#2EE09A',
-    dark: '##111931',
+    dark: '#040B22',
+    newDark: '#111931',
     component: '#202946',
+    componentBcg: '#111931',
     light: '#3A466B',
+    lightHover: '#A9B6BF',
     black: '#010514',
-    textGrey: '#A9B6BF',
+    textGrey: '#27262B',
+    lightGrey: '#A9B6BF',
     text: '#FFFFFF',
     Error: '#FB555F',
     pinkLinearGradient:
@@ -217,6 +223,11 @@ export const newTypography = {
   body2: {
     fontSize: 16,
     lineHeight: '20px',
+    fontWeight: 400
+  },
+  body3: {
+    fontSize: 20,
+    lineHeight: '24px',
     fontWeight: 400
   },
   caption1: {

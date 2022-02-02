@@ -113,11 +113,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginInline: 9,
     transition: '.4s all'
   },
-  rateText: {
-    color: colors.invariant.lightInfoText,
-    textAlign: 'right',
-    ...typography.label1
-  },
+
   transactionDetails: {
     display: 'flex',
     alignItems: 'center',

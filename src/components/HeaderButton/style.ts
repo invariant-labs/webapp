@@ -3,7 +3,7 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerButton: {
-    background: colors.invariant.componentOut2,
+    background: colors.invariant.light,
     color: colors.white.main,
     paddingInline: 12,
     borderRadius: 10,
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:hover': {
-      background: colors.invariant.componentOut3
+      background: colors.blue.deep
     },
     '&:active': {
       '& #downIcon': {
@@ -31,8 +31,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     WebkitPaddingBefore: '2px'
   },
   headerButtonConnect: {
-    background: colors.invariant.logoPurple,
-    color: colors.white.main,
+    background:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    color: colors.invariant.newDark,
     paddingInline: 12,
     borderRadius: 10,
     textTransform: 'none',
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   headerButtonConnected: {
-    background: colors.invariant.componentOut2,
+    background: colors.invariant.light,
     color: colors.white.main,
     paddingInline: 12,
     borderRadius: 10,
@@ -75,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:hover': {
-      background: colors.invariant.componentOut3
+      background: colors.blue.deep
     }
   },
   headerButtonTextEllipsis: {

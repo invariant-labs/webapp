@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -30,21 +30,25 @@ const useStyles = makeStyles(() => ({
     zIndex: 13
   },
   desc: {
-    ...typography.body1,
+    ...newTypography.body2,
     fontWeight: 500,
     lineHeight: '20px',
-    color: colors.invariant.lightInfoText
+    color: colors.invariant.lightHover
   },
   button: {
+    height: 40,
+    width: 200,
     marginTop: 20,
-    color: colors.white.main,
-    background: colors.invariant.accent1,
-    ...typography.body1,
+    color: colors.invariant.componentBcg,
+    ...newTypography.body1,
     textTransform: 'none',
+    borderRadius: 14,
+    background:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
 
     '&:hover': {
-      background: colors.invariant.accent1,
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`
+      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
+      boxShadow: `0 0 5px ${colors.invariant.pink}`
     }
   }
 }))
