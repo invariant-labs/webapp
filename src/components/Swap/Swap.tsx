@@ -118,6 +118,10 @@ export const Swap: React.FC<ISwap> = ({
     }
   }, [tokenFromIndex, tokenToIndex])
   useEffect(() => {
+    if (getStateMessage() === 'No route found') {
+      setAmountTo('')
+      setAmountFrom('')
+    }
     if (inputRef === inputTarget.FROM) {
       simulateWithTimeout()
     }
@@ -173,7 +177,7 @@ export const Swap: React.FC<ISwap> = ({
   }, [tokenToIndex, tokenFromIndex, pools.length])
 
   useEffect(() => {
-    let temp: string = amountFrom
+    const temp: string = amountFrom
     setAmountFrom(amountTo)
     setAmountTo(temp)
     setInputRef(inputRef === inputTarget.FROM ? inputTarget.TO : inputTarget.FROM)
@@ -488,7 +492,8 @@ export const Swap: React.FC<ISwap> = ({
           {tokenFromIndex !== null &&
           tokenToIndex !== null &&
           getStateMessage() !== 'insufficient volume' &&
-          getStateMessage() !== 'exceed single swap limit (split transaction into several)' ? (
+          getStateMessage() !== 'exceed single swap limit (split transaction into several)' &&
+          getStateMessage() !== 'No route found' ? (
             <ExchangeRate
               tokenFromSymbol={tokens[tokenFromIndex].symbol}
               tokenToSymbol={tokens[tokenToIndex].symbol}
