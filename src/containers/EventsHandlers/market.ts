@@ -89,7 +89,6 @@ const MarketEvents = () => {
                   new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
                   singleTick.index,
                   tickObject => {
-                    console.log('update tick: ', singleTick.index)
                     dispatch(
                       actions.updateTicks({
                         poolIndex: indexPool.toString(),

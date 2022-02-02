@@ -126,6 +126,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       background: colors.invariant.accent1,
       boxShadow: `0 0 15px ${colors.invariant.accent1}`
     },
+    '&:disabled': {
+      backgroundColor: colors.invariant.componentOut3,
+      color: colors.invariant.background2
+    },
 
     [theme.breakpoints.down('xs')]: {
       ...typography.label2,
