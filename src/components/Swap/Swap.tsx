@@ -108,7 +108,7 @@ export const Swap: React.FC<ISwap> = ({
     amountOut: BN
     simulateSuccess: boolean
     poolIndex: number
-  }>({ amountOut: new BN(0), simulateSuccess: false, poolIndex: 0 })
+  }>({ amountOut: new BN(0), simulateSuccess: true, poolIndex: 0 })
 
   const timeoutRef = useRef<number>(0)
 
@@ -294,15 +294,12 @@ export const Swap: React.FC<ISwap> = ({
     ) {
       return 'Insufficient balance'
     }
-    if (+amountTo === 0) {
-      return 'insufficient volume'
-    }
     if (!simulateResult.simulateSuccess) {
-      return 'exceed single swap limit (split transaction into several)'
+      return 'Exceed single swap limit (split transaction into several)'
     }
 
     if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {
-      return 'Insufficient trade volume'
+      return 'Insufficient volume'
     }
 
     return 'Swap'
@@ -491,8 +488,8 @@ export const Swap: React.FC<ISwap> = ({
           ) : null}
           {tokenFromIndex !== null &&
           tokenToIndex !== null &&
-          getStateMessage() !== 'insufficient volume' &&
-          getStateMessage() !== 'exceed single swap limit (split transaction into several)' &&
+          getStateMessage() !== 'Insufficient volume' &&
+          getStateMessage() !== 'Exceed single swap limit (split transaction into several)' &&
           getStateMessage() !== 'No route found' ? (
             <ExchangeRate
               tokenFromSymbol={tokens[tokenFromIndex].symbol}

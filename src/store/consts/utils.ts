@@ -520,6 +520,10 @@ export const handleSimulate = async (
   let poolIndex: number = 0
   let isXtoY = false
   let resault
+  console.log(123)
+  if (amount.eq(new BN(0))) {
+    return { amountOut: new BN(0), poolIndex: poolIndex, simulateSuccess: true }
+  }
 
   for (const pool of filteredPools) {
     isXtoY = fromToken.equals(pool.tokenX)
