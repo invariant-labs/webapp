@@ -1,11 +1,12 @@
 import { call, put, all, spawn, takeEvery, takeLatest } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
-import { actions, PoolWithAddress } from '@reducers/pools'
+import { actions, PairTokens, PoolWithAddress } from '@reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PublicKey } from '@solana/web3.js'
 import { PoolStructure } from '@invariant-labs/sdk/lib/market'
+import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 export interface iTick {
   index: Tick[]
 }
@@ -19,12 +20,47 @@ export function* fetchPoolData(action: PayloadAction<Pair>) {
       marketProgram.program.programId
     )
 
-    yield* put(actions.addPool({
+    yield* put(actions.addPools([{
       ...poolData,
       address
-    }))
+    }]))
   } catch (error) {
-    yield* put(actions.poolAddingFailed())
+    yield* put(actions.poolsAddingFailed())
+
+    console.log(error)
+  }
+}
+
+export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
+  const marketProgram = yield* call(getMarketProgram)
+  try {
+    const pools: PoolWithAddress[] = []
+
+    for (const fee of FEE_TIERS) {
+      try {
+        const pair = new Pair(
+          action.payload.first,
+          action.payload.second,
+          fee
+        )
+        const poolData = yield* call([marketProgram, marketProgram.getPool], pair)
+        const address = yield* call(
+          [pair, pair.getAddress],
+          marketProgram.program.programId
+        )
+
+        pools.push({
+          ...poolData,
+          address
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    yield* put(actions.addPools(pools))
+  } catch (error) {
+    yield* put(actions.poolsAddingFailed())
 
     console.log(error)
   }
@@ -40,13 +76,17 @@ export function* fetchPoolsDataForPositions(action: PayloadAction<PublicKey[]>) 
   try {
     const newPools: PoolWithAddress[] = []
 
-    for (const address of action.payload) {
-      const poolData: PoolStructure = yield* call(fetchPoolFromAddress, address)
+    try {
+      for (const address of action.payload) {
+        const poolData: PoolStructure = yield* call(fetchPoolFromAddress, address)
 
-      newPools.push({
-        ...poolData,
-        address
-      })
+        newPools.push({
+          ...poolData,
+          address
+        })
+      }
+    } catch (error) {
+      console.log(error)
     }
 
     yield* put(actions.addPoolsForPositions(newPools))
@@ -57,6 +97,10 @@ export function* fetchPoolsDataForPositions(action: PayloadAction<PublicKey[]>) 
 
 export function* getPoolsDataForPositionsHandler(): Generator {
   yield* takeEvery(actions.getPoolsDataForPositions, fetchPoolsDataForPositions)
+}
+
+export function* getAllPoolsForPairDataHandler(): Generator {
+  yield* takeLatest(actions.getAllPoolsForPairData, fetchAllPoolsForPairData)
 }
 
 export function* getPoolDataHandler(): Generator {

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { swapTokens, status } from '@selectors/solanaWallet'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { calcPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
-import { isLoadingLatestSinglePool, pools } from '@selectors/pools'
+import { isLoadingLatestPoolsForTransaction, pools } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { initPosition, plotTicks } from '@selectors/positions'
@@ -26,7 +26,7 @@ export const NewPositionWrapper = () => {
   const allPools = useSelector(pools)
   const { success, inProgress } = useSelector(initPosition)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
-  const isFetchingNewPool = useSelector(isLoadingLatestSinglePool)
+  const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 

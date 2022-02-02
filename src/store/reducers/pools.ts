@@ -14,7 +14,7 @@ export interface IPoolsStore {
   tokens: Record<string, Token>
   pools: PoolWithAddress[]
   poolTicks: { [key in string]: Tick[] }
-  isLoadingLatestSinglePool: boolean
+  isLoadingLatestPoolsForTransaction: boolean
 }
 
 export interface UpdatePool {
@@ -37,7 +37,12 @@ export const defaultState: IPoolsStore = {
   tokens: {},
   pools: [],
   poolTicks: {},
-  isLoadingLatestSinglePool: false
+  isLoadingLatestPoolsForTransaction: false
+}
+
+export interface PairTokens {
+  first: PublicKey,
+  second: PublicKey
 }
 
 export const poolsSliceName = 'pools'
@@ -64,13 +69,13 @@ const poolsSlice = createSlice({
       }
       return state
     },
-    addPool(state, action: PayloadAction<PoolWithAddress>) {
-      state.pools = [...state.pools, action.payload]
-      state.isLoadingLatestSinglePool = false
+    addPools(state, action: PayloadAction<PoolWithAddress[]>) {
+      state.pools = [...state.pools, ...action.payload]
+      state.isLoadingLatestPoolsForTransaction = false
       return state
     },
-    poolAddingFailed(state) {
-      state.isLoadingLatestSinglePool = false
+    poolsAddingFailed(state) {
+      state.isLoadingLatestPoolsForTransaction = false
       return state
     },
     addPoolsForPositions(state, action: PayloadAction<PoolWithAddress[]>) {
@@ -83,7 +88,12 @@ const poolsSlice = createSlice({
       ] = action.payload.tick
     },
     getPoolData(state, _action: PayloadAction<Pair>) {
-      state.isLoadingLatestSinglePool = true
+      state.isLoadingLatestPoolsForTransaction = true
+
+      return state
+    },
+    getAllPoolsForPairData(state, _action: PayloadAction<PairTokens>) {
+      state.isLoadingLatestPoolsForTransaction = true
 
       return state
     },

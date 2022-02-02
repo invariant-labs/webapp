@@ -1,5 +1,5 @@
 import { Swap } from '@components/Swap/Swap'
-import { isLoadingLatestSinglePool, pools, poolTicks } from '@selectors/pools'
+import { isLoadingLatestPoolsForTransaction, pools, poolTicks } from '@selectors/pools'
 import { swap as swapPool } from '@selectors/swap'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,7 +16,7 @@ export const WrappedSwap = () => {
   const tokensList = useSelector(swapTokens)
   const { success, inProgress } = useSelector(swapPool)
   const fullSolBalance = useSelector(balance)
-  const isFetchingNewPool = useSelector(isLoadingLatestSinglePool)
+  const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
 
   const [progress, setProgress] = useState<ProgressState>('none')
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
