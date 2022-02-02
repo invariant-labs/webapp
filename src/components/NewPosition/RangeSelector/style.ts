@@ -77,6 +77,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginRight: 0,
         marginBottom: 8
       }
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
     }
   },
   blocker: {

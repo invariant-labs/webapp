@@ -19,9 +19,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...newTypography.heading2,
     display: 'grid',
     gridTemplateAreas: `
-    "select select"
-    "balance percentages"
+    "select select select select"
+    "balance balance percentages percentages"
     `,
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateAreas: `
+    "select select select select"
+    "balance balance balance percentages"
+    `
+    },
 
     '& $input': {
       color: colors.white.main,
@@ -33,10 +39,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: colors.invariant.light
     },
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       height: 84,
       '& $input': {
-        paddingTop: 12
+        // paddingBottom: 30
       }
     }
   },
@@ -57,7 +63,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('sm')]: {
       height: 36,
-      minWidth: 85
+      minWidth: 85,
+      marginTop: 4
     }
   },
   percentages: {
@@ -97,6 +104,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer'
   },
   caption2: {
+    display: 'flex',
+    flexWrap: 'nowrap',
     ...newTypography.caption2,
     color: colors.invariant.lightHover,
 
