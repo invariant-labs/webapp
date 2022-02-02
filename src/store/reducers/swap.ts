@@ -1,5 +1,4 @@
-import { DEFAULT_PUBLICKEY } from '@consts/static'
-import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { Decimal, DEFAULT_PUBLIC_KEY } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
@@ -8,11 +7,13 @@ import { PayloadType } from './types'
 
 export interface Swap {
   slippage: Decimal
-  price: Decimal
   knownPrice: Decimal
   poolIndex: number
+  tokenFrom: PublicKey
+  tokenTo: PublicKey
+  amount: BN
+  byAmountIn: boolean
   txid?: string
-  simulate: Simulate
   inProgress?: boolean
   success?: boolean
 }
@@ -31,21 +32,15 @@ export interface ISwapStore {
   swap: Swap
 }
 
-export const defaultSimulate: Simulate = {
-  simulatePrice: new BN(0),
-  fromToken: DEFAULT_PUBLICKEY,
-  toToken: DEFAULT_PUBLICKEY,
-  amount: new BN(0),
-  success: false
-}
-
 export const defaultState: ISwapStore = {
   swap: {
     slippage: { v: fromFee(new BN(1000)) },
-    price: { v: new BN(0) },
     knownPrice: { v: new BN(0) },
     poolIndex: 0,
-    simulate: defaultSimulate
+    tokenFrom: DEFAULT_PUBLIC_KEY,
+    tokenTo: DEFAULT_PUBLIC_KEY,
+    amount: new BN(0),
+    byAmountIn: false
   }
 }
 
@@ -66,20 +61,13 @@ const swapSlice = createSlice({
       state.swap.success = action.payload
       return state
     },
-    simulate(state, action: PayloadAction<Simulate>) {
-      state.swap.simulate = action.payload
-      return state
-    },
-    simulateSuccess(state, action: PayloadAction<boolean>) {
-      state.swap.simulate.success = action.payload
-      return state
-    },
     setPoolIndex(state, action: PayloadAction<number>) {
       state.swap.poolIndex = action.payload
       return state
     },
-    changePrice(state, action: PayloadAction<BN>) {
-      state.swap.price.v = action.payload
+    setPair(state, action: PayloadAction<{ tokenFrom: PublicKey; tokenTo: PublicKey }>) {
+      state.swap.tokenFrom = action.payload.tokenFrom
+      state.swap.tokenTo = action.payload.tokenTo
       return state
     }
   }

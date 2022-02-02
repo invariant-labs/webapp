@@ -18,6 +18,7 @@ interface IProps {
   current: SwapToken | null
   tokens: Array<{ symbol: string; name: string; logoURI: string }>
   onSelect: (name: string) => void
+  disabled: boolean
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -31,7 +32,8 @@ export const AmountInput: React.FC<IProps> = ({
   onMaxClick,
   current,
   tokens,
-  onSelect
+  onSelect,
+  disabled
 }) => {
   const classes = useStyles()
 
@@ -93,6 +95,7 @@ export const AmountInput: React.FC<IProps> = ({
           onClick={onMaxClick}
           className={classes.maxButton}
           labelClassName={classes.label}
+          disabled={disabled}
         />
       }
       startAdornment={

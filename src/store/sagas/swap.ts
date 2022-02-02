@@ -1,8 +1,8 @@
-import { all, call, put, select, spawn, takeEvery } from 'typed-redux-saga'
+import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
 import { swap } from '@selectors/swap'
-import { poolTicks, pools, tokens } from '@selectors/pools'
+import { pools, tokens } from '@selectors/pools'
 import { accounts } from '@selectors/solanaWallet'
 import { createAccount, getWallet } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
@@ -11,88 +11,15 @@ import { getConnection } from './connection'
 import { Keypair, sendAndConfirmRawTransaction, SystemProgram, Transaction } from '@solana/web3.js'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { WRAPPED_SOL_ADDRESS, PAIRS } from '@consts/static'
-import { simulateSwap, SimulateSwapInterface } from '@invariant-labs/sdk/src/utils'
-import BN from 'bn.js'
-import { Tick } from '@invariant-labs/sdk/src/market'
 import { network } from '@selectors/solanaConnection'
-
-export function* handleSimulate(): Generator {
-  try {
-    const allPools = yield* select(pools)
-    const ticksArray = yield* select(poolTicks)
-    const networkType = yield* select(network)
-    const { slippage, simulate } = yield* select(swap)
-    const marketProgram = yield* call(getMarketProgram)
-    const poolIndexes: number[] = []
-    const swapPool = PAIRS[networkType].filter(
-      pool =>
-        (simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)) ||
-        (simulate.fromToken.equals(pool.tokenY) && simulate.toToken.equals(pool.tokenX))
-    )
-    // trunk-ignore(eslint/array-callback-return)
-    PAIRS[networkType].map((pair, index) => {
-      if (
-        (simulate.fromToken.equals(pair.tokenX) && simulate.toToken.equals(pair.tokenY)) ||
-        (simulate.fromToken.equals(pair.tokenY) && simulate.toToken.equals(pair.tokenX))
-      ) {
-        poolIndexes.push(index)
-      }
-    })
-    if (!swapPool) {
-      return
-    }
-    let i = 0
-    let swapSimulateRouterAmount: BN = new BN(0)
-    for (const pool of swapPool) {
-      const isXtoY = simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)
-
-      const tickMap = yield* call(
-        [marketProgram, marketProgram.getTickmap],
-        new Pair(pool.tokenX, pool.tokenY, pool.feeTier)
-      )
-      const ticks: Map<number, Tick> = new Map<number, Tick>()
-      if (ticks.size === 0) {
-        for (const tick of ticksArray[i]) {
-          ticks.set(tick.index, tick)
-        }
-      }
-      if (simulate.amount.gt(new BN(0))) {
-        const simulateObject: SimulateSwapInterface = {
-          pair: new Pair(pool.tokenX, pool.tokenY, pool.feeTier),
-          xToY: isXtoY,
-          byAmountIn: true,
-          swapAmount: simulate.amount,
-          currentPrice: { v: simulate.simulatePrice },
-          slippage: slippage,
-          pool: allPools[poolIndexes[i]],
-          ticks: ticks,
-          tickmap: tickMap,
-          market: marketProgram
-        }
-        const swapSimulateResault = simulateSwap(simulateObject)
-        if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
-          swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
-          yield put(swapActions.setPoolIndex(poolIndexes[i]))
-        }
-        yield put(swapActions.simulateSuccess(true))
-      } else {
-        yield put(swapActions.changePrice(new BN(0)))
-      }
-      i++
-    }
-    yield put(swapActions.changePrice(swapSimulateRouterAmount))
-  } catch (error) {
-    yield put(swapActions.simulateSuccess(false))
-    console.log(error)
-  }
-}
 
 export function* handleSwapWithSOL(): Generator {
   try {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const networkType = yield* select(network)
-    const { slippage, simulate, poolIndex } = yield* select(swap)
+    const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
+      yield* select(swap)
 
     const wallet = yield* call(getWallet)
     const tokensAccounts = yield* select(accounts)
@@ -100,16 +27,15 @@ export function* handleSwapWithSOL(): Generator {
     const marketProgram = yield* call(getMarketProgram)
     const swapPool = allPools.find(
       pool =>
-        (simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)) ||
-        (simulate.fromToken.equals(pool.tokenY) && simulate.toToken.equals(pool.tokenX))
+        (tokenFrom.equals(pool.tokenX) && tokenTo.equals(pool.tokenY)) ||
+        (tokenFrom.equals(pool.tokenY) && tokenTo.equals(pool.tokenX))
     )
 
     if (!swapPool) {
       return
     }
 
-    const isXtoY =
-      simulate.fromToken.equals(swapPool.tokenX) && simulate.toToken.equals(swapPool.tokenY)
+    const isXtoY = tokenFrom.equals(swapPool.tokenX)
 
     const wrappedSolAccount = Keypair.generate()
 
@@ -125,8 +51,8 @@ export function* handleSwapWithSOL(): Generator {
       fromPubkey: wallet.publicKey,
       toPubkey: wrappedSolAccount.publicKey,
       lamports:
-        allTokens[simulate.fromToken.toString()].address.toString() === WRAPPED_SOL_ADDRESS
-          ? simulate.amount.toNumber()
+        allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+          ? amount.toNumber()
           : 0
     })
 
@@ -137,6 +63,38 @@ export function* handleSwapWithSOL(): Generator {
       wallet.publicKey
     )
 
+    const initialTx =
+      allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+        ? new Transaction().add(createIx).add(transferIx).add(initIx)
+        : new Transaction().add(createIx).add(initIx)
+    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    initialTx.recentBlockhash = initialBlockhash.blockhash
+    initialTx.feePayer = wallet.publicKey
+
+    const initialSignedTx = yield* call([wallet, wallet.signTransaction], initialTx)
+    initialSignedTx.partialSign(wrappedSolAccount)
+    const initialTxid = yield* call(
+      sendAndConfirmRawTransaction,
+      connection,
+      initialSignedTx.serialize(),
+      {
+        skipPreflight: false
+      }
+    )
+
+    if (!initialTxid.length) {
+      yield put(swapActions.setSwapSuccess(false))
+
+      return yield put(
+        snackbarsActions.add({
+          message: 'SOL wrapping failed. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: initialTxid
+        })
+      )
+    }
+
     const unwrapIx = Token.createCloseAccountInstruction(
       TOKEN_PROGRAM_ID,
       wrappedSolAccount.publicKey,
@@ -146,60 +104,87 @@ export function* handleSwapWithSOL(): Generator {
     )
 
     let fromAddress =
-      allTokens[simulate.fromToken.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+      allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
-        : tokensAccounts[simulate.fromToken.toString()]
-        ? tokensAccounts[simulate.fromToken.toString()].address
+        : tokensAccounts[tokenFrom.toString()]
+        ? tokensAccounts[tokenFrom.toString()].address
         : null
     if (fromAddress === null) {
-      fromAddress = yield* call(createAccount, simulate.fromToken)
+      fromAddress = yield* call(createAccount, tokenFrom)
     }
     let toAddress =
-      allTokens[simulate.toToken.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+      allTokens[tokenTo.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
-        : tokensAccounts[simulate.toToken.toString()]
-        ? tokensAccounts[simulate.toToken.toString()].address
+        : tokensAccounts[tokenTo.toString()]
+        ? tokensAccounts[tokenTo.toString()].address
         : null
     if (toAddress === null) {
-      toAddress = yield* call(createAccount, simulate.toToken)
+      toAddress = yield* call(createAccount, tokenTo)
     }
-    console.log(poolIndex)
-    console.log('swap amount: ', simulate.amount.toString())
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
-      pair: new Pair(simulate.fromToken, simulate.toToken, PAIRS[networkType][poolIndex].feeTier),
+      pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,
-      amount: simulate.amount,
-      knownPrice: { v: simulate.simulatePrice },
+      amount: amount,
+      knownPrice: knownPrice,
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
       accountY: isXtoY ? toAddress : fromAddress,
-      byAmountIn: true,
+      byAmountIn: byAmountIn,
       owner: wallet.publicKey
     })
-    console.log('swap amount: ', simulate.amount.toString())
-    const tx =
-      allTokens[simulate.fromToken.toString()].address.toString() === WRAPPED_SOL_ADDRESS
-        ? new Transaction().add(createIx).add(transferIx).add(initIx).add(swapTx).add(unwrapIx)
-        : new Transaction().add(createIx).add(initIx).add(swapTx).add(unwrapIx)
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
-    tx.recentBlockhash = blockhash.blockhash
-    tx.feePayer = wallet.publicKey
+    const swapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    swapTx.recentBlockhash = swapBlockhash.blockhash
+    swapTx.feePayer = wallet.publicKey
 
-    const signedTx = yield* call([wallet, wallet.signTransaction], tx)
-    signedTx.partialSign(wrappedSolAccount)
-    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
-      skipPreflight: false
-    })
+    const swapSignedTx = yield* call([wallet, wallet.signTransaction], swapTx)
+    const swapTxid = yield* call(
+      sendAndConfirmRawTransaction,
+      connection,
+      swapSignedTx.serialize(),
+      {
+        skipPreflight: false
+      }
+    )
 
-    yield put(swapActions.setSwapSuccess(!!txid.length))
+    if (!swapTxid.length) {
+      yield put(swapActions.setSwapSuccess(false))
 
-    if (!txid.length) {
-      yield put(
+      return yield put(
         snackbarsActions.add({
-          message: 'Tokens swapping failed. Please try again.',
+          message:
+            'Tokens swapping failed. Please unwrap wrapped SOL in your wallet and try again.',
           variant: 'error',
           persist: false,
-          txid
+          txid: swapTxid
+        })
+      )
+    }
+
+    const unwrapTx = new Transaction().add(unwrapIx)
+    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
+    unwrapTx.feePayer = wallet.publicKey
+
+    const unwrapSignedTx = yield* call([wallet, wallet.signTransaction], unwrapTx)
+    const unwrapTxid = yield* call(
+      sendAndConfirmRawTransaction,
+      connection,
+      unwrapSignedTx.serialize(),
+      {
+        skipPreflight: false
+      }
+    )
+
+    yield put(swapActions.setSwapSuccess(true))
+
+    if (!unwrapTxid.length) {
+      yield put(
+        snackbarsActions.add({
+          message:
+            'Tokens swapped successfully, but wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
+          variant: 'error',
+          persist: false,
+          txid: unwrapTxid
         })
       )
     } else {
@@ -208,7 +193,7 @@ export function* handleSwapWithSOL(): Generator {
           message: 'Tokens swapped successfully.',
           variant: 'success',
           persist: false,
-          txid
+          txid: swapTxid
         })
       )
     }
@@ -219,7 +204,8 @@ export function* handleSwapWithSOL(): Generator {
 
     yield put(
       snackbarsActions.add({
-        message: 'Failed to send. Please try again.',
+        message:
+          'Failed to send. Please unwrap wrapped SOL in your wallet if you have any and try again.',
         variant: 'error',
         persist: false
       })
@@ -232,11 +218,12 @@ export function* handleSwap(): Generator {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const networkType = yield* select(network)
-    const { slippage, simulate, poolIndex } = yield* select(swap)
+    const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
+      yield* select(swap)
 
     if (
-      allTokens[simulate.fromToken.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
-      allTokens[simulate.toToken.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+      allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
+      allTokens[tokenTo.toString()].address.toString() === WRAPPED_SOL_ADDRESS
     ) {
       return yield* call(handleSwapWithSOL)
     }
@@ -246,38 +233,37 @@ export function* handleSwap(): Generator {
     const marketProgram = yield* call(getMarketProgram)
     const swapPool = allPools.find(
       pool =>
-        (simulate.fromToken.equals(pool.tokenX) && simulate.toToken.equals(pool.tokenY)) ||
-        (simulate.fromToken.equals(pool.tokenY) && simulate.toToken.equals(pool.tokenX))
+        (tokenFrom.equals(pool.tokenX) && tokenTo.equals(pool.tokenY)) ||
+        (tokenFrom.equals(pool.tokenY) && tokenTo.equals(pool.tokenX))
     )
 
     if (!swapPool) {
       return
     }
 
-    const isXtoY =
-      simulate.fromToken.equals(swapPool.tokenX) && simulate.toToken.equals(swapPool.tokenY)
+    const isXtoY = tokenFrom.equals(swapPool.tokenX)
 
-    let fromAddress = tokensAccounts[simulate.fromToken.toString()]
-      ? tokensAccounts[simulate.fromToken.toString()].address
+    let fromAddress = tokensAccounts[tokenFrom.toString()]
+      ? tokensAccounts[tokenFrom.toString()].address
       : null
     if (fromAddress === null) {
-      fromAddress = yield* call(createAccount, simulate.fromToken)
+      fromAddress = yield* call(createAccount, tokenFrom)
     }
-    let toAddress = tokensAccounts[simulate.toToken.toString()]
-      ? tokensAccounts[simulate.toToken.toString()].address
+    let toAddress = tokensAccounts[tokenTo.toString()]
+      ? tokensAccounts[tokenTo.toString()].address
       : null
     if (toAddress === null) {
-      toAddress = yield* call(createAccount, simulate.toToken)
+      toAddress = yield* call(createAccount, tokenTo)
     }
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
-      pair: new Pair(simulate.fromToken, simulate.toToken, PAIRS[networkType][poolIndex].feeTier),
+      pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,
-      amount: simulate.amount,
-      knownPrice: { v: simulate.simulatePrice },
+      amount: amount,
+      knownPrice: knownPrice,
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
       accountY: isXtoY ? toAddress : fromAddress,
-      byAmountIn: true,
+      byAmountIn: byAmountIn,
       owner: wallet.publicKey
     })
     const connection = yield* call(getConnection)
@@ -325,13 +311,7 @@ export function* handleSwap(): Generator {
     )
   }
 }
-export function* simulateHandler(): Generator {
-  yield* takeEvery(swapActions.simulate, handleSimulate)
-}
+
 export function* swapHandler(): Generator {
   yield* takeEvery(swapActions.swap, handleSwap)
-}
-
-export function* swapSaga(): Generator {
-  yield all([simulateHandler, swapHandler].map(spawn))
 }

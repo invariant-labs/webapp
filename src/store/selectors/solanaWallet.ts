@@ -62,8 +62,10 @@ export const swapTokens = createSelector(
       assetAddress: token.address,
       balance:
         token.address.toString() === WRAPPED_SOL_ADDRESS
-          ? solBalance
-          : allAccounts[token.address.toString()]?.balance ?? 0
+          ? solBalance.gte(new BN(7150961))
+            ? solBalance.sub(new BN(7150961))
+            : new BN(0)
+          : allAccounts[token.address.toString()]?.balance ?? new BN(0)
     }))
   }
 )
@@ -81,8 +83,10 @@ export const swapTokensDict = createSelector(
         assetAddress: val.address,
         balance:
           val.address.toString() === WRAPPED_SOL_ADDRESS
-            ? solBalance
-            : allAccounts[val.address.toString()]?.balance ?? 0
+            ? solBalance.gte(new BN(7150961))
+              ? solBalance.sub(new BN(7150961))
+              : new BN(0)
+            : allAccounts[val.address.toString()]?.balance ?? new BN(0)
       }
     })
 

@@ -1,11 +1,11 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-export const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles((theme: Theme) => ({
   transactionDetailsInfo: {
     position: 'absolute',
     top: 5,
-    right: 70,
+    left: -252,
     opacity: 1,
     zIndex: 1,
     transition: 'all .3s',
@@ -19,6 +19,9 @@ export const useStyles = makeStyles(() => ({
     padding: 16,
     marginBottom: 16,
     borderRadius: 5,
+    [theme.breakpoints.down('sm')]: {
+      left: 105
+    },
     '& p': {
       ...typography.body1
     }

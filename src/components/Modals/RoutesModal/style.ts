@@ -3,15 +3,16 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
-    background: colors.invariant.componentOut4,
+    background: colors.invariant.component,
     width: 160,
-    borderRadius: 10,
+    borderRadius: 20,
     marginTop: 24,
     padding: 8
   },
   listItem: {
     paddingTop: 2,
-    borderRadius: 5,
+    color: colors.invariant.lightGrey,
+    borderRadius: 11,
     textAlign: 'center',
     width: '100%',
     height: 40,
@@ -20,7 +21,7 @@ const useStyles = makeStyles(() => ({
       marginBottom: 8
     },
     '&:hover': {
-      background: colors.invariant.componentOut2,
+      background: colors.invariant.light,
       '& $name': {
         color: colors.white.main,
         ...typography.heading4
