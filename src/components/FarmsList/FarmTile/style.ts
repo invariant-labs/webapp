@@ -134,16 +134,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:disabled': {
-      background:
-        'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%) !important',
+      background: 'rgba(58, 70, 107, 0.8) !important',
       pointerEvents: 'auto !important',
       cursor: 'pointer'
     },
 
     '&:hover:disabled': {
-      background: `linear-gradient(180deg, ${colors.invariant.green} 0%, #21A47C 100%) !important`,
+      background: `${colors.invariant.light} !important`,
       pointerEvents: 'auto !important',
-      boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35) !important'
+      boxShadow: 'none'
     }
   }
 }))

@@ -3,7 +3,7 @@ import { colors, newTypography, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderRadius: 10,
+    borderRadius: 20,
     backgroundColor: colors.invariant.component,
     padding: 16,
     paddingTop: 16,
@@ -213,8 +213,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   tokenArea: {
-    backgroundColor: colors.invariant.componentOut2,
-    borderRadius: 5,
+    backgroundColor: colors.invariant.newDark,
+    borderRadius: 16,
     display: 'flex',
     flexDirection: 'row',
     width: 353,
@@ -226,11 +226,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   token: {
-    backgroundColor: colors.invariant.componentOut3,
-    borderRadius: 5,
+    width: 86,
+    backgroundColor: colors.invariant.light,
+    borderRadius: 12,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    margin: 4,
     padding: '3px 12px'
   },
   tokenName: {
