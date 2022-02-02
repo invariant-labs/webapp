@@ -68,6 +68,7 @@ export interface ISwap {
   progress: ProgressState
   poolTicks: { [x: string]: Tick[] }
   fullSolBalance: BN
+  isWaitingForNewPool: boolean
 }
 export const Swap: React.FC<ISwap> = ({
   walletStatus,
@@ -77,7 +78,8 @@ export const Swap: React.FC<ISwap> = ({
   onSetPair,
   progress,
   poolTicks,
-  fullSolBalance
+  fullSolBalance,
+  isWaitingForNewPool
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -269,7 +271,7 @@ export const Swap: React.FC<ISwap> = ({
     if (tokenFromIndex === null || tokenToIndex === null) {
       return 'Choose pair'
     }
-    if (throttle) {
+    if (throttle || isWaitingForNewPool) {
       return 'Loading'
     }
     if (!getIsXToY(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
