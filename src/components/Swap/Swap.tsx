@@ -130,6 +130,7 @@ export const Swap: React.FC<ISwap> = ({
   }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance])
 
   const simulateWithTimeout = () => {
+    inputRef === inputTarget.FROM ? setAmountTo('') : setAmountFrom('')
     setThrottle(true)
 
     clearTimeout(timeoutRef.current)
@@ -171,6 +172,13 @@ export const Swap: React.FC<ISwap> = ({
     }
   }, [tokenToIndex, tokenFromIndex, pools.length])
 
+  useEffect(() => {
+    let temp: string = amountFrom
+    setAmountFrom(amountTo)
+    setAmountTo(temp)
+    setInputRef(inputRef === inputTarget.FROM ? inputTarget.TO : inputTarget.FROM)
+  }, [swap])
+
   const getKnownPrice = (assetIn: SwapToken, assetFor: SwapToken) => {
     let swapRate: number = 0
     let knownPrice: BN = new BN(0)
@@ -185,9 +193,12 @@ export const Swap: React.FC<ISwap> = ({
       } else {
         knownPrice = new BN(sqrtPricePow * 10 ** decimalDiff)
       }
-      swapRate =
-        +printBN(simulateResult.amountOut, assetFor.decimals) /
-        Number(inputRef === inputTarget.FROM ? amountFrom : amountTo)
+      if (inputRef === inputTarget.FROM) {
+        swapRate = +printBN(simulateResult.amountOut, assetFor.decimals) / Number(amountFrom)
+      } else {
+        swapRate = Number(amountTo) / +printBN(simulateResult.amountOut, assetFor.decimals)
+      }
+
       amountOut = Number(printBN(simulateResult.amountOut, assetFor.decimals))
       setSwapRate(swapRate)
     }
@@ -351,7 +362,7 @@ export const Swap: React.FC<ISwap> = ({
               ? `${classes.amountInput} ${classes.amountInputDown}`
               : `${classes.amountInput}`
           }
-          style={{ transform: swap !== null ? (swap ? 'translateY(0px)' : 'translateY(0px)') : '' }}
+          // style={{ transform: swap !== null ? (swap ? 'translateY(0px)' : 'translateY(0px)') : '' }}
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountFrom(value)
@@ -375,7 +386,6 @@ export const Swap: React.FC<ISwap> = ({
                 return name === token.symbol
               })
             )
-            setAmountFrom('')
           }}
           disabled={tokenFromIndex === null}
         />
@@ -422,9 +432,11 @@ export const Swap: React.FC<ISwap> = ({
               : `${classes.amountInput}`
           }
           decimal={tokenToIndex !== null ? tokens[tokenToIndex].decimals : 6}
-          style={{
-            transform: swap !== null ? (swap ? 'translateY(0px)' : 'translateY(0px)') : ''
-          }}
+          style={
+            {
+              // transform: swap !== null ? (swap ? 'translateY(0px)' : 'translateY(0px)') : ''
+            }
+          }
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountTo(value)
@@ -448,7 +460,6 @@ export const Swap: React.FC<ISwap> = ({
               })
             )
             updateEstimatedAmount()
-            setAmountTo('')
           }}
           disabled={tokenFromIndex === null}
         />
@@ -501,7 +512,7 @@ export const Swap: React.FC<ISwap> = ({
               inputRef === inputTarget.FROM
                 ? printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals)
                 : printBNtoBN(amountTo, tokens[tokenToIndex].decimals),
-              inputRef === inputTarget.FROM ? true : false
+              inputRef === inputTarget.FROM
             )
           }}
           progress={progress}
