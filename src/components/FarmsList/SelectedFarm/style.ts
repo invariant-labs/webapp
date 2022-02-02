@@ -226,7 +226,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   token: {
-    width: 86,
     backgroundColor: colors.invariant.light,
     borderRadius: 12,
     display: 'flex',
