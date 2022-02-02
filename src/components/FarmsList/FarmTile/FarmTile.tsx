@@ -3,9 +3,10 @@ import React from 'react'
 import { Token } from '@consts/static'
 import { Link } from 'react-router-dom'
 import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
-import useStyle from './style'
 import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
+
+import useStyle from './style'
 
 export interface IFarm {
   isActive?: boolean

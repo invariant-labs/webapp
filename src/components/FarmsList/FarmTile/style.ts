@@ -1,9 +1,9 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderRadius: 10,
+    borderRadius: 24,
     backgroundColor: colors.invariant.component,
     padding: 24,
     paddingTop: 16,
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   dot: {
     height: 16,
     minWidth: 16,
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.lightGrey,
 
     [theme.breakpoints.down('xs')]: {
       height: 12,
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   pulseDot: {
     height: 12,
     width: 12,
-    backgroundColor: colors.invariant.accent2,
+    backgroundColor: colors.invariant.green,
     borderRadius: '50%',
     marginRight: 6,
     position: 'relative',
@@ -89,14 +89,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   greenText: {
-    color: colors.invariant.accent2
+    color: colors.invariant.green
   },
   greyText: {
-    color: colors.invariant.lightInfoText
+    color: colors.invariant.lightGrey,
+    fontSize: 20
   },
   activity: {
-    ...typography.body1,
-
+    ...newTypography.body1,
     [theme.breakpoints.down('xs')]: {
       ...typography.label2
     }
@@ -107,10 +107,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   label: {
-    color: colors.invariant.lightInfoText,
-    ...typography.heading4,
-    fontWeight: 400,
-    letterSpacing: '0.03em'
+    color: colors.invariant.lightGrey,
+    ...typography.body2,
+    fontSize: 20,
+    letterSpacing: '-0.03em'
   },
   value: {
     color: colors.white.main,
@@ -122,28 +122,28 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     width: '100%',
-    height: 40,
-    borderRadius: '16px',
+    height: 44,
+    borderRadius: 16,
     textTransform: 'none',
     ...typography.body1,
     background: 'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)',
     color: colors.black.full,
     '&:hover': {
-      background: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
+      background: `linear-gradient(180deg, ${colors.invariant.green} 0%, #21A47C 100%)`,
       boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
 
     '&:disabled': {
-      backgroundColor: colors.invariant.componentOut3,
-      color: colors.invariant.background2,
+      background:
+        'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%) !important',
       pointerEvents: 'auto !important',
       cursor: 'pointer'
     },
 
     '&:hover:disabled': {
-      backgroundColor: `${colors.invariant.componentOut2}`,
+      background: `linear-gradient(180deg, ${colors.invariant.green} 0%, #21A47C 100%) !important`,
       pointerEvents: 'auto !important',
-      boxShadow: 'unset'
+      boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35) !important'
     }
   }
 }))

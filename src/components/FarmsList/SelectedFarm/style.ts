@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 92,
     height: 27,
     fontWeight: 700,
-    borderRadius: 16,
+    borderRadius: 9,
     padding: '7px 0',
     textTransform: 'none',
     color: colors.black.full,
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 92,
     height: 27,
     fontWeight: 400,
-    borderRadius: 16,
+    borderRadius: 9,
     padding: '7px 0',
     textTransform: 'none',
     backgroundColor: colors.invariant.newDark,
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 92,
     height: 27,
     fontWeight: 700,
-    borderRadius: 16,
+    borderRadius: 9,
     padding: '7px 0',
     background: 'rgba(239, 132, 245, 0.9)',
     textTransform: 'none',
@@ -91,9 +91,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 36
   },
   greenText: {
-    fontSize: 16,
-    fontWeight: 400,
-    color: colors.invariant.accent2,
+    ...typography.body2,
+    color: colors.invariant.green,
+    letterSpacing: '-0.03em',
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'space-between',
@@ -113,7 +113,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   value: {
     color: colors.white.main,
     ...typography.body1,
-    fontWeight: 600,
     marginLeft: 4
   },
   spacing: {
@@ -129,11 +128,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 16,
     textTransform: 'none',
     ...typography.body1,
+    fontWeight: 700,
+    letterSpacing: '-0.03em',
     background:
       'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
     color: colors.black.full,
     '&:hover': {
-      boxShadow: `0px 0px 15px ${colors.invariant.accent1}`
+      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
+      boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)}'
     }
   },
   buttonContainer: {
