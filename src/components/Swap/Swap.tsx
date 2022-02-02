@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { printBN, printBNtoBN, handleSimulate, findPairIndex, findPairs } from '@consts/utils'
+import { printBN, printBNtoBN, handleSimulate, findPairs } from '@consts/utils'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
@@ -65,7 +65,6 @@ export interface ISwap {
   ) => void
   onSetPair: (tokenFrom: PublicKey, tokenTo: PublicKey) => void
   progress: ProgressState
-  poolInit: boolean
   poolTicks: { [x: string]: Tick[] }
   fullSolBalance: BN
 }
@@ -76,7 +75,6 @@ export const Swap: React.FC<ISwap> = ({
   onSwap,
   onSetPair,
   progress,
-  poolInit,
   poolTicks,
   fullSolBalance
 }) => {
@@ -95,7 +93,6 @@ export const Swap: React.FC<ISwap> = ({
   const [amountTo, setAmountTo] = React.useState<string>('')
   const [swapRate, setSwapRate] = React.useState<number>(0)
   const [swap, setSwap] = React.useState<boolean | null>(null)
-  const [tokensY, setTokensY] = React.useState<SwapToken[]>(tokens)
   const [rotates, setRotates] = React.useState<number>(0)
   const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
@@ -168,12 +165,6 @@ export const Swap: React.FC<ISwap> = ({
 
     if (tokenFromIndex !== null && tokenToIndex === null) {
       setAmountFrom('0.000000')
-    }
-    if (tokenFromIndex !== null) {
-      const tokensY = tokens.filter(token => {
-        return findPairIndex(token.assetAddress, tokens[tokenFromIndex].assetAddress, pools) !== -1
-      })
-      setTokensY(tokensY)
     }
   }, [tokenToIndex, tokenFromIndex, pools.length])
 
@@ -267,7 +258,7 @@ export const Swap: React.FC<ISwap> = ({
     if (tokenFromIndex === null || tokenToIndex === null) {
       return 'Choose pair'
     }
-    if (!poolInit || throttle) {
+    if (throttle) {
       return 'Loading'
     }
     if (!getIsXToY(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
@@ -388,11 +379,8 @@ export const Swap: React.FC<ISwap> = ({
               setRotates(rotates + 1)
               swap !== null ? setSwap(!swap) : setSwap(true)
               const tmp = tokenFromIndex
-              const tokensTmp = tokens
               setTokenFromIndex(tokenToIndex)
               setTokenToIndex(tmp)
-              tokens = tokensY
-              setTokensY(tokensTmp)
             }}>
             <img
               src={SwapArrows}
@@ -441,7 +429,7 @@ export const Swap: React.FC<ISwap> = ({
               )
             }
           }}
-          tokens={tokensY}
+          tokens={tokens}
           current={tokenToIndex !== null ? tokens[tokenToIndex] : null}
           onSelect={(name: string) => {
             setTokenToIndex(

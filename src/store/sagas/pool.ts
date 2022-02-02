@@ -23,7 +23,6 @@ export function* fetchPoolData(action: PayloadAction<Pair>) {
       ...poolData,
       address
     }))
-    yield* put(actions.initPool(true))
   } catch (error) {
     yield* put(actions.poolAddingFailed())
 

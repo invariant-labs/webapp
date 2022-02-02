@@ -14,7 +14,6 @@ export interface IPoolsStore {
   tokens: Record<string, Token>
   pools: PoolWithAddress[]
   poolTicks: { [key in string]: Tick[] }
-  initPool: boolean,
   isLoadingLatestSinglePool: boolean
 }
 
@@ -38,7 +37,6 @@ export const defaultState: IPoolsStore = {
   tokens: {},
   pools: [],
   poolTicks: {},
-  initPool: false,
   isLoadingLatestSinglePool: false
 }
 
@@ -47,10 +45,6 @@ const poolsSlice = createSlice({
   name: poolsSliceName,
   initialState: defaultState,
   reducers: {
-    initPool(state, action: PayloadAction<boolean>) {
-      state.initPool = action.payload
-      return state
-    },
     setTokens(state, action: PayloadAction<Record<string, Token>>) {
       state.tokens = action.payload
       return state

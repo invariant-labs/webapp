@@ -3,14 +3,13 @@ import { keySelectors, AnyProps } from './helpers'
 
 const store = (s: AnyProps) => s[poolsSliceName] as IPoolsStore
 
-export const { pools, tokens, initPool, poolTicks, isLoadingLatestSinglePool } = keySelectors(store, [
+export const { pools, tokens, poolTicks, isLoadingLatestSinglePool } = keySelectors(store, [
   'pools',
   'tokens',
-  'initPool',
   'poolTicks',
   'isLoadingLatestSinglePool'
 ])
 
-export const poolsSelectors = { pools, tokens, initPool, poolTicks, isLoadingLatestSinglePool }
+export const poolsSelectors = { pools, tokens, poolTicks, isLoadingLatestSinglePool }
 
 export default poolsSelectors
