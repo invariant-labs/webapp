@@ -22,7 +22,7 @@ export const SearchInput: React.FC<ISearchInput> = ({ handleChange, value }) => 
         placeholder='Search'
         inputProps={{
           style: {
-            padding: '5px 15px 2px 5px'
+            padding: '2px 15px 2px 5px'
           }
         }}
         endAdornment={

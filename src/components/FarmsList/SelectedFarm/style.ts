@@ -3,22 +3,21 @@ import { colors, newTypography, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderRadius: 10,
-    backgroundColor: colors.invariant.componentOut1,
+    borderRadius: 20,
+    backgroundColor: colors.invariant.component,
     padding: 16,
     paddingTop: 16,
     width: 508
   },
   unstakeButton: {
+    background: 'rgba(46, 224, 154, 0.9)',
     fontSize: 16,
     width: 92,
     height: 27,
-    fontWeight: 400,
-    borderRadius: 6,
+    fontWeight: 700,
+    borderRadius: 9,
     padding: '7px 0',
-    backgroundColor: colors.invariant.accent2,
     textTransform: 'none',
-    boxShadow: '0px 0px 20px -8px white',
     color: colors.black.full,
     [theme.breakpoints.down('xs')]: {
       width: '50%',
@@ -26,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&:hover': {
       boxShadow: '0px 0px 20px -8px white',
-      backgroundColor: colors.invariant.accent2
+      background: 'rgba(46, 224, 154, 0.9)'
     }
   },
   stakedValue: {
@@ -37,40 +36,43 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 92,
     height: 27,
     fontWeight: 400,
-    borderRadius: 6,
+    borderRadius: 9,
     padding: '7px 0',
     textTransform: 'none',
-    backgroundColor: colors.invariant.componentIn2,
+    backgroundColor: colors.invariant.newDark,
+    boxShadow: 'none',
+
     color: colors.invariant.lightInfoText,
     [theme.breakpoints.down('xs')]: {
       width: '50%',
       height: 40
     },
     '&:hover': {
-      boxShadow: '0px 0px 20px -8px white'
+      backgroundColor: colors.invariant.newDark,
+      color: colors.invariant.lightGrey
     }
   },
   stakeButton: {
     fontSize: 16,
     width: 92,
     height: 27,
-    fontWeight: 400,
-    borderRadius: 6,
+    fontWeight: 700,
+    borderRadius: 9,
     padding: '7px 0',
-    backgroundColor: colors.invariant.accent1,
-    boxShadow: '0px 0px 20px -8px white',
+    background: 'rgba(239, 132, 245, 0.9)',
     textTransform: 'none',
-    color: colors.white.main,
+    color: colors.black.full,
     [theme.breakpoints.down('xs')]: {
       width: '50%',
       height: 40
     },
     '&:hover': {
       boxShadow: '0px 0px 20px -8px white',
-      backgroundColor: colors.invariant.accent1
+      background: 'rgba(239, 132, 245, 0.9)'
     }
   },
   labelText: {
+    justifyContent: 'center',
     ...newTypography.caption1,
     color: colors.invariant.lightInfoText
   },
@@ -85,10 +87,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelGrid: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 36
   },
   greenText: {
-    color: colors.invariant.accent2,
+    ...typography.body2,
+    color: colors.invariant.green,
+    letterSpacing: '-0.03em',
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'space-between',
@@ -101,13 +106,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 400
   },
   infoText: {
-    ...typography.body1,
+    ...typography.body2,
+    letterSpacing: '-0.03em',
     color: colors.invariant.lightInfoText
   },
   value: {
     color: colors.white.main,
     ...typography.body1,
-    fontWeight: 600,
     marginLeft: 4
   },
   spacing: {
@@ -119,20 +124,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttonStake: {
     width: '100%',
-    height: 40,
-    borderRadius: 5,
+    height: 44,
+    borderRadius: 16,
     textTransform: 'none',
     ...typography.body1,
-    backgroundColor: colors.invariant.accent1,
-    color: colors.white.main,
+    fontWeight: 700,
+    letterSpacing: '-0.03em',
+    background:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    color: colors.black.full,
     '&:hover': {
-      backgroundColor: colors.invariant.accent1,
-      boxShadow: `0px 0px 15px ${colors.invariant.accent1}`
+      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
+      boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)}'
     }
   },
   buttonContainer: {
-    backgroundColor: '#1C1B1E',
-    borderRadius: 6,
+    backgroundColor: colors.invariant.newDark,
+    borderRadius: 16,
     width: 184,
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
@@ -142,35 +150,38 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttonUnstake: {
     width: '100%',
-    height: 40,
-    borderRadius: 5,
+    height: 44,
+    borderRadius: 16,
     textTransform: 'none',
     ...typography.body1,
-    backgroundColor: colors.invariant.accent2,
+    fontWeight: 700,
+    background: 'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)',
     color: colors.black.full,
     '&:hover': {
-      backgroundColor: `${colors.invariant.accent2}`,
-      boxShadow: `0px 0px 15px ${colors.invariant.accent2}`
+      background: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
+      boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     }
   },
   stakeLabel: {
     ...typography.body3
   },
   claimRewards: {
-    width: 120,
-    height: 40,
-    borderRadius: 5,
+    width: 115,
+    letterSpacing: '-0.03em',
+    height: 44,
+    borderRadius: 16,
     textTransform: 'none',
     ...typography.body1,
-    backgroundColor: colors.invariant.accent2,
+    background:
+      'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%);',
     color: colors.black.full,
     [theme.breakpoints.down('xs')]: {
       ...typography.body3,
       minWidth: 105
     },
     '&:hover': {
-      backgroundColor: `${colors.invariant.accent2}`,
-      boxShadow: `0px 0px 15px ${colors.invariant.accent2}`
+      background: '$linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
+      boxShadow: '0px 0px 8px rgba(46, 224, 154, 0.35)'
     }
   },
   infoContainer: {
@@ -202,8 +213,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   tokenArea: {
-    backgroundColor: colors.invariant.componentOut2,
-    borderRadius: '5px',
+    backgroundColor: colors.invariant.newDark,
+    borderRadius: 16,
     display: 'flex',
     flexDirection: 'row',
     width: 353,
@@ -215,18 +226,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   token: {
-    backgroundColor: colors.invariant.componentOut3,
-    borderRadius: '5px',
+    backgroundColor: colors.invariant.light,
+    borderRadius: 12,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    margin: 4,
     padding: '3px 12px'
   },
   tokenName: {
     color: colors.white.main,
     ...typography.body1,
     [theme.breakpoints.down('xs')]: {
-      ...typography.body3
+      ...newTypography.body2
     }
   },
   tokenValue: {
@@ -235,7 +247,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '0 15px'
+    padding: '0 15px',
+    [theme.breakpoints.down('xs')]: {
+      ...newTypography.body2,
+      paddingLeft: 4
+    }
   }
 }))
 
