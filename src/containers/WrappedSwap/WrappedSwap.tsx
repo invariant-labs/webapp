@@ -35,7 +35,7 @@ export const WrappedSwap = () => {
 
   return (
     <Swap
-      onSwap={(slippage, knownPrice, tokenFrom, tokenTo, poolIndex, amount) => {
+      onSwap={(slippage, knownPrice, tokenFrom, tokenTo, poolIndex, amount, byAmountIn) => {
         setProgress('progress')
         dispatch(
           actions.swap({
@@ -44,7 +44,8 @@ export const WrappedSwap = () => {
             poolIndex,
             tokenFrom,
             tokenTo,
-            amount
+            amount,
+            byAmountIn
           })
         )
       }}

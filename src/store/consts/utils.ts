@@ -511,15 +511,22 @@ export const handleSimulate = async (
   fromToken: PublicKey,
   toToken: PublicKey,
   amount: BN,
-  currentPrice: BN
+  currentPrice: BN,
+  byAmountIn: boolean
 ): Promise<{ amountOut: BN; poolIndex: number; simulateSuccess: boolean }> => {
   const marketProgram = getMarketProgramSync()
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(-1)
   let poolIndex: number = 0
+  let isXtoY = false
+  let resault
+  console.log(123)
+  if (amount.eq(new BN(0))) {
+    return { amountOut: new BN(0), poolIndex: poolIndex, simulateSuccess: true }
+  }
 
   for (const pool of filteredPools) {
-    const isXtoY = fromToken.equals(pool.tokenX) && toToken.equals(pool.tokenY)
+    isXtoY = fromToken.equals(pool.tokenX)
 
     const tickMap = await marketProgram.getTickmap(
       new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v })
@@ -532,7 +539,7 @@ export const handleSimulate = async (
     try {
       const swapSimulateResault = await simulateSwap({
         xToY: isXtoY,
-        byAmountIn: true,
+        byAmountIn: byAmountIn,
         swapAmount: amount,
         currentPrice: { v: currentPrice },
         slippage: slippage,
@@ -540,15 +547,22 @@ export const handleSimulate = async (
         ticks: ticks,
         tickmap: tickMap
       })
+
       if (swapSimulateResault.amountPerTick.length >= 8) {
         throw new Error('too large amount')
       }
-
-      if (swapSimulateRouterAmount.lt(swapSimulateResault.accumulatedAmountOut)) {
-        poolIndex = findPoolIndex(pool.address, pools)
-        swapSimulateRouterAmount = swapSimulateResault.accumulatedAmountOut
+      if (!byAmountIn) {
+        resault = swapSimulateResault.accumulatedAmountIn.add(swapSimulateResault.accumulatedFee)
+      } else {
+        resault = swapSimulateResault.accumulatedAmountOut
       }
-    } catch (error) {}
+      if (swapSimulateRouterAmount.lt(resault)) {
+        poolIndex = findPoolIndex(pool.address, pools)
+        swapSimulateRouterAmount = resault
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
   if (swapSimulateRouterAmount.lt(new BN(0))) {
     return { amountOut: new BN(0), poolIndex: poolIndex, simulateSuccess: false }

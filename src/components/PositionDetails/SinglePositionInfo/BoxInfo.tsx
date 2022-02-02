@@ -31,7 +31,14 @@ export const BoxInfo: React.FC<{
       <Grid container justifyContent='space-between'>
         <Typography className={classes.title}> {title}</Typography>
         {onClickButton ? (
-          <Button className={classes.violetButton} variant='contained' onClick={onClickButton}>
+          <Button
+            className={classes.violetButton}
+            variant='contained'
+            onClick={onClickButton}
+            disabled={
+              Math.abs(Number(tokenXValue)) < 10 ** -tokenXDecimal &&
+              Math.abs(Number(tokenYValue)) < 10 ** -tokenYDecimal
+            }>
             Claim fee
           </Button>
         ) : null}

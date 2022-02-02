@@ -53,6 +53,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
 
+  const [leftInputRounded, setLeftInputRounded] = useState('')
+  const [rightInputRounded, setRightInputRounded] = useState('')
+
   const [plotMin, setPlotMin] = useState(0)
   const [plotMax, setPlotMax] = useState(1)
 
@@ -84,12 +87,22 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }
 
+  const setLeftInputValues = (val: string) => {
+    setLeftInput(val)
+    setLeftInputRounded((+val).toFixed(12))
+  }
+
+  const setRightInputValues = (val: string) => {
+    setRightInput(val)
+    setRightInputRounded((+val).toFixed(12))
+  }
+
   const changeRangeHandler = (left: number, right: number) => {
     setLeftRange(left)
     setRightRange(right)
 
-    setLeftInput(calcPrice(left, isXtoY, xDecimal, yDecimal).toString())
-    setRightInput(calcPrice(right, isXtoY, xDecimal, yDecimal).toString())
+    setLeftInputValues(calcPrice(left, isXtoY, xDecimal, yDecimal).toString())
+    setRightInputValues(calcPrice(right, isXtoY, xDecimal, yDecimal).toString())
 
     onChangeRange(left, right)
   }
@@ -161,8 +174,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             label='Min price'
             tokenFromSymbol={tokenASymbol}
             tokenToSymbol={tokenBSymbol}
-            currentValue={leftInput}
-            setValue={setLeftInput}
+            currentValue={leftInputRounded}
+            setValue={setLeftInputValues}
             decreaseValue={() => {
               const newLeft = isXtoY
                 ? Math.max(minSpacingMultiplicity(tickSpacing), leftRange - tickSpacing)
@@ -195,8 +208,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             label='Max price'
             tokenFromSymbol={tokenASymbol}
             tokenToSymbol={tokenBSymbol}
-            currentValue={rightInput}
-            setValue={setRightInput}
+            currentValue={rightInputRounded}
+            setValue={setRightInputValues}
             decreaseValue={() => {
               const newRight = isXtoY
                 ? Math.max(rightRange - tickSpacing, leftRange + tickSpacing)
