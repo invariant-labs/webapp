@@ -8,7 +8,6 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     textTransform: 'none',
     ...newTypography.body1,
-    backgroundColor: colors.invariant.pink,
     color: colors.invariant.componentBcg,
     background:
       'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
@@ -16,10 +15,6 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
     overflow: 'hidden',
     zIndex: 4,
-
-    '&:hover': {
-      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)'
-    },
 
     '&:disabled': {
       backgroundColor: colors.invariant.light,

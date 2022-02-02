@@ -56,7 +56,7 @@ const useStyles = makeStyles(() => ({
   },
   addButton: {
     width: '100%',
-    marginTop: 18
+    marginTop: 44
   }
 }))
 
