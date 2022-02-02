@@ -3,7 +3,6 @@ import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    height: 540,
     borderRadius: 10,
     backgroundColor: colors.invariant.component,
     padding: 24,
@@ -88,40 +87,45 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: 0,
     right: 0,
     zIndex: 11,
-    width: '464px',
-    height: '541px',
+    width: '49%',
+    height: '100%',
     backgroundColor: 'rgba(11, 12, 13, 0.8)',
     filter: 'blur(0px) brightness(0.4)',
     borderRadius: 11,
-
     [theme.breakpoints.down('sm')]: {
+      position: 'absolute',
+      top: 555,
+      right: 0,
+      zIndex: 11,
       width: '100%',
-      height: '100%'
+      height: '100%',
+      borderRadius: 9
     },
-    [theme.breakpoints.down('md')]: {
-      top: 590,
-      width: '100%',
-      height: 641
+
+    [theme.breakpoints.down('xs')]: {
+      position: 'absolute',
+      top: 595,
+      right: 0,
+      width: 540,
+      height: 670
     }
   },
 
   blockedInfoWrapper: {
-    position: 'absolute',
-    top: 0,
+    position: 'relative',
+    bottom: 240,
     right: 0,
-    width: '464px',
-    height: '541px',
-    zIndex: 12,
+    zIndex: 12
 
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      height: '100%'
-    },
-    [theme.breakpoints.down('md')]: {
-      top: 606,
-      width: '100%',
-      height: '590px'
-    }
+    // [theme.breakpoints.down('sm')]: {
+    //   width: '100%',
+    //   height: '100%'
+    // },
+    // [theme.breakpoints.down('md')]: {
+    //   // top: 606,
+    //   width: '100%',
+    //   height: '590px'
+    // }
   },
 
   blockedInfo: {

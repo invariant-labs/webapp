@@ -128,7 +128,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
       <Typography className={classes.title}>Add new liquidity position</Typography>
 
-      <Grid container className={classes.row}>
+      <Grid container className={classes.row} alignItems='stretch'>
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
           className={classes.deposit}
