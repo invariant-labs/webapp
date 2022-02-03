@@ -25,10 +25,13 @@ export interface ILiquidityItem {
 interface IProp {
   data: ILiquidityItem[]
   onAddPositionClick: () => void
+  searchSetValue: (value: string) => void
+  searchPosition: string
   loading?: boolean
   showNoConnected?: boolean
   noConnectedBlockerProps: INoConnected
   itemsPerPage: number
+  searchValue: string
 }
 
 export const PositionsList: React.FC<IProp> = ({
@@ -37,19 +40,22 @@ export const PositionsList: React.FC<IProp> = ({
   loading = false,
   showNoConnected = false,
   noConnectedBlockerProps,
-  itemsPerPage
+  itemsPerPage,
+  searchValue,
+  searchSetValue
 }) => {
   const classes = useStyle()
   const [page, setPage] = useState(1)
 
-  // begining of Search  Bar
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    searchSetValue(e.target.value.toLowerCase())
+  }
 
-  // const [query, setQuery] = useState('')
-  // const filteredData = query.length === 0 ? data : data.filter(data => data.tokenXName.toLowerCase()) || data.filter(data => data.tokenYName.toLowerCase())
   const handleChangePagination = (page: number): void => {
     setPage(page)
   }
-  function paginator(currentPage: number) {
+
+  const paginator = (currentPage: number) => {
     const page = currentPage || 1
     const perPage = itemsPerPage || 10
     const offset = (page - 1) * perPage
@@ -62,6 +68,7 @@ export const PositionsList: React.FC<IProp> = ({
       data: paginatedItems
     }
   }
+
   return (
     <Grid className={classes.root}>
       <Grid
@@ -84,9 +91,8 @@ export const PositionsList: React.FC<IProp> = ({
                 <SearchIcon />
               </InputAdornment>
             }
-            // onChange={e => {
-            //   setQuery(e.target.value)
-            // }}
+            onChange={handleChangeInput}
+            value={searchValue}
           />
         </Grid>
         <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>

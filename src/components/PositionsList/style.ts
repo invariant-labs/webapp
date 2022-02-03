@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 10,
     background: colors.invariant.black,
     border: '1px solid #202946',
-    color: colors.invariant.light,
+    color: colors.invariant.lightGrey,
     ...newTypography.body2,
     [theme.breakpoints.down('xs')]: {
       marginBottom: 12
