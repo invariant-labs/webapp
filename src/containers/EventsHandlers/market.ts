@@ -54,56 +54,53 @@ const MarketEvents = () => {
     connectEvents()
   }, [dispatch, allPools.length, networkStatus, marketProgram])
 
-  useEffect(() => {
-    if (
-      networkStatus !== Status.Initialized ||
-      !marketProgram ||
-      Object.values(allPools).length === 0
-    ) {
-      return
-    }
-    const connectEvents = async () => {
-      if (tokenFrom && tokenTo) {
-        Object.keys(poolTicksArray).forEach(address => {
-          if (subscribedTick.has(address)) {
-            console.log(address.toString())
-            return
-          }
-          subscribedTick.add(address)
-          const pool = allPools.find(pool => {
-            return pool.address.toString() === address
-          })
-          if (typeof pool === 'undefined') {
-            return
-          }
-          // DO PRZETESTOWANIA, WYWALA SOCKET
-          console.log(poolTicksArray)
-          R.forEachObj(poolTicksArray, tick => {
-            tick.forEach(singleTick => {
-              marketProgram
-                .onTickChange(
-                  new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
-                  singleTick.index,
-                  tickObject => {
-                    dispatch(
-                      actions.updateTicks({
-                        address: address,
-                        index: singleTick.index,
-                        tick: tickObject
-                      })
-                    )
-                  }
-                )
-                .then(() => {})
-                .catch(() => {})
-            })
-          })
-        })
-      }
-    }
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    connectEvents()
-  }, [networkStatus, marketProgram, Object.values(poolTicksArray).length])
+  // useEffect(() => {
+  //   if (
+  //     networkStatus !== Status.Initialized ||
+  //     !marketProgram ||
+  //     Object.values(allPools).length === 0
+  //   ) {
+  //     return
+  //   }
+  //   const connectEvents = async () => {
+  //     if (tokenFrom && tokenTo) {
+  //       Object.keys(poolTicksArray).forEach(address => {
+  //         if (subscribedTick.has(address)) {
+  //           return
+  //         }
+  //         subscribedTick.add(address)
+  //         const pool = allPools.find(pool => {
+  //           return pool.address.toString() === address
+  //         })
+  //         if (typeof pool === 'undefined') {
+  //           return
+  //         }
+  //         R.forEachObj(poolTicksArray, tick => {
+  //           tick.forEach(singleTick => {
+  //             marketProgram
+  //               .onTickChange(
+  //                 new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
+  //                 singleTick.index,
+  //                 tickObject => {
+  //                   dispatch(
+  //                     actions.updateTicks({
+  //                       address: address,
+  //                       index: singleTick.index,
+  //                       tick: tickObject
+  //                     })
+  //                   )
+  //                 }
+  //               )
+  //               .then(() => {})
+  //               .catch(() => {})
+  //           })
+  //         })
+  //       })
+  //     }
+  //   }
+  //   // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  //   connectEvents()
+  // }, [networkStatus, marketProgram, Object.values(poolTicksArray).length])
 
   useEffect(() => {
     if (tokenFrom && tokenTo) {

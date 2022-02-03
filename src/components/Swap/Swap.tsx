@@ -304,6 +304,13 @@ export const Swap: React.FC<ISwap> = ({
 
     return 'Swap'
   }
+  const activeSwapDetails = () => {
+    return (
+      getStateMessage() !== 'Insufficient volume' &&
+      getStateMessage() !== 'Exceed single swap limit (split transaction into several)' &&
+      getStateMessage() !== 'No route found'
+    )
+  }
   const setSlippage = (slippage: string): void => {
     setSlippTolerance(slippage)
   }
@@ -476,7 +483,7 @@ export const Swap: React.FC<ISwap> = ({
           </Grid>
           {tokenFromIndex !== null && tokenToIndex !== null ? (
             <TransactionDetails
-              open={detailsOpen}
+              open={detailsOpen && activeSwapDetails()}
               fee={{
                 v: pools[simulateResult.poolIndex].fee.v
               }}
@@ -486,11 +493,7 @@ export const Swap: React.FC<ISwap> = ({
               }}
             />
           ) : null}
-          {tokenFromIndex !== null &&
-          tokenToIndex !== null &&
-          getStateMessage() !== 'Insufficient volume' &&
-          getStateMessage() !== 'Exceed single swap limit (split transaction into several)' &&
-          getStateMessage() !== 'No route found' ? (
+          {tokenFromIndex !== null && tokenToIndex !== null && activeSwapDetails() ? (
             <ExchangeRate
               tokenFromSymbol={tokens[tokenFromIndex].symbol}
               tokenToSymbol={tokens[tokenToIndex].symbol}
