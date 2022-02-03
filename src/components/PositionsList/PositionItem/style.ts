@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   infoText: {
     ...newTypography.body1,
-    color: colors.invariant.textGrey,
+    color: colors.invariant.lightGrey,
     whiteSpace: 'nowrap'
   },
   greenText: {
@@ -85,7 +85,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 170,
     marginRight: 8,
     lineHeight: 20,
-
     [theme.breakpoints.down('md')]: {
       flex: '1 1 0%'
     }
