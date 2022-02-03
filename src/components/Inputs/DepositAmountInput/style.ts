@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& $input': {
       color: colors.white.main,
       position: 'relative',
-      top: -5,
+      top: 1,
       textAlign: 'end',
       ...newTypography.heading2
     },
@@ -43,15 +43,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('xs')]: {
       height: 84,
-      '& $input': {
-        // paddingBottom: 30
-      }
+      '& $input': {}
     }
   },
   inputContainer: {
     gridColumn: '1/-1',
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   currency: {
     height: 36,
@@ -65,8 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('sm')]: {
       height: 36,
-      minWidth: 85,
-      marginTop: 4
+      minWidth: 85
     }
   },
   percentages: {
