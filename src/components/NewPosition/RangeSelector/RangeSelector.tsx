@@ -245,20 +245,16 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             Set full range
           </Button>
         </Grid>
-
-        {blocked && (
-          <>
-            <Grid className={classes.blocker} />
-            <Grid
-              container
-              className={classes.blockedInfoWrapper}
-              justifyContent='center'
-              alignItems='center'>
-              <Typography className={classes.blockedInfo}>{blockerInfo}</Typography>
-            </Grid>
-          </>
-        )}
       </Grid>
+
+      {blocked && (
+        <>
+          <Grid className={classes.blocker}>
+            <Typography className={classes.blockedInfo}>{blockerInfo}</Typography>
+            {/* </Grid> */}
+          </Grid>
+        </>
+      )}
     </Grid>
   )
 }

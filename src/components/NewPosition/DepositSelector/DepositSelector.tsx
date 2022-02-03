@@ -32,6 +32,10 @@ export interface IDepositSelector {
   isCurrentPoolExisting: boolean
   className?: string
   progress: ProgressState
+  percentageChangeA?: number
+  usdValueA?: number
+  percentageChangeB?: number
+  usdValueB?: number
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -44,7 +48,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   feeTiers,
   isCurrentPoolExisting,
   className,
-  progress
+  progress,
+  percentageChangeA,
+  usdValueA,
+  percentageChangeB,
+  usdValueB
 }) => {
   const classes = useStyles()
 
@@ -135,10 +143,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   return (
     <Grid container direction='column' className={classNames(classes.wrapper, className)}>
       <Typography className={classes.sectionTitle}>Tokens</Typography>
+
       <Grid container className={classes.sectionWrapper} style={{ marginBottom: 8 }}>
         <Grid container className={classes.selects} direction='row' justifyContent='space-between'>
           <Grid className={classes.selectWrapper}>
-            <Typography className={classes.inputLabel}>Pair token A</Typography>
             <Select
               tokens={tokens}
               current={tokenAIndex !== null ? tokens[tokenAIndex] : null}
@@ -153,7 +161,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           </Grid>
 
           <Grid className={classes.selectWrapper}>
-            <Typography className={classes.inputLabel}>Pair token B</Typography>
             <Select
               tokens={tokensB}
               current={tokenBIndex !== null ? tokens[tokenBIndex] : null}
@@ -168,7 +175,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           </Grid>
         </Grid>
 
-        <Typography className={classes.inputLabel}>Fee</Typography>
         <FeeSwitch
           onSelect={fee => {
             setFeeTierIndex(fee)
@@ -181,8 +187,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
       <Grid container className={classes.sectionWrapper}>
-        <Typography className={classes.inputLabel}>Pair token A amount</Typography>
         <DepositAmountInput
+          percentageChange={percentageChangeA}
+          usdValue={usdValueA}
           currency={tokenAIndex !== null ? tokens[tokenAIndex].symbol : null}
           currencyIconSrc={tokenAIndex !== null ? tokens[tokenAIndex].logoURI : undefined}
           placeholder='0.0'
@@ -194,6 +201,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimals)
             )
           }}
+          balanceValue={
+            tokenAIndex !== null
+              ? printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimals)
+              : ''
+          }
           style={{
             marginBottom: 10
           }}
@@ -209,8 +221,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           {...tokenAInputState}
         />
 
-        <Typography className={classes.inputLabel}>Pair token B amount</Typography>
         <DepositAmountInput
+          percentageChange={percentageChangeB}
+          usdValue={usdValueB}
           currency={tokenBIndex !== null ? tokens[tokenBIndex].symbol : null}
           currencyIconSrc={tokenBIndex !== null ? tokens[tokenBIndex].logoURI : undefined}
           placeholder='0.0'
@@ -222,6 +235,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               printBN(tokens[tokenBIndex].balance, tokens[tokenBIndex].decimals)
             )
           }}
+          balanceValue={
+            tokenBIndex !== null
+              ? printBN(tokens[tokenBIndex].balance, tokens[tokenBIndex].decimals)
+              : ''
+          }
           onBlur={() => {
             if (
               tokenAIndex !== null &&

@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     '& g > text': {
       stroke: 'none',
-      fill: '#746E7C!important',
+      fill: '#A9B6BF!important',
       fontFamily: 'Mukta!important',
 
       [theme.breakpoints.down('sm')]: {
@@ -16,24 +16,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   zoomIcon: {
-    width: 14,
+    width: 18,
     height: 'auto',
-    fill: '#000000',
+    fill: '#111931',
 
     [theme.breakpoints.down('sm')]: {
-      width: 20
+      width: 22
     }
   },
   zoomButton: {
-    minWidth: 0,
-    width: 21,
-    height: 18,
-    backgroundColor: colors.invariant.accent2,
-    borderRadius: 3,
+    minWidth: 28,
+    width: 28,
+    height: 28,
+    borderRadius: 10,
+    backgroundColor: 'rgba(46,224,154,0.8)',
     padding: 0,
 
     '&:hover': {
-      backgroundColor: colors.invariant.logoGreen
+      backgroundColor: colors.invariant.green,
+      boxShadow: `0 0 10px ${colors.invariant.green}`
     },
 
     [theme.breakpoints.down('sm')]: {
@@ -44,11 +45,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   zoomButtonsWrapper: {
     position: 'absolute',
     top: 0,
-    right: 0,
+    right: 8,
     maxWidth: 21,
-    height: 42,
+    height: 64,
     zIndex: 10,
-    flexDirection: 'column',
+    flexDirection: 'row',
 
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'row',
