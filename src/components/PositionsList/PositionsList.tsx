@@ -1,11 +1,12 @@
-import { Button, Grid, Typography, InputAdornment, InputBase } from '@material-ui/core'
 import React, { useState } from 'react'
-import { PositionItem } from './PositionItem/PositionItem'
-import useStyle from './style'
-import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Link } from 'react-router-dom'
-import SearchIcon from '@material-ui/icons/Search'
+import { Button, Grid, Typography, InputAdornment, InputBase } from '@material-ui/core'
+import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
+import { PositionItem } from './PositionItem/PositionItem'
 import { PaginationList } from './Pagination/Pagination'
+import SearchIcon from '@material-ui/icons/Search'
+
+import useStyle from './style'
 
 export interface ILiquidityItem {
   tokenXName: string
