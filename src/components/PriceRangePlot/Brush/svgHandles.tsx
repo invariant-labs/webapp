@@ -1,3 +1,4 @@
+import { colors } from '@static/theme'
 import React from 'react'
 
 export interface ISVGHandle {
@@ -6,78 +7,57 @@ export interface ISVGHandle {
   x: number
   fill: string
   textColor: string
-  strokesColor: string
   textPosition: number
   isReversed?: boolean
 }
 
-export const MaxText: React.FC<Pick<ISVGHandle, 'x' | 'textColor' | 'textPosition'>> = ({
-  textColor,
-  textPosition
-}) => (
-  <svg
-    width='23'
-    height='8'
-    viewBox='0 0 23 8'
-    fill='none'
-    xmlns='http://www.w3.org/2000/svg'
-    x={textPosition}
-    y={6}>
-    <path
-      d='M0.974937 0.439999H2.41494L3.99894 5.264C4.07894 5.496 4.15494 5.724 4.22694 5.948C4.29894 6.164 4.36694 6.384 4.43094 6.608H4.45494C4.51894 6.384 4.58294 6.168 4.64694 5.96C4.71894 5.752 4.79894 5.52 4.88694 5.264L6.43494 0.439999H7.87494L8.53494 8H7.43094L7.11894 3.992C7.08694 3.6 7.06294 3.212 7.04694 2.828C7.03094 2.436 7.01494 2.04 6.99894 1.64H6.97494C6.86294 2.032 6.74694 2.424 6.62694 2.816C6.51494 3.208 6.39494 3.6 6.26694 3.992L4.93494 8H3.92694L2.59494 3.98C2.45894 3.572 2.33494 3.184 2.22294 2.816C2.11094 2.44 1.99894 2.048 1.88694 1.64H1.86294C1.84694 2.032 1.82294 2.424 1.79094 2.816C1.76694 3.208 1.73894 3.6 1.70694 3.992L1.41894 8H0.338937L0.974937 0.439999ZM12.0095 0.439999H12.9935L16.0055 8H14.8535L14.0255 5.9H10.9175L10.1015 8H8.9615L12.0095 0.439999ZM11.2175 5.024H13.7015L13.1975 3.716C13.0615 3.372 12.9375 3.04 12.8255 2.72C12.7135 2.4 12.6015 2.072 12.4895 1.736H12.4655C12.3535 2.072 12.2375 2.396 12.1175 2.708C11.9975 3.02 11.8695 3.356 11.7335 3.716L11.2175 5.024ZM17.33 0.439999L19.142 3.392L21.038 0.439999H22.25L19.766 4.16L22.37 8H21.098L19.142 4.928L17.174 8H15.962L18.482 4.16L16.07 0.439999H17.33Z'
-      fill={textColor}
-    />
-  </svg>
-)
-
-export const MinText: React.FC<Pick<ISVGHandle, 'x' | 'textColor' | 'textPosition'>> = ({
-  textColor,
-  textPosition
-}) => (
+export const MaxText: React.FC<Pick<ISVGHandle, 'x' | 'textColor'>> = ({ x, textColor }) => (
   <svg
     width='20'
-    height='8'
-    viewBox='0 0 20 8'
+    height='7'
+    viewBox='0 0 20 7'
     fill='none'
     xmlns='http://www.w3.org/2000/svg'
-    x={textPosition}
+    x={x}
     y={6}>
     <path
-      d='M1.36361 0.439999H2.80361L4.38761 5.264C4.46761 5.496 4.54361 5.724 4.61561 5.948C4.68761 6.164 4.75561 6.384 4.81961 6.608H4.84361C4.90761 6.384 4.97161 6.168 5.03561 5.96C5.10761 5.752 5.18761 5.52 5.27561 5.264L6.82361 0.439999H8.26361L8.92361 8H7.81961L7.50761 3.992C7.47561 3.6 7.45161 3.212 7.43561 2.828C7.41961 2.436 7.40361 2.04 7.38761 1.64H7.36361C7.25161 2.032 7.13561 2.424 7.01561 2.816C6.90361 3.208 6.78361 3.6 6.65561 3.992L5.32361 8H4.31561L2.98361 3.98C2.84761 3.572 2.72361 3.184 2.61161 2.816C2.49961 2.44 2.38761 2.048 2.27561 1.64H2.25161C2.23561 2.032 2.21161 2.424 2.17961 2.816C2.15561 3.208 2.12761 3.6 2.09561 3.992L1.80761 8H0.727609L1.36361 0.439999ZM11.3902 0.439999V8H10.2862V0.439999H11.3902ZM12.9379 0.439999H13.8979L17.3419 5.228C17.4699 5.404 17.5939 5.584 17.7139 5.768C17.8339 5.952 17.9419 6.132 18.0379 6.308H18.0619C18.0459 6.028 18.0339 5.748 18.0259 5.468C18.0179 5.188 18.0139 4.908 18.0139 4.628V0.439999H19.0939V8H18.1339L14.7259 3.272C14.6059 3.104 14.4819 2.916 14.3539 2.708C14.2259 2.492 14.1059 2.28 13.9939 2.072H13.9699C13.9859 2.408 13.9979 2.744 14.0059 3.08C14.0139 3.416 14.0179 3.752 14.0179 4.088V8H12.9379V0.439999Z'
+      d='M1.20516 0.699999H2.75516L3.75516 3.84C3.84182 4.11333 3.92182 4.38667 3.99516 4.66C4.07516 4.92667 4.14516 5.19 4.20516 5.45H4.24516C4.27182 5.33667 4.30182 5.21333 4.33516 5.08C4.37516 4.94 4.41516 4.8 4.45516 4.66C4.49516 4.51333 4.53182 4.37 4.56516 4.23C4.60516 4.09 4.64516 3.96 4.68516 3.84L5.65516 0.699999H7.20516L7.70516 7H6.53516C6.48182 6.31333 6.43182 5.63 6.38516 4.95C6.34516 4.26333 6.31849 3.57667 6.30516 2.89L6.27516 1.9H6.24516C6.14516 2.29333 6.03849 2.69667 5.92516 3.11C5.81182 3.52333 5.69849 3.9 5.58516 4.24L4.70516 7H3.71516L2.81516 4.24C2.66182 3.77333 2.53182 3.34667 2.42516 2.96C2.32516 2.56667 2.23849 2.21333 2.16516 1.9H2.14516C2.13182 2.42 2.10849 2.96333 2.07516 3.53C2.04849 4.09667 2.01849 4.62 1.98516 5.1L1.87516 7H0.725156L1.20516 0.699999ZM10.2369 4.54H11.9869L11.6569 3.61C11.5635 3.33 11.4735 3.06667 11.3869 2.82C11.3069 2.57333 11.2235 2.30333 11.1369 2.01H11.1169C11.0235 2.28333 10.9335 2.55 10.8469 2.81C10.7602 3.06333 10.6669 3.33 10.5669 3.61L10.2369 4.54ZM10.5369 0.699999H11.7569L14.1469 7H12.8569L12.2969 5.45H9.94688L9.38688 7H8.11688L10.5369 0.699999ZM15.5385 0.699999L16.9285 2.99L18.3285 0.699999H19.7185L17.6685 3.8L19.8185 7H18.3785L16.8785 4.62L15.4085 7H14.0285L16.0985 3.8L14.1185 0.699999H15.5385Z'
       fill={textColor}
     />
   </svg>
 )
 
-export const LeftHandle: React.FC<Pick<ISVGHandle, 'height' | 'fill' | 'strokesColor'>> = ({
-  height,
-  fill,
-  strokesColor
-}) => (
+export const MinText: React.FC<Pick<ISVGHandle, 'x' | 'textColor'>> = ({ x, textColor }) => (
+  <svg
+    width='20'
+    height='7'
+    viewBox='0 0 20 7'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    x={x}
+    y={6}>
+    <path
+      d='M0.601641 0.699999H2.15164L3.15164 3.84C3.23831 4.11333 3.31831 4.38667 3.39164 4.66C3.47164 4.92667 3.54164 5.19 3.60164 5.45H3.64164C3.66831 5.33667 3.69831 5.21333 3.73164 5.08C3.77164 4.94 3.81164 4.8 3.85164 4.66C3.89164 4.51333 3.92831 4.37 3.96164 4.23C4.00164 4.09 4.04164 3.96 4.08164 3.84L5.05164 0.699999H6.60164L7.10164 7H5.93164C5.87831 6.31333 5.82831 5.63 5.78164 4.95C5.74164 4.26333 5.71497 3.57667 5.70164 2.89L5.67164 1.9H5.64164C5.54164 2.29333 5.43497 2.69667 5.32164 3.11C5.20831 3.52333 5.09497 3.9 4.98164 4.24L4.10164 7H3.11164L2.21164 4.24C2.05831 3.77333 1.92831 3.34667 1.82164 2.96C1.72164 2.56667 1.63497 2.21333 1.56164 1.9H1.54164C1.52831 2.42 1.50497 2.96333 1.47164 3.53C1.44497 4.09667 1.41497 4.62 1.38164 5.1L1.27164 7H0.121641L0.601641 0.699999ZM9.39336 0.699999V7H8.17336V0.699999H9.39336ZM10.5394 0.699999H11.6394L14.0394 4.24C14.1727 4.44 14.296 4.64 14.4094 4.84C14.5227 5.03333 14.6127 5.19333 14.6794 5.32H14.6994C14.6594 4.86 14.6394 4.4 14.6394 3.94C14.6394 3.47333 14.6394 3.01 14.6394 2.55V0.699999H15.7894V7H14.6894L12.3994 3.65C12.246 3.42333 12.0994 3.18667 11.9594 2.94C11.826 2.69333 11.7227 2.49333 11.6494 2.34H11.6294C11.6627 2.83333 11.6794 3.31333 11.6794 3.78C11.686 4.24 11.6894 4.71 11.6894 5.19V7H10.5394V0.699999Z'
+      fill={textColor}
+    />
+  </svg>
+)
+
+export const LeftHandle: React.FC<Pick<ISVGHandle, 'height' | 'fill'>> = ({ height, fill }) => (
   <>
     <path d={`M36 ${height}V0`} stroke={fill} strokeWidth='2' />
-    <path
-      d='M0 4C0 1.79087 1.79086 0 4 0H36.2402V19.5893H4C1.79086 19.5893 0 17.7985 0 15.5893V4Z'
-      fill={fill}
-    />
-    <path d='M5 5V15' stroke={strokesColor} strokeOpacity='0.5' />
-    <path d='M8 5V15' stroke={strokesColor} strokeOpacity='0.5' />
+    <path d='M0 4C0 1.79086 1.79086 0 4 0H37V20H4C1.79086 20 0 18.2091 0 16V4Z' fill={fill} />
+    <path d='M5 5V15' stroke={colors.invariant.dark} strokeOpacity='0.5' />
+    <path d='M8 5V15' stroke={colors.invariant.dark} strokeOpacity='0.5' />
   </>
 )
 
-export const RightHandle: React.FC<Pick<ISVGHandle, 'height' | 'fill' | 'strokesColor'>> = ({
-  height,
-  fill,
-  strokesColor
-}) => (
+export const RightHandle: React.FC<Pick<ISVGHandle, 'height' | 'fill'>> = ({ height, fill }) => (
   <>
     <path d={`M1 ${height}V0`} stroke={fill} strokeWidth='2' />
-    <path
-      d='M36.2402 4C36.2402 1.79087 34.4494 0 32.2402 0H-1.14441e-05V19.5893H32.2402C34.4494 19.5893 36.2402 17.7985 36.2402 15.5893V4Z'
-      fill={fill}
-    />
-    <path d='M29 5V15' stroke={strokesColor} strokeOpacity='0.5' />
-    <path d='M32 5V15' stroke={strokesColor} strokeOpacity='0.5' />
+    <path d='M37 4C37 1.79086 35.2091 0 33 0H0V20H33C35.2091 20 37 18.2091 37 16V4Z' fill={fill} />
+    <path d='M29 5V15' stroke={colors.invariant.dark} strokeOpacity='0.5' />
+    <path d='M32 5V15' stroke={colors.invariant.dark} strokeOpacity='0.5' />
   </>
 )
 
@@ -87,8 +67,6 @@ export const MaxHandle: React.FC<ISVGHandle> = ({
   x,
   fill,
   textColor,
-  strokesColor,
-  textPosition,
   isReversed = false
 }) => (
   <svg
@@ -100,11 +78,11 @@ export const MaxHandle: React.FC<ISVGHandle> = ({
     xmlns='http://www.w3.org/2000/svg'
     x={x}>
     {!isReversed ? (
-      <RightHandle height={height} fill={fill} strokesColor={strokesColor} />
+      <RightHandle height={height} fill={fill} />
     ) : (
-      <LeftHandle height={height} fill={fill} strokesColor={strokesColor} />
+      <LeftHandle height={height} fill={fill} />
     )}
-    <MaxText textColor={textColor} x={isReversed ? 14 : 5} textPosition={textPosition} />
+    <MaxText textColor={textColor} x={isReversed ? 14 : 5} />
   </svg>
 )
 
@@ -114,8 +92,6 @@ export const MinHandle: React.FC<ISVGHandle> = ({
   x,
   fill,
   textColor,
-  strokesColor,
-  textPosition,
   isReversed = false
 }) => (
   <svg
@@ -127,10 +103,10 @@ export const MinHandle: React.FC<ISVGHandle> = ({
     xmlns='http://www.w3.org/2000/svg'
     x={x}>
     {!isReversed ? (
-      <LeftHandle height={height} fill={fill} strokesColor={strokesColor} />
+      <LeftHandle height={height} fill={fill} />
     ) : (
-      <RightHandle height={height} fill={fill} strokesColor={strokesColor} />
+      <RightHandle height={height} fill={fill} />
     )}
-    <MinText textColor={textColor} x={isReversed ? 5 : 14} textPosition={textPosition} />
+    <MinText textColor={textColor} x={isReversed ? 5 : 14} />
   </svg>
 )

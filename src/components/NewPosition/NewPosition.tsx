@@ -21,7 +21,12 @@ export interface INewPosition {
   tokensB: SwapToken[]
   data: PlotTickData[]
   midPrice: TickPlotPositionData
-  addLiquidityHandler: (leftTickIndex: number, rightTickIndex: number) => void
+  addLiquidityHandler: (
+    leftTickIndex: number,
+    rightTickIndex: number,
+    xAmount: number,
+    yAmount: number
+  ) => void
   onChangePositionTokens: (
     tokenAIndex: number | null,
     tokenBindex: number | null,
@@ -123,7 +128,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
       <Typography className={classes.title}>Add new liquidity position</Typography>
 
-      <Grid container className={classes.row}>
+      <Grid container className={classes.row} alignItems='stretch'>
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
           className={classes.deposit}
@@ -137,7 +142,16 @@ export const NewPosition: React.FC<INewPosition> = ({
           }}
           onAddLiquidity={() => {
             if (tokenAIndex !== null && tokenBIndex !== null) {
-              addLiquidityHandler(leftRange, rightRange)
+              addLiquidityHandler(
+                leftRange,
+                rightRange,
+                isXtoY
+                  ? +tokenADeposit * 10 ** tokens[tokenAIndex].decimals
+                  : +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals,
+                isXtoY
+                  ? +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals
+                  : +tokenADeposit * 10 ** tokens[tokenAIndex].decimals
+              )
             }
           }}
           tokenAInputState={{

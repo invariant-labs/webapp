@@ -1,17 +1,19 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
     textTransform: 'none',
     boxShadow: 'none',
-    borderRadius: 3,
-    fontSize: 16,
+    borderRadius: 13,
     minWidth: 80,
-    backgroundColor: '#34303B',
-    padding: '2px 10px',
+    fontFamily: 'Mukta',
+    backgroundColor: colors.invariant.componentBcg,
+    ...newTypography.body3,
+    padding: 12,
+
     '&:hover': {
-      backgroundColor: colors.invariant.componentOut3
+      backgroundColor: colors.invariant.light
     },
     [theme.breakpoints.down('xs')]: {
       minWidth: 90
@@ -19,20 +21,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenName: {
     position: 'relative',
-    top: 1
+    top: 1,
+    color: colors.white.main
   },
   icon: {
-    minWidth: 18,
-    height: 18,
-    marginRight: 6,
+    minWidth: 20,
+    height: 20,
     borderRadius: '100%'
   },
-  endIcon: {
-    width: '2em',
-    marginLeft: 6,
-    '& svg': {
-    }
-  }
+  endIcon: {}
 }))
 
 export default useStyles

@@ -2,7 +2,6 @@ import { Grid, Hidden, Typography, useMediaQuery } from '@material-ui/core'
 import React, { useMemo } from 'react'
 import icons from '@static/icons'
 import { ILiquidityItem } from '../PositionsList'
-import AnimatedNumber from '@components/AnimatedNumber'
 import { formatNumbers, FormatNumberThreshold, PrefixConfig, showPrefix } from '@consts/utils'
 import { theme } from '@static/theme'
 import useStyle from './style'
@@ -95,11 +94,7 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
         <Typography className={classes.infoText}>Value</Typography>
         <Grid className={classes.infoCenter} container item justifyContent='center'>
           <Typography className={classes.greenText}>
-            <AnimatedNumber
-              value={value}
-              duration={300}
-              formatValue={formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)}
-            />
+            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(value.toString())}
             {showPrefix(value, isXs || isDesktop ? shorterPrefixConfig : undefined)} {tokenXName}
           </Typography>
         </Grid>

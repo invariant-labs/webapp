@@ -9,17 +9,19 @@ const useStyles = makeStyles(() => ({
     width: 20
   },
   input: {
+    boxSizing: 'border-box',
     ...typography.body2,
     outline: 'none',
-    height: 25,
     width: 88,
-    backgroundColor: colors.invariant.componentOut2,
-    color: colors.invariant.lightInfoText,
-    borderRadius: 3,
+    height: 28,
     fontFamily: 'Mukta',
-    cursor: 'pointer',
     lineHeight: 16,
-    border: '1px solid #4D4757'
+    fontSize: 16,
+    backgroundColor: colors.invariant.newDark,
+    color: colors.invariant.lightGrey,
+    border: `1px solid ${colors.invariant.light}`,
+    borderRadius: 8,
+    cursor: 'pointer'
   }
 }))
 

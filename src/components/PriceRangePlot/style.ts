@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     '& g > text': {
       stroke: 'none',
-      fill: '#746E7C!important',
+      fill: '#A9B6BF!important',
       fontFamily: 'Mukta!important',
 
       [theme.breakpoints.down('sm')]: {
@@ -18,25 +18,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   zoomIcon: {
     width: 18,
     height: 'auto',
-    fill: '#000000',
+    fill: '#111931',
 
     [theme.breakpoints.down('sm')]: {
-      width: 20
+      width: 22
     }
   },
   zoomButton: {
-    minWidth: 0,
+    minWidth: 28,
     width: 28,
     height: 28,
-    backgroundColor: colors.invariant.green,
-    borderRadius: 5,
+    borderRadius: 10,
+    backgroundColor: 'rgba(46,224,154,0.8)',
     padding: 0,
     '&:not(:last-child)': {
       marginBottom: 8
     },
 
     '&:hover': {
-      backgroundColor: colors.invariant.green
+      backgroundColor: colors.invariant.green,
+      boxShadow: `0 0 10px ${colors.invariant.green}`
     },
 
     [theme.breakpoints.down('sm')]: {
@@ -47,11 +48,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   zoomButtonsWrapper: {
     position: 'absolute',
     top: 0,
-    right: 0,
-    maxWidth: 28,
-    height: 42,
+    right: 8,
+    maxWidth: 21,
+    height: 64,
     zIndex: 10,
-    // flexDirection: 'column',
+    flexDirection: 'row',
+
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'row',
       maxWidth: 92,

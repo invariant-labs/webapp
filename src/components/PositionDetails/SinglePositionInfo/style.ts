@@ -127,6 +127,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       background: colors.invariant.pinkLinearGradient,
       boxShadow: `0 0 16px ${colors.invariant.pink}`
     },
+    '&:disabled': {
+      backgroundColor: colors.invariant.componentOut3,
+      color: colors.invariant.background2
+    },
 
     [theme.breakpoints.down('xs')]: {
       ...newTypography.body1,
