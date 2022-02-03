@@ -1,11 +1,12 @@
 import { Swap } from '@components/Swap/Swap'
 import { isLoadingLatestPoolsForTransaction, pools, poolTicks } from '@selectors/pools'
 import { swap as swapPool } from '@selectors/swap'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@reducers/swap'
 import { balance, status, swapTokens } from '@selectors/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import { actions as poolsActions } from '@reducers/pools'
 
 export const WrappedSwap = () => {
   const dispatch = useDispatch()
@@ -19,15 +20,6 @@ export const WrappedSwap = () => {
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
 
   const [progress, setProgress] = useState<ProgressState>('none')
-  const [poolIndex, setPoolIndex] = useState<number | null>(null)
-
-  const isWaitingForNewPool = useMemo(() => {
-    if (poolIndex !== null) {
-      return false
-    }
-
-    return isFetchingNewPool
-  }, [isFetchingNewPool, poolIndex])
 
   useEffect(() => {
     if (!inProgress && progress === 'progress') {
@@ -66,6 +58,12 @@ export const WrappedSwap = () => {
             tokenTo
           })
         )
+        dispatch(
+          poolsActions.getAllPoolsForPairData({
+            first: tokenFrom,
+            second: tokenTo
+          })
+        )
       }}
       walletStatus={walletStatus}
       tokens={tokensList}
@@ -74,7 +72,7 @@ export const WrappedSwap = () => {
       progress={progress}
       poolTicks={poolTicksArray}
       fullSolBalance={fullSolBalance}
-      isWaitingForNewPool={isWaitingForNewPool}
+      isWaitingForNewPool={isFetchingNewPool}
     />
   )
 }
