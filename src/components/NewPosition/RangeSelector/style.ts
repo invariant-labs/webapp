@@ -63,7 +63,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...newTypography.body2,
     color: colors.white.main,
     textTransform: 'none',
-    // width: 200,
     height: 36,
     paddingInline: 8,
     backgroundColor: colors.invariant.light,
@@ -89,7 +88,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '49%',
     height: '100%',
     backgroundColor: 'rgba(11, 12, 13, 0.8)',
-    // filter: 'blur(0px) brightness(0.4)',
     borderRadius: 11,
     [theme.breakpoints.down('sm')]: {
       top: 555,
