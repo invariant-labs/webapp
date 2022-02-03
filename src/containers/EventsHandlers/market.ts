@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import * as R from 'remeda'
 import { network, status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
@@ -16,7 +16,10 @@ const MarketEvents = () => {
   const { tokenFrom, tokenTo } = useSelector(swap)
   const networkStatus = useSelector(status)
   const networkType = useSelector(network)
-  const allPools = useSelector(pools)
+  const poolsObj = useSelector(pools)
+
+  const allPools = useMemo(() => Object.values(poolsObj), [poolsObj])
+
   const poolTicksArray = useSelector(poolTicks)
   const [subscribedTick, _setSubscribeTick] = useState<
     Array<{ fromToken: string; toToken: string; indexPool: number }>
@@ -58,7 +61,7 @@ const MarketEvents = () => {
     if (
       networkStatus !== Status.Initialized ||
       !marketProgram ||
-      Object.values(allPools).length === 0
+      allPools.length === 0
     ) {
       return
     }
@@ -105,7 +108,7 @@ const MarketEvents = () => {
     }
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     connectEvents()
-  }, [networkStatus, marketProgram, Object.values(allPools).length])
+  }, [networkStatus, marketProgram, allPools.length])
 
   useEffect(() => {
     if (tokenFrom && tokenTo) {

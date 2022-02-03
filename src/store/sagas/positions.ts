@@ -283,7 +283,8 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 }
 
 export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicksData>): Generator {
-  const allPools = yield* select(pools)
+  const poolsObj = yield* select(pools)
+  const allPools = Object.values(poolsObj)
   const allTokens = yield* select(tokens)
 
   const poolIndex = action.payload.poolIndex

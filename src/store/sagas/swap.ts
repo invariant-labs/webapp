@@ -16,7 +16,8 @@ import { network } from '@selectors/solanaConnection'
 export function* handleSwapWithSOL(): Generator {
   try {
     const allTokens = yield* select(tokens)
-    const allPools = yield* select(pools)
+    const poolsObj = yield* select(pools)
+    const allPools = Object.values(poolsObj)
     const networkType = yield* select(network)
     const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
       yield* select(swap)
@@ -216,7 +217,8 @@ export function* handleSwapWithSOL(): Generator {
 export function* handleSwap(): Generator {
   try {
     const allTokens = yield* select(tokens)
-    const allPools = yield* select(pools)
+    const poolsObj = yield* select(pools)
+    const allPools = Object.values(poolsObj)
     const networkType = yield* select(network)
     const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
       yield* select(swap)

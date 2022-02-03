@@ -5,6 +5,7 @@ import { Tick } from '@invariant-labs/sdk/src/market'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
 import { PayloadType } from './types'
+import * as R from 'remeda'
 
 export interface PoolWithAddress extends PoolStructure {
   address: PublicKey
@@ -12,7 +13,7 @@ export interface PoolWithAddress extends PoolStructure {
 
 export interface IPoolsStore {
   tokens: Record<string, Token>
-  pools: PoolWithAddress[]
+  pools: { [key in string]: PoolWithAddress }
   poolTicks: { [key in string]: Tick[] }
   isLoadingLatestPoolsForTransaction: boolean
 }
@@ -35,7 +36,7 @@ export interface UpdateTicks {
 
 export const defaultState: IPoolsStore = {
   tokens: {},
-  pools: [],
+  pools: {},
   poolTicks: {},
   isLoadingLatestPoolsForTransaction: false
 }
@@ -54,7 +55,7 @@ const poolsSlice = createSlice({
       state.tokens = action.payload
       return state
     },
-    setPools(state, action: PayloadAction<PoolWithAddress[]>) {
+    setPools(state, action: PayloadAction<{ [key in string]: PoolWithAddress }>) {
       state.pools = action.payload
       return state
     },
@@ -70,7 +71,11 @@ const poolsSlice = createSlice({
       return state
     },
     addPools(state, action: PayloadAction<PoolWithAddress[]>) {
-      state.pools = [...state.pools, ...action.payload]
+      const newData = action.payload.reduce((acc, pool) => ({
+        ...acc,
+        [pool.address.toString()]: pool
+      }), {})
+      state.pools = R.merge(state.pools, newData)
       state.isLoadingLatestPoolsForTransaction = false
       return state
     },
@@ -79,7 +84,11 @@ const poolsSlice = createSlice({
       return state
     },
     addPoolsForPositions(state, action: PayloadAction<PoolWithAddress[]>) {
-      state.pools = [...state.pools, ...action.payload]
+      const newData = action.payload.reduce((acc, pool) => ({
+        ...acc,
+        [pool.address.toString()]: pool
+      }), {})
+      state.pools = R.merge(state.pools, newData)
       return state
     },
     updateTicks(state, action: PayloadAction<UpdateTicks>) {

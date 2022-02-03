@@ -7,6 +7,7 @@ import { actions } from '@reducers/swap'
 import { balance, status, swapTokens } from '@selectors/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { actions as poolsActions } from '@reducers/pools'
+import { PublicKey } from '@solana/web3.js'
 
 export const WrappedSwap = () => {
   const dispatch = useDispatch()
@@ -20,6 +21,8 @@ export const WrappedSwap = () => {
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
 
   const [progress, setProgress] = useState<ProgressState>('none')
+  const [tokenFrom, setTokenFrom] = useState<PublicKey | null>(null)
+  const [tokenTo, setTokenTo] = useState<PublicKey | null>(null)
 
   useEffect(() => {
     if (!inProgress && progress === 'progress') {
@@ -34,6 +37,17 @@ export const WrappedSwap = () => {
       }, 3000)
     }
   }, [success, inProgress])
+
+  useEffect(() => {
+    if (tokenFrom !== null && tokenTo !== null && !isFetchingNewPool) {
+      dispatch(
+        actions.setPair({
+          tokenFrom,
+          tokenTo
+        })
+      )
+    }
+  }, [isFetchingNewPool])
 
   return (
     <Swap
@@ -52,12 +66,8 @@ export const WrappedSwap = () => {
         )
       }}
       onSetPair={(tokenFrom, tokenTo) => {
-        dispatch(
-          actions.setPair({
-            tokenFrom,
-            tokenTo
-          })
-        )
+        setTokenFrom(tokenFrom)
+        setTokenTo(tokenTo)
         dispatch(
           poolsActions.getAllPoolsForPairData({
             first: tokenFrom,
@@ -67,7 +77,7 @@ export const WrappedSwap = () => {
       }}
       walletStatus={walletStatus}
       tokens={tokensList}
-      pools={allPools}
+      pools={Object.values(allPools)}
       swapData={swap}
       progress={progress}
       poolTicks={poolTicksArray}

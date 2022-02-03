@@ -22,7 +22,7 @@ export const positionsWithPoolsData = createSelector(
   positionsList,
   tokens,
   (allPools, { list }, tokens) => {
-    const poolsByKey: Record<string, PoolWithAddressAndIndex> = allPools.reduce(
+    const poolsByKey: Record<string, PoolWithAddressAndIndex> = Object.values(allPools).reduce(
       (prev, pool, index) => {
         return {
           [pool.address.toString()]: {

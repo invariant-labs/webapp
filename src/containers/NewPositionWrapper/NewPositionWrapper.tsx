@@ -23,7 +23,10 @@ export const NewPositionWrapper = () => {
 
   const tokens = useSelector(swapTokens)
   const walletStatus = useSelector(status)
-  const allPools = useSelector(pools)
+  const poolsObj = useSelector(pools)
+
+  const allPools = useMemo(() => Object.values(poolsObj), [poolsObj])
+
   const { success, inProgress } = useSelector(initPosition)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
