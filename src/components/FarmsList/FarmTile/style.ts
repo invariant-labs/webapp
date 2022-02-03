@@ -126,10 +126,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 16,
     textTransform: 'none',
     ...typography.body1,
-    background: 'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)',
+    background: colors.invariant.greenLinearGradientOpacity,
     color: colors.black.full,
     '&:hover': {
-      background: `linear-gradient(180deg, ${colors.invariant.green} 0%, #21A47C 100%)`,
+      background: colors.invariant.greenLinearGradientNoOpacity,
       boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
 

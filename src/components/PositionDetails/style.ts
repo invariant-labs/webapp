@@ -53,8 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.black,
     ...newTypography.body1,
     textTransform: 'none',
-    background:
-      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    background: colors.invariant.pinkLinearGradientOpacity,
     borderRadius: 14,
     height: 40,
     width: 130,
@@ -64,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     letterSpacing: -0.03,
 
     '&:hover': {
-      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
+      background: colors.invariant.pinkLinearGradientNoOpacity,
       boxShadow: `0 0 16px ${colors.invariant.pink}`
     }
   },

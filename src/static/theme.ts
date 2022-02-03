@@ -97,7 +97,13 @@ export const colors = {
     pinkLinearGradient:
       'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
     greenLinearGradient:
-      'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)'
+      'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)',
+    greenLinearGradientNoOpacity: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
+    greenLinearGradientOpacity:
+      'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)',
+    pinkLinearGradientNoOpacity: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
+    pinkLinearGradientOpacity:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)'
   }
 }
 

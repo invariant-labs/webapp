@@ -30,12 +30,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   text: {
     ...newTypography.body1,
-    color: colors.invariant.textGrey,
+    color: colors.invariant.lightGrey,
     backgroundColor: colors.invariant.component,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: '12px',
+    borderRadius: 12,
     height: 36,
     width: '100%'
   },
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   closedText: {
-    width: '100px',
+    width: 100,
     paddingRight: 0
   },
   namesGrid: {
@@ -92,16 +92,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.component,
     marginTop: 20,
     padding: 24,
-    borderRadius: '24px'
+    borderRadius: 24
   },
   iconSmall: {
-    width: '20px',
-    height: '20px',
+    width: 20,
+    height: 20,
     marginRight: 8,
     borderRadius: '100%'
   },
   boxInfo: {
-    borderRadius: '16px',
+    borderRadius: 16,
     '&:not(:last-child)': {
       marginBottom: 26
     }
@@ -116,16 +116,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'Mukta'
   },
   violetButton: {
-    background: colors.invariant.pinkLinearGradient,
-    borderRadius: '11px',
+    background: colors.invariant.pinkLinearGradientOpacity,
+    borderRadius: 11,
     textTransform: 'none',
     color: colors.invariant.dark,
     width: 116,
     height: 32,
     ...newTypography.body1,
     '&:hover': {
-      background: colors.invariant.pinkLinearGradient,
-      boxShadow: `0 0 16px ${colors.invariant.pink}`
+      background: colors.invariant.pinkLinearGradientNoOpacity,
+      boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
     '&:disabled': {
       backgroundColor: colors.invariant.componentOut3,
@@ -149,7 +149,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenArea: {
     backgroundColor: colors.invariant.dark,
-    borderRadius: '16px',
+    borderRadius: 16,
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
@@ -171,19 +171,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   token: {
     backgroundColor: colors.invariant.light,
-    borderRadius: '12px',
+    borderRadius: 12,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     padding: '8px 13px'
   },
   tokenName: {
-    color: colors.invariant.textGrey,
+    color: colors.white.main,
     ...newTypography.heading4,
     fontWeight: 400
   },
   tokenValue: {
-    color: colors.invariant.textGrey,
+    color: colors.invariant.lightGrey,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -199,18 +199,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   closeButton: {
     color: colors.invariant.dark,
-    background: colors.invariant.greenLinearGradient,
+    background: colors.invariant.greenLinearGradientOpacity,
     height: 36,
-    width: '116px',
+    width: 116,
     textTransform: 'none',
     transition: '300ms',
     paddingInline: 0,
-    borderRadius: '12px',
+    borderRadius: 12,
     ...newTypography.body1,
 
     '&:hover': {
-      background: colors.invariant.greenLinearGradient,
-      boxShadow: `0px 0px 8px ${colors.invariant.green}`
+      background: colors.invariant.greenLinearGradientNoOpacity,
+      boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
 
     [theme.breakpoints.down('xs')]: {

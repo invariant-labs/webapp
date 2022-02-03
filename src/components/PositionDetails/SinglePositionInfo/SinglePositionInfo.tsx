@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import React from 'react'
 import { BoxInfo } from './BoxInfo'
 import useStyles from './style'
+
 export interface ILiquidityItem {
   tokenXName: string
   tokenXIcon: string
@@ -15,6 +16,7 @@ export interface ILiquidityItem {
   min: number
   max: number
 }
+
 interface IProp {
   data: ILiquidityItem
   onClickClaimFee: () => void

@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.componentOut2,
     borderRadius: 5,
     height: 35,
-    width: 331,
+    width: 310,
     paddingInline: 10,
     marginRight: 8,
 
