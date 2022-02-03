@@ -7,7 +7,6 @@ export interface ISVGHandle {
   x: number
   fill: string
   textColor: string
-  textPosition: number
   isReversed?: boolean
 }
 
