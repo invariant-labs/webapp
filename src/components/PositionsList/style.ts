@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   titleBar: {
     display: 'flex',
-    justifyContent: 'center',
     marginBottom: 20
   },
   title: {
@@ -35,6 +34,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  searchRoot: {
+    width: '100%'
+  },
+  searchWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'nowrap'
+  },
   searchBar: {
     width: 221,
     height: 32,
@@ -45,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.lightGrey,
     ...newTypography.body2,
     [theme.breakpoints.down('xs')]: {
-      marginBottom: 12
+      maxWidth: 200
     }
   },
   button: {
@@ -54,15 +63,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'none',
     borderRadius: 14,
     height: 40,
-    width: 130,
+    minWidth: 130,
     paddingInline: 0,
+    marginLeft: 16,
     background:
       'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
 
     '&:hover': {
       background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
       boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)'
-    }
+    },
+    [theme.breakpoints.down('xs')]: {}
   },
   buttonText: {
     WebkitPaddingBefore: '2px'

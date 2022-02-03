@@ -25,13 +25,12 @@ export interface ILiquidityItem {
 interface IProp {
   data: ILiquidityItem[]
   onAddPositionClick: () => void
-  searchSetValue: (value: string) => void
-  searchPosition: string
   loading?: boolean
   showNoConnected?: boolean
   noConnectedBlockerProps: INoConnected
   itemsPerPage: number
   searchValue: string
+  searchSetValue: (value: string) => void
 }
 
 export const PositionsList: React.FC<IProp> = ({
@@ -77,27 +76,29 @@ export const PositionsList: React.FC<IProp> = ({
         direction='row'
         justifyContent='space-between'
         alignItems='center'>
-        <Grid>
+        <Grid className={classes.searchRoot}>
           <Grid className={classes.titleBar}>
             <Typography className={classes.title}>Your Liquidity Positions</Typography>
             <Typography className={classes.positionsNumber}>{data.length}</Typography>
           </Grid>
-          <InputBase
-            type={'text'}
-            className={classes.searchBar}
-            placeholder='Search position'
-            endAdornment={
-              <InputAdornment position='end'>
-                <SearchIcon />
-              </InputAdornment>
-            }
-            onChange={handleChangeInput}
-            value={searchValue}
-          />
+          <Grid className={classes.searchWrapper}>
+            <InputBase
+              type={'text'}
+              className={classes.searchBar}
+              placeholder='Search position'
+              endAdornment={
+                <InputAdornment position='end'>
+                  <SearchIcon />
+                </InputAdornment>
+              }
+              onChange={handleChangeInput}
+              value={searchValue}
+            />
+            <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
+              <span className={classes.buttonText}>+ Add Position</span>
+            </Button>
+          </Grid>
         </Grid>
-        <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
-          <span className={classes.buttonText}>+ Add Position</span>
-        </Button>
       </Grid>
       <Grid className={classes.list}>
         {data.length > 0 ? (
