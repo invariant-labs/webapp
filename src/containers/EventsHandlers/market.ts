@@ -19,9 +19,7 @@ const MarketEvents = () => {
   const networkType = useSelector(network)
   const allPools = useSelector(pools)
   const poolTicksArray = useSelector(poolTicks)
-  const [subscribedTick, _setSubscribeTick] = useState<
-    Array<{ fromToken: string; toToken: string; indexPool: number }>
-  >([])
+  const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
   useEffect(() => {
     if (networkStatus !== Status.Initialized || !marketProgram) {
       return
@@ -66,22 +64,20 @@ const MarketEvents = () => {
     }
     const connectEvents = async () => {
       if (tokenFrom && tokenTo) {
-        allPools.forEach((pool, indexPool) => {
-          if (
-            subscribedTick.findIndex(
-              e =>
-                ((e.fromToken === tokenFrom.toString() && e.toToken === tokenTo.toString()) ||
-                  (e.toToken === tokenFrom.toString() && e.fromToken === tokenTo.toString())) &&
-                e.indexPool === indexPool
-            ) !== -1
-          ) {
+        Object.keys(poolTicksArray).forEach(address => {
+          if (subscribedTick.has(address)) {
+            console.log(address.toString())
             return
           }
-          subscribedTick.push({
-            fromToken: pool.tokenX.toString(),
-            toToken: pool.tokenY.toString(),
-            indexPool
+          subscribedTick.add(address)
+          const pool = allPools.find(pool => {
+            return pool.address.toString() === address
           })
+          if (typeof pool === 'undefined') {
+            return
+          }
+          // DO PRZETESTOWANIA, WYWALA SOCKET
+          console.log(poolTicksArray)
           R.forEachObj(poolTicksArray, tick => {
             tick.forEach(singleTick => {
               marketProgram
@@ -91,7 +87,7 @@ const MarketEvents = () => {
                   tickObject => {
                     dispatch(
                       actions.updateTicks({
-                        poolIndex: indexPool.toString(),
+                        address: address,
                         index: singleTick.index,
                         tick: tickObject
                       })
@@ -107,7 +103,7 @@ const MarketEvents = () => {
     }
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     connectEvents()
-  }, [networkStatus, marketProgram, Object.values(allPools).length])
+  }, [networkStatus, marketProgram, Object.values(poolTicksArray).length])
 
   useEffect(() => {
     if (tokenFrom && tokenTo) {

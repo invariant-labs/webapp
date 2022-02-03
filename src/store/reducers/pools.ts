@@ -28,7 +28,7 @@ export interface UpdateTick {
 }
 
 export interface UpdateTicks {
-  poolIndex: string
+  address: string
   index: number
   tick: Tick
 }
@@ -69,8 +69,8 @@ const poolsSlice = createSlice({
       return state
     },
     updateTicks(state, action: PayloadAction<UpdateTicks>) {
-      state.poolTicks[action.payload.poolIndex][
-        state.poolTicks[action.payload.poolIndex].findIndex(e => e.index === action.payload.index)
+      state.poolTicks[action.payload.address][
+        state.poolTicks[action.payload.address].findIndex(e => e.index === action.payload.index)
       ] = action.payload.tick
     },
 
