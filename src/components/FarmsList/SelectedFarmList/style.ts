@@ -6,13 +6,16 @@ const useStyles = makeStyles(() => ({
     width: 508
   },
   header: {
+    display: 'flex',
+    flexDirection: 'row',
     ...typography.heading3,
     color: colors.white.main,
-    marginTop: 10
+    marginBottom: 10
   },
   title: {
     ...typography.heading4,
-    color: colors.white.main
+    color: colors.white.main,
+    marginLeft: 10
   },
   tile: {
     marginBottom: 20

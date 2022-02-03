@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import useStyle from './style'
 import AnimatedNumber from '@components/AnimatedNumber'
 import { theme } from '@static/theme'
+import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 
 export interface ISelectedFarm {
   value: number
@@ -41,16 +42,16 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
     <Grid className={classes.root} container direction='column'>
       <Grid className={classes.top}>
         <Box className={classes.buttonContainer}>
-          <Button
+          <OutlinedButton
             onClick={() => handleButtonStake('stake')}
-            className={activeValue === 'stake' ? classes.stakeButton : classes.disableButton}>
-            Stake
-          </Button>
-          <Button
+            className={activeValue === 'stake' ? classes.stakeButton : classes.disableButton}
+            name='Stake'
+          />
+          <OutlinedButton
+            name='Unstake'
             onClick={() => handleButtonStake('unstake')}
-            className={activeValue === 'unstake' ? classes.unstakeButton : classes.disableButton}>
-            Unstake
-          </Button>
+            className={activeValue === 'unstake' ? classes.unstakeButton : classes.disableButton}
+          />
         </Box>
         <Typography className={classes.greenText}>
           Unclaimed rewards:
@@ -140,16 +141,15 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
               </Typography>
             </Box>
           </Grid>
-          <Button
+          <OutlinedButton
             className={classes.buttonStake}
-            type='button'
+            name='Stake'
             onClick={() => {
               if (onStake !== undefined) {
                 onStake('stake')
               }
-            }}>
-            Stake
-          </Button>
+            }}
+          />
         </>
       ) : (
         <>
@@ -178,9 +178,12 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
           </Grid>
           <Grid justifyContent='space-between' direction='row'>
             <Box className={classes.labelGrid}>
-              <Typography className={classes.labelText}>
+              <Typography className={classes.infoText}>
                 Staked:
-                <span className={classes.stakedValue}>{staked}</span> {pair}
+                <Typography display='inline' className={classes.labelText}>
+                  <span className={classes.stakedValue}>{staked.toLocaleString('pl-PL')}</span>
+                  {pair}
+                </Typography>
               </Typography>
               <Typography className={classes.labelText}>
                 {isXsDown
@@ -191,7 +194,6 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
           </Grid>
           <Button
             className={classes.buttonUnstake}
-            type='button'
             onClick={() => {
               if (onUnstake !== undefined) {
                 onUnstake('unstake')

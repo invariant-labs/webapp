@@ -3,7 +3,6 @@ import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    height: 540,
     borderRadius: 10,
     backgroundColor: colors.invariant.component,
     padding: 24,
@@ -59,11 +58,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   button: {
+    width: '100%',
     flex: '1 1 0%',
     ...newTypography.body2,
     color: colors.white.main,
     textTransform: 'none',
-    width: 200,
     height: 36,
     paddingInline: 8,
     backgroundColor: colors.invariant.light,
@@ -78,57 +77,46 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginRight: 0,
         marginBottom: 8
       }
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
     }
   },
   blocker: {
     position: 'absolute',
+    background: 'red',
     top: 0,
     right: 0,
     zIndex: 11,
-    width: '464px',
-    height: '541px',
+    width: '49%',
+    height: '100%',
     backgroundColor: 'rgba(11, 12, 13, 0.8)',
-    filter: 'blur(0px) brightness(0.4)',
     borderRadius: 11,
-
     [theme.breakpoints.down('sm')]: {
+      top: 555,
+      right: 0,
+      zIndex: 11,
       width: '100%',
-      height: '100%'
+      height: 670,
+      borderRadius: 9
     },
-    [theme.breakpoints.down('md')]: {
-      top: 590,
-      width: '100%',
-      height: 641
-    }
-  },
 
-  blockedInfoWrapper: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: '464px',
-    height: '541px',
-    zIndex: 12,
-
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
+      top: 595,
+      right: 0,
       width: '100%',
-      height: '100%'
-    },
-    [theme.breakpoints.down('md')]: {
-      top: 606,
-      width: '100%',
-      height: '590px'
+      height: 670
     }
   },
 
   blockedInfo: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
     ...newTypography.heading4,
-    color: colors.invariant.lightHover
+    color: colors.invariant.lightHover,
+    zIndex: 99
   },
   buttons: {
+    width: '100%',
     flexDirection: 'row',
     gap: 16,
     alignItems: 'center',

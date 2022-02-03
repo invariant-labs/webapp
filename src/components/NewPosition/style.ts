@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   row: {
     minWidth: 464,
-    minHeight: 504,
+    minHeight: 540,
     position: 'relative',
     flexDirection: 'row',
 
