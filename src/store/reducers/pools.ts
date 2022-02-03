@@ -19,7 +19,7 @@ export interface IPoolsStore {
 }
 
 export interface UpdatePool {
-  index: number
+  address: PublicKey
   poolStructure: PoolStructure
 }
 
@@ -64,8 +64,8 @@ const poolsSlice = createSlice({
       return state
     },
     updatePool(state, action: PayloadAction<UpdatePool>) {
-      state.pools[action.payload.index] = {
-        address: state.pools[action.payload.index].address,
+      state.pools[action.payload.address.toString()] = {
+        address: state.pools[action.payload.address.toString()].address,
         ...action.payload.poolStructure
       }
       return state

@@ -37,25 +37,21 @@ export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
     const pools: PoolWithAddress[] = []
 
     for (const fee of FEE_TIERS) {
-      try {
-        const pair = new Pair(
-          action.payload.first,
-          action.payload.second,
-          fee
-        )
-        const poolData = yield* call([marketProgram, marketProgram.getPool], pair)
-        const address = yield* call(
-          [pair, pair.getAddress],
-          marketProgram.program.programId
-        )
+      const pair = new Pair(
+        action.payload.first,
+        action.payload.second,
+        fee
+      )
+      const poolData = yield* call([marketProgram, marketProgram.getPool], pair)
+      const address = yield* call(
+        [pair, pair.getAddress],
+        marketProgram.program.programId
+      )
 
-        pools.push({
-          ...poolData,
-          address
-        })
-      } catch (error) {
-        console.log(error)
-      }
+      pools.push({
+        ...poolData,
+        address
+      })
     }
 
     yield* put(actions.addPools(pools))
@@ -76,17 +72,13 @@ export function* fetchPoolsDataForPositions(action: PayloadAction<PublicKey[]>) 
   try {
     const newPools: PoolWithAddress[] = []
 
-    try {
-      for (const address of action.payload) {
-        const poolData: PoolStructure = yield* call(fetchPoolFromAddress, address)
+    for (const address of action.payload) {
+      const poolData: PoolStructure = yield* call(fetchPoolFromAddress, address)
 
-        newPools.push({
-          ...poolData,
-          address
-        })
-      }
-    } catch (error) {
-      console.log(error)
+      newPools.push({
+        ...poolData,
+        address
+      })
     }
 
     yield* put(actions.addPoolsForPositions(newPools))
