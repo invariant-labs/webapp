@@ -52,15 +52,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.dark,
     ...newTypography.body1,
     textTransform: 'none',
-    background: colors.invariant.pink,
     borderRadius: 14,
     height: 40,
     width: 130,
     paddingInline: 0,
+    background:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
 
     '&:hover': {
-      background: colors.invariant.pink,
-      boxShadow: `0 0 15px ${colors.invariant.pink}`
+      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
+      boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)'
     }
   },
   buttonText: {
