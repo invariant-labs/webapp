@@ -86,7 +86,7 @@ storiesOf('positionsList/list', module)
         <PositionsList
           data={data}
           onAddPositionClick={handleClick}
-          itemsPerPage={2}
+          itemsPerPage={5}
           noConnectedBlockerProps={{
             onConnect: () => {},
             onDisconnect: () => {}
