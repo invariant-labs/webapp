@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   currentPriceLabel: {
     backgroundColor: colors.invariant.light,
-    color: '#A9B6BF',
+    color: colors.invariant.lightGrey,
     textAlign: 'center',
     borderRadius: '11px!important',
     '& p': {

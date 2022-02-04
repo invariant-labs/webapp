@@ -61,6 +61,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 130,
     paddingInline: 0,
     marginLeft: 16,
+    [theme.breakpoints.down('xs')]: {
+      minWidth: 100
+    },
 
     '&:hover': {
       background: colors.invariant.pinkLinearGradient,
@@ -68,7 +71,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   buttonText: {
-    WebkitPaddingBefore: '2px'
+    WebkitPaddingBefore: '2px',
+    [theme.breakpoints.down('xs')]: {
+      position: 'absolute',
+      top: 10,
+      ...newTypography.caption1
+    }
   },
   noPositionsText: {
     ...newTypography.heading1,
