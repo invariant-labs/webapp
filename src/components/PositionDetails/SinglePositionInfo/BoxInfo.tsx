@@ -9,6 +9,10 @@ export const BoxInfo: React.FC<{
   tokenYIcon: string
   tokenXDecimal: number
   tokenYDecimal: number
+  tokenXBalance?: number
+  tokenYBalance?: number
+  tokenXUSDValue?: number
+  tokenYUSDValue?: number
   title: string
   onClickButton?: () => void
   tokenXValue: number
@@ -20,6 +24,10 @@ export const BoxInfo: React.FC<{
   tokenXIcon,
   tokenXDecimal,
   tokenYDecimal,
+  tokenXBalance,
+  tokenXUSDValue,
+  tokenYBalance,
+  tokenYUSDValue,
   title,
   onClickButton,
   tokenYValue,
@@ -46,29 +54,53 @@ export const BoxInfo: React.FC<{
 
       <Grid className={classes.tokenGrid} container direction='column'>
         <Grid className={classes.tokenArea}>
-          <Grid className={classes.token}>
-            <img className={classes.iconSmall} src={tokenXIcon} alt={tokenXName} />
-            <Typography className={classes.tokenName}>{tokenXName}</Typography>
+          <Grid className={classes.tokenAreaUpperPart}>
+            <Grid className={classes.token}>
+              <img className={classes.iconSmall} src={tokenXIcon} alt={tokenXName} />
+              <Typography className={classes.tokenName}>{tokenXName}</Typography>
+            </Grid>
+            <Typography className={classes.tokenValue}>
+              {(Math.abs(Number(tokenXValue)) < 10 ** -tokenXDecimal
+                ? 0
+                : Number(tokenXValue)
+              ).toFixed(tokenXDecimal)}
+            </Typography>
           </Grid>
-          <Typography className={classes.tokenValue}>
-            {(Math.abs(Number(tokenXValue)) < 10 ** -tokenXDecimal
-              ? 0
-              : Number(tokenXValue)
-            ).toFixed(tokenXDecimal)}
-          </Typography>
+          {typeof tokenXBalance !== 'undefined' ? (
+            <Grid className={classes.tokenAreaLowerPart}>
+              <Typography className={classes.tokenBalance}>
+                Balance: {tokenXBalance} {tokenXName}
+              </Typography>
+              {typeof tokenXUSDValue !== 'undefined' ? (
+                <Typography className={classes.tokenUSDValue}>~ $ {tokenXUSDValue}</Typography>
+              ) : null}
+            </Grid>
+          ) : null}
         </Grid>
 
         <Grid className={classes.tokenArea}>
-          <Grid className={classes.token}>
-            <img className={classes.iconSmall} src={tokenYIcon} alt={tokenYName} />
-            <Typography className={classes.tokenName}>{tokenYName}</Typography>
+          <Grid className={classes.tokenAreaUpperPart}>
+            <Grid className={classes.token}>
+              <img className={classes.iconSmall} src={tokenYIcon} alt={tokenYName} />
+              <Typography className={classes.tokenName}>{tokenYName}</Typography>
+            </Grid>
+            <Typography className={classes.tokenValue}>
+              {(Math.abs(Number(tokenYValue)) < 10 ** -tokenYDecimal
+                ? 0
+                : Number(tokenYValue)
+              ).toFixed(tokenYDecimal)}
+            </Typography>
           </Grid>
-          <Typography className={classes.tokenValue}>
-            {(Math.abs(Number(tokenYValue)) < 10 ** -tokenYDecimal
-              ? 0
-              : Number(tokenYValue)
-            ).toFixed(tokenYDecimal)}
-          </Typography>
+          {typeof tokenYBalance !== 'undefined' ? (
+            <Grid className={classes.tokenAreaLowerPart}>
+              <Typography className={classes.tokenBalance}>
+                Balance: {tokenYBalance} {tokenYName}
+              </Typography>
+              {typeof tokenYUSDValue !== 'undefined' ? (
+                <Typography className={classes.tokenUSDValue}>~ $ {tokenYUSDValue}</Typography>
+              ) : null}
+            </Grid>
+          ) : null}
         </Grid>
       </Grid>
     </Grid>

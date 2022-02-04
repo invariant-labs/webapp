@@ -7,11 +7,13 @@ import { liqTokens } from '@components/PositionDetails/PositionDetails.stories'
 const tokens: liqTokens[] = [
   {
     symbol: 'BTC',
-    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
+    logoURI:
+      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
   },
   {
     symbol: 'SNY',
-    logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png'
+    logoURI:
+      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png'
   }
 ]
 
@@ -35,6 +37,10 @@ storiesOf('singlePosition/leftComponent', module)
         tokenYLiqValue={20.99703}
         tokenXClaimValue={2.19703}
         tokenYClaimValue={9.19703}
+        tokenXBalance={102460.3445}
+        tokenYBalance={460.3445}
+        tokenXUSDValue={205341.4361}
+        tokenYUSDValue={6205341.4361}
         closePosition={() => console.log('close position')}
       />
     </Grid>
@@ -58,6 +64,10 @@ storiesOf('singlePosition/leftComponent', module)
         tokenYLiqValue={20.99703}
         tokenXClaimValue={2.19703}
         tokenYClaimValue={9.19703}
+        tokenXBalance={102460.3445}
+        tokenYBalance={460.3445}
+        tokenXUSDValue={205341.4361}
+        tokenYUSDValue={6205341.4361}
         closePosition={() => console.log('close position')}
       />
     </Grid>

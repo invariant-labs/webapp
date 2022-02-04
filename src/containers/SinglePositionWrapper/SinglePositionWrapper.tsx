@@ -248,6 +248,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       tokenYLiqValue={tokenYLiquidity}
       tokenXClaimValue={tokenXClaim}
       tokenYClaimValue={tokenYClaim}
+      tokenXBalance={+printBN(position.tokenX.balance, position.tokenX.decimals)}
+      tokenYBalance={+printBN(position.tokenY.balance, position.tokenY.decimals)}
       positionData={{
         tokenXName: position.tokenX.symbol,
         tokenYName: position.tokenY.symbol,

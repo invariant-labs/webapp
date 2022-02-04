@@ -57,7 +57,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.text,
     lineHeight: '40px',
     whiteSpace: 'nowrap',
-
     [theme.breakpoints.down('md')]: {
       ...newTypography.heading3,
       lineHeight: '33px'

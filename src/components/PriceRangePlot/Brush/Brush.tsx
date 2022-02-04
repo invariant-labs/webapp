@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import { CustomLayerProps } from '@nivo/line'
 import { colors } from '@static/theme'
 import React, { useState, useEffect, useRef, PointerEventHandler } from 'react'

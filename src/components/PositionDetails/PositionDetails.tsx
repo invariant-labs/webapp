@@ -6,7 +6,6 @@ import SinglePositionPlot from '@components/PositionDetails/SinglePositionPlot/S
 import { Button, Grid, Typography } from '@material-ui/core'
 import { Link, useHistory } from 'react-router-dom'
 import backIcon from '@static/svg/back-arrow.svg'
-import AddIcon from '@material-ui/icons/AddOutlined'
 import useStyles from './style'
 import { PlotTickData } from '@reducers/positions'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
@@ -30,6 +29,10 @@ interface IProps {
   xDecimal: number
   yDecimal: number
   tickSpacing: number
+  tokenXBalance: number
+  tokenYBalance: number
+  tokenXUSDValue?: number
+  tokenYUSDValue?: number
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -50,7 +53,11 @@ const PositionDetails: React.FC<IProps> = ({
   ticksLoading,
   xDecimal,
   yDecimal,
-  tickSpacing
+  tickSpacing,
+  tokenXBalance,
+  tokenYBalance,
+  tokenXUSDValue,
+  tokenYUSDValue
 }) => {
   const classes = useStyles()
 
@@ -74,6 +81,10 @@ const PositionDetails: React.FC<IProps> = ({
           tokenYLiqValue={tokenYLiqValue}
           tokenXClaimValue={tokenXClaimValue}
           tokenYClaimValue={tokenYClaimValue}
+          tokenXBalance={tokenXBalance}
+          tokenYBalance={tokenYBalance}
+          tokenXUSDValue={tokenXUSDValue}
+          tokenYUSDValue={tokenYUSDValue}
         />
       </Grid>
       <Grid
@@ -86,11 +97,10 @@ const PositionDetails: React.FC<IProps> = ({
         <Button
           className={classes.button}
           variant='contained'
-          startIcon={<AddIcon />}
           onClick={() => {
             history.push('/newPosition')
           }}>
-          <span className={classes.buttonText}>Add Liquidity</span>
+          <span className={classes.buttonText}>+ Add Liquidity</span>
         </Button>
 
         <SinglePositionPlot

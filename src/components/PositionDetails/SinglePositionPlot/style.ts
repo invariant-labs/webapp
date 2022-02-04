@@ -1,66 +1,72 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '100%',
-    backgroundColor: colors.invariant.componentOut4,
+    backgroundColor: colors.invariant.component,
     padding: 24,
     paddingTop: 18,
-    borderRadius: 10
+    borderRadius: 24
   },
   header: {
-    ...typography.body1,
-    color: colors.white.main,
-    paddingBottom: 14
+    ...newTypography.heading4,
+    color: '#FFFFFF',
+    paddingBottom: 30
   },
   plotWrapper: {
-    paddingBottom: 25
+    paddingBottom: 39
   },
   minMaxInfo: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gridGap: '15px',
-    paddingBottom: 25,
+    paddingBottom: 16,
 
     [theme.breakpoints.down('xs')]: {
       gridTemplateColumns: '1fr',
       gridGap: '8px'
     }
   },
+  currentPriceContainer: {
+    backgroundColor: '#111931',
+    borderRadius: 11
+  },
   currentPriceLabel: {
-    backgroundColor: colors.invariant.componentOut3,
-    color: colors.invariant.lightInfoText,
+    backgroundColor: colors.invariant.light,
+    color: '#A9B6BF',
     textAlign: 'center',
+    borderRadius: '11px!important',
     '& p': {
-      ...typography.body1,
+      ...newTypography.body2,
       textTransform: 'uppercase',
       lineHeight: '35px'
     }
   },
   currentPriceAmonut: {
-    backgroundColor: colors.invariant.componentOut2,
+    backgroundColor: '#111931',
     textAlign: 'center',
+    borderRadius: '11px!important',
     '& span': {
-      color: colors.white.main,
-      ...typography.body1,
+      color: colors.invariant.text,
+      ...newTypography.body1,
       lineHeight: '35px',
       paddingRight: 5
     },
     '& p': {
-      color: colors.invariant.lightInfoText,
-      ...typography.body1
+      color: '#A9B6BF',
+      ...newTypography.body1
     }
   },
   plot: {
     width: '100%',
-    height: 207,
-    backgroundColor: colors.invariant.componentIn2,
+    height: 295,
+    backgroundColor: colors.invariant.component,
     borderRadius: 10,
 
     '& .zoomBtns': {
-      top: 10,
-      right: 10
+      top: -12,
+      right: 0
     },
 
     [theme.breakpoints.down('xs')]: {

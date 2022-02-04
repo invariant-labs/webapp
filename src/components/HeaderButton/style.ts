@@ -31,8 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     WebkitPaddingBefore: '2px'
   },
   headerButtonConnect: {
-    background:
-      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    background: colors.invariant.pinkLinearGradientOpacity,
     color: colors.invariant.newDark,
     paddingInline: 12,
     borderRadius: 10,

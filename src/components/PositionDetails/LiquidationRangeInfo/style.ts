@@ -1,24 +1,26 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   infoTypeLabel: {
     textTransform: 'uppercase',
-    color: colors.invariant.lightInfoText,
-    ...typography.body1,
+    color: colors.invariant.textGrey,
+    ...newTypography.body2,
     lineHeight: '35px'
   },
   infoTypeSwap: {
     display: 'flex',
-    backgroundColor: colors.invariant.componentOut2,
-    borderRadius: 5,
-    lineHeight: '35px'
+    backgroundColor: colors.invariant.dark,
+    borderRadius: 13,
+    lineHeight: '20px',
+    alignItems: 'center'
   },
   infoType: {
-    backgroundColor: colors.invariant.componentOut3,
-    borderRadius: 5,
+    backgroundColor: colors.invariant.light,
+    borderRadius: 13,
     textAlign: 'center',
-    width: 61
+    width: 61,
+    padding: 2
   },
   infoSwap: {
     display: 'flex',
@@ -27,23 +29,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%'
   },
   infoAmount: {
-    color: colors.white.main,
+    color: colors.invariant.text,
     paddingRight: 5,
-    ...typography.body1,
+    ...newTypography.body1,
     lineHeight: '35px',
 
     [theme.breakpoints.only('md')]: {
-      ...typography.label2,
+      ...newTypography.body2,
       lineHeight: '35px'
     }
   },
   infoSwapToken: {
-    color: colors.invariant.lightInfoText,
-    ...typography.body1,
+    color: colors.invariant.textGrey,
+    ...newTypography.body1,
     lineHeight: '35px',
 
     [theme.breakpoints.only('md')]: {
-      ...typography.label2,
+      ...newTypography.body1,
       lineHeight: '35px'
     }
   }

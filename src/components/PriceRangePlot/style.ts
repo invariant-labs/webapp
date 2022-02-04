@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 10,
     backgroundColor: 'rgba(46,224,154,0.8)',
     padding: 0,
+    '&:not(:last-child)': {
+      marginBottom: 8
+    },
 
     '&:hover': {
       backgroundColor: colors.invariant.green,
