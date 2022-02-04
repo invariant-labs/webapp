@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, newTypography } from '@static/theme'
 
 export const useStyles = makeStyles(() => ({
@@ -31,7 +31,7 @@ export const useTabsStyles = makeStyles(() => ({
   }
 }))
 
-export const useSingleTabStyles = makeStyles(() => ({
+export const useSingleTabStyles = makeStyles((theme: Theme) => ({
   root: {
     zIndex: 1,
     textTransform: 'none',
@@ -43,6 +43,11 @@ export const useSingleTabStyles = makeStyles(() => ({
     minWidth: 50,
     width: 50,
     marginRight: '7px',
+    [theme.breakpoints.down('xs')]: {
+      position: 'relative',
+      top: 2,
+      ...newTypography.body2
+    },
 
     '&:hover': {
       color: colors.invariant.lightHover,
@@ -59,6 +64,11 @@ export const useSingleTabStyles = makeStyles(() => ({
     ...newTypography.heading4,
     color: colors.white.main,
     transition: 'color 300ms',
+    [theme.breakpoints.down('xs')]: {
+      position: 'relative',
+      top: 2,
+      ...newTypography.body1
+    },
 
     '&:hover': {
       color: colors.white.main

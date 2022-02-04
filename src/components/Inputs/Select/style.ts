@@ -22,7 +22,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   tokenName: {
     position: 'relative',
     top: 1,
-    color: colors.white.main
+    color: colors.white.main,
+    [theme.breakpoints.down('xs')]: {
+      position: 'relative',
+      top: -1,
+      ...newTypography.caption2
+    }
   },
   icon: {
     minWidth: 20,
