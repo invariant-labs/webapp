@@ -115,6 +115,7 @@ const MarketEvents = () => {
 
       pools.forEach(pool => {
         // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         marketProgram.getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v })).then(res => {
           dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
         })
