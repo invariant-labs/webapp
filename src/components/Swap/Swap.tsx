@@ -200,15 +200,16 @@ export const Swap: React.FC<ISwap> = ({
       if (inputRef === inputTarget.FROM) {
         swapRate = +printBN(simulateResult.amountOut, assetFor.decimals) / Number(amountFrom)
       } else {
-        swapRate = Number(amountTo) / +printBN(simulateResult.amountOut, assetFor.decimals)
+        swapRate = Number(amountTo) / +printBN(simulateResult.amountOut, assetIn.decimals)
       }
 
       amountOut = Number(printBN(simulateResult.amountOut, assetFor.decimals))
-      setSwapRate(swapRate)
+      // setSwapRate(swapRate)
     }
     return {
       amountOut: amountOut.toFixed(assetFor.decimals),
-      knownPrice: printBNtoBN(knownPrice.toString(), 0)
+      knownPrice: printBNtoBN(knownPrice.toString(), 0),
+      swapRate: swapRate
     }
   }
 
@@ -238,7 +239,7 @@ export const Swap: React.FC<ISwap> = ({
           )
         )
       } else if (inputRef === inputTarget.TO) {
-        const simulatePrice = getKnownPrice(tokens[tokenToIndex], tokens[tokenFromIndex])
+        const simulatePrice = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex])
         setSimulateResult(
           await handleSimulate(
             pools,
@@ -267,7 +268,7 @@ export const Swap: React.FC<ISwap> = ({
   }
   const updateEstimatedAmount = () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      setAmountTo(getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut)
+      setAmountTo(getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut) // TO POWODUJE BŁĄD RATE
     }
   }
 
@@ -308,7 +309,8 @@ export const Swap: React.FC<ISwap> = ({
     return (
       getStateMessage() !== 'Insufficient volume' &&
       getStateMessage() !== 'Exceed single swap limit (split transaction into several)' &&
-      getStateMessage() !== 'No route found'
+      getStateMessage() !== 'No route found' &&
+      getStateMessage() !== 'Insufficient balance'
     )
   }
   const setSlippage = (slippage: string): void => {
@@ -497,7 +499,7 @@ export const Swap: React.FC<ISwap> = ({
             <ExchangeRate
               tokenFromSymbol={tokens[tokenFromIndex].symbol}
               tokenToSymbol={tokens[tokenToIndex].symbol}
-              amount={swapRate}
+              amount={getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate}
               tokenToDecimals={tokens[tokenToIndex].decimals}
               loading={getStateMessage() === 'Loading'}></ExchangeRate>
           ) : null}
