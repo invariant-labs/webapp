@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   icons: {
-    marginRight: 20,
+    marginRight: 12,
     width: 'fit-content',
 
     [theme.breakpoints.down('md')]: {
@@ -41,6 +41,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   arrows: {
     width: 25,
+    marginLeft: 8,
+    marginRight: 8,
 
     [theme.breakpoints.down('md')]: {
       width: 20
@@ -51,11 +53,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   names: {
-    ...newTypography.heading1,
+    ...newTypography.heading2,
     color: colors.invariant.text,
-    lineHeight: '32px',
+    lineHeight: '40px',
     whiteSpace: 'nowrap',
-
     [theme.breakpoints.down('md')]: {
       ...newTypography.heading3,
       lineHeight: '33px'
@@ -67,30 +68,30 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   infoText: {
-    ...typography.body1,
-    color: colors.invariant.lightInfoText,
+    ...newTypography.body1,
+    color: colors.invariant.lightGrey,
     whiteSpace: 'nowrap'
   },
   greenText: {
-    ...typography.body1,
-    color: colors.invariant.accent2,
+    ...newTypography.body1,
+    color: colors.invariant.green,
     whiteSpace: 'nowrap'
   },
   liquidity: {
-    background: colors.invariant.componentOut2,
-    borderRadius: 5,
-    height: 35,
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
     width: 170,
     marginRight: 8,
-
+    lineHeight: 20,
     [theme.breakpoints.down('md')]: {
       flex: '1 1 0%'
     }
   },
   fee: {
-    background: colors.invariant.componentOut2,
-    borderRadius: 5,
-    height: 35,
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
     width: 90,
     marginRight: 8,
 
@@ -102,10 +103,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: '1 1 0%'
   },
   minMax: {
-    background: colors.invariant.componentOut2,
-    borderRadius: 5,
-    height: 35,
-    width: 310,
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
+    width: 331,
     paddingInline: 10,
     marginRight: 8,
 
@@ -116,9 +117,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   value: {
-    background: colors.invariant.componentOut2,
-    borderRadius: 5,
-    height: 35,
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
     width: 164,
     paddingInline: 12,
 

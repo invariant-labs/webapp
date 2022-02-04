@@ -100,6 +100,7 @@ export const colors = {
     pinkLinearGradient: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
     pinkLinearGradientOpacity:
       'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)'
+
   }
 }
 

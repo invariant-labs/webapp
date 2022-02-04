@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { storiesOf } from '@storybook/react'
 import { PositionItem } from './PositionItem'
 storiesOf('positionsList/item', module).add('item', () => {
