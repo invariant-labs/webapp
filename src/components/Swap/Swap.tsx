@@ -94,7 +94,6 @@ export const Swap: React.FC<ISwap> = ({
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [amountTo, setAmountTo] = React.useState<string>('')
-  const [swapRate, setSwapRate] = React.useState<number>(0)
   const [swap, setSwap] = React.useState<boolean | null>(null)
   const [tokensY, setTokensY] = React.useState<SwapToken[]>(tokens)
   const [rotates, setRotates] = React.useState<number>(0)
@@ -204,7 +203,6 @@ export const Swap: React.FC<ISwap> = ({
       }
 
       amountOut = Number(printBN(simulateResult.amountOut, assetFor.decimals))
-      // setSwapRate(swapRate)
     }
     return {
       amountOut: amountOut.toFixed(assetFor.decimals),
@@ -268,7 +266,7 @@ export const Swap: React.FC<ISwap> = ({
   }
   const updateEstimatedAmount = () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      setAmountTo(getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut) // TO POWODUJE BŁĄD RATE
+      setAmountTo(getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut) // TO POWODUJE BŁĄD PRZY 1 ODŚWIEŻENIU
     }
   }
 
@@ -372,7 +370,6 @@ export const Swap: React.FC<ISwap> = ({
               ? `${classes.amountInput} ${classes.amountInputDown}`
               : `${classes.amountInput}`
           }
-          // style={{ transform: swap !== null ? (swap ? 'translateY(0px)' : 'translateY(0px)') : '' }}
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountFrom(value)
@@ -442,11 +439,6 @@ export const Swap: React.FC<ISwap> = ({
               : `${classes.amountInput}`
           }
           decimal={tokenToIndex !== null ? tokens[tokenToIndex].decimals : 6}
-          style={
-            {
-              // transform: swap !== null ? (swap ? 'translateY(0px)' : 'translateY(0px)') : ''
-            }
-          }
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountTo(value)
@@ -469,7 +461,6 @@ export const Swap: React.FC<ISwap> = ({
                 return name === token.symbol
               })
             )
-            updateEstimatedAmount()
           }}
           disabled={tokenFromIndex === null}
         />
@@ -485,14 +476,15 @@ export const Swap: React.FC<ISwap> = ({
           </Grid>
           {tokenFromIndex !== null && tokenToIndex !== null ? (
             <TransactionDetails
-              open={detailsOpen && activeSwapDetails()}
+              open={detailsOpen && activeSwapDetails() && getStateMessage() !== 'Loading'}
               fee={{
                 v: pools[simulateResult.poolIndex].fee.v
               }}
               exchangeRate={{
-                val: swapRate.toFixed(tokens[tokenToIndex].decimals),
+                val: getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate,
                 symbol: tokens[tokenToIndex].symbol
               }}
+              decimal={tokens[tokenToIndex].decimals}
             />
           ) : null}
           {tokenFromIndex !== null && tokenToIndex !== null && activeSwapDetails() ? (
