@@ -130,11 +130,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.body1,
     fontWeight: 700,
     letterSpacing: '-0.03em',
-    background:
-      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    background: colors.invariant.pinkLinearGradientOpacity,
     color: colors.black.full,
     '&:hover': {
-      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
+      background: colors.invariant.pinkLinearGradient,
       boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)}'
     }
   },
@@ -155,10 +154,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'none',
     ...typography.body1,
     fontWeight: 700,
-    background: 'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)',
+    background: colors.invariant.greenLinearGradientOpacity,
     color: colors.black.full,
     '&:hover': {
-      background: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
+      background: colors.invariant.greenLinearGradient,
       boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     }
   },
@@ -172,15 +171,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 16,
     textTransform: 'none',
     ...typography.body1,
-    background:
-      'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%);',
+    background: colors.invariant.greenLinearGradientOpacity,
     color: colors.black.full,
     [theme.breakpoints.down('xs')]: {
       ...typography.body3,
       minWidth: 105
     },
     '&:hover': {
-      background: '$linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
+      background: colors.invariant.greenLinearGradient,
       boxShadow: '0px 0px 8px rgba(46, 224, 154, 0.35)'
     }
   },

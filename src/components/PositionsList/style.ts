@@ -21,16 +21,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#111931',
     ...newTypography.body1,
     textTransform: 'none',
-    background:
-      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    background: colors.invariant.pinkLinearGradientOpacity,
     borderRadius: 14,
     height: 40,
     width: 130,
     paddingInline: 0,
 
     '&:hover': {
-      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%);',
-      boxShadow: `0 0 16px ${colors.invariant.pink}`
+      background: colors.invariant.pinkLinearGradient,
+      boxShadow: '0px 0px 16px rgba(239, 132, 0, 0.35)'
     }
   },
   buttonText: {

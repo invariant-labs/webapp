@@ -45,7 +45,7 @@ export const NoConnected: React.FC<INoConnected> = ({
             <Typography className={classes.desc}>{descCustomText}</Typography>
           )}
           <Button className={classes.button} onClick={handleClick} variant='contained'>
-            Connect a wallet
+            Connect a wallet??
           </Button>
         </Grid>
       </Grid>

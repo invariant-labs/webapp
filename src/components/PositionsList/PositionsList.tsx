@@ -65,7 +65,7 @@ export const PositionsList: React.FC<IProp> = ({
         alignItems='center'>
         <Typography className={classes.title}>Your Liquidity Positions</Typography>
         <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
-          <span className={classes.buttonText}>+ Add Position</span>
+          <Typography className={classes.buttonText}>+ Add Position</Typography>
         </Button>
       </Grid>
       <Grid className={classes.list}>

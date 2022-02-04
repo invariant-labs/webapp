@@ -124,7 +124,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 32,
     ...newTypography.body1,
     '&:hover': {
-      background: colors.invariant.pinkLinearGradientNoOpacity,
+      background: colors.invariant.pinkLinearGradient,
       boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
     '&:disabled': {
@@ -209,7 +209,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...newTypography.body1,
 
     '&:hover': {
-      background: colors.invariant.greenLinearGradientNoOpacity,
+      background: colors.invariant.greenLinearGradient,
       boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
 

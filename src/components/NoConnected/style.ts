@@ -43,12 +43,11 @@ const useStyles = makeStyles(() => ({
     ...newTypography.body1,
     textTransform: 'none',
     borderRadius: 14,
-    background:
-      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    background: colors.invariant.pinkLinearGradientOpacity,
 
     '&:hover': {
-      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
-      boxShadow: `0 0 5px ${colors.invariant.pink}`
+      background: colors.invariant.pinkLinearGradient,
+      boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)'
     }
   }
 }))

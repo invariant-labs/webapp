@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     letterSpacing: -0.03,
 
     '&:hover': {
-      background: colors.invariant.pinkLinearGradientNoOpacity,
+      background: colors.invariant.pinkLinearGradient,
       boxShadow: `0 0 16px ${colors.invariant.pink}`
     }
   },

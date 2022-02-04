@@ -129,7 +129,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.greenLinearGradientOpacity,
     color: colors.black.full,
     '&:hover': {
-      background: colors.invariant.greenLinearGradientNoOpacity,
+      background: colors.invariant.greenLinearGradient,
       boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
 
