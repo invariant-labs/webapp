@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.text,
     ...newTypography.heading4,
     fontWeight: 700
-
   },
   positionsNumber: {
     width: 28,
@@ -62,14 +61,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 130,
     paddingInline: 0,
     marginLeft: 16,
-    background:
-      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
 
     '&:hover': {
       background: colors.invariant.pinkLinearGradient,
       boxShadow: '0px 0px 16px rgba(239, 132, 0, 0.35)'
     }
-
   },
   buttonText: {
     WebkitPaddingBefore: '2px'
