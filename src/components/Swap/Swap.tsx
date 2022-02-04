@@ -266,7 +266,7 @@ export const Swap: React.FC<ISwap> = ({
   }
   const updateEstimatedAmount = () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      setAmountTo(getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut) // TO POWODUJE BŁĄD PRZY 1 ODŚWIEŻENIU
+      setAmountTo(getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut)
     }
   }
 
