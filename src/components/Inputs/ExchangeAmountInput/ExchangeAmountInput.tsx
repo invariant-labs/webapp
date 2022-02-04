@@ -48,11 +48,6 @@ export const AmountInput: React.FC<IProps> = ({
       const caretPosition = e.target.selectionStart
 
       let parsed = e.target.value
-      const zerosRegex = /^0+\d+\.?\d*$/
-      // if (zerosRegex.test(parsed)) {
-      //   console.log(132)
-      //   parsed = parsed.replace(/^0+/, '')
-      // }
 
       const dotRegex = /^\.\d*$/
       if (dotRegex.test(parsed)) {
