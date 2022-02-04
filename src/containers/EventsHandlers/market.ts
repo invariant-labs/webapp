@@ -75,26 +75,23 @@ const MarketEvents = () => {
           if (typeof pool === 'undefined') {
             return
           }
-          console.log(123)
-          R.forEachObj(poolTicksArray, tick => {
-            tick.forEach(singleTick => {
-              marketProgram
-                .onTickChange(
-                  new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
-                  singleTick.index,
-                  tickObject => {
-                    dispatch(
-                      actions.updateTicks({
-                        address: address,
-                        index: singleTick.index,
-                        tick: tickObject
-                      })
-                    )
-                  }
-                )
-                .then(() => {})
-                .catch(() => {})
-            })
+          poolTicksArray[address].forEach(singleTick => {
+            marketProgram
+              .onTickChange(
+                new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
+                singleTick.index,
+                tickObject => {
+                  dispatch(
+                    actions.updateTicks({
+                      address: address,
+                      index: singleTick.index,
+                      tick: tickObject
+                    })
+                  )
+                }
+              )
+              .then(() => {})
+              .catch(() => {})
           })
         })
       }
