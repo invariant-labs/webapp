@@ -93,7 +93,11 @@ export const colors = {
     textGrey: '#27262B',
     lightGrey: '#A9B6BF',
     text: '#FFFFFF',
-    Error: '#FB555F'
+    Error: '#FB555F',
+    pinkLinearGradient:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    greenLinearGradient:
+      'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)'
   }
 }
 

@@ -1,10 +1,10 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    background: colors.invariant.componentOut1,
-    borderRadius: 10,
+    background: colors.invariant.component,
+    borderRadius: 24,
     padding: 20,
 
     '&:not(:last-child)': {
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:hover': {
-      background: colors.invariant.componentOut4
+      background: colors.invariant.component
     },
 
     [theme.breakpoints.down('md')]: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   icons: {
-    marginRight: 20,
+    marginRight: 12,
     width: 'fit-content',
 
     [theme.breakpoints.down('md')]: {
@@ -41,6 +41,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   arrows: {
     width: 25,
+    marginLeft: 8,
+    marginRight: 8,
 
     [theme.breakpoints.down('md')]: {
       width: 20
@@ -51,46 +53,46 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   names: {
-    ...typography.heading1,
-    color: colors.white.main,
+    ...newTypography.heading2,
+    color: colors.invariant.text,
     lineHeight: '40px',
     whiteSpace: 'nowrap',
 
     [theme.breakpoints.down('md')]: {
-      ...typography.heading3,
+      ...newTypography.heading3,
       lineHeight: '33px'
     },
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.heading4,
+      ...newTypography.heading4,
       lineHeight: '25px'
     }
   },
   infoText: {
-    ...typography.body1,
-    color: colors.invariant.lightInfoText,
+    ...newTypography.body1,
+    color: colors.invariant.lightGrey,
     whiteSpace: 'nowrap'
   },
   greenText: {
-    ...typography.body1,
-    color: colors.invariant.accent2,
+    ...newTypography.body1,
+    color: colors.invariant.green,
     whiteSpace: 'nowrap'
   },
   liquidity: {
-    background: colors.invariant.componentOut2,
-    borderRadius: 5,
-    height: 35,
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
     width: 170,
     marginRight: 8,
-
+    lineHeight: 20,
     [theme.breakpoints.down('md')]: {
       flex: '1 1 0%'
     }
   },
   fee: {
-    background: colors.invariant.componentOut2,
-    borderRadius: 5,
-    height: 35,
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
     width: 90,
     marginRight: 8,
 
@@ -102,9 +104,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: '1 1 0%'
   },
   minMax: {
-    background: colors.invariant.componentOut2,
-    borderRadius: 5,
-    height: 35,
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
     width: 331,
     paddingInline: 10,
     marginRight: 8,
@@ -116,9 +118,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   value: {
-    background: colors.invariant.componentOut2,
-    borderRadius: 5,
-    height: 35,
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
     width: 164,
     paddingInline: 12,
 

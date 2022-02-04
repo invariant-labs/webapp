@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -10,35 +10,78 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   header: {
-    paddingBottom: 30
+    paddingBottom: 16,
+    display: 'flex',
+    alignItems: 'flex-end'
+  },
+  titleBar: {
+    display: 'flex',
+    marginBottom: 20
   },
   title: {
-    color: colors.white.main,
-    ...typography.heading4,
+    color: colors.invariant.text,
+    ...newTypography.heading4,
     fontWeight: 500
   },
-  button: {
-    color: colors.white.main,
-    ...typography.body1,
-    textTransform: 'none',
-    background: colors.invariant.accent1,
+  positionsNumber: {
+    width: 28,
+    height: 28,
+    color: colors.invariant.text,
+    background: colors.invariant.light,
+    marginLeft: 8,
+    borderRadius: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  searchRoot: {
+    width: '100%'
+  },
+  searchWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'nowrap'
+  },
+  searchBar: {
+    width: 221,
+    height: 32,
+    padding: '7px 12px',
     borderRadius: 10,
+    background: colors.invariant.black,
+    border: '1px solid #202946',
+    color: colors.invariant.lightGrey,
+    ...newTypography.body2,
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: 200
+    }
+  },
+  button: {
+    color: colors.invariant.dark,
+    ...newTypography.body1,
+    textTransform: 'none',
+    borderRadius: 14,
     height: 40,
-    width: 130,
+    minWidth: 130,
     paddingInline: 0,
+    marginLeft: 16,
+    background:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
 
     '&:hover': {
-      background: colors.invariant.accent1,
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`
-    }
+      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
+      boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)'
+    },
+    [theme.breakpoints.down('xs')]: {}
   },
   buttonText: {
     WebkitPaddingBefore: '2px'
   },
   noPositionsText: {
-    ...typography.heading1,
+    ...newTypography.heading1,
     textAlign: 'center',
-    color: colors.white.main
+    color: colors.invariant.text
   },
   list: {
     position: 'relative'
