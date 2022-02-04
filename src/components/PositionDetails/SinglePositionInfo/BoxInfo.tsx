@@ -72,7 +72,7 @@ export const BoxInfo: React.FC<{
                 Balance: {tokenXBalance} {tokenXName}
               </Typography>
               {typeof tokenXUSDValue !== 'undefined' ? (
-                <Typography className={classes.tokenUSDValue}>~ $ {tokenXUSDValue}</Typography>
+                <Typography className={classes.tokenUSDValue}>$ {tokenXUSDValue}</Typography>
               ) : null}
             </Grid>
           ) : null}
@@ -97,7 +97,7 @@ export const BoxInfo: React.FC<{
                 Balance: {tokenYBalance} {tokenYName}
               </Typography>
               {typeof tokenYUSDValue !== 'undefined' ? (
-                <Typography className={classes.tokenUSDValue}>~ $ {tokenYUSDValue}</Typography>
+                <Typography className={classes.tokenUSDValue}>$ {tokenYUSDValue}</Typography>
               ) : null}
             </Grid>
           ) : null}
