@@ -183,10 +183,6 @@ export const Swap: React.FC<ISwap> = ({
     setInputRef(inputRef === inputTarget.FROM ? inputTarget.TO : inputTarget.FROM)
   }, [swap])
 
-  useEffect(() => {
-    console.log(inputRef)
-  }, [inputRef])
-
   const getKnownPrice = (assetIn: SwapToken, assetFor: SwapToken) => {
     let swapRate: number = 0
     let knownPrice: BN = new BN(0)
