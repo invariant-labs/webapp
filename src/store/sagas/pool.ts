@@ -26,8 +26,6 @@ export function* fetchPoolData(action: PayloadAction<Pair>) {
     }]))
   } catch (error) {
     yield* put(actions.addPools([]))
-
-    console.log(error)
   }
 }
 
@@ -52,7 +50,6 @@ export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
         address
       })
     } catch (error) {
-      console.log(error)
     }
   }
 
@@ -77,7 +74,6 @@ export function* fetchPoolsDataForPositions(action: PayloadAction<PublicKey[]>) 
         address
       })
     } catch (error) {
-      console.log(error)
     }
   }
 

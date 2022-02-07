@@ -139,7 +139,7 @@ export const NewPositionWrapper = () => {
 
     setMidPrice({
       index: 0,
-      x: 1
+      x: calcPrice(0, isXtoY, xDecimal, yDecimal)
     })
   }, [poolIndex, isXtoY, xDecimal, yDecimal])
 

@@ -38,16 +38,17 @@ export const PoolInit: React.FC<IPoolInit> = ({
 }) => {
   const classes = useStyles()
 
-  const [leftRange, setLeftRange] = useState(minSpacingMultiplicity(tickSpacing))
-  const [rightRange, setRightRange] = useState(maxSpacingMultiplicity(tickSpacing))
+  const [leftRange, setLeftRange] = useState(tickSpacing * 10 * (isXtoY ? -1 : 1))
+  const [rightRange, setRightRange] = useState(tickSpacing * 10 * (isXtoY ? 1 : -1))
 
-  const [leftInput, setLeftInput] = useState('')
-  const [rightInput, setRightInput] = useState('')
+  const [leftInput, setLeftInput] = useState(calcPrice(leftRange, isXtoY, xDecimal, yDecimal).toString())
+  const [rightInput, setRightInput] = useState(calcPrice(rightRange, isXtoY, xDecimal, yDecimal).toString())
 
-  const [leftInputRounded, setLeftInputRounded] = useState('')
-  const [rightInputRounded, setRightInputRounded] = useState('')
+  const [leftInputRounded, setLeftInputRounded] = useState((+leftInput).toFixed(12))
+  const [rightInputRounded, setRightInputRounded] = useState((+rightInput).toFixed(12))
 
-  const [midPriceInput, setMidPriceInput] = useState('')
+  const [midPriceInput, setMidPriceInput] = useState(calcPrice(midPrice, isXtoY, xDecimal, yDecimal).toString())
+
   useEffect(() => {
     onChangeMidPrice(nearestTickIndex(+midPriceInput, tickSpacing, isXtoY, xDecimal, yDecimal))
   }, [midPriceInput])
@@ -82,7 +83,13 @@ export const PoolInit: React.FC<IPoolInit> = ({
     onChangeRange(left, right)
   }
 
-  const resetRange = () => {}
+  const resetRange = () => {
+    changeRangeHandler(tickSpacing * 10 * (isXtoY ? -1 : 1), tickSpacing * 10 * (isXtoY ? 1 : -1))
+  }
+
+  useEffect(() => {
+    changeRangeHandler(leftRange, rightRange)
+  }, [midPrice])
 
   return (
     <Grid container className={classes.wrapper}>
