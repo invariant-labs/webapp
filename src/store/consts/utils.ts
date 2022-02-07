@@ -513,15 +513,26 @@ export const handleSimulate = async (
   amount: BN,
   currentPrice: BN,
   byAmountIn: boolean
-): Promise<{ amountOut: BN; poolIndex: number; simulateSuccess: boolean }> => {
+): Promise<{
+  amountOut: BN
+  poolIndex: number
+  simulateSuccess: boolean
+  AmountOutWithFee: BN
+}> => {
   const marketProgram = getMarketProgramSync()
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(-1)
   let poolIndex: number = 0
   let isXtoY = false
+  let resaultWithFee: BN = new BN(0)
   let resault
   if (amount.eq(new BN(0))) {
-    return { amountOut: new BN(0), poolIndex: poolIndex, simulateSuccess: true }
+    return {
+      amountOut: new BN(0),
+      poolIndex: poolIndex,
+      simulateSuccess: true,
+      AmountOutWithFee: new BN(0)
+    }
   }
 
   for (const pool of filteredPools) {
@@ -556,6 +567,7 @@ export const handleSimulate = async (
         resault = swapSimulateResault.accumulatedAmountOut
       }
       if (swapSimulateRouterAmount.lt(resault)) {
+        resaultWithFee = resault.add(swapSimulateResault.accumulatedFee)
         poolIndex = findPoolIndex(pool.address, pools)
         swapSimulateRouterAmount = resault
       }
@@ -564,9 +576,19 @@ export const handleSimulate = async (
     }
   }
   if (swapSimulateRouterAmount.lt(new BN(0))) {
-    return { amountOut: new BN(0), poolIndex: poolIndex, simulateSuccess: false }
+    return {
+      amountOut: new BN(0),
+      poolIndex: poolIndex,
+      simulateSuccess: false,
+      AmountOutWithFee: new BN(0)
+    }
   }
-  return { amountOut: swapSimulateRouterAmount, poolIndex: poolIndex, simulateSuccess: true }
+  return {
+    amountOut: swapSimulateRouterAmount,
+    poolIndex: poolIndex,
+    simulateSuccess: true,
+    AmountOutWithFee: resaultWithFee
+  }
 }
 
 export const minSpacingMultiplicity = (spacing: number) => {

@@ -107,7 +107,8 @@ export const Swap: React.FC<ISwap> = ({
     amountOut: BN
     simulateSuccess: boolean
     poolIndex: number
-  }>({ amountOut: new BN(0), simulateSuccess: true, poolIndex: 0 })
+    AmountOutWithFee: BN
+  }>({ amountOut: new BN(0), simulateSuccess: true, poolIndex: 0, AmountOutWithFee: new BN(0) })
 
   const timeoutRef = useRef<number>(0)
 
@@ -124,13 +125,13 @@ export const Swap: React.FC<ISwap> = ({
     if (inputRef === inputTarget.FROM) {
       simulateWithTimeout()
     }
-  }, [amountFrom, tokenToIndex, tokenFromIndex, slippTolerance])
+  }, [amountFrom, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
 
   useEffect(() => {
     if (inputRef === inputTarget.TO) {
       simulateWithTimeout()
     }
-  }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance])
+  }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
 
   const simulateWithTimeout = () => {
     inputRef === inputTarget.FROM ? setAmountTo('') : setAmountFrom('')
@@ -182,6 +183,10 @@ export const Swap: React.FC<ISwap> = ({
     setInputRef(inputRef === inputTarget.FROM ? inputTarget.TO : inputTarget.FROM)
   }, [swap])
 
+  useEffect(() => {
+    console.log(inputRef)
+  }, [inputRef])
+
   const getKnownPrice = (assetIn: SwapToken, assetFor: SwapToken) => {
     let swapRate: number = 0
     let knownPrice: BN = new BN(0)
@@ -197,9 +202,9 @@ export const Swap: React.FC<ISwap> = ({
         knownPrice = new BN(sqrtPricePow * 10 ** decimalDiff)
       }
       if (inputRef === inputTarget.FROM) {
-        swapRate = +printBN(simulateResult.amountOut, assetFor.decimals) / Number(amountFrom)
+        swapRate = +printBN(simulateResult.AmountOutWithFee, assetFor.decimals) / Number(amountFrom)
       } else {
-        swapRate = Number(amountTo) / +printBN(simulateResult.amountOut, assetIn.decimals)
+        swapRate = Number(amountTo) / +printBN(simulateResult.AmountOutWithFee, assetIn.decimals)
       }
 
       amountOut = Number(printBN(simulateResult.amountOut, assetFor.decimals))
