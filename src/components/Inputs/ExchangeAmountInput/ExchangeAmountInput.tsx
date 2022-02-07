@@ -1,4 +1,4 @@
-import { Input } from '@material-ui/core'
+import { Input, Box, Typography } from '@material-ui/core'
 import React, { CSSProperties, useRef } from 'react'
 import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
@@ -18,7 +18,8 @@ interface IProps {
   current: SwapToken | null
   tokens: Array<{ symbol: string; name: string; logoURI: string }>
   onSelect: (name: string) => void
-  disabled: boolean
+  disabled: boolean,
+  Balance?: string | undefined
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -33,11 +34,11 @@ export const AmountInput: React.FC<IProps> = ({
   current,
   tokens,
   onSelect,
-  disabled
+  disabled,
+  Balance
 }) => {
   const classes = useStyles()
-
-  const inputRef = useRef<HTMLInputElement>(null)
+   const inputRef = useRef<HTMLInputElement>(null)
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const onlyNumbersRegex = /^\d*\.?\d*$/
@@ -77,37 +78,43 @@ export const AmountInput: React.FC<IProps> = ({
   }
 
   return (
+  <>
     <Input
-      inputRef={inputRef}
-      error={!!error}
-      className={classNames(classes.amountInput, className)}
-      classes={{ input: classes.input }}
-      style={style}
-      type={'text'}
-      value={value}
-      disableUnderline={true}
-      placeholder={placeholder}
-      onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-      endAdornment={
-        <OutlinedButton
-          name='Max'
-          color='primary'
-          onClick={onMaxClick}
-          className={classes.maxButton}
-          labelClassName={classes.label}
-          disabled={disabled}
-        />
-      }
-      startAdornment={
-        <Select
-          centered={true}
-          tokens={tokens}
-          onSelect={onSelect}
-          current={current}
-          className={classes.select}
-        />
-      }
-    />
+        inputRef={inputRef}
+        error={!!error}
+        className={classNames(classes.amountInput, className)}
+        classes={{ input: classes.input }}
+        style={style}
+        type={'text'}
+        value={value}
+        disableUnderline={true}
+        placeholder={placeholder}
+        onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
+        startAdornment={
+          <Select
+            centered={true}
+            tokens={tokens}
+            onSelect={onSelect}
+            current={current}
+            className={classes.select}
+          />
+        }
+      />
+    <Box className={classes.container}>
+      <Box className= {classes.BalanceContainer}>
+        <Typography className= {classes.BalanceTypography}>Balance: {Balance}</Typography>
+      <OutlinedButton
+        name='max'
+        color='primary'
+        onClick={onMaxClick}
+        className={classes.maxButton}
+        labelClassName={classes.label}
+        disabled={disabled}
+      />
+      </Box>
+        <Typography className= {classes.walletBalanace}>-</Typography>
+    </Box>
+    </>
   )
 }
 export default AmountInput

@@ -5,10 +5,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     textTransform: 'none',
     boxShadow: 'none',
-    borderRadius: 13,
-    minWidth: 80,
+    borderRadius: 12,
+    height: 36,
+    minWidth: 103,
     fontFamily: 'Mukta',
-    backgroundColor: colors.invariant.componentBcg,
+    backgroundColor: colors.invariant.light,
     ...newTypography.body3,
     padding: 12,
 

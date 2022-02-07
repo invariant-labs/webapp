@@ -7,7 +7,6 @@ import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
 import Slippage from '@components/Swap/slippage/Slippage'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
-import TransactionDetails from '@components/Swap/transactionDetails/TransactionDetails'
 import { PRICE_DECIMAL, WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { Swap as SwapData } from '@reducers/swap'
 import { Status } from '@reducers/solanaWallet'
@@ -109,6 +108,8 @@ export const Swap: React.FC<ISwap> = ({
     simulateSuccess: boolean
     poolIndex: number
   }>({ amountOut: new BN(0), simulateSuccess: true, poolIndex: 0 })
+
+  console.log(settings)
 
   const timeoutRef = useRef<number>(0)
 
@@ -273,7 +274,7 @@ export const Swap: React.FC<ISwap> = ({
 
   const getStateMessage = () => {
     if (walletStatus !== Status.Initialized) {
-      return 'Please connect wallet'
+      return 'Connect a wallet'
     }
     if (tokenFromIndex === null || tokenToIndex === null) {
       return 'Choose pair'
@@ -302,7 +303,7 @@ export const Swap: React.FC<ISwap> = ({
       return 'Insufficient volume'
     }
 
-    return 'Swap'
+    return 'Swap tokens'
   }
   const setSlippage = (slippage: string): void => {
     setSlippTolerance(slippage)
@@ -322,6 +323,7 @@ export const Swap: React.FC<ISwap> = ({
     unblurContent()
     setSettings(false)
   }
+
   return (
     <Grid container className={classes.swapWrapper}>
       <Grid container className={classes.header}>
@@ -341,36 +343,32 @@ export const Swap: React.FC<ISwap> = ({
       </Grid>
       <Grid container className={classes.root} direction='column'>
         <Box className={classes.tokenComponentTextContainer}>
-          <Typography className={classes.tokenComponentText}>From: </Typography>
-          <Typography className={classes.tokenComponentText}>
-            Balance:{' '}
-            {tokenFromIndex !== null
-              ? printBN(
-                  tokens[tokenFromIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
-                    ? fullSolBalance
-                    : tokens[tokenFromIndex].balance,
-                  tokens[tokenFromIndex].decimals
-                )
-              : '0'}
-          </Typography>
         </Box>
+        <Box className={
+        swap ? `${classes.exchangeRoot} ${classes.amountInputDown} ${classes.transactionBottom}`
+        : `${classes.exchangeRoot} ${classes.transactionBottom}`
+          }>
         <ExchangeAmountInput
           value={amountFrom}
+          Balance = {tokenFromIndex !== null
+            ? printBN(
+                tokens[tokenFromIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
+                  ? fullSolBalance
+                  : tokens[tokenFromIndex].balance,
+                tokens[tokenFromIndex].decimals
+              )
+            : '- -'}
+
           key={swap?.toString()}
           decimal={tokenFromIndex !== null ? tokens[tokenFromIndex].decimals : 6}
-          className={
-            swap !== null
-              ? `${classes.amountInput} ${classes.amountInputDown}`
-              : `${classes.amountInput}`
-          }
-          // style={{ transform: swap !== null ? (swap ? 'translateY(0px)' : 'translateY(0px)') : '' }}
+          className = {classes.amountInput}
           setValue={value => {
             if (value.match(/^\d*\.?\d*$/)) {
               setAmountFrom(value)
               setInputRef(inputTarget.FROM)
             }
           }}
-          placeholder={'0.0'}
+          placeholder={`0.${'0'.repeat(6)}`}
           onMaxClick={() => {
             if (tokenToIndex !== null && tokenFromIndex !== null) {
               setAmountFrom(
@@ -390,6 +388,7 @@ export const Swap: React.FC<ISwap> = ({
           }}
           disabled={tokenFromIndex === null}
         />
+        </Box>
         <Box className={classes.tokenComponentTextContainer}>
           <Box
             className={classes.swapArrowBox}
@@ -403,6 +402,7 @@ export const Swap: React.FC<ISwap> = ({
               tokens = tokensY
               setTokensY(tokensTmp)
             }}>
+            <Box className = {classes.swapImgRoot}>
             <img
               src={SwapArrows}
               style={{
@@ -410,30 +410,25 @@ export const Swap: React.FC<ISwap> = ({
               }}
               className={classes.swapArrows}
             />
+            </Box>
           </Box>
-          <Typography className={classes.tokenComponentText}>To (Estd.)</Typography>
-          <Typography className={classes.tokenComponentText}>
-            Balance:{' '}
-            {tokenToIndex !== null
-              ? printBN(
-                  tokens[tokenToIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
-                    ? fullSolBalance
-                    : tokens[tokenToIndex].balance,
-                  tokens[tokenToIndex].decimals
-                )
-              : '0'}
-          </Typography>
         </Box>
+        <Box className={swap ? `${classes.exchangeRoot} ${classes.amountInputUp} ${classes.transactionBottom}`
+        : `${classes.exchangeRoot} ${classes.transactionBottom}`}>
         <ExchangeAmountInput
           value={amountTo}
-          key={tokenToIndex?.toString()}
-          className={
-            swap !== null
-              ? `${classes.amountInput} ${classes.amountInputUp}`
-              : `${classes.amountInput}`
-          }
-          decimal={tokenToIndex !== null ? tokens[tokenToIndex].decimals : 6}
-          style={
+          Balance = {tokenToIndex !== null
+            ? printBN(
+                tokens[tokenToIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
+                ? fullSolBalance
+                : tokens[tokenToIndex].balance,
+              tokens[tokenToIndex].decimals
+            )
+          : '- -'}
+        key={tokenToIndex?.toString()}
+          className= {classes.amountInput}
+        decimal={tokenToIndex !== null ? tokens[tokenToIndex].decimals : 6}
+        style={
             {
               // transform: swap !== null ? (swap ? 'translateY(0px)' : 'translateY(0px)') : ''
             }
@@ -444,7 +439,7 @@ export const Swap: React.FC<ISwap> = ({
               setInputRef(inputTarget.TO)
             }
           }}
-          placeholder={'0.0'}
+          placeholder={`0.${'0'.repeat(6)}`}
           onMaxClick={() => {
             if (tokenToIndex !== null && tokenFromIndex !== null) {
               setAmountFrom(
@@ -464,7 +459,9 @@ export const Swap: React.FC<ISwap> = ({
           }}
           disabled={tokenFromIndex === null}
         />
-        <Box className={classes.transactionDetails}>
+        </Box>
+        <Box >
+          <Box className={classes.transactionDetails}>
           <Grid
             className={classes.transactionDetailsWrapper}
             onMouseEnter={hoverDetails}
@@ -474,18 +471,7 @@ export const Swap: React.FC<ISwap> = ({
             </Typography>
             <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }} />
           </Grid>
-          {tokenFromIndex !== null && tokenToIndex !== null ? (
-            <TransactionDetails
-              open={detailsOpen}
-              fee={{
-                v: pools[simulateResult.poolIndex].fee.v
-              }}
-              exchangeRate={{
-                val: swapRate.toFixed(tokens[tokenToIndex].decimals),
-                symbol: tokens[tokenToIndex].symbol
-              }}
-            />
-          ) : null}
+          <Box className= {classes.transtactionData}>
           {tokenFromIndex !== null &&
           tokenToIndex !== null &&
           getStateMessage() !== 'Insufficient volume' &&
@@ -497,12 +483,14 @@ export const Swap: React.FC<ISwap> = ({
               amount={swapRate}
               tokenToDecimals={tokens[tokenToIndex].decimals}
               loading={getStateMessage() === 'Loading'}></ExchangeRate>
-          ) : null}
+          ) : 'No Data'}
+            </Box>
+          </Box>
         </Box>
         <AnimatedButton
           content={getStateMessage()}
           className={classes.swapButton}
-          disabled={getStateMessage() !== 'Swap' || progress !== 'none'}
+          disabled={getStateMessage() !== 'Swap tokens' || progress !== 'none'}
           onClick={() => {
             if (tokenFromIndex === null || tokenToIndex === null) return
             onSwap(

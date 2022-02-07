@@ -17,7 +17,7 @@ export interface ISelectModal {
   className?: string
 }
 export const Select: React.FC<ISelectModal> = ({
-  name = 'Select a token',
+  name = 'Select',
   current,
   centered,
   tokens,

@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     ...newTypography.body1,
     color: colors.invariant.componentBcg,
-    background: colors.invariant.pinkLinearGradientOpacity,
+    background: colors.invariant.greenLinearGradient,
     transition: 'background-color 0ms ease, box-shadow 150ms linear',
     position: 'relative',
     overflow: 'hidden',

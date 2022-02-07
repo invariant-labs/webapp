@@ -48,11 +48,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 20,
     cursor: 'pointer',
     transition: 'filter 100ms',
-
     '&:hover': {
       filter: 'brightness(1.5)'
     }
   },
+
   settingsIconBtn: {
     padding: 0,
     margin: 0,
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute'
   },
   root: {
-    background: colors.invariant.componentOut4,
+    background: colors.invariant.component,
     borderRadius: 10,
     paddingInline: 24,
     paddingBottom: 22,
@@ -75,13 +75,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative'
   },
   tokenComponentText: {
-    color: colors.invariant.lightInfoText,
-    ...typography.label1
+    color: colors.invariant.lightGrey,
+    ...typography.label1,
+    paddingLeft: 15
   },
   amountInput: {
-    position: 'relative',
-    border: `1px solid ${colors.invariant.componentOut2}`,
-    backgroundColor: colors.invariant.componentIn2
+    position: 'relative'
+    // border: `1px solid ${colors.invariant.componentOut2}`,
+    // backgroundColor: colors.invariant.componentIn2
   },
   amountInputDown: {
     animation: '$slide-down .3s'
@@ -90,7 +91,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     animation: '$slide-up .3s'
   },
   swapArrowBox: {
-    backgroundColor: colors.invariant.componentOut2,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.invariant.component,
     width: 50,
     height: 50,
     borderRadius: '50%',
@@ -100,15 +104,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: '0%',
     transform: 'translateX(-50%) translateY(-40%)',
     cursor: 'pointer',
-    transition: 'background-color 200ms',
-
+    transition: 'background-color 200ms'
+  },
+  swapImgRoot: {
+    background: colors.invariant.newDark,
+    width: '40px',
+    height: '40px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 100,
     '&:hover': {
       backgroundColor: colors.invariant.componentOut3
     }
+
   },
+
   swapArrows: {
-    width: 32,
-    height: 24,
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
     marginBlock: 13,
     marginInline: 9,
     transition: '.4s all'
@@ -122,6 +137,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative'
   },
   transactionDetailsWrapper: {
+    backgroundColor: colors.invariant.light,
+    marginTop: '10px',
+    marginBottom: '10px',
+    padding: '5px 15px 5px 15px',
+    borderRadius: '10px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -132,13 +152,32 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   transactionDetailsHeader: {
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.lightGrey,
     ...typography.label1,
     cursor: 'pointer'
   },
   swapButton: {
     width: '100%',
     height: 48
+  },
+  exchangeRoot: {
+    position: 'relative',
+    background: colors.invariant.newDark,
+    borderRadius: 20
+   },
+   transactionTop: {
+    margin: '10px'
+  },
+
+  transactionBottom: {
+    marginTop: '15px'
+  },
+
+  transtactionData: {
+   border: `1px solid ${colors.invariant.light}`,
+   borderRadius: '10px',
+   padding: '2px 10px',
+   color: colors.invariant.lightGrey
   }
 }))
 
