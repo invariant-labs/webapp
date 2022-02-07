@@ -144,4 +144,6 @@ export const airdropQuantities: Record<NetworkType, number[]> = {
 
 export const WRAPPED_SOL_ADDRESS = 'So11111111111111111111111111111111111111112'
 
+export const WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT = new BN(9200961)
+
 export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, MAINNET_RPCS, NetworkType }
