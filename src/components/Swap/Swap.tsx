@@ -219,6 +219,7 @@ export const Swap: React.FC<ISwap> = ({
         return key === pair.address.toString()
       })
       if (indexPool.length === 0) {
+        setAmountTo('')
         return
       }
       if (inputRef === inputTarget.FROM) {
@@ -462,6 +463,7 @@ export const Swap: React.FC<ISwap> = ({
                 return name === token.symbol
               })
             )
+            setSwap(null)
           }}
           disabled={tokenFromIndex === null}
         />
