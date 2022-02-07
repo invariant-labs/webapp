@@ -44,17 +44,40 @@ export const PoolInit: React.FC<IPoolInit> = ({
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
 
+  const [leftInputRounded, setLeftInputRounded] = useState('')
+  const [rightInputRounded, setRightInputRounded] = useState('')
+
   const [midPriceInput, setMidPriceInput] = useState('')
   useEffect(() => {
     onChangeMidPrice(nearestTickIndex(+midPriceInput, tickSpacing, isXtoY, xDecimal, yDecimal))
   }, [midPriceInput])
 
+  const setLeftInputValues = (val: string) => {
+    setLeftInput(val)
+    setLeftInputRounded((+val).toFixed(12))
+  }
+
+  const setRightInputValues = (val: string) => {
+    setRightInput(val)
+    setRightInputRounded((+val).toFixed(12))
+  }
+
+  const onLeftInputChange = (val: string) => {
+    setLeftInput(val)
+    setLeftInputRounded(val)
+  }
+
+  const onRightInputChange = (val: string) => {
+    setRightInput(val)
+    setRightInputRounded(val)
+  }
+
   const changeRangeHandler = (left: number, right: number) => {
     setLeftRange(left)
     setRightRange(right)
 
-    setLeftInput(calcPrice(left, isXtoY, xDecimal, yDecimal).toString())
-    setRightInput(calcPrice(right, isXtoY, xDecimal, yDecimal).toString())
+    setLeftInputValues(calcPrice(left, isXtoY, xDecimal, yDecimal).toString())
+    setRightInputValues(calcPrice(right, isXtoY, xDecimal, yDecimal).toString())
 
     onChangeRange(left, right)
   }
@@ -106,8 +129,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
             label='Min price'
             tokenFromSymbol={tokenASymbol}
             tokenToSymbol={tokenBSymbol}
-            currentValue={leftInput}
-            setValue={setLeftInput}
+            currentValue={leftInputRounded}
+            setValue={onLeftInputChange}
             decreaseValue={() => {
               const newLeft = isXtoY
                 ? Math.max(minSpacingMultiplicity(tickSpacing), leftRange - tickSpacing)
@@ -140,8 +163,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
             label='Max price'
             tokenFromSymbol={tokenASymbol}
             tokenToSymbol={tokenBSymbol}
-            currentValue={rightInput}
-            setValue={setRightInput}
+            currentValue={rightInputRounded}
+            setValue={onRightInputChange}
             decreaseValue={() => {
               const newRight = isXtoY
                 ? Math.max(rightRange - tickSpacing, leftRange + tickSpacing)
