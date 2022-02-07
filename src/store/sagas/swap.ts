@@ -10,15 +10,13 @@ import { Pair } from '@invariant-labs/sdk'
 import { getConnection } from './connection'
 import { Keypair, sendAndConfirmRawTransaction, SystemProgram, Transaction } from '@solana/web3.js'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { WRAPPED_SOL_ADDRESS, PAIRS } from '@consts/static'
-import { network } from '@selectors/solanaConnection'
+import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 
 export function* handleSwapWithSOL(): Generator {
   try {
     const allTokens = yield* select(tokens)
     const poolsObj = yield* select(pools)
     const allPools = Object.values(poolsObj)
-    const networkType = yield* select(network)
     const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
       yield* select(swap)
 
@@ -123,7 +121,9 @@ export function* handleSwapWithSOL(): Generator {
       toAddress = yield* call(createAccount, tokenTo)
     }
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
-      pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
+      pair: new Pair(tokenFrom, tokenTo, {
+        fee: allPools[poolIndex].fee.v
+      }),
       xToY: isXtoY,
       amount: amount,
       knownPrice: knownPrice,
@@ -219,7 +219,6 @@ export function* handleSwap(): Generator {
     const allTokens = yield* select(tokens)
     const poolsObj = yield* select(pools)
     const allPools = Object.values(poolsObj)
-    const networkType = yield* select(network)
     const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
       yield* select(swap)
 
@@ -258,7 +257,9 @@ export function* handleSwap(): Generator {
       toAddress = yield* call(createAccount, tokenTo)
     }
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
-      pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
+      pair: new Pair(tokenFrom, tokenTo, {
+        fee: allPools[poolIndex].fee.v
+      }),
       xToY: isXtoY,
       amount: amount,
       knownPrice: knownPrice,

@@ -79,10 +79,6 @@ const poolsSlice = createSlice({
       state.isLoadingLatestPoolsForTransaction = false
       return state
     },
-    poolsAddingFailed(state) {
-      state.isLoadingLatestPoolsForTransaction = false
-      return state
-    },
     addPoolsForPositions(state, action: PayloadAction<PoolWithAddress[]>) {
       const newData = action.payload.reduce((acc, pool) => ({
         ...acc,

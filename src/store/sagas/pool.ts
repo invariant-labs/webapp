@@ -25,7 +25,7 @@ export function* fetchPoolData(action: PayloadAction<Pair>) {
       address
     }]))
   } catch (error) {
-    yield* put(actions.poolsAddingFailed())
+    yield* put(actions.addPools([]))
 
     console.log(error)
   }
@@ -33,10 +33,9 @@ export function* fetchPoolData(action: PayloadAction<Pair>) {
 
 export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
   const marketProgram = yield* call(getMarketProgram)
-  try {
-    const pools: PoolWithAddress[] = []
-
-    for (const fee of FEE_TIERS) {
+  const pools: PoolWithAddress[] = []
+  for (const fee of FEE_TIERS) {
+    try {
       const pair = new Pair(
         action.payload.first,
         action.payload.second,
@@ -52,14 +51,12 @@ export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
         ...poolData,
         address
       })
+    } catch (error) {
+      console.log(error)
     }
-
-    yield* put(actions.addPools(pools))
-  } catch (error) {
-    yield* put(actions.poolsAddingFailed())
-
-    console.log(error)
   }
+
+  yield* put(actions.addPools(pools))
 }
 
 const fetchPoolFromAddress = async (address: PublicKey) => {
@@ -69,22 +66,22 @@ const fetchPoolFromAddress = async (address: PublicKey) => {
 }
 
 export function* fetchPoolsDataForPositions(action: PayloadAction<PublicKey[]>) {
-  try {
-    const newPools: PoolWithAddress[] = []
+  const newPools: PoolWithAddress[] = []
 
-    for (const address of action.payload) {
+  for (const address of action.payload) {
+    try {
       const poolData: PoolStructure = yield* call(fetchPoolFromAddress, address)
 
       newPools.push({
         ...poolData,
         address
       })
+    } catch (error) {
+      console.log(error)
     }
-
-    yield* put(actions.addPoolsForPositions(newPools))
-  } catch (error) {
-    console.log(error)
   }
+
+  yield* put(actions.addPoolsForPositions(newPools))
 }
 
 export function* getPoolsDataForPositionsHandler(): Generator {
@@ -103,6 +100,7 @@ export function* poolsSaga(): Generator {
   yield all(
     [
       getPoolDataHandler,
+      getAllPoolsForPairDataHandler,
       getPoolsDataForPositionsHandler
     ].map(spawn)
   )
