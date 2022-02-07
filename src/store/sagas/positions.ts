@@ -15,7 +15,13 @@ import { pools, tokens } from '@selectors/pools'
 import { Pair } from '@invariant-labs/sdk'
 import { createLiquidityPlot, createPlaceholderLiquidityPlot } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
-import { Transaction, sendAndConfirmRawTransaction, Keypair, SystemProgram, PublicKey } from '@solana/web3.js'
+import {
+  Transaction,
+  sendAndConfirmRawTransaction,
+  Keypair,
+  SystemProgram,
+  PublicKey
+} from '@solana/web3.js'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { positionsWithPoolsData, singlePositionData } from '@selectors/positions'
@@ -69,8 +75,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       fromPubkey: wallet.publicKey,
       toPubkey: wrappedSolAccount.publicKey,
       lamports:
-        allTokens[data.tokenX.toString()].address.toString() ===
-        WRAPPED_SOL_ADDRESS
+        allTokens[data.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
           ? data.xAmount
           : data.yAmount
     })
@@ -91,8 +96,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     )
 
     let userTokenX =
-      allTokens[data.tokenX.toString()].address.toString() ===
-      WRAPPED_SOL_ADDRESS
+      allTokens[data.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenX.toString()]
         ? tokensAccounts[data.tokenX.toString()].address
@@ -103,8 +107,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     }
 
     let userTokenY =
-      allTokens[data.tokenY.toString()].address.toString() ===
-      WRAPPED_SOL_ADDRESS
+      allTokens[data.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenY.toString()]
         ? tokensAccounts[data.tokenY.toString()].address
@@ -195,10 +198,8 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     const allTokens = yield* select(tokens)
 
     if (
-      allTokens[action.payload.tokenX.toString()].address.toString() ===
-        WRAPPED_SOL_ADDRESS ||
-      allTokens[action.payload.tokenY.toString()].address.toString() ===
-        WRAPPED_SOL_ADDRESS
+      allTokens[action.payload.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
+      allTokens[action.payload.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
     ) {
       return yield* call(handleInitPositionWithSOL, action.payload)
     }
@@ -338,7 +339,7 @@ export function* handleGetPositionsList() {
       head - 1
     )
 
-    const pools = (new Set(list.map((pos) => pos.pool)))
+    const pools = new Set(list.map(pos => pos.pool))
 
     yield* put(poolsActions.getPoolsDataForPositions(Array.from(pools)))
 

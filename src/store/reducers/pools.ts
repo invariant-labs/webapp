@@ -42,7 +42,7 @@ export const defaultState: IPoolsStore = {
 }
 
 export interface PairTokens {
-  first: PublicKey,
+  first: PublicKey
   second: PublicKey
 }
 
@@ -71,19 +71,25 @@ const poolsSlice = createSlice({
       return state
     },
     addPools(state, action: PayloadAction<PoolWithAddress[]>) {
-      const newData = action.payload.reduce((acc, pool) => ({
-        ...acc,
-        [pool.address.toString()]: pool
-      }), {})
+      const newData = action.payload.reduce(
+        (acc, pool) => ({
+          ...acc,
+          [pool.address.toString()]: pool
+        }),
+        {}
+      )
       state.pools = R.merge(state.pools, newData)
       state.isLoadingLatestPoolsForTransaction = false
       return state
     },
     addPoolsForPositions(state, action: PayloadAction<PoolWithAddress[]>) {
-      const newData = action.payload.reduce((acc, pool) => ({
-        ...acc,
-        [pool.address.toString()]: pool
-      }), {})
+      const newData = action.payload.reduce(
+        (acc, pool) => ({
+          ...acc,
+          [pool.address.toString()]: pool
+        }),
+        {}
+      )
       state.pools = R.merge(state.pools, newData)
       return state
     },

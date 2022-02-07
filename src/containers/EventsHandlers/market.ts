@@ -41,7 +41,7 @@ const MarketEvents = () => {
     }
 
     const connectEvents = () => {
-      allPools.forEach((pool) => {
+      allPools.forEach(pool => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         marketProgram.onPoolChange(pool.tokenX, pool.tokenY, { fee: pool.fee.v }, poolStructure => {
           dispatch(
@@ -58,11 +58,7 @@ const MarketEvents = () => {
   }, [dispatch, allPools.length, networkStatus, marketProgram])
 
   useEffect(() => {
-    if (
-      networkStatus !== Status.Initialized ||
-      !marketProgram ||
-      allPools.length === 0
-    ) {
+    if (networkStatus !== Status.Initialized || !marketProgram || allPools.length === 0) {
       return
     }
     const connectEvents = async () => {

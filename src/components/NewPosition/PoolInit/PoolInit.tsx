@@ -41,13 +41,19 @@ export const PoolInit: React.FC<IPoolInit> = ({
   const [leftRange, setLeftRange] = useState(tickSpacing * 10 * (isXtoY ? -1 : 1))
   const [rightRange, setRightRange] = useState(tickSpacing * 10 * (isXtoY ? 1 : -1))
 
-  const [leftInput, setLeftInput] = useState(calcPrice(leftRange, isXtoY, xDecimal, yDecimal).toString())
-  const [rightInput, setRightInput] = useState(calcPrice(rightRange, isXtoY, xDecimal, yDecimal).toString())
+  const [leftInput, setLeftInput] = useState(
+    calcPrice(leftRange, isXtoY, xDecimal, yDecimal).toString()
+  )
+  const [rightInput, setRightInput] = useState(
+    calcPrice(rightRange, isXtoY, xDecimal, yDecimal).toString()
+  )
 
   const [leftInputRounded, setLeftInputRounded] = useState((+leftInput).toFixed(12))
   const [rightInputRounded, setRightInputRounded] = useState((+rightInput).toFixed(12))
 
-  const [midPriceInput, setMidPriceInput] = useState(calcPrice(midPrice, isXtoY, xDecimal, yDecimal).toString())
+  const [midPriceInput, setMidPriceInput] = useState(
+    calcPrice(midPrice, isXtoY, xDecimal, yDecimal).toString()
+  )
 
   useEffect(() => {
     onChangeMidPrice(nearestTickIndex(+midPriceInput, tickSpacing, isXtoY, xDecimal, yDecimal))

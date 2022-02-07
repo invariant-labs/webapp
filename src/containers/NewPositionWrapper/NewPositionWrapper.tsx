@@ -181,11 +181,11 @@ export const NewPositionWrapper = () => {
             )
           } else {
             dispatch(
-              poolsActions.getPoolData(new Pair(
-                tokens[tokenA].assetAddress,
-                tokens[tokenB].assetAddress,
-                { fee: FEE_TIERS[feeTierIndex].fee }
-              ))
+              poolsActions.getPoolData(
+                new Pair(tokens[tokenA].assetAddress, tokens[tokenB].assetAddress, {
+                  fee: FEE_TIERS[feeTierIndex].fee
+                })
+              )
             )
           }
         }

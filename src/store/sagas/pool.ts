@@ -20,10 +20,14 @@ export function* fetchPoolData(action: PayloadAction<Pair>) {
       marketProgram.program.programId
     )
 
-    yield* put(actions.addPools([{
-      ...poolData,
-      address
-    }]))
+    yield* put(
+      actions.addPools([
+        {
+          ...poolData,
+          address
+        }
+      ])
+    )
   } catch (error) {
     yield* put(actions.addPools([]))
   }
@@ -34,23 +38,15 @@ export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
   const pools: PoolWithAddress[] = []
   for (const fee of FEE_TIERS) {
     try {
-      const pair = new Pair(
-        action.payload.first,
-        action.payload.second,
-        fee
-      )
+      const pair = new Pair(action.payload.first, action.payload.second, fee)
       const poolData = yield* call([marketProgram, marketProgram.getPool], pair)
-      const address = yield* call(
-        [pair, pair.getAddress],
-        marketProgram.program.programId
-      )
+      const address = yield* call([pair, pair.getAddress], marketProgram.program.programId)
 
       pools.push({
         ...poolData,
         address
       })
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   yield* put(actions.addPools(pools))
@@ -73,8 +69,7 @@ export function* fetchPoolsDataForPositions(action: PayloadAction<PublicKey[]>) 
         ...poolData,
         address
       })
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   yield* put(actions.addPoolsForPositions(newPools))
@@ -94,10 +89,6 @@ export function* getPoolDataHandler(): Generator {
 
 export function* poolsSaga(): Generator {
   yield all(
-    [
-      getPoolDataHandler,
-      getAllPoolsForPairDataHandler,
-      getPoolsDataForPositionsHandler
-    ].map(spawn)
+    [getPoolDataHandler, getAllPoolsForPairDataHandler, getPoolsDataForPositionsHandler].map(spawn)
   )
 }
