@@ -340,52 +340,54 @@ export const Swap: React.FC<ISwap> = ({
         </Grid>
       </Grid>
       <Grid container className={classes.root} direction='column'>
-        <Box className={classes.tokenComponentTextContainer}>
-        </Box>
-        <Box className={
-        swap ? `${classes.exchangeRoot} ${classes.amountInputDown} ${classes.transactionBottom}`
-        : `${classes.exchangeRoot} ${classes.transactionBottom}`
+        <Box className={classes.tokenComponentTextContainer}></Box>
+        <Box
+          className={
+            swap
+              ? `${classes.exchangeRoot} ${classes.amountInputDown} ${classes.transactionBottom}`
+              : `${classes.exchangeRoot} ${classes.transactionBottom}`
           }>
-        <ExchangeAmountInput
-          value={amountFrom}
-          Balance = {tokenFromIndex !== null
-            ? printBN(
-                tokens[tokenFromIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
-                  ? fullSolBalance
-                  : tokens[tokenFromIndex].balance,
-                tokens[tokenFromIndex].decimals
-              )
-            : '- -'}
-
-          key={swap?.toString()}
-          decimal={tokenFromIndex !== null ? tokens[tokenFromIndex].decimals : 6}
-          className = {classes.amountInput}
-          setValue={value => {
-            if (value.match(/^\d*\.?\d*$/)) {
-              setAmountFrom(value)
-              setInputRef(inputTarget.FROM)
+          <ExchangeAmountInput
+            value={amountFrom}
+            Balance={
+              tokenFromIndex !== null
+                ? printBN(
+                    tokens[tokenFromIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
+                      ? fullSolBalance
+                      : tokens[tokenFromIndex].balance,
+                    tokens[tokenFromIndex].decimals
+                  )
+                : '- -'
             }
-          }}
-          placeholder={`0.${'0'.repeat(6)}`}
-          onMaxClick={() => {
-            if (tokenToIndex !== null && tokenFromIndex !== null) {
-              setAmountFrom(
-                printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
+            key={swap?.toString()}
+            decimal={tokenFromIndex !== null ? tokens[tokenFromIndex].decimals : 6}
+            className={classes.amountInput}
+            setValue={value => {
+              if (value.match(/^\d*\.?\d*$/)) {
+                setAmountFrom(value)
+                setInputRef(inputTarget.FROM)
+              }
+            }}
+            placeholder={`0.${'0'.repeat(6)}`}
+            onMaxClick={() => {
+              if (tokenToIndex !== null && tokenFromIndex !== null) {
+                setAmountFrom(
+                  printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
+                )
+                setInputRef(inputTarget.FROM)
+              }
+            }}
+            tokens={tokens}
+            current={tokenFromIndex !== null ? tokens[tokenFromIndex] : null}
+            onSelect={(name: string) => {
+              setTokenFromIndex(
+                tokens.findIndex(token => {
+                  return name === token.symbol
+                })
               )
-              setInputRef(inputTarget.FROM)
-            }
-          }}
-          tokens={tokens}
-          current={tokenFromIndex !== null ? tokens[tokenFromIndex] : null}
-          onSelect={(name: string) => {
-            setTokenFromIndex(
-              tokens.findIndex(token => {
-                return name === token.symbol
-              })
-            )
-          }}
-          disabled={tokenFromIndex === null}
-        />
+            }}
+            disabled={tokenFromIndex === null}
+          />
         </Box>
         <Box className={classes.tokenComponentTextContainer}>
           <Box
@@ -400,88 +402,96 @@ export const Swap: React.FC<ISwap> = ({
               tokens = tokensY
               setTokensY(tokensTmp)
             }}>
-            <Box className = {classes.swapImgRoot}>
-            <img
-              src={SwapArrows}
-              style={{
-                transform: `rotate(${-rotates * 180}deg)`
-              }}
-              className={classes.swapArrows}
-            />
+            <Box className={classes.swapImgRoot}>
+              <img
+                src={SwapArrows}
+                style={{
+                  transform: `rotate(${-rotates * 180}deg)`
+                }}
+                className={classes.swapArrows}
+              />
             </Box>
           </Box>
         </Box>
-        <Box className={swap ? `${classes.exchangeRoot} ${classes.amountInputUp} ${classes.transactionBottom}`
-        : `${classes.exchangeRoot} ${classes.transactionBottom}`}>
-        <ExchangeAmountInput
-          value={amountTo}
-          Balance = {tokenToIndex !== null
-            ? printBN(
-                tokens[tokenToIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
-                ? fullSolBalance
-                : tokens[tokenToIndex].balance,
-              tokens[tokenToIndex].decimals
-            )
-          : '- -'}
-        key={tokenToIndex?.toString()}
-          className= {classes.amountInput}
-        decimal={tokenToIndex !== null ? tokens[tokenToIndex].decimals : 6}
-        style={
-            {
-              // transform: swap !== null ? (swap ? 'translateY(0px)' : 'translateY(0px)') : ''
+        <Box
+          className={
+            swap
+              ? `${classes.exchangeRoot} ${classes.amountInputUp} ${classes.transactionBottom}`
+              : `${classes.exchangeRoot} ${classes.transactionBottom}`
+          }>
+          <ExchangeAmountInput
+            value={amountTo}
+            Balance={
+              tokenToIndex !== null
+                ? printBN(
+                    tokens[tokenToIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
+                      ? fullSolBalance
+                      : tokens[tokenToIndex].balance,
+                    tokens[tokenToIndex].decimals
+                  )
+                : '- -'
             }
-          }
-          setValue={value => {
-            if (value.match(/^\d*\.?\d*$/)) {
-              setAmountTo(value)
-              setInputRef(inputTarget.TO)
+            key={tokenToIndex?.toString()}
+            className={classes.amountInput}
+            decimal={tokenToIndex !== null ? tokens[tokenToIndex].decimals : 6}
+            style={
+              {
+                // transform: swap !== null ? (swap ? 'translateY(0px)' : 'translateY(0px)') : ''
+              }
             }
-          }}
-          placeholder={`0.${'0'.repeat(6)}`}
-          onMaxClick={() => {
-            if (tokenToIndex !== null && tokenFromIndex !== null) {
-              setAmountFrom(
-                printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
+            setValue={value => {
+              if (value.match(/^\d*\.?\d*$/)) {
+                setAmountTo(value)
+                setInputRef(inputTarget.TO)
+              }
+            }}
+            placeholder={`0.${'0'.repeat(6)}`}
+            onMaxClick={() => {
+              if (tokenToIndex !== null && tokenFromIndex !== null) {
+                setAmountFrom(
+                  printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
+                )
+              }
+            }}
+            tokens={tokensY}
+            current={tokenToIndex !== null ? tokens[tokenToIndex] : null}
+            onSelect={(name: string) => {
+              setTokenToIndex(
+                tokens.findIndex(token => {
+                  return name === token.symbol
+                })
               )
-            }
-          }}
-          tokens={tokensY}
-          current={tokenToIndex !== null ? tokens[tokenToIndex] : null}
-          onSelect={(name: string) => {
-            setTokenToIndex(
-              tokens.findIndex(token => {
-                return name === token.symbol
-              })
-            )
-            updateEstimatedAmount()
-          }}
-          disabled={tokenFromIndex === null}
-        />
+              updateEstimatedAmount()
+            }}
+            disabled={tokenFromIndex === null}
+          />
         </Box>
-        <Box >
+        <Box>
           <Box className={classes.transactionDetails}>
-          <Grid
-            className={classes.transactionDetailsWrapper}
-            onMouseEnter={hoverDetails}
-            onMouseLeave={hoverDetails}>
-            <Typography className={classes.transactionDetailsHeader}>
-              See transaction details
-            </Typography>
-            <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }} />
-          </Grid>
-          <Box className= {classes.transtactionData}>
-          {tokenFromIndex !== null &&
-          tokenToIndex !== null &&
-          getStateMessage() !== 'Insufficient volume' &&
-          getStateMessage() !== 'Exceed single swap limit (split transaction into several)' &&
-          getStateMessage() !== 'No route found' ? (
-            <ExchangeRate
-              tokenFromSymbol={tokens[tokenFromIndex].symbol}
-              tokenToSymbol={tokens[tokenToIndex].symbol}
-              amount={swapRate}
-              tokenToDecimals={tokens[tokenToIndex].decimals}
-              loading={getStateMessage() === 'Loading'}></ExchangeRate>
-          ) : 'No Data'}
+            <Grid
+              className={classes.transactionDetailsWrapper}
+              onMouseEnter={hoverDetails}
+              onMouseLeave={hoverDetails}>
+              <Typography className={classes.transactionDetailsHeader}>
+                See transaction details
+              </Typography>
+              <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }} />
+            </Grid>
+            <Box className={classes.transtactionData}>
+              {tokenFromIndex !== null &&
+              tokenToIndex !== null &&
+              getStateMessage() !== 'Insufficient volume' &&
+              getStateMessage() !== 'Exceed single swap limit (split transaction into several)' &&
+              getStateMessage() !== 'No route found' ? (
+                <ExchangeRate
+                  tokenFromSymbol={tokens[tokenFromIndex].symbol}
+                  tokenToSymbol={tokens[tokenToIndex].symbol}
+                  amount={swapRate}
+                  tokenToDecimals={tokens[tokenToIndex].decimals}
+                  loading={getStateMessage() === 'Loading'}></ExchangeRate>
+              ) : (
+                'No Data'
+              )}
             </Box>
           </Box>
         </Box>

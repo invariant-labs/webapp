@@ -117,7 +117,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       backgroundColor: colors.invariant.componentOut3
     }
-
   },
 
   swapArrows: {
@@ -164,8 +163,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     background: colors.invariant.newDark,
     borderRadius: 20
-   },
-   transactionTop: {
+  },
+  transactionTop: {
     margin: '10px'
   },
 
@@ -174,10 +173,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 
   transtactionData: {
-   border: `1px solid ${colors.invariant.light}`,
-   borderRadius: '10px',
-   padding: '2px 10px',
-   color: colors.invariant.lightGrey
+    border: `1px solid ${colors.invariant.light}`,
+    borderRadius: '10px',
+    padding: '2px 10px',
+    color: colors.invariant.lightGrey
   }
 }))
 

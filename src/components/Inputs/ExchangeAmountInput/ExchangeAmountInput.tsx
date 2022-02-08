@@ -18,7 +18,7 @@ interface IProps {
   current: SwapToken | null
   tokens: Array<{ symbol: string; name: string; logoURI: string }>
   onSelect: (name: string) => void
-  disabled: boolean,
+  disabled: boolean
   Balance?: string | undefined
 }
 
@@ -38,7 +38,7 @@ export const AmountInput: React.FC<IProps> = ({
   Balance
 }) => {
   const classes = useStyles()
-   const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const onlyNumbersRegex = /^\d*\.?\d*$/
@@ -78,8 +78,8 @@ export const AmountInput: React.FC<IProps> = ({
   }
 
   return (
-  <>
-    <Input
+    <>
+      <Input
         inputRef={inputRef}
         error={!!error}
         className={classNames(classes.amountInput, className)}
@@ -100,20 +100,20 @@ export const AmountInput: React.FC<IProps> = ({
           />
         }
       />
-    <Box className={classes.container}>
-      <Box className= {classes.BalanceContainer}>
-        <Typography className= {classes.BalanceTypography}>Balance: {Balance}</Typography>
-      <OutlinedButton
-        name='max'
-        color='primary'
-        onClick={onMaxClick}
-        className={classes.maxButton}
-        labelClassName={classes.label}
-        disabled={disabled}
-      />
+      <Box className={classes.container}>
+        <Box className={classes.BalanceContainer}>
+          <Typography className={classes.BalanceTypography}>Balance: {Balance}</Typography>
+          <OutlinedButton
+            name='max'
+            color='primary'
+            onClick={onMaxClick}
+            className={classes.maxButton}
+            labelClassName={classes.label}
+            disabled={disabled}
+          />
+        </Box>
+        <Typography className={classes.walletBalanace}>-</Typography>
       </Box>
-        <Typography className= {classes.walletBalanace}>-</Typography>
-    </Box>
     </>
   )
 }
