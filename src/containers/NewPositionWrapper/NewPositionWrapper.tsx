@@ -149,6 +149,23 @@ export const NewPositionWrapper = () => {
     return ticksData
   }, [ticksData, ticksLoading, isXtoY, tickSpacing, xDecimal, yDecimal])
 
+  useEffect(() => {
+    if (
+      tokenAIndex !== null &&
+      tokenBIndex !== null &&
+      poolIndex === null &&
+      progress === 'approvedWithSuccess'
+    ) {
+      dispatch(
+        poolsActions.getPoolData(
+          new Pair(tokens[tokenAIndex].assetAddress, tokens[tokenBIndex].assetAddress, {
+            fee
+          })
+        )
+      )
+    }
+  }, [progress])
+
   return (
     <NewPosition
       tokens={tokens}
