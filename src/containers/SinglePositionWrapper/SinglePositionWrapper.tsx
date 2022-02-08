@@ -53,7 +53,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }, [position?.id])
 
   useEffect(() => {
-    if (waitingForTicksData === true && rangeTicksLoading) {
+    if (waitingForTicksData === true && !rangeTicksLoading) {
       setWaitingForTicksData(false)
     }
   }, [rangeTicksLoading])
@@ -188,10 +188,10 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const [tokenXClaim, tokenYClaim] = useMemo(() => {
     if (
+      waitingForTicksData === false &&
       position &&
       typeof lowerTick !== 'undefined' &&
-      typeof upperTick !== 'undefined' &&
-      waitingForTicksData === false
+      typeof upperTick !== 'undefined'
     ) {
       const [bnX, bnY] = calculateClaimAmount({
         position,

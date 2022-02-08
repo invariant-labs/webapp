@@ -9,6 +9,7 @@ import { Status } from '@reducers/solanaWallet'
 import { DEFAULT_PUBLIC_KEY } from '@invariant-labs/sdk/lib/market'
 import { PoolWithAddress } from '@reducers/pools'
 import { Decimal } from '@invariant-labs/sdk/src/market'
+import { fromFee } from '@invariant-labs/sdk/lib/utils'
 
 const pools: PoolWithAddress[] = [
   {
@@ -144,6 +145,20 @@ storiesOf('newUi/swap', module)
         pools={pools}
         progress='none'
         poolInit={true}
+        fullSolBalance={new BN(2137)}
+        swapData={{
+          slippage: { v: fromFee(new BN(1000)) },
+          knownPrice: { v: new BN(0) },
+          poolIndex: 0,
+          tokenFrom: DEFAULT_PUBLIC_KEY,
+          tokenTo: DEFAULT_PUBLIC_KEY,
+          amount: new BN(0),
+          byAmountIn: false
+        }}
+        onSetPair={() => {}}
+        poolTicks={{
+          [DEFAULT_PUBLIC_KEY.toString()]: []
+        }}
       />
     </div>
   ))

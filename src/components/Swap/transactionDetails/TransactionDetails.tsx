@@ -8,11 +8,12 @@ import { Decimal } from '@invariant-labs/sdk/lib/market'
 
 interface IProps {
   open: boolean
-  fee: {v: BN}
-  exchangeRate: {val: string, symbol: string}
+  fee: { v: BN }
+  exchangeRate: { val: number; symbol: string }
+  decimal: number
 }
 
-const percentValueDisplay = (amount: Decimal): {value: BN, decimal: number} => {
+const percentValueDisplay = (amount: Decimal): { value: BN; decimal: number } => {
   const amountLength = amount.v.toString().length - 1
   const amountDec = PRICE_DECIMAL - amountLength - 2
   const amountValue = amount.v.div(new BN(10).pow(new BN(amountLength)))
@@ -22,21 +23,23 @@ const percentValueDisplay = (amount: Decimal): {value: BN, decimal: number} => {
   }
 }
 
-const TransactionDetails: React.FC<IProps> = ({ open, fee, exchangeRate }) => {
+const TransactionDetails: React.FC<IProps> = ({ open, fee, exchangeRate, decimal }) => {
   const percent = percentValueDisplay(fee)
   const classes = useStyles()
   return (
-    <Grid container className={classes.transactionDetailsInfo} style={{ opacity: open ? '1' : '0', zIndex: open ? 10 : 0 }}>
+    <Grid
+      container
+      className={classes.transactionDetailsInfo}
+      style={{ opacity: open ? '1' : '0', zIndex: open ? 10 : 0 }}>
       <Grid className={classes.detailsInfoWrapper}>
         <Typography component='h2'>Transaction details</Typography>
         <Typography component='p'>
-                Fee: <Typography component='span'>
-            {printBN(percent.value, percent.decimal)} %
-          </Typography>
+          Fee: <Typography component='span'>{printBN(percent.value, percent.decimal)} %</Typography>
         </Typography>
         <Typography component='p'>
-                Exchange rate: <Typography component='span'>
-            {exchangeRate.val} {exchangeRate.symbol}
+          Exchange rate:{' '}
+          <Typography component='span'>
+            {exchangeRate.val.toFixed(decimal)} {exchangeRate.symbol}
           </Typography>
         </Typography>
       </Grid>

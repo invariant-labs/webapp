@@ -41,17 +41,13 @@ export const AmountInput: React.FC<IProps> = ({
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const onlyNumbersRegex = /^\d*\.?\d*$/
-    const test = `^\\d*\\.?\\d{0,${decimal}}$`
-    const regex = new RegExp(test, 'g')
+    const trimDecimal = `^\\d*\\.?\\d{0,${decimal}}$`
+    const regex = new RegExp(trimDecimal, 'g')
     if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value
       const caretPosition = e.target.selectionStart
 
       let parsed = e.target.value
-      const zerosRegex = /^0+\d+\.?\d*$/
-      if (zerosRegex.test(parsed)) {
-        parsed = parsed.replace(/^0+/, '')
-      }
 
       const dotRegex = /^\.\d*$/
       if (dotRegex.test(parsed)) {
