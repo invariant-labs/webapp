@@ -11,7 +11,7 @@ import {
   InitPositionData
 } from '@reducers/positions'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { pools, tokens } from '@selectors/pools'
+import { poolsArraySortedByFees, tokens } from '@selectors/pools'
 import { Pair } from '@invariant-labs/sdk'
 import { createLiquidityPlot, createPlaceholderLiquidityPlot } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
@@ -284,8 +284,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 }
 
 export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicksData>): Generator {
-  const poolsObj = yield* select(pools)
-  const allPools = Object.values(poolsObj)
+  const allPools = yield* select(poolsArraySortedByFees)
   const allTokens = yield* select(tokens)
 
   const poolIndex = action.payload.poolIndex
@@ -339,7 +338,7 @@ export function* handleGetPositionsList() {
       head - 1
     )
 
-    const pools = new Set(list.map(pos => pos.pool))
+    const pools = new Set(list.map(pos => pos.pool.toString()))
 
     yield* put(poolsActions.getPoolsDataForPositions(Array.from(pools)))
 

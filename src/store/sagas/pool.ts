@@ -58,16 +58,16 @@ const fetchPoolFromAddress = async (address: PublicKey) => {
   return (await marketProgram.program.account.pool.fetch(address)) as PoolStructure
 }
 
-export function* fetchPoolsDataForPositions(action: PayloadAction<PublicKey[]>) {
+export function* fetchPoolsDataForPositions(action: PayloadAction<string[]>) {
   const newPools: PoolWithAddress[] = []
 
   for (const address of action.payload) {
     try {
-      const poolData: PoolStructure = yield* call(fetchPoolFromAddress, address)
+      const poolData: PoolStructure = yield* call(fetchPoolFromAddress, new PublicKey(address))
 
       newPools.push({
         ...poolData,
-        address
+        address: new PublicKey(address)
       })
     } catch (error) {}
   }

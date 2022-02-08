@@ -1,5 +1,9 @@
 import { Swap } from '@components/Swap/Swap'
-import { isLoadingLatestPoolsForTransaction, pools, poolTicks } from '@selectors/pools'
+import {
+  isLoadingLatestPoolsForTransaction,
+  poolsArraySortedByFees,
+  poolTicks
+} from '@selectors/pools'
 import { swap as swapPool } from '@selectors/swap'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,7 +18,7 @@ export const WrappedSwap = () => {
   const walletStatus = useSelector(status)
   const swap = useSelector(swapPool)
   const poolTicksArray = useSelector(poolTicks)
-  const allPools = useSelector(pools)
+  const allPools = useSelector(poolsArraySortedByFees)
   const tokensList = useSelector(swapTokens)
   const { success, inProgress } = useSelector(swapPool)
   const fullSolBalance = useSelector(balance)
@@ -77,7 +81,7 @@ export const WrappedSwap = () => {
       }}
       walletStatus={walletStatus}
       tokens={tokensList}
-      pools={Object.values(allPools)}
+      pools={allPools}
       swapData={swap}
       progress={progress}
       poolTicks={poolTicksArray}

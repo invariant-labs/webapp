@@ -108,7 +108,7 @@ const poolsSlice = createSlice({
 
       return state
     },
-    getPoolsDataForPositions(_state, _action: PayloadAction<PublicKey[]>) {}
+    getPoolsDataForPositions(_state, _action: PayloadAction<string[]>) {}
   }
 })
 

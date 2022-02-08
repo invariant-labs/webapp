@@ -467,7 +467,7 @@ export const Swap: React.FC<ISwap> = ({
             </Typography>
             <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }} />
           </Grid>
-          {tokenFromIndex !== null && tokenToIndex !== null ? (
+          {tokenFromIndex !== null && tokenToIndex !== null && pools.length ? (
             <TransactionDetails
               open={detailsOpen && activeSwapDetails() && getStateMessage() !== 'Loading'}
               fee={{

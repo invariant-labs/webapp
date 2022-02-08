@@ -2,7 +2,7 @@ import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
 import { swap } from '@selectors/swap'
-import { pools, tokens } from '@selectors/pools'
+import { poolsArraySortedByFees, tokens } from '@selectors/pools'
 import { accounts } from '@selectors/solanaWallet'
 import { createAccount, getWallet } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
@@ -15,8 +15,7 @@ import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 export function* handleSwapWithSOL(): Generator {
   try {
     const allTokens = yield* select(tokens)
-    const poolsObj = yield* select(pools)
-    const allPools = Object.values(poolsObj)
+    const allPools = yield* select(poolsArraySortedByFees)
     const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
       yield* select(swap)
 
@@ -217,8 +216,7 @@ export function* handleSwapWithSOL(): Generator {
 export function* handleSwap(): Generator {
   try {
     const allTokens = yield* select(tokens)
-    const poolsObj = yield* select(pools)
-    const allPools = Object.values(poolsObj)
+    const allPools = yield* select(poolsArraySortedByFees)
     const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
       yield* select(swap)
 

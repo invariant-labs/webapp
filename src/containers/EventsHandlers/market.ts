@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { network, status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
 import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
-import { pools, poolTicks } from '@selectors/pools'
+import { poolsArraySortedByFees, poolTicks } from '@selectors/pools'
 import { getNetworkTokensList, findPairs } from '@consts/utils'
 import { swap } from '@selectors/swap'
 import { Pair } from '@invariant-labs/sdk'
@@ -15,9 +15,7 @@ const MarketEvents = () => {
   const { tokenFrom, tokenTo } = useSelector(swap)
   const networkStatus = useSelector(status)
   const networkType = useSelector(network)
-  const poolsObj = useSelector(pools)
-
-  const allPools = useMemo(() => Object.values(poolsObj), [poolsObj])
+  const allPools = useSelector(poolsArraySortedByFees)
 
   const poolTicksArray = useSelector(poolTicks)
   const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
