@@ -86,9 +86,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   amountInputDown: {
     animation: '$slide-down .3s'
   },
+
   amountInputUp: {
     animation: '$slide-up .3s'
   },
+
   swapArrowBox: {
     backgroundColor: colors.invariant.componentOut2,
     width: 50,
