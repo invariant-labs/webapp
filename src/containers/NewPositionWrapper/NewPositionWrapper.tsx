@@ -81,7 +81,7 @@ export const NewPositionWrapper = () => {
       return allPools[poolIndex].tickSpacing
     }
 
-    return 0
+    return 1
   }, [poolIndex])
 
   const midPrice = useMemo(() => {
