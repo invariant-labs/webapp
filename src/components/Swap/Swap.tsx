@@ -109,8 +109,6 @@ export const Swap: React.FC<ISwap> = ({
     poolIndex: number
   }>({ amountOut: new BN(0), simulateSuccess: true, poolIndex: 0 })
 
-  console.log(settings)
-
   const timeoutRef = useRef<number>(0)
 
   useEffect(() => {
