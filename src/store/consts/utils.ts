@@ -539,7 +539,6 @@ export const handleSimulate = async (
   const tickMap = await marketProgram.getTickmap(
     new Pair(filteredPools[0].tokenX, filteredPools[0].tokenY, { fee: filteredPools[0].fee.v })
   )
-  console.log(filteredPools[0].fee.v.toString())
   const ticks: Map<number, Tick> = new Map<number, Tick>()
   for (const tick of poolTicks[filteredPools[0].address.toString()]) {
     ticks.set(tick.index, tick)
