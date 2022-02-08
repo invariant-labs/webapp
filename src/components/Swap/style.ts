@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     width: 500,
     position: 'relative',
-    paddingBottom: 28,
+    paddingBottom: 9,
     '& h1': {
       ...typography.heading4,
       color: colors.white.main
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   root: {
     background: colors.invariant.component,
-    borderRadius: 10,
+    borderRadius: 24,
     paddingInline: 24,
     paddingBottom: 22,
     paddingTop: 16,
@@ -81,8 +81,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   amountInput: {
     position: 'relative'
-    // border: `1px solid ${colors.invariant.componentOut2}`,
-    // backgroundColor: colors.invariant.componentIn2
   },
   amountInputDown: {
     animation: '$slide-down .3s'
@@ -132,7 +130,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    margin: '5px 0 7px 0px',
     position: 'relative'
   },
   transactionDetailsWrapper: {
@@ -165,11 +163,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 20
   },
   transactionTop: {
-    margin: '10px'
+    marginTop: 10
   },
 
   transactionBottom: {
-    marginTop: '15px'
+    marginTop: 10
   },
 
   transtactionData: {

@@ -16,9 +16,8 @@ const useStyles = makeStyles(() => ({
     zIndex: 4,
 
     '&:disabled': {
-      backgroundColor: colors.invariant.light,
-      color: colors.invariant.componentBcg,
-      background: 'none'
+      background: colors.invariant.pinkLinearGradient,
+      color: colors.invariant.componentBcg
     }
   },
   buttonRelease: {
