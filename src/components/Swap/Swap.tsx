@@ -20,6 +20,7 @@ import { Tick } from '@invariant-labs/sdk/src/market'
 import { PoolWithAddress } from '@reducers/pools'
 import ExchangeRate from './ExchangeRate/ExchangeRate'
 import TransactionDetails from './transactionDetails/TransactionDetails'
+import classNames from 'classnames'
 
 export interface SwapToken {
   balance: BN
@@ -93,6 +94,7 @@ export const Swap: React.FC<ISwap> = ({
 
   const [tokenToIndex, setTokenToIndex] = React.useState<number | null>(null)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+  const [lockAnimation, setLockAnimation] = React.useState<boolean>(false)
   const [anchorTransaction, setAnchorTransaction] = React.useState<HTMLButtonElement | null>(null)
   const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [amountTo, setAmountTo] = React.useState<string>('')
@@ -345,6 +347,10 @@ export const Swap: React.FC<ISwap> = ({
     setDetailsOpen(!detailsOpen)
   }
 
+  React.useEffect(() => {
+    lockAnimation && setTimeout(() => setLockAnimation(false), 305)
+  }, [lockAnimation])
+
   return (
     <Grid container className={classes.swapWrapper}>
       <Grid container className={classes.header}>
@@ -364,11 +370,11 @@ export const Swap: React.FC<ISwap> = ({
       </Grid>
       <Grid container className={classes.root} direction='column'>
         <Box
-          className={
-            swap
-              ? `${classes.exchangeRoot} ${classes.amountInputDown} ${classes.transactionBottom}`
-              : `${classes.exchangeRoot} ${classes.transactionBottom}`
-          }>
+          className={classNames(
+            classes.exchangeRoot,
+            classes.transactionBottom,
+            lockAnimation && `${classes.exchangeRoot} ${classes.amountInputDown} `
+          )}>
           <ExchangeAmountInput
             value={amountFrom}
             balance={
@@ -415,6 +421,8 @@ export const Swap: React.FC<ISwap> = ({
           <Box
             className={classes.swapArrowBox}
             onClick={() => {
+              if (lockAnimation) return
+              setLockAnimation(!lockAnimation)
               setRotates(rotates + 1)
               swap !== null ? setSwap(!swap) : setSwap(true)
               const tmp = tokenFromIndex
@@ -436,11 +444,11 @@ export const Swap: React.FC<ISwap> = ({
           </Box>
         </Box>
         <Box
-          className={
-            swap
-              ? `${classes.exchangeRoot} ${classes.amountInputUp} ${classes.transactionBottom}`
-              : `${classes.exchangeRoot} ${classes.transactionBottom}`
-          }>
+          className={classNames(
+            classes.exchangeRoot,
+            classes.transactionBottom,
+            lockAnimation && `${classes.exchangeRoot} ${classes.amountInputUp} `
+          )}>
           <ExchangeAmountInput
             value={amountTo}
             balance={
@@ -495,7 +503,10 @@ export const Swap: React.FC<ISwap> = ({
               <Typography className={classes.transactionDetailsHeader}>
                 See transaction details
               </Typography>
-              <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }} />
+              <CardMedia
+                image={infoIcon}
+                style={{ width: 10, height: 10, marginLeft: 4, filter: 'brightness(0.8)' }}
+              />
             </Grid>
           </button>
           <Box className={classes.transtactionData}>
@@ -513,9 +524,9 @@ export const Swap: React.FC<ISwap> = ({
                 handleCloseTransactionDetails={handleCloseTransactionDetails}
                 decimal={tokens[tokenToIndex].decimals}
               />
-            ) : (
+            ) : tokenToIndex === null || tokenFromIndex === null ? (
               'No data'
-            )}
+            ) : null}
             {tokenFromIndex !== null && tokenToIndex !== null && activeSwapDetails() ? (
               <ExchangeRate
                 tokenFromSymbol={tokens[tokenFromIndex].symbol}
@@ -523,9 +534,9 @@ export const Swap: React.FC<ISwap> = ({
                 amount={getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate}
                 tokenToDecimals={tokens[tokenToIndex].decimals}
                 loading={getStateMessage() === 'Loading'}></ExchangeRate>
-            ) : (
+            ) : !activeSwapDetails() ? (
               'No data'
-            )}
+            ) : null}
           </Box>
         </Box>
         <AnimatedButton
