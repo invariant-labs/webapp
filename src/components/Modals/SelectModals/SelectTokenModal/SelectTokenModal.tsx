@@ -95,9 +95,9 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
         horizontal: 'center'
       }}>
       <Grid container className={classes.container}>
-        <Button className={classes.selectTokenClose} onClick={handleClose}></Button>
         <Grid className={classes.selectTokenHeader}>
           <Typography component='h1'>Select a token</Typography>
+          <Button className={classes.selectTokenClose} onClick={handleClose}></Button>
         </Grid>
         <Grid container className={classes.inputControl}>
           <input

@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selectTokenHeader: {
     width: '100%',
-    paddingBottom: 5,
+    paddingBottom: 15,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between'
@@ -30,9 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative'
   },
   selectTokenClose: {
-    position: 'absolute',
-    top: 15,
-    right: 12,
     minWidth: 0,
     height: 20,
     '&:after': {
@@ -111,7 +108,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   tokenList: {
     background: colors.invariant.component,
     borderTop: `1px solid ${colors.invariant.light}`,
-
     width: 451,
     height: 352,
     padding: 8
@@ -168,9 +164,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   searchIcon: {
     color: colors.invariant.componentOut3,
     margin: 10
-  },
-  hideScroll: {
-    '& > *:first-child': {}
   },
   scrollbarThumb: {
     background: colors.invariant.accent1,
