@@ -1,27 +1,47 @@
-import { colors, typography } from '@static/theme'
+import { colors, newTypography, theme } from '@static/theme'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
   general: {
-    marginLeft: 5,
-    cursor: 'default !important',
-    minWidth: 30,
-    height: 15,
-    borderRadius: 3,
-    textAlign: 'center',
-    textTransform: 'none',
-    ...typography.body1,
-    backgroundColor: `${colors.invariant.green} !important`,
-    padding: '10px 14px',
+    width: 26,
+    maxWidth: 26,
+    height: 14,
+    ...newTypography.tiny2,
+    background: ' rgba(46, 224, 154, 0.8)',
+    borderRadius: 4,
+    marginLeft: 4,
+    marginTop: 1,
+    cursor: 'default',
+
     '&:hover': {
-      backgroundColor: colors.invariant.green
+      backgroundColor: colors.invariant.green,
+      boxShadow: '0px 0px 20px -10px white'
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      ...newTypography.tiny2,
+      width: 26,
+      maxWidth: 26,
+      height: 14,
+      marginTop: 1
     }
   },
+
+  activeButton: {
+    background: `${colors.invariant.green} !important`
+  },
+
   disabled: {
-    minWidth: 30,
+    ...newTypography.tiny2,
+    widt: 20,
+    maxWidth: 26,
     height: 15,
+    color: `${colors.invariant.background2} !important`,
     background: `${colors.invariant.light} !important`,
-    color: `${colors.invariant.background2} !important`
+    '&:hover': {
+      background: colors.invariant.light,
+      cursor: 'default'
+    }
   }
 }))
 

@@ -15,6 +15,7 @@ export interface IProps {
   fontWeight?: FontWeightProperty
   padding?: PaddingProperty<number>
   labelClassName?: string
+  balance: string | undefined
 }
 
 export const OutlinedButton: React.FC<IProps> = ({
@@ -24,16 +25,25 @@ export const OutlinedButton: React.FC<IProps> = ({
   className,
   disabled = false,
   startIcon,
-  labelClassName
+  labelClassName,
+  balance
 }) => {
   const classes = useStyles()
+
+  const tokenBalance = isNaN(Number(balance))
+  const disabledButton = disabled && tokenBalance
+
   return (
     <Button
-      className={classNames(classes.general, className)}
+      className={classNames(
+        classes.general,
+        !isNaN(Number(balance)) && classes.activeButton,
+        className
+      )}
       variant='contained'
       color={color}
       classes={{ disabled: classes.disabled, label: classNames(labelClassName) }}
-      disabled={disabled}
+      disabled={disabledButton}
       type={onClick ? 'button' : 'submit'}
       startIcon={startIcon}
       onClick={onClick}>
