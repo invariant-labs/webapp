@@ -101,8 +101,7 @@ export const AmountInput: React.FC<IProps> = ({
       <Box className={classes.container}>
         <Box className={classes.BalanceContainer}>
           <Typography className={classes.BalanceTypography}>
-            Balance: {balance && balance.length > 5 ? `${balance.substring(0, 4)}. ` : balance}{' '}
-            {tokenIcon}
+            Balance: {balance} {tokenIcon}
           </Typography>
           <OutlinedButton
             name='max'
@@ -111,6 +110,7 @@ export const AmountInput: React.FC<IProps> = ({
             className={classes.maxButton}
             labelClassName={classes.label}
             disabled={disabled}
+            balance={balance}
           />
         </Box>
         <Typography className={classes.walletBalanace}>-</Typography>

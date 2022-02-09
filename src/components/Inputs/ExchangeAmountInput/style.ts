@@ -14,9 +14,8 @@ const useStyles = makeStyles(() => ({
       textAlign: 'right'
     }
   },
-
   maxButton: {
-    ...newTypography.caption3,
+    ...newTypography.tiny2,
     color: colors.invariant.componentIn2,
     minWidth: 30,
     height: 15,
@@ -32,7 +31,6 @@ const useStyles = makeStyles(() => ({
   select: {
     marginRight: 20
   },
-
   input: {
     textAlign: 'right',
     color: colors.white.main,
@@ -43,7 +41,6 @@ const useStyles = makeStyles(() => ({
   label: {
     top: -1
   },
-
   BalanceContainer: {
     display: 'flex',
     alignItems: 'center'
@@ -52,11 +49,11 @@ const useStyles = makeStyles(() => ({
     cursor: 'default !important',
     color: colors.invariant.lightGrey,
     ...newTypography.caption3,
-    marginLeft: 20,
+    paddingLeft: 15,
     marginRight: 3
   },
   container: {
-    marginRight: '10px',
+    paddingRight: 15,
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'row',
