@@ -69,6 +69,28 @@ const useStyles = makeStyles(() => ({
   exchangeContainer: {
     padding: '10px 15px 0  15px ',
     display: 'flex'
+  },
+  noData: {
+    color: colors.invariant.warning,
+    ...newTypography.caption2,
+    display: 'grid',
+    gap: 5.45,
+    gridAutoFlow: 'column',
+    cursor: 'default',
+    paddingBottom: 10
+  },
+  noDataIcon: {
+    height: 9.5,
+    width: 9.5,
+    border: '1px solid #EFD063',
+    color: colors.invariant.warning,
+    borderRadius: '50%',
+    fontSize: 8,
+    lineHeight: '10px',
+    fontWeight: 400,
+    textAlign: 'center',
+    alignSelf: 'center',
+    cursor: 'default'
   }
 }))
 

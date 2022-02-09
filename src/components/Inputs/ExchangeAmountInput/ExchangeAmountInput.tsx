@@ -113,7 +113,11 @@ export const AmountInput: React.FC<IProps> = ({
             balance={balance}
           />
         </Box>
-        <Typography className={classes.walletBalanace}>-</Typography>
+
+        <Typography className={classes.noData}>
+          <div className={classes.noDataIcon}>?</div>No data
+        </Typography>
+        {/* <Typography className={classes.walletBalanace}>-</Typography> */}
       </Box>
     </>
   )
