@@ -7,9 +7,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 'calc(50vw - 231px)',
     [theme.breakpoints.down('xs')]: {
       marginLeft: 'calc(50vw - 206px)'
-    }
+    },
+    overflowY: 'hidden'
   },
   container: {
+    overflows: 'hidden',
     padding: 30,
     backgroundColor: colors.invariant.component,
     borderRadius: 20,
@@ -56,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: colors.invariant.newDark,
     borderRadius: 15,
     padding: '18px 10px 17px 10px',
-    marginBottom: 15,
+    marginBottom: 7,
     '&::placeholder': {
       color: colors.invariant.light,
       ...newTypography.body1
@@ -82,20 +84,30 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.body2
   },
   commonTokensList: {
-    display: 'flex'
-  },
-  commonTokenItem: {
     display: 'flex',
-    cursor: 'pointer',
+    flexFlow: 'row wrap'
+  },
+
+  commonTokenItem: {
+    minWidth: 'auto',
+    display: 'flex',
+    cursor: 'default',
     justifyContent: 'center',
     alignItems: 'center',
-    border: '1px solid',
-    borderColor: colors.invariant.componentOut2,
-    borderRadius: 3,
-    padding: '7px 7px 2px 7px',
-    marginRight: 10,
+    border: `1px solid ${colors.invariant.newDark}`,
+    borderColor: colors.invariant.newDark,
+    background: colors.invariant.newDark,
+    borderRadius: 15,
+    padding: '4px 10px 2px 15px',
+    marginTop: 7,
+    marginRight: 7,
     '& p': {
       ...typography.body2
+    },
+
+    '&:hover': {
+      border: `1px solid ${colors.invariant.light}`,
+      background: colors.invariant.light
     }
   },
   commonTokenIcon: {
@@ -126,7 +138,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 431,
     height: 70,
     cursor: 'pointer',
-    padding: '9px 0px 9px 12px',
+    padding: '9px 9px 9px 9px',
 
     '& > p': {
       whiteSpace: 'nowrap',
@@ -139,20 +151,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenName: {
     color: colors.white.main,
-    ...typography.heading4,
+    ...newTypography.heading4,
     lineHeight: '20px'
   },
   tokenDescrpiption: {
-    color: colors.white.main,
-    ...typography.label1,
+    color: colors.invariant.lightGrey,
+    ...newTypography.caption1,
     lineHeight: '16px',
     whiteSpace: 'nowrap'
   },
+  tokenBalanceStatus: {
+    color: colors.invariant.lightGrey,
+    ...newTypography.body1,
+    paddingRight: 15
+  },
+
   tokenIcon: {
     width: 30,
     height: 30,
-    marginLeft: 6,
-    marginRight: 14,
+    marginRight: 40,
     borderRadius: '50%',
     boxShadow: '0px 0px 10px rgba(216, 255, 181, 0.5)'
   },
@@ -162,16 +179,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap'
   },
   searchIcon: {
-    color: colors.invariant.componentOut3,
-    margin: 10
+    color: colors.invariant.componentOut3
   },
+
+  hideScroll: {
+    '& > *:first-child': {
+      paddingRight: '20px'
+    }
+  },
+
   scrollbarThumb: {
-    background: colors.invariant.accent1,
+    background: '#ef84f5',
     borderRadius: 10,
     width: 5
   },
   scrollbarTrack: {
-    background: '#2D2932',
+    background: '#111931',
     borderRadius: 10,
     height: '98%',
     margin: 5,
@@ -223,16 +246,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.componentOut1,
     minWidth: 100,
     height: 102,
-    padding: 4,
-    overflowY: 'hidden'
+    padding: 4
   },
   filterListText: {
     borderRadius: 5,
     background: colors.invariant.componentOut1,
     minWidth: 115,
     height: 102,
-    padding: 4,
-    overflowY: 'hidden'
+    padding: 4
   },
   filterItem: {
     margin: '2px 0',

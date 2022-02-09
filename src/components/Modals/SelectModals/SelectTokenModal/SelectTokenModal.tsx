@@ -4,10 +4,11 @@ import CustomScrollbar from '../CustomScrollbar'
 import searchIcon from '@static/svg/lupa.svg'
 import { FixedSizeList as List } from 'react-window'
 import useStyles from '../style'
+// import icons from '@static/icons'
 
 export interface ISelectTokenModal {
   tokens: Array<{ symbol: string; name: string; logoURI: string }>
-  // commonTokens: Array<{ symbol: string, name: string, logoURI: string }>
+  // commonTokens: Array<{ symbol: string; name: string; logoURI: string }>
   open: boolean
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
@@ -110,15 +111,16 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
         </Grid>
         {/* TODO: create a common tokens list */}
         {/* <Grid container className={classes.commonTokens}>
-          <Typography component='h2' className={classes.commonTokensHeader}>Commonly used</Typography>
           <Grid className={classes.commonTokensList}>
-            {commonTokens.map((token) => (
-              <Box className={classes.commonTokenItem}
+            {commonTokens.map(token => (
+              <Box
+                className={classes.commonTokenItem}
                 key={token.symbol}
-                onClick={() => {
-                  onSelect(tokenIndex(token ? token.symbol : ''))
-                  handleClose()
-                }} >
+                // onClick={() => {
+                //   onSelect(tokenIndex(token ? token.symbol : ''))
+                //   handleClose()
+                // }}
+              >
                 <CardMedia
                   className={classes.commonTokenIcon}
                   image={icons[token.symbol] ?? icons.USDT}
@@ -157,7 +159,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                     <Typography className={classes.tokenName}>{token.symbol}</Typography>
                     <Typography className={classes.tokenDescrpiption}>{token.name}</Typography>
                   </Grid>
-                  <Typography>Balance: -</Typography>
+                  <Typography className={classes.tokenBalanceStatus}>Balance: -</Typography>
                 </Grid>
               )
             }}

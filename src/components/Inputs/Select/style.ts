@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'Mukta',
     backgroundColor: colors.invariant.light,
     ...newTypography.body3,
-    padding: 5,
+    padding: 15,
 
     filter: 'brightness(0.8)',
 
@@ -32,14 +32,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.white.main
   },
   icon: {
-    marginLeft: 8,
+    marginRight: 5,
     minWidth: 20,
     height: 20,
     borderRadius: '100%'
   },
   endIcon: {
-    marginLeft: 8,
-    marginRight: 8
+    marginLeft: 8
   }
 }))
 
