@@ -207,7 +207,11 @@ export const spacingMultiplicityLte = (arg: number, spacing: number): number => 
     return arg
   }
 
-  return arg >= 0 ? arg - (arg % spacing) : arg + (arg % spacing)
+  if (arg >= 0) {
+    return arg - (arg % spacing)
+  }
+
+  return arg - (spacing - (Math.abs(arg) % spacing))
 }
 
 export const spacingMultiplicityGte = (arg: number, spacing: number): number => {
@@ -215,7 +219,11 @@ export const spacingMultiplicityGte = (arg: number, spacing: number): number => 
     return arg
   }
 
-  return arg >= 0 ? arg + (arg % spacing) : arg - (arg % spacing)
+  if (arg >= 0) {
+    return arg + (spacing - (arg % spacing))
+  }
+
+  return arg + (Math.abs(arg) % spacing)
 }
 
 export const createLiquidityPlot = (
