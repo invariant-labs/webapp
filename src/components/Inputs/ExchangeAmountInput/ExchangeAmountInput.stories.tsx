@@ -53,6 +53,7 @@ storiesOf('inputs/exchangeAmount', module)
         tokens={tokens}
         current={tokens[0]}
         onSelect={(chosen: string) => action(`chosen: ${chosen}`)}
+        disabled={false}
       />
     </div>
   ))

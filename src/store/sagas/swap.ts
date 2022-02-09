@@ -18,7 +18,8 @@ export function* handleSwapWithSOL(): Generator {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const networkType = yield* select(network)
-    const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex } = yield* select(swap)
+    const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
+      yield* select(swap)
 
     const wallet = yield* call(getWallet)
     const tokensAccounts = yield* select(accounts)
@@ -34,7 +35,7 @@ export function* handleSwapWithSOL(): Generator {
       return
     }
 
-    const isXtoY = tokenFrom.equals(swapPool.tokenX) && tokenTo.equals(swapPool.tokenY)
+    const isXtoY = tokenFrom.equals(swapPool.tokenX)
 
     const wrappedSolAccount = Keypair.generate()
 
@@ -128,7 +129,7 @@ export function* handleSwapWithSOL(): Generator {
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
       accountY: isXtoY ? toAddress : fromAddress,
-      byAmountIn: true,
+      byAmountIn: byAmountIn,
       owner: wallet.publicKey
     })
     const swapBlockhash = yield* call([connection, connection.getRecentBlockhash])
@@ -217,7 +218,8 @@ export function* handleSwap(): Generator {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const networkType = yield* select(network)
-    const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex } = yield* select(swap)
+    const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
+      yield* select(swap)
 
     if (
       allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
@@ -239,7 +241,7 @@ export function* handleSwap(): Generator {
       return
     }
 
-    const isXtoY = tokenFrom.equals(swapPool.tokenX) && tokenTo.equals(swapPool.tokenY)
+    const isXtoY = tokenFrom.equals(swapPool.tokenX)
 
     let fromAddress = tokensAccounts[tokenFrom.toString()]
       ? tokensAccounts[tokenFrom.toString()].address
@@ -261,7 +263,7 @@ export function* handleSwap(): Generator {
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
       accountY: isXtoY ? toAddress : fromAddress,
-      byAmountIn: true,
+      byAmountIn: byAmountIn,
       owner: wallet.publicKey
     })
     const connection = yield* call(getConnection)

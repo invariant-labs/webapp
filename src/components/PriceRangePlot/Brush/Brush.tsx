@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { CustomLayerProps } from '@nivo/line'
 import { colors } from '@static/theme'
-import React, { useState, useEffect, useRef, PointerEventHandler } from 'react'
+import React, { useState, useEffect, useRef, PointerEventHandler, TouchEventHandler } from 'react'
 import useStyles from './style'
 import { MaxHandle, MinHandle } from './svgHandles'
 
@@ -52,6 +52,19 @@ export const Handle: React.FC<HandleProps> = ({
     }
   }
 
+  const startTouchDrag: TouchEventHandler<SVGRectElement> = event => {
+    onStart()
+    setDrag(true)
+    if (handleRef.current) {
+      const CTM = handleRef.current.getScreenCTM()
+
+      if (CTM) {
+        const ctmX = (event.targetTouches[0].clientX - CTM.e) / CTM.a
+        setOffset(ctmX - currentPosition)
+      }
+    }
+  }
+
   const endDrag = () => {
     if (drag) {
       setDrag(false)
@@ -67,6 +80,22 @@ export const Handle: React.FC<HandleProps> = ({
 
       if (CTM) {
         const x = (event.clientX - CTM.e) / CTM.a - offset
+
+        if (x >= minPosition && x <= maxPosition) {
+          setCurrentPosition(x)
+        }
+      }
+    }
+  }
+
+  const dragTouchHandler: TouchEventHandler<SVGRectElement> = event => {
+    if (drag && handleRef.current) {
+      event.preventDefault()
+      event.stopPropagation()
+      const CTM = handleRef.current.getScreenCTM()
+
+      if (CTM) {
+        const x = (event.targetTouches[0].clientX - CTM.e) / CTM.a - offset
 
         if (x >= minPosition && x <= maxPosition) {
           setCurrentPosition(x)
@@ -109,10 +138,14 @@ export const Handle: React.FC<HandleProps> = ({
         y={0}
         width={drag ? plotWidth : 42}
         height={height}
-        onPointerDown={!disabled ? startDrag : undefined}
-        onPointerUp={!disabled ? endDrag : undefined}
-        onPointerMove={!disabled ? dragHandler : undefined}
-        onPointerLeave={!disabled ? endDrag : undefined}
+        onMouseDown={!disabled ? startDrag : undefined}
+        onMouseUp={!disabled ? endDrag : undefined}
+        onMouseMove={!disabled ? dragHandler : undefined}
+        onMouseLeave={!disabled ? endDrag : undefined}
+        onTouchStart={!disabled ? startTouchDrag : undefined}
+        onTouchEnd={!disabled ? endDrag : undefined}
+        onTouchMove={!disabled ? dragTouchHandler : undefined}
+        onTouchCancel={!disabled ? endDrag : undefined}
         fill='transparent'
       />
     </>
