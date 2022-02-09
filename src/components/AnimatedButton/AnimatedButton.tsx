@@ -64,6 +64,15 @@ const AnimatedButton: React.FC<Props> = ({
     return ''
   }
 
+  const getContent = () => {
+    if (content === 'Connect a wallet') {
+      return `${classes.buttonSelectDisabled}`
+    }
+    if (content === 'Swap tokens') {
+      return `${classes.ButtonSwapActive}`
+    }
+  }
+
   return (
     <div>
       <Button
@@ -77,8 +86,7 @@ const AnimatedButton: React.FC<Props> = ({
             progress === 'failed'
             ? classes.buttonRelease
             : undefined,
-          content === 'Connect a wallet' && classes.buttonSelectDisabled,
-          content === 'Swap tokens' && classes.ButtonSwapActive,
+          getContent(),
           className
         )}
         onClick={onClick}>
