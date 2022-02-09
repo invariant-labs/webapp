@@ -143,7 +143,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     margin: '5px 0 7px 0px',
     position: 'relative',
-    cursor: 'pointer',
+    cursor: 'default',
+    filter: 'brightness(0.9)',
+
     '& :hover , & :hover > p , & :hover > div ': {
       filter: 'brightness(1.2)'
     }
