@@ -97,6 +97,16 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     setRightInputRounded((+val).toFixed(12))
   }
 
+  const onLeftInputChange = (val: string) => {
+    setLeftInput(val)
+    setLeftInputRounded(val)
+  }
+
+  const onRightInputChange = (val: string) => {
+    setRightInput(val)
+    setRightInputRounded(val)
+  }
+
   const changeRangeHandler = (left: number, right: number) => {
     setLeftRange(left)
     setRightRange(right)
@@ -169,7 +179,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             tokenFromSymbol={tokenASymbol}
             tokenToSymbol={tokenBSymbol}
             currentValue={leftInputRounded}
-            setValue={setLeftInputValues}
+            setValue={onLeftInputChange}
             decreaseValue={() => {
               const newLeft = isXtoY
                 ? Math.max(minSpacingMultiplicity(tickSpacing), leftRange - tickSpacing)
@@ -203,7 +213,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             tokenFromSymbol={tokenASymbol}
             tokenToSymbol={tokenBSymbol}
             currentValue={rightInputRounded}
-            setValue={setRightInputValues}
+            setValue={onRightInputChange}
             decreaseValue={() => {
               const newRight = isXtoY
                 ? Math.max(rightRange - tickSpacing, leftRange + tickSpacing)

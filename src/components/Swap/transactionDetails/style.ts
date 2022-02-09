@@ -3,10 +3,10 @@ import { colors, typography } from '@static/theme'
 
 export const useStyles = makeStyles((theme: Theme) => ({
   transactionDetailsInfo: {
-    top: 5,
-    left: -252,
+    top: 0,
+    left: 0,
     opacity: 1,
-    zIndex: 4,
+    zIndex: 1000,
     transition: 'all .3s',
     transitionDelay: '.1s',
     backgroundColor: colors.invariant.component,

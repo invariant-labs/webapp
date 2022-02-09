@@ -6,7 +6,6 @@ const useStyles = makeStyles(() => ({
     background: colors.invariant.newDark,
     color: colors.invariant.light,
     borderRadius: 20,
-    padding: '10px 15px 0  15px ',
     ...newTypography.heading2,
     width: '100%',
     textAlign: 'right',
@@ -36,7 +35,6 @@ const useStyles = makeStyles(() => ({
 
   input: {
     textAlign: 'right',
-    paddingTop: 4,
     color: colors.white.main,
     '& ::placeholder': {
       textAlign: 'right'
@@ -70,6 +68,10 @@ const useStyles = makeStyles(() => ({
   },
   walletBalanace: {
     color: colors.invariant.lightGrey
+  },
+  exchangeContainer: {
+    padding: '10px 15px 0  15px ',
+    display: 'flex'
   }
 }))
 

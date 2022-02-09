@@ -9,9 +9,10 @@ import { Decimal } from '@invariant-labs/sdk/lib/market'
 interface IProps {
   open: boolean
   fee: { v: BN }
-  exchangeRate: { val: string; symbol: string }
+  exchangeRate: { val: number; symbol: string }
   anchorTransaction: HTMLButtonElement | null
   handleCloseTransactionDetails: () => void
+  decimal: number
 }
 
 const percentValueDisplay = (amount: Decimal): { value: BN; decimal: number } => {
@@ -29,6 +30,7 @@ const TransactionDetails: React.FC<IProps> = ({
   fee,
   exchangeRate,
   anchorTransaction,
+  decimal,
   handleCloseTransactionDetails
 }) => {
   const percent = percentValueDisplay(fee)
@@ -64,7 +66,7 @@ const TransactionDetails: React.FC<IProps> = ({
           <Typography component='p'>
             Exchange rate:{' '}
             <Typography component='span'>
-              {!exchangeRate.val ? 0 : exchangeRate.val} {exchangeRate.symbol}
+              {exchangeRate.val.toFixed(decimal)} {exchangeRate.symbol}
             </Typography>
           </Typography>
         </Grid>
@@ -72,4 +74,5 @@ const TransactionDetails: React.FC<IProps> = ({
     </Popover>
   )
 }
+
 export default TransactionDetails

@@ -20,6 +20,7 @@ import { Tick } from '@invariant-labs/sdk/src/market'
 import { PoolWithAddress } from '@reducers/pools'
 import ExchangeRate from './ExchangeRate/ExchangeRate'
 import TransactionDetails from './transactionDetails/TransactionDetails'
+
 export interface SwapToken {
   balance: BN
   decimals: number
@@ -95,7 +96,6 @@ export const Swap: React.FC<ISwap> = ({
   const [anchorTransaction, setAnchorTransaction] = React.useState<HTMLButtonElement | null>(null)
   const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [amountTo, setAmountTo] = React.useState<string>('')
-  const [swapRate, setSwapRate] = React.useState<number>(0)
   const [swap, setSwap] = React.useState<boolean | null>(null)
   const [tokensY, setTokensY] = React.useState<SwapToken[]>(tokens)
   const [rotates, setRotates] = React.useState<number>(0)
@@ -109,7 +109,8 @@ export const Swap: React.FC<ISwap> = ({
     amountOut: BN
     simulateSuccess: boolean
     poolIndex: number
-  }>({ amountOut: new BN(0), simulateSuccess: true, poolIndex: 0 })
+    AmountOutWithFee: BN
+  }>({ amountOut: new BN(0), simulateSuccess: true, poolIndex: 0, AmountOutWithFee: new BN(0) })
 
   const timeoutRef = useRef<number>(0)
 
@@ -126,13 +127,13 @@ export const Swap: React.FC<ISwap> = ({
     if (inputRef === inputTarget.FROM) {
       simulateWithTimeout()
     }
-  }, [amountFrom, tokenToIndex, tokenFromIndex, slippTolerance])
+  }, [amountFrom, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
 
   useEffect(() => {
     if (inputRef === inputTarget.TO) {
       simulateWithTimeout()
     }
-  }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance])
+  }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
 
   const simulateWithTimeout = () => {
     inputRef === inputTarget.FROM ? setAmountTo('') : setAmountFrom('')
@@ -199,17 +200,17 @@ export const Swap: React.FC<ISwap> = ({
         knownPrice = new BN(sqrtPricePow * 10 ** decimalDiff)
       }
       if (inputRef === inputTarget.FROM) {
-        swapRate = +printBN(simulateResult.amountOut, assetFor.decimals) / Number(amountFrom)
+        swapRate = +printBN(simulateResult.AmountOutWithFee, assetFor.decimals) / Number(amountFrom)
       } else {
-        swapRate = Number(amountTo) / +printBN(simulateResult.amountOut, assetFor.decimals)
+        swapRate = Number(amountTo) / +printBN(simulateResult.AmountOutWithFee, assetIn.decimals)
       }
 
       amountOut = Number(printBN(simulateResult.amountOut, assetFor.decimals))
-      setSwapRate(swapRate)
     }
     return {
       amountOut: amountOut.toFixed(assetFor.decimals),
-      knownPrice: printBNtoBN(knownPrice.toString(), 0)
+      knownPrice: printBNtoBN(knownPrice.toString(), 0),
+      swapRate: swapRate
     }
   }
 
@@ -220,6 +221,7 @@ export const Swap: React.FC<ISwap> = ({
         return key === pair.address.toString()
       })
       if (indexPool.length === 0) {
+        setAmountTo('')
         return
       }
       if (inputRef === inputTarget.FROM) {
@@ -239,7 +241,7 @@ export const Swap: React.FC<ISwap> = ({
           )
         )
       } else if (inputRef === inputTarget.TO) {
-        const simulatePrice = getKnownPrice(tokens[tokenToIndex], tokens[tokenFromIndex])
+        const simulatePrice = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex])
         setSimulateResult(
           await handleSimulate(
             pools,
@@ -305,6 +307,14 @@ export const Swap: React.FC<ISwap> = ({
 
     return 'Swap tokens'
   }
+  const activeSwapDetails = () => {
+    return (
+      getStateMessage() !== 'Insufficient volume' &&
+      getStateMessage() !== 'Exceed single swap limit (split transaction into several)' &&
+      getStateMessage() !== 'No route found' &&
+      getStateMessage() !== 'Insufficient balance'
+    )
+  }
   const setSlippage = (slippage: string): void => {
     setSlippTolerance(slippage)
   }
@@ -321,7 +331,9 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   const handleOpenTransactionDetails = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (tokenFromIndex === null || tokenToIndex === null) return
+    if (tokenFromIndex === null || tokenToIndex === null || getStateMessage() !== 'Swap tokens') {
+      return
+    }
 
     setAnchorTransaction(event.currentTarget)
     blurContent()
@@ -471,54 +483,49 @@ export const Swap: React.FC<ISwap> = ({
                   return name === token.symbol
                 })
               )
-              updateEstimatedAmount()
             }}
             disabled={tokenFromIndex === null}
           />
         </Box>
-        <Box>
-          <Box className={classes.transactionDetails}>
-            <button
-              onClick={handleOpenTransactionDetails}
-              className={classes.HiddenTransactionButton}>
-              <Grid className={classes.transactionDetailsWrapper}>
-                <Typography className={classes.transactionDetailsHeader}>
-                  See transaction details
-                </Typography>
-                <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }} />
-              </Grid>
-            </button>
-
+        <Box className={classes.transactionDetails}>
+          <button
+            onClick={handleOpenTransactionDetails}
+            className={classes.HiddenTransactionButton}>
+            <Grid className={classes.transactionDetailsWrapper}>
+              <Typography className={classes.transactionDetailsHeader}>
+                See transaction details
+              </Typography>
+              <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }} />
+            </Grid>
+          </button>
+          <Box className={classes.transtactionData}>
             {tokenFromIndex !== null && tokenToIndex !== null ? (
               <TransactionDetails
-                handleCloseTransactionDetails={handleCloseTransactionDetails}
-                anchorTransaction={anchorTransaction}
-                open={detailsOpen}
+                open={detailsOpen && activeSwapDetails() && getStateMessage() !== 'Loading'}
                 fee={{
                   v: pools[simulateResult.poolIndex].fee.v
                 }}
                 exchangeRate={{
-                  val: swapRate.toFixed(tokens[tokenToIndex].decimals),
+                  val: getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate,
                   symbol: tokens[tokenToIndex].symbol
                 }}
+                anchorTransaction={anchorTransaction}
+                handleCloseTransactionDetails={handleCloseTransactionDetails}
+                decimal={tokens[tokenToIndex].decimals}
               />
-            ) : null}
-            <Box className={classes.transtactionData}>
-              {tokenFromIndex !== null &&
-              tokenToIndex !== null &&
-              getStateMessage() !== 'Insufficient volume' &&
-              getStateMessage() !== 'Exceed single swap limit (split transaction into several)' &&
-              getStateMessage() !== 'No route found' ? (
-                <ExchangeRate
-                  tokenFromSymbol={tokens[tokenFromIndex].symbol}
-                  tokenToSymbol={tokens[tokenToIndex].symbol}
-                  amount={swapRate}
-                  tokenToDecimals={tokens[tokenToIndex].decimals}
-                  loading={getStateMessage() === 'Loading'}></ExchangeRate>
-              ) : (
-                'No Data'
-              )}
-            </Box>
+            ) : (
+              'No data'
+            )}
+            {tokenFromIndex !== null && tokenToIndex !== null && activeSwapDetails() ? (
+              <ExchangeRate
+                tokenFromSymbol={tokens[tokenFromIndex].symbol}
+                tokenToSymbol={tokens[tokenToIndex].symbol}
+                amount={getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate}
+                tokenToDecimals={tokens[tokenToIndex].decimals}
+                loading={getStateMessage() === 'Loading'}></ExchangeRate>
+            ) : (
+              'No data'
+            )}
           </Box>
         </Box>
         <AnimatedButton

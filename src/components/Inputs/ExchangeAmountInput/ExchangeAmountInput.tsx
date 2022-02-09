@@ -1,4 +1,4 @@
-import { Input, Box, Typography } from '@material-ui/core'
+import { Input, Box, Typography, Grid } from '@material-ui/core'
 import React, { CSSProperties, useRef } from 'react'
 import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
@@ -42,17 +42,13 @@ export const AmountInput: React.FC<IProps> = ({
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const onlyNumbersRegex = /^\d*\.?\d*$/
-    const test = `^\\d*\\.?\\d{0,${decimal}}$`
-    const regex = new RegExp(test, 'g')
+    const trimDecimal = `^\\d*\\.?\\d{0,${decimal}}$`
+    const regex = new RegExp(trimDecimal, 'g')
     if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value
       const caretPosition = e.target.selectionStart
 
       let parsed = e.target.value
-      const zerosRegex = /^0+\d+\.?\d*$/
-      if (zerosRegex.test(parsed)) {
-        parsed = parsed.replace(/^0+/, '')
-      }
 
       const dotRegex = /^\.\d*$/
       if (dotRegex.test(parsed)) {
@@ -81,27 +77,27 @@ export const AmountInput: React.FC<IProps> = ({
 
   return (
     <>
-      <Input
-        inputRef={inputRef}
-        error={!!error}
-        className={classNames(classes.amountInput, className)}
-        classes={{ input: classes.input }}
-        style={style}
-        type={'text'}
-        value={value}
-        disableUnderline={true}
-        placeholder={placeholder}
-        onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-        startAdornment={
-          <Select
-            centered={true}
-            tokens={tokens}
-            onSelect={onSelect}
-            current={current}
-            className={classes.select}
-          />
-        }
-      />
+      <Grid container alignItems='center' wrap='nowrap' className={classes.exchangeContainer}>
+        <Select
+          centered={true}
+          tokens={tokens}
+          onSelect={onSelect}
+          current={current}
+          className={classes.select}
+        />
+        <Input
+          inputRef={inputRef}
+          error={!!error}
+          className={classNames(classes.amountInput, className)}
+          classes={{ input: classes.input }}
+          style={style}
+          type={'text'}
+          value={value}
+          disableUnderline={true}
+          placeholder={placeholder}
+          onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
+        />
+      </Grid>
       <Box className={classes.container}>
         <Box className={classes.BalanceContainer}>
           <Typography className={classes.BalanceTypography}>
