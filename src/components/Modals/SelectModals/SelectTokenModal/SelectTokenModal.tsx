@@ -94,7 +94,6 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
         vertical: 'top',
         horizontal: 'center'
       }}>
-      {' '}
       <Grid container className={classes.container}>
         <Button className={classes.selectTokenClose} onClick={handleClose}></Button>
         <Grid className={classes.selectTokenHeader}>
@@ -137,16 +136,13 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
             itemCount={filteredTokens.length}
             outerElementType={CustomScrollbarsVirtualList}
             outerRef={outerRef}>
-            {({ index, style }) => {
+            {({ index }) => {
               const token = filteredTokens[index]
               return (
                 <Grid
                   container
                   className={classes.tokenItem}
-                  style={{
-                    ...style,
-                    width: 'calc(100% - 16px)'
-                  }}
+                  style={{ width: 'calc(100% - 16px)' }}
                   alignItems='center'
                   wrap='nowrap'
                   onClick={() => {
@@ -157,10 +153,11 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                   <Grid item>
                     <CardMedia className={classes.tokenIcon} image={token.logoURI} />{' '}
                   </Grid>
-                  <Grid item>
+                  <Grid container className={classes.tokenContainer}>
                     <Typography className={classes.tokenName}>{token.symbol}</Typography>
                     <Typography className={classes.tokenDescrpiption}>{token.name}</Typography>
                   </Grid>
+                  <Typography>Balance: -</Typography>
                 </Grid>
               )
             }}

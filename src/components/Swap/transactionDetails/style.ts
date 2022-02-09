@@ -3,27 +3,61 @@ import { colors, typography } from '@static/theme'
 
 export const useStyles = makeStyles((theme: Theme) => ({
   transactionDetailsInfo: {
-    position: 'absolute',
     top: 5,
     left: -252,
     opacity: 1,
-    zIndex: 1,
+    zIndex: 4,
     transition: 'all .3s',
     transitionDelay: '.1s',
-    backgroundColor: colors.invariant.componentIn2,
+    backgroundColor: colors.invariant.component,
     width: 250,
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
     color: colors.white.main,
-    padding: 16,
-    marginBottom: 16,
-    borderRadius: 5,
+    padding: 10,
+    borderRadius: 20,
     [theme.breakpoints.down('sm')]: {
       left: 105
     },
     '& p': {
       ...typography.body1
+    }
+  },
+  closeTransactionContainer: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+
+  closeTransactionButton: {
+    position: 'relative',
+    minWidth: 0,
+    height: 20,
+    marginLeft: 20,
+    background: 'none',
+    '&:hover': {
+      background: 'none !important'
+    },
+    '&:after': {
+      content: '"\u2715"',
+      fontSize: 25,
+      position: 'absolute',
+      color: colors.invariant.lightInfoText,
+      top: '90%',
+      right: '0%',
+      transform: 'translateY(-50%)'
+    }
+  },
+
+  papper: {
+    position: 'absolute',
+    borderRadius: 20,
+    left: 252
+  },
+  root: {
+    background: 'transparent',
+    '& > *': {
+      backgroundColor: 'transparent'
     }
   },
   detailsInfoWrapper: {

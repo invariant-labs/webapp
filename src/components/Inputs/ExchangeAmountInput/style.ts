@@ -6,9 +6,10 @@ const useStyles = makeStyles(() => ({
     background: colors.invariant.newDark,
     color: colors.invariant.light,
     borderRadius: 20,
-    padding: '10px 15px 0  8px ',
+    padding: '10px 15px 0  15px ',
     ...newTypography.heading2,
     width: '100%',
+    textAlign: 'right',
     transition: 'all .4s',
     '& ::placeholder': {
       textAlign: 'right'
@@ -32,31 +33,40 @@ const useStyles = makeStyles(() => ({
   select: {
     marginRight: 20
   },
+
   input: {
+    textAlign: 'right',
     paddingTop: 4,
-    '&:focus': {
-      color: colors.white.main
+    color: colors.white.main,
+    '& ::placeholder': {
+      textAlign: 'right'
     }
   },
   label: {
     top: -1
   },
+
   BalanceContainer: {
     display: 'flex',
-    alignItems: 'center',
-    width: '100%'
+    alignItems: 'center'
   },
   BalanceTypography: {
+    cursor: 'default !important',
     color: colors.invariant.lightGrey,
     ...newTypography.caption3,
-    marginLeft: '10px',
-    marginRight: '10px'
+    marginLeft: 20,
+    marginRight: 3
   },
   container: {
     marginRight: '10px',
     display: 'flex',
     justifyContent: 'space-between',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    filter: 'brightness(0.8)',
+
+    '& :hover > button , & :hover > p': {
+      filter: 'brightness(1.5)'
+    }
   },
   walletBalanace: {
     color: colors.invariant.lightGrey

@@ -19,6 +19,7 @@ import useStyles from './style'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PoolWithAddress } from '@reducers/pools'
 import ExchangeRate from './ExchangeRate/ExchangeRate'
+import TransactionDetails from './transactionDetails/TransactionDetails'
 export interface SwapToken {
   balance: BN
   decimals: number
@@ -91,6 +92,7 @@ export const Swap: React.FC<ISwap> = ({
 
   const [tokenToIndex, setTokenToIndex] = React.useState<number | null>(null)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+  const [anchorTransaction, setAnchorTransaction] = React.useState<HTMLButtonElement | null>(null)
   const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [amountTo, setAmountTo] = React.useState<string>('')
   const [swapRate, setSwapRate] = React.useState<number>(0)
@@ -275,7 +277,7 @@ export const Swap: React.FC<ISwap> = ({
       return 'Connect a wallet'
     }
     if (tokenFromIndex === null || tokenToIndex === null) {
-      return 'Choose pair'
+      return 'Select a token'
     }
     if (!poolInit || throttle) {
       return 'Loading'
@@ -313,13 +315,22 @@ export const Swap: React.FC<ISwap> = ({
     setSettings(true)
   }
 
-  const hoverDetails = () => {
-    setDetailsOpen(!detailsOpen)
-  }
-
   const handleCloseSettings = () => {
     unblurContent()
     setSettings(false)
+  }
+
+  const handleOpenTransactionDetails = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (tokenFromIndex === null || tokenToIndex === null) return
+
+    setAnchorTransaction(event.currentTarget)
+    blurContent()
+    setDetailsOpen(!detailsOpen)
+  }
+
+  const handleCloseTransactionDetails = () => {
+    unblurContent()
+    setDetailsOpen(!detailsOpen)
   }
 
   return (
@@ -340,7 +351,6 @@ export const Swap: React.FC<ISwap> = ({
         </Grid>
       </Grid>
       <Grid container className={classes.root} direction='column'>
-        <Box className={classes.tokenComponentTextContainer}></Box>
         <Box
           className={
             swap
@@ -349,7 +359,7 @@ export const Swap: React.FC<ISwap> = ({
           }>
           <ExchangeAmountInput
             value={amountFrom}
-            Balance={
+            balance={
               tokenFromIndex !== null
                 ? printBN(
                     tokens[tokenFromIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
@@ -421,7 +431,7 @@ export const Swap: React.FC<ISwap> = ({
           }>
           <ExchangeAmountInput
             value={amountTo}
-            Balance={
+            balance={
               tokenToIndex !== null
                 ? printBN(
                     tokens[tokenToIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
@@ -468,15 +478,31 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
         <Box>
           <Box className={classes.transactionDetails}>
-            <Grid
-              className={classes.transactionDetailsWrapper}
-              onMouseEnter={hoverDetails}
-              onMouseLeave={hoverDetails}>
-              <Typography className={classes.transactionDetailsHeader}>
-                See transaction details
-              </Typography>
-              <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }} />
-            </Grid>
+            <button
+              onClick={handleOpenTransactionDetails}
+              className={classes.HiddenTransactionButton}>
+              <Grid className={classes.transactionDetailsWrapper}>
+                <Typography className={classes.transactionDetailsHeader}>
+                  See transaction details
+                </Typography>
+                <CardMedia image={infoIcon} style={{ width: 10, height: 10, marginLeft: 4 }} />
+              </Grid>
+            </button>
+
+            {tokenFromIndex !== null && tokenToIndex !== null ? (
+              <TransactionDetails
+                handleCloseTransactionDetails={handleCloseTransactionDetails}
+                anchorTransaction={anchorTransaction}
+                open={detailsOpen}
+                fee={{
+                  v: pools[simulateResult.poolIndex].fee.v
+                }}
+                exchangeRate={{
+                  val: swapRate.toFixed(tokens[tokenToIndex].decimals),
+                  symbol: tokens[tokenToIndex].symbol
+                }}
+              />
+            ) : null}
             <Box className={classes.transtactionData}>
               {tokenFromIndex !== null &&
               tokenToIndex !== null &&

@@ -19,7 +19,7 @@ interface IProps {
   tokens: Array<{ symbol: string; name: string; logoURI: string }>
   onSelect: (name: string) => void
   disabled: boolean
-  Balance?: string | undefined
+  balance?: string | undefined
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -35,7 +35,7 @@ export const AmountInput: React.FC<IProps> = ({
   tokens,
   onSelect,
   disabled,
-  Balance
+  balance
 }) => {
   const classes = useStyles()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -77,6 +77,8 @@ export const AmountInput: React.FC<IProps> = ({
     }
   }
 
+  const tokenIcon = !current ? null : current.symbol ?? current.symbol
+
   return (
     <>
       <Input
@@ -102,7 +104,10 @@ export const AmountInput: React.FC<IProps> = ({
       />
       <Box className={classes.container}>
         <Box className={classes.BalanceContainer}>
-          <Typography className={classes.BalanceTypography}>Balance: {Balance}</Typography>
+          <Typography className={classes.BalanceTypography}>
+            Balance: {balance && balance.length > 5 ? `${balance.substring(0, 4)}. ` : balance}{' '}
+            {tokenIcon}
+          </Typography>
           <OutlinedButton
             name='max'
             color='primary'

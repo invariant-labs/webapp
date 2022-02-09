@@ -3,18 +3,18 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
   general: {
+    marginLeft: 5,
+    cursor: 'default !important',
     minWidth: 30,
     height: 15,
     borderRadius: 3,
     textAlign: 'center',
     textTransform: 'none',
     ...typography.body1,
-    // backgroundColor: colors.invariant.accent1,
-    background: colors.invariant.green,
-
+    backgroundColor: `${colors.invariant.green} !important`,
     padding: '10px 14px',
     '&:hover': {
-      backgroundColor: colors.invariant.accent2
+      backgroundColor: colors.invariant.green
     }
   },
   disabled: {

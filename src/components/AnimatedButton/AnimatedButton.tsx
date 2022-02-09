@@ -77,6 +77,8 @@ const AnimatedButton: React.FC<Props> = ({
             progress === 'failed'
             ? classes.buttonRelease
             : undefined,
+          content === 'Connect a wallet' && classes.buttonSelectDisabled,
+          content === 'Swap tokens' && classes.ButtonSwapActive,
           className
         )}
         onClick={onClick}>

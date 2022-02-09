@@ -21,7 +21,7 @@ const Slippage: React.FC<Props> = ({
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const inputRef = React.useRef<HTMLInputElement>(null)
 
-  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const regex = /^\d*\.?\d*$/
     if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value
@@ -78,31 +78,37 @@ const Slippage: React.FC<Props> = ({
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'right'
-      }}
-    >
+      }}>
       <Grid container className={classes.detailsWrapper}>
         <Grid container>
           <Typography component='h2'>Swap Transaction Settings</Typography>
-          <Button className={classes.selectTokenClose} onClick={handleClose} ></Button>
+          <Button className={classes.selectTokenClose} onClick={handleClose} />
         </Grid>
         <Typography component='p'>Slippage tolerance:</Typography>
         <Box>
-          <input placeholder='1%' className={classes.detailsInfoForm} type={'text'} value={slippTolerance} onChange={(e) => {
-            allowOnlyDigitsAndTrimUnnecessaryZeros(e)
-            checkSlippage(e)
-          }}
-          ref={inputRef}
-          onBlur={() => {
-            setSlippTolerance(Number(slippTolerance).toFixed(2))
-            setSlippage(slippTolerance)
-          }}
+          <input
+            placeholder='1%'
+            className={classes.detailsInfoForm}
+            type={'text'}
+            value={slippTolerance}
+            onChange={e => {
+              allowOnlyDigitsAndTrimUnnecessaryZeros(e)
+              checkSlippage(e)
+            }}
+            ref={inputRef}
+            onBlur={() => {
+              setSlippTolerance(Number(slippTolerance).toFixed(2))
+              setSlippage(slippTolerance)
+            }}
           />
           <button
             className={classes.detailsInfoBtn}
             onClick={() => {
               setSlippTolerance(defaultSlippage)
               setSlippage(defaultSlippage)
-            }}>Auto</button>
+            }}>
+            Auto
+          </button>
         </Box>
       </Grid>
     </Popover>

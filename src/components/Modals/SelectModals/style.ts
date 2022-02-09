@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   popover: {
@@ -11,7 +11,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   container: {
     padding: 30,
-    backgroundColor: colors.invariant.componentOut4,
+    backgroundColor: colors.invariant.component,
+    borderRadius: 20,
     width: 500,
     [theme.breakpoints.down('xs')]: {
       width: 410
@@ -48,21 +49,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   selectTokenInput: {
-    backgroundColor: colors.invariant.componentIn1,
+    backgroundColor: colors.invariant.newDark,
     width: '100%',
     fontSize: 16,
     fontWeight: 600,
     position: 'relative',
     color: 'white',
-    border: '1px solid',
-    borderColor: colors.invariant.componentOut2,
-    borderRadius: 5,
+    border: `1px solid ${colors.invariant.newDark}`,
+    borderColor: colors.invariant.newDark,
+    borderRadius: 15,
     padding: '18px 10px 17px 10px',
     marginBottom: 15,
     '&::placeholder': {
-      color: colors.invariant.componentOut3,
-      fontSize: 16,
-      fontWeight: 600
+      color: colors.invariant.light,
+      ...newTypography.body1
     },
     '&:focus': {
       outline: 'none'
@@ -109,14 +109,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxShadow: '0px 0px 5px rgba(216, 255, 181, 0.5)'
   },
   tokenList: {
-    borderRadius: 10,
-    background: colors.invariant.componentIn1,
+    background: colors.invariant.component,
+    borderTop: `1px solid ${colors.invariant.light}`,
+
     width: 451,
     height: 352,
-    padding: 8,
-    overflowY: 'hidden'
+    padding: 8
   },
+
+  tokenContainer: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+
   tokenItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
     margin: '0 0 2px 0',
     borderRadius: 10,
     width: 431,
@@ -124,8 +132,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     padding: '9px 0px 9px 12px',
 
+    '& > p': {
+      whiteSpace: 'nowrap',
+      marginRight: 20
+    },
+
     '&:hover': {
-      background: colors.invariant.componentOut2
+      background: colors.invariant.light
     }
   },
   tokenName: {
@@ -157,9 +170,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 10
   },
   hideScroll: {
-    '& > *:first-child': {
-      paddingRight: '20px'
-    }
+    '& > *:first-child': {}
   },
   scrollbarThumb: {
     background: colors.invariant.accent1,

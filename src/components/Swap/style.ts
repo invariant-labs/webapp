@@ -53,10 +53,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
 
+  HiddenTransactionButton: {
+    background: 'none !important',
+    border: 'none'
+  },
+
   settingsIconBtn: {
     padding: 0,
     margin: 0,
-    minWidth: 'auto'
+    minWidth: 'auto',
+    background: 'none',
+    '& :hover': {
+      background: 'none'
+    }
   },
   slippage: {
     position: 'absolute'
@@ -113,7 +122,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     borderRadius: 100,
     '&:hover': {
-      backgroundColor: colors.invariant.componentOut3
+      backgroundColor: colors.invariant.light
     }
   },
 
@@ -122,7 +131,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     objectFit: 'contain',
     marginBlock: 13,
-    marginInline: 9,
+    marginInline: 6,
     transition: '.4s all'
   },
 
@@ -131,7 +140,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     margin: '5px 0 7px 0px',
-    position: 'relative'
+    position: 'relative',
+    cursor: 'pointer',
+    '& :hover , & :hover > p , & :hover > div ': {
+      filter: 'brightness(1.2)'
+    }
   },
   transactionDetailsWrapper: {
     backgroundColor: colors.invariant.light,
@@ -141,8 +154,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '10px',
     display: 'flex',
     alignItems: 'center',
+
     justifyContent: 'center',
-    '&:hover': {
+    '& :hover': {
       '& $transactionDetailsInfo': {
         opacity: 1
       }
@@ -150,13 +164,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   transactionDetailsHeader: {
     color: colors.invariant.lightGrey,
-    ...typography.label1,
-    cursor: 'pointer'
+    ...typography.label1
   },
+
   swapButton: {
     width: '100%',
     height: 48
   },
+
   exchangeRoot: {
     position: 'relative',
     background: colors.invariant.newDark,
@@ -173,7 +188,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   transtactionData: {
     border: `1px solid ${colors.invariant.light}`,
     borderRadius: '10px',
-    padding: '2px 10px',
+    padding: '5px 15px 5px 15px',
+
     color: colors.invariant.lightGrey
   }
 }))
