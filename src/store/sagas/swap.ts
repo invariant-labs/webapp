@@ -50,7 +50,10 @@ export function* handleSwapWithSOL(): Generator {
     const transferIx = SystemProgram.transfer({
       fromPubkey: wallet.publicKey,
       toPubkey: wrappedSolAccount.publicKey,
-      lamports: allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS ? amountIn.toNumber() : 0
+      lamports:
+        allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+          ? amountIn.toNumber()
+          : 0
     })
 
     const initIx = Token.createInitAccountInstruction(
