@@ -7,7 +7,8 @@ import {
   calcTicksAmountInRange,
   nearestTickIndex,
   maxSpacingMultiplicity,
-  minSpacingMultiplicity
+  minSpacingMultiplicity,
+  toMaxNumericPlaces
 } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
@@ -89,12 +90,22 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const setLeftInputValues = (val: string) => {
     setLeftInput(val)
-    setLeftInputRounded((+val).toFixed(12))
+    setLeftInputRounded(toMaxNumericPlaces(+val, 5))
   }
 
   const setRightInputValues = (val: string) => {
     setRightInput(val)
-    setRightInputRounded((+val).toFixed(12))
+    setRightInputRounded(toMaxNumericPlaces(+val, 5))
+  }
+
+  const onLeftInputChange = (val: string) => {
+    setLeftInput(val)
+    setLeftInputRounded(val)
+  }
+
+  const onRightInputChange = (val: string) => {
+    setRightInput(val)
+    setRightInputRounded(val)
   }
 
   const changeRangeHandler = (left: number, right: number) => {
@@ -169,7 +180,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             tokenFromSymbol={tokenASymbol}
             tokenToSymbol={tokenBSymbol}
             currentValue={leftInputRounded}
-            setValue={setLeftInputValues}
+            setValue={onLeftInputChange}
             decreaseValue={() => {
               const newLeft = isXtoY
                 ? Math.max(minSpacingMultiplicity(tickSpacing), leftRange - tickSpacing)
@@ -203,7 +214,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             tokenFromSymbol={tokenASymbol}
             tokenToSymbol={tokenBSymbol}
             currentValue={rightInputRounded}
-            setValue={setRightInputValues}
+            setValue={onRightInputChange}
             decreaseValue={() => {
               const newRight = isXtoY
                 ? Math.max(rightRange - tickSpacing, leftRange + tickSpacing)
