@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Grid, Typography } from '@material-ui/core'
 import useStyles from './style'
+import { formatNumbers, FormatNumberThreshold, PrefixConfig, showPrefix } from '@consts/utils'
 
 export const BoxInfo: React.FC<{
   tokenXName: string
@@ -34,6 +35,48 @@ export const BoxInfo: React.FC<{
   tokenXValue
 }) => {
   const classes = useStyles()
+
+  const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThreshold[] => [
+    {
+      value: 10,
+      decimals
+    },
+    {
+      value: 10000,
+      decimals: 6
+    },
+    {
+      value: 100000,
+      decimals: 4
+    },
+    {
+      value: 1000000,
+      decimals: 3
+    },
+    {
+      value: 1000000000,
+      decimals: 2,
+      divider: 1000000
+    },
+    {
+      value: Infinity,
+      decimals: 2,
+      divider: 1000000000
+    }
+  ]
+
+  const prefixConfig: PrefixConfig = {
+    B: 1000000000,
+    M: 1000000
+  }
+
+  const tokenXPrintValue = Math.abs(Number(tokenXValue)) < 10 ** -tokenXDecimal
+    ? 0
+    : Number(tokenXValue)
+
+  const tokenYPrintValue = Math.abs(Number(tokenYValue)) < 10 ** -tokenYDecimal
+    ? 0
+    : Number(tokenYValue)
   return (
     <Grid className={classes.boxInfo}>
       <Grid container justifyContent='space-between'>
@@ -60,10 +103,7 @@ export const BoxInfo: React.FC<{
               <Typography className={classes.tokenName}>{tokenXName}</Typography>
             </Grid>
             <Typography className={classes.tokenValue}>
-              {(Math.abs(Number(tokenXValue)) < 10 ** -tokenXDecimal
-                ? 0
-                : Number(tokenXValue)
-              ).toFixed(tokenXDecimal)}
+              {formatNumbers(thresholdsWithTokenDecimal(tokenXDecimal))(`${tokenXPrintValue}`)}{showPrefix(tokenXPrintValue, prefixConfig)}
             </Typography>
           </Grid>
           {typeof tokenXBalance !== 'undefined' ? (
@@ -85,10 +125,7 @@ export const BoxInfo: React.FC<{
               <Typography className={classes.tokenName}>{tokenYName}</Typography>
             </Grid>
             <Typography className={classes.tokenValue}>
-              {(Math.abs(Number(tokenYValue)) < 10 ** -tokenYDecimal
-                ? 0
-                : Number(tokenYValue)
-              ).toFixed(tokenYDecimal)}
+              {formatNumbers(thresholdsWithTokenDecimal(tokenYDecimal))(`${tokenYPrintValue}`)}{showPrefix(tokenYPrintValue, prefixConfig)}
             </Typography>
           </Grid>
           {typeof tokenYBalance !== 'undefined' ? (

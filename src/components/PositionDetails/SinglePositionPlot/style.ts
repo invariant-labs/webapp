@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   currentPriceAmonut: {
-    backgroundColor: '#111931',
+    backgroundColor: colors.invariant.dark,
     textAlign: 'center',
     borderRadius: '11px!important',
     '& span': {
