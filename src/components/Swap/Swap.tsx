@@ -104,7 +104,6 @@ export const Swap: React.FC<ISwap> = ({
   const [swap, setSwap] = React.useState<boolean | null>(null)
   const [tokensY, setTokensY] = React.useState<SwapToken[]>(tokens)
   const [rotates, setRotates] = React.useState<number>(0)
-  const [poolIndex, setPoolIndex] = React.useState<number | null>(null)
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const [throttle, setThrottle] = React.useState<boolean>(false)
   const [settings, setSettings] = React.useState<boolean>(false)
@@ -164,17 +163,6 @@ export const Swap: React.FC<ISwap> = ({
   useEffect(() => {
     updateEstimatedAmount()
 
-    if (tokenToIndex !== null && tokenFromIndex !== null) {
-      const pairIndex = pools.findIndex(pool => {
-        return (
-          (tokens[tokenFromIndex].assetAddress.equals(pool.tokenX) &&
-            tokens[tokenToIndex].assetAddress.equals(pool.tokenY)) ||
-          (tokens[tokenToIndex].assetAddress.equals(pool.tokenX) &&
-            tokens[tokenFromIndex].assetAddress.equals(pool.tokenY))
-        )
-      })
-      setPoolIndex(pairIndex)
-    }
     if (tokenFromIndex !== null) {
       const tokensY = tokens.filter(token => {
         return findPairIndex(token.assetAddress, tokens[tokenFromIndex].assetAddress, pools) !== -1
@@ -193,15 +181,13 @@ export const Swap: React.FC<ISwap> = ({
   const getKnownPrice = (assetIn: SwapToken, assetFor: SwapToken) => {
     let swapRate: number = 0
     let amountOut: number = 0
-    if (poolIndex !== -1 && poolIndex !== null) {
-      if (inputRef === inputTarget.FROM) {
-        swapRate = +printBN(simulateResult.AmountOutWithFee, assetFor.decimals) / Number(amountFrom)
-      } else {
-        swapRate = Number(amountTo) / +printBN(simulateResult.AmountOutWithFee, assetIn.decimals)
-      }
-
-      amountOut = Number(printBN(simulateResult.amountOut, assetFor.decimals))
+    if (inputRef === inputTarget.FROM) {
+      swapRate = +printBN(simulateResult.AmountOutWithFee, assetFor.decimals) / Number(amountFrom)
+    } else {
+      swapRate = Number(amountTo) / +printBN(simulateResult.AmountOutWithFee, assetIn.decimals)
     }
+
+    amountOut = Number(printBN(simulateResult.amountOut, assetFor.decimals))
     return {
       amountOut: amountOut.toFixed(assetFor.decimals),
       swapRate: swapRate
