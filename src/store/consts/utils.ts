@@ -512,6 +512,20 @@ export const findPairs = (tokenFrom: PublicKey, tokenTo: PublicKey, pairs: PoolW
   )
 }
 
+export const calcCurrentPriceOfPool = (
+  pool: PoolWithAddress,
+  xDecimal: number,
+  yDecimal: number
+) => {
+  const decimalDiff = PRICE_DECIMAL + (xDecimal - yDecimal)
+  const sqrtPricePow: number =
+    +printBN(pool.sqrtPrice.v, PRICE_DECIMAL) * +printBN(pool.sqrtPrice.v, PRICE_DECIMAL)
+
+  const knownPrice: BN = new BN(sqrtPricePow * 10 ** decimalDiff)
+
+  return printBNtoBN(knownPrice.toString(), 0)
+}
+
 export const handleSimulate = async (
   pools: PoolWithAddress[],
   poolTicks: { [key in string]: Tick[] },
@@ -519,8 +533,9 @@ export const handleSimulate = async (
   fromToken: PublicKey,
   toToken: PublicKey,
   amount: BN,
-  currentPrice: BN,
-  byAmountIn: boolean
+  byAmountIn: boolean,
+  fromDecimal: number,
+  toDecimal: number
 ): Promise<{
   amountOut: BN
   poolIndex: number
@@ -556,7 +571,13 @@ export const handleSimulate = async (
       xToY: isXtoY,
       byAmountIn: byAmountIn,
       swapAmount: amount,
-      currentPrice: { v: currentPrice },
+      currentPrice: {
+        v: calcCurrentPriceOfPool(
+          filteredPools[0],
+          isXtoY ? fromDecimal : toDecimal,
+          isXtoY ? toDecimal : fromDecimal
+        )
+      },
       slippage: slippage,
       pool: filteredPools[0],
       ticks: ticks,
