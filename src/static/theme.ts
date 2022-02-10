@@ -81,7 +81,6 @@ export const colors = {
     warning: '#EFD063',
     // after UI changes we will delete unnecessary vars
     pink: '#EF84F5',
-    lightPink: '#ef84f5',
     violet: '#9C3EBD',
     green: '#2EE09A',
     dark: '#040B22',
