@@ -55,7 +55,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
   HiddenTransactionButton: {
     background: 'none !important',
-    border: 'none'
+    border: 'none',
+    minWidth: 'auto'
   },
 
   settingsIconBtn: {
@@ -151,24 +152,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   transactionDetailsWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
     backgroundColor: colors.invariant.light,
     marginTop: '10px',
     marginBottom: '10px',
     padding: '5px 15px 5px 15px',
     borderRadius: '10px',
-    display: 'flex',
     alignItems: 'center',
 
-    justifyContent: 'center',
-    '& :hover': {
-      '& $transactionDetailsInfo': {
-        opacity: 1
-      }
+    '&:hover $transactionDetailsInfo': {
+      opacity: 1
     }
   },
   transactionDetailsHeader: {
     color: colors.invariant.lightGrey,
-    ...typography.label1
+    ...typography.label1,
+    whiteSpace: 'nowrap'
   },
 
   swapButton: {
@@ -195,6 +195,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '5px 15px 5px 15px',
 
     color: colors.invariant.lightGrey
+  },
+  buttonSelectDisabled: {
+    background: `${colors.invariant.pinkLinearGradient} !important`,
+
+    '&:hover': {
+      filter: 'brightness(1.15)',
+      boxShadow:
+        '0px 3px 1px -2px rgba(43, 193, 144, 0.2),0px 1px 2px 0px rgba(45, 168, 128, 0.14),0px 0px 5px 7px rgba(59, 183, 142, 0.12)'
+    }
+  },
+  ButtonSwapActive: {
+    transition: 'filter 0.3s linear',
+    background: `${colors.invariant.greenLinearGradient} !important`,
+    filter: 'brightness(0.8)',
+    '&:hover': {
+      filter: 'brightness(1.15)',
+      boxShadow:
+        '0px 3px 1px -2px rgba(43, 193, 144, 0.2),0px 1px 2px 0px rgba(45, 168, 128, 0.14),0px 0px 5px 7px rgba(59, 183, 142, 0.12)'
+    }
   }
 }))
 

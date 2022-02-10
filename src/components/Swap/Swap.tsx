@@ -500,13 +500,17 @@ export const Swap: React.FC<ISwap> = ({
             onClick={handleOpenTransactionDetails}
             className={classes.HiddenTransactionButton}>
             <Grid className={classes.transactionDetailsWrapper}>
-              <Typography className={classes.transactionDetailsHeader}>
-                See transaction details
-              </Typography>
-              <CardMedia
-                image={infoIcon}
-                style={{ width: 10, height: 10, marginLeft: 4, filter: 'brightness(0.8)' }}
-              />
+              <Box>
+                <Typography className={classes.transactionDetailsHeader}>
+                  See transaction details
+                </Typography>
+              </Box>
+              <Box>
+                <CardMedia
+                  image={infoIcon}
+                  style={{ width: 10, height: 10, marginLeft: 4, filter: 'brightness(0.8)' }}
+                />
+              </Box>
             </Grid>
           </button>
           <Box className={classes.transtactionData}>
@@ -542,6 +546,13 @@ export const Swap: React.FC<ISwap> = ({
         <AnimatedButton
           content={getStateMessage()}
           className={classes.swapButton}
+          classNameContent={
+            getStateMessage() === 'Connect a wallet'
+              ? classes.buttonSelectDisabled
+              : getStateMessage() === 'Swap tokens' && progress === 'none'
+              ? classes.ButtonSwapActive
+              : ''
+          }
           disabled={getStateMessage() !== 'Swap tokens' || progress !== 'none'}
           onClick={() => {
             if (tokenFromIndex === null || tokenToIndex === null) return
