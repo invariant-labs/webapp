@@ -20,6 +20,7 @@ interface Props {
   progress: ProgressState
   onClick: () => void
   className?: string
+  classNameContent: string
 }
 
 const AnimatedButton: React.FC<Props> = ({
@@ -27,7 +28,8 @@ const AnimatedButton: React.FC<Props> = ({
   disabled = false,
   progress,
   onClick,
-  className
+  className,
+  classNameContent
 }) => {
   const classes = useStyles()
 
@@ -64,15 +66,6 @@ const AnimatedButton: React.FC<Props> = ({
     return ''
   }
 
-  const getContent = () => {
-    if (content === 'Connect a wallet') {
-      return `${classes.buttonSelectDisabled}`
-    }
-    if (content === 'Swap tokens') {
-      return `${classes.ButtonSwapActive}`
-    }
-  }
-
   return (
     <div>
       <Button
@@ -86,7 +79,7 @@ const AnimatedButton: React.FC<Props> = ({
             progress === 'failed'
             ? classes.buttonRelease
             : undefined,
-          getContent(),
+          classNameContent,
           className
         )}
         onClick={onClick}>
