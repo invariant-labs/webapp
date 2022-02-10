@@ -6,7 +6,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 'calc(50vh - 258px)',
     marginLeft: 'calc(50vw - 231px)',
     [theme.breakpoints.down('xs')]: {
-      marginLeft: 'calc(50vw - 206px)'
+      display: 'flex',
+      marginLeft: 'auto',
+      justifyContent: 'center'
     }
   },
   container: {
@@ -16,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 20,
     width: 500,
     [theme.breakpoints.down('xs')]: {
-      width: 410
+      width: '100vw'
     }
   },
   selectTokenHeader: {
@@ -188,10 +190,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 
   scrollbarThumb: {
-    background: '#ef84f5',
+    background: colors.invariant.pink,
     borderRadius: 10,
-    width: 5,
-    height: '100px !important'
+    width: 5
   },
   scrollbarTrack: {
     background: '#111931',
