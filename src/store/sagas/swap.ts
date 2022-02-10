@@ -18,7 +18,7 @@ export function* handleSwapWithSOL(): Generator {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const networkType = yield* select(network)
-    const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
+    const { slippage, tokenFrom, tokenTo, amountIn, knownPrice, poolIndex, byAmountIn, amountOut } =
       yield* select(swap)
 
     const wallet = yield* call(getWallet)
@@ -50,10 +50,7 @@ export function* handleSwapWithSOL(): Generator {
     const transferIx = SystemProgram.transfer({
       fromPubkey: wallet.publicKey,
       toPubkey: wrappedSolAccount.publicKey,
-      lamports:
-        allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
-          ? amount.toNumber()
-          : 0
+      lamports: allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS ? amountIn.toNumber() : 0
     })
 
     const initIx = Token.createInitAccountInstruction(
@@ -124,7 +121,7 @@ export function* handleSwapWithSOL(): Generator {
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
       pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,
-      amount: amount,
+      amount: byAmountIn ? amountIn : amountOut,
       knownPrice: knownPrice,
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
@@ -218,7 +215,7 @@ export function* handleSwap(): Generator {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const networkType = yield* select(network)
-    const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
+    const { slippage, tokenFrom, tokenTo, amountIn, knownPrice, poolIndex, byAmountIn, amountOut } =
       yield* select(swap)
 
     if (
@@ -258,7 +255,7 @@ export function* handleSwap(): Generator {
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
       pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,
-      amount: amount,
+      amount: byAmountIn ? amountIn : amountOut,
       knownPrice: knownPrice,
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,

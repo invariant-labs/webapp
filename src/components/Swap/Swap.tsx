@@ -68,7 +68,8 @@ export interface ISwap {
     tokenFrom: PublicKey,
     tokenTo: PublicKey,
     poolIndex: number,
-    amount: BN,
+    amountIn: BN,
+    amountOut: BN,
     byAmountIn: boolean
   ) => void
   onSetPair: (tokenFrom: PublicKey, tokenTo: PublicKey) => void
@@ -505,9 +506,8 @@ export const Swap: React.FC<ISwap> = ({
               tokens[tokenFromIndex].address,
               tokens[tokenToIndex].address,
               simulateResult.poolIndex,
-              inputRef === inputTarget.FROM
-                ? printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals)
-                : printBNtoBN(amountTo, tokens[tokenToIndex].decimals),
+              printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),
+              printBNtoBN(amountTo, tokens[tokenToIndex].decimals),
               inputRef === inputTarget.FROM
             )
           }}
