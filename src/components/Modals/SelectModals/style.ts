@@ -7,12 +7,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 'calc(50vw - 231px)',
     [theme.breakpoints.down('xs')]: {
       marginLeft: 'calc(50vw - 206px)'
-    },
-    overflowY: 'hidden'
+    }
   },
   container: {
-    overflows: 'hidden',
-    padding: 30,
+    overflow: 'hidden',
+    padding: 15,
     backgroundColor: colors.invariant.component,
     borderRadius: 20,
     width: 500,
@@ -122,7 +121,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderTop: `1px solid ${colors.invariant.light}`,
     width: 451,
     height: 352,
-    padding: 8
+    paddingTop: 10
   },
 
   tokenContainer: {
@@ -136,17 +135,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '0 0 2px 0',
     borderRadius: 10,
     width: 431,
-    height: 70,
+    height: 40,
     cursor: 'pointer',
-    padding: '9px 9px 9px 9px',
-
+    padding: 12,
     '& > p': {
-      whiteSpace: 'nowrap',
-      marginRight: 20
+      whiteSpace: 'nowrap'
     },
 
     '&:hover': {
-      background: colors.invariant.light
+      background: colors.invariant.light,
+      borderRadius: 25
     }
   },
   tokenName: {
@@ -156,14 +154,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenDescrpiption: {
     color: colors.invariant.lightGrey,
-    ...newTypography.caption1,
+    ...newTypography.caption4,
     lineHeight: '16px',
     whiteSpace: 'nowrap'
   },
   tokenBalanceStatus: {
+    filter: 'brightness(0.8)',
     color: colors.invariant.lightGrey,
-    ...newTypography.body1,
-    paddingRight: 15
+    ...newTypography.caption2,
+    minWidth: 'auto'
   },
 
   tokenIcon: {
@@ -184,14 +183,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
   hideScroll: {
     '& > *:first-child': {
-      paddingRight: '20px'
+      paddingRight: '30px'
     }
   },
 
   scrollbarThumb: {
     background: '#ef84f5',
     borderRadius: 10,
-    width: 5
+    width: 5,
+    height: '100px !important'
   },
   scrollbarTrack: {
     background: '#111931',
@@ -206,6 +206,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxShadow: 'none',
     maxWidth: 456
   },
+
   clearIcon: {
     minWidth: 12,
     height: 12,

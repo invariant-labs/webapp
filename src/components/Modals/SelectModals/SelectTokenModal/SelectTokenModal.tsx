@@ -4,10 +4,12 @@ import CustomScrollbar from '../CustomScrollbar'
 import searchIcon from '@static/svg/lupa.svg'
 import { FixedSizeList as List } from 'react-window'
 import useStyles from '../style'
+import { printBN } from '@consts/utils'
+import { BN } from '@project-serum/anchor'
 // import icons from '@static/icons'
 
 export interface ISelectTokenModal {
-  tokens: Array<{ symbol: string; name: string; logoURI: string }>
+  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
   // commonTokens: Array<{ symbol: string; name: string; logoURI: string }>
   open: boolean
   handleClose: () => void
@@ -140,9 +142,10 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
             outerRef={outerRef}>
             {({ index }) => {
               const token = filteredTokens[index]
+              const tokenBalance = printBN(token.balance, token.decimals)
+
               return (
                 <Grid
-                  container
                   className={classes.tokenItem}
                   style={{ width: 'calc(100% - 16px)' }}
                   alignItems='center'
@@ -159,7 +162,9 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                     <Typography className={classes.tokenName}>{token.symbol}</Typography>
                     <Typography className={classes.tokenDescrpiption}>{token.name}</Typography>
                   </Grid>
-                  <Typography className={classes.tokenBalanceStatus}>Balance: -</Typography>
+                  <Typography className={classes.tokenBalanceStatus}>
+                    Balance: {tokenBalance}
+                  </Typography>
                 </Grid>
               )
             }}
