@@ -623,3 +623,17 @@ export const minSpacingMultiplicity = (spacing: number) => {
 export const maxSpacingMultiplicity = (spacing: number) => {
   return Math.min(spacingMultiplicityLte(MAX_TICK, spacing), (TICK_LIMIT - 2) * spacing)
 }
+
+export const toMaxNumericPlaces = (num: number, places: number): string => {
+  const log = Math.floor(Math.log10(num))
+
+  if (log >= places) {
+    return num.toFixed(0)
+  }
+
+  if (log >= 0) {
+    return num.toFixed(places - log - 1)
+  }
+
+  return num.toFixed(places + Math.abs(log) - 1)
+}
