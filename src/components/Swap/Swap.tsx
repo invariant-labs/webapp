@@ -545,13 +545,12 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
         <AnimatedButton
           content={getStateMessage()}
-          className={classes.swapButton}
-          classNameContent={
+          className={
             getStateMessage() === 'Connect a wallet'
-              ? classes.buttonSelectDisabled
+              ? `${classes.swapButton} ${classes.buttonSelectDisabled}`
               : getStateMessage() === 'Swap tokens' && progress === 'none'
-              ? classes.ButtonSwapActive
-              : ''
+              ? `${classes.swapButton} ${classes.ButtonSwapActive}`
+              : classes.swapButton
           }
           disabled={getStateMessage() !== 'Swap tokens' || progress !== 'none'}
           onClick={() => {
