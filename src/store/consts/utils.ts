@@ -161,6 +161,35 @@ const defaultThresholds: FormatNumberThreshold[] = [
     divider: 1000000000
   }
 ]
+const lookup = [
+  { value: 1, symbol: '' },
+  { value: 1e3, symbol: 'k' },
+  { value: 1e6, symbol: 'M' },
+  { value: 1e9, symbol: 'G' },
+  { value: 1e12, symbol: 'T' },
+  { value: 1e15, symbol: 'P' },
+  { value: 1e18, symbol: 'E' }
+]
+
+export const formatNumberToSymbol = (value: string | undefined) => {
+  if (isNaN(Number(value)) || !value) {
+    return value
+  }
+
+  const dot = value.split('.')
+
+  const toNumber = Number(value)
+
+  const tier = (Math.log10(Math.abs(toNumber)) / 3) | 0
+
+  if (tier === 0) return `${dot[0] ? dot[0] : value}.${dot[1] ? dot[1].slice(0, 2) : ''}`
+
+  const findCorrectValue = lookup[tier > 7 ? 6 : tier]
+
+  const scaled = toNumber / Math.pow(10, tier * 3)
+
+  return scaled.toFixed(0) + findCorrectValue.symbol
+}
 
 export const formatNumbers =
   (thresholds: FormatNumberThreshold[] = defaultThresholds) =>
