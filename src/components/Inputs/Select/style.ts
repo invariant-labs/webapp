@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('xs')]: {
-      minWidth: 90
+      minWidth: 'auto'
     }
   },
   tokenName: {
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '100%'
   },
   endIcon: {
-    marginLeft: 8
+    marginLeft: 9
   }
 }))
 
