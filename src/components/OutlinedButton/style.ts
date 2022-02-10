@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
     marginLeft: 4,
     marginTop: 1,
     cursor: 'default',
-
+    textTransform: 'none',
     '&:hover': {
       backgroundColor: colors.invariant.green,
       boxShadow: '0px 0px 20px -10px white'
@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
 
   disabled: {
     ...newTypography.tiny2,
-    widt: 20,
+    width: 20,
     maxWidth: 26,
     height: 15,
     color: `${colors.invariant.background2} !important`,
