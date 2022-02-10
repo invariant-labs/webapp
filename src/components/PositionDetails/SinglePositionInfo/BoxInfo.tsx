@@ -70,13 +70,12 @@ export const BoxInfo: React.FC<{
     M: 1000000
   }
 
-  const tokenXPrintValue = Math.abs(Number(tokenXValue)) < 10 ** -tokenXDecimal
-    ? 0
-    : Number(tokenXValue)
+  const tokenXPrintValue =
+    Math.abs(Number(tokenXValue)) < 10 ** -tokenXDecimal ? 0 : Number(tokenXValue)
 
-  const tokenYPrintValue = Math.abs(Number(tokenYValue)) < 10 ** -tokenYDecimal
-    ? 0
-    : Number(tokenYValue)
+  const tokenYPrintValue =
+    Math.abs(Number(tokenYValue)) < 10 ** -tokenYDecimal ? 0 : Number(tokenYValue)
+
   return (
     <Grid className={classes.boxInfo}>
       <Grid container justifyContent='space-between'>
@@ -103,7 +102,8 @@ export const BoxInfo: React.FC<{
               <Typography className={classes.tokenName}>{tokenXName}</Typography>
             </Grid>
             <Typography className={classes.tokenValue}>
-              {formatNumbers(thresholdsWithTokenDecimal(tokenXDecimal))(`${tokenXPrintValue}`)}{showPrefix(tokenXPrintValue, prefixConfig)}
+              {formatNumbers(thresholdsWithTokenDecimal(tokenXDecimal))(`${tokenXPrintValue}`)}
+              {showPrefix(tokenXPrintValue, prefixConfig)}
             </Typography>
           </Grid>
           {typeof tokenXBalance !== 'undefined' ? (
@@ -125,7 +125,8 @@ export const BoxInfo: React.FC<{
               <Typography className={classes.tokenName}>{tokenYName}</Typography>
             </Grid>
             <Typography className={classes.tokenValue}>
-              {formatNumbers(thresholdsWithTokenDecimal(tokenYDecimal))(`${tokenYPrintValue}`)}{showPrefix(tokenYPrintValue, prefixConfig)}
+              {formatNumbers(thresholdsWithTokenDecimal(tokenYDecimal))(`${tokenYPrintValue}`)}
+              {showPrefix(tokenYPrintValue, prefixConfig)}
             </Typography>
           </Grid>
           {typeof tokenYBalance !== 'undefined' ? (
