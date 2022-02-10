@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   maxButton: {
-    ...newTypography.tiny2,
+    ...newTypography.caption4,
     color: colors.invariant.componentIn2,
     minWidth: 30,
     height: 15,
@@ -60,7 +60,7 @@ const useStyles = makeStyles(() => ({
     filter: 'brightness(0.8)',
 
     '& :hover > button , & :hover > p': {
-      filter: 'brightness(1.5)'
+      filter: 'brightness(1.1)'
     }
   },
   walletBalanace: {

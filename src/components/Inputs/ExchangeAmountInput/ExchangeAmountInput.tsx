@@ -6,7 +6,7 @@ import Select from '@components/Inputs/Select/Select'
 import useStyles from './style'
 import { SwapToken } from '@components/Swap/Swap'
 import { BN } from '@project-serum/anchor'
-import { formatNumberToSymbol } from '@consts/utils'
+import { formatNumbers, showPrefix } from '@consts/utils'
 
 interface IProps {
   setValue: (value: string) => void
@@ -102,7 +102,8 @@ export const AmountInput: React.FC<IProps> = ({
       <Box className={classes.container}>
         <Box className={classes.BalanceContainer}>
           <Typography className={classes.BalanceTypography}>
-            Balance: {formatNumberToSymbol(balance)} {tokenIcon}
+            Balance: {balance && formatNumbers()(balance.toString())}
+            {showPrefix(Number(balance))} {tokenIcon}
           </Typography>
           <OutlinedButton
             name='Max'
