@@ -5,6 +5,8 @@ import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import Select from '@components/Inputs/Select/Select'
 import useStyles from './style'
 import { SwapToken } from '@components/Swap/Swap'
+import { BN } from '@project-serum/anchor'
+import { formatNumberToSymbol } from '@consts/utils'
 
 interface IProps {
   setValue: (value: string) => void
@@ -16,7 +18,7 @@ interface IProps {
   style?: CSSProperties
   onMaxClick: () => void
   current: SwapToken | null
-  tokens: Array<{ symbol: string; name: string; logoURI: string }>
+  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
   onSelect: (name: string) => void
   disabled: boolean
   balance?: string | undefined
@@ -39,7 +41,6 @@ export const AmountInput: React.FC<IProps> = ({
 }) => {
   const classes = useStyles()
   const inputRef = useRef<HTMLInputElement>(null)
-
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const onlyNumbersRegex = /^\d*\.?\d*$/
     const trimDecimal = `^\\d*\\.?\\d{0,${decimal}}$`
@@ -101,23 +102,25 @@ export const AmountInput: React.FC<IProps> = ({
       <Box className={classes.container}>
         <Box className={classes.BalanceContainer}>
           <Typography className={classes.BalanceTypography}>
-            Balance: {balance} {tokenIcon}
+            Balance: {formatNumberToSymbol(balance)} {tokenIcon}
           </Typography>
           <OutlinedButton
-            name='max'
+            name='Max'
             color='primary'
             onClick={onMaxClick}
             className={classes.maxButton}
             labelClassName={classes.label}
-            disabled={disabled}
-            balance={balance}
+            disabled={
+              disabled && isNaN(Number(balance))
+                ? disabled && isNaN(Number(balance))
+                : isNaN(Number(balance))
+            }
           />
         </Box>
 
         <Typography className={classes.noData}>
           <div className={classes.noDataIcon}>?</div>No data
         </Typography>
-        {/* <Typography className={classes.walletBalanace}>-</Typography> */}
       </Box>
     </>
   )
