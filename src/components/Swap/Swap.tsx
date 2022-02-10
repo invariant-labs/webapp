@@ -279,7 +279,7 @@ export const Swap: React.FC<ISwap> = ({
       return 'Insufficient balance'
     }
     if (!simulateResult.simulateSuccess) {
-      return 'Slippage tolerance is too low'
+      return 'Exceed single swap limit (split transaction into several)'
     }
 
     if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {
@@ -291,7 +291,7 @@ export const Swap: React.FC<ISwap> = ({
   const activeSwapDetails = () => {
     return (
       getStateMessage() !== 'Insufficient volume' &&
-      getStateMessage() !== 'Slippage tolerance is too low' &&
+      getStateMessage() !== 'Exceed single swap limit (split transaction into several)' &&
       getStateMessage() !== 'No route found' &&
       getStateMessage() !== 'Insufficient balance'
     )
