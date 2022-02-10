@@ -20,7 +20,6 @@ interface Props {
   progress: ProgressState
   onClick: () => void
   className?: string
-  classNameContent: string
 }
 
 const AnimatedButton: React.FC<Props> = ({
@@ -28,8 +27,7 @@ const AnimatedButton: React.FC<Props> = ({
   disabled = false,
   progress,
   onClick,
-  className,
-  classNameContent
+  className
 }) => {
   const classes = useStyles()
 
@@ -79,7 +77,6 @@ const AnimatedButton: React.FC<Props> = ({
             progress === 'failed'
             ? classes.buttonRelease
             : undefined,
-          classNameContent,
           className
         )}
         onClick={onClick}>
