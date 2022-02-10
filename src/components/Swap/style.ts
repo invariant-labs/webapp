@@ -142,10 +142,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    flexFlow: 'row wrap',
     margin: '5px 0 7px 0px',
     position: 'relative',
     cursor: 'default',
     filter: 'brightness(0.9)',
+
+    [theme.breakpoints.down('xs')]: {
+      justifyContent: 'center'
+    },
 
     '& :hover , & :hover > p , & :hover > div ': {
       filter: 'brightness(1.2)'
@@ -193,7 +198,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: `1px solid ${colors.invariant.light}`,
     borderRadius: '10px',
     padding: '5px 15px 5px 15px',
-
     color: colors.invariant.lightGrey
   },
   buttonSelectDisabled: {

@@ -7,15 +7,16 @@ const useStyles = makeStyles(() => ({
     textAlign: 'right',
     ...typography.label1,
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    whiteSpace: 'nowrap'
   },
   loadingContainer: {
-    width: 120,
     display: 'grid',
+    width: 20,
+    padding: '6px 15px 6px 15px',
     justifyContent: 'center'
   },
   loading: {
-    height: '100%',
     width: 15,
     zIndex: 10,
     margin: '0 auto'

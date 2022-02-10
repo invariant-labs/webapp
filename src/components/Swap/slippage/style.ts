@@ -40,7 +40,7 @@ const useStyles = makeStyles(() => ({
       transform: 'translateY(-50%)'
     },
     '&:hover': {
-      backgroundColor: colors.invariant.componentOut4
+      backgroundColor: colors.invariant.component
     }
   },
   detailsInfoForm: {
