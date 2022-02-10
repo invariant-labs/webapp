@@ -14,8 +14,7 @@ const useStyles = makeStyles(() => ({
     cursor: 'default',
     textTransform: 'none',
     '&:hover': {
-      backgroundColor: colors.invariant.green,
-      boxShadow: '0px 0px 20px -10px white'
+      background: `${colors.invariant.green} !important`
     },
 
     [theme.breakpoints.down('sm')]: {
