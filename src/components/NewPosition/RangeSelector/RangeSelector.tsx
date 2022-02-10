@@ -7,7 +7,8 @@ import {
   calcTicksAmountInRange,
   nearestTickIndex,
   maxSpacingMultiplicity,
-  minSpacingMultiplicity
+  minSpacingMultiplicity,
+  toMaxNumericPlaces
 } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
@@ -89,12 +90,12 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const setLeftInputValues = (val: string) => {
     setLeftInput(val)
-    setLeftInputRounded((+val).toFixed(12))
+    setLeftInputRounded(toMaxNumericPlaces(+val, 5))
   }
 
   const setRightInputValues = (val: string) => {
     setRightInput(val)
-    setRightInputRounded((+val).toFixed(12))
+    setRightInputRounded(toMaxNumericPlaces(+val, 5))
   }
 
   const onLeftInputChange = (val: string) => {
