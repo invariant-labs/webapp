@@ -207,7 +207,11 @@ export const spacingMultiplicityLte = (arg: number, spacing: number): number => 
     return arg
   }
 
-  return arg >= 0 ? arg - (arg % spacing) : arg + (arg % spacing)
+  if (arg >= 0) {
+    return arg - (arg % spacing)
+  }
+
+  return arg - (spacing - (Math.abs(arg) % spacing))
 }
 
 export const spacingMultiplicityGte = (arg: number, spacing: number): number => {
@@ -215,7 +219,11 @@ export const spacingMultiplicityGte = (arg: number, spacing: number): number => 
     return arg
   }
 
-  return arg >= 0 ? arg + (arg % spacing) : arg - (arg % spacing)
+  if (arg >= 0) {
+    return arg + (spacing - (arg % spacing))
+  }
+
+  return arg + (Math.abs(arg) % spacing)
 }
 
 export const createLiquidityPlot = (
@@ -504,6 +512,20 @@ export const findPairs = (tokenFrom: PublicKey, tokenTo: PublicKey, pairs: PoolW
   )
 }
 
+export const calcCurrentPriceOfPool = (
+  pool: PoolWithAddress,
+  xDecimal: number,
+  yDecimal: number
+) => {
+  const decimalDiff = PRICE_DECIMAL + (xDecimal - yDecimal)
+  const sqrtPricePow: number =
+    +printBN(pool.sqrtPrice.v, PRICE_DECIMAL) * +printBN(pool.sqrtPrice.v, PRICE_DECIMAL)
+
+  const knownPrice: BN = new BN(sqrtPricePow * 10 ** decimalDiff)
+
+  return printBNtoBN(knownPrice.toString(), 0)
+}
+
 export const handleSimulate = async (
   pools: PoolWithAddress[],
   poolTicks: { [key in string]: Tick[] },
@@ -511,8 +533,9 @@ export const handleSimulate = async (
   fromToken: PublicKey,
   toToken: PublicKey,
   amount: BN,
-  currentPrice: BN,
-  byAmountIn: boolean
+  byAmountIn: boolean,
+  fromDecimal: number,
+  toDecimal: number
 ): Promise<{
   amountOut: BN
   poolIndex: number
@@ -548,7 +571,13 @@ export const handleSimulate = async (
       xToY: isXtoY,
       byAmountIn: byAmountIn,
       swapAmount: amount,
-      currentPrice: { v: currentPrice },
+      currentPrice: {
+        v: calcCurrentPriceOfPool(
+          filteredPools[0],
+          isXtoY ? fromDecimal : toDecimal,
+          isXtoY ? toDecimal : fromDecimal
+        )
+      },
       slippage: slippage,
       pool: filteredPools[0],
       ticks: ticks,
@@ -593,4 +622,18 @@ export const minSpacingMultiplicity = (spacing: number) => {
 
 export const maxSpacingMultiplicity = (spacing: number) => {
   return Math.min(spacingMultiplicityLte(MAX_TICK, spacing), (TICK_LIMIT - 2) * spacing)
+}
+
+export const toMaxNumericPlaces = (num: number, places: number): string => {
+  const log = Math.floor(Math.log10(num))
+
+  if (log >= places) {
+    return num.toFixed(0)
+  }
+
+  if (log >= 0) {
+    return num.toFixed(places - log - 1)
+  }
+
+  return num.toFixed(places + Math.abs(log) - 1)
 }
