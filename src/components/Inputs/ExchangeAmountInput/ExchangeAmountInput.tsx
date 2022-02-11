@@ -102,7 +102,8 @@ export const AmountInput: React.FC<IProps> = ({
       <Box className={classes.container}>
         <Box className={classes.BalanceContainer}>
           <Typography className={classes.BalanceTypography}>
-            Balance: {balance && formatNumbers()(balance.toString())}
+            Balance:
+            {balance && formatNumbers()(balance.toString())}
             {showPrefix(Number(balance))} {tokenIcon}
           </Typography>
           <OutlinedButton
@@ -111,14 +112,9 @@ export const AmountInput: React.FC<IProps> = ({
             onClick={onMaxClick}
             className={classes.maxButton}
             labelClassName={classes.label}
-            disabled={
-              disabled && isNaN(Number(balance))
-                ? disabled && isNaN(Number(balance))
-                : isNaN(Number(balance))
-            }
+            disabled={disabled && isNaN(Number(balance)) ? disabled : isNaN(Number(balance))}
           />
         </Box>
-
         <Typography className={classes.noData}>
           <div className={classes.noDataIcon}>?</div>No data
         </Typography>
