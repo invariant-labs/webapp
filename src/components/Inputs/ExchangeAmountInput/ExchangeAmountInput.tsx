@@ -102,8 +102,7 @@ export const AmountInput: React.FC<IProps> = ({
       <Box className={classes.container}>
         <Box className={classes.BalanceContainer}>
           <Typography className={classes.BalanceTypography}>
-            Balance:
-            {balance && formatNumbers()(balance.toString())}
+            Balance: {balance && formatNumbers()(balance.toString())}
             {showPrefix(Number(balance))} {tokenIcon}
           </Typography>
           <OutlinedButton
