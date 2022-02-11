@@ -231,7 +231,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     top: '50%',
     left: 'calc(50% - 16px)',
-    cursor: 'pointer'
+    cursor: 'pointer',
+
+    '&:hover': {
+      filter: 'brightness(2)'
+    }
   }
 }))
 
