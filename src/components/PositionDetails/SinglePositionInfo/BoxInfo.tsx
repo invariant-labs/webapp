@@ -2,38 +2,21 @@ import React from 'react'
 import { Button, Grid, Typography } from '@material-ui/core'
 import useStyles from './style'
 import { formatNumbers, FormatNumberThreshold, PrefixConfig, showPrefix } from '@consts/utils'
+import { ILiquidityToken } from './consts'
+import SwapPosition from '@static/svg/swap-position.svg'
+
+export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue' | 'liqValue'> {
+  value: number
+}
 
 export const BoxInfo: React.FC<{
-  tokenXName: string
-  tokenXIcon: string
-  tokenYName: string
-  tokenYIcon: string
-  tokenXDecimal: number
-  tokenYDecimal: number
-  tokenXBalance?: number
-  tokenYBalance?: number
-  tokenXUSDValue?: number
-  tokenYUSDValue?: number
   title: string
   onClickButton?: () => void
-  tokenXValue: number
-  tokenYValue: number
-}> = ({
-  tokenYName,
-  tokenYIcon,
-  tokenXName,
-  tokenXIcon,
-  tokenXDecimal,
-  tokenYDecimal,
-  tokenXBalance,
-  tokenXUSDValue,
-  tokenYBalance,
-  tokenYUSDValue,
-  title,
-  onClickButton,
-  tokenYValue,
-  tokenXValue
-}) => {
+  tokenA: BoxInfoToken
+  tokenB: BoxInfoToken
+  showBalance?: boolean
+  swapHandler?: () => void
+}> = ({ title, onClickButton, tokenB, tokenA, showBalance = false, swapHandler }) => {
   const classes = useStyles()
 
   const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThreshold[] => [
@@ -71,10 +54,10 @@ export const BoxInfo: React.FC<{
   }
 
   const tokenXPrintValue =
-    Math.abs(Number(tokenXValue)) < 10 ** -tokenXDecimal ? 0 : Number(tokenXValue)
+    Math.abs(Number(tokenA.value)) < 10 ** -tokenA.decimal ? 0 : Number(tokenA.value)
 
   const tokenYPrintValue =
-    Math.abs(Number(tokenYValue)) < 10 ** -tokenYDecimal ? 0 : Number(tokenYValue)
+    Math.abs(Number(tokenB.value)) < 10 ** -tokenB.decimal ? 0 : Number(tokenB.value)
 
   return (
     <Grid className={classes.boxInfo}>
@@ -86,8 +69,8 @@ export const BoxInfo: React.FC<{
             variant='contained'
             onClick={onClickButton}
             disabled={
-              Math.abs(Number(tokenXValue)) < 10 ** -tokenXDecimal &&
-              Math.abs(Number(tokenYValue)) < 10 ** -tokenYDecimal
+              Math.abs(Number(tokenA.value)) < 10 ** -tokenA.decimal &&
+              Math.abs(Number(tokenB.value)) < 10 ** -tokenB.decimal
             }>
             Claim fee
           </Button>
@@ -98,44 +81,50 @@ export const BoxInfo: React.FC<{
         <Grid className={classes.tokenArea}>
           <Grid className={classes.tokenAreaUpperPart}>
             <Grid className={classes.token}>
-              <img className={classes.iconSmall} src={tokenXIcon} alt={tokenXName} />
-              <Typography className={classes.tokenName}>{tokenXName}</Typography>
+              <img className={classes.iconSmall} src={tokenA.icon} alt={tokenA.name} />
+              <Typography className={classes.tokenName}>{tokenA.name}</Typography>
             </Grid>
             <Typography className={classes.tokenValue}>
-              {formatNumbers(thresholdsWithTokenDecimal(tokenXDecimal))(`${tokenXPrintValue}`)}
+              {formatNumbers(thresholdsWithTokenDecimal(tokenA.decimal))(`${tokenXPrintValue}`)}
               {showPrefix(tokenXPrintValue, prefixConfig)}
             </Typography>
           </Grid>
-          {typeof tokenXBalance !== 'undefined' ? (
+          {showBalance ? (
             <Grid className={classes.tokenAreaLowerPart}>
               <Typography className={classes.tokenBalance}>
-                Balance: {tokenXBalance} {tokenXName}
+                Balance: {tokenA.balance} {tokenA.name}
               </Typography>
-              {typeof tokenXUSDValue !== 'undefined' ? (
-                <Typography className={classes.tokenUSDValue}>$ {tokenXUSDValue}</Typography>
+              {typeof tokenA.usdValue !== 'undefined' ? (
+                <Typography className={classes.tokenUSDValue}>$ {tokenA.usdValue}</Typography>
               ) : null}
             </Grid>
           ) : null}
         </Grid>
 
+        {
+          typeof swapHandler !== 'undefined'
+            ? <img src={SwapPosition} className={classes.arrowsIcon} onClick={swapHandler} />
+            : null
+        }
+
         <Grid className={classes.tokenArea}>
           <Grid className={classes.tokenAreaUpperPart}>
             <Grid className={classes.token}>
-              <img className={classes.iconSmall} src={tokenYIcon} alt={tokenYName} />
-              <Typography className={classes.tokenName}>{tokenYName}</Typography>
+              <img className={classes.iconSmall} src={tokenB.icon} alt={tokenB.name} />
+              <Typography className={classes.tokenName}>{tokenB.name}</Typography>
             </Grid>
             <Typography className={classes.tokenValue}>
-              {formatNumbers(thresholdsWithTokenDecimal(tokenYDecimal))(`${tokenYPrintValue}`)}
+              {formatNumbers(thresholdsWithTokenDecimal(tokenB.decimal))(`${tokenYPrintValue}`)}
               {showPrefix(tokenYPrintValue, prefixConfig)}
             </Typography>
           </Grid>
-          {typeof tokenYBalance !== 'undefined' ? (
+          {showBalance ? (
             <Grid className={classes.tokenAreaLowerPart}>
               <Typography className={classes.tokenBalance}>
-                Balance: {tokenYBalance} {tokenYName}
+                Balance: {tokenB.balance} {tokenB.name}
               </Typography>
-              {typeof tokenYUSDValue !== 'undefined' ? (
-                <Typography className={classes.tokenUSDValue}>$ {tokenYUSDValue}</Typography>
+              {typeof tokenB.usdValue !== 'undefined' ? (
+                <Typography className={classes.tokenUSDValue}>$ {tokenB.usdValue}</Typography>
               ) : null}
             </Grid>
           ) : null}

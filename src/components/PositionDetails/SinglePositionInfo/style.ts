@@ -102,6 +102,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   boxInfo: {
     borderRadius: 16,
+    position: 'relative',
     '&:not(:last-child)': {
       marginBottom: 26
     }
@@ -223,6 +224,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: 3,
     width: 19,
     height: 19
+  },
+  arrowsIcon: {
+    width: 32,
+    height: 32,
+    position: 'absolute',
+    top: '50%',
+    left: 'calc(50% - 16px)',
+    cursor: 'pointer'
   }
 }))
 
