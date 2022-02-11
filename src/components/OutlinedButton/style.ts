@@ -7,7 +7,7 @@ const useStyles = makeStyles(() => ({
     maxWidth: 26,
     height: 14,
     ...newTypography.tiny2,
-    background: ' rgba(46, 224, 154, 0.8)',
+    background: 'rgba(46, 224, 154, 0.8)',
     borderRadius: 4,
     marginLeft: 4,
     marginTop: 1,
