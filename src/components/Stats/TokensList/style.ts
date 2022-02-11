@@ -6,6 +6,11 @@ const useStyles = makeStyles(() => ({
     padding: '0 24px',
     borderRadius: '24px',
     backgroundColor: colors.invariant.component
+  },
+  pagination: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center'
   }
 }))
 

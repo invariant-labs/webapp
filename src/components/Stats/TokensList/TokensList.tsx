@@ -1,6 +1,7 @@
 import { BN } from '@project-serum/anchor'
 import TokenListItem from '../TokenListItem/TokenListItem'
-import React from 'react'
+import React, { useState } from 'react'
+import { PaginationList } from '@components/PositionsList/Pagination/Pagination'
 import { Grid } from '@material-ui/core'
 import useStyles from './style'
 
@@ -21,6 +22,10 @@ export interface ITokensList {
 
 const TokensList: React.FC<ITokensList> = ({ data }) => {
   const classes = useStyles()
+  const [page, setPage] = useState(1)
+  const handleChangePagination = (page: number): void => {
+    setPage(page)
+  }
   return (
     <Grid classes={{ root: classes.container }}>
       <TokenListItem displayType='header' />
@@ -40,6 +45,13 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
           />
         )
       })}
+      <Grid className={classes.pagination}>
+        <PaginationList
+          pages={Math.ceil(data.length / 7)}
+          defaultPage={1}
+          handleChangePage={handleChangePagination}
+        />
+      </Grid>
     </Grid>
   )
 }

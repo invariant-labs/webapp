@@ -3,7 +3,7 @@ import { printBN } from '@consts/utils'
 import { Grid, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
 import { colors } from '@static/theme'
-import icons from '@static/icons'
+
 import { useStyles } from './style'
 
 interface IProps {
@@ -33,31 +33,35 @@ const TokenListItem: React.FC<IProps> = ({
 }) => {
   const classes = useStyles()
   const isNegative = Number(priceChange) > 0 ? false : true
-  return displayType === 'tokens' ? (
-    <Grid container style={{ color: colors.white.main }} className={classes.container}>
-      <Typography component='p'>{itemNumber}</Typography>
-      <Grid>
-        <Typography>{`${name} (${symbol})`}</Typography>
-      </Grid>
-      <Typography>${Number(printBN(price, decimals)).toFixed(2)}</Typography>
-      <Typography style={{ color: isNegative ? colors.invariant.error : colors.green.main }}>
-        {isNegative ? `${priceChange}%` : `+${priceChange}%`}
-      </Typography>
-      <Typography>{volume}</Typography>
-      <Typography>{TVL}</Typography>
-    </Grid>
-  ) : (
-    <Grid container style={{ color: '#A9B6BF' }} className={classes.container}>
-      <Typography>
-        N<sup>o</sup>
-      </Typography>
-      <Grid>
-        <Typography>Name</Typography>
-      </Grid>
-      <Typography>Price</Typography>
-      <Typography>Price Change</Typography>
-      <Typography>Volume 24H</Typography>
-      <Typography>TVL</Typography>
+  return (
+    <Grid>
+      {displayType === 'tokens' ? (
+        <Grid container style={{ color: colors.white.main }} className={classes.container}>
+          <Typography component='p'>{itemNumber}</Typography>
+          <Grid>
+            <Typography>{`${name} (${symbol})`}</Typography>
+          </Grid>
+          <Typography>${Number(printBN(price, decimals)).toFixed(2)}</Typography>
+          <Typography style={{ color: isNegative ? colors.invariant.error : colors.green.main }}>
+            {isNegative ? `${priceChange}%` : `+${priceChange}%`}
+          </Typography>
+          <Typography>{volume}</Typography>
+          <Typography>{TVL}</Typography>
+        </Grid>
+      ) : (
+        <Grid container style={{ color: '#A9B6BF' }} className={classes.container}>
+          <Typography>
+            N<sup>o</sup>
+          </Typography>
+          <Grid>
+            <Typography>Name</Typography>
+          </Grid>
+          <Typography>Price</Typography>
+          <Typography>Price Change</Typography>
+          <Typography>Volume 24H</Typography>
+          <Typography>TVL</Typography>
+        </Grid>
+      )}
     </Grid>
   )
 }
