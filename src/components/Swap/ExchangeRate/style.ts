@@ -3,7 +3,7 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   rateText: {
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.lightGrey,
     textAlign: 'right',
     ...typography.label1,
     display: 'flex',
