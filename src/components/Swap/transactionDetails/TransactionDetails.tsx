@@ -52,7 +52,7 @@ const TransactionDetails: React.FC<IProps> = ({
         style={{ opacity: open ? '1' : '0', zIndex: open ? 10 : 0 }}>
         <Grid className={classes.detailsInfoWrapper}>
           <Grid container className={classes.closeTransactionContainer}>
-            <Typography component='h2'>Transaction details</Typography>
+            <Typography component='h1'>Transaction details</Typography>
             <Button
               style={{ background: 'transparent' }}
               className={classes.closeTransactionButton}

@@ -15,36 +15,36 @@ export const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     color: colors.white.main,
-    padding: 10,
+    padding: '5px 15px 5px 15px',
     borderRadius: 20,
     [theme.breakpoints.down('sm')]: {
       left: 105
     },
     '& p': {
-      ...typography.body1
+      ...typography.body2
     }
   },
   closeTransactionContainer: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    '& p': {
+      ...typography.heading1
+    }
   },
 
   closeTransactionButton: {
-    position: 'relative',
-    minWidth: 0,
-    height: 20,
-    marginLeft: 20,
     background: 'none',
     '&:hover': {
       background: 'none !important'
     },
+    cursor: 'default',
     '&:after': {
       content: '"\u2715"',
-      fontSize: 25,
+      fontSize: 20,
       position: 'absolute',
-      color: colors.invariant.lightInfoText,
-      top: '90%',
-      right: '0%',
+      color: colors.white.main,
+      top: '50%',
+      right: '10%',
       transform: 'translateY(-50%)'
     }
   },
@@ -62,15 +62,15 @@ export const useStyles = makeStyles((theme: Theme) => ({
   },
   detailsInfoWrapper: {
     height: 'auto',
-    '& h2': {
-      ...typography.body1
+    '& h1': {
+      ...typography.heading4
     },
     '& p': {
-      ...typography.body3
+      ...typography.body2
     },
     '& span': {
       ...typography.label1,
-      color: colors.invariant.lightInfoText
+      color: colors.invariant.lightGrey
     }
   }
 }))
