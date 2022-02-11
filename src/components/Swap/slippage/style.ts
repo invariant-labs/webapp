@@ -26,29 +26,27 @@ const useStyles = makeStyles(() => ({
   },
 
   selectTokenClose: {
-    position: 'relative',
-    minWidth: 0,
-    height: 20,
-    marginLeft: 20,
+    background: 'none',
+    '&:hover': {
+      background: 'none !important'
+    },
+    cursor: 'default',
     '&:after': {
       content: '"\u2715"',
-      fontSize: 25,
+      fontSize: 20,
       position: 'absolute',
-      color: colors.invariant.lightInfoText,
-      top: '90%',
-      right: '0%',
+      color: colors.white.main,
+      top: '50%',
+      right: '10%',
       transform: 'translateY(-50%)'
-    },
-    '&:hover': {
-      backgroundColor: colors.invariant.component
     }
   },
   detailsInfoForm: {
     border: `1px solid ${colors.invariant.component}`,
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.light,
     borderRadius: 15,
     width: '93%',
-    backgroundColor: colors.invariant.dark,
+    backgroundColor: colors.invariant.newDark,
     padding: '10px 8px',
     '&::placeholder': {
       color: colors.invariant.lightInfoText
