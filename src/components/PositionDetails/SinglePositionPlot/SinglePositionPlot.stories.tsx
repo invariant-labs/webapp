@@ -42,7 +42,6 @@ storiesOf('singlePosition/rightComponent', module).add('plot', () => {
         name: 'SNY',
         decimal: 9
       }}
-
       ticksLoading={false}
       tickSpacing={4}
       min={2149.6}

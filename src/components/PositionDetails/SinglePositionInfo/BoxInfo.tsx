@@ -101,11 +101,9 @@ export const BoxInfo: React.FC<{
           ) : null}
         </Grid>
 
-        {
-          typeof swapHandler !== 'undefined'
-            ? <img src={SwapPosition} className={classes.arrowsIcon} onClick={swapHandler} />
-            : null
-        }
+        {typeof swapHandler !== 'undefined' ? (
+          <img src={SwapPosition} className={classes.arrowsIcon} onClick={swapHandler} />
+        ) : null}
 
         <Grid className={classes.tokenArea}>
           <Grid className={classes.tokenAreaUpperPart}>
