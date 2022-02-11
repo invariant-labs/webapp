@@ -91,6 +91,8 @@ storiesOf('positionsList/list', module)
             onConnect: () => {},
             onDisconnect: () => {}
           }}
+          searchValue={''}
+          searchSetValue={() => {}}
         />
       </Grid>
     )

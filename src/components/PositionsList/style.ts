@@ -10,12 +10,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   header: {
-    paddingBottom: 28
+    paddingBottom: 16,
+    display: 'flex',
+    alignItems: 'flex-end'
+  },
+  titleBar: {
+    display: 'flex',
+    marginBottom: 20
   },
   title: {
     color: colors.invariant.text,
     ...newTypography.heading4,
-    fontWeight: 700
+    fontWeight: 500
   },
   positionsNumber: {
     width: 28,
@@ -52,31 +58,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   button: {
+    color: colors.invariant.dark,
     ...newTypography.body1,
     textTransform: 'none',
-    background: colors.invariant.pinkLinearGradientOpacity,
-    color: colors.invariant.dark,
     borderRadius: 14,
     height: 40,
     minWidth: 130,
     paddingInline: 0,
     marginLeft: 16,
-    [theme.breakpoints.down('xs')]: {
-      minWidth: 100
-    },
+    background:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
 
     '&:hover': {
-      background: colors.invariant.pinkLinearGradient,
-      boxShadow: '0px 0px 16px rgba(239, 132, 0, 0.35)'
-    }
+      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
+      boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)'
+    },
+    [theme.breakpoints.down('xs')]: {}
   },
   buttonText: {
-    WebkitPaddingBefore: '2px',
-    [theme.breakpoints.down('xs')]: {
-      position: 'absolute',
-      top: 10,
-      ...newTypography.caption1
-    }
+    WebkitPaddingBefore: '2px'
   },
   noPositionsText: {
     ...newTypography.heading1,

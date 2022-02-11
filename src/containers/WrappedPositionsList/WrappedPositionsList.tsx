@@ -117,7 +117,6 @@ export const WrappedPositionsList: React.FC = () => {
         },
         descCustomText: 'No liquidity positions to show.'
       }}
-      searchPosition={''}
     />
   )
 }
