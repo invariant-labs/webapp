@@ -44,11 +44,11 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
 
   useEffect(() => {
     const initSideDist = Math.abs(
-      midPrice.x -
+      leftRange.x -
         calcPrice(
           Math.max(
             spacingMultiplicityGte(MIN_TICK, tickSpacing),
-            midPrice.index - tickSpacing * 15
+            leftRange.index - tickSpacing * 15
           ),
           true,
           xDecimal,
@@ -56,9 +56,9 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         )
     )
 
-    setPlotMin(midPrice.x - initSideDist)
-    setPlotMax(midPrice.x + initSideDist)
-  }, [ticksLoading, midPrice])
+    setPlotMin(leftRange.x - initSideDist)
+    setPlotMax(rightRange.x + initSideDist)
+  }, [ticksLoading, leftRange, rightRange])
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
