@@ -3,20 +3,27 @@ import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
+    posiiton: 'relative',
+    width: 'auto',
     textTransform: 'none',
     boxShadow: 'none',
-    borderRadius: 13,
-    minWidth: 80,
+    borderRadius: 12,
+    height: 36,
+    minWidth: 'auto',
     fontFamily: 'Mukta',
-    backgroundColor: colors.invariant.componentBcg,
+    backgroundColor: colors.invariant.light,
     ...newTypography.body3,
-    padding: 12,
+    padding: 15,
+
+    filter: 'brightness(0.8)',
 
     '&:hover': {
+      filter: 'brightness(1)',
       backgroundColor: colors.invariant.light
     },
+
     [theme.breakpoints.down('xs')]: {
-      minWidth: 90
+      minWidth: 'auto'
     }
   },
   tokenName: {
@@ -25,11 +32,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.white.main
   },
   icon: {
+    marginRight: 5,
     minWidth: 20,
     height: 20,
     borderRadius: '100%'
   },
-  endIcon: {}
+  endIcon: {
+    marginLeft: 9
+  }
 }))
 
 export default useStyles
