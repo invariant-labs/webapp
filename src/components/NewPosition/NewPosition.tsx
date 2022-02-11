@@ -203,6 +203,17 @@ export const NewPosition: React.FC<INewPosition> = ({
           feeTiers={feeTiers}
           isCurrentPoolExisting={isCurrentPoolExisting}
           progress={progress}
+          onReverseTokens={() => {
+            if (tokenAIndex === null || tokenBIndex === null) {
+              return
+            }
+
+            const pom = tokenAIndex
+            setTokenAIndex(tokenBIndex)
+            setTokenBIndex(pom)
+            setFee(fee)
+            onChangePositionTokens(tokenBIndex, tokenAIndex, fee)
+          }}
         />
 
         <RangeSelector

@@ -7,6 +7,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
 import classNames from 'classnames'
 import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import SwapList from '@static/svg/swap-list.svg'
 import useStyles from './style'
 
 export interface InputState {
@@ -36,6 +37,7 @@ export interface IDepositSelector {
   usdValueA?: number
   percentageChangeB?: number
   usdValueB?: number
+  onReverseTokens: () => void
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -52,7 +54,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   percentageChangeA,
   usdValueA,
   percentageChangeB,
-  usdValueB
+  usdValueB,
+  onReverseTokens
 }) => {
   const classes = useStyles()
 
@@ -159,6 +162,16 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               className={classes.customSelect}
             />
           </Grid>
+
+          <img
+            className={classes.arrows}
+            src={SwapList}
+            alt='Arrow'
+            onClick={() => {
+              setTokenAIndex(tokenBIndex)
+              onReverseTokens()
+            }}
+          />
 
           <Grid className={classes.selectWrapper}>
             <Select

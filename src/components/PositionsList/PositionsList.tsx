@@ -118,11 +118,11 @@ export const PositionsList: React.FC<IProp> = ({
           <NoConnected {...noConnectedBlockerProps} />
         ) : (
           <Typography className={classes.noPositionsText}>
-            {loading ? 'Loading...' : 'Currently you have no liquidity positions.'}
+            {loading ? 'Loading...' : 'No liquidity positions to show.'}
           </Typography>
         )}
       </Grid>
-      {Math.ceil(data.length / itemsPerPage) > 1 ? (
+      {paginator(page).totalPages > 1 ? (
         <PaginationList
           pages={paginator(page).totalPages}
           defaultPage={1}

@@ -31,11 +31,7 @@ const useStyles = makeStyles(() => ({
     marginBottom: 10
   },
   selectWrapper: {
-    flex: '1 1 0%',
-
-    '&:first-child': {
-      marginRight: 8
-    }
+    flex: '1 1 0%'
   },
   customSelect: {
     width: '100%',
@@ -57,6 +53,14 @@ const useStyles = makeStyles(() => ({
   addButton: {
     width: '100%',
     marginTop: 24
+  },
+  arrows: {
+    width: 32,
+    cursor: 'pointer',
+
+    '&:hover': {
+      filter: 'brightness(2)'
+    }
   }
 }))
 
