@@ -97,8 +97,13 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
         <Typography className={classes.infoText}>Value</Typography>
         <Grid className={classes.infoCenter} container item justifyContent='center'>
           <Typography className={classes.greenText}>
-            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)((xToY ? valueX : valueY).toString())}
-            {showPrefix(xToY ? valueX : valueY, isXs || isDesktop ? shorterPrefixConfig : undefined)}{' '}
+            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(
+              (xToY ? valueX : valueY).toString()
+            )}
+            {showPrefix(
+              xToY ? valueX : valueY,
+              isXs || isDesktop ? shorterPrefixConfig : undefined
+            )}{' '}
             {xToY ? tokenXName : tokenYName}
           </Typography>
         </Grid>
@@ -126,7 +131,7 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
               className={classes.arrows}
               src={SwapList}
               alt='Arrow'
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation()
                 setXToY(!xToY)
               }}
@@ -154,12 +159,22 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
           justifyContent='center'
           alignItems='center'>
           <Typography className={classes.infoText}>
-            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)((xToY ? tokenXLiq : tokenYLiq).toString())}
-            {showPrefix(xToY ? tokenXLiq : tokenYLiq, isXs || isDesktop ? shorterPrefixConfig : undefined)}{' '}
+            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(
+              (xToY ? tokenXLiq : tokenYLiq).toString()
+            )}
+            {showPrefix(
+              xToY ? tokenXLiq : tokenYLiq,
+              isXs || isDesktop ? shorterPrefixConfig : undefined
+            )}{' '}
             {xToY ? tokenXName : tokenYName}
             {' - '}
-            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)((xToY ? tokenYLiq : tokenXLiq).toString())}
-            {showPrefix(xToY ? tokenYLiq : tokenXLiq, isXs || isDesktop ? shorterPrefixConfig : undefined)}{' '}
+            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(
+              (xToY ? tokenYLiq : tokenXLiq).toString()
+            )}
+            {showPrefix(
+              xToY ? tokenYLiq : tokenXLiq,
+              isXs || isDesktop ? shorterPrefixConfig : undefined
+            )}{' '}
             {xToY ? tokenYName : tokenXName}
           </Typography>
         </Grid>

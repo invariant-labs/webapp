@@ -105,7 +105,12 @@ export const PositionsList: React.FC<IProp> = ({
       <Grid className={classes.list}>
         {data.length > 0 ? (
           paginator(page).data.map((element, index) => (
-            <Grid onClick={() => { history.push(`/position/${element.id}`) }} key={index} className={classes.itemLink}>
+            <Grid
+              onClick={() => {
+                history.push(`/position/${element.id}`)
+              }}
+              key={index}
+              className={classes.itemLink}>
               <PositionItem key={index} {...element} />
             </Grid>
           ))
