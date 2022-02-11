@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { Button, Grid, Typography, InputAdornment, InputBase } from '@material-ui/core'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { PositionItem } from './PositionItem/PositionItem'
@@ -7,6 +6,7 @@ import { PaginationList } from './Pagination/Pagination'
 import SearchIcon from '@material-ui/icons/Search'
 
 import useStyle from './style'
+import { useHistory } from 'react-router-dom'
 
 export interface ILiquidityItem {
   tokenXName: string
@@ -18,7 +18,8 @@ export interface ILiquidityItem {
   fee: number
   min: number
   max: number
-  value: number
+  valueX: number
+  valueY: number
   id: string
 }
 
@@ -44,6 +45,7 @@ export const PositionsList: React.FC<IProp> = ({
   searchSetValue
 }) => {
   const classes = useStyle()
+  const history = useHistory()
   const [page, setPage] = useState(1)
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,9 +105,9 @@ export const PositionsList: React.FC<IProp> = ({
       <Grid className={classes.list}>
         {data.length > 0 ? (
           paginator(page).data.map((element, index) => (
-            <Link to={`/position/${element.id}`} key={index} className={classes.itemLink}>
+            <Grid onClick={() => { history.push(`/position/${element.id}`) }} key={index} className={classes.itemLink}>
               <PositionItem key={index} {...element} />
-            </Link>
+            </Grid>
           ))
         ) : showNoConnected ? (
           <NoConnected {...noConnectedBlockerProps} />

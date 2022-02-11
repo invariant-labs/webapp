@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:hover': {
-      background: colors.invariant.component
+      background: `${colors.invariant.component}B0`
     },
 
     [theme.breakpoints.down('md')]: {
@@ -40,16 +40,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   arrows: {
-    width: 25,
-    marginLeft: 8,
-    marginRight: 8,
+    width: 36,
+    marginLeft: 4,
+    marginRight: 4,
 
     [theme.breakpoints.down('md')]: {
-      width: 20
+      width: 30
     },
 
     [theme.breakpoints.down('xs')]: {
-      width: 15
+      width: 24
+    },
+
+    '&:hover': {
+      filter: 'brightness(2)'
     }
   },
   names: {
@@ -106,7 +110,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.light,
     borderRadius: 11,
     height: 36,
-    width: 331,
+    width: 320,
     paddingInline: 10,
     marginRight: 8,
 
@@ -120,7 +124,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.light,
     borderRadius: 11,
     height: 36,
-    width: 164,
+    width: 160,
     paddingInline: 12,
 
     [theme.breakpoints.down('xs')]: {

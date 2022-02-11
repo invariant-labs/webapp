@@ -88,6 +88,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   itemLink: {
     textDecoration: 'none',
+    cursor: 'pointer',
 
     '&:not(:last-child)': {
       display: 'block',

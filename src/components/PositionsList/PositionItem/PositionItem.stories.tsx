@@ -14,7 +14,8 @@ storiesOf('positionsList/item', module).add('item', () => {
       min={2149.6}
       max={149.6}
       fee={0.05}
-      value={10000.45}
+      valueX={10000.45}
+      valueY={2137.4}
       id='dd'
     />
   )
