@@ -9,22 +9,21 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     ...newTypography.body1,
     color: colors.invariant.componentBcg,
-    background: colors.invariant.pinkLinearGradientOpacity,
+    background: colors.invariant.pinkLinearGradient,
     transition: 'background-color 0ms ease, box-shadow 150ms linear',
     position: 'relative',
     overflow: 'hidden',
     zIndex: 4,
-
     '&:disabled': {
-      backgroundColor: colors.invariant.light,
-      color: colors.invariant.componentBcg,
-      background: 'none'
+      background: colors.invariant.light,
+      color: colors.invariant.componentBcg
     }
   },
+
   buttonRelease: {
-    backgroundColor: colors.invariant.componentOut4,
+    background: `${colors.invariant.componentOut4} !important`,
     '&:hover': {
-      backgroundColor: `${colors.invariant.componentOut4} !important`
+      background: `${colors.invariant.componentOut4} !important`
     }
   },
   '@keyframes slide-start': {
