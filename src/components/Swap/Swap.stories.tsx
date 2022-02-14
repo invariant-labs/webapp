@@ -151,7 +151,8 @@ storiesOf('newUi/swap', module)
           poolIndex: 0,
           tokenFrom: DEFAULT_PUBLIC_KEY,
           tokenTo: DEFAULT_PUBLIC_KEY,
-          amount: new BN(0),
+          amountIn: new BN(0),
+          amountOut: new BN(0),
           byAmountIn: false
         }}
         onSetPair={() => {}}

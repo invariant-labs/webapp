@@ -11,11 +11,12 @@ export interface Swap {
   poolIndex: number
   tokenFrom: PublicKey
   tokenTo: PublicKey
-  amount: BN
+  amountIn: BN
   byAmountIn: boolean
   txid?: string
   inProgress?: boolean
   success?: boolean
+  amountOut: BN
 }
 
 export interface Simulate {
@@ -39,8 +40,9 @@ export const defaultState: ISwapStore = {
     poolIndex: 0,
     tokenFrom: DEFAULT_PUBLIC_KEY,
     tokenTo: DEFAULT_PUBLIC_KEY,
-    amount: new BN(0),
-    byAmountIn: false
+    amountIn: new BN(0),
+    byAmountIn: false,
+    amountOut: new BN(0)
   }
 }
 
