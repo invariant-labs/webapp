@@ -3,7 +3,7 @@ import { Grid, Typography, Box } from '@material-ui/core'
 import { formatNumbers, showPrefix } from '@consts/utils'
 import { ResponsiveBar } from '@nivo/bar'
 import classNames from 'classnames'
-import { useStyles } from './styles'
+import { useStyles } from './style'
 import { colors } from '@static/theme'
 
 interface StatsInterface {
@@ -29,7 +29,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, uniqueKeys, d
     grid: { line: { stroke: 'transparent' } }
   }
 
-  const isLower = percentVolume < 0
+  const isLower = percentVolume < 0 ?  
 
   return (
     <Grid className={classes.container}>

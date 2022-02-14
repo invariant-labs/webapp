@@ -4,7 +4,7 @@ import { ResponsiveLine } from '@nivo/line'
 import { linearGradientDef } from '@nivo/core'
 import { formatNumbers, showPrefix } from '@consts/utils'
 import { Grid, Box, Typography } from '@material-ui/core'
-import { useStyles } from './styles'
+import { useStyles } from './style'
 import classNames from 'classnames'
 import { colors } from '@static/theme'
 
@@ -38,6 +38,8 @@ const Liquidity: React.FC<LiquidityInterface> = ({
     }
   }
 
+  const isLower = liquidityPercent < 0
+
   return (
     <Grid className={classes.container}>
       <Box className={classes.liquidityContainer}>
@@ -51,13 +53,13 @@ const Liquidity: React.FC<LiquidityInterface> = ({
             <Box
               className={classNames(
                 classes.volumeStatusColor,
-                liquidityPercent < 0 ? classes.backgroundVolumeLow : classes.backgroundVolumeUp
+                isLower ? classes.backgroundVolumeLow : classes.backgroundVolumeUp
               )}>
               <Typography
                 component='p'
                 className={classNames(
                   classes.volumeStatusHeader,
-                  liquidityPercent < 0 ? classes.volumeLow : classes.volumeUp
+                  isLower ? classes.volumeLow : classes.volumeUp
                 )}>
                 {liquidityPercent < 0
                   ? `-${liquidityPercent.toString().split('-')[1]}`
