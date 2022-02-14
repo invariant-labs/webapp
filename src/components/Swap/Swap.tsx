@@ -216,9 +216,7 @@ export const Swap: React.FC<ISwap> = ({
             tokens[tokenFromIndex].address,
             tokens[tokenToIndex].address,
             printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),
-            true,
-            tokens[tokenFromIndex].decimals,
-            tokens[tokenToIndex].decimals
+            true
           )
         )
       } else if (inputRef === inputTarget.TO) {
@@ -232,9 +230,7 @@ export const Swap: React.FC<ISwap> = ({
             tokens[tokenFromIndex].address,
             tokens[tokenToIndex].address,
             printBNtoBN(amountTo, tokens[tokenToIndex].decimals),
-            false,
-            tokens[tokenFromIndex].decimals,
-            tokens[tokenToIndex].decimals
+            false
           )
         )
       }

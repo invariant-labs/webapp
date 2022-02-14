@@ -533,9 +533,7 @@ export const handleSimulate = async (
   fromToken: PublicKey,
   toToken: PublicKey,
   amount: BN,
-  byAmountIn: boolean,
-  fromDecimal: number,
-  toDecimal: number
+  byAmountIn: boolean
 ): Promise<{
   amountOut: BN
   poolIndex: number
@@ -576,11 +574,7 @@ export const handleSimulate = async (
       byAmountIn: byAmountIn,
       swapAmount: amount,
       currentPrice: {
-        v: calcCurrentPriceOfPool(
-          filteredPools[0],
-          isXtoY ? fromDecimal : toDecimal,
-          isXtoY ? toDecimal : fromDecimal
-        )
+        v: isXtoY ? new BN(1) : new BN('340282366920938463463374607431768211455')
       },
       slippage: slippage,
       pool: filteredPools[0],
