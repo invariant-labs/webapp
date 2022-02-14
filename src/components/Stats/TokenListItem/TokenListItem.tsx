@@ -3,7 +3,7 @@ import { printBN } from '@consts/utils'
 import { Grid, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
 import { colors } from '@static/theme'
-
+import icons from '@static/icons'
 import { useStyles } from './style'
 
 interface IProps {
@@ -22,7 +22,7 @@ interface IProps {
 const TokenListItem: React.FC<IProps> = ({
   displayType,
   itemNumber,
-  icon,
+  icon = 'BTCIcon',
   name,
   symbol,
   price = new BN(0),
@@ -36,20 +36,30 @@ const TokenListItem: React.FC<IProps> = ({
   return (
     <Grid>
       {displayType === 'tokens' ? (
-        <Grid container style={{ color: colors.white.main }} className={classes.container}>
+        <Grid
+          container
+          style={{ color: colors.white.main }}
+          classes={{ container: classes.container, root: classes.tokenList }}>
           <Typography component='p'>{itemNumber}</Typography>
-          <Grid>
-            <Typography>{`${name} (${symbol})`}</Typography>
+          <Grid className={classes.tokenName}>
+            <img src={icons[icon]}></img>
+            <Typography>
+              {`${name}`}
+              <span className={classes.tokenSymbol}>{` (${symbol})`}</span>
+            </Typography>
           </Grid>
           <Typography>${Number(printBN(price, decimals)).toFixed(2)}</Typography>
           <Typography style={{ color: isNegative ? colors.invariant.error : colors.green.main }}>
-            {isNegative ? `${priceChange}%` : `+${priceChange}%`}
+            {isNegative ? `- ${Math.abs(Number(priceChange))}%` : `+ ${priceChange}%`}
           </Typography>
           <Typography>{volume}</Typography>
           <Typography>{TVL}</Typography>
         </Grid>
       ) : (
-        <Grid container style={{ color: '#A9B6BF' }} className={classes.container}>
+        <Grid
+          container
+          style={{ color: colors.invariant.textGrey, fontWeight: 400 }}
+          classes={{ container: classes.container, root: classes.header }}>
           <Typography style={{ lineHeight: '12px' }}>
             N<sup>o</sup>
           </Typography>

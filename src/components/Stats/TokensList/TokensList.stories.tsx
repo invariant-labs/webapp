@@ -48,10 +48,10 @@ storiesOf('stats/TokenList', module).add('Item', () => {
         TVL: '234,413,532.43'
       },
       {
-        icon: 'NEAR',
-        name: 'Near',
-        symbol: 'NEAR',
-        price: new BN(3221452),
+        icon: 'USD',
+        name: 'Dollar',
+        symbol: 'USDC',
+        price: new BN(1000000),
         decimals: 6,
         priceChange: '2.33',
         volume: '421,323,423.23',
