@@ -149,7 +149,7 @@ export const NewPositionWrapper = () => {
       onChangePositionTokens={(tokenA, tokenB, fee) => {
         setTokenAIndex(tokenA)
         setTokenBIndex(tokenB)
-        if (tokenA !== null && tokenB !== null) {
+        if (tokenA !== null && tokenB !== null && !(tokenAIndex === tokenA && tokenBIndex === tokenB)) {
           const index = allPools.findIndex(
             pool =>
               pool.fee.v.eq(FEE_TIERS[fee].fee) &&
@@ -165,7 +165,7 @@ export const NewPositionWrapper = () => {
             setCurrentPairReversed(!currentPairReversed)
           }
 
-          if (index !== -1) {
+          if (index !== -1 && index !== poolIndex) {
             dispatch(
               actions.getCurrentPlotTicks({
                 poolIndex: index,
@@ -302,6 +302,7 @@ export const NewPositionWrapper = () => {
       tickSpacing={tickSpacing}
       xDecimal={xDecimal}
       yDecimal={yDecimal}
+      poolIndex={poolIndex}
     />
   )
 }

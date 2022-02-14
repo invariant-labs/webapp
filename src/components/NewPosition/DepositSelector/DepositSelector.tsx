@@ -38,6 +38,7 @@ export interface IDepositSelector {
   percentageChangeB?: number
   usdValueB?: number
   onReverseTokens: () => void
+  poolIndex: number | null
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -55,7 +56,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   usdValueA,
   percentageChangeB,
   usdValueB,
-  onReverseTokens
+  onReverseTokens,
+  poolIndex
 }) => {
   const classes = useStyles()
 
@@ -131,9 +133,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
   useEffect(() => {
     if (
-      tokenAIndex !== null &&
-      tokenBIndex !== null &&
-      !tokensB.find(token => token.symbol === tokens[tokenAIndex].symbol)
+      poolIndex === null
     ) {
       const indexB = tokensB.length
         ? tokens.findIndex(token => token.symbol === tokensB[0].symbol)
@@ -141,7 +141,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       setTokenBIndex(indexB)
       setPositionTokens(tokenAIndex, indexB, feeTierIndex)
     }
-  }, [tokensB])
+  }, [tokensB, poolIndex])
 
   return (
     <Grid container direction='column' className={classNames(classes.wrapper, className)}>
@@ -168,7 +168,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             src={SwapList}
             alt='Arrow'
             onClick={() => {
+              const pom = tokenAIndex
               setTokenAIndex(tokenBIndex)
+              setTokenBIndex(pom)
               onReverseTokens()
             }}
           />

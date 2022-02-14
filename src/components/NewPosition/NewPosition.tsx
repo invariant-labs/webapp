@@ -48,6 +48,7 @@ export interface INewPosition {
   xDecimal: number
   yDecimal: number
   tickSpacing: number
+  poolIndex: number | null
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -67,7 +68,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   isXtoY,
   xDecimal,
   yDecimal,
-  tickSpacing
+  tickSpacing,
+  poolIndex
 }) => {
   const classes = useStyles()
 
@@ -214,6 +216,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             setFee(fee)
             onChangePositionTokens(tokenBIndex, tokenAIndex, fee)
           }}
+          poolIndex={poolIndex}
         />
 
         <RangeSelector
