@@ -148,7 +148,7 @@ storiesOf('newUi/swap', module)
         fullSolBalance={new BN(2137)}
         swapData={{
           slippage: { v: fromFee(new BN(1000)) },
-          knownPrice: { v: new BN(0) },
+          estimatedPriceAfterSwap: { v: new BN(0) },
           poolIndex: 0,
           tokenFrom: DEFAULT_PUBLIC_KEY,
           tokenTo: DEFAULT_PUBLIC_KEY,

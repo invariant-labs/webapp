@@ -18,8 +18,16 @@ export function* handleSwapWithSOL(): Generator {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const networkType = yield* select(network)
-    const { slippage, tokenFrom, tokenTo, amountIn, knownPrice, poolIndex, byAmountIn, amountOut } =
-      yield* select(swap)
+    const {
+      slippage,
+      tokenFrom,
+      tokenTo,
+      amountIn,
+      estimatedPriceAfterSwap,
+      poolIndex,
+      byAmountIn,
+      amountOut
+    } = yield* select(swap)
 
     const wallet = yield* call(getWallet)
     const tokensAccounts = yield* select(accounts)
@@ -125,7 +133,7 @@ export function* handleSwapWithSOL(): Generator {
       pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,
       amount: byAmountIn ? amountIn : amountOut,
-      estimatedPriceAfterSwap: knownPrice,
+      estimatedPriceAfterSwap,
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
       accountY: isXtoY ? toAddress : fromAddress,
@@ -218,8 +226,16 @@ export function* handleSwap(): Generator {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const networkType = yield* select(network)
-    const { slippage, tokenFrom, tokenTo, amountIn, knownPrice, poolIndex, byAmountIn, amountOut } =
-      yield* select(swap)
+    const {
+      slippage,
+      tokenFrom,
+      tokenTo,
+      amountIn,
+      estimatedPriceAfterSwap,
+      poolIndex,
+      byAmountIn,
+      amountOut
+    } = yield* select(swap)
 
     if (
       allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
@@ -259,7 +275,7 @@ export function* handleSwap(): Generator {
       pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,
       amount: byAmountIn ? amountIn : amountOut,
-      estimatedPriceAfterSwap: knownPrice,
+      estimatedPriceAfterSwap,
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
       accountY: isXtoY ? toAddress : fromAddress,
