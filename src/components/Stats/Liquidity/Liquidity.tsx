@@ -40,6 +40,11 @@ const Liquidity: React.FC<LiquidityInterface> = ({
 
   const isLower = liquidityPercent < 0
 
+  const lineKey = positions.map(({ data }) => data.map(({ x }) => x))
+  const reduceArray = lineKey.reduce((array, isArray) =>
+    Array.isArray(isArray) ? array.concat(isArray) : array
+  )
+
   return (
     <Grid className={classes.container}>
       <Box className={classes.liquidityContainer}>
@@ -74,12 +79,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
         <ResponsiveLine
           data={positions}
           margin={{ top: 30, bottom: 20, left: 10, right: 20 }}
-          axisBottom={{
-            tickSize: 0,
-            tickPadding: 10,
-            tickRotation: 0,
-            tickValues: 5
-          }}
+          axisBottom={null}
           legends={[]}
           axisTop={null}
           axisRight={null}
@@ -105,6 +105,13 @@ const Liquidity: React.FC<LiquidityInterface> = ({
           fill={[{ match: '*', id: 'gradient' }]}
         />
       </div>
+      <Box className={classes.LineKeys}>
+        {reduceArray.map((keyLine, i) => (
+          <Typography key={i} className={classes.keyPTag}>
+            {keyLine}
+          </Typography>
+        ))}
+      </Box>
     </Grid>
   )
 }

@@ -16,6 +16,7 @@ export const useStyles = makeStyles(() => ({
     fontWeight: 'normal',
     marginLeft: 20
   },
+
   liquidityHeader: {
     color: '#A9B6BF',
     ...newTypography.body2
@@ -26,10 +27,12 @@ export const useStyles = makeStyles(() => ({
     letterSpacing: '-0.03em',
     marginTop: 5
   },
+
   barContainer: {
     height: 200,
     display: 'flex'
   },
+
   volumePercentHeader: {
     display: 'flex',
     alignItems: 'center'
@@ -67,5 +70,16 @@ export const useStyles = makeStyles(() => ({
 
   volumeUp: {
     color: colors.invariant.green
+  },
+
+  LineKeys: {
+    marginLeft: 10,
+    marginRight: 30,
+    display: 'flex',
+    width: '100%'
+  },
+
+  keyPTag: {
+    width: '100%'
   }
 }))
