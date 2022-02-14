@@ -80,6 +80,7 @@ export const useStyles = makeStyles(() => ({
   },
 
   keyPTag: {
-    width: '100%'
+    width: '100%',
+    color: colors.invariant.textGrey
   }
 }))
