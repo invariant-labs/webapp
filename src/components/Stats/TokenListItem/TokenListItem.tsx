@@ -50,7 +50,7 @@ const TokenListItem: React.FC<IProps> = ({
         </Grid>
       ) : (
         <Grid container style={{ color: '#A9B6BF' }} className={classes.container}>
-          <Typography>
+          <Typography style={{ lineHeight: '12px' }}>
             N<sup>o</sup>
           </Typography>
           <Grid>

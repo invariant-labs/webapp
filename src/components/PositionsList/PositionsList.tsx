@@ -88,6 +88,7 @@ export const PositionsList: React.FC<IProp> = ({
           pages={paginator(page).totalPages}
           defaultPage={1}
           handleChangePage={handleChangePagination}
+          variant='end'
         />
       ) : null}
     </Grid>

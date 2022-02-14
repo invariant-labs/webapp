@@ -50,6 +50,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
           pages={Math.ceil(data.length / 7)}
           defaultPage={1}
           handleChangePage={handleChangePagination}
+          variant='center'
         />
       </Grid>
     </Grid>
