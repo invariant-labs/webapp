@@ -144,10 +144,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   const reversePlot = () => {
-    changeRangeHandler(
-      rightRange,
-      leftRange
-    )
+    changeRangeHandler(rightRange, leftRange)
     const pom = 1 / plotMin
     setPlotMin(1 / plotMax)
     setPlotMax(pom)

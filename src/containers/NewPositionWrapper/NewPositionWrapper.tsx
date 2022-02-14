@@ -149,7 +149,11 @@ export const NewPositionWrapper = () => {
       tokens={tokens}
       tokensB={tokensB}
       onChangePositionTokens={(tokenA, tokenB, fee) => {
-        if (tokenA !== null && tokenB !== null && !(tokenAIndex === tokenA && tokenBIndex === tokenB && fee === feeTier)) {
+        if (
+          tokenA !== null &&
+          tokenB !== null &&
+          !(tokenAIndex === tokenA && tokenBIndex === tokenB && fee === feeTier)
+        ) {
           const index = allPools.findIndex(
             pool =>
               pool.fee.v.eq(FEE_TIERS[fee].fee) &&
