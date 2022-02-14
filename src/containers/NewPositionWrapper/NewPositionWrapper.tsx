@@ -128,13 +128,19 @@ export const NewPositionWrapper = () => {
     return Object.values(unique)
   }, [tokenAIndex, allPools.length])
 
+  const [currentPairReversed, setCurrentPairReversed] = useState<boolean>(false)
+
   const data = useMemo(() => {
     if (ticksLoading) {
       return createPlaceholderLiquidityPlot(isXtoY, 10, tickSpacing, xDecimal, yDecimal)
     }
 
+    if (currentPairReversed) {
+      return ticksData.map(tick => ({ ...tick, x: 1 / tick.x })).reverse()
+    }
+
     return ticksData
-  }, [ticksData, ticksLoading, isXtoY, tickSpacing, xDecimal, yDecimal])
+  }, [ticksData, ticksLoading, isXtoY, tickSpacing, xDecimal, yDecimal, currentPairReversed])
 
   return (
     <NewPosition
@@ -153,7 +159,11 @@ export const NewPositionWrapper = () => {
                   pool.tokenY.equals(tokens[tokenA].assetAddress)))
           )
 
-          setPoolIndex(index !== -1 ? index : null)
+          if (index !== poolIndex) {
+            setPoolIndex(index !== -1 ? index : null)
+          } else {
+            setCurrentPairReversed(!currentPairReversed)
+          }
 
           if (index !== -1) {
             dispatch(
