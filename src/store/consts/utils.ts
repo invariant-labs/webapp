@@ -541,6 +541,7 @@ export const handleSimulate = async (
   poolIndex: number
   simulateSuccess: boolean
   AmountOutWithFee: BN
+  estimatedPriceAfterSwap: BN
 }> => {
   const marketProgram = getMarketProgramSync()
   const filteredPools = findPairs(fromToken, toToken, pools)
@@ -549,12 +550,15 @@ export const handleSimulate = async (
   let isXtoY = false
   let resaultWithFee: BN = new BN(0)
   let resault
+  let estimatedPrice: BN = new BN(0)
+
   if (amount.eq(new BN(0))) {
     return {
       amountOut: new BN(0),
       poolIndex: poolIndex,
       simulateSuccess: true,
-      AmountOutWithFee: new BN(0)
+      AmountOutWithFee: new BN(0),
+      estimatedPriceAfterSwap: new BN(0)
     }
   }
   isXtoY = fromToken.equals(filteredPools[0].tokenX)
@@ -596,6 +600,7 @@ export const handleSimulate = async (
       resaultWithFee = resault.add(swapSimulateResault.accumulatedFee)
       poolIndex = findPoolIndex(filteredPools[0].address, pools)
       swapSimulateRouterAmount = resault
+      estimatedPrice = swapSimulateResault.priceAfterSwap
     }
   } catch (error) {
     console.log(error)
@@ -605,14 +610,16 @@ export const handleSimulate = async (
       amountOut: new BN(0),
       poolIndex: poolIndex,
       simulateSuccess: false,
-      AmountOutWithFee: new BN(0)
+      AmountOutWithFee: new BN(0),
+      estimatedPriceAfterSwap: new BN(0)
     }
   }
   return {
     amountOut: swapSimulateRouterAmount,
     poolIndex: poolIndex,
     simulateSuccess: true,
-    AmountOutWithFee: resaultWithFee
+    AmountOutWithFee: resaultWithFee,
+    estimatedPriceAfterSwap: estimatedPrice
   }
 }
 
