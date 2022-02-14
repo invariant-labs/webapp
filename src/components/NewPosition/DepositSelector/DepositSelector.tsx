@@ -119,9 +119,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         tokenAInputState.setValue(parts[0] + '.' + parts[1].slice(0, tokens[tokenAIndex].decimals))
       }
     }
-  }, [tokenAIndex])
 
-  useEffect(() => {
     if (tokenBIndex !== null) {
       if (getScaleFromString(tokenBInputState.value) > tokens[tokenBIndex].decimals) {
         const parts = tokenBInputState.value.split('.')
@@ -129,7 +127,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         tokenAInputState.setValue(parts[0] + '.' + parts[1].slice(0, tokens[tokenBIndex].decimals))
       }
     }
-  }, [tokenBIndex])
+  }, [poolIndex])
 
   useEffect(() => {
     if (
@@ -171,6 +169,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             src={SwapList}
             alt='Arrow'
             onClick={() => {
+              if (!tokenBInputState.blocked) {
+                tokenAInputState.setValue(tokenBInputState.value)
+              } else {
+                tokenBInputState.setValue(tokenAInputState.value)
+              }
               const pom = tokenAIndex
               setTokenAIndex(tokenBIndex)
               setTokenBIndex(pom)

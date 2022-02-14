@@ -58,5 +58,6 @@ storiesOf('position/depositSelector', module).add('deposit', () => (
     isCurrentPoolExisting={true}
     progress='none'
     onReverseTokens={() => {}}
+    poolIndex={0}
   />
 ))

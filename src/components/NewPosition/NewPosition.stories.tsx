@@ -80,6 +80,8 @@ storiesOf('position/newPosition', module)
         yDecimal={6}
         tickSpacing={1}
         isXtoY={true}
+        poolIndex={0}
+        currentPairReversed={null}
       />
     </div>
   ))
@@ -109,6 +111,8 @@ storiesOf('position/newPosition', module)
         yDecimal={6}
         tickSpacing={4}
         isXtoY={true}
+        poolIndex={0}
+        currentPairReversed={null}
       />
     </div>
   ))
