@@ -177,7 +177,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
-              (isXtoY ? rightRange <= midPrice.index : rightRange > midPrice.index),
+              (isXtoY ? (rightRange <= midPrice.index) && !(leftRange > midPrice.index) : (rightRange > midPrice.index) && !(leftRange <= midPrice.index)),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimals : 0
           }}
@@ -200,7 +200,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
-              (isXtoY ? leftRange > midPrice.index : leftRange <= midPrice.index),
+              (isXtoY ? (leftRange > midPrice.index) && !(rightRange <= midPrice.index) : (leftRange <= midPrice.index) && !(rightRange > midPrice.index)),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimals : 0
           }}
