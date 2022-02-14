@@ -49,6 +49,7 @@ export interface INewPosition {
   yDecimal: number
   tickSpacing: number
   poolIndex: number | null
+  currentPairReversed: boolean | null
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -69,7 +70,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   xDecimal,
   yDecimal,
   tickSpacing,
-  poolIndex
+  poolIndex,
+  currentPairReversed
 }) => {
   const classes = useStyles()
 
@@ -279,6 +281,7 @@ export const NewPosition: React.FC<INewPosition> = ({
           xDecimal={xDecimal}
           yDecimal={yDecimal}
           fee={fee}
+          currentPairReversed={currentPairReversed}
         />
       </Grid>
     </Grid>

@@ -133,7 +133,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
   useEffect(() => {
     if (
-      poolIndex === null
+      poolIndex === null &&
+      tokenAIndex !== null &&
+      tokenBIndex !== null &&
+      !tokensB.find(token => token.symbol === tokens[tokenAIndex].symbol)
     ) {
       const indexB = tokensB.length
         ? tokens.findIndex(token => token.symbol === tokensB[0].symbol)

@@ -128,28 +128,28 @@ export const NewPositionWrapper = () => {
     return Object.values(unique)
   }, [tokenAIndex, allPools.length])
 
-  const [currentPairReversed, setCurrentPairReversed] = useState<boolean>(false)
+  const [currentPairReversed, setCurrentPairReversed] = useState<boolean | null>(null)
 
   const data = useMemo(() => {
     if (ticksLoading) {
       return createPlaceholderLiquidityPlot(isXtoY, 10, tickSpacing, xDecimal, yDecimal)
     }
 
-    if (currentPairReversed) {
+    if (currentPairReversed === true) {
       return ticksData.map(tick => ({ ...tick, x: 1 / tick.x })).reverse()
     }
 
     return ticksData
   }, [ticksData, ticksLoading, isXtoY, tickSpacing, xDecimal, yDecimal, currentPairReversed])
 
+  const [feeTier, setFeeTier] = useState(-1)
+
   return (
     <NewPosition
       tokens={tokens}
       tokensB={tokensB}
       onChangePositionTokens={(tokenA, tokenB, fee) => {
-        setTokenAIndex(tokenA)
-        setTokenBIndex(tokenB)
-        if (tokenA !== null && tokenB !== null && !(tokenAIndex === tokenA && tokenBIndex === tokenB)) {
+        if (tokenA !== null && tokenB !== null && !(tokenAIndex === tokenA && tokenBIndex === tokenB && fee === feeTier)) {
           const index = allPools.findIndex(
             pool =>
               pool.fee.v.eq(FEE_TIERS[fee].fee) &&
@@ -161,8 +161,9 @@ export const NewPositionWrapper = () => {
 
           if (index !== poolIndex) {
             setPoolIndex(index !== -1 ? index : null)
+            setCurrentPairReversed(null)
           } else {
-            setCurrentPairReversed(!currentPairReversed)
+            setCurrentPairReversed(currentPairReversed === null ? true : !currentPairReversed)
           }
 
           if (index !== -1 && index !== poolIndex) {
@@ -174,6 +175,10 @@ export const NewPositionWrapper = () => {
             )
           }
         }
+
+        setTokenAIndex(tokenA)
+        setTokenBIndex(tokenB)
+        setFeeTier(fee)
       }}
       feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, PRICE_DECIMAL - 2))}
       data={data}
@@ -303,6 +308,7 @@ export const NewPositionWrapper = () => {
       xDecimal={xDecimal}
       yDecimal={yDecimal}
       poolIndex={poolIndex}
+      currentPairReversed={currentPairReversed}
     />
   )
 }
