@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     backgroundColor: colors.invariant.componentBcg,
     borderRadius: 20,
-    padding: '12px 12px 6px 12px',
+    padding: '6px 12px 6px 12px',
     ...newTypography.heading2,
     display: 'grid',
     gridTemplateAreas: `
@@ -50,7 +50,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     gridColumn: '1/-1',
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 6,
+
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: 0
+    }
   },
   currency: {
     height: 36,
