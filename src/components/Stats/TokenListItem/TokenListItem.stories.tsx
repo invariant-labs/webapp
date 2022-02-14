@@ -5,7 +5,6 @@ import { BN } from '@project-serum/anchor'
 
 storiesOf('stats/TokenListItem', module)
   .add('Item', () => {
-    let a = 9
     return (
       <TokenListItem
         displayType='tokens'

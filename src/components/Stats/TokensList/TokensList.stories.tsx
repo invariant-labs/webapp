@@ -1,7 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import TokensList from './TokensList'
-import { ITokensList } from './TokensList'
+import TokensList, { ITokensList } from './TokensList'
 import { BN } from '@project-serum/anchor'
 
 storiesOf('stats/TokenList', module).add('Item', () => {
@@ -59,6 +58,5 @@ storiesOf('stats/TokenList', module).add('Item', () => {
       }
     ]
   }
-  let a = 9
   return <TokensList data={tokens.data} />
 })

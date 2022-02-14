@@ -21,18 +21,18 @@ interface IProps {
 
 const TokenListItem: React.FC<IProps> = ({
   displayType,
-  itemNumber,
+  itemNumber = 0,
   icon = 'BTCIcon',
-  name,
-  symbol,
+  name = 'Bitcoin',
+  symbol = 'BTCIcon',
   price = new BN(0),
   decimals = 0,
-  priceChange,
-  volume,
-  TVL
+  priceChange = '0',
+  volume = '0',
+  TVL = '0'
 }) => {
   const classes = useStyles()
-  const isNegative = Number(priceChange) > 0 ? false : true
+  const isNegative = Number(priceChange) > 0
   return (
     <Grid>
       {displayType === 'tokens' ? (
