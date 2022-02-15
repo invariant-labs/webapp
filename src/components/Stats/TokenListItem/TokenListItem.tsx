@@ -3,7 +3,6 @@ import { printBN } from '@consts/utils'
 import { Grid, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
 import { colors } from '@static/theme'
-import icons from '@static/icons'
 import { useStyles } from './style'
 
 interface IProps {
