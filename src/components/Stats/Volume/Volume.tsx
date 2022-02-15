@@ -11,18 +11,29 @@ interface StatsInterface {
   volume: number
   data: Array<{
     timeStamp: string
-    [key: number]: number
+    value: number[]
   }>
 }
 
 const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
   const classes = useStyles()
 
-  const keys = data.map(({ timeStamp, ...rest }) => rest)
+  const BarData = data.map(el => {
+    const value = el.value
+
+    const timeStamp = el.timeStamp
+
+    const objs = value.reduce((a, v) => ({ ...a, [v]: v }), {})
+
+    return { timeStamp, ...objs }
+  })
+
+  const keys = BarData.map(({ timeStamp, ...rest }) => rest)
 
   const getKeys = keys
     .map(key => Object.keys(key))
     .reduce((array, isArray) => (Array.isArray(isArray) ? array.concat(isArray) : array))
+
   const uniqueKeys = [...new Set(getKeys)]
 
   const Theme = {
@@ -70,7 +81,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
       <div className={classes.barContainer}>
         <ResponsiveBar
           margin={{ top: 70, bottom: 30, left: 0 }}
-          data={data}
+          data={BarData}
           keys={uniqueKeys}
           indexBy='timeStamp'
           labelSkipWidth={2}

@@ -11,39 +11,39 @@ storiesOf('position/Stats', module)
     const [data] = React.useState([
       {
         timeStamp: '1AM',
-        value: 120
+        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
       },
       {
         timeStamp: '4AM',
-        value: 35
+        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
       },
       {
         timeStamp: '7AM',
-        value: 33
+        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
       },
       {
         timeStamp: '10AM',
-        value: 27
+        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
       },
       {
         timeStamp: '1PM',
-        value: 199
+        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
       },
       {
         timeStamp: '4PM',
-        value: 117
+        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
       },
       {
         timeStamp: '7PM',
-        value: 100
+        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
       },
       {
         timeStamp: '10PM',
-        value: 200
+        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
       },
       {
         timeStamp: '10PM',
-        value: 200
+        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
       }
     ])
 
