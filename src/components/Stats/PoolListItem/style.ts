@@ -31,9 +31,7 @@ const useStyle = makeStyles(() => ({
     }
   },
   symbolsContainer: {
-    marginLeft: 10,
-    display: 'flex',
-    alignItems: 'center'
+    marginLeft: 10
   }
 }))
 

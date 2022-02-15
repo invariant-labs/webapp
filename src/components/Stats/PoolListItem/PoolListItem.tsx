@@ -41,7 +41,9 @@ const PoolListItem: React.FC<IProps> = ({
               <img src={iconTo} />
             </Box>
             <Box className={classes.symbolsContainer}>
-              <Typography>{symbolFrom}</Typography>/<Typography>{symbolTo}</Typography>
+              <Typography>
+                {symbolFrom}/{symbolTo}
+              </Typography>
             </Box>
           </Grid>
           <Typography>{fee}%</Typography>

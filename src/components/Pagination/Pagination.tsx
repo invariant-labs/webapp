@@ -3,26 +3,23 @@ import { Pagination } from '@material-ui/lab'
 import useStyle from './style'
 import { useMediaQuery } from '@material-ui/core'
 import { theme } from '@static/theme'
-import classNames from 'classnames'
 export interface IProps {
   pages: number
   defaultPage: number
   handleChangePage: (page: number) => void
   variant: string
-  className?: string
 }
 
 export const PaginationList: React.FC<IProps> = ({
   pages,
   defaultPage,
   handleChangePage,
-  variant,
-  className
+  variant
 }) => {
   const classes = useStyle()
   const matches = useMediaQuery(theme.breakpoints.down('xs'))
   return (
-    <div className={classNames(classes.root, className)} style={{ justifyContent: `${variant}` }}>
+    <div className={classes.root} style={{ justifyContent: `${variant}` }}>
       <Pagination
         count={pages}
         shape='rounded'
