@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 export const useStyles = makeStyles((theme: Theme) => ({
   transactionDetailsInfo: {
@@ -15,24 +15,26 @@ export const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     color: colors.white.main,
-    padding: '5px 15px 5px 15px',
+    padding: '10px 15px 10px 15px',
     borderRadius: 20,
     [theme.breakpoints.down('sm')]: {
       left: 105
     },
     '& p': {
-      ...typography.body2
+      ...newTypography.body2
     }
   },
   closeTransactionContainer: {
     display: 'flex',
     justifyContent: 'space-between',
+    marginBottom: 8,
     '& p': {
-      ...typography.heading1
+      ...newTypography.heading1
     }
   },
 
   closeTransactionButton: {
+    minWidth: 0,
     background: 'none',
     '&:hover': {
       background: 'none !important'
@@ -63,13 +65,13 @@ export const useStyles = makeStyles((theme: Theme) => ({
   detailsInfoWrapper: {
     height: 'auto',
     '& h1': {
-      ...typography.heading4
+      ...newTypography.heading4
     },
     '& p': {
-      ...typography.body2
+      ...newTypography.body2
     },
     '& span': {
-      ...typography.label1,
+      ...newTypography.body2,
       color: colors.invariant.lightGrey
     }
   }

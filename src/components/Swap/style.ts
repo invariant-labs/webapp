@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes slide-down': {
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     paddingBottom: 9,
     '& h1': {
-      ...typography.heading4,
+      ...newTypography.heading4,
       color: colors.white.main
     }
   },
@@ -83,11 +83,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     position: 'relative'
-  },
-  tokenComponentText: {
-    color: colors.invariant.lightGrey,
-    ...typography.label1,
-    paddingLeft: 15
   },
   amountInput: {
     position: 'relative'
@@ -172,7 +167,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   transactionDetailsHeader: {
     color: colors.invariant.lightGrey,
-    ...typography.label1,
+    ...newTypography.caption4,
+    lineHeight: '24px',
     whiteSpace: 'nowrap'
   },
 
@@ -218,6 +214,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       boxShadow:
         '0px 3px 1px -2px rgba(43, 193, 144, 0.2),0px 1px 2px 0px rgba(45, 168, 128, 0.14),0px 0px 5px 7px rgba(59, 183, 142, 0.12)'
     }
+  },
+  noData: {
+    ...newTypography.caption4,
+    lineHeight: '24px'
   }
 }))
 

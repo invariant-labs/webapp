@@ -1,11 +1,12 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   rateText: {
     color: colors.invariant.lightGrey,
     textAlign: 'right',
-    ...typography.label1,
+    ...newTypography.caption4,
+    lineHeight: '24px',
     display: 'flex',
     justifyContent: 'center',
     whiteSpace: 'nowrap'
