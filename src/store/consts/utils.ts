@@ -548,8 +548,8 @@ export const handleSimulate = async (
   let swapSimulateRouterAmount: BN = new BN(-1)
   let poolIndex: number = 0
   let isXtoY = false
-  let resaultWithFee: BN = new BN(0)
-  let resault
+  let resultWithFee: BN = new BN(0)
+  let result
   let estimatedPrice: BN = new BN(0)
 
   if (amount.eq(new BN(0))) {
@@ -571,7 +571,7 @@ export const handleSimulate = async (
     ticks.set(tick.index, tick)
   }
   try {
-    const swapSimulateResault = await simulateSwap({
+    const swapSimulateResult = await simulateSwap({
       xToY: isXtoY,
       byAmountIn: byAmountIn,
       swapAmount: amount,
@@ -584,19 +584,19 @@ export const handleSimulate = async (
       tickmap: tickMap
     })
 
-    if (swapSimulateResault.amountPerTick.length >= 8) {
+    if (swapSimulateResult.amountPerTick.length >= 8) {
       throw new Error('too large amount')
     }
     if (!byAmountIn) {
-      resault = swapSimulateResault.accumulatedAmountIn.add(swapSimulateResault.accumulatedFee)
+      result = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
     } else {
-      resault = swapSimulateResault.accumulatedAmountOut
+      result = swapSimulateResult.accumulatedAmountOut
     }
-    if (swapSimulateRouterAmount.lt(resault)) {
-      resaultWithFee = resault.add(swapSimulateResault.accumulatedFee)
+    if (swapSimulateRouterAmount.lt(result)) {
+      resultWithFee = result.add(swapSimulateResult.accumulatedFee)
       poolIndex = findPoolIndex(filteredPools[0].address, pools)
-      swapSimulateRouterAmount = resault
-      estimatedPrice = swapSimulateResault.priceAfterSwap
+      swapSimulateRouterAmount = result
+      estimatedPrice = swapSimulateResult.priceAfterSwap
     }
   } catch (error) {
     console.log(error)
@@ -614,7 +614,7 @@ export const handleSimulate = async (
     amountOut: swapSimulateRouterAmount,
     poolIndex: poolIndex,
     simulateSuccess: true,
-    AmountOutWithFee: resaultWithFee,
+    AmountOutWithFee: resultWithFee,
     estimatedPriceAfterSwap: estimatedPrice
   }
 }
