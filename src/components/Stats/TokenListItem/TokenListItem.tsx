@@ -32,7 +32,7 @@ const TokenListItem: React.FC<IProps> = ({
   TVL = '0'
 }) => {
   const classes = useStyles()
-  const isNegative = Number(priceChange) > 0
+  const isNegative = Number(priceChange) < 0
   return (
     <Grid>
       {displayType === 'tokens' ? (
@@ -42,7 +42,7 @@ const TokenListItem: React.FC<IProps> = ({
           classes={{ container: classes.container, root: classes.tokenList }}>
           <Typography component='p'>{itemNumber}</Typography>
           <Grid className={classes.tokenName}>
-            <img src={icons[icon]}></img>
+            <img src={icon}></img>
             <Typography>
               {`${name}`}
               <span className={classes.tokenSymbol}>{` (${symbol})`}</span>
@@ -50,7 +50,7 @@ const TokenListItem: React.FC<IProps> = ({
           </Grid>
           <Typography>${Number(printBN(price, decimals)).toFixed(2)}</Typography>
           <Typography style={{ color: isNegative ? colors.invariant.error : colors.green.main }}>
-            {isNegative ? `- ${Math.abs(Number(priceChange))}%` : `+ ${priceChange}%`}
+            {isNegative ? `-${Math.abs(Number(priceChange))}%` : `+${priceChange}%`}
           </Typography>
           <Typography>{volume}</Typography>
           <Typography>{TVL}</Typography>

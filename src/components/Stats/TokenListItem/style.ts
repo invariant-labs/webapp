@@ -26,7 +26,8 @@ export const useStyles = makeStyles(() => ({
     alignItems: 'center',
     '& img': {
       width: 28,
-      paddingRight: 8
+      marginRight: 8,
+      borderRadius: '50%'
     }
   },
   tokenSymbol: {
