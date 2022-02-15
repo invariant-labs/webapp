@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   wrapper: {
@@ -19,12 +19,6 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.component,
     paddingTop: 0,
     width: '100%'
-  },
-  inputLabel: {
-    ...typography.body3,
-    lineHeight: '16px',
-    color: colors.invariant.lightInfoText,
-    marginBottom: 3
   },
   selects: {
     gap: 12,

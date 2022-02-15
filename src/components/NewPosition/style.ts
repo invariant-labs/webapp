@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -23,11 +23,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   backText: {
     color: colors.invariant.lightHover,
     WebkitPaddingBefore: '2px',
-    ...typography.body2
+    ...newTypography.body2
   },
   title: {
     color: colors.white.main,
-    ...typography.heading4,
+    ...newTypography.heading4,
     marginBottom: 18
   },
   row: {

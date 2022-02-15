@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -8,20 +8,20 @@ const useStyles = makeStyles(() => ({
     color: colors.invariant.light,
     height: 32,
     borderRadius: 10,
-    ...typography.body1,
+    ...newTypography.body1,
     textTransform: 'capitalize',
     boxShadow: 'none',
     margin: '4px',
     '&:hover': {
       background: 'transparent',
       color: colors.invariant.lightGrey,
-      ...typography.body1
+      ...newTypography.body1
     }
   },
   active: {
     background: colors.invariant.light,
     color: colors.white.main,
-    ...typography.body1,
+    ...newTypography.body1,
     '&:hover': {
       background: colors.invariant.light,
       color: colors.white.main
