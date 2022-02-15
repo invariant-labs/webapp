@@ -4,7 +4,7 @@ import { colors, newTypography } from '@static/theme'
 const useStyles = makeStyles((theme: Theme) => ({
   infoTypeLabel: {
     textTransform: 'uppercase',
-    color: colors.invariant.textGrey,
+    color: colors.invariant.lightGrey,
     ...newTypography.body2,
     lineHeight: '35px'
   },
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   infoSwapToken: {
-    color: colors.invariant.textGrey,
+    color: colors.invariant.lightGrey,
     ...newTypography.body1,
     lineHeight: '35px',
 

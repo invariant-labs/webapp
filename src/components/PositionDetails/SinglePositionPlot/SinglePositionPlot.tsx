@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { Grid, Typography, Card } from '@material-ui/core'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
-import { ILiquidityItem } from '../SinglePositionInfo/SinglePositionInfo'
 import { calcPrice, spacingMultiplicityGte, calcTicksAmountInRange } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import useStyles from './style'
+import { ILiquidityToken } from '../SinglePositionInfo/consts'
 
 export interface ISinglePositionPlot {
   data: PlotTickData[]
@@ -14,13 +14,13 @@ export interface ISinglePositionPlot {
   rightRange: TickPlotPositionData
   midPrice: TickPlotPositionData
   currentPrice: number
-  tokenY: string
-  tokenX: string
-  positionData: ILiquidityItem
+  tokenY: Pick<ILiquidityToken, 'name' | 'decimal'>
+  tokenX: Pick<ILiquidityToken, 'name' | 'decimal'>
   ticksLoading: boolean
-  xDecimal: number
-  yDecimal: number
   tickSpacing: number
+  min: number
+  max: number
+  xToY: boolean
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -31,11 +31,11 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   currentPrice,
   tokenY,
   tokenX,
-  positionData,
   ticksLoading,
-  xDecimal,
-  yDecimal,
-  tickSpacing
+  tickSpacing,
+  min,
+  max,
+  xToY
 }) => {
   const classes = useStyles()
 
@@ -44,21 +44,21 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
 
   useEffect(() => {
     const initSideDist = Math.abs(
-      midPrice.x -
+      leftRange.x -
         calcPrice(
           Math.max(
             spacingMultiplicityGte(MIN_TICK, tickSpacing),
-            midPrice.index - tickSpacing * 15
+            leftRange.index - tickSpacing * 15
           ),
-          true,
-          xDecimal,
-          yDecimal
+          xToY,
+          tokenX.decimal,
+          tokenY.decimal
         )
     )
 
-    setPlotMin(midPrice.x - initSideDist)
-    setPlotMax(midPrice.x + initSideDist)
-  }, [ticksLoading, midPrice])
+    setPlotMin(leftRange.x - initSideDist)
+    setPlotMax(rightRange.x + initSideDist)
+  }, [ticksLoading, leftRange, rightRange])
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -74,8 +74,14 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     const newMax = plotMax - diff / 6
 
     if (
-      calcTicksAmountInRange(Math.max(newMin, 0), newMax, tickSpacing, true, xDecimal, yDecimal) >=
-      4
+      calcTicksAmountInRange(
+        Math.max(newMin, 0),
+        newMax,
+        tickSpacing,
+        xToY,
+        tokenX.decimal,
+        tokenY.decimal
+      ) >= 4
     ) {
       setPlotMin(newMin)
       setPlotMax(newMax)
@@ -102,22 +108,22 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           loading={ticksLoading}
           isXtoY
           tickSpacing={tickSpacing}
-          xDecimal={xDecimal}
-          yDecimal={yDecimal}
+          xDecimal={tokenX.decimal}
+          yDecimal={tokenY.decimal}
         />
       </Grid>
       <Grid className={classes.minMaxInfo}>
         <LiquidationRangeInfo
           label='min'
-          amount={positionData.min}
-          tokenX={tokenX}
-          tokenY={tokenY}
+          amount={min}
+          tokenX={xToY ? tokenX.name : tokenY.name}
+          tokenY={xToY ? tokenY.name : tokenX.name}
         />
         <LiquidationRangeInfo
           label='max'
-          amount={positionData.max}
-          tokenX={tokenX}
-          tokenY={tokenY}
+          amount={max}
+          tokenX={xToY ? tokenX.name : tokenY.name}
+          tokenY={xToY ? tokenY.name : tokenX.name}
         />
       </Grid>
       <Grid className={classes.currentPriceContainer}>
@@ -127,7 +133,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         <Card className={classes.currentPriceAmonut}>
           <Typography component='p'>
             <Typography component='span'>{currentPrice}</Typography>
-            {tokenY} per {tokenX}
+            {xToY ? tokenY.name : tokenX.name} per {xToY ? tokenX.name : tokenY.name}
           </Typography>
         </Card>
       </Grid>

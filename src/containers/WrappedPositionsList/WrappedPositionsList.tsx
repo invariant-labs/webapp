@@ -83,7 +83,8 @@ export const WrappedPositionsList: React.FC = () => {
             position.tokenY.decimals
           )
 
-          const value = tokenXLiq + tokenYLiq / currentPrice
+          const valueX = tokenXLiq + tokenYLiq / currentPrice
+          const valueY = tokenYLiq + tokenXLiq * currentPrice
 
           return {
             tokenXName: position.tokenX.symbol,
@@ -95,7 +96,8 @@ export const WrappedPositionsList: React.FC = () => {
             max,
             tokenXLiq,
             tokenYLiq,
-            value,
+            valueX,
+            valueY,
             id: position.id.toString() + '_' + position.pool.toString()
           }
         })
@@ -117,7 +119,6 @@ export const WrappedPositionsList: React.FC = () => {
         },
         descCustomText: 'No liquidity positions to show.'
       }}
-      searchPosition={''}
     />
   )
 }

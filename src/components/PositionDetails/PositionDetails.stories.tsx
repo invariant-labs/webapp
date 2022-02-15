@@ -26,18 +26,6 @@ const data = [
 storiesOf('position wrapper/positionDetailsWrapper', module)
   .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
   .add('default', () => {
-    const tokens: liqTokens[] = [
-      {
-        symbol: 'BTC',
-        logoURI:
-          'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
-      },
-      {
-        symbol: 'SNY',
-        logoURI:
-          'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png'
-      }
-    ]
     return (
       <PositionDetails
         detailsData={data}
@@ -54,33 +42,29 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
           index: 140
         }}
         currentPrice={300}
-        tokenY={'SNY'}
-        tokenX={'BTC'}
-        positionData={{
-          tokenXName: 'BTC',
-          tokenXIcon: tokens[0].logoURI,
-          tokenYName: 'SNY',
-          tokenYIcon: tokens[1].logoURI,
-          tokenXDecimal: 6,
-          tokenYDecimal: 6,
-          min: 2149.6,
-          max: 149.6,
-          fee: 0.05
+        tokenX={{
+          name: 'BTC',
+          icon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png',
+          decimal: 9,
+          liqValue: 10000.23532,
+          claimValue: 21.37,
+          balance: 9.11
+        }}
+        tokenY={{
+          name: 'SNY',
+          icon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png',
+          decimal: 9,
+          liqValue: 10000.23532,
+          claimValue: 21.37,
+          balance: 9.11
         }}
         onClickClaimFee={() => console.log('thanks from claiming')}
-        tokenXLiqValue={2.19703}
-        tokenYLiqValue={20.99703}
-        tokenXClaimValue={2.19703}
-        tokenYClaimValue={9.19703}
         closePosition={() => console.log('close position')}
         ticksLoading={false}
-        xDecimal={6}
-        yDecimal={6}
         tickSpacing={1}
-        tokenXBalance={102460.3445}
-        tokenYBalance={460.3445}
-        tokenXUSDValue={205341.4361}
-        tokenYUSDValue={6205341.4361}
+        min={2149.6}
+        max={149.6}
+        fee={0.01}
       />
     )
   })

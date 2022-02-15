@@ -17,7 +17,8 @@ const data = [
     fee: 0.05,
     tokenXLiq: 5000,
     tokenYLiq: 300.2,
-    value: 10000.45,
+    valueX: 10000.45,
+    valueY: 21370.4,
     id: '1'
   },
   {
@@ -32,7 +33,8 @@ const data = [
     fee: 0.05,
     tokenXLiq: 5000,
     tokenYLiq: 300.2,
-    value: 10000.45,
+    valueX: 10000.45,
+    valueY: 21370.4,
     id: '2'
   },
   {
@@ -47,7 +49,8 @@ const data = [
     fee: 0.05,
     tokenXLiq: 5000,
     tokenYLiq: 300.2,
-    value: 10000.45,
+    valueX: 10000.45,
+    valueY: 21370.4,
     id: '3'
   },
   {
@@ -62,7 +65,8 @@ const data = [
     fee: 0.05,
     tokenXLiq: 5000,
     tokenYLiq: 300.2,
-    value: 10000.45,
+    valueX: 10000.45,
+    valueY: 21370.4,
     id: '4'
   }
 ]
@@ -91,6 +95,8 @@ storiesOf('positionsList/list', module)
             onConnect: () => {},
             onDisconnect: () => {}
           }}
+          searchValue={''}
+          searchSetValue={() => {}}
         />
       </Grid>
     )

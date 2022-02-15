@@ -1,7 +1,5 @@
-import React from 'react'
-import SinglePositionInfo, {
-  ILiquidityItem
-} from '@components/PositionDetails/SinglePositionInfo/SinglePositionInfo'
+import React, { useState } from 'react'
+import SinglePositionInfo from '@components/PositionDetails/SinglePositionInfo/SinglePositionInfo'
 import SinglePositionPlot from '@components/PositionDetails/SinglePositionPlot/SinglePositionPlot'
 import { Button, Grid, Typography } from '@material-ui/core'
 import { Link, useHistory } from 'react-router-dom'
@@ -9,6 +7,7 @@ import backIcon from '@static/svg/back-arrow.svg'
 import useStyles from './style'
 import { PlotTickData } from '@reducers/positions'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
+import { ILiquidityToken } from './SinglePositionInfo/consts'
 
 interface IProps {
   detailsData: PlotTickData[]
@@ -16,23 +15,15 @@ interface IProps {
   rightRange: TickPlotPositionData
   midPrice: TickPlotPositionData
   currentPrice: number
-  tokenY: string
-  tokenX: string
-  positionData: ILiquidityItem
+  tokenX: ILiquidityToken
+  tokenY: ILiquidityToken
   onClickClaimFee: () => void
   closePosition: () => void
-  tokenXLiqValue: number
-  tokenYLiqValue: number
-  tokenXClaimValue: number
-  tokenYClaimValue: number
   ticksLoading: boolean
-  xDecimal: number
-  yDecimal: number
   tickSpacing: number
-  tokenXBalance: number
-  tokenYBalance: number
-  tokenXUSDValue?: number
-  tokenYUSDValue?: number
+  fee: number
+  min: number
+  max: number
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -43,25 +34,19 @@ const PositionDetails: React.FC<IProps> = ({
   currentPrice,
   tokenY,
   tokenX,
-  positionData,
   onClickClaimFee,
   closePosition,
-  tokenXLiqValue,
-  tokenYLiqValue,
-  tokenXClaimValue,
-  tokenYClaimValue,
   ticksLoading,
-  xDecimal,
-  yDecimal,
   tickSpacing,
-  tokenXBalance,
-  tokenYBalance,
-  tokenXUSDValue,
-  tokenYUSDValue
+  fee,
+  min,
+  max
 }) => {
   const classes = useStyles()
 
   const history = useHistory()
+
+  const [xToY, setXToY] = useState<boolean>(true)
 
   return (
     <Grid container className={classes.wrapperContainer} wrap='nowrap'>
@@ -74,17 +59,13 @@ const PositionDetails: React.FC<IProps> = ({
         </Link>
 
         <SinglePositionInfo
-          data={positionData}
+          fee={fee}
           onClickClaimFee={onClickClaimFee}
           closePosition={closePosition}
-          tokenXLiqValue={tokenXLiqValue}
-          tokenYLiqValue={tokenYLiqValue}
-          tokenXClaimValue={tokenXClaimValue}
-          tokenYClaimValue={tokenYClaimValue}
-          tokenXBalance={tokenXBalance}
-          tokenYBalance={tokenYBalance}
-          tokenXUSDValue={tokenXUSDValue}
-          tokenYUSDValue={tokenYUSDValue}
+          tokenX={tokenX}
+          tokenY={tokenY}
+          xToY={xToY}
+          swapHandler={() => setXToY(!xToY)}
         />
       </Grid>
       <Grid
@@ -106,22 +87,27 @@ const PositionDetails: React.FC<IProps> = ({
         <SinglePositionPlot
           data={
             detailsData.length
-              ? detailsData
+              ? xToY
+                ? detailsData
+                : detailsData.map(tick => ({ ...tick, x: 1 / tick.x })).reverse()
               : Array(100)
                   .fill(1)
                   .map((_e, index) => ({ x: index, y: index, index }))
           }
-          leftRange={leftRange}
-          rightRange={rightRange}
-          midPrice={midPrice}
-          currentPrice={currentPrice}
+          leftRange={xToY ? leftRange : { ...rightRange, x: 1 / rightRange.x }}
+          rightRange={xToY ? rightRange : { ...leftRange, x: 1 / leftRange.x }}
+          midPrice={{
+            ...midPrice,
+            x: midPrice.x ** (xToY ? 1 : -1)
+          }}
+          currentPrice={currentPrice ** (xToY ? 1 : -1)}
           tokenY={tokenY}
           tokenX={tokenX}
-          positionData={positionData}
           ticksLoading={ticksLoading}
           tickSpacing={tickSpacing}
-          xDecimal={xDecimal}
-          yDecimal={yDecimal}
+          min={xToY ? min : 1 / max}
+          max={xToY ? max : 1 / min}
+          xToY={xToY}
         />
       </Grid>
     </Grid>

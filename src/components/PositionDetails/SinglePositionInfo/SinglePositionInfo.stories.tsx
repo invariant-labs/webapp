@@ -2,73 +2,31 @@ import { Grid } from '@material-ui/core'
 import { storiesOf } from '@storybook/react'
 import React from 'react'
 import SinglePositionInfo from './SinglePositionInfo'
-import { liqTokens } from '@components/PositionDetails/PositionDetails.stories'
 
-const tokens: liqTokens[] = [
-  {
-    symbol: 'BTC',
-    logoURI:
-      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
-  },
-  {
-    symbol: 'SNY',
-    logoURI:
-      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png'
-  }
-]
-
-storiesOf('singlePosition/leftComponent', module)
-  .add('closed', () => (
-    <Grid style={{ background: '#1C1B1E', width: '540px', height: '500px', padding: '20px' }}>
-      <SinglePositionInfo
-        data={{
-          tokenXName: 'BTC',
-          tokenXIcon: tokens[0].logoURI,
-          tokenYIcon: tokens[1].logoURI,
-          tokenXDecimal: 6,
-          tokenYDecimal: 6,
-          tokenYName: 'SNY',
-          min: 2149.6,
-          max: 149.6,
-          fee: 0.05
-        }}
-        onClickClaimFee={() => console.log('thanks from claiming')}
-        tokenXLiqValue={2.19703}
-        tokenYLiqValue={20.99703}
-        tokenXClaimValue={2.19703}
-        tokenYClaimValue={9.19703}
-        tokenXBalance={102460.3445}
-        tokenYBalance={460.3445}
-        tokenXUSDValue={205341.4361}
-        tokenYUSDValue={6205341.4361}
-        closePosition={() => console.log('close position')}
-      />
-    </Grid>
-  ))
-  .add('active', () => (
-    <Grid style={{ background: '#1C1B1E', width: '540px', height: '500px', padding: '20px' }}>
-      <SinglePositionInfo
-        data={{
-          tokenXName: 'BTC',
-          tokenXIcon: tokens[0].logoURI,
-          tokenYIcon: tokens[1].logoURI,
-          tokenYName: 'SNY',
-          tokenXDecimal: 6,
-          tokenYDecimal: 6,
-          min: 2149.6,
-          max: 149.6,
-          fee: 0.05
-        }}
-        onClickClaimFee={() => console.log('thanks from claiming')}
-        tokenXLiqValue={2.19703}
-        tokenYLiqValue={20.99703}
-        tokenXClaimValue={2.19703}
-        tokenYClaimValue={9.19703}
-        tokenXBalance={102460.3445}
-        tokenYBalance={460.3445}
-        tokenXUSDValue={205341.4361}
-        tokenYUSDValue={6205341.4361}
-        closePosition={() => console.log('close position')}
-      />
-    </Grid>
-  ))
+storiesOf('singlePosition/leftComponent', module).add('active', () => (
+  <Grid style={{ background: '#1C1B1E', width: '540px', height: '500px', padding: '20px' }}>
+    <SinglePositionInfo
+      onClickClaimFee={() => console.log('thanks from claiming')}
+      closePosition={() => console.log('close position')}
+      swapHandler={() => {}}
+      xToY
+      fee={0.01}
+      tokenX={{
+        name: 'BTC',
+        icon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png',
+        decimal: 9,
+        liqValue: 10000.23532,
+        claimValue: 21.37,
+        balance: 9.11
+      }}
+      tokenY={{
+        name: 'SNY',
+        icon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png',
+        decimal: 9,
+        liqValue: 10000.23532,
+        claimValue: 21.37,
+        balance: 9.11
+      }}
+    />
+  </Grid>
+))

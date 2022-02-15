@@ -229,8 +229,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       leftRange={leftRange}
       rightRange={rightRange}
       currentPrice={current}
-      tokenY={position.tokenY.symbol}
-      tokenX={position.tokenX.symbol}
       onClickClaimFee={() => {
         dispatch(actions.claimFee(position.positionIndex))
       }}
@@ -244,27 +242,27 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           })
         )
       }}
-      tokenXLiqValue={tokenXLiquidity}
-      tokenYLiqValue={tokenYLiquidity}
-      tokenXClaimValue={tokenXClaim}
-      tokenYClaimValue={tokenYClaim}
-      tokenXBalance={+printBN(position.tokenX.balance, position.tokenX.decimals)}
-      tokenYBalance={+printBN(position.tokenY.balance, position.tokenY.decimals)}
-      positionData={{
-        tokenXName: position.tokenX.symbol,
-        tokenYName: position.tokenY.symbol,
-        tokenXIcon: position.tokenX.logoURI,
-        tokenYIcon: position.tokenY.logoURI,
-        tokenXDecimal: position.tokenX.decimals,
-        tokenYDecimal: position.tokenY.decimals,
-        fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
-        min,
-        max
-      }}
       ticksLoading={ticksLoading}
       tickSpacing={position?.poolData.tickSpacing ?? 1}
-      xDecimal={position?.tokenX.decimals ?? 0}
-      yDecimal={position?.tokenY.decimals ?? 0}
+      tokenX={{
+        name: position.tokenX.symbol,
+        icon: position.tokenX.logoURI,
+        decimal: position.tokenX.decimals,
+        balance: +printBN(position.tokenX.balance, position.tokenX.decimals),
+        liqValue: tokenXLiquidity,
+        claimValue: tokenXClaim
+      }}
+      tokenY={{
+        name: position.tokenY.symbol,
+        icon: position.tokenY.logoURI,
+        decimal: position.tokenY.decimals,
+        balance: +printBN(position.tokenY.balance, position.tokenY.decimals),
+        liqValue: tokenYLiquidity,
+        claimValue: tokenYClaim
+      }}
+      fee={+printBN(position.poolData.fee.v, PRICE_DECIMAL - 2)}
+      min={min}
+      max={max}
     />
   ) : isLoadingList ? (
     <Typography className={classes.placeholderText}>Loading...</Typography>
