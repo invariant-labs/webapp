@@ -98,6 +98,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginBottom: 16
       }
     }
+  },
+  searchIcon: {
+    width: 17
   }
 }))
 
