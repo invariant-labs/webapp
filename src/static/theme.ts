@@ -85,7 +85,7 @@ export const colors = {
     component: '#202946',
     light: '#3A466B',
     black: '#010514',
-    textGrey: '#27262B',
+    textGrey: '#A9B6BF',
     text: '#FFFFFF',
     Error: '#FB555F'
   }
