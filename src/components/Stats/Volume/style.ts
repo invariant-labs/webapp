@@ -16,7 +16,7 @@ export const useStyles = makeStyles(() => ({
     fontWeight: 'normal'
   },
   volumeHeader: {
-    color: '#A9B6BF',
+    color: colors.invariant.textGrey,
     ...newTypography.body2
   },
   volumePercentContainer: {
