@@ -57,7 +57,8 @@ export const BTC_DEV: Token = {
   address: new PublicKey(MOCK_TOKENS.BTC),
   decimals: 6,
   name: 'Wrapped Bitcoin (Sollet)',
-  logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
 }
 export const WSOL_DEV: Token = {
   symbol: 'WSOL',
@@ -72,7 +73,8 @@ export const RENDOGE_DEV: Token = {
   address: new PublicKey(MOCK_TOKENS.REN_DOGE),
   decimals: 8,
   name: 'renDOGE',
-  logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png'
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png'
 }
 
 enum SolanaNetworks {
@@ -133,7 +135,14 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
 }
 
 export const airdropTokens: Record<NetworkType, PublicKey[]> = {
-  Devnet: [USDC_DEV.address, USDT_DEV.address, SOL_DEV.address, MSOL_DEV.address, BTC_DEV.address, RENDOGE_DEV.address],
+  Devnet: [
+    USDC_DEV.address,
+    USDT_DEV.address,
+    SOL_DEV.address,
+    MSOL_DEV.address,
+    BTC_DEV.address,
+    RENDOGE_DEV.address
+  ],
   Mainnet: [],
   Testnet: [],
   Localnet: []
