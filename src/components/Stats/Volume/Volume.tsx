@@ -7,17 +7,23 @@ import { useStyles } from './style'
 import { colors } from '@static/theme'
 
 interface StatsInterface {
-  uniqueKeys: string[]
   percentVolume: number
   volume: number
   data: Array<{
-    map: string
+    timeStamp: string
     [key: number]: number
   }>
 }
 
-const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, uniqueKeys, data }) => {
+const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
   const classes = useStyles()
+
+  const keys = data.map(({ timeStamp, ...rest }) => rest)
+
+  const getKeys = keys
+    .map(key => Object.keys(key))
+    .reduce((array, isArray) => (Array.isArray(isArray) ? array.concat(isArray) : array))
+  const uniqueKeys = [...new Set(getKeys)]
 
   const Theme = {
     axis: {
@@ -66,7 +72,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, uniqueKeys, d
           margin={{ top: 70, bottom: 30, left: 0 }}
           data={data}
           keys={uniqueKeys}
-          indexBy='map'
+          indexBy='timeStamp'
           labelSkipWidth={2}
           labelSkipHeight={12}
           theme={Theme}
