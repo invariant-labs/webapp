@@ -575,7 +575,7 @@ export const handleSimulate = async (
       xToY: isXtoY,
       byAmountIn: byAmountIn,
       swapAmount: amount,
-      currentPrice: {
+      priceLimit: {
         v: isXtoY ? new BN(1) : new BN('340282366920938463463374607431768211455')
       },
       slippage: slippage,
