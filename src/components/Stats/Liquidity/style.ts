@@ -7,7 +7,7 @@ export const useStyles = makeStyles(() => ({
     color: 'white',
     maxWidth: '524px',
     borderRadius: 24,
-    padding: '30px 15px 30px 15px '
+    padding: '24px 0 24px 0 '
   },
   liquidityContainer: {
     dispaly: 'flex',
@@ -18,7 +18,7 @@ export const useStyles = makeStyles(() => ({
   },
 
   liquidityHeader: {
-    color: '#A9B6BF',
+    color: colors.invariant.textGrey,
     ...newTypography.body2
   },
 
