@@ -71,29 +71,7 @@ export function* handleSwapWithSOL(): Generator {
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
-    const initialSignedTx = yield* call([wallet, wallet.signTransaction], initialTx)
-    initialSignedTx.partialSign(wrappedSolAccount)
-    const initialTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      initialSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
-
-    if (!initialTxid.length) {
-      yield put(swapActions.setSwapSuccess(false))
-
-      return yield put(
-        snackbarsActions.add({
-          message: 'SOL wrapping failed. Please try again.',
-          variant: 'error',
-          persist: false,
-          txid: initialTxid
-        })
-      )
-    }
+    initialTx.partialSign(wrappedSolAccount)
 
     const unwrapIx = Token.createCloseAccountInstruction(
       TOKEN_PROGRAM_ID,
@@ -136,7 +114,34 @@ export function* handleSwapWithSOL(): Generator {
     swapTx.recentBlockhash = swapBlockhash.blockhash
     swapTx.feePayer = wallet.publicKey
 
-    const swapSignedTx = yield* call([wallet, wallet.signTransaction], swapTx)
+    const unwrapTx = new Transaction().add(unwrapIx)
+    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
+    unwrapTx.feePayer = wallet.publicKey
+
+    const [initialSignedTx, swapSignedTx, unwrapSignedTx] = yield* call([wallet, wallet.signAllTransactions], [initialTx, swapTx, unwrapTx])
+    const initialTxid = yield* call(
+      sendAndConfirmRawTransaction,
+      connection,
+      initialSignedTx.serialize(),
+      {
+        skipPreflight: false
+      }
+    )
+
+    if (!initialTxid.length) {
+      yield put(swapActions.setSwapSuccess(false))
+
+      return yield put(
+        snackbarsActions.add({
+          message: 'SOL wrapping failed. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: initialTxid
+        })
+      )
+    }
+
     const swapTxid = yield* call(
       sendAndConfirmRawTransaction,
       connection,
@@ -160,12 +165,6 @@ export function* handleSwapWithSOL(): Generator {
       )
     }
 
-    const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
-    unwrapTx.feePayer = wallet.publicKey
-
-    const unwrapSignedTx = yield* call([wallet, wallet.signTransaction], unwrapTx)
     const unwrapTxid = yield* call(
       sendAndConfirmRawTransaction,
       connection,
