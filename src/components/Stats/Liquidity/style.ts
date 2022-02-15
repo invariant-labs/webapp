@@ -7,7 +7,7 @@ export const useStyles = makeStyles(() => ({
     color: 'white',
     maxWidth: '524px',
     borderRadius: 24,
-    padding: '24px 0 24px 0 '
+    padding: 24
   },
   liquidityContainer: {
     dispaly: 'flex',

@@ -7,7 +7,7 @@ export const useStyles = makeStyles(() => ({
     color: 'white',
     maxWidth: '524px',
     borderRadius: 24,
-    padding: 30
+    padding: 24
   },
   volumeContainer: {
     display: 'flex',
