@@ -74,13 +74,13 @@ export const useStyles = makeStyles(() => ({
 
   LineKeys: {
     marginLeft: 10,
-    marginRight: 30,
     display: 'flex',
     width: '100%'
   },
 
   keyPTag: {
     width: '100%',
-    color: colors.invariant.textGrey
+    color: colors.invariant.textGrey,
+    ...newTypography.caption4
   }
 }))
