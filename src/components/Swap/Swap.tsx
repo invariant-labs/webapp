@@ -155,9 +155,13 @@ export const Swap: React.FC<ISwap> = ({
 
   useEffect(() => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      inputRef === inputTarget.FROM
-        ? setAmountTo(getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut)
-        : setAmountFrom(getKnownPrice(tokens[tokenToIndex], tokens[tokenFromIndex]).amountOut)
+      if (inputRef === inputTarget.FROM) {
+        const amount = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut
+        setAmountTo(+amount === 0 ? '' : amount)
+      } else {
+        const amount = getKnownPrice(tokens[tokenToIndex], tokens[tokenFromIndex]).amountOut
+        setAmountFrom(+amount === 0 ? '' : amount)
+      }
     }
   }, [simulateResult])
 
@@ -247,7 +251,8 @@ export const Swap: React.FC<ISwap> = ({
   }
   const updateEstimatedAmount = () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      setAmountTo(getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut)
+      const amount = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut
+      setAmountTo(+amount === 0 ? '' : amount)
     }
   }
 
