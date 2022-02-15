@@ -119,7 +119,10 @@ export function* handleSwapWithSOL(): Generator {
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
-    const [initialSignedTx, swapSignedTx, unwrapSignedTx] = yield* call([wallet, wallet.signAllTransactions], [initialTx, swapTx, unwrapTx])
+    const [initialSignedTx, swapSignedTx, unwrapSignedTx] = yield* call(
+      [wallet, wallet.signAllTransactions],
+      [initialTx, swapTx, unwrapTx]
+    )
     const initialTxid = yield* call(
       sendAndConfirmRawTransaction,
       connection,
