@@ -4,7 +4,7 @@ import { PositionItem } from './PositionItem/PositionItem'
 import useStyle from './style'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Link } from 'react-router-dom'
-import { PaginationList } from './Pagination/Pagination'
+import { PaginationList } from '@components/Pagination/Pagination'
 
 export interface ILiquidityItem {
   tokenXName: string
@@ -88,6 +88,7 @@ export const PositionsList: React.FC<IProp> = ({
           pages={paginator(page).totalPages}
           defaultPage={1}
           handleChangePage={handleChangePagination}
+          variant='end'
         />
       ) : null}
     </Grid>
