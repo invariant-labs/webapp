@@ -5,6 +5,7 @@ export const useStyles = makeStyles(() => ({
   container: {
     display: 'grid',
     gridTemplateColumns: '5% 35% 17.5% 12.5% 15% 15%',
+    padding: '18px 0 ',
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`
   },
@@ -14,14 +15,12 @@ export const useStyles = makeStyles(() => ({
       ...newTypography.heading4
     }
   },
-
   header: {
     '& p': {
       ...newTypography.heading4,
       fontWeight: 400
     }
   },
-
   tokenName: {
     display: 'flex',
     alignItems: 'center',
