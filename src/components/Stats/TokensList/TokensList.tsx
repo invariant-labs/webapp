@@ -1,7 +1,7 @@
 import { BN } from '@project-serum/anchor'
 import TokenListItem from '../TokenListItem/TokenListItem'
 import React, { useState } from 'react'
-import { PaginationList } from '@components/PositionsList/Pagination/Pagination'
+import { PaginationList } from '@components/Pagination/Pagination'
 import { Grid } from '@material-ui/core'
 import useStyles from './style'
 
