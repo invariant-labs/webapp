@@ -11,7 +11,11 @@ storiesOf('stats/PoolList', module)
       .map(() => {
         return {
           symbolFrom: 'BTC',
-          symbolTo: 'xBTC',
+          fromLogoURI:
+            'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png',
+          symbolTo: 'USDC',
+          toLogoURI:
+            'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
           fee: '0.05',
           volume: '9,242,263,567.34',
           TVL: '$242,263,567.34'

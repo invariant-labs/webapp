@@ -4,7 +4,15 @@ import React from 'react'
 import { useStyle } from './style'
 
 interface PoolListInterface {
-  data: Array<{ symbolFrom: string; symbolTo: string; fee: string; volume: string; TVL: string }>
+  data: Array<{
+    fromLogoURI: string
+    symbolFrom: string
+    symbolTo: string
+    toLogoURI: string
+    fee: string
+    volume: string
+    TVL: string
+  }>
 }
 
 const PoolList: React.FC<PoolListInterface> = ({ data }) => {
@@ -22,15 +30,21 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
     return data.slice(dataPerPage).slice(0, contentPerPage)
   }
 
-  const resultPerPage = ContentPerPage(page)
-
   const pages = Math.ceil(data.length / 7)
 
   return (
     <Grid className={classes.container}>
       <Typography style={{ color: 'white' }}> soon </Typography>
+      {ContentPerPage(page).map((element, index) => (
+        <div key={index}>{element.volume}</div>
+      ))}
       <Grid>
-        <PaginationList handleChangePage={handleChangePage} pages={pages} defaultPage={0} />
+        <PaginationList
+          handleChangePage={handleChangePage}
+          pages={pages}
+          defaultPage={0}
+          className={classes.paginationLightColor}
+        />
       </Grid>
     </Grid>
   )
