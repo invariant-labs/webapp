@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
     width: '100%'
   },
   inputLabel: {
-    ...typography.body3,
+    ...newTypography.body3,
     lineHeight: '16px',
     color: colors.invariant.light,
     marginBottom: 3

@@ -8,12 +8,12 @@ const useStyles = makeStyles(() => ({
   header: {
     display: 'flex',
     flexDirection: 'row',
-    ...typography.heading3,
+    ...newTypography.body1,
     color: colors.white.main,
     marginBottom: 10
   },
   title: {
-    ...typography.heading4,
+    ...newTypography.heading3,
     color: colors.white.main,
     marginLeft: 10
   },

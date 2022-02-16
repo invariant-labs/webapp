@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 36
   },
   greenText: {
-    ...typography.body2,
+    ...newTypography.body1,
     color: colors.invariant.green,
     letterSpacing: '-0.03em',
     [theme.breakpoints.down('xs')]: {
@@ -102,17 +102,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     color: colors.white.main,
-    ...typography.body1,
+    ...newTypography.caption1,
     fontWeight: 400
   },
   infoText: {
-    ...typography.body2,
+    ...newTypography.caption2,
     letterSpacing: '-0.03em',
     color: colors.invariant.textGrey
   },
   value: {
     color: colors.white.main,
-    ...typography.body1,
+    ...newTypography.caption1,
     marginLeft: 4
   },
   spacing: {
@@ -127,7 +127,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 44,
     borderRadius: 16,
     textTransform: 'none',
-    ...typography.body1,
+    ...newTypography.body1,
     fontWeight: 700,
     letterSpacing: '-0.03em',
     background: colors.invariant.pinkLinearGradientOpacity,
@@ -152,7 +152,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 44,
     borderRadius: 16,
     textTransform: 'none',
-    ...typography.body1,
+    ...newTypography.body1,
     fontWeight: 700,
     background: colors.invariant.greenLinearGradientOpacity,
     color: colors.black.full,
@@ -162,7 +162,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   stakeLabel: {
-    ...typography.body3
+    ...newTypography.body3
   },
   claimRewards: {
     width: 115,
@@ -170,11 +170,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 44,
     borderRadius: 16,
     textTransform: 'none',
-    ...typography.body1,
+    ...newTypography.body1,
     background: colors.invariant.greenLinearGradientOpacity,
     color: colors.black.full,
     [theme.breakpoints.down('xs')]: {
-      ...typography.body3,
+      ...newTypography.body3,
       minWidth: 105
     },
     '&:hover': {
@@ -234,7 +234,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenName: {
     color: colors.white.main,
-    ...typography.body1,
+    ...newTypography.caption1,
     [theme.breakpoints.down('xs')]: {
       ...newTypography.body2
     }

@@ -36,11 +36,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   names: {
-    ...typography.heading1,
+    ...newTypography.heading1,
     color: colors.white.main,
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.heading3
+      ...newTypography.heading3
     }
   },
   dot: {
@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   activity: {
     ...newTypography.body1,
     [theme.breakpoints.down('xs')]: {
-      ...typography.label2
+      ...newTypography.body2
     }
   },
   flexWrapper: {
@@ -108,13 +108,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     color: colors.invariant.lightGrey,
-    ...typography.body2,
-    fontSize: 20,
+    ...newTypography.heading4,
+    fontWeight: 400,
     letterSpacing: '-0.03em'
   },
   value: {
     color: colors.white.main,
-    ...typography.heading4
+    ...newTypography.heading4
   },
   link: {
     marginTop: 20,
@@ -125,7 +125,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 44,
     borderRadius: 16,
     textTransform: 'none',
-    ...typography.body1,
+    ...newTypography.body1,
     background: colors.invariant.greenLinearGradientOpacity,
     color: colors.black.full,
     '&:hover': {
