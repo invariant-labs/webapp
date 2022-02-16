@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.newDark,
     boxShadow: 'none',
 
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.dark,
     [theme.breakpoints.down('xs')]: {
       width: '50%',
       height: 40
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelText: {
     justifyContent: 'center',
     ...newTypography.caption1,
-    color: colors.invariant.lightInfoText
+    color: colors.white.main
   },
   top: {
     marginBottom: 20,
@@ -108,7 +108,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   infoText: {
     ...typography.body2,
     letterSpacing: '-0.03em',
-    color: colors.invariant.lightInfoText
+    color: colors.invariant.textGrey
   },
   value: {
     color: colors.white.main,

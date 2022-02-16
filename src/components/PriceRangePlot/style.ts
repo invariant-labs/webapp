@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   loadingText: {
     ...typography.heading4,
-    fill: colors.invariant.darkInfoText
+    fill: colors.invariant.dark
   }
 }))
 

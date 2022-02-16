@@ -16,7 +16,6 @@ const useStyles = makeStyles(() => ({
   },
   maxButton: {
     ...newTypography.caption4,
-    color: colors.invariant.componentIn2,
     minWidth: 30,
     height: 15,
     borderRadius: 3,
@@ -39,7 +38,8 @@ const useStyles = makeStyles(() => ({
     }
   },
   label: {
-    top: -1
+    top: -1,
+    color: colors.invariant.dark
   },
   BalanceContainer: {
     display: 'flex',

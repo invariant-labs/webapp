@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
   },
   tooltip: {
     ...typography.label2,
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.textGrey,
     background: colors.black.full,
     borderRadius: 12,
     height: 24,

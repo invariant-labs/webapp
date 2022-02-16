@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
   },
   postionsInfo: {
     ...newTypography.body2,
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.lightGrey,
     display: 'flex',
     alignItems: 'center'
   },

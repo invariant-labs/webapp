@@ -129,8 +129,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
     '&:disabled': {
-      backgroundColor: colors.invariant.componentOut3,
-      color: colors.invariant.background2
+      backgroundColor: colors.invariant.light,
+      color: colors.invariant.dark
     },
 
     [theme.breakpoints.down('xs')]: {

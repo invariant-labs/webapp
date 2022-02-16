@@ -50,8 +50,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:hover': {
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`,
-      backgroundColor: colors.invariant.accent1
+      boxShadow: `0 0 15px ${colors.invariant.light}`,
+      backgroundColor: colors.invariant.light
     }
   },
   headerButtonConnected: {

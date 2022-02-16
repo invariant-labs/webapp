@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
   inputLabel: {
     ...typography.body3,
     lineHeight: '16px',
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.light,
     marginBottom: 3
   },
   selects: {

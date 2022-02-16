@@ -49,7 +49,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.newDark,
     padding: '10px 8px',
     '&::placeholder': {
-      color: colors.invariant.lightInfoText
+      color: colors.invariant.light
     },
     '&:focus': {
       outline: 'none'

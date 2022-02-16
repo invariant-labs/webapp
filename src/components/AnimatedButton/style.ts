@@ -21,9 +21,9 @@ const useStyles = makeStyles(() => ({
   },
 
   buttonRelease: {
-    background: `${colors.invariant.componentOut4} !important`,
+    background: `${colors.invariant.component} !important`,
     '&:hover': {
-      background: `${colors.invariant.componentOut4} !important`
+      background: `${colors.invariant.component} !important`
     }
   },
   '@keyframes slide-start': {

@@ -17,7 +17,7 @@ export const SearchInput: React.FC<ISearchInput> = ({ handleChange, value }) => 
       <InputBase
         type={'text'}
         value={value}
-        className={classes.input}
+        classes={{ input: classes.input }}
         onChange={handleChange}
         placeholder='Search'
         inputProps={{

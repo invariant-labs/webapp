@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     '& .MuiPaginationItem-ellipsis': {
-      color: colors.invariant.componentOut3
+      color: colors.invariant.light
     },
     '& .Mui-selected': {
       color: colors.invariant.green

@@ -6,7 +6,7 @@ const useStyles = makeStyles(() => ({
     height: '100vh'
   },
   root: {
-    background: colors.invariant.componentOut4,
+    background: colors.invariant.component,
     width: 340,
     borderRadius: 10,
     margin: '10% auto ',
@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
   desc: {
     ...typography.body3,
     lineHeight: '16px',
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.textGrey,
     textAlign: 'center',
     padding: 8
   },
@@ -33,20 +33,25 @@ const useStyles = makeStyles(() => ({
     paddingTop: 17
   },
   buttonCancel: {
-    backgroundColor: colors.invariant.lightInfoText,
-    color: colors.invariant.darkInfoText,
+    backgroundColor: colors.invariant.light,
+    borderRadius: 10,
+    color: colors.invariant.dark,
     width: 120,
     ...typography.body1,
     textTransform: 'capitalize',
     padding: '3px 16px'
   },
   buttonClaim: {
-    backgroundColor: colors.invariant.accent2,
-    color: colors.invariant.darkInfoText,
+    backgroundColor: 'rgba(46, 224, 154, 0.8)',
+    borderRadius: 10,
+    color: colors.invariant.dark,
     width: 120,
     ...typography.body1,
     textTransform: 'capitalize',
-    padding: '3px 16px'
+    padding: '3px 16px',
+    '&:hover': {
+      backgroundColor: colors.invariant.green
+    }
   }
 }))
 

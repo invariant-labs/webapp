@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
     width: 20,
     maxWidth: 26,
     height: 15,
-    color: `${colors.invariant.background2} !important`,
+    color: `${colors.invariant.dark} !important`,
     background: `${colors.invariant.light} !important`,
     '&:hover': {
       background: colors.invariant.light,

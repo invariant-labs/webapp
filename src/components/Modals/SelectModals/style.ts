@@ -174,14 +174,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '50%',
     boxShadow: '0px 0px 10px rgba(216, 255, 181, 0.5)'
   },
-  tokenBalance: {
-    ...typography.subtitle2,
-    color: colors.invariant.componentIn1,
-    whiteSpace: 'nowrap'
-  },
-  searchIcon: {
-    color: colors.invariant.componentOut3
-  },
 
   hideScroll: {
     '& > *:first-child': {
@@ -229,13 +221,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'none',
     boxShadow: 'none',
     borderRadius: 5,
-    backgroundColor: colors.invariant.componentOut1,
+    backgroundColor: colors.invariant.component,
+    color: colors.invariant.textGrey,
     height: 26,
     width: '100%',
     textAlign: 'center',
     marginTop: 4,
     '&:hover': {
-      backgroundColor: colors.invariant.componentOut2,
+      backgroundColor: colors.invariant.light,
       boxShadow: 'none',
       color: colors.white.main
     },
@@ -245,14 +238,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   filterList: {
     borderRadius: 5,
-    background: colors.invariant.componentOut1,
+    background: colors.invariant.component,
     minWidth: 100,
     height: 102,
     padding: 4
   },
   filterListText: {
     borderRadius: 5,
-    background: colors.invariant.componentOut1,
+    background: colors.invariant.component,
     minWidth: 115,
     height: 102,
     padding: 4
@@ -263,7 +256,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     position: 'relative',
     '&:hover': {
-      background: colors.invariant.componentOut1
+      background: colors.invariant.component
     }
   },
   filterItemText: {
@@ -272,17 +265,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     position: 'relative',
     '&:hover': {
-      background: colors.invariant.componentOut1
+      background: colors.invariant.light
     }
   },
   filterNameText: {
     position: 'absolute',
     left: 6,
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.textGrey,
     ...typography.body2
   },
   filterName: {
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.textGrey,
     position: 'absolute',
     left: 28,
     ...typography.body2

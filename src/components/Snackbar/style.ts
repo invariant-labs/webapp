@@ -3,10 +3,10 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   success: {
-    backgroundColor: colors.invariant.componentOut2,
+    backgroundColor: colors.invariant.component,
     borderStyle: 'solid',
     borderWidth: 1,
-    borderColor: colors.invariant.lightInfoText,
+    borderColor: colors.invariant.component,
     borderRadius: 10,
     ...typography.body1,
     maxWidth: 350,
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxHeight: 64,
     minWidth: 100,
     '& SVG': {
-      color: colors.invariant.accent2,
+      color: colors.invariant.green,
       marginTop: -2,
       [theme.breakpoints.down('xs')]: {
         marginTop: 2
@@ -28,10 +28,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   error: {
-    backgroundColor: colors.invariant.componentOut2,
+    backgroundColor: colors.invariant.component,
     borderStyle: 'solid',
     borderWidth: 1,
-    borderColor: colors.invariant.lightInfoText,
+    borderColor: colors.invariant.component,
     borderRadius: 10,
     padding: 10,
     ...typography.body1,
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxHeight: 64,
     minWidth: 100,
     '& SVG': {
-      color: colors.invariant.error,
+      color: colors.invariant.Error,
       marginTop: -2,
       [theme.breakpoints.down('xs')]: {
         marginTop: 2
@@ -53,10 +53,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   info: {
-    backgroundColor: colors.invariant.componentOut2,
+    backgroundColor: colors.invariant.component,
     borderStyle: 'solid',
     borderWidth: 1,
-    borderColor: colors.invariant.lightInfoText,
+    borderColor: colors.invariant.component,
     borderRadius: 10,
     padding: 10,
     ...typography.body1,
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxHeight: 64,
     minWidth: 100,
     '& SVG': {
-      color: colors.invariant.lightInfoText,
+      color: colors.invariant.textGrey,
       marginTop: -2,
       [theme.breakpoints.down('xs')]: {
         marginTop: 2
@@ -78,10 +78,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   warning: {
-    backgroundColor: colors.invariant.componentOut2,
+    backgroundColor: colors.invariant.component,
     borderStyle: 'solid',
     borderWidth: 1,
-    borderColor: colors.invariant.lightInfoText,
+    borderColor: colors.invariant.component,
     borderRadius: 10,
     padding: 10,
     ...typography.body1,

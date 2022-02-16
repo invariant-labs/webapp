@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
   name: {
     textTransform: 'capitalize',
     ...typography.heading4,
-    color: colors.invariant.lightInfoText
+    color: colors.invariant.light
   },
   current: {
     textTransform: 'capitalize',

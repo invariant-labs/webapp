@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonIcon: {
     width: 22,
     height: 'auto',
-    fill: colors.invariant.darkInfoText
+    fill: colors.invariant.dark
   },
   value: {
     color: colors.white.main,
