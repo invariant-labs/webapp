@@ -37,6 +37,7 @@ storiesOf('position/rangeSelector', module)
       tickSpacing={1}
       isXtoY={true}
       fee={0}
+      currentPairReversed={null}
     />
   ))
   .add('blocked', () => (
@@ -59,5 +60,6 @@ storiesOf('position/rangeSelector', module)
       tickSpacing={4}
       isXtoY={true}
       fee={0}
+      currentPairReversed={null}
     />
   ))

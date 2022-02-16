@@ -3,26 +3,26 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   data: {
-    height: 25,
+    height: 36,
     paddingInline: 8,
-    backgroundColor: colors.invariant.componentOut2,
-    borderRadius: 3,
+    backgroundColor: colors.invariant.light,
+    borderRadius: 11,
 
     [theme.breakpoints.down('sm')]: {
-      height: 35
+      height: 36
     }
   },
   label: {
     color: colors.white.main,
-    ...typography.label2,
+    ...typography.body1,
 
     [theme.breakpoints.down('sm')]: {
       ...typography.body1
     }
   },
   tokens: {
-    color: colors.invariant.lightInfoText,
-    ...typography.label1,
+    color: colors.invariant.lightHover,
+    ...typography.body2,
 
     [theme.breakpoints.down('sm')]: {
       marginInline: 'auto',
@@ -30,18 +30,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   controls: {
-    marginTop: 5
+    // marginTop: 5,
+    backgroundColor: colors.invariant.componentBcg,
+    borderRadius: 10
   },
   button: {
-    minWidth: 30,
-    width: 30,
-    height: 30,
-    borderRadius: 2,
-    backgroundColor: colors.invariant.accent2,
+    minWidth: 36,
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: 'rgba(46,224,154,0.8)',
     padding: 0,
+    zIndex: 1,
 
     '&:hover': {
-      backgroundColor: colors.invariant.logoGreen
+      backgroundColor: colors.invariant.green,
+      boxShadow: `0 0 10px ${colors.invariant.green}`
     },
 
     [theme.breakpoints.down('sm')]: {
@@ -53,15 +57,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonIcon: {
     width: 22,
     height: 'auto',
-    fill: colors.invariant.darkInfoText
+    fill: colors.invariant.dark
   },
   value: {
     color: colors.white.main,
-    ...typography.body2,
+    ...typography.body3,
     lineHeight: 24,
-    borderBlock: `1px solid ${colors.invariant.componentOut2}`,
-    backgroundColor: colors.invariant.componentIn1,
-    height: 30,
+    backgroundColor: colors.invariant.componentBcg,
+    height: 36,
     paddingInline: 5,
     flex: '1 1 0%',
 
@@ -70,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('sm')]: {
-      height: 40
+      height: 36
     }
   }
 }))
