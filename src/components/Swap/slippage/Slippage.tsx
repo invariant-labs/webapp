@@ -21,7 +21,9 @@ const Slippage: React.FC<Props> = ({
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const inputRef = React.useRef<HTMLInputElement>(null)
 
-  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = e => {
+  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = e => {
     const regex = /^\d*\.?\d*$/
     if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value
