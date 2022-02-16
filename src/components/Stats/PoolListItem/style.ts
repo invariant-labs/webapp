@@ -5,12 +5,14 @@ const useStyle = makeStyles(() => ({
   container: {
     width: 1072,
     color: colors.invariant.textGrey,
-    fontWeight: 400,
     display: 'grid',
-    gridTemplateColumns: '5% 55% 12% 17% 15% 15%',
+    gridTemplateColumns: '5% 55% 10% 17% 15% 15%',
     padding: '18px 0',
     backgroundColor: colors.invariant.component,
-    borderBottom: `1px solid ${colors.invariant.light}`
+    borderBottom: `1px solid ${colors.invariant.light}`,
+    '& p': {
+      ...newTypography.heading4
+    }
   },
 
   imageContainer: {
