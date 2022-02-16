@@ -15,6 +15,9 @@ interface IProps {
   blockerInfo?: string
   decimalsLimit: number
   onBlur?: () => void
+  percentageChange?: number
+  usdValue?: number
+  balanceValue?: string
 }
 
 export const DepositAmountInput: React.FC<IProps> = ({
@@ -28,7 +31,10 @@ export const DepositAmountInput: React.FC<IProps> = ({
   blocked = false,
   blockerInfo,
   onBlur,
-  decimalsLimit
+  decimalsLimit,
+  percentageChange,
+  usdValue,
+  balanceValue
 }) => {
   const classes = useStyles()
 
@@ -75,15 +81,8 @@ export const DepositAmountInput: React.FC<IProps> = ({
 
   return (
     <Grid container className={classes.wrapper} style={style}>
-      <Input
-        inputRef={inputRef}
-        className={classes.root}
-        type={'text'}
-        value={value}
-        disableUnderline={true}
-        placeholder={placeholder}
-        onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-        startAdornment={
+      <div className={classes.root}>
+        <div className={classes.inputContainer}>
           <Grid
             className={classes.currency}
             container
@@ -99,15 +98,68 @@ export const DepositAmountInput: React.FC<IProps> = ({
               <Typography className={classes.noCurrencyText}>Select</Typography>
             )}
           </Grid>
-        }
-        endAdornment={
-          <Button className={classes.maxButton} onClick={onMaxClick}>
-            Max
-          </Button>
-        }
-        onBlur={onBlur}
-      />
+          <Input
+            inputRef={inputRef}
+            type={'text'}
+            value={value}
+            disableUnderline={true}
+            placeholder={placeholder}
+            onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
+            onBlur={onBlur}
+          />
+        </div>
+        <Grid
+          className={classes.balance}
+          container
+          alignItems='center'
+          wrap='nowrap'
+          onClick={onMaxClick}>
+          {
+            <>
+              <Typography className={classes.caption2}>
+                Balance: {currency ? `${balanceValue || '0'} ${currency}` : '- -'}
+                <Button
+                  className={
+                    currency
+                      ? classes.maxButton
+                      : `${classes.maxButton} ${classes.maxButtonNotActive}`
+                  }
+                  onClick={onMaxClick}>
+                  Max
+                </Button>
+              </Typography>
+            </>
+          }
+        </Grid>
+        <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>
+          {
+            <>
+              {currency && !usdValue ? (
+                <Typography className={classes.noData}>
+                  <div className={classes.noDataIcon}>?</div>No data
+                </Typography>
+              ) : (
+                ''
+              )}
 
+              {currency && usdValue ? (
+                <>
+                  <Typography className={classes.percentage}>{percentageChange}%</Typography>
+                  <Typography className={classes.caption2}>~ ${usdValue}</Typography>
+                </>
+              ) : (
+                ''
+              )}
+
+              {!currency && !usdValue ? (
+                <Typography className={classes.caption2}>-</Typography>
+              ) : (
+                ''
+              )}
+            </>
+          }
+        </Grid>
+      </div>
       {blocked && (
         <>
           <Grid container className={classes.blocker} />

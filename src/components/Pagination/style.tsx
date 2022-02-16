@@ -19,7 +19,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     '& .MuiPaginationItem-page': {
       ...typography.heading4,
-      color: colors.invariant.light
+ 
+      color: colors.invariant.light,
+      '&:hover': {
+        color: colors.invariant.lightGrey
+      }
+ 
     },
 
     '& .MuiPaginationItem-page:hover': {
@@ -27,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '& .MuiPaginationItem-ellipsis': {
-      color: colors.invariant.componentOut3
+      color: colors.invariant.light
     },
 
     '& .Mui-selected': {
@@ -38,30 +43,34 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '& .MuiPaginationItem-page.Mui-selected': {
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
+      '&:hover': {
+        color: colors.invariant.green
+      }
     },
     '& li:first-child button': {
       backgroundColor: colors.invariant.green,
       minWidth: 40,
       minHeight: 40,
-      filter: 'brightness(0.8)'
+      opacity: 0.8
+    },
+    '& li:first-child button:hover': {
+      opacity: 1
+ 
     },
 
     '& li:last-child button': {
       backgroundColor: colors.invariant.green,
       minWidth: 40,
       minHeight: 40,
-      filter: 'brightness(0.8)'
+      opacity: 0.8
+
     },
 
     '& li:last-child button:hover': {
-      backgroundColor: `${colors.invariant.green} !important`,
-      filter: 'brightness(1.1)'
-    },
-
-    '& li:first-child button:hover': {
-      backgroundColor: `${colors.invariant.green} !important`,
-      filter: 'brightness(1.1)'
+ 
+      opacity: 1
+ 
     },
 
     '& svg': {

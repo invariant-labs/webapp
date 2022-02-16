@@ -12,7 +12,10 @@ storiesOf('newUi/swap', module)
       <TransactionDetails
         open={true}
         fee={{ v: new BN(1000) }}
-        exchangeRate={{ val: '0.4321', symbol: 'SNY' }}
+        exchangeRate={{ val: 0.4321, symbol: 'SNY' }}
+        anchorTransaction={null}
+        decimal={6}
+        handleCloseTransactionDetails={() => {}}
       />
     </div>
   ))

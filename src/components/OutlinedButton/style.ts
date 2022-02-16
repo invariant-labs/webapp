@@ -1,21 +1,46 @@
-import { colors, typography } from '@static/theme'
+import { colors, typography, theme } from '@static/theme'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
   general: {
-    borderRadius: 10,
-    textAlign: 'center',
+    width: 26,
+    maxWidth: 26,
+    height: 14,
+    ...typography.tiny2,
+    background: 'rgba(46, 224, 154, 0.8)',
+    borderRadius: 4,
+    marginLeft: 4,
+    marginTop: 1,
+    cursor: 'default',
     textTransform: 'none',
-    ...typography.body1,
-    backgroundColor: colors.invariant.accent1,
-    padding: '10px 14px',
     '&:hover': {
-      backgroundColor: colors.invariant.accent2
+      background: `${colors.invariant.green} !important`
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      ...typography.tiny2,
+      width: 26,
+      maxWidth: 26,
+      height: 14,
+      marginTop: 1
     }
   },
+
+  activeButton: {
+    background: `${colors.invariant.green} !important`
+  },
+
   disabled: {
-    background: `${colors.invariant.componentOut3} !important`,
-    color: `${colors.invariant.background2} !important`
+    ...typography.tiny2,
+    width: 20,
+    maxWidth: 26,
+    height: 15,
+    color: `${colors.invariant.dark} !important`,
+    background: `${colors.invariant.light} !important`,
+    '&:hover': {
+      background: colors.invariant.light,
+      cursor: 'default'
+    }
   }
 }))
 
