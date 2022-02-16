@@ -100,7 +100,7 @@ export const PoolInit: React.FC<IPoolInit> = ({
   return (
     <Grid container className={classes.wrapper}>
       <Typography className={classes.header}>Starting price</Typography>
-      <Grid container className={classes.innerWrapper} direction='column'>
+      <Grid container className={classes.innerWrapper} direction='column' justifyContent='flex-start'>
         <Grid className={classes.infoWrapper}>
           <Typography className={classes.info}>
             This pool does not exist yet. Select a pair of tokens, then choose a fee. Enter the
@@ -121,7 +121,7 @@ export const PoolInit: React.FC<IPoolInit> = ({
           container
           justifyContent='space-between'
           alignItems='center'>
-          <Typography className={classes.priceLabel}>{tokenBSymbol} starting price: </Typography>
+          <Typography className={classes.priceLabel}>{tokenASymbol} starting price: </Typography>
 
           <Typography className={classes.priceValue}>
             <AnimatedNumber
@@ -131,7 +131,7 @@ export const PoolInit: React.FC<IPoolInit> = ({
               duration={300}
               formatValue={formatNumbers()}
             />
-            {showPrefix(calcPrice(midPrice, isXtoY, xDecimal, yDecimal))} {tokenASymbol}
+            {showPrefix(calcPrice(midPrice, isXtoY, xDecimal, yDecimal))} {tokenBSymbol}
           </Typography>
         </Grid>
 

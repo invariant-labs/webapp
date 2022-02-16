@@ -4,31 +4,31 @@ import { colors, typography } from '@static/theme'
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     borderRadius: 10,
-    backgroundColor: colors.invariant.componentOut4,
+    backgroundColor: colors.invariant.component,
     padding: 24,
     paddingTop: 16,
     flex: '1 1 0%'
   },
   header: {
-    ...typography.body1,
+    ...typography.heading4,
     marginBottom: 6,
     color: colors.white.main
   },
   innerWrapper: {
     borderRadius: 8,
-    backgroundColor: colors.invariant.componentIn2,
-    padding: 16,
+    backgroundColor: colors.invariant.component,
     width: '100%',
     position: 'relative'
   },
   subheader: {
-    ...typography.body2,
+    ...typography.heading4,
     marginBlock: 12,
     color: colors.white.main
   },
   inputs: {
-    marginBottom: 15,
+    marginBottom: 20,
     flexDirection: 'row',
+    gap: 16,
 
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'
@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   input: {
     flex: '1 1 0%',
+    gap: 12,
 
     '&:first-child': {
       marginRight: 8
@@ -49,13 +50,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   button: {
+    width: '100%',
     flex: '1 1 0%',
-    height: 25,
-    ...typography.body3,
+    ...typography.body2,
     color: colors.white.main,
-    backgroundColor: colors.invariant.componentOut2,
-    borderRadius: 3,
     textTransform: 'none',
+    height: 36,
+    paddingInline: 8,
+    backgroundColor: colors.invariant.light,
+    borderRadius: 11,
 
     '&:first-child': {
       marginRight: 8
@@ -69,37 +72,39 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   buttons: {
+    width: '100%',
     flexDirection: 'row',
+    gap: 16,
+    alignItems: 'center',
 
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'
     }
   },
   infoWrapper: {
-    border: `1px solid ${colors.invariant.lightInfoText}`,
-    borderRadius: 10,
-    paddingInline: 16,
-    paddingBlock: 8,
-    backgroundColor: colors.invariant.componentOut2,
+    borderRadius: 19,
+    padding: 16,
+    background: 'radial-gradient(286.05% 1397.73% at 101.8% 159.3%, rgba(46, 224, 154, 0.3) 0%, rgba(0, 0, 0, 0) 100%), radial-gradient(235.47% 781.83% at 5.41% 0%, rgba(239, 132, 245, 0.3) 0%, rgba(0, 0, 0, 0) 100%), linear-gradient(0deg, #3A466B, #3A466B)',
     marginBottom: 16
   },
   info: {
     color: colors.white.main,
-    ...typography.body2
+    ...typography.body2,
+    lineHeight: '22px'
   },
   midPrice: {
     marginBottom: 8
   },
   priceWrapper: {
-    backgroundColor: colors.invariant.componentOut2,
+    backgroundColor: colors.invariant.light,
     paddingInline: 12,
-    paddingBlock: 4,
-    borderRadius: 8,
+    paddingBlock: 10,
+    borderRadius: 13,
     marginBottom: 36
   },
   priceLabel: {
     ...typography.body2,
-    color: colors.invariant.lightInfoText
+    color: colors.invariant.textGrey
   },
   priceValue: {
     ...typography.body1,
