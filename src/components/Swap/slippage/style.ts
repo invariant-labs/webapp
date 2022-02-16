@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -9,6 +9,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   detailsWrapper: {
+    width: 306,
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: colors.invariant.component,
@@ -16,16 +17,17 @@ const useStyles = makeStyles(() => ({
     borderRadius: 20,
     color: colors.white.main,
     '& h2': {
-      ...typography.heading4
+      ...newTypography.heading4
     },
     '& p': {
-      ...typography.body3,
+      ...newTypography.body2,
       color: colors.invariant.lightHover,
-      marginBottom: 5
+      marginBottom: 6
     }
   },
 
   selectTokenClose: {
+    minWidth: 0,
     background: 'none',
     '&:hover': {
       background: 'none !important'
@@ -45,9 +47,11 @@ const useStyles = makeStyles(() => ({
     border: `1px solid ${colors.invariant.component}`,
     color: colors.invariant.light,
     borderRadius: 15,
-    width: '93%',
+    width: '100%',
     backgroundColor: colors.invariant.newDark,
-    padding: '10px 8px',
+    ...newTypography.heading4,
+    fontWeight: 400,
+    padding: 8,
     '&::placeholder': {
       color: colors.invariant.light
     },
@@ -55,13 +59,19 @@ const useStyles = makeStyles(() => ({
       outline: 'none'
     }
   },
+  innerInput: {
+    paddingBlock: 0
+  },
   detailsInfoBtn: {
+    minWidth: 49,
     backgroundColor: colors.invariant.green,
-    borderRadius: 5,
+    borderRadius: 9,
     border: 'none',
-    padding: '4px 10px',
-    marginLeft: -60,
+    padding: 0,
+    width: 49,
+    height: 28,
     cursor: 'pointer',
+    ...newTypography.body2,
     '&:hover': {
       filter: 'brightness(1.15)',
       boxShadow:

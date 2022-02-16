@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
     borderRadius: 11,
     textAlign: 'center',
     width: '100%',
-    height: 40,
+    paddingBlock: 8,
     cursor: 'pointer',
     '&:not(:last-child)': {
       marginBottom: 8
@@ -24,18 +24,18 @@ const useStyles = makeStyles(() => ({
       background: colors.invariant.light,
       '& $name': {
         color: colors.white.main,
-        ...typography.heading4
+        ...newTypography.heading4
       }
     }
   },
   name: {
     textTransform: 'capitalize',
-    ...typography.heading4,
     color: colors.invariant.light
+    ...newTypography.heading4,
   },
   current: {
     textTransform: 'capitalize',
-    ...typography.heading4,
+    ...newTypography.heading4,
     color: colors.white.main
   },
   paper: {

@@ -59,7 +59,7 @@ const TransactionDetails: React.FC<IProps> = ({
               onClick={handleCloseTransactionDetails}></Button>
           </Grid>
 
-          <Typography component='p'>
+          <Typography component='p' style={{ marginBottom: 8 }}>
             Fee:{' '}
             <Typography component='span'>{printBN(percent.value, percent.decimal)} %</Typography>
           </Typography>

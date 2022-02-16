@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   popover: {
@@ -23,10 +23,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selectTokenHeader: {
     width: '100%',
-    paddingBottom: 15,
+    paddingBottom: 20,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+
+    '& h1': {
+      ...newTypography.heading4
+    }
   },
   inputControl: {
     width: '100%',
@@ -82,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: 14
   },
   commonTokensHeader: {
-    ...typography.body2
+    ...newTypography.body2
   },
   commonTokensList: {
     display: 'flex',
@@ -103,7 +107,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 7,
     marginRight: 7,
     '& p': {
-      ...typography.body2
+      ...newTypography.body2
     },
 
     '&:hover': {
@@ -174,6 +178,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '50%',
     boxShadow: '0px 0px 10px rgba(216, 255, 181, 0.5)'
   },
+  tokenBalance: {
+    ...newTypography.body2,
+    color: colors.invariant.componentIn1,
+    whiteSpace: 'nowrap'
+  },
+  searchIcon: {
+    color: colors.invariant.componentOut3
+  },
 
   hideScroll: {
     '& > *:first-child': {
@@ -216,7 +228,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 14
   },
   button: {
-    ...typography.body2,
+    ...newTypography.body2,
     padding: 0,
     textTransform: 'none',
     boxShadow: 'none',
@@ -272,13 +284,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     left: 6,
     color: colors.invariant.textGrey,
-    ...typography.body2
+    ...newTypography.body2
   },
   filterName: {
     color: colors.invariant.textGrey,
     position: 'absolute',
     left: 28,
-    ...typography.body2
+    ...newTypography.body2
   },
   filterIcon: {
     width: 10,

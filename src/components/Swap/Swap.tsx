@@ -512,7 +512,7 @@ export const Swap: React.FC<ISwap> = ({
                 decimal={tokens[tokenToIndex].decimals}
               />
             ) : tokenToIndex === null || tokenFromIndex === null ? (
-              'No data'
+              <Typography className={classes.noData}>No data</Typography>
             ) : null}
             {tokenFromIndex !== null && tokenToIndex !== null && activeSwapDetails() ? (
               <ExchangeRate
@@ -522,7 +522,7 @@ export const Swap: React.FC<ISwap> = ({
                 tokenToDecimals={tokens[tokenToIndex].decimals}
                 loading={getStateMessage() === 'Loading'}></ExchangeRate>
             ) : !activeSwapDetails() ? (
-              'No data'
+              <Typography className={classes.noData}>No data</Typography>
             ) : null}
           </Box>
         </Box>

@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   endIcon: {
@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
   },
   input: {
     boxSizing: 'border-box',
-    ...typography.body2,
+    ...newTypography.body2,
     outline: 'none',
     width: 88,
     height: 28,

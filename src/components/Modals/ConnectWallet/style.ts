@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
   listItem: {
     color: colors.invariant.lightGrey,
     borderRadius: 11,
-    padding: '3px 7px',
+    padding: '6px 7px',
     width: '100%',
     cursor: 'pointer',
     display: 'flex',
@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   title: {
-    ...typography.body1,
+    ...newTypography.body1,
     margin: 10
   },
   dotIcon: {
@@ -56,7 +56,7 @@ const useStyles = makeStyles(() => ({
   },
   name: {
     textTransform: 'capitalize',
-    ...typography.body2,
+    ...newTypography.body2,
     float: 'left',
     paddingTop: '2px'
   },

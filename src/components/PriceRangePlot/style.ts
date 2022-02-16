@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -61,8 +61,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   loadingText: {
-    ...typography.heading4,
-    fill: colors.invariant.dark
+    fill: colors.invariant.dark,
+    ...newTypography.heading4
   }
 }))
 

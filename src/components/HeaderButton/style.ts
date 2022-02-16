@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, newTypography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerButton: {
@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingInline: 12,
     borderRadius: 10,
     textTransform: 'none',
-    ...typography.body1,
+    ...newTypography.body1,
     lineHeight: '22px',
     height: 40,
     width: 130,
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingInline: 12,
     borderRadius: 10,
     textTransform: 'none',
-    ...typography.body1,
+    ...newTypography.body1,
     height: 40,
     minWidth: 130,
 
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingInline: 12,
     borderRadius: 10,
     textTransform: 'none',
-    ...typography.body1,
+    ...newTypography.body1,
     height: 40,
     minWidth: 221,
 
@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'none',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    ...typography.body1,
+    ...newTypography.body1,
     whiteSpace: 'nowrap'
   },
   disabled: {
