@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyle = makeStyles(() => ({
   container: {
@@ -11,7 +11,7 @@ const useStyle = makeStyles(() => ({
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`,
     '& p': {
-      ...newTypography.heading4
+      ...typography.heading4
     }
   },
 
@@ -27,7 +27,7 @@ const useStyle = makeStyles(() => ({
   header: {
     header: {
       '& p': {
-        ...newTypography.heading4,
+        ...typography.heading4,
         fontWeight: 400
       }
     }

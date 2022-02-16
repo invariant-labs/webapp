@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     '& .MuiPaginationItem-page': {
       ...typography.heading4,
+
       color: colors.invariant.light,
       '&:hover': {
         color: colors.invariant.lightGrey
