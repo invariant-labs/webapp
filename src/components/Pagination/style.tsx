@@ -5,7 +5,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: 1122,
     display: 'flex',
-    justifyContent: 'end',
     [theme.breakpoints.down('md')]: {
       width: '100%'
     },

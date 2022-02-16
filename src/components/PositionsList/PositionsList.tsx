@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { Button, Grid, Typography, InputAdornment, InputBase } from '@material-ui/core'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { PositionItem } from './PositionItem/PositionItem'
-import { PaginationList } from './Pagination/Pagination'
+import { PaginationList } from '@components/Pagination/Pagination'
 import SearchIcon from '@static/svg/lupaDark.svg'
 import useStyle from './style'
 
@@ -126,6 +126,7 @@ export const PositionsList: React.FC<IProp> = ({
           pages={paginator(page).totalPages}
           defaultPage={1}
           handleChangePage={handleChangePagination}
+          variant='end'
         />
       ) : null}
     </Grid>
