@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   text: {
-    ...newTypography.body1,
+    ...typography.body1,
     color: colors.invariant.lightGrey,
     backgroundColor: colors.invariant.component,
     display: 'flex',
@@ -80,12 +80,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   name: {
-    ...newTypography.heading3,
+    ...typography.heading3,
     color: colors.invariant.text,
     lineHeight: '28px',
 
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.heading4
+      ...typography.heading4
     }
   },
   bottomGrid: {
@@ -108,11 +108,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   title: {
-    ...newTypography.heading4,
+    ...typography.heading4,
     color: colors.invariant.text
   },
   titleValue: {
-    ...newTypography.heading3,
+    ...typography.heading3,
     color: colors.invariant.text,
     fontFamily: 'Mukta'
   },
@@ -123,7 +123,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.dark,
     width: 116,
     height: 32,
-    ...newTypography.body1,
+    ...typography.body1,
     '&:hover': {
       background: colors.invariant.pinkLinearGradient,
       boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.body1,
+      ...typography.body1,
       maxHeight: 28,
       minWidth: 105
     }
@@ -180,7 +180,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenName: {
     color: colors.white.main,
-    ...newTypography.heading4,
+    ...typography.heading4,
     fontWeight: 400
   },
   tokenValue: {
@@ -188,15 +188,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    ...newTypography.heading2
+    ...typography.heading2
   },
   tokenBalance: {
     color: '#A9B6BF',
-    ...newTypography.caption2
+    ...typography.caption2
   },
   tokenUSDValue: {
     color: '#A9B6BF',
-    ...newTypography.caption2
+    ...typography.caption2
   },
   closeButton: {
     color: colors.invariant.dark,
@@ -207,7 +207,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: '300ms',
     paddingInline: 0,
     borderRadius: 12,
-    ...newTypography.body1,
+    ...typography.body1,
 
     '&:hover': {
       background: colors.invariant.greenLinearGradient,

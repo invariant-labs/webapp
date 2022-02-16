@@ -1,4 +1,4 @@
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
@@ -6,7 +6,7 @@ const useStyles = makeStyles(() => ({
     background: colors.invariant.newDark,
     color: colors.invariant.light,
     borderRadius: 20,
-    ...newTypography.heading2,
+    ...typography.heading2,
     width: '100%',
     textAlign: 'right',
     transition: 'all .4s',
@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   maxButton: {
-    ...newTypography.caption4,
+    ...typography.caption4,
     minWidth: 30,
     height: 15,
     borderRadius: 3,
@@ -48,7 +48,7 @@ const useStyles = makeStyles(() => ({
   BalanceTypography: {
     cursor: 'default !important',
     color: colors.invariant.lightGrey,
-    ...newTypography.caption3,
+    ...typography.caption3,
     paddingLeft: 15,
     marginRight: 3
   },
@@ -72,7 +72,7 @@ const useStyles = makeStyles(() => ({
   },
   noData: {
     color: colors.invariant.warning,
-    ...newTypography.caption2,
+    ...typography.caption2,
     display: 'grid',
     gap: 5.45,
     gridAutoFlow: 'column',

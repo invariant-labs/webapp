@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -7,7 +7,7 @@ const useStyles = makeStyles(() => ({
     borderRadius: 16,
     textAlign: 'center',
     textTransform: 'none',
-    ...newTypography.body1,
+    ...typography.body1,
     color: colors.invariant.componentBcg,
     background: colors.invariant.pinkLinearGradient,
     transition: 'background-color 0ms ease, box-shadow 150ms linear',

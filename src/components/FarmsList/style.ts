@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 10
   },
   title: {
-    ...newTypography.heading4,
+    ...typography.heading4,
     color: colors.white.main
   },
   tile: {

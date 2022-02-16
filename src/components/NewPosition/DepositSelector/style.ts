@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   wrapper: {
@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
     flex: '1 1 0%'
   },
   sectionTitle: {
-    ...newTypography.heading4,
+    ...typography.heading4,
     marginBottom: 24,
     color: colors.white.main
   },
@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
     width: '100%'
   },
   inputLabel: {
-    ...newTypography.body3,
+    ...typography.body3,
     lineHeight: '16px',
     color: colors.invariant.light,
     marginBottom: 3

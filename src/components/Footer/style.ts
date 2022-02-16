@@ -1,4 +1,4 @@
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 import { makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(() => ({
@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
   },
   tooltip: {
     color: colors.invariant.textGrey,
-    ...newTypography.caption4,
+    ...typography.caption4,
     lineHeight: '24px',
     background: colors.black.full,
     borderRadius: 12,

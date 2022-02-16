@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   labelText: {
     justifyContent: 'center',
-    ...newTypography.caption1,
+    ...typography.caption1,
     color: colors.white.main
   },
   top: {
@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 36
   },
   greenText: {
-    ...newTypography.body1,
+    ...typography.body1,
     color: colors.invariant.green,
     letterSpacing: '-0.03em',
     [theme.breakpoints.down('xs')]: {
@@ -102,17 +102,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     color: colors.white.main,
-    ...newTypography.caption1,
+    ...typography.caption1,
     fontWeight: 400
   },
   infoText: {
-    ...newTypography.caption2,
+    ...typography.caption2,
     letterSpacing: '-0.03em',
     color: colors.invariant.textGrey
   },
   value: {
     color: colors.white.main,
-    ...newTypography.caption1,
+    ...typography.caption1,
     marginLeft: 4
   },
   spacing: {
@@ -127,7 +127,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 44,
     borderRadius: 16,
     textTransform: 'none',
-    ...newTypography.body1,
+    ...typography.body1,
     fontWeight: 700,
     letterSpacing: '-0.03em',
     background: colors.invariant.pinkLinearGradientOpacity,
@@ -152,7 +152,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 44,
     borderRadius: 16,
     textTransform: 'none',
-    ...newTypography.body1,
+    ...typography.body1,
     fontWeight: 700,
     background: colors.invariant.greenLinearGradientOpacity,
     color: colors.black.full,
@@ -162,7 +162,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   stakeLabel: {
-    ...newTypography.body3
+    ...typography.body3
   },
   claimRewards: {
     width: 115,
@@ -170,11 +170,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 44,
     borderRadius: 16,
     textTransform: 'none',
-    ...newTypography.body1,
+    ...typography.body1,
     background: colors.invariant.greenLinearGradientOpacity,
     color: colors.black.full,
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.body3,
+      ...typography.body3,
       minWidth: 105
     },
     '&:hover': {
@@ -234,20 +234,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenName: {
     color: colors.white.main,
-    ...newTypography.caption1,
+    ...typography.caption1,
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.body2
+      ...typography.body2
     }
   },
   tokenValue: {
-    ...newTypography.heading4,
+    ...typography.heading4,
     color: colors.white.main,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     padding: '0 15px',
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.body2,
+      ...typography.body2,
       paddingLeft: 4
     }
   }

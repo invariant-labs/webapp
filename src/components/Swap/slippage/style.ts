@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -17,10 +17,10 @@ const useStyles = makeStyles(() => ({
     borderRadius: 20,
     color: colors.white.main,
     '& h2': {
-      ...newTypography.heading4
+      ...typography.heading4
     },
     '& p': {
-      ...newTypography.body2,
+      ...typography.body2,
       color: colors.invariant.lightHover,
       marginBottom: 6
     }
@@ -49,7 +49,7 @@ const useStyles = makeStyles(() => ({
     borderRadius: 15,
     width: '100%',
     backgroundColor: colors.invariant.newDark,
-    ...newTypography.heading4,
+    ...typography.heading4,
     fontWeight: 400,
     padding: 8,
     '&::placeholder': {
@@ -71,7 +71,7 @@ const useStyles = makeStyles(() => ({
     width: 49,
     height: 28,
     cursor: 'pointer',
-    ...newTypography.body2,
+    ...typography.body2,
     '&:hover': {
       filter: 'brightness(1.15)',
       boxShadow:

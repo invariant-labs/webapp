@@ -87,7 +87,7 @@ export const colors = {
   }
 }
 
-export const newTypography = {
+export const typography = {
   heading1: {
     fontSize: 32,
     lineHeight: '36px',
@@ -176,14 +176,14 @@ export const theme = createTheme({
   typography: {
     fontFamily: 'Mukta',
     fontWeightRegular: 600,
-    h1: newTypography.heading1,
-    h2: newTypography.heading2,
-    h3: newTypography.heading3,
-    h4: newTypography.heading4,
-    body1: newTypography.body1,
-    body2: newTypography.body2,
-    body3: newTypography.body3,
-    caption: newTypography.caption1
+    h1: typography.heading1,
+    h2: typography.heading2,
+    h3: typography.heading3,
+    h4: typography.heading4,
+    body1: typography.body1,
+    body2: typography.body2,
+    body3: typography.body3,
+    caption: typography.caption1
   },
   overrides: {
     MuiInputBase: {

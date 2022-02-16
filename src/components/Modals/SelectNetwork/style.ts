@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   title: {
-    ...newTypography.body1,
+    ...typography.body1,
     margin: 10
   },
   dotIcon: {
@@ -48,7 +48,7 @@ const useStyles = makeStyles(() => ({
   },
   name: {
     textTransform: 'capitalize',
-    ...newTypography.body2,
+    ...typography.body2,
     paddingTop: '1px'
   },
   paper: {

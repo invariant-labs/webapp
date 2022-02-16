@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.componentBcg,
     borderRadius: 20,
     padding: '6px 12px 6px 12px',
-    ...newTypography.heading2,
+    ...typography.heading2,
     display: 'grid',
     gridTemplateAreas: `
     "select select select select"
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       position: 'relative',
       top: 1,
       textAlign: 'end',
-      ...newTypography.heading2
+      ...typography.heading2
     },
 
     '& $input::placeholder': {
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   percentage: {
     color: colors.invariant.Error,
-    ...newTypography.tiny1,
+    ...typography.tiny1,
     backgroundColor: 'rgba(251, 85, 95, 0.2)',
     borderRadius: 5,
     width: 39,
@@ -95,11 +95,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '100%'
   },
   currencySymbol: {
-    ...newTypography.body3,
+    ...typography.body3,
     color: colors.white.main
   },
   noCurrencyText: {
-    ...newTypography.body3,
+    ...typography.body3,
     color: colors.white.main,
     cursor: 'default'
   },
@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   caption2: {
     display: 'flex',
     flexWrap: 'nowrap',
-    ...newTypography.caption2,
+    ...typography.caption2,
     color: colors.invariant.lightHover,
 
     '&:hover': {
@@ -120,7 +120,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   maxButton: {
     color: colors.invariant.componentBcg,
-    ...newTypography.tiny2,
+    ...typography.tiny2,
     borderRadius: 4,
     width: 26,
     minWidth: 26,
@@ -151,7 +151,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noData: {
     color: colors.invariant.warning,
-    ...newTypography.caption2,
+    ...typography.caption2,
     display: 'grid',
     gap: 5.45,
     gridAutoFlow: 'column',
@@ -188,7 +188,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%'
   },
   blockedInfo: {
-    ...newTypography.body2,
+    ...typography.body2,
     color: colors.invariant.lightHover
   }
 }))

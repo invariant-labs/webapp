@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 'auto',
     fontFamily: 'Mukta',
     backgroundColor: colors.invariant.light,
-    ...newTypography.body3,
+    ...typography.body3,
     padding: 15,
 
     filter: 'brightness(0.8)',

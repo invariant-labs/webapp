@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -36,11 +36,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   names: {
-    ...newTypography.heading1,
+    ...typography.heading1,
     color: colors.white.main,
 
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.heading3
+      ...typography.heading3
     }
   },
   dot: {
@@ -96,9 +96,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 20
   },
   activity: {
-    ...newTypography.body1,
+    ...typography.body1,
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.body2
+      ...typography.body2
     }
   },
   flexWrapper: {
@@ -108,13 +108,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     color: colors.invariant.lightGrey,
-    ...newTypography.heading4,
+    ...typography.heading4,
     fontWeight: 400,
     letterSpacing: '-0.03em'
   },
   value: {
     color: colors.white.main,
-    ...newTypography.heading4
+    ...typography.heading4
   },
   link: {
     marginTop: 20,
@@ -125,7 +125,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 44,
     borderRadius: 16,
     textTransform: 'none',
-    ...newTypography.body1,
+    ...typography.body1,
     background: colors.invariant.greenLinearGradientOpacity,
     color: colors.black.full,
     '&:hover': {

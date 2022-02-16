@@ -1,9 +1,9 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   button: {
-    ...newTypography.body2,
+    ...typography.body2,
     backgroundColor: colors.invariant.component,
     textTransform: 'none',
     boxShadow: 'none',

@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 export const useStyles = makeStyles(() => ({
   wrapper: {
@@ -35,7 +35,7 @@ export const useSingleTabStyles = makeStyles(() => ({
   root: {
     zIndex: 1,
     textTransform: 'none',
-    ...newTypography.body3,
+    ...typography.body3,
     height: 36,
     minHeight: 36,
     color: colors.invariant.light,
@@ -56,7 +56,7 @@ export const useSingleTabStyles = makeStyles(() => ({
     }
   },
   selected: {
-    ...newTypography.heading4,
+    ...typography.heading4,
     color: colors.white.main,
     transition: 'color 300ms',
 

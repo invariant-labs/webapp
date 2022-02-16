@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: '1 1 0%'
   },
   header: {
-    ...newTypography.heading4,
+    ...typography.heading4,
     marginBottom: 6,
     color: colors.white.main
   },
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   subheader: {
-    ...newTypography.heading4,
+    ...typography.heading4,
     marginBlock: 12,
     color: colors.white.main
   },
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     width: '100%',
     flex: '1 1 0%',
-    ...newTypography.body2,
+    ...typography.body2,
     color: colors.white.main,
     textTransform: 'none',
     height: 36,
@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
-    ...newTypography.heading4,
+    ...typography.heading4,
     color: colors.invariant.lightHover,
     zIndex: 99
   },

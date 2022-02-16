@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   title: {
     color: colors.invariant.text,
-    ...newTypography.heading4,
+    ...typography.heading4,
     fontWeight: 500
   },
   positionsNumber: {
@@ -52,14 +52,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.black,
     border: '1px solid #202946',
     color: colors.invariant.lightGrey,
-    ...newTypography.body2,
+    ...typography.body2,
     [theme.breakpoints.down('xs')]: {
       maxWidth: 200
     }
   },
   button: {
     color: colors.invariant.dark,
-    ...newTypography.body1,
+    ...typography.body1,
     textTransform: 'none',
     borderRadius: 14,
     height: 40,
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     WebkitPaddingBefore: '2px'
   },
   noPositionsText: {
-    ...newTypography.heading1,
+    ...typography.heading1,
     textAlign: 'center',
     color: colors.invariant.text
   },
