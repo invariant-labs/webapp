@@ -8,44 +8,36 @@ storiesOf('position/Stats', module)
   .add('volume24', () => {
     const [percerentVolume] = React.useState<number>(1.14)
     const [volume] = React.useState<number>(231258435934)
-    const [data] = React.useState([
-      {
-        timeStamp: '1AM',
-        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
-      },
-      {
-        timeStamp: '4AM',
-        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
-      },
-      {
-        timeStamp: '7AM',
-        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
-      },
-      {
-        timeStamp: '10AM',
-        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
-      },
-      {
-        timeStamp: '1PM',
-        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
-      },
-      {
-        timeStamp: '4PM',
-        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
-      },
-      {
-        timeStamp: '7PM',
-        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
-      },
-      {
-        timeStamp: '10PM',
-        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
-      },
-      {
-        timeStamp: '10PM',
-        value: [321, 312, 31, 456, 35, 21, 76, 22, 76, 22, 44, 21]
+    const [data, seData] = React.useState<Array<{ timeStamp: number; value: number }>>([])
+
+    const timeSlicer = 10
+    let timeCreator = 0
+
+    React.useEffect(() => {
+      const data: Array<{ timeStamp: number; value: number }> = []
+
+      for (let i = 0; timeCreator < 24 * 60; i++) {
+        const hours = ~~(timeCreator / 60)
+        const minutes = ~~(timeCreator % 60)
+        const dayTime = '2022'
+        const dayMonth = 'Wed'
+        const monthDay = 'Feb'
+        const dayNumber = '16'
+
+        const correctMinute = minutes < 10 ? `0${minutes}` : minutes
+        const correctHour = hours < 10 ? `0${hours}` : hours
+        const simulateTime = `${dayMonth} ${monthDay} ${dayNumber} ${dayTime} ${correctHour}:${correctMinute}:00`
+
+        const unix = new Date(simulateTime).getTime()
+
+        const obj = { timeStamp: unix, value: ~~(Math.random() * ~~(timeCreator / 60) + 2) }
+
+        data.push(obj)
+        timeCreator = timeCreator + timeSlicer
       }
-    ])
+
+      seData(data)
+    }, [])
 
     return <Volume data={data} percentVolume={percerentVolume} volume={volume} />
   })

@@ -10,31 +10,94 @@ interface StatsInterface {
   percentVolume: number
   volume: number
   data: Array<{
-    timeStamp: string
-    value: number[]
+    timeStamp: number
+    value: number
   }>
+}
+
+interface toolTipInterface {
+  data: {
+    timeStamp: string
+  }
+  color: string
+}
+
+const tooltip = ({ data, color }: toolTipInterface) => {
+  return (
+    <div
+      style={{
+        background: colors.white.main,
+        width: 100,
+        height: 25,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        color
+      }}>
+      <strong>{data.timeStamp}</strong>
+    </div>
+  )
 }
 
 const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
   const classes = useStyles()
 
-  const BarData = data.map(el => {
-    const value = el.value
+  const cutArray = (arr: Array<{ timeStamp: string; value: number[] }>, size: number) => {
+    const arrData = arr.slice(0)
+    const result = []
 
-    const timeStamp = el.timeStamp
+    while (arrData.length > 0) result.push(arrData.splice(0, size))
 
-    const objs = value.reduce((a, v) => ({ ...a, [v]: v }), {})
+    return result
+  }
 
-    return { timeStamp, ...objs }
+  function concatArray<T>(arr: T[][]) {
+    return arr.reduce(
+      (array, isArray) => (Array.isArray(isArray) ? array.concat(isArray) : array),
+      []
+    )
+  }
+
+  const converToUnix = data
+    .map(el => {
+      const unix = el.timeStamp
+      const date = new Date(unix)
+      const hours = date.getHours()
+
+      const convertedHour = hours >= 13 ? `${hours - 12}PM` : `${hours}AM`
+
+      return { ...el, timeStamp: convertedHour }
+    })
+    .filter(({ timeStamp }) => timeStamp !== '0AM')
+
+  const sortedByTimeStamp = converToUnix.reduce((map, { timeStamp, value }) => {
+    if (!map.has(timeStamp)) return map.set(timeStamp, [value])
+
+    map.get(timeStamp).push(value)
+
+    return map
+  }, new Map())
+
+  const convertedArray: Array<{ timeStamp: string; value: number[] }> = Array.from(
+    sortedByTimeStamp,
+    ([timeStamp, value]) => ({ timeStamp, value })
+  )
+
+  const barDataContent = cutArray(convertedArray, 3)
+
+  const barData: Array<{ timeStamp: string; [key: number]: number }> = barDataContent.map(el => {
+    const timeStamp = el.map(({ timeStamp }) => timeStamp)[0]
+
+    const concatValues = concatArray(el.map(({ value }) => value))
+
+    const convert = Object.assign({}, concatValues)
+    return { timeStamp, ...convert }
   })
 
-  const keys = BarData.map(({ timeStamp, ...rest }) => rest)
+  const keys = barData.map(({ timeStamp, ...rest }) => Object.keys(rest))
 
-  const getKeys = keys
-    .map(key => Object.keys(key))
-    .reduce((array, isArray) => (Array.isArray(isArray) ? array.concat(isArray) : array))
-
-  const uniqueKeys = [...new Set(getKeys)]
+  const uniqueKeys = [...new Set(concatArray(keys))]
 
   const Theme = {
     axis: {
@@ -80,9 +143,10 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
       </Box>
       <div className={classes.barContainer}>
         <ResponsiveBar
-          margin={{ top: 70, bottom: 30, left: 0 }}
-          data={BarData}
+          margin={{ top: 30, bottom: 30, left: 0 }}
+          data={barData}
           keys={uniqueKeys}
+          tooltip={tooltip}
           indexBy='timeStamp'
           labelSkipWidth={2}
           labelSkipHeight={12}
@@ -90,8 +154,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
           groupMode='grouped'
           enableLabel={false}
           enableGridY={false}
-          isInteractive={false}
-          innerPadding={3}
+          innerPadding={2}
           padding={0.03}
           indexScale={{ type: 'band', round: true }}
           colors={colors.invariant.pink}

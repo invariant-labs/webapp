@@ -4,7 +4,6 @@ import { newTypography, colors } from '@static/theme'
 export const useStyles = makeStyles(() => ({
   container: {
     backgroundColor: colors.invariant.component,
-    color: 'white',
     maxWidth: '524px',
     borderRadius: 24,
     padding: 24
@@ -26,6 +25,7 @@ export const useStyles = makeStyles(() => ({
   volumePercentHeader: {
     ...newTypography.heading1,
     letterSpacing: '-0.03em',
+    color: colors.white.main,
     marginTop: 5
   },
   volumeStatusContainer: {
