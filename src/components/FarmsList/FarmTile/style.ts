@@ -3,10 +3,13 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderRadius: 10,
-    backgroundColor: colors.invariant.componentOut1,
+    borderRadius: 24,
+    backgroundColor: colors.invariant.component,
     padding: 24,
-    paddingTop: 16
+    paddingTop: 16,
+    [theme.breakpoints.down('xs')]: {
+      padding: 16
+    }
   },
   top: {
     marginBottom: 10
@@ -28,7 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 16,
 
     [theme.breakpoints.down('xs')]: {
-      width: 58
+      width: 58,
+      marginRight: 8
     }
   },
   names: {
@@ -42,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   dot: {
     height: 16,
     minWidth: 16,
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.lightGrey,
 
     [theme.breakpoints.down('xs')]: {
       height: 12,
@@ -61,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   pulseDot: {
     height: 12,
     width: 12,
-    backgroundColor: colors.invariant.accent2,
+    backgroundColor: colors.invariant.green,
     borderRadius: '50%',
     marginRight: 6,
     position: 'relative',
@@ -85,16 +89,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   greenText: {
-    color: colors.invariant.accent2
+    color: colors.invariant.green
   },
   greyText: {
-    color: colors.invariant.lightInfoText
+    color: colors.invariant.lightGrey,
+    fontSize: 20
   },
   activity: {
     ...typography.body1,
-
     [theme.breakpoints.down('xs')]: {
-      ...typography.label2
+      ...typography.body2
     }
   },
   flexWrapper: {
@@ -103,9 +107,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   label: {
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.lightGrey,
     ...typography.heading4,
-    fontWeight: 400
+    fontWeight: 400,
+    letterSpacing: '-0.03em'
   },
   value: {
     color: colors.white.main,
@@ -117,29 +122,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     width: '100%',
-    height: 40,
-    borderRadius: 5,
+    height: 44,
+    borderRadius: 16,
     textTransform: 'none',
     ...typography.body1,
-    backgroundColor: colors.invariant.accent1,
-    color: colors.white.main,
-
+    background: colors.invariant.greenLinearGradientOpacity,
+    color: colors.black.full,
     '&:hover': {
-      backgroundColor: `${colors.invariant.accent1}`,
-      boxShadow: `0px 0px 15px ${colors.invariant.accent1}`
+      background: colors.invariant.greenLinearGradient,
+      boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
 
     '&:disabled': {
-      backgroundColor: colors.invariant.componentOut3,
-      color: colors.invariant.background2,
+      background: 'rgba(58, 70, 107, 0.8) !important',
       pointerEvents: 'auto !important',
       cursor: 'pointer'
     },
 
     '&:hover:disabled': {
-      backgroundColor: `${colors.invariant.componentOut2} !important`,
+      background: `${colors.invariant.light} !important`,
       pointerEvents: 'auto !important',
-      boxShadow: 'unset'
+      boxShadow: 'none'
     }
   }
 }))

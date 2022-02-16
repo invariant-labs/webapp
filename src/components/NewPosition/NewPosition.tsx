@@ -50,6 +50,8 @@ export interface INewPosition {
   yDecimal: number
   tickSpacing: number
   isWaitingForNewPool: boolean
+  poolIndex: number | null
+  currentPairReversed: boolean | null
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -70,7 +72,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   xDecimal,
   yDecimal,
   tickSpacing,
-  isWaitingForNewPool
+  isWaitingForNewPool,
+  poolIndex,
+  currentPairReversed
 }) => {
   const classes = useStyles()
 
@@ -203,7 +207,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
       <Typography className={classes.title}>Add new liquidity position</Typography>
 
-      <Grid container className={classes.row}>
+      <Grid container className={classes.row} alignItems='stretch'>
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
           className={classes.deposit}
@@ -247,7 +251,9 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
-              (isXtoY ? rightRange <= midPrice.index : rightRange > midPrice.index),
+              (isXtoY
+                ? rightRange <= midPrice.index && !(leftRange > midPrice.index)
+                : rightRange > midPrice.index && !(leftRange <= midPrice.index)),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimals : 0
           }}
@@ -270,12 +276,26 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
-              (isXtoY ? leftRange > midPrice.index : leftRange <= midPrice.index),
+              (isXtoY
+                ? leftRange > midPrice.index && !(rightRange <= midPrice.index)
+                : leftRange <= midPrice.index && !(rightRange > midPrice.index)),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimals : 0
           }}
           feeTiers={feeTiers}
           progress={progress}
+          onReverseTokens={() => {
+            if (tokenAIndex === null || tokenBIndex === null) {
+              return
+            }
+
+            const pom = tokenAIndex
+            setTokenAIndex(tokenBIndex)
+            setTokenBIndex(pom)
+            setFee(fee)
+            onChangePositionTokens(tokenBIndex, tokenAIndex, fee)
+          }}
+          poolIndex={poolIndex}
         />
 
         {isCurrentPoolExisting ||
@@ -311,6 +331,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             xDecimal={xDecimal}
             yDecimal={yDecimal}
             fee={fee}
+            currentPairReversed={currentPairReversed}
           />
         ) : (
           <PoolInit

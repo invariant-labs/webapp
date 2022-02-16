@@ -1,0 +1,22 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Deploy to Staging
+        uses: amondnet/vercel-action@v20
+        id: deploy-vercel-production
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          alias-domains: |
+            staging.invariant.app
+          scope: ${{ secrets.VERCEL_ORG_ID }}

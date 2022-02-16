@@ -141,13 +141,19 @@ export const NewPositionWrapper = () => {
     })
   }, [poolIndex, isXtoY, xDecimal, yDecimal])
 
+  const [currentPairReversed, setCurrentPairReversed] = useState<boolean | null>(null)
+
   const data = useMemo(() => {
     if (ticksLoading) {
       return createPlaceholderLiquidityPlot(isXtoY, 10, tickSpacing, xDecimal, yDecimal)
     }
 
+    if (currentPairReversed === true) {
+      return ticksData.map(tick => ({ ...tick, x: 1 / tick.x })).reverse()
+    }
+
     return ticksData
-  }, [ticksData, ticksLoading, isXtoY, tickSpacing, xDecimal, yDecimal])
+  }, [ticksData, ticksLoading, isXtoY, tickSpacing, xDecimal, yDecimal, currentPairReversed])
 
   useEffect(() => {
     if (
@@ -185,9 +191,14 @@ export const NewPositionWrapper = () => {
                   pool.tokenY.equals(tokens[tokenA].assetAddress)))
           )
 
-          setPoolIndex(index !== -1 ? index : null)
+          if (index !== poolIndex) {
+            setPoolIndex(index !== -1 ? index : null)
+            setCurrentPairReversed(null)
+          } else {
+            setCurrentPairReversed(currentPairReversed === null ? true : !currentPairReversed)
+          }
 
-          if (index !== -1) {
+          if (index !== -1 && index !== poolIndex) {
             dispatch(
               actions.getCurrentPlotTicks({
                 poolIndex: index,
@@ -204,6 +215,11 @@ export const NewPositionWrapper = () => {
             )
           }
         }
+
+        setTokenAIndex(tokenA)
+        setTokenBIndex(tokenB)
+        setFee(FEE_TIERS[feeTierIndex].fee)
+        setTickSpacing(feeToTickSpacing(FEE_TIERS[feeTierIndex].fee))
       }}
       feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, PRICE_DECIMAL - 2))}
       data={data}
@@ -345,6 +361,8 @@ export const NewPositionWrapper = () => {
       xDecimal={xDecimal}
       yDecimal={yDecimal}
       isWaitingForNewPool={isWaitingForNewPool}
+      poolIndex={poolIndex}
+      currentPairReversed={currentPairReversed}
     />
   )
 }

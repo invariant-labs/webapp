@@ -3,8 +3,8 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    background: colors.invariant.componentOut1,
-    borderRadius: 10,
+    background: colors.invariant.component,
+    borderRadius: 24,
     padding: 20,
 
     '&:not(:last-child)': {
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:hover': {
-      background: colors.invariant.componentOut4
+      background: `${colors.invariant.component}B0`
     },
 
     [theme.breakpoints.down('md')]: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   icons: {
-    marginRight: 20,
+    marginRight: 12,
     width: 'fit-content',
 
     [theme.breakpoints.down('md')]: {
@@ -40,22 +40,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   arrows: {
-    width: 25,
+    width: 36,
+    marginLeft: 4,
+    marginRight: 4,
 
     [theme.breakpoints.down('md')]: {
-      width: 20
+      width: 30
     },
 
     [theme.breakpoints.down('xs')]: {
-      width: 15
+      width: 24
+    },
+
+    '&:hover': {
+      filter: 'brightness(2)'
     }
   },
   names: {
-    ...typography.heading1,
-    color: colors.white.main,
+    ...typography.heading2,
+    color: colors.invariant.text,
     lineHeight: '40px',
     whiteSpace: 'nowrap',
-
     [theme.breakpoints.down('md')]: {
       ...typography.heading3,
       lineHeight: '33px'
@@ -68,29 +73,29 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   infoText: {
     ...typography.body1,
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.lightGrey,
     whiteSpace: 'nowrap'
   },
   greenText: {
     ...typography.body1,
-    color: colors.invariant.accent2,
+    color: colors.invariant.green,
     whiteSpace: 'nowrap'
   },
   liquidity: {
-    background: colors.invariant.componentOut2,
-    borderRadius: 5,
-    height: 35,
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
     width: 170,
     marginRight: 8,
-
+    lineHeight: 20,
     [theme.breakpoints.down('md')]: {
       flex: '1 1 0%'
     }
   },
   fee: {
-    background: colors.invariant.componentOut2,
-    borderRadius: 5,
-    height: 35,
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
     width: 90,
     marginRight: 8,
 
@@ -102,10 +107,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: '1 1 0%'
   },
   minMax: {
-    background: colors.invariant.componentOut2,
-    borderRadius: 5,
-    height: 35,
-    width: 331,
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
+    width: 320,
     paddingInline: 10,
     marginRight: 8,
 
@@ -116,10 +121,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   value: {
-    background: colors.invariant.componentOut2,
-    borderRadius: 5,
-    height: 35,
-    width: 164,
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
+    width: 160,
     paddingInline: 12,
 
     [theme.breakpoints.down('xs')]: {

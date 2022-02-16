@@ -55,7 +55,7 @@ storiesOf('farmsList/selectedFarm', module)
               rewardsToken: 'SNY',
               currencyPrice: 2,
               apy: 1,
-              liquidity: 457
+              liquidity: 458
             }
           ]}
           stakeHandler={(id: string) => {
