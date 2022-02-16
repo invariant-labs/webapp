@@ -9,6 +9,6 @@ const handleChange = (page: number): void => {
 
 storiesOf('positionsList/pagination', module).add('pagination', () => (
   <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
-    <PaginationList pages={10} defaultPage={5} handleChangePage={handleChange} />
+    <PaginationList pages={10} defaultPage={5} handleChangePage={handleChange} variant='end' />
   </div>
 ))
