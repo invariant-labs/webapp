@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography, typography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.newDark,
     boxShadow: 'none',
 
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.dark,
     [theme.breakpoints.down('xs')]: {
       width: '50%',
       height: 40
@@ -73,8 +73,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   labelText: {
     justifyContent: 'center',
-    ...newTypography.caption1,
-    color: colors.invariant.lightInfoText
+    ...typography.caption1,
+    color: colors.white.main
   },
   top: {
     marginBottom: 20,
@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 36
   },
   greenText: {
-    ...typography.body2,
+    ...typography.body1,
     color: colors.invariant.green,
     letterSpacing: '-0.03em',
     [theme.breakpoints.down('xs')]: {
@@ -102,17 +102,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     color: colors.white.main,
-    ...typography.body1,
+    ...typography.caption1,
     fontWeight: 400
   },
   infoText: {
-    ...typography.body2,
+    ...typography.caption2,
     letterSpacing: '-0.03em',
-    color: colors.invariant.lightInfoText
+    color: colors.invariant.textGrey
   },
   value: {
     color: colors.white.main,
-    ...typography.body1,
+    ...typography.caption1,
     marginLeft: 4
   },
   spacing: {
@@ -234,20 +234,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenName: {
     color: colors.white.main,
-    ...typography.body1,
+    ...typography.caption1,
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.body2
+      ...typography.body2
     }
   },
   tokenValue: {
-    ...newTypography.heading4,
+    ...typography.heading4,
     color: colors.white.main,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     padding: '0 15px',
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.body2,
+      ...typography.body2,
       paddingLeft: 4
     }
   }

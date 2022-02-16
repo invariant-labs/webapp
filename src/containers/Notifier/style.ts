@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'uppercase',
     borderRadius: 6,
     border: 'none',
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.textGrey,
     fontSize: 14,
     fontWeight: 600,
     cursor: 'pointer',

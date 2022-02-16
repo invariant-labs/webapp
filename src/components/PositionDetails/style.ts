@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapperContainer: {
@@ -47,11 +47,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   backText: {
     color: 'rgba(169, 182, 191, 1)',
     WebkitPaddingBefore: '2px',
-    ...newTypography.body2
+    ...typography.body2
   },
   button: {
     color: colors.invariant.black,
-    ...newTypography.body1,
+    ...typography.body1,
     textTransform: 'none',
     background: colors.invariant.pinkLinearGradientOpacity,
     borderRadius: 14,

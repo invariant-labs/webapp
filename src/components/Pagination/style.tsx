@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -16,14 +16,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: colors.black.full
     },
     '& .MuiPaginationItem-page': {
-      ...newTypography.heading4,
+      ...typography.heading4,
       color: colors.invariant.light,
       '&:hover': {
         color: colors.invariant.lightGrey
       }
     },
     '& .MuiPaginationItem-ellipsis': {
-      color: colors.invariant.componentOut3
+      color: colors.invariant.light
     },
     '& .Mui-selected': {
       color: colors.invariant.green

@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -24,18 +24,18 @@ const useStyles = makeStyles(() => ({
       background: colors.invariant.light,
       '& $name': {
         color: colors.white.main,
-        ...newTypography.heading4
+        ...typography.heading4
       }
     }
   },
   name: {
     textTransform: 'capitalize',
-    ...newTypography.heading4,
-    color: colors.invariant.lightInfoText
+    color: colors.invariant.light,
+    ...typography.heading4
   },
   current: {
     textTransform: 'capitalize',
-    ...newTypography.heading4,
+    ...typography.heading4,
     color: colors.white.main
   },
   paper: {

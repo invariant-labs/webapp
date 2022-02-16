@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -57,27 +57,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   names: {
-    ...newTypography.heading2,
+    ...typography.heading2,
     color: colors.invariant.text,
     lineHeight: '40px',
     whiteSpace: 'nowrap',
     [theme.breakpoints.down('md')]: {
-      ...newTypography.heading3,
+      ...typography.heading3,
       lineHeight: '33px'
     },
 
     [theme.breakpoints.down('xs')]: {
-      ...newTypography.heading4,
+      ...typography.heading4,
       lineHeight: '25px'
     }
   },
   infoText: {
-    ...newTypography.body1,
+    ...typography.body1,
     color: colors.invariant.lightGrey,
     whiteSpace: 'nowrap'
   },
   greenText: {
-    ...newTypography.body1,
+    ...typography.body1,
     color: colors.invariant.green,
     whiteSpace: 'nowrap'
   },

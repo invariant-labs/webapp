@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   popover: {
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
 
     '& h1': {
-      ...newTypography.heading4
+      ...typography.heading4
     }
   },
   inputControl: {
@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 7,
     '&::placeholder': {
       color: colors.invariant.light,
-      ...newTypography.body1
+      ...typography.body1
     },
     '&:focus': {
       outline: 'none'
@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: 14
   },
   commonTokensHeader: {
-    ...newTypography.body2
+    ...typography.body2
   },
   commonTokensList: {
     display: 'flex',
@@ -107,7 +107,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 7,
     marginRight: 7,
     '& p': {
-      ...newTypography.body2
+      ...typography.body2
     },
 
     '&:hover': {
@@ -155,19 +155,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenName: {
     color: colors.white.main,
-    ...newTypography.heading4,
+    ...typography.heading4,
     lineHeight: '20px'
   },
   tokenDescrpiption: {
     color: colors.invariant.lightGrey,
-    ...newTypography.caption4,
+    ...typography.caption4,
     lineHeight: '16px',
     whiteSpace: 'nowrap'
   },
   tokenBalanceStatus: {
     filter: 'brightness(0.8)',
     color: colors.invariant.lightGrey,
-    ...newTypography.caption2,
+    ...typography.caption2,
     minWidth: 'auto'
   },
 
@@ -179,12 +179,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxShadow: '0px 0px 10px rgba(216, 255, 181, 0.5)'
   },
   tokenBalance: {
-    ...newTypography.body2,
-    color: colors.invariant.componentIn1,
+    ...typography.body2,
+    color: colors.invariant.textGrey,
     whiteSpace: 'nowrap'
   },
   searchIcon: {
-    color: colors.invariant.componentOut3
+    color: colors.invariant.light
   },
 
   hideScroll: {
@@ -228,18 +228,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 14
   },
   button: {
-    ...newTypography.body2,
+    ...typography.body2,
     padding: 0,
     textTransform: 'none',
     boxShadow: 'none',
     borderRadius: 5,
-    backgroundColor: colors.invariant.componentOut1,
+    backgroundColor: colors.invariant.component,
+    color: colors.invariant.textGrey,
     height: 26,
     width: '100%',
     textAlign: 'center',
     marginTop: 4,
     '&:hover': {
-      backgroundColor: colors.invariant.componentOut2,
+      backgroundColor: colors.invariant.light,
       boxShadow: 'none',
       color: colors.white.main
     },
@@ -249,14 +250,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   filterList: {
     borderRadius: 5,
-    background: colors.invariant.componentOut1,
+    background: colors.invariant.component,
     minWidth: 100,
     height: 102,
     padding: 4
   },
   filterListText: {
     borderRadius: 5,
-    background: colors.invariant.componentOut1,
+    background: colors.invariant.component,
     minWidth: 115,
     height: 102,
     padding: 4
@@ -267,7 +268,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     position: 'relative',
     '&:hover': {
-      background: colors.invariant.componentOut1
+      background: colors.invariant.component
     }
   },
   filterItemText: {
@@ -276,20 +277,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     position: 'relative',
     '&:hover': {
-      background: colors.invariant.componentOut1
+      background: colors.invariant.light
     }
   },
   filterNameText: {
     position: 'absolute',
     left: 6,
-    color: colors.invariant.lightInfoText,
-    ...newTypography.body2
+    color: colors.invariant.textGrey,
+    ...typography.body2
   },
   filterName: {
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.textGrey,
     position: 'absolute',
     left: 28,
-    ...newTypography.body2
+    ...typography.body2
   },
   filterIcon: {
     width: 10,
