@@ -20,7 +20,7 @@ const MarketEvents = () => {
   const poolTicksArray = useSelector(poolTicks)
   const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
   useEffect(() => {
-    if (networkStatus !== Status.Initialized || !marketProgram) {
+    if (networkStatus !== Status.Initialized) {
       return
     }
     const connectEvents = () => {
@@ -29,7 +29,7 @@ const MarketEvents = () => {
     }
 
     connectEvents()
-  }, [dispatch, networkStatus, marketProgram])
+  }, [dispatch, networkStatus])
 
   useEffect(() => {
     if (networkStatus !== Status.Initialized || !marketProgram) {
