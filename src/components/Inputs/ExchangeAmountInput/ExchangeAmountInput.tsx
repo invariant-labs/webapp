@@ -100,9 +100,9 @@ export const AmountInput: React.FC<IProps> = ({
         />
       </Grid>
       <Box className={classes.container}>
-        <Box className={classes.BalanceContainer}>
+        <Grid className={classes.BalanceContainer}>
           <Typography className={classes.BalanceTypography}>
-            Balance: {balance && formatNumbers()(balance.toString())}
+            Balance: {balance ? formatNumbers()(balance.toString()) : 0}
             {showPrefix(Number(balance))} {tokenIcon}
           </Typography>
           <OutlinedButton
@@ -113,7 +113,7 @@ export const AmountInput: React.FC<IProps> = ({
             labelClassName={classes.label}
             disabled={disabled && isNaN(Number(balance)) ? disabled : isNaN(Number(balance))}
           />
-        </Box>
+        </Grid>
         <Typography className={classes.noData}>
           <div className={classes.noDataIcon}>?</div>No data
         </Typography>

@@ -1,4 +1,4 @@
-import { getScaleFromString } from '@consts/utils'
+import { formatNumbers, getScaleFromString, showPrefix } from '@consts/utils'
 import { Button, Grid, Input, Typography } from '@material-ui/core'
 import React, { useRef, CSSProperties } from 'react'
 import useStyles from './style'
@@ -117,7 +117,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
           {
             <>
               <Typography className={classes.caption2}>
-                Balance: {currency ? `${balanceValue || '0'} ${currency}` : '- -'}
+                Balance: {currency ? `${balanceValue ? formatNumbers()(balanceValue.toString()) + ' ' + showPrefix(Number(balanceValue)) : '0'} ${currency}` : '- -'}
                 <Button
                   className={
                     currency
