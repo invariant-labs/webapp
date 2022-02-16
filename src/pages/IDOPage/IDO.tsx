@@ -7,7 +7,9 @@ const IDO = () => {
   const classes = useStyles()
   return (
     <Grid container className={classes.container}>
-      <WrappedIDO />
+      <Grid item>
+        <WrappedIDO />
+      </Grid>
     </Grid>
   )
 }

@@ -1,8 +1,14 @@
 import React from 'react'
-import { Grid } from '@material-ui/core'
+import IDO from '@components/IDO/IDO'
+import IDOLabel from '@components/IDOLabel/IDOLabel'
 
 const WrappedIDO = () => {
-  return <Grid></Grid>
+  return (
+    <>
+      <IDO xBTC='0.0 xBTC' xETH='0.0 xETH' sol='0.0432 SOL' usd='47.43 USD' xUSD='46.643 xUSD' />
+      <IDOLabel />
+    </>
+  )
 }
 
 export default WrappedIDO
