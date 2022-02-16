@@ -159,7 +159,7 @@ export const airdropQuantities: Record<NetworkType, number[]> = {
     100 * 10 ** USDT_DEV.decimals,
     10 ** SOL_DEV.decimals,
     10 ** MSOL_DEV.decimals,
-    0.0001 * 10 ** BTC_DEV.decimals,
+    0.0025 * 10 ** BTC_DEV.decimals,
     700 * 10 ** RENDOGE_DEV.decimals
   ],
   Mainnet: [],
