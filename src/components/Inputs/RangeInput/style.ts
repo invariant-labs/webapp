@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   data: {
@@ -14,19 +14,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     color: colors.white.main,
-    ...newTypography.body1,
+    ...typography.body1,
 
     [theme.breakpoints.down('sm')]: {
-      ...newTypography.body1
+      ...typography.body1
     }
   },
   tokens: {
     color: colors.invariant.lightHover,
-    ...newTypography.body2,
+    ...typography.body2,
 
     [theme.breakpoints.down('sm')]: {
       marginInline: 'auto',
-      ...newTypography.body2
+      ...typography.body2
     }
   },
   controls: {
@@ -57,11 +57,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonIcon: {
     width: 22,
     height: 'auto',
-    fill: colors.invariant.darkInfoText
+    fill: colors.invariant.dark
   },
   value: {
     color: colors.white.main,
-    ...newTypography.body3,
+    ...typography.body3,
     lineHeight: 24,
     backgroundColor: colors.invariant.componentBcg,
     height: 36,

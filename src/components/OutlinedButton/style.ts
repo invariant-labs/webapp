@@ -1,4 +1,4 @@
-import { colors, newTypography, theme } from '@static/theme'
+import { colors, typography, theme } from '@static/theme'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
@@ -6,7 +6,7 @@ const useStyles = makeStyles(() => ({
     width: 26,
     maxWidth: 26,
     height: 14,
-    ...newTypography.tiny2,
+    ...typography.tiny2,
     background: 'rgba(46, 224, 154, 0.8)',
     borderRadius: 4,
     marginLeft: 4,
@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
     },
 
     [theme.breakpoints.down('sm')]: {
-      ...newTypography.tiny2,
+      ...typography.tiny2,
       width: 26,
       maxWidth: 26,
       height: 14,
@@ -31,11 +31,11 @@ const useStyles = makeStyles(() => ({
   },
 
   disabled: {
-    ...newTypography.tiny2,
+    ...typography.tiny2,
     width: 20,
     maxWidth: 26,
     height: 15,
-    color: `${colors.invariant.background2} !important`,
+    color: `${colors.invariant.dark} !important`,
     background: `${colors.invariant.light} !important`,
     '&:hover': {
       background: colors.invariant.light,

@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography, typography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -96,9 +96,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 20
   },
   activity: {
-    ...newTypography.body1,
+    ...typography.body1,
     [theme.breakpoints.down('xs')]: {
-      ...typography.label2
+      ...typography.body2
     }
   },
   flexWrapper: {
@@ -108,8 +108,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     color: colors.invariant.lightGrey,
-    ...typography.body2,
-    fontSize: 20,
+    ...typography.heading4,
+    fontWeight: 400,
     letterSpacing: '-0.03em'
   },
   value: {

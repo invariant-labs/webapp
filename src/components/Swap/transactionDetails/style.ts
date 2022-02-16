@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 export const useStyles = makeStyles((theme: Theme) => ({
   transactionDetailsInfo: {
@@ -21,7 +21,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
       left: 105
     },
     '& p': {
-      ...newTypography.body2
+      ...typography.body2
     }
   },
   closeTransactionContainer: {
@@ -29,7 +29,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     marginBottom: 8,
     '& p': {
-      ...newTypography.heading1
+      ...typography.heading1
     }
   },
 
@@ -65,13 +65,13 @@ export const useStyles = makeStyles((theme: Theme) => ({
   detailsInfoWrapper: {
     height: 'auto',
     '& h1': {
-      ...newTypography.heading4
+      ...typography.heading4
     },
     '& p': {
-      ...newTypography.body2
+      ...typography.body2
     },
     '& span': {
-      ...newTypography.body2,
+      ...typography.body2,
       color: colors.invariant.lightGrey
     }
   }

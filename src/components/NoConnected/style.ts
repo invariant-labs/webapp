@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, newTypography } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
     zIndex: 13
   },
   desc: {
-    ...newTypography.body2,
+    ...typography.body2,
     fontWeight: 500,
     lineHeight: '20px',
     color: colors.invariant.lightHover
@@ -40,7 +40,7 @@ const useStyles = makeStyles(() => ({
     width: 200,
     marginTop: 20,
     color: colors.invariant.componentBcg,
-    ...newTypography.body1,
+    ...typography.body1,
     textTransform: 'none',
     borderRadius: 14,
     background: colors.invariant.pinkLinearGradientOpacity,
