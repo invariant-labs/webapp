@@ -3,77 +3,172 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    position: 'relative'
+    position: 'relative',
+    minWidth: 416,
+    marginBottom: 16,
+
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 0
+    }
   },
   root: {
     width: '100%',
-    height: 44,
-    backgroundColor: colors.invariant.componentIn1,
-    border: `1px solid ${colors.invariant.componentOut2}`,
-    borderRadius: 5,
-    padding: 9,
-    ...typography.body2,
-
-    '& $input': {
-      paddingInline: 8,
-      paddingTop: 7
+    backgroundColor: colors.invariant.componentBcg,
+    borderRadius: 20,
+    padding: '6px 12px 6px 12px',
+    ...typography.heading2,
+    display: 'grid',
+    gridTemplateAreas: `
+    "select select select select"
+    "balance balance percentages percentages"
+    `,
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateAreas: `
+    "select select select select"
+    "balance balance balance percentages"
+    `
     },
 
-    [theme.breakpoints.down('sm')]: {
-      height: 51,
-      '& $input': {
-        paddingTop: 10
-      }
+    '& $input': {
+      color: colors.white.main,
+      position: 'relative',
+      top: 1,
+      textAlign: 'end',
+      ...typography.heading2
+    },
+
+    '& $input::placeholder': {
+      color: colors.invariant.light
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      height: 84,
+      '& $input': {}
+    }
+  },
+  inputContainer: {
+    gridColumn: '1/-1',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: 0
     }
   },
   currency: {
-    height: 26,
-    minWidth: 51,
+    height: 36,
+    minWidth: 85,
     width: 'fit-content',
     flexShrink: 0,
-    paddingInline: 5,
-    borderRadius: 3,
-    backgroundColor: colors.invariant.componentOut2,
+    borderRadius: 11,
+    backgroundColor: colors.invariant.light,
+    padding: '6px 12px 6px 12px',
+    cursor: 'default',
 
     [theme.breakpoints.down('sm')]: {
-      height: 34,
-      minWidth: 67
+      height: 36,
+      minWidth: 85
     }
   },
-  currencyIcon: {
-    minWidth: 14,
-    height: 14,
+  percentages: {
+    gridArea: 'percentages',
+    justifyContent: 'end',
+    height: 17
+  },
+  percentage: {
+    color: colors.invariant.Error,
+    ...typography.tiny1,
+    backgroundColor: 'rgba(251, 85, 95, 0.2)',
+    borderRadius: 5,
+    width: 39,
+    textAlign: 'center',
     marginRight: 3,
+    height: 16,
+    lineHeight: '16px'
+  },
+  currencyIcon: {
+    minWidth: 20,
+    height: 20,
+    marginRight: 8,
     borderRadius: '100%'
   },
   currencySymbol: {
     ...typography.body3,
-    color: colors.white.main,
-    marginTop: 1
+    color: colors.white.main
   },
   noCurrencyText: {
     ...typography.body3,
-    color: colors.invariant.lightInfoText
+    color: colors.white.main,
+    cursor: 'default'
+  },
+  balance: {
+    gridArea: 'balance',
+    height: 17,
+    cursor: 'pointer'
+  },
+  caption2: {
+    display: 'flex',
+    flexWrap: 'nowrap',
+    ...typography.caption2,
+    color: colors.invariant.lightHover,
+
+    '&:hover': {
+      color: colors.white.main
+    }
   },
   maxButton: {
-    backgroundColor: colors.invariant.accent2,
-    color: colors.invariant.darkInfoText,
-    ...typography.body3,
-    borderRadius: 3,
-    width: 40,
-    minWidth: 40,
-    height: 26,
+    color: colors.invariant.componentBcg,
+    ...typography.tiny2,
+    borderRadius: 4,
+    width: 26,
+    minWidth: 26,
+    height: 14,
     textTransform: 'none',
+    marginLeft: 4,
+    marginTop: 1,
+    background: ' rgba(46, 224, 154, 0.8)',
+
     '&:hover': {
-      backgroundColor: colors.invariant.logoGreen,
+      background: 'none',
+      backgroundColor: colors.invariant.green,
       boxShadow: '0px 0px 20px -10px white'
     },
-
     [theme.breakpoints.down('sm')]: {
-      width: 50,
-      minWidth: 50,
-      height: 34
+      width: 26,
+      minWidth: 26,
+      height: 14,
+      marginTop: 2
     }
+  },
+  maxButtonNotActive: {
+    backgroundColor: colors.invariant.light,
+    '&:hover': {
+      backgroundColor: colors.invariant.light,
+      cursor: 'default'
+    }
+  },
+  noData: {
+    color: colors.invariant.warning,
+    ...typography.caption2,
+    display: 'grid',
+    gap: 5.45,
+    gridAutoFlow: 'column',
+    cursor: 'default'
+  },
+  noDataIcon: {
+    height: 9.5,
+    width: 9.5,
+    border: '1px solid #EFD063',
+    color: colors.invariant.warning,
+    borderRadius: '50%',
+    fontSize: 8,
+    lineHeight: '10px',
+    fontWeight: 400,
+    textAlign: 'center',
+    alignSelf: 'center',
+    cursor: 'default'
   },
   blocker: {
     position: 'absolute',
@@ -93,8 +188,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%'
   },
   blockedInfo: {
-    ...typography.body4,
-    color: colors.invariant.lightInfoText
+    ...typography.body2,
+    color: colors.invariant.lightHover
   }
 }))
 

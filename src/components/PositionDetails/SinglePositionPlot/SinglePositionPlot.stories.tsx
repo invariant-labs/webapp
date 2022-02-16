@@ -1,7 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import SinglePositionPlot from './SinglePositionPlot'
-import { NetworkType, tokens } from '@consts/static'
 import { calcPrice } from '@consts/utils'
 import { MIN_TICK, MAX_TICK } from '@invariant-labs/sdk'
 
@@ -35,23 +34,19 @@ storiesOf('singlePosition/rightComponent', module).add('plot', () => {
         index: 140
       }}
       currentPrice={300}
-      tokenY={'SNY'}
-      tokenX={'xUSD'}
-      positionData={{
-        tokenXName: 'BTC',
-        tokenXIcon: tokens[NetworkType.DEVNET][0].logoURI,
-        tokenYIcon: tokens[NetworkType.DEVNET][1].logoURI,
-        tokenYName: 'SNY',
-        min: 2149.6,
-        max: 149.6,
-        fee: 0.05,
-        tokenXDecimal: 6,
-        tokenYDecimal: 6
+      tokenX={{
+        name: 'BTC',
+        decimal: 9
+      }}
+      tokenY={{
+        name: 'SNY',
+        decimal: 9
       }}
       ticksLoading={false}
-      xDecimal={6}
-      yDecimal={6}
       tickSpacing={4}
+      min={2149.6}
+      max={149.6}
+      xToY
     />
   )
 })

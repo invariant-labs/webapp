@@ -27,9 +27,10 @@ export const OutlinedButton: React.FC<IProps> = ({
   labelClassName
 }) => {
   const classes = useStyles()
+
   return (
     <Button
-      className={classNames(classes.general, className)}
+      className={classNames(classes.general, !disabled && classes.activeButton, className)}
       variant='contained'
       color={color}
       classes={{ disabled: classes.disabled, label: classNames(labelClassName) }}
