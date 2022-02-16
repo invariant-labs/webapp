@@ -10,27 +10,70 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   header: {
-    paddingBottom: 30
+    paddingBottom: 16,
+    display: 'flex',
+    alignItems: 'flex-end'
+  },
+  titleBar: {
+    display: 'flex',
+    marginBottom: 20
   },
   title: {
-    color: colors.white.main,
+    color: colors.invariant.text,
     ...typography.heading4,
     fontWeight: 500
   },
+  positionsNumber: {
+    width: 28,
+    height: 28,
+    color: colors.invariant.text,
+    background: colors.invariant.light,
+    marginLeft: 8,
+    borderRadius: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  searchRoot: {
+    width: '100%'
+  },
+  searchWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'nowrap'
+  },
+  searchBar: {
+    width: 221,
+    height: 32,
+    padding: '7px 12px',
+    borderRadius: 10,
+    background: colors.invariant.black,
+    border: '1px solid #202946',
+    color: colors.invariant.lightGrey,
+    ...typography.body2,
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: 200
+    }
+  },
   button: {
-    color: colors.white.main,
+    color: colors.invariant.dark,
     ...typography.body1,
     textTransform: 'none',
-    background: colors.invariant.accent1,
-    borderRadius: 10,
+    borderRadius: 14,
     height: 40,
-    width: 130,
+    minWidth: 130,
     paddingInline: 0,
+    marginLeft: 16,
+    background:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
 
     '&:hover': {
-      background: colors.invariant.accent1,
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`
-    }
+      background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
+      boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)'
+    },
+    [theme.breakpoints.down('xs')]: {}
   },
   buttonText: {
     WebkitPaddingBefore: '2px'
@@ -38,13 +81,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   noPositionsText: {
     ...typography.heading1,
     textAlign: 'center',
-    color: colors.white.main
+    color: colors.invariant.text
   },
   list: {
     position: 'relative'
   },
   itemLink: {
     textDecoration: 'none',
+    cursor: 'pointer',
 
     '&:not(:last-child)': {
       display: 'block',
@@ -54,6 +98,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginBottom: 16
       }
     }
+  },
+  searchIcon: {
+    width: 17
   }
 }))
 
