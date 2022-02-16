@@ -191,7 +191,9 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
           justifyContent='space-between'
           alignItems='center'
           wrap='nowrap'>
-          <Typography className={classNames(classes.greenText, classes.label)}>MIN - MAX</Typography>
+          <Typography className={classNames(classes.greenText, classes.label)}>
+            MIN - MAX
+          </Typography>
           <Grid className={classes.infoCenter} container item justifyContent='center'>
             <Typography className={classes.infoText}>
               {formatNumbers(isXs || isDesktop ? minMaxShorterThresholds : undefined)(
