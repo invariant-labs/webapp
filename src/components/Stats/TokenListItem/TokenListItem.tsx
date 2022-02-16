@@ -48,7 +48,7 @@ const TokenListItem: React.FC<IProps> = ({
             </Typography>
           </Grid>
           <Typography>${Number(printBN(price, decimals)).toFixed(2)}</Typography>
-          <Typography style={{ color: isNegative ? colors.invariant.error : colors.green.main }}>
+          <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
             {isNegative ? `-${Math.abs(Number(priceChange))}%` : `+${priceChange}%`}
           </Typography>
           <Typography>{volume}</Typography>
