@@ -180,11 +180,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenBalance: {
     ...newTypography.body2,
-    color: colors.invariant.componentIn1,
+    color: colors.invariant.textGrey,
     whiteSpace: 'nowrap'
   },
   searchIcon: {
-    color: colors.invariant.componentOut3
+    color: colors.invariant.light
   },
 
   hideScroll: {
