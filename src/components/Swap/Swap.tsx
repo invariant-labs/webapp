@@ -293,13 +293,12 @@ export const Swap: React.FC<ISwap> = ({
     if (simulateResult.error === 'Error: Too large amount') {
       return 'Exceed single swap limit (split transaction into several)'
     }
-    if (simulateResult.error === 'Error: At the end of price range') {
+    if (
+      simulateResult.error === 'Error: At the end of price range' ||
+      simulateResult.error === 'Error: Price would cross swap limit'
+    ) {
       return 'Insufficient liquidity'
     }
-    if (simulateResult.error === 'Error: Price would cross swap limit') {
-      return 'test'
-    }
-
     return 'Swap tokens'
   }
   const activeSwapDetails = () => {
