@@ -1,4 +1,4 @@
-import { getScaleFromString } from '@consts/utils'
+import { formatNumbers, FormatNumberThreshold, getScaleFromString, showPrefix } from '@consts/utils'
 import { Button, Grid, Input, Typography } from '@material-ui/core'
 import React, { useRef, CSSProperties } from 'react'
 import useStyles from './style'
@@ -39,6 +39,40 @@ export const DepositAmountInput: React.FC<IProps> = ({
   const classes = useStyles()
 
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const thresholds: FormatNumberThreshold[] = [
+    {
+      value: 10,
+      decimals: decimalsLimit
+    },
+    {
+      value: 100,
+      decimals: 4
+    },
+    {
+      value: 1000,
+      decimals: 2
+    },
+    {
+      value: 10000,
+      decimals: 1
+    },
+    {
+      value: 1000000,
+      decimals: 2,
+      divider: 1000
+    },
+    {
+      value: 1000000000,
+      decimals: 2,
+      divider: 1000000
+    },
+    {
+      value: Infinity,
+      decimals: 2,
+      divider: 1000000000
+    }
+  ]
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const regex = /^\d*\.?\d*$/
@@ -117,7 +151,15 @@ export const DepositAmountInput: React.FC<IProps> = ({
           {
             <>
               <Typography className={classes.caption2}>
-                Balance: {currency ? `${balanceValue || '0'} ${currency}` : '- -'}
+                Balance:{' '}
+                {currency
+                  ? `${
+                      balanceValue
+                        ? formatNumbers(thresholds)(balanceValue.toString()) +
+                          showPrefix(Number(balanceValue))
+                        : '0'
+                    } ${currency}`
+                  : '- -'}
                 <Button
                   className={
                     currency

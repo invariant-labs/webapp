@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     color: colors.white.main,
+    marginRight: 2,
     ...typography.body1,
 
     [theme.breakpoints.down('sm')]: {
@@ -23,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   tokens: {
     color: colors.invariant.lightHover,
     ...typography.body2,
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
 
     [theme.breakpoints.down('sm')]: {
       marginInline: 'auto',
