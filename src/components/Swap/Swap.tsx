@@ -227,7 +227,6 @@ export const Swap: React.FC<ISwap> = ({
             true
           )
         )
-        console.log(simulateResult.error)
       } else if (inputRef === inputTarget.TO) {
         setSimulateResult(
           await handleSimulate(
@@ -242,7 +241,6 @@ export const Swap: React.FC<ISwap> = ({
             false
           )
         )
-        console.log(simulateResult.error)
       }
     }
   }
