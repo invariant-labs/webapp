@@ -121,7 +121,6 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
     new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[0]),
     new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[1]),
     new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[2]),
-    new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[2]),
     new Pair(USDC_DEV.address, RENDOGE_DEV.address, FEE_TIERS[1]),
     new Pair(USDC_DEV.address, RENDOGE_DEV.address, FEE_TIERS[2]),
     new Pair(USDC_DEV.address, BTC_DEV.address, FEE_TIERS[1]),
@@ -141,7 +140,14 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
 }
 
 export const airdropTokens: Record<NetworkType, PublicKey[]> = {
-  Devnet: [USDC_DEV.address, USDT_DEV.address, SOL_DEV.address, MSOL_DEV.address],
+  Devnet: [
+    USDC_DEV.address,
+    USDT_DEV.address,
+    SOL_DEV.address,
+    MSOL_DEV.address,
+    BTC_DEV.address,
+    RENDOGE_DEV.address
+  ],
   Mainnet: [],
   Testnet: [],
   Localnet: []
