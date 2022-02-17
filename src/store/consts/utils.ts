@@ -166,9 +166,12 @@ export const formatNumbers =
   (thresholds: FormatNumberThreshold[] = defaultThresholds) =>
   (value: string) => {
     const num = Number(value)
-    const threshold = thresholds.sort((a, b) => a.value - b.value).find(thr => num < thr.value)
+    const abs = Math.abs(num)
+    const threshold = thresholds.sort((a, b) => a.value - b.value).find(thr => abs < thr.value)
 
-    return threshold ? (num / (threshold.divider ?? 1)).toFixed(threshold.decimals) : value
+    const formatted = threshold ? (abs / (threshold.divider ?? 1)).toFixed(threshold.decimals) : value
+
+    return num < 0 && threshold ? '-' + formatted : formatted
   }
 
 export const nearestPriceIndex = (price: number, data: Array<{ x: number; y: number }>) => {
