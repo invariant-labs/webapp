@@ -7,7 +7,14 @@ const useStyles = makeStyles(() => ({
     marginTop: '65px',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    flexFlow: 'row wrap'
+  },
+
+  flow: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'end'
   }
 }))
 
