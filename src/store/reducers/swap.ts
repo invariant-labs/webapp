@@ -7,7 +7,7 @@ import { PayloadType } from './types'
 
 export interface Swap {
   slippage: Decimal
-  knownPrice: Decimal
+  estimatedPriceAfterSwap: Decimal
   poolIndex: number
   tokenFrom: PublicKey
   tokenTo: PublicKey
@@ -36,7 +36,7 @@ export interface ISwapStore {
 export const defaultState: ISwapStore = {
   swap: {
     slippage: { v: fromFee(new BN(1000)) },
-    knownPrice: { v: new BN(0) },
+    estimatedPriceAfterSwap: { v: new BN(0) },
     poolIndex: 0,
     tokenFrom: DEFAULT_PUBLIC_KEY,
     tokenTo: DEFAULT_PUBLIC_KEY,

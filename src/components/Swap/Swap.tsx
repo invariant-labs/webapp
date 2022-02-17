@@ -1,13 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import {
-  printBN,
-  printBNtoBN,
-  handleSimulate,
-  findPairs,
-  calcCurrentPriceOfPool
-} from '@consts/utils'
+import { printBN, printBNtoBN, handleSimulate, findPairs } from '@consts/utils'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
@@ -117,7 +111,14 @@ export const Swap: React.FC<ISwap> = ({
     simulateSuccess: boolean
     poolIndex: number
     AmountOutWithFee: BN
-  }>({ amountOut: new BN(0), simulateSuccess: true, poolIndex: 0, AmountOutWithFee: new BN(0) })
+    estimatedPriceAfterSwap: BN
+  }>({
+    amountOut: new BN(0),
+    simulateSuccess: true,
+    poolIndex: 0,
+    AmountOutWithFee: new BN(0),
+    estimatedPriceAfterSwap: new BN(0)
+  })
 
   const timeoutRef = useRef<number>(0)
 
@@ -157,9 +158,13 @@ export const Swap: React.FC<ISwap> = ({
 
   useEffect(() => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      inputRef === inputTarget.FROM
-        ? setAmountTo(getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut)
-        : setAmountFrom(getKnownPrice(tokens[tokenToIndex], tokens[tokenFromIndex]).amountOut)
+      if (inputRef === inputTarget.FROM) {
+        const amount = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut
+        setAmountTo(+amount === 0 ? '' : amount)
+      } else {
+        const amount = getKnownPrice(tokens[tokenToIndex], tokens[tokenFromIndex]).amountOut
+        setAmountFrom(+amount === 0 ? '' : amount)
+      }
     }
   }, [simulateResult])
 
@@ -211,9 +216,7 @@ export const Swap: React.FC<ISwap> = ({
             tokens[tokenFromIndex].address,
             tokens[tokenToIndex].address,
             printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals),
-            true,
-            tokens[tokenFromIndex].decimals,
-            tokens[tokenToIndex].decimals
+            true
           )
         )
       } else if (inputRef === inputTarget.TO) {
@@ -227,9 +230,7 @@ export const Swap: React.FC<ISwap> = ({
             tokens[tokenFromIndex].address,
             tokens[tokenToIndex].address,
             printBNtoBN(amountTo, tokens[tokenToIndex].decimals),
-            false,
-            tokens[tokenFromIndex].decimals,
-            tokens[tokenToIndex].decimals
+            false
           )
         )
       }
@@ -246,7 +247,8 @@ export const Swap: React.FC<ISwap> = ({
   }
   const updateEstimatedAmount = () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      setAmountTo(getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut)
+      const amount = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut
+      setAmountTo(+amount === 0 ? '' : amount)
     }
   }
 
@@ -527,19 +529,10 @@ export const Swap: React.FC<ISwap> = ({
           onClick={() => {
             if (tokenFromIndex === null || tokenToIndex === null) return
 
-            const isXtoY = getIsXToY(
-              tokens[tokenFromIndex].assetAddress,
-              tokens[tokenToIndex].assetAddress
-            )
-
             onSwap(
               { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
               {
-                v: calcCurrentPriceOfPool(
-                  pools[simulateResult.poolIndex],
-                  isXtoY ? tokens[tokenFromIndex].decimals : tokens[tokenToIndex].decimals,
-                  isXtoY ? tokens[tokenToIndex].decimals : tokens[tokenFromIndex].decimals
-                )
+                v: simulateResult.estimatedPriceAfterSwap
               },
               tokens[tokenFromIndex].address,
               tokens[tokenToIndex].address,

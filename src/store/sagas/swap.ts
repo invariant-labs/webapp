@@ -16,8 +16,16 @@ export function* handleSwapWithSOL(): Generator {
   try {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(poolsArraySortedByFees)
-    const { slippage, tokenFrom, tokenTo, amountIn, knownPrice, poolIndex, byAmountIn, amountOut } =
-      yield* select(swap)
+    const {
+      slippage,
+      tokenFrom,
+      tokenTo,
+      amountIn,
+      estimatedPriceAfterSwap,
+      poolIndex,
+      byAmountIn,
+      amountOut
+    } = yield* select(swap)
 
     const wallet = yield* call(getWallet)
     const tokensAccounts = yield* select(accounts)
@@ -103,7 +111,7 @@ export function* handleSwapWithSOL(): Generator {
       }),
       xToY: isXtoY,
       amount: byAmountIn ? amountIn : amountOut,
-      knownPrice: knownPrice,
+      estimatedPriceAfterSwap,
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
       accountY: isXtoY ? toAddress : fromAddress,
@@ -219,8 +227,16 @@ export function* handleSwap(): Generator {
   try {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(poolsArraySortedByFees)
-    const { slippage, tokenFrom, tokenTo, amountIn, knownPrice, poolIndex, byAmountIn, amountOut } =
-      yield* select(swap)
+    const {
+      slippage,
+      tokenFrom,
+      tokenTo,
+      amountIn,
+      estimatedPriceAfterSwap,
+      poolIndex,
+      byAmountIn,
+      amountOut
+    } = yield* select(swap)
 
     if (
       allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
@@ -262,7 +278,7 @@ export function* handleSwap(): Generator {
       }),
       xToY: isXtoY,
       amount: byAmountIn ? amountIn : amountOut,
-      knownPrice: knownPrice,
+      estimatedPriceAfterSwap,
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
       accountY: isXtoY ? toAddress : fromAddress,

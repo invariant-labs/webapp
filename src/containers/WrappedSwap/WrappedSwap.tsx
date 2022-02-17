@@ -57,7 +57,7 @@ export const WrappedSwap = () => {
     <Swap
       onSwap={(
         slippage,
-        knownPrice,
+        estimatedPriceAfterSwap,
         tokenFrom,
         tokenTo,
         poolIndex,
@@ -69,7 +69,7 @@ export const WrappedSwap = () => {
         dispatch(
           actions.swap({
             slippage,
-            knownPrice,
+            estimatedPriceAfterSwap,
             poolIndex,
             tokenFrom,
             tokenTo,
