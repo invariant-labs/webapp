@@ -24,8 +24,9 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center'
   },
   tooltip: {
-    ...typography.label2,
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.textGrey,
+    ...typography.caption4,
+    lineHeight: '24px',
     background: colors.black.full,
     borderRadius: 12,
     height: 24,

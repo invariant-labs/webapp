@@ -19,21 +19,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   arrowIcon: {
     width: 22,
+    marginRight: 8,
+    marginLeft: 8,
 
     [theme.breakpoints.down('xs')]: {
-      width: 15
+      width: 15,
+      marginRight: 2,
+      marginLeft: 2
     }
   },
   text: {
     ...typography.body1,
-    color: colors.invariant.lightInfoText,
-    backgroundColor: colors.invariant.componentOut2,
+    color: colors.invariant.lightGrey,
+    backgroundColor: colors.invariant.component,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: '5px',
-    maxHeight: 35,
-    padding: '4px 0px 3px 0px',
+    borderRadius: 12,
+    height: 36,
     width: '100%'
   },
   rangeGrid: {
@@ -49,7 +52,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   headerText: {
     display: 'flex',
     flexDirection: 'row',
-    paddingTop: '3px',
     alignItems: 'center'
   },
   feeText: {
@@ -60,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   closedText: {
-    width: '100px',
+    width: 100,
     paddingRight: 0
   },
   namesGrid: {
@@ -79,60 +81,60 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   name: {
     ...typography.heading3,
-    color: colors.white.main,
-    lineHeight: '35px',
+    color: colors.invariant.text,
+    lineHeight: '28px',
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.body1
+      ...typography.heading4
     }
   },
   bottomGrid: {
-    background: colors.invariant.componentOut4,
+    background: colors.invariant.component,
     marginTop: 20,
     padding: 24,
-    borderRadius: '10px'
+    borderRadius: 24
   },
   iconSmall: {
-    width: '16px',
-    marginRight: 5,
+    width: 20,
+    height: 20,
+    marginRight: 8,
     borderRadius: '100%'
   },
   boxInfo: {
-    backgroundColor: colors.invariant.componentIn2,
-    borderRadius: '8px',
-    padding: 20,
+    borderRadius: 16,
+    position: 'relative',
     '&:not(:last-child)': {
-      marginBottom: 24
+      marginBottom: 26
     }
   },
   title: {
-    ...typography.body1,
-    color: colors.white.main
+    ...typography.heading4,
+    color: colors.invariant.text
   },
   titleValue: {
     ...typography.heading3,
-    color: colors.white.main,
+    color: colors.invariant.text,
     fontFamily: 'Mukta'
   },
   violetButton: {
-    backgroundColor: colors.invariant.accent1,
-    borderRadius: '5px',
+    background: colors.invariant.pinkLinearGradientOpacity,
+    borderRadius: 11,
     textTransform: 'none',
-    color: colors.white.main,
-    minWidth: 140,
-    maxHeight: 35,
+    color: colors.invariant.dark,
+    width: 116,
+    height: 32,
     ...typography.body1,
     '&:hover': {
-      background: colors.invariant.accent1,
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`
+      background: colors.invariant.pinkLinearGradient,
+      boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
     '&:disabled': {
-      backgroundColor: colors.invariant.componentOut3,
-      color: colors.invariant.background2
+      backgroundColor: colors.invariant.light,
+      color: colors.invariant.dark
     },
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.label2,
+      ...typography.body1,
       maxHeight: 28,
       minWidth: 105
     }
@@ -141,55 +143,80 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 10
+    paddingTop: 14,
+    '&:not(:last-child)': {
+      paddingTop: 24
+    }
   },
   tokenArea: {
-    backgroundColor: colors.invariant.componentOut2,
-    borderRadius: '5px',
-    display: 'flex',
+    backgroundColor: colors.invariant.dark,
+    borderRadius: 16,
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
+    padding: 12,
     '&:not(:last-child)': {
       marginBottom: 8
     }
   },
+  tokenAreaUpperPart: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  tokenAreaLowerPart: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 16
+  },
   token: {
-    backgroundColor: colors.invariant.componentOut3,
-    borderRadius: '5px',
+    backgroundColor: colors.invariant.light,
+    borderRadius: 12,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: '3px 12px'
+    padding: '8px 13px'
   },
   tokenName: {
     color: colors.white.main,
-    ...typography.body1
+    ...typography.heading4,
+    fontWeight: 400
   },
   tokenValue: {
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.lightGrey,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingRight: 15,
-    ...typography.body1
+    ...typography.heading2
+  },
+  tokenBalance: {
+    color: '#A9B6BF',
+    ...typography.caption2
+  },
+  tokenUSDValue: {
+    color: '#A9B6BF',
+    ...typography.caption2
   },
   closeButton: {
-    color: colors.invariant.componentOut2,
-    background: colors.invariant.accent2,
-    maxHeight: '35px',
-    minWidth: 114,
+    color: colors.invariant.dark,
+    background: colors.invariant.greenLinearGradientOpacity,
+    height: 36,
+    width: 116,
     textTransform: 'none',
     transition: '300ms',
     paddingInline: 0,
+    borderRadius: 12,
+    ...typography.body1,
+
     '&:hover': {
-      background: colors.invariant.accent2,
-      boxShadow: `0px 0px 15px ${colors.invariant.accent2}`
+      background: colors.invariant.greenLinearGradient,
+      boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.label2,
-      minWidth: 84
+      width: 84,
+      fontSize: 12
     }
   },
   iconText: {
@@ -197,6 +224,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: 3,
     width: 19,
     height: 19
+  },
+  arrowsIcon: {
+    width: 32,
+    height: 32,
+    position: 'absolute',
+    top: '50%',
+    left: 'calc(50% - 16px)',
+    cursor: 'pointer',
+
+    '&:hover': {
+      filter: 'brightness(2)'
+    }
   }
 }))
 

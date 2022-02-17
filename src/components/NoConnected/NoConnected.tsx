@@ -11,7 +11,11 @@ export interface INoConnected {
   onDisconnect: () => void
   descCustomText?: string
 }
-export const NoConnected: React.FC<INoConnected> = ({ onConnect, onDisconnect, descCustomText }) => {
+export const NoConnected: React.FC<INoConnected> = ({
+  onConnect,
+  onDisconnect,
+  descCustomText
+}) => {
   const classes = useStyles()
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
@@ -37,7 +41,9 @@ export const NoConnected: React.FC<INoConnected> = ({ onConnect, onDisconnect, d
         <Grid className={classNames(classes.root, 'noConnectedInfo')}>
           <img className={classes.img} src={icons.NoConnected} />
           <Typography className={classes.desc}>Wallet is not connected.</Typography>
-          {descCustomText?.length && <Typography className={classes.desc}>{descCustomText}</Typography>}
+          {descCustomText?.length && (
+            <Typography className={classes.desc}>{descCustomText}</Typography>
+          )}
           <Button className={classes.button} onClick={handleClick} variant='contained'>
             Connect a wallet
           </Button>

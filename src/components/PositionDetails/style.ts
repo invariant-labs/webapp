@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   positionDetails: {
-    width: 461,
+    width: 517,
     marginRight: 24,
 
     [theme.breakpoints.down('md')]: {
@@ -45,24 +45,30 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 12
   },
   backText: {
-    color: colors.invariant.lightInfoText,
+    color: 'rgba(169, 182, 191, 1)',
     WebkitPaddingBefore: '2px',
     ...typography.body2
   },
   button: {
-    color: colors.white.main,
+    color: colors.invariant.black,
     ...typography.body1,
     textTransform: 'none',
-    background: colors.invariant.accent1,
-    borderRadius: 5,
+    background: colors.invariant.pinkLinearGradientOpacity,
+    borderRadius: 14,
     height: 40,
-    width: 168,
+    width: 130,
     marginBottom: 16,
+    paddingRight: 9,
+    paddingLeft: 9,
+    letterSpacing: -0.03,
 
     '&:hover': {
-      background: colors.invariant.accent1,
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`
+      background: colors.invariant.pinkLinearGradient,
+      boxShadow: `0 0 16px ${colors.invariant.pink}`
     }
+  },
+  buttonStartIcon: {
+    marginRight: 0
   },
   buttonText: {
     WebkitPaddingBefore: '2px'

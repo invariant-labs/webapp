@@ -1,10 +1,12 @@
-import { Input } from '@material-ui/core'
+import { Input, Box, Typography, Grid } from '@material-ui/core'
 import React, { CSSProperties, useRef } from 'react'
 import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import Select from '@components/Inputs/Select/Select'
 import useStyles from './style'
 import { SwapToken } from '@components/Swap/Swap'
+import { BN } from '@project-serum/anchor'
+import { formatNumbers, FormatNumberThreshold, showPrefix } from '@consts/utils'
 
 interface IProps {
   setValue: (value: string) => void
@@ -16,9 +18,10 @@ interface IProps {
   style?: CSSProperties
   onMaxClick: () => void
   current: SwapToken | null
-  tokens: Array<{ symbol: string; name: string; logoURI: string }>
+  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
   onSelect: (name: string) => void
   disabled: boolean
+  balance?: string | undefined
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -33,11 +36,45 @@ export const AmountInput: React.FC<IProps> = ({
   current,
   tokens,
   onSelect,
-  disabled
+  disabled,
+  balance
 }) => {
   const classes = useStyles()
-
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const thresholds: FormatNumberThreshold[] = [
+    {
+      value: 10,
+      decimals: decimal
+    },
+    {
+      value: 100,
+      decimals: 4
+    },
+    {
+      value: 1000,
+      decimals: 2
+    },
+    {
+      value: 10000,
+      decimals: 1
+    },
+    {
+      value: 1000000,
+      decimals: 2,
+      divider: 1000
+    },
+    {
+      value: 1000000000,
+      decimals: 2,
+      divider: 1000000
+    },
+    {
+      value: Infinity,
+      decimals: 2,
+      divider: 1000000000
+    }
+  ]
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const onlyNumbersRegex = /^\d*\.?\d*$/
@@ -72,29 +109,11 @@ export const AmountInput: React.FC<IProps> = ({
     }
   }
 
+  const tokenIcon = !current ? null : current.symbol ?? current.symbol
+
   return (
-    <Input
-      inputRef={inputRef}
-      error={!!error}
-      className={classNames(classes.amountInput, className)}
-      classes={{ input: classes.input }}
-      style={style}
-      type={'text'}
-      value={value}
-      disableUnderline={true}
-      placeholder={placeholder}
-      onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-      endAdornment={
-        <OutlinedButton
-          name='Max'
-          color='primary'
-          onClick={onMaxClick}
-          className={classes.maxButton}
-          labelClassName={classes.label}
-          disabled={disabled}
-        />
-      }
-      startAdornment={
+    <>
+      <Grid container alignItems='center' wrap='nowrap' className={classes.exchangeContainer}>
         <Select
           centered={true}
           tokens={tokens}
@@ -102,8 +121,39 @@ export const AmountInput: React.FC<IProps> = ({
           current={current}
           className={classes.select}
         />
-      }
-    />
+        <Input
+          inputRef={inputRef}
+          error={!!error}
+          className={classNames(classes.amountInput, className)}
+          classes={{ input: classes.input }}
+          style={style}
+          type={'text'}
+          value={value}
+          disableUnderline={true}
+          placeholder={placeholder}
+          onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
+        />
+      </Grid>
+      <Box className={classes.container}>
+        <Grid className={classes.BalanceContainer}>
+          <Typography className={classes.BalanceTypography}>
+            Balance: {balance ? formatNumbers(thresholds)(balance.toString()) : 0}
+            {showPrefix(Number(balance))} {tokenIcon}
+          </Typography>
+          <OutlinedButton
+            name='Max'
+            color='primary'
+            onClick={onMaxClick}
+            className={classes.maxButton}
+            labelClassName={classes.label}
+            disabled={disabled && isNaN(Number(balance)) ? disabled : isNaN(Number(balance))}
+          />
+        </Grid>
+        <Typography className={classes.noData}>
+          <div className={classes.noDataIcon}>?</div>No data
+        </Typography>
+      </Box>
+    </>
   )
 }
 export default AmountInput
