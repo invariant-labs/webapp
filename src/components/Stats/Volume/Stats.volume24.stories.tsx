@@ -38,7 +38,5 @@ storiesOf('position/Stats', module)
       setData(data)
     }, [])
 
-    console.log(data)
-
     return <Volume data={data} percentVolume={1.14} volume={231258435934} />
   })
