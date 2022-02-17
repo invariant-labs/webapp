@@ -28,17 +28,17 @@ const IDOLabel: React.FC<IDOLabelInterface> = ({
 
   return (
     <Grid className={classes.lableContainer}>
-      <Grid className={classes.lightLabelContainer}>
+      <Grid className={classNames(classes.lightLabelContainer, classes.topLabelRadius)}>
         <Typography component='p'>Sale period ends in</Typography>
         <Box className={classes.timeContainer}>
-          <CardMedia className={classes.image} image={Clock} />
+          <CardMedia className={classNames(classes.image, classes.smallImage)} image={Clock} />
           <Typography component='h1'>{Sale}</Typography>
         </Box>
       </Grid>
       <Grid className={classes.DarkPanelContainer}>
         <Typography component='p'>Grace period ends in</Typography>
         <Box className={classes.timeContainer}>
-          <CardMedia className={classes.image} image={Clock} />
+          <CardMedia className={classNames(classes.image, classes.smallImage)} image={Clock} />
           <Typography component='h1'>{Grace}</Typography>
         </Box>
       </Grid>
@@ -56,7 +56,7 @@ const IDOLabel: React.FC<IDOLabelInterface> = ({
           <Typography component='h1'>{Estimated}</Typography>
         </Box>
       </Grid>
-      <Grid className={classes.lightLabelContainer}>
+      <Grid className={classNames(classes.lightLabelContainer, classes.bottomLabelRadius)}>
         <Typography component='p'>INVARIANT for sale</Typography>
         <Box className={classes.timeContainer}>
           <CardMedia className={classes.image} image={icons.LogoShort} />

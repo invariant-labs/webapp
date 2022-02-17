@@ -62,6 +62,7 @@ const IDO: React.FC<IDOinterface> = ({ HEADER, xUSD, USD, SOL, xETH, xBTC, Butto
         <Box className={classes.IdoButtonContainer}>
           <AnimatedButton
             content={ButtonHeader}
+            disabled={false}
             onClick={() => {}}
             progress={'none'}
             className={`${classes.IDOButton} ${classes.buttonDisabled}`}

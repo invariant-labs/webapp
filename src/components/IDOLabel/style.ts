@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 import { colors, typography } from '@static/theme'
+
 const useStyle = makeStyles(theme => ({
   lableContainer: {
     width: 240,
@@ -14,17 +15,28 @@ const useStyle = makeStyles(theme => ({
     }
   },
 
+  topLabelRadius: {
+    borderRadius: '24px 24px 0  0'
+  },
+  bottomLabelRadius: {
+    borderRadius: '0 0 24px  24px'
+  },
+
   lightLabelContainer: {
     padding: '10px 0 10px 0 ',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-
+    opacity: 0.8,
     '& p': {
       letterSpacing: '-0.03em',
-      paddingBottom: 3,
+      paddingBottom: 3.5,
       ...typography.caption2,
       color: colors.invariant.textGrey
+    },
+    backgroundColor: colors.invariant.component,
+    '&:hover': {
+      filter: 'brightness(1.5)'
     }
   },
 
@@ -36,9 +48,13 @@ const useStyle = makeStyles(theme => ({
     alignItems: 'center',
     '& p': {
       letterSpacing: '-0.03em',
-      paddingBottom: 3,
+      paddingBottom: 3.5,
       ...typography.caption2,
       color: colors.invariant.textGrey
+    },
+
+    '&:hover': {
+      backgroundColor: colors.invariant.component
     }
   },
 
@@ -64,6 +80,14 @@ const useStyle = makeStyles(theme => ({
     marginRight: 7,
     backgroundSize: 'contain'
   },
+
+  smallImage: {
+    minWidth: 18,
+    height: 18,
+    marginRight: 7,
+    backgroundSize: 'contain'
+  },
+
   Token: {
     borderRadius: 100
   }

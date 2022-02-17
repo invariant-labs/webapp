@@ -93,6 +93,7 @@ const useStyle = makeStyles(theme => ({
   IDOButton: {
     width: '100%',
     height: 48,
+    transitionDuration: '0s !important',
     background: colors.invariant.pinkLinearGradient
   },
 
@@ -109,11 +110,13 @@ const useStyle = makeStyles(theme => ({
   },
 
   buttonDisabled: {
-    background: colors.invariant.pinkLinearGradient,
+    transitionDuration: '0s !important',
+    opacity: 0.7,
+    background: `${colors.invariant.pinkLinearGradient} !important`,
     '&:hover': {
       filter: 'brightness(1.15)',
-      background: colors.invariant.pinkLinearGradient,
-
+      background: `${colors.invariant.pinkLinearGradient} !important`,
+      opacity: 1,
       boxShadow:
         '0px 3px 1px -2px rgba(239, 132, 245, 0.2),0px 1px 2px 0px rgba(239, 132, 245, 0.2),0px 0px 5px 7px rgba(239, 132, 245, 0.2)'
     }

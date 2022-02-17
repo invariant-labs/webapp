@@ -1,7 +1,7 @@
 import React from 'react'
 import { Grid } from '@material-ui/core'
 import useStyles from './style'
-import WrappedIDO from '@containers/Wrappedido/WrappedIDO'
+import WrappedIDO from '@containers/WrappedIdo/WrappedIDO'
 import IDOLabel from '@components/IDOLabel/IDOLabel'
 
 const IDO = () => {
