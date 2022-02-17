@@ -9,6 +9,13 @@ import classNames from 'classnames'
 import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import SwapList from '@static/svg/swap-list.svg'
 import useStyles from './style'
+import { PublicKey } from '@solana/web3.js'
+import {
+  WRAPPED_SOL_ADDRESS,
+  WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT,
+  WSOL_POOL_INIT_LAMPORTS
+} from '@consts/static'
+import { BN } from '@project-serum/anchor'
 
 export interface InputState {
   value: string
@@ -192,6 +199,33 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             if (tokenAIndex === null) {
               return
             }
+
+            if (tokens[tokenAIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))) {
+              if (tokenBIndex !== null && poolIndex === null) {
+                tokenAInputState.setValue(
+                  printBN(
+                    tokens[tokenAIndex].balance.gt(WSOL_POOL_INIT_LAMPORTS)
+                      ? tokens[tokenAIndex].balance.sub(WSOL_POOL_INIT_LAMPORTS)
+                      : new BN(0),
+                    tokens[tokenAIndex].decimals
+                  )
+                )
+
+                return
+              }
+
+              tokenAInputState.setValue(
+                printBN(
+                  tokens[tokenAIndex].balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                    ? tokens[tokenAIndex].balance.sub(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                    : new BN(0),
+                  tokens[tokenAIndex].decimals
+                )
+              )
+
+              return
+            }
+
             tokenAInputState.setValue(
               printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimals)
             )
@@ -226,6 +260,33 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             if (tokenBIndex === null) {
               return
             }
+
+            if (tokens[tokenBIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))) {
+              if (tokenAIndex !== null && poolIndex === null) {
+                tokenAInputState.setValue(
+                  printBN(
+                    tokens[tokenBIndex].balance.gt(WSOL_POOL_INIT_LAMPORTS)
+                      ? tokens[tokenBIndex].balance.sub(WSOL_POOL_INIT_LAMPORTS)
+                      : new BN(0),
+                    tokens[tokenBIndex].decimals
+                  )
+                )
+
+                return
+              }
+
+              tokenAInputState.setValue(
+                printBN(
+                  tokens[tokenBIndex].balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                    ? tokens[tokenBIndex].balance.sub(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                    : new BN(0),
+                  tokens[tokenBIndex].decimals
+                )
+              )
+
+              return
+            }
+
             tokenBInputState.setValue(
               printBN(tokens[tokenBIndex].balance, tokens[tokenBIndex].decimals)
             )

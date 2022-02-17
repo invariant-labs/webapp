@@ -15,42 +15,10 @@ import { poolsArraySortedByFees, tokens } from '@selectors/pools'
 import { Pair } from '@invariant-labs/sdk'
 import { createLiquidityPlot, createPlaceholderLiquidityPlot } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
-import {
-  Transaction,
-  sendAndConfirmRawTransaction,
-  Keypair,
-  SystemProgram,
-  PublicKey
-} from '@solana/web3.js'
+import { Transaction, sendAndConfirmRawTransaction, Keypair, SystemProgram } from '@solana/web3.js'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { positionsWithPoolsData, singlePositionData } from '@selectors/positions'
-import BN from 'bn.js'
-
-export function* createPool(
-  tokenX: PublicKey,
-  tokenY: PublicKey,
-  fee: BN,
-  initTick?: number
-): Generator {
-  const connection = yield* call(getConnection)
-  const wallet = yield* call(getWallet)
-  const marketProgram = yield* call(getMarketProgram)
-
-  const { transaction: tx, signers } = yield* call([marketProgram, marketProgram.createPoolTx], {
-    pair: new Pair(tokenX, tokenY, { fee: fee }),
-    initTick: initTick
-  })
-  const blockhash = yield* call([connection, connection.getRecentBlockhash])
-  tx.recentBlockhash = blockhash.blockhash
-  tx.feePayer = wallet.publicKey
-  const signedTx = yield* call([wallet, wallet.signTransaction], tx)
-  signedTx.partialSign(...signers)
-
-  yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
-    skipPreflight: false
-  })
-}
 
 export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
   try {
@@ -117,17 +85,36 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       userTokenY = yield* call(createAccount, data.tokenY)
     }
 
-    const initPositionTx = yield* call([marketProgram, marketProgram.initPositionTx], {
-      pair: new Pair(data.tokenX, data.tokenY, {
-        fee: data.fee
-      }),
-      userTokenX,
-      userTokenY,
-      lowerTick: data.lowerTick,
-      upperTick: data.upperTick,
-      liquidityDelta: data.liquidityDelta,
-      owner: wallet.publicKey
-    })
+    let initPositionTx: Transaction
+
+    if (data.initPool) {
+      const { transaction, signers } = yield* call(
+        [marketProgram, marketProgram.initPoolAndPositionTx],
+        {
+          pair: new Pair(data.tokenX, data.tokenY, { fee: data.fee }),
+          userTokenX,
+          userTokenY,
+          lowerTick: data.lowerTick,
+          upperTick: data.upperTick,
+          liquidityDelta: data.liquidityDelta,
+          owner: wallet.publicKey,
+          initTick: data.initTick
+        }
+      )
+
+      initPositionTx = transaction
+      initPositionTx.partialSign(...signers)
+    } else {
+      initPositionTx = yield* call([marketProgram, marketProgram.initPositionTx], {
+        pair: new Pair(data.tokenX, data.tokenY, { fee: data.fee }),
+        userTokenX,
+        userTokenY,
+        lowerTick: data.lowerTick,
+        upperTick: data.upperTick,
+        liquidityDelta: data.liquidityDelta,
+        owner: wallet.publicKey
+      })
+    }
 
     const tx = new Transaction()
       .add(createIx)
@@ -185,16 +172,6 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
-    if (action.payload.initPool) {
-      yield* call(
-        createPool,
-        action.payload.tokenX,
-        action.payload.tokenY,
-        action.payload.fee,
-        action.payload.initTick
-      )
-    }
-
     const allTokens = yield* select(tokens)
 
     if (
@@ -226,15 +203,36 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       userTokenY = yield* call(createAccount, action.payload.tokenY)
     }
 
-    const tx = yield* call([marketProgram, marketProgram.initPositionTx], {
-      pair: new Pair(action.payload.tokenX, action.payload.tokenY, { fee: action.payload.fee }),
-      userTokenX,
-      userTokenY,
-      lowerTick: action.payload.lowerTick,
-      upperTick: action.payload.upperTick,
-      liquidityDelta: action.payload.liquidityDelta,
-      owner: wallet.publicKey
-    })
+    let tx: Transaction
+
+    if (action.payload.initPool) {
+      const { transaction, signers } = yield* call(
+        [marketProgram, marketProgram.initPoolAndPositionTx],
+        {
+          pair: new Pair(action.payload.tokenX, action.payload.tokenY, { fee: action.payload.fee }),
+          userTokenX,
+          userTokenY,
+          lowerTick: action.payload.lowerTick,
+          upperTick: action.payload.upperTick,
+          liquidityDelta: action.payload.liquidityDelta,
+          owner: wallet.publicKey,
+          initTick: action.payload.initTick
+        }
+      )
+
+      tx = transaction
+      tx.partialSign(...signers)
+    } else {
+      tx = yield* call([marketProgram, marketProgram.initPositionTx], {
+        pair: new Pair(action.payload.tokenX, action.payload.tokenY, { fee: action.payload.fee }),
+        userTokenX,
+        userTokenY,
+        lowerTick: action.payload.lowerTick,
+        upperTick: action.payload.upperTick,
+        liquidityDelta: action.payload.liquidityDelta,
+        owner: wallet.publicKey
+      })
+    }
 
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash

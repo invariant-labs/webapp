@@ -8,7 +8,7 @@ import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
 import Slippage from '@components/Swap/slippage/Slippage'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import TransactionDetails from '@components/Swap/transactionDetails/TransactionDetails'
-import { WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { WRAPPED_SOL_ADDRESS, WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT } from '@consts/static'
 import { Swap as SwapData } from '@reducers/swap'
 import { Status } from '@reducers/solanaWallet'
 import SwapArrows from '@static/svg/swap-arrows.svg'
@@ -70,7 +70,6 @@ export interface ISwap {
   onSetPair: (tokenFrom: PublicKey, tokenTo: PublicKey) => void
   progress: ProgressState
   poolTicks: { [x: string]: Tick[] }
-  fullSolBalance: BN
   isWaitingForNewPool: boolean
 }
 export const Swap: React.FC<ISwap> = ({
@@ -81,7 +80,6 @@ export const Swap: React.FC<ISwap> = ({
   onSetPair,
   progress,
   poolTicks,
-  fullSolBalance,
   isWaitingForNewPool
 }) => {
   const classes = useStyles()
@@ -361,12 +359,7 @@ export const Swap: React.FC<ISwap> = ({
             value={amountFrom}
             balance={
               tokenFromIndex !== null
-                ? printBN(
-                    tokens[tokenFromIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
-                      ? fullSolBalance
-                      : tokens[tokenFromIndex].balance,
-                    tokens[tokenFromIndex].decimals
-                  )
+                ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
                 : '- -'
             }
             key={swap?.toString()}
@@ -382,7 +375,14 @@ export const Swap: React.FC<ISwap> = ({
             onMaxClick={() => {
               if (tokenToIndex !== null && tokenFromIndex !== null) {
                 setAmountFrom(
-                  printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
+                  printBN(
+                    tokens[tokenFromIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
+                      ? tokens[tokenFromIndex].balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                        ? tokens[tokenFromIndex].balance.sub(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                        : new BN(0)
+                      : tokens[tokenFromIndex].balance,
+                    tokens[tokenFromIndex].decimals
+                  )
                 )
                 setInputRef(inputTarget.FROM)
               }
@@ -432,12 +432,7 @@ export const Swap: React.FC<ISwap> = ({
             value={amountTo}
             balance={
               tokenToIndex !== null
-                ? printBN(
-                    tokens[tokenToIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
-                      ? fullSolBalance
-                      : tokens[tokenToIndex].balance,
-                    tokens[tokenToIndex].decimals
-                  )
+                ? printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimals)
                 : '- -'
             }
             key={tokenToIndex?.toString()}
@@ -458,7 +453,14 @@ export const Swap: React.FC<ISwap> = ({
             onMaxClick={() => {
               if (tokenToIndex !== null && tokenFromIndex !== null) {
                 setAmountFrom(
-                  printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
+                  printBN(
+                    tokens[tokenFromIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
+                      ? tokens[tokenFromIndex].balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                        ? tokens[tokenFromIndex].balance.sub(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                        : new BN(0)
+                      : tokens[tokenFromIndex].balance,
+                    tokens[tokenFromIndex].decimals
+                  )
                 )
               }
             }}
