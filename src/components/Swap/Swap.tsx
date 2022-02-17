@@ -109,16 +109,16 @@ export const Swap: React.FC<ISwap> = ({
   const [inputRef, setInputRef] = React.useState<string>(inputTarget.FROM)
   const [simulateResult, setSimulateResult] = React.useState<{
     amountOut: BN
-    simulateSuccess: boolean
     poolIndex: number
     AmountOutWithFee: BN
     estimatedPriceAfterSwap: BN
+    error: string
   }>({
     amountOut: new BN(0),
-    simulateSuccess: true,
     poolIndex: 0,
     AmountOutWithFee: new BN(0),
-    estimatedPriceAfterSwap: new BN(0)
+    estimatedPriceAfterSwap: new BN(0),
+    error: ''
   })
 
   const timeoutRef = useRef<number>(0)
@@ -267,6 +267,7 @@ export const Swap: React.FC<ISwap> = ({
     if (walletStatus !== Status.Initialized) {
       return 'Connect a wallet'
     }
+
     if (tokenFromIndex === null || tokenToIndex === null) {
       return 'Select a token'
     }
@@ -283,14 +284,19 @@ export const Swap: React.FC<ISwap> = ({
     ) {
       return 'Insufficient balance'
     }
-    if (!simulateResult.simulateSuccess) {
-      return 'Exceed single swap limit (split transaction into several)'
-    }
 
     if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {
       return 'Insufficient volume'
     }
-
+    if (simulateResult.error === 'Error: Too large amount') {
+      return 'Exceed single swap limit (split transaction into several)'
+    }
+    if (
+      simulateResult.error === 'Error: At the end of price range' ||
+      simulateResult.error === 'Error: Price would cross swap limit'
+    ) {
+      return 'Insufficient liquidity'
+    }
     return 'Swap tokens'
   }
   const activeSwapDetails = () => {
