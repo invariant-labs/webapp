@@ -4,7 +4,17 @@ import { DENOMINATOR, parseLiquidityOnTicks, simulateSwap } from '@invariant-lab
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
-import { MSOL_DEV, NetworkType, PRICE_DECIMAL, Token, USDC_DEV, USDT_DEV, WSOL_DEV } from './static'
+import {
+  BTC_DEV,
+  MSOL_DEV,
+  NetworkType,
+  PRICE_DECIMAL,
+  RENDOGE_DEV,
+  Token,
+  USDC_DEV,
+  USDT_DEV,
+  WSOL_DEV
+} from './static'
 import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
 import { getMarketProgramSync } from '@web3/programs/amm'
@@ -356,7 +366,9 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
         [USDC_DEV.address.toString()]: USDC_DEV,
         [USDT_DEV.address.toString()]: USDT_DEV,
         [MSOL_DEV.address.toString()]: MSOL_DEV,
-        [WSOL_DEV.address.toString()]: WSOL_DEV
+        [BTC_DEV.address.toString()]: BTC_DEV,
+        [WSOL_DEV.address.toString()]: WSOL_DEV,
+        [RENDOGE_DEV.address.toString()]: RENDOGE_DEV
       }
     default:
       return {}
