@@ -6,8 +6,6 @@ import Volume from './Volume'
 storiesOf('position/Stats', module)
   .addDecorator(withKnobs)
   .add('volume24', () => {
-    const [percerentVolume] = React.useState<number>(1.14)
-    const [volume] = React.useState<number>(231258435934)
     const [data, seData] = React.useState<Array<{ timeStamp: number; value: number }>>([])
 
     const timeSlicer = 10
@@ -39,5 +37,5 @@ storiesOf('position/Stats', module)
       seData(data)
     }, [])
 
-    return <Volume data={data} percentVolume={percerentVolume} volume={volume} />
+    return <Volume data={data} percentVolume={1.14} volume={231258435934} />
   })
