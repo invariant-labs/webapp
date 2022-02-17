@@ -3,6 +3,7 @@ import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
 import useStyle from './style'
 import icons from '@static/icons'
 import classNames from 'classnames'
+import Clock from '@static/svg/Clock.svg'
 
 interface IDOLabelInterface {
   Sale: string
@@ -30,14 +31,14 @@ const IDOLabel: React.FC<IDOLabelInterface> = ({
       <Grid className={classes.lightLabelContainer}>
         <Typography component='p'>Sale period ends in</Typography>
         <Box className={classes.timeContainer}>
-          <CardMedia className={classes.image} image={icons.LogoShort} />
+          <CardMedia className={classes.image} image={Clock} />
           <Typography component='h1'>{Sale}</Typography>
         </Box>
       </Grid>
       <Grid className={classes.DarkPanelContainer}>
         <Typography component='p'>Grace period ends in</Typography>
         <Box className={classes.timeContainer}>
-          <CardMedia className={classes.image} image={icons.LogoShort} />
+          <CardMedia className={classes.image} image={Clock} />
           <Typography component='h1'>{Grace}</Typography>
         </Box>
       </Grid>

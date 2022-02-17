@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core'
-import { newTypography, colors } from '@static/theme'
+import { typography, colors } from '@static/theme'
 
 export const useStyles = makeStyles(() => ({
   container: {
@@ -9,18 +9,21 @@ export const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`
   },
+
   tokenList: {
     color: colors.white.main,
     '& p': {
-      ...newTypography.heading4
+      ...typography.heading4
     }
   },
+
   header: {
     '& p': {
-      ...newTypography.heading4,
+      ...typography.heading4,
       fontWeight: 400
     }
   },
+
   tokenName: {
     display: 'flex',
     alignItems: 'center',
@@ -30,6 +33,7 @@ export const useStyles = makeStyles(() => ({
       borderRadius: '50%'
     }
   },
+
   tokenSymbol: {
     color: colors.invariant.textGrey,
     fontWeight: 400
