@@ -372,8 +372,8 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
       return {
         [USDC_DEV.address.toString()]: USDC_DEV,
         [USDT_DEV.address.toString()]: USDT_DEV,
-        [BTC_DEV.address.toString()]: BTC_DEV,
         [MSOL_DEV.address.toString()]: MSOL_DEV,
+        [BTC_DEV.address.toString()]: BTC_DEV,
         [WSOL_DEV.address.toString()]: WSOL_DEV,
         [RENDOGE_DEV.address.toString()]: RENDOGE_DEV
       }
@@ -546,13 +546,14 @@ export const handleSimulate = async (
 ): Promise<{
   amountOut: BN
   poolIndex: number
-  simulateSuccess: boolean
   AmountOutWithFee: BN
   estimatedPriceAfterSwap: BN
+  error: string
 }> => {
   const marketProgram = getMarketProgramSync()
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(-1)
+  let errorMessage: string = ''
   let poolIndex: number = 0
   let isXtoY = false
   let resultWithFee: BN = new BN(0)
@@ -563,9 +564,9 @@ export const handleSimulate = async (
     return {
       amountOut: new BN(0),
       poolIndex: poolIndex,
-      simulateSuccess: true,
       AmountOutWithFee: new BN(0),
-      estimatedPriceAfterSwap: new BN(0)
+      estimatedPriceAfterSwap: new BN(0),
+      error: errorMessage
     }
   }
   isXtoY = fromToken.equals(filteredPools[0].tokenX)
@@ -592,7 +593,7 @@ export const handleSimulate = async (
     })
 
     if (swapSimulateResult.amountPerTick.length >= 8) {
-      throw new Error('too large amount')
+      throw new Error('Too large amount')
     }
     if (!byAmountIn) {
       result = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
@@ -605,24 +606,25 @@ export const handleSimulate = async (
       swapSimulateRouterAmount = result
       estimatedPrice = swapSimulateResult.priceAfterSwap
     }
-  } catch (error) {
-    console.log(error)
+  } catch (err: any) {
+    errorMessage = err.toString()
+    console.log(err.toString())
   }
   if (swapSimulateRouterAmount.lt(new BN(0))) {
     return {
       amountOut: new BN(0),
       poolIndex: poolIndex,
-      simulateSuccess: false,
       AmountOutWithFee: new BN(0),
-      estimatedPriceAfterSwap: new BN(0)
+      estimatedPriceAfterSwap: new BN(0),
+      error: errorMessage
     }
   }
   return {
     amountOut: swapSimulateRouterAmount,
     poolIndex: poolIndex,
-    simulateSuccess: true,
     AmountOutWithFee: resultWithFee,
-    estimatedPriceAfterSwap: estimatedPrice
+    estimatedPriceAfterSwap: estimatedPrice,
+    error: ''
   }
 }
 
