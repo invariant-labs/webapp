@@ -172,9 +172,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 
   tokenIcon: {
-    width: 30,
+    minWidth: 30,
     height: 30,
-    marginRight: 40,
+    marginRight: 16,
     borderRadius: '50%',
     boxShadow: '0px 0px 10px rgba(216, 255, 181, 0.5)'
   },
