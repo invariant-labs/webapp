@@ -9,18 +9,18 @@ import { BN } from '@project-serum/anchor'
 import { formatNumbers, FormatNumberThreshold, showPrefix } from '@consts/utils'
 
 interface IProps {
-  setValue: (value: string) => void
+  setValue?: (value: string) => void
   value?: string
   error?: string | null
   className?: string
-  decimal: number
+  decimal?: number
   placeholder?: string
   style?: CSSProperties
-  onMaxClick: () => void
-  current: SwapToken | null
-  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
-  onSelect: (name: string) => void
-  disabled: boolean
+  onMaxClick?: () => void
+  current?: SwapToken | null
+  tokens?: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
+  onSelect?: (name: string) => void
+  disabled?: boolean
   balance?: string | undefined
 }
 
@@ -45,7 +45,7 @@ export const AmountInput: React.FC<IProps> = ({
   const thresholds: FormatNumberThreshold[] = [
     {
       value: 10,
-      decimals: decimal
+      decimals: decimal || 0
     },
     {
       value: 100,
@@ -78,7 +78,7 @@ export const AmountInput: React.FC<IProps> = ({
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const onlyNumbersRegex = /^\d*\.?\d*$/
-    const trimDecimal = `^\\d*\\.?\\d{0,${decimal}}$`
+    const trimDecimal = `^\\d*\\.?\\d{0,${decimal || 0}}$`
     const regex = new RegExp(trimDecimal, 'g')
     if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value
@@ -93,7 +93,7 @@ export const AmountInput: React.FC<IProps> = ({
 
       const diff = startValue.length - parsed.length
 
-      setValue(parsed)
+      setValue?.(parsed)
       if (caretPosition !== null && parsed !== startValue) {
         setTimeout(() => {
           if (inputRef.current) {
@@ -103,9 +103,9 @@ export const AmountInput: React.FC<IProps> = ({
         }, 0)
       }
     } else if (!onlyNumbersRegex.test(e.target.value)) {
-      setValue('')
+      setValue?.('')
     } else if (!regex.test(e.target.value)) {
-      setValue(e.target.value.slice(0, e.target.value.length - 1))
+      setValue?.(e.target.value.slice(0, e.target.value.length - 1))
     }
   }
 
@@ -116,9 +116,9 @@ export const AmountInput: React.FC<IProps> = ({
       <Grid container alignItems='center' wrap='nowrap' className={classes.exchangeContainer}>
         <Select
           centered={true}
-          tokens={tokens}
+          tokens={tokens || []}
           onSelect={onSelect}
-          current={current}
+          current={current || null}
           className={classes.select}
         />
         <Input

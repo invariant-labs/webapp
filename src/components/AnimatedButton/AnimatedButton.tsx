@@ -18,7 +18,7 @@ interface Props {
   content: string
   disabled?: boolean
   progress: ProgressState
-  onClick: () => void
+  onClick?: () => void
   className?: string
 }
 

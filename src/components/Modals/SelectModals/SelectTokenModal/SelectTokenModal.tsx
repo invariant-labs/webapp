@@ -15,7 +15,7 @@ export interface ISelectTokenModal {
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
   centered?: boolean
-  onSelect: (name: string) => void
+  onSelect: ((name: string) => void) | null
 }
 
 interface IScroll {
@@ -151,7 +151,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                   alignItems='center'
                   wrap='nowrap'
                   onClick={() => {
-                    onSelect(token.symbol)
+                    onSelect?.(token.symbol)
                     setValue('')
                     handleClose()
                   }}>

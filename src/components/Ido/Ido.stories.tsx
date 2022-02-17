@@ -3,7 +3,7 @@ import { withKnobs } from '@storybook/addon-knobs'
 import { storiesOf } from '@storybook/react'
 import Ido from './Ido'
 
-storiesOf('newUi/ido', module)
+storiesOf('newUi/Ido', module)
   .addDecorator(withKnobs)
   .add('connect a wallet', () => {
     return (

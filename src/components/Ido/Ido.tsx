@@ -7,7 +7,7 @@ import AnimatedButton from '@components/AnimatedButton/AnimatedButton'
 import icons from '@static/icons'
 import classNames from 'classnames'
 
-interface Idointerface {
+interface IdoInterface {
   xBtc: string
   xEth: string
   sol: string
@@ -17,7 +17,7 @@ interface Idointerface {
   buttonHeader: string
 }
 
-const Ido: React.FC<Idointerface> = ({ header, xUsd, usd, sol, xEth, xBtc, buttonHeader }) => {
+const Ido: React.FC<IdoInterface> = ({ header, xUsd, usd, sol, xEth, xBtc, buttonHeader }) => {
   const classes = useStyle()
 
   return (
