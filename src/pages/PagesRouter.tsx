@@ -15,7 +15,6 @@ import { status } from '@selectors/solanaWallet'
 import { SinglePositionPage } from './SinglePositionPage/SinglePositionPage'
 import { pools } from '@selectors/pools'
 import Footer from '@components/Footer/Footer'
-import IDO from './IDOPage/IDO'
 
 export const PagesRouter: React.FC = () => {
   const dispatch = useDispatch()
@@ -47,8 +46,6 @@ export const PagesRouter: React.FC = () => {
           <Route path='/swap' component={SwapPage} />
           <Route path={'/newPosition'} component={NewPositionPage} />
           <Route path={'/pool'} component={ListPage} />
-          <Route path={'/ido'} component={IDO} />
-
           <Route
             path={'/position/:id'}
             render={({ match }) => <SinglePositionPage id={match.params.id} />}

@@ -10,7 +10,7 @@ storiesOf('newUi/idoLabel', module)
       <IDOLabel
         Sale='15:03:33'
         Grace='32:29:27'
-        SOL='121 124 846'
+        Sol='121 124 846'
         Estimated='218.839'
         Invariant='20 000 000'
         SolToken='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'

@@ -8,52 +8,56 @@ storiesOf('newUi/ido', module)
   .add('connect a wallet', () => {
     return (
       <IDO
-        HEADER='Deposit your SOL'
-        xBTC='0.00000 xBTC'
-        xETH='0.00000 xETH'
-        SOL='0.0432 SOL'
-        USD='47.43 USD'
-        xUSD='46.643 xUSD'
+        Header='Deposit your SOL'
+        Xbtc='0.00000 xBTC'
+        Xeth='0.00000 xETH'
+        Sol='0.0432 SOL'
+        Usd='47.43 USD'
+        Xusd='46.643 xUSD'
         ButtonHeader='Connect a wallet'
+        Disabled={true}
       />
     )
   })
   .add('sell period', () => {
     return (
       <IDO
-        HEADER='Deposit your SOL'
-        xBTC='0.00000 xBTC'
-        xETH='0.00000 xETH'
-        SOL='0.0432 SOL'
-        USD='47.43 USD'
-        xUSD='46.643 xUSD'
+        Header='Deposit your SOL'
+        Xbtc='0.00000 xBTC'
+        Xeth='0.00000 xETH'
+        Sol='0.0432 SOL'
+        Usd='47.43 USD'
+        Xusd='46.643 xUSD'
         ButtonHeader='Deposit'
+        Disabled={true}
       />
     )
   })
   .add('grace period', () => {
     return (
       <IDO
-        HEADER='Deposit your SOL'
-        xBTC='0.00000 xBTC'
-        xETH='0.00000 xETH'
-        SOL='0.0432 SOL'
-        USD='47.43 USD'
-        xUSD='46.643 xUSD'
+        Header='Deposit your SOL'
+        Xbtc='0.00000 xBTC'
+        Xeth='0.00000 xETH'
+        Sol='0.0432 SOL'
+        Usd='47.43 USD'
+        Xusd='46.643 xUSD'
         ButtonHeader='Whitdraw'
+        Disabled={true}
       />
     )
   })
   .add('claiming', () => {
     return (
       <IDO
-        HEADER='Deposit your SOL'
-        xBTC='0.00000 xBTC'
-        xETH='0.00000 xETH'
-        SOL='0.0432 SOL'
-        USD='47.43 USD'
-        xUSD='46.643 xUSD'
+        Header='Deposit your SOL'
+        Xbtc='0.00000 xBTC'
+        Xeth='0.00000 xETH'
+        Sol='0.0432 SOL'
+        Usd='47.43 USD'
+        Xusd='46.643 xUSD'
         ButtonHeader='Claim'
+        Disabled={true}
       />
     )
   })

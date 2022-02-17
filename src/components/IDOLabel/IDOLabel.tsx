@@ -8,7 +8,7 @@ import Clock from '@static/svg/Clock.svg'
 interface IDOLabelInterface {
   Sale: string
   Grace: string
-  SOL: string
+  Sol: string
   Estimated: string
   Invariant: string
   SolToken: string
@@ -20,7 +20,7 @@ const IDOLabel: React.FC<IDOLabelInterface> = ({
   Grace,
   Invariant,
   Estimated,
-  SOL,
+  Sol,
   SolToken,
   EstToken
 }) => {
@@ -46,7 +46,7 @@ const IDOLabel: React.FC<IDOLabelInterface> = ({
         <Typography component='p'>SOL Contibuted</Typography>
         <Box className={classes.timeContainer}>
           <CardMedia className={classNames(classes.image, classes.Token)} image={SolToken} />
-          <Typography component='h1'>{SOL}</Typography>
+          <Typography component='h1'>{Sol}</Typography>
         </Box>
       </Grid>
       <Grid className={classes.DarkPanelContainer}>

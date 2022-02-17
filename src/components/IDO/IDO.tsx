@@ -5,18 +5,29 @@ import useStyle from './style'
 import AmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import AnimatedButton from '@components/AnimatedButton/AnimatedButton'
 import icons from '@static/icons'
+import classNames from 'classnames'
 
 interface IDOinterface {
-  xBTC: string
-  xETH: string
-  SOL: string
-  USD: string
-  xUSD: string
-  HEADER: string
+  Xbtc: string
+  Xeth: string
+  Sol: string
+  Usd: string
+  Xusd: string
+  Header: string
   ButtonHeader: string
+  Disabled: boolean
 }
 
-const IDO: React.FC<IDOinterface> = ({ HEADER, xUSD, USD, SOL, xETH, xBTC, ButtonHeader }) => {
+const IDO: React.FC<IDOinterface> = ({
+  Header,
+  Xusd,
+  Usd,
+  Sol,
+  Xeth,
+  Xbtc,
+  ButtonHeader,
+  Disabled
+}) => {
   const classes = useStyle()
 
   return (
@@ -26,11 +37,11 @@ const IDO: React.FC<IDOinterface> = ({ HEADER, xUSD, USD, SOL, xETH, xBTC, Butto
       </Grid>
       <Grid container className={classes.root} direction='column'>
         <Box className={classes.depositHeader}>
-          <Typography component='h1'>{HEADER}</Typography>
+          <Typography component='h1'>{Header}</Typography>
         </Box>
         <Grid className={classes.AmountInputContainer}>
           <AmountInput
-            disabled={true}
+            disabled={Disabled}
             onSelect={() => {}}
             tokens={[]}
             current={null}
@@ -49,12 +60,12 @@ const IDO: React.FC<IDOinterface> = ({ HEADER, xUSD, USD, SOL, xETH, xBTC, Butto
           </Box>
           <Grid className={classes.amountCollection}>
             <Box className={classes.amountBox}>
-              <Typography component='p'>{xUSD}</Typography>
+              <Typography component='p'>{Xusd}</Typography>
               <Box className={classes.amountData}>
-                <Typography component='p'>{USD}</Typography>
-                <Typography component='p'>{SOL}</Typography>
-                <Typography component='p'>{xETH}</Typography>
-                <Typography component='p'>{xBTC}</Typography>
+                <Typography component='p'>{Usd}</Typography>
+                <Typography component='p'>{Sol}</Typography>
+                <Typography component='p'>{Xeth}</Typography>
+                <Typography component='p'>{Xbtc}</Typography>
               </Box>
             </Box>
           </Grid>
@@ -65,7 +76,7 @@ const IDO: React.FC<IDOinterface> = ({ HEADER, xUSD, USD, SOL, xETH, xBTC, Butto
             disabled={false}
             onClick={() => {}}
             progress={'none'}
-            className={`${classes.IDOButton} ${classes.buttonDisabled}`}
+            className={classNames(classes.IDOButton, classes.buttonDisabled)}
           />
         </Box>
       </Grid>
