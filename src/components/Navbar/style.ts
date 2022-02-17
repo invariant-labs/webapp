@@ -5,7 +5,7 @@ const useStyles = makeStyles(() => ({
   button: {
     minWidth: 67,
     backgroundColor: 'transparent',
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.light,
     height: 32,
     borderRadius: 10,
     ...typography.body1,
@@ -13,15 +13,19 @@ const useStyles = makeStyles(() => ({
     boxShadow: 'none',
     margin: '4px',
     '&:hover': {
-      background: colors.invariant.componentOut2,
-      color: colors.white.main,
+      background: 'transparent',
+      color: colors.invariant.lightGrey,
       ...typography.body1
     }
   },
   active: {
-    background: colors.invariant.componentOut2,
+    background: colors.invariant.light,
     color: colors.white.main,
-    ...typography.body1
+    ...typography.body1,
+    '&:hover': {
+      background: colors.invariant.light,
+      color: colors.white.main
+    }
   },
   disabled: {
     opacity: 1

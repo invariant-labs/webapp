@@ -7,12 +7,14 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import useStyles from './style'
+import { BN } from '@project-serum/anchor'
 
 export interface ISelectModal {
   name?: string
   current: SwapToken | null
   centered?: boolean
-  tokens: Array<{ symbol: string, name: string, logoURI: string }>
+  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
+
   onSelect: (name: string) => void
   className?: string
 }
@@ -47,17 +49,16 @@ export const Select: React.FC<ISelectModal> = ({
         variant='contained'
         onClick={handleClick}
         startIcon={
-          !current ? null : (
-            <img className={classes.icon} src={current.logoURI ?? icons.SNY} />
-          )
+          !current ? null : <img className={classes.icon} src={current.logoURI ?? icons.SNY} />
         }
         endIcon={<ExpandMoreIcon className={classes.endIcon} />}
         classes={{
           endIcon: 'selectArrow'
         }}
-        disableRipple
-      >
-        <span style={{ whiteSpace: 'nowrap' }} className={classes.tokenName}>{!current ? name : current.symbol}</span>
+        disableRipple>
+        <span style={{ whiteSpace: 'nowrap' }} className={classes.tokenName}>
+          {!current ? name : current.symbol}
+        </span>
       </Button>
       <SelectTokenModal
         tokens={tokens}

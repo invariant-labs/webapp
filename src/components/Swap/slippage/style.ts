@@ -9,59 +9,74 @@ const useStyles = makeStyles(() => ({
     }
   },
   detailsWrapper: {
+    width: 306,
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: colors.invariant.componentOut4,
+    backgroundColor: colors.invariant.component,
     padding: 12,
-    borderRadius: 10,
+    borderRadius: 20,
     color: colors.white.main,
     '& h2': {
       ...typography.heading4
     },
     '& p': {
-      ...typography.label1
-
+      ...typography.body2,
+      color: colors.invariant.lightHover,
+      marginBottom: 6
     }
   },
+
   selectTokenClose: {
-    position: 'relative',
     minWidth: 0,
-    height: 20,
-    marginLeft: 20,
+    background: 'none',
+    '&:hover': {
+      background: 'none !important'
+    },
+    cursor: 'default',
     '&:after': {
       content: '"\u2715"',
-      fontSize: 25,
+      fontSize: 20,
       position: 'absolute',
-      color: colors.invariant.lightInfoText,
-      top: '90%',
-      right: '0%',
+      color: colors.white.main,
+      top: '50%',
+      right: '10%',
       transform: 'translateY(-50%)'
-    },
-    '&:hover': {
-      backgroundColor: colors.invariant.componentOut4
     }
   },
   detailsInfoForm: {
-    border: `1px solid ${colors.invariant.componentOut2}`,
-    color: colors.white.main,
-    borderRadius: 5,
-    width: '93%',
-    backgroundColor: colors.invariant.componentIn2,
-    padding: '10px 8px',
+    border: `1px solid ${colors.invariant.component}`,
+    color: colors.invariant.light,
+    borderRadius: 15,
+    width: '100%',
+    backgroundColor: colors.invariant.newDark,
+    ...typography.heading4,
+    fontWeight: 400,
+    padding: 8,
     '&::placeholder': {
-      color: colors.invariant.lightInfoText
+      color: colors.invariant.light
     },
     '&:focus': {
       outline: 'none'
     }
   },
+  innerInput: {
+    paddingBlock: 0
+  },
   detailsInfoBtn: {
-    backgroundColor: colors.invariant.accent2,
-    borderRadius: 5,
+    minWidth: 49,
+    backgroundColor: colors.invariant.green,
+    borderRadius: 9,
     border: 'none',
-    padding: '4px 10px',
-    marginLeft: -55,
-    cursor: 'pointer'
+    padding: 0,
+    width: 49,
+    height: 28,
+    cursor: 'pointer',
+    ...typography.body2,
+    '&:hover': {
+      filter: 'brightness(1.15)',
+      boxShadow:
+        '0px 3px 1px -2px rgba(43, 193, 144, 0.2),0px 1px 2px 0px rgba(45, 168, 128, 0.14),0px 0px 5px 7px rgba(59, 183, 142, 0.12)'
+    }
   }
 }))
 

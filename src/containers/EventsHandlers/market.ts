@@ -20,7 +20,7 @@ const MarketEvents = () => {
   const poolTicksArray = useSelector(poolTicks)
   const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
   useEffect(() => {
-    if (networkStatus !== Status.Initialized || !marketProgram) {
+    if (networkStatus !== Status.Initialized) {
       return
     }
     const connectEvents = () => {
@@ -29,7 +29,7 @@ const MarketEvents = () => {
     }
 
     connectEvents()
-  }, [dispatch, networkStatus, marketProgram])
+  }, [dispatch, networkStatus])
 
   useEffect(() => {
     if (networkStatus !== Status.Initialized || !marketProgram) {
@@ -104,7 +104,7 @@ const MarketEvents = () => {
       const pools = findPairs(tokenFrom, tokenTo, allPools)
 
       pools.forEach(pool => {
-        // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         marketProgram.getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v })).then(res => {
           dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
         })

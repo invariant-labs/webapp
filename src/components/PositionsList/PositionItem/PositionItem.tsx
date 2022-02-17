@@ -1,10 +1,11 @@
 import { Grid, Hidden, Typography, useMediaQuery } from '@material-ui/core'
-import React, { useMemo } from 'react'
-import icons from '@static/icons'
+import React, { useMemo, useState } from 'react'
 import { ILiquidityItem } from '../PositionsList'
 import { formatNumbers, FormatNumberThreshold, PrefixConfig, showPrefix } from '@consts/utils'
 import { theme } from '@static/theme'
+import SwapList from '@static/svg/swap-list.svg'
 import useStyle from './style'
+import classNames from 'classnames'
 
 const shorterThresholds: FormatNumberThreshold[] = [
   {
@@ -66,12 +67,15 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
   fee,
   min,
   max,
-  value
+  valueX,
+  valueY
 }) => {
   const classes = useStyle()
 
   const isXs = useMediaQuery(theme.breakpoints.down('xs'))
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'))
+
+  const [xToY, setXToY] = useState<boolean>(true)
 
   const feeFragment = useMemo(
     () => (
@@ -91,16 +95,22 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
         justifyContent='space-between'
         alignItems='center'
         wrap='nowrap'>
-        <Typography className={classes.infoText}>Value</Typography>
+        <Typography className={classNames(classes.infoText, classes.label)}>Value</Typography>
         <Grid className={classes.infoCenter} container item justifyContent='center'>
           <Typography className={classes.greenText}>
-            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(value.toString())}
-            {showPrefix(value, isXs || isDesktop ? shorterPrefixConfig : undefined)} {tokenXName}
+            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(
+              (xToY ? valueX : valueY).toString()
+            )}
+            {showPrefix(
+              xToY ? valueX : valueY,
+              isXs || isDesktop ? shorterPrefixConfig : undefined
+            )}{' '}
+            {xToY ? tokenXName : tokenYName}
           </Typography>
         </Grid>
       </Grid>
     ),
-    [value, tokenXName, classes, isXs, isDesktop]
+    [valueX, valueY, tokenXName, classes, isXs, isDesktop, tokenYName, xToY]
   )
 
   return (
@@ -113,13 +123,29 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
       <Grid container item className={classes.mdTop} direction='row' wrap='nowrap'>
         <Grid container item className={classes.iconsAndNames} alignItems='center' wrap='nowrap'>
           <Grid container item className={classes.icons} alignItems='center' wrap='nowrap'>
-            <img className={classes.tokenIcon} src={tokenXIcon} alt={tokenXName} />
-            <img className={classes.arrows} src={icons.ArrowIcon} alt='Arrow' />
-            <img className={classes.tokenIcon} src={tokenYIcon} alt={tokenYName} />
+            <img
+              className={classes.tokenIcon}
+              src={xToY ? tokenXIcon : tokenYIcon}
+              alt={xToY ? tokenXName : tokenYName}
+            />
+            <img
+              className={classes.arrows}
+              src={SwapList}
+              alt='Arrow'
+              onClick={e => {
+                e.stopPropagation()
+                setXToY(!xToY)
+              }}
+            />
+            <img
+              className={classes.tokenIcon}
+              src={xToY ? tokenYIcon : tokenXIcon}
+              alt={xToY ? tokenYName : tokenXName}
+            />
           </Grid>
 
           <Typography className={classes.names}>
-            {tokenXName} - {tokenYName}
+            {xToY ? tokenXName : tokenYName} - {xToY ? tokenYName : tokenXName}
           </Typography>
         </Grid>
 
@@ -134,13 +160,23 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
           justifyContent='center'
           alignItems='center'>
           <Typography className={classes.infoText}>
-            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(tokenXLiq.toString())}
-            {showPrefix(tokenXLiq, isXs || isDesktop ? shorterPrefixConfig : undefined)}{' '}
-            {tokenXName}
+            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(
+              (xToY ? tokenXLiq : tokenYLiq).toString()
+            )}
+            {showPrefix(
+              xToY ? tokenXLiq : tokenYLiq,
+              isXs || isDesktop ? shorterPrefixConfig : undefined
+            )}{' '}
+            {xToY ? tokenXName : tokenYName}
             {' - '}
-            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(tokenYLiq.toString())}
-            {showPrefix(tokenYLiq, isXs || isDesktop ? shorterPrefixConfig : undefined)}{' '}
-            {tokenYName}
+            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(
+              (xToY ? tokenYLiq : tokenXLiq).toString()
+            )}
+            {showPrefix(
+              xToY ? tokenYLiq : tokenXLiq,
+              isXs || isDesktop ? shorterPrefixConfig : undefined
+            )}{' '}
+            {xToY ? tokenYName : tokenXName}
           </Typography>
         </Grid>
 
@@ -155,19 +191,27 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
           justifyContent='space-between'
           alignItems='center'
           wrap='nowrap'>
-          <Typography className={classes.greenText}>MIN - MAX</Typography>
+          <Typography className={classNames(classes.greenText, classes.label)}>
+            MIN - MAX
+          </Typography>
           <Grid className={classes.infoCenter} container item justifyContent='center'>
             <Typography className={classes.infoText}>
               {formatNumbers(isXs || isDesktop ? minMaxShorterThresholds : undefined)(
-                min.toString()
+                (xToY ? min : 1 / max).toString()
               )}
-              {showPrefix(min, isXs || isDesktop ? shorterPrefixConfig : undefined)}
+              {showPrefix(
+                xToY ? min : 1 / max,
+                isXs || isDesktop ? shorterPrefixConfig : undefined
+              )}
               {' - '}
               {formatNumbers(isXs || isDesktop ? minMaxShorterThresholds : undefined)(
-                max.toString()
+                (xToY ? max : 1 / min).toString()
               )}
-              {showPrefix(max, isXs || isDesktop ? shorterPrefixConfig : undefined)} {tokenYName}{' '}
-              per {tokenXName}
+              {showPrefix(
+                xToY ? max : 1 / min,
+                isXs || isDesktop ? shorterPrefixConfig : undefined
+              )}{' '}
+              {xToY ? tokenYName : tokenXName} per {xToY ? tokenXName : tokenYName}
             </Typography>
           </Grid>
         </Grid>

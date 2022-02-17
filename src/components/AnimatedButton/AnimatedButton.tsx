@@ -63,6 +63,7 @@ const AnimatedButton: React.FC<Props> = ({
     }
     return ''
   }
+
   return (
     <div>
       <Button

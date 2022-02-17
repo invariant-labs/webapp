@@ -3,7 +3,7 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    width: 882
+    width: 952
   },
   back: {
     height: 24,
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 12
   },
   backText: {
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.lightHover,
     WebkitPaddingBefore: '2px',
     ...typography.body2
   },
@@ -31,6 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 18
   },
   row: {
+    minWidth: 464,
+    minHeight: 540,
     position: 'relative',
     flexDirection: 'row',
 
@@ -40,6 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
+      minWidth: 0,
 
       '& .noConnectedInfo': {
         justifyContent: 'flex-start',

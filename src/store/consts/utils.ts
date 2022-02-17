@@ -5,10 +5,11 @@ import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
 import {
-  ANA_DEV,
+  BTC_DEV,
   MSOL_DEV,
   NetworkType,
   PRICE_DECIMAL,
+  RENDOGE_DEV,
   Token,
   USDC_DEV,
   USDT_DEV,
@@ -111,15 +112,17 @@ const defaultPrefixConfig: PrefixConfig = {
 }
 
 export const showPrefix = (nr: number, config: PrefixConfig = defaultPrefixConfig): string => {
-  if (typeof config.B !== 'undefined' && nr >= config.B) {
+  const abs = Math.abs(nr)
+
+  if (typeof config.B !== 'undefined' && abs >= config.B) {
     return 'B'
   }
 
-  if (typeof config.M !== 'undefined' && nr >= config.M) {
+  if (typeof config.M !== 'undefined' && abs >= config.M) {
     return 'M'
   }
 
-  if (typeof config.K !== 'undefined' && nr >= config.K) {
+  if (typeof config.K !== 'undefined' && abs >= config.K) {
     return 'K'
   }
 
@@ -166,9 +169,14 @@ export const formatNumbers =
   (thresholds: FormatNumberThreshold[] = defaultThresholds) =>
   (value: string) => {
     const num = Number(value)
-    const threshold = thresholds.sort((a, b) => a.value - b.value).find(thr => num < thr.value)
+    const abs = Math.abs(num)
+    const threshold = thresholds.sort((a, b) => a.value - b.value).find(thr => abs < thr.value)
 
-    return threshold ? (num / (threshold.divider ?? 1)).toFixed(threshold.decimals) : value
+    const formatted = threshold
+      ? (abs / (threshold.divider ?? 1)).toFixed(threshold.decimals)
+      : value
+
+    return num < 0 && threshold ? '-' + formatted : formatted
   }
 
 export const nearestPriceIndex = (price: number, data: Array<{ x: number; y: number }>) => {
@@ -364,9 +372,10 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
       return {
         [USDC_DEV.address.toString()]: USDC_DEV,
         [USDT_DEV.address.toString()]: USDT_DEV,
-        [ANA_DEV.address.toString()]: ANA_DEV,
         [MSOL_DEV.address.toString()]: MSOL_DEV,
-        [WSOL_DEV.address.toString()]: WSOL_DEV
+        [BTC_DEV.address.toString()]: BTC_DEV,
+        [WSOL_DEV.address.toString()]: WSOL_DEV,
+        [RENDOGE_DEV.address.toString()]: RENDOGE_DEV
       }
     default:
       return {}
@@ -533,28 +542,31 @@ export const handleSimulate = async (
   fromToken: PublicKey,
   toToken: PublicKey,
   amount: BN,
-  byAmountIn: boolean,
-  fromDecimal: number,
-  toDecimal: number
+  byAmountIn: boolean
 ): Promise<{
   amountOut: BN
   poolIndex: number
-  simulateSuccess: boolean
   AmountOutWithFee: BN
+  estimatedPriceAfterSwap: BN
+  error: string
 }> => {
   const marketProgram = getMarketProgramSync()
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(-1)
+  let errorMessage: string = ''
   let poolIndex: number = 0
   let isXtoY = false
-  let resaultWithFee: BN = new BN(0)
-  let resault
+  let resultWithFee: BN = new BN(0)
+  let result
+  let estimatedPrice: BN = new BN(0)
+
   if (amount.eq(new BN(0))) {
     return {
       amountOut: new BN(0),
       poolIndex: poolIndex,
-      simulateSuccess: true,
-      AmountOutWithFee: new BN(0)
+      AmountOutWithFee: new BN(0),
+      estimatedPriceAfterSwap: new BN(0),
+      error: errorMessage
     }
   }
   isXtoY = fromToken.equals(filteredPools[0].tokenX)
@@ -567,16 +579,12 @@ export const handleSimulate = async (
     ticks.set(tick.index, tick)
   }
   try {
-    const swapSimulateResault = await simulateSwap({
+    const swapSimulateResult = await simulateSwap({
       xToY: isXtoY,
       byAmountIn: byAmountIn,
       swapAmount: amount,
-      currentPrice: {
-        v: calcCurrentPriceOfPool(
-          filteredPools[0],
-          isXtoY ? fromDecimal : toDecimal,
-          isXtoY ? toDecimal : fromDecimal
-        )
+      priceLimit: {
+        v: isXtoY ? new BN(1) : new BN('340282366920938463463374607431768211455')
       },
       slippage: slippage,
       pool: filteredPools[0],
@@ -584,35 +592,39 @@ export const handleSimulate = async (
       tickmap: tickMap
     })
 
-    if (swapSimulateResault.amountPerTick.length >= 8) {
-      throw new Error('too large amount')
+    if (swapSimulateResult.amountPerTick.length >= 8) {
+      throw new Error('Too large amount')
     }
     if (!byAmountIn) {
-      resault = swapSimulateResault.accumulatedAmountIn.add(swapSimulateResault.accumulatedFee)
+      result = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
     } else {
-      resault = swapSimulateResault.accumulatedAmountOut
+      result = swapSimulateResult.accumulatedAmountOut
     }
-    if (swapSimulateRouterAmount.lt(resault)) {
-      resaultWithFee = resault.add(swapSimulateResault.accumulatedFee)
+    if (swapSimulateRouterAmount.lt(result)) {
+      resultWithFee = result.add(swapSimulateResult.accumulatedFee)
       poolIndex = findPoolIndex(filteredPools[0].address, pools)
-      swapSimulateRouterAmount = resault
+      swapSimulateRouterAmount = result
+      estimatedPrice = swapSimulateResult.priceAfterSwap
     }
-  } catch (error) {
-    console.log(error)
+  } catch (err: any) {
+    errorMessage = err.toString()
+    console.log(err.toString())
   }
   if (swapSimulateRouterAmount.lt(new BN(0))) {
     return {
       amountOut: new BN(0),
       poolIndex: poolIndex,
-      simulateSuccess: false,
-      AmountOutWithFee: new BN(0)
+      AmountOutWithFee: new BN(0),
+      estimatedPriceAfterSwap: new BN(0),
+      error: errorMessage
     }
   }
   return {
     amountOut: swapSimulateRouterAmount,
     poolIndex: poolIndex,
-    simulateSuccess: true,
-    AmountOutWithFee: resaultWithFee
+    AmountOutWithFee: resultWithFee,
+    estimatedPriceAfterSwap: estimatedPrice,
+    error: ''
   }
 }
 

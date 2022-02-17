@@ -4,25 +4,27 @@ import { colors, typography } from '@static/theme'
 export const useStyles = makeStyles(() => ({
   wrapper: {
     width: '100%',
-    borderRadius: 5,
-    backgroundColor: colors.invariant.componentIn1
+    borderRadius: 13,
+    backgroundColor: colors.invariant.componentBcg,
+    marginBottom: 32
   }
 }))
 
 export const useTabsStyles = makeStyles(() => ({
   root: {
     overflow: 'visible',
-    padding: 8,
-    height: 28,
-    minHeight: 28
+    height: 36,
+    minHeight: 36,
+    margin: '4px 4px',
+    borderRadius: 10
   },
   indicator: {
-    height: 28,
-    borderRadius: 3,
-    backgroundColor: colors.invariant.componentOut2
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: colors.invariant.light
   },
   scrollable: {
-    overflow: 'visible'
+    overflow: 'hidden'
   },
   flexContainer: {
     justifyContent: 'space-between'
@@ -33,18 +35,28 @@ export const useSingleTabStyles = makeStyles(() => ({
   root: {
     zIndex: 1,
     textTransform: 'none',
-    ...typography.body2,
-    height: 28,
-    minHeight: 28,
-    color: colors.invariant.componentOut3,
+    ...typography.body3,
+    height: 36,
+    minHeight: 36,
+    color: colors.invariant.light,
     paddingInline: 0,
+    minWidth: 50,
+    width: 50,
+    marginRight: '7px',
 
     '&:hover': {
-      color: colors.invariant.lightInfoText
+      color: colors.invariant.lightHover,
+      backgroundColor: colors.invariant.light,
+      height: 36,
+      borderRadius: 10
+    },
+
+    '&:last-of-type': {
+      marginRight: 0
     }
   },
   selected: {
-    ...typography.body1,
+    ...typography.heading4,
     color: colors.white.main,
     transition: 'color 300ms',
 
