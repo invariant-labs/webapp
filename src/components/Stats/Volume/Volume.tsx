@@ -34,17 +34,15 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
     )
   }
 
-  const converToUnix = data
-    .map(el => {
-      const unix = el.timeStamp
-      const date = new Date(unix)
-      const hours = date.getHours()
+  const converToUnix = data.map(el => {
+    const unix = el.timeStamp
+    const date = new Date(unix)
+    const hours = date.getHours()
 
-      const convertedHour = hours >= 13 ? `${hours - 12}PM` : `${hours}AM`
+    const convertedHour = hours >= 13 ? `${hours - 12}PM` : `${hours}AM`
 
-      return { ...el, timeStamp: convertedHour }
-    })
-    .filter(({ timeStamp }) => timeStamp !== '0AM')
+    return { ...el, timeStamp: convertedHour }
+  })
 
   const sortedByTimeStamp = converToUnix.reduce((map, { timeStamp, value }) => {
     if (!map.has(timeStamp)) return map.set(timeStamp, [value])
@@ -62,7 +60,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
   const barDataContent = cutArray(convertedArray, 3)
 
   const barData: Array<{ timeStamp: string; [key: number]: number }> = barDataContent.map(el => {
-    const timeStamp = el.map(({ timeStamp }) => timeStamp)[0]
+    const timeStamp = el[0].timeStamp
 
     const concatValues = concatArray(el.map(({ value }) => value))
 
