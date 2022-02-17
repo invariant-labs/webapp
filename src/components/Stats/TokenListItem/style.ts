@@ -5,7 +5,7 @@ export const useStyles = makeStyles(() => ({
   container: {
     display: 'grid',
     gridTemplateColumns: '5% 35% 17.5% 12.5% 15% 15%',
-    padding: '18px 0',
+    padding: '18px 0 ',
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`
   },
@@ -30,6 +30,7 @@ export const useStyles = makeStyles(() => ({
       borderRadius: '50%'
     }
   },
+
   tokenSymbol: {
     color: colors.invariant.textGrey,
     fontWeight: 400
