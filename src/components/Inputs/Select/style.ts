@@ -1,37 +1,44 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors } from '@static/theme'
+import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
+    posiiton: 'relative',
+    width: 'auto',
     textTransform: 'none',
     boxShadow: 'none',
-    borderRadius: 3,
-    fontSize: 16,
-    minWidth: 80,
-    backgroundColor: '#34303B',
-    padding: '2px 10px',
+    borderRadius: 12,
+    height: 36,
+    minWidth: 'auto',
+    fontFamily: 'Mukta',
+    backgroundColor: colors.invariant.light,
+    ...typography.body3,
+    padding: 15,
+
+    filter: 'brightness(0.8)',
+
     '&:hover': {
-      backgroundColor: colors.invariant.componentOut3
+      filter: 'brightness(1)',
+      backgroundColor: colors.invariant.light
     },
+
     [theme.breakpoints.down('xs')]: {
-      minWidth: 90
+      minWidth: 'auto'
     }
   },
   tokenName: {
     position: 'relative',
-    top: 1
+    top: 1,
+    color: colors.white.main
   },
   icon: {
-    minWidth: 18,
-    height: 18,
-    marginRight: 6,
+    marginRight: 5,
+    minWidth: 20,
+    height: 20,
     borderRadius: '100%'
   },
   endIcon: {
-    width: '2em',
-    marginLeft: 6,
-    '& svg': {
-    }
+    marginLeft: 9
   }
 }))
 

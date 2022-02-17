@@ -3,32 +3,27 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   button: {
-    height: 40,
-    borderRadius: 5,
+    height: 44,
+    borderRadius: 16,
     textAlign: 'center',
     textTransform: 'none',
     ...typography.body1,
-    backgroundColor: colors.invariant.accent1,
-    color: colors.white.main,
+    color: colors.invariant.componentBcg,
+    background: colors.invariant.pinkLinearGradient,
     transition: 'background-color 0ms ease, box-shadow 150ms linear',
     position: 'relative',
     overflow: 'hidden',
     zIndex: 4,
-
-    '&:hover': {
-      backgroundColor: `${colors.invariant.accent1}`,
-      boxShadow: `0px 0px 15px ${colors.invariant.accent1}`
-    },
-
     '&:disabled': {
-      backgroundColor: colors.invariant.componentOut3,
-      color: colors.invariant.background2
+      background: colors.invariant.light,
+      color: colors.invariant.componentBcg
     }
   },
+
   buttonRelease: {
-    backgroundColor: colors.invariant.componentOut4,
+    background: `${colors.invariant.component} !important`,
     '&:hover': {
-      backgroundColor: `${colors.invariant.componentOut4} !important`
+      background: `${colors.invariant.component} !important`
     }
   },
   '@keyframes slide-start': {
@@ -69,7 +64,7 @@ const useStyles = makeStyles(() => ({
     zIndex: 1,
     top: 0,
     left: '-100%',
-    backgroundColor: colors.invariant.accent1
+    backgroundColor: colors.invariant.pink
   },
   backgroundRelease: {
     position: 'absolute',
@@ -81,7 +76,7 @@ const useStyles = makeStyles(() => ({
     top: '0%',
     animation: '$slide-start .4s ease-in',
     transition: 'all .2s',
-    backgroundColor: colors.invariant.accent1
+    backgroundColor: colors.invariant.pink
   },
   backgroundApprovedWithSuccess: {
     top: 0,
@@ -114,7 +109,7 @@ const useStyles = makeStyles(() => ({
   },
   btnStories: {
     padding: '8px 14px',
-    backgroundColor: colors.invariant.accent2,
+    backgroundColor: colors.invariant.green,
     border: 'none',
     margin: '10px 14px 10px 0'
   }

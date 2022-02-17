@@ -3,23 +3,28 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   endIcon: {
-    color: colors.invariant.componentOut3,
+    color: colors.invariant.light,
     position: 'absolute',
-    right: 2,
+    right: 12,
     width: 20
   },
   input: {
+    boxSizing: 'border-box',
     ...typography.body2,
     outline: 'none',
-    height: 25,
     width: 88,
-    backgroundColor: colors.invariant.componentOut2,
-    color: colors.invariant.lightInfoText,
-    borderRadius: 3,
+    height: 28,
     fontFamily: 'Mukta',
-    cursor: 'pointer',
     lineHeight: 16,
-    border: '1px solid #4D4757'
+    fontSize: 16,
+    backgroundColor: colors.invariant.black,
+    color: colors.invariant.light,
+    border: `1px solid ${colors.invariant.light}`,
+    borderRadius: 8,
+    cursor: 'pointer',
+    '&::placeholder': {
+      color: colors.invariant.light
+    }
   }
 }))
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import { CustomLayerProps } from '@nivo/line'
 import { colors } from '@static/theme'
 import React, { useState, useEffect, useRef, PointerEventHandler, TouchEventHandler } from 'react'
@@ -112,16 +111,16 @@ export const Handle: React.FC<HandleProps> = ({
         <MinHandle
           height={height}
           x={!isReversed() ? currentPosition - 37 : currentPosition}
-          fill={disabled ? colors.invariant.componentOut3 : colors.invariant.accent1}
-          textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
+          fill={disabled ? colors.invariant.light : colors.invariant.pink}
+          textColor={disabled ? colors.invariant.lightHover : colors.invariant.componentBcg}
           isReversed={isReversed()}
         />
       ) : (
         <MaxHandle
           height={height}
           x={!isReversed() ? currentPosition : currentPosition - 37}
-          fill={disabled ? colors.invariant.componentOut3 : colors.invariant.accent1}
-          textColor={disabled ? colors.invariant.lightInfoText : colors.white.main}
+          fill={disabled ? colors.invariant.light : colors.invariant.pink}
+          textColor={disabled ? colors.invariant.lightHover : colors.invariant.componentBcg}
           isReversed={isReversed()}
         />
       )}

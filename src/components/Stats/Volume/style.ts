@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/styles'
-import { newTypography, colors } from '@static/theme'
+import { typography, colors } from '@static/theme'
 
 export const useStyles = makeStyles(() => ({
   container: {
@@ -16,14 +16,14 @@ export const useStyles = makeStyles(() => ({
   },
   volumeHeader: {
     color: colors.invariant.textGrey,
-    ...newTypography.body2
+    ...typography.body2
   },
   volumePercentContainer: {
     display: 'flex',
     alignItems: 'center'
   },
   volumePercentHeader: {
-    ...newTypography.heading1,
+    ...typography.heading1,
     letterSpacing: '-0.03em',
     color: colors.white.main,
     marginTop: 5
@@ -43,7 +43,7 @@ export const useStyles = makeStyles(() => ({
   },
 
   volumeStatusHeader: {
-    ...newTypography.body1,
+    ...typography.body1,
     filter: 'brightness(1.2)'
   },
   barContainer: {

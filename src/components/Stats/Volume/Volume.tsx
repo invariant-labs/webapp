@@ -5,6 +5,7 @@ import { ResponsiveBar } from '@nivo/bar'
 import classNames from 'classnames'
 import { useStyles } from './style'
 import { colors } from '@static/theme'
+import tooltip from './ToolTip'
 
 interface StatsInterface {
   percentVolume: number
@@ -13,31 +14,6 @@ interface StatsInterface {
     timeStamp: number
     value: number
   }>
-}
-
-interface toolTipInterface {
-  data: {
-    timeStamp: string
-  }
-  color: string
-}
-
-const tooltip = ({ data, color }: toolTipInterface) => {
-  return (
-    <div
-      style={{
-        background: colors.white.main,
-        width: 100,
-        height: 25,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10,
-        color
-      }}>
-      <strong>{data.timeStamp}</strong>
-    </div>
-  )
 }
 
 const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
