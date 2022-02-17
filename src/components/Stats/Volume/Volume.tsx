@@ -5,7 +5,6 @@ import { ResponsiveBar } from '@nivo/bar'
 import classNames from 'classnames'
 import { useStyles } from './style'
 import { colors } from '@static/theme'
-import tooltip from './ToolTip'
 
 interface StatsInterface {
   percentVolume: number
@@ -122,7 +121,6 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
           margin={{ top: 30, bottom: 30, left: 0 }}
           data={barData}
           keys={uniqueKeys}
-          tooltip={tooltip}
           indexBy='timeStamp'
           labelSkipWidth={2}
           labelSkipHeight={12}
@@ -131,6 +129,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
           enableLabel={false}
           enableGridY={false}
           innerPadding={2}
+          isInteractive={false}
           padding={0.03}
           indexScale={{ type: 'band', round: true }}
           colors={colors.invariant.pink}
