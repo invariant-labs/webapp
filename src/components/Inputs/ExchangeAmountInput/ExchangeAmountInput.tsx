@@ -6,7 +6,7 @@ import Select from '@components/Inputs/Select/Select'
 import useStyles from './style'
 import { SwapToken } from '@components/Swap/Swap'
 import { BN } from '@project-serum/anchor'
-import { formatNumbers, showPrefix } from '@consts/utils'
+import { formatNumbers, FormatNumberThreshold, showPrefix } from '@consts/utils'
 
 interface IProps {
   setValue: (value: string) => void
@@ -41,6 +41,41 @@ export const AmountInput: React.FC<IProps> = ({
 }) => {
   const classes = useStyles()
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const thresholds: FormatNumberThreshold[] = [
+    {
+      value: 10,
+      decimals: decimal
+    },
+    {
+      value: 100,
+      decimals: 4
+    },
+    {
+      value: 1000,
+      decimals: 2
+    },
+    {
+      value: 10000,
+      decimals: 1
+    },
+    {
+      value: 1000000,
+      decimals: 2,
+      divider: 1000
+    },
+    {
+      value: 1000000000,
+      decimals: 2,
+      divider: 1000000
+    },
+    {
+      value: Infinity,
+      decimals: 2,
+      divider: 1000000000
+    }
+  ]
+
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const onlyNumbersRegex = /^\d*\.?\d*$/
     const trimDecimal = `^\\d*\\.?\\d{0,${decimal}}$`
@@ -102,7 +137,7 @@ export const AmountInput: React.FC<IProps> = ({
       <Box className={classes.container}>
         <Grid className={classes.BalanceContainer}>
           <Typography className={classes.BalanceTypography}>
-            Balance: {balance ? formatNumbers()(balance.toString()) : 0}
+            Balance: {balance ? formatNumbers(thresholds)(balance.toString()) : 0}
             {showPrefix(Number(balance))} {tokenIcon}
           </Typography>
           <OutlinedButton
