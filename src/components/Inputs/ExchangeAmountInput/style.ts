@@ -43,10 +43,10 @@ const useStyles = makeStyles(() => ({
   },
   BalanceContainer: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    cursor: 'pointer'
   },
   BalanceTypography: {
-    cursor: 'default !important',
     color: colors.invariant.lightGrey,
     ...typography.caption3,
     paddingLeft: 15,
