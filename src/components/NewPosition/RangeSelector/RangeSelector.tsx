@@ -145,9 +145,24 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const reversePlot = () => {
     changeRangeHandler(rightRange, leftRange)
-    const pom = 1 / plotMin
-    setPlotMin(1 / plotMax)
-    setPlotMax(pom)
+    if (plotMin > 0) {
+      const pom = 1 / plotMin
+      setPlotMin(1 / plotMax)
+      setPlotMax(pom)
+    } else {
+      const initSideDist = Math.abs(
+        midPrice.x -
+          calcPrice(
+            Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 15),
+            isXtoY,
+            xDecimal,
+            yDecimal
+          )
+      )
+
+      setPlotMin(midPrice.x - initSideDist)
+      setPlotMax(midPrice.x + initSideDist)
+    }
   }
 
   useEffect(() => {

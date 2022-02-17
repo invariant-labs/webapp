@@ -112,15 +112,17 @@ const defaultPrefixConfig: PrefixConfig = {
 }
 
 export const showPrefix = (nr: number, config: PrefixConfig = defaultPrefixConfig): string => {
-  if (typeof config.B !== 'undefined' && nr >= config.B) {
+  const abs = Math.abs(nr)
+
+  if (typeof config.B !== 'undefined' && abs >= config.B) {
     return 'B'
   }
 
-  if (typeof config.M !== 'undefined' && nr >= config.M) {
+  if (typeof config.M !== 'undefined' && abs >= config.M) {
     return 'M'
   }
 
-  if (typeof config.K !== 'undefined' && nr >= config.K) {
+  if (typeof config.K !== 'undefined' && abs >= config.K) {
     return 'K'
   }
 
@@ -167,9 +169,14 @@ export const formatNumbers =
   (thresholds: FormatNumberThreshold[] = defaultThresholds) =>
   (value: string) => {
     const num = Number(value)
-    const threshold = thresholds.sort((a, b) => a.value - b.value).find(thr => num < thr.value)
+    const abs = Math.abs(num)
+    const threshold = thresholds.sort((a, b) => a.value - b.value).find(thr => abs < thr.value)
 
-    return threshold ? (num / (threshold.divider ?? 1)).toFixed(threshold.decimals) : value
+    const formatted = threshold
+      ? (abs / (threshold.divider ?? 1)).toFixed(threshold.decimals)
+      : value
+
+    return num < 0 && threshold ? '-' + formatted : formatted
   }
 
 export const nearestPriceIndex = (price: number, data: Array<{ x: number; y: number }>) => {

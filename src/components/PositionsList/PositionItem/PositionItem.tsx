@@ -5,6 +5,7 @@ import { formatNumbers, FormatNumberThreshold, PrefixConfig, showPrefix } from '
 import { theme } from '@static/theme'
 import SwapList from '@static/svg/swap-list.svg'
 import useStyle from './style'
+import classNames from 'classnames'
 
 const shorterThresholds: FormatNumberThreshold[] = [
   {
@@ -94,7 +95,7 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
         justifyContent='space-between'
         alignItems='center'
         wrap='nowrap'>
-        <Typography className={classes.infoText}>Value</Typography>
+        <Typography className={classNames(classes.infoText, classes.label)}>Value</Typography>
         <Grid className={classes.infoCenter} container item justifyContent='center'>
           <Typography className={classes.greenText}>
             {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(
@@ -190,7 +191,9 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
           justifyContent='space-between'
           alignItems='center'
           wrap='nowrap'>
-          <Typography className={classes.greenText}>MIN - MAX</Typography>
+          <Typography className={classNames(classes.greenText, classes.label)}>
+            MIN - MAX
+          </Typography>
           <Grid className={classes.infoCenter} container item justifyContent='center'>
             <Typography className={classes.infoText}>
               {formatNumbers(isXs || isDesktop ? minMaxShorterThresholds : undefined)(

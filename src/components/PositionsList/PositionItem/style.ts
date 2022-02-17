@@ -6,6 +6,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.component,
     borderRadius: 24,
     padding: 20,
+    flexWrap: 'nowrap',
 
     '&:not(:last-child)': {
       marginBottom: 20
@@ -16,7 +17,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('md')]: {
-      padding: 16
+      padding: 16,
+      flexWrap: 'wrap'
     }
   },
   icons: {
@@ -57,13 +59,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   names: {
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
     ...typography.heading2,
     color: colors.invariant.text,
     lineHeight: '40px',
     whiteSpace: 'nowrap',
+    width: 180,
     [theme.breakpoints.down('md')]: {
       ...typography.heading3,
-      lineHeight: '33px'
+      lineHeight: '33px',
+      width: 'unset'
     },
 
     [theme.breakpoints.down('xs')]: {
@@ -74,12 +80,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   infoText: {
     ...typography.body1,
     color: colors.invariant.lightGrey,
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden'
   },
   greenText: {
     ...typography.body1,
     color: colors.invariant.green,
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden'
   },
   liquidity: {
     background: colors.invariant.light,
@@ -155,6 +165,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   iconsAndNames: {
     width: 'fit-content'
+  },
+  label: {
+    marginRight: 2
   }
 }))
 

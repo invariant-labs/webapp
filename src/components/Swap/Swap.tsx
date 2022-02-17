@@ -253,14 +253,14 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   const getStateMessage = () => {
+    if (throttle || isWaitingForNewPool) {
+      return 'Loading'
+    }
     if (walletStatus !== Status.Initialized) {
       return 'Connect a wallet'
     }
     if (tokenFromIndex === null || tokenToIndex === null) {
       return 'Select a token'
-    }
-    if (throttle || isWaitingForNewPool) {
-      return 'Loading'
     }
     if (!getIsXToY(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
       return 'No route found'
