@@ -454,11 +454,9 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
         <Box
           className={classNames(
-            walletConnected
-              ? transactionStatus && getStateMessage() !== 'Insufficient balance'
-                ? classes.ableToHover
-                : exchangeRateStatus && classes.walletDisabled
-              : classes.hideBalance
+            classes.exchangeRoot,
+            classes.transactionBottom,
+            lockAnimation && `${classes.exchangeRoot} ${classes.amountInputUp} `
           )}>
           <ExchangeAmountInput
             value={amountTo}
@@ -509,11 +507,13 @@ export const Swap: React.FC<ISwap> = ({
         <Box className={classes.transactionDetails}>
           <button
             onClick={handleOpenTransactionDetails}
-            className={
-              transactionStatus && getStateMessage() !== 'Insufficient balance'
-                ? classes.HiddenTransactionButton
-                : classes.transactionDetailDisabled
-            }>
+            className={classNames(
+              walletConnected
+                ? transactionStatus && getStateMessage() !== 'Insufficient balance'
+                  ? classes.ableToHover
+                  : exchangeRateStatus && classes.walletDisabled
+                : classes.hideBalance
+            )}>
             <Grid className={classes.transactionDetailsWrapper}>
               <Typography className={classes.transactionDetailsHeader}>
                 See transaction details
