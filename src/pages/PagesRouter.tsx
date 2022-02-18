@@ -28,7 +28,11 @@ export const PagesRouter: React.FC = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (signerStatus === Status.Initialized && walletStatus === WalletStatus.Initialized && allPools.length > 0) {
+    if (
+      signerStatus === Status.Initialized &&
+      walletStatus === WalletStatus.Initialized &&
+      allPools.length > 0
+    ) {
       dispatch(actions.getPositionsList())
     }
   }, [signerStatus, walletStatus, allPools.length])
