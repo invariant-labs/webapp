@@ -595,6 +595,7 @@ export const Swap: React.FC<ISwap> = ({
             connected={walletConnected}
             onDisconnect={onDisconnectWallet}
             activeWallet={walletConnected ? typeOfWallet : undefined}
+            className={classes.connectWalletButton}
           />
         ) : (
           <AnimatedButton

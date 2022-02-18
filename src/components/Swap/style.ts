@@ -91,6 +91,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 16,
     width: 500
   },
+
+  connectWalletButton: {
+    height: '48px !important',
+    borderRadius: '16px !important'
+  },
   tokenComponentTextContainer: {
     display: 'flex',
     justifyContent: 'space-between',
