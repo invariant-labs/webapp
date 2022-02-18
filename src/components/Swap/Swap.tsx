@@ -454,9 +454,11 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
         <Box
           className={classNames(
-            classes.exchangeRoot,
-            classes.transactionBottom,
-            lockAnimation && `${classes.exchangeRoot} ${classes.amountInputUp} `
+            walletConnected
+              ? transactionStatus && getStateMessage() !== 'Insufficient balance'
+                ? classes.ableToHover
+                : exchangeRateStatus && classes.walletDisabled
+              : classes.hideBalance
           )}>
           <ExchangeAmountInput
             value={amountTo}
