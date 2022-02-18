@@ -135,7 +135,7 @@ export const AmountInput: React.FC<IProps> = ({
         />
       </Grid>
       <Box className={classes.container}>
-        <Grid className={classes.BalanceContainer}>
+        <Grid className={classes.BalanceContainer} onClick={onMaxClick}>
           <Typography className={classes.BalanceTypography}>
             Balance: {balance ? formatNumbers(thresholds)(balance.toString()) : 0}
             {showPrefix(Number(balance))} {tokenIcon}
