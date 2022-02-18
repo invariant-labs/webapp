@@ -359,6 +359,7 @@ export const Swap: React.FC<ISwap> = ({
   const exchangeRateStatus = walletConnected && tokenFromIndex !== null && tokenToIndex !== null
 
   const transactionStatus = exchangeRateStatus ? amountTo !== '' && amountFrom !== '' : false
+
   return (
     <Grid container className={classes.swapWrapper}>
       <Grid container className={classes.header}>
@@ -507,7 +508,7 @@ export const Swap: React.FC<ISwap> = ({
           <button
             onClick={handleOpenTransactionDetails}
             className={
-              transactionStatus
+              transactionStatus && getStateMessage() !== 'Insufficient balance'
                 ? classes.HiddenTransactionButton
                 : classes.transactionDetailDisabled
             }>
