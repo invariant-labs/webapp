@@ -360,6 +360,13 @@ export const Swap: React.FC<ISwap> = ({
 
   const transactionStatus = exchangeRateStatus ? amountTo !== '' && amountFrom !== '' : false
 
+  const hideResult =
+    tokenFromIndex !== null &&
+    tokenToIndex !== null &&
+    getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate
+
+  const lockResult = hideResult === 0 || hideResult === Infinity
+
   return (
     <Grid container className={classes.swapWrapper}>
       <Grid container className={classes.header}>
@@ -504,7 +511,6 @@ export const Swap: React.FC<ISwap> = ({
             disabled={tokenFromIndex === null}
           />
         </Box>
-
         <Box className={classes.transactionDetails}>
           <button
             onClick={handleOpenTransactionDetails}
@@ -534,6 +540,8 @@ export const Swap: React.FC<ISwap> = ({
               walletConnected
                 ? transactionStatus && getStateMessage() !== 'Insufficient balance'
                   ? classes.ableToHover
+                  : lockResult
+                  ? classes.hideBalance
                   : exchangeRateStatus && classes.walletDisabled
                 : classes.hideBalance
             )}>
@@ -553,13 +561,15 @@ export const Swap: React.FC<ISwap> = ({
               />
             ) : null}
 
-            {exchangeRateStatus ? (
-              <ExchangeRate
-                tokenFromSymbol={tokens[tokenFromIndex].symbol}
-                tokenToSymbol={tokens[tokenToIndex].symbol}
-                amount={getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate}
-                tokenToDecimals={tokens[tokenToIndex].decimals}
-                loading={getStateMessage() === 'Loading'}></ExchangeRate>
+            {!lockResult ? (
+              exchangeRateStatus ? (
+                <ExchangeRate
+                  tokenFromSymbol={tokens[tokenFromIndex].symbol}
+                  tokenToSymbol={tokens[tokenToIndex].symbol}
+                  amount={getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate}
+                  tokenToDecimals={tokens[tokenToIndex].decimals}
+                  loading={getStateMessage() === 'Loading'}></ExchangeRate>
+              ) : null
             ) : null}
           </Box>
         </Box>

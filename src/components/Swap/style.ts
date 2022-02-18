@@ -59,7 +59,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 'auto',
     color: colors.invariant.lightHover,
     '&:hover': {
-      filter: 'brightness(1.15)'
+      filter: 'brightness(1.15)',
+      cursor: 'pointer'
     }
   },
 
@@ -201,7 +202,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 
   ableToHover: {
-    cursor: 'pointer',
     border: `1px solid ${colors.invariant.light}`,
     borderRadius: '10px',
     padding: '5px 15px 5px 15px'
