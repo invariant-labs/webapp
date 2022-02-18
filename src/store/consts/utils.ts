@@ -557,7 +557,7 @@ export const handleSimulate = async (
   let poolIndex: number = 0
   let isXtoY = false
   let resultWithFee: BN = new BN(0)
-  let resault
+  let result
   let estimatedPrice: BN = new BN(0)
 
   if (amount.eq(new BN(0))) {
@@ -599,15 +599,14 @@ export const handleSimulate = async (
         throw new Error('Too large amount')
       }
       if (!byAmountIn) {
-        resault = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
+        result = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
       } else {
-        resault = swapSimulateResult.accumulatedAmountOut
+        result = swapSimulateResult.accumulatedAmountOut
       }
-      if (swapSimulateRouterAmount.lt(resault)) {
-        console.log(resault.toString())
-        resultWithFee = resault.add(swapSimulateResult.accumulatedFee)
+      if (swapSimulateRouterAmount.lt(result)) {
+        resultWithFee = result.add(swapSimulateResult.accumulatedFee)
         poolIndex = findPoolIndex(pool.address, pools)
-        swapSimulateRouterAmount = resault
+        swapSimulateRouterAmount = result
         estimatedPrice = swapSimulateResult.priceAfterSwap
       }
     } catch (err: any) {
