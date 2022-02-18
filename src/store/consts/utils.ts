@@ -569,48 +569,52 @@ export const handleSimulate = async (
       error: errorMessage
     }
   }
-  isXtoY = fromToken.equals(filteredPools[0].tokenX)
 
-  const tickMap = await marketProgram.getTickmap(
-    new Pair(filteredPools[0].tokenX, filteredPools[0].tokenY, { fee: filteredPools[0].fee.v })
-  )
-  const ticks: Map<number, Tick> = new Map<number, Tick>()
-  for (const tick of poolTicks[filteredPools[0].address.toString()]) {
-    ticks.set(tick.index, tick)
+  for (const pool of filteredPools) {
+    isXtoY = fromToken.equals(pool.tokenX)
+    const tickMap = await marketProgram.getTickmap(
+      new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v })
+    )
+
+    const ticks: Map<number, Tick> = new Map<number, Tick>()
+    for (const tick of poolTicks[pool.address.toString()]) {
+      ticks.set(tick.index, tick)
+    }
+
+    try {
+      const swapSimulateResult = await simulateSwap({
+        xToY: isXtoY,
+        byAmountIn: byAmountIn,
+        swapAmount: amount,
+        priceLimit: {
+          v: isXtoY ? new BN(1) : new BN('340282366920938463463374607431768211455')
+        },
+        slippage: slippage,
+        pool: pool,
+        ticks: ticks,
+        tickmap: tickMap
+      })
+
+      if (swapSimulateResult.amountPerTick.length >= 8) {
+        throw new Error('Too large amount')
+      }
+      if (!byAmountIn) {
+        resault = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
+      } else {
+        resault = swapSimulateResult.accumulatedAmountOut
+      }
+      if (swapSimulateRouterAmount.lt(resault)) {
+        console.log(resault.toString())
+        resultWithFee = resault.add(swapSimulateResult.accumulatedFee)
+        poolIndex = findPoolIndex(pool.address, pools)
+        swapSimulateRouterAmount = resault
+        estimatedPrice = swapSimulateResult.priceAfterSwap
+      }
+    } catch (err: any) {
+      errorMessage = err.toString()
+      console.log(err.toString())
+    }
   }
-  try {
-    const swapSimulateResult = await simulateSwap({
-      xToY: isXtoY,
-      byAmountIn: byAmountIn,
-      swapAmount: amount,
-      priceLimit: {
-        v: isXtoY ? new BN(1) : new BN('340282366920938463463374607431768211455')
-      },
-      slippage: slippage,
-      pool: filteredPools[0],
-      ticks: ticks,
-      tickmap: tickMap
-    })
-
-    if (swapSimulateResult.amountPerTick.length >= 8) {
-      throw new Error('Too large amount')
-    }
-    if (!byAmountIn) {
-      resault = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
-    } else {
-      resault = swapSimulateResult.accumulatedAmountOut
-    }
-    if (swapSimulateRouterAmount.lt(resault)) {
-      resultWithFee = resault.add(swapSimulateResult.accumulatedFee)
-      poolIndex = findPoolIndex(filteredPools[0].address, pools)
-      swapSimulateRouterAmount = resault
-      estimatedPrice = swapSimulateResult.priceAfterSwap
-    }
-  } catch (err: any) {
-    errorMessage = err.toString()
-    console.log(err.toString())
-  }
-
   if (swapSimulateRouterAmount.lt(new BN(0))) {
     return {
       amountOut: new BN(0),
@@ -620,6 +624,7 @@ export const handleSimulate = async (
       error: errorMessage
     }
   }
+
   return {
     amountOut: swapSimulateRouterAmount,
     poolIndex: poolIndex,
