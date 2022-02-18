@@ -147,7 +147,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
               return (
                 <Grid
                   className={classes.tokenItem}
-                  style={{ width: 'calc(100% - 16px)' }}
+                  style={{ width: 'calc(100% - 8px)' }}
                   alignItems='center'
                   wrap='nowrap'
                   onClick={() => {
