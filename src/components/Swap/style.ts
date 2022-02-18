@@ -57,8 +57,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: 'none !important',
     border: 'none',
     minWidth: 'auto',
-    color: `${colors.invariant.lightHover}`,
-    '& :hover': {
+    color: colors.invariant.lightHover,
+    '&:hover': {
       filter: 'brightness(1.15)'
     }
   },
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: 'none !important',
     border: 'none',
     minWidth: 'auto',
-    color: `${colors.invariant.lightHover}`
+    color: colors.invariant.lightHover
   },
 
   settingsIconBtn: {
@@ -168,11 +168,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '10px',
     alignItems: 'center'
   },
+
   transactionDetailsHeader: {
     ...typography.caption4,
     lineHeight: '24px',
     whiteSpace: 'nowrap',
     pointerEvents: 'none'
+  },
+
+  walletDisabled: {
+    padding: '5px 15px 5px 15px',
+    border: `1px solid ${colors.invariant.light}`,
+    borderRadius: '10px'
   },
 
   swapButton: {
@@ -189,6 +196,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 10
   },
 
+  hideBalance: {
+    padding: '5px 15px 5px 15px'
+  },
+
+  ableToHover: {
+    cursor: 'pointer',
+    border: `1px solid ${colors.invariant.light}`,
+    borderRadius: '10px',
+    padding: '5px 15px 5px 15px'
+  },
+
   transactionBottom: {
     marginTop: 10
   },
@@ -198,11 +216,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '10px',
     padding: '5px 15px 5px 15px',
     color: colors.invariant.lightGrey
-  },
-
-  walletDisabled: {
-    border: 'none',
-    padding: '5px 15px 5px 15px'
   },
 
   buttonSelectDisabled: {
