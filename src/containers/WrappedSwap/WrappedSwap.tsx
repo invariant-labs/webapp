@@ -4,11 +4,8 @@ import { swap as swapPool } from '@selectors/swap'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@reducers/swap'
-import { balance, status, swapTokens, address } from '@selectors/solanaWallet'
+import { balance, status, swapTokens } from '@selectors/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
-import { actions as walletActions } from '@reducers/solanaWallet'
-import { WalletType } from '@web3/wallet'
-import { DEFAULT_PUBLICKEY } from '@consts/static'
 
 export const WrappedSwap = () => {
   const dispatch = useDispatch()
@@ -20,8 +17,6 @@ export const WrappedSwap = () => {
   const tokensList = useSelector(swapTokens)
   const { success, inProgress } = useSelector(swapPool)
   const fullSolBalance = useSelector(balance)
-  const walletAddress = useSelector(address)
-  const [typeOfWallet, setTypeOfWallet] = useState<WalletType>(WalletType.PHANTOM)
 
   const [progress, setProgress] = useState<ProgressState>('none')
 
@@ -73,17 +68,6 @@ export const WrappedSwap = () => {
           })
         )
       }}
-      onWalletSelect={wallet => {
-        if (walletAddress.equals(DEFAULT_PUBLICKEY)) {
-          setTypeOfWallet(wallet)
-        }
-        dispatch(walletActions.connect(wallet))
-      }}
-      onDisconnectWallet={() => {
-        dispatch(walletActions.disconnect())
-      }}
-      address={walletAddress}
-      typeOfWallet={typeOfWallet}
       walletStatus={walletStatus}
       tokens={tokensList}
       pools={allPools}
