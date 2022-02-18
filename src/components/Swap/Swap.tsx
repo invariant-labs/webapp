@@ -504,16 +504,15 @@ export const Swap: React.FC<ISwap> = ({
             disabled={tokenFromIndex === null}
           />
         </Box>
+
         <Box className={classes.transactionDetails}>
           <button
             onClick={handleOpenTransactionDetails}
-            className={classNames(
-              walletConnected
-                ? transactionStatus && getStateMessage() !== 'Insufficient balance'
-                  ? classes.ableToHover
-                  : exchangeRateStatus && classes.walletDisabled
-                : classes.hideBalance
-            )}>
+            className={
+              transactionStatus && getStateMessage() !== 'Insufficient balance'
+                ? classes.HiddenTransactionButton
+                : classes.transactionDetailDisabled
+            }>
             <Grid className={classes.transactionDetailsWrapper}>
               <Typography className={classes.transactionDetailsHeader}>
                 See transaction details
@@ -530,7 +529,14 @@ export const Swap: React.FC<ISwap> = ({
               />
             </Grid>
           </button>
-          <Box className={exchangeRateStatus ? classes.transtactionData : classes.walletDisabled}>
+          <Box
+            className={classNames(
+              walletConnected
+                ? transactionStatus && getStateMessage() !== 'Insufficient balance'
+                  ? classes.ableToHover
+                  : exchangeRateStatus && classes.walletDisabled
+                : classes.hideBalance
+            )}>
             {exchangeRateStatus ? (
               <TransactionDetails
                 open={detailsOpen && activeSwapDetails() && getStateMessage() !== 'Loading'}
