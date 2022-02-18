@@ -15,7 +15,7 @@ export interface ISelectModal {
   centered?: boolean
   tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
 
-  onSelect?: (name: string) => void
+  onSelect: (name: string) => void
   className?: string
 }
 export const Select: React.FC<ISelectModal> = ({
@@ -23,7 +23,7 @@ export const Select: React.FC<ISelectModal> = ({
   current,
   centered,
   tokens,
-  onSelect = null,
+  onSelect,
   className
 }) => {
   const classes = useStyles()

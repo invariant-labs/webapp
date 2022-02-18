@@ -26,17 +26,17 @@ interface IProps {
 
 export const AmountInput: React.FC<IProps> = ({
   value,
-  setValue,
+  setValue = () => {},
   error,
   className,
-  decimal,
+  decimal = 0,
   placeholder,
   style,
-  onMaxClick,
-  current,
-  tokens,
-  onSelect,
-  disabled,
+  onMaxClick = () => {},
+  current = null,
+  tokens = [],
+  onSelect = () => {},
+  disabled = false,
   balance
 }) => {
   const classes = useStyles()

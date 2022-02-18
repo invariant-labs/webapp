@@ -26,7 +26,7 @@ const AnimatedButton: React.FC<Props> = ({
   content,
   disabled = false,
   progress,
-  onClick,
+  onClick = () => {},
   className
 }) => {
   const classes = useStyles()

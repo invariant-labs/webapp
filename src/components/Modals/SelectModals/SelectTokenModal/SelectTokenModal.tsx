@@ -15,7 +15,7 @@ export interface ISelectTokenModal {
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
   centered?: boolean
-  onSelect: ((name: string) => void) | null
+  onSelect: (name: string) => void
 }
 
 interface IScroll {
