@@ -151,7 +151,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                   alignItems='center'
                   wrap='nowrap'
                   onClick={() => {
-                    onSelect?.(token.symbol)
+                    onSelect(token.symbol)
                     setValue('')
                     handleClose()
                   }}>

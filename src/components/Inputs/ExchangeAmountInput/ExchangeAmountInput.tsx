@@ -9,34 +9,34 @@ import { BN } from '@project-serum/anchor'
 import { formatNumbers, FormatNumberThreshold, showPrefix } from '@consts/utils'
 
 interface IProps {
-  setValue?: (value: string) => void
+  setValue: (value: string) => void
   value?: string
   error?: string | null
   className?: string
-  decimal?: number
+  decimal: number
   placeholder?: string
   style?: CSSProperties
-  onMaxClick?: () => void
-  current?: SwapToken | null
-  tokens?: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
-  onSelect?: (name: string) => void
-  disabled?: boolean
+  onMaxClick: () => void
+  current: SwapToken | null
+  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
+  onSelect: (name: string) => void
+  disabled: boolean
   balance?: string | undefined
 }
 
 export const AmountInput: React.FC<IProps> = ({
   value,
-  setValue = () => {},
+  setValue,
   error,
   className,
-  decimal = 0,
+  decimal,
   placeholder,
   style,
-  onMaxClick = () => {},
-  current = null,
-  tokens = [],
-  onSelect = () => {},
-  disabled = false,
+  onMaxClick,
+  current,
+  tokens,
+  onSelect,
+  disabled,
   balance
 }) => {
   const classes = useStyles()
@@ -45,7 +45,7 @@ export const AmountInput: React.FC<IProps> = ({
   const thresholds: FormatNumberThreshold[] = [
     {
       value: 10,
-      decimals: decimal || 0
+      decimals: decimal
     },
     {
       value: 100,
@@ -93,7 +93,7 @@ export const AmountInput: React.FC<IProps> = ({
 
       const diff = startValue.length - parsed.length
 
-      setValue?.(parsed)
+      setValue(parsed)
       if (caretPosition !== null && parsed !== startValue) {
         setTimeout(() => {
           if (inputRef.current) {
@@ -103,9 +103,9 @@ export const AmountInput: React.FC<IProps> = ({
         }, 0)
       }
     } else if (!onlyNumbersRegex.test(e.target.value)) {
-      setValue?.('')
+      setValue('')
     } else if (!regex.test(e.target.value)) {
-      setValue?.(e.target.value.slice(0, e.target.value.length - 1))
+      setValue(e.target.value.slice(0, e.target.value.length - 1))
     }
   }
 
@@ -116,9 +116,9 @@ export const AmountInput: React.FC<IProps> = ({
       <Grid container alignItems='center' wrap='nowrap' className={classes.exchangeContainer}>
         <Select
           centered={true}
-          tokens={tokens || []}
+          tokens={tokens}
           onSelect={onSelect}
-          current={current || null}
+          current={current}
           className={classes.select}
         />
         <Input

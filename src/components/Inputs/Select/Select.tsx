@@ -14,10 +14,10 @@ export interface ISelectModal {
   current: SwapToken | null
   centered?: boolean
   tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
-
   onSelect: (name: string) => void
   className?: string
 }
+
 export const Select: React.FC<ISelectModal> = ({
   name = 'Select',
   current,
