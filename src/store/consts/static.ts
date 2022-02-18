@@ -2,7 +2,6 @@ import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { MOCK_TOKENS, Pair } from '@invariant-labs/sdk'
 import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
-import icons from '@static/icons'
 
 declare global {
   interface Window {
@@ -53,12 +52,13 @@ export const MSOL_DEV = {
   logoURI:
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png'
 }
-export const ANA_DEV: Token = {
-  symbol: 'ANA',
-  address: new PublicKey(MOCK_TOKENS.ANA),
+export const BTC_DEV: Token = {
+  symbol: 'BTC',
+  address: new PublicKey(MOCK_TOKENS.BTC),
   decimals: 6,
-  name: 'Nirvana',
-  logoURI: icons.ANA
+  name: 'Wrapped Bitcoin (Sollet)',
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
 }
 export const WSOL_DEV: Token = {
   symbol: 'WSOL',
@@ -67,6 +67,14 @@ export const WSOL_DEV: Token = {
   name: 'Wrapped Solana',
   logoURI:
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
+}
+export const RENDOGE_DEV: Token = {
+  symbol: 'renDOGE',
+  address: new PublicKey(MOCK_TOKENS.REN_DOGE),
+  decimals: 8,
+  name: 'renDOGE',
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png'
 }
 
 enum SolanaNetworks {
@@ -94,7 +102,7 @@ const DEFAULT_PUBLICKEY = new PublicKey(0)
 const MAX_U64 = new BN('18446744073709551615')
 
 export const tokens: Record<NetworkType, Token[]> = {
-  Devnet: [USDC_DEV, USDT_DEV, ANA_DEV, MSOL_DEV],
+  Devnet: [USDC_DEV, USDT_DEV, BTC_DEV, MSOL_DEV],
   Mainnet: [],
   Testnet: [],
   Localnet: []
@@ -112,7 +120,15 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
     new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[0]),
     new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[0]),
     new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[1]),
-    new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[2])
+    new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[2]),
+    new Pair(USDC_DEV.address, RENDOGE_DEV.address, FEE_TIERS[1]),
+    new Pair(USDC_DEV.address, RENDOGE_DEV.address, FEE_TIERS[2]),
+    new Pair(USDC_DEV.address, BTC_DEV.address, FEE_TIERS[1]),
+    new Pair(USDC_DEV.address, BTC_DEV.address, FEE_TIERS[2]),
+    new Pair(USDC_DEV.address, BTC_DEV.address, FEE_TIERS[3]),
+    new Pair(BTC_DEV.address, RENDOGE_DEV.address, FEE_TIERS[1]),
+    new Pair(BTC_DEV.address, RENDOGE_DEV.address, FEE_TIERS[2]),
+    new Pair(BTC_DEV.address, RENDOGE_DEV.address, FEE_TIERS[3])
   ],
   Testnet: [],
   Mainnet: [
@@ -124,7 +140,14 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
 }
 
 export const airdropTokens: Record<NetworkType, PublicKey[]> = {
-  Devnet: [USDC_DEV.address, USDT_DEV.address, SOL_DEV.address, MSOL_DEV.address],
+  Devnet: [
+    USDC_DEV.address,
+    USDT_DEV.address,
+    SOL_DEV.address,
+    MSOL_DEV.address,
+    BTC_DEV.address,
+    RENDOGE_DEV.address
+  ],
   Mainnet: [],
   Testnet: [],
   Localnet: []
@@ -135,7 +158,9 @@ export const airdropQuantities: Record<NetworkType, number[]> = {
     100 * 10 ** USDC_DEV.decimals,
     100 * 10 ** USDT_DEV.decimals,
     10 ** SOL_DEV.decimals,
-    10 ** MSOL_DEV.decimals
+    10 ** MSOL_DEV.decimals,
+    0.0025 * 10 ** BTC_DEV.decimals,
+    700 * 10 ** RENDOGE_DEV.decimals
   ],
   Mainnet: [],
   Testnet: [],
@@ -143,5 +168,7 @@ export const airdropQuantities: Record<NetworkType, number[]> = {
 }
 
 export const WRAPPED_SOL_ADDRESS = 'So11111111111111111111111111111111111111112'
+
+export const WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT = new BN(9200961)
 
 export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, MAINNET_RPCS, NetworkType }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography, Box, Grid, Button, Popover } from '@material-ui/core'
+import { Typography, Box, Grid, Button, Popover, Input } from '@material-ui/core'
 import useStyles from './style'
 
 interface Props {
@@ -21,7 +21,9 @@ const Slippage: React.FC<Props> = ({
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const inputRef = React.useRef<HTMLInputElement>(null)
 
-  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = e => {
     const regex = /^\d*\.?\d*$/
     if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value
@@ -53,7 +55,7 @@ const Slippage: React.FC<Props> = ({
     }
   }
 
-  const checkSlippage: React.ChangeEventHandler<HTMLInputElement> = e => {
+  const checkSlippage: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = e => {
     if (Number(e.target.value) > 50) {
       setSlippTolerance('50.00')
     } else if (Number(e.target.value) < 0 || isNaN(Number(e.target.value))) {
@@ -78,31 +80,43 @@ const Slippage: React.FC<Props> = ({
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'right'
-      }}
-    >
+      }}>
       <Grid container className={classes.detailsWrapper}>
-        <Grid container>
+        <Grid container justifyContent='space-between' style={{ marginBottom: 6 }}>
           <Typography component='h2'>Swap Transaction Settings</Typography>
-          <Button className={classes.selectTokenClose} onClick={handleClose} ></Button>
+          <Button className={classes.selectTokenClose} onClick={handleClose} />
         </Grid>
         <Typography component='p'>Slippage tolerance:</Typography>
         <Box>
-          <input placeholder='1%' className={classes.detailsInfoForm} type={'text'} value={slippTolerance} onChange={(e) => {
-            allowOnlyDigitsAndTrimUnnecessaryZeros(e)
-            checkSlippage(e)
-          }}
-          ref={inputRef}
-          onBlur={() => {
-            setSlippTolerance(Number(slippTolerance).toFixed(2))
-            setSlippage(slippTolerance)
-          }}
+          <Input
+            disableUnderline
+            placeholder='1%'
+            className={classes.detailsInfoForm}
+            type={'text'}
+            value={slippTolerance}
+            onChange={e => {
+              allowOnlyDigitsAndTrimUnnecessaryZeros(e)
+              checkSlippage(e)
+            }}
+            ref={inputRef}
+            onBlur={() => {
+              setSlippTolerance(Number(slippTolerance).toFixed(2))
+              setSlippage(slippTolerance)
+            }}
+            endAdornment={
+              <button
+                className={classes.detailsInfoBtn}
+                onClick={() => {
+                  setSlippTolerance(defaultSlippage)
+                  setSlippage(defaultSlippage)
+                }}>
+                Auto
+              </button>
+            }
+            classes={{
+              input: classes.innerInput
+            }}
           />
-          <button
-            className={classes.detailsInfoBtn}
-            onClick={() => {
-              setSlippTolerance(defaultSlippage)
-              setSlippage(defaultSlippage)
-            }}>Auto</button>
         </Box>
       </Grid>
     </Popover>

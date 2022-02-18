@@ -1,4 +1,4 @@
-import { getScaleFromString } from '@consts/utils'
+import { formatNumbers, FormatNumberThreshold, getScaleFromString, showPrefix } from '@consts/utils'
 import { Button, Grid, Input, Typography } from '@material-ui/core'
 import React, { useRef, CSSProperties } from 'react'
 import useStyles from './style'
@@ -15,6 +15,9 @@ interface IProps {
   blockerInfo?: string
   decimalsLimit: number
   onBlur?: () => void
+  percentageChange?: number
+  usdValue?: number
+  balanceValue?: string
 }
 
 export const DepositAmountInput: React.FC<IProps> = ({
@@ -28,11 +31,48 @@ export const DepositAmountInput: React.FC<IProps> = ({
   blocked = false,
   blockerInfo,
   onBlur,
-  decimalsLimit
+  decimalsLimit,
+  percentageChange,
+  usdValue,
+  balanceValue
 }) => {
   const classes = useStyles()
 
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const thresholds: FormatNumberThreshold[] = [
+    {
+      value: 10,
+      decimals: decimalsLimit
+    },
+    {
+      value: 100,
+      decimals: 4
+    },
+    {
+      value: 1000,
+      decimals: 2
+    },
+    {
+      value: 10000,
+      decimals: 1
+    },
+    {
+      value: 1000000,
+      decimals: 2,
+      divider: 1000
+    },
+    {
+      value: 1000000000,
+      decimals: 2,
+      divider: 1000000
+    },
+    {
+      value: Infinity,
+      decimals: 2,
+      divider: 1000000000
+    }
+  ]
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const regex = /^\d*\.?\d*$/
@@ -75,15 +115,8 @@ export const DepositAmountInput: React.FC<IProps> = ({
 
   return (
     <Grid container className={classes.wrapper} style={style}>
-      <Input
-        inputRef={inputRef}
-        className={classes.root}
-        type={'text'}
-        value={value}
-        disableUnderline={true}
-        placeholder={placeholder}
-        onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-        startAdornment={
+      <div className={classes.root}>
+        <div className={classes.inputContainer}>
           <Grid
             className={classes.currency}
             container
@@ -99,15 +132,76 @@ export const DepositAmountInput: React.FC<IProps> = ({
               <Typography className={classes.noCurrencyText}>Select</Typography>
             )}
           </Grid>
-        }
-        endAdornment={
-          <Button className={classes.maxButton} onClick={onMaxClick}>
-            Max
-          </Button>
-        }
-        onBlur={onBlur}
-      />
+          <Input
+            inputRef={inputRef}
+            type={'text'}
+            value={value}
+            disableUnderline={true}
+            placeholder={placeholder}
+            onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
+            onBlur={onBlur}
+          />
+        </div>
+        <Grid
+          className={classes.balance}
+          container
+          alignItems='center'
+          wrap='nowrap'
+          onClick={onMaxClick}>
+          {
+            <>
+              <Typography className={classes.caption2}>
+                Balance:{' '}
+                {currency
+                  ? `${
+                      balanceValue
+                        ? formatNumbers(thresholds)(balanceValue.toString()) +
+                          showPrefix(Number(balanceValue))
+                        : '0'
+                    } ${currency}`
+                  : '- -'}
+                <Button
+                  className={
+                    currency
+                      ? classes.maxButton
+                      : `${classes.maxButton} ${classes.maxButtonNotActive}`
+                  }
+                  onClick={onMaxClick}>
+                  Max
+                </Button>
+              </Typography>
+            </>
+          }
+        </Grid>
+        <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>
+          {
+            <>
+              {currency && !usdValue ? (
+                <Typography className={classes.noData}>
+                  <div className={classes.noDataIcon}>?</div>No data
+                </Typography>
+              ) : (
+                ''
+              )}
 
+              {currency && usdValue ? (
+                <>
+                  <Typography className={classes.percentage}>{percentageChange}%</Typography>
+                  <Typography className={classes.caption2}>~ ${usdValue}</Typography>
+                </>
+              ) : (
+                ''
+              )}
+
+              {!currency && !usdValue ? (
+                <Typography className={classes.caption2}>-</Typography>
+              ) : (
+                ''
+              )}
+            </>
+          }
+        </Grid>
+      </div>
       {blocked && (
         <>
           <Grid container className={classes.blocker} />

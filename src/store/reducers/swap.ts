@@ -7,15 +7,16 @@ import { PayloadType } from './types'
 
 export interface Swap {
   slippage: Decimal
-  knownPrice: Decimal
+  estimatedPriceAfterSwap: Decimal
   poolIndex: number
   tokenFrom: PublicKey
   tokenTo: PublicKey
-  amount: BN
+  amountIn: BN
   byAmountIn: boolean
   txid?: string
   inProgress?: boolean
   success?: boolean
+  amountOut: BN
 }
 
 export interface Simulate {
@@ -35,12 +36,13 @@ export interface ISwapStore {
 export const defaultState: ISwapStore = {
   swap: {
     slippage: { v: fromFee(new BN(1000)) },
-    knownPrice: { v: new BN(0) },
+    estimatedPriceAfterSwap: { v: new BN(0) },
     poolIndex: 0,
     tokenFrom: DEFAULT_PUBLIC_KEY,
     tokenTo: DEFAULT_PUBLIC_KEY,
-    amount: new BN(0),
-    byAmountIn: false
+    amountIn: new BN(0),
+    byAmountIn: false,
+    amountOut: new BN(0)
   }
 }
 

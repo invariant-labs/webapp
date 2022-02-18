@@ -7,7 +7,8 @@ import {
   calcTicksAmountInRange,
   nearestTickIndex,
   maxSpacingMultiplicity,
-  minSpacingMultiplicity
+  minSpacingMultiplicity,
+  toMaxNumericPlaces
 } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
@@ -28,6 +29,7 @@ export interface IRangeSelector {
   xDecimal: number
   yDecimal: number
   tickSpacing: number
+  currentPairReversed: boolean | null
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -43,7 +45,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   isXtoY,
   xDecimal,
   yDecimal,
-  tickSpacing
+  tickSpacing,
+  currentPairReversed
 }) => {
   const classes = useStyles()
 
@@ -52,6 +55,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
+
+  const [leftInputRounded, setLeftInputRounded] = useState('')
+  const [rightInputRounded, setRightInputRounded] = useState('')
 
   const [plotMin, setPlotMin] = useState(0)
   const [plotMax, setPlotMax] = useState(1)
@@ -84,12 +90,32 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }
 
+  const setLeftInputValues = (val: string) => {
+    setLeftInput(val)
+    setLeftInputRounded(toMaxNumericPlaces(+val, 5))
+  }
+
+  const setRightInputValues = (val: string) => {
+    setRightInput(val)
+    setRightInputRounded(toMaxNumericPlaces(+val, 5))
+  }
+
+  const onLeftInputChange = (val: string) => {
+    setLeftInput(val)
+    setLeftInputRounded(val)
+  }
+
+  const onRightInputChange = (val: string) => {
+    setRightInput(val)
+    setRightInputRounded(val)
+  }
+
   const changeRangeHandler = (left: number, right: number) => {
     setLeftRange(left)
     setRightRange(right)
 
-    setLeftInput(calcPrice(left, isXtoY, xDecimal, yDecimal).toString())
-    setRightInput(calcPrice(right, isXtoY, xDecimal, yDecimal).toString())
+    setLeftInputValues(calcPrice(left, isXtoY, xDecimal, yDecimal).toString())
+    setRightInputValues(calcPrice(right, isXtoY, xDecimal, yDecimal).toString())
 
     onChangeRange(left, right)
   }
@@ -117,9 +143,35 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     setPlotMax(midPrice.x + initSideDist)
   }
 
+  const reversePlot = () => {
+    changeRangeHandler(rightRange, leftRange)
+    if (plotMin > 0) {
+      const pom = 1 / plotMin
+      setPlotMin(1 / plotMax)
+      setPlotMax(pom)
+    } else {
+      const initSideDist = Math.abs(
+        midPrice.x -
+          calcPrice(
+            Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 15),
+            isXtoY,
+            xDecimal,
+            yDecimal
+          )
+      )
+
+      setPlotMin(midPrice.x - initSideDist)
+      setPlotMax(midPrice.x + initSideDist)
+    }
+  }
+
   useEffect(() => {
-    resetPlot()
-  }, [tokenASymbol, tokenBSymbol, fee])
+    if (currentPairReversed === null) {
+      resetPlot()
+    } else {
+      reversePlot()
+    }
+  }, [tokenASymbol, tokenBSymbol, fee, currentPairReversed])
 
   return (
     <Grid container className={classes.wrapper}>
@@ -155,8 +207,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             label='Min price'
             tokenFromSymbol={tokenASymbol}
             tokenToSymbol={tokenBSymbol}
-            currentValue={leftInput}
-            setValue={setLeftInput}
+            currentValue={leftInputRounded}
+            setValue={onLeftInputChange}
             decreaseValue={() => {
               const newLeft = isXtoY
                 ? Math.max(minSpacingMultiplicity(tickSpacing), leftRange - tickSpacing)
@@ -189,8 +241,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             label='Max price'
             tokenFromSymbol={tokenASymbol}
             tokenToSymbol={tokenBSymbol}
-            currentValue={rightInput}
-            setValue={setRightInput}
+            currentValue={rightInputRounded}
+            setValue={onRightInputChange}
             decreaseValue={() => {
               const newRight = isXtoY
                 ? Math.max(rightRange - tickSpacing, leftRange + tickSpacing)
@@ -232,20 +284,13 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             Set full range
           </Button>
         </Grid>
-
-        {blocked && (
-          <>
-            <Grid className={classes.blocker} />
-            <Grid
-              container
-              className={classes.blockedInfoWrapper}
-              justifyContent='center'
-              alignItems='center'>
-              <Typography className={classes.blockedInfo}>{blockerInfo}</Typography>
-            </Grid>
-          </>
-        )}
       </Grid>
+
+      {blocked && (
+        <Grid className={classes.blocker}>
+          <Typography className={classes.blockedInfo}>{blockerInfo}</Typography>
+        </Grid>
+      )}
     </Grid>
   )
 }

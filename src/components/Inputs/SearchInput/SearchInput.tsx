@@ -17,12 +17,12 @@ export const SearchInput: React.FC<ISearchInput> = ({ handleChange, value }) => 
       <InputBase
         type={'text'}
         value={value}
-        className={classes.input}
+        classes={{ input: classes.input }}
         onChange={handleChange}
         placeholder='Search'
         inputProps={{
           style: {
-            padding: '5px 15px 2px 5px'
+            padding: '2px 15px 2px 5px'
           }
         }}
         endAdornment={

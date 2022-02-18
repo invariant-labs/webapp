@@ -12,11 +12,41 @@ storiesOf('buttons/AnimatedButtons', module)
   .add('primary', () => {
     const classes = useStyles()
     const [progress, setProgress] = useState<ProgressState>('none')
-    return <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
-      <AnimateButton content={'Add liquidity'} progress={progress} onClick={() => setProgress('progress')}/>
-      <button className={classes.btnStories} onClick={() => { setProgress('approvedWithSuccess') }}>Approve transaction (success)</button>
-      <button className={classes.btnStories} onClick={() => { setProgress('approvedWithFail') }}>Approve transaction (failes)</button>
-      <button className={classes.btnStories} onClick={() => { setProgress('success') }}>Transaction end(success)</button>
-      <button className={classes.btnStories} onClick={() => { setProgress('failed') }}>Transaction end(failed)</button>
-    </div>
+    return (
+      <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
+        <AnimateButton
+          content={'Add liquidity'}
+          progress={progress}
+          onClick={() => setProgress('progress')}
+        />
+        <button
+          className={classes.btnStories}
+          onClick={() => {
+            setProgress('approvedWithSuccess')
+          }}>
+          Approve transaction (success)
+        </button>
+        <button
+          className={classes.btnStories}
+          onClick={() => {
+            setProgress('approvedWithFail')
+          }}>
+          Approve transaction (failes)
+        </button>
+        <button
+          className={classes.btnStories}
+          onClick={() => {
+            setProgress('success')
+          }}>
+          Transaction end(success)
+        </button>
+        <button
+          className={classes.btnStories}
+          onClick={() => {
+            setProgress('failed')
+          }}>
+          Transaction end(failed)
+        </button>
+      </div>
+    )
   })

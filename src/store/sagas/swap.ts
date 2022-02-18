@@ -18,8 +18,16 @@ export function* handleSwapWithSOL(): Generator {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const networkType = yield* select(network)
-    const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
-      yield* select(swap)
+    const {
+      slippage,
+      tokenFrom,
+      tokenTo,
+      amountIn,
+      estimatedPriceAfterSwap,
+      poolIndex,
+      byAmountIn,
+      amountOut
+    } = yield* select(swap)
 
     const wallet = yield* call(getWallet)
     const tokensAccounts = yield* select(accounts)
@@ -52,7 +60,7 @@ export function* handleSwapWithSOL(): Generator {
       toPubkey: wrappedSolAccount.publicKey,
       lamports:
         allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
-          ? amount.toNumber()
+          ? amountIn.toNumber()
           : 0
     })
 
@@ -71,29 +79,7 @@ export function* handleSwapWithSOL(): Generator {
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
-    const initialSignedTx = yield* call([wallet, wallet.signTransaction], initialTx)
-    initialSignedTx.partialSign(wrappedSolAccount)
-    const initialTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      initialSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
-
-    if (!initialTxid.length) {
-      yield put(swapActions.setSwapSuccess(false))
-
-      return yield put(
-        snackbarsActions.add({
-          message: 'SOL wrapping failed. Please try again.',
-          variant: 'error',
-          persist: false,
-          txid: initialTxid
-        })
-      )
-    }
+    initialTx.partialSign(wrappedSolAccount)
 
     const unwrapIx = Token.createCloseAccountInstruction(
       TOKEN_PROGRAM_ID,
@@ -124,8 +110,8 @@ export function* handleSwapWithSOL(): Generator {
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
       pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,
-      amount: amount,
-      knownPrice: knownPrice,
+      amount: byAmountIn ? amountIn : amountOut,
+      estimatedPriceAfterSwap,
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
       accountY: isXtoY ? toAddress : fromAddress,
@@ -136,7 +122,37 @@ export function* handleSwapWithSOL(): Generator {
     swapTx.recentBlockhash = swapBlockhash.blockhash
     swapTx.feePayer = wallet.publicKey
 
-    const swapSignedTx = yield* call([wallet, wallet.signTransaction], swapTx)
+    const unwrapTx = new Transaction().add(unwrapIx)
+    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
+    unwrapTx.feePayer = wallet.publicKey
+
+    const [initialSignedTx, swapSignedTx, unwrapSignedTx] = yield* call(
+      [wallet, wallet.signAllTransactions],
+      [initialTx, swapTx, unwrapTx]
+    )
+    const initialTxid = yield* call(
+      sendAndConfirmRawTransaction,
+      connection,
+      initialSignedTx.serialize(),
+      {
+        skipPreflight: false
+      }
+    )
+
+    if (!initialTxid.length) {
+      yield put(swapActions.setSwapSuccess(false))
+
+      return yield put(
+        snackbarsActions.add({
+          message: 'SOL wrapping failed. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: initialTxid
+        })
+      )
+    }
+
     const swapTxid = yield* call(
       sendAndConfirmRawTransaction,
       connection,
@@ -160,12 +176,6 @@ export function* handleSwapWithSOL(): Generator {
       )
     }
 
-    const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
-    unwrapTx.feePayer = wallet.publicKey
-
-    const unwrapSignedTx = yield* call([wallet, wallet.signTransaction], unwrapTx)
     const unwrapTxid = yield* call(
       sendAndConfirmRawTransaction,
       connection,
@@ -218,8 +228,16 @@ export function* handleSwap(): Generator {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const networkType = yield* select(network)
-    const { slippage, tokenFrom, tokenTo, amount, knownPrice, poolIndex, byAmountIn } =
-      yield* select(swap)
+    const {
+      slippage,
+      tokenFrom,
+      tokenTo,
+      amountIn,
+      estimatedPriceAfterSwap,
+      poolIndex,
+      byAmountIn,
+      amountOut
+    } = yield* select(swap)
 
     if (
       allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
@@ -258,8 +276,8 @@ export function* handleSwap(): Generator {
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
       pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
       xToY: isXtoY,
-      amount: amount,
-      knownPrice: knownPrice,
+      amount: byAmountIn ? amountIn : amountOut,
+      estimatedPriceAfterSwap,
       slippage: slippage,
       accountX: isXtoY ? fromAddress : toAddress,
       accountY: isXtoY ? toAddress : fromAddress,

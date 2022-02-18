@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import * as R from 'remeda'
 import { network, status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
 import { actions } from '@reducers/pools'
@@ -19,11 +18,9 @@ const MarketEvents = () => {
   const networkType = useSelector(network)
   const allPools = useSelector(pools)
   const poolTicksArray = useSelector(poolTicks)
-  const [subscribedTick, _setSubscribeTick] = useState<
-    Array<{ fromToken: string; toToken: string; indexPool: number }>
-  >([])
+  const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
   useEffect(() => {
-    if (networkStatus !== Status.Initialized || !marketProgram) {
+    if (networkStatus !== Status.Initialized) {
       return
     }
     const connectEvents = () => {
@@ -32,7 +29,7 @@ const MarketEvents = () => {
     }
 
     connectEvents()
-  }, [dispatch, networkStatus, marketProgram])
+  }, [dispatch, networkStatus])
 
   useEffect(() => {
     if (networkStatus !== Status.Initialized || !marketProgram) {
@@ -66,55 +63,48 @@ const MarketEvents = () => {
     }
     const connectEvents = async () => {
       if (tokenFrom && tokenTo) {
-        allPools.forEach((pool, indexPool) => {
-          if (
-            subscribedTick.findIndex(
-              e =>
-                ((e.fromToken === tokenFrom.toString() && e.toToken === tokenTo.toString()) ||
-                  (e.toToken === tokenFrom.toString() && e.fromToken === tokenTo.toString())) &&
-                e.indexPool === indexPool
-            ) !== -1
-          ) {
+        Object.keys(poolTicksArray).forEach(address => {
+          if (subscribedTick.has(address)) {
             return
           }
-          subscribedTick.push({
-            fromToken: pool.tokenX.toString(),
-            toToken: pool.tokenY.toString(),
-            indexPool
+          subscribedTick.add(address)
+          const pool = allPools.find(pool => {
+            return pool.address.toString() === address
           })
-          R.forEachObj(poolTicksArray, tick => {
-            tick.forEach(singleTick => {
-              marketProgram
-                .onTickChange(
-                  new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
-                  singleTick.index,
-                  tickObject => {
-                    dispatch(
-                      actions.updateTicks({
-                        poolIndex: indexPool.toString(),
-                        index: singleTick.index,
-                        tick: tickObject
-                      })
-                    )
-                  }
-                )
-                .then(() => {})
-                .catch(() => {})
-            })
+          if (typeof pool === 'undefined') {
+            return
+          }
+          poolTicksArray[address].forEach(singleTick => {
+            marketProgram
+              .onTickChange(
+                new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
+                singleTick.index,
+                tickObject => {
+                  dispatch(
+                    actions.updateTicks({
+                      address: address,
+                      index: singleTick.index,
+                      tick: tickObject
+                    })
+                  )
+                }
+              )
+              .then(() => {})
+              .catch(() => {})
           })
         })
       }
     }
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     connectEvents()
-  }, [networkStatus, marketProgram, Object.values(allPools).length])
+  }, [networkStatus, marketProgram, Object.values(poolTicksArray).length])
 
   useEffect(() => {
     if (tokenFrom && tokenTo) {
       const pools = findPairs(tokenFrom, tokenTo, allPools)
 
       pools.forEach(pool => {
-        // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         marketProgram.getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v })).then(res => {
           dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
         })

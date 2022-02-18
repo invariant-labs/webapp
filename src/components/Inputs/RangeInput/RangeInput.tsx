@@ -33,7 +33,7 @@ export const RangeInput: React.FC<IRangeInput> = ({
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const regex = /^\d*\.?\d*$/
     if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value
@@ -68,11 +68,23 @@ export const RangeInput: React.FC<IRangeInput> = ({
 
   return (
     <Grid className={className} style={style} container direction='column' alignItems='center'>
-      <Grid className={classes.data} container direction='row' justifyContent='space-between' alignItems='center'>
+      <Grid
+        className={classes.data}
+        container
+        direction='row'
+        justifyContent='space-between'
+        alignItems='center'>
         <Typography className={classes.label}>{label}</Typography>
-        <Typography className={classes.tokens}>{tokenToSymbol} per {tokenFromSymbol}</Typography>
+        <Typography className={classes.tokens}>
+          {tokenToSymbol} per {tokenFromSymbol}
+        </Typography>
       </Grid>
-      <Grid className={classes.controls} container direction='row' alignItems='center' wrap='nowrap'>
+      <Grid
+        className={classes.controls}
+        container
+        direction='row'
+        alignItems='center'
+        wrap='nowrap'>
         <Button className={classes.button} onClick={decreaseValue} disableRipple>
           <Remove className={classes.buttonIcon} />
         </Button>

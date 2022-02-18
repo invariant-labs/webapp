@@ -4,10 +4,13 @@ import CustomScrollbar from '../CustomScrollbar'
 import searchIcon from '@static/svg/lupa.svg'
 import { FixedSizeList as List } from 'react-window'
 import useStyles from '../style'
+import { printBN } from '@consts/utils'
+import { BN } from '@project-serum/anchor'
+// import icons from '@static/icons'
 
 export interface ISelectTokenModal {
-  tokens: Array<{ symbol: string; name: string; logoURI: string }>
-  // commonTokens: Array<{ symbol: string, name: string, logoURI: string }>
+  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
+  // commonTokens: Array<{ symbol: string; name: string; logoURI: string }>
   open: boolean
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
@@ -94,11 +97,10 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
         vertical: 'top',
         horizontal: 'center'
       }}>
-      {' '}
       <Grid container className={classes.container}>
-        <Button className={classes.selectTokenClose} onClick={handleClose}></Button>
         <Grid className={classes.selectTokenHeader}>
           <Typography component='h1'>Select a token</Typography>
+          <Button className={classes.selectTokenClose} onClick={handleClose}></Button>
         </Grid>
         <Grid container className={classes.inputControl}>
           <input
@@ -111,15 +113,16 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
         </Grid>
         {/* TODO: create a common tokens list */}
         {/* <Grid container className={classes.commonTokens}>
-          <Typography component='h2' className={classes.commonTokensHeader}>Commonly used</Typography>
           <Grid className={classes.commonTokensList}>
-            {commonTokens.map((token) => (
-              <Box className={classes.commonTokenItem}
+            {commonTokens.map(token => (
+              <Box
+                className={classes.commonTokenItem}
                 key={token.symbol}
-                onClick={() => {
-                  onSelect(tokenIndex(token ? token.symbol : ''))
-                  handleClose()
-                }} >
+                // onClick={() => {
+                //   onSelect(tokenIndex(token ? token.symbol : ''))
+                //   handleClose()
+                // }}
+              >
                 <CardMedia
                   className={classes.commonTokenIcon}
                   image={icons[token.symbol] ?? icons.USDT}
@@ -137,16 +140,14 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
             itemCount={filteredTokens.length}
             outerElementType={CustomScrollbarsVirtualList}
             outerRef={outerRef}>
-            {({ index, style }) => {
+            {({ index }) => {
               const token = filteredTokens[index]
+              const tokenBalance = printBN(token.balance, token.decimals)
+
               return (
                 <Grid
-                  container
                   className={classes.tokenItem}
-                  style={{
-                    ...style,
-                    width: 'calc(100% - 16px)'
-                  }}
+                  style={{ width: 'calc(100% - 16px)' }}
                   alignItems='center'
                   wrap='nowrap'
                   onClick={() => {
@@ -154,13 +155,14 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                     setValue('')
                     handleClose()
                   }}>
-                  <Grid item>
-                    <CardMedia className={classes.tokenIcon} image={token.logoURI} />{' '}
-                  </Grid>
-                  <Grid item>
+                  <CardMedia className={classes.tokenIcon} image={token.logoURI} />{' '}
+                  <Grid container className={classes.tokenContainer}>
                     <Typography className={classes.tokenName}>{token.symbol}</Typography>
                     <Typography className={classes.tokenDescrpiption}>{token.name}</Typography>
                   </Grid>
+                  <Typography className={classes.tokenBalanceStatus}>
+                    Balance: {tokenBalance}
+                  </Typography>
                 </Grid>
               )
             }}
