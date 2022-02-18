@@ -4,7 +4,6 @@ import { colors, typography } from '@static/theme'
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     position: 'relative',
-    minWidth: 416,
     marginBottom: 16,
 
     [theme.breakpoints.down('sm')]: {
