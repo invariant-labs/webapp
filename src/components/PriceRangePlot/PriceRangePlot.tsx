@@ -9,7 +9,7 @@ import ZoomInIcon from '@static/svg/zoom-in-icon.svg'
 import ZoomOutIcon from '@static/svg/zoom-out-icon.svg'
 import Brush from './Brush/Brush'
 import useStyles from './style'
-import { nearestPriceIndex, nearestTickIndex } from '@consts/utils'
+import { nearestTickIndex } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 
 export type TickPlotPositionData = Omit<PlotTickData, 'y'>
