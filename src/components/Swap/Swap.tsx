@@ -135,9 +135,6 @@ export const Swap: React.FC<ISwap> = ({
     }
   }, [tokenFromIndex, tokenToIndex])
   useEffect(() => {
-    if (getStateMessage() === 'No route found') {
-      setAmountTo('')
-    }
     if (inputRef === inputTarget.FROM) {
       simulateWithTimeout()
     }
@@ -211,6 +208,10 @@ export const Swap: React.FC<ISwap> = ({
   const setSimulateAmount = async () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       const pair = findPairs(tokens[tokenFromIndex].address, tokens[tokenToIndex].address, pools)[0]
+      if (typeof pair === 'undefined') {
+        setAmountTo('')
+        return
+      }
       const indexPool = Object.keys(poolTicks).filter(key => {
         return key === pair.address.toString()
       })
