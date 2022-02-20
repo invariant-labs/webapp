@@ -149,9 +149,10 @@ export const AmountInput: React.FC<IProps> = ({
             disabled={disabled && isNaN(Number(balance)) ? disabled : isNaN(Number(balance))}
           />
         </Grid>
+        {/* TODO: temporarily commented; uncomment when fetching usd value will be done
         <Typography className={classes.noData}>
           <div className={classes.noDataIcon}>?</div>No data
-        </Typography>
+        </Typography> */}
       </Box>
     </>
   )

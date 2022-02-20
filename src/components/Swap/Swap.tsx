@@ -309,7 +309,8 @@ export const Swap: React.FC<ISwap> = ({
     return (
       getStateMessage() === 'Insufficient balance' ||
       getStateMessage() === 'Swap tokens' ||
-      getStateMessage() === 'Loading'
+      getStateMessage() === 'Loading' ||
+      getStateMessage() === 'Connect a wallet'
     )
   }
   const setSlippage = (slippage: string): void => {
@@ -526,7 +527,7 @@ export const Swap: React.FC<ISwap> = ({
               decimal={tokens[tokenToIndex].decimals}
             />
           ) : null}
-          {exchangeRateStatus && hasShowRateMessage() ? (
+          {tokenFromIndex !== null && tokenToIndex !== null && hasShowRateMessage() && amountFrom !== '' && amountTo !== '' ? (
             <Box className={classes.ableToHover}>
               <ExchangeRate
                 tokenFromSymbol={tokens[tokenFromIndex].symbol}
@@ -538,7 +539,7 @@ export const Swap: React.FC<ISwap> = ({
             </Box>
           ) : null}
         </Box>
-        {walletStatus !== Status.Initialized ? (
+        {walletStatus !== Status.Initialized && getStateMessage() !== 'Loading' ? (
           <ChangeWalletButton
             name='Connect wallet'
             options={[
