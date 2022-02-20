@@ -4,7 +4,7 @@ import CustomScrollbar from '../CustomScrollbar'
 import searchIcon from '@static/svg/lupa.svg'
 import { FixedSizeList as List } from 'react-window'
 import useStyles from '../style'
-import { printBN } from '@consts/utils'
+import { formatNumbers, FormatNumberThreshold, printBN, showPrefix } from '@consts/utils'
 import { BN } from '@project-serum/anchor'
 // import icons from '@static/icons'
 
@@ -80,6 +80,40 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value.toLowerCase())
   }
+
+  const thresholds = (decimals: number): FormatNumberThreshold[] => [
+    {
+      value: 10,
+      decimals
+    },
+    {
+      value: 100,
+      decimals: 4
+    },
+    {
+      value: 1000,
+      decimals: 2
+    },
+    {
+      value: 10000,
+      decimals: 1
+    },
+    {
+      value: 1000000,
+      decimals: 2,
+      divider: 1000
+    },
+    {
+      value: 1000000000,
+      decimals: 2,
+      divider: 1000000
+    },
+    {
+      value: Infinity,
+      decimals: 2,
+      divider: 1000000000
+    }
+  ]
 
   return (
     <Popover
@@ -161,7 +195,8 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                     <Typography className={classes.tokenDescrpiption}>{token.name}</Typography>
                   </Grid>
                   <Typography className={classes.tokenBalanceStatus}>
-                    Balance: {tokenBalance}
+                    Balance: {formatNumbers(thresholds(token.decimals))(tokenBalance)}
+                    {showPrefix(Number(tokenBalance))}
                   </Typography>
                 </Grid>
               )
