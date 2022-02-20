@@ -88,7 +88,7 @@ export const Swap: React.FC<ISwap> = ({
   poolTicks,
   fullSolBalance,
   onWalletSelect,
-  onDisconnectWallet,
+  onDisconnectWallet
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -346,11 +346,15 @@ export const Swap: React.FC<ISwap> = ({
     lockAnimation && setTimeout(() => setLockAnimation(false), 305)
   }, [lockAnimation])
 
-  const exchangeRateStatus = walletStatus === Status.Initialized && tokenFromIndex !== null && tokenToIndex !== null
+  const exchangeRateStatus =
+    walletStatus === Status.Initialized && tokenFromIndex !== null && tokenToIndex !== null
 
   const transactionStatus = exchangeRateStatus ? amountTo !== '' && amountFrom !== '' : false
 
-  const swapRate = tokenFromIndex === null || tokenToIndex === null ? 0 : getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate
+  const swapRate =
+    tokenFromIndex === null || tokenToIndex === null
+      ? 0
+      : getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate
 
   return (
     <Grid container className={classes.swapWrapper}>
@@ -512,32 +516,31 @@ export const Swap: React.FC<ISwap> = ({
             </Grid>
           </button>
           {exchangeRateStatus && getStateMessage() === 'Swap tokens' ? (
-              <TransactionDetails
-                open={detailsOpen}
-                fee={{
-                  v: pools[simulateResult.poolIndex].fee.v
-                }}
-                exchangeRate={{
-                  val: swapRate,
-                  symbol: tokens[tokenToIndex].symbol
-                }}
-                anchorTransaction={anchorTransaction}
-                handleCloseTransactionDetails={handleCloseTransactionDetails}
-                decimal={tokens[tokenToIndex].decimals}
-              />
-            ) : null}
-            {exchangeRateStatus && hasShowRateMessage() ? (
-              <Box
-              className={classes.ableToHover}>
+            <TransactionDetails
+              open={detailsOpen}
+              fee={{
+                v: pools[simulateResult.poolIndex].fee.v
+              }}
+              exchangeRate={{
+                val: swapRate,
+                symbol: tokens[tokenToIndex].symbol
+              }}
+              anchorTransaction={anchorTransaction}
+              handleCloseTransactionDetails={handleCloseTransactionDetails}
+              decimal={tokens[tokenToIndex].decimals}
+            />
+          ) : null}
+          {exchangeRateStatus && hasShowRateMessage() ? (
+            <Box className={classes.ableToHover}>
               <ExchangeRate
                 tokenFromSymbol={tokens[tokenFromIndex].symbol}
                 tokenToSymbol={tokens[tokenToIndex].symbol}
                 amount={swapRate}
                 tokenToDecimals={tokens[tokenToIndex].decimals}
                 loading={getStateMessage() === 'Loading'}
-                />
-                </Box>
-            ) : null}
+              />
+            </Box>
+          ) : null}
         </Box>
         {walletStatus !== Status.Initialized ? (
           <ChangeWalletButton
