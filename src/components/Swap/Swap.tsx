@@ -71,7 +71,6 @@ export interface ISwap {
   ) => void
   onSetPair: (tokenFrom: PublicKey, tokenTo: PublicKey) => void
   progress: ProgressState
-  poolInit: boolean
   poolTicks: { [x: string]: Tick[] }
   onWalletSelect: (wallet: WalletType) => void
   onDisconnectWallet: () => void
@@ -83,7 +82,6 @@ export const Swap: React.FC<ISwap> = ({
   onSwap,
   onSetPair,
   progress,
-  poolInit,
   poolTicks,
   onWalletSelect,
   onDisconnectWallet
@@ -265,7 +263,7 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   const getStateMessage = () => {
-    if (!poolInit || throttle) {
+    if (tokenFromIndex !== null && tokenToIndex !== null && throttle) {
       return 'Loading'
     }
     if (walletStatus !== Status.Initialized) {
@@ -520,8 +518,8 @@ export const Swap: React.FC<ISwap> = ({
           {tokenFromIndex !== null &&
           tokenToIndex !== null &&
           hasShowRateMessage() &&
-          amountFrom !== '' &&
-          amountTo !== '' ? (
+          (getStateMessage() === 'Loading' ||
+            (swapRate !== 0 && swapRate !== Infinity && !isNaN(swapRate))) ? (
             <>
               <TransactionDetails
                 open={detailsOpen}
