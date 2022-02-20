@@ -16,6 +16,7 @@ export interface ISelectTokenModal {
   anchorEl: HTMLButtonElement | null
   centered?: boolean
   onSelect: (name: string) => void
+  hideBalances?: boolean
 }
 
 interface IScroll {
@@ -60,7 +61,8 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   handleClose,
   anchorEl,
   centered = false,
-  onSelect
+  onSelect,
+  hideBalances = false
 }) => {
   const classes = useStyles()
   const [value, setValue] = useState<string>('')
@@ -194,10 +196,12 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                     <Typography className={classes.tokenName}>{token.symbol}</Typography>
                     <Typography className={classes.tokenDescrpiption}>{token.name}</Typography>
                   </Grid>
-                  <Typography className={classes.tokenBalanceStatus}>
-                    Balance: {formatNumbers(thresholds(token.decimals))(tokenBalance)}
-                    {showPrefix(Number(tokenBalance))}
-                  </Typography>
+                  {!hideBalances ? (
+                    <Typography className={classes.tokenBalanceStatus}>
+                      Balance: {formatNumbers(thresholds(token.decimals))(tokenBalance)}
+                      {showPrefix(Number(tokenBalance))}
+                    </Typography>
+                  ) : null}
                 </Grid>
               )
             }}

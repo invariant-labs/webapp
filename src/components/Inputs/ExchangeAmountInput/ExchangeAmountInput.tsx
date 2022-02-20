@@ -21,7 +21,8 @@ interface IProps {
   tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
   onSelect: (name: string) => void
   disabled: boolean
-  balance?: string | undefined
+  balance?: string
+  hideBalancesInModal?: boolean
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -37,7 +38,8 @@ export const AmountInput: React.FC<IProps> = ({
   tokens,
   onSelect,
   disabled,
-  balance
+  balance,
+  hideBalancesInModal = false
 }) => {
   const classes = useStyles()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -120,6 +122,7 @@ export const AmountInput: React.FC<IProps> = ({
           onSelect={onSelect}
           current={current}
           className={classes.select}
+          hideBalancesInModal={hideBalancesInModal}
         />
         <Input
           inputRef={inputRef}

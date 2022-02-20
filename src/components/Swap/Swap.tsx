@@ -410,6 +410,7 @@ export const Swap: React.FC<ISwap> = ({
               )
             }}
             disabled={tokenFromIndex === null}
+            hideBalancesInModal={walletStatus !== Status.Initialized}
           />
         </Box>
         <Box className={classes.tokenComponentTextContainer}>
@@ -486,6 +487,7 @@ export const Swap: React.FC<ISwap> = ({
               )
             }}
             disabled={tokenFromIndex === null}
+            hideBalancesInModal={walletStatus !== Status.Initialized}
           />
         </Box>
         <Box className={classes.transactionDetails}>
