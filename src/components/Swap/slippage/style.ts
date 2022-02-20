@@ -19,12 +19,13 @@ const useStyles = makeStyles(() => ({
     '& h2': {
       ...typography.heading4,
       paddingBottom: 10
-    },
-    '& p': {
-      ...typography.body2,
-      color: colors.invariant.lightHover,
-      marginBottom: 8
     }
+  },
+
+  label: {
+    ...typography.body2,
+    color: colors.invariant.lightHover,
+    marginBottom: 8
   },
 
   selectTokenClose: {
@@ -79,6 +80,12 @@ const useStyles = makeStyles(() => ({
       boxShadow:
         '0px 3px 1px -2px rgba(43, 193, 144, 0.2),0px 1px 2px 0px rgba(45, 168, 128, 0.14),0px 0px 5px 7px rgba(59, 183, 142, 0.12)'
     }
+  },
+  info: {
+    ...typography.caption2,
+    color: colors.white.main,
+    marginTop: 10,
+    textAlign: 'justify'
   }
 }))
 
