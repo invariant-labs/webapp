@@ -137,7 +137,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       !tokensB.find(token => token.symbol === tokens[tokenAIndex].symbol)
     ) {
       const indexB = tokensB.length
-        ? tokens.findIndex(token => token.symbol === tokensB[0].symbol)
+        ? tokens.findIndex(token => token.symbol === tokens[tokenBIndex].symbol)
         : null
       setTokenBIndex(indexB)
       setPositionTokens(tokenAIndex, indexB, feeTierIndex)
