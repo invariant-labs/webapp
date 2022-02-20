@@ -168,9 +168,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     backgroundColor: colors.invariant.light,
-    marginTop: '10px',
-    marginBottom: '10px',
-    padding: '5px 15px 5px 15px',
+    margin: '16px 0 ',
+    padding: '5px 15px',
     borderRadius: '10px',
     alignItems: 'center'
   },
