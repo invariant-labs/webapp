@@ -95,7 +95,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       return []
     }
 
-    const rangeData = data.filter(tick => tick.x <= leftRange.x)
+    let rangeData: Array<{ x: number; y: number }> = data.filter(tick => tick.x <= leftRange.x)
+    const outData: Array<{ x: number; y: number }> = data.filter(tick => tick.x < plotMin)
 
     if (!rangeData.length) {
       return []
@@ -104,17 +105,20 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     if (rangeData[rangeData.length - 1].x < leftRange.x) {
       rangeData.push({
         x: leftRange.x,
-        y: rangeData[rangeData.length - 1].y,
-        index: leftRange.index
+        y: rangeData[rangeData.length - 1].y
       })
     }
 
-    return pointsOmitter(
-      rangeData.slice(
-        Math.max(0, nearestPriceIndex(plotMin, rangeData) - 5),
-        Math.min(rangeData.length, nearestPriceIndex(plotMax, rangeData) + 5)
-      )
-    )
+    rangeData = rangeData.slice(outData.length, rangeData.length)
+
+    if (rangeData[0].x > plotMin) {
+      rangeData.unshift({
+        x: plotMin,
+        y: outData.length > 0 ? outData[outData.length - 1].y : 0
+      })
+    }
+
+    return pointsOmitter(rangeData)
   }, [disabled, leftRange, data, plotMin, plotMax, pointsOmitter])
 
   const currentRange = useMemo(() => {
@@ -132,34 +136,32 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     }
 
     const lessThan = data.filter(tick => tick.x <= leftRange.x).length
-    const rangeData = data.filter(tick => tick.x >= leftRange.x && tick.x <= rightRange.x)
+    const rangeData: Array<{ x: number; y: number }> = data.filter(
+      tick => tick.x >= leftRange.x && tick.x <= rightRange.x
+    )
 
     if (!rangeData.length) {
       rangeData.push({
         x: leftRange.x,
-        y: data[lessThan - 1].y,
-        index: leftRange.index
+        y: data[lessThan - 1].y
       })
 
       rangeData.push({
         x: rightRange.x,
-        y: data[lessThan - 1].y,
-        index: rightRange.index
+        y: data[lessThan - 1].y
       })
     } else {
       if (rangeData[0].x > leftRange.x) {
         rangeData.unshift({
           x: leftRange.x,
-          y: rangeData[0].y,
-          index: leftRange.index
+          y: rangeData[0].y
         })
       }
 
       if (rangeData[rangeData.length - 1].x < rightRange.x) {
         rangeData.push({
           x: rightRange.x,
-          y: rangeData[rangeData.length - 1].y,
-          index: rightRange.index
+          y: rangeData[rangeData.length - 1].y
         })
       }
     }
@@ -177,7 +179,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       return []
     }
 
-    const rangeData = data.filter(tick => tick.x >= rightRange.x)
+    let rangeData: Array<{ x: number; y: number }> = data.filter(tick => tick.x >= rightRange.x)
+    const outData: Array<{ x: number; y: number }> = data.filter(tick => tick.x > plotMax)
 
     if (!rangeData.length) {
       return []
@@ -186,17 +189,20 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     if (rangeData[0].x > rightRange.x) {
       rangeData.unshift({
         x: rightRange.x,
-        y: rangeData[0].y,
-        index: rightRange.index
+        y: rangeData[0].y
       })
     }
 
-    return pointsOmitter(
-      rangeData.slice(
-        Math.max(0, nearestPriceIndex(plotMin, rangeData) - 5),
-        Math.min(rangeData.length, nearestPriceIndex(plotMax, rangeData) + 5)
-      )
-    )
+    rangeData = rangeData.slice(0, rangeData.length - outData.length)
+
+    if (rangeData[rangeData.length - 1].x < plotMax) {
+      rangeData.push({
+        x: plotMax,
+        y: rangeData[rangeData.length - 1].y
+      })
+    }
+
+    return pointsOmitter(rangeData)
   }, [disabled, data, rightRange, plotMin, plotMax, pointsOmitter])
 
   const currentLayer: Layer = ({ innerWidth, innerHeight }) => {
