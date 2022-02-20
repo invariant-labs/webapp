@@ -56,7 +56,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   HiddenTransactionButton: {
     background: 'none !important',
     border: 'none',
-    minWidth: 'auto'
+    minWidth: 'auto',
+    color: colors.invariant.lightHover,
+    '&:hover': {
+      filter: 'brightness(1.15)',
+      cursor: 'pointer'
+    }
+  },
+
+  transactionDetailDisabled: {
+    background: 'none !important',
+    border: 'none',
+    minWidth: 'auto',
+    color: colors.invariant.lightHover
   },
 
   settingsIconBtn: {
@@ -78,6 +90,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: 22,
     paddingTop: 16,
     width: 500
+  },
+
+  connectWalletButton: {
+    height: '48px !important',
+    borderRadius: '16px !important',
+    width: '100%'
   },
   tokenComponentTextContainer: {
     display: 'flex',
@@ -145,10 +163,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('xs')]: {
       justifyContent: 'center'
-    },
-
-    '& :hover , & :hover > p , & :hover > div ': {
-      filter: 'brightness(1.2)'
     }
   },
   transactionDetailsWrapper: {
@@ -158,17 +172,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '16px 0 ',
     padding: '5px 15px',
     borderRadius: '10px',
-    alignItems: 'center',
-
-    '&:hover $transactionDetailsInfo': {
-      opacity: 1
-    }
+    alignItems: 'center'
   },
+
   transactionDetailsHeader: {
-    color: colors.invariant.lightGrey,
     ...typography.caption4,
     lineHeight: '24px',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    pointerEvents: 'none'
   },
 
   swapButton: {
@@ -185,6 +196,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 10
   },
 
+  hideBalance: {
+    padding: '5px 15px 5px 15px'
+  },
+
+  ableToHover: {
+    border: `1px solid ${colors.invariant.light}`,
+    borderRadius: '10px',
+    padding: '5px 15px 5px 15px'
+  },
+
   transactionBottom: {
     marginTop: 10
   },
@@ -195,6 +216,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '5px 15px 5px 15px',
     color: colors.invariant.lightGrey
   },
+
   buttonSelectDisabled: {
     background: `${colors.invariant.pinkLinearGradient} !important`,
 
@@ -214,9 +236,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         '0px 3px 1px -2px rgba(43, 193, 144, 0.2),0px 1px 2px 0px rgba(45, 168, 128, 0.14),0px 0px 5px 7px rgba(59, 183, 142, 0.12)'
     }
   },
-  noData: {
-    ...typography.caption4,
-    lineHeight: '24px'
+  infoIcon: {
+    width: 10,
+    height: 10,
+    marginLeft: 4,
+    filter: 'brightness(0.8)',
+    pointerEvents: 'none'
   }
 }))
 
