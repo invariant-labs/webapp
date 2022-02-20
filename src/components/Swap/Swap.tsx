@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { printBN, printBNtoBN, handleSimulate, findPairIndex, findPairs } from '@consts/utils'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
-import { Grid, Typography, Box, CardMedia, Button, useMediaQuery } from '@material-ui/core'
+import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
 import Slippage from '@components/Swap/slippage/Slippage'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import TransactionDetails from '@components/Swap/transactionDetails/TransactionDetails'
@@ -137,7 +137,6 @@ export const Swap: React.FC<ISwap> = ({
   useEffect(() => {
     if (getStateMessage() === 'No route found') {
       setAmountTo('')
-      setAmountFrom('')
     }
     if (inputRef === inputTarget.FROM) {
       simulateWithTimeout()
@@ -403,7 +402,7 @@ export const Swap: React.FC<ISwap> = ({
             }}
             placeholder={`0.${'0'.repeat(6)}`}
             onMaxClick={() => {
-              if (tokenToIndex !== null && tokenFromIndex !== null) {
+              if (tokenFromIndex !== null) {
                 setInputRef(inputTarget.FROM)
                 setAmountFrom(
                   printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
@@ -469,11 +468,6 @@ export const Swap: React.FC<ISwap> = ({
             key={tokenToIndex?.toString()}
             className={classes.amountInput}
             decimal={tokenToIndex !== null ? tokens[tokenToIndex].decimals : 6}
-            style={
-              {
-                // transform: swap !== null ? (swap ? 'translateY(0px)' : 'translateY(0px)') : ''
-              }
-            }
             setValue={value => {
               if (value.match(/^\d*\.?\d*$/)) {
                 setAmountTo(value)
@@ -482,7 +476,8 @@ export const Swap: React.FC<ISwap> = ({
             }}
             placeholder={`0.${'0'.repeat(6)}`}
             onMaxClick={() => {
-              if (tokenToIndex !== null && tokenFromIndex !== null) {
+              if (tokenFromIndex !== null) {
+                setInputRef(inputTarget.FROM)
                 setAmountFrom(
                   printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
                 )
