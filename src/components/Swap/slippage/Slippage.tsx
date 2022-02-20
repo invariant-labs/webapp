@@ -119,8 +119,8 @@ const Slippage: React.FC<Props> = ({
           />
         </Box>
         <Typography className={classes.info}>
-          Slippage tolerance value is the pricing difference between the price at the confirmation time
-          and the actual price of the transaction users are willing to accept when swapping.
+          Slippage tolerance value is the pricing difference between the price at the confirmation
+          time and the actual price of the transaction users are willing to accept when swapping.
         </Typography>
       </Grid>
     </Popover>
