@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { printBN, printBNtoBN, handleSimulate, findPairIndex, findPairs } from '@consts/utils'
@@ -22,7 +22,6 @@ import { PoolWithAddress } from '@reducers/pools'
 import ExchangeRate from './ExchangeRate/ExchangeRate'
 import classNames from 'classnames'
 import ChangeWalletButton from '@components/HeaderButton/ChangeWalletButton'
-import { theme } from '@static/theme'
 import { WalletType } from '@web3/wallet'
 
 export interface SwapToken {
@@ -75,10 +74,8 @@ export interface ISwap {
   poolInit: boolean
   poolTicks: { [x: string]: Tick[] }
   fullSolBalance: BN
-  address: PublicKey
   onWalletSelect: (wallet: WalletType) => void
   onDisconnectWallet: () => void
-  typeOfWallet?: WalletType
 }
 export const Swap: React.FC<ISwap> = ({
   walletStatus,
@@ -89,11 +86,9 @@ export const Swap: React.FC<ISwap> = ({
   progress,
   poolInit,
   poolTicks,
-  address,
   fullSolBalance,
   onWalletSelect,
   onDisconnectWallet,
-  typeOfWallet = WalletType.PHANTOM
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -310,12 +305,11 @@ export const Swap: React.FC<ISwap> = ({
     }
     return 'Swap tokens'
   }
-  const activeSwapDetails = () => {
+  const hasShowRateMessage = () => {
     return (
-      getStateMessage() !== 'Insufficient volume' &&
-      getStateMessage() !== 'Exceed single swap limit (split transaction into several)' &&
-      getStateMessage() !== 'No route found' &&
-      getStateMessage() !== 'Insufficient balance'
+      getStateMessage() === 'Insufficient balance' ||
+      getStateMessage() === 'Swap tokens' ||
+      getStateMessage() === 'Loading'
     )
   }
   const setSlippage = (slippage: string): void => {
@@ -352,20 +346,11 @@ export const Swap: React.FC<ISwap> = ({
     lockAnimation && setTimeout(() => setLockAnimation(false), 305)
   }, [lockAnimation])
 
-  const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
-
-  const walletConnected = walletStatus === Status.Initialized
-
-  const exchangeRateStatus = walletConnected && tokenFromIndex !== null && tokenToIndex !== null
+  const exchangeRateStatus = walletStatus === Status.Initialized && tokenFromIndex !== null && tokenToIndex !== null
 
   const transactionStatus = exchangeRateStatus ? amountTo !== '' && amountFrom !== '' : false
 
-  const hideResult =
-    tokenFromIndex !== null &&
-    tokenToIndex !== null &&
-    getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate
-
-  const lockResult = hideResult === 0 || hideResult === Infinity
+  const swapRate = tokenFromIndex === null || tokenToIndex === null ? 0 : getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate
 
   return (
     <Grid container className={classes.swapWrapper}>
@@ -523,36 +508,17 @@ export const Swap: React.FC<ISwap> = ({
               <Typography className={classes.transactionDetailsHeader}>
                 See transaction details
               </Typography>
-              <CardMedia
-                image={infoIcon}
-                style={{
-                  width: 10,
-                  height: 10,
-                  marginLeft: 4,
-                  filter: 'brightness(0.8)',
-                  pointerEvents: 'none'
-                }}
-              />
+              <CardMedia image={infoIcon} className={classes.infoIcon} />
             </Grid>
           </button>
-          <Box
-            className={classNames(
-              walletConnected
-                ? transactionStatus && getStateMessage() !== 'Insufficient balance'
-                  ? classes.ableToHover
-                  : lockResult
-                  ? classes.hideBalance
-                  : exchangeRateStatus && classes.walletDisabled
-                : classes.hideBalance
-            )}>
-            {exchangeRateStatus ? (
+          {exchangeRateStatus && getStateMessage() === 'Swap tokens' ? (
               <TransactionDetails
-                open={detailsOpen && activeSwapDetails() && getStateMessage() !== 'Loading'}
+                open={detailsOpen}
                 fee={{
                   v: pools[simulateResult.poolIndex].fee.v
                 }}
                 exchangeRate={{
-                  val: getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate,
+                  val: swapRate,
                   symbol: tokens[tokenToIndex].symbol
                 }}
                 anchorTransaction={anchorTransaction}
@@ -560,28 +526,22 @@ export const Swap: React.FC<ISwap> = ({
                 decimal={tokens[tokenToIndex].decimals}
               />
             ) : null}
-
-            {!lockResult ? (
-              exchangeRateStatus ? (
-                <ExchangeRate
-                  tokenFromSymbol={tokens[tokenFromIndex].symbol}
-                  tokenToSymbol={tokens[tokenToIndex].symbol}
-                  amount={getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate}
-                  tokenToDecimals={tokens[tokenToIndex].decimals}
-                  loading={getStateMessage() === 'Loading'}></ExchangeRate>
-              ) : null
+            {exchangeRateStatus && hasShowRateMessage() ? (
+              <Box
+              className={classes.ableToHover}>
+              <ExchangeRate
+                tokenFromSymbol={tokens[tokenFromIndex].symbol}
+                tokenToSymbol={tokens[tokenToIndex].symbol}
+                amount={swapRate}
+                tokenToDecimals={tokens[tokenToIndex].decimals}
+                loading={getStateMessage() === 'Loading'}
+                />
+                </Box>
             ) : null}
-          </Box>
         </Box>
-        {!walletConnected ? (
+        {walletStatus !== Status.Initialized ? (
           <ChangeWalletButton
-            name={
-              walletConnected
-                ? `${address.toString().substr(0, isXsDown ? 8 : 15)}...${
-                    !isXsDown ? address.toString().substr(address.toString().length - 4, 4) : ''
-                  }`
-                : 'Connect wallet'
-            }
+            name='Connect wallet'
             options={[
               WalletType.PHANTOM,
               WalletType.SOLLET,
@@ -592,9 +552,9 @@ export const Swap: React.FC<ISwap> = ({
               WalletType.CLOVER
             ]}
             onSelect={onWalletSelect}
-            connected={walletConnected}
+            connected={false}
             onDisconnect={onDisconnectWallet}
-            activeWallet={walletConnected ? typeOfWallet : undefined}
+            activeWallet={undefined}
             className={classes.connectWalletButton}
           />
         ) : (

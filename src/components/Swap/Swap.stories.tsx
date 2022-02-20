@@ -160,6 +160,8 @@ storiesOf('newUi/swap', module)
         poolTicks={{
           [DEFAULT_PUBLIC_KEY.toString()]: []
         }}
+        onWalletSelect={() => {}}
+        onDisconnectWallet={() => {}}
       />
     </div>
   ))

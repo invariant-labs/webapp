@@ -94,7 +94,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
   connectWalletButton: {
     height: '48px !important',
-    borderRadius: '16px !important'
+    borderRadius: '16px !important',
+    width: '100%'
   },
   tokenComponentTextContainer: {
     display: 'flex',
@@ -181,12 +182,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     pointerEvents: 'none'
   },
 
-  walletDisabled: {
-    padding: '5px 15px 5px 15px',
-    border: `1px solid ${colors.invariant.light}`,
-    borderRadius: '10px'
-  },
-
   swapButton: {
     width: '100%',
     height: 48
@@ -240,6 +235,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       boxShadow:
         '0px 3px 1px -2px rgba(43, 193, 144, 0.2),0px 1px 2px 0px rgba(45, 168, 128, 0.14),0px 0px 5px 7px rgba(59, 183, 142, 0.12)'
     }
+  },
+  infoIcon: {
+    width: 10,
+    height: 10,
+    marginLeft: 4,
+    filter: 'brightness(0.8)',
+    pointerEvents: 'none'
   }
 }))
 
