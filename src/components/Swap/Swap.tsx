@@ -327,10 +327,6 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   const handleOpenTransactionDetails = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (tokenFromIndex === null || tokenToIndex === null || getStateMessage() !== 'Swap tokens') {
-      return
-    }
-
     setAnchorTransaction(event.currentTarget)
     blurContent()
     setDetailsOpen(!detailsOpen)
@@ -344,11 +340,6 @@ export const Swap: React.FC<ISwap> = ({
   React.useEffect(() => {
     lockAnimation && setTimeout(() => setLockAnimation(false), 305)
   }, [lockAnimation])
-
-  const exchangeRateStatus =
-    walletStatus === Status.Initialized && tokenFromIndex !== null && tokenToIndex !== null
-
-  const transactionStatus = exchangeRateStatus ? amountTo !== '' && amountFrom !== '' : false
 
   const swapRate =
     tokenFromIndex === null || tokenToIndex === null
@@ -501,9 +492,21 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
         <Box className={classes.transactionDetails}>
           <button
-            onClick={handleOpenTransactionDetails}
+            onClick={
+              tokenFromIndex !== null &&
+              tokenToIndex !== null &&
+              hasShowRateMessage() &&
+              amountFrom !== '' &&
+              amountTo !== ''
+                ? handleOpenTransactionDetails
+                : undefined
+            }
             className={
-              transactionStatus && getStateMessage() !== 'Insufficient balance'
+              tokenFromIndex !== null &&
+              tokenToIndex !== null &&
+              hasShowRateMessage() &&
+              amountFrom !== '' &&
+              amountTo !== ''
                 ? classes.HiddenTransactionButton
                 : classes.transactionDetailDisabled
             }>
@@ -514,35 +517,36 @@ export const Swap: React.FC<ISwap> = ({
               <CardMedia image={infoIcon} className={classes.infoIcon} />
             </Grid>
           </button>
-          {exchangeRateStatus && getStateMessage() === 'Swap tokens' ? (
-            <TransactionDetails
-              open={detailsOpen}
-              fee={{
-                v: pools[simulateResult.poolIndex].fee.v
-              }}
-              exchangeRate={{
-                val: swapRate,
-                symbol: tokens[tokenToIndex].symbol
-              }}
-              anchorTransaction={anchorTransaction}
-              handleCloseTransactionDetails={handleCloseTransactionDetails}
-              decimal={tokens[tokenToIndex].decimals}
-            />
-          ) : null}
           {tokenFromIndex !== null &&
           tokenToIndex !== null &&
           hasShowRateMessage() &&
           amountFrom !== '' &&
           amountTo !== '' ? (
-            <Box className={classes.ableToHover}>
-              <ExchangeRate
-                tokenFromSymbol={tokens[tokenFromIndex].symbol}
-                tokenToSymbol={tokens[tokenToIndex].symbol}
-                amount={swapRate}
-                tokenToDecimals={tokens[tokenToIndex].decimals}
-                loading={getStateMessage() === 'Loading'}
+            <>
+              <TransactionDetails
+                open={detailsOpen}
+                fee={{
+                  v: pools[simulateResult.poolIndex].fee.v
+                }}
+                exchangeRate={{
+                  val: swapRate,
+                  symbol: tokens[tokenToIndex].symbol
+                }}
+                anchorTransaction={anchorTransaction}
+                handleCloseTransactionDetails={handleCloseTransactionDetails}
+                decimal={tokens[tokenToIndex].decimals}
               />
-            </Box>
+
+              <Box className={classes.ableToHover}>
+                <ExchangeRate
+                  tokenFromSymbol={tokens[tokenFromIndex].symbol}
+                  tokenToSymbol={tokens[tokenToIndex].symbol}
+                  amount={swapRate}
+                  tokenToDecimals={tokens[tokenToIndex].decimals}
+                  loading={getStateMessage() === 'Loading'}
+                />
+              </Box>
+            </>
           ) : null}
         </Box>
         {walletStatus !== Status.Initialized && getStateMessage() !== 'Loading' ? (
