@@ -80,7 +80,7 @@ export const AmountInput: React.FC<IProps> = ({
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const onlyNumbersRegex = /^\d*\.?\d*$/
-    const trimDecimal = `^\\d*\\.?\\d{0,${decimal || 0}}$`
+    const trimDecimal = `^\\d*\\.?\\d{0,${decimal}}$`
     const regex = new RegExp(trimDecimal, 'g')
     if (e.target.value === '' || regex.test(e.target.value)) {
       const startValue = e.target.value

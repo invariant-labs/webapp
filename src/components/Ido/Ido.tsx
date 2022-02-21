@@ -1,13 +1,12 @@
 import React from 'react'
 import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
 import { SwapToken } from '@components/Swap/Swap'
-
 import useStyle from './style'
-import AmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import AnimatedButton from '@components/AnimatedButton/AnimatedButton'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import { printBN } from '@consts/utils'
+import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
 
 interface IdoInterface {
   xBtc: string
@@ -31,7 +30,7 @@ const Ido: React.FC<IdoInterface> = ({
   tokens
 }) => {
   const [amountFrom, setAmountFrom] = React.useState<string>('')
-  const [tokenIndex, setTokenIndex] = React.useState<number | null>(tokens.length ? 0 : null)
+  const [tokenIndex] = React.useState<number | null>(tokens.length ? 0 : null)
 
   const classes = useStyle()
 
@@ -45,15 +44,9 @@ const Ido: React.FC<IdoInterface> = ({
           <Typography component='h1'>{header}</Typography>
         </Box>
         <Grid className={classes.AmountInputContainer}>
-          <AmountInput
+          <DepositAmountInput
             value={amountFrom}
-            balance={
-              tokenIndex !== null
-                ? printBN(tokens[tokenIndex].balance, tokens[tokenIndex].decimals)
-                : '- -'
-            }
-            current={tokenIndex !== null ? tokens[tokenIndex] : null}
-            tokens={tokens}
+            currency={null}
             placeholder={`0.${'0'.repeat(6)}`}
             setValue={value => setAmountFrom(value)}
             onMaxClick={() => {
@@ -61,11 +54,7 @@ const Ido: React.FC<IdoInterface> = ({
                 setAmountFrom(printBN(tokens[tokenIndex].balance, tokens[tokenIndex].decimals))
               }
             }}
-            decimal={tokenIndex !== null ? tokens[tokenIndex].decimals : 6}
-            onSelect={(name: string) => {
-              setTokenIndex(tokens.findIndex(token => name === token.symbol))
-            }}
-            disabled={tokenIndex === null}
+            decimalsLimit={tokenIndex !== null ? tokens[tokenIndex].decimals : 6}
           />
         </Grid>
         <Grid className={classes.DepositContainer}>
