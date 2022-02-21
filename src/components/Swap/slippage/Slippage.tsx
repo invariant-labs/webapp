@@ -86,7 +86,7 @@ const Slippage: React.FC<Props> = ({
           <Typography component='h2'>Swap Transaction Settings</Typography>
           <Button className={classes.selectTokenClose} onClick={handleClose} />
         </Grid>
-        <Typography component='p'>Slippage tolerance:</Typography>
+        <Typography className={classes.label}>Slippage tolerance:</Typography>
         <Box>
           <Input
             disableUnderline
@@ -118,6 +118,10 @@ const Slippage: React.FC<Props> = ({
             }}
           />
         </Box>
+        <Typography className={classes.info}>
+          Slippage tolerance is a pricing difference between the price at the confirmation time and
+          the actual price of the transaction users are willing to accept when swapping.
+        </Typography>
       </Grid>
     </Popover>
   )

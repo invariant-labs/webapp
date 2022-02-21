@@ -5,6 +5,7 @@ import { blurContent, unblurContent } from '@consts/uiUtils'
 import ConnectWallet from '@components/Modals/ConnectWallet/ConnectWallet'
 import { WalletType } from '@web3/wallet'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import classNames from 'classnames'
 export interface IProps {
   name: string
   options: WalletType[]
@@ -14,6 +15,7 @@ export interface IProps {
   onDisconnect: () => void
   hideArrow?: boolean
   activeWallet?: WalletType
+  className?: string
 }
 export const ChangeWalletButton: React.FC<IProps> = ({
   name,
@@ -23,7 +25,8 @@ export const ChangeWalletButton: React.FC<IProps> = ({
   startIcon,
   hideArrow,
   onDisconnect,
-  activeWallet
+  activeWallet,
+  className
 }) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
@@ -48,7 +51,10 @@ export const ChangeWalletButton: React.FC<IProps> = ({
   return (
     <>
       <Button
-        className={connected ? classes.headerButtonConnected : classes.headerButtonConnect}
+        className={classNames(
+          className,
+          connected ? classes.headerButtonConnected : classes.headerButtonConnect
+        )}
         variant='contained'
         classes={{
           disabled: classes.disabled,

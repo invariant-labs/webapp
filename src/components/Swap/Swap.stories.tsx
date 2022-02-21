@@ -144,8 +144,6 @@ storiesOf('newUi/swap', module)
         onSwap={onSwap}
         pools={pools}
         progress='none'
-        poolInit={true}
-        fullSolBalance={new BN(2137)}
         swapData={{
           slippage: { v: fromFee(new BN(1000)) },
           estimatedPriceAfterSwap: { v: new BN(0) },
@@ -160,6 +158,8 @@ storiesOf('newUi/swap', module)
         poolTicks={{
           [DEFAULT_PUBLIC_KEY.toString()]: []
         }}
+        onWalletSelect={() => {}}
+        onDisconnectWallet={() => {}}
       />
     </div>
   ))

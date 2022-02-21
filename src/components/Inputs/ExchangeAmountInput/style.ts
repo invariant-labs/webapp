@@ -47,7 +47,8 @@ const useStyles = makeStyles(() => ({
   BalanceContainer: {
     display: 'flex',
     alignItems: 'center',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    paddingBlock: 6
   },
   BalanceTypography: {
     color: colors.invariant.lightGrey,
