@@ -117,7 +117,7 @@ export const PositionsList: React.FC<IProp> = ({
           <NoConnected {...noConnectedBlockerProps} />
         ) : (
           <Typography className={classes.noPositionsText}>
-            {loading ? 'Loading...' : 'No liquidity positions to show.'}
+            {loading ? 'Loading...' : 'You have no positions.'}
           </Typography>
         )}
       </Grid>
