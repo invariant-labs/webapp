@@ -203,7 +203,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   ableToHover: {
     border: `1px solid ${colors.invariant.light}`,
     borderRadius: '10px',
-    padding: '5px 15px 5px 15px'
+    padding: '5px 15px 5px 15px',
+    cursor: 'pointer'
   },
 
   transactionBottom: {
