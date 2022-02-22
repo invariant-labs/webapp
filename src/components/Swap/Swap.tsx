@@ -85,7 +85,7 @@ export const Swap: React.FC<ISwap> = ({
   onSetPair,
   progress,
   poolTicks,
-  isWaitingForNewPool
+  isWaitingForNewPool,
   onWalletSelect,
   onDisconnectWallet
 }) => {
