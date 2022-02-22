@@ -9,18 +9,21 @@ export const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`
   },
+
   tokenList: {
     color: colors.white.main,
     '& p': {
       ...typography.heading4
     }
   },
+
   header: {
     '& p': {
       ...typography.heading4,
       fontWeight: 400
     }
   },
+
   tokenName: {
     display: 'flex',
     alignItems: 'center',
