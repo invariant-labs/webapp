@@ -44,12 +44,12 @@ storiesOf('newUi/Ido', module)
   .add('connect a wallet', () => {
     return (
       <Ido
-        xBtc='Deposit your SOL'
+        xBtc='46.643 xUSD'
         xEth='0.00000 xBTC'
         sol='0.00000 xETH'
         usd='0.0432 SOL'
         xUsd='47.43 USD'
-        header='46.643 xUSD'
+        header='Deposit your SOL'
         buttonHeader='Connect a wallet'
         tokens={tokens}
       />
@@ -58,12 +58,12 @@ storiesOf('newUi/Ido', module)
   .add('sell period', () => {
     return (
       <Ido
-        xBtc='Deposit your SOL'
+        xBtc='46.643 xUSD'
         xEth='0.00000 xBTC'
         sol='0.00000 xETH'
         usd='0.0432 SOL'
         xUsd='47.43 USD'
-        header='46.643 xUSD'
+        header='Deposit your '
         buttonHeader='Connect a wallet'
         tokens={tokens}
       />
@@ -72,12 +72,12 @@ storiesOf('newUi/Ido', module)
   .add('grace period', () => {
     return (
       <Ido
-        xBtc='Deposit your SOL'
+        xBtc='46.643 xUSD'
         xEth='0.00000 xBTC'
         sol='0.00000 xETH'
         usd='0.0432 SOL'
         xUsd='47.43 USD'
-        header='46.643 xUSD'
+        header='Withdraw your SOL'
         buttonHeader='Connect a wallet'
         tokens={tokens}
       />
@@ -86,12 +86,12 @@ storiesOf('newUi/Ido', module)
   .add('claiming', () => {
     return (
       <Ido
-        xBtc='Deposit your SOL'
+        xBtc='46.643 xUSD'
         xEth='0.00000 xBTC'
         sol='0.00000 xETH'
         usd='0.0432 SOL'
         xUsd='47.43 USD'
-        header='46.643 xUSD'
+        header='Claim your SOL'
         buttonHeader='Connect a wallet'
         tokens={tokens}
       />
