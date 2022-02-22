@@ -120,6 +120,12 @@ const useStyle = makeStyles(theme => ({
       boxShadow:
         '0px 3px 1px -2px rgba(239, 132, 245, 0.2),0px 1px 2px 0px rgba(239, 132, 245, 0.2),0px 0px 5px 7px rgba(239, 132, 245, 0.2)'
     }
+  },
+  container: {
+    display: 'flex',
+    flexFlow: 'row wrap',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 }))
 

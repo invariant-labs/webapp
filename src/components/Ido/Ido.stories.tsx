@@ -5,6 +5,9 @@ import Ido from './Ido'
 import { SwapToken } from '@components/Swap/Swap'
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
+import IdoLabel from '@components/IdoLabel/IdoLabel'
+import { Grid } from '@material-ui/core'
+import useStyle from './style'
 
 const tokens: SwapToken[] = [
   {
@@ -95,5 +98,33 @@ storiesOf('newUi/Ido', module)
         buttonHeader='Connect a wallet'
         tokens={tokens}
       />
+    )
+  })
+  .add('mobile', () => {
+    const classes = useStyle()
+
+    return (
+      <Grid container className={classes.container}>
+        <Ido
+          xBtc='Deposit your SOL'
+          xEth='0.00000 xBTC'
+          sol='0.00000 xETH'
+          usd='0.0432 SOL'
+          xUsd='47.43 USD'
+          header='46.643 xUSD'
+          buttonHeader='Connect a wallet'
+          tokens={tokens}
+        />
+
+        <IdoLabel
+          sale='15:03:33'
+          grace='32:29:27'
+          sol='121 124 846'
+          estimated='218.839'
+          invariant='20 000 000'
+          solToken='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
+          estToken='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
+        />
+      </Grid>
     )
   })
