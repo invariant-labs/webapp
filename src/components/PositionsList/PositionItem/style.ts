@@ -33,12 +33,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 40,
     borderRadius: '100%',
 
-    [theme.breakpoints.down('md')]: {
-      width: 33
-    },
-
     [theme.breakpoints.down('xs')]: {
-      width: 25
+      width: 28
     }
   },
   arrows: {
@@ -70,7 +66,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       ...typography.heading2
     },
     [theme.breakpoints.down('md')]: {
-      lineHeight: '32 px',
+      lineHeight: '32px',
       width: 'unset'
     },
     [theme.breakpoints.down('xs')]: {
@@ -83,14 +79,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.lightGrey,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption1
+    }
   },
   greenText: {
     ...typography.body1,
     color: colors.invariant.green,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption1
+    }
   },
   liquidity: {
     background: colors.invariant.light,
