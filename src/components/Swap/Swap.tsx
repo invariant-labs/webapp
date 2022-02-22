@@ -192,12 +192,6 @@ export const Swap: React.FC<ISwap> = ({
     setRateReversed(false)
   }, [tokenFromIndex, tokenToIndex])
 
-  const getSwapRate = (assetIn: SwapToken, assetFor: SwapToken) => {
-    return inputRef === inputTarget.FROM
-      ? +printBN(simulateResult.AmountOutWithFee, assetFor.decimals) / Number(amountFrom)
-      : Number(amountTo) / +printBN(simulateResult.AmountOutWithFee, assetIn.decimals)
-  }
-
   const getAmountOut = (assetFor: SwapToken) => {
     const amountOut: number = Number(printBN(simulateResult.amountOut, assetFor.decimals))
 
@@ -346,9 +340,9 @@ export const Swap: React.FC<ISwap> = ({
   }, [lockAnimation])
 
   const swapRate =
-    tokenFromIndex === null || tokenToIndex === null
+    tokenFromIndex === null || tokenToIndex === null || amountFrom === '' || amountTo === ''
       ? 0
-      : getSwapRate(tokens[tokenFromIndex], tokens[tokenToIndex])
+      : +amountTo / +amountFrom
 
   return (
     <Grid container className={classes.swapWrapper}>
