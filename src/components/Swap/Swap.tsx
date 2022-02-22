@@ -110,7 +110,7 @@ export const Swap: React.FC<ISwap> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
   const [inputRef, setInputRef] = React.useState<string>(inputTarget.FROM)
-  const [rateDirection, setRateDirection] = React.useState<boolean | null>(null)
+  const [rateReversed, setRateReversed] = React.useState<boolean>(false)
   const [simulateResult, setSimulateResult] = React.useState<{
     amountOut: BN
     poolIndex: number
@@ -187,6 +187,12 @@ export const Swap: React.FC<ISwap> = ({
     setAmountTo(temp)
     setInputRef(inputRef === inputTarget.FROM ? inputTarget.TO : inputTarget.FROM)
   }, [swap])
+
+  useEffect(() => {
+    setRateReversed(false)
+  }, [tokenFromIndex, tokenToIndex])
+
+  console.log(rateReversed)
 
   const getKnownPrice = (assetIn: SwapToken, assetFor: SwapToken) => {
     let swapRate: number = 0
@@ -429,7 +435,6 @@ export const Swap: React.FC<ISwap> = ({
               setTokenToIndex(tmp)
               tokens = tokensY
               setTokensY(tokensTmp)
-              setRateDirection(false)
             }}>
             <Box className={classes.swapImgRoot}>
               <img
@@ -530,23 +535,19 @@ export const Swap: React.FC<ISwap> = ({
                 }}
                 exchangeRate={{
                   val: swapRate,
-                  symbol: tokens[rateDirection ? tokenFromIndex : tokenToIndex].symbol
+                  symbol: tokens[tokenToIndex].symbol
                 }}
                 anchorTransaction={anchorTransaction}
                 handleCloseTransactionDetails={handleCloseTransactionDetails}
-                decimal={tokens[rateDirection ? tokenFromIndex : tokenToIndex].decimals}
+                decimal={tokens[tokenToIndex].decimals}
               />
               <Box className={classes.ableToHover}>
                 <ExchangeRate
-                  onClick={() => {
-                    rateDirection !== null
-                      ? setRateDirection(!rateDirection)
-                      : setRateDirection(true)
-                  }}
-                  tokenFromSymbol={tokens[rateDirection ? tokenToIndex : tokenFromIndex].symbol}
-                  tokenToSymbol={tokens[rateDirection ? tokenFromIndex : tokenToIndex].symbol}
-                  amount={rateDirection ? 1 / swapRate : swapRate}
-                  tokenToDecimals={tokens[rateDirection ? tokenFromIndex : tokenToIndex].decimals}
+                  onClick={() => setRateReversed(!rateReversed)}
+                  tokenFromSymbol={tokens[rateReversed ? tokenToIndex : tokenFromIndex].symbol}
+                  tokenToSymbol={tokens[rateReversed ? tokenFromIndex : tokenToIndex].symbol}
+                  amount={rateReversed ? 1 / swapRate : swapRate}
+                  tokenToDecimals={tokens[rateReversed ? tokenFromIndex : tokenToIndex].decimals}
                   loading={getStateMessage() === 'Loading'}
                 />
               </Box>
