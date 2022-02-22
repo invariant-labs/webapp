@@ -110,7 +110,7 @@ export const Swap: React.FC<ISwap> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
   const [inputRef, setInputRef] = React.useState<string>(inputTarget.FROM)
-  const [swapTokens, setSwapTokens] = React.useState<boolean | null>(null)
+  const [rateDirection, setRateDirection] = React.useState<boolean | null>(null)
   const [simulateResult, setSimulateResult] = React.useState<{
     amountOut: BN
     poolIndex: number
@@ -188,21 +188,14 @@ export const Swap: React.FC<ISwap> = ({
     setInputRef(inputRef === inputTarget.FROM ? inputTarget.TO : inputTarget.FROM)
   }, [swap])
 
-  useEffect(() => {
-    setInputRef(inputRef === inputTarget.FROM ? inputTarget.TO : inputTarget.FROM)
-  }, [swapTokens])
-
   const getKnownPrice = (assetIn: SwapToken, assetFor: SwapToken) => {
     let swapRate: number = 0
     let amountOut: number = 0
 
-    const from = swapTokens ? amountTo : amountFrom
-    const to = swapTokens ? amountFrom : amountTo
-
     if (inputRef === inputTarget.FROM) {
-      swapRate = +printBN(simulateResult.AmountOutWithFee, assetFor.decimals) / Number(from)
+      swapRate = +printBN(simulateResult.AmountOutWithFee, assetFor.decimals) / Number(amountFrom)
     } else {
-      swapRate = Number(to) / +printBN(simulateResult.AmountOutWithFee, assetIn.decimals)
+      swapRate = Number(amountTo) / +printBN(simulateResult.AmountOutWithFee, assetIn.decimals)
     }
 
     amountOut = Number(printBN(simulateResult.amountOut, assetFor.decimals))
@@ -351,13 +344,10 @@ export const Swap: React.FC<ISwap> = ({
     lockAnimation && setTimeout(() => setLockAnimation(false), 305)
   }, [lockAnimation])
 
-  const fromToken = swapTokens ? tokenToIndex : tokenFromIndex
-  const toToken = swapTokens ? tokenFromIndex : tokenToIndex
-
   const swapRate =
-    fromToken === null || toToken === null
+    tokenFromIndex === null || tokenToIndex === null
       ? 0
-      : getKnownPrice(tokens[fromToken], tokens[toToken]).swapRate
+      : getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate
 
   return (
     <Grid container className={classes.swapWrapper}>
@@ -439,7 +429,7 @@ export const Swap: React.FC<ISwap> = ({
               setTokenToIndex(tmp)
               tokens = tokensY
               setTokensY(tokensTmp)
-              setSwapTokens(false)
+              setRateDirection(false)
             }}>
             <Box className={classes.swapImgRoot}>
               <img
@@ -527,8 +517,8 @@ export const Swap: React.FC<ISwap> = ({
               <CardMedia image={infoIcon} className={classes.infoIcon} />
             </Grid>
           </button>
-          {fromToken !== null &&
-          toToken !== null &&
+          {tokenFromIndex !== null &&
+          tokenToIndex !== null &&
           hasShowRateMessage() &&
           (getStateMessage() === 'Loading' ||
             (swapRate !== 0 && swapRate !== Infinity && !isNaN(swapRate))) ? (
@@ -540,21 +530,23 @@ export const Swap: React.FC<ISwap> = ({
                 }}
                 exchangeRate={{
                   val: swapRate,
-                  symbol: tokens[toToken].symbol
+                  symbol: tokens[rateDirection ? tokenFromIndex : tokenToIndex].symbol
                 }}
                 anchorTransaction={anchorTransaction}
                 handleCloseTransactionDetails={handleCloseTransactionDetails}
-                decimal={tokens[toToken].decimals}
+                decimal={tokens[rateDirection ? tokenFromIndex : tokenToIndex].decimals}
               />
               <Box className={classes.ableToHover}>
                 <ExchangeRate
                   onClick={() => {
-                    swapTokens !== null ? setSwapTokens(!swapTokens) : setSwapTokens(true)
+                    rateDirection !== null
+                      ? setRateDirection(!rateDirection)
+                      : setRateDirection(true)
                   }}
-                  tokenFromSymbol={tokens[fromToken].symbol}
-                  tokenToSymbol={tokens[toToken].symbol}
-                  amount={swapRate}
-                  tokenToDecimals={tokens[toToken].decimals}
+                  tokenFromSymbol={tokens[rateDirection ? tokenToIndex : tokenFromIndex].symbol}
+                  tokenToSymbol={tokens[rateDirection ? tokenFromIndex : tokenToIndex].symbol}
+                  amount={rateDirection ? 1 / swapRate : swapRate}
+                  tokenToDecimals={tokens[rateDirection ? tokenFromIndex : tokenToIndex].decimals}
                   loading={getStateMessage() === 'Loading'}
                 />
               </Box>
