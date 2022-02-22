@@ -66,7 +66,7 @@ storiesOf('newUi/Ido', module)
         sol='0.00000 xETH'
         usd='0.0432 SOL'
         xUsd='47.43 USD'
-        header='Deposit your '
+        header='Claim your SOL'
         buttonHeader='Connect a wallet'
         tokens={tokens}
       />
@@ -115,7 +115,6 @@ storiesOf('newUi/Ido', module)
           buttonHeader='Connect a wallet'
           tokens={tokens}
         />
-
         <IdoLabel
           sale='15:03:33'
           grace='32:29:27'
