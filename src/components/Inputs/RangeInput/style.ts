@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('sm')]: {
       ...typography.body1
+    },
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption3
     }
   },
   tokens: {
@@ -31,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       marginInline: 'auto',
       ...typography.body2
+    },
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption3
     }
   },
   controls: {
@@ -78,6 +84,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('sm')]: {
       height: 36
+    },
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption2
     }
   }
 }))

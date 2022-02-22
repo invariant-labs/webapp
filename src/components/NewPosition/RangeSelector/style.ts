@@ -36,11 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputs: {
     marginBottom: 12,
     flexDirection: 'row',
-    gap: 16,
-
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column'
-    }
+    gap: 16
   },
   input: {
     flex: '1 1 0%',
@@ -119,11 +115,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     flexDirection: 'row',
     gap: 16,
-    alignItems: 'center',
-
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column'
-    }
+    alignItems: 'center'
   }
 }))
 
