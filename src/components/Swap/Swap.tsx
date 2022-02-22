@@ -520,7 +520,9 @@ export const Swap: React.FC<ISwap> = ({
           tokenToIndex !== null &&
           hasShowRateMessage() &&
           (getStateMessage() === 'Loading' ||
-            (swapRate !== 0 && swapRate !== Infinity && !isNaN(swapRate))) ? (
+            (swapRate !== 0 && swapRate !== Infinity && !isNaN(swapRate))) &&
+          amountFrom !== '' &&
+          amountTo !== '' ? (
             <>
               <TransactionDetails
                 open={detailsOpen}
