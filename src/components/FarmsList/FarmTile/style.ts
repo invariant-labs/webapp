@@ -126,10 +126,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 16,
     textTransform: 'none',
     ...typography.body1,
-    background: colors.invariant.greenLinearGradientOpacity,
     color: colors.black.full,
+
+    maxWidth: '100%',
+    background:
+      ' linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)  !important',
     '&:hover': {
-      background: colors.invariant.greenLinearGradient,
+      background:
+        ' linear-gradient(180deg, rgba(46, 224, 154, 1) 0%, rgba(33, 164, 124, 0.8) 100%)  !important',
       boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
 
@@ -144,6 +148,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       pointerEvents: 'auto !important',
       boxShadow: 'none'
     }
+  },
+
+  mobileContainer: {
+    paddingBottom: 20
+  },
+
+  spacer: {
+    paddingTop: 20
   }
 }))
 
