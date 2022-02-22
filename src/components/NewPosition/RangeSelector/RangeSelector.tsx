@@ -179,6 +179,10 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }, [midPrice, ticksLoading])
 
+  const tokenNameWrapper = (tokenName: string) => {
+    return tokenName.length > 4 ? tokenName.slice(0, 4).concat('...') : tokenName
+  }
+
   return (
     <Grid container className={classes.wrapper}>
       <Typography className={classes.header}>Price range</Typography>
@@ -211,8 +215,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           <RangeInput
             className={classes.input}
             label='Min price'
-            tokenFromSymbol={tokenASymbol}
-            tokenToSymbol={tokenBSymbol}
+            tokenFromSymbol={tokenNameWrapper(tokenASymbol)}
+            tokenToSymbol={tokenNameWrapper(tokenBSymbol)}
             currentValue={leftInputRounded}
             setValue={onLeftInputChange}
             decreaseValue={() => {
@@ -245,8 +249,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           <RangeInput
             className={classes.input}
             label='Max price'
-            tokenFromSymbol={tokenASymbol}
-            tokenToSymbol={tokenBSymbol}
+            tokenFromSymbol={tokenNameWrapper(tokenASymbol)}
+            tokenToSymbol={tokenNameWrapper(tokenBSymbol)}
             currentValue={rightInputRounded}
             setValue={onRightInputChange}
             decreaseValue={() => {

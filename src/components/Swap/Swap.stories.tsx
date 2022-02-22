@@ -159,6 +159,8 @@ storiesOf('newUi/swap', module)
           [DEFAULT_PUBLIC_KEY.toString()]: []
         }}
         isWaitingForNewPool={false}
+        onWalletSelect={() => {}}
+        onDisconnectWallet={() => {}}
       />
     </div>
   ))

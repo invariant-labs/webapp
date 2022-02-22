@@ -12,6 +12,7 @@ import { status, swapTokens } from '@selectors/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { actions as poolsActions } from '@reducers/pools'
 import { PublicKey } from '@solana/web3.js'
+import { actions as walletActions } from '@reducers/solanaWallet'
 
 export const WrappedSwap = () => {
   const dispatch = useDispatch()
@@ -87,6 +88,12 @@ export const WrappedSwap = () => {
             second: tokenTo
           })
         )
+      }}
+      onWalletSelect={wallet => {
+        dispatch(walletActions.connect(wallet))
+      }}
+      onDisconnectWallet={() => {
+        dispatch(walletActions.disconnect())
       }}
       walletStatus={walletStatus}
       tokens={tokensList}

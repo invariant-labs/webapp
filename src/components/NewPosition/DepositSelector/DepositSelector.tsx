@@ -225,7 +225,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
               return
             }
-
             tokenAInputState.setValue(
               printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimals)
             )
@@ -263,7 +262,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
             if (tokens[tokenBIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))) {
               if (tokenAIndex !== null && poolIndex === null) {
-                tokenAInputState.setValue(
+                tokenBInputState.setValue(
                   printBN(
                     tokens[tokenBIndex].balance.gt(WSOL_POOL_INIT_LAMPORTS)
                       ? tokens[tokenBIndex].balance.sub(WSOL_POOL_INIT_LAMPORTS)
@@ -275,7 +274,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
                 return
               }
 
-              tokenAInputState.setValue(
+              tokenBInputState.setValue(
                 printBN(
                   tokens[tokenBIndex].balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
                     ? tokens[tokenBIndex].balance.sub(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
@@ -286,7 +285,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
               return
             }
-
             tokenBInputState.setValue(
               printBN(tokens[tokenBIndex].balance, tokens[tokenBIndex].decimals)
             )

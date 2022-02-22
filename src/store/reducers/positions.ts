@@ -70,7 +70,7 @@ export const defaultState: IPositionsStore = {
   },
   positionsList: {
     list: [],
-    loading: false
+    loading: true
   },
   currentPositionRangeTicks: {
     lowerTick: undefined,

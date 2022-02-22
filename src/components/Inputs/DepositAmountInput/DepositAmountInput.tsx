@@ -176,13 +176,15 @@ export const DepositAmountInput: React.FC<IProps> = ({
         <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>
           {
             <>
-              {currency && !usdValue ? (
+              {/*
+                TODO: temporarily commented; uncomment when fetching prices will be done
+               {currency && !usdValue ? (
                 <Typography className={classes.noData}>
                   <div className={classes.noDataIcon}>?</div>No data
                 </Typography>
               ) : (
                 ''
-              )}
+              )} */}
 
               {currency && usdValue ? (
                 <>
