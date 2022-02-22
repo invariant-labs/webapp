@@ -33,11 +33,7 @@ const ExchangeRate: React.FC<iProps> = ({
     )
   }
 
-  return (
-    <Box className={classes.ableToHover}>
-      {setLoading()}
-    </Box>
-  )
+  return <Box className={classes.ableToHover}>{setLoading()}</Box>
 }
 
 export default ExchangeRate
