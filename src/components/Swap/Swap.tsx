@@ -111,7 +111,7 @@ export const Swap: React.FC<ISwap> = ({
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
   const [inputRef, setInputRef] = React.useState<string>(inputTarget.FROM)
   const [swapTokens, setSwapTokens] = React.useState<boolean | null>(null)
-  const [exchangeLoader, setExchangeLoader] = React.useState<boolean>(false)
+
   const [tokenY, setTokenY] = React.useState<{ id: null | number; amount: null | string }>({
     id: null,
     amount: null
@@ -370,10 +370,6 @@ export const Swap: React.FC<ISwap> = ({
     lockAnimation && setTimeout(() => setLockAnimation(false), 305)
   }, [lockAnimation])
 
-  React.useEffect(() => {
-    exchangeLoader && setTimeout(() => setExchangeLoader(false), 300)
-  }, [exchangeLoader])
-
   const swapRate =
     tokenX.id === null || tokenY.id === null
       ? 0
@@ -575,7 +571,7 @@ export const Swap: React.FC<ISwap> = ({
                   tokenToSymbol={tokens[tokenY.id].symbol}
                   amount={swapRate}
                   tokenToDecimals={tokens[tokenY.id].decimals}
-                  loading={getStateMessage() === 'Loading' || exchangeLoader}
+                  loading={getStateMessage() === 'Loading'}
                 />
               </Box>
             </>
