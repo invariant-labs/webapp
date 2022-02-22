@@ -72,8 +72,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
       boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)'
-    },
-    [theme.breakpoints.down('xs')]: {}
+    }
+  },
+
+  buttonSelectDisabled: {
+    ...typography.body1,
+    textTransform: 'none',
+    borderRadius: 14,
+    height: 40,
+    minWidth: 130,
+    paddingInline: 0,
+    cursor: 'auto',
+    marginLeft: 16,
+    background: `${colors.invariant.light} !important`,
+
+    '&:hover': {
+      filter: 'brightness(1.15)'
+    }
   },
   buttonText: {
     WebkitPaddingBefore: '2px'
