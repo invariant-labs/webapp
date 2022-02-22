@@ -95,7 +95,10 @@ export const PositionsList: React.FC<IProp> = ({
               onChange={handleChangeInput}
               value={searchValue}
             />
-            <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
+            <Button
+              className={showNoConnected ? classes.buttonSelectDisabled : classes.button}
+              variant='contained'
+              onClick={showNoConnected ? () => {} : onAddPositionClick}>
               <span className={classes.buttonText}>+ Add Position</span>
             </Button>
           </Grid>

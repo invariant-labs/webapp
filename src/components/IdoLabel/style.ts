@@ -9,6 +9,7 @@ const useStyle = makeStyles(theme => ({
 
     marginLeft: 15,
 
+    marginTop: '40px',
     [theme.breakpoints.down('sm')]: {
       width: 500,
       margin: 15
@@ -23,7 +24,7 @@ const useStyle = makeStyles(theme => ({
   },
 
   lightLabelContainer: {
-    padding: '10px 0 10px 0 ',
+    padding: '12px 0 12px 0 ',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
