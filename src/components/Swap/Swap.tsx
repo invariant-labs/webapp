@@ -565,7 +565,6 @@ export const Swap: React.FC<ISwap> = ({
                 <ExchangeRate
                   onClick={() => {
                     swapTokens !== null ? setSwapTokens(!swapTokens) : setSwapTokens(true)
-                    setExchangeLoader(true)
                   }}
                   tokenFromSymbol={tokens[tokenX.id].symbol}
                   tokenToSymbol={tokens[tokenY.id].symbol}
