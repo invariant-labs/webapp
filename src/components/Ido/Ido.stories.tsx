@@ -8,39 +8,18 @@ import { PublicKey } from '@solana/web3.js'
 import IdoLabel from '@components/IdoLabel/IdoLabel'
 import { Grid } from '@material-ui/core'
 import useStyle from './style'
+import { printBN } from '@consts/utils'
 
-const tokens: SwapToken[] = [
-  {
-    balance: new BN(100).mul(new BN(34786)),
-    decimals: 6,
-    symbol: 'SOL',
-    assetAddress: new PublicKey('So11111111111111111111111111111111111111112'),
-    name: 'Wrapped Solana',
-    logoURI:
-      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
-    address: new PublicKey('So11111111111111111111111111111111111111112')
-  },
-  {
-    balance: new BN(100).mul(new BN(126)),
-    decimals: 6,
-    symbol: 'BTC',
-    assetAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-    name: 'BTC',
-    logoURI:
-      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png',
-    address: new PublicKey('So11111111111111111111111111111111111111112')
-  },
-  {
-    balance: new BN(10).mul(new BN(5342)),
-    decimals: 6,
-    symbol: 'USDC',
-    assetAddress: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
-    name: 'USD coin',
-    logoURI:
-      'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
-    address: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
-  }
-]
+const token: SwapToken = {
+  balance: new BN(100).mul(new BN(34786)),
+  decimals: 6,
+  symbol: 'SOL',
+  assetAddress: new PublicKey('So11111111111111111111111111111111111111112'),
+  name: 'Wrapped Solana',
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
+  address: new PublicKey('So11111111111111111111111111111111111111112')
+}
 
 storiesOf('newUi/Ido', module)
   .addDecorator(withKnobs)
@@ -54,7 +33,9 @@ storiesOf('newUi/Ido', module)
         xUsd='47.43 USD'
         header='Deposit your SOL'
         buttonHeader='Connect a wallet'
-        tokens={tokens}
+        token={token}
+        decimal={token.decimals}
+        balance={printBN(token.balance, token.decimals)}
       />
     )
   })
@@ -68,7 +49,9 @@ storiesOf('newUi/Ido', module)
         xUsd='47.43 USD'
         header='Claim your SOL'
         buttonHeader='Connect a wallet'
-        tokens={tokens}
+        token={token}
+        decimal={token.decimals}
+        balance={printBN(token.balance, token.decimals)}
       />
     )
   })
@@ -82,7 +65,9 @@ storiesOf('newUi/Ido', module)
         xUsd='47.43 USD'
         header='Withdraw your SOL'
         buttonHeader='Connect a wallet'
-        tokens={tokens}
+        token={token}
+        decimal={token.decimals}
+        balance={printBN(token.balance, token.decimals)}
       />
     )
   })
@@ -96,7 +81,9 @@ storiesOf('newUi/Ido', module)
         xUsd='47.43 USD'
         header='Claim your SOL'
         buttonHeader='Connect a wallet'
-        tokens={tokens}
+        token={token}
+        decimal={token.decimals}
+        balance={printBN(token.balance, token.decimals)}
       />
     )
   })
@@ -113,7 +100,9 @@ storiesOf('newUi/Ido', module)
           xUsd='47.43 USD'
           header='Claim your SOL'
           buttonHeader='Connect a wallet'
-          tokens={tokens}
+          token={token}
+          decimal={token.decimals}
+          balance={printBN(token.balance, token.decimals)}
         />
         <IdoLabel
           sale='15:03:33'

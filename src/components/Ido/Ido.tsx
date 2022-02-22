@@ -5,7 +5,6 @@ import useStyle from './style'
 import AnimatedButton from '@components/AnimatedButton/AnimatedButton'
 import icons from '@static/icons'
 import classNames from 'classnames'
-import { printBN } from '@consts/utils'
 import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
 
 interface IdoInterface {
@@ -16,7 +15,9 @@ interface IdoInterface {
   xUsd: string
   header: string
   buttonHeader: string
-  tokens: SwapToken[]
+  token: SwapToken
+  balance: string
+  decimal: number
 }
 
 const Ido: React.FC<IdoInterface> = ({
@@ -27,11 +28,10 @@ const Ido: React.FC<IdoInterface> = ({
   xEth,
   xBtc,
   buttonHeader,
-  tokens
+  token,
+  balance,
+  decimal
 }) => {
-  const [amountFrom, setAmountFrom] = React.useState<string>('')
-  const [tokenIndex] = React.useState<number | null>(tokens.length ? 0 : null)
-
   const classes = useStyle()
 
   return (
@@ -45,16 +45,13 @@ const Ido: React.FC<IdoInterface> = ({
         </Box>
         <Grid className={classes.AmountInputContainer}>
           <DepositAmountInput
-            value={amountFrom}
-            currency={null}
+            balanceValue={balance}
+            currency={token.symbol}
+            currencyIconSrc={token.logoURI}
             placeholder={`0.${'0'.repeat(6)}`}
-            setValue={value => setAmountFrom(value)}
-            onMaxClick={() => {
-              if (tokenIndex !== null) {
-                setAmountFrom(printBN(tokens[tokenIndex].balance, tokens[tokenIndex].decimals))
-              }
-            }}
-            decimalsLimit={tokenIndex !== null ? tokens[tokenIndex].decimals : 6}
+            setValue={() => {}}
+            onMaxClick={() => {}}
+            decimalsLimit={decimal}
           />
         </Grid>
         <Grid className={classes.DepositContainer}>
