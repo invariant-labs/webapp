@@ -106,12 +106,12 @@ storiesOf('newUi/Ido', module)
     return (
       <Grid container className={classes.container}>
         <Ido
-          xBtc='Deposit your SOL'
+          xBtc='46.643 xUSD'
           xEth='0.00000 xBTC'
           sol='0.00000 xETH'
           usd='0.0432 SOL'
           xUsd='47.43 USD'
-          header='46.643 xUSD'
+          header='Claim your SOL'
           buttonHeader='Connect a wallet'
           tokens={tokens}
         />
