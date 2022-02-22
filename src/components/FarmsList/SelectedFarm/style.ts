@@ -9,66 +9,99 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 16,
     width: 508
   },
-  unstakeButton: {
-    background: 'rgba(46, 224, 154, 0.9)',
-    fontSize: 16,
-    width: 92,
-    height: 27,
-    fontWeight: 700,
-    borderRadius: 9,
-    padding: '7px 0',
-    textTransform: 'none',
-    color: colors.black.full,
-    [theme.breakpoints.down('xs')]: {
-      width: '50%',
-      height: 40
-    },
-    '&:hover': {
-      boxShadow: '0px 0px 20px -8px white',
-      background: 'rgba(46, 224, 154, 0.9)'
-    }
-  },
+
   stakedValue: {
     marginLeft: 2
   },
+
+  disabledStake: {
+    fontSize: 16,
+    width: '100%',
+    height: 27,
+    borderRadius: 12,
+    padding: '7px 0',
+    background: `${colors.invariant.newDark} !important`,
+    textTransform: 'none',
+    color: colors.invariant.light,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      height: 40,
+      maxWidth: '100%',
+      marginLeft: 0
+    },
+
+    '&:hover': {
+      boxShadow: '0px 0px 20px -8px white',
+      background: 'rgba(239, 132, 245, 0.9) !important',
+      color: colors.black.full
+    }
+  },
+
+  unstakeButton: {
+    fontSize: 16,
+    width: '100%',
+    height: 27,
+    borderRadius: 12,
+    padding: '7px 0',
+    fontWeight: 700,
+    background: colors.invariant.greenLinearGradientOpacity,
+    textTransform: 'none',
+    color: colors.black.full,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      height: 40,
+      maxWidth: '100%'
+    },
+
+    '&:hover': {
+      boxShadow: '0px 0px 20px -8px white',
+      background: colors.invariant.greenLinearGradientOpacity,
+      color: colors.black.full
+    }
+  },
+
   disableButton: {
     fontSize: 16,
-    width: 92,
+    width: '100%',
     height: 27,
-    fontWeight: 400,
-    borderRadius: 9,
+    borderRadius: 12,
     padding: '7px 0',
+    background: `${colors.invariant.newDark} !important`,
     textTransform: 'none',
-    backgroundColor: colors.invariant.newDark,
-    boxShadow: 'none',
-
-    color: colors.invariant.dark,
+    color: colors.invariant.light,
     [theme.breakpoints.down('xs')]: {
-      width: '50%',
-      height: 40
+      width: '100%',
+      height: 40,
+      maxWidth: '100%'
     },
+
     '&:hover': {
-      backgroundColor: colors.invariant.newDark,
-      color: colors.invariant.lightGrey
+      boxShadow: '0px 0px 20px -8px white',
+      background: 'rgba(239, 132, 245, 0.9) ',
+      color: colors.black.full
     }
   },
   stakeButton: {
     fontSize: 16,
-    width: 92,
+    width: '100%',
     height: 27,
     fontWeight: 700,
-    borderRadius: 9,
+    borderRadius: 12,
     padding: '7px 0',
-    background: 'rgba(239, 132, 245, 0.9)',
+    background: 'rgba(239, 132, 245, 0.9) !important',
     textTransform: 'none',
     color: colors.black.full,
     [theme.breakpoints.down('xs')]: {
-      width: '50%',
-      height: 40
+      width: '100%',
+      height: 40,
+      maxWidth: '100%',
+      marginLeft: 0
     },
+
     '&:hover': {
       boxShadow: '0px 0px 20px -8px white',
-      background: 'rgba(239, 132, 245, 0.9)'
+      background: 'rgba(239, 132, 245, 0.9) !important',
+      color: colors.black.full
     }
   },
   labelText: {
@@ -108,12 +141,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   infoText: {
     ...typography.caption2,
     letterSpacing: '-0.03em',
-    color: colors.invariant.textGrey
+    color: colors.invariant.textGrey,
+    display: 'flex',
+    justifyContent: 'space-between'
   },
+
   value: {
     color: colors.white.main,
     ...typography.caption1,
-    marginLeft: 4
+    marginLeft: 4,
+    paddingBottom: 7,
+    paddingTop: 7
   },
   spacing: {
     marginLeft: 2
@@ -124,29 +162,33 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttonStake: {
     width: '100%',
+    maxWidth: '100%',
     height: 44,
     borderRadius: 16,
     textTransform: 'none',
     ...typography.body1,
     fontWeight: 700,
     letterSpacing: '-0.03em',
-    background: colors.invariant.pinkLinearGradientOpacity,
+    background: `${colors.invariant.pinkLinearGradientOpacity} !important`,
     color: colors.black.full,
+
     '&:hover': {
-      background: colors.invariant.pinkLinearGradient,
+      background: `${colors.invariant.pinkLinearGradientOpacity} !important`,
       boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)}'
     }
   },
   buttonContainer: {
-    backgroundColor: colors.invariant.newDark,
-    borderRadius: 16,
     width: 184,
+    borderRadius: 12,
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'space-between',
-      width: '100%'
+      borderRadius: 12,
+      width: '100%',
+      backgroundColor: colors.invariant.newDark
     }
   },
+
   buttonUnstake: {
     width: '100%',
     height: 44,
@@ -193,18 +235,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   boxLeft: {
     display: 'flex',
     justifyContent: 'space-between',
-    width: '50%',
     flexDirection: 'column',
+
     [theme.breakpoints.down('xs')]: {
       width: '100%'
     }
   },
   boxRight: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '50%',
-    flexDirection: 'column',
-    textAlign: 'right',
+    // display: 'flex',
+    // justifyContent: 'space-between',
+    // width: '50%',
+    // flexDirection: 'column',
+    // textAlign: 'right',
     [theme.breakpoints.down('xs')]: {
       textAlign: 'left',
       width: '100%'

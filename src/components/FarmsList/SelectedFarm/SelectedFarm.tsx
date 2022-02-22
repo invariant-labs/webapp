@@ -44,7 +44,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
         <Box className={classes.buttonContainer}>
           <OutlinedButton
             onClick={() => handleButtonStake('stake')}
-            className={activeValue === 'stake' ? classes.stakeButton : classes.disableButton}
+            className={activeValue === 'stake' ? classes.stakeButton : classes.disabledStake}
             name='Stake'
           />
           <OutlinedButton
