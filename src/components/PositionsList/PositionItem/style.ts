@@ -147,6 +147,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   mdInfo: {
     width: 'fit-content',
+    flexWrap: 'nowrap',
 
     [theme.breakpoints.down('md')]: {
       flexWrap: 'nowrap',
