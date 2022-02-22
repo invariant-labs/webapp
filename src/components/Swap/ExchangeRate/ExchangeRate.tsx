@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@material-ui/core'
+import { Box, Grid, Typography } from '@material-ui/core'
 import loadingAnimation from '@static/gif/loading.gif'
 import React from 'react'
 import useStyles from './style'
@@ -34,11 +34,9 @@ const ExchangeRate: React.FC<iProps> = ({
   }
 
   return (
-    <Grid>
-      <Typography component='h5' className={classes.rateText}>
-        {setLoading()}
-      </Typography>
-    </Grid>
+    <Box className={classes.ableToHover}>
+      {setLoading()}
+    </Box>
   )
 }
 
