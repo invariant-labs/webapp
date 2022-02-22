@@ -66,14 +66,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '40px',
     whiteSpace: 'nowrap',
     width: 180,
+    [theme.breakpoints.down('lg')]: {
+      ...typography.heading2
+    },
     [theme.breakpoints.down('md')]: {
-      ...typography.heading3,
-      lineHeight: '33px',
+      lineHeight: '32 px',
       width: 'unset'
     },
-
     [theme.breakpoints.down('xs')]: {
-      ...typography.heading4,
+      ...typography.heading3,
       lineHeight: '25px'
     }
   },
