@@ -17,6 +17,7 @@ export interface ISelectedFarm {
   onStake?: (id: string) => void
   onUnstake?: (id: string) => void
   onClaimReward?: (id: string) => void
+  solImg: string
 }
 
 export const SelectedFarm: React.FC<ISelectedFarm> = ({
@@ -30,7 +31,8 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
   action,
   onStake,
   onUnstake,
-  onClaimReward
+  onClaimReward,
+  solImg
 }) => {
   const classes = useStyle()
   const [activeValue, SetActiveValue] = useState(action)
@@ -156,7 +158,10 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
           <Grid style={{ display: 'flex' }}>
             <Grid className={classes.tokenArea}>
               <Grid className={classes.token}>
-                <Typography className={classes.tokenName}>{pair}</Typography>
+                <Typography className={classes.tokenName}>
+                  <img src={solImg} alt='' className={classes.tokenImg} />
+                  {rewardsToken}
+                </Typography>
               </Grid>
               <Typography className={classes.tokenValue}>
                 <AnimatedNumber
@@ -179,16 +184,16 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
           <Grid justifyContent='space-between' direction='row'>
             <Box className={classes.labelGrid}>
               <Typography className={classes.infoText}>
-                Staked:
+                Staked:{' '}
                 <Typography display='inline' className={classes.labelText}>
-                  <span className={classes.stakedValue}>{staked.toLocaleString('pl-PL')}</span>
+                  <span className={classes.stakedValue}>{staked.toLocaleString('pl-PL')}</span>{' '}
                   {pair}
                 </Typography>
               </Typography>
               <Typography className={classes.labelText}>
                 {isXsDown
-                  ? `$ ${value * currencyPrice}`
-                  : `${value} ${pair} = $ ${value * currencyPrice}`}
+                  ? `${Number(value).toFixed(2)} ${rewardsToken} = $${value * currencyPrice}`
+                  : `${value} ${pair} = $${value * currencyPrice}`}
               </Typography>
             </Box>
           </Grid>

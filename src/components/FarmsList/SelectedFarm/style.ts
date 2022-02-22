@@ -20,7 +20,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 27,
     borderRadius: 12,
     padding: '7px 0',
-    background: `${colors.invariant.newDark} !important`,
+    background: 'none !important',
+    boxShadow: 'none !important',
     textTransform: 'none',
     color: colors.invariant.light,
     [theme.breakpoints.down('xs')]: {
@@ -35,6 +36,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       background: 'rgba(239, 132, 245, 0.9) !important',
       color: colors.black.full
     }
+  },
+
+  tokenImg: {
+    width: 20,
+    height: 20,
+    objectFit: 'cover',
+    marginRight: 10,
+    borderRadius: 100
   },
 
   unstakeButton: {
@@ -66,7 +75,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 27,
     borderRadius: 12,
     padding: '7px 0',
-    background: `${colors.invariant.newDark} !important`,
+    background: 'none !important',
+    boxShadow: 'none !important',
     textTransform: 'none',
     color: colors.invariant.light,
     [theme.breakpoints.down('xs')]: {
@@ -107,7 +117,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelText: {
     justifyContent: 'center',
     ...typography.caption1,
-    color: colors.white.main
+    color: colors.invariant.textGrey
   },
   top: {
     marginBottom: 20,
@@ -216,7 +226,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.greenLinearGradientOpacity,
     color: colors.black.full,
     [theme.breakpoints.down('xs')]: {
-      ...typography.body3,
+      ...typography.caption3,
       minWidth: 105
     },
     '&:hover': {
@@ -278,7 +288,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.white.main,
     ...typography.caption1,
     [theme.breakpoints.down('xs')]: {
-      ...typography.body2
+      ...typography.body2,
+      display: 'flex',
+      alignItems: 'center'
     }
   },
   tokenValue: {

@@ -22,6 +22,7 @@ storiesOf('farmsList/selectedFarm', module).add('tile', () => {
         onClaimReward={(id: string): void => {
           console.log(id)
         }}
+        solImg='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
       />
     </div>
   )
