@@ -127,7 +127,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: '0%',
     transform: 'translateX(-50%) translateY(-40%)',
     cursor: 'pointer',
-    transition: 'background-color 200ms'
+    transition: 'background-color 200ms',
+
+    [theme.breakpoints.down('xs')]: {
+      transform: 'translateX(-50%) translateY(-10%)'
+    }
   },
   swapImgRoot: {
     background: colors.invariant.newDark,
@@ -176,10 +180,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 
   transactionDetailsHeader: {
-    ...typography.caption4,
-    lineHeight: '24px',
+    ...typography.caption2,
     whiteSpace: 'nowrap',
-    pointerEvents: 'none'
+    pointerEvents: 'none',
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.tiny2
+    }
   },
 
   swapButton: {
@@ -208,7 +215,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 
   transactionBottom: {
-    marginTop: 10
+    marginTop: 10,
+
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 36
+    }
   },
 
   transtactionData: {

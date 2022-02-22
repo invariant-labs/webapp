@@ -161,10 +161,10 @@ export const Swap: React.FC<ISwap> = ({
   useEffect(() => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       if (inputRef === inputTarget.FROM) {
-        const amount = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut
+        const amount = getAmountOut(tokens[tokenToIndex])
         setAmountTo(+amount === 0 ? '' : amount)
       } else {
-        const amount = getKnownPrice(tokens[tokenToIndex], tokens[tokenFromIndex]).amountOut
+        const amount = getAmountOut(tokens[tokenFromIndex])
         setAmountFrom(+amount === 0 ? '' : amount)
       }
     }
@@ -192,19 +192,16 @@ export const Swap: React.FC<ISwap> = ({
     setRateReversed(false)
   }, [tokenFromIndex, tokenToIndex])
 
-  const getKnownPrice = (assetIn: SwapToken, assetFor: SwapToken) => {
-    let swapRate: number = 0
-    let amountOut: number = 0
+  const getSwapRate = (assetIn: SwapToken, assetFor: SwapToken) => {
+    return inputRef === inputTarget.FROM
+      ? +printBN(simulateResult.AmountOutWithFee, assetFor.decimals) / Number(amountFrom)
+      : Number(amountTo) / +printBN(simulateResult.AmountOutWithFee, assetIn.decimals)
+  }
 
-    if (inputRef === inputTarget.FROM) {
-      swapRate = +printBN(simulateResult.AmountOutWithFee, assetFor.decimals) / Number(amountFrom)
-    } else {
-      swapRate = Number(amountTo) / +printBN(simulateResult.AmountOutWithFee, assetIn.decimals)
-    }
+  const getAmountOut = (assetFor: SwapToken) => {
+    const amountOut: number = Number(printBN(simulateResult.amountOut, assetFor.decimals))
 
-    amountOut = Number(printBN(simulateResult.amountOut, assetFor.decimals))
-
-    return { amountOut: amountOut.toFixed(assetFor.decimals), swapRate: swapRate }
+    return amountOut.toFixed(assetFor.decimals)
   }
 
   const setSimulateAmount = async () => {
@@ -265,7 +262,7 @@ export const Swap: React.FC<ISwap> = ({
 
   const updateEstimatedAmount = () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      const amount = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut
+      const amount = getAmountOut(tokens[tokenToIndex])
       setAmountTo(+amount === 0 ? '' : amount)
     }
   }
@@ -351,7 +348,7 @@ export const Swap: React.FC<ISwap> = ({
   const swapRate =
     tokenFromIndex === null || tokenToIndex === null
       ? 0
-      : getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate
+      : getSwapRate(tokens[tokenFromIndex], tokens[tokenToIndex])
 
   return (
     <Grid container className={classes.swapWrapper}>
