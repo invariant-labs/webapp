@@ -192,8 +192,6 @@ export const Swap: React.FC<ISwap> = ({
     setRateReversed(false)
   }, [tokenFromIndex, tokenToIndex])
 
-  console.log(rateReversed)
-
   const getKnownPrice = (assetIn: SwapToken, assetFor: SwapToken) => {
     let swapRate: number = 0
     let amountOut: number = 0
