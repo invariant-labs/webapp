@@ -117,7 +117,7 @@ export const WrappedPositionsList: React.FC = () => {
         onDisconnect: () => {
           dispatch(actions.disconnect())
         },
-        descCustomText: 'No liquidity positions to show.'
+        descCustomText: 'You have no positions.'
       }}
     />
   )

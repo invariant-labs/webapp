@@ -8,7 +8,7 @@ storiesOf('liquidityPosition/noconnected', module).add('default', () => {
       <NoConnected
         onConnect={() => {}}
         onDisconnect={() => {}}
-        descCustomText='No liquidity positions to show.'
+        descCustomText='You have no positions.'
       />
     </div>
   )
