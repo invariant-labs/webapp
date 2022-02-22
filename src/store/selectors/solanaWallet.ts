@@ -62,9 +62,7 @@ export const swapTokens = createSelector(
       assetAddress: token.address,
       balance:
         token.address.toString() === WRAPPED_SOL_ADDRESS
-          ? solBalance.gte(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
-            ? solBalance.sub(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
-            : new BN(0)
+          ? solBalance
           : allAccounts[token.address.toString()]?.balance ?? new BN(0)
     }))
   }

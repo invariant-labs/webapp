@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   container: {
     overflow: 'hidden',
-    padding: 15,
+    padding: 24,
     backgroundColor: colors.invariant.component,
     borderRadius: 20,
     width: 500,
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: colors.invariant.newDark,
     borderRadius: 15,
     padding: '18px 10px 17px 10px',
-    marginBottom: 7,
+    marginBottom: 20,
     '&::placeholder': {
       color: colors.invariant.light,
       ...typography.body1
@@ -127,7 +127,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderTop: `1px solid ${colors.invariant.light}`,
     width: 451,
     height: 352,
-    paddingTop: 10
+    paddingTop: 20
   },
 
   tokenContainer: {
@@ -150,7 +150,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     '&:hover': {
       background: colors.invariant.light,
-      borderRadius: 25
+      borderRadius: 24
     }
   },
   tokenName: {

@@ -33,12 +33,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 40,
     borderRadius: '100%',
 
-    [theme.breakpoints.down('md')]: {
-      width: 33
-    },
-
     [theme.breakpoints.down('xs')]: {
-      width: 25
+      width: 28
     }
   },
   arrows: {
@@ -66,14 +62,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '40px',
     whiteSpace: 'nowrap',
     width: 180,
+    [theme.breakpoints.down('lg')]: {
+      ...typography.heading2
+    },
     [theme.breakpoints.down('md')]: {
-      ...typography.heading3,
-      lineHeight: '33px',
+      lineHeight: '32px',
       width: 'unset'
     },
-
     [theme.breakpoints.down('xs')]: {
-      ...typography.heading4,
+      ...typography.heading3,
       lineHeight: '25px'
     }
   },
@@ -82,14 +79,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.lightGrey,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption1
+    }
   },
   greenText: {
     ...typography.body1,
     color: colors.invariant.green,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption1
+    }
   },
   liquidity: {
     background: colors.invariant.light,
@@ -144,6 +147,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   mdInfo: {
     width: 'fit-content',
+    flexWrap: 'nowrap',
 
     [theme.breakpoints.down('md')]: {
       flexWrap: 'nowrap',

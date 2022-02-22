@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.white.main
   },
   inputs: {
-    marginBottom: 20,
+    marginBottom: 12,
     flexDirection: 'row',
     gap: 16,
 
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   input: {
     flex: '1 1 0%',
-    gap: 12,
+    gap: 16,
 
     '&:first-child': {
       marginRight: 8
