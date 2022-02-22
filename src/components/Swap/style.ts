@@ -243,56 +243,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 4,
     filter: 'brightness(0.8)',
     pointerEvents: 'none'
-  },
-
-  exchangeRateContainer: {
-    paddingTop: 20,
-    display: 'flex'
-  },
-
-  ExchangeFeeContainer: {
-    borderRight: '1px solid white',
-    marginRight: 15
-  },
-  feeContainer: {
-    marginRight: 15
-  },
-
-  feeHeader: {
-    ...typography.heading4,
-    color: colors.invariant.textGrey,
-    paddingBottom: 10,
-    display: 'flex',
-    flexDirection: 'row'
-  },
-
-  ExchangeHeader: {
-    ...typography.heading4,
-    color: colors.invariant.textGrey
-  },
-  percentHeader: {
-    ...typography.heading4,
-    color: colors.white.main,
-    '& span': {
-      paddingLeft: 5,
-      color: colors.invariant.textGrey
-    }
-  },
-  valueContainer: {
-    ...typography.heading4,
-    color: colors.white.main
-  },
-  swapIcon: {
-    width: 25,
-    height: 25,
-    backgroundSize: 'contain'
-  },
-  swapIconContainer: {
-    marginLeft: 20,
-    background: colors.invariant.newDark,
-    padding: '0 10px 0 10px',
-    borderRadius: 5,
-    cursor: 'pointer'
   }
 }))
 
