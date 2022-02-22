@@ -26,10 +26,11 @@ const ExchangeRate: React.FC<iProps> = ({
       </Grid>
     ) : (
       <Typography className={classes.rateText}>
-        1 {tokenFromSymbol} = {amount.toFixed(tokenToDecimals)} {tokenToSymbol}
+        1 {tokenFromSymbol} = {isNaN(amount) ? 0 : amount.toFixed(tokenToDecimals)} {tokenToSymbol}
       </Typography>
     )
   }
+
   return (
     <Grid>
       <Typography component='h5' className={classes.rateText}>
