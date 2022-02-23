@@ -83,6 +83,7 @@ storiesOf('position/newPosition', module)
         isWaitingForNewPool={false}
         poolIndex={0}
         currentPairReversed={null}
+        bestTiers={[]}
       />
     </div>
   ))
@@ -115,6 +116,7 @@ storiesOf('position/newPosition', module)
         isWaitingForNewPool={false}
         poolIndex={0}
         currentPairReversed={null}
+        bestTiers={[]}
       />
     </div>
   ))

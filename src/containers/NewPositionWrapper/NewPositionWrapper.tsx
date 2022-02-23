@@ -10,13 +10,14 @@ import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { initPosition, plotTicks } from '@selectors/positions'
 import { BN } from '@project-serum/anchor'
-import { PRICE_DECIMAL } from '@consts/static'
+import { bestTiers, PRICE_DECIMAL } from '@consts/static'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import { calculatePriceSqrt, Pair } from '@invariant-labs/sdk'
 import { feeToTickSpacing } from '@invariant-labs/sdk/src/utils'
 import { actions as poolsActions } from '@reducers/pools'
+import { network } from '@selectors/solanaConnection'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -28,6 +29,7 @@ export const NewPositionWrapper = () => {
   const { success, inProgress } = useSelector(initPosition)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
+  const currentNetwork = useSelector(network)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
@@ -358,6 +360,7 @@ export const NewPositionWrapper = () => {
       isWaitingForNewPool={isWaitingForNewPool}
       poolIndex={poolIndex}
       currentPairReversed={currentPairReversed}
+      bestTiers={bestTiers[currentNetwork]}
     />
   )
 }

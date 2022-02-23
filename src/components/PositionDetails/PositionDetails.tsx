@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import SinglePositionInfo from '@components/PositionDetails/SinglePositionInfo/SinglePositionInfo'
 import SinglePositionPlot from '@components/PositionDetails/SinglePositionPlot/SinglePositionPlot'
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Button, Grid, Hidden, Typography } from '@material-ui/core'
 import { Link, useHistory } from 'react-router-dom'
 import backIcon from '@static/svg/back-arrow.svg'
 import useStyles from './style'
@@ -75,14 +75,16 @@ const PositionDetails: React.FC<IProps> = ({
         alignItems='flex-end'
         className={classes.right}
         wrap='nowrap'>
-        <Button
-          className={classes.button}
-          variant='contained'
-          onClick={() => {
-            history.push('/newPosition')
-          }}>
-          <span className={classes.buttonText}>+ Add Liquidity</span>
-        </Button>
+        <Hidden xsDown>
+          <Button
+            className={classes.button}
+            variant='contained'
+            onClick={() => {
+              history.push('/newPosition')
+            }}>
+            <span className={classes.buttonText}>+ Add Liquidity</span>
+          </Button>
+        </Hidden>
 
         <SinglePositionPlot
           data={
