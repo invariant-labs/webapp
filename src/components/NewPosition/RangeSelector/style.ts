@@ -42,10 +42,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: '1 1 0%',
     gap: 16,
 
-    '&:first-child': {
-      marginRight: 8
-    },
-
     [theme.breakpoints.down('sm')]: {
       '&:first-child': {
         marginRight: 0,
@@ -63,10 +59,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingInline: 8,
     backgroundColor: colors.invariant.light,
     borderRadius: 11,
-
-    '&:first-child': {
-      marginRight: 8
-    },
 
     [theme.breakpoints.down('sm')]: {
       '&:first-child': {

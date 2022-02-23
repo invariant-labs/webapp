@@ -209,8 +209,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           <RangeInput
             className={classes.input}
             label='Min price'
-            tokenFromSymbol={tokenNameWrapper(tokenASymbol)}
-            tokenToSymbol={tokenNameWrapper(tokenBSymbol)}
+            tokenFromSymbol={tokenASymbol}
+            tokenToSymbol={tokenBSymbol}
             currentValue={leftInputRounded}
             setValue={onLeftInputChange}
             decreaseValue={() => {
@@ -243,8 +243,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           <RangeInput
             className={classes.input}
             label='Max price'
-            tokenFromSymbol={tokenNameWrapper(tokenASymbol)}
-            tokenToSymbol={tokenNameWrapper(tokenBSymbol)}
+            tokenFromSymbol={tokenASymbol}
+            tokenToSymbol={tokenBSymbol}
             currentValue={rightInputRounded}
             setValue={onRightInputChange}
             decreaseValue={() => {

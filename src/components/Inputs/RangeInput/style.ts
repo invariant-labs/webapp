@@ -5,6 +5,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   data: {
     height: 36,
     paddingInline: 8,
+    flexWrap: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
     backgroundColor: colors.invariant.light,
     borderRadius: 11,
 
@@ -14,7 +18,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     color: colors.white.main,
-    marginRight: 2,
+    whiteSpace: 'nowrap',
+    marginRight: 16,
     ...typography.body1,
 
     [theme.breakpoints.down('sm')]: {
