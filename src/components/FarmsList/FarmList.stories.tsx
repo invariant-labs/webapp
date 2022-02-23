@@ -153,5 +153,3 @@ storiesOf('farmsList/list', module)
       </Grid>
     )
   })
-
-// <NoConnected onConnect={() => {}} onDisconnect={() => {}} />
