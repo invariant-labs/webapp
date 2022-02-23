@@ -184,11 +184,9 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
           <Grid justifyContent='space-between' direction='row'>
             <Box className={classes.labelGrid}>
               <Typography className={classes.infoText}>
-                Staked
-                <Typography display='inline' className={classes.labelText}>
-                  <span className={classes.stakedValue}>{staked.toLocaleString('pl-PL')}</span>{' '}
-                  {pair}
-                </Typography>
+                <span className={classes.labelText}>
+                  Staked: {staked.toLocaleString('pl-PL')} {pair}
+                </span>
               </Typography>
               <Typography className={classes.labelText}>
                 {isXsDown

@@ -98,7 +98,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
   labelText: {
     justifyContent: 'center',
-    ...typography.caption4,
+    ...typography.caption1,
+
+    [theme.breakpoints.down(400)]: {
+      ...typography.caption4
+    },
 
     color: colors.invariant.textGrey
   },
