@@ -592,9 +592,6 @@ export const handleSimulate = async (
       tickmap: tickMap
     })
 
-    if (swapSimulateResult.amountPerTick.length >= 8) {
-      throw new Error('Too large amount')
-    }
     if (!byAmountIn) {
       result = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
     } else {
@@ -606,6 +603,10 @@ export const handleSimulate = async (
       swapSimulateRouterAmount = result
       estimatedPrice = swapSimulateResult.priceAfterSwap
     }
+
+    if (swapSimulateResult.amountPerTick.length >= 8) {
+      throw new Error('Too large amount')
+    }
   } catch (err: any) {
     errorMessage = err.toString()
     console.log(err.toString())
@@ -616,6 +617,15 @@ export const handleSimulate = async (
       poolIndex: poolIndex,
       AmountOutWithFee: new BN(0),
       estimatedPriceAfterSwap: new BN(0),
+      error: errorMessage
+    }
+  }
+  if (errorMessage.length > 0) {
+    return {
+      amountOut: swapSimulateRouterAmount,
+      poolIndex: poolIndex,
+      AmountOutWithFee: resultWithFee,
+      estimatedPriceAfterSwap: estimatedPrice,
       error: errorMessage
     }
   }
