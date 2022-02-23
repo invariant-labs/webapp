@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core'
-import { colors, typography } from '@static/theme'
+import { colors, theme, typography } from '@static/theme'
 
 const useStyle = makeStyles(() => ({
   container: {
@@ -10,8 +10,19 @@ const useStyle = makeStyles(() => ({
     padding: '18px 0',
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`,
+    whiteSpace: 'nowrap',
     '& p': {
       ...typography.heading4
+    },
+
+    [theme.breakpoints.down(960)]: {
+      gridTemplateColumns: '5% 35% 15% 21% 20% 20%'
+    },
+
+    [theme.breakpoints.down(600)]: {
+      '& p': {
+        ...typography.caption2
+      }
     }
   },
 
@@ -24,6 +35,7 @@ const useStyle = makeStyles(() => ({
       borderRadius: '50%'
     }
   },
+
   header: {
     header: {
       '& p': {

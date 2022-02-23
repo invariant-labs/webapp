@@ -1,7 +1,8 @@
 import React from 'react'
-import { Grid, Typography, Box } from '@material-ui/core'
+import { Grid, Typography, Box, useMediaQuery } from '@material-ui/core'
 import useStyle from './style'
 import { colors } from '@static/theme'
+import { formatNumbers, showPrefix } from '@consts/utils'
 
 interface IProps {
   TVL?: string
@@ -27,6 +28,9 @@ const PoolListItem: React.FC<IProps> = ({
   tokenIndex
 }) => {
   const classes = useStyle()
+
+  const isXDown = useMediaQuery('(max-width:892px)')
+
   return (
     <Grid>
       {displayType === 'token' ? (
@@ -47,8 +51,20 @@ const PoolListItem: React.FC<IProps> = ({
             </Box>
           </Grid>
           <Typography>{fee}%</Typography>
-          <Typography>${volume}</Typography>
-          <Typography>${TVL}</Typography>
+          <Typography>
+            {isXDown
+              ? `~$${formatNumbers()(volume.split(',').join(''))} ${showPrefix(
+                  Number(volume.split(',').join(''))
+                )}`
+              : `$${volume}`}
+          </Typography>
+          <Typography>
+            {isXDown
+              ? `~$${formatNumbers()(TVL.split(',').join(''))} ${showPrefix(
+                  Number(TVL.split(',').join(''))
+                )}`
+              : `$${TVL}`}
+          </Typography>
         </Grid>
       ) : (
         <Grid container classes={{ container: classes.container, root: classes.header }}>
