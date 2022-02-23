@@ -20,6 +20,7 @@ storiesOf('position/poolInit', module).add('setter', () => {
         isXtoY={true}
         midPrice={midPrice}
         onChangeMidPrice={setMidPrice}
+        currentPairReversed={null}
       />
     </div>
   )
