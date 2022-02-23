@@ -173,12 +173,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }, [tokenASymbol, tokenBSymbol, fee, currentPairReversed])
 
-  useEffect(() => {
-    if (ticksLoading) {
-      resetPlot()
-    }
-  }, [midPrice, ticksLoading])
-
   return (
     <Grid container className={classes.wrapper}>
       <Typography className={classes.header}>Price range</Typography>

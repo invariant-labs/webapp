@@ -178,7 +178,8 @@ export const NewPositionWrapper = () => {
     <NewPosition
       tokens={tokens}
       onChangePositionTokens={(tokenA, tokenB, feeTierIndex) => {
-        if (tokenA !== null && tokenB !== null) {
+        const isNewCombination = !(tokenAIndex === tokenA && tokenBIndex === tokenB && fee.eq(FEE_TIERS[feeTierIndex].fee))
+        if (tokenA !== null && tokenB !== null && isNewCombination) {
           const index = allPools.findIndex(
             pool =>
               pool.fee.v.eq(FEE_TIERS[feeTierIndex].fee) &&
@@ -188,10 +189,10 @@ export const NewPositionWrapper = () => {
                   pool.tokenY.equals(tokens[tokenA].assetAddress)))
           )
 
-          if (index !== poolIndex) {
+          if (index !== poolIndex && isNewCombination) {
             setPoolIndex(index !== -1 ? index : null)
             setCurrentPairReversed(null)
-          } else {
+          } else if (!isNewCombination) {
             setCurrentPairReversed(currentPairReversed === null ? true : !currentPairReversed)
           }
 
@@ -202,7 +203,7 @@ export const NewPositionWrapper = () => {
                 isXtoY: allPools[index].tokenX.equals(tokens[tokenA].assetAddress)
               })
             )
-          } else {
+          } else if (isNewCombination) {
             dispatch(
               poolsActions.getPoolData(
                 new Pair(tokens[tokenA].assetAddress, tokens[tokenB].assetAddress, {
