@@ -151,7 +151,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 
   mobileContainer: {
-    paddingBottom: 20
+    padding: '6px 0 6px 0'
   },
 
   spacer: {

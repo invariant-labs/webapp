@@ -67,7 +67,7 @@ export const FarmTile: React.FC<IFarm> = ({
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Total Staked:</Typography>
         <Typography className={classes.value}>
-          {totalStaked.toLocaleString('fr-FR')} {tokenX.symbol}
+          {totalStaked.toLocaleString('fr-FR')} xUSD
         </Typography>
       </Grid>
       <Grid
@@ -76,9 +76,7 @@ export const FarmTile: React.FC<IFarm> = ({
         justifyContent='space-between'
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Liquidity:</Typography>
-        <Typography className={classes.value}>
-          {liquidity.toLocaleString('fr-FR')} {tokenX.symbol}
-        </Typography>
+        <Typography className={classes.value}>${liquidity.toLocaleString('fr-FR')}</Typography>
       </Grid>
       <Link className={classes.link} to={`/farms/${farmId}`}>
         <OutlinedButton className={classes.button} disabled={!isActive} name='Stake' />
