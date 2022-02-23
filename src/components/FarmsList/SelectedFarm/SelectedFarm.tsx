@@ -160,7 +160,6 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
               <Grid className={classes.token}>
                 <Typography className={classes.tokenName}>
                   <CardMedia image={iconTokenX} className={classes.tokenImg} />
-
                   <Typography className={classes.tokenName}>{rewardsToken}</Typography>
                 </Typography>
               </Grid>
@@ -185,7 +184,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
           <Grid justifyContent='space-between' direction='row'>
             <Box className={classes.labelGrid}>
               <Typography className={classes.infoText}>
-                Staked:{' '}
+                Staked
                 <Typography display='inline' className={classes.labelText}>
                   <span className={classes.stakedValue}>{staked.toLocaleString('pl-PL')}</span>{' '}
                   {pair}

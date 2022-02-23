@@ -98,12 +98,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
   labelText: {
     justifyContent: 'center',
-    ...typography.caption1,
-    color: colors.invariant.textGrey,
+    ...typography.caption4,
 
-    [theme.breakpoints.down(390)]: {
-      ...typography.caption4
-    }
+    color: colors.invariant.textGrey
   },
   top: {
     marginBottom: 18,
@@ -285,6 +282,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   tokenName: {
     color: colors.white.main,
     ...typography.caption1,
+    fontWeight: 'normal',
     display: 'flex',
     alignItems: 'center',
 
