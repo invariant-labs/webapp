@@ -10,9 +10,10 @@ import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { initPosition, plotTicks } from '@selectors/positions'
 import { BN } from '@project-serum/anchor'
-import { PRICE_DECIMAL } from '@consts/static'
+import { bestTiers, PRICE_DECIMAL } from '@consts/static'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import { network } from '@selectors/solanaConnection'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -23,6 +24,7 @@ export const NewPositionWrapper = () => {
   const allPools = useSelector(pools)
   const { success, inProgress } = useSelector(initPosition)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
+  const currentNetwork = useSelector(network)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
@@ -313,6 +315,7 @@ export const NewPositionWrapper = () => {
       yDecimal={yDecimal}
       poolIndex={poolIndex}
       currentPairReversed={currentPairReversed}
+      bestTiers={bestTiers[currentNetwork]}
     />
   )
 }
