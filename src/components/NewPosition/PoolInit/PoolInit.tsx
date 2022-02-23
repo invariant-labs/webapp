@@ -100,7 +100,11 @@ export const PoolInit: React.FC<IPoolInit> = ({
   return (
     <Grid container className={classes.wrapper}>
       <Typography className={classes.header}>Starting price</Typography>
-      <Grid container className={classes.innerWrapper} direction='column' justifyContent='flex-start'>
+      <Grid
+        container
+        className={classes.innerWrapper}
+        direction='column'
+        justifyContent='flex-start'>
         <Grid className={classes.infoWrapper}>
           <Typography className={classes.info}>
             This pool does not exist yet. Select a pair of tokens, then choose a fee. Enter the
