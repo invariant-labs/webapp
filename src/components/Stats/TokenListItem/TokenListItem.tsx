@@ -2,9 +2,8 @@ import React from 'react'
 import { formatNumbers, printBN, showPrefix } from '@consts/utils'
 import { Grid, Typography, useMediaQuery } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
-import { colors } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import { useStyles } from './style'
-
 interface IProps {
   displayType: string
   itemNumber?: number
@@ -33,8 +32,8 @@ const TokenListItem: React.FC<IProps> = ({
   const classes = useStyles()
   const isNegative = Number(priceChange) < 0
 
-  const isXDown = useMediaQuery('(max-width:1012px)')
-  const hideTokenImage = useMediaQuery('(max-width:600px)')
+  const isXDown = useMediaQuery(theme.breakpoints.down('sm'))
+  const hideName = useMediaQuery(theme.breakpoints.down('xs'))
 
   return (
     <Grid>
@@ -45,10 +44,10 @@ const TokenListItem: React.FC<IProps> = ({
           classes={{ container: classes.container, root: classes.tokenList }}>
           <Typography component='p'>{itemNumber}</Typography>
           <Grid className={classes.tokenName}>
-            <img src={icon}></img>
+            {!isXDown && <img src={icon}></img>}
             <Typography>
-              {`${name}`}
-              <span className={classes.tokenSymbol}>{` (${symbol})`}</span>
+              {hideName ? symbol : name}
+              {!hideName && <span className={classes.tokenSymbol}>{` (${symbol})`}</span>}
             </Typography>
           </Grid>
           <Typography>${Number(printBN(price, decimals)).toFixed(2)}</Typography>
