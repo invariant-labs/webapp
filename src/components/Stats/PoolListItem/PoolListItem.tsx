@@ -56,15 +56,15 @@ const PoolListItem: React.FC<IProps> = ({
           <Typography>{fee}%</Typography>
           <Typography>
             {isXDown
-              ? `~$${formatNumbers()(volume.split(',').join(''))} ${showPrefix(
-                  Number(volume.split(',').join(''))
+              ? `~$${formatNumbers()(volume.replace(/[,.]/g, ''))} ${showPrefix(
+                  Number(volume.replace(/[,.]/g, ''))
                 )}`
               : `$${volume}`}
           </Typography>
           <Typography>
             {isXDown
-              ? `~$${formatNumbers()(TVL.split(',').join(''))} ${showPrefix(
-                  Number(TVL.split(',').join(''))
+              ? `~$${formatNumbers()(TVL.replace(/[,.]/g, ''))} ${showPrefix(
+                  Number(TVL.replace(/[,.]/g, ''))
                 )}`
               : `$${TVL}`}
           </Typography>
