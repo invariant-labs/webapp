@@ -41,7 +41,8 @@ export interface IDepositSelector {
   percentageChangeB?: number
   usdValueB?: number
   onReverseTokens: () => void
-  poolIndex: number | null
+  poolIndex: number | null,
+  bestTierIndex?: number
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -60,7 +61,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   percentageChangeB,
   usdValueB,
   onReverseTokens,
-  poolIndex
+  poolIndex,
+  bestTierIndex
 }) => {
   const classes = useStyles()
 
@@ -206,6 +208,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           }}
           feeTiers={feeTiers}
           showOnlyPercents
+          bestTierIndex={bestTierIndex}
         />
       </Grid>
 
