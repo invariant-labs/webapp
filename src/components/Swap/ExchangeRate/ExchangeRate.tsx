@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@material-ui/core'
+import { Box, Grid, Typography } from '@material-ui/core'
 import loadingAnimation from '@static/gif/loading.gif'
 import React from 'react'
 import useStyles from './style'
@@ -9,6 +9,7 @@ interface iProps {
   amount: number
   tokenToDecimals: number
   loading: boolean
+  onClick: () => void
 }
 
 const ExchangeRate: React.FC<iProps> = ({
@@ -16,7 +17,8 @@ const ExchangeRate: React.FC<iProps> = ({
   tokenToSymbol,
   amount,
   tokenToDecimals,
-  loading
+  loading,
+  onClick
 }) => {
   const classes = useStyles()
   const setLoading = () => {
@@ -25,19 +27,13 @@ const ExchangeRate: React.FC<iProps> = ({
         <img src={loadingAnimation} className={classes.loading}></img>
       </Grid>
     ) : (
-      <Typography className={classes.rateText}>
+      <Typography className={classes.rateText} onClick={onClick}>
         1 {tokenFromSymbol} = {isNaN(amount) ? 0 : amount.toFixed(tokenToDecimals)} {tokenToSymbol}
       </Typography>
     )
   }
 
-  return (
-    <Grid>
-      <Typography component='h5' className={classes.rateText}>
-        {setLoading()}
-      </Typography>
-    </Grid>
-  )
+  return <Box className={classes.ableToHover}>{setLoading()}</Box>
 }
 
 export default ExchangeRate
