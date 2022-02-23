@@ -95,7 +95,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   connectWalletButton: {
     height: '48px !important',
     borderRadius: '16px !important',
-    width: '100%'
+    width: '100%',
+
+    [theme.breakpoints.down('xs')]: {
+      width: '100% !important'
+    }
   },
   tokenComponentTextContainer: {
     display: 'flex',
@@ -127,7 +131,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: '0%',
     transform: 'translateX(-50%) translateY(-40%)',
     cursor: 'pointer',
-    transition: 'background-color 200ms'
+    transition: 'background-color 200ms',
+
+    [theme.breakpoints.down('xs')]: {
+      transform: 'translateX(-50%) translateY(-14%)'
+    }
   },
   swapImgRoot: {
     background: colors.invariant.newDark,
@@ -155,31 +163,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    flexFlow: 'row wrap',
+    flexFlow: 'row nowrap',
     margin: '5px 0 7px 0px',
     position: 'relative',
     cursor: 'default',
-    filter: 'brightness(0.9)',
-
-    [theme.breakpoints.down('xs')]: {
-      justifyContent: 'center'
-    }
+    filter: 'brightness(0.9)'
   },
   transactionDetailsWrapper: {
     display: 'flex',
     flexDirection: 'row',
     backgroundColor: colors.invariant.light,
     margin: '16px 0 ',
-    padding: '5px 15px',
+    paddingInline: 15,
     borderRadius: '10px',
-    alignItems: 'center'
+    alignItems: 'center',
+    height: 32
   },
 
   transactionDetailsHeader: {
-    ...typography.caption4,
-    lineHeight: '24px',
+    ...typography.caption2,
     whiteSpace: 'nowrap',
-    pointerEvents: 'none'
+    pointerEvents: 'none',
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.tiny2
+    }
   },
 
   swapButton: {
@@ -200,15 +208,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '5px 15px 5px 15px'
   },
 
-  ableToHover: {
-    border: `1px solid ${colors.invariant.light}`,
-    borderRadius: '10px',
-    padding: '5px 15px 5px 15px',
-    cursor: 'pointer'
-  },
-
   transactionBottom: {
-    marginTop: 10
+    marginTop: 10,
+
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 36
+    }
   },
 
   transtactionData: {
@@ -241,6 +246,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 10,
     height: 10,
     marginLeft: 4,
+    marginBottom: 2,
     filter: 'brightness(0.8)',
     pointerEvents: 'none'
   }
