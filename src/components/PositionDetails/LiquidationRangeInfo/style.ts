@@ -6,7 +6,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'uppercase',
     color: colors.invariant.lightGrey,
     ...typography.body2,
-    lineHeight: '35px'
+    lineHeight: '35px',
+    [theme.breakpoints.down('md')]: {
+      ...typography.caption4,
+      lineHeight: '35px'
+    },
+    [theme.breakpoints.down('sm')]: {
+      ...typography.body2,
+      lineHeight: '35px'
+    }
   },
   infoTypeSwap: {
     display: 'flex',
@@ -43,9 +51,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.lightGrey,
     ...typography.body1,
     lineHeight: '35px',
-
-    [theme.breakpoints.only('md')]: {
-      ...typography.body1,
+    [theme.breakpoints.down('md')]: {
+      ...typography.caption3,
+      lineHeight: '35px'
+    },
+    [theme.breakpoints.down('sm')]: {
+      ...typography.caption1,
       lineHeight: '35px'
     }
   }

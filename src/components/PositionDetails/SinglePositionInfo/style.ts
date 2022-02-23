@@ -213,11 +213,40 @@ const useStyles = makeStyles((theme: Theme) => ({
       background: colors.invariant.greenLinearGradient,
       boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
     },
+    [theme.breakpoints.down('md')]: {
+      marginRight: 10
+    },
 
     [theme.breakpoints.down('xs')]: {
       width: 84,
       fontSize: 12
     }
+  },
+  button: {
+    color: colors.invariant.black,
+    ...typography.body1,
+    textTransform: 'none',
+    background: colors.invariant.pinkLinearGradientOpacity,
+    borderRadius: 14,
+    height: 40,
+    width: 130,
+    paddingRight: 9,
+    paddingLeft: 9,
+    letterSpacing: -0.03,
+
+    '&:hover': {
+      background: colors.invariant.pinkLinearGradient,
+      boxShadow: `0 0 16px ${colors.invariant.pink}`
+    }
+  },
+  buttonText: {
+    WebkitPaddingBefore: '2px'
+  },
+  buttons: {
+    width: ' 100%',
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap'
   },
   iconText: {
     paddingRight: 10,
