@@ -33,7 +33,7 @@ const TokenListItem: React.FC<IProps> = ({
   const classes = useStyles()
   const isNegative = Number(priceChange) < 0
 
-  const isXDown = useMediaQuery('(max-width:892px)')
+  const isXDown = useMediaQuery('(max-width:1012px)')
   const hideTokenImage = useMediaQuery('(max-width:600px)')
 
   return (

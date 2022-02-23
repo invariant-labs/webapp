@@ -9,8 +9,8 @@ export const useStyles = makeStyles(theme => ({
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`,
 
-    [theme.breakpoints.down(960)]: {
-      gridTemplateColumns: '5% 35% 15% 21% 20% 20%',
+    [theme.breakpoints.down(1012)]: {
+      gridTemplateColumns: ': 5% 30% 14% 20% 18% 20% 20%',
 
       '& p': {
         ...typography.heading4
