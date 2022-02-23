@@ -5,8 +5,20 @@ export const useStyles = makeStyles(() => ({
   wrapper: {
     width: '100%',
     borderRadius: 13,
-    backgroundColor: colors.invariant.componentBcg,
-    marginBottom: 32
+    backgroundColor: colors.invariant.componentBcg
+  },
+  bestText: {
+    color: colors.invariant.green,
+    position: 'relative',
+    transition: 'left 300ms',
+    ...typography.caption1,
+    textAlign: 'center'
+  },
+  bestWrapper: {
+    width: '100%',
+    height: 25,
+    paddingBlock: 4,
+    marginBottom: 7
   }
 }))
 
@@ -53,6 +65,15 @@ export const useSingleTabStyles = makeStyles(() => ({
 
     '&:last-of-type': {
       marginRight: 0
+    }
+  },
+  best: {
+    color: colors.invariant.green,
+    border: `2px solid ${colors.invariant.green}`,
+    borderRadius: 10,
+
+    '&:hover': {
+      color: colors.invariant.green
     }
   },
   selected: {
