@@ -358,6 +358,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             tokenBSymbol={tokenBIndex !== null ? tokens[tokenBIndex].symbol : 'XYZ'}
             midPrice={midPrice.index}
             onChangeMidPrice={onChangeMidPrice}
+            currentPairReversed={currentPairReversed}
           />
         )}
       </Grid>

@@ -171,7 +171,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     } else {
       reversePlot()
     }
-  }, [tokenASymbol, tokenBSymbol, fee, currentPairReversed])
+  }, [tokenASymbol, tokenBSymbol, fee, currentPairReversed, ticksLoading])
 
   return (
     <Grid container className={classes.wrapper}>

@@ -23,6 +23,7 @@ export interface IPoolInit {
   tickSpacing: number
   midPrice: number
   onChangeMidPrice: (mid: number) => void
+  currentPairReversed: boolean | null
 }
 
 export const PoolInit: React.FC<IPoolInit> = ({
@@ -34,7 +35,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
   yDecimal,
   tickSpacing,
   midPrice,
-  onChangeMidPrice
+  onChangeMidPrice,
+  currentPairReversed
 }) => {
   const classes = useStyles()
 
@@ -96,6 +98,13 @@ export const PoolInit: React.FC<IPoolInit> = ({
   useEffect(() => {
     changeRangeHandler(leftRange, rightRange)
   }, [midPrice])
+
+  useEffect(() => {
+    if (currentPairReversed !== null) {
+      setMidPriceInput((1 / +midPriceInput).toString())
+      changeRangeHandler(rightRange, leftRange)
+    }
+  }, [currentPairReversed])
 
   return (
     <Grid container className={classes.wrapper}>
