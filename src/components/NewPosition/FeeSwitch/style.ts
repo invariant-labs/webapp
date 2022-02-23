@@ -7,7 +7,9 @@ export const useStyles = makeStyles(() => ({
     borderRadius: 13,
     backgroundColor: colors.invariant.componentBcg,
     marginBottom: 32
-  }
+  },
+  bestText: {},
+  bestWrapper: {}
 }))
 
 export const useTabsStyles = makeStyles(() => ({
@@ -55,6 +57,7 @@ export const useSingleTabStyles = makeStyles(() => ({
       marginRight: 0
     }
   },
+  best: {},
   selected: {
     ...typography.heading4,
     color: colors.white.main,
