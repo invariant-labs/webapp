@@ -173,10 +173,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }, [tokenASymbol, tokenBSymbol, fee, currentPairReversed])
 
-  const tokenNameWrapper = (tokenName: string) => {
-    return tokenName.length > 4 ? tokenName.slice(0, 4).concat('...') : tokenName
-  }
-
   return (
     <Grid container className={classes.wrapper}>
       <Typography className={classes.header}>Price range</Typography>
