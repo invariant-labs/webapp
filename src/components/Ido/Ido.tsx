@@ -1,12 +1,11 @@
-import React from 'react'
-import { Grid, Typography, Box, CardMedia } from '@material-ui/core'
+import React, { useState } from 'react'
+import { Grid, Typography, Box, CardMedia, useMediaQuery } from '@material-ui/core'
 import { SwapToken } from '@components/Swap/Swap'
 import useStyle from './style'
 import AnimatedButton from '@components/AnimatedButton/AnimatedButton'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
-
 interface IdoInterface {
   xBtc: string
   xEth: string
@@ -32,7 +31,11 @@ const Ido: React.FC<IdoInterface> = ({
   balance,
   decimal
 }) => {
+  const [amount, setAmount] = useState('')
+
   const classes = useStyle()
+
+  const isXsDown = useMediaQuery('(max-width:450px)')
 
   return (
     <Grid className={classes.idoWrapper}>
@@ -43,14 +46,15 @@ const Ido: React.FC<IdoInterface> = ({
         <Box className={classes.depositHeader}>
           <Typography component='h1'>{header}</Typography>
         </Box>
-        <Grid className={classes.AmountInputContainer}>
+        <Grid className={classes.AmountInputContainer} id='11111111111111111111111'>
           <DepositAmountInput
+            value={amount}
             balanceValue={balance}
             currency={token.symbol}
             currencyIconSrc={token.logoURI}
             placeholder={`0.${'0'.repeat(6)}`}
-            setValue={() => {}}
-            onMaxClick={() => {}}
+            setValue={value => setAmount(value)}
+            onMaxClick={() => setAmount(balance)}
             decimalsLimit={decimal}
           />
         </Grid>
@@ -68,7 +72,10 @@ const Ido: React.FC<IdoInterface> = ({
                 <Typography component='p'>{usd}</Typography>
                 <Typography component='p'>{sol}</Typography>
                 <Typography component='p'>{xEth}</Typography>
-                <Typography component='p'>{xBtc}</Typography>
+                <Typography component='p' style={{ display: isXsDown ? 'none' : 'block' }}>
+                  {' '}
+                  {xBtc}
+                </Typography>
               </Box>
             </Box>
           </Grid>

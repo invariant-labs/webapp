@@ -26,11 +26,11 @@ storiesOf('newUi/Ido', module)
   .add('connect a wallet', () => {
     return (
       <Ido
-        xBtc='46.643 xUSD'
-        xEth='0.00000 xBTC'
-        sol='0.00000 xETH'
-        usd='0.0432 SOL'
-        xUsd='47.43 USD'
+        xEth='0.00000 xETH'
+        sol='0.0432 SOL'
+        usd='47.43 USD'
+        xUsd='46.643 xUSD'
+        xBtc='0.00000 xBTC'
         header='Deposit your SOL'
         buttonHeader='Connect a wallet'
         token={token}
@@ -42,11 +42,11 @@ storiesOf('newUi/Ido', module)
   .add('sell period', () => {
     return (
       <Ido
-        xBtc='46.643 xUSD'
-        xEth='0.00000 xBTC'
-        sol='0.00000 xETH'
-        usd='0.0432 SOL'
-        xUsd='47.43 USD'
+        xEth='0.00000 xETH'
+        sol='0.0432 SOL'
+        usd='47.43 USD'
+        xUsd='46.643 xUSD'
+        xBtc='0.00000 xBTC'
         header='Claim your SOL'
         buttonHeader='Connect a wallet'
         token={token}
@@ -58,11 +58,11 @@ storiesOf('newUi/Ido', module)
   .add('grace period', () => {
     return (
       <Ido
-        xBtc='46.643 xUSD'
-        xEth='0.00000 xBTC'
-        sol='0.00000 xETH'
-        usd='0.0432 SOL'
-        xUsd='47.43 USD'
+        xEth='0.00000 xETH'
+        sol='0.0432 SOL'
+        usd='47.43 USD'
+        xUsd='46.643 xUSD'
+        xBtc='0.00000 xBTC'
         header='Withdraw your SOL'
         buttonHeader='Connect a wallet'
         token={token}
@@ -74,11 +74,11 @@ storiesOf('newUi/Ido', module)
   .add('claiming', () => {
     return (
       <Ido
-        xBtc='46.643 xUSD'
-        xEth='0.00000 xBTC'
-        sol='0.00000 xETH'
-        usd='0.0432 SOL'
-        xUsd='47.43 USD'
+        xEth='0.00000 xETH'
+        sol='0.0432 SOL'
+        usd='47.43 USD'
+        xUsd='46.643 xUSD'
+        xBtc='0.00000 xBTC'
         header='Claim your SOL'
         buttonHeader='Connect a wallet'
         token={token}
@@ -93,11 +93,11 @@ storiesOf('newUi/Ido', module)
     return (
       <Grid container className={classes.container}>
         <Ido
-          xBtc='46.643 xUSD'
-          xEth='0.00000 xBTC'
-          sol='0.00000 xETH'
-          usd='0.0432 SOL'
-          xUsd='47.43 USD'
+          xEth='0.00000 xETH'
+          sol='0.0432 SOL'
+          usd='47.43 USD'
+          xUsd='46.643 xUSD'
+          xBtc='0.00000 xBTC'
           header='Claim your SOL'
           buttonHeader='Connect a wallet'
           token={token}
