@@ -1,7 +1,8 @@
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Button, Grid, Hidden, Typography } from '@material-ui/core'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import { BoxInfo } from './BoxInfo'
 import { ILiquidityToken } from './consts'
 import useStyles from './style'
@@ -25,6 +26,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
   xToY,
   swapHandler
 }) => {
+  const history = useHistory()
   const classes = useStyles()
   return (
     <Grid className={classes.root}>
@@ -48,17 +50,28 @@ const SinglePositionInfo: React.FC<IProp> = ({
             </Typography>
             <Typography className={classes.name}>{xToY ? tokenY.name : tokenX.name}</Typography>
           </Grid>
-        </Grid>
-
-        <Grid className={classes.headerText}>
           <Grid className={classes.rangeGrid}>
             <Typography className={classNames(classes.text, classes.feeText)}>
               {fee}% fee
             </Typography>
           </Grid>
+        </Grid>
+
+        <Grid className={classes.headerButtons}>
           <Button className={classes.closeButton} variant='contained' onClick={closePosition}>
             Close position
           </Button>
+          <Hidden smUp>
+            {' '}
+            <Button
+              className={classes.button}
+              variant='contained'
+              onClick={() => {
+                history.push('/newPosition')
+              }}>
+              <span className={classes.buttonText}>+ Add Liquidity</span>
+            </Button>
+          </Hidden>
         </Grid>
       </Grid>
       <Grid className={classes.bottomGrid}>

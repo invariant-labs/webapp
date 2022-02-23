@@ -6,7 +6,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'uppercase',
     color: colors.invariant.lightGrey,
     ...typography.body2,
-    lineHeight: '35px'
+    lineHeight: '35px',
+    [theme.breakpoints.down('md')]: {
+      ...typography.caption4,
+      lineHeight: '35px'
+    },
+    [theme.breakpoints.down('sm')]: {
+      ...typography.body2,
+      lineHeight: '35px'
+    }
   },
   infoTypeSwap: {
     display: 'flex',
@@ -19,8 +27,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.light,
     borderRadius: 13,
     textAlign: 'center',
+    marginRight: 6,
     width: 61,
-    padding: 2
+    padding: 2,
+    [theme.breakpoints.down('md')]: {
+      marginRight: 0
+    }
   },
   infoSwap: {
     display: 'flex',
@@ -30,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   infoAmount: {
     color: colors.invariant.text,
-    paddingRight: 5,
+    paddingRight: 8,
     ...typography.body1,
     lineHeight: '35px',
 
@@ -42,10 +54,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   infoSwapToken: {
     color: colors.invariant.lightGrey,
     ...typography.body1,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
     lineHeight: '35px',
-
-    [theme.breakpoints.only('md')]: {
-      ...typography.body1,
+    [theme.breakpoints.down('md')]: {
+      ...typography.caption3,
+      lineHeight: '35px'
+    },
+    [theme.breakpoints.down('sm')]: {
+      ...typography.caption1,
       lineHeight: '35px'
     }
   }
