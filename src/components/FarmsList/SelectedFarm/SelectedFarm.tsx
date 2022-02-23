@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography, useMediaQuery } from '@material-ui/core'
+import { Box, Button, CardMedia, Grid, Typography, useMediaQuery } from '@material-ui/core'
 import React, { useState } from 'react'
 import useStyle from './style'
 import AnimatedNumber from '@components/AnimatedNumber'
@@ -159,8 +159,9 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
             <Grid className={classes.tokenArea}>
               <Grid className={classes.token}>
                 <Typography className={classes.tokenName}>
-                  <img src={iconTokenX} alt='' className={classes.tokenImg} />
-                  {rewardsToken}
+                  <CardMedia image={iconTokenX} className={classes.tokenImg} />
+
+                  <Typography className={classes.tokenName}>{rewardsToken}</Typography>
                 </Typography>
               </Grid>
               <Typography className={classes.tokenValue}>

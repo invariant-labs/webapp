@@ -41,8 +41,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 
   tokenImg: {
-    width: 20,
-    height: 20,
+    minWidth: 20,
+    minHeight: 20,
     objectFit: 'cover',
     marginRight: 10,
     borderRadius: 100
@@ -99,7 +99,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelText: {
     justifyContent: 'center',
     ...typography.caption1,
-    color: colors.invariant.textGrey
+    color: colors.invariant.textGrey,
+
+    [theme.breakpoints.down(390)]: {
+      ...typography.caption4
+    }
   },
   top: {
     marginBottom: 18,
@@ -283,6 +287,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.caption1,
     display: 'flex',
     alignItems: 'center',
+
+    '& p': {
+      display: 'flex',
+      alginItems: 'center',
+      justifyContent: 'center'
+    },
+
     [theme.breakpoints.down('xs')]: {
       ...typography.body2
     }
