@@ -100,7 +100,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     ...typography.caption1,
 
-    [theme.breakpoints.down(400)]: {
+    [theme.breakpoints.down('xs')]: {
       ...typography.caption4
     },
 
