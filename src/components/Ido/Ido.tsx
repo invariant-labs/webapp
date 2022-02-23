@@ -46,7 +46,7 @@ const Ido: React.FC<IdoInterface> = ({
         <Box className={classes.depositHeader}>
           <Typography component='h1'>{header}</Typography>
         </Box>
-        <Grid className={classes.AmountInputContainer} id='11111111111111111111111'>
+        <Grid className={classes.AmountInputContainer}>
           <DepositAmountInput
             value={amount}
             balanceValue={balance}

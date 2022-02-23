@@ -42,13 +42,11 @@ const useStyle = makeStyles(theme => ({
   },
 
   AmountInputContainer: {
-    backgroundColor: colors.invariant.newDark,
     borderRadius: 16,
     marginTop: 22,
-
     '& > div': {
       marginBottom: 0,
-      height: 100
+      height: 80
     }
   },
 
