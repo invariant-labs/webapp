@@ -1,6 +1,6 @@
 import React from 'react'
-import { printBN } from '@consts/utils'
-import { Grid, Typography } from '@material-ui/core'
+import { formatNumbers, printBN, showPrefix } from '@consts/utils'
+import { Grid, Typography, useMediaQuery } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
 import { colors } from '@static/theme'
 import { useStyles } from './style'
@@ -32,6 +32,10 @@ const TokenListItem: React.FC<IProps> = ({
 }) => {
   const classes = useStyles()
   const isNegative = Number(priceChange) < 0
+
+  const isXDown = useMediaQuery('(max-width:892px)')
+  const hideTokenImage = useMediaQuery('(max-width:600px)')
+
   return (
     <Grid>
       {displayType === 'tokens' ? (
@@ -51,8 +55,20 @@ const TokenListItem: React.FC<IProps> = ({
           <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
             {isNegative ? `-${Math.abs(Number(priceChange))}%` : `+${priceChange}%`}
           </Typography>
-          <Typography>{volume}</Typography>
-          <Typography>{TVL}</Typography>
+          <Typography>
+            {isXDown
+              ? `~$${formatNumbers()(volume.replace(/[,.]/g, ''))} ${showPrefix(
+                  Number(volume.split(',').join(''))
+                )}`
+              : `$${volume}`}
+          </Typography>
+          <Typography>
+            {isXDown
+              ? `~$${formatNumbers()(TVL.replace(/[,.]/g, ''))} ${showPrefix(
+                  Number(TVL.split(',').join(''))
+                )}`
+              : `$${TVL}`}
+          </Typography>
         </Grid>
       ) : (
         <Grid

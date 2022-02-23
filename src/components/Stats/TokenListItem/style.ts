@@ -1,13 +1,25 @@
 import { makeStyles } from '@material-ui/core'
 import { typography, colors } from '@static/theme'
 
-export const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles(theme => ({
   container: {
     display: 'grid',
     gridTemplateColumns: '5% 35% 17.5% 12.5% 15% 15%',
     padding: '18px 0 ',
     backgroundColor: colors.invariant.component,
-    borderBottom: `1px solid ${colors.invariant.light}`
+    borderBottom: `1px solid ${colors.invariant.light}`,
+
+    [theme.breakpoints.down(960)]: {
+      gridTemplateColumns: '5% 35% 15% 21% 20% 20%',
+
+      '& p': {
+        ...typography.heading4
+      }
+    },
+
+    [theme.breakpoints.down(450)]: {
+      gridTemplateColumns: ' 10% 27% 15% 26% 20%'
+    }
   },
 
   tokenList: {

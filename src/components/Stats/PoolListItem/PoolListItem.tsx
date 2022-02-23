@@ -57,14 +57,14 @@ const PoolListItem: React.FC<IProps> = ({
           <Typography>
             {isXDown
               ? `~$${formatNumbers()(volume.replace(/[,.]/g, ''))} ${showPrefix(
-                  Number(volume.replace(/[,.]/g, ''))
+                  Number(volume.split(',').join(''))
                 )}`
               : `$${volume}`}
           </Typography>
           <Typography>
             {isXDown
               ? `~$${formatNumbers()(TVL.replace(/[,.]/g, ''))} ${showPrefix(
-                  Number(TVL.replace(/[,.]/g, ''))
+                  Number(TVL.split(',').join(''))
                 )}`
               : `$${TVL}`}
           </Typography>
