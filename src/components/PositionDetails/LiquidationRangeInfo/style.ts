@@ -20,7 +20,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 13,
     textAlign: 'center',
     width: 61,
-    padding: 2
+    padding: 2,
+    marginRight: 6
   },
   infoSwap: {
     display: 'flex',
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   infoAmount: {
     color: colors.invariant.text,
-    paddingRight: 5,
+    paddingRight: 6,
     ...typography.body1,
     lineHeight: '35px',
 
@@ -41,6 +42,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   infoSwapToken: {
     color: colors.invariant.lightGrey,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
     ...typography.body1,
     lineHeight: '35px',
 
