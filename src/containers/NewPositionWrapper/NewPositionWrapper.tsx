@@ -178,8 +178,11 @@ export const NewPositionWrapper = () => {
     <NewPosition
       tokens={tokens}
       onChangePositionTokens={(tokenA, tokenB, feeTierIndex) => {
-        const isNewCombination = !(tokenAIndex === tokenA && tokenBIndex === tokenB && fee.eq(FEE_TIERS[feeTierIndex].fee))
-        if (tokenA !== null && tokenB !== null && isNewCombination) {
+        if (
+          tokenA !== null &&
+          tokenB !== null &&
+          !(tokenAIndex === tokenA && tokenBIndex === tokenB && fee.eq(FEE_TIERS[feeTierIndex].fee))
+        ) {
           const index = allPools.findIndex(
             pool =>
               pool.fee.v.eq(FEE_TIERS[feeTierIndex].fee) &&
@@ -189,10 +192,21 @@ export const NewPositionWrapper = () => {
                   pool.tokenY.equals(tokens[tokenA].assetAddress)))
           )
 
-          if (index !== poolIndex && isNewCombination) {
+          if (
+            index !== poolIndex &&
+            !(
+              tokenAIndex === tokenB &&
+              tokenBIndex === tokenA &&
+              fee.eq(FEE_TIERS[feeTierIndex].fee)
+            )
+          ) {
             setPoolIndex(index !== -1 ? index : null)
             setCurrentPairReversed(null)
-          } else if (!isNewCombination) {
+          } else if (
+            tokenAIndex === tokenB &&
+            tokenBIndex === tokenA &&
+            fee.eq(FEE_TIERS[feeTierIndex].fee)
+          ) {
             setCurrentPairReversed(currentPairReversed === null ? true : !currentPairReversed)
           }
 
@@ -203,7 +217,13 @@ export const NewPositionWrapper = () => {
                 isXtoY: allPools[index].tokenX.equals(tokens[tokenA].assetAddress)
               })
             )
-          } else if (isNewCombination) {
+          } else if (
+            !(
+              tokenAIndex === tokenB &&
+              tokenBIndex === tokenA &&
+              fee.eq(FEE_TIERS[feeTierIndex].fee)
+            )
+          ) {
             dispatch(
               poolsActions.getPoolData(
                 new Pair(tokens[tokenA].assetAddress, tokens[tokenB].assetAddress, {
