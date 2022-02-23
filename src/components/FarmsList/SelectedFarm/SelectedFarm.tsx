@@ -155,7 +155,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
         </>
       ) : (
         <>
-          <Grid style={{ display: 'flex' }}>
+          <Grid className={classes.tokenContainer}>
             <Grid className={classes.tokenArea}>
               <Grid className={classes.token}>
                 <Typography className={classes.tokenName}>
