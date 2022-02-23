@@ -11,8 +11,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   header: {
     ...typography.heading4,
-    marginBottom: 6,
-    color: colors.white.main
+    marginBottom: 24,
+    color: colors.white.main,
+    height: 24
   },
   innerWrapper: {
     borderRadius: 8,
@@ -28,19 +29,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputs: {
     marginBottom: 20,
     flexDirection: 'row',
-    gap: 16,
-
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column'
-    }
+    gap: 16
   },
   input: {
     flex: '1 1 0%',
     gap: 12,
-
-    '&:first-child': {
-      marginRight: 8
-    },
 
     [theme.breakpoints.down('sm')]: {
       '&:first-child': {
@@ -60,10 +53,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.light,
     borderRadius: 11,
 
-    '&:first-child': {
-      marginRight: 8
-    },
-
     [theme.breakpoints.down('sm')]: {
       '&:first-child': {
         marginRight: 0,
@@ -75,11 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     flexDirection: 'row',
     gap: 16,
-    alignItems: 'center',
-
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column'
-    }
+    alignItems: 'center'
   },
   infoWrapper: {
     borderRadius: 19,
@@ -101,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingInline: 12,
     paddingBlock: 10,
     borderRadius: 13,
-    marginBottom: 36
+    marginBottom: 48
   },
   priceLabel: {
     ...typography.body2,

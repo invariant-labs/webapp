@@ -264,13 +264,10 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
-              (!isCurrentPoolExisting ||
-                (isXtoY
-                  ? rightRange <= midPrice.index && !(leftRange > midPrice.index)
-                  : rightRange > midPrice.index && !(leftRange <= midPrice.index))),
-            blockerInfo: isCurrentPoolExisting
-              ? 'Range only for single-asset deposit.'
-              : 'Select existing pool to deposit',
+              (isXtoY
+                ? rightRange <= midPrice.index && !(leftRange > midPrice.index)
+                : rightRange > midPrice.index && !(leftRange <= midPrice.index)),
+            blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimals : 0
           }}
           tokenBInputState={{
@@ -292,13 +289,10 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
-              (!isCurrentPoolExisting ||
-                (isXtoY
-                  ? leftRange > midPrice.index && !(rightRange <= midPrice.index)
-                  : leftRange <= midPrice.index && !(rightRange > midPrice.index))),
-            blockerInfo: isCurrentPoolExisting
-              ? 'Range only for single-asset deposit.'
-              : 'Select existing pool to deposit',
+              (isXtoY
+                ? leftRange > midPrice.index && !(rightRange <= midPrice.index)
+                : leftRange <= midPrice.index && !(rightRange > midPrice.index)),
+            blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimals : 0
           }}
           feeTiers={feeTiers}
