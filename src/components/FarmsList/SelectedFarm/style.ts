@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 27,
     borderRadius: 9,
     marginLeft: 0,
-    padding: '7px 0',
+    padding: '7px 40px 7px 40px',
     background: 'none !important',
     boxShadow: 'none !important',
     textTransform: 'none',
@@ -35,8 +35,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     '&:hover': {
       boxShadow: '0px 0px 20px -8px white',
-      background: 'rgba(239, 132, 245, 0.9) !important',
-      color: colors.black.full
+      background: 'none !important',
+      color: colors.invariant.lightGrey
     }
   },
 
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     height: 27,
     borderRadius: 9,
-    padding: '7px 0',
+    padding: '7px 40px 7px 40px',
     fontWeight: 700,
     background: colors.invariant.greenLinearGradientOpacity,
     textTransform: 'none',
@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     height: 27,
     borderRadius: 9,
-    padding: '7px 0',
+    padding: '7px 40px 7px 40px',
     background: 'none !important',
     boxShadow: 'none !important',
     textTransform: 'none',
@@ -91,8 +91,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     '&:hover': {
       boxShadow: '0px 0px 20px -8px white',
-      background: 'rgba(239, 132, 245, 0.9) ',
-      color: colors.black.full
+      background: 'none !important',
+      color: colors.invariant.lightGrey
     }
   },
 
@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.textGrey
   },
   top: {
-    marginBottom: 10,
+    marginBottom: 18,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -114,7 +114,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 36
+    marginBottom: 25
   },
 
   greenText: {
@@ -213,7 +213,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   claimRewards: {
     width: 115,
     letterSpacing: '-0.03em',
-    height: 44,
+    height: 40,
     borderRadius: 16,
     textTransform: 'none',
     ...typography.body1,
@@ -263,10 +263,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 353,
     height: 40,
     justifyContent: 'flex-start',
-    marginRight: 8,
-    '&:not(:last-child)': {
-      marginBottom: 8
-    }
+    marginRight: 8
   },
   token: {
     backgroundColor: colors.invariant.light,
@@ -320,7 +317,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     height: 27,
     fontWeight: 700,
-    padding: '7px 0',
+    padding: '7px 40px 7px 40px',
     marginLeft: 0,
     background: 'rgba(239, 132, 245, 0.9) !important',
     textTransform: 'none',
@@ -348,6 +345,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         borderRadius: 12
       }
     }
+  },
+  tokenContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: 8,
+    marginTop: 10
   }
 }))
 
