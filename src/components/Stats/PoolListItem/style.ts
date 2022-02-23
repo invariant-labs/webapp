@@ -3,7 +3,6 @@ import { colors, theme, typography } from '@static/theme'
 
 const useStyle = makeStyles(() => ({
   container: {
-    width: 1072,
     color: colors.invariant.textGrey,
     display: 'grid',
     gridTemplateColumns: '5% 55% 10% 17% 15% 15%',
@@ -16,7 +15,15 @@ const useStyle = makeStyles(() => ({
     },
 
     [theme.breakpoints.down(960)]: {
-      gridTemplateColumns: '5% 35% 15% 21% 20% 20%'
+      gridTemplateColumns: '5% 35% 15% 21% 20% 20%',
+
+      '& p': {
+        ...typography.heading4
+      }
+    },
+
+    [theme.breakpoints.down(450)]: {
+      gridTemplateColumns: ' 10% 27% 15% 26% 20%'
     },
 
     [theme.breakpoints.down(600)]: {
@@ -44,9 +51,8 @@ const useStyle = makeStyles(() => ({
       }
     }
   },
-  symbolsContainer: {
-    marginLeft: 10
-  }
+
+  symbolsContainer: { marginLeft: 10 }
 }))
 
 export default useStyle

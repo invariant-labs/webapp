@@ -30,6 +30,7 @@ const PoolListItem: React.FC<IProps> = ({
   const classes = useStyle()
 
   const isXDown = useMediaQuery('(max-width:892px)')
+  const hideTokenImage = useMediaQuery('(max-width:450px)')
 
   return (
     <Grid>
@@ -40,10 +41,12 @@ const PoolListItem: React.FC<IProps> = ({
           style={{ color: colors.white.main }}>
           <Typography>{tokenIndex}</Typography>
           <Grid className={classes.imageContainer}>
-            <Box>
-              <img src={iconFrom} />
-              <img src={iconTo} />
-            </Box>
+            {!hideTokenImage && (
+              <Box>
+                <img src={iconFrom} />
+                <img src={iconTo} />
+              </Box>
+            )}
             <Box className={classes.symbolsContainer}>
               <Typography>
                 {symbolFrom}/{symbolTo}
@@ -68,7 +71,7 @@ const PoolListItem: React.FC<IProps> = ({
         </Grid>
       ) : (
         <Grid container classes={{ container: classes.container, root: classes.header }}>
-          <Typography style={{ lineHeight: '20px' }}>
+          <Typography style={{ lineHeight: '11px' }}>
             N<sup>o</sup>
           </Typography>
           <Grid>
