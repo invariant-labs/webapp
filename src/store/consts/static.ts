@@ -140,8 +140,8 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
 }
 
 export interface BestTier {
-  tokenX: PublicKey,
-  tokenY: PublicKey,
+  tokenX: PublicKey
+  tokenY: PublicKey
   bestTierIndex: number
 }
 

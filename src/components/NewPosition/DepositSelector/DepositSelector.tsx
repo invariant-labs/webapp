@@ -41,7 +41,7 @@ export interface IDepositSelector {
   percentageChangeB?: number
   usdValueB?: number
   onReverseTokens: () => void
-  poolIndex: number | null,
+  poolIndex: number | null
   bestTierIndex?: number
 }
 
