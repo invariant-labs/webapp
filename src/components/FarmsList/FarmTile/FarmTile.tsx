@@ -52,21 +52,31 @@ export const FarmTile: React.FC<IFarm> = ({
           </Typography>
         </Grid>
       </Grid>
-      <Grid container direction='row' justifyContent='space-between'>
+      <Grid
+        container
+        direction='row'
+        justifyContent='space-between'
+        className={classNames(classes.mobileContainer, classes.spacer)}>
         <Typography className={classes.label}>APY:</Typography>
         <Typography className={classes.value}>{apyPercent}%</Typography>
       </Grid>
-      <Grid container direction='row' justifyContent='space-between'>
+      <Grid
+        container
+        direction='row'
+        justifyContent='space-between'
+        className={classes.mobileContainer}>
         <Typography className={classes.label}>Total Staked:</Typography>
         <Typography className={classes.value}>
-          {totalStaked.toLocaleString('fr-FR')} {tokenX.symbol}
+          {totalStaked.toLocaleString('fr-FR')} xUSD
         </Typography>
       </Grid>
-      <Grid container direction='row' justifyContent='space-between'>
+      <Grid
+        container
+        direction='row'
+        justifyContent='space-between'
+        className={classes.mobileContainer}>
         <Typography className={classes.label}>Liquidity:</Typography>
-        <Typography className={classes.value}>
-          {liquidity.toLocaleString('fr-FR')} {tokenX.symbol}
-        </Typography>
+        <Typography className={classes.value}>${liquidity.toLocaleString('fr-FR')}</Typography>
       </Grid>
       <Link className={classes.link} to={`/farms/${farmId}`}>
         <OutlinedButton className={classes.button} disabled={!isActive} name='Stake' />

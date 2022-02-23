@@ -31,6 +31,8 @@ storiesOf('farmsList/selectedFarm', module)
           }
           data={[
             {
+              iconTokenX:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
               value: 2345.34,
               staked: 233345,
               pair: 'xBTC - xUSD',
@@ -40,6 +42,8 @@ storiesOf('farmsList/selectedFarm', module)
               liquidity: 457
             },
             {
+              iconTokenX:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
               value: 2345.34,
               staked: 233345,
               pair: 'xBTC - xUSD',
@@ -49,6 +53,8 @@ storiesOf('farmsList/selectedFarm', module)
               liquidity: 457
             },
             {
+              iconTokenX:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
               value: 2345.34,
               staked: 233345,
               pair: 'xBTC - xUSD',
