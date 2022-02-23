@@ -75,7 +75,7 @@ const PositionDetails: React.FC<IProps> = ({
         alignItems='flex-end'
         className={classes.right}
         wrap='nowrap'>
-        <Hidden smDown>
+        <Hidden xsDown>
           <Button
             className={classes.button}
             variant='contained'

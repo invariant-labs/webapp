@@ -50,18 +50,18 @@ const SinglePositionInfo: React.FC<IProp> = ({
             </Typography>
             <Typography className={classes.name}>{xToY ? tokenY.name : tokenX.name}</Typography>
           </Grid>
-        </Grid>
-
-        <Grid className={classes.headerText}>
           <Grid className={classes.rangeGrid}>
             <Typography className={classNames(classes.text, classes.feeText)}>
               {fee}% fee
             </Typography>
           </Grid>
+        </Grid>
+
+        <Grid className={classes.headerButtons}>
           <Button className={classes.closeButton} variant='contained' onClick={closePosition}>
             Close position
           </Button>
-          <Hidden mdUp>
+          <Hidden smUp>
             {' '}
             <Button
               className={classes.button}

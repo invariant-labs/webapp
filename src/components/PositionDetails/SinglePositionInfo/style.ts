@@ -47,14 +47,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   header: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column'
+    }
   },
-  headerText: {
+  headerButtons: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      justifyContent: 'space-between',
+      marginTop: 16
+    }
   },
   feeText: {
+    marginLeft: 12,
     minWidth: 90,
 
     [theme.breakpoints.down('xs')]: {
@@ -218,8 +226,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('xs')]: {
-      width: 84,
-      fontSize: 12
+      width: '50%',
+      ...typography.caption1,
+      height: 40
     }
   },
   button: {
@@ -227,7 +236,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.body1,
     textTransform: 'none',
     background: colors.invariant.pinkLinearGradientOpacity,
-    borderRadius: 14,
+    borderRadius: 12,
     height: 40,
     width: 130,
     paddingRight: 9,
@@ -237,10 +246,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       background: colors.invariant.pinkLinearGradient,
       boxShadow: `0 0 16px ${colors.invariant.pink}`
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '50%',
+      ...typography.caption1
     }
   },
   buttonText: {
-    WebkitPaddingBefore: '2px'
+    WebkitPaddingBefore: '2px',
+    [theme.breakpoints.down('xs')]: {
+      WebkitPaddingBefore: 0
+    }
   },
   buttons: {
     width: ' 100%',
