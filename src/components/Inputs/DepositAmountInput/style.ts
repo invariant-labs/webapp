@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('xs')]: {
-      height: 84
+      '& $input': {}
     }
   },
   inputContainer: {
