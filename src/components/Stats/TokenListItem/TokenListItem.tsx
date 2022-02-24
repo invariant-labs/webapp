@@ -51,19 +51,23 @@ const TokenListItem: React.FC<IProps> = ({
             </Typography>
           </Grid>
           <Typography>${Number(printBN(price, decimals)).toFixed(2)}</Typography>
-          <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
-            {isNegative ? `-${Math.abs(Number(priceChange))}%` : `+${priceChange}%`}
-          </Typography>
+          {!hideName && (
+            <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
+              {isNegative ? `-${Math.abs(Number(priceChange))}%` : `+${priceChange}%`}
+            </Typography>
+          )}
+          {!hideName && (
+            <Typography>
+              {isXDown
+                ? `~$${Number(formatNumbers()(volume.split(',').join(''))).toFixed(1)} ${showPrefix(
+                    Number(volume.split(',').join(''))
+                  )}`
+                : `$${volume}`}
+            </Typography>
+          )}
           <Typography>
             {isXDown
-              ? `~$${formatNumbers()(volume.replace(/[,.]/g, ''))} ${showPrefix(
-                  Number(volume.split(',').join(''))
-                )}`
-              : `$${volume}`}
-          </Typography>
-          <Typography>
-            {isXDown
-              ? `~$${formatNumbers()(TVL.replace(/[,.]/g, ''))} ${showPrefix(
+              ? `~$${Number(formatNumbers()(TVL.split(',').join(''))).toFixed(1)} ${showPrefix(
                   Number(TVL.split(',').join(''))
                 )}`
               : `$${TVL}`}
@@ -81,8 +85,8 @@ const TokenListItem: React.FC<IProps> = ({
             <Typography>Name</Typography>
           </Grid>
           <Typography>Price</Typography>
-          <Typography>Price Change</Typography>
-          <Typography>Volume 24H</Typography>
+          {!hideName && <Typography>Price Change</Typography>}
+          {!hideName && <Typography>Volume 24H</Typography>}
           <Typography>TVL</Typography>
         </Grid>
       )}

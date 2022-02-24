@@ -10,19 +10,15 @@ export const useStyles = makeStyles(theme => ({
     borderBottom: `1px solid ${colors.invariant.light}`,
     whiteSpace: 'nowrap',
 
-    [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: '5% 35% 12.5% 17.5% 18% 15%'
-    },
-
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '5% 35% 12.5% 17.5% 18% 15%',
+      gridTemplateColumns: '5% 35% 16.5% 17.5% 15% 15%',
       '& p': {
         ...typography.caption2
       }
     },
 
     [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '5% 15% 16% 24% 25% 20%',
+      gridTemplateColumns: '8% 38% 27% auto',
       '& p': {
         ...typography.caption2
       }
@@ -34,9 +30,10 @@ export const useStyles = makeStyles(theme => ({
     '& p': {
       ...typography.heading4
     },
+
     [theme.breakpoints.down('sm')]: {
       '& p': {
-        ...typography.caption2
+        ...typography.caption1
       }
     }
   },

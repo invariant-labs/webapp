@@ -1,9 +1,8 @@
 import React from 'react'
 import { Grid, Typography, Box, useMediaQuery } from '@material-ui/core'
 import useStyle from './style'
-import { colors } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import { formatNumbers, showPrefix } from '@consts/utils'
-
 interface IProps {
   TVL?: string
   volume?: string
@@ -29,8 +28,8 @@ const PoolListItem: React.FC<IProps> = ({
 }) => {
   const classes = useStyle()
 
-  const isXDown = useMediaQuery('(max-width:892px)')
-  const hideTokenImage = useMediaQuery('(max-width:450px)')
+  const isXDown = useMediaQuery(theme.breakpoints.down('sm'))
+  const hideTokenImage = useMediaQuery(theme.breakpoints.down('xs'))
 
   return (
     <Grid>
