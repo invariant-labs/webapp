@@ -1,10 +1,10 @@
 import React from 'react'
-import { Grid, Typography, Box } from '@material-ui/core'
+import { Grid, Typography, Box, useMediaQuery } from '@material-ui/core'
 import { formatNumbers, showPrefix } from '@consts/utils'
 import { ResponsiveBar } from '@nivo/bar'
 import classNames from 'classnames'
 import { useStyles } from './style'
-import { colors } from '@static/theme'
+import { colors, theme } from '@static/theme'
 
 interface StatsInterface {
   percentVolume: number
@@ -17,6 +17,8 @@ interface StatsInterface {
 
 const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
   const classes = useStyles()
+
+  const isXdown = useMediaQuery(theme.breakpoints.down('xs'))
 
   const cutArray = (arr: Array<{ timeStamp: string; value: number[] }>, size: number) => {
     const arrData = arr.slice(0)
@@ -126,7 +128,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
           groupMode='grouped'
           enableLabel={false}
           enableGridY={false}
-          innerPadding={2}
+          innerPadding={isXdown ? 1 : 2}
           isInteractive={false}
           padding={0.03}
           indexScale={{ type: 'band', round: true }}
