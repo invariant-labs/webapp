@@ -45,6 +45,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
       {paginator(page).data.map((token, index) => {
         return (
           <TokenListItem
+            key={index}
             displayType='tokens'
             itemNumber={index + 1}
             icon={token.icon}

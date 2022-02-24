@@ -1,8 +1,8 @@
 import React from 'react'
-import { Grid, Typography, Box } from '@material-ui/core'
+import { Grid, Typography, Box, useMediaQuery } from '@material-ui/core'
 import useStyle from './style'
-import { colors } from '@static/theme'
-
+import { colors, theme } from '@static/theme'
+import { formatNumbers, showPrefix } from '@consts/utils'
 interface IProps {
   TVL?: string
   volume?: string
@@ -27,6 +27,10 @@ const PoolListItem: React.FC<IProps> = ({
   tokenIndex
 }) => {
   const classes = useStyle()
+
+  const isXDown = useMediaQuery(theme.breakpoints.down('sm'))
+  const hideTokenImage = useMediaQuery(theme.breakpoints.down('xs'))
+
   return (
     <Grid>
       {displayType === 'token' ? (
@@ -36,10 +40,12 @@ const PoolListItem: React.FC<IProps> = ({
           style={{ color: colors.white.main }}>
           <Typography>{tokenIndex}</Typography>
           <Grid className={classes.imageContainer}>
-            <Box>
-              <img src={iconFrom} />
-              <img src={iconTo} />
-            </Box>
+            {!hideTokenImage && (
+              <Box>
+                <img src={iconFrom} />
+                <img src={iconTo} />
+              </Box>
+            )}
             <Box className={classes.symbolsContainer}>
               <Typography>
                 {symbolFrom}/{symbolTo}
@@ -47,12 +53,24 @@ const PoolListItem: React.FC<IProps> = ({
             </Box>
           </Grid>
           <Typography>{fee}%</Typography>
-          <Typography>${volume}</Typography>
-          <Typography>${TVL}</Typography>
+          <Typography>
+            {isXDown
+              ? `~$${formatNumbers()(volume.replace(/[,.]/g, ''))} ${showPrefix(
+                  Number(volume.split(',').join(''))
+                )}`
+              : `$${volume}`}
+          </Typography>
+          <Typography>
+            {isXDown
+              ? `~$${formatNumbers()(TVL.replace(/[,.]/g, ''))} ${showPrefix(
+                  Number(TVL.split(',').join(''))
+                )}`
+              : `$${TVL}`}
+          </Typography>
         </Grid>
       ) : (
         <Grid container classes={{ container: classes.container, root: classes.header }}>
-          <Typography style={{ lineHeight: '20px' }}>
+          <Typography style={{ lineHeight: '11px' }}>
             N<sup>o</sup>
           </Typography>
           <Grid>
