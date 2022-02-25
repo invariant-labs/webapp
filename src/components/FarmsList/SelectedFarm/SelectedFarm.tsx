@@ -1,10 +1,9 @@
-import { Box, Button, Grid, Typography, useMediaQuery } from '@material-ui/core'
+import { Box, Button, CardMedia, Grid, Typography, useMediaQuery } from '@material-ui/core'
 import React, { useState } from 'react'
 import useStyle from './style'
 import AnimatedNumber from '@components/AnimatedNumber'
 import { theme } from '@static/theme'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
-
 export interface ISelectedFarm {
   value: number
   staked: number
@@ -17,6 +16,7 @@ export interface ISelectedFarm {
   onStake?: (id: string) => void
   onUnstake?: (id: string) => void
   onClaimReward?: (id: string) => void
+  iconTokenX: string
 }
 
 export const SelectedFarm: React.FC<ISelectedFarm> = ({
@@ -30,7 +30,8 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
   action,
   onStake,
   onUnstake,
-  onClaimReward
+  onClaimReward,
+  iconTokenX
 }) => {
   const classes = useStyle()
   const [activeValue, SetActiveValue] = useState(action)
@@ -44,7 +45,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
         <Box className={classes.buttonContainer}>
           <OutlinedButton
             onClick={() => handleButtonStake('stake')}
-            className={activeValue === 'stake' ? classes.stakeButton : classes.disableButton}
+            className={activeValue === 'stake' ? classes.stakeButton : classes.disabledStake}
             name='Stake'
           />
           <OutlinedButton
@@ -71,7 +72,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
         <>
           <Grid className={classes.infoContainer}>
             <Box className={classes.boxLeft}>
-              <Typography className={classes.infoText}>
+              <Typography className={classes.infoHeader}>
                 Total Staked:
                 <Typography display='inline' component='span' className={classes.value}>
                   <AnimatedNumber
@@ -82,18 +83,8 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                   <span className={classes.spacing}>{pair}</span>
                 </Typography>
               </Typography>
-              <Typography className={classes.infoText}>
-                APY:
-                <Typography display='inline' component='span' className={classes.value}>
-                  <AnimatedNumber
-                    value={apy}
-                    duration={300}
-                    formatValue={(value: string) => Number(value).toFixed(1)}
-                  />
-                  %
-                </Typography>
-              </Typography>
-              <Typography className={classes.infoText}>
+
+              <Typography className={classes.infoHeader}>
                 Liquidity:
                 <Typography display='inline' component='span' className={classes.value}>
                   $
@@ -104,9 +95,20 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                   />
                 </Typography>
               </Typography>
+              <Typography className={classes.infoHeader}>
+                APY:
+                <Typography display='inline' component='span' className={classes.value}>
+                  <AnimatedNumber
+                    value={apy}
+                    duration={300}
+                    formatValue={(value: string) => Number(value).toFixed(1)}
+                  />
+                  %
+                </Typography>
+              </Typography>
             </Box>
             <Box className={classes.boxRight}>
-              <Typography className={classes.infoText}>
+              <Typography className={classes.infoHeader}>
                 Total Staked:
                 <Typography display='inline' component='span' className={classes.value}>
                   <AnimatedNumber
@@ -117,7 +119,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                   <span className={classes.spacing}>{pair}</span>
                 </Typography>
               </Typography>
-              <Typography className={classes.infoText}>
+              <Typography className={classes.infoHeader}>
                 Total Staked:
                 <Typography display='inline' component='span' className={classes.value}>
                   <AnimatedNumber
@@ -128,7 +130,7 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
                   <span className={classes.spacing}>{pair}</span>
                 </Typography>
               </Typography>
-              <Typography className={classes.infoText}>
+              <Typography className={classes.infoHeader}>
                 Total Staked:
                 <Typography display='inline' component='span' className={classes.value}>
                   <AnimatedNumber
@@ -153,10 +155,13 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
         </>
       ) : (
         <>
-          <Grid style={{ display: 'flex' }}>
+          <Grid className={classes.tokenContainer}>
             <Grid className={classes.tokenArea}>
               <Grid className={classes.token}>
-                <Typography className={classes.tokenName}>{pair}</Typography>
+                <Typography className={classes.tokenName}>
+                  <CardMedia image={iconTokenX} className={classes.tokenImg} />
+                  <Typography className={classes.tokenName}>{rewardsToken}</Typography>
+                </Typography>
               </Grid>
               <Typography className={classes.tokenValue}>
                 <AnimatedNumber
@@ -179,16 +184,14 @@ export const SelectedFarm: React.FC<ISelectedFarm> = ({
           <Grid justifyContent='space-between' direction='row'>
             <Box className={classes.labelGrid}>
               <Typography className={classes.infoText}>
-                Staked:
-                <Typography display='inline' className={classes.labelText}>
-                  <span className={classes.stakedValue}>{staked.toLocaleString('pl-PL')}</span>
-                  {pair}
-                </Typography>
+                <span className={classes.labelText}>
+                  Staked: {staked.toLocaleString('pl-PL')} {pair}
+                </span>
               </Typography>
               <Typography className={classes.labelText}>
                 {isXsDown
-                  ? `$ ${value * currencyPrice}`
-                  : `${value} ${pair} = $ ${value * currencyPrice}`}
+                  ? `${Number(value).toFixed(2)} ${rewardsToken} = $${value * currencyPrice}`
+                  : `${value} ${rewardsToken} = $${value * currencyPrice}`}
               </Typography>
             </Box>
           </Grid>

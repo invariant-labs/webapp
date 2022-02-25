@@ -25,9 +25,9 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     height: '370px',
     backgroundColor: 'rgba(12, 11, 13, 0.8)',
-    filter: 'blur(4px) brightness(0.4)',
     position: 'absolute',
-    zIndex: 13
+    zIndex: 13,
+    borderRadius: 24
   },
   desc: {
     ...typography.body2,

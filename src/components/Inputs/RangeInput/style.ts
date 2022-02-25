@@ -5,6 +5,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   data: {
     height: 36,
     paddingInline: 8,
+    flexWrap: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
     backgroundColor: colors.invariant.light,
     borderRadius: 11,
 
@@ -14,11 +18,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     color: colors.white.main,
-    marginRight: 2,
+    whiteSpace: 'nowrap',
+    marginRight: 16,
     ...typography.body1,
 
     [theme.breakpoints.down('sm')]: {
       ...typography.body1
+    },
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption3
     }
   },
   tokens: {
@@ -31,6 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       marginInline: 'auto',
       ...typography.body2
+    },
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption3
     }
   },
   controls: {
@@ -78,6 +89,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('sm')]: {
       height: 36
+    },
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption2
     }
   }
 }))
