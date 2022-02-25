@@ -36,7 +36,6 @@ storiesOf('position/rangeSelector', module)
       yDecimal={6}
       tickSpacing={1}
       isXtoY={true}
-      fee={0}
       currentPairReversed={null}
     />
   ))
@@ -59,7 +58,6 @@ storiesOf('position/rangeSelector', module)
       yDecimal={6}
       tickSpacing={4}
       isXtoY={true}
-      fee={0}
       currentPairReversed={null}
     />
   ))

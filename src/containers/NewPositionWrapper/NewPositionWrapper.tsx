@@ -133,14 +133,16 @@ export const NewPositionWrapper = () => {
         index: allPools[poolIndex].currentTickIndex,
         x: calcPrice(allPools[poolIndex].currentTickIndex, isXtoY, xDecimal, yDecimal)
       })
-
-      return
     }
+  }, [poolIndex, isXtoY, xDecimal, yDecimal, allPools])
 
-    setMidPrice({
-      index: 0,
-      x: calcPrice(0, isXtoY, xDecimal, yDecimal)
-    })
+  useEffect(() => {
+    if (poolIndex === null) {
+      setMidPrice({
+        index: 0,
+        x: calcPrice(0, isXtoY, xDecimal, yDecimal)
+      })
+    }
   }, [poolIndex, isXtoY, xDecimal, yDecimal])
 
   const [currentPairReversed, setCurrentPairReversed] = useState<boolean | null>(null)

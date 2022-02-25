@@ -20,7 +20,6 @@ export interface IRangeSelector {
   midPrice: TickPlotPositionData
   tokenASymbol: string
   tokenBSymbol: string
-  fee: number
   onChangeRange: (leftIndex: number, rightIndex: number) => void
   blocked?: boolean
   blockerInfo?: string
@@ -37,7 +36,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   midPrice,
   tokenASymbol,
   tokenBSymbol,
-  fee,
   onChangeRange,
   blocked = false,
   blockerInfo,
@@ -166,12 +164,16 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   useEffect(() => {
-    if (currentPairReversed === null) {
-      resetPlot()
-    } else {
+    if (currentPairReversed !== null) {
       reversePlot()
     }
-  }, [tokenASymbol, tokenBSymbol, fee, currentPairReversed, ticksLoading])
+  }, [currentPairReversed])
+
+  useEffect(() => {
+    if (ticksLoading) {
+      resetPlot()
+    }
+  }, [ticksLoading, midPrice])
 
   return (
     <Grid container className={classes.wrapper}>

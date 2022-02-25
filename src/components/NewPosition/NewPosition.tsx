@@ -1,5 +1,5 @@
 import { Grid, Typography } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DepositSelector from './DepositSelector/DepositSelector'
 import RangeSelector from './RangeSelector/RangeSelector'
 import { BN } from '@project-serum/anchor'
@@ -209,6 +209,12 @@ export const NewPosition: React.FC<INewPosition> = ({
               tier.tokenY.equals(tokens[tokenAIndex].assetAddress))
         )?.bestTierIndex ?? undefined
 
+  useEffect(() => {
+    if (!ticksLoading) {
+      onChangeRange(leftRange, rightRange)
+    }
+  }, [midPrice.index])
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Link to='/pool' style={{ textDecoration: 'none' }}>
@@ -264,6 +270,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
+              !isWaitingForNewPool &&
               (isXtoY
                 ? rightRange <= midPrice.index && !(leftRange > midPrice.index)
                 : rightRange > midPrice.index && !(leftRange <= midPrice.index)),
@@ -289,6 +296,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
+              !isWaitingForNewPool &&
               (isXtoY
                 ? leftRange > midPrice.index && !(rightRange <= midPrice.index)
                 : leftRange <= midPrice.index && !(rightRange > midPrice.index)),
@@ -305,7 +313,6 @@ export const NewPosition: React.FC<INewPosition> = ({
             const pom = tokenAIndex
             setTokenAIndex(tokenBIndex)
             setTokenBIndex(pom)
-            setFee(fee)
             onChangePositionTokens(tokenBIndex, tokenAIndex, fee)
           }}
           poolIndex={poolIndex}
@@ -344,7 +351,6 @@ export const NewPosition: React.FC<INewPosition> = ({
             tickSpacing={tickSpacing}
             xDecimal={xDecimal}
             yDecimal={yDecimal}
-            fee={fee}
             currentPairReversed={currentPairReversed}
           />
         ) : (
