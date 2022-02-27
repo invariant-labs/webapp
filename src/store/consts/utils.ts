@@ -1,6 +1,11 @@
 import { calculatePriceSqrt, MAX_TICK, MIN_TICK, Pair, TICK_LIMIT } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
-import { DECIMAL, DENOMINATOR, parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
+import {
+  DECIMAL,
+  DENOMINATOR,
+  parseLiquidityOnTicks,
+  simulateSwap
+} from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
