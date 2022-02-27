@@ -11,9 +11,8 @@ import {
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
 import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
-import { PRICE_DECIMAL } from '@consts/static'
 import { calculatePriceSqrt, DENOMINATOR } from '@invariant-labs/sdk'
-import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
+import { calculateClaimAmount, DECIMAL } from '@invariant-labs/sdk/src/utils'
 import useStyles from './style'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 
@@ -260,7 +259,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         liqValue: tokenYLiquidity,
         claimValue: tokenYClaim
       }}
-      fee={+printBN(position.poolData.fee.v, PRICE_DECIMAL - 2)}
+      fee={+printBN(position.poolData.fee.v, DECIMAL - 2)}
       min={min}
       max={max}
     />
