@@ -7,6 +7,7 @@ import { actions } from '@reducers/swap'
 import { status, swapTokens } from '@selectors/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { actions as walletActions } from '@reducers/solanaWallet'
+import { PublicKey } from '@solana/web3.js'
 
 export const WrappedSwap = () => {
   const dispatch = useDispatch()
@@ -32,6 +33,18 @@ export const WrappedSwap = () => {
       }, 3000)
     }
   }, [success, inProgress])
+
+  const lastTokenFrom = localStorage.getItem('INVARIANT_LAST_TOKEN_FROM')
+  const lastTokenTo = localStorage.getItem('INVARIANT_LAST_TOKEN_TO')
+
+  const initialTokenFromIndex =
+    lastTokenFrom === null
+      ? null
+      : tokensList.findIndex(token => token.assetAddress.equals(new PublicKey(lastTokenFrom)))
+  const initialTokenToIndex =
+    lastTokenTo === null
+      ? null
+      : tokensList.findIndex(token => token.assetAddress.equals(new PublicKey(lastTokenTo)))
 
   return (
     <Swap
@@ -60,6 +73,8 @@ export const WrappedSwap = () => {
         )
       }}
       onSetPair={(tokenFrom, tokenTo) => {
+        localStorage.setItem('INVARIANT_LAST_TOKEN_FROM', tokenFrom.toString())
+        localStorage.setItem('INVARIANT_LAST_TOKEN_TO', tokenTo.toString())
         dispatch(
           actions.setPair({
             tokenFrom,
@@ -79,6 +94,8 @@ export const WrappedSwap = () => {
       swapData={swap}
       progress={progress}
       poolTicks={poolTicksArray}
+      initialTokenFromIndex={initialTokenFromIndex === -1 ? null : initialTokenFromIndex}
+      initialTokenToIndex={initialTokenToIndex === -1 ? null : initialTokenToIndex}
     />
   )
 }
