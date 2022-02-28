@@ -3,12 +3,12 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { isLoadingPositionsList, positionsWithPoolsData } from '@selectors/positions'
 import { status } from '@selectors/solanaWallet'
-import { PRICE_DECIMAL } from '@consts/static'
 import { calcYPerXPrice, printBN } from '@consts/utils'
 import { calculatePriceSqrt, DENOMINATOR } from '@invariant-labs/sdk'
 import { Status, actions } from '@reducers/solanaWallet'
 import { PositionsList } from '@components/PositionsList/PositionsList'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
+import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 
 export const WrappedPositionsList: React.FC = () => {
   const dispatch = useDispatch()
@@ -91,7 +91,7 @@ export const WrappedPositionsList: React.FC = () => {
             tokenYName: position.tokenY.symbol,
             tokenXIcon: position.tokenX.logoURI,
             tokenYIcon: position.tokenY.logoURI,
-            fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
+            fee: +printBN(position.poolData.fee.v, DECIMAL - 2),
             min,
             max,
             tokenXLiq,
