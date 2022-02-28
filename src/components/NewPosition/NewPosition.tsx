@@ -255,14 +255,16 @@ export const NewPosition: React.FC<INewPosition> = ({
               tokenAIndex !== null &&
               (isXtoY ? right > midPrice.index : right < midPrice.index)
             ) {
+              const deposit = tokenADeposit
               const amount = getOtherTokenAmount(
-                printBNtoBN(tokenADeposit, tokens[tokenAIndex].decimals),
+                printBNtoBN(deposit, tokens[tokenAIndex].decimals),
                 left,
                 right,
                 true
               )
 
               if (tokenBIndex !== null && +tokenADeposit !== 0) {
+                setTokenADeposit(deposit)
                 setTokenBDeposit(amount)
 
                 return
@@ -270,6 +272,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             }
 
             if (tokenBIndex !== null && (isXtoY ? left < midPrice.index : left > midPrice.index)) {
+              const deposit = tokenBDeposit
               const amount = getOtherTokenAmount(
                 printBNtoBN(tokenBDeposit, tokens[tokenBIndex].decimals),
                 left,
@@ -279,6 +282,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
               if (tokenAIndex !== null && +tokenBDeposit !== 0) {
                 setTokenADeposit(amount)
+                setTokenBDeposit(deposit)
               }
             }
           }}
