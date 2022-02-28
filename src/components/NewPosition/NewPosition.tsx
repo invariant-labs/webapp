@@ -263,7 +263,7 @@ export const NewPosition: React.FC<INewPosition> = ({
                 true
               )
 
-              if (tokenBIndex !== null && +tokenADeposit !== 0) {
+              if (tokenBIndex !== null && +deposit !== 0) {
                 setTokenADeposit(deposit)
                 setTokenBDeposit(amount)
 
@@ -280,7 +280,7 @@ export const NewPosition: React.FC<INewPosition> = ({
                 false
               )
 
-              if (tokenAIndex !== null && +tokenBDeposit !== 0) {
+              if (tokenAIndex !== null && +deposit !== 0) {
                 setTokenADeposit(amount)
                 setTokenBDeposit(deposit)
               }
