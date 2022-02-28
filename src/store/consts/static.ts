@@ -19,7 +19,7 @@ export interface Token {
   name: string
   logoURI: string
 }
-export const PRICE_DECIMAL = 12
+export const PRICE_DECIMAL = 24
 export const USDC_DEV: Token = {
   symbol: 'USDC',
   address: new PublicKey(MOCK_TOKENS.USDC),
