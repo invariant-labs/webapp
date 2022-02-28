@@ -15,6 +15,7 @@ import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import useStyles from './style'
+import { BestTier } from '@consts/static'
 
 export interface INewPosition {
   tokens: SwapToken[]
@@ -50,6 +51,7 @@ export interface INewPosition {
   tickSpacing: number
   poolIndex: number | null
   currentPairReversed: boolean | null
+  bestTiers: BestTier[]
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -71,7 +73,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   yDecimal,
   tickSpacing,
   poolIndex,
-  currentPairReversed
+  currentPairReversed,
+  bestTiers
 }) => {
   const classes = useStyles()
 
@@ -120,6 +123,17 @@ export const NewPosition: React.FC<INewPosition> = ({
 
     return printBN(result, tokens[printIndex].decimals)
   }
+
+  const bestTierIndex =
+    tokenAIndex === null || tokenBIndex === null
+      ? undefined
+      : bestTiers.find(
+          tier =>
+            (tier.tokenX.equals(tokens[tokenAIndex].assetAddress) &&
+              tier.tokenY.equals(tokens[tokenBIndex].assetAddress)) ||
+            (tier.tokenX.equals(tokens[tokenBIndex].assetAddress) &&
+              tier.tokenY.equals(tokens[tokenAIndex].assetAddress))
+        )?.bestTierIndex ?? undefined
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
@@ -229,6 +243,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             onChangePositionTokens(tokenBIndex, tokenAIndex, fee)
           }}
           poolIndex={poolIndex}
+          bestTierIndex={bestTierIndex}
         />
 
         <RangeSelector

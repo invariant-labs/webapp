@@ -19,7 +19,7 @@ export interface Token {
   name: string
   logoURI: string
 }
-export const PRICE_DECIMAL = 12
+export const PRICE_DECIMAL = 24
 export const USDC_DEV: Token = {
   symbol: 'USDC',
   address: new PublicKey(MOCK_TOKENS.USDC),
@@ -136,6 +136,45 @@ export const PAIRS: Record<NetworkType, Pair[]> = {
     new Pair(MAINNET_ADRESSES.USDC, MAINNET_ADRESSES.UST, FEE_TIERS[0]),
     new Pair(MAINNET_ADRESSES.USDC, MAINNET_ADRESSES.SOL, FEE_TIERS[1])
   ],
+  Localnet: []
+}
+
+export interface BestTier {
+  tokenX: PublicKey
+  tokenY: PublicKey
+  bestTierIndex: number
+}
+
+export const bestTiers: Record<NetworkType, BestTier[]> = {
+  Devnet: [
+    {
+      tokenX: USDC_DEV.address,
+      tokenY: USDT_DEV.address,
+      bestTierIndex: 0
+    },
+    {
+      tokenX: USDC_DEV.address,
+      tokenY: WSOL_DEV.address,
+      bestTierIndex: 1
+    },
+    {
+      tokenX: USDC_DEV.address,
+      tokenY: BTC_DEV.address,
+      bestTierIndex: 1
+    },
+    {
+      tokenX: RENDOGE_DEV.address,
+      tokenY: BTC_DEV.address,
+      bestTierIndex: 3
+    },
+    {
+      tokenX: USDC_DEV.address,
+      tokenY: RENDOGE_DEV.address,
+      bestTierIndex: 3
+    }
+  ],
+  Testnet: [],
+  Mainnet: [],
   Localnet: []
 }
 

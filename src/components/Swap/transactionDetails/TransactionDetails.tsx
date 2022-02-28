@@ -2,9 +2,9 @@ import { printBN } from '@consts/utils'
 import { Grid, Popover, Typography, Button } from '@material-ui/core'
 import BN from 'bn.js'
 import React from 'react'
-import { PRICE_DECIMAL } from '@consts/static'
 import { useStyles } from './style'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 
 interface IProps {
   open: boolean
@@ -17,7 +17,7 @@ interface IProps {
 
 const percentValueDisplay = (amount: Decimal): { value: BN; decimal: number } => {
   const amountLength = amount.v.toString().length - 1
-  const amountDec = PRICE_DECIMAL - amountLength - 2
+  const amountDec = DECIMAL - amountLength - 2
   const amountValue = amount.v.div(new BN(10).pow(new BN(amountLength)))
   return {
     value: amountValue,

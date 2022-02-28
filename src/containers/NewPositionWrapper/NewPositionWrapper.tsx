@@ -3,16 +3,17 @@ import NewPosition from '@components/NewPosition/NewPosition'
 import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
 import { SwapToken, swapTokens, status, swapTokensDict } from '@selectors/solanaWallet'
-import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
+import { DECIMAL, FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { calcPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { pools } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { initPosition, plotTicks } from '@selectors/positions'
 import { BN } from '@project-serum/anchor'
-import { PRICE_DECIMAL } from '@consts/static'
+import { bestTiers } from '@consts/static'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import { network } from '@selectors/solanaConnection'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -23,6 +24,7 @@ export const NewPositionWrapper = () => {
   const allPools = useSelector(pools)
   const { success, inProgress } = useSelector(initPosition)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
+  const currentNetwork = useSelector(network)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
@@ -184,7 +186,7 @@ export const NewPositionWrapper = () => {
         setTokenBIndex(tokenB)
         setFeeTier(fee)
       }}
-      feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, PRICE_DECIMAL - 2))}
+      feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, DECIMAL - 2))}
       data={data}
       midPrice={midPrice}
       addLiquidityHandler={(leftTickIndex, rightTickIndex, xAmount, yAmount) => {
@@ -313,6 +315,7 @@ export const NewPositionWrapper = () => {
       yDecimal={yDecimal}
       poolIndex={poolIndex}
       currentPairReversed={currentPairReversed}
+      bestTiers={bestTiers[currentNetwork]}
     />
   )
 }
