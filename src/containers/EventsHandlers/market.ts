@@ -103,12 +103,21 @@ const MarketEvents = () => {
     if (tokenFrom && tokenTo) {
       const pools = findPairs(tokenFrom, tokenTo, allPools)
 
-      pools.forEach(pool => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        marketProgram.getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v })).then(res => {
-          dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
-        })
-      })
+      if (pools.length !== 0) {
+        console.log(123)
+        marketProgram
+          .getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pools[0].fee.v }))
+          .then(res => {
+            dispatch(actions.setTicks({ index: pools[0].address.toString(), tickStructure: res }))
+          })
+      }
+
+      // pools.forEach(pool => {
+      //   // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      //   marketProgram.getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v })).then(res => {
+      //     dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
+      //   })
+      // }) code for set ticks for all fee tiers
     }
   }, [tokenFrom, tokenTo])
 
