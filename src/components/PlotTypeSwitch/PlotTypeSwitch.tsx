@@ -8,9 +8,7 @@ export interface IPlotTypeSwitch {
   onSwitch: (isDiscrete: boolean) => void
 }
 
-export const PlotTypeSwitch: React.FC<IPlotTypeSwitch> = ({
-  onSwitch
-}) => {
+export const PlotTypeSwitch: React.FC<IPlotTypeSwitch> = ({ onSwitch }) => {
   const [current, setCurrent] = useState(0)
 
   const tabsClasses = useTabsStyles()
@@ -29,19 +27,16 @@ export const PlotTypeSwitch: React.FC<IPlotTypeSwitch> = ({
       scrollButtons='off'
       TabIndicatorProps={{ children: <span /> }}
       classes={tabsClasses}>
-        <Tab
-          disableRipple
-          label={(
-            <img src={Continuous} className={tabsClasses.continuous} />
-          )}
-          classes={singleTabClasses}/>
-        <Tab
-          disableRipple
-          label={(
-            <img src={Discrete} className={tabsClasses.discrete} />
-          )}
-          classes={singleTabClasses}
-        />
+      <Tab
+        disableRipple
+        label={<img src={Continuous} className={tabsClasses.continuous} />}
+        classes={singleTabClasses}
+      />
+      <Tab
+        disableRipple
+        label={<img src={Discrete} className={tabsClasses.discrete} />}
+        classes={singleTabClasses}
+      />
     </Tabs>
   )
 }
