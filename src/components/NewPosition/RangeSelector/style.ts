@@ -9,9 +9,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 16,
     flex: '1 1 0%'
   },
+  headerContainer: {
+    marginBottom: 6
+  },
   header: {
     ...typography.heading4,
-    marginBottom: 6,
     color: colors.white.main
   },
   innerWrapper: {
