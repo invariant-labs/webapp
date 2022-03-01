@@ -20,6 +20,12 @@ export const useTabsStyles = makeStyles(() => ({
   },
   flexContainer: {
     justifyContent: 'space-between'
+  },
+  continuous: {
+    width: 29
+  },
+  discrete: {
+    width: 22
   }
 }))
 
@@ -33,12 +39,9 @@ export const useSingleTabStyles = makeStyles(() => ({
     width: 46,
 
     '&:hover': {
-      backgroundColor: colors.invariant.light,
+      backgroundColor: `${colors.invariant.light}B0`,
       height: 26,
       borderRadius: 9
     }
-  },
-  selected: {
-    transition: 'color 300ms'
   }
 }))

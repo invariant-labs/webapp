@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Tab, Tabs } from '@material-ui/core'
 import { useSingleTabStyles, useTabsStyles } from './style'
+import Continuous from '@static/svg/continuous.svg'
+import Discrete from '@static//svg/discrete.svg'
 
 export interface IPlotTypeSwitch {
   onSwitch: (isDiscrete: boolean) => void
@@ -29,11 +31,15 @@ export const PlotTypeSwitch: React.FC<IPlotTypeSwitch> = ({
       classes={tabsClasses}>
         <Tab
           disableRipple
-          label={''}
-          classes={singleTabClasses} />
+          label={(
+            <img src={Continuous} className={tabsClasses.continuous} />
+          )}
+          classes={singleTabClasses}/>
         <Tab
           disableRipple
-          label={''}
+          label={(
+            <img src={Discrete} className={tabsClasses.discrete} />
+          )}
           classes={singleTabClasses}
         />
     </Tabs>
