@@ -508,7 +508,7 @@ export const findPoolIndex = (address: PublicKey, pools: PoolWithAddress[]) => {
 
 export const findPairIndex = (
   fromToken: PublicKey,
-  toToken: PublicKey, // do naprawy!!!
+  toToken: PublicKey,
   pools: PoolWithAddress[]
 ) => {
   return pools.findIndex(
