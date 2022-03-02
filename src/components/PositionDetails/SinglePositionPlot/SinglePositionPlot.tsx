@@ -5,8 +5,9 @@ import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeIn
 import { calcPrice, spacingMultiplicityGte, calcTicksAmountInRange } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
-import useStyles from './style'
 import { ILiquidityToken } from '../SinglePositionInfo/consts'
+import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
+import useStyles from './style'
 
 export interface ISinglePositionPlot {
   data: PlotTickData[]
@@ -41,6 +42,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
 
   const [plotMin, setPlotMin] = useState(0)
   const [plotMax, setPlotMax] = useState(1)
+
+  const [isPlotDiscrete, setIsPlotDiscrete] = useState(false)
 
   useEffect(() => {
     const initSideDist = Math.abs(
@@ -90,9 +93,10 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
 
   return (
     <Grid item className={classes.root}>
-      <Typography component='h1' className={classes.header}>
-        Price range
-      </Typography>
+      <Grid className={classes.headerContainer} container justifyContent='space-between'>
+        <Typography className={classes.header}>Price range</Typography>
+        <PlotTypeSwitch onSwitch={setIsPlotDiscrete} />
+      </Grid>
       <Grid className={classes.plotWrapper}>
         <PriceRangePlot
           data={data}
@@ -110,6 +114,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           tickSpacing={tickSpacing}
           xDecimal={tokenX.decimal}
           yDecimal={tokenY.decimal}
+          isDiscrete={isPlotDiscrete}
         />
       </Grid>
       <Grid className={classes.minMaxInfo}>
