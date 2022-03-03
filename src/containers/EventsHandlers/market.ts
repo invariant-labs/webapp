@@ -10,8 +10,6 @@ import { getNetworkTokensList, findPairs } from '@consts/utils'
 import { swap } from '@selectors/swap'
 import { Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
-import { add } from 'lodash'
-import { ContactsOutlined } from '@material-ui/icons'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -153,6 +151,7 @@ const MarketEvents = () => {
       const pools = findPairs(tokenFrom, tokenTo, allPools)
 
       if (pools.length !== 0) {
+        // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
         marketProgram
           .getTickmap(new Pair(pools[0].tokenX, pools[0].tokenY, { fee: pools[0].fee.v }))
           .then(res => {
@@ -160,6 +159,7 @@ const MarketEvents = () => {
               actions.setTickMaps({ index: pools[0].tickmap.toString(), tickMapStructure: res })
             )
           })
+        // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
         marketProgram
           .getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pools[0].fee.v }))
           .then(res => {

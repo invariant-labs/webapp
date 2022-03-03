@@ -1,4 +1,4 @@
-import { calculatePriceSqrt, MAX_TICK, MIN_TICK, Pair, TICK_LIMIT } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, MAX_TICK, MIN_TICK, TICK_LIMIT } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import {
   DECIMAL,
@@ -22,10 +22,7 @@ import {
 } from './static'
 import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
-import { getMarketProgramSync } from '@web3/programs/amm'
 import { PoolWithAddress } from '@reducers/pools'
-import { tickMaps } from '@selectors/pools'
-import { useSelector } from 'react-redux'
 import { Tickmap } from '@invariant-labs/sdk/lib/market'
 
 export const tou64 = (amount: BN | String) => {
@@ -559,7 +556,6 @@ export const handleSimulate = async (
   estimatedPriceAfterSwap: BN
   error: string
 }> => {
-  const marketProgram = getMarketProgramSync()
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(-1)
   let errorMessage: string = ''
