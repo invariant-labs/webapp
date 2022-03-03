@@ -4,21 +4,24 @@ import { network, status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
 import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
-import { pools, poolTicks } from '@selectors/pools'
+import { pools, poolTicks, tickMaps } from '@selectors/pools'
 import { PAIRS } from '@consts/static'
 import { getNetworkTokensList, findPairs } from '@consts/utils'
 import { swap } from '@selectors/swap'
 import { Pair } from '@invariant-labs/sdk'
+import { PublicKey } from '@solana/web3.js'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
   const marketProgram = getMarketProgramSync()
   const { tokenFrom, tokenTo } = useSelector(swap)
   const networkStatus = useSelector(status)
+  const Tickmaps = useSelector(tickMaps)
   const networkType = useSelector(network)
   const allPools = useSelector(pools)
   const poolTicksArray = useSelector(poolTicks)
   const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
+  const [subscribedTickmap, _setSubscribedTickmap] = useState<Set<string>>(new Set())
   useEffect(() => {
     if (networkStatus !== Status.Initialized) {
       return
@@ -92,6 +95,19 @@ const MarketEvents = () => {
               .then(() => {})
               .catch(() => {})
           })
+          Tickmaps[address].bitmap.forEach(tick => {
+            marketProgram
+              .onTickmapChange(new PublicKey(address), tickmap => {
+                dispatch(
+                  actions.updateTickmap({
+                    address: address,
+                    bitmap: tickmap.bitmap
+                  })
+                )
+              })
+              .then(() => {})
+              .catch(() => {})
+          })
         })
       }
     }
@@ -102,7 +118,6 @@ const MarketEvents = () => {
   useEffect(() => {
     if (tokenFrom && tokenTo) {
       const pools = findPairs(tokenFrom, tokenTo, allPools)
-      console.log(pools)
 
       if (pools.length !== 0) {
         marketProgram

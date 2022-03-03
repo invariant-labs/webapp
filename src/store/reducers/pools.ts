@@ -39,6 +39,11 @@ export interface UpdateTicks {
   tick: Tick
 }
 
+export interface UpdateTickmap {
+  address: string
+  bitmap: number[]
+}
+
 export const defaultState: IPoolsStore = {
   tokens: {},
   pools: [],
@@ -83,7 +88,9 @@ const poolsSlice = createSlice({
         state.poolTicks[action.payload.address].findIndex(e => e.index === action.payload.index)
       ] = action.payload.tick
     },
-
+    updateTickmap(state, action: PayloadAction<UpdateTickmap>) {
+      state.tickMaps[action.payload.address].bitmap = action.payload.bitmap
+    },
     getPoolsData(_state, _action: PayloadAction<Pair[]>) {}
   }
 })
