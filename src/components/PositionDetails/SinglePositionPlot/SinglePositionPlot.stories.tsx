@@ -47,6 +47,8 @@ storiesOf('singlePosition/rightComponent', module).add('plot', () => {
       min={2149.6}
       max={149.6}
       xToY
+      initialIsDiscreteValue={false}
+      onDiscreteChange={() => {}}
     />
   )
 })

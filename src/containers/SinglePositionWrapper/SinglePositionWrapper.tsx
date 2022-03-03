@@ -221,6 +221,12 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     return ticksData
   }, [ticksData, ticksLoading, position?.id])
 
+  const initialIsDiscreteValue = localStorage.getItem('IS_PLOT_DISCRETE') === 'true'
+
+  const setIsDiscreteValue = (val: boolean) => {
+    localStorage.setItem('IS_PLOT_DISCRETE', val ? 'true' : 'false')
+  }
+
   return !isLoadingList && position ? (
     <PositionDetails
       detailsData={data}
@@ -262,6 +268,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       fee={+printBN(position.poolData.fee.v, DECIMAL - 2)}
       min={min}
       max={max}
+      initialIsDiscreteValue={initialIsDiscreteValue}
+      onDiscreteChange={setIsDiscreteValue}
     />
   ) : isLoadingList ? (
     <Typography className={classes.placeholderText}>Loading...</Typography>

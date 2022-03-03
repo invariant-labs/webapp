@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { printBN, printBNtoBN, handleSimulate, findPairIndex, findPairs } from '@consts/utils'
-import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { Decimal, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
 import Slippage from '@components/Swap/slippage/Slippage'
@@ -59,6 +59,7 @@ export interface ISwap {
   swapData: SwapData
   tokens: SwapToken[]
   pools: PoolWithAddress[]
+  tickmap: { [x: string]: Tickmap }
   onSwap: (
     slippage: Decimal,
     knownPrice: Decimal,
@@ -74,28 +75,30 @@ export interface ISwap {
   poolTicks: { [x: string]: Tick[] }
   onWalletSelect: (wallet: WalletType) => void
   onDisconnectWallet: () => void
+  initialTokenFromIndex: number | null
+  initialTokenToIndex: number | null
 }
 
 export const Swap: React.FC<ISwap> = ({
   walletStatus,
   tokens,
   pools,
+  tickmap,
   onSwap,
   onSetPair,
   progress,
   poolTicks,
   onWalletSelect,
-  onDisconnectWallet
+  onDisconnectWallet,
+  initialTokenFromIndex,
+  initialTokenToIndex
 }) => {
   const classes = useStyles()
   enum inputTarget {
     FROM = 'from',
     TO = 'to'
   }
-  const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
-    tokens.length ? 0 : null
-  )
-
+  const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(null)
   const [tokenToIndex, setTokenToIndex] = React.useState<number | null>(null)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [lockAnimation, setLockAnimation] = React.useState<boolean>(false)
@@ -128,19 +131,28 @@ export const Swap: React.FC<ISwap> = ({
   const timeoutRef = useRef<number>(0)
 
   useEffect(() => {
-    if (tokenFromIndex !== null && tokenToIndex !== null) {
-      onSetPair(tokens[tokenFromIndex].address, tokens[tokenToIndex].address)
+    if (!!tokens.length && tokenFromIndex === null && tokenToIndex === null) {
+      setTokenFromIndex(
+        initialTokenFromIndex !== null ? initialTokenFromIndex : tokens.length ? 0 : null
+      )
+      setTokenToIndex(initialTokenToIndex)
     }
-  }, [tokenFromIndex, tokenToIndex])
+  }, [tokens.length])
 
   useEffect(() => {
-    if (inputRef === inputTarget.FROM) {
+    if (tokenFromIndex !== null && tokenToIndex !== null && !!pools.length) {
+      onSetPair(tokens[tokenFromIndex].address, tokens[tokenToIndex].address)
+    }
+  }, [tokenFromIndex, tokenToIndex, pools.length])
+
+  useEffect(() => {
+    if (inputRef === inputTarget.FROM && !(amountFrom === '' && amountTo === '')) {
       simulateWithTimeout()
     }
   }, [amountFrom, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
 
   useEffect(() => {
-    if (inputRef === inputTarget.TO) {
+    if (inputRef === inputTarget.TO && !(amountFrom === '' && amountTo === '')) {
       simulateWithTimeout()
     }
   }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
@@ -154,7 +166,7 @@ export const Swap: React.FC<ISwap> = ({
       setSimulateAmount().finally(() => {
         setThrottle(false)
       })
-    }, 500)
+    }, 100)
     timeoutRef.current = timeout
   }
 
@@ -218,6 +230,7 @@ export const Swap: React.FC<ISwap> = ({
           await handleSimulate(
             pools,
             poolTicks,
+            tickmap,
             {
               v: fromFee(new BN(Number(+slippTolerance * 1000)))
             },
@@ -232,6 +245,7 @@ export const Swap: React.FC<ISwap> = ({
           await handleSimulate(
             pools,
             poolTicks,
+            tickmap,
             {
               v: fromFee(new BN(Number(+slippTolerance * 1000)))
             },
@@ -262,7 +276,7 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   const getStateMessage = () => {
-    if (tokenFromIndex !== null && tokenToIndex !== null && throttle) {
+    if ((tokenFromIndex !== null && tokenToIndex !== null && throttle) || !pools.length) {
       return 'Loading'
     }
     if (walletStatus !== Status.Initialized) {

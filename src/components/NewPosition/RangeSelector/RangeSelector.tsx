@@ -13,6 +13,7 @@ import {
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
+import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
 import useStyles from './style'
 
 export interface IRangeSelector {
@@ -30,6 +31,8 @@ export interface IRangeSelector {
   yDecimal: number
   tickSpacing: number
   currentPairReversed: boolean | null
+  initialIsDiscreteValue: boolean
+  onDiscreteChange: (val: boolean) => void
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -46,7 +49,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   xDecimal,
   yDecimal,
   tickSpacing,
-  currentPairReversed
+  currentPairReversed,
+  initialIsDiscreteValue,
+  onDiscreteChange
 }) => {
   const classes = useStyles()
 
@@ -61,6 +66,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const [plotMin, setPlotMin] = useState(0)
   const [plotMax, setPlotMax] = useState(1)
+
+  const [isPlotDiscrete, setIsPlotDiscrete] = useState(initialIsDiscreteValue)
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -173,9 +180,61 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }, [tokenASymbol, tokenBSymbol, fee, currentPairReversed])
 
+  const autoZoomHandler = (left: number, right: number) => {
+    const leftX = calcPrice(left, isXtoY, xDecimal, yDecimal)
+    const rightX = calcPrice(right, isXtoY, xDecimal, yDecimal)
+
+    if (leftX < plotMin || rightX > plotMax) {
+      const leftDist = Math.abs(
+        leftX -
+          calcPrice(
+            isXtoY
+              ? Math.max(minSpacingMultiplicity(tickSpacing), left - tickSpacing * 15)
+              : Math.min(maxSpacingMultiplicity(tickSpacing), left + tickSpacing * 15),
+            isXtoY,
+            xDecimal,
+            yDecimal
+          )
+      )
+      const rightDist = Math.abs(
+        rightX -
+          calcPrice(
+            isXtoY
+              ? Math.min(maxSpacingMultiplicity(tickSpacing), right + tickSpacing * 15)
+              : Math.max(minSpacingMultiplicity(tickSpacing), right - tickSpacing * 15),
+            isXtoY,
+            xDecimal,
+            yDecimal
+          )
+      )
+
+      let dist
+
+      if (leftX < plotMin && rightX > plotMax) {
+        dist = Math.max(leftDist, rightDist)
+      } else if (leftX < plotMin) {
+        dist = leftDist
+      } else {
+        dist = rightDist
+      }
+
+      setPlotMin(leftX - dist)
+      setPlotMax(rightX + dist)
+    }
+  }
+
   return (
     <Grid container className={classes.wrapper}>
-      <Typography className={classes.header}>Price range</Typography>
+      <Grid className={classes.headerContainer} container justifyContent='space-between'>
+        <Typography className={classes.header}>Price range</Typography>
+        <PlotTypeSwitch
+          onSwitch={val => {
+            setIsPlotDiscrete(val)
+            onDiscreteChange(val)
+          }}
+          initialValue={isPlotDiscrete ? 1 : 0}
+        />
+      </Grid>
       <Grid container className={classes.innerWrapper}>
         <PriceRangePlot
           className={classes.plot}
@@ -199,6 +258,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           tickSpacing={tickSpacing}
           xDecimal={xDecimal}
           yDecimal={yDecimal}
+          isDiscrete={isPlotDiscrete}
         />
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>
@@ -214,6 +274,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 ? Math.max(minSpacingMultiplicity(tickSpacing), leftRange - tickSpacing)
                 : Math.min(maxSpacingMultiplicity(tickSpacing), leftRange + tickSpacing)
               changeRangeHandler(newLeft, rightRange)
+              autoZoomHandler(newLeft, rightRange)
             }}
             increaseValue={() => {
               const newLeft = isXtoY
@@ -221,6 +282,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 : Math.max(rightRange + tickSpacing, leftRange - tickSpacing)
 
               changeRangeHandler(newLeft, rightRange)
+              autoZoomHandler(newLeft, rightRange)
             }}
             onBlur={() => {
               const newLeft = isXtoY
@@ -234,6 +296,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                   )
 
               changeRangeHandler(newLeft, rightRange)
+              autoZoomHandler(newLeft, rightRange)
             }}
           />
           <RangeInput
@@ -248,12 +311,14 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 ? Math.max(rightRange - tickSpacing, leftRange + tickSpacing)
                 : Math.min(rightRange + tickSpacing, leftRange - tickSpacing)
               changeRangeHandler(leftRange, newRight)
+              autoZoomHandler(leftRange, newRight)
             }}
             increaseValue={() => {
               const newRight = isXtoY
                 ? Math.min(maxSpacingMultiplicity(tickSpacing), rightRange + tickSpacing)
                 : Math.max(minSpacingMultiplicity(tickSpacing), rightRange - tickSpacing)
               changeRangeHandler(leftRange, newRight)
+              autoZoomHandler(leftRange, newRight)
             }}
             onBlur={() => {
               const newRight = isXtoY
@@ -266,6 +331,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                     nearestTickIndex(+rightInput, tickSpacing, isXtoY, xDecimal, yDecimal)
                   )
               changeRangeHandler(leftRange, newRight)
+              autoZoomHandler(leftRange, newRight)
             }}
           />
         </Grid>
@@ -276,10 +342,15 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           <Button
             className={classes.button}
             onClick={() => {
-              changeRangeHandler(
-                isXtoY ? minSpacingMultiplicity(tickSpacing) : maxSpacingMultiplicity(tickSpacing),
-                isXtoY ? maxSpacingMultiplicity(tickSpacing) : minSpacingMultiplicity(tickSpacing)
-              )
+              const left = isXtoY
+                ? minSpacingMultiplicity(tickSpacing)
+                : maxSpacingMultiplicity(tickSpacing)
+              const right = isXtoY
+                ? maxSpacingMultiplicity(tickSpacing)
+                : minSpacingMultiplicity(tickSpacing)
+
+              changeRangeHandler(left, right)
+              autoZoomHandler(left, right)
             }}>
             Set full range
           </Button>
