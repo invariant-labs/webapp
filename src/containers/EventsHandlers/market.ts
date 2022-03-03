@@ -113,7 +113,6 @@ const MarketEvents = () => {
     const connectEvents = async () => {
       if (tokenFrom && tokenTo) {
         Object.keys(tickmaps).forEach(address => {
-          console.log(address)
           if (subscribedTickmap.has(address)) {
             return
           }
@@ -121,15 +120,11 @@ const MarketEvents = () => {
           const pool = allPools.find(pool => {
             return pool.tickmap.toString() === address
           })
-          console.log(allPools)
-          console.log(pool)
           if (typeof pool === 'undefined') {
             return
           }
-          console.log(123)
           marketProgram
             .onTickmapChange(new PublicKey(address), tickmap => {
-              console.log(tickmap)
               dispatch(
                 actions.updateTickmap({
                   address: address,
