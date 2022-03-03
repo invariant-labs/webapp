@@ -5,8 +5,9 @@ import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeIn
 import { calcPrice, spacingMultiplicityGte, calcTicksAmountInRange } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
-import useStyles from './style'
 import { ILiquidityToken } from '../SinglePositionInfo/consts'
+import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
+import useStyles from './style'
 
 export interface ISinglePositionPlot {
   data: PlotTickData[]
@@ -21,6 +22,8 @@ export interface ISinglePositionPlot {
   min: number
   max: number
   xToY: boolean
+  initialIsDiscreteValue: boolean
+  onDiscreteChange: (val: boolean) => void
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -35,12 +38,16 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   tickSpacing,
   min,
   max,
-  xToY
+  xToY,
+  initialIsDiscreteValue,
+  onDiscreteChange
 }) => {
   const classes = useStyles()
 
   const [plotMin, setPlotMin] = useState(0)
   const [plotMax, setPlotMax] = useState(1)
+
+  const [isPlotDiscrete, setIsPlotDiscrete] = useState(initialIsDiscreteValue)
 
   useEffect(() => {
     const initSideDist = Math.abs(
@@ -90,9 +97,16 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
 
   return (
     <Grid item className={classes.root}>
-      <Typography component='h1' className={classes.header}>
-        Price range
-      </Typography>
+      <Grid className={classes.headerContainer} container justifyContent='space-between'>
+        <Typography className={classes.header}>Price range</Typography>
+        <PlotTypeSwitch
+          onSwitch={val => {
+            setIsPlotDiscrete(val)
+            onDiscreteChange(val)
+          }}
+          initialValue={isPlotDiscrete ? 1 : 0}
+        />
+      </Grid>
       <Grid className={classes.plotWrapper}>
         <PriceRangePlot
           data={data}
@@ -110,6 +124,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           tickSpacing={tickSpacing}
           xDecimal={tokenX.decimal}
           yDecimal={tokenY.decimal}
+          isDiscrete={isPlotDiscrete}
         />
       </Grid>
       <Grid className={classes.minMaxInfo}>

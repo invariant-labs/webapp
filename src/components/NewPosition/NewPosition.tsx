@@ -52,6 +52,8 @@ export interface INewPosition {
   poolIndex: number | null
   currentPairReversed: boolean | null
   bestTiers: BestTier[]
+  initialIsDiscreteValue: boolean
+  onDiscreteChange: (val: boolean) => void
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -74,7 +76,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   tickSpacing,
   poolIndex,
   currentPairReversed,
-  bestTiers
+  bestTiers,
+  initialIsDiscreteValue,
+  onDiscreteChange
 }) => {
   const classes = useStyles()
 
@@ -255,14 +259,16 @@ export const NewPosition: React.FC<INewPosition> = ({
               tokenAIndex !== null &&
               (isXtoY ? right > midPrice.index : right < midPrice.index)
             ) {
+              const deposit = tokenADeposit
               const amount = getOtherTokenAmount(
-                printBNtoBN(tokenADeposit, tokens[tokenAIndex].decimals),
+                printBNtoBN(deposit, tokens[tokenAIndex].decimals),
                 left,
                 right,
                 true
               )
 
-              if (tokenBIndex !== null && +tokenADeposit !== 0) {
+              if (tokenBIndex !== null && +deposit !== 0) {
+                setTokenADeposit(deposit)
                 setTokenBDeposit(amount)
 
                 return
@@ -270,6 +276,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             }
 
             if (tokenBIndex !== null && (isXtoY ? left < midPrice.index : left > midPrice.index)) {
+              const deposit = tokenBDeposit
               const amount = getOtherTokenAmount(
                 printBNtoBN(tokenBDeposit, tokens[tokenBIndex].decimals),
                 left,
@@ -277,8 +284,9 @@ export const NewPosition: React.FC<INewPosition> = ({
                 false
               )
 
-              if (tokenAIndex !== null && +tokenBDeposit !== 0) {
+              if (tokenAIndex !== null && +deposit !== 0) {
                 setTokenADeposit(amount)
+                setTokenBDeposit(deposit)
               }
             }
           }}
@@ -307,6 +315,8 @@ export const NewPosition: React.FC<INewPosition> = ({
           yDecimal={yDecimal}
           fee={fee}
           currentPairReversed={currentPairReversed}
+          initialIsDiscreteValue={initialIsDiscreteValue}
+          onDiscreteChange={onDiscreteChange}
         />
       </Grid>
     </Grid>

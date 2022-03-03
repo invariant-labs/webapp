@@ -1,4 +1,4 @@
-import { calculatePriceSqrt, MAX_TICK, MIN_TICK, Pair, TICK_LIMIT } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, MAX_TICK, MIN_TICK, TICK_LIMIT } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import {
   DECIMAL,
@@ -22,8 +22,8 @@ import {
 } from './static'
 import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
-import { getMarketProgramSync } from '@web3/programs/amm'
 import { PoolWithAddress } from '@reducers/pools'
+import { Tickmap } from '@invariant-labs/sdk/lib/market'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -508,7 +508,7 @@ export const findPoolIndex = (address: PublicKey, pools: PoolWithAddress[]) => {
 
 export const findPairIndex = (
   fromToken: PublicKey,
-  toToken: PublicKey, // do naprawy!!!
+  toToken: PublicKey,
   pools: PoolWithAddress[]
 ) => {
   return pools.findIndex(
@@ -543,6 +543,7 @@ export const calcCurrentPriceOfPool = (
 export const handleSimulate = async (
   pools: PoolWithAddress[],
   poolTicks: { [key in string]: Tick[] },
+  tickmaps: { [key in string]: Tickmap },
   slippage: Decimal,
   fromToken: PublicKey,
   toToken: PublicKey,
@@ -555,7 +556,6 @@ export const handleSimulate = async (
   estimatedPriceAfterSwap: BN
   error: string
 }> => {
-  const marketProgram = getMarketProgramSync()
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(-1)
   let errorMessage: string = ''
@@ -576,9 +576,9 @@ export const handleSimulate = async (
   }
   isXtoY = fromToken.equals(filteredPools[0].tokenX)
 
-  const tickMap = await marketProgram.getTickmap(
-    new Pair(filteredPools[0].tokenX, filteredPools[0].tokenY, { fee: filteredPools[0].fee.v })
-  )
+  // const tickMap = await marketProgram.getTickmap(
+  //   new Pair(filteredPools[0].tokenX, filteredPools[0].tokenY, { fee: filteredPools[0].fee.v })
+  // )
   const ticks: Map<number, Tick> = new Map<number, Tick>()
   for (const tick of poolTicks[filteredPools[0].address.toString()]) {
     ticks.set(tick.index, tick)
@@ -594,7 +594,7 @@ export const handleSimulate = async (
       slippage: slippage,
       pool: filteredPools[0],
       ticks: ticks,
-      tickmap: tickMap
+      tickmap: tickmaps[filteredPools[0].tickmap.toString()]
     })
 
     if (!byAmountIn) {

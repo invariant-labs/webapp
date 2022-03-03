@@ -9,9 +9,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 18,
     borderRadius: 24
   },
-  header: {
+  headerContainer: {
     ...typography.heading4,
-    color: '#FFFFFF',
+    color: '#FFFFFF'
+  },
+  header: {
     paddingBottom: 30
   },
   plotWrapper: {
