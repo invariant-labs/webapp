@@ -2,7 +2,8 @@ import { Swap } from '@components/Swap/Swap'
 import {
   isLoadingLatestPoolsForTransaction,
   poolsArraySortedByFees,
-  poolTicks
+  poolTicks,
+  tickMaps
 } from '@selectors/pools'
 import { swap as swapPool } from '@selectors/swap'
 import React, { useEffect, useState } from 'react'
@@ -18,6 +19,7 @@ export const WrappedSwap = () => {
   const dispatch = useDispatch()
   const walletStatus = useSelector(status)
   const swap = useSelector(swapPool)
+  const tickmap = useSelector(tickMaps)
   const poolTicksArray = useSelector(poolTicks)
   const allPools = useSelector(poolsArraySortedByFees)
   const tokensList = useSelector(swapTokens)
@@ -115,6 +117,7 @@ export const WrappedSwap = () => {
       progress={progress}
       poolTicks={poolTicksArray}
       isWaitingForNewPool={isFetchingNewPool}
+      tickmap={tickmap}
       initialTokenFromIndex={initialTokenFromIndex === -1 ? null : initialTokenFromIndex}
       initialTokenToIndex={initialTokenToIndex === -1 ? null : initialTokenToIndex}
     />

@@ -1,6 +1,6 @@
 import { Token } from '@consts/static'
 import { Pair } from '@invariant-labs/sdk'
-import { PoolStructure } from '@invariant-labs/sdk/lib/market'
+import { PoolStructure, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
@@ -16,11 +16,17 @@ export interface IPoolsStore {
   pools: { [key in string]: PoolWithAddress }
   poolTicks: { [key in string]: Tick[] }
   isLoadingLatestPoolsForTransaction: boolean
+  tickMaps: { [key in string]: Tickmap }
 }
 
 export interface UpdatePool {
   address: PublicKey
   poolStructure: PoolStructure
+}
+
+export interface updateTickMaps {
+  index: string
+  tickMapStructure: Tickmap
 }
 
 export interface UpdateTick {
@@ -34,11 +40,17 @@ export interface UpdateTicks {
   tick: Tick
 }
 
+export interface UpdateTickmap {
+  address: string
+  bitmap: number[]
+}
+
 export const defaultState: IPoolsStore = {
   tokens: {},
   pools: {},
   poolTicks: {},
-  isLoadingLatestPoolsForTransaction: false
+  isLoadingLatestPoolsForTransaction: false,
+  tickMaps: {}
 }
 
 export interface PairTokens {
@@ -58,6 +70,9 @@ const poolsSlice = createSlice({
     setPools(state, action: PayloadAction<{ [key in string]: PoolWithAddress }>) {
       state.pools = action.payload
       return state
+    },
+    setTickMaps(state, action: PayloadAction<updateTickMaps>) {
+      state.tickMaps[action.payload.index] = action.payload.tickMapStructure
     },
     setTicks(state, action: PayloadAction<UpdateTick>) {
       state.poolTicks[action.payload.index] = action.payload.tickStructure
@@ -108,7 +123,10 @@ const poolsSlice = createSlice({
 
       return state
     },
-    getPoolsDataForPositions(_state, _action: PayloadAction<string[]>) {}
+    getPoolsDataForPositions(_state, _action: PayloadAction<string[]>) {},
+    updateTickmap(state, action: PayloadAction<UpdateTickmap>) {
+      state.tickMaps[action.payload.address].bitmap = action.payload.bitmap
+    }
   }
 })
 
