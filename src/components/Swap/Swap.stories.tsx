@@ -162,6 +162,7 @@ storiesOf('newUi/swap', module)
         onDisconnectWallet={() => {}}
         initialTokenFromIndex={null}
         initialTokenToIndex={null}
+        tickmap={{}}
       />
     </div>
   ))
