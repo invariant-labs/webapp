@@ -75,6 +75,8 @@ export interface ISwap {
   isWaitingForNewPool: boolean
   onWalletSelect: (wallet: WalletType) => void
   onDisconnectWallet: () => void
+  initialTokenFromIndex: number | null
+  initialTokenToIndex: number | null
 }
 
 export const Swap: React.FC<ISwap> = ({
@@ -87,17 +89,16 @@ export const Swap: React.FC<ISwap> = ({
   poolTicks,
   isWaitingForNewPool,
   onWalletSelect,
-  onDisconnectWallet
+  onDisconnectWallet,
+  initialTokenFromIndex,
+  initialTokenToIndex
 }) => {
   const classes = useStyles()
   enum inputTarget {
     FROM = 'from',
     TO = 'to'
   }
-  const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
-    tokens.length ? 0 : null
-  )
-
+  const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(null)
   const [tokenToIndex, setTokenToIndex] = React.useState<number | null>(null)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [lockAnimation, setLockAnimation] = React.useState<boolean>(false)
@@ -129,19 +130,28 @@ export const Swap: React.FC<ISwap> = ({
   const timeoutRef = useRef<number>(0)
 
   useEffect(() => {
-    if (tokenFromIndex !== null && tokenToIndex !== null) {
-      onSetPair(tokens[tokenFromIndex].address, tokens[tokenToIndex].address)
+    if (!!tokens.length && tokenFromIndex === null && tokenToIndex === null) {
+      setTokenFromIndex(
+        initialTokenFromIndex !== null ? initialTokenFromIndex : tokens.length ? 0 : null
+      )
+      setTokenToIndex(initialTokenToIndex)
     }
-  }, [tokenFromIndex, tokenToIndex])
+  }, [tokens.length])
 
   useEffect(() => {
-    if (inputRef === inputTarget.FROM) {
+    if (tokenFromIndex !== null && tokenToIndex !== null && !!pools.length) {
+      onSetPair(tokens[tokenFromIndex].address, tokens[tokenToIndex].address)
+    }
+  }, [tokenFromIndex, tokenToIndex, pools.length])
+
+  useEffect(() => {
+    if (inputRef === inputTarget.FROM && amountFrom !== '') {
       simulateWithTimeout()
     }
   }, [amountFrom, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
 
   useEffect(() => {
-    if (inputRef === inputTarget.TO) {
+    if (inputRef === inputTarget.TO && amountTo !== '') {
       simulateWithTimeout()
     }
   }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])

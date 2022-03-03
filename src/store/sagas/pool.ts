@@ -5,10 +5,26 @@ import { actions, PairTokens, PoolWithAddress } from '@reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PublicKey } from '@solana/web3.js'
-import { PoolStructure } from '@invariant-labs/sdk/lib/market'
+import { Market, PoolStructure } from '@invariant-labs/sdk/lib/market'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 export interface iTick {
   index: Tick[]
+}
+
+// TODO: temporary method to fetch multiple pools
+export const getPools = async (pairs: Pair[], marketProgram: Market): Promise<PoolWithAddress[]> => {
+  const addresses: PublicKey[] = await Promise.all(
+    pairs.map(async pair => await pair.getAddress(marketProgram.program.programId))
+  )
+
+  const pools = (await marketProgram.program.account.pool.fetchMultiple(
+    addresses
+  )) as PoolStructure[]
+
+  return pools.map((pool, index) => ({
+    ...pool,
+    address: addresses[index]
+  }))
 }
 
 export function* fetchPoolData(action: PayloadAction<Pair>) {

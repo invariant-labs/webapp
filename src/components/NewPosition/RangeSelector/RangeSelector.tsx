@@ -13,6 +13,7 @@ import {
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
+import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
 import useStyles from './style'
 
 export interface IRangeSelector {
@@ -59,6 +60,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const [plotMin, setPlotMin] = useState(0)
   const [plotMax, setPlotMax] = useState(1)
+
+  const [isPlotDiscrete, setIsPlotDiscrete] = useState(false)
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -220,7 +223,10 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   return (
     <Grid container className={classes.wrapper}>
-      <Typography className={classes.header}>Price range</Typography>
+      <Grid className={classes.headerContainer} container justifyContent='space-between'>
+        <Typography className={classes.header}>Price range</Typography>
+        <PlotTypeSwitch onSwitch={setIsPlotDiscrete} />
+      </Grid>
       <Grid container className={classes.innerWrapper}>
         <PriceRangePlot
           className={classes.plot}
@@ -244,6 +250,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           tickSpacing={tickSpacing}
           xDecimal={xDecimal}
           yDecimal={yDecimal}
+          isDiscrete={isPlotDiscrete}
         />
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>

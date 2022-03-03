@@ -52,6 +52,17 @@ export const WrappedSwap = () => {
       )
     }
   }, [isFetchingNewPool])
+  const lastTokenFrom = localStorage.getItem('INVARIANT_LAST_TOKEN_FROM')
+  const lastTokenTo = localStorage.getItem('INVARIANT_LAST_TOKEN_TO')
+
+  const initialTokenFromIndex =
+    lastTokenFrom === null
+      ? null
+      : tokensList.findIndex(token => token.assetAddress.equals(new PublicKey(lastTokenFrom)))
+  const initialTokenToIndex =
+    lastTokenTo === null
+      ? null
+      : tokensList.findIndex(token => token.assetAddress.equals(new PublicKey(lastTokenTo)))
 
   return (
     <Swap
@@ -82,6 +93,8 @@ export const WrappedSwap = () => {
       onSetPair={(tokenFrom, tokenTo) => {
         setTokenFrom(tokenFrom)
         setTokenTo(tokenTo)
+        localStorage.setItem('INVARIANT_LAST_TOKEN_FROM', tokenFrom.toString())
+        localStorage.setItem('INVARIANT_LAST_TOKEN_TO', tokenTo.toString())
         dispatch(
           poolsActions.getAllPoolsForPairData({
             first: tokenFrom,
@@ -102,6 +115,8 @@ export const WrappedSwap = () => {
       progress={progress}
       poolTicks={poolTicksArray}
       isWaitingForNewPool={isFetchingNewPool}
+      initialTokenFromIndex={initialTokenFromIndex === -1 ? null : initialTokenFromIndex}
+      initialTokenToIndex={initialTokenToIndex === -1 ? null : initialTokenToIndex}
     />
   )
 }

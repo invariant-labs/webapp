@@ -161,6 +161,8 @@ storiesOf('newUi/swap', module)
         isWaitingForNewPool={false}
         onWalletSelect={() => {}}
         onDisconnectWallet={() => {}}
+        initialTokenFromIndex={null}
+        initialTokenToIndex={null}
       />
     </div>
   ))
