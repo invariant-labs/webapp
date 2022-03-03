@@ -10,7 +10,7 @@ storiesOf('position/plotTypeSwitch', module).add('default', () => {
         padding: 20,
         width: 400
       }}>
-      <PlotTypeSwitch onSwitch={() => {}} />
+      <PlotTypeSwitch onSwitch={() => {}} initialValue={0} />
     </div>
   )
 })

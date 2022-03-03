@@ -24,6 +24,8 @@ interface IProps {
   fee: number
   min: number
   max: number
+  initialIsDiscreteValue: boolean
+  onDiscreteChange: (val: boolean) => void
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -40,7 +42,9 @@ const PositionDetails: React.FC<IProps> = ({
   tickSpacing,
   fee,
   min,
-  max
+  max,
+  initialIsDiscreteValue,
+  onDiscreteChange
 }) => {
   const classes = useStyles()
 
@@ -110,6 +114,8 @@ const PositionDetails: React.FC<IProps> = ({
           min={xToY ? min : 1 / max}
           max={xToY ? max : 1 / min}
           xToY={xToY}
+          initialIsDiscreteValue={initialIsDiscreteValue}
+          onDiscreteChange={onDiscreteChange}
         />
       </Grid>
     </Grid>
