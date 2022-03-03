@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { printBN, printBNtoBN, handleSimulate, findPairIndex, findPairs } from '@consts/utils'
-import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { Decimal, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
 import Slippage from '@components/Swap/slippage/Slippage'
@@ -59,6 +59,7 @@ export interface ISwap {
   swapData: SwapData
   tokens: SwapToken[]
   pools: PoolWithAddress[]
+  tickmap: { [x: string]: Tickmap }
   onSwap: (
     slippage: Decimal,
     knownPrice: Decimal,
@@ -82,6 +83,7 @@ export const Swap: React.FC<ISwap> = ({
   walletStatus,
   tokens,
   pools,
+  tickmap,
   onSwap,
   onSetPair,
   progress,
@@ -144,13 +146,13 @@ export const Swap: React.FC<ISwap> = ({
   }, [tokenFromIndex, tokenToIndex, pools.length])
 
   useEffect(() => {
-    if (inputRef === inputTarget.FROM && amountFrom !== '') {
+    if (inputRef === inputTarget.FROM && !(amountFrom === '' && amountTo === '')) {
       simulateWithTimeout()
     }
   }, [amountFrom, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
 
   useEffect(() => {
-    if (inputRef === inputTarget.TO && amountTo !== '') {
+    if (inputRef === inputTarget.TO && !(amountFrom === '' && amountTo === '')) {
       simulateWithTimeout()
     }
   }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
@@ -164,7 +166,7 @@ export const Swap: React.FC<ISwap> = ({
       setSimulateAmount().finally(() => {
         setThrottle(false)
       })
-    }, 500)
+    }, 100)
     timeoutRef.current = timeout
   }
 
@@ -228,6 +230,7 @@ export const Swap: React.FC<ISwap> = ({
           await handleSimulate(
             pools,
             poolTicks,
+            tickmap,
             {
               v: fromFee(new BN(Number(+slippTolerance * 1000)))
             },
@@ -242,6 +245,7 @@ export const Swap: React.FC<ISwap> = ({
           await handleSimulate(
             pools,
             poolTicks,
+            tickmap,
             {
               v: fromFee(new BN(Number(+slippTolerance * 1000)))
             },
