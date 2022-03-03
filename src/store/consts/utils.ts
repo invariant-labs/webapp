@@ -24,6 +24,9 @@ import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
 import { getMarketProgramSync } from '@web3/programs/amm'
 import { PoolWithAddress } from '@reducers/pools'
+import { tickMaps } from '@selectors/pools'
+import { useSelector } from 'react-redux'
+import { Tickmap } from '@invariant-labs/sdk/lib/market'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -543,6 +546,7 @@ export const calcCurrentPriceOfPool = (
 export const handleSimulate = async (
   pools: PoolWithAddress[],
   poolTicks: { [key in string]: Tick[] },
+  tickmaps: { [key in string]: Tickmap },
   slippage: Decimal,
   fromToken: PublicKey,
   toToken: PublicKey,
@@ -576,9 +580,9 @@ export const handleSimulate = async (
   }
   isXtoY = fromToken.equals(filteredPools[0].tokenX)
 
-  const tickMap = await marketProgram.getTickmap(
-    new Pair(filteredPools[0].tokenX, filteredPools[0].tokenY, { fee: filteredPools[0].fee.v })
-  )
+  // const tickMap = await marketProgram.getTickmap(
+  //   new Pair(filteredPools[0].tokenX, filteredPools[0].tokenY, { fee: filteredPools[0].fee.v })
+  // )
   const ticks: Map<number, Tick> = new Map<number, Tick>()
   for (const tick of poolTicks[filteredPools[0].address.toString()]) {
     ticks.set(tick.index, tick)
@@ -594,7 +598,7 @@ export const handleSimulate = async (
       slippage: slippage,
       pool: filteredPools[0],
       ticks: ticks,
-      tickmap: tickMap
+      tickmap: tickmaps[filteredPools[0].address.toString()]
     })
 
     if (!byAmountIn) {

@@ -102,9 +102,16 @@ const MarketEvents = () => {
   useEffect(() => {
     if (tokenFrom && tokenTo) {
       const pools = findPairs(tokenFrom, tokenTo, allPools)
+      console.log(pools)
 
       if (pools.length !== 0) {
-        console.log(123)
+        marketProgram
+          .getTickmap(new Pair(pools[0].tokenX, pools[0].tokenY, { fee: pools[0].fee.v }))
+          .then(res => {
+            dispatch(
+              actions.setTickMaps({ index: pools[0].address.toString(), tickMapStructure: res })
+            )
+          })
         marketProgram
           .getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pools[0].fee.v }))
           .then(res => {
