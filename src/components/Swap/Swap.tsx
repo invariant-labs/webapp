@@ -146,13 +146,13 @@ export const Swap: React.FC<ISwap> = ({
   }, [tokenFromIndex, tokenToIndex, pools.length])
 
   useEffect(() => {
-    if (inputRef === inputTarget.FROM && amountFrom !== '') {
+    if (inputRef === inputTarget.FROM) {
       simulateWithTimeout()
     }
   }, [amountFrom, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
 
   useEffect(() => {
-    if (inputRef === inputTarget.TO && amountTo !== '') {
+    if (inputRef === inputTarget.TO) {
       simulateWithTimeout()
     }
   }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
