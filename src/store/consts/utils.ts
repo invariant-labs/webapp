@@ -598,7 +598,7 @@ export const handleSimulate = async (
       slippage: slippage,
       pool: filteredPools[0],
       ticks: ticks,
-      tickmap: tickmaps[filteredPools[0].address.toString()]
+      tickmap: tickmaps[filteredPools[0].tickmap.toString()]
     })
 
     if (!byAmountIn) {

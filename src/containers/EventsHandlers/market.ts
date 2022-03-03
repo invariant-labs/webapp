@@ -10,13 +10,15 @@ import { getNetworkTokensList, findPairs } from '@consts/utils'
 import { swap } from '@selectors/swap'
 import { Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
+import { add } from 'lodash'
+import { ContactsOutlined } from '@material-ui/icons'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
   const marketProgram = getMarketProgramSync()
   const { tokenFrom, tokenTo } = useSelector(swap)
   const networkStatus = useSelector(status)
-  const Tickmaps = useSelector(tickMaps)
+  const tickmaps = useSelector(tickMaps)
   const networkType = useSelector(network)
   const allPools = useSelector(pools)
   const poolTicksArray = useSelector(poolTicks)
@@ -95,25 +97,56 @@ const MarketEvents = () => {
               .then(() => {})
               .catch(() => {})
           })
-          Tickmaps[address].bitmap.forEach(tick => {
-            marketProgram
-              .onTickmapChange(new PublicKey(address), tickmap => {
-                dispatch(
-                  actions.updateTickmap({
-                    address: address,
-                    bitmap: tickmap.bitmap
-                  })
-                )
-              })
-              .then(() => {})
-              .catch(() => {})
-          })
         })
       }
     }
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     connectEvents()
   }, [networkStatus, marketProgram, Object.values(poolTicksArray).length])
+
+  useEffect(() => {
+    if (
+      networkStatus !== Status.Initialized ||
+      !marketProgram ||
+      Object.values(allPools).length === 0
+    ) {
+      return
+    }
+    const connectEvents = async () => {
+      if (tokenFrom && tokenTo) {
+        Object.keys(tickmaps).forEach(address => {
+          console.log(address)
+          if (subscribedTickmap.has(address)) {
+            return
+          }
+          subscribedTickmap.add(address)
+          const pool = allPools.find(pool => {
+            return pool.tickmap.toString() === address
+          })
+          console.log(allPools)
+          console.log(pool)
+          if (typeof pool === 'undefined') {
+            return
+          }
+          console.log(123)
+          marketProgram
+            .onTickmapChange(new PublicKey(address), tickmap => {
+              console.log(tickmap)
+              dispatch(
+                actions.updateTickmap({
+                  address: address,
+                  bitmap: tickmap.bitmap
+                })
+              )
+            })
+            .then(() => {})
+            .catch(() => {})
+        })
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    connectEvents()
+  }, [networkStatus, marketProgram, Object.values(tickmaps).length])
 
   useEffect(() => {
     if (tokenFrom && tokenTo) {
@@ -124,7 +157,7 @@ const MarketEvents = () => {
           .getTickmap(new Pair(pools[0].tokenX, pools[0].tokenY, { fee: pools[0].fee.v }))
           .then(res => {
             dispatch(
-              actions.setTickMaps({ index: pools[0].address.toString(), tickMapStructure: res })
+              actions.setTickMaps({ index: pools[0].tickmap.toString(), tickMapStructure: res })
             )
           })
         marketProgram
