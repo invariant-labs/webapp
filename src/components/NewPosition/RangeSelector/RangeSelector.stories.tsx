@@ -38,6 +38,8 @@ storiesOf('position/rangeSelector', module)
       isXtoY={true}
       fee={0}
       currentPairReversed={null}
+      initialIsDiscreteValue={false}
+      onDiscreteChange={() => {}}
     />
   ))
   .add('blocked', () => (
@@ -61,5 +63,7 @@ storiesOf('position/rangeSelector', module)
       isXtoY={true}
       fee={0}
       currentPairReversed={null}
+      initialIsDiscreteValue={false}
+      onDiscreteChange={() => {}}
     />
   ))

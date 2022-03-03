@@ -6,10 +6,11 @@ import Discrete from '@static//svg/discrete.svg'
 
 export interface IPlotTypeSwitch {
   onSwitch: (isDiscrete: boolean) => void
+  initialValue: number
 }
 
-export const PlotTypeSwitch: React.FC<IPlotTypeSwitch> = ({ onSwitch }) => {
-  const [current, setCurrent] = useState(0)
+export const PlotTypeSwitch: React.FC<IPlotTypeSwitch> = ({ onSwitch, initialValue }) => {
+  const [current, setCurrent] = useState(initialValue)
 
   const tabsClasses = useTabsStyles()
   const singleTabClasses = useSingleTabStyles()
