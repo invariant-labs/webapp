@@ -54,6 +54,8 @@ export interface INewPosition {
   poolIndex: number | null
   currentPairReversed: boolean | null
   bestTiers: BestTier[]
+  initialIsDiscreteValue: boolean
+  onDiscreteChange: (val: boolean) => void
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -77,7 +79,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   isWaitingForNewPool,
   poolIndex,
   currentPairReversed,
-  bestTiers
+  bestTiers,
+  initialIsDiscreteValue,
+  onDiscreteChange
 }) => {
   const classes = useStyles()
 
@@ -352,6 +356,8 @@ export const NewPosition: React.FC<INewPosition> = ({
             xDecimal={xDecimal}
             yDecimal={yDecimal}
             currentPairReversed={currentPairReversed}
+            initialIsDiscreteValue={initialIsDiscreteValue}
+            onDiscreteChange={onDiscreteChange}
           />
         ) : (
           <PoolInit

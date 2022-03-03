@@ -37,6 +37,8 @@ storiesOf('position/rangeSelector', module)
       tickSpacing={1}
       isXtoY={true}
       currentPairReversed={null}
+      initialIsDiscreteValue={false}
+      onDiscreteChange={() => {}}
     />
   ))
   .add('blocked', () => (
@@ -59,5 +61,7 @@ storiesOf('position/rangeSelector', module)
       tickSpacing={4}
       isXtoY={true}
       currentPairReversed={null}
+      initialIsDiscreteValue={false}
+      onDiscreteChange={() => {}}
     />
   ))

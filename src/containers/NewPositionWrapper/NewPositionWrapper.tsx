@@ -176,6 +176,12 @@ export const NewPositionWrapper = () => {
     }
   }, [progress])
 
+  const initialIsDiscreteValue = localStorage.getItem('IS_PLOT_DISCRETE') === 'true'
+
+  const setIsDiscreteValue = (val: boolean) => {
+    localStorage.setItem('IS_PLOT_DISCRETE', val ? 'true' : 'false')
+  }
+
   return (
     <NewPosition
       tokens={tokens}
@@ -384,6 +390,8 @@ export const NewPositionWrapper = () => {
       poolIndex={poolIndex}
       currentPairReversed={currentPairReversed}
       bestTiers={bestTiers[currentNetwork]}
+      initialIsDiscreteValue={initialIsDiscreteValue}
+      onDiscreteChange={setIsDiscreteValue}
     />
   )
 }

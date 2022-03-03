@@ -30,6 +30,8 @@ export interface IRangeSelector {
   yDecimal: number
   tickSpacing: number
   currentPairReversed: boolean | null
+  initialIsDiscreteValue: boolean
+  onDiscreteChange: (val: boolean) => void
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -45,7 +47,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   xDecimal,
   yDecimal,
   tickSpacing,
-  currentPairReversed
+  currentPairReversed,
+  initialIsDiscreteValue,
+  onDiscreteChange
 }) => {
   const classes = useStyles()
 
@@ -61,7 +65,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [plotMin, setPlotMin] = useState(0)
   const [plotMax, setPlotMax] = useState(1)
 
-  const [isPlotDiscrete, setIsPlotDiscrete] = useState(false)
+  const [isPlotDiscrete, setIsPlotDiscrete] = useState(initialIsDiscreteValue)
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -225,7 +229,13 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     <Grid container className={classes.wrapper}>
       <Grid className={classes.headerContainer} container justifyContent='space-between'>
         <Typography className={classes.header}>Price range</Typography>
-        <PlotTypeSwitch onSwitch={setIsPlotDiscrete} />
+        <PlotTypeSwitch
+          onSwitch={val => {
+            setIsPlotDiscrete(val)
+            onDiscreteChange(val)
+          }}
+          initialValue={isPlotDiscrete ? 1 : 0}
+        />
       </Grid>
       <Grid container className={classes.innerWrapper}>
         <PriceRangePlot

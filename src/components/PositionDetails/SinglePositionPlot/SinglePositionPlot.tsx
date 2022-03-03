@@ -22,6 +22,8 @@ export interface ISinglePositionPlot {
   min: number
   max: number
   xToY: boolean
+  initialIsDiscreteValue: boolean
+  onDiscreteChange: (val: boolean) => void
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -36,14 +38,16 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   tickSpacing,
   min,
   max,
-  xToY
+  xToY,
+  initialIsDiscreteValue,
+  onDiscreteChange
 }) => {
   const classes = useStyles()
 
   const [plotMin, setPlotMin] = useState(0)
   const [plotMax, setPlotMax] = useState(1)
 
-  const [isPlotDiscrete, setIsPlotDiscrete] = useState(false)
+  const [isPlotDiscrete, setIsPlotDiscrete] = useState(initialIsDiscreteValue)
 
   useEffect(() => {
     const initSideDist = Math.abs(
@@ -95,7 +99,13 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     <Grid item className={classes.root}>
       <Grid className={classes.headerContainer} container justifyContent='space-between'>
         <Typography className={classes.header}>Price range</Typography>
-        <PlotTypeSwitch onSwitch={setIsPlotDiscrete} />
+        <PlotTypeSwitch
+          onSwitch={val => {
+            setIsPlotDiscrete(val)
+            onDiscreteChange(val)
+          }}
+          initialValue={isPlotDiscrete ? 1 : 0}
+        />
       </Grid>
       <Grid className={classes.plotWrapper}>
         <PriceRangePlot
