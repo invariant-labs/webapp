@@ -158,7 +158,6 @@ export const Swap: React.FC<ISwap> = ({
   }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
 
   const simulateWithTimeout = () => {
-    inputRef === inputTarget.FROM ? setAmountTo('') : setAmountFrom('')
     setThrottle(true)
 
     clearTimeout(timeoutRef.current)

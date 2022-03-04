@@ -8,7 +8,7 @@ import { pools, poolTicks, tickMaps } from '@selectors/pools'
 import { PAIRS } from '@consts/static'
 import { getNetworkTokensList, findPairs } from '@consts/utils'
 import { swap } from '@selectors/swap'
-import { Pair } from '@invariant-labs/sdk'
+import { findTickmapChanges, Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
 
 const MarketEvents = () => {
@@ -123,17 +123,51 @@ const MarketEvents = () => {
           if (typeof pool === 'undefined') {
             return
           }
-          marketProgram
-            .onTickmapChange(new PublicKey(address), tickmap => {
-              dispatch(
-                actions.updateTickmap({
-                  address: address,
-                  bitmap: tickmap.bitmap
-                })
-              )
-            })
-            .then(() => {})
-            .catch(() => {})
+          console.log(pool)
+          marketProgram.onTickmapChange(new PublicKey(address), tickmap => {
+            const changes = findTickmapChanges(
+              tickmaps[address].bitmap,
+              tickmap.bitmap,
+              pool.currentTickIndex
+            )
+            for (const [index, info] of Object.entries(changes)) {
+              if (info === 'added') {
+                marketProgram.onTickChange(
+                  new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
+                  +index,
+                  tickObject => {
+                    dispatch(
+                      actions.updateTicks({
+                        address: pool.address.toString(),
+                        index: +index,
+                        tick: tickObject
+                      })
+                    )
+                  }
+                )
+              } else {
+                marketProgram.unsubscribeTick(
+                  new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
+                  +index,
+                  tickObject => {
+                    dispatch(
+                      actions.updateTicks({
+                        address: pool.address.toString(),
+                        index: +index,
+                        tick: tickObject
+                      })
+                    )
+                  }
+                )
+              }
+            }
+            dispatch(
+              actions.updateTickmap({
+                address: address,
+                bitmap: tickmap.bitmap
+              })
+            )
+          })
         })
       }
     }
