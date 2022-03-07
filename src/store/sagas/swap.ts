@@ -192,7 +192,7 @@ export function* handleSwapWithSOL(): Generator {
         snackbarsActions.add({
           message:
             'Tokens swapped successfully, but wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
-          variant: 'error',
+          variant: 'warning',
           persist: false,
           txid: unwrapTxid
         })

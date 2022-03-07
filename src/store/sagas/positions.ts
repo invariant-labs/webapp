@@ -117,35 +117,94 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       })
     }
 
-    const tx = new Transaction()
-      .add(createIx)
-      .add(transferIx)
-      .add(initIx)
-      .add(initPositionTx)
-      .add(unwrapIx)
+    const initialTx = new Transaction().add(createIx).add(transferIx).add(initIx)
 
-    const blockhash = yield* call([connection, connection.getLatestBlockhash])
-    tx.recentBlockhash = blockhash.blockhash
-    tx.feePayer = wallet.publicKey
-    const signedTx = yield* call([wallet, wallet.signTransaction], tx)
-    signedTx.partialSign(wrappedSolAccount)
+    const initialBlockhash = yield* call([connection, connection.getLatestBlockhash])
+    initialTx.recentBlockhash = initialBlockhash.blockhash
+    initialTx.feePayer = wallet.publicKey
+    initialTx.partialSign(wrappedSolAccount)
 
+    const initPositionBlockhash = yield* call([connection, connection.getLatestBlockhash])
+    initPositionTx.recentBlockhash = initPositionBlockhash.blockhash
+    initPositionTx.feePayer = wallet.publicKey
     if (poolSigners.length) {
-      signedTx.partialSign(...poolSigners)
+      initPositionTx.partialSign(...poolSigners)
     }
-    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
-      skipPreflight: false
-    })
 
-    yield put(actions.setInitPositionSuccess(!!txid.length))
+    const unwrapTx = new Transaction().add(unwrapIx)
+    const unwrapBlockhash = yield* call([connection, connection.getLatestBlockhash])
+    unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
+    unwrapTx.feePayer = wallet.publicKey
 
-    if (!txid.length) {
-      yield put(
+    const [initialSignedTx, initPositionSignedTx, unwrapSignedTx] = yield* call(
+      [wallet, wallet.signAllTransactions],
+      [initialTx, initPositionTx, unwrapTx]
+    )
+
+    const initialTxid = yield* call(
+      sendAndConfirmRawTransaction,
+      connection,
+      initialSignedTx.serialize(),
+      {
+        skipPreflight: false
+      }
+    )
+
+    if (!initialTxid.length) {
+      yield put(actions.setInitPositionSuccess(false))
+
+      return yield put(
         snackbarsActions.add({
-          message: 'Position adding failed. Please try again.',
+          message: 'SOL wrapping failed. Please try again.',
           variant: 'error',
           persist: false,
-          txid
+          txid: initialTxid
+        })
+      )
+    }
+
+    const initPositionTxid = yield* call(
+      sendAndConfirmRawTransaction,
+      connection,
+      initPositionSignedTx.serialize(),
+      {
+        skipPreflight: false
+      }
+    )
+
+    if (!initPositionTxid.length) {
+      yield put(actions.setInitPositionSuccess(false))
+
+      return yield put(
+        snackbarsActions.add({
+          message:
+            'Position adding failed. Please unwrap wrapped SOL in your wallet and try again.',
+          variant: 'error',
+          persist: false,
+          txid: initPositionTxid
+        })
+      )
+    }
+
+    const unwrapTxid = yield* call(
+      sendAndConfirmRawTransaction,
+      connection,
+      unwrapSignedTx.serialize(),
+      {
+        skipPreflight: false
+      }
+    )
+
+    yield put(actions.setInitPositionSuccess(true))
+
+    if (!unwrapTxid.length) {
+      yield put(
+        snackbarsActions.add({
+          message:
+            'Position added successfully, but wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
+          variant: 'warning',
+          persist: false,
+          txid: unwrapTxid
         })
       )
     } else {
@@ -154,7 +213,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
           message: 'Position added successfully.',
           variant: 'success',
           persist: false,
-          txid
+          txid: unwrapTxid
         })
       )
 
