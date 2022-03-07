@@ -120,11 +120,9 @@ const MarketEvents = () => {
           const pool = allPools.find(pool => {
             return pool.tickmap.toString() === address
           })
-          console.log(pool)
           if (typeof pool === 'undefined') {
             return
           }
-          console.log(pool)
           // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
           marketProgram.onTickmapChange(new PublicKey(address), tickmap => {
             const changes = findTickmapChanges(
@@ -140,6 +138,7 @@ const MarketEvents = () => {
                   new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
                   +index,
                   tickObject => {
+                    console.log('subscribe new tick!', index)
                     dispatch(
                       actions.updateTicks({
                         address: pool.address.toString(),
@@ -149,14 +148,6 @@ const MarketEvents = () => {
                     )
                   }
                 )
-              } else {
-                // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
-                marketProgram.unsubscribeTick(
-                  new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
-                  +index,
-                  () => {}
-                )
-                dispatch(actions.deleteTick({ address: pool.address.toString(), index: +index }))
               }
             }
             dispatch(
