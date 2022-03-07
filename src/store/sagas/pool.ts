@@ -12,7 +12,10 @@ export interface iTick {
 }
 
 // TODO: temporary method to fetch multiple pools
-export const getPools = async (pairs: Pair[], marketProgram: Market): Promise<PoolWithAddress[]> => {
+export const getPools = async (
+  pairs: Pair[],
+  marketProgram: Market
+): Promise<PoolWithAddress[]> => {
   const addresses: PublicKey[] = await Promise.all(
     pairs.map(async pair => await pair.getAddress(marketProgram.program.programId))
   )
