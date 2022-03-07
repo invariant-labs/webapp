@@ -86,6 +86,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     }
 
     let initPositionTx: Transaction
+    let poolSigners: Keypair[] = []
 
     if (data.initPool) {
       const { transaction, signers } = yield* call(
@@ -103,7 +104,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       )
 
       initPositionTx = transaction
-      initPositionTx.partialSign(...signers)
+      poolSigners = signers
     } else {
       initPositionTx = yield* call([marketProgram, marketProgram.initPositionTx], {
         pair: new Pair(data.tokenX, data.tokenY, { fee: data.fee }),
@@ -123,11 +124,15 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       .add(initPositionTx)
       .add(unwrapIx)
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
     signedTx.partialSign(wrappedSolAccount)
+
+    if (poolSigners.length) {
+      signedTx.partialSign(...poolSigners)
+    }
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false
     })
@@ -204,6 +209,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     }
 
     let tx: Transaction
+    let poolSigners: Keypair[] = []
 
     if (action.payload.initPool) {
       const { transaction, signers } = yield* call(
@@ -221,7 +227,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       )
 
       tx = transaction
-      tx.partialSign(...signers)
+      poolSigners = signers
     } else {
       tx = yield* call([marketProgram, marketProgram.initPositionTx], {
         pair: new Pair(action.payload.tokenX, action.payload.tokenY, { fee: action.payload.fee }),
@@ -234,11 +240,14 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       })
     }
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
+    if (poolSigners.length) {
+      signedTx.partialSign(...poolSigners)
+    }
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false
     })
@@ -420,7 +429,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 
     const tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
@@ -510,7 +519,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
     const tx = new Transaction().add(ix)
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
@@ -623,7 +632,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
 
     const tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
@@ -717,7 +726,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
 
     const tx = new Transaction().add(ix)
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)

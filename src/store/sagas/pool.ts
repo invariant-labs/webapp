@@ -71,25 +71,27 @@ export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
   yield* put(actions.addPools(pools))
 }
 
-const fetchPoolFromAddress = async (address: PublicKey) => {
-  const marketProgram = await getMarketProgram()
+export const getPoolsFromAdresses = async (
+  addresses: PublicKey[],
+  marketProgram: Market
+): Promise<PoolWithAddress[]> => {
+  const pools = (await marketProgram.program.account.pool.fetchMultiple(
+    addresses
+  )) as PoolStructure[]
 
-  return (await marketProgram.program.account.pool.fetch(address)) as PoolStructure
+  return pools.map((pool, index) => ({
+    ...pool,
+    address: addresses[index]
+  }))
 }
 
 export function* fetchPoolsDataForPositions(action: PayloadAction<string[]>) {
-  const newPools: PoolWithAddress[] = []
-
-  for (const address of action.payload) {
-    try {
-      const poolData: PoolStructure = yield* call(fetchPoolFromAddress, new PublicKey(address))
-
-      newPools.push({
-        ...poolData,
-        address: new PublicKey(address)
-      })
-    } catch (error) {}
-  }
+  const marketProgram = yield* call(getMarketProgram)
+  const newPools: PoolWithAddress[] = yield* call(
+    getPoolsFromAdresses,
+    action.payload.map(addr => new PublicKey(addr)),
+    marketProgram
+  )
 
   yield* put(actions.addPoolsForPositions(newPools))
 }

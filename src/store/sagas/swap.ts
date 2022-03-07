@@ -73,7 +73,7 @@ export function* handleSwapWithSOL(): Generator {
       allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? new Transaction().add(createIx).add(transferIx).add(initIx)
         : new Transaction().add(createIx).add(initIx)
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const initialBlockhash = yield* call([connection, connection.getLatestBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
@@ -118,12 +118,12 @@ export function* handleSwapWithSOL(): Generator {
       byAmountIn: byAmountIn,
       owner: wallet.publicKey
     })
-    const swapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const swapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     swapTx.recentBlockhash = swapBlockhash.blockhash
     swapTx.feePayer = wallet.publicKey
 
     const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const unwrapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
@@ -286,7 +286,7 @@ export function* handleSwap(): Generator {
       owner: wallet.publicKey
     })
     const connection = yield* call(getConnection)
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     swapTx.recentBlockhash = blockhash.blockhash
     swapTx.feePayer = wallet.publicKey
 

@@ -163,7 +163,7 @@ export function* getCollateralTokenAirdrop(
   }
   const tx = instructions.reduce((tx, ix) => tx.add(ix), new Transaction())
   const connection = yield* call(getConnection)
-  const blockhash = yield* call([connection, connection.getRecentBlockhash])
+  const blockhash = yield* call([connection, connection.getLatestBlockhash])
   tx.feePayer = wallet.publicKey
   tx.recentBlockhash = blockhash.blockhash
   tx.sign(airdropAdmin)
@@ -195,7 +195,7 @@ export function* sendToken(from: PublicKey, target: PublicKey, amount: BN): Saga
 }
 export function* signAndSend(wallet: WalletAdapter, tx: Transaction): SagaGenerator<string> {
   const connection = yield* call(getConnection)
-  const blockhash = yield* call([connection, connection.getRecentBlockhash])
+  const blockhash = yield* call([connection, connection.getLatestBlockhash])
   tx.feePayer = wallet.publicKey
   tx.recentBlockhash = blockhash.blockhash
   const signedTx = yield* call([wallet, wallet.signTransaction], tx)
