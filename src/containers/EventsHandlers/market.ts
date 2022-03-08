@@ -133,7 +133,6 @@ const MarketEvents = () => {
             console.log(changes)
             for (const [index, info] of Object.entries(changes)) {
               if (info === 'added') {
-                // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
                 try {
                   console.log('sub')
                   // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
