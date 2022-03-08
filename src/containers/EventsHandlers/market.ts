@@ -136,6 +136,7 @@ const MarketEvents = () => {
                 // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
                 try {
                   console.log('sub')
+                  // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
                   marketProgram.onTickChange(
                     new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
                     +index,
