@@ -22,12 +22,18 @@ export const getPools = async (
 
   const pools = (await marketProgram.program.account.pool.fetchMultiple(
     addresses
-  )) as PoolStructure[]
+  )) as Array<PoolStructure | null>
 
-  return pools.map((pool, index) => ({
-    ...pool,
-    address: addresses[index]
-  }))
+  return pools
+    .map((pool, index) =>
+      pool !== null
+        ? {
+            ...pool,
+            address: addresses[index]
+          }
+        : null
+    )
+    .filter(pool => pool !== null) as PoolWithAddress[]
 }
 
 export function* fetchPoolData(action: PayloadAction<Pair>) {
@@ -54,19 +60,8 @@ export function* fetchPoolData(action: PayloadAction<Pair>) {
 
 export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
   const marketProgram = yield* call(getMarketProgram)
-  const pools: PoolWithAddress[] = []
-  for (const fee of FEE_TIERS) {
-    try {
-      const pair = new Pair(action.payload.first, action.payload.second, fee)
-      const poolData = yield* call([marketProgram, marketProgram.getPool], pair)
-      const address = yield* call([pair, pair.getAddress], marketProgram.program.programId)
-
-      pools.push({
-        ...poolData,
-        address
-      })
-    } catch (error) {}
-  }
+  const pairs = FEE_TIERS.map(fee => new Pair(action.payload.first, action.payload.second, fee))
+  const pools: PoolWithAddress[] = yield call(getPools, pairs, marketProgram)
 
   yield* put(actions.addPools(pools))
 }
