@@ -134,20 +134,25 @@ const MarketEvents = () => {
             for (const [index, info] of Object.entries(changes)) {
               if (info === 'added') {
                 // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
-                marketProgram.onTickChange(
-                  new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
-                  +index,
-                  tickObject => {
-                    console.log('subscribe new tick!', index)
-                    dispatch(
-                      actions.updateTicks({
-                        address: pool.address.toString(),
-                        index: +index,
-                        tick: tickObject
-                      })
-                    )
-                  }
-                )
+                try {
+                  console.log('sub')
+                  marketProgram.onTickChange(
+                    new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
+                    +index,
+                    tickObject => {
+                      console.log('subscribe new tick!', index)
+                      dispatch(
+                        actions.updateTicks({
+                          address: pool.address.toString(),
+                          index: +index,
+                          tick: tickObject
+                        })
+                      )
+                    }
+                  )
+                } catch (err) {
+                  console.log(err)
+                }
               }
             }
             dispatch(
