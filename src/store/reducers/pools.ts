@@ -33,10 +33,11 @@ export interface UpdateTick {
   index: string
   tickStructure: Tick[]
 }
-
-export interface UpdateTicks {
+export interface DeleteTick {
   address: string
   index: number
+}
+export interface UpdateTicks extends DeleteTick {
   tick: Tick
 }
 
@@ -124,6 +125,10 @@ const poolsSlice = createSlice({
       return state
     },
     getPoolsDataForPositions(_state, _action: PayloadAction<string[]>) {},
+    deleteTick(state, action: PayloadAction<DeleteTick>) {
+      state.poolTicks[action.payload.address].splice(action.payload.index, 1)
+      console.log(state.poolTicks[action.payload.address])
+    },
     updateTickmap(state, action: PayloadAction<UpdateTickmap>) {
       state.tickMaps[action.payload.address].bitmap = action.payload.bitmap
     }

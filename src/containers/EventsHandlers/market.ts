@@ -7,7 +7,7 @@ import { getMarketProgramSync } from '@web3/programs/amm'
 import { poolsArraySortedByFees, poolTicks, tickMaps } from '@selectors/pools'
 import { getNetworkTokensList, findPairs } from '@consts/utils'
 import { swap } from '@selectors/swap'
-import { Pair } from '@invariant-labs/sdk'
+import { findTickmapChanges, Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
 
 const MarketEvents = () => {
@@ -118,17 +118,45 @@ const MarketEvents = () => {
           if (typeof pool === 'undefined') {
             return
           }
-          marketProgram
-            .onTickmapChange(new PublicKey(address), tickmap => {
-              dispatch(
-                actions.updateTickmap({
-                  address: address,
-                  bitmap: tickmap.bitmap
-                })
-              )
-            })
-            .then(() => {})
-            .catch(() => {})
+          // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
+          marketProgram.onTickmapChange(new PublicKey(address), tickmap => {
+            const changes = findTickmapChanges(
+              tickmaps[address].bitmap,
+              tickmap.bitmap,
+              pool.tickSpacing
+            )
+            console.log(changes)
+            for (const [index, info] of Object.entries(changes)) {
+              if (info === 'added') {
+                try {
+                  console.log('sub')
+                  // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
+                  marketProgram.onTickChange(
+                    new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
+                    +index,
+                    tickObject => {
+                      console.log('subscribe new tick!', index)
+                      dispatch(
+                        actions.updateTicks({
+                          address: pool.address.toString(),
+                          index: +index,
+                          tick: tickObject
+                        })
+                      )
+                    }
+                  )
+                } catch (err) {
+                  console.log(err)
+                }
+              }
+            }
+            dispatch(
+              actions.updateTickmap({
+                address: address,
+                bitmap: tickmap.bitmap
+              })
+            )
+          })
         })
       }
     }
