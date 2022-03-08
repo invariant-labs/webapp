@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { isLoadingPositionsList, positionsWithPoolsData } from '@selectors/positions'
 import { status } from '@selectors/solanaWallet'
 import { calcYPerXPrice, printBN } from '@consts/utils'
-import { calculatePriceSqrt, DENOMINATOR } from '@invariant-labs/sdk'
+import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { Status, actions } from '@reducers/solanaWallet'
 import { PositionsList } from '@components/PositionsList/PositionsList'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
@@ -56,7 +56,7 @@ export const WrappedPositionsList: React.FC = () => {
                 calculatePriceSqrt(position.upperTickIndex).v,
                 position.poolData.sqrtPrice.v,
                 calculatePriceSqrt(position.lowerTickIndex).v
-              ).div(DENOMINATOR),
+              ),
               position.tokenX.decimals
             )
           } catch (error) {
@@ -70,7 +70,7 @@ export const WrappedPositionsList: React.FC = () => {
                 calculatePriceSqrt(position.upperTickIndex).v,
                 position.poolData.sqrtPrice.v,
                 calculatePriceSqrt(position.lowerTickIndex).v
-              ).div(DENOMINATOR),
+              ),
               position.tokenY.decimals
             )
           } catch (error) {
