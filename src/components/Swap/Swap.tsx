@@ -149,16 +149,29 @@ export const Swap: React.FC<ISwap> = ({
     if (inputRef === inputTarget.FROM && !(amountFrom === '' && amountTo === '')) {
       simulateWithTimeout()
     }
-  }, [amountFrom, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
+  }, [
+    amountFrom,
+    tokenToIndex,
+    tokenFromIndex,
+    slippTolerance,
+    Object.keys(poolTicks).length,
+    Object.keys(tickmap).length
+  ])
 
   useEffect(() => {
     if (inputRef === inputTarget.TO && !(amountFrom === '' && amountTo === '')) {
       simulateWithTimeout()
     }
-  }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
+  }, [
+    amountTo,
+    tokenToIndex,
+    tokenFromIndex,
+    slippTolerance,
+    Object.keys(poolTicks).length,
+    Object.keys(tickmap).length
+  ])
 
   const simulateWithTimeout = () => {
-    inputRef === inputTarget.FROM ? setAmountTo('') : setAmountFrom('')
     setThrottle(true)
 
     clearTimeout(timeoutRef.current)
@@ -276,7 +289,11 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   const getStateMessage = () => {
-    if ((tokenFromIndex !== null && tokenToIndex !== null && throttle) || !pools.length) {
+    if (
+      (tokenFromIndex !== null && tokenToIndex !== null && throttle) ||
+      !pools.length ||
+      simulateResult.error === "TypeError: Cannot read properties of undefined (reading 'bitmap')"
+    ) {
       return 'Loading'
     }
     if (walletStatus !== Status.Initialized) {
