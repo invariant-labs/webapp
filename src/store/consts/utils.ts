@@ -1,4 +1,4 @@
-import { calculatePriceSqrt, MAX_TICK, MIN_TICK, TICK_LIMIT } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, MAX_TICK, MIN_TICK, Pair, TICK_LIMIT } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import { DECIMAL, parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
@@ -515,14 +515,12 @@ export const handleSimulate = async (
 
   for (const pool of filteredPools) {
     isXtoY = fromToken.equals(pool.tokenX)
-    const tickMap = await marketProgram.getTickmap(
-      new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v })
-    )
 
     const ticks: Map<number, Tick> = new Map<number, Tick>()
     for (const tick of poolTicks[pool.address.toString()]) {
       ticks.set(tick.index, tick)
     }
+    console.log(result?.toString())
 
     try {
       const swapSimulateResult = await simulateSwap({
@@ -535,7 +533,7 @@ export const handleSimulate = async (
         slippage: slippage,
         pool: pool,
         ticks: ticks,
-        tickmap: tickMap
+        tickmap: tickmaps[pool.tickmap.toString()]
       })
 
       if (swapSimulateResult.amountPerTick.length >= 8) {
@@ -563,15 +561,6 @@ export const handleSimulate = async (
       poolIndex: poolIndex,
       AmountOutWithFee: new BN(0),
       estimatedPriceAfterSwap: new BN(0),
-      error: errorMessage
-    }
-  }
-  if (errorMessage.length > 0) {
-    return {
-      amountOut: swapSimulateRouterAmount,
-      poolIndex: poolIndex,
-      AmountOutWithFee: resultWithFee,
-      estimatedPriceAfterSwap: estimatedPrice,
       error: errorMessage
     }
   }
