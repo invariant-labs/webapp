@@ -520,7 +520,6 @@ export const handleSimulate = async (
     for (const tick of poolTicks[pool.address.toString()]) {
       ticks.set(tick.index, tick)
     }
-    console.log(result?.toString())
 
     try {
       const swapSimulateResult = await simulateSwap({
