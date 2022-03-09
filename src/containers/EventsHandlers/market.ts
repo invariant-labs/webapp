@@ -167,30 +167,22 @@ const MarketEvents = () => {
   useEffect(() => {
     if (tokenFrom && tokenTo) {
       const pools = findPairs(tokenFrom, tokenTo, allPools)
-
-      if (pools.length !== 0) {
-        // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
+      for (const pool of pools) {
         marketProgram
-          .getTickmap(new Pair(pools[0].tokenX, pools[0].tokenY, { fee: pools[0].fee.v }))
+          .getTickmap(new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }))
           .then(res => {
-            dispatch(
-              actions.setTickMaps({ index: pools[0].tickmap.toString(), tickMapStructure: res })
-            )
+            dispatch(actions.setTickMaps({ index: pool.tickmap.toString(), tickMapStructure: res }))
           })
-        // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
+          .catch(err => {
+            console.log(err)
+          })
         marketProgram
-          .getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pools[0].fee.v }))
+          .getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v }))
           .then(res => {
-            dispatch(actions.setTicks({ index: pools[0].address.toString(), tickStructure: res }))
+            dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
           })
+          .catch(err => console.log(err))
       }
-
-      // pools.forEach(pool => {
-      //   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      //   marketProgram.getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v })).then(res => {
-      //     dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
-      //   })
-      // }) code for set ticks for all fee tiers
     }
   }, [tokenFrom, tokenTo])
 
