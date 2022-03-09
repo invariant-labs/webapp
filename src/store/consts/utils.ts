@@ -1,4 +1,4 @@
-import { calculatePriceSqrt, MAX_TICK, MIN_TICK, Pair, TICK_LIMIT } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, MAX_TICK, MIN_TICK, TICK_LIMIT } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import { DECIMAL, parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
@@ -561,6 +561,15 @@ export const handleSimulate = async (
       poolIndex: poolIndex,
       AmountOutWithFee: new BN(0),
       estimatedPriceAfterSwap: new BN(0),
+      error: errorMessage
+    }
+  }
+  if (errorMessage.length > 0) {
+    return {
+      amountOut: swapSimulateRouterAmount,
+      poolIndex: poolIndex,
+      AmountOutWithFee: resultWithFee,
+      estimatedPriceAfterSwap: estimatedPrice,
       error: errorMessage
     }
   }
