@@ -13,14 +13,12 @@ import { actions as solanaConnectionActions, Status } from '@reducers/solanaConn
 import { actions } from '@reducers/positions'
 import { status } from '@selectors/solanaWallet'
 import { SinglePositionPage } from './SinglePositionPage/SinglePositionPage'
-import { pools } from '@selectors/pools'
 import Footer from '@components/Footer/Footer'
 
 export const PagesRouter: React.FC = () => {
   const dispatch = useDispatch()
   const signerStatus = useSelector(solanaConnectionSelector.status)
   const walletStatus = useSelector(status)
-  const allPools = useSelector(pools)
 
   useEffect(() => {
     // dispatch(providerActions.initProvider())
@@ -28,14 +26,10 @@ export const PagesRouter: React.FC = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (
-      signerStatus === Status.Initialized &&
-      walletStatus === WalletStatus.Initialized &&
-      allPools.length > 0
-    ) {
+    if (signerStatus === Status.Initialized && walletStatus === WalletStatus.Initialized) {
       dispatch(actions.getPositionsList())
     }
-  }, [signerStatus, walletStatus, allPools.length])
+  }, [signerStatus, walletStatus])
 
   return (
     <Router>

@@ -4,8 +4,7 @@ import { network, status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
 import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
-import { pools, poolTicks, tickMaps } from '@selectors/pools'
-import { PAIRS } from '@consts/static'
+import { poolsArraySortedByFees, poolTicks, tickMaps } from '@selectors/pools'
 import { getNetworkTokensList, findPairs } from '@consts/utils'
 import { swap } from '@selectors/swap'
 import { findTickmapChanges, Pair } from '@invariant-labs/sdk'
@@ -18,7 +17,8 @@ const MarketEvents = () => {
   const networkStatus = useSelector(status)
   const tickmaps = useSelector(tickMaps)
   const networkType = useSelector(network)
-  const allPools = useSelector(pools)
+  const allPools = useSelector(poolsArraySortedByFees)
+
   const poolTicksArray = useSelector(poolTicks)
   const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
   const [subscribedTickmap, _setSubscribedTickmap] = useState<Set<string>>(new Set())
@@ -28,7 +28,6 @@ const MarketEvents = () => {
     }
     const connectEvents = () => {
       dispatch(actions.setTokens(getNetworkTokensList(networkType)))
-      dispatch(actions.getPoolsData(PAIRS[networkType]))
     }
 
     connectEvents()
@@ -40,12 +39,12 @@ const MarketEvents = () => {
     }
 
     const connectEvents = () => {
-      allPools.forEach((pool, index) => {
+      allPools.forEach(pool => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         marketProgram.onPoolChange(pool.tokenX, pool.tokenY, { fee: pool.fee.v }, poolStructure => {
           dispatch(
             actions.updatePool({
-              index,
+              address: pool.address,
               poolStructure
             })
           )
@@ -57,11 +56,7 @@ const MarketEvents = () => {
   }, [dispatch, allPools.length, networkStatus, marketProgram])
 
   useEffect(() => {
-    if (
-      networkStatus !== Status.Initialized ||
-      !marketProgram ||
-      Object.values(allPools).length === 0
-    ) {
+    if (networkStatus !== Status.Initialized || !marketProgram || allPools.length === 0) {
       return
     }
     const connectEvents = async () => {

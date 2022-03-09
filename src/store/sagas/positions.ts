@@ -1,5 +1,6 @@
-import { call, put, takeEvery, select, all, spawn, takeLatest } from 'typed-redux-saga'
+import { call, put, takeEvery, take, select, all, spawn, takeLatest } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
+import { actions as poolsActions } from '@reducers/pools'
 import { createAccount, getWallet, sleep } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
 import { getConnection } from './connection'
@@ -10,7 +11,7 @@ import {
   InitPositionData
 } from '@reducers/positions'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { pools, tokens } from '@selectors/pools'
+import { poolsArraySortedByFees, tokens } from '@selectors/pools'
 import { Pair } from '@invariant-labs/sdk'
 import { createLiquidityPlot, createPlaceholderLiquidityPlot } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
@@ -25,7 +26,6 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     const wallet = yield* call(getWallet)
     const marketProgram = yield* call(getMarketProgram)
 
-    const allPools = yield* select(pools)
     const tokensAccounts = yield* select(accounts)
     const allTokens = yield* select(tokens)
 
@@ -43,8 +43,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       fromPubkey: wallet.publicKey,
       toPubkey: wrappedSolAccount.publicKey,
       lamports:
-        allTokens[allPools[data.poolIndex].tokenX.toString()].address.toString() ===
-        WRAPPED_SOL_ADDRESS
+        allTokens[data.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
           ? data.xAmount
           : data.yAmount
     })
@@ -65,66 +64,147 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     )
 
     let userTokenX =
-      allTokens[allPools[data.poolIndex].tokenX.toString()].address.toString() ===
-      WRAPPED_SOL_ADDRESS
+      allTokens[data.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
-        : tokensAccounts[allPools[data.poolIndex].tokenX.toString()]
-        ? tokensAccounts[allPools[data.poolIndex].tokenX.toString()].address
+        : tokensAccounts[data.tokenX.toString()]
+        ? tokensAccounts[data.tokenX.toString()].address
         : null
 
     if (userTokenX === null) {
-      userTokenX = yield* call(createAccount, allPools[data.poolIndex].tokenX)
+      userTokenX = yield* call(createAccount, data.tokenX)
     }
 
     let userTokenY =
-      allTokens[allPools[data.poolIndex].tokenY.toString()].address.toString() ===
-      WRAPPED_SOL_ADDRESS
+      allTokens[data.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
-        : tokensAccounts[allPools[data.poolIndex].tokenY.toString()]
-        ? tokensAccounts[allPools[data.poolIndex].tokenY.toString()].address
+        : tokensAccounts[data.tokenY.toString()]
+        ? tokensAccounts[data.tokenY.toString()].address
         : null
 
     if (userTokenY === null) {
-      userTokenY = yield* call(createAccount, allPools[data.poolIndex].tokenY)
+      userTokenY = yield* call(createAccount, data.tokenY)
     }
 
-    const initPositionTx = yield* call([marketProgram, marketProgram.initPositionTx], {
-      pair: new Pair(allPools[data.poolIndex].tokenX, allPools[data.poolIndex].tokenY, {
-        fee: allPools[data.poolIndex].fee.v
-      }),
-      userTokenX,
-      userTokenY,
-      lowerTick: data.lowerTick,
-      upperTick: data.upperTick,
-      liquidityDelta: data.liquidityDelta,
-      owner: wallet.publicKey
-    })
+    let initPositionTx: Transaction
+    let poolSigners: Keypair[] = []
 
-    const tx = new Transaction()
-      .add(createIx)
-      .add(transferIx)
-      .add(initIx)
-      .add(initPositionTx)
-      .add(unwrapIx)
+    if (data.initPool) {
+      const { transaction, signers } = yield* call(
+        [marketProgram, marketProgram.initPoolAndPositionTx],
+        {
+          pair: new Pair(data.tokenX, data.tokenY, { fee: data.fee }),
+          userTokenX,
+          userTokenY,
+          lowerTick: data.lowerTick,
+          upperTick: data.upperTick,
+          liquidityDelta: data.liquidityDelta,
+          owner: wallet.publicKey,
+          initTick: data.initTick
+        }
+      )
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
-    tx.recentBlockhash = blockhash.blockhash
-    tx.feePayer = wallet.publicKey
-    const signedTx = yield* call([wallet, wallet.signTransaction], tx)
-    signedTx.partialSign(wrappedSolAccount)
-    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
-      skipPreflight: false
-    })
+      initPositionTx = transaction
+      poolSigners = signers
+    } else {
+      initPositionTx = yield* call([marketProgram, marketProgram.initPositionTx], {
+        pair: new Pair(data.tokenX, data.tokenY, { fee: data.fee }),
+        userTokenX,
+        userTokenY,
+        lowerTick: data.lowerTick,
+        upperTick: data.upperTick,
+        liquidityDelta: data.liquidityDelta,
+        owner: wallet.publicKey
+      })
+    }
 
-    yield put(actions.setInitPositionSuccess(!!txid.length))
+    const initialTx = new Transaction().add(createIx).add(transferIx).add(initIx)
 
-    if (!txid.length) {
-      yield put(
+    const initialBlockhash = yield* call([connection, connection.getLatestBlockhash])
+    initialTx.recentBlockhash = initialBlockhash.blockhash
+    initialTx.feePayer = wallet.publicKey
+    initialTx.partialSign(wrappedSolAccount)
+
+    const initPositionBlockhash = yield* call([connection, connection.getLatestBlockhash])
+    initPositionTx.recentBlockhash = initPositionBlockhash.blockhash
+    initPositionTx.feePayer = wallet.publicKey
+    if (poolSigners.length) {
+      initPositionTx.partialSign(...poolSigners)
+    }
+
+    const unwrapTx = new Transaction().add(unwrapIx)
+    const unwrapBlockhash = yield* call([connection, connection.getLatestBlockhash])
+    unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
+    unwrapTx.feePayer = wallet.publicKey
+
+    const [initialSignedTx, initPositionSignedTx, unwrapSignedTx] = yield* call(
+      [wallet, wallet.signAllTransactions],
+      [initialTx, initPositionTx, unwrapTx]
+    )
+
+    const initialTxid = yield* call(
+      sendAndConfirmRawTransaction,
+      connection,
+      initialSignedTx.serialize(),
+      {
+        skipPreflight: false
+      }
+    )
+
+    if (!initialTxid.length) {
+      yield put(actions.setInitPositionSuccess(false))
+
+      return yield put(
         snackbarsActions.add({
-          message: 'Position adding failed. Please try again.',
+          message: 'SOL wrapping failed. Please try again.',
           variant: 'error',
           persist: false,
-          txid
+          txid: initialTxid
+        })
+      )
+    }
+
+    const initPositionTxid = yield* call(
+      sendAndConfirmRawTransaction,
+      connection,
+      initPositionSignedTx.serialize(),
+      {
+        skipPreflight: false
+      }
+    )
+
+    if (!initPositionTxid.length) {
+      yield put(actions.setInitPositionSuccess(false))
+
+      return yield put(
+        snackbarsActions.add({
+          message:
+            'Position adding failed. Please unwrap wrapped SOL in your wallet and try again.',
+          variant: 'error',
+          persist: false,
+          txid: initPositionTxid
+        })
+      )
+    }
+
+    const unwrapTxid = yield* call(
+      sendAndConfirmRawTransaction,
+      connection,
+      unwrapSignedTx.serialize(),
+      {
+        skipPreflight: false
+      }
+    )
+
+    yield put(actions.setInitPositionSuccess(true))
+
+    if (!unwrapTxid.length) {
+      yield put(
+        snackbarsActions.add({
+          message:
+            'Position added successfully, but wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
+          variant: 'warning',
+          persist: false,
+          txid: unwrapTxid
         })
       )
     } else {
@@ -133,7 +213,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
           message: 'Position added successfully.',
           variant: 'success',
           persist: false,
-          txid
+          txid: unwrapTxid
         })
       )
 
@@ -156,14 +236,11 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
-    const allPools = yield* select(pools)
     const allTokens = yield* select(tokens)
 
     if (
-      allTokens[allPools[action.payload.poolIndex].tokenX.toString()].address.toString() ===
-        WRAPPED_SOL_ADDRESS ||
-      allTokens[allPools[action.payload.poolIndex].tokenY.toString()].address.toString() ===
-        WRAPPED_SOL_ADDRESS
+      allTokens[action.payload.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
+      allTokens[action.payload.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
     ) {
       return yield* call(handleInitPositionWithSOL, action.payload)
     }
@@ -174,40 +251,62 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 
     const tokensAccounts = yield* select(accounts)
 
-    let userTokenX = tokensAccounts[allPools[action.payload.poolIndex].tokenX.toString()]
-      ? tokensAccounts[allPools[action.payload.poolIndex].tokenX.toString()].address
+    let userTokenX = tokensAccounts[action.payload.tokenX.toString()]
+      ? tokensAccounts[action.payload.tokenX.toString()].address
       : null
 
     if (userTokenX === null) {
-      userTokenX = yield* call(createAccount, allPools[action.payload.poolIndex].tokenX)
+      userTokenX = yield* call(createAccount, action.payload.tokenX)
     }
 
-    let userTokenY = tokensAccounts[allPools[action.payload.poolIndex].tokenY.toString()]
-      ? tokensAccounts[allPools[action.payload.poolIndex].tokenY.toString()].address
+    let userTokenY = tokensAccounts[action.payload.tokenY.toString()]
+      ? tokensAccounts[action.payload.tokenY.toString()].address
       : null
 
     if (userTokenY === null) {
-      userTokenY = yield* call(createAccount, allPools[action.payload.poolIndex].tokenY)
+      userTokenY = yield* call(createAccount, action.payload.tokenY)
     }
 
-    const tx = yield* call([marketProgram, marketProgram.initPositionTx], {
-      pair: new Pair(
-        allPools[action.payload.poolIndex].tokenX,
-        allPools[action.payload.poolIndex].tokenY,
-        { fee: allPools[action.payload.poolIndex].fee.v }
-      ),
-      userTokenX,
-      userTokenY,
-      lowerTick: action.payload.lowerTick,
-      upperTick: action.payload.upperTick,
-      liquidityDelta: action.payload.liquidityDelta,
-      owner: wallet.publicKey
-    })
+    let tx: Transaction
+    let poolSigners: Keypair[] = []
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    if (action.payload.initPool) {
+      const { transaction, signers } = yield* call(
+        [marketProgram, marketProgram.initPoolAndPositionTx],
+        {
+          pair: new Pair(action.payload.tokenX, action.payload.tokenY, { fee: action.payload.fee }),
+          userTokenX,
+          userTokenY,
+          lowerTick: action.payload.lowerTick,
+          upperTick: action.payload.upperTick,
+          liquidityDelta: action.payload.liquidityDelta,
+          owner: wallet.publicKey,
+          initTick: action.payload.initTick
+        }
+      )
+
+      tx = transaction
+      poolSigners = signers
+    } else {
+      tx = yield* call([marketProgram, marketProgram.initPositionTx], {
+        pair: new Pair(action.payload.tokenX, action.payload.tokenY, { fee: action.payload.fee }),
+        userTokenX,
+        userTokenY,
+        lowerTick: action.payload.lowerTick,
+        upperTick: action.payload.upperTick,
+        liquidityDelta: action.payload.liquidityDelta,
+        owner: wallet.publicKey
+      })
+    }
+
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+
+    if (poolSigners.length) {
+      signedTx.partialSign(...poolSigners)
+    }
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false
     })
@@ -251,7 +350,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 }
 
 export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicksData>): Generator {
-  const allPools = yield* select(pools)
+  const allPools = yield* select(poolsArraySortedByFees)
   const allTokens = yield* select(tokens)
 
   const poolIndex = action.payload.poolIndex
@@ -305,10 +404,16 @@ export function* handleGetPositionsList() {
       head - 1
     )
 
-    yield put(actions.setPositionsList(list))
+    const pools = new Set(list.map(pos => pos.pool.toString()))
+
+    yield* put(poolsActions.getPoolsDataForPositions(Array.from(pools)))
+
+    yield* take(poolsActions.addPoolsForPositions)
+
+    yield* put(actions.setPositionsList(list))
   } catch (error) {
     console.log(error)
-    yield put(actions.setPositionsList([]))
+    yield* put(actions.setPositionsList([]))
   }
 }
 
@@ -383,7 +488,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 
     const tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
@@ -473,7 +578,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
     const tx = new Transaction().add(ix)
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
@@ -586,7 +691,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
 
     const tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
@@ -680,7 +785,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
 
     const tx = new Transaction().add(ix)
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
@@ -794,7 +899,7 @@ export function* getCurrentPlotTicksHandler(): Generator {
   yield* takeLatest(actions.getCurrentPlotTicks, handleGetCurrentPlotTicks)
 }
 export function* getPositionsListHandler(): Generator {
-  yield* takeEvery(actions.getPositionsList, handleGetPositionsList)
+  yield* takeLatest(actions.getPositionsList, handleGetPositionsList)
 }
 export function* claimFeeHandler(): Generator {
   yield* takeEvery(actions.claimFee, handleClaimFee)

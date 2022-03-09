@@ -10,7 +10,11 @@ import AnimatedButton, { ProgressState } from '@components/AnimatedButton/Animat
 import SwapList from '@static/svg/swap-list.svg'
 import useStyles from './style'
 import { PublicKey } from '@solana/web3.js'
-import { WRAPPED_SOL_ADDRESS, WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT } from '@consts/static'
+import {
+  WRAPPED_SOL_ADDRESS,
+  WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT,
+  WSOL_POOL_INIT_LAMPORTS
+} from '@consts/static'
 import { BN } from '@project-serum/anchor'
 
 export interface InputState {
@@ -23,7 +27,6 @@ export interface InputState {
 
 export interface IDepositSelector {
   tokens: SwapToken[]
-  tokensB: SwapToken[]
   setPositionTokens: (
     tokenAIndex: number | null,
     tokenBindex: number | null,
@@ -33,7 +36,6 @@ export interface IDepositSelector {
   tokenAInputState: InputState
   tokenBInputState: InputState
   feeTiers: number[]
-  isCurrentPoolExisting: boolean
   className?: string
   progress: ProgressState
   percentageChangeA?: number
@@ -47,13 +49,11 @@ export interface IDepositSelector {
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
   tokens,
-  tokensB,
   setPositionTokens,
   onAddLiquidity,
   tokenAInputState,
   tokenBInputState,
   feeTiers,
-  isCurrentPoolExisting,
   className,
   progress,
   percentageChangeA,
@@ -75,8 +75,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'Select tokens'
     }
 
-    if (!isCurrentPoolExisting) {
-      return 'Pool does not exist'
+    if (tokenAIndex === tokenBIndex) {
+      return 'Select different tokens'
     }
 
     if (
@@ -107,14 +107,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
 
     return 'Add Liquidity'
-  }, [
-    tokenAIndex,
-    tokenBIndex,
-    tokenAInputState.value,
-    tokenBInputState.value,
-    tokens,
-    isCurrentPoolExisting
-  ])
+  }, [tokenAIndex, tokenBIndex, tokenAInputState.value, tokenBInputState.value, tokens])
 
   useEffect(() => {
     if (tokenAIndex !== null) {
@@ -133,21 +126,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       }
     }
   }, [poolIndex])
-
-  useEffect(() => {
-    if (
-      poolIndex === null &&
-      tokenAIndex !== null &&
-      tokenBIndex !== null &&
-      !tokensB.find(token => token.symbol === tokens[tokenAIndex].symbol)
-    ) {
-      const indexB = tokensB.length
-        ? tokens.findIndex(token => token.symbol === tokens[tokenBIndex].symbol)
-        : null
-      setTokenBIndex(indexB)
-      setPositionTokens(tokenAIndex, indexB, feeTierIndex)
-    }
-  }, [tokensB, poolIndex])
 
   return (
     <Grid container direction='column' className={classNames(classes.wrapper, className)}>
@@ -188,7 +166,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
           <Grid className={classes.selectWrapper}>
             <Select
-              tokens={tokensB}
+              tokens={tokens}
               current={tokenBIndex !== null ? tokens[tokenBIndex] : null}
               onSelect={name => {
                 const index = tokens.findIndex(e => e.symbol === name)
@@ -224,7 +202,21 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             if (tokenAIndex === null) {
               return
             }
+
             if (tokens[tokenAIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))) {
+              if (tokenBIndex !== null && poolIndex === null) {
+                tokenAInputState.setValue(
+                  printBN(
+                    tokens[tokenAIndex].balance.gt(WSOL_POOL_INIT_LAMPORTS)
+                      ? tokens[tokenAIndex].balance.sub(WSOL_POOL_INIT_LAMPORTS)
+                      : new BN(0),
+                    tokens[tokenAIndex].decimals
+                  )
+                )
+
+                return
+              }
+
               tokenAInputState.setValue(
                 printBN(
                   tokens[tokenAIndex].balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
@@ -270,7 +262,21 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             if (tokenBIndex === null) {
               return
             }
+
             if (tokens[tokenBIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))) {
+              if (tokenAIndex !== null && poolIndex === null) {
+                tokenBInputState.setValue(
+                  printBN(
+                    tokens[tokenBIndex].balance.gt(WSOL_POOL_INIT_LAMPORTS)
+                      ? tokens[tokenBIndex].balance.sub(WSOL_POOL_INIT_LAMPORTS)
+                      : new BN(0),
+                    tokens[tokenBIndex].decimals
+                  )
+                )
+
+                return
+              }
+
               tokenBInputState.setValue(
                 printBN(
                   tokens[tokenBIndex].balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)

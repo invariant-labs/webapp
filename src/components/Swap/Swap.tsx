@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { printBN, printBNtoBN, handleSimulate, findPairIndex, findPairs } from '@consts/utils'
+import { printBN, printBNtoBN, handleSimulate, findPairs } from '@consts/utils'
 import { Decimal, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
@@ -73,6 +73,7 @@ export interface ISwap {
   onSetPair: (tokenFrom: PublicKey, tokenTo: PublicKey) => void
   progress: ProgressState
   poolTicks: { [x: string]: Tick[] }
+  isWaitingForNewPool: boolean
   onWalletSelect: (wallet: WalletType) => void
   onDisconnectWallet: () => void
   initialTokenFromIndex: number | null
@@ -88,6 +89,7 @@ export const Swap: React.FC<ISwap> = ({
   onSetPair,
   progress,
   poolTicks,
+  isWaitingForNewPool,
   onWalletSelect,
   onDisconnectWallet,
   initialTokenFromIndex,
@@ -106,7 +108,6 @@ export const Swap: React.FC<ISwap> = ({
   const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [amountTo, setAmountTo] = React.useState<string>('')
   const [swap, setSwap] = React.useState<boolean | null>(null)
-  const [tokensY, setTokensY] = React.useState<SwapToken[]>(tokens)
   const [rotates, setRotates] = React.useState<number>(0)
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const [throttle, setThrottle] = React.useState<boolean>(false)
@@ -197,13 +198,6 @@ export const Swap: React.FC<ISwap> = ({
 
   useEffect(() => {
     updateEstimatedAmount()
-
-    if (tokenFromIndex !== null) {
-      const tokensY = tokens.filter(token => {
-        return findPairIndex(token.assetAddress, tokens[tokenFromIndex].assetAddress, pools) !== -1
-      })
-      setTokensY(tokensY)
-    }
   }, [tokenToIndex, tokenFromIndex, pools.length])
 
   useEffect(() => {
@@ -291,7 +285,7 @@ export const Swap: React.FC<ISwap> = ({
   const getStateMessage = () => {
     if (
       (tokenFromIndex !== null && tokenToIndex !== null && throttle) ||
-      !pools.length ||
+      isWaitingForNewPool ||
       simulateResult.error === "TypeError: Cannot read properties of undefined (reading 'bitmap')"
     ) {
       return 'Loading'
@@ -452,11 +446,8 @@ export const Swap: React.FC<ISwap> = ({
               setRotates(rotates + 1)
               swap !== null ? setSwap(!swap) : setSwap(true)
               const tmp = tokenFromIndex
-              const tokensTmp = tokens
               setTokenFromIndex(tokenToIndex)
               setTokenToIndex(tmp)
-              tokens = tokensY
-              setTokensY(tokensTmp)
             }}>
             <Box className={classes.swapImgRoot}>
               <img
@@ -507,7 +498,7 @@ export const Swap: React.FC<ISwap> = ({
                 )
               }
             }}
-            tokens={tokensY}
+            tokens={tokens}
             current={tokenToIndex !== null ? tokens[tokenToIndex] : null}
             onSelect={(name: string) => {
               const token = tokens.findIndex(token => name === token.symbol)
