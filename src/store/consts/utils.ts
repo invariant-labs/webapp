@@ -538,6 +538,7 @@ export const handleSimulate = async (
       if (swapSimulateResult.amountPerTick.length >= 8) {
         throw new Error('Too large amount')
       }
+      console.log(swapSimulateResult.accumulatedAmountOut.toString())
       if (!byAmountIn) {
         result = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
       } else {
