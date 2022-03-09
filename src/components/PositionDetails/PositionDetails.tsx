@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import SinglePositionInfo from '@components/PositionDetails/SinglePositionInfo/SinglePositionInfo'
 import SinglePositionPlot from '@components/PositionDetails/SinglePositionPlot/SinglePositionPlot'
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Button, Grid, Hidden, Typography } from '@material-ui/core'
 import { Link, useHistory } from 'react-router-dom'
 import backIcon from '@static/svg/back-arrow.svg'
 import useStyles from './style'
@@ -24,6 +24,8 @@ interface IProps {
   fee: number
   min: number
   max: number
+  initialIsDiscreteValue: boolean
+  onDiscreteChange: (val: boolean) => void
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -40,7 +42,9 @@ const PositionDetails: React.FC<IProps> = ({
   tickSpacing,
   fee,
   min,
-  max
+  max,
+  initialIsDiscreteValue,
+  onDiscreteChange
 }) => {
   const classes = useStyles()
 
@@ -75,14 +79,16 @@ const PositionDetails: React.FC<IProps> = ({
         alignItems='flex-end'
         className={classes.right}
         wrap='nowrap'>
-        <Button
-          className={classes.button}
-          variant='contained'
-          onClick={() => {
-            history.push('/newPosition')
-          }}>
-          <span className={classes.buttonText}>+ Add Liquidity</span>
-        </Button>
+        <Hidden xsDown>
+          <Button
+            className={classes.button}
+            variant='contained'
+            onClick={() => {
+              history.push('/newPosition')
+            }}>
+            <span className={classes.buttonText}>+ Add Liquidity</span>
+          </Button>
+        </Hidden>
 
         <SinglePositionPlot
           data={
@@ -108,6 +114,8 @@ const PositionDetails: React.FC<IProps> = ({
           min={xToY ? min : 1 / max}
           max={xToY ? max : 1 / min}
           xToY={xToY}
+          initialIsDiscreteValue={initialIsDiscreteValue}
+          onDiscreteChange={onDiscreteChange}
         />
       </Grid>
     </Grid>

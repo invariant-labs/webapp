@@ -1,26 +1,39 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, theme, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   rateText: {
     color: colors.invariant.lightGrey,
-    textAlign: 'right',
-    ...typography.caption4,
-    lineHeight: '24px',
-    display: 'flex',
+    ...typography.caption2,
     justifyContent: 'center',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.tiny2
+    }
   },
   loadingContainer: {
-    display: 'grid',
     width: 20,
-    padding: '6px 15px 6px 15px',
-    justifyContent: 'center'
+    paddingInline: 15,
+    justifyContent: 'center',
+    overflow: 'hidden'
   },
   loading: {
     width: 15,
     zIndex: 10,
-    margin: '0 auto'
+    marginTop: 6
+  },
+  ableToHover: {
+    border: `1px solid ${colors.invariant.light}`,
+    borderRadius: '10px',
+    paddingInline: 15,
+    cursor: 'pointer',
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex'
   }
 }))
 

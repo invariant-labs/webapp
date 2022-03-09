@@ -1,17 +1,20 @@
 import React, { useState } from 'react'
-import { Grid, Tab, Tabs } from '@material-ui/core'
+import { Grid, Tab, Tabs, Typography } from '@material-ui/core'
 import useStyles, { useSingleTabStyles, useTabsStyles } from './style'
+import classNames from 'classnames'
 
 export interface IFeeSwitch {
   onSelect: (value: number) => void
   showOnlyPercents?: boolean
   feeTiers: number[]
+  bestTierIndex?: number
 }
 
 export const FeeSwitch: React.FC<IFeeSwitch> = ({
   onSelect,
   showOnlyPercents = false,
-  feeTiers
+  feeTiers,
+  bestTierIndex
 }) => {
   const classes = useStyles()
 
@@ -26,27 +29,47 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
   }
 
   return (
-    <Grid className={classes.wrapper}>
-      <Tabs
-        value={current}
-        onChange={handleChange}
-        variant='scrollable'
-        scrollButtons='off'
-        TabIndicatorProps={{ children: <span /> }}
-        classes={tabsClasses}>
-        {feeTiers.map((tier, index) => (
-          <Tab
-            key={index}
-            disableRipple
-            label={showOnlyPercents ? `${tier}%` : `${tier}% fee`}
-            classes={singleTabClasses}
+    <>
+      <Grid className={classes.wrapper}>
+        <Tabs
+          value={current}
+          onChange={handleChange}
+          variant='scrollable'
+          scrollButtons='off'
+          TabIndicatorProps={{ children: <span /> }}
+          classes={tabsClasses}>
+          {feeTiers.map((tier, index) => (
+            <Tab
+              key={index}
+              disableRipple
+              label={showOnlyPercents ? `${tier}%` : `${tier}% fee`}
+              classes={{
+                root: classNames(
+                  singleTabClasses.root,
+                  index === bestTierIndex ? singleTabClasses.best : undefined
+                ),
+                selected: singleTabClasses.selected
+              }}
+              style={{
+                minWidth: `calc(${feeTiers.length === 0 ? 0 : 100 / feeTiers.length}% - 7px)`
+              }}
+            />
+          ))}
+        </Tabs>
+      </Grid>
+      <Grid className={classes.bestWrapper}>
+        {typeof bestTierIndex !== 'undefined' && !!feeTiers.length ? (
+          <Typography
+            className={classes.bestText}
             style={{
-              minWidth: `calc(${feeTiers.length === 0 ? 0 : 100 / feeTiers.length}% - 7px)`
-            }}
-          />
-        ))}
-      </Tabs>
-    </Grid>
+              width: `calc(${100 / feeTiers.length}% - 7px)`,
+              left: `calc(${(100 / feeTiers.length) * bestTierIndex}% + 3px)`
+            }}>
+            Best
+          </Typography>
+        ) : null}
+      </Grid>
+    </>
   )
 }
 

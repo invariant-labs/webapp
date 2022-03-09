@@ -15,6 +15,7 @@ export interface ISelectedFarmList {
   unstakeHandler: (id: string) => void
   claimRewardHandler: (id: string) => void
 }
+
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   title,
   data,
@@ -60,6 +61,7 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
           <div className={classes.tile}>
             <SelectedFarm
               key={index}
+              iconTokenX={iconTokenX}
               value={element.value}
               staked={element.staked}
               pair={element.pair}

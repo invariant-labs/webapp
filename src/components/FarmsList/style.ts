@@ -14,6 +14,10 @@ const useStyles = makeStyles(() => ({
   },
   tile: {
     marginBottom: 20
+  },
+
+  noConnected: {
+    position: 'relative'
   }
 }))
 

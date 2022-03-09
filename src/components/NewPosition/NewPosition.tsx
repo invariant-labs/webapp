@@ -15,6 +15,7 @@ import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import useStyles from './style'
+import { BestTier } from '@consts/static'
 
 export interface INewPosition {
   tokens: SwapToken[]
@@ -50,6 +51,9 @@ export interface INewPosition {
   tickSpacing: number
   poolIndex: number | null
   currentPairReversed: boolean | null
+  bestTiers: BestTier[]
+  initialIsDiscreteValue: boolean
+  onDiscreteChange: (val: boolean) => void
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -71,7 +75,10 @@ export const NewPosition: React.FC<INewPosition> = ({
   yDecimal,
   tickSpacing,
   poolIndex,
-  currentPairReversed
+  currentPairReversed,
+  bestTiers,
+  initialIsDiscreteValue,
+  onDiscreteChange
 }) => {
   const classes = useStyles()
 
@@ -120,6 +127,17 @@ export const NewPosition: React.FC<INewPosition> = ({
 
     return printBN(result, tokens[printIndex].decimals)
   }
+
+  const bestTierIndex =
+    tokenAIndex === null || tokenBIndex === null
+      ? undefined
+      : bestTiers.find(
+          tier =>
+            (tier.tokenX.equals(tokens[tokenAIndex].assetAddress) &&
+              tier.tokenY.equals(tokens[tokenBIndex].assetAddress)) ||
+            (tier.tokenX.equals(tokens[tokenBIndex].assetAddress) &&
+              tier.tokenY.equals(tokens[tokenAIndex].assetAddress))
+        )?.bestTierIndex ?? undefined
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
@@ -229,6 +247,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             onChangePositionTokens(tokenBIndex, tokenAIndex, fee)
           }}
           poolIndex={poolIndex}
+          bestTierIndex={bestTierIndex}
         />
 
         <RangeSelector
@@ -240,14 +259,16 @@ export const NewPosition: React.FC<INewPosition> = ({
               tokenAIndex !== null &&
               (isXtoY ? right > midPrice.index : right < midPrice.index)
             ) {
+              const deposit = tokenADeposit
               const amount = getOtherTokenAmount(
-                printBNtoBN(tokenADeposit, tokens[tokenAIndex].decimals),
+                printBNtoBN(deposit, tokens[tokenAIndex].decimals),
                 left,
                 right,
                 true
               )
 
-              if (tokenBIndex !== null && +tokenADeposit !== 0) {
+              if (tokenBIndex !== null && +deposit !== 0) {
+                setTokenADeposit(deposit)
                 setTokenBDeposit(amount)
 
                 return
@@ -255,6 +276,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             }
 
             if (tokenBIndex !== null && (isXtoY ? left < midPrice.index : left > midPrice.index)) {
+              const deposit = tokenBDeposit
               const amount = getOtherTokenAmount(
                 printBNtoBN(tokenBDeposit, tokens[tokenBIndex].decimals),
                 left,
@@ -262,8 +284,9 @@ export const NewPosition: React.FC<INewPosition> = ({
                 false
               )
 
-              if (tokenAIndex !== null && +tokenBDeposit !== 0) {
+              if (tokenAIndex !== null && +deposit !== 0) {
                 setTokenADeposit(amount)
+                setTokenBDeposit(deposit)
               }
             }
           }}
@@ -292,6 +315,8 @@ export const NewPosition: React.FC<INewPosition> = ({
           yDecimal={yDecimal}
           fee={fee}
           currentPairReversed={currentPairReversed}
+          initialIsDiscreteValue={initialIsDiscreteValue}
+          onDiscreteChange={onDiscreteChange}
         />
       </Grid>
     </Grid>

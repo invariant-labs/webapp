@@ -9,9 +9,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 18,
     borderRadius: 24
   },
-  header: {
+  headerContainer: {
     ...typography.heading4,
-    color: '#FFFFFF',
+    color: '#FFFFFF'
+  },
+  header: {
     paddingBottom: 30
   },
   plotWrapper: {
@@ -40,7 +42,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& p': {
       ...typography.body2,
       textTransform: 'uppercase',
-      lineHeight: '35px'
+      lineHeight: '35px',
+      [theme.breakpoints.only('md')]: {
+        ...typography.caption2,
+        lineHeight: '35px'
+      }
     }
   },
   currentPriceAmonut: {
@@ -55,7 +61,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& p': {
       color: '#A9B6BF',
-      ...typography.body1
+      ...typography.body1,
+      [theme.breakpoints.only('md')]: {
+        ...typography.caption1,
+        lineHeight: '35px'
+      }
     }
   },
   plot: {

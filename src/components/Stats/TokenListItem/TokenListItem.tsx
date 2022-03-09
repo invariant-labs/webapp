@@ -1,10 +1,9 @@
 import React from 'react'
-import { printBN } from '@consts/utils'
-import { Grid, Typography } from '@material-ui/core'
+import { formatNumbers, printBN, showPrefix } from '@consts/utils'
+import { Grid, Typography, useMediaQuery } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
-import { colors } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import { useStyles } from './style'
-
 interface IProps {
   displayType: string
   itemNumber?: number
@@ -32,6 +31,10 @@ const TokenListItem: React.FC<IProps> = ({
 }) => {
   const classes = useStyles()
   const isNegative = Number(priceChange) < 0
+
+  const isXDown = useMediaQuery(theme.breakpoints.down('sm'))
+  const hideName = useMediaQuery(theme.breakpoints.down('xs'))
+
   return (
     <Grid>
       {displayType === 'tokens' ? (
@@ -41,18 +44,34 @@ const TokenListItem: React.FC<IProps> = ({
           classes={{ container: classes.container, root: classes.tokenList }}>
           <Typography component='p'>{itemNumber}</Typography>
           <Grid className={classes.tokenName}>
-            <img src={icon}></img>
+            {!isXDown && <img src={icon}></img>}
             <Typography>
-              {`${name}`}
-              <span className={classes.tokenSymbol}>{` (${symbol})`}</span>
+              {hideName ? symbol : name}
+              {!hideName && <span className={classes.tokenSymbol}>{` (${symbol})`}</span>}
             </Typography>
           </Grid>
           <Typography>${Number(printBN(price, decimals)).toFixed(2)}</Typography>
-          <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
-            {isNegative ? `-${Math.abs(Number(priceChange))}%` : `+${priceChange}%`}
+          {!hideName && (
+            <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
+              {isNegative ? `-${Math.abs(Number(priceChange))}%` : `+${priceChange}%`}
+            </Typography>
+          )}
+          {!hideName && (
+            <Typography>
+              {isXDown
+                ? `~$${Number(formatNumbers()(volume.split(',').join(''))).toFixed(1)} ${showPrefix(
+                    Number(volume.split(',').join(''))
+                  )}`
+                : `$${volume}`}
+            </Typography>
+          )}
+          <Typography>
+            {isXDown
+              ? `~$${Number(formatNumbers()(TVL.split(',').join(''))).toFixed(1)} ${showPrefix(
+                  Number(TVL.split(',').join(''))
+                )}`
+              : `$${TVL}`}
           </Typography>
-          <Typography>{volume}</Typography>
-          <Typography>{TVL}</Typography>
         </Grid>
       ) : (
         <Grid
@@ -66,8 +85,8 @@ const TokenListItem: React.FC<IProps> = ({
             <Typography>Name</Typography>
           </Grid>
           <Typography>Price</Typography>
-          <Typography>Price Change</Typography>
-          <Typography>Volume 24H</Typography>
+          {!hideName && <Typography>Price Change</Typography>}
+          {!hideName && <Typography>Volume 24H</Typography>}
           <Typography>TVL</Typography>
         </Grid>
       )}

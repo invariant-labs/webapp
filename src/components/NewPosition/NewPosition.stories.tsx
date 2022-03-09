@@ -82,6 +82,9 @@ storiesOf('position/newPosition', module)
         isXtoY={true}
         poolIndex={0}
         currentPairReversed={null}
+        bestTiers={[]}
+        initialIsDiscreteValue={false}
+        onDiscreteChange={() => {}}
       />
     </div>
   ))
@@ -113,6 +116,9 @@ storiesOf('position/newPosition', module)
         isXtoY={true}
         poolIndex={0}
         currentPairReversed={null}
+        bestTiers={[]}
+        initialIsDiscreteValue={false}
+        onDiscreteChange={() => {}}
       />
     </div>
   ))

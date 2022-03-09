@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { printBN, printBNtoBN, handleSimulate, findPairIndex, findPairs } from '@consts/utils'
-import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { Decimal, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
 import Slippage from '@components/Swap/slippage/Slippage'
@@ -59,6 +59,7 @@ export interface ISwap {
   swapData: SwapData
   tokens: SwapToken[]
   pools: PoolWithAddress[]
+  tickmap: { [x: string]: Tickmap }
   onSwap: (
     slippage: Decimal,
     knownPrice: Decimal,
@@ -74,27 +75,30 @@ export interface ISwap {
   poolTicks: { [x: string]: Tick[] }
   onWalletSelect: (wallet: WalletType) => void
   onDisconnectWallet: () => void
+  initialTokenFromIndex: number | null
+  initialTokenToIndex: number | null
 }
+
 export const Swap: React.FC<ISwap> = ({
   walletStatus,
   tokens,
   pools,
+  tickmap,
   onSwap,
   onSetPair,
   progress,
   poolTicks,
   onWalletSelect,
-  onDisconnectWallet
+  onDisconnectWallet,
+  initialTokenFromIndex,
+  initialTokenToIndex
 }) => {
   const classes = useStyles()
   enum inputTarget {
     FROM = 'from',
     TO = 'to'
   }
-  const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(
-    tokens.length ? 0 : null
-  )
-
+  const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(null)
   const [tokenToIndex, setTokenToIndex] = React.useState<number | null>(null)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [lockAnimation, setLockAnimation] = React.useState<boolean>(false)
@@ -109,6 +113,7 @@ export const Swap: React.FC<ISwap> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
   const [inputRef, setInputRef] = React.useState<string>(inputTarget.FROM)
+  const [rateReversed, setRateReversed] = React.useState<boolean>(false)
   const [simulateResult, setSimulateResult] = React.useState<{
     amountOut: BN
     poolIndex: number
@@ -126,24 +131,47 @@ export const Swap: React.FC<ISwap> = ({
   const timeoutRef = useRef<number>(0)
 
   useEffect(() => {
-    if (tokenFromIndex !== null && tokenToIndex !== null) {
+    if (!!tokens.length && tokenFromIndex === null && tokenToIndex === null) {
+      setTokenFromIndex(
+        initialTokenFromIndex !== null ? initialTokenFromIndex : tokens.length ? 0 : null
+      )
+      setTokenToIndex(initialTokenToIndex)
+    }
+  }, [tokens.length])
+
+  useEffect(() => {
+    if (tokenFromIndex !== null && tokenToIndex !== null && !!pools.length) {
       onSetPair(tokens[tokenFromIndex].address, tokens[tokenToIndex].address)
     }
-  }, [tokenFromIndex, tokenToIndex])
-  useEffect(() => {
-    if (inputRef === inputTarget.FROM) {
-      simulateWithTimeout()
-    }
-  }, [amountFrom, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
+  }, [tokenFromIndex, tokenToIndex, pools.length])
 
   useEffect(() => {
-    if (inputRef === inputTarget.TO) {
+    if (inputRef === inputTarget.FROM && !(amountFrom === '' && amountTo === '')) {
       simulateWithTimeout()
     }
-  }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
+  }, [
+    amountFrom,
+    tokenToIndex,
+    tokenFromIndex,
+    slippTolerance,
+    Object.keys(poolTicks).length,
+    Object.keys(tickmap).length
+  ])
+
+  useEffect(() => {
+    if (inputRef === inputTarget.TO && !(amountFrom === '' && amountTo === '')) {
+      simulateWithTimeout()
+    }
+  }, [
+    amountTo,
+    tokenToIndex,
+    tokenFromIndex,
+    slippTolerance,
+    Object.keys(poolTicks).length,
+    Object.keys(tickmap).length
+  ])
 
   const simulateWithTimeout = () => {
-    inputRef === inputTarget.FROM ? setAmountTo('') : setAmountFrom('')
     setThrottle(true)
 
     clearTimeout(timeoutRef.current)
@@ -151,17 +179,17 @@ export const Swap: React.FC<ISwap> = ({
       setSimulateAmount().finally(() => {
         setThrottle(false)
       })
-    }, 500)
+    }, 100)
     timeoutRef.current = timeout
   }
 
   useEffect(() => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       if (inputRef === inputTarget.FROM) {
-        const amount = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut
+        const amount = getAmountOut(tokens[tokenToIndex])
         setAmountTo(+amount === 0 ? '' : amount)
       } else {
-        const amount = getKnownPrice(tokens[tokenToIndex], tokens[tokenFromIndex]).amountOut
+        const amount = getAmountOut(tokens[tokenFromIndex])
         setAmountFrom(+amount === 0 ? '' : amount)
       }
     }
@@ -185,20 +213,14 @@ export const Swap: React.FC<ISwap> = ({
     setInputRef(inputRef === inputTarget.FROM ? inputTarget.TO : inputTarget.FROM)
   }, [swap])
 
-  const getKnownPrice = (assetIn: SwapToken, assetFor: SwapToken) => {
-    let swapRate: number = 0
-    let amountOut: number = 0
-    if (inputRef === inputTarget.FROM) {
-      swapRate = +printBN(simulateResult.AmountOutWithFee, assetFor.decimals) / Number(amountFrom)
-    } else {
-      swapRate = Number(amountTo) / +printBN(simulateResult.AmountOutWithFee, assetIn.decimals)
-    }
+  useEffect(() => {
+    setRateReversed(false)
+  }, [tokenFromIndex, tokenToIndex])
 
-    amountOut = Number(printBN(simulateResult.amountOut, assetFor.decimals))
-    return {
-      amountOut: amountOut.toFixed(assetFor.decimals),
-      swapRate: swapRate
-    }
+  const getAmountOut = (assetFor: SwapToken) => {
+    const amountOut: number = Number(printBN(simulateResult.amountOut, assetFor.decimals))
+
+    return amountOut.toFixed(assetFor.decimals)
   }
 
   const setSimulateAmount = async () => {
@@ -211,6 +233,7 @@ export const Swap: React.FC<ISwap> = ({
       const indexPool = Object.keys(poolTicks).filter(key => {
         return key === pair.address.toString()
       })
+
       if (indexPool.length === 0) {
         setAmountTo('')
         return
@@ -220,6 +243,7 @@ export const Swap: React.FC<ISwap> = ({
           await handleSimulate(
             pools,
             poolTicks,
+            tickmap,
             {
               v: fromFee(new BN(Number(+slippTolerance * 1000)))
             },
@@ -234,6 +258,7 @@ export const Swap: React.FC<ISwap> = ({
           await handleSimulate(
             pools,
             poolTicks,
+            tickmap,
             {
               v: fromFee(new BN(Number(+slippTolerance * 1000)))
             },
@@ -255,15 +280,20 @@ export const Swap: React.FC<ISwap> = ({
     )
     return !!swapPool
   }
+
   const updateEstimatedAmount = () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
-      const amount = getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).amountOut
+      const amount = getAmountOut(tokens[tokenToIndex])
       setAmountTo(+amount === 0 ? '' : amount)
     }
   }
 
   const getStateMessage = () => {
-    if (tokenFromIndex !== null && tokenToIndex !== null && throttle) {
+    if (
+      (tokenFromIndex !== null && tokenToIndex !== null && throttle) ||
+      !pools.length ||
+      simulateResult.error === "TypeError: Cannot read properties of undefined (reading 'bitmap')"
+    ) {
       return 'Loading'
     }
     if (walletStatus !== Status.Initialized) {
@@ -341,9 +371,9 @@ export const Swap: React.FC<ISwap> = ({
   }, [lockAnimation])
 
   const swapRate =
-    tokenFromIndex === null || tokenToIndex === null
+    tokenFromIndex === null || tokenToIndex === null || amountFrom === '' || amountTo === ''
       ? 0
-      : getKnownPrice(tokens[tokenFromIndex], tokens[tokenToIndex]).swapRate
+      : +amountTo / +amountFrom
 
   return (
     <Grid container className={classes.swapWrapper}>
@@ -366,7 +396,6 @@ export const Swap: React.FC<ISwap> = ({
         <Box
           className={classNames(
             classes.exchangeRoot,
-            classes.transactionBottom,
             lockAnimation && `${classes.exchangeRoot} ${classes.amountInputDown} `
           )}>
           <ExchangeAmountInput
@@ -404,11 +433,8 @@ export const Swap: React.FC<ISwap> = ({
             tokens={tokens}
             current={tokenFromIndex !== null ? tokens[tokenFromIndex] : null}
             onSelect={(name: string) => {
-              setTokenFromIndex(
-                tokens.findIndex(token => {
-                  return name === token.symbol
-                })
-              )
+              const token = tokens.findIndex(token => name === token.symbol)
+              setTokenFromIndex(token)
             }}
             disabled={tokenFromIndex === null}
             hideBalancesInModal={walletStatus !== Status.Initialized}
@@ -481,11 +507,8 @@ export const Swap: React.FC<ISwap> = ({
             tokens={tokensY}
             current={tokenToIndex !== null ? tokens[tokenToIndex] : null}
             onSelect={(name: string) => {
-              setTokenToIndex(
-                tokens.findIndex(token => {
-                  return name === token.symbol
-                })
-              )
+              const token = tokens.findIndex(token => name === token.symbol)
+              setTokenToIndex(token)
             }}
             disabled={tokenFromIndex === null}
             hideBalancesInModal={walletStatus !== Status.Initialized}
@@ -522,7 +545,9 @@ export const Swap: React.FC<ISwap> = ({
           tokenToIndex !== null &&
           hasShowRateMessage() &&
           (getStateMessage() === 'Loading' ||
-            (swapRate !== 0 && swapRate !== Infinity && !isNaN(swapRate))) ? (
+            (swapRate !== 0 && swapRate !== Infinity && !isNaN(swapRate))) &&
+          amountFrom !== '' &&
+          amountTo !== '' ? (
             <>
               <TransactionDetails
                 open={detailsOpen}
@@ -537,16 +562,14 @@ export const Swap: React.FC<ISwap> = ({
                 handleCloseTransactionDetails={handleCloseTransactionDetails}
                 decimal={tokens[tokenToIndex].decimals}
               />
-
-              <Box className={classes.ableToHover}>
-                <ExchangeRate
-                  tokenFromSymbol={tokens[tokenFromIndex].symbol}
-                  tokenToSymbol={tokens[tokenToIndex].symbol}
-                  amount={swapRate}
-                  tokenToDecimals={tokens[tokenToIndex].decimals}
-                  loading={getStateMessage() === 'Loading'}
-                />
-              </Box>
+              <ExchangeRate
+                onClick={() => setRateReversed(!rateReversed)}
+                tokenFromSymbol={tokens[rateReversed ? tokenToIndex : tokenFromIndex].symbol}
+                tokenToSymbol={tokens[rateReversed ? tokenFromIndex : tokenToIndex].symbol}
+                amount={rateReversed ? 1 / swapRate : swapRate}
+                tokenToDecimals={tokens[rateReversed ? tokenFromIndex : tokenToIndex].decimals}
+                loading={getStateMessage() === 'Loading'}
+              />
             </>
           ) : null}
         </Box>

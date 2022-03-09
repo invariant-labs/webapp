@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Button, Grid, Typography, InputAdornment, InputBase } from '@material-ui/core'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
@@ -68,6 +68,10 @@ export const PositionsList: React.FC<IProp> = ({
       data: paginatedItems
     }
   }
+
+  useEffect(() => {
+    setPage(1)
+  }, [searchValue])
 
   return (
     <Grid className={classes.root}>

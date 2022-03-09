@@ -9,9 +9,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 16,
     flex: '1 1 0%'
   },
+  headerContainer: {
+    marginBottom: 6
+  },
   header: {
     ...typography.heading4,
-    marginBottom: 6,
     color: colors.white.main
   },
   innerWrapper: {
@@ -36,19 +38,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputs: {
     marginBottom: 12,
     flexDirection: 'row',
-    gap: 16,
-
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column'
-    }
+    gap: 16
   },
   input: {
     flex: '1 1 0%',
     gap: 16,
-
-    '&:first-child': {
-      marginRight: 8
-    },
 
     [theme.breakpoints.down('sm')]: {
       '&:first-child': {
@@ -67,10 +61,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingInline: 8,
     backgroundColor: colors.invariant.light,
     borderRadius: 11,
-
-    '&:first-child': {
-      marginRight: 8
-    },
 
     [theme.breakpoints.down('sm')]: {
       '&:first-child': {
@@ -119,11 +109,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     flexDirection: 'row',
     gap: 16,
-    alignItems: 'center',
-
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column'
-    }
+    alignItems: 'center'
   }
 }))
 

@@ -65,6 +65,8 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
         min={2149.6}
         max={149.6}
         fee={0.01}
+        initialIsDiscreteValue={false}
+        onDiscreteChange={() => {}}
       />
     )
   })

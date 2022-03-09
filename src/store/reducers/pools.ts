@@ -1,6 +1,6 @@
 import { Token } from '@consts/static'
 import { Pair } from '@invariant-labs/sdk'
-import { PoolStructure } from '@invariant-labs/sdk/lib/market'
+import { PoolStructure, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
@@ -14,6 +14,7 @@ export interface IPoolsStore {
   tokens: Record<string, Token>
   pools: PoolWithAddress[]
   poolTicks: { [key in string]: Tick[] }
+  tickMaps: { [key in string]: Tickmap }
   initPool: boolean
 }
 
@@ -22,21 +23,33 @@ export interface UpdatePool {
   poolStructure: PoolStructure
 }
 
+export interface updateTickMaps {
+  index: string
+  tickMapStructure: Tickmap
+}
+
 export interface UpdateTick {
   index: string
   tickStructure: Tick[]
 }
-
-export interface UpdateTicks {
+export interface DeleteTick {
   address: string
   index: number
+}
+export interface UpdateTicks extends DeleteTick {
   tick: Tick
+}
+
+export interface UpdateTickmap {
+  address: string
+  bitmap: number[]
 }
 
 export const defaultState: IPoolsStore = {
   tokens: {},
   pools: [],
   poolTicks: {},
+  tickMaps: {},
   initPool: false
 }
 
@@ -57,6 +70,9 @@ const poolsSlice = createSlice({
       state.pools = action.payload
       return state
     },
+    setTickMaps(state, action: PayloadAction<updateTickMaps>) {
+      state.tickMaps[action.payload.index] = action.payload.tickMapStructure
+    },
     setTicks(state, action: PayloadAction<UpdateTick>) {
       state.poolTicks[action.payload.index] = action.payload.tickStructure
       return state
@@ -73,7 +89,13 @@ const poolsSlice = createSlice({
         state.poolTicks[action.payload.address].findIndex(e => e.index === action.payload.index)
       ] = action.payload.tick
     },
-
+    deleteTick(state, action: PayloadAction<DeleteTick>) {
+      state.poolTicks[action.payload.address].splice(action.payload.index, 1)
+      console.log(state.poolTicks[action.payload.address])
+    },
+    updateTickmap(state, action: PayloadAction<UpdateTickmap>) {
+      state.tickMaps[action.payload.address].bitmap = action.payload.bitmap
+    },
     getPoolsData(_state, _action: PayloadAction<Pair[]>) {}
   }
 })
