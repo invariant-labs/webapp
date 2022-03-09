@@ -178,10 +178,15 @@ const MarketEvents = () => {
           .then(res => {
             dispatch(actions.setTickMaps({ index: pool.tickmap.toString(), tickMapStructure: res }))
           })
-        // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
-        marketProgram.getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v })).then(res => {
-          dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
-        })
+          .catch(err => {
+            console.log(err)
+          })
+        marketProgram
+          .getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v }))
+          .then(res => {
+            dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
+          })
+          .catch(err => console.log(err))
       }
     }
   }, [tokenFrom, tokenTo])

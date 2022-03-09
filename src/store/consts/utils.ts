@@ -564,6 +564,7 @@ export const handleSimulate = async (
       error: errorMessage
     }
   }
+
   return {
     amountOut: swapSimulateRouterAmount,
     poolIndex: poolIndex,
