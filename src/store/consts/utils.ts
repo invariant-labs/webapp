@@ -564,15 +564,6 @@ export const handleSimulate = async (
       error: errorMessage
     }
   }
-  if (errorMessage.length > 0) {
-    return {
-      amountOut: swapSimulateRouterAmount,
-      poolIndex: poolIndex,
-      AmountOutWithFee: resultWithFee,
-      estimatedPriceAfterSwap: estimatedPrice,
-      error: errorMessage
-    }
-  }
   return {
     amountOut: swapSimulateRouterAmount,
     poolIndex: poolIndex,
