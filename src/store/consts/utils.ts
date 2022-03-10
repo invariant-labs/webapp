@@ -609,7 +609,9 @@ export interface PoolSnapshot {
 }
 
 export const getNetworkStats = async (name: string): Promise<Record<string, PoolSnapshot>> => {
-  return await axios.get(`https://api.invariant.app/stats/${name}`)
+  const { data } = await axios.get<Record<string, PoolSnapshot>>(`https://api.invariant.app/stats/${name}`)
+
+  return data
 }
 
 export const getPoolsFromAdresses = async (
@@ -641,4 +643,24 @@ export const getPools = async (
   )
 
   return await getPoolsFromAdresses(addresses, marketProgram)
+}
+
+export interface CoingeckoApiPriceData {
+  current_price: number
+  price_change_percentage_24h: number
+}
+
+export interface CoingeckoPriceData {
+  price: number
+  priceChange: number
+}
+
+export const getCoingeckoPricesData = async (ids: string[]): Promise<CoingeckoPriceData[]> => {
+  const idsList = ids.reduce((acc, id, index) => acc + id + (index < ids.length - 1 ? ',' : ''), '')
+  const { data } = await axios.get<CoingeckoApiPriceData[]>(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsList}`)
+
+  return data.map((tokenData) => ({
+    price: tokenData.current_price,
+    priceChange: tokenData.price_change_percentage_24h
+  }))
 }
