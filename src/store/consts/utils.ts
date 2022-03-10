@@ -364,7 +364,8 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
           ...all,
           [token.address]: {
             ...token,
-            address: new PublicKey(token.address)
+            address: new PublicKey(token.address),
+            coingeckoId: token?.extensions?.coingeckoId
           }
         }),
         {}
@@ -597,18 +598,24 @@ export const toMaxNumericPlaces = (num: number, places: number): string => {
   return num.toFixed(places + Math.abs(log) - 1)
 }
 
-export const getNetworkStats = async (name: string) => {
+export interface PoolSnapshot {
+  timestamp: number
+  volumeX: string
+  volumeY: string
+  liquidityX: string
+  liquidityY: string
+  feeX: string
+  feeY: string
+}
+
+export const getNetworkStats = async (name: string): Promise<Record<string, PoolSnapshot>> => {
   return await axios.get(`https://api.invariant.app/stats/${name}`)
 }
 
-export const getPools = async (
-  pairs: Pair[],
+export const getPoolsFromAdresses = async (
+  addresses: PublicKey[],
   marketProgram: Market
 ): Promise<PoolWithAddress[]> => {
-  const addresses: PublicKey[] = await Promise.all(
-    pairs.map(async pair => await pair.getAddress(marketProgram.program.programId))
-  )
-
   const pools = (await marketProgram.program.account.pool.fetchMultiple(
     addresses
   )) as Array<PoolStructure | null>
@@ -625,16 +632,13 @@ export const getPools = async (
     .filter(pool => pool !== null) as PoolWithAddress[]
 }
 
-export const getPoolsFromAdresses = async (
-  addresses: PublicKey[],
+export const getPools = async (
+  pairs: Pair[],
   marketProgram: Market
 ): Promise<PoolWithAddress[]> => {
-  const pools = (await marketProgram.program.account.pool.fetchMultiple(
-    addresses
-  )) as PoolStructure[]
+  const addresses: PublicKey[] = await Promise.all(
+    pairs.map(async pair => await pair.getAddress(marketProgram.program.programId))
+  )
 
-  return pools.map((pool, index) => ({
-    ...pool,
-    address: addresses[index]
-  }))
+  return await getPoolsFromAdresses(addresses, marketProgram)
 }
