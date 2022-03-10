@@ -19,7 +19,7 @@ import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
 import { PoolWithAddress } from '@reducers/pools'
 import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -656,11 +656,19 @@ export interface CoingeckoPriceData {
 }
 
 export const getCoingeckoPricesData = async (ids: string[]): Promise<CoingeckoPriceData[]> => {
-  const idsList = ids.reduce((acc, id, index) => acc + id + (index < ids.length - 1 ? ',' : ''), '')
-  const { data } = await axios.get<CoingeckoApiPriceData[]>(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsList}`)
+  const requests: Array<Promise<AxiosResponse<CoingeckoApiPriceData[]>>> = []
+  for (let i = 0; i < ids.length; i += 250) {
+    const idsSlice = ids.slice(i, i + 250)
+    const idsList = idsSlice.reduce((acc, id, index) => acc + id + (index < 249 ? ',' : ''), '')
+    requests.push(axios.get<CoingeckoApiPriceData[]>(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsList}&per_page=250`))
+  }
 
-  return data.map((tokenData) => ({
-    price: tokenData.current_price,
-    priceChange: tokenData.price_change_percentage_24h
-  }))
+  return await Promise.all(requests).then((responses) => {
+    const concatRes: CoingeckoApiPriceData[] = responses.map(res => res.data).reduce((acc, data) => [...acc, ...data], [])
+
+    return concatRes.map((tokenData) => ({
+      price: tokenData.current_price,
+      priceChange: tokenData.price_change_percentage_24h
+    }))
+  })
 }
