@@ -57,6 +57,24 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginBottom: 24,
       marginRight: 0
     }
+  },
+  settingsIconBtn: {
+    padding: 0,
+    margin: 0,
+    minWidth: 'auto',
+    background: 'none',
+    '& :hover': {
+      background: 'none'
+    }
+  },
+  settingsIcon: {
+    width: 20,
+    height: 20,
+    cursor: 'pointer',
+    transition: 'filter 100ms',
+    '&:hover': {
+      filter: 'brightness(1.5)'
+    }
   }
 }))
 

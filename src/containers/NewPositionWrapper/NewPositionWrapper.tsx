@@ -251,7 +251,14 @@ export const NewPositionWrapper = () => {
       data={data}
       midPrice={midPrice}
       setMidPrice={setMidPrice}
-      addLiquidityHandler={(leftTickIndex, rightTickIndex, xAmount, yAmount) => {
+      addLiquidityHandler={(
+        leftTickIndex,
+        rightTickIndex,
+        xAmount,
+        yAmount,
+        slippage,
+        knownPrice
+      ) => {
         if (tokenAIndex === null || tokenBIndex === null) {
           return
         }
@@ -274,7 +281,9 @@ export const NewPositionWrapper = () => {
             initPool: poolIndex === null,
             initTick: poolIndex === null ? midPrice.index : undefined,
             xAmount,
-            yAmount
+            yAmount,
+            slippage,
+            knownPrice
           })
         )
       }}
