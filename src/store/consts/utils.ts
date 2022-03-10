@@ -1,4 +1,4 @@
-import { calculatePriceSqrt, MAX_TICK, MIN_TICK, TICK_LIMIT } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, MAX_TICK, MIN_TICK, Pair, TICK_LIMIT } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import { DECIMAL, parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
@@ -18,7 +18,8 @@ import {
 import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
 import { PoolWithAddress } from '@reducers/pools'
-import { Tickmap } from '@invariant-labs/sdk/lib/market'
+import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
+import axios from 'axios'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -594,4 +595,46 @@ export const toMaxNumericPlaces = (num: number, places: number): string => {
   }
 
   return num.toFixed(places + Math.abs(log) - 1)
+}
+
+export const getNetworkStats = async (name: string) => {
+  return await axios.get(`https://api.invariant.app/stats/${name}`)
+}
+
+export const getPools = async (
+  pairs: Pair[],
+  marketProgram: Market
+): Promise<PoolWithAddress[]> => {
+  const addresses: PublicKey[] = await Promise.all(
+    pairs.map(async pair => await pair.getAddress(marketProgram.program.programId))
+  )
+
+  const pools = (await marketProgram.program.account.pool.fetchMultiple(
+    addresses
+  )) as Array<PoolStructure | null>
+
+  return pools
+    .map((pool, index) =>
+      pool !== null
+        ? {
+            ...pool,
+            address: addresses[index]
+          }
+        : null
+    )
+    .filter(pool => pool !== null) as PoolWithAddress[]
+}
+
+export const getPoolsFromAdresses = async (
+  addresses: PublicKey[],
+  marketProgram: Market
+): Promise<PoolWithAddress[]> => {
+  const pools = (await marketProgram.program.account.pool.fetchMultiple(
+    addresses
+  )) as PoolStructure[]
+
+  return pools.map((pool, index) => ({
+    ...pool,
+    address: addresses[index]
+  }))
 }
