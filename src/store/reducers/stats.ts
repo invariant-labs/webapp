@@ -55,7 +55,6 @@ export const defaultState: IStatsStore = {
   },
   tokensData: [],
   poolsData: []
-
 }
 
 export const statsSliceName = 'stats'
