@@ -3,8 +3,9 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
+    backgroundColor: colors.invariant.component,
     position: 'relative',
-    marginBottom: 16,
+    borderRadius: 24,
 
     [theme.breakpoints.down('sm')]: {
       minWidth: 0
@@ -50,6 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 6,
+    paddingBottom: 6,
 
     [theme.breakpoints.down('xs')]: {
       marginBottom: 0
@@ -73,7 +75,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 20,
     height: 20,
     marginRight: 8,
-    borderRadius: '100%'
+    borderRadius: '100%',
+    background: 'radial-gradient(96.25% 96.25% at 50% 3.75%, #9AC8E9 0%, #5B8DC8 100%)'
   },
   currencySymbol: {
     ...typography.body3,
@@ -91,7 +94,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexWrap: 'nowrap',
     ...typography.caption2,
-    color: colors.invariant.lightHover,
+    color: colors.invariant.textGrey,
+    letterSpacing: '-0.03em',
 
     '&:hover': {
       color: colors.white.main
@@ -106,8 +110,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 14,
     textTransform: 'none',
     marginLeft: 4,
-    marginTop: 1,
     background: ' rgba(46, 224, 154, 0.8)',
+    letterSpacing: '-0.03em',
 
     '&:hover': {
       background: 'none',
@@ -142,13 +146,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     marginRight: 3,
     height: 16,
-    lineHeight: '16px'
+    lineHeight: '16px',
+    letterSpacing: '-0.03em'
   },
   volumeHeader: {
-    margin: 24,
-    color: colors.white.main,
-    ...typography.body3,
-    fontWeight: 700
+    margin: '24px 0 24px 0',
+    color: colors.invariant.text,
+    ...typography.heading4
   }
 }))
 

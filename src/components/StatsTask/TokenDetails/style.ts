@@ -1,32 +1,40 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import { colors, typography } from '@static/theme'
+import { colors, typography, theme } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderRadius: 24,
-    backgroundColor: colors.invariant.dark,
-    padding: 24,
-    paddingTop: 16,
-    [theme.breakpoints.down('xs')]: {
-      padding: 16
-    }
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    width: '100%',
+    borderRadius: 18,
+    backgroundColor: colors.invariant.componentBcg,
+    padding: '24px 16px 0 16px',
+    margin: '0 16px 0 16px'
   },
   label: {
     color: colors.invariant.lightGrey,
     ...typography.caption2,
-    fontWeight: 400,
+    fontFamily: theme.typography.fontFamily,
+    fontStyle: 'normal',
+    lineHeight: 0,
+    paddingBottom: 8,
     letterSpacing: '-0.03em'
   },
   value: {
     color: colors.white.main,
-    ...typography.caption1
-  },
-  mobileContainer: {
-    padding: '10px 0 10px 0',
-    fontFamily: 'Mukta'
+    fontFamily: theme.typography.fontFamily,
+    ...typography.caption1,
+    lineHeight: 0,
+    paddingBottom: 8,
+    letterSpacing: '-0.03em'
   },
   spacer: {
-    paddingTop: 20
+    paddingBottom: 16,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }
 }))
 

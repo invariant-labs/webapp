@@ -3,10 +3,9 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   unstakeButton: {
-    margin: '81px 24px 24px 24px',
     fontSize: 16,
     width: '100%',
-    height: 27,
+    height: 44,
     borderRadius: 12,
     padding: '7px 40px 7px 40px',
     fontWeight: 700,
@@ -20,46 +19,59 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderRadius: 12
     }
   },
+  buttonContainer: {
+    padding: '0 24px 24px 24px'
+  },
   containterSection: {
-    marginBottom: 19
+    padding: '0 24px 19px 24px'
   },
   mainContainer: {
     width: 464,
-    height: 'auto'
+    height: 398,
+    backgroundColor: colors.invariant.component,
+    borderRadius: 24
   },
   calculator: {
-    marginBottom: 17
+    padding: '0 24px 0 24px',
+    marginBottom: 81
   },
   topContainer: {
-    display: 'flex',
-    marginBottom: 12
+    margin: '0 0 12px 24px'
   },
   calculatorName: {
+    marginRight: 12,
     textAlign: 'center',
     alignSelf: 'center',
     color: colors.invariant.textGrey,
     ...typography.body2
   },
   calculatorButtons: {
-    flexWrap: 'nowrap',
-    margin: '19px 0 12px 12px',
+    width: 'auto',
     borderRadius: 8,
-    backgroundColor: colors.invariant.light
+    backgroundColor: colors.invariant.componentBcg
   },
   button: {
     minWidth: 'auto',
     width: 39,
-    hight: 20,
+    height: 20,
     borderRadius: 12,
-    ...typography.caption3
+    ...typography.caption4,
+    backgroundColor: colors.invariant.componentBcg,
+    color: colors.invariant.light
   },
   selected: {
     minWidth: 'auto',
     width: 39,
-    hight: 20,
+    height: 20,
     borderRadius: 8,
-    ...typography.caption3,
-    backgroundColor: colors.invariant.green
+    ...typography.caption4,
+    backgroundColor: colors.invariant.green,
+    color: colors.invariant.black,
+
+    '&:hover': {
+      background: 'none',
+      backgroundColor: colors.invariant.green
+    }
   }
 }))
 

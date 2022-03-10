@@ -5,6 +5,8 @@ import { Grid, Box, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 import { colors } from '@static/theme'
 import { useStyles } from './style'
+// @ts-expect-error
+import { linearGradientDef } from '@nivo/core'
 
 export interface TokenChartInterface {
   percentChart: number
@@ -28,7 +30,6 @@ export const TokenChart: React.FC<TokenChartInterface> = ({
     axis: {
       tickColor: 'transparent',
       ticks: {
-        line: { stroke: colors.invariant.component },
         text: { fill: '#A9B6BF' }
       }
     }
@@ -43,8 +44,9 @@ export const TokenChart: React.FC<TokenChartInterface> = ({
       <Box className={classes.chartContainer}>
         <Typography className={classes.chartHeader}>Token Chart</Typography>
         <div className={classes.tokenPercentHeader}>
-          <Typography className={classes.tokenChartHeader}>
-            SNY: ${formatNumbers()(volumeChart.toString())}
+          <Typography className={classes.tokenChartSNY}>SNY:</Typography>
+          <Typography className={classes.tokenChartUSD}>
+            ${formatNumbers()(volumeChart.toString())}
             {showPrefix(volumeChart)}
           </Typography>
           <Box className={classes.tokenStatusContainer}>
@@ -65,10 +67,10 @@ export const TokenChart: React.FC<TokenChartInterface> = ({
           </Box>
         </div>
       </Box>
-      <div className={classes.barContainer}>
+      <Grid className={classes.barContainer}>
         <ResponsiveLine
           data={positions}
-          margin={{ top: 20, right: 30, bottom: 10, left: 20 }}
+          margin={{ right: 16, bottom: 6.6, left: 16 }}
           axisBottom={null}
           legends={[]}
           axisTop={null}
@@ -85,9 +87,17 @@ export const TokenChart: React.FC<TokenChartInterface> = ({
           colors={colors.invariant.green}
           theme={Theme}
           lineWidth={1}
-          fill={[{ match: '*', id: 'gradient' }]}></ResponsiveLine>
-      </div>
-      <Box className={classes.LineKeys}>
+          defs={[
+            linearGradientDef('gradient', [
+              { offset: 0, color: 'inherit' },
+              { offset: 50, color: 'inherit' },
+              { offset: 100, color: 'inherit', opacity: 0 }
+            ])
+          ]}
+          fill={[{ match: '*', id: 'gradient' }]}
+        />
+      </Grid>
+      <Box className={classes.lineKeys}>
         {reduceArray.map((keyLine, i) => (
           <Typography key={i} className={classes.keyPTag}>
             {keyLine}

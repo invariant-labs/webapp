@@ -24,35 +24,23 @@ export const TokenDetails: React.FC<TokenDetailsInterface> = ({
         container
         direction='row'
         justifyContent='space-between'
-        className={classNames(classes.mobileContainer, classes.spacer)}>
+        className={classNames(classes.spacer)}>
         <Typography className={classes.label}>Token:</Typography>
         <Typography className={classes.value}>{currency}</Typography>
       </Grid>
-      <Grid
-        container
-        direction='row'
-        justifyContent='space-between'
-        className={classes.mobileContainer}>
+      <Grid container direction='row' justifyContent='space-between' className={classes.spacer}>
         <Typography className={classes.label}>Amount:</Typography>
         <Typography className={classes.value}>
           {valueAmount} {currency}
         </Typography>
       </Grid>
-      <Grid
-        container
-        direction='row'
-        justifyContent='space-between'
-        className={classes.mobileContainer}>
+      <Grid container direction='row' justifyContent='space-between' className={classes.spacer}>
         <Typography className={classes.label}>Balance before:</Typography>
         <Typography className={classes.value}>
           {valueBalanceBefore} {currency}
         </Typography>
       </Grid>
-      <Grid
-        container
-        direction='row'
-        justifyContent='space-between'
-        className={classes.mobileContainer}>
+      <Grid container direction='row' justifyContent='space-between' className={classes.spacer}>
         <Typography className={classes.label}>Balance after:</Typography>
         <Typography className={classes.value}>
           {valueBalanceAfter} {currency}

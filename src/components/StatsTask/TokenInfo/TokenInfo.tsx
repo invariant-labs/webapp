@@ -31,17 +31,19 @@ const TokenInfo: React.FC<TokenInfoInterface> = ({
 }) => {
   const classes = useStyles()
   return (
-    <Grid className={classes.infoContainer}>
+    <Grid container className={classes.root} direction='column'>
       <Typography className={classes.volumeHeader}>Heading 2</Typography>
-      <TokenDetails
-        currency={currency}
-        valueAmount={valueAmount}
-        valueBalanceBefore={valueBalanceBefore}
-        valueBalanceAfter={valueBalanceAfter}></TokenDetails>
-      <TokenChart
-        percentChart={percentChart}
-        volumeChart={volumeChart}
-        positions={positions}></TokenChart>
+      <Grid container className={classes.tokenDetails}>
+        <TokenDetails
+          currency={currency}
+          valueAmount={valueAmount}
+          valueBalanceBefore={valueBalanceBefore}
+          valueBalanceAfter={valueBalanceAfter}
+        />
+      </Grid>
+      <Grid container className={classes.tokenChart}>
+        <TokenChart percentChart={percentChart} volumeChart={volumeChart} positions={positions} />
+      </Grid>
     </Grid>
   )
 }

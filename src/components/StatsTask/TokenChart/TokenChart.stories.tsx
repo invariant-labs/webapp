@@ -6,8 +6,8 @@ import TokenChart from './TokenChart'
 storiesOf('token/TokenChart', module)
   .addDecorator(withKnobs)
   .add('Token Chart', () => {
-    const [percentChart] = React.useState<number>(0.1)
-    const [volumeChart] = React.useState<number>(1.0)
+    const percentChart = 0.1
+    const volumeChart = 1.0
 
     const positions = [
       {

@@ -8,17 +8,15 @@ import icons from '@static/icons'
 storiesOf('tokenInput/currency', module)
   .addDecorator(withKnobs)
   .add('default', () => (
-    <div style={{ backgroundColor: colors.invariant.component, padding: '10px' }}>
-      <TokenInput
-        setValue={() => {}}
-        placeholder={'12.3451'}
-        currency={'SNY'}
-        currencyIconSrc={icons.SNY}
-        onMaxClick={() => {}}
-        decimalsLimit={4}
-        percentageChange={-4.14}
-        usdValue={205341.4361}
-        balanceValue={'460.3445'}
-      />
-    </div>
+    <TokenInput
+      setValue={() => {}}
+      placeholder={'12.3451'}
+      currency={'SNY'}
+      currencyIconSrc={icons.SNY}
+      onMaxClick={() => {}}
+      decimalsLimit={4}
+      percentageChange={-4.14}
+      usdValue={205341.4361}
+      balanceValue={'460.3445'}
+    />
   ))

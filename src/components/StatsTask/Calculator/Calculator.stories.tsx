@@ -13,7 +13,6 @@ storiesOf('calculator/currency', module)
       currencyIconSrc={icons.SNY}
       value={'12.3451'}
       decimalsLimit={4}
-      outputValue={'12,3451'}
-      outputIconSrc={icons.USD}
+      outputValue={12.3451}
     />
   ))

@@ -8,44 +8,58 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexWrap: 'nowrap',
     borderRadius: 12,
     justifyContent: 'space-between',
+    alignItems: 'center',
     background: colors.invariant.light
   },
 
   calculator: {
+    display: 'flex',
     alignItems: 'center',
+
     [theme.breakpoints.down('sm')]: {
       minWidth: 0
     }
   },
   greenPart: {
+    display: 'flex',
     alignItems: 'center',
-    width: 'auto',
-    flexWrap: 'nowrap',
+    justifyContent: 'end',
+    paddingRight: 12,
     [theme.breakpoints.down('sm')]: {
       minWidth: 0
     }
   },
   greenText: {
-    paddingRight: 8,
-    ...typography.body1,
+    display: 'flex',
+    alignItems: 'center',
+    height: 12,
+    padding: '15px 8px 15px 0',
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: '24px',
     color: colors.invariant.green,
-    whiteSpace: 'nowrap',
-    [theme.breakpoints.down('xs')]: {
-      ...typography.caption1
-    }
+    whiteSpace: 'nowrap'
   },
   heading3: {
+    display: 'flex',
+    alignItems: 'center',
+    height: 14,
     padding: '14px 12px 14px 12px',
-    color: colors.white.main,
+    color: colors.invariant.text,
     ...typography.heading3,
     flexWrap: 'nowrap'
   },
   currencyIcon: {
-    marginRight: 12,
-    minWidth: 20,
-    height: 20,
+    minWidth: 28,
+    height: 28,
     borderRadius: '100%',
-    background: colors.invariant.greenLinearGradient
+    background: 'radial-gradient(96.25% 96.25% at 50% 3.75%, #9AC8E9 0%, #5B8DC8 100%)'
+  },
+  outputIcon: {
+    minWidth: 18,
+    height: 18,
+    borderRadius: '100%',
+    background: 'radial-gradient(96.25% 96.25% at 50% 3.75%, #9AC8E9 0%, #5B8DC8 100%)'
   }
 }))
 

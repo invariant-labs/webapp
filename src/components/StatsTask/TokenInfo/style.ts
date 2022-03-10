@@ -5,12 +5,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   volumeHeader: {
     color: colors.white.main,
     ...typography.heading4,
-    fontWeight: 700,
-    margin: '0 0 24px 24px'
+    padding: '24px 0 24px 24px'
   },
-  infoContainer: {
+  root: {
     width: 256,
-    hight: 386
+    height: 386,
+    padding: 0,
+    backgroundColor: colors.invariant.component,
+    borderRadius: 24
+  },
+  tokenDetails: {
+    height: 122,
+    width: 'auto'
+  },
+  tokenChart: {
+    height: 140,
+    width: 'auto',
+    marginTop: 32
   }
 }))
 

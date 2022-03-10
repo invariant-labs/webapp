@@ -3,55 +3,59 @@ import { colors, typography } from '@static/theme'
 
 export const useStyles = makeStyles(() => ({
   container: {
+    dispaly: 'flex',
     backgroundColor: colors.invariant.component,
     color: 'white',
-    maxWidth: '524px',
-    borderRadius: 24,
-    paddingLeft: 24
+    width: '100%',
+    borderRadius: 24
   },
   chartContainer: {
-    dispaly: 'flex',
     flexDirection: 'column',
     alignItems: 'flexp-start',
-    fontWeight: 'normal'
+    fontWeight: 'normal',
+    marginLeft: 24
   },
 
   chartHeader: {
     color: colors.white.main,
-    ...typography.body3,
-    margin: '32px 0 16px 0'
+    ...typography.heading4
   },
 
-  tokenChartHeader: {
+  tokenChartSNY: {
+    ...typography.caption2,
+    marginRight: 5,
+    color: colors.invariant.textGrey
+  },
+
+  tokenChartUSD: {
     ...typography.caption1
   },
 
   barContainer: {
-    height: 220,
+    height: 88.4,
     width: 'auto',
-    display: 'flex',
-    margin: '0 100 0 100'
+    display: 'flex'
   },
 
   tokenPercentHeader: {
     display: 'flex',
     alignItems: 'center',
-    marginTop: 16
+    marginTop: 13
   },
   tokenStatusContainer: {
-    marginLeft: 10,
     display: 'flex',
-    ...typography.tiny1,
+    marginLeft: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    minWidth: 'auto'
+    height: 16,
+    width: 39
   },
   tokenStatusColor: {
-    textAlign: 'center',
-    height: 16,
-    width: 39,
-    minWidth: 'auto',
-    padding: '5px 0 5px 0',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 'inherit',
+    width: 'inherit',
     borderRadius: 6
   },
 
@@ -76,16 +80,20 @@ export const useStyles = makeStyles(() => ({
     color: colors.invariant.green
   },
 
-  LineKeys: {
-    marginLeft: 10,
+  lineKeys: {
+    margin: `0 16px 0 16px`,
+    paddingBottom: 22,
     display: 'flex',
-    width: '100%'
+    width: 'auto',
+    justifyContent: 'space-between'
   },
 
   keyPTag: {
-    width: '100%',
     color: colors.invariant.textGrey,
-    ...typography.caption4
+    fontFamily: 'Mukta',
+    fontStyle: 'normal',
+    fontWeight: 400,
+    fontSize: 10
   }
 }))
 
