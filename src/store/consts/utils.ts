@@ -608,8 +608,8 @@ export interface PoolSnapshot {
   feeY: string
 }
 
-export const getNetworkStats = async (name: string): Promise<Record<string, PoolSnapshot>> => {
-  const { data } = await axios.get<Record<string, PoolSnapshot>>(`https://api.invariant.app/stats/${name}`)
+export const getNetworkStats = async (name: string): Promise<Record<string, PoolSnapshot[]>> => {
+  const { data } = await axios.get<Record<string, PoolSnapshot[]>>(`https://api.invariant.app/stats/${name}`)
 
   return data
 }
