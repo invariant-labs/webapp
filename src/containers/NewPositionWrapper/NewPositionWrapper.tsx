@@ -113,7 +113,6 @@ export const NewPositionWrapper = () => {
             (pool.tokenX.equals(tokens[tokenBIndex].assetAddress) &&
               pool.tokenY.equals(tokens[tokenAIndex].assetAddress)))
       )
-
       setPoolIndex(index !== -1 ? index : null)
 
       if (index !== -1) {
@@ -126,7 +125,6 @@ export const NewPositionWrapper = () => {
       }
     }
   }, [isWaitingForNewPool])
-
   useEffect(() => {
     if (poolIndex !== null) {
       setMidPrice({
@@ -249,6 +247,7 @@ export const NewPositionWrapper = () => {
       }}
       feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, DECIMAL - 2))}
       data={data}
+      sortedPools={allPools}
       midPrice={midPrice}
       setMidPrice={setMidPrice}
       addLiquidityHandler={(
@@ -269,7 +268,7 @@ export const NewPositionWrapper = () => {
 
         const lowerTick = Math.min(leftTickIndex, rightTickIndex)
         const upperTick = Math.max(leftTickIndex, rightTickIndex)
-
+        console.log('INIT POSITION')
         dispatch(
           actions.initPosition({
             tokenX: tokens[isXtoY ? tokenAIndex : tokenBIndex].assetAddress,

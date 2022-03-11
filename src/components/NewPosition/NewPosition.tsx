@@ -20,12 +20,14 @@ import useStyles from './style'
 import { BestTier } from '@consts/static'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import Slippage from '@components/Swap/slippage/Slippage'
+import { PoolWithAddress } from '@reducers/pools'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 
 export interface INewPosition {
   tokens: SwapToken[]
   data: PlotTickData[]
+  sortedPools: PoolWithAddress[]
   midPrice: TickPlotPositionData
   setMidPrice: (mid: TickPlotPositionData) => void
   addLiquidityHandler: (
@@ -68,6 +70,7 @@ export interface INewPosition {
 export const NewPosition: React.FC<INewPosition> = ({
   tokens,
   data,
+  sortedPools,
   midPrice,
   setMidPrice,
   addLiquidityHandler,
@@ -277,7 +280,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             onChangePositionTokens(index1, index2, fee)
           }}
           onAddLiquidity={() => {
-            if (tokenAIndex !== null && tokenBIndex !== null) {
+            if (tokenAIndex !== null && tokenBIndex !== null && poolIndex !== null) {
               addLiquidityHandler(
                 leftRange,
                 rightRange,
@@ -287,9 +290,8 @@ export const NewPosition: React.FC<INewPosition> = ({
                 isXtoY
                   ? +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals
                   : +tokenADeposit * 10 ** tokens[tokenAIndex].decimals,
-                  { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
-                  tokens[].knownPrice
-
+                { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
+                sortedPools[poolIndex].sqrtPrice
               )
             }
           }}
