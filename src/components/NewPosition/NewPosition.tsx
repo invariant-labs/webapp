@@ -141,7 +141,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
     const result = calcAmount(amount, left, right, tokens[calcIndex].assetAddress)
 
-    return printBN(result, tokens[printIndex].decimals)
+    return (+printBN(result, tokens[printIndex].decimals)).toString()
   }
 
   const onChangeRange = (left: number, right: number) => {
