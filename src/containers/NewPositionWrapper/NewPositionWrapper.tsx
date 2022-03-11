@@ -4,7 +4,12 @@ import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
 import { swapTokens, status } from '@selectors/solanaWallet'
 import { DECIMAL, FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { calcPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
+import {
+  calcPrice,
+  createPlaceholderLiquidityPlot,
+  printBN,
+  sqrtPriceFromIndex
+} from '@consts/utils'
 import { isLoadingLatestPoolsForTransaction, poolsArraySortedByFees } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
@@ -113,7 +118,6 @@ export const NewPositionWrapper = () => {
             (pool.tokenX.equals(tokens[tokenBIndex].assetAddress) &&
               pool.tokenY.equals(tokens[tokenAIndex].assetAddress)))
       )
-
       setPoolIndex(index !== -1 ? index : null)
 
       if (index !== -1) {
@@ -126,7 +130,6 @@ export const NewPositionWrapper = () => {
       }
     }
   }, [isWaitingForNewPool])
-
   useEffect(() => {
     if (poolIndex !== null) {
       setMidPrice({
@@ -251,7 +254,7 @@ export const NewPositionWrapper = () => {
       data={data}
       midPrice={midPrice}
       setMidPrice={setMidPrice}
-      addLiquidityHandler={(leftTickIndex, rightTickIndex, xAmount, yAmount) => {
+      addLiquidityHandler={(leftTickIndex, rightTickIndex, xAmount, yAmount, slippage) => {
         if (tokenAIndex === null || tokenBIndex === null) {
           return
         }
@@ -274,7 +277,12 @@ export const NewPositionWrapper = () => {
             initPool: poolIndex === null,
             initTick: poolIndex === null ? midPrice.index : undefined,
             xAmount,
-            yAmount
+            yAmount,
+            slippage,
+            knownPrice:
+              poolIndex === null
+                ? sqrtPriceFromIndex(midPrice.index)
+                : allPools[poolIndex].sqrtPrice
           })
         )
       }}

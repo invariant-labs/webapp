@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@material-ui/core'
+import { Button, Grid, Typography } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import DepositSelector from './DepositSelector/DepositSelector'
 import RangeSelector from './RangeSelector/RangeSelector'
@@ -9,14 +9,19 @@ import { PublicKey } from '@solana/web3.js'
 import { PlotTickData } from '@reducers/positions'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Link } from 'react-router-dom'
+import settingIcon from '@static/svg/settings.svg'
 import backIcon from '@static/svg/back-arrow.svg'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import PoolInit from './PoolInit/PoolInit'
-import useStyles from './style'
 import { BestTier } from '@consts/static'
+import { blurContent, unblurContent } from '@consts/uiUtils'
+import Slippage from '@components/Modals/Slippage/Slippage'
+import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { fromFee } from '@invariant-labs/sdk/lib/utils'
+import useStyles from './style'
 
 export interface INewPosition {
   tokens: SwapToken[]
@@ -27,7 +32,8 @@ export interface INewPosition {
     leftTickIndex: number,
     rightTickIndex: number,
     xAmount: number,
-    yAmount: number
+    yAmount: number,
+    slippage: Decimal
   ) => void
   onChangePositionTokens: (
     tokenAIndex: number | null,
@@ -95,6 +101,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [tokenADeposit, setTokenADeposit] = useState<string>('')
   const [tokenBDeposit, setTokenBDeposit] = useState<string>('')
 
+  const [settings, setSettings] = React.useState<boolean>(false)
+  const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -132,7 +141,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
     const result = calcAmount(amount, left, right, tokens[calcIndex].assetAddress)
 
-    return printBN(result, tokens[printIndex].decimals)
+    return (+printBN(result, tokens[printIndex].decimals)).toString()
   }
 
   const onChangeRange = (left: number, right: number) => {
@@ -219,6 +228,21 @@ export const NewPosition: React.FC<INewPosition> = ({
     }
   }, [midPrice.index])
 
+  const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+    blurContent()
+    setSettings(true)
+  }
+
+  const handleCloseSettings = () => {
+    unblurContent()
+    setSettings(false)
+  }
+
+  const setSlippage = (slippage: string): void => {
+    setSlippTolerance(slippage)
+  }
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Link to='/pool' style={{ textDecoration: 'none' }}>
@@ -228,7 +252,21 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Typography className={classes.title}>Add new liquidity position</Typography>
+      <Grid container justifyContent='space-between'>
+        <Typography className={classes.title}>Add new liquidity position</Typography>
+        <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
+          <img src={settingIcon} className={classes.settingsIcon} />
+        </Button>
+      </Grid>
+
+      <Slippage
+        open={settings}
+        setSlippage={setSlippage}
+        handleClose={handleCloseSettings}
+        anchorEl={anchorEl}
+        defaultSlippage={'1'}
+        infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
+      />
 
       <Grid container className={classes.row} alignItems='stretch'>
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
@@ -251,7 +289,8 @@ export const NewPosition: React.FC<INewPosition> = ({
                   : +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals,
                 isXtoY
                   ? +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals
-                  : +tokenADeposit * 10 ** tokens[tokenAIndex].decimals
+                  : +tokenADeposit * 10 ** tokens[tokenAIndex].decimals,
+                { v: fromFee(new BN(Number(+slippTolerance * 1000))) }
               )
             }
           }}

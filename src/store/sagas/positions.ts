@@ -99,7 +99,9 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
           upperTick: data.upperTick,
           liquidityDelta: data.liquidityDelta,
           owner: wallet.publicKey,
-          initTick: data.initTick
+          initTick: data.initTick,
+          slippage: data.slippage,
+          knownPrice: data.knownPrice
         }
       )
 
@@ -113,7 +115,9 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
         lowerTick: data.lowerTick,
         upperTick: data.upperTick,
         liquidityDelta: data.liquidityDelta,
-        owner: wallet.publicKey
+        owner: wallet.publicKey,
+        slippage: data.slippage,
+        knownPrice: data.knownPrice
       })
     }
 
@@ -281,7 +285,9 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
           upperTick: action.payload.upperTick,
           liquidityDelta: action.payload.liquidityDelta,
           owner: wallet.publicKey,
-          initTick: action.payload.initTick
+          initTick: action.payload.initTick,
+          slippage: action.payload.slippage,
+          knownPrice: action.payload.knownPrice
         }
       )
 
@@ -295,7 +301,9 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
         lowerTick: action.payload.lowerTick,
         upperTick: action.payload.upperTick,
         liquidityDelta: action.payload.liquidityDelta,
-        owner: wallet.publicKey
+        owner: wallet.publicKey,
+        slippage: action.payload.slippage,
+        knownPrice: action.payload.knownPrice
       })
     }
 
