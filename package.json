@@ -73,6 +73,7 @@
     "serve": "vite serve",
     "preview": "vite preview",
     "lint": "eslint --ext .js,.ts,.tsx .",
+    "start": "react-scripts --openssl-legacy-provider start",
     "fix": "eslint --fix --fix-type suggestion --ext .js,.ts,.tsx .",
     "storybook": "start-storybook -p 9009 -c .storybook watch-css -s public",
     "build-storybook": "build-storybook -s public",
