@@ -1,14 +1,13 @@
 import { actions, PoolStatsData, TimeData, TokenStatsData } from '@reducers/stats'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { network } from '@selectors/solanaConnection'
-import { CoingeckoPriceData, getCoingeckoPricesData, getNetworkStats, getPoolsFromAdresses, PoolSnapshot } from '@consts/utils'
+import { getCoingeckoPricesData, getCoingeckoPricesHistory, getNetworkStats, getPoolsFromAdresses, PoolSnapshot, printBN } from '@consts/utils'
 import { tokens } from '@selectors/pools'
 import { PublicKey } from '@solana/web3.js'
 import { getMarketProgram } from '@web3/programs/amm'
 import { PoolWithAddress } from '@reducers/pools'
 import { Token } from '@consts/static'
-
-export type CoingeckoTokenWithPrice = Required<Token> & CoingeckoPriceData
+import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 
 export function* getStats(): Generator {
   try {
@@ -47,6 +46,7 @@ export function* getStats(): Generator {
       [key]: val
     }) : acc, {})
     const coingeckoPricesData = yield* call(getCoingeckoPricesData, Object.values(coingeckoTokens).map(token => token.coingeckoId))
+    const coingeckoPricesHistory = yield* call(getCoingeckoPricesHistory)
 
     const volume24 = {
       value: 0,
@@ -61,60 +61,79 @@ export function* getStats(): Generator {
       change: 0
     }
 
+    const tokensDataObject: Record<string, TokenStatsData> = {}
+    const poolsData: PoolStatsData[] = []
+
+    const volumePlot: TimeData[] = []
+    const liquidityPlot: TimeData[] = []
+
     let prevVolume24 = 0
     let prevTvl24 = 0
     let prevFees24 = 0
 
     Object.entries(existingPoolsData).forEach(([address, snapshots]) => {
+      if (!tokensDataObject[poolsDataObject[address].tokenX.toString()]) {
+        tokensDataObject[poolsDataObject[address].tokenX.toString()] = {
+          address: poolsDataObject[address].tokenX,
+          price: 0,
+          priceChange: 0,
+          volume24: 0,
+          tvl: 0
+        }
+      }
+
+      if (!tokensDataObject[poolsDataObject[address].tokenY.toString()]) {
+        tokensDataObject[poolsDataObject[address].tokenY.toString()] = {
+          address: poolsDataObject[address].tokenY,
+          price: 0,
+          priceChange: 0,
+          volume24: 0,
+          tvl: 0
+        }
+      }
+
       if (!snapshots.length) {
+        poolsData.push({
+          volume24: 0,
+          tvl: 0,
+          tokenX: poolsDataObject[address].tokenX,
+          tokenY: poolsDataObject[address].tokenY,
+          fee: +printBN(poolsDataObject[address].fee.v, DECIMAL - 2)
+        })
         return
       }
 
-      const xDecimal = allTokens[poolsDataObject[address].tokenX.toString()].decimals
-      const yDecimal = allTokens[poolsDataObject[address].tokenY.toString()].decimals
+      const tokenX = allTokens[poolsDataObject[address].tokenX.toString()]
+      const tokenY = allTokens[poolsDataObject[address].tokenY.toString()]
 
       const lastSnapshot = snapshots[snapshots.length - 1]
-
-      volume24.value += 0
-      fees24.value += 0
 
       if (snapshots.length > 1) {
         const secondLastSnapshot = snapshots[snapshots.length - 2]
 
-        volume24.value -= 0
-        fees24.value -= 0
-
-        prevVolume24 += 0
-        prevFees24 += 0
-
         if (snapshots.length > 2) {
           const thirdLastSnapshot = snapshots[snapshots.length - 3]
-
-          prevVolume24 -= 0
-          prevFees24 -= 0
         }
-
-        prevTvl24 += 0
       }
 
+      volume24.value += 0
+      fees24.value += 0
       tvl24.value += 0
+
+      prevVolume24 += 0
+      prevFees24 += 0
+      prevTvl24 += 0
     })
 
     volume24.change = (volume24.value - prevVolume24) / prevVolume24 * 100
     tvl24.change = (tvl24.value - prevTvl24) / prevTvl24 * 100
     fees24.change = (fees24.value - prevFees24) / prevFees24 * 100
 
-    const tokensData: TokenStatsData[] = []
-    const poolsData: PoolStatsData[] = []
-
-    const volumePlot: TimeData[] = []
-    const liquidityPlot: TimeData[] = []
-
     yield* put(actions.setCurrentStats({
       volume24,
       tvl24,
       fees24,
-      tokensData,
+      tokensData: Object.values(tokensDataObject),
       poolsData,
       volumePlot,
       liquidityPlot
