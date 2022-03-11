@@ -47,13 +47,6 @@ export function* getStats(): Generator {
       [key]: val
     }) : acc, {})
     const coingeckoPricesData = yield* call(getCoingeckoPricesData, Object.values(coingeckoTokens).map(token => token.coingeckoId))
-    const coingeckoTokensWithPrice: Record<string, CoingeckoTokenWithPrice> = Object.entries(coingeckoTokens).reduce((acc, [key, val], index) => ({
-      ...acc,
-      [key]: {
-        ...val,
-        ...coingeckoPricesData[index]
-      }
-    }), {})
 
     const volume24 = {
       value: 0,
@@ -77,37 +70,34 @@ export function* getStats(): Generator {
         return
       }
 
-      const xPrice = coingeckoTokensWithPrice[poolsDataObject[address].tokenX.toString()].price
-      const yPrice = coingeckoTokensWithPrice[poolsDataObject[address].tokenY.toString()].price
-
-      const xDecimal = coingeckoTokensWithPrice[poolsDataObject[address].tokenX.toString()].decimals
-      const yDecimal = coingeckoTokensWithPrice[poolsDataObject[address].tokenY.toString()].decimals
+      const xDecimal = allTokens[poolsDataObject[address].tokenX.toString()].decimals
+      const yDecimal = allTokens[poolsDataObject[address].tokenY.toString()].decimals
 
       const lastSnapshot = snapshots[snapshots.length - 1]
 
-      volume24.value += (+lastSnapshot.volumeX / 10 ** xDecimal * xPrice) + (+lastSnapshot.volumeY / 10 ** yDecimal * yPrice)
-      fees24.value += (+lastSnapshot.feeX / 10 ** xDecimal * xPrice) + (+lastSnapshot.feeY / 10 ** yDecimal * yPrice)
+      volume24.value += 0
+      fees24.value += 0
 
       if (snapshots.length > 1) {
         const secondLastSnapshot = snapshots[snapshots.length - 2]
 
-        volume24.value -= (+secondLastSnapshot.volumeX / 10 ** xDecimal * xPrice) + (+secondLastSnapshot.volumeY / 10 ** yDecimal * yPrice)
-        fees24.value -= (+secondLastSnapshot.feeX / 10 ** xDecimal * xPrice) + (+secondLastSnapshot.feeY / 10 ** yDecimal * yPrice)
+        volume24.value -= 0
+        fees24.value -= 0
 
-        prevVolume24 += (+secondLastSnapshot.volumeX / 10 ** xDecimal * xPrice) + (+secondLastSnapshot.volumeY / 10 ** yDecimal * yPrice)
-        prevFees24 += (+secondLastSnapshot.feeX / 10 ** xDecimal * xPrice) + (+secondLastSnapshot.feeY / 10 ** yDecimal * yPrice)
+        prevVolume24 += 0
+        prevFees24 += 0
 
         if (snapshots.length > 2) {
           const thirdLastSnapshot = snapshots[snapshots.length - 3]
 
-          prevVolume24 -= (+thirdLastSnapshot.volumeX / 10 ** xDecimal * xPrice) + (+thirdLastSnapshot.volumeY / 10 ** yDecimal * yPrice)
-          prevFees24 -= (+thirdLastSnapshot.feeX / 10 ** xDecimal * xPrice) + (+thirdLastSnapshot.feeY / 10 ** yDecimal * yPrice)
+          prevVolume24 -= 0
+          prevFees24 -= 0
         }
 
-        prevTvl24 += (+secondLastSnapshot.liquidityX / 10 ** xDecimal * xPrice) + (+secondLastSnapshot.liquidityY / 10 ** yDecimal * yPrice)
+        prevTvl24 += 0
       }
 
-      tvl24.value += (+lastSnapshot.liquidityX / 10 ** xDecimal * xPrice) + (+lastSnapshot.liquidityY / 10 ** yDecimal * yPrice)
+      tvl24.value += 0
     })
 
     volume24.change = (volume24.value - prevVolume24) / prevVolume24 * 100

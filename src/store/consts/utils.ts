@@ -609,7 +609,9 @@ export interface PoolSnapshot {
 }
 
 export const getNetworkStats = async (name: string): Promise<Record<string, PoolSnapshot[]>> => {
-  const { data } = await axios.get<Record<string, PoolSnapshot[]>>(`https://api.invariant.app/stats/${name}`)
+  const { data } = await axios.get<Record<string, PoolSnapshot[]>>(
+    `https://api.invariant.app/stats/${name}`
+  )
 
   return data
 }
@@ -646,6 +648,7 @@ export const getPools = async (
 }
 
 export interface CoingeckoApiPriceData {
+  id: string
   current_price: number
   price_change_percentage_24h: number
 }
@@ -655,20 +658,43 @@ export interface CoingeckoPriceData {
   priceChange: number
 }
 
-export const getCoingeckoPricesData = async (ids: string[]): Promise<CoingeckoPriceData[]> => {
+export const getCoingeckoPricesData = async (ids: string[]): Promise<Record<string, CoingeckoPriceData>> => {
   const requests: Array<Promise<AxiosResponse<CoingeckoApiPriceData[]>>> = []
   for (let i = 0; i < ids.length; i += 250) {
     const idsSlice = ids.slice(i, i + 250)
     const idsList = idsSlice.reduce((acc, id, index) => acc + id + (index < 249 ? ',' : ''), '')
-    requests.push(axios.get<CoingeckoApiPriceData[]>(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsList}&per_page=250`))
+    requests.push(
+      axios.get<CoingeckoApiPriceData[]>(
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsList}&per_page=250`
+      )
+    )
   }
 
-  return await Promise.all(requests).then((responses) => {
-    const concatRes: CoingeckoApiPriceData[] = responses.map(res => res.data).reduce((acc, data) => [...acc, ...data], [])
+  return await Promise.all(requests).then(responses => {
+    const concatRes: CoingeckoApiPriceData[] = responses
+      .map(res => res.data)
+      .reduce((acc, data) => [...acc, ...data], [])
 
-    return concatRes.map((tokenData) => ({
-      price: tokenData.current_price,
-      priceChange: tokenData.price_change_percentage_24h
-    }))
+    const data: Record<string, CoingeckoPriceData> = {}
+
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    concatRes.forEach(({ id, current_price, price_change_percentage_24h }) => {
+      data[id] = {
+        price: current_price,
+        priceChange: price_change_percentage_24h
+      }
+    })
+
+    return data
   })
+}
+
+export const getCoingeckoPricesHistory = async (): Promise<
+  Record<string, Record<string, number>>
+> => {
+  const { data } = await axios.get<Record<string, Record<string, number>>>(
+    'https://api.invariant.app/pricesHistory'
+  )
+
+  return data
 }
