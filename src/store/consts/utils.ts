@@ -658,7 +658,9 @@ export interface CoingeckoPriceData {
   priceChange: number
 }
 
-export const getCoingeckoPricesData = async (ids: string[]): Promise<Record<string, CoingeckoPriceData>> => {
+export const getCoingeckoPricesData = async (
+  ids: string[]
+): Promise<Record<string, CoingeckoPriceData>> => {
   const requests: Array<Promise<AxiosResponse<CoingeckoApiPriceData[]>>> = []
   for (let i = 0; i < ids.length; i += 250) {
     const idsSlice = ids.slice(i, i + 250)
@@ -697,4 +699,12 @@ export const getCoingeckoPricesHistory = async (): Promise<
   )
 
   return data
+}
+
+export const sqrtPriceFromIndex = (index: number) => {
+  const sqrt = Math.sqrt(1.0001 ** index)
+
+  return {
+    v: printBNtoBN(sqrt.toFixed(PRICE_DECIMAL), PRICE_DECIMAL)
+  }
 }

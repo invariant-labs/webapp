@@ -8,6 +8,7 @@ interface Props {
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
   defaultSlippage: string
+  infoText?: string
 }
 
 const Slippage: React.FC<Props> = ({
@@ -15,7 +16,8 @@ const Slippage: React.FC<Props> = ({
   setSlippage,
   handleClose,
   anchorEl,
-  defaultSlippage
+  defaultSlippage,
+  infoText
 }) => {
   const classes = useStyles()
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
@@ -119,8 +121,8 @@ const Slippage: React.FC<Props> = ({
           />
         </Box>
         <Typography className={classes.info}>
-          Slippage tolerance is a pricing difference between the price at the confirmation time and
-          the actual price of the transaction users are willing to accept when swapping.
+          {infoText ??
+            'Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when swapping.'}
         </Typography>
       </Grid>
     </Popover>
