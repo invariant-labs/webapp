@@ -15,7 +15,7 @@ storiesOf('Calculator/CalculatorSection', module)
       placeholder={'12.3451'}
       decimalsLimit={4}
       percentageChange={-4.14}
-      balanceValue={'460.3445'}
+      balanceValue={460.3445}
       usdValue={205341.4361}
       onMaxClick={() => {}}
       outputValue={12.3451}

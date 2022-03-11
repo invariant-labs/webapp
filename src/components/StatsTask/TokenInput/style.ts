@@ -93,6 +93,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   caption2: {
     display: 'flex',
     flexWrap: 'nowrap',
+    cursor: 'pointer',
     ...typography.caption2,
     color: colors.invariant.textGrey,
     letterSpacing: '-0.03em',

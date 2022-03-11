@@ -3,6 +3,7 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles'
 import { Button, Grid, Input, Typography } from '@material-ui/core'
 import useStyles from './style'
 import { formatNumbers, FormatNumberThreshold, getScaleFromString, showPrefix } from '@consts/utils'
+import { number } from '@storybook/addon-knobs'
 
 interface TokenInputInterface {
   setValue: (value: string) => void
@@ -13,7 +14,7 @@ interface TokenInputInterface {
   style?: CSSProperties
   decimalsLimit: number
   percentageChange?: number
-  balanceValue?: string
+  balanceValue?: number
   usdValue?: number
   onMaxClick: () => void
 }
@@ -32,6 +33,7 @@ export const TokenInput: React.FC<TokenInputInterface> = ({
   onMaxClick
 }) => {
   const classes = useStyles()
+  const [maxValue, setMaxValue] = useState<number>()
   const inputRef = useRef<HTMLInputElement>(null)
   const thresholds: FormatNumberThreshold[] = [
     {
@@ -128,7 +130,7 @@ export const TokenInput: React.FC<TokenInputInterface> = ({
           <Input
             inputRef={inputRef}
             type={'text'}
-            value={value}
+            value={maxValue}
             disableUnderline={true}
             placeholder={placeholder}
             onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
@@ -139,7 +141,9 @@ export const TokenInput: React.FC<TokenInputInterface> = ({
           container
           alignItems='center'
           wrap='nowrap'
-          onClick={onMaxClick}>
+          onClick={() => {
+            setMaxValue(balanceValue)
+          }}>
           <>
             <Typography className={classes.caption2}>
               Balance:{' '}
@@ -156,8 +160,7 @@ export const TokenInput: React.FC<TokenInputInterface> = ({
                   currency
                     ? classes.maxButton
                     : `${classes.maxButton} ${classes.maxButtonNotActive}`
-                }
-                onClick={onMaxClick}>
+                }>
                 Max
               </Button>
             </Typography>

@@ -12,7 +12,7 @@ interface CalculatorSectionInterface {
   placeholder?: string
   decimalsLimit: number
   percentageChange?: number
-  balanceValue?: string
+  balanceValue?: number
   usdValue?: number
   onMaxClick: () => void
   onClick: () => void
