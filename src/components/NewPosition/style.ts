@@ -59,12 +59,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   settingsIconBtn: {
+    width: 20,
+    height: 20,
     padding: 0,
     margin: 0,
     minWidth: 'auto',
     background: 'none',
-    '& :hover': {
-      background: 'none'
+    '&:hover': {
+      backgroundColor: 'none'
     }
   },
   settingsIcon: {

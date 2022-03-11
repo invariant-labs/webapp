@@ -16,18 +16,16 @@ import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import PoolInit from './PoolInit/PoolInit'
-import useStyles from './style'
 import { BestTier } from '@consts/static'
 import { blurContent, unblurContent } from '@consts/uiUtils'
-import Slippage from '@components/Swap/slippage/Slippage'
-import { PoolWithAddress } from '@reducers/pools'
+import Slippage from '@components/Modals/Slippage/Slippage'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
+import useStyles from './style'
 
 export interface INewPosition {
   tokens: SwapToken[]
   data: PlotTickData[]
-  sortedPools: PoolWithAddress[]
   midPrice: TickPlotPositionData
   setMidPrice: (mid: TickPlotPositionData) => void
   addLiquidityHandler: (
@@ -35,8 +33,7 @@ export interface INewPosition {
     rightTickIndex: number,
     xAmount: number,
     yAmount: number,
-    slippage: Decimal,
-    knownPrice: Decimal
+    slippage: Decimal
   ) => void
   onChangePositionTokens: (
     tokenAIndex: number | null,
@@ -70,7 +67,6 @@ export interface INewPosition {
 export const NewPosition: React.FC<INewPosition> = ({
   tokens,
   data,
-  sortedPools,
   midPrice,
   setMidPrice,
   addLiquidityHandler,
@@ -256,16 +252,20 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Typography className={classes.title}>Add new liquidity position</Typography>
-      <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
-        <img src={settingIcon} className={classes.settingsIcon} />
-      </Button>
+      <Grid container justifyContent='space-between'>
+        <Typography className={classes.title}>Add new liquidity position</Typography>
+        <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
+          <img src={settingIcon} className={classes.settingsIcon} />
+        </Button>
+      </Grid>
+
       <Slippage
         open={settings}
         setSlippage={setSlippage}
         handleClose={handleCloseSettings}
         anchorEl={anchorEl}
         defaultSlippage={'1'}
+        infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
       />
 
       <Grid container className={classes.row} alignItems='stretch'>
@@ -280,7 +280,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             onChangePositionTokens(index1, index2, fee)
           }}
           onAddLiquidity={() => {
-            if (tokenAIndex !== null && tokenBIndex !== null && poolIndex !== null) {
+            if (tokenAIndex !== null && tokenBIndex !== null) {
               addLiquidityHandler(
                 leftRange,
                 rightRange,
@@ -290,8 +290,7 @@ export const NewPosition: React.FC<INewPosition> = ({
                 isXtoY
                   ? +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals
                   : +tokenADeposit * 10 ** tokens[tokenAIndex].decimals,
-                { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
-                sortedPools[poolIndex].sqrtPrice
+                { v: fromFee(new BN(Number(+slippTolerance * 1000))) }
               )
             }
           }}

@@ -4,7 +4,7 @@ import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
 import { swapTokens, status } from '@selectors/solanaWallet'
 import { DECIMAL, FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { calcPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
+import { calcPrice, createPlaceholderLiquidityPlot, printBN, sqrtPriceFromIndex } from '@consts/utils'
 import { isLoadingLatestPoolsForTransaction, poolsArraySortedByFees } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
@@ -247,7 +247,6 @@ export const NewPositionWrapper = () => {
       }}
       feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, DECIMAL - 2))}
       data={data}
-      sortedPools={allPools}
       midPrice={midPrice}
       setMidPrice={setMidPrice}
       addLiquidityHandler={(
@@ -255,8 +254,7 @@ export const NewPositionWrapper = () => {
         rightTickIndex,
         xAmount,
         yAmount,
-        slippage,
-        knownPrice
+        slippage
       ) => {
         if (tokenAIndex === null || tokenBIndex === null) {
           return
@@ -268,7 +266,7 @@ export const NewPositionWrapper = () => {
 
         const lowerTick = Math.min(leftTickIndex, rightTickIndex)
         const upperTick = Math.max(leftTickIndex, rightTickIndex)
-        console.log('INIT POSITION')
+
         dispatch(
           actions.initPosition({
             tokenX: tokens[isXtoY ? tokenAIndex : tokenBIndex].assetAddress,
@@ -282,7 +280,7 @@ export const NewPositionWrapper = () => {
             xAmount,
             yAmount,
             slippage,
-            knownPrice
+            knownPrice: poolIndex === null ? sqrtPriceFromIndex(midPrice.index) : allPools[poolIndex].sqrtPrice
           })
         )
       }}

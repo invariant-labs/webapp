@@ -595,3 +595,11 @@ export const toMaxNumericPlaces = (num: number, places: number): string => {
 
   return num.toFixed(places + Math.abs(log) - 1)
 }
+
+export const sqrtPriceFromIndex = (index: number) => {
+  const sqrt = Math.sqrt(1.0001 ** index)
+
+  return {
+    v: printBNtoBN(sqrt.toFixed(PRICE_DECIMAL), PRICE_DECIMAL)
+  }
+}

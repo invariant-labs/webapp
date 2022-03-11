@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PayloadType } from '@reducers/types'
-import { Position, InitPosition, Tick, Decimal } from '@invariant-labs/sdk/lib/market'
+import { Position, InitPosition, Tick } from '@invariant-labs/sdk/lib/market'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 
