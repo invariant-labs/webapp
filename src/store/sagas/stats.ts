@@ -37,7 +37,7 @@ const get24HValueDiffData = (
   }
 
   const lastSnapshot = snapshots[snapshots.length - 1]
-  const lastTimestamp = lastSnapshot.timestamp
+  const lastTimestamp = lastSnapshot.timestamp.toString()
   const lastPrice = tokenPriceHistory[lastTimestamp]
     ? printBNtoBN(tokenPriceHistory[lastTimestamp].toFixed(DECIMAL), DECIMAL)
     : new BN(0)
@@ -47,7 +47,7 @@ const get24HValueDiffData = (
 
   if (snapshots.length > 1) {
     const secondLastSnapshot = snapshots[snapshots.length - 2]
-    const secondLastTimestamp = secondLastSnapshot.timestamp
+    const secondLastTimestamp = secondLastSnapshot.timestamp.toString()
     const secondLastPrice = tokenPriceHistory[secondLastTimestamp]
       ? printBNtoBN(tokenPriceHistory[secondLastTimestamp].toFixed(DECIMAL), DECIMAL)
       : new BN(0)
@@ -138,17 +138,6 @@ export function* getStats(): Generator {
       {}
     )
 
-    const existingPoolsData: Record<string, PoolSnapshot[]> = Object.entries(data).reduce(
-      (acc, [key, val]) =>
-        typeof poolsDataObject[key] !== 'undefined'
-          ? {
-              ...acc,
-              [key]: val
-            }
-          : acc,
-      {}
-    )
-
     const allTokens = yield* select(tokens)
     const coingeckoTokens: Record<string, Required<Token>> = Object.entries(allTokens).reduce(
       (acc, [key, val]) =>
@@ -182,14 +171,18 @@ export function* getStats(): Generator {
     const tokensDataObject: Record<string, TokenStatsData> = {}
     const poolsData: PoolStatsData[] = []
 
-    const volumePlot: TimeData[] = []
-    const liquidityPlot: TimeData[] = []
+    const volumeForTimestamps: Record<string, number> = {}
+    const liquidityForTimestamps: Record<string, number> = {}
 
     let prevVolume24 = 0
     let prevTvl24 = 0
     let prevFees24 = 0
 
-    Object.entries(existingPoolsData).forEach(([address, snapshots]) => {
+    Object.entries(data).forEach(([address, snapshots]) => {
+      if (!poolsDataObject[address]) {
+        return
+      }
+
       const coingeckoXId =
         coingeckoTokens?.[poolsDataObject[address].tokenX.toString()].coingeckoId ?? ''
       const coingeckoYId =
@@ -286,11 +279,87 @@ export function* getStats(): Generator {
         tokenY: poolsDataObject[address].tokenY,
         fee: +printBN(poolsDataObject[address].fee.v, DECIMAL - 2)
       })
+
+      snapshots.slice(-30).forEach((snapshot, index, lastMonthSnapshots) => {
+        const timestamp = snapshot.timestamp.toString()
+        const xPrice = printBNtoBN(
+          (coingeckoPricesHistory?.[coingeckoXId]?.[timestamp] ?? 0).toFixed(DECIMAL),
+          DECIMAL
+        )
+        const yPrice = printBNtoBN(
+          (coingeckoPricesHistory?.[coingeckoYId]?.[timestamp] ?? 0).toFixed(DECIMAL),
+          DECIMAL
+        )
+
+        if (!volumeForTimestamps[timestamp]) {
+          volumeForTimestamps[timestamp] = 0
+        }
+
+        if (!liquidityForTimestamps[timestamp]) {
+          liquidityForTimestamps[timestamp] = 0
+        }
+
+        let usdVolumeX: number
+        let usdVolumeY: number
+
+        if (index > 0) {
+          const prevSnapshot = lastMonthSnapshots[index - 1]
+
+          usdVolumeX = +printBN(
+            new BN(snapshot.volumeX)
+              .sub(new BN(prevSnapshot.volumeX))
+              .mul(xPrice)
+              .div(new BN(10 ** DECIMAL)),
+            DECIMAL
+          )
+          usdVolumeY = +printBN(
+            new BN(snapshot.volumeY)
+              .sub(new BN(prevSnapshot.volumeY))
+              .mul(yPrice)
+              .div(new BN(10 ** DECIMAL)),
+            DECIMAL
+          )
+        } else {
+          usdVolumeX = +printBN(
+            new BN(snapshot.volumeX).mul(xPrice).div(new BN(10 ** DECIMAL)),
+            DECIMAL
+          )
+          usdVolumeY = +printBN(
+            new BN(snapshot.volumeY).mul(yPrice).div(new BN(10 ** DECIMAL)),
+            DECIMAL
+          )
+        }
+
+        const usdLiquidityX = +printBN(
+          new BN(snapshot.liquidityX).mul(xPrice).div(new BN(10 ** DECIMAL)),
+          DECIMAL
+        )
+        const usdLiquidityY = +printBN(
+          new BN(snapshot.liquidityY).mul(yPrice).div(new BN(10 ** DECIMAL)),
+          DECIMAL
+        )
+
+        volumeForTimestamps[timestamp] += usdVolumeX + usdVolumeY
+        liquidityForTimestamps[timestamp] += usdLiquidityX + usdLiquidityY
+      })
     })
 
     volume24.change = ((volume24.value - prevVolume24) / prevVolume24) * 100
     tvl24.change = ((tvl24.value - prevTvl24) / prevTvl24) * 100
     fees24.change = ((fees24.value - prevFees24) / prevFees24) * 100
+
+    const volumePlot: TimeData[] = Object.entries(volumeForTimestamps).map(
+      ([timestamp, value]) => ({
+        timestamp: +timestamp,
+        value
+      })
+    )
+    const liquidityPlot: TimeData[] = Object.entries(liquidityForTimestamps).map(
+      ([timestamp, value]) => ({
+        timestamp: +timestamp,
+        value
+      })
+    )
 
     yield* put(
       actions.setCurrentStats({
