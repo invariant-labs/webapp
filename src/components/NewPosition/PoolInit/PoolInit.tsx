@@ -7,7 +7,8 @@ import {
   formatNumbers,
   showPrefix,
   minSpacingMultiplicity,
-  maxSpacingMultiplicity
+  maxSpacingMultiplicity,
+  toMaxNumericPlaces
 } from '@consts/utils'
 import SimpleInput from '@components/Inputs/SimpleInput/SimpleInput'
 import useStyles from './style'
@@ -63,12 +64,12 @@ export const PoolInit: React.FC<IPoolInit> = ({
 
   const setLeftInputValues = (val: string) => {
     setLeftInput(val)
-    setLeftInputRounded((+val).toFixed(12))
+    setLeftInputRounded(toMaxNumericPlaces(+val, 5))
   }
 
   const setRightInputValues = (val: string) => {
     setRightInput(val)
-    setRightInputRounded((+val).toFixed(12))
+    setRightInputRounded(toMaxNumericPlaces(+val, 5))
   }
 
   const onLeftInputChange = (val: string) => {

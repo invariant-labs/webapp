@@ -149,14 +149,16 @@ export const NewPosition: React.FC<INewPosition> = ({
     setRightRange(right)
 
     if (tokenAIndex !== null && (isXtoY ? right > midPrice.index : right < midPrice.index)) {
+      const deposit = tokenADeposit
       const amount = getOtherTokenAmount(
-        printBNtoBN(tokenADeposit, tokens[tokenAIndex].decimals),
+        printBNtoBN(deposit, tokens[tokenAIndex].decimals),
         left,
         right,
         true
       )
 
-      if (tokenBIndex !== null && +tokenADeposit !== 0) {
+      if (tokenBIndex !== null && +deposit !== 0) {
+        setTokenADeposit(deposit)
         setTokenBDeposit(amount)
 
         return
@@ -164,14 +166,16 @@ export const NewPosition: React.FC<INewPosition> = ({
     }
 
     if (tokenBIndex !== null && (isXtoY ? left < midPrice.index : left > midPrice.index)) {
+      const deposit = tokenBDeposit
       const amount = getOtherTokenAmount(
-        printBNtoBN(tokenBDeposit, tokens[tokenBIndex].decimals),
+        printBNtoBN(deposit, tokens[tokenBIndex].decimals),
         left,
         right,
         false
       )
 
-      if (tokenAIndex !== null && +tokenBDeposit !== 0) {
+      if (tokenAIndex !== null && +deposit !== 0) {
+        setTokenBDeposit(deposit)
         setTokenADeposit(amount)
       }
     }
@@ -184,14 +188,16 @@ export const NewPosition: React.FC<INewPosition> = ({
     })
 
     if (tokenAIndex !== null && (isXtoY ? rightRange > mid : rightRange < mid)) {
+      const deposit = tokenADeposit
       const amount = getOtherTokenAmount(
-        printBNtoBN(tokenADeposit, tokens[tokenAIndex].decimals),
+        printBNtoBN(deposit, tokens[tokenAIndex].decimals),
         leftRange,
         rightRange,
         true
       )
 
-      if (tokenBIndex !== null && +tokenADeposit !== 0) {
+      if (tokenBIndex !== null && +deposit !== 0) {
+        setTokenADeposit(deposit)
         setTokenBDeposit(amount)
 
         return
@@ -199,14 +205,16 @@ export const NewPosition: React.FC<INewPosition> = ({
     }
 
     if (tokenBIndex !== null && (isXtoY ? leftRange < mid : leftRange > mid)) {
+      const deposit = tokenBDeposit
       const amount = getOtherTokenAmount(
-        printBNtoBN(tokenBDeposit, tokens[tokenBIndex].decimals),
+        printBNtoBN(deposit, tokens[tokenBIndex].decimals),
         leftRange,
         rightRange,
         false
       )
 
-      if (tokenAIndex !== null && +tokenBDeposit !== 0) {
+      if (tokenAIndex !== null && +deposit !== 0) {
+        setTokenBDeposit(deposit)
         setTokenADeposit(amount)
       }
     }
@@ -266,6 +274,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         anchorEl={anchorEl}
         defaultSlippage={'1'}
         infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
+        headerText='Position Transaction Settings'
       />
 
       <Grid container className={classes.row} alignItems='stretch'>
@@ -315,8 +324,8 @@ export const NewPosition: React.FC<INewPosition> = ({
               tokenBIndex !== null &&
               !isWaitingForNewPool &&
               (isXtoY
-                ? rightRange <= midPrice.index && !(leftRange > midPrice.index)
-                : rightRange > midPrice.index && !(leftRange <= midPrice.index)),
+                ? rightRange <= midPrice.index && !(leftRange >= midPrice.index)
+                : rightRange >= midPrice.index && !(leftRange <= midPrice.index)),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimals : 0
           }}
@@ -341,8 +350,8 @@ export const NewPosition: React.FC<INewPosition> = ({
               tokenBIndex !== null &&
               !isWaitingForNewPool &&
               (isXtoY
-                ? leftRange > midPrice.index && !(rightRange <= midPrice.index)
-                : leftRange <= midPrice.index && !(rightRange > midPrice.index)),
+                ? leftRange >= midPrice.index && !(rightRange <= midPrice.index)
+                : leftRange <= midPrice.index && !(rightRange >= midPrice.index)),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimals : 0
           }}
