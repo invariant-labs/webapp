@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { printBN, printBNtoBN, handleSimulate, findPairIndex, findPairs } from '@consts/utils'
+import { printBN, printBNtoBN, handleSimulate, findPairs } from '@consts/utils'
 import { Decimal, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
-import Slippage from '@components/Swap/slippage/Slippage'
+import Slippage from '@components/Modals/Slippage/Slippage'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import TransactionDetails from '@components/Swap/transactionDetails/TransactionDetails'
 import { WRAPPED_SOL_ADDRESS, WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT } from '@consts/static'
@@ -73,6 +73,7 @@ export interface ISwap {
   onSetPair: (tokenFrom: PublicKey, tokenTo: PublicKey) => void
   progress: ProgressState
   poolTicks: { [x: string]: Tick[] }
+  isWaitingForNewPool: boolean
   onWalletSelect: (wallet: WalletType) => void
   onDisconnectWallet: () => void
   initialTokenFromIndex: number | null
@@ -88,6 +89,7 @@ export const Swap: React.FC<ISwap> = ({
   onSetPair,
   progress,
   poolTicks,
+  isWaitingForNewPool,
   onWalletSelect,
   onDisconnectWallet,
   initialTokenFromIndex,
@@ -106,7 +108,6 @@ export const Swap: React.FC<ISwap> = ({
   const [amountFrom, setAmountFrom] = React.useState<string>('')
   const [amountTo, setAmountTo] = React.useState<string>('')
   const [swap, setSwap] = React.useState<boolean | null>(null)
-  const [tokensY, setTokensY] = React.useState<SwapToken[]>(tokens)
   const [rotates, setRotates] = React.useState<number>(0)
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const [throttle, setThrottle] = React.useState<boolean>(false)
@@ -149,16 +150,29 @@ export const Swap: React.FC<ISwap> = ({
     if (inputRef === inputTarget.FROM && !(amountFrom === '' && amountTo === '')) {
       simulateWithTimeout()
     }
-  }, [amountFrom, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
+  }, [
+    amountFrom,
+    tokenToIndex,
+    tokenFromIndex,
+    slippTolerance,
+    Object.keys(poolTicks).length,
+    Object.keys(tickmap).length
+  ])
 
   useEffect(() => {
     if (inputRef === inputTarget.TO && !(amountFrom === '' && amountTo === '')) {
       simulateWithTimeout()
     }
-  }, [amountTo, tokenToIndex, tokenFromIndex, slippTolerance, Object.keys(poolTicks).length])
+  }, [
+    amountTo,
+    tokenToIndex,
+    tokenFromIndex,
+    slippTolerance,
+    Object.keys(poolTicks).length,
+    Object.keys(tickmap).length
+  ])
 
   const simulateWithTimeout = () => {
-    inputRef === inputTarget.FROM ? setAmountTo('') : setAmountFrom('')
     setThrottle(true)
 
     clearTimeout(timeoutRef.current)
@@ -184,13 +198,6 @@ export const Swap: React.FC<ISwap> = ({
 
   useEffect(() => {
     updateEstimatedAmount()
-
-    if (tokenFromIndex !== null) {
-      const tokensY = tokens.filter(token => {
-        return findPairIndex(token.assetAddress, tokens[tokenFromIndex].assetAddress, pools) !== -1
-      })
-      setTokensY(tokensY)
-    }
   }, [tokenToIndex, tokenFromIndex, pools.length])
 
   useEffect(() => {
@@ -276,7 +283,11 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   const getStateMessage = () => {
-    if ((tokenFromIndex !== null && tokenToIndex !== null && throttle) || !pools.length) {
+    if (
+      (tokenFromIndex !== null && tokenToIndex !== null && throttle) ||
+      isWaitingForNewPool ||
+      simulateResult.error === "TypeError: Cannot read properties of undefined (reading 'bitmap')"
+    ) {
       return 'Loading'
     }
     if (walletStatus !== Status.Initialized) {
@@ -300,7 +311,10 @@ export const Swap: React.FC<ISwap> = ({
       return 'Insufficient balance'
     }
 
-    if (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0)) {
+    if (
+      printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0) ||
+      simulateResult.error === 'Error: Amount out is zero'
+    ) {
       return 'Insufficient volume'
     }
     if (simulateResult.error === 'Error: Too large amount') {
@@ -432,11 +446,8 @@ export const Swap: React.FC<ISwap> = ({
               setRotates(rotates + 1)
               swap !== null ? setSwap(!swap) : setSwap(true)
               const tmp = tokenFromIndex
-              const tokensTmp = tokens
               setTokenFromIndex(tokenToIndex)
               setTokenToIndex(tmp)
-              tokens = tokensY
-              setTokensY(tokensTmp)
             }}>
             <Box className={classes.swapImgRoot}>
               <img
@@ -487,7 +498,7 @@ export const Swap: React.FC<ISwap> = ({
                 )
               }
             }}
-            tokens={tokensY}
+            tokens={tokens}
             current={tokenToIndex !== null ? tokens[tokenToIndex] : null}
             onSelect={(name: string) => {
               const token = tokens.findIndex(token => name === token.symbol)

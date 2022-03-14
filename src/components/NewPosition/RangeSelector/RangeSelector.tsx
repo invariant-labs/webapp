@@ -21,7 +21,6 @@ export interface IRangeSelector {
   midPrice: TickPlotPositionData
   tokenASymbol: string
   tokenBSymbol: string
-  fee: number
   onChangeRange: (leftIndex: number, rightIndex: number) => void
   blocked?: boolean
   blockerInfo?: string
@@ -40,7 +39,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   midPrice,
   tokenASymbol,
   tokenBSymbol,
-  fee,
   onChangeRange,
   blocked = false,
   blockerInfo,
@@ -173,12 +171,16 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   useEffect(() => {
-    if (currentPairReversed === null) {
-      resetPlot()
-    } else {
+    if (currentPairReversed !== null) {
       reversePlot()
     }
-  }, [tokenASymbol, tokenBSymbol, fee, currentPairReversed])
+  }, [currentPairReversed])
+
+  useEffect(() => {
+    if (ticksLoading) {
+      resetPlot()
+    }
+  }, [ticksLoading, midPrice])
 
   const autoZoomHandler = (left: number, right: number) => {
     const leftX = calcPrice(left, isXtoY, xDecimal, yDecimal)

@@ -2,7 +2,7 @@ import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
 import { swap } from '@selectors/swap'
-import { pools, tokens } from '@selectors/pools'
+import { poolsArraySortedByFees, tokens } from '@selectors/pools'
 import { accounts } from '@selectors/solanaWallet'
 import { createAccount, getWallet } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
@@ -10,14 +10,12 @@ import { Pair } from '@invariant-labs/sdk'
 import { getConnection } from './connection'
 import { Keypair, sendAndConfirmRawTransaction, SystemProgram, Transaction } from '@solana/web3.js'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { WRAPPED_SOL_ADDRESS, PAIRS } from '@consts/static'
-import { network } from '@selectors/solanaConnection'
+import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 
 export function* handleSwapWithSOL(): Generator {
   try {
     const allTokens = yield* select(tokens)
-    const allPools = yield* select(pools)
-    const networkType = yield* select(network)
+    const allPools = yield* select(poolsArraySortedByFees)
     const {
       slippage,
       tokenFrom,
@@ -75,7 +73,7 @@ export function* handleSwapWithSOL(): Generator {
       allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? new Transaction().add(createIx).add(transferIx).add(initIx)
         : new Transaction().add(createIx).add(initIx)
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const initialBlockhash = yield* call([connection, connection.getLatestBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
@@ -108,7 +106,9 @@ export function* handleSwapWithSOL(): Generator {
       toAddress = yield* call(createAccount, tokenTo)
     }
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
-      pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
+      pair: new Pair(tokenFrom, tokenTo, {
+        fee: allPools[poolIndex].fee.v
+      }),
       xToY: isXtoY,
       amount: byAmountIn ? amountIn : amountOut,
       estimatedPriceAfterSwap,
@@ -118,12 +118,12 @@ export function* handleSwapWithSOL(): Generator {
       byAmountIn: byAmountIn,
       owner: wallet.publicKey
     })
-    const swapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const swapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     swapTx.recentBlockhash = swapBlockhash.blockhash
     swapTx.feePayer = wallet.publicKey
 
     const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const unwrapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
@@ -192,7 +192,7 @@ export function* handleSwapWithSOL(): Generator {
         snackbarsActions.add({
           message:
             'Tokens swapped successfully, but wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
-          variant: 'error',
+          variant: 'warning',
           persist: false,
           txid: unwrapTxid
         })
@@ -226,8 +226,7 @@ export function* handleSwapWithSOL(): Generator {
 export function* handleSwap(): Generator {
   try {
     const allTokens = yield* select(tokens)
-    const allPools = yield* select(pools)
-    const networkType = yield* select(network)
+    const allPools = yield* select(poolsArraySortedByFees)
     const {
       slippage,
       tokenFrom,
@@ -274,7 +273,9 @@ export function* handleSwap(): Generator {
       toAddress = yield* call(createAccount, tokenTo)
     }
     const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
-      pair: new Pair(tokenFrom, tokenTo, PAIRS[networkType][poolIndex].feeTier),
+      pair: new Pair(tokenFrom, tokenTo, {
+        fee: allPools[poolIndex].fee.v
+      }),
       xToY: isXtoY,
       amount: byAmountIn ? amountIn : amountOut,
       estimatedPriceAfterSwap,
@@ -285,7 +286,7 @@ export function* handleSwap(): Generator {
       owner: wallet.publicKey
     })
     const connection = yield* call(getConnection)
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     swapTx.recentBlockhash = blockhash.blockhash
     swapTx.feePayer = wallet.publicKey
 

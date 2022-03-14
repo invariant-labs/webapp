@@ -1,11 +1,6 @@
 import { calculatePriceSqrt, MAX_TICK, MIN_TICK, TICK_LIMIT } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
-import {
-  DECIMAL,
-  DENOMINATOR,
-  parseLiquidityOnTicks,
-  simulateSwap
-} from '@invariant-labs/sdk/src/utils'
+import { DECIMAL, parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
@@ -445,63 +440,6 @@ export const calcPrice = (index: number, isXtoY: boolean, xDecimal: number, yDec
   return isXtoY ? price : price !== 0 ? 1 / price : Number.MAX_SAFE_INTEGER
 }
 
-// TODO: temporarily copied, remove later
-export const getX = (
-  liquidity: BN,
-  upperSqrtPrice: BN,
-  currentSqrtPrice: BN,
-  lowerSqrtPrice: BN
-): BN => {
-  if (
-    upperSqrtPrice.lte(new BN(0)) ||
-    currentSqrtPrice.lte(new BN(0)) ||
-    lowerSqrtPrice.lte(new BN(0))
-  ) {
-    throw new Error('Price cannot be lower or equal 0')
-  }
-
-  let denominator: BN
-  let nominator: BN
-
-  if (currentSqrtPrice.gte(upperSqrtPrice)) {
-    return new BN(0)
-  } else if (currentSqrtPrice.lt(lowerSqrtPrice)) {
-    denominator = lowerSqrtPrice.mul(upperSqrtPrice).div(DENOMINATOR)
-    nominator = upperSqrtPrice.sub(lowerSqrtPrice)
-  } else {
-    denominator = upperSqrtPrice.mul(currentSqrtPrice).div(DENOMINATOR)
-    nominator = upperSqrtPrice.sub(currentSqrtPrice)
-  }
-
-  return liquidity.mul(nominator).div(denominator)
-}
-
-export const getY = (
-  liquidity: BN,
-  upperSqrtPrice: BN,
-  currentSqrtPrice: BN,
-  lowerSqrtPrice: BN
-): BN => {
-  if (
-    lowerSqrtPrice.lte(new BN(0)) ||
-    currentSqrtPrice.lte(new BN(0)) ||
-    upperSqrtPrice.lte(new BN(0))
-  ) {
-    throw new Error('Price cannot be 0')
-  }
-
-  let difference: BN
-  if (currentSqrtPrice.lt(lowerSqrtPrice)) {
-    return new BN(0)
-  } else if (currentSqrtPrice.gte(upperSqrtPrice)) {
-    difference = upperSqrtPrice.sub(lowerSqrtPrice)
-  } else {
-    difference = currentSqrtPrice.sub(lowerSqrtPrice)
-  }
-
-  return liquidity.mul(difference).div(DENOMINATOR)
-}
-
 export const findPoolIndex = (address: PublicKey, pools: PoolWithAddress[]) => {
   return pools.findIndex(pool => pool.address.equals(address))
 }
@@ -574,47 +512,48 @@ export const handleSimulate = async (
       error: errorMessage
     }
   }
-  isXtoY = fromToken.equals(filteredPools[0].tokenX)
 
-  // const tickMap = await marketProgram.getTickmap(
-  //   new Pair(filteredPools[0].tokenX, filteredPools[0].tokenY, { fee: filteredPools[0].fee.v })
-  // )
-  const ticks: Map<number, Tick> = new Map<number, Tick>()
-  for (const tick of poolTicks[filteredPools[0].address.toString()]) {
-    ticks.set(tick.index, tick)
-  }
-  try {
-    const swapSimulateResult = await simulateSwap({
-      xToY: isXtoY,
-      byAmountIn: byAmountIn,
-      swapAmount: amount,
-      priceLimit: {
-        v: isXtoY ? new BN(1) : new BN('340282366920938463463374607431768211455')
-      },
-      slippage: slippage,
-      pool: filteredPools[0],
-      ticks: ticks,
-      tickmap: tickmaps[filteredPools[0].tickmap.toString()]
-    })
+  for (const pool of filteredPools) {
+    isXtoY = fromToken.equals(pool.tokenX)
 
-    if (!byAmountIn) {
-      result = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
-    } else {
-      result = swapSimulateResult.accumulatedAmountOut
-    }
-    if (swapSimulateRouterAmount.lt(result)) {
-      resultWithFee = result.add(swapSimulateResult.accumulatedFee)
-      poolIndex = findPoolIndex(filteredPools[0].address, pools)
-      swapSimulateRouterAmount = result
-      estimatedPrice = swapSimulateResult.priceAfterSwap
+    const ticks: Map<number, Tick> = new Map<number, Tick>()
+    for (const tick of poolTicks[pool.address.toString()]) {
+      ticks.set(tick.index, tick)
     }
 
-    if (swapSimulateResult.amountPerTick.length >= 8) {
-      throw new Error('Too large amount')
+    try {
+      const swapSimulateResult = await simulateSwap({
+        xToY: isXtoY,
+        byAmountIn: byAmountIn,
+        swapAmount: amount,
+        priceLimit: {
+          v: isXtoY ? new BN(1) : new BN('340282366920938463463374607431768211455')
+        },
+        slippage: slippage,
+        pool: pool,
+        ticks: ticks,
+        tickmap: tickmaps[pool.tickmap.toString()]
+      })
+
+      if (swapSimulateResult.amountPerTick.length >= 8) {
+        throw new Error('Too large amount')
+      }
+      console.log(swapSimulateResult.accumulatedAmountOut.toString())
+      if (!byAmountIn) {
+        result = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
+      } else {
+        result = swapSimulateResult.accumulatedAmountOut
+      }
+      if (swapSimulateRouterAmount.lt(result)) {
+        resultWithFee = result.add(swapSimulateResult.accumulatedFee)
+        poolIndex = findPoolIndex(pool.address, pools)
+        swapSimulateRouterAmount = result
+        estimatedPrice = swapSimulateResult.priceAfterSwap
+      }
+    } catch (err: any) {
+      errorMessage = err.toString()
+      console.log(err.toString())
     }
-  } catch (err: any) {
-    errorMessage = err.toString()
-    console.log(err.toString())
   }
   if (swapSimulateRouterAmount.lt(new BN(0))) {
     return {
@@ -625,15 +564,7 @@ export const handleSimulate = async (
       error: errorMessage
     }
   }
-  if (errorMessage.length > 0) {
-    return {
-      amountOut: swapSimulateRouterAmount,
-      poolIndex: poolIndex,
-      AmountOutWithFee: resultWithFee,
-      estimatedPriceAfterSwap: estimatedPrice,
-      error: errorMessage
-    }
-  }
+
   return {
     amountOut: swapSimulateRouterAmount,
     poolIndex: poolIndex,
@@ -663,4 +594,12 @@ export const toMaxNumericPlaces = (num: number, places: number): string => {
   }
 
   return num.toFixed(places + Math.abs(log) - 1)
+}
+
+export const sqrtPriceFromIndex = (index: number) => {
+  const sqrt = Math.sqrt(1.0001 ** index)
+
+  return {
+    v: printBNtoBN(sqrt.toFixed(PRICE_DECIMAL), PRICE_DECIMAL)
+  }
 }

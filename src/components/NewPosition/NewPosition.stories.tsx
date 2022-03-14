@@ -59,12 +59,12 @@ storiesOf('position/newPosition', module)
       style={{ backgroundColor: colors.invariant.componentBcg, padding: 20, width: 'fit-content' }}>
       <NewPosition
         tokens={tokens}
-        tokensB={tokens}
         data={data}
         midPrice={{
           x: calcPrice(140, true, 6, 6),
           index: 140
         }}
+        setMidPrice={() => {}}
         addLiquidityHandler={() => {}}
         onChangePositionTokens={() => {}}
         isCurrentPoolExisting={true}
@@ -80,6 +80,7 @@ storiesOf('position/newPosition', module)
         yDecimal={6}
         tickSpacing={1}
         isXtoY={true}
+        isWaitingForNewPool={false}
         poolIndex={0}
         currentPairReversed={null}
         bestTiers={[]}
@@ -93,12 +94,12 @@ storiesOf('position/newPosition', module)
       style={{ backgroundColor: colors.invariant.componentBcg, padding: 20, width: 'fit-content' }}>
       <NewPosition
         tokens={tokens}
-        tokensB={tokens}
         data={data}
         midPrice={{
           x: calcPrice(140, true, 6, 6),
           index: 140
         }}
+        setMidPrice={() => {}}
         addLiquidityHandler={() => {}}
         onChangePositionTokens={() => {}}
         isCurrentPoolExisting={false}
@@ -114,6 +115,7 @@ storiesOf('position/newPosition', module)
         yDecimal={6}
         tickSpacing={4}
         isXtoY={true}
+        isWaitingForNewPool={false}
         poolIndex={0}
         currentPairReversed={null}
         bestTiers={[]}

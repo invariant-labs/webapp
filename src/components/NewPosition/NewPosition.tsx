@@ -1,32 +1,39 @@
-import { Grid, Typography } from '@material-ui/core'
-import React, { useState } from 'react'
+import { Button, Grid, Typography } from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
 import DepositSelector from './DepositSelector/DepositSelector'
 import RangeSelector from './RangeSelector/RangeSelector'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
-import { printBN, printBNtoBN } from '@consts/utils'
+import { calcPrice, printBN, printBNtoBN } from '@consts/utils'
 import { PublicKey } from '@solana/web3.js'
 import { PlotTickData } from '@reducers/positions'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Link } from 'react-router-dom'
+import settingIcon from '@static/svg/settings.svg'
 import backIcon from '@static/svg/back-arrow.svg'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
-import useStyles from './style'
+import PoolInit from './PoolInit/PoolInit'
 import { BestTier } from '@consts/static'
+import { blurContent, unblurContent } from '@consts/uiUtils'
+import Slippage from '@components/Modals/Slippage/Slippage'
+import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { fromFee } from '@invariant-labs/sdk/lib/utils'
+import useStyles from './style'
 
 export interface INewPosition {
   tokens: SwapToken[]
-  tokensB: SwapToken[]
   data: PlotTickData[]
   midPrice: TickPlotPositionData
+  setMidPrice: (mid: TickPlotPositionData) => void
   addLiquidityHandler: (
     leftTickIndex: number,
     rightTickIndex: number,
     xAmount: number,
-    yAmount: number
+    yAmount: number,
+    slippage: Decimal
   ) => void
   onChangePositionTokens: (
     tokenAIndex: number | null,
@@ -49,6 +56,7 @@ export interface INewPosition {
   xDecimal: number
   yDecimal: number
   tickSpacing: number
+  isWaitingForNewPool: boolean
   poolIndex: number | null
   currentPairReversed: boolean | null
   bestTiers: BestTier[]
@@ -58,9 +66,9 @@ export interface INewPosition {
 
 export const NewPosition: React.FC<INewPosition> = ({
   tokens,
-  tokensB,
   data,
   midPrice,
+  setMidPrice,
   addLiquidityHandler,
   onChangePositionTokens,
   isCurrentPoolExisting,
@@ -74,6 +82,7 @@ export const NewPosition: React.FC<INewPosition> = ({
   xDecimal,
   yDecimal,
   tickSpacing,
+  isWaitingForNewPool,
   poolIndex,
   currentPairReversed,
   bestTiers,
@@ -92,13 +101,20 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [tokenADeposit, setTokenADeposit] = useState<string>('')
   const [tokenBDeposit, setTokenBDeposit] = useState<string>('')
 
+  const [settings, setSettings] = React.useState<boolean>(false)
+  const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
     }
 
-    if (!isCurrentPoolExisting) {
-      return 'Pool does not exist'
+    if (tokenAIndex === tokenBIndex) {
+      return "Token A can't be the same as token B"
+    }
+
+    if (isWaitingForNewPool) {
+      return 'Loading pool info...'
     }
 
     return ''
@@ -125,9 +141,84 @@ export const NewPosition: React.FC<INewPosition> = ({
 
     const result = calcAmount(amount, left, right, tokens[calcIndex].assetAddress)
 
-    return printBN(result, tokens[printIndex].decimals)
+    return (+printBN(result, tokens[printIndex].decimals)).toString()
   }
 
+  const onChangeRange = (left: number, right: number) => {
+    setLeftRange(left)
+    setRightRange(right)
+
+    if (tokenAIndex !== null && (isXtoY ? right > midPrice.index : right < midPrice.index)) {
+      const deposit = tokenADeposit
+      const amount = getOtherTokenAmount(
+        printBNtoBN(deposit, tokens[tokenAIndex].decimals),
+        left,
+        right,
+        true
+      )
+
+      if (tokenBIndex !== null && +deposit !== 0) {
+        setTokenADeposit(deposit)
+        setTokenBDeposit(amount)
+
+        return
+      }
+    }
+
+    if (tokenBIndex !== null && (isXtoY ? left < midPrice.index : left > midPrice.index)) {
+      const deposit = tokenBDeposit
+      const amount = getOtherTokenAmount(
+        printBNtoBN(deposit, tokens[tokenBIndex].decimals),
+        left,
+        right,
+        false
+      )
+
+      if (tokenAIndex !== null && +deposit !== 0) {
+        setTokenBDeposit(deposit)
+        setTokenADeposit(amount)
+      }
+    }
+  }
+
+  const onChangeMidPrice = (mid: number) => {
+    setMidPrice({
+      index: mid,
+      x: calcPrice(mid, isXtoY, xDecimal, yDecimal)
+    })
+
+    if (tokenAIndex !== null && (isXtoY ? rightRange > mid : rightRange < mid)) {
+      const deposit = tokenADeposit
+      const amount = getOtherTokenAmount(
+        printBNtoBN(deposit, tokens[tokenAIndex].decimals),
+        leftRange,
+        rightRange,
+        true
+      )
+
+      if (tokenBIndex !== null && +deposit !== 0) {
+        setTokenADeposit(deposit)
+        setTokenBDeposit(amount)
+
+        return
+      }
+    }
+
+    if (tokenBIndex !== null && (isXtoY ? leftRange < mid : leftRange > mid)) {
+      const deposit = tokenBDeposit
+      const amount = getOtherTokenAmount(
+        printBNtoBN(deposit, tokens[tokenBIndex].decimals),
+        leftRange,
+        rightRange,
+        false
+      )
+
+      if (tokenAIndex !== null && +deposit !== 0) {
+        setTokenBDeposit(deposit)
+        setTokenADeposit(amount)
+      }
+    }
+  }
   const bestTierIndex =
     tokenAIndex === null || tokenBIndex === null
       ? undefined
@@ -139,6 +230,27 @@ export const NewPosition: React.FC<INewPosition> = ({
               tier.tokenY.equals(tokens[tokenAIndex].assetAddress))
         )?.bestTierIndex ?? undefined
 
+  useEffect(() => {
+    if (!ticksLoading) {
+      onChangeRange(leftRange, rightRange)
+    }
+  }, [midPrice.index])
+
+  const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+    blurContent()
+    setSettings(true)
+  }
+
+  const handleCloseSettings = () => {
+    unblurContent()
+    setSettings(false)
+  }
+
+  const setSlippage = (slippage: string): void => {
+    setSlippTolerance(slippage)
+  }
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Link to='/pool' style={{ textDecoration: 'none' }}>
@@ -148,14 +260,28 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Typography className={classes.title}>Add new liquidity position</Typography>
+      <Grid container justifyContent='space-between'>
+        <Typography className={classes.title}>Add new liquidity position</Typography>
+        <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
+          <img src={settingIcon} className={classes.settingsIcon} />
+        </Button>
+      </Grid>
+
+      <Slippage
+        open={settings}
+        setSlippage={setSlippage}
+        handleClose={handleCloseSettings}
+        anchorEl={anchorEl}
+        defaultSlippage={'1'}
+        infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
+        headerText='Position Transaction Settings'
+      />
 
       <Grid container className={classes.row} alignItems='stretch'>
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
           className={classes.deposit}
           tokens={tokens}
-          tokensB={tokensB}
           setPositionTokens={(index1, index2, fee) => {
             setTokenAIndex(index1)
             setTokenBIndex(index2)
@@ -172,7 +298,8 @@ export const NewPosition: React.FC<INewPosition> = ({
                   : +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals,
                 isXtoY
                   ? +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals
-                  : +tokenADeposit * 10 ** tokens[tokenAIndex].decimals
+                  : +tokenADeposit * 10 ** tokens[tokenAIndex].decimals,
+                { v: fromFee(new BN(Number(+slippTolerance * 1000))) }
               )
             }
           }}
@@ -195,13 +322,11 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
-              (!isCurrentPoolExisting ||
-                (isXtoY
-                  ? rightRange <= midPrice.index && !(leftRange > midPrice.index)
-                  : rightRange > midPrice.index && !(leftRange <= midPrice.index))),
-            blockerInfo: isCurrentPoolExisting
-              ? 'Range only for single-asset deposit.'
-              : 'Select existing pool to deposit',
+              !isWaitingForNewPool &&
+              (isXtoY
+                ? rightRange <= midPrice.index && !(leftRange >= midPrice.index)
+                : rightRange >= midPrice.index && !(leftRange <= midPrice.index)),
+            blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimals : 0
           }}
           tokenBInputState={{
@@ -223,17 +348,14 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked:
               tokenAIndex !== null &&
               tokenBIndex !== null &&
-              (!isCurrentPoolExisting ||
-                (isXtoY
-                  ? leftRange > midPrice.index && !(rightRange <= midPrice.index)
-                  : leftRange <= midPrice.index && !(rightRange > midPrice.index))),
-            blockerInfo: isCurrentPoolExisting
-              ? 'Range only for single-asset deposit.'
-              : 'Select existing pool to deposit',
+              !isWaitingForNewPool &&
+              (isXtoY
+                ? leftRange >= midPrice.index && !(rightRange <= midPrice.index)
+                : leftRange <= midPrice.index && !(rightRange >= midPrice.index)),
+            blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimals : 0
           }}
           feeTiers={feeTiers}
-          isCurrentPoolExisting={isCurrentPoolExisting}
           progress={progress}
           onReverseTokens={() => {
             if (tokenAIndex === null || tokenBIndex === null) {
@@ -243,81 +365,62 @@ export const NewPosition: React.FC<INewPosition> = ({
             const pom = tokenAIndex
             setTokenAIndex(tokenBIndex)
             setTokenBIndex(pom)
-            setFee(fee)
             onChangePositionTokens(tokenBIndex, tokenAIndex, fee)
           }}
           poolIndex={poolIndex}
           bestTierIndex={bestTierIndex}
         />
 
-        <RangeSelector
-          onChangeRange={(left, right) => {
-            setLeftRange(left)
-            setRightRange(right)
-
-            if (
-              tokenAIndex !== null &&
-              (isXtoY ? right > midPrice.index : right < midPrice.index)
-            ) {
-              const deposit = tokenADeposit
-              const amount = getOtherTokenAmount(
-                printBNtoBN(deposit, tokens[tokenAIndex].decimals),
-                left,
-                right,
-                true
-              )
-
-              if (tokenBIndex !== null && +deposit !== 0) {
-                setTokenADeposit(deposit)
-                setTokenBDeposit(amount)
-
-                return
-              }
+        {isCurrentPoolExisting ||
+        tokenAIndex === null ||
+        tokenBIndex === null ||
+        tokenAIndex === tokenBIndex ||
+        isWaitingForNewPool ? (
+          <RangeSelector
+            onChangeRange={onChangeRange}
+            blocked={
+              tokenAIndex === null ||
+              tokenBIndex === null ||
+              tokenAIndex === tokenBIndex ||
+              data.length === 0 ||
+              isWaitingForNewPool
             }
-
-            if (tokenBIndex !== null && (isXtoY ? left < midPrice.index : left > midPrice.index)) {
-              const deposit = tokenBDeposit
-              const amount = getOtherTokenAmount(
-                printBNtoBN(tokenBDeposit, tokens[tokenBIndex].decimals),
-                left,
-                right,
-                false
-              )
-
-              if (tokenAIndex !== null && +deposit !== 0) {
-                setTokenADeposit(amount)
-                setTokenBDeposit(deposit)
-              }
-            }
-          }}
-          blocked={
-            tokenAIndex === null ||
+            blockerInfo={setRangeBlockerInfo()}
+            {...(tokenAIndex === null ||
             tokenBIndex === null ||
             !isCurrentPoolExisting ||
-            data.length === 0
-          }
-          blockerInfo={setRangeBlockerInfo()}
-          {...(tokenAIndex === null ||
-          tokenBIndex === null ||
-          !isCurrentPoolExisting ||
-          data.length === 0
-            ? noRangePlaceholderProps
-            : {
-                data,
-                midPrice,
-                tokenASymbol: tokens[tokenAIndex].symbol,
-                tokenBSymbol: tokens[tokenBIndex].symbol
-              })}
-          ticksLoading={ticksLoading}
-          isXtoY={isXtoY}
-          tickSpacing={tickSpacing}
-          xDecimal={xDecimal}
-          yDecimal={yDecimal}
-          fee={fee}
-          currentPairReversed={currentPairReversed}
-          initialIsDiscreteValue={initialIsDiscreteValue}
-          onDiscreteChange={onDiscreteChange}
-        />
+            data.length === 0 ||
+            isWaitingForNewPool
+              ? noRangePlaceholderProps
+              : {
+                  data,
+                  midPrice,
+                  tokenASymbol: tokens[tokenAIndex].symbol,
+                  tokenBSymbol: tokens[tokenBIndex].symbol
+                })}
+            ticksLoading={ticksLoading}
+            isXtoY={isXtoY}
+            tickSpacing={tickSpacing}
+            xDecimal={xDecimal}
+            yDecimal={yDecimal}
+            currentPairReversed={currentPairReversed}
+            initialIsDiscreteValue={initialIsDiscreteValue}
+            onDiscreteChange={onDiscreteChange}
+          />
+        ) : (
+          <PoolInit
+            onChangeRange={onChangeRange}
+            isXtoY={isXtoY}
+            tickSpacing={tickSpacing}
+            xDecimal={xDecimal}
+            yDecimal={yDecimal}
+            tokenASymbol={tokenAIndex !== null ? tokens[tokenAIndex].symbol : 'ABC'}
+            tokenBSymbol={tokenBIndex !== null ? tokens[tokenBIndex].symbol : 'XYZ'}
+            midPrice={midPrice.index}
+            onChangeMidPrice={onChangeMidPrice}
+            currentPairReversed={currentPairReversed}
+          />
+        )}
       </Grid>
     </Grid>
   )
