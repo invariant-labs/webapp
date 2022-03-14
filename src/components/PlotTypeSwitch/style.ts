@@ -1,6 +1,15 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { colors } from '@static/theme'
 
+export const useStyles = makeStyles(() => ({
+  continuous: {
+    width: 29
+  },
+  discrete: {
+    width: 22
+  }
+}))
+
 export const useTabsStyles = makeStyles(() => ({
   root: {
     overflow: 'visible',
@@ -20,12 +29,6 @@ export const useTabsStyles = makeStyles(() => ({
   },
   flexContainer: {
     justifyContent: 'space-between'
-  },
-  continuous: {
-    width: 29
-  },
-  discrete: {
-    width: 22
   }
 }))
 

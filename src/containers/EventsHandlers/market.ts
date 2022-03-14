@@ -4,11 +4,10 @@ import { network, status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
 import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
-import { pools, poolTicks, tickMaps } from '@selectors/pools'
-import { PAIRS } from '@consts/static'
+import { poolsArraySortedByFees, poolTicks, tickMaps } from '@selectors/pools'
 import { getNetworkTokensList, findPairs } from '@consts/utils'
 import { swap } from '@selectors/swap'
-import { Pair } from '@invariant-labs/sdk'
+import { findTickmapChanges, Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
 
 const MarketEvents = () => {
@@ -18,7 +17,8 @@ const MarketEvents = () => {
   const networkStatus = useSelector(status)
   const tickmaps = useSelector(tickMaps)
   const networkType = useSelector(network)
-  const allPools = useSelector(pools)
+  const allPools = useSelector(poolsArraySortedByFees)
+
   const poolTicksArray = useSelector(poolTicks)
   const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
   const [subscribedTickmap, _setSubscribedTickmap] = useState<Set<string>>(new Set())
@@ -28,7 +28,6 @@ const MarketEvents = () => {
     }
     const connectEvents = () => {
       dispatch(actions.setTokens(getNetworkTokensList(networkType)))
-      dispatch(actions.getPoolsData(PAIRS[networkType]))
     }
 
     connectEvents()
@@ -40,12 +39,12 @@ const MarketEvents = () => {
     }
 
     const connectEvents = () => {
-      allPools.forEach((pool, index) => {
+      allPools.forEach(pool => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         marketProgram.onPoolChange(pool.tokenX, pool.tokenY, { fee: pool.fee.v }, poolStructure => {
           dispatch(
             actions.updatePool({
-              index,
+              address: pool.address,
               poolStructure
             })
           )
@@ -57,11 +56,7 @@ const MarketEvents = () => {
   }, [dispatch, allPools.length, networkStatus, marketProgram])
 
   useEffect(() => {
-    if (
-      networkStatus !== Status.Initialized ||
-      !marketProgram ||
-      Object.values(allPools).length === 0
-    ) {
+    if (networkStatus !== Status.Initialized || !marketProgram || allPools.length === 0) {
       return
     }
     const connectEvents = async () => {
@@ -123,17 +118,45 @@ const MarketEvents = () => {
           if (typeof pool === 'undefined') {
             return
           }
-          marketProgram
-            .onTickmapChange(new PublicKey(address), tickmap => {
-              dispatch(
-                actions.updateTickmap({
-                  address: address,
-                  bitmap: tickmap.bitmap
-                })
-              )
-            })
-            .then(() => {})
-            .catch(() => {})
+          // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
+          marketProgram.onTickmapChange(new PublicKey(address), tickmap => {
+            const changes = findTickmapChanges(
+              tickmaps[address].bitmap,
+              tickmap.bitmap,
+              pool.tickSpacing
+            )
+            console.log(changes)
+            for (const [index, info] of Object.entries(changes)) {
+              if (info === 'added') {
+                try {
+                  console.log('sub')
+                  // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
+                  marketProgram.onTickChange(
+                    new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
+                    +index,
+                    tickObject => {
+                      console.log('subscribe new tick!', index)
+                      dispatch(
+                        actions.updateTicks({
+                          address: pool.address.toString(),
+                          index: +index,
+                          tick: tickObject
+                        })
+                      )
+                    }
+                  )
+                } catch (err) {
+                  console.log(err)
+                }
+              }
+            }
+            dispatch(
+              actions.updateTickmap({
+                address: address,
+                bitmap: tickmap.bitmap
+              })
+            )
+          })
         })
       }
     }
@@ -144,30 +167,22 @@ const MarketEvents = () => {
   useEffect(() => {
     if (tokenFrom && tokenTo) {
       const pools = findPairs(tokenFrom, tokenTo, allPools)
-
-      if (pools.length !== 0) {
-        // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
+      for (const pool of pools) {
         marketProgram
-          .getTickmap(new Pair(pools[0].tokenX, pools[0].tokenY, { fee: pools[0].fee.v }))
+          .getTickmap(new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }))
           .then(res => {
-            dispatch(
-              actions.setTickMaps({ index: pools[0].tickmap.toString(), tickMapStructure: res })
-            )
+            dispatch(actions.setTickMaps({ index: pool.tickmap.toString(), tickMapStructure: res }))
           })
-        // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
+          .catch(err => {
+            console.log(err)
+          })
         marketProgram
-          .getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pools[0].fee.v }))
+          .getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v }))
           .then(res => {
-            dispatch(actions.setTicks({ index: pools[0].address.toString(), tickStructure: res }))
+            dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
           })
+          .catch(err => console.log(err))
       }
-
-      // pools.forEach(pool => {
-      //   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      //   marketProgram.getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v })).then(res => {
-      //     dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
-      //   })
-      // }) code for set ticks for all fee tiers
     }
   }, [tokenFrom, tokenTo])
 

@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
 import { toBlur } from '@consts/uiUtils'
-import Slippage from '@components/Swap/slippage/Slippage'
+import Slippage from '@components/Modals/Slippage/Slippage'
 import React from 'react'
 
 storiesOf('newUi/swap', module)
