@@ -266,6 +266,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         anchorEl={anchorEl}
         defaultSlippage={'1'}
         infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
+        headerText='Position Transaction Settings'
       />
 
       <Grid container className={classes.row} alignItems='stretch'>
