@@ -42,6 +42,9 @@ export const NewPositionWrapper = () => {
 
   const [progress, setProgress] = useState<ProgressState>('none')
 
+  const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
+  const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
+
   useEffect(() => {
     setProgress('none')
   }, [poolIndex])
@@ -49,6 +52,16 @@ export const NewPositionWrapper = () => {
   useEffect(() => {
     if (!inProgress && progress === 'progress') {
       setProgress(success ? 'approvedWithSuccess' : 'approvedWithFail')
+
+      if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
+        dispatch(
+          actions.getCurrentPlotTicks({
+            poolIndex,
+            isXtoY: allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
+            disableLoading: true
+          })
+        )
+      }
 
       setTimeout(() => {
         setProgress(success ? 'success' : 'failed')
@@ -59,9 +72,6 @@ export const NewPositionWrapper = () => {
       }, 3000)
     }
   }, [success, inProgress])
-
-  const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
-  const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
 
   const isXtoY = useMemo(() => {
     if (tokenAIndex !== null && tokenBIndex !== null) {
