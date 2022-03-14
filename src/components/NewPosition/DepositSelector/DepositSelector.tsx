@@ -311,7 +311,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       </Grid>
 
       <AnimatedButton
-        className={classes.addButton}
+        className={classNames(
+          classes.addButton,
+          progress === 'none' ? classes.hoverButton : undefined
+        )}
         onClick={() => {
           if (progress === 'none') {
             onAddLiquidity()
