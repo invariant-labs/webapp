@@ -9,9 +9,9 @@ interface PoolListInterface {
     symbolTo: string
     iconFrom: string
     iconTo: string
-    volume: string
-    TVL: string
-    fee: string
+    volume: number
+    TVL: number
+    fee: number
   }>
 }
 

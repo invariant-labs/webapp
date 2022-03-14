@@ -4,9 +4,9 @@ import useStyle from './style'
 import { colors, theme } from '@static/theme'
 import { formatNumbers, showPrefix } from '@consts/utils'
 interface IProps {
-  TVL?: string
-  volume?: string
-  fee?: string
+  TVL?: number
+  volume?: number
+  fee?: number
   displayType: string
   symbolFrom?: string
   symbolTo?: string
@@ -16,9 +16,9 @@ interface IProps {
 }
 
 const PoolListItem: React.FC<IProps> = ({
-  fee = '0',
-  volume = '0',
-  TVL = '0',
+  fee = 0,
+  volume = 0,
+  TVL = 0,
   displayType,
   symbolFrom,
   symbolTo,
@@ -55,17 +55,11 @@ const PoolListItem: React.FC<IProps> = ({
           <Typography>{fee}%</Typography>
           <Typography>
             {isXDown
-              ? `~$${formatNumbers()(volume.replace(/[,.]/g, ''))} ${showPrefix(
-                  Number(volume.split(',').join(''))
-                )}`
+              ? `~$${formatNumbers()(volume.toString())} ${showPrefix(volume)}`
               : `$${volume}`}
           </Typography>
           <Typography>
-            {isXDown
-              ? `~$${formatNumbers()(TVL.replace(/[,.]/g, ''))} ${showPrefix(
-                  Number(TVL.split(',').join(''))
-                )}`
-              : `$${TVL}`}
+            {isXDown ? `~$${formatNumbers()(TVL.toString())} ${showPrefix(TVL)}` : `$${TVL}`}
           </Typography>
         </Grid>
       ) : (

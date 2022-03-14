@@ -1,4 +1,3 @@
-import { BN } from '@project-serum/anchor'
 import TokenListItem from '../TokenListItem/TokenListItem'
 import React, { useState } from 'react'
 import { PaginationList } from '@components/Pagination/Pagination'
@@ -9,11 +8,10 @@ export interface ITokensListData {
   icon: string
   name: string
   symbol: string
-  price: BN
-  decimals: number
-  priceChange: string
-  volume: string
-  TVL: string
+  price: number
+  priceChange: number
+  volume: number
+  TVL: number
 }
 
 export interface ITokensList {
@@ -52,7 +50,6 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
             name={token.name}
             symbol={token.symbol}
             price={token.price}
-            decimals={token.decimals}
             priceChange={token.priceChange}
             volume={token.volume}
             TVL={token.TVL}

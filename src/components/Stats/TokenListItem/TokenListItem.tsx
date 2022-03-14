@@ -1,7 +1,6 @@
 import React from 'react'
-import { formatNumbers, printBN, showPrefix } from '@consts/utils'
+import { formatNumbers, showPrefix } from '@consts/utils'
 import { Grid, Typography, useMediaQuery } from '@material-ui/core'
-import { BN } from '@project-serum/anchor'
 import { colors, theme } from '@static/theme'
 import { useStyles } from './style'
 interface IProps {
@@ -10,11 +9,10 @@ interface IProps {
   icon?: string
   name?: string
   symbol?: string
-  price?: BN
-  decimals?: number
-  priceChange?: string
-  volume?: string
-  TVL?: string
+  price?: number
+  priceChange?: number
+  volume?: number
+  TVL?: number
 }
 
 const TokenListItem: React.FC<IProps> = ({
@@ -23,14 +21,13 @@ const TokenListItem: React.FC<IProps> = ({
   icon = 'BTCIcon',
   name = 'Bitcoin',
   symbol = 'BTCIcon',
-  price = new BN(0),
-  decimals = 0,
-  priceChange = '0',
-  volume = '0',
-  TVL = '0'
+  price = 0,
+  priceChange = 0,
+  volume = 0,
+  TVL = 0
 }) => {
   const classes = useStyles()
-  const isNegative = Number(priceChange) < 0
+  const isNegative = priceChange < 0
 
   const isXDown = useMediaQuery(theme.breakpoints.down('sm'))
   const hideName = useMediaQuery(theme.breakpoints.down('xs'))
@@ -50,25 +47,25 @@ const TokenListItem: React.FC<IProps> = ({
               {!hideName && <span className={classes.tokenSymbol}>{` (${symbol})`}</span>}
             </Typography>
           </Grid>
-          <Typography>${Number(printBN(price, decimals)).toFixed(2)}</Typography>
+          <Typography>${price.toFixed(2)}</Typography>
           {!hideName && (
             <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
-              {isNegative ? `-${Math.abs(Number(priceChange))}%` : `+${priceChange}%`}
+              {isNegative ? `${priceChange}%` : `+${priceChange}%`}
             </Typography>
           )}
           {!hideName && (
             <Typography>
               {isXDown
-                ? `~$${Number(formatNumbers()(volume.split(',').join(''))).toFixed(1)} ${showPrefix(
-                    Number(volume.split(',').join(''))
+                ? `~$${Number(formatNumbers()(volume.toString())).toFixed(1)} ${showPrefix(
+                    volume
                   )}`
                 : `$${volume}`}
             </Typography>
           )}
           <Typography>
             {isXDown
-              ? `~$${Number(formatNumbers()(TVL.split(',').join(''))).toFixed(1)} ${showPrefix(
-                  Number(TVL.split(',').join(''))
+              ? `~$${Number(formatNumbers()(TVL.toString())).toFixed(1)} ${showPrefix(
+                  TVL
                 )}`
               : `$${TVL}`}
           </Typography>
