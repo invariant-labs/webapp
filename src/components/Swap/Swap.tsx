@@ -172,6 +172,12 @@ export const Swap: React.FC<ISwap> = ({
     Object.keys(tickmap).length
   ])
 
+  useEffect(() => {
+    if (progress === 'none' && !(amountFrom === '' && amountTo === '')) {
+      simulateWithTimeout()
+    }
+  }, [progress])
+
   const simulateWithTimeout = () => {
     setThrottle(true)
 
