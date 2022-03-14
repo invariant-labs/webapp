@@ -7,22 +7,38 @@ import VolumeBar from '@components/Stats/volumeBar/volumeBar'
 import TokensList from '@components/Stats/TokensList/TokensList'
 import PoolList from '@components/Stats/PoolList/PoolList'
 import { useSelector } from 'react-redux'
-import { poolsStatsWithTokensDetails, tokensStatsWithTokensDetails } from '@selectors/stats'
+import { fees24, poolsStatsWithTokensDetails, tokensStatsWithTokensDetails, tvl24, volume24 } from '@selectors/stats'
 
 export const WrappedStats: React.FC = () => {
   const classes = useStyles()
 
   const poolsList = useSelector(poolsStatsWithTokensDetails)
   const tokensList = useSelector(tokensStatsWithTokensDetails)
+  const volume24h = useSelector(volume24)
+  const tvl24h = useSelector(tvl24)
+  const fees24h = useSelector(fees24)
 
   return (
     <Grid container className={classes.wrapper}>
       <Typography className={classes.subheader}>Overview</Typography>
       <Grid>
-        <Volume />
-        <Liquidity />
+        <Volume
+          volume={volume24h.value}
+          percentVolume={volume24h.change}
+        />
+        <Liquidity
+          liquidityVolume={tvl24h.value}
+          liquidityPercent={tvl24h.change}
+        />
       </Grid>
-      <VolumeBar />
+      <VolumeBar
+        volume={volume24h.value}
+        percentVolume={volume24h.change}
+        tvlVolume={tvl24h.value}
+        percentTvl={tvl24h.change}
+        feesVolume={fees24h.value}
+        percentFees={fees24h.change}
+      />
       <Typography className={classes.subheader}>Top tokens</Typography>
       <TokensList
         data={tokensList.map(

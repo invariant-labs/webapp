@@ -6,12 +6,12 @@ import { formatNumbers, showPrefix } from '@consts/utils'
 import { theme } from '@static/theme'
 
 interface Iprops {
-  percentVolume: string
-  volume: string
-  tvlVolume: string
-  percentTvl: string
-  feesVolume: string
-  percentFees: string
+  percentVolume: number
+  volume: number
+  tvlVolume: number
+  percentTvl: number
+  feesVolume: number
+  percentFees: number
 }
 
 const VolumeBar: React.FC<Iprops> = ({
@@ -31,48 +31,48 @@ const VolumeBar: React.FC<Iprops> = ({
       <Box className={classes.tokenName}>
         <Typography className={classes.tokenHeader}>Volume24H:</Typography>
         <Typography className={classes.tokenContent}>
-          {formatNumbers()(volume)}
-          {showPrefix(Number(volume))}
+          {formatNumbers()(volume.toString())}
+          {showPrefix(volume)}
         </Typography>
         {!isXDown && (
           <Typography
             className={classNames(
               classes.tokenContent,
-              Number(percentVolume) < 0 ? classes.tokenLow : classes.tokenUp
+              percentVolume < 0 ? classes.tokenLow : classes.tokenUp
             )}>
-            {Number(percentVolume) < 0 ? `(${percentVolume}%)` : `(+${percentVolume}%)`}
+            {percentVolume < 0 ? `(${percentVolume}%)` : `(+${percentVolume}%)`}
           </Typography>
         )}
       </Box>
       <Box className={classes.tokenName}>
         <Typography className={classes.tokenHeader}>TVL 24H:</Typography>
         <Typography className={classes.tokenContent}>
-          {formatNumbers()(tvlVolume)}
-          {showPrefix(Number(tvlVolume))}
+          {formatNumbers()(tvlVolume.toString())}
+          {showPrefix(tvlVolume)}
         </Typography>
         {!isXDown && (
           <Typography
             className={classNames(
               classes.tokenContent,
-              Number(percentTvl) < 0 ? classes.tokenLow : classes.tokenUp
+              percentTvl < 0 ? classes.tokenLow : classes.tokenUp
             )}>
-            {Number(percentTvl) < 0 ? `(${percentTvl}%)` : `(+${percentTvl}%)`}
+            {percentTvl < 0 ? `(${percentTvl}%)` : `(+${percentTvl}%)`}
           </Typography>
         )}
       </Box>
       <Box className={classes.tokenName}>
         <Typography className={classes.tokenHeader}>Fees 24H:</Typography>
         <Typography className={classes.tokenContent}>
-          {formatNumbers()(feesVolume)}
-          {showPrefix(Number(feesVolume))}
+          {formatNumbers()(feesVolume.toString())}
+          {showPrefix(feesVolume)}
         </Typography>
         {!isXDown && (
           <Typography
             className={classNames(
               classes.tokenContent,
-              Number(percentFees) < 0 ? classes.tokenLow : classes.tokenUp
+              percentFees < 0 ? classes.tokenLow : classes.tokenUp
             )}>
-            {Number(percentFees) < 0 ? `(${percentFees}%)` : `(+${percentFees}%)`}
+            {percentFees < 0 ? `(${percentFees}%)` : `(+${percentFees}%)`}
           </Typography>
         )}
       </Box>
