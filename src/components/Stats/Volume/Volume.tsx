@@ -5,20 +5,18 @@ import { ResponsiveBar } from '@nivo/bar'
 import classNames from 'classnames'
 import { useStyles } from './style'
 import { colors, theme } from '@static/theme'
+import { TimeData } from '@reducers/stats'
 
 interface StatsInterface {
   percentVolume: number
   volume: number
-  data: Array<{
-    timeStamp: number
-    value: number
-  }>
+  data: TimeData[]
 }
 
 const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
   const classes = useStyles()
 
-  const isXdown = useMediaQuery(theme.breakpoints.down('xs'))
+  const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
 
   const cutArray = (arr: Array<{ timeStamp: string; value: number[] }>, size: number) => {
     const arrData = arr.slice(0)
@@ -37,7 +35,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
   }
 
   const converToUnix = data.map(el => {
-    const unix = el.timeStamp
+    const unix = el.timestamp
     const date = new Date(unix)
     const hours = date.getHours()
 
@@ -108,8 +106,8 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
                   isLower ? classes.volumeLow : classes.volumeUp
                 )}>
                 {percentVolume < 0
-                  ? `-${percentVolume.toString().split('-')[1]}`
-                  : `+ ${percentVolume}`}
+                  ? percentVolume
+                  : `+${percentVolume}`}
                 %
               </Typography>
             </Box>
@@ -128,7 +126,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
           groupMode='grouped'
           enableLabel={false}
           enableGridY={false}
-          innerPadding={isXdown ? 1 : 2}
+          innerPadding={isXsDown ? 1 : 2}
           isInteractive={false}
           padding={0.03}
           indexScale={{ type: 'band', round: true }}

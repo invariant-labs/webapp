@@ -7,7 +7,7 @@ import VolumeBar from '@components/Stats/volumeBar/volumeBar'
 import TokensList from '@components/Stats/TokensList/TokensList'
 import PoolList from '@components/Stats/PoolList/PoolList'
 import { useSelector } from 'react-redux'
-import { fees24, poolsStatsWithTokensDetails, tokensStatsWithTokensDetails, tvl24, volume24 } from '@selectors/stats'
+import { fees24, liquidityPlot, poolsStatsWithTokensDetails, tokensStatsWithTokensDetails, tvl24, volume24, volumePlot } from '@selectors/stats'
 
 export const WrappedStats: React.FC = () => {
   const classes = useStyles()
@@ -17,6 +17,8 @@ export const WrappedStats: React.FC = () => {
   const volume24h = useSelector(volume24)
   const tvl24h = useSelector(tvl24)
   const fees24h = useSelector(fees24)
+  const volumePlotData = useSelector(volumePlot)
+  const liquidityPlotData = useSelector(liquidityPlot)
 
   return (
     <Grid container className={classes.wrapper}>
@@ -25,6 +27,7 @@ export const WrappedStats: React.FC = () => {
         <Volume
           volume={volume24h.value}
           percentVolume={volume24h.change}
+          data={volumePlotData}
         />
         <Liquidity
           liquidityVolume={tvl24h.value}
