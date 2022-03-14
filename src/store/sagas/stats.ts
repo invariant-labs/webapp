@@ -97,7 +97,7 @@ const get24HLiquidityDiffData = (
     ? printBNtoBN(tokenPriceHistory[lastTimestamp].toFixed(DECIMAL), DECIMAL)
     : new BN(0)
 
-  let currentBN: BN = new BN(lastSnapshot[key]).mul(lastPrice).div(new BN(10 ** DECIMAL))
+  const currentBN: BN = new BN(lastSnapshot[key]).mul(lastPrice).div(new BN(10 ** DECIMAL))
   let prevBN: BN
 
   if (snapshots.length > 1) {
