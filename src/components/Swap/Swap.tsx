@@ -141,7 +141,7 @@ export const Swap: React.FC<ISwap> = ({
   }, [tokens.length])
 
   useEffect(() => {
-    if (tokenFromIndex !== null && tokenToIndex !== null && !!pools.length) {
+    if (tokenFromIndex !== null && tokenToIndex !== null) {
       onSetPair(tokens[tokenFromIndex].address, tokens[tokenToIndex].address)
     }
   }, [tokenFromIndex, tokenToIndex, pools.length])
@@ -171,6 +171,12 @@ export const Swap: React.FC<ISwap> = ({
     Object.keys(poolTicks).length,
     Object.keys(tickmap).length
   ])
+
+  useEffect(() => {
+    if (progress === 'none' && !(amountFrom === '' && amountTo === '')) {
+      simulateWithTimeout()
+    }
+  }, [progress])
 
   const simulateWithTimeout = () => {
     setThrottle(true)
