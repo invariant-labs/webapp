@@ -18,7 +18,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
 
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
 
-  const cutArray = (arr: Array<{ timeStamp: string; value: number[] }>, size: number) => {
+  const cutArray = (arr: Array<{ timestamp: string; value: number[] }>, size: number) => {
     const arrData = arr.slice(0)
     const result = []
 
@@ -34,41 +34,31 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
     )
   }
 
-  const converToUnix = data.map(el => {
-    const unix = el.timestamp
-    const date = new Date(unix)
-    const hours = date.getHours()
+  const sortedByTimeStamp = data.reduce((map, { timestamp, value }) => {
+    if (!map.has(timestamp)) return map.set(timestamp, [value])
 
-    const convertedHour = hours >= 13 ? `${hours - 12}PM` : `${hours}AM`
-
-    return { ...el, timeStamp: convertedHour }
-  })
-
-  const sortedByTimeStamp = converToUnix.reduce((map, { timeStamp, value }) => {
-    if (!map.has(timeStamp)) return map.set(timeStamp, [value])
-
-    map.get(timeStamp).push(value)
+    map.get(timestamp).push(value)
 
     return map
   }, new Map())
 
-  const convertedArray: Array<{ timeStamp: string; value: number[] }> = Array.from(
+  const convertedArray: Array<{ timestamp: string; value: number[] }> = Array.from(
     sortedByTimeStamp,
-    ([timeStamp, value]) => ({ timeStamp, value })
+    ([timestamp, value]) => ({ timestamp, value })
   )
 
-  const barDataContent = cutArray(convertedArray, 3)
+  const barDataContent = cutArray(convertedArray, 1)
 
-  const barData: Array<{ timeStamp: string; [key: number]: number }> = barDataContent.map(el => {
-    const timeStamp = el[0].timeStamp
+  const barData: Array<{ timestamp: string; [key: number]: number }> = barDataContent.map(el => {
+    const timestamp = el[0].timestamp
 
     const concatValues = concatArray(el.map(({ value }) => value))
 
     const convert = Object.assign({}, concatValues)
-    return { timeStamp, ...convert }
+    return { timestamp, ...convert }
   })
 
-  const keys = barData.map(({ timeStamp, ...rest }) => Object.keys(rest))
+  const keys = barData.map(({ timestamp, ...rest }) => Object.keys(rest))
 
   const uniqueKeys = [...new Set(concatArray(keys))]
 
@@ -119,9 +109,19 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
           margin={{ top: 30, bottom: 30, left: 0 }}
           data={barData}
           keys={uniqueKeys}
-          indexBy='timeStamp'
-          labelSkipWidth={2}
-          labelSkipHeight={12}
+          indexBy='timestamp'
+          axisBottom={{
+            tickSize: 0,
+            tickPadding: 10,
+            tickRotation: 0,
+            format: (time) => {
+              const date = new Date(time)
+              const day = date.getDate()
+              const month = date.getMonth() + 1
+
+              return `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}`
+            }
+          }}
           theme={Theme}
           groupMode='grouped'
           enableLabel={false}
