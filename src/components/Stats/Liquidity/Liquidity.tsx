@@ -3,28 +3,22 @@ import { ResponsiveLine } from '@nivo/line'
 // @ts-expect-error
 import { linearGradientDef } from '@nivo/core'
 import { formatNumbers, showPrefix } from '@consts/utils'
-import { Grid, Box, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import { useStyles } from './style'
 import classNames from 'classnames'
 import { colors } from '@static/theme'
+import { TimeData } from '@reducers/stats'
 
 interface LiquidityInterface {
   liquidityPercent: number
   liquidityVolume: number
-
-  positions: Array<{
-    id: string
-    data: Array<{
-      x: string
-      y: number
-    }>
-  }>
+  data: TimeData[]
 }
 
 const Liquidity: React.FC<LiquidityInterface> = ({
   liquidityPercent,
   liquidityVolume,
-  positions
+  data
 }) => {
   const classes = useStyles()
 
@@ -40,22 +34,17 @@ const Liquidity: React.FC<LiquidityInterface> = ({
 
   const isLower = liquidityPercent < 0
 
-  const lineKey = positions.map(({ data }) => data.map(({ x }) => x))
-  const reduceArray = lineKey.reduce((array, isArray) =>
-    Array.isArray(isArray) ? array.concat(isArray) : array
-  )
-
   return (
     <Grid className={classes.container}>
-      <Box className={classes.liquidityContainer}>
+      <Grid className={classes.liquidityContainer}>
         <Typography className={classes.liquidityHeader}>Liquidity 24H</Typography>
-        <div className={classes.volumePercentHeader}>
+        <Grid className={classes.volumePercentHeader}>
           <Typography className={classes.volumeLiquidityHeader}>
             ${formatNumbers()(liquidityVolume.toString())}
             {showPrefix(liquidityVolume)}
           </Typography>
-          <Box className={classes.volumeStatusContainer}>
-            <Box
+          <Grid className={classes.volumeStatusContainer}>
+            <Grid
               className={classNames(
                 classes.volumeStatusColor,
                 isLower ? classes.backgroundVolumeLow : classes.backgroundVolumeUp
@@ -67,19 +56,37 @@ const Liquidity: React.FC<LiquidityInterface> = ({
                   isLower ? classes.volumeLow : classes.volumeUp
                 )}>
                 {liquidityPercent < 0
-                  ? `-${liquidityPercent.toString().split('-')[1]}`
+                  ? liquidityPercent
                   : `+ ${liquidityPercent}`}
                 %
               </Typography>
-            </Box>
-          </Box>
-        </div>
-      </Box>
-      <div className={classes.barContainer}>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid className={classes.barContainer}>
         <ResponsiveLine
-          data={positions}
-          margin={{ top: 30, bottom: 20, left: 10, right: 20 }}
-          axisBottom={null}
+          data={[{
+            id: 'liquidity',
+            data: data.map(({ timestamp, value }) => ({
+              x: new Date(timestamp),
+              y: value
+            }))
+          }]}
+          margin={{ top: 24, bottom: 24, left: 24, right: 24 }}
+          xScale={{
+            type: 'time',
+            format: 'native',
+            precision: 'day',
+            useUTC: true
+          }}
+          axisBottom={{
+            tickSize: 0,
+            tickPadding: 10,
+            tickRotation: 0,
+            tickValues: 'every 4 days',
+            format: '%d/%m'
+          }}
           legends={[]}
           axisTop={null}
           axisRight={null}
@@ -104,14 +111,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
           ]}
           fill={[{ match: '*', id: 'gradient' }]}
         />
-      </div>
-      <Box className={classes.LineKeys}>
-        {reduceArray.map((keyLine, i) => (
-          <Typography key={i} className={classes.keyPTag}>
-            {keyLine}
-          </Typography>
-        ))}
-      </Box>
+      </Grid>
     </Grid>
   )
 }

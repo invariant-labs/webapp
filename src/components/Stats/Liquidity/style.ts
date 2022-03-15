@@ -7,14 +7,14 @@ export const useStyles = makeStyles(() => ({
     color: 'white',
     maxWidth: '524px',
     borderRadius: 24,
-    padding: 24
+    paddingBlock: 24
   },
   liquidityContainer: {
     dispaly: 'flex',
     flexDirection: 'column',
     alignItems: 'flexp-start',
     fontWeight: 'normal',
-    marginLeft: 20
+    marginLeft: 24
   },
 
   liquidityHeader: {
