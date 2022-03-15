@@ -97,14 +97,12 @@ export const WrappedSwap = () => {
         setTokenTo(tokenTo)
         localStorage.setItem('INVARIANT_LAST_TOKEN_FROM', tokenFrom.toString())
         localStorage.setItem('INVARIANT_LAST_TOKEN_TO', tokenTo.toString())
-        if (!tokenFrom.equals(tokenTo)) {
-          dispatch(
-            poolsActions.getAllPoolsForPairData({
-              first: tokenFrom,
-              second: tokenTo
-            })
-          )
-        }
+        dispatch(
+          poolsActions.getAllPoolsForPairData({
+            first: tokenFrom,
+            second: tokenTo
+          })
+        )
       }}
       onWalletSelect={wallet => {
         dispatch(walletActions.connect(wallet))

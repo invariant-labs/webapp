@@ -141,7 +141,7 @@ export const Swap: React.FC<ISwap> = ({
   }, [tokens.length])
 
   useEffect(() => {
-    if (tokenFromIndex !== null && tokenToIndex !== null) {
+    if (tokenFromIndex !== null && tokenToIndex !== null && !!pools.length) {
       onSetPair(tokens[tokenFromIndex].address, tokens[tokenToIndex].address)
     }
   }, [tokenFromIndex, tokenToIndex, pools.length])
