@@ -205,6 +205,7 @@ export const NewPositionWrapper = () => {
           tokenA !== null &&
           tokenB !== null &&
           tokenA !== tokenB &&
+          
           !(tokenAIndex === tokenA && tokenBIndex === tokenB && fee.eq(FEE_TIERS[feeTierIndex].fee))
         ) {
           const index = allPools.findIndex(
