@@ -428,8 +428,7 @@ export function* handleGetPositionsList() {
     yield* take(poolsActions.addPoolsForPositions)
 
     yield* put(actions.setPositionsList(list))
-  } catch (error) {
-    console.log(error)
+  } catch (_error) {
     yield* put(actions.setPositionsList([]))
   }
 }
