@@ -59,7 +59,9 @@ export const NewPositionWrapper = () => {
         dispatch(
           actions.getCurrentPlotTicks({
             poolIndex,
-            isXtoY: allPools[poolIndex].tokenX.equals(tokens[currentPairReversed === true ? tokenBIndex : tokenAIndex].assetAddress),
+            isXtoY: allPools[poolIndex].tokenX.equals(
+              tokens[currentPairReversed === true ? tokenBIndex : tokenAIndex].assetAddress
+            ),
             disableLoading: true
           })
         )
