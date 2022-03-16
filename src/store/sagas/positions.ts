@@ -188,6 +188,17 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
           txid: initPositionTxid
         })
       )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Position added successfully.',
+          variant: 'success',
+          persist: false,
+          txid: initPositionTxid
+        })
+      )
+
+      yield put(actions.getPositionsList())
     }
 
     const unwrapTxid = yield* call(
@@ -204,8 +215,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     if (!unwrapTxid.length) {
       yield put(
         snackbarsActions.add({
-          message:
-            'Position added successfully, but wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
+          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
           variant: 'warning',
           persist: false,
           txid: unwrapTxid
@@ -214,14 +224,12 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Position added successfully.',
+          message: 'SOL unwrapped successfully.',
           variant: 'success',
           persist: false,
           txid: unwrapTxid
         })
       )
-
-      yield put(actions.getPositionsList())
     }
   } catch (error) {
     console.log(error)
@@ -419,8 +427,7 @@ export function* handleGetPositionsList() {
     yield* take(poolsActions.addPoolsForPositions)
 
     yield* put(actions.setPositionsList(list))
-  } catch (error) {
-    console.log(error)
+  } catch (_error) {
     yield* put(actions.setPositionsList([]))
   }
 }

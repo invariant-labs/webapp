@@ -127,7 +127,6 @@ const poolsSlice = createSlice({
     getPoolsDataForPositions(_state, _action: PayloadAction<string[]>) {},
     deleteTick(state, action: PayloadAction<DeleteTick>) {
       state.poolTicks[action.payload.address].splice(action.payload.index, 1)
-      console.log(state.poolTicks[action.payload.address])
     },
     updateTickmap(state, action: PayloadAction<UpdateTickmap>) {
       state.tickMaps[action.payload.address].bitmap = action.payload.bitmap
