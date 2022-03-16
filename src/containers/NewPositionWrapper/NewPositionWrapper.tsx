@@ -45,6 +45,8 @@ export const NewPositionWrapper = () => {
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
   const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
 
+  const [currentPairReversed, setCurrentPairReversed] = useState<boolean | null>(null)
+
   useEffect(() => {
     setProgress('none')
   }, [poolIndex])
@@ -57,7 +59,9 @@ export const NewPositionWrapper = () => {
         dispatch(
           actions.getCurrentPlotTicks({
             poolIndex,
-            isXtoY: allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
+            isXtoY: allPools[poolIndex].tokenX.equals(
+              tokens[currentPairReversed === true ? tokenBIndex : tokenAIndex].assetAddress
+            ),
             disableLoading: true
           })
         )
@@ -158,8 +162,6 @@ export const NewPositionWrapper = () => {
     }
   }, [poolIndex, isXtoY, xDecimal, yDecimal])
 
-  const [currentPairReversed, setCurrentPairReversed] = useState<boolean | null>(null)
-
   const data = useMemo(() => {
     if (ticksLoading) {
       return createPlaceholderLiquidityPlot(isXtoY, 10, tickSpacing, xDecimal, yDecimal)
@@ -202,6 +204,7 @@ export const NewPositionWrapper = () => {
         if (
           tokenA !== null &&
           tokenB !== null &&
+          tokenA !== tokenB &&
           !(tokenAIndex === tokenA && tokenBIndex === tokenB && fee.eq(FEE_TIERS[feeTierIndex].fee))
         ) {
           const index = allPools.findIndex(
