@@ -199,8 +199,7 @@ export function* handleSwapWithSOL(): Generator {
     if (!unwrapTxid.length) {
       yield put(
         snackbarsActions.add({
-          message:
-            'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
+          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
           variant: 'warning',
           persist: false,
           txid: unwrapTxid

@@ -42,27 +42,27 @@ const Notifier = () => {
                 onClick={() => {
                   if (
                     currentNetwork.toLocaleLowerCase() !== 'mainnet' &&
-                  txid !== undefined &&
-                  !isAccount
+                    txid !== undefined &&
+                    !isAccount
                   ) {
                     window.open(
                       'https://explorer.solana.com/tx/' +
-                      txid +
-                      '?cluster=' +
-                      currentNetwork.toLowerCase()
+                        txid +
+                        '?cluster=' +
+                        currentNetwork.toLowerCase()
                     )
                   } else if (
                     currentNetwork.toLocaleLowerCase() === 'mainnet' &&
-                  txid !== undefined &&
-                  !isAccount
+                    txid !== undefined &&
+                    !isAccount
                   ) {
                     window.open('https://explorer.solana.com/tx/' + txid)
                   } else if (currentNetwork.toLocaleLowerCase() !== 'mainnet' && isAccount) {
                     window.open(
                       'https://explorer.solana.com/address/' +
-                      txid +
-                      '?cluster=' +
-                      currentNetwork.toLowerCase()
+                        txid +
+                        '?cluster=' +
+                        currentNetwork.toLowerCase()
                     )
                   } else if (currentNetwork.toLocaleLowerCase() === 'mainnet' && isAccount) {
                     window.open('https://explorer.solana.com/address/' + txid)
