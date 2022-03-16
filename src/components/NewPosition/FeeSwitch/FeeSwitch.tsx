@@ -31,7 +31,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
       setBlocked(true)
       setTimeout(() => {
         setBlocked(false)
-      }, 100)
+      }, 200)
     }
   }
 
