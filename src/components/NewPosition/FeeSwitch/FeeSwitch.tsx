@@ -19,13 +19,20 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
   const classes = useStyles()
 
   const [current, setCurrent] = useState(0)
+  const [blocked, setBlocked] = useState(false)
 
   const tabsClasses = useTabsStyles()
   const singleTabClasses = useSingleTabStyles()
 
   const handleChange = (_: React.ChangeEvent<{}>, newValue: number) => {
-    setCurrent(newValue)
-    onSelect(newValue)
+    if (!blocked) {
+      setCurrent(newValue)
+      onSelect(newValue)
+      setBlocked(true)
+      setTimeout(() => {
+        setBlocked(false)
+      }, 100)
+    }
   }
 
   return (
