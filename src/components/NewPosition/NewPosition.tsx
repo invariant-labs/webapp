@@ -4,7 +4,7 @@ import DepositSelector from './DepositSelector/DepositSelector'
 import RangeSelector from './RangeSelector/RangeSelector'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
-import { calcPrice, printBN, printBNtoBN } from '@consts/utils'
+import { calcPrice, printBN, printBNtoBN, trimLeadingZeros } from '@consts/utils'
 import { PublicKey } from '@solana/web3.js'
 import { PlotTickData } from '@reducers/positions'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
@@ -141,7 +141,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
     const result = calcAmount(amount, left, right, tokens[calcIndex].assetAddress)
 
-    return (+printBN(result, tokens[printIndex].decimals)).toString()
+    return trimLeadingZeros(printBN(result, tokens[printIndex].decimals))
   }
 
   const onChangeRange = (left: number, right: number) => {
@@ -324,8 +324,8 @@ export const NewPosition: React.FC<INewPosition> = ({
               tokenBIndex !== null &&
               !isWaitingForNewPool &&
               (isXtoY
-                ? rightRange <= midPrice.index && !(leftRange >= midPrice.index)
-                : rightRange >= midPrice.index && !(leftRange <= midPrice.index)),
+                ? rightRange < midPrice.index && !(leftRange > midPrice.index)
+                : rightRange > midPrice.index && !(leftRange < midPrice.index)),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimals : 0
           }}
@@ -350,8 +350,8 @@ export const NewPosition: React.FC<INewPosition> = ({
               tokenBIndex !== null &&
               !isWaitingForNewPool &&
               (isXtoY
-                ? leftRange >= midPrice.index && !(rightRange <= midPrice.index)
-                : leftRange <= midPrice.index && !(rightRange >= midPrice.index)),
+                ? leftRange > midPrice.index && !(rightRange < midPrice.index)
+                : leftRange < midPrice.index && !(rightRange > midPrice.index)),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimals : 0
           }}
