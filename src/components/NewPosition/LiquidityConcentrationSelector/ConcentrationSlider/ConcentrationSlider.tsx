@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react'
-import { Slider } from '@material-ui/core'
-import { useStyles } from './style'
+import { Grid, Slider, Typography } from '@material-ui/core'
+import { useSliderStyles, useThumbStyles } from './style'
 
 export interface IProps {
   values: number[]
@@ -8,8 +8,24 @@ export interface IProps {
   defaultValueIndex?: number
 }
 
+const Thumb: React.FC<React.HTMLAttributes<HTMLSpanElement>> = (props) => {
+  const classes = useThumbStyles()
+
+  return (
+    <Grid {...props} className={classes.root} style={props.style} container item alignItems='center' direction='column'>
+      <Grid className={classes.labelWrapper}>
+        <Typography className={classes.label}>{props['aria-valuenow']}x</Typography>
+      </Grid>
+
+      <Grid className={classes.outerCircle}>
+        <Grid className={classes.innerCircle} />
+      </Grid>
+    </Grid>
+  )
+}
+
 export const ConcentrationSlider: React.FC<IProps> = ({ values, valueChangeHandler, defaultValueIndex = 0 }) => {
-  const classes = useStyles()
+  const sliderClasses = useSliderStyles({ valuesLength: values.length })
 
   const onChange = (_e: ChangeEvent<{}>, value: number | number[]) => {
     valueChangeHandler(value as number)
@@ -17,22 +33,20 @@ export const ConcentrationSlider: React.FC<IProps> = ({ values, valueChangeHandl
 
   const marks = values.map((value, index) => ({
     value,
-    label: index === 0 || index === values.length - 1 ? `${value}x` : ''
+    label: index === 0 || index === values.length - 1 ? `${value}x` : undefined
   }))
-
-  const valueLabelFormat = (value: number) => `${value}x`
 
   return (
     <Slider
-      classes={classes}
-      onChangeCommitted={onChange}
+      classes={sliderClasses}
+      onChange={onChange}
       marks={marks}
       min={values[0]}
       max={values[values.length - 1]}
       step={null}
       valueLabelDisplay='on'
-      valueLabelFormat={valueLabelFormat}
       defaultValue={values[defaultValueIndex]}
+      ThumbComponent={Thumb}
     />
   )
 }
