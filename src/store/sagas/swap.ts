@@ -174,6 +174,15 @@ export function* handleSwapWithSOL(): Generator {
           txid: swapTxid
         })
       )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Tokens swapped successfully.',
+          variant: 'success',
+          persist: false,
+          txid: swapTxid
+        })
+      )
     }
 
     const unwrapTxid = yield* call(
@@ -190,8 +199,7 @@ export function* handleSwapWithSOL(): Generator {
     if (!unwrapTxid.length) {
       yield put(
         snackbarsActions.add({
-          message:
-            'Tokens swapped successfully, but wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
+          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
           variant: 'warning',
           persist: false,
           txid: unwrapTxid
@@ -200,10 +208,10 @@ export function* handleSwapWithSOL(): Generator {
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Tokens swapped successfully.',
+          message: 'SOL unwrapped successfully.',
           variant: 'success',
           persist: false,
-          txid: swapTxid
+          txid: unwrapTxid
         })
       )
     }

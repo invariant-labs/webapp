@@ -78,7 +78,7 @@ export const RENDOGE_DEV: Token = {
 }
 
 enum SolanaNetworks {
-  DEV = 'https://api.devnet.solana.com',
+  DEV = 'https://solana--devnet.datahub.figment.io/apikey/182e93d87a1f1d335c9d74d6c7371388',
   TEST = 'https://api.testnet.solana.com',
   MAIN = 'https://api.mainnet-beta.solana.com',
   MAIN_SERUM = 'https://solana-api.projectserum.com',
