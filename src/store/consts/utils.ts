@@ -496,7 +496,7 @@ export const handleSimulate = async (
 }> => {
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(-1)
-  let errorMessage: string[] = []
+  const errorMessage: string[] = []
   let poolIndex: number = 0
   let isXtoY = false
   let resultWithFee: BN = new BN(0)
@@ -534,7 +534,6 @@ export const handleSimulate = async (
         ticks: ticks,
         tickmap: tickmaps[pool.tickmap.toString()]
       })
-      console.log('number of cross: ', swapSimulateResult.amountPerTick.length)
       if (swapSimulateResult.amountPerTick.length >= 8) {
         throw new Error('Too large amount')
       }
@@ -545,7 +544,6 @@ export const handleSimulate = async (
         result = swapSimulateResult.accumulatedAmountOut
       }
       if (swapSimulateRouterAmount.lt(result)) {
-        console.log('amount to swap: ', swapSimulateResult.accumulatedAmountOut.toString())
         resultWithFee = result.add(swapSimulateResult.accumulatedFee)
         poolIndex = findPoolIndex(pool.address, pools)
         swapSimulateRouterAmount = result
