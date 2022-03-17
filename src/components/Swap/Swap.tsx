@@ -322,8 +322,9 @@ export const Swap: React.FC<ISwap> = ({
     }
 
     if (
-      printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0) ||
-      isError('Error: Amount out is zero')
+      (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0) ||
+        isError('Error: Amount out is zero')) &&
+      !simulateResult.error.length
     ) {
       return 'Insufficient volume'
     }
