@@ -616,7 +616,7 @@ export const trimLeadingZeros = (amount: string): string => {
   }
 
   const reversedDec = Array.from(amountParts[1]).reverse()
-  const firstNonZero = reversedDec.findIndex((char) => char !== '0')
+  const firstNonZero = reversedDec.findIndex(char => char !== '0')
 
   if (firstNonZero === -1) {
     return amountParts[0]
