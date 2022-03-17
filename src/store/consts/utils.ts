@@ -492,11 +492,11 @@ export const handleSimulate = async (
   poolIndex: number
   AmountOutWithFee: BN
   estimatedPriceAfterSwap: BN
-  error: string
+  error: string[]
 }> => {
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(-1)
-  let errorMessage: string = ''
+  let errorMessage: string[] = []
   let poolIndex: number = 0
   let isXtoY = false
   let resultWithFee: BN = new BN(0)
@@ -545,13 +545,14 @@ export const handleSimulate = async (
         result = swapSimulateResult.accumulatedAmountOut
       }
       if (swapSimulateRouterAmount.lt(result)) {
+        console.log(swapSimulateResult.accumulatedAmountOut.toString())
         resultWithFee = result.add(swapSimulateResult.accumulatedFee)
         poolIndex = findPoolIndex(pool.address, pools)
         swapSimulateRouterAmount = result
         estimatedPrice = swapSimulateResult.priceAfterSwap
       }
     } catch (err: any) {
-      errorMessage = err.toString()
+      errorMessage.push(err.toString())
       console.log(err.toString())
     }
   }
@@ -570,7 +571,7 @@ export const handleSimulate = async (
     poolIndex: poolIndex,
     AmountOutWithFee: resultWithFee,
     estimatedPriceAfterSwap: estimatedPrice,
-    error: ''
+    error: []
   }
 }
 
