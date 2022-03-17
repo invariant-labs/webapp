@@ -324,8 +324,8 @@ export const NewPosition: React.FC<INewPosition> = ({
               tokenBIndex !== null &&
               !isWaitingForNewPool &&
               (isXtoY
-                ? rightRange <= midPrice.index && !(leftRange >= midPrice.index)
-                : rightRange >= midPrice.index && !(leftRange <= midPrice.index)),
+                ? rightRange < midPrice.index && !(leftRange > midPrice.index)
+                : rightRange > midPrice.index && !(leftRange < midPrice.index)),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimals : 0
           }}
@@ -350,8 +350,8 @@ export const NewPosition: React.FC<INewPosition> = ({
               tokenBIndex !== null &&
               !isWaitingForNewPool &&
               (isXtoY
-                ? leftRange >= midPrice.index && !(rightRange <= midPrice.index)
-                : leftRange <= midPrice.index && !(rightRange >= midPrice.index)),
+                ? leftRange > midPrice.index && !(rightRange < midPrice.index)
+                : leftRange < midPrice.index && !(rightRange > midPrice.index)),
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimals : 0
           }}
