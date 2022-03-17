@@ -603,3 +603,26 @@ export const sqrtPriceFromIndex = (index: number) => {
     v: printBNtoBN(sqrt.toFixed(PRICE_DECIMAL), PRICE_DECIMAL)
   }
 }
+
+export const trimLeadingZeros = (amount: string): string => {
+  const amountParts = amount.split('.')
+
+  if (!amountParts.length) {
+    return '0'
+  }
+
+  if (amountParts.length === 1) {
+    return amountParts[0]
+  }
+
+  const reversedDec = Array.from(amountParts[1]).reverse()
+  const firstNonZero = reversedDec.findIndex((char) => char !== '0')
+
+  if (firstNonZero === -1) {
+    return amountParts[0]
+  }
+
+  const trimmed = reversedDec.slice(firstNonZero, reversedDec.length).reverse().join('')
+
+  return `${amountParts[0]}.${trimmed}`
+}
