@@ -334,12 +334,10 @@ export const Swap: React.FC<ISwap> = ({
 
     if (
       isError('Error: At the end of price range') ||
-      isError('Error: Price would cross swap limit')
+      isError('Error: Price would cross swap limit') ||
+      isError('Error: Too large liquidity gap')
     ) {
       return 'Insufficient liquidity'
-    }
-    if (isError('Error: Too large liquidity gap')) {
-      return 'Too large liquidity gap'
     }
     return 'Swap tokens'
   }
