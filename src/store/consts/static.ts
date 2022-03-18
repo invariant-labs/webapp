@@ -82,6 +82,7 @@ enum SolanaNetworks {
   TEST = 'https://api.testnet.solana.com',
   MAIN = 'https://api.mainnet-beta.solana.com',
   MAIN_SERUM = 'https://solana-api.projectserum.com',
+  MAIN_FIGMENT = 'https://solana--mainnet.datahub.figment.io/apikey/182e93d87a1f1d335c9d74d6c7371388',
   LOCAL = 'http://127.0.0.1:8899'
 }
 
@@ -94,7 +95,7 @@ enum NetworkType {
 
 const MAINNET_RPCS = [
   {
-    rpc: SolanaNetworks.MAIN_SERUM,
+    rpc: SolanaNetworks.MAIN_FIGMENT,
     probability: 1
   }
 ]
