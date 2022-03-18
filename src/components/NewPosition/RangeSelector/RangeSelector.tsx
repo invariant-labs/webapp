@@ -8,13 +8,16 @@ import {
   nearestTickIndex,
   maxSpacingMultiplicity,
   minSpacingMultiplicity,
-  toMaxNumericPlaces
+  toMaxNumericPlaces,
+  calculateConcentrationRange
 } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
 import useStyles from './style'
+import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
+import { getConcentrationArray } from '@invariant-labs/sdk/lib/utils'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -32,6 +35,7 @@ export interface IRangeSelector {
   currentPairReversed: boolean | null
   initialIsDiscreteValue: boolean
   onDiscreteChange: (val: boolean) => void
+  isConcentrated?: boolean
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -49,7 +53,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   tickSpacing,
   currentPairReversed,
   initialIsDiscreteValue,
-  onDiscreteChange
+  onDiscreteChange,
+  isConcentrated = false
 }) => {
   const classes = useStyles()
 
@@ -262,101 +267,119 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           yDecimal={yDecimal}
           isDiscrete={isPlotDiscrete}
         />
-        <Typography className={classes.subheader}>Set price range</Typography>
-        <Grid container className={classes.inputs}>
-          <RangeInput
-            className={classes.input}
-            label='Min price'
-            tokenFromSymbol={tokenASymbol}
-            tokenToSymbol={tokenBSymbol}
-            currentValue={leftInputRounded}
-            setValue={onLeftInputChange}
-            decreaseValue={() => {
-              const newLeft = isXtoY
-                ? Math.max(minSpacingMultiplicity(tickSpacing), leftRange - tickSpacing)
-                : Math.min(maxSpacingMultiplicity(tickSpacing), leftRange + tickSpacing)
-              changeRangeHandler(newLeft, rightRange)
-              autoZoomHandler(newLeft, rightRange)
-            }}
-            increaseValue={() => {
-              const newLeft = isXtoY
-                ? Math.min(rightRange - tickSpacing, leftRange + tickSpacing)
-                : Math.max(rightRange + tickSpacing, leftRange - tickSpacing)
+        {
+          isConcentrated
+            ? (
+              <ConcentrationSlider
+                defaultValueIndex={0}
+                values={getConcentrationArray(tickSpacing, 1, midPrice.index)}
+                valueChangeHandler={(value) => {
+                  const { leftRange, rightRange } = calculateConcentrationRange(tickSpacing, value, 1, midPrice.index, isXtoY)
+                  changeRangeHandler(leftRange, rightRange)
+                  autoZoomHandler(leftRange, rightRange)
+                }}
+              />
+            )
+            : (
+              <>
+                <Typography className={classes.subheader}>Set price range</Typography>
+                  <Grid container className={classes.inputs}>
+                    <RangeInput
+                      className={classes.input}
+                      label='Min price'
+                      tokenFromSymbol={tokenASymbol}
+                      tokenToSymbol={tokenBSymbol}
+                      currentValue={leftInputRounded}
+                      setValue={onLeftInputChange}
+                      decreaseValue={() => {
+                        const newLeft = isXtoY
+                          ? Math.max(minSpacingMultiplicity(tickSpacing), leftRange - tickSpacing)
+                          : Math.min(maxSpacingMultiplicity(tickSpacing), leftRange + tickSpacing)
+                        changeRangeHandler(newLeft, rightRange)
+                        autoZoomHandler(newLeft, rightRange)
+                      }}
+                      increaseValue={() => {
+                        const newLeft = isXtoY
+                          ? Math.min(rightRange - tickSpacing, leftRange + tickSpacing)
+                          : Math.max(rightRange + tickSpacing, leftRange - tickSpacing)
 
-              changeRangeHandler(newLeft, rightRange)
-              autoZoomHandler(newLeft, rightRange)
-            }}
-            onBlur={() => {
-              const newLeft = isXtoY
-                ? Math.min(
-                    rightRange - tickSpacing,
-                    nearestTickIndex(+leftInput, tickSpacing, isXtoY, xDecimal, yDecimal)
-                  )
-                : Math.max(
-                    rightRange + tickSpacing,
-                    nearestTickIndex(+leftInput, tickSpacing, isXtoY, xDecimal, yDecimal)
-                  )
+                        changeRangeHandler(newLeft, rightRange)
+                        autoZoomHandler(newLeft, rightRange)
+                      }}
+                      onBlur={() => {
+                        const newLeft = isXtoY
+                          ? Math.min(
+                              rightRange - tickSpacing,
+                              nearestTickIndex(+leftInput, tickSpacing, isXtoY, xDecimal, yDecimal)
+                            )
+                          : Math.max(
+                              rightRange + tickSpacing,
+                              nearestTickIndex(+leftInput, tickSpacing, isXtoY, xDecimal, yDecimal)
+                            )
 
-              changeRangeHandler(newLeft, rightRange)
-              autoZoomHandler(newLeft, rightRange)
-            }}
-          />
-          <RangeInput
-            className={classes.input}
-            label='Max price'
-            tokenFromSymbol={tokenASymbol}
-            tokenToSymbol={tokenBSymbol}
-            currentValue={rightInputRounded}
-            setValue={onRightInputChange}
-            decreaseValue={() => {
-              const newRight = isXtoY
-                ? Math.max(rightRange - tickSpacing, leftRange + tickSpacing)
-                : Math.min(rightRange + tickSpacing, leftRange - tickSpacing)
-              changeRangeHandler(leftRange, newRight)
-              autoZoomHandler(leftRange, newRight)
-            }}
-            increaseValue={() => {
-              const newRight = isXtoY
-                ? Math.min(maxSpacingMultiplicity(tickSpacing), rightRange + tickSpacing)
-                : Math.max(minSpacingMultiplicity(tickSpacing), rightRange - tickSpacing)
-              changeRangeHandler(leftRange, newRight)
-              autoZoomHandler(leftRange, newRight)
-            }}
-            onBlur={() => {
-              const newRight = isXtoY
-                ? Math.max(
-                    leftRange + tickSpacing,
-                    nearestTickIndex(+rightInput, tickSpacing, isXtoY, xDecimal, yDecimal)
-                  )
-                : Math.min(
-                    leftRange - tickSpacing,
-                    nearestTickIndex(+rightInput, tickSpacing, isXtoY, xDecimal, yDecimal)
-                  )
-              changeRangeHandler(leftRange, newRight)
-              autoZoomHandler(leftRange, newRight)
-            }}
-          />
-        </Grid>
-        <Grid container className={classes.buttons}>
-          <Button className={classes.button} onClick={resetPlot}>
-            Reset range
-          </Button>
-          <Button
-            className={classes.button}
-            onClick={() => {
-              const left = isXtoY
-                ? minSpacingMultiplicity(tickSpacing)
-                : maxSpacingMultiplicity(tickSpacing)
-              const right = isXtoY
-                ? maxSpacingMultiplicity(tickSpacing)
-                : minSpacingMultiplicity(tickSpacing)
+                        changeRangeHandler(newLeft, rightRange)
+                        autoZoomHandler(newLeft, rightRange)
+                      }}
+                    />
+                    <RangeInput
+                      className={classes.input}
+                      label='Max price'
+                      tokenFromSymbol={tokenASymbol}
+                      tokenToSymbol={tokenBSymbol}
+                      currentValue={rightInputRounded}
+                      setValue={onRightInputChange}
+                      decreaseValue={() => {
+                        const newRight = isXtoY
+                          ? Math.max(rightRange - tickSpacing, leftRange + tickSpacing)
+                          : Math.min(rightRange + tickSpacing, leftRange - tickSpacing)
+                        changeRangeHandler(leftRange, newRight)
+                        autoZoomHandler(leftRange, newRight)
+                      }}
+                      increaseValue={() => {
+                        const newRight = isXtoY
+                          ? Math.min(maxSpacingMultiplicity(tickSpacing), rightRange + tickSpacing)
+                          : Math.max(minSpacingMultiplicity(tickSpacing), rightRange - tickSpacing)
+                        changeRangeHandler(leftRange, newRight)
+                        autoZoomHandler(leftRange, newRight)
+                      }}
+                      onBlur={() => {
+                        const newRight = isXtoY
+                          ? Math.max(
+                              leftRange + tickSpacing,
+                              nearestTickIndex(+rightInput, tickSpacing, isXtoY, xDecimal, yDecimal)
+                            )
+                          : Math.min(
+                              leftRange - tickSpacing,
+                              nearestTickIndex(+rightInput, tickSpacing, isXtoY, xDecimal, yDecimal)
+                            )
+                        changeRangeHandler(leftRange, newRight)
+                        autoZoomHandler(leftRange, newRight)
+                      }}
+                    />
+                  </Grid>
+                  <Grid container className={classes.buttons}>
+                    <Button className={classes.button} onClick={resetPlot}>
+                      Reset range
+                    </Button>
+                    <Button
+                      className={classes.button}
+                      onClick={() => {
+                        const left = isXtoY
+                          ? minSpacingMultiplicity(tickSpacing)
+                          : maxSpacingMultiplicity(tickSpacing)
+                        const right = isXtoY
+                          ? maxSpacingMultiplicity(tickSpacing)
+                          : minSpacingMultiplicity(tickSpacing)
 
-              changeRangeHandler(left, right)
-              autoZoomHandler(left, right)
-            }}>
-            Set full range
-          </Button>
-        </Grid>
+                        changeRangeHandler(left, right)
+                        autoZoomHandler(left, right)
+                      }}>
+                      Set full range
+                    </Button>
+                  </Grid>
+              </>
+            )
+        }
       </Grid>
 
       {blocked && (

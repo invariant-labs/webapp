@@ -1,6 +1,6 @@
 import { calculatePriceSqrt, MAX_TICK, MIN_TICK, TICK_LIMIT } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
-import { DECIMAL, parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
+import { calculateTickDelta, DECIMAL, parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
@@ -624,4 +624,21 @@ export const trimLeadingZeros = (amount: string): string => {
   const trimmed = reversedDec.slice(firstNonZero, reversedDec.length).reverse().join('')
 
   return `${amountParts[0]}.${trimmed}`
+}
+
+export const calculateConcentrationRange = (
+  tickSpacing: number,
+  concentration: number,
+  minimumRange: number,
+  currentTick: number,
+  isXToY: boolean
+) => {
+  const tickDelta = calculateTickDelta(tickSpacing, minimumRange, concentration)
+  const lowerTick = currentTick - tickDelta * tickSpacing
+  const upperTick = currentTick + tickDelta * tickSpacing
+
+  return {
+    leftRange: isXToY ? lowerTick : upperTick,
+    rightRange: isXToY ? upperTick : lowerTick
+  }
 }

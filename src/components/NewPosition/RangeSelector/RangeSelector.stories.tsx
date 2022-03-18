@@ -65,3 +65,26 @@ storiesOf('position/rangeSelector', module)
       onDiscreteChange={() => {}}
     />
   ))
+  .add('concentrated', () => (
+    <RangeSelector
+      data={data}
+      midPrice={{
+        x: calcPrice(140, true, 6, 6),
+        index: 140
+      }}
+      tokenASymbol='BAT'
+      tokenBSymbol='ETH'
+      onChangeRange={(left, right) => {
+        action(`range indexes: ${left} - ${right}`)()
+      }}
+      ticksLoading={false}
+      xDecimal={6}
+      yDecimal={6}
+      tickSpacing={1}
+      isXtoY={true}
+      currentPairReversed={null}
+      initialIsDiscreteValue={false}
+      onDiscreteChange={() => {}}
+      isConcentrated
+    />
+  ))

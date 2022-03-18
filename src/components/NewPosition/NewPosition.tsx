@@ -22,6 +22,7 @@ import Slippage from '@components/Modals/Slippage/Slippage'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './style'
+import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 
 export interface INewPosition {
   tokens: SwapToken[]
@@ -90,6 +91,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   onDiscreteChange
 }) => {
   const classes = useStyles()
+
+  const [isConcentrated, setIsConcentrated] = useState(false)
 
   const [leftRange, setLeftRange] = useState(MIN_TICK)
   const [rightRange, setRightRange] = useState(MAX_TICK)
@@ -262,9 +265,15 @@ export const NewPosition: React.FC<INewPosition> = ({
 
       <Grid container justifyContent='space-between'>
         <Typography className={classes.title}>Add new liquidity position</Typography>
-        <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
-          <img src={settingIcon} className={classes.settingsIcon} />
-        </Button>
+        <Grid>
+          <ConcentrationTypeSwitch
+            onSwitch={setIsConcentrated}
+            initialValue={0}
+          />
+          <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
+            <img src={settingIcon} className={classes.settingsIcon} />
+          </Button>
+        </Grid>
       </Grid>
 
       <Slippage
@@ -406,6 +415,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             currentPairReversed={currentPairReversed}
             initialIsDiscreteValue={initialIsDiscreteValue}
             onDiscreteChange={onDiscreteChange}
+            isConcentrated={isConcentrated}
           />
         ) : (
           <PoolInit
