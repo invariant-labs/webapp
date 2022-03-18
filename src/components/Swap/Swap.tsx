@@ -331,6 +331,9 @@ export const Swap: React.FC<ISwap> = ({
     if (isError('Error: Too large amount')) {
       return 'Exceed single swap limit (split transaction into several)'
     }
+    if (isError('Error: Too large liquidity gap')) {
+      return 'Too large liquidity gap'
+    }
     if (
       isError('Error: At the end of price range') ||
       isError('Error: Price would cross swap limit')
