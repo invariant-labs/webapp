@@ -492,11 +492,11 @@ export const handleSimulate = async (
   poolIndex: number
   AmountOutWithFee: BN
   estimatedPriceAfterSwap: BN
-  error: string
+  error: string[]
 }> => {
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(-1)
-  let errorMessage: string = ''
+  const errorMessage: string[] = []
   let poolIndex: number = 0
   let isXtoY = false
   let resultWithFee: BN = new BN(0)
@@ -534,11 +534,10 @@ export const handleSimulate = async (
         ticks: ticks,
         tickmap: tickmaps[pool.tickmap.toString()]
       })
-
       if (swapSimulateResult.amountPerTick.length >= 8) {
         throw new Error('Too large amount')
       }
-      console.log(swapSimulateResult.accumulatedAmountOut.toString())
+
       if (!byAmountIn) {
         result = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
       } else {
@@ -551,7 +550,7 @@ export const handleSimulate = async (
         estimatedPrice = swapSimulateResult.priceAfterSwap
       }
     } catch (err: any) {
-      errorMessage = err.toString()
+      errorMessage.push(err.toString())
       console.log(err.toString())
     }
   }
@@ -570,7 +569,7 @@ export const handleSimulate = async (
     poolIndex: poolIndex,
     AmountOutWithFee: resultWithFee,
     estimatedPriceAfterSwap: estimatedPrice,
-    error: ''
+    error: []
   }
 }
 
@@ -602,4 +601,27 @@ export const sqrtPriceFromIndex = (index: number) => {
   return {
     v: printBNtoBN(sqrt.toFixed(PRICE_DECIMAL), PRICE_DECIMAL)
   }
+}
+
+export const trimLeadingZeros = (amount: string): string => {
+  const amountParts = amount.split('.')
+
+  if (!amountParts.length) {
+    return '0'
+  }
+
+  if (amountParts.length === 1) {
+    return amountParts[0]
+  }
+
+  const reversedDec = Array.from(amountParts[1]).reverse()
+  const firstNonZero = reversedDec.findIndex(char => char !== '0')
+
+  if (firstNonZero === -1) {
+    return amountParts[0]
+  }
+
+  const trimmed = reversedDec.slice(firstNonZero, reversedDec.length).reverse().join('')
+
+  return `${amountParts[0]}.${trimmed}`
 }
