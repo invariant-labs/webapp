@@ -125,17 +125,15 @@ const MarketEvents = () => {
               tickmap.bitmap,
               pool.tickSpacing
             )
-            console.log(changes)
+
             for (const [index, info] of Object.entries(changes)) {
               if (info === 'added') {
                 try {
-                  console.log('sub')
                   // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
                   marketProgram.onTickChange(
                     new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
                     +index,
                     tickObject => {
-                      console.log('subscribe new tick!', index)
                       dispatch(
                         actions.updateTicks({
                           address: pool.address.toString(),

@@ -45,6 +45,8 @@ export const NewPositionWrapper = () => {
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
   const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
 
+  const [currentPairReversed, setCurrentPairReversed] = useState<boolean | null>(null)
+
   useEffect(() => {
     setProgress('none')
   }, [poolIndex])
@@ -57,7 +59,9 @@ export const NewPositionWrapper = () => {
         dispatch(
           actions.getCurrentPlotTicks({
             poolIndex,
-            isXtoY: allPools[poolIndex].tokenX.equals(tokens[tokenAIndex].assetAddress),
+            isXtoY: allPools[poolIndex].tokenX.equals(
+              tokens[currentPairReversed === true ? tokenBIndex : tokenAIndex].assetAddress
+            ),
             disableLoading: true
           })
         )
@@ -158,8 +162,6 @@ export const NewPositionWrapper = () => {
     }
   }, [poolIndex, isXtoY, xDecimal, yDecimal])
 
-  const [currentPairReversed, setCurrentPairReversed] = useState<boolean | null>(null)
-
   const data = useMemo(() => {
     if (ticksLoading) {
       return createPlaceholderLiquidityPlot(isXtoY, 10, tickSpacing, xDecimal, yDecimal)
@@ -202,6 +204,7 @@ export const NewPositionWrapper = () => {
         if (
           tokenA !== null &&
           tokenB !== null &&
+          tokenA !== tokenB &&
           !(tokenAIndex === tokenA && tokenBIndex === tokenB && fee.eq(FEE_TIERS[feeTierIndex].fee))
         ) {
           const index = allPools.findIndex(
@@ -308,12 +311,6 @@ export const NewPositionWrapper = () => {
         const lowerTick = Math.min(left, right)
         const upperTick = Math.max(left, right)
 
-        console.log('liquidity calc by:', tokenAddress.toString())
-        console.log(
-          'pool token x:',
-          tokens[isXtoY ? tokenAIndex : tokenBIndex].assetAddress.toString()
-        )
-
         try {
           if (byX) {
             const result = getLiquidityByX(
@@ -327,18 +324,6 @@ export const NewPositionWrapper = () => {
             )
             setLiquidity(result.liquidity)
 
-            console.log(
-              'x:',
-              amount.toString(),
-              'y:',
-              result.y.toString(),
-              'ticks:',
-              lowerTick,
-              upperTick,
-              'liquidity',
-              result.liquidity.v.toString()
-            )
-
             return result.y
           }
 
@@ -351,18 +336,6 @@ export const NewPositionWrapper = () => {
           )
           setLiquidity(result.liquidity)
 
-          console.log(
-            'y:',
-            amount.toString(),
-            'x:',
-            result.x.toString(),
-            'ticks:',
-            lowerTick,
-            upperTick,
-            'liquidity',
-            result.liquidity.v.toString()
-          )
-
           return result.x
         } catch (error) {
           const result = (byX ? getLiquidityByY : getLiquidityByX)(
@@ -373,17 +346,6 @@ export const NewPositionWrapper = () => {
             true
           )
           setLiquidity(result.liquidity)
-
-          console.log(
-            'err',
-            byX ? 'x:' : 'y:',
-            amount.toString(),
-            'ticks:',
-            lowerTick,
-            upperTick,
-            'liquidity:',
-            result.liquidity.v.toString()
-          )
         }
 
         return new BN(0)
