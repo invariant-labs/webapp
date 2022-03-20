@@ -6,13 +6,12 @@ import {
   nearestTickIndex,
   formatNumbers,
   showPrefix,
-  minSpacingMultiplicity,
-  maxSpacingMultiplicity,
   toMaxNumericPlaces
 } from '@consts/utils'
 import SimpleInput from '@components/Inputs/SimpleInput/SimpleInput'
 import useStyles from './style'
 import AnimatedNumber from '@components/AnimatedNumber'
+import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 
 export interface IPoolInit {
   tokenASymbol: string
@@ -160,8 +159,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
             setValue={onLeftInputChange}
             decreaseValue={() => {
               const newLeft = isXtoY
-                ? Math.max(minSpacingMultiplicity(tickSpacing), leftRange - tickSpacing)
-                : Math.min(maxSpacingMultiplicity(tickSpacing), leftRange + tickSpacing)
+                ? Math.max(getMinTick(tickSpacing), leftRange - tickSpacing)
+                : Math.min(getMaxTick(tickSpacing), leftRange + tickSpacing)
               changeRangeHandler(newLeft, rightRange)
             }}
             increaseValue={() => {
@@ -200,8 +199,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
             }}
             increaseValue={() => {
               const newRight = isXtoY
-                ? Math.min(maxSpacingMultiplicity(tickSpacing), rightRange + tickSpacing)
-                : Math.max(minSpacingMultiplicity(tickSpacing), rightRange - tickSpacing)
+                ? Math.min(getMaxTick(tickSpacing), rightRange + tickSpacing)
+                : Math.max(getMinTick(tickSpacing), rightRange - tickSpacing)
               changeRangeHandler(leftRange, newRight)
             }}
             onBlur={() => {
@@ -226,8 +225,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
             className={classes.button}
             onClick={() => {
               changeRangeHandler(
-                isXtoY ? minSpacingMultiplicity(tickSpacing) : maxSpacingMultiplicity(tickSpacing),
-                isXtoY ? maxSpacingMultiplicity(tickSpacing) : minSpacingMultiplicity(tickSpacing)
+                isXtoY ? getMinTick(tickSpacing) : getMaxTick(tickSpacing),
+                isXtoY ? getMaxTick(tickSpacing) : getMinTick(tickSpacing)
               )
             }}>
             Set full range

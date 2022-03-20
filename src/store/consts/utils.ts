@@ -1,6 +1,12 @@
-import { calculatePriceSqrt, MAX_TICK, MIN_TICK, TICK_LIMIT } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
-import { DECIMAL, parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
+import {
+  DECIMAL,
+  getMaxTick,
+  getMinTick,
+  parseLiquidityOnTicks,
+  simulateSwap
+} from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
@@ -251,8 +257,8 @@ export const createLiquidityPlot = (
 
   const ticksData: PlotTickData[] = []
 
-  const min = minSpacingMultiplicity(pool.tickSpacing)
-  const max = maxSpacingMultiplicity(pool.tickSpacing)
+  const min = getMinTick(pool.tickSpacing)
+  const max = getMaxTick(pool.tickSpacing)
 
   if (!ticks.length || ticks[0].index !== min) {
     const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
@@ -333,8 +339,8 @@ export const createPlaceholderLiquidityPlot = (
 ) => {
   const ticksData: PlotTickData[] = []
 
-  const min = minSpacingMultiplicity(tickSpacing)
-  const max = maxSpacingMultiplicity(tickSpacing)
+  const min = getMinTick(tickSpacing)
+  const max = getMaxTick(tickSpacing)
 
   const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
 
@@ -399,10 +405,7 @@ export const nearestSpacingMultiplicity = (arg: number, spacing: number) => {
 
   const nearest = Math.abs(greater - arg) < Math.abs(lower - arg) ? greater : lower
 
-  return Math.max(
-    Math.min(nearest, maxSpacingMultiplicity(spacing)),
-    minSpacingMultiplicity(spacing)
-  )
+  return Math.max(Math.min(nearest, getMaxTick(spacing)), getMinTick(spacing))
 }
 
 export const nearestTickIndex = (
@@ -571,14 +574,6 @@ export const handleSimulate = async (
     estimatedPriceAfterSwap: estimatedPrice,
     error: []
   }
-}
-
-export const minSpacingMultiplicity = (spacing: number) => {
-  return Math.max(spacingMultiplicityGte(MIN_TICK, spacing), -(TICK_LIMIT - 2) * spacing)
-}
-
-export const maxSpacingMultiplicity = (spacing: number) => {
-  return Math.min(spacingMultiplicityLte(MAX_TICK, spacing), (TICK_LIMIT - 2) * spacing)
 }
 
 export const toMaxNumericPlaces = (num: number, places: number): string => {
