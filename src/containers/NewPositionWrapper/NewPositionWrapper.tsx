@@ -6,6 +6,7 @@ import { swapTokens, status } from '@selectors/solanaWallet'
 import { DECIMAL, FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import {
   calcPrice,
+  calcYPerXPrice,
   createPlaceholderLiquidityPlot,
   printBN,
   sqrtPriceFromIndex
@@ -148,7 +149,7 @@ export const NewPositionWrapper = () => {
     if (poolIndex !== null) {
       setMidPrice({
         index: allPools[poolIndex].currentTickIndex,
-        x: calcPrice(allPools[poolIndex].currentTickIndex, isXtoY, xDecimal, yDecimal)
+        x: calcYPerXPrice(allPools[poolIndex].sqrtPrice.v, xDecimal, yDecimal) ** (isXtoY ? 1 : -1)
       })
     }
   }, [poolIndex, isXtoY, xDecimal, yDecimal, allPools])
