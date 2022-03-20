@@ -373,6 +373,9 @@ export const NewPositionWrapper = () => {
       bestTiers={bestTiers[currentNetwork]}
       initialIsDiscreteValue={initialIsDiscreteValue}
       onDiscreteChange={setIsDiscreteValue}
+      currentPriceSqrt={
+        poolIndex !== null ? allPools[poolIndex].sqrtPrice.v : calculatePriceSqrt(midPrice.index).v
+      }
     />
   )
 }
