@@ -150,7 +150,7 @@ const mainnetBestTiersCreator = () => {
     for (let j = i + 1; j < 5; j++) {
       const [symbolY, tokenY] = Object.entries(unstableTokens)[j]
 
-      if ((symbolX.slice(-3) === 'SOL' && symbolY.slice(-3) === 'SOL')) {
+      if (symbolX.slice(-3) === 'SOL' && symbolY.slice(-3) === 'SOL') {
         bestTiers.push({
           tokenX,
           tokenY,
