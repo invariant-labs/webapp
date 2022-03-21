@@ -3,14 +3,14 @@ import { colors, typography } from '@static/theme'
 
 export const useThumbStyles = makeStyles(() => ({
   root: {
-    width: 54,
+    width: 60,
     position: 'absolute',
     top: -26,
-    transform: 'translateX(-22px)',
+    transform: 'translateX(-30px)',
     outline: 'none'
   },
   labelWrapper: {
-    width: 54,
+    width: 60,
     height: 20,
     borderRadius: 7,
     background: colors.invariant.light,
@@ -37,19 +37,15 @@ export const useThumbStyles = makeStyles(() => ({
   }
 }))
 
-export const useSliderStyles = makeStyles<Theme, { valuesLength: number }>(() => ({
+export const useSliderStyles = makeStyles<Theme, { valuesLength: number; unsafePercent: number }>(() => ({
   root: {
     width: '100%'
   },
-  track: {
-    background: colors.invariant.dark,
-    height: 6
-  },
-  rail: {
-    background: colors.invariant.dark,
+  rail: ({ unsafePercent }) => ({
+    background: `linear-gradient(90deg, #2EE09A 0%, #2EE09A ${unsafePercent}%, #FB555F ${Math.min(unsafePercent + 5, 100)}%)`,
     height: 6,
     opacity: 1
-  },
+  }),
   markLabel: {
     color: colors.invariant.text,
     ...typography.body1,
@@ -62,9 +58,16 @@ export const useSliderStyles = makeStyles<Theme, { valuesLength: number }>(() =>
       display: 'block',
       width: 14,
       height: 14,
-      background: colors.invariant.dark,
       borderRadius: '100%',
       transform: 'translate(-6px, -4px)'
+    },
+
+    '&[data-index="0"]': {
+      background: colors.invariant.green
+    },
+
+    [`&[data-index="${valuesLength - 1}"]`]: {
+      background: colors.invariant.Error
     }
   })
 }))
