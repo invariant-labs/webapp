@@ -175,8 +175,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
             itemSize={66}
             itemCount={filteredTokens.length}
             outerElementType={CustomScrollbarsVirtualList}
-            outerRef={outerRef}
-          >
+            outerRef={outerRef}>
             {({ index, style }) => {
               const token = filteredTokens[index]
               const tokenBalance = printBN(token.balance, token.decimals)
