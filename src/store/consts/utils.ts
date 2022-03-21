@@ -254,7 +254,7 @@ export const createLiquidityPlot = (
   const min = minSpacingMultiplicity(pool.tickSpacing)
   const max = maxSpacingMultiplicity(pool.tickSpacing)
 
-  if (!ticks.length || ticks[0].index !== min) {
+  if (!ticks.length || ticks[0].index > min) {
     const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
 
     ticksData.push({
@@ -297,7 +297,7 @@ export const createLiquidityPlot = (
       y: 0,
       index: max
     })
-  } else if (ticks[ticks.length - 1].index !== max) {
+  } else if (ticks[ticks.length - 1].index < max) {
     if (max - ticks[ticks.length - 1].index > pool.tickSpacing) {
       const price = calcPrice(
         ticks[ticks.length - 1].index + pool.tickSpacing,
