@@ -574,7 +574,7 @@ export const handleSimulate = async (
 }
 
 export const minSpacingMultiplicity = (spacing: number) => {
-  return Math.max(spacingMultiplicityGte(MIN_TICK, spacing), -(TICK_LIMIT - 2) * spacing)
+  return Math.max(spacingMultiplicityGte(MIN_TICK, spacing), -(TICK_LIMIT - 1) * spacing)
 }
 
 export const maxSpacingMultiplicity = (spacing: number) => {
