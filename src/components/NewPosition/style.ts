@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 20,
     padding: 0,
     margin: 0,
+    marginLeft: 10,
     minWidth: 'auto',
     background: 'none',
     '&:hover': {
@@ -77,6 +78,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       filter: 'brightness(1.5)'
     }
+  },
+  options: {
+    width: 'fit-content',
+    marginBottom: 18
   }
 }))
 

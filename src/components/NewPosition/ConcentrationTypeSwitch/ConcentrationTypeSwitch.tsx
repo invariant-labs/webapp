@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Tab, Tabs } from '@material-ui/core'
+import { Tab, Tabs, useMediaQuery } from '@material-ui/core'
+import { theme } from '@static/theme'
 import { useSingleTabStyles, useTabsStyles } from './style'
 
 export interface IProps {
@@ -8,6 +9,8 @@ export interface IProps {
 }
 
 export const ConcentrationTypeSwitch: React.FC<IProps> = ({ onSwitch, initialValue }) => {
+  const isXs = useMediaQuery(theme.breakpoints.down('xs'))
+
   const [current, setCurrent] = useState(initialValue)
 
   const tabsClasses = useTabsStyles({ value: current })
@@ -27,7 +30,7 @@ export const ConcentrationTypeSwitch: React.FC<IProps> = ({ onSwitch, initialVal
       TabIndicatorProps={{ children: <span /> }}
       classes={tabsClasses}>
       <Tab disableRipple label='Range' classes={singleTabClasses} />
-      <Tab disableRipple label='Concentr.' classes={singleTabClasses} />
+      <Tab disableRipple label={isXs ? 'Conc.' : 'Concentr.'} classes={singleTabClasses} />
     </Tabs>
   )
 }

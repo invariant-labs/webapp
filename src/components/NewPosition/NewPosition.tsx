@@ -274,7 +274,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
       <Grid container justifyContent='space-between'>
         <Typography className={classes.title}>Add new liquidity position</Typography>
-        <Grid>
+        <Grid container item alignItems='center' className={classes.options}>
           <ConcentrationTypeSwitch
             onSwitch={setIsConcentrated}
             initialValue={0}

@@ -1,14 +1,18 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-export const useTabsStyles = makeStyles<Theme, { value: number }>(() => ({
+export const useTabsStyles = makeStyles<Theme, { value: number }>((theme: Theme) => ({
   root: {
     overflow: 'visible',
     height: 28,
     minHeight: 28,
     borderRadius: 9,
     width: 160,
-    backgroundColor: colors.invariant.black
+    backgroundColor: colors.invariant.black,
+
+    [theme.breakpoints.down('xs')]: {
+      width: 90
+    }
   },
   indicator: ({ value }) => ({
     height: 28,
@@ -24,7 +28,7 @@ export const useTabsStyles = makeStyles<Theme, { value: number }>(() => ({
   }
 }))
 
-export const useSingleTabStyles = makeStyles(() => ({
+export const useSingleTabStyles = makeStyles((theme: Theme) => ({
   root: {
     textTransform: 'none',
     zIndex: 1,
@@ -39,6 +43,11 @@ export const useSingleTabStyles = makeStyles(() => ({
 
     '&:hover': {
       color: colors.invariant.lightHover
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      minWidth: 45,
+      width: 45
     }
   },
   selected: {
