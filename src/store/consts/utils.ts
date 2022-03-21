@@ -642,3 +642,29 @@ export const calculateConcentrationRange = (
     rightRange: isXToY ? upperTick : lowerTick
   }
 }
+
+export enum PositionTokenBlock {
+  None,
+  A,
+  B
+}
+
+export const determinePositionTokenBlock = (
+  currentSqrtPrice: BN,
+  lowerTick: number,
+  upperTick: number,
+  isXtoY: boolean
+) => {
+  const lowerPrice = calculatePriceSqrt(lowerTick)
+  const upperPrice = calculatePriceSqrt(upperTick)
+
+  if (lowerPrice.v.gte(currentSqrtPrice)) {
+    return isXtoY ? PositionTokenBlock.B : PositionTokenBlock.A
+  }
+
+  if (upperPrice.v.lte(currentSqrtPrice)) {
+    return isXtoY ? PositionTokenBlock.A : PositionTokenBlock.B
+  }
+
+  return PositionTokenBlock.None
+}
