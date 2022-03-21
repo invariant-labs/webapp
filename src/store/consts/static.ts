@@ -1,7 +1,6 @@
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { MOCK_TOKENS, Pair } from '@invariant-labs/sdk'
-import { FEE_TIERS } from '@invariant-labs/sdk/src/utils'
+import { MOCK_TOKENS } from '@invariant-labs/sdk'
 
 declare global {
   interface Window {
@@ -82,6 +81,7 @@ enum SolanaNetworks {
   TEST = 'https://api.testnet.solana.com',
   MAIN = 'https://api.mainnet-beta.solana.com',
   MAIN_SERUM = 'https://solana-api.projectserum.com',
+  MAIN_FIGMENT = 'https://solana--mainnet.datahub.figment.io/apikey/182e93d87a1f1d335c9d74d6c7371388',
   LOCAL = 'http://127.0.0.1:8899'
 }
 
@@ -94,7 +94,7 @@ enum NetworkType {
 
 const MAINNET_RPCS = [
   {
-    rpc: SolanaNetworks.MAIN_SERUM,
+    rpc: SolanaNetworks.MAIN_FIGMENT,
     probability: 1
   }
 ]
@@ -108,42 +108,78 @@ export const tokens: Record<NetworkType, Token[]> = {
   Localnet: []
 }
 
-const MAINNET_ADRESSES = {
-  USDC: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
-  USDT: new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'),
-  UST: new PublicKey('9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i'),
-  SOL: new PublicKey('So11111111111111111111111111111111111111112')
-}
-
-export const PAIRS: Record<NetworkType, Pair[]> = {
-  Devnet: [
-    new Pair(USDC_DEV.address, USDT_DEV.address, FEE_TIERS[0]),
-    new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[0]),
-    new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[1]),
-    new Pair(USDC_DEV.address, WSOL_DEV.address, FEE_TIERS[2]),
-    new Pair(USDC_DEV.address, RENDOGE_DEV.address, FEE_TIERS[1]),
-    new Pair(USDC_DEV.address, RENDOGE_DEV.address, FEE_TIERS[2]),
-    new Pair(USDC_DEV.address, RENDOGE_DEV.address, FEE_TIERS[3]),
-    new Pair(USDC_DEV.address, BTC_DEV.address, FEE_TIERS[1]),
-    new Pair(USDC_DEV.address, BTC_DEV.address, FEE_TIERS[2]),
-    new Pair(USDC_DEV.address, BTC_DEV.address, FEE_TIERS[3]),
-    new Pair(BTC_DEV.address, RENDOGE_DEV.address, FEE_TIERS[1]),
-    new Pair(BTC_DEV.address, RENDOGE_DEV.address, FEE_TIERS[2]),
-    new Pair(BTC_DEV.address, RENDOGE_DEV.address, FEE_TIERS[3])
-  ],
-  Testnet: [],
-  Mainnet: [
-    new Pair(MAINNET_ADRESSES.USDC, MAINNET_ADRESSES.USDT, FEE_TIERS[0]),
-    new Pair(MAINNET_ADRESSES.USDC, MAINNET_ADRESSES.UST, FEE_TIERS[0]),
-    new Pair(MAINNET_ADRESSES.USDC, MAINNET_ADRESSES.SOL, FEE_TIERS[1])
-  ],
-  Localnet: []
-}
-
 export interface BestTier {
   tokenX: PublicKey
   tokenY: PublicKey
   bestTierIndex: number
+}
+
+const mainnetBestTiersCreator = () => {
+  const stableTokens = {
+    USDC: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+    USDT: new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'),
+    UST: new PublicKey('9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i'),
+    UXD: new PublicKey('7kbnvuGBxxj8AG9qp8Scn56muWGaRaFqxg1FsRp3PaFT')
+  }
+
+  const unstableTokens = {
+    SOL: new PublicKey('So11111111111111111111111111111111111111112'),
+    stSOL: new PublicKey('7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj'),
+    BTC: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+    ETH: new PublicKey('7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs'),
+    mSOL: new PublicKey('mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So')
+  }
+
+  const bestTiers: BestTier[] = []
+
+  for (let i = 0; i < 4; i++) {
+    const tokenX = Object.values(stableTokens)[i]
+    for (let j = i + 1; j < 4; j++) {
+      const tokenY = Object.values(stableTokens)[j]
+
+      bestTiers.push({
+        tokenX,
+        tokenY,
+        bestTierIndex: 0
+      })
+    }
+  }
+
+  for (let i = 0; i < 5; i++) {
+    const [symbolX, tokenX] = Object.entries(unstableTokens)[i]
+    for (let j = i + 1; j < 5; j++) {
+      const [symbolY, tokenY] = Object.entries(unstableTokens)[j]
+
+      if (symbolX.slice(-3) === 'SOL' && symbolY.slice(-3) === 'SOL') {
+        bestTiers.push({
+          tokenX,
+          tokenY,
+          bestTierIndex: 0
+        })
+      } else {
+        bestTiers.push({
+          tokenX,
+          tokenY,
+          bestTierIndex: 2
+        })
+      }
+    }
+  }
+
+  for (let i = 0; i < 4; i++) {
+    const tokenX = Object.values(stableTokens)[i]
+    for (let j = 0; j < 5; j++) {
+      const tokenY = Object.values(unstableTokens)[j]
+
+      bestTiers.push({
+        tokenX,
+        tokenY,
+        bestTierIndex: 1
+      })
+    }
+  }
+
+  return bestTiers
 }
 
 export const bestTiers: Record<NetworkType, BestTier[]> = {
@@ -175,7 +211,7 @@ export const bestTiers: Record<NetworkType, BestTier[]> = {
     }
   ],
   Testnet: [],
-  Mainnet: [],
+  Mainnet: mainnetBestTiersCreator(),
   Localnet: []
 }
 

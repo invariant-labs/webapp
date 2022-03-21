@@ -254,7 +254,7 @@ export const createLiquidityPlot = (
   const min = minSpacingMultiplicity(pool.tickSpacing)
   const max = maxSpacingMultiplicity(pool.tickSpacing)
 
-  if (!ticks.length || ticks[0].index !== min) {
+  if (!ticks.length || ticks[0].index > min) {
     const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
 
     ticksData.push({
@@ -297,7 +297,7 @@ export const createLiquidityPlot = (
       y: 0,
       index: max
     })
-  } else if (ticks[ticks.length - 1].index !== max) {
+  } else if (ticks[ticks.length - 1].index < max) {
     if (max - ticks[ticks.length - 1].index > pool.tickSpacing) {
       const price = calcPrice(
         ticks[ticks.length - 1].index + pool.tickSpacing,
@@ -574,7 +574,7 @@ export const handleSimulate = async (
 }
 
 export const minSpacingMultiplicity = (spacing: number) => {
-  return Math.max(spacingMultiplicityGte(MIN_TICK, spacing), -(TICK_LIMIT - 2) * spacing)
+  return Math.max(spacingMultiplicityGte(MIN_TICK, spacing), -(TICK_LIMIT - 1) * spacing)
 }
 
 export const maxSpacingMultiplicity = (spacing: number) => {
@@ -593,14 +593,6 @@ export const toMaxNumericPlaces = (num: number, places: number): string => {
   }
 
   return num.toFixed(places + Math.abs(log) - 1)
-}
-
-export const sqrtPriceFromIndex = (index: number) => {
-  const sqrt = Math.sqrt(1.0001 ** index)
-
-  return {
-    v: printBNtoBN(sqrt.toFixed(PRICE_DECIMAL), PRICE_DECIMAL)
-  }
 }
 
 export const trimLeadingZeros = (amount: string): string => {

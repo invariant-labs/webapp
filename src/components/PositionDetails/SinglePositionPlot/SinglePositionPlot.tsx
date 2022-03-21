@@ -120,7 +120,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           midPrice={midPrice}
           className={classes.plot}
           loading={ticksLoading}
-          isXtoY
+          isXtoY={xToY}
           tickSpacing={tickSpacing}
           xDecimal={tokenX.decimal}
           yDecimal={tokenY.decimal}
