@@ -86,6 +86,7 @@ storiesOf('position/newPosition', module)
         bestTiers={[]}
         initialIsDiscreteValue={false}
         onDiscreteChange={() => {}}
+        currentPriceSqrt={new BN(140000000)}
       />
     </div>
   ))
@@ -121,6 +122,7 @@ storiesOf('position/newPosition', module)
         bestTiers={[]}
         initialIsDiscreteValue={false}
         onDiscreteChange={() => {}}
+        currentPriceSqrt={new BN(140000000)}
       />
     </div>
   ))
