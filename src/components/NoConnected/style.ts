@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'rgba(12, 11, 13, 0.8)',
     position: 'absolute',
     zIndex: 13,
-    borderRadius: 24
+    borderRadius: 10
   },
   desc: {
     ...typography.body2,
