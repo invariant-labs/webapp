@@ -14,7 +14,7 @@ export interface ISelectModal {
   current: SwapToken | null
   centered?: boolean
   tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
-  onSelect: (name: string) => void
+  onSelect: (index: number) => void
   className?: string
   hideBalancesInModal?: boolean
 }

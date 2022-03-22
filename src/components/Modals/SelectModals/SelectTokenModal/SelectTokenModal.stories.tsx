@@ -50,6 +50,6 @@ storiesOf('newModals/selectToken', module)
       open={true}
       handleClose={() => {}}
       anchorEl={null}
-      onSelect={(chosen: string) => action(`chosen index: ${chosen}`)()}
+      onSelect={index => action(`chosen index: ${index}`)()}
     />
   ))

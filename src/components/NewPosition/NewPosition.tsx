@@ -71,6 +71,8 @@ export interface INewPosition {
   initialIsDiscreteValue: boolean
   onDiscreteChange: (val: boolean) => void
   currentPriceSqrt: BN
+  canCreateNewPool: boolean
+  canCreateNewPosition: boolean
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -97,7 +99,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   bestTiers,
   initialIsDiscreteValue,
   onDiscreteChange,
-  currentPriceSqrt
+  currentPriceSqrt,
+  canCreateNewPool,
+  canCreateNewPosition
 }) => {
   const classes = useStyles()
 
@@ -393,6 +397,8 @@ export const NewPosition: React.FC<INewPosition> = ({
           }}
           poolIndex={poolIndex}
           bestTierIndex={bestTierIndex}
+          canCreateNewPool={canCreateNewPool}
+          canCreateNewPosition={canCreateNewPosition}
         />
 
         {isCurrentPoolExisting ||
