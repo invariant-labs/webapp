@@ -15,7 +15,7 @@ export interface ISelectTokenModal {
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
   centered?: boolean
-  onSelect: (name: string) => void
+  onSelect: (index: number) => void
   hideBalances?: boolean
 }
 
@@ -69,22 +69,29 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
 
   const outerRef = useRef<HTMLElement>(null)
 
+  const tokensWithIndexes = tokens.map((token, index) => ({
+    ...token,
+    index
+  }))
+
   const filteredTokens = useMemo(
     () =>
-      tokens.filter(token => {
-        return (
-          token.symbol.toLowerCase().includes(value) || token.name.toLowerCase().includes(value)
-        )
-      }).sort((a, b) => {
-        const aBalance = +printBN(a.balance, a.decimals)
-        const bBalance = +printBN(b.balance, b.decimals)
-        if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
-          return a.symbol.localeCompare(b.symbol)
-        }
+      tokensWithIndexes
+        .filter(token => {
+          return (
+            token.symbol.toLowerCase().includes(value) || token.name.toLowerCase().includes(value)
+          )
+        })
+        .sort((a, b) => {
+          const aBalance = +printBN(a.balance, a.decimals)
+          const bBalance = +printBN(b.balance, b.decimals)
+          if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
+            return a.symbol.localeCompare(b.symbol)
+          }
 
-        return aBalance === 0 ? 1 : -1
-      }),
-    [value, tokens]
+          return aBalance === 0 ? 1 : -1
+        }),
+    [value, tokensWithIndexes]
   )
 
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -199,7 +206,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                   alignItems='center'
                   wrap='nowrap'
                   onClick={() => {
-                    onSelect(token.symbol)
+                    onSelect(token.index)
                     setValue('')
                     handleClose()
                   }}>
