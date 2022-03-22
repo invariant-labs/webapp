@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: '1 1 0%'
   },
   headerContainer: {
-    marginBottom: 6
+    marginBottom: 12
   },
   header: {
     ...typography.heading4,
@@ -20,13 +20,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 8,
     backgroundColor: colors.invariant.component,
     width: '100%',
-    position: 'relative'
+    position: 'relative',
+    flex: '1 1 0%'
   },
   plot: {
     width: '100%',
     height: 240,
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       height: 215
     }
   },
@@ -110,6 +111,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     gap: 16,
     alignItems: 'center'
+  },
+  sliderWrapper: {
+    paddingTop: 24
   }
 }))
 

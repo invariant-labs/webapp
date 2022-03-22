@@ -6,6 +6,7 @@ export interface IProps {
   values: number[]
   valueChangeHandler: (value: number) => void
   defaultValueIndex?: number
+  unsafePercent: number
 }
 
 interface ThumbProps extends React.HTMLAttributes<HTMLSpanElement> {
@@ -28,8 +29,8 @@ const Thumb: React.FC<ThumbProps> = ({ concentrationValues, ...props }) => {
   )
 }
 
-export const ConcentrationSlider: React.FC<IProps> = ({ values, valueChangeHandler, defaultValueIndex = 0 }) => {
-  const sliderClasses = useSliderStyles({ valuesLength: values.length, unsafePercent: 60 })
+export const ConcentrationSlider: React.FC<IProps> = ({ values, valueChangeHandler, defaultValueIndex = 0, unsafePercent }) => {
+  const sliderClasses = useSliderStyles({ valuesLength: values.length, unsafePercent })
 
   const onChange = (_e: ChangeEvent<{}>, value: number | number[]) => {
     valueChangeHandler(value as number)

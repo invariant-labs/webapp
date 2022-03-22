@@ -247,7 +247,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         )?.bestTierIndex ?? undefined
 
   useEffect(() => {
-    if (!ticksLoading) {
+    if (!ticksLoading && !isConcentrated) {
       onChangeRange(leftRange, rightRange)
     }
   }, [midPrice.index])
@@ -437,6 +437,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             initialIsDiscreteValue={initialIsDiscreteValue}
             onDiscreteChange={onDiscreteChange}
             isConcentrated={isConcentrated}
+            feeTierIndex={fee}
           />
         ) : (
           <PoolInit

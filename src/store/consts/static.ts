@@ -77,7 +77,7 @@ export const RENDOGE_DEV: Token = {
 }
 
 enum SolanaNetworks {
-  DEV = 'https://solana--devnet.datahub.figment.io/apikey/182e93d87a1f1d335c9d74d6c7371388',
+  DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',
   MAIN = 'https://api.mainnet-beta.solana.com',
   MAIN_SERUM = 'https://solana-api.projectserum.com',
@@ -259,5 +259,9 @@ export const WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT = new BN(9200961)
 export const WSOL_POSITION_INIT_LAMPORTS = new BN(6164600)
 
 export const WSOL_POOL_INIT_LAMPORTS = new BN(106000961)
+
+export const minimumRangesForTiers = [20, 74, 80, 64, 28]
+
+export const unsafePercentsForTiers = [20.02, 38, 41.78, 37.87, 36.8]
 
 export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, MAINNET_RPCS, NetworkType }

@@ -39,6 +39,7 @@ storiesOf('position/rangeSelector', module)
       currentPairReversed={null}
       initialIsDiscreteValue={false}
       onDiscreteChange={() => {}}
+      feeTierIndex={0}
     />
   ))
   .add('blocked', () => (
@@ -63,6 +64,7 @@ storiesOf('position/rangeSelector', module)
       currentPairReversed={null}
       initialIsDiscreteValue={false}
       onDiscreteChange={() => {}}
+      feeTierIndex={0}
     />
   ))
   .add('concentrated', () => (
@@ -86,5 +88,6 @@ storiesOf('position/rangeSelector', module)
       initialIsDiscreteValue={false}
       onDiscreteChange={() => {}}
       isConcentrated
+      feeTierIndex={0}
     />
   ))

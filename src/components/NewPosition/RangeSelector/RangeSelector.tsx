@@ -18,6 +18,7 @@ import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
 import useStyles from './style'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { getConcentrationArray } from '@invariant-labs/sdk/lib/utils'
+import { minimumRangesForTiers, unsafePercentsForTiers } from '@consts/static'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -36,6 +37,7 @@ export interface IRangeSelector {
   initialIsDiscreteValue: boolean
   onDiscreteChange: (val: boolean) => void
   isConcentrated?: boolean
+  feeTierIndex: number
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -54,7 +56,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   currentPairReversed,
   initialIsDiscreteValue,
   onDiscreteChange,
-  isConcentrated = false
+  isConcentrated = false,
+  feeTierIndex
 }) => {
   const classes = useStyles()
 
@@ -230,14 +233,14 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }
 
-  const concentrationArray = useMemo(() => getConcentrationArray(tickSpacing, 1, midPrice.index).sort((a, b) => a - b), [tickSpacing, midPrice.index])
+  const concentrationArray = useMemo(() => getConcentrationArray(tickSpacing, minimumRangesForTiers[feeTierIndex], midPrice.index).sort((a, b) => a - b), [tickSpacing, midPrice.index, feeTierIndex])
 
   useEffect(() => {
     if (isConcentrated) {
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[0],
-        1,
+        minimumRangesForTiers[feeTierIndex],
         midPrice.index,
         isXtoY
       )
@@ -247,7 +250,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }, [isConcentrated])
 
   return (
-    <Grid container className={classes.wrapper}>
+    <Grid container className={classes.wrapper} direction='column'>
       <Grid className={classes.headerContainer} container justifyContent='space-between'>
         <Typography className={classes.header}>Price range</Typography>
         <PlotTypeSwitch
@@ -361,21 +364,24 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           />
         </Grid>
         {isConcentrated ? (
-          <ConcentrationSlider
-            defaultValueIndex={0}
-            values={concentrationArray}
-            valueChangeHandler={value => {
-              const { leftRange, rightRange } = calculateConcentrationRange(
-                tickSpacing,
-                concentrationArray[value],
-                1,
-                midPrice.index,
-                isXtoY
-              )
-              changeRangeHandler(leftRange, rightRange)
-              autoZoomHandler(leftRange, rightRange)
-            }}
-          />
+          <Grid container className={classes.sliderWrapper}>
+            <ConcentrationSlider
+              defaultValueIndex={0}
+              values={concentrationArray}
+              valueChangeHandler={value => {
+                const { leftRange, rightRange } = calculateConcentrationRange(
+                  tickSpacing,
+                  concentrationArray[value],
+                  minimumRangesForTiers[feeTierIndex],
+                  midPrice.index,
+                  isXtoY
+                )
+                changeRangeHandler(leftRange, rightRange)
+                autoZoomHandler(leftRange, rightRange)
+              }}
+              unsafePercent={unsafePercentsForTiers[feeTierIndex]}
+            />
+          </Grid>
         ) : (
           <Grid container className={classes.buttons}>
             <Button className={classes.button} onClick={resetPlot}>

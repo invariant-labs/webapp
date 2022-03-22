@@ -46,11 +46,19 @@ export const useSliderStyles = makeStyles<Theme, { valuesLength: number; unsafeP
     height: 6,
     opacity: 1
   }),
-  markLabel: {
+  markLabel: ({ valuesLength }) => ({
     color: colors.invariant.text,
     ...typography.body1,
-    marginTop: 10
-  },
+    marginTop: 10,
+
+    '&[data-index="0"]': {
+      transform: 'translateX(-25%)'
+    },
+
+    [`&[data-index="${valuesLength - 1}"]`]: {
+      transform: 'translateX(-90%)'
+    }
+  }),
   mark: ({ valuesLength }) => ({
     display: 'none',
 
