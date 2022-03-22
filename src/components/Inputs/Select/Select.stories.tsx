@@ -49,7 +49,7 @@ storiesOf('Inputs/select', module)
         current={null}
         name='Select a token'
         tokens={tokens}
-        onSelect={(chosen: string) => action(`chosen index: ${chosen}`)()}
+        onSelect={index => action(`chosen index: ${index}`)()}
       />
     </div>
   ))
@@ -59,7 +59,7 @@ storiesOf('Inputs/select', module)
         current={tokens[0]}
         name='Select a token'
         tokens={tokens}
-        onSelect={(chosen: string) => action(`chosen index: ${chosen}`)()}
+        onSelect={index => action(`chosen index: ${index}`)()}
       />
     </div>
   ))
