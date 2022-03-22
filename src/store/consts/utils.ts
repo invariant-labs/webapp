@@ -551,7 +551,6 @@ export const handleSimulate = async (
       }
     } catch (err: any) {
       errorMessage.push(err.toString())
-      console.log(err.toString())
     }
   }
   if (swapSimulateRouterAmount.lt(new BN(0))) {
