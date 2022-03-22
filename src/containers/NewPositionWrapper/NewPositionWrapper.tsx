@@ -4,12 +4,7 @@ import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
 import { swapTokens, status } from '@selectors/solanaWallet'
 import { DECIMAL, FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import {
-  calcPrice,
-  createPlaceholderLiquidityPlot,
-  printBN,
-  sqrtPriceFromIndex
-} from '@consts/utils'
+import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { isLoadingLatestPoolsForTransaction, poolsArraySortedByFees } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
@@ -148,7 +143,7 @@ export const NewPositionWrapper = () => {
     if (poolIndex !== null) {
       setMidPrice({
         index: allPools[poolIndex].currentTickIndex,
-        x: calcPrice(allPools[poolIndex].currentTickIndex, isXtoY, xDecimal, yDecimal)
+        x: calcYPerXPrice(allPools[poolIndex].sqrtPrice.v, xDecimal, yDecimal) ** (isXtoY ? 1 : -1)
       })
     }
   }, [poolIndex, isXtoY, xDecimal, yDecimal, allPools])
@@ -294,7 +289,7 @@ export const NewPositionWrapper = () => {
             slippage,
             knownPrice:
               poolIndex === null
-                ? sqrtPriceFromIndex(midPrice.index)
+                ? calculatePriceSqrt(midPrice.index)
                 : allPools[poolIndex].sqrtPrice
           })
         )
@@ -372,6 +367,9 @@ export const NewPositionWrapper = () => {
       bestTiers={bestTiers[currentNetwork]}
       initialIsDiscreteValue={initialIsDiscreteValue}
       onDiscreteChange={setIsDiscreteValue}
+      currentPriceSqrt={
+        poolIndex !== null ? allPools[poolIndex].sqrtPrice.v : calculatePriceSqrt(midPrice.index).v
+      }
     />
   )
 }

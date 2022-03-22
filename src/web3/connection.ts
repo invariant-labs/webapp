@@ -12,6 +12,7 @@ export const networkToName = (network: SolanaNetworks) => {
 
     case SolanaNetworks.MAIN:
     case SolanaNetworks.MAIN_SERUM:
+    case SolanaNetworks.MAIN_FIGMENT:
       return NetworkType.MAINNET
     case SolanaNetworks.LOCAL:
       return NetworkType.LOCALNET
@@ -36,7 +37,7 @@ export const getRandomMainnetRPC = () => {
     }
   }
 
-  return SolanaNetworks.MAIN_SERUM
+  return SolanaNetworks.MAIN_FIGMENT
 }
 export const getNetworkFromType = (type: NetworkType) => {
   switch (type) {
@@ -78,9 +79,10 @@ const solanaNetworktoProgramNetwork = (solanaNetwork: SolanaNetworks): Network =
       return Network.LOCAL
     // case SolanaNetworks.TEST:
     //   return Network.TEST
-    // case SolanaNetworks.MAIN:
-    // case SolanaNetworks.MAIN_SERUM:
-    //   return Network.MAIN
+    case SolanaNetworks.MAIN:
+    case SolanaNetworks.MAIN_SERUM:
+    case SolanaNetworks.MAIN_FIGMENT:
+      return Network.MAIN
   }
   return Network.DEV
 }

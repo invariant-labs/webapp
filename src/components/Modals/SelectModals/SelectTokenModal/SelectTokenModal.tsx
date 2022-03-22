@@ -172,18 +172,22 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
           <List
             height={352}
             width={371}
-            itemSize={70}
+            itemSize={66}
             itemCount={filteredTokens.length}
             outerElementType={CustomScrollbarsVirtualList}
             outerRef={outerRef}>
-            {({ index }) => {
+            {({ index, style }) => {
               const token = filteredTokens[index]
               const tokenBalance = printBN(token.balance, token.decimals)
 
               return (
                 <Grid
                   className={classes.tokenItem}
-                  style={{ width: 'calc(100% - 8px)' }}
+                  style={{
+                    ...style,
+                    width: 370,
+                    height: 40
+                  }}
                   alignItems='center'
                   wrap='nowrap'
                   onClick={() => {
