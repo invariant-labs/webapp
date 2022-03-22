@@ -19,7 +19,7 @@ interface IProps {
   onMaxClick: () => void
   current: SwapToken | null
   tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
-  onSelect: (name: string) => void
+  onSelect: (index: number) => void
   disabled: boolean
   balance?: string
   hideBalancesInModal?: boolean

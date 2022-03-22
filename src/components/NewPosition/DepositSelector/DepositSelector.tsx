@@ -137,8 +137,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             <Select
               tokens={tokens}
               current={tokenAIndex !== null ? tokens[tokenAIndex] : null}
-              onSelect={name => {
-                const index = tokens.findIndex(e => e.symbol === name)
+              onSelect={index => {
                 setTokenAIndex(index)
                 setPositionTokens(index, tokenBIndex, feeTierIndex)
               }}
@@ -168,8 +167,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             <Select
               tokens={tokens}
               current={tokenBIndex !== null ? tokens[tokenBIndex] : null}
-              onSelect={name => {
-                const index = tokens.findIndex(e => e.symbol === name)
+              onSelect={index => {
                 setTokenBIndex(index)
                 setPositionTokens(tokenAIndex, index, feeTierIndex)
               }}
