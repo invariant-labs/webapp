@@ -13,6 +13,7 @@ export const networkToName = (network: SolanaNetworks) => {
     case SolanaNetworks.MAIN:
     case SolanaNetworks.MAIN_SERUM:
     case SolanaNetworks.MAIN_FIGMENT:
+    case SolanaNetworks.MAIN_GENESYSGO:
       return NetworkType.MAINNET
     case SolanaNetworks.LOCAL:
       return NetworkType.LOCALNET
@@ -82,6 +83,7 @@ const solanaNetworktoProgramNetwork = (solanaNetwork: SolanaNetworks): Network =
     case SolanaNetworks.MAIN:
     case SolanaNetworks.MAIN_SERUM:
     case SolanaNetworks.MAIN_FIGMENT:
+    case SolanaNetworks.MAIN_GENESYSGO:
       return Network.MAIN
   }
   return Network.DEV
