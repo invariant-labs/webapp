@@ -102,7 +102,6 @@ const MAINNET_RPCS = [
   //   rpc: SolanaNetworks.MAIN_GENESYSGO,
   //   probability: 0.5
   // }
-  
   {
     rpc: SolanaNetworks.MAIN,
     probability: 1
