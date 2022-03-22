@@ -75,6 +75,14 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
         return (
           token.symbol.toLowerCase().includes(value) || token.name.toLowerCase().includes(value)
         )
+      }).sort((a, b) => {
+        const aBalance = +printBN(a.balance, a.decimals)
+        const bBalance = +printBN(b.balance, b.decimals)
+        if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
+          return a.symbol.localeCompare(b.symbol)
+        }
+
+        return aBalance === 0 ? 1 : -1
       }),
     [value, tokens]
   )
@@ -200,7 +208,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                     <Typography className={classes.tokenName}>{token.symbol}</Typography>
                     <Typography className={classes.tokenDescrpiption}>{token.name}</Typography>
                   </Grid>
-                  {!hideBalances ? (
+                  {!hideBalances && Number(tokenBalance) > 0 ? (
                     <Typography className={classes.tokenBalanceStatus}>
                       Balance: {formatNumbers(thresholds(token.decimals))(tokenBalance)}
                       {showPrefix(Number(tokenBalance))}
