@@ -83,7 +83,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'Select different tokens'
     }
 
-    if ((poolIndex === null && !canCreateNewPool) || (poolIndex !== null && !canCreateNewPosition)) {
+    if (
+      (poolIndex === null && !canCreateNewPool) ||
+      (poolIndex !== null && !canCreateNewPosition)
+    ) {
       return 'Insufficient lamports'
     }
 
