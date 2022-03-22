@@ -84,15 +84,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       right: 0,
       zIndex: 11,
       width: '100%',
-      height: 670,
+      height: 500,
       borderRadius: 9
     },
 
     [theme.breakpoints.down('xs')]: {
-      top: 595,
+      top: 545,
       right: 0,
       width: '100%',
-      height: 670
+      height: 500
     }
   },
 
