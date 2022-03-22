@@ -45,6 +45,8 @@ export interface IDepositSelector {
   onReverseTokens: () => void
   poolIndex: number | null
   bestTierIndex?: number
+  canCreateNewPool: boolean
+  canCreateNewPosition: boolean
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -62,7 +64,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   usdValueB,
   onReverseTokens,
   poolIndex,
-  bestTierIndex
+  bestTierIndex,
+  canCreateNewPool,
+  canCreateNewPosition
 }) => {
   const classes = useStyles()
 
@@ -77,6 +81,13 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
     if (tokenAIndex === tokenBIndex) {
       return 'Select different tokens'
+    }
+
+    if (
+      (poolIndex === null && !canCreateNewPool) ||
+      (poolIndex !== null && !canCreateNewPosition)
+    ) {
+      return 'Insufficient lamports'
     }
 
     if (
