@@ -87,6 +87,8 @@ storiesOf('position/newPosition', module)
         initialIsDiscreteValue={false}
         onDiscreteChange={() => {}}
         currentPriceSqrt={new BN(140000000)}
+        canCreateNewPool
+        canCreateNewPosition
       />
     </div>
   ))
@@ -123,6 +125,8 @@ storiesOf('position/newPosition', module)
         initialIsDiscreteValue={false}
         onDiscreteChange={() => {}}
         currentPriceSqrt={new BN(140000000)}
+        canCreateNewPool
+        canCreateNewPosition
       />
     </div>
   ))
