@@ -134,26 +134,38 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   const resetPlot = () => {
-    const initSideDist = Math.abs(
-      midPrice.x -
-        calcPrice(
-          Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 15),
-          isXtoY,
-          xDecimal,
-          yDecimal
-        )
-    )
+    if (!isConcentrated) {
+      const initSideDist = Math.abs(
+        midPrice.x -
+          calcPrice(
+            Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 15),
+            isXtoY,
+            xDecimal,
+            yDecimal
+          )
+      )
 
-    changeRangeHandler(
-      isXtoY
-        ? Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 10)
-        : Math.min(maxSpacingMultiplicity(tickSpacing), midPrice.index + tickSpacing * 10),
-      isXtoY
-        ? Math.min(maxSpacingMultiplicity(tickSpacing), midPrice.index + tickSpacing * 10)
-        : Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 10)
-    )
-    setPlotMin(midPrice.x - initSideDist)
-    setPlotMax(midPrice.x + initSideDist)
+      changeRangeHandler(
+        isXtoY
+          ? Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 10)
+          : Math.min(maxSpacingMultiplicity(tickSpacing), midPrice.index + tickSpacing * 10),
+        isXtoY
+          ? Math.min(maxSpacingMultiplicity(tickSpacing), midPrice.index + tickSpacing * 10)
+          : Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 10)
+      )
+      setPlotMin(midPrice.x - initSideDist)
+      setPlotMax(midPrice.x + initSideDist)
+    } else {
+      const { leftRange, rightRange } = calculateConcentrationRange(
+        tickSpacing,
+        concentrationArray[0],
+        minimumRangesForTiers[feeTierIndex],
+        midPrice.index,
+        isXtoY
+      )
+      changeRangeHandler(leftRange, rightRange)
+      autoZoomHandler(leftRange, rightRange)
+    }
   }
 
   const reversePlot = () => {
@@ -289,6 +301,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           xDecimal={xDecimal}
           yDecimal={yDecimal}
           isDiscrete={isPlotDiscrete}
+          disabled={isConcentrated}
         />
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>

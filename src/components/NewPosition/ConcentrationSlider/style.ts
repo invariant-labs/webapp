@@ -52,7 +52,7 @@ export const useSliderStyles = makeStyles<Theme, { valuesLength: number; unsafeP
     marginTop: 10,
 
     '&[data-index="0"]': {
-      transform: 'translateX(-25%)'
+      transform: 'translateX(-30%)'
     },
 
     [`&[data-index="${valuesLength - 1}"]`]: {

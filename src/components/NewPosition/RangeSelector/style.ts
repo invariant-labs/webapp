@@ -106,7 +106,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   sliderWrapper: {
-    paddingTop: 24
+    paddingTop: 24,
+    paddingInline: 8
   }
 }))
 
