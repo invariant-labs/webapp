@@ -18,9 +18,18 @@ const Thumb: React.FC<ThumbProps> = ({ concentrationValues, ...props }) => {
   const classes = useThumbStyles()
 
   return (
-    <Grid {...props} className={classes.root} style={props.style} container item alignItems='center' direction='column'>
+    <Grid
+      {...props}
+      className={classes.root}
+      style={props.style}
+      container
+      item
+      alignItems='center'
+      direction='column'>
       <Grid className={classes.labelWrapper}>
-        <Typography className={classes.label}>{concentrationValues[props['aria-valuenow'] ?? 0].toFixed(1)}x</Typography>
+        <Typography className={classes.label}>
+          {concentrationValues[props['aria-valuenow'] ?? 0].toFixed(1)}x
+        </Typography>
       </Grid>
 
       <Grid className={classes.outerCircle}>
@@ -30,16 +39,28 @@ const Thumb: React.FC<ThumbProps> = ({ concentrationValues, ...props }) => {
   )
 }
 
-export const ConcentrationSlider: React.FC<IProps> = ({ values, valueChangeHandler, valueIndex, unsafePercent, dragHandler }) => {
+export const ConcentrationSlider: React.FC<IProps> = ({
+  values,
+  valueChangeHandler,
+  valueIndex,
+  unsafePercent,
+  dragHandler
+}) => {
   const sliderClasses = useSliderStyles({ valuesLength: values.length, unsafePercent })
 
-  const onChangeCommited = useCallback((_e: ChangeEvent<{}>, value: number | number[]) => {
-    valueChangeHandler(value as number)
-  }, [valueChangeHandler])
+  const onChangeCommited = useCallback(
+    (_e: ChangeEvent<{}>, value: number | number[]) => {
+      valueChangeHandler(value as number)
+    },
+    [valueChangeHandler]
+  )
 
-  const onChange = useCallback((_e: ChangeEvent<{}>, value: number | number[]) => {
-    dragHandler(value as number)
-  }, [dragHandler])
+  const onChange = useCallback(
+    (_e: ChangeEvent<{}>, value: number | number[]) => {
+      dragHandler(value as number)
+    },
+    [dragHandler]
+  )
 
   const marks = values.map((value, index) => ({
     value: index,
@@ -55,12 +76,7 @@ export const ConcentrationSlider: React.FC<IProps> = ({ values, valueChangeHandl
       min={0}
       max={values.length - 1}
       value={valueIndex}
-      ThumbComponent={(props) => (
-        <Thumb
-          concentrationValues={values}
-          {...props}
-        />
-      )}
+      ThumbComponent={props => <Thumb concentrationValues={values} {...props} />}
       track={false}
     />
   )

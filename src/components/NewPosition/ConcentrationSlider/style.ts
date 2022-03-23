@@ -37,45 +37,50 @@ export const useThumbStyles = makeStyles(() => ({
   }
 }))
 
-export const useSliderStyles = makeStyles<Theme, { valuesLength: number; unsafePercent: number }>(() => ({
-  root: {
-    width: '100%'
-  },
-  rail: ({ unsafePercent }) => ({
-    background: `linear-gradient(90deg, #2EE09A 0%, #2EE09A ${unsafePercent}%, #FB555F ${Math.min(unsafePercent + 5, 100)}%)`,
-    height: 6,
-    opacity: 1
-  }),
-  markLabel: ({ valuesLength }) => ({
-    color: colors.invariant.text,
-    ...typography.body1,
-    marginTop: 10,
-
-    '&[data-index="0"]': {
-      transform: 'translateX(-30%)'
+export const useSliderStyles = makeStyles<Theme, { valuesLength: number; unsafePercent: number }>(
+  () => ({
+    root: {
+      width: '100%'
     },
+    rail: ({ unsafePercent }) => ({
+      background: `linear-gradient(90deg, #2EE09A 0%, #2EE09A ${unsafePercent}%, #FB555F ${Math.min(
+        unsafePercent + 5,
+        100
+      )}%)`,
+      height: 6,
+      opacity: 1
+    }),
+    markLabel: ({ valuesLength }) => ({
+      color: colors.invariant.text,
+      ...typography.body1,
+      marginTop: 10,
 
-    [`&[data-index="${valuesLength - 1}"]`]: {
-      transform: 'translateX(-90%)'
-    }
-  }),
-  mark: ({ valuesLength }) => ({
-    display: 'none',
+      '&[data-index="0"]': {
+        transform: 'translateX(-30%)'
+      },
 
-    [`&[data-index="${valuesLength - 1}"], &[data-index="0"]`]: {
-      display: 'block',
-      width: 14,
-      height: 14,
-      borderRadius: '100%',
-      transform: 'translate(-6px, -4px)'
-    },
+      [`&[data-index="${valuesLength - 1}"]`]: {
+        transform: 'translateX(-90%)'
+      }
+    }),
+    mark: ({ valuesLength }) => ({
+      display: 'none',
 
-    '&[data-index="0"]': {
-      background: colors.invariant.green
-    },
+      [`&[data-index="${valuesLength - 1}"], &[data-index="0"]`]: {
+        display: 'block',
+        width: 14,
+        height: 14,
+        borderRadius: '100%',
+        transform: 'translate(-6px, -4px)'
+      },
 
-    [`&[data-index="${valuesLength - 1}"]`]: {
-      background: colors.invariant.Error
-    }
+      '&[data-index="0"]': {
+        background: colors.invariant.green
+      },
+
+      [`&[data-index="${valuesLength - 1}"]`]: {
+        background: colors.invariant.Error
+      }
+    })
   })
-}))
+)
