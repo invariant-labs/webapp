@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, useCallback } from 'react'
 import { Grid, Slider, Typography } from '@material-ui/core'
 import { useSliderStyles, useThumbStyles } from './style'
 
@@ -7,6 +7,7 @@ export interface IProps {
   valueChangeHandler: (value: number) => void
   valueIndex: number
   unsafePercent: number
+  dragHandler: (value: number) => void
 }
 
 interface ThumbProps extends React.HTMLAttributes<HTMLSpanElement> {
@@ -29,12 +30,16 @@ const Thumb: React.FC<ThumbProps> = ({ concentrationValues, ...props }) => {
   )
 }
 
-export const ConcentrationSlider: React.FC<IProps> = ({ values, valueChangeHandler, valueIndex, unsafePercent }) => {
+export const ConcentrationSlider: React.FC<IProps> = ({ values, valueChangeHandler, valueIndex, unsafePercent, dragHandler }) => {
   const sliderClasses = useSliderStyles({ valuesLength: values.length, unsafePercent })
 
-  const onChange = (_e: ChangeEvent<{}>, value: number | number[]) => {
+  const onChangeCommited = useCallback((_e: ChangeEvent<{}>, value: number | number[]) => {
     valueChangeHandler(value as number)
-  }
+  }, [valueChangeHandler])
+
+  const onChange = useCallback((_e: ChangeEvent<{}>, value: number | number[]) => {
+    dragHandler(value as number)
+  }, [dragHandler])
 
   const marks = values.map((value, index) => ({
     value: index,
@@ -44,6 +49,7 @@ export const ConcentrationSlider: React.FC<IProps> = ({ values, valueChangeHandl
   return (
     <Slider
       classes={sliderClasses}
+      onChangeCommitted={onChangeCommited}
       onChange={onChange}
       marks={marks}
       min={0}

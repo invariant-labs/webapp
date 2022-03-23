@@ -433,6 +433,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 changeRangeHandler(leftRange, rightRange)
                 autoZoomHandler(leftRange, rightRange)
               }}
+              dragHandler={value => {
+                setConcentrationIndex(value)
+              }}
               unsafePercent={unsafePercent}
             />
           </Grid>

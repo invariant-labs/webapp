@@ -15,6 +15,9 @@ storiesOf('position/concentrationSlider', module).add('default', () => {
           valueChangeHandler={(val) => {
             console.log(val)
           }}
+          dragHandler={(val) => {
+            console.log(val)
+          }}
           valueIndex={3}
           unsafePercent={60}
         />
