@@ -40,6 +40,7 @@ storiesOf('position/rangeSelector', module)
       initialIsDiscreteValue={false}
       onDiscreteChange={() => {}}
       feeTierIndex={0}
+      poolIndex={null}
     />
   ))
   .add('blocked', () => (
@@ -65,6 +66,7 @@ storiesOf('position/rangeSelector', module)
       initialIsDiscreteValue={false}
       onDiscreteChange={() => {}}
       feeTierIndex={0}
+      poolIndex={null}
     />
   ))
   .add('concentrated', () => (
@@ -89,5 +91,6 @@ storiesOf('position/rangeSelector', module)
       onDiscreteChange={() => {}}
       isConcentrated
       feeTierIndex={0}
+      poolIndex={null}
     />
   ))

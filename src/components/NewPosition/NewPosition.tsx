@@ -412,6 +412,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         tokenAIndex === tokenBIndex ||
         isWaitingForNewPool ? (
           <RangeSelector
+            poolIndex={poolIndex}
             onChangeRange={onChangeRange}
             blocked={
               tokenAIndex === null ||

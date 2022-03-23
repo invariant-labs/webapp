@@ -38,6 +38,7 @@ export interface IRangeSelector {
   onDiscreteChange: (val: boolean) => void
   isConcentrated?: boolean
   feeTierIndex: number
+  poolIndex: number | null
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -57,7 +58,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   initialIsDiscreteValue,
   onDiscreteChange,
   isConcentrated = false,
-  feeTierIndex
+  feeTierIndex,
+  poolIndex
 }) => {
   const classes = useStyles()
 
@@ -267,21 +269,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       changeRangeHandler(leftRange, rightRange)
       autoZoomHandler(leftRange, rightRange)
     }
-  }, [isConcentrated])
-
-  useEffect(() => {
-    if (isConcentrated && !ticksLoading) {
-      const { leftRange, rightRange } = calculateConcentrationRange(
-        tickSpacing,
-        concentrationArray[concentrationIndex],
-        minimumRangesForTiers[feeTierIndex],
-        midPrice.index,
-        isXtoY
-      )
-      changeRangeHandler(leftRange, rightRange)
-      autoZoomHandler(leftRange, rightRange)
-    }
-  }, [midPrice.index])
+  }, [isConcentrated, midPrice.index, concentrationArray])
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
@@ -401,6 +389,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         {isConcentrated ? (
           <Grid container className={classes.sliderWrapper}>
             <ConcentrationSlider
+              key={poolIndex ?? -1}
               valueIndex={concentrationIndex}
               values={concentrationArray}
               valueChangeHandler={value => {
