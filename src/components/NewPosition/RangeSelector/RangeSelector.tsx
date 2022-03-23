@@ -9,7 +9,8 @@ import {
   maxSpacingMultiplicity,
   minSpacingMultiplicity,
   toMaxNumericPlaces,
-  calculateConcentrationRange
+  calculateConcentrationRange,
+  getProperConcentrationArray
 } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
@@ -17,8 +18,7 @@ import { MAX_TICK } from '@invariant-labs/sdk/src'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
 import useStyles from './style'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
-import { getConcentrationArray } from '@invariant-labs/sdk/lib/utils'
-import { minimumRangesForTiers, unsafePercentsForTiers } from '@consts/static'
+import { maxSafeConcentrationsForTiers, minimumRangesForTiers } from '@consts/static'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -233,7 +233,11 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }
 
-  const concentrationArray = useMemo(() => getConcentrationArray(tickSpacing, minimumRangesForTiers[feeTierIndex], midPrice.index).sort((a, b) => a - b), [tickSpacing, midPrice.index, feeTierIndex])
+  const concentrationArray = useMemo(
+    () =>
+      getProperConcentrationArray(tickSpacing, minimumRangesForTiers[feeTierIndex], midPrice.index),
+    [tickSpacing, midPrice.index, feeTierIndex]
+  )
 
   useEffect(() => {
     if (isConcentrated) {
@@ -379,7 +383,11 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 changeRangeHandler(leftRange, rightRange)
                 autoZoomHandler(leftRange, rightRange)
               }}
-              unsafePercent={unsafePercentsForTiers[feeTierIndex]}
+              unsafePercent={
+                (maxSafeConcentrationsForTiers[feeTierIndex] /
+                  concentrationArray[concentrationArray.length - 1]) *
+                100
+              }
             />
           </Grid>
         ) : (

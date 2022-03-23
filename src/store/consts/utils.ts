@@ -1,6 +1,12 @@
 import { calculatePriceSqrt, MAX_TICK, MIN_TICK, TICK_LIMIT } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
-import { calculateTickDelta, DECIMAL, parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
+import {
+  calculateTickDelta,
+  DECIMAL,
+  getConcentrationArray,
+  parseLiquidityOnTicks,
+  simulateSwap
+} from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
@@ -659,3 +665,12 @@ export const determinePositionTokenBlock = (
 
   return PositionTokenBlock.None
 }
+
+export const getProperConcentrationArray = (
+  tickSpacing: number,
+  minimumRange: number,
+  currentTick: number
+): number[] =>
+  getConcentrationArray(tickSpacing, minimumRange, currentTick)
+    .sort((a, b) => a - b)
+    .filter(val => calculateTickDelta(tickSpacing, minimumRange, val) > 0)
