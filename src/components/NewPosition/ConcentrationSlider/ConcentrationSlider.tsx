@@ -5,7 +5,7 @@ import { useSliderStyles, useThumbStyles } from './style'
 export interface IProps {
   values: number[]
   valueChangeHandler: (value: number) => void
-  defaultValueIndex?: number
+  valueIndex: number
   unsafePercent: number
 }
 
@@ -29,7 +29,7 @@ const Thumb: React.FC<ThumbProps> = ({ concentrationValues, ...props }) => {
   )
 }
 
-export const ConcentrationSlider: React.FC<IProps> = ({ values, valueChangeHandler, defaultValueIndex = 0, unsafePercent }) => {
+export const ConcentrationSlider: React.FC<IProps> = ({ values, valueChangeHandler, valueIndex, unsafePercent }) => {
   const sliderClasses = useSliderStyles({ valuesLength: values.length, unsafePercent })
 
   const onChange = (_e: ChangeEvent<{}>, value: number | number[]) => {
@@ -48,8 +48,7 @@ export const ConcentrationSlider: React.FC<IProps> = ({ values, valueChangeHandl
       marks={marks}
       min={0}
       max={values.length - 1}
-      valueLabelDisplay='on'
-      defaultValue={values[defaultValueIndex]}
+      value={valueIndex}
       ThumbComponent={(props) => (
         <Thumb
           concentrationValues={values}

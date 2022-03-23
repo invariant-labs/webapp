@@ -75,6 +75,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const [isPlotDiscrete, setIsPlotDiscrete] = useState(initialIsDiscreteValue)
 
+  const [concentrationIndex, setConcentrationIndex] = useState(0)
+
   const zoomMinus = () => {
     const diff = plotMax - plotMin
     const newMin = plotMin - diff / 4
@@ -253,6 +255,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   useEffect(() => {
     if (isConcentrated) {
+      setConcentrationIndex(0)
+
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[0],
@@ -264,6 +268,20 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       autoZoomHandler(leftRange, rightRange)
     }
   }, [isConcentrated])
+
+  useEffect(() => {
+    if (isConcentrated && !ticksLoading) {
+      const { leftRange, rightRange } = calculateConcentrationRange(
+        tickSpacing,
+        concentrationArray[concentrationIndex],
+        minimumRangesForTiers[feeTierIndex],
+        midPrice.index,
+        isXtoY
+      )
+      changeRangeHandler(leftRange, rightRange)
+      autoZoomHandler(leftRange, rightRange)
+    }
+  }, [midPrice.index])
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
@@ -383,9 +401,10 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         {isConcentrated ? (
           <Grid container className={classes.sliderWrapper}>
             <ConcentrationSlider
-              defaultValueIndex={0}
+              valueIndex={concentrationIndex}
               values={concentrationArray}
               valueChangeHandler={value => {
+                setConcentrationIndex(value)
                 const { leftRange, rightRange } = calculateConcentrationRange(
                   tickSpacing,
                   concentrationArray[value],

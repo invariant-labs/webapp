@@ -269,7 +269,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
-      <Link to='/pool' style={{ textDecoration: 'none' }}>
+      <Link to='/pool' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
         <Grid className={classes.back} container item alignItems='center'>
           <img className={classes.backIcon} src={backIcon} />
           <Typography className={classes.backText}>Back to Liquidity Positions List</Typography>
