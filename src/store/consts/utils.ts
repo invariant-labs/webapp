@@ -255,7 +255,7 @@ export const createLiquidityPlot = (
   const min = minSpacingMultiplicity(pool.tickSpacing)
   const max = maxSpacingMultiplicity(pool.tickSpacing)
 
-  if (!ticks.length || ticks[0].index !== min) {
+  if (!ticks.length || ticks[0].index > min) {
     const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
 
     ticksData.push({
@@ -298,7 +298,7 @@ export const createLiquidityPlot = (
       y: 0,
       index: max
     })
-  } else if (ticks[ticks.length - 1].index !== max) {
+  } else if (ticks[ticks.length - 1].index < max) {
     if (max - ticks[ticks.length - 1].index > pool.tickSpacing) {
       const price = calcPrice(
         ticks[ticks.length - 1].index + pool.tickSpacing,
@@ -494,11 +494,11 @@ export const handleSimulate = async (
   poolIndex: number
   AmountOutWithFee: BN
   estimatedPriceAfterSwap: BN
-  error: string
+  error: string[]
 }> => {
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(-1)
-  let errorMessage: string = ''
+  const errorMessage: string[] = []
   let poolIndex: number = 0
   let isXtoY = false
   let resultWithFee: BN = new BN(0)
@@ -536,11 +536,10 @@ export const handleSimulate = async (
         ticks: ticks,
         tickmap: tickmaps[pool.tickmap.toString()]
       })
-
       if (swapSimulateResult.amountPerTick.length >= 8) {
         throw new Error('Too large amount')
       }
-      console.log(swapSimulateResult.accumulatedAmountOut.toString())
+
       if (!byAmountIn) {
         result = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
       } else {
@@ -553,8 +552,7 @@ export const handleSimulate = async (
         estimatedPrice = swapSimulateResult.priceAfterSwap
       }
     } catch (err: any) {
-      errorMessage = err.toString()
-      console.log(err.toString())
+      errorMessage.push(err.toString())
     }
   }
   if (swapSimulateRouterAmount.lt(new BN(0))) {
@@ -572,12 +570,12 @@ export const handleSimulate = async (
     poolIndex: poolIndex,
     AmountOutWithFee: resultWithFee,
     estimatedPriceAfterSwap: estimatedPrice,
-    error: ''
+    error: []
   }
 }
 
 export const minSpacingMultiplicity = (spacing: number) => {
-  return Math.max(spacingMultiplicityGte(MIN_TICK, spacing), -(TICK_LIMIT - 2) * spacing)
+  return Math.max(spacingMultiplicityGte(MIN_TICK, spacing), -(TICK_LIMIT - 1) * spacing)
 }
 
 export const maxSpacingMultiplicity = (spacing: number) => {
@@ -700,11 +698,51 @@ export const getCoingeckoPricesHistory = async (): Promise<
 
   return data
 }
+export const trimLeadingZeros = (amount: string): string => {
+  const amountParts = amount.split('.')
 
-export const sqrtPriceFromIndex = (index: number) => {
-  const sqrt = Math.sqrt(1.0001 ** index)
-
-  return {
-    v: printBNtoBN(sqrt.toFixed(PRICE_DECIMAL), PRICE_DECIMAL)
+  if (!amountParts.length) {
+    return '0'
   }
+
+  if (amountParts.length === 1) {
+    return amountParts[0]
+  }
+
+  const reversedDec = Array.from(amountParts[1]).reverse()
+  const firstNonZero = reversedDec.findIndex(char => char !== '0')
+
+  if (firstNonZero === -1) {
+    return amountParts[0]
+  }
+
+  const trimmed = reversedDec.slice(firstNonZero, reversedDec.length).reverse().join('')
+
+  return `${amountParts[0]}.${trimmed}`
+}
+
+export enum PositionTokenBlock {
+  None,
+  A,
+  B
+}
+
+export const determinePositionTokenBlock = (
+  currentSqrtPrice: BN,
+  lowerTick: number,
+  upperTick: number,
+  isXtoY: boolean
+) => {
+  const lowerPrice = calculatePriceSqrt(lowerTick)
+  const upperPrice = calculatePriceSqrt(upperTick)
+
+  if (lowerPrice.v.gte(currentSqrtPrice)) {
+    return isXtoY ? PositionTokenBlock.B : PositionTokenBlock.A
+  }
+
+  if (upperPrice.v.lte(currentSqrtPrice)) {
+    return isXtoY ? PositionTokenBlock.A : PositionTokenBlock.B
+  }
+
+  return PositionTokenBlock.None
 }

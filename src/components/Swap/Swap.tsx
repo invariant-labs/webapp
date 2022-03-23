@@ -120,13 +120,13 @@ export const Swap: React.FC<ISwap> = ({
     poolIndex: number
     AmountOutWithFee: BN
     estimatedPriceAfterSwap: BN
-    error: string
+    error: string[]
   }>({
     amountOut: new BN(0),
     poolIndex: 0,
     AmountOutWithFee: new BN(0),
     estimatedPriceAfterSwap: new BN(0),
-    error: ''
+    error: []
   })
 
   const timeoutRef = useRef<number>(0)
@@ -141,7 +141,7 @@ export const Swap: React.FC<ISwap> = ({
   }, [tokens.length])
 
   useEffect(() => {
-    if (tokenFromIndex !== null && tokenToIndex !== null && !!pools.length) {
+    if (tokenFromIndex !== null && tokenToIndex !== null) {
       onSetPair(tokens[tokenFromIndex].address, tokens[tokenToIndex].address)
     }
   }, [tokenFromIndex, tokenToIndex, pools.length])
@@ -171,6 +171,12 @@ export const Swap: React.FC<ISwap> = ({
     Object.keys(poolTicks).length,
     Object.keys(tickmap).length
   ])
+
+  useEffect(() => {
+    if (progress === 'none' && !(amountFrom === '' && amountTo === '')) {
+      simulateWithTimeout()
+    }
+  }, [progress])
 
   const simulateWithTimeout = () => {
     setThrottle(true)
@@ -282,11 +288,15 @@ export const Swap: React.FC<ISwap> = ({
     }
   }
 
+  const isError = (error: string) => {
+    return simulateResult.error.some(err => err === error)
+  }
+
   const getStateMessage = () => {
     if (
       (tokenFromIndex !== null && tokenToIndex !== null && throttle) ||
       isWaitingForNewPool ||
-      simulateResult.error === "TypeError: Cannot read properties of undefined (reading 'bitmap')"
+      isError("TypeError: Cannot read properties of undefined (reading 'bitmap')")
     ) {
       return 'Loading'
     }
@@ -312,17 +322,20 @@ export const Swap: React.FC<ISwap> = ({
     }
 
     if (
-      printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0) ||
-      simulateResult.error === 'Error: Amount out is zero'
+      (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0) ||
+        isError('Error: Amount out is zero')) &&
+      !simulateResult.error.length
     ) {
       return 'Insufficient volume'
     }
-    if (simulateResult.error === 'Error: Too large amount') {
+    if (isError('Error: Too large amount')) {
       return 'Exceed single swap limit (split transaction into several)'
     }
+
     if (
-      simulateResult.error === 'Error: At the end of price range' ||
-      simulateResult.error === 'Error: Price would cross swap limit'
+      isError('Error: At the end of price range') ||
+      isError('Error: Price would cross swap limit') ||
+      isError('Error: Too large liquidity gap')
     ) {
       return 'Insufficient liquidity'
     }
@@ -429,10 +442,7 @@ export const Swap: React.FC<ISwap> = ({
             }}
             tokens={tokens}
             current={tokenFromIndex !== null ? tokens[tokenFromIndex] : null}
-            onSelect={(name: string) => {
-              const token = tokens.findIndex(token => name === token.symbol)
-              setTokenFromIndex(token)
-            }}
+            onSelect={setTokenFromIndex}
             disabled={tokenFromIndex === null}
             hideBalancesInModal={walletStatus !== Status.Initialized}
           />
@@ -500,10 +510,7 @@ export const Swap: React.FC<ISwap> = ({
             }}
             tokens={tokens}
             current={tokenToIndex !== null ? tokens[tokenToIndex] : null}
-            onSelect={(name: string) => {
-              const token = tokens.findIndex(token => name === token.symbol)
-              setTokenToIndex(token)
-            }}
+            onSelect={setTokenToIndex}
             disabled={tokenFromIndex === null}
             hideBalancesInModal={walletStatus !== Status.Initialized}
           />

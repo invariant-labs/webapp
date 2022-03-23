@@ -2,14 +2,9 @@ import React, { useState, useMemo, useEffect } from 'react'
 import NewPosition from '@components/NewPosition/NewPosition'
 import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
-import { swapTokens, status } from '@selectors/solanaWallet'
+import { swapTokens, status, canCreateNewPool, canCreateNewPosition } from '@selectors/solanaWallet'
 import { DECIMAL, FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import {
-  calcPrice,
-  createPlaceholderLiquidityPlot,
-  printBN,
-  sqrtPriceFromIndex
-} from '@consts/utils'
+import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { isLoadingLatestPoolsForTransaction, poolsArraySortedByFees } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
@@ -31,6 +26,9 @@ export const NewPositionWrapper = () => {
   const walletStatus = useSelector(status)
   const allPools = useSelector(poolsArraySortedByFees)
 
+  const canUserCreateNewPool = useSelector(canCreateNewPool)
+  const canUserCreateNewPosition = useSelector(canCreateNewPosition)
+
   const { success, inProgress } = useSelector(initPosition)
   const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
@@ -42,6 +40,11 @@ export const NewPositionWrapper = () => {
 
   const [progress, setProgress] = useState<ProgressState>('none')
 
+  const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
+  const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
+
+  const [currentPairReversed, setCurrentPairReversed] = useState<boolean | null>(null)
+
   useEffect(() => {
     setProgress('none')
   }, [poolIndex])
@@ -49,6 +52,18 @@ export const NewPositionWrapper = () => {
   useEffect(() => {
     if (!inProgress && progress === 'progress') {
       setProgress(success ? 'approvedWithSuccess' : 'approvedWithFail')
+
+      if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
+        dispatch(
+          actions.getCurrentPlotTicks({
+            poolIndex,
+            isXtoY: allPools[poolIndex].tokenX.equals(
+              tokens[currentPairReversed === true ? tokenBIndex : tokenAIndex].assetAddress
+            ),
+            disableLoading: true
+          })
+        )
+      }
 
       setTimeout(() => {
         setProgress(success ? 'success' : 'failed')
@@ -59,9 +74,6 @@ export const NewPositionWrapper = () => {
       }, 3000)
     }
   }, [success, inProgress])
-
-  const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
-  const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
 
   const isXtoY = useMemo(() => {
     if (tokenAIndex !== null && tokenBIndex !== null) {
@@ -134,7 +146,7 @@ export const NewPositionWrapper = () => {
     if (poolIndex !== null) {
       setMidPrice({
         index: allPools[poolIndex].currentTickIndex,
-        x: calcPrice(allPools[poolIndex].currentTickIndex, isXtoY, xDecimal, yDecimal)
+        x: calcYPerXPrice(allPools[poolIndex].sqrtPrice.v, xDecimal, yDecimal) ** (isXtoY ? 1 : -1)
       })
     }
   }, [poolIndex, isXtoY, xDecimal, yDecimal, allPools])
@@ -147,8 +159,6 @@ export const NewPositionWrapper = () => {
       })
     }
   }, [poolIndex, isXtoY, xDecimal, yDecimal])
-
-  const [currentPairReversed, setCurrentPairReversed] = useState<boolean | null>(null)
 
   const data = useMemo(() => {
     if (ticksLoading) {
@@ -192,6 +202,7 @@ export const NewPositionWrapper = () => {
         if (
           tokenA !== null &&
           tokenB !== null &&
+          tokenA !== tokenB &&
           !(tokenAIndex === tokenA && tokenBIndex === tokenB && fee.eq(FEE_TIERS[feeTierIndex].fee))
         ) {
           const index = allPools.findIndex(
@@ -281,7 +292,7 @@ export const NewPositionWrapper = () => {
             slippage,
             knownPrice:
               poolIndex === null
-                ? sqrtPriceFromIndex(midPrice.index)
+                ? calculatePriceSqrt(midPrice.index)
                 : allPools[poolIndex].sqrtPrice
           })
         )
@@ -298,12 +309,6 @@ export const NewPositionWrapper = () => {
         const lowerTick = Math.min(left, right)
         const upperTick = Math.max(left, right)
 
-        console.log('liquidity calc by:', tokenAddress.toString())
-        console.log(
-          'pool token x:',
-          tokens[isXtoY ? tokenAIndex : tokenBIndex].assetAddress.toString()
-        )
-
         try {
           if (byX) {
             const result = getLiquidityByX(
@@ -317,18 +322,6 @@ export const NewPositionWrapper = () => {
             )
             setLiquidity(result.liquidity)
 
-            console.log(
-              'x:',
-              amount.toString(),
-              'y:',
-              result.y.toString(),
-              'ticks:',
-              lowerTick,
-              upperTick,
-              'liquidity',
-              result.liquidity.v.toString()
-            )
-
             return result.y
           }
 
@@ -341,18 +334,6 @@ export const NewPositionWrapper = () => {
           )
           setLiquidity(result.liquidity)
 
-          console.log(
-            'y:',
-            amount.toString(),
-            'x:',
-            result.x.toString(),
-            'ticks:',
-            lowerTick,
-            upperTick,
-            'liquidity',
-            result.liquidity.v.toString()
-          )
-
           return result.x
         } catch (error) {
           const result = (byX ? getLiquidityByY : getLiquidityByX)(
@@ -363,17 +344,6 @@ export const NewPositionWrapper = () => {
             true
           )
           setLiquidity(result.liquidity)
-
-          console.log(
-            'err',
-            byX ? 'x:' : 'y:',
-            amount.toString(),
-            'ticks:',
-            lowerTick,
-            upperTick,
-            'liquidity:',
-            result.liquidity.v.toString()
-          )
         }
 
         return new BN(0)
@@ -400,6 +370,11 @@ export const NewPositionWrapper = () => {
       bestTiers={bestTiers[currentNetwork]}
       initialIsDiscreteValue={initialIsDiscreteValue}
       onDiscreteChange={setIsDiscreteValue}
+      currentPriceSqrt={
+        poolIndex !== null ? allPools[poolIndex].sqrtPrice.v : calculatePriceSqrt(midPrice.index).v
+      }
+      canCreateNewPool={canUserCreateNewPool}
+      canCreateNewPosition={canUserCreateNewPosition}
     />
   )
 }

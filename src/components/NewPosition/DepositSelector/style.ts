@@ -53,10 +53,14 @@ const useStyles = makeStyles(() => ({
   addButton: {
     width: '100%',
     marginTop: 24,
+    cursor: 'default'
+  },
+  hoverButton: {
     '&:hover': {
       filter: 'brightness(1.2)',
       boxShadow: `0 0 10px ${colors.invariant.pink}`,
-      transition: '.2s all'
+      transition: '.2s all',
+      cursor: 'pointer'
     }
   },
   arrows: {

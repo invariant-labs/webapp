@@ -123,12 +123,12 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
 
     const initialTx = new Transaction().add(createIx).add(transferIx).add(initIx)
 
-    const initialBlockhash = yield* call([connection, connection.getLatestBlockhash])
+    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
     initialTx.partialSign(wrappedSolAccount)
 
-    const initPositionBlockhash = yield* call([connection, connection.getLatestBlockhash])
+    const initPositionBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initPositionTx.recentBlockhash = initPositionBlockhash.blockhash
     initPositionTx.feePayer = wallet.publicKey
     if (poolSigners.length) {
@@ -136,7 +136,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     }
 
     const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getLatestBlockhash])
+    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
@@ -188,6 +188,17 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
           txid: initPositionTxid
         })
       )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Position added successfully.',
+          variant: 'success',
+          persist: false,
+          txid: initPositionTxid
+        })
+      )
+
+      yield put(actions.getPositionsList())
     }
 
     const unwrapTxid = yield* call(
@@ -204,8 +215,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     if (!unwrapTxid.length) {
       yield put(
         snackbarsActions.add({
-          message:
-            'Position added successfully, but wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
+          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
           variant: 'warning',
           persist: false,
           txid: unwrapTxid
@@ -214,14 +224,12 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Position added successfully.',
+          message: 'SOL unwrapped successfully.',
           variant: 'success',
           persist: false,
           txid: unwrapTxid
         })
       )
-
-      yield put(actions.getPositionsList())
     }
   } catch (error) {
     console.log(error)
@@ -307,7 +315,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       })
     }
 
-    const blockhash = yield* call([connection, connection.getLatestBlockhash])
+    const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
@@ -419,8 +427,7 @@ export function* handleGetPositionsList() {
     yield* take(poolsActions.addPoolsForPositions)
 
     yield* put(actions.setPositionsList(list))
-  } catch (error) {
-    console.log(error)
+  } catch (_error) {
     yield* put(actions.setPositionsList([]))
   }
 }
@@ -496,7 +503,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 
     const tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
 
-    const blockhash = yield* call([connection, connection.getLatestBlockhash])
+    const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
@@ -586,7 +593,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
     const tx = new Transaction().add(ix)
 
-    const blockhash = yield* call([connection, connection.getLatestBlockhash])
+    const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
@@ -699,7 +706,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
 
     const tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
 
-    const blockhash = yield* call([connection, connection.getLatestBlockhash])
+    const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
@@ -793,7 +800,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
 
     const tx = new Transaction().add(ix)
 
-    const blockhash = yield* call([connection, connection.getLatestBlockhash])
+    const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)

@@ -4,7 +4,14 @@ import DepositSelector from './DepositSelector/DepositSelector'
 import RangeSelector from './RangeSelector/RangeSelector'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
-import { calcPrice, printBN, printBNtoBN } from '@consts/utils'
+import {
+  calcPrice,
+  determinePositionTokenBlock,
+  PositionTokenBlock,
+  printBN,
+  printBNtoBN,
+  trimLeadingZeros
+} from '@consts/utils'
 import { PublicKey } from '@solana/web3.js'
 import { PlotTickData } from '@reducers/positions'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
@@ -62,6 +69,9 @@ export interface INewPosition {
   bestTiers: BestTier[]
   initialIsDiscreteValue: boolean
   onDiscreteChange: (val: boolean) => void
+  currentPriceSqrt: BN
+  canCreateNewPool: boolean
+  canCreateNewPosition: boolean
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -87,7 +97,10 @@ export const NewPosition: React.FC<INewPosition> = ({
   currentPairReversed,
   bestTiers,
   initialIsDiscreteValue,
-  onDiscreteChange
+  onDiscreteChange,
+  currentPriceSqrt,
+  canCreateNewPool,
+  canCreateNewPosition
 }) => {
   const classes = useStyles()
 
@@ -141,7 +154,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
     const result = calcAmount(amount, left, right, tokens[calcIndex].assetAddress)
 
-    return (+printBN(result, tokens[printIndex].decimals)).toString()
+    return trimLeadingZeros(printBN(result, tokens[printIndex].decimals))
   }
 
   const onChangeRange = (left: number, right: number) => {
@@ -323,9 +336,12 @@ export const NewPosition: React.FC<INewPosition> = ({
               tokenAIndex !== null &&
               tokenBIndex !== null &&
               !isWaitingForNewPool &&
-              (isXtoY
-                ? rightRange <= midPrice.index && !(leftRange >= midPrice.index)
-                : rightRange >= midPrice.index && !(leftRange <= midPrice.index)),
+              determinePositionTokenBlock(
+                currentPriceSqrt,
+                Math.min(leftRange, rightRange),
+                Math.max(leftRange, rightRange),
+                isXtoY
+              ) === PositionTokenBlock.A,
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimals : 0
           }}
@@ -349,9 +365,12 @@ export const NewPosition: React.FC<INewPosition> = ({
               tokenAIndex !== null &&
               tokenBIndex !== null &&
               !isWaitingForNewPool &&
-              (isXtoY
-                ? leftRange >= midPrice.index && !(rightRange <= midPrice.index)
-                : leftRange <= midPrice.index && !(rightRange >= midPrice.index)),
+              determinePositionTokenBlock(
+                currentPriceSqrt,
+                Math.min(leftRange, rightRange),
+                Math.max(leftRange, rightRange),
+                isXtoY
+              ) === PositionTokenBlock.B,
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimals : 0
           }}
@@ -369,6 +388,8 @@ export const NewPosition: React.FC<INewPosition> = ({
           }}
           poolIndex={poolIndex}
           bestTierIndex={bestTierIndex}
+          canCreateNewPool={canCreateNewPool}
+          canCreateNewPosition={canCreateNewPosition}
         />
 
         {isCurrentPoolExisting ||

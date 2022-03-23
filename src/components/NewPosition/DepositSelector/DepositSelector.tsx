@@ -45,6 +45,8 @@ export interface IDepositSelector {
   onReverseTokens: () => void
   poolIndex: number | null
   bestTierIndex?: number
+  canCreateNewPool: boolean
+  canCreateNewPosition: boolean
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -62,7 +64,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   usdValueB,
   onReverseTokens,
   poolIndex,
-  bestTierIndex
+  bestTierIndex,
+  canCreateNewPool,
+  canCreateNewPosition
 }) => {
   const classes = useStyles()
 
@@ -77,6 +81,13 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
     if (tokenAIndex === tokenBIndex) {
       return 'Select different tokens'
+    }
+
+    if (
+      (poolIndex === null && !canCreateNewPool) ||
+      (poolIndex !== null && !canCreateNewPosition)
+    ) {
+      return 'Insufficient lamports'
     }
 
     if (
@@ -137,8 +148,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             <Select
               tokens={tokens}
               current={tokenAIndex !== null ? tokens[tokenAIndex] : null}
-              onSelect={name => {
-                const index = tokens.findIndex(e => e.symbol === name)
+              onSelect={index => {
                 setTokenAIndex(index)
                 setPositionTokens(index, tokenBIndex, feeTierIndex)
               }}
@@ -168,8 +178,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             <Select
               tokens={tokens}
               current={tokenBIndex !== null ? tokens[tokenBIndex] : null}
-              onSelect={name => {
-                const index = tokens.findIndex(e => e.symbol === name)
+              onSelect={index => {
                 setTokenBIndex(index)
                 setPositionTokens(tokenAIndex, index, feeTierIndex)
               }}
@@ -311,8 +320,15 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       </Grid>
 
       <AnimatedButton
-        className={classes.addButton}
-        onClick={onAddLiquidity}
+        className={classNames(
+          classes.addButton,
+          progress === 'none' ? classes.hoverButton : undefined
+        )}
+        onClick={() => {
+          if (progress === 'none') {
+            onAddLiquidity()
+          }
+        }}
         disabled={getButtonMessage() !== 'Add Liquidity'}
         content={getButtonMessage()}
         progress={progress}
