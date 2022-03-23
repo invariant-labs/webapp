@@ -6,9 +6,12 @@ import { useSingleTabStyles, useTabsStyles } from './style'
 export interface IProps {
   onSwitch: (isConcentrated: boolean) => void
   initialValue: number
+  className?: string
+  style?: React.CSSProperties
+  disabled?: boolean
 }
 
-export const ConcentrationTypeSwitch: React.FC<IProps> = ({ onSwitch, initialValue }) => {
+export const ConcentrationTypeSwitch: React.FC<IProps> = ({ onSwitch, initialValue, className, style, disabled = false }) => {
   const isXs = useMediaQuery(theme.breakpoints.down('xs'))
 
   const [current, setCurrent] = useState(initialValue)
@@ -23,14 +26,16 @@ export const ConcentrationTypeSwitch: React.FC<IProps> = ({ onSwitch, initialVal
 
   return (
     <Tabs
+      className={className}
+      style={style}
       value={current}
-      onChange={handleChange}
+      onChange={!disabled ? handleChange : undefined}
       variant='scrollable'
       scrollButtons='off'
       TabIndicatorProps={{ children: <span /> }}
       classes={tabsClasses}>
-      <Tab disableRipple label='Range' classes={singleTabClasses} />
-      <Tab disableRipple label={isXs ? 'Conc.' : 'Concentr.'} classes={singleTabClasses} />
+      <Tab disableRipple label='Range' classes={singleTabClasses} style={{ cursor: !disabled ? 'pointer' : 'default' }} />
+      <Tab disableRipple label={isXs ? 'Conc.' : 'Concentr.'} classes={singleTabClasses} style={{ cursor: !disabled ? 'pointer' : 'default' }} />
     </Tabs>
   )
 }

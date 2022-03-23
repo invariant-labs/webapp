@@ -25,11 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   plot: {
     width: '100%',
-    height: 240,
-
-    [theme.breakpoints.down('xs')]: {
-      height: 215
-    }
+    height: 220
   },
   subheader: {
     ...typography.heading4,
@@ -85,15 +81,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       right: 0,
       zIndex: 11,
       width: '100%',
-      height: 500,
+      height: 510,
       borderRadius: 9
     },
 
     [theme.breakpoints.down('xs')]: {
-      top: 545,
-      right: 0,
-      width: '100%',
-      height: 500
+      top: 545
     }
   },
 

@@ -28,7 +28,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     color: colors.white.main,
     ...typography.heading4,
-    marginBottom: 18
+    marginBottom: 18,
+
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 18
+    }
   },
   row: {
     minWidth: 464,
@@ -81,7 +85,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   options: {
     width: 'fit-content',
-    marginBottom: 18
+    marginBottom: 18,
+    height: 28
+  },
+  switch: {
+    transition: 'opacity 500ms'
   }
 }))
 
