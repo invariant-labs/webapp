@@ -160,6 +160,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       setPlotMin(midPrice.x - initSideDist)
       setPlotMax(midPrice.x + initSideDist)
     } else {
+      setConcentrationIndex(0)
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[0],
@@ -269,7 +270,24 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       changeRangeHandler(leftRange, rightRange)
       autoZoomHandler(leftRange, rightRange)
     }
-  }, [isConcentrated, midPrice.index, concentrationArray])
+  }, [isConcentrated])
+
+  useEffect(() => {
+    if (isConcentrated && !ticksLoading) {
+      const index = concentrationIndex > concentrationArray.length - 1 ? concentrationArray.length - 1 : concentrationIndex
+      setConcentrationIndex(index)
+
+      const { leftRange, rightRange } = calculateConcentrationRange(
+        tickSpacing,
+        concentrationArray[index],
+        minimumRangesForTiers[feeTierIndex],
+        midPrice.index,
+        isXtoY
+      )
+      changeRangeHandler(leftRange, rightRange)
+      autoZoomHandler(leftRange, rightRange)
+    }
+  }, [midPrice.index, concentrationArray])
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
