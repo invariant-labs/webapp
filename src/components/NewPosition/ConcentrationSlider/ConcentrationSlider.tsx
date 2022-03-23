@@ -44,7 +44,7 @@ export const ConcentrationSlider: React.FC<IProps> = ({ values, valueChangeHandl
   return (
     <Slider
       classes={sliderClasses}
-      onChange={onChange}
+      onChangeCommitted={onChange}
       marks={marks}
       min={0}
       max={values.length - 1}

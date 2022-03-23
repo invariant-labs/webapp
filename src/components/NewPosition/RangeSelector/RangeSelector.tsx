@@ -274,7 +274,10 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   useEffect(() => {
     if (isConcentrated && !ticksLoading) {
-      const index = concentrationIndex > concentrationArray.length - 1 ? concentrationArray.length - 1 : concentrationIndex
+      const index =
+        concentrationIndex > concentrationArray.length - 1
+          ? concentrationArray.length - 1
+          : concentrationIndex
       setConcentrationIndex(index)
 
       const { leftRange, rightRange } = calculateConcentrationRange(
@@ -288,6 +291,14 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       autoZoomHandler(leftRange, rightRange)
     }
   }, [midPrice.index, concentrationArray])
+
+  const unsafePercent = useMemo(
+    () =>
+      (concentrationArray.findIndex(val => val >= maxSafeConcentrationsForTiers[feeTierIndex]) /
+        concentrationArray.length) *
+      100,
+    [concentrationArray, feeTierIndex]
+  )
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
@@ -422,11 +433,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 changeRangeHandler(leftRange, rightRange)
                 autoZoomHandler(leftRange, rightRange)
               }}
-              unsafePercent={
-                (maxSafeConcentrationsForTiers[feeTierIndex] /
-                  concentrationArray[concentrationArray.length - 1]) *
-                100
-              }
+              unsafePercent={unsafePercent}
             />
           </Grid>
         ) : (
