@@ -310,33 +310,33 @@ export function* getStats(): Generator {
               .sub(new BN(prevSnapshot.volumeX))
               .mul(xPrice)
               .div(new BN(10 ** DECIMAL)),
-            DECIMAL
+            tokenX.decimals
           )
           usdVolumeY = +printBN(
             new BN(snapshot.volumeY)
               .sub(new BN(prevSnapshot.volumeY))
               .mul(yPrice)
               .div(new BN(10 ** DECIMAL)),
-            DECIMAL
+            tokenY.decimals
           )
         } else {
           usdVolumeX = +printBN(
             new BN(snapshot.volumeX).mul(xPrice).div(new BN(10 ** DECIMAL)),
-            DECIMAL
+            tokenX.decimals
           )
           usdVolumeY = +printBN(
             new BN(snapshot.volumeY).mul(yPrice).div(new BN(10 ** DECIMAL)),
-            DECIMAL
+            tokenY.decimals
           )
         }
 
         const usdLiquidityX = +printBN(
           new BN(snapshot.liquidityX).mul(xPrice).div(new BN(10 ** DECIMAL)),
-          DECIMAL
+          tokenX.decimals
         )
         const usdLiquidityY = +printBN(
           new BN(snapshot.liquidityY).mul(yPrice).div(new BN(10 ** DECIMAL)),
-          DECIMAL
+          tokenY.decimals
         )
 
         volumeForTimestamps[timestamp] += usdVolumeX + usdVolumeY
