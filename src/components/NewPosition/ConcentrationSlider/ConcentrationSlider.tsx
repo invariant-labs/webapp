@@ -28,7 +28,7 @@ const Thumb: React.FC<ThumbProps> = ({ concentrationValues, ...props }) => {
       direction='column'>
       <Grid className={classes.labelWrapper}>
         <Typography className={classes.label}>
-          {concentrationValues[props['aria-valuenow'] ?? 0].toFixed(1)}x
+          {concentrationValues[props['aria-valuenow'] ?? 0].toFixed(0)}x
         </Typography>
       </Grid>
 
@@ -64,7 +64,7 @@ export const ConcentrationSlider: React.FC<IProps> = ({
 
   const marks = values.map((value, index) => ({
     value: index,
-    label: index === 0 || index === values.length - 1 ? `${value.toFixed(1)}x` : undefined
+    label: index === 0 || index === values.length - 1 ? `${value.toFixed(0)}x` : undefined
   }))
 
   return (
