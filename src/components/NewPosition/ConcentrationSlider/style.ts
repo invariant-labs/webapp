@@ -43,10 +43,13 @@ export const useSliderStyles = makeStyles<Theme, { valuesLength: number; unsafeP
       width: '100%'
     },
     rail: ({ unsafePercent }) => ({
-      background: `linear-gradient(90deg, #2EE09A 0%, #2EE09A ${unsafePercent}%, #FB555F ${Math.min(
-        unsafePercent + 5,
-        100
-      )}%)`,
+      background:
+        unsafePercent > 100
+          ? colors.invariant.green
+          : `linear-gradient(90deg, #2EE09A 0%, #2EE09A ${unsafePercent}%, #FB555F ${Math.min(
+              unsafePercent + 5,
+              100
+            )}%)`,
       height: 6,
       opacity: 1
     }),
@@ -63,7 +66,7 @@ export const useSliderStyles = makeStyles<Theme, { valuesLength: number; unsafeP
         transform: 'translateX(-90%)'
       }
     }),
-    mark: ({ valuesLength }) => ({
+    mark: ({ valuesLength, unsafePercent }) => ({
       display: 'none',
 
       [`&[data-index="${valuesLength - 1}"], &[data-index="0"]`]: {
@@ -79,7 +82,7 @@ export const useSliderStyles = makeStyles<Theme, { valuesLength: number; unsafeP
       },
 
       [`&[data-index="${valuesLength - 1}"]`]: {
-        background: colors.invariant.Error
+        background: unsafePercent > 100 ? colors.invariant.green : colors.invariant.Error
       }
     })
   })

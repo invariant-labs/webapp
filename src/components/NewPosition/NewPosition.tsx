@@ -444,6 +444,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             onDiscreteChange={onDiscreteChange}
             isConcentrated={isConcentrated}
             feeTierIndex={fee}
+            bestTierIndex={bestTierIndex}
           />
         ) : (
           <PoolInit

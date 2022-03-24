@@ -39,6 +39,7 @@ export interface IRangeSelector {
   isConcentrated?: boolean
   feeTierIndex: number
   poolIndex: number | null
+  bestTierIndex?: number
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -59,7 +60,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   onDiscreteChange,
   isConcentrated = false,
   feeTierIndex,
-  poolIndex
+  poolIndex,
+  bestTierIndex
 }) => {
   const classes = useStyles()
 
@@ -294,13 +296,14 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }, [midPrice.index, concentrationArray])
 
-  const unsafePercent = useMemo(
-    () =>
-      (concentrationArray.findIndex(val => val >= maxSafeConcentrationsForTiers[feeTierIndex]) /
-        concentrationArray.length) *
-      100,
-    [concentrationArray, feeTierIndex]
-  )
+  const unsafePercent = useMemo(() => {
+    const index =
+      typeof bestTierIndex === 'undefined'
+        ? concentrationArray.findIndex(val => val >= maxSafeConcentrationsForTiers[feeTierIndex])
+        : concentrationArray.findIndex(val => val >= maxSafeConcentrationsForTiers[bestTierIndex])
+
+    return index === -1 ? 101 : (index / concentrationArray.length) * 100
+  }, [concentrationArray, feeTierIndex, bestTierIndex])
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
