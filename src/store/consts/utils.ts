@@ -3,7 +3,6 @@ import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import {
   calculateTickDelta,
   DECIMAL,
-  getConcentrationArray,
   parseLiquidityOnTicks,
   simulateSwap
 } from '@invariant-labs/sdk/src/utils'
@@ -631,8 +630,8 @@ export const calculateConcentrationRange = (
   isXToY: boolean
 ) => {
   const tickDelta = calculateTickDelta(tickSpacing, minimumRange, concentration)
-  const lowerTick = currentTick - tickDelta * tickSpacing
-  const upperTick = currentTick + tickDelta * tickSpacing
+  const lowerTick = currentTick - (minimumRange / 2 + tickDelta) * tickSpacing
+  const upperTick = currentTick + (minimumRange / 2 + tickDelta) * tickSpacing
 
   return {
     leftRange: isXToY ? lowerTick : upperTick,
@@ -665,12 +664,3 @@ export const determinePositionTokenBlock = (
 
   return PositionTokenBlock.None
 }
-
-export const getProperConcentrationArray = (
-  tickSpacing: number,
-  minimumRange: number,
-  currentTick: number
-): number[] =>
-  getConcentrationArray(tickSpacing, minimumRange, currentTick)
-    .sort((a, b) => a - b)
-    .filter(val => calculateTickDelta(tickSpacing, minimumRange, val) > 0)

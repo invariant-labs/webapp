@@ -9,8 +9,7 @@ import {
   maxSpacingMultiplicity,
   minSpacingMultiplicity,
   toMaxNumericPlaces,
-  calculateConcentrationRange,
-  getProperConcentrationArray
+  calculateConcentrationRange
 } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
@@ -19,6 +18,7 @@ import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
 import useStyles from './style'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { maxSafeConcentrationsForTiers, minimumRangesForTiers } from '@consts/static'
+import { getConcentrationArray } from '@invariant-labs/sdk/lib/utils'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -169,7 +169,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         isXtoY
       )
       changeRangeHandler(leftRange, rightRange)
-      autoZoomHandler(leftRange, rightRange)
+      autoZoomHandler(leftRange, rightRange, true)
     }
   }
 
@@ -207,11 +207,11 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }, [ticksLoading, midPrice])
 
-  const autoZoomHandler = (left: number, right: number) => {
+  const autoZoomHandler = (left: number, right: number, canZoomCloser: boolean = false) => {
     const leftX = calcPrice(left, isXtoY, xDecimal, yDecimal)
     const rightX = calcPrice(right, isXtoY, xDecimal, yDecimal)
 
-    if (leftX < plotMin || rightX > plotMax) {
+    if (leftX < plotMin || rightX > plotMax || canZoomCloser) {
       const leftDist = Math.abs(
         leftX -
           calcPrice(
@@ -252,7 +252,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const concentrationArray = useMemo(
     () =>
-      getProperConcentrationArray(tickSpacing, minimumRangesForTiers[feeTierIndex], midPrice.index),
+      getConcentrationArray(tickSpacing, minimumRangesForTiers[feeTierIndex], midPrice.index).sort(
+        (a, b) => a - b
+      ),
     [tickSpacing, midPrice.index, feeTierIndex]
   )
 
@@ -268,7 +270,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         isXtoY
       )
       changeRangeHandler(leftRange, rightRange)
-      autoZoomHandler(leftRange, rightRange)
+      autoZoomHandler(leftRange, rightRange, true)
     }
   }, [isConcentrated])
 
@@ -288,7 +290,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         isXtoY
       )
       changeRangeHandler(leftRange, rightRange)
-      autoZoomHandler(leftRange, rightRange)
+      autoZoomHandler(leftRange, rightRange, true)
     }
   }, [midPrice.index, concentrationArray])
 
@@ -431,7 +433,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                   isXtoY
                 )
                 changeRangeHandler(leftRange, rightRange)
-                autoZoomHandler(leftRange, rightRange)
+                autoZoomHandler(leftRange, rightRange, true)
               }}
               dragHandler={value => {
                 setConcentrationIndex(value)
