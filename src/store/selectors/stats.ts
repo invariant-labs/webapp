@@ -6,7 +6,7 @@ import { tokens } from './pools'
 
 const store = (s: AnyProps) => s[statsSliceName] as IStatsStore
 
-export const { volumePlot, liquidityPlot, volume24, tvl24, fees24, tokensData, poolsData } =
+export const { volumePlot, liquidityPlot, volume24, tvl24, fees24, tokensData, poolsData, isLoading } =
   keySelectors(store, [
     'volumePlot',
     'liquidityPlot',
@@ -14,7 +14,8 @@ export const { volumePlot, liquidityPlot, volume24, tvl24, fees24, tokensData, p
     'tvl24',
     'fees24',
     'tokensData',
-    'poolsData'
+    'poolsData',
+    'isLoading'
   ])
 
 export interface ExtendedPoolStatsData extends PoolStatsData {
@@ -44,7 +45,8 @@ export const statsSelectors = {
   tokensData,
   poolsData,
   poolsStatsWithTokensDetails,
-  tokensStatsWithTokensDetails
+  tokensStatsWithTokensDetails,
+  isLoading
 }
 
 export default statsSelectors

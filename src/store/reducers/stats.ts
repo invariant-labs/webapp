@@ -36,6 +36,7 @@ export interface IStatsStore {
   fees24: Value24H
   tokensData: TokenStatsData[]
   poolsData: PoolStatsData[]
+  isLoading: boolean
 }
 
 export const defaultState: IStatsStore = {
@@ -54,7 +55,8 @@ export const defaultState: IStatsStore = {
     change: 0
   },
   tokensData: [],
-  poolsData: []
+  poolsData: [],
+  isLoading: true
 }
 
 export const statsSliceName = 'stats'
@@ -62,11 +64,18 @@ const statsSlice = createSlice({
   name: statsSliceName,
   initialState: defaultState,
   reducers: {
-    setCurrentStats(state, action: PayloadAction<IStatsStore>) {
-      state = action.payload
+    setCurrentStats(state, action: PayloadAction<Omit<IStatsStore, 'isLoading'>>) {
+      state = {
+        ...action.payload,
+        isLoading: false
+      }
       return state
     },
-    getCurrentStats(_state, _action) {}
+    getCurrentStats(state) {
+      state.isLoading = true
+
+      return state
+    }
   }
 })
 

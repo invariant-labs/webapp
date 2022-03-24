@@ -73,7 +73,8 @@
     "extensions": {
       "serumV3Usdc": "5F7LGsP1LPtaRV7vVKgxwNYX4Vf22xvuzyXjyar7jJqp",
       "twitter": "https://twitter.com/LidoFinance",
-      "website": "https://solana.lido.fi/"
+      "website": "https://solana.lido.fi/",
+      "coingeckoId": "lido-staked-sol"
     }
   },
   {
@@ -115,7 +116,7 @@
     "extensions": {
       "address": "uusd",
       "bridgeContract": "https://finder.terra.money/columbus-5/address/terra10nmmwe8r3g99a9newtqa7a75xfgs2e8z87r2sf",
-      "coingeckoId": "terra-usd"
+      "coingeckoId": "terrausd"
     }
   },
   {

@@ -184,15 +184,15 @@ export function* getStats(): Generator {
       }
 
       const coingeckoXId =
-        coingeckoTokens?.[poolsDataObject[address].tokenX.toString()].coingeckoId ?? ''
+        coingeckoTokens?.[poolsDataObject[address].tokenX.toString()]?.coingeckoId ?? ''
       const coingeckoYId =
-        coingeckoTokens?.[poolsDataObject[address].tokenY.toString()].coingeckoId ?? ''
+        coingeckoTokens?.[poolsDataObject[address].tokenY.toString()]?.coingeckoId ?? ''
 
       if (!tokensDataObject[poolsDataObject[address].tokenX.toString()]) {
         tokensDataObject[poolsDataObject[address].tokenX.toString()] = {
           address: poolsDataObject[address].tokenX,
-          price: coingeckoPricesData?.[coingeckoXId].price ?? 0,
-          priceChange: coingeckoPricesData?.[coingeckoXId].priceChange ?? 0,
+          price: coingeckoPricesData?.[coingeckoXId]?.price ?? 0,
+          priceChange: coingeckoPricesData?.[coingeckoXId]?.priceChange ?? 0,
           volume24: 0,
           tvl: 0
         }
@@ -201,8 +201,8 @@ export function* getStats(): Generator {
       if (!tokensDataObject[poolsDataObject[address].tokenY.toString()]) {
         tokensDataObject[poolsDataObject[address].tokenY.toString()] = {
           address: poolsDataObject[address].tokenY,
-          price: coingeckoPricesData?.[coingeckoYId].price ?? 0,
-          priceChange: coingeckoPricesData?.[coingeckoXId].priceChange ?? 0,
+          price: coingeckoPricesData?.[coingeckoYId]?.price ?? 0,
+          priceChange: coingeckoPricesData?.[coingeckoXId]?.priceChange ?? 0,
           volume24: 0,
           tvl: 0
         }
