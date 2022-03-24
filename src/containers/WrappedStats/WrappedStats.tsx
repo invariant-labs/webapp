@@ -32,6 +32,7 @@ export const WrappedStats: React.FC = () => {
         <Liquidity
           liquidityVolume={tvl24h.value}
           liquidityPercent={tvl24h.change}
+          data={liquidityPlotData}
         />
       </Grid>
       <VolumeBar

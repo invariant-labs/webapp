@@ -3,9 +3,11 @@ import { Grid, Typography, Box, useMediaQuery } from '@material-ui/core'
 import { formatNumbers, showPrefix } from '@consts/utils'
 import { ResponsiveBar } from '@nivo/bar'
 import classNames from 'classnames'
-import { useStyles } from './style'
 import { colors, theme } from '@static/theme'
 import { TimeData } from '@reducers/stats'
+// @ts-expect-error
+import { linearGradientDef } from '@nivo/core'
+import { useStyles } from './style'
 
 interface StatsInterface {
   percentVolume: number
@@ -119,7 +121,9 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
               const day = date.getDate()
               const month = date.getMonth() + 1
 
-              return `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}`
+              const dayMod = (time / (1000 * 60 * 60 * 24)) % 4
+
+              return dayMod === 0 ? `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}` : ''
             }
           }}
           theme={Theme}
@@ -130,6 +134,15 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
           isInteractive={false}
           padding={0.03}
           indexScale={{ type: 'band', round: true }}
+          defs={[
+            linearGradientDef('gradient', [
+              { offset: 0, color: '#EF84F5' },
+              { offset: 100, color: '#9C3EBD', opacity: 0.7 }
+            ])
+          ]}
+          fill={[
+            { match: '*', id: 'gradient' }
+          ]}
           colors={colors.invariant.pink}
         />
       </div>
