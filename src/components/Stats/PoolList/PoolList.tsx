@@ -23,13 +23,13 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
 
   const paginator = (currentPage: number) => {
     const page = currentPage || 1
-    const perPage = 7
+    const perPage = 10
     const offest = (page - 1) * perPage
 
     return data.slice(offest).slice(0, perPage)
   }
 
-  const pages = Math.ceil(data.length / 7)
+  const pages = Math.ceil(data.length / 10)
 
   return (
     <Grid classes={{ root: classes.container }}>
@@ -37,7 +37,7 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
       {paginator(page).map((element, index) => (
         <PoolListItem
           displayType='token'
-          tokenIndex={index + 1}
+          tokenIndex={index + 1 + (page - 1) * 10}
           symbolFrom={element.symbolFrom}
           symbolTo={element.symbolTo}
           iconFrom={element.iconFrom}

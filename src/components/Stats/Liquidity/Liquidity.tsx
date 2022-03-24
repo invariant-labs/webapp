@@ -82,7 +82,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({ liquidityPercent, liquidityVo
             tickSize: 0,
             tickPadding: 10,
             tickRotation: 0,
-            tickValues: 'every 4 days',
+            tickValues: data.length >= 25 ? 'every 4 days' : data.length >= 10 ? 'every 2 days' : 'every day',
             format: '%d/%m'
           }}
           legends={[]}

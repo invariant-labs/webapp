@@ -45,7 +45,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
           <TokenListItem
             key={index}
             displayType='tokens'
-            itemNumber={index + 1}
+            itemNumber={index + 1 + (page - 1) * 10}
             icon={token.icon}
             name={token.name}
             symbol={token.symbol}
@@ -58,7 +58,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
       })}
       <Grid className={classes.pagination}>
         <PaginationList
-          pages={Math.ceil(data.length / 7)}
+          pages={Math.ceil(data.length / 10)}
           defaultPage={1}
           handleChangePage={handleChangePagination}
           variant='center'

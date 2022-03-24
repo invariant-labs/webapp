@@ -63,7 +63,7 @@ const PoolListItem: React.FC<IProps> = ({
           <Grid>
             <Typography>Name</Typography>
           </Grid>
-          <Typography>fee</Typography>
+          <Typography>Fee</Typography>
           <Typography>Volume 24H</Typography>
           <Typography>TVL</Typography>
         </Grid>
