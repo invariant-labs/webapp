@@ -40,7 +40,8 @@ export const useThumbStyles = makeStyles(() => ({
 export const useSliderStyles = makeStyles<Theme, { valuesLength: number; unsafePercent: number }>(
   () => ({
     root: {
-      width: '100%'
+      width: '100%',
+      paddingBlock: 13
     },
     rail: ({ unsafePercent }) => ({
       background:
@@ -57,6 +58,7 @@ export const useSliderStyles = makeStyles<Theme, { valuesLength: number; unsafeP
       color: colors.invariant.text,
       ...typography.body1,
       marginTop: 10,
+      top: 26,
 
       '&[data-index="0"]': {
         transform: 'translateX(-30%)'

@@ -107,7 +107,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   sliderWrapper: {
     paddingTop: 24,
-    paddingInline: 8
+    paddingInline: 8,
+    height: 77,
+    position: 'relative'
+  },
+  unsafeWarning: {
+    ...typography.body2,
+    color: colors.invariant.Error,
+    position: 'absolute',
+    top: 60,
+    left: 30,
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption4,
+      top: 61
+    }
   }
 }))
 

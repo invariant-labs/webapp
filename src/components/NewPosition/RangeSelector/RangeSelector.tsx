@@ -296,14 +296,18 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }, [midPrice.index, concentrationArray])
 
-  const unsafePercent = useMemo(() => {
-    const index =
+  const unsafeIndex = useMemo(
+    () =>
       typeof bestTierIndex === 'undefined'
         ? concentrationArray.findIndex(val => val >= maxSafeConcentrationsForTiers[feeTierIndex])
-        : concentrationArray.findIndex(val => val >= maxSafeConcentrationsForTiers[bestTierIndex])
+        : concentrationArray.findIndex(val => val >= maxSafeConcentrationsForTiers[bestTierIndex]),
+    [concentrationArray, feeTierIndex, bestTierIndex]
+  )
 
-    return index === -1 ? 101 : (index / concentrationArray.length) * 100
-  }, [concentrationArray, feeTierIndex, bestTierIndex])
+  const unsafePercent = useMemo(
+    () => (unsafeIndex === -1 ? 101 : (unsafeIndex / concentrationArray.length) * 100),
+    [concentrationArray, unsafeIndex]
+  )
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
@@ -443,6 +447,11 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               }}
               unsafePercent={unsafePercent}
             />
+            {unsafeIndex !== -1 && concentrationIndex >= unsafeIndex ? (
+              <Typography className={classes.unsafeWarning}>
+                <b>Warning!</b> Unsafe concentration.
+              </Typography>
+            ) : null}
           </Grid>
         ) : (
           <Grid container className={classes.buttons}>
