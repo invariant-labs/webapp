@@ -47,28 +47,18 @@ const TokenListItem: React.FC<IProps> = ({
               {!hideName && <span className={classes.tokenSymbol}>{` (${symbol})`}</span>}
             </Typography>
           </Grid>
-          <Typography>${price.toFixed(2)}</Typography>
+          <Typography>{`~$${formatNumbers()(price.toString())}${showPrefix(price)}`}</Typography>
           {!hideName && (
             <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
-              {isNegative ? `${priceChange}%` : `+${priceChange}%`}
+              {isNegative ? `${priceChange.toFixed(2)}%` : `+${priceChange.toFixed(2)}%`}
             </Typography>
           )}
           {!hideName && (
             <Typography>
-              {isXDown
-                ? `~$${Number(formatNumbers()(volume.toString())).toFixed(1)} ${showPrefix(
-                    volume
-                  )}`
-                : `$${volume}`}
+              {`~$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}
             </Typography>
           )}
-          <Typography>
-            {isXDown
-              ? `~$${Number(formatNumbers()(TVL.toString())).toFixed(1)} ${showPrefix(
-                  TVL
-                )}`
-              : `$${TVL}`}
-          </Typography>
+          <Typography>{`~$${formatNumbers()(TVL.toString())}${showPrefix(TVL)}`}</Typography>
         </Grid>
       ) : (
         <Grid

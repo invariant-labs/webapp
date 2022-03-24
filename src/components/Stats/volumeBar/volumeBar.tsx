@@ -29,9 +29,9 @@ const VolumeBar: React.FC<Iprops> = ({
   return (
     <Grid container classes={{ container: classes.container }}>
       <Box className={classes.tokenName}>
-        <Typography className={classes.tokenHeader}>Volume24H:</Typography>
+        <Typography className={classes.tokenHeader}>Volume 24H:</Typography>
         <Typography className={classes.tokenContent}>
-          {formatNumbers()(volume.toString())}
+          ${formatNumbers()(volume.toString())}
           {showPrefix(volume)}
         </Typography>
         {!isXDown && (
@@ -40,14 +40,16 @@ const VolumeBar: React.FC<Iprops> = ({
               classes.tokenContent,
               percentVolume < 0 ? classes.tokenLow : classes.tokenUp
             )}>
-            {percentVolume < 0 ? `(${percentVolume}%)` : `(+${percentVolume}%)`}
+            {percentVolume < 0
+              ? `(${percentVolume.toFixed(2)}%)`
+              : `(+${percentVolume.toFixed(2)}%)`}
           </Typography>
         )}
       </Box>
       <Box className={classes.tokenName}>
         <Typography className={classes.tokenHeader}>TVL 24H:</Typography>
         <Typography className={classes.tokenContent}>
-          {formatNumbers()(tvlVolume.toString())}
+          ${formatNumbers()(tvlVolume.toString())}
           {showPrefix(tvlVolume)}
         </Typography>
         {!isXDown && (
@@ -56,14 +58,14 @@ const VolumeBar: React.FC<Iprops> = ({
               classes.tokenContent,
               percentTvl < 0 ? classes.tokenLow : classes.tokenUp
             )}>
-            {percentTvl < 0 ? `(${percentTvl}%)` : `(+${percentTvl}%)`}
+            {percentTvl < 0 ? `(${percentTvl.toFixed(2)}%)` : `(+${percentTvl.toFixed(2)}%)`}
           </Typography>
         )}
       </Box>
       <Box className={classes.tokenName}>
         <Typography className={classes.tokenHeader}>Fees 24H:</Typography>
         <Typography className={classes.tokenContent}>
-          {formatNumbers()(feesVolume.toString())}
+          ${formatNumbers()(feesVolume.toString())}
           {showPrefix(feesVolume)}
         </Typography>
         {!isXDown && (
@@ -72,7 +74,7 @@ const VolumeBar: React.FC<Iprops> = ({
               classes.tokenContent,
               percentFees < 0 ? classes.tokenLow : classes.tokenUp
             )}>
-            {percentFees < 0 ? `(${percentFees}%)` : `(+${percentFees}%)`}
+            {percentFees < 0 ? `(${percentFees.toFixed(2)}%)` : `(+${percentFees.toFixed(2)}%)`}
           </Typography>
         )}
       </Box>

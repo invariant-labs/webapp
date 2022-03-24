@@ -97,10 +97,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
                   classes.volumeStatusHeader,
                   isLower ? classes.volumeLow : classes.volumeUp
                 )}>
-                {percentVolume < 0
-                  ? percentVolume
-                  : `+${percentVolume}`}
-                %
+                {percentVolume < 0 ? percentVolume.toFixed(2) : `+${percentVolume.toFixed(2)}`}%
               </Typography>
             </Box>
           </Box>
@@ -116,14 +113,16 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
             tickSize: 0,
             tickPadding: 10,
             tickRotation: 0,
-            format: (time) => {
+            format: time => {
               const date = new Date(time)
               const day = date.getDate()
               const month = date.getMonth() + 1
 
               const dayMod = (time / (1000 * 60 * 60 * 24)) % 4
 
-              return dayMod === 0 ? `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}` : ''
+              return dayMod === 0
+                ? `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}`
+                : ''
             }
           }}
           theme={Theme}
@@ -140,9 +139,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
               { offset: 100, color: '#9C3EBD', opacity: 0.7 }
             ])
           ]}
-          fill={[
-            { match: '*', id: 'gradient' }
-          ]}
+          fill={[{ match: '*', id: 'gradient' }]}
           colors={colors.invariant.pink}
         />
       </div>

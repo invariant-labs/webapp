@@ -15,11 +15,7 @@ interface LiquidityInterface {
   data: TimeData[]
 }
 
-const Liquidity: React.FC<LiquidityInterface> = ({
-  liquidityPercent,
-  liquidityVolume,
-  data
-}) => {
+const Liquidity: React.FC<LiquidityInterface> = ({ liquidityPercent, liquidityVolume, data }) => {
   const classes = useStyles()
 
   const Theme = {
@@ -56,8 +52,8 @@ const Liquidity: React.FC<LiquidityInterface> = ({
                   isLower ? classes.volumeLow : classes.volumeUp
                 )}>
                 {liquidityPercent < 0
-                  ? liquidityPercent
-                  : `+ ${liquidityPercent}`}
+                  ? liquidityPercent.toFixed(2)
+                  : `+${liquidityPercent.toFixed(2)}`}
                 %
               </Typography>
             </Grid>
@@ -66,13 +62,15 @@ const Liquidity: React.FC<LiquidityInterface> = ({
       </Grid>
       <Grid className={classes.barContainer}>
         <ResponsiveLine
-          data={[{
-            id: 'liquidity',
-            data: data.map(({ timestamp, value }) => ({
-              x: new Date(timestamp),
-              y: value
-            }))
-          }]}
+          data={[
+            {
+              id: 'liquidity',
+              data: data.map(({ timestamp, value }) => ({
+                x: new Date(timestamp),
+                y: value
+              }))
+            }
+          ]}
           margin={{ top: 24, bottom: 24, left: 24, right: 24 }}
           xScale={{
             type: 'time',
