@@ -44,7 +44,7 @@ export const WrappedStats: React.FC = () => {
       ) : (
         <>
           <Typography className={classes.subheader}>Overview</Typography>
-          <Grid container className={classes.plotsRow}>
+          <Grid container className={classes.plotsRow} wrap='nowrap'>
             <Volume
               volume={volume24h.value}
               percentVolume={volume24h.change}
@@ -69,7 +69,7 @@ export const WrappedStats: React.FC = () => {
             />
           </Grid>
           <Typography className={classes.subheader}>Top tokens</Typography>
-          <Grid className={classes.row}>
+          <Grid container className={classes.row}>
             <TokensList
               data={tokensList
                 .map(tokenData => ({

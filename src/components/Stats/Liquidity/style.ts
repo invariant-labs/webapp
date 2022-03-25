@@ -6,12 +6,13 @@ export const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.component,
     color: 'white',
     borderRadius: 24,
-    paddingBlock: 24
+    paddingBlock: 24,
+    boxSizing: 'border-box'
   },
   liquidityContainer: {
     dispaly: 'flex',
     flexDirection: 'column',
-    alignItems: 'flexp-start',
+    alignItems: 'flex-start',
     fontWeight: 'normal',
     marginLeft: 24
   },

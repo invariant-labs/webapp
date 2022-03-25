@@ -32,7 +32,7 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
   const pages = Math.ceil(data.length / 10)
 
   return (
-    <Grid classes={{ root: classes.container }}>
+    <Grid container direction='column' classes={{ root: classes.container }}>
       <PoolListItem displayType='header' />
       {paginator(page).map((element, index) => (
         <PoolListItem

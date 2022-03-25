@@ -38,7 +38,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
     }
   }
   return (
-    <Grid classes={{ root: classes.container }}>
+    <Grid container direction='column' classes={{ root: classes.container }}>
       <TokenListItem displayType='header' />
       {paginator(page).data.map((token, index) => {
         return (

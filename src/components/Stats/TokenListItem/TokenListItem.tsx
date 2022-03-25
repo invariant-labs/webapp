@@ -55,10 +55,10 @@ const TokenListItem: React.FC<IProps> = ({
           )}
           {!hideName && (
             <Typography>
-              {`~$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}
+              {`$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}
             </Typography>
           )}
-          <Typography>{`~$${formatNumbers()(TVL.toString())}${showPrefix(TVL)}`}</Typography>
+          <Typography>{`$${formatNumbers()(TVL.toString())}${showPrefix(TVL)}`}</Typography>
         </Grid>
       ) : (
         <Grid

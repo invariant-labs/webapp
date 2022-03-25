@@ -3,7 +3,7 @@ import { typography, colors } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    maxWidth: 1120
+    maxWidth: 1072
   },
   subheader: {
     ...typography.heading4,
@@ -27,13 +27,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.white.main
   },
   plot: {
-    flex: '1 1 0%',
+    width: 524,
 
     '&:first-child': {
       marginRight: 24
     },
 
     [theme.breakpoints.down('sm')]: {
+      width: '100%',
+
       '&:first-child': {
         marginRight: 0,
         marginBottom: 24

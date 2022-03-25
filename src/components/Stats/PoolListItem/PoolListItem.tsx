@@ -52,8 +52,8 @@ const PoolListItem: React.FC<IProps> = ({
             </Box>
           </Grid>
           <Typography>{fee}%</Typography>
-          <Typography>{`~$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}</Typography>
-          <Typography>{`~$${formatNumbers()(TVL.toString())}${showPrefix(TVL)}`}</Typography>
+          <Typography>{`$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}</Typography>
+          <Typography>{`$${formatNumbers()(TVL.toString())}${showPrefix(TVL)}`}</Typography>
         </Grid>
       ) : (
         <Grid container classes={{ container: classes.container, root: classes.header }}>

@@ -3,7 +3,7 @@ import { colors, typography, theme } from '@static/theme'
 
 const useStyle = makeStyles(() => ({
   container: {
-    maxWidth: 1120,
+    maxWidth: 1072,
     width: '100%',
     backgroundColor: colors.invariant.component,
     borderRadius: 22,
