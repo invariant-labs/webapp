@@ -19,9 +19,5 @@ storiesOf('stats/TokenListItem', module)
     )
   })
   .add('Header', () => {
-    return (
-      <TokenListItem
-        displayType='header'
-      />
-    )
+    return <TokenListItem displayType='header' />
   })

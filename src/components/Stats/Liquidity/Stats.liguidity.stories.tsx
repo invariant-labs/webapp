@@ -22,11 +22,5 @@ storiesOf('position/stats', module)
       setData(data)
     }, [])
 
-    return (
-      <Liquidity
-        liquidityPercent={-4.14}
-        liquidityVolume={383575527255}
-        data={data}
-      />
-    )
+    return <Liquidity liquidityPercent={-4.14} liquidityVolume={383575527255} data={data} />
   })

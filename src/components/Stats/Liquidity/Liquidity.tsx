@@ -16,7 +16,12 @@ interface LiquidityInterface {
   className?: string
 }
 
-const Liquidity: React.FC<LiquidityInterface> = ({ liquidityPercent, liquidityVolume, data, className }) => {
+const Liquidity: React.FC<LiquidityInterface> = ({
+  liquidityPercent,
+  liquidityVolume,
+  data,
+  className
+}) => {
   const classes = useStyles()
 
   const Theme = {
@@ -83,7 +88,8 @@ const Liquidity: React.FC<LiquidityInterface> = ({ liquidityPercent, liquidityVo
             tickSize: 0,
             tickPadding: 10,
             tickRotation: 0,
-            tickValues: data.length >= 24 ? 'every 4 days' : data.length >= 8 ? 'every 2 days' : 'every day',
+            tickValues:
+              data.length >= 24 ? 'every 4 days' : data.length >= 8 ? 'every 2 days' : 'every day',
             format: '%d/%m'
           }}
           legends={[]}
