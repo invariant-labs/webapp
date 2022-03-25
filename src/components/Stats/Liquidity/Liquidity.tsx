@@ -4,18 +4,19 @@ import { ResponsiveLine } from '@nivo/line'
 import { linearGradientDef } from '@nivo/core'
 import { formatNumbers, showPrefix } from '@consts/utils'
 import { Grid, Typography } from '@material-ui/core'
-import { useStyles } from './style'
 import classNames from 'classnames'
 import { colors } from '@static/theme'
 import { TimeData } from '@reducers/stats'
+import { useStyles } from './style'
 
 interface LiquidityInterface {
   liquidityPercent: number
   liquidityVolume: number
   data: TimeData[]
+  className?: string
 }
 
-const Liquidity: React.FC<LiquidityInterface> = ({ liquidityPercent, liquidityVolume, data }) => {
+const Liquidity: React.FC<LiquidityInterface> = ({ liquidityPercent, liquidityVolume, data, className }) => {
   const classes = useStyles()
 
   const Theme = {
@@ -31,9 +32,9 @@ const Liquidity: React.FC<LiquidityInterface> = ({ liquidityPercent, liquidityVo
   const isLower = liquidityPercent < 0
 
   return (
-    <Grid className={classes.container}>
+    <Grid className={classNames(classes.container, className)}>
       <Grid className={classes.liquidityContainer}>
-        <Typography className={classes.liquidityHeader}>Liquidity 24H</Typography>
+        <Typography className={classes.liquidityHeader}>Liquidity</Typography>
         <Grid className={classes.volumePercentHeader}>
           <Typography className={classes.volumeLiquidityHeader}>
             ${formatNumbers()(liquidityVolume.toString())}

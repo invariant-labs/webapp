@@ -72,7 +72,7 @@ const TokenListItem: React.FC<IProps> = ({
             <Typography>Name</Typography>
           </Grid>
           <Typography>Price</Typography>
-          {!hideName && <Typography>Price Change</Typography>}
+          {!hideName && <Typography>Price change</Typography>}
           {!hideName && <Typography>Volume 24H</Typography>}
           <Typography>TVL</Typography>
         </Grid>

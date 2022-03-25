@@ -12,10 +12,11 @@ import { useStyles } from './style'
 interface StatsInterface {
   percentVolume: number
   volume: number
-  data: TimeData[]
+  data: TimeData[],
+  className?: string
 }
 
-const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
+const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, className }) => {
   const classes = useStyles()
 
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
@@ -77,9 +78,9 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data }) => {
   const isLower = percentVolume < 0
 
   return (
-    <Grid className={classes.container}>
+    <Grid className={classNames(classes.container, className)}>
       <Box className={classes.volumeContainer}>
-        <Typography className={classes.volumeHeader}>Volume 24H</Typography>
+        <Typography className={classes.volumeHeader}>Volume</Typography>
         <div className={classes.volumePercentContainer}>
           <Typography className={classes.volumePercentHeader}>
             ${formatNumbers()(volume.toString())}

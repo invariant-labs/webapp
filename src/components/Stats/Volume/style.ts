@@ -4,9 +4,9 @@ import { typography, colors } from '@static/theme'
 export const useStyles = makeStyles(() => ({
   container: {
     backgroundColor: colors.invariant.component,
-    maxWidth: '524px',
     borderRadius: 24,
-    padding: 24
+    padding: 24,
+    boxSizing: 'border-box'
   },
   volumeContainer: {
     display: 'flex',

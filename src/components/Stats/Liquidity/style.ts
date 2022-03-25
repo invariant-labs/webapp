@@ -5,7 +5,6 @@ export const useStyles = makeStyles(() => ({
   container: {
     backgroundColor: colors.invariant.component,
     color: 'white',
-    maxWidth: '524px',
     borderRadius: 24,
     paddingBlock: 24
   },
