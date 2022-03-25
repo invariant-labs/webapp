@@ -607,6 +607,7 @@ export interface PoolSnapshot {
 }
 
 export const getNetworkStats = async (name: string): Promise<Record<string, PoolSnapshot[]>> => {
+  // TODO: later change api url to api.invariant.app
   const { data } = await axios.get<Record<string, PoolSnapshot[]>>(
     `https://stats-one-red.vercel.app/stats/${name}`
   )
@@ -692,6 +693,7 @@ export const getCoingeckoPricesData = async (
 export const getCoingeckoPricesHistory = async (): Promise<
   Record<string, Record<string, number>>
 > => {
+  // TODO: later change api url to api.invariant.app
   const { data } = await axios.get<Record<string, Record<string, number>>>(
     'https://stats-one-red.vercel.app/pricesHistory'
   )
