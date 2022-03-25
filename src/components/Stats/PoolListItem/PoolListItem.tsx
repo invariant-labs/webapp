@@ -35,12 +35,12 @@ const PoolListItem: React.FC<IProps> = ({
       {displayType === 'token' ? (
         <Grid
           container
-          classes={{ container: classes.container, root: classes.header }}
+          classes={{ container: classes.container }}
           style={{ color: colors.white.main }}>
           <Typography>{tokenIndex}</Typography>
           <Grid className={classes.imageContainer}>
             {!hideTokenImage && (
-              <Box>
+              <Box className={classes.iconsWrapper}>
                 <img src={iconFrom} />
                 <img src={iconTo} />
               </Box>

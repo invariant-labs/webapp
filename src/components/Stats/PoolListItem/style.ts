@@ -39,11 +39,17 @@ const useStyle = makeStyles(() => ({
     }
   },
 
+  iconsWrapper: {
+    height: 28
+  },
+
   header: {
-    header: {
-      '& p': {
-        ...typography.heading4,
-        fontWeight: 400
+    '& p': {
+      ...typography.heading4,
+      fontWeight: 400,
+
+      [theme.breakpoints.down('sm')]: {
+        ...typography.caption2
       }
     }
   },
