@@ -77,13 +77,13 @@ const Liquidity: React.FC<LiquidityInterface> = ({ liquidityPercent, liquidityVo
             type: 'time',
             format: 'native',
             precision: 'day',
-            useUTC: true
+            useUTC: false
           }}
           axisBottom={{
             tickSize: 0,
             tickPadding: 10,
             tickRotation: 0,
-            tickValues: data.length >= 25 ? 'every 4 days' : data.length >= 10 ? 'every 2 days' : 'every day',
+            tickValues: data.length >= 24 ? 'every 4 days' : data.length >= 8 ? 'every 2 days' : 'every day',
             format: '%d/%m'
           }}
           legends={[]}

@@ -119,7 +119,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, classNa
               const day = date.getDate()
               const month = date.getMonth() + 1
 
-              const dayMod = Math.floor(time / (1000 * 60 * 60 * 24)) % (data.length >= 25 ? 4 : data.length >= 10 ? 2 : 1)
+              const dayMod = Math.floor(time / (1000 * 60 * 60 * 24)) % (data.length >= 24 ? 4 : data.length >= 8 ? 2 : 1)
 
               return dayMod === 0
                 ? `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}`
