@@ -45,11 +45,11 @@ const PoolListItem: React.FC<IProps> = ({
                 <img src={iconTo} />
               </Box>
             )}
-            <Box className={classes.symbolsContainer}>
+            <Grid className={classes.symbolsContainer}>
               <Typography>
                 {symbolFrom}/{symbolTo}
               </Typography>
-            </Box>
+            </Grid>
           </Grid>
           <Typography>{fee}%</Typography>
           <Typography>{`$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}</Typography>

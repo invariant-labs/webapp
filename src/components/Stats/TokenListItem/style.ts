@@ -53,6 +53,14 @@ export const useStyles = makeStyles(theme => ({
   tokenName: {
     display: 'flex',
     alignItems: 'center',
+    paddingRight: 5,
+
+    '& p': {
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis'
+    },
+
     '& img': {
       width: 28,
       marginRight: 8,

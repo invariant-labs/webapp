@@ -54,7 +54,17 @@ const useStyle = makeStyles(() => ({
     }
   },
 
-  symbolsContainer: { marginLeft: 10 }
+  symbolsContainer: {
+    marginLeft: 10,
+    paddingRight: 5,
+
+    '& p': {
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      display: 'block'
+    }
+  }
 }))
 
 export default useStyle
