@@ -52,7 +52,7 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
           pages={pages}
           defaultPage={1}
           handleChangePage={handleChangePagination}
-          variant='center'
+          variant='flex-end'
         />
       </Grid>
     </Grid>

@@ -11,7 +11,8 @@ const useStyles = makeStyles(() => ({
   pagination: {
     width: '100%',
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginBlock: 10
   }
 }))
 

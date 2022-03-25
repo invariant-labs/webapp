@@ -38,7 +38,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
     }
   }
   return (
-    <Grid container direction='column' classes={{ root: classes.container }}>
+    <Grid container direction='column' classes={{ root: classes.container }} wrap='nowrap'>
       <TokenListItem displayType='header' />
       {paginator(page).data.map((token, index) => {
         return (
@@ -61,7 +61,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
           pages={Math.ceil(data.length / 10)}
           defaultPage={1}
           handleChangePage={handleChangePagination}
-          variant='center'
+          variant='flex-end'
         />
       </Grid>
     </Grid>
