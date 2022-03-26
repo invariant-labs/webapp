@@ -111,17 +111,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 77,
     position: 'relative'
   },
-  unsafeWarning: {
-    ...typography.body2,
-    color: colors.invariant.Error,
+  warningWrapper: {
     position: 'absolute',
     top: 60,
     left: 30,
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.caption4,
       top: 61
     }
+  },
+  unsafeWarning: {
+    ...typography.body2,
+    color: colors.invariant.Error,
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption4
+    }
+  },
+  questionMark: {
+    width: 14,
+    height: 14,
+    marginLeft: 5
+  },
+  tooltip: {
+    background: colors.invariant.componentBcg,
+    borderRadius: 12,
+    width: 300,
+    textAlign: 'justify',
+    padding: 10
+  },
+  tooltipText: {
+    ...typography.caption4,
+    color: colors.white.main
   }
 }))
 

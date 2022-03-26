@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Button, Grid, Tooltip, Typography } from '@material-ui/core'
 import React, { useState, useEffect, useMemo } from 'react'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
@@ -15,10 +15,11 @@ import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
-import useStyles from './style'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { maxSafeConcentrationsForTiers, minimumRangesForTiers } from '@consts/static'
 import { getConcentrationArray } from '@invariant-labs/sdk/lib/utils'
+import questionMark from '@static/svg/questionMark.svg'
+import useStyles from './style'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -448,9 +449,35 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               unsafePercent={unsafePercent}
             />
             {unsafeIndex !== -1 && concentrationIndex >= unsafeIndex ? (
-              <Typography className={classes.unsafeWarning}>
-                <b>Warning!</b> Unsafe concentration.
-              </Typography>
+              <Grid
+                className={classes.warningWrapper}
+                container
+                item
+                direction='row'
+                wrap='nowrap'
+                alignItems='center'>
+                <Typography className={classes.unsafeWarning}>
+                  Extremely high concentration
+                </Typography>
+                <Tooltip
+                  title={
+                    <Typography className={classes.tooltipText}>
+                      High concentration enforces that your liquidity is provided within a tight
+                      price range. Higher concentration will allow you to earn more, but it has
+                      additional risk. Choosing high concentration is appropriate if you assume low
+                      price volatility.
+                      <br />
+                      Make sure you want to open a position in the selected price range. Remember
+                      that the position only makes a profit if the price is within range.
+                    </Typography>
+                  }
+                  placement='bottom'
+                  classes={{
+                    tooltip: classes.tooltip
+                  }}>
+                  <img src={questionMark} className={classes.questionMark} />
+                </Tooltip>
+              </Grid>
             ) : null}
           </Grid>
         ) : (
