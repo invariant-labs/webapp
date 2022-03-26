@@ -748,3 +748,15 @@ export const determinePositionTokenBlock = (
 
   return PositionTokenBlock.None
 }
+
+export const generateUnknownTokenPlaceholder = (
+  address: PublicKey,
+  decimals: number = 0
+): Token => ({
+  address,
+  decimals,
+  symbol: '???',
+  name: 'Unknown token',
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
+})
