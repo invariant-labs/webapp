@@ -467,6 +467,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                       additional risk. Choosing high concentration is appropriate if you assume low
                       price volatility.
                       <br />
+                      <br />
                       Make sure you want to open a position in the selected price range. Remember
                       that the position only makes a profit if the price is within range.
                     </Typography>

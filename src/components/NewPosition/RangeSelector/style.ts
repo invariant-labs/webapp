@@ -142,6 +142,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tooltipText: {
     ...typography.caption4,
+    fontSize: 13,
     color: colors.white.main
   }
 }))
