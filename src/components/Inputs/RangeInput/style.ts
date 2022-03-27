@@ -81,10 +81,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.componentBcg,
     height: 36,
     paddingInline: 5,
+    borderRadius: 10,
     flex: '1 1 0%',
 
     '& $input': {
       textAlign: 'center'
+    },
+
+    '& $input:disabled': {
+      color: colors.white.main
     },
 
     [theme.breakpoints.down('sm')]: {

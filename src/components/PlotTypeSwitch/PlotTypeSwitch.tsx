@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Tab, Tabs } from '@material-ui/core'
 import { useSingleTabStyles, useTabsStyles, useStyles } from './style'
 import Continuous from '@static/svg/continuous.svg'
-import Discrete from '@static//svg/discrete.svg'
+import Discrete from '@static/svg/discrete.svg'
 
 export interface IPlotTypeSwitch {
   onSwitch: (isDiscrete: boolean) => void
