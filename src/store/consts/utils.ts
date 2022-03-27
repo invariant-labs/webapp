@@ -752,7 +752,7 @@ export const determinePositionTokenBlock = (
 export const generateUnknownTokenDataObject = (
   // prepared already here in case when new tokens will be added on branch with full list, but these tokens won't be available on master deploy
   address: PublicKey,
-  decimals: number = 6
+  decimals: number
 ): Token => ({
   address,
   decimals,
@@ -762,15 +762,24 @@ export const generateUnknownTokenDataObject = (
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
 })
 
-export const getTokensDecimals = async (
+export const getFullNewTokensData = async (
   addresses: PublicKey[],
   connection: Connection
-): Promise<number[]> => {
+): Promise<Record<string, Token>> => {
   const promises = addresses
     .map(address => new SPLToken(connection, address, TOKEN_PROGRAM_ID, new Keypair()))
     .map(async token => await token.getMintInfo())
 
   return await Promise.allSettled(promises).then(results =>
-    results.map(result => (result.status === 'fulfilled' ? result.value.decimals : 6))
+    results.reduce(
+      (acc, result, index) => ({
+        ...acc,
+        [addresses[index].toString()]: generateUnknownTokenDataObject(
+          addresses[index],
+          result.status === 'fulfilled' ? result.value.decimals : 6
+        )
+      }),
+      {}
+    )
   )
 }

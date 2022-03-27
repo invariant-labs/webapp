@@ -4,6 +4,7 @@ import { network } from '@selectors/solanaConnection'
 import {
   getCoingeckoPricesData,
   getCoingeckoPricesHistory,
+  getFullNewTokensData,
   getNetworkStats,
   getPoolsFromAdresses,
   PoolSnapshot,
@@ -13,10 +14,11 @@ import {
 import { tokens } from '@selectors/pools'
 import { PublicKey } from '@solana/web3.js'
 import { getMarketProgram } from '@web3/programs/amm'
-import { PoolWithAddress } from '@reducers/pools'
+import { PoolWithAddress, actions as poolsActions } from '@reducers/pools'
 import { Token } from '@consts/static'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
+import { getConnection } from './connection'
 
 interface Diff24 {
   prev: number
@@ -120,6 +122,7 @@ const get24HLiquidityDiffData = (
 
 export function* getStats(): Generator {
   try {
+    const connection = yield* call(getConnection)
     const currentNetwork = yield* select(network)
     const data = yield* call(getNetworkStats, currentNetwork.toLowerCase())
 
@@ -138,7 +141,24 @@ export function* getStats(): Generator {
       {}
     )
 
-    const allTokens = yield* select(tokens)
+    let allTokens = yield* select(tokens)
+
+    const unknownTokens = new Set<PublicKey>()
+
+    allPoolsData.forEach((pool) => {
+      if (!allTokens[pool.tokenX.toString()]) {
+        unknownTokens.add(pool.tokenX)
+      }
+
+      if (!allTokens[pool.tokenY.toString()]) {
+        unknownTokens.add(pool.tokenY)
+      }
+    })
+
+    const newTokens = yield* call(getFullNewTokensData, [...unknownTokens], connection)
+    yield* put(poolsActions.addTokens(newTokens))
+    allTokens = yield* select(tokens)
+
     const coingeckoTokens: Record<string, Required<Token>> = Object.entries(allTokens).reduce(
       (acc, [key, val]) =>
         typeof val.coingeckoId !== 'undefined'
