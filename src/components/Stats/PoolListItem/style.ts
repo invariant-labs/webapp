@@ -33,6 +33,7 @@ const useStyle = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     '& img': {
+      minWidth: 28,
       width: 28,
       marginRight: 3,
       borderRadius: '50%'
