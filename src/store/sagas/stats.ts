@@ -145,7 +145,7 @@ export function* getStats(): Generator {
 
     const unknownTokens = new Set<PublicKey>()
 
-    allPoolsData.forEach((pool) => {
+    allPoolsData.forEach(pool => {
       if (!allTokens[pool.tokenX.toString()]) {
         unknownTokens.add(pool.tokenX)
       }

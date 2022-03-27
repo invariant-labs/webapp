@@ -27,7 +27,7 @@ storiesOf('stats/TokenList', module).add('Item', () => {
         icon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
         name: 'USD Coin',
         symbol: 'USDC',
-        price: 1.000000,
+        price: 1.0,
         priceChange: 2.33,
         volume: 421323423.23,
         TVL: 234413532.43
