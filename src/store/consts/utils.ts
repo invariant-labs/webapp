@@ -749,14 +749,14 @@ export const determinePositionTokenBlock = (
   return PositionTokenBlock.None
 }
 
-export const generateUnknownTokenPlaceholder = (
+export const generateUnknownTokenDataObject = ( // prepared already here in case when new tokens will be added on branch with full list, but these tokens won't be available on master deploy
   address: PublicKey,
   decimals: number = 0
 ): Token => ({
   address,
   decimals,
-  symbol: '???',
-  name: 'Unknown token',
+  symbol: `${address.toString().slice(0, 4)}...${address.toString().slice(-4)}`,
+  name: address.toString(),
   logoURI:
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
 })
