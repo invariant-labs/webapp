@@ -1,5 +1,4 @@
 import { Token } from '@consts/static'
-import { generateUnknownTokenDataObject } from '@consts/utils'
 import { createSelector } from '@reduxjs/toolkit'
 import { IStatsStore, PoolStatsData, statsSliceName, TokenStatsData } from '../reducers/stats'
 import { keySelectors, AnyProps } from './helpers'
@@ -37,10 +36,8 @@ export const poolsStatsWithTokensDetails = createSelector(
   (allPoolsData, allTokens) =>
     allPoolsData.map(poolData => ({
       ...poolData,
-      tokenXDetails:
-        allTokens?.[poolData.tokenX.toString()] ?? generateUnknownTokenDataObject(poolData.tokenX),
-      tokenYDetails:
-        allTokens?.[poolData.tokenY.toString()] ?? generateUnknownTokenDataObject(poolData.tokenY)
+      tokenXDetails: allTokens[poolData.tokenX.toString()],
+      tokenYDetails: allTokens[poolData.tokenY.toString()]
     }))
 )
 
@@ -53,9 +50,7 @@ export const tokensStatsWithTokensDetails = createSelector(
   (allTokensData, allTokens) =>
     allTokensData.map(tokenData => ({
       ...tokenData,
-      tokenDetails:
-        allTokens?.[tokenData.address.toString()] ??
-        generateUnknownTokenDataObject(tokenData.address)
+      tokenDetails: allTokens?.[tokenData.address.toString()]
     }))
 )
 

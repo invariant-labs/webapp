@@ -3,7 +3,7 @@ import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import { DECIMAL, parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
-import { u64 } from '@solana/spl-token'
+import { Token as SPLToken, TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import {
   BTC_DEV,
   MSOL_DEV,
@@ -16,7 +16,7 @@ import {
   WSOL_DEV
 } from './static'
 import mainnetList from './tokenLists/mainnet.json'
-import { PublicKey } from '@solana/web3.js'
+import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import { PoolWithAddress } from '@reducers/pools'
 import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
 import axios, { AxiosResponse } from 'axios'
@@ -749,9 +749,10 @@ export const determinePositionTokenBlock = (
   return PositionTokenBlock.None
 }
 
-export const generateUnknownTokenDataObject = ( // prepared already here in case when new tokens will be added on branch with full list, but these tokens won't be available on master deploy
+export const generateUnknownTokenDataObject = (
+  // prepared already here in case when new tokens will be added on branch with full list, but these tokens won't be available on master deploy
   address: PublicKey,
-  decimals: number = 0
+  decimals: number = 6
 ): Token => ({
   address,
   decimals,
@@ -760,3 +761,16 @@ export const generateUnknownTokenDataObject = ( // prepared already here in case
   logoURI:
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
 })
+
+export const getTokensDecimals = async (
+  addresses: PublicKey[],
+  connection: Connection
+): Promise<number[]> => {
+  const promises = addresses
+    .map(address => new SPLToken(connection, address, TOKEN_PROGRAM_ID, new Keypair()))
+    .map(async token => await token.getMintInfo())
+
+  return await Promise.allSettled(promises).then(results =>
+    results.map(result => (result.status === 'fulfilled' ? result.value.decimals : 6))
+  )
+}
