@@ -14,7 +14,7 @@ storiesOf('position/Stats', module)
 
       for (let i = 0; i < 30; i++) {
         data.push({
-          timestamp: i * 1000 * 60 * 60 * 24,
+          timestamp: i * 1000 * 60 * 60 * 24 + 1,
           value: Math.random()
         })
       }

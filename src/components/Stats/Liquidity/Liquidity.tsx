@@ -24,16 +24,6 @@ const Liquidity: React.FC<LiquidityInterface> = ({
 }) => {
   const classes = useStyles()
 
-  const Theme = {
-    axis: {
-      tickColor: 'transparent',
-      ticks: {
-        line: { stroke: colors.invariant.component },
-        text: { fill: '#A9B6BF' }
-      }
-    }
-  }
-
   const isLower = liquidityPercent < 0
 
   return (
@@ -106,7 +96,21 @@ const Liquidity: React.FC<LiquidityInterface> = ({
           useMesh
           animate
           colors={colors.invariant.green}
-          theme={Theme}
+          theme={{
+            axis: {
+              ticks: {
+                line: { stroke: colors.invariant.component },
+                text: { fill: '#A9B6BF' }
+              }
+            },
+            crosshair: {
+              line: {
+                stroke: colors.invariant.lightGrey,
+                strokeWidth: 1,
+                strokeDasharray: 'solid'
+              }
+            }
+          }}
           lineWidth={1}
           defs={[
             linearGradientDef('gradient', [
@@ -116,7 +120,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
             ])
           ]}
           fill={[{ match: '*', id: 'gradient' }]}
-          enableCrosshair={false}
+          crosshairType='bottom'
           tooltip={({ point }) => {
             const date = point.data.x as Date
             const day = date.getDate()
@@ -124,8 +128,12 @@ const Liquidity: React.FC<LiquidityInterface> = ({
 
             return (
               <Grid className={classes.tooltip}>
-                <Typography className={classes.tooltipDate}>{`${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}`}</Typography>
-                <Typography className={classes.tooltipValue}>${(point.data.y as number).toFixed(2)}</Typography>
+                <Typography className={classes.tooltipDate}>{`${day < 10 ? '0' : ''}${day}/${
+                  month < 10 ? '0' : ''
+                }${month}`}</Typography>
+                <Typography className={classes.tooltipValue}>
+                  ${(point.data.y as number).toFixed(2)}
+                </Typography>
               </Grid>
             )
           }}

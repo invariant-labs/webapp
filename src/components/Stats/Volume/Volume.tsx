@@ -21,50 +21,6 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, classNa
 
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
 
-  const cutArray = (arr: Array<{ timestamp: string; value: number[] }>, size: number) => {
-    const arrData = arr.slice(0)
-    const result = []
-
-    while (arrData.length > 0) result.push(arrData.splice(0, size))
-
-    return result
-  }
-
-  function concatArray<T>(arr: T[][]) {
-    return arr.reduce(
-      (array, isArray) => (Array.isArray(isArray) ? array.concat(isArray) : array),
-      []
-    )
-  }
-
-  const sortedByTimeStamp = data.reduce((map, { timestamp, value }) => {
-    if (!map.has(timestamp)) return map.set(timestamp, [value])
-
-    map.get(timestamp).push(value)
-
-    return map
-  }, new Map())
-
-  const convertedArray: Array<{ timestamp: string; value: number[] }> = Array.from(
-    sortedByTimeStamp,
-    ([timestamp, value]) => ({ timestamp, value })
-  )
-
-  const barDataContent = cutArray(convertedArray, 1)
-
-  const barData: Array<{ timestamp: string; [key: number]: number }> = barDataContent.map(el => {
-    const timestamp = el[0].timestamp
-
-    const concatValues = concatArray(el.map(({ value }) => value))
-
-    const convert = Object.assign({}, concatValues)
-    return { timestamp, ...convert }
-  })
-
-  const keys = barData.map(({ timestamp, ...rest }) => Object.keys(rest))
-
-  const uniqueKeys = [...new Set(concatArray(keys))]
-
   const Theme = {
     axis: {
       fontSize: '14px',
@@ -76,6 +32,8 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, classNa
   }
 
   const isLower = percentVolume < 0
+
+  console.log(data)
 
   return (
     <Grid className={classNames(classes.container, className)}>
@@ -107,8 +65,8 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, classNa
       <div className={classes.barContainer}>
         <ResponsiveBar
           margin={{ top: 30, bottom: 30, left: 0 }}
-          data={barData}
-          keys={uniqueKeys}
+          data={data as Array<{ timestamp: number; value: number }>}
+          keys={['value']}
           indexBy='timestamp'
           axisBottom={{
             tickSize: 0,
@@ -151,8 +109,10 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, classNa
 
             return (
               <Grid className={classes.tooltip}>
-                <Typography className={classes.tooltipDate}>{`${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}`}</Typography>
-                <Typography className={classes.tooltipValue}>${data[0].toFixed(2)}</Typography>
+                <Typography className={classes.tooltipDate}>{`${day < 10 ? '0' : ''}${day}/${
+                  month < 10 ? '0' : ''
+                }${month}`}</Typography>
+                <Typography className={classes.tooltipValue}>${data.value.toFixed(2)}</Typography>
               </Grid>
             )
           }}
