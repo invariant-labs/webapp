@@ -13,7 +13,9 @@ import { actions as solanaConnectionActions, Status } from '@reducers/solanaConn
 import { actions } from '@reducers/positions'
 import { status } from '@selectors/solanaWallet'
 import { SinglePositionPage } from './SinglePositionPage/SinglePositionPage'
+import SingleFarmPage from './SingleFarmPage/SingleFarmPage'
 import Footer from '@components/Footer/Footer'
+import FarmsPage from './FarmsPage/FarmsPage'
 
 export const PagesRouter: React.FC = () => {
   const dispatch = useDispatch()
@@ -40,6 +42,8 @@ export const PagesRouter: React.FC = () => {
           <Route path='/swap' component={SwapPage} />
           <Route path={'/newPosition'} component={NewPositionPage} />
           <Route path={'/pool'} component={ListPage} />
+          <Route path={'/farms'} component={FarmsPage} />
+          <Route path={'/farm/:id'} render={({match}) => <SingleFarmPage id={match.params.id} />} />
           <Route
             path={'/position/:id'}
             render={({ match }) => <SinglePositionPage id={match.params.id} />}
