@@ -20,7 +20,7 @@ const useStyle = makeStyles(() => ({
 
     [theme.breakpoints.down('sm')]: {
       '& p': {
-        ...typography.caption2
+        ...typography.caption1
       }
     },
 
