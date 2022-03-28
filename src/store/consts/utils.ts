@@ -758,8 +758,7 @@ export const generateUnknownTokenDataObject = (
   decimals,
   symbol: `${address.toString().slice(0, 4)}...${address.toString().slice(-4)}`,
   name: address.toString(),
-  logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
+  logoURI: '/unknownToken.svg'
 })
 
 export const getFullNewTokensData = async (
