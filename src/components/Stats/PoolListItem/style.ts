@@ -25,7 +25,7 @@ const useStyle = makeStyles(() => ({
     },
 
     [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '7% 28% 17% 28% 20%'
+      gridTemplateColumns: '28% 15% 30% 25%'
     }
   },
 
@@ -64,6 +64,10 @@ const useStyle = makeStyles(() => ({
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
       display: 'block'
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 0
     }
   },
   icon: {

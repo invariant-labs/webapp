@@ -55,7 +55,7 @@ const PoolListItem: React.FC<IProps> = ({
           container
           classes={{ container: classes.container }}
           style={{ color: colors.white.main }}>
-          <Typography>{tokenIndex}</Typography>
+          {!hideTokenImage && <Typography>{tokenIndex}</Typography>}
           <Grid className={classes.imageContainer}>
             {!hideTokenImage && (
               <Box className={classes.iconsWrapper}>
@@ -75,9 +75,11 @@ const PoolListItem: React.FC<IProps> = ({
         </Grid>
       ) : (
         <Grid container classes={{ container: classes.container, root: classes.header }}>
-          <Typography style={{ lineHeight: '11px' }}>
-            N<sup>o</sup>
-          </Typography>
+          {!hideTokenImage && (
+            <Typography style={{ lineHeight: '11px' }}>
+              N<sup>o</sup>
+            </Typography>
+          )}
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {

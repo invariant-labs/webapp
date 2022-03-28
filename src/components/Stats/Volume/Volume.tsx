@@ -33,8 +33,6 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, classNa
 
   const isLower = percentVolume < 0
 
-  console.log(data)
-
   return (
     <Grid className={classNames(classes.container, className)}>
       <Box className={classes.volumeContainer}>

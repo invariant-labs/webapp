@@ -22,7 +22,7 @@ export interface ITokensList {
 const TokensList: React.FC<ITokensList> = ({ data }) => {
   const classes = useStyles()
   const [page, setPage] = useState(1)
-  const [sortType, setSortType] = React.useState(SortType.TVL_DESC)
+  const [sortType, setSortType] = React.useState(SortType.VOLUME_DESC)
 
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
 

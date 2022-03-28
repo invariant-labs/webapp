@@ -59,7 +59,7 @@ const TokenListItem: React.FC<IProps> = ({
           container
           style={{ color: colors.white.main }}
           classes={{ container: classes.container, root: classes.tokenList }}>
-          <Typography component='p'>{itemNumber}</Typography>
+          {!hideName && <Typography component='p'>{itemNumber}</Typography>}
           <Grid className={classes.tokenName}>
             {!isXDown && <img src={icon}></img>}
             <Typography>
@@ -73,9 +73,7 @@ const TokenListItem: React.FC<IProps> = ({
               {isNegative ? `${priceChange.toFixed(2)}%` : `+${priceChange.toFixed(2)}%`}
             </Typography>
           )}
-          {!hideName && (
-            <Typography>{`$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}</Typography>
-          )}
+          <Typography>{`$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}</Typography>
           <Typography>{`$${formatNumbers()(TVL.toString())}${showPrefix(TVL)}`}</Typography>
         </Grid>
       ) : (
@@ -83,9 +81,11 @@ const TokenListItem: React.FC<IProps> = ({
           container
           style={{ color: colors.invariant.textGrey, fontWeight: 400 }}
           classes={{ container: classes.container, root: classes.header }}>
-          <Typography style={{ lineHeight: '12px' }}>
-            N<sup>o</sup>
-          </Typography>
+          {!hideName && (
+            <Typography style={{ lineHeight: '12px' }}>
+              N<sup>o</sup>
+            </Typography>
+          )}
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {
@@ -136,24 +136,22 @@ const TokenListItem: React.FC<IProps> = ({
               ) : null}
             </Typography>
           )}
-          {!hideName && (
-            <Typography
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                if (sortType === SortType.VOLUME_DESC) {
-                  onSort?.(SortType.VOLUME_ASC)
-                } else {
-                  onSort?.(SortType.VOLUME_DESC)
-                }
-              }}>
-              Volume 24H
-              {sortType === SortType.VOLUME_ASC ? (
-                <ArrowDropUpIcon className={classes.icon} />
-              ) : sortType === SortType.VOLUME_DESC ? (
-                <ArrowDropDownIcon className={classes.icon} />
-              ) : null}
-            </Typography>
-          )}
+          <Typography
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              if (sortType === SortType.VOLUME_DESC) {
+                onSort?.(SortType.VOLUME_ASC)
+              } else {
+                onSort?.(SortType.VOLUME_DESC)
+              }
+            }}>
+            Volume 24H
+            {sortType === SortType.VOLUME_ASC ? (
+              <ArrowDropUpIcon className={classes.icon} />
+            ) : sortType === SortType.VOLUME_DESC ? (
+              <ArrowDropDownIcon className={classes.icon} />
+            ) : null}
+          </Typography>
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {

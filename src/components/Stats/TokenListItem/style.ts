@@ -18,7 +18,7 @@ export const useStyles = makeStyles(theme => ({
     },
 
     [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '8% 38% 27% auto'
+      gridTemplateColumns: '15% 25% 35% 25%'
     }
   },
 
