@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: '1 1 0%'
   },
   headerContainer: {
-    marginBottom: 6
+    marginBottom: 12
   },
   header: {
     ...typography.heading4,
@@ -20,15 +20,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 8,
     backgroundColor: colors.invariant.component,
     width: '100%',
-    position: 'relative'
+    position: 'relative',
+    flex: '1 1 0%'
   },
   plot: {
     width: '100%',
-    height: 240,
-
-    [theme.breakpoints.down('sm')]: {
-      height: 215
-    }
+    height: 220
   },
   subheader: {
     ...typography.heading4,
@@ -84,15 +81,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       right: 0,
       zIndex: 11,
       width: '100%',
-      height: 500,
+      height: 510,
       borderRadius: 9
     },
 
     [theme.breakpoints.down('xs')]: {
-      top: 545,
-      right: 0,
-      width: '100%',
-      height: 500
+      top: 545
     }
   },
 
@@ -110,6 +104,46 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     gap: 16,
     alignItems: 'center'
+  },
+  sliderWrapper: {
+    paddingTop: 24,
+    paddingInline: 8,
+    height: 77,
+    position: 'relative'
+  },
+  warningWrapper: {
+    position: 'absolute',
+    top: 60,
+    left: 30,
+
+    [theme.breakpoints.down('xs')]: {
+      top: 61
+    }
+  },
+  unsafeWarning: {
+    ...typography.body2,
+    color: colors.invariant.Error,
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption4
+    }
+  },
+  questionMark: {
+    width: 14,
+    height: 14,
+    marginLeft: 5
+  },
+  tooltip: {
+    background: colors.invariant.componentBcg,
+    borderRadius: 12,
+    width: 300,
+    textAlign: 'justify',
+    padding: 10
+  },
+  tooltipText: {
+    ...typography.caption4,
+    fontSize: 13,
+    color: colors.white.main
   }
 }))
 
