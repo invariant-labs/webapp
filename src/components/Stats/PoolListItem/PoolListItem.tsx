@@ -1,8 +1,10 @@
 import React from 'react'
 import { Grid, Typography, Box, useMediaQuery } from '@material-ui/core'
-import useStyle from './style'
 import { colors, theme } from '@static/theme'
 import { formatNumbers, showPrefix } from '@consts/utils'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
+import useStyle from './style'
 
 export enum SortType {
   NAME_ASC,
@@ -76,19 +78,22 @@ const PoolListItem: React.FC<IProps> = ({
           <Typography style={{ lineHeight: '11px' }}>
             N<sup>o</sup>
           </Typography>
-          <Grid>
-            <Typography
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                if (sortType === SortType.NAME_ASC) {
-                  onSort?.(SortType.NAME_DESC)
-                } else {
-                  onSort?.(SortType.NAME_ASC)
-                }
-              }}>
-              Name
-            </Typography>
-          </Grid>
+          <Typography
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              if (sortType === SortType.NAME_ASC) {
+                onSort?.(SortType.NAME_DESC)
+              } else {
+                onSort?.(SortType.NAME_ASC)
+              }
+            }}>
+            Name
+            {sortType === SortType.NAME_ASC ? (
+              <ArrowDropUpIcon className={classes.icon} />
+            ) : sortType === SortType.NAME_DESC ? (
+              <ArrowDropDownIcon className={classes.icon} />
+            ) : null}
+          </Typography>
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {
@@ -99,6 +104,11 @@ const PoolListItem: React.FC<IProps> = ({
               }
             }}>
             Fee
+            {sortType === SortType.FEE_ASC ? (
+              <ArrowDropUpIcon className={classes.icon} />
+            ) : sortType === SortType.FEE_DESC ? (
+              <ArrowDropDownIcon className={classes.icon} />
+            ) : null}
           </Typography>
           <Typography
             style={{ cursor: 'pointer' }}
@@ -110,6 +120,11 @@ const PoolListItem: React.FC<IProps> = ({
               }
             }}>
             Volume 24H
+            {sortType === SortType.VOLUME_ASC ? (
+              <ArrowDropUpIcon className={classes.icon} />
+            ) : sortType === SortType.VOLUME_DESC ? (
+              <ArrowDropDownIcon className={classes.icon} />
+            ) : null}
           </Typography>
           <Typography
             style={{ cursor: 'pointer' }}
@@ -121,6 +136,11 @@ const PoolListItem: React.FC<IProps> = ({
               }
             }}>
             TVL
+            {sortType === SortType.TVL_ASC ? (
+              <ArrowDropUpIcon className={classes.icon} />
+            ) : sortType === SortType.TVL_DESC ? (
+              <ArrowDropDownIcon className={classes.icon} />
+            ) : null}
           </Typography>
         </Grid>
       )}

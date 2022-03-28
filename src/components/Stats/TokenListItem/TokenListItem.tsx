@@ -2,6 +2,8 @@ import React from 'react'
 import { formatNumbers, showPrefix } from '@consts/utils'
 import { Grid, Typography, useMediaQuery } from '@material-ui/core'
 import { colors, theme } from '@static/theme'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
 import { useStyles } from './style'
 
 export enum SortType {
@@ -84,19 +86,22 @@ const TokenListItem: React.FC<IProps> = ({
           <Typography style={{ lineHeight: '12px' }}>
             N<sup>o</sup>
           </Typography>
-          <Grid>
-            <Typography
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                if (sortType === SortType.NAME_ASC) {
-                  onSort?.(SortType.NAME_DESC)
-                } else {
-                  onSort?.(SortType.NAME_ASC)
-                }
-              }}>
-              Name
-            </Typography>
-          </Grid>
+          <Typography
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              if (sortType === SortType.NAME_ASC) {
+                onSort?.(SortType.NAME_DESC)
+              } else {
+                onSort?.(SortType.NAME_ASC)
+              }
+            }}>
+            Name
+            {sortType === SortType.NAME_ASC ? (
+              <ArrowDropUpIcon className={classes.icon} />
+            ) : sortType === SortType.NAME_DESC ? (
+              <ArrowDropDownIcon className={classes.icon} />
+            ) : null}
+          </Typography>
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {
@@ -107,6 +112,11 @@ const TokenListItem: React.FC<IProps> = ({
               }
             }}>
             Price
+            {sortType === SortType.PRICE_ASC ? (
+              <ArrowDropUpIcon className={classes.icon} />
+            ) : sortType === SortType.PRICE_DESC ? (
+              <ArrowDropDownIcon className={classes.icon} />
+            ) : null}
           </Typography>
           {!hideName && (
             <Typography
@@ -119,6 +129,11 @@ const TokenListItem: React.FC<IProps> = ({
                 }
               }}>
               Price change
+              {sortType === SortType.CHANGE_ASC ? (
+                <ArrowDropUpIcon className={classes.icon} />
+              ) : sortType === SortType.CHANGE_DESC ? (
+                <ArrowDropDownIcon className={classes.icon} />
+              ) : null}
             </Typography>
           )}
           {!hideName && (
@@ -132,6 +147,11 @@ const TokenListItem: React.FC<IProps> = ({
                 }
               }}>
               Volume 24H
+              {sortType === SortType.VOLUME_ASC ? (
+                <ArrowDropUpIcon className={classes.icon} />
+              ) : sortType === SortType.VOLUME_DESC ? (
+                <ArrowDropDownIcon className={classes.icon} />
+              ) : null}
             </Typography>
           )}
           <Typography
@@ -144,6 +164,11 @@ const TokenListItem: React.FC<IProps> = ({
               }
             }}>
             TVL
+            {sortType === SortType.TVL_ASC ? (
+              <ArrowDropUpIcon className={classes.icon} />
+            ) : sortType === SortType.TVL_DESC ? (
+              <ArrowDropDownIcon className={classes.icon} />
+            ) : null}
           </Typography>
         </Grid>
       )}

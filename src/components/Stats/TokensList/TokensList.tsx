@@ -1,7 +1,8 @@
 import TokenListItem, { SortType } from '../TokenListItem/TokenListItem'
 import React, { useEffect, useMemo, useState } from 'react'
 import { PaginationList } from '@components/Pagination/Pagination'
-import { Grid } from '@material-ui/core'
+import { Grid, useMediaQuery } from '@material-ui/core'
+import { theme } from '@static/theme'
 import useStyles from './style'
 
 export interface ITokensListData {
@@ -21,17 +22,23 @@ export interface ITokensList {
 const TokensList: React.FC<ITokensList> = ({ data }) => {
   const classes = useStyles()
   const [page, setPage] = useState(1)
-  const [sortType, setSortType] = React.useState(SortType.VOLUME_DESC)
+  const [sortType, setSortType] = React.useState(SortType.TVL_DESC)
+
+  const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
 
   const sortedData = useMemo(() => {
     switch (sortType) {
       case SortType.NAME_ASC:
         return data.sort((a, b) =>
-          `${a.name} (${a.symbol})`.localeCompare(`${b.name} (${b.symbol})`)
+          isXsDown
+            ? a.symbol.localeCompare(b.symbol)
+            : `${a.name} (${a.symbol})`.localeCompare(`${b.name} (${b.symbol})`)
         )
       case SortType.NAME_DESC:
         return data.sort((a, b) =>
-          `${b.name} (${b.symbol})`.localeCompare(`${a.name} (${a.symbol})`)
+          isXsDown
+            ? b.symbol.localeCompare(a.symbol)
+            : `${b.name} (${b.symbol})`.localeCompare(`${a.name} (${a.symbol})`)
         )
       case SortType.PRICE_ASC:
         return data.sort((a, b) => a.price - b.price)
@@ -50,7 +57,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
       case SortType.TVL_DESC:
         return data.sort((a, b) => b.TVL - a.TVL)
     }
-  }, [data, sortType])
+  }, [data, sortType, isXsDown])
 
   useEffect(() => {
     setPage(1)

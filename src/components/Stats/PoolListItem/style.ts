@@ -65,6 +65,11 @@ const useStyle = makeStyles(() => ({
       textOverflow: 'ellipsis',
       display: 'block'
     }
+  },
+  icon: {
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: -4
+    }
   }
 }))
 
