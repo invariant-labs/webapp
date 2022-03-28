@@ -26,6 +26,13 @@ const Liquidity: React.FC<LiquidityInterface> = ({
 
   const isLower = liquidityPercent < 0
 
+  console.log(
+    data.map(({ timestamp, value }) => ({
+      x: new Date(timestamp),
+      y: value
+    }))
+  )
+
   return (
     <Grid className={classNames(classes.container, className)}>
       <Grid className={classes.liquidityContainer}>
@@ -62,7 +69,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
             {
               id: 'liquidity',
               data: data.map(({ timestamp, value }) => ({
-                x: new Date(timestamp),
+                x: new Date(timestamp).toLocaleDateString('en-GB'),
                 y: value
               }))
             }
@@ -70,7 +77,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
           margin={{ top: 24, bottom: 24, left: 24, right: 24 }}
           xScale={{
             type: 'time',
-            format: 'native',
+            format: '%d/%m/%Y',
             precision: 'day',
             useUTC: false
           }}
