@@ -102,8 +102,9 @@ const Liquidity: React.FC<LiquidityInterface> = ({
           enableGridY={false}
           enablePoints={false}
           enableArea={true}
-          isInteractive={false}
-          animate={false}
+          isInteractive
+          useMesh
+          animate
           colors={colors.invariant.green}
           theme={Theme}
           lineWidth={1}
@@ -115,6 +116,19 @@ const Liquidity: React.FC<LiquidityInterface> = ({
             ])
           ]}
           fill={[{ match: '*', id: 'gradient' }]}
+          enableCrosshair={false}
+          tooltip={({ point }) => {
+            const date = point.data.x as Date
+            const day = date.getDate()
+            const month = date.getMonth() + 1
+
+            return (
+              <Grid className={classes.tooltip}>
+                <Typography className={classes.tooltipDate}>{`${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}`}</Typography>
+                <Typography className={classes.tooltipValue}>${(point.data.y as number).toFixed(2)}</Typography>
+              </Grid>
+            )
+          }}
         />
       </Grid>
     </Grid>

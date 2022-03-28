@@ -82,5 +82,22 @@ export const useStyles = makeStyles(() => ({
     width: '100%',
     color: colors.invariant.textGrey,
     ...typography.caption4
+  },
+  tooltip: {
+    background: colors.invariant.component,
+    border: `1px solid ${colors.invariant.lightGrey}`,
+    borderRadius: 5,
+    width: 100,
+    padding: 5
+  },
+  tooltipDate: {
+    ...typography.caption4,
+    color: colors.white.main,
+    textAlign: 'center'
+  },
+  tooltipValue: {
+    ...typography.caption3,
+    color: colors.invariant.green,
+    textAlign: 'center'
   }
 }))

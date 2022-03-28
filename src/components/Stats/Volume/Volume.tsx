@@ -133,7 +133,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, classNa
           enableLabel={false}
           enableGridY={false}
           innerPadding={isXsDown ? 1 : 2}
-          isInteractive={false}
+          isInteractive
           padding={0.03}
           indexScale={{ type: 'band', round: true }}
           defs={[
@@ -144,6 +144,18 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, classNa
           ]}
           fill={[{ match: '*', id: 'gradient' }]}
           colors={colors.invariant.pink}
+          tooltip={({ data }) => {
+            const date = new Date(data.timestamp)
+            const day = date.getDate()
+            const month = date.getMonth() + 1
+
+            return (
+              <Grid className={classes.tooltip}>
+                <Typography className={classes.tooltipDate}>{`${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}`}</Typography>
+                <Typography className={classes.tooltipValue}>${data[0].toFixed(2)}</Typography>
+              </Grid>
+            )
+          }}
         />
       </div>
     </Grid>
