@@ -1,4 +1,5 @@
 import SearchInput from '@components/Inputs/SearchInput/SearchInput'
+import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Grid, Typography } from '@material-ui/core'
 import React, { useState } from 'react'
 import FarmTile, { IFarm } from './FarmTile/FarmTile'
@@ -7,8 +8,15 @@ import useStyle from './style'
 export interface IFarmList {
   title: string
   data: IFarm[]
+  showNoConnected?: boolean
+  noConnectedBlockerProps: INoConnected
 }
-export const FarmList: React.FC<IFarmList> = ({ title, data }) => {
+export const FarmList: React.FC<IFarmList> = ({
+  title,
+  data,
+  showNoConnected = false,
+  noConnectedBlockerProps
+}) => {
   const classes = useStyle()
   const [value, setValue] = useState('')
 
@@ -28,28 +36,32 @@ export const FarmList: React.FC<IFarmList> = ({ title, data }) => {
         <SearchInput handleChange={handleChangeInput} value={value} />
       </Grid>
       <Grid>
-        {data.length > 0
-          ? data
-              .filter(item => {
-                return (
-                  item.tokenX.symbol.toLowerCase().includes(value) ||
-                  item.tokenY.symbol.toLowerCase().includes(value)
-                )
-              })
-              .map(element => (
-                <div className={classes.tile}>
-                  <FarmTile
-                    isActive={element.isActive}
-                    apyPercent={element.apyPercent}
-                    totalStaked={element.totalStaked}
-                    liquidity={element.liquidity}
-                    farmId={element.farmId}
-                    tokenX={element.tokenX}
-                    tokenY={element.tokenY}
-                  />
-                </div>
-              ))
-          : null}
+        {showNoConnected ? (
+          <Grid className={classes.noConnected}>
+            <NoConnected {...noConnectedBlockerProps} />
+          </Grid>
+        ) : data.length > 0 ? (
+          data
+            .filter(item => {
+              return (
+                item.tokenX.symbol.toLowerCase().includes(value) ||
+                item.tokenY.symbol.toLowerCase().includes(value)
+              )
+            })
+            .map(element => (
+              <div className={classes.tile}>
+                <FarmTile
+                  isActive={element.isActive}
+                  apyPercent={element.apyPercent}
+                  totalStaked={element.totalStaked}
+                  liquidity={element.liquidity}
+                  farmId={element.farmId}
+                  tokenX={element.tokenX}
+                  tokenY={element.tokenY}
+                />
+              </div>
+            ))
+        ) : null}
       </Grid>
     </Grid>
   )

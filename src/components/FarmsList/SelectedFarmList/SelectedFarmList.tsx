@@ -15,6 +15,7 @@ export interface ISelectedFarmList {
   unstakeHandler: (id: string) => void
   claimRewardHandler: (id: string) => void
 }
+
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   title,
   data,
@@ -30,22 +31,12 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   const classes = useStyle()
   return (
     <Grid className={classes.root}>
-      <Grid
-        className={classes.header}
-        container
-        direction='row'
-        justifyContent='flex-start'
-        alignItems='center'>
+      <Grid className={classes.header} container justifyContent='flex-start'>
         <img src={iconTokenX} alt={'Token in pool'} className={classes.bigIcon} />
         <img src={iconTokenY} alt={'Token in pool'} className={classes.bigIcon} />
-        <Typography className={classes.header}>{title}</Typography>
+        <Typography className={classes.title}>{title}</Typography>
       </Grid>
-      <Grid
-        className={classes.header}
-        container
-        direction='row'
-        justifyContent='space-between'
-        alignItems='center'>
+      <Grid className={classes.header} container direction='row' justifyContent='space-between'>
         <Typography className={classes.postionsInfo}>
           Total Positions:
           <Typography display='inline' component='span' className={classes.value}>
@@ -70,6 +61,7 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
           <div className={classes.tile}>
             <SelectedFarm
               key={index}
+              iconTokenX={iconTokenX}
               value={element.value}
               staked={element.staked}
               pair={element.pair}

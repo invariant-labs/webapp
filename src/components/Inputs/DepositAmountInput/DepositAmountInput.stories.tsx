@@ -8,18 +8,20 @@ import icons from '@static/icons'
 storiesOf('newInputs/amount', module)
   .addDecorator(withKnobs)
   .add('default', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px', width: 400 }}>
+    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
       <DepositAmountInput
         setValue={() => {}}
         placeholder={'0.0'}
         currency={null}
         onMaxClick={() => {}}
         decimalsLimit={6}
+        percentageChange={4.15}
+        usdValue={205341.43}
       />
     </div>
   ))
   .add('currency', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px', width: 400 }}>
+    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
       <DepositAmountInput
         setValue={() => {}}
         placeholder={'0.0'}
@@ -27,11 +29,14 @@ storiesOf('newInputs/amount', module)
         onMaxClick={() => {}}
         currencyIconSrc={icons.SNY}
         decimalsLimit={6}
+        percentageChange={4.15}
+        usdValue={205341.43}
+        balanceValue={'-200000000'}
       />
     </div>
   ))
   .add('long currency', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px', width: 400 }}>
+    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
       <DepositAmountInput
         setValue={() => {}}
         placeholder={'0.0'}
@@ -39,11 +44,13 @@ storiesOf('newInputs/amount', module)
         onMaxClick={() => {}}
         currencyIconSrc={icons.SNY}
         decimalsLimit={6}
+        percentageChange={4.15}
+        usdValue={205341.43}
       />
     </div>
   ))
   .add('blocked', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px', width: 400 }}>
+    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
       <DepositAmountInput
         setValue={() => {}}
         placeholder={'0.0'}
@@ -52,6 +59,8 @@ storiesOf('newInputs/amount', module)
         blocked
         blockerInfo='Price outside range. Single-asset deposit only.'
         decimalsLimit={6}
+        percentageChange={4.15}
+        usdValue={205341.43}
       />
     </div>
   ))

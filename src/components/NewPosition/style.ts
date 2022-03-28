@@ -3,7 +3,7 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    width: 882
+    width: 952
   },
   back: {
     height: 24,
@@ -21,16 +21,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 12
   },
   backText: {
-    color: colors.invariant.lightInfoText,
+    color: colors.invariant.lightHover,
     WebkitPaddingBefore: '2px',
     ...typography.body2
   },
   title: {
     color: colors.white.main,
     ...typography.heading4,
-    marginBottom: 18
+    marginBottom: 18,
+
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 18
+    }
   },
   row: {
+    minWidth: 464,
+    minHeight: 540,
     position: 'relative',
     flexDirection: 'row',
 
@@ -40,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
+      minWidth: 0,
 
       '& .noConnectedInfo': {
         justifyContent: 'flex-start',
@@ -54,6 +61,35 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginBottom: 24,
       marginRight: 0
     }
+  },
+  settingsIconBtn: {
+    width: 20,
+    height: 20,
+    padding: 0,
+    margin: 0,
+    marginLeft: 10,
+    minWidth: 'auto',
+    background: 'none',
+    '&:hover': {
+      backgroundColor: 'none'
+    }
+  },
+  settingsIcon: {
+    width: 20,
+    height: 20,
+    cursor: 'pointer',
+    transition: 'filter 100ms',
+    '&:hover': {
+      filter: 'brightness(1.5)'
+    }
+  },
+  options: {
+    width: 'fit-content',
+    marginBottom: 18,
+    height: 28
+  },
+  switch: {
+    transition: 'opacity 500ms'
   }
 }))
 

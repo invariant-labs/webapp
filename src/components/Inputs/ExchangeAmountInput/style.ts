@@ -1,28 +1,31 @@
-import { colors } from '@static/theme'
+import { colors, typography } from '@static/theme'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
   amountInput: {
-    background: colors.invariant.componentIn2,
-    color: colors.white.main,
-    borderRadius: 5,
-    padding: '8px 15px',
-    fontSize: 30,
-    fontWeight: 'normal',
+    background: colors.invariant.newDark,
+    color: colors.invariant.light,
+    borderRadius: 20,
+    ...typography.heading2,
     width: '100%',
-    marginBottom: 16,
-    transition: 'all .4s'
+    textAlign: 'right',
+    transition: 'all .4s',
+    '& ::placeholder': {
+      textAlign: 'right'
+    }
   },
   maxButton: {
-    fontSize: 16,
-    color: colors.invariant.componentIn2,
-    minWidth: 55,
-    height: 32,
-    fontWeight: 400,
+    ...typography.caption4,
+    minWidth: 30,
+    height: 15,
     borderRadius: 3,
     padding: '7px 0',
-    backgroundColor: colors.invariant.accent2,
-    background: 'radial-gradient(118.38% 303.54% at 3.96% 118.38%, rgba(119, 72, 216, 0.1) 0%, rgba(119, 72, 216, 0) 100%), radial-gradient(57.34% 103.84% at 50% 0%, rgba(156, 231, 90, 0.1) 0%, rgba(156, 231, 90, 0) 100%)',
+    backgroundColor: colors.invariant.light,
+    marginTop: 0,
+    lineHeight: '13px',
+    cursor: 'pointer',
+    background:
+      'radial-gradient(118.38% 303.54% at 3.96% 118.38%, rgba(119, 72, 216, 0.1) 0%, rgba(119, 72, 216, 0) 100%), radial-gradient(57.34% 103.84% at 50% 0%, rgba(156, 231, 90, 0.1) 0%, rgba(156, 231, 90, 0) 100%)',
     '&:hover': {
       boxShadow: '0px 0px 20px -8px white'
     }
@@ -31,13 +34,67 @@ const useStyles = makeStyles(() => ({
     marginRight: 20
   },
   input: {
-    paddingTop: 4,
-    '&:focus': {
-      color: colors.white.main
+    textAlign: 'right',
+    color: colors.white.main,
+    '& ::placeholder': {
+      textAlign: 'right'
     }
   },
   label: {
-    top: -1
+    top: -1,
+    color: colors.invariant.dark
+  },
+  BalanceContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+    paddingBlock: 6
+  },
+  BalanceTypography: {
+    color: colors.invariant.lightGrey,
+    ...typography.caption3,
+    paddingLeft: 15,
+    marginRight: 3
+  },
+  container: {
+    paddingRight: 15,
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    filter: 'brightness(0.8)',
+
+    '& :hover > button , & :hover > p': {
+      filter: 'brightness(1.1)'
+    }
+  },
+  walletBalanace: {
+    color: colors.invariant.lightGrey
+  },
+  exchangeContainer: {
+    padding: '10px 15px 0  15px ',
+    display: 'flex'
+  },
+  noData: {
+    color: colors.invariant.warning,
+    ...typography.caption2,
+    display: 'grid',
+    gap: 5.45,
+    gridAutoFlow: 'column',
+    cursor: 'default',
+    paddingBottom: 10
+  },
+  noDataIcon: {
+    height: 9.5,
+    width: 9.5,
+    border: '1px solid #EFD063',
+    color: colors.invariant.warning,
+    borderRadius: '50%',
+    fontSize: 8,
+    lineHeight: '10px',
+    fontWeight: 400,
+    textAlign: 'center',
+    alignSelf: 'center',
+    cursor: 'default'
   }
 }))
 

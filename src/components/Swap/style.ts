@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     width: 500,
     position: 'relative',
-    paddingBottom: 28,
+    paddingBottom: 9,
     '& h1': {
       ...typography.heading4,
       color: colors.white.main
@@ -48,40 +48,66 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 20,
     cursor: 'pointer',
     transition: 'filter 100ms',
-
     '&:hover': {
       filter: 'brightness(1.5)'
     }
   },
+
+  HiddenTransactionButton: {
+    background: 'none !important',
+    border: 'none',
+    minWidth: 'auto',
+    color: colors.invariant.lightHover,
+    '&:hover': {
+      filter: 'brightness(1.15)',
+      cursor: 'pointer'
+    }
+  },
+
+  transactionDetailDisabled: {
+    background: 'none !important',
+    border: 'none',
+    minWidth: 'auto',
+    color: colors.invariant.lightHover
+  },
+
   settingsIconBtn: {
     padding: 0,
     margin: 0,
-    minWidth: 'auto'
+    minWidth: 'auto',
+    background: 'none',
+    '& :hover': {
+      background: 'none'
+    }
   },
   slippage: {
     position: 'absolute'
   },
   root: {
-    background: colors.invariant.componentOut4,
-    borderRadius: 10,
+    background: colors.invariant.component,
+    borderRadius: 24,
     paddingInline: 24,
     paddingBottom: 22,
     paddingTop: 16,
     width: 500
+  },
+
+  connectWalletButton: {
+    height: '48px !important',
+    borderRadius: '16px !important',
+    width: '100%',
+
+    [theme.breakpoints.down('xs')]: {
+      width: '100% !important'
+    }
   },
   tokenComponentTextContainer: {
     display: 'flex',
     justifyContent: 'space-between',
     position: 'relative'
   },
-  tokenComponentText: {
-    color: colors.invariant.lightInfoText,
-    ...typography.label1
-  },
   amountInput: {
-    position: 'relative',
-    border: `1px solid ${colors.invariant.componentOut2}`,
-    backgroundColor: colors.invariant.componentIn2
+    position: 'relative'
   },
   amountInputDown: {
     animation: '$slide-down .3s'
@@ -92,7 +118,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 
   swapArrowBox: {
-    backgroundColor: colors.invariant.componentOut2,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.invariant.component,
     width: 50,
     height: 50,
     borderRadius: '50%',
@@ -104,15 +133,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     transition: 'background-color 200ms',
 
-    '&:hover': {
-      backgroundColor: colors.invariant.componentOut3
+    [theme.breakpoints.down('xs')]: {
+      transform: 'translateX(-50%) translateY(-14%)'
     }
   },
+  swapImgRoot: {
+    background: colors.invariant.newDark,
+    width: '40px',
+    height: '40px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+    '&:hover': {
+      backgroundColor: colors.invariant.light
+    }
+  },
+
   swapArrows: {
-    width: 32,
-    height: 24,
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
     marginBlock: 13,
-    marginInline: 9,
+    marginInline: 6,
     transition: '.4s all'
   },
 
@@ -120,27 +163,92 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
-    position: 'relative'
+    flexFlow: 'row nowrap',
+    margin: '5px 0 7px 0px',
+    position: 'relative',
+    cursor: 'default',
+    filter: 'brightness(0.9)'
   },
   transactionDetailsWrapper: {
     display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: colors.invariant.light,
+    margin: '16px 0 ',
+    paddingInline: 15,
+    borderRadius: '10px',
     alignItems: 'center',
-    justifyContent: 'center',
-    '&:hover': {
-      '& $transactionDetailsInfo': {
-        opacity: 1
-      }
+    height: 32
+  },
+
+  transactionDetailsHeader: {
+    ...typography.caption2,
+    whiteSpace: 'nowrap',
+    pointerEvents: 'none',
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.tiny2
     }
   },
-  transactionDetailsHeader: {
-    color: colors.invariant.lightInfoText,
-    ...typography.label1,
-    cursor: 'pointer'
-  },
+
   swapButton: {
     width: '100%',
     height: 48
+  },
+
+  exchangeRoot: {
+    position: 'relative',
+    background: colors.invariant.newDark,
+    borderRadius: 20
+  },
+  transactionTop: {
+    marginTop: 10
+  },
+
+  hideBalance: {
+    padding: '5px 15px 5px 15px'
+  },
+
+  transactionBottom: {
+    marginTop: 10,
+
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 36
+    }
+  },
+
+  transtactionData: {
+    border: `1px solid ${colors.invariant.light}`,
+    borderRadius: '10px',
+    padding: '5px 15px 5px 15px',
+    color: colors.invariant.lightGrey
+  },
+
+  buttonSelectDisabled: {
+    background: `${colors.invariant.pinkLinearGradient} !important`,
+
+    '&:hover': {
+      filter: 'brightness(1.15)',
+      boxShadow:
+        '0px 3px 1px -2px rgba(43, 193, 144, 0.2),0px 1px 2px 0px rgba(45, 168, 128, 0.14),0px 0px 5px 7px rgba(59, 183, 142, 0.12)'
+    }
+  },
+  ButtonSwapActive: {
+    transition: 'filter 0.3s linear',
+    background: `${colors.invariant.greenLinearGradient} !important`,
+    filter: 'brightness(0.8)',
+    '&:hover': {
+      filter: 'brightness(1.15)',
+      boxShadow:
+        '0px 3px 1px -2px rgba(43, 193, 144, 0.2),0px 1px 2px 0px rgba(45, 168, 128, 0.14),0px 0px 5px 7px rgba(59, 183, 142, 0.12)'
+    }
+  },
+  infoIcon: {
+    width: 10,
+    height: 10,
+    marginLeft: 4,
+    marginBottom: 2,
+    filter: 'brightness(0.8)',
+    pointerEvents: 'none'
   }
 }))
 

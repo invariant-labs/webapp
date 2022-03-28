@@ -52,7 +52,7 @@ storiesOf('inputs/exchangeAmount', module)
         onMaxClick={() => {}}
         tokens={tokens}
         current={tokens[0]}
-        onSelect={(chosen: string) => action(`chosen: ${chosen}`)}
+        onSelect={index => action(`chosen index: ${index}`)()}
         disabled={false}
       />
     </div>

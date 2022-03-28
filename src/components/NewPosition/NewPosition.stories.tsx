@@ -7,6 +7,7 @@ import { PublicKey } from '@solana/web3.js'
 import { MemoryRouter } from 'react-router'
 import { calcPrice } from '@consts/utils'
 import { MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
+import { colors } from '@static/theme'
 
 const data = [
   {
@@ -54,20 +55,21 @@ const tokens: SwapToken[] = [
 storiesOf('position/newPosition', module)
   .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
   .add('new', () => (
-    <div style={{ backgroundColor: '#000000', padding: 20, width: 'fit-content' }}>
+    <div
+      style={{ backgroundColor: colors.invariant.componentBcg, padding: 20, width: 'fit-content' }}>
       <NewPosition
         tokens={tokens}
-        tokensB={tokens}
         data={data}
         midPrice={{
           x: calcPrice(140, true, 6, 6),
           index: 140
         }}
+        setMidPrice={() => {}}
         addLiquidityHandler={() => {}}
         onChangePositionTokens={() => {}}
         isCurrentPoolExisting={true}
         calcAmount={() => new BN(1)}
-        feeTiers={[0.05, 0.3, 1]}
+        feeTiers={[0.02, 0.04, 0.1, 0.3, 1]}
         ticksLoading={false}
         noConnectedBlockerProps={{
           onConnect: () => {},
@@ -78,24 +80,34 @@ storiesOf('position/newPosition', module)
         yDecimal={6}
         tickSpacing={1}
         isXtoY={true}
+        isWaitingForNewPool={false}
+        poolIndex={0}
+        currentPairReversed={null}
+        bestTiers={[]}
+        initialIsDiscreteValue={false}
+        onDiscreteChange={() => {}}
+        currentPriceSqrt={new BN(140000000)}
+        canCreateNewPool
+        canCreateNewPosition
       />
     </div>
   ))
   .add('noPool', () => (
-    <div style={{ backgroundColor: '#000000', padding: 20, width: 'fit-content' }}>
+    <div
+      style={{ backgroundColor: colors.invariant.componentBcg, padding: 20, width: 'fit-content' }}>
       <NewPosition
         tokens={tokens}
-        tokensB={tokens}
         data={data}
         midPrice={{
           x: calcPrice(140, true, 6, 6),
           index: 140
         }}
+        setMidPrice={() => {}}
         addLiquidityHandler={() => {}}
         onChangePositionTokens={() => {}}
         isCurrentPoolExisting={false}
         calcAmount={() => new BN(1)}
-        feeTiers={[0.05, 0.3, 1]}
+        feeTiers={[0.02, 0.04, 0.1, 0.3, 1]}
         ticksLoading={false}
         noConnectedBlockerProps={{
           onConnect: () => {},
@@ -106,6 +118,15 @@ storiesOf('position/newPosition', module)
         yDecimal={6}
         tickSpacing={4}
         isXtoY={true}
+        isWaitingForNewPool={false}
+        poolIndex={0}
+        currentPairReversed={null}
+        bestTiers={[]}
+        initialIsDiscreteValue={false}
+        onDiscreteChange={() => {}}
+        currentPriceSqrt={new BN(140000000)}
+        canCreateNewPool
+        canCreateNewPosition
       />
     </div>
   ))

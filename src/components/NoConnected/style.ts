@@ -25,26 +25,29 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     height: '370px',
     backgroundColor: 'rgba(12, 11, 13, 0.8)',
-    filter: 'blur(4px) brightness(0.4)',
     position: 'absolute',
-    zIndex: 13
+    zIndex: 13,
+    borderRadius: 10
   },
   desc: {
-    ...typography.body1,
+    ...typography.body2,
     fontWeight: 500,
     lineHeight: '20px',
-    color: colors.invariant.lightInfoText
+    color: colors.invariant.lightHover
   },
   button: {
+    height: 40,
+    width: 200,
     marginTop: 20,
-    color: colors.white.main,
-    background: colors.invariant.accent1,
+    color: colors.invariant.componentBcg,
     ...typography.body1,
     textTransform: 'none',
+    borderRadius: 14,
+    background: colors.invariant.pinkLinearGradientOpacity,
 
     '&:hover': {
-      background: colors.invariant.accent1,
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`
+      background: colors.invariant.pinkLinearGradient,
+      boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)'
     }
   }
 }))

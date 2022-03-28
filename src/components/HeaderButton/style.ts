@@ -3,7 +3,7 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerButton: {
-    background: colors.invariant.componentOut2,
+    background: colors.invariant.light,
     color: colors.white.main,
     paddingInline: 12,
     borderRadius: 10,
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:hover': {
-      background: colors.invariant.componentOut3
+      background: colors.blue.deep
     },
     '&:active': {
       '& #downIcon': {
@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     WebkitPaddingBefore: '2px'
   },
   headerButtonConnect: {
-    background: colors.invariant.logoPurple,
-    color: colors.white.main,
+    background: colors.invariant.pinkLinearGradientOpacity,
+    color: colors.invariant.newDark,
     paddingInline: 12,
     borderRadius: 10,
     textTransform: 'none',
@@ -50,12 +50,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:hover': {
-      boxShadow: `0 0 15px ${colors.invariant.accent1}`,
-      backgroundColor: colors.invariant.accent1
+      boxShadow: `0 0 15px ${colors.invariant.light}`,
+      backgroundColor: colors.invariant.light
     }
   },
   headerButtonConnected: {
-    background: colors.invariant.componentOut2,
+    background: colors.invariant.light,
     color: colors.white.main,
     paddingInline: 12,
     borderRadius: 10,
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     '&:hover': {
-      background: colors.invariant.componentOut3
+      background: colors.blue.deep
     }
   },
   headerButtonTextEllipsis: {

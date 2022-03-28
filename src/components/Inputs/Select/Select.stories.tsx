@@ -44,22 +44,22 @@ const tokens: SwapToken[] = [
 storiesOf('Inputs/select', module)
   .addDecorator(withKnobs)
   .add('default - token', () => (
-    <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
+    <div style={{ backgroundColor: colors.invariant.component, padding: '100px' }}>
       <Select
         current={null}
-        name='Select&nbsp;token'
+        name='Select a token'
         tokens={tokens}
-        onSelect={(chosen: string) => action(`chosen index: ${chosen}`)()}
+        onSelect={index => action(`chosen index: ${index}`)()}
       />
     </div>
   ))
   .add('chosen - token', () => (
-    <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
+    <div style={{ backgroundColor: colors.invariant.component, padding: '100px' }}>
       <Select
         current={tokens[0]}
-        name='Select&nbsp;token'
+        name='Select a token'
         tokens={tokens}
-        onSelect={(chosen: string) => action(`chosen index: ${chosen}`)()}
+        onSelect={index => action(`chosen index: ${index}`)()}
       />
     </div>
   ))

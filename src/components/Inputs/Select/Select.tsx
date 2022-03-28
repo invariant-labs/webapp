@@ -7,22 +7,26 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import useStyles from './style'
+import { BN } from '@project-serum/anchor'
 
 export interface ISelectModal {
   name?: string
   current: SwapToken | null
   centered?: boolean
-  tokens: Array<{ symbol: string, name: string, logoURI: string }>
-  onSelect: (name: string) => void
+  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
+  onSelect: (index: number) => void
   className?: string
+  hideBalancesInModal?: boolean
 }
+
 export const Select: React.FC<ISelectModal> = ({
   name = 'Select',
   current,
   centered,
   tokens,
   onSelect,
-  className
+  className,
+  hideBalancesInModal = false
 }) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
@@ -47,17 +51,16 @@ export const Select: React.FC<ISelectModal> = ({
         variant='contained'
         onClick={handleClick}
         startIcon={
-          !current ? null : (
-            <img className={classes.icon} src={current.logoURI ?? icons.SNY} />
-          )
+          !current ? null : <img className={classes.icon} src={current.logoURI ?? icons.SNY} />
         }
         endIcon={<ExpandMoreIcon className={classes.endIcon} />}
         classes={{
           endIcon: 'selectArrow'
         }}
-        disableRipple
-      >
-        <span style={{ whiteSpace: 'nowrap' }} className={classes.tokenName}>{!current ? name : current.symbol}</span>
+        disableRipple>
+        <span style={{ whiteSpace: 'nowrap' }} className={classes.tokenName}>
+          {!current ? name : current.symbol}
+        </span>
       </Button>
       <SelectTokenModal
         tokens={tokens}
@@ -68,6 +71,7 @@ export const Select: React.FC<ISelectModal> = ({
         anchorEl={anchorEl}
         onSelect={onSelect}
         handleClose={handleClose}
+        hideBalances={hideBalancesInModal}
       />
     </>
   )

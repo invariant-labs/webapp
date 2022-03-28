@@ -15,7 +15,6 @@ export function* getConnection(): SagaGenerator<Connection> {
 
 export function* initConnection(): Generator {
   try {
-    console.log('init connection')
     yield* call(getConnection)
     // TODO: pull state here
 

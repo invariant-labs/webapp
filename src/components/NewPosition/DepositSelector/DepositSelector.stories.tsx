@@ -38,11 +38,10 @@ const tokens: SwapToken[] = [
 storiesOf('position/depositSelector', module).add('deposit', () => (
   <DepositSelector
     tokens={tokens}
-    tokensB={tokens}
     setPositionTokens={() => {}}
     onAddLiquidity={() => {}}
     tokenAInputState={{
-      value: '1',
+      value: '0.000001',
       setValue: () => {},
       blocked: false,
       decimalsLimit: 6
@@ -51,11 +50,14 @@ storiesOf('position/depositSelector', module).add('deposit', () => (
       value: '',
       setValue: () => {},
       blocked: true,
-      blockerInfo: 'Select token.',
+      blockerInfo: 'Select a token.',
       decimalsLimit: 8
     }}
-    feeTiers={[0.05, 0.3, 1]}
-    isCurrentPoolExisting={true}
+    feeTiers={[0.02, 0.04, 0.1, 0.3, 1]}
     progress='none'
+    onReverseTokens={() => {}}
+    poolIndex={0}
+    canCreateNewPool
+    canCreateNewPosition
   />
 ))

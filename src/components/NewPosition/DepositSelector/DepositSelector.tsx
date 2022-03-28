@@ -7,7 +7,15 @@ import React, { useState, useCallback, useEffect } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
 import classNames from 'classnames'
 import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import SwapList from '@static/svg/swap-list.svg'
 import useStyles from './style'
+import { PublicKey } from '@solana/web3.js'
+import {
+  WRAPPED_SOL_ADDRESS,
+  WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT,
+  WSOL_POOL_INIT_LAMPORTS
+} from '@consts/static'
+import { BN } from '@project-serum/anchor'
 
 export interface InputState {
   value: string
@@ -19,7 +27,6 @@ export interface InputState {
 
 export interface IDepositSelector {
   tokens: SwapToken[]
-  tokensB: SwapToken[]
   setPositionTokens: (
     tokenAIndex: number | null,
     tokenBindex: number | null,
@@ -29,22 +36,37 @@ export interface IDepositSelector {
   tokenAInputState: InputState
   tokenBInputState: InputState
   feeTiers: number[]
-  isCurrentPoolExisting: boolean
   className?: string
   progress: ProgressState
+  percentageChangeA?: number
+  usdValueA?: number
+  percentageChangeB?: number
+  usdValueB?: number
+  onReverseTokens: () => void
+  poolIndex: number | null
+  bestTierIndex?: number
+  canCreateNewPool: boolean
+  canCreateNewPosition: boolean
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
   tokens,
-  tokensB,
   setPositionTokens,
   onAddLiquidity,
   tokenAInputState,
   tokenBInputState,
   feeTiers,
-  isCurrentPoolExisting,
   className,
-  progress
+  progress,
+  percentageChangeA,
+  usdValueA,
+  percentageChangeB,
+  usdValueB,
+  onReverseTokens,
+  poolIndex,
+  bestTierIndex,
+  canCreateNewPool,
+  canCreateNewPosition
 }) => {
   const classes = useStyles()
 
@@ -57,8 +79,15 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'Select tokens'
     }
 
-    if (!isCurrentPoolExisting) {
-      return 'Pool does not exist'
+    if (tokenAIndex === tokenBIndex) {
+      return 'Select different tokens'
+    }
+
+    if (
+      (poolIndex === null && !canCreateNewPool) ||
+      (poolIndex !== null && !canCreateNewPosition)
+    ) {
+      return 'Insufficient lamports'
     }
 
     if (
@@ -89,14 +118,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
 
     return 'Add Liquidity'
-  }, [
-    tokenAIndex,
-    tokenBIndex,
-    tokenAInputState.value,
-    tokenBInputState.value,
-    tokens,
-    isCurrentPoolExisting
-  ])
+  }, [tokenAIndex, tokenBIndex, tokenAInputState.value, tokenBInputState.value, tokens])
 
   useEffect(() => {
     if (tokenAIndex !== null) {
@@ -106,9 +128,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         tokenAInputState.setValue(parts[0] + '.' + parts[1].slice(0, tokens[tokenAIndex].decimals))
       }
     }
-  }, [tokenAIndex])
 
-  useEffect(() => {
     if (tokenBIndex !== null) {
       if (getScaleFromString(tokenBInputState.value) > tokens[tokenBIndex].decimals) {
         const parts = tokenBInputState.value.split('.')
@@ -116,34 +136,19 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         tokenAInputState.setValue(parts[0] + '.' + parts[1].slice(0, tokens[tokenBIndex].decimals))
       }
     }
-  }, [tokenBIndex])
-
-  useEffect(() => {
-    if (
-      tokenAIndex !== null &&
-      tokenBIndex !== null &&
-      !tokensB.find(token => token.symbol === tokens[tokenAIndex].symbol)
-    ) {
-      const indexB = tokensB.length
-        ? tokens.findIndex(token => token.symbol === tokensB[0].symbol)
-        : null
-      setTokenBIndex(indexB)
-      setPositionTokens(tokenAIndex, indexB, feeTierIndex)
-    }
-  }, [tokensB])
+  }, [poolIndex])
 
   return (
     <Grid container direction='column' className={classNames(classes.wrapper, className)}>
       <Typography className={classes.sectionTitle}>Tokens</Typography>
+
       <Grid container className={classes.sectionWrapper} style={{ marginBottom: 8 }}>
         <Grid container className={classes.selects} direction='row' justifyContent='space-between'>
           <Grid className={classes.selectWrapper}>
-            <Typography className={classes.inputLabel}>Pair token A</Typography>
             <Select
               tokens={tokens}
               current={tokenAIndex !== null ? tokens[tokenAIndex] : null}
-              onSelect={name => {
-                const index = tokens.findIndex(e => e.symbol === name)
+              onSelect={index => {
                 setTokenAIndex(index)
                 setPositionTokens(index, tokenBIndex, feeTierIndex)
               }}
@@ -152,13 +157,28 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             />
           </Grid>
 
+          <img
+            className={classes.arrows}
+            src={SwapList}
+            alt='Arrow'
+            onClick={() => {
+              if (!tokenBInputState.blocked) {
+                tokenAInputState.setValue(tokenBInputState.value)
+              } else {
+                tokenBInputState.setValue(tokenAInputState.value)
+              }
+              const pom = tokenAIndex
+              setTokenAIndex(tokenBIndex)
+              setTokenBIndex(pom)
+              onReverseTokens()
+            }}
+          />
+
           <Grid className={classes.selectWrapper}>
-            <Typography className={classes.inputLabel}>Pair token B</Typography>
             <Select
-              tokens={tokensB}
+              tokens={tokens}
               current={tokenBIndex !== null ? tokens[tokenBIndex] : null}
-              onSelect={name => {
-                const index = tokens.findIndex(e => e.symbol === name)
+              onSelect={index => {
                 setTokenBIndex(index)
                 setPositionTokens(tokenAIndex, index, feeTierIndex)
               }}
@@ -168,7 +188,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           </Grid>
         </Grid>
 
-        <Typography className={classes.inputLabel}>Fee</Typography>
         <FeeSwitch
           onSelect={fee => {
             setFeeTierIndex(fee)
@@ -176,13 +195,15 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           }}
           feeTiers={feeTiers}
           showOnlyPercents
+          bestTierIndex={bestTierIndex}
         />
       </Grid>
 
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
       <Grid container className={classes.sectionWrapper}>
-        <Typography className={classes.inputLabel}>Pair token A amount</Typography>
         <DepositAmountInput
+          percentageChange={percentageChangeA}
+          usdValue={usdValueA}
           currency={tokenAIndex !== null ? tokens[tokenAIndex].symbol : null}
           currencyIconSrc={tokenAIndex !== null ? tokens[tokenAIndex].logoURI : undefined}
           placeholder='0.0'
@@ -190,10 +211,41 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             if (tokenAIndex === null) {
               return
             }
+
+            if (tokens[tokenAIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))) {
+              if (tokenBIndex !== null && poolIndex === null) {
+                tokenAInputState.setValue(
+                  printBN(
+                    tokens[tokenAIndex].balance.gt(WSOL_POOL_INIT_LAMPORTS)
+                      ? tokens[tokenAIndex].balance.sub(WSOL_POOL_INIT_LAMPORTS)
+                      : new BN(0),
+                    tokens[tokenAIndex].decimals
+                  )
+                )
+
+                return
+              }
+
+              tokenAInputState.setValue(
+                printBN(
+                  tokens[tokenAIndex].balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                    ? tokens[tokenAIndex].balance.sub(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                    : new BN(0),
+                  tokens[tokenAIndex].decimals
+                )
+              )
+
+              return
+            }
             tokenAInputState.setValue(
               printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimals)
             )
           }}
+          balanceValue={
+            tokenAIndex !== null
+              ? printBN(tokens[tokenAIndex].balance, tokens[tokenAIndex].decimals)
+              : ''
+          }
           style={{
             marginBottom: 10
           }}
@@ -209,8 +261,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           {...tokenAInputState}
         />
 
-        <Typography className={classes.inputLabel}>Pair token B amount</Typography>
         <DepositAmountInput
+          percentageChange={percentageChangeB}
+          usdValue={usdValueB}
           currency={tokenBIndex !== null ? tokens[tokenBIndex].symbol : null}
           currencyIconSrc={tokenBIndex !== null ? tokens[tokenBIndex].logoURI : undefined}
           placeholder='0.0'
@@ -218,10 +271,41 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             if (tokenBIndex === null) {
               return
             }
+
+            if (tokens[tokenBIndex].assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))) {
+              if (tokenAIndex !== null && poolIndex === null) {
+                tokenBInputState.setValue(
+                  printBN(
+                    tokens[tokenBIndex].balance.gt(WSOL_POOL_INIT_LAMPORTS)
+                      ? tokens[tokenBIndex].balance.sub(WSOL_POOL_INIT_LAMPORTS)
+                      : new BN(0),
+                    tokens[tokenBIndex].decimals
+                  )
+                )
+
+                return
+              }
+
+              tokenBInputState.setValue(
+                printBN(
+                  tokens[tokenBIndex].balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                    ? tokens[tokenBIndex].balance.sub(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                    : new BN(0),
+                  tokens[tokenBIndex].decimals
+                )
+              )
+
+              return
+            }
             tokenBInputState.setValue(
               printBN(tokens[tokenBIndex].balance, tokens[tokenBIndex].decimals)
             )
           }}
+          balanceValue={
+            tokenBIndex !== null
+              ? printBN(tokens[tokenBIndex].balance, tokens[tokenBIndex].decimals)
+              : ''
+          }
           onBlur={() => {
             if (
               tokenAIndex !== null &&
@@ -236,8 +320,15 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       </Grid>
 
       <AnimatedButton
-        className={classes.addButton}
-        onClick={onAddLiquidity}
+        className={classNames(
+          classes.addButton,
+          progress === 'none' ? classes.hoverButton : undefined
+        )}
+        onClick={() => {
+          if (progress === 'none') {
+            onAddLiquidity()
+          }
+        }}
         disabled={getButtonMessage() !== 'Add Liquidity'}
         content={getButtonMessage()}
         progress={progress}

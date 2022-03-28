@@ -1,14 +1,20 @@
-import { calculatePriceSqrt, MAX_TICK, MIN_TICK, Pair, TICK_LIMIT } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, MAX_TICK, MIN_TICK, TICK_LIMIT } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
-import { DENOMINATOR, parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
+import {
+  calculateTickDelta,
+  DECIMAL,
+  parseLiquidityOnTicks,
+  simulateSwap
+} from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { u64 } from '@solana/spl-token'
 import {
-  ANA_DEV,
+  BTC_DEV,
   MSOL_DEV,
   NetworkType,
   PRICE_DECIMAL,
+  RENDOGE_DEV,
   Token,
   USDC_DEV,
   USDT_DEV,
@@ -16,8 +22,8 @@ import {
 } from './static'
 import mainnetList from './tokenLists/mainnet.json'
 import { PublicKey } from '@solana/web3.js'
-import { getMarketProgramSync } from '@web3/programs/amm'
 import { PoolWithAddress } from '@reducers/pools'
+import { Tickmap } from '@invariant-labs/sdk/lib/market'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -111,15 +117,17 @@ const defaultPrefixConfig: PrefixConfig = {
 }
 
 export const showPrefix = (nr: number, config: PrefixConfig = defaultPrefixConfig): string => {
-  if (typeof config.B !== 'undefined' && nr >= config.B) {
+  const abs = Math.abs(nr)
+
+  if (typeof config.B !== 'undefined' && abs >= config.B) {
     return 'B'
   }
 
-  if (typeof config.M !== 'undefined' && nr >= config.M) {
+  if (typeof config.M !== 'undefined' && abs >= config.M) {
     return 'M'
   }
 
-  if (typeof config.K !== 'undefined' && nr >= config.K) {
+  if (typeof config.K !== 'undefined' && abs >= config.K) {
     return 'K'
   }
 
@@ -166,9 +174,14 @@ export const formatNumbers =
   (thresholds: FormatNumberThreshold[] = defaultThresholds) =>
   (value: string) => {
     const num = Number(value)
-    const threshold = thresholds.sort((a, b) => a.value - b.value).find(thr => num < thr.value)
+    const abs = Math.abs(num)
+    const threshold = thresholds.sort((a, b) => a.value - b.value).find(thr => abs < thr.value)
 
-    return threshold ? (num / (threshold.divider ?? 1)).toFixed(threshold.decimals) : value
+    const formatted = threshold
+      ? (abs / (threshold.divider ?? 1)).toFixed(threshold.decimals)
+      : value
+
+    return num < 0 && threshold ? '-' + formatted : formatted
   }
 
 export const nearestPriceIndex = (price: number, data: Array<{ x: number; y: number }>) => {
@@ -207,7 +220,11 @@ export const spacingMultiplicityLte = (arg: number, spacing: number): number => 
     return arg
   }
 
-  return arg >= 0 ? arg - (arg % spacing) : arg + (arg % spacing)
+  if (arg >= 0) {
+    return arg - (arg % spacing)
+  }
+
+  return arg - (spacing - (Math.abs(arg) % spacing))
 }
 
 export const spacingMultiplicityGte = (arg: number, spacing: number): number => {
@@ -215,7 +232,11 @@ export const spacingMultiplicityGte = (arg: number, spacing: number): number => 
     return arg
   }
 
-  return arg >= 0 ? arg + (arg % spacing) : arg - (arg % spacing)
+  if (arg >= 0) {
+    return arg + (spacing - (arg % spacing))
+  }
+
+  return arg + (Math.abs(arg) % spacing)
 }
 
 export const createLiquidityPlot = (
@@ -238,7 +259,7 @@ export const createLiquidityPlot = (
   const min = minSpacingMultiplicity(pool.tickSpacing)
   const max = maxSpacingMultiplicity(pool.tickSpacing)
 
-  if (!ticks.length || ticks[0].index !== min) {
+  if (!ticks.length || ticks[0].index > min) {
     const minPrice = calcPrice(min, isXtoY, tokenXDecimal, tokenYDecimal)
 
     ticksData.push({
@@ -260,7 +281,7 @@ export const createLiquidityPlot = (
       const price = calcPrice(tick.index - pool.tickSpacing, isXtoY, tokenXDecimal, tokenYDecimal)
       ticksData.push({
         x: price,
-        y: +printBN(ticks[i - 1].liqudity, PRICE_DECIMAL),
+        y: +printBN(ticks[i - 1].liqudity, DECIMAL),
         index: tick.index - pool.tickSpacing
       })
     }
@@ -268,7 +289,7 @@ export const createLiquidityPlot = (
     const price = calcPrice(tick.index, isXtoY, tokenXDecimal, tokenYDecimal)
     ticksData.push({
       x: price,
-      y: +printBN(ticks[i].liqudity, PRICE_DECIMAL),
+      y: +printBN(ticks[i].liqudity, DECIMAL),
       index: tick.index
     })
   })
@@ -281,7 +302,7 @@ export const createLiquidityPlot = (
       y: 0,
       index: max
     })
-  } else if (ticks[ticks.length - 1].index !== max) {
+  } else if (ticks[ticks.length - 1].index < max) {
     if (max - ticks[ticks.length - 1].index > pool.tickSpacing) {
       const price = calcPrice(
         ticks[ticks.length - 1].index + pool.tickSpacing,
@@ -356,9 +377,10 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
       return {
         [USDC_DEV.address.toString()]: USDC_DEV,
         [USDT_DEV.address.toString()]: USDT_DEV,
-        [ANA_DEV.address.toString()]: ANA_DEV,
         [MSOL_DEV.address.toString()]: MSOL_DEV,
-        [WSOL_DEV.address.toString()]: WSOL_DEV
+        [BTC_DEV.address.toString()]: BTC_DEV,
+        [WSOL_DEV.address.toString()]: WSOL_DEV,
+        [RENDOGE_DEV.address.toString()]: RENDOGE_DEV
       }
     default:
       return {}
@@ -423,70 +445,13 @@ export const calcPrice = (index: number, isXtoY: boolean, xDecimal: number, yDec
   return isXtoY ? price : price !== 0 ? 1 / price : Number.MAX_SAFE_INTEGER
 }
 
-// TODO: temporarily copied, remove later
-export const getX = (
-  liquidity: BN,
-  upperSqrtPrice: BN,
-  currentSqrtPrice: BN,
-  lowerSqrtPrice: BN
-): BN => {
-  if (
-    upperSqrtPrice.lte(new BN(0)) ||
-    currentSqrtPrice.lte(new BN(0)) ||
-    lowerSqrtPrice.lte(new BN(0))
-  ) {
-    throw new Error('Price cannot be lower or equal 0')
-  }
-
-  let denominator: BN
-  let nominator: BN
-
-  if (currentSqrtPrice.gte(upperSqrtPrice)) {
-    return new BN(0)
-  } else if (currentSqrtPrice.lt(lowerSqrtPrice)) {
-    denominator = lowerSqrtPrice.mul(upperSqrtPrice).div(DENOMINATOR)
-    nominator = upperSqrtPrice.sub(lowerSqrtPrice)
-  } else {
-    denominator = upperSqrtPrice.mul(currentSqrtPrice).div(DENOMINATOR)
-    nominator = upperSqrtPrice.sub(currentSqrtPrice)
-  }
-
-  return liquidity.mul(nominator).div(denominator)
-}
-
-export const getY = (
-  liquidity: BN,
-  upperSqrtPrice: BN,
-  currentSqrtPrice: BN,
-  lowerSqrtPrice: BN
-): BN => {
-  if (
-    lowerSqrtPrice.lte(new BN(0)) ||
-    currentSqrtPrice.lte(new BN(0)) ||
-    upperSqrtPrice.lte(new BN(0))
-  ) {
-    throw new Error('Price cannot be 0')
-  }
-
-  let difference: BN
-  if (currentSqrtPrice.lt(lowerSqrtPrice)) {
-    return new BN(0)
-  } else if (currentSqrtPrice.gte(upperSqrtPrice)) {
-    difference = upperSqrtPrice.sub(lowerSqrtPrice)
-  } else {
-    difference = currentSqrtPrice.sub(lowerSqrtPrice)
-  }
-
-  return liquidity.mul(difference).div(DENOMINATOR)
-}
-
 export const findPoolIndex = (address: PublicKey, pools: PoolWithAddress[]) => {
   return pools.findIndex(pool => pool.address.equals(address))
 }
 
 export const findPairIndex = (
   fromToken: PublicKey,
-  toToken: PublicKey, // do naprawy!!!
+  toToken: PublicKey,
   pools: PoolWithAddress[]
 ) => {
   return pools.findIndex(
@@ -504,93 +469,198 @@ export const findPairs = (tokenFrom: PublicKey, tokenTo: PublicKey, pairs: PoolW
   )
 }
 
+export const calcCurrentPriceOfPool = (
+  pool: PoolWithAddress,
+  xDecimal: number,
+  yDecimal: number
+) => {
+  const decimalDiff = PRICE_DECIMAL + (xDecimal - yDecimal)
+  const sqrtPricePow: number =
+    +printBN(pool.sqrtPrice.v, PRICE_DECIMAL) * +printBN(pool.sqrtPrice.v, PRICE_DECIMAL)
+
+  const knownPrice: BN = new BN(sqrtPricePow * 10 ** decimalDiff)
+
+  return printBNtoBN(knownPrice.toString(), 0)
+}
+
 export const handleSimulate = async (
   pools: PoolWithAddress[],
   poolTicks: { [key in string]: Tick[] },
+  tickmaps: { [key in string]: Tickmap },
   slippage: Decimal,
   fromToken: PublicKey,
   toToken: PublicKey,
   amount: BN,
-  currentPrice: BN,
   byAmountIn: boolean
 ): Promise<{
   amountOut: BN
   poolIndex: number
-  simulateSuccess: boolean
   AmountOutWithFee: BN
+  estimatedPriceAfterSwap: BN
+  error: string[]
 }> => {
-  const marketProgram = getMarketProgramSync()
   const filteredPools = findPairs(fromToken, toToken, pools)
   let swapSimulateRouterAmount: BN = new BN(-1)
+  const errorMessage: string[] = []
   let poolIndex: number = 0
   let isXtoY = false
-  let resaultWithFee: BN = new BN(0)
-  let resault
+  let resultWithFee: BN = new BN(0)
+  let result
+  let estimatedPrice: BN = new BN(0)
+
   if (amount.eq(new BN(0))) {
     return {
       amountOut: new BN(0),
       poolIndex: poolIndex,
-      simulateSuccess: true,
-      AmountOutWithFee: new BN(0)
+      AmountOutWithFee: new BN(0),
+      estimatedPriceAfterSwap: new BN(0),
+      error: errorMessage
     }
   }
-  isXtoY = fromToken.equals(filteredPools[0].tokenX)
 
-  const tickMap = await marketProgram.getTickmap(
-    new Pair(filteredPools[0].tokenX, filteredPools[0].tokenY, { fee: filteredPools[0].fee.v })
-  )
-  const ticks: Map<number, Tick> = new Map<number, Tick>()
-  for (const tick of poolTicks[filteredPools[0].address.toString()]) {
-    ticks.set(tick.index, tick)
-  }
-  try {
-    const swapSimulateResault = await simulateSwap({
-      xToY: isXtoY,
-      byAmountIn: byAmountIn,
-      swapAmount: amount,
-      currentPrice: { v: currentPrice },
-      slippage: slippage,
-      pool: filteredPools[0],
-      ticks: ticks,
-      tickmap: tickMap
-    })
+  for (const pool of filteredPools) {
+    isXtoY = fromToken.equals(pool.tokenX)
 
-    if (swapSimulateResault.amountPerTick.length >= 8) {
-      throw new Error('too large amount')
+    const ticks: Map<number, Tick> = new Map<number, Tick>()
+    for (const tick of poolTicks[pool.address.toString()]) {
+      ticks.set(tick.index, tick)
     }
-    if (!byAmountIn) {
-      resault = swapSimulateResault.accumulatedAmountIn.add(swapSimulateResault.accumulatedFee)
-    } else {
-      resault = swapSimulateResault.accumulatedAmountOut
+
+    try {
+      const swapSimulateResult = await simulateSwap({
+        xToY: isXtoY,
+        byAmountIn: byAmountIn,
+        swapAmount: amount,
+        priceLimit: {
+          v: isXtoY ? new BN(1) : new BN('340282366920938463463374607431768211455')
+        },
+        slippage: slippage,
+        pool: pool,
+        ticks: ticks,
+        tickmap: tickmaps[pool.tickmap.toString()]
+      })
+      if (swapSimulateResult.amountPerTick.length >= 8) {
+        throw new Error('Too large amount')
+      }
+
+      if (!byAmountIn) {
+        result = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
+      } else {
+        result = swapSimulateResult.accumulatedAmountOut
+      }
+      if (swapSimulateRouterAmount.lt(result)) {
+        resultWithFee = result.add(swapSimulateResult.accumulatedFee)
+        poolIndex = findPoolIndex(pool.address, pools)
+        swapSimulateRouterAmount = result
+        estimatedPrice = swapSimulateResult.priceAfterSwap
+      }
+    } catch (err: any) {
+      errorMessage.push(err.toString())
     }
-    if (swapSimulateRouterAmount.lt(resault)) {
-      resaultWithFee = resault.add(swapSimulateResault.accumulatedFee)
-      poolIndex = findPoolIndex(filteredPools[0].address, pools)
-      swapSimulateRouterAmount = resault
-    }
-  } catch (error) {
-    console.log(error)
   }
   if (swapSimulateRouterAmount.lt(new BN(0))) {
     return {
       amountOut: new BN(0),
       poolIndex: poolIndex,
-      simulateSuccess: false,
-      AmountOutWithFee: new BN(0)
+      AmountOutWithFee: new BN(0),
+      estimatedPriceAfterSwap: new BN(0),
+      error: errorMessage
     }
   }
+
   return {
     amountOut: swapSimulateRouterAmount,
     poolIndex: poolIndex,
-    simulateSuccess: true,
-    AmountOutWithFee: resaultWithFee
+    AmountOutWithFee: resultWithFee,
+    estimatedPriceAfterSwap: estimatedPrice,
+    error: []
   }
 }
 
 export const minSpacingMultiplicity = (spacing: number) => {
-  return Math.max(spacingMultiplicityGte(MIN_TICK, spacing), -(TICK_LIMIT - 2) * spacing)
+  return Math.max(spacingMultiplicityGte(MIN_TICK, spacing), -(TICK_LIMIT - 1) * spacing)
 }
 
 export const maxSpacingMultiplicity = (spacing: number) => {
   return Math.min(spacingMultiplicityLte(MAX_TICK, spacing), (TICK_LIMIT - 2) * spacing)
+}
+
+export const toMaxNumericPlaces = (num: number, places: number): string => {
+  const log = Math.floor(Math.log10(num))
+
+  if (log >= places) {
+    return num.toFixed(0)
+  }
+
+  if (log >= 0) {
+    return num.toFixed(places - log - 1)
+  }
+
+  return num.toFixed(places + Math.abs(log) - 1)
+}
+
+export const trimLeadingZeros = (amount: string): string => {
+  const amountParts = amount.split('.')
+
+  if (!amountParts.length) {
+    return '0'
+  }
+
+  if (amountParts.length === 1) {
+    return amountParts[0]
+  }
+
+  const reversedDec = Array.from(amountParts[1]).reverse()
+  const firstNonZero = reversedDec.findIndex(char => char !== '0')
+
+  if (firstNonZero === -1) {
+    return amountParts[0]
+  }
+
+  const trimmed = reversedDec.slice(firstNonZero, reversedDec.length).reverse().join('')
+
+  return `${amountParts[0]}.${trimmed}`
+}
+
+export const calculateConcentrationRange = (
+  tickSpacing: number,
+  concentration: number,
+  minimumRange: number,
+  currentTick: number,
+  isXToY: boolean
+) => {
+  const tickDelta = calculateTickDelta(tickSpacing, minimumRange, concentration)
+  const lowerTick = currentTick - (minimumRange / 2 + tickDelta) * tickSpacing
+  const upperTick = currentTick + (minimumRange / 2 + tickDelta) * tickSpacing
+
+  return {
+    leftRange: isXToY ? lowerTick : upperTick,
+    rightRange: isXToY ? upperTick : lowerTick
+  }
+}
+
+export enum PositionTokenBlock {
+  None,
+  A,
+  B
+}
+
+export const determinePositionTokenBlock = (
+  currentSqrtPrice: BN,
+  lowerTick: number,
+  upperTick: number,
+  isXtoY: boolean
+) => {
+  const lowerPrice = calculatePriceSqrt(lowerTick)
+  const upperPrice = calculatePriceSqrt(upperTick)
+
+  if (lowerPrice.v.gte(currentSqrtPrice)) {
+    return isXtoY ? PositionTokenBlock.B : PositionTokenBlock.A
+  }
+
+  if (upperPrice.v.lte(currentSqrtPrice)) {
+    return isXtoY ? PositionTokenBlock.A : PositionTokenBlock.B
+  }
+
+  return PositionTokenBlock.None
 }

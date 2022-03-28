@@ -11,9 +11,8 @@ import {
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Typography } from '@material-ui/core'
 import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
-import { PRICE_DECIMAL } from '@consts/static'
-import { calculatePriceSqrt, DENOMINATOR } from '@invariant-labs/sdk'
-import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
+import { calculatePriceSqrt } from '@invariant-labs/sdk'
+import { calculateClaimAmount, DECIMAL } from '@invariant-labs/sdk/src/utils'
 import useStyles from './style'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 
@@ -156,7 +155,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             calculatePriceSqrt(position.upperTickIndex).v,
             position.poolData.sqrtPrice.v,
             calculatePriceSqrt(position.lowerTickIndex).v
-          ).div(DENOMINATOR),
+          ),
           position.tokenX.decimals
         )
       } catch (error) {
@@ -175,7 +174,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             calculatePriceSqrt(position.upperTickIndex).v,
             position.poolData.sqrtPrice.v,
             calculatePriceSqrt(position.lowerTickIndex).v
-          ).div(DENOMINATOR),
+          ),
           position.tokenY.decimals
         )
       } catch (error) {
@@ -222,6 +221,12 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     return ticksData
   }, [ticksData, ticksLoading, position?.id])
 
+  const initialIsDiscreteValue = localStorage.getItem('IS_PLOT_DISCRETE') === 'true'
+
+  const setIsDiscreteValue = (val: boolean) => {
+    localStorage.setItem('IS_PLOT_DISCRETE', val ? 'true' : 'false')
+  }
+
   return !isLoadingList && position ? (
     <PositionDetails
       detailsData={data}
@@ -229,8 +234,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       leftRange={leftRange}
       rightRange={rightRange}
       currentPrice={current}
-      tokenY={position.tokenY.symbol}
-      tokenX={position.tokenX.symbol}
       onClickClaimFee={() => {
         dispatch(actions.claimFee(position.positionIndex))
       }}
@@ -244,25 +247,29 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           })
         )
       }}
-      tokenXLiqValue={tokenXLiquidity}
-      tokenYLiqValue={tokenYLiquidity}
-      tokenXClaimValue={tokenXClaim}
-      tokenYClaimValue={tokenYClaim}
-      positionData={{
-        tokenXName: position.tokenX.symbol,
-        tokenYName: position.tokenY.symbol,
-        tokenXIcon: position.tokenX.logoURI,
-        tokenYIcon: position.tokenY.logoURI,
-        tokenXDecimal: position.tokenX.decimals,
-        tokenYDecimal: position.tokenY.decimals,
-        fee: +printBN(position.poolData.fee.v, PRICE_DECIMAL - 2),
-        min,
-        max
-      }}
       ticksLoading={ticksLoading}
       tickSpacing={position?.poolData.tickSpacing ?? 1}
-      xDecimal={position?.tokenX.decimals ?? 0}
-      yDecimal={position?.tokenY.decimals ?? 0}
+      tokenX={{
+        name: position.tokenX.symbol,
+        icon: position.tokenX.logoURI,
+        decimal: position.tokenX.decimals,
+        balance: +printBN(position.tokenX.balance, position.tokenX.decimals),
+        liqValue: tokenXLiquidity,
+        claimValue: tokenXClaim
+      }}
+      tokenY={{
+        name: position.tokenY.symbol,
+        icon: position.tokenY.logoURI,
+        decimal: position.tokenY.decimals,
+        balance: +printBN(position.tokenY.balance, position.tokenY.decimals),
+        liqValue: tokenYLiquidity,
+        claimValue: tokenYClaim
+      }}
+      fee={+printBN(position.poolData.fee.v, DECIMAL - 2)}
+      min={min}
+      max={max}
+      initialIsDiscreteValue={initialIsDiscreteValue}
+      onDiscreteChange={setIsDiscreteValue}
     />
   ) : isLoadingList ? (
     <Typography className={classes.placeholderText}>Loading...</Typography>

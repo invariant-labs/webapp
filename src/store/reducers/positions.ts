@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PayloadType } from '@reducers/types'
 import { Position, InitPosition, Tick } from '@invariant-labs/sdk/lib/market'
+import { PublicKey } from '@solana/web3.js'
+import { BN } from '@project-serum/anchor'
 
 export interface PositionsListStore {
   list: Position[]
@@ -37,7 +39,11 @@ export interface IPositionsStore {
 
 export interface InitPositionData
   extends Omit<InitPosition, 'owner' | 'userTokenX' | 'userTokenY' | 'pair'> {
-  poolIndex: number
+  tokenX: PublicKey
+  tokenY: PublicKey
+  fee: BN
+  initPool?: boolean
+  initTick?: number
   xAmount: number
   yAmount: number
 }
@@ -45,6 +51,7 @@ export interface InitPositionData
 export interface GetCurrentTicksData {
   poolIndex: number
   isXtoY: boolean
+  disableLoading?: boolean
 }
 
 export interface ClosePositionData {
@@ -64,7 +71,7 @@ export const defaultState: IPositionsStore = {
   },
   positionsList: {
     list: [],
-    loading: false
+    loading: true
   },
   currentPositionRangeTicks: {
     lowerTick: undefined,
@@ -96,8 +103,8 @@ const positionsSlice = createSlice({
       state.plotTicks.loading = false
       return state
     },
-    getCurrentPlotTicks(state, _action: PayloadAction<GetCurrentTicksData>) {
-      state.plotTicks.loading = true
+    getCurrentPlotTicks(state, action: PayloadAction<GetCurrentTicksData>) {
+      state.plotTicks.loading = !action.payload.disableLoading
       return state
     },
     setPositionsList(state, action: PayloadAction<Position[]>) {

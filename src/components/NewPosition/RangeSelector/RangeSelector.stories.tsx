@@ -36,7 +36,11 @@ storiesOf('position/rangeSelector', module)
       yDecimal={6}
       tickSpacing={1}
       isXtoY={true}
-      fee={0}
+      currentPairReversed={null}
+      initialIsDiscreteValue={false}
+      onDiscreteChange={() => {}}
+      feeTierIndex={0}
+      poolIndex={null}
     />
   ))
   .add('blocked', () => (
@@ -58,6 +62,35 @@ storiesOf('position/rangeSelector', module)
       yDecimal={6}
       tickSpacing={4}
       isXtoY={true}
-      fee={0}
+      currentPairReversed={null}
+      initialIsDiscreteValue={false}
+      onDiscreteChange={() => {}}
+      feeTierIndex={0}
+      poolIndex={null}
+    />
+  ))
+  .add('concentrated', () => (
+    <RangeSelector
+      data={data}
+      midPrice={{
+        x: calcPrice(140, true, 6, 6),
+        index: 140
+      }}
+      tokenASymbol='BAT'
+      tokenBSymbol='ETH'
+      onChangeRange={(left, right) => {
+        action(`range indexes: ${left} - ${right}`)()
+      }}
+      ticksLoading={false}
+      xDecimal={6}
+      yDecimal={6}
+      tickSpacing={1}
+      isXtoY={true}
+      currentPairReversed={null}
+      initialIsDiscreteValue={false}
+      onDiscreteChange={() => {}}
+      isConcentrated
+      feeTierIndex={0}
+      poolIndex={null}
     />
   ))

@@ -2,7 +2,8 @@ import { PoolWithAddress } from '@reducers/pools'
 import { createSelector } from 'reselect'
 import { IPositionsStore, positionsSliceName } from '../reducers/positions'
 import { keySelectors, AnyProps } from './helpers'
-import { pools, tokens } from './pools'
+import { poolsArraySortedByFees } from './pools'
+import { swapTokensDict } from './solanaWallet'
 
 const store = (s: AnyProps) => s[positionsSliceName] as IPositionsStore
 
@@ -18,9 +19,9 @@ export interface PoolWithAddressAndIndex extends PoolWithAddress {
 }
 
 export const positionsWithPoolsData = createSelector(
-  pools,
+  poolsArraySortedByFees,
   positionsList,
-  tokens,
+  swapTokensDict,
   (allPools, { list }, tokens) => {
     const poolsByKey: Record<string, PoolWithAddressAndIndex> = allPools.reduce(
       (prev, pool, index) => {

@@ -12,6 +12,8 @@ export const networkToName = (network: SolanaNetworks) => {
 
     case SolanaNetworks.MAIN:
     case SolanaNetworks.MAIN_SERUM:
+    case SolanaNetworks.MAIN_FIGMENT:
+    case SolanaNetworks.MAIN_GENESYSGO:
       return NetworkType.MAINNET
     case SolanaNetworks.LOCAL:
       return NetworkType.LOCALNET
@@ -58,7 +60,6 @@ const getSolanaConnection = (url: SolanaNetworks): Connection => {
     return _connection
   }
   _connection = new Connection(url, 'recent')
-  console.log(_connection)
   _network = url
 
   return _connection
@@ -78,9 +79,11 @@ const solanaNetworktoProgramNetwork = (solanaNetwork: SolanaNetworks): Network =
       return Network.LOCAL
     // case SolanaNetworks.TEST:
     //   return Network.TEST
-    // case SolanaNetworks.MAIN:
-    // case SolanaNetworks.MAIN_SERUM:
-    //   return Network.MAIN
+    case SolanaNetworks.MAIN:
+    case SolanaNetworks.MAIN_SERUM:
+    case SolanaNetworks.MAIN_FIGMENT:
+    case SolanaNetworks.MAIN_GENESYSGO:
+      return Network.MAIN
   }
   return Network.DEV
 }

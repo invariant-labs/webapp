@@ -1,10 +1,12 @@
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import React from 'react'
 import { Token } from '@consts/static'
 import { Link } from 'react-router-dom'
 import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
-import useStyle from './style'
 import classNames from 'classnames'
+import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
+
+import useStyle from './style'
 
 export interface IFarm {
   isActive?: boolean
@@ -50,26 +52,34 @@ export const FarmTile: React.FC<IFarm> = ({
           </Typography>
         </Grid>
       </Grid>
-      <Grid container direction='row' justifyContent='space-between'>
+      <Grid
+        container
+        direction='row'
+        justifyContent='space-between'
+        className={classNames(classes.mobileContainer, classes.spacer)}>
         <Typography className={classes.label}>APY:</Typography>
         <Typography className={classes.value}>{apyPercent}%</Typography>
       </Grid>
-      <Grid container direction='row' justifyContent='space-between'>
+      <Grid
+        container
+        direction='row'
+        justifyContent='space-between'
+        className={classes.mobileContainer}>
         <Typography className={classes.label}>Total Staked:</Typography>
         <Typography className={classes.value}>
-          {totalStaked} {tokenX.symbol}
+          {totalStaked.toLocaleString('fr-FR')} xUSD
         </Typography>
       </Grid>
-      <Grid container direction='row' justifyContent='space-between'>
+      <Grid
+        container
+        direction='row'
+        justifyContent='space-between'
+        className={classes.mobileContainer}>
         <Typography className={classes.label}>Liquidity:</Typography>
-        <Typography className={classes.value}>
-          {liquidity} {tokenX.symbol}
-        </Typography>
+        <Typography className={classes.value}>${liquidity.toLocaleString('fr-FR')}</Typography>
       </Grid>
       <Link className={classes.link} to={`/farms/${farmId}`}>
-        <Button className={classes.button} disabled={!isActive} type='button'>
-          Stake
-        </Button>
+        <OutlinedButton className={classes.button} disabled={!isActive} name='Stake' />
       </Link>
     </Grid>
   )

@@ -10,7 +10,7 @@ const networks: ISelectNetwork[] = [
   { name: NetworkType.TESTNET, network: SolanaNetworks.TEST }
 ]
 
-storiesOf('modals/newselectNetwork', module).add('default', () => (
+storiesOf('modals/newSelectNetwork', module).add('default', () => (
   <SelectNetwork
     networks={networks}
     open={true}
