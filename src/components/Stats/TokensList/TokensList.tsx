@@ -1,5 +1,5 @@
-import TokenListItem from '../TokenListItem/TokenListItem'
-import React, { useState } from 'react'
+import TokenListItem, { SortType } from '../TokenListItem/TokenListItem'
+import React, { useEffect, useMemo, useState } from 'react'
 import { PaginationList } from '@components/Pagination/Pagination'
 import { Grid } from '@material-ui/core'
 import useStyles from './style'
@@ -21,6 +21,41 @@ export interface ITokensList {
 const TokensList: React.FC<ITokensList> = ({ data }) => {
   const classes = useStyles()
   const [page, setPage] = useState(1)
+  const [sortType, setSortType] = React.useState(SortType.VOLUME_DESC)
+
+  const sortedData = useMemo(() => {
+    switch (sortType) {
+      case SortType.NAME_ASC:
+        return data.sort((a, b) =>
+          `${a.name} (${a.symbol})`.localeCompare(`${b.name} (${b.symbol})`)
+        )
+      case SortType.NAME_DESC:
+        return data.sort((a, b) =>
+          `${b.name} (${b.symbol})`.localeCompare(`${a.name} (${a.symbol})`)
+        )
+      case SortType.PRICE_ASC:
+        return data.sort((a, b) => a.price - b.price)
+      case SortType.PRICE_DESC:
+        return data.sort((a, b) => b.price - a.price)
+      case SortType.CHANGE_ASC:
+        return data.sort((a, b) => a.priceChange - b.priceChange)
+      case SortType.CHANGE_DESC:
+        return data.sort((a, b) => b.priceChange - a.priceChange)
+      case SortType.VOLUME_ASC:
+        return data.sort((a, b) => a.volume - b.volume)
+      case SortType.VOLUME_DESC:
+        return data.sort((a, b) => b.volume - a.volume)
+      case SortType.TVL_ASC:
+        return data.sort((a, b) => a.TVL - b.TVL)
+      case SortType.TVL_DESC:
+        return data.sort((a, b) => b.TVL - a.TVL)
+    }
+  }, [data, sortType])
+
+  useEffect(() => {
+    setPage(1)
+  }, [data])
+
   const handleChangePagination = (page: number): void => {
     setPage(page)
   }
@@ -28,7 +63,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
     const page = currentPage || 1
     const perPage = 10
     const offset = (page - 1) * perPage
-    const paginatedItems = data.slice(offset).slice(0, 10)
+    const paginatedItems = sortedData.slice(offset).slice(0, 10)
     const totalPages = Math.ceil(data.length / perPage)
 
     return {
@@ -39,7 +74,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
   }
   return (
     <Grid container direction='column' classes={{ root: classes.container }} wrap='nowrap'>
-      <TokenListItem displayType='header' />
+      <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />
       {paginator(page).data.map((token, index) => {
         return (
           <TokenListItem

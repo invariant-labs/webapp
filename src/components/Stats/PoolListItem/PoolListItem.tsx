@@ -3,6 +3,18 @@ import { Grid, Typography, Box, useMediaQuery } from '@material-ui/core'
 import useStyle from './style'
 import { colors, theme } from '@static/theme'
 import { formatNumbers, showPrefix } from '@consts/utils'
+
+export enum SortType {
+  NAME_ASC,
+  NAME_DESC,
+  FEE_ASC,
+  FEE_DESC,
+  VOLUME_ASC,
+  VOLUME_DESC,
+  TVL_ASC,
+  TVL_DESC
+}
+
 interface IProps {
   TVL?: number
   volume?: number
@@ -13,6 +25,8 @@ interface IProps {
   iconFrom?: string
   iconTo?: string
   tokenIndex?: number
+  sortType?: SortType
+  onSort?: (type: SortType) => void
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -24,7 +38,9 @@ const PoolListItem: React.FC<IProps> = ({
   symbolTo,
   iconFrom,
   iconTo,
-  tokenIndex
+  tokenIndex,
+  sortType,
+  onSort
 }) => {
   const classes = useStyle()
 
@@ -61,11 +77,51 @@ const PoolListItem: React.FC<IProps> = ({
             N<sup>o</sup>
           </Typography>
           <Grid>
-            <Typography>Name</Typography>
+            <Typography
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                if (sortType === SortType.NAME_ASC) {
+                  onSort?.(SortType.NAME_DESC)
+                } else {
+                  onSort?.(SortType.NAME_ASC)
+                }
+              }}>
+              Name
+            </Typography>
           </Grid>
-          <Typography>Fee</Typography>
-          <Typography>Volume 24H</Typography>
-          <Typography>TVL</Typography>
+          <Typography
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              if (sortType === SortType.FEE_ASC) {
+                onSort?.(SortType.FEE_DESC)
+              } else {
+                onSort?.(SortType.FEE_ASC)
+              }
+            }}>
+            Fee
+          </Typography>
+          <Typography
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              if (sortType === SortType.VOLUME_DESC) {
+                onSort?.(SortType.VOLUME_ASC)
+              } else {
+                onSort?.(SortType.VOLUME_DESC)
+              }
+            }}>
+            Volume 24H
+          </Typography>
+          <Typography
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              if (sortType === SortType.TVL_DESC) {
+                onSort?.(SortType.TVL_ASC)
+              } else {
+                onSort?.(SortType.TVL_DESC)
+              }
+            }}>
+            TVL
+          </Typography>
         </Grid>
       )}
     </Grid>

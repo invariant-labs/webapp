@@ -3,6 +3,20 @@ import { formatNumbers, showPrefix } from '@consts/utils'
 import { Grid, Typography, useMediaQuery } from '@material-ui/core'
 import { colors, theme } from '@static/theme'
 import { useStyles } from './style'
+
+export enum SortType {
+  NAME_ASC,
+  NAME_DESC,
+  PRICE_ASC,
+  PRICE_DESC,
+  CHANGE_ASC,
+  CHANGE_DESC,
+  VOLUME_ASC,
+  VOLUME_DESC,
+  TVL_ASC,
+  TVL_DESC
+}
+
 interface IProps {
   displayType: string
   itemNumber?: number
@@ -13,6 +27,8 @@ interface IProps {
   priceChange?: number
   volume?: number
   TVL?: number
+  sortType?: SortType
+  onSort?: (type: SortType) => void
 }
 
 const TokenListItem: React.FC<IProps> = ({
@@ -24,7 +40,9 @@ const TokenListItem: React.FC<IProps> = ({
   price = 0,
   priceChange = 0,
   volume = 0,
-  TVL = 0
+  TVL = 0,
+  sortType,
+  onSort
 }) => {
   const classes = useStyles()
   const isNegative = priceChange < 0
@@ -67,12 +85,66 @@ const TokenListItem: React.FC<IProps> = ({
             N<sup>o</sup>
           </Typography>
           <Grid>
-            <Typography>Name</Typography>
+            <Typography
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                if (sortType === SortType.NAME_ASC) {
+                  onSort?.(SortType.NAME_DESC)
+                } else {
+                  onSort?.(SortType.NAME_ASC)
+                }
+              }}>
+              Name
+            </Typography>
           </Grid>
-          <Typography>Price</Typography>
-          {!hideName && <Typography>Price change</Typography>}
-          {!hideName && <Typography>Volume 24H</Typography>}
-          <Typography>TVL</Typography>
+          <Typography
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              if (sortType === SortType.PRICE_ASC) {
+                onSort?.(SortType.PRICE_DESC)
+              } else {
+                onSort?.(SortType.PRICE_ASC)
+              }
+            }}>
+            Price
+          </Typography>
+          {!hideName && (
+            <Typography
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                if (sortType === SortType.CHANGE_ASC) {
+                  onSort?.(SortType.CHANGE_DESC)
+                } else {
+                  onSort?.(SortType.CHANGE_ASC)
+                }
+              }}>
+              Price change
+            </Typography>
+          )}
+          {!hideName && (
+            <Typography
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                if (sortType === SortType.VOLUME_DESC) {
+                  onSort?.(SortType.VOLUME_ASC)
+                } else {
+                  onSort?.(SortType.VOLUME_DESC)
+                }
+              }}>
+              Volume 24H
+            </Typography>
+          )}
+          <Typography
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              if (sortType === SortType.TVL_DESC) {
+                onSort?.(SortType.TVL_ASC)
+              } else {
+                onSort?.(SortType.TVL_DESC)
+              }
+            }}>
+            TVL
+          </Typography>
         </Grid>
       )}
     </Grid>
