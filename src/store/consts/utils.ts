@@ -1,9 +1,14 @@
-import { calculatePriceSqrt, MAX_TICK, MIN_TICK, TICK_LIMIT } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, MAX_TICK, MIN_TICK, Pair, TICK_LIMIT } from '@invariant-labs/sdk'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
-import { DECIMAL, parseLiquidityOnTicks, simulateSwap } from '@invariant-labs/sdk/src/utils'
+import {
+  calculateTickDelta,
+  DECIMAL,
+  parseLiquidityOnTicks,
+  simulateSwap
+} from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
-import { u64 } from '@solana/spl-token'
+import { Token as SPLToken, TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import {
   BTC_DEV,
   MSOL_DEV,
@@ -16,9 +21,10 @@ import {
   WSOL_DEV
 } from './static'
 import mainnetList from './tokenLists/mainnet.json'
-import { PublicKey } from '@solana/web3.js'
+import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import { PoolWithAddress } from '@reducers/pools'
-import { Tickmap } from '@invariant-labs/sdk/lib/market'
+import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
+import axios, { AxiosResponse } from 'axios'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -363,7 +369,8 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
           ...all,
           [token.address]: {
             ...token,
-            address: new PublicKey(token.address)
+            address: new PublicKey(token.address),
+            coingeckoId: token?.extensions?.coingeckoId
           }
         }),
         {}
@@ -594,6 +601,110 @@ export const toMaxNumericPlaces = (num: number, places: number): string => {
   return num.toFixed(places + Math.abs(log) - 1)
 }
 
+export interface PoolSnapshot {
+  timestamp: number
+  volumeX: string
+  volumeY: string
+  liquidityX: string
+  liquidityY: string
+  feeX: string
+  feeY: string
+}
+
+export const getNetworkStats = async (name: string): Promise<Record<string, PoolSnapshot[]>> => {
+  // TODO: later change api url to api.invariant.app
+  const { data } = await axios.get<Record<string, PoolSnapshot[]>>(
+    `https://stats-one-red.vercel.app/stats/${name}`
+  )
+
+  return data
+}
+
+export const getPoolsFromAdresses = async (
+  addresses: PublicKey[],
+  marketProgram: Market
+): Promise<PoolWithAddress[]> => {
+  const pools = (await marketProgram.program.account.pool.fetchMultiple(
+    addresses
+  )) as Array<PoolStructure | null>
+
+  return pools
+    .map((pool, index) =>
+      pool !== null
+        ? {
+            ...pool,
+            address: addresses[index]
+          }
+        : null
+    )
+    .filter(pool => pool !== null) as PoolWithAddress[]
+}
+
+export const getPools = async (
+  pairs: Pair[],
+  marketProgram: Market
+): Promise<PoolWithAddress[]> => {
+  const addresses: PublicKey[] = await Promise.all(
+    pairs.map(async pair => await pair.getAddress(marketProgram.program.programId))
+  )
+
+  return await getPoolsFromAdresses(addresses, marketProgram)
+}
+
+export interface CoingeckoApiPriceData {
+  id: string
+  current_price: number
+  price_change_percentage_24h: number
+}
+
+export interface CoingeckoPriceData {
+  price: number
+  priceChange: number
+}
+
+export const getCoingeckoPricesData = async (
+  ids: string[]
+): Promise<Record<string, CoingeckoPriceData>> => {
+  const requests: Array<Promise<AxiosResponse<CoingeckoApiPriceData[]>>> = []
+  for (let i = 0; i < ids.length; i += 250) {
+    const idsSlice = ids.slice(i, i + 250)
+    const idsList = idsSlice.reduce((acc, id, index) => acc + id + (index < 249 ? ',' : ''), '')
+    requests.push(
+      axios.get<CoingeckoApiPriceData[]>(
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsList}&per_page=250`
+      )
+    )
+  }
+
+  return await Promise.all(requests).then(responses => {
+    const concatRes: CoingeckoApiPriceData[] = responses
+      .map(res => res.data)
+      .reduce((acc, data) => [...acc, ...data], [])
+
+    const data: Record<string, CoingeckoPriceData> = {}
+
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    concatRes.forEach(({ id, current_price, price_change_percentage_24h }) => {
+      data[id] = {
+        price: current_price,
+        priceChange: price_change_percentage_24h
+      }
+    })
+
+    return data
+  })
+}
+
+export const getCoingeckoPricesHistory = async (): Promise<
+  Record<string, Record<string, number>>
+> => {
+  // TODO: later change api url to api.invariant.app
+  const { data } = await axios.get<Record<string, Record<string, number>>>(
+    'https://stats-one-red.vercel.app/pricesHistory'
+  )
+
+  return data
+}
 export const trimLeadingZeros = (amount: string): string => {
   const amountParts = amount.split('.')
 
@@ -615,6 +726,23 @@ export const trimLeadingZeros = (amount: string): string => {
   const trimmed = reversedDec.slice(firstNonZero, reversedDec.length).reverse().join('')
 
   return `${amountParts[0]}.${trimmed}`
+}
+
+export const calculateConcentrationRange = (
+  tickSpacing: number,
+  concentration: number,
+  minimumRange: number,
+  currentTick: number,
+  isXToY: boolean
+) => {
+  const tickDelta = calculateTickDelta(tickSpacing, minimumRange, concentration)
+  const lowerTick = currentTick - (minimumRange / 2 + tickDelta) * tickSpacing
+  const upperTick = currentTick + (minimumRange / 2 + tickDelta) * tickSpacing
+
+  return {
+    leftRange: isXToY ? lowerTick : upperTick,
+    rightRange: isXToY ? upperTick : lowerTick
+  }
 }
 
 export enum PositionTokenBlock {
@@ -641,4 +769,38 @@ export const determinePositionTokenBlock = (
   }
 
   return PositionTokenBlock.None
+}
+
+export const generateUnknownTokenDataObject = (
+  // prepared already here in case when new tokens will be added on branch with full list, but these tokens won't be available on master deploy
+  address: PublicKey,
+  decimals: number
+): Token => ({
+  address,
+  decimals,
+  symbol: `${address.toString().slice(0, 4)}...${address.toString().slice(-4)}`,
+  name: address.toString(),
+  logoURI: '/unknownToken.svg'
+})
+
+export const getFullNewTokensData = async (
+  addresses: PublicKey[],
+  connection: Connection
+): Promise<Record<string, Token>> => {
+  const promises = addresses
+    .map(address => new SPLToken(connection, address, TOKEN_PROGRAM_ID, new Keypair()))
+    .map(async token => await token.getMintInfo())
+
+  return await Promise.allSettled(promises).then(results =>
+    results.reduce(
+      (acc, result, index) => ({
+        ...acc,
+        [addresses[index].toString()]: generateUnknownTokenDataObject(
+          addresses[index],
+          result.status === 'fulfilled' ? result.value.decimals : 6
+        )
+      }),
+      {}
+    )
+  )
 }

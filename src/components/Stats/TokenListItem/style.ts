@@ -4,24 +4,21 @@ import { typography, colors } from '@static/theme'
 export const useStyles = makeStyles(theme => ({
   container: {
     display: 'grid',
-    gridTemplateColumns: '5% 35% 17.5% 12.5% 15% 15%',
+    gridTemplateColumns: '5% 35% 15% 15% 15% 15%',
     padding: '18px 0 ',
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`,
     whiteSpace: 'nowrap',
 
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '5% 35% 16.5% 17.5% 15% 15%',
+      gridTemplateColumns: '5% 35% 15% 17.5% 16.5% 15%',
       '& p': {
         ...typography.caption2
       }
     },
 
     [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '8% 38% 27% auto',
-      '& p': {
-        ...typography.caption2
-      }
+      gridTemplateColumns: '15% 25% 35% 25%'
     }
   },
 
@@ -41,7 +38,10 @@ export const useStyles = makeStyles(theme => ({
   header: {
     '& p': {
       ...typography.heading4,
-      fontWeight: 400
+      fontWeight: 400,
+      display: 'flex',
+      justifyContent: 'start',
+      alignItems: 'center'
     },
     [theme.breakpoints.down('sm')]: {
       '& p': {
@@ -53,7 +53,16 @@ export const useStyles = makeStyles(theme => ({
   tokenName: {
     display: 'flex',
     alignItems: 'center',
+    paddingRight: 5,
+
+    '& p': {
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis'
+    },
+
     '& img': {
+      minWidth: 28,
       width: 28,
       marginRight: 8,
       borderRadius: '50%'
@@ -63,5 +72,10 @@ export const useStyles = makeStyles(theme => ({
   tokenSymbol: {
     color: colors.invariant.textGrey,
     fontWeight: 400
+  },
+  icon: {
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: -4
+    }
   }
 }))

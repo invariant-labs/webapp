@@ -17,6 +17,7 @@ export interface Token {
   decimals: number
   name: string
   logoURI: string
+  coingeckoId?: string
 }
 export const PRICE_DECIMAL = 24
 export const USDC_DEV: Token = {
@@ -25,7 +26,8 @@ export const USDC_DEV: Token = {
   decimals: 6,
   name: 'USD Coin',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
+  coingeckoId: 'usd-coin'
 }
 export const USDT_DEV: Token = {
   symbol: 'USDT',
@@ -33,7 +35,8 @@ export const USDT_DEV: Token = {
   decimals: 6,
   name: 'Tether USD',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg',
+  coingeckoId: 'tether'
 }
 export const SOL_DEV: Token = {
   symbol: 'SOL',
@@ -41,7 +44,8 @@ export const SOL_DEV: Token = {
   decimals: 9,
   name: 'Wrapped Solana',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
+  coingeckoId: 'solana'
 }
 export const MSOL_DEV = {
   symbol: 'mSOL',
@@ -49,7 +53,8 @@ export const MSOL_DEV = {
   decimals: 9,
   name: 'Marinade Solana',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png',
+  coingeckoId: 'msol'
 }
 export const BTC_DEV: Token = {
   symbol: 'BTC',
@@ -57,7 +62,8 @@ export const BTC_DEV: Token = {
   decimals: 6,
   name: 'Wrapped Bitcoin (Sollet)',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png',
+  coingeckoId: 'bitcoin'
 }
 export const WSOL_DEV: Token = {
   symbol: 'WSOL',
@@ -65,7 +71,8 @@ export const WSOL_DEV: Token = {
   decimals: 9,
   name: 'Wrapped Solana',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
+  coingeckoId: 'solana'
 }
 export const RENDOGE_DEV: Token = {
   symbol: 'renDOGE',
@@ -73,11 +80,12 @@ export const RENDOGE_DEV: Token = {
   decimals: 8,
   name: 'renDOGE',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
+  coingeckoId: 'rendoge'
 }
 
 enum SolanaNetworks {
-  DEV = 'https://solana--devnet.datahub.figment.io/apikey/182e93d87a1f1d335c9d74d6c7371388',
+  DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',
   MAIN = 'https://api.mainnet-beta.solana.com',
   MAIN_SERUM = 'https://solana-api.projectserum.com',
@@ -259,5 +267,9 @@ export const WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT = new BN(9200961)
 export const WSOL_POSITION_INIT_LAMPORTS = new BN(6164600)
 
 export const WSOL_POOL_INIT_LAMPORTS = new BN(106000961)
+
+export const minimumRangesForTiers = [20, 74, 80, 64, 28]
+
+export const maxSafeConcentrationsForTiers = [400.52, 41.49, 21.47, 8.13, 5.45]
 
 export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, MAINNET_RPCS, NetworkType }

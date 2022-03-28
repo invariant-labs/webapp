@@ -27,7 +27,7 @@ const MarketEvents = () => {
       return
     }
     const connectEvents = () => {
-      dispatch(actions.setTokens(getNetworkTokensList(networkType)))
+      dispatch(actions.addTokens(getNetworkTokensList(networkType)))
     }
 
     connectEvents()

@@ -20,12 +20,12 @@ const useStyle = makeStyles(() => ({
 
     [theme.breakpoints.down('sm')]: {
       '& p': {
-        ...typography.caption2
+        ...typography.caption1
       }
     },
 
     [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '7% 28% 17% 28% 20%'
+      gridTemplateColumns: '28% 15% 30% 25%'
     }
   },
 
@@ -33,22 +33,48 @@ const useStyle = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     '& img': {
+      minWidth: 28,
       width: 28,
       marginRight: 3,
       borderRadius: '50%'
     }
   },
 
+  iconsWrapper: {
+    height: 28
+  },
+
   header: {
-    header: {
-      '& p': {
-        ...typography.heading4,
-        fontWeight: 400
+    '& p': {
+      ...typography.heading4,
+      fontWeight: 400,
+
+      [theme.breakpoints.down('sm')]: {
+        ...typography.caption2
       }
     }
   },
 
-  symbolsContainer: { marginLeft: 10 }
+  symbolsContainer: {
+    marginLeft: 10,
+    paddingRight: 5,
+
+    '& p': {
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      display: 'block'
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 0
+    }
+  },
+  icon: {
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: -4
+    }
+  }
 }))
 
 export default useStyle

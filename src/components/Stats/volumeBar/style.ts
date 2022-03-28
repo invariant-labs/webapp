@@ -42,11 +42,13 @@ const useStyle = makeStyles(() => ({
   },
 
   tokenLow: {
-    color: colors.invariant.Error
+    color: colors.invariant.Error,
+    fontWeight: 400
   },
 
   tokenUp: {
-    color: colors.invariant.green
+    color: colors.invariant.green,
+    fontWeight: 400
   }
 }))
 

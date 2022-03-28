@@ -1,5 +1,5 @@
-import { Button, Grid, Typography } from '@material-ui/core'
-import React, { useState, useEffect } from 'react'
+import { Button, Grid, Tooltip, Typography } from '@material-ui/core'
+import React, { useState, useEffect, useMemo } from 'react'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import {
@@ -8,12 +8,17 @@ import {
   nearestTickIndex,
   maxSpacingMultiplicity,
   minSpacingMultiplicity,
-  toMaxNumericPlaces
+  toMaxNumericPlaces,
+  calculateConcentrationRange
 } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
+import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
+import { maxSafeConcentrationsForTiers, minimumRangesForTiers } from '@consts/static'
+import { getConcentrationArray } from '@invariant-labs/sdk/lib/utils'
+import questionMark from '@static/svg/questionMark.svg'
 import useStyles from './style'
 
 export interface IRangeSelector {
@@ -32,6 +37,10 @@ export interface IRangeSelector {
   currentPairReversed: boolean | null
   initialIsDiscreteValue: boolean
   onDiscreteChange: (val: boolean) => void
+  isConcentrated?: boolean
+  feeTierIndex: number
+  poolIndex: number | null
+  bestTierIndex?: number
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -49,7 +58,11 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   tickSpacing,
   currentPairReversed,
   initialIsDiscreteValue,
-  onDiscreteChange
+  onDiscreteChange,
+  isConcentrated = false,
+  feeTierIndex,
+  poolIndex,
+  bestTierIndex
 }) => {
   const classes = useStyles()
 
@@ -66,6 +79,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [plotMax, setPlotMax] = useState(1)
 
   const [isPlotDiscrete, setIsPlotDiscrete] = useState(initialIsDiscreteValue)
+
+  const [concentrationIndex, setConcentrationIndex] = useState(0)
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -126,26 +141,39 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   const resetPlot = () => {
-    const initSideDist = Math.abs(
-      midPrice.x -
-        calcPrice(
-          Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 15),
-          isXtoY,
-          xDecimal,
-          yDecimal
-        )
-    )
+    if (!isConcentrated) {
+      const initSideDist = Math.abs(
+        midPrice.x -
+          calcPrice(
+            Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 15),
+            isXtoY,
+            xDecimal,
+            yDecimal
+          )
+      )
 
-    changeRangeHandler(
-      isXtoY
-        ? Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 10)
-        : Math.min(maxSpacingMultiplicity(tickSpacing), midPrice.index + tickSpacing * 10),
-      isXtoY
-        ? Math.min(maxSpacingMultiplicity(tickSpacing), midPrice.index + tickSpacing * 10)
-        : Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 10)
-    )
-    setPlotMin(midPrice.x - initSideDist)
-    setPlotMax(midPrice.x + initSideDist)
+      changeRangeHandler(
+        isXtoY
+          ? Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 10)
+          : Math.min(maxSpacingMultiplicity(tickSpacing), midPrice.index + tickSpacing * 10),
+        isXtoY
+          ? Math.min(maxSpacingMultiplicity(tickSpacing), midPrice.index + tickSpacing * 10)
+          : Math.max(minSpacingMultiplicity(tickSpacing), midPrice.index - tickSpacing * 10)
+      )
+      setPlotMin(midPrice.x - initSideDist)
+      setPlotMax(midPrice.x + initSideDist)
+    } else {
+      setConcentrationIndex(0)
+      const { leftRange, rightRange } = calculateConcentrationRange(
+        tickSpacing,
+        concentrationArray[0],
+        minimumRangesForTiers[feeTierIndex],
+        midPrice.index,
+        isXtoY
+      )
+      changeRangeHandler(leftRange, rightRange)
+      autoZoomHandler(leftRange, rightRange, true)
+    }
   }
 
   const reversePlot = () => {
@@ -182,11 +210,11 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }, [ticksLoading, midPrice])
 
-  const autoZoomHandler = (left: number, right: number) => {
+  const autoZoomHandler = (left: number, right: number, canZoomCloser: boolean = false) => {
     const leftX = calcPrice(left, isXtoY, xDecimal, yDecimal)
     const rightX = calcPrice(right, isXtoY, xDecimal, yDecimal)
 
-    if (leftX < plotMin || rightX > plotMax) {
+    if (leftX < plotMin || rightX > plotMax || canZoomCloser) {
       const leftDist = Math.abs(
         leftX -
           calcPrice(
@@ -225,8 +253,65 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }
 
+  const concentrationArray = useMemo(
+    () =>
+      getConcentrationArray(tickSpacing, minimumRangesForTiers[feeTierIndex], midPrice.index).sort(
+        (a, b) => a - b
+      ),
+    [tickSpacing, midPrice.index, feeTierIndex]
+  )
+
+  useEffect(() => {
+    if (isConcentrated) {
+      setConcentrationIndex(0)
+
+      const { leftRange, rightRange } = calculateConcentrationRange(
+        tickSpacing,
+        concentrationArray[0],
+        minimumRangesForTiers[feeTierIndex],
+        midPrice.index,
+        isXtoY
+      )
+      changeRangeHandler(leftRange, rightRange)
+      autoZoomHandler(leftRange, rightRange, true)
+    }
+  }, [isConcentrated])
+
+  useEffect(() => {
+    if (isConcentrated && !ticksLoading) {
+      const index =
+        concentrationIndex > concentrationArray.length - 1
+          ? concentrationArray.length - 1
+          : concentrationIndex
+      setConcentrationIndex(index)
+
+      const { leftRange, rightRange } = calculateConcentrationRange(
+        tickSpacing,
+        concentrationArray[index],
+        minimumRangesForTiers[feeTierIndex],
+        midPrice.index,
+        isXtoY
+      )
+      changeRangeHandler(leftRange, rightRange)
+      autoZoomHandler(leftRange, rightRange, true)
+    }
+  }, [midPrice.index, concentrationArray])
+
+  const unsafeIndex = useMemo(
+    () =>
+      typeof bestTierIndex === 'undefined'
+        ? concentrationArray.findIndex(val => val >= maxSafeConcentrationsForTiers[feeTierIndex])
+        : concentrationArray.findIndex(val => val >= maxSafeConcentrationsForTiers[bestTierIndex]),
+    [concentrationArray, feeTierIndex, bestTierIndex]
+  )
+
+  const unsafePercent = useMemo(
+    () => (unsafeIndex === -1 ? 101 : (unsafeIndex / concentrationArray.length) * 100),
+    [concentrationArray, unsafeIndex]
+  )
+
   return (
-    <Grid container className={classes.wrapper}>
+    <Grid container className={classes.wrapper} direction='column'>
       <Grid className={classes.headerContainer} container justifyContent='space-between'>
         <Typography className={classes.header}>Price range</Typography>
         <PlotTypeSwitch
@@ -261,10 +346,12 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           xDecimal={xDecimal}
           yDecimal={yDecimal}
           isDiscrete={isPlotDiscrete}
+          disabled={isConcentrated}
         />
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>
           <RangeInput
+            disabled={isConcentrated}
             className={classes.input}
             label='Min price'
             tokenFromSymbol={tokenASymbol}
@@ -302,6 +389,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             }}
           />
           <RangeInput
+            disabled={isConcentrated}
             className={classes.input}
             label='Max price'
             tokenFromSymbol={tokenASymbol}
@@ -337,26 +425,84 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             }}
           />
         </Grid>
-        <Grid container className={classes.buttons}>
-          <Button className={classes.button} onClick={resetPlot}>
-            Reset range
-          </Button>
-          <Button
-            className={classes.button}
-            onClick={() => {
-              const left = isXtoY
-                ? minSpacingMultiplicity(tickSpacing)
-                : maxSpacingMultiplicity(tickSpacing)
-              const right = isXtoY
-                ? maxSpacingMultiplicity(tickSpacing)
-                : minSpacingMultiplicity(tickSpacing)
+        {isConcentrated ? (
+          <Grid container className={classes.sliderWrapper}>
+            <ConcentrationSlider
+              key={poolIndex ?? -1}
+              valueIndex={concentrationIndex}
+              values={concentrationArray}
+              valueChangeHandler={value => {
+                setConcentrationIndex(value)
+                const { leftRange, rightRange } = calculateConcentrationRange(
+                  tickSpacing,
+                  concentrationArray[value],
+                  minimumRangesForTiers[feeTierIndex],
+                  midPrice.index,
+                  isXtoY
+                )
+                changeRangeHandler(leftRange, rightRange)
+                autoZoomHandler(leftRange, rightRange, true)
+              }}
+              dragHandler={value => {
+                setConcentrationIndex(value)
+              }}
+              unsafePercent={unsafePercent}
+            />
+            {unsafeIndex !== -1 && concentrationIndex >= unsafeIndex ? (
+              <Grid
+                className={classes.warningWrapper}
+                container
+                item
+                direction='row'
+                wrap='nowrap'
+                alignItems='center'>
+                <Typography className={classes.unsafeWarning}>
+                  Extremely high concentration
+                </Typography>
+                <Tooltip
+                  title={
+                    <Typography className={classes.tooltipText}>
+                      High concentration enforces that your liquidity is provided within a tight
+                      price range. Higher concentration will allow you to earn more, but it has
+                      additional risk. Choosing high concentration is appropriate if you assume low
+                      price volatility.
+                      <br />
+                      <br />
+                      Make sure you want to open a position in the selected price range. Remember
+                      that the position only makes a profit if the price is within range.
+                    </Typography>
+                  }
+                  placement='bottom'
+                  classes={{
+                    tooltip: classes.tooltip
+                  }}>
+                  <img src={questionMark} className={classes.questionMark} />
+                </Tooltip>
+              </Grid>
+            ) : null}
+          </Grid>
+        ) : (
+          <Grid container className={classes.buttons}>
+            <Button className={classes.button} onClick={resetPlot}>
+              Reset range
+            </Button>
+            <Button
+              className={classes.button}
+              onClick={() => {
+                const left = isXtoY
+                  ? minSpacingMultiplicity(tickSpacing)
+                  : maxSpacingMultiplicity(tickSpacing)
+                const right = isXtoY
+                  ? maxSpacingMultiplicity(tickSpacing)
+                  : minSpacingMultiplicity(tickSpacing)
 
-              changeRangeHandler(left, right)
-              autoZoomHandler(left, right)
-            }}>
-            Set full range
-          </Button>
-        </Grid>
+                changeRangeHandler(left, right)
+                autoZoomHandler(left, right)
+              }}>
+              Set full range
+            </Button>
+          </Grid>
+        )}
       </Grid>
 
       {blocked && (

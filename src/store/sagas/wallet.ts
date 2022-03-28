@@ -171,8 +171,6 @@ export function* getCollateralTokenAirdrop(
   yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
     skipPreflight: true
   })
-
-  console.log('Token Airdroped')
 }
 // export function* getTokenProgram(pubKey: PublicKey): SagaGenerator<number> {
 //   const connection = yield* call(getConnection)
@@ -280,7 +278,6 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
 }
 
 export function* init(): Generator {
-  console.log('init saga')
   yield* put(actions.setStatus(Status.Init))
   const wallet = yield* call(getWallet)
   // const balance = yield* call(getBalance, wallet.publicKey)
