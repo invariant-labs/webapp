@@ -15,6 +15,7 @@ export interface IRangeInput {
   onBlur: () => void
   style?: React.CSSProperties
   className?: string
+  disabled?: boolean
 }
 
 export const RangeInput: React.FC<IRangeInput> = ({
@@ -27,7 +28,8 @@ export const RangeInput: React.FC<IRangeInput> = ({
   setValue,
   onBlur,
   style,
-  className
+  className,
+  disabled = false
 }) => {
   const classes = useStyles()
 
@@ -85,9 +87,11 @@ export const RangeInput: React.FC<IRangeInput> = ({
         direction='row'
         alignItems='center'
         wrap='nowrap'>
-        <Button className={classes.button} onClick={decreaseValue} disableRipple>
-          <Remove className={classes.buttonIcon} />
-        </Button>
+        {disabled ? null : (
+          <Button className={classes.button} onClick={decreaseValue} disableRipple>
+            <Remove className={classes.buttonIcon} />
+          </Button>
+        )}
         <Input
           className={classes.value}
           value={currentValue}
@@ -95,10 +99,13 @@ export const RangeInput: React.FC<IRangeInput> = ({
           onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
           onBlur={onBlur}
           disableUnderline={true}
+          disabled={disabled}
         />
-        <Button className={classes.button} onClick={increaseValue} disableRipple>
-          <Add className={classes.buttonIcon} />
-        </Button>
+        {disabled ? null : (
+          <Button className={classes.button} onClick={increaseValue} disableRipple>
+            <Add className={classes.buttonIcon} />
+          </Button>
+        )}
       </Grid>
     </Grid>
   )
