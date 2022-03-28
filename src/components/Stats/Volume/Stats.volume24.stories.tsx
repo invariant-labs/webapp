@@ -7,32 +7,16 @@ import Volume from './Volume'
 storiesOf('position/Stats', module)
   .addDecorator(withKnobs)
   .add('volume24', () => {
-    const [data, setData] = useAddonState<Array<{ timeStamp: number; value: number }>>('time', [])
-
-    const timeSlicer = 10
-    let timeCreator = 60
+    const [data, setData] = useAddonState<Array<{ timestamp: number; value: number }>>('time', [])
 
     React.useEffect(() => {
-      const data: Array<{ timeStamp: number; value: number }> = []
+      const data: Array<{ timestamp: number; value: number }> = []
 
-      for (let i = 0; timeCreator < 24 * 60; i++) {
-        const hours = ~~(timeCreator / 60)
-        const minutes = timeCreator % 60
-
-        const dayTime = '2022'
-        const dayMonth = 'Wed'
-        const monthDay = 'Feb'
-        const dayNumber = '16'
-
-        const correctMinute = minutes < 10 ? `0${minutes}` : minutes
-        const correctHour = hours < 10 ? `0${hours}` : hours
-        const simulateTime = `${dayMonth} ${monthDay} ${dayNumber} ${dayTime} ${correctHour}:${correctMinute}:00`
-        const unix = new Date(simulateTime).getTime()
-
-        const obj = { timeStamp: unix, value: ~~(Math.random() * ~~(timeCreator / 60) + 2) }
-
-        data.push(obj)
-        timeCreator = timeCreator + timeSlicer
+      for (let i = 0; i < 30; i++) {
+        data.push({
+          timestamp: i * 1000 * 60 * 60 * 24 + 1,
+          value: Math.random()
+        })
       }
 
       setData(data)
