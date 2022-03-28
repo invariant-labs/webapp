@@ -213,7 +213,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                   <CardMedia className={classes.tokenIcon} image={token.logoURI} />{' '}
                   <Grid container className={classes.tokenContainer}>
                     <Typography className={classes.tokenName}>{token.symbol}</Typography>
-                    <Typography className={classes.tokenDescrpiption}>{token.name}</Typography>
+                    <Typography className={classes.tokenDescrpiption}>{token.name.slice(0, 30)}{token.name.length > 30 ? '...' : ''}</Typography>
                   </Grid>
                   {!hideBalances && Number(tokenBalance) > 0 ? (
                     <Typography className={classes.tokenBalanceStatus}>
