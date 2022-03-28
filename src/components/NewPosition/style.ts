@@ -28,7 +28,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     color: colors.white.main,
     ...typography.heading4,
-    marginBottom: 18
+    marginBottom: 18,
+
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 18
+    }
   },
   row: {
     minWidth: 464,
@@ -63,6 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 20,
     padding: 0,
     margin: 0,
+    marginLeft: 10,
     minWidth: 'auto',
     background: 'none',
     '&:hover': {
@@ -77,6 +82,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       filter: 'brightness(1.5)'
     }
+  },
+  options: {
+    width: 'fit-content',
+    marginBottom: 18,
+    height: 28
+  },
+  switch: {
+    transition: 'opacity 500ms'
   }
 }))
 

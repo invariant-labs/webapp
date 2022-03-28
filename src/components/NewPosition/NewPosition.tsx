@@ -29,6 +29,7 @@ import Slippage from '@components/Modals/Slippage/Slippage'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './style'
+import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 
 export interface INewPosition {
   tokens: SwapToken[]
@@ -103,6 +104,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   canCreateNewPosition
 }) => {
   const classes = useStyles()
+
+  const [isConcentrated, setIsConcentrated] = useState(false)
 
   const [leftRange, setLeftRange] = useState(MIN_TICK)
   const [rightRange, setRightRange] = useState(MAX_TICK)
@@ -244,7 +247,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         )?.bestTierIndex ?? undefined
 
   useEffect(() => {
-    if (!ticksLoading) {
+    if (!ticksLoading && !isConcentrated) {
       onChangeRange(leftRange, rightRange)
     }
   }, [midPrice.index])
@@ -266,7 +269,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
-      <Link to='/pool' style={{ textDecoration: 'none' }}>
+      <Link to='/pool' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
         <Grid className={classes.back} container item alignItems='center'>
           <img className={classes.backIcon} src={backIcon} />
           <Typography className={classes.backText}>Back to Liquidity Positions List</Typography>
@@ -275,9 +278,20 @@ export const NewPosition: React.FC<INewPosition> = ({
 
       <Grid container justifyContent='space-between'>
         <Typography className={classes.title}>Add new liquidity position</Typography>
-        <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
-          <img src={settingIcon} className={classes.settingsIcon} />
-        </Button>
+        <Grid container item alignItems='center' className={classes.options}>
+          <ConcentrationTypeSwitch
+            onSwitch={setIsConcentrated}
+            initialValue={0}
+            className={classes.switch}
+            style={{
+              opacity: poolIndex !== null ? 1 : 0
+            }}
+            disabled={poolIndex === null}
+          />
+          <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
+            <img src={settingIcon} className={classes.settingsIcon} />
+          </Button>
+        </Grid>
       </Grid>
 
       <Slippage
@@ -398,6 +412,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         tokenAIndex === tokenBIndex ||
         isWaitingForNewPool ? (
           <RangeSelector
+            poolIndex={poolIndex}
             onChangeRange={onChangeRange}
             blocked={
               tokenAIndex === null ||
@@ -427,6 +442,9 @@ export const NewPosition: React.FC<INewPosition> = ({
             currentPairReversed={currentPairReversed}
             initialIsDiscreteValue={initialIsDiscreteValue}
             onDiscreteChange={onDiscreteChange}
+            isConcentrated={isConcentrated}
+            feeTierIndex={fee}
+            bestTierIndex={bestTierIndex}
           />
         ) : (
           <PoolInit
