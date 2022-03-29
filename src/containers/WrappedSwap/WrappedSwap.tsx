@@ -14,9 +14,15 @@ import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { actions as poolsActions } from '@reducers/pools'
 import { PublicKey } from '@solana/web3.js'
 import { actions as walletActions } from '@reducers/solanaWallet'
+import { getCurrentSolanaConnection } from '@web3/connection'
+import { addNewTokenToLocalStorage, getFullNewTokensData } from '@consts/utils'
+import { network } from '@selectors/solanaConnection'
 
 export const WrappedSwap = () => {
   const dispatch = useDispatch()
+
+  const connection = getCurrentSolanaConnection()
+
   const walletStatus = useSelector(status)
   const swap = useSelector(swapPool)
   const tickmap = useSelector(tickMaps)
@@ -25,6 +31,7 @@ export const WrappedSwap = () => {
   const tokensList = useSelector(swapTokens)
   const { success, inProgress } = useSelector(swapPool)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
+  const networkType = useSelector(network)
 
   const [progress, setProgress] = useState<ProgressState>('none')
   const [tokenFrom, setTokenFrom] = useState<PublicKey | null>(null)
@@ -65,6 +72,19 @@ export const WrappedSwap = () => {
     lastTokenTo === null
       ? null
       : tokensList.findIndex(token => token.assetAddress.equals(new PublicKey(lastTokenTo)))
+
+  const addTokenHandler = (address: string) => {
+    if (connection !== null) {
+      getFullNewTokensData([new PublicKey(address)], connection)
+        .then(data => {
+          dispatch(poolsActions.addTokens(data))
+          addNewTokenToLocalStorage(address, networkType)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+  }
 
   return (
     <Swap
@@ -122,6 +142,7 @@ export const WrappedSwap = () => {
       tickmap={tickmap}
       initialTokenFromIndex={initialTokenFromIndex === -1 ? null : initialTokenFromIndex}
       initialTokenToIndex={initialTokenToIndex === -1 ? null : initialTokenToIndex}
+      handleAddToken={addTokenHandler}
     />
   )
 }

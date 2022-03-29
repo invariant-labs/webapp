@@ -802,3 +802,13 @@ export const getFullNewTokensData = async (
     )
   )
 }
+
+export const addNewTokenToLocalStorage = (address: string, network: NetworkType) => {
+  const currentListStr = localStorage.getItem(`CUSTOM_TOKENS_${network}`)
+
+  const currentList = currentListStr !== null ? JSON.parse(currentListStr) : []
+
+  currentList.push(address)
+
+  localStorage.setItem(`CUSTOM_TOKENS_${network}`, currentList)
+}

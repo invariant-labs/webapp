@@ -250,7 +250,10 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
         open={isAddOpen}
         anchorEl={anchorEl}
         handleClose={() => setIsAddOpen(false)}
-        addToken={handleAddToken}
+        addToken={(address) => {
+          handleAddToken(address)
+          setIsAddOpen(false)
+        }}
       />
     </>
   )

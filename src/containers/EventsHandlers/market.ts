@@ -5,10 +5,11 @@ import { Status } from '@reducers/solanaConnection'
 import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
 import { poolsArraySortedByFees, poolTicks, tickMaps } from '@selectors/pools'
-import { getNetworkTokensList, findPairs } from '@consts/utils'
+import { getNetworkTokensList, findPairs, getFullNewTokensData } from '@consts/utils'
 import { swap } from '@selectors/swap'
 import { findTickmapChanges, Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
+import { getCurrentSolanaConnection } from '@web3/connection'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -23,11 +24,31 @@ const MarketEvents = () => {
   const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
   const [subscribedTickmap, _setSubscribedTickmap] = useState<Set<string>>(new Set())
   useEffect(() => {
-    if (networkStatus !== Status.Initialized) {
+    const connection = getCurrentSolanaConnection()
+    if (networkStatus !== Status.Initialized || !connection) {
       return
     }
     const connectEvents = () => {
-      dispatch(actions.addTokens(getNetworkTokensList(networkType)))
+      let tokens = getNetworkTokensList(networkType)
+
+      const currentListStr = localStorage.getItem(`CUSTOM_TOKENS_${networkType}`)
+      const currentList =
+        currentListStr !== null
+          ? JSON.parse(currentListStr)
+              .filter((address: string) => !tokens[address])
+              .map((address: string) => new PublicKey(address))
+          : []
+
+      getFullNewTokensData(currentList, connection)
+        .then(data => {
+          tokens = {
+            ...tokens,
+            ...data
+          }
+        })
+        .finally(() => {
+          actions.addTokens(tokens)
+        })
     }
 
     connectEvents()
