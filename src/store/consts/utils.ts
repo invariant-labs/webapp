@@ -362,19 +362,17 @@ export const createPlaceholderLiquidityPlot = (
 }
 
 export const getNetworkTokensList = (networkType: NetworkType): Record<string, Token> => {
+  const obj: Record<string, Token> = {}
   switch (networkType) {
     case NetworkType.MAINNET:
-      return mainnetList.reduce(
-        (all, token) => ({
-          ...all,
-          [token.address]: {
-            ...token,
-            address: new PublicKey(token.address),
-            coingeckoId: token?.extensions?.coingeckoId
-          }
-        }),
-        {}
-      )
+      mainnetList.forEach(token => {
+        obj[token.address] = {
+          ...token,
+          address: new PublicKey(token.address),
+          coingeckoId: token?.extensions?.coingeckoId
+        }
+      })
+      return obj
     case NetworkType.DEVNET:
       return {
         [USDC_DEV.address.toString()]: USDC_DEV,
