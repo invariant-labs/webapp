@@ -50,6 +50,7 @@ storiesOf('Inputs/select', module)
         name='Select a token'
         tokens={tokens}
         onSelect={index => action(`chosen index: ${index}`)()}
+        handleAddToken={() => {}}
       />
     </div>
   ))
@@ -60,6 +61,7 @@ storiesOf('Inputs/select', module)
         name='Select a token'
         tokens={tokens}
         onSelect={index => action(`chosen index: ${index}`)()}
+        handleAddToken={() => {}}
       />
     </div>
   ))

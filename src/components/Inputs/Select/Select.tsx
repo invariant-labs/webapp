@@ -17,6 +17,7 @@ export interface ISelectModal {
   onSelect: (index: number) => void
   className?: string
   hideBalancesInModal?: boolean
+  handleAddToken: (address: string) => void
 }
 
 export const Select: React.FC<ISelectModal> = ({
@@ -26,7 +27,8 @@ export const Select: React.FC<ISelectModal> = ({
   tokens,
   onSelect,
   className,
-  hideBalancesInModal = false
+  hideBalancesInModal = false,
+  handleAddToken
 }) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
@@ -72,6 +74,7 @@ export const Select: React.FC<ISelectModal> = ({
         onSelect={onSelect}
         handleClose={handleClose}
         hideBalances={hideBalancesInModal}
+        handleAddToken={handleAddToken}
       />
     </>
   )

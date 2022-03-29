@@ -89,6 +89,7 @@ storiesOf('position/newPosition', module)
         currentPriceSqrt={new BN(140000000)}
         canCreateNewPool
         canCreateNewPosition
+        handleAddToken={() => {}}
       />
     </div>
   ))
@@ -127,6 +128,7 @@ storiesOf('position/newPosition', module)
         currentPriceSqrt={new BN(140000000)}
         canCreateNewPool
         canCreateNewPosition
+        handleAddToken={() => {}}
       />
     </div>
   ))

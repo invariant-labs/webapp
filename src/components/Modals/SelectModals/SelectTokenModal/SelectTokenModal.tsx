@@ -3,9 +3,11 @@ import { Typography, Popover, Grid, CardMedia, Box, Button } from '@material-ui/
 import CustomScrollbar from '../CustomScrollbar'
 import searchIcon from '@static/svg/lupa.svg'
 import { FixedSizeList as List } from 'react-window'
-import useStyles from '../style'
 import { formatNumbers, FormatNumberThreshold, printBN, showPrefix } from '@consts/utils'
 import { BN } from '@project-serum/anchor'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import useStyles from '../style'
+import AddTokenModal from '@components/Modals/AddTokenModal/AddTokenModal'
 // import icons from '@static/icons'
 
 export interface ISelectTokenModal {
@@ -17,6 +19,7 @@ export interface ISelectTokenModal {
   centered?: boolean
   onSelect: (index: number) => void
   hideBalances?: boolean
+  handleAddToken: (address: string) => void
 }
 
 interface IScroll {
@@ -62,10 +65,13 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   anchorEl,
   centered = false,
   onSelect,
-  hideBalances = false
+  hideBalances = false,
+  handleAddToken
 }) => {
   const classes = useStyles()
   const [value, setValue] = useState<string>('')
+
+  const [isAddOpen, setIsAddOpen] = useState(false)
 
   const outerRef = useRef<HTMLElement>(null)
 
@@ -133,37 +139,46 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   ]
 
   return (
-    <Popover
-      classes={{ paper: classes.paper }}
-      open={open}
-      anchorEl={anchorEl}
-      onClose={handleClose}
-      anchorReference={centered ? 'none' : 'anchorEl'}
-      className={classes.popover}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left'
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'center'
-      }}>
-      <Grid container className={classes.container}>
-        <Grid className={classes.selectTokenHeader}>
-          <Typography component='h1'>Select a token</Typography>
-          <Button className={classes.selectTokenClose} onClick={handleClose}></Button>
-        </Grid>
-        <Grid container className={classes.inputControl}>
-          <input
-            className={classes.selectTokenInput}
-            placeholder='Search token name or address'
-            onChange={searchToken}
-            value={value}
-          />
-          <CardMedia image={searchIcon} className={classes.inputIcon} />
-        </Grid>
-        {/* TODO: create a common tokens list */}
-        {/* <Grid container className={classes.commonTokens}>
+    <>
+      <Popover
+        classes={{ paper: classes.paper }}
+        open={open && !isAddOpen}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorReference={centered ? 'none' : 'anchorEl'}
+        className={classes.popover}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left'
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center'
+        }}>
+        <Grid container className={classes.container}>
+          <Grid className={classes.selectTokenHeader}>
+            <Typography component='h1'>Select a token</Typography>
+            <Button className={classes.selectTokenClose} onClick={handleClose}></Button>
+          </Grid>
+          <Grid
+            className={classes.topRow}
+            container
+            direction='row'
+            wrap='nowrap'
+            alignItems='center'>
+            <Grid container className={classes.inputControl}>
+              <input
+                className={classes.selectTokenInput}
+                placeholder='Search token name or address'
+                onChange={searchToken}
+                value={value}
+              />
+              <CardMedia image={searchIcon} className={classes.inputIcon} />
+            </Grid>
+            <AddCircleOutlineIcon className={classes.addIcon} onClick={() => setIsAddOpen(true)} />
+          </Grid>
+          {/* TODO: create a common tokens list */}
+          {/* <Grid container className={classes.commonTokens}>
           <Grid className={classes.commonTokensList}>
             {commonTokens.map(token => (
               <Box
@@ -183,51 +198,61 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
             ))}
           </Grid>
         </Grid> */}
-        <Box className={classes.tokenList}>
-          <List
-            height={352}
-            width={371}
-            itemSize={66}
-            itemCount={filteredTokens.length}
-            outerElementType={CustomScrollbarsVirtualList}
-            outerRef={outerRef}>
-            {({ index, style }) => {
-              const token = filteredTokens[index]
-              const tokenBalance = printBN(token.balance, token.decimals)
+          <Box className={classes.tokenList}>
+            <List
+              height={352}
+              width={371}
+              itemSize={66}
+              itemCount={filteredTokens.length}
+              outerElementType={CustomScrollbarsVirtualList}
+              outerRef={outerRef}>
+              {({ index, style }) => {
+                const token = filteredTokens[index]
+                const tokenBalance = printBN(token.balance, token.decimals)
 
-              return (
-                <Grid
-                  className={classes.tokenItem}
-                  style={{
-                    ...style,
-                    width: 370,
-                    height: 40
-                  }}
-                  alignItems='center'
-                  wrap='nowrap'
-                  onClick={() => {
-                    onSelect(token.index)
-                    setValue('')
-                    handleClose()
-                  }}>
-                  <CardMedia className={classes.tokenIcon} image={token.logoURI} />{' '}
-                  <Grid container className={classes.tokenContainer}>
-                    <Typography className={classes.tokenName}>{token.symbol}</Typography>
-                    <Typography className={classes.tokenDescrpiption}>{token.name.slice(0, 30)}{token.name.length > 30 ? '...' : ''}</Typography>
+                return (
+                  <Grid
+                    className={classes.tokenItem}
+                    style={{
+                      ...style,
+                      width: 370,
+                      height: 40
+                    }}
+                    alignItems='center'
+                    wrap='nowrap'
+                    onClick={() => {
+                      onSelect(token.index)
+                      setValue('')
+                      handleClose()
+                    }}>
+                    <CardMedia className={classes.tokenIcon} image={token.logoURI} />{' '}
+                    <Grid container className={classes.tokenContainer}>
+                      <Typography className={classes.tokenName}>{token.symbol}</Typography>
+                      <Typography className={classes.tokenDescrpiption}>
+                        {token.name.slice(0, 30)}
+                        {token.name.length > 30 ? '...' : ''}
+                      </Typography>
+                    </Grid>
+                    {!hideBalances && Number(tokenBalance) > 0 ? (
+                      <Typography className={classes.tokenBalanceStatus}>
+                        Balance: {formatNumbers(thresholds(token.decimals))(tokenBalance)}
+                        {showPrefix(Number(tokenBalance))}
+                      </Typography>
+                    ) : null}
                   </Grid>
-                  {!hideBalances && Number(tokenBalance) > 0 ? (
-                    <Typography className={classes.tokenBalanceStatus}>
-                      Balance: {formatNumbers(thresholds(token.decimals))(tokenBalance)}
-                      {showPrefix(Number(tokenBalance))}
-                    </Typography>
-                  ) : null}
-                </Grid>
-              )
-            }}
-          </List>
-        </Box>
-      </Grid>
-    </Popover>
+                )
+              }}
+            </List>
+          </Box>
+        </Grid>
+      </Popover>
+      <AddTokenModal
+        open={isAddOpen}
+        anchorEl={anchorEl}
+        handleClose={() => setIsAddOpen(false)}
+        addToken={handleAddToken}
+      />
+    </>
   )
 }
 export default SelectTokenModal

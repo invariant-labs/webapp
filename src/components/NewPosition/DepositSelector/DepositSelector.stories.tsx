@@ -59,5 +59,6 @@ storiesOf('position/depositSelector', module).add('deposit', () => (
     poolIndex={0}
     canCreateNewPool
     canCreateNewPosition
+    handleAddToken={() => {}}
   />
 ))

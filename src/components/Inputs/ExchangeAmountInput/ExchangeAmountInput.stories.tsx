@@ -54,6 +54,7 @@ storiesOf('inputs/exchangeAmount', module)
         current={tokens[0]}
         onSelect={index => action(`chosen index: ${index}`)()}
         disabled={false}
+        handleAddToken={() => {}}
       />
     </div>
   ))

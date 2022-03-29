@@ -164,6 +164,7 @@ storiesOf('newUi/swap', module)
         initialTokenFromIndex={null}
         initialTokenToIndex={null}
         tickmap={{}}
+        handleAddToken={() => {}}
       />
     </div>
   ))

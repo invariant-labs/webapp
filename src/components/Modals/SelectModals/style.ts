@@ -63,7 +63,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: colors.invariant.newDark,
     borderRadius: 15,
     padding: '18px 10px 17px 10px',
-    marginBottom: 20,
     '&::placeholder': {
       color: colors.invariant.light,
       ...typography.body1
@@ -302,6 +301,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxShadow: 'none',
     minWidth: 102,
     position: 'absolute'
+  },
+  topRow: {
+    marginBottom: 20
+  },
+  addIcon: {
+    marginLeft: 10,
+    cursor: 'pointer'
   }
 }))
 
