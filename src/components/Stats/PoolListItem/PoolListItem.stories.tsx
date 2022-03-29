@@ -14,9 +14,9 @@ storiesOf('stats/PoolListItem', module)
         symbolTo='USDT'
         iconFrom='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
         iconTo='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
-        volume='421,323,423.23'
-        TVL='234,413,532.43'
-        fee='0.05'
+        volume={421323423.23}
+        TVL={234413532.43}
+        fee={0.05}
       />
     )
   })

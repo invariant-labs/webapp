@@ -5,16 +5,16 @@ export const useStyles = makeStyles(() => ({
   container: {
     backgroundColor: colors.invariant.component,
     color: 'white',
-    maxWidth: '524px',
     borderRadius: 24,
-    padding: 24
+    paddingBlock: 24,
+    boxSizing: 'border-box'
   },
   liquidityContainer: {
     dispaly: 'flex',
     flexDirection: 'column',
-    alignItems: 'flexp-start',
+    alignItems: 'flex-start',
     fontWeight: 'normal',
-    marginLeft: 20
+    marginLeft: 24
   },
 
   liquidityHeader: {
@@ -82,5 +82,22 @@ export const useStyles = makeStyles(() => ({
     width: '100%',
     color: colors.invariant.textGrey,
     ...typography.caption4
+  },
+  tooltip: {
+    background: colors.invariant.component,
+    border: `1px solid ${colors.invariant.lightGrey}`,
+    borderRadius: 5,
+    width: 100,
+    padding: 5
+  },
+  tooltipDate: {
+    ...typography.caption4,
+    color: colors.white.main,
+    textAlign: 'center'
+  },
+  tooltipValue: {
+    ...typography.caption3,
+    color: colors.invariant.green,
+    textAlign: 'center'
   }
 }))

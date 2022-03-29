@@ -16,6 +16,7 @@ import { SinglePositionPage } from './SinglePositionPage/SinglePositionPage'
 import SingleFarmPage from './SingleFarmPage/SingleFarmPage'
 import Footer from '@components/Footer/Footer'
 import FarmsPage from './FarmsPage/FarmsPage'
+import StatsPage from './StatsPage/StatsPage'
 
 export const PagesRouter: React.FC = () => {
   const dispatch = useDispatch()
@@ -44,6 +45,7 @@ export const PagesRouter: React.FC = () => {
           <Route path={'/pool'} component={ListPage} />
           <Route path={'/farms'} component={FarmsPage} />
           <Route path={'/farm/:id'} render={({match}) => <SingleFarmPage id={match.params.id} />} />
+          <Route path={'/stats'} component={StatsPage} />
           <Route
             path={'/position/:id'}
             render={({ match }) => <SinglePositionPage id={match.params.id} />}
