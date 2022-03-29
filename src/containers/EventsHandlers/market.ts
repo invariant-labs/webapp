@@ -32,16 +32,42 @@ const MarketEvents = () => {
       let tokens = getNetworkTokensList(networkType)
 
       const currentListStr = localStorage.getItem(`CUSTOM_TOKENS_${networkType}`)
-      const currentList = currentListStr !== null ? JSON.parse(currentListStr).filter((address: string) => !tokens[address]).map((address: string) => new PublicKey(address)) : []
+      const currentList =
+        currentListStr !== null
+          ? JSON.parse(currentListStr)
+              .filter((address: string) => !tokens[address])
+              .map((address: string) => new PublicKey(address))
+          : []
 
-      getFullNewTokensData(currentList, connection).then((data) => {
-        tokens = {
-          ...tokens,
-          ...data
-        }
-      }).finally(() => {
-        dispatch(actions.addTokens(tokens))
-      })
+      const lastTokenFrom = localStorage.getItem('INVARIANT_LAST_TOKEN_FROM')
+      const lastTokenTo = localStorage.getItem('INVARIANT_LAST_TOKEN_TO')
+
+      if (
+        lastTokenFrom !== null &&
+        !tokens[lastTokenFrom] &&
+        !currentList.find((addr: string) => addr === lastTokenFrom)
+      ) {
+        currentList.push(lastTokenFrom)
+      }
+
+      if (
+        lastTokenTo !== null &&
+        !tokens[lastTokenTo] &&
+        !currentList.find((addr: string) => addr === lastTokenTo)
+      ) {
+        currentList.push(lastTokenTo)
+      }
+
+      getFullNewTokensData(currentList, connection)
+        .then(data => {
+          tokens = {
+            ...tokens,
+            ...data
+          }
+        })
+        .finally(() => {
+          dispatch(actions.addTokens(tokens))
+        })
     }
 
     connectEvents()
