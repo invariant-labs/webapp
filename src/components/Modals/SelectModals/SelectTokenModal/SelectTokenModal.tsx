@@ -248,7 +248,6 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
       </Popover>
       <AddTokenModal
         open={isAddOpen}
-        anchorEl={anchorEl}
         handleClose={() => setIsAddOpen(false)}
         addToken={(address) => {
           handleAddToken(address)

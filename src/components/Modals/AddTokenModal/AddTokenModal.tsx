@@ -4,11 +4,10 @@ import useStyles from './style'
 
 export interface IProps {
   open: boolean
-  anchorEl: HTMLButtonElement | null
   handleClose: () => void
   addToken: (address: string) => void
 }
-export const AddTokenModal: React.FC<IProps> = ({ open, anchorEl, handleClose, addToken }) => {
+export const AddTokenModal: React.FC<IProps> = ({ open, handleClose, addToken }) => {
   const classes = useStyles()
 
   const [address, setAddress] = useState('')
@@ -16,8 +15,9 @@ export const AddTokenModal: React.FC<IProps> = ({ open, anchorEl, handleClose, a
   return (
     <Popover
       classes={{ paper: classes.paper }}
+      className={classes.popover}
       open={open}
-      anchorEl={anchorEl}
+      anchorReference='none'
       onClose={handleClose}
       anchorOrigin={{
         vertical: 'bottom',

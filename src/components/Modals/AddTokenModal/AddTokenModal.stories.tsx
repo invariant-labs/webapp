@@ -7,7 +7,6 @@ storiesOf('modals/AddToken', module)
     <AddTokenModal
       open={true}
       handleClose={() => {}}
-      anchorEl={null}
       addToken={() => {}}
     />
   ))

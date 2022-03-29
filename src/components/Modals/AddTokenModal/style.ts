@@ -1,13 +1,22 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     background: colors.invariant.component,
     width: 480,
     height: 140,
     borderRadius: 24,
     padding: '20px 24px'
+  },
+  popover: {
+    marginTop: 'calc(50vh - 258px)',
+    marginLeft: 'calc(50vw - 241px)',
+    [theme.breakpoints.down('xs')]: {
+      display: 'flex',
+      marginLeft: 'auto',
+      justifyContent: 'center'
+    }
   },
   paper: {
     background: 'transparent',

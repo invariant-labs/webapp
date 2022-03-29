@@ -810,5 +810,5 @@ export const addNewTokenToLocalStorage = (address: string, network: NetworkType)
 
   currentList.push(address)
 
-  localStorage.setItem(`CUSTOM_TOKENS_${network}`, currentList)
+  localStorage.setItem(`CUSTOM_TOKENS_${network}`, JSON.stringify(currentList))
 }
