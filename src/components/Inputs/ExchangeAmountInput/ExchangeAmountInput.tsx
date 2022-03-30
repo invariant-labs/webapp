@@ -5,8 +5,8 @@ import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import Select from '@components/Inputs/Select/Select'
 import useStyles from './style'
 import { SwapToken } from '@components/Swap/Swap'
-import { BN } from '@project-serum/anchor'
 import { formatNumbers, FormatNumberThreshold, showPrefix } from '@consts/utils'
+import { PublicKey } from '@solana/web3.js'
 
 interface IProps {
   setValue: (value: string) => void
@@ -18,12 +18,13 @@ interface IProps {
   style?: CSSProperties
   onMaxClick: () => void
   current: SwapToken | null
-  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
+  tokens: SwapToken[]
   onSelect: (index: number) => void
   disabled: boolean
   balance?: string
   hideBalancesInModal?: boolean
   handleAddToken: (address: string) => void
+  commonTokens: PublicKey[]
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -41,7 +42,8 @@ export const AmountInput: React.FC<IProps> = ({
   disabled,
   balance,
   hideBalancesInModal = false,
-  handleAddToken
+  handleAddToken,
+  commonTokens
 }) => {
   const classes = useStyles()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -126,6 +128,7 @@ export const AmountInput: React.FC<IProps> = ({
           className={classes.select}
           hideBalancesInModal={hideBalancesInModal}
           handleAddToken={handleAddToken}
+          commonTokens={commonTokens}
         />
         <Input
           inputRef={inputRef}

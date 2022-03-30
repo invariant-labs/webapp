@@ -48,6 +48,7 @@ export interface IDepositSelector {
   canCreateNewPool: boolean
   canCreateNewPosition: boolean
   handleAddToken: (address: string) => void
+  commonTokens: PublicKey[]
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -68,7 +69,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   bestTierIndex,
   canCreateNewPool,
   canCreateNewPosition,
-  handleAddToken
+  handleAddToken,
+  commonTokens
 }) => {
   const classes = useStyles()
 
@@ -158,6 +160,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               className={classes.customSelect}
               handleAddToken={handleAddToken}
               sliceName
+              commonTokens={commonTokens}
             />
           </Grid>
 
@@ -190,6 +193,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               className={classes.customSelect}
               handleAddToken={handleAddToken}
               sliceName
+              commonTokens={commonTokens}
             />
           </Grid>
         </Grid>

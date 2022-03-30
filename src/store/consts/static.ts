@@ -232,6 +232,22 @@ export const bestTiers: Record<NetworkType, BestTier[]> = {
   Localnet: []
 }
 
+export const commonTokensForNetworks: Record<NetworkType, PublicKey[]> = {
+  Devnet: [USDC_DEV.address, USDT_DEV.address, BTC_DEV.address, WSOL_DEV.address, MSOL_DEV.address],
+  Mainnet: [
+    new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+    new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'),
+    new PublicKey('9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i'),
+    new PublicKey('7kbnvuGBxxj8AG9qp8Scn56muWGaRaFqxg1FsRp3PaFT'),
+    new PublicKey('So11111111111111111111111111111111111111112'),
+    new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+    new PublicKey('7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs'),
+    new PublicKey('mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So')
+  ],
+  Testnet: [],
+  Localnet: []
+}
+
 export const airdropTokens: Record<NetworkType, PublicKey[]> = {
   Devnet: [
     USDC_DEV.address,

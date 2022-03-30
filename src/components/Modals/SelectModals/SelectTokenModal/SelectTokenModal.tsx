@@ -4,15 +4,15 @@ import CustomScrollbar from '../CustomScrollbar'
 import searchIcon from '@static/svg/lupa.svg'
 import { FixedSizeList as List } from 'react-window'
 import { formatNumbers, FormatNumberThreshold, printBN, showPrefix } from '@consts/utils'
-import { BN } from '@project-serum/anchor'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
-import useStyles from '../style'
 import AddTokenModal from '@components/Modals/AddTokenModal/AddTokenModal'
-// import icons from '@static/icons'
+import useStyles from '../style'
+import { SwapToken } from '@selectors/solanaWallet'
+import { PublicKey } from '@solana/web3.js'
 
 export interface ISelectTokenModal {
-  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
-  // commonTokens: Array<{ symbol: string; name: string; logoURI: string }>
+  tokens: SwapToken[]
+  commonTokens: PublicKey[]
   open: boolean
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
@@ -59,7 +59,7 @@ const CustomScrollbarsVirtualList = React.forwardRef<HTMLElement, IScroll>((prop
 
 export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   tokens,
-  // commonTokens,
+  commonTokens,
   open,
   handleClose,
   anchorEl,
@@ -79,6 +79,14 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
     ...token,
     index
   }))
+
+  const commonTokensList = useMemo(
+    () =>
+      tokensWithIndexes.filter(
+        ({ assetAddress }) => commonTokens.findIndex(key => key.equals(assetAddress)) !== -1
+      ),
+    [tokensWithIndexes, commonTokens]
+  )
 
   const filteredTokens = useMemo(
     () =>
@@ -177,27 +185,23 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
             </Grid>
             <AddCircleOutlineIcon className={classes.addIcon} onClick={() => setIsAddOpen(true)} />
           </Grid>
-          {/* TODO: create a common tokens list */}
-          {/* <Grid container className={classes.commonTokens}>
-          <Grid className={classes.commonTokensList}>
-            {commonTokens.map(token => (
-              <Box
-                className={classes.commonTokenItem}
-                key={token.symbol}
-                // onClick={() => {
-                //   onSelect(tokenIndex(token ? token.symbol : ''))
-                //   handleClose()
-                // }}
-              >
-                <CardMedia
-                  className={classes.commonTokenIcon}
-                  image={icons[token.symbol] ?? icons.USDT}
-                />
-                <Typography component='p'>{token.symbol}</Typography>
-              </Box>
-            ))}
+          <Grid container className={classes.commonTokens}>
+            <Grid className={classes.commonTokensList}>
+              {commonTokensList.map(token => (
+                <Box
+                  className={classes.commonTokenItem}
+                  key={token.symbol}
+                  onClick={() => {
+                    onSelect(token.index)
+                    setValue('')
+                    handleClose()
+                  }}>
+                  <img className={classes.commonTokenIcon} />
+                  <Typography component='p'>{token.symbol}</Typography>
+                </Box>
+              ))}
+            </Grid>
           </Grid>
-        </Grid> */}
           <Box className={classes.tokenList}>
             <List
               height={352}

@@ -39,14 +39,17 @@ const tokens: SwapToken[] = [
     address: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
   }
 ]
-// const commonTokens = 'SNY BTC ETH DOGE'.split(' ').map(symbol => ({ symbol }))
 
 storiesOf('newModals/selectToken', module)
   .addDecorator(withKnobs)
   .add('default', () => (
     <SelectTokenModal
       tokens={tokens}
-      // commonTokens={commonTokens}
+      commonTokens={[
+        new PublicKey('So11111111111111111111111111111111111111112'),
+        new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+        new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
+      ]}
       open={true}
       handleClose={() => {}}
       anchorEl={null}

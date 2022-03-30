@@ -17,6 +17,7 @@ import { actions as walletActions } from '@reducers/solanaWallet'
 import { getCurrentSolanaConnection } from '@web3/connection'
 import { addNewTokenToLocalStorage, getFullNewTokensData } from '@consts/utils'
 import { network } from '@selectors/solanaConnection'
+import { commonTokensForNetworks } from '@consts/static'
 
 export const WrappedSwap = () => {
   const dispatch = useDispatch()
@@ -143,6 +144,7 @@ export const WrappedSwap = () => {
       initialTokenFromIndex={initialTokenFromIndex === -1 ? null : initialTokenFromIndex}
       initialTokenToIndex={initialTokenToIndex === -1 ? null : initialTokenToIndex}
       handleAddToken={addTokenHandler}
+      commonTokens={commonTokensForNetworks[networkType]}
     />
   )
 }

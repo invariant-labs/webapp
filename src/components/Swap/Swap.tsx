@@ -79,6 +79,7 @@ export interface ISwap {
   initialTokenFromIndex: number | null
   initialTokenToIndex: number | null
   handleAddToken: (address: string) => void
+  commonTokens: PublicKey[]
 }
 
 export const Swap: React.FC<ISwap> = ({
@@ -95,7 +96,8 @@ export const Swap: React.FC<ISwap> = ({
   onDisconnectWallet,
   initialTokenFromIndex,
   initialTokenToIndex,
-  handleAddToken
+  handleAddToken,
+  commonTokens
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -448,6 +450,7 @@ export const Swap: React.FC<ISwap> = ({
             disabled={tokenFromIndex === null}
             hideBalancesInModal={walletStatus !== Status.Initialized}
             handleAddToken={handleAddToken}
+            commonTokens={commonTokens}
           />
         </Box>
         <Box className={classes.tokenComponentTextContainer}>
@@ -517,6 +520,7 @@ export const Swap: React.FC<ISwap> = ({
             disabled={tokenFromIndex === null}
             hideBalancesInModal={walletStatus !== Status.Initialized}
             handleAddToken={handleAddToken}
+            commonTokens={commonTokens}
           />
         </Box>
         <Box className={classes.transactionDetails}>

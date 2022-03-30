@@ -17,7 +17,7 @@ import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { initPosition, plotTicks } from '@selectors/positions'
 import { BN } from '@project-serum/anchor'
-import { bestTiers } from '@consts/static'
+import { bestTiers, commonTokensForNetworks } from '@consts/static'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
@@ -400,6 +400,7 @@ export const NewPositionWrapper = () => {
       canCreateNewPool={canUserCreateNewPool}
       canCreateNewPosition={canUserCreateNewPosition}
       handleAddToken={addTokenHandler}
+      commonTokens={commonTokensForNetworks[currentNetwork]}
     />
   )
 }
