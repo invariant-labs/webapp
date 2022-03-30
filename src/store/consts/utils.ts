@@ -666,7 +666,10 @@ export const getCoingeckoPricesData = async (
   const requests: Array<Promise<AxiosResponse<CoingeckoApiPriceData[]>>> = []
   for (let i = 0; i < ids.length; i += 250) {
     const idsSlice = ids.slice(i, i + 250)
-    const idsList = idsSlice.reduce((acc, id, index) => acc + id + (index < 249 ? ',' : ''), '')
+    let idsList = ''
+    idsSlice.forEach((id, index) => {
+      idsList += id + (index < 249 ? ',' : '')
+    })
     requests.push(
       axios.get<CoingeckoApiPriceData[]>(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsList}&per_page=250`
@@ -675,9 +678,12 @@ export const getCoingeckoPricesData = async (
   }
 
   return await Promise.all(requests).then(responses => {
-    const concatRes: CoingeckoApiPriceData[] = responses
+    let concatRes: CoingeckoApiPriceData[] = []
+    responses
       .map(res => res.data)
-      .reduce((acc, data) => [...acc, ...data], [])
+      .forEach(data => {
+        concatRes = [...concatRes, ...data]
+      })
 
     const data: Record<string, CoingeckoPriceData> = {}
 
@@ -789,18 +795,18 @@ export const getFullNewTokensData = async (
     .map(address => new SPLToken(connection, address, TOKEN_PROGRAM_ID, new Keypair()))
     .map(async token => await token.getMintInfo())
 
-  return await Promise.allSettled(promises).then(results =>
-    results.reduce(
-      (acc, result, index) => ({
-        ...acc,
-        [addresses[index].toString()]: generateUnknownTokenDataObject(
-          addresses[index],
-          result.status === 'fulfilled' ? result.value.decimals : 6
-        )
-      }),
-      {}
-    )
+  const tokens: Record<string, Token> = {}
+
+  await Promise.allSettled(promises).then(results =>
+    results.forEach((result, index) => {
+      tokens[addresses[index].toString()] = generateUnknownTokenDataObject(
+        addresses[index],
+        result.status === 'fulfilled' ? result.value.decimals : 6
+      )
+    })
   )
+
+  return tokens
 }
 
 export const addNewTokenToLocalStorage = (address: string, network: NetworkType) => {
