@@ -196,7 +196,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                     setValue('')
                     handleClose()
                   }}>
-                  <img className={classes.commonTokenIcon} />
+                  <img className={classes.commonTokenIcon} src={token.logoURI} />
                   <Typography component='p'>{token.symbol}</Typography>
                 </Box>
               ))}
