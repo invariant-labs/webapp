@@ -102,17 +102,13 @@ enum NetworkType {
 }
 
 const MAINNET_RPCS = [
-  // {
-  //   rpc: SolanaNetworks.MAIN_FIGMENT,
-  //   probability: 0.5
-  // },
-  // {
-  //   rpc: SolanaNetworks.MAIN_GENESYSGO,
-  //   probability: 0.5
-  // }
   {
-    rpc: SolanaNetworks.MAIN_SERUM,
-    probability: 1
+    rpc: SolanaNetworks.MAIN_FIGMENT,
+    probability: 0.5
+  },
+  {
+    rpc: SolanaNetworks.MAIN_GENESYSGO,
+    probability: 0.5
   }
 ]
 const DEFAULT_PUBLICKEY = new PublicKey(0)
