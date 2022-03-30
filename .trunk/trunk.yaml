@@ -7,3 +7,6 @@ lint:
     - eslint@7.32.0
     - gitleaks@7.6.1
     - prettier@2.4.1
+  ignore:
+    - linters: [gitleaks]
+      paths: src/store/consts/tokenLists/**
