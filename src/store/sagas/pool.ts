@@ -1,4 +1,4 @@
-import { call, put, all, spawn, takeEvery, takeLatest } from 'typed-redux-saga'
+import { call, put, all, spawn, takeEvery, takeLatest, select } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
 import { actions, PairTokens, PoolWithAddress } from '@reducers/pools'
@@ -6,7 +6,9 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PublicKey } from '@solana/web3.js'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { getPools, getPoolsFromAdresses } from '@consts/utils'
+import { getFullNewTokensData, getPools, getPoolsFromAdresses } from '@consts/utils'
+import { tokens } from '@selectors/pools'
+import { getConnection } from './connection'
 export interface iTick {
   index: Tick[]
 }
@@ -42,12 +44,29 @@ export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
 }
 
 export function* fetchPoolsDataForPositions(action: PayloadAction<string[]>) {
+  const connection = yield* call(getConnection)
   const marketProgram = yield* call(getMarketProgram)
   const newPools: PoolWithAddress[] = yield* call(
     getPoolsFromAdresses,
     action.payload.map(addr => new PublicKey(addr)),
     marketProgram
   )
+
+  const allTokens = yield* select(tokens)
+  const unknownTokens = new Set<PublicKey>()
+
+  newPools.forEach((pool) => {
+    if (!allTokens[pool.tokenX.toString()]) {
+      unknownTokens.add(pool.tokenX)
+    }
+
+    if (!allTokens[pool.tokenY.toString()]) {
+      unknownTokens.add(pool.tokenY)
+    }
+  })
+
+  const newTokens = yield* call(getFullNewTokensData, [...unknownTokens], connection)
+  yield* put(actions.addTokens(newTokens))
 
   yield* put(actions.addPoolsForPositions(newPools))
 }
