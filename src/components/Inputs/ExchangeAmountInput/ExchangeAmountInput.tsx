@@ -113,7 +113,7 @@ export const AmountInput: React.FC<IProps> = ({
     }
   }
 
-  const tokenIcon = !current ? null : current.symbol ?? current.symbol
+  const tokenIcon = !current ? '' : current.symbol
 
   return (
     <>
@@ -144,7 +144,8 @@ export const AmountInput: React.FC<IProps> = ({
         <Grid className={classes.BalanceContainer} onClick={onMaxClick}>
           <Typography className={classes.BalanceTypography}>
             Balance: {balance ? formatNumbers(thresholds)(balance.toString()) : 0}
-            {showPrefix(Number(balance))} {tokenIcon}
+            {showPrefix(Number(balance))} {tokenIcon.slice(0, 8)}
+            {tokenIcon.length > 8 ? '...' : ''}
           </Typography>
           <OutlinedButton
             name='Max'
