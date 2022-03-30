@@ -157,6 +157,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               centered
               className={classes.customSelect}
               handleAddToken={handleAddToken}
+              sliceName
             />
           </Grid>
 
@@ -188,6 +189,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               centered
               className={classes.customSelect}
               handleAddToken={handleAddToken}
+              sliceName
             />
           </Grid>
         </Grid>

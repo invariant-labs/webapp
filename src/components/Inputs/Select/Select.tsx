@@ -18,6 +18,7 @@ export interface ISelectModal {
   className?: string
   hideBalancesInModal?: boolean
   handleAddToken: (address: string) => void
+  sliceName?: boolean
 }
 
 export const Select: React.FC<ISelectModal> = ({
@@ -28,7 +29,8 @@ export const Select: React.FC<ISelectModal> = ({
   onSelect,
   className,
   hideBalancesInModal = false,
-  handleAddToken
+  handleAddToken,
+  sliceName = false
 }) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
@@ -44,6 +46,8 @@ export const Select: React.FC<ISelectModal> = ({
     unblurContent()
     setOpen(false)
   }
+
+  const displayName = !current ? name : current.symbol
 
   return (
     <>
@@ -61,7 +65,7 @@ export const Select: React.FC<ISelectModal> = ({
         }}
         disableRipple>
         <span style={{ whiteSpace: 'nowrap' }} className={classes.tokenName}>
-          {!current ? name : current.symbol}
+          {sliceName && displayName.length > 8 ? displayName.slice(0, 8) + '...' : displayName}
         </span>
       </Button>
       <SelectTokenModal
