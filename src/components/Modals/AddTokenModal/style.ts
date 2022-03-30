@@ -68,7 +68,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.heading3,
     color: colors.invariant.black,
     textTransform: 'none',
-    borderRadius: 18
+    borderRadius: 18,
+
+    '&:disabled': {
+      background: colors.invariant.light,
+      color: colors.invariant.black
+    }
   }
 }))
 
