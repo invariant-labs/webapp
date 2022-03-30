@@ -38,7 +38,7 @@ export const getRandomMainnetRPC = () => {
     }
   }
 
-  return SolanaNetworks.MAIN_SERUM
+  return SolanaNetworks.MAIN_GENESYSGO
 }
 export const getNetworkFromType = (type: NetworkType) => {
   switch (type) {
