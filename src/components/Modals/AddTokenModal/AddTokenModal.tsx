@@ -51,7 +51,7 @@ export const AddTokenModal: React.FC<IProps> = ({ open, handleClose, addToken })
             className={classes.add}
             onClick={() => addToken(address)}
             disableRipple
-            disabled={address.length === 44}>
+            disabled={address.length === 0}>
             Add
           </Button>
         </Grid>
