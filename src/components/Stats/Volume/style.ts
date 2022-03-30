@@ -4,9 +4,9 @@ import { typography, colors } from '@static/theme'
 export const useStyles = makeStyles(() => ({
   container: {
     backgroundColor: colors.invariant.component,
-    maxWidth: '524px',
     borderRadius: 24,
-    padding: 24
+    padding: 24,
+    boxSizing: 'border-box'
   },
   volumeContainer: {
     display: 'flex',
@@ -61,5 +61,22 @@ export const useStyles = makeStyles(() => ({
   },
   volumeUp: {
     color: colors.invariant.green
+  },
+  tooltip: {
+    background: colors.invariant.component,
+    border: `1px solid ${colors.invariant.lightGrey}`,
+    borderRadius: 5,
+    width: 100,
+    padding: 5
+  },
+  tooltipDate: {
+    ...typography.caption4,
+    color: colors.white.main,
+    textAlign: 'center'
+  },
+  tooltipValue: {
+    ...typography.caption3,
+    color: colors.invariant.pink,
+    textAlign: 'center'
   }
 }))
