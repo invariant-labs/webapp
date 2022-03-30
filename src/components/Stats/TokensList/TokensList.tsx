@@ -1,19 +1,18 @@
-import { BN } from '@project-serum/anchor'
-import TokenListItem from '../TokenListItem/TokenListItem'
-import React, { useState } from 'react'
+import TokenListItem, { SortType } from '../TokenListItem/TokenListItem'
+import React, { useEffect, useMemo, useState } from 'react'
 import { PaginationList } from '@components/Pagination/Pagination'
-import { Grid } from '@material-ui/core'
+import { Grid, useMediaQuery } from '@material-ui/core'
+import { theme } from '@static/theme'
 import useStyles from './style'
 
 export interface ITokensListData {
   icon: string
   name: string
   symbol: string
-  price: BN
-  decimals: number
-  priceChange: string
-  volume: string
-  TVL: string
+  price: number
+  priceChange: number
+  volume: number
+  TVL: number
 }
 
 export interface ITokensList {
@@ -23,6 +22,47 @@ export interface ITokensList {
 const TokensList: React.FC<ITokensList> = ({ data }) => {
   const classes = useStyles()
   const [page, setPage] = useState(1)
+  const [sortType, setSortType] = React.useState(SortType.VOLUME_DESC)
+
+  const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
+
+  const sortedData = useMemo(() => {
+    switch (sortType) {
+      case SortType.NAME_ASC:
+        return data.sort((a, b) =>
+          isXsDown
+            ? a.symbol.localeCompare(b.symbol)
+            : `${a.name} (${a.symbol})`.localeCompare(`${b.name} (${b.symbol})`)
+        )
+      case SortType.NAME_DESC:
+        return data.sort((a, b) =>
+          isXsDown
+            ? b.symbol.localeCompare(a.symbol)
+            : `${b.name} (${b.symbol})`.localeCompare(`${a.name} (${a.symbol})`)
+        )
+      case SortType.PRICE_ASC:
+        return data.sort((a, b) => a.price - b.price)
+      case SortType.PRICE_DESC:
+        return data.sort((a, b) => b.price - a.price)
+      case SortType.CHANGE_ASC:
+        return data.sort((a, b) => a.priceChange - b.priceChange)
+      case SortType.CHANGE_DESC:
+        return data.sort((a, b) => b.priceChange - a.priceChange)
+      case SortType.VOLUME_ASC:
+        return data.sort((a, b) => a.volume - b.volume)
+      case SortType.VOLUME_DESC:
+        return data.sort((a, b) => b.volume - a.volume)
+      case SortType.TVL_ASC:
+        return data.sort((a, b) => a.TVL - b.TVL)
+      case SortType.TVL_DESC:
+        return data.sort((a, b) => b.TVL - a.TVL)
+    }
+  }, [data, sortType, isXsDown])
+
+  useEffect(() => {
+    setPage(1)
+  }, [data])
+
   const handleChangePagination = (page: number): void => {
     setPage(page)
   }
@@ -30,7 +70,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
     const page = currentPage || 1
     const perPage = 10
     const offset = (page - 1) * perPage
-    const paginatedItems = data.slice(offset).slice(0, 10)
+    const paginatedItems = sortedData.slice(offset).slice(0, 10)
     const totalPages = Math.ceil(data.length / perPage)
 
     return {
@@ -40,19 +80,18 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
     }
   }
   return (
-    <Grid classes={{ root: classes.container }}>
-      <TokenListItem displayType='header' />
+    <Grid container direction='column' classes={{ root: classes.container }} wrap='nowrap'>
+      <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />
       {paginator(page).data.map((token, index) => {
         return (
           <TokenListItem
             key={index}
             displayType='tokens'
-            itemNumber={index + 1}
+            itemNumber={index + 1 + (page - 1) * 10}
             icon={token.icon}
             name={token.name}
             symbol={token.symbol}
             price={token.price}
-            decimals={token.decimals}
             priceChange={token.priceChange}
             volume={token.volume}
             TVL={token.TVL}
@@ -61,10 +100,10 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
       })}
       <Grid className={classes.pagination}>
         <PaginationList
-          pages={Math.ceil(data.length / 7)}
+          pages={Math.ceil(data.length / 10)}
           defaultPage={1}
           handleChangePage={handleChangePagination}
-          variant='center'
+          variant='flex-end'
         />
       </Grid>
     </Grid>
