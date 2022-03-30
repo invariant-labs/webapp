@@ -9,4 +9,5 @@ lint:
     - prettier@2.4.1
   ignore:
     - linters: [gitleaks]
-      paths: src/store/consts/tokenLists/**
+      paths:
+      - src/store/consts/tokenLists/**
