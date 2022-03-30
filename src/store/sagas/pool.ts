@@ -55,7 +55,7 @@ export function* fetchPoolsDataForPositions(action: PayloadAction<string[]>) {
   const allTokens = yield* select(tokens)
   const unknownTokens = new Set<PublicKey>()
 
-  newPools.forEach((pool) => {
+  newPools.forEach(pool => {
     if (!allTokens[pool.tokenX.toString()]) {
       unknownTokens.add(pool.tokenX)
     }

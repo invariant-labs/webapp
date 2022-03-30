@@ -249,7 +249,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
       <AddTokenModal
         open={isAddOpen}
         handleClose={() => setIsAddOpen(false)}
-        addToken={(address) => {
+        addToken={address => {
           handleAddToken(address)
           setIsAddOpen(false)
         }}
