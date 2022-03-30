@@ -39,8 +39,8 @@ const MarketEvents = () => {
               .map((address: string) => new PublicKey(address))
           : []
 
-      const lastTokenFrom = localStorage.getItem('INVARIANT_LAST_TOKEN_FROM')
-      const lastTokenTo = localStorage.getItem('INVARIANT_LAST_TOKEN_TO')
+      const lastTokenFrom = localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`)
+      const lastTokenTo = localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`)
 
       if (
         lastTokenFrom !== null &&

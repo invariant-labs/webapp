@@ -61,8 +61,8 @@ export const WrappedSwap = () => {
       )
     }
   }, [isFetchingNewPool])
-  const lastTokenFrom = localStorage.getItem('INVARIANT_LAST_TOKEN_FROM')
-  const lastTokenTo = localStorage.getItem('INVARIANT_LAST_TOKEN_TO')
+  const lastTokenFrom = localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`)
+  const lastTokenTo = localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`)
 
   const initialTokenFromIndex =
     lastTokenFrom === null
@@ -115,8 +115,8 @@ export const WrappedSwap = () => {
       onSetPair={(tokenFrom, tokenTo) => {
         setTokenFrom(tokenFrom)
         setTokenTo(tokenTo)
-        localStorage.setItem('INVARIANT_LAST_TOKEN_FROM', tokenFrom.toString())
-        localStorage.setItem('INVARIANT_LAST_TOKEN_TO', tokenTo.toString())
+        localStorage.setItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`, tokenFrom.toString())
+        localStorage.setItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`, tokenTo.toString())
         if (!tokenFrom.equals(tokenTo)) {
           dispatch(
             poolsActions.getAllPoolsForPairData({
