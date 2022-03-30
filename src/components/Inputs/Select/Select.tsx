@@ -65,7 +65,7 @@ export const Select: React.FC<ISelectModal> = ({
         }}
         disableRipple>
         <span style={{ whiteSpace: 'nowrap' }} className={classes.tokenName}>
-          {sliceName && displayName.length > 8 ? displayName.slice(0, 8) + '...' : displayName}
+          {sliceName && displayName.length > 10 ? displayName.slice(0, 8) + '...' : displayName}
         </span>
       </Button>
       <SelectTokenModal
