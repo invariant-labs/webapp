@@ -78,7 +78,7 @@ export const FarmTile: React.FC<IFarm> = ({
         <Typography className={classes.label}>Liquidity:</Typography>
         <Typography className={classes.value}>${liquidity.toLocaleString('fr-FR')}</Typography>
       </Grid>
-      <Link className={classes.link} to={`/farms/${farmId}`}>
+      <Link className={classes.link} to={`/farm/${farmId}`}>
         <OutlinedButton className={classes.button} disabled={!isActive} name='Stake' />
       </Link>
     </Grid>

@@ -47,7 +47,8 @@ export const Header: React.FC<IHeader> = ({
   const routes = ['swap', 'pool', 'stats', 'farms']
 
   const otherRoutesToHighlight: Record<string, RegExp[]> = {
-    pool: [/^newPosition$/, /^position\/*/]
+    pool: [/^newPosition$/, /^position\/*/],
+    farms: [/^farms$/, /^farm\/*/]
   }
 
   const [activePath, setActive] = React.useState(landing)
