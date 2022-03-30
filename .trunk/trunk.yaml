@@ -10,4 +10,4 @@ lint:
   ignore:
     - linters: [gitleaks]
       paths:
-      - src/store/consts/tokenLists/**
+        - src/store/consts/tokenLists/**
