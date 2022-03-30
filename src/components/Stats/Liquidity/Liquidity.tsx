@@ -26,13 +26,6 @@ const Liquidity: React.FC<LiquidityInterface> = ({
 
   const isLower = liquidityPercent < 0
 
-  console.log(
-    data.map(({ timestamp, value }) => ({
-      x: new Date(timestamp),
-      y: value
-    }))
-  )
-
   return (
     <Grid className={classNames(classes.container, className)}>
       <Grid className={classes.liquidityContainer}>
