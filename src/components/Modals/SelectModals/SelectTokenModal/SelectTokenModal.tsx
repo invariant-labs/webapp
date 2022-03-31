@@ -7,7 +7,8 @@ import {
   Box,
   Button,
   FormControlLabel,
-  Checkbox
+  Checkbox,
+  useMediaQuery
 } from '@material-ui/core'
 import CustomScrollbar from '../CustomScrollbar'
 import searchIcon from '@static/svg/lupa.svg'
@@ -18,6 +19,7 @@ import AddTokenModal from '@components/Modals/AddTokenModal/AddTokenModal'
 import useStyles from '../style'
 import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
+import { theme } from '@static/theme'
 
 export interface ISelectTokenModal {
   tokens: SwapToken[]
@@ -78,6 +80,8 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   handleAddToken
 }) => {
   const classes = useStyles()
+  const isXs = useMediaQuery(theme.breakpoints.down('xs'))
+
   const [value, setValue] = useState<string>('')
 
   const [isAddOpen, setIsAddOpen] = useState(false)
@@ -227,7 +231,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
           <Box className={classes.tokenList}>
             <List
               height={352}
-              width={371}
+              width={360}
               itemSize={66}
               itemCount={filteredTokens.length}
               outerElementType={CustomScrollbarsVirtualList}
@@ -241,7 +245,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                     className={classes.tokenItem}
                     style={{
                       ...style,
-                      width: 370,
+                      width: '90%',
                       height: 40
                     }}
                     alignItems='center'
@@ -255,8 +259,8 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                     <Grid container className={classes.tokenContainer}>
                       <Typography className={classes.tokenName}>{token.symbol}</Typography>
                       <Typography className={classes.tokenDescrpiption}>
-                        {token.name.slice(0, 30)}
-                        {token.name.length > 30 ? '...' : ''}
+                        {token.name.slice(0, isXs ? 20 : 30)}
+                        {token.name.length > (isXs ? 20 : 30) ? '...' : ''}
                       </Typography>
                     </Grid>
                     {!hideBalances && Number(tokenBalance) > 0 ? (
