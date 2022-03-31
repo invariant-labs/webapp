@@ -775,10 +775,7 @@ export const determinePositionTokenBlock = (
   return PositionTokenBlock.None
 }
 
-export const generateUnknownTokenDataObject = (
-  address: PublicKey,
-  decimals: number
-): Token => ({
+export const generateUnknownTokenDataObject = (address: PublicKey, decimals: number): Token => ({
   address,
   decimals,
   symbol: `${address.toString().slice(0, 4)}...${address.toString().slice(-4)}`,
