@@ -18,6 +18,7 @@ export interface Token {
   name: string
   logoURI: string
   coingeckoId?: string
+  isUnknown?: boolean
 }
 export const PRICE_DECIMAL = 24
 export const USDC_DEV: Token = {

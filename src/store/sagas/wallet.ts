@@ -88,7 +88,8 @@ export function* fetchTokensAccounts(): Generator {
         symbol: `${info.mint.slice(0, 4)}...${info.mint.slice(-4)}`,
         decimals: info.tokenAmount.decimals,
         address: new PublicKey(info.mint),
-        logoURI: '/unknownToken.svg'
+        logoURI: '/unknownToken.svg',
+        isUnknown: true
       }
     }
   }
@@ -259,7 +260,8 @@ export function* createAccount(tokenAddress: PublicKey): SagaGenerator<PublicKey
           symbol: `${tokenAddress.toString().slice(0, 4)}...${tokenAddress.toString().slice(-4)}`,
           decimals: token.decimals,
           address: tokenAddress,
-          logoURI: '/unknownToken.svg'
+          logoURI: '/unknownToken.svg',
+          isUnknown: true
         }
       })
     )
@@ -320,7 +322,8 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
           .slice(-4)}`,
         decimals: token.decimals,
         address: tokenAddress[index],
-        logoURI: '/unknownToken.svg'
+        logoURI: '/unknownToken.svg',
+        isUnknown: true
       }
     }
   }

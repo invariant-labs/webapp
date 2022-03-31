@@ -776,7 +776,6 @@ export const determinePositionTokenBlock = (
 }
 
 export const generateUnknownTokenDataObject = (
-  // prepared already here in case when new tokens will be added on branch with full list, but these tokens won't be available on master deploy
   address: PublicKey,
   decimals: number
 ): Token => ({
@@ -784,7 +783,8 @@ export const generateUnknownTokenDataObject = (
   decimals,
   symbol: `${address.toString().slice(0, 4)}...${address.toString().slice(-4)}`,
   name: address.toString(),
-  logoURI: '/unknownToken.svg'
+  logoURI: '/unknownToken.svg',
+  isUnknown: true
 })
 
 export const getFullNewTokensData = async (
