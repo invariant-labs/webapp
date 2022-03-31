@@ -54,6 +54,7 @@ export interface SwapToken {
   assetAddress: PublicKey
   name: string
   logoURI: string
+  isUnknown?: boolean
 }
 
 export const swapTokens = createSelector(

@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '20px 24px'
   },
   popover: {
-    marginTop: 'calc(50vh - 258px)',
+    marginTop: 'calc(50vh - 350px)',
     marginLeft: 'calc(50vw - 241px)',
     [theme.breakpoints.down('xs')]: {
       display: 'flex',

@@ -1,5 +1,14 @@
 import React, { useMemo, useState, useRef, useCallback } from 'react'
-import { Typography, Popover, Grid, CardMedia, Box, Button } from '@material-ui/core'
+import {
+  Typography,
+  Popover,
+  Grid,
+  CardMedia,
+  Box,
+  Button,
+  FormControlLabel,
+  Checkbox
+} from '@material-ui/core'
 import CustomScrollbar from '../CustomScrollbar'
 import searchIcon from '@static/svg/lupa.svg'
 import { FixedSizeList as List } from 'react-window'
@@ -72,6 +81,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   const [value, setValue] = useState<string>('')
 
   const [isAddOpen, setIsAddOpen] = useState(false)
+  const [hideUnknown, setHideUnknown] = useState(false)
 
   const outerRef = useRef<HTMLElement>(null)
 
@@ -88,25 +98,25 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
     [tokensWithIndexes, commonTokens]
   )
 
-  const filteredTokens = useMemo(
-    () =>
-      tokensWithIndexes
-        .filter(token => {
-          return (
-            token.symbol.toLowerCase().includes(value) || token.name.toLowerCase().includes(value)
-          )
-        })
-        .sort((a, b) => {
-          const aBalance = +printBN(a.balance, a.decimals)
-          const bBalance = +printBN(b.balance, b.decimals)
-          if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
-            return a.symbol.localeCompare(b.symbol)
-          }
+  const filteredTokens = useMemo(() => {
+    const list = tokensWithIndexes
+      .filter(token => {
+        return (
+          token.symbol.toLowerCase().includes(value) || token.name.toLowerCase().includes(value)
+        )
+      })
+      .sort((a, b) => {
+        const aBalance = +printBN(a.balance, a.decimals)
+        const bBalance = +printBN(b.balance, b.decimals)
+        if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
+          return a.symbol.localeCompare(b.symbol)
+        }
 
-          return aBalance === 0 ? 1 : -1
-        }),
-    [value, tokensWithIndexes]
-  )
+        return aBalance === 0 ? 1 : -1
+      })
+
+    return hideUnknown ? list.filter(token => !token.isUnknown) : list
+  }, [value, tokensWithIndexes])
 
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value.toLowerCase())
@@ -185,7 +195,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
             </Grid>
             <AddCircleOutlineIcon className={classes.addIcon} onClick={() => setIsAddOpen(true)} />
           </Grid>
-          <Grid container className={classes.commonTokens}>
+          <Grid container>
             <Grid className={classes.commonTokensList}>
               {commonTokensList.map(token => (
                 <Box
@@ -201,6 +211,18 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                 </Box>
               ))}
             </Grid>
+          </Grid>
+          <Grid container>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={hideUnknown}
+                  onChange={e => setHideUnknown(e.target.checked)}
+                  name='hideUnknown'
+                />
+              }
+              label='Hide unknown tokens'
+            />
           </Grid>
           <Box className={classes.tokenList}>
             <List

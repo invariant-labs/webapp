@@ -3,7 +3,7 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   popover: {
-    marginTop: 'calc(50vh - 258px)',
+    marginTop: 'calc(50vh - 350px)',
     marginLeft: 'calc(50vw - 231px)',
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
@@ -77,9 +77,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 26,
     right: '12px',
     top: '14px'
-  },
-  commonTokens: {
-    paddingBottom: 14
   },
   commonTokensHeader: {
     ...typography.body2
