@@ -14,9 +14,16 @@ import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { actions as poolsActions } from '@reducers/pools'
 import { PublicKey } from '@solana/web3.js'
 import { actions as walletActions } from '@reducers/solanaWallet'
+import { getCurrentSolanaConnection } from '@web3/connection'
+import { addNewTokenToLocalStorage, getFullNewTokensData } from '@consts/utils'
+import { network } from '@selectors/solanaConnection'
+import { commonTokensForNetworks } from '@consts/static'
 
 export const WrappedSwap = () => {
   const dispatch = useDispatch()
+
+  const connection = getCurrentSolanaConnection()
+
   const walletStatus = useSelector(status)
   const swap = useSelector(swapPool)
   const tickmap = useSelector(tickMaps)
@@ -25,6 +32,7 @@ export const WrappedSwap = () => {
   const tokensList = useSelector(swapTokens)
   const { success, inProgress } = useSelector(swapPool)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
+  const networkType = useSelector(network)
 
   const [progress, setProgress] = useState<ProgressState>('none')
   const [tokenFrom, setTokenFrom] = useState<PublicKey | null>(null)
@@ -54,8 +62,8 @@ export const WrappedSwap = () => {
       )
     }
   }, [isFetchingNewPool])
-  const lastTokenFrom = localStorage.getItem('INVARIANT_LAST_TOKEN_FROM')
-  const lastTokenTo = localStorage.getItem('INVARIANT_LAST_TOKEN_TO')
+  const lastTokenFrom = localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`)
+  const lastTokenTo = localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`)
 
   const initialTokenFromIndex =
     lastTokenFrom === null
@@ -65,6 +73,22 @@ export const WrappedSwap = () => {
     lastTokenTo === null
       ? null
       : tokensList.findIndex(token => token.assetAddress.equals(new PublicKey(lastTokenTo)))
+
+  const addTokenHandler = (address: string) => {
+    if (
+      connection !== null &&
+      tokensList.findIndex(token => token.address.equals(new PublicKey(address))) === -1
+    ) {
+      getFullNewTokensData([new PublicKey(address)], connection)
+        .then(data => {
+          dispatch(poolsActions.addTokens(data))
+          addNewTokenToLocalStorage(address, networkType)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+  }
 
   return (
     <Swap
@@ -95,8 +119,8 @@ export const WrappedSwap = () => {
       onSetPair={(tokenFrom, tokenTo) => {
         setTokenFrom(tokenFrom)
         setTokenTo(tokenTo)
-        localStorage.setItem('INVARIANT_LAST_TOKEN_FROM', tokenFrom.toString())
-        localStorage.setItem('INVARIANT_LAST_TOKEN_TO', tokenTo.toString())
+        localStorage.setItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`, tokenFrom.toString())
+        localStorage.setItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`, tokenTo.toString())
         if (!tokenFrom.equals(tokenTo)) {
           dispatch(
             poolsActions.getAllPoolsForPairData({
@@ -122,6 +146,8 @@ export const WrappedSwap = () => {
       tickmap={tickmap}
       initialTokenFromIndex={initialTokenFromIndex === -1 ? null : initialTokenFromIndex}
       initialTokenToIndex={initialTokenToIndex === -1 ? null : initialTokenToIndex}
+      handleAddToken={addTokenHandler}
+      commonTokens={commonTokensForNetworks[networkType]}
     />
   )
 }

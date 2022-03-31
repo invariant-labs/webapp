@@ -73,6 +73,8 @@ export interface INewPosition {
   currentPriceSqrt: BN
   canCreateNewPool: boolean
   canCreateNewPosition: boolean
+  handleAddToken: (address: string) => void
+  commonTokens: PublicKey[]
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -101,7 +103,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   onDiscreteChange,
   currentPriceSqrt,
   canCreateNewPool,
-  canCreateNewPosition
+  canCreateNewPosition,
+  handleAddToken,
+  commonTokens
 }) => {
   const classes = useStyles()
 
@@ -404,6 +408,8 @@ export const NewPosition: React.FC<INewPosition> = ({
           bestTierIndex={bestTierIndex}
           canCreateNewPool={canCreateNewPool}
           canCreateNewPosition={canCreateNewPosition}
+          handleAddToken={handleAddToken}
+          commonTokens={commonTokens}
         />
 
         {isCurrentPoolExisting ||

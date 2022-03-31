@@ -47,9 +47,15 @@ storiesOf('Inputs/select', module)
     <div style={{ backgroundColor: colors.invariant.component, padding: '100px' }}>
       <Select
         current={null}
+        commonTokens={[
+          new PublicKey('So11111111111111111111111111111111111111112'),
+          new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+          new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
+        ]}
         name='Select a token'
         tokens={tokens}
         onSelect={index => action(`chosen index: ${index}`)()}
+        handleAddToken={() => {}}
       />
     </div>
   ))
@@ -57,9 +63,15 @@ storiesOf('Inputs/select', module)
     <div style={{ backgroundColor: colors.invariant.component, padding: '100px' }}>
       <Select
         current={tokens[0]}
+        commonTokens={[
+          new PublicKey('So11111111111111111111111111111111111111112'),
+          new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+          new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
+        ]}
         name='Select a token'
         tokens={tokens}
         onSelect={index => action(`chosen index: ${index}`)()}
+        handleAddToken={() => {}}
       />
     </div>
   ))

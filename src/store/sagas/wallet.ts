@@ -29,9 +29,17 @@ import { WalletAdapter } from '@web3/adapters/types'
 import { getTokenDetails } from './token'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { accounts, address, status } from '@selectors/solanaWallet'
-import { airdropQuantities, airdropTokens, DEFAULT_PUBLICKEY } from '@consts/static'
+import {
+  airdropQuantities,
+  airdropTokens,
+  DEFAULT_PUBLICKEY,
+  Token as StoreToken
+} from '@consts/static'
 import airdropAdmin from '@consts/airdropAdmin'
 import { network } from '@selectors/solanaConnection'
+import { tokens } from '@selectors/pools'
+import { actions as poolsActions } from '@reducers/pools'
+
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
   return wallet
@@ -61,6 +69,8 @@ export function* fetchTokensAccounts(): Generator {
       programId: TOKEN_PROGRAM_ID
     }
   )
+  const allTokens = yield* select(tokens)
+  const unknownTokens: Record<string, StoreToken> = {}
   for (const account of tokensAccounts.value) {
     const info: IparsedTokenInfo = account.account.data.parsed.info
     yield* put(
@@ -71,7 +81,20 @@ export function* fetchTokensAccounts(): Generator {
         decimals: info.tokenAmount.decimals
       })
     )
+
+    if (!allTokens[info.mint]) {
+      unknownTokens[info.mint] = {
+        name: info.mint,
+        symbol: `${info.mint.slice(0, 4)}...${info.mint.slice(-4)}`,
+        decimals: info.tokenAmount.decimals,
+        address: new PublicKey(info.mint),
+        logoURI: '/unknownToken.svg',
+        isUnknown: true
+      }
+    }
   }
+
+  yield* put(poolsActions.addTokens(unknownTokens))
 }
 
 export function* getToken(tokenAddress: PublicKey): SagaGenerator<Token> {
@@ -228,6 +251,21 @@ export function* createAccount(tokenAddress: PublicKey): SagaGenerator<PublicKey
       decimals: token.decimals
     })
   )
+  const allTokens = yield* select(tokens)
+  if (!allTokens[tokenAddress.toString()]) {
+    yield* put(
+      poolsActions.addTokens({
+        [tokenAddress.toString()]: {
+          name: tokenAddress.toString(),
+          symbol: `${tokenAddress.toString().slice(0, 4)}...${tokenAddress.toString().slice(-4)}`,
+          decimals: token.decimals,
+          address: tokenAddress,
+          logoURI: '/unknownToken.svg',
+          isUnknown: true
+        }
+      })
+    )
+  }
   yield* call(sleep, 1000) // Give time to subscribe to new token
   return associatedAccount
 }
@@ -261,6 +299,8 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
     wallet,
     ixs.reduce((tx, ix) => tx.add(ix), new Transaction())
   )
+  const allTokens = yield* select(tokens)
+  const unknownTokens: Record<string, StoreToken> = {}
   for (const [index, address] of tokenAddress.entries()) {
     const token = yield* call(getTokenDetails, tokenAddress[index].toString())
     yield* put(
@@ -273,7 +313,23 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
     )
     // Give time to subscribe to new token
     yield* call(sleep, 1000)
+
+    if (!allTokens[tokenAddress[index].toString()]) {
+      unknownTokens[tokenAddress[index].toString()] = {
+        name: tokenAddress[index].toString(),
+        symbol: `${tokenAddress[index].toString().slice(0, 4)}...${tokenAddress[index]
+          .toString()
+          .slice(-4)}`,
+        decimals: token.decimals,
+        address: tokenAddress[index],
+        logoURI: '/unknownToken.svg',
+        isUnknown: true
+      }
+    }
   }
+
+  yield* put(poolsActions.addTokens(unknownTokens))
+
   return associatedAccs
 }
 

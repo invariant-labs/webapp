@@ -362,19 +362,17 @@ export const createPlaceholderLiquidityPlot = (
 }
 
 export const getNetworkTokensList = (networkType: NetworkType): Record<string, Token> => {
+  const obj: Record<string, Token> = {}
   switch (networkType) {
     case NetworkType.MAINNET:
-      return mainnetList.reduce(
-        (all, token) => ({
-          ...all,
-          [token.address]: {
-            ...token,
-            address: new PublicKey(token.address),
-            coingeckoId: token?.extensions?.coingeckoId
-          }
-        }),
-        {}
-      )
+      mainnetList.forEach(token => {
+        obj[token.address] = {
+          ...token,
+          address: new PublicKey(token.address),
+          coingeckoId: token?.extensions?.coingeckoId
+        }
+      })
+      return obj
     case NetworkType.DEVNET:
       return {
         [USDC_DEV.address.toString()]: USDC_DEV,
@@ -668,7 +666,10 @@ export const getCoingeckoPricesData = async (
   const requests: Array<Promise<AxiosResponse<CoingeckoApiPriceData[]>>> = []
   for (let i = 0; i < ids.length; i += 250) {
     const idsSlice = ids.slice(i, i + 250)
-    const idsList = idsSlice.reduce((acc, id, index) => acc + id + (index < 249 ? ',' : ''), '')
+    let idsList = ''
+    idsSlice.forEach((id, index) => {
+      idsList += id + (index < 249 ? ',' : '')
+    })
     requests.push(
       axios.get<CoingeckoApiPriceData[]>(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsList}&per_page=250`
@@ -677,9 +678,12 @@ export const getCoingeckoPricesData = async (
   }
 
   return await Promise.all(requests).then(responses => {
-    const concatRes: CoingeckoApiPriceData[] = responses
+    let concatRes: CoingeckoApiPriceData[] = []
+    responses
       .map(res => res.data)
-      .reduce((acc, data) => [...acc, ...data], [])
+      .forEach(data => {
+        concatRes = [...concatRes, ...data]
+      })
 
     const data: Record<string, CoingeckoPriceData> = {}
 
@@ -771,16 +775,13 @@ export const determinePositionTokenBlock = (
   return PositionTokenBlock.None
 }
 
-export const generateUnknownTokenDataObject = (
-  // prepared already here in case when new tokens will be added on branch with full list, but these tokens won't be available on master deploy
-  address: PublicKey,
-  decimals: number
-): Token => ({
+export const generateUnknownTokenDataObject = (address: PublicKey, decimals: number): Token => ({
   address,
   decimals,
   symbol: `${address.toString().slice(0, 4)}...${address.toString().slice(-4)}`,
   name: address.toString(),
-  logoURI: '/unknownToken.svg'
+  logoURI: '/unknownToken.svg',
+  isUnknown: true
 })
 
 export const getFullNewTokensData = async (
@@ -791,16 +792,26 @@ export const getFullNewTokensData = async (
     .map(address => new SPLToken(connection, address, TOKEN_PROGRAM_ID, new Keypair()))
     .map(async token => await token.getMintInfo())
 
-  return await Promise.allSettled(promises).then(results =>
-    results.reduce(
-      (acc, result, index) => ({
-        ...acc,
-        [addresses[index].toString()]: generateUnknownTokenDataObject(
-          addresses[index],
-          result.status === 'fulfilled' ? result.value.decimals : 6
-        )
-      }),
-      {}
-    )
+  const tokens: Record<string, Token> = {}
+
+  await Promise.allSettled(promises).then(results =>
+    results.forEach((result, index) => {
+      tokens[addresses[index].toString()] = generateUnknownTokenDataObject(
+        addresses[index],
+        result.status === 'fulfilled' ? result.value.decimals : 6
+      )
+    })
   )
+
+  return tokens
+}
+
+export const addNewTokenToLocalStorage = (address: string, network: NetworkType) => {
+  const currentListStr = localStorage.getItem(`CUSTOM_TOKENS_${network}`)
+
+  const currentList = currentListStr !== null ? JSON.parse(currentListStr) : []
+
+  currentList.push(address)
+
+  localStorage.setItem(`CUSTOM_TOKENS_${network}`, JSON.stringify([...new Set(currentList)]))
 }

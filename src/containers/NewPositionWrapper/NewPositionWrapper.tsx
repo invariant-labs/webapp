@@ -4,13 +4,20 @@ import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
 import { swapTokens, status, canCreateNewPool, canCreateNewPosition } from '@selectors/solanaWallet'
 import { DECIMAL, FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
+import {
+  addNewTokenToLocalStorage,
+  calcPrice,
+  calcYPerXPrice,
+  createPlaceholderLiquidityPlot,
+  getFullNewTokensData,
+  printBN
+} from '@consts/utils'
 import { isLoadingLatestPoolsForTransaction, poolsArraySortedByFees } from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { initPosition, plotTicks } from '@selectors/positions'
 import { BN } from '@project-serum/anchor'
-import { bestTiers } from '@consts/static'
+import { bestTiers, commonTokensForNetworks } from '@consts/static'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
@@ -18,9 +25,13 @@ import { calculatePriceSqrt, Pair } from '@invariant-labs/sdk'
 import { feeToTickSpacing } from '@invariant-labs/sdk/src/utils'
 import { actions as poolsActions } from '@reducers/pools'
 import { network } from '@selectors/solanaConnection'
+import { getCurrentSolanaConnection } from '@web3/connection'
+import { PublicKey } from '@solana/web3.js'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
+
+  const connection = getCurrentSolanaConnection()
 
   const tokens = useSelector(swapTokens)
   const walletStatus = useSelector(status)
@@ -193,6 +204,22 @@ export const NewPositionWrapper = () => {
 
   const setIsDiscreteValue = (val: boolean) => {
     localStorage.setItem('IS_PLOT_DISCRETE', val ? 'true' : 'false')
+  }
+
+  const addTokenHandler = (address: string) => {
+    if (
+      connection !== null &&
+      tokens.findIndex(token => token.address.equals(new PublicKey(address))) === -1
+    ) {
+      getFullNewTokensData([new PublicKey(address)], connection)
+        .then(data => {
+          dispatch(poolsActions.addTokens(data))
+          addNewTokenToLocalStorage(address, currentNetwork)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
   }
 
   return (
@@ -375,6 +402,8 @@ export const NewPositionWrapper = () => {
       }
       canCreateNewPool={canUserCreateNewPool}
       canCreateNewPosition={canUserCreateNewPosition}
+      handleAddToken={addTokenHandler}
+      commonTokens={commonTokensForNetworks[currentNetwork]}
     />
   )
 }

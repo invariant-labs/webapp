@@ -133,13 +133,10 @@ export function* getStats(): Generator {
       Object.keys(data).map(addr => new PublicKey(addr)),
       marketProgram
     )
-    const poolsDataObject: Record<string, PoolWithAddress> = allPoolsData.reduce(
-      (acc, pool) => ({
-        ...acc,
-        [pool.address.toString()]: pool
-      }),
-      {}
-    )
+    const poolsDataObject: Record<string, PoolWithAddress> = {}
+    allPoolsData.forEach(pool => {
+      poolsDataObject[pool.address.toString()] = pool
+    })
 
     let allTokens = yield* select(tokens)
 
@@ -159,16 +156,12 @@ export function* getStats(): Generator {
     yield* put(poolsActions.addTokens(newTokens))
     allTokens = yield* select(tokens)
 
-    const coingeckoTokens: Record<string, Required<Token>> = Object.entries(allTokens).reduce(
-      (acc, [key, val]) =>
-        typeof val.coingeckoId !== 'undefined'
-          ? {
-              ...acc,
-              [key]: val
-            }
-          : acc,
-      {}
-    )
+    const coingeckoTokens: Record<string, Required<Token>> = {}
+    Object.entries(allTokens).forEach(([key, val]) => {
+      if (typeof val.coingeckoId !== 'undefined') {
+        coingeckoTokens[key] = val as Required<Token>
+      }
+    })
     const coingeckoPricesData = yield* call(
       getCoingeckoPricesData,
       Object.values(coingeckoTokens).map(token => token.coingeckoId)
