@@ -209,7 +209,7 @@ export const NewPositionWrapper = () => {
   const addTokenHandler = (address: string) => {
     if (
       connection !== null &&
-      tokens.findIndex(token => token.address.equals(new PublicKey(address))) !== -1
+      tokens.findIndex(token => token.address.equals(new PublicKey(address))) === -1
     ) {
       getFullNewTokensData([new PublicKey(address)], connection)
         .then(data => {

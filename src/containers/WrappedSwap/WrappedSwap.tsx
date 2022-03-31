@@ -77,7 +77,7 @@ export const WrappedSwap = () => {
   const addTokenHandler = (address: string) => {
     if (
       connection !== null &&
-      tokensList.findIndex(token => token.address.equals(new PublicKey(address))) !== -1
+      tokensList.findIndex(token => token.address.equals(new PublicKey(address))) === -1
     ) {
       getFullNewTokensData([new PublicKey(address)], connection)
         .then(data => {
