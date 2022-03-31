@@ -164,6 +164,12 @@ storiesOf('newUi/swap', module)
         initialTokenFromIndex={null}
         initialTokenToIndex={null}
         tickmap={{}}
+        handleAddToken={() => {}}
+        commonTokens={[
+          new PublicKey('So11111111111111111111111111111111111111112'),
+          new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+          new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
+        ]}
       />
     </div>
   ))
