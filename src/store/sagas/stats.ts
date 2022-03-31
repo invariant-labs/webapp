@@ -215,7 +215,7 @@ export function* getStats(): Generator {
         tokensDataObject[poolsDataObject[address].tokenY.toString()] = {
           address: poolsDataObject[address].tokenY,
           price: coingeckoPricesData?.[coingeckoYId]?.price ?? 0,
-          priceChange: coingeckoPricesData?.[coingeckoXId]?.priceChange ?? 0,
+          priceChange: coingeckoPricesData?.[coingeckoYId]?.priceChange ?? 0,
           volume24: 0,
           tvl: 0
         }
