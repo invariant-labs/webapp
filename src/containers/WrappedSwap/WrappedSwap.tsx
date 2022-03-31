@@ -75,7 +75,10 @@ export const WrappedSwap = () => {
       : tokensList.findIndex(token => token.assetAddress.equals(new PublicKey(lastTokenTo)))
 
   const addTokenHandler = (address: string) => {
-    if (connection !== null) {
+    if (
+      connection !== null &&
+      tokensList.findIndex(token => token.address.equals(new PublicKey(address))) !== -1
+    ) {
       getFullNewTokensData([new PublicKey(address)], connection)
         .then(data => {
           dispatch(poolsActions.addTokens(data))

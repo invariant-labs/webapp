@@ -250,17 +250,20 @@ export function* createAccount(tokenAddress: PublicKey): SagaGenerator<PublicKey
       decimals: token.decimals
     })
   )
-  yield* put(
-    poolsActions.addTokens({
-      [tokenAddress.toString()]: {
-        name: tokenAddress.toString(),
-        symbol: `${tokenAddress.toString().slice(0, 4)}...${tokenAddress.toString().slice(-4)}`,
-        decimals: token.decimals,
-        address: tokenAddress,
-        logoURI: '/unknownToken.svg'
-      }
-    })
-  )
+  const allTokens = yield* select(tokens)
+  if (!allTokens[tokenAddress.toString()]) {
+    yield* put(
+      poolsActions.addTokens({
+        [tokenAddress.toString()]: {
+          name: tokenAddress.toString(),
+          symbol: `${tokenAddress.toString().slice(0, 4)}...${tokenAddress.toString().slice(-4)}`,
+          decimals: token.decimals,
+          address: tokenAddress,
+          logoURI: '/unknownToken.svg'
+        }
+      })
+    )
+  }
   yield* call(sleep, 1000) // Give time to subscribe to new token
   return associatedAccount
 }
@@ -294,6 +297,7 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
     wallet,
     ixs.reduce((tx, ix) => tx.add(ix), new Transaction())
   )
+  const allTokens = yield* select(tokens)
   const unknownTokens: Record<string, StoreToken> = {}
   for (const [index, address] of tokenAddress.entries()) {
     const token = yield* call(getTokenDetails, tokenAddress[index].toString())
@@ -308,14 +312,16 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
     // Give time to subscribe to new token
     yield* call(sleep, 1000)
 
-    unknownTokens[tokenAddress[index].toString()] = {
-      name: tokenAddress[index].toString(),
-      symbol: `${tokenAddress[index].toString().slice(0, 4)}...${tokenAddress[index]
-        .toString()
-        .slice(-4)}`,
-      decimals: token.decimals,
-      address: tokenAddress[index],
-      logoURI: '/unknownToken.svg'
+    if (!allTokens[tokenAddress[index].toString()]) {
+      unknownTokens[tokenAddress[index].toString()] = {
+        name: tokenAddress[index].toString(),
+        symbol: `${tokenAddress[index].toString().slice(0, 4)}...${tokenAddress[index]
+          .toString()
+          .slice(-4)}`,
+        decimals: token.decimals,
+        address: tokenAddress[index],
+        logoURI: '/unknownToken.svg'
+      }
     }
   }
 
