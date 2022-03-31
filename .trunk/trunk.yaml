@@ -8,6 +8,6 @@ lint:
     - gitleaks@7.6.1
     - prettier@2.4.1
   ignore:
-    - linters: [gitleaks]
+    - linters: [gitleaks, prettier]
       paths:
         - src/store/consts/tokenLists/**
