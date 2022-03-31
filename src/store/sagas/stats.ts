@@ -3,13 +3,10 @@ import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { network } from '@selectors/solanaConnection'
 import {
   getCoingeckoPricesData,
-  getCoingeckoPricesHistory,
   getFullNewTokensData,
   getNetworkStats,
   getPoolsFromAdresses,
-  PoolSnapshot,
-  printBN,
-  printBNtoBN
+  printBN
 } from '@consts/utils'
 import { tokens } from '@selectors/pools'
 import { PublicKey } from '@solana/web3.js'
@@ -17,108 +14,7 @@ import { getMarketProgram } from '@web3/programs/amm'
 import { PoolWithAddress, actions as poolsActions } from '@reducers/pools'
 import { Token } from '@consts/static'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { BN } from '@project-serum/anchor'
 import { getConnection } from './connection'
-
-interface Diff24 {
-  prev: number
-  current: number
-}
-
-const get24HValueDiffData = (
-  snapshots: PoolSnapshot[],
-  key: 'volumeX' | 'volumeY' | 'feeX' | 'feeY',
-  tokenDecimals: number,
-  tokenPriceHistory: Record<string, number>
-): Diff24 => {
-  if (!snapshots.length) {
-    return {
-      prev: 0,
-      current: 0
-    }
-  }
-
-  const lastSnapshot = snapshots[snapshots.length - 1]
-  const lastTimestamp = lastSnapshot.timestamp.toString()
-  const lastPrice = tokenPriceHistory[lastTimestamp]
-    ? printBNtoBN(tokenPriceHistory[lastTimestamp].toFixed(DECIMAL), DECIMAL)
-    : new BN(0)
-
-  let currentBN: BN
-  let prevBN: BN
-
-  if (snapshots.length > 1) {
-    const secondLastSnapshot = snapshots[snapshots.length - 2]
-    const secondLastTimestamp = secondLastSnapshot.timestamp.toString()
-    const secondLastPrice = tokenPriceHistory[secondLastTimestamp]
-      ? printBNtoBN(tokenPriceHistory[secondLastTimestamp].toFixed(DECIMAL), DECIMAL)
-      : new BN(0)
-
-    currentBN = new BN(lastSnapshot[key])
-      .sub(new BN(secondLastSnapshot[key]))
-      .mul(lastPrice)
-      .div(new BN(10 ** DECIMAL))
-
-    if (snapshots.length > 2) {
-      const thirdLastSnapshot = snapshots[snapshots.length - 3]
-
-      prevBN = new BN(secondLastSnapshot[key])
-        .sub(new BN(thirdLastSnapshot[key]))
-        .mul(secondLastPrice)
-        .div(new BN(10 ** DECIMAL))
-    } else {
-      prevBN = new BN(secondLastSnapshot[key]).mul(secondLastPrice).div(new BN(10 ** DECIMAL))
-    }
-  } else {
-    currentBN = new BN(lastSnapshot[key]).mul(lastPrice).div(new BN(10 ** DECIMAL))
-    prevBN = new BN(0)
-  }
-
-  return {
-    prev: +printBN(prevBN, tokenDecimals),
-    current: +printBN(currentBN, tokenDecimals)
-  }
-}
-
-const get24HLiquidityDiffData = (
-  snapshots: PoolSnapshot[],
-  key: 'liquidityX' | 'liquidityY',
-  tokenDecimals: number,
-  tokenPriceHistory: Record<string, number>
-): Diff24 => {
-  if (!snapshots.length) {
-    return {
-      prev: 0,
-      current: 0
-    }
-  }
-
-  const lastSnapshot = snapshots[snapshots.length - 1]
-  const lastTimestamp = lastSnapshot.timestamp
-  const lastPrice = tokenPriceHistory[lastTimestamp]
-    ? printBNtoBN(tokenPriceHistory[lastTimestamp].toFixed(DECIMAL), DECIMAL)
-    : new BN(0)
-
-  const currentBN: BN = new BN(lastSnapshot[key]).mul(lastPrice).div(new BN(10 ** DECIMAL))
-  let prevBN: BN
-
-  if (snapshots.length > 1) {
-    const secondLastSnapshot = snapshots[snapshots.length - 2]
-    const secondLastTimestamp = secondLastSnapshot.timestamp
-    const secondLastPrice = tokenPriceHistory[secondLastTimestamp]
-      ? printBNtoBN(tokenPriceHistory[secondLastTimestamp].toFixed(DECIMAL), DECIMAL)
-      : new BN(0)
-
-    prevBN = new BN(secondLastSnapshot[key]).mul(secondLastPrice).div(new BN(10 ** DECIMAL))
-  } else {
-    prevBN = new BN(0)
-  }
-
-  return {
-    prev: +printBN(prevBN, tokenDecimals),
-    current: +printBN(currentBN, tokenDecimals)
-  }
-}
 
 export function* getStats(): Generator {
   try {
@@ -166,7 +62,6 @@ export function* getStats(): Generator {
       getCoingeckoPricesData,
       Object.values(coingeckoTokens).map(token => token.coingeckoId)
     )
-    const coingeckoPricesHistory = yield* call(getCoingeckoPricesHistory)
 
     const volume24 = {
       value: 0,
@@ -235,74 +130,35 @@ export function* getStats(): Generator {
       const tokenX = allTokens[poolsDataObject[address].tokenX.toString()]
       const tokenY = allTokens[poolsDataObject[address].tokenY.toString()]
 
-      const { prev: prevVolumeX, current: currentVolumeX } = get24HValueDiffData(
-        snapshots,
-        'volumeX',
-        tokenX.decimals,
-        coingeckoPricesHistory?.[coingeckoXId] ?? {}
-      )
-      const { prev: prevVolumeY, current: currentVolumeY } = get24HValueDiffData(
-        snapshots,
-        'volumeY',
-        tokenY.decimals,
-        coingeckoPricesHistory?.[coingeckoYId] ?? {}
-      )
-      const { prev: prevFeeX, current: currentFeeX } = get24HValueDiffData(
-        snapshots,
-        'feeX',
-        tokenX.decimals,
-        coingeckoPricesHistory?.[coingeckoXId] ?? {}
-      )
-      const { prev: prevFeeY, current: currentFeeY } = get24HValueDiffData(
-        snapshots,
-        'feeY',
-        tokenY.decimals,
-        coingeckoPricesHistory?.[coingeckoYId] ?? {}
-      )
-      const { prev: prevLiquidityX, current: currentLiquidityX } = get24HLiquidityDiffData(
-        snapshots,
-        'liquidityX',
-        tokenX.decimals,
-        coingeckoPricesHistory?.[coingeckoXId] ?? {}
-      )
-      const { prev: prevLiquidityY, current: currentLiquidityY } = get24HLiquidityDiffData(
-        snapshots,
-        'liquidityY',
-        tokenY.decimals,
-        coingeckoPricesHistory?.[coingeckoYId] ?? {}
-      )
+      const lastSnapshot = snapshots[snapshots.length - 1]
 
-      volume24.value += currentVolumeX + currentVolumeY
-      fees24.value += currentFeeX + currentFeeY
-      tvl24.value += currentLiquidityX + currentLiquidityY
+      volume24.value += lastSnapshot.volumeX.usdValue24 + lastSnapshot.volumeY.usdValue24
+      fees24.value += lastSnapshot.feeX.usdValue24 + lastSnapshot.feeY.usdValue24
+      tvl24.value += lastSnapshot.liquidityX.usdValue24 + lastSnapshot.liquidityY.usdValue24
 
-      prevVolume24 += prevVolumeX + prevVolumeY
-      prevFees24 += prevFeeX + prevFeeY
-      prevTvl24 += prevLiquidityX + prevLiquidityY
+      if (snapshots.length > 1) {
+        const prevSnapshot = snapshots[snapshots.length - 2]
 
-      tokensDataObject[tokenX.address.toString()].volume24 += currentVolumeX
-      tokensDataObject[tokenY.address.toString()].volume24 += currentVolumeY
-      tokensDataObject[tokenX.address.toString()].tvl += currentLiquidityX
-      tokensDataObject[tokenY.address.toString()].tvl += currentLiquidityY
+        prevVolume24 += prevSnapshot.volumeX.usdValue24 + prevSnapshot.volumeY.usdValue24
+        prevFees24 += prevSnapshot.feeX.usdValue24 + prevSnapshot.feeY.usdValue24
+        prevTvl24 += prevSnapshot.liquidityX.usdValue24 + prevSnapshot.liquidityY.usdValue24
+      }
+
+      tokensDataObject[tokenX.address.toString()].volume24 += lastSnapshot.volumeX.usdValue24
+      tokensDataObject[tokenY.address.toString()].volume24 += lastSnapshot.volumeY.usdValue24
+      tokensDataObject[tokenX.address.toString()].tvl += lastSnapshot.liquidityX.usdValue24
+      tokensDataObject[tokenY.address.toString()].tvl += lastSnapshot.liquidityY.usdValue24
 
       poolsData.push({
-        volume24: currentVolumeX + currentVolumeY,
-        tvl: currentLiquidityX + currentLiquidityY,
+        volume24: lastSnapshot.volumeX.usdValue24 + lastSnapshot.volumeY.usdValue24,
+        tvl: lastSnapshot.liquidityX.usdValue24 + lastSnapshot.liquidityY.usdValue24,
         tokenX: poolsDataObject[address].tokenX,
         tokenY: poolsDataObject[address].tokenY,
         fee: +printBN(poolsDataObject[address].fee.v, DECIMAL - 2)
       })
 
-      snapshots.slice(-30).forEach((snapshot, index, lastMonthSnapshots) => {
+      snapshots.slice(-30).forEach(snapshot => {
         const timestamp = snapshot.timestamp.toString()
-        const xPrice = printBNtoBN(
-          (coingeckoPricesHistory?.[coingeckoXId]?.[timestamp] ?? 0).toFixed(DECIMAL),
-          DECIMAL
-        )
-        const yPrice = printBNtoBN(
-          (coingeckoPricesHistory?.[coingeckoYId]?.[timestamp] ?? 0).toFixed(DECIMAL),
-          DECIMAL
-        )
 
         if (!volumeForTimestamps[timestamp]) {
           volumeForTimestamps[timestamp] = 0
@@ -312,48 +168,9 @@ export function* getStats(): Generator {
           liquidityForTimestamps[timestamp] = 0
         }
 
-        let usdVolumeX: number
-        let usdVolumeY: number
-
-        if (index > 0) {
-          const prevSnapshot = lastMonthSnapshots[index - 1]
-
-          usdVolumeX = +printBN(
-            new BN(snapshot.volumeX)
-              .sub(new BN(prevSnapshot.volumeX))
-              .mul(xPrice)
-              .div(new BN(10 ** DECIMAL)),
-            tokenX.decimals
-          )
-          usdVolumeY = +printBN(
-            new BN(snapshot.volumeY)
-              .sub(new BN(prevSnapshot.volumeY))
-              .mul(yPrice)
-              .div(new BN(10 ** DECIMAL)),
-            tokenY.decimals
-          )
-        } else {
-          usdVolumeX = +printBN(
-            new BN(snapshot.volumeX).mul(xPrice).div(new BN(10 ** DECIMAL)),
-            tokenX.decimals
-          )
-          usdVolumeY = +printBN(
-            new BN(snapshot.volumeY).mul(yPrice).div(new BN(10 ** DECIMAL)),
-            tokenY.decimals
-          )
-        }
-
-        const usdLiquidityX = +printBN(
-          new BN(snapshot.liquidityX).mul(xPrice).div(new BN(10 ** DECIMAL)),
-          tokenX.decimals
-        )
-        const usdLiquidityY = +printBN(
-          new BN(snapshot.liquidityY).mul(yPrice).div(new BN(10 ** DECIMAL)),
-          tokenY.decimals
-        )
-
-        volumeForTimestamps[timestamp] += usdVolumeX + usdVolumeY
-        liquidityForTimestamps[timestamp] += usdLiquidityX + usdLiquidityY
+        volumeForTimestamps[timestamp] += snapshot.volumeX.usdValue24 + snapshot.volumeY.usdValue24
+        liquidityForTimestamps[timestamp] +=
+          snapshot.liquidityX.usdValue24 + snapshot.liquidityY.usdValue24
       })
     })
 
