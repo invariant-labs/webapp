@@ -89,10 +89,19 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
 
   const outerRef = useRef<HTMLElement>(null)
 
-  const tokensWithIndexes = tokens.map((token, index) => ({
+  const tokensWithIndexes = useMemo(() => tokens.map((token, index) => ({
     ...token,
-    index
-  }))
+    index,
+    strAddress: token.assetAddress.toString()
+  })).sort((a, b) => {
+    const aBalance = +printBN(a.balance, a.decimals)
+    const bBalance = +printBN(b.balance, b.decimals)
+    if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
+      return a.symbol.localeCompare(b.symbol)
+    }
+
+    return aBalance === 0 ? 1 : -1
+  }), [tokens])
 
   const commonTokensList = useMemo(
     () =>
@@ -106,17 +115,8 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
     const list = tokensWithIndexes
       .filter(token => {
         return (
-          token.symbol.toLowerCase().includes(value) || token.name.toLowerCase().includes(value)
+          token.symbol.toLowerCase().includes(value) || token.name.toLowerCase().includes(value) || token.strAddress.toLowerCase().includes(value)
         )
-      })
-      .sort((a, b) => {
-        const aBalance = +printBN(a.balance, a.decimals)
-        const bBalance = +printBN(b.balance, b.decimals)
-        if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
-          return a.symbol.localeCompare(b.symbol)
-        }
-
-        return aBalance === 0 ? 1 : -1
       })
 
     return hideUnknown ? list.filter(token => !token.isUnknown) : list
