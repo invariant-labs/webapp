@@ -599,20 +599,25 @@ export const toMaxNumericPlaces = (num: number, places: number): string => {
   return num.toFixed(places + Math.abs(log) - 1)
 }
 
+export interface SnapshotValueData {
+  tokenBNFromBeginning: string
+  usdValue24: number
+}
+
 export interface PoolSnapshot {
   timestamp: number
-  volumeX: string
-  volumeY: string
-  liquidityX: string
-  liquidityY: string
-  feeX: string
-  feeY: string
+  volumeX: SnapshotValueData
+  volumeY: SnapshotValueData
+  liquidityX: SnapshotValueData
+  liquidityY: SnapshotValueData
+  feeX: SnapshotValueData
+  feeY: SnapshotValueData
 }
 
 export const getNetworkStats = async (name: string): Promise<Record<string, PoolSnapshot[]>> => {
   // TODO: later change api url to api.invariant.app
   const { data } = await axios.get<Record<string, PoolSnapshot[]>>(
-    `https://stats-one-red.vercel.app/stats/${name}`
+    `https://stats-one-red.vercel.app/stats/v2/${name}/full`
   )
 
   return data
@@ -699,16 +704,6 @@ export const getCoingeckoPricesData = async (
   })
 }
 
-export const getCoingeckoPricesHistory = async (): Promise<
-  Record<string, Record<string, number>>
-> => {
-  // TODO: later change api url to api.invariant.app
-  const { data } = await axios.get<Record<string, Record<string, number>>>(
-    'https://stats-one-red.vercel.app/pricesHistory'
-  )
-
-  return data
-}
 export const trimLeadingZeros = (amount: string): string => {
   const amountParts = amount.split('.')
 
