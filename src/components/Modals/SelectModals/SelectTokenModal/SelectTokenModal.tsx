@@ -115,7 +115,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
     const list = tokensWithIndexes
       .filter(token => {
         return (
-          token.symbol.toLowerCase().includes(value) || token.name.toLowerCase().includes(value) || token.strAddress.toLowerCase().includes(value)
+          token.symbol.toLowerCase().includes(value.toLowerCase()) || token.name.toLowerCase().includes(value.toLowerCase()) || token.strAddress.includes(value)
         )
       })
 
@@ -123,7 +123,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   }, [value, tokensWithIndexes])
 
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value.toLowerCase())
+    setValue(e.target.value)
   }
 
   const thresholds = (decimals: number): FormatNumberThreshold[] => [
