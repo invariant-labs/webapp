@@ -255,7 +255,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                       setValue('')
                       handleClose()
                     }}>
-                    <CardMedia className={classes.tokenIcon} image={token.logoURI} />{' '}
+                    <img className={classes.tokenIcon} src={token.logoURI} loading='lazy' />{' '}
                     <Grid container className={classes.tokenContainer}>
                       <Typography className={classes.tokenName}>{token.symbol}</Typography>
                       <Typography className={classes.tokenDescrpiption}>
