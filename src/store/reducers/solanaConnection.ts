@@ -18,7 +18,7 @@ export interface ISolanaConnectionStore {
 export const defaultState: ISolanaConnectionStore = {
   status: Status.Uninitialized,
   message: '',
-  network: NetworkType.DEVNET,
+  network: NetworkType.MAINNET,
   slot: 0
 }
 export const solanaConnectionSliceName = 'solanaConnection'
