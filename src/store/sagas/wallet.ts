@@ -9,7 +9,7 @@ import {
   takeLatest
 } from 'typed-redux-saga'
 
-import { actions, PayloadTypes } from '@reducers/solanaWallet'
+import { actions, ITokenAccount, PayloadTypes } from '@reducers/solanaWallet'
 import { getConnection } from './connection'
 import { getSolanaWallet, connectWallet, disconnectWallet, WalletType } from '@web3/wallet'
 import {
@@ -70,17 +70,16 @@ export function* fetchTokensAccounts(): Generator {
     }
   )
   const allTokens = yield* select(tokens)
+  const newAccounts: ITokenAccount[] = []
   const unknownTokens: Record<string, StoreToken> = {}
   for (const account of tokensAccounts.value) {
     const info: IparsedTokenInfo = account.account.data.parsed.info
-    yield* put(
-      actions.addTokenAccount({
-        programId: new PublicKey(info.mint),
-        balance: new BN(info.tokenAmount.amount),
-        address: account.pubkey,
-        decimals: info.tokenAmount.decimals
-      })
-    )
+    newAccounts.push({
+      programId: new PublicKey(info.mint),
+      balance: new BN(info.tokenAmount.amount),
+      address: account.pubkey,
+      decimals: info.tokenAmount.decimals
+    })
 
     if (!allTokens[info.mint]) {
       unknownTokens[info.mint] = {
@@ -94,6 +93,9 @@ export function* fetchTokensAccounts(): Generator {
     }
   }
 
+  yield* put(
+    actions.addTokenAccounts(newAccounts)
+  )
   yield* put(poolsActions.addTokens(unknownTokens))
 }
 
