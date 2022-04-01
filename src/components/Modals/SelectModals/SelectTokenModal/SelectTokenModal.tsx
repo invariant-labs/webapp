@@ -89,10 +89,25 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
 
   const outerRef = useRef<HTMLElement>(null)
 
-  const tokensWithIndexes = tokens.map((token, index) => ({
-    ...token,
-    index
-  }))
+  const tokensWithIndexes = useMemo(
+    () =>
+      tokens
+        .map((token, index) => ({
+          ...token,
+          index,
+          strAddress: token.assetAddress.toString()
+        }))
+        .sort((a, b) => {
+          const aBalance = +printBN(a.balance, a.decimals)
+          const bBalance = +printBN(b.balance, b.decimals)
+          if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
+            return a.symbol.localeCompare(b.symbol)
+          }
+
+          return aBalance === 0 ? 1 : -1
+        }),
+    [tokens]
+  )
 
   const commonTokensList = useMemo(
     () =>
@@ -103,27 +118,19 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   )
 
   const filteredTokens = useMemo(() => {
-    const list = tokensWithIndexes
-      .filter(token => {
-        return (
-          token.symbol.toLowerCase().includes(value) || token.name.toLowerCase().includes(value)
-        )
-      })
-      .sort((a, b) => {
-        const aBalance = +printBN(a.balance, a.decimals)
-        const bBalance = +printBN(b.balance, b.decimals)
-        if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
-          return a.symbol.localeCompare(b.symbol)
-        }
-
-        return aBalance === 0 ? 1 : -1
-      })
+    const list = tokensWithIndexes.filter(token => {
+      return (
+        token.symbol.toLowerCase().includes(value.toLowerCase()) ||
+        token.name.toLowerCase().includes(value.toLowerCase()) ||
+        token.strAddress.includes(value)
+      )
+    })
 
     return hideUnknown ? list.filter(token => !token.isUnknown) : list
   }, [value, tokensWithIndexes])
 
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value.toLowerCase())
+    setValue(e.target.value)
   }
 
   const thresholds = (decimals: number): FormatNumberThreshold[] => [
@@ -255,7 +262,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                       setValue('')
                       handleClose()
                     }}>
-                    <CardMedia className={classes.tokenIcon} image={token.logoURI} />{' '}
+                    <img className={classes.tokenIcon} src={token.logoURI} loading='lazy' />{' '}
                     <Grid container className={classes.tokenContainer}>
                       <Typography className={classes.tokenName}>{token.symbol}</Typography>
                       <Typography className={classes.tokenDescrpiption}>
