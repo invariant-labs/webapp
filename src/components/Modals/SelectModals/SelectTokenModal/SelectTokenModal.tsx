@@ -89,19 +89,25 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
 
   const outerRef = useRef<HTMLElement>(null)
 
-  const tokensWithIndexes = useMemo(() => tokens.map((token, index) => ({
-    ...token,
-    index,
-    strAddress: token.assetAddress.toString()
-  })).sort((a, b) => {
-    const aBalance = +printBN(a.balance, a.decimals)
-    const bBalance = +printBN(b.balance, b.decimals)
-    if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
-      return a.symbol.localeCompare(b.symbol)
-    }
+  const tokensWithIndexes = useMemo(
+    () =>
+      tokens
+        .map((token, index) => ({
+          ...token,
+          index,
+          strAddress: token.assetAddress.toString()
+        }))
+        .sort((a, b) => {
+          const aBalance = +printBN(a.balance, a.decimals)
+          const bBalance = +printBN(b.balance, b.decimals)
+          if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
+            return a.symbol.localeCompare(b.symbol)
+          }
 
-    return aBalance === 0 ? 1 : -1
-  }), [tokens])
+          return aBalance === 0 ? 1 : -1
+        }),
+    [tokens]
+  )
 
   const commonTokensList = useMemo(
     () =>
@@ -112,12 +118,13 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   )
 
   const filteredTokens = useMemo(() => {
-    const list = tokensWithIndexes
-      .filter(token => {
-        return (
-          token.symbol.toLowerCase().includes(value.toLowerCase()) || token.name.toLowerCase().includes(value.toLowerCase()) || token.strAddress.includes(value)
-        )
-      })
+    const list = tokensWithIndexes.filter(token => {
+      return (
+        token.symbol.toLowerCase().includes(value.toLowerCase()) ||
+        token.name.toLowerCase().includes(value.toLowerCase()) ||
+        token.strAddress.includes(value)
+      )
+    })
 
     return hideUnknown ? list.filter(token => !token.isUnknown) : list
   }, [value, tokensWithIndexes])
