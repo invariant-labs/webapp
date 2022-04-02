@@ -3,7 +3,7 @@ import { colors, theme, typography } from '@static/theme'
 
 const useStyle = makeStyles(() => ({
   container: {
-    color: colors.invariant.textGrey,
+    color: colors.white.main,
     display: 'grid',
     gridTemplateColumns: '5% 55% 10% 17% 15% 15% 20%',
     padding: '18px 0',
@@ -46,6 +46,7 @@ const useStyle = makeStyles(() => ({
 
   header: {
     '& p': {
+      color: colors.invariant.textGrey,
       ...typography.heading4,
       fontWeight: 400,
 
