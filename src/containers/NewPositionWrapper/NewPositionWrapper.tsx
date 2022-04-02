@@ -222,6 +222,12 @@ export const NewPositionWrapper = () => {
     }
   }
 
+  const initialIsConcentratedValue = localStorage.getItem('IS_CONCENTRATED') === 'true' || localStorage.getItem('IS_CONCENTRATED') === null
+
+  const setIsConcentratedValue = (val: boolean) => {
+    localStorage.setItem('IS_CONCENTRATED', val ? 'true' : 'false')
+  }
+
   return (
     <NewPosition
       tokens={tokens}
@@ -404,6 +410,8 @@ export const NewPositionWrapper = () => {
       canCreateNewPosition={canUserCreateNewPosition}
       handleAddToken={addTokenHandler}
       commonTokens={commonTokensForNetworks[currentNetwork]}
+      initialIsConcentratedValue={initialIsConcentratedValue}
+      onIsConcentratedChange={setIsConcentratedValue}
     />
   )
 }
