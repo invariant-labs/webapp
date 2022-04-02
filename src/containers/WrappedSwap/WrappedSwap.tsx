@@ -15,9 +15,10 @@ import { actions as poolsActions } from '@reducers/pools'
 import { PublicKey } from '@solana/web3.js'
 import { actions as walletActions } from '@reducers/solanaWallet'
 import { getCurrentSolanaConnection } from '@web3/connection'
-import { addNewTokenToLocalStorage, getFullNewTokensData } from '@consts/utils'
+import { addNewTokenToLocalStorage, getNewTokenOrThrow } from '@consts/utils'
 import { network } from '@selectors/solanaConnection'
 import { commonTokensForNetworks } from '@consts/static'
+import { actions as snackbarsActions } from '@reducers/snackbars'
 
 export const WrappedSwap = () => {
   const dispatch = useDispatch()
@@ -77,16 +78,38 @@ export const WrappedSwap = () => {
   const addTokenHandler = (address: string) => {
     if (
       connection !== null &&
-      tokensList.findIndex(token => token.address.equals(new PublicKey(address))) === -1
+      tokensList.findIndex(token => token.address.toString() === address) === -1
     ) {
-      getFullNewTokensData([new PublicKey(address)], connection)
+      getNewTokenOrThrow(address, connection)
         .then(data => {
+          console.log(data)
           dispatch(poolsActions.addTokens(data))
           addNewTokenToLocalStorage(address, networkType)
+          dispatch(
+            snackbarsActions.add({
+              message: 'Token added to your list',
+              variant: 'success',
+              persist: false
+            })
+          )
         })
-        .catch(error => {
-          console.log(error)
+        .catch(() => {
+          dispatch(
+            snackbarsActions.add({
+              message: 'Token adding failed, check if address is valid and try again',
+              variant: 'error',
+              persist: false
+            })
+          )
         })
+    } else {
+      dispatch(
+        snackbarsActions.add({
+          message: 'Token already exists on your list',
+          variant: 'info',
+          persist: false
+        })
+      )
     }
   }
 
