@@ -79,6 +79,9 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
       data: paginatedItems
     }
   }
+
+  const pages = Math.ceil(data.length / 10)
+
   return (
     <Grid container direction='column' classes={{ root: classes.container }} wrap='nowrap'>
       <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />
@@ -95,17 +98,20 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
             priceChange={token.priceChange}
             volume={token.volume}
             TVL={token.TVL}
+            hideBottomLine={pages === 1 && (index + 1) === data.length}
           />
         )
       })}
-      <Grid className={classes.pagination}>
-        <PaginationList
-          pages={Math.ceil(data.length / 10)}
-          defaultPage={1}
-          handleChangePage={handleChangePagination}
-          variant='flex-end'
-        />
-      </Grid>
+      {pages > 1 ? (
+        <Grid className={classes.pagination}>
+          <PaginationList
+            pages={Math.ceil(data.length / 10)}
+            defaultPage={1}
+            handleChangePage={handleChangePagination}
+            variant='flex-end'
+          />
+        </Grid>
+      ) : null}
     </Grid>
   )
 }

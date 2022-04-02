@@ -31,6 +31,7 @@ interface IProps {
   TVL?: number
   sortType?: SortType
   onSort?: (type: SortType) => void
+  hideBottomLine?: boolean
 }
 
 const TokenListItem: React.FC<IProps> = ({
@@ -44,7 +45,8 @@ const TokenListItem: React.FC<IProps> = ({
   volume = 0,
   TVL = 0,
   sortType,
-  onSort
+  onSort,
+  hideBottomLine = false
 }) => {
   const classes = useStyles()
   const isNegative = priceChange < 0
@@ -57,8 +59,9 @@ const TokenListItem: React.FC<IProps> = ({
       {displayType === 'tokens' ? (
         <Grid
           container
-          style={{ color: colors.white.main }}
-          classes={{ container: classes.container, root: classes.tokenList }}>
+          classes={{ container: classes.container, root: classes.tokenList }}
+          style={hideBottomLine ? { border: 'none' } : undefined}
+          >
           {!hideName && <Typography component='p'>{itemNumber}</Typography>}
           <Grid className={classes.tokenName}>
             {!isXDown && <img src={icon}></img>}

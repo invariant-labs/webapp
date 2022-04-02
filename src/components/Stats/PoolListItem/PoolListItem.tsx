@@ -1,6 +1,6 @@
 import React from 'react'
 import { Grid, Typography, Box, useMediaQuery } from '@material-ui/core'
-import { colors, theme } from '@static/theme'
+import { theme } from '@static/theme'
 import { formatNumbers, showPrefix } from '@consts/utils'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
@@ -29,6 +29,7 @@ interface IProps {
   tokenIndex?: number
   sortType?: SortType
   onSort?: (type: SortType) => void
+  hideBottomLine?: boolean
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -42,7 +43,8 @@ const PoolListItem: React.FC<IProps> = ({
   iconTo,
   tokenIndex,
   sortType,
-  onSort
+  onSort,
+  hideBottomLine = false
 }) => {
   const classes = useStyle()
 
@@ -54,7 +56,8 @@ const PoolListItem: React.FC<IProps> = ({
         <Grid
           container
           classes={{ container: classes.container }}
-          style={{ color: colors.white.main }}>
+          style={hideBottomLine ? { border: 'none' } : undefined}
+          >
           {!hideTokenImage && <Typography>{tokenIndex}</Typography>}
           <Grid className={classes.imageContainer}>
             {!hideTokenImage && (
