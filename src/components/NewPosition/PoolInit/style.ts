@@ -23,11 +23,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   subheader: {
     ...typography.heading4,
-    marginBlock: 12,
+    marginBottom: 24,
     color: colors.white.main
   },
   inputs: {
-    marginBottom: 20,
+    marginBottom: 36,
     flexDirection: 'row',
     gap: 16
   },
@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingInline: 12,
     paddingBlock: 10,
     borderRadius: 13,
-    marginBottom: 48
+    marginBottom: 24
   },
   priceLabel: {
     ...typography.body2,
