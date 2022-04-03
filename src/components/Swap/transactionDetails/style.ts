@@ -39,7 +39,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       background: 'none !important'
     },
-    cursor: 'default',
+    cursor: 'pointer',
     '&:after': {
       content: '"\u2715"',
       fontSize: 20,

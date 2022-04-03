@@ -810,3 +810,19 @@ export const addNewTokenToLocalStorage = (address: string, network: NetworkType)
 
   localStorage.setItem(`CUSTOM_TOKENS_${network}`, JSON.stringify([...new Set(currentList)]))
 }
+
+export const getNewTokenOrThrow = async (
+  address: string,
+  connection: Connection
+): Promise<Record<string, Token>> => {
+  const key = new PublicKey(address)
+  const token = new SPLToken(connection, key, TOKEN_PROGRAM_ID, new Keypair())
+
+  const info = await token.getMintInfo()
+
+  console.log(info)
+
+  return {
+    [address.toString()]: generateUnknownTokenDataObject(key, info.decimals)
+  }
+}
