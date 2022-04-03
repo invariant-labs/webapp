@@ -98,7 +98,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
             priceChange={token.priceChange}
             volume={token.volume}
             TVL={token.TVL}
-            hideBottomLine={pages === 1 && (index + 1) === data.length}
+            hideBottomLine={pages === 1 && index + 1 === data.length}
           />
         )
       })}

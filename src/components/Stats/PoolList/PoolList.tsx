@@ -76,7 +76,7 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
           volume={element.volume}
           TVL={element.TVL}
           fee={element.fee}
-          hideBottomLine={pages === 1 && (index + 1) === data.length}
+          hideBottomLine={pages === 1 && index + 1 === data.length}
         />
       ))}
       {pages > 1 ? (

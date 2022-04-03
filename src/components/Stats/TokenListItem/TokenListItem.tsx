@@ -60,8 +60,7 @@ const TokenListItem: React.FC<IProps> = ({
         <Grid
           container
           classes={{ container: classes.container, root: classes.tokenList }}
-          style={hideBottomLine ? { border: 'none' } : undefined}
-          >
+          style={hideBottomLine ? { border: 'none' } : undefined}>
           {!hideName && <Typography component='p'>{itemNumber}</Typography>}
           <Grid className={classes.tokenName}>
             {!isXDown && <img src={icon}></img>}

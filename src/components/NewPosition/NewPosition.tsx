@@ -288,7 +288,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         <Typography className={classes.title}>Add new liquidity position</Typography>
         <Grid container item alignItems='center' className={classes.options}>
           <ConcentrationTypeSwitch
-            onSwitch={(val) => {
+            onSwitch={val => {
               setIsConcentrated(val)
               onIsConcentratedChange(val)
             }}

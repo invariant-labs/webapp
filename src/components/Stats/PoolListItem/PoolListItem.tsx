@@ -56,8 +56,7 @@ const PoolListItem: React.FC<IProps> = ({
         <Grid
           container
           classes={{ container: classes.container }}
-          style={hideBottomLine ? { border: 'none' } : undefined}
-          >
+          style={hideBottomLine ? { border: 'none' } : undefined}>
           {!hideTokenImage && <Typography>{tokenIndex}</Typography>}
           <Grid className={classes.imageContainer}>
             {!hideTokenImage && (
