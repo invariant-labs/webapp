@@ -292,8 +292,11 @@ export const NewPosition: React.FC<INewPosition> = ({
               setIsConcentrated(val)
               onIsConcentratedChange(val)
             }}
-            initialValue={initialIsConcentratedValue ? 1 : 0}
+            initialValue={initialIsConcentratedValue ? 0 : 1}
             className={classes.switch}
+            style={{
+              opacity: poolIndex !== null ? 1 : 0
+            }}
             disabled={poolIndex === null}
           />
           <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
