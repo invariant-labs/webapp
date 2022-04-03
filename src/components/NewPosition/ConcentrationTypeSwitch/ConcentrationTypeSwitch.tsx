@@ -27,7 +27,7 @@ export const ConcentrationTypeSwitch: React.FC<IProps> = ({
 
   const handleChange = (_: React.ChangeEvent<{}>, newValue: number) => {
     setCurrent(newValue)
-    onSwitch(!!newValue)
+    onSwitch(!newValue)
   }
 
   return (
@@ -42,13 +42,13 @@ export const ConcentrationTypeSwitch: React.FC<IProps> = ({
       classes={tabsClasses}>
       <Tab
         disableRipple
-        label='Range'
+        label={isXs ? 'Conc.' : 'Concentr.'}
         classes={singleTabClasses}
         style={{ cursor: !disabled ? 'pointer' : 'default' }}
       />
       <Tab
         disableRipple
-        label={isXs ? 'Conc.' : 'Concentr.'}
+        label='Range'
         classes={singleTabClasses}
         style={{ cursor: !disabled ? 'pointer' : 'default' }}
       />

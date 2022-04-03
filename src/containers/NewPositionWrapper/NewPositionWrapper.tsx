@@ -9,7 +9,7 @@ import {
   calcPrice,
   calcYPerXPrice,
   createPlaceholderLiquidityPlot,
-  getFullNewTokensData,
+  getNewTokenOrThrow,
   printBN
 } from '@consts/utils'
 import { isLoadingLatestPoolsForTransaction, poolsArraySortedByFees } from '@selectors/pools'
@@ -26,7 +26,7 @@ import { feeToTickSpacing } from '@invariant-labs/sdk/src/utils'
 import { actions as poolsActions } from '@reducers/pools'
 import { network } from '@selectors/solanaConnection'
 import { getCurrentSolanaConnection } from '@web3/connection'
-import { PublicKey } from '@solana/web3.js'
+import { actions as snackbarsActions } from '@reducers/snackbars'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -209,17 +209,46 @@ export const NewPositionWrapper = () => {
   const addTokenHandler = (address: string) => {
     if (
       connection !== null &&
-      tokens.findIndex(token => token.address.equals(new PublicKey(address))) === -1
+      tokens.findIndex(token => token.address.toString() === address) === -1
     ) {
-      getFullNewTokensData([new PublicKey(address)], connection)
+      getNewTokenOrThrow(address, connection)
         .then(data => {
           dispatch(poolsActions.addTokens(data))
           addNewTokenToLocalStorage(address, currentNetwork)
+          dispatch(
+            snackbarsActions.add({
+              message: 'Token added to your list',
+              variant: 'success',
+              persist: false
+            })
+          )
         })
-        .catch(error => {
-          console.log(error)
+        .catch(() => {
+          dispatch(
+            snackbarsActions.add({
+              message: 'Token adding failed, check if address is valid and try again',
+              variant: 'error',
+              persist: false
+            })
+          )
         })
+    } else {
+      dispatch(
+        snackbarsActions.add({
+          message: 'Token already exists on your list',
+          variant: 'info',
+          persist: false
+        })
+      )
     }
+  }
+
+  const initialIsConcentratedValue =
+    localStorage.getItem('IS_CONCENTRATED') === 'true' ||
+    localStorage.getItem('IS_CONCENTRATED') === null
+
+  const setIsConcentratedValue = (val: boolean) => {
+    localStorage.setItem('IS_CONCENTRATED', val ? 'true' : 'false')
   }
 
   return (
@@ -404,6 +433,8 @@ export const NewPositionWrapper = () => {
       canCreateNewPosition={canUserCreateNewPosition}
       handleAddToken={addTokenHandler}
       commonTokens={commonTokensForNetworks[currentNetwork]}
+      initialIsConcentratedValue={initialIsConcentratedValue}
+      onIsConcentratedChange={setIsConcentratedValue}
     />
   )
 }

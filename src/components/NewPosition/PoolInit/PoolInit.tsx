@@ -117,8 +117,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
         justifyContent='flex-start'>
         <Grid className={classes.infoWrapper}>
           <Typography className={classes.info}>
-            This pool does not exist yet. Select a pair of tokens, then choose a fee. Enter the
-            amount of Token A, then Token B and press the button.
+            This pool has not existed yet. To create it, select the fee tier, initial price, and
+            enter the amount of the tokens. Estimated cost of creating pool is 0.1 SOL
           </Typography>
         </Grid>
 

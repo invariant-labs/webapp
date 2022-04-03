@@ -34,13 +34,13 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       background: 'none !important'
     },
-    cursor: 'default',
+    cursor: 'pointer',
     '&:after': {
       content: '"\u2715"',
       fontSize: 20,
       position: 'absolute',
       color: colors.white.main,
-      top: '50%',
+      top: '40%',
       right: '10%',
       transform: 'translateY(-50%)'
     }
