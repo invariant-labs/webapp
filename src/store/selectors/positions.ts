@@ -23,18 +23,13 @@ export const positionsWithPoolsData = createSelector(
   positionsList,
   swapTokensDict,
   (allPools, { list }, tokens) => {
-    const poolsByKey: Record<string, PoolWithAddressAndIndex> = allPools.reduce(
-      (prev, pool, index) => {
-        return {
-          [pool.address.toString()]: {
-            ...pool,
-            poolIndex: index
-          },
-          ...prev
-        }
-      },
-      {}
-    )
+    const poolsByKey: Record<string, PoolWithAddressAndIndex> = {}
+    allPools.forEach((pool, index) => {
+      poolsByKey[pool.address.toString()] = {
+        ...pool,
+        poolIndex: index
+      }
+    })
 
     return list.map((position, index) => ({
       ...position,

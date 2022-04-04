@@ -7,16 +7,19 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import useStyles from './style'
-import { BN } from '@project-serum/anchor'
+import { PublicKey } from '@solana/web3.js'
 
 export interface ISelectModal {
   name?: string
   current: SwapToken | null
   centered?: boolean
-  tokens: Array<{ symbol: string; name: string; logoURI: string; balance: BN; decimals: number }>
+  tokens: SwapToken[]
   onSelect: (index: number) => void
   className?: string
   hideBalancesInModal?: boolean
+  handleAddToken: (address: string) => void
+  sliceName?: boolean
+  commonTokens: PublicKey[]
 }
 
 export const Select: React.FC<ISelectModal> = ({
@@ -26,7 +29,10 @@ export const Select: React.FC<ISelectModal> = ({
   tokens,
   onSelect,
   className,
-  hideBalancesInModal = false
+  hideBalancesInModal = false,
+  handleAddToken,
+  sliceName = false,
+  commonTokens
 }) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
@@ -42,6 +48,8 @@ export const Select: React.FC<ISelectModal> = ({
     unblurContent()
     setOpen(false)
   }
+
+  const displayName = !current ? name : current.symbol
 
   return (
     <>
@@ -59,7 +67,7 @@ export const Select: React.FC<ISelectModal> = ({
         }}
         disableRipple>
         <span style={{ whiteSpace: 'nowrap' }} className={classes.tokenName}>
-          {!current ? name : current.symbol}
+          {sliceName && displayName.length > 10 ? displayName.slice(0, 8) + '...' : displayName}
         </span>
       </Button>
       <SelectTokenModal
@@ -72,6 +80,8 @@ export const Select: React.FC<ISelectModal> = ({
         onSelect={onSelect}
         handleClose={handleClose}
         hideBalances={hideBalancesInModal}
+        handleAddToken={handleAddToken}
+        commonTokens={commonTokens}
       />
     </>
   )

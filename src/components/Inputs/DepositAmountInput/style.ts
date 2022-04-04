@@ -19,14 +19,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'grid',
     gridTemplateAreas: `
     "select select select select"
-    "balance balance percentages percentages"
-    `,
-    [theme.breakpoints.down('sm')]: {
-      gridTemplateAreas: `
-    "select select select select"
     "balance balance balance percentages"
-    `
-    },
+    `,
 
     '& $input': {
       color: colors.white.main,

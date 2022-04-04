@@ -362,19 +362,17 @@ export const createPlaceholderLiquidityPlot = (
 }
 
 export const getNetworkTokensList = (networkType: NetworkType): Record<string, Token> => {
+  const obj: Record<string, Token> = {}
   switch (networkType) {
     case NetworkType.MAINNET:
-      return mainnetList.reduce(
-        (all, token) => ({
-          ...all,
-          [token.address]: {
-            ...token,
-            address: new PublicKey(token.address),
-            coingeckoId: token?.extensions?.coingeckoId
-          }
-        }),
-        {}
-      )
+      mainnetList.forEach(token => {
+        obj[token.address] = {
+          ...token,
+          address: new PublicKey(token.address),
+          coingeckoId: token?.extensions?.coingeckoId
+        }
+      })
+      return obj
     case NetworkType.DEVNET:
       return {
         [USDC_DEV.address.toString()]: USDC_DEV,
@@ -601,20 +599,25 @@ export const toMaxNumericPlaces = (num: number, places: number): string => {
   return num.toFixed(places + Math.abs(log) - 1)
 }
 
+export interface SnapshotValueData {
+  tokenBNFromBeginning: string
+  usdValue24: number
+}
+
 export interface PoolSnapshot {
   timestamp: number
-  volumeX: string
-  volumeY: string
-  liquidityX: string
-  liquidityY: string
-  feeX: string
-  feeY: string
+  volumeX: SnapshotValueData
+  volumeY: SnapshotValueData
+  liquidityX: SnapshotValueData
+  liquidityY: SnapshotValueData
+  feeX: SnapshotValueData
+  feeY: SnapshotValueData
 }
 
 export const getNetworkStats = async (name: string): Promise<Record<string, PoolSnapshot[]>> => {
   // TODO: later change api url to api.invariant.app
   const { data } = await axios.get<Record<string, PoolSnapshot[]>>(
-    `https://stats-one-red.vercel.app/stats/${name}`
+    `https://stats-one-red.vercel.app/stats/v2/${name}/full`
   )
 
   return data
@@ -668,7 +671,10 @@ export const getCoingeckoPricesData = async (
   const requests: Array<Promise<AxiosResponse<CoingeckoApiPriceData[]>>> = []
   for (let i = 0; i < ids.length; i += 250) {
     const idsSlice = ids.slice(i, i + 250)
-    const idsList = idsSlice.reduce((acc, id, index) => acc + id + (index < 249 ? ',' : ''), '')
+    let idsList = ''
+    idsSlice.forEach((id, index) => {
+      idsList += id + (index < 249 ? ',' : '')
+    })
     requests.push(
       axios.get<CoingeckoApiPriceData[]>(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsList}&per_page=250`
@@ -677,9 +683,12 @@ export const getCoingeckoPricesData = async (
   }
 
   return await Promise.all(requests).then(responses => {
-    const concatRes: CoingeckoApiPriceData[] = responses
+    let concatRes: CoingeckoApiPriceData[] = []
+    responses
       .map(res => res.data)
-      .reduce((acc, data) => [...acc, ...data], [])
+      .forEach(data => {
+        concatRes = [...concatRes, ...data]
+      })
 
     const data: Record<string, CoingeckoPriceData> = {}
 
@@ -695,16 +704,6 @@ export const getCoingeckoPricesData = async (
   })
 }
 
-export const getCoingeckoPricesHistory = async (): Promise<
-  Record<string, Record<string, number>>
-> => {
-  // TODO: later change api url to api.invariant.app
-  const { data } = await axios.get<Record<string, Record<string, number>>>(
-    'https://stats-one-red.vercel.app/pricesHistory'
-  )
-
-  return data
-}
 export const trimLeadingZeros = (amount: string): string => {
   const amountParts = amount.split('.')
 
@@ -771,16 +770,13 @@ export const determinePositionTokenBlock = (
   return PositionTokenBlock.None
 }
 
-export const generateUnknownTokenDataObject = (
-  // prepared already here in case when new tokens will be added on branch with full list, but these tokens won't be available on master deploy
-  address: PublicKey,
-  decimals: number
-): Token => ({
+export const generateUnknownTokenDataObject = (address: PublicKey, decimals: number): Token => ({
   address,
   decimals,
   symbol: `${address.toString().slice(0, 4)}...${address.toString().slice(-4)}`,
   name: address.toString(),
-  logoURI: '/unknownToken.svg'
+  logoURI: '/unknownToken.svg',
+  isUnknown: true
 })
 
 export const getFullNewTokensData = async (
@@ -791,16 +787,42 @@ export const getFullNewTokensData = async (
     .map(address => new SPLToken(connection, address, TOKEN_PROGRAM_ID, new Keypair()))
     .map(async token => await token.getMintInfo())
 
-  return await Promise.allSettled(promises).then(results =>
-    results.reduce(
-      (acc, result, index) => ({
-        ...acc,
-        [addresses[index].toString()]: generateUnknownTokenDataObject(
-          addresses[index],
-          result.status === 'fulfilled' ? result.value.decimals : 6
-        )
-      }),
-      {}
-    )
+  const tokens: Record<string, Token> = {}
+
+  await Promise.allSettled(promises).then(results =>
+    results.forEach((result, index) => {
+      tokens[addresses[index].toString()] = generateUnknownTokenDataObject(
+        addresses[index],
+        result.status === 'fulfilled' ? result.value.decimals : 6
+      )
+    })
   )
+
+  return tokens
+}
+
+export const addNewTokenToLocalStorage = (address: string, network: NetworkType) => {
+  const currentListStr = localStorage.getItem(`CUSTOM_TOKENS_${network}`)
+
+  const currentList = currentListStr !== null ? JSON.parse(currentListStr) : []
+
+  currentList.push(address)
+
+  localStorage.setItem(`CUSTOM_TOKENS_${network}`, JSON.stringify([...new Set(currentList)]))
+}
+
+export const getNewTokenOrThrow = async (
+  address: string,
+  connection: Connection
+): Promise<Record<string, Token>> => {
+  const key = new PublicKey(address)
+  const token = new SPLToken(connection, key, TOKEN_PROGRAM_ID, new Keypair())
+
+  const info = await token.getMintInfo()
+
+  console.log(info)
+
+  return {
+    [address.toString()]: generateUnknownTokenDataObject(key, info.decimals)
+  }
 }

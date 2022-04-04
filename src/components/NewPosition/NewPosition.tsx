@@ -73,6 +73,10 @@ export interface INewPosition {
   currentPriceSqrt: BN
   canCreateNewPool: boolean
   canCreateNewPosition: boolean
+  handleAddToken: (address: string) => void
+  commonTokens: PublicKey[]
+  initialIsConcentratedValue: boolean
+  onIsConcentratedChange: (val: boolean) => void
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -101,11 +105,15 @@ export const NewPosition: React.FC<INewPosition> = ({
   onDiscreteChange,
   currentPriceSqrt,
   canCreateNewPool,
-  canCreateNewPosition
+  canCreateNewPosition,
+  handleAddToken,
+  commonTokens,
+  initialIsConcentratedValue,
+  onIsConcentratedChange
 }) => {
   const classes = useStyles()
 
-  const [isConcentrated, setIsConcentrated] = useState(false)
+  const [isConcentrated, setIsConcentrated] = useState(initialIsConcentratedValue)
 
   const [leftRange, setLeftRange] = useState(MIN_TICK)
   const [rightRange, setRightRange] = useState(MAX_TICK)
@@ -280,8 +288,11 @@ export const NewPosition: React.FC<INewPosition> = ({
         <Typography className={classes.title}>Add new liquidity position</Typography>
         <Grid container item alignItems='center' className={classes.options}>
           <ConcentrationTypeSwitch
-            onSwitch={setIsConcentrated}
-            initialValue={0}
+            onSwitch={val => {
+              setIsConcentrated(val)
+              onIsConcentratedChange(val)
+            }}
+            initialValue={initialIsConcentratedValue ? 0 : 1}
             className={classes.switch}
             style={{
               opacity: poolIndex !== null ? 1 : 0
@@ -404,6 +415,8 @@ export const NewPosition: React.FC<INewPosition> = ({
           bestTierIndex={bestTierIndex}
           canCreateNewPool={canCreateNewPool}
           canCreateNewPosition={canCreateNewPosition}
+          handleAddToken={handleAddToken}
+          commonTokens={commonTokens}
         />
 
         {isCurrentPoolExisting ||

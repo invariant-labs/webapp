@@ -76,16 +76,19 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
           volume={element.volume}
           TVL={element.TVL}
           fee={element.fee}
+          hideBottomLine={pages === 1 && index + 1 === data.length}
         />
       ))}
-      <Grid className={classes.pagination}>
-        <PaginationList
-          pages={pages}
-          defaultPage={1}
-          handleChangePage={handleChangePagination}
-          variant='flex-end'
-        />
-      </Grid>
+      {pages > 1 ? (
+        <Grid className={classes.pagination}>
+          <PaginationList
+            pages={pages}
+            defaultPage={1}
+            handleChangePage={handleChangePagination}
+            variant='flex-end'
+          />
+        </Grid>
+      ) : null}
     </Grid>
   )
 }

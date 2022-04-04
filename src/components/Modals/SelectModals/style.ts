@@ -3,7 +3,7 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   popover: {
-    marginTop: 'calc(50vh - 258px)',
+    marginTop: 'calc(50vh - 350px)',
     marginLeft: 'calc(50vw - 231px)',
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
@@ -63,7 +63,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: colors.invariant.newDark,
     borderRadius: 15,
     padding: '18px 10px 17px 10px',
-    marginBottom: 20,
     '&::placeholder': {
       color: colors.invariant.light,
       ...typography.body1
@@ -79,12 +78,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: '12px',
     top: '14px'
   },
-  commonTokens: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'start',
-    paddingBottom: 14
-  },
   commonTokensHeader: {
     ...typography.body2
   },
@@ -96,31 +89,28 @@ const useStyles = makeStyles((theme: Theme) => ({
   commonTokenItem: {
     minWidth: 'auto',
     display: 'flex',
-    cursor: 'default',
+    cursor: 'pointer',
     justifyContent: 'center',
     alignItems: 'center',
-    border: `1px solid ${colors.invariant.newDark}`,
-    borderColor: colors.invariant.newDark,
-    background: colors.invariant.newDark,
-    borderRadius: 15,
-    padding: '4px 10px 2px 15px',
-    marginTop: 7,
-    marginRight: 7,
+    background: colors.invariant.dark,
+    borderRadius: 12,
+    padding: '6px 12px',
+    marginRight: 6,
+    marginBottom: 8,
     '& p': {
-      ...typography.body2
+      ...typography.heading4,
+      fontWeight: 400
     },
 
     '&:hover': {
-      border: `1px solid ${colors.invariant.light}`,
       background: colors.invariant.light
     }
   },
   commonTokenIcon: {
-    width: 18,
-    height: 18,
-    margin: '0 6px 2px 0',
+    width: 24,
+    height: 24,
     borderRadius: '50%',
-    boxShadow: '0px 0px 5px rgba(216, 255, 181, 0.5)'
+    marginRight: 8
   },
   tokenList: {
     background: colors.invariant.component,
@@ -302,6 +292,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxShadow: 'none',
     minWidth: 102,
     position: 'absolute'
+  },
+  topRow: {
+    marginBottom: 20
+  },
+  addIcon: {
+    marginLeft: 10,
+    cursor: 'pointer'
   }
 }))
 
