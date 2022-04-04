@@ -1,4 +1,4 @@
-import { Grid, Hidden, Typography, useMediaQuery } from '@material-ui/core'
+import { Grid, Hidden, Tooltip, Typography, useMediaQuery } from '@material-ui/core'
 import React, { useMemo, useState } from 'react'
 import { formatNumbers, FormatNumberThreshold, PrefixConfig, showPrefix } from '@consts/utils'
 import { theme } from '@static/theme'
@@ -95,9 +95,17 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
 
   const feeFragment = useMemo(
     () => (
-      <Grid container item className={classNames(classes.fee, isActive ? classes.activeFee : undefined)} justifyContent='center' alignItems='center'>
-        <Typography className={classNames(classes.infoText, isActive ? classes.activeInfoText : undefined)}>{fee}% fee</Typography>
-      </Grid>
+      <Tooltip
+        title={isActive ? 'Position active. Current price is inside range' : 'Position inactive. Current price is outside range'}
+        placement='top'
+        classes={{
+          tooltip: classes.tooltip
+        }}
+      >
+        <Grid container item className={classNames(classes.fee, isActive ? classes.activeFee : undefined)} justifyContent='center' alignItems='center'>
+          <Typography className={classNames(classes.infoText, isActive ? classes.activeInfoText : undefined)}>{fee}% fee</Typography>
+        </Grid>
+      </Tooltip>
     ),
     [fee, classes, isActive]
   )

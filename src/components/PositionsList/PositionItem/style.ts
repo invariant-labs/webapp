@@ -178,6 +178,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     marginRight: 2
+  },
+  tooltip: {
+    background: colors.invariant.componentBcg,
+    border: `1px solid ${colors.invariant.lightGrey}`,
+    borderRadius: 12,
+    padding: 10,
+    ...typography.caption4,
+    fontSize: 13,
+    color: colors.white.main
   }
 }))
 
