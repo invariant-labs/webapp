@@ -36,9 +36,7 @@ const BondItem: React.FC<BondItem> = ({
     <Grid container style={{ color: colors.white.main }} className={classes.container}>
       <Grid className={classes.itemList}>
         <Grid className={classes.iconItems}>
-          {isExSmall ? (
-            ''
-          ) : (
+          {isExSmall ? null : (
             <>
               <Grid item>
                 <img src={icon} />
@@ -59,21 +57,11 @@ const BondItem: React.FC<BondItem> = ({
         {printBN(new BN(price), decimals)} {symbol} per {secondSymbol}
       </Grid>
       <Grid className={classes.roi}>+{roiPercent}%</Grid>
-      {!isExSmall ? (
-        <>
-          <Typography className={classes.purchased}>${purchased}</Typography>
-        </>
-      ) : (
-        <></>
-      )}
+      {!isExSmall ? <Typography className={classes.purchased}>${purchased}</Typography> : null}
 
       {!isSmall ? (
-        <>
-          <Grid className={classes.days}>{!isSmall && <span>{vesting} days</span>}</Grid>
-        </>
-      ) : (
-        <></>
-      )}
+        <Grid className={classes.days}>{!isSmall && <span>{vesting} days</span>}</Grid>
+      ) : null}
 
       <Button className={classes.bondButton}>Bond</Button>
     </Grid>

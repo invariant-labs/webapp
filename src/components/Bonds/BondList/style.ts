@@ -4,7 +4,6 @@ import { colors } from '@static/theme'
 export const useStyles = makeStyles(theme => ({
   container: {
     margin: '0',
-    display: 'grid',
     boxSizing: 'border-box',
     maxWidth: '918px',
     width: '100%',

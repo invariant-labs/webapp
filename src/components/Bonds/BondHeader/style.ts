@@ -7,10 +7,12 @@ export const useStyles = makeStyles(theme => ({
     maxWidth: '918px',
     width: '100%',
     padding: '32px 0 32px 0',
+    fontWeight: 400,
     alignItems: 'center',
     textAlign: 'center',
     gridTemplateColumns: '21% 25% 11% 19% 12% 12%',
     backgroundColor: colors.invariant.component,
+    color: colors.invariant.textGrey,
     '& *': {
       whiteSpace: 'nowrap',
       ...typography.caption2
