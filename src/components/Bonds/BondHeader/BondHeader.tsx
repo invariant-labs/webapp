@@ -5,7 +5,6 @@ import { useStyles } from './style'
 
 const BondHeader = () => {
   const classes = useStyles()
-  const isMedium = useMediaQuery(theme.breakpoints.down('md'))
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
   const isExSmall = useMediaQuery(theme.breakpoints.down('xs'))
   return (

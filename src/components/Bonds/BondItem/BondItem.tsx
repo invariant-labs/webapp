@@ -7,9 +7,9 @@ import { useStyles } from './style'
 
 interface BondItem {
   icon: string
-  secoundIcon: string
+  secondIcon: string
   symbol: string
-  secoundSymbol: string
+  secondSymbol: string
   decimals: number
   price: number
   roiPercent: string
@@ -19,9 +19,9 @@ interface BondItem {
 
 const BondItem: React.FC<BondItem> = ({
   icon,
-  secoundIcon,
+  secondIcon,
   symbol,
-  secoundSymbol,
+  secondSymbol,
   decimals,
   price,
   roiPercent,
@@ -31,9 +31,7 @@ const BondItem: React.FC<BondItem> = ({
   const classes = useStyles()
   const isExSmall = useMediaQuery(theme.breakpoints.down('xs'))
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
-  {
-    console.log(window.screen.width)
-  }
+
   return (
     <Grid container style={{ color: colors.white.main }} className={classes.container}>
       <Grid className={classes.itemList}>
@@ -46,19 +44,19 @@ const BondItem: React.FC<BondItem> = ({
                 <img src={icon} />
               </Grid>
               <Grid className={classes.icon} item>
-                <img src={secoundIcon} />
+                <img src={secondIcon} />
               </Grid>
             </>
           )}
           <Grid className={classes.symbol}>
             <Typography>
-              {symbol}/{secoundSymbol}
+              {symbol}/{secondSymbol}
             </Typography>
           </Grid>
         </Grid>
       </Grid>
       <Grid className={classes.price}>
-        {printBN(new BN(price), decimals)} {symbol} per {secoundSymbol}
+        {printBN(new BN(price), decimals)} {symbol} per {secondSymbol}
       </Grid>
       <Grid className={classes.roi}>+{roiPercent}%</Grid>
       {!isExSmall ? (

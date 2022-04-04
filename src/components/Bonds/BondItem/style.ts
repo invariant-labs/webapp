@@ -8,7 +8,6 @@ export const useStyles = makeStyles(theme => ({
     maxWidth: '918px',
     width: '100%',
     backgroundColor: colors.invariant.component,
-    color: colors.white.main,
     alignItems: 'center',
     justifyContent: 'center',
     gridTemplateColumns: '21% 25% 11% 19% 12% 12%',
