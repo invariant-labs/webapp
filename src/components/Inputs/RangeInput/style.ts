@@ -98,6 +98,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('xs')]: {
       ...typography.caption2
     }
+  },
+  diffLabel: {
+    ...typography.caption4,
+    color: colors.invariant.textGrey,
+    width: 'fit-content',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap'
+  },
+  diff: {
+    ...typography.tiny1,
+    padding: 3,
+    borderRadius: 5,
+    marginLeft: 5,
+    flex: '0 0 auto'
   }
 }))
 

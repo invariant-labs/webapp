@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.white.main
   },
   inputs: {
-    marginBottom: 36,
+    marginBottom: 16,
     flexDirection: 'row',
     gap: 16
   },

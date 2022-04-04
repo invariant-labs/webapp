@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   plot: {
     width: '100%',
-    height: 220
+    height: 190
   },
   subheader: {
     ...typography.heading4,
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       right: 0,
       zIndex: 11,
       width: '100%',
-      height: 510,
+      height: 545,
       borderRadius: 9
     },
 

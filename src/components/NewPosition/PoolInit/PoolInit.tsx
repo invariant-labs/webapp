@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from '@material-ui/core'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import {
   calcPrice,
@@ -107,6 +107,11 @@ export const PoolInit: React.FC<IPoolInit> = ({
     }
   }, [currentPairReversed])
 
+  const price = useMemo(
+    () => calcPrice(midPrice, isXtoY, xDecimal, yDecimal),
+    [midPrice, isXtoY, xDecimal, yDecimal]
+  )
+
   return (
     <Grid container className={classes.wrapper}>
       <Typography className={classes.header}>Starting price</Typography>
@@ -139,13 +144,11 @@ export const PoolInit: React.FC<IPoolInit> = ({
 
           <Typography className={classes.priceValue}>
             <AnimatedNumber
-              value={calcPrice(midPrice, isXtoY, xDecimal, yDecimal).toFixed(
-                isXtoY ? xDecimal : yDecimal
-              )}
+              value={price.toFixed(isXtoY ? xDecimal : yDecimal)}
               duration={300}
               formatValue={formatNumbers()}
             />
-            {showPrefix(calcPrice(midPrice, isXtoY, xDecimal, yDecimal))} {tokenBSymbol}
+            {showPrefix(price)} {tokenBSymbol}
           </Typography>
         </Grid>
 
@@ -184,6 +187,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
 
               changeRangeHandler(newLeft, rightRange)
             }}
+            diffLabel='Min/Current price difference:'
+            percentDiff={((+leftInput - price) / price) * 100}
           />
           <RangeInput
             className={classes.input}
@@ -216,6 +221,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
                   )
               changeRangeHandler(leftRange, newRight)
             }}
+            diffLabel='Max/Current price difference:'
+            percentDiff={((+rightInput - price) / price) * 100}
           />
         </Grid>
         <Grid container className={classes.buttons}>
