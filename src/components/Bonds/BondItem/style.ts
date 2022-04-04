@@ -15,11 +15,16 @@ export const useStyles = makeStyles(theme => ({
     borderTop: '2px solid #3A466B',
     ...typography.body1,
 
-    [theme.breakpoints.down('md')]: {
-      '&': {
-        width: '100%',
-        gridTemplateColumns: '23% 28% 14% 21% 14%'
-      }
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      ...typography.caption1,
+      gridTemplateColumns: '23% 29% 13% 21% 14%'
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      ...typography.caption3,
+      gridTemplateColumns: '28% 35% 18% 19%'
     }
   },
   itemList: {
@@ -30,7 +35,6 @@ export const useStyles = makeStyles(theme => ({
     alignItems: 'center'
   },
   icon: {
-    padding: '0 8px 0 0',
     right: '8px',
     position: 'relative'
   },
@@ -42,39 +46,57 @@ export const useStyles = makeStyles(theme => ({
       width: 32,
       borderRadius: '50%',
 
-      [theme.breakpoints.down('sm')]: {
-        width: '22px'
+      [theme.breakpoints.down('xs')]: {
+        width: '22px',
+        hight: '22px'
       }
     }
   },
   symbol: {
-    margin: '0 15px 0 8px',
+    marginRight: '15px',
     width: '73',
     height: '20',
-    padding: '0 0 0 8'
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption3,
+      justifyContent: 'center',
+      alignItems: 'center',
+      margin: 'auto'
+    }
   },
   purchased: {
-    marginLeft: '25px',
-    overflow: 'hidden'
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   roi: {
     color: colors.invariant.green,
     margin: 'auto'
   },
   price: {
-    margin: 'auto',
-    padding: '20px'
+    marginLeft: '30px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   },
   days: {
     marginLeft: '10px'
   },
   bondButton: {
-    backgroundColor: colors.invariant.green,
+    backgroundColor: colors.green.button,
     color: colors.invariant.dark,
     borderRadius: '10px',
     width: '80px',
     hight: '32px',
     marginLeft: 'auto',
-    ...typography.body1
+    ...typography.body1,
+
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 'auto'
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '64px',
+      ...typography.caption1
+    }
   }
 }))

@@ -14,6 +14,14 @@ export const useStyles = makeStyles(theme => ({
     '& *': {
       whiteSpace: 'nowrap',
       ...typography.caption2
+    },
+    [theme.breakpoints.down('sm')]: {
+      ...typography.caption1,
+      gridTemplateColumns: '23% 29% 13% 21% 14%'
+    },
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption3,
+      gridTemplateColumns: '28% 35% 18% 19%'
     }
   },
 
