@@ -1,11 +1,26 @@
 import { Grid, Hidden, Typography, useMediaQuery } from '@material-ui/core'
 import React, { useMemo, useState } from 'react'
-import { ILiquidityItem } from '../PositionsList'
 import { formatNumbers, FormatNumberThreshold, PrefixConfig, showPrefix } from '@consts/utils'
 import { theme } from '@static/theme'
 import SwapList from '@static/svg/swap-list.svg'
 import useStyle from './style'
 import classNames from 'classnames'
+
+export interface ILiquidityItem {
+  tokenXName: string
+  tokenYName: string
+  tokenXIcon: string
+  tokenYIcon: string
+  tokenXLiq: number
+  tokenYLiq: number
+  fee: number
+  min: number
+  max: number
+  valueX: number
+  valueY: number
+  id: string
+  isActive?: boolean
+}
 
 const shorterThresholds: FormatNumberThreshold[] = [
   {
@@ -68,7 +83,8 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
   min,
   max,
   valueX,
-  valueY
+  valueY,
+  isActive = false
 }) => {
   const classes = useStyle()
 
@@ -79,11 +95,11 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
 
   const feeFragment = useMemo(
     () => (
-      <Grid container item className={classes.fee} justifyContent='center' alignItems='center'>
-        <Typography className={classes.infoText}>{fee}% fee</Typography>
+      <Grid container item className={classNames(classes.fee, isActive ? classes.activeFee : undefined)} justifyContent='center' alignItems='center'>
+        <Typography className={classNames(classes.infoText, isActive ? classes.activeInfoText : undefined)}>{fee}% fee</Typography>
       </Grid>
     ),
-    [fee, classes]
+    [fee, classes, isActive]
   )
 
   const valueFragment = useMemo(
@@ -153,6 +169,8 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
       </Grid>
 
       <Grid container item className={classes.mdInfo} direction='row'>
+        <Hidden smDown>{feeFragment}</Hidden>
+
         <Grid
           container
           item
@@ -179,8 +197,6 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
             {xToY ? tokenYName : tokenXName}
           </Typography>
         </Grid>
-
-        <Hidden smDown>{feeFragment}</Hidden>
 
         <Hidden mdUp>{valueFragment}</Hidden>
 

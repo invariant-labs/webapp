@@ -2,25 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Button, Grid, Typography, InputAdornment, InputBase } from '@material-ui/core'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
-import { PositionItem } from './PositionItem/PositionItem'
+import { ILiquidityItem, PositionItem } from './PositionItem/PositionItem'
 import { PaginationList } from '@components/Pagination/Pagination'
 import SearchIcon from '@static/svg/lupaDark.svg'
 import useStyle from './style'
-
-export interface ILiquidityItem {
-  tokenXName: string
-  tokenYName: string
-  tokenXIcon: string
-  tokenYIcon: string
-  tokenXLiq: number
-  tokenYLiq: number
-  fee: number
-  min: number
-  max: number
-  valueX: number
-  valueY: number
-  id: string
-}
 
 interface IProp {
   data: ILiquidityItem[]

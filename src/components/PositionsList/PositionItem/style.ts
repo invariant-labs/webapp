@@ -84,6 +84,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       ...typography.caption1
     }
   },
+  activeInfoText: {
+    color: colors.invariant.black
+  },
   greenText: {
     ...typography.body1,
     color: colors.invariant.green,
@@ -115,6 +118,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       marginRight: 0
     }
+  },
+  activeFee: {
+    background: colors.invariant.green
   },
   infoCenter: {
     flex: '1 1 0%'
