@@ -70,16 +70,19 @@ export const useStyles = makeStyles(theme => ({
   },
   roi: {
     color: colors.invariant.green,
-    margin: 'auto'
+    margin: 'auto',
+    fontFamily: 'Mukta'
   },
   price: {
     marginLeft: '20px',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
-    textOverflow: 'ellipsis'
+    textOverflow: 'ellipsis',
+    fontFamily: 'Mukta'
   },
   days: {
-    marginLeft: '10px'
+    marginLeft: '10px',
+    fontFamily: 'Mukta'
   },
   bondButton: {
     backgroundColor: colors.green.button,
@@ -87,6 +90,7 @@ export const useStyles = makeStyles(theme => ({
     borderRadius: '10px',
     width: '80px',
     hight: '32px',
+    textTransform: 'none',
     marginLeft: 'auto',
     ...typography.body1,
 
