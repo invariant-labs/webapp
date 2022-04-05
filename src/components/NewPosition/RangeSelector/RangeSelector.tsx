@@ -19,6 +19,7 @@ import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { maxSafeConcentrationsForTiers, minimumRangesForTiers } from '@consts/static'
 import { getConcentrationArray } from '@invariant-labs/sdk/lib/utils'
 import questionMark from '@static/svg/questionMark.svg'
+import loader from '@static/gif/loader.gif'
 import useStyles from './style'
 
 export interface IRangeSelector {
@@ -511,7 +512,13 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
       {blocked && (
         <Grid className={classes.blocker}>
-          <Typography className={classes.blockedInfo}>{blockerInfo}</Typography>
+          {blockerInfo === 'Loading pool info...' ? (
+            <Grid container style={{ height: '100%' }}>
+              <img src={loader} className={classes.loader} />
+            </Grid>
+          ) : (
+            <Typography className={classes.blockedInfo}>{blockerInfo}</Typography>
+          )}
         </Grid>
       )}
     </Grid>

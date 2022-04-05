@@ -144,6 +144,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.caption4,
     fontSize: 13,
     color: colors.white.main
+  },
+  loader: {
+    height: 150,
+    width: 150,
+    margin: 'auto'
   }
 }))
 
