@@ -487,12 +487,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             <Button
               className={classes.button}
               onClick={() => {
-                const left = isXtoY
-                  ? getMinTick(tickSpacing)
-                  : getMaxTick(tickSpacing)
-                const right = isXtoY
-                  ? getMaxTick(tickSpacing)
-                  : getMinTick(tickSpacing)
+                const left = isXtoY ? getMinTick(tickSpacing) : getMaxTick(tickSpacing)
+                const right = isXtoY ? getMaxTick(tickSpacing) : getMinTick(tickSpacing)
 
                 changeRangeHandler(left, right)
                 autoZoomHandler(left, right)

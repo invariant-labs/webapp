@@ -405,10 +405,7 @@ export const nearestSpacingMultiplicity = (arg: number, spacing: number) => {
 
   const nearest = Math.abs(greater - arg) < Math.abs(lower - arg) ? greater : lower
 
-  return Math.max(
-    Math.min(nearest, getMaxTick(spacing)),
-    getMinTick(spacing)
-  )
+  return Math.max(Math.min(nearest, getMaxTick(spacing)), getMinTick(spacing))
 }
 
 export const nearestTickIndex = (
