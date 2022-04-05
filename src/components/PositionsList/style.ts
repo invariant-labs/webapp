@@ -118,8 +118,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 17
   },
   loading: {
-    width: 300,
-    height: 300,
+    width: 200,
+    height: 200,
     marginInline: 'auto'
   }
 }))

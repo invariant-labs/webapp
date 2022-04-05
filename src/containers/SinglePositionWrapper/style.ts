@@ -8,8 +8,8 @@ const useStyles = makeStyles(() => ({
     color: colors.white.main
   },
   loading: {
-    width: 300,
-    height: 300,
+    width: 200,
+    height: 200,
     marginInline: 'auto'
   }
 }))
