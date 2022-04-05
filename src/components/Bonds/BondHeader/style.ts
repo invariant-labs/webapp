@@ -23,7 +23,7 @@ export const useStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down('xs')]: {
       ...typography.caption3,
-      gridTemplateColumns: '28% 35% 18% 19%'
+      gridTemplateColumns: '26% 34% 21% 19%'
     }
   },
 

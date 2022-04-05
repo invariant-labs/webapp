@@ -5,7 +5,7 @@ import { BN } from '@project-serum/anchor'
 import { colors, theme } from '@static/theme'
 import { useStyles } from './style'
 
-interface BondItem {
+interface IBondItem {
   icon: string
   secondIcon: string
   symbol: string
@@ -17,7 +17,7 @@ interface BondItem {
   vesting: string
 }
 
-const BondItem: React.FC<BondItem> = ({
+const IBondItem: React.FC<IBondItem> = ({
   icon,
   secondIcon,
   symbol,
@@ -67,4 +67,4 @@ const BondItem: React.FC<BondItem> = ({
     </Grid>
   )
 }
-export default BondItem
+export default IBondItem

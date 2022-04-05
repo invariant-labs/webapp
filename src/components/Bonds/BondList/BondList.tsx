@@ -1,10 +1,10 @@
 import { Grid } from '@material-ui/core'
 import React from 'react'
 import BondHeader from '../BondHeader/BondHeader'
-import BondItem from '../BondItem/BondItem'
+import IBondItem from '../BondItem/BondItem'
 import { useStyles } from './style'
 
-interface BondListInterface {
+interface IBondListInterface {
   data: Array<{
     icon: string
     secondIcon: string
@@ -18,14 +18,14 @@ interface BondListInterface {
   }>
 }
 
-const BondList: React.FC<BondListInterface> = ({ data }) => {
+const BondList: React.FC<IBondListInterface> = ({ data }) => {
   const classes = useStyles()
 
   return (
     <Grid className={classes.container}>
       <BondHeader />
-      {data.map((element, index) => (
-        <BondItem
+      {data.map(element => (
+        <IBondItem
           icon={element.icon}
           secondIcon={element.secondIcon}
           symbol={element.symbol}

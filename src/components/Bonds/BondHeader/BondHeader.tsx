@@ -1,5 +1,5 @@
 import { Grid, Typography, useMediaQuery } from '@material-ui/core'
-import { colors, theme } from '@static/theme'
+import { theme } from '@static/theme'
 import React from 'react'
 import { useStyles } from './style'
 

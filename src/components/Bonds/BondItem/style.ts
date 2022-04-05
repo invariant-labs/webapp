@@ -23,7 +23,7 @@ export const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('xs')]: {
       width: '100%',
       ...typography.caption3,
-      gridTemplateColumns: '28% 35% 18% 19%'
+      gridTemplateColumns: '26% 34% 21% 19%'
     }
   },
   itemList: {
@@ -73,7 +73,7 @@ export const useStyles = makeStyles(theme => ({
     margin: 'auto'
   },
   price: {
-    marginLeft: '30px',
+    marginLeft: '20px',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis'
