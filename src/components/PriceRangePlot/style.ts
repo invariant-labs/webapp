@@ -63,6 +63,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   loadingText: {
     fill: colors.invariant.dark,
     ...typography.heading4
+  },
+  cover: {
+    width: '100%',
+    height: '100%',
+    background: `${colors.invariant.black}dd`,
+    position: 'absolute',
+    zIndex: 100,
+    borderRadius: 10
+  },
+  loader: {
+    height: 100,
+    width: 100,
+    margin: 'auto'
   }
 }))
 

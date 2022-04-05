@@ -125,6 +125,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           xDecimal={tokenX.decimal}
           yDecimal={tokenY.decimal}
           isDiscrete={isPlotDiscrete}
+          coverOnLoading
         />
       </Grid>
       <Grid className={classes.minMaxInfo}>
