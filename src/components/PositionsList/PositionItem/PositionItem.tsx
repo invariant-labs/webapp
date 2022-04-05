@@ -96,14 +96,25 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
   const feeFragment = useMemo(
     () => (
       <Tooltip
-        title={isActive ? 'Position active. Current price is inside range' : 'Position inactive. Current price is outside range'}
+        title={
+          isActive
+            ? 'Position active. Current price is inside range'
+            : 'Position inactive. Current price is outside range'
+        }
         placement='top'
         classes={{
           tooltip: classes.tooltip
-        }}
-      >
-        <Grid container item className={classNames(classes.fee, isActive ? classes.activeFee : undefined)} justifyContent='center' alignItems='center'>
-          <Typography className={classNames(classes.infoText, isActive ? classes.activeInfoText : undefined)}>{fee}% fee</Typography>
+        }}>
+        <Grid
+          container
+          item
+          className={classNames(classes.fee, isActive ? classes.activeFee : undefined)}
+          justifyContent='center'
+          alignItems='center'>
+          <Typography
+            className={classNames(classes.infoText, isActive ? classes.activeInfoText : undefined)}>
+            {fee}% fee
+          </Typography>
         </Grid>
       </Tooltip>
     ),

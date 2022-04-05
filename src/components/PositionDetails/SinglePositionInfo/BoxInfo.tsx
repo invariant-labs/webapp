@@ -88,11 +88,11 @@ export const BoxInfo: React.FC<{
       </Grid>
 
       <Grid className={classes.tokenGrid} container direction='column'>
-      {showLoader ? (
-            <Grid container className={classes.cover}>
-              <img src={loader} className={classes.loader} />
-            </Grid>
-          ) : null}
+        {showLoader ? (
+          <Grid container className={classes.cover}>
+            <img src={loader} className={classes.loader} />
+          </Grid>
+        ) : null}
         <Grid className={classes.tokenArea}>
           <Grid className={classes.tokenAreaUpperPart}>
             <Grid className={classes.token}>
