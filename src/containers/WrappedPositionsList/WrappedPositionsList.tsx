@@ -98,7 +98,8 @@ export const WrappedPositionsList: React.FC = () => {
             tokenYLiq,
             valueX,
             valueY,
-            id: position.id.toString() + '_' + position.pool.toString()
+            id: position.id.toString() + '_' + position.pool.toString(),
+            isActive: currentPrice >= min && currentPrice <= max
           }
         })
         .filter(item => {

@@ -8,9 +8,10 @@ import classNames from 'classnames'
 import ZoomInIcon from '@static/svg/zoom-in-icon.svg'
 import ZoomOutIcon from '@static/svg/zoom-out-icon.svg'
 import Brush from './Brush/Brush'
-import useStyles from './style'
 import { nearestTickIndex } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
+import loader from '@static/gif/loader.gif'
+import useStyles from './style'
 
 export type TickPlotPositionData = Omit<PlotTickData, 'y'>
 
@@ -33,6 +34,7 @@ export interface IPriceRangePlot {
   yDecimal: number
   tickSpacing: number
   isDiscrete?: boolean
+  coverOnLoading?: boolean
 }
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
@@ -53,7 +55,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   xDecimal,
   yDecimal,
   tickSpacing,
-  isDiscrete = false
+  isDiscrete = false,
+  coverOnLoading = false
 }) => {
   const classes = useStyles()
 
@@ -279,7 +282,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   }
 
   const lazyLoadingLayer: Layer = ({ innerWidth, innerHeight }) => {
-    if (!loading) {
+    if (!loading || coverOnLoading) {
       return null
     }
 
@@ -311,6 +314,11 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       className={classNames(classes.container, className)}
       style={style}
       innerRef={containerRef}>
+      {loading && coverOnLoading ? (
+        <Grid container className={classes.cover}>
+          <img src={loader} className={classes.loader} />
+        </Grid>
+      ) : null}
       <Grid
         container
         item

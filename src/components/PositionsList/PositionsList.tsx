@@ -2,25 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Button, Grid, Typography, InputAdornment, InputBase } from '@material-ui/core'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
-import { PositionItem } from './PositionItem/PositionItem'
+import { ILiquidityItem, PositionItem } from './PositionItem/PositionItem'
 import { PaginationList } from '@components/Pagination/Pagination'
 import SearchIcon from '@static/svg/lupaDark.svg'
+import loader from '@static/gif/loader.gif'
 import useStyle from './style'
-
-export interface ILiquidityItem {
-  tokenXName: string
-  tokenYName: string
-  tokenXIcon: string
-  tokenYIcon: string
-  tokenXLiq: number
-  tokenYLiq: number
-  fee: number
-  min: number
-  max: number
-  valueX: number
-  valueY: number
-  id: string
-}
 
 interface IProp {
   data: ILiquidityItem[]
@@ -122,10 +108,12 @@ export const PositionsList: React.FC<IProp> = ({
           ))
         ) : showNoConnected ? (
           <NoConnected {...noConnectedBlockerProps} />
+        ) : loading ? (
+          <Grid container>
+            <img src={loader} className={classes.loading} />
+          </Grid>
         ) : (
-          <Typography className={classes.noPositionsText}>
-            {loading ? 'Loading...' : 'You have no positions.'}
-          </Typography>
+          <Typography className={classes.noPositionsText}>You have no positions.</Typography>
         )}
       </Grid>
       {paginator(page).totalPages > 1 ? (
