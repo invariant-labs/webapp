@@ -22,9 +22,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 16
   },
   loading: {
-    ...typography.heading1,
-    textAlign: 'center',
-    color: colors.white.main
+    width: 300,
+    height: 300,
+    marginInline: 'auto'
   },
   plot: {
     width: 524,
