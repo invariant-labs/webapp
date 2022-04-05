@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     background: `${colors.invariant.black}dd`,
     position: 'absolute',
-    zIndex: 100,
+    zIndex: 11,
     borderRadius: 10
   },
   loader: {

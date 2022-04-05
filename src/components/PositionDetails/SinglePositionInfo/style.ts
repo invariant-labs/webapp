@@ -148,6 +148,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   tokenGrid: {
+    position: 'relative',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -281,6 +282,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       filter: 'brightness(2)'
     }
+  },
+  cover: {
+    width: '100%',
+    height: 'calc(100% - 12px)',
+    background: `${colors.invariant.black}dd`,
+    position: 'absolute',
+    borderRadius: 10,
+    zIndex: 1
+  },
+  loader: {
+    height: 50,
+    width: 50,
+    margin: 'auto'
   }
 }))
 

@@ -39,6 +39,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
 
+  const [showFeesLoader, setShowFeesLoader] = useState(true)
+
   useEffect(() => {
     if (position?.id && waitingForTicksData === null) {
       setWaitingForTicksData(true)
@@ -202,6 +204,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
       })
 
+      setShowFeesLoader(false)
+
       return [+printBN(bnX, position.tokenX.decimals), +printBN(bnY, position.tokenY.decimals)]
     }
 
@@ -271,6 +275,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       max={max}
       initialIsDiscreteValue={initialIsDiscreteValue}
       onDiscreteChange={setIsDiscreteValue}
+      showFeesLoader={showFeesLoader}
     />
   ) : isLoadingList ? (
     <Grid container>

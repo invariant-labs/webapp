@@ -26,6 +26,7 @@ interface IProps {
   max: number
   initialIsDiscreteValue: boolean
   onDiscreteChange: (val: boolean) => void
+  showFeesLoader?: boolean
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -44,7 +45,8 @@ const PositionDetails: React.FC<IProps> = ({
   min,
   max,
   initialIsDiscreteValue,
-  onDiscreteChange
+  onDiscreteChange,
+  showFeesLoader = false
 }) => {
   const classes = useStyles()
 
@@ -70,6 +72,7 @@ const PositionDetails: React.FC<IProps> = ({
           tokenY={tokenY}
           xToY={xToY}
           swapHandler={() => setXToY(!xToY)}
+          showFeesLoader={showFeesLoader}
         />
       </Grid>
       <Grid
