@@ -113,7 +113,7 @@ export const PoolInit: React.FC<IPoolInit> = ({
   )
 
   return (
-    <Grid container className={classes.wrapper}>
+    <Grid container direction='column' className={classes.wrapper}>
       <Typography className={classes.header}>Starting price</Typography>
       <Grid
         container

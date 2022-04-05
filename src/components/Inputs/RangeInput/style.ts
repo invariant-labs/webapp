@@ -100,7 +100,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   diffLabel: {
-    ...typography.caption4,
+    ...typography.caption2,
     color: colors.invariant.textGrey,
     width: 'fit-content',
     textOverflow: 'ellipsis',
@@ -108,7 +108,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap'
   },
   diff: {
-    ...typography.tiny1,
+    ...typography.caption3,
     padding: 3,
     borderRadius: 5,
     marginLeft: 5,
