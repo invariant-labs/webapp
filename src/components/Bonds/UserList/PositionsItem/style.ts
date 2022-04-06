@@ -8,7 +8,7 @@ export const useStyles = makeStyles(theme => ({
     maxWidth: '918px',
     width: '100%',
     padding: '16px 0 16px 0',
-    borderTop: '2px solid #3A466B',
+    borderTop: `2px solid ${colors.invariant.light}`,
     gridTemplateColumns: '23% 23% 19% 19% 16%',
     backgroundColor: colors.invariant.component,
     color: colors.white.main,
@@ -49,6 +49,12 @@ export const useStyles = makeStyles(theme => ({
     marginLeft: 'auto',
     width: '80px',
     height: '32px',
-    background: colors.invariant.pinkLinearGradient
+    borderRadius: '10px',
+    background: colors.invariant.pinkLinearGradient,
+
+    '&:hover': {
+      background: colors.invariant.pinkLinearGradient,
+      opacity: 0.8
+    }
   }
 }))

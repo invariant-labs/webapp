@@ -26,17 +26,7 @@ const PositionsList: React.FC<IPositionsListInterface> = ({ data }) => {
     <Grid className={classes.container}>
       <HeaderList />
       {data.map(element => (
-        <IPositionsItem
-          icon={element.icon}
-          decimals={element.decimals}
-          value={element.value}
-          symbol={element.symbol}
-          secondIcon={element.secondIcon}
-          secondValue={element.secondValue}
-          secondSymbol={element.secondSymbol}
-          redeemable={element.redeemable}
-          vestPeriod={element.vestPeriod}
-        />
+        <IPositionsItem {...element} />
       ))}
     </Grid>
   )

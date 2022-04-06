@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/react'
 import React from 'react'
-import HederList from './HeaderList'
+import HeaderList from './HeaderList'
 
-storiesOf('bonds/HederList', module).add('HederList', () => {
-  return <HederList />
+storiesOf('bonds/HeaderList', module).add('HeaderList', () => {
+  return <HeaderList />
 })
