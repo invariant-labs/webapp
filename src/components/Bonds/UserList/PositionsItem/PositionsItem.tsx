@@ -17,7 +17,7 @@ interface IPositionsItem {
   vestPeriod: string
 }
 
-const IPositionsItem: React.FC<IPositionsItem> = ({
+const PositionsItem: React.FC<IPositionsItem> = ({
   icon,
   decimals,
   value,
@@ -62,4 +62,4 @@ const IPositionsItem: React.FC<IPositionsItem> = ({
   )
 }
 
-export default IPositionsItem
+export default PositionsItem

@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core'
-import { colors, theme } from '@static/theme'
+import { colors } from '@static/theme'
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles(() => ({
   container: {
     margin: '0',
     boxSizing: 'border-box',
