@@ -42,15 +42,9 @@ export const useStyles = makeStyles(theme => ({
   bought: {
     marginRight: 'auto'
   },
-  icon: {},
-  symbol: {},
-  paid: {},
-  secondIcon: {},
-  secondSymbol: {},
   redeemable: {
     color: colors.invariant.green
   },
-  period: {},
   redeemButton: {
     marginLeft: 'auto',
     width: '80px',

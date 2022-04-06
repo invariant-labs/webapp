@@ -35,28 +35,28 @@ const PositionsItem: React.FC<IPositionsItem> = ({
     <Grid container className={classes.container}>
       <Grid className={classes.bought}>
         {isExSmall ? null : (
-          <Grid className={classes.icon}>
+          <Grid>
             <img src={icon} />
           </Grid>
         )}
-        <Typography className={classes.symbol}>
+        <Typography>
           {printBN(value, decimals)} {symbol}
         </Typography>
       </Grid>
 
       {isExSmall ? null : (
-        <Grid className={classes.paid}>
-          <Grid className={classes.secondIcon}>
+        <Grid>
+          <Grid>
             <img src={secondIcon} />
           </Grid>
-          <Typography className={classes.secondSymbol}>
+          <Typography>
             {printBN(secondValue, decimals)} {secondSymbol}
           </Typography>
         </Grid>
       )}
 
       <Grid className={classes.redeemable}>{printBN(redeemable, decimals)}</Grid>
-      <Grid className={classes.period}>{vestPeriod} days</Grid>
+      <Grid>{vestPeriod} days</Grid>
       <Button className={classes.redeemButton}>Redeem</Button>
     </Grid>
   )
