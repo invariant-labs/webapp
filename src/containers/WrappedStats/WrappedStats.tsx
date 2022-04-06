@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { Grid, Typography } from '@material-ui/core'
-import useStyles from './styles'
 import Liquidity from '@components/Stats/Liquidity/Liquidity'
 import Volume from '@components/Stats/Volume/Volume'
 import VolumeBar from '@components/Stats/volumeBar/volumeBar'
@@ -18,6 +17,8 @@ import {
   volumePlot
 } from '@selectors/stats'
 import { actions } from '@reducers/stats'
+import loader from '@static/gif/loader.gif'
+import useStyles from './styles'
 
 export const WrappedStats: React.FC = () => {
   const classes = useStyles()
@@ -40,7 +41,7 @@ export const WrappedStats: React.FC = () => {
   return (
     <Grid container className={classes.wrapper} direction='column'>
       {isLoadingStats ? (
-        <Typography className={classes.loading}>Loading...</Typography>
+        <img src={loader} className={classes.loading} />
       ) : (
         <>
           <Typography className={classes.subheader}>Overview</Typography>

@@ -116,6 +116,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   searchIcon: {
     width: 17
+  },
+  loading: {
+    width: 150,
+    height: 150,
+    marginInline: 'auto'
   }
 }))
 

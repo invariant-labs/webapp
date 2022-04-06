@@ -71,6 +71,12 @@ const solanaWalletSlice = createSlice({
       state.accounts[action.payload.programId.toString()] = action.payload
       return state
     },
+    addTokenAccounts(state, action: PayloadAction<ITokenAccount[]>) {
+      action.payload.forEach(account => {
+        state.accounts[account.programId.toString()] = account
+      })
+      return state
+    },
     setTokenBalance(state, action: PayloadAction<IsetTokenBalance>) {
       state.accounts[action.payload.programId].balance = action.payload.balance
       return state

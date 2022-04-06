@@ -3,6 +3,7 @@ import React, { useRef } from 'react'
 import Add from '@material-ui/icons/Add'
 import Remove from '@material-ui/icons/Remove'
 import useStyles from './style'
+import { colors } from '@static/theme'
 
 export interface IRangeInput {
   label: string
@@ -16,6 +17,8 @@ export interface IRangeInput {
   style?: React.CSSProperties
   className?: string
   disabled?: boolean
+  percentDiff: number
+  diffLabel: string
 }
 
 export const RangeInput: React.FC<IRangeInput> = ({
@@ -29,7 +32,9 @@ export const RangeInput: React.FC<IRangeInput> = ({
   onBlur,
   style,
   className,
-  disabled = false
+  disabled = false,
+  percentDiff,
+  diffLabel
 }) => {
   const classes = useStyles()
 
@@ -106,6 +111,18 @@ export const RangeInput: React.FC<IRangeInput> = ({
             <Add className={classes.buttonIcon} />
           </Button>
         )}
+      </Grid>
+      <Grid container direction='row' alignItems='center' wrap='nowrap'>
+        <Typography className={classes.diffLabel}>{diffLabel}</Typography>
+        <Typography
+          className={classes.diff}
+          style={{
+            color: percentDiff >= 0 ? colors.invariant.green : colors.invariant.Error,
+            backgroundColor: percentDiff >= 0 ? 'rgba(46, 224, 149,0.2)' : 'rgba(251,85,95,0.2)'
+          }}>
+          {percentDiff >= 0 ? '+' : ''}
+          {(percentDiff ?? 0).toFixed(2)}%
+        </Typography>
       </Grid>
     </Grid>
   )

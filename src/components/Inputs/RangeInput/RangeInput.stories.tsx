@@ -31,6 +31,8 @@ storiesOf('position/rangeInput', module)
             setVal((+val).toFixed(2).toString())
           }}
           style={{ width: 200, maxHeight: 300, margin: 'auto' }}
+          diffLabel='Max/Current price difference:'
+          percentDiff={100}
         />
       </div>
     )
@@ -63,6 +65,8 @@ storiesOf('position/rangeInput', module)
           }}
           style={{ width: 200, maxHeight: 300, margin: 'auto' }}
           disabled
+          diffLabel='Max/Current price difference:'
+          percentDiff={100}
         />
       </div>
     )

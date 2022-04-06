@@ -18,7 +18,7 @@ const transformNetwork = createTransform(
     if (Object.values(NetworkType).includes(outboundState)) {
       return outboundState
     } else {
-      return NetworkType.DEVNET
+      return NetworkType.MAINNET
     }
   }
 )

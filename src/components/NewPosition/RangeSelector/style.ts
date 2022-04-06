@@ -25,21 +25,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   plot: {
     width: '100%',
-    height: 220
+    height: 190
   },
   subheader: {
     ...typography.heading4,
-    marginBlock: 12,
+    marginBlock: 16,
     color: colors.white.main
   },
   inputs: {
-    marginBottom: 12,
+    marginBottom: 8,
     flexDirection: 'row',
     gap: 16
   },
   input: {
     flex: '1 1 0%',
-    gap: 16,
+    gap: 12,
 
     [theme.breakpoints.down('sm')]: {
       '&:first-child': {
@@ -77,11 +77,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'rgba(11, 12, 13, 0.8)',
     borderRadius: 11,
     [theme.breakpoints.down('sm')]: {
-      top: 555,
+      top: 562,
       right: 0,
       zIndex: 11,
       width: '100%',
-      height: 510,
+      height: 535,
       borderRadius: 9
     },
 
@@ -144,6 +144,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.caption4,
     fontSize: 13,
     color: colors.white.main
+  },
+  loader: {
+    height: 150,
+    width: 150,
+    margin: 'auto'
   }
 }))
 

@@ -1,18 +1,17 @@
 import { Button, Grid, Typography } from '@material-ui/core'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import {
   calcPrice,
   nearestTickIndex,
   formatNumbers,
   showPrefix,
-  minSpacingMultiplicity,
-  maxSpacingMultiplicity,
   toMaxNumericPlaces
 } from '@consts/utils'
 import SimpleInput from '@components/Inputs/SimpleInput/SimpleInput'
 import useStyles from './style'
 import AnimatedNumber from '@components/AnimatedNumber'
+import { getMinTick, getMaxTick } from '@invariant-labs/sdk/lib/utils'
 
 export interface IPoolInit {
   tokenASymbol: string
@@ -107,8 +106,13 @@ export const PoolInit: React.FC<IPoolInit> = ({
     }
   }, [currentPairReversed])
 
+  const price = useMemo(
+    () => calcPrice(midPrice, isXtoY, xDecimal, yDecimal),
+    [midPrice, isXtoY, xDecimal, yDecimal]
+  )
+
   return (
-    <Grid container className={classes.wrapper}>
+    <Grid container direction='column' className={classes.wrapper}>
       <Typography className={classes.header}>Starting price</Typography>
       <Grid
         container
@@ -117,8 +121,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
         justifyContent='flex-start'>
         <Grid className={classes.infoWrapper}>
           <Typography className={classes.info}>
-            This pool does not exist yet. Select a pair of tokens, then choose a fee. Enter the
-            amount of Token A, then Token B and press the button.
+            This pool has not existed yet. To create it, select the fee tier, initial price, and
+            enter the amount of the tokens. Estimated cost of creating pool is 0.1 SOL
           </Typography>
         </Grid>
 
@@ -139,13 +143,11 @@ export const PoolInit: React.FC<IPoolInit> = ({
 
           <Typography className={classes.priceValue}>
             <AnimatedNumber
-              value={calcPrice(midPrice, isXtoY, xDecimal, yDecimal).toFixed(
-                isXtoY ? xDecimal : yDecimal
-              )}
+              value={price.toFixed(isXtoY ? xDecimal : yDecimal)}
               duration={300}
               formatValue={formatNumbers()}
             />
-            {showPrefix(calcPrice(midPrice, isXtoY, xDecimal, yDecimal))} {tokenBSymbol}
+            {showPrefix(price)} {tokenBSymbol}
           </Typography>
         </Grid>
 
@@ -160,8 +162,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
             setValue={onLeftInputChange}
             decreaseValue={() => {
               const newLeft = isXtoY
-                ? Math.max(minSpacingMultiplicity(tickSpacing), leftRange - tickSpacing)
-                : Math.min(maxSpacingMultiplicity(tickSpacing), leftRange + tickSpacing)
+                ? Math.max(getMinTick(tickSpacing), leftRange - tickSpacing)
+                : Math.min(getMaxTick(tickSpacing), leftRange + tickSpacing)
               changeRangeHandler(newLeft, rightRange)
             }}
             increaseValue={() => {
@@ -184,6 +186,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
 
               changeRangeHandler(newLeft, rightRange)
             }}
+            diffLabel='Min/Current price difference:'
+            percentDiff={((+leftInput - price) / price) * 100}
           />
           <RangeInput
             className={classes.input}
@@ -200,8 +204,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
             }}
             increaseValue={() => {
               const newRight = isXtoY
-                ? Math.min(maxSpacingMultiplicity(tickSpacing), rightRange + tickSpacing)
-                : Math.max(minSpacingMultiplicity(tickSpacing), rightRange - tickSpacing)
+                ? Math.min(getMaxTick(tickSpacing), rightRange + tickSpacing)
+                : Math.max(getMinTick(tickSpacing), rightRange - tickSpacing)
               changeRangeHandler(leftRange, newRight)
             }}
             onBlur={() => {
@@ -216,6 +220,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
                   )
               changeRangeHandler(leftRange, newRight)
             }}
+            diffLabel='Max/Current price difference:'
+            percentDiff={((+rightInput - price) / price) * 100}
           />
         </Grid>
         <Grid container className={classes.buttons}>
@@ -226,8 +232,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
             className={classes.button}
             onClick={() => {
               changeRangeHandler(
-                isXtoY ? minSpacingMultiplicity(tickSpacing) : maxSpacingMultiplicity(tickSpacing),
-                isXtoY ? maxSpacingMultiplicity(tickSpacing) : minSpacingMultiplicity(tickSpacing)
+                isXtoY ? getMinTick(tickSpacing) : getMaxTick(tickSpacing),
+                isXtoY ? getMaxTick(tickSpacing) : getMinTick(tickSpacing)
               )
             }}>
             Set full range

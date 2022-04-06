@@ -15,6 +15,7 @@ interface IProp {
   tokenY: ILiquidityToken
   xToY: boolean
   swapHandler: () => void
+  showFeesLoader?: boolean
 }
 
 const SinglePositionInfo: React.FC<IProp> = ({
@@ -24,7 +25,8 @@ const SinglePositionInfo: React.FC<IProp> = ({
   tokenX,
   tokenY,
   xToY,
-  swapHandler
+  swapHandler,
+  showFeesLoader = false
 }) => {
   const history = useHistory()
   const classes = useStyles()
@@ -95,6 +97,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
             xToY ? { ...tokenY, value: tokenY.claimValue } : { ...tokenX, value: tokenX.claimValue }
           }
           onClickButton={onClickClaimFee}
+          showLoader={showFeesLoader}
         />
       </Grid>
     </Grid>
