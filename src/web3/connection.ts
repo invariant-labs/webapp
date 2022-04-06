@@ -1,6 +1,7 @@
 import { Connection } from '@solana/web3.js'
 import { MAINNET_RPCS, NetworkType, SolanaNetworks } from '@consts/static'
 import { Network } from '@invariant-labs/sdk'
+import { Network as StakerNetwork } from '@invariant-labs/staker-sdk'
 
 export const networkToName = (network: SolanaNetworks) => {
   switch (network) {
@@ -88,6 +89,22 @@ const solanaNetworktoProgramNetwork = (solanaNetwork: SolanaNetworks): Network =
   return Network.DEV
 }
 
+const solanaNetworktoStakerNetwork = (solanaNetwork: SolanaNetworks): StakerNetwork => {
+  switch (solanaNetwork) {
+    case SolanaNetworks.DEV:
+      return StakerNetwork.DEV
+    case SolanaNetworks.LOCAL:
+      return StakerNetwork.LOCAL
+    case SolanaNetworks.TEST:
+      return StakerNetwork.TEST
+    case SolanaNetworks.MAIN:
+    case SolanaNetworks.MAIN_SERUM:
+    case SolanaNetworks.MAIN_FIGMENT:
+    case SolanaNetworks.MAIN_GENESYSGO:
+      return StakerNetwork.MAIN
+  }
+}
+
 const getCurrentSolanaConnection = (): Connection | null => {
   return _connection
 }
@@ -97,5 +114,6 @@ export {
   SolanaNetworks,
   getCurrentSolanaConnection,
   getSolanaNetwork,
-  solanaNetworktoProgramNetwork
+  solanaNetworktoProgramNetwork,
+  solanaNetworktoStakerNetwork
 }
