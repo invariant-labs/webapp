@@ -17,7 +17,7 @@ interface IBondItem {
   vesting: string
 }
 
-const IBondItem: React.FC<IBondItem> = ({
+const BondItem: React.FC<IBondItem> = ({
   icon,
   secondIcon,
   symbol,
@@ -67,4 +67,4 @@ const IBondItem: React.FC<IBondItem> = ({
     </Grid>
   )
 }
-export default IBondItem
+export default BondItem
