@@ -6,6 +6,11 @@ const useStyles = makeStyles(() => ({
     ...typography.heading1,
     textAlign: 'center',
     color: colors.white.main
+  },
+  loading: {
+    width: 150,
+    height: 150,
+    marginInline: 'auto'
   }
 }))
 

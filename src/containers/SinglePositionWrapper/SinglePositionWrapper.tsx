@@ -9,12 +9,13 @@ import {
   singlePositionData
 } from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
-import { Typography } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { calculateClaimAmount, DECIMAL } from '@invariant-labs/sdk/src/utils'
-import useStyles from './style'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
+import loader from '@static/gif/loader.gif'
+import useStyles from './style'
 
 export interface IProps {
   id: string
@@ -37,6 +38,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   } = useSelector(currentPositionRangeTicks)
 
   const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
+
+  const [showFeesLoader, setShowFeesLoader] = useState(true)
 
   useEffect(() => {
     if (position?.id && waitingForTicksData === null) {
@@ -201,6 +204,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
       })
 
+      setShowFeesLoader(false)
+
       return [+printBN(bnX, position.tokenX.decimals), +printBN(bnY, position.tokenY.decimals)]
     }
 
@@ -270,9 +275,12 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       max={max}
       initialIsDiscreteValue={initialIsDiscreteValue}
       onDiscreteChange={setIsDiscreteValue}
+      showFeesLoader={showFeesLoader}
     />
   ) : isLoadingList ? (
-    <Typography className={classes.placeholderText}>Loading...</Typography>
+    <Grid container>
+      <img src={loader} className={classes.loading} />
+    </Grid>
   ) : !position ? (
     <Typography className={classes.placeholderText}>
       Position does not exist in your list.
