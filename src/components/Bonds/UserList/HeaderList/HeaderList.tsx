@@ -1,22 +1,20 @@
-import { Grid, Typography } from '@material-ui/core'
-import { colors } from '@static/theme'
+import { Grid, Typography, useMediaQuery } from '@material-ui/core'
+import { colors, theme } from '@static/theme'
 import React from 'react'
 import { useStyles } from './style'
 
-const HederList = () => {
+const HeaderList = () => {
   const classes = useStyles()
+  const isExSmall = useMediaQuery(theme.breakpoints.down('xs'))
 
   return (
-    <Grid
-      container
-      style={{ color: colors.invariant.textGrey, fontWeight: 400 }}
-      classes={{ container: classes.containter }}>
-      <Typography>You've bought</Typography>
-      <Typography>You've paid</Typography>
+    <Grid container classes={{ container: classes.container }}>
+      <Typography className={classes.bought}>You've bought</Typography>
+      {isExSmall ? null : <Typography>You've paid</Typography>}
       <Typography>Redeemable</Typography>
       <Typography>Vest period</Typography>
     </Grid>
   )
 }
 
-export default HederList
+export default HeaderList
