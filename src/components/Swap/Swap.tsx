@@ -124,12 +124,16 @@ export const Swap: React.FC<ISwap> = ({
     poolIndex: number
     AmountOutWithFee: BN
     estimatedPriceAfterSwap: BN
+    minimumReceived: BN
+    priceImpact: BN
     error: string[]
   }>({
     amountOut: new BN(0),
     poolIndex: 0,
     AmountOutWithFee: new BN(0),
     estimatedPriceAfterSwap: new BN(0),
+    minimumReceived: new BN(0),
+    priceImpact: new BN(0),
     error: []
   })
 

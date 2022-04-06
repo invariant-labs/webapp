@@ -495,6 +495,8 @@ export const handleSimulate = async (
   poolIndex: number
   AmountOutWithFee: BN
   estimatedPriceAfterSwap: BN
+  minimumReceived: BN
+  priceImpact: BN
   error: string[]
 }> => {
   const filteredPools = findPairs(fromToken, toToken, pools)
@@ -505,6 +507,8 @@ export const handleSimulate = async (
   let resultWithFee: BN = new BN(0)
   let result
   let estimatedPrice: BN = new BN(0)
+  let minimumReceived: BN = new BN(0)
+  let priceImpact: BN = new BN(0)
 
   if (amount.eq(new BN(0))) {
     return {
@@ -512,6 +516,8 @@ export const handleSimulate = async (
       poolIndex: poolIndex,
       AmountOutWithFee: new BN(0),
       estimatedPriceAfterSwap: new BN(0),
+      minimumReceived: new BN(0),
+      priceImpact: new BN(0),
       error: errorMessage
     }
   }
@@ -551,6 +557,8 @@ export const handleSimulate = async (
         poolIndex = findPoolIndex(pool.address, pools)
         swapSimulateRouterAmount = result
         estimatedPrice = swapSimulateResult.priceAfterSwap
+        minimumReceived = swapSimulateResult.minReceived
+        priceImpact = swapSimulateResult.priceImpact
       }
     } catch (err: any) {
       errorMessage.push(err.toString())
@@ -562,6 +570,8 @@ export const handleSimulate = async (
       poolIndex: poolIndex,
       AmountOutWithFee: new BN(0),
       estimatedPriceAfterSwap: new BN(0),
+      minimumReceived: new BN(0),
+      priceImpact: new BN(0),
       error: errorMessage
     }
   }
@@ -571,6 +581,8 @@ export const handleSimulate = async (
     poolIndex: poolIndex,
     AmountOutWithFee: resultWithFee,
     estimatedPriceAfterSwap: estimatedPrice,
+    minimumReceived,
+    priceImpact,
     error: []
   }
 }
