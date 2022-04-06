@@ -11,7 +11,7 @@ export const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     gridTemplateColumns: '21% 25% 11% 19% 12% 12%',
-    borderTop: '2px solid #3A466B',
+    borderTop: `2px solid ${colors.invariant.light}`,
     ...typography.body1,
 
     [theme.breakpoints.down('sm')]: {
@@ -74,7 +74,7 @@ export const useStyles = makeStyles(theme => ({
     fontFamily: 'Mukta'
   },
   price: {
-    marginLeft: '20px',
+    margin: 'auto',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -93,6 +93,10 @@ export const useStyles = makeStyles(theme => ({
     textTransform: 'none',
     marginLeft: 'auto',
     ...typography.body1,
+
+    '&:hover': {
+      background: colors.invariant.greenLinearGradient
+    },
 
     [theme.breakpoints.down('sm')]: {
       marginRight: 'auto'
