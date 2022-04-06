@@ -85,7 +85,7 @@ export const useStyles = makeStyles(theme => ({
     fontFamily: 'Mukta'
   },
   bondButton: {
-    backgroundColor: colors.green.button,
+    background: colors.invariant.greenLinearGradient,
     color: colors.invariant.dark,
     borderRadius: '10px',
     width: '80px',
@@ -95,7 +95,8 @@ export const useStyles = makeStyles(theme => ({
     ...typography.body1,
 
     '&:hover': {
-      background: colors.invariant.greenLinearGradient
+      background: colors.invariant.greenLinearGradient,
+      opacity: 0.8
     },
 
     [theme.breakpoints.down('sm')]: {
