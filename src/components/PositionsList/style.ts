@@ -122,6 +122,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 150,
     height: 150,
     margin: 'auto'
+  },
+  placeholder: {
+    margin: 'auto'
   }
 }))
 

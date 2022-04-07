@@ -7,6 +7,7 @@ import { PaginationList } from '@components/Pagination/Pagination'
 import SearchIcon from '@static/svg/lupaDark.svg'
 import loader from '@static/gif/loader.gif'
 import useStyle from './style'
+import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
 
 interface IProp {
   data: ILiquidityItem[]
@@ -94,7 +95,7 @@ export const PositionsList: React.FC<IProp> = ({
           </Grid>
         </Grid>
       </Grid>
-      <Grid container className={classes.list}>
+      <Grid container direction='column' className={classes.list} justifyContent='flex-start'>
         {data.length > 0 ? (
           paginator(page).data.map((element, index) => (
             <Grid
@@ -113,7 +114,10 @@ export const PositionsList: React.FC<IProp> = ({
             <img src={loader} className={classes.loading} />
           </Grid>
         ) : (
-          <Typography className={classes.noPositionsText}>You have no positions.</Typography>
+          <EmptyPlaceholder
+            desc='Add your first position by pressing the button and start earning!'
+            className={classes.placeholder}
+          />
         )}
       </Grid>
       {paginator(page).totalPages > 1 ? (
