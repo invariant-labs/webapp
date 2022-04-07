@@ -7,7 +7,7 @@ export const useStyles = makeStyles<Theme, { open: boolean }>(() => ({
     padding: 0,
     background: colors.invariant.newDark,
     overflow: 'hidden',
-    transition: 'max-height 1s',
+    transition: 'max-height 300ms',
     maxHeight: open ? 210 : 0,
     marginBottom: 16
   }),
