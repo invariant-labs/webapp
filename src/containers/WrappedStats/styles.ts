@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   loading: {
     width: 150,
     height: 150,
-    margin: 'auto'
+    marginInline: 'auto'
   },
   plot: {
     width: 524,

@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
   loading: {
     width: 150,
     height: 150,
-    margin: 'auto'
+    marginInline: 'auto'
   }
 }))
 

@@ -99,8 +99,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.text
   },
   list: {
-    position: 'relative',
-    flex: 1
+    position: 'relative'
   },
   itemLink: {
     textDecoration: 'none',
@@ -121,7 +120,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   loading: {
     width: 150,
     height: 150,
-    margin: 'auto'
+    marginInline: 'auto'
   }
 }))
 
