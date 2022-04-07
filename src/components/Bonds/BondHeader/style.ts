@@ -6,7 +6,7 @@ export const useStyles = makeStyles(theme => ({
     display: 'grid',
     maxWidth: '918px',
     width: '100%',
-    padding: '32px 0 32px 0',
+    padding: '30px 0 30px 0',
     fontWeight: 400,
     alignItems: 'center',
     textAlign: 'center',
@@ -23,7 +23,8 @@ export const useStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down('xs')]: {
       ...typography.caption3,
-      gridTemplateColumns: '26% 34% 21% 19%'
+      gridTemplateColumns: '33% 34% 33%',
+      padding: '24px 0 16px 0 '
     }
   },
 

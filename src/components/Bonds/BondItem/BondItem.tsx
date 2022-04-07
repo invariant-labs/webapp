@@ -47,16 +47,16 @@ const BondItem: React.FC<IBondItem> = ({
             </>
           )}
           <Grid className={classes.symbol}>
-            <Typography>
+            <Typography className={classes.secondSymbol}>
               {symbol}/{secondSymbol}
             </Typography>
           </Grid>
         </Grid>
       </Grid>
       <Grid className={classes.price}>
-        {printBN(new BN(price), decimals)} {symbol} per {secondSymbol}
+        {printBN(new BN(price), decimals)} {symbol}/{secondSymbol}
       </Grid>
-      <Grid className={classes.roi}>+{roiPercent}%</Grid>
+      {!isExSmall ? <Grid className={classes.roi}>+{roiPercent}%</Grid> : null}
       {!isExSmall ? <Typography className={classes.purchased}>${purchased}</Typography> : null}
 
       {!isSmall ? (

@@ -23,7 +23,7 @@ export const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('xs')]: {
       width: '100%',
       ...typography.caption3,
-      gridTemplateColumns: '26% 34% 21% 19%'
+      gridTemplateColumns: '33% 34% 33%'
     }
   },
   itemList: {
@@ -61,6 +61,11 @@ export const useStyles = makeStyles(theme => ({
       justifyContent: 'center',
       alignItems: 'center',
       margin: 'auto'
+    }
+  },
+  secondSymbol: {
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption3
     }
   },
   purchased: {
