@@ -11,11 +11,10 @@ storiesOf('newUi/swap', module)
       <TransactionDetailsBox
         open
         fee={{ v: new BN(1000) }}
-        exchangeRate={{ val: 0.4321, symbol: 'SNY' }}
-        decimal={6}
+        exchangeRate={{ val: 0.4321, symbol: 'SNY', decimal: 6 }}
         slippage={new BN(100000)}
         priceImpact={new BN(400000)}
-        minimumReceived={new BN(1000000000)}
+        minimumReceived={{ val: new BN(1000000000), symbol: 'BTC', decimal: 6 }}
       />
     </div>
   ))

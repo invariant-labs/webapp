@@ -8,7 +8,7 @@ export const useStyles = makeStyles<Theme, { open: boolean }>(() => ({
     background: colors.invariant.newDark,
     overflow: 'hidden',
     transition: 'max-height 2s',
-    maxHeight: open ? 'unset' : 0
+    maxHeight: open ? 162 : 0
   }),
   row: {
     '&:not(:last-child)': {
