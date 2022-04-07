@@ -12,7 +12,7 @@ storiesOf('newUi/swap', module)
         open
         fee={{ v: new BN(1000) }}
         exchangeRate={{ val: 0.4321, symbol: 'SNY', decimal: 6 }}
-        slippage={new BN(100000)}
+        slippage={0.1}
         priceImpact={new BN(400000)}
         minimumReceived={{ val: new BN(1000000000), symbol: 'BTC', decimal: 6 }}
       />

@@ -10,7 +10,7 @@ interface IProps {
   open: boolean
   fee: { v: BN }
   exchangeRate: { val: number; symbol: string; decimal: number }
-  slippage: BN
+  slippage: number
   minimumReceived: { val: BN; symbol: string; decimal: number }
   priceImpact: BN
 }
@@ -36,44 +36,43 @@ const TransactionDetailsBox: React.FC<IProps> = ({
   const classes = useStyles({ open })
 
   const feePercent = percentValueDisplay(fee)
-  const slippagePercent = percentValueDisplay({ v: slippage })
   const impactPercent = percentValueDisplay({ v: priceImpact })
 
   return (
-    <Grid container direction='column' wrap='nowrap' className={classes.wrapper}>
-      <Grid container justifyContent='space-between' className={classes.row}>
-        <Typography className={classes.label}>Exchange rate:</Typography>
-        <Typography className={classes.value}>
-          {exchangeRate.val.toFixed(exchangeRate.decimal)} {exchangeRate.symbol}
-        </Typography>
-      </Grid>
+    <Grid container className={classes.wrapper}>
+      <Grid container direction='column' wrap='nowrap' className={classes.innerWrapper}>
+        <Grid container justifyContent='space-between' className={classes.row}>
+          <Typography className={classes.label}>Exchange rate:</Typography>
+          <Typography className={classes.value}>
+            {exchangeRate.val.toFixed(exchangeRate.decimal)} {exchangeRate.symbol}
+          </Typography>
+        </Grid>
 
-      <Grid container justifyContent='space-between' className={classes.row}>
-        <Typography className={classes.label}>Fee:</Typography>
-        <Typography className={classes.value}>
-          {printBN(feePercent.value, feePercent.decimal)} %
-        </Typography>
-      </Grid>
+        <Grid container justifyContent='space-between' className={classes.row}>
+          <Typography className={classes.label}>Fee:</Typography>
+          <Typography className={classes.value}>
+            {printBN(feePercent.value, feePercent.decimal)}%
+          </Typography>
+        </Grid>
 
-      <Grid container justifyContent='space-between' className={classes.row}>
-        <Typography className={classes.label}>Price impact:</Typography>
-        <Typography className={classes.value}>
-          {printBN(impactPercent.value, impactPercent.decimal)} %
-        </Typography>
-      </Grid>
+        <Grid container justifyContent='space-between' className={classes.row}>
+          <Typography className={classes.label}>Price impact:</Typography>
+          <Typography className={classes.value}>
+            {printBN(impactPercent.value, impactPercent.decimal)}%
+          </Typography>
+        </Grid>
 
-      <Grid container justifyContent='space-between' className={classes.row}>
-        <Typography className={classes.label}>Minimum received:</Typography>
-        <Typography className={classes.value}>
-          {printBN(minimumReceived.val, minimumReceived.decimal)} {minimumReceived.symbol}
-        </Typography>
-      </Grid>
+        <Grid container justifyContent='space-between' className={classes.row}>
+          <Typography className={classes.label}>Minimum received:</Typography>
+          <Typography className={classes.value}>
+            {printBN(minimumReceived.val, minimumReceived.decimal)} {minimumReceived.symbol}
+          </Typography>
+        </Grid>
 
-      <Grid container justifyContent='space-between' className={classes.row}>
-        <Typography className={classes.label}>Slippage tolerance:</Typography>
-        <Typography className={classes.value}>
-          {printBN(slippagePercent.value, slippagePercent.decimal)} %
-        </Typography>
+        <Grid container justifyContent='space-between' className={classes.row}>
+          <Typography className={classes.label}>Slippage tolerance:</Typography>
+          <Typography className={classes.value}>{slippage}%</Typography>
+        </Grid>
       </Grid>
     </Grid>
   )

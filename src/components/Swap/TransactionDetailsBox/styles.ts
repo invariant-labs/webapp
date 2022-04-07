@@ -4,20 +4,26 @@ import { colors, typography } from '@static/theme'
 export const useStyles = makeStyles<Theme, { open: boolean }>(() => ({
   wrapper: ({ open }) => ({
     borderRadius: 10,
-    padding: open ? 16 : 0,
+    padding: 0,
     background: colors.invariant.newDark,
     overflow: 'hidden',
-    transition: 'max-height 2s',
-    maxHeight: open ? 162 : 0
+    transition: 'max-height 1s',
+    maxHeight: open ? 210 : 0,
+    marginBottom: 16
   }),
+  innerWrapper: {
+    padding: 16,
+    minHeight: 162
+  },
   row: {
     '&:not(:last-child)': {
-      marginBottom: 12
+      marginBottom: 8
     }
   },
   label: {
     ...typography.body1,
-    color: colors.white.main
+    color: colors.white.main,
+    marginRight: 3
   },
   value: {
     ...typography.body2,

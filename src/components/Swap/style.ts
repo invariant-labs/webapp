@@ -164,7 +164,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexFlow: 'row nowrap',
-    margin: '5px 0 7px 0px',
+    marginTop: 5,
     position: 'relative',
     cursor: 'default',
     filter: 'brightness(0.9)'
