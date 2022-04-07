@@ -110,7 +110,7 @@ export const PositionsList: React.FC<IProp> = ({
         ) : showNoConnected ? (
           <NoConnected {...noConnectedBlockerProps} />
         ) : loading ? (
-          <Grid container>
+          <Grid container style={{ flex: 1 }}>
             <img src={loader} className={classes.loading} />
           </Grid>
         ) : (
