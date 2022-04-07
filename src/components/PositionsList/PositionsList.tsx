@@ -60,7 +60,7 @@ export const PositionsList: React.FC<IProp> = ({
   }, [searchValue])
 
   return (
-    <Grid className={classes.root}>
+    <Grid container direction='column' className={classes.root}>
       <Grid
         className={classes.header}
         container
@@ -94,7 +94,7 @@ export const PositionsList: React.FC<IProp> = ({
           </Grid>
         </Grid>
       </Grid>
-      <Grid className={classes.list}>
+      <Grid container className={classes.list}>
         {data.length > 0 ? (
           paginator(page).data.map((element, index) => (
             <Grid
