@@ -36,14 +36,23 @@ export const transformBN = (amount: BN): string => {
   return (amount.div(new BN(1e2)).toNumber() / 1e4).toString()
 }
 export const printBN = (amount: BN, decimals: number): string => {
-  const balanceString = amount.toString()
+  const amountString = amount.toString()
+  const isNegative = amountString.length > 0 && amountString[0] === '-'
+
+  const balanceString = isNegative ? amountString.slice(1) : amountString
+
   if (balanceString.length <= decimals) {
-    return '0.' + '0'.repeat(decimals - balanceString.length) + balanceString
+    return (
+      (isNegative ? '-' : '') + '0.' + '0'.repeat(decimals - balanceString.length) + balanceString
+    )
   } else {
-    return trimZeros(
-      balanceString.substring(0, balanceString.length - decimals) +
-        '.' +
-        balanceString.substring(balanceString.length - decimals)
+    return (
+      (isNegative ? '-' : '') +
+      trimZeros(
+        balanceString.substring(0, balanceString.length - decimals) +
+          '.' +
+          balanceString.substring(balanceString.length - decimals)
+      )
     )
   }
 }
