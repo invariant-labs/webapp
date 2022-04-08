@@ -95,13 +95,15 @@ const solanaNetworktoStakerNetwork = (solanaNetwork: SolanaNetworks): StakerNetw
       return StakerNetwork.DEV
     case SolanaNetworks.LOCAL:
       return StakerNetwork.LOCAL
-    case SolanaNetworks.TEST:
-      return StakerNetwork.TEST
-    case SolanaNetworks.MAIN:
-    case SolanaNetworks.MAIN_SERUM:
-    case SolanaNetworks.MAIN_FIGMENT:
-    case SolanaNetworks.MAIN_GENESYSGO:
-      return StakerNetwork.MAIN
+    // case SolanaNetworks.TEST:
+    //   return StakerNetwork.TEST
+    // case SolanaNetworks.MAIN:
+    // case SolanaNetworks.MAIN_SERUM:
+    // case SolanaNetworks.MAIN_FIGMENT:
+    // case SolanaNetworks.MAIN_GENESYSGO:
+    //   return StakerNetwork.MAIN
+    default:
+      return StakerNetwork.DEV
   }
 }
 
