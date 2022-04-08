@@ -24,6 +24,17 @@ export interface GetStakesForFarmPayload {
   pool: PublicKey
 }
 
+export interface SetSingleFarmPayload {
+  farm: PublicKey
+  data: IncentiveStructure
+}
+
+export interface FarmPositionData {
+  pool: PublicKey
+  id: BN
+  farm: PublicKey
+}
+
 export const defaultState: IFarmsStore = {
   farms: {},
   isLoadingFarms: false,
@@ -50,6 +61,11 @@ const farmsSlice = createSlice({
       state.isLoadingFarms = false
       return state
     },
+    updateSingleFarm(_state, _action: PayloadAction<PublicKey>) {},
+    setSingleFarm(state, action: PayloadAction<SetSingleFarmPayload>) {
+      state.farms[action.payload.farm.toString()] = action.payload.data
+      return state
+    },
     getCurrentFarmData(state, action: PayloadAction<GetStakesForFarmPayload>) {
       state.currentFarmData = {
         ...action.payload,
@@ -63,7 +79,9 @@ const farmsSlice = createSlice({
       state.currentFarmData.stakedPositionsIds = action.payload
       state.isLoadingCurrentFarmData = false
       return state
-    }
+    },
+    stakePosition(_state, _action: PayloadAction<FarmPositionData>) {},
+    withdrawRewardsForPosition(_state, _action: PayloadAction<FarmPositionData>) {}
   }
 })
 
