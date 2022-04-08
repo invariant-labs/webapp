@@ -21,10 +21,10 @@ addParameters({
 
 const customViewports = {
   sx375: {
-    name: 'xs-360',
+    name: 'xs-375',
     styles: {
-      width: '360px',
-      height: '360px'
+      width: '375px',
+      height: '375px'
     }
   },
   sm450: {
