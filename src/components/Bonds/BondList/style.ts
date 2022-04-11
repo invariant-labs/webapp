@@ -13,8 +13,7 @@ export const useStyles = makeStyles(theme => ({
     backgroundColor: colors.invariant.component,
 
     [theme.breakpoints.down('xs')]: {
-      padding: '0 16px 10px 16px',
-      maxWidth: '504px'
+      padding: '0 16px 10px 16px'
     }
   }
 }))

@@ -25,17 +25,7 @@ const BondList: React.FC<IBondListInterface> = ({ data }) => {
     <Grid className={classes.container}>
       <BondHeader />
       {data.map(element => (
-        <IBondItem
-          icon={element.icon}
-          secondIcon={element.secondIcon}
-          symbol={element.symbol}
-          secondSymbol={element.secondSymbol}
-          decimals={element.decimals}
-          price={element.price}
-          roiPercent={element.roiPercent}
-          purchased={element.purchased}
-          vesting={element.vesting}
-        />
+        <IBondItem {...element} />
       ))}
     </Grid>
   )
