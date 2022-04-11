@@ -5,7 +5,6 @@ import React from 'react'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { useStyles } from './styles'
-import { trimLeadingZeros } from '../../../store/consts/utils'
 
 interface IProps {
   open: boolean
@@ -37,6 +36,7 @@ const TransactionDetailsBox: React.FC<IProps> = ({
   const classes = useStyles({ open })
 
   const feePercent = percentValueDisplay(fee)
+  const impact = +printBN(priceImpact, DECIMAL - 2)
 
   return (
     <Grid container className={classes.wrapper}>
@@ -58,7 +58,7 @@ const TransactionDetailsBox: React.FC<IProps> = ({
         <Grid container justifyContent='space-between' className={classes.row}>
           <Typography className={classes.label}>Price impact:</Typography>
           <Typography className={classes.value}>
-            {trimLeadingZeros(printBN(priceImpact, DECIMAL))}%
+            {impact < 0.01 ? '<0.01%' : `${impact.toFixed(2)}%`}
           </Typography>
         </Grid>
 
