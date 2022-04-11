@@ -39,7 +39,7 @@ const bondsSlice = createSlice({
       state.isLoadingBondsList = false
       return state
     },
-    getPositionsList(state) {
+    getBondsList(state) {
       state.isLoadingBondsList = true
       return state
     },
