@@ -404,10 +404,6 @@ export const Swap: React.FC<ISwap> = ({
   useEffect(() => {
     if (getStateMessage() !== 'Loading') {
       setPrevOpenState(detailsOpen && canShowDetails)
-
-      if (!(detailsOpen && canShowDetails)) {
-        setDetailsOpen(false)
-      }
     }
   }, [detailsOpen, canShowDetails])
 
