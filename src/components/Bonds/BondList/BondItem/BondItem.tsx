@@ -5,7 +5,7 @@ import { BN } from '@project-serum/anchor'
 import { colors, theme } from '@static/theme'
 import { useStyles } from './style'
 
-interface IBondItem {
+export interface IBondItem {
   icon: string
   secondIcon: string
   symbol: string

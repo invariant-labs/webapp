@@ -5,7 +5,7 @@ import { theme } from '@static/theme'
 import React from 'react'
 import { useStyles } from './style'
 
-interface IPositionsItem {
+export interface IPositionsItem {
   icon: string
   decimals: number
   value: BN
