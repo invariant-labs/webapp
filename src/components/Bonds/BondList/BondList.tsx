@@ -1,7 +1,7 @@
 import { Grid } from '@material-ui/core'
 import React from 'react'
-import BondHeader from '../BondHeader/BondHeader'
-import IBondItem from '../BondItem/BondItem'
+import BondHeader from './BondHeader/BondHeader'
+import IBondItem from './BondItem/BondItem'
 import { useStyles } from './style'
 
 interface IBondListInterface {
