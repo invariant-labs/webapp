@@ -1,7 +1,7 @@
 import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
 import { WRAPPED_SOL_ADDRESS, WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT } from '@consts/static'
 import { printBN, printBNtoBN } from '@consts/utils'
-import { Button, Grid, Popover, Typography } from '@material-ui/core'
+import { Button, Grid, Input, Popover, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
@@ -52,36 +52,41 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
         vertical: 'top',
         horizontal: 'center'
       }}>
-      <Grid container className={classes.container}>
+      <Grid container className={classes.container} direction='column' alignItems='center'>
         <Typography className={classes.buy}>Buy {bondToken.symbol}</Typography>
         <Typography className={classes.label}>You're paying with</Typography>
-        <Typography className={classes.value}>
-          <img className={classes.icon} src={quoteToken.logoURI} /> {quoteToken.symbol}
-        </Typography>
+        <Grid container alignItems='center' justifyContent='center' style={{ marginBottom: 16 }}>
+          <img className={classes.icon} src={quoteToken.logoURI} />
+          <Typography className={classes.value} style={{ marginBottom: 0 }}>
+            {quoteToken.symbol}
+          </Typography>
+        </Grid>
         <Typography className={classes.label}>Treasury sell price</Typography>
         <Typography className={classes.value}>
-          {price} {quoteToken.symbol}/{bondToken.symbol}
+          {price} {bondToken.symbol}/{quoteToken.symbol}
         </Typography>
         <Typography className={classes.label}>Supply</Typography>
         <Typography className={classes.value}>
           {supply} {bondToken.symbol}
         </Typography>
         <Typography className={classes.label}>Slippage</Typography>
-        <Grid className={classes.mainInput}>
-          <input
-            className={classes.input}
-            value={slippage}
-            onChange={e => setSlippage(e.target.value)}></input>
-          <Button className={classes.slippageButton} onClick={() => setSlippage('1')}>
-            Auto
-          </Button>
-        </Grid>
-        <Grid className={classes.vesting}>
+        <Input
+          className={classes.input}
+          value={slippage}
+          onChange={e => setSlippage(e.target.value)}
+          disableUnderline
+          endAdornment={
+            <Button className={classes.slippageButton} onClick={() => setSlippage('1')}>
+              Auto
+            </Button>
+          }
+        />
+        <Grid className={classes.headers}>
           <Typography className={classes.label}>Vesting term</Typography>
-          <Typography className={classes.greenValue}>ROI</Typography>
+          <Typography className={classes.label}>ROI</Typography>
         </Grid>
-        <Grid className={classes.roi}>
-          <Typography className={classes.label}>{vestingTerm} days</Typography>
+        <Grid className={classes.values}>
+          <Typography className={classes.greenValue}>{vestingTerm}</Typography>
           <Typography className={classes.greenValue}>+{roi}%</Typography>
         </Grid>
         <DepositAmountInput

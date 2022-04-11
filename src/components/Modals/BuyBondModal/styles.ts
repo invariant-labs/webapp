@@ -6,6 +6,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 'calc(50vh - 350px)',
     marginLeft: 'calc(50vw - 231px)',
     [theme.breakpoints.down('xs')]: {
+      marginTop: 'calc(50vh - 300px)',
       display: 'flex',
       marginLeft: 'auto',
       justifyContent: 'center'
@@ -17,106 +18,128 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 456
   },
   container: {
-    display: 'grid',
-    maxWidth: '464px',
-    heightMax: '877px',
-    width: '100%',
     backgroundColor: colors.invariant.component,
-    borderRadius: '24px',
-    justifyContent: 'center'
+    borderRadius: 24,
+    padding: 24
   },
   button: {
     textTransform: 'none',
     ...typography.body1,
     background: colors.invariant.pinkLinearGradient,
-    borderRadius: '16px',
-    height: '44px',
-    margin: '26px 0 24px 0',
+    borderRadius: 16,
+    height: 44,
     color: colors.invariant.dark,
+    width: '100%',
 
     '&:hover': {
       background: colors.invariant.pinkLinearGradient,
-      opacity: '0.8'
+      opacity: 0.8
     }
   },
   buy: {
-    padding: '26px 0 26px 0'
+    color: colors.white.main,
+    ...typography.heading1,
+    marginBottom: 16,
+    [theme.breakpoints.down('xs')]: {
+      ...typography.heading4,
+      marginBottom: 8
+    }
   },
   token: {
-    paddingBottom: '16px'
+    paddingBottom: 16
   },
   icon: {
-    width: '44px',
-    height: '44px',
+    width: 44,
+    height: 44,
     borderRadius: '100%',
-    marginRight: '12px'
-  },
-  price: {
-    padding: '35px 0 10px 0'
-  },
-  pricePercent: {
-    display: 'flex',
-    marginLeft: '12px',
-    padding: '4px',
-    borderRadius: '5px',
-    ...typography.caption1,
-    background: 'rgba(251, 85, 95, 0.2)',
-    color: 'rgba(251, 85, 95)'
-  },
-  slippage: {
-    padding: '35px 0 10px 0'
-  },
-  mainInput: {
-    position: 'relative'
+    marginRight: 12,
+    [theme.breakpoints.down('xs')]: {
+      width: 22,
+      height: 22,
+      marrginRight: 8
+    }
   },
   input: {
-    border: '0',
-    width: '396px',
-    padding: '10px',
+    width: '100%',
+    padding: '6px 10px',
     color: colors.white.main,
-    ...typography.heading3,
-    maxWidth: '416px',
+    ...typography.body1,
     backgroundColor: colors.invariant.newDark,
-    borderRadius: '11px',
+    borderRadius: 11,
+    marginBottom: 16,
 
-    '&:focus': {
-      outline: 'none'
+    [theme.breakpoints.down('xs')]: {
+      ...typography.heading4,
+      marginBottom: 8,
+      padding: '3px 10px'
     }
   },
   slippageButton: {
-    position: 'absolute',
     ...typography.body2,
     color: colors.invariant.black,
-    right: '5px',
-    borderRadius: '9px',
+    borderRadius: 9,
     textTransform: 'none',
     background: colors.invariant.greenLinearGradient,
-    width: '58px',
-    height: '32px',
+    width: 58,
+    height: 32,
 
     '&:hover': {
       color: colors.invariant.greenLinearGradient,
-      opacity: '0.8'
+      opacity: 0.8
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption4,
+      height: 24,
+      width: 40,
+      minWidth: 40
     }
   },
-  vesting: {
+  headers: {
     display: 'grid',
     width: '100%',
     gridTemplateColumns: '50% 50%',
-    padding: '35px 0 10px 0',
     textAlign: 'center'
   },
-  roi: {
+  values: {
     display: 'grid',
     width: '100%',
     gridTemplateColumns: '50% 50%',
+    textAlign: 'center',
+    marginBottom: 16,
+
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: 8
+    }
+  },
+  label: {
+    color: colors.invariant.textGrey,
+    ...typography.body2,
+    marginBottom: 8,
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.caption4,
+      marginBottom: 4
+    }
+  },
+  value: {
+    color: colors.white.main,
     ...typography.heading1,
-    color: colors.invariant.green,
-    textAlign: 'center'
+    marginBottom: 16,
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.heading4,
+      marginBottom: 8
+    }
   },
-  label: {},
-  value: {},
-  greenValue: {}
+  greenValue: {
+    color: colors.invariant.green,
+    ...typography.heading1,
+
+    [theme.breakpoints.down('xs')]: {
+      ...typography.heading4
+    }
+  }
 }))
 
 export default useStyles
