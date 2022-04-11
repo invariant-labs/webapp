@@ -1,17 +1,67 @@
-import { actions } from '@reducers/bonds'
-import { all, spawn, takeLatest } from 'typed-redux-saga'
+import { BondSaleStruct, BondStruct } from '@invariant-labs/bonds-sdk/lib/sale'
+import { actions, RedeemBond, BuyBond } from '@reducers/bonds'
+import { getBondsProgram } from '@web3/programs/bonds'
+import { all, call, put, spawn, takeLatest } from 'typed-redux-saga'
+import { actions as snackbarsActions } from '@reducers/snackbars'
+import { PayloadAction } from '@reduxjs/toolkit'
 
-export function* handleGetBondsList(): Generator {}
+export function* handleGetBondsList() {
+  try {
+    const bondsProgram = yield* call(getBondsProgram)
 
-export function* handleGetUserVested(): Generator {}
+    // const list = yield* call([bondsProgram, bondsProgram.])
+    const list: BondSaleStruct[] = []
 
-export function* handleBuyBondWithWSOL(): Generator {}
+    yield* put(actions.setBondsList(list))
+  } catch (error) {
+    console.log(error)
+  }
+}
 
-export function* handleBuyBond(): Generator {}
+export function* handleGetUserVested() {
+  try {
+    const bondsProgram = yield* call(getBondsProgram)
 
-export function* handleRedeemBondWithWSOL(): Generator {}
+    // const list = yield* call([bondsProgram, bondsProgram.])
+    const list: BondStruct[] = []
 
-export function* handleRedeemBond(): Generator {}
+    yield* put(actions.setUserVested(list))
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export function* handleBuyBondWithWSOL(data: BuyBond) {
+  try {
+    const bondsProgram = yield* call(getBondsProgram)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export function* handleBuyBond(action: PayloadAction<BuyBond>) {
+  try {
+    const bondsProgram = yield* call(getBondsProgram)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export function* handleRedeemBondWithWSOL(data: RedeemBond) {
+  try {
+    const bondsProgram = yield* call(getBondsProgram)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
+  try {
+    const bondsProgram = yield* call(getBondsProgram)
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 export function* getBondsListHandler(): Generator {
   yield* takeLatest(actions.getBondsList, handleGetBondsList)
