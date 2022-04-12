@@ -74,11 +74,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.component,
     borderRadius: 10,
 
-    '& .zoomBtns': {
-      top: -12,
-      right: 0
-    },
-
     [theme.breakpoints.down('xs')]: {
       height: 253
     }

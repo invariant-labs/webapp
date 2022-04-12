@@ -3,7 +3,8 @@ import { typography, colors } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    maxWidth: 1072
+    maxWidth: 1072,
+    minHeight: '100%'
   },
   subheader: {
     ...typography.heading4,
@@ -22,9 +23,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 16
   },
   loading: {
-    ...typography.heading1,
-    textAlign: 'center',
-    color: colors.white.main
+    width: 150,
+    height: 150,
+    margin: 'auto'
   },
   plot: {
     width: 524,

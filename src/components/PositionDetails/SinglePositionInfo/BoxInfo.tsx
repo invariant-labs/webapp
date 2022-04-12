@@ -1,9 +1,10 @@
 import React from 'react'
 import { Button, Grid, Typography } from '@material-ui/core'
-import useStyles from './style'
 import { formatNumbers, FormatNumberThreshold, PrefixConfig, showPrefix } from '@consts/utils'
 import { ILiquidityToken } from './consts'
 import SwapPosition from '@static/svg/swap-position.svg'
+import loader from '@static/gif/loading2.gif'
+import useStyles from './style'
 
 export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue' | 'liqValue'> {
   value: number
@@ -16,7 +17,16 @@ export const BoxInfo: React.FC<{
   tokenB: BoxInfoToken
   showBalance?: boolean
   swapHandler?: () => void
-}> = ({ title, onClickButton, tokenB, tokenA, showBalance = false, swapHandler }) => {
+  showLoader?: boolean
+}> = ({
+  title,
+  onClickButton,
+  tokenB,
+  tokenA,
+  showBalance = false,
+  swapHandler,
+  showLoader = false
+}) => {
   const classes = useStyles()
 
   const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThreshold[] => [
@@ -78,6 +88,11 @@ export const BoxInfo: React.FC<{
       </Grid>
 
       <Grid className={classes.tokenGrid} container direction='column'>
+        {showLoader ? (
+          <Grid container className={classes.cover}>
+            <img src={loader} className={classes.loader} />
+          </Grid>
+        ) : null}
         <Grid className={classes.tokenArea}>
           <Grid className={classes.tokenAreaUpperPart}>
             <Grid className={classes.token}>
