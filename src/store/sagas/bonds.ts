@@ -1,16 +1,39 @@
 import { BondSaleStruct, BondStruct } from '@invariant-labs/bonds-sdk/lib/sale'
 import { actions, RedeemBond, BuyBond } from '@reducers/bonds'
 import { getBondsProgram } from '@web3/programs/bonds'
-import { all, call, put, spawn, takeLatest } from 'typed-redux-saga'
+import { all, call, put, select, spawn, takeLatest } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { PayloadAction } from '@reduxjs/toolkit'
+import { getFullNewTokensData } from '@consts/utils'
+import { tokens } from '@selectors/pools'
+import { actions as poolsActions } from '@reducers/pools'
+import { getConnection } from './connection'
+import { PublicKey } from '@solana/web3.js'
 
 export function* handleGetBondsList() {
   try {
+    const connection = yield* call(getConnection)
     const bondsProgram = yield* call(getBondsProgram)
 
     // const list = yield* call([bondsProgram, bondsProgram.])
     const list: BondSaleStruct[] = []
+
+    const allTokens = yield* select(tokens)
+
+    const unknownTokens = new Set<PublicKey>()
+
+    list.forEach(bond => {
+      if (!allTokens[bond.tokenBond.toString()]) {
+        unknownTokens.add(bond.tokenBond)
+      }
+
+      if (!allTokens[bond.tokenQuote.toString()]) {
+        unknownTokens.add(bond.tokenQuote)
+      }
+    })
+
+    const newTokens = yield* call(getFullNewTokensData, [...unknownTokens], connection)
+    yield* put(poolsActions.addTokens(newTokens))
 
     yield* put(actions.setBondsList(list))
   } catch (error) {

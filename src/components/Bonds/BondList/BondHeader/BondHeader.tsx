@@ -12,7 +12,7 @@ const BondHeader = () => {
       <Typography>Pair</Typography>
       <Typography>Price</Typography>
       {!isExSmall ? <Typography>ROI</Typography> : null}
-      {!isExSmall ? <Typography>Purchased</Typography> : null}
+      {!isExSmall ? <Typography>Supply</Typography> : null}
       {!isSmall ? <Typography className={classes.vesting}>Vesting term</Typography> : null}
     </Grid>
   )

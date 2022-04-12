@@ -18,8 +18,9 @@ storiesOf('bonds/BondList', module)
           decimals: 2,
           price: 12235,
           roiPercent: '13.34',
-          purchased: '100,434.44',
-          vesting: '10'
+          supply: '100,434.44',
+          vesting: '10',
+          onBondClick: () => {}
         }
       })
     return <BondList data={data} />

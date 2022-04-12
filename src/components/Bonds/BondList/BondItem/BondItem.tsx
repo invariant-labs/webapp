@@ -13,8 +13,9 @@ export interface IBondItem {
   decimals: number
   price: number
   roiPercent: string
-  purchased: string
+  supply: string
   vesting: string
+  onBondClick: () => void
 }
 
 const BondItem: React.FC<IBondItem> = ({
@@ -25,8 +26,9 @@ const BondItem: React.FC<IBondItem> = ({
   decimals,
   price,
   roiPercent,
-  purchased,
-  vesting
+  supply,
+  vesting,
+  onBondClick
 }) => {
   const classes = useStyles()
   const isExSmall = useMediaQuery(theme.breakpoints.down('xs'))
@@ -57,13 +59,19 @@ const BondItem: React.FC<IBondItem> = ({
         {printBN(new BN(price), decimals)} {symbol}/{secondSymbol}
       </Grid>
       {!isExSmall ? <Grid className={classes.roi}>+{roiPercent}%</Grid> : null}
-      {!isExSmall ? <Typography className={classes.purchased}>${purchased}</Typography> : null}
-
-      {!isSmall ? (
-        <Grid className={classes.days}>{!isSmall && <span>{vesting} days</span>}</Grid>
+      {!isExSmall ? (
+        <Typography className={classes.purchased}>
+          {supply} {secondSymbol}
+        </Typography>
       ) : null}
 
-      <Button className={classes.bondButton}>Bond</Button>
+      {!isSmall ? (
+        <Grid className={classes.days}>{!isSmall && <span>{vesting}</span>}</Grid>
+      ) : null}
+
+      <Button className={classes.bondButton} onClick={onBondClick}>
+        Bond
+      </Button>
     </Grid>
   )
 }

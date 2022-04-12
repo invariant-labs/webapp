@@ -12,8 +12,9 @@ storiesOf('bonds/BondItem', module).add('BondItem', () => {
       decimals={2}
       price={12235}
       roiPercent='341313.34'
-      purchased='100,434,444,444.44'
+      supply='100,434,444,444.44'
       vesting='10'
+      onBondClick={() => {}}
     />
   )
 })
