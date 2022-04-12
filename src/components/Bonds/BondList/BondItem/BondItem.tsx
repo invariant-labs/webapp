@@ -1,29 +1,22 @@
 import React from 'react'
-import { printBN } from '@consts/utils'
 import { Button, Grid, Typography, useMediaQuery } from '@material-ui/core'
-import { BN } from '@project-serum/anchor'
 import { colors, theme } from '@static/theme'
+import { SwapToken } from '@selectors/solanaWallet'
 import { useStyles } from './style'
 
 export interface IBondItem {
-  icon: string
-  secondIcon: string
-  symbol: string
-  secondSymbol: string
-  decimals: number
+  bondToken: SwapToken
+  quoteToken: SwapToken
   price: number
-  roiPercent: string
-  supply: string
+  roiPercent: number
+  supply: number
   vesting: string
   onBondClick: () => void
 }
 
 const BondItem: React.FC<IBondItem> = ({
-  icon,
-  secondIcon,
-  symbol,
-  secondSymbol,
-  decimals,
+  bondToken,
+  quoteToken,
   price,
   roiPercent,
   supply,
@@ -41,27 +34,27 @@ const BondItem: React.FC<IBondItem> = ({
           {isExSmall ? null : (
             <>
               <Grid item>
-                <img src={icon} />
+                <img src={bondToken.logoURI} />
               </Grid>
               <Grid className={classes.icon} item>
-                <img src={secondIcon} />
+                <img src={quoteToken.logoURI} />
               </Grid>
             </>
           )}
           <Grid className={classes.symbol}>
             <Typography className={classes.secondSymbol}>
-              {symbol}/{secondSymbol}
+              {bondToken.symbol}/{quoteToken.symbol}
             </Typography>
           </Grid>
         </Grid>
       </Grid>
       <Grid className={classes.price}>
-        {printBN(new BN(price), decimals)} {symbol}/{secondSymbol}
+        {price} {bondToken.symbol}/{quoteToken.symbol}
       </Grid>
       {!isExSmall ? <Grid className={classes.roi}>+{roiPercent}%</Grid> : null}
       {!isExSmall ? (
         <Typography className={classes.purchased}>
-          {supply} {secondSymbol}
+          {supply} {bondToken.symbol}
         </Typography>
       ) : null}
 

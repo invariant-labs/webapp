@@ -11,7 +11,7 @@ import PositionsList from '@components/Bonds/UserList/PositionsList/PositionsLis
 import { BN } from '@project-serum/anchor'
 import BuyBondModal from '@components/Modals/BuyBondModal/BuyBondModal'
 import { blurContent, unblurContent } from '@consts/uiUtils'
-import { USDC_DEV, WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { USDC_DEV } from '@consts/static'
 import { PublicKey } from '@solana/web3.js'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import useStyles from './styles'
@@ -45,17 +45,27 @@ export const WrappedBonds: React.FC = () => {
       .fill({})
       .map((_e, index) => {
         return {
-          tokenBond: new PublicKey(WRAPPED_SOL_ADDRESS),
-          tokenQuote: new PublicKey(WRAPPED_SOL_ADDRESS),
-          icon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
-          secondIcon:
-            'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png',
-          symbol: 'xSOL',
-          secondSymbol: 'xBTC',
-          decimals: 2,
+          bondToken: {
+            balance: new BN(100).mul(new BN(34786)),
+            decimals: 6,
+            symbol: 'SOL',
+            assetAddress: new PublicKey('So11111111111111111111111111111111111111112'),
+            name: 'Wrapped Solana',
+            logoURI:
+              'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
+          },
+          quoteToken: {
+            balance: new BN(100).mul(new BN(126)),
+            decimals: 6,
+            symbol: 'BTC',
+            assetAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+            name: 'BTC',
+            logoURI:
+              'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
+          },
           price: 12235,
-          roiPercent: '13.34',
-          supply: '100434.44',
+          roiPercent: 13.34,
+          supply: 100434.44,
           vesting: '10 days',
           onBondClick: () => {
             if (walletStatus === Status.Initialized) {
@@ -128,12 +138,12 @@ export const WrappedBonds: React.FC = () => {
             bondToken={
               modalBondIndex === null
                 ? placeholderToken
-                : allTokens[bondsData[modalBondIndex].tokenBond.toString()]
+                : bondsData[modalBondIndex].bondToken
             }
             quoteToken={
               modalBondIndex === null
                 ? placeholderToken
-                : allTokens[bondsData[modalBondIndex].tokenQuote.toString()]
+                : bondsData[modalBondIndex].quoteToken
             }
             roi={modalBondIndex === null ? 0 : +bondsData[modalBondIndex].roiPercent}
             price={modalBondIndex === null ? 0 : bondsData[modalBondIndex].price}
