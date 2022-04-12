@@ -18,7 +18,6 @@ export const useStyles = makeStyles(theme => ({
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      fontFamily: 'Mukta',
 
       [theme.breakpoints.down('xs')]: {
         width: '100%',
@@ -39,9 +38,6 @@ export const useStyles = makeStyles(theme => ({
       gridTemplateColumns: '29% 25% 25% 21%'
     }
   },
-  bought: {
-    marginRight: 'auto'
-  },
   redeemable: {
     color: colors.invariant.green
   },
@@ -55,6 +51,27 @@ export const useStyles = makeStyles(theme => ({
     '&:hover': {
       background: colors.invariant.pinkLinearGradient,
       opacity: 0.8
+    }
+  },
+  itemName: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  icon: {
+    right: '8px',
+    position: 'relative'
+  },
+  iconItems: {
+    display: 'flex',
+    alignItems: 'center',
+    '& img': {
+      width: 32,
+      borderRadius: '50%',
+
+      [theme.breakpoints.down('xs')]: {
+        width: '22px',
+        height: '22px'
+      }
     }
   }
 }))

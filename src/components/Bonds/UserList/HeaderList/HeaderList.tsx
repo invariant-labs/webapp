@@ -9,8 +9,8 @@ const HeaderList = () => {
 
   return (
     <Grid container classes={{ container: classes.container }}>
-      <Typography className={classes.bought}>You've bought</Typography>
-      {isExSmall ? null : <Typography>You've paid</Typography>}
+      {isExSmall ? null : <Typography>Pair</Typography>}
+      <Typography>You've bought</Typography>
       <Typography>Redeemable</Typography>
       <Typography>Vest period</Typography>
     </Grid>

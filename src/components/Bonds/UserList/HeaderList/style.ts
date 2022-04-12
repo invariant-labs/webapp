@@ -23,12 +23,5 @@ export const useStyles = makeStyles(theme => ({
         ...typography.caption4
       }
     }
-  },
-  bought: {
-    marginLeft: '25px',
-
-    [theme.breakpoints.down('xs')]: {
-      margin: 'auto'
-    }
   }
 }))

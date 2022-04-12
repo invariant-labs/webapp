@@ -1,63 +1,55 @@
-import { printBN } from '@consts/utils'
 import { Button, Grid, Typography, useMediaQuery } from '@material-ui/core'
-import { BN } from '@project-serum/anchor'
+import { SwapToken } from '@selectors/solanaWallet'
 import { theme } from '@static/theme'
 import React from 'react'
 import { useStyles } from './style'
 
 export interface IPositionsItem {
-  icon: string
-  decimals: number
-  value: BN
-  symbol: string
-  secondIcon: string
-  secondValue: BN
-  secondSymbol: string
-  redeemable: BN
+  bondToken: SwapToken
+  quoteToken: SwapToken
+  bought: number
+  redeemable: number
   vestPeriod: string
+  onRedeemClick: () => void
 }
 
 const PositionsItem: React.FC<IPositionsItem> = ({
-  icon,
-  decimals,
-  value,
-  symbol,
-  secondIcon,
-  secondValue,
-  secondSymbol,
+  bondToken,
+  quoteToken,
+  bought,
   redeemable,
-  vestPeriod
+  vestPeriod,
+  onRedeemClick
 }) => {
   const classes = useStyles()
   const isExSmall = useMediaQuery(theme.breakpoints.down('xs'))
 
   return (
     <Grid container className={classes.container}>
-      <Grid className={classes.bought}>
-        {isExSmall ? null : (
-          <Grid>
-            <img src={icon} />
-          </Grid>
-        )}
-        <Typography>
-          {printBN(value, decimals)} {symbol}
-        </Typography>
-      </Grid>
-
       {isExSmall ? null : (
-        <Grid>
-          <Grid>
-            <img src={secondIcon} />
-          </Grid>
+        <Grid className={classes.iconItems}>
+          <img src={bondToken.logoURI} />
+          <img className={classes.icon} src={quoteToken.logoURI} />
           <Typography>
-            {printBN(secondValue, decimals)} {secondSymbol}
+            {bondToken.symbol}/{quoteToken.symbol}
           </Typography>
         </Grid>
       )}
 
-      <Grid className={classes.redeemable}>{printBN(redeemable, decimals)}</Grid>
-      <Grid>{vestPeriod} days</Grid>
-      <Button className={classes.redeemButton}>Redeem</Button>
+      <Grid>
+        {isExSmall ? null : (
+            <img src={bondToken.logoURI} />
+        )}
+        <Typography>
+          {bought} {bondToken.symbol}
+        </Typography>
+      </Grid>
+
+      <Typography className={classes.redeemable}>{redeemable}</Typography>
+      <Typography>{vestPeriod}</Typography>
+      <Button className={classes.redeemButton} onClick={onRedeemClick}>
+        Redeem
+      </Button>
     </Grid>
   )
 }
