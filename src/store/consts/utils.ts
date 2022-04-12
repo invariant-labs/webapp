@@ -4,7 +4,8 @@ import {
   calculateTickDelta,
   DECIMAL,
   parseLiquidityOnTicks,
-  simulateSwap
+  simulateSwap,
+  SimulationStatus
 } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
@@ -568,6 +569,10 @@ export const handleSimulate = async (
         estimatedPrice = swapSimulateResult.priceAfterSwap
         minimumReceived = swapSimulateResult.minReceived
         priceImpact = swapSimulateResult.priceImpact
+      }
+
+      if (swapSimulateResult.status !== SimulationStatus.Ok) {
+        errorMessage.push(swapSimulateResult.status)
       }
     } catch (err: any) {
       errorMessage.push(err.toString())
