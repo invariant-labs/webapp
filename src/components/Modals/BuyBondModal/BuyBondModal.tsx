@@ -54,8 +54,11 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
       }}>
       <Grid container className={classes.container} direction='column' alignItems='center'>
         <Typography className={classes.buy}>Buy {bondToken.symbol}</Typography>
+        <Button className={classes.close} onClick={handleClose}>
+          {'\u2715'}
+        </Button>
         <Typography className={classes.label}>You're paying with</Typography>
-        <Grid container alignItems='center' justifyContent='center' style={{ marginBottom: 16 }}>
+        <Grid container alignItems='center' justifyContent='center' className={classes.pay}>
           <img className={classes.icon} src={quoteToken.logoURI} />
           <Typography className={classes.value} style={{ marginBottom: 0 }}>
             {quoteToken.symbol}

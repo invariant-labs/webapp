@@ -3,10 +3,10 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   popover: {
-    marginTop: 'calc(50vh - 350px)',
+    marginTop: 'calc(50vh - 375px)',
     marginLeft: 'calc(50vw - 231px)',
     [theme.breakpoints.down('xs')]: {
-      marginTop: 'calc(50vh - 300px)',
+      marginTop: 'calc(50vh - 305px)',
       display: 'flex',
       marginLeft: 'auto',
       justifyContent: 'center'
@@ -20,7 +20,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     backgroundColor: colors.invariant.component,
     borderRadius: 24,
-    padding: 24
+    padding: 24,
+    position: 'relative'
   },
   button: {
     textTransform: 'none',
@@ -70,7 +71,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('xs')]: {
       ...typography.heading4,
-      marginBottom: 8,
       padding: '3px 10px'
     }
   },
@@ -106,11 +106,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     gridTemplateColumns: '50% 50%',
     textAlign: 'center',
-    marginBottom: 16,
-
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: 8
-    }
+    marginBottom: 16
   },
   label: {
     color: colors.invariant.textGrey,
@@ -138,6 +134,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('xs')]: {
       ...typography.heading4
+    }
+  },
+  close: {
+    position: 'absolute',
+    right: 24,
+    minWidth: 0,
+    maxHeight: 20,
+    maxWidth: 16,
+    fontSize: 20,
+    background: 'none',
+    '&:hover': {
+      background: 'none !important'
+    }
+  },
+  pay: {
+    marginBottom: 16,
+
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: 8
     }
   }
 }))
