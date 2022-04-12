@@ -10,7 +10,7 @@ export const useStyles = makeStyles(theme => ({
     fontWeight: 400,
     alignItems: 'center',
     textAlign: 'center',
-    gridTemplateColumns: '21% 25% 11% 19% 12% 12%',
+    gridTemplateColumns: '2fr 1fr 2fr 1fr 86px',
     backgroundColor: colors.invariant.component,
     color: colors.invariant.textGrey,
     '& *': {
@@ -18,12 +18,11 @@ export const useStyles = makeStyles(theme => ({
       ...typography.caption2
     },
     [theme.breakpoints.down('sm')]: {
-      ...typography.caption1,
-      gridTemplateColumns: '23% 29% 13% 21% 14%'
+      ...typography.caption1
     },
     [theme.breakpoints.down('xs')]: {
       ...typography.caption3,
-      gridTemplateColumns: '33% 34% 33%',
+      gridTemplateColumns: '1fr 1fr 70px',
       padding: '24px 0 16px 0 '
     }
   },

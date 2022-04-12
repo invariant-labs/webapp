@@ -10,20 +10,19 @@ export const useStyles = makeStyles(theme => ({
     backgroundColor: colors.invariant.component,
     alignItems: 'center',
     justifyContent: 'center',
-    gridTemplateColumns: '21% 25% 11% 19% 12% 12%',
+    gridTemplateColumns: '2fr 1fr 2fr 1fr 86px',
     borderTop: `2px solid ${colors.invariant.light}`,
     ...typography.body1,
 
     [theme.breakpoints.down('sm')]: {
       width: '100%',
-      ...typography.caption1,
-      gridTemplateColumns: '23% 29% 13% 21% 14%'
+      ...typography.caption1
     },
 
     [theme.breakpoints.down('xs')]: {
       width: '100%',
       ...typography.caption3,
-      gridTemplateColumns: '33% 34% 33%'
+      gridTemplateColumns: '1fr 1fr 70px'
     }
   },
   itemList: {
@@ -47,25 +46,19 @@ export const useStyles = makeStyles(theme => ({
 
       [theme.breakpoints.down('xs')]: {
         width: '22px',
-        hight: '22px'
+        height: '22px'
       }
     }
   },
   symbol: {
     marginRight: '15px',
-    width: '73',
-    height: '20',
+    height: '20px',
 
     [theme.breakpoints.down('xs')]: {
       ...typography.caption3,
       justifyContent: 'center',
       alignItems: 'center',
       margin: 'auto'
-    }
-  },
-  secondSymbol: {
-    [theme.breakpoints.down('xs')]: {
-      ...typography.caption3
     }
   },
   purchased: {
@@ -75,37 +68,24 @@ export const useStyles = makeStyles(theme => ({
   },
   roi: {
     color: colors.invariant.green,
-    margin: 'auto',
-    fontFamily: 'Mukta'
-  },
-  price: {
-    margin: 'auto',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    fontFamily: 'Mukta'
+    margin: 'auto'
   },
   days: {
-    marginLeft: '10px',
-    fontFamily: 'Mukta'
+    marginLeft: '10px'
   },
   bondButton: {
     background: colors.invariant.greenLinearGradient,
     color: colors.invariant.dark,
     borderRadius: '10px',
     width: '80px',
-    hight: '32px',
+    height: '32px',
     textTransform: 'none',
-    marginLeft: 'auto',
     ...typography.body1,
+    marginLeft: 'auto',
 
     '&:hover': {
       background: colors.invariant.greenLinearGradient,
       opacity: 0.8
-    },
-
-    [theme.breakpoints.down('sm')]: {
-      marginRight: 'auto'
     },
     [theme.breakpoints.down('xs')]: {
       width: '64px',
