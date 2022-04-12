@@ -9,14 +9,14 @@ import { tokens } from '@selectors/pools'
 import { actions as poolsActions } from '@reducers/pools'
 import { getConnection } from './connection'
 import { PublicKey } from '@solana/web3.js'
+import { address } from '@selectors/solanaWallet'
 
 export function* handleGetBondsList() {
   try {
     const connection = yield* call(getConnection)
     const bondsProgram = yield* call(getBondsProgram)
 
-    // const list = yield* call([bondsProgram, bondsProgram.])
-    const list: BondSaleStruct[] = []
+    const list: BondSaleStruct[] = yield* call([bondsProgram, bondsProgram.getAllBondSales])
 
     const allTokens = yield* select(tokens)
 
@@ -44,9 +44,9 @@ export function* handleGetBondsList() {
 export function* handleGetUserVested() {
   try {
     const bondsProgram = yield* call(getBondsProgram)
+    const walletAddess = yield* select(address)
 
-    // const list = yield* call([bondsProgram, bondsProgram.])
-    const list: BondStruct[] = []
+    const list: BondStruct[] = yield* call([bondsProgram, bondsProgram.getAllOwnerBonds], walletAddess)
 
     yield* put(actions.setUserVested(list))
   } catch (error) {

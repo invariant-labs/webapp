@@ -12,9 +12,9 @@ import { BN } from '@project-serum/anchor'
 import BuyBondModal from '@components/Modals/BuyBondModal/BuyBondModal'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { USDC_DEV } from '@consts/static'
-import { PublicKey } from '@solana/web3.js'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import useStyles from './styles'
+import { printBN } from '@consts/utils'
 
 export const WrappedBonds: React.FC = () => {
   const classes = useStyles()
@@ -41,49 +41,31 @@ export const WrappedBonds: React.FC = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
 
   const bondsData = useMemo(() => {
-    return Array(4)
-      .fill({})
-      .map((_e, index) => {
-        return {
-          bondToken: {
-            balance: new BN(100).mul(new BN(34786)),
-            decimals: 6,
-            symbol: 'SOL',
-            assetAddress: new PublicKey('So11111111111111111111111111111111111111112'),
-            name: 'Wrapped Solana',
-            logoURI:
-              'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
-          },
-          quoteToken: {
-            balance: new BN(100).mul(new BN(126)),
-            decimals: 6,
-            symbol: 'BTC',
-            assetAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-            name: 'BTC',
-            logoURI:
-              'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
-          },
-          price: 12235,
-          roiPercent: 13.34,
-          supply: 100434.44,
-          vesting: '10 days',
-          onBondClick: () => {
-            if (walletStatus === Status.Initialized) {
-              setModalBondIndex(index)
-              blurContent()
-              setModalOpen(true)
-            } else {
-              dispatch(
-                snackbarsActions.add({
-                  message: 'Connect wallet to buy bonds',
-                  variant: 'warning',
-                  persist: false
-                })
-              )
-            }
+    return allBonds.map((bond, index) => {
+      return {
+        bondToken: allTokens[bond.tokenBond.toString()],
+        quoteToken: allTokens[bond.tokenQuote.toString()],
+        roiPercent: 0,
+        supply: +printBN(bond.supply.v, allTokens[bond.tokenBond.toString()].decimals),
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        vesting: bond.vestingTime.div(new BN(60 * 60 * 24)).toString() + ' days',
+        onBondClick: () => {
+          if (walletStatus === Status.Initialized) {
+            setModalBondIndex(index)
+            blurContent()
+            setModalOpen(true)
+          } else {
+            dispatch(
+              snackbarsActions.add({
+                message: 'Connect wallet to buy bonds',
+                variant: 'warning',
+                persist: false
+              })
+            )
           }
         }
-      })
+      }
+    })
   }, [allBonds, allTokens])
 
   const userVestedData = useMemo(() => {
@@ -136,17 +118,13 @@ export const WrappedBonds: React.FC = () => {
           <BuyBondModal
             open={modalOpen}
             bondToken={
-              modalBondIndex === null
-                ? placeholderToken
-                : bondsData[modalBondIndex].bondToken
+              modalBondIndex === null ? placeholderToken : bondsData[modalBondIndex].bondToken
             }
             quoteToken={
-              modalBondIndex === null
-                ? placeholderToken
-                : bondsData[modalBondIndex].quoteToken
+              modalBondIndex === null ? placeholderToken : bondsData[modalBondIndex].quoteToken
             }
             roi={modalBondIndex === null ? 0 : +bondsData[modalBondIndex].roiPercent}
-            price={modalBondIndex === null ? 0 : bondsData[modalBondIndex].price}
+            price={0}
             supply={modalBondIndex === null ? 0 : +bondsData[modalBondIndex].supply}
             vestingTerm={modalBondIndex === null ? '' : bondsData[modalBondIndex].vesting}
             handleClose={() => {

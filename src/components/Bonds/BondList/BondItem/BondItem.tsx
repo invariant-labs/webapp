@@ -7,7 +7,6 @@ import { useStyles } from './style'
 export interface IBondItem {
   bondToken: SwapToken
   quoteToken: SwapToken
-  price: number
   roiPercent: number
   supply: number
   vesting: string
