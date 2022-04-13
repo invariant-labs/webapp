@@ -47,6 +47,10 @@ const bondsSlice = createSlice({
       state.isLoadingBondsList = true
       return state
     },
+    updateBond(state, action: PayloadAction<BondSaleWithAddress>) {
+      state.bondsList[action.payload.address.toString()] = action.payload
+      return state
+    },
     setUserVested(state, action: PayloadAction<BondStruct[]>) {
       state.userVested = action.payload
       state.isLoadingUserVested = false
