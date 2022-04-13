@@ -11,6 +11,7 @@ import { PlotTickData } from '@reducers/positions'
 import { Token as SPLToken, TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import {
   BTC_DEV,
+  MCK_DEV,
   MSOL_DEV,
   NetworkType,
   PRICE_DECIMAL,
@@ -18,6 +19,7 @@ import {
   Token,
   USDC_DEV,
   USDT_DEV,
+  VEMCK_DEV,
   WSOL_DEV
 } from './static'
 import mainnetList from './tokenLists/mainnet.json'
@@ -381,7 +383,9 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
         [MSOL_DEV.address.toString()]: MSOL_DEV,
         [BTC_DEV.address.toString()]: BTC_DEV,
         [WSOL_DEV.address.toString()]: WSOL_DEV,
-        [RENDOGE_DEV.address.toString()]: RENDOGE_DEV
+        [RENDOGE_DEV.address.toString()]: RENDOGE_DEV,
+        [MCK_DEV.address.toString()]: MCK_DEV,
+        [VEMCK_DEV.address.toString()]: VEMCK_DEV
       }
     default:
       return {}

@@ -85,6 +85,23 @@ export const RENDOGE_DEV: Token = {
   coingeckoId: 'rendoge'
 }
 
+export const MCK_DEV: Token = {
+  symbol: 'MCK',
+  address: new PublicKey('7AUnkVAWnkkh5Za3xLnSdgEuhs8SDuHuaqTAGErh44zc'),
+  decimals: 6,
+  name: 'Mock Quote Token',
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
+}
+export const VEMCK_DEV: Token = {
+  symbol: 'veMCK',
+  address: new PublicKey('7419i15RMBxn6c4aETP8V2wrPd9C5kdCdk4inYDtph1i'),
+  decimals: 6,
+  name: 'Mock Bond Token',
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png'
+}
+
 enum SolanaNetworks {
   DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',
@@ -256,7 +273,9 @@ export const airdropTokens: Record<NetworkType, PublicKey[]> = {
     SOL_DEV.address,
     MSOL_DEV.address,
     BTC_DEV.address,
-    RENDOGE_DEV.address
+    RENDOGE_DEV.address,
+    MCK_DEV.address,
+    VEMCK_DEV.address
   ],
   Mainnet: [],
   Testnet: [],
@@ -270,7 +289,9 @@ export const airdropQuantities: Record<NetworkType, number[]> = {
     10 ** SOL_DEV.decimals,
     10 ** MSOL_DEV.decimals,
     0.0025 * 10 ** BTC_DEV.decimals,
-    700 * 10 ** RENDOGE_DEV.decimals
+    700 * 10 ** RENDOGE_DEV.decimals,
+    100 * 10 ** MCK_DEV.decimals,
+    1 * 10 ** VEMCK_DEV.decimals
   ],
   Mainnet: [],
   Testnet: [],
