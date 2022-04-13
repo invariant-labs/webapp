@@ -13,9 +13,11 @@ import BuyBondModal from '@components/Modals/BuyBondModal/BuyBondModal'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { USDC_DEV } from '@consts/static'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import { calculateAmountToClaim } from '@invariant-labs/bonds-sdk/lib/math'
+import { calculateAmountToClaim, getPriceAfterSlippage } from '@invariant-labs/bonds-sdk/lib/math'
 import { printBN } from '@consts/utils'
 import useStyles from './styles'
+import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { fromFee } from '@invariant-labs/sdk/lib/utils'
 
 export const WrappedBonds: React.FC = () => {
   const classes = useStyles()
@@ -40,6 +42,7 @@ export const WrappedBonds: React.FC = () => {
 
   const [modalBondIndex, setModalBondIndex] = useState<number | null>(null)
   const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const [modalPrice, setModalPrice] = useState<Decimal>({ v: new BN(0) })
 
   const bondsData = useMemo(() => {
     return Object.values(allBonds).map((bond, index) => {
@@ -48,7 +51,6 @@ export const WrappedBonds: React.FC = () => {
         quoteToken: allTokens[bond.tokenQuote.toString()],
         roiPercent: 0,
         supply: +printBN(bond.supply.v, allTokens[bond.tokenBond.toString()].decimals),
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         vesting: bond.vestingTime.div(new BN(60 * 60 * 24)).toString() + ' days',
         onBondClick: () => {
           if (walletStatus === Status.Initialized) {
@@ -70,18 +72,27 @@ export const WrappedBonds: React.FC = () => {
   }, [allBonds, allTokens])
 
   const userVestedData = useMemo(() => {
-    return allUserVested
-      .map((vested) => {
-        const sale = allBonds[vested.bondSale.toString()]
-        return {
-          bondToken: allTokens[sale.tokenBond.toString()],
-          quoteToken: allTokens[sale.tokenQuote.toString()],
-          bought: +printBN(vested.bondAmount.v, allTokens[sale.tokenBond.toString()].decimals),
-          redeemable: +printBN(calculateAmountToClaim(vested), allTokens[sale.tokenBond.toString()].decimals),
-          vestPeriod: '1/3 days',
-          onRedeemClick: () => {}
+    return allUserVested.map(vested => {
+      const sale = allBonds[vested.bondSale.toString()]
+      return {
+        bondToken: allTokens[sale.tokenBond.toString()],
+        quoteToken: allTokens[sale.tokenQuote.toString()],
+        bought: +printBN(vested.bondAmount.v, allTokens[sale.tokenBond.toString()].decimals),
+        redeemable: +printBN(
+          calculateAmountToClaim(vested),
+          allTokens[sale.tokenBond.toString()].decimals
+        ),
+        vestPeriod: sale.vestingTime.div(new BN(60 * 60 * 24)).toString() + ' days',
+        onRedeemClick: () => {
+          dispatch(
+            actions.redeemBond({
+              bondSale: sale.address,
+              bondId: vested.id
+            })
+          )
         }
-      })
+      }
+    })
   }, [allUserVested, allTokens])
 
   const placeholderToken = {
@@ -121,14 +132,29 @@ export const WrappedBonds: React.FC = () => {
               modalBondIndex === null ? placeholderToken : bondsData[modalBondIndex].quoteToken
             }
             roi={modalBondIndex === null ? 0 : +bondsData[modalBondIndex].roiPercent}
-            price={0}
+            price={
+              modalBondIndex === null
+                ? 0
+                : +printBN(modalPrice.v, bondsData[modalBondIndex].bondToken.decimals)
+            }
             supply={modalBondIndex === null ? 0 : +bondsData[modalBondIndex].supply}
             vestingTerm={modalBondIndex === null ? '' : bondsData[modalBondIndex].vesting}
             handleClose={() => {
               setModalOpen(false)
               unblurContent()
             }}
-            onBuy={() => {
+            onBuy={(amount, slippage) => {
+              if (modalBondIndex !== null) {
+                dispatch(
+                  actions.buyBond({
+                    bondSale: allBonds[modalBondIndex].address,
+                    amount,
+                    priceLimit: getPriceAfterSlippage(modalPrice, {
+                      v: fromFee(new BN(Number(+slippage * 1000)))
+                    })
+                  })
+                )
+              }
               setModalOpen(false)
               unblurContent()
             }}
