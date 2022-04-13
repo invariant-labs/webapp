@@ -8,12 +8,12 @@ export const useStyles = makeStyles<Theme, { open: boolean }>(() => ({
     background: colors.invariant.newDark,
     overflow: 'hidden',
     transition: 'max-height 300ms',
-    maxHeight: open ? 220 : 0,
+    maxHeight: open ? 160 : 0,
     marginBottom: 16
   }),
   innerWrapper: {
     padding: 16,
-    minHeight: 162
+    minHeight: 132
   },
   row: {
     '&:not(:last-child)': {

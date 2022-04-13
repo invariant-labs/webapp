@@ -11,7 +11,7 @@ interface IProps {
   fee: { v: BN }
   exchangeRate: { val: number; symbol: string; decimal: number }
   slippage: number
-  minimumReceived: { val: BN; symbol: string; decimal: number }
+  // minimumReceived: { val: BN; symbol: string; decimal: number }
   priceImpact: BN
 }
 
@@ -30,7 +30,7 @@ const TransactionDetailsBox: React.FC<IProps> = ({
   fee,
   exchangeRate,
   slippage,
-  minimumReceived,
+  // minimumReceived,
   priceImpact
 }) => {
   const classes = useStyles({ open })
@@ -64,12 +64,12 @@ const TransactionDetailsBox: React.FC<IProps> = ({
           </Typography>
         </Grid>
 
-        <Grid container justifyContent='space-between' className={classes.row}>
+        {/* <Grid container justifyContent='space-between' className={classes.row}>
           <Typography className={classes.label}>Minimum received:</Typography>
           <Typography className={classes.value}>
             {printBN(minimumReceived.val, minimumReceived.decimal)} {minimumReceived.symbol}
           </Typography>
-        </Grid>
+        </Grid> */}
 
         <Grid container justifyContent='space-between' className={classes.row}>
           <Typography className={classes.label}>Slippage tolerance:</Typography>
