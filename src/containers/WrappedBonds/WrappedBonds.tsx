@@ -38,10 +38,10 @@ export const WrappedBonds: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    if (walletStatus === Status.Initialized) {
+    if (walletStatus === Status.Initialized && Object.values(allBonds).length > 0) {
       dispatch(actions.getUserVested())
     }
-  }, [walletStatus])
+  }, [walletStatus, Object.values(allBonds).length])
 
   const [modalBondIndex, setModalBondIndex] = useState<number | null>(null)
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -76,7 +76,7 @@ export const WrappedBonds: React.FC = () => {
   }, [allBonds, allTokens])
 
   const userVestedData = useMemo(() => {
-    return allUserVested.map(vested => {
+    return Object.values(allUserVested).map(vested => {
       const sale = allBonds[vested.bondSale.toString()]
       return {
         bondToken: allTokens[sale.tokenBond.toString()],

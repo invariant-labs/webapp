@@ -3,9 +3,9 @@ import { useEffect } from 'react'
 import { status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
 import { getBondsProgramSync } from '@web3/programs/bonds'
-import { BondSaleStruct, Bonds } from '@invariant-labs/bonds-sdk/lib/sale'
+import { BondSaleStruct, Bonds, BondStruct } from '@invariant-labs/bonds-sdk/lib/sale'
 import { PublicKey } from '@solana/web3.js'
-import { bondsList } from '@selectors/bonds'
+import { bondsList, userVested } from '@selectors/bonds'
 import { actions } from '@reducers/bonds'
 import * as R from 'remeda'
 
@@ -21,11 +21,24 @@ const onBondSaleChange = async (
     })
 }
 
+const onBondChange = async (
+  bondsProgram: Bonds,
+  bond: PublicKey,
+  fn: (data: BondStruct) => void
+) => {
+  bondsProgram.program.account.bond
+    .subscribe(bond, 'singleGossip')
+    .on('change', (data: BondStruct) => {
+      fn(data)
+    })
+}
+
 const BondsEvents = () => {
   const dispatch = useDispatch()
   const bondsProgram = getBondsProgramSync()
   const networkStatus = useSelector(status)
   const allBonds = useSelector(bondsList)
+  const allUserVested = useSelector(userVested)
 
   useEffect(() => {
     if (networkStatus !== Status.Initialized || !bondsProgram) {
@@ -51,6 +64,31 @@ const BondsEvents = () => {
 
     connectEvents()
   }, [dispatch, networkStatus, Object.values(allBonds).length])
+
+  useEffect(() => {
+    if (networkStatus !== Status.Initialized || !bondsProgram) {
+      return
+    }
+
+    const connectEvents = () => {
+      R.forEachObj(allUserVested, vested => {
+        onBondChange(bondsProgram, vested.address, bondData => {
+          dispatch(
+            actions.updateVested({
+              ...bondData,
+              address: vested.address
+            })
+          )
+        })
+          .then(() => {})
+          .catch(err => {
+            console.log(err)
+          })
+      })
+    }
+
+    connectEvents()
+  }, [dispatch, networkStatus, Object.values(allUserVested).length])
 
   return null
 }

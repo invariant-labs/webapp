@@ -8,17 +8,21 @@ export interface BondSaleWithAddress extends BondSaleStruct {
   address: PublicKey
 }
 
+export interface BondWithAddress extends BondStruct {
+  address: PublicKey
+}
+
 export interface IBondsStore {
   bondsList: Record<string, BondSaleWithAddress>
   isLoadingBondsList: boolean
-  userVested: BondStruct[]
+  userVested: Record<string, BondWithAddress>
   isLoadingUserVested: boolean
 }
 
 export const defaultState: IBondsStore = {
   bondsList: {},
   isLoadingBondsList: false,
-  userVested: [],
+  userVested: {},
   isLoadingUserVested: false
 }
 
@@ -51,13 +55,17 @@ const bondsSlice = createSlice({
       state.bondsList[action.payload.address.toString()] = action.payload
       return state
     },
-    setUserVested(state, action: PayloadAction<BondStruct[]>) {
+    setUserVested(state, action: PayloadAction<Record<string, BondWithAddress>>) {
       state.userVested = action.payload
       state.isLoadingUserVested = false
       return state
     },
     getUserVested(state) {
       state.isLoadingUserVested = true
+      return state
+    },
+    updateVested(state, action: PayloadAction<BondWithAddress>) {
+      state.userVested[action.payload.address.toString()] = action.payload
       return state
     },
     buyBond(_state, _action: PayloadAction<BuyBond>) {},

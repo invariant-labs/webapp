@@ -1,4 +1,4 @@
-import { actions, RedeemBond, BuyBond, BondSaleWithAddress } from '@reducers/bonds'
+import { actions, RedeemBond, BuyBond, BondSaleWithAddress, BondWithAddress } from '@reducers/bonds'
 import { getBondsProgram } from '@web3/programs/bonds'
 import { all, call, put, select, spawn, takeLatest } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
@@ -63,8 +63,16 @@ export function* handleGetUserVested() {
     const walletAddess = yield* select(address)
 
     const list = yield* call([bondsProgram, bondsProgram.getAllOwnerBonds], walletAddess)
+    const vestedObject: Record<string, BondWithAddress> = {}
 
-    yield* put(actions.setUserVested(list.map(e => e.account)))
+    list.forEach(({ publicKey, account }) => {
+      vestedObject[publicKey.toString()] = {
+        ...account,
+        address: publicKey
+      }
+    })
+
+    yield* put(actions.setUserVested(vestedObject))
   } catch (error) {
     console.log(error)
   }
