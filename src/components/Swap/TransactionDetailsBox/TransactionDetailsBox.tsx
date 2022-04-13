@@ -4,6 +4,7 @@ import BN from 'bn.js'
 import React from 'react'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
+import loadingAnimation from '@static/gif/loading.gif'
 import { useStyles } from './styles'
 
 interface IProps {
@@ -13,6 +14,7 @@ interface IProps {
   slippage: number
   // minimumReceived: { val: BN; symbol: string; decimal: number }
   priceImpact: BN
+  isLoadingRate?: boolean
 }
 
 const percentValueDisplay = (amount: Decimal): { value: BN; decimal: number } => {
@@ -31,7 +33,8 @@ const TransactionDetailsBox: React.FC<IProps> = ({
   exchangeRate,
   slippage,
   // minimumReceived,
-  priceImpact
+  priceImpact,
+  isLoadingRate = false
 }) => {
   const classes = useStyles({ open })
 
@@ -43,11 +46,15 @@ const TransactionDetailsBox: React.FC<IProps> = ({
       <Grid container direction='column' wrap='nowrap' className={classes.innerWrapper}>
         <Grid container justifyContent='space-between' className={classes.row}>
           <Typography className={classes.label}>Exchange rate:</Typography>
-          <Typography className={classes.value}>
-            {exchangeRate.val === Infinity
-              ? '-'
-              : `${exchangeRate.val.toFixed(exchangeRate.decimal)} ${exchangeRate.symbol}`}
-          </Typography>
+          {isLoadingRate ? (
+            <img src={loadingAnimation} className={classes.loading} />
+          ) : (
+            <Typography className={classes.value}>
+              {exchangeRate.val === Infinity
+                ? '-'
+                : `${exchangeRate.val.toFixed(exchangeRate.decimal)} ${exchangeRate.symbol}`}
+            </Typography>
+          )}
         </Grid>
 
         <Grid container justifyContent='space-between' className={classes.row}>

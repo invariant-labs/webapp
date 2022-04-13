@@ -510,20 +510,32 @@ export const handleSimulate = async (
   error: string[]
 }> => {
   const filteredPools = findPairs(fromToken, toToken, pools)
-  let swapSimulateRouterAmount: BN = new BN(-1)
   const errorMessage: string[] = []
-  let poolIndex: number = 0
   let isXtoY = false
-  let resultWithFee: BN = new BN(0)
   let result
-  let estimatedPrice: BN = new BN(0)
-  let minimumReceived: BN = new BN(0)
-  let priceImpact: BN = new BN(0)
+
+  let successData = {
+    amountOut: new BN(-1),
+    poolIndex: 0,
+    AmountOutWithFee: new BN(0),
+    estimatedPriceAfterSwap: new BN(0),
+    minimumReceived: new BN(0),
+    priceImpact: new BN(0)
+  }
+
+  let allFailedData = {
+    amountOut: new BN(-1),
+    poolIndex: 0,
+    AmountOutWithFee: new BN(0),
+    estimatedPriceAfterSwap: new BN(0),
+    minimumReceived: new BN(0),
+    priceImpact: new BN(0)
+  }
 
   if (amount.eq(new BN(0))) {
     return {
       amountOut: new BN(0),
-      poolIndex: poolIndex,
+      poolIndex: 0,
       AmountOutWithFee: new BN(0),
       estimatedPriceAfterSwap: new BN(0),
       minimumReceived: new BN(0),
@@ -562,13 +574,24 @@ export const handleSimulate = async (
       } else {
         result = swapSimulateResult.accumulatedAmountOut
       }
-      if (swapSimulateRouterAmount.lt(result)) {
-        resultWithFee = result.add(swapSimulateResult.accumulatedFee)
-        poolIndex = findPoolIndex(pool.address, pools)
-        swapSimulateRouterAmount = result
-        estimatedPrice = swapSimulateResult.priceAfterSwap
-        minimumReceived = swapSimulateResult.minReceived
-        priceImpact = swapSimulateResult.priceImpact
+      if (successData.amountOut.lt(result) && swapSimulateResult.status === SimulationStatus.Ok) {
+        successData = {
+          amountOut: result,
+          poolIndex: findPoolIndex(pool.address, pools),
+          AmountOutWithFee: result.add(swapSimulateResult.accumulatedFee),
+          estimatedPriceAfterSwap: swapSimulateResult.priceAfterSwap,
+          minimumReceived: swapSimulateResult.minReceived,
+          priceImpact: swapSimulateResult.priceImpact
+        }
+      } else if (allFailedData.amountOut.lt(result)) {
+        allFailedData = {
+          amountOut: result,
+          poolIndex: findPoolIndex(pool.address, pools),
+          AmountOutWithFee: result.add(swapSimulateResult.accumulatedFee),
+          estimatedPriceAfterSwap: swapSimulateResult.priceAfterSwap,
+          minimumReceived: swapSimulateResult.minReceived,
+          priceImpact: swapSimulateResult.priceImpact
+        }
       }
 
       if (swapSimulateResult.status !== SimulationStatus.Ok) {
@@ -578,10 +601,10 @@ export const handleSimulate = async (
       errorMessage.push(err.toString())
     }
   }
-  if (swapSimulateRouterAmount.lt(new BN(0))) {
+  if (successData.amountOut.lt(new BN(0)) && allFailedData.amountOut.lt(new BN(0))) {
     return {
       amountOut: new BN(0),
-      poolIndex: poolIndex,
+      poolIndex: 0,
       AmountOutWithFee: new BN(0),
       estimatedPriceAfterSwap: new BN(0),
       minimumReceived: new BN(0),
@@ -590,13 +613,15 @@ export const handleSimulate = async (
     }
   }
 
+  if (successData.amountOut.lt(new BN(0))) {
+    return {
+      ...allFailedData,
+      error: errorMessage
+    }
+  }
+
   return {
-    amountOut: swapSimulateRouterAmount,
-    poolIndex: poolIndex,
-    AmountOutWithFee: resultWithFee,
-    estimatedPriceAfterSwap: estimatedPrice,
-    minimumReceived,
-    priceImpact,
+    ...successData,
     error: []
   }
 }

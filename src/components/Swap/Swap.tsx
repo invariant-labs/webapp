@@ -600,6 +600,7 @@ export const Swap: React.FC<ISwap> = ({
           // }}
           priceImpact={simulateResult.priceImpact}
           slippage={+slippTolerance}
+          isLoadingRate={getStateMessage() === 'Loading'}
         />
         {walletStatus !== Status.Initialized && getStateMessage() !== 'Loading' ? (
           <ChangeWalletButton

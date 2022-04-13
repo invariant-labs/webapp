@@ -28,5 +28,14 @@ export const useStyles = makeStyles<Theme, { open: boolean }>(() => ({
   value: {
     ...typography.body2,
     color: colors.white.main
+  },
+  loadingContainer: {
+    width: 20,
+    justifyContent: 'center',
+    overflow: 'hidden'
+  },
+  loading: {
+    width: 15,
+    height: 15
   }
 }))
