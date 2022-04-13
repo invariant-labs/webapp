@@ -14,7 +14,7 @@ storiesOf('newUi/swap', module)
         exchangeRate={{ val: 0.4321, symbol: 'SNY', decimal: 6 }}
         slippage={0.1}
         priceImpact={new BN(400000)}
-        minimumReceived={{ val: new BN(1000000000), symbol: 'BTC', decimal: 6 }}
+        // minimumReceived={{ val: new BN(1000000000), symbol: 'BTC', decimal: 6 }}
       />
     </div>
   ))
