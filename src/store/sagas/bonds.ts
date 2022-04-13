@@ -1,5 +1,4 @@
-import { BondSaleStruct, BondStruct } from '@invariant-labs/bonds-sdk/lib/sale'
-import { actions, RedeemBond, BuyBond } from '@reducers/bonds'
+import { actions, RedeemBond, BuyBond, BondSaleWithAddress } from '@reducers/bonds'
 import { getBondsProgram } from '@web3/programs/bonds'
 import { all, call, put, select, spawn, takeLatest } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
@@ -16,26 +15,33 @@ export function* handleGetBondsList() {
     const connection = yield* call(getConnection)
     const bondsProgram = yield* call(getBondsProgram)
 
-    const list: BondSaleStruct[] = yield* call([bondsProgram, bondsProgram.getAllBondSales])
+    const list = yield* call([bondsProgram, bondsProgram.getAllBondSales])
 
     const allTokens = yield* select(tokens)
 
     const unknownTokens = new Set<PublicKey>()
+    const bondsObject: Record<string, BondSaleWithAddress> = {}
 
-    list.forEach(bond => {
-      if (!allTokens[bond.tokenBond.toString()]) {
-        unknownTokens.add(bond.tokenBond)
+    console.log(list)
+
+    list.forEach(({ publicKey, account }) => {
+      bondsObject[publicKey.toString()] = {
+        ...account,
+        address: publicKey
+      }
+      if (!allTokens[account.tokenBond.toString()]) {
+        unknownTokens.add(account.tokenBond)
       }
 
-      if (!allTokens[bond.tokenQuote.toString()]) {
-        unknownTokens.add(bond.tokenQuote)
+      if (!allTokens[account.tokenQuote.toString()]) {
+        unknownTokens.add(account.tokenQuote)
       }
     })
 
     const newTokens = yield* call(getFullNewTokensData, [...unknownTokens], connection)
     yield* put(poolsActions.addTokens(newTokens))
 
-    yield* put(actions.setBondsList(list))
+    yield* put(actions.setBondsList(bondsObject))
   } catch (error) {
     console.log(error)
   }
@@ -46,9 +52,9 @@ export function* handleGetUserVested() {
     const bondsProgram = yield* call(getBondsProgram)
     const walletAddess = yield* select(address)
 
-    const list: BondStruct[] = yield* call([bondsProgram, bondsProgram.getAllOwnerBonds], walletAddess)
+    const list = yield* call([bondsProgram, bondsProgram.getAllOwnerBonds], walletAddess)
 
-    yield* put(actions.setUserVested(list))
+    yield* put(actions.setUserVested(list.map(e => e.account)))
   } catch (error) {
     console.log(error)
   }

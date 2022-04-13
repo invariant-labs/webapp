@@ -13,9 +13,9 @@ import BuyBondModal from '@components/Modals/BuyBondModal/BuyBondModal'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { USDC_DEV } from '@consts/static'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import useStyles from './styles'
+import { calculateAmountToClaim } from '@invariant-labs/bonds-sdk/lib/math'
 import { printBN } from '@consts/utils'
-import { PublicKey } from '@solana/web3.js'
+import useStyles from './styles'
 
 export const WrappedBonds: React.FC = () => {
   const classes = useStyles()
@@ -42,7 +42,7 @@ export const WrappedBonds: React.FC = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
 
   const bondsData = useMemo(() => {
-    return allBonds.map((bond, index) => {
+    return Object.values(allBonds).map((bond, index) => {
       return {
         bondToken: allTokens[bond.tokenBond.toString()],
         quoteToken: allTokens[bond.tokenQuote.toString()],
@@ -70,30 +70,14 @@ export const WrappedBonds: React.FC = () => {
   }, [allBonds, allTokens])
 
   const userVestedData = useMemo(() => {
-    return Array(2)
-      .fill({})
-      .map(() => {
+    return allUserVested
+      .map((vested) => {
+        const sale = allBonds[vested.bondSale.toString()]
         return {
-          bondToken: {
-            balance: new BN(100).mul(new BN(34786)),
-            decimals: 6,
-            symbol: 'SOL',
-            assetAddress: new PublicKey('So11111111111111111111111111111111111111112'),
-            name: 'Wrapped Solana',
-            logoURI:
-              'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
-          },
-          quoteToken: {
-            balance: new BN(100).mul(new BN(126)),
-            decimals: 6,
-            symbol: 'BTC',
-            assetAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-            name: 'BTC',
-            logoURI:
-              'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
-          },
-          bought: 2137,
-          redeemable: 8553,
+          bondToken: allTokens[sale.tokenBond.toString()],
+          quoteToken: allTokens[sale.tokenQuote.toString()],
+          bought: +printBN(vested.bondAmount.v, allTokens[sale.tokenBond.toString()].decimals),
+          redeemable: +printBN(calculateAmountToClaim(vested), allTokens[sale.tokenBond.toString()].decimals),
           vestPeriod: '1/3 days',
           onRedeemClick: () => {}
         }

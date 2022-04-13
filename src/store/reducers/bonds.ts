@@ -4,15 +4,19 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
 import { PayloadType } from './types'
 
+export interface BondSaleWithAddress extends BondSaleStruct {
+  address: PublicKey
+}
+
 export interface IBondsStore {
-  bondsList: BondSaleStruct[]
+  bondsList: Record<string, BondSaleWithAddress>
   isLoadingBondsList: boolean
   userVested: BondStruct[]
   isLoadingUserVested: boolean
 }
 
 export const defaultState: IBondsStore = {
-  bondsList: [],
+  bondsList: {},
   isLoadingBondsList: false,
   userVested: [],
   isLoadingUserVested: false
@@ -34,7 +38,7 @@ const bondsSlice = createSlice({
   name: bondsSliceName,
   initialState: defaultState,
   reducers: {
-    setBondsList(state, action: PayloadAction<BondSaleStruct[]>) {
+    setBondsList(state, action: PayloadAction<Record<string, BondSaleWithAddress>>) {
       state.bondsList = action.payload
       state.isLoadingBondsList = false
       return state
