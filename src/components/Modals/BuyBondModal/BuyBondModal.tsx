@@ -1,11 +1,12 @@
 import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
 import { WRAPPED_SOL_ADDRESS, WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT } from '@consts/static'
 import { printBN, printBNtoBN } from '@consts/utils'
+import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Input, Popover, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useStyles from './styles'
 
 interface IBuyBondModal {
@@ -13,11 +14,12 @@ interface IBuyBondModal {
   handleClose: () => void
   bondToken: SwapToken
   quoteToken: SwapToken
-  price: number
+  price: BN
   supply: number
   roi: number
   vestingTerm: string
   onBuy: (amount: BN, slippage: number) => void
+  onBondAmountChange: (amount: BN) => void
 }
 
 const BuyBondModal: React.FC<IBuyBondModal> = ({
@@ -29,13 +31,23 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
   supply,
   roi,
   vestingTerm,
-  onBuy
+  onBuy,
+  onBondAmountChange
 }) => {
   const classes = useStyles()
 
   const [amountBond, setAmountBond] = useState<string>('')
   const [amountQuote, setAmountQuote] = useState<string>('')
-  const [slippage, setSlippage] = useState<string>('')
+  const [slippage, setSlippage] = useState<string>('1')
+
+  useEffect(() => {
+    onBondAmountChange(printBNtoBN(amountBond, bondToken.decimals))
+  }, [amountBond])
+
+  useEffect(() => {
+    const bondBN = printBNtoBN(amountBond, bondToken.decimals)
+    setAmountQuote(printBN(bondBN.mul(price).div(new BN(10 ** DECIMAL)), quoteToken.decimals))
+  }, [price, amountBond])
 
   return (
     <Popover
@@ -66,7 +78,7 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
         </Grid>
         <Typography className={classes.label}>Treasury sell price</Typography>
         <Typography className={classes.value}>
-          {price} {bondToken.symbol}/{quoteToken.symbol}
+          {printBN(price, DECIMAL)} {quoteToken.symbol}/{bondToken.symbol}
         </Typography>
         <Typography className={classes.label}>Supply</Typography>
         <Typography className={classes.value}>
@@ -93,6 +105,7 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
           <Typography className={classes.greenValue}>+{roi}%</Typography>
         </Grid>
         <DepositAmountInput
+          disabled
           value={amountQuote}
           balanceValue={printBN(quoteToken.balance, quoteToken.decimals)}
           currency={quoteToken.symbol}
@@ -122,12 +135,12 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
           onMaxClick={() => {
             setAmountQuote(
               printBN(
-                bondToken.assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
-                  ? bondToken.balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
-                    ? bondToken.balance.sub(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                quoteToken.assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
+                  ? quoteToken.balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                    ? quoteToken.balance.sub(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
                     : new BN(0)
-                  : bondToken.balance,
-                bondToken.decimals
+                  : quoteToken.balance,
+                quoteToken.decimals
               )
             )
           }}

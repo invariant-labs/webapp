@@ -19,6 +19,8 @@ import { createAccount, getWallet } from './wallet'
 import { bondsList } from '@selectors/bonds'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { BN } from '@project-serum/anchor'
+import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 
 export function* handleGetBondsList() {
   try {
@@ -31,8 +33,6 @@ export function* handleGetBondsList() {
 
     const unknownTokens = new Set<PublicKey>()
     const bondsObject: Record<string, BondSaleWithAddress> = {}
-
-    console.log(list)
 
     list.forEach(({ publicKey, account }) => {
       bondsObject[publicKey.toString()] = {
@@ -86,10 +86,12 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
       programId: TOKEN_PROGRAM_ID
     })
 
+    const solAmount = data.amount.mul(data.priceLimit).div(new BN(10 ** DECIMAL))
+
     const transferIx = SystemProgram.transfer({
       fromPubkey: wallet.publicKey,
       toPubkey: wrappedSolAccount.publicKey,
-      lamports: data.amount.toNumber()
+      lamports: solAmount.toNumber()
     })
 
     const initIx = Token.createInitAccountInstruction(

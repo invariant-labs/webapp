@@ -9,7 +9,7 @@ storiesOf('modals/buyBond', module).add('modal', () => {
     <BuyBondModal
       open
       handleClose={() => {}}
-      price={2}
+      price={new BN(2000000)}
       supply={2137}
       roi={5}
       vestingTerm='10 days'
@@ -32,6 +32,7 @@ storiesOf('modals/buyBond', module).add('modal', () => {
         logoURI:
           'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
       }}
+      onBondAmountChange={() => {}}
     />
   )
 })

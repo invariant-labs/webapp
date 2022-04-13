@@ -13,11 +13,14 @@ import BuyBondModal from '@components/Modals/BuyBondModal/BuyBondModal'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { USDC_DEV } from '@consts/static'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import { calculateAmountToClaim, getPriceAfterSlippage } from '@invariant-labs/bonds-sdk/lib/math'
+import {
+  calculateAmountToClaim,
+  calculateSellPrice,
+  getPriceAfterSlippage
+} from '@invariant-labs/bonds-sdk/lib/math'
 import { printBN } from '@consts/utils'
-import useStyles from './styles'
-import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
+import useStyles from './styles'
 
 export const WrappedBonds: React.FC = () => {
   const classes = useStyles()
@@ -42,11 +45,12 @@ export const WrappedBonds: React.FC = () => {
 
   const [modalBondIndex, setModalBondIndex] = useState<number | null>(null)
   const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const [modalPrice, setModalPrice] = useState<Decimal>({ v: new BN(0) })
+  const [modalPrice, setModalPrice] = useState<BN>(new BN(0))
 
   const bondsData = useMemo(() => {
     return Object.values(allBonds).map((bond, index) => {
       return {
+        address: bond.address,
         bondToken: allTokens[bond.tokenBond.toString()],
         quoteToken: allTokens[bond.tokenQuote.toString()],
         roiPercent: 0,
@@ -132,11 +136,7 @@ export const WrappedBonds: React.FC = () => {
               modalBondIndex === null ? placeholderToken : bondsData[modalBondIndex].quoteToken
             }
             roi={modalBondIndex === null ? 0 : +bondsData[modalBondIndex].roiPercent}
-            price={
-              modalBondIndex === null
-                ? 0
-                : +printBN(modalPrice.v, bondsData[modalBondIndex].bondToken.decimals)
-            }
+            price={modalPrice}
             supply={modalBondIndex === null ? 0 : +bondsData[modalBondIndex].supply}
             vestingTerm={modalBondIndex === null ? '' : bondsData[modalBondIndex].vesting}
             handleClose={() => {
@@ -147,16 +147,26 @@ export const WrappedBonds: React.FC = () => {
               if (modalBondIndex !== null) {
                 dispatch(
                   actions.buyBond({
-                    bondSale: allBonds[modalBondIndex].address,
+                    bondSale: bondsData[modalBondIndex].address,
                     amount,
-                    priceLimit: getPriceAfterSlippage(modalPrice, {
-                      v: fromFee(new BN(Number(+slippage * 1000)))
-                    })
+                    priceLimit: getPriceAfterSlippage(
+                      { v: modalPrice },
+                      {
+                        v: fromFee(new BN(Number(slippage * 1000)))
+                      }
+                    )
                   })
                 )
               }
               setModalOpen(false)
               unblurContent()
+            }}
+            onBondAmountChange={amount => {
+              if (modalBondIndex !== null) {
+                setModalPrice(
+                  calculateSellPrice(allBonds[bondsData[modalBondIndex].address.toString()], amount)
+                )
+              }
             }}
           />
         </>
