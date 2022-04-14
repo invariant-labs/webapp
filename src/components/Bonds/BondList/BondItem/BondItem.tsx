@@ -35,24 +35,20 @@ const BondItem: React.FC<IBondItem> = ({
             </>
           )}
           <Typography className={classes.symbol}>
-              {bondToken.symbol}/{quoteToken.symbol}
+            {bondToken.symbol}/{quoteToken.symbol}
           </Typography>
         </Grid>
       </Grid>
       <Typography className={classes.purchased}>
-          {remaining} {bondToken.symbol}
-        </Typography>
+        {remaining} {bondToken.symbol}
+      </Typography>
       {!isExSmall ? (
         <Typography className={classes.purchased}>
           {supply} {bondToken.symbol}
         </Typography>
       ) : null}
 
-      {!isExSmall ? (
-        <Typography className={classes.days}>
-          {vesting}
-        </Typography>
-      ) : null}
+      {!isExSmall ? <Typography className={classes.days}>{vesting}</Typography> : null}
 
       <Button className={classes.bondButton} onClick={onBondClick}>
         Bond

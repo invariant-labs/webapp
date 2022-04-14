@@ -13,10 +13,7 @@ import BuyBondModal from '@components/Modals/BuyBondModal/BuyBondModal'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { USDC_DEV } from '@consts/static'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import {
-  calculateAmountToClaim,
-  getPriceAfterSlippage
-} from '@invariant-labs/bonds-sdk/lib/math'
+import { calculateAmountToClaim, getPriceAfterSlippage } from '@invariant-labs/bonds-sdk/lib/math'
 import { calculateBondPrice, printBN } from '@consts/utils'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './styles'
@@ -178,7 +175,11 @@ export const WrappedBonds: React.FC = () => {
             onAmountChange={(amount, byAmountBond) => {
               if (modalBondIndex !== null) {
                 setModalPrice(
-                  calculateBondPrice(allBonds[bondsData[modalBondIndex].address.toString()], amount, byAmountBond)
+                  calculateBondPrice(
+                    allBonds[bondsData[modalBondIndex].address.toString()],
+                    amount,
+                    byAmountBond
+                  )
                 )
               }
             }}

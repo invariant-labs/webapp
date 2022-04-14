@@ -37,9 +37,7 @@ const PositionsItem: React.FC<IPositionsItem> = ({
       )}
 
       <Grid>
-        {isExSmall ? null : (
-            <img src={bondToken.logoURI} />
-        )}
+        {isExSmall ? null : <img src={bondToken.logoURI} />}
         <Typography>
           {bought} {bondToken.symbol}
         </Typography>
