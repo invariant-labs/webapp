@@ -47,6 +47,12 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
   const [lastTouchedInput, setLastTouchedInput] = useState<InputType>(InputType.BOND)
 
   useEffect(() => {
+    if (open) {
+      setAmountBond(printBN(new BN(10 ** bondToken.decimals), bondToken.decimals))
+    }
+  }, [open])
+
+  useEffect(() => {
     if (lastTouchedInput === InputType.BOND) {
       onAmountChange(printBNtoBN(amountBond, bondToken.decimals), true)
 
@@ -123,7 +129,8 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
         </Grid>
         <Typography className={classes.label}>Treasury sell price</Typography>
         <Typography className={classes.value}>
-          {printBN(price, DECIMAL)} {quoteToken.symbol}/{bondToken.symbol}
+          {(+printBN(price, DECIMAL)).toFixed(quoteToken.decimals)} {quoteToken.symbol}/
+          {bondToken.symbol}
         </Typography>
         <Typography className={classes.label}>Supply</Typography>
         <Typography className={classes.value}>
