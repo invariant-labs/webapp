@@ -79,6 +79,19 @@ export const WrappedBonds: React.FC = () => {
   const userVestedData = useMemo(() => {
     return Object.values(allUserVested).map(vested => {
       const sale = allBonds[vested.bondSale.toString()]
+
+      const now = Date.now() / 1000
+      const progress =
+        now < vested.vestingStart.toNumber()
+          ? '0%'
+          : now > vested.vestingEnd.toNumber()
+          ? '100%'
+          : `${(
+              ((now - vested.vestingStart.toNumber()) /
+                (vested.vestingEnd.toNumber() - vested.vestingStart.toNumber())) *
+              100
+            ).toFixed(1)}%`
+
       return {
         bondToken: allTokens[sale.tokenBond.toString()],
         quoteToken: allTokens[sale.tokenQuote.toString()],
@@ -87,7 +100,7 @@ export const WrappedBonds: React.FC = () => {
           calculateAmountToClaim(vested),
           allTokens[sale.tokenBond.toString()].decimals
         ),
-        vestPeriod: sale.vestingTime.div(new BN(60 * 60 * 24)).toString() + ' days',
+        vestingProgress: progress,
         onRedeemClick: () => {
           dispatch(
             actions.redeemBond({

@@ -9,7 +9,7 @@ export interface IPositionsItem {
   quoteToken: SwapToken
   bought: number
   redeemable: number
-  vestPeriod: string
+  vestingProgress: string
   onRedeemClick: () => void
 }
 
@@ -18,7 +18,7 @@ const PositionsItem: React.FC<IPositionsItem> = ({
   quoteToken,
   bought,
   redeemable,
-  vestPeriod,
+  vestingProgress,
   onRedeemClick
 }) => {
   const classes = useStyles()
@@ -46,7 +46,7 @@ const PositionsItem: React.FC<IPositionsItem> = ({
       </Grid>
 
       <Typography className={classes.redeemable}>{redeemable}</Typography>
-      <Typography>{vestPeriod}</Typography>
+      <Typography>{vestingProgress}</Typography>
       <Button className={classes.redeemButton} onClick={onRedeemClick}>
         Redeem
       </Button>

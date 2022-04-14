@@ -27,7 +27,7 @@ storiesOf('bonds/PositionsItem', module).add('PositionsItem', () => {
       }}
       bought={1354}
       redeemable={8553}
-      vestPeriod='1/3 days'
+      vestingProgress='1/3 days'
       onRedeemClick={() => {}}
     />
   )

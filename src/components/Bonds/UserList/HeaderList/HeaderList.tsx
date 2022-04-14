@@ -12,7 +12,7 @@ const HeaderList = () => {
       {isExSmall ? null : <Typography>Pair</Typography>}
       <Typography>You've bought</Typography>
       <Typography>Redeemable</Typography>
-      <Typography>Vest period</Typography>
+      <Typography>Vesting progress</Typography>
     </Grid>
   )
 }

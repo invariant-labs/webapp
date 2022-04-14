@@ -32,7 +32,7 @@ storiesOf('bonds/PositionsList', module)
           },
           bought: 2137,
           redeemable: 8553,
-          vestPeriod: '1/3 days',
+          vestingProgress: '30%',
           onRedeemClick: () => {}
         }
       })
