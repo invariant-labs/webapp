@@ -824,10 +824,6 @@ export const getNewTokenOrThrow = async (
 }
 
 export const calculateEstBondPriceForQuoteAmount = (bondSale: BondSaleStruct, amount: BN) => {
-  if (amount.gt(bondSale.supply.v)) {
-    return new BN(0)
-  }
-
   let lowerBondAmount = new BN(0)
   let lowerPrice = calculateSellPrice(bondSale, lowerBondAmount)
   let lowerQuoteAmount = lowerBondAmount.mul(lowerPrice).div(new BN(10 ** DECIMAL))
@@ -835,6 +831,10 @@ export const calculateEstBondPriceForQuoteAmount = (bondSale: BondSaleStruct, am
   let upperBondAmount = bondSale.supply.v
   let upperPrice = calculateSellPrice(bondSale, upperBondAmount)
   let upperQuoteAmount = upperBondAmount.mul(upperPrice).div(new BN(10 ** DECIMAL))
+
+  if (amount.gt(upperQuoteAmount)) {
+    return new BN(0)
+  }
 
   while (upperQuoteAmount.sub(lowerQuoteAmount).abs().gt(new BN(1))) {
     const middleBondAmount = upperBondAmount.add(lowerBondAmount).div(new BN(2))
