@@ -55,6 +55,7 @@ export const WrappedBonds: React.FC = () => {
         quoteToken: allTokens[bond.tokenQuote.toString()],
         roiPercent: 0,
         supply: +printBN(bond.supply.v, allTokens[bond.tokenBond.toString()].decimals),
+        remaining: +printBN(bond.remainingAmount.v, allTokens[bond.tokenBond.toString()].decimals),
         vesting: bond.vestingTime.div(new BN(60 * 60 * 24)).toString() + ' days',
         onBondClick: () => {
           if (walletStatus === Status.Initialized) {

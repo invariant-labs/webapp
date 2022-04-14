@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
 import { getBondsProgramSync } from '@web3/programs/bonds'
@@ -8,6 +8,8 @@ import { PublicKey } from '@solana/web3.js'
 import { bondsList, userVested } from '@selectors/bonds'
 import { actions } from '@reducers/bonds'
 import * as R from 'remeda'
+import { status as walletStatus } from '@selectors/solanaWallet'
+import { Status as WalletStatus } from '@reducers/solanaWallet'
 
 const onBondSaleChange = async (
   bondsProgram: Bonds,
@@ -39,6 +41,7 @@ const BondsEvents = () => {
   const networkStatus = useSelector(status)
   const allBonds = useSelector(bondsList)
   const allUserVested = useSelector(userVested)
+  const walletStat = useSelector(walletStatus)
 
   useEffect(() => {
     if (networkStatus !== Status.Initialized || !bondsProgram) {
@@ -65,12 +68,20 @@ const BondsEvents = () => {
     connectEvents()
   }, [dispatch, networkStatus, Object.values(allBonds).length])
 
+  const [vestedKeys, setVestedKeys] = useState<string[]>([])
+
   useEffect(() => {
-    if (networkStatus !== Status.Initialized || !bondsProgram) {
+    if (
+      networkStatus !== Status.Initialized ||
+      !bondsProgram ||
+      walletStat !== WalletStatus.Initialized
+    ) {
       return
     }
 
     const connectEvents = () => {
+      setVestedKeys(Object.keys(allUserVested))
+
       R.forEachObj(allUserVested, vested => {
         onBondChange(bondsProgram, vested.address, bondData => {
           dispatch(
@@ -88,7 +99,32 @@ const BondsEvents = () => {
     }
 
     connectEvents()
-  }, [dispatch, networkStatus, Object.values(allUserVested).length])
+  }, [dispatch, networkStatus, walletStat, Object.values(allUserVested).length])
+
+  useEffect(() => {
+    if (
+      networkStatus !== Status.Initialized ||
+      !bondsProgram ||
+      walletStat === WalletStatus.Initialized
+    ) {
+      return
+    }
+
+    const connectEvents = () => {
+      vestedKeys.forEach(key => {
+        bondsProgram.program.account.bond
+          .unsubscribe(new PublicKey(key))
+          .then(() => {})
+          .catch(error => {
+            console.log(error)
+          })
+      })
+
+      setVestedKeys([])
+    }
+
+    connectEvents()
+  }, [dispatch, networkStatus, walletStat])
 
   return null
 }

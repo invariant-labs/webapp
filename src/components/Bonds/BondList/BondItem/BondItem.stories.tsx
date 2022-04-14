@@ -25,7 +25,7 @@ storiesOf('bonds/BondItem', module).add('BondItem', () => {
         logoURI:
           'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
       }}
-      roiPercent={341313.34}
+      remaining={341313.34}
       supply={100434444444.44}
       vesting='10 days'
       onBondClick={() => {}}

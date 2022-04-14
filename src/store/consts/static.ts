@@ -274,8 +274,7 @@ export const airdropTokens: Record<NetworkType, PublicKey[]> = {
     MSOL_DEV.address,
     BTC_DEV.address,
     RENDOGE_DEV.address,
-    MCK_DEV.address,
-    VEMCK_DEV.address
+    MCK_DEV.address
   ],
   Mainnet: [],
   Testnet: [],
@@ -290,8 +289,7 @@ export const airdropQuantities: Record<NetworkType, number[]> = {
     10 ** MSOL_DEV.decimals,
     0.0025 * 10 ** BTC_DEV.decimals,
     700 * 10 ** RENDOGE_DEV.decimals,
-    100 * 10 ** MCK_DEV.decimals,
-    1 * 10 ** VEMCK_DEV.decimals
+    100 * 10 ** MCK_DEV.decimals
   ],
   Mainnet: [],
   Testnet: [],

@@ -7,7 +7,7 @@ import { useStyles } from './style'
 export interface IBondItem {
   bondToken: SwapToken
   quoteToken: SwapToken
-  roiPercent: number
+  remaining: number
   supply: number
   vesting: string
   onBondClick: () => void
@@ -16,7 +16,7 @@ export interface IBondItem {
 const BondItem: React.FC<IBondItem> = ({
   bondToken,
   quoteToken,
-  roiPercent,
+  remaining,
   supply,
   vesting,
   onBondClick
@@ -39,7 +39,9 @@ const BondItem: React.FC<IBondItem> = ({
           </Typography>
         </Grid>
       </Grid>
-      <Typography className={classes.roi}>+{roiPercent}%</Typography>
+      <Typography className={classes.purchased}>
+          {remaining} {bondToken.symbol}
+        </Typography>
       {!isExSmall ? (
         <Typography className={classes.purchased}>
           {supply} {bondToken.symbol}

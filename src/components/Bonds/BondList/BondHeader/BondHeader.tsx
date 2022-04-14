@@ -9,7 +9,7 @@ const BondHeader = () => {
   return (
     <Grid container classes={{ container: classes.container }}>
       <Typography>Pair</Typography>
-      <Typography>ROI</Typography>
+      <Typography>Remaining</Typography>
       {!isExSmall ? <Typography>Supply</Typography> : null}
       {!isExSmall ? <Typography className={classes.vesting}>Vesting term</Typography> : null}
     </Grid>
