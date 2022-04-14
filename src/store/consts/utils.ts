@@ -11,6 +11,7 @@ import { PlotTickData } from '@reducers/positions'
 import { Token as SPLToken, TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import {
   BTC_DEV,
+  MAX_U64,
   MCK_DEV,
   MSOL_DEV,
   NetworkType,
@@ -825,39 +826,26 @@ export const getNewTokenOrThrow = async (
 
 export const calculateEstBondPriceForQuoteAmount = (bondSale: BondSaleStruct, amount: BN) => {
   let lowerBondAmount = new BN(0)
-  let lowerPrice = calculateSellPrice(bondSale, lowerBondAmount)
-  let lowerQuoteAmount = lowerBondAmount.mul(lowerPrice).div(new BN(10 ** DECIMAL))
+  let upperBondAmount = MAX_U64
+  let price = calculateSellPrice(bondSale, upperBondAmount)
 
-  let upperBondAmount = bondSale.supply.v
-  let upperPrice = calculateSellPrice(bondSale, upperBondAmount)
-  let upperQuoteAmount = upperBondAmount.mul(upperPrice).div(new BN(10 ** DECIMAL))
-
-  if (amount.gt(upperQuoteAmount)) {
-    return new BN(0)
-  }
-
-  while (upperQuoteAmount.sub(lowerQuoteAmount).abs().gt(new BN(1))) {
+  while (upperBondAmount.sub(lowerBondAmount).abs().gt(new BN(1))) {
     const middleBondAmount = upperBondAmount.add(lowerBondAmount).div(new BN(2))
-    const middlePrice = calculateSellPrice(bondSale, middleBondAmount)
-    const middleQuoteAmount = middleBondAmount.mul(middlePrice).div(new BN(10 ** DECIMAL))
+    price = calculateSellPrice(bondSale, middleBondAmount)
+    const middleQuoteAmount = middleBondAmount.mul(price).div(new BN(10 ** DECIMAL))
 
     if (middleQuoteAmount.sub(amount).abs().lte(new BN(1))) {
-      upperPrice = middlePrice
       break
     }
 
-    if (middlePrice.lt(amount)) {
+    if (middleQuoteAmount.lt(amount)) {
       lowerBondAmount = middleBondAmount
-      lowerPrice = middlePrice
-      lowerQuoteAmount = middleQuoteAmount
     } else {
       upperBondAmount = middleBondAmount
-      upperPrice = middlePrice
-      upperQuoteAmount = middleQuoteAmount
     }
   }
 
-  return upperPrice
+  return price
 }
 
 export const calculateBondPrice = (bondSale: BondSaleStruct, amount: BN, byAmountBond: boolean) =>
