@@ -19,7 +19,12 @@ interface IBuyBondModal {
   roi: number
   vestingTerm: string
   onBuy: (amount: BN, slippage: number) => void
-  onBondAmountChange: (amount: BN) => void
+  onAmountChange: (amount: BN, byAmountBond: boolean) => void
+}
+
+enum InputType {
+  QUOTE,
+  BOND
 }
 
 const BuyBondModal: React.FC<IBuyBondModal> = ({
@@ -32,22 +37,62 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
   roi,
   vestingTerm,
   onBuy,
-  onBondAmountChange
+  onAmountChange
 }) => {
   const classes = useStyles()
 
-  const [amountBond, setAmountBond] = useState<string>('')
-  const [amountQuote, setAmountQuote] = useState<string>('')
+  const [amountBond, setAmountBond] = useState<string>('0')
+  const [amountQuote, setAmountQuote] = useState<string>('0')
   const [slippage, setSlippage] = useState<string>('1')
+  const [lastTouchedInput, setLastTouchedInput] = useState<InputType>(InputType.BOND)
 
   useEffect(() => {
-    onBondAmountChange(printBNtoBN(amountBond, bondToken.decimals))
+    if (lastTouchedInput === InputType.BOND) {
+      onAmountChange(printBNtoBN(amountBond, bondToken.decimals), true)
+
+      if (price.eq(new BN(0))) {
+        setAmountQuote('0')
+        return
+      }
+
+      const bondBN = printBNtoBN(amountBond, bondToken.decimals)
+      setAmountQuote(printBN(bondBN.mul(price).div(new BN(10 ** DECIMAL)), quoteToken.decimals))
+    }
   }, [amountBond])
 
   useEffect(() => {
-    const bondBN = printBNtoBN(amountBond, bondToken.decimals)
-    setAmountQuote(printBN(bondBN.mul(price).div(new BN(10 ** DECIMAL)), quoteToken.decimals))
-  }, [price, amountBond])
+    if (lastTouchedInput === InputType.QUOTE) {
+      onAmountChange(printBNtoBN(amountQuote, quoteToken.decimals), false)
+
+      if (price.eq(new BN(0))) {
+        setAmountBond('0')
+        return
+      }
+
+      const quoteBN = printBNtoBN(amountQuote, quoteToken.decimals)
+      setAmountBond(printBN(quoteBN.mul(new BN(10 ** DECIMAL)).div(price), bondToken.decimals))
+    }
+  }, [amountQuote])
+
+  useEffect(() => {
+    if (lastTouchedInput === InputType.QUOTE) {
+      if (price.eq(new BN(0))) {
+        setAmountBond('0')
+        return
+      }
+
+      const quoteBN = printBNtoBN(amountQuote, quoteToken.decimals)
+      setAmountBond(printBN(quoteBN.mul(new BN(10 ** DECIMAL)).div(price), bondToken.decimals))
+    } else {
+      if (price.eq(new BN(0))) {
+        setAmountQuote('0')
+        return
+      }
+
+      const bondBN = printBNtoBN(amountBond, bondToken.decimals)
+      setAmountQuote(printBN(bondBN.mul(price).div(new BN(10 ** DECIMAL)), quoteToken.decimals))
+    }
+  }, [price])
 
   return (
     <Popover
@@ -105,14 +150,17 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
           <Typography className={classes.greenValue}>+{roi}%</Typography>
         </Grid>
         <DepositAmountInput
-          disabled
           value={amountQuote}
           balanceValue={printBN(quoteToken.balance, quoteToken.decimals)}
           currency={quoteToken.symbol}
           currencyIconSrc={quoteToken.logoURI}
           decimalsLimit={quoteToken.decimals}
-          setValue={setAmountQuote}
+          setValue={value => {
+            setLastTouchedInput(InputType.QUOTE)
+            setAmountQuote(value)
+          }}
           onMaxClick={() => {
+            setLastTouchedInput(InputType.QUOTE)
             setAmountQuote(
               printBN(
                 quoteToken.assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
@@ -131,8 +179,12 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
           currency={bondToken.symbol}
           currencyIconSrc={bondToken.logoURI}
           decimalsLimit={bondToken.decimals}
-          setValue={setAmountBond}
+          setValue={value => {
+            setLastTouchedInput(InputType.BOND)
+            setAmountBond(value)
+          }}
           onMaxClick={() => {
+            setLastTouchedInput(InputType.QUOTE)
             setAmountQuote(
               printBN(
                 quoteToken.assetAddress.equals(new PublicKey(WRAPPED_SOL_ADDRESS))

@@ -28,6 +28,8 @@ import { PoolWithAddress } from '@reducers/pools'
 import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
 import axios, { AxiosResponse } from 'axios'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
+import { calculateSellPrice } from '@invariant-labs/bonds-sdk/lib/math'
+import { BondSaleStruct } from '@invariant-labs/bonds-sdk/lib/sale'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -820,3 +822,31 @@ export const getNewTokenOrThrow = async (
     [address.toString()]: generateUnknownTokenDataObject(key, info.decimals)
   }
 }
+
+export const calculateEstBondPriceForQuoteAmount = (bondSale: BondSaleStruct, amount: BN) => {
+  let calculatedBondAmount = bondSale.remainingAmount.v
+  let price = calculateSellPrice(bondSale, calculatedBondAmount)
+  let calculatedQuoteAmount = calculatedBondAmount.mul(price).div(new BN(10 ** DECIMAL))
+
+  while (calculatedQuoteAmount.sub(amount).abs().gt(new BN(1))) {
+    if (calculatedQuoteAmount.gt(amount)) {
+      calculatedBondAmount = calculatedBondAmount.mul(new BN(10 ** DECIMAL)).div(new BN(2)).div(new BN(10 ** DECIMAL))
+    } else {
+      calculatedBondAmount = calculatedBondAmount.mul(new BN(10 ** DECIMAL)).mul(new BN(3)).div(new BN(2)).div(new BN(10 ** DECIMAL))
+    }
+
+    price = calculateSellPrice(bondSale, calculatedBondAmount)
+    calculatedQuoteAmount = calculatedBondAmount.mul(price).div(new BN(10 ** DECIMAL))
+    console.log({
+      amount: amount.toString(),
+      calculatedQuoteAmount: calculatedQuoteAmount.toString()
+    })
+    console.log(printBN(price, DECIMAL))
+  }
+
+  return price
+}
+
+export const calculateBondPrice = (bondSale: BondSaleStruct, amount: BN, byAmountBond: boolean) => byAmountBond
+  ? calculateSellPrice(bondSale, amount)
+  : calculateEstBondPriceForQuoteAmount(bondSale, amount)

@@ -15,10 +15,9 @@ import { USDC_DEV } from '@consts/static'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import {
   calculateAmountToClaim,
-  calculateSellPrice,
   getPriceAfterSlippage
 } from '@invariant-labs/bonds-sdk/lib/math'
-import { printBN } from '@consts/utils'
+import { calculateBondPrice, printBN } from '@consts/utils'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './styles'
 
@@ -61,6 +60,7 @@ export const WrappedBonds: React.FC = () => {
           if (walletStatus === Status.Initialized) {
             setModalBondIndex(index)
             blurContent()
+            setModalPrice(new BN(0))
             setModalOpen(true)
           } else {
             dispatch(
@@ -175,10 +175,10 @@ export const WrappedBonds: React.FC = () => {
               setModalOpen(false)
               unblurContent()
             }}
-            onBondAmountChange={amount => {
+            onAmountChange={(amount, byAmountBond) => {
               if (modalBondIndex !== null) {
                 setModalPrice(
-                  calculateSellPrice(allBonds[bondsData[modalBondIndex].address.toString()], amount)
+                  calculateBondPrice(allBonds[bondsData[modalBondIndex].address.toString()], amount, byAmountBond)
                 )
               }
             }}

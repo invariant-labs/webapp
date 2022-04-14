@@ -429,7 +429,7 @@ export function* handleDisconnect(): Generator {
         upperTick: undefined
       })
     )
-    yield* put(bondsActions.setUserVested([]))
+    yield* put(bondsActions.setUserVested({}))
   } catch (error) {
     console.log(error)
   }
