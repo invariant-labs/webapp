@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { printBN, printBNtoBN, handleSimulate, findPairs } from '@consts/utils'
+import { printBN, printBNtoBN, handleSimulate, findPairs, trimLeadingZeros } from '@consts/utils'
 import { Decimal, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
@@ -201,10 +201,10 @@ export const Swap: React.FC<ISwap> = ({
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       if (inputRef === inputTarget.FROM) {
         const amount = getAmountOut(tokens[tokenToIndex])
-        setAmountTo(+amount === 0 ? '' : amount)
+        setAmountTo(+amount === 0 ? '' : trimLeadingZeros(amount))
       } else {
         const amount = getAmountOut(tokens[tokenFromIndex])
-        setAmountFrom(+amount === 0 ? '' : amount)
+        setAmountFrom(+amount === 0 ? '' : trimLeadingZeros(amount))
       }
     }
   }, [simulateResult])
@@ -291,7 +291,7 @@ export const Swap: React.FC<ISwap> = ({
   const updateEstimatedAmount = () => {
     if (tokenFromIndex !== null && tokenToIndex !== null) {
       const amount = getAmountOut(tokens[tokenToIndex])
-      setAmountTo(+amount === 0 ? '' : amount)
+      setAmountTo(+amount === 0 ? '' : trimLeadingZeros(amount))
     }
   }
 
@@ -322,6 +322,15 @@ export const Swap: React.FC<ISwap> = ({
     if (!getIsXToY(tokens[tokenFromIndex].assetAddress, tokens[tokenToIndex].assetAddress)) {
       return 'No route found'
     }
+
+    if (
+      isError('At the end of price range') ||
+      isError('Price would cross swap limit') ||
+      isError('Too large liquidity gap')
+    ) {
+      return 'Insufficient liquidity'
+    }
+
     if (
       printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).gt(
         printBNtoBN(
@@ -344,13 +353,6 @@ export const Swap: React.FC<ISwap> = ({
       return 'Exceed single swap limit (split transaction into several)'
     }
 
-    if (
-      isError('At the end of price range') ||
-      isError('Price would cross swap limit') ||
-      isError('Too large liquidity gap')
-    ) {
-      return 'Insufficient liquidity'
-    }
     return 'Swap tokens'
   }
   const hasShowRateMessage = () => {
