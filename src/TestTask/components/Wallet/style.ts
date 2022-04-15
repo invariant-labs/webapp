@@ -18,7 +18,11 @@ const useStyles = makeStyles(() => ({
     minWidth: 386,
     padding: 24,
     borderRadius: 24,
-    background: '#202946'
+    background: '#202946',
+
+    ['@media(max-width: 420px)']: {
+      minWidth: 0
+    }
   },
   calculatorValueContainer: {
     display: 'flex',

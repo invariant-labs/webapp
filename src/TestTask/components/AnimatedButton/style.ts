@@ -111,7 +111,12 @@ const useStyles = makeStyles(() => ({
     padding: '8px 14px',
     backgroundColor: colors.invariant.green,
     border: 'none',
-    margin: '10px 14px 10px 0'
+    margin: '10px 14px 0 0',
+    borderRadius: 10,
+
+    '&:last-of-type': {
+      margin: '10px 0 0 0'
+    }
   }
 }))
 

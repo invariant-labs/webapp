@@ -12,7 +12,7 @@ storiesOf('test/components/CalculatorSwitch', module).add('default', () => {
         margin: 'auto',
         borderRadius: 10
       }}>
-      <CalculatorSwitch onSwitch={() => {}} initialValue={0} />
+      <CalculatorSwitch currentCurrency={0} />
     </div>
   )
 })

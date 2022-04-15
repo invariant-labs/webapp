@@ -29,7 +29,7 @@ export const CalculatorValue: React.FC<IProps> = ({
         {/* INPUT VALUE */}
         <Typography variant='h3' className={`${classes.title} ${!value && classes.titleEmpty}`}>{`${
           value ? value : '0.0'
-        } ${currency}`}</Typography>
+        } ${currency === 'AERGO' ? 'ARG' : currency}`}</Typography>
 
         {/* BIG ICON */}
         {currency !== null ? (

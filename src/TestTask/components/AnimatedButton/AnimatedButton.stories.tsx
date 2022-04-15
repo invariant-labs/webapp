@@ -13,7 +13,14 @@ storiesOf('test/components/AnimatedButtons', module)
     const classes = useStyles()
     const [progress, setProgress] = useState<ProgressState>('none')
     return (
-      <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
+      <div
+        style={{
+          backgroundColor: colors.navy.component,
+          padding: '10px',
+          borderRadius: 20,
+          maxWidth: 785,
+          margin: 'auto'
+        }}>
         <AnimateButton
           content={'Add liquidity'}
           progress={progress}

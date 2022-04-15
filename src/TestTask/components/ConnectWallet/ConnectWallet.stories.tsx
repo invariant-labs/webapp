@@ -8,7 +8,15 @@ storiesOf('test/components/ConnectWallet', module)
   .add('default', () => (
     <ConnectWallet
       open={true}
-      options={[WalletType.PHANTOM, WalletType.SOLLET, WalletType.MATH, WalletType.SOLFLARE]}
+      options={[
+        WalletType.PHANTOM,
+        WalletType.SOLLET,
+        WalletType.MATH,
+        WalletType.SOLFLARE,
+        WalletType.COIN98,
+        WalletType.SLOPE,
+        WalletType.CLOVER
+      ]}
       handleClose={() => {}}
       callDisconect={action('disconnect')}
       connected={false}
@@ -20,7 +28,15 @@ storiesOf('test/components/ConnectWallet', module)
   .add('withDisconnect', () => (
     <ConnectWallet
       open={true}
-      options={[WalletType.PHANTOM, WalletType.SOLLET, WalletType.MATH, WalletType.SOLFLARE]}
+      options={[
+        WalletType.PHANTOM,
+        WalletType.SOLLET,
+        WalletType.MATH,
+        WalletType.SOLFLARE,
+        WalletType.COIN98,
+        WalletType.SLOPE,
+        WalletType.CLOVER
+      ]}
       handleClose={() => {}}
       callDisconect={action('disconnect')}
       connected={true}

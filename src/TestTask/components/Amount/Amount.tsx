@@ -21,6 +21,7 @@ interface IProps {
   percentageChange?: number
   usdValue?: number
   balanceValue?: string
+  changeCurrencyType?: (currentCurrencyType: string) => void
 }
 
 export const Amount: React.FC<IProps> = ({
@@ -37,7 +38,8 @@ export const Amount: React.FC<IProps> = ({
   decimalsLimit,
   percentageChange,
   usdValue,
-  balanceValue
+  balanceValue,
+  changeCurrencyType
 }) => {
   const classes = useStyles()
 
@@ -128,6 +130,7 @@ export const Amount: React.FC<IProps> = ({
       <div className={classes.root}>
         <div className={classes.inputContainer}>
           <Grid
+            onClick={() => (changeCurrencyType && currency ? changeCurrencyType(currency) : null)}
             className={classes.currency}
             container
             justifyContent='center'

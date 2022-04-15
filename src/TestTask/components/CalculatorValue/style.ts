@@ -11,7 +11,13 @@ const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    transition: 'all 150ms ease-out',
+
+    ['@media(max-width: 420px)']: {
+      display: 'grid',
+      gridTemplateColumns: '100% 28px'
+    }
   },
   title: {
     fontFamily: 'Mukta',
@@ -36,27 +42,44 @@ const useStyles = makeStyles(() => ({
     minWidth: 28,
     height: 28,
     margin: '0 auto 0 12px',
-    borderRadius: '100%'
+    borderRadius: '100%',
+
+    ['@media(max-width: 420px)']: {
+      margin: 0
+    }
   },
   currencyIconSmall: {
     minWidth: 18,
     height: 18,
     margin: '0 0 0 8px',
-    borderRadius: '100%'
+    borderRadius: '100%',
+    transition: 'all 150ms ease-out',
+
+    ['@media(max-width: 420px)']: {
+      display: 'none'
+    }
   },
   currencyIconGradient: {
     background: 'radial-gradient(96.25% 96.25% at 50% 3.75%, #9AC8E9 0%, #5B8DC8 100%)',
     width: 28,
     height: 28,
     borderRadius: '50%',
-    margin: '0 auto 0 12px'
+    margin: '0 auto 0 12px',
+
+    ['@media(max-width: 420px)']: {
+      margin: 0
+    }
   },
   currencyIconGradientSmall: {
     background: 'radial-gradient(96.25% 96.25% at 50% 3.75%, #9AC8E9 0%, #5B8DC8 100%)',
     minWidth: 18,
     height: 18,
     borderRadius: '50%',
-    margin: '0 0 0 8px'
+    margin: '0 0 0 8px',
+
+    ['@media(max-width: 420px)']: {
+      display: 'none'
+    }
   }
 }))
 

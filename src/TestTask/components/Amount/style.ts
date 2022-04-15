@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'grid',
     gridTemplateAreas: `
     "select select select select"
-    "balance balance balance percentages"
+    "balance balance percentages percentages"
     `,
 
     '& $input': {
@@ -35,6 +35,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('xs')]: {
       '& $input': {}
+    },
+
+    ['@media(max-width: 420px)']: {
+      gridTemplateAreas: `
+      "select select select select"
+      "balance balance balance balance"
+      "percentages percentages percentages percentages"
+      `
     }
   },
   inputContainer: {
@@ -56,7 +64,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 11,
     backgroundColor: colors.invariant.light,
     padding: '6px 12px 6px 12px',
-    cursor: 'default',
+    cursor: 'pointer',
+    transition: 'background-color 150ms ease-out',
+
+    '&:hover': {
+      backgroundColor: `${colors.invariant.component}`
+    },
 
     [theme.breakpoints.down('sm')]: {
       height: 36,
@@ -69,7 +82,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 17
   },
   percentageContainer: {
-    display: 'flex'
+    transition: 'all 150ms ease-out',
+    display: 'flex',
+    ['@media(max-width: 420px)']: {
+      margin: '2px auto 0 0'
+    }
   },
   percentage: {
     color: colors.invariant.Error,
@@ -81,7 +98,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 3,
     height: 16,
     lineHeight: '16px',
-    padding: '0px 5px'
+    padding: '0px 5px',
+    transition: 'all 150ms ease-out',
+    ['@media(max-width: 420px)']: {
+      order: 2,
+      margin: '0 0 0 5px'
+    }
   },
   currencyIcon: {
     minWidth: 20,
@@ -112,8 +134,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   caption2: {
     display: 'flex',
-    flexWrap: 'nowrap',
-    width: '100%',
+    flexDirection: 'row',
+    miWidth: 'max-content',
     ...typography.caption2,
     color: colors.invariant.lightHover,
 

@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Tab, Tabs, useMediaQuery } from '@material-ui/core'
 import { theme } from '@static/theme'
 import { useSingleTabStyles, useTabsStyles } from './style'
 
 export interface IProps {
   onSwitch: (isConcentrated: boolean) => void
-  initialValue: number
   className?: string
   style?: React.CSSProperties
   currentCurrency: number
@@ -14,7 +13,6 @@ export interface IProps {
 
 export const CalculatorSwitch: React.FC<IProps> = ({
   onSwitch,
-  initialValue,
   className,
   style,
   currentCurrency,

@@ -41,27 +41,35 @@ export const Wallet: React.FC<IWallet> = ({}) => {
     }
   ]
 
+  const changeCurrencyType = (currentCurrencyType: string) => {
+    if (currentCurrencyType === 'SNY') {
+      setCurrencyType('AERGO')
+    } else {
+      setCurrencyType('SNY')
+    }
+  }
+
+  console.log(currencyType)
   return (
     <Grid container className={classes.root}>
       <Grid container className={classes.rootContainer}>
         <Grid container className={classes.amountContainer}>
           <Typography variant='h2' className={classes.title}>
-            Your wallet
+            Click on SNY
           </Typography>
-          {/* Values of usdValue AND percentageChange AND balanceValue are STATIC */}
-          {/* No percentageChange info was found in DepositSelector and above - percentageChangeA and percentageChangB were undefined */}
-          {/* No usdValue info was found in DepositSelector and above - usdValueA and usdValueB were undefined */}
+
           <Amount
             value={value}
             setValue={setValue}
-            currency='SNY'
+            currency={currencyType}
             onMaxClick={() => {}}
             decimalsLimit={6}
-            currencyIconSrc={currencyType !== 'SNY' ? icons[currencyType] : undefined}
+            currencyIconSrc={currencyType === 'SNY' ? undefined : icons['SNY']}
             percentageChange={-4.15}
             usdValue={205341.43}
             balanceValue={balance}
             placeholder='0.0'
+            changeCurrencyType={changeCurrencyType}
           />
         </Grid>
         <Grid container className={classes.calculatorValueSwitch}>
@@ -70,7 +78,6 @@ export const Wallet: React.FC<IWallet> = ({}) => {
           </Typography>
           <CalculatorSwitch
             onSwitch={() => {}}
-            initialValue={0}
             currentCurrency={currentCurrency}
             setCurrentCurrency={setCurrentCurrency}
           />
@@ -81,13 +88,13 @@ export const Wallet: React.FC<IWallet> = ({}) => {
             value={value}
             currencyRate={toCurrency[currentCurrency].rate}
             toCurrency={toCurrency[currentCurrency].name}
-            currencyIconSrc={undefined}
+            currencyIconSrc={currencyType === 'SNY' ? undefined : icons['SNY']}
           />
         </Grid>
 
         <AnimatedButton
           onClick={() => {}}
-          content={'Connect a wallet'}
+          content={'Happy Button'}
           progress={'none'}
           className={classNames(classes.IDOButton, classes.buttonDisabled)}
         />
