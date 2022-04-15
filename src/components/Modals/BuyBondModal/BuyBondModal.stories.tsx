@@ -11,7 +11,7 @@ storiesOf('modals/buyBond', module).add('modal', () => {
       handleClose={() => {}}
       price={new BN(2000000)}
       supply={2137}
-      roi={5}
+      remaining={911}
       vestingTerm='10 days'
       onBuy={() => {}}
       bondToken={{

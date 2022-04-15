@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Grid, Typography, useMediaQuery } from '@material-ui/core'
 import { colors, theme } from '@static/theme'
 import { SwapToken } from '@selectors/solanaWallet'
+import { formatNumbers, FormatNumberThreshold, showPrefix, trimLeadingZeros } from '@consts/utils'
 import { useStyles } from './style'
 
 export interface IBondItem {
@@ -12,6 +13,40 @@ export interface IBondItem {
   vesting: string
   onBondClick: () => void
 }
+
+const thresholds: FormatNumberThreshold[] = [
+  {
+    value: 10,
+    decimals: 6
+  },
+  {
+    value: 100,
+    decimals: 4
+  },
+  {
+    value: 1000,
+    decimals: 2
+  },
+  {
+    value: 10000,
+    decimals: 1
+  },
+  {
+    value: 1000000,
+    decimals: 2,
+    divider: 1000
+  },
+  {
+    value: 1000000000,
+    decimals: 2,
+    divider: 1000000
+  },
+  {
+    value: Infinity,
+    decimals: 2,
+    divider: 1000000000
+  }
+]
 
 const BondItem: React.FC<IBondItem> = ({
   bondToken,
@@ -40,11 +75,13 @@ const BondItem: React.FC<IBondItem> = ({
         </Grid>
       </Grid>
       <Typography className={classes.purchased}>
-        {remaining} {bondToken.symbol}
+        {trimLeadingZeros(formatNumbers(thresholds)(remaining.toString()))}
+        {showPrefix(remaining)} {bondToken.symbol}
       </Typography>
       {!isExSmall ? (
         <Typography className={classes.purchased}>
-          {supply} {bondToken.symbol}
+          {trimLeadingZeros(formatNumbers(thresholds)(supply.toString()))}
+          {showPrefix(supply)} {bondToken.symbol}
         </Typography>
       ) : null}
 

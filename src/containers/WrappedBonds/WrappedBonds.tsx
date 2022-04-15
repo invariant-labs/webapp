@@ -146,8 +146,8 @@ export const WrappedBonds: React.FC = () => {
             quoteToken={
               modalBondIndex === null ? placeholderToken : bondsData[modalBondIndex].quoteToken
             }
-            roi={modalBondIndex === null ? 0 : +bondsData[modalBondIndex].roiPercent}
             price={modalPrice}
+            remaining={modalBondIndex === null ? 0 : +bondsData[modalBondIndex].remaining}
             supply={modalBondIndex === null ? 0 : +bondsData[modalBondIndex].supply}
             vestingTerm={modalBondIndex === null ? '' : bondsData[modalBondIndex].vesting}
             handleClose={() => {

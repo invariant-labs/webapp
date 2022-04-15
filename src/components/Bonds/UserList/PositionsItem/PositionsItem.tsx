@@ -2,6 +2,7 @@ import { Button, Grid, Typography, useMediaQuery } from '@material-ui/core'
 import { SwapToken } from '@selectors/solanaWallet'
 import { theme } from '@static/theme'
 import React from 'react'
+import { formatNumbers, FormatNumberThreshold, showPrefix, trimLeadingZeros } from '@consts/utils'
 import { useStyles } from './style'
 
 export interface IPositionsItem {
@@ -12,6 +13,40 @@ export interface IPositionsItem {
   vestingProgress: string
   onRedeemClick: () => void
 }
+
+const thresholds: FormatNumberThreshold[] = [
+  {
+    value: 10,
+    decimals: 6
+  },
+  {
+    value: 100,
+    decimals: 4
+  },
+  {
+    value: 1000,
+    decimals: 2
+  },
+  {
+    value: 10000,
+    decimals: 1
+  },
+  {
+    value: 1000000,
+    decimals: 2,
+    divider: 1000
+  },
+  {
+    value: 1000000000,
+    decimals: 2,
+    divider: 1000000
+  },
+  {
+    value: Infinity,
+    decimals: 2,
+    divider: 1000000000
+  }
+]
 
 const PositionsItem: React.FC<IPositionsItem> = ({
   bondToken,
@@ -39,11 +74,15 @@ const PositionsItem: React.FC<IPositionsItem> = ({
       <Grid>
         {isExSmall ? null : <img src={bondToken.logoURI} />}
         <Typography>
-          {bought} {bondToken.symbol}
+          {trimLeadingZeros(formatNumbers(thresholds)(bought.toString()))}
+          {showPrefix(bought)} {bondToken.symbol}
         </Typography>
       </Grid>
 
-      <Typography className={classes.redeemable}>{redeemable}</Typography>
+      <Typography className={classes.redeemable}>
+        {trimLeadingZeros(formatNumbers(thresholds)(redeemable.toString()))}
+        {showPrefix(redeemable)}
+      </Typography>
       <Typography>{vestingProgress}</Typography>
       <Button className={classes.redeemButton} onClick={onRedeemClick}>
         Redeem

@@ -1,6 +1,13 @@
 import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
 import { WRAPPED_SOL_ADDRESS, WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT } from '@consts/static'
-import { printBN, printBNtoBN } from '@consts/utils'
+import {
+  printBN,
+  printBNtoBN,
+  formatNumbers,
+  FormatNumberThreshold,
+  showPrefix,
+  trimLeadingZeros
+} from '@consts/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Input, Popover, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
@@ -15,8 +22,8 @@ interface IBuyBondModal {
   bondToken: SwapToken
   quoteToken: SwapToken
   price: BN
+  remaining: number
   supply: number
-  roi: number
   vestingTerm: string
   onBuy: (amount: BN, slippage: number) => void
   onAmountChange: (amount: BN, byAmountBond: boolean) => void
@@ -27,14 +34,48 @@ enum InputType {
   BOND
 }
 
+const thresholds: FormatNumberThreshold[] = [
+  {
+    value: 10,
+    decimals: 6
+  },
+  {
+    value: 100,
+    decimals: 4
+  },
+  {
+    value: 1000,
+    decimals: 2
+  },
+  {
+    value: 10000,
+    decimals: 1
+  },
+  {
+    value: 1000000,
+    decimals: 2,
+    divider: 1000
+  },
+  {
+    value: 1000000000,
+    decimals: 2,
+    divider: 1000000
+  },
+  {
+    value: Infinity,
+    decimals: 2,
+    divider: 1000000000
+  }
+]
+
 const BuyBondModal: React.FC<IBuyBondModal> = ({
   open,
   handleClose,
   bondToken,
   quoteToken,
   price,
+  remaining,
   supply,
-  roi,
   vestingTerm,
   onBuy,
   onAmountChange
@@ -100,6 +141,8 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
     }
   }, [price])
 
+  const priceStr = printBN(price, DECIMAL)
+
   return (
     <Popover
       classes={{ paper: classes.paper }}
@@ -129,12 +172,13 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
         </Grid>
         <Typography className={classes.label}>Treasury sell price</Typography>
         <Typography className={classes.value}>
-          {(+printBN(price, DECIMAL)).toFixed(quoteToken.decimals)} {quoteToken.symbol}/
-          {bondToken.symbol}
+          {trimLeadingZeros(formatNumbers(thresholds)(priceStr))}
+          {showPrefix(+priceStr)} {quoteToken.symbol}/{bondToken.symbol}
         </Typography>
         <Typography className={classes.label}>Supply</Typography>
         <Typography className={classes.value}>
-          {supply} {bondToken.symbol}
+          {trimLeadingZeros(formatNumbers(thresholds)(supply.toString()))}
+          {showPrefix(supply)} {bondToken.symbol}
         </Typography>
         <Typography className={classes.label}>Slippage</Typography>
         <Input
@@ -150,11 +194,14 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
         />
         <Grid className={classes.headers}>
           <Typography className={classes.label}>Vesting term</Typography>
-          <Typography className={classes.label}>ROI</Typography>
+          <Typography className={classes.label}>Remaining {bondToken.symbol}</Typography>
         </Grid>
         <Grid className={classes.values}>
           <Typography className={classes.greenValue}>{vestingTerm}</Typography>
-          <Typography className={classes.greenValue}>+{roi}%</Typography>
+          <Typography className={classes.greenValue}>
+            {trimLeadingZeros(formatNumbers(thresholds)(remaining.toString()))}
+            {showPrefix(remaining)}
+          </Typography>
         </Grid>
         <DepositAmountInput
           value={amountQuote}
