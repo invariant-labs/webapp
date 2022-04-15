@@ -1,11 +1,16 @@
 import React from 'react'
+
+import ConnectWallet from '../ConnectWallet/ConnectWallet'
 import { Button, Typography } from '@material-ui/core'
-import useStyles from './style'
+
 import { blurContent, unblurContent } from '@consts/uiUtils'
-import ConnectWallet from '@components/Modals/ConnectWallet/ConnectWallet'
 import { WalletType } from '@web3/wallet'
+
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+
 import classNames from 'classnames'
+import useStyles from './style'
+
 export interface IProps {
   name: string
   options: WalletType[]
@@ -17,6 +22,7 @@ export interface IProps {
   activeWallet?: WalletType
   className?: string
 }
+
 export const ChangeWalletButton: React.FC<IProps> = ({
   name,
   options,

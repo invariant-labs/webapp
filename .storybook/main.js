@@ -4,6 +4,7 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const resolve = item => {
   return path.join(__dirname, '../', item)
 }
+
 module.exports = {
   stories: ['../src/**/*.stories.tsx'],
   addons: [

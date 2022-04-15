@@ -10,10 +10,9 @@ import ChangeWalletButton from './ChangeWalletButton'
 import { WalletType } from '@web3/wallet'
 import { NetworkType, SolanaNetworks } from '@consts/static'
 
-const loremIpsum =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+const descr = 'CLICK TO SEE THE DROPDOWN'
 
-storiesOf('buttons/newHeaderButton', module)
+storiesOf('test/components/HeaderButtons', module)
   .addDecorator(withKnobs)
   .add('selectWallet', () => (
     <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
@@ -26,7 +25,7 @@ storiesOf('buttons/newHeaderButton', module)
       />
       <br />
       <div id={toBlur} style={{ color: '#00F9BB' }}>
-        <Typography variant='body2'>{loremIpsum}</Typography>
+        <Typography variant='body2'>{descr}</Typography>
       </div>
     </div>
   ))
@@ -41,7 +40,7 @@ storiesOf('buttons/newHeaderButton', module)
       />
       <br />
       <div id={toBlur} style={{ color: '#00F9BB' }}>
-        <Typography variant='body2'>{loremIpsum}</Typography>
+        <Typography variant='body2'>{descr}</Typography>
       </div>
     </div>
   ))
@@ -50,8 +49,10 @@ storiesOf('buttons/newHeaderButton', module)
       <SelectNetworkButton
         name={NetworkType.MAINNET}
         networks={[
+          { name: NetworkType.DEVNET, network: SolanaNetworks.DEV },
           { name: NetworkType.MAINNET, network: SolanaNetworks.MAIN },
-          { name: NetworkType.DEVNET, network: SolanaNetworks.DEV }
+          { name: NetworkType.TESTNET, network: SolanaNetworks.TEST },
+          { name: NetworkType.LOCALNET, network: SolanaNetworks.LOCAL }
         ]}
         onSelect={(chosen: string) => action(`chosen: ${chosen}`)()}
       />

@@ -83,7 +83,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     ...typography.body1,
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    ['@media (max-width:378px)']: {
+      transform: 'scale(0.75)'
+    }
   },
   disabled: {
     opacity: 0.5

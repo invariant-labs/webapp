@@ -1,24 +1,29 @@
 import React from 'react'
-import { PublicKey } from '@solana/web3.js'
+import { MemoryRouter } from 'react-router-dom'
+
 import { DEFAULT_PUBLICKEY, NetworkType } from '@consts/static'
+import { toBlur } from '@consts/uiUtils'
+
 import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
 import { withKnobs } from '@storybook/addon-knobs'
-import Header from './Header'
-import { toBlur } from '@consts/uiUtils'
-import { WalletType } from '@web3/wallet'
-import { MemoryRouter } from 'react-router'
 
-storiesOf('test/dynamicVariant/components/Header', module)
+import { WalletType } from '@web3/wallet'
+import { PublicKey } from '@solana/web3.js'
+
+import { Header } from './Header.component'
+
+//instead of MemoryRouter we could use StoryRouter from 'storybook-react-router'
+//But in the hole project MemoryRouter is used instead
+storiesOf('test/components/Header', module)
   .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
   .addDecorator(withKnobs)
   .add('default', () => {
     return (
-      // style for testing only
       <div
         style={{
-          background: '#0B090D',
-          height: '100vh'
+          background: '#0b090d',
+          height: 'calc(100vh - 70px)'
         }}>
         <div
           id={toBlur}
@@ -52,7 +57,7 @@ storiesOf('test/dynamicVariant/components/Header', module)
       <div
         style={{
           background: '#0B090D',
-          height: '100vh'
+          height: 'calc(100vh - 70px)'
         }}>
         <div
           id={toBlur}

@@ -1,10 +1,14 @@
 import React from 'react'
+
+import SelectNetwork, { ISelectNetwork } from '../SelectNetwork/SelectNetwork'
 import { Button } from '@material-ui/core'
-import useStyles from './style'
-import { blurContent, unblurContent } from '@consts/uiUtils'
-import SelectNetwork, { ISelectNetwork } from '@components/Modals/SelectNetwork/SelectNetwork'
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
+
 import { NetworkType } from '@consts/static'
+import { blurContent, unblurContent } from '@consts/uiUtils'
+
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
+
+import useStyles from './style'
 
 export interface IProps {
   name: NetworkType
@@ -12,6 +16,7 @@ export interface IProps {
   onSelect: (chosen: NetworkType) => void
   disabled?: boolean
 }
+
 export const SelectNetworkButton: React.FC<IProps> = ({
   name,
   networks,
