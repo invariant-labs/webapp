@@ -335,19 +335,19 @@ export const Swap: React.FC<ISwap> = ({
 
     if (
       (printBNtoBN(amountFrom, tokens[tokenFromIndex].decimals).eqn(0) ||
-        isError('Error: Amount out is zero')) &&
+        isError('Amount out is zero')) &&
       !simulateResult.error.length
     ) {
       return 'Insufficient volume'
     }
-    if (isError('Error: Too large amount')) {
+    if (isError('Too large amount')) {
       return 'Exceed single swap limit (split transaction into several)'
     }
 
     if (
-      isError('Error: At the end of price range') ||
-      isError('Error: Price would cross swap limit') ||
-      isError('Error: Too large liquidity gap')
+      isError('At the end of price range') ||
+      isError('Price would cross swap limit') ||
+      isError('Too large liquidity gap')
     ) {
       return 'Insufficient liquidity'
     }
