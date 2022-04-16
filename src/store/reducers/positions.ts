@@ -129,7 +129,7 @@ const positionsSlice = createSlice({
     },
     setCurrentPositionRangeTicks(
       state,
-      action: PayloadAction<{ lowerTick: Tick; upperTick: Tick }>
+      action: PayloadAction<{ lowerTick?: Tick; upperTick?: Tick }>
     ) {
       state.currentPositionRangeTicks = {
         ...action.payload,
