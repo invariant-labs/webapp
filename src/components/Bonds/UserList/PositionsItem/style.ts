@@ -5,11 +5,10 @@ export const useStyles = makeStyles(theme => ({
   container: {
     display: 'grid',
     boxSizing: 'border-box',
-    maxWidth: '918px',
     width: '100%',
-    padding: '16px 0 16px 0',
+    padding: '16px 0',
     borderTop: `2px solid ${colors.invariant.light}`,
-    gridTemplateColumns: '23% 23% 19% 19% 16%',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 134px',
     backgroundColor: colors.invariant.component,
     color: colors.white.main,
     ...typography.body1,
@@ -31,11 +30,15 @@ export const useStyles = makeStyles(theme => ({
     '& img': {
       width: 32,
       borderRadius: '50%',
-      marginRight: '8px'
+      marginRight: 8
     },
+
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: '1fr 1fr 1fr 1fr 80px'
+    },
+
     [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      gridTemplateColumns: '29% 25% 25% 21%'
+      gridTemplateColumns: '1fr 1fr 1fr 70px'
     }
   },
   redeemable: {
@@ -43,14 +46,23 @@ export const useStyles = makeStyles(theme => ({
   },
   redeemButton: {
     marginLeft: 'auto',
-    width: '80px',
-    height: '32px',
-    borderRadius: '10px',
+    width: 128,
+    height: 32,
+    borderRadius: 10,
     background: colors.invariant.pinkLinearGradient,
+    ...typography.body1,
 
     '&:hover': {
-      background: colors.invariant.pinkLinearGradient,
-      opacity: 0.8
+      background: colors.invariant.pinkLinearGradientOpacity
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      width: 74,
+      ...typography.caption1
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      width: 64
     }
   },
   itemName: {
@@ -58,19 +70,18 @@ export const useStyles = makeStyles(theme => ({
     alignItems: 'center'
   },
   icon: {
-    right: '8px',
-    position: 'relative'
+    marginLeft: -8,
+    marginRight: 8
   },
   iconItems: {
-    display: 'flex',
-    alignItems: 'center',
     '& img': {
       width: 32,
       borderRadius: '50%',
+      marginRight: 0,
 
       [theme.breakpoints.down('xs')]: {
-        width: '22px',
-        height: '22px'
+        width: 22,
+        height: 22
       }
     }
   }

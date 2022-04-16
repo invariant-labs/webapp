@@ -57,14 +57,19 @@ const PositionsItem: React.FC<IPositionsItem> = ({
   onRedeemClick
 }) => {
   const classes = useStyles()
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
   const isExSmall = useMediaQuery(theme.breakpoints.down('xs'))
 
   return (
     <Grid container className={classes.container}>
       {isExSmall ? null : (
         <Grid className={classes.iconItems}>
-          <img src={bondToken.logoURI} />
-          <img className={classes.icon} src={quoteToken.logoURI} />
+          {isSmall ? null : (
+            <>
+              <img src={bondToken.logoURI} />
+              <img className={classes.icon} src={quoteToken.logoURI} />
+            </>
+          )}
           <Typography>
             {bondToken.symbol}/{quoteToken.symbol}
           </Typography>
@@ -72,7 +77,7 @@ const PositionsItem: React.FC<IPositionsItem> = ({
       )}
 
       <Grid>
-        {isExSmall ? null : <img src={bondToken.logoURI} />}
+        {isSmall ? null : <img src={bondToken.logoURI} />}
         <Typography>
           {trimLeadingZeros(formatNumbers(thresholds)(bought.toString()))}
           {showPrefix(bought)} {bondToken.symbol}
