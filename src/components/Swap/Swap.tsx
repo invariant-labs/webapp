@@ -361,7 +361,8 @@ export const Swap: React.FC<ISwap> = ({
       getStateMessage() === 'Swap tokens' ||
       getStateMessage() === 'Loading' ||
       getStateMessage() === 'Connect a wallet' ||
-      getStateMessage() === 'Exceed single swap limit (split transaction into several)'
+      getStateMessage() === 'Exceed single swap limit (split transaction into several)' ||
+      getStateMessage() === 'Insufficient liquidity'
     )
   }
   const setSlippage = (slippage: string): void => {

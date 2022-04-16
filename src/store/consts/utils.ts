@@ -12,6 +12,7 @@ import { PlotTickData } from '@reducers/positions'
 import { Token as SPLToken, TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import {
   BTC_DEV,
+  MAX_U64,
   MSOL_DEV,
   NetworkType,
   PRICE_DECIMAL,
@@ -513,9 +514,12 @@ export const handleSimulate = async (
   const errorMessage: string[] = []
   let isXtoY = false
   let result
+  let okChanges = 0
+  let failChanges = 0
+  const initAmountOut = byAmountIn ? new BN(-1) : MAX_U64
 
   let successData = {
-    amountOut: new BN(-1),
+    amountOut: initAmountOut,
     poolIndex: 0,
     AmountOutWithFee: new BN(0),
     estimatedPriceAfterSwap: new BN(0),
@@ -524,7 +528,7 @@ export const handleSimulate = async (
   }
 
   let allFailedData = {
-    amountOut: new BN(-1),
+    amountOut: initAmountOut,
     poolIndex: 0,
     AmountOutWithFee: new BN(0),
     estimatedPriceAfterSwap: new BN(0),
@@ -575,7 +579,7 @@ export const handleSimulate = async (
         result = swapSimulateResult.accumulatedAmountOut
       }
       if (
-        successData.amountOut.lt(result) &&
+        (byAmountIn ? successData.amountOut.lt(result) : successData.amountOut.gt(result)) &&
         swapSimulateResult.status === SimulationStatus.Ok &&
         swapSimulateResult.amountPerTick.length < 8
       ) {
@@ -587,7 +591,11 @@ export const handleSimulate = async (
           minimumReceived: swapSimulateResult.minReceived,
           priceImpact: swapSimulateResult.priceImpact
         }
-      } else if (allFailedData.amountOut.lt(result)) {
+
+        okChanges += 1
+      } else if (
+        byAmountIn ? allFailedData.amountOut.lt(result) : allFailedData.amountOut.gt(result)
+      ) {
         allFailedData = {
           amountOut: result,
           poolIndex: findPoolIndex(pool.address, pools),
@@ -596,6 +604,8 @@ export const handleSimulate = async (
           minimumReceived: swapSimulateResult.minReceived,
           priceImpact: swapSimulateResult.priceImpact
         }
+
+        failChanges += 1
       }
 
       if (swapSimulateResult.status !== SimulationStatus.Ok) {
@@ -605,7 +615,7 @@ export const handleSimulate = async (
       errorMessage.push(err.toString())
     }
   }
-  if (successData.amountOut.lt(new BN(0)) && allFailedData.amountOut.lt(new BN(0))) {
+  if (okChanges === 0 && failChanges === 0) {
     return {
       amountOut: new BN(0),
       poolIndex: 0,
@@ -617,7 +627,7 @@ export const handleSimulate = async (
     }
   }
 
-  if (successData.amountOut.lt(new BN(0))) {
+  if (okChanges === 0) {
     return {
       ...allFailedData,
       error: errorMessage
