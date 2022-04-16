@@ -472,6 +472,7 @@ export const Swap: React.FC<ISwap> = ({
             hideBalancesInModal={walletStatus !== Status.Initialized}
             handleAddToken={handleAddToken}
             commonTokens={commonTokens}
+            limit={1e14}
           />
         </Box>
         <Box className={classes.tokenComponentTextContainer}>
@@ -542,6 +543,7 @@ export const Swap: React.FC<ISwap> = ({
             hideBalancesInModal={walletStatus !== Status.Initialized}
             handleAddToken={handleAddToken}
             commonTokens={commonTokens}
+            limit={1e14}
           />
         </Box>
         <Box className={classes.transactionDetails}>
