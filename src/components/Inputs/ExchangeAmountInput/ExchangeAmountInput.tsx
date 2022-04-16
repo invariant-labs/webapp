@@ -90,7 +90,6 @@ export const AmountInput: React.FC<IProps> = ({
     const regex = new RegExp(trimDecimal, 'g')
     if (e.target.value === '' || regex.test(e.target.value)) {
       if (typeof limit !== 'undefined' && +e.target.value > limit) {
-        setValue(limit.toString())
         return
       }
 
