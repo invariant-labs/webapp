@@ -421,7 +421,13 @@ export function* handleDisconnect(): Generator {
     yield* call(disconnectWallet)
     yield call([localStorage, localStorage.removeItem], 'INVARIANT_SESSION_WALLET')
     yield* put(actions.resetState())
-    yield* put(positionsActions.resetState())
+    yield* put(positionsActions.setPositionsList([]))
+    yield* put(
+      positionsActions.setCurrentPositionRangeTicks({
+        lowerTick: undefined,
+        upperTick: undefined
+      })
+    )
   } catch (error) {
     console.log(error)
   }

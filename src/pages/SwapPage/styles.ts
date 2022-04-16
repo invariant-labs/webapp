@@ -6,7 +6,6 @@ const useStyles = makeStyles(() => ({
     minHeight: '70vh',
     marginTop: '65px',
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'transparent'
   }
 }))
