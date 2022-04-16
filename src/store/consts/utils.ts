@@ -4,7 +4,8 @@ import {
   calculateTickDelta,
   DECIMAL,
   parseLiquidityOnTicks,
-  simulateSwap
+  simulateSwap,
+  SimulationStatus
 } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
@@ -41,14 +42,23 @@ export const transformBN = (amount: BN): string => {
   return (amount.div(new BN(1e2)).toNumber() / 1e4).toString()
 }
 export const printBN = (amount: BN, decimals: number): string => {
-  const balanceString = amount.toString()
+  const amountString = amount.toString()
+  const isNegative = amountString.length > 0 && amountString[0] === '-'
+
+  const balanceString = isNegative ? amountString.slice(1) : amountString
+
   if (balanceString.length <= decimals) {
-    return '0.' + '0'.repeat(decimals - balanceString.length) + balanceString
+    return (
+      (isNegative ? '-' : '') + '0.' + '0'.repeat(decimals - balanceString.length) + balanceString
+    )
   } else {
-    return trimZeros(
-      balanceString.substring(0, balanceString.length - decimals) +
-        '.' +
-        balanceString.substring(balanceString.length - decimals)
+    return (
+      (isNegative ? '-' : '') +
+      trimZeros(
+        balanceString.substring(0, balanceString.length - decimals) +
+          '.' +
+          balanceString.substring(balanceString.length - decimals)
+      )
     )
   }
 }
@@ -502,23 +512,44 @@ export const handleSimulate = async (
   poolIndex: number
   AmountOutWithFee: BN
   estimatedPriceAfterSwap: BN
+  minimumReceived: BN
+  priceImpact: BN
   error: string[]
 }> => {
   const filteredPools = findPairs(fromToken, toToken, pools)
-  let swapSimulateRouterAmount: BN = new BN(-1)
   const errorMessage: string[] = []
-  let poolIndex: number = 0
   let isXtoY = false
-  let resultWithFee: BN = new BN(0)
   let result
-  let estimatedPrice: BN = new BN(0)
+  let okChanges = 0
+  let failChanges = 0
+  const initAmountOut = byAmountIn ? new BN(-1) : MAX_U64
+
+  let successData = {
+    amountOut: initAmountOut,
+    poolIndex: 0,
+    AmountOutWithFee: new BN(0),
+    estimatedPriceAfterSwap: new BN(0),
+    minimumReceived: new BN(0),
+    priceImpact: new BN(0)
+  }
+
+  let allFailedData = {
+    amountOut: initAmountOut,
+    poolIndex: 0,
+    AmountOutWithFee: new BN(0),
+    estimatedPriceAfterSwap: new BN(0),
+    minimumReceived: new BN(0),
+    priceImpact: new BN(0)
+  }
 
   if (amount.eq(new BN(0))) {
     return {
       amountOut: new BN(0),
-      poolIndex: poolIndex,
+      poolIndex: 0,
       AmountOutWithFee: new BN(0),
       estimatedPriceAfterSwap: new BN(0),
+      minimumReceived: new BN(0),
+      priceImpact: new BN(0),
       error: errorMessage
     }
   }
@@ -545,7 +576,7 @@ export const handleSimulate = async (
         tickmap: tickmaps[pool.tickmap.toString()]
       })
       if (swapSimulateResult.amountPerTick.length >= 8) {
-        throw new Error('Too large amount')
+        errorMessage.push('Too large amount')
       }
 
       if (!byAmountIn) {
@@ -553,31 +584,64 @@ export const handleSimulate = async (
       } else {
         result = swapSimulateResult.accumulatedAmountOut
       }
-      if (swapSimulateRouterAmount.lt(result)) {
-        resultWithFee = result.add(swapSimulateResult.accumulatedFee)
-        poolIndex = findPoolIndex(pool.address, pools)
-        swapSimulateRouterAmount = result
-        estimatedPrice = swapSimulateResult.priceAfterSwap
+      if (
+        (byAmountIn ? successData.amountOut.lt(result) : successData.amountOut.gt(result)) &&
+        swapSimulateResult.status === SimulationStatus.Ok &&
+        swapSimulateResult.amountPerTick.length < 8
+      ) {
+        successData = {
+          amountOut: result,
+          poolIndex: findPoolIndex(pool.address, pools),
+          AmountOutWithFee: result.add(swapSimulateResult.accumulatedFee),
+          estimatedPriceAfterSwap: swapSimulateResult.priceAfterSwap,
+          minimumReceived: swapSimulateResult.minReceived,
+          priceImpact: swapSimulateResult.priceImpact
+        }
+
+        okChanges += 1
+      } else if (
+        byAmountIn ? allFailedData.amountOut.lt(result) : allFailedData.amountOut.gt(result)
+      ) {
+        allFailedData = {
+          amountOut: result,
+          poolIndex: findPoolIndex(pool.address, pools),
+          AmountOutWithFee: result.add(swapSimulateResult.accumulatedFee),
+          estimatedPriceAfterSwap: swapSimulateResult.priceAfterSwap,
+          minimumReceived: swapSimulateResult.minReceived,
+          priceImpact: swapSimulateResult.priceImpact
+        }
+
+        failChanges += 1
+      }
+
+      if (swapSimulateResult.status !== SimulationStatus.Ok) {
+        errorMessage.push(swapSimulateResult.status)
       }
     } catch (err: any) {
       errorMessage.push(err.toString())
     }
   }
-  if (swapSimulateRouterAmount.lt(new BN(0))) {
+  if (okChanges === 0 && failChanges === 0) {
     return {
       amountOut: new BN(0),
-      poolIndex: poolIndex,
+      poolIndex: 0,
       AmountOutWithFee: new BN(0),
       estimatedPriceAfterSwap: new BN(0),
+      minimumReceived: new BN(0),
+      priceImpact: new BN(0),
+      error: errorMessage
+    }
+  }
+
+  if (okChanges === 0) {
+    return {
+      ...allFailedData,
       error: errorMessage
     }
   }
 
   return {
-    amountOut: swapSimulateRouterAmount,
-    poolIndex: poolIndex,
-    AmountOutWithFee: resultWithFee,
-    estimatedPriceAfterSwap: estimatedPrice,
+    ...successData,
     error: []
   }
 }
