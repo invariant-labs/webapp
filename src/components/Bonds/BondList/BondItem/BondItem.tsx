@@ -57,35 +57,34 @@ const BondItem: React.FC<IBondItem> = ({
   onBondClick
 }) => {
   const classes = useStyles()
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
   const isExSmall = useMediaQuery(theme.breakpoints.down('xs'))
 
   return (
     <Grid container style={{ color: colors.white.main }} className={classes.container}>
-      <Grid className={classes.itemList}>
-        <Grid className={classes.iconItems}>
-          {isExSmall ? null : (
-            <>
-              <img src={bondToken.logoURI} />
-              <img className={classes.icon} src={quoteToken.logoURI} />
-            </>
-          )}
-          <Typography className={classes.symbol}>
-            {bondToken.symbol}/{quoteToken.symbol}
-          </Typography>
-        </Grid>
+      <Grid className={classes.iconItems}>
+        {isExSmall ? null : (
+          <>
+            <img src={bondToken.logoURI} />
+            <img className={classes.icon} src={quoteToken.logoURI} />
+          </>
+        )}
+        <Typography className={classes.symbol}>
+          {bondToken.symbol}/{quoteToken.symbol}
+        </Typography>
       </Grid>
       <Typography className={classes.purchased}>
         {trimLeadingZeros(formatNumbers(thresholds)(remaining.toString()))}
         {showPrefix(remaining)} {bondToken.symbol}
       </Typography>
-      {!isExSmall ? (
+      {!isSmall ? (
         <Typography className={classes.purchased}>
           {trimLeadingZeros(formatNumbers(thresholds)(supply.toString()))}
           {showPrefix(supply)} {bondToken.symbol}
         </Typography>
       ) : null}
 
-      {!isExSmall ? <Typography className={classes.days}>{vesting}</Typography> : null}
+      {!isExSmall ? <Typography className={classes.purchased}>{vesting}</Typography> : null}
 
       <Button className={classes.bondButton} onClick={onBondClick}>
         Bond
