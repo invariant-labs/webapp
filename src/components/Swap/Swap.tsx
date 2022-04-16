@@ -140,8 +140,16 @@ export const Swap: React.FC<ISwap> = ({
 
   useEffect(() => {
     if (!!tokens.length && tokenFromIndex === null && tokenToIndex === null) {
+      const firstCommonIndex = commonTokens.length
+        ? tokens.findIndex(token => token.assetAddress.equals(commonTokens[0]))
+        : -1
+
       setTokenFromIndex(
-        initialTokenFromIndex !== null ? initialTokenFromIndex : tokens.length ? 0 : null
+        initialTokenFromIndex !== null
+          ? initialTokenFromIndex
+          : firstCommonIndex !== -1
+          ? firstCommonIndex
+          : 0
       )
       setTokenToIndex(initialTokenToIndex)
     }
