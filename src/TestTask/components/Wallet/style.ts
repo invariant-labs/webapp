@@ -3,6 +3,7 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
+    minHeight: 386,
     height: 'calc(100vh - 32px)',
     width: '100%'
   },
