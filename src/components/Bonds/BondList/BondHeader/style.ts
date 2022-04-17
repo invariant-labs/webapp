@@ -6,13 +6,13 @@ export const useStyles = makeStyles(theme => ({
     display: 'grid',
     width: '100%',
     padding: '30px 0',
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 134px',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 128px',
     [theme.breakpoints.down('sm')]: {
       padding: '16px 0',
-      gridTemplateColumns: '1fr 1fr 1fr 102px'
+      gridTemplateColumns: '1fr 1fr 1fr 96px'
     },
     [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '1fr 1fr 70px'
+      gridTemplateColumns: '1fr 1fr 64px'
     }
   },
 

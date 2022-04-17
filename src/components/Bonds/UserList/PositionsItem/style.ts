@@ -8,17 +8,17 @@ export const useStyles = makeStyles(theme => ({
     width: '100%',
     padding: '16px 0',
     borderTop: `2px solid ${colors.invariant.light}`,
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 134px',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 128px',
     color: colors.white.main,
     ...typography.body1,
 
     [theme.breakpoints.down('sm')]: {
       ...typography.caption1,
-      gridTemplateColumns: '1fr 1fr 1fr 1fr 80px'
+      gridTemplateColumns: '1fr 1fr 1fr 1fr 74px'
     },
 
     [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '1fr 1fr 1fr 70px'
+      gridTemplateColumns: '1fr 1fr 1fr 64px'
     }
   },
   redeemable: {

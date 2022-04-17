@@ -6,15 +6,15 @@ export const useStyles = makeStyles(theme => ({
     display: 'grid',
     width: '100%',
     padding: '28px 0',
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 134px',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 128px',
     color: colors.invariant.textGrey,
 
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '1fr 1fr 1fr 1fr 80px'
+      gridTemplateColumns: '1fr 1fr 1fr 1fr 74px'
     },
 
     [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '1fr 1fr 1fr 70px'
+      gridTemplateColumns: '1fr 1fr 1fr 64px'
     }
   },
   text: {

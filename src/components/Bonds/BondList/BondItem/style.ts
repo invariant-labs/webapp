@@ -10,18 +10,18 @@ export const useStyles = makeStyles(theme => ({
     backgroundColor: colors.invariant.component,
     alignItems: 'center',
     justifyContent: 'center',
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 134px',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 128px',
     borderTop: `2px solid ${colors.invariant.light}`,
     ...typography.body1,
 
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '1fr 1fr 1fr 102px',
+      gridTemplateColumns: '1fr 1fr 1fr 96px',
       ...typography.caption1
     },
 
     [theme.breakpoints.down('xs')]: {
       ...typography.caption3,
-      gridTemplateColumns: '1fr 1fr 70px'
+      gridTemplateColumns: '1fr 1fr 64px'
     }
   },
   itemName: {
