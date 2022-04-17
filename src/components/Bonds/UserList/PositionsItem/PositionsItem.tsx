@@ -3,6 +3,7 @@ import { SwapToken } from '@selectors/solanaWallet'
 import { theme } from '@static/theme'
 import React from 'react'
 import { formatNumbers, FormatNumberThreshold, showPrefix, trimLeadingZeros } from '@consts/utils'
+import classNames from 'classnames'
 import { useStyles } from './style'
 
 export interface IPositionsItem {
@@ -63,11 +64,14 @@ const PositionsItem: React.FC<IPositionsItem> = ({
   return (
     <Grid container className={classes.container}>
       {isExSmall ? null : (
-        <Grid className={classes.iconItems}>
+        <Grid className={classes.pair}>
           {isSmall ? null : (
             <>
-              <img src={bondToken.logoURI} />
-              <img className={classes.icon} src={quoteToken.logoURI} />
+              <img className={classes.icon} src={bondToken.logoURI} />
+              <img
+                className={classNames(classes.icon, classes.secondPairIcon)}
+                src={quoteToken.logoURI}
+              />
             </>
           )}
           <Typography>
@@ -76,19 +80,21 @@ const PositionsItem: React.FC<IPositionsItem> = ({
         </Grid>
       )}
 
-      <Grid>
-        {isSmall ? null : <img src={bondToken.logoURI} />}
+      <Grid className={classes.text}>
+        {isSmall ? null : (
+          <img className={classNames(classes.icon, classes.singleIcon)} src={bondToken.logoURI} />
+        )}
         <Typography>
           {trimLeadingZeros(formatNumbers(thresholds)(bought.toString()))}
           {showPrefix(bought)} {bondToken.symbol}
         </Typography>
       </Grid>
 
-      <Typography className={classes.redeemable}>
+      <Typography className={classNames(classes.redeemable, classes.text)}>
         {trimLeadingZeros(formatNumbers(thresholds)(redeemable.toString()))}
         {showPrefix(redeemable)}
       </Typography>
-      <Typography>{vestingProgress}</Typography>
+      <Typography className={classes.text}>{vestingProgress}</Typography>
       <Button className={classes.redeemButton} onClick={onRedeemClick}>
         Redeem
       </Button>

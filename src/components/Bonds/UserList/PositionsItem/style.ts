@@ -9,31 +9,11 @@ export const useStyles = makeStyles(theme => ({
     padding: '16px 0',
     borderTop: `2px solid ${colors.invariant.light}`,
     gridTemplateColumns: '1fr 1fr 1fr 1fr 134px',
-    backgroundColor: colors.invariant.component,
     color: colors.white.main,
     ...typography.body1,
 
-    '& *': {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-
-      [theme.breakpoints.down('xs')]: {
-        width: '100%',
-        ...typography.caption1
-      }
-    },
-    '& span': {
-      color: colors.invariant.dark,
-      textTransform: 'none'
-    },
-    '& img': {
-      width: 32,
-      borderRadius: '50%',
-      marginRight: 8
-    },
-
     [theme.breakpoints.down('sm')]: {
+      ...typography.caption1,
       gridTemplateColumns: '1fr 1fr 1fr 1fr 80px'
     },
 
@@ -51,6 +31,8 @@ export const useStyles = makeStyles(theme => ({
     borderRadius: 10,
     background: colors.invariant.pinkLinearGradient,
     ...typography.body1,
+    color: colors.invariant.dark,
+    textTransform: 'none',
 
     '&:hover': {
       background: colors.invariant.pinkLinearGradientOpacity
@@ -65,24 +47,27 @@ export const useStyles = makeStyles(theme => ({
       width: 64
     }
   },
-  itemName: {
-    display: 'flex',
-    alignItems: 'center'
-  },
   icon: {
+    width: 32,
+    borderRadius: '50%'
+  },
+  secondPairIcon: {
     marginLeft: -8,
     marginRight: 8
   },
-  iconItems: {
-    '& img': {
-      width: 32,
-      borderRadius: '50%',
-      marginRight: 0,
-
-      [theme.breakpoints.down('xs')]: {
-        width: 22,
-        height: 22
-      }
+  singleIcon: {
+    marginRight: 8
+  },
+  pair: {
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'center'
     }
+  },
+  text: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 }))
