@@ -16,7 +16,7 @@ import { Grid, CardMedia, Button, Hidden, useMediaQuery, IconButton } from '@mat
 
 import { theme } from '@static/theme'
 
-import useStyles from './Header.styles'
+import useStyles from './styles'
 import useButtonStyles from '../HeaderButton/style'
 
 import icons from '@static/icons'

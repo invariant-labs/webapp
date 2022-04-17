@@ -11,7 +11,7 @@ import { withKnobs } from '@storybook/addon-knobs'
 import { WalletType } from '@web3/wallet'
 import { PublicKey } from '@solana/web3.js'
 
-import { Header } from './Header.component'
+import { Header } from './Header'
 
 //instead of MemoryRouter we could use StoryRouter from 'storybook-react-router'
 //But in the hole project MemoryRouter is used instead

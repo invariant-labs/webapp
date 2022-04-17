@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
 
     ['@media(max-width: 420px)']: {
       display: 'grid',
-      gridTemplateColumns: '100% 28px'
+      gridTemplateColumns: '1fr 28px'
     }
   },
   title: {
@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => ({
     fontWeight: 400,
     fontSize: 16,
     lineHeight: '24px',
-    color: '#2EE09A'
+    color: '#2ee09a'
   },
   currencyIcon: {
     minWidth: 28,

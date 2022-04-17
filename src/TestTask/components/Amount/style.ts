@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     backgroundColor: colors.invariant.componentBcg,
     borderRadius: 20,
-    padding: '6px 12px 6px 12px',
+    padding: '6px 12px 12px 12px',
     ...typography.heading2,
     display: 'grid',
     gridTemplateAreas: `
@@ -37,12 +37,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       '& $input': {}
     },
 
-    ['@media(max-width: 420px)']: {
+    ['@media(max-width: 435px)']: {
       gridTemplateAreas: `
       "select select select select"
       "balance balance balance balance"
       "percentages percentages percentages percentages"
       `
+    },
+
+    ['@media(max-width: 360px)']: {
+      padding: '12px'
     }
   },
   inputContainer: {
@@ -54,6 +58,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('xs')]: {
       marginBottom: 0
+    },
+    ['@media(max-width: 360px)']: {
+      flexDirection: 'column',
+      alignItems: 'flex-start'
     }
   },
   currency: {
@@ -74,6 +82,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       height: 36,
       minWidth: 85
+    },
+
+    ['@media(max-width: 360px)']: {
+      minWidth: '100%'
     }
   },
   percentages: {
@@ -84,8 +96,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   percentageContainer: {
     transition: 'all 150ms ease-out',
     display: 'flex',
-    ['@media(max-width: 420px)']: {
-      margin: '2px auto 0 0'
+    ['@media(max-width: 435px)']: {
+      margin: '10px auto 0 0'
     }
   },
   percentage: {
@@ -100,9 +112,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '16px',
     padding: '0px 5px',
     transition: 'all 150ms ease-out',
-    ['@media(max-width: 420px)']: {
+    ['@media(max-width: 435px)']: {
       order: 2,
-      margin: '0 0 0 5px'
+      margin: '0 0 5px'
     }
   },
   currencyIcon: {

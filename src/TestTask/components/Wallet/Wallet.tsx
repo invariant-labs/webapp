@@ -49,7 +49,6 @@ export const Wallet: React.FC<IWallet> = ({}) => {
     }
   }
 
-  console.log(currencyType)
   return (
     <Grid container className={classes.root}>
       <Grid container className={classes.rootContainer}>
