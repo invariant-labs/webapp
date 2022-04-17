@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     background: 'transparent',
     boxShadow: 'none',
-    maxWidth: 456
+    maxWidth: 464
   },
   container: {
     backgroundColor: colors.invariant.component,
@@ -61,10 +61,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   input: {
-    width: '100%',
+    width: 270,
     padding: '6px 10px',
     color: colors.white.main,
-    ...typography.body1,
+    ...typography.heading3,
     backgroundColor: colors.invariant.newDark,
     borderRadius: 11,
     marginBottom: 16,
@@ -84,8 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 32,
 
     '&:hover': {
-      color: colors.invariant.greenLinearGradient,
-      opacity: 0.8
+      background: colors.invariant.greenLinearGradientOpacity
     },
 
     [theme.breakpoints.down('xs')]: {
@@ -97,13 +96,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   headers: {
     display: 'grid',
-    width: '100%',
+    width: 270,
     gridTemplateColumns: '50% 50%',
     textAlign: 'center'
   },
   values: {
     display: 'grid',
-    width: '100%',
+    width: 270,
     gridTemplateColumns: '50% 50%',
     textAlign: 'center',
     marginBottom: 16
