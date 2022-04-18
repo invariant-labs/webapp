@@ -5,7 +5,7 @@ import { actions } from '@reducers/bonds'
 import { status, swapTokensDict } from '@selectors/solanaWallet'
 import loader from '@static/gif/loader.gif'
 import { Status } from '@reducers/solanaWallet'
-import { bondsList, isLoadingBondsList, userVested } from '@selectors/bonds'
+import { bondsList, buyTransactionStatus, isLoadingBondsList, userVested } from '@selectors/bonds'
 import BondList from '@components/Bonds/BondList/BondList'
 import PositionsList from '@components/Bonds/UserList/PositionsList/PositionsList'
 import { BN } from '@project-serum/anchor'
@@ -17,6 +17,7 @@ import { calculateAmountToClaim, getPriceAfterSlippage } from '@invariant-labs/b
 import { calculateBondPrice, printBN } from '@consts/utils'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './styles'
+import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 
 export const WrappedBonds: React.FC = () => {
   const classes = useStyles()
@@ -28,6 +29,7 @@ export const WrappedBonds: React.FC = () => {
   const allBonds = useSelector(bondsList)
   const allUserVested = useSelector(userVested)
   const allTokens = useSelector(swapTokensDict)
+  const buyStatus = useSelector(buyTransactionStatus)
 
   useEffect(() => {
     dispatch(actions.getBondsList())
@@ -50,6 +52,22 @@ export const WrappedBonds: React.FC = () => {
       )
     }
   }, [modalBondIndex])
+
+  const [progress, setProgress] = useState<ProgressState>('none')
+
+  useEffect(() => {
+    if (!buyStatus.inProgress && progress === 'progress') {
+      setProgress(buyStatus.success ? 'approvedWithSuccess' : 'approvedWithFail')
+
+      setTimeout(() => {
+        setProgress(buyStatus.success ? 'success' : 'failed')
+      }, 1500)
+
+      setTimeout(() => {
+        setProgress('none')
+      }, 3000)
+    }
+  }, [buyStatus])
 
   const bondsData = useMemo(() => {
     return Object.values(allBonds).map((bond, index) => {
@@ -164,6 +182,7 @@ export const WrappedBonds: React.FC = () => {
             }}
             onBuy={(amount, slippage) => {
               if (modalBondIndex !== null) {
+                setProgress('progress')
                 dispatch(
                   actions.buyBond({
                     bondSale: bondsData[modalBondIndex].address,
@@ -177,8 +196,6 @@ export const WrappedBonds: React.FC = () => {
                   })
                 )
               }
-              setModalOpen(false)
-              unblurContent()
             }}
             onAmountChange={(amount, byAmountBond) => {
               if (modalBondIndex !== null) {
@@ -191,6 +208,7 @@ export const WrappedBonds: React.FC = () => {
                 )
               }
             }}
+            progress={progress}
           />
         </>
       )}

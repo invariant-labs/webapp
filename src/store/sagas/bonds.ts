@@ -158,6 +158,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
     )
 
     if (!initialTxid.length) {
+      yield* put(actions.setBuyBondSuccess(false))
       return yield* put(
         snackbarsActions.add({
           message: 'SOL wrapping failed. Please try again.',
@@ -178,6 +179,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
     )
 
     if (!bondTxid.length) {
+      yield* put(actions.setBuyBondSuccess(false))
       yield* put(
         snackbarsActions.add({
           message: 'Failed to buy bond. Please unwrap wrapped SOL in your wallet and try again.',
@@ -187,6 +189,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
         })
       )
     } else {
+      yield* put(actions.setBuyBondSuccess(true))
       yield* put(
         snackbarsActions.add({
           message: 'Bond bought successfully.',
@@ -229,6 +232,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
     }
   } catch (error) {
     console.log(error)
+    yield* put(actions.setBuyBondSuccess(false))
     yield* put(
       snackbarsActions.add({
         message: 'Failed to buy bond. Please try again.',
@@ -288,6 +292,7 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
     })
 
     if (!txid.length) {
+      yield* put(actions.setBuyBondSuccess(false))
       yield* put(
         snackbarsActions.add({
           message: 'Failed to buy bond. Please try again.',
@@ -297,6 +302,7 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
         })
       )
     } else {
+      yield* put(actions.setBuyBondSuccess(true))
       yield* put(
         snackbarsActions.add({
           message: 'Bond bought successfully.',
@@ -310,6 +316,7 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
     }
   } catch (error) {
     console.log(error)
+    yield* put(actions.setBuyBondSuccess(false))
     yield* put(
       snackbarsActions.add({
         message: 'Failed to buy bond. Please try again.',

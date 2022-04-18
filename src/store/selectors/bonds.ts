@@ -3,16 +3,17 @@ import { keySelectors, AnyProps } from './helpers'
 
 const store = (s: AnyProps) => s[bondsSliceName] as IBondsStore
 
-export const { bondsList, isLoadingBondsList, userVested, isLoadingUserVested } = keySelectors(
+export const { bondsList, isLoadingBondsList, userVested, isLoadingUserVested, buyTransactionStatus } = keySelectors(
   store,
-  ['bondsList', 'isLoadingBondsList', 'userVested', 'isLoadingUserVested']
+  ['bondsList', 'isLoadingBondsList', 'userVested', 'isLoadingUserVested', 'buyTransactionStatus']
 )
 
 export const bondsSelectors = {
   bondsList,
   isLoadingBondsList,
   userVested,
-  isLoadingUserVested
+  isLoadingUserVested,
+  buyTransactionStatus
 }
 
 export default bondsSelectors

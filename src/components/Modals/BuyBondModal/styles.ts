@@ -24,18 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative'
   },
   button: {
-    textTransform: 'none',
-    ...typography.body1,
-    background: colors.invariant.pinkLinearGradient,
-    borderRadius: 16,
-    height: 44,
-    color: colors.invariant.dark,
-    width: '100%',
-
-    '&:hover': {
-      background: colors.invariant.pinkLinearGradient,
-      opacity: 0.8
-    }
+    width: '100%'
   },
   buy: {
     color: colors.white.main,

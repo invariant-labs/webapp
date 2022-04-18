@@ -1,3 +1,4 @@
+import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
 import { WRAPPED_SOL_ADDRESS, WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT } from '@consts/static'
 import {
@@ -27,6 +28,7 @@ interface IBuyBondModal {
   vestingTerm: string
   onBuy: (amount: BN, slippage: number) => void
   onAmountChange: (amount: BN, byAmountBond: boolean) => void
+  progress: ProgressState
 }
 
 enum InputType {
@@ -78,7 +80,8 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
   supply,
   vestingTerm,
   onBuy,
-  onAmountChange
+  onAmountChange,
+  progress
 }) => {
   const classes = useStyles()
 
@@ -252,11 +255,12 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
             )
           }}
         />
-        <Button
+        <AnimatedButton
           className={classes.button}
-          onClick={() => onBuy(printBNtoBN(amountBond, bondToken.decimals), +slippage)}>
-          Buy {bondToken.symbol}
-        </Button>
+          content={`Buy ${bondToken.symbol}`}
+          onClick={() => onBuy(printBNtoBN(amountBond, bondToken.decimals), +slippage)}
+          progress={progress}
+        />
       </Grid>
     </Popover>
   )

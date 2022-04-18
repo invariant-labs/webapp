@@ -17,13 +17,20 @@ export interface IBondsStore {
   isLoadingBondsList: boolean
   userVested: Record<string, BondWithAddress>
   isLoadingUserVested: boolean
+  buyTransactionStatus: {
+    inProgress: boolean
+    success?: boolean
+  }
 }
 
 export const defaultState: IBondsStore = {
   bondsList: {},
   isLoadingBondsList: false,
   userVested: {},
-  isLoadingUserVested: false
+  isLoadingUserVested: false,
+  buyTransactionStatus: {
+    inProgress: false
+  }
 }
 
 export interface BuyBond {
@@ -68,7 +75,21 @@ const bondsSlice = createSlice({
       state.userVested[action.payload.address.toString()] = action.payload
       return state
     },
-    buyBond(_state, _action: PayloadAction<BuyBond>) {},
+    buyBond(state, _action: PayloadAction<BuyBond>) {
+      state.buyTransactionStatus = {
+        inProgress: true
+      }
+
+      return state
+    },
+    setBuyBondSuccess(state, action: PayloadAction<boolean>) {
+      state.buyTransactionStatus = {
+        inProgress: false,
+        success: action.payload
+      }
+
+      return state
+    },
     redeemBond(_state, _action: PayloadAction<RedeemBond>) {}
   }
 })
