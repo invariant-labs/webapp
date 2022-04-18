@@ -43,6 +43,14 @@ export const WrappedBonds: React.FC = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [modalPrice, setModalPrice] = useState<BN>(new BN(0))
 
+  useEffect(() => {
+    if (modalBondIndex !== null) {
+      setModalPrice(
+        calculateBondPrice(allBonds[bondsData[modalBondIndex].address.toString()], new BN(0), true)
+      )
+    }
+  }, [modalBondIndex])
+
   const bondsData = useMemo(() => {
     return Object.values(allBonds).map((bond, index) => {
       return {

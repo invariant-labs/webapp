@@ -89,7 +89,8 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
 
   useEffect(() => {
     if (open) {
-      setAmountBond(printBN(new BN(10 ** bondToken.decimals), bondToken.decimals))
+      setLastTouchedInput(InputType.BOND)
+      setAmountBond('0.' + '0'.repeat(bondToken.decimals))
     }
   }, [open])
 
