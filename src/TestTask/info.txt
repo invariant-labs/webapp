@@ -1,0 +1,7 @@
+Z racji tego, że to testowe zadanie, polegające tylko na odwzorowaniu makietu z Figmy, wykorzystywanie Storybooka, to niektóre dane statycznie wpisałem, a nie jako propsy w komponentach.
+
+Widziałem w projekcie, że wszystkie dispatch-e są w osobnych folderach containerów itd, które nie mają plików '*.stories.tsx'
+
+Miałem styczność pierwszy raz ze Storybookiem i TypeScriptem, więc może to troche nieestetycznie wyglądać :c (przykładowo tam gdzie jest component 'App.tsx' i w wielu innych miejscach)
+
+Uzależniłem przycisk 'SNY/AERGO' od całej kupy komponentów więc jest jakaś interakcja z nimi (któa nie musi być wcale sensowna, jednak starałem się bardziej o to, żeby cokolwiek robiły te przyciski).
