@@ -10,9 +10,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: '1 1 0%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'flex-start',
-    minHeight: 386
+    minHeight: '100%',
+
+    ['@media(max-width: 308px)']: {
+      minWidth: 228
+    }
   },
   plot: {
     width: '100%',

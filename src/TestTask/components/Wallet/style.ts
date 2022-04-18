@@ -4,7 +4,7 @@ import { colors, typography } from '@static/theme'
 const useStyles = makeStyles(() => ({
   root: {
     minHeight: 386,
-    height: 'calc(100vh - 32px)',
+    height: '100%',
     width: '100%'
   },
   amountContainer: {
@@ -13,16 +13,16 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center'
   },
   rootContainer: {
-    maxWidth: 464,
     width: '100%',
-    margin: 'auto',
-    minWidth: 386,
     padding: 24,
     borderRadius: 24,
     background: '#202946',
 
-    ['@media(max-width: 420px)']: {
+    ['@media(max-width: 696px)']: {
       minWidth: 0
+    },
+    ['@media(max-width: 680px)']: {
+      padding: 16
     }
   },
   calculatorValueContainer: {

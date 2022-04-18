@@ -13,41 +13,34 @@ import icons from '@static/icons'
 import classNames from 'classnames'
 import useStyles from './style'
 import AnimatedButton from '../AnimatedButton/AnimatedButton'
+import { string } from 'yup'
 
-export interface IWallet {}
+export interface IWallet {
+  balance: string
+  value: string
+  setValue: (value: string) => void
+  currencyType: string
+  currentCurrency: number
+  setCurrentCurrency: (currentCurrencyType: number) => void
+  toCurrency: { name: string; rate: number }[]
+  changeCurrencyType: (currentCurrencyType: string) => void
+  percentageChange: number
+  balanceUSD: string
+}
 
-export const Wallet: React.FC<IWallet> = ({}) => {
+export const Wallet: React.FC<IWallet> = ({
+  balance,
+  value,
+  setValue,
+  currencyType,
+  currentCurrency,
+  setCurrentCurrency,
+  toCurrency,
+  changeCurrencyType,
+  percentageChange,
+  balanceUSD
+}) => {
   const classes = useStyles()
-
-  const balance = printBN(new BN(100).mul(new BN(4603445)), 6)
-  const [value, setValue] = React.useState<string>('')
-  const [currencyType, setCurrencyType] = React.useState<string>('SNY')
-  const [currentCurrency, setCurrentCurrency] = React.useState<number>(0)
-
-  const toCurrency = [
-    {
-      name: 'USD',
-      rate: 0.448797
-    },
-
-    {
-      name: 'ETH',
-      rate: 0.003
-    },
-
-    {
-      name: 'BTC',
-      rate: 0.00001119
-    }
-  ]
-
-  const changeCurrencyType = (currentCurrencyType: string) => {
-    if (currentCurrencyType === 'SNY') {
-      setCurrencyType('AERGO')
-    } else {
-      setCurrencyType('SNY')
-    }
-  }
 
   return (
     <Grid container className={classes.root}>
@@ -64,8 +57,8 @@ export const Wallet: React.FC<IWallet> = ({}) => {
             onMaxClick={() => {}}
             decimalsLimit={6}
             currencyIconSrc={currencyType === 'SNY' ? undefined : icons['SNY']}
-            percentageChange={-4.15}
-            usdValue={205341.43}
+            percentageChange={percentageChange}
+            usdValue={parseFloat(balanceUSD)}
             balanceValue={balance}
             placeholder='0.0'
             changeCurrencyType={changeCurrencyType}

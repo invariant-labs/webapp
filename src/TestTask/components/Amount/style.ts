@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       '& $input': {}
     },
 
-    ['@media(max-width: 435px)']: {
+    ['@media(max-width: 710px)']: {
       gridTemplateAreas: `
       "select select select select"
       "balance balance balance balance"
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       `
     },
 
-    ['@media(max-width: 360px)']: {
+    ['@media(max-width: 635px)']: {
       padding: '12px'
     }
   },
@@ -59,9 +59,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('xs')]: {
       marginBottom: 0
     },
-    ['@media(max-width: 360px)']: {
+    ['@media(max-width: 635px)']: {
       flexDirection: 'column',
-      alignItems: 'flex-start'
+      alignItems: 'flex-end'
     }
   },
   currency: {
@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       minWidth: 85
     },
 
-    ['@media(max-width: 360px)']: {
+    ['@media(max-width: 635px)']: {
       minWidth: '100%'
     }
   },
@@ -96,14 +96,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   percentageContainer: {
     transition: 'all 150ms ease-out',
     display: 'flex',
-    ['@media(max-width: 435px)']: {
+    ['@media(max-width: 710px)']: {
       margin: '10px auto 0 0'
     }
   },
   percentage: {
-    color: colors.invariant.Error,
     ...typography.tiny1,
-    backgroundColor: 'rgba(251, 85, 95, 0.2)',
     borderRadius: 5,
     width: 39,
     textAlign: 'center',
@@ -112,11 +110,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '16px',
     padding: '0px 5px',
     transition: 'all 150ms ease-out',
-    ['@media(max-width: 435px)']: {
+    ['@media(max-width: 710px)']: {
       order: 2,
-      margin: '0 0 5px'
+      margin: '0 0 0 5px'
     }
   },
+  volumeLow: {
+    color: colors.invariant.Error,
+    backgroundColor: 'rgba(251,85,95,0.2)'
+  },
+
+  volumeUp: {
+    color: colors.invariant.green,
+    backgroundColor: 'rgba(46, 224, 149,0.2)'
+  },
+
   currencyIcon: {
     minWidth: 20,
     height: 20,

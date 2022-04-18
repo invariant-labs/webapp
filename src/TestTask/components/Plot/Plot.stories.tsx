@@ -21,7 +21,7 @@ storiesOf('test/components/Plot', module)
     }, [])
 
     return (
-      <div style={{ maxWidth: 224, margin: 'auto' }}>
+      <div style={{ maxWidth: 256, margin: 'auto' }}>
         <Plot
           currencyType={'SNY'}
           liquidityPercent={-4.14}

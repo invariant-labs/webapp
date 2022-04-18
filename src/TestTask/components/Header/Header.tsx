@@ -175,3 +175,5 @@ export const Header: React.FC<IHeader> = ({
     </Grid>
   )
 }
+
+export default Header

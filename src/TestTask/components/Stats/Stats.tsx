@@ -12,6 +12,8 @@ interface IStats {
   data: TimeData[]
   rate?: number
   currencyType: string
+  balance: string
+  value: string
 }
 
 export const Stats: React.FC<IStats> = ({
@@ -19,7 +21,9 @@ export const Stats: React.FC<IStats> = ({
   currencyType,
   data,
   liquidityPercent,
-  liquidityVolume
+  liquidityVolume,
+  balance,
+  value
 }) => {
   const classes = useStyles()
 
@@ -30,7 +34,7 @@ export const Stats: React.FC<IStats> = ({
       </Typography>
 
       <Grid container>
-        <Info amount={'12.43'} currencyType={'SNY'} balance={'463.543'} />
+        <Info amount={value} currencyType={currencyType} balance={balance} />
       </Grid>
       <Typography variant='h2' className={classes.statsTitle}>
         Token chart

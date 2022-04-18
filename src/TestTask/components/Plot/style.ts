@@ -7,7 +7,8 @@ export const useStyles = makeStyles(() => ({
     color: 'white',
     borderRadius: 24,
     padding: 16,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    minWidth: '100%'
   },
   liquidityContainer: {
     display: 'flex',
@@ -46,7 +47,10 @@ export const useStyles = makeStyles(() => ({
   barContainer: {
     minWidth: 224,
     height: 124,
-    display: 'flex'
+    display: 'flex',
+    ['@media(max-width: 308px)']: {
+      minWidth: 182
+    }
   },
 
   volumePercentHeader: {

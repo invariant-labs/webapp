@@ -29,6 +29,8 @@ storiesOf('test/components/Stats', module)
           liquidityPercent={-4.14}
           liquidityVolume={383575527255}
           data={data}
+          balance={'460'}
+          value={''}
         />
       </div>
     )

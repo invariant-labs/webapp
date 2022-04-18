@@ -18,7 +18,11 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('xs')]: {
-      paddingInline: 16
+      paddingInline: 0
+    },
+
+    ['@media (max-width:378px)']: {
+      height: 48
     }
   },
   logo: {
@@ -33,7 +37,8 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
     transition: 'all 150ms ease-out',
 
     ['@media (max-width:378px)']: {
-      transform: 'scale(0.75)'
+      minWidth: 30,
+      height: 20
     }
   },
   routers: {
@@ -63,7 +68,7 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
     },
 
     [theme.breakpoints.only('md')]: {
-      minWidth: 335
+      minWidth: connected ? 310 : 240
     },
 
     [theme.breakpoints.down('sm')]: {
@@ -83,7 +88,11 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
   menu: {
     width: 40,
     height: 25,
-    transition: 'all 150ms ease-out'
+    transition: 'all 150ms ease-out',
+    ['@media (max-width:378px)']: {
+      width: 25,
+      height: 20
+    }
   },
   menuButton: {
     borderRadius: 10,
@@ -97,9 +106,6 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
     },
     '&:hover $menu': {
       filter: 'brightness(2)'
-    },
-    ['@media (max-width:378px)']: {
-      transform: 'scale(0.75)'
     }
   },
   leftSide: {

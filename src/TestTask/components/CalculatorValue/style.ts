@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     transition: 'all 150ms ease-out',
 
-    ['@media(max-width: 420px)']: {
+    ['@media(max-width: 696px)']: {
       display: 'grid',
       gridTemplateColumns: '1fr 28px'
     }
@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
     margin: '0 auto 0 12px',
     borderRadius: '100%',
 
-    ['@media(max-width: 420px)']: {
+    ['@media(max-width: 696px)']: {
       margin: 0
     }
   },
@@ -55,7 +55,7 @@ const useStyles = makeStyles(() => ({
     borderRadius: '100%',
     transition: 'all 150ms ease-out',
 
-    ['@media(max-width: 420px)']: {
+    ['@media(max-width: 696px)']: {
       display: 'none'
     }
   },
@@ -66,7 +66,7 @@ const useStyles = makeStyles(() => ({
     borderRadius: '50%',
     margin: '0 auto 0 12px',
 
-    ['@media(max-width: 420px)']: {
+    ['@media(max-width: 696px)']: {
       margin: 0
     }
   },
@@ -77,7 +77,7 @@ const useStyles = makeStyles(() => ({
     borderRadius: '50%',
     margin: '0 0 0 8px',
 
-    ['@media(max-width: 420px)']: {
+    ['@media(max-width: 696px)']: {
       display: 'none'
     }
   }

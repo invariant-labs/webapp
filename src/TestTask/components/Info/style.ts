@@ -37,7 +37,8 @@ const useStyles = makeStyles(() => ({
     fontWeight: 700,
     fontSize: 14,
     lineHeight: '17px',
-    color: '#fff'
+    color: '#fff',
+    textAlign: 'end'
   }
 }))
 

@@ -205,7 +205,21 @@ export const Amount: React.FC<IProps> = ({
 
               {currency && usdValue ? (
                 <div className={classes.percentageContainer}>
-                  <Typography className={classes.percentage}>{percentageChange}%</Typography>
+                  <Typography
+                    className={`${classes.percentage} ${
+                      percentageChange
+                        ? percentageChange >= 0
+                          ? classes.volumeUp
+                          : classes.volumeLow
+                        : ''
+                    }`}>
+                    {percentageChange
+                      ? percentageChange >= 0
+                        ? '+' + percentageChange.toString()
+                        : percentageChange.toString()
+                      : 0}
+                    %
+                  </Typography>
                   <Typography className={classes.caption2}>~ ${usdValue}</Typography>
                 </div>
               ) : (

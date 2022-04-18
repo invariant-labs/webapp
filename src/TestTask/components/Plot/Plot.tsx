@@ -28,7 +28,31 @@ const Plot: React.FC<IPlot> = ({
 }) => {
   const classes = useStyles()
   const isLower = liquidityPercent < 0
+  let minY = 0
+  let maxY = 0
   const dateAndHours = data.map(({ timestamp, value }) => {
+    if (rate) {
+      minY =
+        rate > 0
+          ? value * rate < minY
+            ? value * rate
+            : minY
+          : value * rate < minY
+          ? value * rate
+          : minY
+      maxY =
+        rate > 0
+          ? value * rate > maxY
+            ? value * rate
+            : maxY
+          : value * rate * -1 < maxY
+          ? value * rate
+          : maxY
+    } else {
+      maxY = value > maxY ? value : maxY
+      minY = value > minY ? value : minY
+    }
+
     return {
       x:
         new Date(timestamp).toLocaleDateString('en-GB') +
@@ -38,7 +62,7 @@ const Plot: React.FC<IPlot> = ({
     }
   })
 
-  console.log(dateAndHours, data)
+  const currencyTypeShort = currencyType === 'AERGO' ? 'ARG' : currencyType
 
   return (
     <Grid className={classNames(classes.container, className)}>
@@ -46,7 +70,7 @@ const Plot: React.FC<IPlot> = ({
         <Grid className={classes.volumePercentHeader}>
           <Typography variant={'h4'} className={classes.volumeLiquidityHeader}>
             <Typography variant={'caption'} className={classes.volumeLiquidityHeaderInner}>
-              {currencyType ? currencyType + ':' : ''}
+              {currencyTypeShort ? currencyTypeShort + ':' : ''}
             </Typography>
             ${formatNumbers()(liquidityVolume.toString())}
             {showPrefix(liquidityVolume)}
@@ -85,6 +109,11 @@ const Plot: React.FC<IPlot> = ({
             type: 'time',
             format: '%d/%m/%YT%H',
             precision: 'hour'
+          }}
+          yScale={{
+            min: minY,
+            max: maxY,
+            type: 'linear'
           }}
           axisBottom={{
             tickSize: 0,
