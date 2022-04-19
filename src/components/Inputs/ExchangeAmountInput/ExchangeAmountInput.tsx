@@ -25,6 +25,7 @@ interface IProps {
   hideBalancesInModal?: boolean
   handleAddToken: (address: string) => void
   commonTokens: PublicKey[]
+  limit?: number
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -43,7 +44,8 @@ export const AmountInput: React.FC<IProps> = ({
   balance,
   hideBalancesInModal = false,
   handleAddToken,
-  commonTokens
+  commonTokens,
+  limit
 }) => {
   const classes = useStyles()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -87,6 +89,10 @@ export const AmountInput: React.FC<IProps> = ({
     const trimDecimal = `^\\d*\\.?\\d{0,${decimal}}$`
     const regex = new RegExp(trimDecimal, 'g')
     if (e.target.value === '' || regex.test(e.target.value)) {
+      if (typeof limit !== 'undefined' && +e.target.value > limit) {
+        return
+      }
+
       const startValue = e.target.value
       const caretPosition = e.target.selectionStart
 
