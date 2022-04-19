@@ -3,10 +3,10 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   popover: {
-    marginTop: 'calc(50vh - 375px)',
+    marginTop: 'calc(50vh - 380px)',
     marginLeft: 'calc(50vw - 231px)',
     [theme.breakpoints.down('xs')]: {
-      marginTop: 'calc(50vh - 305px)',
+      marginTop: 'calc(50vh - 345px)',
       display: 'flex',
       marginLeft: 'auto',
       justifyContent: 'center'
@@ -24,15 +24,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative'
   },
   button: {
-    width: '100%'
+    width: '100%',
+    marginTop: 12
   },
   buy: {
     color: colors.white.main,
     ...typography.heading1,
     marginBottom: 16,
     [theme.breakpoints.down('xs')]: {
-      ...typography.heading4,
-      marginBottom: 8
+      ...typography.heading3
     }
   },
   token: {
@@ -59,7 +59,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 16,
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.heading4,
       padding: '3px 10px'
     }
   },
@@ -102,8 +101,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 8,
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.caption4,
-      marginBottom: 4
+      ...typography.caption4
     }
   },
   value: {
@@ -112,8 +110,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 16,
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.heading4,
-      marginBottom: 8
+      ...typography.heading3
     }
   },
   greenValue: {
@@ -121,7 +118,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.heading1,
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.heading4
+      ...typography.heading3
     }
   },
   close: {
@@ -137,11 +134,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   pay: {
-    marginBottom: 16,
-
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: 8
-    }
+    marginBottom: 16
   }
 }))
 
