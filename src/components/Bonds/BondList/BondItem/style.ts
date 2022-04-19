@@ -11,6 +11,7 @@ export const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     gridTemplateColumns: '1fr 1fr 1fr 1fr 128px',
+    columnGap: 6,
     borderTop: `2px solid ${colors.invariant.light}`,
     ...typography.body1,
 
@@ -49,6 +50,9 @@ export const useStyles = makeStyles(theme => ({
   symbol: {
     marginRight: 15,
     height: 20,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
 
     [theme.breakpoints.down('xs')]: {
       justifyContent: 'center',
@@ -59,7 +63,13 @@ export const useStyles = makeStyles(theme => ({
   purchased: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+
+    '& p': {
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis'
+    }
   },
   bondButton: {
     background: colors.invariant.greenLinearGradient,

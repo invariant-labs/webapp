@@ -73,18 +73,26 @@ const BondItem: React.FC<IBondItem> = ({
           {bondToken.symbol}/{quoteToken.symbol}
         </Typography>
       </Grid>
-      <Typography className={classes.purchased}>
-        {trimLeadingZeros(formatNumbers(thresholds)(remaining.toString()))}
-        {showPrefix(remaining)} {bondToken.symbol}
-      </Typography>
-      {!isSmall ? (
-        <Typography className={classes.purchased}>
-          {trimLeadingZeros(formatNumbers(thresholds)(supply.toString()))}
-          {showPrefix(supply)} {bondToken.symbol}
+      <Grid className={classes.purchased}>
+        <Typography>
+          {trimLeadingZeros(formatNumbers(thresholds)(remaining.toString()))}
+          {showPrefix(remaining)} {bondToken.symbol}
         </Typography>
+      </Grid>
+      {!isSmall ? (
+        <Grid className={classes.purchased}>
+          <Typography>
+            {trimLeadingZeros(formatNumbers(thresholds)(supply.toString()))}
+            {showPrefix(supply)} {bondToken.symbol}
+          </Typography>
+        </Grid>
       ) : null}
 
-      {!isExSmall ? <Typography className={classes.purchased}>{vesting}</Typography> : null}
+      {!isExSmall ? (
+        <Grid className={classes.purchased}>
+          <Typography>{vesting}</Typography>
+        </Grid>
+      ) : null}
 
       <Button className={classes.bondButton} onClick={onBondClick}>
         Bond

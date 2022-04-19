@@ -9,6 +9,7 @@ export const useStyles = makeStyles(theme => ({
     padding: '16px 0',
     borderTop: `2px solid ${colors.invariant.light}`,
     gridTemplateColumns: '1fr 1fr 1fr 1fr 128px',
+    columnGap: 6,
     color: colors.white.main,
     ...typography.body1,
 
@@ -61,6 +62,13 @@ export const useStyles = makeStyles(theme => ({
   pair: {
     display: 'flex',
     alignItems: 'center',
+
+    '& p': {
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis'
+    },
+
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'center'
     }
@@ -68,6 +76,12 @@ export const useStyles = makeStyles(theme => ({
   text: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+
+    '& p': {
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis'
+    }
   }
 }))

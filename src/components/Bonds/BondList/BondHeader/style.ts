@@ -7,6 +7,7 @@ export const useStyles = makeStyles(theme => ({
     width: '100%',
     padding: '30px 0',
     gridTemplateColumns: '1fr 1fr 1fr 1fr 128px',
+    columnGap: 6,
     [theme.breakpoints.down('sm')]: {
       padding: '16px 0',
       gridTemplateColumns: '1fr 1fr 1fr 96px'
