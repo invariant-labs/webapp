@@ -7,7 +7,8 @@ import {
   formatNumbers,
   FormatNumberThreshold,
   showPrefix,
-  trimLeadingZeros
+  trimLeadingZeros,
+  getScaleFromString
 } from '@consts/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Input, Popover, Typography } from '@material-ui/core'
@@ -87,7 +88,8 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
 
   const [amountBond, setAmountBond] = useState<string>('0')
   const [amountQuote, setAmountQuote] = useState<string>('0')
-  const [slippage, setSlippage] = useState<string>('1')
+  const [slippage, setSlippage] = useState<number>(1)
+  const [inputSlippage, setInputSlippage] = useState<string>('1%')
   const [lastTouchedInput, setLastTouchedInput] = useState<InputType>(InputType.BOND)
 
   useEffect(() => {
@@ -147,6 +149,42 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
 
   const priceStr = printBN(price, DECIMAL)
 
+  const onSlippageBlur = () => {
+    if (!inputSlippage) {
+      setSlippage(0)
+      setInputSlippage('0%')
+      return
+    }
+
+    let valueMinusPercent = inputSlippage
+
+    if (inputSlippage[inputSlippage.length - 1] === '%') {
+      valueMinusPercent = inputSlippage.slice(0, inputSlippage.length - 1)
+    }
+
+    if (getScaleFromString(valueMinusPercent) > 2) {
+      valueMinusPercent = valueMinusPercent.slice(
+        0,
+        valueMinusPercent.length - getScaleFromString(valueMinusPercent) + 2
+      )
+    }
+
+    if (+valueMinusPercent > 50) {
+      setSlippage(50)
+      setInputSlippage('50%')
+      return
+    }
+
+    if (+valueMinusPercent < 0 || !valueMinusPercent.length || isNaN(+valueMinusPercent)) {
+      setSlippage(0)
+      setInputSlippage('0%')
+      return
+    }
+
+    setSlippage(+valueMinusPercent)
+    setInputSlippage(valueMinusPercent + '%')
+  }
+
   return (
     <Popover
       classes={{ paper: classes.paper }}
@@ -187,11 +225,17 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
         <Typography className={classes.label}>Slippage</Typography>
         <Input
           className={classes.input}
-          value={slippage}
-          onChange={e => setSlippage(e.target.value)}
+          value={inputSlippage}
+          onChange={e => setInputSlippage(e.target.value)}
+          onBlur={onSlippageBlur}
           disableUnderline
           endAdornment={
-            <Button className={classes.slippageButton} onClick={() => setSlippage('1')}>
+            <Button
+              className={classes.slippageButton}
+              onClick={() => {
+                setSlippage(1)
+                setInputSlippage('1%')
+              }}>
               Auto
             </Button>
           }
@@ -258,7 +302,7 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
         <AnimatedButton
           className={classes.button}
           content={`Buy ${bondToken.symbol}`}
-          onClick={() => onBuy(printBNtoBN(amountBond, bondToken.decimals), +slippage)}
+          onClick={() => onBuy(printBNtoBN(amountBond, bondToken.decimals), slippage)}
           progress={progress}
         />
       </Grid>
