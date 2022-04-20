@@ -1,108 +1,73 @@
-import { Box, Button, CardMedia, Grid, Typography, useMediaQuery } from '@material-ui/core'
+import { Button, CardMedia, Grid, Typography } from '@material-ui/core'
 import React from 'react'
 import useStyle from './styles'
 import AnimatedNumber from '@components/AnimatedNumber'
-import { theme } from '@static/theme'
 
 export interface IRewardsTile {
+  tokenXSymbol: string
+  tokenYSymbol: string
+  minPrice: number
+  maxPrice: number
+  fee: number
+  tokenXDeposit: number
+  tokenYDeposit: number
   value: number
-  staked: number
-  pair: string
-  currencyPrice: number
   rewardsToken: string
-  apy: number
-  liquidity: number
-  onClaimReward?: (id: string) => void
+  onClaimReward?: () => void
   iconTokenX: string
 }
 
 export const RewardsTile: React.FC<IRewardsTile> = ({
+  tokenXSymbol,
+  tokenYSymbol,
+  minPrice,
+  maxPrice,
+  fee,
+  tokenXDeposit,
+  tokenYDeposit,
   value,
-  staked,
-  pair,
   rewardsToken,
-  currencyPrice,
-  apy,
-  liquidity,
   onClaimReward,
   iconTokenX
 }) => {
   const classes = useStyle()
-  const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
   return (
     <Grid className={classes.root} container direction='column'>
-      <Grid className={classes.infoContainer}>
-        <Box className={classes.boxLeft}>
-          <Typography className={classes.infoHeader}>
-            Total Staked:
-            <Typography display='inline' component='span' className={classes.value}>
-              <AnimatedNumber
-                value={value}
-                duration={300}
-                formatValue={(value: string) => Number(value).toFixed(2)}
-              />
-              <span className={classes.spacing}>{pair}</span>
-            </Typography>
-          </Typography>
+      <Typography className={classes.header}>Your staked</Typography>
+      <Grid className={classes.positionInfo} container>
+        <Grid className={classes.leftSide} container direction='column'>
+          <Grid className={classes.row} container>
+            <Typography className={classes.label}>Min price:</Typography>
+            <Typography className={classes.value}>{minPrice} {tokenXSymbol}/{tokenYSymbol}</Typography>
+          </Grid>
 
-          <Typography className={classes.infoHeader}>
-            Liquidity:
-            <Typography display='inline' component='span' className={classes.value}>
-              $
-              <AnimatedNumber
-                value={liquidity}
-                duration={300}
-                formatValue={(value: string) => Number(value).toFixed(0)}
-              />
-            </Typography>
-          </Typography>
-          <Typography className={classes.infoHeader}>
-            APY:
-            <Typography display='inline' component='span' className={classes.value}>
-              <AnimatedNumber
-                value={apy}
-                duration={300}
-                formatValue={(value: string) => Number(value).toFixed(1)}
-              />
-              %
-            </Typography>
-          </Typography>
-        </Box>
-        <Box className={classes.boxRight}>
-          <Typography className={classes.infoHeader}>
-            Total Staked:
-            <Typography display='inline' component='span' className={classes.value}>
-              <AnimatedNumber
-                value={value}
-                duration={300}
-                formatValue={(value: string) => Number(value).toFixed(2)}
-              />
-              <span className={classes.spacing}>{pair}</span>
-            </Typography>
-          </Typography>
-          <Typography className={classes.infoHeader}>
-            Total Staked:
-            <Typography display='inline' component='span' className={classes.value}>
-              <AnimatedNumber
-                value={value}
-                duration={300}
-                formatValue={(value: string) => Number(value).toFixed(2)}
-              />
-              <span className={classes.spacing}>{pair}</span>
-            </Typography>
-          </Typography>
-          <Typography className={classes.infoHeader}>
-            Total Staked:
-            <Typography display='inline' component='span' className={classes.value}>
-              <AnimatedNumber
-                value={value}
-                duration={300}
-                formatValue={(value: string) => Number(value).toFixed(2)}
-              />
-              <span className={classes.spacing}>{pair}</span>
-            </Typography>
-          </Typography>
-        </Box>
+          <Grid className={classes.row} container>
+            <Typography className={classes.label}>Max price:</Typography>
+            <Typography className={classes.value}>{maxPrice} {tokenXSymbol}/{tokenYSymbol}</Typography>
+          </Grid>
+
+          <Grid className={classes.row} container>
+            <Typography className={classes.label}>Fee:</Typography>
+            <Typography className={classes.value}>{fee}%</Typography>
+          </Grid>
+        </Grid>
+
+        <Grid className={classes.rightSide} container direction='column'>
+          <Grid className={classes.row} container>
+            <Typography className={classes.label}>{tokenXSymbol} deposit:</Typography>
+            <Typography className={classes.value}>{tokenXDeposit}</Typography>
+          </Grid>
+
+          <Grid className={classes.row} container>
+            <Typography className={classes.label}>{tokenYSymbol} deposit:</Typography>
+            <Typography className={classes.value}>{tokenYDeposit}</Typography>
+          </Grid>
+
+          <Grid className={classes.row} container>
+            <Typography className={classes.label}>Value:</Typography>
+            <Typography className={classes.value}>{value} {tokenXSymbol}</Typography>
+          </Grid>
+        </Grid>
       </Grid>
       <Grid className={classes.tokenContainer}>
         <Grid className={classes.tokenArea}>
@@ -122,27 +87,9 @@ export const RewardsTile: React.FC<IRewardsTile> = ({
         </Grid>
         <Button
           className={classes.claimRewards}
-          onClick={() => {
-            if (onClaimReward !== undefined) {
-              onClaimReward('id')
-            }
-          }}>
+          onClick={onClaimReward}>
           Claim Rewards
         </Button>
-      </Grid>
-      <Grid justifyContent='space-between' direction='row'>
-        <Box className={classes.labelGrid}>
-          <Typography className={classes.infoText}>
-            <span className={classes.labelText}>
-              Staked: {staked.toLocaleString('pl-PL')} {pair}
-            </span>
-          </Typography>
-          <Typography className={classes.labelText}>
-            {isXsDown
-              ? `${Number(value).toFixed(2)} ${rewardsToken} = $${value * currencyPrice}`
-              : `${value} ${rewardsToken} = $${value * currencyPrice}`}
-          </Typography>
-        </Box>
       </Grid>
     </Grid>
   )
