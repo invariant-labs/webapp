@@ -138,9 +138,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
   tokenContainer: {
     display: 'flex',
-    alignItems: 'center',
-    marginBottom: 8,
-    marginTop: 10
+    alignItems: 'center'
   }
 }))
 
