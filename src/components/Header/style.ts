@@ -49,7 +49,7 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
     flex: '1 1 0%',
     marginLeft: 12,
 
-    [theme.breakpoints.only('lg')]: {
+    [theme.breakpoints.up('lg')]: {
       minWidth: connected ? 433 : 350
     },
 
