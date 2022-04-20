@@ -8,22 +8,52 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 16,
     width: 508
   },
-  header: {},
-  positionInfo: {
-    flexWrap: 'nowrap'
+  header: {
+    color: colors.white.main,
+    ...typography.heading4,
+    marginBottom: 12
   },
-  leftSide: {},
+  positionInfo: {
+    flexWrap: 'nowrap',
+    border: `1px solid ${colors.invariant.light}`,
+    borderRadius: 16,
+    padding: '12px 16px',
+    marginBottom: 16,
+
+    [theme.breakpoints.down('xs')]: {
+      flexWrap: 'wrap'
+    }
+  },
+  leftSide: {
+    marginRight: 8,
+    [theme.breakpoints.down('xs')]: {
+      marginRight: 0,
+      marginBottom: 8
+    }
+  },
   rightSide: {
     '& $row': {
-      justifyContent: 'flex-end'
+      justifyContent: 'flex-end',
+
+      [theme.breakpoints.down('xs')]: {
+        justifyContent: 'flex-start'
+      }
     }
   },
   row: {
+    '&:not(:last-child)': {
+      marginBottom: 8
+    }
   },
   label: {
-    marginRight: 5
+    marginRight: 5,
+    ...typography.body2,
+    color: colors.invariant.textGrey
   },
-  value: {},
+  value: {
+    ...typography.body1,
+    color: colors.white.main
+  },
   buttonStake: {
     minWidth: '100%',
     height: 44,
