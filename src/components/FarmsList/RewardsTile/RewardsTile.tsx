@@ -1,7 +1,6 @@
 import { Button, CardMedia, Grid, Typography } from '@material-ui/core'
 import React from 'react'
 import useStyle from './styles'
-import AnimatedNumber from '@components/AnimatedNumber'
 
 export interface IRewardsTile {
   tokenXSymbol: string
@@ -12,9 +11,10 @@ export interface IRewardsTile {
   tokenXDeposit: number
   tokenYDeposit: number
   value: number
-  rewardsToken: string
-  onClaimReward?: () => void
-  iconTokenX: string
+  rewardSymbol: string
+  onClaimReward: () => void
+  rewardIcon: string
+  rewardValue: number
 }
 
 export const RewardsTile: React.FC<IRewardsTile> = ({
@@ -26,9 +26,10 @@ export const RewardsTile: React.FC<IRewardsTile> = ({
   tokenXDeposit,
   tokenYDeposit,
   value,
-  rewardsToken,
+  rewardSymbol,
   onClaimReward,
-  iconTokenX
+  rewardIcon,
+  rewardValue
 }) => {
   const classes = useStyle()
   return (
@@ -38,12 +39,16 @@ export const RewardsTile: React.FC<IRewardsTile> = ({
         <Grid className={classes.leftSide} container direction='column'>
           <Grid className={classes.row} container>
             <Typography className={classes.label}>Min price:</Typography>
-            <Typography className={classes.value}>{minPrice} {tokenXSymbol}/{tokenYSymbol}</Typography>
+            <Typography className={classes.value}>
+              {minPrice} {tokenXSymbol}/{tokenYSymbol}
+            </Typography>
           </Grid>
 
           <Grid className={classes.row} container>
             <Typography className={classes.label}>Max price:</Typography>
-            <Typography className={classes.value}>{maxPrice} {tokenXSymbol}/{tokenYSymbol}</Typography>
+            <Typography className={classes.value}>
+              {maxPrice} {tokenXSymbol}/{tokenYSymbol}
+            </Typography>
           </Grid>
 
           <Grid className={classes.row} container>
@@ -65,30 +70,25 @@ export const RewardsTile: React.FC<IRewardsTile> = ({
 
           <Grid className={classes.row} container>
             <Typography className={classes.label}>Value:</Typography>
-            <Typography className={classes.value}>{value} {tokenXSymbol}</Typography>
+            <Typography className={classes.value}>
+              {value} {tokenXSymbol}
+            </Typography>
           </Grid>
         </Grid>
       </Grid>
+      <Typography className={classes.profit}>Current profit</Typography>
       <Grid className={classes.tokenContainer}>
         <Grid className={classes.tokenArea}>
           <Grid className={classes.token}>
             <Typography className={classes.tokenName}>
-              <CardMedia image={iconTokenX} className={classes.tokenImg} />
-              <Typography className={classes.tokenName}>{rewardsToken}</Typography>
+              <CardMedia image={rewardIcon} className={classes.tokenImg} />
+              <Typography className={classes.tokenName}>{rewardSymbol}</Typography>
             </Typography>
           </Grid>
-          <Typography className={classes.tokenValue}>
-            <AnimatedNumber
-              value={value}
-              duration={300}
-              formatValue={(value: string) => Number(value).toFixed(2)}
-            />
-          </Typography>
+          <Typography className={classes.tokenValue}>{rewardValue}</Typography>
         </Grid>
-        <Button
-          className={classes.claimRewards}
-          onClick={onClaimReward}>
-          Claim Rewards
+        <Button className={classes.claimRewards} onClick={onClaimReward}>
+          Claim rewards
         </Button>
       </Grid>
     </Grid>

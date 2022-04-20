@@ -13,13 +13,14 @@ storiesOf('farmsList/rewardsTile', module).add('tile', () => {
         tokenXDeposit={2137}
         tokenYDeposit={911}
         value={5184}
-        rewardsToken={'SNY'}
+        rewardSymbol={'SNY'}
         onClaimReward={() => {
           console.log('reward')
         }}
-        iconTokenX={
+        rewardIcon={
           'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
         }
+        rewardValue={2137}
       />
     </div>
   )

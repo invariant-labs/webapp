@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minHeight: 20,
     objectFit: 'cover',
     marginRight: 10,
-    borderRadius: 100
+    borderRadius: '100%'
   },
 
   claimRewards: {
@@ -71,7 +71,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 16,
     textTransform: 'none',
     ...typography.body1,
-    fontWeight: 500,
     background: colors.invariant.greenLinearGradientOpacity,
     color: colors.black.full,
     [theme.breakpoints.down('xs')]: {
@@ -108,20 +107,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenName: {
     color: colors.white.main,
-    ...typography.caption1,
-    fontWeight: 'normal',
+    ...typography.heading4,
+    fontWeight: 400,
     display: 'flex',
-    alignItems: 'center',
-
-    '& p': {
-      display: 'flex',
-      alginItems: 'center',
-      justifyContent: 'center'
-    },
-
-    [theme.breakpoints.down('xs')]: {
-      ...typography.body2
-    }
+    alignItems: 'center'
   },
   tokenValue: {
     ...typography.heading4,
@@ -129,16 +118,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '0 15px',
-    [theme.breakpoints.down('xs')]: {
-      ...typography.body2,
-      paddingLeft: 4
-    }
+    padding: '0 15px'
   },
 
   tokenContainer: {
     display: 'flex',
     alignItems: 'center'
+  },
+  profit: {
+    ...typography.caption2,
+    color: colors.invariant.textGrey,
+    marginBottom: 4
   }
 }))
 
