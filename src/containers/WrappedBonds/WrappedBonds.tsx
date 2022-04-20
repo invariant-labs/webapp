@@ -71,6 +71,8 @@ export const WrappedBonds: React.FC = () => {
 
   const bondsData = useMemo(() => {
     return Object.values(allBonds).map((bond, index) => {
+      const now = Date.now() / 1000
+
       return {
         address: bond.address,
         bondToken: allTokens[bond.tokenBond.toString()],
@@ -83,7 +85,6 @@ export const WrappedBonds: React.FC = () => {
           if (walletStatus === Status.Initialized) {
             setModalBondIndex(index)
             blurContent()
-            setModalPrice(new BN(0))
             setModalOpen(true)
           } else {
             dispatch(
@@ -94,7 +95,8 @@ export const WrappedBonds: React.FC = () => {
               })
             )
           }
-        }
+        },
+        isSelling: bond.startTime.toNumber() <= now && bond.endTime.toNumber() >= now
       }
     })
   }, [allBonds, allTokens])
@@ -155,7 +157,7 @@ export const WrappedBonds: React.FC = () => {
             desired one. In the bottom part you can see how many tokens you are eligible to withdraw
             and how much time is left that you can claim the remaining part.
           </Typography>
-          <BondList data={bondsData} />
+          <BondList data={bondsData.filter(bond => bond.isSelling)} />
           {walletStatus === Status.Initialized && userVestedData.length > 0 ? (
             <>
               <Typography className={classes.header} style={{ marginTop: 16 }}>
