@@ -366,6 +366,7 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
     initialTx.partialSign(wrappedSolAccount)
 
     const redeemTx = yield* call([bondsProgram, bondsProgram.claimBondTransaction], {
+      bondSale: data.bondSale,
       bondId: data.bondId,
       ownerBondAccount: wrappedSolAccount.publicKey
     })
@@ -500,6 +501,7 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
     }
 
     const tx = yield* call([bondsProgram, bondsProgram.claimBondTransaction], {
+      bondSale: action.payload.bondSale,
       bondId: action.payload.bondId,
       ownerBondAccount
     })
