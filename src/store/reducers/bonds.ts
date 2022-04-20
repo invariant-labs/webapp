@@ -25,7 +25,7 @@ export interface IBondsStore {
 
 export const defaultState: IBondsStore = {
   bondsList: {},
-  isLoadingBondsList: false,
+  isLoadingBondsList: true,
   userVested: {},
   isLoadingUserVested: false,
   buyTransactionStatus: {

@@ -13,6 +13,8 @@ import { Token as SPLToken, TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import {
   BTC_DEV,
   MAX_U64,
+  MC2_DEV,
+  MC3_DEV,
   MCK_DEV,
   MSOL_DEV,
   NetworkType,
@@ -21,6 +23,7 @@ import {
   Token,
   USDC_DEV,
   USDT_DEV,
+  VEMC2_DEV,
   VEMCK_DEV,
   WSOL_DEV
 } from './static'
@@ -381,7 +384,7 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
   const obj: Record<string, Token> = {}
   switch (networkType) {
     case NetworkType.MAINNET:
-      mainnetList.forEach(token => {
+      ;(mainnetList as any[]).forEach(token => {
         obj[token.address] = {
           ...token,
           address: new PublicKey(token.address),
@@ -398,7 +401,10 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
         [WSOL_DEV.address.toString()]: WSOL_DEV,
         [RENDOGE_DEV.address.toString()]: RENDOGE_DEV,
         [MCK_DEV.address.toString()]: MCK_DEV,
-        [VEMCK_DEV.address.toString()]: VEMCK_DEV
+        [VEMCK_DEV.address.toString()]: VEMCK_DEV,
+        [MC2_DEV.address.toString()]: MC2_DEV,
+        [VEMC2_DEV.address.toString()]: VEMC2_DEV,
+        [MC3_DEV.address.toString()]: MC3_DEV
       }
     default:
       return {}

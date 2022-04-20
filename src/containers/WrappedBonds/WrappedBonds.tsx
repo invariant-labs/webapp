@@ -32,8 +32,10 @@ export const WrappedBonds: React.FC = () => {
   const buyStatus = useSelector(buyTransactionStatus)
 
   useEffect(() => {
-    dispatch(actions.getBondsList())
-  }, [])
+    if (Object.values(allTokens).length > 0 && Object.values(allBonds).length === 0) {
+      dispatch(actions.getBondsList())
+    }
+  }, [allTokens])
 
   useEffect(() => {
     if (walletStatus === Status.Initialized && Object.values(allBonds).length > 0) {
@@ -102,40 +104,42 @@ export const WrappedBonds: React.FC = () => {
   }, [allBonds, allTokens])
 
   const userVestedData = useMemo(() => {
-    return Object.values(allUserVested).map(vested => {
-      const sale = allBonds[vested.bondSale.toString()]
+    return Object.values(allUserVested)
+      .filter(vested => typeof allBonds[vested.bondSale.toString()] !== 'undefined')
+      .map(vested => {
+        const sale = allBonds[vested.bondSale.toString()]
 
-      const now = Date.now() / 1000
-      const progress =
-        now < vested.vestingStart.toNumber()
-          ? '0%'
-          : now > vested.vestingEnd.toNumber()
-          ? '100%'
-          : `${(
-              ((now - vested.vestingStart.toNumber()) /
-                (vested.vestingEnd.toNumber() - vested.vestingStart.toNumber())) *
-              100
-            ).toFixed(1)}%`
+        const now = Date.now() / 1000
+        const progress =
+          now < vested.vestingStart.toNumber()
+            ? '0%'
+            : now > vested.vestingEnd.toNumber()
+            ? '100%'
+            : `${(
+                ((now - vested.vestingStart.toNumber()) /
+                  (vested.vestingEnd.toNumber() - vested.vestingStart.toNumber())) *
+                100
+              ).toFixed(1)}%`
 
-      return {
-        bondToken: allTokens[sale.tokenBond.toString()],
-        quoteToken: allTokens[sale.tokenQuote.toString()],
-        bought: +printBN(vested.bondAmount.v, allTokens[sale.tokenBond.toString()].decimals),
-        redeemable: +printBN(
-          calculateAmountToClaim(vested),
-          allTokens[sale.tokenBond.toString()].decimals
-        ),
-        vestingProgress: progress,
-        onRedeemClick: () => {
-          dispatch(
-            actions.redeemBond({
-              bondSale: sale.address,
-              bondId: vested.id
-            })
-          )
+        return {
+          bondToken: allTokens[sale.tokenBond.toString()],
+          quoteToken: allTokens[sale.tokenQuote.toString()],
+          bought: +printBN(vested.bondAmount.v, allTokens[sale.tokenBond.toString()].decimals),
+          redeemable: +printBN(
+            calculateAmountToClaim(vested),
+            allTokens[sale.tokenBond.toString()].decimals
+          ),
+          vestingProgress: progress,
+          onRedeemClick: () => {
+            dispatch(
+              actions.redeemBond({
+                bondSale: sale.address,
+                bondId: vested.id
+              })
+            )
+          }
         }
-      }
-    })
+      })
   }, [allUserVested, allTokens])
 
   const placeholderToken = {
