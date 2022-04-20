@@ -17,62 +17,51 @@ storiesOf('farmsList/selectedFarm', module)
           height: '100vh'
         }}>
         <SelectedFarmList
-          title={'xBTC - xUSD'}
-          rewards={'2 233.35'}
-          rewardsTokenSymbol={'SNY'}
-          iconTokenX={
-            'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
-          }
-          iconTokenY={
-            'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
-          }
-          iconRewardToken={
-            'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
-          }
-          data={[
+          tokenXIcon='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
+          tokenYIcon='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
+          rewardIcon='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
+          tokenXSymbol='BTC'
+          tokenYSymbol='SOL'
+          rewardSymbol='SNY'
+          duration='01.01.99 - 20.03.03'
+          totalStaked={2000000}
+          userStaked={5000}
+          totalRewardPerDay={21.37}
+          apy={9.11}
+          toStake={[
             {
-              iconTokenX:
-                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
-              value: 2345.34,
-              staked: 233345,
-              pair: 'xBTC - xUSD',
-              rewardsToken: 'SNY',
-              currencyPrice: 2,
-              apy: 1,
-              liquidity: 457
-            },
-            {
-              iconTokenX:
-                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
-              value: 2345.34,
-              staked: 233345,
-              pair: 'xBTC - xUSD',
-              rewardsToken: 'SNY',
-              currencyPrice: 2,
-              apy: 1,
-              liquidity: 457
-            },
-            {
-              iconTokenX:
-                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
-              value: 2345.34,
-              staked: 233345,
-              pair: 'xBTC - xUSD',
-              rewardsToken: 'SNY',
-              currencyPrice: 2,
-              apy: 1,
-              liquidity: 458
+              tokenXSymbol: 'BTC',
+              tokenYSymbol: 'SOL',
+              minPrice: 2,
+              maxPrice: 5.005,
+              fee: 0.3,
+              tokenXDeposit: 2137,
+              tokenYDeposit: 911,
+              value: 5184,
+              onStake: () => {
+                console.log('stake')
+              }
             }
           ]}
-          stakeHandler={(id: string) => {
-            console.log(id)
-          }}
-          unstakeHandler={(id: string) => {
-            console.log(id)
-          }}
-          claimRewardHandler={(id: string) => {
-            console.log(id)
-          }}
+          stakedPositions={[
+            {
+              tokenXSymbol: 'BTC',
+              tokenYSymbol: 'SOL',
+              minPrice: 2,
+              maxPrice: 5.005,
+              fee: 0.3,
+              tokenXDeposit: 2137,
+              tokenYDeposit: 911,
+              value: 5184,
+              rewardSymbol: 'SNY',
+              onClaimReward: () => {
+                console.log('reward')
+              },
+              rewardIcon:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
+              rewardValue: 2137
+            }
+          ]}
         />
       </Grid>
     )

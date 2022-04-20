@@ -1,46 +1,54 @@
 import { Grid, Typography } from '@material-ui/core'
 import React from 'react'
-import SelectedFarm, { ISelectedFarm } from '../SelectedFarm/SelectedFarm'
+import RewardsTile, { IRewardsTile } from '../RewardsTile/RewardsTile'
+import StakeTile, { IStakedTile } from '../StakeTile/StakeTile'
 import useStyle from './style'
 
 export interface ISelectedFarmList {
-  title: string
-  rewards: string
-  iconTokenX: string
-  iconTokenY: string
-  iconRewardToken: string
-  rewardsTokenSymbol: string
-  data: ISelectedFarm[]
-  stakeHandler: (id: string) => void
-  unstakeHandler: (id: string) => void
-  claimRewardHandler: (id: string) => void
+  tokenXIcon: string
+  tokenYIcon: string
+  tokenXSymbol: string
+  tokenYSymbol: string
+  rewardIcon: string
+  rewardSymbol: string
+  duration: string
+  totalStaked: number
+  userStaked: number
+  totalRewardPerDay: number
+  apy: number
+  toStake: IStakedTile[]
+  stakedPositions: IRewardsTile[]
 }
 
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
-  title,
-  data,
-  rewards,
-  iconTokenX,
-  iconTokenY,
-  iconRewardToken,
-  rewardsTokenSymbol,
-  stakeHandler,
-  unstakeHandler,
-  claimRewardHandler
+  tokenXIcon,
+  tokenYIcon,
+  tokenXSymbol,
+  tokenYSymbol,
+  rewardIcon,
+  rewardSymbol,
+  duration,
+  totalStaked,
+  userStaked,
+  totalRewardPerDay,
+  apy,
+  toStake,
+  stakedPositions
 }) => {
   const classes = useStyle()
+
   return (
     <Grid className={classes.root}>
       <Grid className={classes.header} container justifyContent='flex-start'>
-        <img src={iconTokenX} alt={'Token in pool'} className={classes.bigIcon} />
-        <img src={iconTokenY} alt={'Token in pool'} className={classes.bigIcon} />
-        <Typography className={classes.title}>{title}</Typography>
+        <img src={tokenXIcon} alt={'Token in pool'} className={classes.bigIcon} />
+        <img src={tokenYIcon} alt={'Token in pool'} className={classes.bigIcon} />
+        <Typography className={classes.title}>{tokenXSymbol}-{tokenYSymbol}</Typography>
       </Grid>
       <Grid className={classes.header} container direction='row' justifyContent='space-between'>
         <Typography className={classes.postionsInfo}>
           Total Positions:
           <Typography display='inline' component='span' className={classes.value}>
-            {data.length}
+            {toStake.length + stakedPositions.length}
           </Typography>
         </Typography>
         <Typography
@@ -51,28 +59,25 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
             component='span'
             className={classes.value}
             style={{ display: 'flex', alignItems: 'center' }}>
-            <img src={iconRewardToken} alt={'Reward token icon'} className={classes.smallIcon} />{' '}
-            {rewards} {rewardsTokenSymbol} / day
+            <img src={rewardIcon} alt={'Reward token icon'} className={classes.smallIcon} />{' '}
+            {totalRewardPerDay} {rewardSymbol} / day
           </Typography>
         </Typography>
       </Grid>
       <Grid className={classes.containers}>
-        {data.map((element, index) => (
+        {toStake.map((element, index) => (
           <div className={classes.tile}>
-            <SelectedFarm
+            <StakeTile
               key={index}
-              iconTokenX={iconTokenX}
-              value={element.value}
-              staked={element.staked}
-              pair={element.pair}
-              rewardsToken={element.rewardsToken}
-              currencyPrice={element.currencyPrice}
-              apy={element.apy}
-              liquidity={element.liquidity}
-              action={'stake'}
-              onStake={stakeHandler}
-              onUnstake={unstakeHandler}
-              onClaimReward={claimRewardHandler}
+              {...element}
+            />
+          </div>
+        ))}
+        {stakedPositions.map((element, index) => (
+          <div className={classes.tile}>
+            <RewardsTile
+              key={index}
+              {...element}
             />
           </div>
         ))}
