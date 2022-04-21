@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
 import { PayloadType } from './types'
-import { IncentiveStructure } from '@invariant-labs/staker-sdk/lib/staker'
-import { DEFAULT_PUBLICKEY } from '@consts/static'
+import { IncentiveStructure, Stake } from '@invariant-labs/staker-sdk/lib/staker'
 import { BN } from '@project-serum/anchor'
 
 export interface CurrentFarmData {
@@ -17,16 +16,16 @@ export interface IncentiveWithAddress extends IncentiveStructure {
   rewardToken: PublicKey
 }
 
+export interface ExtendedStake extends Stake {
+  pool: PublicKey,
+  address: PublicKey
+}
+
 export interface IFarmsStore {
   farms: Record<string, IncentiveWithAddress>
   isLoadingFarms: boolean
-  currentFarmData: CurrentFarmData
-  isLoadingCurrentFarmData: boolean
-}
-
-export interface GetStakesForFarmPayload {
-  farm: PublicKey
-  pool: PublicKey
+  userStakes: Record<string, ExtendedStake>
+  isLoadingUserStakes: boolean
 }
 
 export interface SetSingleFarmPayload {
@@ -43,13 +42,8 @@ export interface FarmPositionData {
 export const defaultState: IFarmsStore = {
   farms: {},
   isLoadingFarms: false,
-  currentFarmData: {
-    farm: DEFAULT_PUBLICKEY,
-    pool: DEFAULT_PUBLICKEY,
-    totalRewardPerDay: 0,
-    stakedPositionsIds: []
-  },
-  isLoadingCurrentFarmData: false
+  userStakes: {},
+  isLoadingUserStakes: false
 }
 
 export const farmsSliceName = 'farms'
@@ -73,18 +67,20 @@ const farmsSlice = createSlice({
       }
       return state
     },
-    getCurrentFarmData(state, action: PayloadAction<GetStakesForFarmPayload>) {
-      state.currentFarmData = {
-        ...action.payload,
-        totalRewardPerDay: 0,
-        stakedPositionsIds: []
-      }
-      state.isLoadingCurrentFarmData = true
+    getUserStakes(state) {
+      state.isLoadingUserStakes = true
       return state
     },
-    setStakedPositionsForCurrentFarm(state, action: PayloadAction<BN[]>) {
-      state.currentFarmData.stakedPositionsIds = action.payload
-      state.isLoadingCurrentFarmData = false
+    addUserStakes(state, action: PayloadAction<Record<string, ExtendedStake>>) {
+      state.userStakes = {
+        ...state.userStakes,
+        ...action.payload
+      }
+      state.isLoadingUserStakes = false
+      return state
+    },
+    setSingleStake(state, action: PayloadAction<ExtendedStake>) {
+      state.userStakes[action.payload.address.toString()] = action.payload
       return state
     },
     stakePosition(_state, _action: PayloadAction<FarmPositionData>) {},
