@@ -107,6 +107,24 @@ const solanaNetworktoStakerNetwork = (solanaNetwork: SolanaNetworks): StakerNetw
   }
 }
 
+const networkTypetoStakerNetwork = (type: NetworkType): StakerNetwork => {
+  switch (type) {
+    case NetworkType.DEVNET:
+      return StakerNetwork.DEV
+    case NetworkType.LOCALNET:
+      return StakerNetwork.LOCAL
+    // case SolanaNetworks.TEST:
+    //   return StakerNetwork.TEST
+    // case SolanaNetworks.MAIN:
+    // case SolanaNetworks.MAIN_SERUM:
+    // case SolanaNetworks.MAIN_FIGMENT:
+    // case SolanaNetworks.MAIN_GENESYSGO:
+    //   return StakerNetwork.MAIN
+    default:
+      return StakerNetwork.DEV
+  }
+}
+
 const getCurrentSolanaConnection = (): Connection | null => {
   return _connection
 }
@@ -117,5 +135,6 @@ export {
   getCurrentSolanaConnection,
   getSolanaNetwork,
   solanaNetworktoProgramNetwork,
-  solanaNetworktoStakerNetwork
+  solanaNetworktoStakerNetwork,
+  networkTypetoStakerNetwork
 }

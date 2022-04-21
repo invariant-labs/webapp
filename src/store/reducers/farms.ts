@@ -14,6 +14,7 @@ export interface CurrentFarmData {
 
 export interface IncentiveWithAddress extends IncentiveStructure {
   address: PublicKey
+  rewardToken: PublicKey
 }
 
 export interface IFarmsStore {
@@ -67,8 +68,8 @@ const farmsSlice = createSlice({
     },
     setSingleFarm(state, action: PayloadAction<SetSingleFarmPayload>) {
       state.farms[action.payload.farm.toString()] = {
-        ...action.payload.data,
-        address: action.payload.farm
+        ...state.farms[action.payload.farm.toString()],
+        ...action.payload.data
       }
       return state
     },
