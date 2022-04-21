@@ -6,8 +6,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 508
   },
   header: {
-    display: 'flex',
-    flexDirection: 'row',
     ...typography.body1,
     color: colors.white.main,
     marginBottom: 10
@@ -23,8 +21,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   containers: { marginTop: 20 },
   bigIcon: {
     width: 32,
-    height: 32,
-    marginRight: 6
+    height: 32
+  },
+  secondBig: {
+    marginLeft: -10
   },
   smallIcon: {
     width: 17,

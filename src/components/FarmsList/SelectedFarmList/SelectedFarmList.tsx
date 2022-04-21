@@ -1,4 +1,5 @@
 import { Grid, Typography } from '@material-ui/core'
+import classNames from 'classnames'
 import React from 'react'
 import RewardsTile, { IRewardsTile } from '../RewardsTile/RewardsTile'
 import StakeTile, { IStakedTile } from '../StakeTile/StakeTile'
@@ -39,9 +40,9 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
 
   return (
     <Grid className={classes.root}>
-      <Grid className={classes.header} container justifyContent='flex-start'>
+      <Grid className={classes.header} container justifyContent='flex-start' alignItems='center'>
         <img src={tokenXIcon} alt={'Token in pool'} className={classes.bigIcon} />
-        <img src={tokenYIcon} alt={'Token in pool'} className={classes.bigIcon} />
+        <img src={tokenYIcon} alt={'Token in pool'} className={classNames(classes.bigIcon, classes.secondBig)} />
         <Typography className={classes.title}>{tokenXSymbol}-{tokenYSymbol}</Typography>
       </Grid>
       <Grid className={classes.positionInfo} container>
