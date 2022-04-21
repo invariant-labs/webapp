@@ -12,7 +12,7 @@ storiesOf('farmsList/tile', module)
           isActive
           apyPercent={1}
           totalStaked={100000}
-          liquidity={2137}
+          yourStaked={2137}
           farmId='qwerty'
           tokenX={tokens[NetworkType.DEVNET][0]}
           tokenY={tokens[NetworkType.DEVNET][1]}
@@ -26,7 +26,7 @@ storiesOf('farmsList/tile', module)
         <FarmTile
           apyPercent={1}
           totalStaked={100000}
-          liquidity={2137}
+          yourStaked={2137}
           farmId='qwerty'
           tokenX={tokens[NetworkType.DEVNET][0]}
           tokenY={tokens[NetworkType.DEVNET][1]}

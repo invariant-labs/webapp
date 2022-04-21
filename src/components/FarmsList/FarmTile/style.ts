@@ -58,8 +58,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 0
     },
 
-    '100%': {
+    '50%': {
       opacity: 1
+    },
+
+    '100%': {
+      opacity: 0
     }
   },
   pulseDot: {

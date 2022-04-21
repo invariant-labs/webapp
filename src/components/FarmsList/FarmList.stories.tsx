@@ -27,7 +27,7 @@ storiesOf('farmsList/list', module)
               isActive: true,
               apyPercent: 1,
               totalStaked: 10000,
-              liquidity: 100,
+              yourStaked: 100,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][0],
               tokenY: tokens[NetworkType.DEVNET][1]
@@ -36,7 +36,7 @@ storiesOf('farmsList/list', module)
               isActive: true,
               apyPercent: 1,
               totalStaked: 10000,
-              liquidity: 200,
+              yourStaked: 200,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][2],
               tokenY: tokens[NetworkType.DEVNET][0]
@@ -45,7 +45,7 @@ storiesOf('farmsList/list', module)
               isActive: true,
               apyPercent: 1,
               totalStaked: 10000,
-              liquidity: 300,
+              yourStaked: 300,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][1],
               tokenY: tokens[NetworkType.DEVNET][2]
@@ -75,7 +75,7 @@ storiesOf('farmsList/list', module)
               isActive: false,
               apyPercent: 1,
               totalStaked: 10000,
-              liquidity: 100,
+              yourStaked: 100,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][0],
               tokenY: tokens[NetworkType.DEVNET][1]
@@ -84,7 +84,7 @@ storiesOf('farmsList/list', module)
               isActive: false,
               apyPercent: 1,
               totalStaked: 10000,
-              liquidity: 200,
+              yourStaked: 200,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][2],
               tokenY: tokens[NetworkType.DEVNET][0]
@@ -93,7 +93,7 @@ storiesOf('farmsList/list', module)
               isActive: false,
               apyPercent: 1,
               totalStaked: 10000,
-              liquidity: 300,
+              yourStaked: 300,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][1],
               tokenY: tokens[NetworkType.DEVNET][2]
@@ -125,7 +125,7 @@ storiesOf('farmsList/list', module)
               isActive: false,
               apyPercent: 1,
               totalStaked: 10000,
-              liquidity: 100,
+              yourStaked: 100,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][0],
               tokenY: tokens[NetworkType.DEVNET][1]
@@ -134,7 +134,7 @@ storiesOf('farmsList/list', module)
               isActive: false,
               apyPercent: 1,
               totalStaked: 10000,
-              liquidity: 200,
+              yourStaked: 200,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][2],
               tokenY: tokens[NetworkType.DEVNET][0]
@@ -143,7 +143,7 @@ storiesOf('farmsList/list', module)
               isActive: false,
               apyPercent: 1,
               totalStaked: 10000,
-              liquidity: 300,
+              yourStaked: 300,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][1],
               tokenY: tokens[NetworkType.DEVNET][2]

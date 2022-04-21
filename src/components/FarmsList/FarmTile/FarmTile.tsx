@@ -12,7 +12,7 @@ export interface IFarm {
   isActive?: boolean
   apyPercent: number
   totalStaked: number
-  liquidity: number
+  yourStaked: number
   tokenX: Token
   tokenY: Token
   farmId: string
@@ -22,7 +22,7 @@ export const FarmTile: React.FC<IFarm> = ({
   isActive = false,
   apyPercent,
   totalStaked,
-  liquidity,
+  yourStaked,
   tokenX,
   tokenY,
   farmId
@@ -65,9 +65,9 @@ export const FarmTile: React.FC<IFarm> = ({
         direction='row'
         justifyContent='space-between'
         className={classes.mobileContainer}>
-        <Typography className={classes.label}>Total Staked:</Typography>
+        <Typography className={classes.label}>Total staked:</Typography>
         <Typography className={classes.value}>
-          {totalStaked.toLocaleString('fr-FR')} xUSD
+          {totalStaked} {tokenX.symbol}
         </Typography>
       </Grid>
       <Grid
@@ -75,11 +75,13 @@ export const FarmTile: React.FC<IFarm> = ({
         direction='row'
         justifyContent='space-between'
         className={classes.mobileContainer}>
-        <Typography className={classes.label}>Liquidity:</Typography>
-        <Typography className={classes.value}>${liquidity.toLocaleString('fr-FR')}</Typography>
+        <Typography className={classes.label}>Your staked:</Typography>
+        <Typography className={classes.value}>
+          {yourStaked} {tokenX.symbol}
+        </Typography>
       </Grid>
       <Link className={classes.link} to={`/farm/${farmId}`}>
-        <OutlinedButton className={classes.button} disabled={!isActive} name='Stake' />
+        <OutlinedButton className={classes.button} disabled={!isActive} name='Details' />
       </Link>
     </Grid>
   )

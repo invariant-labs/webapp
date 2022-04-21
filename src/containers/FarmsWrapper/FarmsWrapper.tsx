@@ -1,5 +1,4 @@
 import React from 'react'
-import FarmTile from '@components/FarmsList/FarmTile/FarmTile'
 import FarmList from '@components/FarmsList/FarmList'
 import { NetworkType, tokens } from '@consts/static'
 import { status } from '@selectors/solanaWallet'
@@ -7,7 +6,7 @@ import { Grid } from '@material-ui/core'
 import { Status, actions } from '@reducers/solanaWallet'
 import { useSelector, useDispatch } from 'react-redux'
 
-export const FarmsWrapper:React.FC = () => {
+export const FarmsWrapper: React.FC = () => {
   const dispatch = useDispatch()
   const walletStatus = useSelector(status)
   return (
@@ -34,7 +33,7 @@ export const FarmsWrapper:React.FC = () => {
             isActive: true,
             apyPercent: 1,
             totalStaked: 10000,
-            liquidity: 100,
+            yourStaked: 100,
             farmId: 'qwerty',
             tokenX: tokens[NetworkType.DEVNET][0],
             tokenY: tokens[NetworkType.DEVNET][1]
@@ -43,7 +42,7 @@ export const FarmsWrapper:React.FC = () => {
             isActive: true,
             apyPercent: 1,
             totalStaked: 10000,
-            liquidity: 200,
+            yourStaked: 200,
             farmId: 'qwerty',
             tokenX: tokens[NetworkType.DEVNET][2],
             tokenY: tokens[NetworkType.DEVNET][0]
@@ -52,7 +51,7 @@ export const FarmsWrapper:React.FC = () => {
             isActive: true,
             apyPercent: 1,
             totalStaked: 10000,
-            liquidity: 300,
+            yourStaked: 300,
             farmId: 'qwerty',
             tokenX: tokens[NetworkType.DEVNET][1],
             tokenY: tokens[NetworkType.DEVNET][2]
