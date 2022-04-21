@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: 508
   },
@@ -20,20 +20,7 @@ const useStyles = makeStyles(() => ({
   tile: {
     marginBottom: 20
   },
-  postionsInfo: {
-    ...typography.body2,
-    color: colors.invariant.lightGrey,
-    display: 'flex',
-    alignItems: 'center'
-  },
   containers: { marginTop: 20 },
-  value: {
-    ...typography.body1,
-    color: colors.white.main,
-    marginLeft: 2,
-    display: 'flex',
-    alignItems: 'center'
-  },
   bigIcon: {
     width: 32,
     height: 32,
@@ -42,7 +29,45 @@ const useStyles = makeStyles(() => ({
   smallIcon: {
     width: 17,
     height: 17,
-    margin: '0 6px'
+    marginRight: 5
+  },
+  positionInfo: {
+    flexWrap: 'nowrap',
+    marginBottom: 16,
+
+    [theme.breakpoints.down('xs')]: {
+      flexWrap: 'wrap'
+    }
+  },
+  leftSide: {
+    marginRight: 8,
+    [theme.breakpoints.down('xs')]: {
+      marginRight: 0,
+      marginBottom: 8
+    }
+  },
+  rightSide: {
+    '& $row': {
+      justifyContent: 'flex-end',
+
+      [theme.breakpoints.down('xs')]: {
+        justifyContent: 'flex-start'
+      }
+    }
+  },
+  row: {
+    '&:not(:last-child)': {
+      marginBottom: 8
+    }
+  },
+  label: {
+    marginRight: 5,
+    ...typography.body2,
+    color: colors.invariant.textGrey
+  },
+  value: {
+    ...typography.body1,
+    color: colors.white.main
   }
 }))
 

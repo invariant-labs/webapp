@@ -44,25 +44,41 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
         <img src={tokenYIcon} alt={'Token in pool'} className={classes.bigIcon} />
         <Typography className={classes.title}>{tokenXSymbol}-{tokenYSymbol}</Typography>
       </Grid>
-      <Grid className={classes.header} container direction='row' justifyContent='space-between'>
-        <Typography className={classes.postionsInfo}>
-          Total Positions:
-          <Typography display='inline' component='span' className={classes.value}>
-            {toStake.length + stakedPositions.length}
-          </Typography>
-        </Typography>
-        <Typography
-          className={classes.postionsInfo}
-          style={{ display: 'flex', alignItems: 'center' }}>
-          Reward:
-          <Typography
-            component='span'
-            className={classes.value}
-            style={{ display: 'flex', alignItems: 'center' }}>
-            <img src={rewardIcon} alt={'Reward token icon'} className={classes.smallIcon} />{' '}
-            {totalRewardPerDay} {rewardSymbol} / day
-          </Typography>
-        </Typography>
+      <Grid className={classes.positionInfo} container>
+        <Grid className={classes.leftSide} container direction='column'>
+          <Grid className={classes.row} container>
+            <Typography className={classes.label}>Farm duration:</Typography>
+            <Typography className={classes.value}>{duration}</Typography>
+          </Grid>
+
+          <Grid className={classes.row} container>
+            <Typography className={classes.label}>Total positions:</Typography>
+            <Typography className={classes.value}>{toStake.length + stakedPositions.length}</Typography>
+          </Grid>
+
+          <Grid className={classes.row} container>
+            <Typography className={classes.label}>APY:</Typography>
+            <Typography className={classes.value}>{apy}%</Typography>
+          </Grid>
+        </Grid>
+
+        <Grid className={classes.rightSide} container direction='column'>
+        <Grid className={classes.row} container>
+            <Typography className={classes.label}>Reward:</Typography>
+            <img src={rewardIcon} className={classes.smallIcon} />
+            <Typography className={classes.value}>{totalRewardPerDay} {rewardSymbol}/day</Typography>
+          </Grid>
+
+          <Grid className={classes.row} container>
+            <Typography className={classes.label}>Total staked:</Typography>
+            <Typography className={classes.value}>{totalStaked} {tokenXSymbol}</Typography>
+          </Grid>
+
+          <Grid className={classes.row} container>
+            <Typography className={classes.label}>Your staked:</Typography>
+            <Typography className={classes.value}>{userStaked} {tokenXSymbol}</Typography>
+          </Grid>
+        </Grid>
       </Grid>
       <Grid className={classes.containers}>
         {toStake.map((element, index) => (
