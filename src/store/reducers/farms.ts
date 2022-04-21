@@ -12,8 +12,12 @@ export interface CurrentFarmData {
   stakedPositionsIds: BN[]
 }
 
+export interface IncentiveWithAddress extends IncentiveStructure {
+  address: PublicKey
+}
+
 export interface IFarmsStore {
-  farms: Record<string, IncentiveStructure>
+  farms: Record<string, IncentiveWithAddress>
   isLoadingFarms: boolean
   currentFarmData: CurrentFarmData
   isLoadingCurrentFarmData: boolean
@@ -56,14 +60,16 @@ const farmsSlice = createSlice({
       state.isLoadingFarms = true
       return state
     },
-    setFarms(state, action: PayloadAction<Record<string, IncentiveStructure>>) {
+    setFarms(state, action: PayloadAction<Record<string, IncentiveWithAddress>>) {
       state.farms = action.payload
       state.isLoadingFarms = false
       return state
     },
-    updateSingleFarm(_state, _action: PayloadAction<PublicKey>) {},
     setSingleFarm(state, action: PayloadAction<SetSingleFarmPayload>) {
-      state.farms[action.payload.farm.toString()] = action.payload.data
+      state.farms[action.payload.farm.toString()] = {
+        ...action.payload.data,
+        address: action.payload.farm
+      }
       return state
     },
     getCurrentFarmData(state, action: PayloadAction<GetStakesForFarmPayload>) {
