@@ -28,6 +28,7 @@ import { PoolWithAddress } from '@reducers/pools'
 import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
 import axios, { AxiosResponse } from 'axios'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
+import { Staker } from '@invariant-labs/staker-sdk'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -880,4 +881,35 @@ export const getNewTokenOrThrow = async (
   return {
     [address.toString()]: generateUnknownTokenDataObject(key, info.decimals)
   }
+}
+
+export const getUserStakesForFarm = async (
+  stakerProgram: Staker,
+  incentive: PublicKey,
+  pool: PublicKey,
+  ids: BN[]
+) => {
+  const promises = ids.map(async id => {
+    const [userStakeAddress] = await stakerProgram.getUserStakeAddressAndBump(incentive, pool, id)
+
+    return userStakeAddress
+  })
+
+  const addresses = await Promise.all(promises)
+
+  const stakes = await stakerProgram.program.account.userStake.fetchMultiple(addresses)
+
+  const fullStakes: any[] = []
+
+  stakes.forEach((stake, index) => {
+    if (stake !== null) {
+      fullStakes.push({
+        ...stake,
+        address: addresses[index],
+        positionId: ids[index]
+      })
+    }
+  })
+
+  return fullStakes
 }
