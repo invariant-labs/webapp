@@ -1,9 +1,11 @@
 {
-  "rewrites": [
+  "redirects": [
     {
       "source": "/contact",
       "destination": "mailto:invariant@contact.pl"
-    },
+    }
+  ],
+  "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/"
