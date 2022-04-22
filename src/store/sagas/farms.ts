@@ -213,7 +213,7 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
       {
         pool: action.payload.pool,
         id: action.payload.id,
-        position: new PublicKey(''),
+        position: positionData.address,
         incentive: action.payload.farm,
         owner: wallet.publicKey,
         index: positionData.positionIndex,
@@ -317,7 +317,7 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     const withdrawIx = yield* call([stakerProgram, stakerProgram.withdrawIx], {
       pool: data.pool,
       id: data.id,
-      position: new PublicKey(''),
+      position: positionData.address,
       incentive: data.farm,
       owner: wallet.publicKey,
       index: positionData.positionIndex,
@@ -473,7 +473,7 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
       {
         pool: action.payload.pool,
         id: action.payload.id,
-        position: new PublicKey(''),
+        position: positionData.address,
         incentive: action.payload.farm,
         owner: wallet.publicKey,
         index: positionData.positionIndex,

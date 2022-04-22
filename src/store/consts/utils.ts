@@ -8,7 +8,7 @@ import {
   SimulationStatus
 } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
-import { PlotTickData } from '@reducers/positions'
+import { PlotTickData, PositionWithAddress } from '@reducers/positions'
 import { Token as SPLToken, TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import {
   BTC_DEV,
@@ -25,7 +25,7 @@ import {
 import mainnetList from './tokenLists/mainnet.json'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import { PoolWithAddress } from '@reducers/pools'
-import { Market, Position, Tickmap } from '@invariant-labs/sdk/lib/market'
+import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
 import axios, { AxiosResponse } from 'axios'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { Staker } from '@invariant-labs/staker-sdk'
@@ -916,10 +916,6 @@ export const getUserStakesForFarm = async (
   return fullStakes
 }
 
-interface PositionWithAddress extends Position {
-  address: PublicKey
-}
-
 export const getPositionsForPool = async (marketProgram: Market, pool: PublicKey) => {
   return (
     await marketProgram.program.account.position.all([
@@ -931,4 +927,26 @@ export const getPositionsForPool = async (marketProgram: Market, pool: PublicKey
     ...account,
     address: publicKey
   })) as PositionWithAddress[]
+}
+
+export const getPositionsAddressesFromRange = async (
+  marketProgram: Market,
+  owner: PublicKey,
+  lowerIndex: number,
+  upperIndex: number
+) => {
+  const promises: Array<
+    Promise<{
+      positionAddress: PublicKey
+      positionBump: number
+    }>
+  > = []
+
+  for (let i = lowerIndex; i <= upperIndex; i++) {
+    promises.push(marketProgram.getPositionAddress(owner, i))
+  }
+
+  return await Promise.all(promises).then(data =>
+    data.map(({ positionAddress }) => positionAddress)
+  )
 }
