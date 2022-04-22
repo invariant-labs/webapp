@@ -916,6 +916,10 @@ export const getUserStakesForFarm = async (
   return fullStakes
 }
 
+interface PositionWithAddress extends Position {
+  address: PublicKey
+}
+
 export const getPositionsForPool = async (marketProgram: Market, pool: PublicKey) => {
   return (
     await marketProgram.program.account.position.all([
@@ -923,5 +927,8 @@ export const getPositionsForPool = async (marketProgram: Market, pool: PublicKey
         memcmp: { bytes: bs58.encode(pool.toBuffer()), offset: 40 }
       }
     ])
-  ).map(({ account }) => account) as Position[]
+  ).map(({ account, publicKey }) => ({
+    ...account,
+    address: publicKey
+  })) as PositionWithAddress[]
 }

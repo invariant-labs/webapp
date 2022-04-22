@@ -44,12 +44,30 @@ export function* getFarmsTotals() {
     const allTokens = yield* select(tokens)
 
     const marketProgram = yield* call(getMarketProgram)
+    const stakerProgram = yield* call(getStakerProgram)
 
     const updatesObject: Record<string, FarmTotalsUpdate> = {}
 
     for (const address in allFarms) {
       const poolAddress = allFarms[address].pool
-      const positions = yield* call(getPositionsForPool, marketProgram, poolAddress)
+      const allPositions = yield* call(getPositionsForPool, marketProgram, poolAddress)
+
+      const stakes = yield* call(
+        getUserStakesForFarm,
+        stakerProgram,
+        new PublicKey(address),
+        poolAddress,
+        allPositions.map(({ id }) => id)
+      )
+
+      const stakesObject: Record<string, StakeWithAddress> = {}
+      stakes.forEach(stake => {
+        stakesObject[stake.position.toString()] = stake
+      })
+
+      const positions = allPositions.filter(
+        position => typeof stakesObject[position.address.toString()] !== 'undefined'
+      )
 
       let liquidityX = new BN(0)
       let liquidityY = new BN(0)
@@ -110,14 +128,14 @@ export function* handleGetFarmsList() {
 
     const poolsKeys: string[] = []
 
-    const promises = list.map(async ({ account, publicKey }) => {
-      poolsKeys.push(account.pool.toString())
+    const promises = list.map(async incentive => {
+      poolsKeys.push(incentive.pool.toString())
 
-      const info = await connection.getParsedAccountInfo(account.tokenAccount)
+      const info = await connection.getParsedAccountInfo(incentive.tokenAccount)
 
-      farmsObject[publicKey.toString()] = {
-        ...account,
-        address: publicKey,
+      farmsObject[incentive.publicKey.toString()] = {
+        ...incentive,
+        address: incentive.publicKey,
         rewardToken: (info as RpcResponseAndContext<AccountInfo<ParsedAccountData>>).value.data
           .parsed.info.mint
       }
