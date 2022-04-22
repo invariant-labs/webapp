@@ -50,15 +50,7 @@ export const FarmList: React.FC<IFarmList> = ({
             })
             .map(element => (
               <div className={classes.tile}>
-                <FarmTile
-                  isActive={element.isActive}
-                  apyPercent={element.apyPercent}
-                  totalStaked={element.totalStaked}
-                  yourStaked={element.yourStaked}
-                  farmId={element.farmId}
-                  tokenX={element.tokenX}
-                  tokenY={element.tokenY}
-                />
+                <FarmTile {...element} />
               </div>
             ))
         ) : null}

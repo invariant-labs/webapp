@@ -30,7 +30,10 @@ storiesOf('farmsList/list', module)
               yourStaked: 100,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][0],
-              tokenY: tokens[NetworkType.DEVNET][1]
+              tokenY: tokens[NetworkType.DEVNET][1],
+              rewardIcon:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
+              rewardSymbol: 'DOGE'
             },
             {
               isActive: true,
@@ -39,7 +42,10 @@ storiesOf('farmsList/list', module)
               yourStaked: 200,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][2],
-              tokenY: tokens[NetworkType.DEVNET][0]
+              tokenY: tokens[NetworkType.DEVNET][0],
+              rewardIcon:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
+              rewardSymbol: 'DOGE'
             },
             {
               isActive: true,
@@ -48,7 +54,10 @@ storiesOf('farmsList/list', module)
               yourStaked: 300,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][1],
-              tokenY: tokens[NetworkType.DEVNET][2]
+              tokenY: tokens[NetworkType.DEVNET][2],
+              rewardIcon:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
+              rewardSymbol: 'DOGE'
             }
           ]}
         />
@@ -78,7 +87,10 @@ storiesOf('farmsList/list', module)
               yourStaked: 100,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][0],
-              tokenY: tokens[NetworkType.DEVNET][1]
+              tokenY: tokens[NetworkType.DEVNET][1],
+              rewardIcon:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
+              rewardSymbol: 'DOGE'
             },
             {
               isActive: false,
@@ -87,7 +99,10 @@ storiesOf('farmsList/list', module)
               yourStaked: 200,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][2],
-              tokenY: tokens[NetworkType.DEVNET][0]
+              tokenY: tokens[NetworkType.DEVNET][0],
+              rewardIcon:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
+              rewardSymbol: 'DOGE'
             },
             {
               isActive: false,
@@ -96,7 +111,10 @@ storiesOf('farmsList/list', module)
               yourStaked: 300,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][1],
-              tokenY: tokens[NetworkType.DEVNET][2]
+              tokenY: tokens[NetworkType.DEVNET][2],
+              rewardIcon:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
+              rewardSymbol: 'DOGE'
             }
           ]}
         />
@@ -128,7 +146,10 @@ storiesOf('farmsList/list', module)
               yourStaked: 100,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][0],
-              tokenY: tokens[NetworkType.DEVNET][1]
+              tokenY: tokens[NetworkType.DEVNET][1],
+              rewardIcon:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
+              rewardSymbol: 'DOGE'
             },
             {
               isActive: false,
@@ -137,7 +158,10 @@ storiesOf('farmsList/list', module)
               yourStaked: 200,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][2],
-              tokenY: tokens[NetworkType.DEVNET][0]
+              tokenY: tokens[NetworkType.DEVNET][0],
+              rewardIcon:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
+              rewardSymbol: 'DOGE'
             },
             {
               isActive: false,
@@ -146,7 +170,10 @@ storiesOf('farmsList/list', module)
               yourStaked: 300,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][1],
-              tokenY: tokens[NetworkType.DEVNET][2]
+              tokenY: tokens[NetworkType.DEVNET][2],
+              rewardIcon:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
+              rewardSymbol: 'DOGE'
             }
           ]}
         />

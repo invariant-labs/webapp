@@ -1,14 +1,26 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import FarmList from '@components/FarmsList/FarmList'
-import { NetworkType, tokens } from '@consts/static'
 import { status } from '@selectors/solanaWallet'
 import { Grid } from '@material-ui/core'
-import { Status, actions } from '@reducers/solanaWallet'
+import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { useSelector, useDispatch } from 'react-redux'
+import { farms } from '@selectors/farms'
+import { pools, tokens } from '@selectors/pools'
+import { actions } from '@reducers/farms'
 
 export const FarmsWrapper: React.FC = () => {
   const dispatch = useDispatch()
   const walletStatus = useSelector(status)
+  const allFarms = useSelector(farms)
+  const allPools = useSelector(pools)
+  const allTokens = useSelector(tokens)
+
+  useEffect(() => {
+    if (Object.values(allTokens).length > 0 && Object.values(allFarms).length === 0) {
+      dispatch(actions.getFarms())
+    }
+  }, [allTokens])
+
   return (
     <Grid
       style={{
@@ -19,44 +31,31 @@ export const FarmsWrapper: React.FC = () => {
       <FarmList
         noConnectedBlockerProps={{
           onConnect: type => {
-            dispatch(actions.connect(type))
+            dispatch(walletActions.connect(type))
           },
           onDisconnect: () => {
-            dispatch(actions.disconnect())
+            dispatch(walletActions.disconnect())
           },
           descCustomText: 'You have no farms.'
         }}
         showNoConnected={walletStatus !== Status.Initialized}
         title={'Active farms'}
-        data={[
-          {
-            isActive: true,
-            apyPercent: 1,
-            totalStaked: 10000,
-            yourStaked: 100,
-            farmId: 'qwerty',
-            tokenX: tokens[NetworkType.DEVNET][0],
-            tokenY: tokens[NetworkType.DEVNET][1]
-          },
-          {
-            isActive: true,
-            apyPercent: 1,
-            totalStaked: 10000,
-            yourStaked: 200,
-            farmId: 'qwerty',
-            tokenX: tokens[NetworkType.DEVNET][2],
-            tokenY: tokens[NetworkType.DEVNET][0]
-          },
-          {
-            isActive: true,
-            apyPercent: 1,
-            totalStaked: 10000,
-            yourStaked: 300,
-            farmId: 'qwerty',
-            tokenX: tokens[NetworkType.DEVNET][1],
-            tokenY: tokens[NetworkType.DEVNET][2]
-          }
-        ]}
+        data={
+          Object.values(allFarms).map((farm) => {
+            const now = Date.now() / 1000
+            return {
+              apyPercent: 0,
+              totalStaked: (farm.totalStakedX ?? 0) + (farm.totalStakedY ?? 0),
+              yourStaked: 0,
+              tokenX: allTokens[allPools[farm.pool.toString()].tokenX.toString()],
+              tokenY: allTokens[allPools[farm.pool.toString()].tokenY.toString()],
+              farmId: farm.address.toString(),
+              rewardSymbol: allTokens[farm.rewardToken.toString()].symbol,
+              rewardIcon: allTokens[farm.rewardToken.toString()].logoURI,
+              isActive: now <= farm.endTime.v.toNumber()
+            }
+          })
+        }
       />
     </Grid>
   )
