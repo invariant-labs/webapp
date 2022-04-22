@@ -2,7 +2,7 @@
   "redirects": [
     {
       "source": "/contact",
-      "destination": "mailto:invariant@contact.pl"
+      "destination": "mailto:contact@invariant.app"
     }
   ],
   "rewrites": [
