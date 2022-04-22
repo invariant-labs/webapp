@@ -1,5 +1,11 @@
-import { all, call, put, select, spawn, take, takeLatest } from 'typed-redux-saga'
-import { actions, FarmPositionData, IncentiveWithAddress, StakeWithAddress } from '@reducers/farms'
+import { all, call, fork, put, select, spawn, take, takeLatest } from 'typed-redux-saga'
+import {
+  actions,
+  FarmPositionData,
+  ExtendedIncentive,
+  StakeWithAddress,
+  FarmTotalsUpdate
+} from '@reducers/farms'
 import { actions as poolsActions } from '@reducers/pools'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { getStakerProgram } from '@web3/programs/staker'
@@ -26,7 +32,73 @@ import { accounts } from '@selectors/solanaWallet'
 import { getConnection } from './connection'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { getUserStakesForFarm } from '@consts/utils'
+import { getPositionsForPool, getUserStakesForFarm, printBN } from '@consts/utils'
+import { pools, tokens } from '@selectors/pools'
+import { BN } from '@project-serum/anchor'
+import { calculatePriceSqrt, getX, getY } from '@invariant-labs/sdk/lib/math'
+
+export function* getFarmsTotals() {
+  try {
+    const allFarms = yield* select(farms)
+    const allPools = yield* select(pools)
+    const allTokens = yield* select(tokens)
+
+    const marketProgram = yield* call(getMarketProgram)
+
+    const updatesObject: Record<string, FarmTotalsUpdate> = {}
+
+    for (const address in allFarms) {
+      const poolAddress = allFarms[address].pool
+      const positions = yield* call(getPositionsForPool, marketProgram, poolAddress)
+
+      let liquidityX = new BN(0)
+      let liquidityY = new BN(0)
+      for (const position of positions) {
+        let xVal, yVal
+
+        try {
+          xVal = getX(
+            position.liquidity.v,
+            calculatePriceSqrt(position.upperTickIndex).v,
+            allPools[poolAddress.toString()].sqrtPrice.v,
+            calculatePriceSqrt(position.lowerTickIndex).v
+          )
+        } catch (error) {
+          xVal = new BN(0)
+        }
+
+        try {
+          yVal = getY(
+            position.liquidity.v,
+            calculatePriceSqrt(position.upperTickIndex).v,
+            allPools[poolAddress.toString()].sqrtPrice.v,
+            calculatePriceSqrt(position.lowerTickIndex).v
+          )
+        } catch (error) {
+          yVal = new BN(0)
+        }
+
+        liquidityX = liquidityX.add(xVal)
+        liquidityY = liquidityY.add(yVal)
+      }
+
+      updatesObject[address.toString()] = {
+        totalStakedX: +printBN(
+          liquidityX,
+          allTokens[allPools[poolAddress.toString()].tokenX.toString()].decimals
+        ),
+        totalStakedY: +printBN(
+          liquidityY,
+          allTokens[allPools[poolAddress.toString()].tokenY.toString()].decimals
+        )
+      }
+    }
+
+    yield* put(actions.updateFarmsTotals(updatesObject))
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 export function* handleGetFarmsList() {
   try {
@@ -34,7 +106,7 @@ export function* handleGetFarmsList() {
     const connection = yield* call(getConnection)
 
     const list = yield* call([stakerProgram, stakerProgram.getAllIncentive])
-    const farmsObject: Record<string, IncentiveWithAddress> = {}
+    const farmsObject: Record<string, ExtendedIncentive> = {}
 
     const poolsKeys: string[] = []
 
@@ -60,6 +132,8 @@ export function* handleGetFarmsList() {
     yield* take(poolsActions.addPoolsForPositions)
 
     yield* put(actions.setFarms(farmsObject))
+
+    yield* fork(getFarmsTotals)
   } catch (error) {
     console.log(error)
   }
@@ -81,7 +155,7 @@ export function* handleGetUserStakes(action: PayloadAction<PublicKey>) {
     )
     const stakesObject: Record<string, StakeWithAddress> = {}
 
-    list.forEach((stake) => {
+    list.forEach(stake => {
       stakesObject[stake.address.toString()] = stake
     })
 

@@ -11,17 +11,24 @@ export interface CurrentFarmData {
   stakedPositionsIds: BN[]
 }
 
-export interface IncentiveWithAddress extends IncentiveStructure {
+export interface ExtendedIncentive extends IncentiveStructure {
   address: PublicKey
   rewardToken: PublicKey
+  totalStakedX?: number
+  totalStakedY?: number
 }
 
 export interface StakeWithAddress extends Stake {
   address: PublicKey
 }
 
+export interface FarmTotalsUpdate {
+  totalStakedX: number
+  totalStakedY: number
+}
+
 export interface IFarmsStore {
-  farms: Record<string, IncentiveWithAddress>
+  farms: Record<string, ExtendedIncentive>
   isLoadingFarms: boolean
   userStakes: Record<string, StakeWithAddress>
   isLoadingUserStakes: boolean
@@ -54,7 +61,7 @@ const farmsSlice = createSlice({
       state.isLoadingFarms = true
       return state
     },
-    setFarms(state, action: PayloadAction<Record<string, IncentiveWithAddress>>) {
+    setFarms(state, action: PayloadAction<Record<string, ExtendedIncentive>>) {
       state.farms = action.payload
       state.isLoadingFarms = false
       return state
@@ -79,7 +86,19 @@ const farmsSlice = createSlice({
       return state
     },
     setSingleStake(state, action: PayloadAction<StakeWithAddress>) {
-      state.userStakes[action.payload.address.toString()] = action.payload
+      state.userStakes[action.payload.address.toString()] = {
+        ...state.userStakes[action.payload.address.toString()],
+        ...action.payload
+      }
+      return state
+    },
+    updateFarmsTotals(state, action: PayloadAction<Record<string, FarmTotalsUpdate>>) {
+      Object.entries(action.payload).forEach(([address, update]) => {
+        state.farms[address.toString()] = {
+          ...state.farms[address.toString()],
+          ...update
+        }
+      })
       return state
     },
     stakePosition(_state, _action: PayloadAction<FarmPositionData>) {},

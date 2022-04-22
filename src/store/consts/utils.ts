@@ -25,12 +25,13 @@ import {
 import mainnetList from './tokenLists/mainnet.json'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import { PoolWithAddress } from '@reducers/pools'
-import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
+import { Market, Position, Tickmap } from '@invariant-labs/sdk/lib/market'
 import axios, { AxiosResponse } from 'axios'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { Staker } from '@invariant-labs/staker-sdk'
 import { StakeWithAddress } from '@reducers/farms'
 import { Stake } from '@invariant-labs/staker-sdk/lib/staker'
+import bs58 from 'bs58'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -913,4 +914,14 @@ export const getUserStakesForFarm = async (
   })
 
   return fullStakes
+}
+
+export const getPositionsForPool = async (marketProgram: Market, pool: PublicKey) => {
+  return (
+    await marketProgram.program.account.position.all([
+      {
+        memcmp: { bytes: bs58.encode(pool.toBuffer()), offset: 40 }
+      }
+    ])
+  ).map(({ account }) => account) as Position[]
 }
