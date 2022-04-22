@@ -1,14 +1,16 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
 import { getStakerProgramSync } from '@web3/programs/staker'
 import { Staker } from '@invariant-labs/staker-sdk'
-import { IncentiveStructure } from '@invariant-labs/staker-sdk/lib/staker'
+import { IncentiveStructure, Stake } from '@invariant-labs/staker-sdk/lib/staker'
 import { PublicKey } from '@solana/web3.js'
-import { farms } from '@selectors/farms'
+import { farms, userStakes } from '@selectors/farms'
 import * as R from 'remeda'
 import { actions } from '@reducers/farms'
+import { status as walletStatus } from '@selectors/solanaWallet'
+import { Status as WalletStatus } from '@reducers/solanaWallet'
 
 const onIncentiveChange = async (
   stakerProgram: Staker,
@@ -22,11 +24,25 @@ const onIncentiveChange = async (
     })
 }
 
+const onStakeChange = async (
+  stakerProgram: Staker,
+  stake: PublicKey,
+  fn: (data: Stake) => void
+) => {
+  stakerProgram.program.account.userStake
+    .subscribe(stake, 'singleGossip')
+    .on('change', (data: Stake) => {
+      fn(data)
+    })
+}
+
 const StakerEvents = () => {
   const dispatch = useDispatch()
   const stakerProgram = getStakerProgramSync()
   const networkStatus = useSelector(status)
   const allFarms = useSelector(farms)
+  const allUserStakes = useSelector(userStakes)
+  const walletStat = useSelector(walletStatus)
 
   useEffect(() => {
     if (networkStatus !== Status.Initialized || !stakerProgram) {
@@ -52,6 +68,65 @@ const StakerEvents = () => {
 
     connectEvents()
   }, [dispatch, networkStatus, Object.values(farms).length])
+
+  const [stakesKeys, setStakesKeys] = useState<string[]>([])
+
+  useEffect(() => {
+    if (
+      networkStatus !== Status.Initialized ||
+      !stakerProgram ||
+      walletStat !== WalletStatus.Initialized
+    ) {
+      return
+    }
+
+    const connectEvents = () => {
+      setStakesKeys(Object.keys(allUserStakes))
+
+      R.forEachObj(allUserStakes, stake => {
+        onStakeChange(stakerProgram, stake.address, stakeData => {
+          dispatch(
+            actions.setSingleStake({
+              ...stakeData,
+              address: stake.address
+            })
+          )
+        })
+          .then(() => {})
+          .catch(err => {
+            console.log(err)
+          })
+      })
+    }
+
+    connectEvents()
+  }, [dispatch, networkStatus, walletStat, Object.values(allUserStakes).length])
+
+  useEffect(() => {
+    if (
+      networkStatus !== Status.Initialized ||
+      !stakerProgram ||
+      walletStat === WalletStatus.Initialized
+    ) {
+      return
+    }
+
+    const connectEvents = () => {
+      stakesKeys.forEach(key => {
+        stakerProgram.program.account.userStake
+          .unsubscribe(new PublicKey(key))
+          .then(() => {})
+          .catch(error => {
+            console.log(error)
+          })
+      })
+
+      setStakesKeys([])
+    }
+
+    connectEvents()
+  }, [dispatch, networkStatus, walletStat])
+
   return null
 }
 
