@@ -160,6 +160,30 @@ const useStyles = makeStyles((theme: Theme) => ({
 
   spacer: {
     paddingTop: 20
+  },
+
+  rewardRow: {
+    border: `1px solid ${colors.invariant.light}`,
+    borderRadius: 12,
+    padding: '10px 14px',
+    marginTop: 10
+  },
+  rewardLabel: {
+    ...typography.body2,
+    color: colors.invariant.green
+  },
+  rewardTokenWrapper: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  rewardIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 8
+  },
+  rewardToken: {
+    ...typography.body1,
+    color: colors.invariant.text
   }
 }))
 

@@ -16,6 +16,8 @@ export interface IFarm {
   tokenX: Token
   tokenY: Token
   farmId: string
+  rewardSymbol: string
+  rewardIcon: string
 }
 
 export const FarmTile: React.FC<IFarm> = ({
@@ -25,7 +27,9 @@ export const FarmTile: React.FC<IFarm> = ({
   yourStaked,
   tokenX,
   tokenY,
-  farmId
+  farmId,
+  rewardSymbol,
+  rewardIcon
 }) => {
   const classes = useStyle()
 
@@ -50,6 +54,13 @@ export const FarmTile: React.FC<IFarm> = ({
             )}>
             {isActive ? 'Active' : 'Inactive'}
           </Typography>
+        </Grid>
+      </Grid>
+      <Grid className={classes.rewardRow} container justifyContent='space-between' alignItems='center'>
+        <Typography className={classes.rewardLabel}>Reward token:</Typography>
+        <Grid className={classes.rewardTokenWrapper}>
+          <img className={classes.rewardIcon} src={rewardIcon} />
+          <Typography className={classes.rewardToken}>{rewardSymbol}</Typography>
         </Grid>
       </Grid>
       <Grid
