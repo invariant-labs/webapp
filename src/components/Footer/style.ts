@@ -33,6 +33,10 @@ const useStyles = makeStyles(() => ({
     width: 59,
     padding: 0,
     textAlign: 'center'
+  },
+  icon: {
+    height: 40,
+    width: 40
   }
 }))
 

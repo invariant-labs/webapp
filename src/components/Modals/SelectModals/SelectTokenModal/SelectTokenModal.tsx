@@ -127,7 +127,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
     })
 
     return hideUnknown ? list.filter(token => !token.isUnknown) : list
-  }, [value, tokensWithIndexes])
+  }, [value, tokensWithIndexes, hideUnknown])
 
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
