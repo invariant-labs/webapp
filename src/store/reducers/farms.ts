@@ -16,15 +16,14 @@ export interface IncentiveWithAddress extends IncentiveStructure {
   rewardToken: PublicKey
 }
 
-export interface ExtendedStake extends Stake {
-  pool: PublicKey,
+export interface StakeWithAddress extends Stake {
   address: PublicKey
 }
 
 export interface IFarmsStore {
   farms: Record<string, IncentiveWithAddress>
   isLoadingFarms: boolean
-  userStakes: Record<string, ExtendedStake>
+  userStakes: Record<string, StakeWithAddress>
   isLoadingUserStakes: boolean
 }
 
@@ -67,11 +66,11 @@ const farmsSlice = createSlice({
       }
       return state
     },
-    getUserStakes(state) {
+    getUserStakes(state, _action: PayloadAction<PublicKey>) {
       state.isLoadingUserStakes = true
       return state
     },
-    addUserStakes(state, action: PayloadAction<Record<string, ExtendedStake>>) {
+    addUserStakes(state, action: PayloadAction<Record<string, StakeWithAddress>>) {
       state.userStakes = {
         ...state.userStakes,
         ...action.payload
@@ -79,7 +78,7 @@ const farmsSlice = createSlice({
       state.isLoadingUserStakes = false
       return state
     },
-    setSingleStake(state, action: PayloadAction<ExtendedStake>) {
+    setSingleStake(state, action: PayloadAction<StakeWithAddress>) {
       state.userStakes[action.payload.address.toString()] = action.payload
       return state
     },

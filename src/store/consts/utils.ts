@@ -29,7 +29,7 @@ import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
 import axios, { AxiosResponse } from 'axios'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { Staker } from '@invariant-labs/staker-sdk'
-import { ExtendedStake } from '@reducers/farms'
+import { StakeWithAddress } from '@reducers/farms'
 import { Stake } from '@invariant-labs/staker-sdk/lib/staker'
 
 export const tou64 = (amount: BN | String) => {
@@ -901,14 +901,13 @@ export const getUserStakesForFarm = async (
 
   const stakes = await stakerProgram.program.account.userStake.fetchMultiple(addresses)
 
-  const fullStakes: ExtendedStake[] = []
+  const fullStakes: StakeWithAddress[] = []
 
   stakes.forEach((stake, index) => {
     if (stake !== null) {
       fullStakes.push({
         ...(stake as Stake),
-        address: addresses[index],
-        pool
+        address: addresses[index]
       })
     }
   })

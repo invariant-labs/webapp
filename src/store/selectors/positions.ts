@@ -1,4 +1,5 @@
 import { PoolWithAddress } from '@reducers/pools'
+import { PublicKey } from '@solana/web3.js'
 import { createSelector } from 'reselect'
 import { IPositionsStore, positionsSliceName } from '../reducers/positions'
 import { keySelectors, AnyProps } from './helpers'
@@ -40,6 +41,9 @@ export const positionsWithPoolsData = createSelector(
     }))
   }
 )
+
+export const positionsForPool = (searchPool: PublicKey) =>
+  createSelector(positionsList, ({ list }) => list.filter(({ pool }) => pool.equals(searchPool)))
 
 export const singlePositionData = (id: string) =>
   createSelector(positionsWithPoolsData, positions =>

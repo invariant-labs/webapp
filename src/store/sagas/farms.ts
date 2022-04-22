@@ -1,5 +1,5 @@
 import { all, call, put, select, spawn, take, takeLatest } from 'typed-redux-saga'
-import { actions, FarmPositionData, IncentiveWithAddress } from '@reducers/farms'
+import { actions, FarmPositionData, IncentiveWithAddress, StakeWithAddress } from '@reducers/farms'
 import { actions as poolsActions } from '@reducers/pools'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { getStakerProgram } from '@web3/programs/staker'
@@ -9,7 +9,7 @@ import { getStakerAddress } from '@invariant-labs/staker-sdk/lib/network'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { network } from '@selectors/solanaConnection'
 import { networkTypetoStakerNetwork } from '@web3/connection'
-import { singlePositionData } from '@selectors/positions'
+import { positionsForPool, singlePositionData } from '@selectors/positions'
 import { Pair } from '@invariant-labs/sdk'
 import {
   AccountInfo,
@@ -26,6 +26,7 @@ import { accounts } from '@selectors/solanaWallet'
 import { getConnection } from './connection'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { getUserStakesForFarm } from '@consts/utils'
 
 export function* handleGetFarmsList() {
   try {
@@ -59,6 +60,32 @@ export function* handleGetFarmsList() {
     yield* take(poolsActions.addPoolsForPositions)
 
     yield* put(actions.setFarms(farmsObject))
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export function* handleGetUserStakes(action: PayloadAction<PublicKey>) {
+  try {
+    const stakerProgram = yield* call(getStakerProgram)
+
+    const allFarms = yield* select(farms)
+    const farmPositions = yield* select(positionsForPool(allFarms[action.payload.toString()].pool))
+
+    const list = yield* call(
+      getUserStakesForFarm,
+      stakerProgram,
+      action.payload,
+      allFarms[action.payload.toString()].pool,
+      farmPositions.map(({ id }) => id)
+    )
+    const stakesObject: Record<string, StakeWithAddress> = {}
+
+    list.forEach((stake) => {
+      stakesObject[stake.address.toString()] = stake
+    })
+
+    yield* put(actions.addUserStakes(stakesObject))
   } catch (error) {
     console.log(error)
   }
@@ -398,6 +425,10 @@ export function* getFarmsListHandler(): Generator {
   yield* takeLatest(actions.getFarms, handleGetFarmsList)
 }
 
+export function* getUserStakesHandler(): Generator {
+  yield* takeLatest(actions.getUserStakes, handleGetUserStakes)
+}
+
 export function* stakePositionHandler(): Generator {
   yield* takeLatest(actions.stakePosition, handleStakePosition)
 }
@@ -407,5 +438,9 @@ export function* withdrawRewardsHandler(): Generator {
 }
 
 export function* farmsSaga(): Generator {
-  yield all([getFarmsListHandler, stakePositionHandler, withdrawRewardsHandler].map(spawn))
+  yield all(
+    [getFarmsListHandler, getUserStakesHandler, stakePositionHandler, withdrawRewardsHandler].map(
+      spawn
+    )
+  )
 }
