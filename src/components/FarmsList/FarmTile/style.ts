@@ -15,29 +15,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 10
   },
   icon: {
-    width: 32,
+    minWidth: 32,
     height: 32,
 
     [theme.breakpoints.down('xs')]: {
-      width: 28,
+      minWidth: 28,
       height: 28
     }
   },
   icons: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 68,
+    minWidth: 68,
     marginRight: 16,
 
     [theme.breakpoints.down('xs')]: {
-      width: 58,
+      minWidth: 58,
       marginRight: 8
     }
   },
   names: {
     ...typography.heading1,
     color: colors.white.main,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
 
     [theme.breakpoints.down('xs')]: {
       ...typography.heading3
@@ -68,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   pulseDot: {
     height: 12,
-    width: 12,
+    minWidth: 12,
     backgroundColor: colors.invariant.green,
     borderRadius: '50%',
     marginRight: 6,
@@ -76,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     [theme.breakpoints.down('xs')]: {
       height: 9,
-      width: 9
+      minWidth: 9
     },
 
     '&::before': {
@@ -108,17 +110,30 @@ const useStyles = makeStyles((theme: Theme) => ({
   flexWrapper: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    flex: '0 1 auto'
+  },
+  activityWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: '1 0 auto'
   },
   label: {
     color: colors.invariant.lightGrey,
     ...typography.heading4,
     fontWeight: 400,
-    letterSpacing: '-0.03em'
+    whiteSpace: 'nowrap',
+    display: 'flex',
+    flex: '1 0 auto',
+    marginRight: 4
   },
   value: {
     color: colors.white.main,
-    ...typography.heading4
+    ...typography.heading4,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   },
   link: {
     marginTop: 20,

@@ -35,7 +35,12 @@ export const FarmTile: React.FC<IFarm> = ({
 
   return (
     <Grid className={classes.root} container direction='column'>
-      <Grid className={classes.top} container direction='row' justifyContent='space-between'>
+      <Grid
+        className={classes.top}
+        container
+        direction='row'
+        justifyContent='space-between'
+        wrap='nowrap'>
         <Grid className={classes.flexWrapper}>
           <Grid className={classes.icons}>
             <img src={tokenX.logoURI} className={classes.icon} />
@@ -45,7 +50,7 @@ export const FarmTile: React.FC<IFarm> = ({
             {tokenX.symbol}-{tokenY.symbol}
           </Typography>
         </Grid>
-        <Grid className={classes.flexWrapper}>
+        <Grid className={classes.activityWrapper}>
           {isActive ? <Grid className={classes.pulseDot} /> : <DotIcon className={classes.dot} />}
           <Typography
             className={classNames(
@@ -56,7 +61,11 @@ export const FarmTile: React.FC<IFarm> = ({
           </Typography>
         </Grid>
       </Grid>
-      <Grid className={classes.rewardRow} container justifyContent='space-between' alignItems='center'>
+      <Grid
+        className={classes.rewardRow}
+        container
+        justifyContent='space-between'
+        alignItems='center'>
         <Typography className={classes.rewardLabel}>Reward token:</Typography>
         <Grid className={classes.rewardTokenWrapper}>
           <img className={classes.rewardIcon} src={rewardIcon} />
@@ -67,6 +76,7 @@ export const FarmTile: React.FC<IFarm> = ({
         container
         direction='row'
         justifyContent='space-between'
+        wrap='nowrap'
         className={classNames(classes.mobileContainer, classes.spacer)}>
         <Typography className={classes.label}>APY:</Typography>
         <Typography className={classes.value}>{apyPercent}%</Typography>
@@ -75,6 +85,7 @@ export const FarmTile: React.FC<IFarm> = ({
         container
         direction='row'
         justifyContent='space-between'
+        wrap='nowrap'
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Total staked:</Typography>
         <Typography className={classes.value}>
@@ -85,6 +96,7 @@ export const FarmTile: React.FC<IFarm> = ({
         container
         direction='row'
         justifyContent='space-between'
+        wrap='nowrap'
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Your staked:</Typography>
         <Typography className={classes.value}>
