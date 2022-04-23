@@ -111,13 +111,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    flex: '0 1 auto'
+    flexShrink: 1
   },
   activityWrapper: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    flex: '1 0 auto',
+    flexShrink: 0,
     marginLeft: 4
   },
   label: {
@@ -126,7 +126,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 400,
     whiteSpace: 'nowrap',
     display: 'flex',
-    flex: '1 0 auto',
+    flexShrink: 0,
     marginRight: 4
   },
   value: {
