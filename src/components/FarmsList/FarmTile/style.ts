@@ -117,7 +117,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    flex: '1 0 auto'
+    flex: '1 0 auto',
+    marginLeft: 4
   },
   label: {
     color: colors.invariant.lightGrey,
