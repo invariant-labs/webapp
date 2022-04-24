@@ -82,6 +82,31 @@ export const farmsWithUserStakedValues = createSelector(
   }
 )
 
+export const positionsForFarm = (farmAddress: string) =>
+  createSelector(
+    farms,
+    positionsWithPoolsData,
+    userStakes,
+    (allFarms, positions, allUserStakes) => {
+      const farm = allFarms[farmAddress]
+
+      const stakesByPositionAddress: Record<string, StakeWithAddress> = {}
+      Object.values(allUserStakes).forEach(stake => {
+        stakesByPositionAddress[stake.position.toString()] = stake
+      })
+
+      return positions
+        .filter(position => position.pool.equals(farm.pool))
+        .map(position => {
+          const positionStake = stakesByPositionAddress[position.address.toString()]
+          return {
+            ...position,
+            stakeAddress: typeof positionStake !== 'undefined' ? positionStake.address : undefined
+          }
+        })
+    }
+  )
+
 export const farmsSelectors = {
   farms,
   isLoadingFarms,
