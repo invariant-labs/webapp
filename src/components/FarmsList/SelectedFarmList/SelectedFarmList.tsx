@@ -40,42 +40,42 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
 
   return (
     <Grid className={classes.root}>
-      <Grid className={classes.header} container justifyContent='flex-start' alignItems='center'>
+      <Grid className={classes.header} container justifyContent='flex-start' alignItems='center' wrap='nowrap'>
         <img src={tokenXIcon} alt={'Token in pool'} className={classes.bigIcon} />
         <img src={tokenYIcon} alt={'Token in pool'} className={classNames(classes.bigIcon, classes.secondBig)} />
         <Typography className={classes.title}>{tokenXSymbol}-{tokenYSymbol}</Typography>
       </Grid>
       <Grid className={classes.positionInfo} container>
         <Grid className={classes.leftSide} container direction='column'>
-          <Grid className={classes.row} container>
+          <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Farm duration:</Typography>
             <Typography className={classes.value}>{duration}</Typography>
           </Grid>
 
-          <Grid className={classes.row} container>
+          <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Total positions:</Typography>
             <Typography className={classes.value}>{toStake.length + stakedPositions.length}</Typography>
           </Grid>
 
-          <Grid className={classes.row} container>
+          <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>APY:</Typography>
             <Typography className={classes.value}>{apy}%</Typography>
           </Grid>
         </Grid>
 
         <Grid className={classes.rightSide} container direction='column'>
-        <Grid className={classes.row} container>
+        <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Reward:</Typography>
             <img src={rewardIcon} className={classes.smallIcon} />
             <Typography className={classes.value}>{totalRewardPerDay} {rewardSymbol}/day</Typography>
           </Grid>
 
-          <Grid className={classes.row} container>
+          <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Total staked:</Typography>
             <Typography className={classes.value}>{totalStaked} {tokenXSymbol}</Typography>
           </Grid>
 
-          <Grid className={classes.row} container>
+          <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Your staked:</Typography>
             <Typography className={classes.value}>{userStaked} {tokenXSymbol}</Typography>
           </Grid>
