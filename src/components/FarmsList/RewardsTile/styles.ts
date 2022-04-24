@@ -49,11 +49,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   label: {
     marginRight: 5,
     ...typography.body2,
-    color: colors.invariant.textGrey
+    color: colors.invariant.textGrey,
+    whiteSpace: 'nowrap',
+    display: 'flex',
+    flexShrink: 0
   },
   value: {
     ...typography.body1,
-    color: colors.white.main
+    color: colors.white.main,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   },
 
   tokenImg: {

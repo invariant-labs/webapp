@@ -37,38 +37,38 @@ export const RewardsTile: React.FC<IRewardsTile> = ({
       <Typography className={classes.header}>Your staked</Typography>
       <Grid className={classes.positionInfo} container>
         <Grid className={classes.leftSide} container direction='column'>
-          <Grid className={classes.row} container>
+          <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Min price:</Typography>
             <Typography className={classes.value}>
               {minPrice} {tokenXSymbol}/{tokenYSymbol}
             </Typography>
           </Grid>
 
-          <Grid className={classes.row} container>
+          <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Max price:</Typography>
             <Typography className={classes.value}>
               {maxPrice} {tokenXSymbol}/{tokenYSymbol}
             </Typography>
           </Grid>
 
-          <Grid className={classes.row} container>
+          <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Fee:</Typography>
             <Typography className={classes.value}>{fee}%</Typography>
           </Grid>
         </Grid>
 
         <Grid className={classes.rightSide} container direction='column'>
-          <Grid className={classes.row} container>
+          <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>{tokenXSymbol} deposit:</Typography>
             <Typography className={classes.value}>{tokenXDeposit}</Typography>
           </Grid>
 
-          <Grid className={classes.row} container>
+          <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>{tokenYSymbol} deposit:</Typography>
             <Typography className={classes.value}>{tokenYDeposit}</Typography>
           </Grid>
 
-          <Grid className={classes.row} container>
+          <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Value:</Typography>
             <Typography className={classes.value}>
               {value} {tokenXSymbol}
