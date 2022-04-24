@@ -4,14 +4,14 @@ import { status } from '@selectors/solanaWallet'
 import { Grid } from '@material-ui/core'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { useSelector, useDispatch } from 'react-redux'
-import { farms } from '@selectors/farms'
+import { farmsWithUserStakedValues } from '@selectors/farms'
 import { pools, tokens } from '@selectors/pools'
 import { actions } from '@reducers/farms'
 
 export const FarmsWrapper: React.FC = () => {
   const dispatch = useDispatch()
   const walletStatus = useSelector(status)
-  const allFarms = useSelector(farms)
+  const allFarms = useSelector(farmsWithUserStakedValues)
   const allPools = useSelector(pools)
   const allTokens = useSelector(tokens)
 
@@ -46,7 +46,7 @@ export const FarmsWrapper: React.FC = () => {
             return {
               apyPercent: 0,
               totalStaked: (farm.totalStakedX ?? 0) + (farm.totalStakedY ?? 0),
-              yourStaked: 0,
+              yourStaked: (farm.userStakedX ?? 0) + (farm.userStakedY ?? 0),
               tokenX: allTokens[allPools[farm.pool.toString()].tokenX.toString()],
               tokenY: allTokens[allPools[farm.pool.toString()].tokenY.toString()],
               farmId: farm.address.toString(),
