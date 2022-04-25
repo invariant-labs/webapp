@@ -3,12 +3,12 @@ import { FarmsWrapper } from '@containers/FarmsWrapper/FarmsWrapper'
 import React from 'react'
 import useStyles from './style'
 
-
-
 const FarmsPage: React.FC = () => {
-    const classes = useStyles()
+  const classes = useStyles()
   return (
-    <Grid container className={classes.container}><FarmsWrapper /></Grid>
+    <Grid container className={classes.container}>
+      <FarmsWrapper />
+    </Grid>
   )
 }
 

@@ -24,7 +24,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   containers: { marginTop: 20 },
   bigIcon: {
     minWidth: 32,
-    height: 32
+    height: 32,
+    borderRadius: '100%'
   },
   secondBig: {
     marginLeft: -10
@@ -32,7 +33,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   smallIcon: {
     minWidth: 17,
     height: 17,
-    marginRight: 5
+    marginRight: 5,
+    borderRadius: '100%'
   },
   positionInfo: {
     flexWrap: 'nowrap',

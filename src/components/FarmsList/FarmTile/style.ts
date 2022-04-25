@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   icon: {
     minWidth: 32,
     height: 32,
+    borderRadius: '100%',
 
     [theme.breakpoints.down('xs')]: {
       minWidth: 28,
@@ -195,7 +196,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   rewardIcon: {
     width: 20,
     height: 20,
-    marginRight: 8
+    marginRight: 8,
+    borderRadius: '100%'
   },
   rewardToken: {
     ...typography.body1,

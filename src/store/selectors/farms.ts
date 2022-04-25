@@ -3,6 +3,7 @@ import { calculatePriceSqrt, getX, getY } from '@invariant-labs/sdk/lib/math'
 import { createSelector } from '@reduxjs/toolkit'
 import { IFarmsStore, farmsSliceName, ExtendedIncentive, StakeWithAddress } from '../reducers/farms'
 import { keySelectors, AnyProps } from './helpers'
+import { pools } from './pools'
 import { positionsWithPoolsData } from './positions'
 
 const store = (s: AnyProps) => s[farmsSliceName] as IFarmsStore
@@ -106,6 +107,20 @@ export const positionsForFarm = (farmAddress: string) =>
         })
     }
   )
+
+export const singleFarmData = (farmAddress: string) =>
+  createSelector(farms, pools, (allFarms, allPools) => {
+    const farm = allFarms[farmAddress]
+
+    if (typeof farm === 'undefined') {
+      return undefined
+    }
+
+    return {
+      ...farm,
+      poolData: allPools[farm.pool.toString()]
+    }
+  })
 
 export const farmsSelectors = {
   farms,
