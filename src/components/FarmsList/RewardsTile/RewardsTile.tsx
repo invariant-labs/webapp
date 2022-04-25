@@ -1,3 +1,4 @@
+import { formatNumbers, showPrefix } from '@consts/utils'
 import { Button, CardMedia, Grid, Typography } from '@material-ui/core'
 import React from 'react'
 import useStyle from './styles'
@@ -40,14 +41,16 @@ export const RewardsTile: React.FC<IRewardsTile> = ({
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Min price:</Typography>
             <Typography className={classes.value}>
-              {minPrice} {tokenXSymbol}/{tokenYSymbol}
+              {formatNumbers()(minPrice.toString())}
+              {showPrefix(minPrice)} {tokenXSymbol}/{tokenYSymbol}
             </Typography>
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Max price:</Typography>
             <Typography className={classes.value}>
-              {maxPrice} {tokenXSymbol}/{tokenYSymbol}
+              {formatNumbers()(maxPrice.toString())}
+              {showPrefix(maxPrice)} {tokenXSymbol}/{tokenYSymbol}
             </Typography>
           </Grid>
 
@@ -60,18 +63,25 @@ export const RewardsTile: React.FC<IRewardsTile> = ({
         <Grid className={classes.rightSide} container direction='column'>
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>{tokenXSymbol} deposit:</Typography>
-            <Typography className={classes.value}>{tokenXDeposit}</Typography>
+            <Typography className={classes.value}>
+              {formatNumbers()(tokenXDeposit.toString())}
+              {showPrefix(tokenXDeposit)}
+            </Typography>
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>{tokenYSymbol} deposit:</Typography>
-            <Typography className={classes.value}>{tokenYDeposit}</Typography>
+            <Typography className={classes.value}>
+              {formatNumbers()(tokenYDeposit.toString())}
+              {showPrefix(tokenYDeposit)}
+            </Typography>
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Value:</Typography>
             <Typography className={classes.value}>
-              {value} {tokenXSymbol}
+              {formatNumbers()(value.toString())}
+              {showPrefix(value)} {tokenXSymbol}
             </Typography>
           </Grid>
         </Grid>
@@ -85,7 +95,10 @@ export const RewardsTile: React.FC<IRewardsTile> = ({
               <Typography className={classes.tokenName}>{rewardSymbol}</Typography>
             </Typography>
           </Grid>
-          <Typography className={classes.tokenValue}>{rewardValue}</Typography>
+          <Typography className={classes.tokenValue}>
+            {formatNumbers()(rewardValue.toString())}
+            {showPrefix(rewardValue)}
+          </Typography>
         </Grid>
         <Button className={classes.claimRewards} onClick={onClaimReward}>
           Claim rewards

@@ -1,3 +1,4 @@
+import { formatNumbers, showPrefix } from '@consts/utils'
 import { Grid, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 import React from 'react'
@@ -40,10 +41,21 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
 
   return (
     <Grid className={classes.root}>
-      <Grid className={classes.header} container justifyContent='flex-start' alignItems='center' wrap='nowrap'>
+      <Grid
+        className={classes.header}
+        container
+        justifyContent='flex-start'
+        alignItems='center'
+        wrap='nowrap'>
         <img src={tokenXIcon} alt={'Token in pool'} className={classes.bigIcon} />
-        <img src={tokenYIcon} alt={'Token in pool'} className={classNames(classes.bigIcon, classes.secondBig)} />
-        <Typography className={classes.title}>{tokenXSymbol}-{tokenYSymbol}</Typography>
+        <img
+          src={tokenYIcon}
+          alt={'Token in pool'}
+          className={classNames(classes.bigIcon, classes.secondBig)}
+        />
+        <Typography className={classes.title}>
+          {tokenXSymbol}-{tokenYSymbol}
+        </Typography>
       </Grid>
       <Grid className={classes.positionInfo} container>
         <Grid className={classes.leftSide} container direction='column'>
@@ -54,7 +66,9 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Total positions:</Typography>
-            <Typography className={classes.value}>{toStake.length + stakedPositions.length}</Typography>
+            <Typography className={classes.value}>
+              {toStake.length + stakedPositions.length}
+            </Typography>
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
@@ -64,38 +78,41 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
         </Grid>
 
         <Grid className={classes.rightSide} container direction='column'>
-        <Grid className={classes.row} container wrap='nowrap'>
+          <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Reward:</Typography>
             <img src={rewardIcon} className={classes.smallIcon} />
-            <Typography className={classes.value}>{totalRewardPerDay} {rewardSymbol}/day</Typography>
+            <Typography className={classes.value}>
+              {formatNumbers()(totalRewardPerDay.toString())}
+              {showPrefix(totalRewardPerDay)} {rewardSymbol}/day
+            </Typography>
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Total staked:</Typography>
-            <Typography className={classes.value}>{totalStaked} {tokenXSymbol}</Typography>
+            <Typography className={classes.value}>
+              {formatNumbers()(totalStaked.toString())}
+              {showPrefix(totalStaked)} {tokenXSymbol}
+            </Typography>
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Your staked:</Typography>
-            <Typography className={classes.value}>{userStaked} {tokenXSymbol}</Typography>
+            <Typography className={classes.value}>
+              {formatNumbers()(userStaked.toString())}
+              {showPrefix(userStaked)} {tokenXSymbol}
+            </Typography>
           </Grid>
         </Grid>
       </Grid>
       <Grid className={classes.containers}>
         {toStake.map((element, index) => (
           <div className={classes.tile}>
-            <StakeTile
-              key={index}
-              {...element}
-            />
+            <StakeTile key={index} {...element} />
           </div>
         ))}
         {stakedPositions.map((element, index) => (
           <div className={classes.tile}>
-            <RewardsTile
-              key={index}
-              {...element}
-            />
+            <RewardsTile key={index} {...element} />
           </div>
         ))}
       </Grid>

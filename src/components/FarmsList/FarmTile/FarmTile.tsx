@@ -7,6 +7,7 @@ import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 
 import useStyle from './style'
+import { formatNumbers, showPrefix } from '@consts/utils'
 
 export interface IFarm {
   isActive?: boolean
@@ -89,7 +90,8 @@ export const FarmTile: React.FC<IFarm> = ({
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Total staked:</Typography>
         <Typography className={classes.value}>
-          {totalStaked} {tokenX.symbol}
+          {formatNumbers()(totalStaked.toString())}
+          {showPrefix(totalStaked)} {tokenX.symbol}
         </Typography>
       </Grid>
       <Grid
@@ -100,7 +102,8 @@ export const FarmTile: React.FC<IFarm> = ({
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Your staked:</Typography>
         <Typography className={classes.value}>
-          {yourStaked} {tokenX.symbol}
+          {formatNumbers()(yourStaked.toString())}
+          {showPrefix(yourStaked)} {tokenX.symbol}
         </Typography>
       </Grid>
       <Link className={classes.link} to={`/farm/${farmId}`}>
