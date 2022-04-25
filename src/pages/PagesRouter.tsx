@@ -17,6 +17,7 @@ import SingleFarmPage from './SingleFarmPage/SingleFarmPage'
 import Footer from '@components/Footer/Footer'
 import FarmsPage from './FarmsPage/FarmsPage'
 import StatsPage from './StatsPage/StatsPage'
+import { farms } from '@selectors/farms'
 import { actions as farmsActions } from '@reducers/farms'
 import { tokens } from '@selectors/pools'
 
@@ -25,6 +26,7 @@ export const PagesRouter: React.FC = () => {
   const signerStatus = useSelector(solanaConnectionSelector.status)
   const walletStatus = useSelector(status)
   const allTokens = useSelector(tokens)
+  const allFarms = useSelector(farms)
 
   useEffect(() => {
     // dispatch(providerActions.initProvider())
@@ -32,17 +34,21 @@ export const PagesRouter: React.FC = () => {
   }, [dispatch])
 
   useEffect(() => {
+    if (
+      signerStatus === Status.Initialized &&
+      Object.values(allTokens).length > 0 &&
+      Object.values(allFarms).length === 0
+    ) {
+      dispatch(farmsActions.getFarms())
+    }
+  }, [allTokens])
+
+  useEffect(() => {
     if (signerStatus === Status.Initialized && walletStatus === WalletStatus.Initialized) {
       dispatch(actions.getPositionsList())
       dispatch(farmsActions.getUserStakes())
     }
   }, [signerStatus, walletStatus])
-
-  useEffect(() => {
-    if (signerStatus === Status.Initialized && Object.values(allTokens).length > 0) {
-      dispatch(farmsActions.getFarms())
-    }
-  }, [allTokens])
 
   return (
     <Router>

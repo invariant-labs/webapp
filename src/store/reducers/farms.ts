@@ -47,9 +47,9 @@ export interface FarmPositionData {
 
 export const defaultState: IFarmsStore = {
   farms: {},
-  isLoadingFarms: false,
+  isLoadingFarms: true,
   userStakes: {},
-  isLoadingUserStakes: false
+  isLoadingUserStakes: true
 }
 
 export const farmsSliceName = 'farms'
