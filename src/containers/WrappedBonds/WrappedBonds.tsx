@@ -46,6 +46,8 @@ export const WrappedBonds: React.FC = () => {
   const [modalBondIndex, setModalBondIndex] = useState<number | null>(null)
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [modalPrice, setModalPrice] = useState<BN>(new BN(0))
+  const [modalAmount, setModalAmount] = useState<BN>(new BN(0))
+  const [modalByAmountBond, setModalByAmountBond] = useState<boolean>(true)
 
   useEffect(() => {
     if (modalBondIndex !== null) {
@@ -82,6 +84,7 @@ export const WrappedBonds: React.FC = () => {
         roiPercent: 0,
         supply: +printBN(bond.supply.v, allTokens[bond.tokenBond.toString()].decimals),
         remaining: +printBN(bond.remainingAmount.v, allTokens[bond.tokenBond.toString()].decimals),
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         vesting: bond.vestingTime.div(new BN(60 * 60 * 24)).toString() + ' days',
         onBondClick: () => {
           if (walletStatus === Status.Initialized) {
@@ -141,6 +144,18 @@ export const WrappedBonds: React.FC = () => {
         }
       })
   }, [allUserVested, allTokens])
+
+  useEffect(() => {
+    if (modalBondIndex !== null) {
+      setModalPrice(
+        calculateBondPrice(
+          allBonds[bondsData[modalBondIndex].address.toString()],
+          modalAmount,
+          modalByAmountBond
+        )
+      )
+    }
+  }, [allBonds])
 
   const placeholderToken = {
     ...USDC_DEV,
@@ -205,6 +220,8 @@ export const WrappedBonds: React.FC = () => {
             }}
             onAmountChange={(amount, byAmountBond) => {
               if (modalBondIndex !== null) {
+                setModalAmount(amount)
+                setModalByAmountBond(byAmountBond)
                 setModalPrice(
                   calculateBondPrice(
                     allBonds[bondsData[modalBondIndex].address.toString()],
