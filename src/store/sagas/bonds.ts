@@ -500,9 +500,11 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
       )
     }
 
+    console.log(new BN(action.payload.bondId))
+
     const tx = yield* call([bondsProgram, bondsProgram.claimBondTransaction], {
       bondSale: action.payload.bondSale,
-      bondId: new BN(action.payload.bondId),
+      bondId: action.payload.bondId,
       ownerBondAccount
     })
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
