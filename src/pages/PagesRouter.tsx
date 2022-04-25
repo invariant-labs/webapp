@@ -17,11 +17,14 @@ import SingleFarmPage from './SingleFarmPage/SingleFarmPage'
 import Footer from '@components/Footer/Footer'
 import FarmsPage from './FarmsPage/FarmsPage'
 import StatsPage from './StatsPage/StatsPage'
+import { actions as farmsActions } from '@reducers/farms'
+import { tokens } from '@selectors/pools'
 
 export const PagesRouter: React.FC = () => {
   const dispatch = useDispatch()
   const signerStatus = useSelector(solanaConnectionSelector.status)
   const walletStatus = useSelector(status)
+  const allTokens = useSelector(tokens)
 
   useEffect(() => {
     // dispatch(providerActions.initProvider())
@@ -31,8 +34,15 @@ export const PagesRouter: React.FC = () => {
   useEffect(() => {
     if (signerStatus === Status.Initialized && walletStatus === WalletStatus.Initialized) {
       dispatch(actions.getPositionsList())
+      dispatch(farmsActions.getUserStakes())
     }
   }, [signerStatus, walletStatus])
+
+  useEffect(() => {
+    if (signerStatus === Status.Initialized && Object.values(allTokens).length > 0) {
+      dispatch(farmsActions.getFarms())
+    }
+  }, [allTokens])
 
   return (
     <Router>
@@ -44,7 +54,10 @@ export const PagesRouter: React.FC = () => {
           <Route path={'/newPosition'} component={NewPositionPage} />
           <Route path={'/pool'} component={ListPage} />
           <Route path={'/farms'} component={FarmsPage} />
-          <Route path={'/farm/:id'} render={({match}) => <SingleFarmPage id={match.params.id} />} />
+          <Route
+            path={'/farm/:id'}
+            render={({ match }) => <SingleFarmPage id={match.params.id} />}
+          />
           <Route path={'/stats'} component={StatsPage} />
           <Route
             path={'/position/:id'}
