@@ -6,6 +6,7 @@ import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { useSelector, useDispatch } from 'react-redux'
 import { farmsWithUserStakedValues } from '@selectors/farms'
 import { pools, tokens } from '@selectors/pools'
+import { calcYPerXPrice } from '@consts/utils'
 
 export const FarmsWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -35,10 +36,19 @@ export const FarmsWrapper: React.FC = () => {
         title={'Active farms'}
         data={Object.values(allFarms).map(farm => {
           const now = Date.now()
+
+          const poolData = allPools[farm.pool.toString()]
+
+          const currentPrice = calcYPerXPrice(
+            poolData.sqrtPrice.v,
+            allTokens[poolData.tokenX.toString()].decimals,
+            allTokens[poolData.tokenY.toString()].decimals
+          )
+
           return {
             apyPercent: 0,
-            totalStaked: (farm.totalStakedX ?? 0) + (farm.totalStakedY ?? 0),
-            yourStaked: (farm.userStakedX ?? 0) + (farm.userStakedY ?? 0),
+            totalStaked: (farm.totalStakedX ?? 0) + (farm.totalStakedY ?? 0) / currentPrice,
+            yourStaked: (farm.userStakedX ?? 0) + (farm.userStakedY ?? 0) / currentPrice,
             tokenX: allTokens[allPools[farm.pool.toString()].tokenX.toString()],
             tokenY: allTokens[allPools[farm.pool.toString()].tokenY.toString()],
             farmId: farm.address.toString(),

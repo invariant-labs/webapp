@@ -20,6 +20,15 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   const farmData = useSelector(singleFarmData(id))
   const farmPositions = useSelector(positionsForFarm(id))
 
+  const currentPrice =
+    typeof farmData === 'undefined'
+      ? 0
+      : calcYPerXPrice(
+          farmData.poolData.sqrtPrice.v,
+          allTokens[farmData.poolData.tokenX.toString()].decimals,
+          allTokens[farmData.poolData.tokenY.toString()].decimals
+        )
+
   const toStake = useMemo(() => {
     if (typeof farmData === 'undefined') {
       return []
@@ -78,7 +87,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
           position.tokenY.decimals
         )
 
-        const valueX = tokenXDeposit + tokenYDeposit / currentPrice
+        const valueX = currentPrice === 0 ? 0 : tokenXDeposit + tokenYDeposit / currentPrice
         // const valueY = tokenYDeposit + tokenXDeposit * currentPrice
 
         return {
@@ -219,7 +228,11 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         month: 'numeric',
         year: '2-digit'
       })}`}
-      totalStaked={(farmData.totalStakedX ?? 0) + (farmData.totalStakedY ?? 0)}
+      totalStaked={
+        currentPrice === 0
+          ? 0
+          : (farmData.totalStakedX ?? 0) + (farmData.totalStakedY ?? 0) / currentPrice
+      }
       userStaked={userStaked}
       totalRewardPerDay={0}
       apy={0}
