@@ -28,11 +28,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     minWidth: 68,
-    marginRight: 16,
+    marginRight: 8,
 
     [theme.breakpoints.down('xs')]: {
       minWidth: 58,
-      marginRight: 8
+      marginRight: 4
     }
   },
   names: {

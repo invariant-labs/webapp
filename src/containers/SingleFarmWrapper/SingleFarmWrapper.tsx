@@ -1,8 +1,13 @@
 import SelectedFarmList from '@components/FarmsList/SelectedFarmList/SelectedFarmList'
+import { calcYPerXPrice, printBN } from '@consts/utils'
+import { calculatePriceSqrt } from '@invariant-labs/sdk'
+import { getX, getY } from '@invariant-labs/sdk/lib/math'
+import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { positionsForFarm, singleFarmData } from '@selectors/farms'
 import { tokens } from '@selectors/pools'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { actions } from '@reducers/farms'
 
 export interface IProps {
   id: string
@@ -15,6 +20,188 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   const farmData = useSelector(singleFarmData(id))
   const farmPositions = useSelector(positionsForFarm(id))
 
+  const toStake = useMemo(() => {
+    if (typeof farmData === 'undefined') {
+      return []
+    }
+
+    return farmPositions
+      .filter(position => typeof position.stakeAddress === 'undefined')
+      .map(position => {
+        const lowerPrice = calcYPerXPrice(
+          calculatePriceSqrt(position.lowerTickIndex).v,
+          position.tokenX.decimals,
+          position.tokenY.decimals
+        )
+        const upperPrice = calcYPerXPrice(
+          calculatePriceSqrt(position.upperTickIndex).v,
+          position.tokenX.decimals,
+          position.tokenY.decimals
+        )
+
+        const minPrice = Math.min(lowerPrice, upperPrice)
+        const maxPrice = Math.max(lowerPrice, upperPrice)
+
+        let tokenXDeposit, tokenYDeposit
+
+        try {
+          tokenXDeposit = +printBN(
+            getX(
+              position.liquidity.v,
+              calculatePriceSqrt(position.upperTickIndex).v,
+              position.poolData.sqrtPrice.v,
+              calculatePriceSqrt(position.lowerTickIndex).v
+            ),
+            position.tokenX.decimals
+          )
+        } catch (error) {
+          tokenXDeposit = 0
+        }
+
+        try {
+          tokenYDeposit = +printBN(
+            getY(
+              position.liquidity.v,
+              calculatePriceSqrt(position.upperTickIndex).v,
+              position.poolData.sqrtPrice.v,
+              calculatePriceSqrt(position.lowerTickIndex).v
+            ),
+            position.tokenY.decimals
+          )
+        } catch (error) {
+          tokenYDeposit = 0
+        }
+
+        const currentPrice = calcYPerXPrice(
+          position.poolData.sqrtPrice.v,
+          position.tokenX.decimals,
+          position.tokenY.decimals
+        )
+
+        const valueX = tokenXDeposit + tokenYDeposit / currentPrice
+        // const valueY = tokenYDeposit + tokenXDeposit * currentPrice
+
+        return {
+          tokenXSymbol: position.tokenX.symbol,
+          tokenYSymbol: position.tokenY.symbol,
+          tokenXIcon: position.tokenX.logoURI,
+          tokenYIcon: position.tokenY.logoURI,
+          fee: +printBN(position.poolData.fee.v, DECIMAL - 2),
+          minPrice,
+          maxPrice,
+          tokenXDeposit,
+          tokenYDeposit,
+          value: valueX,
+          onStake: () => {
+            dispatch(
+              actions.stakePosition({
+                farm: farmData.address,
+                pool: position.pool,
+                id: position.id
+              })
+            )
+          }
+        }
+      })
+  }, [farmPositions])
+  const stakedPositions = useMemo(() => {
+    if (typeof farmData === 'undefined') {
+      return []
+    }
+
+    return farmPositions
+      .filter(position => typeof position.stakeAddress !== 'undefined')
+      .map(position => {
+        const lowerPrice = calcYPerXPrice(
+          calculatePriceSqrt(position.lowerTickIndex).v,
+          position.tokenX.decimals,
+          position.tokenY.decimals
+        )
+        const upperPrice = calcYPerXPrice(
+          calculatePriceSqrt(position.upperTickIndex).v,
+          position.tokenX.decimals,
+          position.tokenY.decimals
+        )
+
+        const minPrice = Math.min(lowerPrice, upperPrice)
+        const maxPrice = Math.max(lowerPrice, upperPrice)
+
+        let tokenXDeposit, tokenYDeposit
+
+        try {
+          tokenXDeposit = +printBN(
+            getX(
+              position.liquidity.v,
+              calculatePriceSqrt(position.upperTickIndex).v,
+              position.poolData.sqrtPrice.v,
+              calculatePriceSqrt(position.lowerTickIndex).v
+            ),
+            position.tokenX.decimals
+          )
+        } catch (error) {
+          tokenXDeposit = 0
+        }
+
+        try {
+          tokenYDeposit = +printBN(
+            getY(
+              position.liquidity.v,
+              calculatePriceSqrt(position.upperTickIndex).v,
+              position.poolData.sqrtPrice.v,
+              calculatePriceSqrt(position.lowerTickIndex).v
+            ),
+            position.tokenY.decimals
+          )
+        } catch (error) {
+          tokenYDeposit = 0
+        }
+
+        const currentPrice = calcYPerXPrice(
+          position.poolData.sqrtPrice.v,
+          position.tokenX.decimals,
+          position.tokenY.decimals
+        )
+
+        const valueX = tokenXDeposit + tokenYDeposit / currentPrice
+        // const valueY = tokenYDeposit + tokenXDeposit * currentPrice
+
+        return {
+          tokenXSymbol: position.tokenX.symbol,
+          tokenYSymbol: position.tokenY.symbol,
+          tokenXIcon: position.tokenX.logoURI,
+          tokenYIcon: position.tokenY.logoURI,
+          fee: +printBN(position.poolData.fee.v, DECIMAL - 2),
+          minPrice,
+          maxPrice,
+          tokenXDeposit,
+          tokenYDeposit,
+          value: valueX,
+          rewardSymbol: allTokens[farmData.rewardToken.toString()].symbol,
+          rewardIcon: allTokens[farmData.rewardToken.toString()].logoURI,
+          rewardValue: 0,
+          onClaimReward: () => {
+            dispatch(
+              actions.withdrawRewardsForPosition({
+                farm: farmData.address,
+                pool: position.pool,
+                id: position.id
+              })
+            )
+          }
+        }
+      })
+  }, [farmPositions])
+
+  const userStaked = useMemo(() => {
+    let sum = 0
+
+    stakedPositions.forEach(({ value }) => {
+      sum += value
+    })
+
+    return sum
+  }, [stakedPositions])
+
   return !farmData ? null : (
     <SelectedFarmList
       tokenXIcon={allTokens[farmData.poolData.tokenX.toString()].logoURI}
@@ -23,13 +210,21 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       tokenYSymbol={allTokens[farmData.poolData.tokenY.toString()].symbol}
       rewardIcon={allTokens[farmData.rewardToken.toString()].logoURI}
       rewardSymbol={allTokens[farmData.rewardToken.toString()].symbol}
-      duration=''
-      totalStaked={0}
-      userStaked={0}
+      duration={`${new Date(farmData.startTime.v.toNumber()).toLocaleDateString('pl-PL', {
+        day: 'numeric',
+        month: 'numeric',
+        year: '2-digit'
+      })}-${new Date(farmData.endTime.v.toNumber()).toLocaleDateString('pl-PL', {
+        day: 'numeric',
+        month: 'numeric',
+        year: '2-digit'
+      })}`}
+      totalStaked={(farmData.totalStakedX ?? 0) + (farmData.totalStakedY ?? 0)}
+      userStaked={userStaked}
       totalRewardPerDay={0}
       apy={0}
-      toStake={[]}
-      stakedPositions={[]}
+      toStake={toStake}
+      stakedPositions={stakedPositions}
     />
   )
 }

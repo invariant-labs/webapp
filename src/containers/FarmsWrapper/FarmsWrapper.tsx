@@ -42,7 +42,7 @@ export const FarmsWrapper: React.FC = () => {
         title={'Active farms'}
         data={
           Object.values(allFarms).map((farm) => {
-            const now = Date.now() / 1000
+            const now = Date.now()
             return {
               apyPercent: 0,
               totalStaked: (farm.totalStakedX ?? 0) + (farm.totalStakedY ?? 0),

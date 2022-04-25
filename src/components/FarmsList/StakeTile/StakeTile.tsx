@@ -43,7 +43,7 @@ export const StakeTile: React.FC<IStakedTile> = ({
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
-            <Typography className={classes.label}>Fee:</Typography>
+            <Typography className={classes.label}>Fee tier:</Typography>
             <Typography className={classes.value}>{fee}%</Typography>
           </Grid>
         </Grid>
