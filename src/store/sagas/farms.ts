@@ -15,7 +15,7 @@ import { getStakerAddress } from '@invariant-labs/staker-sdk/lib/network'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { network } from '@selectors/solanaConnection'
 import { networkTypetoStakerNetwork } from '@web3/connection'
-import { positionsForPool, singlePositionData } from '@selectors/positions'
+import { positionsList, singlePositionData } from '@selectors/positions'
 import { Pair } from '@invariant-labs/sdk'
 import {
   AccountInfo,
@@ -157,27 +157,35 @@ export function* handleGetFarmsList() {
   }
 }
 
-export function* handleGetUserStakes(action: PayloadAction<PublicKey>) {
+export function* handleGetUserStakes() {
   try {
     const stakerProgram = yield* call(getStakerProgram)
 
     const allFarms = yield* select(farms)
-    const farmPositions = yield* select(positionsForPool(allFarms[action.payload.toString()].pool))
+    const { list: positions } = yield* select(positionsList)
 
-    const list = yield* call(
-      getUserStakesForFarm,
-      stakerProgram,
-      action.payload,
-      allFarms[action.payload.toString()].pool,
-      farmPositions.map(({ id }) => id)
-    )
+    const promises: Array<Promise<void>> = []
     const stakesObject: Record<string, StakeWithAddress> = {}
 
-    list.forEach(stake => {
-      stakesObject[stake.address.toString()] = stake
+    Object.values(allFarms).forEach((farm) => {
+      const farmPositions = positions.filter(({ pool }) => pool.equals(farm.pool))
+
+      if (!farmPositions.length) {
+        return
+      }
+
+      promises.push(getUserStakesForFarm(stakerProgram, farm.address, farm.pool, farmPositions.map(({ id }) => id)).then((list) => {
+        list.forEach(stake => {
+          stakesObject[stake.address.toString()] = stake
+        })
+      }))
     })
 
-    yield* put(actions.addUserStakes(stakesObject))
+    yield* call(async () => {
+      await Promise.all(promises)
+    })
+
+    yield* put(actions.setUserStakes(stakesObject))
   } catch (error) {
     console.log(error)
   }

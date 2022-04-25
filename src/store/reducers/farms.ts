@@ -73,20 +73,13 @@ const farmsSlice = createSlice({
       }
       return state
     },
-    getUserStakes(state, _action: PayloadAction<PublicKey>) {
+    getUserStakes(state) {
       state.isLoadingUserStakes = true
       return state
     },
-    addUserStakes(state, action: PayloadAction<Record<string, StakeWithAddress>>) {
-      state.userStakes = {
-        ...state.userStakes,
-        ...action.payload
-      }
+    setUserStakes(state, action: PayloadAction<Record<string, StakeWithAddress>>) {
+      state.userStakes = action.payload
       state.isLoadingUserStakes = false
-      return state
-    },
-    resetUserStakes(state) {
-      state.userStakes = {}
       return state
     },
     setSingleStake(state, action: PayloadAction<StakeWithAddress>) {
