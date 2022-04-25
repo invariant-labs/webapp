@@ -92,6 +92,18 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
   const [inputSlippage, setInputSlippage] = useState<string>('1%')
   const [lastTouchedInput, setLastTouchedInput] = useState<InputType>(InputType.BOND)
 
+  const getButtonMessage = () => {
+    if (+amountBond === 0) {
+      return 'Amount must be higher than 0'
+    }
+
+    if (+amountBond > remaining) {
+      return 'Amount not available to buy'
+    }
+
+    return `Buy ${bondToken.symbol}`
+  }
+
   useEffect(() => {
     if (open) {
       setLastTouchedInput(InputType.BOND)
@@ -301,7 +313,8 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
         />
         <AnimatedButton
           className={classes.button}
-          content={`Buy ${bondToken.symbol}`}
+          content={getButtonMessage()}
+          disabled={+amountBond === 0 || +amountBond > remaining}
           onClick={() => onBuy(printBNtoBN(amountBond, bondToken.decimals), slippage)}
           progress={progress}
         />
