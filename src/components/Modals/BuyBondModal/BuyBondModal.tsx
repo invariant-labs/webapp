@@ -229,7 +229,7 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
           {trimLeadingZeros(formatNumbers(thresholds)(priceStr))}
           {showPrefix(+priceStr)} {quoteToken.symbol}/{bondToken.symbol}
         </Typography>
-        <Typography className={classes.label}>Supply</Typography>
+        <Typography className={classes.label}>Total supply</Typography>
         <Typography className={classes.value}>
           {trimLeadingZeros(formatNumbers(thresholds)(supply.toString()))}
           {showPrefix(supply)} {bondToken.symbol}
