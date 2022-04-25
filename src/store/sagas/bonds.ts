@@ -500,7 +500,7 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
       )
     }
 
-    console.log(action.payload.bondId, action.payload.bondId.toBuffer())
+    console.log(action.payload.bondId)
 
     const tx = yield* call([bondsProgram, bondsProgram.claimBondTransaction], {
       bondSale: action.payload.bondSale,
