@@ -14,8 +14,8 @@ const PositionsList: React.FC<IPositionsListInterface> = ({ data }) => {
   return (
     <Grid className={classes.container}>
       <HeaderList />
-      {data.map(element => (
-        <PositionsItem {...element} />
+      {data.map((element, index) => (
+        <PositionsItem key={index} {...element} />
       ))}
     </Grid>
   )

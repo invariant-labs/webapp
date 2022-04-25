@@ -14,8 +14,8 @@ const BondList: React.FC<IBondListInterface> = ({ data }) => {
   return (
     <Grid className={classes.container}>
       <BondHeader />
-      {data.map(element => (
-        <BondItem {...element} />
+      {data.map((element, index) => (
+        <BondItem key={index} {...element} />
       ))}
     </Grid>
   )
