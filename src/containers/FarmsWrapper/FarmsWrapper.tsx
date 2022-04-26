@@ -35,7 +35,7 @@ export const FarmsWrapper: React.FC = () => {
         showNoConnected={walletStatus !== Status.Initialized}
         title={'Active farms'}
         data={Object.values(allFarms).map(farm => {
-          const now = Date.now()
+          const now = Date.now() / 1000
 
           const poolData = allPools[farm.pool.toString()]
 

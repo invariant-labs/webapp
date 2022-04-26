@@ -167,18 +167,25 @@ export function* handleGetUserStakes() {
     const promises: Array<Promise<void>> = []
     const stakesObject: Record<string, StakeWithAddress> = {}
 
-    Object.values(allFarms).forEach((farm) => {
+    Object.values(allFarms).forEach(farm => {
       const farmPositions = positions.filter(({ pool }) => pool.equals(farm.pool))
 
       if (!farmPositions.length) {
         return
       }
 
-      promises.push(getUserStakesForFarm(stakerProgram, farm.address, farm.pool, farmPositions.map(({ id }) => id)).then((list) => {
-        list.forEach(stake => {
-          stakesObject[stake.address.toString()] = stake
+      promises.push(
+        getUserStakesForFarm(
+          stakerProgram,
+          farm.address,
+          farm.pool,
+          farmPositions.map(({ id }) => id)
+        ).then(list => {
+          list.forEach(stake => {
+            stakesObject[stake.address.toString()] = stake
+          })
         })
-      }))
+      )
     })
 
     yield* call(async () => {
@@ -248,6 +255,14 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
         })
       )
     }
+
+    yield* put(
+      actions.setStakePositionSuccess({
+        pool: action.payload.pool,
+        id: action.payload.id,
+        success: !stringTx.length
+      })
+    )
   } catch (error) {
     console.log(error)
     yield* put(
@@ -255,6 +270,14 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
         message: 'Failed to stake position. Please try again.',
         variant: 'error',
         persist: false
+      })
+    )
+
+    yield* put(
+      actions.setStakePositionSuccess({
+        pool: action.payload.pool,
+        id: action.payload.id,
+        success: false
       })
     )
   }

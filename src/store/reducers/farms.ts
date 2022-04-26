@@ -27,11 +27,17 @@ export interface FarmTotalsUpdate {
   totalStakedY: number
 }
 
+export interface StakeStatus {
+  inProgress: boolean
+  success: boolean
+}
+
 export interface IFarmsStore {
   farms: Record<string, ExtendedIncentive>
   isLoadingFarms: boolean
   userStakes: Record<string, StakeWithAddress>
   isLoadingUserStakes: boolean
+  stakeStatuses: Record<string, StakeStatus>
 }
 
 export interface SetSingleFarmPayload {
@@ -45,11 +51,18 @@ export interface FarmPositionData {
   farm: PublicKey
 }
 
+export interface StakeSuccessData {
+  pool: PublicKey
+  id: BN
+  success: boolean
+}
+
 export const defaultState: IFarmsStore = {
   farms: {},
   isLoadingFarms: true,
   userStakes: {},
-  isLoadingUserStakes: true
+  isLoadingUserStakes: true,
+  stakeStatuses: {}
 }
 
 export const farmsSliceName = 'farms'
@@ -98,7 +111,20 @@ const farmsSlice = createSlice({
       })
       return state
     },
-    stakePosition(_state, _action: PayloadAction<FarmPositionData>) {},
+    stakePosition(state, action: PayloadAction<FarmPositionData>) {
+      state.stakeStatuses[action.payload.id.toString() + action.payload.pool.toString()] = {
+        inProgress: true,
+        success: false
+      }
+      return state
+    },
+    setStakePositionSuccess(state, action: PayloadAction<StakeSuccessData>) {
+      state.stakeStatuses[action.payload.id.toString() + action.payload.pool.toString()] = {
+        inProgress: false,
+        success: action.payload.success
+      }
+      return state
+    },
     withdrawRewardsForPosition(_state, _action: PayloadAction<FarmPositionData>) {}
   }
 })

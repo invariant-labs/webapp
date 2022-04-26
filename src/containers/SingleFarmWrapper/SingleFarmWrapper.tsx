@@ -3,7 +3,7 @@ import { calcYPerXPrice, printBN } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { positionsForFarm, singleFarmData } from '@selectors/farms'
+import { positionsForFarm, singleFarmData, stakeStatuses } from '@selectors/farms'
 import { tokens } from '@selectors/pools'
 import React, { useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -19,6 +19,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   const allTokens = useSelector(tokens)
   const farmData = useSelector(singleFarmData(id))
   const farmPositions = useSelector(positionsForFarm(id))
+  const allStakeStatuses = useSelector(stakeStatuses)
 
   const currentPrice =
     typeof farmData === 'undefined'
@@ -101,6 +102,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
           tokenXDeposit,
           tokenYDeposit,
           value: valueX,
+          stakeStatus: allStakeStatuses[position.id.toString() + '_' + position.pool.toString()],
           onStake: () => {
             dispatch(
               actions.stakePosition({
@@ -112,7 +114,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
           }
         }
       })
-  }, [farmPositions])
+  }, [farmPositions, allStakeStatuses])
   const stakedPositions = useMemo(() => {
     if (typeof farmData === 'undefined') {
       return []
@@ -219,11 +221,11 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       tokenYSymbol={allTokens[farmData.poolData.tokenY.toString()].symbol}
       rewardIcon={allTokens[farmData.rewardToken.toString()].logoURI}
       rewardSymbol={allTokens[farmData.rewardToken.toString()].symbol}
-      duration={`${new Date(farmData.startTime.v.toNumber()).toLocaleDateString('pl-PL', {
+      duration={`${new Date(farmData.startTime.v.toNumber() * 1000).toLocaleDateString('pl-PL', {
         day: 'numeric',
         month: 'numeric',
         year: '2-digit'
-      })}-${new Date(farmData.endTime.v.toNumber()).toLocaleDateString('pl-PL', {
+      })}-${new Date(farmData.endTime.v.toNumber() * 1000).toLocaleDateString('pl-PL', {
         day: 'numeric',
         month: 'numeric',
         year: '2-digit'
