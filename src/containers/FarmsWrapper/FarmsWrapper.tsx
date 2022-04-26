@@ -4,11 +4,12 @@ import { status } from '@selectors/solanaWallet'
 import { Grid } from '@material-ui/core'
 import { Status } from '@reducers/solanaWallet'
 import { useSelector, useDispatch } from 'react-redux'
-import { farmsWithUserStakedValues } from '@selectors/farms'
+import { farmsWithUserStakedValues, isLoadingFarms } from '@selectors/farms'
 import { pools, tokens } from '@selectors/pools'
 import { calcYPerXPrice, printBN } from '@consts/utils'
 import { actions } from '@reducers/farms'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
+import loader from '@static/gif/loader.gif'
 
 export const FarmsWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -16,6 +17,7 @@ export const FarmsWrapper: React.FC = () => {
   const allFarms = useSelector(farmsWithUserStakedValues)
   const allPools = useSelector(pools)
   const allTokens = useSelector(tokens)
+  const farmsLoading = useSelector(isLoadingFarms)
 
   useEffect(() => {
     if (Object.values(allTokens).length > 0 && Object.values(allFarms).length === 0) {
@@ -56,8 +58,14 @@ export const FarmsWrapper: React.FC = () => {
 
   return (
     <Grid container direction='column' alignItems='center'>
-      <FarmList title={'Active farms'} data={data.filter(({ isActive }) => isActive)} />
-      <FarmList title={'Inactive farms'} data={data.filter(({ isActive }) => !isActive)} />
+      {farmsLoading ? (
+        <img src={loader} style={{ width: 150, height: 150, margin: 'auto' }} />
+      ) : (
+        <>
+          <FarmList title={'Active farms'} data={data.filter(({ isActive }) => isActive)} />
+          <FarmList title={'Inactive farms'} data={data.filter(({ isActive }) => !isActive)} />
+        </>
+      )}
     </Grid>
   )
 }
