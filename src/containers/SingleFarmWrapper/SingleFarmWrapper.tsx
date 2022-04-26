@@ -3,11 +3,13 @@ import { calcYPerXPrice, printBN } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { positionsForFarm, singleFarmData, stakeStatuses } from '@selectors/farms'
+import { farms, positionsForFarm, singleFarmData, stakeStatuses } from '@selectors/farms'
 import { tokens } from '@selectors/pools'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@reducers/farms'
+import { Status } from '@reducers/solanaWallet'
+import { status } from '@selectors/solanaWallet'
 
 export interface IProps {
   id: string
@@ -20,6 +22,20 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   const farmData = useSelector(singleFarmData(id))
   const farmPositions = useSelector(positionsForFarm(id))
   const allStakeStatuses = useSelector(stakeStatuses)
+  const allFarms = useSelector(farms)
+  const walletStatus = useSelector(status)
+
+  useEffect(() => {
+    if (Object.values(allTokens).length > 0 && Object.values(allFarms).length === 0) {
+      dispatch(actions.getFarms())
+    }
+  }, [allTokens])
+
+  useEffect(() => {
+    if (walletStatus === Status.Initialized && Object.values(allFarms).length > 0) {
+      dispatch(actions.getUserStakes())
+    }
+  }, [walletStatus, allFarms])
 
   const currentPrice =
     typeof farmData === 'undefined'

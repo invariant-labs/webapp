@@ -107,6 +107,21 @@ const solanaNetworktoStakerNetwork = (solanaNetwork: SolanaNetworks): StakerNetw
   }
 }
 
+const networkTypetoProgramNetwork = (type: NetworkType): Network => {
+  switch (type) {
+    case NetworkType.DEVNET:
+      return Network.DEV
+    case NetworkType.LOCALNET:
+      return Network.LOCAL
+    // case SolanaNetworks.TEST:
+    //   return StakerNetwork.TEST
+    case NetworkType.MAINNET:
+      return Network.MAIN
+    default:
+      return Network.DEV
+  }
+}
+
 const networkTypetoStakerNetwork = (type: NetworkType): StakerNetwork => {
   switch (type) {
     case NetworkType.DEVNET:
@@ -136,5 +151,6 @@ export {
   getSolanaNetwork,
   solanaNetworktoProgramNetwork,
   solanaNetworktoStakerNetwork,
-  networkTypetoStakerNetwork
+  networkTypetoStakerNetwork,
+  networkTypetoProgramNetwork
 }

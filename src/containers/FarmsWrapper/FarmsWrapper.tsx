@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import FarmList from '@components/FarmsList/FarmList'
 import { status } from '@selectors/solanaWallet'
 import { Grid } from '@material-ui/core'
@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { farmsWithUserStakedValues } from '@selectors/farms'
 import { pools, tokens } from '@selectors/pools'
 import { calcYPerXPrice } from '@consts/utils'
+import { actions } from '@reducers/farms'
 
 export const FarmsWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -14,6 +15,18 @@ export const FarmsWrapper: React.FC = () => {
   const allFarms = useSelector(farmsWithUserStakedValues)
   const allPools = useSelector(pools)
   const allTokens = useSelector(tokens)
+
+  useEffect(() => {
+    if (Object.values(allTokens).length > 0 && Object.values(allFarms).length === 0) {
+      dispatch(actions.getFarms())
+    }
+  }, [allTokens])
+
+  useEffect(() => {
+    if (walletStatus === Status.Initialized && Object.values(allFarms).length > 0) {
+      dispatch(actions.getUserStakes())
+    }
+  }, [walletStatus, allFarms])
 
   return (
     <Grid

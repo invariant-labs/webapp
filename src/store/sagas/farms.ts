@@ -3,7 +3,7 @@ import {
   actions,
   FarmPositionData,
   ExtendedIncentive,
-  StakeWithAddress,
+  ExtendedStake,
   FarmTotalsUpdate
 } from '@reducers/farms'
 import { actions as poolsActions } from '@reducers/pools'
@@ -11,12 +11,11 @@ import { actions as snackbarsActions } from '@reducers/snackbars'
 import { getStakerProgram } from '@web3/programs/staker'
 import { getMarketProgram } from '@web3/programs/amm'
 import { createAccount, getWallet } from './wallet'
-import { getStakerAddress } from '@invariant-labs/staker-sdk/lib/network'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { network } from '@selectors/solanaConnection'
-import { networkTypetoStakerNetwork } from '@web3/connection'
+import { networkTypetoProgramNetwork } from '@web3/connection'
 import { positionsList, singlePositionData } from '@selectors/positions'
-import { Pair } from '@invariant-labs/sdk'
+import { getMarketAddress, Pair } from '@invariant-labs/sdk'
 import {
   AccountInfo,
   Keypair,
@@ -57,10 +56,11 @@ export function* getFarmsTotals() {
         stakerProgram,
         new PublicKey(address),
         poolAddress,
-        allPositions.map(({ id }) => id)
+        allPositions.map(({ id }) => id),
+        allPositions.map(({ address }) => address)
       )
 
-      const stakesObject: Record<string, StakeWithAddress> = {}
+      const stakesObject: Record<string, ExtendedStake> = {}
       stakes.forEach(stake => {
         stakesObject[stake.position.toString()] = stake
       })
@@ -165,7 +165,7 @@ export function* handleGetUserStakes() {
     const { list: positions } = yield* select(positionsList)
 
     const promises: Array<Promise<void>> = []
-    const stakesObject: Record<string, StakeWithAddress> = {}
+    const stakesObject: Record<string, ExtendedStake> = {}
 
     Object.values(allFarms).forEach(farm => {
       const farmPositions = positions.filter(({ pool }) => pool.equals(farm.pool))
@@ -179,7 +179,8 @@ export function* handleGetUserStakes() {
           stakerProgram,
           farm.address,
           farm.pool,
-          farmPositions.map(({ id }) => id)
+          farmPositions.map(({ id }) => id),
+          farmPositions.map(({ address }) => address)
         ).then(list => {
           list.forEach(stake => {
             stakesObject[stake.address.toString()] = stake
@@ -232,7 +233,7 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
         incentive: action.payload.farm,
         owner: wallet.publicKey,
         index: positionData.positionIndex,
-        invariant: new PublicKey(getStakerAddress(networkTypetoStakerNetwork(currentNetwork)))
+        invariant: new PublicKey(getMarketAddress(networkTypetoProgramNetwork(currentNetwork)))
       }
     )
 

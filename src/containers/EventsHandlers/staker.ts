@@ -87,8 +87,8 @@ const StakerEvents = () => {
         onStakeChange(stakerProgram, stake.address, stakeData => {
           dispatch(
             actions.setSingleStake({
-              ...stakeData,
-              address: stake.address
+              ...stake,
+              ...stakeData
             })
           )
         })

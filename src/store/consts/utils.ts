@@ -29,7 +29,7 @@ import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
 import axios, { AxiosResponse } from 'axios'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { Staker } from '@invariant-labs/staker-sdk'
-import { StakeWithAddress } from '@reducers/farms'
+import { ExtendedStake } from '@reducers/farms'
 import { Stake } from '@invariant-labs/staker-sdk/lib/staker'
 import bs58 from 'bs58'
 
@@ -890,7 +890,8 @@ export const getUserStakesForFarm = async (
   stakerProgram: Staker,
   incentive: PublicKey,
   pool: PublicKey,
-  ids: BN[]
+  ids: BN[],
+  positionsAdresses: PublicKey[]
 ) => {
   const promises = ids.map(async id => {
     const [userStakeAddress] = await stakerProgram.getUserStakeAddressAndBump(incentive, pool, id)
@@ -902,13 +903,14 @@ export const getUserStakesForFarm = async (
 
   const stakes = await stakerProgram.program.account.userStake.fetchMultiple(addresses)
 
-  const fullStakes: StakeWithAddress[] = []
+  const fullStakes: ExtendedStake[] = []
 
   stakes.forEach((stake, index) => {
     if (stake !== null) {
       fullStakes.push({
         ...(stake as Stake),
-        address: addresses[index]
+        address: addresses[index],
+        position: positionsAdresses[index]
       })
     }
   })

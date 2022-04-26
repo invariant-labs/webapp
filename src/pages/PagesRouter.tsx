@@ -46,9 +46,14 @@ export const PagesRouter: React.FC = () => {
   useEffect(() => {
     if (signerStatus === Status.Initialized && walletStatus === WalletStatus.Initialized) {
       dispatch(actions.getPositionsList())
-      dispatch(farmsActions.getUserStakes())
     }
   }, [signerStatus, walletStatus])
+
+  useEffect(() => {
+    if (signerStatus === Status.Initialized && walletStatus === WalletStatus.Initialized && Object.values(allFarms).length > 0) {
+      dispatch(farmsActions.getUserStakes())
+    }
+  }, [signerStatus, walletStatus, allFarms])
 
   return (
     <Router>

@@ -1,7 +1,7 @@
 import { printBN } from '@consts/utils'
 import { calculatePriceSqrt, getX, getY } from '@invariant-labs/sdk/lib/math'
 import { createSelector } from '@reduxjs/toolkit'
-import { IFarmsStore, farmsSliceName, ExtendedIncentive, StakeWithAddress } from '../reducers/farms'
+import { IFarmsStore, farmsSliceName, ExtendedIncentive, ExtendedStake } from '../reducers/farms'
 import { keySelectors, AnyProps } from './helpers'
 import { pools } from './pools'
 import { positionsWithPoolsData } from './positions'
@@ -26,7 +26,7 @@ export const farmsWithUserStakedValues = createSelector(
   userStakes,
   positionsWithPoolsData,
   (allFarms, allUserStakes, positions) => {
-    const stakesByPositionAddress: Record<string, StakeWithAddress> = {}
+    const stakesByPositionAddress: Record<string, ExtendedStake> = {}
     Object.values(allUserStakes).forEach(stake => {
       stakesByPositionAddress[stake.position.toString()] = stake
     })
@@ -92,7 +92,7 @@ export const positionsForFarm = (farmAddress: string) =>
     (allFarms, positions, allUserStakes) => {
       const farm = allFarms[farmAddress]
 
-      const stakesByPositionAddress: Record<string, StakeWithAddress> = {}
+      const stakesByPositionAddress: Record<string, ExtendedStake> = {}
       Object.values(allUserStakes).forEach(stake => {
         stakesByPositionAddress[stake.position.toString()] = stake
       })
