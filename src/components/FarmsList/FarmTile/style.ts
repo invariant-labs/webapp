@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderRadius: '50%',
       content: '""',
       display: 'block',
-      boxShadow: '0 0 2px 4px rgba(157, 212, 109, 0.25)',
+      boxShadow: '0 0 3px 5px rgba(157, 212, 109, 0.25)',
       animation: '$pulse 2s infinite'
     }
   },
