@@ -15,6 +15,7 @@ export interface IStakedTile {
   tokenYDeposit: number
   value: number
   stakeStatus?: StakeStatus
+  isActive?: boolean
   onStake: () => void
 }
 
@@ -28,6 +29,7 @@ export const StakeTile: React.FC<IStakedTile> = ({
   tokenYDeposit,
   value,
   stakeStatus,
+  isActive = true,
   onStake
 }) => {
   const classes = useStyle()
@@ -110,7 +112,8 @@ export const StakeTile: React.FC<IStakedTile> = ({
 
       <AnimatedButton
         className={classes.buttonStake}
-        content='Stake'
+        disabled={!isActive}
+        content={isActive ? 'Stake' : 'Farm inactive'}
         onClick={onStake}
         progress={progress}
       />

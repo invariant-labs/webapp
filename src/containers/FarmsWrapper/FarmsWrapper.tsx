@@ -54,7 +54,7 @@ export const FarmsWrapper: React.FC = () => {
             farmId: farm.address.toString(),
             rewardSymbol: allTokens[farm.rewardToken.toString()].symbol,
             rewardIcon: allTokens[farm.rewardToken.toString()].logoURI,
-            isActive: now <= farm.endTime.v.toNumber()
+            isActive: now >= farm.startTime.v.toNumber() && now <= farm.endTime.v.toNumber()
           }
         })}
       />

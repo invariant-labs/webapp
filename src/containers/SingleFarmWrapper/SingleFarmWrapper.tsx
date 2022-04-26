@@ -91,6 +91,8 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         const valueX = currentPrice === 0 ? 0 : tokenXDeposit + tokenYDeposit / currentPrice
         // const valueY = tokenYDeposit + tokenXDeposit * currentPrice
 
+        const now = Date.now() / 1000
+
         return {
           tokenXSymbol: position.tokenX.symbol,
           tokenYSymbol: position.tokenY.symbol,
@@ -103,6 +105,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
           tokenYDeposit,
           value: valueX,
           stakeStatus: allStakeStatuses[position.id.toString() + '_' + position.pool.toString()],
+          isActive: now >= farmData.startTime.v.toNumber() && now <= farmData.endTime.v.toNumber(),
           onStake: () => {
             dispatch(
               actions.stakePosition({
