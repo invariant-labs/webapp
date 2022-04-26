@@ -29,7 +29,8 @@ storiesOf('farmsList/list', module)
               tokenY: tokens[NetworkType.DEVNET][1],
               rewardIcon:
                 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
-              rewardSymbol: 'DOGE'
+              rewardSymbol: 'DOGE',
+              feeTier: 0.01
             },
             {
               isActive: true,
@@ -41,7 +42,8 @@ storiesOf('farmsList/list', module)
               tokenY: tokens[NetworkType.DEVNET][0],
               rewardIcon:
                 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
-              rewardSymbol: 'DOGE'
+              rewardSymbol: 'DOGE',
+              feeTier: 0.01
             },
             {
               isActive: true,
@@ -53,7 +55,8 @@ storiesOf('farmsList/list', module)
               tokenY: tokens[NetworkType.DEVNET][2],
               rewardIcon:
                 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
-              rewardSymbol: 'DOGE'
+              rewardSymbol: 'DOGE',
+              feeTier: 0.01
             }
           ]}
         />
@@ -82,7 +85,8 @@ storiesOf('farmsList/list', module)
               tokenY: tokens[NetworkType.DEVNET][1],
               rewardIcon:
                 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
-              rewardSymbol: 'DOGE'
+              rewardSymbol: 'DOGE',
+              feeTier: 0.01
             },
             {
               isActive: false,
@@ -94,7 +98,8 @@ storiesOf('farmsList/list', module)
               tokenY: tokens[NetworkType.DEVNET][0],
               rewardIcon:
                 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
-              rewardSymbol: 'DOGE'
+              rewardSymbol: 'DOGE',
+              feeTier: 0.01
             },
             {
               isActive: false,
@@ -106,7 +111,8 @@ storiesOf('farmsList/list', module)
               tokenY: tokens[NetworkType.DEVNET][2],
               rewardIcon:
                 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
-              rewardSymbol: 'DOGE'
+              rewardSymbol: 'DOGE',
+              feeTier: 0.01
             }
           ]}
         />

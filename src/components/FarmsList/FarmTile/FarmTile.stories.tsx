@@ -18,6 +18,7 @@ storiesOf('farmsList/tile', module)
           tokenY={tokens[NetworkType.DEVNET][1]}
           rewardIcon='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png'
           rewardSymbol='DOGE'
+          feeTier={0.01}
         />
       </div>
     )
@@ -34,6 +35,7 @@ storiesOf('farmsList/tile', module)
           tokenY={tokens[NetworkType.DEVNET][1]}
           rewardIcon='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png'
           rewardSymbol='DOGE'
+          feeTier={0.01}
         />
       </div>
     )

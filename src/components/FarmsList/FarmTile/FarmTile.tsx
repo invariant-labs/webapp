@@ -19,6 +19,7 @@ export interface IFarm {
   farmId: string
   rewardSymbol: string
   rewardIcon: string
+  feeTier: number
 }
 
 export const FarmTile: React.FC<IFarm> = ({
@@ -30,14 +31,14 @@ export const FarmTile: React.FC<IFarm> = ({
   tokenY,
   farmId,
   rewardSymbol,
-  rewardIcon
+  rewardIcon,
+  feeTier
 }) => {
   const classes = useStyle()
 
   return (
     <Grid className={classes.root} container direction='column'>
       <Grid
-        className={classes.top}
         container
         direction='row'
         justifyContent='space-between'
@@ -79,6 +80,15 @@ export const FarmTile: React.FC<IFarm> = ({
         justifyContent='space-between'
         wrap='nowrap'
         className={classNames(classes.mobileContainer, classes.spacer)}>
+        <Typography className={classes.label}>Fee tier:</Typography>
+        <Typography className={classes.value}>{feeTier}%</Typography>
+      </Grid>
+      <Grid
+        container
+        direction='row'
+        justifyContent='space-between'
+        wrap='nowrap'
+        className={classes.mobileContainer}>
         <Typography className={classes.label}>APY:</Typography>
         <Typography className={classes.value}>{apyPercent}%</Typography>
       </Grid>

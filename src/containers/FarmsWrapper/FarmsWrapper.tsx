@@ -6,8 +6,9 @@ import { Status } from '@reducers/solanaWallet'
 import { useSelector, useDispatch } from 'react-redux'
 import { farmsWithUserStakedValues } from '@selectors/farms'
 import { pools, tokens } from '@selectors/pools'
-import { calcYPerXPrice } from '@consts/utils'
+import { calcYPerXPrice, printBN } from '@consts/utils'
 import { actions } from '@reducers/farms'
+import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 
 export const FarmsWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -48,7 +49,8 @@ export const FarmsWrapper: React.FC = () => {
       farmId: farm.address.toString(),
       rewardSymbol: allTokens[farm.rewardToken.toString()].symbol,
       rewardIcon: allTokens[farm.rewardToken.toString()].logoURI,
-      isActive: now >= farm.startTime.v.toNumber() && now <= farm.endTime.v.toNumber()
+      isActive: now >= farm.startTime.v.toNumber() && now <= farm.endTime.v.toNumber(),
+      feeTier: +printBN(allPools[farm.pool.toString()].fee.v, DECIMAL - 2)
     }
   })
 

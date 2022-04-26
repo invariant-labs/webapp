@@ -11,9 +11,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: 16
     }
   },
-  top: {
-    marginBottom: 10
-  },
   icon: {
     minWidth: 32,
     height: 32,
@@ -138,7 +135,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textOverflow: 'ellipsis'
   },
   link: {
-    marginTop: 20,
+    marginTop: 10,
     textDecoration: 'none'
   },
   button: {
@@ -172,11 +169,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 
   mobileContainer: {
-    padding: '6px 0 6px 0'
+    padding: '4px 0'
   },
 
   spacer: {
-    paddingTop: 20
+    paddingTop: 12
   },
 
   rewardRow: {
