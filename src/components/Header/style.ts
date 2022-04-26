@@ -1,7 +1,7 @@
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors } from '@static/theme'
 
-const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     margin: 'auto',
     maxWidth: 1920,
@@ -44,13 +44,13 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
       boxShadow: '0px 0px 10px rgba(157, 212, 109, 0.5)'
     }
   },
-  buttons: ({ connected }) => ({
+  buttons: {
     justifyContent: 'flex-end',
     flex: '1 1 0%',
     marginLeft: 12,
 
     [theme.breakpoints.up('lg')]: {
-      minWidth: connected ? 433 : 350
+      minWidth: 350
     },
 
     [theme.breakpoints.only('md')]: {
@@ -61,7 +61,12 @@ const useStyles = makeStyles<Theme, { connected: boolean }>((theme: Theme) => ({
       marginLeft: 0,
       justifyContent: 'center'
     }
-  }),
+  },
+  buttonsLgConnected: {
+    [theme.breakpoints.up('lg')]: {
+      minWidth: 433
+    }
+  },
   link: {
     textDecoration: 'none',
     minWidth: 'fit-content'

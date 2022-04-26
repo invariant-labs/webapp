@@ -14,6 +14,7 @@ import { theme } from '@static/theme'
 import RoutesModal from '@components/Modals/RoutesModal/RoutesModal'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import Hamburger from '@static/svg/Hamburger.svg'
+import classNames from 'classnames'
 import useStyles from './style'
 
 export interface IHeader {
@@ -39,7 +40,7 @@ export const Header: React.FC<IHeader> = ({
   onFaucet,
   onDisconnectWallet
 }) => {
-  const classes = useStyles({ connected: walletConnected })
+  const classes = useStyles()
   const buttonClasses = useButtonStyles()
 
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
@@ -97,7 +98,14 @@ export const Header: React.FC<IHeader> = ({
           </Grid>
         </Hidden>
 
-        <Grid container item className={classes.buttons} wrap='nowrap'>
+        <Grid
+          container
+          item
+          className={classNames(
+            classes.buttons,
+            walletConnected ? classes.buttonsLgConnected : undefined
+          )}
+          wrap='nowrap'>
           <Hidden xsDown>
             {(typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) && (
               <Button
