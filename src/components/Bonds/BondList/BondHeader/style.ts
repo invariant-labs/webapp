@@ -5,25 +5,23 @@ export const useStyles = makeStyles(theme => ({
   container: {
     display: 'grid',
     width: '100%',
-    padding: '28px 0',
+    padding: '30px 0',
     gridTemplateColumns: '1fr 1fr 1fr 1fr 128px',
     columnGap: 6,
-    color: colors.invariant.textGrey,
-
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '1fr 1fr 1fr 1fr 74px'
+      padding: '16px 0',
+      gridTemplateColumns: '1fr 1fr 1fr 96px'
     },
-
     [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '1fr 1fr 1fr 64px'
+      gridTemplateColumns: '1fr 1fr 64px'
     }
   },
-  text: {
-    ...typography.caption2,
-    margin: 'auto',
-    textAlign: 'center',
 
-    [theme.breakpoints.down('xs')]: {
+  text: {
+    textAlign: 'center',
+    color: colors.invariant.textGrey,
+    ...typography.caption2,
+    [theme.breakpoints.down('sm')]: {
       ...typography.caption4
     }
   }

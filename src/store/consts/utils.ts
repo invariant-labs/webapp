@@ -13,6 +13,9 @@ import { Token as SPLToken, TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
 import {
   BTC_DEV,
   MAX_U64,
+  MC2_DEV,
+  MC3_DEV,
+  MCK_DEV,
   MSOL_DEV,
   NetworkType,
   PRICE_DECIMAL,
@@ -20,6 +23,8 @@ import {
   Token,
   USDC_DEV,
   USDT_DEV,
+  VEMC2_DEV,
+  VEMCK_DEV,
   WSOL_DEV
 } from './static'
 import mainnetList from './tokenLists/mainnet.json'
@@ -28,6 +33,8 @@ import { PoolWithAddress } from '@reducers/pools'
 import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
 import axios, { AxiosResponse } from 'axios'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
+import { calculateSellPrice } from '@invariant-labs/bonds-sdk/lib/math'
+import { BondSaleStruct } from '@invariant-labs/bonds-sdk/lib/sale'
 
 export const tou64 = (amount: BN | String) => {
   // eslint-disable-next-line new-cap
@@ -377,7 +384,7 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
   const obj: Record<string, Token> = {}
   switch (networkType) {
     case NetworkType.MAINNET:
-      mainnetList.forEach(token => {
+      ;(mainnetList as any[]).forEach(token => {
         obj[token.address] = {
           ...token,
           address: new PublicKey(token.address),
@@ -392,7 +399,12 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
         [MSOL_DEV.address.toString()]: MSOL_DEV,
         [BTC_DEV.address.toString()]: BTC_DEV,
         [WSOL_DEV.address.toString()]: WSOL_DEV,
-        [RENDOGE_DEV.address.toString()]: RENDOGE_DEV
+        [RENDOGE_DEV.address.toString()]: RENDOGE_DEV,
+        [MCK_DEV.address.toString()]: MCK_DEV,
+        [VEMCK_DEV.address.toString()]: VEMCK_DEV,
+        [MC2_DEV.address.toString()]: MC2_DEV,
+        [VEMC2_DEV.address.toString()]: VEMC2_DEV,
+        [MC3_DEV.address.toString()]: MC3_DEV
       }
     default:
       return {}
@@ -881,3 +893,32 @@ export const getNewTokenOrThrow = async (
     [address.toString()]: generateUnknownTokenDataObject(key, info.decimals)
   }
 }
+
+export const calculateEstBondPriceForQuoteAmount = (bondSale: BondSaleStruct, amount: BN) => {
+  let lowerBondAmount = new BN(0)
+  let upperBondAmount = MAX_U64
+  let price = calculateSellPrice(bondSale, upperBondAmount)
+
+  while (upperBondAmount.sub(lowerBondAmount).abs().gt(new BN(1))) {
+    const middleBondAmount = upperBondAmount.add(lowerBondAmount).div(new BN(2))
+    price = calculateSellPrice(bondSale, middleBondAmount)
+    const middleQuoteAmount = middleBondAmount.mul(price).div(new BN(10 ** DECIMAL))
+
+    if (middleQuoteAmount.sub(amount).abs().lte(new BN(1))) {
+      break
+    }
+
+    if (middleQuoteAmount.lt(amount)) {
+      lowerBondAmount = middleBondAmount
+    } else {
+      upperBondAmount = middleBondAmount
+    }
+  }
+
+  return price
+}
+
+export const calculateBondPrice = (bondSale: BondSaleStruct, amount: BN, byAmountBond: boolean) =>
+  byAmountBond
+    ? calculateSellPrice(bondSale, amount)
+    : calculateEstBondPriceForQuoteAmount(bondSale, amount)

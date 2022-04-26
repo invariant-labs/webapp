@@ -15,6 +15,7 @@ import { status } from '@selectors/solanaWallet'
 import { SinglePositionPage } from './SinglePositionPage/SinglePositionPage'
 import Footer from '@components/Footer/Footer'
 import StatsPage from './StatsPage/StatsPage'
+import BondsPage from './BondsPage/BondsPage'
 
 export const PagesRouter: React.FC = () => {
   const dispatch = useDispatch()
@@ -42,6 +43,7 @@ export const PagesRouter: React.FC = () => {
           <Route path={'/newPosition'} component={NewPositionPage} />
           <Route path={'/pool'} component={ListPage} />
           <Route path={'/stats'} component={StatsPage} />
+          <Route path={'/bonds'} component={BondsPage} />
           <Route
             path={'/position/:id'}
             render={({ match }) => <SinglePositionPage id={match.params.id} />}
