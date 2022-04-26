@@ -1,22 +1,11 @@
 import { Grid } from '@material-ui/core'
-import { BN } from '@project-serum/anchor'
 import React from 'react'
 import HeaderList from '../HeaderList/HeaderList'
-import IPositionsItem from '../PositionsItem/PositionsItem'
+import PositionsItem, { IPositionsItem } from '../PositionsItem/PositionsItem'
 import { useStyles } from './style'
 
 interface IPositionsListInterface {
-  data: Array<{
-    icon: string
-    decimals: number
-    value: BN
-    symbol: string
-    secondIcon: string
-    secondValue: BN
-    secondSymbol: string
-    redeemable: BN
-    vestPeriod: string
-  }>
+  data: IPositionsItem[]
 }
 
 const PositionsList: React.FC<IPositionsListInterface> = ({ data }) => {
@@ -25,8 +14,8 @@ const PositionsList: React.FC<IPositionsListInterface> = ({ data }) => {
   return (
     <Grid className={classes.container}>
       <HeaderList />
-      {data.map(element => (
-        <IPositionsItem {...element} />
+      {data.map((element, index) => (
+        <PositionsItem key={index} {...element} />
       ))}
     </Grid>
   )

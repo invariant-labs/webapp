@@ -5,37 +5,33 @@ export const useStyles = makeStyles(theme => ({
   container: {
     display: 'grid',
     boxSizing: 'border-box',
-    maxWidth: '918px',
+    maxWidth: 918,
     width: '100%',
     backgroundColor: colors.invariant.component,
     alignItems: 'center',
     justifyContent: 'center',
-    gridTemplateColumns: '21% 25% 11% 19% 12% 12%',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 128px',
+    columnGap: 6,
     borderTop: `2px solid ${colors.invariant.light}`,
     ...typography.body1,
 
     [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      ...typography.caption1,
-      gridTemplateColumns: '23% 29% 13% 21% 14%'
+      gridTemplateColumns: '1fr 1fr 1fr 96px',
+      ...typography.caption1
     },
 
     [theme.breakpoints.down('xs')]: {
-      width: '100%',
       ...typography.caption3,
-      gridTemplateColumns: '33% 34% 33%'
+      gridTemplateColumns: '1fr 1fr 64px'
     }
-  },
-  itemList: {
-    padding: '22px 0 22px 0 32px'
   },
   itemName: {
     display: 'flex',
     alignItems: 'center'
   },
   icon: {
-    right: '8px',
-    position: 'relative'
+    marginLeft: -8,
+    marginRight: 8
   },
   iconItems: {
     display: 'flex',
@@ -46,70 +42,56 @@ export const useStyles = makeStyles(theme => ({
       borderRadius: '50%',
 
       [theme.breakpoints.down('xs')]: {
-        width: '22px',
-        hight: '22px'
+        width: 22,
+        height: 22
       }
     }
   },
   symbol: {
-    marginRight: '15px',
-    width: '73',
-    height: '20',
+    marginRight: 15,
+    height: 20,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
 
     [theme.breakpoints.down('xs')]: {
-      ...typography.caption3,
       justifyContent: 'center',
       alignItems: 'center',
       margin: 'auto'
     }
   },
-  secondSymbol: {
-    [theme.breakpoints.down('xs')]: {
-      ...typography.caption3
-    }
-  },
   purchased: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
-  },
-  roi: {
-    color: colors.invariant.green,
-    margin: 'auto',
-    fontFamily: 'Mukta'
-  },
-  price: {
-    margin: 'auto',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    fontFamily: 'Mukta'
-  },
-  days: {
-    marginLeft: '10px',
-    fontFamily: 'Mukta'
+    alignItems: 'center',
+
+    '& p': {
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis'
+    }
   },
   bondButton: {
     background: colors.invariant.greenLinearGradient,
     color: colors.invariant.dark,
-    borderRadius: '10px',
-    width: '80px',
-    hight: '32px',
+    borderRadius: 10,
+    width: 128,
+    height: '32px',
     textTransform: 'none',
-    marginLeft: 'auto',
     ...typography.body1,
+    marginLeft: 'auto',
 
     '&:hover': {
-      background: colors.invariant.greenLinearGradient,
-      opacity: 0.8
+      background: colors.invariant.greenLinearGradientOpacity
     },
 
     [theme.breakpoints.down('sm')]: {
-      marginRight: 'auto'
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '64px',
+      width: 96,
       ...typography.caption1
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      width: 64
     }
   }
 }))

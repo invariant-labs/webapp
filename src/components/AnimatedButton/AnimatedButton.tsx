@@ -65,32 +65,30 @@ const AnimatedButton: React.FC<Props> = ({
   }
 
   return (
-    <div>
-      <Button
-        disabled={disabled}
-        variant='contained'
-        className={classNames(
-          classes.button,
-          progress === 'progress' ||
-            progress === 'approvedWithSuccess' ||
-            progress === 'approvedWithFail' ||
-            progress === 'failed'
-            ? classes.buttonRelease
-            : undefined,
-          className
-        )}
-        onClick={onClick}>
-        <div className={getClasses()}></div>
-        {progress === 'progress' ||
-        progress === 'approvedWithSuccess' ||
-        progress === 'approvedWithFail' ||
-        content === 'Loading' ? (
-          <img src={loadingAnimation} style={{ height: '100%', width: 25, zIndex: 10 }}></img>
-        ) : (
-          getMessage()
-        )}
-      </Button>
-    </div>
+    <Button
+      disabled={disabled}
+      variant='contained'
+      className={classNames(
+        classes.button,
+        progress === 'progress' ||
+          progress === 'approvedWithSuccess' ||
+          progress === 'approvedWithFail' ||
+          progress === 'failed'
+          ? classes.buttonRelease
+          : undefined,
+        className
+      )}
+      onClick={onClick}>
+      <div className={getClasses()}></div>
+      {progress === 'progress' ||
+      progress === 'approvedWithSuccess' ||
+      progress === 'approvedWithFail' ||
+      content === 'Loading' ? (
+        <img src={loadingAnimation} style={{ height: '100%', width: 25, zIndex: 10 }}></img>
+      ) : (
+        getMessage()
+      )}
+    </Button>
   )
 }
 

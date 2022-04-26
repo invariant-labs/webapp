@@ -1,12 +1,19 @@
-import { storiesOf } from '@storybook/react'
 import { BN } from '@project-serum/anchor'
-import React from 'react'
-import PositionsItem from './PositionsItem'
 import { PublicKey } from '@solana/web3.js'
+import { storiesOf } from '@storybook/react'
+import React from 'react'
+import BuyBondModal from './BuyBondModal'
 
-storiesOf('bonds/PositionsItem', module).add('PositionsItem', () => {
+storiesOf('modals/buyBond', module).add('modal', () => {
   return (
-    <PositionsItem
+    <BuyBondModal
+      open
+      handleClose={() => {}}
+      price={new BN(2000000)}
+      supply={2137}
+      remaining={911}
+      vestingTerm='10 days'
+      onBuy={() => {}}
       bondToken={{
         balance: new BN(100).mul(new BN(34786)),
         decimals: 6,
@@ -25,10 +32,8 @@ storiesOf('bonds/PositionsItem', module).add('PositionsItem', () => {
         logoURI:
           'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
       }}
-      bought={1354}
-      redeemable={8553}
-      vestingProgress='1/3 days'
-      onRedeemClick={() => {}}
+      onAmountChange={() => {}}
+      progress={'none'}
     />
   )
 })

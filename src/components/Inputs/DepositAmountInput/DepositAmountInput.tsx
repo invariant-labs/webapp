@@ -18,6 +18,7 @@ interface IProps {
   percentageChange?: number
   usdValue?: number
   balanceValue?: string
+  disabled?: boolean
 }
 
 export const DepositAmountInput: React.FC<IProps> = ({
@@ -34,7 +35,8 @@ export const DepositAmountInput: React.FC<IProps> = ({
   decimalsLimit,
   percentageChange,
   usdValue,
-  balanceValue
+  balanceValue,
+  disabled = false
 }) => {
   const classes = useStyles()
 
@@ -140,6 +142,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
             placeholder={placeholder}
             onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
             onBlur={onBlur}
+            disabled={disabled}
           />
         </div>
         <Grid

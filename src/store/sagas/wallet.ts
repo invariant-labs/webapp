@@ -40,6 +40,7 @@ import { network } from '@selectors/solanaConnection'
 import { tokens } from '@selectors/pools'
 import { actions as poolsActions } from '@reducers/pools'
 import { actions as farmsActions } from '@reducers/farms'
+import { actions as bondsActions } from '@reducers/bonds'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
@@ -430,6 +431,7 @@ export function* handleDisconnect(): Generator {
         upperTick: undefined
       })
     )
+    yield* put(bondsActions.setUserVested({}))
   } catch (error) {
     console.log(error)
   }

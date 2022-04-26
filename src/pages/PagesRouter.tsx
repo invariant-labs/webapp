@@ -20,6 +20,7 @@ import StatsPage from './StatsPage/StatsPage'
 import { farms } from '@selectors/farms'
 import { actions as farmsActions } from '@reducers/farms'
 import { tokens } from '@selectors/pools'
+import BondsPage from './BondsPage/BondsPage'
 
 export const PagesRouter: React.FC = () => {
   const dispatch = useDispatch()
@@ -70,6 +71,7 @@ export const PagesRouter: React.FC = () => {
             render={({ match }) => <SingleFarmPage id={match.params.id} />}
           />
           <Route path={'/stats'} component={StatsPage} />
+          <Route path={'/bonds'} component={BondsPage} />
           <Route
             path={'/position/:id'}
             render={({ match }) => <SinglePositionPage id={match.params.id} />}
