@@ -3,13 +3,15 @@ import { calcYPerXPrice, printBN } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { farms, positionsForFarm, singleFarmData, stakeStatuses } from '@selectors/farms'
+import { farms, positionsForFarm, singleFarmData, stakeStatuses, userStakes } from '@selectors/farms'
 import { tokens } from '@selectors/pools'
 import React, { useEffect, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@reducers/farms'
 import { Status } from '@reducers/solanaWallet'
 import { status } from '@selectors/solanaWallet'
+import { calculateReward } from '@invariant-labs/staker-sdk/lib/utils'
+import { BN } from '@project-serum/anchor'
 
 export interface IProps {
   id: string
@@ -23,6 +25,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   const farmPositions = useSelector(positionsForFarm(id))
   const allStakeStatuses = useSelector(stakeStatuses)
   const allFarms = useSelector(farms)
+  const allUserStakes = useSelector(userStakes)
   const walletStatus = useSelector(status)
 
   useEffect(() => {
@@ -195,6 +198,23 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         const valueX = tokenXDeposit + tokenYDeposit / currentPrice
         // const valueY = tokenYDeposit + tokenXDeposit * currentPrice
 
+        let rewardValue = 0
+
+        if (typeof position.stakeAddress !== 'undefined') {
+          const { result } = calculateReward({
+            totalRewardUnclaimed: farmData.totalRewardUnclaimed.v,
+            totalSecondsClaimed: farmData.totalSecondsClaimed.v,
+            startTime: farmData.startTime.v,
+            endTime: farmData.endTime.v,
+            liquidity: position.liquidity,
+            currentTime: new BN(Date.now() / 1000),
+            secondsPerLiquidityInsideInitial: allUserStakes[position.stakeAddress.toString()].secondsPerLiquidityInitial,
+            secondsPerLiquidityInside: position.secondsPerLiquidityInside
+          })
+
+          rewardValue = +printBN(result, allTokens[farmData.rewardToken.toString()].decimals)
+        }
+
         return {
           tokenXSymbol: position.tokenX.symbol,
           tokenYSymbol: position.tokenY.symbol,
@@ -208,7 +228,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
           value: valueX,
           rewardSymbol: allTokens[farmData.rewardToken.toString()].symbol,
           rewardIcon: allTokens[farmData.rewardToken.toString()].logoURI,
-          rewardValue: 0,
+          rewardValue,
           onClaimReward: () => {
             dispatch(
               actions.withdrawRewardsForPosition({
