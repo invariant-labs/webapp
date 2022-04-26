@@ -261,7 +261,7 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
       actions.setStakePositionSuccess({
         pool: action.payload.pool,
         id: action.payload.id,
-        success: !stringTx.length
+        success: !!stringTx.length
       })
     )
   } catch (error) {
