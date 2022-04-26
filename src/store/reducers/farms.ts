@@ -112,14 +112,14 @@ const farmsSlice = createSlice({
       return state
     },
     stakePosition(state, action: PayloadAction<FarmPositionData>) {
-      state.stakeStatuses[action.payload.id.toString() + action.payload.pool.toString()] = {
+      state.stakeStatuses[action.payload.id.toString() + '_' + action.payload.pool.toString()] = {
         inProgress: true,
         success: false
       }
       return state
     },
     setStakePositionSuccess(state, action: PayloadAction<StakeSuccessData>) {
-      state.stakeStatuses[action.payload.id.toString() + action.payload.pool.toString()] = {
+      state.stakeStatuses[action.payload.id.toString() + '_' + action.payload.pool.toString()] = {
         inProgress: false,
         success: action.payload.success
       }

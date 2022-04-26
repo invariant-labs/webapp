@@ -1,8 +1,9 @@
 import { Grid, Typography } from '@material-ui/core'
-import React from 'react'
-import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
+import React, { useEffect, useState } from 'react'
 import useStyle from './styles'
 import { formatNumbers, showPrefix } from '@consts/utils'
+import { StakeStatus } from '@reducers/farms'
+import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 
 export interface IStakedTile {
   tokenXSymbol: string
@@ -13,6 +14,7 @@ export interface IStakedTile {
   tokenXDeposit: number
   tokenYDeposit: number
   value: number
+  stakeStatus?: StakeStatus
   onStake: () => void
 }
 
@@ -25,9 +27,33 @@ export const StakeTile: React.FC<IStakedTile> = ({
   tokenXDeposit,
   tokenYDeposit,
   value,
+  stakeStatus,
   onStake
 }) => {
   const classes = useStyle()
+
+  const [progress, setProgress] = useState<ProgressState>('none')
+
+  useEffect(() => {
+    if (typeof stakeStatus === 'undefined') {
+      return
+    }
+
+    if (!stakeStatus.inProgress && progress === 'progress') {
+      setProgress(stakeStatus.success ? 'approvedWithSuccess' : 'approvedWithFail')
+
+      setTimeout(() => {
+        setProgress(stakeStatus.success ? 'success' : 'failed')
+      }, 1500)
+
+      setTimeout(() => {
+        setProgress('none')
+      }, 3000)
+    } else if (stakeStatus.inProgress && progress !== 'progress') {
+      setProgress('progress')
+    }
+  }, [stakeStatus])
+
   return (
     <Grid className={classes.root} container direction='column'>
       <Typography className={classes.header}>Stake</Typography>
@@ -82,7 +108,12 @@ export const StakeTile: React.FC<IStakedTile> = ({
         </Grid>
       </Grid>
 
-      <OutlinedButton className={classes.buttonStake} name='Stake' onClick={onStake} />
+      <AnimatedButton
+        className={classes.buttonStake}
+        content='Stake'
+        onClick={onStake}
+        progress={progress}
+      />
     </Grid>
   )
 }

@@ -61,17 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textOverflow: 'ellipsis'
   },
   buttonStake: {
-    minWidth: '100%',
-    height: 44,
-    borderRadius: 16,
-    textTransform: 'none',
-    ...typography.body1,
-    background: `${colors.invariant.pinkLinearGradientOpacity} !important`,
-    color: colors.black.full,
-    '&:hover': {
-      background: `${colors.invariant.pinkLinearGradientOpacity} !important`,
-      boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)}'
-    }
+    minWidth: '100%'
   }
 }))
 
