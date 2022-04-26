@@ -1,5 +1,4 @@
 import SearchInput from '@components/Inputs/SearchInput/SearchInput'
-import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Grid, Typography } from '@material-ui/core'
 import React, { useState } from 'react'
 import FarmTile, { IFarm } from './FarmTile/FarmTile'
@@ -8,14 +7,10 @@ import useStyle from './style'
 export interface IFarmList {
   title: string
   data: IFarm[]
-  showNoConnected?: boolean
-  noConnectedBlockerProps: INoConnected
 }
 export const FarmList: React.FC<IFarmList> = ({
   title,
-  data,
-  showNoConnected = false,
-  noConnectedBlockerProps
+  data
 }) => {
   const classes = useStyle()
   const [value, setValue] = useState('')
@@ -36,11 +31,7 @@ export const FarmList: React.FC<IFarmList> = ({
         <SearchInput handleChange={handleChangeInput} value={value} />
       </Grid>
       <Grid>
-        {showNoConnected ? (
-          <Grid className={classes.noConnected}>
-            <NoConnected {...noConnectedBlockerProps} />
-          </Grid>
-        ) : data.length > 0 ? (
+        {data.length > 0 ? (
           data
             .filter(item => {
               return (
@@ -48,9 +39,9 @@ export const FarmList: React.FC<IFarmList> = ({
                 item.tokenY.symbol.toLowerCase().includes(value)
               )
             })
-            .map(element => (
+            .map((element, index) => (
               <div className={classes.tile}>
-                <FarmTile {...element} />
+                <FarmTile key={index} {...element} />
               </div>
             ))
         ) : null}
