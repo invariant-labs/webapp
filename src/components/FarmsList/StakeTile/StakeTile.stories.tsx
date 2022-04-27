@@ -12,10 +12,12 @@ storiesOf('farmsList/stakeTile', module).add('tile', () => {
         fee={0.3}
         tokenXDeposit={2137}
         tokenYDeposit={911}
-        value={5184}
+        valueX={5184}
+        valueY={2137}
         onStake={() => {
           console.log('stake')
         }}
+        xToY
       />
     </div>
   )

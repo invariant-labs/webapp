@@ -12,7 +12,8 @@ storiesOf('farmsList/rewardsTile', module).add('tile', () => {
         fee={0.3}
         tokenXDeposit={2137}
         tokenYDeposit={911}
-        value={5184}
+        valueX={5184}
+        valueY={2137}
         rewardSymbol={'SNY'}
         onClaimReward={() => {
           console.log('reward')
@@ -21,6 +22,7 @@ storiesOf('farmsList/rewardsTile', module).add('tile', () => {
           'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
         }
         rewardValue={2137}
+        xToY
       />
     </div>
   )

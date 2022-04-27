@@ -127,7 +127,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         )
 
         const valueX = currentPrice === 0 ? 0 : tokenXDeposit + tokenYDeposit / currentPrice
-        // const valueY = tokenYDeposit + tokenXDeposit * currentPrice
+        const valueY = tokenYDeposit + tokenXDeposit * currentPrice
 
         const now = Date.now() / 1000
 
@@ -141,7 +141,8 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
           maxPrice,
           tokenXDeposit,
           tokenYDeposit,
-          value: valueX,
+          valueX,
+          valueY,
           stakeStatus: allStakeStatuses[position.id.toString() + '_' + position.pool.toString()],
           isActive: now >= farmData.startTime.v.toNumber() && now <= farmData.endTime.v.toNumber(),
           onStake: () => {
@@ -215,7 +216,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         )
 
         const valueX = tokenXDeposit + tokenYDeposit / currentPrice
-        // const valueY = tokenYDeposit + tokenXDeposit * currentPrice
+        const valueY = tokenYDeposit + tokenXDeposit * currentPrice
 
         let rewardValue = 0
 
@@ -245,7 +246,8 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
           maxPrice,
           tokenXDeposit,
           tokenYDeposit,
-          value: valueX,
+          valueX,
+          valueY,
           rewardSymbol: allTokens[farmData.rewardToken.toString()].symbol,
           rewardIcon: allTokens[farmData.rewardToken.toString()].logoURI,
           rewardValue,
@@ -262,11 +264,21 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       })
   }, [farmPositions])
 
-  const userStaked = useMemo(() => {
+  const userStakedInXToken = useMemo(() => {
     let sum = 0
 
-    stakedPositions.forEach(({ value }) => {
-      sum += value
+    stakedPositions.forEach(({ valueX }) => {
+      sum += valueX
+    })
+
+    return sum
+  }, [stakedPositions])
+
+  const userStakedInYToken = useMemo(() => {
+    let sum = 0
+
+    stakedPositions.forEach(({ valueY }) => {
+      sum += valueY
     })
 
     return sum
@@ -295,12 +307,14 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         month: 'numeric',
         year: '2-digit'
       })}`}
-      totalStaked={
-        currentPrice === 0
-          ? 0
-          : (farmData.totalStakedX ?? 0) + (farmData.totalStakedY ?? 0) / currentPrice
+      totalStakedInXToken={
+        (farmData.totalStakedX ?? 0) + (farmData.totalStakedY ?? 0) / currentPrice
       }
-      userStaked={userStaked}
+      totalStakedInYToken={
+        (farmData.totalStakedY ?? 0) + (farmData.totalStakedX ?? 0) / currentPrice
+      }
+      userStakedInXToken={userStakedInXToken}
+      userStakedInYToken={userStakedInYToken}
       totalRewardPerDay={0}
       apy={0}
       toStake={toStake}

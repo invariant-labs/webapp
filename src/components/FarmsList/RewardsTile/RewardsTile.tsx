@@ -11,14 +11,19 @@ export interface IRewardsTile {
   fee: number
   tokenXDeposit: number
   tokenYDeposit: number
-  value: number
+  valueX: number
+  valueY: number
   rewardSymbol: string
   onClaimReward: () => void
   rewardIcon: string
   rewardValue: number
 }
 
-export const RewardsTile: React.FC<IRewardsTile> = ({
+export interface IProps extends IRewardsTile {
+  xToY: boolean
+}
+
+export const RewardsTile: React.FC<IProps> = ({
   tokenXSymbol,
   tokenYSymbol,
   minPrice,
@@ -26,13 +31,30 @@ export const RewardsTile: React.FC<IRewardsTile> = ({
   fee,
   tokenXDeposit,
   tokenYDeposit,
-  value,
+  valueX,
+  valueY,
   rewardSymbol,
   onClaimReward,
   rewardIcon,
-  rewardValue
+  rewardValue,
+  xToY
 }) => {
   const classes = useStyle()
+
+  const data = xToY ? {
+    firstSymbol: tokenXSymbol,
+    secondSymbol: tokenYSymbol,
+    max: maxPrice,
+    min: minPrice,
+    value: valueX
+  } : {
+    firstSymbol: tokenYSymbol,
+    secondSymbol: tokenXSymbol,
+    max: 1 / maxPrice,
+    min: 1 / minPrice,
+    value: valueY
+  }
+
   return (
     <Grid className={classes.root} container direction='column'>
       <Grid className={classes.positionInfo} container>
@@ -40,16 +62,16 @@ export const RewardsTile: React.FC<IRewardsTile> = ({
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Min price:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(minPrice.toString())}
-              {showPrefix(minPrice)} {tokenXSymbol}/{tokenYSymbol}
+              {formatNumbers()(data.min.toString())}
+              {showPrefix(data.min)} {data.secondSymbol}/{data.firstSymbol}
             </Typography>
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Max price:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(maxPrice.toString())}
-              {showPrefix(maxPrice)} {tokenXSymbol}/{tokenYSymbol}
+              {formatNumbers()(data.max.toString())}
+              {showPrefix(data.max)} {data.secondSymbol}/{data.firstSymbol}
             </Typography>
           </Grid>
 
@@ -79,8 +101,8 @@ export const RewardsTile: React.FC<IRewardsTile> = ({
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Value:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(value.toString())}
-              {showPrefix(value)} {tokenXSymbol}
+              {formatNumbers()(data.value.toString())}
+              {showPrefix(data.value)} {data.firstSymbol}
             </Typography>
           </Grid>
         </Grid>

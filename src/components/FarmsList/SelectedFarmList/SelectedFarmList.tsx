@@ -1,14 +1,14 @@
 import { formatNumbers, showPrefix } from '@consts/utils'
 import { Grid, Typography } from '@material-ui/core'
-import classNames from 'classnames'
-import React from 'react'
+import React, { useState } from 'react'
 import RewardsTile, { IRewardsTile } from '../RewardsTile/RewardsTile'
 import StakeTile, { IStakedTile } from '../StakeTile/StakeTile'
 import backIcon from '@static/svg/back-arrow.svg'
 import { Link } from 'react-router-dom'
 import loader from '@static/gif/loader.gif'
-import useStyle from './style'
+import SwapList from '@static/svg/swap-list.svg'
 import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import useStyle from './style'
 
 export interface ISelectedFarmList {
   tokenXIcon: string
@@ -18,8 +18,10 @@ export interface ISelectedFarmList {
   rewardIcon: string
   rewardSymbol: string
   duration: string
-  totalStaked: number
-  userStaked: number
+  totalStakedInXToken: number
+  totalStakedInYToken: number
+  userStakedInXToken: number
+  userStakedInYToken: number
   totalRewardPerDay: number
   apy: number
   toStake: IStakedTile[]
@@ -36,8 +38,10 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   rewardIcon,
   rewardSymbol,
   duration,
-  totalStaked,
-  userStaked,
+  totalStakedInXToken,
+  totalStakedInYToken,
+  userStakedInXToken,
+  userStakedInYToken,
   totalRewardPerDay,
   apy,
   toStake,
@@ -46,6 +50,20 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   walletConnected = false
 }) => {
   const classes = useStyle()
+
+  const [xToY, setXtoY] = useState(true)
+
+  const totalsData = xToY
+    ? {
+        totalStaked: totalStakedInXToken,
+        userStaked: userStakedInXToken,
+        totalSymbol: tokenXSymbol
+      }
+    : {
+        totalStaked: totalStakedInYToken,
+        userStaked: userStakedInYToken,
+        totalSymbol: tokenYSymbol
+      }
 
   return (
     <Grid className={classes.root}>
@@ -61,14 +79,26 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
         justifyContent='flex-start'
         alignItems='center'
         wrap='nowrap'>
-        <img src={tokenXIcon} alt={'Token in pool'} className={classes.bigIcon} />
         <img
-          src={tokenYIcon}
+          src={xToY ? tokenXIcon : tokenYIcon}
           alt={'Token in pool'}
-          className={classNames(classes.bigIcon, classes.secondBig)}
+          className={classes.bigIcon}
+        />
+        <img
+          className={classes.arrows}
+          src={SwapList}
+          alt='Arrow'
+          onClick={() => {
+            setXtoY(!xToY)
+          }}
+        />
+        <img
+          src={xToY ? tokenYIcon : tokenXIcon}
+          alt={'Token in pool'}
+          className={classes.bigIcon}
         />
         <Typography className={classes.title}>
-          {tokenXSymbol}-{tokenYSymbol}
+          {xToY ? tokenXSymbol : tokenYSymbol}-{xToY ? tokenYSymbol : tokenXSymbol}
         </Typography>
       </Grid>
       <Grid className={classes.positionInfo} container>
@@ -104,16 +134,16 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Total staked:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(totalStaked.toString())}
-              {showPrefix(totalStaked)} {tokenXSymbol}
+              {formatNumbers()(totalsData.totalStaked.toString())}
+              {showPrefix(totalsData.totalStaked)} {totalsData.totalSymbol}
             </Typography>
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Your staked:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(userStaked.toString())}
-              {showPrefix(userStaked)} {tokenXSymbol}
+              {formatNumbers()(totalsData.userStaked.toString())}
+              {showPrefix(totalsData.userStaked)} {totalsData.totalSymbol}
             </Typography>
           </Grid>
         </Grid>
@@ -129,7 +159,7 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
               {stakedPositions.length ? (
                 stakedPositions.map((element, index) => (
                   <div className={classes.tile}>
-                    <RewardsTile key={index} {...element} />
+                    <RewardsTile key={index} {...element} xToY={xToY} />
                   </div>
                 ))
               ) : (
@@ -144,7 +174,7 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
               {toStake.length ? (
                 toStake.map((element, index) => (
                   <div className={classes.tile}>
-                    <StakeTile key={index} {...element} />
+                    <StakeTile key={index} {...element} xToY={xToY} />
                   </div>
                 ))
               ) : (

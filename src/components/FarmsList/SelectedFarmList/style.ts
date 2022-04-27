@@ -30,9 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 32,
     borderRadius: '100%'
   },
-  secondBig: {
-    marginLeft: -10
-  },
   smallIcon: {
     minWidth: 17,
     height: 17,
@@ -111,6 +108,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   empty: {
     marginBlock: 20
+  },
+  arrows: {
+    minWidth: 32,
+    marginLeft: 4,
+    marginRight: 4,
+
+    '&:hover': {
+      filter: 'brightness(2)'
+    }
   }
 }))
 

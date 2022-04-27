@@ -13,13 +13,18 @@ export interface IStakedTile {
   fee: number
   tokenXDeposit: number
   tokenYDeposit: number
-  value: number
+  valueX: number
+  valueY: number
   stakeStatus?: StakeStatus
   isActive?: boolean
   onStake: () => void
 }
 
-export const StakeTile: React.FC<IStakedTile> = ({
+export interface IProps extends IStakedTile {
+  xToY: boolean
+}
+
+export const StakeTile: React.FC<IProps> = ({
   tokenXSymbol,
   tokenYSymbol,
   minPrice,
@@ -27,10 +32,12 @@ export const StakeTile: React.FC<IStakedTile> = ({
   fee,
   tokenXDeposit,
   tokenYDeposit,
-  value,
+  valueX,
+  valueY,
   stakeStatus,
   isActive = true,
-  onStake
+  onStake,
+  xToY
 }) => {
   const classes = useStyle()
 
@@ -56,23 +63,37 @@ export const StakeTile: React.FC<IStakedTile> = ({
     }
   }, [stakeStatus])
 
+  const data = xToY ? {
+    firstSymbol: tokenXSymbol,
+    secondSymbol: tokenYSymbol,
+    max: maxPrice,
+    min: minPrice,
+    value: valueX
+  } : {
+    firstSymbol: tokenYSymbol,
+    secondSymbol: tokenXSymbol,
+    max: 1 / maxPrice,
+    min: 1 / minPrice,
+    value: valueY
+  }
+
   return (
     <Grid className={classes.root} container direction='column'>
-      <Grid className={classes.positionInfo} container>
+       <Grid className={classes.positionInfo} container>
         <Grid className={classes.leftSide} container direction='column'>
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Min price:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(minPrice.toString())}
-              {showPrefix(minPrice)} {tokenXSymbol}/{tokenYSymbol}
+              {formatNumbers()(data.min.toString())}
+              {showPrefix(data.min)} {data.secondSymbol}/{data.firstSymbol}
             </Typography>
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Max price:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(maxPrice.toString())}
-              {showPrefix(maxPrice)} {tokenXSymbol}/{tokenYSymbol}
+              {formatNumbers()(data.max.toString())}
+              {showPrefix(data.max)} {data.secondSymbol}/{data.firstSymbol}
             </Typography>
           </Grid>
 
@@ -102,8 +123,8 @@ export const StakeTile: React.FC<IStakedTile> = ({
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Value:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(value.toString())}
-              {showPrefix(value)} {tokenXSymbol}
+              {formatNumbers()(data.value.toString())}
+              {showPrefix(data.value)} {data.firstSymbol}
             </Typography>
           </Grid>
         </Grid>
