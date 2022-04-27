@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
     lineHeight: 16,
     fontSize: 16,
     backgroundColor: colors.invariant.dark,
-    color: colors.invariant.light,
+    color: colors.invariant.lightGrey,
     border: `1px solid ${colors.invariant.light}`,
     borderRadius: 8,
     cursor: 'pointer',
