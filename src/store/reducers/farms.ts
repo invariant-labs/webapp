@@ -58,6 +58,12 @@ export interface StakeSuccessData {
   success: boolean
 }
 
+export interface StateUpdateAfterStake {
+  newStake: ExtendedStake,
+  totalStakedXAddition: number,
+  totalStakedYAddition: number
+}
+
 export const defaultState: IFarmsStore = {
   farms: {},
   isLoadingFarms: true,
@@ -124,6 +130,18 @@ const farmsSlice = createSlice({
         inProgress: false,
         success: action.payload.success
       }
+      return state
+    },
+    updateStateAfterStake(state, action: PayloadAction<StateUpdateAfterStake>) {
+      const farm = state.farms[action.payload.newStake.incentive.toString()]
+
+      state.farms[action.payload.newStake.incentive.toString()] = {
+        ...farm,
+        totalStakedX: (farm.totalStakedX ?? 0) + action.payload.totalStakedXAddition,
+        totalStakedY: (farm.totalStakedY ?? 0) + action.payload.totalStakedYAddition
+      }
+      state.userStakes[action.payload.newStake.address.toString()] = action.payload.newStake
+
       return state
     },
     withdrawRewardsForPosition(_state, _action: PayloadAction<FarmPositionData>) {}

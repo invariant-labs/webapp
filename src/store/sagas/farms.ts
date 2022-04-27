@@ -10,7 +10,7 @@ import { actions as poolsActions, ListPoolsResponse, ListType } from '@reducers/
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { getStakerProgram } from '@web3/programs/staker'
 import { getMarketProgram } from '@web3/programs/amm'
-import { createAccount, getWallet } from './wallet'
+import { createAccount, getWallet, sleep } from './wallet'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { network } from '@selectors/solanaConnection'
 import { networkTypetoProgramNetwork } from '@web3/connection'
@@ -156,7 +156,10 @@ export function* handleGetFarmsList() {
     const pattern: GuardPredicate<PayloadAction<ListPoolsResponse>> = (
       action
     ): action is PayloadAction<ListPoolsResponse> => {
-      return typeof action?.payload?.listType !== 'undefined' && action.payload.listType === ListType.FARMS
+      return (
+        typeof action?.payload?.listType !== 'undefined' &&
+        action.payload.listType === ListType.FARMS
+      )
     }
 
     yield* take(pattern)
@@ -249,6 +252,14 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
       }
     )
 
+    yield* put(
+      actions.setStakePositionSuccess({
+        pool: action.payload.pool,
+        id: action.payload.id,
+        success: !!stringTx.length
+      })
+    )
+
     if (!stringTx.length) {
       yield* put(
         snackbarsActions.add({
@@ -267,15 +278,58 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
           txid: stringTx
         })
       )
-    }
 
-    yield* put(
-      actions.setStakePositionSuccess({
-        pool: action.payload.pool,
-        id: action.payload.id,
-        success: !!stringTx.length
-      })
-    )
+      const stakes = yield* call(
+        getUserStakesForFarm,
+        stakerProgram,
+        action.payload.farm,
+        action.payload.pool,
+        [action.payload.id],
+        [positionData.address]
+      )
+
+      if (stakes.length === 1) {
+        yield* call(sleep, 2000)
+
+        let totalStakedXAddition, totalStakedYAddition
+
+        try {
+          totalStakedXAddition = +printBN(
+            getX(
+              positionData.liquidity.v,
+              calculatePriceSqrt(positionData.upperTickIndex).v,
+              positionData.poolData.sqrtPrice.v,
+              calculatePriceSqrt(positionData.lowerTickIndex).v
+            ),
+            positionData.tokenX.decimals
+          )
+        } catch (error) {
+          totalStakedXAddition = 0
+        }
+
+        try {
+          totalStakedYAddition = +printBN(
+            getY(
+              positionData.liquidity.v,
+              calculatePriceSqrt(positionData.upperTickIndex).v,
+              positionData.poolData.sqrtPrice.v,
+              calculatePriceSqrt(positionData.lowerTickIndex).v
+            ),
+            positionData.tokenY.decimals
+          )
+        } catch (error) {
+          totalStakedYAddition = 0
+        }
+
+        yield* put(
+          actions.updateStateAfterStake({
+            newStake: stakes[0],
+            totalStakedXAddition,
+            totalStakedYAddition
+          })
+        )
+      }
+    }
   } catch (error) {
     console.log(error)
     yield* put(
