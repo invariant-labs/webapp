@@ -286,6 +286,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       apy={0}
       toStake={toStake}
       stakedPositions={stakedPositions}
+      stakesLoading={stakesLoading}
     />
   )
 }

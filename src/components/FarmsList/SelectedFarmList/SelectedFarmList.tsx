@@ -6,6 +6,7 @@ import RewardsTile, { IRewardsTile } from '../RewardsTile/RewardsTile'
 import StakeTile, { IStakedTile } from '../StakeTile/StakeTile'
 import backIcon from '@static/svg/back-arrow.svg'
 import { Link } from 'react-router-dom'
+import loader from '@static/gif/loader.gif'
 import useStyle from './style'
 
 export interface ISelectedFarmList {
@@ -22,6 +23,7 @@ export interface ISelectedFarmList {
   apy: number
   toStake: IStakedTile[]
   stakedPositions: IRewardsTile[]
+  stakesLoading?: boolean
 }
 
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
@@ -37,7 +39,8 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   totalRewardPerDay,
   apy,
   toStake,
-  stakedPositions
+  stakedPositions,
+  stakesLoading = false
 }) => {
   const classes = useStyle()
 
@@ -112,18 +115,24 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
           </Grid>
         </Grid>
       </Grid>
-      <Grid className={classes.containers}>
-        {stakedPositions.map((element, index) => (
-          <div className={classes.tile}>
-            <RewardsTile key={index} {...element} />
-          </div>
-        ))}
+      <Grid container direction='column' alignItems='center' className={classes.containers}>
+        {stakesLoading ? (
+          <img src={loader} style={{ width: 150, height: 150, margin: 'auto' }} />
+        ) : (
+          <>
+            {stakedPositions.map((element, index) => (
+              <div className={classes.tile}>
+                <RewardsTile key={index} {...element} />
+              </div>
+            ))}
 
-        {toStake.map((element, index) => (
-          <div className={classes.tile}>
-            <StakeTile key={index} {...element} />
-          </div>
-        ))}
+            {toStake.map((element, index) => (
+              <div className={classes.tile}>
+                <StakeTile key={index} {...element} />
+              </div>
+            ))}
+          </>
+        )}
       </Grid>
     </Grid>
   )

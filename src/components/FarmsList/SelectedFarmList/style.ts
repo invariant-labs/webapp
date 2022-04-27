@@ -21,7 +21,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   tile: {
     marginBottom: 20
   },
-  containers: { marginTop: 20 },
+  containers: {
+    marginTop: 20,
+    minHeight: 250
+  },
   bigIcon: {
     minWidth: 32,
     height: 32,

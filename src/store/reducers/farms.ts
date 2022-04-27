@@ -62,7 +62,7 @@ export const defaultState: IFarmsStore = {
   farms: {},
   isLoadingFarms: true,
   userStakes: {},
-  isLoadingUserStakes: true,
+  isLoadingUserStakes: false,
   stakeStatuses: {}
 }
 
