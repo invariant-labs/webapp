@@ -65,12 +65,12 @@ export enum ListType {
 }
 
 export interface ListPoolsRequest {
-  addresses: string[],
+  addresses: string[]
   listType: ListType
 }
 
-export interface ListPoolsResponse{
-  data: PoolWithAddress[],
+export interface ListPoolsResponse {
+  data: PoolWithAddress[]
   listType: ListType
 }
 

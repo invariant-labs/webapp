@@ -38,11 +38,7 @@ export const FarmTile: React.FC<IFarm> = ({
 
   return (
     <Grid className={classes.root} container direction='column'>
-      <Grid
-        container
-        direction='row'
-        justifyContent='space-between'
-        wrap='nowrap'>
+      <Grid container direction='row' justifyContent='space-between' wrap='nowrap'>
         <Grid className={classes.flexWrapper}>
           <Grid className={classes.icons}>
             <img src={tokenX.logoURI} className={classes.icon} />

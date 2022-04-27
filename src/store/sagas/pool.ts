@@ -68,10 +68,12 @@ export function* fetchPoolsDataForList(action: PayloadAction<ListPoolsRequest>) 
   const newTokens = yield* call(getFullNewTokensData, [...unknownTokens], connection)
   yield* put(actions.addTokens(newTokens))
 
-  yield* put(actions.addPoolsForList({
-    data: newPools,
-    listType: action.payload.listType
-  }))
+  yield* put(
+    actions.addPoolsForList({
+      data: newPools,
+      listType: action.payload.listType
+    })
+  )
 }
 
 export function* getPoolsDataForListHandler(): Generator {

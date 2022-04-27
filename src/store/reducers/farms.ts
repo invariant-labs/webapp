@@ -59,8 +59,8 @@ export interface StakeSuccessData {
 }
 
 export interface StateUpdateAfterStake {
-  newStake: ExtendedStake,
-  totalStakedXAddition: number,
+  newStake: ExtendedStake
+  totalStakedXAddition: number
   totalStakedYAddition: number
 }
 

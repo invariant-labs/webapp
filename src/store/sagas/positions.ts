@@ -450,7 +450,10 @@ export function* handleGetPositionsList() {
     const pattern: GuardPredicate<PayloadAction<ListPoolsResponse>> = (
       action
     ): action is PayloadAction<ListPoolsResponse> => {
-      return typeof action?.payload?.listType !== 'undefined' && action.payload.listType === ListType.POSITIONS
+      return (
+        typeof action?.payload?.listType !== 'undefined' &&
+        action.payload.listType === ListType.POSITIONS
+      )
     }
 
     yield* take(pattern)
