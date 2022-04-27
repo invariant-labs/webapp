@@ -100,6 +100,10 @@ export const positionsForFarm = (farmAddress: string) =>
     (allFarms, positions, allUserStakes) => {
       const farm = allFarms[farmAddress]
 
+      if (typeof farm === 'undefined') {
+        return []
+      }
+
       const stakesByPositionAddress: Record<string, ExtendedStake> = {}
       Object.values(allUserStakes).forEach(stake => {
         if (farmAddress === stake.incentive.toString()) {

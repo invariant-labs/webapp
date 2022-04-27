@@ -10,6 +10,7 @@ import { calcYPerXPrice, printBN } from '@consts/utils'
 import { actions } from '@reducers/farms'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import loader from '@static/gif/loader.gif'
+import { positionsList } from '@selectors/positions'
 
 export const FarmsWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -19,6 +20,7 @@ export const FarmsWrapper: React.FC = () => {
   const allTokens = useSelector(tokens)
   const allUserStakes = useSelector(userStakes)
   const farmsLoading = useSelector(isLoadingFarms)
+  const { list } = useSelector(positionsList)
 
   useEffect(() => {
     if (Object.values(allTokens).length > 0 && Object.values(allFarms).length === 0) {
@@ -27,7 +29,7 @@ export const FarmsWrapper: React.FC = () => {
   }, [Object.values(allTokens).length])
 
   useEffect(() => {
-    if (walletStatus === Status.Initialized && Object.values(allFarms).length > 0 && Object.values(allUserStakes).length === 0) {
+    if (walletStatus === Status.Initialized && Object.values(allFarms).length > 0 && Object.values(allUserStakes).length === 0 && list.length !== 0) {
       dispatch(actions.getUserStakes())
     }
   }, [walletStatus, Object.values(allFarms).length])

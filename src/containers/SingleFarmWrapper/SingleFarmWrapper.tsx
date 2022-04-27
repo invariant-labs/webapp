@@ -13,6 +13,7 @@ import { status } from '@selectors/solanaWallet'
 import { calculateReward } from '@invariant-labs/staker-sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
 import loader from '@static/gif/loader.gif'
+import { positionsList } from '@selectors/positions'
 
 export interface IProps {
   id: string
@@ -30,6 +31,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   const walletStatus = useSelector(status)
   const farmsLoading = useSelector(isLoadingFarms)
   const stakesLoading = useSelector(isLoadingUserStakes)
+  const { list } = useSelector(positionsList)
 
   useEffect(() => {
     if (Object.values(allTokens).length > 0 && Object.values(allFarms).length === 0) {
@@ -38,7 +40,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   }, [Object.values(allTokens).length])
 
   useEffect(() => {
-    if (walletStatus === Status.Initialized && Object.values(allFarms).length > 0 && Object.values(allUserStakes).length === 0) {
+    if (walletStatus === Status.Initialized && Object.values(allFarms).length > 0 && Object.values(allUserStakes).length === 0 && list.length !== 0) {
       dispatch(actions.getUserStakes())
     }
   }, [walletStatus, Object.values(allFarms).length])

@@ -6,7 +6,7 @@ import {
   ExtendedStake,
   FarmTotalsUpdate
 } from '@reducers/farms'
-import { actions as poolsActions } from '@reducers/pools'
+import { actions as poolsActions, ListPoolsResponse, ListType } from '@reducers/pools'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { getStakerProgram } from '@web3/programs/staker'
 import { getMarketProgram } from '@web3/programs/amm'
@@ -35,6 +35,7 @@ import { getPositionsForPool, getUserStakesForFarm, printBN } from '@consts/util
 import { pools, tokens } from '@selectors/pools'
 import { BN } from '@project-serum/anchor'
 import { calculatePriceSqrt, getX, getY } from '@invariant-labs/sdk/lib/math'
+import { GuardPredicate } from '@redux-saga/types'
 
 export function* getFarmsTotals() {
   try {
@@ -145,9 +146,20 @@ export function* handleGetFarmsList() {
       await Promise.all(promises)
     })
 
-    yield* put(poolsActions.getPoolsDataForPositions(poolsKeys))
+    yield* put(
+      poolsActions.getPoolsDataForList({
+        addresses: poolsKeys,
+        listType: ListType.FARMS
+      })
+    )
 
-    yield* take(poolsActions.addPoolsForPositions)
+    const pattern: GuardPredicate<PayloadAction<ListPoolsResponse>> = (
+      action
+    ): action is PayloadAction<ListPoolsResponse> => {
+      return typeof action?.payload?.listType !== 'undefined' && action.payload.listType === ListType.FARMS
+    }
+
+    yield* take(pattern)
 
     yield* put(actions.setFarms(farmsObject))
 
