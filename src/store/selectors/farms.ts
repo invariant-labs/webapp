@@ -1,6 +1,7 @@
 import { printBN } from '@consts/utils'
 import { calculatePriceSqrt, getX, getY } from '@invariant-labs/sdk/lib/math'
 import { createSelector } from '@reduxjs/toolkit'
+import { PublicKey } from '@solana/web3.js'
 import { IFarmsStore, farmsSliceName, ExtendedIncentive, ExtendedStake } from '../reducers/farms'
 import { keySelectors, AnyProps } from './helpers'
 import { pools } from './pools'
@@ -27,9 +28,12 @@ export const farmsWithUserStakedValues = createSelector(
   userStakes,
   positionsWithPoolsData,
   (allFarms, allUserStakes, positions) => {
-    const stakesByPositionAddress: Record<string, ExtendedStake> = {}
+    const incentivesForPositions: Record<string, PublicKey[]> = {}
     Object.values(allUserStakes).forEach(stake => {
-      stakesByPositionAddress[stake.position.toString()] = stake
+      if (typeof incentivesForPositions[stake.position.toString()] === 'undefined') {
+        incentivesForPositions[stake.position.toString()] = []
+      }
+      incentivesForPositions[stake.position.toString()].push(stake.incentive)
     })
 
     const farmsObject: Record<string, IncentiveWithUserStaked> = {}
@@ -41,7 +45,10 @@ export const farmsWithUserStakedValues = createSelector(
       const farmStakedPositions = positions.filter(
         position =>
           position.pool.equals(farm.pool) &&
-          typeof stakesByPositionAddress[position.address.toString()] !== 'undefined'
+          typeof incentivesForPositions[position.address.toString()] !== 'undefined' &&
+          incentivesForPositions[position.address.toString()].findIndex(address =>
+            address.equals(farm.address)
+          ) !== -1
       )
 
       farmStakedPositions.forEach(position => {
