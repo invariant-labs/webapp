@@ -8,6 +8,7 @@ import backIcon from '@static/svg/back-arrow.svg'
 import { Link } from 'react-router-dom'
 import loader from '@static/gif/loader.gif'
 import useStyle from './style'
+import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
 
 export interface ISelectedFarmList {
   tokenXIcon: string
@@ -24,6 +25,7 @@ export interface ISelectedFarmList {
   toStake: IStakedTile[]
   stakedPositions: IRewardsTile[]
   stakesLoading?: boolean
+  walletConnected?: boolean
 }
 
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
@@ -40,7 +42,8 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   apy,
   toStake,
   stakedPositions,
-  stakesLoading = false
+  stakesLoading = false,
+  walletConnected = false
 }) => {
   const classes = useStyle()
 
@@ -116,26 +119,38 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
         </Grid>
       </Grid>
       <Grid container direction='column' alignItems='center' className={classes.containers}>
-        {stakesLoading ? (
-          <img src={loader} style={{ width: 150, height: 150, margin: 'auto' }} />
+        {walletConnected ? (
+          stakesLoading ? (
+            <img src={loader} style={{ width: 150, height: 150, margin: 'auto' }} />
+          ) : (
+            <>
+              <Typography className={classes.listHeader}>Your staked positions</Typography>
+
+              {stakedPositions.length ? (
+                stakedPositions.map((element, index) => (
+                  <div className={classes.tile}>
+                    <RewardsTile key={index} {...element} />
+                  </div>
+                ))
+              ) : (
+                <EmptyPlaceholder desc='You have no positions staked on this farm' />
+              )}
+
+              <Typography className={classes.listHeader}>Positions to stake</Typography>
+
+              {toStake.length ? (
+                toStake.map((element, index) => (
+                  <div className={classes.tile}>
+                    <StakeTile key={index} {...element} />
+                  </div>
+                ))
+              ) : (
+                <EmptyPlaceholder desc='You have no more positions available to stake on this farm' />
+              )}
+            </>
+          )
         ) : (
-          <>
-            <Typography className={classes.listHeader}>Your staked positions</Typography>
-
-            {stakedPositions.map((element, index) => (
-              <div className={classes.tile}>
-                <RewardsTile key={index} {...element} />
-              </div>
-            ))}
-
-            <Typography className={classes.listHeader}>Positions to stake</Typography>
-
-            {toStake.map((element, index) => (
-              <div className={classes.tile}>
-                <StakeTile key={index} {...element} />
-              </div>
-            ))}
-          </>
+          <EmptyPlaceholder desc='Connect wallet to stake on this farm' />
         )}
       </Grid>
     </Grid>
