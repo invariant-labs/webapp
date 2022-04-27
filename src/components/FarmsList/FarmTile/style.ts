@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.component,
     padding: 24,
     paddingTop: 16,
+    width: 436,
     [theme.breakpoints.down('xs')]: {
       padding: 16
     }

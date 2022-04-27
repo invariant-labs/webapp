@@ -29,7 +29,12 @@ export const FarmsWrapper: React.FC = () => {
   }, [Object.values(allTokens).length])
 
   useEffect(() => {
-    if (walletStatus === Status.Initialized && Object.values(allFarms).length > 0 && Object.values(allUserStakes).length === 0 && list.length > 0) {
+    if (
+      walletStatus === Status.Initialized &&
+      Object.values(allFarms).length > 0 &&
+      Object.values(allUserStakes).length === 0 &&
+      list.length > 0
+    ) {
       dispatch(actions.getUserStakes())
     }
   }, [walletStatus, Object.values(allFarms).length, list])
@@ -65,8 +70,16 @@ export const FarmsWrapper: React.FC = () => {
         <img src={loader} style={{ width: 150, height: 150, margin: 'auto' }} />
       ) : (
         <>
-          <FarmList title={'Active farms'} data={data.filter(({ isActive }) => isActive)} />
-          <FarmList title={'Inactive farms'} data={data.filter(({ isActive }) => !isActive)} />
+          <FarmList
+            title={'Active farms'}
+            data={data.filter(({ isActive }) => isActive)}
+            emptyDesc='There are no active farms at this moment'
+          />
+          <FarmList
+            title={'Inactive farms'}
+            data={[]}
+            emptyDesc='There are no inactive farms at this moment'
+          />
         </>
       )}
     </Grid>

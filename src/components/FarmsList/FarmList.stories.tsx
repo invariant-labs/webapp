@@ -59,6 +59,7 @@ storiesOf('farmsList/list', module)
               feeTier: 0.01
             }
           ]}
+          emptyDesc='List is empty'
         />
       </Grid>
     )
@@ -115,6 +116,7 @@ storiesOf('farmsList/list', module)
               feeTier: 0.01
             }
           ]}
+          emptyDesc='List is empty'
         />
       </Grid>
     )

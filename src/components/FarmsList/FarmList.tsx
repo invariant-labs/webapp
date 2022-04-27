@@ -1,3 +1,4 @@
+import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import SearchInput from '@components/Inputs/SearchInput/SearchInput'
 import { Grid, Typography } from '@material-ui/core'
 import React, { useState } from 'react'
@@ -7,17 +8,22 @@ import useStyle from './style'
 export interface IFarmList {
   title: string
   data: IFarm[]
+  emptyDesc: string
 }
-export const FarmList: React.FC<IFarmList> = ({
-  title,
-  data
-}) => {
+export const FarmList: React.FC<IFarmList> = ({ title, data, emptyDesc }) => {
   const classes = useStyle()
   const [value, setValue] = useState('')
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value.toLowerCase())
   }
+
+  const filteredData = data.filter(item => {
+    return (
+      item.tokenX.symbol.toLowerCase().includes(value) ||
+      item.tokenY.symbol.toLowerCase().includes(value)
+    )
+  })
 
   return (
     <Grid className={classes.root}>
@@ -30,21 +36,18 @@ export const FarmList: React.FC<IFarmList> = ({
         <Typography className={classes.title}>{title}</Typography>
         <SearchInput handleChange={handleChangeInput} value={value} />
       </Grid>
-      <Grid>
-        {data.length > 0 ? (
-          data
-            .filter(item => {
-              return (
-                item.tokenX.symbol.toLowerCase().includes(value) ||
-                item.tokenY.symbol.toLowerCase().includes(value)
-              )
-            })
-            .map((element, index) => (
-              <div className={classes.tile}>
-                <FarmTile key={index} {...element} />
-              </div>
-            ))
-        ) : null}
+      <Grid container direction='column' alignItems='center'>
+        {filteredData.length > 0 ? (
+          filteredData.map((element, index) => (
+            <div className={classes.tile}>
+              <FarmTile key={index} {...element} />
+            </div>
+          ))
+        ) : (
+          <EmptyPlaceholder
+            desc={data.length === 0 ? emptyDesc : 'There are no farms matching this case'}
+          />
+        )}
       </Grid>
     </Grid>
   )
