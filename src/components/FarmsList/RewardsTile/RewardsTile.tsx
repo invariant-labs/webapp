@@ -35,7 +35,6 @@ export const RewardsTile: React.FC<IRewardsTile> = ({
   const classes = useStyle()
   return (
     <Grid className={classes.root} container direction='column'>
-      <Typography className={classes.header}>Your staked</Typography>
       <Grid className={classes.positionInfo} container>
         <Grid className={classes.leftSide} container direction='column'>
           <Grid className={classes.row} container wrap='nowrap'>

@@ -120,11 +120,15 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
           <img src={loader} style={{ width: 150, height: 150, margin: 'auto' }} />
         ) : (
           <>
+            <Typography className={classes.listHeader}>Your staked positions</Typography>
+
             {stakedPositions.map((element, index) => (
               <div className={classes.tile}>
                 <RewardsTile key={index} {...element} />
               </div>
             ))}
+
+            <Typography className={classes.listHeader}>Positions to stake</Typography>
 
             {toStake.map((element, index) => (
               <div className={classes.tile}>

@@ -58,7 +58,6 @@ export const StakeTile: React.FC<IStakedTile> = ({
 
   return (
     <Grid className={classes.root} container direction='column'>
-      <Typography className={classes.header}>Stake</Typography>
       <Grid className={classes.positionInfo} container>
         <Grid className={classes.leftSide} container direction='column'>
           <Grid className={classes.row} container wrap='nowrap'>

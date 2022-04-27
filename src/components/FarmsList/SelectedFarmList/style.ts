@@ -102,6 +102,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'rgba(169, 182, 191, 1)',
     WebkitPaddingBefore: '2px',
     ...typography.body2
+  },
+  listHeader: {
+    color: colors.white.main,
+    ...typography.heading4,
+    marginBottom: 12,
+    width: '100%'
   }
 }))
 

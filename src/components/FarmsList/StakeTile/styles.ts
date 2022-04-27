@@ -8,11 +8,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 16,
     width: 508
   },
-  header: {
-    color: colors.white.main,
-    ...typography.heading4,
-    marginBottom: 12
-  },
   positionInfo: {
     flexWrap: 'nowrap',
     border: `1px solid ${colors.invariant.light}`,
