@@ -47,10 +47,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 16,
     minWidth: 16,
     color: colors.invariant.lightGrey,
+    marginTop: -2,
 
     [theme.breakpoints.down('xs')]: {
       height: 12,
-      minWidth: 12
+      minWidth: 12,
+      marginTop: -3
     }
   },
   '@keyframes pulse': {
@@ -73,10 +75,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '50%',
     marginRight: 6,
     position: 'relative',
+    marginTop: -2,
 
     [theme.breakpoints.down('xs')]: {
       height: 9,
-      minWidth: 9
+      minWidth: 9,
+      marginTop: -3
     },
 
     '&::before': {
