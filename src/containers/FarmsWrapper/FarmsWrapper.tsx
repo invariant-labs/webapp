@@ -77,7 +77,7 @@ export const FarmsWrapper: React.FC = () => {
           />
           <FarmList
             title={'Inactive farms'}
-            data={[]}
+            data={data.filter(({ isActive }) => !isActive)}
             emptyDesc='There are no inactive farms at this moment'
           />
         </>
