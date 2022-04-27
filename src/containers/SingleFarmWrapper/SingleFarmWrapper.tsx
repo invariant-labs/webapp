@@ -3,7 +3,15 @@ import { calcYPerXPrice, printBN } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { farms, isLoadingFarms, isLoadingUserStakes, positionsForFarm, singleFarmData, stakeStatuses, userStakes } from '@selectors/farms'
+import {
+  farms,
+  isLoadingFarms,
+  isLoadingUserStakes,
+  positionsForFarm,
+  singleFarmData,
+  stakeStatuses,
+  userStakes
+} from '@selectors/farms'
 import { tokens } from '@selectors/pools'
 import React, { useEffect, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -14,6 +22,7 @@ import { calculateReward } from '@invariant-labs/staker-sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
 import loader from '@static/gif/loader.gif'
 import { positionsList } from '@selectors/positions'
+import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
 
 export interface IProps {
   id: string
@@ -40,7 +49,12 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   }, [Object.values(allTokens).length])
 
   useEffect(() => {
-    if (walletStatus === Status.Initialized && Object.values(allFarms).length > 0 && Object.values(allUserStakes).length === 0 && list.length > 0) {
+    if (
+      walletStatus === Status.Initialized &&
+      Object.values(allFarms).length > 0 &&
+      Object.values(allUserStakes).length === 0 &&
+      list.length > 0
+    ) {
       dispatch(actions.getUserStakes())
     }
   }, [walletStatus, Object.values(allFarms).length, list])
@@ -213,7 +227,8 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
             endTime: farmData.endTime.v,
             liquidity: allUserStakes[position.stakeAddress.toString()].liquidity,
             currentTime: new BN(Date.now() / 1000),
-            secondsPerLiquidityInsideInitial: allUserStakes[position.stakeAddress.toString()].secondsPerLiquidityInitial,
+            secondsPerLiquidityInsideInitial:
+              allUserStakes[position.stakeAddress.toString()].secondsPerLiquidityInitial,
             secondsPerLiquidityInside: position.secondsPerLiquidityInside
           })
 
@@ -258,9 +273,11 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   }, [stakedPositions])
 
   return !farmData ? (
-    farmsLoading
-      ? <img src={loader} style={{ width: 150, height: 150, margin: 'auto' }} />
-      : null
+    farmsLoading ? (
+      <img src={loader} style={{ width: 150, height: 150, margin: 'auto' }} />
+    ) : (
+      <EmptyPlaceholder desc='Farm does not exist' style={{ marginBlock: 20 }} />
+    )
   ) : (
     <SelectedFarmList
       tokenXIcon={allTokens[farmData.poolData.tokenX.toString()].logoURI}
