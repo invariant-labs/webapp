@@ -1,19 +1,20 @@
 import { Grid, Typography } from '@material-ui/core'
-import React from 'react'
+import React, { useState } from 'react'
 import { Token } from '@consts/static'
 import { Link } from 'react-router-dom'
 import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
-
-import useStyle from './style'
+import SwapList from '@static/svg/swap-list.svg'
 import { formatNumbers, showPrefix } from '@consts/utils'
-
+import useStyle from './style'
 export interface IFarm {
   isActive?: boolean
   apyPercent: number
-  totalStaked: number
-  yourStaked: number
+  totalStakedInXToken: number
+  yourStakedInXToken: number
+  totalStakedInYToken: number
+  yourStakedInYToken: number
   tokenX: Token
   tokenY: Token
   farmId: string
@@ -25,8 +26,10 @@ export interface IFarm {
 export const FarmTile: React.FC<IFarm> = ({
   isActive = false,
   apyPercent,
-  totalStaked,
-  yourStaked,
+  totalStakedInXToken,
+  totalStakedInYToken,
+  yourStakedInXToken,
+  yourStakedInYToken,
   tokenX,
   tokenY,
   farmId,
@@ -36,16 +39,38 @@ export const FarmTile: React.FC<IFarm> = ({
 }) => {
   const classes = useStyle()
 
+  const [xToY, setXtoY] = useState(true)
+
+  const totalsData = xToY
+    ? {
+        totalStaked: totalStakedInXToken,
+        userStaked: yourStakedInXToken,
+        totalSymbol: tokenX.symbol
+      }
+    : {
+        totalStaked: totalStakedInYToken,
+        userStaked: yourStakedInYToken,
+        totalSymbol: tokenY.symbol
+      }
+
   return (
     <Grid className={classes.root} container direction='column'>
       <Grid container direction='row' justifyContent='space-between' wrap='nowrap'>
         <Grid className={classes.flexWrapper}>
           <Grid className={classes.icons}>
-            <img src={tokenX.logoURI} className={classes.icon} />
-            <img src={tokenY.logoURI} className={classes.icon} />
+            <img src={(xToY ? tokenX : tokenY).logoURI} className={classes.icon} />
+            <img
+              className={classes.arrows}
+              src={SwapList}
+              alt='Arrow'
+              onClick={() => {
+                setXtoY(!xToY)
+              }}
+            />
+            <img src={(xToY ? tokenY : tokenX).logoURI} className={classes.icon} />
           </Grid>
           <Typography className={classes.names}>
-            {tokenX.symbol}-{tokenY.symbol}
+            {(xToY ? tokenX : tokenY).symbol}-{(xToY ? tokenY : tokenX).symbol}
           </Typography>
         </Grid>
         <Grid className={classes.activityWrapper}>
@@ -96,8 +121,8 @@ export const FarmTile: React.FC<IFarm> = ({
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Total staked:</Typography>
         <Typography className={classes.value}>
-          {formatNumbers()(totalStaked.toString())}
-          {showPrefix(totalStaked)} {tokenX.symbol}
+          {formatNumbers()(totalsData.totalStaked.toString())}
+          {showPrefix(totalsData.totalStaked)} {totalsData.totalSymbol}
         </Typography>
       </Grid>
       <Grid
@@ -108,8 +133,8 @@ export const FarmTile: React.FC<IFarm> = ({
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Your staked:</Typography>
         <Typography className={classes.value}>
-          {formatNumbers()(yourStaked.toString())}
-          {showPrefix(yourStaked)} {tokenX.symbol}
+          {formatNumbers()(totalsData.userStaked.toString())}
+          {showPrefix(totalsData.userStaked)} {totalsData.totalSymbol}
         </Typography>
       </Grid>
       <Link className={classes.link} to={`/farm/${farmId}`}>

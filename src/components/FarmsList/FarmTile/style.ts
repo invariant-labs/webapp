@@ -25,11 +25,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   icons: {
     display: 'flex',
     flexDirection: 'row',
-    minWidth: 68,
+    alignItems: 'center',
+    minWidth: 100,
     marginRight: 8,
 
     [theme.breakpoints.down('xs')]: {
-      minWidth: 58,
+      minWidth: 86,
       marginRight: 4
     }
   },
@@ -204,6 +205,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   rewardToken: {
     ...typography.body1,
     color: colors.invariant.text
+  },
+  arrows: {
+    minWidth: 32,
+    marginLeft: 4,
+    marginRight: 4,
+
+    [theme.breakpoints.down('xs')]: {
+      minWidth: 28
+    },
+
+    '&:hover': {
+      filter: 'brightness(2)'
+    }
   }
 }))
 

@@ -11,8 +11,10 @@ storiesOf('farmsList/tile', module)
         <FarmTile
           isActive
           apyPercent={1}
-          totalStaked={100000}
-          yourStaked={2137}
+          totalStakedInXToken={100000}
+          yourStakedInXToken={2137}
+          totalStakedInYToken={200000}
+          yourStakedInYToken={4137}
           farmId='qwerty'
           tokenX={tokens[NetworkType.DEVNET][0]}
           tokenY={tokens[NetworkType.DEVNET][1]}
@@ -28,8 +30,10 @@ storiesOf('farmsList/tile', module)
       <div style={{ width: 500, height: 500 }}>
         <FarmTile
           apyPercent={1}
-          totalStaked={100000}
-          yourStaked={2137}
+          totalStakedInXToken={100000}
+          yourStakedInXToken={2137}
+          totalStakedInYToken={200000}
+          yourStakedInYToken={4137}
           farmId='qwerty'
           tokenX={tokens[NetworkType.DEVNET][0]}
           tokenY={tokens[NetworkType.DEVNET][1]}
