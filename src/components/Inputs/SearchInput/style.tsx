@@ -17,13 +17,13 @@ const useStyles = makeStyles(() => ({
     fontFamily: 'Mukta',
     lineHeight: 16,
     fontSize: 16,
-    backgroundColor: colors.invariant.black,
+    backgroundColor: colors.invariant.dark,
     color: colors.invariant.light,
     border: `1px solid ${colors.invariant.light}`,
     borderRadius: 8,
     cursor: 'pointer',
     '&::placeholder': {
-      color: colors.invariant.light
+      color: colors.invariant.textGrey
     }
   }
 }))
