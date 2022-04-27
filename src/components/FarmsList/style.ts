@@ -18,6 +18,9 @@ const useStyles = makeStyles(() => ({
 
   noConnected: {
     position: 'relative'
+  },
+  empty: {
+    marginBlock: 20
   }
 }))
 

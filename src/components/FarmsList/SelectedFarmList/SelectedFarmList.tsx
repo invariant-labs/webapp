@@ -133,7 +133,7 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
                   </div>
                 ))
               ) : (
-                <EmptyPlaceholder desc='You have no positions staked on this farm' />
+                <EmptyPlaceholder desc='You have no positions staked on this farm' className={classes.empty} />
               )}
 
               <Typography className={classes.listHeader}>Positions to stake</Typography>
@@ -145,7 +145,7 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
                   </div>
                 ))
               ) : (
-                <EmptyPlaceholder desc='You have no more positions available to stake on this farm' />
+                <EmptyPlaceholder desc='You have no more positions available to stake on this farm' className={classes.empty} />
               )}
             </>
           )

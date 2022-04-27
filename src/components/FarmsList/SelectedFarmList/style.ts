@@ -108,6 +108,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.heading4,
     marginBottom: 12,
     width: '100%'
+  },
+  empty: {
+    marginBlock: 20
   }
 }))
 

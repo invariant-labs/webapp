@@ -45,6 +45,7 @@ export const FarmList: React.FC<IFarmList> = ({ title, data, emptyDesc }) => {
           ))
         ) : (
           <EmptyPlaceholder
+          className={classes.empty}
             desc={data.length === 0 ? emptyDesc : 'There are no farms matching this case'}
           />
         )}
