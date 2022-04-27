@@ -40,10 +40,10 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   }, [Object.values(allTokens).length])
 
   useEffect(() => {
-    if (walletStatus === Status.Initialized && Object.values(allFarms).length > 0 && Object.values(allUserStakes).length === 0 && list.length !== 0) {
+    if (walletStatus === Status.Initialized && Object.values(allFarms).length > 0 && Object.values(allUserStakes).length === 0 && list.length > 0) {
       dispatch(actions.getUserStakes())
     }
-  }, [walletStatus, Object.values(allFarms).length])
+  }, [walletStatus, Object.values(allFarms).length, list])
 
   const currentPrice =
     typeof farmData === 'undefined'
