@@ -79,6 +79,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis'
+  },
+  back: {
+    height: 40,
+    marginBottom: 16,
+    width: 'fit-content',
+    transition: 'filter 300ms',
+
+    '&:hover': {
+      filter: 'brightness(2)'
+    }
+  },
+  backIcon: {
+    width: 22,
+    height: 24,
+    marginRight: 12
+  },
+  backText: {
+    color: 'rgba(169, 182, 191, 1)',
+    WebkitPaddingBefore: '2px',
+    ...typography.body2
   }
 }))
 

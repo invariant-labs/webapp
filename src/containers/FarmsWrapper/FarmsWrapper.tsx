@@ -4,7 +4,7 @@ import { status } from '@selectors/solanaWallet'
 import { Grid } from '@material-ui/core'
 import { Status } from '@reducers/solanaWallet'
 import { useSelector, useDispatch } from 'react-redux'
-import { farmsWithUserStakedValues, isLoadingFarms } from '@selectors/farms'
+import { farmsWithUserStakedValues, isLoadingFarms, userStakes } from '@selectors/farms'
 import { pools, tokens } from '@selectors/pools'
 import { calcYPerXPrice, printBN } from '@consts/utils'
 import { actions } from '@reducers/farms'
@@ -17,19 +17,20 @@ export const FarmsWrapper: React.FC = () => {
   const allFarms = useSelector(farmsWithUserStakedValues)
   const allPools = useSelector(pools)
   const allTokens = useSelector(tokens)
+  const allUserStakes = useSelector(userStakes)
   const farmsLoading = useSelector(isLoadingFarms)
 
   useEffect(() => {
     if (Object.values(allTokens).length > 0 && Object.values(allFarms).length === 0) {
       dispatch(actions.getFarms())
     }
-  }, [allTokens])
+  }, [Object.values(allTokens).length])
 
   useEffect(() => {
-    if (walletStatus === Status.Initialized && Object.values(allFarms).length > 0) {
+    if (walletStatus === Status.Initialized && Object.values(allFarms).length > 0 && Object.values(allUserStakes).length === 0) {
       dispatch(actions.getUserStakes())
     }
-  }, [walletStatus, allFarms])
+  }, [walletStatus, Object.values(allFarms).length])
 
   const data = Object.values(allFarms).map(farm => {
     const now = Date.now() / 1000

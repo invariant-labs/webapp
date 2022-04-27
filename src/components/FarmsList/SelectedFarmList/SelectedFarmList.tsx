@@ -4,6 +4,8 @@ import classNames from 'classnames'
 import React from 'react'
 import RewardsTile, { IRewardsTile } from '../RewardsTile/RewardsTile'
 import StakeTile, { IStakedTile } from '../StakeTile/StakeTile'
+import backIcon from '@static/svg/back-arrow.svg'
+import { Link } from 'react-router-dom'
 import useStyle from './style'
 
 export interface ISelectedFarmList {
@@ -41,6 +43,12 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
 
   return (
     <Grid className={classes.root}>
+      <Link to='/farms' style={{ textDecoration: 'none' }}>
+        <Grid className={classes.back} container item alignItems='center'>
+          <img className={classes.backIcon} src={backIcon} />
+          <Typography className={classes.backText}>Back to Farms List</Typography>
+        </Grid>
+      </Link>
       <Grid
         className={classes.header}
         container
@@ -105,14 +113,15 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
         </Grid>
       </Grid>
       <Grid className={classes.containers}>
-        {toStake.map((element, index) => (
-          <div className={classes.tile}>
-            <StakeTile key={index} {...element} />
-          </div>
-        ))}
         {stakedPositions.map((element, index) => (
           <div className={classes.tile}>
             <RewardsTile key={index} {...element} />
+          </div>
+        ))}
+
+        {toStake.map((element, index) => (
+          <div className={classes.tile}>
+            <StakeTile key={index} {...element} />
           </div>
         ))}
       </Grid>
