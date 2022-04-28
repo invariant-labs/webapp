@@ -9,8 +9,9 @@ export interface IFarmList {
   title: string
   data: IFarm[]
   emptyDesc: string
+  isLoadingTotals: boolean
 }
-export const FarmList: React.FC<IFarmList> = ({ title, data, emptyDesc }) => {
+export const FarmList: React.FC<IFarmList> = ({ title, data, emptyDesc, isLoadingTotals }) => {
   const classes = useStyle()
   const [value, setValue] = useState('')
 
@@ -40,7 +41,7 @@ export const FarmList: React.FC<IFarmList> = ({ title, data, emptyDesc }) => {
         {filteredData.length > 0 ? (
           filteredData.map((element, index) => (
             <div className={classes.tile}>
-              <FarmTile key={index} {...element} />
+              <FarmTile key={index} {...element} isLoadingTotals={isLoadingTotals} />
             </div>
           ))
         ) : (

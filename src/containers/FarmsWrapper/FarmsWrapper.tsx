@@ -4,7 +4,7 @@ import { status } from '@selectors/solanaWallet'
 import { Grid } from '@material-ui/core'
 import { Status } from '@reducers/solanaWallet'
 import { useSelector, useDispatch } from 'react-redux'
-import { farmsWithUserStakedValues, isLoadingFarms, userStakes } from '@selectors/farms'
+import { farmsWithUserStakedValues, isLoadingFarms, isLoadingFarmsTotals, userStakes } from '@selectors/farms'
 import { pools, tokens } from '@selectors/pools'
 import { calcYPerXPrice, printBN } from '@consts/utils'
 import { actions } from '@reducers/farms'
@@ -21,6 +21,7 @@ export const FarmsWrapper: React.FC = () => {
   const allUserStakes = useSelector(userStakes)
   const farmsLoading = useSelector(isLoadingFarms)
   const { list } = useSelector(positionsList)
+  const farmsTotalsLoading = useSelector(isLoadingFarmsTotals)
 
   useEffect(() => {
     if (Object.values(allTokens).length > 0 && Object.values(allFarms).length === 0) {
@@ -76,11 +77,13 @@ export const FarmsWrapper: React.FC = () => {
             title={'Active farms'}
             data={data.filter(({ isActive }) => isActive)}
             emptyDesc='There are no active farms at this moment'
+            isLoadingTotals={farmsTotalsLoading}
           />
           <FarmList
             title={'Inactive farms'}
             data={data.filter(({ isActive }) => !isActive)}
             emptyDesc='There are no inactive farms at this moment'
+            isLoadingTotals={farmsTotalsLoading}
           />
         </>
       )}

@@ -9,13 +9,14 @@ import { positionsWithPoolsData } from './positions'
 
 const store = (s: AnyProps) => s[farmsSliceName] as IFarmsStore
 
-export const { farms, isLoadingFarms, userStakes, isLoadingUserStakes, stakeStatuses } =
+export const { farms, isLoadingFarms, userStakes, isLoadingUserStakes, stakeStatuses, isLoadingFarmsTotals } =
   keySelectors(store, [
     'farms',
     'isLoadingFarms',
     'userStakes',
     'isLoadingUserStakes',
-    'stakeStatuses'
+    'stakeStatuses',
+    'isLoadingFarmsTotals'
   ])
 
 export interface IncentiveWithUserStaked extends ExtendedIncentive {

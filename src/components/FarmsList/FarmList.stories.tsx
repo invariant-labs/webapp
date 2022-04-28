@@ -17,6 +17,7 @@ storiesOf('farmsList/list', module)
           paddingInline: 20
         }}>
         <FarmList
+          isLoadingTotals={false}
           title={'Active farms'}
           data={[
             {
@@ -80,6 +81,7 @@ storiesOf('farmsList/list', module)
           paddingInline: 20
         }}>
         <FarmList
+          isLoadingTotals={false}
           title={'Inactive farms'}
           data={[
             {

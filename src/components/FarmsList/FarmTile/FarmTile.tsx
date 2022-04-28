@@ -7,7 +7,9 @@ import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import SwapList from '@static/svg/swap-list.svg'
 import { formatNumbers, showPrefix, thresholdsWithTokenDecimal } from '@consts/utils'
+import loadingAnimation from '@static/gif/loading.gif'
 import useStyle from './style'
+
 export interface IFarm {
   isActive?: boolean
   apyPercent: number
@@ -23,7 +25,11 @@ export interface IFarm {
   feeTier: number
 }
 
-export const FarmTile: React.FC<IFarm> = ({
+export interface IProps extends IFarm {
+  isLoadingTotals: boolean
+}
+
+export const FarmTile: React.FC<IProps> = ({
   isActive = false,
   apyPercent,
   totalStakedInXToken,
@@ -35,7 +41,8 @@ export const FarmTile: React.FC<IFarm> = ({
   farmId,
   rewardSymbol,
   rewardIcon,
-  feeTier
+  feeTier,
+  isLoadingTotals
 }) => {
   const classes = useStyle()
 
@@ -119,15 +126,20 @@ export const FarmTile: React.FC<IFarm> = ({
         container
         direction='row'
         justifyContent='space-between'
+        alignItems='center'
         wrap='nowrap'
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Total staked:</Typography>
-        <Typography className={classes.value}>
-          {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(
-            totalsData.totalStaked.toString()
-          )}
-          {showPrefix(totalsData.totalStaked)} {totalsData.totalSymbol}
-        </Typography>
+        {
+          isLoadingTotals
+            ? <img src={loadingAnimation} className={classes.loading} />
+            : (<Typography className={classes.value}>
+              {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(
+                totalsData.totalStaked.toString()
+              )}
+              {showPrefix(totalsData.totalStaked)} {totalsData.totalSymbol}
+            </Typography>)
+        }
       </Grid>
       <Grid
         container

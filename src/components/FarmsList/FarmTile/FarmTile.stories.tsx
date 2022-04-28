@@ -9,6 +9,7 @@ storiesOf('farmsList/tile', module)
     return (
       <div style={{ width: 500, height: 500 }}>
         <FarmTile
+          isLoadingTotals={false}
           isActive
           apyPercent={1}
           totalStakedInXToken={100000}
@@ -29,6 +30,7 @@ storiesOf('farmsList/tile', module)
     return (
       <div style={{ width: 500, height: 500 }}>
         <FarmTile
+          isLoadingTotals={false}
           apyPercent={1}
           totalStakedInXToken={100000}
           yourStakedInXToken={2137}

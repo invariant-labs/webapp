@@ -36,6 +36,7 @@ export interface StakeStatus {
 export interface IFarmsStore {
   farms: Record<string, ExtendedIncentive>
   isLoadingFarms: boolean
+  isLoadingFarmsTotals: boolean
   userStakes: Record<string, ExtendedStake>
   isLoadingUserStakes: boolean
   stakeStatuses: Record<string, StakeStatus>
@@ -67,6 +68,7 @@ export interface StateUpdateAfterStake {
 export const defaultState: IFarmsStore = {
   farms: {},
   isLoadingFarms: true,
+  isLoadingFarmsTotals: true,
   userStakes: {},
   isLoadingUserStakes: true,
   stakeStatuses: {}
@@ -79,6 +81,7 @@ const farmsSlice = createSlice({
   reducers: {
     getFarms(state) {
       state.isLoadingFarms = true
+      state.isLoadingFarmsTotals = true
       return state
     },
     setFarms(state, action: PayloadAction<Record<string, ExtendedIncentive>>) {
@@ -116,6 +119,9 @@ const farmsSlice = createSlice({
           ...update
         }
       })
+
+      state.isLoadingFarmsTotals = false
+
       return state
     },
     stakePosition(state, action: PayloadAction<FarmPositionData>) {
