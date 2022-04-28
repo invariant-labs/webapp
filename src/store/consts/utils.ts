@@ -922,3 +922,75 @@ export const calculateBondPrice = (bondSale: BondSaleStruct, amount: BN, byAmoun
   byAmountBond
     ? calculateSellPrice(bondSale, amount)
     : calculateEstBondPriceForQuoteAmount(bondSale, amount)
+
+interface MultipleTiersSimulationResult {
+  amountOut: BN
+  transactions: Array<{
+    amountPercent: number
+    poolIndex: number
+    estimatedPriceAfterSwap: BN
+    priceImpact: BN
+  }>
+  error: string[]
+}
+
+interface SingleSimulationData {
+  poolIndex: number
+  estimatedPriceAfterSwap: BN
+  priceImpact: BN
+  amountPercent: number
+  errors: string[]
+}
+
+interface SimulationsPackResult {
+  amountOut: BN,
+  transactionsIndexes: number[]
+}
+
+export const simulateMultipleTiersSwap = async (
+  pools: PoolWithAddress[],
+  poolTicks: { [key in string]: Tick[] },
+  tickmaps: { [key in string]: Tickmap },
+  slippage: Decimal,
+  fromToken: PublicKey,
+  toToken: PublicKey,
+  amount: BN
+): Promise<MultipleTiersSimulationResult> => {
+  const filteredPools = findPairs(fromToken, toToken, pools)
+
+  const simulationsResults: SingleSimulationData[] = []
+
+  for (const pool of filteredPools) {
+    const isXtoY = fromToken.equals(pool.tokenX)
+
+    const ticks: Map<number, Tick> = new Map<number, Tick>()
+    for (const tick of poolTicks[pool.address.toString()]) {
+      ticks.set(tick.index, tick)
+    }
+
+    try {
+      const _swapSimulateResult = await simulateSwap({
+        xToY: isXtoY,
+        byAmountIn: true,
+        swapAmount: amount,
+        priceLimit: {
+          v: isXtoY ? new BN(1) : new BN('340282366920938463463374607431768211455')
+        },
+        slippage: slippage,
+        pool: pool,
+        ticks: ticks,
+        tickmap: tickmaps[pool.tickmap.toString()]
+      })
+    } catch (err: any) {
+    }
+  }
+
+  const _partials: Array<Array<SimulationsPackResult | undefined>> = (new Array(21)).fill(new Array(simulationsResults.length + 1).fill(undefined))
+  const _partialsWithFailed: Array<Array<SimulationsPackResult | undefined>> = (new Array(21)).fill(new Array(simulationsResults.length + 1).fill(undefined))
+
+  return {
+    amountOut: new BN(0),
+    transactions: [],
+    error: []
+  }
+}
