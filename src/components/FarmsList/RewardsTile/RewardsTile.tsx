@@ -41,19 +41,21 @@ export const RewardsTile: React.FC<IProps> = ({
 }) => {
   const classes = useStyle()
 
-  const data = xToY ? {
-    firstSymbol: tokenXSymbol,
-    secondSymbol: tokenYSymbol,
-    max: maxPrice,
-    min: minPrice,
-    value: valueX
-  } : {
-    firstSymbol: tokenYSymbol,
-    secondSymbol: tokenXSymbol,
-    max: 1 / maxPrice,
-    min: 1 / minPrice,
-    value: valueY
-  }
+  const data = xToY
+    ? {
+        firstSymbol: tokenXSymbol,
+        secondSymbol: tokenYSymbol,
+        max: maxPrice,
+        min: minPrice,
+        value: valueX
+      }
+    : {
+        firstSymbol: tokenYSymbol,
+        secondSymbol: tokenXSymbol,
+        max: 1 / maxPrice,
+        min: 1 / minPrice,
+        value: valueY
+      }
 
   return (
     <Grid className={classes.root} container direction='column'>

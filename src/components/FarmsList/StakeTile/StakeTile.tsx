@@ -63,23 +63,25 @@ export const StakeTile: React.FC<IProps> = ({
     }
   }, [stakeStatus])
 
-  const data = xToY ? {
-    firstSymbol: tokenXSymbol,
-    secondSymbol: tokenYSymbol,
-    max: maxPrice,
-    min: minPrice,
-    value: valueX
-  } : {
-    firstSymbol: tokenYSymbol,
-    secondSymbol: tokenXSymbol,
-    max: 1 / maxPrice,
-    min: 1 / minPrice,
-    value: valueY
-  }
+  const data = xToY
+    ? {
+        firstSymbol: tokenXSymbol,
+        secondSymbol: tokenYSymbol,
+        max: maxPrice,
+        min: minPrice,
+        value: valueX
+      }
+    : {
+        firstSymbol: tokenYSymbol,
+        secondSymbol: tokenXSymbol,
+        max: 1 / maxPrice,
+        min: 1 / minPrice,
+        value: valueY
+      }
 
   return (
     <Grid className={classes.root} container direction='column'>
-       <Grid className={classes.positionInfo} container>
+      <Grid className={classes.positionInfo} container>
         <Grid className={classes.leftSide} container direction='column'>
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Min price:</Typography>
