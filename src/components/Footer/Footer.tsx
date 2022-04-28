@@ -24,7 +24,7 @@ export const FooterTransition: React.FC<TransitionProps & {
   }
 
   return (
-    <Transition in={inProp} {...props}>
+    <Transition in={inProp} {...(props as any)}>
       {(state) => (
         <div
           style={{
