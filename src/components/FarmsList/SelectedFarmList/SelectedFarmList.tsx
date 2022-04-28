@@ -123,7 +123,9 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
             <Typography className={classes.label}>Reward:</Typography>
             <img src={rewardToken.logoURI} className={classes.smallIcon} />
             <Typography className={classes.value}>
-              {formatNumbers(thresholdsWithTokenDecimal(rewardToken.decimals))(totalRewardPerDay.toString())}
+              {formatNumbers(thresholdsWithTokenDecimal(rewardToken.decimals))(
+                totalRewardPerDay.toString()
+              )}
               {showPrefix(totalRewardPerDay)} {rewardToken.symbol}/day
             </Typography>
           </Grid>

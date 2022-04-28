@@ -123,7 +123,9 @@ export const FarmTile: React.FC<IFarm> = ({
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Total staked:</Typography>
         <Typography className={classes.value}>
-          {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(totalsData.totalStaked.toString())}
+          {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(
+            totalsData.totalStaked.toString()
+          )}
           {showPrefix(totalsData.totalStaked)} {totalsData.totalSymbol}
         </Typography>
       </Grid>
@@ -135,7 +137,9 @@ export const FarmTile: React.FC<IFarm> = ({
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Your staked:</Typography>
         <Typography className={classes.value}>
-          {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(totalsData.userStaked.toString())}
+          {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(
+            totalsData.userStaked.toString()
+          )}
           {showPrefix(totalsData.userStaked)} {totalsData.totalSymbol}
         </Typography>
       </Grid>
