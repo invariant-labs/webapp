@@ -1,13 +1,15 @@
 import { Grid, Typography } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import useStyle from './styles'
-import { formatNumbers, showPrefix } from '@consts/utils'
+import { formatNumbers, showPrefix, thresholdsWithTokenDecimal } from '@consts/utils'
 import { StakeStatus } from '@reducers/farms'
 import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 
 export interface IStakedTile {
   tokenXSymbol: string
   tokenYSymbol: string
+  tokenXDecimals: number
+  tokenYDecimals: number
   minPrice: number
   maxPrice: number
   fee: number
@@ -27,6 +29,8 @@ export interface IProps extends IStakedTile {
 export const StakeTile: React.FC<IProps> = ({
   tokenXSymbol,
   tokenYSymbol,
+  tokenXDecimals,
+  tokenYDecimals,
   minPrice,
   maxPrice,
   fee,
@@ -69,14 +73,18 @@ export const StakeTile: React.FC<IProps> = ({
         secondSymbol: tokenYSymbol,
         max: maxPrice,
         min: minPrice,
-        value: valueX
+        value: valueX,
+        firstDecimals: tokenXDecimals,
+        secondDecimals: tokenYDecimals
       }
     : {
         firstSymbol: tokenYSymbol,
         secondSymbol: tokenXSymbol,
         max: 1 / maxPrice,
         min: 1 / minPrice,
-        value: valueY
+        value: valueY,
+        firstDecimals: tokenYDecimals,
+        secondDecimals: tokenXDecimals
       }
 
   return (
@@ -86,7 +94,7 @@ export const StakeTile: React.FC<IProps> = ({
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Min price:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(data.min.toString())}
+              {formatNumbers(thresholdsWithTokenDecimal(data.secondDecimals))(data.min.toString())}
               {showPrefix(data.min)} {data.secondSymbol}/{data.firstSymbol}
             </Typography>
           </Grid>
@@ -94,7 +102,7 @@ export const StakeTile: React.FC<IProps> = ({
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Max price:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(data.max.toString())}
+              {formatNumbers(thresholdsWithTokenDecimal(data.secondDecimals))(data.max.toString())}
               {showPrefix(data.max)} {data.secondSymbol}/{data.firstSymbol}
             </Typography>
           </Grid>
@@ -109,7 +117,7 @@ export const StakeTile: React.FC<IProps> = ({
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>{tokenXSymbol} deposit:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(tokenXDeposit.toString())}
+              {formatNumbers(thresholdsWithTokenDecimal(tokenXDecimals))(tokenXDeposit.toString())}
               {showPrefix(tokenXDeposit)}
             </Typography>
           </Grid>
@@ -117,7 +125,7 @@ export const StakeTile: React.FC<IProps> = ({
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>{tokenYSymbol} deposit:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(tokenYDeposit.toString())}
+              {formatNumbers(thresholdsWithTokenDecimal(tokenYDecimals))(tokenYDeposit.toString())}
               {showPrefix(tokenYDeposit)}
             </Typography>
           </Grid>
@@ -125,7 +133,7 @@ export const StakeTile: React.FC<IProps> = ({
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Value:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(data.value.toString())}
+              {formatNumbers(thresholdsWithTokenDecimal(data.firstDecimals))(data.value.toString())}
               {showPrefix(data.value)} {data.firstSymbol}
             </Typography>
           </Grid>

@@ -7,6 +7,8 @@ storiesOf('farmsList/rewardsTile', module).add('tile', () => {
       <RewardsTile
         tokenXSymbol='BTC'
         tokenYSymbol='SOL'
+        tokenXDecimals={9}
+        tokenYDecimals={6}
         minPrice={2}
         maxPrice={5.005}
         fee={0.3}
@@ -15,6 +17,7 @@ storiesOf('farmsList/rewardsTile', module).add('tile', () => {
         valueX={5184}
         valueY={2137}
         rewardSymbol={'SNY'}
+        rewardDecimals={7}
         onClaimReward={() => {
           console.log('reward')
         }}

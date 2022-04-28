@@ -134,8 +134,8 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         return {
           tokenXSymbol: position.tokenX.symbol,
           tokenYSymbol: position.tokenY.symbol,
-          tokenXIcon: position.tokenX.logoURI,
-          tokenYIcon: position.tokenY.logoURI,
+          tokenXDecimals: position.tokenX.decimals,
+          tokenYDecimals: position.tokenY.decimals,
           fee: +printBN(position.poolData.fee.v, DECIMAL - 2),
           minPrice,
           maxPrice,
@@ -239,8 +239,8 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         return {
           tokenXSymbol: position.tokenX.symbol,
           tokenYSymbol: position.tokenY.symbol,
-          tokenXIcon: position.tokenX.logoURI,
-          tokenYIcon: position.tokenY.logoURI,
+          tokenXDecimals: position.tokenX.decimals,
+          tokenYDecimals: position.tokenY.decimals,
           fee: +printBN(position.poolData.fee.v, DECIMAL - 2),
           minPrice,
           maxPrice,
@@ -250,6 +250,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
           valueY,
           rewardSymbol: allTokens[farmData.rewardToken.toString()].symbol,
           rewardIcon: allTokens[farmData.rewardToken.toString()].logoURI,
+          rewardDecimals: allTokens[farmData.rewardToken.toString()].decimals,
           rewardValue,
           onClaimReward: () => {
             dispatch(

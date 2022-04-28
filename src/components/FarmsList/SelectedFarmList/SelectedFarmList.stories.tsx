@@ -32,6 +32,8 @@ storiesOf('farmsList/selectedFarm', module)
             {
               tokenXSymbol: 'BTC',
               tokenYSymbol: 'SOL',
+              tokenXDecimals: 9,
+              tokenYDecimals: 6,
               minPrice: 2,
               maxPrice: 5.005,
               fee: 0.3,
@@ -48,6 +50,8 @@ storiesOf('farmsList/selectedFarm', module)
             {
               tokenXSymbol: 'BTC',
               tokenYSymbol: 'SOL',
+              tokenXDecimals: 9,
+              tokenYDecimals: 6,
               minPrice: 2,
               maxPrice: 5.005,
               fee: 0.3,
@@ -56,6 +60,7 @@ storiesOf('farmsList/selectedFarm', module)
               valueX: 5184,
               valueY: 2137,
               rewardSymbol: 'SNY',
+              rewardDecimals: 7,
               onClaimReward: () => {
                 console.log('reward')
               },

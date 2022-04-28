@@ -7,6 +7,8 @@ storiesOf('farmsList/stakeTile', module).add('tile', () => {
       <StakeTile
         tokenXSymbol='BTC'
         tokenYSymbol='SOL'
+        tokenXDecimals={9}
+        tokenYDecimals={6}
         minPrice={2}
         maxPrice={5.005}
         fee={0.3}
