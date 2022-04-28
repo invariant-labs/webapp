@@ -20,14 +20,14 @@ export const FooterTransition: React.FC<
     <Fade
       {...props}
       timeout={{
-        appear: 1000,
-        enter: 1000,
-        exit: 500
+        appear: 500,
+        enter: 500,
+        exit: 400
       }}>
       <div>
         <div
           style={{
-            transition: 'transform 500ms',
+            transition: 'transform 400ms',
             transform: translate
           }}>
           {children}
