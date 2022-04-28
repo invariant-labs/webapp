@@ -2,14 +2,46 @@ import React from 'react'
 import { Grid, Tooltip } from '@material-ui/core'
 import { social } from '@static/links'
 import icons from '@static/icons'
+import { Transition } from 'react-transition-group'
 import useStyles from './style'
+import { TransitionProps } from '@material-ui/core/transitions'
+
+export const FooterTransition: React.FC<TransitionProps & {
+  children?: React.ReactElement<any, any> | undefined;
+}> = ({ in: inProp, children, ...props }) => {
+  const duration = 300
+  const defaultStyle = {
+    transition: `opacity ${duration}ms ease-in-out`,
+    opacity: 0
+  }
+
+  const transitionStyles = {
+    entering: { opacity: 1 },
+    entered: { opacity: 1 },
+    exiting: { opacity: 0 },
+    exited: { opacity: 0 },
+    unmounted: { opacity: 0 }
+  }
+
+  return (
+    <Transition in={inProp} {...props}>
+      {(state) => (
+        <div
+          style={{
+            ...defaultStyle,
+            ...transitionStyles[state]
+          }}>{children}</div>
+      )}
+    </Transition>
+  )
+}
 
 export const Footer = () => {
   const classes = useStyles()
   return (
     <Grid className={classes.footer}>
       <Grid className={classes.footerItem}>
-        <Tooltip classes={{ tooltip: classes.tooltip }} title='Github' placement='top'>
+        <Tooltip classes={{ tooltip: classes.tooltip }} title='Github' placement='top' TransitionComponent={FooterTransition}>
           <a href={social.github} className={classes.footerLink} target='_blank'>
             <img className={classes.icon} src={icons.GithubIcon} alt={'github icon'} />
           </a>
