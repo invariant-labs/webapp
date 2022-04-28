@@ -130,16 +130,16 @@ export const FarmTile: React.FC<IProps> = ({
         wrap='nowrap'
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Total staked:</Typography>
-        {
-          isLoadingTotals
-            ? <img src={loadingAnimation} className={classes.loading} />
-            : (<Typography className={classes.value}>
-              {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(
-                totalsData.totalStaked.toString()
-              )}
-              {showPrefix(totalsData.totalStaked)} {totalsData.totalSymbol}
-            </Typography>)
-        }
+        {isLoadingTotals ? (
+          <img src={loadingAnimation} className={classes.loading} />
+        ) : (
+          <Typography className={classes.value}>
+            {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(
+              totalsData.totalStaked.toString()
+            )}
+            {showPrefix(totalsData.totalStaked)} {totalsData.totalSymbol}
+          </Typography>
+        )}
       </Grid>
       <Grid
         container

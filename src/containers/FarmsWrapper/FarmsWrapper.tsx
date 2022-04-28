@@ -4,7 +4,12 @@ import { status } from '@selectors/solanaWallet'
 import { Grid } from '@material-ui/core'
 import { Status } from '@reducers/solanaWallet'
 import { useSelector, useDispatch } from 'react-redux'
-import { farmsWithUserStakedValues, isLoadingFarms, isLoadingFarmsTotals, userStakes } from '@selectors/farms'
+import {
+  farmsWithUserStakedValues,
+  isLoadingFarms,
+  isLoadingFarmsTotals,
+  userStakes
+} from '@selectors/farms'
 import { pools, tokens } from '@selectors/pools'
 import { calcYPerXPrice, printBN } from '@consts/utils'
 import { actions } from '@reducers/farms'
