@@ -6,7 +6,7 @@ import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import SwapList from '@static/svg/swap-list.svg'
-import { formatNumbers, showPrefix } from '@consts/utils'
+import { formatNumbers, showPrefix, thresholdsWithTokenDecimal } from '@consts/utils'
 import useStyle from './style'
 export interface IFarm {
   isActive?: boolean
@@ -45,12 +45,14 @@ export const FarmTile: React.FC<IFarm> = ({
     ? {
         totalStaked: totalStakedInXToken,
         userStaked: yourStakedInXToken,
-        totalSymbol: tokenX.symbol
+        totalSymbol: tokenX.symbol,
+        totalDecimals: tokenX.decimals
       }
     : {
         totalStaked: totalStakedInYToken,
         userStaked: yourStakedInYToken,
-        totalSymbol: tokenY.symbol
+        totalSymbol: tokenY.symbol,
+        totalDecimals: tokenY.decimals
       }
 
   return (
@@ -121,7 +123,7 @@ export const FarmTile: React.FC<IFarm> = ({
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Total staked:</Typography>
         <Typography className={classes.value}>
-          {formatNumbers()(totalsData.totalStaked.toString())}
+          {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(totalsData.totalStaked.toString())}
           {showPrefix(totalsData.totalStaked)} {totalsData.totalSymbol}
         </Typography>
       </Grid>
@@ -133,7 +135,7 @@ export const FarmTile: React.FC<IFarm> = ({
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Your staked:</Typography>
         <Typography className={classes.value}>
-          {formatNumbers()(totalsData.userStaked.toString())}
+          {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(totalsData.userStaked.toString())}
           {showPrefix(totalsData.userStaked)} {totalsData.totalSymbol}
         </Typography>
       </Grid>

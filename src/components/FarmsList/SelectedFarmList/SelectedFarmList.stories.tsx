@@ -3,6 +3,7 @@ import { storiesOf } from '@storybook/react'
 import { Grid } from '@material-ui/core'
 import { MemoryRouter } from 'react-router'
 import SelectedFarmList from './SelectedFarmList'
+import { NetworkType, tokens } from '@consts/static'
 
 storiesOf('farmsList/selectedFarm', module)
   .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
@@ -17,12 +18,9 @@ storiesOf('farmsList/selectedFarm', module)
           height: '100vh'
         }}>
         <SelectedFarmList
-          tokenXIcon='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
-          tokenYIcon='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
-          rewardIcon='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
-          tokenXSymbol='BTC'
-          tokenYSymbol='SOL'
-          rewardSymbol='SNY'
+          tokenX={tokens[NetworkType.DEVNET][0]}
+          tokenY={tokens[NetworkType.DEVNET][1]}
+          rewardToken={tokens[NetworkType.DEVNET][0]}
           duration='01.01.99 - 20.03.03'
           totalStakedInXToken={2000000}
           userStakedInXToken={5000}
@@ -82,12 +80,9 @@ storiesOf('farmsList/selectedFarm', module)
           height: '100vh'
         }}>
         <SelectedFarmList
-          tokenXIcon='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
-          tokenYIcon='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
-          rewardIcon='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
-          tokenXSymbol='BTC'
-          tokenYSymbol='SOL'
-          rewardSymbol='SNY'
+          tokenX={tokens[NetworkType.DEVNET][0]}
+          tokenY={tokens[NetworkType.DEVNET][1]}
+          rewardToken={tokens[NetworkType.DEVNET][0]}
           duration='01.01.99 - 20.03.03'
           totalStakedInXToken={2000000}
           userStakedInXToken={5000}

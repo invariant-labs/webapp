@@ -1,4 +1,4 @@
-import { formatNumbers, showPrefix } from '@consts/utils'
+import { formatNumbers, showPrefix, thresholdsWithTokenDecimal } from '@consts/utils'
 import { Grid, Typography } from '@material-ui/core'
 import React, { useState } from 'react'
 import RewardsTile, { IRewardsTile } from '../RewardsTile/RewardsTile'
@@ -8,15 +8,13 @@ import { Link } from 'react-router-dom'
 import loader from '@static/gif/loader.gif'
 import SwapList from '@static/svg/swap-list.svg'
 import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import { Token } from '@consts/static'
 import useStyle from './style'
 
 export interface ISelectedFarmList {
-  tokenXIcon: string
-  tokenYIcon: string
-  tokenXSymbol: string
-  tokenYSymbol: string
-  rewardIcon: string
-  rewardSymbol: string
+  tokenX: Token
+  tokenY: Token
+  rewardToken: Token
   duration: string
   totalStakedInXToken: number
   totalStakedInYToken: number
@@ -31,12 +29,9 @@ export interface ISelectedFarmList {
 }
 
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
-  tokenXIcon,
-  tokenYIcon,
-  tokenXSymbol,
-  tokenYSymbol,
-  rewardIcon,
-  rewardSymbol,
+  tokenX,
+  tokenY,
+  rewardToken,
   duration,
   totalStakedInXToken,
   totalStakedInYToken,
@@ -57,12 +52,14 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
     ? {
         totalStaked: totalStakedInXToken,
         userStaked: userStakedInXToken,
-        totalSymbol: tokenXSymbol
+        totalSymbol: tokenX.symbol,
+        totalDecimals: tokenX.decimals
       }
     : {
         totalStaked: totalStakedInYToken,
         userStaked: userStakedInYToken,
-        totalSymbol: tokenYSymbol
+        totalSymbol: tokenY.symbol,
+        totalDecimals: tokenY.decimals
       }
 
   return (
@@ -80,7 +77,7 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
         alignItems='center'
         wrap='nowrap'>
         <img
-          src={xToY ? tokenXIcon : tokenYIcon}
+          src={xToY ? tokenX.logoURI : tokenY.logoURI}
           alt={'Token in pool'}
           className={classes.bigIcon}
         />
@@ -93,12 +90,12 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
           }}
         />
         <img
-          src={xToY ? tokenYIcon : tokenXIcon}
+          src={xToY ? tokenY.logoURI : tokenX.logoURI}
           alt={'Token in pool'}
           className={classes.bigIcon}
         />
         <Typography className={classes.title}>
-          {xToY ? tokenXSymbol : tokenYSymbol}-{xToY ? tokenYSymbol : tokenXSymbol}
+          {xToY ? tokenX.symbol : tokenY.symbol}-{xToY ? tokenY.symbol : tokenX.symbol}
         </Typography>
       </Grid>
       <Grid className={classes.positionInfo} container>
@@ -124,17 +121,19 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
         <Grid className={classes.rightSide} container direction='column'>
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Reward:</Typography>
-            <img src={rewardIcon} className={classes.smallIcon} />
+            <img src={rewardToken.logoURI} className={classes.smallIcon} />
             <Typography className={classes.value}>
-              {formatNumbers()(totalRewardPerDay.toString())}
-              {showPrefix(totalRewardPerDay)} {rewardSymbol}/day
+              {formatNumbers(thresholdsWithTokenDecimal(rewardToken.decimals))(totalRewardPerDay.toString())}
+              {showPrefix(totalRewardPerDay)} {rewardToken.symbol}/day
             </Typography>
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Total staked:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(totalsData.totalStaked.toString())}
+              {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(
+                totalsData.totalStaked.toString()
+              )}
               {showPrefix(totalsData.totalStaked)} {totalsData.totalSymbol}
             </Typography>
           </Grid>
@@ -142,7 +141,9 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Your staked:</Typography>
             <Typography className={classes.value}>
-              {formatNumbers()(totalsData.userStaked.toString())}
+              {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(
+                totalsData.userStaked.toString()
+              )}
               {showPrefix(totalsData.userStaked)} {totalsData.totalSymbol}
             </Typography>
           </Grid>

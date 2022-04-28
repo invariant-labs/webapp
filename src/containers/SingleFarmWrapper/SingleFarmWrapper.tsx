@@ -292,12 +292,9 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
     )
   ) : (
     <SelectedFarmList
-      tokenXIcon={allTokens[farmData.poolData.tokenX.toString()].logoURI}
-      tokenYIcon={allTokens[farmData.poolData.tokenY.toString()].logoURI}
-      tokenXSymbol={allTokens[farmData.poolData.tokenX.toString()].symbol}
-      tokenYSymbol={allTokens[farmData.poolData.tokenY.toString()].symbol}
-      rewardIcon={allTokens[farmData.rewardToken.toString()].logoURI}
-      rewardSymbol={allTokens[farmData.rewardToken.toString()].symbol}
+      tokenX={allTokens[farmData.poolData.tokenX.toString()]}
+      tokenY={allTokens[farmData.poolData.tokenY.toString()]}
+      rewardToken={allTokens[farmData.rewardToken.toString()]}
       duration={`${new Date(farmData.startTime.v.toNumber() * 1000).toLocaleDateString('pl-PL', {
         day: 'numeric',
         month: 'numeric',
