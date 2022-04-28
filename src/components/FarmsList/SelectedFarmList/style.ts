@@ -117,6 +117,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       filter: 'brightness(2)'
     }
+  },
+  loading: {
+    width: 20,
+    height: 20
   }
 }))
 

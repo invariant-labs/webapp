@@ -9,6 +9,7 @@ import loader from '@static/gif/loader.gif'
 import SwapList from '@static/svg/swap-list.svg'
 import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import { Token } from '@consts/static'
+import loadingAnimation from '@static/gif/loading.gif'
 import useStyle from './style'
 
 export interface ISelectedFarmList {
@@ -26,6 +27,7 @@ export interface ISelectedFarmList {
   stakedPositions: IRewardsTile[]
   stakesLoading?: boolean
   walletConnected?: boolean
+  isLoadingTotals?: boolean
 }
 
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
@@ -42,7 +44,8 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   toStake,
   stakedPositions,
   stakesLoading = false,
-  walletConnected = false
+  walletConnected = false,
+  isLoadingTotals = false
 }) => {
   const classes = useStyle()
 
@@ -132,12 +135,16 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Total staked:</Typography>
-            <Typography className={classes.value}>
-              {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(
-                totalsData.totalStaked.toString()
-              )}
-              {showPrefix(totalsData.totalStaked)} {totalsData.totalSymbol}
-            </Typography>
+            {isLoadingTotals ? (
+              <img src={loadingAnimation} className={classes.loading} />
+            ) : (
+              <Typography className={classes.value}>
+                {formatNumbers(thresholdsWithTokenDecimal(totalsData.totalDecimals))(
+                  totalsData.totalStaked.toString()
+                )}
+                {showPrefix(totalsData.totalStaked)} {totalsData.totalSymbol}
+              </Typography>
+            )}
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
