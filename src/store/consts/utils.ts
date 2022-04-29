@@ -971,7 +971,7 @@ export const simulateMultipleTiersSwap = async (
       ticks.set(tick.index, tick)
     }
 
-    for (let i = 0; i <= 100; i += 5) {
+    for (let i = 5; i <= 100; i += 5) {
       try {
         const swapSimulateResult = simulateSwap({
           xToY: isXtoY,
@@ -1018,16 +1018,161 @@ export const simulateMultipleTiersSwap = async (
     }
   }
 
-  const _partials: Array<Array<SimulationsPackResult | undefined>> = new Array(21).fill(
-    new Array(simulationsResults.length + 1).fill(undefined)
+  const partials: SimulationsPackResult[][] = new Array(21).fill(
+    new Array(simulationsResults.length + 1).fill({
+      amountOut: new BN(0),
+      transactionsIndexes: []
+    })
   )
-  const _partialsWithFailed: Array<Array<SimulationsPackResult | undefined>> = new Array(21).fill(
-    new Array(simulationsResults.length + 1).fill(undefined)
+  const partialsWithFailed: SimulationsPackResult[][] = new Array(21).fill(
+    new Array(simulationsResults.length + 1).fill({
+      amountOut: new BN(0),
+      transactionsIndexes: []
+    })
   )
+
+  for (let i = 0; i < simulationsResults.length + 1; i++) {
+    partials[0][i] = {
+      amountOut: new BN(0),
+      transactionsIndexes: []
+    }
+
+    partialsWithFailed[0][i] = {
+      amountOut: new BN(0),
+      transactionsIndexes: []
+    }
+  }
+
+  for (let i = 0; i < 21; i++) {
+    partials[i][0] = {
+      amountOut: new BN(0),
+      transactionsIndexes: []
+    }
+
+    partialsWithFailed[i][0] = {
+      amountOut: new BN(0),
+      transactionsIndexes: []
+    }
+  }
+
+  for (let i = 1; i < simulationsResults.length + 1; i++) {
+    for (let j = 1; j < 21; j++) {
+      if (simulationsResults[i].amountPercent > j * 5) {
+        partials[i][j] = partials[i - 1][j]
+        partialsWithFailed[i][j] = partialsWithFailed[i - 1][j]
+      } else {
+        // byAmountIn ? successData.amountOut.lt(result) : successData.amountOut.gt(result)
+
+        if (simulationsResults[i].errors.length === 0) {
+          if (
+            partials[i - 1][j - simulationsResults[i].amountPercent / 5].transactionsIndexes
+              .map(index => simulationsResults[index].poolIndex)
+              .findIndex(poolIndex => poolIndex === simulationsResults[i].poolIndex) === -1
+          ) {
+            if (
+              byAmountIn
+                ? partials[i - 1][j - simulationsResults[i].amountPercent / 5].amountOut
+                    .add(simulationsResults[i].amountOut)
+                    .gt(partials[i - 1][j].amountOut)
+                : partials[i - 1][j - simulationsResults[i].amountPercent / 5].amountOut
+                    .add(simulationsResults[i].amountOut)
+                    .lt(partials[i - 1][j].amountOut)
+            ) {
+              partials[i][j] = {
+                amountOut: partials[i - 1][
+                  j - simulationsResults[i].amountPercent / 5
+                ].amountOut.add(simulationsResults[i].amountOut),
+                transactionsIndexes: [
+                  ...partials[i - 1][j - simulationsResults[i].amountPercent / 5]
+                    .transactionsIndexes,
+                  i
+                ]
+              }
+            } else {
+              partials[i][j] = partials[i - 1][j]
+            }
+          }
+        } else {
+          if (
+            partialsWithFailed[i - 1][
+              j - simulationsResults[i].amountPercent / 5
+            ].transactionsIndexes
+              .map(index => simulationsResults[index].poolIndex)
+              .findIndex(poolIndex => poolIndex === simulationsResults[i].poolIndex) === -1
+          ) {
+            if (
+              byAmountIn
+                ? partialsWithFailed[i - 1][j - simulationsResults[i].amountPercent / 5].amountOut
+                    .add(simulationsResults[i].amountOut)
+                    .gt(partialsWithFailed[i - 1][j].amountOut)
+                : partialsWithFailed[i - 1][j - simulationsResults[i].amountPercent / 5].amountOut
+                    .add(simulationsResults[i].amountOut)
+                    .lt(partialsWithFailed[i - 1][j].amountOut)
+            ) {
+              partialsWithFailed[i][j] = {
+                amountOut: partialsWithFailed[i - 1][
+                  j - simulationsResults[i].amountPercent / 5
+                ].amountOut.add(simulationsResults[i].amountOut),
+                transactionsIndexes: [
+                  ...partialsWithFailed[i - 1][j - simulationsResults[i].amountPercent / 5]
+                    .transactionsIndexes,
+                  i
+                ]
+              }
+            } else {
+              partialsWithFailed[i][j] = partialsWithFailed[i - 1][j]
+            }
+          }
+        }
+      }
+    }
+  }
+
+  let lastPercentsSum = 0
+  let lastPercentsSumWithFailed = 0
+
+  let lastErrors: string[] = []
+
+  let amountOut = new BN(0)
+  let amountOutWithFailed = new BN(0)
+
+  partials[20][simulationsResults.length].transactionsIndexes.forEach(index => {
+    lastPercentsSum += simulationsResults[index].amountPercent
+
+    amountOut = amountOut.add(simulationsResults[index].amountOut)
+  })
+
+  partialsWithFailed[20][simulationsResults.length].transactionsIndexes.forEach(index => {
+    lastPercentsSumWithFailed += simulationsResults[index].amountPercent
+
+    lastErrors = [...lastErrors, ...simulationsResults[index].errors]
+
+    amountOutWithFailed = amountOutWithFailed.add(simulationsResults[index].amountOut)
+  })
+
+  if (lastPercentsSum === 100) {
+    return {
+      amountOut,
+      transactions: partials[20][simulationsResults.length].transactionsIndexes.map(
+        index => simulationsResults[index]
+      ),
+      error: []
+    }
+  }
+
+  if (lastPercentsSumWithFailed === 100) {
+    return {
+      amountOut: amountOutWithFailed,
+      transactions: partialsWithFailed[20][simulationsResults.length].transactionsIndexes.map(
+        index => simulationsResults[index]
+      ),
+      error: lastErrors
+    }
+  }
 
   return {
     amountOut: new BN(0),
     transactions: [],
-    error: errorsInCaseOfTotalFail
+    error: [...errorsInCaseOfTotalFail, ...lastErrors]
   }
 }
