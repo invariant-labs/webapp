@@ -20,6 +20,8 @@ export interface ISelectModal {
   handleAddToken: (address: string) => void
   sliceName?: boolean
   commonTokens: PublicKey[]
+  initialHideUnknownTokensValue: boolean
+  onHideUnknownTokensChange: (val: boolean) => void
 }
 
 export const Select: React.FC<ISelectModal> = ({
@@ -32,7 +34,9 @@ export const Select: React.FC<ISelectModal> = ({
   hideBalancesInModal = false,
   handleAddToken,
   sliceName = false,
-  commonTokens
+  commonTokens,
+  initialHideUnknownTokensValue,
+  onHideUnknownTokensChange
 }) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
@@ -82,6 +86,8 @@ export const Select: React.FC<ISelectModal> = ({
         hideBalances={hideBalancesInModal}
         handleAddToken={handleAddToken}
         commonTokens={commonTokens}
+        initialHideUnknownTokensValue={initialHideUnknownTokensValue}
+        onHideUnknownTokensChange={onHideUnknownTokensChange}
       />
     </>
   )
