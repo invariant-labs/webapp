@@ -935,6 +935,7 @@ interface MultipleTiersSimulationResult {
 }
 
 interface SingleSimulationData {
+  amountOut: BN
   poolIndex: number
   estimatedPriceAfterSwap: BN
   priceImpact: BN
@@ -943,7 +944,7 @@ interface SingleSimulationData {
 }
 
 interface SimulationsPackResult {
-  amountOut: BN,
+  amountOut: BN
   transactionsIndexes: number[]
 }
 
@@ -954,11 +955,13 @@ export const simulateMultipleTiersSwap = async (
   slippage: Decimal,
   fromToken: PublicKey,
   toToken: PublicKey,
-  amount: BN
+  amount: BN,
+  byAmountIn: boolean
 ): Promise<MultipleTiersSimulationResult> => {
   const filteredPools = findPairs(fromToken, toToken, pools)
 
   const simulationsResults: SingleSimulationData[] = []
+  const errorsInCaseOfTotalFail: string[] = []
 
   for (const pool of filteredPools) {
     const isXtoY = fromToken.equals(pool.tokenX)
@@ -968,29 +971,63 @@ export const simulateMultipleTiersSwap = async (
       ticks.set(tick.index, tick)
     }
 
-    try {
-      const _swapSimulateResult = await simulateSwap({
-        xToY: isXtoY,
-        byAmountIn: true,
-        swapAmount: amount,
-        priceLimit: {
-          v: isXtoY ? new BN(1) : new BN('340282366920938463463374607431768211455')
-        },
-        slippage: slippage,
-        pool: pool,
-        ticks: ticks,
-        tickmap: tickmaps[pool.tickmap.toString()]
-      })
-    } catch (err: any) {
+    for (let i = 0; i <= 100; i += 5) {
+      try {
+        const swapSimulateResult = simulateSwap({
+          xToY: isXtoY,
+          byAmountIn: byAmountIn,
+          swapAmount: amount,
+          priceLimit: {
+            v: isXtoY ? new BN(1) : new BN('340282366920938463463374607431768211455')
+          },
+          slippage: slippage,
+          pool: pool,
+          ticks: ticks,
+          tickmap: tickmaps[pool.tickmap.toString()]
+        })
+
+        let result
+
+        if (!byAmountIn) {
+          result = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
+        } else {
+          result = swapSimulateResult.accumulatedAmountOut
+        }
+
+        const resultData: SingleSimulationData = {
+          amountOut: result,
+          poolIndex: findPoolIndex(pool.address, pools),
+          estimatedPriceAfterSwap: swapSimulateResult.priceAfterSwap,
+          priceImpact: swapSimulateResult.priceImpact,
+          amountPercent: i,
+          errors: []
+        }
+
+        if (swapSimulateResult.amountPerTick.length >= 8) {
+          resultData.errors.push('Too large amount')
+        }
+
+        if (swapSimulateResult.status !== SimulationStatus.Ok) {
+          resultData.errors.push(swapSimulateResult.status)
+        }
+
+        simulationsResults.push(resultData)
+      } catch (err: any) {
+        errorsInCaseOfTotalFail.push(err.toString())
+      }
     }
   }
 
-  const _partials: Array<Array<SimulationsPackResult | undefined>> = (new Array(21)).fill(new Array(simulationsResults.length + 1).fill(undefined))
-  const _partialsWithFailed: Array<Array<SimulationsPackResult | undefined>> = (new Array(21)).fill(new Array(simulationsResults.length + 1).fill(undefined))
+  const _partials: Array<Array<SimulationsPackResult | undefined>> = new Array(21).fill(
+    new Array(simulationsResults.length + 1).fill(undefined)
+  )
+  const _partialsWithFailed: Array<Array<SimulationsPackResult | undefined>> = new Array(21).fill(
+    new Array(simulationsResults.length + 1).fill(undefined)
+  )
 
   return {
     amountOut: new BN(0),
     transactions: [],
-    error: []
+    error: errorsInCaseOfTotalFail
   }
 }
