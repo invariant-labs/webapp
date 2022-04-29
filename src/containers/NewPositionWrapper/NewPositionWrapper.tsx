@@ -251,6 +251,14 @@ export const NewPositionWrapper = () => {
     localStorage.setItem('IS_CONCENTRATED', val ? 'true' : 'false')
   }
 
+  const initialHideUnknownTokensValue =
+    localStorage.getItem('HIDE_UNKNOWN_TOKENS') === 'true' ||
+    localStorage.getItem('HIDE_UNKNOWN_TOKENS') === null
+
+  const setHideUnknownTokensValue = (val: boolean) => {
+    localStorage.setItem('HIDE_UNKNOWN_TOKENS', val ? 'true' : 'false')
+  }
+
   return (
     <NewPosition
       tokens={tokens}
@@ -435,6 +443,8 @@ export const NewPositionWrapper = () => {
       commonTokens={commonTokensForNetworks[currentNetwork]}
       initialIsConcentratedValue={initialIsConcentratedValue}
       onIsConcentratedChange={setIsConcentratedValue}
+      initialHideUnknownTokensValue={initialHideUnknownTokensValue}
+      onHideUnknownTokensChange={setHideUnknownTokensValue}
     />
   )
 }

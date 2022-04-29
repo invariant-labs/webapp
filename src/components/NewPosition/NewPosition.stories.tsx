@@ -97,6 +97,8 @@ storiesOf('position/newPosition', module)
         ]}
         initialIsConcentratedValue={false}
         onIsConcentratedChange={() => {}}
+        initialHideUnknownTokensValue={false}
+        onHideUnknownTokensChange={() => {}}
       />
     </div>
   ))
@@ -143,6 +145,8 @@ storiesOf('position/newPosition', module)
         ]}
         initialIsConcentratedValue={false}
         onIsConcentratedChange={() => {}}
+        initialHideUnknownTokensValue={false}
+        onHideUnknownTokensChange={() => {}}
       />
     </div>
   ))

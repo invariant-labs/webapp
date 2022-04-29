@@ -113,6 +113,14 @@ export const WrappedSwap = () => {
     }
   }
 
+  const initialHideUnknownTokensValue =
+    localStorage.getItem('HIDE_UNKNOWN_TOKENS') === 'true' ||
+    localStorage.getItem('HIDE_UNKNOWN_TOKENS') === null
+
+  const setHideUnknownTokensValue = (val: boolean) => {
+    localStorage.setItem('HIDE_UNKNOWN_TOKENS', val ? 'true' : 'false')
+  }
+
   return (
     <Swap
       onSwap={(
@@ -171,6 +179,8 @@ export const WrappedSwap = () => {
       initialTokenToIndex={initialTokenToIndex === -1 ? null : initialTokenToIndex}
       handleAddToken={addTokenHandler}
       commonTokens={commonTokensForNetworks[networkType]}
+      initialHideUnknownTokensValue={initialHideUnknownTokensValue}
+      onHideUnknownTokensChange={setHideUnknownTokensValue}
     />
   )
 }

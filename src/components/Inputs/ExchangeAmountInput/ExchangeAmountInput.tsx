@@ -26,6 +26,8 @@ interface IProps {
   handleAddToken: (address: string) => void
   commonTokens: PublicKey[]
   limit?: number
+  initialHideUnknownTokensValue: boolean
+  onHideUnknownTokensChange: (val: boolean) => void
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -45,7 +47,9 @@ export const AmountInput: React.FC<IProps> = ({
   hideBalancesInModal = false,
   handleAddToken,
   commonTokens,
-  limit
+  limit,
+  initialHideUnknownTokensValue,
+  onHideUnknownTokensChange
 }) => {
   const classes = useStyles()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -135,6 +139,8 @@ export const AmountInput: React.FC<IProps> = ({
           hideBalancesInModal={hideBalancesInModal}
           handleAddToken={handleAddToken}
           commonTokens={commonTokens}
+          initialHideUnknownTokensValue={initialHideUnknownTokensValue}
+          onHideUnknownTokensChange={onHideUnknownTokensChange}
         />
         <Input
           inputRef={inputRef}

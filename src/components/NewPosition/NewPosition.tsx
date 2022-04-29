@@ -77,6 +77,8 @@ export interface INewPosition {
   commonTokens: PublicKey[]
   initialIsConcentratedValue: boolean
   onIsConcentratedChange: (val: boolean) => void
+  initialHideUnknownTokensValue: boolean
+  onHideUnknownTokensChange: (val: boolean) => void
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -109,7 +111,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   handleAddToken,
   commonTokens,
   initialIsConcentratedValue,
-  onIsConcentratedChange
+  onIsConcentratedChange,
+  initialHideUnknownTokensValue,
+  onHideUnknownTokensChange
 }) => {
   const classes = useStyles()
 
@@ -417,6 +421,8 @@ export const NewPosition: React.FC<INewPosition> = ({
           canCreateNewPosition={canCreateNewPosition}
           handleAddToken={handleAddToken}
           commonTokens={commonTokens}
+          initialHideUnknownTokensValue={initialHideUnknownTokensValue}
+          onHideUnknownTokensChange={onHideUnknownTokensChange}
         />
 
         {isCurrentPoolExisting ||
