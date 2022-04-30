@@ -1061,8 +1061,6 @@ export const simulateMultipleTiersSwap = async (
         partials[i][j] = partials[i - 1][j]
         partialsWithFailed[i][j] = partialsWithFailed[i - 1][j]
       } else {
-        // byAmountIn ? successData.amountOut.lt(result) : successData.amountOut.gt(result)
-
         if (simulationsResults[i].errors.length === 0) {
           if (
             partials[i - 1][j - simulationsResults[i].amountPercent / 5].transactionsIndexes
