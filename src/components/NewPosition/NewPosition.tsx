@@ -6,6 +6,7 @@ import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@selectors/solanaWallet'
 import {
   calcPrice,
+  CoingeckoPriceData,
   determinePositionTokenBlock,
   PositionTokenBlock,
   printBN,
@@ -79,6 +80,8 @@ export interface INewPosition {
   onIsConcentratedChange: (val: boolean) => void
   initialHideUnknownTokensValue: boolean
   onHideUnknownTokensChange: (val: boolean) => void
+  tokenAPriceData?: CoingeckoPriceData
+  tokenBPriceData?: CoingeckoPriceData
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -113,7 +116,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   initialIsConcentratedValue,
   onIsConcentratedChange,
   initialHideUnknownTokensValue,
-  onHideUnknownTokensChange
+  onHideUnknownTokensChange,
+  tokenAPriceData,
+  tokenBPriceData
 }) => {
   const classes = useStyles()
 
@@ -423,6 +428,10 @@ export const NewPosition: React.FC<INewPosition> = ({
           commonTokens={commonTokens}
           initialHideUnknownTokensValue={initialHideUnknownTokensValue}
           onHideUnknownTokensChange={onHideUnknownTokensChange}
+          percentageChangeA={tokenAPriceData?.priceChange}
+          percentageChangeB={tokenBPriceData?.priceChange}
+          usdValueA={tokenAPriceData?.price}
+          usdValueB={tokenBPriceData?.price}
         />
 
         {isCurrentPoolExisting ||

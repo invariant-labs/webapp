@@ -8,7 +8,9 @@ import {
   addNewTokenToLocalStorage,
   calcPrice,
   calcYPerXPrice,
+  CoingeckoPriceData,
   createPlaceholderLiquidityPlot,
+  getCoingeckoTokenPrice,
   getNewTokenOrThrow,
   printBN
 } from '@consts/utils'
@@ -259,6 +261,38 @@ export const NewPositionWrapper = () => {
     localStorage.setItem('HIDE_UNKNOWN_TOKENS', val ? 'true' : 'false')
   }
 
+  const [tokenAPriceData, setTokenAPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
+  useEffect(() => {
+    if (tokenAIndex === null) {
+      return
+    }
+
+    const id = tokens[tokenAIndex].coingeckoId ?? ''
+    if (id.length) {
+      getCoingeckoTokenPrice(id)
+        .then(data => setTokenAPriceData(data))
+        .catch(() => setTokenAPriceData(undefined))
+    } else {
+      setTokenAPriceData(undefined)
+    }
+  }, [tokenAIndex])
+
+  const [tokenBPriceData, setTokenBPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
+  useEffect(() => {
+    if (tokenBIndex === null) {
+      return
+    }
+
+    const id = tokens[tokenBIndex].coingeckoId ?? ''
+    if (id.length) {
+      getCoingeckoTokenPrice(id)
+        .then(data => setTokenBPriceData(data))
+        .catch(() => setTokenBPriceData(undefined))
+    } else {
+      setTokenBPriceData(undefined)
+    }
+  }, [tokenBIndex])
+
   return (
     <NewPosition
       tokens={tokens}
@@ -445,6 +479,8 @@ export const NewPositionWrapper = () => {
       onIsConcentratedChange={setIsConcentratedValue}
       initialHideUnknownTokensValue={initialHideUnknownTokensValue}
       onHideUnknownTokensChange={setHideUnknownTokensValue}
+      tokenAPriceData={tokenAPriceData}
+      tokenBPriceData={tokenBPriceData}
     />
   )
 }
