@@ -10,7 +10,7 @@ import {
 } from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Grid, Typography } from '@material-ui/core'
-import { calcPrice, calcYPerXPrice, createPlaceholderLiquidityPlot, printBN } from '@consts/utils'
+import { calcPrice, calcYPerXPrice, CoingeckoPriceData, createPlaceholderLiquidityPlot, getCoingeckoTokenPrice, printBN } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { calculateClaimAmount, DECIMAL } from '@invariant-labs/sdk/src/utils'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
@@ -232,6 +232,33 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     localStorage.setItem('IS_PLOT_DISCRETE', val ? 'true' : 'false')
   }
 
+  const [tokenXPriceData, setTokenXPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
+  const [tokenYPriceData, setTokenYPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
+
+  useEffect(() => {
+    if (!position) {
+      return
+    }
+
+    const xId = position.tokenX.coingeckoId ?? ''
+    if (xId.length) {
+      getCoingeckoTokenPrice(xId)
+        .then(data => setTokenXPriceData(data))
+        .catch(() => setTokenXPriceData(undefined))
+    } else {
+      setTokenXPriceData(undefined)
+    }
+
+    const yId = position.tokenY.coingeckoId ?? ''
+    if (yId.length) {
+      getCoingeckoTokenPrice(yId)
+        .then(data => setTokenYPriceData(data))
+        .catch(() => setTokenYPriceData(undefined))
+    } else {
+      setTokenYPriceData(undefined)
+    }
+  }, [position?.id])
+
   return !isLoadingList && position ? (
     <PositionDetails
       detailsData={data}
@@ -260,7 +287,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         decimal: position.tokenX.decimals,
         balance: +printBN(position.tokenX.balance, position.tokenX.decimals),
         liqValue: tokenXLiquidity,
-        claimValue: tokenXClaim
+        claimValue: tokenXClaim,
+        usdValue: typeof tokenXPriceData?.price === 'undefined' ? undefined : tokenXPriceData.price * +printBN(position.tokenX.balance, position.tokenX.decimals)
       }}
       tokenY={{
         name: position.tokenY.symbol,
@@ -268,7 +296,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         decimal: position.tokenY.decimals,
         balance: +printBN(position.tokenY.balance, position.tokenY.decimals),
         liqValue: tokenYLiquidity,
-        claimValue: tokenYClaim
+        claimValue: tokenYClaim,
+        usdValue: typeof tokenYPriceData?.price === 'undefined' ? undefined : tokenYPriceData.price * +printBN(position.tokenY.balance, position.tokenY.decimals)
       }}
       fee={+printBN(position.poolData.fee.v, DECIMAL - 2)}
       min={min}
