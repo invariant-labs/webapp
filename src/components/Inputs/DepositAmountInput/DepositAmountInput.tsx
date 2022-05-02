@@ -1,5 +1,5 @@
 import { formatNumbers, FormatNumberThreshold, getScaleFromString, showPrefix } from '@consts/utils'
-import { Button, Grid, Input, Typography } from '@material-ui/core'
+import { Button, Grid, Input, Tooltip, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 import React, { useRef, CSSProperties } from 'react'
 import loadingAnimation from '@static/gif/loading.gif'
@@ -241,9 +241,16 @@ export const DepositAmountInput: React.FC<IProps> = ({
                   </Typography>
                 </>
               ) : (
-                <Typography className={classes.noData}>
-                  <div className={classes.noDataIcon}>?</div>No data
-                </Typography>
+                <Tooltip
+                  title='Cannot fetch price of token'
+                  placement='bottom'
+                  classes={{
+                    tooltip: classes.tooltip
+                  }}>
+                  <Typography className={classes.noData}>
+                    <div className={classes.noDataIcon}>?</div>No data
+                  </Typography>
+                </Tooltip>
               )
             ) : null}
           </Grid>

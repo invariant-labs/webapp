@@ -189,6 +189,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   loading: {
     width: 15,
     height: 15
+  },
+  tooltip: {
+    background: colors.invariant.componentBcg,
+    border: `1px solid ${colors.invariant.lightGrey}`,
+    borderRadius: 12,
+    padding: 10,
+    ...typography.caption4,
+    fontSize: 13,
+    color: colors.white.main
   }
 }))
 
