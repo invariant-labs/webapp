@@ -82,6 +82,8 @@ export interface INewPosition {
   onHideUnknownTokensChange: (val: boolean) => void
   tokenAPriceData?: CoingeckoPriceData
   tokenBPriceData?: CoingeckoPriceData
+  priceALoading?: boolean
+  priceBLoading?: boolean
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -118,7 +120,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   initialHideUnknownTokensValue,
   onHideUnknownTokensChange,
   tokenAPriceData,
-  tokenBPriceData
+  tokenBPriceData,
+  priceALoading,
+  priceBLoading
 }) => {
   const classes = useStyles()
 
@@ -430,8 +434,10 @@ export const NewPosition: React.FC<INewPosition> = ({
           onHideUnknownTokensChange={onHideUnknownTokensChange}
           percentageChangeA={tokenAPriceData?.priceChange}
           percentageChangeB={tokenBPriceData?.priceChange}
-          usdValueA={tokenAPriceData?.price}
-          usdValueB={tokenBPriceData?.price}
+          priceA={tokenAPriceData?.price}
+          priceB={tokenBPriceData?.price}
+          priceALoading={priceALoading}
+          priceBLoading={priceBLoading}
         />
 
         {isCurrentPoolExisting ||

@@ -64,12 +64,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   percentage: {
     ...typography.tiny1,
     borderRadius: 5,
-    paddingInline: 3,
+    paddingInline: 5,
     marginRight: 3,
     height: 16,
     lineHeight: '16px',
     display: 'flex',
-    flexShrink: 0
+    flexShrink: 0,
+    marginTop: 1
   },
   percentagePositive: {
     color: colors.invariant.green,
@@ -184,6 +185,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   blockedInfo: {
     ...typography.body2,
     color: colors.invariant.lightHover
+  },
+  loading: {
+    width: 15,
+    height: 15
   }
 }))
 

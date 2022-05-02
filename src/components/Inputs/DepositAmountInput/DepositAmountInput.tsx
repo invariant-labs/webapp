@@ -2,6 +2,7 @@ import { formatNumbers, FormatNumberThreshold, getScaleFromString, showPrefix } 
 import { Button, Grid, Input, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 import React, { useRef, CSSProperties } from 'react'
+import loadingAnimation from '@static/gif/loading.gif'
 import useStyles from './style'
 
 interface IProps {
@@ -20,6 +21,7 @@ interface IProps {
   tokenPrice?: number
   balanceValue?: string
   disabled?: boolean
+  priceLoading?: boolean
 }
 
 export const DepositAmountInput: React.FC<IProps> = ({
@@ -37,7 +39,8 @@ export const DepositAmountInput: React.FC<IProps> = ({
   percentageChange = 0,
   tokenPrice,
   balanceValue,
-  disabled = false
+  disabled = false,
+  priceLoading = false
 }) => {
   const classes = useStyles()
 
@@ -221,7 +224,9 @@ export const DepositAmountInput: React.FC<IProps> = ({
           </Grid>
           <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>
             {currency ? (
-              tokenPrice ? (
+              priceLoading ? (
+                <img src={loadingAnimation} className={classes.loading} />
+              ) : tokenPrice ? (
                 <>
                   <Typography
                     className={classNames(

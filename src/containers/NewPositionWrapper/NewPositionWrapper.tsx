@@ -262,6 +262,7 @@ export const NewPositionWrapper = () => {
   }
 
   const [tokenAPriceData, setTokenAPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
+  const [priceALoading, setPriceALoading] = useState(false)
   useEffect(() => {
     if (tokenAIndex === null) {
       return
@@ -269,15 +270,18 @@ export const NewPositionWrapper = () => {
 
     const id = tokens[tokenAIndex].coingeckoId ?? ''
     if (id.length) {
+      setPriceALoading(true)
       getCoingeckoTokenPrice(id)
         .then(data => setTokenAPriceData(data))
         .catch(() => setTokenAPriceData(undefined))
+        .finally(() => setPriceALoading(false))
     } else {
       setTokenAPriceData(undefined)
     }
   }, [tokenAIndex])
 
   const [tokenBPriceData, setTokenBPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
+  const [priceBLoading, setPriceBLoading] = useState(false)
   useEffect(() => {
     if (tokenBIndex === null) {
       return
@@ -285,9 +289,11 @@ export const NewPositionWrapper = () => {
 
     const id = tokens[tokenBIndex].coingeckoId ?? ''
     if (id.length) {
+      setPriceBLoading(true)
       getCoingeckoTokenPrice(id)
         .then(data => setTokenBPriceData(data))
         .catch(() => setTokenBPriceData(undefined))
+        .finally(() => setPriceBLoading(false))
     } else {
       setTokenBPriceData(undefined)
     }
@@ -481,6 +487,8 @@ export const NewPositionWrapper = () => {
       onHideUnknownTokensChange={setHideUnknownTokensValue}
       tokenAPriceData={tokenAPriceData}
       tokenBPriceData={tokenBPriceData}
+      priceALoading={priceALoading}
+      priceBLoading={priceBLoading}
     />
   )
 }
