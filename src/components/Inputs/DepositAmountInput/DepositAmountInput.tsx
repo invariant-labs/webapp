@@ -17,7 +17,7 @@ interface IProps {
   decimalsLimit: number
   onBlur?: () => void
   percentageChange?: number
-  usdValue?: number
+  tokenPrice?: number
   balanceValue?: string
   disabled?: boolean
 }
@@ -34,8 +34,8 @@ export const DepositAmountInput: React.FC<IProps> = ({
   blockerInfo,
   onBlur,
   decimalsLimit,
-  percentageChange,
-  usdValue,
+  percentageChange = 0,
+  tokenPrice,
   balanceValue,
   disabled = false
 }) => {
@@ -52,6 +52,32 @@ export const DepositAmountInput: React.FC<IProps> = ({
       value: 100,
       decimals: 4
     },
+    {
+      value: 1000,
+      decimals: 2
+    },
+    {
+      value: 10000,
+      decimals: 1
+    },
+    {
+      value: 1000000,
+      decimals: 2,
+      divider: 1000
+    },
+    {
+      value: 1000000000,
+      decimals: 2,
+      divider: 1000000
+    },
+    {
+      value: Infinity,
+      decimals: 2,
+      divider: 1000000000
+    }
+  ]
+
+  const usdThresholds: FormatNumberThreshold[] = [
     {
       value: 1000,
       decimals: 2
@@ -115,6 +141,8 @@ export const DepositAmountInput: React.FC<IProps> = ({
       setValue('')
     }
   }
+
+  const usdBalance = tokenPrice && balanceValue ? tokenPrice * +balanceValue : 0
 
   return (
     <Grid container className={classes.wrapper} style={style}>
@@ -193,20 +221,18 @@ export const DepositAmountInput: React.FC<IProps> = ({
           </Grid>
           <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>
             {currency ? (
-              usdValue ? (
+              tokenPrice ? (
                 <>
                   <Typography
                     className={classNames(
                       classes.percentage,
-                      (percentageChange ?? 0) > 0
-                        ? classes.percentagePositive
-                        : classes.percentageNegative
+                      percentageChange > 0 ? classes.percentagePositive : classes.percentageNegative
                     )}>
-                    {(percentageChange ?? 0) > 0 ? '+' : ''}
-                    {percentageChange?.toFixed(2)}%
+                    {percentageChange > 0 ? '+' : ''}
+                    {percentageChange.toFixed(2)}%
                   </Typography>
                   <Typography className={classes.caption2}>
-                    ~${(usdValue * (balanceValue ? +balanceValue : 0)).toFixed(2)}
+                    ~${formatNumbers(usdThresholds)(usdBalance.toString()) + showPrefix(usdBalance)}
                   </Typography>
                 </>
               ) : (

@@ -221,7 +221,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       <Grid container className={classes.sectionWrapper}>
         <DepositAmountInput
           percentageChange={percentageChangeA}
-          usdValue={usdValueA}
+          tokenPrice={usdValueA}
           currency={tokenAIndex !== null ? tokens[tokenAIndex].symbol : null}
           currencyIconSrc={tokenAIndex !== null ? tokens[tokenAIndex].logoURI : undefined}
           placeholder='0.0'
@@ -281,7 +281,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
         <DepositAmountInput
           percentageChange={percentageChangeB}
-          usdValue={usdValueB}
+          tokenPrice={usdValueB}
           currency={tokenBIndex !== null ? tokens[tokenBIndex].symbol : null}
           currencyIconSrc={tokenBIndex !== null ? tokens[tokenBIndex].logoURI : undefined}
           placeholder='0.0'
