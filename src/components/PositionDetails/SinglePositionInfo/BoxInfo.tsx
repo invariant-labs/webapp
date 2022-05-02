@@ -136,7 +136,10 @@ export const BoxInfo: React.FC<{
                 Balance: {tokenA.balance} {tokenA.name}
               </Typography>
               {typeof tokenA.usdValue !== 'undefined' ? (
-                <Typography className={classes.tokenUSDValue}>~${formatNumbers(usdThresholds)(tokenA.usdValue.toString())}{showPrefix(tokenA.usdValue)}</Typography>
+                <Typography className={classes.tokenUSDValue}>
+                  ~${formatNumbers(usdThresholds)(tokenA.usdValue.toString())}
+                  {showPrefix(tokenA.usdValue)}
+                </Typography>
               ) : null}
             </Grid>
           ) : null}
@@ -163,7 +166,10 @@ export const BoxInfo: React.FC<{
                 Balance: {tokenB.balance} {tokenB.name}
               </Typography>
               {typeof tokenB.usdValue !== 'undefined' ? (
-                <Typography className={classes.tokenUSDValue}>~${formatNumbers(usdThresholds)(tokenB.usdValue.toString())}{showPrefix(tokenB.usdValue)}</Typography>
+                <Typography className={classes.tokenUSDValue}>
+                  ~${formatNumbers(usdThresholds)(tokenB.usdValue.toString())}
+                  {showPrefix(tokenB.usdValue)}
+                </Typography>
               ) : null}
             </Grid>
           ) : null}

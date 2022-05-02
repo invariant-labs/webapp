@@ -10,7 +10,14 @@ import {
 } from '@selectors/positions'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Grid, Typography } from '@material-ui/core'
-import { calcPrice, calcYPerXPrice, CoingeckoPriceData, createPlaceholderLiquidityPlot, getCoingeckoTokenPrice, printBN } from '@consts/utils'
+import {
+  calcPrice,
+  calcYPerXPrice,
+  CoingeckoPriceData,
+  createPlaceholderLiquidityPlot,
+  getCoingeckoTokenPrice,
+  printBN
+} from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { calculateClaimAmount, DECIMAL } from '@invariant-labs/sdk/src/utils'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
@@ -288,7 +295,10 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         balance: +printBN(position.tokenX.balance, position.tokenX.decimals),
         liqValue: tokenXLiquidity,
         claimValue: tokenXClaim,
-        usdValue: typeof tokenXPriceData?.price === 'undefined' ? undefined : tokenXPriceData.price * +printBN(position.tokenX.balance, position.tokenX.decimals)
+        usdValue:
+          typeof tokenXPriceData?.price === 'undefined'
+            ? undefined
+            : tokenXPriceData.price * +printBN(position.tokenX.balance, position.tokenX.decimals)
       }}
       tokenY={{
         name: position.tokenY.symbol,
@@ -297,7 +307,10 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         balance: +printBN(position.tokenY.balance, position.tokenY.decimals),
         liqValue: tokenYLiquidity,
         claimValue: tokenYClaim,
-        usdValue: typeof tokenYPriceData?.price === 'undefined' ? undefined : tokenYPriceData.price * +printBN(position.tokenY.balance, position.tokenY.decimals)
+        usdValue:
+          typeof tokenYPriceData?.price === 'undefined'
+            ? undefined
+            : tokenYPriceData.price * +printBN(position.tokenY.balance, position.tokenY.decimals)
       }}
       fee={+printBN(position.poolData.fee.v, DECIMAL - 2)}
       min={min}
