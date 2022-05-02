@@ -71,13 +71,13 @@ const useStyles = makeStyles(() => ({
   noData: {
     color: colors.invariant.warning,
     ...typography.caption2,
-    display: 'grid',
-    gap: 5.45,
-    gridAutoFlow: 'column',
+    display: 'flex',
+    flexDirection: 'row',
     cursor: 'default',
     paddingBottom: 10
   },
   noDataIcon: {
+    marginRight: 5,
     height: 9.5,
     width: 9.5,
     border: '1px solid #EFD063',
