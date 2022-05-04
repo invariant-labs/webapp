@@ -1,6 +1,7 @@
 import { Connection } from '@solana/web3.js'
 import { MAINNET_RPCS, NetworkType, SolanaNetworks } from '@consts/static'
 import { Network } from '@invariant-labs/sdk'
+import { Network as BondsNetwork } from '@invariant-labs/bonds-sdk'
 
 export const networkToName = (network: SolanaNetworks) => {
   switch (network) {
@@ -88,6 +89,23 @@ const solanaNetworktoProgramNetwork = (solanaNetwork: SolanaNetworks): Network =
   return Network.DEV
 }
 
+const solanaNetworktoBondsNetwork = (solanaNetwork: SolanaNetworks): BondsNetwork => {
+  switch (solanaNetwork) {
+    case SolanaNetworks.DEV:
+      return BondsNetwork.DEV
+    case SolanaNetworks.LOCAL:
+      return BondsNetwork.LOCAL
+    // case SolanaNetworks.TEST:
+    //   return BondsNetwork.TEST
+    // case SolanaNetworks.MAIN:
+    // case SolanaNetworks.MAIN_SERUM:
+    // case SolanaNetworks.MAIN_FIGMENT:
+    // case SolanaNetworks.MAIN_GENESYSGO:
+    //   return BondsNetwork.MAIN
+  }
+  return BondsNetwork.DEV
+}
+
 const getCurrentSolanaConnection = (): Connection | null => {
   return _connection
 }
@@ -97,5 +115,6 @@ export {
   SolanaNetworks,
   getCurrentSolanaConnection,
   getSolanaNetwork,
-  solanaNetworktoProgramNetwork
+  solanaNetworktoProgramNetwork,
+  solanaNetworktoBondsNetwork
 }

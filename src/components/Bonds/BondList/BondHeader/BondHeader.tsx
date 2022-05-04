@@ -9,11 +9,10 @@ const BondHeader = () => {
   const isExSmall = useMediaQuery(theme.breakpoints.down('xs'))
   return (
     <Grid container classes={{ container: classes.container }}>
-      <Typography>Pair</Typography>
-      <Typography>Price</Typography>
-      {!isExSmall ? <Typography>ROI</Typography> : null}
-      {!isExSmall ? <Typography>Purchased</Typography> : null}
-      {!isSmall ? <Typography className={classes.vesting}>Vesting term</Typography> : null}
+      <Typography className={classes.text}>Pair</Typography>
+      <Typography className={classes.text}>Remaining</Typography>
+      {!isSmall ? <Typography className={classes.text}>Total supply</Typography> : null}
+      {!isExSmall ? <Typography className={classes.text}>Vesting term</Typography> : null}
     </Grid>
   )
 }

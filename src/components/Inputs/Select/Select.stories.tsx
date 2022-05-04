@@ -56,6 +56,8 @@ storiesOf('Inputs/select', module)
         tokens={tokens}
         onSelect={index => action(`chosen index: ${index}`)()}
         handleAddToken={() => {}}
+        initialHideUnknownTokensValue={false}
+        onHideUnknownTokensChange={() => {}}
       />
     </div>
   ))
@@ -72,6 +74,8 @@ storiesOf('Inputs/select', module)
         tokens={tokens}
         onSelect={index => action(`chosen index: ${index}`)()}
         handleAddToken={() => {}}
+        initialHideUnknownTokensValue={false}
+        onHideUnknownTokensChange={() => {}}
       />
     </div>
   ))
