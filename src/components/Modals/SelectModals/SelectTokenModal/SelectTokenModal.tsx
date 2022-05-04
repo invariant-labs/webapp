@@ -31,6 +31,8 @@ export interface ISelectTokenModal {
   onSelect: (index: number) => void
   hideBalances?: boolean
   handleAddToken: (address: string) => void
+  initialHideUnknownTokensValue: boolean
+  onHideUnknownTokensChange: (val: boolean) => void
 }
 
 interface IScroll {
@@ -77,7 +79,9 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   centered = false,
   onSelect,
   hideBalances = false,
-  handleAddToken
+  handleAddToken,
+  initialHideUnknownTokensValue,
+  onHideUnknownTokensChange
 }) => {
   const classes = useStyles()
   const isXs = useMediaQuery(theme.breakpoints.down('xs'))
@@ -85,7 +89,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
   const [value, setValue] = useState<string>('')
 
   const [isAddOpen, setIsAddOpen] = useState(false)
-  const [hideUnknown, setHideUnknown] = useState(false)
+  const [hideUnknown, setHideUnknown] = useState(initialHideUnknownTokensValue)
 
   const outerRef = useRef<HTMLElement>(null)
 
@@ -228,7 +232,10 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
               control={
                 <Checkbox
                   checked={hideUnknown}
-                  onChange={e => setHideUnknown(e.target.checked)}
+                  onChange={e => {
+                    setHideUnknown(e.target.checked)
+                    onHideUnknownTokensChange(e.target.checked)
+                  }}
                   name='hideUnknown'
                 />
               }

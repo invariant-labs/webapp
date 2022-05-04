@@ -103,6 +103,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   caption2: {
     display: 'flex',
     flexWrap: 'nowrap',
+    alignItems: 'center',
     ...typography.caption2,
     color: colors.invariant.lightHover,
 
@@ -121,6 +122,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 4,
     marginTop: 1,
     background: ' rgba(46, 224, 154, 0.8)',
+    lineHeight: '14px',
 
     '&:hover': {
       background: 'none',

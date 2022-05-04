@@ -12,9 +12,8 @@ export const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     backgroundColor: colors.invariant.component,
 
-    [theme.breakpoints.down('xs')]: {
-      padding: '0 16px 10px 16px',
-      maxWidth: '504px'
+    [theme.breakpoints.down('sm')]: {
+      padding: '0 16px'
     }
   }
 }))

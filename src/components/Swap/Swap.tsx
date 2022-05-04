@@ -80,6 +80,8 @@ export interface ISwap {
   initialTokenToIndex: number | null
   handleAddToken: (address: string) => void
   commonTokens: PublicKey[]
+  initialHideUnknownTokensValue: boolean
+  onHideUnknownTokensChange: (val: boolean) => void
 }
 
 export const Swap: React.FC<ISwap> = ({
@@ -97,7 +99,9 @@ export const Swap: React.FC<ISwap> = ({
   initialTokenFromIndex,
   initialTokenToIndex,
   handleAddToken,
-  commonTokens
+  commonTokens,
+  initialHideUnknownTokensValue,
+  onHideUnknownTokensChange
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -481,6 +485,8 @@ export const Swap: React.FC<ISwap> = ({
             handleAddToken={handleAddToken}
             commonTokens={commonTokens}
             limit={1e14}
+            initialHideUnknownTokensValue={initialHideUnknownTokensValue}
+            onHideUnknownTokensChange={onHideUnknownTokensChange}
           />
         </Box>
         <Box className={classes.tokenComponentTextContainer}>
@@ -552,6 +558,8 @@ export const Swap: React.FC<ISwap> = ({
             handleAddToken={handleAddToken}
             commonTokens={commonTokens}
             limit={1e14}
+            initialHideUnknownTokensValue={initialHideUnknownTokensValue}
+            onHideUnknownTokensChange={onHideUnknownTokensChange}
           />
         </Box>
         <Box className={classes.transactionDetails}>

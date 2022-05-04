@@ -44,7 +44,10 @@ export const Header: React.FC<IHeader> = ({
 
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
 
-  const routes = ['swap', 'pool', 'stats']
+  const routes =
+    typeOfNetwork === NetworkType.MAINNET
+      ? ['swap', 'pool', 'stats']
+      : ['swap', 'pool', 'stats', 'bonds']
 
   const otherRoutesToHighlight: Record<string, RegExp[]> = {
     pool: [/^newPosition$/, /^position\/*/]

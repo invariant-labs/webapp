@@ -55,5 +55,7 @@ storiesOf('newModals/selectToken', module)
       anchorEl={null}
       onSelect={index => action(`chosen index: ${index}`)()}
       handleAddToken={() => {}}
+      initialHideUnknownTokensValue={false}
+      onHideUnknownTokensChange={() => {}}
     />
   ))
