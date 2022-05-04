@@ -123,6 +123,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   loading: {
     width: 20,
     height: 20
+  },
+  noWalletEmpty: {
+    marginTop: 80
   }
 }))
 
