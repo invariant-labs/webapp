@@ -49,8 +49,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     cursor: 'pointer',
     paddingBlock: 6,
-    flexShrink: 0,
-    width: 'fit-content',
+    flexShrink: 1,
     marginRight: 10
   },
   BalanceTypography: {
@@ -104,7 +103,8 @@ const useStyles = makeStyles(() => ({
     color: colors.white.main
   },
   percentages: {
-    flexShrink: 1,
+    flexShrink: 0,
+    width: 'fit-content',
     justifyContent: 'end',
     height: 17
   },

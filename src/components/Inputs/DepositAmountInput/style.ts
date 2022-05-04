@@ -57,7 +57,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   percentages: {
-    flexShrink: 1,
+    flexShrink: 0,
+    width: 'fit-content',
     justifyContent: 'end',
     height: 17
   },
@@ -98,8 +99,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   balance: {
     height: 17,
     cursor: 'pointer',
-    flexShrink: 0,
-    width: 'fit-content',
+    flexShrink: 1,
     marginRight: 10
   },
   caption2: {
