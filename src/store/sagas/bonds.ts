@@ -16,7 +16,7 @@ import {
 } from '@solana/web3.js'
 import { accounts, address } from '@selectors/solanaWallet'
 import { createAccount, getWallet } from './wallet'
-import { bondsList } from '@selectors/bonds'
+import { bondsList, userVested } from '@selectors/bonds'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { BN } from '@project-serum/anchor'
@@ -329,6 +329,8 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
 
 export function* handleRedeemBondWithWSOL(data: RedeemBond) {
   try {
+    const allUserVested = yield* select(userVested)
+
     const connection = yield* call(getConnection)
     const wallet = yield* call(getWallet)
     const bondsProgram = yield* call(getBondsProgram)
@@ -431,6 +433,10 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
           txid: redeemTxid
         })
       )
+
+      if (allUserVested[data.vestedAddress.toString()].vestingEnd.toNumber() * 1000 < Date.now()) {
+        yield* put(actions.removeVested(data.vestedAddress))
+      }
     }
 
     const unwrapTxid = yield* call(
@@ -476,6 +482,7 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
 export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
   try {
     const allBonds = yield* select(bondsList)
+    const allUserVested = yield* select(userVested)
 
     if (allBonds[action.payload.bondSale.toString()].tokenBond.toString() === WRAPPED_SOL_ADDRESS) {
       return yield* call(handleRedeemBondWithWSOL, action.payload)
@@ -532,6 +539,13 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
           txid
         })
       )
+
+      if (
+        allUserVested[action.payload.vestedAddress.toString()].vestingEnd.toNumber() * 1000 <
+        Date.now()
+      ) {
+        yield* put(actions.removeVested(action.payload.vestedAddress))
+      }
     }
   } catch (error) {
     console.log(error)

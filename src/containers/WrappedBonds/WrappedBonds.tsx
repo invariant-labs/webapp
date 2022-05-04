@@ -138,7 +138,8 @@ export const WrappedBonds: React.FC = () => {
             dispatch(
               actions.redeemBond({
                 bondSale: sale.address,
-                bondId: vested.id
+                bondId: vested.id,
+                vestedAddress: vested.address
               })
             )
           }
