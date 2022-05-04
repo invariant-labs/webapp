@@ -5,7 +5,7 @@ import { PublicKey } from '@solana/web3.js'
 import { IFarmsStore, farmsSliceName, ExtendedIncentive, ExtendedStake } from '../reducers/farms'
 import { keySelectors, AnyProps } from './helpers'
 import { pools } from './pools'
-import { positionsWithPoolsData } from './positions'
+import { positionsList, positionsWithPoolsData } from './positions'
 
 const store = (s: AnyProps) => s[farmsSliceName] as IFarmsStore
 
@@ -129,6 +129,17 @@ export const positionsForFarm = (farmAddress: string) =>
         })
     }
   )
+
+export const howManyPositionsForFarm = (farmAddress: string) =>
+  createSelector(farms, positionsList, (allFarms, { list }) => {
+    const farm = allFarms[farmAddress]
+
+    if (typeof farm === 'undefined') {
+      return 0
+    }
+
+    return list.filter(position => position.pool.equals(farm.pool)).length
+  })
 
 export const singleFarmData = (farmAddress: string) =>
   createSelector(farms, pools, (allFarms, allPools) => {

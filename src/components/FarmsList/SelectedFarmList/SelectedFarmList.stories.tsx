@@ -70,6 +70,7 @@ storiesOf('farmsList/selectedFarm', module)
             }
           ]}
           walletConnected
+          totalPositions={2}
         />
       </Grid>
     )
@@ -97,6 +98,7 @@ storiesOf('farmsList/selectedFarm', module)
           apy={9.11}
           toStake={[]}
           stakedPositions={[]}
+          totalPositions={0}
         />
       </Grid>
     )

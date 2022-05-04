@@ -5,6 +5,7 @@ import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import {
   farms,
+  howManyPositionsForFarm,
   isLoadingFarms,
   isLoadingFarmsTotals,
   isLoadingUserStakes,
@@ -43,6 +44,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   const stakesLoading = useSelector(isLoadingUserStakes)
   const { list } = useSelector(positionsList)
   const farmsTotalsLoading = useSelector(isLoadingFarmsTotals)
+  const farmPositionsLength = useSelector(howManyPositionsForFarm(id))
 
   useEffect(() => {
     if (Object.values(allTokens).length > 0 && Object.values(allFarms).length === 0) {
@@ -319,9 +321,10 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       apy={0}
       toStake={toStake}
       stakedPositions={stakedPositions}
-      stakesLoading={stakesLoading}
+      stakesLoading={stakesLoading && farmPositionsLength > 0}
       walletConnected={walletStatus === Status.Initialized}
       isLoadingTotals={farmsTotalsLoading}
+      totalPositions={farmPositionsLength}
     />
   )
 }

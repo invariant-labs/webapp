@@ -28,6 +28,7 @@ export interface ISelectedFarmList {
   stakesLoading?: boolean
   walletConnected?: boolean
   isLoadingTotals?: boolean
+  totalPositions: number
 }
 
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
@@ -45,7 +46,8 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   stakedPositions,
   stakesLoading = false,
   walletConnected = false,
-  isLoadingTotals = false
+  isLoadingTotals = false,
+  totalPositions
 }) => {
   const classes = useStyle()
 
@@ -110,9 +112,7 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Total positions:</Typography>
-            <Typography className={classes.value}>
-              {toStake.length + stakedPositions.length}
-            </Typography>
+            <Typography className={classes.value}>{totalPositions}</Typography>
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
