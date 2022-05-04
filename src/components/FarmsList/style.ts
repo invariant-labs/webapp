@@ -3,10 +3,15 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles(() => ({
   root: {
-    width: 436
+    width: 436,
+    position: 'relative'
   },
   header: {
     paddingBottom: 10
+  },
+  search: {
+    position: 'absolute',
+    top: -2
   },
   title: {
     ...typography.heading4,

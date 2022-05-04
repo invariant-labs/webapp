@@ -36,7 +36,7 @@ export const FarmList: React.FC<IFarmList> = ({ data, isLoadingTotals }) => {
   return (
     <Grid className={classes.root}>
       <Grid
-        className={classes.header}
+        className={classes.search}
         container
         direction='row'
         justifyContent='flex-end'
