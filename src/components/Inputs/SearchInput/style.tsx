@@ -5,14 +5,15 @@ const useStyles = makeStyles(() => ({
   endIcon: {
     color: colors.invariant.light,
     position: 'absolute',
-    right: 12,
+    right: 4,
     width: 20
   },
   input: {
     boxSizing: 'border-box',
     ...typography.body2,
     outline: 'none',
-    width: 200,
+    width: 128,
+    marginRight: -8,
     height: 28,
     fontFamily: 'Mukta',
     lineHeight: 16,

@@ -113,6 +113,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 32,
     marginLeft: 4,
     marginRight: 4,
+    cursor: 'pointer',
+    filter: 'brightness(0.7)',
 
     '&:hover': {
       filter: 'brightness(2)'

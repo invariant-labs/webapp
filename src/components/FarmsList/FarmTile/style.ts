@@ -27,11 +27,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     minWidth: 100,
-    marginRight: 8,
+    marginRight: 16,
 
     [theme.breakpoints.down('xs')]: {
       minWidth: 86,
-      marginRight: 4
+      marginRight: 8
     }
   },
   names: {
@@ -145,6 +145,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     textDecoration: 'none'
   },
   button: {
+    marginTop: 4,
+    marginLeft: 0,
     width: '100%',
     height: 44,
     borderRadius: 16,
@@ -175,7 +177,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 
   mobileContainer: {
-    padding: '4px 0'
+    padding: '7px 0'
   },
 
   spacer: {
@@ -186,7 +188,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: `1px solid ${colors.invariant.light}`,
     borderRadius: 12,
     padding: '10px 14px',
-    marginTop: 10
+    marginTop: 14
   },
   rewardLabel: {
     ...typography.body2,
@@ -210,6 +212,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 32,
     marginLeft: 4,
     marginRight: 4,
+    cursor: 'pointer',
 
     [theme.breakpoints.down('xs')]: {
       minWidth: 28
