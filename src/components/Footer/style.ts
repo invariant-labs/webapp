@@ -7,7 +7,9 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '35px 0'
+    padding: '35px 0',
+    position: 'relative',
+    zIndex: 2000
   },
   footerItem: {
     margin: '0 10px',

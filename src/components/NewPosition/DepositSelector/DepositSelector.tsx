@@ -49,6 +49,8 @@ export interface IDepositSelector {
   canCreateNewPosition: boolean
   handleAddToken: (address: string) => void
   commonTokens: PublicKey[]
+  initialHideUnknownTokensValue: boolean
+  onHideUnknownTokensChange: (val: boolean) => void
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -70,7 +72,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   canCreateNewPool,
   canCreateNewPosition,
   handleAddToken,
-  commonTokens
+  commonTokens,
+  initialHideUnknownTokensValue,
+  onHideUnknownTokensChange
 }) => {
   const classes = useStyles()
 
@@ -161,6 +165,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               handleAddToken={handleAddToken}
               sliceName
               commonTokens={commonTokens}
+              initialHideUnknownTokensValue={initialHideUnknownTokensValue}
+              onHideUnknownTokensChange={onHideUnknownTokensChange}
             />
           </Grid>
 
@@ -194,6 +200,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               handleAddToken={handleAddToken}
               sliceName
               commonTokens={commonTokens}
+              initialHideUnknownTokensValue={initialHideUnknownTokensValue}
+              onHideUnknownTokensChange={onHideUnknownTokensChange}
             />
           </Grid>
         </Grid>
