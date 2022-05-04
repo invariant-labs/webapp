@@ -196,7 +196,10 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
             </>
           )
         ) : (
-          <EmptyPlaceholder desc='Connect wallet to stake on this farm' className={classes.noWalletEmpty} />
+          <EmptyPlaceholder
+            desc='Connect wallet to stake on this farm'
+            className={classes.noWalletEmpty}
+          />
         )}
       </Grid>
     </Grid>
