@@ -6,12 +6,10 @@ import FarmTile, { IFarm } from './FarmTile/FarmTile'
 import useStyle from './style'
 
 export interface IFarmList {
-  title: string
   data: IFarm[]
-  emptyDesc: string
   isLoadingTotals: boolean
 }
-export const FarmList: React.FC<IFarmList> = ({ title, data, emptyDesc, isLoadingTotals }) => {
+export const FarmList: React.FC<IFarmList> = ({ data, isLoadingTotals }) => {
   const classes = useStyle()
   const [value, setValue] = useState('')
 
@@ -19,10 +17,19 @@ export const FarmList: React.FC<IFarmList> = ({ title, data, emptyDesc, isLoadin
     setValue(e.target.value.toLowerCase())
   }
 
-  const filteredData = data.filter(item => {
+  const filteredActive = data.filter(item => {
     return (
-      item.tokenX.symbol.toLowerCase().includes(value) ||
-      item.tokenY.symbol.toLowerCase().includes(value)
+      !!item.isActive &&
+      (item.tokenX.symbol.toLowerCase().includes(value) ||
+        item.tokenY.symbol.toLowerCase().includes(value))
+    )
+  })
+
+  const filteredInactive = data.filter(item => {
+    return (
+      !item.isActive &&
+      (item.tokenX.symbol.toLowerCase().includes(value) ||
+        item.tokenY.symbol.toLowerCase().includes(value))
     )
   })
 
@@ -32,25 +39,61 @@ export const FarmList: React.FC<IFarmList> = ({ title, data, emptyDesc, isLoadin
         className={classes.header}
         container
         direction='row'
-        justifyContent='space-between'
+        justifyContent='flex-end'
         alignItems='center'>
-        <Typography className={classes.title}>{title}</Typography>
         <SearchInput handleChange={handleChangeInput} value={value} />
       </Grid>
-      <Grid container direction='column' alignItems='center'>
-        {filteredData.length > 0 ? (
-          filteredData.map((element, index) => (
-            <div className={classes.tile}>
-              <FarmTile key={index} {...element} isLoadingTotals={isLoadingTotals} />
-            </div>
-          ))
-        ) : (
+      {!filteredActive.length && !filteredInactive.length ? (
+        <Grid container direction='column' alignItems='center'>
           <EmptyPlaceholder
             className={classes.empty}
-            desc={data.length === 0 ? emptyDesc : 'There are no farms matching this case'}
+            desc={
+              value.length
+                ? 'There are no farms matching this case'
+                : 'There are no existing farms at this moment'
+            }
           />
-        )}
-      </Grid>
+        </Grid>
+      ) : null}
+      {filteredActive.length > 0 ? (
+        <>
+          <Grid
+            className={classes.header}
+            container
+            direction='row'
+            justifyContent='space-between'
+            alignItems='center'>
+            <Typography className={classes.title}>Active farms</Typography>
+          </Grid>
+          <Grid container direction='column' alignItems='center'>
+            {filteredActive.map((element, index) => (
+              <div className={classes.tile}>
+                <FarmTile key={index} {...element} isLoadingTotals={isLoadingTotals} />
+              </div>
+            ))}
+          </Grid>
+        </>
+      ) : null}
+
+      {filteredInactive.length > 0 ? (
+        <>
+          <Grid
+            className={classes.header}
+            container
+            direction='row'
+            justifyContent='space-between'
+            alignItems='center'>
+            <Typography className={classes.title}>Inactive farms</Typography>
+          </Grid>
+          <Grid container direction='column' alignItems='center'>
+            {filteredInactive.map((element, index) => (
+              <div className={classes.tile}>
+                <FarmTile key={index} {...element} isLoadingTotals={isLoadingTotals} />
+              </div>
+            ))}
+          </Grid>
+        </>
+      ) : null}
     </Grid>
   )
 }

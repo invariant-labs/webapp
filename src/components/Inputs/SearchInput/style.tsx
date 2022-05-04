@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
     boxSizing: 'border-box',
     ...typography.body2,
     outline: 'none',
-    width: 88,
+    width: 200,
     height: 28,
     fontFamily: 'Mukta',
     lineHeight: 16,

@@ -77,20 +77,7 @@ export const FarmsWrapper: React.FC = () => {
       {farmsLoading ? (
         <img src={loader} style={{ width: 150, height: 150, margin: 'auto' }} />
       ) : (
-        <>
-          <FarmList
-            title={'Active farms'}
-            data={data.filter(({ isActive }) => isActive)}
-            emptyDesc='There are no active farms at this moment'
-            isLoadingTotals={farmsTotalsLoading}
-          />
-          <FarmList
-            title={'Inactive farms'}
-            data={data.filter(({ isActive }) => !isActive)}
-            emptyDesc='There are no inactive farms at this moment'
-            isLoadingTotals={farmsTotalsLoading}
-          />
-        </>
+        <FarmList data={data} isLoadingTotals={farmsTotalsLoading} />
       )}
     </Grid>
   )
