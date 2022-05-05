@@ -122,7 +122,6 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
     const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
-    initialTx.partialSign(wrappedSolAccount)
 
     const bondKeypair = Keypair.generate()
     const bondTx = yield* call(
@@ -136,7 +135,6 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
     const bondBlockhash = yield* call([connection, connection.getRecentBlockhash])
     bondTx.recentBlockhash = bondBlockhash.blockhash
     bondTx.feePayer = wallet.publicKey
-    bondTx.partialSign(bondKeypair)
 
     const unwrapTx = new Transaction().add(unwrapIx)
     const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
@@ -147,6 +145,9 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
       [wallet, wallet.signAllTransactions],
       [initialTx, bondTx, unwrapTx]
     )
+
+    initialSignedTx.partialSign(wrappedSolAccount)
+    bondSignedTx.partialSign(bondKeypair)
 
     const initialTxid = yield* call(
       sendAndConfirmRawTransaction,
@@ -365,7 +366,6 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
     const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
-    initialTx.partialSign(wrappedSolAccount)
 
     const redeemTx = yield* call([bondsProgram, bondsProgram.claimBondTransaction], {
       bondSale: data.bondSale,
@@ -385,6 +385,8 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
       [wallet, wallet.signAllTransactions],
       [initialTx, redeemTx, unwrapTx]
     )
+
+    initialSignedTx.partialSign(wrappedSolAccount)
 
     const initialTxid = yield* call(
       sendAndConfirmRawTransaction,
