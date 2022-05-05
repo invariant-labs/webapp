@@ -1,4 +1,5 @@
 import ConnectWallet from '@components/Modals/ConnectWallet/ConnectWallet'
+import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Button, Grid, Typography } from '@material-ui/core'
 import icons from '@static/icons'
 import { WalletType } from '@web3/wallet'
@@ -21,12 +22,15 @@ export const NoConnected: React.FC<INoConnected> = ({
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget)
+    const headerButton: HTMLButtonElement | null = document.getElementById('connect-wallet-button') as (HTMLButtonElement | null)
+    setAnchorEl(headerButton !== null ? headerButton : event.currentTarget)
     setOpen(true)
+    blurContent()
   }
 
   const handleClose = () => {
     setOpen(false)
+    unblurContent()
   }
 
   const handleDisconnect = () => {
