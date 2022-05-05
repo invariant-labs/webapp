@@ -22,7 +22,9 @@ export const NoConnected: React.FC<INoConnected> = ({
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const headerButton: HTMLButtonElement | null = document.getElementById('connect-wallet-button') as (HTMLButtonElement | null)
+    const headerButton: HTMLButtonElement | null = document.getElementById(
+      'connect-wallet-button'
+    ) as HTMLButtonElement | null
     setAnchorEl(headerButton !== null ? headerButton : event.currentTarget)
     setOpen(true)
     blurContent()
