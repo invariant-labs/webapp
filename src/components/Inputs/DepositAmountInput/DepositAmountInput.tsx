@@ -1,6 +1,8 @@
 import { formatNumbers, FormatNumberThreshold, getScaleFromString, showPrefix } from '@consts/utils'
-import { Button, Grid, Input, Typography } from '@material-ui/core'
+import { Button, Grid, Input, Tooltip, Typography } from '@material-ui/core'
+import classNames from 'classnames'
 import React, { useRef, CSSProperties } from 'react'
+import loadingAnimation from '@static/gif/loading.gif'
 import useStyles from './style'
 
 interface IProps {
@@ -16,9 +18,10 @@ interface IProps {
   decimalsLimit: number
   onBlur?: () => void
   percentageChange?: number
-  usdValue?: number
+  tokenPrice?: number
   balanceValue?: string
   disabled?: boolean
+  priceLoading?: boolean
 }
 
 export const DepositAmountInput: React.FC<IProps> = ({
@@ -33,10 +36,11 @@ export const DepositAmountInput: React.FC<IProps> = ({
   blockerInfo,
   onBlur,
   decimalsLimit,
-  percentageChange,
-  usdValue,
+  percentageChange = 0,
+  tokenPrice,
   balanceValue,
-  disabled = false
+  disabled = false,
+  priceLoading = false
 }) => {
   const classes = useStyles()
 
@@ -51,6 +55,32 @@ export const DepositAmountInput: React.FC<IProps> = ({
       value: 100,
       decimals: 4
     },
+    {
+      value: 1000,
+      decimals: 2
+    },
+    {
+      value: 10000,
+      decimals: 1
+    },
+    {
+      value: 1000000,
+      decimals: 2,
+      divider: 1000
+    },
+    {
+      value: 1000000000,
+      decimals: 2,
+      divider: 1000000
+    },
+    {
+      value: Infinity,
+      decimals: 2,
+      divider: 1000000000
+    }
+  ]
+
+  const usdThresholds: FormatNumberThreshold[] = [
     {
       value: 1000,
       decimals: 2
@@ -115,10 +145,18 @@ export const DepositAmountInput: React.FC<IProps> = ({
     }
   }
 
+  const usdBalance = tokenPrice && balanceValue ? tokenPrice * +balanceValue : 0
+
   return (
     <Grid container className={classes.wrapper} style={style}>
       <div className={classes.root}>
-        <div className={classes.inputContainer}>
+        <Grid
+          container
+          justifyContent='space-between'
+          alignItems='center'
+          direction='row'
+          wrap='nowrap'
+          className={classes.inputContainer}>
           <Grid
             className={classes.currency}
             container
@@ -135,6 +173,8 @@ export const DepositAmountInput: React.FC<IProps> = ({
             )}
           </Grid>
           <Input
+            className={classes.input}
+            classes={{ input: classes.innerInput }}
             inputRef={inputRef}
             type={'text'}
             value={value}
@@ -144,25 +184,32 @@ export const DepositAmountInput: React.FC<IProps> = ({
             onBlur={onBlur}
             disabled={disabled}
           />
-        </div>
+        </Grid>
         <Grid
-          className={classes.balance}
           container
+          justifyContent='space-between'
           alignItems='center'
-          wrap='nowrap'
-          onClick={onMaxClick}>
-          {
-            <>
-              <Typography className={classes.caption2}>
-                Balance:{' '}
-                {currency
-                  ? `${
-                      balanceValue
-                        ? formatNumbers(thresholds)(balanceValue.toString()) +
-                          showPrefix(Number(balanceValue))
-                        : '0'
-                    } ${currency}`
-                  : '- -'}
+          direction='row'
+          wrap='nowrap'>
+          <Grid
+            className={classes.balance}
+            container
+            alignItems='center'
+            wrap='nowrap'
+            onClick={onMaxClick}>
+            {
+              <>
+                <Typography className={classes.caption2}>
+                  Balance:{' '}
+                  {currency
+                    ? `${
+                        balanceValue
+                          ? formatNumbers(thresholds)(balanceValue) +
+                            showPrefix(Number(balanceValue))
+                          : '0'
+                      } ${currency}`
+                    : '- -'}
+                </Typography>
                 <Button
                   className={
                     currency
@@ -172,39 +219,41 @@ export const DepositAmountInput: React.FC<IProps> = ({
                   onClick={onMaxClick}>
                   Max
                 </Button>
-              </Typography>
-            </>
-          }
-        </Grid>
-        <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>
-          {
-            <>
-              {/*
-                TODO: temporarily commented; uncomment when fetching prices will be done
-               {currency && !usdValue ? (
-                <Typography className={classes.noData}>
-                  <div className={classes.noDataIcon}>?</div>No data
-                </Typography>
-              ) : (
-                ''
-              )} */}
-
-              {currency && usdValue ? (
+              </>
+            }
+          </Grid>
+          <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>
+            {currency ? (
+              priceLoading ? (
+                <img src={loadingAnimation} className={classes.loading} />
+              ) : tokenPrice ? (
                 <>
-                  <Typography className={classes.percentage}>{percentageChange}%</Typography>
-                  <Typography className={classes.caption2}>~ ${usdValue}</Typography>
+                  <Typography
+                    className={classNames(
+                      classes.percentage,
+                      percentageChange > 0 ? classes.percentagePositive : classes.percentageNegative
+                    )}>
+                    {percentageChange > 0 ? '+' : ''}
+                    {percentageChange.toFixed(2)}%
+                  </Typography>
+                  <Typography className={classes.caption2}>
+                    ~${formatNumbers(usdThresholds)(usdBalance.toString()) + showPrefix(usdBalance)}
+                  </Typography>
                 </>
               ) : (
-                ''
-              )}
-
-              {!currency && !usdValue ? (
-                <Typography className={classes.caption2}>-</Typography>
-              ) : (
-                ''
-              )}
-            </>
-          }
+                <Tooltip
+                  title='Cannot fetch price of token'
+                  placement='bottom'
+                  classes={{
+                    tooltip: classes.tooltip
+                  }}>
+                  <Typography className={classes.noData}>
+                    <div className={classes.noDataIcon}>?</div>No data
+                  </Typography>
+                </Tooltip>
+              )
+            ) : null}
+          </Grid>
         </Grid>
       </div>
       {blocked && (
@@ -222,4 +271,5 @@ export const DepositAmountInput: React.FC<IProps> = ({
     </Grid>
   )
 }
+
 export default DepositAmountInput

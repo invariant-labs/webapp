@@ -39,9 +39,9 @@ export interface IDepositSelector {
   className?: string
   progress: ProgressState
   percentageChangeA?: number
-  usdValueA?: number
+  priceA?: number
   percentageChangeB?: number
-  usdValueB?: number
+  priceB?: number
   onReverseTokens: () => void
   poolIndex: number | null
   bestTierIndex?: number
@@ -51,6 +51,8 @@ export interface IDepositSelector {
   commonTokens: PublicKey[]
   initialHideUnknownTokensValue: boolean
   onHideUnknownTokensChange: (val: boolean) => void
+  priceALoading?: boolean
+  priceBLoading?: boolean
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -63,9 +65,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   className,
   progress,
   percentageChangeA,
-  usdValueA,
+  priceA,
   percentageChangeB,
-  usdValueB,
+  priceB,
   onReverseTokens,
   poolIndex,
   bestTierIndex,
@@ -74,7 +76,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   handleAddToken,
   commonTokens,
   initialHideUnknownTokensValue,
-  onHideUnknownTokensChange
+  onHideUnknownTokensChange,
+  priceALoading,
+  priceBLoading
 }) => {
   const classes = useStyles()
 
@@ -221,7 +225,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       <Grid container className={classes.sectionWrapper}>
         <DepositAmountInput
           percentageChange={percentageChangeA}
-          usdValue={usdValueA}
+          tokenPrice={priceA}
           currency={tokenAIndex !== null ? tokens[tokenAIndex].symbol : null}
           currencyIconSrc={tokenAIndex !== null ? tokens[tokenAIndex].logoURI : undefined}
           placeholder='0.0'
@@ -277,11 +281,12 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             }
           }}
           {...tokenAInputState}
+          priceLoading={priceALoading}
         />
 
         <DepositAmountInput
           percentageChange={percentageChangeB}
-          usdValue={usdValueB}
+          tokenPrice={priceB}
           currency={tokenBIndex !== null ? tokens[tokenBIndex].symbol : null}
           currencyIconSrc={tokenBIndex !== null ? tokens[tokenBIndex].logoURI : undefined}
           placeholder='0.0'
@@ -334,6 +339,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             }
           }}
           {...tokenBInputState}
+          priceLoading={priceBLoading}
         />
       </Grid>
 

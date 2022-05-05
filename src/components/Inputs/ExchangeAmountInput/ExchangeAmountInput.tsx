@@ -1,12 +1,13 @@
-import { Input, Box, Typography, Grid } from '@material-ui/core'
+import { Input, Typography, Grid, Tooltip } from '@material-ui/core'
 import React, { CSSProperties, useRef } from 'react'
 import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import Select from '@components/Inputs/Select/Select'
-import useStyles from './style'
 import { SwapToken } from '@components/Swap/Swap'
 import { formatNumbers, FormatNumberThreshold, showPrefix } from '@consts/utils'
 import { PublicKey } from '@solana/web3.js'
+import loadingAnimation from '@static/gif/loading.gif'
+import useStyles from './style'
 
 interface IProps {
   setValue: (value: string) => void
@@ -28,6 +29,9 @@ interface IProps {
   limit?: number
   initialHideUnknownTokensValue: boolean
   onHideUnknownTokensChange: (val: boolean) => void
+  percentageChange?: number
+  tokenPrice?: number
+  priceLoading?: boolean
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -49,7 +53,10 @@ export const AmountInput: React.FC<IProps> = ({
   commonTokens,
   limit,
   initialHideUnknownTokensValue,
-  onHideUnknownTokensChange
+  onHideUnknownTokensChange,
+  percentageChange = 0,
+  tokenPrice,
+  priceLoading = false
 }) => {
   const classes = useStyles()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -63,6 +70,32 @@ export const AmountInput: React.FC<IProps> = ({
       value: 100,
       decimals: 4
     },
+    {
+      value: 1000,
+      decimals: 2
+    },
+    {
+      value: 10000,
+      decimals: 1
+    },
+    {
+      value: 1000000,
+      decimals: 2,
+      divider: 1000
+    },
+    {
+      value: 1000000000,
+      decimals: 2,
+      divider: 1000000
+    },
+    {
+      value: Infinity,
+      decimals: 2,
+      divider: 1000000000
+    }
+  ]
+
+  const usdThresholds: FormatNumberThreshold[] = [
     {
       value: 1000,
       decimals: 2
@@ -127,6 +160,8 @@ export const AmountInput: React.FC<IProps> = ({
 
   const tokenIcon = !current ? '' : current.symbol
 
+  const usdBalance = tokenPrice && balance ? tokenPrice * +balance : 0
+
   return (
     <>
       <Grid container alignItems='center' wrap='nowrap' className={classes.exchangeContainer}>
@@ -155,7 +190,13 @@ export const AmountInput: React.FC<IProps> = ({
           onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
         />
       </Grid>
-      <Box className={classes.container}>
+      <Grid
+        container
+        justifyContent='space-between'
+        alignItems='center'
+        direction='row'
+        wrap='nowrap'
+        className={classes.bottom}>
         <Grid className={classes.BalanceContainer} onClick={onMaxClick}>
           <Typography className={classes.BalanceTypography}>
             Balance: {balance ? formatNumbers(thresholds)(balance.toString()) : 0}
@@ -171,11 +212,39 @@ export const AmountInput: React.FC<IProps> = ({
             disabled={disabled && isNaN(Number(balance)) ? disabled : isNaN(Number(balance))}
           />
         </Grid>
-        {/* TODO: temporarily commented; uncomment when fetching usd value will be done
-        <Typography className={classes.noData}>
-          <div className={classes.noDataIcon}>?</div>No data
-        </Typography> */}
-      </Box>
+        <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>
+          {current ? (
+            priceLoading ? (
+              <img src={loadingAnimation} className={classes.loading} />
+            ) : tokenPrice ? (
+              <>
+                <Typography
+                  className={classNames(
+                    classes.percentage,
+                    percentageChange > 0 ? classes.percentagePositive : classes.percentageNegative
+                  )}>
+                  {percentageChange > 0 ? '+' : ''}
+                  {percentageChange.toFixed(2)}%
+                </Typography>
+                <Typography className={classes.caption2}>
+                  ~${formatNumbers(usdThresholds)(usdBalance.toString()) + showPrefix(usdBalance)}
+                </Typography>
+              </>
+            ) : (
+              <Tooltip
+                title='Cannot fetch price of token'
+                placement='bottom'
+                classes={{
+                  tooltip: classes.tooltip
+                }}>
+                <Typography className={classes.noData}>
+                  <div className={classes.noDataIcon}>?</div>No data
+                </Typography>
+              </Tooltip>
+            )
+          ) : null}
+        </Grid>
+      </Grid>
     </>
   )
 }

@@ -1,7 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { printBN, printBNtoBN, handleSimulate, findPairs, trimLeadingZeros } from '@consts/utils'
+import {
+  printBN,
+  printBNtoBN,
+  handleSimulate,
+  findPairs,
+  trimLeadingZeros,
+  CoingeckoPriceData
+} from '@consts/utils'
 import { Decimal, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
@@ -82,6 +89,10 @@ export interface ISwap {
   commonTokens: PublicKey[]
   initialHideUnknownTokensValue: boolean
   onHideUnknownTokensChange: (val: boolean) => void
+  tokenFromPriceData?: CoingeckoPriceData
+  tokenToPriceData?: CoingeckoPriceData
+  priceFromLoading?: boolean
+  priceToLoading?: boolean
 }
 
 export const Swap: React.FC<ISwap> = ({
@@ -101,7 +112,11 @@ export const Swap: React.FC<ISwap> = ({
   handleAddToken,
   commonTokens,
   initialHideUnknownTokensValue,
-  onHideUnknownTokensChange
+  onHideUnknownTokensChange,
+  tokenFromPriceData,
+  tokenToPriceData,
+  priceFromLoading,
+  priceToLoading
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -487,6 +502,9 @@ export const Swap: React.FC<ISwap> = ({
             limit={1e14}
             initialHideUnknownTokensValue={initialHideUnknownTokensValue}
             onHideUnknownTokensChange={onHideUnknownTokensChange}
+            tokenPrice={tokenFromPriceData?.price}
+            percentageChange={tokenFromPriceData?.priceChange}
+            priceLoading={priceFromLoading}
           />
         </Box>
         <Box className={classes.tokenComponentTextContainer}>
@@ -560,6 +578,9 @@ export const Swap: React.FC<ISwap> = ({
             limit={1e14}
             initialHideUnknownTokensValue={initialHideUnknownTokensValue}
             onHideUnknownTokensChange={onHideUnknownTokensChange}
+            tokenPrice={tokenToPriceData?.price}
+            percentageChange={tokenToPriceData?.priceChange}
+            priceLoading={priceToLoading}
           />
         </Box>
         <Box className={classes.transactionDetails}>
