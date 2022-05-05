@@ -1027,3 +1027,16 @@ export const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThresh
     divider: 1000000000
   }
 ]
+
+export const getCoingeckoTokenPrice = async (id: string): Promise<CoingeckoPriceData> => {
+  return await axios
+    .get<CoingeckoApiPriceData[]>(
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${id}`
+    )
+    .then(res => {
+      return {
+        price: res.data[0].current_price,
+        priceChange: res.data[0].price_change_percentage_24h
+      }
+    })
+}

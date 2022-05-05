@@ -58,6 +58,32 @@ export const BoxInfo: React.FC<{
     }
   ]
 
+  const usdThresholds: FormatNumberThreshold[] = [
+    {
+      value: 1000,
+      decimals: 2
+    },
+    {
+      value: 10000,
+      decimals: 1
+    },
+    {
+      value: 1000000,
+      decimals: 2,
+      divider: 1000
+    },
+    {
+      value: 1000000000,
+      decimals: 2,
+      divider: 1000000
+    },
+    {
+      value: Infinity,
+      decimals: 2,
+      divider: 1000000000
+    }
+  ]
+
   const prefixConfig: PrefixConfig = {
     B: 1000000000,
     M: 1000000
@@ -110,7 +136,10 @@ export const BoxInfo: React.FC<{
                 Balance: {tokenA.balance} {tokenA.name}
               </Typography>
               {typeof tokenA.usdValue !== 'undefined' ? (
-                <Typography className={classes.tokenUSDValue}>$ {tokenA.usdValue}</Typography>
+                <Typography className={classes.tokenUSDValue}>
+                  ~${formatNumbers(usdThresholds)(tokenA.usdValue.toString())}
+                  {showPrefix(tokenA.usdValue)}
+                </Typography>
               ) : null}
             </Grid>
           ) : null}
@@ -137,7 +166,10 @@ export const BoxInfo: React.FC<{
                 Balance: {tokenB.balance} {tokenB.name}
               </Typography>
               {typeof tokenB.usdValue !== 'undefined' ? (
-                <Typography className={classes.tokenUSDValue}>$ {tokenB.usdValue}</Typography>
+                <Typography className={classes.tokenUSDValue}>
+                  ~${formatNumbers(usdThresholds)(tokenB.usdValue.toString())}
+                  {showPrefix(tokenB.usdValue)}
+                </Typography>
               ) : null}
             </Grid>
           ) : null}
