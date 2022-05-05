@@ -3,7 +3,8 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: 508
+    width: 508,
+    position: 'relative'
   },
   header: {
     ...typography.body1,

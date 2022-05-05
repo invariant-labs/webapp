@@ -11,6 +11,7 @@ import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import { Token } from '@consts/static'
 import loadingAnimation from '@static/gif/loading.gif'
 import useStyle from './style'
+import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 
 export interface ISelectedFarmList {
   tokenX: Token
@@ -29,6 +30,7 @@ export interface ISelectedFarmList {
   walletConnected?: boolean
   isLoadingTotals?: boolean
   totalPositions: number
+  noConnectedBlockerProps: INoConnected
 }
 
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
@@ -47,7 +49,8 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   stakesLoading = false,
   walletConnected = false,
   isLoadingTotals = false,
-  totalPositions
+  totalPositions,
+  noConnectedBlockerProps
 }) => {
   const classes = useStyle()
 
@@ -162,7 +165,7 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
         {walletConnected ? (
           stakesLoading ? (
             <img src={loader} style={{ width: 150, height: 150, margin: 'auto' }} />
-          ) : (
+          ) : totalPositions > 0 ? (
             <>
               <Typography className={classes.listHeader}>Your staked positions</Typography>
 
@@ -194,11 +197,16 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
                 />
               )}
             </>
+          ) : (
+            <EmptyPlaceholder
+              desc='You have no positions for this farm'
+              className={classes.noWalletEmpty}
+            />
           )
         ) : (
-          <EmptyPlaceholder
-            desc='Connect wallet to stake on this farm'
-            className={classes.noWalletEmpty}
+          <NoConnected
+            {...noConnectedBlockerProps}
+            descCustomText='You are unable to stake positions.'
           />
         )}
       </Grid>

@@ -18,7 +18,7 @@ import { tokens } from '@selectors/pools'
 import React, { useEffect, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@reducers/farms'
-import { Status } from '@reducers/solanaWallet'
+import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { status } from '@selectors/solanaWallet'
 import { calculateReward } from '@invariant-labs/staker-sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
@@ -313,7 +313,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         (farmData.totalStakedX ?? 0) + (farmData.totalStakedY ?? 0) / currentPrice
       }
       totalStakedInYToken={
-        (farmData.totalStakedY ?? 0) + (farmData.totalStakedX ?? 0) / currentPrice
+        (farmData.totalStakedY ?? 0) + (farmData.totalStakedX ?? 0) * currentPrice
       }
       userStakedInXToken={userStakedInXToken}
       userStakedInYToken={userStakedInYToken}
@@ -325,6 +325,14 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       walletConnected={walletStatus === Status.Initialized}
       isLoadingTotals={farmsTotalsLoading}
       totalPositions={farmPositionsLength}
+      noConnectedBlockerProps={{
+        onConnect: type => {
+          dispatch(walletActions.connect(type))
+        },
+        onDisconnect: () => {
+          dispatch(walletActions.disconnect())
+        }
+      }}
     />
   )
 }
