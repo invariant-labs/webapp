@@ -35,6 +35,7 @@ import ANAIcon from './icons/ana.svg'
 import activeIcon from './svg/active.svg'
 import inactiveIcon from './svg/inactive.svg'
 import allIcon from './svg/all.svg'
+import nightlyIcon from './svg/nightly.svg'
 
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
@@ -48,6 +49,7 @@ const icons: { [key: string]: string } = {
   coin98: coin98Icon,
   slope: slope,
   clover: clover,
+  nightly: nightlyIcon,
   clear: clearIcon,
   Mainnet: mainnet,
   Devnet: devnet,

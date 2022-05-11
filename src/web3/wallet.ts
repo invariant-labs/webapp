@@ -7,6 +7,8 @@ import { SolflareWalletAdapter } from './adapters/solflare'
 import { Coin98WalletAdapter } from './adapters/coin98'
 import { SlopeWalletAdapter } from './adapters/slope'
 import { CloverWalletAdapter } from './adapters/clover'
+import { NightlyWalletAdapter } from './adapters/nightly'
+
 export enum WalletType {
   PHANTOM,
   SOLLET,
@@ -14,7 +16,8 @@ export enum WalletType {
   SOLFLARE,
   COIN98,
   SLOPE,
-  CLOVER
+  CLOVER,
+  NIGHTLY
 }
 
 let _wallet: WalletAdapter
@@ -84,6 +87,13 @@ const connectWallet = async (wallet: WalletType): Promise<WalletAdapter> => {
         break
       case WalletType.CLOVER:
         _wallet = new CloverWalletAdapter()
+        _wallet.on('connect', () => {
+          resolve(_wallet)
+        })
+        _wallet.connect()
+        break
+      case WalletType.NIGHTLY:
+        _wallet = new NightlyWalletAdapter()
         _wallet.on('connect', () => {
           resolve(_wallet)
         })
