@@ -11,6 +11,7 @@ import {
   isLoadingUserStakes,
   positionsForFarm,
   singleFarmData,
+  stakeRangeTicks,
   stakeStatuses,
   userStakes
 } from '@selectors/farms'
@@ -20,7 +21,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@reducers/farms'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { status } from '@selectors/solanaWallet'
-import { calculateReward } from '@invariant-labs/staker-sdk/lib/utils'
+import {
+  calculateReward,
+  calculateSecondsPerLiquidityInside
+} from '@invariant-labs/staker-sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
 import loader from '@static/gif/loader.gif'
 import { positionsList } from '@selectors/positions'
@@ -45,6 +49,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   const { list } = useSelector(positionsList)
   const farmsTotalsLoading = useSelector(isLoadingFarmsTotals)
   const farmPositionsLength = useSelector(howManyPositionsForFarm(id))
+  const allStakeRangeTicks = useSelector(stakeRangeTicks)
 
   useEffect(() => {
     if (Object.values(allTokens).length > 0 && Object.values(allFarms).length === 0) {
@@ -62,6 +67,18 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       dispatch(actions.getUserStakes())
     }
   }, [walletStatus, Object.values(allFarms).length, list])
+
+  useEffect(() => {
+    const stakeAddresses: string[] = []
+    farmPositions.forEach(({ stakeAddress }) => {
+      if (typeof stakeAddress !== 'undefined') {
+        stakeAddresses.push(stakeAddress.toString())
+      }
+    })
+    if (stakeAddresses.length > 0) {
+      dispatch(actions.getNewStakeRangeTicks(stakeAddresses))
+    }
+  }, [Object.values(allUserStakes).length])
 
   const currentPrice =
     typeof farmData === 'undefined'
@@ -225,6 +242,26 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         let rewardValue = 0
 
         if (typeof position.stakeAddress !== 'undefined') {
+          let secondsPerLiquidityInside = position.secondsPerLiquidityInside
+
+          if (typeof allStakeRangeTicks[position.stakeAddress.toString()] !== 'undefined') {
+            const rangeTicks = allStakeRangeTicks[position.stakeAddress.toString()]
+
+            if (
+              typeof rangeTicks.lowerTick !== 'undefined' &&
+              typeof rangeTicks.upperTick !== 'undefined'
+            ) {
+              secondsPerLiquidityInside = {
+                v: calculateSecondsPerLiquidityInside({
+                  tickLower: rangeTicks.lowerTick,
+                  tickUpper: rangeTicks.upperTick,
+                  pool: position.poolData,
+                  currentTimestamp: new BN(Math.floor(Date.now() / 1000))
+                })
+              }
+            }
+          }
+
           const { result } = calculateReward({
             totalRewardUnclaimed: farmData.totalRewardUnclaimed.v,
             totalSecondsClaimed: farmData.totalSecondsClaimed.v,
@@ -234,7 +271,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
             currentTime: new BN(Date.now() / 1000),
             secondsPerLiquidityInsideInitial:
               allUserStakes[position.stakeAddress.toString()].secondsPerLiquidityInitial,
-            secondsPerLiquidityInside: position.secondsPerLiquidityInside
+            secondsPerLiquidityInside: secondsPerLiquidityInside
           })
 
           rewardValue = +printBN(result, allTokens[farmData.rewardToken.toString()].decimals)
@@ -287,7 +324,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
     })
 
     return sum
-  }, [stakedPositions])
+  }, [stakedPositions, allStakeRangeTicks])
 
   return !farmData ? (
     farmsLoading ? (

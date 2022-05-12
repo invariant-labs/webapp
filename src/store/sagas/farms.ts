@@ -4,7 +4,8 @@ import {
   FarmPositionData,
   ExtendedIncentive,
   ExtendedStake,
-  FarmTotalsUpdate
+  FarmTotalsUpdate,
+  StakeRangeTicks
 } from '@reducers/farms'
 import { actions as poolsActions, ListPoolsResponse, ListType } from '@reducers/pools'
 import { actions as snackbarsActions } from '@reducers/snackbars'
@@ -14,7 +15,12 @@ import { createAccount, getWallet, sleep } from './wallet'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { network } from '@selectors/solanaConnection'
 import { networkTypetoProgramNetwork } from '@web3/connection'
-import { positionsList, singlePositionData } from '@selectors/positions'
+import {
+  positionsList,
+  positionsWithPoolsData,
+  PositionWithPoolData,
+  singlePositionData
+} from '@selectors/positions'
 import { getMarketAddress, Pair } from '@invariant-labs/sdk'
 import {
   AccountInfo,
@@ -26,12 +32,12 @@ import {
   SystemProgram,
   Transaction
 } from '@solana/web3.js'
-import { farms } from '@selectors/farms'
+import { farms, userStakes } from '@selectors/farms'
 import { accounts } from '@selectors/solanaWallet'
 import { getConnection } from './connection'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { getPositionsForPool, getUserStakesForFarm, printBN } from '@consts/utils'
+import { getPositionsForPool, getTicksList, getUserStakesForFarm, printBN } from '@consts/utils'
 import { pools, tokens } from '@selectors/pools'
 import { BN } from '@project-serum/anchor'
 import { calculatePriceSqrt, getX, getY } from '@invariant-labs/sdk/lib/math'
@@ -612,6 +618,64 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
   }
 }
 
+export function* handleGetNewStakeRangeTicks(action: PayloadAction<string[]>) {
+  try {
+    const marketProgram = yield* call(getMarketProgram)
+
+    const allStakes = yield* select(userStakes)
+    const allPositions = yield* select(positionsWithPoolsData)
+
+    const positionsDict: Record<string, PositionWithPoolData> = {}
+    allPositions.forEach(position => {
+      positionsDict[position.address.toString()] = position
+    })
+
+    const ticksData: Array<{ pair: Pair; index: number; payloadIndex: number; isLower: boolean }> =
+      []
+    action.payload.forEach((address, index) => {
+      const stake = allStakes[address]
+      const position = positionsDict[stake.position.toString()]
+
+      const pair = new Pair(position.poolData.tokenX, position.poolData.tokenY, {
+        fee: position.poolData.fee.v
+      })
+
+      ticksData.push({
+        pair,
+        index: position.lowerTickIndex,
+        payloadIndex: index,
+        isLower: true
+      })
+      ticksData.push({
+        pair,
+        index: position.upperTickIndex,
+        payloadIndex: index,
+        isLower: false
+      })
+    })
+
+    const ticks = yield* call(getTicksList, marketProgram, ticksData)
+
+    const rangeTicks: Record<string, StakeRangeTicks> = {}
+
+    ticks.forEach((tick, index) => {
+      if (typeof rangeTicks[action.payload[ticksData[index].payloadIndex]] === 'undefined') {
+        rangeTicks[action.payload[ticksData[index].payloadIndex]] = {}
+      }
+
+      if (tick !== null) {
+        rangeTicks[action.payload[ticksData[index].payloadIndex]][
+          ticksData[index].isLower ? 'lowerTick' : 'upperTick'
+        ] = tick
+      }
+    })
+
+    yield* put(actions.addNewStakeRangeTicks(rangeTicks))
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export function* getFarmsListHandler(): Generator {
   yield* takeLatest(actions.getFarms, handleGetFarmsList)
 }
@@ -628,10 +692,18 @@ export function* withdrawRewardsHandler(): Generator {
   yield* takeLatest(actions.withdrawRewardsForPosition, handleWithdrawRewards)
 }
 
+export function* getNewStakeRangeTicksHandler(): Generator {
+  yield* takeLatest(actions.getNewStakeRangeTicks, handleGetNewStakeRangeTicks)
+}
+
 export function* farmsSaga(): Generator {
   yield all(
-    [getFarmsListHandler, getUserStakesHandler, stakePositionHandler, withdrawRewardsHandler].map(
-      spawn
-    )
+    [
+      getFarmsListHandler,
+      getUserStakesHandler,
+      stakePositionHandler,
+      withdrawRewardsHandler,
+      getNewStakeRangeTicksHandler
+    ].map(spawn)
   )
 }

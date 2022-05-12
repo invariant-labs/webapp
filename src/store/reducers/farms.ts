@@ -3,6 +3,7 @@ import { PublicKey } from '@solana/web3.js'
 import { PayloadType } from './types'
 import { IncentiveStructure, Stake } from '@invariant-labs/staker-sdk/lib/staker'
 import { BN } from '@project-serum/anchor'
+import { Tick } from '@invariant-labs/sdk/lib/market'
 
 export interface CurrentFarmData {
   farm: PublicKey
@@ -33,6 +34,11 @@ export interface StakeStatus {
   success: boolean
 }
 
+export interface StakeRangeTicks {
+  lowerTick?: Tick
+  upperTick?: Tick
+}
+
 export interface IFarmsStore {
   farms: Record<string, ExtendedIncentive>
   isLoadingFarms: boolean
@@ -40,6 +46,8 @@ export interface IFarmsStore {
   userStakes: Record<string, ExtendedStake>
   isLoadingUserStakes: boolean
   stakeStatuses: Record<string, StakeStatus>
+  isLoadingNewRangeTicks: boolean
+  stakeRangeTicks: Record<string, StakeRangeTicks>
 }
 
 export interface SetSingleFarmPayload {
@@ -71,7 +79,9 @@ export const defaultState: IFarmsStore = {
   isLoadingFarmsTotals: true,
   userStakes: {},
   isLoadingUserStakes: true,
-  stakeStatuses: {}
+  stakeStatuses: {},
+  isLoadingNewRangeTicks: false,
+  stakeRangeTicks: {}
 }
 
 export const farmsSliceName = 'farms'
@@ -150,7 +160,20 @@ const farmsSlice = createSlice({
 
       return state
     },
-    withdrawRewardsForPosition(_state, _action: PayloadAction<FarmPositionData>) {}
+    withdrawRewardsForPosition(_state, _action: PayloadAction<FarmPositionData>) {},
+    getNewStakeRangeTicks(state, _action: PayloadAction<string[]>) {
+      state.isLoadingNewRangeTicks = true
+      return state
+    },
+    addNewStakeRangeTicks(state, action: PayloadAction<Record<string, StakeRangeTicks>>) {
+      state.isLoadingNewRangeTicks = false
+      state.stakeRangeTicks = {
+        ...state.stakeRangeTicks,
+        ...action.payload
+      }
+
+      return state
+    }
   }
 })
 

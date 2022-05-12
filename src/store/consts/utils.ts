@@ -1038,3 +1038,20 @@ export const getCoingeckoTokenPrice = async (id: string): Promise<CoingeckoPrice
       }
     })
 }
+
+export const getTicksList = async (
+  marketProgram: Market,
+  data: Array<{ pair: Pair; index: number }>
+): Promise<Array<Tick | null>> => {
+  const ticksAddresses = await Promise.all(
+    data.map(async ({ pair, index }) => {
+      const { tickAddress } = await marketProgram.getTickAddress(pair, index)
+
+      return tickAddress
+    })
+  )
+
+  const ticks = await marketProgram.program.account.tick.fetchMultiple(ticksAddresses)
+
+  return ticks.map(tick => (tick === null ? null : (tick as Tick)))
+}
