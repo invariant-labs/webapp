@@ -19,7 +19,7 @@ export interface PoolWithAddressAndIndex extends PoolWithAddress {
 }
 
 export interface PositionWithPoolData extends PositionWithAddress {
-  poolData: PoolWithAddressAndIndex,
+  poolData: PoolWithAddressAndIndex
   tokenX: SwapToken
   tokenY: SwapToken
   positionIndex: number
@@ -50,6 +50,7 @@ export const positionsWithPoolsData = createSelector(
 
 export const singlePositionData = (id: string) =>
   createSelector(positionsWithPoolsData, positions =>
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     positions.find(position => id === position.id.toString() + '_' + position.pool.toString())
   )
 

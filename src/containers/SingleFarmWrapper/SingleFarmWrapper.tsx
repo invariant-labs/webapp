@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import SelectedFarmList from '@components/FarmsList/SelectedFarmList/SelectedFarmList'
 import { calcYPerXPrice, printBN } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { all, call, fork, put, select, spawn, take, takeLatest } from 'typed-redux-saga'
 import {
   actions,
