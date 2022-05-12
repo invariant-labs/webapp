@@ -397,7 +397,6 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
-    initialTx.partialSign(wrappedSolAccount)
 
     const updateIx = yield* call(
       [marketProgram, marketProgram.updateSecondsPerLiquidityInstruction],
@@ -437,6 +436,8 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
       [wallet, wallet.signAllTransactions],
       [initialTx, withdrawTx, unwrapTx]
     )
+
+    initialSignedTx.partialSign(wrappedSolAccount)
 
     const initialTxid = yield* call(
       sendAndConfirmRawTransaction,
