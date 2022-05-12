@@ -1,6 +1,7 @@
 import { formatNumbers, showPrefix, thresholdsWithTokenDecimal } from '@consts/utils'
 import { Button, CardMedia, Grid, Typography } from '@material-ui/core'
 import React from 'react'
+import loadingAnimation from '@static/gif/loading.gif'
 import useStyle from './styles'
 
 export interface IRewardsTile {
@@ -24,6 +25,7 @@ export interface IRewardsTile {
 
 export interface IProps extends IRewardsTile {
   xToY: boolean
+  showRewardsLoader: boolean
 }
 
 export const RewardsTile: React.FC<IProps> = ({
@@ -43,7 +45,8 @@ export const RewardsTile: React.FC<IProps> = ({
   onClaimReward,
   rewardIcon,
   rewardValue,
-  xToY
+  xToY,
+  showRewardsLoader
 }) => {
   const classes = useStyle()
 
@@ -128,10 +131,14 @@ export const RewardsTile: React.FC<IProps> = ({
               <Typography className={classes.tokenName}>{rewardSymbol}</Typography>
             </Typography>
           </Grid>
-          <Typography className={classes.tokenValue}>
-            {formatNumbers(thresholdsWithTokenDecimal(rewardDecimals))(rewardValue.toString())}
-            {showPrefix(rewardValue)}
-          </Typography>
+          {showRewardsLoader ? (
+            <img src={loadingAnimation} className={classes.loading} />
+          ) : (
+            <Typography className={classes.tokenValue}>
+              {formatNumbers(thresholdsWithTokenDecimal(rewardDecimals))(rewardValue.toString())}
+              {showPrefix(rewardValue)}
+            </Typography>
+          )}
         </Grid>
         <Button className={classes.claimRewards} onClick={onClaimReward}>
           Claim rewards

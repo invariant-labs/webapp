@@ -8,6 +8,7 @@ import {
   howManyPositionsForFarm,
   isLoadingFarms,
   isLoadingFarmsTotals,
+  isLoadingNewRangeTicks,
   isLoadingUserStakes,
   positionsForFarm,
   singleFarmData,
@@ -16,7 +17,7 @@ import {
   userStakes
 } from '@selectors/farms'
 import { tokens } from '@selectors/pools'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@reducers/farms'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
@@ -50,6 +51,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   const farmsTotalsLoading = useSelector(isLoadingFarmsTotals)
   const farmPositionsLength = useSelector(howManyPositionsForFarm(id))
   const allStakeRangeTicks = useSelector(stakeRangeTicks)
+  const rangeTicksLoading = useSelector(isLoadingNewRangeTicks)
 
   useEffect(() => {
     if (Object.values(allTokens).length > 0 && Object.values(allFarms).length === 0) {
@@ -68,6 +70,16 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
     }
   }, [walletStatus, Object.values(allFarms).length, list])
 
+  const [rangeTicksFetched, setRangeTicksFetched] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    if (rangeTicksFetched === null && rangeTicksLoading) {
+      setRangeTicksFetched(false)
+    } else if (rangeTicksFetched === false && !rangeTicksLoading) {
+      setRangeTicksFetched(true)
+    }
+  }, [rangeTicksLoading])
+
   useEffect(() => {
     const stakeAddresses: string[] = []
     farmPositions.forEach(({ stakeAddress }) => {
@@ -75,7 +87,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         stakeAddresses.push(stakeAddress.toString())
       }
     })
-    if (stakeAddresses.length > 0) {
+    if (stakeAddresses.length > 0 && !rangeTicksFetched) {
       dispatch(actions.getNewStakeRangeTicks(stakeAddresses))
     }
   }, [Object.values(allUserStakes).length])
@@ -275,6 +287,10 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
           })
 
           rewardValue = +printBN(result, allTokens[farmData.rewardToken.toString()].decimals)
+
+          if (rewardValue < 0) {
+            rewardValue = 0
+          }
         }
 
         return {
@@ -304,7 +320,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
           }
         }
       })
-  }, [farmPositions])
+  }, [farmPositions, allStakeRangeTicks])
 
   const userStakedInXToken = useMemo(() => {
     let sum = 0
@@ -324,7 +340,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
     })
 
     return sum
-  }, [stakedPositions, allStakeRangeTicks])
+  }, [stakedPositions])
 
   return !farmData ? (
     farmsLoading ? (
@@ -370,6 +386,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
           dispatch(walletActions.disconnect())
         }
       }}
+      isLoadingRangeTicks={!rangeTicksFetched}
     />
   )
 }

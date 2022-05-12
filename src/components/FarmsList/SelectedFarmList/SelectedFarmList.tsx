@@ -31,6 +31,7 @@ export interface ISelectedFarmList {
   isLoadingTotals?: boolean
   totalPositions: number
   noConnectedBlockerProps: INoConnected
+  isLoadingRangeTicks?: boolean
 }
 
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
@@ -50,7 +51,8 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   walletConnected = false,
   isLoadingTotals = false,
   totalPositions,
-  noConnectedBlockerProps
+  noConnectedBlockerProps,
+  isLoadingRangeTicks = false
 }) => {
   const classes = useStyle()
 
@@ -172,7 +174,12 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
               {stakedPositions.length ? (
                 stakedPositions.map((element, index) => (
                   <div className={classes.tile}>
-                    <RewardsTile key={index} {...element} xToY={xToY} />
+                    <RewardsTile
+                      key={index}
+                      {...element}
+                      xToY={xToY}
+                      showRewardsLoader={isLoadingRangeTicks}
+                    />
                   </div>
                 ))
               ) : (

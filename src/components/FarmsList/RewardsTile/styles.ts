@@ -129,6 +129,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.caption2,
     color: colors.invariant.textGrey,
     marginBottom: 4
+  },
+  loading: {
+    width: 30,
+    height: 30,
+    marginBlock: 'auto',
+    marginLeft: 15
   }
 }))
 
