@@ -24,7 +24,6 @@ import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as positionsActions } from '@reducers/positions'
 import { Status } from '@reducers/solanaConnection'
 import { BN } from '@project-serum/anchor'
-import { tou64 } from '@consts/utils'
 import { WalletAdapter } from '@web3/adapters/types'
 import { getTokenDetails } from './token'
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -191,8 +190,8 @@ export function* getCollateralTokenAirdrop(
   const blockhash = yield* call([connection, connection.getRecentBlockhash])
   tx.feePayer = wallet.publicKey
   tx.recentBlockhash = blockhash.blockhash
-  tx.sign(airdropAdmin)
   const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+  signedTx.partialSign(airdropAdmin)
   yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
     skipPreflight: true
   })
@@ -202,20 +201,7 @@ export function* getCollateralTokenAirdrop(
 //   const balance = yield* call(, pubKey)
 //   return balance
 // }
-export function* sendToken(from: PublicKey, target: PublicKey, amount: BN): SagaGenerator<string> {
-  const wallet = yield* call(getWallet)
-  const ix = Token.createTransferInstruction(
-    TOKEN_PROGRAM_ID,
-    from,
-    target,
-    wallet.publicKey,
-    [],
-    tou64(amount)
-  )
-  const signature = yield* call(signAndSend, wallet, new Transaction().add(ix))
 
-  return signature
-}
 export function* signAndSend(wallet: WalletAdapter, tx: Transaction): SagaGenerator<string> {
   const connection = yield* call(getConnection)
   const blockhash = yield* call([connection, connection.getRecentBlockhash])
@@ -410,6 +396,9 @@ export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): 
       break
     case WalletType.CLOVER:
       enumWallet = 'clover'
+      break
+    case WalletType.NIGHTLY:
+      enumWallet = 'nightly'
       break
     default:
       enumWallet = 'phantom'

@@ -9,7 +9,7 @@ import {
 } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData, PositionWithAddress } from '@reducers/positions'
-import { Token as SPLToken, TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token'
+import { Token as SPLToken, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import {
   BTC_DEV,
   MAX_U64,
@@ -40,10 +40,6 @@ import bs58 from 'bs58'
 import { calculateSellPrice } from '@invariant-labs/bonds-sdk/lib/math'
 import { BondSaleStruct } from '@invariant-labs/bonds-sdk/lib/sale'
 
-export const tou64 = (amount: BN | String) => {
-  // eslint-disable-next-line new-cap
-  return new u64(amount.toString())
-}
 export const transformBN = (amount: BN): string => {
   // eslint-disable-next-line new-cap
   return (amount.div(new BN(1e2)).toNumber() / 1e4).toString()
@@ -56,12 +52,14 @@ export const printBN = (amount: BN, decimals: number): string => {
 
   if (balanceString.length <= decimals) {
     return (
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       (isNegative ? '-' : '') + '0.' + '0'.repeat(decimals - balanceString.length) + balanceString
     )
   } else {
     return (
       (isNegative ? '-' : '') +
       trimZeros(
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         balanceString.substring(0, balanceString.length - decimals) +
           '.' +
           balanceString.substring(balanceString.length - decimals)

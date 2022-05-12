@@ -131,14 +131,10 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
-    initialTx.partialSign(wrappedSolAccount)
 
     const initPositionBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initPositionTx.recentBlockhash = initPositionBlockhash.blockhash
     initPositionTx.feePayer = wallet.publicKey
-    if (poolSigners.length) {
-      initPositionTx.partialSign(...poolSigners)
-    }
 
     const unwrapTx = new Transaction().add(unwrapIx)
     const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
@@ -149,6 +145,12 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       [wallet, wallet.signAllTransactions],
       [initialTx, initPositionTx, unwrapTx]
     )
+
+    initialSignedTx.partialSign(wrappedSolAccount)
+
+    if (poolSigners.length) {
+      initPositionSignedTx.partialSign(...poolSigners)
+    }
 
     const initialTxid = yield* call(
       sendAndConfirmRawTransaction,
