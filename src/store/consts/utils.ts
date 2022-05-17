@@ -680,9 +680,8 @@ export interface PoolSnapshot {
 }
 
 export const getNetworkStats = async (name: string): Promise<Record<string, PoolSnapshot[]>> => {
-  // TODO: later change api url to api.invariant.app
   const { data } = await axios.get<Record<string, PoolSnapshot[]>>(
-    `https://stats-one-red.vercel.app/stats/v2/${name}/full`
+    `https://stats.invariant.app/full/${name}`
   )
 
   return data
