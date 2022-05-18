@@ -221,6 +221,159 @@ export function* handleGetUserStakes() {
   }
 }
 
+export function* handleStakePositionTmp(action: PayloadAction<FarmPositionData>) {
+  try {
+    const stakerProgram = yield* call(getStakerProgram)
+    const marketProgram = yield* call(getMarketProgram)
+    const wallet = yield* call(getWallet)
+    const connection = yield* call(getConnection)
+
+    const currentNetwork = yield* select(network)
+    const positionData = yield* select(
+      singlePositionData(action.payload.id.toString() + '_' + action.payload.pool.toString())
+    )
+
+    if (typeof positionData === 'undefined') {
+      return
+    }
+
+    const updateIx = yield* call(
+      [marketProgram, marketProgram.updateSecondsPerLiquidityInstruction],
+      {
+        pair: new Pair(positionData.poolData.tokenX, positionData.poolData.tokenY, {
+          fee: positionData.poolData.fee.v
+        }),
+        owner: wallet.publicKey,
+        lowerTickIndex: positionData.lowerTickIndex,
+        upperTickIndex: positionData.upperTickIndex,
+        index: positionData.positionIndex
+      }
+    )
+
+    const stakeIx = yield* call([stakerProgram, stakerProgram.createStakeIx], {
+      pool: action.payload.pool,
+      id: action.payload.id,
+      position: positionData.address,
+      incentive: action.payload.farm,
+      owner: wallet.publicKey,
+      index: positionData.positionIndex,
+      invariant: new PublicKey(getMarketAddress(networkTypetoProgramNetwork(currentNetwork)))
+    })
+
+    const stakeTx = new Transaction().add(updateIx).add(stakeIx)
+    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    stakeTx.recentBlockhash = blockhash.blockhash
+    stakeTx.feePayer = wallet.publicKey
+
+    const stakeSignedTx = yield* call([wallet, wallet.signTransaction], stakeTx)
+
+    const stringTx = yield* call(
+      sendAndConfirmRawTransaction,
+      connection,
+      stakeSignedTx.serialize(),
+      {
+        skipPreflight: false
+      }
+    )
+
+    yield* put(
+      actions.setStakePositionSuccess({
+        pool: action.payload.pool,
+        id: action.payload.id,
+        success: !!stringTx.length
+      })
+    )
+
+    if (!stringTx.length) {
+      yield* put(
+        snackbarsActions.add({
+          message: 'Failed to stake position. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: stringTx
+        })
+      )
+    } else {
+      yield* put(
+        snackbarsActions.add({
+          message: 'Position staked successfully.',
+          variant: 'success',
+          persist: false,
+          txid: stringTx
+        })
+      )
+
+      const stakes = yield* call(
+        getUserStakesForFarm,
+        stakerProgram,
+        action.payload.farm,
+        action.payload.pool,
+        [action.payload.id],
+        [positionData.address]
+      )
+
+      if (stakes.length === 1) {
+        yield* call(sleep, 2000)
+
+        let totalStakedXAddition, totalStakedYAddition
+
+        try {
+          totalStakedXAddition = +printBN(
+            getX(
+              positionData.liquidity.v,
+              calculatePriceSqrt(positionData.upperTickIndex).v,
+              positionData.poolData.sqrtPrice.v,
+              calculatePriceSqrt(positionData.lowerTickIndex).v
+            ),
+            positionData.tokenX.decimals
+          )
+        } catch (error) {
+          totalStakedXAddition = 0
+        }
+
+        try {
+          totalStakedYAddition = +printBN(
+            getY(
+              positionData.liquidity.v,
+              calculatePriceSqrt(positionData.upperTickIndex).v,
+              positionData.poolData.sqrtPrice.v,
+              calculatePriceSqrt(positionData.lowerTickIndex).v
+            ),
+            positionData.tokenY.decimals
+          )
+        } catch (error) {
+          totalStakedYAddition = 0
+        }
+
+        yield* put(
+          actions.updateStateAfterStake({
+            newStake: stakes[0],
+            totalStakedXAddition,
+            totalStakedYAddition
+          })
+        )
+      }
+    }
+  } catch (error) {
+    console.log(error)
+    yield* put(
+      snackbarsActions.add({
+        message: 'Failed to stake position. Please try again.',
+        variant: 'error',
+        persist: false
+      })
+    )
+
+    yield* put(
+      actions.setStakePositionSuccess({
+        pool: action.payload.pool,
+        id: action.payload.id,
+        success: false
+      })
+    )
+  }
+}
+
 export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
   try {
     const stakerProgram = yield* call(getStakerProgram)
@@ -619,6 +772,107 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
   }
 }
 
+export function* handleWithdrawRewardsTmp(action: PayloadAction<FarmPositionData>) {
+  try {
+    const tokensAccounts = yield* select(accounts)
+    const allFarms = yield* select(farms)
+    const rewardToken = allFarms[action.payload.farm.toString()].rewardToken
+
+    if (rewardToken.toString() === WRAPPED_SOL_ADDRESS) {
+      return yield* call(handleWithdrawRewardsWithWSOL, action.payload)
+    }
+
+    const stakerProgram = yield* call(getStakerProgram)
+    const marketProgram = yield* call(getMarketProgram)
+    const wallet = yield* call(getWallet)
+    const connection = yield* call(getConnection)
+
+    const positionData = yield* select(
+      singlePositionData(action.payload.id.toString() + '_' + action.payload.pool.toString())
+    )
+
+    if (typeof positionData === 'undefined') {
+      return
+    }
+
+    let ownerTokenAcc = tokensAccounts[rewardToken.toString()]
+      ? tokensAccounts[rewardToken.toString()].address
+      : null
+    if (ownerTokenAcc === null) {
+      ownerTokenAcc = yield* call(createAccount, rewardToken)
+    }
+
+    const updateIx = yield* call(
+      [marketProgram, marketProgram.updateSecondsPerLiquidityInstruction],
+      {
+        pair: new Pair(positionData.poolData.tokenX, positionData.poolData.tokenY, {
+          fee: positionData.poolData.fee.v
+        }),
+        owner: wallet.publicKey,
+        lowerTickIndex: positionData.lowerTickIndex,
+        upperTickIndex: positionData.upperTickIndex,
+        index: positionData.positionIndex
+      }
+    )
+
+    const withdrawIx = yield* call([stakerProgram, stakerProgram.withdrawIx], {
+      pool: action.payload.pool,
+      id: action.payload.id,
+      position: positionData.address,
+      incentive: action.payload.farm,
+      owner: wallet.publicKey,
+      index: positionData.positionIndex,
+      incentiveTokenAccount: allFarms[action.payload.farm.toString()].tokenAccount,
+      ownerTokenAcc
+    })
+
+    const withdrawTx = new Transaction().add(updateIx).add(withdrawIx)
+    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    withdrawTx.recentBlockhash = blockhash.blockhash
+    withdrawTx.feePayer = wallet.publicKey
+
+    const withdrawSignedTx = yield* call([wallet, wallet.signTransaction], withdrawTx)
+
+    const stringTx = yield* call(
+      sendAndConfirmRawTransaction,
+      connection,
+      withdrawSignedTx.serialize(),
+      {
+        skipPreflight: false
+      }
+    )
+
+    if (!stringTx.length) {
+      yield* put(
+        snackbarsActions.add({
+          message: 'Failed to withdraw rewards. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: stringTx
+        })
+      )
+    } else {
+      yield* put(
+        snackbarsActions.add({
+          message: 'Rewards withdrawn successfully.',
+          variant: 'success',
+          persist: false,
+          txid: stringTx
+        })
+      )
+    }
+  } catch (error) {
+    console.log(error)
+    yield* put(
+      snackbarsActions.add({
+        message: 'Failed to withdraw rewards. Please try again.',
+        variant: 'error',
+        persist: false
+      })
+    )
+  }
+}
+
 export function* handleGetNewStakeRangeTicks(action: PayloadAction<string[]>) {
   try {
     const marketProgram = yield* call(getMarketProgram)
@@ -686,11 +940,11 @@ export function* getUserStakesHandler(): Generator {
 }
 
 export function* stakePositionHandler(): Generator {
-  yield* takeLatest(actions.stakePosition, handleStakePosition)
+  yield* takeLatest(actions.stakePosition, handleStakePositionTmp)
 }
 
 export function* withdrawRewardsHandler(): Generator {
-  yield* takeLatest(actions.withdrawRewardsForPosition, handleWithdrawRewards)
+  yield* takeLatest(actions.withdrawRewardsForPosition, handleWithdrawRewardsTmp)
 }
 
 export function* getNewStakeRangeTicksHandler(): Generator {
