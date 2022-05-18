@@ -99,6 +99,7 @@
   "devDependencies": {
     "@hookform/error-message": "^0.0.3",
     "@hookform/resolvers": "^0.1.0",
+    "@rollup/plugin-inject": "^4.0.4",
     "@storybook/addon-actions": "^6.4.14",
     "@storybook/addon-console": "^1.2.3",
     "@storybook/addon-knobs": "^6.2.9",
