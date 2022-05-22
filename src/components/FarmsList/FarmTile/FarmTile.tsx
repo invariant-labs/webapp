@@ -120,7 +120,7 @@ export const FarmTile: React.FC<IProps> = ({
         wrap='nowrap'
         className={classes.mobileContainer}>
         <Typography className={classes.label}>APY:</Typography>
-        <Typography className={classes.value}>{apyPercent}%</Typography>
+        <Typography className={classes.value}>{apyPercent.toFixed(2)}%</Typography>
       </Grid>
       <Grid
         container

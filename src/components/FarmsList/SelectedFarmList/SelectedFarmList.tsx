@@ -122,7 +122,7 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>APY:</Typography>
-            <Typography className={classes.value}>{apy}%</Typography>
+            <Typography className={classes.value}>{apy.toFixed(2)}%</Typography>
           </Grid>
         </Grid>
 
