@@ -1063,8 +1063,14 @@ export const getPoolsAPY = async (name: string): Promise<Record<string, number>>
   return data
 }
 
-export const getIncentivesAPY = async (name: string): Promise<Record<string, number>> => {
-  const { data } = await axios.get<Record<string, number>>(
+export interface IncentiveRewardData {
+  apy: number
+  total: number
+  token: string
+}
+
+export const getIncentivesRewardData = async (name: string): Promise<Record<string, IncentiveRewardData>> => {
+  const { data } = await axios.get<Record<string, IncentiveRewardData>>(
     `https://stats.invariant.app/incentive_apy/${name}`
   )
 

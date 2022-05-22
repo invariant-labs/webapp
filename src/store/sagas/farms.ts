@@ -39,7 +39,7 @@ import { getConnection } from './connection'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import {
-  getIncentivesAPY,
+  getIncentivesRewardData,
   getPoolsAPY,
   getPositionsForPool,
   getTicksList,
@@ -142,7 +142,7 @@ export function* handleGetFarmsList() {
 
     const currentNetwork = yield* select(network)
     const poolsApy = yield* call(getPoolsAPY, currentNetwork.toLowerCase())
-    const incentivesApy = yield* call(getIncentivesAPY, currentNetwork.toLowerCase())
+    const incentivesApy = yield* call(getIncentivesRewardData, currentNetwork.toLowerCase())
 
     const farmsObject: Record<string, ExtendedIncentive> = {}
 
@@ -151,16 +151,23 @@ export function* handleGetFarmsList() {
     const promises = list.map(async incentive => {
       poolsKeys.push(incentive.pool.toString())
 
-      const info = await connection.getParsedAccountInfo(incentive.tokenAccount)
+      let rewardToken: PublicKey
+
+      if (typeof incentivesApy?.[incentive.publicKey.toString()] !== 'undefined') {
+        const info = await connection.getParsedAccountInfo(incentive.tokenAccount)
+        rewardToken = (info as RpcResponseAndContext<AccountInfo<ParsedAccountData>>).value.data
+          .parsed.info.mint
+      } else {
+        rewardToken = new PublicKey(incentivesApy[incentive.publicKey.toString()].token)
+      }
 
       farmsObject[incentive.publicKey.toString()] = {
         ...incentive,
         address: incentive.publicKey,
-        rewardToken: (info as RpcResponseAndContext<AccountInfo<ParsedAccountData>>).value.data
-          .parsed.info.mint,
+        rewardToken,
         apy:
           (poolsApy?.[incentive.pool.toString()] ?? 0) +
-          (incentivesApy?.[incentive.publicKey.toString()] ?? 0)
+          (incentivesApy?.[incentive.publicKey.toString()].apy ?? 0)
       }
     })
 
