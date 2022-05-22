@@ -29,6 +29,7 @@ export interface ISelectedFarmList {
   stakesLoading?: boolean
   walletConnected?: boolean
   isLoadingTotals?: boolean
+  isLoadingTotalRewards?: boolean
   totalPositions: number
   noConnectedBlockerProps: INoConnected
   isLoadingRangeTicks?: boolean
@@ -50,6 +51,7 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   stakesLoading = false,
   walletConnected = false,
   isLoadingTotals = false,
+  isLoadingTotalRewards = false,
   totalPositions,
   noConnectedBlockerProps,
   isLoadingRangeTicks = false
@@ -129,13 +131,19 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
         <Grid className={classes.rightSide} container direction='column'>
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Reward:</Typography>
-            <img src={rewardToken.logoURI} className={classes.smallIcon} />
-            <Typography className={classes.value}>
-              {formatNumbers(thresholdsWithTokenDecimal(rewardToken.decimals))(
-                totalRewardPerDay.toString()
-              )}
-              {showPrefix(totalRewardPerDay)} {rewardToken.symbol}/day
-            </Typography>
+            {isLoadingTotalRewards ? (
+              <img src={loadingAnimation} className={classes.loading} />
+            ) : (
+              <>
+                <img src={rewardToken.logoURI} className={classes.smallIcon} />
+                <Typography className={classes.value}>
+                  {formatNumbers(thresholdsWithTokenDecimal(rewardToken.decimals))(
+                    totalRewardPerDay.toString()
+                  )}
+                  {showPrefix(totalRewardPerDay)} {rewardToken.symbol}/day
+                </Typography>
+              </>
+            )}
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>

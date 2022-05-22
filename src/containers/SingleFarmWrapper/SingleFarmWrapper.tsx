@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 import SelectedFarmList from '@components/FarmsList/SelectedFarmList/SelectedFarmList'
-import { calcYPerXPrice, printBN } from '@consts/utils'
+import { calcYPerXPrice, getCoingeckoTokenPrice, printBN } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
-import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
+import { dailyFactorRewards, DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import {
   farms,
   howManyPositionsForFarm,
@@ -70,6 +70,35 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       dispatch(actions.getUserStakes())
     }
   }, [walletStatus, Object.values(allFarms).length, list])
+
+  const [rewardTokenPrice, setRewardTokenPrice] = useState(0)
+  const [rewardTokenPriceLoading, setRewardTokenPriceLoading] = useState(false)
+  const [tokenXPrice, setTokenXPrice] = useState(0)
+  const [tokenXPriceLoading, setTokenXPriceLoading] = useState(false)
+
+  useEffect(() => {
+    if (typeof farmData === 'undefined') {
+      return
+    }
+
+    const rewardId = allTokens[farmData.rewardToken.toString()].coingeckoId ?? ''
+    if (rewardId.length && !rewardTokenPriceLoading) {
+      setRewardTokenPriceLoading(true)
+      getCoingeckoTokenPrice(rewardId)
+        .then(data => setRewardTokenPrice(data.price))
+        .catch(() => setRewardTokenPrice(0))
+        .finally(() => setRewardTokenPriceLoading(false))
+    }
+
+    const xId = allTokens[farmData.poolData.tokenX.toString()].coingeckoId ?? ''
+    if (xId.length && !tokenXPriceLoading) {
+      setTokenXPriceLoading(true)
+      getCoingeckoTokenPrice(xId)
+        .then(data => setTokenXPrice(data.price))
+        .catch(() => setTokenXPrice(0))
+        .finally(() => setTokenXPriceLoading(false))
+    }
+  }, [typeof farmData])
 
   const [rangeTicksFetched, setRangeTicksFetched] = useState<boolean | null>(null)
 
@@ -318,7 +347,18 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
                 id: position.id
               })
             )
-          }
+          },
+          rewardPerDay: dailyFactorRewards(
+            farmData.totalReward * rewardTokenPrice,
+            new BN(tokenXDeposit * 10 ** position.tokenX.decimals),
+            tokenXPrice,
+            Math.floor(
+              (farmData.endTime.v.toNumber() - farmData.startTime.v.toNumber()) / 60 / 60 / 24
+            ) *
+              60 *
+              60 *
+              24
+          )
         }
       })
   }, [farmPositions, allStakeRangeTicks])
@@ -341,6 +381,26 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
     })
 
     return sum
+  }, [stakedPositions])
+
+  const rewardsPerDay = useMemo(() => {
+    const now = Date.now() / 1000
+    if (
+      typeof farmData === 'undefined' ||
+      now < farmData.startTime.v.toNumber() ||
+      now > farmData.endTime.v.toNumber() ||
+      tokenXPrice === 0 ||
+      rewardTokenPrice === 0
+    ) {
+      return 0
+    }
+    let sum = 0
+
+    stakedPositions.forEach(({ rewardPerDay }) => {
+      sum += rewardPerDay
+    })
+
+    return sum / rewardTokenPrice
   }, [stakedPositions])
 
   return !farmData ? (
@@ -371,13 +431,14 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       }
       userStakedInXToken={userStakedInXToken}
       userStakedInYToken={userStakedInYToken}
-      totalRewardPerDay={0}
+      totalRewardPerDay={rewardsPerDay}
       apy={farmData.apy}
       toStake={toStake}
       stakedPositions={stakedPositions}
       stakesLoading={stakesLoading && farmPositionsLength > 0}
       walletConnected={walletStatus === Status.Initialized}
       isLoadingTotals={farmsTotalsLoading}
+      isLoadingTotalRewards={tokenXPriceLoading || rewardTokenPriceLoading}
       totalPositions={farmPositionsLength}
       noConnectedBlockerProps={{
         onConnect: type => {

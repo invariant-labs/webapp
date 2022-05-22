@@ -19,6 +19,7 @@ export interface ExtendedIncentive extends IncentiveStructure {
   totalStakedX?: number
   totalStakedY?: number
   apy: number
+  totalReward: number
 }
 
 export interface ExtendedStake extends Stake {

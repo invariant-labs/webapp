@@ -167,7 +167,8 @@ export function* handleGetFarmsList() {
         rewardToken,
         apy:
           (poolsApy?.[incentive.pool.toString()] ?? 0) +
-          (incentivesApy?.[incentive.publicKey.toString()].apy ?? 0)
+          (incentivesApy?.[incentive.publicKey.toString()].apy ?? 0),
+        totalReward: incentivesApy?.[incentive.publicKey.toString()].total ?? 0
       }
     })
 
