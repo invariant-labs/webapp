@@ -1069,7 +1069,9 @@ export interface IncentiveRewardData {
   token: string
 }
 
-export const getIncentivesRewardData = async (name: string): Promise<Record<string, IncentiveRewardData>> => {
+export const getIncentivesRewardData = async (
+  name: string
+): Promise<Record<string, IncentiveRewardData>> => {
   const { data } = await axios.get<Record<string, IncentiveRewardData>>(
     `https://stats.invariant.app/incentive_rewards/${name}`
   )
