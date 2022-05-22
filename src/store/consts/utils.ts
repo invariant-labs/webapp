@@ -1054,3 +1054,19 @@ export const getTicksList = async (
 
   return ticks.map(tick => (tick === null ? null : (tick as Tick)))
 }
+
+export const getPoolsAPY = async (name: string): Promise<Record<string, number>> => {
+  const { data } = await axios.get<Record<string, number>>(
+    `https://stats.invariant.app/pool_apy/${name}`
+  )
+
+  return data
+}
+
+export const getIncentivesAPY = async (name: string): Promise<Record<string, number>> => {
+  const { data } = await axios.get<Record<string, number>>(
+    `https://stats.invariant.app/incentive_apy/${name}`
+  )
+
+  return data
+}

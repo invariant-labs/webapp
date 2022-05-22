@@ -38,7 +38,14 @@ import { accounts } from '@selectors/solanaWallet'
 import { getConnection } from './connection'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { getPositionsForPool, getTicksList, getUserStakesForFarm, printBN } from '@consts/utils'
+import {
+  getIncentivesAPY,
+  getPoolsAPY,
+  getPositionsForPool,
+  getTicksList,
+  getUserStakesForFarm,
+  printBN
+} from '@consts/utils'
 import { pools, tokens } from '@selectors/pools'
 import { BN } from '@project-serum/anchor'
 import { calculatePriceSqrt, getX, getY } from '@invariant-labs/sdk/lib/math'
@@ -132,6 +139,11 @@ export function* handleGetFarmsList() {
     const connection = yield* call(getConnection)
 
     const list = yield* call([stakerProgram, stakerProgram.getAllIncentive])
+
+    const currentNetwork = yield* select(network)
+    const poolsApy = yield* call(getPoolsAPY, currentNetwork.toLowerCase())
+    const incentivesApy = yield* call(getIncentivesAPY, currentNetwork.toLowerCase())
+
     const farmsObject: Record<string, ExtendedIncentive> = {}
 
     const poolsKeys: string[] = []
@@ -145,7 +157,10 @@ export function* handleGetFarmsList() {
         ...incentive,
         address: incentive.publicKey,
         rewardToken: (info as RpcResponseAndContext<AccountInfo<ParsedAccountData>>).value.data
-          .parsed.info.mint
+          .parsed.info.mint,
+        apy:
+          (poolsApy?.[incentive.pool.toString()] ?? 0) +
+          (incentivesApy?.[incentive.publicKey.toString()] ?? 0)
       }
     })
 
