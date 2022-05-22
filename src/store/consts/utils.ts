@@ -269,7 +269,7 @@ export const createLiquidityPlot = (
   tokenYDecimal: number
 ) => {
   const sortedTicks = rawTicks.sort((a, b) => a.index - b.index)
-  const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(sortedTicks, pool) : []
+  const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(sortedTicks) : []
 
   const ticks = rawTicks.map((raw, index) => ({
     ...raw,
@@ -716,7 +716,7 @@ export const getPools = async (
   marketProgram: Market
 ): Promise<PoolWithAddress[]> => {
   const addresses: PublicKey[] = await Promise.all(
-    pairs.map(async pair => await pair.getAddress(marketProgram.program.programId))
+    pairs.map(async pair => pair.getAddress(marketProgram.program.programId))
   )
 
   return await getPoolsFromAdresses(addresses, marketProgram)
