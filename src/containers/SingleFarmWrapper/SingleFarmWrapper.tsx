@@ -371,14 +371,12 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       }
       userStakedInXToken={userStakedInXToken}
       userStakedInYToken={userStakedInYToken}
-      totalRewardPerDay={0}
       apy={farmData.apy}
       toStake={toStake}
       stakedPositions={stakedPositions}
       stakesLoading={stakesLoading && farmPositionsLength > 0}
       walletConnected={walletStatus === Status.Initialized}
       isLoadingTotals={farmsTotalsLoading}
-      isLoadingTotalRewards={false}
       totalPositions={farmPositionsLength}
       noConnectedBlockerProps={{
         onConnect: type => {

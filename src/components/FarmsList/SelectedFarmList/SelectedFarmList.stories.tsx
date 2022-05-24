@@ -26,7 +26,6 @@ storiesOf('farmsList/selectedFarm', module)
           userStakedInXToken={5000}
           totalStakedInYToken={3000000}
           userStakedInYToken={7000}
-          totalRewardPerDay={21.37}
           apy={9.11}
           toStake={[
             {
@@ -98,7 +97,6 @@ storiesOf('farmsList/selectedFarm', module)
           userStakedInXToken={5000}
           totalStakedInYToken={3000000}
           userStakedInYToken={7000}
-          totalRewardPerDay={21.37}
           apy={9.11}
           toStake={[]}
           stakedPositions={[]}

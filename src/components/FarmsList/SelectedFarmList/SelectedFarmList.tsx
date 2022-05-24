@@ -22,14 +22,12 @@ export interface ISelectedFarmList {
   totalStakedInYToken: number
   userStakedInXToken: number
   userStakedInYToken: number
-  totalRewardPerDay: number
   apy: number
   toStake: IStakedTile[]
   stakedPositions: IRewardsTile[]
   stakesLoading?: boolean
   walletConnected?: boolean
   isLoadingTotals?: boolean
-  isLoadingTotalRewards?: boolean
   totalPositions: number
   noConnectedBlockerProps: INoConnected
   isLoadingRangeTicks?: boolean
@@ -44,14 +42,12 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   totalStakedInYToken,
   userStakedInXToken,
   userStakedInYToken,
-  totalRewardPerDay,
   apy,
   toStake,
   stakedPositions,
   stakesLoading = false,
   walletConnected = false,
   isLoadingTotals = false,
-  isLoadingTotalRewards = false,
   totalPositions,
   noConnectedBlockerProps,
   isLoadingRangeTicks = false
@@ -130,20 +126,9 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
 
         <Grid className={classes.rightSide} container direction='column'>
           <Grid className={classes.row} container wrap='nowrap'>
-            <Typography className={classes.label}>Reward:</Typography>
-            {isLoadingTotalRewards ? (
-              <img src={loadingAnimation} className={classes.loading} />
-            ) : (
-              <>
-                <img src={rewardToken.logoURI} className={classes.smallIcon} />
-                <Typography className={classes.value}>
-                  {formatNumbers(thresholdsWithTokenDecimal(rewardToken.decimals))(
-                    totalRewardPerDay.toString()
-                  )}
-                  {showPrefix(totalRewardPerDay)} {rewardToken.symbol}/day
-                </Typography>
-              </>
-            )}
+            <Typography className={classes.label}>Reward token:</Typography>
+            <img src={rewardToken.logoURI} className={classes.smallIcon} />
+            <Typography className={classes.value}>{rewardToken.symbol}</Typography>
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
