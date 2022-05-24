@@ -7,37 +7,39 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.component,
     padding: 24,
     paddingTop: 16,
+    width: 436,
     [theme.breakpoints.down('xs')]: {
       padding: 16
     }
   },
-  top: {
-    marginBottom: 10
-  },
   icon: {
-    width: 32,
+    minWidth: 32,
     height: 32,
+    borderRadius: '100%',
 
     [theme.breakpoints.down('xs')]: {
-      width: 28,
+      minWidth: 28,
       height: 28
     }
   },
   icons: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 68,
+    alignItems: 'center',
+    minWidth: 100,
     marginRight: 16,
 
     [theme.breakpoints.down('xs')]: {
-      width: 58,
+      minWidth: 86,
       marginRight: 8
     }
   },
   names: {
     ...typography.heading1,
     color: colors.white.main,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
 
     [theme.breakpoints.down('xs')]: {
       ...typography.heading3
@@ -47,10 +49,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 16,
     minWidth: 16,
     color: colors.invariant.lightGrey,
+    marginTop: -2,
 
     [theme.breakpoints.down('xs')]: {
       height: 12,
-      minWidth: 12
+      minWidth: 12,
+      marginTop: -3
     }
   },
   '@keyframes pulse': {
@@ -58,21 +62,27 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 0
     },
 
-    '100%': {
+    '50%': {
       opacity: 1
+    },
+
+    '100%': {
+      opacity: 0
     }
   },
   pulseDot: {
     height: 12,
-    width: 12,
+    minWidth: 12,
     backgroundColor: colors.invariant.green,
     borderRadius: '50%',
     marginRight: 6,
     position: 'relative',
+    marginTop: -2,
 
     [theme.breakpoints.down('xs')]: {
       height: 9,
-      width: 9
+      minWidth: 9,
+      marginTop: -3
     },
 
     '&::before': {
@@ -84,7 +94,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderRadius: '50%',
       content: '""',
       display: 'block',
-      boxShadow: '0 0 2px 4px rgba(157, 212, 109, 0.25)',
+      boxShadow: '0 0 3px 5px rgba(157, 212, 109, 0.25)',
       animation: '$pulse 2s infinite'
     }
   },
@@ -104,23 +114,39 @@ const useStyles = makeStyles((theme: Theme) => ({
   flexWrapper: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexShrink: 1
+  },
+  activityWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexShrink: 0,
+    marginLeft: 4
   },
   label: {
     color: colors.invariant.lightGrey,
     ...typography.heading4,
     fontWeight: 400,
-    letterSpacing: '-0.03em'
+    whiteSpace: 'nowrap',
+    display: 'flex',
+    flexShrink: 0,
+    marginRight: 4
   },
   value: {
     color: colors.white.main,
-    ...typography.heading4
+    ...typography.heading4,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   },
   link: {
-    marginTop: 20,
+    marginTop: 10,
     textDecoration: 'none'
   },
   button: {
+    marginTop: 4,
+    marginLeft: 0,
     width: '100%',
     height: 44,
     borderRadius: 16,
@@ -151,11 +177,54 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 
   mobileContainer: {
-    padding: '6px 0 6px 0'
+    padding: '7px 0'
   },
 
   spacer: {
-    paddingTop: 20
+    paddingTop: 12
+  },
+
+  rewardRow: {
+    border: `1px solid ${colors.invariant.light}`,
+    borderRadius: 12,
+    padding: '10px 14px',
+    marginTop: 14
+  },
+  rewardLabel: {
+    ...typography.body2,
+    color: colors.invariant.green
+  },
+  rewardTokenWrapper: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  rewardIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 8,
+    borderRadius: '100%'
+  },
+  rewardToken: {
+    ...typography.body1,
+    color: colors.invariant.text
+  },
+  arrows: {
+    minWidth: 32,
+    marginLeft: 4,
+    marginRight: 4,
+    cursor: 'pointer',
+
+    [theme.breakpoints.down('xs')]: {
+      minWidth: 28
+    },
+
+    '&:hover': {
+      filter: 'brightness(2)'
+    }
+  },
+  loading: {
+    width: 20,
+    height: 20
   }
 }))
 

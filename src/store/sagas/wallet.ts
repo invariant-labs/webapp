@@ -38,6 +38,7 @@ import airdropAdmin from '@consts/airdropAdmin'
 import { network } from '@selectors/solanaConnection'
 import { tokens } from '@selectors/pools'
 import { actions as poolsActions } from '@reducers/pools'
+import { actions as farmsActions } from '@reducers/farms'
 import { actions as bondsActions } from '@reducers/bonds'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
@@ -412,6 +413,7 @@ export function* handleDisconnect(): Generator {
     yield call([localStorage, localStorage.removeItem], 'INVARIANT_SESSION_WALLET')
     yield* put(actions.resetState())
     yield* put(positionsActions.setPositionsList([]))
+    yield* put(farmsActions.setUserStakes({}))
     yield* put(
       positionsActions.setCurrentPositionRangeTicks({
         lowerTick: undefined,

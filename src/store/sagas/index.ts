@@ -5,6 +5,7 @@ import { swapHandler } from './swap'
 import { walletSaga } from './wallet'
 import { positionsSaga } from '@sagas/positions'
 import { statsHandler } from './stats'
+import { farmsSaga } from './farms'
 import { bondsSaga } from './bonds'
 
 export function* rootSaga(): Generator {
@@ -16,7 +17,8 @@ export function* rootSaga(): Generator {
       positionsSaga,
       poolsSaga,
       statsHandler,
-      bondsSaga
+      bondsSaga,
+      farmsSaga
     ].map(spawn)
   )
 }

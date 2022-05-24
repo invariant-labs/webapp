@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import { ViteAliases } from 'vite-aliases'
 import react from '@vitejs/plugin-react'
+import inject from '@rollup/plugin-inject'
+
 export default defineConfig({
   plugins: [
     react(),
@@ -11,5 +13,10 @@ export default defineConfig({
   ],
   define: {
     'process.env.NODE_DEBUG': 'false'
+  },
+  build: {
+    rollupOptions: {
+      plugins: [inject({ Buffer: ['buffer', 'Buffer'] })]
+    }
   }
 })

@@ -59,6 +59,21 @@ export interface PairTokens {
   second: PublicKey
 }
 
+export enum ListType {
+  POSITIONS,
+  FARMS
+}
+
+export interface ListPoolsRequest {
+  addresses: string[]
+  listType: ListType
+}
+
+export interface ListPoolsResponse {
+  data: PoolWithAddress[]
+  listType: ListType
+}
+
 export const poolsSliceName = 'pools'
 const poolsSlice = createSlice({
   name: poolsSliceName,
@@ -101,8 +116,8 @@ const poolsSlice = createSlice({
       state.isLoadingLatestPoolsForTransaction = false
       return state
     },
-    addPoolsForPositions(state, action: PayloadAction<PoolWithAddress[]>) {
-      const newData = action.payload.reduce(
+    addPoolsForList(state, action: PayloadAction<ListPoolsResponse>) {
+      const newData = action.payload.data.reduce(
         (acc, pool) => ({
           ...acc,
           [pool.address.toString()]: pool
@@ -127,7 +142,7 @@ const poolsSlice = createSlice({
 
       return state
     },
-    getPoolsDataForPositions(_state, _action: PayloadAction<string[]>) {},
+    getPoolsDataForList(_state, _action: PayloadAction<ListPoolsRequest>) {},
     deleteTick(state, action: PayloadAction<DeleteTick>) {
       state.poolTicks[action.payload.address].splice(action.payload.index, 1)
     },

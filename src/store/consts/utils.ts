@@ -8,7 +8,7 @@ import {
   SimulationStatus
 } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
-import { PlotTickData } from '@reducers/positions'
+import { PlotTickData, PositionWithAddress } from '@reducers/positions'
 import { Token as SPLToken, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import {
   BTC_DEV,
@@ -33,6 +33,10 @@ import { PoolWithAddress } from '@reducers/pools'
 import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
 import axios, { AxiosResponse } from 'axios'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
+import { Staker } from '@invariant-labs/staker-sdk'
+import { ExtendedStake } from '@reducers/farms'
+import { Stake } from '@invariant-labs/staker-sdk/lib/staker'
+import bs58 from 'bs58'
 import { calculateSellPrice } from '@invariant-labs/bonds-sdk/lib/math'
 import { BondSaleStruct } from '@invariant-labs/bonds-sdk/lib/sale'
 
@@ -265,7 +269,7 @@ export const createLiquidityPlot = (
   tokenYDecimal: number
 ) => {
   const sortedTicks = rawTicks.sort((a, b) => a.index - b.index)
-  const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(sortedTicks, pool) : []
+  const parsedTicks = rawTicks.length ? parseLiquidityOnTicks(sortedTicks) : []
 
   const ticks = rawTicks.map((raw, index) => ({
     ...raw,
@@ -712,7 +716,7 @@ export const getPools = async (
   marketProgram: Market
 ): Promise<PoolWithAddress[]> => {
   const addresses: PublicKey[] = await Promise.all(
-    pairs.map(async pair => await pair.getAddress(marketProgram.program.programId))
+    pairs.map(async pair => pair.getAddress(marketProgram.program.programId))
   )
 
   return await getPoolsFromAdresses(addresses, marketProgram)
@@ -891,6 +895,73 @@ export const getNewTokenOrThrow = async (
   }
 }
 
+export const getUserStakesForFarm = async (
+  stakerProgram: Staker,
+  incentive: PublicKey,
+  pool: PublicKey,
+  ids: BN[],
+  positionsAdresses: PublicKey[]
+) => {
+  const promises = ids.map(async id => {
+    const [userStakeAddress] = await stakerProgram.getUserStakeAddressAndBump(incentive, pool, id)
+
+    return userStakeAddress
+  })
+
+  const addresses = await Promise.all(promises)
+
+  const stakes = await stakerProgram.program.account.userStake.fetchMultiple(addresses)
+
+  const fullStakes: ExtendedStake[] = []
+
+  stakes.forEach((stake, index) => {
+    if (stake !== null) {
+      fullStakes.push({
+        ...(stake as Stake),
+        address: addresses[index],
+        position: positionsAdresses[index]
+      })
+    }
+  })
+
+  return fullStakes
+}
+
+export const getPositionsForPool = async (marketProgram: Market, pool: PublicKey) => {
+  return (
+    await marketProgram.program.account.position.all([
+      {
+        memcmp: { bytes: bs58.encode(pool.toBuffer()), offset: 40 }
+      }
+    ])
+  ).map(({ account, publicKey }) => ({
+    ...account,
+    address: publicKey
+  })) as PositionWithAddress[]
+}
+
+export const getPositionsAddressesFromRange = async (
+  marketProgram: Market,
+  owner: PublicKey,
+  lowerIndex: number,
+  upperIndex: number
+) => {
+  const promises: Array<
+    Promise<{
+      positionAddress: PublicKey
+      positionBump: number
+    }>
+  > = []
+
+  for (let i = lowerIndex; i <= upperIndex; i++) {
+    promises.push(marketProgram.getPositionAddress(owner, i))
+  }
+
+  return await Promise.all(promises).then(data =>
+    data.map(({ positionAddress }) => positionAddress)
+  )
+}
+
 export const calculateEstBondPriceForQuoteAmount = (bondSale: BondSaleStruct, amount: BN) => {
   let lowerBondAmount = new BN(0)
   let upperBondAmount = MAX_U64
@@ -920,6 +991,40 @@ export const calculateBondPrice = (bondSale: BondSaleStruct, amount: BN, byAmoun
     ? calculateSellPrice(bondSale, amount)
     : calculateEstBondPriceForQuoteAmount(bondSale, amount)
 
+export const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThreshold[] => [
+  {
+    value: 10,
+    decimals
+  },
+  {
+    value: 100,
+    decimals: 4
+  },
+  {
+    value: 1000,
+    decimals: 2
+  },
+  {
+    value: 10000,
+    decimals: 1
+  },
+  {
+    value: 1000000,
+    decimals: 2,
+    divider: 1000
+  },
+  {
+    value: 1000000000,
+    decimals: 2,
+    divider: 1000000
+  },
+  {
+    value: Infinity,
+    decimals: 2,
+    divider: 1000000000
+  }
+]
+
 export const getCoingeckoTokenPrice = async (id: string): Promise<CoingeckoPriceData> => {
   return await axios
     .get<CoingeckoApiPriceData[]>(
@@ -931,4 +1036,45 @@ export const getCoingeckoTokenPrice = async (id: string): Promise<CoingeckoPrice
         priceChange: res.data[0].price_change_percentage_24h
       }
     })
+}
+
+export const getTicksList = async (
+  marketProgram: Market,
+  data: Array<{ pair: Pair; index: number }>
+): Promise<Array<Tick | null>> => {
+  const ticksAddresses = await Promise.all(
+    data.map(async ({ pair, index }) => {
+      const { tickAddress } = await marketProgram.getTickAddress(pair, index)
+
+      return tickAddress
+    })
+  )
+
+  const ticks = await marketProgram.program.account.tick.fetchMultiple(ticksAddresses)
+
+  return ticks.map(tick => (tick === null ? null : (tick as Tick)))
+}
+
+export const getPoolsAPY = async (name: string): Promise<Record<string, number>> => {
+  const { data } = await axios.get<Record<string, number>>(
+    `https://stats.invariant.app/pool_apy/${name}`
+  )
+
+  return data
+}
+
+export interface IncentiveRewardData {
+  apy: number
+  total: number
+  token: string
+}
+
+export const getIncentivesRewardData = async (
+  name: string
+): Promise<Record<string, IncentiveRewardData>> => {
+  const { data } = await axios.get<Record<string, IncentiveRewardData>>(
+    `https://stats.invariant.app/incentive_rewards/${name}`
+  )
+
+  return data
 }
