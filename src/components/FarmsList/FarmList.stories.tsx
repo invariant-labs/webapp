@@ -17,136 +17,52 @@ storiesOf('farmsList/list', module)
           paddingInline: 20
         }}>
         <FarmList
-          noConnectedBlockerProps={{
-            onConnect: () => {},
-            onDisconnect: () => {}
-          }}
-          title={'Active farms'}
+          isLoadingTotals={false}
           data={[
             {
               isActive: true,
               apyPercent: 1,
-              totalStaked: 10000,
-              liquidity: 100,
+              totalStakedInXToken: 10000,
+              yourStakedInXToken: 300,
+              totalStakedInYToken: 20000,
+              yourStakedInYToken: 500,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][0],
-              tokenY: tokens[NetworkType.DEVNET][1]
+              tokenY: tokens[NetworkType.DEVNET][1],
+              rewardIcon:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
+              rewardSymbol: 'DOGE',
+              feeTier: 0.01
             },
             {
               isActive: true,
               apyPercent: 1,
-              totalStaked: 10000,
-              liquidity: 200,
+              totalStakedInXToken: 10000,
+              yourStakedInXToken: 300,
+              totalStakedInYToken: 20000,
+              yourStakedInYToken: 500,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][2],
-              tokenY: tokens[NetworkType.DEVNET][0]
+              tokenY: tokens[NetworkType.DEVNET][0],
+              rewardIcon:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
+              rewardSymbol: 'DOGE',
+              feeTier: 0.01
             },
             {
               isActive: true,
               apyPercent: 1,
-              totalStaked: 10000,
-              liquidity: 300,
+              totalStakedInXToken: 10000,
+              yourStakedInXToken: 300,
+              totalStakedInYToken: 20000,
+              yourStakedInYToken: 500,
               farmId: 'qwerty',
               tokenX: tokens[NetworkType.DEVNET][1],
-              tokenY: tokens[NetworkType.DEVNET][2]
-            }
-          ]}
-        />
-      </Grid>
-    )
-  })
-  .add('inactive', () => {
-    return (
-      <Grid
-        style={{
-          backgroundColor: '#1C1B1E',
-          justifyContent: 'center',
-          display: 'flex',
-          paddingInline: 20
-        }}>
-        <FarmList
-          noConnectedBlockerProps={{
-            onConnect: () => {},
-            onDisconnect: () => {}
-          }}
-          title={'Inactive farms'}
-          data={[
-            {
-              isActive: false,
-              apyPercent: 1,
-              totalStaked: 10000,
-              liquidity: 100,
-              farmId: 'qwerty',
-              tokenX: tokens[NetworkType.DEVNET][0],
-              tokenY: tokens[NetworkType.DEVNET][1]
-            },
-            {
-              isActive: false,
-              apyPercent: 1,
-              totalStaked: 10000,
-              liquidity: 200,
-              farmId: 'qwerty',
-              tokenX: tokens[NetworkType.DEVNET][2],
-              tokenY: tokens[NetworkType.DEVNET][0]
-            },
-            {
-              isActive: false,
-              apyPercent: 1,
-              totalStaked: 10000,
-              liquidity: 300,
-              farmId: 'qwerty',
-              tokenX: tokens[NetworkType.DEVNET][1],
-              tokenY: tokens[NetworkType.DEVNET][2]
-            }
-          ]}
-        />
-      </Grid>
-    )
-  })
-  .add('wallet not connected', () => {
-    return (
-      <Grid
-        style={{
-          backgroundColor: '#1C1B1E',
-          justifyContent: 'center',
-          display: 'flex',
-          paddingInline: 20,
-          height: '100vh'
-        }}>
-        <FarmList
-          noConnectedBlockerProps={{
-            onConnect: () => {},
-            onDisconnect: () => {}
-          }}
-          showNoConnected={true}
-          title={'Active farms'}
-          data={[
-            {
-              isActive: false,
-              apyPercent: 1,
-              totalStaked: 10000,
-              liquidity: 100,
-              farmId: 'qwerty',
-              tokenX: tokens[NetworkType.DEVNET][0],
-              tokenY: tokens[NetworkType.DEVNET][1]
-            },
-            {
-              isActive: false,
-              apyPercent: 1,
-              totalStaked: 10000,
-              liquidity: 200,
-              farmId: 'qwerty',
-              tokenX: tokens[NetworkType.DEVNET][2],
-              tokenY: tokens[NetworkType.DEVNET][0]
-            },
-            {
-              isActive: false,
-              apyPercent: 1,
-              totalStaked: 10000,
-              liquidity: 300,
-              farmId: 'qwerty',
-              tokenX: tokens[NetworkType.DEVNET][1],
-              tokenY: tokens[NetworkType.DEVNET][2]
+              tokenY: tokens[NetworkType.DEVNET][2],
+              rewardIcon:
+                'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
+              rewardSymbol: 'DOGE',
+              feeTier: 0.01
             }
           ]}
         />

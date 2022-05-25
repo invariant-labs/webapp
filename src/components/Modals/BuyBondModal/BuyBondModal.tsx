@@ -8,7 +8,8 @@ import {
   FormatNumberThreshold,
   showPrefix,
   trimLeadingZeros,
-  getScaleFromString
+  getScaleFromString,
+  CoingeckoPriceData
 } from '@consts/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Input, Popover, Typography } from '@material-ui/core'
@@ -30,6 +31,10 @@ interface IBuyBondModal {
   onBuy: (amount: BN, slippage: number) => void
   onAmountChange: (amount: BN, byAmountBond: boolean) => void
   progress: ProgressState
+  quoteTokenPriceData?: CoingeckoPriceData
+  bondTokenPriceData?: CoingeckoPriceData
+  quotePriceLoading?: boolean
+  bondPriceLoading?: boolean
 }
 
 enum InputType {
@@ -82,7 +87,11 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
   vestingTerm,
   onBuy,
   onAmountChange,
-  progress
+  progress,
+  quoteTokenPriceData,
+  bondTokenPriceData,
+  quotePriceLoading,
+  bondPriceLoading
 }) => {
   const classes = useStyles()
 
@@ -286,6 +295,9 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
               )
             )
           }}
+          tokenPrice={quoteTokenPriceData?.price}
+          percentageChange={quoteTokenPriceData?.priceChange}
+          priceLoading={quotePriceLoading}
         />
         <DepositAmountInput
           value={amountBond}
@@ -310,6 +322,9 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
               )
             )
           }}
+          tokenPrice={bondTokenPriceData?.price}
+          percentageChange={bondTokenPriceData?.priceChange}
+          priceLoading={bondPriceLoading}
         />
         <AnimatedButton
           className={classes.button}

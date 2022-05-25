@@ -1,7 +1,7 @@
 import { call, put, all, spawn, takeEvery, takeLatest, select } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
-import { actions, PairTokens, PoolWithAddress } from '@reducers/pools'
+import { actions, ListPoolsRequest, PairTokens, PoolWithAddress } from '@reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PublicKey } from '@solana/web3.js'
@@ -43,12 +43,12 @@ export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
   yield* put(actions.addPools(pools))
 }
 
-export function* fetchPoolsDataForPositions(action: PayloadAction<string[]>) {
+export function* fetchPoolsDataForList(action: PayloadAction<ListPoolsRequest>) {
   const connection = yield* call(getConnection)
   const marketProgram = yield* call(getMarketProgram)
   const newPools: PoolWithAddress[] = yield* call(
     getPoolsFromAdresses,
-    action.payload.map(addr => new PublicKey(addr)),
+    action.payload.addresses.map(addr => new PublicKey(addr)),
     marketProgram
   )
 
@@ -68,11 +68,16 @@ export function* fetchPoolsDataForPositions(action: PayloadAction<string[]>) {
   const newTokens = yield* call(getFullNewTokensData, [...unknownTokens], connection)
   yield* put(actions.addTokens(newTokens))
 
-  yield* put(actions.addPoolsForPositions(newPools))
+  yield* put(
+    actions.addPoolsForList({
+      data: newPools,
+      listType: action.payload.listType
+    })
+  )
 }
 
-export function* getPoolsDataForPositionsHandler(): Generator {
-  yield* takeEvery(actions.getPoolsDataForPositions, fetchPoolsDataForPositions)
+export function* getPoolsDataForListHandler(): Generator {
+  yield* takeEvery(actions.getPoolsDataForList, fetchPoolsDataForList)
 }
 
 export function* getAllPoolsForPairDataHandler(): Generator {
@@ -85,6 +90,6 @@ export function* getPoolDataHandler(): Generator {
 
 export function* poolsSaga(): Generator {
   yield all(
-    [getPoolDataHandler, getAllPoolsForPairDataHandler, getPoolsDataForPositionsHandler].map(spawn)
+    [getPoolDataHandler, getAllPoolsForPairDataHandler, getPoolsDataForListHandler].map(spawn)
   )
 }

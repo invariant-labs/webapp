@@ -23,8 +23,9 @@ export const RoutesModal: React.FC<IRoutesModal> = ({
 }) => {
   const classes = useStyles()
 
-  const otherRoutesToHighlight: Record<string, string[]> = {
-    pool: ['newPosition', 'position']
+  const otherRoutesToHighlight: Record<string, RegExp[]> = {
+    pool: [/^newPosition$/, /^position\/*/],
+    farms: [/^farms$/, /^farm\/*/]
   }
 
   return (
@@ -51,10 +52,16 @@ export const RoutesModal: React.FC<IRoutesModal> = ({
               onSelect(route)
               handleClose()
             }}>
-            <Link
-              to={`/${route}`}
-              className={classes.link}>
-              <Typography className={current === route || !!(current && otherRoutesToHighlight[route]?.includes(current)) ? classes.current : classes.name}>
+            <Link to={`/${route}`} className={classes.link}>
+              <Typography
+                className={
+                  current === route ||
+                  (typeof current !== 'undefined' &&
+                    !!otherRoutesToHighlight[route] &&
+                    otherRoutesToHighlight[route].some(pathRegex => pathRegex.test(current)))
+                    ? classes.current
+                    : classes.name
+                }>
                 {route}
               </Typography>
             </Link>
@@ -67,11 +74,8 @@ export const RoutesModal: React.FC<IRoutesModal> = ({
             onClick={() => {
               onFaucet()
               handleClose()
-            }}
-          >
-            <Typography className={classes.name}>
-              Faucet
-            </Typography>
+            }}>
+            <Typography className={classes.name}>Faucet</Typography>
           </Grid>
         )}
       </Grid>

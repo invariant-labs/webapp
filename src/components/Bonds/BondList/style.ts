@@ -15,5 +15,9 @@ export const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('sm')]: {
       padding: '0 16px'
     }
+  },
+  empty: {
+    borderTop: `2px solid ${colors.invariant.light}`,
+    paddingBlock: 20
   }
 }))

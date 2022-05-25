@@ -1,6 +1,6 @@
 import { call, put, takeEvery, take, select, all, spawn, takeLatest } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import { actions as poolsActions } from '@reducers/pools'
+import { actions as poolsActions, ListPoolsResponse, ListType } from '@reducers/pools'
 import { createAccount, getWallet, sleep } from './wallet'
 import { getMarketProgram } from '@web3/programs/amm'
 import { getConnection } from './connection'
@@ -13,12 +13,17 @@ import {
 import { PayloadAction } from '@reduxjs/toolkit'
 import { poolsArraySortedByFees, tokens } from '@selectors/pools'
 import { Pair } from '@invariant-labs/sdk'
-import { createLiquidityPlot, createPlaceholderLiquidityPlot } from '@consts/utils'
+import {
+  createLiquidityPlot,
+  createPlaceholderLiquidityPlot,
+  getPositionsAddressesFromRange
+} from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
 import { Transaction, sendAndConfirmRawTransaction, Keypair, SystemProgram } from '@solana/web3.js'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { positionsWithPoolsData, singlePositionData } from '@selectors/positions'
+import { GuardPredicate } from '@redux-saga/types'
 
 export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
   try {
@@ -126,14 +131,10 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
-    initialTx.partialSign(wrappedSolAccount)
 
     const initPositionBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initPositionTx.recentBlockhash = initPositionBlockhash.blockhash
     initPositionTx.feePayer = wallet.publicKey
-    if (poolSigners.length) {
-      initPositionTx.partialSign(...poolSigners)
-    }
 
     const unwrapTx = new Transaction().add(unwrapIx)
     const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
@@ -144,6 +145,12 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       [wallet, wallet.signAllTransactions],
       [initialTx, initPositionTx, unwrapTx]
     )
+
+    initialSignedTx.partialSign(wrappedSolAccount)
+
+    if (poolSigners.length) {
+      initPositionSignedTx.partialSign(...poolSigners)
+    }
 
     const initialTxid = yield* call(
       sendAndConfirmRawTransaction,
@@ -420,13 +427,40 @@ export function* handleGetPositionsList() {
       head - 1
     )
 
+    const addresses = yield* call(
+      getPositionsAddressesFromRange,
+      marketProgram,
+      wallet.publicKey,
+      0,
+      head - 1
+    )
+
+    const positions = list.map((position, index) => ({
+      ...position,
+      address: addresses[index]
+    }))
+
     const pools = new Set(list.map(pos => pos.pool.toString()))
 
-    yield* put(poolsActions.getPoolsDataForPositions(Array.from(pools)))
+    yield* put(
+      poolsActions.getPoolsDataForList({
+        addresses: Array.from(pools),
+        listType: ListType.POSITIONS
+      })
+    )
 
-    yield* take(poolsActions.addPoolsForPositions)
+    const pattern: GuardPredicate<PayloadAction<ListPoolsResponse>> = (
+      action
+    ): action is PayloadAction<ListPoolsResponse> => {
+      return (
+        typeof action?.payload?.listType !== 'undefined' &&
+        action.payload.listType === ListType.POSITIONS
+      )
+    }
 
-    yield* put(actions.setPositionsList(list))
+    yield* take(pattern)
+
+    yield* put(actions.setPositionsList(positions))
   } catch (_error) {
     yield* put(actions.setPositionsList([]))
   }

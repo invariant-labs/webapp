@@ -9,13 +9,19 @@ storiesOf('farmsList/tile', module)
     return (
       <div style={{ width: 500, height: 500 }}>
         <FarmTile
+          isLoadingTotals={false}
           isActive
           apyPercent={1}
-          totalStaked={100000}
-          liquidity={2137}
+          totalStakedInXToken={100000}
+          yourStakedInXToken={2137}
+          totalStakedInYToken={200000}
+          yourStakedInYToken={4137}
           farmId='qwerty'
           tokenX={tokens[NetworkType.DEVNET][0]}
           tokenY={tokens[NetworkType.DEVNET][1]}
+          rewardIcon='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png'
+          rewardSymbol='DOGE'
+          feeTier={0.01}
         />
       </div>
     )
@@ -24,12 +30,18 @@ storiesOf('farmsList/tile', module)
     return (
       <div style={{ width: 500, height: 500 }}>
         <FarmTile
+          isLoadingTotals={false}
           apyPercent={1}
-          totalStaked={100000}
-          liquidity={2137}
+          totalStakedInXToken={100000}
+          yourStakedInXToken={2137}
+          totalStakedInYToken={200000}
+          yourStakedInYToken={4137}
           farmId='qwerty'
           tokenX={tokens[NetworkType.DEVNET][0]}
           tokenY={tokens[NetworkType.DEVNET][1]}
+          rewardIcon='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png'
+          rewardSymbol='DOGE'
+          feeTier={0.01}
         />
       </div>
     )

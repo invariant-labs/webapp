@@ -14,6 +14,7 @@ import { theme } from '@static/theme'
 import RoutesModal from '@components/Modals/RoutesModal/RoutesModal'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import Hamburger from '@static/svg/Hamburger.svg'
+import classNames from 'classnames'
 import useStyles from './style'
 
 export interface IHeader {
@@ -39,7 +40,7 @@ export const Header: React.FC<IHeader> = ({
   onFaucet,
   onDisconnectWallet
 }) => {
-  const classes = useStyles({ connected: walletConnected })
+  const classes = useStyles()
   const buttonClasses = useButtonStyles()
 
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
@@ -47,10 +48,11 @@ export const Header: React.FC<IHeader> = ({
   const routes =
     typeOfNetwork === NetworkType.MAINNET
       ? ['swap', 'pool', 'stats']
-      : ['swap', 'pool', 'stats', 'bonds']
+      : ['swap', 'pool', 'stats', 'farms', 'bonds']
 
   const otherRoutesToHighlight: Record<string, RegExp[]> = {
-    pool: [/^newPosition$/, /^position\/*/]
+    pool: [/^newPosition$/, /^position\/*/],
+    farms: [/^farms$/, /^farm\/*/]
   }
 
   const [activePath, setActive] = React.useState(landing)
@@ -96,7 +98,14 @@ export const Header: React.FC<IHeader> = ({
           </Grid>
         </Hidden>
 
-        <Grid container item className={classes.buttons} wrap='nowrap'>
+        <Grid
+          container
+          item
+          className={classNames(
+            classes.buttons,
+            walletConnected ? classes.buttonsLgConnected : undefined
+          )}
+          wrap='nowrap'>
           <Hidden xsDown>
             {(typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) && (
               <Button
@@ -133,7 +142,8 @@ export const Header: React.FC<IHeader> = ({
               WalletType.SOLFLARE,
               WalletType.COIN98,
               WalletType.SLOPE,
-              WalletType.CLOVER
+              WalletType.CLOVER,
+              WalletType.NIGHTLY
             ]}
             onSelect={onWalletSelect}
             connected={walletConnected}

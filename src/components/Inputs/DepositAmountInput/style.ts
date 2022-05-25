@@ -14,39 +14,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     backgroundColor: colors.invariant.componentBcg,
     borderRadius: 20,
-    padding: '6px 12px 6px 12px',
-    ...typography.heading2,
-    display: 'grid',
-    gridTemplateAreas: `
-    "select select select select"
-    "balance balance balance percentages"
-    `,
-
-    '& $input': {
-      color: colors.white.main,
-      position: 'relative',
-      top: 1,
-      textAlign: 'end',
-      ...typography.heading2
-    },
-
-    '& $input::placeholder': {
-      color: colors.invariant.light
-    },
-
-    [theme.breakpoints.down('xs')]: {
-      '& $input': {}
-    }
+    padding: '6px 12px',
+    ...typography.heading2
   },
   inputContainer: {
-    gridColumn: '1/-1',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     marginBottom: 6,
 
     [theme.breakpoints.down('xs')]: {
       marginBottom: 0
+    }
+  },
+  input: {
+    color: colors.invariant.light,
+    ...typography.heading2,
+    width: '100%',
+    textAlign: 'right',
+    transition: 'all .4s',
+    '& ::placeholder': {
+      textAlign: 'right'
+    }
+  },
+  innerInput: {
+    textAlign: 'right',
+    color: colors.white.main,
+    '& ::placeholder': {
+      textAlign: 'right'
     }
   },
   currency: {
@@ -65,20 +57,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   percentages: {
-    gridArea: 'percentages',
+    flexShrink: 0,
+    width: 'fit-content',
     justifyContent: 'end',
     height: 17
   },
   percentage: {
-    color: colors.invariant.Error,
     ...typography.tiny1,
-    backgroundColor: 'rgba(251, 85, 95, 0.2)',
     borderRadius: 5,
-    width: 39,
-    textAlign: 'center',
+    paddingInline: 5,
     marginRight: 3,
     height: 16,
-    lineHeight: '16px'
+    lineHeight: '16px',
+    display: 'flex',
+    flexShrink: 0,
+    marginTop: 1
+  },
+  percentagePositive: {
+    color: colors.invariant.green,
+    backgroundColor: `${colors.invariant.green}40`
+  },
+  percentageNegative: {
+    color: colors.invariant.Error,
+    backgroundColor: `${colors.invariant.Error}40`
   },
   currencyIcon: {
     minWidth: 20,
@@ -96,16 +97,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'default'
   },
   balance: {
-    gridArea: 'balance',
     height: 17,
-    cursor: 'pointer'
+    cursor: 'pointer',
+    flexShrink: 1,
+    marginRight: 10
   },
   caption2: {
-    display: 'flex',
-    flexWrap: 'nowrap',
-    alignItems: 'center',
     ...typography.caption2,
     color: colors.invariant.lightHover,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
 
     '&:hover': {
       color: colors.white.main
@@ -120,7 +122,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 14,
     textTransform: 'none',
     marginLeft: 4,
-    marginTop: 1,
     background: ' rgba(46, 224, 154, 0.8)',
     lineHeight: '14px',
 
@@ -146,12 +147,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   noData: {
     color: colors.invariant.warning,
     ...typography.caption2,
-    display: 'grid',
-    gap: 5.45,
-    gridAutoFlow: 'column',
-    cursor: 'default'
+    cursor: 'default',
+    display: 'flex',
+    flexDirection: 'row'
   },
   noDataIcon: {
+    marginRight: 5,
     height: 9.5,
     width: 9.5,
     border: '1px solid #EFD063',
@@ -184,6 +185,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   blockedInfo: {
     ...typography.body2,
     color: colors.invariant.lightHover
+  },
+  loading: {
+    width: 15,
+    height: 15
+  },
+  tooltip: {
+    background: colors.invariant.componentBcg,
+    border: `1px solid ${colors.invariant.lightGrey}`,
+    borderRadius: 12,
+    padding: 10,
+    ...typography.caption4,
+    fontSize: 13,
+    color: colors.white.main
   }
 }))
 

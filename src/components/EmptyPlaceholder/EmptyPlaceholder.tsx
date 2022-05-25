@@ -7,9 +7,10 @@ import { useStyles } from './styles'
 export interface IProps {
   desc: string
   className?: string
+  style?: React.CSSProperties
 }
 
-export const EmptyPlaceholder: React.FC<IProps> = ({ desc, className }) => {
+export const EmptyPlaceholder: React.FC<IProps> = ({ desc, className, style }) => {
   const classes = useStyles()
 
   return (
@@ -17,7 +18,8 @@ export const EmptyPlaceholder: React.FC<IProps> = ({ desc, className }) => {
       container
       direction='column'
       alignItems='center'
-      className={classNames(classes.wrapper, className)}>
+      className={classNames(classes.wrapper, className)}
+      style={style}>
       <img src={empty} className={classes.image} />
       <Typography className={classes.title}>It's empty here...</Typography>
       <Typography className={classes.desc}>{desc}</Typography>

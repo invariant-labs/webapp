@@ -42,6 +42,7 @@ export interface BuyBond {
 export interface RedeemBond {
   bondSale: PublicKey
   bondId: BN
+  vestedAddress: PublicKey
 }
 
 export const bondsSliceName = 'bonds'
@@ -73,6 +74,12 @@ const bondsSlice = createSlice({
     },
     updateVested(state, action: PayloadAction<BondWithAddress>) {
       state.userVested[action.payload.address.toString()] = action.payload
+      return state
+    },
+    removeVested(state, action: PayloadAction<PublicKey>) {
+      const { [action.payload.toString()]: _removed, ...restVested } = state.userVested
+      state.userVested = restVested
+
       return state
     },
     buyBond(state, _action: PayloadAction<BuyBond>) {

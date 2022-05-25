@@ -1,11 +1,11 @@
 import { printBN } from '@consts/utils'
 import { Grid, Typography } from '@material-ui/core'
-import BN from 'bn.js'
 import React from 'react'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import loadingAnimation from '@static/gif/loading.gif'
 import { useStyles } from './styles'
+import { BN } from '@project-serum/anchor'
 
 interface IProps {
   open: boolean

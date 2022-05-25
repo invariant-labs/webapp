@@ -48,24 +48,17 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
-    paddingBlock: 6
+    paddingBlock: 6,
+    flexShrink: 1,
+    marginRight: 10
   },
   BalanceTypography: {
     color: colors.invariant.lightGrey,
-    ...typography.caption3,
-    paddingLeft: 15,
-    marginRight: 3
-  },
-  container: {
-    paddingRight: 15,
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    filter: 'brightness(0.8)',
-
-    '& :hover > button , & :hover > p': {
-      filter: 'brightness(1.1)'
-    }
+    ...typography.caption2,
+    marginRight: 3,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis'
   },
   walletBalanace: {
     color: colors.invariant.lightGrey
@@ -77,13 +70,13 @@ const useStyles = makeStyles(() => ({
   noData: {
     color: colors.invariant.warning,
     ...typography.caption2,
-    display: 'grid',
-    gap: 5.45,
-    gridAutoFlow: 'column',
+    display: 'flex',
+    flexDirection: 'row',
     cursor: 'default',
     paddingBottom: 10
   },
   noDataIcon: {
+    marginRight: 5,
     height: 9.5,
     width: 9.5,
     border: '1px solid #EFD063',
@@ -95,6 +88,58 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     alignSelf: 'center',
     cursor: 'default'
+  },
+  loading: {
+    width: 15,
+    height: 15
+  },
+  tooltip: {
+    background: colors.invariant.componentBcg,
+    border: `1px solid ${colors.invariant.lightGrey}`,
+    borderRadius: 12,
+    padding: 10,
+    ...typography.caption4,
+    fontSize: 13,
+    color: colors.white.main
+  },
+  percentages: {
+    flexShrink: 0,
+    width: 'fit-content',
+    justifyContent: 'end',
+    height: 17
+  },
+  percentage: {
+    ...typography.tiny1,
+    borderRadius: 5,
+    paddingInline: 5,
+    marginRight: 3,
+    height: 16,
+    lineHeight: '16px',
+    display: 'flex',
+    flexShrink: 0,
+    marginTop: 1
+  },
+  percentagePositive: {
+    color: colors.invariant.green,
+    backgroundColor: `${colors.invariant.green}40`
+  },
+  percentageNegative: {
+    color: colors.invariant.Error,
+    backgroundColor: `${colors.invariant.Error}40`
+  },
+  caption2: {
+    ...typography.caption2,
+    color: colors.invariant.lightHover,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+
+    '&:hover': {
+      color: colors.white.main
+    }
+  },
+  bottom: {
+    paddingInline: 15
   }
 }))
 

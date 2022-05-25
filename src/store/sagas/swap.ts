@@ -77,8 +77,6 @@ export function* handleSwapWithSOL(): Generator {
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
-    initialTx.partialSign(wrappedSolAccount)
-
     const unwrapIx = Token.createCloseAccountInstruction(
       TOKEN_PROGRAM_ID,
       wrappedSolAccount.publicKey,
@@ -131,6 +129,9 @@ export function* handleSwapWithSOL(): Generator {
       [wallet, wallet.signAllTransactions],
       [initialTx, swapTx, unwrapTx]
     )
+
+    initialSignedTx.partialSign(wrappedSolAccount)
+
     const initialTxid = yield* call(
       sendAndConfirmRawTransaction,
       connection,
