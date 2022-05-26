@@ -125,7 +125,10 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
       const bBalance = +printBN(b.balance, b.decimals)
       if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
         if (value.length) {
-          if (a.symbol.toLowerCase().startsWith(value.toLowerCase()) && !b.symbol.toLowerCase().startsWith(value.toLowerCase())) {
+          if (
+            a.symbol.toLowerCase().startsWith(value.toLowerCase()) &&
+            !b.symbol.toLowerCase().startsWith(value.toLowerCase())
+          ) {
             return -1
           }
 
