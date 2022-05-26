@@ -132,7 +132,10 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
             return -1
           }
 
-          if (b.symbol.toLowerCase().startsWith(value.toLowerCase())) {
+          if (
+            b.symbol.toLowerCase().startsWith(value.toLowerCase()) &&
+            !a.symbol.toLowerCase().startsWith(value.toLowerCase())
+          ) {
             return 1
           }
         }
