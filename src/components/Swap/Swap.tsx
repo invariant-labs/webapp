@@ -77,7 +77,7 @@ export interface ISwap {
     amountOut: BN,
     byAmountIn: boolean
   ) => void
-  onSetPair: (tokenFrom: PublicKey, tokenTo: PublicKey) => void
+  onSetPair: (tokenFrom: PublicKey | null, tokenTo: PublicKey | null) => void
   progress: ProgressState
   poolTicks: { [x: string]: Tick[] }
   isWaitingForNewPool: boolean
@@ -175,9 +175,10 @@ export const Swap: React.FC<ISwap> = ({
   }, [tokens.length])
 
   useEffect(() => {
-    if (tokenFromIndex !== null && tokenToIndex !== null) {
-      onSetPair(tokens[tokenFromIndex].address, tokens[tokenToIndex].address)
-    }
+    onSetPair(
+      tokenFromIndex === null ? null : tokens[tokenFromIndex].address,
+      tokenToIndex === null ? null : tokens[tokenToIndex].address
+    )
   }, [tokenFromIndex, tokenToIndex, pools.length])
 
   useEffect(() => {

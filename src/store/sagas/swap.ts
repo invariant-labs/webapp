@@ -103,7 +103,7 @@ export function* handleSwapWithSOL(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, tokenTo)
     }
-    const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
+    const swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
       pair: new Pair(tokenFrom, tokenTo, {
         fee: allPools[poolIndex].fee.v
       }),
@@ -281,7 +281,7 @@ export function* handleSwap(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, tokenTo)
     }
-    const swapTx = yield* call([marketProgram, marketProgram.swapTransactionSplit], {
+    const swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
       pair: new Pair(tokenFrom, tokenTo, {
         fee: allPools[poolIndex].fee.v
       }),

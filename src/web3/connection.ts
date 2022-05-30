@@ -16,6 +16,7 @@ export const networkToName = (network: SolanaNetworks) => {
     case SolanaNetworks.MAIN_SERUM:
     case SolanaNetworks.MAIN_FIGMENT:
     case SolanaNetworks.MAIN_GENESYSGO:
+    case SolanaNetworks.MAIN_NIGHTLY:
       return NetworkType.MAINNET
     case SolanaNetworks.LOCAL:
       return NetworkType.LOCALNET
@@ -85,6 +86,7 @@ const solanaNetworktoProgramNetwork = (solanaNetwork: SolanaNetworks): Network =
     case SolanaNetworks.MAIN_SERUM:
     case SolanaNetworks.MAIN_FIGMENT:
     case SolanaNetworks.MAIN_GENESYSGO:
+    case SolanaNetworks.MAIN_NIGHTLY:
       return Network.MAIN
   }
   return Network.DEV
@@ -102,6 +104,7 @@ const solanaNetworktoStakerNetwork = (solanaNetwork: SolanaNetworks): StakerNetw
     // case SolanaNetworks.MAIN_SERUM:
     // case SolanaNetworks.MAIN_FIGMENT:
     // case SolanaNetworks.MAIN_GENESYSGO:
+    // case SolanaNetworks.MAIN_NIGHTLY:
     //   return StakerNetwork.MAIN
     default:
       return StakerNetwork.DEV
@@ -135,6 +138,7 @@ const networkTypetoStakerNetwork = (type: NetworkType): StakerNetwork => {
     // case SolanaNetworks.MAIN_SERUM:
     // case SolanaNetworks.MAIN_FIGMENT:
     // case SolanaNetworks.MAIN_GENESYSGO:
+    // case SolanaNetworks.MAIN_NIGHTLY:
     //   return StakerNetwork.MAIN
     default:
       return StakerNetwork.DEV
@@ -152,6 +156,7 @@ const solanaNetworktoBondsNetwork = (solanaNetwork: SolanaNetworks): BondsNetwor
     // case SolanaNetworks.MAIN_SERUM:
     // case SolanaNetworks.MAIN_FIGMENT:
     // case SolanaNetworks.MAIN_GENESYSGO:
+    // case SolanaNetworks.MAIN_NIGHTLY:
     //   return BondsNetwork.MAIN
   }
   return BondsNetwork.DEV

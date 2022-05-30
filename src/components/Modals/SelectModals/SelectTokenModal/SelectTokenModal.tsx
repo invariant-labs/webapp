@@ -95,21 +95,11 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
 
   const tokensWithIndexes = useMemo(
     () =>
-      tokens
-        .map((token, index) => ({
-          ...token,
-          index,
-          strAddress: token.assetAddress.toString()
-        }))
-        .sort((a, b) => {
-          const aBalance = +printBN(a.balance, a.decimals)
-          const bBalance = +printBN(b.balance, b.decimals)
-          if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
-            return a.symbol.localeCompare(b.symbol)
-          }
-
-          return aBalance === 0 ? 1 : -1
-        }),
+      tokens.map((token, index) => ({
+        ...token,
+        index,
+        strAddress: token.assetAddress.toString()
+      })),
     [tokens]
   )
 
@@ -130,7 +120,33 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
       )
     })
 
-    return hideUnknown ? list.filter(token => !token.isUnknown) : list
+    const sorted = list.sort((a, b) => {
+      const aBalance = +printBN(a.balance, a.decimals)
+      const bBalance = +printBN(b.balance, b.decimals)
+      if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
+        if (value.length) {
+          if (
+            a.symbol.toLowerCase().startsWith(value.toLowerCase()) &&
+            !b.symbol.toLowerCase().startsWith(value.toLowerCase())
+          ) {
+            return -1
+          }
+
+          if (
+            b.symbol.toLowerCase().startsWith(value.toLowerCase()) &&
+            !a.symbol.toLowerCase().startsWith(value.toLowerCase())
+          ) {
+            return 1
+          }
+        }
+
+        return a.symbol.toLowerCase().localeCompare(b.symbol.toLowerCase())
+      }
+
+      return aBalance === 0 ? 1 : -1
+    })
+
+    return hideUnknown ? sorted.filter(token => !token.isUnknown) : sorted
   }, [value, tokensWithIndexes, hideUnknown])
 
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
