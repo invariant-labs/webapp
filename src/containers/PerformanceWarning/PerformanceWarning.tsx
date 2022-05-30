@@ -6,7 +6,7 @@ import { Status } from '@reducers/solanaConnection'
 import { useSelector } from 'react-redux'
 import useStyles from './styles'
 import axios from 'axios'
-import { NetworkType } from '@consts/static'
+import { NetworkType, SolanaNetworks } from '@consts/static'
 
 export const PerformanceWarning: React.FC = () => {
   const classes = useStyles()
@@ -20,9 +20,7 @@ export const PerformanceWarning: React.FC = () => {
     if (networkStatus === Status.Initialized) {
       axios
         .post<{ result: Array<{ numTransactions: number; samplePeriodSecs: number }> }>(
-          networkType === NetworkType.MAINNET
-            ? 'https://rpc.nightly.app:8899/'
-            : 'https://api.devnet.solana.com',
+          networkType === NetworkType.MAINNET ? SolanaNetworks.MAIN_NIGHTLY : SolanaNetworks.DEV,
           {
             jsonrpc: '2.0',
             id: 1,
