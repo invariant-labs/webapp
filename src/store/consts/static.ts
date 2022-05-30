@@ -133,6 +133,7 @@ enum SolanaNetworks {
   MAIN_SERUM = 'https://solana-api.projectserum.com',
   MAIN_FIGMENT = 'https://solana--mainnet.datahub.figment.io/apikey/182e93d87a1f1d335c9d74d6c7371388',
   MAIN_GENESYSGO = 'https://ssc-dao.genesysgo.net',
+  MAIN_NIGHTLY = 'https://rpc.nightly.app:8899/',
   LOCAL = 'http://127.0.0.1:8899'
 }
 
@@ -153,7 +154,7 @@ const MAINNET_RPCS = [
   //   probability: 0.5
   // }
   {
-    rpc: SolanaNetworks.MAIN,
+    rpc: SolanaNetworks.MAIN_NIGHTLY,
     probability: 1
   }
 ]
