@@ -162,7 +162,7 @@ export interface FormatNumberThreshold {
   divider?: number
 }
 
-const defaultThresholds: FormatNumberThreshold[] = [
+export const defaultThresholds: FormatNumberThreshold[] = [
   {
     value: 10,
     decimals: 4
@@ -716,7 +716,7 @@ export const getPools = async (
   marketProgram: Market
 ): Promise<PoolWithAddress[]> => {
   const addresses: PublicKey[] = await Promise.all(
-    pairs.map(async pair => pair.getAddress(marketProgram.program.programId))
+    pairs.map(async pair => await pair.getAddress(marketProgram.program.programId))
   )
 
   return await getPoolsFromAdresses(addresses, marketProgram)
@@ -1056,11 +1056,15 @@ export const getTicksList = async (
 }
 
 export const getPoolsAPY = async (name: string): Promise<Record<string, number>> => {
-  const { data } = await axios.get<Record<string, number>>(
-    `https://stats.invariant.app/pool_apy/${name}`
-  )
+  try {
+    const { data } = await axios.get<Record<string, number>>(
+      `https://stats.invariant.app/pool_apy/${name}`
+    )
 
-  return data
+    return data
+  } catch (_err) {
+    return {}
+  }
 }
 
 export interface IncentiveRewardData {
@@ -1072,9 +1076,13 @@ export interface IncentiveRewardData {
 export const getIncentivesRewardData = async (
   name: string
 ): Promise<Record<string, IncentiveRewardData>> => {
-  const { data } = await axios.get<Record<string, IncentiveRewardData>>(
-    `https://stats.invariant.app/incentive_rewards/${name}`
-  )
+  try {
+    const { data } = await axios.get<Record<string, IncentiveRewardData>>(
+      `https://stats.invariant.app/incentive_rewards/${name}`
+    )
 
-  return data
+    return data
+  } catch (_err) {
+    return {}
+  }
 }

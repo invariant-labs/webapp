@@ -26,6 +26,7 @@ export interface PoolStatsData {
   fee: number
   volume24: number
   tvl: number
+  apy: number
 }
 
 export interface IStatsStore {
