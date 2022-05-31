@@ -47,7 +47,7 @@ export const Header: React.FC<IHeader> = ({
 
   const routes =
     typeOfNetwork === NetworkType.MAINNET
-      ? ['swap', 'pool', 'stats', 'farms']
+      ? ['swap', 'pool', 'stats']
       : ['swap', 'pool', 'stats', 'farms', 'bonds']
 
   const otherRoutesToHighlight: Record<string, RegExp[]> = {
