@@ -161,13 +161,17 @@ export function* handleGetFarmsList() {
         rewardToken = new PublicKey(incentivesApy[incentive.publicKey.toString()].token)
       }
 
+      const now = Date.now() / 1000
+
       farmsObject[incentive.publicKey.toString()] = {
         ...incentive,
         address: incentive.publicKey,
         rewardToken,
         apy:
-          (poolsApy?.[incentive.pool.toString()] ?? 0) +
-          (incentivesApy?.[incentive.publicKey.toString()]?.apy ?? 0)
+          now > incentive.endTime.v.toNumber()
+            ? 0
+            : (poolsApy?.[incentive.pool.toString()] ?? 0) +
+              (incentivesApy?.[incentive.publicKey.toString()]?.apy ?? 0)
       }
     })
 

@@ -5,6 +5,7 @@ import {
   getCoingeckoPricesData,
   getFullNewTokensData,
   getNetworkStats,
+  getPoolsAPY,
   getPoolsFromAdresses,
   printBN
 } from '@consts/utils'
@@ -21,6 +22,7 @@ export function* getStats(): Generator {
     const connection = yield* call(getConnection)
     const currentNetwork = yield* select(network)
     const data = yield* call(getNetworkStats, currentNetwork.toLowerCase())
+    const poolsApy = yield* call(getPoolsAPY, currentNetwork.toLowerCase())
 
     const marketProgram = yield* call(getMarketProgram)
 
@@ -122,7 +124,8 @@ export function* getStats(): Generator {
           tvl: 0,
           tokenX: poolsDataObject[address].tokenX,
           tokenY: poolsDataObject[address].tokenY,
-          fee: +printBN(poolsDataObject[address].fee.v, DECIMAL - 2)
+          fee: +printBN(poolsDataObject[address].fee.v, DECIMAL - 2),
+          apy: poolsApy[address] ?? 0
         })
         return
       }
@@ -154,7 +157,8 @@ export function* getStats(): Generator {
         tvl: lastSnapshot.liquidityX.usdValue24 + lastSnapshot.liquidityY.usdValue24,
         tokenX: poolsDataObject[address].tokenX,
         tokenY: poolsDataObject[address].tokenY,
-        fee: +printBN(poolsDataObject[address].fee.v, DECIMAL - 2)
+        fee: +printBN(poolsDataObject[address].fee.v, DECIMAL - 2),
+        apy: poolsApy[address] ?? 0
       })
 
       snapshots.slice(-30).forEach(snapshot => {
