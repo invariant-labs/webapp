@@ -13,6 +13,7 @@ interface PoolListInterface {
     volume: number
     TVL: number
     fee: number
+    apy: number
   }>
 }
 
@@ -43,6 +44,10 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
         return data.sort((a, b) => a.TVL - b.TVL)
       case SortType.TVL_DESC:
         return data.sort((a, b) => b.TVL - a.TVL)
+      case SortType.APY_ASC:
+        return data.sort((a, b) => a.apy - b.apy)
+      case SortType.APY_DESC:
+        return data.sort((a, b) => b.apy - a.apy)
     }
   }, [data, sortType])
 
@@ -76,6 +81,7 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
           volume={element.volume}
           TVL={element.TVL}
           fee={element.fee}
+          apy={element.apy}
           hideBottomLine={pages === 1 && index + 1 === data.length}
         />
       ))}

@@ -16,7 +16,8 @@ storiesOf('stats/PoolList', module).add('PoolList', () => {
             'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg',
           volume: 421323423.23,
           TVL: 234413532.43,
-          fee: 0.05
+          fee: 0.05,
+          apy: 3554245444
         }
       })
   )
