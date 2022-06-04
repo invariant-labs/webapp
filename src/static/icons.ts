@@ -35,6 +35,7 @@ import ANAIcon from './icons/ana.svg'
 import activeIcon from './svg/active.svg'
 import inactiveIcon from './svg/inactive.svg'
 import allIcon from './svg/all.svg'
+import { LocalPhoneTwoTone } from '@material-ui/icons'
 
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
@@ -51,6 +52,8 @@ const icons: { [key: string]: string } = {
   clear: clearIcon,
   Mainnet: mainnet,
   Devnet: devnet,
+  //DUP OF DEVNET
+  Localnet: devnet,
   Testnet: testnet,
   DOGE: dogeIcon,
   SOL: SOLIcon,
@@ -65,6 +68,8 @@ const icons: { [key: string]: string } = {
   NoConnected: NoCon,
   MainnetIcon: mainnetIcon,
   DevnetIcon: devnetIcon,
+  //DUP OF DEVNETICON
+  LocalnetIcon: devnetIcon,
   TestnetIcon: testnetIcon,
   GithubIcon: githubIcon,
   TelegramIcon: telegramIcon,
