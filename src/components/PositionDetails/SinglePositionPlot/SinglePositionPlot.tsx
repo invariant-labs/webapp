@@ -24,6 +24,7 @@ export interface ISinglePositionPlot {
   xToY: boolean
   initialIsDiscreteValue: boolean
   onDiscreteChange: (val: boolean) => void
+  hasTicksError?: boolean
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -40,7 +41,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   max,
   xToY,
   initialIsDiscreteValue,
-  onDiscreteChange
+  onDiscreteChange,
+  hasTicksError
 }) => {
   const classes = useStyles()
 
@@ -126,6 +128,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           yDecimal={tokenY.decimal}
           isDiscrete={isPlotDiscrete}
           coverOnLoading
+          hasError={hasTicksError}
         />
       </Grid>
       <Grid className={classes.minMaxInfo}>

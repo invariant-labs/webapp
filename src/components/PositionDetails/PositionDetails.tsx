@@ -27,6 +27,7 @@ interface IProps {
   initialIsDiscreteValue: boolean
   onDiscreteChange: (val: boolean) => void
   showFeesLoader?: boolean
+  hasTicksError?: boolean
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -46,7 +47,8 @@ const PositionDetails: React.FC<IProps> = ({
   max,
   initialIsDiscreteValue,
   onDiscreteChange,
-  showFeesLoader = false
+  showFeesLoader = false,
+  hasTicksError
 }) => {
   const classes = useStyles()
 
@@ -119,6 +121,7 @@ const PositionDetails: React.FC<IProps> = ({
           xToY={xToY}
           initialIsDiscreteValue={initialIsDiscreteValue}
           onDiscreteChange={onDiscreteChange}
+          hasTicksError={hasTicksError}
         />
       </Grid>
     </Grid>
