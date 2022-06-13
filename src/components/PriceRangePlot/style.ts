@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   loadingText: {
-    fill: colors.invariant.dark,
+    fill: colors.invariant.black,
     ...typography.heading4
   },
   buttonText: {
