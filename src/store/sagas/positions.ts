@@ -409,7 +409,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       xDecimal,
       yDecimal
     )
-    yield put(actions.setPlotTicks(data))
+    yield put(actions.setErrorPlotTicks(data))
   }
 }
 

@@ -61,8 +61,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   loadingText: {
-    fill: colors.invariant.dark,
+    fill: colors.invariant.black,
     ...typography.heading4
+  },
+  buttonText: {
+    fill: colors.invariant.dark,
+    ...typography.body1
+  },
+  reload: {
+    cursor: 'pointer'
   },
   cover: {
     width: '100%',

@@ -35,6 +35,8 @@ export interface IPriceRangePlot {
   tickSpacing: number
   isDiscrete?: boolean
   coverOnLoading?: boolean
+  hasError?: boolean
+  reloadHandler: () => void
 }
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
@@ -56,7 +58,9 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   yDecimal,
   tickSpacing,
   isDiscrete = false,
-  coverOnLoading = false
+  coverOnLoading = false,
+  hasError = false,
+  reloadHandler
 }) => {
   const classes = useStyles()
 
@@ -308,6 +312,97 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     )
   }
 
+  const errorLayer: Layer = ({ innerWidth, innerHeight }) => {
+    if (loading || !hasError) {
+      return null
+    }
+
+    return (
+      <svg
+        width={innerWidth}
+        height={innerHeight + 5}
+        viewBox={`0 0 ${innerWidth} ${innerHeight + 5}`}
+        fill='none'
+        xmlns='http://www.w3.org/2000/svg'
+        x={0}
+        y={-5}>
+        <rect x={0} y={0} width='100%' height='100%' fill={`${colors.white.main}20`} />
+        <text
+          x='50%'
+          y={innerHeight / 2 - 20}
+          dominant-baseline='middle'
+          text-anchor='middle'
+          className={classes.loadingText}>
+          Unable to load liquidity chart
+        </text>
+        <rect
+          x={innerWidth / 2 - 60}
+          y='50%'
+          width={120}
+          height={30}
+          rx={10}
+          fill={`${colors.invariant.pink}80`}
+        />
+        <text
+          x='50%'
+          y={innerHeight / 2 + 18}
+          dominant-baseline='middle'
+          text-anchor='middle'
+          className={classes.buttonText}>
+          Reload chart
+        </text>
+        <rect
+          x={innerWidth / 2 - 60}
+          y='50%'
+          width={120}
+          height={30}
+          rx={10}
+          fill='transparent'
+          className={classes.reload}
+          onClick={reloadHandler}
+        />
+      </svg>
+    )
+  }
+
+  const brushLayer = Brush(
+    leftRange.x,
+    rightRange.x,
+    position => {
+      const nearest = nearestTickIndex(
+        plotMin + position * (plotMax - plotMin),
+        tickSpacing,
+        isXtoY,
+        xDecimal,
+        yDecimal
+      )
+      onChangeRange?.(
+        isXtoY
+          ? Math.min(rightRange.index - tickSpacing, nearest)
+          : Math.max(rightRange.index + tickSpacing, nearest),
+        rightRange.index
+      )
+    },
+    position => {
+      const nearest = nearestTickIndex(
+        plotMin + position * (plotMax - plotMin),
+        tickSpacing,
+        isXtoY,
+        xDecimal,
+        yDecimal
+      )
+      onChangeRange?.(
+        leftRange.index,
+        isXtoY
+          ? Math.max(leftRange.index + tickSpacing, nearest)
+          : Math.min(leftRange.index - tickSpacing, nearest)
+      )
+    },
+    plotMin,
+    plotMax,
+    disabled
+  )
+
   return (
     <Grid
       container
@@ -384,43 +479,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'areas',
           'lines',
           lazyLoadingLayer,
-          Brush(
-            leftRange.x,
-            rightRange.x,
-            position => {
-              const nearest = nearestTickIndex(
-                plotMin + position * (plotMax - plotMin),
-                tickSpacing,
-                isXtoY,
-                xDecimal,
-                yDecimal
-              )
-              onChangeRange?.(
-                isXtoY
-                  ? Math.min(rightRange.index - tickSpacing, nearest)
-                  : Math.max(rightRange.index + tickSpacing, nearest),
-                rightRange.index
-              )
-            },
-            position => {
-              const nearest = nearestTickIndex(
-                plotMin + position * (plotMax - plotMin),
-                tickSpacing,
-                isXtoY,
-                xDecimal,
-                yDecimal
-              )
-              onChangeRange?.(
-                leftRange.index,
-                isXtoY
-                  ? Math.max(leftRange.index + tickSpacing, nearest)
-                  : Math.min(leftRange.index - tickSpacing, nearest)
-              )
-            },
-            plotMin,
-            plotMax,
-            disabled
-          ),
+          ...(disabled ? [brushLayer, errorLayer] : [errorLayer, brushLayer]),
           'axes',
           'legends'
         ]}

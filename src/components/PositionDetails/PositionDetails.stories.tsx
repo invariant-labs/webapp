@@ -67,6 +67,7 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
         fee={0.01}
         initialIsDiscreteValue={false}
         onDiscreteChange={() => {}}
+        reloadHandler={() => {}}
       />
     )
   })

@@ -21,6 +21,7 @@ export interface PlotTickData {
 export interface PlotTicks {
   data: PlotTickData[]
   loading: boolean
+  hasError?: boolean
 }
 
 export interface InitPositionStore {
@@ -104,6 +105,13 @@ const positionsSlice = createSlice({
     setPlotTicks(state, action: PayloadAction<PlotTickData[]>) {
       state.plotTicks.data = action.payload
       state.plotTicks.loading = false
+      state.plotTicks.hasError = false
+      return state
+    },
+    setErrorPlotTicks(state, action: PayloadAction<PlotTickData[]>) {
+      state.plotTicks.data = action.payload
+      state.plotTicks.loading = false
+      state.plotTicks.hasError = true
       return state
     },
     getCurrentPlotTicks(state, action: PayloadAction<GetCurrentTicksData>) {

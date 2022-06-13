@@ -67,6 +67,7 @@ storiesOf('position/priceRangePlot', module)
         yDecimal={6}
         tickSpacing={4}
         isXtoY={true}
+        reloadHandler={() => {}}
       />
     )
   })
@@ -111,6 +112,7 @@ storiesOf('position/priceRangePlot', module)
         yDecimal={6}
         tickSpacing={4}
         isXtoY={true}
+        reloadHandler={() => {}}
       />
     )
   })
