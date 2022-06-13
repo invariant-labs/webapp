@@ -20,7 +20,7 @@ export interface PlotTickData {
 
 export interface PlotTicks {
   data: PlotTickData[]
-  loading: boolean,
+  loading: boolean
   hasError?: boolean
 }
 
