@@ -43,7 +43,7 @@ export const NewPositionWrapper = () => {
   const canUserCreateNewPosition = useSelector(canCreateNewPosition)
 
   const { success, inProgress } = useSelector(initPosition)
-  const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
+  const { data: ticksData, loading: ticksLoading, hasError: hasTicksError } = useSelector(plotTicks)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
   const currentNetwork = useSelector(network)
 
@@ -489,6 +489,7 @@ export const NewPositionWrapper = () => {
       tokenBPriceData={tokenBPriceData}
       priceALoading={priceALoading}
       priceBLoading={priceBLoading}
+      hasTicksError={hasTicksError}
     />
   )
 }

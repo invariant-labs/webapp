@@ -35,6 +35,7 @@ export interface IPriceRangePlot {
   tickSpacing: number
   isDiscrete?: boolean
   coverOnLoading?: boolean
+  hasError?: boolean
 }
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
@@ -56,7 +57,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   yDecimal,
   tickSpacing,
   isDiscrete = false,
-  coverOnLoading = false
+  coverOnLoading = false,
+  hasError = false
 }) => {
   const classes = useStyles()
 
@@ -308,6 +310,33 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     )
   }
 
+  const errorLayer: Layer = ({ innerWidth, innerHeight }) => {
+    if (loading || !hasError) {
+      return null
+    }
+
+    return (
+      <svg
+        width={innerWidth}
+        height={innerHeight + 5}
+        viewBox={`0 0 ${innerWidth} ${innerHeight + 5}`}
+        fill='none'
+        xmlns='http://www.w3.org/2000/svg'
+        x={0}
+        y={-5}>
+        <rect x={0} y={0} width='100%' height='100%' fill={`${colors.white.main}20`} />
+        <text
+          x='50%'
+          y='50%'
+          dominant-baseline='middle'
+          text-anchor='middle'
+          className={classes.loadingText}>
+          Unable to load liquidity chart
+        </text>
+      </svg>
+    )
+  }
+
   return (
     <Grid
       container
@@ -384,6 +413,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'areas',
           'lines',
           lazyLoadingLayer,
+          errorLayer,
           Brush(
             leftRange.x,
             rightRange.x,
