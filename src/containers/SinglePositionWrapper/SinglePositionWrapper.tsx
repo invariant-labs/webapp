@@ -319,6 +319,14 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       onDiscreteChange={setIsDiscreteValue}
       showFeesLoader={showFeesLoader}
       hasTicksError={hasTicksError}
+      reloadHandler={() => {
+        dispatch(
+          actions.getCurrentPlotTicks({
+            poolIndex: position.poolData.poolIndex,
+            isXtoY: true
+          })
+        )
+      }}
     />
   ) : isLoadingList ? (
     <Grid container>

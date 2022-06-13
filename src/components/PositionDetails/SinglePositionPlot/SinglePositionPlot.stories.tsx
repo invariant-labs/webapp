@@ -49,6 +49,7 @@ storiesOf('singlePosition/rightComponent', module).add('plot', () => {
       xToY
       initialIsDiscreteValue={false}
       onDiscreteChange={() => {}}
+      reloadHandler={() => {}}
     />
   )
 })

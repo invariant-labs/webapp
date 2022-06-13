@@ -85,6 +85,7 @@ export interface INewPosition {
   priceALoading?: boolean
   priceBLoading?: boolean
   hasTicksError?: boolean
+  reloadHandler: () => void
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -124,7 +125,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   tokenBPriceData,
   priceALoading,
   priceBLoading,
-  hasTicksError
+  hasTicksError,
+  reloadHandler
 }) => {
   const classes = useStyles()
 
@@ -482,6 +484,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             feeTierIndex={fee}
             bestTierIndex={bestTierIndex}
             hasTicksError={hasTicksError}
+            reloadHandler={reloadHandler}
           />
         ) : (
           <PoolInit

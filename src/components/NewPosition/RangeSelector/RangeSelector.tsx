@@ -41,6 +41,7 @@ export interface IRangeSelector {
   poolIndex: number | null
   bestTierIndex?: number
   hasTicksError?: boolean
+  reloadHandler: () => void
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -63,7 +64,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   feeTierIndex,
   poolIndex,
   bestTierIndex,
-  hasTicksError
+  hasTicksError,
+  reloadHandler
 }) => {
   const classes = useStyles()
 
@@ -349,6 +351,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           isDiscrete={isPlotDiscrete}
           disabled={isConcentrated}
           hasError={hasTicksError}
+          reloadHandler={reloadHandler}
         />
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>

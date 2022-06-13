@@ -28,6 +28,7 @@ interface IProps {
   onDiscreteChange: (val: boolean) => void
   showFeesLoader?: boolean
   hasTicksError?: boolean
+  reloadHandler: () => void
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -48,7 +49,8 @@ const PositionDetails: React.FC<IProps> = ({
   initialIsDiscreteValue,
   onDiscreteChange,
   showFeesLoader = false,
-  hasTicksError
+  hasTicksError,
+  reloadHandler
 }) => {
   const classes = useStyles()
 
@@ -122,6 +124,7 @@ const PositionDetails: React.FC<IProps> = ({
           initialIsDiscreteValue={initialIsDiscreteValue}
           onDiscreteChange={onDiscreteChange}
           hasTicksError={hasTicksError}
+          reloadHandler={reloadHandler}
         />
       </Grid>
     </Grid>

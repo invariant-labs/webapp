@@ -490,6 +490,18 @@ export const NewPositionWrapper = () => {
       priceALoading={priceALoading}
       priceBLoading={priceBLoading}
       hasTicksError={hasTicksError}
+      reloadHandler={() => {
+        if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
+          dispatch(
+            actions.getCurrentPlotTicks({
+              poolIndex,
+              isXtoY: allPools[poolIndex].tokenX.equals(
+                tokens[currentPairReversed === true ? tokenBIndex : tokenAIndex].assetAddress
+              )
+            })
+          )
+        }
+      }}
     />
   )
 }

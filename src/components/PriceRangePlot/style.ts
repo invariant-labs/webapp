@@ -66,8 +66,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttonText: {
     fill: colors.invariant.dark,
-    ...typography.body1,
-    cursor: 'pointer'
+    ...typography.body1
   },
   reload: {
     cursor: 'pointer'
