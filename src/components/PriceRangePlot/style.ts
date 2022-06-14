@@ -64,20 +64,35 @@ const useStyles = makeStyles((theme: Theme) => ({
     fill: colors.invariant.black,
     ...typography.heading4
   },
-  buttonText: {
-    fill: colors.invariant.dark,
-    ...typography.body1
+  errorWrapper: {
+    margin: 'auto'
   },
-  reload: {
-    cursor: 'pointer'
+  errorText: {
+    color: colors.white.main,
+    ...typography.heading4
+  },
+  reloadButton: {
+    width: 130,
+    height: 40,
+    borderRadius: 14,
+    background: colors.invariant.pinkLinearGradientOpacity,
+    color: colors.invariant.dark,
+    ...typography.body1,
+    marginTop: 24,
+    textTransform: 'none',
+
+    '&:hover': {
+      background: colors.invariant.pinkLinearGradient
+    }
   },
   cover: {
-    width: '100%',
-    height: '100%',
-    background: `${colors.invariant.black}dd`,
+    width: 'calc(100% + 10px)',
+    height: 'calc(100% + 10px)',
+    background: '#01051499',
     position: 'absolute',
     zIndex: 11,
-    borderRadius: 10
+    borderRadius: 10,
+    backdropFilter: 'blur(16px)'
   },
   loader: {
     height: 100,

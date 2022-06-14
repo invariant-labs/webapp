@@ -3,7 +3,7 @@ import { Layer, ResponsiveLine } from '@nivo/line'
 // @ts-expect-error
 import { linearGradientDef } from '@nivo/core'
 import { colors, theme } from '@static/theme'
-import { Button, Grid, useMediaQuery } from '@material-ui/core'
+import { Button, Grid, Typography, useMediaQuery } from '@material-ui/core'
 import classNames from 'classnames'
 import ZoomInIcon from '@static/svg/zoom-in-icon.svg'
 import ZoomOutIcon from '@static/svg/zoom-out-icon.svg'
@@ -312,59 +312,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     )
   }
 
-  const errorLayer: Layer = ({ innerWidth, innerHeight }) => {
-    if (loading || !hasError) {
-      return null
-    }
-
-    return (
-      <svg
-        width={innerWidth}
-        height={innerHeight + 5}
-        viewBox={`0 0 ${innerWidth} ${innerHeight + 5}`}
-        fill='none'
-        xmlns='http://www.w3.org/2000/svg'
-        x={0}
-        y={-5}>
-        <rect x={0} y={0} width='100%' height='100%' fill={`${colors.white.main}20`} />
-        <text
-          x='50%'
-          y={innerHeight / 2 - 20}
-          dominant-baseline='middle'
-          text-anchor='middle'
-          className={classes.loadingText}>
-          Unable to load liquidity chart
-        </text>
-        <rect
-          x={innerWidth / 2 - 60}
-          y='50%'
-          width={120}
-          height={30}
-          rx={10}
-          fill={`${colors.invariant.pink}80`}
-        />
-        <text
-          x='50%'
-          y={innerHeight / 2 + 18}
-          dominant-baseline='middle'
-          text-anchor='middle'
-          className={classes.buttonText}>
-          Reload chart
-        </text>
-        <rect
-          x={innerWidth / 2 - 60}
-          y='50%'
-          width={120}
-          height={30}
-          rx={10}
-          fill='transparent'
-          className={classes.reload}
-          onClick={reloadHandler}
-        />
-      </svg>
-    )
-  }
-
   const brushLayer = Brush(
     leftRange.x,
     rightRange.x,
@@ -412,6 +359,16 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       {loading && coverOnLoading ? (
         <Grid container className={classes.cover}>
           <img src={loader} className={classes.loader} />
+        </Grid>
+      ) : null}
+      {!loading && hasError ? (
+        <Grid container className={classes.cover}>
+          <Grid className={classes.errorWrapper} container direction='column' alignItems='center'>
+            <Typography className={classes.errorText}>Unable to load liquidity chart</Typography>
+            <Button className={classes.reloadButton} onClick={reloadHandler}>
+              Reload chart
+            </Button>
+          </Grid>
         </Grid>
       ) : null}
       <Grid
@@ -479,7 +436,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'areas',
           'lines',
           lazyLoadingLayer,
-          ...(disabled ? [brushLayer, errorLayer] : [errorLayer, brushLayer]),
+          brushLayer,
           'axes',
           'legends'
         ]}
