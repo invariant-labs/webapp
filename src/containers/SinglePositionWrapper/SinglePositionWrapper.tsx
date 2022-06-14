@@ -37,7 +37,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
-  const { data: ticksData, loading: ticksLoading } = useSelector(plotTicks)
+  const { data: ticksData, loading: ticksLoading, hasError: hasTicksError } = useSelector(plotTicks)
   const {
     lowerTick,
     upperTick,
@@ -318,6 +318,15 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       initialIsDiscreteValue={initialIsDiscreteValue}
       onDiscreteChange={setIsDiscreteValue}
       showFeesLoader={showFeesLoader}
+      hasTicksError={hasTicksError}
+      reloadHandler={() => {
+        dispatch(
+          actions.getCurrentPlotTicks({
+            poolIndex: position.poolData.poolIndex,
+            isXtoY: true
+          })
+        )
+      }}
     />
   ) : isLoadingList ? (
     <Grid container>

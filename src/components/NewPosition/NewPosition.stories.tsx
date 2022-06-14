@@ -99,6 +99,7 @@ storiesOf('position/newPosition', module)
         onIsConcentratedChange={() => {}}
         initialHideUnknownTokensValue={false}
         onHideUnknownTokensChange={() => {}}
+        reloadHandler={() => {}}
       />
     </div>
   ))
@@ -147,6 +148,7 @@ storiesOf('position/newPosition', module)
         onIsConcentratedChange={() => {}}
         initialHideUnknownTokensValue={false}
         onHideUnknownTokensChange={() => {}}
+        reloadHandler={() => {}}
       />
     </div>
   ))

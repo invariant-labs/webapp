@@ -3,7 +3,7 @@ import { Layer, ResponsiveLine } from '@nivo/line'
 // @ts-expect-error
 import { linearGradientDef } from '@nivo/core'
 import { colors, theme } from '@static/theme'
-import { Button, Grid, useMediaQuery } from '@material-ui/core'
+import { Button, Grid, Typography, useMediaQuery } from '@material-ui/core'
 import classNames from 'classnames'
 import ZoomInIcon from '@static/svg/zoom-in-icon.svg'
 import ZoomOutIcon from '@static/svg/zoom-out-icon.svg'
@@ -35,6 +35,8 @@ export interface IPriceRangePlot {
   tickSpacing: number
   isDiscrete?: boolean
   coverOnLoading?: boolean
+  hasError?: boolean
+  reloadHandler: () => void
 }
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
@@ -56,7 +58,9 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   yDecimal,
   tickSpacing,
   isDiscrete = false,
-  coverOnLoading = false
+  coverOnLoading = false,
+  hasError = false,
+  reloadHandler
 }) => {
   const classes = useStyles()
 
@@ -308,6 +312,44 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     )
   }
 
+  const brushLayer = Brush(
+    leftRange.x,
+    rightRange.x,
+    position => {
+      const nearest = nearestTickIndex(
+        plotMin + position * (plotMax - plotMin),
+        tickSpacing,
+        isXtoY,
+        xDecimal,
+        yDecimal
+      )
+      onChangeRange?.(
+        isXtoY
+          ? Math.min(rightRange.index - tickSpacing, nearest)
+          : Math.max(rightRange.index + tickSpacing, nearest),
+        rightRange.index
+      )
+    },
+    position => {
+      const nearest = nearestTickIndex(
+        plotMin + position * (plotMax - plotMin),
+        tickSpacing,
+        isXtoY,
+        xDecimal,
+        yDecimal
+      )
+      onChangeRange?.(
+        leftRange.index,
+        isXtoY
+          ? Math.max(leftRange.index + tickSpacing, nearest)
+          : Math.min(leftRange.index - tickSpacing, nearest)
+      )
+    },
+    plotMin,
+    plotMax,
+    disabled
+  )
+
   return (
     <Grid
       container
@@ -317,6 +359,16 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       {loading && coverOnLoading ? (
         <Grid container className={classes.cover}>
           <img src={loader} className={classes.loader} />
+        </Grid>
+      ) : null}
+      {!loading && hasError ? (
+        <Grid container className={classes.cover}>
+          <Grid className={classes.errorWrapper} container direction='column' alignItems='center'>
+            <Typography className={classes.errorText}>Unable to load liquidity chart</Typography>
+            <Button className={classes.reloadButton} onClick={reloadHandler}>
+              Reload chart
+            </Button>
+          </Grid>
         </Grid>
       ) : null}
       <Grid
@@ -384,43 +436,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'areas',
           'lines',
           lazyLoadingLayer,
-          Brush(
-            leftRange.x,
-            rightRange.x,
-            position => {
-              const nearest = nearestTickIndex(
-                plotMin + position * (plotMax - plotMin),
-                tickSpacing,
-                isXtoY,
-                xDecimal,
-                yDecimal
-              )
-              onChangeRange?.(
-                isXtoY
-                  ? Math.min(rightRange.index - tickSpacing, nearest)
-                  : Math.max(rightRange.index + tickSpacing, nearest),
-                rightRange.index
-              )
-            },
-            position => {
-              const nearest = nearestTickIndex(
-                plotMin + position * (plotMax - plotMin),
-                tickSpacing,
-                isXtoY,
-                xDecimal,
-                yDecimal
-              )
-              onChangeRange?.(
-                leftRange.index,
-                isXtoY
-                  ? Math.max(leftRange.index + tickSpacing, nearest)
-                  : Math.min(leftRange.index - tickSpacing, nearest)
-              )
-            },
-            plotMin,
-            plotMax,
-            disabled
-          ),
+          brushLayer,
           'axes',
           'legends'
         ]}

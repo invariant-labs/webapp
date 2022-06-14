@@ -84,6 +84,8 @@ export interface INewPosition {
   tokenBPriceData?: CoingeckoPriceData
   priceALoading?: boolean
   priceBLoading?: boolean
+  hasTicksError?: boolean
+  reloadHandler: () => void
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -122,7 +124,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   tokenAPriceData,
   tokenBPriceData,
   priceALoading,
-  priceBLoading
+  priceBLoading,
+  hasTicksError,
+  reloadHandler
 }) => {
   const classes = useStyles()
 
@@ -479,6 +483,8 @@ export const NewPosition: React.FC<INewPosition> = ({
             isConcentrated={isConcentrated}
             feeTierIndex={fee}
             bestTierIndex={bestTierIndex}
+            hasTicksError={hasTicksError}
+            reloadHandler={reloadHandler}
           />
         ) : (
           <PoolInit
