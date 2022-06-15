@@ -11,7 +11,6 @@ const useStyles = makeStyles(() => ({
     borderRadius: 4,
     marginLeft: 4,
     marginTop: 1,
-    cursor: 'default',
     textTransform: 'none',
     '&:hover': {
       background: `${colors.invariant.green} !important`

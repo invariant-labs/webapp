@@ -24,7 +24,6 @@ import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as positionsActions } from '@reducers/positions'
 import { Status } from '@reducers/solanaConnection'
 import { BN } from '@project-serum/anchor'
-import { tou64 } from '@consts/utils'
 import { WalletAdapter } from '@web3/adapters/types'
 import { getTokenDetails } from './token'
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -39,6 +38,7 @@ import airdropAdmin from '@consts/airdropAdmin'
 import { network } from '@selectors/solanaConnection'
 import { tokens } from '@selectors/pools'
 import { actions as poolsActions } from '@reducers/pools'
+import { actions as farmsActions } from '@reducers/farms'
 import { actions as bondsActions } from '@reducers/bonds'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
@@ -190,8 +190,8 @@ export function* getCollateralTokenAirdrop(
   const blockhash = yield* call([connection, connection.getRecentBlockhash])
   tx.feePayer = wallet.publicKey
   tx.recentBlockhash = blockhash.blockhash
-  tx.sign(airdropAdmin)
   const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+  signedTx.partialSign(airdropAdmin)
   yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
     skipPreflight: true
   })
@@ -201,20 +201,7 @@ export function* getCollateralTokenAirdrop(
 //   const balance = yield* call(, pubKey)
 //   return balance
 // }
-export function* sendToken(from: PublicKey, target: PublicKey, amount: BN): SagaGenerator<string> {
-  const wallet = yield* call(getWallet)
-  const ix = Token.createTransferInstruction(
-    TOKEN_PROGRAM_ID,
-    from,
-    target,
-    wallet.publicKey,
-    [],
-    tou64(amount)
-  )
-  const signature = yield* call(signAndSend, wallet, new Transaction().add(ix))
 
-  return signature
-}
 export function* signAndSend(wallet: WalletAdapter, tx: Transaction): SagaGenerator<string> {
   const connection = yield* call(getConnection)
   const blockhash = yield* call([connection, connection.getRecentBlockhash])
@@ -410,6 +397,9 @@ export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): 
     case WalletType.CLOVER:
       enumWallet = 'clover'
       break
+    case WalletType.NIGHTLY:
+      enumWallet = 'nightly'
+      break
     default:
       enumWallet = 'phantom'
   }
@@ -423,6 +413,7 @@ export function* handleDisconnect(): Generator {
     yield call([localStorage, localStorage.removeItem], 'INVARIANT_SESSION_WALLET')
     yield* put(actions.resetState())
     yield* put(positionsActions.setPositionsList([]))
+    yield* put(farmsActions.setUserStakes({}))
     yield* put(
       positionsActions.setCurrentPositionRangeTicks({
         lowerTick: undefined,

@@ -4,8 +4,11 @@ import { Position, InitPosition, Tick } from '@invariant-labs/sdk/lib/market'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 
+export interface PositionWithAddress extends Position {
+  address: PublicKey
+}
 export interface PositionsListStore {
-  list: Position[]
+  list: PositionWithAddress[]
   loading: boolean
 }
 
@@ -18,6 +21,7 @@ export interface PlotTickData {
 export interface PlotTicks {
   data: PlotTickData[]
   loading: boolean
+  hasError?: boolean
 }
 
 export interface InitPositionStore {
@@ -101,13 +105,20 @@ const positionsSlice = createSlice({
     setPlotTicks(state, action: PayloadAction<PlotTickData[]>) {
       state.plotTicks.data = action.payload
       state.plotTicks.loading = false
+      state.plotTicks.hasError = false
+      return state
+    },
+    setErrorPlotTicks(state, action: PayloadAction<PlotTickData[]>) {
+      state.plotTicks.data = action.payload
+      state.plotTicks.loading = false
+      state.plotTicks.hasError = true
       return state
     },
     getCurrentPlotTicks(state, action: PayloadAction<GetCurrentTicksData>) {
       state.plotTicks.loading = !action.payload.disableLoading
       return state
     },
-    setPositionsList(state, action: PayloadAction<Position[]>) {
+    setPositionsList(state, action: PayloadAction<PositionWithAddress[]>) {
       state.positionsList.list = action.payload
       state.positionsList.loading = false
       return state
@@ -120,7 +131,10 @@ const positionsSlice = createSlice({
       return state
     },
     setSinglePosition(state, action: PayloadAction<SetPositionData>) {
-      state.positionsList.list[action.payload.index] = action.payload.position
+      state.positionsList.list[action.payload.index] = {
+        address: state.positionsList.list[action.payload.index].address,
+        ...action.payload.position
+      }
       return state
     },
     getCurrentPositionRangeTicks(state, _action: PayloadAction<string>) {

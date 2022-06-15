@@ -1,9 +1,9 @@
 import { PoolWithAddress } from '@reducers/pools'
 import { createSelector } from 'reselect'
-import { IPositionsStore, positionsSliceName } from '../reducers/positions'
+import { IPositionsStore, positionsSliceName, PositionWithAddress } from '../reducers/positions'
 import { keySelectors, AnyProps } from './helpers'
 import { poolsArraySortedByFees } from './pools'
-import { swapTokensDict } from './solanaWallet'
+import { SwapToken, swapTokensDict } from './solanaWallet'
 
 const store = (s: AnyProps) => s[positionsSliceName] as IPositionsStore
 
@@ -16,6 +16,13 @@ export const isLoadingPositionsList = createSelector(positionsList, s => s.loadi
 
 export interface PoolWithAddressAndIndex extends PoolWithAddress {
   poolIndex: number
+}
+
+export interface PositionWithPoolData extends PositionWithAddress {
+  poolData: PoolWithAddressAndIndex
+  tokenX: SwapToken
+  tokenY: SwapToken
+  positionIndex: number
 }
 
 export const positionsWithPoolsData = createSelector(
@@ -43,6 +50,7 @@ export const positionsWithPoolsData = createSelector(
 
 export const singlePositionData = (id: string) =>
   createSelector(positionsWithPoolsData, positions =>
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     positions.find(position => id === position.id.toString() + '_' + position.pool.toString())
   )
 

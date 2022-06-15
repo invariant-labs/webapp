@@ -24,6 +24,8 @@ export interface ISinglePositionPlot {
   xToY: boolean
   initialIsDiscreteValue: boolean
   onDiscreteChange: (val: boolean) => void
+  hasTicksError?: boolean
+  reloadHandler: () => void
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -40,7 +42,9 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   max,
   xToY,
   initialIsDiscreteValue,
-  onDiscreteChange
+  onDiscreteChange,
+  hasTicksError,
+  reloadHandler
 }) => {
   const classes = useStyles()
 
@@ -126,6 +130,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           yDecimal={tokenY.decimal}
           isDiscrete={isPlotDiscrete}
           coverOnLoading
+          hasError={hasTicksError}
+          reloadHandler={reloadHandler}
         />
       </Grid>
       <Grid className={classes.minMaxInfo}>

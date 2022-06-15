@@ -14,10 +14,16 @@ import { blurContent, unblurContent } from '@consts/uiUtils'
 import { USDC_DEV } from '@consts/static'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { calculateAmountToClaim, getPriceAfterSlippage } from '@invariant-labs/bonds-sdk/lib/math'
-import { calculateBondPrice, printBN } from '@consts/utils'
+import {
+  calculateBondPrice,
+  CoingeckoPriceData,
+  getCoingeckoTokenPrice,
+  printBN
+} from '@consts/utils'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './styles'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
 
 export const WrappedBonds: React.FC = () => {
   const classes = useStyles()
@@ -137,7 +143,8 @@ export const WrappedBonds: React.FC = () => {
             dispatch(
               actions.redeemBond({
                 bondSale: sale.address,
-                bondId: vested.id
+                bondId: vested.id,
+                vestedAddress: vested.address
               })
             )
           }
@@ -157,11 +164,52 @@ export const WrappedBonds: React.FC = () => {
     }
   }, [allBonds])
 
+  const [quoteTokenPriceData, setQuoteTokenPriceData] = useState<CoingeckoPriceData | undefined>(
+    undefined
+  )
+  const [quotePriceLoading, setQuotePriceLoading] = useState(false)
+  const [bondTokenPriceData, setBondTokenPriceData] = useState<CoingeckoPriceData | undefined>(
+    undefined
+  )
+  const [bondPriceLoading, setBondPriceLoading] = useState(false)
+
+  useEffect(() => {
+    if (modalBondIndex === null) {
+      return
+    }
+
+    const bond = bondsData[modalBondIndex]
+
+    const quoteId = bond.quoteToken.coingeckoId ?? ''
+    if (quoteId.length) {
+      setQuotePriceLoading(true)
+      getCoingeckoTokenPrice(quoteId)
+        .then(data => setQuoteTokenPriceData(data))
+        .catch(() => setQuoteTokenPriceData(undefined))
+        .finally(() => setQuotePriceLoading(false))
+    } else {
+      setQuoteTokenPriceData(undefined)
+    }
+
+    const bondId = bond.bondToken.coingeckoId ?? ''
+    if (bondId.length) {
+      setBondPriceLoading(true)
+      getCoingeckoTokenPrice(bondId)
+        .then(data => setBondTokenPriceData(data))
+        .catch(() => setBondTokenPriceData(undefined))
+        .finally(() => setBondPriceLoading(false))
+    } else {
+      setBondTokenPriceData(undefined)
+    }
+  }, [modalBondIndex])
+
   const placeholderToken = {
     ...USDC_DEV,
     assetAddress: USDC_DEV.address,
     balance: new BN(0)
   }
+
+  const bondsForSale = useMemo(() => bondsData.filter(bond => bond.isSelling), [bondsData])
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
@@ -176,7 +224,16 @@ export const WrappedBonds: React.FC = () => {
             desired one. In the bottom part you can see how many tokens you are eligible to withdraw
             and how much time is left that you can claim the remaining part.
           </Typography>
-          <BondList data={bondsData.filter(bond => bond.isSelling)} />
+          {bondsForSale.length === 0 && userVestedData.length === 0 ? (
+            <EmptyPlaceholder
+              className={classes.empty}
+              desc='There are no bonds for sale at the moment'
+            />
+          ) : null}
+          {bondsForSale.length > 0 ||
+          (walletStatus === Status.Initialized && userVestedData.length > 0) ? (
+            <BondList data={bondsForSale} />
+          ) : null}
           {walletStatus === Status.Initialized && userVestedData.length > 0 ? (
             <>
               <Typography className={classes.header} style={{ marginTop: 16 }}>
@@ -232,6 +289,10 @@ export const WrappedBonds: React.FC = () => {
               }
             }}
             progress={progress}
+            quoteTokenPriceData={quoteTokenPriceData}
+            bondTokenPriceData={bondTokenPriceData}
+            quotePriceLoading={quotePriceLoading}
+            bondPriceLoading={bondPriceLoading}
           />
         </>
       )}

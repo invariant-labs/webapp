@@ -1,7 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { printBN, printBNtoBN, handleSimulate, findPairs, trimLeadingZeros } from '@consts/utils'
+import {
+  printBN,
+  printBNtoBN,
+  handleSimulate,
+  findPairs,
+  trimLeadingZeros,
+  CoingeckoPriceData
+} from '@consts/utils'
 import { Decimal, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
@@ -70,7 +77,7 @@ export interface ISwap {
     amountOut: BN,
     byAmountIn: boolean
   ) => void
-  onSetPair: (tokenFrom: PublicKey, tokenTo: PublicKey) => void
+  onSetPair: (tokenFrom: PublicKey | null, tokenTo: PublicKey | null) => void
   progress: ProgressState
   poolTicks: { [x: string]: Tick[] }
   isWaitingForNewPool: boolean
@@ -82,6 +89,10 @@ export interface ISwap {
   commonTokens: PublicKey[]
   initialHideUnknownTokensValue: boolean
   onHideUnknownTokensChange: (val: boolean) => void
+  tokenFromPriceData?: CoingeckoPriceData
+  tokenToPriceData?: CoingeckoPriceData
+  priceFromLoading?: boolean
+  priceToLoading?: boolean
 }
 
 export const Swap: React.FC<ISwap> = ({
@@ -101,7 +112,11 @@ export const Swap: React.FC<ISwap> = ({
   handleAddToken,
   commonTokens,
   initialHideUnknownTokensValue,
-  onHideUnknownTokensChange
+  onHideUnknownTokensChange,
+  tokenFromPriceData,
+  tokenToPriceData,
+  priceFromLoading,
+  priceToLoading
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -160,9 +175,10 @@ export const Swap: React.FC<ISwap> = ({
   }, [tokens.length])
 
   useEffect(() => {
-    if (tokenFromIndex !== null && tokenToIndex !== null) {
-      onSetPair(tokens[tokenFromIndex].address, tokens[tokenToIndex].address)
-    }
+    onSetPair(
+      tokenFromIndex === null ? null : tokens[tokenFromIndex].address,
+      tokenToIndex === null ? null : tokens[tokenToIndex].address
+    )
   }, [tokenFromIndex, tokenToIndex, pools.length])
 
   useEffect(() => {
@@ -487,6 +503,9 @@ export const Swap: React.FC<ISwap> = ({
             limit={1e14}
             initialHideUnknownTokensValue={initialHideUnknownTokensValue}
             onHideUnknownTokensChange={onHideUnknownTokensChange}
+            tokenPrice={tokenFromPriceData?.price}
+            percentageChange={tokenFromPriceData?.priceChange}
+            priceLoading={priceFromLoading}
           />
         </Box>
         <Box className={classes.tokenComponentTextContainer}>
@@ -560,6 +579,9 @@ export const Swap: React.FC<ISwap> = ({
             limit={1e14}
             initialHideUnknownTokensValue={initialHideUnknownTokensValue}
             onHideUnknownTokensChange={onHideUnknownTokensChange}
+            tokenPrice={tokenToPriceData?.price}
+            percentageChange={tokenToPriceData?.priceChange}
+            priceLoading={priceToLoading}
           />
         </Box>
         <Box className={classes.transactionDetails}>
@@ -633,7 +655,8 @@ export const Swap: React.FC<ISwap> = ({
               WalletType.SOLFLARE,
               WalletType.COIN98,
               WalletType.SLOPE,
-              WalletType.CLOVER
+              WalletType.CLOVER,
+              WalletType.NIGHTLY
             ]}
             onSelect={onWalletSelect}
             connected={false}

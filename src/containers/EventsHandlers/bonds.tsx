@@ -80,6 +80,16 @@ const BondsEvents = () => {
     }
 
     const connectEvents = () => {
+      const removedKeys = vestedKeys.filter(key => typeof allUserVested[key] === 'undefined')
+      removedKeys.forEach(key => {
+        bondsProgram.program.account.bond
+          .unsubscribe(new PublicKey(key))
+          .then(() => {})
+          .catch(error => {
+            console.log(error)
+          })
+      })
+
       setVestedKeys(Object.keys(allUserVested))
 
       R.forEachObj(allUserVested, vested => {

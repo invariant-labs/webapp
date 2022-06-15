@@ -9,13 +9,18 @@ import { swap as swapPool } from '@selectors/swap'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@reducers/swap'
-import { status, swapTokens } from '@selectors/solanaWallet'
+import { status, swapTokens, swapTokensDict } from '@selectors/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { actions as poolsActions } from '@reducers/pools'
 import { PublicKey } from '@solana/web3.js'
 import { actions as walletActions } from '@reducers/solanaWallet'
 import { getCurrentSolanaConnection } from '@web3/connection'
-import { addNewTokenToLocalStorage, getNewTokenOrThrow } from '@consts/utils'
+import {
+  addNewTokenToLocalStorage,
+  CoingeckoPriceData,
+  getCoingeckoTokenPrice,
+  getNewTokenOrThrow
+} from '@consts/utils'
 import { network } from '@selectors/solanaConnection'
 import { commonTokensForNetworks } from '@consts/static'
 import { actions as snackbarsActions } from '@reducers/snackbars'
@@ -31,6 +36,7 @@ export const WrappedSwap = () => {
   const poolTicksArray = useSelector(poolTicks)
   const allPools = useSelector(poolsArraySortedByFees)
   const tokensList = useSelector(swapTokens)
+  const tokensDict = useSelector(swapTokensDict)
   const { success, inProgress } = useSelector(swapPool)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
   const networkType = useSelector(network)
@@ -121,6 +127,48 @@ export const WrappedSwap = () => {
     localStorage.setItem('HIDE_UNKNOWN_TOKENS', val ? 'true' : 'false')
   }
 
+  const [tokenFromPriceData, setTokenFromPriceData] = useState<CoingeckoPriceData | undefined>(
+    undefined
+  )
+  const [priceFromLoading, setPriceFromLoading] = useState(false)
+  useEffect(() => {
+    if (tokenFrom === null) {
+      return
+    }
+
+    const id = tokensDict[tokenFrom.toString()].coingeckoId ?? ''
+    if (id.length) {
+      setPriceFromLoading(true)
+      getCoingeckoTokenPrice(id)
+        .then(data => setTokenFromPriceData(data))
+        .catch(() => setTokenFromPriceData(undefined))
+        .finally(() => setPriceFromLoading(false))
+    } else {
+      setTokenFromPriceData(undefined)
+    }
+  }, [tokenFrom])
+
+  const [tokenToPriceData, setTokenToPriceData] = useState<CoingeckoPriceData | undefined>(
+    undefined
+  )
+  const [priceToLoading, setPriceToLoading] = useState(false)
+  useEffect(() => {
+    if (tokenTo === null) {
+      return
+    }
+
+    const id = tokensDict[tokenTo.toString()].coingeckoId ?? ''
+    if (id.length) {
+      setPriceToLoading(true)
+      getCoingeckoTokenPrice(id)
+        .then(data => setTokenToPriceData(data))
+        .catch(() => setTokenToPriceData(undefined))
+        .finally(() => setPriceToLoading(false))
+    } else {
+      setTokenToPriceData(undefined)
+    }
+  }, [tokenTo])
+
   return (
     <Swap
       onSwap={(
@@ -150,9 +198,15 @@ export const WrappedSwap = () => {
       onSetPair={(tokenFrom, tokenTo) => {
         setTokenFrom(tokenFrom)
         setTokenTo(tokenTo)
-        localStorage.setItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`, tokenFrom.toString())
-        localStorage.setItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`, tokenTo.toString())
-        if (!tokenFrom.equals(tokenTo)) {
+
+        if (tokenFrom !== null) {
+          localStorage.setItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`, tokenFrom.toString())
+        }
+
+        if (tokenTo !== null) {
+          localStorage.setItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`, tokenTo.toString())
+        }
+        if (tokenFrom !== null && tokenTo !== null && !tokenFrom.equals(tokenTo)) {
           dispatch(
             poolsActions.getAllPoolsForPairData({
               first: tokenFrom,
@@ -181,6 +235,10 @@ export const WrappedSwap = () => {
       commonTokens={commonTokensForNetworks[networkType]}
       initialHideUnknownTokensValue={initialHideUnknownTokensValue}
       onHideUnknownTokensChange={setHideUnknownTokensValue}
+      tokenFromPriceData={tokenFromPriceData}
+      tokenToPriceData={tokenToPriceData}
+      priceFromLoading={priceFromLoading}
+      priceToLoading={priceToLoading}
     />
   )
 }

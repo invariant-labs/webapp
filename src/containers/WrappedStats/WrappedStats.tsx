@@ -92,7 +92,8 @@ export const WrappedStats: React.FC = () => {
               iconTo: poolData.tokenYDetails.logoURI,
               volume: poolData.volume24,
               TVL: poolData.tvl,
-              fee: poolData.fee
+              fee: poolData.fee,
+              apy: poolData.apy
             }))}
           />
         </>

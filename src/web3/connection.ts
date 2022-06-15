@@ -1,6 +1,7 @@
 import { Connection } from '@solana/web3.js'
 import { MAINNET_RPCS, NetworkType, SolanaNetworks } from '@consts/static'
 import { Network } from '@invariant-labs/sdk'
+import { Network as StakerNetwork } from '@invariant-labs/staker-sdk'
 import { Network as BondsNetwork } from '@invariant-labs/bonds-sdk'
 
 export const networkToName = (network: SolanaNetworks) => {
@@ -15,6 +16,7 @@ export const networkToName = (network: SolanaNetworks) => {
     case SolanaNetworks.MAIN_SERUM:
     case SolanaNetworks.MAIN_FIGMENT:
     case SolanaNetworks.MAIN_GENESYSGO:
+    case SolanaNetworks.MAIN_NIGHTLY:
       return NetworkType.MAINNET
     case SolanaNetworks.LOCAL:
       return NetworkType.LOCALNET
@@ -84,11 +86,60 @@ const solanaNetworktoProgramNetwork = (solanaNetwork: SolanaNetworks): Network =
     case SolanaNetworks.MAIN_SERUM:
     case SolanaNetworks.MAIN_FIGMENT:
     case SolanaNetworks.MAIN_GENESYSGO:
+    case SolanaNetworks.MAIN_NIGHTLY:
       return Network.MAIN
   }
   return Network.DEV
 }
 
+const solanaNetworktoStakerNetwork = (solanaNetwork: SolanaNetworks): StakerNetwork => {
+  switch (solanaNetwork) {
+    case SolanaNetworks.DEV:
+      return StakerNetwork.DEV
+    case SolanaNetworks.LOCAL:
+      return StakerNetwork.LOCAL
+    // case SolanaNetworks.TEST:
+    //   return StakerNetwork.TEST
+    case SolanaNetworks.MAIN:
+    case SolanaNetworks.MAIN_SERUM:
+    case SolanaNetworks.MAIN_FIGMENT:
+    case SolanaNetworks.MAIN_GENESYSGO:
+    case SolanaNetworks.MAIN_NIGHTLY:
+      return StakerNetwork.MAIN
+    default:
+      return StakerNetwork.DEV
+  }
+}
+
+const networkTypetoProgramNetwork = (type: NetworkType): Network => {
+  switch (type) {
+    case NetworkType.DEVNET:
+      return Network.DEV
+    case NetworkType.LOCALNET:
+      return Network.LOCAL
+    // case SolanaNetworks.TEST:
+    //   return StakerNetwork.TEST
+    case NetworkType.MAINNET:
+      return Network.MAIN
+    default:
+      return Network.DEV
+  }
+}
+
+const networkTypetoStakerNetwork = (type: NetworkType): StakerNetwork => {
+  switch (type) {
+    case NetworkType.DEVNET:
+      return StakerNetwork.DEV
+    case NetworkType.LOCALNET:
+      return StakerNetwork.LOCAL
+    // case SolanaNetworks.TEST:
+    //   return StakerNetwork.TEST
+    case NetworkType.MAINNET:
+      return StakerNetwork.MAIN
+    default:
+      return StakerNetwork.DEV
+  }
+}
 const solanaNetworktoBondsNetwork = (solanaNetwork: SolanaNetworks): BondsNetwork => {
   switch (solanaNetwork) {
     case SolanaNetworks.DEV:
@@ -101,6 +152,7 @@ const solanaNetworktoBondsNetwork = (solanaNetwork: SolanaNetworks): BondsNetwor
     // case SolanaNetworks.MAIN_SERUM:
     // case SolanaNetworks.MAIN_FIGMENT:
     // case SolanaNetworks.MAIN_GENESYSGO:
+    // case SolanaNetworks.MAIN_NIGHTLY:
     //   return BondsNetwork.MAIN
   }
   return BondsNetwork.DEV
@@ -116,5 +168,8 @@ export {
   getCurrentSolanaConnection,
   getSolanaNetwork,
   solanaNetworktoProgramNetwork,
+  solanaNetworktoStakerNetwork,
+  networkTypetoStakerNetwork,
+  networkTypetoProgramNetwork,
   solanaNetworktoBondsNetwork
 }

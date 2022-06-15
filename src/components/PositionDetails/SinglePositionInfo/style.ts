@@ -275,7 +275,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 32,
     height: 32,
     position: 'absolute',
-    top: '50%',
+    top: 'calc(50% - 8px)',
     left: 'calc(50% - 16px)',
     cursor: 'pointer',
 

@@ -21,6 +21,10 @@ const useStyles = makeStyles(() => ({
     ...typography.body2,
     marginBottom: 16,
     textAlign: 'justify'
+  },
+  empty: {
+    marginInline: 'auto',
+    marginTop: 50
   }
 }))
 

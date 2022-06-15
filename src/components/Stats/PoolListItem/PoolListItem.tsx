@@ -1,7 +1,7 @@
 import React from 'react'
 import { Grid, Typography, Box, useMediaQuery } from '@material-ui/core'
 import { theme } from '@static/theme'
-import { formatNumbers, showPrefix } from '@consts/utils'
+import { defaultThresholds, formatNumbers, showPrefix } from '@consts/utils'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
 import useStyle from './style'
@@ -14,7 +14,9 @@ export enum SortType {
   VOLUME_ASC,
   VOLUME_DESC,
   TVL_ASC,
-  TVL_DESC
+  TVL_DESC,
+  APY_ASC,
+  APY_DESC
 }
 
 interface IProps {
@@ -30,6 +32,7 @@ interface IProps {
   sortType?: SortType
   onSort?: (type: SortType) => void
   hideBottomLine?: boolean
+  apy?: number
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -44,11 +47,12 @@ const PoolListItem: React.FC<IProps> = ({
   tokenIndex,
   sortType,
   onSort,
-  hideBottomLine = false
+  hideBottomLine = false,
+  apy = 0
 }) => {
   const classes = useStyle()
 
-  const hideTokenImage = useMediaQuery(theme.breakpoints.down('xs'))
+  const isXs = useMediaQuery(theme.breakpoints.down('xs'))
 
   return (
     <Grid>
@@ -57,9 +61,9 @@ const PoolListItem: React.FC<IProps> = ({
           container
           classes={{ container: classes.container }}
           style={hideBottomLine ? { border: 'none' } : undefined}>
-          {!hideTokenImage && <Typography>{tokenIndex}</Typography>}
+          {!isXs ? <Typography>{tokenIndex}</Typography> : null}
           <Grid className={classes.imageContainer}>
-            {!hideTokenImage && (
+            {!isXs && (
               <Box className={classes.iconsWrapper}>
                 <img src={iconFrom} />
                 <img src={iconTo} />
@@ -71,13 +75,18 @@ const PoolListItem: React.FC<IProps> = ({
               </Typography>
             </Grid>
           </Grid>
+          {!isXs ? (
+            <Typography>{`${formatNumbers(defaultThresholds.slice(1, defaultThresholds.length))(
+              apy.toString()
+            )}${showPrefix(apy)}%`}</Typography>
+          ) : null}
           <Typography>{fee}%</Typography>
           <Typography>{`$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}</Typography>
           <Typography>{`$${formatNumbers()(TVL.toString())}${showPrefix(TVL)}`}</Typography>
         </Grid>
       ) : (
         <Grid container classes={{ container: classes.container, root: classes.header }}>
-          {!hideTokenImage && (
+          {!isXs && (
             <Typography style={{ lineHeight: '11px' }}>
               N<sup>o</sup>
             </Typography>
@@ -98,6 +107,24 @@ const PoolListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
+          {!isXs ? (
+            <Typography
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                if (sortType === SortType.APY_DESC) {
+                  onSort?.(SortType.APY_ASC)
+                } else {
+                  onSort?.(SortType.APY_DESC)
+                }
+              }}>
+              APY
+              {sortType === SortType.APY_ASC ? (
+                <ArrowDropUpIcon className={classes.icon} />
+              ) : sortType === SortType.APY_DESC ? (
+                <ArrowDropDownIcon className={classes.icon} />
+              ) : null}
+            </Typography>
+          ) : null}
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {
