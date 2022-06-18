@@ -1,7 +1,7 @@
 import React from 'react'
 import { Grid, Typography, Box, useMediaQuery } from '@material-ui/core'
 import { theme } from '@static/theme'
-import { defaultThresholds, formatNumbers, showPrefix } from '@consts/utils'
+import { formatNumbers, showPrefix } from '@consts/utils'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
 import useStyle from './style'
@@ -75,11 +75,7 @@ const PoolListItem: React.FC<IProps> = ({
               </Typography>
             </Grid>
           </Grid>
-          {!isXs ? (
-            <Typography>{`${formatNumbers(defaultThresholds.slice(1, defaultThresholds.length))(
-              apy.toString()
-            )}${showPrefix(apy)}%`}</Typography>
-          ) : null}
+          {!isXs ? <Typography>{`${apy > 1000 ? '>1000' : apy.toFixed(2)}%`}</Typography> : null}
           <Typography>{fee}%</Typography>
           <Typography>{`$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}</Typography>
           <Typography>{`$${formatNumbers()(TVL.toString())}${showPrefix(TVL)}`}</Typography>
