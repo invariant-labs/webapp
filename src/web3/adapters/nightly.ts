@@ -68,7 +68,6 @@ export class NightlyWalletAdapter extends EventEmitter implements WalletAdapter 
       return pk
     } catch (error) {
       console.log(error)
-      window.open('https://nightly.app/', '_blank')
     }
   }
 

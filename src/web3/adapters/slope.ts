@@ -28,7 +28,9 @@ interface SlopeWallet {
   }>
 }
 
-interface SlopeWindow extends Window { Slope?: new () => SlopeWallet }
+interface SlopeWindow extends Window {
+  Slope?: new () => SlopeWallet
+}
 
 declare const window: SlopeWindow
 
@@ -65,7 +67,7 @@ export class SlopeWalletAdapter extends EventEmitter implements WalletAdapter {
   }
 
   async connect(): Promise<void> {
-    if (typeof (window.Slope) !== 'undefined') {
+    if (typeof window.Slope !== 'undefined') {
       if (this.connected || this.connecting) return
       this._connecting = true
 
@@ -76,7 +78,6 @@ export class SlopeWalletAdapter extends EventEmitter implements WalletAdapter {
 
       this.emit('connect')
     } else {
-      window.open('https://slope.finance/', '_blank')
       this._connecting = false
     }
   }
@@ -103,13 +104,9 @@ export class SlopeWalletAdapter extends EventEmitter implements WalletAdapter {
     return transaction
   }
 
-  async signAllTransactions(
-    transactions: Transaction[]
-  ): Promise<Transaction[]> {
+  async signAllTransactions(transactions: Transaction[]): Promise<Transaction[]> {
     const wallet = this._wallet
-    const messages = transactions.map((transaction) =>
-      bs58.encode(transaction.serializeMessage())
-    )
+    const messages = transactions.map(transaction => bs58.encode(transaction.serializeMessage()))
     if (wallet) {
       const { data } = await wallet.signAllTransactions(messages)
       const length = transactions.length
