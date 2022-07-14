@@ -90,7 +90,6 @@ export class Coin98WalletAdapter extends EventEmitter implements WalletAdapter {
           this.disconnect()
         })
     } else {
-      window.open('https://coin98.com/', '_blank')
       return
     }
 

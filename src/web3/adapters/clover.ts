@@ -22,9 +22,7 @@ export class CloverWalletAdapter extends EventEmitter implements WalletAdapter {
     return false
   }
 
-  public async signAllTransactions(
-    transactions: Transaction[]
-  ): Promise<Transaction[]> {
+  public async signAllTransactions(transactions: Transaction[]): Promise<Transaction[]> {
     if (!this._provider) {
       return transactions
     }
@@ -57,7 +55,6 @@ export class CloverWalletAdapter extends EventEmitter implements WalletAdapter {
     }
 
     if (!this._provider) {
-      window.open('https://clover.finance/#PITCH', '_blank')
       return
     }
 
