@@ -32,7 +32,7 @@ import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import { PoolWithAddress } from '@reducers/pools'
 import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
 import axios, { AxiosResponse } from 'axios'
-import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
+import { getMaxTick, getMinTick, Range } from '@invariant-labs/sdk/lib/utils'
 import { Staker } from '@invariant-labs/staker-sdk'
 import { ExtendedStake } from '@reducers/farms'
 import { Stake } from '@invariant-labs/staker-sdk/lib/staker'
@@ -1079,6 +1079,18 @@ export const getIncentivesRewardData = async (
   try {
     const { data } = await axios.get<Record<string, IncentiveRewardData>>(
       `https://stats.invariant.app/incentive_rewards/${name}`
+    )
+
+    return data
+  } catch (_err) {
+    return {}
+  }
+}
+
+export const getPoolsVolumeRanges = async (name: string): Promise<Record<string, Range[]>> => {
+  try {
+    const { data } = await axios.get<Record<string, Range[]>>(
+      `https://stats.invariant.app/pool_volume_range/${name}`
     )
 
     return data

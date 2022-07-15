@@ -4,13 +4,14 @@ import { keySelectors, AnyProps } from './helpers'
 
 const store = (s: AnyProps) => s[poolsSliceName] as IPoolsStore
 
-export const { pools, tokens, poolTicks, isLoadingLatestPoolsForTransaction, tickMaps } =
+export const { pools, tokens, poolTicks, isLoadingLatestPoolsForTransaction, tickMaps, volumeRanges } =
   keySelectors(store, [
     'pools',
     'tokens',
     'poolTicks',
     'isLoadingLatestPoolsForTransaction',
-    'tickMaps'
+    'tickMaps',
+    'volumeRanges'
   ])
 
 export const poolsArraySortedByFees = createSelector(pools, allPools =>
@@ -22,7 +23,8 @@ export const poolsSelectors = {
   tokens,
   poolTicks,
   isLoadingLatestPoolsForTransaction,
-  tickMaps
+  tickMaps,
+  volumeRanges
 }
 
 export default poolsSelectors
