@@ -14,7 +14,11 @@ import {
   getNewTokenOrThrow,
   printBN
 } from '@consts/utils'
-import { isLoadingLatestPoolsForTransaction, poolsArraySortedByFees } from '@selectors/pools'
+import {
+  isLoadingLatestPoolsForTransaction,
+  poolsArraySortedByFees,
+  volumeRanges
+} from '@selectors/pools'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { initPosition, plotTicks } from '@selectors/positions'
@@ -23,7 +27,7 @@ import { bestTiers, commonTokensForNetworks } from '@consts/static'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
-import { calculatePriceSqrt, Pair } from '@invariant-labs/sdk'
+import { calculatePriceSqrt, MAX_TICK, Pair } from '@invariant-labs/sdk'
 import { feeToTickSpacing } from '@invariant-labs/sdk/src/utils'
 import { actions as poolsActions } from '@reducers/pools'
 import { network } from '@selectors/solanaConnection'
@@ -38,6 +42,7 @@ export const NewPositionWrapper = () => {
   const tokens = useSelector(swapTokens)
   const walletStatus = useSelector(status)
   const allPools = useSelector(poolsArraySortedByFees)
+  const poolsVolumeRanges = useSelector(volumeRanges)
 
   const canUserCreateNewPool = useSelector(canCreateNewPool)
   const canUserCreateNewPosition = useSelector(canCreateNewPosition)
@@ -299,6 +304,48 @@ export const NewPositionWrapper = () => {
     }
   }, [tokenBIndex])
 
+  const currentVolumeRange = useMemo(() => {
+    if (poolIndex === null) {
+      return undefined
+    }
+
+    const poolAddress = allPools[poolIndex].address.toString()
+
+    if (!poolsVolumeRanges[poolAddress]) {
+      return undefined
+    }
+
+    const lowerTicks: number[] = poolsVolumeRanges[poolAddress]
+      .map(range => (range.tickLower === null ? undefined : range.tickLower))
+      .filter(tick => typeof tick !== 'undefined') as number[]
+    const upperTicks: number[] = poolsVolumeRanges[poolAddress]
+      .map(range => (range.tickUpper === null ? undefined : range.tickUpper))
+      .filter(tick => typeof tick !== 'undefined') as number[]
+
+    const lowerPrice = calcPrice(
+      !lowerTicks.length || !upperTicks.length
+        ? allPools[poolIndex].currentTickIndex
+        : Math.min(...lowerTicks),
+      isXtoY,
+      xDecimal,
+      yDecimal
+    )
+
+    const upperPrice = calcPrice(
+      !lowerTicks.length || !upperTicks.length
+        ? Math.min(allPools[poolIndex].currentTickIndex + allPools[poolIndex].tickSpacing, MAX_TICK)
+        : Math.max(...upperTicks),
+      isXtoY,
+      xDecimal,
+      yDecimal
+    )
+
+    return {
+      min: Math.min(lowerPrice, upperPrice),
+      max: Math.max(lowerPrice, upperPrice)
+    }
+  }, [poolsVolumeRanges, poolIndex, isXtoY, xDecimal, yDecimal])
+
   return (
     <NewPosition
       tokens={tokens}
@@ -502,6 +549,7 @@ export const NewPositionWrapper = () => {
           )
         }
       }}
+      plotVolumeRange={currentVolumeRange}
     />
   )
 }

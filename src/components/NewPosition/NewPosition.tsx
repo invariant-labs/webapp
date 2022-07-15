@@ -86,7 +86,7 @@ export interface INewPosition {
   priceBLoading?: boolean
   hasTicksError?: boolean
   reloadHandler: () => void
-  volumeRange?: {
+  plotVolumeRange?: {
     min: number
     max: number
   }
@@ -131,7 +131,7 @@ export const NewPosition: React.FC<INewPosition> = ({
   priceBLoading,
   hasTicksError,
   reloadHandler,
-  volumeRange
+  plotVolumeRange
 }) => {
   const classes = useStyles()
 
@@ -490,7 +490,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             bestTierIndex={bestTierIndex}
             hasTicksError={hasTicksError}
             reloadHandler={reloadHandler}
-            volumeRange={volumeRange}
+            volumeRange={plotVolumeRange}
           />
         ) : (
           <PoolInit
