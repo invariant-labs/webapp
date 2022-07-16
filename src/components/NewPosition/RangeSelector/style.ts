@@ -180,7 +180,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.component,
     boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.35)',
     borderRadius: 20,
-    padding: 16
+    padding: 16,
+    maxWidth: 360,
+    boxSizing: 'border-box'
   },
   liquidityTitle: {
     color: colors.invariant.text,
@@ -189,7 +191,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   liquidityDesc: {
     color: colors.invariant.text,
-    ...typography.caption2
+    ...typography.caption2,
+    textAlign: 'justify'
   },
   liquidityImg: {
     width: 56,

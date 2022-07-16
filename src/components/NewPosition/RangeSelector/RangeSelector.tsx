@@ -338,8 +338,12 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
               <Grid container direction='row' wrap='nowrap'>
                 <Typography className={classes.liquidityDesc}>
-                  It’s shown as white dashed lines on the plot. It represents prices range of volume
-                  from the last 7 days.
+                  While selecting the price range, note where active liquidity is located. Your
+                  liquidity can be inactive and, as a consequence, not generate profits. The active
+                  liquidity range is represented by white, dashed lines in the liquidity chart.
+                  Active liquidity is determined by the maximum price range resulting from the
+                  statistical volume of swaps for the last 7 days. Note: active liquidity borders
+                  are always aligned to the nearest initialized ticks.
                 </Typography>
                 <img className={classes.liquidityImg} src={activeLiquidity} />
               </Grid>
