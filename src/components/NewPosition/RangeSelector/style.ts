@@ -195,9 +195,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'justify'
   },
   liquidityImg: {
-    width: 56,
-    minWidth: 56,
-    height: 41.5,
+    width: 88,
+    minWidth: 88,
+    height: 66,
     marginLeft: 16
   }
 }))
