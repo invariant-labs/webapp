@@ -469,7 +469,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         role='application'
         layers={[
           currentLayer,
-          volumeRangeLayer,
           bottomLineLayer,
           'grid',
           'markers',
@@ -477,6 +476,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'lines',
           lazyLoadingLayer,
           brushLayer,
+          volumeRangeLayer,
           'axes',
           'legends'
         ]}
