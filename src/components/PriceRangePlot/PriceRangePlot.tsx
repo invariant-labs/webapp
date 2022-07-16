@@ -37,6 +37,10 @@ export interface IPriceRangePlot {
   coverOnLoading?: boolean
   hasError?: boolean
   reloadHandler: () => void
+  volumeRange?: {
+    min: number
+    max: number
+  }
 }
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
@@ -60,7 +64,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   isDiscrete = false,
   coverOnLoading = false,
   hasError = false,
-  reloadHandler
+  reloadHandler,
+  volumeRange
 }) => {
   const classes = useStyles()
 
@@ -280,6 +285,40 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     )
   }
 
+  const volumeRangeLayer: Layer = ({ innerWidth, innerHeight }) => {
+    if (typeof volumeRange === 'undefined') {
+      return null
+    }
+
+    const unitLen = innerWidth / (plotMax - plotMin)
+    return (
+      <>
+        {volumeRange.min >= plotMin ? (
+          <line
+            x1={(volumeRange.min - plotMin) * unitLen}
+            x2={(volumeRange.min - plotMin) * unitLen}
+            y1={0}
+            strokeWidth={1}
+            y2={innerHeight}
+            stroke={colors.invariant.text}
+            strokeDasharray='16 4'
+          />
+        ) : null}
+        {volumeRange.max <= plotMax ? (
+          <line
+            x1={(volumeRange.max - plotMin) * unitLen}
+            x2={(volumeRange.max - plotMin) * unitLen}
+            y1={0}
+            strokeWidth={1}
+            y2={innerHeight}
+            stroke={colors.invariant.text}
+            strokeDasharray='16 4'
+          />
+        ) : null}
+      </>
+    )
+  }
+
   const bottomLineLayer: Layer = ({ innerWidth, innerHeight }) => {
     const bottomLine = innerHeight
     return <rect x={0} y={bottomLine} width={innerWidth} height={1} fill={colors.invariant.light} />
@@ -437,6 +476,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'lines',
           lazyLoadingLayer,
           brushLayer,
+          volumeRangeLayer,
           'axes',
           'legends'
         ]}

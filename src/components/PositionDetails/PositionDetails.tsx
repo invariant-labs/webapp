@@ -29,6 +29,10 @@ interface IProps {
   showFeesLoader?: boolean
   hasTicksError?: boolean
   reloadHandler: () => void
+  plotVolumeRange?: {
+    min: number
+    max: number
+  }
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -50,7 +54,8 @@ const PositionDetails: React.FC<IProps> = ({
   onDiscreteChange,
   showFeesLoader = false,
   hasTicksError,
-  reloadHandler
+  reloadHandler,
+  plotVolumeRange
 }) => {
   const classes = useStyles()
 
@@ -125,6 +130,14 @@ const PositionDetails: React.FC<IProps> = ({
           onDiscreteChange={onDiscreteChange}
           hasTicksError={hasTicksError}
           reloadHandler={reloadHandler}
+          volumeRange={
+            xToY
+              ? plotVolumeRange
+              : {
+                  min: 1 / (plotVolumeRange?.max ?? 1),
+                  max: 1 / (plotVolumeRange?.min ?? 1)
+                }
+          }
         />
       </Grid>
     </Grid>

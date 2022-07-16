@@ -6,6 +6,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
 import { PayloadType } from './types'
 import * as R from 'remeda'
+import { Range } from '@invariant-labs/sdk/lib/utils'
 
 export interface PoolWithAddress extends PoolStructure {
   address: PublicKey
@@ -17,6 +18,7 @@ export interface IPoolsStore {
   poolTicks: { [key in string]: Tick[] }
   isLoadingLatestPoolsForTransaction: boolean
   tickMaps: { [key in string]: Tickmap }
+  volumeRanges: Record<string, Range[]>
 }
 
 export interface UpdatePool {
@@ -51,7 +53,8 @@ export const defaultState: IPoolsStore = {
   pools: {},
   poolTicks: {},
   isLoadingLatestPoolsForTransaction: false,
-  tickMaps: {}
+  tickMaps: {},
+  volumeRanges: {}
 }
 
 export interface PairTokens {
@@ -84,6 +87,10 @@ const poolsSlice = createSlice({
         ...state.tokens,
         ...action.payload
       }
+      return state
+    },
+    setVolumeRanges(state, action: PayloadAction<Record<string, Range[]>>) {
+      state.volumeRanges = action.payload
       return state
     },
     setPools(state, action: PayloadAction<{ [key in string]: PoolWithAddress }>) {
