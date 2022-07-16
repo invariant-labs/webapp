@@ -149,6 +149,32 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 150,
     width: 150,
     margin: 'auto'
+  },
+  infoRow: {
+    marginBottom: 16
+  },
+  activeLiquidity: {
+    color: colors.invariant.text,
+    ...typography.caption2,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    cursor: 'default'
+  },
+  activeLiquidityIcon: {
+    marginLeft: 5,
+    height: 14,
+    width: 14,
+    border: '1px solid #FFFFFF',
+    color: colors.invariant.text,
+    borderRadius: '50%',
+    fontSize: 8,
+    lineHeight: '10px',
+    fontWeight: 400,
+    textAlign: 'center',
+    boxSizing: 'border-box',
+    paddingTop: 3,
+    cursor: 'default'
   }
 }))
 

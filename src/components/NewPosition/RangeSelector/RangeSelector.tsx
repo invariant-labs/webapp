@@ -330,6 +330,18 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           initialValue={isPlotDiscrete ? 1 : 0}
         />
       </Grid>
+      <Grid className={classes.infoRow} container justifyContent='flex-end'>
+        <Tooltip
+          title='Cannot fetch price of token'
+          placement='bottom'
+          classes={{
+            tooltip: classes.tooltip
+          }}>
+          <Typography className={classes.activeLiquidity}>
+            Active liquidity <div className={classes.activeLiquidityIcon}>i</div>
+          </Typography>
+        </Tooltip>
+      </Grid>
       <Grid container className={classes.innerWrapper}>
         <PriceRangePlot
           className={classes.plot}
