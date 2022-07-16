@@ -19,6 +19,7 @@ import { getConcentrationArray, getMaxTick, getMinTick } from '@invariant-labs/s
 import questionMark from '@static/svg/questionMark.svg'
 import loader from '@static/gif/loader.gif'
 import useStyles from './style'
+import activeLiquidity from '@static/svg/activeLiquidity.svg'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -332,10 +333,21 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       </Grid>
       <Grid className={classes.infoRow} container justifyContent='flex-end'>
         <Tooltip
-          title='Cannot fetch price of token'
+          title={
+            <>
+              <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
+              <Grid container direction='row' wrap='nowrap'>
+                <Typography className={classes.liquidityDesc}>
+                  It’s shown as white dashed lines on the plot. It represents prices range of volume
+                  from the last 7 days.
+                </Typography>
+                <img className={classes.liquidityImg} src={activeLiquidity} />
+              </Grid>
+            </>
+          }
           placement='bottom'
           classes={{
-            tooltip: classes.tooltip
+            tooltip: classes.liquidityTooltip
           }}>
           <Typography className={classes.activeLiquidity}>
             Active liquidity <div className={classes.activeLiquidityIcon}>i</div>

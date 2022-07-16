@@ -175,6 +175,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxSizing: 'border-box',
     paddingTop: 3,
     cursor: 'default'
+  },
+  liquidityTooltip: {
+    background: colors.invariant.component,
+    boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.35)',
+    borderRadius: 20,
+    padding: 16
+  },
+  liquidityTitle: {
+    color: colors.invariant.text,
+    ...typography.heading4,
+    marginBottom: 12
+  },
+  liquidityDesc: {
+    color: colors.invariant.text,
+    ...typography.caption2
+  },
+  liquidityImg: {
+    width: 56,
+    minWidth: 56,
+    height: 41.5,
+    marginLeft: 16
   }
 }))
 
