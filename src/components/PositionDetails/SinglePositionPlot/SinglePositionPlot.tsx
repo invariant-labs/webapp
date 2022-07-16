@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Grid, Typography, Card } from '@material-ui/core'
+import { Grid, Typography, Card, Tooltip } from '@material-ui/core'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
 import { calcPrice, spacingMultiplicityGte, calcTicksAmountInRange } from '@consts/utils'
@@ -7,6 +7,7 @@ import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { ILiquidityToken } from '../SinglePositionInfo/consts'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
+import activeLiquidity from '@static/svg/activeLiquidity.svg'
 import useStyles from './style'
 
 export interface ISinglePositionPlot {
@@ -26,6 +27,10 @@ export interface ISinglePositionPlot {
   onDiscreteChange: (val: boolean) => void
   hasTicksError?: boolean
   reloadHandler: () => void
+  volumeRange?: {
+    min: number
+    max: number
+  }
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -44,7 +49,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   initialIsDiscreteValue,
   onDiscreteChange,
   hasTicksError,
-  reloadHandler
+  reloadHandler,
+  volumeRange
 }) => {
   const classes = useStyles()
 
@@ -111,6 +117,33 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           initialValue={isPlotDiscrete ? 1 : 0}
         />
       </Grid>
+      <Grid className={classes.infoRow} container justifyContent='flex-end'>
+        <Tooltip
+          title={
+            <>
+              <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
+              <Grid container direction='row' wrap='nowrap'>
+                <Typography className={classes.liquidityDesc}>
+                  While selecting the price range, note where active liquidity is located. Your
+                  liquidity can be inactive and, as a consequence, not generate profits. The active
+                  liquidity range is represented by white, dashed lines in the liquidity chart.
+                  Active liquidity is determined by the maximum price range resulting from the
+                  statistical volume of swaps for the last 7 days. Note: active liquidity borders
+                  are always aligned to the nearest initialized ticks.
+                </Typography>
+                <img className={classes.liquidityImg} src={activeLiquidity} />
+              </Grid>
+            </>
+          }
+          placement='bottom'
+          classes={{
+            tooltip: classes.liquidityTooltip
+          }}>
+          <Typography className={classes.activeLiquidity}>
+            Active liquidity <div className={classes.activeLiquidityIcon}>i</div>
+          </Typography>
+        </Tooltip>
+      </Grid>
       <Grid className={classes.plotWrapper}>
         <PriceRangePlot
           data={data}
@@ -132,6 +165,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           coverOnLoading
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
+          volumeRange={volumeRange}
         />
       </Grid>
       <Grid className={classes.minMaxInfo}>

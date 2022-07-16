@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     background: colors.invariant.dark,
     borderRadius: 12,
-    padding: '6px 12px',
+    padding: '6px 11px',
     marginRight: 6,
     marginBottom: 8,
     '& p': {
