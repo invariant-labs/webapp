@@ -68,6 +68,10 @@ storiesOf('position/priceRangePlot', module)
         tickSpacing={4}
         isXtoY={true}
         reloadHandler={() => {}}
+        volumeRange={{
+          min: calcPrice(13000, true, 6, 6),
+          max: calcPrice(18000, true, 6, 6)
+        }}
       />
     )
   })

@@ -5,7 +5,12 @@ import { Status } from '@reducers/solanaConnection'
 import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
 import { poolsArraySortedByFees, poolTicks, tickMaps } from '@selectors/pools'
-import { getNetworkTokensList, findPairs, getFullNewTokensData } from '@consts/utils'
+import {
+  getNetworkTokensList,
+  findPairs,
+  getFullNewTokensData,
+  getPoolsVolumeRanges
+} from '@consts/utils'
 import { swap } from '@selectors/swap'
 import { findTickmapChanges, Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
@@ -67,6 +72,13 @@ const MarketEvents = () => {
         })
         .finally(() => {
           dispatch(actions.addTokens(tokens))
+        })
+      getPoolsVolumeRanges(networkType.toLowerCase())
+        .then(ranges => {
+          dispatch(actions.setVolumeRanges(ranges))
+        })
+        .catch(error => {
+          console.log(error)
         })
     }
 

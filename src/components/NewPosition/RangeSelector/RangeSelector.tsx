@@ -19,6 +19,7 @@ import { getConcentrationArray, getMaxTick, getMinTick } from '@invariant-labs/s
 import questionMark from '@static/svg/questionMark.svg'
 import loader from '@static/gif/loader.gif'
 import useStyles from './style'
+import activeLiquidity from '@static/svg/activeLiquidity.svg'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -42,6 +43,10 @@ export interface IRangeSelector {
   bestTierIndex?: number
   hasTicksError?: boolean
   reloadHandler: () => void
+  volumeRange?: {
+    min: number
+    max: number
+  }
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -65,7 +70,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   poolIndex,
   bestTierIndex,
   hasTicksError,
-  reloadHandler
+  reloadHandler,
+  volumeRange
 }) => {
   const classes = useStyles()
 
@@ -325,6 +331,33 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           initialValue={isPlotDiscrete ? 1 : 0}
         />
       </Grid>
+      <Grid className={classes.infoRow} container justifyContent='flex-end'>
+        <Tooltip
+          title={
+            <>
+              <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
+              <Grid container direction='row' wrap='nowrap'>
+                <Typography className={classes.liquidityDesc}>
+                  While selecting the price range, note where active liquidity is located. Your
+                  liquidity can be inactive and, as a consequence, not generate profits. The active
+                  liquidity range is represented by white, dashed lines in the liquidity chart.
+                  Active liquidity is determined by the maximum price range resulting from the
+                  statistical volume of swaps for the last 7 days. Note: active liquidity borders
+                  are always aligned to the nearest initialized ticks.
+                </Typography>
+                <img className={classes.liquidityImg} src={activeLiquidity} />
+              </Grid>
+            </>
+          }
+          placement='bottom'
+          classes={{
+            tooltip: classes.liquidityTooltip
+          }}>
+          <Typography className={classes.activeLiquidity}>
+            Active liquidity <div className={classes.activeLiquidityIcon}>i</div>
+          </Typography>
+        </Tooltip>
+      </Grid>
       <Grid container className={classes.innerWrapper}>
         <PriceRangePlot
           className={classes.plot}
@@ -352,6 +385,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           disabled={isConcentrated}
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
+          volumeRange={volumeRange}
         />
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>

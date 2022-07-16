@@ -20,9 +20,10 @@ import {
 } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { calculateClaimAmount, DECIMAL } from '@invariant-labs/sdk/src/utils'
-import { getX, getY } from '@invariant-labs/sdk/lib/math'
+import { getX, getY, MAX_TICK } from '@invariant-labs/sdk/lib/math'
 import loader from '@static/gif/loader.gif'
 import useStyles from './style'
+import { volumeRanges } from '@selectors/pools'
 
 export interface IProps {
   id: string
@@ -43,6 +44,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     upperTick,
     loading: rangeTicksLoading
   } = useSelector(currentPositionRangeTicks)
+  const poolsVolumeRanges = useSelector(volumeRanges)
 
   const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
 
@@ -242,6 +244,48 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const [tokenXPriceData, setTokenXPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
   const [tokenYPriceData, setTokenYPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
 
+  const currentVolumeRange = useMemo(() => {
+    if (!position?.poolData.address) {
+      return undefined
+    }
+
+    const poolAddress = position.poolData.address.toString()
+
+    if (!poolsVolumeRanges[poolAddress]) {
+      return undefined
+    }
+
+    const lowerTicks: number[] = poolsVolumeRanges[poolAddress]
+      .map(range => (range.tickLower === null ? undefined : range.tickLower))
+      .filter(tick => typeof tick !== 'undefined') as number[]
+    const upperTicks: number[] = poolsVolumeRanges[poolAddress]
+      .map(range => (range.tickUpper === null ? undefined : range.tickUpper))
+      .filter(tick => typeof tick !== 'undefined') as number[]
+
+    const lowerPrice = calcPrice(
+      !lowerTicks.length || !upperTicks.length
+        ? position.poolData.currentTickIndex
+        : Math.min(...lowerTicks),
+      true,
+      position.tokenX.decimals,
+      position.tokenY.decimals
+    )
+
+    const upperPrice = calcPrice(
+      !lowerTicks.length || !upperTicks.length
+        ? Math.min(position.poolData.currentTickIndex + position.poolData.tickSpacing, MAX_TICK)
+        : Math.max(...upperTicks),
+      true,
+      position.tokenX.decimals,
+      position.tokenY.decimals
+    )
+
+    return {
+      min: Math.min(lowerPrice, upperPrice),
+      max: Math.max(lowerPrice, upperPrice)
+    }
+  }, [poolsVolumeRanges, position])
+
   useEffect(() => {
     if (!position) {
       return
@@ -327,6 +371,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           })
         )
       }}
+      plotVolumeRange={currentVolumeRange}
     />
   ) : isLoadingList ? (
     <Grid container>
