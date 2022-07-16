@@ -301,7 +301,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
             strokeWidth={1}
             y2={innerHeight}
             stroke={colors.invariant.text}
-            strokeDasharray="16 4"
+            strokeDasharray='16 4'
           />
         ) : null}
         {volumeRange.max <= plotMax ? (
@@ -312,7 +312,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
             strokeWidth={1}
             y2={innerHeight}
             stroke={colors.invariant.text}
-            strokeDasharray="16 4"
+            strokeDasharray='16 4'
           />
         ) : null}
       </>
