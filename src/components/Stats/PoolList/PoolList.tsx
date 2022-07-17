@@ -37,13 +37,13 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
       case SortType.FEE_DESC:
         return data.sort((a, b) => b.fee - a.fee)
       case SortType.VOLUME_ASC:
-        return data.sort((a, b) => a.volume - b.volume)
+        return data.sort((a, b) => (a.volume === b.volume ? a.TVL - b.TVL : a.volume - b.volume))
       case SortType.VOLUME_DESC:
-        return data.sort((a, b) => b.volume - a.volume)
+        return data.sort((a, b) => (a.volume === b.volume ? b.TVL - a.TVL : b.volume - a.volume))
       case SortType.TVL_ASC:
-        return data.sort((a, b) => a.TVL - b.TVL)
+        return data.sort((a, b) => (a.TVL === b.TVL ? a.volume - b.volume : a.TVL - b.TVL))
       case SortType.TVL_DESC:
-        return data.sort((a, b) => b.TVL - a.TVL)
+        return data.sort((a, b) => (a.TVL === b.TVL ? b.volume - a.volume : b.TVL - a.TVL))
       case SortType.APY_ASC:
         return data.sort((a, b) => a.apy - b.apy)
       case SortType.APY_DESC:
