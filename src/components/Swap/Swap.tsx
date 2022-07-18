@@ -468,7 +468,6 @@ export const Swap: React.FC<ISwap> = ({
                 ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
                 : '- -'
             }
-            key={swap?.toString()}
             decimal={tokenFromIndex !== null ? tokens[tokenFromIndex].decimals : 6}
             className={classes.amountInput}
             setValue={value => {
@@ -546,7 +545,6 @@ export const Swap: React.FC<ISwap> = ({
                 ? printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimals)
                 : '- -'
             }
-            key={tokenToIndex?.toString()}
             className={classes.amountInput}
             decimal={tokenToIndex !== null ? tokens[tokenToIndex].decimals : 6}
             setValue={value => {
