@@ -763,8 +763,8 @@ export const getCoingeckoPricesData = async (
     // eslint-disable-next-line @typescript-eslint/naming-convention
     concatRes.forEach(({ id, current_price, price_change_percentage_24h }) => {
       data[id] = {
-        price: current_price,
-        priceChange: price_change_percentage_24h
+        price: current_price ?? 0,
+        priceChange: price_change_percentage_24h ?? 0
       }
     })
 
@@ -1032,8 +1032,8 @@ export const getCoingeckoTokenPrice = async (id: string): Promise<CoingeckoPrice
     )
     .then(res => {
       return {
-        price: res.data[0].current_price,
-        priceChange: res.data[0].price_change_percentage_24h
+        price: res.data[0].current_price ?? 0,
+        priceChange: res.data[0].price_change_percentage_24h ?? 0
       }
     })
 }
