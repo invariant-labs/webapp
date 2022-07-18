@@ -122,17 +122,26 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           title={
             <>
               <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
-              <Grid container direction='row' wrap='nowrap'>
+              <Typography className={classes.liquidityDesc} style={{ marginBottom: 12 }}>
+                While selecting the price range, note where active liquidity is located. Your
+                liquidity can be inactive and, as a consequence, not generate profits.
+              </Typography>
+              <Grid
+                container
+                direction='row'
+                wrap='nowrap'
+                alignItems='center'
+                style={{ marginBottom: 12 }}>
                 <Typography className={classes.liquidityDesc}>
-                  While selecting the price range, note where active liquidity is located. Your
-                  liquidity can be inactive and, as a consequence, not generate profits. The active
-                  liquidity range is represented by white, dashed lines in the liquidity chart.
-                  Active liquidity is determined by the maximum price range resulting from the
-                  statistical volume of swaps for the last 7 days. Note: active liquidity borders
-                  are always aligned to the nearest initialized ticks.
+                  The active liquidity range is represented by white, dashed lines in the liquidity
+                  chart. Active liquidity is determined by the maximum price range resulting from
+                  the statistical volume of swaps for the last 7 days.
                 </Typography>
                 <img className={classes.liquidityImg} src={activeLiquidity} />
               </Grid>
+              <Typography className={classes.liquidityNote}>
+                Note: active liquidity borders are always aligned to the nearest initialized ticks.
+              </Typography>
             </>
           }
           placement='bottom'
