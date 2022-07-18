@@ -109,8 +109,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.35)',
     borderRadius: 20,
     padding: 16,
-    maxWidth: 360,
-    boxSizing: 'border-box'
+    maxWidth: 376,
+    boxSizing: 'border-box',
+
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: 360
+    }
   },
   liquidityTitle: {
     color: colors.invariant.text,
@@ -119,13 +123,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   liquidityDesc: {
     color: colors.invariant.text,
-    ...typography.caption2,
-    textAlign: 'justify'
+    ...typography.caption2
+  },
+  liquidityNote: {
+    color: colors.invariant.textGrey,
+    ...typography.caption2
   },
   liquidityImg: {
-    width: 88,
-    minWidth: 88,
-    height: 66,
+    width: 80,
+    minWidth: 80,
+    height: 60,
     marginLeft: 16
   }
 }))
