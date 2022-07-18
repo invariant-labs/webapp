@@ -4,59 +4,47 @@ import { colors, typography } from '@static/theme'
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes slide-down': {
     '0%': {
-      transform: 'translateY(0%)',
-      zIndex: 0
+      transform: 'translateY(0%)'
     },
     '50%': {
-      transform: 'translateY(60%)',
-      zIndex: 1
+      transform: 'translateY(60%)'
     },
     '100%': {
-      transform: 'translateY(0%)',
-      zIndex: 0
+      transform: 'translateY(0%)'
     }
   },
   '@keyframes slide-up': {
     '0%': {
-      transform: 'translateY(0%)',
-      zIndex: 1
+      transform: 'translateY(0%)'
     },
     '50%': {
-      transform: 'translateY(-80%)',
-      zIndex: 0
+      transform: 'translateY(-70%)'
     },
     '100%': {
-      transform: 'translateY(0%)',
-      zIndex: 1
+      transform: 'translateY(0%)'
     }
   },
 
   '@keyframes slide-down-xs': {
     '0%': {
-      transform: 'translateY(0%)',
-      zIndex: 0
+      transform: 'translateY(0%)'
     },
     '50%': {
-      transform: 'translateY(90%)',
-      zIndex: 1
+      transform: 'translateY(90%)'
     },
     '100%': {
-      transform: 'translateY(0%)',
-      zIndex: 0
+      transform: 'translateY(0%)'
     }
   },
   '@keyframes slide-up-xs': {
     '0%': {
-      transform: 'translateY(0%)',
-      zIndex: 1
+      transform: 'translateY(0%)'
     },
     '50%': {
-      transform: 'translateY(-110%)',
-      zIndex: 0
+      transform: 'translateY(-110%)'
     },
     '100%': {
-      transform: 'translateY(0%)',
-      zIndex: 1
+      transform: 'translateY(0%)'
     }
   },
   swapWrapper: {

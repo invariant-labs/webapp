@@ -521,7 +521,7 @@ export const Swap: React.FC<ISwap> = ({
                 const tmp = tokenFromIndex
                 setTokenFromIndex(tokenToIndex)
                 setTokenToIndex(tmp)
-              }, 150)
+              }, 50)
             }}>
             <Box className={classes.swapImgRoot}>
               <img
