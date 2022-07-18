@@ -459,7 +459,7 @@ export const Swap: React.FC<ISwap> = ({
         <Box
           className={classNames(
             classes.exchangeRoot,
-            lockAnimation && `${classes.exchangeRoot} ${classes.amountInputDown} `
+            lockAnimation ? classes.amountInputDown : undefined
           )}>
           <ExchangeAmountInput
             value={amountFrom}
@@ -536,7 +536,7 @@ export const Swap: React.FC<ISwap> = ({
           className={classNames(
             classes.exchangeRoot,
             classes.transactionBottom,
-            lockAnimation && `${classes.exchangeRoot} ${classes.amountInputUp} `
+            lockAnimation ? classes.amountInputUp : undefined
           )}>
           <ExchangeAmountInput
             value={amountTo}

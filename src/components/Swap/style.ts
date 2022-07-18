@@ -110,11 +110,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative'
   },
   amountInputDown: {
-    animation: '$slide-down .3s'
+    animation: '$slide-down .3s linear'
   },
 
   amountInputUp: {
-    animation: '$slide-up .3s'
+    animation: '$slide-up .3s linear'
   },
 
   swapArrowBox: {
