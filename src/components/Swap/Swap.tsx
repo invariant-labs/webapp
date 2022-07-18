@@ -222,7 +222,7 @@ export const Swap: React.FC<ISwap> = ({
         setThrottle(false)
       })
     }, 100)
-    timeoutRef.current = timeout
+    timeoutRef.current = timeout as unknown as number
   }
 
   useEffect(() => {
@@ -516,9 +516,11 @@ export const Swap: React.FC<ISwap> = ({
               setLockAnimation(!lockAnimation)
               setRotates(rotates + 1)
               swap !== null ? setSwap(!swap) : setSwap(true)
-              const tmp = tokenFromIndex
-              setTokenFromIndex(tokenToIndex)
-              setTokenToIndex(tmp)
+              setTimeout(() => {
+                const tmp = tokenFromIndex
+                setTokenFromIndex(tokenToIndex)
+                setTokenToIndex(tmp)
+              }, 150)
             }}>
             <Box className={classes.swapImgRoot}>
               <img
