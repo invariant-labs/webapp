@@ -4,29 +4,58 @@ import { colors, typography } from '@static/theme'
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes slide-down': {
     '0%': {
-      top: 0,
+      transform: 'translateY(0%)',
       zIndex: 0
     },
     '50%': {
-      top: 60,
+      transform: 'translateY(60%)',
       zIndex: 1
     },
     '100%': {
-      top: 0,
+      transform: 'translateY(0%)',
       zIndex: 0
     }
   },
   '@keyframes slide-up': {
     '0%': {
-      top: 0,
+      transform: 'translateY(0%)',
       zIndex: 1
     },
     '50%': {
-      top: -60,
+      transform: 'translateY(-80%)',
       zIndex: 0
     },
     '100%': {
-      top: 0,
+      transform: 'translateY(0%)',
+      zIndex: 1
+    }
+  },
+
+  '@keyframes slide-down-xs': {
+    '0%': {
+      transform: 'translateY(0%)',
+      zIndex: 0
+    },
+    '50%': {
+      transform: 'translateY(90%)',
+      zIndex: 1
+    },
+    '100%': {
+      transform: 'translateY(0%)',
+      zIndex: 0
+    }
+  },
+  '@keyframes slide-up-xs': {
+    '0%': {
+      transform: 'translateY(0%)',
+      zIndex: 1
+    },
+    '50%': {
+      transform: 'translateY(-110%)',
+      zIndex: 0
+    },
+    '100%': {
+      transform: 'translateY(0%)',
       zIndex: 1
     }
   },
@@ -116,11 +145,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative'
   },
   amountInputDown: {
-    animation: '$slide-down .3s linear'
+    animation: '$slide-down 300ms linear',
+
+    [theme.breakpoints.down('xs')]: {
+      animation: '$slide-down-xs 300ms linear'
+    }
   },
 
   amountInputUp: {
-    animation: '$slide-up .3s linear'
+    animation: '$slide-up 300ms linear',
+
+    [theme.breakpoints.down('xs')]: {
+      animation: '$slide-up-xs 300ms linear'
+    }
   },
 
   swapArrowBox: {

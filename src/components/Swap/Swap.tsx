@@ -413,7 +413,9 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   React.useEffect(() => {
-    lockAnimation && setTimeout(() => setLockAnimation(false), 305)
+    if (lockAnimation) {
+      setTimeout(() => setLockAnimation(false), 500)
+    }
   }, [lockAnimation])
 
   const swapRate =
