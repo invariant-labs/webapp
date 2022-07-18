@@ -4,24 +4,30 @@ import { colors, typography } from '@static/theme'
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes slide-down': {
     '0%': {
-      top: 0
+      top: 0,
+      zIndex: 0
     },
     '50%': {
-      top: 60
+      top: 60,
+      zIndex: 1
     },
     '100%': {
-      top: 0
+      top: 0,
+      zIndex: 0
     }
   },
   '@keyframes slide-up': {
     '0%': {
-      top: 0
+      top: 0,
+      zIndex: 1
     },
     '50%': {
-      top: -60
+      top: -60,
+      zIndex: 0
     },
     '100%': {
-      top: 0
+      top: 0,
+      zIndex: 1
     }
   },
   swapWrapper: {
