@@ -222,7 +222,7 @@ export const Swap: React.FC<ISwap> = ({
         setThrottle(false)
       })
     }, 100)
-    timeoutRef.current = timeout
+    timeoutRef.current = timeout as unknown as number
   }
 
   useEffect(() => {
@@ -413,7 +413,9 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   React.useEffect(() => {
-    lockAnimation && setTimeout(() => setLockAnimation(false), 305)
+    if (lockAnimation) {
+      setTimeout(() => setLockAnimation(false), 500)
+    }
   }, [lockAnimation])
 
   const swapRate =
@@ -459,7 +461,7 @@ export const Swap: React.FC<ISwap> = ({
         <Box
           className={classNames(
             classes.exchangeRoot,
-            lockAnimation && `${classes.exchangeRoot} ${classes.amountInputDown} `
+            lockAnimation ? classes.amountInputDown : undefined
           )}>
           <ExchangeAmountInput
             value={amountFrom}
@@ -468,7 +470,6 @@ export const Swap: React.FC<ISwap> = ({
                 ? printBN(tokens[tokenFromIndex].balance, tokens[tokenFromIndex].decimals)
                 : '- -'
             }
-            key={swap?.toString()}
             decimal={tokenFromIndex !== null ? tokens[tokenFromIndex].decimals : 6}
             className={classes.amountInput}
             setValue={value => {
@@ -516,9 +517,11 @@ export const Swap: React.FC<ISwap> = ({
               setLockAnimation(!lockAnimation)
               setRotates(rotates + 1)
               swap !== null ? setSwap(!swap) : setSwap(true)
-              const tmp = tokenFromIndex
-              setTokenFromIndex(tokenToIndex)
-              setTokenToIndex(tmp)
+              setTimeout(() => {
+                const tmp = tokenFromIndex
+                setTokenFromIndex(tokenToIndex)
+                setTokenToIndex(tmp)
+              }, 50)
             }}>
             <Box className={classes.swapImgRoot}>
               <img
@@ -535,7 +538,7 @@ export const Swap: React.FC<ISwap> = ({
           className={classNames(
             classes.exchangeRoot,
             classes.transactionBottom,
-            lockAnimation && `${classes.exchangeRoot} ${classes.amountInputUp} `
+            lockAnimation ? classes.amountInputUp : undefined
           )}>
           <ExchangeAmountInput
             value={amountTo}
@@ -544,7 +547,6 @@ export const Swap: React.FC<ISwap> = ({
                 ? printBN(tokens[tokenToIndex].balance, tokens[tokenToIndex].decimals)
                 : '- -'
             }
-            key={tokenToIndex?.toString()}
             className={classes.amountInput}
             decimal={tokenToIndex !== null ? tokens[tokenToIndex].decimals : 6}
             setValue={value => {
