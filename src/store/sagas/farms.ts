@@ -39,6 +39,7 @@ import { getConnection } from './connection'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import {
+  getFullNewTokensData,
   getIncentivesRewardData,
   getPoolsAPY,
   getPositionsForPool,
@@ -141,12 +142,14 @@ export function* handleGetFarmsList() {
     const list = yield* call([stakerProgram, stakerProgram.getAllIncentive])
 
     const currentNetwork = yield* select(network)
+    const allTokens = yield* select(tokens)
     const poolsApy = yield* call(getPoolsAPY, currentNetwork.toLowerCase())
     const incentivesApy = yield* call(getIncentivesRewardData, currentNetwork.toLowerCase())
 
     const farmsObject: Record<string, ExtendedIncentive> = {}
 
     const poolsKeys: string[] = []
+    const unknownTokens = new Set<PublicKey>()
 
     const promises = list.map(async incentive => {
       poolsKeys.push(incentive.pool.toString())
@@ -159,6 +162,10 @@ export function* handleGetFarmsList() {
           .parsed.info.mint
       } else {
         rewardToken = new PublicKey(incentivesApy[incentive.publicKey.toString()].token)
+      }
+
+      if (!allTokens[rewardToken.toString()]) {
+        unknownTokens.add(rewardToken)
       }
 
       const now = Date.now() / 1000
@@ -178,6 +185,9 @@ export function* handleGetFarmsList() {
     yield* call(async () => {
       await Promise.all(promises)
     })
+
+    const newTokens = yield* call(getFullNewTokensData, [...unknownTokens], connection)
+    yield* put(poolsActions.addTokens(newTokens))
 
     yield* put(
       poolsActions.getPoolsDataForList({
