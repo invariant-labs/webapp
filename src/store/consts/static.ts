@@ -149,7 +149,7 @@ export const HBB_DEV: Token = {
 enum SolanaNetworks {
   DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',
-  MAIN = 'https://rpc.nightly.app:8899',
+  MAIN = 'https://api.mainnet-beta.solana.com',
   MAIN_SERUM = 'https://solana-api.projectserum.com',
   MAIN_FIGMENT = 'https://solana--mainnet.datahub.figment.io/apikey/182e93d87a1f1d335c9d74d6c7371388',
   MAIN_GENESYSGO = 'https://ssc-dao.genesysgo.net',
@@ -296,7 +296,14 @@ export const bestTiers: Record<NetworkType, BestTier[]> = {
 }
 
 export const commonTokensForNetworks: Record<NetworkType, PublicKey[]> = {
-  Devnet: [USDC_DEV.address, USDT_DEV.address, BTC_DEV.address, WSOL_DEV.address, MSOL_DEV.address, USDH_DEV.address],
+  Devnet: [
+    USDC_DEV.address,
+    USDT_DEV.address,
+    BTC_DEV.address,
+    WSOL_DEV.address,
+    MSOL_DEV.address,
+    USDH_DEV.address
+  ],
   Mainnet: [
     new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
     new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'),
