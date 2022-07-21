@@ -296,7 +296,7 @@ export const bestTiers: Record<NetworkType, BestTier[]> = {
 }
 
 export const commonTokensForNetworks: Record<NetworkType, PublicKey[]> = {
-  Devnet: [USDC_DEV.address, USDT_DEV.address, BTC_DEV.address, WSOL_DEV.address, MSOL_DEV.address],
+  Devnet: [USDC_DEV.address, USDT_DEV.address, BTC_DEV.address, WSOL_DEV.address, MSOL_DEV.address, USDH_DEV.address],
   Mainnet: [
     new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
     new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'),
