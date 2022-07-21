@@ -126,6 +126,26 @@ export const VEMC2_DEV: Token = {
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png'
 }
 
+export const USDH_DEV: Token = {
+  symbol: 'USDH',
+  address: new PublicKey('41dDByBv1Z6mCHCp4FJeZNP8MPiviUpFz2AdzJYRszzv'),
+  decimals: 6,
+  name: 'USDH',
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX/usdh.svg',
+  coingeckoId: 'usdh'
+}
+
+export const HBB_DEV: Token = {
+  symbol: 'HBB',
+  address: new PublicKey('EBuKgNDiUonDYML2CZXCRQKnE982hnt6AhaxXVZZoCyo'),
+  decimals: 6,
+  name: 'Hubble',
+  logoURI:
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/HBB111SCo9jkCejsZfz8Ec8nH7T6THF8KEKSnvwT6XK6/logo.svg',
+  coingeckoId: 'hubble'
+}
+
 enum SolanaNetworks {
   DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',
@@ -301,7 +321,8 @@ export const airdropTokens: Record<NetworkType, PublicKey[]> = {
     RENDOGE_DEV.address,
     MCK_DEV.address,
     MC2_DEV.address,
-    MC3_DEV.address
+    MC3_DEV.address,
+    USDH_DEV.address
   ],
   Mainnet: [],
   Testnet: [],
@@ -318,7 +339,8 @@ export const airdropQuantities: Record<NetworkType, number[]> = {
     700 * 10 ** RENDOGE_DEV.decimals,
     100 * 10 ** MCK_DEV.decimals,
     100 * 10 ** MC2_DEV.decimals,
-    100 * 10 ** MC3_DEV.decimals
+    100 * 10 ** MC3_DEV.decimals,
+    100 * 10 ** USDH_DEV.decimals
   ],
   Mainnet: [],
   Testnet: [],
