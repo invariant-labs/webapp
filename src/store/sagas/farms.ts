@@ -156,7 +156,7 @@ export function* handleGetFarmsList() {
 
       let rewardToken: PublicKey
 
-      if (typeof incentivesApy?.[incentive.publicKey.toString()] === 'undefined') {
+      if (typeof incentivesApy?.[incentive.publicKey.toString()]?.token === 'undefined') {
         const info = await connection.getParsedAccountInfo(incentive.tokenAccount)
         rewardToken = (info as RpcResponseAndContext<AccountInfo<ParsedAccountData>>).value.data
           .parsed.info.mint
