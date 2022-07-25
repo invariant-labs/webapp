@@ -162,40 +162,32 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
             <img src={loader} style={{ width: 150, height: 150, margin: 'auto' }} />
           ) : totalPositions > 0 ? (
             <>
-              <Typography className={classes.listHeader}>Your staked positions</Typography>
-
               {stakedPositions.length ? (
-                stakedPositions.map((element, index) => (
-                  <div className={classes.tile}>
-                    <RewardsTile
-                      key={index}
-                      {...element}
-                      xToY={xToY}
-                      showRewardsLoader={isLoadingRangeTicks}
-                    />
-                  </div>
-                ))
-              ) : (
-                <EmptyPlaceholder
-                  desc='You have no positions staked on this farm'
-                  className={classes.empty}
-                />
-              )}
-
-              <Typography className={classes.listHeader}>Positions to stake</Typography>
+                <>
+                  <Typography className={classes.listHeader}>Your staked positions</Typography>
+                  {stakedPositions.map((element, index) => (
+                    <div className={classes.tile}>
+                      <RewardsTile
+                        key={index}
+                        {...element}
+                        xToY={xToY}
+                        showRewardsLoader={isLoadingRangeTicks}
+                      />
+                    </div>
+                  ))}
+                </>
+              ) : null}
 
               {toStake.length ? (
-                toStake.map((element, index) => (
-                  <div className={classes.tile}>
-                    <StakeTile key={index} {...element} xToY={xToY} />
-                  </div>
-                ))
-              ) : (
-                <EmptyPlaceholder
-                  desc='You have no more positions available to stake on this farm'
-                  className={classes.empty}
-                />
-              )}
+                <>
+                  <Typography className={classes.listHeader}>Positions to stake</Typography>
+                  {toStake.map((element, index) => (
+                    <div className={classes.tile}>
+                      <StakeTile key={index} {...element} xToY={xToY} />
+                    </div>
+                  ))}
+                </>
+              ) : null}
             </>
           ) : (
             <EmptyPlaceholder
