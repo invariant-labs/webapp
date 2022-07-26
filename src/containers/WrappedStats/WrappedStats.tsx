@@ -132,7 +132,8 @@ export const WrappedStats: React.FC = () => {
               apy: poolData.apy + (accumulatedFarmsAPY?.[poolData.poolAddress.toString()] ?? 0),
               apyData: {
                 Fees: poolData.apy,
-                ...(typeof accumulatedFarmsAPY?.[poolData.poolAddress.toString()] !== 'undefined'
+                ...(typeof accumulatedFarmsAPY?.[poolData.poolAddress.toString()] !== 'undefined' &&
+                accumulatedFarmsAPY[poolData.poolAddress.toString()] > 0
                   ? {
                       'All farms rewards': accumulatedFarmsAPY[poolData.poolAddress.toString()]
                     }
