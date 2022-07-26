@@ -597,7 +597,7 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
       ? tokensAccounts[rewardToken.toString()].address
       : null
     if (ownerTokenAcc === null) {
-      ownerTokenAcc = yield* call(createAccount, rewardToken)
+      ownerTokenAcc = yield* call(createAccount, new PublicKey(rewardToken.toString()))
     }
 
     const stringTx = yield* call(
