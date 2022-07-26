@@ -21,6 +21,7 @@ export interface TokenStatsData {
 }
 
 export interface PoolStatsData {
+  poolAddress: PublicKey
   tokenX: PublicKey
   tokenY: PublicKey
   fee: number

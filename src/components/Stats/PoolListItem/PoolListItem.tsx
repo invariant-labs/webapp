@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Typography, Box, useMediaQuery } from '@material-ui/core'
+import { Grid, Typography, Box, useMediaQuery, Tooltip } from '@material-ui/core'
 import { theme } from '@static/theme'
 import { formatNumbers, showPrefix } from '@consts/utils'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -33,6 +33,7 @@ interface IProps {
   onSort?: (type: SortType) => void
   hideBottomLine?: boolean
   apy?: number
+  apyData?: Record<string, number>
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -48,7 +49,8 @@ const PoolListItem: React.FC<IProps> = ({
   sortType,
   onSort,
   hideBottomLine = false,
-  apy = 0
+  apy = 0,
+  apyData = {}
 }) => {
   const classes = useStyle()
 
@@ -75,7 +77,32 @@ const PoolListItem: React.FC<IProps> = ({
               </Typography>
             </Grid>
           </Grid>
-          {!isXs ? <Typography>{`${apy > 1000 ? '>1000' : apy.toFixed(2)}%`}</Typography> : null}
+          {!isXs ? (
+            <Typography>
+              {`${apy > 1000 ? '>1000' : apy.toFixed(2)}%`}
+              <Tooltip
+                title={
+                  <>
+                    <Typography className={classes.liquidityTitle}>Pool APY</Typography>
+                    <Typography className={classes.liquidityDesc}>
+                      {Object.entries(apyData).map(([label, value], index) => (
+                        <>
+                          {index > 0 ? '+ ' : ''}
+                          {label}: {`${value > 1000 ? '>1000' : value.toFixed(2)}%`}
+                          <br />
+                        </>
+                      ))}
+                    </Typography>
+                  </>
+                }
+                placement='bottom'
+                classes={{
+                  tooltip: classes.liquidityTooltip
+                }}>
+                <div className={classes.activeLiquidityIcon}>i</div>
+              </Tooltip>
+            </Typography>
+          ) : null}
           <Typography>{fee}%</Typography>
           <Typography>{`$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}</Typography>
           <Typography>{`$${formatNumbers()(TVL.toString())}${showPrefix(TVL)}`}</Typography>
