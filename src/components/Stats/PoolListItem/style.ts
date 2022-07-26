@@ -96,7 +96,7 @@ const useStyle = makeStyles(() => ({
     boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.35)',
     borderRadius: 20,
     padding: 16,
-    maxWidth: 250,
+    maxWidth: 350,
     boxSizing: 'border-box'
   },
   liquidityTitle: {

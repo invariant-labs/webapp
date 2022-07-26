@@ -85,8 +85,9 @@ const PoolListItem: React.FC<IProps> = ({
                   <>
                     <Typography className={classes.liquidityTitle}>Pool APY</Typography>
                     <Typography className={classes.liquidityDesc}>
-                      {Object.entries(apyData).map(([label, value]) => (
+                      {Object.entries(apyData).map(([label, value], index) => (
                         <>
+                          {index > 0 ? '+ ' : ''}
                           {label}: {`${value > 1000 ? '>1000' : value.toFixed(2)}%`}
                           <br />
                         </>

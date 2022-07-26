@@ -125,7 +125,8 @@ export function* getStats(): Generator {
           tokenX: poolsDataObject[address].tokenX,
           tokenY: poolsDataObject[address].tokenY,
           fee: +printBN(poolsDataObject[address].fee.v, DECIMAL - 2),
-          apy: poolsApy[address] ?? 0
+          apy: poolsApy[address] ?? 0,
+          poolAddress: new PublicKey(address)
         })
         return
       }
@@ -158,7 +159,8 @@ export function* getStats(): Generator {
         tokenX: poolsDataObject[address].tokenX,
         tokenY: poolsDataObject[address].tokenY,
         fee: +printBN(poolsDataObject[address].fee.v, DECIMAL - 2),
-        apy: poolsApy[address] ?? 0
+        apy: poolsApy[address] ?? 0,
+        poolAddress: new PublicKey(address)
       })
 
       snapshots.slice(-30).forEach(snapshot => {
