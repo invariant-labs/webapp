@@ -66,7 +66,9 @@ export const WrappedStats: React.FC = () => {
         acc[farm.pool.toString()] = 0
       }
 
-      acc[farm.pool.toString()] += farm.apy - (poolsObject[farm.pool.toString()]?.apy ?? 0)
+      if (farm.apy > 0) {
+        acc[farm.pool.toString()] += farm.apy - (poolsObject[farm.pool.toString()]?.apy ?? 0)
+      }
     })
 
     return acc
