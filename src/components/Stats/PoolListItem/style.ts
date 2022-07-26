@@ -75,6 +75,38 @@ const useStyle = makeStyles(() => ({
     [theme.breakpoints.down('sm')]: {
       marginLeft: -4
     }
+  },
+  activeLiquidityIcon: {
+    marginLeft: 5,
+    height: 14,
+    width: 14,
+    border: '1px solid #FFFFFF',
+    color: colors.invariant.text,
+    borderRadius: '50%',
+    fontSize: 10,
+    lineHeight: '10px',
+    fontWeight: 400,
+    textAlign: 'center',
+    boxSizing: 'border-box',
+    paddingTop: 1,
+    cursor: 'pointer'
+  },
+  liquidityTooltip: {
+    background: colors.invariant.component,
+    boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.35)',
+    borderRadius: 20,
+    padding: 16,
+    maxWidth: 250,
+    boxSizing: 'border-box'
+  },
+  liquidityTitle: {
+    color: colors.invariant.text,
+    ...typography.heading4,
+    marginBottom: 8
+  },
+  liquidityDesc: {
+    color: colors.invariant.text,
+    ...typography.caption1
   }
 }))
 

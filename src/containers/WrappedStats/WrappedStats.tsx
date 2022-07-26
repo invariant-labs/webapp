@@ -93,7 +93,10 @@ export const WrappedStats: React.FC = () => {
               volume: poolData.volume24,
               TVL: poolData.tvl,
               fee: poolData.fee,
-              apy: poolData.apy
+              apy: poolData.apy,
+              apyData: {
+                Fees: poolData.apy
+              }
             }))}
           />
         </>
