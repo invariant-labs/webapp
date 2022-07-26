@@ -17,7 +17,10 @@ storiesOf('stats/PoolList', module).add('PoolList', () => {
           volume: 421323423.23,
           TVL: 234413532.43,
           fee: 0.05,
-          apy: 3554245444
+          apy: 3554245444,
+          apyData: {
+            Fees: 21.37
+          }
         }
       })
   )
