@@ -587,7 +587,7 @@ export const handleSimulate = async (
         ticks: ticks,
         tickmap: tickmaps[pool.tickmap.toString()]
       })
-      if (swapSimulateResult.amountPerTick.length >= 8) {
+      if (swapSimulateResult.amountPerTick.length > 19) {
         errorMessage.push('Too large amount')
       }
 
@@ -599,7 +599,7 @@ export const handleSimulate = async (
       if (
         (byAmountIn ? successData.amountOut.lt(result) : successData.amountOut.gt(result)) &&
         swapSimulateResult.status === SimulationStatus.Ok &&
-        swapSimulateResult.amountPerTick.length < 8
+        swapSimulateResult.amountPerTick.length <= 19
       ) {
         successData = {
           amountOut: result,
