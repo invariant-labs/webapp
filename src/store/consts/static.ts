@@ -174,7 +174,7 @@ const MAINNET_RPCS = [
   //   probability: 0.5
   // }
   {
-    rpc: SolanaNetworks.MAIN,
+    rpc: SolanaNetworks.MAIN_NIGHTLY,
     probability: 1
   }
 ]
