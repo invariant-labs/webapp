@@ -14,6 +14,7 @@ interface PoolListInterface {
     TVL: number
     fee: number
     apy: number
+    apyData: Record<string, number>
   }>
 }
 
@@ -83,6 +84,7 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
           fee={element.fee}
           apy={element.apy}
           hideBottomLine={pages === 1 && index + 1 === data.length}
+          apyData={element.apyData}
         />
       ))}
       {pages > 1 ? (

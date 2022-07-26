@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Grid, Typography } from '@material-ui/core'
 import Liquidity from '@components/Stats/Liquidity/Liquidity'
 import Volume from '@components/Stats/Volume/Volume'
@@ -19,6 +19,8 @@ import {
 import { actions } from '@reducers/stats'
 import loader from '@static/gif/loader.gif'
 import useStyles from './styles'
+import { farms } from '@selectors/farms'
+import { actions as farmsActions } from '@reducers/farms'
 
 export const WrappedStats: React.FC = () => {
   const classes = useStyles()
@@ -33,10 +35,44 @@ export const WrappedStats: React.FC = () => {
   const volumePlotData = useSelector(volumePlot)
   const liquidityPlotData = useSelector(liquidityPlot)
   const isLoadingStats = useSelector(isLoading)
+  const allFarms = useSelector(farms)
+
+  useEffect(() => {
+    if (tokensList.length > 0 && Object.values(allFarms).length === 0) {
+      dispatch(farmsActions.getFarms())
+    }
+  }, [tokensList.length])
 
   useEffect(() => {
     dispatch(actions.getCurrentStats())
   }, [])
+
+  const accumulatedFarmsAPY = useMemo(() => {
+    const poolsObject: Record<
+      string,
+      {
+        apy: number
+      }
+    > = {}
+
+    poolsList.forEach(data => {
+      poolsObject[data.poolAddress.toString()] = data
+    })
+
+    const acc: Record<string, number> = {}
+
+    Object.values(allFarms).forEach(farm => {
+      if (!acc[farm.pool.toString()]) {
+        acc[farm.pool.toString()] = 0
+      }
+
+      if (farm.apy > 0) {
+        acc[farm.pool.toString()] += farm.apy - (poolsObject[farm.pool.toString()]?.apy ?? 0)
+      }
+    })
+
+    return acc
+  }, [poolsList, allFarms])
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
@@ -93,7 +129,16 @@ export const WrappedStats: React.FC = () => {
               volume: poolData.volume24,
               TVL: poolData.tvl,
               fee: poolData.fee,
-              apy: poolData.apy
+              apy: poolData.apy + (accumulatedFarmsAPY?.[poolData.poolAddress.toString()] ?? 0),
+              apyData: {
+                Fees: poolData.apy,
+                ...(typeof accumulatedFarmsAPY?.[poolData.poolAddress.toString()] !== 'undefined' &&
+                accumulatedFarmsAPY[poolData.poolAddress.toString()] > 0
+                  ? {
+                      'All farms rewards': accumulatedFarmsAPY[poolData.poolAddress.toString()]
+                    }
+                  : {})
+              }
             }))}
           />
         </>

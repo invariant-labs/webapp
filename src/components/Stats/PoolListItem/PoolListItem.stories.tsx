@@ -18,6 +18,9 @@ storiesOf('stats/PoolListItem', module)
         TVL={234413532.43}
         fee={0.05}
         apy={300}
+        apyData={{
+          Fees: 300
+        }}
       />
     )
   })
