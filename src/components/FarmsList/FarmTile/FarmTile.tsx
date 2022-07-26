@@ -156,7 +156,10 @@ export const FarmTile: React.FC<IProps> = ({
         </Typography>
       </Grid>
       <Link className={classes.link} to={`/farm/${farmId}`}>
-        <OutlinedButton className={classes.button} disabled={!isActive} name='Details' />
+        <OutlinedButton
+          className={classNames(classes.button, !isActive ? classes.disabled : undefined)}
+          name='Details'
+        />
       </Link>
     </Grid>
   )
