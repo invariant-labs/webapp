@@ -186,7 +186,7 @@ export const PoolInit: React.FC<IPoolInit> = ({
 
               changeRangeHandler(newLeft, rightRange)
             }}
-            diffLabel='Min/Current price difference:'
+            diffLabel='Min - Current price'
             percentDiff={((+leftInput - price) / price) * 100}
           />
           <RangeInput
@@ -220,7 +220,7 @@ export const PoolInit: React.FC<IPoolInit> = ({
                   )
               changeRangeHandler(leftRange, newRight)
             }}
-            diffLabel='Max/Current price difference:'
+            diffLabel='Max - Current price'
             percentDiff={((+rightInput - price) / price) * 100}
           />
         </Grid>
