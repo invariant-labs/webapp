@@ -112,13 +112,19 @@ export const RangeInput: React.FC<IRangeInput> = ({
           </Button>
         )}
       </Grid>
-      <Grid container direction='row' alignItems='center' wrap='nowrap'>
-        <Typography className={classes.diffLabel}>{diffLabel}</Typography>
+      <Grid
+        className={classes.diffWrapper}
+        container
+        direction='row'
+        alignItems='center'
+        wrap='nowrap'>
+        <Grid className={classes.diffLabelWrapper}>
+          <Typography className={classes.diffLabel}>{diffLabel}</Typography>
+        </Grid>
         <Typography
           className={classes.diff}
           style={{
-            color: percentDiff >= 0 ? colors.invariant.green : colors.invariant.Error,
-            backgroundColor: percentDiff >= 0 ? 'rgba(46, 224, 149,0.2)' : 'rgba(251,85,95,0.2)'
+            color: percentDiff >= 0 ? colors.invariant.green : colors.invariant.Error
           }}>
           {percentDiff >= 0 ? '+' : ''}
           {(percentDiff ?? 0).toFixed(2)}%

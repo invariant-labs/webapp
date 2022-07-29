@@ -439,7 +439,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               changeRangeHandler(newLeft, rightRange)
               autoZoomHandler(newLeft, rightRange)
             }}
-            diffLabel='Min/Current price difference:'
+            diffLabel='Min - Current price'
             percentDiff={((+leftInput - midPrice.x) / midPrice.x) * 100}
           />
           <RangeInput
@@ -477,7 +477,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               changeRangeHandler(leftRange, newRight)
               autoZoomHandler(leftRange, newRight)
             }}
-            diffLabel='Max/Current price difference:'
+            diffLabel='Max - Current price'
             percentDiff={((+rightInput - midPrice.x) / midPrice.x) * 100}
           />
         </Grid>
