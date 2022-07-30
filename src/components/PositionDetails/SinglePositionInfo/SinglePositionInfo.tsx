@@ -1,7 +1,9 @@
+import ClosePositionWarning from '@components/Modals/ClosePositionWarning/ClosePositionWarning'
+import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Button, Grid, Hidden, Typography } from '@material-ui/core'
 import icons from '@static/icons'
 import classNames from 'classnames'
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { BoxInfo } from './BoxInfo'
 import { ILiquidityToken } from './consts'
@@ -10,12 +12,13 @@ import useStyles from './style'
 interface IProp {
   fee: number
   onClickClaimFee: () => void
-  closePosition: () => void
+  closePosition: (claimFarmRewards?: boolean) => void
   tokenX: ILiquidityToken
   tokenY: ILiquidityToken
   xToY: boolean
   swapHandler: () => void
   showFeesLoader?: boolean
+  userHasStakes?: boolean
 }
 
 const SinglePositionInfo: React.FC<IProp> = ({
@@ -26,12 +29,31 @@ const SinglePositionInfo: React.FC<IProp> = ({
   tokenY,
   xToY,
   swapHandler,
-  showFeesLoader = false
+  showFeesLoader = false,
+  userHasStakes = false
 }) => {
   const history = useHistory()
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const classes = useStyles()
   return (
     <Grid className={classes.root}>
+      <ClosePositionWarning
+        open={isModalOpen}
+        onCancel={() => {
+          setIsModalOpen(false)
+          unblurContent()
+        }}
+        onClose={() => {
+          closePosition()
+          setIsModalOpen(false)
+          unblurContent()
+        }}
+        onClaim={() => {
+          closePosition(true)
+          setIsModalOpen(false)
+          unblurContent()
+        }}
+      />
       <Grid className={classes.header}>
         <Grid className={classes.iconsGrid}>
           <img
@@ -60,7 +82,17 @@ const SinglePositionInfo: React.FC<IProp> = ({
         </Grid>
 
         <Grid className={classes.headerButtons}>
-          <Button className={classes.closeButton} variant='contained' onClick={closePosition}>
+          <Button
+            className={classes.closeButton}
+            variant='contained'
+            onClick={() => {
+              if (!userHasStakes) {
+                closePosition()
+              } else {
+                setIsModalOpen(true)
+                blurContent()
+              }
+            }}>
             Close position
           </Button>
           <Hidden smUp>

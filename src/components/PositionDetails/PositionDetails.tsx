@@ -18,7 +18,7 @@ interface IProps {
   tokenX: ILiquidityToken
   tokenY: ILiquidityToken
   onClickClaimFee: () => void
-  closePosition: () => void
+  closePosition: (claimFarmRewards?: boolean) => void
   ticksLoading: boolean
   tickSpacing: number
   fee: number
@@ -33,6 +33,7 @@ interface IProps {
     min: number
     max: number
   }
+  userHasStakes?: boolean
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -55,7 +56,8 @@ const PositionDetails: React.FC<IProps> = ({
   showFeesLoader = false,
   hasTicksError,
   reloadHandler,
-  plotVolumeRange
+  plotVolumeRange,
+  userHasStakes = false
 }) => {
   const classes = useStyles()
 
@@ -82,6 +84,7 @@ const PositionDetails: React.FC<IProps> = ({
           xToY={xToY}
           swapHandler={() => setXToY(!xToY)}
           showFeesLoader={showFeesLoader}
+          userHasStakes={userHasStakes}
         />
       </Grid>
       <Grid
