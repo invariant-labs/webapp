@@ -280,7 +280,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         y={0}
         width={2}
         height={innerHeight}
-        fill={colors.invariant.light}
+        fill={colors.invariant.yellow}
       />
     )
   }

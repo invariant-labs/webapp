@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: 30
   },
   plotWrapper: {
-    paddingBottom: 39
+    paddingBottom: 29
   },
   minMaxInfo: {
     display: 'grid',
@@ -134,6 +134,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 80,
     height: 60,
     marginLeft: 16
+  },
+  currentPrice: {
+    color: colors.invariant.yellow,
+    ...typography.caption2,
+    textAlign: 'right'
   }
 }))
 

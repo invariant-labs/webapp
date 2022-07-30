@@ -99,19 +99,32 @@ const useStyles = makeStyles((theme: Theme) => ({
       ...typography.caption2
     }
   },
+  diffWrapper: {
+    borderRadius: 11,
+    height: 36,
+    backgroundColor: colors.invariant.black
+  },
+  diffLabelWrapper: {
+    borderRadius: 11,
+    height: 36,
+    backgroundColor: colors.invariant.light,
+    display: 'flex',
+    alignItems: 'center',
+    paddingInline: 10
+  },
   diffLabel: {
     ...typography.caption2,
-    color: colors.invariant.textGrey,
+    color: colors.invariant.text,
     width: 'fit-content',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap'
   },
   diff: {
-    ...typography.caption3,
+    ...typography.body1,
     padding: 3,
     borderRadius: 5,
-    marginLeft: 5,
+    marginInline: 'auto',
     flex: '0 0 auto'
   }
 }))
