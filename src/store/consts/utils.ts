@@ -32,7 +32,7 @@ import {
 import mainnetList from './tokenLists/mainnet.json'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import { PoolWithAddress } from '@reducers/pools'
-import { Market, Tickmap } from '@invariant-labs/sdk/lib/market'
+import { Market, Tickmap, TICK_CROSSES_PER_IX } from '@invariant-labs/sdk/lib/market'
 import axios, { AxiosResponse } from 'axios'
 import { getMaxTick, getMinTick, Range } from '@invariant-labs/sdk/lib/utils'
 import { Staker } from '@invariant-labs/staker-sdk'
@@ -587,7 +587,7 @@ export const handleSimulate = async (
         ticks: ticks,
         tickmap: tickmaps[pool.tickmap.toString()]
       })
-      if (swapSimulateResult.amountPerTick.length >= 8) {
+      if (swapSimulateResult.amountPerTick.length > TICK_CROSSES_PER_IX) {
         errorMessage.push('Too large amount')
       }
 
@@ -599,7 +599,7 @@ export const handleSimulate = async (
       if (
         (byAmountIn ? successData.amountOut.lt(result) : successData.amountOut.gt(result)) &&
         swapSimulateResult.status === SimulationStatus.Ok &&
-        swapSimulateResult.amountPerTick.length < 8
+        swapSimulateResult.amountPerTick.length <= TICK_CROSSES_PER_IX
       ) {
         successData = {
           amountOut: result,

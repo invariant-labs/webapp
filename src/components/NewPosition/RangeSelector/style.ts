@@ -25,12 +25,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   plot: {
     width: '100%',
-    height: 190
+    height: 185
   },
   subheader: {
     ...typography.heading4,
-    marginBlock: 16,
-    color: colors.white.main
+    marginBottom: 10,
+    color: colors.white.main,
+    [theme.breakpoints.down('sm')]: {
+      marginBlock: 16
+    }
   },
   inputs: {
     marginBottom: 8,
@@ -81,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       right: 0,
       zIndex: 11,
       width: '100%',
-      height: 535,
+      height: 555,
       borderRadius: 9
     },
 
@@ -206,6 +209,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 80,
     height: 60,
     marginLeft: 16
+  },
+  currentPrice: {
+    color: colors.invariant.yellow,
+    ...typography.caption2,
+    textAlign: 'right'
   }
 }))
 

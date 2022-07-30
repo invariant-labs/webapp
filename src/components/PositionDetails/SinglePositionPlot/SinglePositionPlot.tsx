@@ -118,40 +118,44 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         />
       </Grid>
       <Grid className={classes.infoRow} container justifyContent='flex-end'>
-        <Tooltip
-          title={
-            <>
-              <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
-              <Typography className={classes.liquidityDesc} style={{ marginBottom: 12 }}>
-                While selecting the price range, note where active liquidity is located. Your
-                liquidity can be inactive and, as a consequence, not generate profits.
-              </Typography>
-              <Grid
-                container
-                direction='row'
-                wrap='nowrap'
-                alignItems='center'
-                style={{ marginBottom: 12 }}>
-                <Typography className={classes.liquidityDesc}>
-                  The active liquidity range is represented by white, dashed lines in the liquidity
-                  chart. Active liquidity is determined by the maximum price range resulting from
-                  the statistical volume of swaps for the last 7 days.
+        <Grid>
+          <Tooltip
+            title={
+              <>
+                <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
+                <Typography className={classes.liquidityDesc} style={{ marginBottom: 12 }}>
+                  While selecting the price range, note where active liquidity is located. Your
+                  liquidity can be inactive and, as a consequence, not generate profits.
                 </Typography>
-                <img className={classes.liquidityImg} src={activeLiquidity} />
-              </Grid>
-              <Typography className={classes.liquidityNote}>
-                Note: active liquidity borders are always aligned to the nearest initialized ticks.
-              </Typography>
-            </>
-          }
-          placement='bottom'
-          classes={{
-            tooltip: classes.liquidityTooltip
-          }}>
-          <Typography className={classes.activeLiquidity}>
-            Active liquidity <div className={classes.activeLiquidityIcon}>i</div>
-          </Typography>
-        </Tooltip>
+                <Grid
+                  container
+                  direction='row'
+                  wrap='nowrap'
+                  alignItems='center'
+                  style={{ marginBottom: 12 }}>
+                  <Typography className={classes.liquidityDesc}>
+                    The active liquidity range is represented by white, dashed lines in the
+                    liquidity chart. Active liquidity is determined by the maximum price range
+                    resulting from the statistical volume of swaps for the last 7 days.
+                  </Typography>
+                  <img className={classes.liquidityImg} src={activeLiquidity} />
+                </Grid>
+                <Typography className={classes.liquidityNote}>
+                  Note: active liquidity borders are always aligned to the nearest initialized
+                  ticks.
+                </Typography>
+              </>
+            }
+            placement='bottom'
+            classes={{
+              tooltip: classes.liquidityTooltip
+            }}>
+            <Typography className={classes.activeLiquidity}>
+              Active liquidity <div className={classes.activeLiquidityIcon}>i</div>
+            </Typography>
+          </Tooltip>
+          <Typography className={classes.currentPrice}>Current price</Typography>
+        </Grid>
       </Grid>
       <Grid className={classes.plotWrapper}>
         <PriceRangePlot
