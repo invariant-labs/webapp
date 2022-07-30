@@ -60,6 +60,7 @@ export interface GetCurrentTicksData {
 
 export interface ClosePositionData {
   positionIndex: number
+  claimFarmRewards?: boolean
   onSuccess: () => void
 }
 

@@ -23,7 +23,6 @@ export interface ExtendedIncentive extends IncentiveStructure {
 
 export interface ExtendedStake extends Stake {
   address: PublicKey
-  position: PublicKey
 }
 
 export interface FarmTotalsUpdate {

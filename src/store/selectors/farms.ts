@@ -159,6 +159,11 @@ export const singleFarmData = (farmAddress: string) =>
     }
   })
 
+export const stakesForPosition = (positionAddress: PublicKey) =>
+  createSelector(userStakes, stakes =>
+    Object.values(stakes).filter(stake => stake.position.equals(positionAddress))
+  )
+
 export const farmsSelectors = {
   farms,
   isLoadingFarms,

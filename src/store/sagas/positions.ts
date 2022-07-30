@@ -24,6 +24,7 @@ import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { positionsWithPoolsData, singlePositionData } from '@selectors/positions'
 import { GuardPredicate } from '@redux-saga/types'
+import { createClaimAllPositionRewardsTx } from './farms'
 
 export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
   try {
@@ -738,7 +739,15 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       userTokenY
     })
 
-    const tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
+    let tx: Transaction
+
+    if (data.claimFarmRewards) {
+      const claimTx = yield* call(createClaimAllPositionRewardsTx, data.positionIndex)
+
+      tx = claimTx.add(createIx).add(initIx).add(ix).add(unwrapIx)
+    } else {
+      tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
+    }
 
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
@@ -832,7 +841,15 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       userTokenY
     })
 
-    const tx = new Transaction().add(ix)
+    let tx: Transaction
+
+    if (action.payload.claimFarmRewards) {
+      const claimTx = yield* call(createClaimAllPositionRewardsTx, action.payload.positionIndex)
+
+      tx = claimTx.add(ix)
+    } else {
+      tx = new Transaction().add(ix)
+    }
 
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
