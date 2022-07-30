@@ -691,19 +691,16 @@ export function* createClaimAllPositionRewardsTx(positionIndex: number) {
       ownerTokenAcc = yield* call(createAccount, new PublicKey(rewardToken.toString()))
     }
 
-    const withdrawIx = yield* call(
-      [stakerProgram, stakerProgram.withdrawIx],
-      {
-        pool: positionData.pool,
-        id: positionData.id,
-        position: positionData.address,
-        incentive: stake.incentive,
-        owner: wallet.publicKey,
-        index: positionData.positionIndex,
-        incentiveTokenAccount: allFarms[stake.incentive.toString()].tokenAccount,
-        ownerTokenAcc
-      }
-    )
+    const withdrawIx = yield* call([stakerProgram, stakerProgram.withdrawIx], {
+      pool: positionData.pool,
+      id: positionData.id,
+      position: positionData.address,
+      incentive: stake.incentive,
+      owner: wallet.publicKey,
+      index: positionData.positionIndex,
+      incentiveTokenAccount: allFarms[stake.incentive.toString()].tokenAccount,
+      ownerTokenAcc
+    })
 
     tx = tx.add(withdrawIx)
   }
