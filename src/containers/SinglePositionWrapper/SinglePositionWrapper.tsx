@@ -23,7 +23,11 @@ import { calculateClaimAmount, DECIMAL } from '@invariant-labs/sdk/src/utils'
 import { getX, getY, MAX_TICK } from '@invariant-labs/sdk/lib/math'
 import loader from '@static/gif/loader.gif'
 import useStyles from './style'
-import { volumeRanges } from '@selectors/pools'
+import { hasTokens, volumeRanges } from '@selectors/pools'
+import { hasFarms, hasUserStakes, stakesForPosition } from '@selectors/farms'
+import { actions as farmsActions } from '@reducers/farms'
+import { Status } from '@reducers/solanaWallet'
+import { status } from '@selectors/solanaWallet'
 
 export interface IProps {
   id: string
@@ -45,6 +49,11 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     loading: rangeTicksLoading
   } = useSelector(currentPositionRangeTicks)
   const poolsVolumeRanges = useSelector(volumeRanges)
+  const hasAnyTokens = useSelector(hasTokens)
+  const hasAnyFarms = useSelector(hasFarms)
+  const hasAnyStakes = useSelector(hasUserStakes)
+  const walletStatus = useSelector(status)
+  const positionStakes = useSelector(stakesForPosition(position?.address))
 
   const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
 
@@ -62,6 +71,18 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       )
     }
   }, [position?.id])
+
+  useEffect(() => {
+    if (hasAnyTokens && !hasAnyFarms) {
+      dispatch(farmsActions.getFarms())
+    }
+  }, [hasAnyTokens])
+
+  useEffect(() => {
+    if (walletStatus === Status.Initialized && hasAnyFarms && !hasAnyStakes && position?.id) {
+      dispatch(farmsActions.getUserStakes())
+    }
+  }, [walletStatus, hasAnyFarms, position?.id])
 
   useEffect(() => {
     if (waitingForTicksData === true && !rangeTicksLoading) {
@@ -320,13 +341,14 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       onClickClaimFee={() => {
         dispatch(actions.claimFee(position.positionIndex))
       }}
-      closePosition={() => {
+      closePosition={claimFarmRewards => {
         dispatch(
           actions.closePosition({
             positionIndex: position.positionIndex,
             onSuccess: () => {
               history.push('/pool')
-            }
+            },
+            claimFarmRewards
           })
         )
       }}
@@ -372,6 +394,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         )
       }}
       plotVolumeRange={currentVolumeRange}
+      userHasStakes={!!positionStakes.length}
     />
   ) : isLoadingList ? (
     <Grid container>

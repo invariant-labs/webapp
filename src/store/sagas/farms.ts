@@ -33,7 +33,7 @@ import {
   SystemProgram,
   Transaction
 } from '@solana/web3.js'
-import { farms, userStakes } from '@selectors/farms'
+import { farms, stakesForPosition, userStakes } from '@selectors/farms'
 import { accounts } from '@selectors/solanaWallet'
 import { getConnection } from './connection'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
@@ -653,6 +653,59 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
       })
     )
   }
+}
+
+export function* createClaimAllPositionRewardsTx(positionIndex: number) {
+  const stakerProgram = yield* call(getStakerProgram)
+  const marketProgram = yield* call(getMarketProgram)
+  const wallet = yield* call(getWallet)
+
+  const allPositionsData = yield* select(positionsWithPoolsData)
+  const positionData = allPositionsData[positionIndex]
+
+  const tokensAccounts = yield* select(accounts)
+  const allFarms = yield* select(farms)
+  const positionStakes = yield* select(stakesForPosition(positionData.address))
+
+  const updateIx = yield* call(
+    [marketProgram, marketProgram.updateSecondsPerLiquidityInstruction],
+    {
+      pair: new Pair(positionData.poolData.tokenX, positionData.poolData.tokenY, {
+        fee: positionData.poolData.fee.v
+      }),
+      owner: wallet.publicKey,
+      lowerTickIndex: positionData.lowerTickIndex,
+      upperTickIndex: positionData.upperTickIndex,
+      index: positionData.positionIndex
+    }
+  )
+
+  let tx = new Transaction().add(updateIx)
+
+  for (const stake of positionStakes) {
+    const rewardToken = allFarms[stake.incentive.toString()].rewardToken
+    let ownerTokenAcc = tokensAccounts[rewardToken.toString()]
+      ? tokensAccounts[rewardToken.toString()].address
+      : null
+    if (ownerTokenAcc === null) {
+      ownerTokenAcc = yield* call(createAccount, new PublicKey(rewardToken.toString()))
+    }
+
+    const withdrawIx = yield* call([stakerProgram, stakerProgram.withdrawIx], {
+      pool: positionData.pool,
+      id: positionData.id,
+      position: positionData.address,
+      incentive: stake.incentive,
+      owner: wallet.publicKey,
+      index: positionData.positionIndex,
+      incentiveTokenAccount: allFarms[stake.incentive.toString()].tokenAccount,
+      ownerTokenAcc
+    })
+
+    tx = tx.add(withdrawIx)
+  }
+
+  return tx
 }
 
 export function* handleGetNewStakeRangeTicks(action: PayloadAction<string[]>) {
