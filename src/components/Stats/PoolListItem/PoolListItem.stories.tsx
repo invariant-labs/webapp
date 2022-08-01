@@ -19,7 +19,9 @@ storiesOf('stats/PoolListItem', module)
         fee={0.05}
         apy={300}
         apyData={{
-          Fees: 300
+          fees: 300,
+          accumulatedFarmsAvg: 100,
+          accumulatedFarmsSingleTick: 200
         }}
       />
     )
