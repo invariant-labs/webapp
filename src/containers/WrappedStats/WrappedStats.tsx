@@ -142,8 +142,7 @@ export const WrappedStats: React.FC = () => {
                 fees: poolData.apy,
                 accumulatedFarmsSingleTick:
                   accumulatedSingleTickAPY?.[poolData.poolAddress.toString()] ?? 0,
-                accumulatedFarmsAvg:
-                  accumulatedAverageAPY?.[poolData.poolAddress.toString()] ?? 0
+                accumulatedFarmsAvg: accumulatedAverageAPY?.[poolData.poolAddress.toString()] ?? 0
               }
             }))}
           />
