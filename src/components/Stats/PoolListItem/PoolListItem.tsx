@@ -33,7 +33,11 @@ interface IProps {
   onSort?: (type: SortType) => void
   hideBottomLine?: boolean
   apy?: number
-  apyData?: Record<string, number>
+  apyData?: {
+    fees: number
+    accumulatedFarmsAvg: number
+    accumulatedFarmsSingleTick: number
+  }
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -50,7 +54,11 @@ const PoolListItem: React.FC<IProps> = ({
   onSort,
   hideBottomLine = false,
   apy = 0,
-  apyData = {}
+  apyData = {
+    fees: 0,
+    accumulatedFarmsAvg: 0,
+    accumulatedFarmsSingleTick: 0
+  }
 }) => {
   const classes = useStyle()
 
@@ -85,13 +93,25 @@ const PoolListItem: React.FC<IProps> = ({
                   <>
                     <Typography className={classes.liquidityTitle}>Pool APY</Typography>
                     <Typography className={classes.liquidityDesc}>
-                      {Object.entries(apyData).map(([label, value], index) => (
+                      Pool fees: {`${apyData.fees > 1000 ? '>1000' : apyData.fees.toFixed(2)}%`}
+                      {apyData.accumulatedFarmsAvg > 0 ? (
                         <>
-                          {index > 0 ? '+ ' : ''}
-                          {label}: {`${value > 1000 ? '>1000' : value.toFixed(2)}%`}
+                          <br />+ All farms rewards with single tick position:{' '}
+                          {`${
+                            apyData.accumulatedFarmsSingleTick > 1000
+                              ? '>1000'
+                              : apyData.accumulatedFarmsSingleTick.toFixed(2)
+                          }%`}
                           <br />
+                          (All farms rewards with average position:{' '}
+                          {`${
+                            apyData.accumulatedFarmsAvg > 1000
+                              ? '>1000'
+                              : apyData.accumulatedFarmsAvg.toFixed(2)
+                          }%`}
+                          )
                         </>
-                      ))}
+                      ) : null}
                     </Typography>
                   </>
                 }

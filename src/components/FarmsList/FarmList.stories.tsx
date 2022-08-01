@@ -21,7 +21,8 @@ storiesOf('farmsList/list', module)
           data={[
             {
               isActive: true,
-              apyPercent: 1,
+              averageApy: 1,
+              singleTickApy: 2,
               totalStakedInXToken: 10000,
               yourStakedInXToken: 300,
               totalStakedInYToken: 20000,
@@ -36,7 +37,8 @@ storiesOf('farmsList/list', module)
             },
             {
               isActive: true,
-              apyPercent: 1,
+              averageApy: 1,
+              singleTickApy: 2,
               totalStakedInXToken: 10000,
               yourStakedInXToken: 300,
               totalStakedInYToken: 20000,
@@ -51,7 +53,8 @@ storiesOf('farmsList/list', module)
             },
             {
               isActive: true,
-              apyPercent: 1,
+              averageApy: 1,
+              singleTickApy: 2,
               totalStakedInXToken: 10000,
               yourStakedInXToken: 300,
               totalStakedInYToken: 20000,

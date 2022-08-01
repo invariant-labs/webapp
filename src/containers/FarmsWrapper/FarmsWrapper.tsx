@@ -57,7 +57,8 @@ export const FarmsWrapper: React.FC = () => {
     )
 
     return {
-      apyPercent: farm.apy,
+      averageApy: farm.averageApy + farm.poolApy,
+      singleTickApy: farm.singleTickApy + farm.poolApy,
       totalStakedInXToken: (farm.totalStakedX ?? 0) + (farm.totalStakedY ?? 0) / currentPrice,
       yourStakedInXToken: (farm.userStakedX ?? 0) + (farm.userStakedY ?? 0) / currentPrice,
       totalStakedInYToken: (farm.totalStakedY ?? 0) + (farm.totalStakedX ?? 0) * currentPrice,

@@ -26,7 +26,8 @@ storiesOf('farmsList/selectedFarm', module)
           userStakedInXToken={5000}
           totalStakedInYToken={3000000}
           userStakedInYToken={7000}
-          apy={9.11}
+          averageApy={9.11}
+          singleTickApy={21.37}
           toStake={[
             {
               tokenXSymbol: 'BTC',
@@ -97,7 +98,8 @@ storiesOf('farmsList/selectedFarm', module)
           userStakedInXToken={5000}
           totalStakedInYToken={3000000}
           userStakedInYToken={7000}
-          apy={9.11}
+          averageApy={9.11}
+          singleTickApy={21.37}
           toStake={[]}
           stakedPositions={[]}
           totalPositions={0}

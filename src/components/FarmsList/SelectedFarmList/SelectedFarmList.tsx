@@ -22,7 +22,8 @@ export interface ISelectedFarmList {
   totalStakedInYToken: number
   userStakedInXToken: number
   userStakedInYToken: number
-  apy: number
+  averageApy: number
+  singleTickApy: number
   toStake: IStakedTile[]
   stakedPositions: IRewardsTile[]
   stakesLoading?: boolean
@@ -42,7 +43,8 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   totalStakedInYToken,
   userStakedInXToken,
   userStakedInYToken,
-  apy,
+  averageApy,
+  singleTickApy,
   toStake,
   stakedPositions,
   stakesLoading = false,
@@ -119,8 +121,13 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
-            <Typography className={classes.label}>APY:</Typography>
-            <Typography className={classes.value}>{apy.toFixed(2)}%</Typography>
+            <Typography className={classes.label}>Average APY:</Typography>
+            <Typography className={classes.value}>{averageApy.toFixed(2)}%</Typography>
+          </Grid>
+
+          <Grid className={classes.row} container wrap='nowrap'>
+            <Typography className={classes.label}>Single tick APY:</Typography>
+            <Typography className={classes.value}>{singleTickApy.toFixed(2)}%</Typography>
           </Grid>
         </Grid>
 

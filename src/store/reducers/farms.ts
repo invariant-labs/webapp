@@ -18,7 +18,9 @@ export interface ExtendedIncentive extends IncentiveStructure {
   rewardToken: PublicKey
   totalStakedX?: number
   totalStakedY?: number
-  apy: number
+  averageApy: number
+  singleTickApy: number
+  poolApy: number
 }
 
 export interface ExtendedStake extends Stake {
