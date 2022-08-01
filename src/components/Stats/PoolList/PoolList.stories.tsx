@@ -19,7 +19,9 @@ storiesOf('stats/PoolList', module).add('PoolList', () => {
           fee: 0.05,
           apy: 3554245444,
           apyData: {
-            Fees: 21.37
+            fees: 21.37,
+            accumulatedFarmsAvg: 100,
+            accumulatedFarmsSingleTick: 200
           }
         }
       })

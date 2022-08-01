@@ -174,11 +174,15 @@ export function* handleGetFarmsList() {
         ...incentive,
         address: incentive.publicKey,
         rewardToken,
-        apy:
+        averageApy:
           now > incentive.endTime.v.toNumber()
             ? 0
-            : (poolsApy?.[incentive.pool.toString()] ?? 0) +
-              (incentivesApy?.[incentive.publicKey.toString()]?.apy ?? 0)
+            : incentivesApy?.[incentive.publicKey.toString()]?.apy ?? 0,
+        singleTickApy:
+          now > incentive.endTime.v.toNumber()
+            ? 0
+            : incentivesApy?.[incentive.publicKey.toString()]?.apySingleTick ?? 0,
+        poolApy: poolsApy?.[incentive.pool.toString()] ?? 0
       }
     })
 

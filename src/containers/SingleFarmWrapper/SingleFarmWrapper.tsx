@@ -371,7 +371,8 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       }
       userStakedInXToken={userStakedInXToken}
       userStakedInYToken={userStakedInYToken}
-      apy={farmData.apy}
+      averageApy={farmData.averageApy + farmData.poolApy}
+      singleTickApy={farmData.singleTickApy + farmData.poolApy}
       toStake={toStake}
       stakedPositions={stakedPositions}
       stakesLoading={stakesLoading && farmPositionsLength > 0}

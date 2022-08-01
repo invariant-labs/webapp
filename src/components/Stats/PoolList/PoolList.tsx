@@ -14,7 +14,11 @@ interface PoolListInterface {
     TVL: number
     fee: number
     apy: number
-    apyData: Record<string, number>
+    apyData: {
+      fees: number
+      accumulatedFarmsAvg: number
+      accumulatedFarmsSingleTick: number
+    }
   }>
 }
 
