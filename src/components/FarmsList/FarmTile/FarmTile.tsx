@@ -12,7 +12,8 @@ import useStyle from './style'
 
 export interface IFarm {
   isActive?: boolean
-  apyPercent: number
+  averageApy: number
+  singleTickApy: number
   totalStakedInXToken: number
   yourStakedInXToken: number
   totalStakedInYToken: number
@@ -31,7 +32,8 @@ export interface IProps extends IFarm {
 
 export const FarmTile: React.FC<IProps> = ({
   isActive = false,
-  apyPercent,
+  averageApy,
+  singleTickApy,
   totalStakedInXToken,
   totalStakedInYToken,
   yourStakedInXToken,
@@ -119,8 +121,17 @@ export const FarmTile: React.FC<IProps> = ({
         justifyContent='space-between'
         wrap='nowrap'
         className={classes.mobileContainer}>
-        <Typography className={classes.label}>APY:</Typography>
-        <Typography className={classes.value}>{apyPercent.toFixed(2)}%</Typography>
+        <Typography className={classes.label}>Average APY:</Typography>
+        <Typography className={classes.value}>{averageApy.toFixed(2)}%</Typography>
+      </Grid>
+      <Grid
+        container
+        direction='row'
+        justifyContent='space-between'
+        wrap='nowrap'
+        className={classes.mobileContainer}>
+        <Typography className={classes.label}>Single tick APY:</Typography>
+        <Typography className={classes.value}>{singleTickApy.toFixed(2)}%</Typography>
       </Grid>
       <Grid
         container

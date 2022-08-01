@@ -1073,6 +1073,7 @@ export const getPoolsAPY = async (name: string): Promise<Record<string, number>>
 
 export interface IncentiveRewardData {
   apy: number
+  apySingleTick: number
   total: number
   token: string
 }

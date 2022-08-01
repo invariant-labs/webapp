@@ -47,32 +47,39 @@ export const WrappedStats: React.FC = () => {
     dispatch(actions.getCurrentStats())
   }, [])
 
-  const accumulatedFarmsAPY = useMemo(() => {
-    const poolsObject: Record<
-      string,
-      {
-        apy: number
-      }
-    > = {}
-
-    poolsList.forEach(data => {
-      poolsObject[data.poolAddress.toString()] = data
-    })
-
+  const accumulatedAverageAPY = useMemo(() => {
     const acc: Record<string, number> = {}
+    const now = Date.now() / 1000
 
     Object.values(allFarms).forEach(farm => {
       if (!acc[farm.pool.toString()]) {
         acc[farm.pool.toString()] = 0
       }
 
-      if (farm.apy > 0) {
-        acc[farm.pool.toString()] += farm.apy - (poolsObject[farm.pool.toString()]?.apy ?? 0)
+      if (farm.endTime.v.toNumber() > now) {
+        acc[farm.pool.toString()] += farm.averageApy
       }
     })
 
     return acc
-  }, [poolsList, allFarms])
+  }, [allFarms])
+
+  const accumulatedSingleTickAPY = useMemo(() => {
+    const acc: Record<string, number> = {}
+    const now = Date.now() / 1000
+
+    Object.values(allFarms).forEach(farm => {
+      if (!acc[farm.pool.toString()]) {
+        acc[farm.pool.toString()] = 0
+      }
+
+      if (farm.endTime.v.toNumber() > now) {
+        acc[farm.pool.toString()] += farm.singleTickApy
+      }
+    })
+
+    return acc
+  }, [allFarms])
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
@@ -129,15 +136,13 @@ export const WrappedStats: React.FC = () => {
               volume: poolData.volume24,
               TVL: poolData.tvl,
               fee: poolData.fee,
-              apy: poolData.apy + (accumulatedFarmsAPY?.[poolData.poolAddress.toString()] ?? 0),
+              apy:
+                poolData.apy + (accumulatedSingleTickAPY?.[poolData.poolAddress.toString()] ?? 0),
               apyData: {
-                Fees: poolData.apy,
-                ...(typeof accumulatedFarmsAPY?.[poolData.poolAddress.toString()] !== 'undefined' &&
-                accumulatedFarmsAPY[poolData.poolAddress.toString()] > 0
-                  ? {
-                      'All farms rewards': accumulatedFarmsAPY[poolData.poolAddress.toString()]
-                    }
-                  : {})
+                fees: poolData.apy,
+                accumulatedFarmsSingleTick:
+                  accumulatedSingleTickAPY?.[poolData.poolAddress.toString()] ?? 0,
+                accumulatedFarmsAvg: accumulatedAverageAPY?.[poolData.poolAddress.toString()] ?? 0
               }
             }))}
           />
