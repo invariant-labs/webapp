@@ -94,9 +94,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (position) {
       return {
         index: position.poolData.currentTickIndex,
-        x: calcPrice(
-          position.poolData.currentTickIndex,
-          true,
+        x: calcYPerXPrice(
+          position.poolData.sqrtPrice.v,
           position.tokenX.decimals,
           position.tokenY.decimals
         )
