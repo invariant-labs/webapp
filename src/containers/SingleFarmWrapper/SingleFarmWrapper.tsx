@@ -253,8 +253,11 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         const valueY = tokenYDeposit + tokenXDeposit * currentPrice
 
         let rewardValue = 0
+        let apy = 0
 
         if (typeof position.stakeAddress !== 'undefined') {
+          apy = allUserStakes[position.stakeAddress.toString()].apy
+
           let secondsPerLiquidityInside = position.secondsPerLiquidityInside
 
           if (typeof allStakeRangeTicks[position.stakeAddress.toString()] !== 'undefined') {
@@ -295,6 +298,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         }
 
         return {
+          apy,
           tokenXSymbol: position.tokenX.symbol,
           tokenYSymbol: position.tokenY.symbol,
           tokenXDecimals: position.tokenX.decimals,
