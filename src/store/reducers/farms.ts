@@ -21,10 +21,12 @@ export interface ExtendedIncentive extends IncentiveStructure {
   averageApy: number
   singleTickApy: number
   poolApy: number
+  totalReward: number
 }
 
 export interface ExtendedStake extends Stake {
   address: PublicKey
+  apy: number
 }
 
 export interface FarmTotalsUpdate {
@@ -71,7 +73,7 @@ export interface StakeSuccessData {
 }
 
 export interface StateUpdateAfterStake {
-  newStake: ExtendedStake
+  newStake: Omit<ExtendedStake, 'apy'>
   totalStakedXAddition: number
   totalStakedYAddition: number
 }
@@ -159,7 +161,10 @@ const farmsSlice = createSlice({
         totalStakedX: (farm.totalStakedX ?? 0) + action.payload.totalStakedXAddition,
         totalStakedY: (farm.totalStakedY ?? 0) + action.payload.totalStakedYAddition
       }
-      state.userStakes[action.payload.newStake.address.toString()] = action.payload.newStake
+      state.userStakes[action.payload.newStake.address.toString()] = {
+        ...state.userStakes[action.payload.newStake.address.toString()],
+        ...action.payload.newStake
+      }
 
       return state
     },

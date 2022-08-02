@@ -52,8 +52,9 @@ import { pools, tokens } from '@selectors/pools'
 import { BN } from '@project-serum/anchor'
 import { calculatePriceSqrt, getX, getY } from '@invariant-labs/sdk/lib/math'
 import { GuardPredicate } from '@redux-saga/types'
-import { rewardsAPY } from '@invariant-labs/sdk/lib/utils'
+import { positionsRewardAPY, rewardsAPY } from '@invariant-labs/sdk/lib/utils'
 import { Tick } from '@invariant-labs/sdk/lib/market'
+import { PositionWithAddress } from '@reducers/positions'
 
 export function* getFarmsTotals() {
   try {
@@ -79,7 +80,7 @@ export function* getFarmsTotals() {
         allPositions.map(({ address }) => address)
       )
 
-      const stakesObject: Record<string, ExtendedStake> = {}
+      const stakesObject: Record<string, Omit<ExtendedStake, 'apy'>> = {}
       stakes.forEach(stake => {
         stakesObject[stake.position.toString()] = stake
       })
@@ -207,9 +208,6 @@ export function* handleGetFarmsList() {
 
     const apyPromises = list.map(async incentive => {
       const poolData = allPools?.[incentive.pool.toString()]
-      if (!poolData) {
-        return
-      }
 
       const now = Date.now() / 1000
 
@@ -217,7 +215,7 @@ export function* handleGetFarmsList() {
 
       const rewardToken = rewardTokens[incentive.publicKey.toString()]
 
-      if (now > incentive.endTime.v.toNumber()) {
+      if (now > incentive.endTime.v.toNumber() || !poolData) {
         apy = { apy: 0, apySingleTick: 0 }
       } else {
         try {
@@ -250,9 +248,7 @@ export function* handleGetFarmsList() {
               (incentivesRewardData?.[incentive.publicKey.toString()]?.total ?? 0),
             tokenPrice: prices[poolData.tokenX.toString()]
           })
-        } catch (error) {
-          console.log(error)
-
+        } catch {
           apy = { apy: 0, apySingleTick: 0 }
         }
       }
@@ -263,7 +259,8 @@ export function* handleGetFarmsList() {
         rewardToken,
         averageApy: apy.apy * 100,
         singleTickApy: apy.apySingleTick * 100,
-        poolApy: poolsApy?.[incentive.pool.toString()] ?? 0
+        poolApy: poolsApy?.[incentive.pool.toString()] ?? 0,
+        totalReward: incentivesRewardData?.[incentive.publicKey.toString()]?.total ?? 0
       }
     })
 
@@ -281,13 +278,26 @@ export function* handleGetFarmsList() {
 
 export function* handleGetUserStakes() {
   try {
+    const marketProgram = yield* call(getMarketProgram)
     const stakerProgram = yield* call(getStakerProgram)
 
     const allFarms = yield* select(farms)
     const { list: positions } = yield* select(positionsList)
 
+    const positionsDict: Record<string, PositionWithAddress> = {}
+    positions.forEach(position => {
+      positionsDict[position.address.toString()] = position
+    })
+
     const promises: Array<Promise<void>> = []
     const stakesObject: Record<string, ExtendedStake> = {}
+
+    const allTokens = yield* select(tokens)
+    const allPools = yield* select(pools)
+    const tickDict: Record<string, Tick[]> = {}
+    const prices: Record<string, number> = {}
+
+    const now = Date.now() / 1000
 
     Object.values(allFarms).forEach(farm => {
       const farmPositions = positions.filter(({ pool }) => pool.equals(farm.pool))
@@ -303,10 +313,62 @@ export function* handleGetUserStakes() {
           farm.pool,
           farmPositions.map(({ id }) => id),
           farmPositions.map(({ address }) => address)
-        ).then(list => {
-          list.forEach(stake => {
-            stakesObject[stake.address.toString()] = stake
-          })
+        ).then(async list => {
+          for (const stake of list) {
+            const positionData = positionsDict[stake.position.toString()]
+            const poolData = allPools?.[farm.pool.toString()]
+
+            let apy
+
+            if (now > farm.endTime.v.toNumber() || !poolData) {
+              apy = 0
+            } else {
+              try {
+                if (typeof tickDict[farm.pool.toString()] === 'undefined') {
+                  tickDict[farm.pool.toString()] = await marketProgram.getAllTicks(
+                    new Pair(poolData.tokenX, poolData.tokenY, { fee: poolData.fee.v })
+                  )
+                }
+
+                const xId = allTokens?.[poolData.tokenX.toString()]?.coingeckoId ?? ''
+
+                if (typeof prices[poolData.tokenX.toString()] === 'undefined' && !!xId.length) {
+                  prices[poolData.tokenX.toString()] = (await getCoingeckoTokenPrice(xId)).price
+                }
+
+                const rewardId = allTokens?.[farm.rewardToken.toString()]?.coingeckoId ?? ''
+
+                if (
+                  typeof prices[farm.rewardToken.toString()] === 'undefined' &&
+                  !!rewardId.length
+                ) {
+                  prices[farm.rewardToken.toString()] = (
+                    await getCoingeckoTokenPrice(rewardId)
+                  ).price
+                }
+
+                apy = positionsRewardAPY({
+                  ticksCurrentSnapshot: tickDict[farm.pool.toString()],
+                  currentTickIndex: poolData.currentTickIndex,
+                  duration:
+                    (farm.endTime.v.toNumber() - farm.startTime.v.toNumber()) / 60 / 60 / 24,
+                  tokenDecimal: allTokens[poolData.tokenX.toString()].decimals ?? 0,
+                  rewardInUsd: prices[farm.rewardToken.toString()] * farm.totalReward,
+                  tokenPrice: prices[poolData.tokenX.toString()],
+                  lowerTickIndex: positionData.lowerTickIndex,
+                  upperTickIndex: positionData.upperTickIndex,
+                  positionLiquidity: positionData.liquidity
+                })
+              } catch {
+                apy = 0
+              }
+            }
+
+            stakesObject[stake.address.toString()] = {
+              ...stake,
+              apy: apy * 100 + farm.poolApy
+            }
+          }
         })
       )
     })
