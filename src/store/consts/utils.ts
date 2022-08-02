@@ -720,7 +720,7 @@ export const getPools = async (
   marketProgram: Market
 ): Promise<PoolWithAddress[]> => {
   const addresses: PublicKey[] = await Promise.all(
-    pairs.map(async pair => pair.getAddress(marketProgram.program.programId))
+    pairs.map(async pair => await pair.getAddress(marketProgram.program.programId))
   )
 
   return await getPoolsFromAdresses(addresses, marketProgram)
