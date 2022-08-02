@@ -459,6 +459,9 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
 
       if (stakes.length === 1) {
         yield* call(sleep, 2000)
+        const allFarms = yield* select(farms)
+        const allTokens = yield* select(tokens)
+        const farmData = allFarms[action.payload.farm.toString()]
 
         let totalStakedXAddition, totalStakedYAddition
 
@@ -490,9 +493,60 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
           totalStakedYAddition = 0
         }
 
+        const now = Date.now() / 1000
+        let apy
+
+        if (now > farmData.endTime.v.toNumber()) {
+          apy = 0
+        } else {
+          try {
+            const ticks = yield* call(
+              [marketProgram, marketProgram.getAllTicks],
+              new Pair(positionData.poolData.tokenX, positionData.poolData.tokenY, {
+                fee: positionData.poolData.fee.v
+              })
+            )
+
+            let xPrice = 0
+            let rewardPrice = 0
+
+            const xId = allTokens?.[positionData.poolData.tokenX.toString()]?.coingeckoId ?? ''
+
+            if (xId.length) {
+              const data = yield* call(getCoingeckoTokenPrice, xId)
+              xPrice = data.price
+            }
+
+            const rewardId = allTokens?.[farmData.rewardToken.toString()]?.coingeckoId ?? ''
+
+            if (rewardId.length) {
+              const data = yield* call(getCoingeckoTokenPrice, rewardId)
+              rewardPrice = data.price
+            }
+
+            apy = positionsRewardAPY({
+              ticksCurrentSnapshot: ticks,
+              currentTickIndex: positionData.poolData.currentTickIndex,
+              duration:
+                (farmData.endTime.v.toNumber() - farmData.startTime.v.toNumber()) / 60 / 60 / 24,
+              tokenDecimal: allTokens[positionData.poolData.tokenX.toString()].decimals ?? 0,
+              rewardInUsd: rewardPrice * farmData.totalReward,
+              tokenPrice: xPrice,
+              lowerTickIndex: positionData.lowerTickIndex,
+              upperTickIndex: positionData.upperTickIndex,
+              positionLiquidity: positionData.liquidity
+            })
+          } catch {
+            apy = 0
+          }
+        }
+
         yield* put(
           actions.updateStateAfterStake({
-            newStake: stakes[0],
+            newStake: {
+              ...stakes[0],
+              apy: apy * 100 + farmData.poolApy
+            },
             totalStakedXAddition,
             totalStakedYAddition
           })
