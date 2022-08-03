@@ -66,7 +66,8 @@ storiesOf('farmsList/selectedFarm', module)
               },
               rewardIcon:
                 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
-              rewardValue: 2137
+              rewardValue: 2137,
+              apy: 21.37
             }
           ]}
           walletConnected

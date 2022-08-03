@@ -21,10 +21,12 @@ export interface ExtendedIncentive extends IncentiveStructure {
   averageApy: number
   singleTickApy: number
   poolApy: number
+  totalReward: number
 }
 
 export interface ExtendedStake extends Stake {
   address: PublicKey
+  apy: number
 }
 
 export interface FarmTotalsUpdate {
