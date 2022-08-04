@@ -122,7 +122,9 @@ export const FarmTile: React.FC<IProps> = ({
         wrap='nowrap'
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Average APY:</Typography>
-        <Typography className={classes.value}>{averageApy.toFixed(2)}%</Typography>
+        <Typography className={classes.value}>
+          {averageApy > 1000 ? '>1000' : averageApy.toFixed(2)}%
+        </Typography>
       </Grid>
       <Grid
         container
@@ -131,7 +133,9 @@ export const FarmTile: React.FC<IProps> = ({
         wrap='nowrap'
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Single tick APY:</Typography>
-        <Typography className={classes.value}>{singleTickApy.toFixed(2)}%</Typography>
+        <Typography className={classes.value}>
+          {singleTickApy > 1000 ? '>1000' : singleTickApy.toFixed(2)}%
+        </Typography>
       </Grid>
       <Grid
         container
