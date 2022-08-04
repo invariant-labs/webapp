@@ -414,6 +414,8 @@ export function* handleGetUserStakes() {
     })
 
     yield* put(actions.setUserStakes(stakesObject))
+
+    yield* fork(getStakesApy)
   } catch (error) {
     console.log(error)
   }
