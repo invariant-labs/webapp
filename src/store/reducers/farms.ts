@@ -18,18 +18,25 @@ export interface ExtendedIncentive extends IncentiveStructure {
   rewardToken: PublicKey
   totalStakedX?: number
   totalStakedY?: number
-  averageApy: number
-  singleTickApy: number
+  averageApy?: number
+  singleTickApy?: number
   poolApy: number
+  totalReward: number
 }
 
 export interface ExtendedStake extends Stake {
   address: PublicKey
+  apy?: number
 }
 
 export interface FarmTotalsUpdate {
   totalStakedX: number
   totalStakedY: number
+}
+
+export interface FarmApyUpdate {
+  averageApy: number
+  singleTickApy: number
 }
 
 export interface StakeStatus {
@@ -46,8 +53,10 @@ export interface IFarmsStore {
   farms: Record<string, ExtendedIncentive>
   isLoadingFarms: boolean
   isLoadingFarmsTotals: boolean
+  isLoadingFarmsApy: boolean
   userStakes: Record<string, ExtendedStake>
   isLoadingUserStakes: boolean
+  isLoadingStakesApy: boolean
   stakeStatuses: Record<string, StakeStatus>
   isLoadingNewRangeTicks: boolean
   stakeRangeTicks: Record<string, StakeRangeTicks>
@@ -80,8 +89,10 @@ export const defaultState: IFarmsStore = {
   farms: {},
   isLoadingFarms: true,
   isLoadingFarmsTotals: true,
+  isLoadingFarmsApy: true,
   userStakes: {},
   isLoadingUserStakes: true,
+  isLoadingStakesApy: true,
   stakeStatuses: {},
   isLoadingNewRangeTicks: false,
   stakeRangeTicks: {}
@@ -127,13 +138,37 @@ const farmsSlice = createSlice({
     },
     updateFarmsTotals(state, action: PayloadAction<Record<string, FarmTotalsUpdate>>) {
       Object.entries(action.payload).forEach(([address, update]) => {
-        state.farms[address.toString()] = {
-          ...state.farms[address.toString()],
+        state.farms[address] = {
+          ...state.farms[address],
           ...update
         }
       })
 
       state.isLoadingFarmsTotals = false
+
+      return state
+    },
+    updateFarmsApy(state, action: PayloadAction<Record<string, FarmApyUpdate>>) {
+      Object.entries(action.payload).forEach(([address, update]) => {
+        state.farms[address] = {
+          ...state.farms[address],
+          ...update
+        }
+      })
+
+      state.isLoadingFarmsApy = false
+
+      return state
+    },
+    updateStakesApy(state, action: PayloadAction<Record<string, number>>) {
+      Object.entries(action.payload).forEach(([address, apy]) => {
+        state.userStakes[address] = {
+          ...state.userStakes[address],
+          apy
+        }
+      })
+
+      state.isLoadingStakesApy = false
 
       return state
     },

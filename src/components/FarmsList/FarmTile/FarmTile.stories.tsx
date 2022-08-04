@@ -10,6 +10,7 @@ storiesOf('farmsList/tile', module)
       <div style={{ width: 500, height: 500 }}>
         <FarmTile
           isLoadingTotals={false}
+          isLoadingApy={false}
           isActive
           averageApy={1}
           singleTickApy={2}
@@ -32,6 +33,7 @@ storiesOf('farmsList/tile', module)
       <div style={{ width: 500, height: 500 }}>
         <FarmTile
           isLoadingTotals={false}
+          isLoadingApy={false}
           averageApy={1}
           singleTickApy={2}
           totalStakedInXToken={100000}

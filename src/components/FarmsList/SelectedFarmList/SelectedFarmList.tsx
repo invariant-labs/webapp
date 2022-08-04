@@ -32,6 +32,8 @@ export interface ISelectedFarmList {
   totalPositions: number
   noConnectedBlockerProps: INoConnected
   isLoadingRangeTicks?: boolean
+  isLoadingFarmApy?: boolean
+  isLoadingStakesApy?: boolean
 }
 
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
@@ -52,7 +54,9 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   isLoadingTotals = false,
   totalPositions,
   noConnectedBlockerProps,
-  isLoadingRangeTicks = false
+  isLoadingRangeTicks = false,
+  isLoadingFarmApy = false,
+  isLoadingStakesApy = false
 }) => {
   const classes = useStyle()
 
@@ -122,12 +126,20 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Average APY:</Typography>
-            <Typography className={classes.value}>{averageApy.toFixed(2)}%</Typography>
+            {isLoadingFarmApy ? (
+              <img src={loadingAnimation} className={classes.loading} />
+            ) : (
+              <Typography className={classes.value}>{averageApy.toFixed(2)}%</Typography>
+            )}
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Single tick APY:</Typography>
-            <Typography className={classes.value}>{singleTickApy.toFixed(2)}%</Typography>
+            {isLoadingFarmApy ? (
+              <img src={loadingAnimation} className={classes.loading} />
+            ) : (
+              <Typography className={classes.value}>{singleTickApy.toFixed(2)}%</Typography>
+            )}
           </Grid>
         </Grid>
 
@@ -179,6 +191,7 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
                         {...element}
                         xToY={xToY}
                         showRewardsLoader={isLoadingRangeTicks}
+                        isLoadingApy={isLoadingStakesApy}
                       />
                     </div>
                   ))}

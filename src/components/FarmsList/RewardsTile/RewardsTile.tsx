@@ -21,11 +21,13 @@ export interface IRewardsTile {
   onClaimReward: () => void
   rewardIcon: string
   rewardValue: number
+  apy: number
 }
 
 export interface IProps extends IRewardsTile {
   xToY: boolean
   showRewardsLoader: boolean
+  isLoadingApy: boolean
 }
 
 export const RewardsTile: React.FC<IProps> = ({
@@ -46,7 +48,9 @@ export const RewardsTile: React.FC<IProps> = ({
   rewardIcon,
   rewardValue,
   xToY,
-  showRewardsLoader
+  showRewardsLoader,
+  apy,
+  isLoadingApy
 }) => {
   const classes = useStyle()
 
@@ -93,6 +97,17 @@ export const RewardsTile: React.FC<IProps> = ({
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Fee tier:</Typography>
             <Typography className={classes.value}>{fee}%</Typography>
+          </Grid>
+
+          <Grid className={classes.row} container wrap='nowrap'>
+            <Typography className={classes.label}>APY for position:</Typography>
+            {isLoadingApy ? (
+              <img src={loadingAnimation} className={classes.smallLoading} />
+            ) : (
+              <Typography className={classes.value}>
+                {apy > 1000 ? '>1000' : apy.toFixed(2)}%
+              </Typography>
+            )}
           </Grid>
         </Grid>
 

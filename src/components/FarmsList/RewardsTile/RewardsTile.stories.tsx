@@ -28,6 +28,8 @@ storiesOf('farmsList/rewardsTile', module)
           rewardValue={2137}
           xToY
           showRewardsLoader={false}
+          apy={21.37}
+          isLoadingApy={false}
         />
       </div>
     )
@@ -58,6 +60,8 @@ storiesOf('farmsList/rewardsTile', module)
           rewardValue={2137}
           xToY
           showRewardsLoader
+          apy={21.37}
+          isLoadingApy={false}
         />
       </div>
     )
