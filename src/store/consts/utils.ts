@@ -916,7 +916,7 @@ export const getUserStakesForFarm = async (
 
   const stakes = await stakerProgram.program.account.userStake.fetchMultiple(addresses)
 
-  const fullStakes: Array<Omit<ExtendedStake, 'apy'>> = []
+  const fullStakes: ExtendedStake[] = []
 
   stakes.forEach((stake, index) => {
     if (stake !== null) {
