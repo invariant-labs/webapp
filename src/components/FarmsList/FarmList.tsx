@@ -8,8 +8,9 @@ import useStyle from './style'
 export interface IFarmList {
   data: IFarm[]
   isLoadingTotals: boolean
+  isLoadingApy: boolean
 }
-export const FarmList: React.FC<IFarmList> = ({ data, isLoadingTotals }) => {
+export const FarmList: React.FC<IFarmList> = ({ data, isLoadingTotals, isLoadingApy }) => {
   const classes = useStyle()
   const [value, setValue] = useState('')
 
@@ -68,7 +69,12 @@ export const FarmList: React.FC<IFarmList> = ({ data, isLoadingTotals }) => {
           <Grid container direction='column' alignItems='center'>
             {filteredActive.map((element, index) => (
               <div className={classes.tile}>
-                <FarmTile key={index} {...element} isLoadingTotals={isLoadingTotals} />
+                <FarmTile
+                  key={index}
+                  {...element}
+                  isLoadingTotals={isLoadingTotals}
+                  isLoadingApy={isLoadingApy}
+                />
               </div>
             ))}
           </Grid>
@@ -88,7 +94,12 @@ export const FarmList: React.FC<IFarmList> = ({ data, isLoadingTotals }) => {
           <Grid container direction='column' alignItems='center'>
             {filteredInactive.map((element, index) => (
               <div className={classes.tile}>
-                <FarmTile key={index} {...element} isLoadingTotals={isLoadingTotals} />
+                <FarmTile
+                  key={index}
+                  {...element}
+                  isLoadingTotals={isLoadingTotals}
+                  isLoadingApy={isLoadingApy}
+                />
               </div>
             ))}
           </Grid>
