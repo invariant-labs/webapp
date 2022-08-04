@@ -8,8 +8,10 @@ import {
   farms,
   howManyPositionsForFarm,
   isLoadingFarms,
+  isLoadingFarmsApy,
   isLoadingFarmsTotals,
   isLoadingNewRangeTicks,
+  isLoadingStakesApy,
   isLoadingUserStakes,
   positionsForFarm,
   singleFarmData,
@@ -53,6 +55,8 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
   const farmPositionsLength = useSelector(howManyPositionsForFarm(id))
   const allStakeRangeTicks = useSelector(stakeRangeTicks)
   const rangeTicksLoading = useSelector(isLoadingNewRangeTicks)
+  const farmApyLoading = useSelector(isLoadingFarmsApy)
+  const stakesApyLoading = useSelector(isLoadingStakesApy)
 
   useEffect(() => {
     if (Object.values(allTokens).length > 0 && Object.values(allFarms).length === 0) {
@@ -256,7 +260,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         let apy = 0
 
         if (typeof position.stakeAddress !== 'undefined') {
-          apy = allUserStakes[position.stakeAddress.toString()].apy
+          apy = allUserStakes[position.stakeAddress.toString()].apy ?? 0
 
           let secondsPerLiquidityInside = position.secondsPerLiquidityInside
 
@@ -375,8 +379,8 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       }
       userStakedInXToken={userStakedInXToken}
       userStakedInYToken={userStakedInYToken}
-      averageApy={farmData.averageApy + farmData.poolApy}
-      singleTickApy={farmData.singleTickApy + farmData.poolApy}
+      averageApy={(farmData.averageApy ?? 0) + farmData.poolApy}
+      singleTickApy={(farmData.singleTickApy ?? 0) + farmData.poolApy}
       toStake={toStake}
       stakedPositions={stakedPositions}
       stakesLoading={stakesLoading && farmPositionsLength > 0}
@@ -392,6 +396,8 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
         }
       }}
       isLoadingRangeTicks={!rangeTicksFetched}
+      isLoadingStakesApy={stakesApyLoading}
+      isLoadingFarmApy={farmApyLoading}
     />
   )
 }
