@@ -17,7 +17,9 @@ export const {
   stakeStatuses,
   isLoadingFarmsTotals,
   isLoadingNewRangeTicks,
-  stakeRangeTicks
+  stakeRangeTicks,
+  isLoadingFarmsApy,
+  isLoadingStakesApy
 } = keySelectors(store, [
   'farms',
   'isLoadingFarms',
@@ -26,7 +28,9 @@ export const {
   'stakeStatuses',
   'isLoadingFarmsTotals',
   'isLoadingNewRangeTicks',
-  'stakeRangeTicks'
+  'stakeRangeTicks',
+  'isLoadingFarmsApy',
+  'isLoadingStakesApy'
 ])
 
 export interface IncentiveWithUserStaked extends ExtendedIncentive {
@@ -181,7 +185,9 @@ export const farmsSelectors = {
   stakeStatuses,
   isLoadingFarmsTotals,
   isLoadingNewRangeTicks,
-  stakeRangeTicks
+  stakeRangeTicks,
+  isLoadingFarmsApy,
+  isLoadingStakesApy
 }
 
 export default farmsSelectors

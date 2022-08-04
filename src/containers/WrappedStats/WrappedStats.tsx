@@ -57,7 +57,7 @@ export const WrappedStats: React.FC = () => {
       }
 
       if (farm.endTime.v.toNumber() > now) {
-        acc[farm.pool.toString()] += farm.averageApy
+        acc[farm.pool.toString()] += farm.averageApy ?? 0
       }
     })
 
@@ -74,7 +74,7 @@ export const WrappedStats: React.FC = () => {
       }
 
       if (farm.endTime.v.toNumber() > now) {
-        acc[farm.pool.toString()] += farm.singleTickApy
+        acc[farm.pool.toString()] += farm.singleTickApy ?? 0
       }
     })
 

@@ -135,6 +135,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 30,
     marginBlock: 'auto',
     marginLeft: 15
+  },
+  smallLoading: {
+    width: 20,
+    height: 20
   }
 }))
 
