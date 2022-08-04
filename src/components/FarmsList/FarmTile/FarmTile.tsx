@@ -28,6 +28,7 @@ export interface IFarm {
 
 export interface IProps extends IFarm {
   isLoadingTotals: boolean
+  isLoadingApy: boolean
 }
 
 export const FarmTile: React.FC<IProps> = ({
@@ -44,7 +45,8 @@ export const FarmTile: React.FC<IProps> = ({
   rewardSymbol,
   rewardIcon,
   feeTier,
-  isLoadingTotals
+  isLoadingTotals,
+  isLoadingApy
 }) => {
   const classes = useStyle()
 
@@ -122,9 +124,13 @@ export const FarmTile: React.FC<IProps> = ({
         wrap='nowrap'
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Average APY:</Typography>
-        <Typography className={classes.value}>
-          {averageApy > 1000 ? '>1000' : averageApy.toFixed(2)}%
-        </Typography>
+        {isLoadingApy ? (
+          <img src={loadingAnimation} className={classes.loading} />
+        ) : (
+          <Typography className={classes.value}>
+            {averageApy > 1000 ? '>1000' : averageApy.toFixed(2)}%
+          </Typography>
+        )}
       </Grid>
       <Grid
         container
@@ -133,9 +139,13 @@ export const FarmTile: React.FC<IProps> = ({
         wrap='nowrap'
         className={classes.mobileContainer}>
         <Typography className={classes.label}>Single tick APY:</Typography>
-        <Typography className={classes.value}>
-          {singleTickApy > 1000 ? '>1000' : singleTickApy.toFixed(2)}%
-        </Typography>
+        {isLoadingApy ? (
+          <img src={loadingAnimation} className={classes.loading} />
+        ) : (
+          <Typography className={classes.value}>
+            {singleTickApy > 1000 ? '>1000' : singleTickApy.toFixed(2)}%
+          </Typography>
+        )}
       </Grid>
       <Grid
         container

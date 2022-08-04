@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   farmsWithUserStakedValues,
   isLoadingFarms,
+  isLoadingFarmsApy,
   isLoadingFarmsTotals,
   userStakes
 } from '@selectors/farms'
@@ -27,6 +28,7 @@ export const FarmsWrapper: React.FC = () => {
   const farmsLoading = useSelector(isLoadingFarms)
   const { list } = useSelector(positionsList)
   const farmsTotalsLoading = useSelector(isLoadingFarmsTotals)
+  const apyLoading = useSelector(isLoadingFarmsApy)
 
   useEffect(() => {
     if (Object.values(allTokens).length > 0 && Object.values(allFarms).length === 0) {
@@ -57,8 +59,8 @@ export const FarmsWrapper: React.FC = () => {
     )
 
     return {
-      averageApy: farm.averageApy + farm.poolApy,
-      singleTickApy: farm.singleTickApy + farm.poolApy,
+      averageApy: (farm.averageApy ?? 0) + farm.poolApy,
+      singleTickApy: (farm.singleTickApy ?? 0) + farm.poolApy,
       totalStakedInXToken: (farm.totalStakedX ?? 0) + (farm.totalStakedY ?? 0) / currentPrice,
       yourStakedInXToken: (farm.userStakedX ?? 0) + (farm.userStakedY ?? 0) / currentPrice,
       totalStakedInYToken: (farm.totalStakedY ?? 0) + (farm.totalStakedX ?? 0) * currentPrice,
@@ -78,7 +80,7 @@ export const FarmsWrapper: React.FC = () => {
       {farmsLoading ? (
         <img src={loader} style={{ width: 150, height: 150, margin: 'auto' }} />
       ) : (
-        <FarmList data={data} isLoadingTotals={farmsTotalsLoading} />
+        <FarmList data={data} isLoadingTotals={farmsTotalsLoading} isLoadingApy={apyLoading} />
       )}
     </Grid>
   )

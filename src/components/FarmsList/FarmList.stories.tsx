@@ -17,6 +17,7 @@ storiesOf('farmsList/list', module)
           paddingInline: 20
         }}>
         <FarmList
+          isLoadingApy={false}
           isLoadingTotals={false}
           data={[
             {
