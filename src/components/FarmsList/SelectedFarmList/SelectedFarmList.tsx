@@ -129,7 +129,9 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
             {isLoadingFarmApy ? (
               <img src={loadingAnimation} className={classes.loading} />
             ) : (
-              <Typography className={classes.value}>{averageApy.toFixed(2)}%</Typography>
+              <Typography className={classes.value}>
+                {averageApy > 1000 ? '>1000' : averageApy.toFixed(2)}%
+              </Typography>
             )}
           </Grid>
 
@@ -138,7 +140,9 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
             {isLoadingFarmApy ? (
               <img src={loadingAnimation} className={classes.loading} />
             ) : (
-              <Typography className={classes.value}>{singleTickApy.toFixed(2)}%</Typography>
+              <Typography className={classes.value}>
+                {singleTickApy > 1000 ? '>1000' : singleTickApy.toFixed(2)}%
+              </Typography>
             )}
           </Grid>
         </Grid>
