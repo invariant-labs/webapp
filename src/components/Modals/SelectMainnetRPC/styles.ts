@@ -4,7 +4,7 @@ import { colors, typography } from '@static/theme'
 const useStyles = makeStyles(() => ({
   root: {
     background: colors.invariant.component,
-    width: 320,
+    width: 310,
     borderRadius: 20,
     marginTop: 8,
     padding: 8
