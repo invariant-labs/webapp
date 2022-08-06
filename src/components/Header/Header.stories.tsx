@@ -29,9 +29,7 @@ storiesOf('ui/newHeader', module)
           }}>
           <Header
             address={DEFAULT_PUBLICKEY}
-            onNetworkSelect={(chosen: string) => {
-              action(`network changed to: ${chosen}`)()
-            }}
+            onNetworkSelect={(networkType, rpc) => action('chosen: ' + networkType + ' ' + rpc)()}
             onWalletSelect={(chosen: WalletType) => {
               action(`wallet changed to: ${chosen}`)()
             }}
@@ -39,7 +37,9 @@ storiesOf('ui/newHeader', module)
             landing='staking'
             onDisconnectWallet={action('disconnect')}
             typeOfNetwork={NetworkType.DEVNET}
-            onFaucet={() => { console.log('Faucet') }}
+            onFaucet={() => {
+              console.log('Faucet')
+            }}
           />
         </div>
       </div>
@@ -61,9 +61,7 @@ storiesOf('ui/newHeader', module)
           }}>
           <Header
             address={new PublicKey(42)}
-            onNetworkSelect={(chosen: string) => {
-              action(`network changed to: ${chosen}`)()
-            }}
+            onNetworkSelect={(networkType, rpc) => action('chosen: ' + networkType + ' ' + rpc)()}
             onWalletSelect={(chosen: WalletType) => {
               action(`wallet changed to: ${chosen}`)()
             }}

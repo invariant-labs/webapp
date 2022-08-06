@@ -12,14 +12,16 @@ export interface ISolanaConnectionStore {
   status: Status
   message: string
   network: NetworkType
-  slot: number
+  slot: number,
+  rpcAddress: string
 }
 
 export const defaultState: ISolanaConnectionStore = {
   status: Status.Uninitialized,
   message: '',
   network: NetworkType.MAINNET,
-  slot: 0
+  slot: 0,
+  rpcAddress: ''
 }
 export const solanaConnectionSliceName = 'solanaConnection'
 const solanaConnectionSlice = createSlice({
@@ -40,6 +42,10 @@ const solanaConnectionSlice = createSlice({
     },
     setNetwork(state, action: PayloadAction<NetworkType>) {
       state.network = action.payload
+      return state
+    },
+    setRpcAddress(state, action: PayloadAction<string>) {
+      state.rpcAddress = action.payload
       return state
     },
     updateSlot(state) {

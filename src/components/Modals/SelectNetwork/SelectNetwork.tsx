@@ -13,7 +13,7 @@ export interface ISelectNetworkModal {
   networks: ISelectNetwork[]
   open: boolean
   anchorEl: HTMLButtonElement | null
-  onSelect: (networkType: NetworkType) => void
+  onSelect: (networkType: NetworkType, rpcAddress: string) => void
   handleClose: () => void
   active: NetworkType
 }
@@ -43,18 +43,18 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
       <Grid className={classes.root}>
         <Typography className={classes.title}>Select a network</Typography>
         <Grid className={classes.list} container alignContent='space-around' direction='column'>
-          {networks.map(({ networkType: name }) => (
+          {networks.map(({ networkType, rpc }) => (
             <Grid
-              className={classNames(classes.listItem, name === active ? classes.active : null)}
+              className={classNames(classes.listItem, networkType === active ? classes.active : null)}
               item
-              key={`networks-${name}`}
+              key={`networks-${networkType}`}
               onClick={() => {
-                onSelect(name)
+                onSelect(networkType, rpc)
                 handleClose()
               }}>
-              <img className={classes.icon} src={icons[`${name}Icon`]} alt={`${name} icon`} />
+              <img className={classes.icon} src={icons[`${networkType}Icon`]} alt={`${networkType} icon`} />
 
-              <Typography className={classes.name}>{name}</Typography>
+              <Typography className={classes.name}>{networkType}</Typography>
               <DotIcon className={classes.dotIcon} />
             </Grid>
           ))}

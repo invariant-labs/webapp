@@ -19,7 +19,7 @@ import useStyles from './style'
 
 export interface IHeader {
   address: PublicKey
-  onNetworkSelect: (networkType: NetworkType) => void
+  onNetworkSelect: (networkType: NetworkType, rpcAddress: string) => void
   onWalletSelect: (chosen: WalletType) => void
   walletConnected: boolean
   landing: string
@@ -123,8 +123,8 @@ export const Header: React.FC<IHeader> = ({
               { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN },
               { networkType: NetworkType.DEVNET, rpc: SolanaNetworks.DEV }
             ]}
-            onSelect={chosen => {
-              onNetworkSelect(chosen)
+            onSelect={(network, rpc) => {
+              onNetworkSelect(network, rpc)
             }}
           />
           <ChangeWalletButton

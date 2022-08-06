@@ -7,13 +7,14 @@ import { DEFAULT_PUBLICKEY } from '@consts/static'
 import { actions as walletActions, Status } from '@reducers/solanaWallet'
 import { address, status } from '@selectors/solanaWallet'
 import { actions } from '@reducers/solanaConnection'
-import { network } from '@selectors/solanaConnection'
+import { network, rpcAddress } from '@selectors/solanaConnection'
 
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
   const walletAddress = useSelector(address)
   const walletStatus = useSelector(status)
   const currentNetwork = useSelector(network)
+  const currentRpc = useSelector(rpcAddress)
   const location = useLocation()
   const [typeOfWallet, setTypeOfWallet] = useState<WalletType>(WalletType.PHANTOM)
   useEffect(() => {
@@ -65,9 +66,13 @@ export const HeaderWrapper: React.FC = () => {
   return (
     <Header
       address={walletAddress}
-      onNetworkSelect={networkType => {
+      onNetworkSelect={(networkType, rpcAddress) => {
         if (networkType !== currentNetwork) {
           dispatch(actions.setNetwork(networkType))
+        }
+
+        if (rpcAddress !== currentRpc) {
+          dispatch(actions.setRpcAddress(rpcAddress))
         }
       }}
       onWalletSelect={chosen => {

@@ -11,7 +11,7 @@ import { NetworkType } from '@consts/static'
 export interface IProps {
   name: NetworkType
   networks: ISelectNetwork[]
-  onSelect: (chosen: NetworkType) => void
+  onSelect: (networkType: NetworkType, rpcAddress: string) => void
   disabled?: boolean
 }
 export const SelectNetworkButton: React.FC<IProps> = ({
