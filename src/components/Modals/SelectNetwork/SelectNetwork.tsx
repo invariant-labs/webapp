@@ -6,14 +6,14 @@ import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 import classNames from 'classnames'
 import useStyles from './style'
 export interface ISelectNetwork {
-  name: NetworkType
-  network: SolanaNetworks
+  networkType: NetworkType
+  rpc: SolanaNetworks
 }
 export interface ISelectNetworkModal {
   networks: ISelectNetwork[]
   open: boolean
   anchorEl: HTMLButtonElement | null
-  onSelect: (wallet: NetworkType) => void
+  onSelect: (networkType: NetworkType) => void
   handleClose: () => void
   active: NetworkType
 }
@@ -43,7 +43,7 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
       <Grid className={classes.root}>
         <Typography className={classes.title}>Select a network</Typography>
         <Grid className={classes.list} container alignContent='space-around' direction='column'>
-          {networks.map(({ name }) => (
+          {networks.map(({ networkType: name }) => (
             <Grid
               className={classNames(classes.listItem, name === active ? classes.active : null)}
               item

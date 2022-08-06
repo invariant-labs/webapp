@@ -49,7 +49,7 @@ storiesOf('buttons/newHeaderButton', module)
     <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
       <SelectNetworkButton
         name={NetworkType.DEVNET}
-        networks={[{ name: NetworkType.DEVNET, network: SolanaNetworks.DEV }, { name: NetworkType.MAINNET, network: SolanaNetworks.MAIN }]}
+        networks={[{ networkType: NetworkType.DEVNET, rpc: SolanaNetworks.DEV }, { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN }]}
         onSelect={(chosen: string) => action(`chosen: ${chosen}`)()}
       />
     </div>

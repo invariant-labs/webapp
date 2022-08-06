@@ -5,9 +5,9 @@ import SelectNetwork, { ISelectNetwork } from './SelectNetwork'
 import { NetworkType, SolanaNetworks } from '@consts/static'
 
 const networks: ISelectNetwork[] = [
-  { name: NetworkType.MAINNET, network: SolanaNetworks.MAIN },
-  { name: NetworkType.DEVNET, network: SolanaNetworks.DEV },
-  { name: NetworkType.TESTNET, network: SolanaNetworks.TEST }
+  { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN },
+  { networkType: NetworkType.DEVNET, rpc: SolanaNetworks.DEV },
+  { networkType: NetworkType.TESTNET, rpc: SolanaNetworks.TEST }
 ]
 
 storiesOf('modals/newSelectNetwork', module).add('default', () => (
