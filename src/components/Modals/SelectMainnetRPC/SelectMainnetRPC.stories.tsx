@@ -32,5 +32,6 @@ storiesOf('modals/selectMainnetRpc', module).add('default', () => (
     onSelect={(networkType, rpc) => action('chosen: ' + networkType + ' ' + rpc)()}
     anchorEl={null}
     activeRPC={SolanaNetworks.MAIN_SERUM}
+    activeNetwork={NetworkType.MAINNET}
   />
 ))

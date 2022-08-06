@@ -1,5 +1,5 @@
-import React from 'react'
-import { Typography, Popover, Grid } from '@material-ui/core'
+import React, { useState } from 'react'
+import { Typography, Popover, Grid, Input, Button } from '@material-ui/core'
 import { NetworkType } from '@consts/static'
 import icons from '@static/icons'
 import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
@@ -14,6 +14,7 @@ export interface ISelectMainnetRpc {
   onSelect: (networkType: NetworkType, rpcAddress: string, rpcName?: string) => void
   handleClose: () => void
   activeRPC: string
+  activeNetwork: NetworkType
 }
 export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
   networks,
@@ -21,9 +22,23 @@ export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
   open,
   onSelect,
   handleClose,
-  activeRPC
+  activeRPC,
+  activeNetwork
 }) => {
   const classes = useStyles()
+
+  const [address, setAddress] = useState(
+    activeNetwork !== NetworkType.MAINNET || networks.some(net => net.rpc === activeRPC)
+      ? ''
+      : activeRPC
+  )
+
+  const isAddressValid = () => {
+    const urlRegex = /^https?:\/\/[^.]+\.[^.]+/
+
+    return urlRegex.test(address)
+  }
+
   return (
     <Popover
       open={open}
@@ -60,6 +75,33 @@ export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
               <DotIcon className={classes.dotIcon} />
             </Grid>
           ))}
+        </Grid>
+        <Grid
+          className={classes.lowerRow}
+          container
+          direction='row'
+          justifyContent='space-between'
+          wrap='nowrap'>
+          <Input
+            className={classes.input}
+            classes={{
+              input: classes.innerInput
+            }}
+            placeholder='Custom RPC address'
+            onChange={e => setAddress(e.target.value)}
+            value={address}
+            disableUnderline
+          />
+          <Button
+            className={classes.add}
+            onClick={() => {
+              onSelect(NetworkType.MAINNET, address, 'Custom')
+              handleClose()
+            }}
+            disableRipple
+            disabled={!isAddressValid()}>
+            Set
+          </Button>
         </Grid>
       </Grid>
     </Popover>

@@ -84,6 +84,7 @@ export const SelectNetworkButton: React.FC<IProps> = ({
         onSelect={onSelect}
         handleClose={handleClose}
         activeRPC={rpc}
+        activeNetwork={name}
       />
     </>
   )
