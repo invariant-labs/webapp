@@ -87,6 +87,7 @@ export const HeaderWrapper: React.FC = () => {
       }}
       typeOfNetwork={currentNetwork}
       typeOfWallet={typeOfWallet}
+      rpc={currentRpc}
     />
   )
 }

@@ -25,6 +25,7 @@ export interface IHeader {
   landing: string
   typeOfWallet?: WalletType
   typeOfNetwork: NetworkType
+  rpc: string
   onFaucet?: () => void
   onDisconnectWallet: () => void
 }
@@ -37,6 +38,7 @@ export const Header: React.FC<IHeader> = ({
   landing,
   typeOfWallet = WalletType.PHANTOM,
   typeOfNetwork,
+  rpc,
   onFaucet,
   onDisconnectWallet
 }) => {
@@ -119,8 +121,24 @@ export const Header: React.FC<IHeader> = ({
           </Hidden>
           <SelectNetworkButton
             name={typeOfNetwork}
+            rpc={rpc}
             networks={[
-              { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN },
+              {
+                networkType: NetworkType.MAINNET,
+                rpc: SolanaNetworks.MAIN_NIGHTLY,
+                rpcName: 'Nightly'
+              },
+              { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN, rpcName: 'Solana' },
+              {
+                networkType: NetworkType.MAINNET,
+                rpc: SolanaNetworks.MAIN_SERUM,
+                rpcName: 'Serum'
+              },
+              {
+                networkType: NetworkType.MAINNET,
+                rpc: SolanaNetworks.MAIN_GENESYSGO,
+                rpcName: 'GenesysGo'
+              },
               { networkType: NetworkType.DEVNET, rpc: SolanaNetworks.DEV }
             ]}
             onSelect={onNetworkSelect}

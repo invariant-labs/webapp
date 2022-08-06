@@ -49,6 +49,7 @@ storiesOf('buttons/newHeaderButton', module)
     <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
       <SelectNetworkButton
         name={NetworkType.DEVNET}
+        rpc={SolanaNetworks.DEV}
         networks={[
           { networkType: NetworkType.DEVNET, rpc: SolanaNetworks.DEV },
           { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN }
