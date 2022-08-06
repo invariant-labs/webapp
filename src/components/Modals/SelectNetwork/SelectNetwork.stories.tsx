@@ -17,6 +17,6 @@ storiesOf('modals/newSelectNetwork', module).add('default', () => (
     handleClose={() => {}}
     onSelect={(networkType, rpc) => action('chosen: ' + networkType + ' ' + rpc)()}
     anchorEl={null}
-    active={NetworkType.TESTNET}
+    activeNetwork={NetworkType.TESTNET}
   />
 ))

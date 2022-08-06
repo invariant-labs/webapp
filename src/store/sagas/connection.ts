@@ -49,7 +49,9 @@ export function* handleNetworkChange(action: PayloadAction<PayloadTypes['setNetw
   window.location.reload()
   yield* put(
     snackbarsActions.add({
-      message: `You are on ${action.payload.network} network.`,
+      message: `You are on network ${action.payload.network}${
+        action.payload?.rpcName ? ' (' + action.payload.rpcName + ')' : ''
+      }.`,
       variant: 'info',
       persist: false
     })

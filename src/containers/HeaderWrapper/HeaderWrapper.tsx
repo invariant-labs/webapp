@@ -66,9 +66,9 @@ export const HeaderWrapper: React.FC = () => {
   return (
     <Header
       address={walletAddress}
-      onNetworkSelect={(network, rpcAddress) => {
+      onNetworkSelect={(network, rpcAddress, rpcName) => {
         if (network !== currentNetwork || rpcAddress !== currentRpc) {
-          dispatch(actions.setNetwork({ network, rpcAddress }))
+          dispatch(actions.setNetwork({ network, rpcAddress, rpcName }))
         }
       }}
       onWalletSelect={chosen => {

@@ -12,7 +12,7 @@ export interface ISolanaConnectionStore {
   status: Status
   message: string
   network: NetworkType
-  slot: number,
+  slot: number
   rpcAddress: string
 }
 
@@ -40,10 +40,14 @@ const solanaConnectionSlice = createSlice({
       state.message = action.payload
       return state
     },
-    setNetwork(state, action: PayloadAction<{
-      network: NetworkType,
-      rpcAddress: string
-    }>) {
+    setNetwork(
+      state,
+      action: PayloadAction<{
+        network: NetworkType
+        rpcAddress: string
+        rpcName?: string
+      }>
+    ) {
       state.network = action.payload.network
       state.rpcAddress = action.payload.rpcAddress
       return state
