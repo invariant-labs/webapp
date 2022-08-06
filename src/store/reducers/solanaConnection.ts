@@ -1,4 +1,4 @@
-import { NetworkType } from '@consts/static'
+import { NetworkType, SolanaNetworks } from '@consts/static'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PayloadType } from './types'
 
@@ -21,7 +21,7 @@ export const defaultState: ISolanaConnectionStore = {
   message: '',
   network: NetworkType.MAINNET,
   slot: 0,
-  rpcAddress: ''
+  rpcAddress: SolanaNetworks.MAIN_NIGHTLY
 }
 export const solanaConnectionSliceName = 'solanaConnection'
 const solanaConnectionSlice = createSlice({
@@ -40,12 +40,12 @@ const solanaConnectionSlice = createSlice({
       state.message = action.payload
       return state
     },
-    setNetwork(state, action: PayloadAction<NetworkType>) {
-      state.network = action.payload
-      return state
-    },
-    setRpcAddress(state, action: PayloadAction<string>) {
-      state.rpcAddress = action.payload
+    setNetwork(state, action: PayloadAction<{
+      network: NetworkType,
+      rpcAddress: string
+    }>) {
+      state.network = action.payload.network
+      state.rpcAddress = action.payload.rpcAddress
       return state
     },
     updateSlot(state) {
