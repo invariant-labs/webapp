@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { network, status } from '@selectors/solanaConnection'
+import { network, rpcAddress, status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
 import { getBondsProgramSync } from '@web3/programs/bonds'
 import { BondSaleStruct, Bonds, BondStruct } from '@invariant-labs/bonds-sdk/lib/sale'
@@ -38,7 +38,8 @@ const onBondChange = async (
 const BondsEvents = () => {
   const dispatch = useDispatch()
   const networkType = useSelector(network)
-  const bondsProgram = getBondsProgramSync(networkType)
+  const rpc = useSelector(rpcAddress)
+  const bondsProgram = getBondsProgramSync(networkType, rpc)
   const networkStatus = useSelector(status)
   const allBonds = useSelector(bondsList)
   const allUserVested = useSelector(userVested)

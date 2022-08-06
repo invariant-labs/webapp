@@ -1,6 +1,6 @@
 import { actions, PoolStatsData, TimeData, TokenStatsData } from '@reducers/stats'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
-import { network } from '@selectors/solanaConnection'
+import { network, rpcAddress } from '@selectors/solanaConnection'
 import {
   getCoingeckoPricesData,
   getFullNewTokensData,
@@ -21,10 +21,11 @@ export function* getStats(): Generator {
   try {
     const connection = yield* call(getConnection)
     const currentNetwork = yield* select(network)
+    const rpc = yield* select(rpcAddress)
     const data = yield* call(getNetworkStats, currentNetwork.toLowerCase())
     const poolsApy = yield* call(getPoolsAPY, currentNetwork.toLowerCase())
 
-    const marketProgram = yield* call(getMarketProgram, currentNetwork)
+    const marketProgram = yield* call(getMarketProgram, currentNetwork, rpc)
 
     const allPoolsData = yield* call(
       getPoolsFromAdresses,

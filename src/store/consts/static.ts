@@ -164,20 +164,6 @@ enum NetworkType {
   MAINNET = 'Mainnet'
 }
 
-const MAINNET_RPCS = [
-  // {
-  //   rpc: SolanaNetworks.MAIN_FIGMENT,
-  //   probability: 0.5
-  // },
-  // {
-  //   rpc: SolanaNetworks.MAIN_GENESYSGO,
-  //   probability: 0.5
-  // }
-  {
-    rpc: SolanaNetworks.MAIN_NIGHTLY,
-    probability: 1
-  }
-]
 const DEFAULT_PUBLICKEY = new PublicKey(0)
 const MAX_U64 = new BN('18446744073709551615')
 
@@ -366,4 +352,4 @@ export const minimumRangesForTiers = [20, 74, 80, 64, 28]
 
 export const maxSafeConcentrationsForTiers = [400.52, 41.49, 21.47, 8.13, 5.45]
 
-export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, MAINNET_RPCS, NetworkType }
+export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, NetworkType }

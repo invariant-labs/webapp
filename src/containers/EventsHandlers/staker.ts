@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { network, status } from '@selectors/solanaConnection'
+import { network, rpcAddress, status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
 import { getStakerProgramSync } from '@web3/programs/staker'
 import { Staker } from '@invariant-labs/staker-sdk'
@@ -39,7 +39,8 @@ const onStakeChange = async (
 const StakerEvents = () => {
   const dispatch = useDispatch()
   const networkType = useSelector(network)
-  const stakerProgram = getStakerProgramSync(networkType)
+  const rpc = useSelector(rpcAddress)
+  const stakerProgram = getStakerProgramSync(networkType, rpc)
   const networkStatus = useSelector(status)
   const allFarms = useSelector(farms)
   const allUserStakes = useSelector(userStakes)
