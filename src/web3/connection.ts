@@ -140,6 +140,22 @@ const networkTypetoStakerNetwork = (type: NetworkType): StakerNetwork => {
       return StakerNetwork.DEV
   }
 }
+
+const networkTypetoBondsNetwork = (type: NetworkType): BondsNetwork => {
+  switch (type) {
+    case NetworkType.DEVNET:
+      return BondsNetwork.DEV
+    case NetworkType.LOCALNET:
+      return BondsNetwork.LOCAL
+    // case SolanaNetworks.TEST:
+    //   return StakerNetwork.TEST
+    // case NetworkType.MAINNET:
+    //   return BondsNetwork.MAIN
+    default:
+      return BondsNetwork.DEV
+  }
+}
+
 const solanaNetworktoBondsNetwork = (solanaNetwork: SolanaNetworks): BondsNetwork => {
   switch (solanaNetwork) {
     case SolanaNetworks.DEV:
@@ -171,5 +187,6 @@ export {
   solanaNetworktoStakerNetwork,
   networkTypetoStakerNetwork,
   networkTypetoProgramNetwork,
+  networkTypetoBondsNetwork,
   solanaNetworktoBondsNetwork
 }

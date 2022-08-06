@@ -62,9 +62,10 @@ export function* getFarmsTotals() {
     const allFarms = yield* select(farms)
     const allPools = yield* select(pools)
     const allTokens = yield* select(tokens)
+    const networkType = yield* select(network)
 
-    const marketProgram = yield* call(getMarketProgram)
-    const stakerProgram = yield* call(getStakerProgram)
+    const marketProgram = yield* call(getMarketProgram, networkType)
+    const stakerProgram = yield* call(getStakerProgram, networkType)
 
     const updatesObject: Record<string, FarmTotalsUpdate> = {}
 
@@ -141,7 +142,9 @@ export function* getFarmsTotals() {
 
 export function* getFarmsApy() {
   try {
-    const marketProgram = yield* call(getMarketProgram)
+    const networkType = yield* select(network)
+
+    const marketProgram = yield* call(getMarketProgram, networkType)
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const allFarms = yield* select(farms)
@@ -216,12 +219,12 @@ export function* getFarmsApy() {
 
 export function* handleGetFarmsList() {
   try {
-    const stakerProgram = yield* call(getStakerProgram)
+    const currentNetwork = yield* select(network)
+    const stakerProgram = yield* call(getStakerProgram, currentNetwork)
     const connection = yield* call(getConnection)
 
     const list = yield* call([stakerProgram, stakerProgram.getAllIncentive])
 
-    const currentNetwork = yield* select(network)
     const allTokens = yield* select(tokens)
     const poolsApy = yield* call(getPoolsAPY, currentNetwork.toLowerCase())
     const incentivesRewardData = yield* call(getIncentivesRewardData, currentNetwork.toLowerCase())
@@ -293,7 +296,9 @@ export function* handleGetFarmsList() {
 
 export function* getStakesApy() {
   try {
-    const marketProgram = yield* call(getMarketProgram)
+    const networkType = yield* select(network)
+
+    const marketProgram = yield* call(getMarketProgram, networkType)
 
     const allFarms = yield* select(farms)
     const allStakes = yield* select(userStakes)
@@ -374,7 +379,8 @@ export function* getStakesApy() {
 
 export function* handleGetUserStakes() {
   try {
-    const stakerProgram = yield* call(getStakerProgram)
+    const networkType = yield* select(network)
+    const stakerProgram = yield* call(getStakerProgram, networkType)
 
     const allFarms = yield* select(farms)
     const { list: positions } = yield* select(positionsList)
@@ -422,11 +428,11 @@ export function* handleGetUserStakes() {
 }
 
 export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
-  const stakerProgram = yield* call(getStakerProgram)
-  const marketProgram = yield* call(getMarketProgram)
+  const currentNetwork = yield* select(network)
+  const stakerProgram = yield* call(getStakerProgram, currentNetwork)
+  const marketProgram = yield* call(getMarketProgram, currentNetwork)
   const wallet = yield* call(getWallet)
 
-  const currentNetwork = yield* select(network)
   const positionData = yield* select(
     singlePositionData(action.payload.id.toString() + '_' + action.payload.pool.toString())
   )
@@ -619,8 +625,9 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
   try {
     const allFarms = yield* select(farms)
 
-    const stakerProgram = yield* call(getStakerProgram)
-    const marketProgram = yield* call(getMarketProgram)
+    const networkType = yield* select(network)
+    const stakerProgram = yield* call(getStakerProgram, networkType)
+    const marketProgram = yield* call(getMarketProgram, networkType)
     const wallet = yield* call(getWallet)
     const connection = yield* call(getConnection)
 
@@ -803,8 +810,9 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
       return yield* call(handleWithdrawRewardsWithWSOL, action.payload)
     }
 
-    const stakerProgram = yield* call(getStakerProgram)
-    const marketProgram = yield* call(getMarketProgram)
+    const networkType = yield* select(network)
+    const stakerProgram = yield* call(getStakerProgram, networkType)
+    const marketProgram = yield* call(getMarketProgram, networkType)
     const wallet = yield* call(getWallet)
 
     const positionData = yield* select(
@@ -878,8 +886,9 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
 }
 
 export function* createClaimAllPositionRewardsTx(positionIndex: number) {
-  const stakerProgram = yield* call(getStakerProgram)
-  const marketProgram = yield* call(getMarketProgram)
+  const networkType = yield* select(network)
+  const stakerProgram = yield* call(getStakerProgram, networkType)
+  const marketProgram = yield* call(getMarketProgram, networkType)
   const wallet = yield* call(getWallet)
 
   const allPositionsData = yield* select(positionsWithPoolsData)
@@ -932,7 +941,9 @@ export function* createClaimAllPositionRewardsTx(positionIndex: number) {
 
 export function* handleGetNewStakeRangeTicks(action: PayloadAction<string[]>) {
   try {
-    const marketProgram = yield* call(getMarketProgram)
+    const networkType = yield* select(network)
+
+    const marketProgram = yield* call(getMarketProgram, networkType)
 
     const allStakes = yield* select(userStakes)
     const allPositions = yield* select(positionsWithPoolsData)

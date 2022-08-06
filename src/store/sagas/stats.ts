@@ -24,7 +24,7 @@ export function* getStats(): Generator {
     const data = yield* call(getNetworkStats, currentNetwork.toLowerCase())
     const poolsApy = yield* call(getPoolsAPY, currentNetwork.toLowerCase())
 
-    const marketProgram = yield* call(getMarketProgram)
+    const marketProgram = yield* call(getMarketProgram, currentNetwork)
 
     const allPoolsData = yield* call(
       getPoolsFromAdresses,

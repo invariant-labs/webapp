@@ -18,11 +18,11 @@ import { getCurrentSolanaConnection } from '@web3/connection'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
-  const marketProgram = getMarketProgramSync()
+  const networkType = useSelector(network)
+  const marketProgram = getMarketProgramSync(networkType)
   const { tokenFrom, tokenTo } = useSelector(swap)
   const networkStatus = useSelector(status)
   const tickmaps = useSelector(tickMaps)
-  const networkType = useSelector(network)
   const allPools = useSelector(poolsArraySortedByFees)
 
   const poolTicksArray = useSelector(poolTicks)
