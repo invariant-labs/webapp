@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Header from '@components/Header/Header'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { WalletType } from '@web3/wallet'
-import { DEFAULT_PUBLICKEY } from '@consts/static'
+import { DEFAULT_PUBLICKEY, NetworkType, SolanaNetworks } from '@consts/static'
 import { actions as walletActions, Status } from '@reducers/solanaWallet'
 import { address, status } from '@selectors/solanaWallet'
 import { actions } from '@reducers/solanaConnection'
@@ -63,11 +63,21 @@ export const HeaderWrapper: React.FC = () => {
     }
   }, [])
 
+  const defaultMainnetRPC = useMemo(() => {
+    const lastRPC = localStorage.getItem('INVARIANT_MAINNET_RPC')
+
+    return lastRPC === null ? SolanaNetworks.MAIN_NIGHTLY : lastRPC
+  }, [])
+
   return (
     <Header
       address={walletAddress}
       onNetworkSelect={(network, rpcAddress, rpcName) => {
         if (network !== currentNetwork || rpcAddress !== currentRpc) {
+          if (network === NetworkType.MAINNET) {
+            localStorage.setItem('INVARIANT_MAINNET_RPC', rpcAddress)
+          }
+
           dispatch(actions.setNetwork({ network, rpcAddress, rpcName }))
         }
       }}
@@ -88,6 +98,7 @@ export const HeaderWrapper: React.FC = () => {
       typeOfNetwork={currentNetwork}
       typeOfWallet={typeOfWallet}
       rpc={currentRpc}
+      defaultMainnetRPC={defaultMainnetRPC}
     />
   )
 }

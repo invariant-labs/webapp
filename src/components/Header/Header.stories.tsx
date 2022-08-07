@@ -38,6 +38,7 @@ storiesOf('ui/newHeader', module)
             onDisconnectWallet={action('disconnect')}
             typeOfNetwork={NetworkType.DEVNET}
             rpc={SolanaNetworks.DEV}
+            defaultMainnetRPC={SolanaNetworks.MAIN_NIGHTLY}
             onFaucet={() => {
               console.log('Faucet')
             }}
@@ -71,6 +72,7 @@ storiesOf('ui/newHeader', module)
             onDisconnectWallet={action('disconnect')}
             typeOfNetwork={NetworkType.DEVNET}
             rpc={SolanaNetworks.DEV}
+            defaultMainnetRPC={SolanaNetworks.MAIN_NIGHTLY}
           />
         </div>
       </div>

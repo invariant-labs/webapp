@@ -1,13 +1,13 @@
 import React from 'react'
 import { Typography, Popover, Grid } from '@material-ui/core'
-import { NetworkType, SolanaNetworks } from '@consts/static'
+import { NetworkType } from '@consts/static'
 import icons from '@static/icons'
 import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 import classNames from 'classnames'
 import useStyles from './style'
 export interface ISelectNetwork {
   networkType: NetworkType
-  rpc: SolanaNetworks
+  rpc: string
   rpcName?: string
 }
 export interface ISelectNetworkModal {

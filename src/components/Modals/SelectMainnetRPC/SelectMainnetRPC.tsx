@@ -14,7 +14,6 @@ export interface ISelectMainnetRpc {
   onSelect: (networkType: NetworkType, rpcAddress: string, rpcName?: string) => void
   handleClose: () => void
   activeRPC: string
-  activeNetwork: NetworkType
 }
 export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
   networks,
@@ -22,15 +21,12 @@ export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
   open,
   onSelect,
   handleClose,
-  activeRPC,
-  activeNetwork
+  activeRPC
 }) => {
   const classes = useStyles()
 
   const [address, setAddress] = useState(
-    activeNetwork !== NetworkType.MAINNET || networks.some(net => net.rpc === activeRPC)
-      ? ''
-      : activeRPC
+    networks.some(net => net.rpc === activeRPC) ? '' : activeRPC
   )
 
   const isAddressValid = () => {

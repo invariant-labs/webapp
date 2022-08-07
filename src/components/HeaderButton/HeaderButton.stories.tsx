@@ -9,6 +9,7 @@ import SelectNetworkButton from './SelectNetworkButton'
 import ChangeWalletButton from './ChangeWalletButton'
 import { WalletType } from '@web3/wallet'
 import { NetworkType, SolanaNetworks } from '@consts/static'
+import SelectRPCButton from './SelectRPCButton'
 
 const loremIpsum =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
@@ -49,10 +50,35 @@ storiesOf('buttons/newHeaderButton', module)
     <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
       <SelectNetworkButton
         name={NetworkType.DEVNET}
-        rpc={SolanaNetworks.DEV}
         networks={[
           { networkType: NetworkType.DEVNET, rpc: SolanaNetworks.DEV },
           { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN }
+        ]}
+        onSelect={(networkType, rpc) => action('chosen: ' + networkType + ' ' + rpc)()}
+      />
+    </div>
+  ))
+  .add('selectRPC', () => (
+    <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
+      <SelectRPCButton
+        rpc={SolanaNetworks.MAIN_NIGHTLY}
+        networks={[
+          {
+            networkType: NetworkType.MAINNET,
+            rpc: SolanaNetworks.MAIN_NIGHTLY,
+            rpcName: 'Nightly'
+          },
+          { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN, rpcName: 'Solana' },
+          {
+            networkType: NetworkType.MAINNET,
+            rpc: SolanaNetworks.MAIN_SERUM,
+            rpcName: 'Serum'
+          },
+          {
+            networkType: NetworkType.MAINNET,
+            rpc: SolanaNetworks.MAIN_GENESYSGO,
+            rpcName: 'GenesysGo'
+          }
         ]}
         onSelect={(networkType, rpc) => action('chosen: ' + networkType + ' ' + rpc)()}
       />
