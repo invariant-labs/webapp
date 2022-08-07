@@ -1,10 +1,14 @@
 import { combineReducers } from 'redux'
 import storage from 'redux-persist/lib/storage'
-import { persistReducer, createTransform } from 'redux-persist'
-import { NetworkType } from '@consts/static'
+import { persistReducer, createTransform, createMigrate, MigrationManifest } from 'redux-persist'
+import { NetworkType, SolanaNetworks } from '@consts/static'
 import { reducer as snackbarsReducer, snackbarsSliceName } from './snackbars'
 import { reducer as solanaWalletReducer, solanaWalletSliceName } from './solanaWallet'
-import { reducer as solanaConnectionReducer, solanaConnectionSliceName } from './solanaConnection'
+import {
+  ISolanaConnectionStore,
+  reducer as solanaConnectionReducer,
+  solanaConnectionSliceName
+} from './solanaConnection'
 import { poolsSliceName, reducer as poolsReducer } from './pools'
 import { swapSliceName, reducer as swapReducer } from './swap'
 import { positionsSliceName, reducer as positionsReducer } from './positions'
@@ -16,19 +20,54 @@ const transformNetwork = createTransform(
   (inboundState: any, _key) => {
     return inboundState
   },
-  (outboundState, _key) => {
-    if (Object.values(NetworkType).includes(outboundState)) {
-      return outboundState
-    } else {
+  (outboundState, key) => {
+    if (key === 'network' && !Object.values(NetworkType).includes(outboundState)) {
       return NetworkType.MAINNET
     }
+
+    return outboundState
   }
 )
+
+const migrations: MigrationManifest = {
+  // @ts-expect-error
+  1: (state: ISolanaConnectionStore) => {
+    const network =
+      typeof state?.network !== 'undefined' && Object.values(NetworkType).includes(state.network)
+        ? state.network
+        : NetworkType.MAINNET
+
+    let rpcAddress
+
+    switch (network) {
+      case NetworkType.DEVNET:
+        rpcAddress = SolanaNetworks.DEV
+        break
+      case NetworkType.TESTNET:
+        rpcAddress = SolanaNetworks.TEST
+        break
+      case NetworkType.LOCALNET:
+        rpcAddress = SolanaNetworks.LOCAL
+        break
+      case NetworkType.MAINNET:
+        rpcAddress = SolanaNetworks.MAIN_QUICKNODE
+        break
+    }
+
+    return {
+      ...state,
+      rpcAddress
+    }
+  }
+}
+
 const connectionPersistConfig = {
   key: solanaConnectionSliceName,
+  version: 1,
   storage: storage,
-  whitelist: ['network'],
-  transforms: [transformNetwork]
+  whitelist: ['network', 'rpcAddress'],
+  transforms: [transformNetwork],
+  migrate: createMigrate(migrations, { debug: false })
 }
 
 const combinedReducers = combineReducers({

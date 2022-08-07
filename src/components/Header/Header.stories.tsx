@@ -1,6 +1,6 @@
 import React from 'react'
 import { PublicKey } from '@solana/web3.js'
-import { DEFAULT_PUBLICKEY, NetworkType } from '@consts/static'
+import { DEFAULT_PUBLICKEY, NetworkType, SolanaNetworks } from '@consts/static'
 import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
 import { withKnobs } from '@storybook/addon-knobs'
@@ -29,9 +29,7 @@ storiesOf('ui/newHeader', module)
           }}>
           <Header
             address={DEFAULT_PUBLICKEY}
-            onNetworkSelect={(chosen: string) => {
-              action(`network changed to: ${chosen}`)()
-            }}
+            onNetworkSelect={(networkType, rpc) => action('chosen: ' + networkType + ' ' + rpc)()}
             onWalletSelect={(chosen: WalletType) => {
               action(`wallet changed to: ${chosen}`)()
             }}
@@ -39,7 +37,11 @@ storiesOf('ui/newHeader', module)
             landing='staking'
             onDisconnectWallet={action('disconnect')}
             typeOfNetwork={NetworkType.DEVNET}
-            onFaucet={() => { console.log('Faucet') }}
+            rpc={SolanaNetworks.DEV}
+            defaultMainnetRPC={SolanaNetworks.MAIN_NIGHTLY}
+            onFaucet={() => {
+              console.log('Faucet')
+            }}
           />
         </div>
       </div>
@@ -61,9 +63,7 @@ storiesOf('ui/newHeader', module)
           }}>
           <Header
             address={new PublicKey(42)}
-            onNetworkSelect={(chosen: string) => {
-              action(`network changed to: ${chosen}`)()
-            }}
+            onNetworkSelect={(networkType, rpc) => action('chosen: ' + networkType + ' ' + rpc)()}
             onWalletSelect={(chosen: WalletType) => {
               action(`wallet changed to: ${chosen}`)()
             }}
@@ -71,6 +71,8 @@ storiesOf('ui/newHeader', module)
             landing='staking'
             onDisconnectWallet={action('disconnect')}
             typeOfNetwork={NetworkType.DEVNET}
+            rpc={SolanaNetworks.DEV}
+            defaultMainnetRPC={SolanaNetworks.MAIN_NIGHTLY}
           />
         </div>
       </div>

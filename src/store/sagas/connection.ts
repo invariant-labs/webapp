@@ -1,15 +1,15 @@
 import { all, call, put, SagaGenerator, select, takeLeading, spawn, delay } from 'typed-redux-saga'
 
 import { actions, Status, PayloadTypes } from '@reducers/solanaConnection'
-import { getNetworkFromType, getSolanaConnection } from '@web3/connection'
+import { getSolanaConnection } from '@web3/connection'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import { network } from '@selectors/solanaConnection'
+import { rpcAddress } from '@selectors/solanaConnection'
 import { Connection } from '@solana/web3.js'
 import { PayloadAction } from '@reduxjs/toolkit'
 
 export function* getConnection(): SagaGenerator<Connection> {
-  const currentNetwork = yield* select(network)
-  const connection = yield* call(getSolanaConnection, getNetworkFromType(currentNetwork))
+  const rpc = yield* select(rpcAddress)
+  const connection = yield* call(getSolanaConnection, rpc)
   return connection
 }
 
@@ -49,7 +49,9 @@ export function* handleNetworkChange(action: PayloadAction<PayloadTypes['setNetw
   window.location.reload()
   yield* put(
     snackbarsActions.add({
-      message: `You are on ${action.payload} network.`,
+      message: `You are on network ${action.payload.network}${
+        action.payload?.rpcName ? ' (' + action.payload.rpcName + ')' : ''
+      }.`,
       variant: 'info',
       persist: false
     })
