@@ -16,17 +16,21 @@ import { blurContent, unblurContent } from '@consts/uiUtils'
 import Hamburger from '@static/svg/Hamburger.svg'
 import classNames from 'classnames'
 import useStyles from './style'
+import SelectRPCButton from '@components/HeaderButton/SelectRPCButton'
+import SelectMainnetRPC from '@components/Modals/SelectMainnetRPC/SelectMainnetRPC'
 
 export interface IHeader {
   address: PublicKey
-  onNetworkSelect: (chosen: NetworkType) => void
+  onNetworkSelect: (networkType: NetworkType, rpcAddress: string, rpcName?: string) => void
   onWalletSelect: (chosen: WalletType) => void
   walletConnected: boolean
   landing: string
   typeOfWallet?: WalletType
   typeOfNetwork: NetworkType
+  rpc: string
   onFaucet?: () => void
   onDisconnectWallet: () => void
+  defaultMainnetRPC: string
 }
 
 export const Header: React.FC<IHeader> = ({
@@ -37,8 +41,10 @@ export const Header: React.FC<IHeader> = ({
   landing,
   typeOfWallet = WalletType.PHANTOM,
   typeOfNetwork,
+  rpc,
   onFaucet,
-  onDisconnectWallet
+  onDisconnectWallet,
+  defaultMainnetRPC
 }) => {
   const classes = useStyles()
   const buttonClasses = useButtonStyles()
@@ -58,12 +64,37 @@ export const Header: React.FC<IHeader> = ({
   const [activePath, setActive] = React.useState(landing)
 
   const [routesModalOpen, setRoutesModalOpen] = React.useState(false)
+  const [mainnetRpcsOpen, setMainnetRpcsOpen] = React.useState(false)
   const [routesModalAnchor, setRoutesModalAnchor] = React.useState<HTMLButtonElement | null>(null)
 
   React.useEffect(() => {
     // if there will be no redirects, get rid of this
     setActive(landing)
   }, [landing])
+
+  const mainnetRPCs = [
+    {
+      networkType: NetworkType.MAINNET,
+      rpc: SolanaNetworks.MAIN_QUICKNODE,
+      rpcName: 'Quicknode'
+    },
+    {
+      networkType: NetworkType.MAINNET,
+      rpc: SolanaNetworks.MAIN_NIGHTLY,
+      rpcName: 'Nightly'
+    },
+    { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN, rpcName: 'Solana' },
+    {
+      networkType: NetworkType.MAINNET,
+      rpc: SolanaNetworks.MAIN_SERUM,
+      rpcName: 'Serum'
+    },
+    {
+      networkType: NetworkType.MAINNET,
+      rpc: SolanaNetworks.MAIN_GENESYSGO,
+      rpcName: 'GenesysGo'
+    }
+  ]
 
   return (
     <Grid container>
@@ -107,7 +138,7 @@ export const Header: React.FC<IHeader> = ({
           )}
           wrap='nowrap'>
           <Hidden xsDown>
-            {(typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) && (
+            {typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET ? (
               <Button
                 className={buttonClasses.headerButton}
                 variant='contained'
@@ -115,23 +146,35 @@ export const Header: React.FC<IHeader> = ({
                 onClick={onFaucet}>
                 Faucet
               </Button>
-            )}
+            ) : null}
+          </Hidden>
+          <Hidden xsDown>
+            {typeOfNetwork === NetworkType.MAINNET ? (
+              <SelectRPCButton rpc={rpc} networks={mainnetRPCs} onSelect={onNetworkSelect} />
+            ) : null}
           </Hidden>
           <SelectNetworkButton
             name={typeOfNetwork}
             networks={[
-              { name: NetworkType.MAINNET, network: SolanaNetworks.MAIN },
-              { name: NetworkType.DEVNET, network: SolanaNetworks.DEV }
+              {
+                networkType: NetworkType.MAINNET,
+                rpc: defaultMainnetRPC,
+                rpcName:
+                  mainnetRPCs.find(data => data.rpc === defaultMainnetRPC)?.rpcName ?? 'Custom'
+              },
+              { networkType: NetworkType.DEVNET, rpc: SolanaNetworks.DEV }
             ]}
-            onSelect={chosen => {
-              onNetworkSelect(chosen)
-            }}
+            onSelect={onNetworkSelect}
           />
           <ChangeWalletButton
             name={
               walletConnected
-                ? `${address.toString().substr(0, isXsDown ? 8 : 15)}...${
-                    !isXsDown ? address.toString().substr(address.toString().length - 4, 4) : ''
+                ? `${address.toString().slice(0, 8)}...${
+                    !isXsDown
+                      ? address
+                          .toString()
+                          .slice(address.toString().length - 4, address.toString().length)
+                      : ''
                   }`
                 : 'Connect wallet'
             }
@@ -185,7 +228,28 @@ export const Header: React.FC<IHeader> = ({
                 ? onFaucet
                 : undefined
             }
+            onRPC={
+              typeOfNetwork === NetworkType.MAINNET && isXsDown
+                ? () => {
+                    setRoutesModalOpen(false)
+                    setMainnetRpcsOpen(true)
+                  }
+                : undefined
+            }
           />
+          {typeOfNetwork === NetworkType.MAINNET ? (
+            <SelectMainnetRPC
+              networks={mainnetRPCs}
+              open={mainnetRpcsOpen}
+              anchorEl={routesModalAnchor}
+              onSelect={onNetworkSelect}
+              handleClose={() => {
+                setMainnetRpcsOpen(false)
+                unblurContent()
+              }}
+              activeRPC={rpc}
+            />
+          ) : null}
         </Hidden>
       </Grid>
     </Grid>
