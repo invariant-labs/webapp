@@ -17,6 +17,7 @@ import Hamburger from '@static/svg/Hamburger.svg'
 import classNames from 'classnames'
 import useStyles from './style'
 import SelectRPCButton from '@components/HeaderButton/SelectRPCButton'
+import SelectMainnetRPC from '@components/Modals/SelectMainnetRPC/SelectMainnetRPC'
 
 export interface IHeader {
   address: PublicKey
@@ -63,6 +64,7 @@ export const Header: React.FC<IHeader> = ({
   const [activePath, setActive] = React.useState(landing)
 
   const [routesModalOpen, setRoutesModalOpen] = React.useState(false)
+  const [mainnetRpcsOpen, setMainnetRpcsOpen] = React.useState(false)
   const [routesModalAnchor, setRoutesModalAnchor] = React.useState<HTMLButtonElement | null>(null)
 
   React.useEffect(() => {
@@ -221,7 +223,28 @@ export const Header: React.FC<IHeader> = ({
                 ? onFaucet
                 : undefined
             }
+            onRPC={
+              typeOfNetwork === NetworkType.MAINNET && isXsDown
+                ? () => {
+                    setRoutesModalOpen(false)
+                    setMainnetRpcsOpen(true)
+                  }
+                : undefined
+            }
           />
+          {typeOfNetwork === NetworkType.MAINNET ? (
+            <SelectMainnetRPC
+              networks={mainnetRPCs}
+              open={mainnetRpcsOpen}
+              anchorEl={routesModalAnchor}
+              onSelect={onNetworkSelect}
+              handleClose={() => {
+                setMainnetRpcsOpen(false)
+                unblurContent()
+              }}
+              activeRPC={rpc}
+            />
+          ) : null}
         </Hidden>
       </Grid>
     </Grid>
