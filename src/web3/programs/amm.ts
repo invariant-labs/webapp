@@ -1,43 +1,41 @@
 import { getMarketAddress, Market } from '@invariant-labs/sdk'
-import {
-  getSolanaConnection,
-  getSolanaNetwork,
-  solanaNetworktoProgramNetwork
-} from '@web3/connection'
+import { getSolanaConnection, networkTypetoProgramNetwork } from '@web3/connection'
 import { getSolanaWallet } from '@web3/wallet'
 import { PublicKey } from '@solana/web3.js'
+import { NetworkType } from '@consts/static'
 let _market: Market
 export const getCurrentMarketProgram = (): Market => {
   return _market
 }
 
-export const getMarketProgram = async (): Promise<Market> => {
+export const getMarketProgram = async (
+  networkType: NetworkType,
+  rpcAddress: string
+): Promise<Market> => {
   if (_market) {
     return _market
   }
-  const solanaNetwork = getSolanaNetwork()
-  const net = solanaNetworktoProgramNetwork(solanaNetwork)
+  const net = networkTypetoProgramNetwork(networkType)
 
   _market = await Market.build(
     net,
     getSolanaWallet(),
-    getSolanaConnection(solanaNetwork),
+    getSolanaConnection(rpcAddress),
     new PublicKey(getMarketAddress(net))
   )
   return _market
 }
 
-export const getMarketProgramSync = (): Market => {
+export const getMarketProgramSync = (networkType: NetworkType, rpcAddress: string): Market => {
   if (_market) {
     return _market
   }
-  const solanaNetwork = getSolanaNetwork()
-  const net = solanaNetworktoProgramNetwork(solanaNetwork)
+  const net = networkTypetoProgramNetwork(networkType)
 
   Market.build(
     net,
     getSolanaWallet(),
-    getSolanaConnection(solanaNetwork),
+    getSolanaConnection(rpcAddress),
     new PublicKey(getMarketAddress(net))
   )
     .then(market => {

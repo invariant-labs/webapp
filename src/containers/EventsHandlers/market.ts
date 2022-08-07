@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { network, status } from '@selectors/solanaConnection'
+import { network, rpcAddress, status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
 import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
@@ -18,11 +18,12 @@ import { getCurrentSolanaConnection } from '@web3/connection'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
-  const marketProgram = getMarketProgramSync()
+  const networkType = useSelector(network)
+  const rpc = useSelector(rpcAddress)
+  const marketProgram = getMarketProgramSync(networkType, rpc)
   const { tokenFrom, tokenTo } = useSelector(swap)
   const networkStatus = useSelector(status)
   const tickmaps = useSelector(tickMaps)
-  const networkType = useSelector(network)
   const allPools = useSelector(poolsArraySortedByFees)
 
   const poolTicksArray = useSelector(poolTicks)

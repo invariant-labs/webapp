@@ -11,6 +11,7 @@ import { getConnection } from './connection'
 import { Keypair, sendAndConfirmRawTransaction, SystemProgram, Transaction } from '@solana/web3.js'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { network, rpcAddress } from '@selectors/solanaConnection'
 
 export function* handleSwapWithSOL(): Generator {
   try {
@@ -30,7 +31,9 @@ export function* handleSwapWithSOL(): Generator {
     const wallet = yield* call(getWallet)
     const tokensAccounts = yield* select(accounts)
     const connection = yield* call(getConnection)
-    const marketProgram = yield* call(getMarketProgram)
+    const networkType = yield* select(network)
+    const rpc = yield* select(rpcAddress)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
     const swapPool = allPools.find(
       pool =>
         (tokenFrom.equals(pool.tokenX) && tokenTo.equals(pool.tokenY)) ||
@@ -256,7 +259,9 @@ export function* handleSwap(): Generator {
 
     const wallet = yield* call(getWallet)
     const tokensAccounts = yield* select(accounts)
-    const marketProgram = yield* call(getMarketProgram)
+    const networkType = yield* select(network)
+    const rpc = yield* select(rpcAddress)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
     const swapPool = allPools.find(
       pool =>
         (tokenFrom.equals(pool.tokenX) && tokenTo.equals(pool.tokenY)) ||

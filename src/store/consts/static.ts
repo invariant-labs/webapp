@@ -149,8 +149,8 @@ export const HBB_DEV: Token = {
 enum SolanaNetworks {
   DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',
-  MAIN = 'https://tame-ancient-mountain.solana-mainnet.quiknode.pro/6a9a95bf7bbb108aea620e7ee4c1fd5e1b67cc62',
-  QUICK_NODE = 'https://tame-ancient-mountain.solana-mainnet.quiknode.pro/6a9a95bf7bbb108aea620e7ee4c1fd5e1b67cc62',
+  MAIN = 'https://api.mainnet-beta.solana.com',
+  MAIN_QUICKNODE = 'https://tame-ancient-mountain.solana-mainnet.quiknode.pro/6a9a95bf7bbb108aea620e7ee4c1fd5e1b67cc62',
   MAIN_SERUM = 'https://solana-api.projectserum.com',
   MAIN_FIGMENT = 'https://solana--mainnet.datahub.figment.io/apikey/182e93d87a1f1d335c9d74d6c7371388',
   MAIN_GENESYSGO = 'https://ssc-dao.genesysgo.net',
@@ -165,20 +165,6 @@ enum NetworkType {
   MAINNET = 'Mainnet'
 }
 
-const MAINNET_RPCS = [
-  // {
-  //   rpc: SolanaNetworks.MAIN_FIGMENT,
-  //   probability: 0.5
-  // },
-  // {
-  //   rpc: SolanaNetworks.MAIN_GENESYSGO,
-  //   probability: 0.5
-  // }
-  {
-    rpc: SolanaNetworks.MAIN_NIGHTLY,
-    probability: 1
-  }
-]
 const DEFAULT_PUBLICKEY = new PublicKey(0)
 const MAX_U64 = new BN('18446744073709551615')
 
@@ -367,4 +353,4 @@ export const minimumRangesForTiers = [20, 74, 80, 64, 28]
 
 export const maxSafeConcentrationsForTiers = [400.52, 41.49, 21.47, 8.13, 5.45]
 
-export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, MAINNET_RPCS, NetworkType }
+export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, NetworkType }
