@@ -20,7 +20,7 @@ export const PerformanceWarning: React.FC = () => {
     if (networkStatus === Status.Initialized) {
       axios
         .post<{ result: Array<{ numTransactions: number; samplePeriodSecs: number }> }>(
-          networkType === NetworkType.MAINNET ? SolanaNetworks.MAIN_NIGHTLY : SolanaNetworks.DEV,
+          networkType === NetworkType.MAINNET ? SolanaNetworks.MAIN_QUICKNODE : SolanaNetworks.DEV,
           {
             jsonrpc: '2.0',
             id: 1,
