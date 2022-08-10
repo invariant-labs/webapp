@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
-import { all, call, fork, put, select, spawn, take, takeLatest } from 'typed-redux-saga'
+import { all, call, fork, put, select, spawn, take, takeLatest, takeEvery } from 'typed-redux-saga'
 import {
   actions,
   FarmPositionData,
@@ -1018,15 +1018,15 @@ export function* getUserStakesHandler(): Generator {
 }
 
 export function* stakePositionHandler(): Generator {
-  yield* takeLatest(actions.stakePosition, handleStakePosition)
+  yield* takeEvery(actions.stakePosition, handleStakePosition)
 }
 
 export function* withdrawRewardsHandler(): Generator {
-  yield* takeLatest(actions.withdrawRewardsForPosition, handleWithdrawRewards)
+  yield* takeEvery(actions.withdrawRewardsForPosition, handleWithdrawRewards)
 }
 
 export function* getNewStakeRangeTicksHandler(): Generator {
-  yield* takeLatest(actions.getNewStakeRangeTicks, handleGetNewStakeRangeTicks)
+  yield* takeEvery(actions.getNewStakeRangeTicks, handleGetNewStakeRangeTicks)
 }
 
 export function* farmsSaga(): Generator {
