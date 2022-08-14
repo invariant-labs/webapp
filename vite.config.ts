@@ -15,6 +15,7 @@ export default defineConfig({
     'process.env.NODE_DEBUG': 'false'
   },
   build: {
+    target: 'es2020',
     rollupOptions: {
       plugins: [inject({ Buffer: ['buffer', 'Buffer'] })]
     }
