@@ -174,7 +174,6 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
           tokenYSymbol: position.tokenY.symbol,
           tokenXDecimals: position.tokenX.decimals,
           tokenYDecimals: position.tokenY.decimals,
-          fee: +printBN(position.poolData.fee.v, DECIMAL - 2),
           minPrice,
           maxPrice,
           tokenXDeposit,
@@ -307,7 +306,6 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
           tokenYSymbol: position.tokenY.symbol,
           tokenXDecimals: position.tokenX.decimals,
           tokenYDecimals: position.tokenY.decimals,
-          fee: +printBN(position.poolData.fee.v, DECIMAL - 2),
           minPrice,
           maxPrice,
           tokenXDeposit,
@@ -379,6 +377,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       }
       userStakedInXToken={userStakedInXToken}
       userStakedInYToken={userStakedInYToken}
+      fee={+printBN(farmData.poolData.fee.v, DECIMAL - 2)}
       averageApy={(farmData.averageApy ?? 0) + farmData.poolApy}
       singleTickApy={(farmData.singleTickApy ?? 0) + farmData.poolApy}
       toStake={toStake}

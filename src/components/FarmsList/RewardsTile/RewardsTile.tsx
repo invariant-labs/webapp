@@ -11,7 +11,6 @@ export interface IRewardsTile {
   tokenYDecimals: number
   minPrice: number
   maxPrice: number
-  fee: number
   tokenXDeposit: number
   tokenYDeposit: number
   valueX: number
@@ -37,7 +36,6 @@ export const RewardsTile: React.FC<IProps> = ({
   tokenYDecimals,
   minPrice,
   maxPrice,
-  fee,
   tokenXDeposit,
   tokenYDeposit,
   valueX,
@@ -92,11 +90,6 @@ export const RewardsTile: React.FC<IProps> = ({
               {formatNumbers(thresholdsWithTokenDecimal(data.secondDecimals))(data.max.toString())}
               {showPrefix(data.max)} {data.secondSymbol}/{data.firstSymbol}
             </Typography>
-          </Grid>
-
-          <Grid className={classes.row} container wrap='nowrap'>
-            <Typography className={classes.label}>Fee tier:</Typography>
-            <Typography className={classes.value}>{fee}%</Typography>
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>

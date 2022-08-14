@@ -18,6 +18,7 @@ storiesOf('farmsList/selectedFarm', module)
           height: '100vh'
         }}>
         <SelectedFarmList
+          fee={0.01}
           tokenX={tokens[NetworkType.DEVNET][0]}
           tokenY={tokens[NetworkType.DEVNET][1]}
           rewardToken={tokens[NetworkType.DEVNET][0]}
@@ -36,7 +37,6 @@ storiesOf('farmsList/selectedFarm', module)
               tokenYDecimals: 6,
               minPrice: 2,
               maxPrice: 5.005,
-              fee: 0.3,
               tokenXDeposit: 2137,
               tokenYDeposit: 911,
               valueX: 5184,
@@ -54,7 +54,6 @@ storiesOf('farmsList/selectedFarm', module)
               tokenYDecimals: 6,
               minPrice: 2,
               maxPrice: 5.005,
-              fee: 0.3,
               tokenXDeposit: 2137,
               tokenYDeposit: 911,
               valueX: 5184,
@@ -91,6 +90,7 @@ storiesOf('farmsList/selectedFarm', module)
           height: '100vh'
         }}>
         <SelectedFarmList
+          fee={0.01}
           tokenX={tokens[NetworkType.DEVNET][0]}
           tokenY={tokens[NetworkType.DEVNET][1]}
           rewardToken={tokens[NetworkType.DEVNET][0]}

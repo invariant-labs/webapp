@@ -12,7 +12,6 @@ export interface IStakedTile {
   tokenYDecimals: number
   minPrice: number
   maxPrice: number
-  fee: number
   tokenXDeposit: number
   tokenYDeposit: number
   valueX: number
@@ -33,7 +32,6 @@ export const StakeTile: React.FC<IProps> = ({
   tokenYDecimals,
   minPrice,
   maxPrice,
-  fee,
   tokenXDeposit,
   tokenYDeposit,
   valueX,
@@ -108,8 +106,11 @@ export const StakeTile: React.FC<IProps> = ({
           </Grid>
 
           <Grid className={classes.row} container wrap='nowrap'>
-            <Typography className={classes.label}>Fee tier:</Typography>
-            <Typography className={classes.value}>{fee}%</Typography>
+            <Typography className={classes.label}>Value:</Typography>
+            <Typography className={classes.value}>
+              {formatNumbers(thresholdsWithTokenDecimal(data.firstDecimals))(data.value.toString())}
+              {showPrefix(data.value)} {data.firstSymbol}
+            </Typography>
           </Grid>
         </Grid>
 
@@ -127,14 +128,6 @@ export const StakeTile: React.FC<IProps> = ({
             <Typography className={classes.value}>
               {formatNumbers(thresholdsWithTokenDecimal(tokenYDecimals))(tokenYDeposit.toString())}
               {showPrefix(tokenYDeposit)}
-            </Typography>
-          </Grid>
-
-          <Grid className={classes.row} container wrap='nowrap'>
-            <Typography className={classes.label}>Value:</Typography>
-            <Typography className={classes.value}>
-              {formatNumbers(thresholdsWithTokenDecimal(data.firstDecimals))(data.value.toString())}
-              {showPrefix(data.value)} {data.firstSymbol}
             </Typography>
           </Grid>
         </Grid>

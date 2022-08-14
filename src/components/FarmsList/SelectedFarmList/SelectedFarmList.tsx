@@ -34,6 +34,7 @@ export interface ISelectedFarmList {
   isLoadingRangeTicks?: boolean
   isLoadingFarmApy?: boolean
   isLoadingStakesApy?: boolean
+  fee: number
 }
 
 export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
@@ -56,7 +57,8 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
   noConnectedBlockerProps,
   isLoadingRangeTicks = false,
   isLoadingFarmApy = false,
-  isLoadingStakesApy = false
+  isLoadingStakesApy = false,
+  fee
 }) => {
   const classes = useStyle()
 
@@ -148,6 +150,11 @@ export const SelectedFarmList: React.FC<ISelectedFarmList> = ({
         </Grid>
 
         <Grid className={classes.rightSide} container direction='column'>
+          <Grid className={classes.row} container wrap='nowrap'>
+            <Typography className={classes.label}>Fee tier:</Typography>
+            <Typography className={classes.value}>{fee}%</Typography>
+          </Grid>
+
           <Grid className={classes.row} container wrap='nowrap'>
             <Typography className={classes.label}>Reward token:</Typography>
             <img src={rewardToken.logoURI} className={classes.smallIcon} />
