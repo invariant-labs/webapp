@@ -26,8 +26,7 @@ import { positionsWithPoolsData, singlePositionData } from '@selectors/positions
 import { GuardPredicate } from '@redux-saga/types'
 import { createClaimAllPositionRewardsTx } from './farms'
 import { network, rpcAddress } from '@selectors/solanaConnection'
-import { actions as farmsActions, ExtendedStake } from '@reducers/farms'
-import { userStakes } from '@selectors/farms'
+import { actions as farmsActions } from '@reducers/farms'
 
 export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
   try {
@@ -799,6 +798,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     }
 
     yield put(actions.getPositionsList())
+    yield* put(farmsActions.getUserStakes())
 
     data.onSuccess()
   } catch (error) {
@@ -902,15 +902,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     }
 
     yield* put(actions.getPositionsList())
-
-    const allStakes = yield* select(userStakes)
-    const newStakes: Record<string, ExtendedStake> = {}
-    Object.entries(allStakes).forEach(([address, stake]) => {
-      if (!stake.position.equals(allPositionsData[action.payload.positionIndex].address)) {
-        newStakes[address] = stake
-      }
-    })
-    yield* put(farmsActions.setUserStakes(newStakes))
+    yield* put(farmsActions.getUserStakes())
 
     action.payload.onSuccess()
   } catch (error) {
