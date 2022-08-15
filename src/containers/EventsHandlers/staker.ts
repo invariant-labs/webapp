@@ -90,7 +90,8 @@ const StakerEvents = () => {
           dispatch(
             actions.setSingleStake({
               ...stake,
-              ...stakeData
+              secondsPerLiquidityInitial: stakeData.secondsPerLiquidityInitial,
+              liquidity: stakeData.liquidity
             })
           )
         })
