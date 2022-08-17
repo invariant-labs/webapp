@@ -19,7 +19,13 @@ import {
   getPositionsAddressesFromRange
 } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
-import { Transaction, sendAndConfirmRawTransaction, Keypair, SystemProgram, PublicKey } from '@solana/web3.js'
+import {
+  Transaction,
+  sendAndConfirmRawTransaction,
+  Keypair,
+  SystemProgram,
+  PublicKey
+} from '@solana/web3.js'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { positionsWithPoolsData, singlePositionData } from '@selectors/positions'
@@ -748,6 +754,14 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
     }
 
+    const positionStakes = yield* select(
+      stakesForPosition(allPositionsData[data.positionIndex].address)
+    )
+    const stakerProgram = yield* call(getStakerProgram, networkType, rpc)
+    for (const stake of positionStakes) {
+      yield* call(unsub, stakerProgram, stake.address)
+    }
+
     const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {
       pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
         fee: positionForIndex.fee.v
@@ -861,15 +875,13 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
     }
 
-    const positionStakes = yield* select(stakesForPosition(allPositionsData[action.payload.positionIndex].address))
+    const positionStakes = yield* select(
+      stakesForPosition(allPositionsData[action.payload.positionIndex].address)
+    )
     const stakerProgram = yield* call(getStakerProgram, networkType, rpc)
 
     for (const stake of positionStakes) {
       yield* call(unsub, stakerProgram, stake.address)
-    }
-
-    if (positionStakes.length) {
-      yield* call(sleep, 3000)
     }
 
     const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {
