@@ -19,7 +19,13 @@ import {
   getPositionsAddressesFromRange
 } from '@consts/utils'
 import { accounts } from '@selectors/solanaWallet'
-import { Transaction, sendAndConfirmRawTransaction, Keypair, SystemProgram } from '@solana/web3.js'
+import {
+  Transaction,
+  sendAndConfirmRawTransaction,
+  Keypair,
+  SystemProgram,
+  PublicKey
+} from '@solana/web3.js'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { positionsWithPoolsData, singlePositionData } from '@selectors/positions'
@@ -27,6 +33,9 @@ import { GuardPredicate } from '@redux-saga/types'
 import { createClaimAllPositionRewardsTx } from './farms'
 import { network, rpcAddress } from '@selectors/solanaConnection'
 import { actions as farmsActions } from '@reducers/farms'
+import { stakesForPosition } from '@selectors/farms'
+import { getStakerProgram } from '@web3/programs/staker'
+import { Staker } from '@invariant-labs/staker-sdk'
 
 export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
   try {
@@ -745,6 +754,14 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
     }
 
+    const positionStakes = yield* select(
+      stakesForPosition(allPositionsData[data.positionIndex].address)
+    )
+    const stakerProgram = yield* call(getStakerProgram, networkType, rpc)
+    for (const stake of positionStakes) {
+      yield* call(unsub, stakerProgram, stake.address)
+    }
+
     const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {
       pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
         fee: positionForIndex.fee.v
@@ -813,6 +830,14 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
   }
 }
 
+const unsub = async (stakerProgram: Staker, key: PublicKey) => {
+  try {
+    await stakerProgram.program.account.userStake.unsubscribe(key)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
   try {
     const allTokens = yield* select(tokens)
@@ -848,6 +873,15 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
 
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
+    }
+
+    const positionStakes = yield* select(
+      stakesForPosition(allPositionsData[action.payload.positionIndex].address)
+    )
+    const stakerProgram = yield* call(getStakerProgram, networkType, rpc)
+
+    for (const stake of positionStakes) {
+      yield* call(unsub, stakerProgram, stake.address)
     }
 
     const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {

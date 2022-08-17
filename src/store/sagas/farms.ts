@@ -942,7 +942,16 @@ export function* createClaimAllPositionRewardsTx(positionIndex: number) {
       ownerTokenAcc
     })
 
-    tx = tx.add(withdrawIx)
+    const closeIx = yield* call(
+      [stakerProgram, stakerProgram.closeStakeByOwnerIx],
+      stake.address,
+      stake.incentive,
+      stake.position,
+      wallet.publicKey,
+      positionData.positionIndex
+    )
+
+    tx = tx.add(withdrawIx).add(closeIx)
   }
 
   return tx

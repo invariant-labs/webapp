@@ -83,9 +83,24 @@ const StakerEvents = () => {
     }
 
     const connectEvents = () => {
-      setStakesKeys(Object.keys(allUserStakes))
+      const tmpKeys = Object.keys(allUserStakes)
+
+      stakesKeys.forEach(key => {
+        if (!tmpKeys.includes(key)) {
+          stakerProgram.program.account.userStake
+            .unsubscribe(new PublicKey(key))
+            .then(() => {})
+            .catch(error => {
+              console.log(error)
+            })
+        }
+      })
 
       R.forEachObj(allUserStakes, stake => {
+        if (stakesKeys.includes(stake.address.toString())) {
+          return
+        }
+
         onStakeChange(stakerProgram, stake.address, stakeData => {
           dispatch(
             actions.setSingleStake({
@@ -100,35 +115,12 @@ const StakerEvents = () => {
             console.log(err)
           })
       })
+
+      setStakesKeys(tmpKeys)
     }
 
     connectEvents()
   }, [dispatch, networkStatus, walletStat, Object.values(allUserStakes).length])
-
-  useEffect(() => {
-    if (
-      networkStatus !== Status.Initialized ||
-      !stakerProgram ||
-      walletStat === WalletStatus.Initialized
-    ) {
-      return
-    }
-
-    const connectEvents = () => {
-      stakesKeys.forEach(key => {
-        stakerProgram.program.account.userStake
-          .unsubscribe(new PublicKey(key))
-          .then(() => {})
-          .catch(error => {
-            console.log(error)
-          })
-      })
-
-      setStakesKeys([])
-    }
-
-    connectEvents()
-  }, [dispatch, networkStatus, walletStat])
 
   return null
 }

@@ -11,7 +11,6 @@ storiesOf('farmsList/stakeTile', module).add('tile', () => {
         tokenYDecimals={6}
         minPrice={2}
         maxPrice={5.005}
-        fee={0.3}
         tokenXDeposit={2137}
         tokenYDeposit={911}
         valueX={5184}
