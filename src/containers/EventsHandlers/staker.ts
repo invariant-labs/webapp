@@ -97,7 +97,7 @@ const StakerEvents = () => {
       })
 
       R.forEachObj(allUserStakes, stake => {
-        if (tmpKeys.includes(stake.address.toString())) {
+        if (stakesKeys.includes(stake.address.toString())) {
           return
         }
 
