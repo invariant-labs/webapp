@@ -275,13 +275,17 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
     const unitLen = innerWidth / (plotMax - plotMin)
     return (
-      <rect
-        x={(midPrice.x - plotMin) * unitLen}
-        y={0}
-        width={2}
-        height={innerHeight}
-        fill={colors.invariant.yellow}
-      />
+      <svg x={(midPrice.x - plotMin) * unitLen - 20} y={0} width={40} height={innerHeight}>
+        <defs>
+          <linearGradient id='currentGradient'>
+            <stop offset='0%' stop-color='black' stop-opacity='0' />
+            <stop offset='50%' stop-color='black' stop-opacity='0.25' />
+            <stop offset='100%' stop-color='black' stop-opacity='0' />
+          </linearGradient>
+        </defs>
+        <rect x={0} y={0} width={40} height={innerHeight} fill='url(#currentGradient)' />
+        <rect x={19} y={0} width={3} height={innerHeight} fill={colors.invariant.yellow} />
+      </svg>
     )
   }
 
@@ -468,15 +472,15 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         animate={false}
         role='application'
         layers={[
-          currentLayer,
           bottomLineLayer,
           'grid',
           'markers',
           'areas',
           'lines',
           lazyLoadingLayer,
-          brushLayer,
+          currentLayer,
           volumeRangeLayer,
+          brushLayer,
           'axes',
           'legends'
         ]}
