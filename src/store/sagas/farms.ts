@@ -7,7 +7,8 @@ import {
   ExtendedStake,
   FarmTotalsUpdate,
   StakeRangeTicks,
-  FarmApyUpdate
+  FarmApyUpdate,
+  StakeRewardData
 } from '@reducers/farms'
 import { actions as poolsActions, ListPoolsResponse, ListType } from '@reducers/pools'
 import { actions as snackbarsActions } from '@reducers/snackbars'
@@ -313,7 +314,7 @@ export function* getStakesApy() {
       positionsDict[position.address.toString()] = position
     })
 
-    const apyObject: Record<string, number> = {}
+    const apyObject: Record<string, StakeRewardData> = {}
 
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
@@ -368,14 +369,17 @@ export function* getStakesApy() {
         }
       }
 
-      apyObject[stake.address.toString()] = apy * 100 + farmData.poolApy
+      apyObject[stake.address.toString()] = {
+        apy: apy * 100 + farmData.poolApy,
+        dailyReward: 0
+      }
     })
 
     yield* call(async () => {
       await Promise.all(promises)
     })
 
-    yield* put(actions.updateStakesApy(apyObject))
+    yield* put(actions.updateStakesRewardData(apyObject))
   } catch (error) {
     console.log(error)
   }

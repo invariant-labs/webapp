@@ -29,6 +29,7 @@ storiesOf('farmsList/rewardsTile', module)
           showRewardsLoader={false}
           apy={21.37}
           isLoadingApy={false}
+          dailyReward={9}
         />
       </div>
     )
@@ -60,6 +61,7 @@ storiesOf('farmsList/rewardsTile', module)
           showRewardsLoader
           apy={21.37}
           isLoadingApy={false}
+          dailyReward={9}
         />
       </div>
     )

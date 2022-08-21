@@ -27,6 +27,7 @@ export interface ExtendedIncentive extends IncentiveStructure {
 export interface ExtendedStake extends Stake {
   address: PublicKey
   apy?: number
+  dailyReward?: number
 }
 
 export interface FarmTotalsUpdate {
@@ -83,6 +84,11 @@ export interface StateUpdateAfterStake {
   newStake: ExtendedStake
   totalStakedXAddition: number
   totalStakedYAddition: number
+}
+
+export interface StakeRewardData {
+  apy: number
+  dailyReward: number
 }
 
 export const defaultState: IFarmsStore = {
@@ -160,11 +166,12 @@ const farmsSlice = createSlice({
 
       return state
     },
-    updateStakesApy(state, action: PayloadAction<Record<string, number>>) {
-      Object.entries(action.payload).forEach(([address, apy]) => {
+    updateStakesRewardData(state, action: PayloadAction<Record<string, StakeRewardData>>) {
+      Object.entries(action.payload).forEach(([address, { apy, dailyReward }]) => {
         state.userStakes[address] = {
           ...state.userStakes[address],
-          apy
+          apy,
+          dailyReward
         }
       })
 
