@@ -21,6 +21,7 @@ export interface IRewardsTile {
   rewardIcon: string
   rewardValue: number
   apy: number
+  dailyReward: number
 }
 
 export interface IProps extends IRewardsTile {
@@ -48,7 +49,8 @@ export const RewardsTile: React.FC<IProps> = ({
   xToY,
   showRewardsLoader,
   apy,
-  isLoadingApy
+  isLoadingApy,
+  dailyReward
 }) => {
   const classes = useStyle()
 
@@ -99,6 +101,18 @@ export const RewardsTile: React.FC<IProps> = ({
             ) : (
               <Typography className={classes.value}>
                 {apy > 1000 ? '>1000' : apy.toFixed(2)}%
+              </Typography>
+            )}
+          </Grid>
+
+          <Grid className={classes.row} container wrap='nowrap'>
+            <Typography className={classes.label}>{rewardSymbol} per day:</Typography>
+            {isLoadingApy ? (
+              <img src={loadingAnimation} className={classes.smallLoading} />
+            ) : (
+              <Typography className={classes.value}>
+                {formatNumbers(thresholdsWithTokenDecimal(rewardDecimals))(dailyReward.toString())}
+                {showPrefix(dailyReward)}
               </Typography>
             )}
           </Grid>

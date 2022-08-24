@@ -7,7 +7,8 @@ import {
   ExtendedStake,
   FarmTotalsUpdate,
   StakeRangeTicks,
-  FarmApyUpdate
+  FarmApyUpdate,
+  StakeRewardData
 } from '@reducers/farms'
 import { actions as poolsActions, ListPoolsResponse, ListType } from '@reducers/pools'
 import { actions as snackbarsActions } from '@reducers/snackbars'
@@ -53,8 +54,11 @@ import { pools, tokens } from '@selectors/pools'
 import { BN } from '@project-serum/anchor'
 import { calculatePriceSqrt, getX, getY } from '@invariant-labs/sdk/lib/math'
 import { GuardPredicate } from '@redux-saga/types'
-import { positionsRewardAPY, rewardsAPY } from '@invariant-labs/sdk/lib/utils'
-import { Tick } from '@invariant-labs/sdk/lib/market'
+import {
+  calculateUserDailyRewards,
+  positionsRewardAPY,
+  rewardsAPY
+} from '@invariant-labs/sdk/lib/utils'
 import { PositionWithAddress } from '@reducers/positions'
 
 export function* getFarmsTotals() {
@@ -143,15 +147,10 @@ export function* getFarmsTotals() {
 
 export function* getFarmsApy() {
   try {
-    const networkType = yield* select(network)
-    const rpc = yield* select(rpcAddress)
-
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const allFarms = yield* select(farms)
 
-    const tickDict: Record<string, Tick[]> = {}
     const prices: Record<string, number> = {}
     const apyObject: Record<string, FarmApyUpdate> = {}
 
@@ -166,12 +165,6 @@ export function* getFarmsApy() {
         apy = { apy: 0, apySingleTick: 0 }
       } else {
         try {
-          if (typeof tickDict[incentive.pool.toString()] === 'undefined') {
-            tickDict[incentive.pool.toString()] = await marketProgram.getAllTicks(
-              new Pair(poolData.tokenX, poolData.tokenY, { fee: poolData.fee.v })
-            )
-          }
-
           const xId = allTokens?.[poolData.tokenX.toString()]?.coingeckoId ?? ''
 
           if (typeof prices[poolData.tokenX.toString()] === 'undefined' && !!xId.length) {
@@ -190,13 +183,14 @@ export function* getFarmsApy() {
           }
 
           apy = rewardsAPY({
-            ticksCurrentSnapshot: tickDict[incentive.pool.toString()],
             currentTickIndex: poolData.currentTickIndex,
             duration:
               (incentive.endTime.v.toNumber() - incentive.startTime.v.toNumber()) / 60 / 60 / 24,
             tokenDecimal: allTokens[poolData.tokenX.toString()].decimals ?? 0,
             rewardInUsd: prices[incentive.rewardToken.toString()] * incentive.totalReward,
-            tokenPrice: prices[poolData.tokenX.toString()]
+            tokenPrice: prices[poolData.tokenX.toString()],
+            tickSpacing: poolData.tickSpacing,
+            poolLiquidity: poolData.liquidity.v
           })
         } catch {
           apy = { apy: 0, apySingleTick: 0 }
@@ -299,11 +293,6 @@ export function* handleGetFarmsList() {
 
 export function* getStakesApy() {
   try {
-    const networkType = yield* select(network)
-    const rpc = yield* select(rpcAddress)
-
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
-
     const allFarms = yield* select(farms)
     const allStakes = yield* select(userStakes)
     const { list: positions } = yield* select(positionsList)
@@ -313,17 +302,16 @@ export function* getStakesApy() {
       positionsDict[position.address.toString()] = position
     })
 
-    const apyObject: Record<string, number> = {}
+    const apyObject: Record<string, StakeRewardData> = {}
 
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
-    const tickDict: Record<string, Tick[]> = {}
     const prices: Record<string, number> = {}
 
     const now = Date.now() / 1000
 
     const promises: Array<Promise<void>> = Object.values(allStakes).map(async stake => {
-      let apy
+      let apy, dailyReward
 
       const positionData = positionsDict[stake.position.toString()]
       const farmData = allFarms?.[stake.incentive.toString()]
@@ -331,14 +319,9 @@ export function* getStakesApy() {
 
       if (!farmData || !poolData || now > farmData.endTime.v.toNumber()) {
         apy = 0
+        dailyReward = 0
       } else {
         try {
-          if (typeof tickDict[farmData.pool.toString()] === 'undefined') {
-            tickDict[farmData.pool.toString()] = await marketProgram.getAllTicks(
-              new Pair(poolData.tokenX, poolData.tokenY, { fee: poolData.fee.v })
-            )
-          }
-
           const xId = allTokens?.[poolData.tokenX.toString()]?.coingeckoId ?? ''
 
           if (typeof prices[poolData.tokenX.toString()] === 'undefined' && !!xId.length) {
@@ -352,7 +335,6 @@ export function* getStakesApy() {
           }
 
           apy = positionsRewardAPY({
-            ticksCurrentSnapshot: tickDict[farmData.pool.toString()],
             currentTickIndex: poolData.currentTickIndex,
             duration:
               (farmData.endTime.v.toNumber() - farmData.startTime.v.toNumber()) / 60 / 60 / 24,
@@ -361,21 +343,37 @@ export function* getStakesApy() {
             tokenPrice: prices[poolData.tokenX.toString()],
             lowerTickIndex: positionData.lowerTickIndex,
             upperTickIndex: positionData.upperTickIndex,
-            positionLiquidity: positionData.liquidity
+            positionLiquidity: positionData.liquidity,
+            poolLiquidity: poolData.liquidity.v
+          })
+
+          dailyReward = calculateUserDailyRewards({
+            currentTickIndex: poolData.currentTickIndex,
+            rewardInTokens: farmData.totalReward,
+            userLiquidity: positionData.liquidity,
+            duration:
+              (farmData.endTime.v.toNumber() - farmData.startTime.v.toNumber()) / 60 / 60 / 24,
+            lowerTickIndex: positionData.lowerTickIndex,
+            upperTickIndex: positionData.upperTickIndex,
+            poolLiquidity: poolData.liquidity.v
           })
         } catch {
           apy = 0
+          dailyReward = 0
         }
       }
 
-      apyObject[stake.address.toString()] = apy * 100 + farmData.poolApy
+      apyObject[stake.address.toString()] = {
+        apy: apy * 100 + farmData.poolApy,
+        dailyReward
+      }
     })
 
     yield* call(async () => {
       await Promise.all(promises)
     })
 
-    yield* put(actions.updateStakesApy(apyObject))
+    yield* put(actions.updateStakesRewardData(apyObject))
   } catch (error) {
     console.log(error)
   }
@@ -564,19 +562,13 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
       }
 
       const now = Date.now() / 1000
-      let apy
+      let apy, dailyReward
 
       if (now > farmData.endTime.v.toNumber()) {
         apy = 0
+        dailyReward = 0
       } else {
         try {
-          const ticks = yield* call(
-            [marketProgram, marketProgram.getAllTicks],
-            new Pair(positionData.poolData.tokenX, positionData.poolData.tokenY, {
-              fee: positionData.poolData.fee.v
-            })
-          )
-
           let xPrice = 0
           let rewardPrice = 0
 
@@ -595,7 +587,6 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
           }
 
           apy = positionsRewardAPY({
-            ticksCurrentSnapshot: ticks,
             currentTickIndex: positionData.poolData.currentTickIndex,
             duration:
               (farmData.endTime.v.toNumber() - farmData.startTime.v.toNumber()) / 60 / 60 / 24,
@@ -604,10 +595,23 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
             tokenPrice: xPrice,
             lowerTickIndex: positionData.lowerTickIndex,
             upperTickIndex: positionData.upperTickIndex,
-            positionLiquidity: positionData.liquidity
+            positionLiquidity: positionData.liquidity,
+            poolLiquidity: positionData.poolData.liquidity.v
+          })
+
+          dailyReward = calculateUserDailyRewards({
+            currentTickIndex: positionData.poolData.currentTickIndex,
+            rewardInTokens: farmData.totalReward,
+            userLiquidity: positionData.liquidity,
+            duration:
+              (farmData.endTime.v.toNumber() - farmData.startTime.v.toNumber()) / 60 / 60 / 24,
+            lowerTickIndex: positionData.lowerTickIndex,
+            upperTickIndex: positionData.upperTickIndex,
+            poolLiquidity: positionData.poolData.liquidity.v
           })
         } catch {
           apy = 0
+          dailyReward = 0
         }
       }
 
@@ -615,7 +619,8 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
         actions.updateStateAfterStake({
           newStake: {
             ...stakes[0],
-            apy: apy * 100 + farmData.poolApy
+            apy: apy * 100 + farmData.poolApy,
+            dailyReward
           },
           totalStakedXAddition,
           totalStakedYAddition
