@@ -59,7 +59,6 @@ import {
   positionsRewardAPY,
   rewardsAPY
 } from '@invariant-labs/sdk/lib/utils'
-import { Tick } from '@invariant-labs/sdk/lib/market'
 import { PositionWithAddress } from '@reducers/positions'
 
 export function* getFarmsTotals() {
@@ -148,15 +147,10 @@ export function* getFarmsTotals() {
 
 export function* getFarmsApy() {
   try {
-    const networkType = yield* select(network)
-    const rpc = yield* select(rpcAddress)
-
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const allFarms = yield* select(farms)
 
-    const tickDict: Record<string, Tick[]> = {}
     const prices: Record<string, number> = {}
     const apyObject: Record<string, FarmApyUpdate> = {}
 
@@ -171,12 +165,6 @@ export function* getFarmsApy() {
         apy = { apy: 0, apySingleTick: 0 }
       } else {
         try {
-          if (typeof tickDict[incentive.pool.toString()] === 'undefined') {
-            tickDict[incentive.pool.toString()] = await marketProgram.getAllTicks(
-              new Pair(poolData.tokenX, poolData.tokenY, { fee: poolData.fee.v })
-            )
-          }
-
           const xId = allTokens?.[poolData.tokenX.toString()]?.coingeckoId ?? ''
 
           if (typeof prices[poolData.tokenX.toString()] === 'undefined' && !!xId.length) {
@@ -195,13 +183,14 @@ export function* getFarmsApy() {
           }
 
           apy = rewardsAPY({
-            ticksCurrentSnapshot: tickDict[incentive.pool.toString()],
             currentTickIndex: poolData.currentTickIndex,
             duration:
               (incentive.endTime.v.toNumber() - incentive.startTime.v.toNumber()) / 60 / 60 / 24,
             tokenDecimal: allTokens[poolData.tokenX.toString()].decimals ?? 0,
             rewardInUsd: prices[incentive.rewardToken.toString()] * incentive.totalReward,
-            tokenPrice: prices[poolData.tokenX.toString()]
+            tokenPrice: prices[poolData.tokenX.toString()],
+            tickSpacing: poolData.tickSpacing,
+            poolLiquidity: poolData.liquidity
           })
         } catch {
           apy = { apy: 0, apySingleTick: 0 }
@@ -304,11 +293,6 @@ export function* handleGetFarmsList() {
 
 export function* getStakesApy() {
   try {
-    const networkType = yield* select(network)
-    const rpc = yield* select(rpcAddress)
-
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
-
     const allFarms = yield* select(farms)
     const allStakes = yield* select(userStakes)
     const { list: positions } = yield* select(positionsList)
@@ -322,7 +306,6 @@ export function* getStakesApy() {
 
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
-    const tickDict: Record<string, Tick[]> = {}
     const prices: Record<string, number> = {}
 
     const now = Date.now() / 1000
@@ -339,12 +322,6 @@ export function* getStakesApy() {
         dailyReward = 0
       } else {
         try {
-          if (typeof tickDict[farmData.pool.toString()] === 'undefined') {
-            tickDict[farmData.pool.toString()] = await marketProgram.getAllTicks(
-              new Pair(poolData.tokenX, poolData.tokenY, { fee: poolData.fee.v })
-            )
-          }
-
           const xId = allTokens?.[poolData.tokenX.toString()]?.coingeckoId ?? ''
 
           if (typeof prices[poolData.tokenX.toString()] === 'undefined' && !!xId.length) {
@@ -358,7 +335,6 @@ export function* getStakesApy() {
           }
 
           apy = positionsRewardAPY({
-            ticksCurrentSnapshot: tickDict[farmData.pool.toString()],
             currentTickIndex: poolData.currentTickIndex,
             duration:
               (farmData.endTime.v.toNumber() - farmData.startTime.v.toNumber()) / 60 / 60 / 24,
@@ -367,18 +343,19 @@ export function* getStakesApy() {
             tokenPrice: prices[poolData.tokenX.toString()],
             lowerTickIndex: positionData.lowerTickIndex,
             upperTickIndex: positionData.upperTickIndex,
-            positionLiquidity: positionData.liquidity
+            positionLiquidity: positionData.liquidity,
+            poolLiquidity: poolData.liquidity
           })
 
           dailyReward = calculateUserDailyRewards({
-            ticksCurrentSnapshot: tickDict[farmData.pool.toString()],
             currentTickIndex: poolData.currentTickIndex,
             rewardInTokens: farmData.totalReward,
             userLiquidity: positionData.liquidity,
             duration:
               (farmData.endTime.v.toNumber() - farmData.startTime.v.toNumber()) / 60 / 60 / 24,
             lowerTickIndex: positionData.lowerTickIndex,
-            upperTickIndex: positionData.upperTickIndex
+            upperTickIndex: positionData.upperTickIndex,
+            poolLiquidity: poolData.liquidity
           })
         } catch {
           apy = 0
@@ -592,13 +569,6 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
         dailyReward = 0
       } else {
         try {
-          const ticks = yield* call(
-            [marketProgram, marketProgram.getAllTicks],
-            new Pair(positionData.poolData.tokenX, positionData.poolData.tokenY, {
-              fee: positionData.poolData.fee.v
-            })
-          )
-
           let xPrice = 0
           let rewardPrice = 0
 
@@ -617,7 +587,6 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
           }
 
           apy = positionsRewardAPY({
-            ticksCurrentSnapshot: ticks,
             currentTickIndex: positionData.poolData.currentTickIndex,
             duration:
               (farmData.endTime.v.toNumber() - farmData.startTime.v.toNumber()) / 60 / 60 / 24,
@@ -626,18 +595,19 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
             tokenPrice: xPrice,
             lowerTickIndex: positionData.lowerTickIndex,
             upperTickIndex: positionData.upperTickIndex,
-            positionLiquidity: positionData.liquidity
+            positionLiquidity: positionData.liquidity,
+            poolLiquidity: positionData.poolData.liquidity
           })
 
           dailyReward = calculateUserDailyRewards({
-            ticksCurrentSnapshot: ticks,
             currentTickIndex: positionData.poolData.currentTickIndex,
             rewardInTokens: farmData.totalReward,
             userLiquidity: positionData.liquidity,
             duration:
               (farmData.endTime.v.toNumber() - farmData.startTime.v.toNumber()) / 60 / 60 / 24,
             lowerTickIndex: positionData.lowerTickIndex,
-            upperTickIndex: positionData.upperTickIndex
+            upperTickIndex: positionData.upperTickIndex,
+            poolLiquidity: positionData.poolData.liquidity
           })
         } catch {
           apy = 0
