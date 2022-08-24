@@ -190,7 +190,7 @@ export function* getFarmsApy() {
             rewardInUsd: prices[incentive.rewardToken.toString()] * incentive.totalReward,
             tokenPrice: prices[poolData.tokenX.toString()],
             tickSpacing: poolData.tickSpacing,
-            poolLiquidity: poolData.liquidity
+            poolLiquidity: poolData.liquidity.v
           })
         } catch {
           apy = { apy: 0, apySingleTick: 0 }
@@ -344,7 +344,7 @@ export function* getStakesApy() {
             lowerTickIndex: positionData.lowerTickIndex,
             upperTickIndex: positionData.upperTickIndex,
             positionLiquidity: positionData.liquidity,
-            poolLiquidity: poolData.liquidity
+            poolLiquidity: poolData.liquidity.v
           })
 
           dailyReward = calculateUserDailyRewards({
@@ -355,7 +355,7 @@ export function* getStakesApy() {
               (farmData.endTime.v.toNumber() - farmData.startTime.v.toNumber()) / 60 / 60 / 24,
             lowerTickIndex: positionData.lowerTickIndex,
             upperTickIndex: positionData.upperTickIndex,
-            poolLiquidity: poolData.liquidity
+            poolLiquidity: poolData.liquidity.v
           })
         } catch {
           apy = 0
@@ -596,7 +596,7 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
             lowerTickIndex: positionData.lowerTickIndex,
             upperTickIndex: positionData.upperTickIndex,
             positionLiquidity: positionData.liquidity,
-            poolLiquidity: positionData.poolData.liquidity
+            poolLiquidity: positionData.poolData.liquidity.v
           })
 
           dailyReward = calculateUserDailyRewards({
@@ -607,7 +607,7 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
               (farmData.endTime.v.toNumber() - farmData.startTime.v.toNumber()) / 60 / 60 / 24,
             lowerTickIndex: positionData.lowerTickIndex,
             upperTickIndex: positionData.upperTickIndex,
-            poolLiquidity: positionData.poolData.liquidity
+            poolLiquidity: positionData.poolData.liquidity.v
           })
         } catch {
           apy = 0
