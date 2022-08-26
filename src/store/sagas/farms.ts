@@ -147,11 +147,17 @@ export function* getFarmsTotals() {
 
 export function* getFarmsApy() {
   try {
+    const networkType = yield* select(network)
+    const rpc = yield* select(rpcAddress)
+
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
     const allFarms = yield* select(farms)
 
     const prices: Record<string, number> = {}
+    const allLiquidity: Record<string, BN> = {}
     const apyObject: Record<string, FarmApyUpdate> = {}
 
     const apyPromises = Object.values(allFarms).map(async incentive => {
@@ -165,6 +171,11 @@ export function* getFarmsApy() {
         apy = { apy: 0, apySingleTick: 0 }
       } else {
         try {
+          if (typeof allLiquidity[incentive.pool.toString()] === 'undefined') {
+            allLiquidity[incentive.pool.toString()] =
+              await marketProgram.getAllPoolLiquidityInTokens(incentive.pool)
+          }
+
           const xId = allTokens?.[poolData.tokenX.toString()]?.coingeckoId ?? ''
 
           if (typeof prices[poolData.tokenX.toString()] === 'undefined' && !!xId.length) {
@@ -190,7 +201,8 @@ export function* getFarmsApy() {
             rewardInUsd: prices[incentive.rewardToken.toString()] * incentive.totalReward,
             tokenPrice: prices[poolData.tokenX.toString()],
             tickSpacing: poolData.tickSpacing,
-            poolLiquidity: poolData.liquidity.v
+            currentLiquidity: poolData.liquidity.v,
+            allLiquidityInTokens: allLiquidity[incentive.pool.toString()]
           })
         } catch {
           apy = { apy: 0, apySingleTick: 0 }
