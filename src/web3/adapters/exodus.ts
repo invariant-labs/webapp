@@ -4,7 +4,6 @@ import { WalletAdapter } from './types'
 import { DEFAULT_PUBLICKEY } from '@consts/static'
 
 interface ExodusProvider {
-  isExodus: boolean
   isConnected: boolean
   publicKey?: PublicKey
   signTransaction: (transaction: Transaction) => Promise<Transaction>
@@ -38,10 +37,10 @@ export class ExodusWalletAdapter extends EventEmitter implements WalletAdapter {
   }
 
   private get _provider(): ExodusProvider {
-    if ((window as any)?.solana.isExodus) {
-      return (window as any).solana
+    if ((window as any)?.exodus?.solana) {
+      return (window as any).exodus.solana
     } else {
-      throw new Error('Exodus: unable to get provider; disable other wallets and try again')
+      throw new Error('Exodus: unable to get provider')
     }
   }
 
