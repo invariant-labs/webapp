@@ -8,7 +8,7 @@ interface ExodusProvider {
   publicKey?: PublicKey
   signTransaction: (transaction: Transaction) => Promise<Transaction>
   signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>
-  connect: () => Promise<{publicKey: PublicKey}>
+  connect: () => Promise<{ publicKey: PublicKey }>
   disconnect: () => Promise<void>
 }
 
