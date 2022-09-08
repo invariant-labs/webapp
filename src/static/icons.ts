@@ -36,6 +36,7 @@ import activeIcon from './svg/active.svg'
 import inactiveIcon from './svg/inactive.svg'
 import allIcon from './svg/all.svg'
 import nightlyIcon from './svg/nightly.svg'
+import exodusIcon from './svg/exodus.svg'
 
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
@@ -50,6 +51,7 @@ const icons: { [key: string]: string } = {
   slope: slope,
   clover: clover,
   nightly: nightlyIcon,
+  exodus: exodusIcon,
   clear: clearIcon,
   Mainnet: mainnet,
   Devnet: devnet,
