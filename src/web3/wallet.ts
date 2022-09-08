@@ -17,7 +17,8 @@ export enum WalletType {
   COIN98,
   SLOPE,
   CLOVER,
-  NIGHTLY
+  NIGHTLY,
+  EXODUS
 }
 
 let _wallet: WalletAdapter
