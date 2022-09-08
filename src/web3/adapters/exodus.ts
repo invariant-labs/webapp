@@ -9,7 +9,7 @@ interface ExodusProvider {
   publicKey?: PublicKey
   signTransaction: (transaction: Transaction) => Promise<Transaction>
   signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>
-  connect: () => Promise<PublicKey>
+  connect: () => Promise<{publicKey: PublicKey}>
   disconnect: () => Promise<void>
 }
 
@@ -41,7 +41,7 @@ export class ExodusWalletAdapter extends EventEmitter implements WalletAdapter {
     if ((window as any)?.solana.isExodus) {
       return (window as any).solana
     } else {
-      throw new Error('Exodus: solana is not defined')
+      throw new Error('Exodus: unable to get provider; disable other wallets and try again')
     }
   }
 
@@ -60,7 +60,7 @@ export class ExodusWalletAdapter extends EventEmitter implements WalletAdapter {
   async connect() {
     try {
       const pk = await this._provider.connect()
-      this._publicKey = pk
+      this._publicKey = pk.publicKey
       this.emit('connect')
       return pk
     } catch (error) {
