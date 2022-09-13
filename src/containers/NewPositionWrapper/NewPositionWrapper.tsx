@@ -123,7 +123,9 @@ export const NewPositionWrapper = () => {
   }, [tokenAIndex, tokenBIndex])
 
   const [fee, setFee] = useState<BN>(NEW_POSITION_FEE_TIERS[0].fee)
-  const [tickSpacing, setTickSpacing] = useState<number>(feeToTickSpacing(NEW_POSITION_FEE_TIERS[0].fee))
+  const [tickSpacing, setTickSpacing] = useState<number>(
+    feeToTickSpacing(NEW_POSITION_FEE_TIERS[0].fee)
+  )
 
   const [midPrice, setMidPrice] = useState<TickPlotPositionData>({
     index: 0,
@@ -354,7 +356,11 @@ export const NewPositionWrapper = () => {
           tokenA !== null &&
           tokenB !== null &&
           tokenA !== tokenB &&
-          !(tokenAIndex === tokenA && tokenBIndex === tokenB && fee.eq(NEW_POSITION_FEE_TIERS[feeTierIndex].fee))
+          !(
+            tokenAIndex === tokenA &&
+            tokenBIndex === tokenB &&
+            fee.eq(NEW_POSITION_FEE_TIERS[feeTierIndex].fee)
+          )
         ) {
           const index = allPools.findIndex(
             pool =>
