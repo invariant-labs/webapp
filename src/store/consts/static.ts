@@ -1,6 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { MOCK_TOKENS } from '@invariant-labs/sdk'
+import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 
 declare global {
   interface Window {
@@ -352,5 +353,7 @@ export const WSOL_POOL_INIT_LAMPORTS = new BN(106000961)
 export const minimumRangesForTiers = [20, 74, 80, 64, 28]
 
 export const maxSafeConcentrationsForTiers = [400.52, 41.49, 21.47, 8.13, 5.45]
+
+export const NEW_POSITION_FEE_TIERS = [FEE_TIERS[0], ...FEE_TIERS.slice(2)]
 
 export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, NetworkType }
