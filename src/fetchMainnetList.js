@@ -1,40 +1,64 @@
+const { Generator, ProviderCoinGecko } = require('@solflare-wallet/utl-aggregator')
 const { TokenListProvider } = require('@solana/spl-token-registry')
 const fs = require('fs')
 
-const coingeckoIdOverwrites = {
-  '9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i': 'terrausd',
-  '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj': 'lido-staked-sol',
-  NRVwhjBQiUPYtfDT5zRBVJajzFQHaBUNtC7SNVvqRFa: 'nirvana-nirv'
-}
+const run = async () => {
+  const tokensObject = {}
 
-new TokenListProvider()
-  .resolve()
-  .then(tokens => {
-    const tokenList = tokens
-      .filterByClusterSlug('mainnet-beta')
-      .getList()
-      .map(token =>
-        coingeckoIdOverwrites[token.address]
-          ? {
-              ...token,
-              extensions: {
-                ...token.extensions,
-                coingeckoId: coingeckoIdOverwrites[token.address]
-              }
-            }
-          : token
-      )
-    fs.writeFileSync(
-      './src/store/consts/tokenLists/mainnet.json',
-      JSON.stringify(
-        tokenList
-          .filter(token => token.chainId === 101)
-          .sort((a, b) => a.symbol.toLowerCase().localeCompare(b.symbol.toLowerCase()))
+  await new TokenListProvider()
+    .resolve()
+    .then(tokens => {
+      tokens
+        .filterByClusterSlug('mainnet-beta')
+        .getList()
+        .filter(token => token.chainId === 101)
+        .forEach(token => {
+          tokensObject[token.address] = token
+        })
+    })
+    .catch(error => {
+      console.log(error)
+    })
+
+  const generator = new Generator([
+    new ProviderCoinGecko(
+      null,
+      'https://tame-ancient-mountain.solana-mainnet.quiknode.pro/6a9a95bf7bbb108aea620e7ee4c1fd5e1b67cc62',
+      {
+        throttle: 3 * 1000,
+        throttleCoinGecko: 15 * 1000,
+        batchAccountsInfo: 100,
+        batchCoinGecko: 5
+      }
+    )
+  ])
+
+  await generator
+    .generateTokenList()
+    .then(tokens => {
+      tokens.tokens
+        .filter(token => token.chainId === 101)
+        .forEach(token => {
+          tokensObject[token.address] = {
+            ...token,
+            symbol: tokensObject[token.address]?.symbol ?? token.symbol
+          }
+        })
+    })
+    .catch(error => {
+      console.log(error)
+    })
+
+  fs.writeFileSync(
+    './src/store/consts/tokenLists/mainnet.json',
+    JSON.stringify(
+      Object.values(tokensObject).sort((a, b) =>
+        a.symbol.toLowerCase().localeCompare(b.symbol.toLowerCase())
       )
     )
+  )
 
-    console.log('Tokens list updated!')
-  })
-  .catch(error => {
-    console.log(error)
-  })
+  console.log('Tokens list updated!')
+}
+
+run()

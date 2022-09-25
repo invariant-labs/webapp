@@ -1,6 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { MOCK_TOKENS } from '@invariant-labs/sdk'
+import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 
 declare global {
   interface Window {
@@ -352,5 +353,25 @@ export const WSOL_POOL_INIT_LAMPORTS = new BN(106000961)
 export const minimumRangesForTiers = [20, 74, 80, 64, 28]
 
 export const maxSafeConcentrationsForTiers = [400.52, 41.49, 21.47, 8.13, 5.45]
+
+export const getNewPositionFeeTiers = (
+  tokenAAddress: PublicKey | null,
+  tokenBAddress: PublicKey | null
+) => {
+  const USDC = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
+  const USDH = new PublicKey('USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX')
+
+  return [
+    FEE_TIERS[
+      tokenAAddress !== null &&
+      tokenBAddress !== null &&
+      ((tokenAAddress.equals(USDC) && tokenBAddress.equals(USDH)) ||
+        (tokenAAddress.equals(USDH) && tokenBAddress.equals(USDC)))
+        ? 1
+        : 0
+    ],
+    ...FEE_TIERS.slice(2)
+  ]
+}
 
 export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, NetworkType }

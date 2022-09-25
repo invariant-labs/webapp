@@ -3,7 +3,7 @@ import NewPosition from '@components/NewPosition/NewPosition'
 import { actions } from '@reducers/positions'
 import { useDispatch, useSelector } from 'react-redux'
 import { swapTokens, status, canCreateNewPool, canCreateNewPosition } from '@selectors/solanaWallet'
-import { DECIMAL, FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
+import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import {
   addNewTokenToLocalStorage,
   calcPrice,
@@ -23,7 +23,7 @@ import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { initPosition, plotTicks } from '@selectors/positions'
 import { BN } from '@project-serum/anchor'
-import { bestTiers, commonTokensForNetworks } from '@consts/static'
+import { bestTiers, commonTokensForNetworks, getNewPositionFeeTiers } from '@consts/static'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
@@ -122,8 +122,17 @@ export const NewPositionWrapper = () => {
     return 0
   }, [tokenAIndex, tokenBIndex])
 
-  const [fee, setFee] = useState<BN>(FEE_TIERS[0].fee)
-  const [tickSpacing, setTickSpacing] = useState<number>(feeToTickSpacing(FEE_TIERS[0].fee))
+  const currentTiers = useMemo(
+    () =>
+      getNewPositionFeeTiers(
+        tokenAIndex === null ? null : tokens[tokenAIndex].assetAddress,
+        tokenBIndex === null ? null : tokens[tokenBIndex].assetAddress
+      ),
+    [tokenAIndex, tokenBIndex]
+  )
+
+  const [fee, setFee] = useState<BN>(currentTiers[0].fee)
+  const [tickSpacing, setTickSpacing] = useState<number>(feeToTickSpacing(currentTiers[0].fee))
 
   const [midPrice, setMidPrice] = useState<TickPlotPositionData>({
     index: 0,
@@ -350,15 +359,23 @@ export const NewPositionWrapper = () => {
     <NewPosition
       tokens={tokens}
       onChangePositionTokens={(tokenA, tokenB, feeTierIndex) => {
+        const tiersAfterChange = getNewPositionFeeTiers(
+          tokenA === null ? null : tokens[tokenA].assetAddress,
+          tokenB === null ? null : tokens[tokenB].assetAddress
+        )
         if (
           tokenA !== null &&
           tokenB !== null &&
           tokenA !== tokenB &&
-          !(tokenAIndex === tokenA && tokenBIndex === tokenB && fee.eq(FEE_TIERS[feeTierIndex].fee))
+          !(
+            tokenAIndex === tokenA &&
+            tokenBIndex === tokenB &&
+            fee.eq(tiersAfterChange[feeTierIndex].fee)
+          )
         ) {
           const index = allPools.findIndex(
             pool =>
-              pool.fee.v.eq(FEE_TIERS[feeTierIndex].fee) &&
+              pool.fee.v.eq(tiersAfterChange[feeTierIndex].fee) &&
               ((pool.tokenX.equals(tokens[tokenA].assetAddress) &&
                 pool.tokenY.equals(tokens[tokenB].assetAddress)) ||
                 (pool.tokenX.equals(tokens[tokenB].assetAddress) &&
@@ -370,7 +387,7 @@ export const NewPositionWrapper = () => {
             !(
               tokenAIndex === tokenB &&
               tokenBIndex === tokenA &&
-              fee.eq(FEE_TIERS[feeTierIndex].fee)
+              fee.eq(tiersAfterChange[feeTierIndex].fee)
             )
           ) {
             setPoolIndex(index !== -1 ? index : null)
@@ -378,7 +395,7 @@ export const NewPositionWrapper = () => {
           } else if (
             tokenAIndex === tokenB &&
             tokenBIndex === tokenA &&
-            fee.eq(FEE_TIERS[feeTierIndex].fee)
+            fee.eq(tiersAfterChange[feeTierIndex].fee)
           ) {
             setCurrentPairReversed(currentPairReversed === null ? true : !currentPairReversed)
           }
@@ -394,13 +411,13 @@ export const NewPositionWrapper = () => {
             !(
               tokenAIndex === tokenB &&
               tokenBIndex === tokenA &&
-              fee.eq(FEE_TIERS[feeTierIndex].fee)
+              fee.eq(tiersAfterChange[feeTierIndex].fee)
             )
           ) {
             dispatch(
               poolsActions.getPoolData(
                 new Pair(tokens[tokenA].assetAddress, tokens[tokenB].assetAddress, {
-                  fee: FEE_TIERS[feeTierIndex].fee
+                  fee: tiersAfterChange[feeTierIndex].fee
                 })
               )
             )
@@ -409,10 +426,10 @@ export const NewPositionWrapper = () => {
 
         setTokenAIndex(tokenA)
         setTokenBIndex(tokenB)
-        setFee(FEE_TIERS[feeTierIndex].fee)
-        setTickSpacing(feeToTickSpacing(FEE_TIERS[feeTierIndex].fee))
+        setFee(tiersAfterChange[feeTierIndex].fee)
+        setTickSpacing(feeToTickSpacing(tiersAfterChange[feeTierIndex].fee))
       }}
-      feeTiers={FEE_TIERS.map(tier => +printBN(tier.fee, DECIMAL - 2))}
+      feeTiers={currentTiers.map(tier => +printBN(tier.fee, DECIMAL - 2))}
       data={data}
       midPrice={midPrice}
       setMidPrice={setMidPrice}
