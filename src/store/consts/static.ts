@@ -359,16 +359,16 @@ export const getNewPositionFeeTiers = (
   tokenBAddress: PublicKey | null
 ) => {
   const USDC = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
-  const USDH = new PublicKey('USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX')
+  const USDT = new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB')
 
   return [
     FEE_TIERS[
       tokenAAddress !== null &&
       tokenBAddress !== null &&
-      ((tokenAAddress.equals(USDC) && tokenBAddress.equals(USDH)) ||
-        (tokenAAddress.equals(USDH) && tokenBAddress.equals(USDC)))
-        ? 1
-        : 0
+      ((tokenAAddress.equals(USDC) && tokenBAddress.equals(USDT)) ||
+        (tokenAAddress.equals(USDT) && tokenBAddress.equals(USDC)))
+        ? 0
+        : 1
     ],
     ...FEE_TIERS.slice(2)
   ]
