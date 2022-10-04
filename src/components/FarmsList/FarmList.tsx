@@ -41,7 +41,14 @@ export const FarmList: React.FC<IFarmList> = ({ data, isLoadingTotals, isLoading
         container
         direction='row'
         justifyContent='flex-end'
-        alignItems='center'>
+        alignItems='center'
+        style={
+          !data.length
+            ? {
+                display: 'none'
+              }
+            : undefined
+        }>
         <SearchInput handleChange={handleChangeInput} value={value} />
       </Grid>
       {!filteredActive.length && !filteredInactive.length ? (
