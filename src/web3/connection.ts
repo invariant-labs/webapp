@@ -66,11 +66,14 @@ const getCurrentSolanaConnection = (): Connection | null => {
   return _connection
 }
 
+const getCurrentNetworkUrl = () => _network
+
 export {
   getSolanaConnection,
   SolanaNetworks,
   getCurrentSolanaConnection,
   networkTypetoStakerNetwork,
   networkTypetoProgramNetwork,
-  networkTypetoBondsNetwork
+  networkTypetoBondsNetwork,
+  getCurrentNetworkUrl
 }

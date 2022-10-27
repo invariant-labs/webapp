@@ -1,12 +1,12 @@
 import { Grid, Typography } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import infoIcon from '@static/svg/infoBlack.svg'
-import { status, network } from '@selectors/solanaConnection'
+import { status } from '@selectors/solanaConnection'
 import { Status } from '@reducers/solanaConnection'
 import { useSelector } from 'react-redux'
 import useStyles from './styles'
 import axios from 'axios'
-import { NetworkType, SolanaNetworks } from '@consts/static'
+import { getCurrentNetworkUrl } from '@web3/connection'
 
 export const PerformanceWarning: React.FC = () => {
   const classes = useStyles()
@@ -14,13 +14,12 @@ export const PerformanceWarning: React.FC = () => {
   const [showWarning, setShowWarning] = useState(false)
 
   const networkStatus = useSelector(status)
-  const networkType = useSelector(network)
 
   useEffect(() => {
     if (networkStatus === Status.Initialized) {
       axios
         .post<{ result: Array<{ numTransactions: number; samplePeriodSecs: number }> }>(
-          networkType === NetworkType.MAINNET ? SolanaNetworks.MAIN_QUICKNODE : SolanaNetworks.DEV,
+          getCurrentNetworkUrl(),
           {
             jsonrpc: '2.0',
             id: 1,
