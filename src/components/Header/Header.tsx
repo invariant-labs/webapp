@@ -175,13 +175,13 @@ export const Header: React.FC<IHeader> = ({
             }
             options={[
               WalletType.PHANTOM,
+              WalletType.NIGHTLY,
               WalletType.SOLLET,
               WalletType.MATH,
               WalletType.SOLFLARE,
               WalletType.COIN98,
               WalletType.SLOPE,
               WalletType.CLOVER,
-              WalletType.NIGHTLY,
               WalletType.EXODUS
             ]}
             onSelect={onWalletSelect}
