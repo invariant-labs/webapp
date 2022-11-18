@@ -75,6 +75,11 @@ export const Header: React.FC<IHeader> = ({
   const mainnetRPCs = [
     {
       networkType: NetworkType.MAINNET,
+      rpc: SolanaNetworks.MAIN_INVARIANT,
+      rpcName: 'Invariant'
+    },
+    {
+      networkType: NetworkType.MAINNET,
       rpc: SolanaNetworks.MAIN_QUICKNODE,
       rpcName: 'Quicknode'
     },
