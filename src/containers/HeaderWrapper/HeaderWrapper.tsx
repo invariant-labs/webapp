@@ -70,7 +70,7 @@ export const HeaderWrapper: React.FC = () => {
   const defaultMainnetRPC = useMemo(() => {
     const lastRPC = localStorage.getItem('INVARIANT_MAINNET_RPC')
 
-    return lastRPC === null ? SolanaNetworks.MAIN_INVARIANT : lastRPC
+    return lastRPC === null ? SolanaNetworks.MAIN_SHAKUDO : lastRPC
   }, [])
 
   return (
