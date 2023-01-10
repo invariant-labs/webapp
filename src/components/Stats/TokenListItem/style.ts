@@ -63,7 +63,8 @@ export const useStyles = makeStyles(theme => ({
 
     '& img': {
       minWidth: 28,
-      width: 28,
+      maxWidth: 28,
+      height: 28,
       marginRight: 8,
       borderRadius: '50%'
     }
