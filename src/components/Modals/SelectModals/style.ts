@@ -161,6 +161,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
   tokenIcon: {
     minWidth: 30,
+    maxWidth: 30,
     height: 30,
     marginRight: 16,
     borderRadius: '50%',
