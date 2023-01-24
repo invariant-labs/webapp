@@ -75,6 +75,11 @@ export const Header: React.FC<IHeader> = ({
   const mainnetRPCs = [
     {
       networkType: NetworkType.MAINNET,
+      rpc: SolanaNetworks.MAIN_ALCHEMY,
+      rpcName: 'Alchemy'
+    },
+    {
+      networkType: NetworkType.MAINNET,
       rpc: SolanaNetworks.MAIN_SHAKUDO,
       rpcName: 'Shakudo'
     },
