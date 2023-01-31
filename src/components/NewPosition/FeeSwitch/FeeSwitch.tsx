@@ -36,47 +36,37 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
   }
 
   return (
-    <>
-      <Grid className={classes.wrapper}>
-        <Tabs
-          value={current}
-          onChange={handleChange}
-          variant='scrollable'
-          scrollButtons='auto'
-          TabIndicatorProps={{ children: <span /> }}
-          classes={tabsClasses}>
-          {feeTiers.map((tier, index) => (
-            <Tab
-              key={index}
-              disableRipple
-              label={showOnlyPercents ? `${tier}%` : `${tier}% fee`}
-              classes={{
-                root: classNames(
-                  singleTabClasses.root,
-                  index === bestTierIndex ? singleTabClasses.best : undefined
-                ),
-                selected: singleTabClasses.selected
-              }}
-              style={{
-                minWidth: `calc(${feeTiers.length === 0 ? 0 : 100 / feeTiers.length}% - 7px)`
-              }}
-            />
-          ))}
-        </Tabs>
-      </Grid>
-      <Grid className={classes.bestWrapper}>
-        {typeof bestTierIndex !== 'undefined' && !!feeTiers.length ? (
-          <Typography
-            className={classes.bestText}
-            style={{
-              width: `calc(${100 / feeTiers.length}% - 7px)`,
-              left: `calc(${(100 / feeTiers.length) * bestTierIndex}% + 3px)`
-            }}>
-            Best
-          </Typography>
-        ) : null}
-      </Grid>
-    </>
+    <Grid className={classes.wrapper}>
+      <Tabs
+        value={current}
+        onChange={handleChange}
+        variant='scrollable'
+        scrollButtons='auto'
+        TabIndicatorProps={{ children: <span /> }}
+        classes={tabsClasses}>
+        {feeTiers.map((tier, index) => (
+          <Tab
+            key={index}
+            disableRipple
+            label={
+              <>
+                {showOnlyPercents ? `${tier}%` : `${tier}% fee`}
+                {bestTierIndex === index ? (
+                  <Typography className={classes.bestText}>Best</Typography>
+                ) : null}
+              </>
+            }
+            classes={{
+              root: classNames(
+                singleTabClasses.root,
+                index === bestTierIndex ? singleTabClasses.best : undefined
+              ),
+              selected: singleTabClasses.selected
+            }}
+          />
+        ))}
+      </Tabs>
+    </Grid>
   )
 }
 
