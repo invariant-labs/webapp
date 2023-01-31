@@ -28,7 +28,7 @@ const Thumb: React.FC<ThumbProps> = ({ concentrationValues, ...props }) => {
       direction='column'>
       <Grid className={classes.labelWrapper}>
         <Typography className={classes.label}>
-          {concentrationValues[props['aria-valuenow'] ?? 0].toFixed(0)}x
+          {(concentrationValues[props['aria-valuenow'] ?? 0] ?? 1).toFixed(0)}x
         </Typography>
       </Grid>
 
