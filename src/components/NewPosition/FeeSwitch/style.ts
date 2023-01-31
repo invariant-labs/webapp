@@ -52,8 +52,8 @@ export const useSingleTabStyles = makeStyles(() => ({
     minHeight: 36,
     color: colors.invariant.light,
     paddingInline: 0,
-    minWidth: 50,
-    width: 50,
+    minWidth: 60,
+    width: 60,
     marginRight: '7px',
 
     '&:hover': {
