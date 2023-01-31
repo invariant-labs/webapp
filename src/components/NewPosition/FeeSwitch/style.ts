@@ -28,7 +28,8 @@ export const useTabsStyles = makeStyles(() => ({
   indicator: {
     height: 36,
     borderRadius: 10,
-    backgroundColor: colors.invariant.light
+    backgroundColor: colors.invariant.light,
+    top: 0
   },
   flexContainer: {
     justifyContent: 'space-between'
