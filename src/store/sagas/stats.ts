@@ -84,10 +84,9 @@ export function* getStats(): Generator {
 
     const volumeForTimestamps: Record<string, number> = {}
     const liquidityForTimestamps: Record<string, number> = {}
+    const feesForTimestamps: Record<string, number> = {}
 
-    let prevVolume24 = 0
-    let prevTvl24 = 0
-    let prevFees24 = 0
+    const lastTimestamp = Math.max(...Object.values(data).filter(snaps => snaps.length > 0).map(snaps => +snaps[snaps.length - 1].timestamp))
 
     Object.entries(data).forEach(([address, snapshots]) => {
       if (!poolsDataObject[address]) {
@@ -137,26 +136,14 @@ export function* getStats(): Generator {
 
       const lastSnapshot = snapshots[snapshots.length - 1]
 
-      volume24.value += lastSnapshot.volumeX.usdValue24 + lastSnapshot.volumeY.usdValue24
-      fees24.value += lastSnapshot.feeX.usdValue24 + lastSnapshot.feeY.usdValue24
-      tvl24.value += lastSnapshot.liquidityX.usdValue24 + lastSnapshot.liquidityY.usdValue24
-
-      if (snapshots.length > 1) {
-        const prevSnapshot = snapshots[snapshots.length - 2]
-
-        prevVolume24 += prevSnapshot.volumeX.usdValue24 + prevSnapshot.volumeY.usdValue24
-        prevFees24 += prevSnapshot.feeX.usdValue24 + prevSnapshot.feeY.usdValue24
-        prevTvl24 += prevSnapshot.liquidityX.usdValue24 + prevSnapshot.liquidityY.usdValue24
-      }
-
-      tokensDataObject[tokenX.address.toString()].volume24 += lastSnapshot.volumeX.usdValue24
-      tokensDataObject[tokenY.address.toString()].volume24 += lastSnapshot.volumeY.usdValue24
+      tokensDataObject[tokenX.address.toString()].volume24 += lastSnapshot.timestamp === lastTimestamp ? lastSnapshot.volumeX.usdValue24 : 0
+      tokensDataObject[tokenY.address.toString()].volume24 += lastSnapshot.timestamp === lastTimestamp ? lastSnapshot.volumeY.usdValue24 : 0
       tokensDataObject[tokenX.address.toString()].tvl += lastSnapshot.liquidityX.usdValue24
       tokensDataObject[tokenY.address.toString()].tvl += lastSnapshot.liquidityY.usdValue24
 
       poolsData.push({
-        volume24: lastSnapshot.volumeX.usdValue24 + lastSnapshot.volumeY.usdValue24,
-        tvl: lastSnapshot.liquidityX.usdValue24 + lastSnapshot.liquidityY.usdValue24,
+        volume24: lastSnapshot.timestamp === lastTimestamp ? lastSnapshot.volumeX.usdValue24 + lastSnapshot.volumeY.usdValue24 : 0,
+        tvl: lastSnapshot.timestamp === lastTimestamp ? lastSnapshot.liquidityX.usdValue24 + lastSnapshot.liquidityY.usdValue24 : 0,
         tokenX: poolsDataObject[address].tokenX,
         tokenY: poolsDataObject[address].tokenY,
         fee: +printBN(poolsDataObject[address].fee.v, DECIMAL - 2),
@@ -175,28 +162,47 @@ export function* getStats(): Generator {
           liquidityForTimestamps[timestamp] = 0
         }
 
+        if (!feesForTimestamps[timestamp]) {
+          feesForTimestamps[timestamp] = 0
+        }
+
         volumeForTimestamps[timestamp] += snapshot.volumeX.usdValue24 + snapshot.volumeY.usdValue24
         liquidityForTimestamps[timestamp] +=
           snapshot.liquidityX.usdValue24 + snapshot.liquidityY.usdValue24
+        feesForTimestamps[timestamp] += snapshot.feeX.usdValue24 + snapshot.feeY.usdValue24
       })
     })
-
-    volume24.change = ((volume24.value - prevVolume24) / prevVolume24) * 100
-    tvl24.change = ((tvl24.value - prevTvl24) / prevTvl24) * 100
-    fees24.change = ((fees24.value - prevFees24) / prevFees24) * 100
 
     const volumePlot: TimeData[] = Object.entries(volumeForTimestamps).map(
       ([timestamp, value]) => ({
         timestamp: +timestamp,
         value
       })
-    )
+    ).sort((a, b) => a.timestamp - b.timestamp)
     const liquidityPlot: TimeData[] = Object.entries(liquidityForTimestamps).map(
       ([timestamp, value]) => ({
         timestamp: +timestamp,
         value
       })
-    )
+    ).sort((a, b) => a.timestamp - b.timestamp)
+    const feePlot: TimeData[] = Object.entries(liquidityForTimestamps).map(
+      ([timestamp, value]) => ({
+        timestamp: +timestamp,
+        value
+      })
+    ).sort((a, b) => a.timestamp - b.timestamp)
+
+    volume24.value = volumePlot.length ? volumePlot[volumePlot.length - 1].value : 0
+    tvl24.value = liquidityPlot.length ? liquidityPlot[liquidityPlot.length - 1].value : 0
+    fees24.value = feePlot.length ? feePlot[feePlot.length - 1].value : 0
+
+    const prevVolume24 = volumePlot.length > 1 ? volumePlot[volumePlot.length - 2].value : 0
+    const prevTvl24 = liquidityPlot.length > 1 ? liquidityPlot[liquidityPlot.length - 2].value : 0
+    const prevFees24 = feePlot.length > 1 ? feePlot[feePlot.length - 2].value : 0
+
+    volume24.change = ((volume24.value - prevVolume24) / prevVolume24) * 100
+    tvl24.change = ((tvl24.value - prevTvl24) / prevTvl24) * 100
+    fees24.change = ((fees24.value - prevFees24) / prevFees24) * 100
 
     yield* put(
       actions.setCurrentStats({
