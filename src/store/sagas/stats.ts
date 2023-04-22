@@ -185,7 +185,7 @@ export function* getStats(): Generator {
         value
       })
     ).sort((a, b) => a.timestamp - b.timestamp)
-    const feePlot: TimeData[] = Object.entries(liquidityForTimestamps).map(
+    const feePlot: TimeData[] = Object.entries(feesForTimestamps).map(
       ([timestamp, value]) => ({
         timestamp: +timestamp,
         value
