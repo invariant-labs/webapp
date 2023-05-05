@@ -43,12 +43,7 @@ export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
   const networkType = yield* select(network)
   const rpc = yield* select(rpcAddress)
   const marketProgram = yield* call(getMarketProgram, networkType, rpc)
-  const pairs = [
-    ...FEE_TIERS,
-    { fee: fromFee(new BN(5000)), tickSpacing: 5 },
-    { fee: fromFee(new BN(10000)), tickSpacing: 5 },
-    { fee: fromFee(new BN(50000)), tickSpacing: 5 }
-  ].map(fee => new Pair(action.payload.first, action.payload.second, fee))
+  const pairs = FEE_TIERS.map(fee => new Pair(action.payload.first, action.payload.second, fee))
   const pools: PoolWithAddress[] = yield call(getPools, pairs, marketProgram)
 
   yield* put(actions.addPools(pools))
