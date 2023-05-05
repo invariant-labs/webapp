@@ -5,20 +5,15 @@ export const useStyles = makeStyles(() => ({
   wrapper: {
     width: '100%',
     borderRadius: 13,
-    backgroundColor: colors.invariant.componentBcg
+    backgroundColor: colors.invariant.componentBcg,
+    marginBottom: 8
   },
   bestText: {
     color: colors.invariant.green,
-    position: 'relative',
-    transition: 'left 300ms',
+    position: 'absolute',
     ...typography.caption1,
-    textAlign: 'center'
-  },
-  bestWrapper: {
-    width: '100%',
-    height: 25,
-    paddingBlock: 4,
-    marginBottom: 7
+    textAlign: 'center',
+    top: 40
   }
 }))
 
@@ -33,13 +28,20 @@ export const useTabsStyles = makeStyles(() => ({
   indicator: {
     height: 36,
     borderRadius: 10,
-    backgroundColor: colors.invariant.light
-  },
-  scrollable: {
-    overflow: 'hidden'
+    backgroundColor: colors.invariant.light,
+    top: 0
   },
   flexContainer: {
     justifyContent: 'space-between'
+  },
+  scrollButtons: {
+    width: 24,
+    '& svg': {
+      fill: colors.invariant.light
+    },
+    '&:hover svg': {
+      fill: colors.invariant.text
+    }
   }
 }))
 
@@ -52,9 +54,11 @@ export const useSingleTabStyles = makeStyles(() => ({
     minHeight: 36,
     color: colors.invariant.light,
     paddingInline: 0,
-    minWidth: 50,
-    width: 50,
+    minWidth: 65,
+    width: 65,
     marginRight: '7px',
+    position: 'relative',
+    overflow: 'visible',
 
     '&:hover': {
       color: colors.invariant.lightHover,

@@ -154,7 +154,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     <Grid container direction='column' className={classNames(classes.wrapper, className)}>
       <Typography className={classes.sectionTitle}>Tokens</Typography>
 
-      <Grid container className={classes.sectionWrapper} style={{ marginBottom: 8 }}>
+      <Grid container className={classes.sectionWrapper} style={{ marginBottom: 40 }}>
         <Grid container className={classes.selects} direction='row' justifyContent='space-between'>
           <Grid className={classes.selectWrapper}>
             <Select
