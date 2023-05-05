@@ -128,7 +128,10 @@ const MarketEvents = () => {
           poolTicksArray[address].forEach(singleTick => {
             marketProgram
               .onTickChange(
-                new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
+                new Pair(pool.tokenX, pool.tokenY, {
+                  fee: pool.fee.v,
+                  tickSpacing: pool.tickSpacing
+                }),
                 singleTick.index,
                 tickObject => {
                   dispatch(
@@ -184,7 +187,10 @@ const MarketEvents = () => {
                 try {
                   // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
                   marketProgram.onTickChange(
-                    new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }),
+                    new Pair(pool.tokenX, pool.tokenY, {
+                      fee: pool.fee.v,
+                      tickSpacing: pool.tickSpacing
+                    }),
                     +index,
                     tickObject => {
                       dispatch(
@@ -220,7 +226,9 @@ const MarketEvents = () => {
       const pools = findPairs(tokenFrom, tokenTo, allPools)
       for (const pool of pools) {
         marketProgram
-          .getTickmap(new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v }))
+          .getTickmap(
+            new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v, tickSpacing: pool.tickSpacing })
+          )
           .then(res => {
             dispatch(actions.setTickMaps({ index: pool.tickmap.toString(), tickMapStructure: res }))
           })
@@ -228,7 +236,9 @@ const MarketEvents = () => {
             console.log(err)
           })
         marketProgram
-          .getAllTicks(new Pair(tokenFrom, tokenTo, { fee: pool.fee.v }))
+          .getAllTicks(
+            new Pair(tokenFrom, tokenTo, { fee: pool.fee.v, tickSpacing: pool.tickSpacing })
+          )
           .then(res => {
             dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
           })
