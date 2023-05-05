@@ -20,8 +20,8 @@ export const useStyles = makeStyles(() => ({
 export const useTabsStyles = makeStyles(() => ({
   root: {
     overflow: 'visible',
-    height: 60,
-    minHeight: 60,
+    height: 36,
+    minHeight: 36,
     margin: '4px 4px',
     borderRadius: 10
   },
@@ -33,6 +33,15 @@ export const useTabsStyles = makeStyles(() => ({
   },
   flexContainer: {
     justifyContent: 'space-between'
+  },
+  scrollButtons: {
+    width: 24,
+    '& svg': {
+      fill: colors.invariant.light
+    },
+    '&:hover svg': {
+      fill: colors.invariant.text
+    }
   }
 }))
 
