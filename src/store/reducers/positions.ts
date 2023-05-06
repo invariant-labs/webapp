@@ -46,6 +46,7 @@ export interface InitPositionData
   tokenX: PublicKey
   tokenY: PublicKey
   fee: BN
+  tickSpacing: number
   initPool?: boolean
   initTick?: number
   xAmount: number

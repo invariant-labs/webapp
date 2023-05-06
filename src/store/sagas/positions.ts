@@ -111,7 +111,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       const { transaction, signers } = yield* call(
         [marketProgram, marketProgram.initPoolAndPositionTx],
         {
-          pair: new Pair(data.tokenX, data.tokenY, { fee: data.fee }),
+          pair: new Pair(data.tokenX, data.tokenY, { fee: data.fee, tickSpacing: data.tickSpacing }),
           userTokenX,
           userTokenY,
           lowerTick: data.lowerTick,
@@ -128,7 +128,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       poolSigners = signers
     } else {
       initPositionTx = yield* call([marketProgram, marketProgram.initPositionTx], {
-        pair: new Pair(data.tokenX, data.tokenY, { fee: data.fee }),
+        pair: new Pair(data.tokenX, data.tokenY, { fee: data.fee, tickSpacing: data.tickSpacing }),
         userTokenX,
         userTokenY,
         lowerTick: data.lowerTick,
@@ -309,7 +309,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       const { transaction, signers } = yield* call(
         [marketProgram, marketProgram.initPoolAndPositionTx],
         {
-          pair: new Pair(action.payload.tokenX, action.payload.tokenY, { fee: action.payload.fee }),
+          pair: new Pair(action.payload.tokenX, action.payload.tokenY, { fee: action.payload.fee, tickSpacing: action.payload.tickSpacing }),
           userTokenX,
           userTokenY,
           lowerTick: action.payload.lowerTick,
@@ -326,7 +326,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       poolSigners = signers
     } else {
       tx = yield* call([marketProgram, marketProgram.initPositionTx], {
-        pair: new Pair(action.payload.tokenX, action.payload.tokenY, { fee: action.payload.fee }),
+        pair: new Pair(action.payload.tokenX, action.payload.tokenY, { fee: action.payload.fee, tickSpacing: action.payload.tickSpacing }),
         userTokenX,
         userTokenY,
         lowerTick: action.payload.lowerTick,
@@ -405,7 +405,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     const rawTicks = yield* call(
       [marketProgram, marketProgram.getAllTicks],
       new Pair(allPools[poolIndex].tokenX, allPools[poolIndex].tokenY, {
-        fee: allPools[poolIndex].fee.v
+        fee: allPools[poolIndex].fee.v,
+        tickSpacing: allPools[poolIndex].tickSpacing
       })
     )
 
@@ -549,7 +550,8 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 
     const ix = yield* call([marketProgram, marketProgram.claimFeeInstruction], {
       pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
-        fee: positionForIndex.fee.v
+        fee: positionForIndex.fee.v,
+        tickSpacing: positionForIndex.tickSpacing
       }),
       userTokenX,
       userTokenY,
@@ -641,7 +643,8 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
     const ix = yield* call([marketProgram, marketProgram.claimFeeInstruction], {
       pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
-        fee: positionForIndex.fee.v
+        fee: positionForIndex.fee.v,
+        tickSpacing: positionForIndex.tickSpacing
       }),
       userTokenX,
       userTokenY,
@@ -764,7 +767,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
 
     const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {
       pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
-        fee: positionForIndex.fee.v
+        fee: positionForIndex.fee.v,
+        tickSpacing: positionForIndex.tickSpacing
       }),
       owner: wallet.publicKey,
       index: data.positionIndex,
@@ -886,7 +890,8 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
 
     const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {
       pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
-        fee: positionForIndex.fee.v
+        fee: positionForIndex.fee.v,
+        tickSpacing: positionForIndex.tickSpacing
       }),
       owner: wallet.publicKey,
       index: action.payload.positionIndex,
@@ -990,7 +995,8 @@ export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<string
     }
 
     const pair = new Pair(positionData.poolData.tokenX, positionData.poolData.tokenY, {
-      fee: positionData.poolData.fee.v
+      fee: positionData.poolData.fee.v,
+      tickSpacing: positionData.poolData.tickSpacing
     })
 
     const lowerTick = yield* call(
