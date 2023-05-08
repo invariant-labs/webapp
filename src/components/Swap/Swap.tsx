@@ -659,7 +659,8 @@ export const Swap: React.FC<ISwap> = ({
               WalletType.COIN98,
               WalletType.SLOPE,
               WalletType.CLOVER,
-              WalletType.EXODUS
+              WalletType.EXODUS,
+              WalletType.BACKPACK
             ]}
             onSelect={onWalletSelect}
             connected={false}

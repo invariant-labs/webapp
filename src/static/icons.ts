@@ -37,6 +37,7 @@ import inactiveIcon from './svg/inactive.svg'
 import allIcon from './svg/all.svg'
 import nightlyIcon from './svg/nightly.svg'
 import exodusIcon from './svg/exodus.svg'
+import backpackIcon from './png/backpack.png'
 
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
@@ -78,7 +79,8 @@ const icons: { [key: string]: string } = {
   closeIcon: closeIcon,
   activeIcon: activeIcon,
   inactiveIcon: inactiveIcon,
-  allIcon: allIcon
+  allIcon: allIcon,
+  backpack: backpackIcon
 }
 
 export default icons
