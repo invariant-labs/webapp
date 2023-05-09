@@ -652,6 +652,7 @@ export const Swap: React.FC<ISwap> = ({
             name='Connect wallet'
             options={[
               WalletType.PHANTOM,
+              WalletType.BACKPACK,
               WalletType.NIGHTLY,
               WalletType.SOLLET,
               WalletType.MATH,
@@ -659,8 +660,7 @@ export const Swap: React.FC<ISwap> = ({
               WalletType.COIN98,
               WalletType.SLOPE,
               WalletType.CLOVER,
-              WalletType.EXODUS,
-              WalletType.BACKPACK
+              WalletType.EXODUS
             ]}
             onSelect={onWalletSelect}
             connected={false}

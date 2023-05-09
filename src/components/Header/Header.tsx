@@ -185,6 +185,7 @@ export const Header: React.FC<IHeader> = ({
             }
             options={[
               WalletType.PHANTOM,
+              WalletType.BACKPACK,
               WalletType.NIGHTLY,
               WalletType.SOLLET,
               WalletType.MATH,
@@ -193,7 +194,6 @@ export const Header: React.FC<IHeader> = ({
               WalletType.SLOPE,
               WalletType.CLOVER,
               WalletType.EXODUS,
-              WalletType.BACKPACK
             ]}
             onSelect={onWalletSelect}
             connected={walletConnected}

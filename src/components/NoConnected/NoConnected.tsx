@@ -58,6 +58,7 @@ export const NoConnected: React.FC<INoConnected> = ({
       <ConnectWallet
         options={[
           WalletType.PHANTOM,
+          WalletType.BACKPACK,
           WalletType.NIGHTLY,
           WalletType.SOLLET,
           WalletType.MATH,
@@ -66,7 +67,6 @@ export const NoConnected: React.FC<INoConnected> = ({
           WalletType.SLOPE,
           WalletType.CLOVER,
           WalletType.EXODUS,
-          WalletType.BACKPACK
         ]}
         open={open}
         anchorEl={anchorEl}
