@@ -151,6 +151,7 @@ enum SolanaNetworks {
   DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',
   MAIN = 'https://api.mainnet-beta.solana.com',
+  MAIN_GET_BLOCK = 'https://sol.getblock.io/7651ca7e-2395-4581-81ba-f0ed62b1faff/mainnet/',
   MAIN_QUICKNODE = 'https://icy-billowing-gadget.solana-mainnet.discover.quiknode.pro/b970ec100ab2d8c249bee494b7d682c8ef75ee6f/',
   MAIN_SERUM = 'https://solana-api.projectserum.com',
   MAIN_FIGMENT = 'https://solana--mainnet.datahub.figment.io/apikey/182e93d87a1f1d335c9d74d6c7371388',
