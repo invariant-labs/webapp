@@ -5,11 +5,12 @@ import { actions, ListPoolsRequest, PairTokens, PoolWithAddress } from '@reducer
 import { PayloadAction } from '@reduxjs/toolkit'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PublicKey } from '@solana/web3.js'
-import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
+import { FEE_TIERS, fromFee } from '@invariant-labs/sdk/lib/utils'
 import { getFullNewTokensData, getPools, getPoolsFromAdresses } from '@consts/utils'
 import { tokens } from '@selectors/pools'
 import { getConnection } from './connection'
 import { network, rpcAddress } from '@selectors/solanaConnection'
+import { BN } from '@project-serum/anchor'
 export interface iTick {
   index: Tick[]
 }

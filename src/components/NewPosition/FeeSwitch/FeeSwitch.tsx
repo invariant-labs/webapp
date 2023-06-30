@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Grid, Tab, Tabs, Typography } from '@material-ui/core'
+import { Grid, Tab, Tabs } from '@material-ui/core'
 import useStyles, { useSingleTabStyles, useTabsStyles } from './style'
 import classNames from 'classnames'
 
@@ -48,14 +48,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
           <Tab
             key={index}
             disableRipple
-            label={
-              <>
-                {showOnlyPercents ? `${tier}%` : `${tier}% fee`}
-                {bestTierIndex === index ? (
-                  <Typography className={classes.bestText}>Best</Typography>
-                ) : null}
-              </>
-            }
+            label={showOnlyPercents ? `${tier}%` : `${tier}% fee`}
             classes={{
               root: classNames(
                 singleTabClasses.root,

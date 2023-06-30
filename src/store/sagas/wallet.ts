@@ -9,7 +9,7 @@ import {
   takeLatest
 } from 'typed-redux-saga'
 
-import { actions, ITokenAccount, PayloadTypes } from '@reducers/solanaWallet'
+import { actions, ITokenAccount, PayloadTypes, Status } from '@reducers/solanaWallet'
 import { getConnection } from './connection'
 import { getSolanaWallet, connectWallet, disconnectWallet, WalletType } from '@web3/wallet'
 import {
@@ -22,18 +22,12 @@ import {
 import { Token, ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as positionsActions } from '@reducers/positions'
-import { Status } from '@reducers/solanaConnection'
 import { BN } from '@project-serum/anchor'
 import { WalletAdapter } from '@web3/adapters/types'
 import { getTokenDetails } from './token'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { accounts, address, status } from '@selectors/solanaWallet'
-import {
-  airdropQuantities,
-  airdropTokens,
-  DEFAULT_PUBLICKEY,
-  Token as StoreToken
-} from '@consts/static'
+import { accounts, status } from '@selectors/solanaWallet'
+import { airdropQuantities, airdropTokens, Token as StoreToken } from '@consts/static'
 import airdropAdmin from '@consts/airdropAdmin'
 import { network } from '@selectors/solanaConnection'
 import { tokens } from '@selectors/pools'
@@ -351,9 +345,9 @@ export function* sendSol(amount: BN, recipient: PublicKey): SagaGenerator<string
 }
 
 export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): Generator {
-  const walletAddress = yield* select(address)
+  const walletStatus = yield* select(status)
   let enumWallet = ''
-  if (!walletAddress.equals(DEFAULT_PUBLICKEY)) {
+  if (walletStatus === Status.Initialized) {
     yield* put(
       snackbarsActions.add({
         message: 'Wallet already connected.',
@@ -402,6 +396,9 @@ export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): 
       break
     case WalletType.EXODUS:
       enumWallet = 'exodus'
+      break
+    case WalletType.BACKPACK:
+      enumWallet = 'backpack'
       break
     default:
       enumWallet = 'phantom'

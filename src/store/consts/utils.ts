@@ -575,13 +575,10 @@ export const handleSimulate = async (
     }
 
     try {
-      const swapSimulateResult = await simulateSwap({
+      const swapSimulateResult = simulateSwap({
         xToY: isXtoY,
         byAmountIn: byAmountIn,
         swapAmount: amount,
-        priceLimit: {
-          v: isXtoY ? new BN(1) : new BN('340282366920938463463374607431768211455')
-        },
         slippage: slippage,
         pool: pool,
         ticks: ticks,

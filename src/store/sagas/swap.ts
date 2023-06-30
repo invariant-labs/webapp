@@ -108,7 +108,8 @@ export function* handleSwapWithSOL(): Generator {
     }
     const swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
       pair: new Pair(tokenFrom, tokenTo, {
-        fee: allPools[poolIndex].fee.v
+        fee: allPools[poolIndex].fee.v,
+        tickSpacing: allPools[poolIndex].tickSpacing
       }),
       xToY: isXtoY,
       amount: byAmountIn ? amountIn : amountOut,
@@ -288,7 +289,8 @@ export function* handleSwap(): Generator {
     }
     const swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
       pair: new Pair(tokenFrom, tokenTo, {
-        fee: allPools[poolIndex].fee.v
+        fee: allPools[poolIndex].fee.v,
+        tickSpacing: allPools[poolIndex].tickSpacing
       }),
       xToY: isXtoY,
       amount: byAmountIn ? amountIn : amountOut,
