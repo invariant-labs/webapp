@@ -2,8 +2,8 @@ import { DEFAULT_PUBLICKEY } from '@consts/static'
 import { BN } from '@project-serum/anchor'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
-import { WalletType } from '@web3/wallet'
 import { PayloadType } from './types'
+import { StandardWalletAdapter } from '@solana/wallet-standard'
 export enum Status {
   Uninitialized = 'uninitialized',
   Init = 'init',
@@ -84,7 +84,7 @@ const solanaWalletSlice = createSlice({
     // Triggers rescan for tokens that we control
     rescanTokens() {},
     airdrop() {},
-    connect(_state, _action: PayloadAction<WalletType>) {},
+    connect(_state, _action: PayloadAction<StandardWalletAdapter>) {},
     disconnect() {}
   }
 })

@@ -215,9 +215,7 @@ export const WrappedSwap = () => {
           )
         }
       }}
-      onWalletSelect={wallet => {
-        dispatch(walletActions.connect(wallet))
-      }}
+      onWalletSelect={() => {}}
       onDisconnectWallet={() => {
         dispatch(walletActions.disconnect())
       }}

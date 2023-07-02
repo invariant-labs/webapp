@@ -390,9 +390,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       isLoadingTotals={farmsTotalsLoading}
       totalPositions={farmPositionsLength}
       noConnectedBlockerProps={{
-        onConnect: type => {
-          dispatch(walletActions.connect(type))
-        },
+        onConnect: () => {},
         onDisconnect: () => {
           dispatch(walletActions.disconnect())
         }

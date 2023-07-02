@@ -6,6 +6,9 @@ import { WalletType } from '@web3/wallet'
 import classNames from 'classnames'
 import React from 'react'
 import useStyles from './style'
+import { getNCSelector } from '@web3/selector'
+import { useDispatch } from 'react-redux'
+import { actions as walletActions } from '@reducers/solanaWallet'
 
 export interface INoConnected {
   onConnect: (type: WalletType) => void
@@ -19,15 +22,15 @@ export const NoConnected: React.FC<INoConnected> = ({
 }) => {
   const classes = useStyles()
 
+  const dispatch = useDispatch()
+
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const headerButton: HTMLButtonElement | null = document.getElementById(
-      'connect-wallet-button'
-    ) as HTMLButtonElement | null
-    setAnchorEl(headerButton !== null ? headerButton : event.currentTarget)
-    setOpen(true)
-    blurContent()
+  const handleClick = async () => {
+    const selector = await getNCSelector((adapter) => {
+      dispatch(walletActions.connect(adapter))
+    })
+    selector.openModal()
   }
 
   const handleClose = () => {
@@ -66,7 +69,7 @@ export const NoConnected: React.FC<INoConnected> = ({
           WalletType.COIN98,
           WalletType.SLOPE,
           WalletType.CLOVER,
-          WalletType.EXODUS,
+          WalletType.EXODUS
         ]}
         open={open}
         anchorEl={anchorEl}

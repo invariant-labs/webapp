@@ -525,9 +525,7 @@ export const NewPositionWrapper = () => {
       ticksLoading={ticksLoading}
       showNoConnected={walletStatus !== Status.Initialized}
       noConnectedBlockerProps={{
-        onConnect: type => {
-          dispatch(walletActions.connect(type))
-        },
+        onConnect: () => {},
         onDisconnect: () => {
           dispatch(walletActions.disconnect())
         },
