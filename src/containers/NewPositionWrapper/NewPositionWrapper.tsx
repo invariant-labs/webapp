@@ -33,6 +33,8 @@ import { actions as poolsActions } from '@reducers/pools'
 import { network } from '@selectors/solanaConnection'
 import { getCurrentSolanaConnection } from '@web3/connection'
 import { actions as snackbarsActions } from '@reducers/snackbars'
+import { WalletType } from '@web3/wallet'
+import { getNCSelector } from '@web3/selector'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -525,7 +527,16 @@ export const NewPositionWrapper = () => {
       ticksLoading={ticksLoading}
       showNoConnected={walletStatus !== Status.Initialized}
       noConnectedBlockerProps={{
-        onConnect: () => {},
+        onConnect: async type => {
+          if (type === WalletType.STANDARD) {
+            const selector = await getNCSelector(() => {
+              dispatch(walletActions.connect(WalletType.STANDARD))
+            })
+            selector.openModal()
+            return
+          }
+          dispatch(walletActions.connect(type))
+        },
         onDisconnect: () => {
           dispatch(walletActions.disconnect())
         },

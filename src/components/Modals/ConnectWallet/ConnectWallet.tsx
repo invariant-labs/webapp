@@ -38,7 +38,8 @@ export const ConnectWallet: React.FC<IConnectWalletModal> = ({
     [WalletType.CLOVER]: 'clover',
     [WalletType.NIGHTLY]: 'nightly',
     [WalletType.EXODUS]: 'exodus',
-    [WalletType.BACKPACK]: 'backpack'
+    [WalletType.BACKPACK]: 'backpack',
+    [WalletType.STANDARD]: 'wallet standard'
   }
 
   return (

@@ -24,6 +24,8 @@ import {
 import { network } from '@selectors/solanaConnection'
 import { commonTokensForNetworks } from '@consts/static'
 import { actions as snackbarsActions } from '@reducers/snackbars'
+import { WalletType } from '@web3/wallet'
+import { getNCSelector } from '@web3/selector'
 
 export const WrappedSwap = () => {
   const dispatch = useDispatch()
@@ -215,7 +217,16 @@ export const WrappedSwap = () => {
           )
         }
       }}
-      onWalletSelect={() => {}}
+      onWalletSelect={async wallet => {
+        if (wallet === WalletType.STANDARD) {
+          const selector = await getNCSelector(() => {
+            dispatch(walletActions.connect(WalletType.STANDARD))
+          })
+          selector.openModal()
+          return
+        }
+        dispatch(walletActions.connect(wallet))
+      }}
       onDisconnectWallet={() => {
         dispatch(walletActions.disconnect())
       }}

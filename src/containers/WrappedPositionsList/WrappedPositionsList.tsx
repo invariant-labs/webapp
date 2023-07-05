@@ -9,6 +9,8 @@ import { Status, actions } from '@reducers/solanaWallet'
 import { PositionsList } from '@components/PositionsList/PositionsList'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
+import { WalletType } from '@web3/wallet'
+import { getNCSelector } from '@web3/selector'
 
 export const WrappedPositionsList: React.FC = () => {
   const dispatch = useDispatch()
@@ -98,6 +100,7 @@ export const WrappedPositionsList: React.FC = () => {
             tokenYLiq,
             valueX,
             valueY,
+            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
             id: position.id.toString() + '_' + position.pool.toString(),
             isActive: currentPrice >= min && currentPrice <= max
           }
@@ -112,7 +115,16 @@ export const WrappedPositionsList: React.FC = () => {
       showNoConnected={walletStatus !== Status.Initialized}
       itemsPerPage={5}
       noConnectedBlockerProps={{
-        onConnect: () => {},
+        onConnect: async type => {
+          if (type === WalletType.STANDARD) {
+            const selector = await getNCSelector(() => {
+              dispatch(actions.connect(WalletType.STANDARD))
+            })
+            selector.openModal()
+            return
+          }
+          dispatch(actions.connect(type))
+        },
         onDisconnect: () => {
           dispatch(actions.disconnect())
         },

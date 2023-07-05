@@ -6,9 +6,6 @@ import ConnectWallet from '@components/Modals/ConnectWallet/ConnectWallet'
 import { WalletType } from '@web3/wallet'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import classNames from 'classnames'
-import { getNCSelector } from '@web3/selector'
-import { useDispatch } from 'react-redux'
-import { actions as walletActions } from '@reducers/solanaWallet'
 
 export interface IProps {
   name: string
@@ -33,14 +30,12 @@ export const ChangeWalletButton: React.FC<IProps> = ({
   className
 }) => {
   const classes = useStyles()
-  const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
-  const handleClick = async () => {
-    const selector = await getNCSelector((adapter) => {
-      dispatch(walletActions.connect(adapter))
-    })
-    selector.openModal()
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+    blurContent()
+    setOpen(true)
   }
 
   const handleClose = () => {

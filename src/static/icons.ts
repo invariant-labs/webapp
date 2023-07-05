@@ -80,7 +80,8 @@ const icons: { [key: string]: string } = {
   activeIcon: activeIcon,
   inactiveIcon: inactiveIcon,
   allIcon: allIcon,
-  backpack: backpackIcon
+  backpack: backpackIcon,
+  'wallet standard': nightlyIcon
 }
 
 export default icons

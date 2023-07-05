@@ -11,7 +11,7 @@ import {
 
 import { actions, ITokenAccount, PayloadTypes, Status } from '@reducers/solanaWallet'
 import { getConnection } from './connection'
-import { getSolanaWallet, connectWallet, disconnectWallet } from '@web3/wallet'
+import { getSolanaWallet, connectWallet, disconnectWallet, WalletType } from '@web3/wallet'
 import {
   Account,
   PublicKey,
@@ -346,6 +346,7 @@ export function* sendSol(amount: BN, recipient: PublicKey): SagaGenerator<string
 
 export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): Generator {
   const walletStatus = yield* select(status)
+  let enumWallet = ''
   if (walletStatus === Status.Initialized) {
     yield* put(
       snackbarsActions.add({
@@ -368,6 +369,44 @@ export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): 
     )
     return
   }
+  switch (action.payload) {
+    case WalletType.PHANTOM:
+      enumWallet = 'phantom'
+      break
+    case WalletType.SOLLET:
+      enumWallet = 'sollet'
+      break
+    case WalletType.MATH:
+      enumWallet = 'math'
+      break
+    case WalletType.SOLFLARE:
+      enumWallet = 'solflare'
+      break
+    case WalletType.COIN98:
+      enumWallet = 'coin98'
+      break
+    case WalletType.SLOPE:
+      enumWallet = 'slope'
+      break
+    case WalletType.CLOVER:
+      enumWallet = 'clover'
+      break
+    case WalletType.NIGHTLY:
+      enumWallet = 'nightly'
+      break
+    case WalletType.EXODUS:
+      enumWallet = 'exodus'
+      break
+    case WalletType.BACKPACK:
+      enumWallet = 'backpack'
+      break
+    case WalletType.STANDARD:
+      enumWallet = 'standard'
+      break
+    default:
+      enumWallet = 'phantom'
+  }
+  yield call([localStorage, localStorage.setItem], 'INVARIANT_SESSION_WALLET', enumWallet)
   yield* call(init)
 }
 
