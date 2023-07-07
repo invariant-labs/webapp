@@ -117,10 +117,8 @@ export const WrappedPositionsList: React.FC = () => {
       noConnectedBlockerProps={{
         onConnect: async type => {
           if (type === WalletType.STANDARD) {
-            const selector = await getNCSelector(() => {
-              dispatch(actions.connect(WalletType.STANDARD))
-            })
-            selector.openModal()
+            const selector = await getNCSelector()
+            selector?.openModal()
             return
           }
           dispatch(actions.connect(type))

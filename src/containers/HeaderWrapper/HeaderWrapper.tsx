@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import Header from '@components/Header/Header'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { WalletType } from '@web3/wallet'
-import { DEFAULT_PUBLICKEY, NetworkType, SolanaNetworks } from '@consts/static'
+import { NetworkType, SolanaNetworks } from '@consts/static'
 import { actions as walletActions, Status } from '@reducers/solanaWallet'
-import { address, status } from '@selectors/solanaWallet'
+import { address, status, walletType } from '@selectors/solanaWallet'
 import { actions } from '@reducers/solanaConnection'
 import { network, rpcAddress } from '@selectors/solanaConnection'
-import { getNCSelector } from '@web3/selector'
+import { getNCSelector, initNCSelector } from '@web3/selector'
 
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -17,77 +17,78 @@ export const HeaderWrapper: React.FC = () => {
   const currentNetwork = useSelector(network)
   const currentRpc = useSelector(rpcAddress)
   const location = useLocation()
-  const [typeOfWallet, setTypeOfWallet] = useState<WalletType>(WalletType.PHANTOM)
+  const typeOfWallet = useSelector(walletType)
+
   useEffect(() => {
-    let enumWallet = WalletType.PHANTOM
-    const sessionWallet = localStorage.getItem('INVARIANT_SESSION_WALLET')
-    if (
-      sessionWallet === 'phantom' ||
-      sessionWallet === 'sollet' ||
-      sessionWallet === 'math' ||
-      sessionWallet === 'solflare' ||
-      sessionWallet === 'coin98' ||
-      sessionWallet === 'slope' ||
-      sessionWallet === 'clover' ||
-      sessionWallet === 'nightly' ||
-      sessionWallet === 'exodus' ||
-      sessionWallet === 'backpack' ||
-      sessionWallet === 'standard'
-    ) {
-      switch (sessionWallet) {
-        case 'phantom':
-          enumWallet = WalletType.PHANTOM
-          break
-        case 'sollet':
-          enumWallet = WalletType.SOLLET
-          break
-        case 'math':
-          enumWallet = WalletType.MATH
-          break
-        case 'solflare':
-          enumWallet = WalletType.SOLFLARE
-          break
-        case 'coin98':
-          enumWallet = WalletType.COIN98
-          break
-        case 'slope':
-          enumWallet = WalletType.SLOPE
-          break
-        case 'clover':
-          enumWallet = WalletType.CLOVER
-          break
-        case 'nightly':
-          enumWallet = WalletType.NIGHTLY
-          break
-        case 'exodus':
-          enumWallet = WalletType.EXODUS
-          break
-        case 'backpack':
-          enumWallet = WalletType.BACKPACK
-          break
-        case 'standard':
-          enumWallet = WalletType.STANDARD
-          break
-        default:
-          enumWallet = WalletType.PHANTOM
+    const init = async () => {
+      await initNCSelector(() => {
+        dispatch(walletActions.connect(WalletType.STANDARD))
+      }).catch(() => {})
+      let enumWallet = WalletType.PHANTOM
+      const sessionWallet = localStorage.getItem('INVARIANT_SESSION_WALLET')
+      if (
+        sessionWallet === 'phantom' ||
+        sessionWallet === 'sollet' ||
+        sessionWallet === 'math' ||
+        sessionWallet === 'solflare' ||
+        sessionWallet === 'coin98' ||
+        sessionWallet === 'slope' ||
+        sessionWallet === 'clover' ||
+        sessionWallet === 'nightly' ||
+        sessionWallet === 'exodus' ||
+        sessionWallet === 'backpack' ||
+        sessionWallet === 'standard'
+      ) {
+        switch (sessionWallet) {
+          case 'phantom':
+            enumWallet = WalletType.PHANTOM
+            break
+          case 'sollet':
+            enumWallet = WalletType.SOLLET
+            break
+          case 'math':
+            enumWallet = WalletType.MATH
+            break
+          case 'solflare':
+            enumWallet = WalletType.SOLFLARE
+            break
+          case 'coin98':
+            enumWallet = WalletType.COIN98
+            break
+          case 'slope':
+            enumWallet = WalletType.SLOPE
+            break
+          case 'clover':
+            enumWallet = WalletType.CLOVER
+            break
+          case 'nightly':
+            enumWallet = WalletType.NIGHTLY
+            break
+          case 'exodus':
+            enumWallet = WalletType.EXODUS
+            break
+          case 'backpack':
+            enumWallet = WalletType.BACKPACK
+            break
+          case 'standard':
+            enumWallet = WalletType.STANDARD
+            break
+          default:
+            enumWallet = WalletType.PHANTOM
+        }
+
+        if (enumWallet === WalletType.STANDARD) {
+          return
+        }
+
+        dispatch(walletActions.connect(enumWallet))
       }
-      if (enumWallet === WalletType.STANDARD) {
-        getNCSelector(() => {
-          if (walletAddress.equals(DEFAULT_PUBLICKEY)) {
-            setTypeOfWallet(enumWallet)
-          }
-          dispatch(walletActions.connect(WalletType.STANDARD))
-        }).then(
-          selector => {
-            selector.openModal()
-          },
-          () => {}
-        )
-        return
-      }
-      setTypeOfWallet(enumWallet)
-      dispatch(walletActions.connect(enumWallet))
     }
+
+    init().then(
+      () => {},
+      () => {}
+    )
   }, [])
 
   const defaultMainnetRPC = useMemo(() => {
@@ -110,19 +111,11 @@ export const HeaderWrapper: React.FC = () => {
       }}
       onWalletSelect={async chosen => {
         if (chosen === WalletType.STANDARD) {
-          const selector = await getNCSelector(() => {
-            if (walletAddress.equals(DEFAULT_PUBLICKEY)) {
-              setTypeOfWallet(chosen)
-            }
-            dispatch(walletActions.connect(WalletType.STANDARD))
-          })
-          selector.openModal()
+          const selector = await getNCSelector()
+          selector?.openModal()
           return
         }
 
-        if (walletAddress.equals(DEFAULT_PUBLICKEY)) {
-          setTypeOfWallet(chosen)
-        }
         dispatch(walletActions.connect(chosen))
       }}
       landing={location.pathname.substr(1)}

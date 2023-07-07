@@ -359,6 +359,7 @@ export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): 
   }
   try {
     yield* call(connectWallet, action.payload)
+    yield* put(actions.setWalletType(action.payload))
   } catch (error) {
     yield put(
       snackbarsActions.add({
@@ -413,6 +414,7 @@ export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): 
 export function* handleDisconnect(): Generator {
   try {
     yield* call(disconnectWallet)
+    yield* put(actions.setWalletType(undefined))
     yield call([localStorage, localStorage.removeItem], 'INVARIANT_SESSION_WALLET')
     yield* put(actions.resetState())
     yield* put(positionsActions.setPositionsList([]))

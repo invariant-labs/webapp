@@ -36,13 +36,15 @@ export interface ISolanaWallet {
   address: PublicKey
   balance: BN
   accounts: { [key in string]: ITokenAccount }
+  walletType: WalletType | undefined
 }
 
 export const defaultState: ISolanaWallet = {
   status: Status.Uninitialized,
   address: DEFAULT_PUBLICKEY,
   balance: new BN(0),
-  accounts: {}
+  accounts: {},
+  walletType: undefined
 }
 export const solanaWalletSliceName = 'solanaWallet'
 const solanaWalletSlice = createSlice({
@@ -85,6 +87,10 @@ const solanaWalletSlice = createSlice({
     rescanTokens() {},
     airdrop() {},
     connect(_state, _action: PayloadAction<WalletType>) {},
+    setWalletType(state, action: PayloadAction<WalletType | undefined>) {
+      state.walletType = action.payload
+      return state
+    },
     disconnect() {}
   }
 })

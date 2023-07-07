@@ -219,10 +219,8 @@ export const WrappedSwap = () => {
       }}
       onWalletSelect={async wallet => {
         if (wallet === WalletType.STANDARD) {
-          const selector = await getNCSelector(() => {
-            dispatch(walletActions.connect(WalletType.STANDARD))
-          })
-          selector.openModal()
+          const selector = await getNCSelector()
+          selector?.openModal()
           return
         }
         dispatch(walletActions.connect(wallet))

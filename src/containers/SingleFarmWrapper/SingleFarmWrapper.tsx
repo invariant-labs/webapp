@@ -394,10 +394,8 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       noConnectedBlockerProps={{
         onConnect: async type => {
           if (type === WalletType.STANDARD) {
-            const selector = await getNCSelector(() => {
-              dispatch(walletActions.connect(WalletType.STANDARD))
-            })
-            selector.openModal()
+            const selector = await getNCSelector()
+            selector?.openModal()
             return
           }
           dispatch(walletActions.connect(type))
