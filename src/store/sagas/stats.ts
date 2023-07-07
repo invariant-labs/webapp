@@ -86,7 +86,11 @@ export function* getStats(): Generator {
     const liquidityForTimestamps: Record<string, number> = {}
     const feesForTimestamps: Record<string, number> = {}
 
-    const lastTimestamp = Math.max(...Object.values(data).filter(snaps => snaps.length > 0).map(snaps => +snaps[snaps.length - 1].timestamp))
+    const lastTimestamp = Math.max(
+      ...Object.values(data)
+        .filter(snaps => snaps.length > 0)
+        .map(snaps => +snaps[snaps.length - 1].timestamp)
+    )
 
     Object.entries(data).forEach(([address, snapshots]) => {
       if (!poolsDataObject[address]) {
@@ -136,14 +140,22 @@ export function* getStats(): Generator {
 
       const lastSnapshot = snapshots[snapshots.length - 1]
 
-      tokensDataObject[tokenX.address.toString()].volume24 += lastSnapshot.timestamp === lastTimestamp ? lastSnapshot.volumeX.usdValue24 : 0
-      tokensDataObject[tokenY.address.toString()].volume24 += lastSnapshot.timestamp === lastTimestamp ? lastSnapshot.volumeY.usdValue24 : 0
+      tokensDataObject[tokenX.address.toString()].volume24 +=
+        lastSnapshot.timestamp === lastTimestamp ? lastSnapshot.volumeX.usdValue24 : 0
+      tokensDataObject[tokenY.address.toString()].volume24 +=
+        lastSnapshot.timestamp === lastTimestamp ? lastSnapshot.volumeY.usdValue24 : 0
       tokensDataObject[tokenX.address.toString()].tvl += lastSnapshot.liquidityX.usdValue24
       tokensDataObject[tokenY.address.toString()].tvl += lastSnapshot.liquidityY.usdValue24
 
       poolsData.push({
-        volume24: lastSnapshot.timestamp === lastTimestamp ? lastSnapshot.volumeX.usdValue24 + lastSnapshot.volumeY.usdValue24 : 0,
-        tvl: lastSnapshot.timestamp === lastTimestamp ? lastSnapshot.liquidityX.usdValue24 + lastSnapshot.liquidityY.usdValue24 : 0,
+        volume24:
+          lastSnapshot.timestamp === lastTimestamp
+            ? lastSnapshot.volumeX.usdValue24 + lastSnapshot.volumeY.usdValue24
+            : 0,
+        tvl:
+          lastSnapshot.timestamp === lastTimestamp
+            ? lastSnapshot.liquidityX.usdValue24 + lastSnapshot.liquidityY.usdValue24
+            : 0,
         tokenX: poolsDataObject[address].tokenX,
         tokenY: poolsDataObject[address].tokenY,
         fee: +printBN(poolsDataObject[address].fee.v, DECIMAL - 2),
@@ -173,24 +185,24 @@ export function* getStats(): Generator {
       })
     })
 
-    const volumePlot: TimeData[] = Object.entries(volumeForTimestamps).map(
-      ([timestamp, value]) => ({
+    const volumePlot: TimeData[] = Object.entries(volumeForTimestamps)
+      .map(([timestamp, value]) => ({
         timestamp: +timestamp,
         value
-      })
-    ).sort((a, b) => a.timestamp - b.timestamp)
-    const liquidityPlot: TimeData[] = Object.entries(liquidityForTimestamps).map(
-      ([timestamp, value]) => ({
+      }))
+      .sort((a, b) => a.timestamp - b.timestamp)
+    const liquidityPlot: TimeData[] = Object.entries(liquidityForTimestamps)
+      .map(([timestamp, value]) => ({
         timestamp: +timestamp,
         value
-      })
-    ).sort((a, b) => a.timestamp - b.timestamp)
-    const feePlot: TimeData[] = Object.entries(feesForTimestamps).map(
-      ([timestamp, value]) => ({
+      }))
+      .sort((a, b) => a.timestamp - b.timestamp)
+    const feePlot: TimeData[] = Object.entries(feesForTimestamps)
+      .map(([timestamp, value]) => ({
         timestamp: +timestamp,
         value
-      })
-    ).sort((a, b) => a.timestamp - b.timestamp)
+      }))
+      .sort((a, b) => a.timestamp - b.timestamp)
 
     volume24.value = volumePlot.length ? volumePlot[volumePlot.length - 1].value : 0
     tvl24.value = liquidityPlot.length ? liquidityPlot[liquidityPlot.length - 1].value : 0
