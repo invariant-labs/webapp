@@ -111,7 +111,10 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       const { transaction, signers } = yield* call(
         [marketProgram, marketProgram.initPoolAndPositionTx],
         {
-          pair: new Pair(data.tokenX, data.tokenY, { fee: data.fee, tickSpacing: data.tickSpacing }),
+          pair: new Pair(data.tokenX, data.tokenY, {
+            fee: data.fee,
+            tickSpacing: data.tickSpacing
+          }),
           userTokenX,
           userTokenY,
           lowerTick: data.lowerTick,
@@ -309,7 +312,10 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       const { transaction, signers } = yield* call(
         [marketProgram, marketProgram.initPoolAndPositionTx],
         {
-          pair: new Pair(action.payload.tokenX, action.payload.tokenY, { fee: action.payload.fee, tickSpacing: action.payload.tickSpacing }),
+          pair: new Pair(action.payload.tokenX, action.payload.tokenY, {
+            fee: action.payload.fee,
+            tickSpacing: action.payload.tickSpacing
+          }),
           userTokenX,
           userTokenY,
           lowerTick: action.payload.lowerTick,
@@ -326,7 +332,10 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       poolSigners = signers
     } else {
       tx = yield* call([marketProgram, marketProgram.initPositionTx], {
-        pair: new Pair(action.payload.tokenX, action.payload.tokenY, { fee: action.payload.fee, tickSpacing: action.payload.tickSpacing }),
+        pair: new Pair(action.payload.tokenX, action.payload.tokenY, {
+          fee: action.payload.fee,
+          tickSpacing: action.payload.tickSpacing
+        }),
         userTokenX,
         userTokenY,
         lowerTick: action.payload.lowerTick,
