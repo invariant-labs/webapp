@@ -66,7 +66,7 @@ export const NoConnected: React.FC<INoConnected> = ({
           WalletType.COIN98,
           WalletType.SLOPE,
           WalletType.CLOVER,
-          WalletType.EXODUS,
+          WalletType.EXODUS
         ]}
         open={open}
         anchorEl={anchorEl}
