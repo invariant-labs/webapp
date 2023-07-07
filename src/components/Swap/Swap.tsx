@@ -652,6 +652,7 @@ export const Swap: React.FC<ISwap> = ({
             name='Connect wallet'
             options={[
               WalletType.PHANTOM,
+              WalletType.BACKPACK,
               WalletType.NIGHTLY,
               WalletType.SOLLET,
               WalletType.MATH,

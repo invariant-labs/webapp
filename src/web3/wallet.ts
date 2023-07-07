@@ -9,6 +9,7 @@ import { SlopeWalletAdapter } from './adapters/slope'
 import { CloverWalletAdapter } from './adapters/clover'
 import { NightlyWalletAdapter } from './adapters/nightly'
 import { ExodusWalletAdapter } from './adapters/exodus'
+import { BackpackWalletAdapter } from './adapters/backpack'
 
 export enum WalletType {
   PHANTOM,
@@ -19,7 +20,8 @@ export enum WalletType {
   SLOPE,
   CLOVER,
   NIGHTLY,
-  EXODUS
+  EXODUS,
+  BACKPACK
 }
 
 let _wallet: WalletAdapter
@@ -103,6 +105,13 @@ const connectWallet = async (wallet: WalletType): Promise<WalletAdapter> => {
         break
       case WalletType.EXODUS:
         _wallet = new ExodusWalletAdapter()
+        _wallet.on('connect', () => {
+          resolve(_wallet)
+        })
+        _wallet.connect()
+        break
+      case WalletType.BACKPACK:
+        _wallet = new BackpackWalletAdapter()
         _wallet.on('connect', () => {
           resolve(_wallet)
         })

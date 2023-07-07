@@ -132,7 +132,9 @@ export const NewPositionWrapper = () => {
   )
 
   const [fee, setFee] = useState<BN>(currentTiers[0].fee)
-  const [tickSpacing, setTickSpacing] = useState<number>(feeToTickSpacing(currentTiers[0].fee))
+  const [tickSpacing, setTickSpacing] = useState(
+    currentTiers[0].tickSpacing ?? feeToTickSpacing(currentTiers[0].fee)
+  )
 
   const [midPrice, setMidPrice] = useState<TickPlotPositionData>({
     index: 0,
@@ -427,7 +429,10 @@ export const NewPositionWrapper = () => {
         setTokenAIndex(tokenA)
         setTokenBIndex(tokenB)
         setFee(tiersAfterChange[feeTierIndex].fee)
-        setTickSpacing(feeToTickSpacing(tiersAfterChange[feeTierIndex].fee))
+        setTickSpacing(
+          tiersAfterChange[feeTierIndex].tickSpacing ??
+            feeToTickSpacing(tiersAfterChange[feeTierIndex].fee)
+        )
       }}
       feeTiers={currentTiers.map(tier => +printBN(tier.fee, DECIMAL - 2))}
       data={data}
@@ -458,6 +463,7 @@ export const NewPositionWrapper = () => {
             xAmount,
             yAmount,
             slippage,
+            tickSpacing,
             knownPrice:
               poolIndex === null
                 ? calculatePriceSqrt(midPrice.index)

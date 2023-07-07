@@ -58,6 +58,7 @@ export const NoConnected: React.FC<INoConnected> = ({
       <ConnectWallet
         options={[
           WalletType.PHANTOM,
+          WalletType.BACKPACK,
           WalletType.NIGHTLY,
           WalletType.SOLLET,
           WalletType.MATH,

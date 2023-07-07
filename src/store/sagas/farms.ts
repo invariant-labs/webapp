@@ -463,7 +463,8 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
       marketProgram,
       {
         pair: new Pair(positionData.poolData.tokenX, positionData.poolData.tokenY, {
-          fee: positionData.poolData.fee.v
+          fee: positionData.poolData.fee.v,
+          tickSpacing: positionData.poolData.tickSpacing
         }),
         owner: wallet.publicKey,
         lowerTickIndex: positionData.lowerTickIndex,
@@ -698,7 +699,8 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
       [marketProgram, marketProgram.updateSecondsPerLiquidityInstruction],
       {
         pair: new Pair(positionData.poolData.tokenX, positionData.poolData.tokenY, {
-          fee: positionData.poolData.fee.v
+          fee: positionData.poolData.fee.v,
+          tickSpacing: positionData.poolData.tickSpacing
         }),
         owner: wallet.publicKey,
         lowerTickIndex: positionData.lowerTickIndex,
@@ -860,7 +862,8 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
       marketProgram,
       {
         pair: new Pair(positionData.poolData.tokenX, positionData.poolData.tokenY, {
-          fee: positionData.poolData.fee.v
+          fee: positionData.poolData.fee.v,
+          tickSpacing: positionData.poolData.tickSpacing
         }),
         owner: wallet.publicKey,
         lowerTickIndex: positionData.lowerTickIndex,
@@ -928,7 +931,8 @@ export function* createClaimAllPositionRewardsTx(positionIndex: number) {
     [marketProgram, marketProgram.updateSecondsPerLiquidityInstruction],
     {
       pair: new Pair(positionData.poolData.tokenX, positionData.poolData.tokenY, {
-        fee: positionData.poolData.fee.v
+        fee: positionData.poolData.fee.v,
+        tickSpacing: positionData.poolData.tickSpacing
       }),
       owner: wallet.publicKey,
       lowerTickIndex: positionData.lowerTickIndex,
@@ -996,7 +1000,8 @@ export function* handleGetNewStakeRangeTicks(action: PayloadAction<string[]>) {
       const position = positionsDict[stake.position.toString()]
 
       const pair = new Pair(position.poolData.tokenX, position.poolData.tokenY, {
-        fee: position.poolData.fee.v
+        fee: position.poolData.fee.v,
+        tickSpacing: position.poolData.tickSpacing
       })
 
       ticksData.push({

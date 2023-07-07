@@ -397,6 +397,9 @@ export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): 
     case WalletType.EXODUS:
       enumWallet = 'exodus'
       break
+    case WalletType.BACKPACK:
+      enumWallet = 'backpack'
+      break
     default:
       enumWallet = 'phantom'
   }

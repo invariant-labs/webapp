@@ -185,6 +185,7 @@ export const Header: React.FC<IHeader> = ({
             }
             options={[
               WalletType.PHANTOM,
+              WalletType.BACKPACK,
               WalletType.NIGHTLY,
               WalletType.SOLLET,
               WalletType.MATH,

@@ -29,7 +29,8 @@ export const HeaderWrapper: React.FC = () => {
       sessionWallet === 'slope' ||
       sessionWallet === 'clover' ||
       sessionWallet === 'nightly' ||
-      sessionWallet === 'exodus'
+      sessionWallet === 'exodus' ||
+      sessionWallet === 'backpack'
     ) {
       switch (sessionWallet) {
         case 'phantom':
@@ -58,6 +59,9 @@ export const HeaderWrapper: React.FC = () => {
           break
         case 'exodus':
           enumWallet = WalletType.EXODUS
+          break
+        case 'backpack':
+          enumWallet = WalletType.BACKPACK
           break
         default:
           enumWallet = WalletType.PHANTOM
