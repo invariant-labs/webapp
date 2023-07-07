@@ -20,72 +20,9 @@ export const HeaderWrapper: React.FC = () => {
   const typeOfWallet = useSelector(walletType)
 
   useEffect(() => {
-    const init = async () => {
-      await initNCSelector(() => {
-        dispatch(walletActions.connect(WalletType.STANDARD))
-      }).catch(() => {})
-      let enumWallet = WalletType.PHANTOM
-      const sessionWallet = localStorage.getItem('INVARIANT_SESSION_WALLET')
-      if (
-        sessionWallet === 'phantom' ||
-        sessionWallet === 'sollet' ||
-        sessionWallet === 'math' ||
-        sessionWallet === 'solflare' ||
-        sessionWallet === 'coin98' ||
-        sessionWallet === 'slope' ||
-        sessionWallet === 'clover' ||
-        sessionWallet === 'nightly' ||
-        sessionWallet === 'exodus' ||
-        sessionWallet === 'backpack' ||
-        sessionWallet === 'standard'
-      ) {
-        switch (sessionWallet) {
-          case 'phantom':
-            enumWallet = WalletType.PHANTOM
-            break
-          case 'sollet':
-            enumWallet = WalletType.SOLLET
-            break
-          case 'math':
-            enumWallet = WalletType.MATH
-            break
-          case 'solflare':
-            enumWallet = WalletType.SOLFLARE
-            break
-          case 'coin98':
-            enumWallet = WalletType.COIN98
-            break
-          case 'slope':
-            enumWallet = WalletType.SLOPE
-            break
-          case 'clover':
-            enumWallet = WalletType.CLOVER
-            break
-          case 'nightly':
-            enumWallet = WalletType.NIGHTLY
-            break
-          case 'exodus':
-            enumWallet = WalletType.EXODUS
-            break
-          case 'backpack':
-            enumWallet = WalletType.BACKPACK
-            break
-          case 'standard':
-            enumWallet = WalletType.STANDARD
-            break
-          default:
-            enumWallet = WalletType.PHANTOM
-        }
-
-        if (enumWallet === WalletType.STANDARD) {
-          return
-        }
-
-        dispatch(walletActions.connect(enumWallet))
-      }
-    }
-
-    init().then(
+    initNCSelector(() => {
+      dispatch(walletActions.connect(WalletType.STANDARD))
+    }).then(
       () => {},
       () => {}
     )

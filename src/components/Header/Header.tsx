@@ -39,7 +39,7 @@ export const Header: React.FC<IHeader> = ({
   onWalletSelect,
   walletConnected,
   landing,
-  typeOfWallet = WalletType.PHANTOM,
+  typeOfWallet = WalletType.STANDARD,
   typeOfNetwork,
   rpc,
   onFaucet,
@@ -184,16 +184,6 @@ export const Header: React.FC<IHeader> = ({
                 : 'Connect wallet'
             }
             options={[
-              WalletType.PHANTOM,
-              WalletType.BACKPACK,
-              WalletType.NIGHTLY,
-              WalletType.SOLLET,
-              WalletType.MATH,
-              WalletType.SOLFLARE,
-              WalletType.COIN98,
-              WalletType.SLOPE,
-              WalletType.CLOVER,
-              WalletType.EXODUS,
               WalletType.STANDARD
             ]}
             onSelect={onWalletSelect}

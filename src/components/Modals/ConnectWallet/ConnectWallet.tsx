@@ -29,16 +29,6 @@ export const ConnectWallet: React.FC<IConnectWalletModal> = ({
   const classes = useStyles()
 
   const names = {
-    [WalletType.PHANTOM]: 'phantom',
-    [WalletType.SOLLET]: 'sollet',
-    [WalletType.MATH]: 'math wallet',
-    [WalletType.SOLFLARE]: 'solflare',
-    [WalletType.COIN98]: 'coin98',
-    [WalletType.SLOPE]: 'slope',
-    [WalletType.CLOVER]: 'clover',
-    [WalletType.NIGHTLY]: 'nightly',
-    [WalletType.EXODUS]: 'exodus',
-    [WalletType.BACKPACK]: 'backpack',
     [WalletType.STANDARD]: 'wallet standard'
   }
 
