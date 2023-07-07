@@ -56,9 +56,7 @@ export const NoConnected: React.FC<INoConnected> = ({
         </Grid>
       </Grid>
       <ConnectWallet
-        options={[
-          WalletType.STANDARD
-        ]}
+        options={[WalletType.STANDARD]}
         open={open}
         anchorEl={anchorEl}
         handleClose={handleClose}

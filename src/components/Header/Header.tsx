@@ -183,9 +183,7 @@ export const Header: React.FC<IHeader> = ({
                   }`
                 : 'Connect wallet'
             }
-            options={[
-              WalletType.STANDARD
-            ]}
+            options={[WalletType.STANDARD]}
             onSelect={onWalletSelect}
             connected={walletConnected}
             onDisconnect={onDisconnectWallet}

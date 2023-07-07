@@ -650,9 +650,7 @@ export const Swap: React.FC<ISwap> = ({
         {walletStatus !== Status.Initialized && getStateMessage() !== 'Loading' ? (
           <ChangeWalletButton
             name='Connect wallet'
-            options={[
-              WalletType.STANDARD
-            ]}
+            options={[WalletType.STANDARD]}
             onSelect={onWalletSelect}
             connected={false}
             onDisconnect={onDisconnectWallet}
