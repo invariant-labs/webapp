@@ -3,7 +3,6 @@ import { BN } from '@project-serum/anchor'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
 import { PayloadType } from './types'
-import { WalletType } from '@web3/wallet'
 export enum Status {
   Uninitialized = 'uninitialized',
   Init = 'init',
@@ -36,15 +35,13 @@ export interface ISolanaWallet {
   address: PublicKey
   balance: BN
   accounts: { [key in string]: ITokenAccount }
-  walletType: WalletType | undefined
 }
 
 export const defaultState: ISolanaWallet = {
   status: Status.Uninitialized,
   address: DEFAULT_PUBLICKEY,
   balance: new BN(0),
-  accounts: {},
-  walletType: undefined
+  accounts: {}
 }
 export const solanaWalletSliceName = 'solanaWallet'
 const solanaWalletSlice = createSlice({
@@ -86,11 +83,7 @@ const solanaWalletSlice = createSlice({
     // Triggers rescan for tokens that we control
     rescanTokens() {},
     airdrop() {},
-    connect(_state, _action: PayloadAction<WalletType>) {},
-    setWalletType(state, action: PayloadAction<WalletType | undefined>) {
-      state.walletType = action.payload
-      return state
-    },
+    connect() {},
     disconnect() {}
   }
 })

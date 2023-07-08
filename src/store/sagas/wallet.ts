@@ -9,7 +9,7 @@ import {
   takeLatest
 } from 'typed-redux-saga'
 
-import { actions, ITokenAccount, PayloadTypes, Status } from '@reducers/solanaWallet'
+import { actions, ITokenAccount, Status } from '@reducers/solanaWallet'
 import { getConnection } from './connection'
 import { getSolanaWallet, connectWallet, disconnectWallet } from '@web3/wallet'
 import {
@@ -25,7 +25,6 @@ import { actions as positionsActions } from '@reducers/positions'
 import { BN } from '@project-serum/anchor'
 import { WalletAdapter } from '@web3/adapters/types'
 import { getTokenDetails } from './token'
-import { PayloadAction } from '@reduxjs/toolkit'
 import { accounts, status } from '@selectors/solanaWallet'
 import { airdropQuantities, airdropTokens, Token as StoreToken } from '@consts/static'
 import airdropAdmin from '@consts/airdropAdmin'
@@ -344,7 +343,7 @@ export function* sendSol(amount: BN, recipient: PublicKey): SagaGenerator<string
   return txid
 }
 
-export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): Generator {
+export function* handleConnect(): Generator {
   const walletStatus = yield* select(status)
   if (walletStatus === Status.Initialized) {
     yield* put(
@@ -357,8 +356,7 @@ export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): 
     return
   }
   try {
-    yield* call(connectWallet, action.payload)
-    yield* put(actions.setWalletType(action.payload))
+    yield* call(connectWallet)
   } catch (error) {
     yield put(
       snackbarsActions.add({
@@ -375,7 +373,6 @@ export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): 
 export function* handleDisconnect(): Generator {
   try {
     yield* call(disconnectWallet)
-    yield* put(actions.setWalletType(undefined))
     yield* put(actions.resetState())
     yield* put(positionsActions.setPositionsList([]))
     yield* put(farmsActions.setUserStakes({}))

@@ -72,8 +72,7 @@ storiesOf('position/newPosition', module)
         feeTiers={[0.02, 0.04, 0.1, 0.3, 1]}
         ticksLoading={false}
         noConnectedBlockerProps={{
-          onConnect: () => {},
-          onDisconnect: () => {}
+          onConnect: () => {}
         }}
         progress='none'
         xDecimal={6}
@@ -121,8 +120,7 @@ storiesOf('position/newPosition', module)
         feeTiers={[0.02, 0.04, 0.1, 0.3, 1]}
         ticksLoading={false}
         noConnectedBlockerProps={{
-          onConnect: () => {},
-          onDisconnect: () => {}
+          onConnect: () => {}
         }}
         progress='none'
         xDecimal={6}

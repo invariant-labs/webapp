@@ -92,8 +92,7 @@ storiesOf('positionsList/list', module)
           onAddPositionClick={handleClick}
           itemsPerPage={5}
           noConnectedBlockerProps={{
-            onConnect: () => {},
-            onDisconnect: () => {}
+            onConnect: () => {}
           }}
           searchValue={''}
           searchSetValue={() => {}}

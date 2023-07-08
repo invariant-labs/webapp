@@ -23,7 +23,7 @@ import { tokens } from '@selectors/pools'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { actions } from '@reducers/farms'
-import { Status, actions as walletActions } from '@reducers/solanaWallet'
+import { Status } from '@reducers/solanaWallet'
 import { status } from '@selectors/solanaWallet'
 import {
   calculateReward,
@@ -33,7 +33,6 @@ import { BN } from '@project-serum/anchor'
 import loader from '@static/gif/loader.gif'
 import { positionsList } from '@selectors/positions'
 import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
-import { WalletType } from '@web3/wallet'
 import { getNCSelector } from '@web3/selector'
 
 export interface IProps {
@@ -392,16 +391,9 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       isLoadingTotals={farmsTotalsLoading}
       totalPositions={farmPositionsLength}
       noConnectedBlockerProps={{
-        onConnect: async type => {
-          if (type === WalletType.STANDARD) {
-            const selector = await getNCSelector()
-            selector?.openModal()
-            return
-          }
-          dispatch(walletActions.connect(type))
-        },
-        onDisconnect: () => {
-          dispatch(walletActions.disconnect())
+        onConnect: async () => {
+          const selector = await getNCSelector()
+          selector?.openModal()
         }
       }}
       isLoadingRangeTicks={!rangeTicksFetched}

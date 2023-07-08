@@ -4,10 +4,6 @@ import { MockWalletAdapter } from './adapters/mock'
 import { StandardAdapter } from './adapters/standard'
 import { standardAdapter } from './selector'
 
-export enum WalletType {
-  STANDARD
-}
-
 let _wallet: WalletAdapter
 const getSolanaWallet = (): WalletAdapter => {
   if (_wallet) {
@@ -18,27 +14,16 @@ const getSolanaWallet = (): WalletAdapter => {
 }
 
 // Here we will pass wallet type right
-const connectWallet = async (wallet: WalletType): Promise<WalletAdapter> => {
+const connectWallet = async (): Promise<WalletAdapter> => {
   return await new Promise(resolve => {
-    switch (wallet) {
-      case WalletType.STANDARD:
-        if (!standardAdapter) {
-          return
-        }
-        _wallet = new StandardAdapter(standardAdapter)
-        _wallet.on('connect', () => {
-          resolve(_wallet)
-        })
-        _wallet.connect()
-        break
-      default:
-        _wallet = new MockWalletAdapter()
-        _wallet.on('connect', () => {
-          resolve(_wallet)
-        })
-        _wallet.connect()
-        break
+    if (!standardAdapter) {
+      return
     }
+    _wallet = new StandardAdapter(standardAdapter)
+    _wallet.on('connect', () => {
+      resolve(_wallet)
+    })
+    _wallet.connect()
   })
 }
 
@@ -47,5 +32,4 @@ const disconnectWallet = () => {
     _wallet.disconnect()
   }
 }
-
 export { getSolanaWallet, connectWallet, disconnectWallet }
