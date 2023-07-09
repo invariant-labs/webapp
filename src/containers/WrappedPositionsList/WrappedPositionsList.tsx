@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { isLoadingPositionsList, positionsWithPoolsData } from '@selectors/positions'
 import { status } from '@selectors/solanaWallet'
 import { calcYPerXPrice, printBN } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
-import { Status, actions } from '@reducers/solanaWallet'
+import { Status } from '@reducers/solanaWallet'
 import { PositionsList } from '@components/PositionsList/PositionsList'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
+import { getNCSelector } from '@web3/selector'
 
 export const WrappedPositionsList: React.FC = () => {
-  const dispatch = useDispatch()
-
   const list = useSelector(positionsWithPoolsData)
   const isLoading = useSelector(isLoadingPositionsList)
   const walletStatus = useSelector(status)
@@ -98,6 +97,7 @@ export const WrappedPositionsList: React.FC = () => {
             tokenYLiq,
             valueX,
             valueY,
+            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
             id: position.id.toString() + '_' + position.pool.toString(),
             isActive: currentPrice >= min && currentPrice <= max
           }
@@ -112,11 +112,9 @@ export const WrappedPositionsList: React.FC = () => {
       showNoConnected={walletStatus !== Status.Initialized}
       itemsPerPage={5}
       noConnectedBlockerProps={{
-        onConnect: type => {
-          dispatch(actions.connect(type))
-        },
-        onDisconnect: () => {
-          dispatch(actions.disconnect())
+        onConnect: async () => {
+          const selector = await getNCSelector()
+          selector?.openModal()
         },
         descCustomText: 'You have no positions.'
       }}
