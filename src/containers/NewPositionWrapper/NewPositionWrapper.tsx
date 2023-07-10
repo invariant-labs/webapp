@@ -24,7 +24,7 @@ import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { initPosition, plotTicks } from '@selectors/positions'
 import { BN } from '@project-serum/anchor'
 import { bestTiers, commonTokensForNetworks, getNewPositionFeeTiers } from '@consts/static'
-import { Status, actions as walletActions } from '@reducers/solanaWallet'
+import { Status } from '@reducers/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import { calculatePriceSqrt, MAX_TICK, Pair } from '@invariant-labs/sdk'
@@ -33,6 +33,7 @@ import { actions as poolsActions } from '@reducers/pools'
 import { network } from '@selectors/solanaConnection'
 import { getCurrentSolanaConnection } from '@web3/connection'
 import { actions as snackbarsActions } from '@reducers/snackbars'
+import { getNCSelector } from '@web3/selector'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -525,11 +526,9 @@ export const NewPositionWrapper = () => {
       ticksLoading={ticksLoading}
       showNoConnected={walletStatus !== Status.Initialized}
       noConnectedBlockerProps={{
-        onConnect: type => {
-          dispatch(walletActions.connect(type))
-        },
-        onDisconnect: () => {
-          dispatch(walletActions.disconnect())
+        onConnect: async () => {
+          const selector = await getNCSelector()
+          selector?.openModal()
         },
         descCustomText: 'Cannot add any liquidity.'
       }}

@@ -28,7 +28,6 @@ import { PoolWithAddress } from '@reducers/pools'
 import ExchangeRate from './ExchangeRate/ExchangeRate'
 import classNames from 'classnames'
 import ChangeWalletButton from '@components/HeaderButton/ChangeWalletButton'
-import { WalletType } from '@web3/wallet'
 import TransactionDetailsBox from './TransactionDetailsBox/TransactionDetailsBox'
 
 export interface SwapToken {
@@ -81,7 +80,7 @@ export interface ISwap {
   progress: ProgressState
   poolTicks: { [x: string]: Tick[] }
   isWaitingForNewPool: boolean
-  onWalletSelect: (wallet: WalletType) => void
+  onConnectWallet: () => void
   onDisconnectWallet: () => void
   initialTokenFromIndex: number | null
   initialTokenToIndex: number | null
@@ -105,7 +104,7 @@ export const Swap: React.FC<ISwap> = ({
   progress,
   poolTicks,
   isWaitingForNewPool,
-  onWalletSelect,
+  onConnectWallet,
   onDisconnectWallet,
   initialTokenFromIndex,
   initialTokenToIndex,
@@ -650,22 +649,9 @@ export const Swap: React.FC<ISwap> = ({
         {walletStatus !== Status.Initialized && getStateMessage() !== 'Loading' ? (
           <ChangeWalletButton
             name='Connect wallet'
-            options={[
-              WalletType.PHANTOM,
-              WalletType.BACKPACK,
-              WalletType.NIGHTLY,
-              WalletType.SOLLET,
-              WalletType.MATH,
-              WalletType.SOLFLARE,
-              WalletType.COIN98,
-              WalletType.SLOPE,
-              WalletType.CLOVER,
-              WalletType.EXODUS
-            ]}
-            onSelect={onWalletSelect}
+            onConnect={onConnectWallet}
             connected={false}
             onDisconnect={onDisconnectWallet}
-            activeWallet={undefined}
             className={classes.connectWalletButton}
           />
         ) : (

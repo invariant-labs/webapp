@@ -159,7 +159,7 @@ storiesOf('newUi/swap', module)
           [DEFAULT_PUBLIC_KEY.toString()]: []
         }}
         isWaitingForNewPool={false}
-        onWalletSelect={() => {}}
+        onConnectWallet={() => {}}
         onDisconnectWallet={() => {}}
         initialTokenFromIndex={null}
         initialTokenToIndex={null}

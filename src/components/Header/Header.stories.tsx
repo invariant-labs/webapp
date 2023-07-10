@@ -6,7 +6,6 @@ import { action } from '@storybook/addon-actions'
 import { withKnobs } from '@storybook/addon-knobs'
 import Header from './Header'
 import { toBlur } from '@consts/uiUtils'
-import { WalletType } from '@web3/wallet'
 import { MemoryRouter } from 'react-router'
 
 storiesOf('ui/newHeader', module)
@@ -30,8 +29,8 @@ storiesOf('ui/newHeader', module)
           <Header
             address={DEFAULT_PUBLICKEY}
             onNetworkSelect={(networkType, rpc) => action('chosen: ' + networkType + ' ' + rpc)()}
-            onWalletSelect={(chosen: WalletType) => {
-              action(`wallet changed to: ${chosen}`)()
+            onConnectWallet={() => {
+              action('connect')
             }}
             walletConnected={false}
             landing='staking'
@@ -64,8 +63,8 @@ storiesOf('ui/newHeader', module)
           <Header
             address={new PublicKey(42)}
             onNetworkSelect={(networkType, rpc) => action('chosen: ' + networkType + ' ' + rpc)()}
-            onWalletSelect={(chosen: WalletType) => {
-              action(`wallet changed to: ${chosen}`)()
+            onConnectWallet={() => {
+              action('connect')
             }}
             walletConnected={true}
             landing='staking'

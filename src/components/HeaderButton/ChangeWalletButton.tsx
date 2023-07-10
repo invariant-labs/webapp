@@ -3,35 +3,36 @@ import { Button, Typography } from '@material-ui/core'
 import useStyles from './style'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import ConnectWallet from '@components/Modals/ConnectWallet/ConnectWallet'
-import { WalletType } from '@web3/wallet'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import classNames from 'classnames'
+
 export interface IProps {
   name: string
-  options: WalletType[]
-  onSelect: (chosen: WalletType) => void
+  onConnect: () => void
   connected: boolean
   startIcon?: JSX.Element
   onDisconnect: () => void
   hideArrow?: boolean
-  activeWallet?: WalletType
   className?: string
 }
 export const ChangeWalletButton: React.FC<IProps> = ({
   name,
-  options,
-  onSelect,
+  onConnect,
   connected,
   startIcon,
   hideArrow,
   onDisconnect,
-  activeWallet,
   className
 }) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!connected) {
+      onConnect()
+      return
+    }
+
     setAnchorEl(event.currentTarget)
     blurContent()
     setOpen(true)
@@ -71,14 +72,10 @@ export const ChangeWalletButton: React.FC<IProps> = ({
         <Typography className={classes.headerButtonTextEllipsis}>{name}</Typography>
       </Button>
       <ConnectWallet
-        options={options}
         open={open}
         anchorEl={anchorEl}
         handleClose={handleClose}
-        onSelect={onSelect}
         callDisconect={handleDisconnect}
-        connected={connected}
-        active={activeWallet}
       />
     </>
   )
