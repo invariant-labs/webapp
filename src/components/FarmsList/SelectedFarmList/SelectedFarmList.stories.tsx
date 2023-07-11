@@ -73,8 +73,7 @@ storiesOf('farmsList/selectedFarm', module)
           walletConnected
           totalPositions={2}
           noConnectedBlockerProps={{
-            onConnect: () => {},
-            onDisconnect: () => {}
+            onConnect: () => {}
           }}
         />
       </Grid>
@@ -106,8 +105,7 @@ storiesOf('farmsList/selectedFarm', module)
           stakedPositions={[]}
           totalPositions={0}
           noConnectedBlockerProps={{
-            onConnect: () => {},
-            onDisconnect: () => {}
+            onConnect: () => {}
           }}
         />
       </Grid>

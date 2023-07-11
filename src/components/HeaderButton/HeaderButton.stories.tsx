@@ -7,7 +7,6 @@ import { Typography } from '@material-ui/core'
 import { colors } from '@static/theme'
 import SelectNetworkButton from './SelectNetworkButton'
 import ChangeWalletButton from './ChangeWalletButton'
-import { WalletType } from '@web3/wallet'
 import { NetworkType, SolanaNetworks } from '@consts/static'
 import SelectRPCButton from './SelectRPCButton'
 
@@ -19,10 +18,9 @@ storiesOf('buttons/newHeaderButton', module)
   .add('selectWallet', () => (
     <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
       <ChangeWalletButton
-        options={[WalletType.PHANTOM, WalletType.SOLLET, WalletType.MATH]}
         name='Open Dropdown'
         connected={false}
-        onSelect={chosen => action(`chosen: ${chosen}`)()}
+        onConnect={() => action('connect')}
         onDisconnect={action('disconnect')}
       />
       <br />
@@ -34,10 +32,9 @@ storiesOf('buttons/newHeaderButton', module)
   .add('withDisconnect', () => (
     <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
       <ChangeWalletButton
-        options={[WalletType.PHANTOM, WalletType.SOLLET, WalletType.MATH]}
         name='Open Dropdown'
         connected={true}
-        onSelect={chosen => action(`chosen: ${chosen}`)()}
+        onConnect={() => action('connect')}
         onDisconnect={action('disconnect')}
       />
       <br />
