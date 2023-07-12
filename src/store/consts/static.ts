@@ -157,7 +157,6 @@ enum SolanaNetworks {
   MAIN_GENESYSGO = 'https://ssc-dao.genesysgo.net',
   MAIN_NIGHTLY = 'https://rpc.nightly.app:8899/',
   MAIN_ALCHEMY = 'https://solana-mainnet.g.alchemy.com/v2/YfX5E62sdlEoytQ9ZEOA_5KIE3QbwUUD',
-  MAIN_BLOCKDAEMON = 'https://try-rpc.mainnet.solana.blockdaemon.tech',
   LOCAL = 'http://127.0.0.1:8899'
 }
 

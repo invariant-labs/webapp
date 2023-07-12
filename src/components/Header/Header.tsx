@@ -77,25 +77,10 @@ export const Header: React.FC<IHeader> = ({
     },
     {
       networkType: NetworkType.MAINNET,
-      rpc: SolanaNetworks.MAIN_BLOCKDAEMON,
-      rpcName: 'Blockdaemon'
-    },
-    {
-      networkType: NetworkType.MAINNET,
       rpc: SolanaNetworks.MAIN_QUICKNODE,
       rpcName: 'Quicknode'
     },
-    { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN, rpcName: 'Solana' },
-    {
-      networkType: NetworkType.MAINNET,
-      rpc: SolanaNetworks.MAIN_SERUM,
-      rpcName: 'Serum'
-    },
-    {
-      networkType: NetworkType.MAINNET,
-      rpc: SolanaNetworks.MAIN_GENESYSGO,
-      rpcName: 'GenesysGo'
-    }
+    { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN, rpcName: 'Solana' }
   ]
 
   return (
