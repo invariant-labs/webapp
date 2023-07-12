@@ -50,7 +50,7 @@ const migrations: MigrationManifest = {
         rpcAddress = SolanaNetworks.LOCAL
         break
       case NetworkType.MAINNET:
-        rpcAddress = SolanaNetworks.MAIN_SHAKUDO
+        rpcAddress = SolanaNetworks.MAIN_ALCHEMY
         break
     }
 

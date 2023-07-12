@@ -156,8 +156,7 @@ enum SolanaNetworks {
   MAIN_FIGMENT = 'https://solana--mainnet.datahub.figment.io/apikey/182e93d87a1f1d335c9d74d6c7371388',
   MAIN_GENESYSGO = 'https://ssc-dao.genesysgo.net',
   MAIN_NIGHTLY = 'https://rpc.nightly.app:8899/',
-  MAIN_SHAKUDO = 'https://081a13gougoozkk51v1ekgzu5jsjrcidg1ynuxpng4hstiospypw9str4gzu8.xyz2.hyperplane.dev/',
-  MAIN_ALCHEMY = 'https://solana-mainnet.g.alchemy.com/v2/olFft01iKDVd2zzpVgTiCc2oKQnic3vs',
+  MAIN_ALCHEMY = 'https://solana-mainnet.g.alchemy.com/v2/YfX5E62sdlEoytQ9ZEOA_5KIE3QbwUUD',
   LOCAL = 'http://127.0.0.1:8899'
 }
 
