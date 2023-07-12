@@ -77,8 +77,8 @@ export const Header: React.FC<IHeader> = ({
     },
     {
       networkType: NetworkType.MAINNET,
-      rpc: SolanaNetworks.MAIN_SHAKUDO,
-      rpcName: 'Shakudo'
+      rpc: SolanaNetworks.MAIN_BLOCKDAEMON,
+      rpcName: 'Blockdaemon'
     },
     {
       networkType: NetworkType.MAINNET,

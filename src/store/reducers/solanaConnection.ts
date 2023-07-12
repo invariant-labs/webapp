@@ -21,7 +21,7 @@ export const defaultState: ISolanaConnectionStore = {
   message: '',
   network: NetworkType.MAINNET,
   slot: 0,
-  rpcAddress: SolanaNetworks.MAIN_SHAKUDO
+  rpcAddress: SolanaNetworks.MAIN_BLOCKDAEMON
 }
 export const solanaConnectionSliceName = 'solanaConnection'
 const solanaConnectionSlice = createSlice({
