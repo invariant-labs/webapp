@@ -17,12 +17,12 @@ storiesOf('stats/PoolListItem', module)
         volume={421323423.23}
         TVL={234413532.43}
         fee={0.05}
-        apy={300}
-        apyData={{
-          fees: 300,
-          accumulatedFarmsAvg: 100,
-          accumulatedFarmsSingleTick: 200
-        }}
+        // apy={300}
+        // apyData={{
+        //   fees: 300,
+        //   accumulatedFarmsAvg: 100,
+        //   accumulatedFarmsSingleTick: 200
+        // }}
       />
     )
   })

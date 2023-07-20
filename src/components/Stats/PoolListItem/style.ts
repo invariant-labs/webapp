@@ -5,7 +5,7 @@ const useStyle = makeStyles(() => ({
   container: {
     color: colors.white.main,
     display: 'grid',
-    gridTemplateColumns: '5% 40% 15% 10% 17% 15% 15% 20%',
+    gridTemplateColumns: '5% 40% 15% 20% 20%',
     padding: '18px 0',
 
     backgroundColor: colors.invariant.component,

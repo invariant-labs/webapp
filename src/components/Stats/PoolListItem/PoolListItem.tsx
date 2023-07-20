@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Typography, Box, useMediaQuery, Tooltip } from '@material-ui/core'
+import { Grid, Typography, Box, useMediaQuery } from '@material-ui/core'
 import { theme } from '@static/theme'
 import { formatNumbers, showPrefix } from '@consts/utils'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -14,9 +14,9 @@ export enum SortType {
   VOLUME_ASC,
   VOLUME_DESC,
   TVL_ASC,
-  TVL_DESC,
-  APY_ASC,
-  APY_DESC
+  TVL_DESC
+  // APY_ASC,
+  // APY_DESC
 }
 
 interface IProps {
@@ -32,12 +32,12 @@ interface IProps {
   sortType?: SortType
   onSort?: (type: SortType) => void
   hideBottomLine?: boolean
-  apy?: number
-  apyData?: {
-    fees: number
-    accumulatedFarmsAvg: number
-    accumulatedFarmsSingleTick: number
-  }
+  // apy?: number
+  // apyData?: {
+  //   fees: number
+  //   accumulatedFarmsAvg: number
+  //   accumulatedFarmsSingleTick: number
+  // }
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -52,13 +52,13 @@ const PoolListItem: React.FC<IProps> = ({
   tokenIndex,
   sortType,
   onSort,
-  hideBottomLine = false,
-  apy = 0,
-  apyData = {
-    fees: 0,
-    accumulatedFarmsAvg: 0,
-    accumulatedFarmsSingleTick: 0
-  }
+  hideBottomLine = false
+  // apy = 0,
+  // apyData = {
+  //   fees: 0,
+  //   accumulatedFarmsAvg: 0,
+  //   accumulatedFarmsSingleTick: 0
+  // }
 }) => {
   const classes = useStyle()
 
@@ -85,7 +85,7 @@ const PoolListItem: React.FC<IProps> = ({
               </Typography>
             </Grid>
           </Grid>
-          {!isXs ? (
+          {/* {!isXs ? (
             <Typography>
               {`${apy > 1000 ? '>1000' : apy.toFixed(2)}%`}
               <Tooltip
@@ -122,7 +122,7 @@ const PoolListItem: React.FC<IProps> = ({
                 <div className={classes.activeLiquidityIcon}>i</div>
               </Tooltip>
             </Typography>
-          ) : null}
+          ) : null} */}
           <Typography>{fee}%</Typography>
           <Typography>{`$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}</Typography>
           <Typography>{`$${formatNumbers()(TVL.toString())}${showPrefix(TVL)}`}</Typography>
@@ -150,7 +150,7 @@ const PoolListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
-          {!isXs ? (
+          {/* {!isXs ? (
             <Typography
               style={{ cursor: 'pointer' }}
               onClick={() => {
@@ -167,7 +167,7 @@ const PoolListItem: React.FC<IProps> = ({
                 <ArrowDropDownIcon className={classes.icon} />
               ) : null}
             </Typography>
-          ) : null}
+          ) : null} */}
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {
