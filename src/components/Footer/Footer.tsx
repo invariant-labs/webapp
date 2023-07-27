@@ -96,6 +96,17 @@ export const Footer = () => {
           </a>
         </Tooltip>
       </Grid>
+      <Grid className={classes.footerItem}>
+        <Tooltip
+          classes={{ tooltip: classes.tooltip }}
+          title='Docs'
+          placement='top'
+          TransitionComponent={FooterTransition}>
+          <a href={social.docs} className={classes.footerLink} target='_blank'>
+            <img className={classes.icon} src={icons.docsIcon} alt={'medium icon'} />
+          </a>
+        </Tooltip>
+      </Grid>
     </Grid>
   )
 }

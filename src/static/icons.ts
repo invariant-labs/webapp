@@ -28,6 +28,7 @@ import ANAIcon from './icons/ana.svg'
 import activeIcon from './svg/active.svg'
 import inactiveIcon from './svg/inactive.svg'
 import allIcon from './svg/all.svg'
+import docsIcon from './svg/docsCircle.svg'
 
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
@@ -60,7 +61,8 @@ const icons: { [key: string]: string } = {
   closeIcon: closeIcon,
   activeIcon: activeIcon,
   inactiveIcon: inactiveIcon,
-  allIcon: allIcon
+  allIcon: allIcon,
+  docsIcon
 }
 
 export default icons
