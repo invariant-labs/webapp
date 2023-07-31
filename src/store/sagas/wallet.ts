@@ -28,11 +28,12 @@ import { getTokenDetails } from './token'
 import { accounts, status } from '@selectors/solanaWallet'
 import { airdropQuantities, airdropTokens, Token as StoreToken } from '@consts/static'
 import airdropAdmin from '@consts/airdropAdmin'
-import { network } from '@selectors/solanaConnection'
+import { network, rpcAddress } from '@selectors/solanaConnection'
 import { tokens } from '@selectors/pools'
 import { actions as poolsActions } from '@reducers/pools'
 import { actions as farmsActions } from '@reducers/farms'
 import { actions as bondsActions } from '@reducers/bonds'
+import { getMarketProgram } from '@web3/programs/amm'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
@@ -357,7 +358,12 @@ export function* handleConnect(): Generator {
   }
   try {
     yield* call(connectWallet)
+    const networkType = yield* select(network)
+    const rpc = yield* select(rpcAddress)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    yield* call([marketProgram, marketProgram.setWallet], getSolanaWallet())
   } catch (error) {
+    console.log(error)
     yield put(
       snackbarsActions.add({
         message: 'Unable to connect to wallet.',
