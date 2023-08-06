@@ -393,7 +393,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       noConnectedBlockerProps={{
         onConnect: async () => {
           const selector = await getNCSelector()
-          selector?.openModal()
+          selector?.connect()
         }
       }}
       isLoadingRangeTicks={!rangeTicksFetched}

@@ -114,7 +114,7 @@ export const WrappedPositionsList: React.FC = () => {
       noConnectedBlockerProps={{
         onConnect: async () => {
           const selector = await getNCSelector()
-          selector?.openModal()
+          selector?.connect()
         },
         descCustomText: 'You have no positions.'
       }}

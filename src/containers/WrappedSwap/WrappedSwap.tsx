@@ -218,7 +218,7 @@ export const WrappedSwap = () => {
       }}
       onConnectWallet={async () => {
         const selector = await getNCSelector()
-        selector?.openModal()
+        selector?.connect()
       }}
       onDisconnectWallet={() => {
         dispatch(walletActions.disconnect())

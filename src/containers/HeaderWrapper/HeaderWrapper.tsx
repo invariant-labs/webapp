@@ -46,7 +46,7 @@ export const HeaderWrapper: React.FC = () => {
       }}
       onConnectWallet={async () => {
         const selector = await getNCSelector()
-        selector?.openModal()
+        selector?.connect()
       }}
       landing={location.pathname.substr(1)}
       walletConnected={walletStatus === Status.Initialized}

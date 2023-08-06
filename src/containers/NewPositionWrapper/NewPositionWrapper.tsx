@@ -528,7 +528,7 @@ export const NewPositionWrapper = () => {
       noConnectedBlockerProps={{
         onConnect: async () => {
           const selector = await getNCSelector()
-          selector?.openModal()
+          selector?.connect()
         },
         descCustomText: 'Cannot add any liquidity.'
       }}
