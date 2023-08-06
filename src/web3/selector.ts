@@ -29,7 +29,7 @@ export const initNCSelector = async (onConnected: () => void) => {
       const canEagerConnect = await adapter.canEagerConnect()
 
       if (canEagerConnect) {
-        await adapter.connect().then(() => {}, () => {})
+        await adapter.connect()
       }
 
       return adapter
