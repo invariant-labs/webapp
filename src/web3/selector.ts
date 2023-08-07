@@ -36,7 +36,7 @@ export const openWalletSelectorModal = async () => {
   try {
     const ncAdapter = await getNCAdapter()
 
-    if (!ncAdapter || ncAdapter.connected) {
+    if (ncAdapter.connected) {
       return
     }
 
