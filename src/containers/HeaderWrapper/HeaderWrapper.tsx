@@ -19,7 +19,7 @@ export const HeaderWrapper: React.FC = () => {
 
   useEffect(() => {
     getNCAdapter().then(
-      (adapter) => {
+      adapter => {
         adapter.addListener('connect', () => {
           dispatch(walletActions.connect())
         })

@@ -4,7 +4,8 @@ import { WalletAdapter } from './types'
 import { DEFAULT_PUBLICKEY } from '@consts/static'
 import { NightlyConnectAdapter } from '@nightlylabs/wallet-selector-solana'
 
-export class StandardAdapter extends EventEmitter implements WalletAdapter { // FYI this is used only for purpose of compatibility with wallet interface in sdk
+export class StandardAdapter extends EventEmitter implements WalletAdapter {
+  // FYI this is used only for purpose of compatibility with wallet interface in sdk
   _innerAdapter: NightlyConnectAdapter
 
   constructor(innerAdapter: NightlyConnectAdapter) {
