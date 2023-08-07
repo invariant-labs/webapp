@@ -9,7 +9,7 @@ import { Status } from '@reducers/solanaWallet'
 import { PositionsList } from '@components/PositionsList/PositionsList'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { getNCSelector } from '@web3/selector'
+import { openWalletSelectorModal } from '@web3/selector'
 
 export const WrappedPositionsList: React.FC = () => {
   const list = useSelector(positionsWithPoolsData)
@@ -112,10 +112,7 @@ export const WrappedPositionsList: React.FC = () => {
       showNoConnected={walletStatus !== Status.Initialized}
       itemsPerPage={5}
       noConnectedBlockerProps={{
-        onConnect: async () => {
-          const selector = await getNCSelector()
-          selector?.connect()
-        },
+        onConnect: openWalletSelectorModal,
         descCustomText: 'You have no positions.'
       }}
     />

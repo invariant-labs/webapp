@@ -2,7 +2,7 @@
 import { WalletAdapter } from './adapters/types'
 import { MockWalletAdapter } from './adapters/mock'
 import { StandardAdapter } from './adapters/standard'
-import { getNCSelector } from './selector'
+import { getNCAdapter } from './selector'
 
 let _wallet: WalletAdapter
 const getSolanaWallet = (): WalletAdapter => {
@@ -16,11 +16,8 @@ const getSolanaWallet = (): WalletAdapter => {
 // Here we will pass wallet type right
 const connectWallet = async (): Promise<WalletAdapter> => {
   return await new Promise(resolve => {
-    getNCSelector().then(
+    getNCAdapter().then(
       adapter => {
-        if (!adapter) {
-          return
-        }
         _wallet = new StandardAdapter(adapter)
         _wallet.on('connect', () => {
           resolve(_wallet)

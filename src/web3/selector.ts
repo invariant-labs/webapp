@@ -1,19 +1,11 @@
 import { NightlyConnectAdapter } from '@nightlylabs/wallet-selector-solana'
 
-let _selectorPromise: Promise<NightlyConnectAdapter> | null = null
-let _selector: NightlyConnectAdapter | null = null
+let _ncAdapterPromise: Promise<NightlyConnectAdapter> | null = null
+let _ncAdapter: NightlyConnectAdapter | null = null
 
-export const getNCSelector = async () => {
-  if (!_selector) {
-    _selector = await _selectorPromise
-  }
-
-  return _selector
-}
-
-export const initNCSelector = async (onConnected: () => void) => {
-  if (_selectorPromise === null) {
-    _selectorPromise = NightlyConnectAdapter.build(
+export const getNCAdapter = async () => {
+  if (!_ncAdapterPromise) {
+    _ncAdapterPromise = NightlyConnectAdapter.build(
       {
         appMetadata: {
           name: 'Invariant',
@@ -23,9 +15,7 @@ export const initNCSelector = async (onConnected: () => void) => {
         url: 'https://nc2.nightly.app'
       },
       true
-    ).then(async (adapter) => {
-      adapter.on('connect', onConnected)
-
+    ).then(async adapter => {
       const canEagerConnect = await adapter.canEagerConnect()
 
       if (canEagerConnect) {
@@ -34,5 +24,24 @@ export const initNCSelector = async (onConnected: () => void) => {
 
       return adapter
     })
+  }
+  if (!_ncAdapter) {
+    _ncAdapter = await _ncAdapterPromise
+  }
+
+  return _ncAdapter
+}
+
+export const openWalletSelectorModal = async () => {
+  try {
+    const ncAdapter = await getNCAdapter()
+
+    if (!ncAdapter || ncAdapter.connected) {
+      return
+    }
+
+    await ncAdapter.connect()
+  } catch (error) {
+    console.log(error)
   }
 }
