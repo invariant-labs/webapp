@@ -2,12 +2,13 @@ import EventEmitter from 'eventemitter3'
 import { Transaction } from '@solana/web3.js'
 import { WalletAdapter } from './types'
 import { DEFAULT_PUBLICKEY } from '@consts/static'
-import { StandardWalletAdapter } from '@solana/wallet-standard'
+import { NightlyConnectAdapter } from '@nightlylabs/wallet-selector-solana'
 
 export class StandardAdapter extends EventEmitter implements WalletAdapter {
-  _innerAdapter: StandardWalletAdapter
+  // FYI this is used only for purpose of compatibility with wallet interface in sdk
+  _innerAdapter: NightlyConnectAdapter
 
-  constructor(innerAdapter: StandardWalletAdapter) {
+  constructor(innerAdapter: NightlyConnectAdapter) {
     super()
     this.connect = this.connect.bind(this)
     this._innerAdapter = innerAdapter
@@ -22,8 +23,7 @@ export class StandardAdapter extends EventEmitter implements WalletAdapter {
   }
 
   async signAllTransactions(transactions: Transaction[]): Promise<Transaction[]> {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return await this._innerAdapter.signAllTransactions!(transactions)
+    return await this._innerAdapter.signAllTransactions(transactions)
   }
 
   get publicKey() {
@@ -31,8 +31,7 @@ export class StandardAdapter extends EventEmitter implements WalletAdapter {
   }
 
   async signTransaction(transaction: Transaction) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return await this._innerAdapter.signTransaction!(transaction)
+    return await this._innerAdapter.signTransaction(transaction)
   }
 
   connect = async () => {
