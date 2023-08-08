@@ -33,7 +33,7 @@ import { BN } from '@project-serum/anchor'
 import loader from '@static/gif/loader.gif'
 import { positionsList } from '@selectors/positions'
 import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
-import { getNCSelector } from '@web3/selector'
+import { openWalletSelectorModal } from '@web3/selector'
 
 export interface IProps {
   id: string
@@ -391,10 +391,7 @@ const SingleFarmWrapper: React.FC<IProps> = ({ id }) => {
       isLoadingTotals={farmsTotalsLoading}
       totalPositions={farmPositionsLength}
       noConnectedBlockerProps={{
-        onConnect: async () => {
-          const selector = await getNCSelector()
-          selector?.openModal()
-        }
+        onConnect: openWalletSelectorModal
       }}
       isLoadingRangeTicks={!rangeTicksFetched}
       isLoadingStakesApy={stakesApyLoading}

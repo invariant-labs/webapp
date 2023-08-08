@@ -33,7 +33,7 @@ import { actions as poolsActions } from '@reducers/pools'
 import { network } from '@selectors/solanaConnection'
 import { getCurrentSolanaConnection } from '@web3/connection'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import { getNCSelector } from '@web3/selector'
+import { openWalletSelectorModal } from '@web3/selector'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -526,10 +526,7 @@ export const NewPositionWrapper = () => {
       ticksLoading={ticksLoading}
       showNoConnected={walletStatus !== Status.Initialized}
       noConnectedBlockerProps={{
-        onConnect: async () => {
-          const selector = await getNCSelector()
-          selector?.openModal()
-        },
+        onConnect: openWalletSelectorModal,
         descCustomText: 'Cannot add any liquidity.'
       }}
       progress={progress}
