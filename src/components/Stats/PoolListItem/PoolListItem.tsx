@@ -97,16 +97,18 @@ const PoolListItem: React.FC<IProps> = ({
                       {apyData.accumulatedFarmsAvg > 0 ? (
                         <>
                           <br />+ All farms rewards with single tick position:{' '}
-                          {`${apyData.accumulatedFarmsSingleTick > 1000
-                            ? '>1000'
-                            : apyData.accumulatedFarmsSingleTick.toFixed(2)
-                            }%`}
+                          {`${
+                            apyData.accumulatedFarmsSingleTick > 1000
+                              ? '>1000'
+                              : apyData.accumulatedFarmsSingleTick.toFixed(2)
+                          }%`}
                           <br />
                           (All farms rewards with average position:{' '}
-                          {`${apyData.accumulatedFarmsAvg > 1000
-                            ? '>1000'
-                            : apyData.accumulatedFarmsAvg.toFixed(2)
-                            }%`}
+                          {`${
+                            apyData.accumulatedFarmsAvg > 1000
+                              ? '>1000'
+                              : apyData.accumulatedFarmsAvg.toFixed(2)
+                          }%`}
                           )
                         </>
                       ) : null}
