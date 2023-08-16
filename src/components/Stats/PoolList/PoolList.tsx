@@ -13,12 +13,12 @@ interface PoolListInterface {
     volume: number
     TVL: number
     fee: number
-    // apy: number
-    // apyData: {
-    //   fees: number
-    //   accumulatedFarmsAvg: number
-    //   accumulatedFarmsSingleTick: number
-    // }
+    apy: number
+    apyData: {
+      fees: number
+      accumulatedFarmsAvg: number
+      accumulatedFarmsSingleTick: number
+    }
   }>
 }
 
@@ -49,10 +49,10 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
         return data.sort((a, b) => (a.TVL === b.TVL ? a.volume - b.volume : a.TVL - b.TVL))
       case SortType.TVL_DESC:
         return data.sort((a, b) => (a.TVL === b.TVL ? b.volume - a.volume : b.TVL - a.TVL))
-      // case SortType.APY_ASC:
-      //   return data.sort((a, b) => a.apy - b.apy)
-      // case SortType.APY_DESC:
-      //   return data.sort((a, b) => b.apy - a.apy)
+      case SortType.APY_ASC:
+        return data.sort((a, b) => a.apy - b.apy)
+      case SortType.APY_DESC:
+        return data.sort((a, b) => b.apy - a.apy)
     }
   }, [data, sortType])
 
@@ -86,9 +86,9 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
           volume={element.volume}
           TVL={element.TVL}
           fee={element.fee}
-          // apy={element.apy}
+          apy={element.apy}
           hideBottomLine={pages === 1 && index + 1 === data.length}
-          // apyData={element.apyData}
+          apyData={element.apyData}
         />
       ))}
       {pages > 1 ? (
