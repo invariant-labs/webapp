@@ -214,7 +214,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.yellow,
     ...typography.caption2,
     textAlign: 'right'
-  }
+  },
+  heatMap:{
+    color: colors.invariant.textGrey,
+    ...typography.caption2,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    cursor: 'default',
+    marginLeft: 48
+  },
+  heatMapIcon: {
+    marginLeft: 5,
+    height: 14,
+    width: 14,
+    border: '1px solid #A9B6BF',
+    color: colors.invariant.textGrey,
+    borderRadius: '50%',
+    fontSize: 8,
+    lineHeight: '10px',
+    fontWeight: 400,
+    textAlign: 'center',
+    boxSizing: 'border-box',
+    paddingTop: 3,
+    cursor: 'default'
+  },
 }))
 
 export default useStyles

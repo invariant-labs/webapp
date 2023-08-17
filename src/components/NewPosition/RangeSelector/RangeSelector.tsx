@@ -1,4 +1,4 @@
-import { Button, Grid, Tooltip, Typography } from '@material-ui/core'
+import {Button, Grid, Tooltip, Typography} from '@material-ui/core'
 import React, { useState, useEffect, useMemo } from 'react'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
@@ -13,6 +13,7 @@ import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
+import {HeatMapSwitch} from '@components/HeatMapSwitch/HeatMapSwitch'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { maxSafeConcentrationsForTiers, minimumRangesForTiers } from '@consts/static'
 import { getConcentrationArray, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
@@ -321,8 +322,24 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
-      <Grid className={classes.headerContainer} container justifyContent='space-between'>
+      <Grid className={classes.headerContainer} container alignItems='center' justifyContent='space-between'>
         <Typography className={classes.header}>Price range</Typography>
+        <Tooltip
+          title={
+            <>
+              <Typography className={classes.liquidityTitle}>Volume Heatmap</Typography>
+            </>
+          }
+          placement='bottom'
+          classes={{
+            tooltip: classes.liquidityTooltip
+          }}>
+          <Typography className={classes.heatMap}>
+            Volume Heatmap<div className={classes.heatMapIcon}>i</div>
+          </Typography>
+        </Tooltip>
+        <HeatMapSwitch/>
+
         <PlotTypeSwitch
           onSwitch={val => {
             setIsPlotDiscrete(val)
