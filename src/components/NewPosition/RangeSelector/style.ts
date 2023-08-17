@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.heading4,
     color: colors.white.main
   },
+  switchesWrapper: {
+    display: 'flex'
+  },
   innerWrapper: {
     borderRadius: 8,
     backgroundColor: colors.invariant.component,

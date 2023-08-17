@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 28,
     width: 28,
     height: 28,
-    borderRadius: 10,
+    borderRadius: 5,
     backgroundColor: 'rgba(46,224,154,0.8)',
     padding: 0,
     '&:not(:last-child)': {
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   zoomButtonsWrapper: {
     position: 'absolute',
-    top: 0,
+    bottom: '25px',
     right: 8,
     maxWidth: 21,
     height: 64,
@@ -98,6 +98,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 100,
     width: 100,
     margin: 'auto'
+  },
+  heatmapValue: {
+    color: colors.invariant.text,
+    margin: '12px 0',
+    ...typography.caption2
+  },
+  heatmapTooltip: {
+    background: colors.invariant.light,
+    borderRadius: 10,
+    marginTop: 0,
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: 360
+    }
   }
 }))
 

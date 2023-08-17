@@ -150,6 +150,13 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+
+  const [heatmapEnabled, setHeatmapEnabled] = useState<boolean>(false)
+
+  const changeHeatmapVisibility = () => {
+    setHeatmapEnabled(prev => !prev)
+  }
+
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -491,6 +498,8 @@ export const NewPosition: React.FC<INewPosition> = ({
             hasTicksError={hasTicksError}
             reloadHandler={reloadHandler}
             volumeRange={plotVolumeRange}
+            heatmapEnabled={heatmapEnabled}
+            changeHeatmapVisibility={changeHeatmapVisibility}
           />
         ) : (
           <PoolInit

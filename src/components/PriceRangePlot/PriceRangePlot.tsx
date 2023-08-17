@@ -3,7 +3,7 @@ import { Layer, ResponsiveLine } from '@nivo/line'
 // @ts-expect-error
 import { linearGradientDef } from '@nivo/core'
 import { colors, theme } from '@static/theme'
-import { Button, Grid, Typography, useMediaQuery } from '@material-ui/core'
+import { Button, Grid, Tooltip, Typography, useMediaQuery } from '@material-ui/core'
 import classNames from 'classnames'
 import ZoomInIcon from '@static/svg/zoom-in-icon.svg'
 import ZoomOutIcon from '@static/svg/zoom-out-icon.svg'
@@ -41,6 +41,7 @@ export interface IPriceRangePlot {
     min: number
     max: number
   }
+  heatmapEnabled: boolean
 }
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
@@ -65,7 +66,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   coverOnLoading = false,
   hasError = false,
   reloadHandler,
-  volumeRange
+  volumeRange,
+  heatmapEnabled
 }) => {
   const classes = useStyles()
 
@@ -393,6 +395,85 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     disabled
   )
 
+  const heatmapLayer: Layer = ({ innerWidth, innerHeight }) => {
+    const heatmapData = [
+      {
+        v: 40000,
+        p1: -5,
+        p2: -1
+      },
+      {
+        v: 60000,
+        p1: -1,
+        p2: 1
+      },
+      {
+        v: 15000,
+        p1: 1,
+        p2: 2
+      },
+      {
+        v: 10000,
+        p1: 2,
+        p2: 4
+      },
+      {
+        v: 15000,
+        p1: 5,
+        p2: 10
+      }
+    ]
+    const maxHeight = innerHeight
+
+    const calculateConcentration = (v: number, p1: number, p2: number) => {
+      let priceRangeResult = p1 - p2
+      if (priceRangeResult >= 0) {
+        return v / priceRangeResult
+      } else {
+        return -(v / priceRangeResult)
+      }
+    }
+
+    const calculatedHeatmap = heatmapData.map(range => {
+      return {
+        ...range,
+        concentration: calculateConcentration(range.v, range.p1, range.p2)
+      }
+    })
+
+    return (
+      <>
+        {calculatedHeatmap.map((range, index) => {
+          return (
+            heatmapEnabled && (
+              <Tooltip
+                title={
+                  <>
+                    <Typography className={classes.heatmapValue}>{heatmapData[index].v}</Typography>
+                  </>
+                }
+                placement='top'
+                classes={{
+                  tooltip: classes.heatmapTooltip
+                }}>
+                <g>
+                  <rect
+                    x={range.p2 - plotMin}
+                    width={range.p2 - range.p1}
+                    key={index}
+                    y={innerHeight - maxHeight}
+                    height={maxHeight}
+                    fill={`rgba(46, 224, 154, 0.2)`}
+                  />
+                </g>
+              </Tooltip>
+            )
+          )
+        })}
+      </>
+    )
+  }
+
   return (
     <Grid
       container
@@ -482,7 +563,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           volumeRangeLayer,
           brushLayer,
           'axes',
-          'legends'
+          'legends',
+          heatmapLayer
         ]}
         defs={[
           linearGradientDef('gradient', [

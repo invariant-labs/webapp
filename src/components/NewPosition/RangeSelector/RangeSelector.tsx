@@ -13,6 +13,7 @@ import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
+import HeatmapSwitch from '../HeatmapSwitch/HeatmapSwitch'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { maxSafeConcentrationsForTiers, minimumRangesForTiers } from '@consts/static'
 import { getConcentrationArray, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
@@ -47,6 +48,8 @@ export interface IRangeSelector {
     min: number
     max: number
   }
+  heatmapEnabled: boolean
+  changeHeatmapVisibility: () => void
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -71,7 +74,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   bestTierIndex,
   hasTicksError,
   reloadHandler,
-  volumeRange
+  volumeRange,
+  heatmapEnabled,
+  changeHeatmapVisibility
 }) => {
   const classes = useStyles()
 
@@ -322,14 +327,17 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Grid className={classes.headerContainer} container justifyContent='space-between'>
-        <Typography className={classes.header}>Price range</Typography>
-        <PlotTypeSwitch
-          onSwitch={val => {
-            setIsPlotDiscrete(val)
-            onDiscreteChange(val)
-          }}
-          initialValue={isPlotDiscrete ? 1 : 0}
-        />
+        <Typography className={classes.header}>Price range</Typography>{' '}
+        <Grid className={classes.switchesWrapper}>
+          <HeatmapSwitch onClick={changeHeatmapVisibility} heatmapEnabled={heatmapEnabled} />
+          <PlotTypeSwitch
+            onSwitch={val => {
+              setIsPlotDiscrete(val)
+              onDiscreteChange(val)
+            }}
+            initialValue={isPlotDiscrete ? 1 : 0}
+          />
+        </Grid>
       </Grid>
       <Grid className={classes.infoRow} container justifyContent='flex-end'>
         <Grid>
@@ -399,6 +407,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
           volumeRange={volumeRange}
+          heatmapEnabled={heatmapEnabled}
         />
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>
