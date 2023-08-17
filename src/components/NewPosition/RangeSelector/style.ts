@@ -1,4 +1,5 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { SwitchProps, Switch } from '@material-ui/core'
+import { makeStyles, styled, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -12,10 +13,31 @@ const useStyles = makeStyles((theme: Theme) => ({
   headerContainer: {
     marginBottom: 12
   },
+  thumb: {
+    scale: 0.7,
+    color: colors.white.main
+  },
+
+  track: {
+    '.Mui-checked.Mui-checked + &': {
+      opacity: 1,
+      backgroundColor: colors.invariant.green
+    }
+  },
+
+  heatMapInfo: {
+    marginRight: 10,
+    padding: 2
+  },
   header: {
     ...typography.heading4,
     color: colors.white.main
   },
+  heatmapText: {
+    ...typography.caption2,
+    color: colors.black.showHeatmap
+  },
+
   innerWrapper: {
     borderRadius: 8,
     backgroundColor: colors.invariant.component,
@@ -179,6 +201,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 3,
     cursor: 'default'
   },
+  infoIcon: {
+    height: 13,
+    width: 13,
+    border: '1px solid #FFFFFF',
+    color: colors.invariant.text,
+    borderRadius: '50%',
+    fontSize: 7,
+
+    lineHeight: '12px',
+    verticalAlign: 'center',
+    fontWeight: 400,
+    textAlign: 'center',
+    boxSizing: 'border-box',
+    paddingTop: 1,
+    cursor: 'default'
+  },
   liquidityTooltip: {
     background: colors.invariant.component,
     boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.35)',
@@ -216,5 +254,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'right'
   }
 }))
+
+// export const CustomSwitch = styled((props:SwitchProps) => (
+//   <Switch {...props} />
+// ))
 
 export default useStyles

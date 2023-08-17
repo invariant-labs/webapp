@@ -67,7 +67,8 @@ export const useStyles = makeStyles(() => ({
     border: `1px solid ${colors.invariant.lightGrey}`,
     borderRadius: 5,
     width: 100,
-    padding: 5
+    padding: 5,
+    position: 'absolute'
   },
   tooltipDate: {
     ...typography.caption4,

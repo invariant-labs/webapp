@@ -1,4 +1,4 @@
-import { Button, Grid, Tooltip, Typography } from '@material-ui/core'
+import { Button, Grid, Tooltip, Typography, Switch } from '@material-ui/core'
 import React, { useState, useEffect, useMemo } from 'react'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
@@ -89,7 +89,37 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const [isPlotDiscrete, setIsPlotDiscrete] = useState(initialIsDiscreteValue)
 
+  const [showHeatMap, setShowHeatMap] = useState(false)
+
   const [concentrationIndex, setConcentrationIndex] = useState(0)
+
+  const [heatMapRanges, setHeatMapRanges] = useState([
+    {
+      first: -5,
+      last: -1,
+      volume: 40000
+    },
+    {
+      first: -1,
+      last: 1,
+      volume: 60000
+    },
+    {
+      first: 1,
+      last: 2,
+      volume: 15000
+    },
+    {
+      first: 2,
+      last: 4,
+      volume: 10000
+    },
+    {
+      first: 4,
+      last: 10,
+      volume: 15000
+    }
+  ])
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -323,13 +353,35 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     <Grid container className={classes.wrapper} direction='column'>
       <Grid className={classes.headerContainer} container justifyContent='space-between'>
         <Typography className={classes.header}>Price range</Typography>
-        <PlotTypeSwitch
-          onSwitch={val => {
-            setIsPlotDiscrete(val)
-            onDiscreteChange(val)
-          }}
-          initialValue={isPlotDiscrete ? 1 : 0}
-        />
+        <Grid item>
+          <Grid container>
+            <Typography className={classes.heatmapText}>
+              <Grid
+                container
+                justifyContent='space-between'
+                alignItems='center'
+                className={classes.heatMapInfo}>
+                Volume Heatmap <div className={classes.infoIcon}>i</div>
+                <Switch
+                  size='small'
+                  checked={showHeatMap}
+                  onClick={() => setShowHeatMap(prev => !prev)}
+                  classes={{
+                    thumb: classes.thumb,
+                    track: classes.track
+                  }}
+                />
+              </Grid>
+            </Typography>
+            <PlotTypeSwitch
+              onSwitch={val => {
+                setIsPlotDiscrete(val)
+                onDiscreteChange(val)
+              }}
+              initialValue={isPlotDiscrete ? 1 : 0}
+            />
+          </Grid>
+        </Grid>
       </Grid>
       <Grid className={classes.infoRow} container justifyContent='flex-end'>
         <Grid>
@@ -392,6 +444,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           loading={ticksLoading}
           isXtoY={isXtoY}
           tickSpacing={tickSpacing}
+          showHeatmap={showHeatMap}
+          heatMapRanges={heatMapRanges}
           xDecimal={xDecimal}
           yDecimal={yDecimal}
           isDiscrete={isPlotDiscrete}

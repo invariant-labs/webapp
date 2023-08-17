@@ -10,7 +10,8 @@ export const colors = {
     cinder: '#0E0C12', // v2.0 background color
     controls: '#44424E', // v2.0 controls background color
     header: '#1A1D28', // v2.0 header
-    card: '#28242E' // v2.0 card color
+    card: '#28242E', // v2.0 card color
+    showHeatmap: '#A9B6BF'
   },
   blue: {
     accent: '#072E5A',

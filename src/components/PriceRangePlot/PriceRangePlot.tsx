@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Layer, ResponsiveLine } from '@nivo/line'
 // @ts-expect-error
 import { linearGradientDef } from '@nivo/core'
@@ -30,6 +30,8 @@ export interface IPriceRangePlot {
   zoomPlus: () => void
   loading?: boolean
   isXtoY: boolean
+  showHeatmap: boolean
+  heatMapRanges: Array<{ first: number; last: number; volume: number }>
   xDecimal: number
   yDecimal: number
   tickSpacing: number
@@ -58,6 +60,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   zoomPlus,
   loading,
   isXtoY,
+  showHeatmap,
+  heatMapRanges,
   xDecimal,
   yDecimal,
   tickSpacing,
@@ -69,11 +73,32 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 }) => {
   const classes = useStyles()
 
+  const [showTooltip, setShowTooltip] = useState<boolean>(false)
+  const [tooltipParams, setTooltipParams] = useState<{ x: number; y: number; volume: number }>({
+    x: 0,
+    y: 0,
+    volume: 0
+  })
+  const [plotRect, setPlotRect] = useState<{ left: number; top: number }>({
+    left: 0,
+    top: 0
+  })
+
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'))
 
   const containerRef = useRef<HTMLDivElement>(null)
 
   const maxVal = useMemo(() => Math.max(...data.map(element => element.y)), [data])
+
+  useEffect(() => {
+    if (containerRef.current)
+      setInterval(() => {
+        if (containerRef.current) {
+          const container = containerRef.current.getBoundingClientRect()
+          setPlotRect({ left: container.left, top: container.top })
+        }
+      }, 100)
+  }, [containerRef])
 
   const pointsOmitter = useCallback(
     (data: Array<{ x: number; y: number }>) => {
@@ -289,6 +314,83 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     )
   }
 
+  const ToolTip = () => {
+    return (
+      <>
+        {showTooltip && (
+          <div
+            style={{
+              background: colors.invariant.component,
+              border: `1px solid ${colors.invariant.lightGrey}`,
+              borderRadius: 5,
+              width: 100,
+              padding: 5,
+              position: 'absolute',
+              zIndex: 10,
+              maxHeight: 20,
+              top: tooltipParams.y,
+              left: tooltipParams.x
+            }}>
+            <Grid container justifyContent='space-evenly'>
+              <Typography className={classes.tooltipValue1}>Volume:</Typography>
+
+              <Typography className={classes.tooltipValue2}>
+                ${tooltipParams.volume.toFixed(2)}
+              </Typography>
+            </Grid>
+          </div>
+        )}
+      </>
+    )
+  }
+
+  const HeatMapLayer: Layer = ({ innerWidth, innerHeight }) => {
+    if (!showHeatmap) return
+    const unitLen = innerWidth / (plotMax - plotMin)
+
+    const concentrations = heatMapRanges.reduce((acc: Array<number>, item, i) => {
+      const concentration = item.volume / Math.abs(item.last - item.first)
+      if (!acc.find(accItem => accItem === concentration)) acc.push(concentration)
+
+      return acc
+    }, [])
+
+    concentrations.sort((a, b) => a - b)
+
+    return (
+      <svg>
+        {plotRect.left !== 0 &&
+          heatMapRanges.map((range, i) => (
+            <rect
+              key={i}
+              x={(range.first - plotMin) * unitLen}
+              y={0}
+              width={(range.last - plotMin - (range.first - plotMin)) * unitLen}
+              height={innerHeight}
+              fill={colors.invariant.green}
+              opacity={
+                (concentrations.findIndex(
+                  item => item === range.volume / Math.abs(range.last - range.first)
+                ) +
+                  1) *
+                (1 / concentrations.length)
+              }
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseMove={e => {
+                if (!showTooltip) setShowTooltip(true)
+                setTooltipParams({
+                  x: e.clientX - plotRect.left,
+                  y: e.clientY - plotRect.top - 50,
+                  volume: range.volume
+                })
+              }}
+              onMouseLeave={() => setShowTooltip(false)}
+            />
+          ))}
+      </svg>
+    )
+  }
+
   const volumeRangeLayer: Layer = ({ innerWidth, innerHeight }) => {
     if (typeof volumeRange === 'undefined') {
       return null
@@ -480,6 +582,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           lazyLoadingLayer,
           currentLayer,
           volumeRangeLayer,
+          HeatMapLayer,
           brushLayer,
           'axes',
           'legends'
@@ -498,6 +601,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           }
         ]}
       />
+      <ToolTip />
     </Grid>
   )
 }

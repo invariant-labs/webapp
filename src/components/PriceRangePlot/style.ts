@@ -98,6 +98,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 100,
     width: 100,
     margin: 'auto'
+  },
+
+  tooltipValue1: {
+    ...typography.caption3,
+    color: colors.white.main,
+    textAlign: 'center'
+  },
+  tooltipValue2: {
+    ...typography.caption3,
+    color: colors.invariant.pink,
+    textAlign: 'center'
   }
 }))
 
