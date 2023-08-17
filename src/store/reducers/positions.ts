@@ -18,6 +18,12 @@ export interface PlotTickData {
   index: number
 }
 
+export interface PlotPriceRanges {
+  v: number
+  p1: number
+  p2: number
+}
+
 export interface PlotTicks {
   data: PlotTickData[]
   loading: boolean

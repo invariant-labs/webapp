@@ -9,10 +9,11 @@ import {
   toMaxNumericPlaces,
   calculateConcentrationRange
 } from '@consts/utils'
-import { PlotTickData } from '@reducers/positions'
+import { PlotTickData, PlotPriceRanges } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
+import VolumeHeatmapSwitch from '@components/VolumeHeatmapSwitch/VolumeHeatmapSwitch'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { maxSafeConcentrationsForTiers, minimumRangesForTiers } from '@consts/static'
 import { getConcentrationArray, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
@@ -23,6 +24,7 @@ import activeLiquidity from '@static/svg/activeLiquidity.svg'
 
 export interface IRangeSelector {
   data: PlotTickData[]
+  priceRanges: PlotPriceRanges[]
   midPrice: TickPlotPositionData
   tokenASymbol: string
   tokenBSymbol: string
@@ -36,6 +38,7 @@ export interface IRangeSelector {
   tickSpacing: number
   currentPairReversed: boolean | null
   initialIsDiscreteValue: boolean
+  initialIsVolumeHeatmap: boolean
   onDiscreteChange: (val: boolean) => void
   isConcentrated?: boolean
   feeTierIndex: number
@@ -51,6 +54,7 @@ export interface IRangeSelector {
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
   data,
+  priceRanges,
   midPrice,
   tokenASymbol,
   tokenBSymbol,
@@ -64,6 +68,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   tickSpacing,
   currentPairReversed,
   initialIsDiscreteValue,
+  initialIsVolumeHeatmap,
   onDiscreteChange,
   isConcentrated = false,
   feeTierIndex,
@@ -88,6 +93,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [plotMax, setPlotMax] = useState(1)
 
   const [isPlotDiscrete, setIsPlotDiscrete] = useState(initialIsDiscreteValue)
+  const [isVolumeHeatmap, setIsVolumeHeatmap] = useState(initialIsVolumeHeatmap)
 
   const [concentrationIndex, setConcentrationIndex] = useState(0)
 
@@ -323,13 +329,35 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     <Grid container className={classes.wrapper} direction='column'>
       <Grid className={classes.headerContainer} container justifyContent='space-between'>
         <Typography className={classes.header}>Price range</Typography>
-        <PlotTypeSwitch
-          onSwitch={val => {
-            setIsPlotDiscrete(val)
-            onDiscreteChange(val)
-          }}
-          initialValue={isPlotDiscrete ? 1 : 0}
-        />
+        <div className={classes.switchesWrapper}>
+          <div className={classes.volumeHeatmapWrapper}>
+            <Tooltip
+              title={
+                <Typography className={classes.heatmapTitle}>Volume Heatmap</Typography>
+              }
+              placement='bottom'
+              classes={{
+                tooltip: classes.liquidityTooltip
+              }}>
+              <Typography className={classes.volumeHeatmap}>
+                Volume Heatmap <div className={classes.volumeHeatmapIcon}>i</div>
+              </Typography>
+            </Tooltip>
+            <VolumeHeatmapSwitch
+              onSwitch={val => {
+                setIsVolumeHeatmap(val)
+              }}
+              initialValue={isVolumeHeatmap}
+            />
+          </div>
+          <PlotTypeSwitch
+            onSwitch={val => {
+              setIsPlotDiscrete(val)
+              onDiscreteChange(val)
+            }}
+            initialValue={isPlotDiscrete ? 1 : 0}
+          />
+        </div>
       </Grid>
       <Grid className={classes.infoRow} container justifyContent='flex-end'>
         <Grid>
@@ -375,6 +403,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         <PriceRangePlot
           className={classes.plot}
           data={data}
+          priceRanges={priceRanges} 
           onChangeRange={changeRangeHandler}
           leftRange={{
             index: leftRange,
@@ -394,6 +423,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           tickSpacing={tickSpacing}
           xDecimal={xDecimal}
           yDecimal={yDecimal}
+          isVolumeHeatmap={isVolumeHeatmap}
           isDiscrete={isPlotDiscrete}
           disabled={isConcentrated}
           hasError={hasTicksError}

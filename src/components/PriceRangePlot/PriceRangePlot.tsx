@@ -1,3 +1,4 @@
+import { Tooltip } from '@material-ui/core'
 import React, { useCallback, useMemo, useRef } from 'react'
 import { Layer, ResponsiveLine } from '@nivo/line'
 // @ts-expect-error
@@ -9,7 +10,7 @@ import ZoomInIcon from '@static/svg/zoom-in-icon.svg'
 import ZoomOutIcon from '@static/svg/zoom-out-icon.svg'
 import Brush from './Brush/Brush'
 import { nearestTickIndex } from '@consts/utils'
-import { PlotTickData } from '@reducers/positions'
+import { PlotTickData, PlotPriceRanges } from '@reducers/positions'
 import loader from '@static/gif/loader.gif'
 import useStyles from './style'
 
@@ -17,6 +18,7 @@ export type TickPlotPositionData = Omit<PlotTickData, 'y'>
 
 export interface IPriceRangePlot {
   data: PlotTickData[]
+  priceRanges: PlotPriceRanges[]
   midPrice?: TickPlotPositionData
   leftRange: TickPlotPositionData
   rightRange: TickPlotPositionData
@@ -33,6 +35,7 @@ export interface IPriceRangePlot {
   xDecimal: number
   yDecimal: number
   tickSpacing: number
+  isVolumeHeatmap?: boolean
   isDiscrete?: boolean
   coverOnLoading?: boolean
   hasError?: boolean
@@ -45,6 +48,7 @@ export interface IPriceRangePlot {
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   data,
+  priceRanges,
   leftRange,
   rightRange,
   midPrice,
@@ -61,6 +65,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   xDecimal,
   yDecimal,
   tickSpacing,
+  isVolumeHeatmap,
   isDiscrete = false,
   coverOnLoading = false,
   hasError = false,
@@ -278,9 +283,9 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       <svg x={(midPrice.x - plotMin) * unitLen - 20} y={0} width={40} height={innerHeight}>
         <defs>
           <linearGradient id='currentGradient'>
-            <stop offset='0%' stop-color='black' stop-opacity='0' />
-            <stop offset='50%' stop-color='black' stop-opacity='0.25' />
-            <stop offset='100%' stop-color='black' stop-opacity='0' />
+            <stop offset='0%' stopColor='black' stopOpacity='0' />
+            <stop offset='50%' stopColor='black' stopOpacity='0.25' />
+            <stop offset='100%' stopColor='black' stopOpacity='0' />
           </linearGradient>
         </defs>
         <rect x={0} y={0} width={40} height={innerHeight} fill='url(#currentGradient)' />
@@ -319,6 +324,69 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
             strokeDasharray='16 4'
           />
         ) : null}
+      </>
+    )
+  }
+
+  const priceRangesLayer: Layer = ({innerWidth, innerHeight}) => {
+    if (typeof priceRanges === 'undefined') {
+      return null
+    }
+
+    const calculateConcentration = (volume: number, price1: number, price2: number) => {
+      return volume / Math.abs(price1 - price2)
+    }
+    
+    const assignCategoryRanges = (priceRanges:PlotPriceRanges[]) => {
+      const categoriesCount = Math.min(5, priceRanges.length)
+
+      const ranges = priceRanges.map(range => {
+        return {
+          ...range,
+          concentration: calculateConcentration(range.v, range.p1, range.p2)
+        }
+      })
+
+      const sortedRanges = ranges.slice().sort((a, b) => {
+        return b.concentration - a.concentration
+      })
+
+      const gap = 0.7 / (categoriesCount - 1)
+      const opacity = Array.from({length: categoriesCount}, (_, i) => Number((0.9 - i * gap).toFixed(2)))
+
+      const categorizedRanges = sortedRanges.map((range, index) => {
+        return {
+          ...range,
+          opacity: opacity[index > 4 ? 4 : index]
+        }
+      })
+
+      return categorizedRanges
+    }
+
+    const categorizedRanges = assignCategoryRanges(priceRanges)
+    const unitLen = innerWidth / (plotMax - plotMin)
+    return (
+      <>
+        {isVolumeHeatmap ? categorizedRanges.map(range => (
+          (range.p2 > plotMin && range.p1 < plotMax) && (
+            <Tooltip
+              title={`Volume: ${Math.round(range.v/1000)}K`}
+              placement={'top'}
+              classes={{
+                tooltip: classes.volumeHeatmapTooltip
+              }}
+            >
+            <rect
+              x={(range.p1 - plotMin) * unitLen} y={0}
+              width={(range.p2 - range.p1) * unitLen}
+              height={innerHeight}
+              fill={colors.invariant.green}
+              opacity={range.opacity}
+            />
+            </Tooltip>
+          )
+        )): null}
       </>
     )
   }
@@ -465,7 +533,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         }}
         enableGridX={false}
         enableGridY={false}
-        enablePoints={false}
+        enablePoints={true}
         enableArea={true}
         legends={[]}
         isInteractive={false}
@@ -480,6 +548,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           lazyLoadingLayer,
           currentLayer,
           volumeRangeLayer,
+          priceRangesLayer,
           brushLayer,
           'axes',
           'legends'

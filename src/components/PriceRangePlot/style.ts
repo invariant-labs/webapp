@@ -98,6 +98,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 100,
     width: 100,
     margin: 'auto'
+  },
+  volumeHeatmapTooltip: {
+    background: colors.invariant.light,
+    borderRadius: 8,
+    padding: '3px 9px',
+    marginBottom: 6
   }
 }))
 

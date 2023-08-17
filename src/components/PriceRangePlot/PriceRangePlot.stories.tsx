@@ -19,6 +19,35 @@ const data = [
     index: MAX_TICK
   }
 ]
+
+const priceRanges = [
+  {
+    v: 40000,
+    p1: -5,
+    p2: -1
+  },
+  {
+    v: 60000,
+    p1: -1,
+    p2: 1
+  },
+  {
+    v: 15000,
+    p1: 1,
+    p2: 2
+  },
+  {
+    v: 10000,
+    p1: 2,
+    p2: 4
+  },
+  {
+    v: 15000,
+    p1: 5,
+    p2: 10
+  }
+]
+
 storiesOf('position/priceRangePlot', module)
   .add('ticks', () => {
     const [leftRange, setLeftRange] = useState(-1000)
@@ -41,6 +70,7 @@ storiesOf('position/priceRangePlot', module)
     return (
       <PriceRangePlot
         data={data}
+        priceRanges={priceRanges}
         leftRange={{
           x: calcPrice(leftRange, true, 6, 6),
           index: leftRange
@@ -66,6 +96,7 @@ storiesOf('position/priceRangePlot', module)
         xDecimal={6}
         yDecimal={6}
         tickSpacing={4}
+        isVolumeHeatmap={true}
         isXtoY={true}
         reloadHandler={() => {}}
         volumeRange={{
@@ -94,6 +125,7 @@ storiesOf('position/priceRangePlot', module)
     return (
       <PriceRangePlot
         data={data}
+        priceRanges={priceRanges}
         leftRange={{
           x: calcPrice(-1000, true, 6, 6),
           index: -1000

@@ -22,6 +22,34 @@ const data = [
   }
 ]
 
+const priceRanges = [
+  {
+    v: 40000,
+    p1: -5,
+    p2: -1
+  },
+  {
+    v: 60000,
+    p1: -1,
+    p2: 1
+  },
+  {
+    v: 15000,
+    p1: 1,
+    p2: 2
+  },
+  {
+    v: 10000,
+    p1: 2,
+    p2: 4
+  },
+  {
+    v: 15000,
+    p1: 5,
+    p2: 10
+  }
+]
+
 const tokens: SwapToken[] = [
   {
     balance: new BN(100).mul(new BN(34786)),
@@ -59,6 +87,7 @@ storiesOf('position/newPosition', module)
       style={{ backgroundColor: colors.invariant.componentBcg, padding: 20, width: 'fit-content' }}>
       <NewPosition
         tokens={tokens}
+        priceRanges={priceRanges}
         data={data}
         midPrice={{
           x: calcPrice(140, true, 6, 6),
@@ -84,6 +113,7 @@ storiesOf('position/newPosition', module)
         currentPairReversed={null}
         bestTiers={[]}
         initialIsDiscreteValue={false}
+        initialIsVolumeHeatmap={false}
         onDiscreteChange={() => {}}
         currentPriceSqrt={new BN(140000000)}
         canCreateNewPool
@@ -108,6 +138,7 @@ storiesOf('position/newPosition', module)
       <NewPosition
         tokens={tokens}
         data={data}
+        priceRanges={priceRanges}
         midPrice={{
           x: calcPrice(140, true, 6, 6),
           index: 140
@@ -132,6 +163,7 @@ storiesOf('position/newPosition', module)
         currentPairReversed={null}
         bestTiers={[]}
         initialIsDiscreteValue={false}
+        initialIsVolumeHeatmap={false}
         onDiscreteChange={() => {}}
         currentPriceSqrt={new BN(140000000)}
         canCreateNewPool

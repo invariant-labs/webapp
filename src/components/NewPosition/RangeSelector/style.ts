@@ -156,6 +156,37 @@ const useStyles = makeStyles((theme: Theme) => ({
   infoRow: {
     marginBottom: 16
   },
+  switchesWrapper: {
+    display: 'flex'
+  },
+  volumeHeatmapWrapper: {
+    display: 'flex',
+    marginRight: '8px'
+  },
+  volumeHeatmap: {
+    marginRight: '2px',
+    color: colors.invariant.textGrey,
+    ...typography.caption2,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    cursor: 'default',
+  },
+  volumeHeatmapIcon: {
+    marginLeft: 5,
+    height: 14,
+    width: 14,
+    border: '1px solid #FFFFFF',
+    color: colors.invariant.textGrey,
+    borderRadius: '50%',
+    fontSize: 8,
+    lineHeight: '10px',
+    fontWeight: 400,
+    textAlign: 'center',
+    boxSizing: 'border-box',
+    paddingTop: 3,
+    cursor: 'default'
+  },
   activeLiquidity: {
     color: colors.invariant.text,
     ...typography.caption2,
@@ -190,6 +221,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('xs')]: {
       maxWidth: 360
     }
+  },
+  heatmapTitle: {
+    color: colors.invariant.text,
+    ...typography.heading4
   },
   liquidityTitle: {
     color: colors.invariant.text,

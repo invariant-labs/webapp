@@ -14,7 +14,7 @@ import {
   trimLeadingZeros
 } from '@consts/utils'
 import { PublicKey } from '@solana/web3.js'
-import { PlotTickData } from '@reducers/positions'
+import { PlotTickData, PlotPriceRanges } from '@reducers/positions'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Link } from 'react-router-dom'
 import settingIcon from '@static/svg/settings.svg'
@@ -35,6 +35,7 @@ import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationType
 export interface INewPosition {
   tokens: SwapToken[]
   data: PlotTickData[]
+  priceRanges: PlotPriceRanges[]
   midPrice: TickPlotPositionData
   setMidPrice: (mid: TickPlotPositionData) => void
   addLiquidityHandler: (
@@ -70,6 +71,7 @@ export interface INewPosition {
   currentPairReversed: boolean | null
   bestTiers: BestTier[]
   initialIsDiscreteValue: boolean
+  initialIsVolumeHeatmap: boolean
   onDiscreteChange: (val: boolean) => void
   currentPriceSqrt: BN
   canCreateNewPool: boolean
@@ -95,6 +97,7 @@ export interface INewPosition {
 export const NewPosition: React.FC<INewPosition> = ({
   tokens,
   data,
+  priceRanges,
   midPrice,
   setMidPrice,
   addLiquidityHandler,
@@ -115,6 +118,7 @@ export const NewPosition: React.FC<INewPosition> = ({
   currentPairReversed,
   bestTiers,
   initialIsDiscreteValue,
+  initialIsVolumeHeatmap,
   onDiscreteChange,
   currentPriceSqrt,
   canCreateNewPool,
@@ -455,6 +459,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         tokenAIndex === tokenBIndex ||
         isWaitingForNewPool ? (
           <RangeSelector
+            priceRanges={priceRanges}
             poolIndex={poolIndex}
             onChangeRange={onChangeRange}
             blocked={
@@ -484,6 +489,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             yDecimal={yDecimal}
             currentPairReversed={currentPairReversed}
             initialIsDiscreteValue={initialIsDiscreteValue}
+            initialIsVolumeHeatmap={initialIsVolumeHeatmap}
             onDiscreteChange={onDiscreteChange}
             isConcentrated={isConcentrated}
             feeTierIndex={fee}
