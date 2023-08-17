@@ -98,6 +98,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 100,
     width: 100,
     margin: 'auto'
+  },
+  customTooltip: {
+    backgroundColor: '#3A466B',
+    color: 'white',
+    fontSize: '12px',
+    borderRadius: '8px',
+    fontWeight: 700,
+    lineHeight: '15px'
   }
 }))
 

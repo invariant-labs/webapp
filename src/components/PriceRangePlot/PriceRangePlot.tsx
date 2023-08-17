@@ -3,7 +3,7 @@ import { Layer, ResponsiveLine } from '@nivo/line'
 // @ts-expect-error
 import { linearGradientDef } from '@nivo/core'
 import { colors, theme } from '@static/theme'
-import { Button, Grid, Typography, useMediaQuery } from '@material-ui/core'
+import { Button, Grid, Tooltip, Typography, useMediaQuery } from '@material-ui/core'
 import classNames from 'classnames'
 import ZoomInIcon from '@static/svg/zoom-in-icon.svg'
 import ZoomOutIcon from '@static/svg/zoom-out-icon.svg'
@@ -41,6 +41,7 @@ export interface IPriceRangePlot {
     min: number
     max: number
   }
+  volumeHeatmap?: boolean
 }
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
@@ -65,7 +66,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   coverOnLoading = false,
   hasError = false,
   reloadHandler,
-  volumeRange
+  volumeRange,
+  volumeHeatmap
 }) => {
   const classes = useStyles()
 
@@ -264,6 +266,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         y: rangeData[rangeData.length - 1].y
       })
     }
+    ;``
 
     return pointsOmitter(rangeData)
   }, [disabled, data, rightRange, plotMin, plotMax, pointsOmitter])
@@ -278,15 +281,81 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       <svg x={(midPrice.x - plotMin) * unitLen - 20} y={0} width={40} height={innerHeight}>
         <defs>
           <linearGradient id='currentGradient'>
-            <stop offset='0%' stop-color='black' stop-opacity='0' />
-            <stop offset='50%' stop-color='black' stop-opacity='0.25' />
-            <stop offset='100%' stop-color='black' stop-opacity='0' />
+            <stop offset='0%' stopColor='black' stopOpacity='0' />
+            <stop offset='50%' stopColor='black' stopOpacity='0.25' />
+            <stop offset='100%' stopColor='black' stopOpacity='0' />
           </linearGradient>
         </defs>
         <rect x={0} y={0} width={40} height={innerHeight} fill='url(#currentGradient)' />
         <rect x={19} y={0} width={3} height={innerHeight} fill={colors.invariant.yellow} />
       </svg>
     )
+  }
+
+  const volumeHeatMapLayer: Layer = ({ innerHeight, innerWidth }) => {
+    if (volumeHeatmap && !loading && typeof volumeRange !== 'undefined') {
+      const priceRanges = [
+        { min: 0.999, max: 1, volume: 15 },
+        { min: 1, max: 1.001, volume: 40 },
+        { min: 1.001, max: 1.002, volume: 60 },
+        { min: 1.002, max: 1.003, volume: 15 },
+        { min: 1.003, max: 1.0035, volume: 10 }
+      ]
+
+      const shortenNumber = (number: number) => {
+        if (number >= 1000000) {
+          return (number / 1000000).toFixed(0) + 'M'
+        } else if (number >= 1000) {
+          return (number / 1000).toFixed(0) + 'K'
+        } else {
+          return number.toString()
+        }
+      }
+
+      const concentrationRanges = priceRanges.map(range => {
+        const volume = range.volume
+        const concentration = volume / Math.abs(range.min - range.max)
+        return { ...range, concentration }
+      })
+
+      concentrationRanges.sort((a, b) => a.concentration - b.concentration) // Sort ranges by concentration
+
+      const opacityValues = [0.2, 0.4, 0.6, 0.8, 1]
+      const categories = Math.min(concentrationRanges.length, opacityValues.length)
+      const rangesPerCategory = Math.ceil(concentrationRanges.length / categories)
+      const categorizedRanges = []
+
+      for (let i = 0; i < categories; i++) {
+        categorizedRanges.push(
+          concentrationRanges.slice(i * rangesPerCategory, (i + 1) * rangesPerCategory)
+        )
+      }
+
+      return categorizedRanges.map((category, categoryIndex) =>
+        category.map((range, index) => {
+          const opacity = opacityValues[categoryIndex]
+          const rectX = ((range.min - plotMin) / (plotMax - plotMin)) * innerWidth
+          const rectWidth = ((range.max - range.min) / (plotMax - plotMin)) * innerWidth
+          return (
+            <Tooltip
+              title={`Volume: ${shortenNumber(range.concentration)}`}
+              classes={{ tooltip: classes.customTooltip }}
+              key={`${categoryIndex}-${index}`}
+              placement='top'>
+              <svg>
+                <rect
+                  x={rectX}
+                  y={0}
+                  width={rectWidth}
+                  height={innerHeight}
+                  fill={`rgba(46, 224, 154, ${opacity})`}
+                />
+              </svg>
+            </Tooltip>
+          )
+        })
+      )
+    }
   }
 
   const volumeRangeLayer: Layer = ({ innerWidth, innerHeight }) => {
@@ -324,8 +393,9 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   }
 
   const bottomLineLayer: Layer = ({ innerWidth, innerHeight }) => {
-    const bottomLine = innerHeight
-    return <rect x={0} y={bottomLine} width={innerWidth} height={1} fill={colors.invariant.light} />
+    return (
+      <rect x={0} y={innerHeight} width={innerWidth} height={1} fill={colors.invariant.light} />
+    )
   }
 
   const lazyLoadingLayer: Layer = ({ innerWidth, innerHeight }) => {
@@ -346,8 +416,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         <text
           x='50%'
           y='50%'
-          dominant-baseline='middle'
-          text-anchor='middle'
+          dominantBaseline='middle'
+          textAnchor='middle'
           className={classes.loadingText}>
           Loading liquidity data...
         </text>
@@ -401,7 +471,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       innerRef={containerRef}>
       {loading && coverOnLoading ? (
         <Grid container className={classes.cover}>
-          <img src={loader} className={classes.loader} />
+          <img src={loader} className={classes.loader} alt='' />
         </Grid>
       ) : null}
       {!loading && hasError ? (
@@ -420,10 +490,10 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         className={classNames(classes.zoomButtonsWrapper, 'zoomBtns')}
         justifyContent='space-between'>
         <Button className={classes.zoomButton} onClick={zoomPlus} disableRipple>
-          <img src={ZoomInIcon} className={classes.zoomIcon} />
+          <img src={ZoomInIcon} className={classes.zoomIcon} alt='' />
         </Button>
         <Button className={classes.zoomButton} onClick={zoomMinus} disableRipple>
-          <img src={ZoomOutIcon} className={classes.zoomIcon} />
+          <img src={ZoomOutIcon} className={classes.zoomIcon} alt='' />
         </Button>
       </Grid>
       <ResponsiveLine
@@ -480,6 +550,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           lazyLoadingLayer,
           currentLayer,
           volumeRangeLayer,
+          volumeHeatMapLayer,
           brushLayer,
           'axes',
           'legends'

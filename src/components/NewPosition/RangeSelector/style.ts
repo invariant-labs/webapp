@@ -23,6 +23,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     flex: '1 1 0%'
   },
+  chartOptionsWrapper: {
+    flexDirection: 'row',
+    flex: '1 1 0%',
+    gap: 12
+  },
   plot: {
     width: '100%',
     height: 185

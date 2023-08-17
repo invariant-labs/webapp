@@ -20,6 +20,7 @@ import questionMark from '@static/svg/questionMark.svg'
 import loader from '@static/gif/loader.gif'
 import useStyles from './style'
 import activeLiquidity from '@static/svg/activeLiquidity.svg'
+import { VolumeHeatmapSwitch } from '@components/VolumeHeatmapSwitch/VolumeHeatmapSwitch'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -90,6 +91,12 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [isPlotDiscrete, setIsPlotDiscrete] = useState(initialIsDiscreteValue)
 
   const [concentrationIndex, setConcentrationIndex] = useState(0)
+
+  const [isVolumeHeatmapChecked, setIsVolumeHeatmapChecked] = useState(true)
+
+  const handleVolumeHeatmapChange = () => {
+    setIsVolumeHeatmapChecked(prevState => !prevState)
+  }
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -323,13 +330,19 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     <Grid container className={classes.wrapper} direction='column'>
       <Grid className={classes.headerContainer} container justifyContent='space-between'>
         <Typography className={classes.header}>Price range</Typography>
-        <PlotTypeSwitch
-          onSwitch={val => {
-            setIsPlotDiscrete(val)
-            onDiscreteChange(val)
-          }}
-          initialValue={isPlotDiscrete ? 1 : 0}
-        />
+        <Grid container className={classes.chartOptionsWrapper} justifyContent='flex-end'>
+          <VolumeHeatmapSwitch
+            checked={isVolumeHeatmapChecked}
+            handleChange={handleVolumeHeatmapChange}
+          />
+          <PlotTypeSwitch
+            onSwitch={val => {
+              setIsPlotDiscrete(val)
+              onDiscreteChange(val)
+            }}
+            initialValue={isPlotDiscrete ? 1 : 0}
+          />
+        </Grid>
       </Grid>
       <Grid className={classes.infoRow} container justifyContent='flex-end'>
         <Grid>
@@ -399,6 +412,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
           volumeRange={volumeRange}
+          volumeHeatmap={isVolumeHeatmapChecked}
         />
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>
