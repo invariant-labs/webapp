@@ -83,6 +83,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     left: 0,
     top: 0
   })
+  const [frame, setFrame] = useState(0)
 
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -91,14 +92,18 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   const maxVal = useMemo(() => Math.max(...data.map(element => element.y)), [data])
 
   useEffect(() => {
-    if (containerRef.current)
-      setInterval(() => {
-        if (containerRef.current) {
-          const container = containerRef.current.getBoundingClientRect()
-          setPlotRect({ left: container.left, top: container.top })
-        }
-      }, 100)
-  }, [containerRef])
+    if (containerRef.current && showHeatmap)
+      setFrame(
+        setInterval(() => {
+          if (containerRef.current) {
+            console.log('hi')
+            const container = containerRef.current.getBoundingClientRect()
+            setPlotRect({ left: container.left, top: container.top })
+          }
+        }, 100)
+      )
+    else clearInterval(frame)
+  }, [containerRef, showHeatmap])
 
   const pointsOmitter = useCallback(
     (data: Array<{ x: number; y: number }>) => {
@@ -320,22 +325,27 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         {showTooltip && (
           <div
             style={{
-              background: colors.invariant.component,
-              border: `1px solid ${colors.invariant.lightGrey}`,
-              borderRadius: 5,
-              width: 100,
+              background: colors.black.heatmapTooltip,
+              borderRadius: 10,
               padding: 5,
+              paddingLeft: 10,
+              paddingRight: 10,
+              minWidth: 80,
               position: 'absolute',
               zIndex: 10,
               maxHeight: 20,
               top: tooltipParams.y,
               left: tooltipParams.x
             }}>
-            <Grid container justifyContent='space-evenly'>
-              <Typography className={classes.tooltipValue1}>Volume:</Typography>
+            <Grid container justifyContent='center'>
+              <Typography className={classes.tooltipValue}>Volume: </Typography>
 
-              <Typography className={classes.tooltipValue2}>
-                ${tooltipParams.volume.toFixed(2)}
+              <Typography className={classes.tooltipValue}>
+                {tooltipParams.volume > 1000000
+                  ? Math.round(tooltipParams.volume / 1000000) + 'M'
+                  : tooltipParams.volume > 1000
+                  ? Math.round(tooltipParams.volume / 1000) + 'K'
+                  : tooltipParams.volume}
               </Typography>
             </Grid>
           </div>
@@ -379,7 +389,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
               onMouseMove={e => {
                 if (!showTooltip) setShowTooltip(true)
                 setTooltipParams({
-                  x: e.clientX - plotRect.left,
+                  x: e.clientX - plotRect.left - 50,
                   y: e.clientY - plotRect.top - 50,
                   volume: range.volume
                 })

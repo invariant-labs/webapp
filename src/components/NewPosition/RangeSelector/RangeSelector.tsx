@@ -354,25 +354,51 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       <Grid className={classes.headerContainer} container justifyContent='space-between'>
         <Typography className={classes.header}>Price range</Typography>
         <Grid item>
-          <Grid container>
-            <Typography className={classes.heatmapText}>
-              <Grid
-                container
-                justifyContent='space-between'
-                alignItems='center'
-                className={classes.heatMapInfo}>
+          <Grid container alignItems='center'>
+            <Tooltip
+              title={
+                <>
+                  <Typography className={classes.liquidityTitle}>Volume Heatmap</Typography>
+                  <Typography className={classes.liquidityDesc} style={{ marginBottom: 12 }}>
+                    Trading volume, in the context of the financial market, is a measure that
+                    expresses the amount of assets exchanged for a specific market pair during a
+                    given period of time.
+                  </Typography>
+                  <Grid
+                    container
+                    direction='row'
+                    wrap='nowrap'
+                    alignItems='center'
+                    style={{ marginBottom: 12 }}>
+                    <Typography className={classes.liquidityDesc}>
+                      The heatmap displays the trading volume distributed across various price
+                      ranges. Each price range has a corresponding trading volume from the last 24
+                      hours denominated in USD.
+                    </Typography>
+                  </Grid>
+                  <Typography className={classes.liquidityNote}>
+                    Note: It can be denominated in the amount of this asset or in USD.
+                  </Typography>
+                </>
+              }
+              placement='bottom'
+              classes={{
+                tooltip: classes.liquidityTooltip
+              }}>
+              <Typography className={classes.heatmapText}>
                 Volume Heatmap <div className={classes.infoIcon}>i</div>
-                <Switch
-                  size='small'
-                  checked={showHeatMap}
-                  onClick={() => setShowHeatMap(prev => !prev)}
-                  classes={{
-                    thumb: classes.thumb,
-                    track: classes.track
-                  }}
-                />
-              </Grid>
-            </Typography>
+              </Typography>
+            </Tooltip>
+            <Switch
+              size='small'
+              checked={showHeatMap}
+              onClick={() => setShowHeatMap(prev => !prev)}
+              classes={{
+                thumb: classes.thumb,
+                track: classes.track
+              }}
+            />
+
             <PlotTypeSwitch
               onSwitch={val => {
                 setIsPlotDiscrete(val)

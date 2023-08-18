@@ -66,7 +66,7 @@ export const useStyles = makeStyles(() => ({
     background: colors.invariant.component,
     border: `1px solid ${colors.invariant.lightGrey}`,
     borderRadius: 5,
-    width: 100,
+    minWidth: 100,
     padding: 5,
     position: 'absolute'
   },

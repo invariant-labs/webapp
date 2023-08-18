@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 12
   },
   thumb: {
-    scale: 0.7,
+    scale: 0.8,
     color: colors.white.main
   },
 
@@ -24,18 +24,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: colors.invariant.green
     }
   },
-
-  heatMapInfo: {
-    marginRight: 10,
-    padding: 2
-  },
   header: {
     ...typography.heading4,
     color: colors.white.main
   },
   heatmapText: {
+    color: colors.black.showHeatmap,
     ...typography.caption2,
-    color: colors.black.showHeatmap
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    cursor: 'default'
   },
 
   innerWrapper: {
@@ -208,7 +207,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.text,
     borderRadius: '50%',
     fontSize: 7,
-
+    marginLeft: 5,
+    marginRight: 5,
     lineHeight: '12px',
     verticalAlign: 'center',
     fontWeight: 400,
