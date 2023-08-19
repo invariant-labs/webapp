@@ -19,8 +19,105 @@ const data = [
     index: MAX_TICK
   }
 ]
+
+const heatMapRangesLong = [
+  {
+    first: -5,
+    last: -1,
+    volume: 40000
+  },
+  {
+    first: -1,
+    last: 1,
+    volume: 60000
+  },
+  {
+    first: 1,
+    last: 2,
+    volume: 15000
+  },
+  {
+    first: 2,
+    last: 4,
+    volume: 10000
+  },
+  {
+    first: 4,
+    last: 10,
+    volume: 15000
+  },
+  {
+    first: 10,
+    last: 12,
+    volume: 15000
+  },
+  {
+    first: 12,
+    last: 13,
+    volume: 1000
+  },
+  {
+    first: 13,
+    last: 16,
+    volume: 15000
+  },
+  {
+    first: 16,
+    last: 17,
+    volume: 1000
+  },
+  {
+    first: 17,
+    last: 20,
+    volume: 15000
+  },
+  {
+    first: 20,
+    last: 22,
+    volume: 1000
+  },
+  {
+    first: 22,
+    last: 26,
+    volume: 15000
+  },
+  {
+    first: 26,
+    last: 29,
+    volume: 1000
+  }
+]
+
+const heatMapRanges = [
+  {
+    first: -5,
+    last: -1,
+    volume: 40000
+  },
+  {
+    first: -1,
+    last: 1,
+    volume: 60000
+  },
+  {
+    first: 1,
+    last: 2,
+    volume: 15000
+  },
+  {
+    first: 2,
+    last: 4,
+    volume: 10000
+  },
+  {
+    first: 4,
+    last: 10,
+    volume: 15000
+  }
+]
+
 storiesOf('position/priceRangePlot', module)
-  .add('ticks-no-heatmap', () => {
+  .add('ticks', () => {
     const [leftRange, setLeftRange] = useState(-1000)
     const [rightRange, setRightRange] = useState(2000)
     const [plotMin, setPlotMin] = useState(0)
@@ -77,7 +174,7 @@ storiesOf('position/priceRangePlot', module)
       />
     )
   })
-  .add('disabled-no-heatmap', () => {
+  .add('disabled', () => {
     const [plotMin, setPlotMin] = useState(0)
     const [plotMax, setPlotMax] = useState(calcPrice(150, true, 6, 6) * 3)
 
@@ -124,161 +221,211 @@ storiesOf('position/priceRangePlot', module)
       />
     )
   })
-.add('ticks-with-heatmap', () => {
-  const [leftRange, setLeftRange] = useState(-1000)
-  const [rightRange, setRightRange] = useState(2000)
-  const [plotMin, setPlotMin] = useState(0)
-  const [plotMax, setPlotMax] = useState(calcPrice(150, true, 6, 6) * 3)
-  const heatMapRanges = [
-    {
-      first: -5,
-      last: -1,
-      volume: 40000
-    },
-    {
-      first: -1,
-      last: 1,
-      volume: 60000
-    },
-    {
-      first: 1,
-      last: 2,
-      volume: 15000
-    },
-    {
-      first: 2,
-      last: 4,
-      volume: 10000
-    },
-    {
-      first: 4,
-      last: 10,
-      volume: 15000
+  .add('ticks-with-heatmap', () => {
+    const [leftRange, setLeftRange] = useState(-1000)
+    const [rightRange, setRightRange] = useState(2000)
+    const [plotMin, setPlotMin] = useState(0)
+    const [plotMax, setPlotMax] = useState(calcPrice(150, true, 6, 6) * 3)
+
+    const zoomMinus = () => {
+      const diff = plotMax - plotMin
+      setPlotMin(plotMin - diff / 4)
+      setPlotMax(plotMax + diff / 4)
     }
-  ]
 
-  const zoomMinus = () => {
-    const diff = plotMax - plotMin
-    setPlotMin(plotMin - diff / 4)
-    setPlotMax(plotMax + diff / 4)
-  }
-
-  const zoomPlus = () => {
-    const diff = plotMax - plotMin
-    setPlotMin(plotMin + diff / 6)
-    setPlotMax(plotMax - diff / 6)
-  }
-
-  return (
-    <PriceRangePlot
-      data={data}
-      leftRange={{
-        x: calcPrice(leftRange, true, 6, 6),
-        index: leftRange
-      }}
-      rightRange={{
-        x: calcPrice(rightRange, true, 6, 6),
-        index: rightRange
-      }}
-      midPrice={{
-        x: calcPrice(150, true, 6, 6),
-        index: 150
-      }}
-      onChangeRange={(left, right) => {
-        action(`range indexes: ${left} - ${right}`)()
-        setLeftRange(left)
-        setRightRange(right)
-      }}
-      style={{ width: 600, height: 300, backgroundColor: '#1C1B1E' }}
-      plotMin={plotMin}
-      plotMax={plotMax}
-      zoomMinus={zoomMinus}
-      zoomPlus={zoomPlus}
-      xDecimal={6}
-      yDecimal={6}
-      tickSpacing={4}
-      showHeatmap={true}
-      heatMapRanges={heatMapRanges}
-      isXtoY={true}
-      reloadHandler={() => {}}
-      volumeRange={{
-        min: calcPrice(13000, true, 6, 6),
-        max: calcPrice(18000, true, 6, 6)
-      }}
-    />
-  )
-})
-.add('disabled-with-heatmap', () => {
-  const [plotMin, setPlotMin] = useState(0)
-  const [plotMax, setPlotMax] = useState(calcPrice(150, true, 6, 6) * 3)
-  const heatMapRanges = [
-    {
-      first: -5,
-      last: -1,
-      volume: 40000
-    },
-    {
-      first: -1,
-      last: 1,
-      volume: 60000
-    },
-    {
-      first: 1,
-      last: 2,
-      volume: 15000
-    },
-    {
-      first: 2,
-      last: 4,
-      volume: 10000
-    },
-    {
-      first: 4,
-      last: 10,
-      volume: 15000
+    const zoomPlus = () => {
+      const diff = plotMax - plotMin
+      setPlotMin(plotMin + diff / 6)
+      setPlotMax(plotMax - diff / 6)
     }
-  ]
 
-  const zoomMinus = () => {
-    const diff = plotMax - plotMin
-    setPlotMin(plotMin - diff / 4)
-    setPlotMax(plotMax + diff / 4)
-  }
+    return (
+      <PriceRangePlot
+        data={data}
+        leftRange={{
+          x: calcPrice(leftRange, true, 6, 6),
+          index: leftRange
+        }}
+        rightRange={{
+          x: calcPrice(rightRange, true, 6, 6),
+          index: rightRange
+        }}
+        midPrice={{
+          x: calcPrice(150, true, 6, 6),
+          index: 150
+        }}
+        onChangeRange={(left, right) => {
+          action(`range indexes: ${left} - ${right}`)()
+          setLeftRange(left)
+          setRightRange(right)
+        }}
+        style={{ width: 600, height: 300, backgroundColor: '#1C1B1E' }}
+        plotMin={plotMin}
+        plotMax={plotMax}
+        zoomMinus={zoomMinus}
+        zoomPlus={zoomPlus}
+        xDecimal={6}
+        yDecimal={6}
+        tickSpacing={4}
+        showHeatmap={true}
+        heatMapRanges={heatMapRanges}
+        isXtoY={true}
+        reloadHandler={() => {}}
+        volumeRange={{
+          min: calcPrice(13000, true, 6, 6),
+          max: calcPrice(18000, true, 6, 6)
+        }}
+      />
+    )
+  })
+  .add('disabled-with-heatmap', () => {
+    const [plotMin, setPlotMin] = useState(0)
+    const [plotMax, setPlotMax] = useState(calcPrice(150, true, 6, 6) * 3)
 
-  const zoomPlus = () => {
-    const diff = plotMax - plotMin
-    setPlotMin(plotMin + diff / 6)
-    setPlotMax(plotMax - diff / 6)
-  }
+    const zoomMinus = () => {
+      const diff = plotMax - plotMin
+      setPlotMin(plotMin - diff / 4)
+      setPlotMax(plotMax + diff / 4)
+    }
 
-  return (
-    <PriceRangePlot
-      data={data}
-      leftRange={{
-        x: calcPrice(-1000, true, 6, 6),
-        index: -1000
-      }}
-      rightRange={{
-        x: calcPrice(2000, true, 6, 6),
-        index: 2000
-      }}
-      midPrice={{
-        x: calcPrice(150, true, 6, 6),
-        index: 150
-      }}
-      style={{ width: 600, height: 300, backgroundColor: '#1C1B1E' }}
-      disabled
-      plotMin={plotMin}
-      plotMax={plotMax}
-      zoomMinus={zoomMinus}
-      zoomPlus={zoomPlus}
-      xDecimal={6}
-      yDecimal={6}
-      tickSpacing={4}
-      showHeatmap={true}
-      heatMapRanges={heatMapRanges}
-      isXtoY={true}
-      reloadHandler={() => {}}
-    />
-  )
-})
+    const zoomPlus = () => {
+      const diff = plotMax - plotMin
+      setPlotMin(plotMin + diff / 6)
+      setPlotMax(plotMax - diff / 6)
+    }
+
+    return (
+      <PriceRangePlot
+        data={data}
+        leftRange={{
+          x: calcPrice(-1000, true, 6, 6),
+          index: -1000
+        }}
+        rightRange={{
+          x: calcPrice(2000, true, 6, 6),
+          index: 2000
+        }}
+        midPrice={{
+          x: calcPrice(150, true, 6, 6),
+          index: 150
+        }}
+        style={{ width: 600, height: 300, backgroundColor: '#1C1B1E' }}
+        disabled
+        plotMin={plotMin}
+        plotMax={plotMax}
+        zoomMinus={zoomMinus}
+        zoomPlus={zoomPlus}
+        xDecimal={6}
+        yDecimal={6}
+        tickSpacing={4}
+        showHeatmap={true}
+        heatMapRanges={heatMapRanges}
+        isXtoY={true}
+        reloadHandler={() => {}}
+      />
+    )
+  })
+  .add('ticks-with-heatmap-more-ranges', () => {
+    const [leftRange, setLeftRange] = useState(-1000)
+    const [rightRange, setRightRange] = useState(2000)
+    const [plotMin, setPlotMin] = useState(0)
+    const [plotMax, setPlotMax] = useState(calcPrice(150, true, 6, 6) * 3)
+
+    const zoomMinus = () => {
+      const diff = plotMax - plotMin
+      setPlotMin(plotMin - diff / 4)
+      setPlotMax(plotMax + diff / 4)
+    }
+
+    const zoomPlus = () => {
+      const diff = plotMax - plotMin
+      setPlotMin(plotMin + diff / 6)
+      setPlotMax(plotMax - diff / 6)
+    }
+
+    return (
+      <PriceRangePlot
+        data={data}
+        leftRange={{
+          x: calcPrice(leftRange, true, 6, 6),
+          index: leftRange
+        }}
+        rightRange={{
+          x: calcPrice(rightRange, true, 6, 6),
+          index: rightRange
+        }}
+        midPrice={{
+          x: calcPrice(150, true, 6, 6),
+          index: 150
+        }}
+        onChangeRange={(left, right) => {
+          action(`range indexes: ${left} - ${right}`)()
+          setLeftRange(left)
+          setRightRange(right)
+        }}
+        style={{ width: 600, height: 300, backgroundColor: '#1C1B1E' }}
+        plotMin={plotMin}
+        plotMax={plotMax}
+        zoomMinus={zoomMinus}
+        zoomPlus={zoomPlus}
+        xDecimal={6}
+        yDecimal={6}
+        tickSpacing={4}
+        showHeatmap={true}
+        heatMapRanges={heatMapRangesLong}
+        isXtoY={true}
+        reloadHandler={() => {}}
+        volumeRange={{
+          min: calcPrice(13000, true, 6, 6),
+          max: calcPrice(18000, true, 6, 6)
+        }}
+      />
+    )
+  })
+  .add('disabled-with-heatmap-more-ranges', () => {
+    const [plotMin, setPlotMin] = useState(0)
+    const [plotMax, setPlotMax] = useState(calcPrice(150, true, 6, 6) * 3)
+
+    const zoomMinus = () => {
+      const diff = plotMax - plotMin
+      setPlotMin(plotMin - diff / 4)
+      setPlotMax(plotMax + diff / 4)
+    }
+
+    const zoomPlus = () => {
+      const diff = plotMax - plotMin
+      setPlotMin(plotMin + diff / 6)
+      setPlotMax(plotMax - diff / 6)
+    }
+
+    return (
+      <PriceRangePlot
+        data={data}
+        leftRange={{
+          x: calcPrice(-1000, true, 6, 6),
+          index: -1000
+        }}
+        rightRange={{
+          x: calcPrice(2000, true, 6, 6),
+          index: 2000
+        }}
+        midPrice={{
+          x: calcPrice(150, true, 6, 6),
+          index: 150
+        }}
+        style={{ width: 600, height: 300, backgroundColor: '#1C1B1E' }}
+        disabled
+        plotMin={plotMin}
+        plotMax={plotMax}
+        zoomMinus={zoomMinus}
+        zoomPlus={zoomPlus}
+        xDecimal={6}
+        yDecimal={6}
+        tickSpacing={4}
+        showHeatmap={true}
+        heatMapRanges={heatMapRangesLong}
+        isXtoY={true}
+        reloadHandler={() => {}}
+      />
+    )
+  })

@@ -395,7 +395,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               onClick={() => setShowHeatMap(prev => !prev)}
               classes={{
                 thumb: classes.thumb,
-                track: classes.track
+                track: classes.track,
               }}
             />
 

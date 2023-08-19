@@ -79,11 +79,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     y: 0,
     volume: 0
   })
-  const [plotRect, setPlotRect] = useState<{ left: number; top: number }>({
-    left: 0,
-    top: 0
-  })
-  const [frame, setFrame] = useState(0)
 
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -91,19 +86,26 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
   const maxVal = useMemo(() => Math.max(...data.map(element => element.y)), [data])
 
-  useEffect(() => {
-    if (containerRef.current && showHeatmap)
-      setFrame(
-        setInterval(() => {
-          if (containerRef.current) {
-            console.log('hi')
-            const container = containerRef.current.getBoundingClientRect()
-            setPlotRect({ left: container.left, top: container.top })
-          }
-        }, 100)
-      )
-    else clearInterval(frame)
-  }, [containerRef, showHeatmap])
+  const determineOpacity = (
+    concentrations: Array<number> | Array<Array<number>>,
+    range: { first: number; last: number; volume: number }
+  ) => {
+    const current_concentration = Math.round(range.volume / Math.abs(range.last - range.first))
+    let opacity
+
+    if (concentrations[0] instanceof Array) {
+      concentrations.forEach((conc, i) => {
+        if ((conc as Array<number>).find(item => item === current_concentration))
+          opacity = (i + 1) * 0.2
+      })
+    } else {
+      opacity =
+        (concentrations.findIndex(item => item === current_concentration) + 1) *
+        (1 / concentrations.length)
+    }
+
+    return opacity
+  }
 
   const pointsOmitter = useCallback(
     (data: Array<{ x: number; y: number }>) => {
@@ -331,7 +333,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
               paddingLeft: 10,
               paddingRight: 10,
               minWidth: 80,
-              position: 'absolute',
+              position: 'fixed',
               zIndex: 10,
               maxHeight: 20,
               top: tooltipParams.y,
@@ -341,9 +343,9 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
               <Typography className={classes.tooltipValue}>Volume: </Typography>
 
               <Typography className={classes.tooltipValue}>
-                {tooltipParams.volume > 1000000
+                {tooltipParams.volume >= 1000000
                   ? Math.round(tooltipParams.volume / 1000000) + 'M'
-                  : tooltipParams.volume > 1000
+                  : tooltipParams.volume >= 1000
                   ? Math.round(tooltipParams.volume / 1000) + 'K'
                   : tooltipParams.volume}
               </Typography>
@@ -358,45 +360,62 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     if (!showHeatmap) return
     const unitLen = innerWidth / (plotMax - plotMin)
 
-    const concentrations = heatMapRanges.reduce((acc: Array<number>, item, i) => {
-      const concentration = item.volume / Math.abs(item.last - item.first)
-      if (!acc.find(accItem => accItem === concentration)) acc.push(concentration)
+    let concentrations: Array<number> | Array<Array<number>> = heatMapRanges.reduce(
+      (acc: Array<number>, item, i) => {
+        const concentration = Math.round(item.volume / Math.abs(item.last - item.first))
+        if (!acc.find(accItem => accItem === concentration)) acc.push(concentration)
 
-      return acc
-    }, [])
+        return acc
+      },
+      []
+    )
 
     concentrations.sort((a, b) => a - b)
+    if (concentrations.length > 5) {
+      concentrations = [
+        concentrations.slice(0, Math.round(concentrations.length / 5)),
+        concentrations.slice(
+          Math.round(concentrations.length / 5),
+          Math.round(2 * (concentrations.length / 5))
+        ),
+        concentrations.slice(
+          Math.round(2 * (concentrations.length / 5)),
+          Math.round(3 * (concentrations.length / 5))
+        ),
+        concentrations.slice(
+          Math.round(3 * (concentrations.length / 5)),
+          Math.round(4 * (concentrations.length / 5))
+        ),
+        concentrations.slice(
+          Math.round(4 * (concentrations.length / 5)),
+          Math.round(5 * (concentrations.length / 5))
+        )
+      ]
+    }
 
     return (
       <svg>
-        {plotRect.left !== 0 &&
-          heatMapRanges.map((range, i) => (
-            <rect
-              key={i}
-              x={(range.first - plotMin) * unitLen}
-              y={0}
-              width={(range.last - plotMin - (range.first - plotMin)) * unitLen}
-              height={innerHeight}
-              fill={colors.invariant.green}
-              opacity={
-                (concentrations.findIndex(
-                  item => item === range.volume / Math.abs(range.last - range.first)
-                ) +
-                  1) *
-                (1 / concentrations.length)
-              }
-              onMouseEnter={() => setShowTooltip(true)}
-              onMouseMove={e => {
-                if (!showTooltip) setShowTooltip(true)
-                setTooltipParams({
-                  x: e.clientX - plotRect.left - 50,
-                  y: e.clientY - plotRect.top - 50,
-                  volume: range.volume
-                })
-              }}
-              onMouseLeave={() => setShowTooltip(false)}
-            />
-          ))}
+        {heatMapRanges.map((range, i) => (
+          <rect
+            key={i}
+            x={(range.first - plotMin) * unitLen}
+            y={0}
+            width={(range.last - plotMin - (range.first - plotMin)) * unitLen}
+            height={innerHeight}
+            fill={colors.invariant.green}
+            opacity={determineOpacity(concentrations, range)}
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseMove={e => {
+              if (!showTooltip) setShowTooltip(true)
+              setTooltipParams({
+                x: e.clientX - 50,
+                y: e.clientY - 50,
+                volume: range.volume
+              })
+            }}
+            onMouseLeave={() => setShowTooltip(false)}
+          />
+        ))}
       </svg>
     )
   }

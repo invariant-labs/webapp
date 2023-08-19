@@ -22,7 +22,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '.Mui-checked.Mui-checked + &': {
       opacity: 1,
       backgroundColor: colors.invariant.green
-    }
+    },
+    height: 12,
+    transform: 'translateY(-1px)'
   },
   header: {
     ...typography.heading4,
