@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     scale: 0.8,
     color: colors.white.main
   },
+  switchContainer: {
+    marginRight: 15
+  },
 
   track: {
     '.Mui-checked.Mui-checked + &': {

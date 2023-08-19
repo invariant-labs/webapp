@@ -389,15 +389,17 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 Volume Heatmap <div className={classes.infoIcon}>i</div>
               </Typography>
             </Tooltip>
-            <Switch
-              size='small'
-              checked={showHeatMap}
-              onClick={() => setShowHeatMap(prev => !prev)}
-              classes={{
-                thumb: classes.thumb,
-                track: classes.track,
-              }}
-            />
+            <div className={classes.switchContainer}>
+              <Switch
+                size='small'
+                checked={showHeatMap}
+                onClick={() => setShowHeatMap(prev => !prev)}
+                classes={{
+                  thumb: classes.thumb,
+                  track: classes.track
+                }}
+              />
+            </div>
 
             <PlotTypeSwitch
               onSwitch={val => {
