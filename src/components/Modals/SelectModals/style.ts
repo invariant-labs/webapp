@@ -198,7 +198,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     background: 'transparent',
     boxShadow: 'none',
-    maxWidth: 456
+    maxWidth: 500
   },
 
   clearIcon: {

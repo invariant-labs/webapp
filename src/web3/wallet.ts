@@ -13,20 +13,11 @@ const getSolanaWallet = (): WalletAdapter => {
   return _wallet
 }
 
-// Here we will pass wallet type right
 const connectWallet = async (): Promise<WalletAdapter> => {
-  return await new Promise(resolve => {
-    getNCAdapter().then(
-      adapter => {
-        _wallet = new StandardAdapter(adapter)
-        _wallet.on('connect', () => {
-          resolve(_wallet)
-        })
-        _wallet.connect()
-      },
-      () => {}
-    )
-  })
+  const adapter = await getNCAdapter()
+  _wallet = new StandardAdapter(adapter)
+
+  return _wallet // no need for any listening for events here, function is already called bacause of dispatch in other event listener
 }
 
 const disconnectWallet = () => {
