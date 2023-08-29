@@ -1,26 +1,13 @@
 /* eslint-disable no-case-declarations */
 import { WalletAdapter } from './adapters/types'
-import { MockWalletAdapter } from './adapters/mock'
 import { StandardAdapter } from './adapters/standard'
 
-let _wallet: WalletAdapter
+const _wallet: WalletAdapter = new StandardAdapter()
 const getSolanaWallet = (): WalletAdapter => {
-  if (_wallet) {
-    return _wallet
-  }
-  _wallet = new MockWalletAdapter()
   return _wallet
 }
 
-const connectWallet = async (): Promise<WalletAdapter> => {
-  _wallet = new StandardAdapter()
-
-  return _wallet // no need for any listening for events here, function is already called bacause of dispatch in other event listener
-}
-
 const disconnectWallet = () => {
-  if (_wallet) {
-    _wallet.disconnect()
-  }
+  _wallet.disconnect()
 }
-export { getSolanaWallet, connectWallet, disconnectWallet }
+export { getSolanaWallet, disconnectWallet }
