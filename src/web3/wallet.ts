@@ -2,7 +2,6 @@
 import { WalletAdapter } from './adapters/types'
 import { MockWalletAdapter } from './adapters/mock'
 import { StandardAdapter } from './adapters/standard'
-import { nightlyConnectAdapter } from './selector'
 
 let _wallet: WalletAdapter
 const getSolanaWallet = (): WalletAdapter => {
@@ -14,7 +13,7 @@ const getSolanaWallet = (): WalletAdapter => {
 }
 
 const connectWallet = async (): Promise<WalletAdapter> => {
-  _wallet = new StandardAdapter(nightlyConnectAdapter)
+  _wallet = new StandardAdapter()
 
   return _wallet // no need for any listening for events here, function is already called bacause of dispatch in other event listener
 }
