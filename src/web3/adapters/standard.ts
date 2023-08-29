@@ -9,7 +9,7 @@ export class StandardAdapter implements WalletAdapter {
   }
 
   get connected() {
-    return nightlyConnectAdapter.connected || false
+    return nightlyConnectAdapter.connected
   }
 
   async signAllTransactions(transactions: Transaction[]): Promise<Transaction[]> {
