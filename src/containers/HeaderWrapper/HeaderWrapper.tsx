@@ -7,7 +7,7 @@ import { actions as walletActions, Status } from '@reducers/solanaWallet'
 import { address, status } from '@selectors/solanaWallet'
 import { actions } from '@reducers/solanaConnection'
 import { network, rpcAddress } from '@selectors/solanaConnection'
-import { getNCAdapter, openWalletSelectorModal } from '@web3/selector'
+import { nightlyConnectAdapter, openWalletSelectorModal } from '@web3/selector'
 
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -18,17 +18,23 @@ export const HeaderWrapper: React.FC = () => {
   const location = useLocation()
 
   useEffect(() => {
-    getNCAdapter().then(
-      adapter => {
-        adapter.addListener('connect', () => {
-          dispatch(walletActions.connect())
-        })
+    nightlyConnectAdapter.addListener('connect', () => {
+      dispatch(walletActions.connect())
+    })
 
-        if (adapter.connected) {
-          dispatch(walletActions.connect())
+    if (nightlyConnectAdapter.connected) {
+      dispatch(walletActions.connect())
+    }
+
+    nightlyConnectAdapter.canEagerConnect().then(
+      async canEagerConnect => {
+        if (canEagerConnect) {
+          await nightlyConnectAdapter.connect()
         }
       },
-      () => {}
+      error => {
+        console.log(error)
+      }
     )
   }, [])
 
