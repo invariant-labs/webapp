@@ -69,7 +69,33 @@ storiesOf('position/newPosition', module)
         onChangePositionTokens={() => {}}
         isCurrentPoolExisting={true}
         calcAmount={() => new BN(1)}
-        feeTiers={[0.02, 0.04, 0.1, 0.3, 1]}
+        feeTiers={[
+          {
+            feeValue: 0.02,
+            minimumRange: 20,
+            maxSafeConcentration: 400
+          },
+          {
+            feeValue: 0.04,
+            minimumRange: 80,
+            maxSafeConcentration: 40
+          },
+          {
+            feeValue: 0.1,
+            minimumRange: 64,
+            maxSafeConcentration: 34
+          },
+          {
+            feeValue: 0.3,
+            minimumRange: 50,
+            maxSafeConcentration: 28
+          },
+          {
+            feeValue: 1,
+            minimumRange: 35,
+            maxSafeConcentration: 5
+          }
+        ]}
         ticksLoading={false}
         noConnectedBlockerProps={{
           onConnect: () => {}
@@ -117,7 +143,33 @@ storiesOf('position/newPosition', module)
         onChangePositionTokens={() => {}}
         isCurrentPoolExisting={false}
         calcAmount={() => new BN(1)}
-        feeTiers={[0.02, 0.04, 0.1, 0.3, 1]}
+        feeTiers={[
+          {
+            feeValue: 0.02,
+            minimumRange: 20,
+            maxSafeConcentration: 400
+          },
+          {
+            feeValue: 0.04,
+            minimumRange: 80,
+            maxSafeConcentration: 40
+          },
+          {
+            feeValue: 0.1,
+            minimumRange: 64,
+            maxSafeConcentration: 34
+          },
+          {
+            feeValue: 0.3,
+            minimumRange: 50,
+            maxSafeConcentration: 28
+          },
+          {
+            feeValue: 1,
+            minimumRange: 35,
+            maxSafeConcentration: 5
+          }
+        ]}
         ticksLoading={false}
         noConnectedBlockerProps={{
           onConnect: () => {}
