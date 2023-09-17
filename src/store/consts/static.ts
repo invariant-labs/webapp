@@ -353,31 +353,34 @@ export const WSOL_POOL_INIT_LAMPORTS = new BN(106000961)
 
 export const minimumRangesForTiers = [20, 20, 74, 80, 64, 28, 28, 28, 28]
 
-export const maxSafeConcentrationsForTiers = [400.52, 400.52, 41.49, 21.47, 8.13, 5.45, 5.45, 5.45, 5.45]
+export const maxSafeConcentrationsForTiers = [
+  400.52, 400.52, 41.49, 21.47, 8.13, 5.45, 5.45, 5.45, 5.45
+]
 
-export const getNewPositionFeeTiers = (
+export const ALL_FEE_TIERS_DATA = FEE_TIERS.map((tier, index) => ({
+  tier,
+  minimumRange: minimumRangesForTiers[index],
+  maxSafeConcentration: maxSafeConcentrationsForTiers[index],
+  primaryIndex: index
+}))
+
+export const getNewPositionUIFeeTiers = (
   tokenAAddress: PublicKey | null,
   tokenBAddress: PublicKey | null
 ) => {
   const USDC = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
   const USDT = new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB')
 
-  const tiersData = FEE_TIERS.map((tier, index) => ({
-    tier,
-    minimumRange: minimumRangesForTiers[index],
-    maxSafeConcentration: maxSafeConcentrationsForTiers[index]
-  }))
-
   if (
     tokenAAddress !== null &&
-      tokenBAddress !== null &&
-      ((tokenAAddress.equals(USDC) && tokenBAddress.equals(USDT)) ||
-        (tokenAAddress.equals(USDT) && tokenBAddress.equals(USDC)))
+    tokenBAddress !== null &&
+    ((tokenAAddress.equals(USDC) && tokenBAddress.equals(USDT)) ||
+      (tokenAAddress.equals(USDT) && tokenBAddress.equals(USDC)))
   ) {
-    return tiersData
+    return ALL_FEE_TIERS_DATA
   }
 
-  return tiersData.slice(1)
+  return ALL_FEE_TIERS_DATA.slice(1)
 }
 
 export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, NetworkType }

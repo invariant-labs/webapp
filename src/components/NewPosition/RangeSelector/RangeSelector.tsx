@@ -44,8 +44,8 @@ export interface IRangeSelector {
   volumeRange?: {
     min: number
     max: number
-  },
-  minimumRange: number,
+  }
+  minimumRange: number
   maxSafeConcentration: number
 }
 
@@ -264,10 +264,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   const concentrationArray = useMemo(
-    () =>
-      getConcentrationArray(tickSpacing, minimumRange, midPrice.index).sort(
-        (a, b) => a - b
-      ),
+    () => getConcentrationArray(tickSpacing, minimumRange, midPrice.index).sort((a, b) => a - b),
     [tickSpacing, midPrice.index, minimumRange]
   )
 
