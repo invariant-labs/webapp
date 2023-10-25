@@ -151,12 +151,13 @@ enum SolanaNetworks {
   DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',
   MAIN = 'https://api.mainnet-beta.solana.com',
-  MAIN_QUICKNODE = 'https://icy-billowing-gadget.solana-mainnet.discover.quiknode.pro/b970ec100ab2d8c249bee494b7d682c8ef75ee6f/',
+  MAIN_QUICKNODE = 'https://tame-ancient-mountain.solana-mainnet.discover.quiknode.pro/6a9a95bf7bbb108aea620e7ee4c1fd5e1b67cc62/',
   MAIN_SERUM = 'https://solana-api.projectserum.com',
   MAIN_FIGMENT = 'https://solana--mainnet.datahub.figment.io/apikey/182e93d87a1f1d335c9d74d6c7371388',
   MAIN_GENESYSGO = 'https://ssc-dao.genesysgo.net',
   MAIN_NIGHTLY = 'https://rpc.nightly.app:8899/',
   MAIN_ALCHEMY = 'https://solana-mainnet.g.alchemy.com/v2/YfX5E62sdlEoytQ9ZEOA_5KIE3QbwUUD',
+  MAIN_HELLOMOON = 'https://rpc.hellomoon.io/2a3fb622-4aa5-41ea-a7c3-1f84acb8cf53',
   LOCAL = 'http://127.0.0.1:8899'
 }
 
