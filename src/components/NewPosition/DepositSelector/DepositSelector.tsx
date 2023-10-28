@@ -53,6 +53,7 @@ export interface IDepositSelector {
   onHideUnknownTokensChange: (val: boolean) => void
   priceALoading?: boolean
   priceBLoading?: boolean
+  feeTierIndex: number
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -78,13 +79,13 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   initialHideUnknownTokensValue,
   onHideUnknownTokensChange,
   priceALoading,
-  priceBLoading
+  priceBLoading,
+  feeTierIndex
 }) => {
   const classes = useStyles()
 
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
   const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
-  const [feeTierIndex, setFeeTierIndex] = useState<number>(0)
 
   const getButtonMessage = useCallback(() => {
     if (tokenAIndex === null || tokenBIndex === null) {
@@ -212,12 +213,12 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
         <FeeSwitch
           onSelect={fee => {
-            setFeeTierIndex(fee)
             setPositionTokens(tokenAIndex, tokenBIndex, fee)
           }}
           feeTiers={feeTiers}
           showOnlyPercents
           bestTierIndex={bestTierIndex}
+          currentValue={feeTierIndex}
         />
       </Grid>
 

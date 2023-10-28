@@ -39,9 +39,10 @@ storiesOf('position/rangeSelector', module)
       currentPairReversed={null}
       initialIsDiscreteValue={false}
       onDiscreteChange={() => {}}
-      feeTierIndex={0}
       poolIndex={null}
       reloadHandler={() => {}}
+      minimumRange={20}
+      maxSafeConcentration={400.52}
     />
   ))
   .add('blocked', () => (
@@ -66,9 +67,10 @@ storiesOf('position/rangeSelector', module)
       currentPairReversed={null}
       initialIsDiscreteValue={false}
       onDiscreteChange={() => {}}
-      feeTierIndex={0}
       poolIndex={null}
       reloadHandler={() => {}}
+      minimumRange={20}
+      maxSafeConcentration={400.52}
     />
   ))
   .add('concentrated', () => (
@@ -92,8 +94,9 @@ storiesOf('position/rangeSelector', module)
       initialIsDiscreteValue={false}
       onDiscreteChange={() => {}}
       isConcentrated
-      feeTierIndex={0}
       poolIndex={null}
       reloadHandler={() => {}}
+      minimumRange={20}
+      maxSafeConcentration={400.52}
     />
   ))
