@@ -56,7 +56,11 @@ export interface INewPosition {
     rightRangeTickIndex: number,
     tokenAddress: PublicKey
   ) => BN
-  feeTiers: number[]
+  feeTiers: Array<{
+    feeValue: number
+    minimumRange: number
+    maxSafeConcentration: number
+  }>
   ticksLoading: boolean
   showNoConnected?: boolean
   noConnectedBlockerProps: INoConnected
@@ -90,6 +94,7 @@ export interface INewPosition {
     min: number
     max: number
   }
+  currentFeeIndex: number
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -131,7 +136,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   priceBLoading,
   hasTicksError,
   reloadHandler,
-  plotVolumeRange
+  plotVolumeRange,
+  currentFeeIndex
 }) => {
   const classes = useStyles()
 
@@ -142,7 +148,6 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
   const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
-  const [fee, setFee] = useState<number>(0)
 
   const [tokenADeposit, setTokenADeposit] = useState<string>('')
   const [tokenBDeposit, setTokenBDeposit] = useState<string>('')
@@ -345,7 +350,6 @@ export const NewPosition: React.FC<INewPosition> = ({
           setPositionTokens={(index1, index2, fee) => {
             setTokenAIndex(index1)
             setTokenBIndex(index2)
-            setFee(fee)
             onChangePositionTokens(index1, index2, fee)
           }}
           onAddLiquidity={() => {
@@ -421,7 +425,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             blockerInfo: 'Range only for single-asset deposit.',
             decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimals : 0
           }}
-          feeTiers={feeTiers}
+          feeTiers={feeTiers.map(tier => tier.feeValue)}
           progress={progress}
           onReverseTokens={() => {
             if (tokenAIndex === null || tokenBIndex === null) {
@@ -431,7 +435,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             const pom = tokenAIndex
             setTokenAIndex(tokenBIndex)
             setTokenBIndex(pom)
-            onChangePositionTokens(tokenBIndex, tokenAIndex, fee)
+            onChangePositionTokens(tokenBIndex, tokenAIndex, currentFeeIndex)
           }}
           poolIndex={poolIndex}
           bestTierIndex={bestTierIndex}
@@ -447,6 +451,7 @@ export const NewPosition: React.FC<INewPosition> = ({
           priceB={tokenBPriceData?.price}
           priceALoading={priceALoading}
           priceBLoading={priceBLoading}
+          feeTierIndex={currentFeeIndex}
         />
 
         {isCurrentPoolExisting ||
@@ -486,11 +491,12 @@ export const NewPosition: React.FC<INewPosition> = ({
             initialIsDiscreteValue={initialIsDiscreteValue}
             onDiscreteChange={onDiscreteChange}
             isConcentrated={isConcentrated}
-            feeTierIndex={fee}
             bestTierIndex={bestTierIndex}
             hasTicksError={hasTicksError}
             reloadHandler={reloadHandler}
             volumeRange={plotVolumeRange}
+            minimumRange={feeTiers[currentFeeIndex].minimumRange}
+            maxSafeConcentration={feeTiers[currentFeeIndex].maxSafeConcentration}
           />
         ) : (
           <PoolInit

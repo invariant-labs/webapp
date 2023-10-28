@@ -8,17 +8,18 @@ export interface IFeeSwitch {
   showOnlyPercents?: boolean
   feeTiers: number[]
   bestTierIndex?: number
+  currentValue: number
 }
 
 export const FeeSwitch: React.FC<IFeeSwitch> = ({
   onSelect,
   showOnlyPercents = false,
   feeTiers,
-  bestTierIndex
+  bestTierIndex,
+  currentValue
 }) => {
   const classes = useStyles()
 
-  const [current, setCurrent] = useState(0)
   const [blocked, setBlocked] = useState(false)
 
   const tabsClasses = useTabsStyles()
@@ -26,7 +27,6 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
 
   const handleChange = (_: React.ChangeEvent<{}>, newValue: number) => {
     if (!blocked) {
-      setCurrent(newValue)
       onSelect(newValue)
       setBlocked(true)
       setTimeout(() => {
@@ -38,7 +38,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
   return (
     <Grid className={classes.wrapper}>
       <Tabs
-        value={current}
+        value={currentValue}
         onChange={handleChange}
         variant='scrollable'
         scrollButtons='auto'

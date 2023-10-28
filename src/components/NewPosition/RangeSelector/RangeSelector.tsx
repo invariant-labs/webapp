@@ -14,7 +14,6 @@ import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
-import { maxSafeConcentrationsForTiers, minimumRangesForTiers } from '@consts/static'
 import { getConcentrationArray, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import questionMark from '@static/svg/questionMark.svg'
 import loader from '@static/gif/loader.gif'
@@ -38,7 +37,6 @@ export interface IRangeSelector {
   initialIsDiscreteValue: boolean
   onDiscreteChange: (val: boolean) => void
   isConcentrated?: boolean
-  feeTierIndex: number
   poolIndex: number | null
   bestTierIndex?: number
   hasTicksError?: boolean
@@ -47,6 +45,8 @@ export interface IRangeSelector {
     min: number
     max: number
   }
+  minimumRange: number
+  maxSafeConcentration: number
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -66,12 +66,13 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   initialIsDiscreteValue,
   onDiscreteChange,
   isConcentrated = false,
-  feeTierIndex,
   poolIndex,
   bestTierIndex,
   hasTicksError,
   reloadHandler,
-  volumeRange
+  volumeRange,
+  minimumRange,
+  maxSafeConcentration
 }) => {
   const classes = useStyles()
 
@@ -176,7 +177,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[0],
-        minimumRangesForTiers[feeTierIndex],
+        minimumRange,
         midPrice.index,
         isXtoY
       )
@@ -263,11 +264,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   const concentrationArray = useMemo(
-    () =>
-      getConcentrationArray(tickSpacing, minimumRangesForTiers[feeTierIndex], midPrice.index).sort(
-        (a, b) => a - b
-      ),
-    [tickSpacing, midPrice.index, feeTierIndex]
+    () => getConcentrationArray(tickSpacing, minimumRange, midPrice.index).sort((a, b) => a - b),
+    [tickSpacing, midPrice.index, minimumRange]
   )
 
   useEffect(() => {
@@ -277,7 +275,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[0],
-        minimumRangesForTiers[feeTierIndex],
+        minimumRange,
         midPrice.index,
         isXtoY
       )
@@ -297,7 +295,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[index],
-        minimumRangesForTiers[feeTierIndex],
+        minimumRange,
         midPrice.index,
         isXtoY
       )
@@ -309,9 +307,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const unsafeIndex = useMemo(
     () =>
       typeof bestTierIndex === 'undefined'
-        ? concentrationArray.findIndex(val => val >= maxSafeConcentrationsForTiers[feeTierIndex])
-        : concentrationArray.findIndex(val => val >= maxSafeConcentrationsForTiers[bestTierIndex]),
-    [concentrationArray, feeTierIndex, bestTierIndex]
+        ? concentrationArray.findIndex(val => val >= maxSafeConcentration)
+        : concentrationArray.findIndex(val => val >= maxSafeConcentration),
+    [concentrationArray, maxSafeConcentration, bestTierIndex]
   )
 
   const unsafePercent = useMemo(
@@ -492,7 +490,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 const { leftRange, rightRange } = calculateConcentrationRange(
                   tickSpacing,
                   concentrationArray[value],
-                  minimumRangesForTiers[feeTierIndex],
+                  minimumRange,
                   midPrice.index,
                   isXtoY
                 )
