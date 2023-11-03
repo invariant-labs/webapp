@@ -14,6 +14,7 @@ storiesOf('newUi/swap', module)
         handleClose={() => {}}
         anchorEl={null}
         defaultSlippage={'1'}
+        initialSlippage='2'
       />
     </div>
   ))

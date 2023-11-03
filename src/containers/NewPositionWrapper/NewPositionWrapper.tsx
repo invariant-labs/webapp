@@ -372,6 +372,12 @@ export const NewPositionWrapper = () => {
     }
   }, [poolsVolumeRanges, poolIndex, isXtoY, xDecimal, yDecimal])
 
+  const initialSlippage = localStorage.getItem('INVARIANT_NEW_POSITION_SLIPPAGE') ?? '1'
+
+  const onSlippageChange = (slippage: string) => {
+    localStorage.setItem('INVARIANT_NEW_POSITION_SLIPPAGE', slippage)
+  }
+
   return (
     <NewPosition
       tokens={tokens}
@@ -590,6 +596,8 @@ export const NewPositionWrapper = () => {
       }}
       plotVolumeRange={currentVolumeRange}
       currentFeeIndex={currentUiFeeIndex}
+      onSlippageChange={onSlippageChange}
+      initialSlippage={initialSlippage}
     />
   )
 }

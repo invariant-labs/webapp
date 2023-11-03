@@ -172,6 +172,8 @@ storiesOf('newUi/swap', module)
         ]}
         initialHideUnknownTokensValue={false}
         onHideUnknownTokensChange={() => {}}
+        onSlippageChange={() => {}}
+        initialSlippage={'1'}
       />
     </div>
   ))

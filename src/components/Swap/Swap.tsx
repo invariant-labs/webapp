@@ -92,6 +92,8 @@ export interface ISwap {
   tokenToPriceData?: CoingeckoPriceData
   priceFromLoading?: boolean
   priceToLoading?: boolean
+  onSlippageChange: (slippage: string) => void
+  initialSlippage: string
 }
 
 export const Swap: React.FC<ISwap> = ({
@@ -115,7 +117,9 @@ export const Swap: React.FC<ISwap> = ({
   tokenFromPriceData,
   tokenToPriceData,
   priceFromLoading,
-  priceToLoading
+  priceToLoading,
+  onSlippageChange,
+  initialSlippage
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -130,7 +134,7 @@ export const Swap: React.FC<ISwap> = ({
   const [amountTo, setAmountTo] = React.useState<string>('')
   const [swap, setSwap] = React.useState<boolean | null>(null)
   const [rotates, setRotates] = React.useState<number>(0)
-  const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
+  const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [throttle, setThrottle] = React.useState<boolean>(false)
   const [settings, setSettings] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
@@ -394,6 +398,7 @@ export const Swap: React.FC<ISwap> = ({
   }
   const setSlippage = (slippage: string): void => {
     setSlippTolerance(slippage)
+    onSlippageChange(slippage)
   }
 
   const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -453,6 +458,7 @@ export const Swap: React.FC<ISwap> = ({
             handleClose={handleCloseSettings}
             anchorEl={anchorEl}
             defaultSlippage={'1'}
+            initialSlippage={initialSlippage}
           />
         </Grid>
       </Grid>
