@@ -135,6 +135,8 @@ storiesOf('position/newPosition', module)
           onHideUnknownTokensChange={() => {}}
           reloadHandler={() => {}}
           currentFeeIndex={feeIndex}
+          onSlippageChange={() => {}}
+          initialSlippage={'1'}
         />
       </div>
     )
@@ -219,6 +221,8 @@ storiesOf('position/newPosition', module)
           onHideUnknownTokensChange={() => {}}
           reloadHandler={() => {}}
           currentFeeIndex={feeIndex}
+          onSlippageChange={() => {}}
+          initialSlippage={'1'}
         />
       </div>
     )

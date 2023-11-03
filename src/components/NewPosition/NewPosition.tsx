@@ -95,6 +95,8 @@ export interface INewPosition {
     max: number
   }
   currentFeeIndex: number
+  onSlippageChange: (slippage: string) => void
+  initialSlippage: string
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -137,7 +139,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   hasTicksError,
   reloadHandler,
   plotVolumeRange,
-  currentFeeIndex
+  currentFeeIndex,
+  onSlippageChange,
+  initialSlippage
 }) => {
   const classes = useStyles()
 
@@ -153,7 +157,7 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [tokenBDeposit, setTokenBDeposit] = useState<string>('')
 
   const [settings, setSettings] = React.useState<boolean>(false)
-  const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
+  const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
@@ -300,6 +304,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   const setSlippage = (slippage: string): void => {
     setSlippTolerance(slippage)
+    onSlippageChange(slippage)
   }
 
   return (
@@ -338,6 +343,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         handleClose={handleCloseSettings}
         anchorEl={anchorEl}
         defaultSlippage={'1'}
+        initialSlippage={initialSlippage}
         infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
         headerText='Position Transaction Settings'
       />

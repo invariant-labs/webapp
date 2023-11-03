@@ -8,6 +8,7 @@ interface Props {
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
   defaultSlippage: string
+  initialSlippage: string
   infoText?: string
   headerText?: string
 }
@@ -18,11 +19,12 @@ const Slippage: React.FC<Props> = ({
   handleClose,
   anchorEl,
   defaultSlippage,
+  initialSlippage,
   infoText,
   headerText
 }) => {
   const classes = useStyles()
-  const [slippTolerance, setSlippTolerance] = React.useState<string>('1')
+  const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const inputRef = React.useRef<HTMLInputElement>(null)
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<
