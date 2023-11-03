@@ -136,7 +136,7 @@ storiesOf('position/newPosition', module)
           reloadHandler={() => {}}
           currentFeeIndex={feeIndex}
           onSlippageChange={() => {}}
-        initialSlippage={'1'}
+          initialSlippage={'1'}
         />
       </div>
     )
@@ -222,7 +222,7 @@ storiesOf('position/newPosition', module)
           reloadHandler={() => {}}
           currentFeeIndex={feeIndex}
           onSlippageChange={() => {}}
-        initialSlippage={'1'}
+          initialSlippage={'1'}
         />
       </div>
     )
