@@ -230,7 +230,7 @@ const mainnetBestTiersCreator = () => {
         bestTiers.push({
           tokenX,
           tokenY,
-          bestTierIndex: 2
+          bestTierIndex: 4
         })
       }
     }
@@ -244,7 +244,7 @@ const mainnetBestTiersCreator = () => {
       bestTiers.push({
         tokenX,
         tokenY,
-        bestTierIndex: 3
+        bestTierIndex: 4
       })
     }
   }
@@ -262,22 +262,22 @@ export const bestTiers: Record<NetworkType, BestTier[]> = {
     {
       tokenX: USDC_DEV.address,
       tokenY: WSOL_DEV.address,
-      bestTierIndex: 3
+      bestTierIndex: 4
     },
     {
       tokenX: USDC_DEV.address,
       tokenY: BTC_DEV.address,
-      bestTierIndex: 3
+      bestTierIndex: 4
     },
     {
       tokenX: RENDOGE_DEV.address,
       tokenY: BTC_DEV.address,
-      bestTierIndex: 5
+      bestTierIndex: 6
     },
     {
       tokenX: USDC_DEV.address,
       tokenY: RENDOGE_DEV.address,
-      bestTierIndex: 5
+      bestTierIndex: 6
     }
   ],
   Testnet: [],
@@ -364,24 +364,5 @@ export const ALL_FEE_TIERS_DATA = FEE_TIERS.map((tier, index) => ({
   maxSafeConcentration: maxSafeConcentrationsForTiers[index],
   primaryIndex: index
 }))
-
-export const getNewPositionUIFeeTiers = (
-  tokenAAddress: PublicKey | null,
-  tokenBAddress: PublicKey | null
-) => {
-  const USDC = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
-  const USDT = new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB')
-
-  if (
-    tokenAAddress !== null &&
-    tokenBAddress !== null &&
-    ((tokenAAddress.equals(USDC) && tokenBAddress.equals(USDT)) ||
-      (tokenAAddress.equals(USDT) && tokenBAddress.equals(USDC)))
-  ) {
-    return ALL_FEE_TIERS_DATA
-  }
-
-  return ALL_FEE_TIERS_DATA.slice(1)
-}
 
 export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, NetworkType }
