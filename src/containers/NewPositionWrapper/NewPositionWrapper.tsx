@@ -418,7 +418,8 @@ export const NewPositionWrapper = () => {
             dispatch(
               poolsActions.getPoolData(
                 new Pair(tokens[tokenA].assetAddress, tokens[tokenB].assetAddress, {
-                  fee: ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee
+                  fee: ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee,
+                  tickSpacing: ALL_FEE_TIERS_DATA[feeTierIndex].tier.tickSpacing
                 })
               )
             )
