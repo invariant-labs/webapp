@@ -230,7 +230,7 @@ const mainnetBestTiersCreator = () => {
         bestTiers.push({
           tokenX,
           tokenY,
-          bestTierIndex: 4
+          bestTierIndex: 2
         })
       }
     }
@@ -244,7 +244,7 @@ const mainnetBestTiersCreator = () => {
       bestTiers.push({
         tokenX,
         tokenY,
-        bestTierIndex: 4
+        bestTierIndex: 2
       })
     }
   }
@@ -262,22 +262,22 @@ export const bestTiers: Record<NetworkType, BestTier[]> = {
     {
       tokenX: USDC_DEV.address,
       tokenY: WSOL_DEV.address,
-      bestTierIndex: 4
+      bestTierIndex: 2
     },
     {
       tokenX: USDC_DEV.address,
       tokenY: BTC_DEV.address,
-      bestTierIndex: 4
+      bestTierIndex: 2
     },
     {
       tokenX: RENDOGE_DEV.address,
       tokenY: BTC_DEV.address,
-      bestTierIndex: 6
+      bestTierIndex: 4
     },
     {
       tokenX: USDC_DEV.address,
       tokenY: RENDOGE_DEV.address,
-      bestTierIndex: 6
+      bestTierIndex: 4
     }
   ],
   Testnet: [],
@@ -352,13 +352,13 @@ export const WSOL_POSITION_INIT_LAMPORTS = new BN(6164600)
 
 export const WSOL_POOL_INIT_LAMPORTS = new BN(106000961)
 
-export const minimumRangesForTiers = [20, 20, 20, 20, 74, 80, 64, 28, 28, 28, 28]
+export const minimumRangesForTiers = [20, 20, 74, 80, 64, 28, 28, 28, 28]
 
 export const maxSafeConcentrationsForTiers = [
-  400.52, 400.52, 400.52, 400.52, 41.49, 21.47, 8.13, 5.45, 5.45, 5.45, 5.45
+  400.52, 400.52, 41.49, 21.47, 8.13, 5.45, 5.45, 5.45, 5.45
 ]
 
-export const ALL_FEE_TIERS_DATA = FEE_TIERS.map((tier, index) => ({
+export const ALL_FEE_TIERS_DATA = FEE_TIERS.slice(2).map((tier, index) => ({
   tier,
   minimumRange: minimumRangesForTiers[index],
   maxSafeConcentration: maxSafeConcentrationsForTiers[index],
