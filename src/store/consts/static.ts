@@ -230,7 +230,7 @@ const mainnetBestTiersCreator = () => {
         bestTiers.push({
           tokenX,
           tokenY,
-          bestTierIndex: 4
+          bestTierIndex: 2
         })
       }
     }
@@ -244,7 +244,7 @@ const mainnetBestTiersCreator = () => {
       bestTiers.push({
         tokenX,
         tokenY,
-        bestTierIndex: 4
+        bestTierIndex: 2
       })
     }
   }
@@ -262,22 +262,22 @@ export const bestTiers: Record<NetworkType, BestTier[]> = {
     {
       tokenX: USDC_DEV.address,
       tokenY: WSOL_DEV.address,
-      bestTierIndex: 4
+      bestTierIndex: 2
     },
     {
       tokenX: USDC_DEV.address,
       tokenY: BTC_DEV.address,
-      bestTierIndex: 4
+      bestTierIndex: 2
     },
     {
       tokenX: RENDOGE_DEV.address,
       tokenY: BTC_DEV.address,
-      bestTierIndex: 6
+      bestTierIndex: 4
     },
     {
       tokenX: USDC_DEV.address,
       tokenY: RENDOGE_DEV.address,
-      bestTierIndex: 6
+      bestTierIndex: 4
     }
   ],
   Testnet: [],
@@ -363,6 +363,6 @@ export const ALL_FEE_TIERS_DATA = FEE_TIERS.map((tier, index) => ({
   minimumRange: minimumRangesForTiers[index],
   maxSafeConcentration: maxSafeConcentrationsForTiers[index],
   primaryIndex: index
-}))
+})).slice(2) // remove slice if all tiers should be visible
 
 export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, NetworkType }
