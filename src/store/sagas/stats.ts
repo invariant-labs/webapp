@@ -80,7 +80,7 @@ export function* getStats(): Generator {
     }
 
     const tokensDataObject: Record<string, TokenStatsData> = {}
-    const poolsData: PoolStatsData[] = []
+    let poolsData: PoolStatsData[] = []
 
     const volumeForTimestamps: Record<string, number> = {}
     const liquidityForTimestamps: Record<string, number> = {}
@@ -203,6 +203,10 @@ export function* getStats(): Generator {
         value
       }))
       .sort((a, b) => a.timestamp - b.timestamp)
+
+    const tiersToOmit = [0.001, 0.003]
+
+    poolsData = poolsData.filter(pool => !tiersToOmit.includes(pool.fee))
 
     volume24.value = volumePlot.length ? volumePlot[volumePlot.length - 1].value : 0
     tvl24.value = liquidityPlot.length ? liquidityPlot[liquidityPlot.length - 1].value : 0
