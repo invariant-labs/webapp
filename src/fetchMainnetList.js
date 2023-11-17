@@ -2,7 +2,7 @@ const fs = require('fs')
 const axios = require('axios')
 
 const run = async () => {
-  const tokensObject = await (await axios.default.get('https://cache.jup.ag/tokens')).data
+  const tokensObject = await (await axios.default.get('https://token.jup.ag/all')).data
   fs.writeFileSync(
     './src/store/consts/tokenLists/mainnet.json',
     JSON.stringify(
