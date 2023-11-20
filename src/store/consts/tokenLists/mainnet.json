@@ -45,6 +45,15 @@
     "tags": ["unknown"]
   },
   {
+    "address": "6F8tWzpfhWBJSciFqyDqZ4YmHNuVSYwyHwZp8i5kMaZV",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "APES ON SOLANA",
+    "symbol": "$AOS",
+    "logoURI": "https://bafkreiefo5czhfrdc5bzviwsfc3bgdeonwxwntglzhrfgshgyk7m7dbqfi.ipfs.nftstorage.link",
+    "tags": ["unknown"]
+  },
+  {
     "address": "6gPiweu5DYdaDnqQF5XQPwiCK3PrzFkJsDuFMFEkCYJ8",
     "chainId": 101,
     "decimals": 9,
@@ -214,6 +223,14 @@
     "name": "Degen Lives Matter",
     "symbol": "$DLM",
     "logoURI": "https://arweave.net/znrOowknAzT0nazUzG1V2gqK7wE9zAc_joGgtyA6du4?ext=png",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "4yoWgpCg5KciCPuA6LxDFpJHa53Jjj6XU9RLFJCgdakL",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "DRIVE",
+    "symbol": "$DRIVE",
     "tags": ["unknown"]
   },
   {
@@ -441,17 +458,8 @@
     "name": "Myro",
     "symbol": "$MYRO",
     "logoURI": "https://imageupload.io/ib/JgSESETVx7v60lk_1698972645.png",
-    "tags": ["unknown"],
+    "tags": ["community"],
     "extensions": { "coingeckoId": "myro" }
-  },
-  {
-    "address": "DUBtvJFZyHHWh6cj3XxodsKCjCvhdc4QGokcL9vGBfwC",
-    "chainId": 101,
-    "decimals": 9,
-    "name": "Myro",
-    "symbol": "$MYRO",
-    "logoURI": "https://arweave.net/kkxEli59OYCUy84WmEC_tRwI3xP8qJ4YUvl4ftSm1nM",
-    "tags": ["unknown"]
   },
   {
     "address": "9WFgUgQ2mo5e6YaC4fzi9nweGgzhFf4W7omu1RBHSk6F",
@@ -470,6 +478,15 @@
     "symbol": "$NEON",
     "logoURI": "https://arweave.net/VPS4BrOgXT4rg-mwGfCLqXL8vtbII0ianMBsw_L2CeE",
     "tags": ["old-registry", "solana-fm"]
+  },
+  {
+    "address": "ABA3XjWCQnC697p9GfoFvzUa6C5eZEk1zkjLNRQAEcJn",
+    "chainId": 101,
+    "decimals": 5,
+    "name": "NERD",
+    "symbol": "$NERD",
+    "logoURI": "https://imgur.com/xwaftRW",
+    "tags": ["unknown"]
   },
   {
     "address": "BUcHPYu5HhVTdRnmvXfvPeGVGKuRN4a7rp52o6Q2cKzU",
@@ -634,6 +651,15 @@
     "tags": ["unknown"]
   },
   {
+    "address": "5ejpasXeT1QYkAEVof2RwytyCXqXq8BhVVLV4RPGcQh1",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "SUSPECT",
+    "symbol": "$SUS",
+    "logoURI": "https://arweave.net/dtppKNK2WQuu-U4XiC3FXpzeUAgKT0T2zDibApiDpGs",
+    "tags": ["unknown"]
+  },
+  {
     "address": "5SwxhEunuUUcWe4ojybdDwky6dpLxAehNmF4AA71STNh",
     "chainId": 101,
     "decimals": 5,
@@ -736,6 +762,15 @@
     "tags": ["old-registry", "solana-fm"]
   },
   {
+    "address": "GQ55CPbqMgrcty5Qu98nmHexaeDncfB1gngqqdQmVN9k",
+    "chainId": 101,
+    "decimals": 5,
+    "name": "ZONK ! Jeet Get ZONk",
+    "symbol": "$ZONK",
+    "logoURI": "https://zonkcoin.com/logo.jpeg",
+    "tags": ["unknown"]
+  },
+  {
     "address": "5n1q1fkvWDhPvZHyTaDyyS5abff1zn6Re41WcG7DLfxz",
     "chainId": 101,
     "decimals": 1,
@@ -808,6 +843,15 @@
     "name": "69",
     "symbol": "69",
     "logoURI": "https://arweave.net/65KmKOKNfqz60q--FKC5924Jizd5ywWMYUAs9O_VpYI",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "995cwLbGzEjgoRs25ens3cHwBFRCarozPCg85ET7VbDG",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "Juice Wrld",
+    "symbol": "999",
+    "logoURI": "https://arweave.net/MZ4Fe6mv4VuS_zPO3sPGwMd3i-Xz9IFY--JVMboNNfo",
     "tags": ["unknown"]
   },
   {
@@ -1152,6 +1196,15 @@
     "tags": ["unknown"]
   },
   {
+    "address": "6Wn4HAjfh4Lz24uESMJ6B1TJ2cWFtDPnSsEjMrDowZ4t",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "ALTMAN",
+    "symbol": "ALTM",
+    "logoURI": "https://arweave.net/wyzi6DB4mYVonmXMgMIaA57UYHg24k1NehQB53hrSgI",
+    "tags": ["unknown"]
+  },
+  {
     "address": "SoLW9muuNQmEAoBws7CWfYQnXRXMVEG12cQhy6LE2Zf",
     "chainId": 101,
     "decimals": 9,
@@ -1178,6 +1231,15 @@
     "name": "SoylanaManletCaptainZ",
     "symbol": "ANSEM",
     "logoURI": "https://arweave.net/tJXiOAU5ZXS7PZbWGKrg5nNRCh5OUlr07iIY4FRWK0o",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "CM5dhjjGzuuttWQyDwy3nNATaFGxbuEdbcbQt6otvKQK",
+    "chainId": 101,
+    "decimals": 2,
+    "name": "ApeThisOnSOL",
+    "symbol": "APED",
+    "logoURI": "https://arweave.net/OxoVyPY4UhD45uBNQB8PHgY0uK0JgEHBxblZ6qnFElw",
     "tags": ["unknown"]
   },
   {
@@ -1264,6 +1326,15 @@
     "name": "ASTRORIBBIT",
     "symbol": "ARBT",
     "logoURI": "https://bafkreifd5vl3hpunou2cifmmebhwvewzj4ubcsoh6kd32v4i6cdolxoqq4.ipfs.nftstorage.link",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "4HgYp2eiokKcqe5AVAxpwCsfUE5pwCNTiPXvpSxYnDi6",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "Argon UBI",
+    "symbol": "ARGON",
+    "logoURI": "https://arweave.net/n56fakv1-QfpHhfHyAjzw1pGNkUqgxckqhCF0R7a07I",
     "tags": ["unknown"]
   },
   {
@@ -1600,15 +1671,6 @@
     "tags": ["unknown"]
   },
   {
-    "address": "9vVwvrq4A2xFfnWmj5yoWFFDpotanhg4S1hBFeVkv9ci",
-    "chainId": 101,
-    "decimals": 6,
-    "name": "BearsONSolana",
-    "symbol": "BEAR",
-    "logoURI": "https://arweave.net/KW1voXBZ8BxPllOdc4cH9XnpkaNU8PZOUVHz-rAgoMc",
-    "tags": ["unknown"]
-  },
-  {
     "address": "BoJqMCWU2Hpa6MtqYqdKKExx1dqUYd5wSfqrG8DUTc1J",
     "chainId": 101,
     "decimals": 9,
@@ -1624,6 +1686,15 @@
     "name": "Mad Bears Club",
     "symbol": "BEAR",
     "logoURI": "https://assets.coingecko.com/coins/images/31504/small/main.jpeg?1693358459",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "9vVwvrq4A2xFfnWmj5yoWFFDpotanhg4S1hBFeVkv9ci",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "BearsONSolana",
+    "symbol": "BEAR",
+    "logoURI": "https://arweave.net/KW1voXBZ8BxPllOdc4cH9XnpkaNU8PZOUVHz-rAgoMc",
     "tags": ["unknown"]
   },
   {
@@ -1644,6 +1715,15 @@
     "logoURI": "https://i.imgur.com/nd9AVZ4.jpeg",
     "tags": ["community", "token-2022"],
     "extensions": { "coingeckoId": "bonkearn" }
+  },
+  {
+    "address": "7CRt5rTsPYiWv7rMiEZnbfTCr6j2dZQP5cJ8bFyHfUnT",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "BigHoss",
+    "symbol": "BHoss",
+    "logoURI": "https://arweave.net/XiZghNdBabVJ1EWjL691_rvQ8V5PljKjl0vk3F7ljGk",
+    "tags": ["unknown"]
   },
   {
     "address": "4onzDs1X6ubktirorHB8iYbve3K4bBtkGpYehqzGm9So",
@@ -1709,6 +1789,15 @@
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/NFTUkR4u7wKxy9QLaX2TGvd9oZSWoMo4jqSJqdMb7Nk/logo.png",
     "tags": ["old-registry", "solana-fm"],
     "extensions": { "coingeckoId": "blockasset" }
+  },
+  {
+    "address": "8XQCvxypkr4ijod7CcdAqpHawTaYPA8LzGEDiSX3d2yu",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "Solana Bloomer",
+    "symbol": "BLOOM",
+    "logoURI": "https://arweave.net/pkWasniaZwWgJYtzaLhC_g0cJRCk_RQ3IyMTPQtcDyE",
+    "tags": ["unknown"]
   },
   {
     "address": "BLZEEuZUBVqFhj8adcCFPJvPVCiCyVmh3hkJMrU8KuJA",
@@ -1818,18 +1907,8 @@
     "decimals": 9,
     "name": "BōKU Labz",
     "symbol": "BOKU",
-    "logoURI": "https://bafybeid35kcydo75arckv6nwbpxofohxp6jbx3sq6qy4fbmv3idmiqayeq.ipfs.nftstorage.link/",
-    "tags": ["unknown"]
-  },
-  {
-    "address": "CN7qFa5iYkHz99PTctvT4xXUHnxwjQ5MHxCuTJtPN5uS",
-    "chainId": 101,
-    "decimals": 9,
-    "name": "Boryoku Dragonz",
-    "symbol": "BOKU",
-    "logoURI": "https://boryoku-dragonz-public.s3.us-east-2.amazonaws.com/BokuBrew.png",
-    "tags": ["old-registry"],
-    "extensions": { "coingeckoId": "boku" }
+    "logoURI": "https://bafybeid35kcydo75arckv6nwbpxofohxp6jbx3sq6qy4fbmv3idmiqayeq.ipfs.nftstorage.link",
+    "tags": ["old-registry"]
   },
   {
     "address": "CYWdWTybatDQLnwGWk1iC4gt5MjPnaueYAaHh3JSZnW4",
@@ -1880,6 +1959,24 @@
     "extensions": { "coingeckoId": "ghostkids" }
   },
   {
+    "address": "CwcuMbWa5xhVJYXvHtEmDLzkh5NoFr2DSwsBsZggzBKd",
+    "chainId": 101,
+    "decimals": 5,
+    "name": "ethboomersol",
+    "symbol": "boomer",
+    "logoURI": "https://nftstorage.link/ipfs/bafybeibor6ejiq4wnitjcdopedrqaj6u647fwwefkerxs3ymw7gm24yvzi",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "3hWAhsV5n88XxBDhFoHM9nYxr5MNj8FVKCWBdMqVLeYM",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "ethboomersol",
+    "symbol": "boomer",
+    "logoURI": "https://arweave.net/UXpivT_84gH5R7ZOLUMLy0ybRBpXqDrpwkwqM9k5Qg8",
+    "tags": ["unknown"]
+  },
+  {
     "address": "CCRJohp9bfQdhZCvCe7MzUQuXMJkKBi4XCjUq3A2YqN8",
     "chainId": 101,
     "decimals": 10,
@@ -1919,6 +2016,15 @@
     "extensions": { "coingeckoId": "cyborg-apes" }
   },
   {
+    "address": "92TXSoaLwWp3vC5qBhJ5hywC6UrSH9SuevtH7MstTzme",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "BORKI",
+    "symbol": "BORKI",
+    "logoURI": "https://i.ibb.co/HVgM9WV/logo2.png",
+    "tags": ["unknown"]
+  },
+  {
     "address": "AkhdZGVbJXPuQZ53u2LrimCjkRP6ZyxG1SoM85T98eE1",
     "chainId": 101,
     "decimals": 8,
@@ -1938,6 +2044,15 @@
     "tags": ["old-registry", "solana-fm"]
   },
   {
+    "address": "EXUNCiQts81FX7FTFAJLumV3rSFcYvWqL9d9KtHjQRCq",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "Bozo",
+    "symbol": "BOZO",
+    "logoURI": "https://arweave.net/rxidcsed-7BNm2tv5_6lpaRNOSAGd5ot6Cy9T7Xs37g",
+    "tags": ["unknown"]
+  },
+  {
     "address": "FbMfoxL6SnQtaNzgKcWzyRuL2Lfj2vV9xoQS4uqcXq4E",
     "chainId": 101,
     "decimals": 7,
@@ -1947,12 +2062,21 @@
     "tags": ["unknown"]
   },
   {
-    "address": "EXUNCiQts81FX7FTFAJLumV3rSFcYvWqL9d9KtHjQRCq",
+    "address": "EjChnoTPcQ9DxKZkBM7g1M4DBF4J2Mx75CYTPoDZyYXB",
     "chainId": 101,
     "decimals": 6,
-    "name": "Bozo",
-    "symbol": "BOZO",
-    "logoURI": "https://arweave.net/rxidcsed-7BNm2tv5_6lpaRNOSAGd5ot6Cy9T7Xs37g",
+    "name": "$BRIAN",
+    "symbol": "BRIAN",
+    "logoURI": "https://arweave.net/9AyuNmkGtVocg1rfIViX-w_AX8lMpGnnO7GGdEWQfB8",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "4U6PbxByhoPAAYfQcGik54U4CqgXoyB2bb5SX4SiACRt",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "BRO",
+    "symbol": "BRO",
+    "logoURI": "https://arweave.net/xPJXcHWSehknJWENEZMfk6IZlYP2dZIs9Ivb0axeAXI",
     "tags": ["unknown"]
   },
   {
@@ -2212,17 +2336,8 @@
     "decimals": 6,
     "name": "Crypto Bet",
     "symbol": "CBET",
-    "logoURI": "https://arweave.net/0zPzroylcnHYNZej6k2sYbn_1dwXZxXxSvF9Nkwj8ak",
+    "logoURI": "https://arweave.net/kdT2K2qkMnQlDtZE562zqvVXO5iphf4k32O70X-jGxM",
     "tags": ["unknown"]
-  },
-  {
-    "address": "96X7yAEcXdDg5gKa1Nye2H9JJHTzGiQ6S13QXiSxHNXK",
-    "chainId": 101,
-    "decimals": 6,
-    "name": "$CBET2.0",
-    "symbol": "CBET2.0",
-    "logoURI": "https://bafkreifcukcss22yt2zoq4llzkn6xobiyta6k4cqyo65ztl76auqx6io6e.ipfs.nftstorage.link",
-    "tags": ["unknown", "token-2022"]
   },
   {
     "address": "E9bjYSAqabYAd2Zaev4qAMVNAiX7Z2Dp4Sn1JgsTn2b6",
@@ -2363,7 +2478,7 @@
     "name": "CHILI",
     "symbol": "CHILI",
     "logoURI": "https://iili.io/H5O87JS.png",
-    "tags": ["community"],
+    "tags": ["community", "solana-fm"],
     "extensions": { "coingeckoId": "chili" }
   },
   {
@@ -2418,15 +2533,6 @@
     "symbol": "CHP",
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DHVUoxNqv3D7EgktBxUsxFF2Wx83hVDmD2wBBpUaw3jn/logo.png",
     "tags": ["old-registry", "solana-fm"]
-  },
-  {
-    "address": "ybWZxSctWf7e8UKKdbfw7WLQodD7unxPn7ffTwkQN6t",
-    "chainId": 101,
-    "decimals": 6,
-    "name": "CHUCK",
-    "symbol": "CHUCK",
-    "logoURI": "https://arweave.net/GXZhCqg6VlPC_ie3mfp3mfaCCby6pM4bHtE4uEubZfI",
-    "tags": ["unknown"]
   },
   {
     "address": "8s9FCz99Wcr3dHpiauFRi6bLXzshXfcGTfgQE7UEopVx",
@@ -2522,6 +2628,15 @@
     "extensions": { "coingeckoId": "coban" }
   },
   {
+    "address": "7xtfruQuH6tGVRuPhEQd8nQcezTS6aoJdoKZpRh3foWK",
+    "chainId": 101,
+    "decimals": 2,
+    "name": "BillionaireCobie",
+    "symbol": "COBIE",
+    "logoURI": "https://arweave.net/JqwBveZWe_9yP2Nus-Cl9YWnm2qZavTG0d7s99yWLQk",
+    "tags": ["unknown"]
+  },
+  {
     "address": "74DSHnK1qqr4z1pXjLjPAVi8XFngZ635jEVpdkJtnizQ",
     "chainId": 101,
     "decimals": 5,
@@ -2550,6 +2665,15 @@
     "tags": ["unknown"]
   },
   {
+    "address": "C1wYGpmgYqRa3WXXjYeQaTmQoX3JWpivKWHKbJLDvCxt",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "COKE",
+    "symbol": "COKE",
+    "logoURI": "https://bafkreig6fcpv7qeo52n6zjdk457spd6dot35do5ig35ojmvqx7slmobweu.ipfs.nftstorage.link",
+    "tags": ["unknown", "token-2022"]
+  },
+  {
     "address": "EzL6LLmv4vgfF7irkjG7ZxM92bTJ9f6nFopDXJTow7zj",
     "chainId": 101,
     "decimals": 9,
@@ -2559,6 +2683,15 @@
     "tags": ["old-registry", "solana-fm"]
   },
   {
+    "address": "CcWwwzUDTbrG6PWNZ25qn5fAsmUGQ2iDaYYA1SyEUy6S",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "GreenHotCook",
+    "symbol": "COOK",
+    "logoURI": "https://arweave.net/bYqin2hfKOb-_M9zInsPyX2qV8EG9u8gSrtkBcJaYZw",
+    "tags": ["unknown"]
+  },
+  {
     "address": "CooKrc8eaU4E6AxBtNqA14V5HWCtxqeY7tZ7k2rS6QGP",
     "chainId": 101,
     "decimals": 2,
@@ -2566,16 +2699,6 @@
     "symbol": "COOKIE",
     "logoURI": "https://arweave.net/4DdoYF-4nIIgXG9r-4VItt8457uxF9kKvgQ5R7um3cE?ext=png",
     "tags": ["unknown"]
-  },
-  {
-    "address": "o1Mw5Y3n68o8TakZFuGKLZMGjm72qv4JeoZvGiCLEvK",
-    "chainId": 101,
-    "decimals": 2,
-    "name": "Cope",
-    "symbol": "Cope",
-    "logoURI": "https://shdw-drive.genesysgo.net/HNTiV9QS4UDrcxpucyKRGTKQTqKGLif61GwM6tpd5R5V/image.png",
-    "tags": ["community", "solana-fm"],
-    "extensions": { "coingeckoId": "cope-token" }
   },
   {
     "address": "8HGyAAB1yoM1ttS7pXjHMa3dukTFGQggnFFH3hJZgzQh",
@@ -2588,6 +2711,16 @@
     "extensions": { "coingeckoId": "cope" }
   },
   {
+    "address": "o1Mw5Y3n68o8TakZFuGKLZMGjm72qv4JeoZvGiCLEvK",
+    "chainId": 101,
+    "decimals": 2,
+    "name": "Cope",
+    "symbol": "Cope",
+    "logoURI": "https://shdw-drive.genesysgo.net/HNTiV9QS4UDrcxpucyKRGTKQTqKGLif61GwM6tpd5R5V/image.png",
+    "tags": ["community", "solana-fm"],
+    "extensions": { "coingeckoId": "cope-token" }
+  },
+  {
     "address": "2maDvG9nXGVstjdnsCZoSsNtjoda1SsZTLrHBVRgLR5F",
     "chainId": 101,
     "decimals": 9,
@@ -2595,6 +2728,15 @@
     "symbol": "CORE",
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/2x4fH7kWNgSLpBjCuFBKKKiNHMcJb6fHs8ahQZUWJj1p/Core.png",
     "tags": ["old-registry", "solana-fm"]
+  },
+  {
+    "address": "6DSqVXg9WLTWgz6LACqxN757QdHe1sCqkUfojWmxWtok",
+    "chainId": 101,
+    "decimals": 7,
+    "name": "Solanacorn",
+    "symbol": "CORN",
+    "logoURI": "https://arweave.net/wM3Dv9T7DrQPmJdRW79bfPRgweo1frxBT2SVRnlbQzI",
+    "tags": ["unknown"]
   },
   {
     "address": "CRNsRpHGSEHuBt7vupjTk8NUFmtipn9mN5BwyLnxwhzc",
@@ -3007,6 +3149,15 @@
     "tags": ["old-registry", "solana-fm"]
   },
   {
+    "address": "FKmZaVbTeayqTE5Y1Ma4bWcz8bFMKExVM3skgysAbSux",
+    "chainId": 101,
+    "decimals": 3,
+    "name": "Deer",
+    "symbol": "DEER",
+    "logoURI": "https://arweave.net/rRU_gZRXSTd3sfbTyK4atx3m2ff9t3ZVc9RNZBEJx3M",
+    "tags": ["unknown"]
+  },
+  {
     "address": "F1w67RBi8ttBJe2KVxvjXoy3K2Nxe1kwtur3MU8HRU9M",
     "chainId": 101,
     "decimals": 6,
@@ -3073,23 +3224,13 @@
     "extensions": { "coingeckoId": "defi-land" }
   },
   {
-    "address": "AskBQDSmM77mB6cBPCVaHb9xB5ULt1jkdtxeKEeojhL6",
-    "chainId": 101,
-    "decimals": 6,
-    "name": "DFronkk",
-    "symbol": "Dfronkk",
-    "logoURI": "https://bafkreidnnymwcvrvcspkaoji5tfqeg63nhh3v633cl3lpvs7yag3syu5ni.ipfs.nftstorage.link",
-    "tags": ["unknown", "token-2022"]
-  },
-  {
     "address": "AAXng5czWLNtTXHdWEn9Ef7kXMXEaraHj2JQKo7ZoLux",
     "chainId": 101,
     "decimals": 9,
     "name": "DarleyGo Essence",
     "symbol": "DGE",
     "logoURI": "https://raw.githubusercontent.com/DarleyGo/token-list/main/assets/mainnet/AAXng5czWLNtTXHdWEn9Ef7kXMXEaraHj2JQKo7ZoLux/icon.png",
-    "tags": ["old-registry", "solana-fm"],
-    "extensions": { "coingeckoId": "darleygo-essence" }
+    "tags": ["old-registry", "solana-fm"]
   },
   {
     "address": "E6UU5M1z4CvSAAF99d9wRoXsasWMEXsvHrz3JQRXtm2X",
@@ -3109,6 +3250,24 @@
     "symbol": "DGNA",
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/8iSagwHZNj4Hx4CMeoZwLLMVbWt4mUT6qk42TxiHkRtn/DGNA.png",
     "tags": ["old-registry"]
+  },
+  {
+    "address": "7RkUj8CuKgUUM1Zqjb5yrABPhBNNHDytBnJVDhVUCwRv",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "DeadHoursMooner",
+    "symbol": "DHM",
+    "logoURI": "https://cdn.discordapp.com/attachments/1173795278499885168/1176051392100704356/image.png?ex=656d7635&is=655b0135&hm=959380c117924e7e8e41411d9247eaa1935bac6dad0e661671816655dda9dd66&",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "DSWLmsSHg63YxvC8FtHfAA8G2AeYJshC5ciCcy3oNMsD",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "HUSKY",
+    "symbol": "DHUSK",
+    "logoURI": "https://arweave.net/Jy6B8Ypb9mwux6mgYaPqULXPNEOZRCnHxoOV-r1-f98",
+    "tags": ["unknown"]
   },
   {
     "address": "7zZdjLmZWpHhCJTzLZjY7KiHhuWsptSyGmMgrG8Uca9V",
@@ -3247,6 +3406,16 @@
     "name": "DONK",
     "symbol": "DONK",
     "logoURI": "https://arweave.net/yu68b5mpxYjDqL990DEL9b_ri9E8TX-o27E1PS9W6II",
+    "tags": ["unknown"],
+    "extensions": { "coingeckoId": "donk" }
+  },
+  {
+    "address": "836dxqBoN9NRJhP2fGVeozsDECFvWNbpAiCKmhc5Hymg",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "DOOMR",
+    "symbol": "DOOMR",
+    "logoURI": "https://media.discordapp.net/attachments/1120333485916303390/1176042132738416731/gQeiUP9v_400x400.png?ex=656d6d96&is=655af896&hm=d3606d39e57dd51c664b4a68aaf1cfb0a22594da3b781af3fd123d8cdf632d40&=",
     "tags": ["unknown"]
   },
   {
@@ -3257,6 +3426,15 @@
     "symbol": "DORKL",
     "logoURI": "https://bafkreicufnhs5evfdochjopzpjaeuxoh5s6uhyl54dlfeb2cm4bqjfi4dq.ipfs.nftstorage.link",
     "tags": ["community"]
+  },
+  {
+    "address": "4RkeBgCD2KdJi9B3fw3B1qi7sBKcSEwkjw3ndpxGtU88",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "•••",
+    "symbol": "DOT",
+    "logoURI": "https://media.discordapp.net/attachments/1120333485916303390/1176083884040015882/dot.png?ex=656d9478&is=655b1f78&hm=3eaf975b5291a122e9d7f679d819102e6aac75af3ab4132f1e0fd685e3c1036e&=",
+    "tags": ["unknown"]
   },
   {
     "address": "DCDDNEzhxEmNFHHQEFfgFU3saZiu1NpMGe1EeYQB1jyY",
@@ -3347,7 +3525,7 @@
     "name": "Drippies Floor Index",
     "symbol": "DRIPSPLIT",
     "logoURI": "https://creator-hub-prod.s3.us-east-2.amazonaws.com/drippies_pfp_1648415706808.gif",
-    "tags": ["old-registry"]
+    "tags": ["old-registry", "solana-fm"]
   },
   {
     "address": "AW3rwqBncagec4Neun9hMQrs144jDJEFSufUno6ithij",
@@ -3942,6 +4120,15 @@
     "extensions": { "coingeckoId": "flowmatic" }
   },
   {
+    "address": "Cx9oLynYgC3RrgXzin7U417hNY9D6YB1eMGw4ZMbWJgw",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "FOMO",
+    "symbol": "FOMO",
+    "logoURI": "https://arweave.net/DPVMg1fFjs1NnVJOzfbrueYoB2smv6KiP4vahLyhk1c",
+    "tags": ["unknown"]
+  },
+  {
     "address": "EcK2evV2cDECVsmvY2FxU51eu3fp4w48zrZxuA92AAAN",
     "chainId": 101,
     "decimals": 9,
@@ -4025,6 +4212,24 @@
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/FriCEbw1V99GwrJRXPnSQ6su2TabHabNxiZ3VNsVFPPN/logo.png",
     "tags": ["old-registry", "solana-fm"],
     "extensions": { "coingeckoId": "soltato-fries" }
+  },
+  {
+    "address": "9ifQSnte6ayTstdNoeUwQrwAwbvijmULFfbYWmw2wjyX",
+    "chainId": 101,
+    "decimals": 5,
+    "name": "Frinkcoin",
+    "symbol": "Frink",
+    "logoURI": "https://arweave.net/RPjmIaO8NrMyohpVBIg_lQlQXtkl8b8IxjbLVH520hk",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "CVrTxrvnpk6P3MVEjSGecj7K8bd1NiU3CUA7uNHebqpj",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "FRINK BACK",
+    "symbol": "FRINK",
+    "logoURI": "https://nftstorage.link/ipfs/bafybeidvfv7436pzahvy7ramv4dqqpvcyz5gs6f2jaavzgznxrukvcybma",
+    "tags": ["unknown"]
   },
   {
     "address": "ErGB9xa24Szxbk1M28u2Tx8rKPqzL6BroNkkzk5rG4zj",
@@ -4167,30 +4372,12 @@
     "extensions": { "coingeckoId": "gari-network" }
   },
   {
-    "address": "GjsAT7J2UZyhKSdhXoUsKQsGBBcVpVY78yCZCVknABFZ",
-    "chainId": 101,
-    "decimals": 6,
-    "name": "SECxy GARY",
-    "symbol": "GARY",
-    "logoURI": "https://bafybeiayibmhrkgfkncngic4plwp6jkwpaiy75hzubpcyruitabisgvleq.ipfs.nftstorage.link",
-    "tags": ["unknown"]
-  },
-  {
     "address": "5B4A9DantbD6eq8hdjqRrVJmHErU3PwUhRKAfGyj2gL1",
     "chainId": 101,
     "decimals": 6,
     "name": "gaSOLine",
     "symbol": "GAS",
     "logoURI": "https://bafybeickiqtgluqhrn7nz6rxf7lbpe56lsnlfs6mikmie2mcjwqqudnnxy.ipfs.nftstorage.link",
-    "tags": ["unknown"]
-  },
-  {
-    "address": "48nUgUZeNm2CzQ7nXbEE4VB8FzM7ZvQHJPP4dNpSiHrh",
-    "chainId": 101,
-    "decimals": 5,
-    "name": "GeckoSpirit",
-    "symbol": "GECK",
-    "logoURI": "https://cdn.discordapp.com/attachments/1029137636083904562/1173242722799337523/20231112_134628.png?ex=65633e6e&is=6550c96e&hm=7ce17171cd8eed33e6eb68f9a68250edfe6392b9b4ce3724e7c8e9847d922977&",
     "tags": ["unknown"]
   },
   {
@@ -4230,6 +4417,15 @@
     "logoURI": "https://www.arweave.net/XVrUkXF5ZCC40IZNTqjs9PegUDYyqEqEd8LyfST-8Wk?ext=png",
     "tags": ["unknown"],
     "extensions": { "coingeckoId": "genz-token" }
+  },
+  {
+    "address": "8W6483kh2AXT79d4uKAagnnLxTZYKPn62sRV2wCuxjD2",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "GLOOMER",
+    "symbol": "GLOOM",
+    "logoURI": "https://media.discordapp.net/attachments/1120333485916303390/1176100860875509820/gloomer.png?ex=656da448&is=655b2f48&hm=89a0748272c2e3f9ba08f0f4fec4ae8257cba9de48420197ba697654bc653886&=",
+    "tags": ["unknown"]
   },
   {
     "address": "GHAhTrgtYW7jRkojQQWPGkMbmG5jGK25QBu6FSj5tvZ5",
@@ -4795,7 +4991,7 @@
     "name": "HottoShotto",
     "symbol": "HOTTO",
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Bqd2ujCTEzpKzfjb1FHL7FKrdM6n1rZSnRecJK57EoKz/logo.png",
-    "tags": ["old-registry"]
+    "tags": ["old-registry", "solana-fm"]
   },
   {
     "address": "4tCbQksFvpVQ9RWXAFkL3XuEpXSMobsqJ8ZxErbQgHWc",
@@ -4898,6 +5094,15 @@
     "symbol": "ICHIGO",
     "logoURI": "https://ichigo.network/logos/logo.png",
     "tags": ["old-registry"]
+  },
+  {
+    "address": "6KPLogYZmMifDEWqyvt535CguWE6eELvuhUChVurtRt3",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "Ice Cream So Good",
+    "symbol": "ICSG",
+    "logoURI": "https://bafkreib4miblobvccebyj2ugyyn37dsffvv5laznnhuiq7qbcu7myerhqq.ipfs.nftstorage.link",
+    "tags": ["unknown", "token-2022"]
   },
   {
     "address": "idoLztG5ZGMVEjjoQWjeSu2eVkVsp3YnrFZKf7dNi4j",
@@ -5009,7 +5214,7 @@
     "name": "Portals Ivory Index",
     "symbol": "IVRY",
     "logoURI": "https://dl.airtable.com/.attachmentThumbnails/102af36cc30fec0b05ebb45406f20971/126d0320",
-    "tags": ["old-registry"]
+    "tags": ["old-registry", "solana-fm"]
   },
   {
     "address": "DVSxJbjFsQgwPbJwrfEuf5QQMKCvBFUt9GeFCsvGPf28",
@@ -5252,6 +5457,24 @@
     "tags": ["unknown"]
   },
   {
+    "address": "KEKsP4AMk9oYEK8RR9E84f83eV7N1fN5yi2HXH1BaVx",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "KEK",
+    "symbol": "KEK",
+    "logoURI": "https://arweave.net/JeYNV0dy5ZLVvDeU9UDa-rdGV8HslYJ5TPHwODjZDhI",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "HHgLTPxP2AKdrWRu1PSN8Zdn3fn4G22i2iRaXuVeApvc",
+    "chainId": 101,
+    "decimals": 5,
+    "name": "BÂLKÂN DWÂRF",
+    "symbol": "kekec",
+    "logoURI": "https://nftstorage.link/ipfs/bafybeibigcuxhemycwwn3ewjpx3ji7jfzfejvd7nuspxbglel6qaffbhqq",
+    "tags": ["unknown"]
+  },
+  {
     "address": "keKWpGFoCcTJBAYQocwuCEVLf4nugbYiXmJtex5RG9Q",
     "chainId": 101,
     "decimals": 9,
@@ -5315,7 +5538,7 @@
     "name": "KITTI TOKEN",
     "symbol": "KITTI",
     "logoURI": "https://arweave.net/I1RzcnSel2oghDkMBE-lZBV9b6AuyDJc0Ywo6QmDlSQ",
-    "tags": ["community"],
+    "tags": ["community", "solana-fm"],
     "extensions": { "coingeckoId": "kitti" }
   },
   {
@@ -5470,6 +5693,15 @@
     "tags": ["unknown"]
   },
   {
+    "address": "EmK8DSgRGifpPcFKMtBDAcjyjmMVQyyJ9SPZGNLBGVv6",
+    "chainId": 101,
+    "decimals": 2,
+    "name": "LamboOnSOL",
+    "symbol": "LAMBO",
+    "logoURI": "https://arweave.net/PcKnkW8rBRaNJdRWxSsbU4hFZno1O3QDdwbGaooroTU",
+    "tags": ["unknown"]
+  },
+  {
     "address": "Lrxqnh6ZHKbGy3dcrCED43nsoLkM1LTzU2jRfWe8qUC",
     "chainId": 101,
     "decimals": 6,
@@ -5478,6 +5710,15 @@
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Lrxqnh6ZHKbGy3dcrCED43nsoLkM1LTzU2jRfWe8qUC/logo.jpg",
     "tags": ["old-registry", "solana-fm"],
     "extensions": { "coingeckoId": "larix" }
+  },
+  {
+    "address": "LaZygHhV6d3RrASbNbyM56RaMY83ZKoaErTNoqfh4zp",
+    "chainId": 101,
+    "decimals": 8,
+    "name": "247Lazy",
+    "symbol": "LAZY",
+    "logoURI": "https://arweave.net/9R9rrRvM78S0vapNwMqXROE4FDP-AIAqG1uOedxKcvY",
+    "tags": ["unknown"]
   },
   {
     "address": "HZRCwxP2Vq9PCpPXooayhJ2bxTpo5xfpQrwB1svh332p",
@@ -5506,6 +5747,24 @@
     "name": "Charvas",
     "symbol": "LEMON",
     "logoURI": "https://arweave.net/fRXHZKAEaIVRgHSXyWOH8Mn33Hl5N6K3kduyeNOjVog",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "2B364cYtdr5CoWwXpRJsyE71d8vW3Tqf4os211GepC9D",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "Let's F$%#ing Go!",
+    "symbol": "LFG",
+    "logoURI": "https://arweave.net/YsLRUoYwMke83rrYAWFToacavqrB1FkHNGxSR4UCJ-E",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "DkP5zS3FA3saPQzdcmwMJwo1ns9sSY49tfx5Awzw9C6m",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "LP funded by GF",
+    "symbol": "LFG",
+    "logoURI": "https://arweave.net/GdELqFNkqb-nOcSoWaZ8MDFM6q0mdq6HsK3ssmynplA",
     "tags": ["unknown"]
   },
   {
@@ -5670,6 +5929,15 @@
     "tags": ["unknown"]
   },
   {
+    "address": "279oZ4QRwpYywavyiqj4apmW3dR6x7NAheLVWXbJqbeW",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "Lucky Strike",
+    "symbol": "LUCKY",
+    "logoURI": "https://arweave.net/V9vWgGClXJJ3qNpA_6kxv0MlYFqNiJKiGcmoz45pXOY",
+    "tags": ["unknown"]
+  },
+  {
     "address": "4bTrLG3C6JVcZwahuorf7rt2uQ1ccWureqYuy7cJ9AF3",
     "chainId": 101,
     "decimals": 6,
@@ -5694,15 +5962,6 @@
     "name": "LUV",
     "symbol": "LUV",
     "logoURI": "https://arweave.net/cBpjk1muOY3PfUeXlIBhxqYIL97cGE5CZ9hjwwzhruk",
-    "tags": ["unknown"]
-  },
-  {
-    "address": "4aoHVxgB8s8CwRJfQaMmqWxzwRsqsdKmyjoWMGXBLy4F",
-    "chainId": 101,
-    "decimals": 9,
-    "name": "MADBEAR",
-    "symbol": "MADBEAR",
-    "logoURI": "https://arweave.net/yVX3ai9Ln2Aq1Ys9on_CUJW6pZDh1EMRAS_knNXUz7M",
     "tags": ["unknown"]
   },
   {
@@ -5825,6 +6084,15 @@
     "name": "Mayonnaise",
     "symbol": "MAYO",
     "tags": ["unknown"]
+  },
+  {
+    "address": "Es1U3s5KpEPn7w7nsNg7tgyJMB53SyddCN3vbvi8NzEc",
+    "chainId": 101,
+    "decimals": 5,
+    "name": "MegaBucks",
+    "symbol": "MB",
+    "logoURI": "https://bafybeih6smwz3fmkydm2oajbs6gsxs46jm6pfkoilv53bh43552utwvabi.ipfs.nftstorage.link",
+    "tags": ["unknown", "token-2022"]
   },
   {
     "address": "Ee1pKgTQmP5xjYQs76HmRM2c2YkqEdc9tk5mQbiGFigT",
@@ -6078,6 +6346,15 @@
     "tags": ["unknown"]
   },
   {
+    "address": "9qCyGXrJTdnUao67TvB1ohoZUWJJR2Y9HWB7PDXtvH4s",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "MileiCoinSolanaMoon69",
+    "symbol": "MILEI",
+    "logoURI": "https://arweave.net/615XIlRQIE7c9LEegngvYypeltzy-tw5-ZHGxkErhPQ",
+    "tags": ["unknown"]
+  },
+  {
     "address": "MLKmUCaj1dpBY881aFsrBwR9RUMoKic8SWT3u1q5Nkj",
     "chainId": 101,
     "decimals": 9,
@@ -6161,6 +6438,15 @@
     "tags": ["old-registry", "solana-fm"]
   },
   {
+    "address": "DVcQgAGUiS3wX7a9Z7geC3hasQUBppYshxVDh6bMAgVP",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "MemeMemoryMania",
+    "symbol": "MMM",
+    "logoURI": "https://arweave.net/uzIs33Ee-WaZQy54a1H-sx-nYpzNc1KrBEOitjxDZ9U",
+    "tags": ["unknown"]
+  },
+  {
     "address": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
     "chainId": 101,
     "decimals": 9,
@@ -6228,6 +6514,24 @@
     "tags": ["unknown"]
   },
   {
+    "address": "FKELCYfsGFBzf7Y4FWe13EJHh6ZpKh3bRwajgqbGZHBy",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "MONK on Solana",
+    "symbol": "MONK",
+    "logoURI": "https://arweave.net/giuZOoGX-i8fzq-9rii9uI6ibDURNTUpGRcwOIlWTfk",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "5LpAwtRtb6DDraTf8dsn8zf4vSjo1Crv9nvHZjxZFDcC",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "MONKE",
+    "symbol": "MONKE",
+    "logoURI": "https://bafybeibta54ifgevz6r5txskiprivri7r3d33mjdya2pkdlfar66beo3hu.ipfs.nftstorage.link",
+    "tags": ["unknown"]
+  },
+  {
     "address": "FmoKY2ERGmE9NzrYphAJcqH5BPRy2Hs4VomRfu8Qgt7Y",
     "chainId": 101,
     "decimals": 2,
@@ -6264,6 +6568,15 @@
     "tags": ["community", "token-2022"]
   },
   {
+    "address": "6DSVpxbA4LCCidrGLxFSxfgTWrt1Tk58yL3L7qDMbTPG",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "Up Up & Away",
+    "symbol": "MOON",
+    "logoURI": "https://arweave.net/EmaAUYEHa7dnD4JsehO4mP__WtDOa6gTKxbY1ZHOUeo",
+    "tags": ["unknown"]
+  },
+  {
     "address": "F14Cp89oAXMrNnaC4mKMNKHPWw2p2R4DRFAZEdJhUBkD",
     "chainId": 101,
     "decimals": 6,
@@ -6271,6 +6584,15 @@
     "symbol": "MOONBURN",
     "logoURI": "https://raw.githubusercontent.com/Joblo197/Crypto/main/Shroom%20Logo.png",
     "tags": ["old-registry", "solana-fm"]
+  },
+  {
+    "address": "6DbNvLruvpc6b2R1ANswqKsxbMtbWiuWisDCgwSRaWyd",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "MOONK",
+    "symbol": "MOONK",
+    "logoURI": "https://media.discordapp.net/attachments/1120333485916303390/1176006602143313971/moonk.png?ex=656d4c7f&is=655ad77f&hm=fea23516acbf592597073d12a903cbb09ce4764a15ed2a42898a0ef94a9ef27b&=",
+    "tags": ["unknown"]
   },
   {
     "address": "9rHeHLjDdaSufE7oDJEYu7MVFEgcMv1fmw77Mbcr6xaS",
@@ -6363,15 +6685,6 @@
     "symbol": "N2H4",
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4q5UBXJxE91BZKX548qhU8i5QBWvZdXzS3RZwfTgLQda/logo.png",
     "tags": ["old-registry", "solana-fm"]
-  },
-  {
-    "address": "7QnaJ9KsT5vEPm1JeiXwNF6CB7naPs3ZYWusm5XUFmXc",
-    "chainId": 101,
-    "decimals": 6,
-    "name": "Nacho",
-    "symbol": "NACHO",
-    "logoURI": "https://shdw-drive.genesysgo.net/HD4CzsQfevtvTiypLVm6Ap7RnhDLMgrGmEyKQe6KxVrY/logo.jpg",
-    "tags": ["unknown"]
   },
   {
     "address": "7TVamnae5TmHRfNBftoTpZXWuQEbZTXehAx1zhLandwB",
@@ -6486,6 +6799,15 @@
     "extensions": { "coingeckoId": "nest-arcade" }
   },
   {
+    "address": "HFVC2N342YuedNam2QNKjgW7ovMqm3G9YEueeDLwvPzx",
+    "chainId": 101,
+    "decimals": 3,
+    "name": "AllMyNiggasUseSolana",
+    "symbol": "NIGGA",
+    "logoURI": "https://arweave.net/JazpAaTG6OTgbqsxCVcKcBYVEviKjHOqGYOthY4pWT8",
+    "tags": ["unknown"]
+  },
+  {
     "address": "G9axULsEyz6mTvQkPdoNvTrPAea8EKj8j9akdC3yQKSx",
     "chainId": 101,
     "decimals": 6,
@@ -6493,16 +6815,6 @@
     "symbol": "NINA",
     "logoURI": "https://bafkreic6ujqpgtkvqvnt2sns62dkiotf52l3wwy74jmrgp34fht36ynzdy.ipfs.nftstorage.link",
     "tags": ["unknown"]
-  },
-  {
-    "address": "DFrJxDoLMYt6bNYeNe8Wrjzj2UPUSLZLEMMYBLuTKcTk",
-    "chainId": 101,
-    "decimals": 8,
-    "name": "NINJA TURTLES",
-    "symbol": "NINJA",
-    "logoURI": "https://arweave.net/2J8mJ6N6GCg7BWTHtcPZMEZsF2iuTYBRI9jdtnHS77o",
-    "tags": ["community"],
-    "extensions": { "coingeckoId": "ninja-turtles" }
   },
   {
     "address": "FgX1WD9WzMU3yLwXaFSarPfkgzjLb2DZCqmkx9ExpuvJ",
@@ -6513,6 +6825,16 @@
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/FgX1WD9WzMU3yLwXaFSarPfkgzjLb2DZCqmkx9ExpuvJ/logo.png",
     "tags": ["old-registry", "solana-fm"],
     "extensions": { "coingeckoId": "ninja-protocol" }
+  },
+  {
+    "address": "DFrJxDoLMYt6bNYeNe8Wrjzj2UPUSLZLEMMYBLuTKcTk",
+    "chainId": 101,
+    "decimals": 8,
+    "name": "NINJA TURTLES",
+    "symbol": "NINJA",
+    "logoURI": "https://arweave.net/2J8mJ6N6GCg7BWTHtcPZMEZsF2iuTYBRI9jdtnHS77o",
+    "tags": ["community"],
+    "extensions": { "coingeckoId": "ninja-turtles" }
   },
   {
     "address": "NRVwhjBQiUPYtfDT5zRBVJajzFQHaBUNtC7SNVvqRFa",
@@ -6604,6 +6926,15 @@
     "symbol": "NOPOS",
     "logoURI": "https://ipfs.io/ipfs/bafybeie46k2eopungsuoeh3gzo6pqyuqxqha6essxuvbpx3cgl75qamby4",
     "tags": ["unknown"]
+  },
+  {
+    "address": "BMBK3eXbzJ7AdDuKXVspn8tatnpdt5Wfpo2Jic4k72Qt",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "norug",
+    "symbol": "norug",
+    "logoURI": "https://bafybeibjpzhynn53twhmc4ttknzsvupuyo3frm6ldibuj6evoxbjfry3um.ipfs.nftstorage.link",
+    "tags": ["unknown", "token-2022"]
   },
   {
     "address": "nosXBVoaCTtYdLvKY6Csb4AC8JCdQKKAaWYtx2ZMoo7",
@@ -7117,6 +7448,15 @@
     "tags": ["old-registry", "solana-fm"]
   },
   {
+    "address": "AnUywo2PAYqc5SLpsa8nKHnm5aR4xhGwmkHuSB247m5s",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "PIZZA DEGENS",
+    "symbol": "PIZZA",
+    "logoURI": "https://media.discordapp.net/attachments/1169283418660536490/1175049353690370118/image.png",
+    "tags": ["unknown"]
+  },
+  {
     "address": "Dm6qzoHyXCQvfa3Pvb9WfWPWJgitRx3NDskSkXr5fg18",
     "chainId": 101,
     "decimals": 9,
@@ -7183,6 +7523,24 @@
     "extensions": { "coingeckoId": "star-atlas-dao" }
   },
   {
+    "address": "FHpG2ELNw89Cp6uE4wHszrd3XVtujZdoauH7mCjY3vjd",
+    "chainId": 101,
+    "decimals": 2,
+    "name": "POMNI",
+    "symbol": "POMNI",
+    "logoURI": "https://arweave.net/6hpPx7fjwQ7-tCJFsphcpY84hXN-J_JvnRNifTSEtTo",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "HeqCcMjmuV5s25J49YiJyT6bD5qWLkP88YPajBySniaV",
+    "chainId": 101,
+    "decimals": 5,
+    "name": "Ponk",
+    "symbol": "PONK",
+    "logoURI": "https://bafkreieyllpkega3ytsmq5gdwx2p44roka5pnlclw2an4xivqmbq7prmge.ipfs.nftstorage.link/",
+    "tags": ["unknown"]
+  },
+  {
     "address": "2mqi8iLJf9WaVRHd7nhRkqvCafxfb3Us7wshaJR73ykS",
     "chainId": 101,
     "decimals": 5,
@@ -7190,6 +7548,15 @@
     "symbol": "POOR",
     "logoURI": "https://shdw-drive.genesysgo.net/AZgm3Vdo1QLf8bKUjyearDC9NygpRHmmtzPaBNQcF4jt/IMG_1640.JPG",
     "tags": ["community"]
+  },
+  {
+    "address": "Bxjt93zPzEyNsbh77m2CuLHKXUkQpt3mVdES31SPdhTL",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "IMPOORDEV",
+    "symbol": "POOR",
+    "logoURI": "https://img.fotofolio.xyz/?url=https%3A%2F%2Fbafkreiggjysigun3yincepkrfnrcnwzzparhskghyt3alevyjnboen2m2y.ipfs.w3s.link%2F",
+    "tags": ["unknown"]
   },
   {
     "address": "G127VVAy2ip3VRLXY8pgMUoFpEWTzGekzByvnoYHen2W",
@@ -7309,7 +7676,7 @@
     "name": "SolanaPrime",
     "symbol": "PRIME",
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/PRiME7gDoiG1vGr95a3CRMv9xHY7UGjd4JKvfSkmQu2/logo.png",
-    "tags": ["old-registry"],
+    "tags": ["old-registry", "solana-fm"],
     "extensions": { "coingeckoId": "solanaprime" }
   },
   {
@@ -7473,6 +7840,16 @@
     "tags": ["old-registry", "solana-fm"]
   },
   {
+    "address": "HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "Pyth Network",
+    "symbol": "PYTH",
+    "logoURI": "https://pyth.network/token.svg",
+    "tags": ["community"],
+    "extensions": { "coingeckoId": "pyth-network" }
+  },
+  {
     "address": "4iGtA8VSTFNFjXdQZiSkMkM2sS4x21tC9y5DAU9WxoQd",
     "chainId": 101,
     "decimals": 5,
@@ -7498,6 +7875,15 @@
     "symbol": "QDOT",
     "logoURI": "https://www.arweave.net/qyhe_8Lmd82_NWRwxdfPX0fm_CItn18KXV1Skp-x6N0?ext=jpg",
     "tags": ["old-registry"]
+  },
+  {
+    "address": "9MMzhQmXXWe9qg67gBDenjmUasMzX5VjqsGkh1itqap5",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "QUACKYCOIN",
+    "symbol": "QUACK",
+    "logoURI": "https://i.postimg.cc/GmGzvSfk/DUCK.png",
+    "tags": ["unknown"]
   },
   {
     "address": "6frkvZf72wiz3uqRWhBqLftNU4PS6XXYCoNrW9P4CFdK",
@@ -7536,6 +7922,15 @@
     "tags": ["old-registry", "solana-fm"]
   },
   {
+    "address": "6iLCSyrcuq6pBuB9TbYoTqjfvysimETReCz1d238iSdy",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "ReiAIDog",
+    "symbol": "R",
+    "logoURI": "https://pbs.twimg.com/profile_images/1725997437356064768/FPgDRj9E_400x400.jpg",
+    "tags": ["unknown"]
+  },
+  {
     "address": "AAmGoPDFLG6bE82BgZWjVi8k95tj9Tf3vUN7WvtUm2BU",
     "chainId": 101,
     "decimals": 6,
@@ -7554,6 +7949,15 @@
     "logoURI": "https://raw.githubusercontent.com/NFTBrickLayer/zillaz-assets/main/RAD-logo.png",
     "tags": ["old-registry", "solana-fm"],
     "extensions": { "coingeckoId": "rad" }
+  },
+  {
+    "address": "ByVHSMQ45XmDesBsbbbq28H1MJyn3qJ6p23jxHnNT8s7",
+    "chainId": 101,
+    "decimals": 8,
+    "name": "Raj Gokal",
+    "symbol": "RAJ",
+    "logoURI": "https://arweave.net/3rUbPVZSiBgGqO0JXZxv85rCdmjg6UbAYMrEXEu1EaI",
+    "tags": ["unknown"]
   },
   {
     "address": "4pZz5Crxbt6783Pu1HdFuV9Rj7QnW9sqrVUY7tgXdhb1",
@@ -7600,16 +8004,8 @@
     "name": "RIBBIT",
     "symbol": "RBT",
     "logoURI": "https://bafkreia3t3g3ecvvq7i5mgivvelysuhn5s6hzrulxmbkwgj5tgpsjtufge.ipfs.nftstorage.link",
-    "tags": ["unknown"]
-  },
-  {
-    "address": "7rsXFkEJFhQ9o6vRYqrcwiejnQEzaVJhwmB1PnVWP822",
-    "chainId": 101,
-    "decimals": 5,
-    "name": "RECYCLE",
-    "symbol": "RCYC",
-    "logoURI": "https://arweave.net/Tk_I3jx_fnH7EPEgEhlXKYwH__uDeMVhGpwSFPlEtdY",
-    "tags": ["unknown"]
+    "tags": ["unknown"],
+    "extensions": { "coingeckoId": "ribbit-2" }
   },
   {
     "address": "AD27ov5fVU2XzwsbvnFvb1JpCBaCB5dRXrczV9CqSVGb",
@@ -7655,7 +8051,7 @@
     "name": "REJECT Token",
     "symbol": "REJECT",
     "logoURI": "https://arweave.net/ijxRvhTwJRWTanYUI-j2DwPzOkpqRbB3y-qSuuvQqhQ",
-    "tags": ["community"]
+    "tags": ["community", "solana-fm"]
   },
   {
     "address": "CDJWUqTcYTVAKXAVXoQZFes5JUFc7owSeq7eMQcDSbo5",
@@ -7731,6 +8127,15 @@
     "tags": ["old-registry", "solana-fm"]
   },
   {
+    "address": "31W37tGGeY27FyNbAxTeS5eCTUaNAhrWPXN47U3K8M3S",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "RICH",
+    "symbol": "RICH",
+    "logoURI": "https://arweave.net/A3mPZfe5LZa3-WiPkcSNxz5Wq1IbmKZQR1mn6ovyvGs",
+    "tags": ["unknown"]
+  },
+  {
     "address": "H5tJ9DbATFu7fZ5ikuAW15yub1AU6tVxv1exjjdgbzaF",
     "chainId": 101,
     "decimals": 5,
@@ -7769,6 +8174,15 @@
     "extensions": { "coingeckoId": "rollbit-coin" }
   },
   {
+    "address": "36geG8MFe1wRW3bk2v2uX7suv8uFsGLgAiWXjx2BjzMZ",
+    "chainId": 101,
+    "decimals": 2,
+    "name": "RLB 2.0 ",
+    "symbol": "RLB2",
+    "logoURI": "https://arweave.net/TpTh5tuyupN798R8dpDR_br1GPgg_X6Cf-7dbPQLzIA",
+    "tags": ["unknown"]
+  },
+  {
     "address": "9m8E1yLHaG1B2TFSNeWahsitQh5yQRnrbyw756HFAcEa",
     "chainId": 101,
     "decimals": 9,
@@ -7787,6 +8201,24 @@
     "tags": ["unknown"]
   },
   {
+    "address": "DhTNFBp4NjaxWqf6LwG57GrJQZfXrso1qK9FcMZt9sv7",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "Rocky",
+    "symbol": "ROCKY",
+    "logoURI": "https://imageupload.io/ib/B1wtisSaYlCUmwy_1700434086.jpg",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "EJHfEEv14vx4qpvWwdtKbkxSi6BB9ucT9PPq2ymUZ27c",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "Rocky",
+    "symbol": "ROCKY",
+    "logoURI": "https://imageupload.io/ib/B1wtisSaYlCUmwy_1700434086.jpg",
+    "tags": ["unknown"]
+  },
+  {
     "address": "RoLLn5qBN4juQ1D2KFpJyAcC7Deo3cYotXi4qDooHLU",
     "chainId": 101,
     "decimals": 6,
@@ -7794,6 +8226,15 @@
     "symbol": "ROL",
     "logoURI": "https://assets.blockstars.gg/static/ROL.svg",
     "tags": ["old-registry", "solana-fm"]
+  },
+  {
+    "address": "GMGPLmjKTmHtQSbR2EermFNn8ugLpkSByobmRphJvf41",
+    "chainId": 101,
+    "decimals": 2,
+    "name": "OneSolEqualsOneRolex",
+    "symbol": "ROLEX",
+    "logoURI": "https://arweave.net/mWTrdJgS3uey9wkQD2N6sGatn73tth_YYVFL0MdRPQ0",
+    "tags": ["unknown"]
   },
   {
     "address": "76aYNHbDfHemxSS7vmh6eJGfjodK8m7srCxiYCrKxzY1",
@@ -8021,21 +8462,21 @@
     "tags": ["unknown"]
   },
   {
-    "address": "9swmeY7ttp6bRWfccJcNmCYAp5pHSnUXuSkydvdRjVVD",
-    "chainId": 101,
-    "decimals": 1,
-    "name": "Solgoodman",
-    "symbol": "SAUL",
-    "logoURI": "https://arweave.net/4Ap7ip-W8U9Y_C05h_ek8ULkR-lu93ffC-MTsmSEay8",
-    "tags": ["unknown"]
-  },
-  {
     "address": "AGuKEu6bwZRwJDJkiuENSmhr8BSbb4667jJyNTRrCLuc",
     "chainId": 101,
     "decimals": 6,
     "name": "BETTERBUYSAULANA",
     "symbol": "SAUL",
     "logoURI": "https://pbs.twimg.com/profile_images/1723752412920340480/1pt11vFK_400x400.jpg",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "9swmeY7ttp6bRWfccJcNmCYAp5pHSnUXuSkydvdRjVVD",
+    "chainId": 101,
+    "decimals": 1,
+    "name": "Solgoodman",
+    "symbol": "SAUL",
+    "logoURI": "https://arweave.net/4Ap7ip-W8U9Y_C05h_ek8ULkR-lu93ffC-MTsmSEay8",
     "tags": ["unknown"]
   },
   {
@@ -8090,6 +8531,15 @@
     "name": "SolanaBearz",
     "symbol": "SBEAR",
     "logoURI": "https://pbs.twimg.com/profile_images/1611342136385110017/2UtV1HLK_400x400.jpg",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "7ep1LbP1gjFsinRBX2LnS7KD7n2fLwo9KYqTiEVzKXmf",
+    "chainId": 101,
+    "decimals": 1,
+    "name": "SHIB FET.AI",
+    "symbol": "SBFET",
+    "logoURI": "https://arweave.net/8mrMoPwCPmP7TMWZ-JPxPE0PdhWpRJAQBdurOUuDjDo",
     "tags": ["unknown"]
   },
   {
@@ -8593,6 +9043,15 @@
     "tags": ["unknown"]
   },
   {
+    "address": "EcupEjUuQV5TJAvBwpxUPi4nrDz9gnXXFfiuZM7HvMHQ",
+    "chainId": 101,
+    "decimals": 2,
+    "name": "Sir Meme A Lot",
+    "symbol": "SMAL",
+    "logoURI": "https://arweave.net/F4WeJqAZmbbWJ-y3FU07F3W4XIVMOF7SAZerJ4V3GsI",
+    "tags": ["unknown"]
+  },
+  {
     "address": "sMEANebFMnd9uTYpyntGzBmTmzEukRFwCjEcnXT2E8z",
     "chainId": 101,
     "decimals": 6,
@@ -8608,6 +9067,15 @@
     "name": "Smoken",
     "symbol": "SMK",
     "logoURI": "https://arweave.net/DTSFa34E-kCK_5isJGtVhG-ITkVwstxSOWnCC4PAR8o",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "EYeVUbcvkuYaeJnUa5xGzUB8QnGrcFFR7z1JAhTugu4t",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "Lucky",
+    "symbol": "SMOKE",
+    "logoURI": "https://media.discordapp.net/attachments/1120333485916303390/1175178025457954846/ZufLjpmy_400x400dfdf.png?ex=656a48d3&is=6557d3d3&hm=95982a28e02188b117522aa2e6876dc6e124fcc2d582319919864623b7d79c60&=",
     "tags": ["unknown"]
   },
   {
@@ -8837,6 +9305,15 @@
     "tags": ["unknown"]
   },
   {
+    "address": "6BgJLHodo1HAGs4TTqNhb58dXqvZXeYQRLAVAtoAJXcg",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "SOLENA",
+    "symbol": "SOLE",
+    "logoURI": "https://solpng.bio/token/6BgJLHodo1HAGs4TTqNhb58dXqvZXeYQRLAVAtoAJXcg/sole.jpg",
+    "tags": ["unknown"]
+  },
+  {
     "address": "HJvvqYcjvma3qQ29FuZUzc9JBrsGWJB6rDiWttKQDC5J",
     "chainId": 101,
     "decimals": 0,
@@ -9011,12 +9488,39 @@
     "tags": ["old-registry", "solana-fm"]
   },
   {
+    "address": "8vFoWYG3pvzuS4MEABKNfqtSPPd5Pbu2eAhcZLzWc11z",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "SolPocketBot",
+    "symbol": "SPBOT",
+    "logoURI": "https://arweave.net/k7zRaMSdVcCCrUFxbXmamEfMm2Za004QA0Xjw3Bkp1A",
+    "tags": ["unknown"]
+  },
+  {
     "address": "CmnhaQS9jgxyLQr4ezUk992P8wvvM1dWwYpjHG41pJn",
     "chainId": 101,
     "decimals": 9,
     "name": "SPEED",
     "symbol": "SPEED",
     "logoURI": "https://arweave.net/EZOHsBQsFUHftrmm9d5n37hMIAAbPSyOocE1g-ESIC0",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "6oPQSsnTRPYGYV5gtV6qS5eWbVYBQ4YRZ5hLsC3kCGBh",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "SquidPepeGame",
+    "symbol": "SPG",
+    "logoURI": "https://arweave.net/1eOKil3cHD-ZUqljrAAP2uBZPOidwJY1F5jo4jSYUy0",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "DT86TCst1FUDPioL47XVn52u1dg1hKP1umbh9Xp69siv",
+    "chainId": 101,
+    "decimals": 7,
+    "name": "Spirit Token",
+    "symbol": "SPIRIT",
+    "logoURI": "https://shdw-drive.genesysgo.net/8FSHMvpgVDLSJYSCLkmabRXXRbywX8WR5vrpqSaoq3u4/spiriticon.png",
     "tags": ["unknown"]
   },
   {
@@ -9036,6 +9540,15 @@
     "symbol": "SPORE",
     "logoURI": "https://bafkreidodmcqrprsgoelphtr5vyqintuqscwixqfh6ndaqurvp2mnnx2h4.ipfs.nftstorage.link/",
     "tags": ["community"]
+  },
+  {
+    "address": "3B8HKhLA3PDXUp5ZP2mcCG4QCRnvrjxHKeH4bZY1bBgf",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "Spot Inu",
+    "symbol": "SPOT",
+    "logoURI": "https://arweave.net/R1GPKyoQ6lhtR8LFxCr0bvA2PmXH-W6BhJhgLlU7NBk",
+    "tags": ["unknown"]
   },
   {
     "address": "5qmuivC7cDi4LLos33Wpu9LwezFaf27oX9fcvvwi9J6z",
@@ -9065,6 +9578,24 @@
     "tags": ["unknown"]
   },
   {
+    "address": "5xbecuZtT1j2xuhpwuJfyFUoiSqVpy3kdxeeYwH2DScr",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "SQUONK",
+    "symbol": "SQK",
+    "logoURI": "https://bafkreicdfnxfu36cdwyad5hpbcwyyj37j7ght3lurjhmxq3dpxlv4gfwoy.ipfs.nftstorage.link",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "6S5PSPvSTzSp84ZUEaYA4uXkzE91SWLhWkKmWNkdFMs8",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "SQUID GAME 2.0",
+    "symbol": "SQUID",
+    "logoURI": "https://arweave.net/6bvoeUl2LOGWMtRKHEl0Cx2SRHYy4PDq8taU7u3Z5-M",
+    "tags": ["unknown"]
+  },
+  {
     "address": "BtX7AfzEJLnU8KQR1AgHrhGH5s2AHUTbfjhUQP8BhPvi",
     "chainId": 101,
     "decimals": 10,
@@ -9083,6 +9614,15 @@
     "tags": ["old-registry"]
   },
   {
+    "address": "RLYv2ubRMDLcGG2UyvPmnPmkfuQTsMbg4Jtygc7dmnq",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "Rally (Legacy - deprecated)",
+    "symbol": "sRLY",
+    "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/RLYv2ubRMDLcGG2UyvPmnPmkfuQTsMbg4Jtygc7dmnq/logo.png",
+    "tags": ["old-registry", "solana-fm"]
+  },
+  {
     "address": "sRLY3migNrkC1HLgqotpvi66qGkdNedqPZ9TJpAQhyh",
     "chainId": 101,
     "decimals": 9,
@@ -9091,15 +9631,6 @@
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/RLYv2ubRMDLcGG2UyvPmnPmkfuQTsMbg4Jtygc7dmnq/logo.png",
     "tags": ["old-registry", "solana-fm"],
     "extensions": { "coingeckoId": "rally-solana" }
-  },
-  {
-    "address": "RLYv2ubRMDLcGG2UyvPmnPmkfuQTsMbg4Jtygc7dmnq",
-    "chainId": 101,
-    "decimals": 9,
-    "name": "Rally (Legacy - deprecated)",
-    "symbol": "sRLY",
-    "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/RLYv2ubRMDLcGG2UyvPmnPmkfuQTsMbg4Jtygc7dmnq/logo.png",
-    "tags": ["old-registry", "solana-fm"]
   },
   {
     "address": "SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt",
@@ -9219,7 +9750,8 @@
     "name": "SolTradingBot",
     "symbol": "STBOT",
     "logoURI": "https://arweave.net/xklXCIrbIr8dml54zjTyVinFNFwfbolIbGyl-yiCi4c",
-    "tags": ["unknown"]
+    "tags": ["unknown"],
+    "extensions": { "coingeckoId": "soltradingbot" }
   },
   {
     "address": "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT",
@@ -9267,6 +9799,15 @@
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9zoqdwEBKWEi9G5Ze8BSkdmppxGgVv1Kw4LuigDiNr9m/logo.png",
     "tags": ["old-registry", "solana-fm"],
     "extensions": { "coingeckoId": "solster" }
+  },
+  {
+    "address": "STRxBwixTZVGY2bGoRkLThTzfeZjx6zMGhTM3CjgZ3B",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "Strong",
+    "symbol": "STR",
+    "logoURI": "https://arweave.net/6mWNNDYKbn06pj9_2LxpMZA-g78F7XEPdnAdNm87vI4?ext=png",
+    "tags": ["unknown"]
   },
   {
     "address": "638rt93K64tuysnqH3n2wjwQ6W2gydiSyiFErczJnfj4",
@@ -9647,6 +10188,15 @@
     "tags": ["old-registry", "solana-fm"]
   },
   {
+    "address": "2Q7tQtGvHgBwsyDc9EkMaLyxLqkDi5VQEubU4PVd4n4s",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "TOAD",
+    "symbol": "TOAD",
+    "logoURI": "https://arweave.net/AgHW3Cl4ukaB2FYieW9-u92pTBJfltTCbp9TThf3ajc",
+    "tags": ["unknown"]
+  },
+  {
     "address": "AmgUMQeqW8H74trc8UkKjzZWtxBdpS496wh4GLy2mCpo",
     "chainId": 101,
     "decimals": 3,
@@ -9662,7 +10212,7 @@
     "name": "Anatoly Coin",
     "symbol": "TOLY",
     "logoURI": "https://shdw-drive.genesysgo.net/3YZtwGNZZisAUxKokcivJEwq2ag93APVXYqeyfaqb9Rq/toly-img.png",
-    "tags": ["unknown"]
+    "tags": ["community"]
   },
   {
     "address": "7qsEyiGtRkPwSr4mRmKrvtykGDKSnQnhFLcmVkYHEWDR",
@@ -9736,6 +10286,15 @@
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/FNFKRV3V8DtA3gVJN6UshMiLGYA8izxFwkNWmJbFjmRj/logo.svg",
     "tags": ["old-registry", "solana-fm"],
     "extensions": { "coingeckoId": "tabtrader" }
+  },
+  {
+    "address": "CckNrubzXkDfdN9bVitgfEax2dHGPNgL9qutirfWSD8m",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "TORTY ",
+    "symbol": "TTY",
+    "logoURI": "https://bafkreifusri3npp4imhuelg3kqemh2ngmck5zqm2g7sl6hohhyce7nl5xm.ipfs.nftstorage.link",
+    "tags": ["unknown"]
   },
   {
     "address": "A8MfPFscgppU3ftzAEfo5DGXnjCabCJvG5QX1U4HzVVU",
@@ -9812,15 +10371,6 @@
     "extensions": { "coingeckoId": "unclemine" }
   },
   {
-    "address": "CcTe61PTM2A9P2AW1sennPhvvviEHhNpqX1VJ2jccGCf",
-    "chainId": 101,
-    "decimals": 6,
-    "name": "UMF2",
-    "symbol": "UMF2",
-    "logoURI": "https://shdw-drive.genesysgo.net/9CNfZDgvCYByLu6hvGSf3JcP2LhyfmFHFi4DZvciQCZh/Group@8x.png",
-    "tags": ["unknown"]
-  },
-  {
     "address": "8FU95xFJhUUkyyCLU13HSzDLs7oC4QZdXQHL6SCeab36",
     "chainId": 101,
     "decimals": 8,
@@ -9869,13 +10419,40 @@
     "extensions": { "coingeckoId": "upfi-network" }
   },
   {
+    "address": "9CPWiCFL11DWr92dsTrzLf5cKz6zKhLz3xzRcYCQ3Nd2",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "UPTOBER",
+    "symbol": "UPT",
+    "logoURI": "https://bafkreihgs65erm5f45s5vzl7y6wdl3nuqqqpcvlith3sotor5jcctft2wu.ipfs.nftstorage.link",
+    "tags": ["community", "token-2022"]
+  },
+  {
+    "address": "CpKHRSnbph5w8DL96PREJnZg2Ng6nu5wz6y7KqK343Kw",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "Uranus",
+    "symbol": "URA",
+    "logoURI": "https://arweave.net/C0HwiBce6ApV001dov1bZaCI_fP-Wa6zmLjhVnVu7U4",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "FfD4yYBx2GLDU7beJr14hVrEy7kEokM9Qjx7G2AbaYSD",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "Purple Urkel",
+    "symbol": "URKEL",
+    "logoURI": "https://arweave.net/RmDv3gJhR2qg7VJEdmgH8JXaIfrUWnJSMLoAaEhgWf8",
+    "tags": ["unknown"]
+  },
+  {
     "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
     "chainId": 101,
     "decimals": 6,
     "name": "USD Coin",
     "symbol": "USDC",
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
-    "tags": ["old-registry"],
+    "tags": ["old-registry", "solana-fm"],
     "extensions": { "coingeckoId": "usd-coin" }
   },
   {
@@ -10068,21 +10645,21 @@
     "extensions": { "coingeckoId": "uxd-protocol-token" }
   },
   {
-    "address": "84KY3exPaKV3b49YowaW2E71DrVjYVLog9vdFXZYfokA",
-    "chainId": 101,
-    "decimals": 9,
-    "name": "VALKYRIE",
-    "symbol": "VALK",
-    "logoURI": "https://arweave.net/qXcUvMYTFqiJEWosnydID47TRyAhiYpii-Y0n_FEtts",
-    "tags": ["unknown"]
-  },
-  {
     "address": "2LhFhBD3tvUYYdD7kqivfSuQxNvPza4DegJvYgZRwdKH",
     "chainId": 101,
     "decimals": 9,
     "name": "VALKYRIE",
     "symbol": "VALK",
     "logoURI": "https://arweave.net/J_2TfnB9stYsSwpFeZduJdix1SqJ0hr8EJO_D_JQt0I",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "84KY3exPaKV3b49YowaW2E71DrVjYVLog9vdFXZYfokA",
+    "chainId": 101,
+    "decimals": 9,
+    "name": "VALKYRIE",
+    "symbol": "VALK",
+    "logoURI": "https://arweave.net/qXcUvMYTFqiJEWosnydID47TRyAhiYpii-Y0n_FEtts",
     "tags": ["unknown"]
   },
   {
@@ -10314,7 +10891,7 @@
     "name": "Wrapped Capsule Coin (Wormhole v1)",
     "symbol": "wCAPS_v1",
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/FeLoyXk8ac2AYVmDhAWEKNWWT63Z9TczeidYbpDvxF3T/logo.svg",
-    "tags": ["old-registry"]
+    "tags": ["old-registry", "solana-fm"]
   },
   {
     "address": "FYpdBuyAHSbdaAyD1sKkxyLWbAP8uUW9h6uvdhK74ij1",
@@ -10688,15 +11265,6 @@
     "extensions": { "coingeckoId": "wrapped-algo" }
   },
   {
-    "address": "6GAboxEhsTqJeK59FdTfpuQW3r5y6qdS7VoijQCeY3Lz",
-    "chainId": 101,
-    "decimals": 1,
-    "name": "xBONK 360",
-    "symbol": "xBONK",
-    "logoURI": "https://arweave.net/J-YZm2-WXXOEX6sSPymBofUdOX6lgwNilQXfzE31Kfo",
-    "tags": ["unknown"]
-  },
-  {
     "address": "3K6rftdAaQYMPunrtNRHgnK2UAtjm2JwyT2oCiTDouYE",
     "chainId": 101,
     "decimals": 0,
@@ -11000,6 +11568,24 @@
     "name": "ZONK",
     "symbol": "ZONK",
     "logoURI": "https://bafkreiagjkmcpzktrjvg23w4u3l2x5ylyoo77x6wfeuuum3agqudtogrre.ipfs.nftstorage.link",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "FxdzdsXbbYfCsVX3XArtPn2HYFF9UdqMjjjUFfvfC8RB",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "SolMaxiZoomer",
+    "symbol": "ZOOMR",
+    "logoURI": "https://i.postimg.cc/9Qbb0LsT/zoomer.png",
+    "tags": ["unknown"]
+  },
+  {
+    "address": "3DstzoPGaiP7j9a6rRjZPvSPZCdYMPrm3GSDTGLybHEK",
+    "chainId": 101,
+    "decimals": 6,
+    "name": "Zephyr",
+    "symbol": "ZPHR",
+    "logoURI": "https://bafybeid6f26ll2n2h7qohudvh3fzeytjo6anaxl76ttpo6ypuih2tuldwa.ipfs.nftstorage.link",
     "tags": ["unknown"]
   },
   {
