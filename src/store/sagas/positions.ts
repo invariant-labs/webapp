@@ -143,73 +143,42 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       })
     }
 
-    const initialTx = new Transaction().add(createIx).add(transferIx).add(initIx)
+    const initialTx = new Transaction().add(createIx).add(transferIx).add(initIx).add(initPositionTx).add(unwrapIx)
 
     const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
-    const initPositionBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    initPositionTx.recentBlockhash = initPositionBlockhash.blockhash
-    initPositionTx.feePayer = wallet.publicKey
-
-    const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
-    unwrapTx.feePayer = wallet.publicKey
-
-    const [initialSignedTx, initPositionSignedTx, unwrapSignedTx] = yield* call(
-      [wallet, wallet.signAllTransactions],
-      [initialTx, initPositionTx, unwrapTx]
+    const signedTx = yield* call(
+      [wallet, wallet.signTransaction],
+      initialTx
     )
 
-    initialSignedTx.partialSign(wrappedSolAccount)
+    signedTx.partialSign(wrappedSolAccount)
 
     if (poolSigners.length) {
-      initPositionSignedTx.partialSign(...poolSigners)
+      signedTx.partialSign(...poolSigners)
     }
 
-    const initialTxid = yield* call(
+    const txid = yield* call(
       sendAndConfirmRawTransaction,
       connection,
-      initialSignedTx.serialize(),
+      signedTx.serialize(),
       {
         skipPreflight: false
       }
     )
 
-    if (!initialTxid.length) {
-      yield put(actions.setInitPositionSuccess(false))
+    yield put(actions.setInitPositionSuccess(!!txid.length))
 
-      return yield put(
-        snackbarsActions.add({
-          message: 'SOL wrapping failed. Please try again.',
-          variant: 'error',
-          persist: false,
-          txid: initialTxid
-        })
-      )
-    }
-
-    const initPositionTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      initPositionSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
-
-    if (!initPositionTxid.length) {
-      yield put(actions.setInitPositionSuccess(false))
-
+    if (!txid.length) {
       return yield put(
         snackbarsActions.add({
           message:
             'Position adding failed. Please unwrap wrapped SOL in your wallet and try again.',
           variant: 'error',
           persist: false,
-          txid: initPositionTxid
+          txid: txid
         })
       )
     } else {
@@ -218,42 +187,11 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
           message: 'Position added successfully.',
           variant: 'success',
           persist: false,
-          txid: initPositionTxid
+          txid: txid
         })
       )
 
       yield put(actions.getPositionsList())
-    }
-
-    const unwrapTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      unwrapSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
-
-    yield put(actions.setInitPositionSuccess(true))
-
-    if (!unwrapTxid.length) {
-      yield put(
-        snackbarsActions.add({
-          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
-          variant: 'warning',
-          persist: false,
-          txid: unwrapTxid
-        })
-      )
-    } else {
-      yield put(
-        snackbarsActions.add({
-          message: 'SOL unwrapped successfully.',
-          variant: 'success',
-          persist: false,
-          txid: unwrapTxid
-        })
-      )
     }
   } catch (error) {
     console.log(error)

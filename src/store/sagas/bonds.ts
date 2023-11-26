@@ -124,12 +124,6 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
       []
     )
 
-    const initialTx = new Transaction().add(createIx).add(transferIx).add(initIx)
-
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    initialTx.recentBlockhash = initialBlockhash.blockhash
-    initialTx.feePayer = wallet.publicKey
-
     const bondKeypair = Keypair.generate()
     const bondTx = yield* call(
       [bondsProgram, bondsProgram.createBondTransaction],
@@ -139,61 +133,34 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
       },
       bondKeypair.publicKey
     )
-    const bondBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    bondTx.recentBlockhash = bondBlockhash.blockhash
-    bondTx.feePayer = wallet.publicKey
 
-    const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
-    unwrapTx.feePayer = wallet.publicKey
+    const initialTx = new Transaction()
+      .add(createIx)
+      .add(transferIx)
+      .add(initIx)
+      .add(bondTx)
+      .add(unwrapIx)
 
-    const [initialSignedTx, bondSignedTx, unwrapSignedTx] = yield* call(
-      [wallet, wallet.signAllTransactions],
-      [initialTx, bondTx, unwrapTx]
-    )
+    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    initialTx.recentBlockhash = initialBlockhash.blockhash
+    initialTx.feePayer = wallet.publicKey
 
-    initialSignedTx.partialSign(wrappedSolAccount)
-    bondSignedTx.partialSign(bondKeypair)
+    const signedTx = yield* call([wallet, wallet.signTransaction], initialTx)
 
-    const initialTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      initialSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
+    signedTx.partialSign(wrappedSolAccount, bondKeypair)
 
-    if (!initialTxid.length) {
-      yield* put(actions.setBuyBondSuccess(false))
-      return yield* put(
-        snackbarsActions.add({
-          message: 'SOL wrapping failed. Please try again.',
-          variant: 'error',
-          persist: false,
-          txid: initialTxid
-        })
-      )
-    }
+    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+      skipPreflight: false
+    })
 
-    const bondTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      bondSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
-
-    if (!bondTxid.length) {
+    if (!txid.length) {
       yield* put(actions.setBuyBondSuccess(false))
       yield* put(
         snackbarsActions.add({
           message: 'Failed to buy bond. Please unwrap wrapped SOL in your wallet and try again.',
           variant: 'error',
           persist: false,
-          txid: bondTxid
+          txid
         })
       )
     } else {
@@ -203,40 +170,11 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
           message: 'Bond bought successfully.',
           variant: 'success',
           persist: false,
-          txid: bondTxid
+          txid
         })
       )
 
       yield* put(actions.getUserVested())
-    }
-
-    const unwrapTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      unwrapSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
-
-    if (!unwrapTxid.length) {
-      yield* put(
-        snackbarsActions.add({
-          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
-          variant: 'warning',
-          persist: false,
-          txid: unwrapTxid
-        })
-      )
-    } else {
-      yield* put(
-        snackbarsActions.add({
-          message: 'SOL unwrapped successfully.',
-          variant: 'success',
-          persist: false,
-          txid: unwrapTxid
-        })
-      )
     }
   } catch (error) {
     console.log(error)
@@ -372,34 +310,23 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
       []
     )
 
-    const initialTx = new Transaction().add(createIx).add(initIx)
-
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    initialTx.recentBlockhash = initialBlockhash.blockhash
-    initialTx.feePayer = wallet.publicKey
-
     const redeemTx = yield* call([bondsProgram, bondsProgram.claimBondTransaction], {
       bondSale: data.bondSale,
       bondId: data.bondId,
       ownerBondAccount: wrappedSolAccount.publicKey
     })
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
-    redeemTx.recentBlockhash = blockhash.blockhash
-    redeemTx.feePayer = wallet.publicKey
 
-    const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
-    unwrapTx.feePayer = wallet.publicKey
+    const initialTx = new Transaction().add(createIx).add(initIx).add(redeemTx).add(unwrapIx)
 
-    const [initialSignedTx, redeemSignedTx, unwrapSignedTx] = yield* call(
-      [wallet, wallet.signAllTransactions],
-      [initialTx, redeemTx, unwrapTx]
-    )
+    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    initialTx.recentBlockhash = initialBlockhash.blockhash
+    initialTx.feePayer = wallet.publicKey
+
+    const initialSignedTx = yield* call([wallet, wallet.signTransaction], initialTx)
 
     initialSignedTx.partialSign(wrappedSolAccount)
 
-    const initialTxid = yield* call(
+    const txid = yield* call(
       sendAndConfirmRawTransaction,
       connection,
       initialSignedTx.serialize(),
@@ -408,33 +335,13 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
       }
     )
 
-    if (!initialTxid.length) {
-      return yield* put(
-        snackbarsActions.add({
-          message: 'SOL wrapping failed. Please try again.',
-          variant: 'error',
-          persist: false,
-          txid: initialTxid
-        })
-      )
-    }
-
-    const redeemTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      redeemSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
-
-    if (!redeemTxid.length) {
+    if (!txid.length) {
       yield* put(
         snackbarsActions.add({
           message: 'Failed to redeem bond. Please try again.',
           variant: 'error',
           persist: false,
-          txid: redeemTxid
+          txid
         })
       )
     } else {
@@ -443,42 +350,13 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
           message: 'Bond redeemed successfully.',
           variant: 'success',
           persist: false,
-          txid: redeemTxid
+          txid
         })
       )
 
       if (allUserVested[data.vestedAddress.toString()].vestingEnd.toNumber() * 1000 < Date.now()) {
         yield* put(actions.removeVested(data.vestedAddress))
       }
-    }
-
-    const unwrapTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      unwrapSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
-
-    if (!unwrapTxid.length) {
-      yield* put(
-        snackbarsActions.add({
-          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
-          variant: 'warning',
-          persist: false,
-          txid: unwrapTxid
-        })
-      )
-    } else {
-      yield* put(
-        snackbarsActions.add({
-          message: 'SOL unwrapped successfully.',
-          variant: 'success',
-          persist: false,
-          txid: unwrapTxid
-        })
-      )
     }
   } catch (error) {
     console.log(error)

@@ -689,12 +689,6 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
       []
     )
 
-    const initialTx = new Transaction().add(createIx).add(initIx)
-
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    initialTx.recentBlockhash = initialBlockhash.blockhash
-    initialTx.feePayer = wallet.publicKey
-
     const updateIx = yield* call(
       [marketProgram, marketProgram.updateSecondsPerLiquidityInstruction],
       {
@@ -720,59 +714,35 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
       ownerTokenAcc: wrappedSolAccount.publicKey
     })
 
-    const withdrawTx = new Transaction().add(updateIx).add(withdrawIx)
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
-    withdrawTx.recentBlockhash = blockhash.blockhash
-    withdrawTx.feePayer = wallet.publicKey
+    const initialTx = new Transaction().add(createIx).add(initIx).add(updateIx).add(withdrawIx).add(unwrapIx)
 
-    const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
-    unwrapTx.feePayer = wallet.publicKey
+    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    initialTx.recentBlockhash = initialBlockhash.blockhash
+    initialTx.feePayer = wallet.publicKey
 
-    const [initialSignedTx, withdrawSignedTx, unwrapSignedTx] = yield* call(
-      [wallet, wallet.signAllTransactions],
-      [initialTx, withdrawTx, unwrapTx]
+    const signedTx = yield* call(
+      [wallet, wallet.signTransaction],
+      initialTx
     )
 
-    initialSignedTx.partialSign(wrappedSolAccount)
+    signedTx.partialSign(wrappedSolAccount)
 
-    const initialTxid = yield* call(
+    const txid = yield* call(
       sendAndConfirmRawTransaction,
       connection,
-      initialSignedTx.serialize(),
+      signedTx.serialize(),
       {
         skipPreflight: false
       }
     )
 
-    if (!initialTxid.length) {
-      return yield* put(
-        snackbarsActions.add({
-          message: 'SOL wrapping failed. Please try again.',
-          variant: 'error',
-          persist: false,
-          txid: initialTxid
-        })
-      )
-    }
-
-    const withdrawTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      withdrawSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
-
-    if (!withdrawTxid.length) {
+    if (!txid.length) {
       yield* put(
         snackbarsActions.add({
           message: 'Failed to withdraw rewards. Please try again.',
           variant: 'error',
           persist: false,
-          txid: withdrawTxid
+          txid
         })
       )
     } else {
@@ -781,36 +751,7 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
           message: 'Rewards withdrawn successfully.',
           variant: 'success',
           persist: false,
-          txid: withdrawTxid
-        })
-      )
-    }
-
-    const unwrapTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      unwrapSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
-
-    if (!unwrapTxid.length) {
-      yield* put(
-        snackbarsActions.add({
-          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
-          variant: 'warning',
-          persist: false,
-          txid: unwrapTxid
-        })
-      )
-    } else {
-      yield* put(
-        snackbarsActions.add({
-          message: 'SOL unwrapped successfully.',
-          variant: 'success',
-          persist: false,
-          txid: unwrapTxid
+          txid
         })
       )
     }

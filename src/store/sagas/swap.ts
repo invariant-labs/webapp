@@ -72,14 +72,6 @@ export function* handleSwapWithSOL(): Generator {
       wallet.publicKey
     )
 
-    const initialTx =
-      allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
-        ? new Transaction().add(createIx).add(transferIx).add(initIx)
-        : new Transaction().add(createIx).add(initIx)
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    initialTx.recentBlockhash = initialBlockhash.blockhash
-    initialTx.feePayer = wallet.publicKey
-
     const unwrapIx = Token.createCloseAccountInstruction(
       TOKEN_PROGRAM_ID,
       wrappedSolAccount.publicKey,
@@ -120,63 +112,32 @@ export function* handleSwapWithSOL(): Generator {
       byAmountIn: byAmountIn,
       owner: wallet.publicKey
     })
-    const swapBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    swapTx.recentBlockhash = swapBlockhash.blockhash
-    swapTx.feePayer = wallet.publicKey
 
-    const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
-    unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
-    unwrapTx.feePayer = wallet.publicKey
+    const initialTx =
+      allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+        ? new Transaction().add(createIx).add(transferIx).add(initIx).add(swapTx).add(unwrapIx)
+        : new Transaction().add(createIx).add(initIx).add(swapTx).add(unwrapIx)
+    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    initialTx.recentBlockhash = initialBlockhash.blockhash
+    initialTx.feePayer = wallet.publicKey
 
-    const [initialSignedTx, swapSignedTx, unwrapSignedTx] = yield* call(
-      [wallet, wallet.signAllTransactions],
-      [initialTx, swapTx, unwrapTx]
-    )
+    const signedTx = yield* call([wallet, wallet.signTransaction], initialTx)
 
-    initialSignedTx.partialSign(wrappedSolAccount)
+    signedTx.partialSign(wrappedSolAccount)
 
-    const initialTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      initialSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
+    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+      skipPreflight: false
+    })
 
-    if (!initialTxid.length) {
-      yield put(swapActions.setSwapSuccess(false))
+    yield put(swapActions.setSwapSuccess(!!txid.length))
 
-      return yield put(
+    if (!txid.length) {
+      yield put(
         snackbarsActions.add({
-          message: 'SOL wrapping failed. Please try again.',
+          message: 'Tokens swapping failed. Please try again.',
           variant: 'error',
           persist: false,
-          txid: initialTxid
-        })
-      )
-    }
-
-    const swapTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      swapSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
-
-    if (!swapTxid.length) {
-      yield put(swapActions.setSwapSuccess(false))
-
-      return yield put(
-        snackbarsActions.add({
-          message:
-            'Tokens swapping failed. Please unwrap wrapped SOL in your wallet and try again.',
-          variant: 'error',
-          persist: false,
-          txid: swapTxid
+          txid
         })
       )
     } else {
@@ -185,38 +146,7 @@ export function* handleSwapWithSOL(): Generator {
           message: 'Tokens swapped successfully.',
           variant: 'success',
           persist: false,
-          txid: swapTxid
-        })
-      )
-    }
-
-    const unwrapTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
-      unwrapSignedTx.serialize(),
-      {
-        skipPreflight: false
-      }
-    )
-
-    yield put(swapActions.setSwapSuccess(true))
-
-    if (!unwrapTxid.length) {
-      yield put(
-        snackbarsActions.add({
-          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
-          variant: 'warning',
-          persist: false,
-          txid: unwrapTxid
-        })
-      )
-    } else {
-      yield put(
-        snackbarsActions.add({
-          message: 'SOL unwrapped successfully.',
-          variant: 'success',
-          persist: false,
-          txid: unwrapTxid
+          txid
         })
       )
     }
