@@ -354,15 +354,9 @@ export const WSOL_POOL_INIT_LAMPORTS = new BN(106000961)
 
 export const minimumRangesForTiers = [20, 20, 20, 20, 20, 74, 80, 64, 64, 28, 28, 28, 28, 28, 28]
 
-export const maxSafeConcentrationsForTiers = [
-  400.52, 400.52, 400.52, 400.52, 400.52, 41.49, 21.47, 8.13, 8.13, 5.45, 5.45, 5.45, 5.45, 5.45,
-  5.45
-]
-
 export const ALL_FEE_TIERS_DATA = FEE_TIERS.map((tier, index) => ({
   tier,
   minimumRange: minimumRangesForTiers[index],
-  maxSafeConcentration: maxSafeConcentrationsForTiers[index],
   primaryIndex: index
 })).slice(3) // remove slice if all tiers should be visible
 
