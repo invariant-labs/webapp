@@ -43,7 +43,6 @@ export interface IRangeSelector {
     min: number
     max: number
   }
-  minimumRange: number
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -66,8 +65,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   poolIndex,
   hasTicksError,
   reloadHandler,
-  volumeRange,
-  minimumRange
+  volumeRange
 }) => {
   const classes = useStyles()
 
@@ -172,7 +170,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[0],
-        minimumRange,
+        1,
         midPrice.index,
         isXtoY
       )
@@ -259,8 +257,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   const concentrationArray = useMemo(
-    () => getConcentrationArray(tickSpacing, minimumRange, midPrice.index).sort((a, b) => a - b),
-    [tickSpacing, midPrice.index, minimumRange]
+    () => getConcentrationArray(tickSpacing, 1, midPrice.index).sort((a, b) => a - b),
+    [tickSpacing, midPrice.index]
   )
 
   useEffect(() => {
@@ -270,7 +268,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[0],
-        minimumRange,
+        1,
         midPrice.index,
         isXtoY
       )
@@ -290,7 +288,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[index],
-        minimumRange,
+        1,
         midPrice.index,
         isXtoY
       )
@@ -472,7 +470,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 const { leftRange, rightRange } = calculateConcentrationRange(
                   tickSpacing,
                   concentrationArray[value],
-                  minimumRange,
+                  1,
                   midPrice.index,
                   isXtoY
                 )

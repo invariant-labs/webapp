@@ -58,7 +58,6 @@ export interface INewPosition {
   ) => BN
   feeTiers: Array<{
     feeValue: number
-    minimumRange: number
   }>
   ticksLoading: boolean
   showNoConnected?: boolean
@@ -499,7 +498,6 @@ export const NewPosition: React.FC<INewPosition> = ({
             hasTicksError={hasTicksError}
             reloadHandler={reloadHandler}
             volumeRange={plotVolumeRange}
-            minimumRange={feeTiers[currentFeeIndex].minimumRange}
           />
         ) : (
           <PoolInit

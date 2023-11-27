@@ -41,7 +41,6 @@ storiesOf('position/rangeSelector', module)
       onDiscreteChange={() => {}}
       poolIndex={null}
       reloadHandler={() => {}}
-      minimumRange={20}
     />
   ))
   .add('blocked', () => (
@@ -68,7 +67,6 @@ storiesOf('position/rangeSelector', module)
       onDiscreteChange={() => {}}
       poolIndex={null}
       reloadHandler={() => {}}
-      minimumRange={20}
     />
   ))
   .add('concentrated', () => (
@@ -94,6 +92,5 @@ storiesOf('position/rangeSelector', module)
       isConcentrated
       poolIndex={null}
       reloadHandler={() => {}}
-      minimumRange={20}
     />
   ))

@@ -352,11 +352,8 @@ export const WSOL_POSITION_INIT_LAMPORTS = new BN(6164600)
 
 export const WSOL_POOL_INIT_LAMPORTS = new BN(106000961)
 
-export const minimumRangesForTiers = [20, 20, 20, 20, 20, 74, 80, 64, 64, 28, 28, 28, 28, 28, 28]
-
 export const ALL_FEE_TIERS_DATA = FEE_TIERS.map((tier, index) => ({
   tier,
-  minimumRange: minimumRangesForTiers[index],
   primaryIndex: index
 })).slice(3) // remove slice if all tiers should be visible
 
