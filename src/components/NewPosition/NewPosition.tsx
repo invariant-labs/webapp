@@ -58,8 +58,6 @@ export interface INewPosition {
   ) => BN
   feeTiers: Array<{
     feeValue: number
-    minimumRange: number
-    maxSafeConcentration: number
   }>
   ticksLoading: boolean
   showNoConnected?: boolean
@@ -497,12 +495,9 @@ export const NewPosition: React.FC<INewPosition> = ({
             initialIsDiscreteValue={initialIsDiscreteValue}
             onDiscreteChange={onDiscreteChange}
             isConcentrated={isConcentrated}
-            bestTierIndex={bestTierIndex}
             hasTicksError={hasTicksError}
             reloadHandler={reloadHandler}
             volumeRange={plotVolumeRange}
-            minimumRange={feeTiers[currentFeeIndex].minimumRange}
-            maxSafeConcentration={feeTiers[currentFeeIndex].maxSafeConcentration}
           />
         ) : (
           <PoolInit
