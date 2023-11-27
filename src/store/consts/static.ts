@@ -355,6 +355,6 @@ export const WSOL_POOL_INIT_LAMPORTS = new BN(106000961)
 export const ALL_FEE_TIERS_DATA = FEE_TIERS.map((tier, index) => ({
   tier,
   primaryIndex: index
-})).slice(3) // remove slice if all tiers should be visible
+})).slice(3, -1) // remove slice if all tiers should be visible
 
 export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, NetworkType }
