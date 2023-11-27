@@ -431,9 +431,7 @@ export const NewPositionWrapper = () => {
         setFeeIndex(feeTierIndex)
       }}
       feeTiers={ALL_FEE_TIERS_DATA.map(tier => ({
-        feeValue: +printBN(tier.tier.fee, DECIMAL - 2),
-        maxSafeConcentration: tier.maxSafeConcentration,
-        minimumRange: tier.minimumRange
+        feeValue: +printBN(tier.tier.fee, DECIMAL - 2)
       }))}
       data={data}
       midPrice={midPrice}

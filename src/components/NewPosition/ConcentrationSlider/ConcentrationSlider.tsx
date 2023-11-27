@@ -6,7 +6,6 @@ export interface IProps {
   values: number[]
   valueChangeHandler: (value: number) => void
   valueIndex: number
-  unsafePercent: number
   dragHandler: (value: number) => void
 }
 
@@ -43,10 +42,9 @@ export const ConcentrationSlider: React.FC<IProps> = ({
   values,
   valueChangeHandler,
   valueIndex,
-  unsafePercent,
   dragHandler
 }) => {
-  const sliderClasses = useSliderStyles({ valuesLength: values.length, unsafePercent })
+  const sliderClasses = useSliderStyles({ valuesLength: values.length })
 
   const onChangeCommited = useCallback(
     (_e: ChangeEvent<{}>, value: number | number[]) => {

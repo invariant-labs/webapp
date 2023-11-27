@@ -80,29 +80,19 @@ storiesOf('position/newPosition', module)
           calcAmount={() => new BN(1)}
           feeTiers={[
             {
-              feeValue: 0.02,
-              minimumRange: 20,
-              maxSafeConcentration: 400
+              feeValue: 0.02
             },
             {
-              feeValue: 0.04,
-              minimumRange: 80,
-              maxSafeConcentration: 40
+              feeValue: 0.04
             },
             {
-              feeValue: 0.1,
-              minimumRange: 64,
-              maxSafeConcentration: 34
+              feeValue: 0.1
             },
             {
-              feeValue: 0.3,
-              minimumRange: 50,
-              maxSafeConcentration: 28
+              feeValue: 0.3
             },
             {
-              feeValue: 1,
-              minimumRange: 35,
-              maxSafeConcentration: 5
+              feeValue: 1
             }
           ]}
           ticksLoading={false}
@@ -166,29 +156,19 @@ storiesOf('position/newPosition', module)
           calcAmount={() => new BN(1)}
           feeTiers={[
             {
-              feeValue: 0.02,
-              minimumRange: 20,
-              maxSafeConcentration: 400
+              feeValue: 0.02
             },
             {
-              feeValue: 0.04,
-              minimumRange: 80,
-              maxSafeConcentration: 40
+              feeValue: 0.04
             },
             {
-              feeValue: 0.1,
-              minimumRange: 64,
-              maxSafeConcentration: 34
+              feeValue: 0.1
             },
             {
-              feeValue: 0.3,
-              minimumRange: 50,
-              maxSafeConcentration: 28
+              feeValue: 0.3
             },
             {
-              feeValue: 1,
-              minimumRange: 35,
-              maxSafeConcentration: 5
+              feeValue: 1
             }
           ]}
           ticksLoading={false}
