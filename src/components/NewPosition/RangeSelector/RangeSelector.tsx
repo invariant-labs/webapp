@@ -15,7 +15,6 @@ import { MAX_TICK } from '@invariant-labs/sdk/src'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { getConcentrationArray, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
-import questionMark from '@static/svg/questionMark.svg'
 import loader from '@static/gif/loader.gif'
 import useStyles from './style'
 import activeLiquidity from '@static/svg/activeLiquidity.svg'
@@ -38,15 +37,12 @@ export interface IRangeSelector {
   onDiscreteChange: (val: boolean) => void
   isConcentrated?: boolean
   poolIndex: number | null
-  bestTierIndex?: number
   hasTicksError?: boolean
   reloadHandler: () => void
   volumeRange?: {
     min: number
     max: number
   }
-  minimumRange: number
-  maxSafeConcentration: number
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -67,12 +63,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   onDiscreteChange,
   isConcentrated = false,
   poolIndex,
-  bestTierIndex,
   hasTicksError,
   reloadHandler,
-  volumeRange,
-  minimumRange,
-  maxSafeConcentration
+  volumeRange
 }) => {
   const classes = useStyles()
 
@@ -177,7 +170,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[0],
-        minimumRange,
+        1,
         midPrice.index,
         isXtoY
       )
@@ -264,8 +257,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   const concentrationArray = useMemo(
-    () => getConcentrationArray(tickSpacing, minimumRange, midPrice.index).sort((a, b) => a - b),
-    [tickSpacing, midPrice.index, minimumRange]
+    () => getConcentrationArray(tickSpacing, 1, midPrice.index).sort((a, b) => a - b),
+    [tickSpacing, midPrice.index]
   )
 
   useEffect(() => {
@@ -275,7 +268,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[0],
-        minimumRange,
+        1,
         midPrice.index,
         isXtoY
       )
@@ -295,7 +288,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[index],
-        minimumRange,
+        1,
         midPrice.index,
         isXtoY
       )
@@ -303,19 +296,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       autoZoomHandler(leftRange, rightRange, true)
     }
   }, [midPrice.index, concentrationArray])
-
-  const unsafeIndex = useMemo(
-    () =>
-      typeof bestTierIndex === 'undefined'
-        ? concentrationArray.findIndex(val => val >= maxSafeConcentration)
-        : concentrationArray.findIndex(val => val >= maxSafeConcentration),
-    [concentrationArray, maxSafeConcentration, bestTierIndex]
-  )
-
-  const unsafePercent = useMemo(
-    () => (unsafeIndex === -1 ? 101 : (unsafeIndex / concentrationArray.length) * 100),
-    [concentrationArray, unsafeIndex]
-  )
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
@@ -490,7 +470,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 const { leftRange, rightRange } = calculateConcentrationRange(
                   tickSpacing,
                   concentrationArray[value],
-                  minimumRange,
+                  1,
                   midPrice.index,
                   isXtoY
                 )
@@ -500,40 +480,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               dragHandler={value => {
                 setConcentrationIndex(value)
               }}
-              unsafePercent={unsafePercent}
             />
-            {unsafeIndex !== -1 && concentrationIndex >= unsafeIndex ? (
-              <Grid
-                className={classes.warningWrapper}
-                container
-                item
-                direction='row'
-                wrap='nowrap'
-                alignItems='center'>
-                <Typography className={classes.unsafeWarning}>
-                  Extremely high concentration
-                </Typography>
-                <Tooltip
-                  title={
-                    <Typography className={classes.tooltipText}>
-                      High concentration enforces that your liquidity is provided within a tight
-                      price range. Higher concentration will allow you to earn more, but it has
-                      additional risk. Choosing high concentration is appropriate if you assume low
-                      price volatility.
-                      <br />
-                      <br />
-                      Make sure you want to open a position in the selected price range. Remember
-                      that the position only makes a profit if the price is within range.
-                    </Typography>
-                  }
-                  placement='bottom'
-                  classes={{
-                    tooltip: classes.tooltip
-                  }}>
-                  <img src={questionMark} className={classes.questionMark} />
-                </Tooltip>
-              </Grid>
-            ) : null}
           </Grid>
         ) : (
           <Grid container className={classes.buttons}>

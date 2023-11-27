@@ -19,7 +19,6 @@ storiesOf('position/concentrationSlider', module).add('default', () => {
           console.log(val)
         }}
         valueIndex={3}
-        unsafePercent={60}
       />
     </div>
   )
