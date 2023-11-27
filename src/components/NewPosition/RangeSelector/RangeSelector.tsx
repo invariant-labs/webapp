@@ -170,7 +170,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[0],
-        1,
+        2,
         midPrice.index,
         isXtoY
       )
@@ -257,7 +257,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   const concentrationArray = useMemo(
-    () => getConcentrationArray(tickSpacing, 1, midPrice.index).sort((a, b) => a - b),
+    () => getConcentrationArray(tickSpacing, 2, midPrice.index).sort((a, b) => a - b),
     [tickSpacing, midPrice.index]
   )
 
@@ -268,7 +268,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[0],
-        1,
+        2,
         midPrice.index,
         isXtoY
       )
@@ -288,7 +288,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[index],
-        1,
+        2,
         midPrice.index,
         isXtoY
       )
@@ -470,7 +470,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 const { leftRange, rightRange } = calculateConcentrationRange(
                   tickSpacing,
                   concentrationArray[value],
-                  1,
+                  2,
                   midPrice.index,
                   isXtoY
                 )
