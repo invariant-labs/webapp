@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Typography } from '@material-ui/core'
 import { useLabelStyles } from './style'
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined'
-import { actions as snackbarsActions } from '@reducers/snackbars'
-import { poolsArraySortedByFees } from '@selectors/pools'
-import { useSelector, useDispatch } from 'react-redux'
 
 export interface IProps {
   displayLength: number
