@@ -31,7 +31,7 @@ import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './style'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
-import MarketIdLabel from './MarketIdLabel/MatketIdLabel'
+import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 
 export interface INewPosition {
   tokens: SwapToken[]
