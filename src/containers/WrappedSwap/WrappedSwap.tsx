@@ -1,30 +1,30 @@
-import { Swap } from '@components/Swap/Swap'
-import {
-  isLoadingLatestPoolsForTransaction,
-  poolsArraySortedByFees,
-  poolTicks,
-  tickMaps
-} from '@selectors/pools'
-import { swap as swapPool } from '@selectors/swap'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { actions } from '@reducers/swap'
-import { status, swapTokens, swapTokensDict } from '@selectors/solanaWallet'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
-import { actions as poolsActions } from '@reducers/pools'
-import { PublicKey } from '@solana/web3.js'
-import { actions as walletActions } from '@reducers/solanaWallet'
-import { getCurrentSolanaConnection } from '@web3/connection'
+import { Swap } from '@components/Swap/Swap'
+import { commonTokensForNetworks } from '@consts/static'
 import {
   addNewTokenToLocalStorage,
   CoingeckoPriceData,
   getCoingeckoTokenPrice,
   getNewTokenOrThrow
 } from '@consts/utils'
-import { network } from '@selectors/solanaConnection'
-import { commonTokensForNetworks } from '@consts/static'
+import { actions as poolsActions } from '@reducers/pools'
 import { actions as snackbarsActions } from '@reducers/snackbars'
+import { actions as walletActions } from '@reducers/solanaWallet'
+import { actions } from '@reducers/swap'
+import {
+  isLoadingLatestPoolsForTransaction,
+  poolsArraySortedByFees,
+  poolTicks,
+  tickMaps
+} from '@selectors/pools'
+import { network } from '@selectors/solanaConnection'
+import { status, swapTokens, swapTokensDict } from '@selectors/solanaWallet'
+import { swap as swapPool } from '@selectors/swap'
+import { PublicKey } from '@solana/web3.js'
+import { getCurrentSolanaConnection } from '@web3/connection'
 import { openWalletSelectorModal } from '@web3/selector'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 export const WrappedSwap = () => {
   const dispatch = useDispatch()
@@ -178,6 +178,8 @@ export const WrappedSwap = () => {
 
   return (
     <Swap
+      tokenFrom={tokenFrom}
+      tokenTo={tokenTo}
       onSwap={(
         slippage,
         estimatedPriceAfterSwap,
