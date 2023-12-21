@@ -2,11 +2,12 @@ import React from 'react'
 import { Typography } from '@material-ui/core'
 import { useLabelStyles } from './style'
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined'
+import { Color } from '@material-ui/lab'
 
 export interface IProps {
   displayLength: number
   marketId: string
-  copyPoolAddressHandler: () => void
+  copyPoolAddressHandler: (message: string, variant: Color) => void
 }
 
 export const MarketIdLabel: React.FC<IProps> = ({
@@ -17,8 +18,14 @@ export const MarketIdLabel: React.FC<IProps> = ({
   const classes = useLabelStyles()
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(marketId)
-    copyPoolAddressHandler()
+    navigator.clipboard
+      .writeText(marketId)
+      .then(() => {
+        copyPoolAddressHandler('Market ID copied to Clipboard', 'success')
+      })
+      .catch(err => {
+        copyPoolAddressHandler('Failed to copy Market ID to Clipboard', 'error')
+      })
   }
 
   return (

@@ -32,10 +32,11 @@ import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './style'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
+import { Color } from '@material-ui/lab'
 
 export interface INewPosition {
   poolAddress: string
-  copyPoolAddressHandler: () => void
+  copyPoolAddressHandler: (message: string, variant: Color) => void
   tokens: SwapToken[]
   data: PlotTickData[]
   midPrice: TickPlotPositionData

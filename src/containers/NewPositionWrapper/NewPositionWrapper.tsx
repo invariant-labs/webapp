@@ -34,6 +34,7 @@ import { network } from '@selectors/solanaConnection'
 import { getCurrentSolanaConnection } from '@web3/connection'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { openWalletSelectorModal } from '@web3/selector'
+import { Color } from '@material-ui/lab'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -258,11 +259,11 @@ export const NewPositionWrapper = () => {
     }
   }
 
-  const copyPoolAddressHandler = () => {
+  const copyPoolAddressHandler = (message: string, variant: Color) => {
     dispatch(
       snackbarsActions.add({
-        message: 'Market ID copied to clipboard',
-        variant: 'success',
+        message,
+        variant,
         persist: false
       })
     )
