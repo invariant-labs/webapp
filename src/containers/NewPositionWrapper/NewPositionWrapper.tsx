@@ -258,6 +258,16 @@ export const NewPositionWrapper = () => {
     }
   }
 
+  const copyPoolAddressHandler = () => {
+    dispatch(
+      snackbarsActions.add({
+        message: 'Market ID copied to clipboard',
+        variant: 'success',
+        persist: false
+      })
+    )
+  }
+
   const initialIsConcentratedValue =
     localStorage.getItem('IS_CONCENTRATED') === 'true' ||
     localStorage.getItem('IS_CONCENTRATED') === null
@@ -362,6 +372,8 @@ export const NewPositionWrapper = () => {
 
   return (
     <NewPosition
+      copyPoolAddressHandler={copyPoolAddressHandler}
+      poolAddress={poolIndex !== null ? allPools[poolIndex].address.toString() : ''}
       tokens={tokens}
       onChangePositionTokens={(tokenA, tokenB, feeTierIndex) => {
         if (

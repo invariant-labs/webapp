@@ -34,6 +34,8 @@ import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationType
 import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 
 export interface INewPosition {
+  poolAddress: string
+  copyPoolAddressHandler: () => void
   tokens: SwapToken[]
   data: PlotTickData[]
   midPrice: TickPlotPositionData
@@ -99,6 +101,8 @@ export interface INewPosition {
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
+  poolAddress,
+  copyPoolAddressHandler,
   tokens,
   data,
   midPrice,
@@ -318,7 +322,13 @@ export const NewPosition: React.FC<INewPosition> = ({
       <Grid container justifyContent='space-between'>
         <Typography className={classes.title}>Add new liquidity position</Typography>
         <Grid container item alignItems='center' className={classes.options}>
-          {poolIndex !== null ? <MarketIdLabel displayLength={10} poolIndex={poolIndex} /> : null}
+          {poolIndex !== null ? (
+            <MarketIdLabel
+              displayLength={10}
+              marketId={poolAddress}
+              copyPoolAddressHandler={copyPoolAddressHandler}
+            />
+          ) : null}
 
           <ConcentrationTypeSwitch
             onSwitch={val => {

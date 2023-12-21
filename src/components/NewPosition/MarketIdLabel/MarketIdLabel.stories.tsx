@@ -2,15 +2,19 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import MarketIdLabel from './MarketIdLabel'
 
-storiesOf('position/MarketIdLabel', module).add('default', () => {
+storiesOf('position/marketIdLabel', module).add('default', () => {
   return (
     <div
       style={{
         backgroundColor: '#202946',
         padding: 20,
-        width: 200
+        width: 300
       }}>
-      <MarketIdLabel poolIndex={0} displayLength={10} />
+      <MarketIdLabel
+        marketId='as8d9asdjkl1239871aslkdjas0d978as123hjasjdh'
+        displayLength={10}
+        copyPoolAddressHandler={() => {}}
+      />
     </div>
   )
 })
