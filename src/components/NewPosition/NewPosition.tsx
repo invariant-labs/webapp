@@ -21,7 +21,7 @@ import settingIcon from '@static/svg/settings.svg'
 import backIcon from '@static/svg/back-arrow.svg'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { MIN_TICK } from '@invariant-labs/sdk'
-import { MAX_TICK } from '@invariant-labs/sdk/src'
+import { MAX_TICK, Pair } from '@invariant-labs/sdk/src'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import PoolInit from './PoolInit/PoolInit'
 import { BestTier } from '@consts/static'
@@ -31,6 +31,7 @@ import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './style'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
+import MarketIdLabel from './MarketIdLabel/MatketIdLabel'
 
 export interface INewPosition {
   tokens: SwapToken[]
@@ -317,6 +318,8 @@ export const NewPosition: React.FC<INewPosition> = ({
       <Grid container justifyContent='space-between'>
         <Typography className={classes.title}>Add new liquidity position</Typography>
         <Grid container item alignItems='center' className={classes.options}>
+          {poolIndex !== null ? <MarketIdLabel displayLength={10} poolIndex={poolIndex} /> : null}
+
           <ConcentrationTypeSwitch
             onSwitch={val => {
               setIsConcentrated(val)
