@@ -26,8 +26,10 @@ import useStyles from './style'
 import { hasTokens, volumeRanges } from '@selectors/pools'
 import { hasFarms, hasUserStakes, stakesForPosition } from '@selectors/farms'
 import { actions as farmsActions } from '@reducers/farms'
+import { actions as snackbarsActions } from '@reducers/snackbars'
 import { Status } from '@reducers/solanaWallet'
 import { status } from '@selectors/solanaWallet'
+import { Color } from '@material-ui/lab'
 
 export interface IProps {
   id: string
@@ -330,8 +332,20 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
   }, [position?.id])
 
+  const copyPoolAddressHandler = (message: string, variant: Color) => {
+    dispatch(
+      snackbarsActions.add({
+        message,
+        variant,
+        persist: false
+      })
+    )
+  }
+
   return !isLoadingList && position ? (
     <PositionDetails
+      poolAddress={position.address}
+      copyPoolAddressHandler={copyPoolAddressHandler}
       detailsData={data}
       midPrice={midPrice}
       leftRange={leftRange}

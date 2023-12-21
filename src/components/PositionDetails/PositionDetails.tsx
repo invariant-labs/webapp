@@ -8,8 +8,13 @@ import useStyles from './style'
 import { PlotTickData } from '@reducers/positions'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import { ILiquidityToken } from './SinglePositionInfo/consts'
+import MarketIdLabel from '@components/NewPosition/MarketIdLabel/MarketIdLabel'
+import { Color } from '@material-ui/lab'
+import { PublicKey } from '@solana/web3.js'
 
 interface IProps {
+  poolAddress: PublicKey
+  copyPoolAddressHandler: (message: string, variant: Color) => void
   detailsData: PlotTickData[]
   leftRange: TickPlotPositionData
   rightRange: TickPlotPositionData
@@ -37,6 +42,8 @@ interface IProps {
 }
 
 const PositionDetails: React.FC<IProps> = ({
+  poolAddress,
+  copyPoolAddressHandler,
   detailsData,
   leftRange,
   rightRange,
@@ -87,6 +94,7 @@ const PositionDetails: React.FC<IProps> = ({
           userHasStakes={userHasStakes}
         />
       </Grid>
+
       <Grid
         container
         item
@@ -94,16 +102,32 @@ const PositionDetails: React.FC<IProps> = ({
         alignItems='flex-end'
         className={classes.right}
         wrap='nowrap'>
-        <Hidden xsDown>
-          <Button
-            className={classes.button}
-            variant='contained'
-            onClick={() => {
-              history.push('/newPosition')
-            }}>
-            <span className={classes.buttonText}>+ Add Liquidity</span>
-          </Button>
-        </Hidden>
+        <Grid
+          container
+          item
+          direction='row'
+          alignItems='flex-end'
+          justifyContent='space-between'
+          style={{ paddingLeft: 20 }}
+          className={classes.right}
+          wrap='nowrap'>
+          <MarketIdLabel
+            marketId={poolAddress.toString()}
+            displayLength={10}
+            copyPoolAddressHandler={copyPoolAddressHandler}
+            style={{ paddingBottom: 20 }}
+          />
+          <Hidden xsDown>
+            <Button
+              className={classes.button}
+              variant='contained'
+              onClick={() => {
+                history.push('/newPosition')
+              }}>
+              <span className={classes.buttonText}>+ Add Liquidity</span>
+            </Button>
+          </Hidden>
+        </Grid>
 
         <SinglePositionPlot
           data={
