@@ -7,7 +7,7 @@ export const useLabelStyles = makeStyles(() => ({
     fontSize: 16,
     fontWeight: 400,
     lineHeight: '20px',
-    letterSpacing: '-3%',
+    letterSpacing: '-0.03px',
     textAlign: 'right',
     color: `${colors.invariant.textGrey} !important`,
     paddingRight: 10
