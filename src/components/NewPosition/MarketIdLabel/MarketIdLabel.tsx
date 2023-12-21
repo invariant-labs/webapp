@@ -23,7 +23,7 @@ export const MarketIdLabel: React.FC<IProps> = ({
       .then(() => {
         copyPoolAddressHandler('Market ID copied to Clipboard', 'success')
       })
-      .catch(err => {
+      .catch(() => {
         copyPoolAddressHandler('Failed to copy Market ID to Clipboard', 'error')
       })
   }
