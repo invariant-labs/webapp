@@ -27,9 +27,9 @@ export interface InputState {
 }
 
 export interface IDepositSelector {
-  tokenFrom: string
-  tokenTo: string
-  feeTier: string
+  initialTokenFrom: string
+  initialTokenTo: string
+  initialFee: string
   tokens: SwapToken[]
   setPositionTokens: (
     tokenAIndex: number | null,
@@ -61,9 +61,9 @@ export interface IDepositSelector {
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
-  tokenFrom,
-  tokenTo,
-  feeTier,
+  initialTokenFrom,
+  initialTokenTo,
+  initialFee,
   tokens,
   setPositionTokens,
   onAddLiquidity,
@@ -106,17 +106,17 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     let feeTierIndexFromPath = null
 
     tokens.forEach((token, index) => {
-      if (token.assetAddress.toString() === tokenFrom) {
+      if (token.assetAddress.toString() === initialTokenFrom) {
         tokenAIndexFromPath = index
       }
 
-      if (token.assetAddress.toString() === tokenTo) {
+      if (token.assetAddress.toString() === initialTokenTo) {
         tokenBIndexFromPath = index
       }
     })
 
     ALL_FEE_TIERS_DATA.forEach((feeTierData, index) => {
-      const parsedFee = (+feeTier.replace('_', '') * Math.pow(10, 8)).toString()
+      const parsedFee = (+initialFee.replace('_', '') * Math.pow(10, 8)).toString()
 
       if (feeTierData.tier.fee.toString() === parsedFee) {
         feeTierIndexFromPath = index

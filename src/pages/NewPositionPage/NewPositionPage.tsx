@@ -4,18 +4,26 @@ import React from 'react'
 import useStyles from './styles'
 
 export interface IProps {
-  tokenFrom: string
-  tokenTo: string
-  feeTier: string
+  initialTokenFrom: string
+  initialTokenTo: string
+  initialFee: string
 }
 
-export const NewPositionPage: React.FC<IProps> = ({ tokenFrom, tokenTo, feeTier }) => {
+export const NewPositionPage: React.FC<IProps> = ({
+  initialTokenFrom,
+  initialTokenTo,
+  initialFee
+}) => {
   const classes = useStyles()
 
   return (
     <Grid container className={classes.container}>
       <Grid item>
-        <NewPositionWrapper tokenFrom={tokenFrom} tokenTo={tokenTo} feeTier={feeTier} />
+        <NewPositionWrapper
+          initialTokenFrom={initialTokenFrom}
+          initialTokenTo={initialTokenTo}
+          initialFee={initialFee}
+        />
       </Grid>
     </Grid>
   )

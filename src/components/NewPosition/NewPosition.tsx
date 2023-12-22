@@ -33,9 +33,9 @@ import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
 
 export interface INewPosition {
-  tokenFrom: string
-  tokenTo: string
-  feeTier: string
+  initialTokenFrom: string
+  initialTokenTo: string
+  initialFee: string
   tokens: SwapToken[]
   data: PlotTickData[]
   midPrice: TickPlotPositionData
@@ -101,9 +101,9 @@ export interface INewPosition {
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
-  tokenFrom,
-  tokenTo,
-  feeTier,
+  initialTokenFrom,
+  initialTokenTo,
+  initialFee,
   tokens,
   data,
   midPrice,
@@ -355,9 +355,9 @@ export const NewPosition: React.FC<INewPosition> = ({
       <Grid container className={classes.row} alignItems='stretch'>
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
-          tokenFrom={tokenFrom}
-          tokenTo={tokenTo}
-          feeTier={feeTier}
+          initialTokenFrom={initialTokenFrom}
+          initialTokenTo={initialTokenTo}
+          initialFee={initialFee}
           className={classes.deposit}
           tokens={tokens}
           setPositionTokens={(index1, index2, fee) => {

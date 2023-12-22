@@ -36,12 +36,16 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 export interface IProps {
-  tokenFrom: string
-  tokenTo: string
-  feeTier: string
+  initialTokenFrom: string
+  initialTokenTo: string
+  initialFee: string
 }
 
-export const NewPositionWrapper: React.FC<IProps> = ({ tokenFrom, tokenTo, feeTier }) => {
+export const NewPositionWrapper: React.FC<IProps> = ({
+  initialTokenFrom,
+  initialTokenTo,
+  initialFee
+}) => {
   const dispatch = useDispatch()
 
   const connection = getCurrentSolanaConnection()
@@ -368,9 +372,9 @@ export const NewPositionWrapper: React.FC<IProps> = ({ tokenFrom, tokenTo, feeTi
 
   return (
     <NewPosition
-      tokenFrom={tokenFrom}
-      tokenTo={tokenTo}
-      feeTier={feeTier}
+      initialTokenFrom={initialTokenFrom}
+      initialTokenTo={initialTokenTo}
+      initialFee={initialFee}
       tokens={tokens}
       onChangePositionTokens={(tokenA, tokenB, feeTierIndex) => {
         if (
