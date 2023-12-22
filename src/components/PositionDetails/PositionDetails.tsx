@@ -123,7 +123,7 @@ const PositionDetails: React.FC<IProps> = ({
           </Hidden>
           <MarketIdLabel
             marketId={poolAddress.toString()}
-            displayLength={10}
+            displayLength={9}
             copyPoolAddressHandler={copyPoolAddressHandler}
             style={{ paddingBottom: 20, paddingRight: 10 }}
           />

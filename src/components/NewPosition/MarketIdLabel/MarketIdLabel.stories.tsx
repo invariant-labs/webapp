@@ -12,7 +12,7 @@ storiesOf('position/marketIdLabel', module).add('default', () => {
       }}>
       <MarketIdLabel
         marketId='as8d9asdjkl1239871aslkdjas0d978as123hjasjdh'
-        displayLength={10}
+        displayLength={9}
         copyPoolAddressHandler={() => {}}
       />
     </div>
