@@ -344,7 +344,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   return !isLoadingList && position ? (
     <PositionDetails
-      poolAddress={position.address}
+      poolAddress={position.poolData.address}
       copyPoolAddressHandler={copyPoolAddressHandler}
       detailsData={data}
       midPrice={midPrice}

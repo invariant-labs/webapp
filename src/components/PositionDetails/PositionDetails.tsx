@@ -107,16 +107,10 @@ const PositionDetails: React.FC<IProps> = ({
           item
           direction='row'
           alignItems='flex-end'
-          justifyContent='space-between'
-          style={{ paddingLeft: 20 }}
+          // justifyContent='space-between'
+          style={{ paddingLeft: 20, flexDirection: 'row-reverse' }}
           className={classes.right}
           wrap='nowrap'>
-          <MarketIdLabel
-            marketId={poolAddress.toString()}
-            displayLength={10}
-            copyPoolAddressHandler={copyPoolAddressHandler}
-            style={{ paddingBottom: 20 }}
-          />
           <Hidden xsDown>
             <Button
               className={classes.button}
@@ -127,6 +121,12 @@ const PositionDetails: React.FC<IProps> = ({
               <span className={classes.buttonText}>+ Add Liquidity</span>
             </Button>
           </Hidden>
+          <MarketIdLabel
+            marketId={poolAddress.toString()}
+            displayLength={10}
+            copyPoolAddressHandler={copyPoolAddressHandler}
+            style={{ paddingBottom: 20, paddingRight: 10 }}
+          />
         </Grid>
 
         <SinglePositionPlot
