@@ -63,6 +63,7 @@ export interface IDepositSelector {
 export const DepositSelector: React.FC<IDepositSelector> = ({
   tokenFrom,
   tokenTo,
+  feeTier,
   tokens,
   setPositionTokens,
   onAddLiquidity,
@@ -96,29 +97,41 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   const [isLoaded, setIsLoaded] = useState<boolean>(false)
 
   useEffect(() => {
-    if (isLoaded || tokens.length === 0) {
+    if (isLoaded || tokens.length === 0 || ALL_FEE_TIERS_DATA.length === 0) {
       return
     }
 
     let tokenAIndexFromPath = null
     let tokenBIndexFromPath = null
+    let feeTierIndexFromPath = null
 
     tokens.forEach((token, index) => {
-      if (token.symbol === tokenFrom) {
+      if (token.assetAddress.toString() === tokenFrom) {
         tokenAIndexFromPath = index
       }
 
-      if (token.symbol === tokenTo) {
+      if (token.assetAddress.toString() === tokenTo) {
         tokenBIndexFromPath = index
+      }
+    })
+
+    ALL_FEE_TIERS_DATA.forEach((feeTierData, index) => {
+      const parsedFee = (+feeTier.replace('_', '') * Math.pow(10, 8)).toString()
+
+      if (feeTierData.tier.fee.toString() === parsedFee) {
+        feeTierIndexFromPath = index
       }
     })
 
     setTokenAIndex(tokenAIndexFromPath)
     setTokenBIndex(tokenBIndexFromPath)
+
+    if (feeTierIndexFromPath !== null) {
+      setPositionTokens(tokenAIndex, tokenBIndex, feeTierIndexFromPath)
+    }
+
     setIsLoaded(true)
   }, [tokens])
-
-  console.log(tokens, ALL_FEE_TIERS_DATA)
 
   const getButtonMessage = useCallback(() => {
     if (tokenAIndex === null || tokenBIndex === null) {
