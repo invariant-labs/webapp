@@ -34,6 +34,7 @@ import { network } from '@selectors/solanaConnection'
 import { getCurrentSolanaConnection } from '@web3/connection'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { openWalletSelectorModal } from '@web3/selector'
+import { Color } from '@material-ui/lab'
 
 export const NewPositionWrapper = () => {
   const dispatch = useDispatch()
@@ -258,6 +259,16 @@ export const NewPositionWrapper = () => {
     }
   }
 
+  const copyPoolAddressHandler = (message: string, variant: Color) => {
+    dispatch(
+      snackbarsActions.add({
+        message,
+        variant,
+        persist: false
+      })
+    )
+  }
+
   const initialIsConcentratedValue =
     localStorage.getItem('IS_CONCENTRATED') === 'true' ||
     localStorage.getItem('IS_CONCENTRATED') === null
@@ -362,6 +373,8 @@ export const NewPositionWrapper = () => {
 
   return (
     <NewPosition
+      copyPoolAddressHandler={copyPoolAddressHandler}
+      poolAddress={poolIndex !== null ? allPools[poolIndex].address.toString() : ''}
       tokens={tokens}
       onChangePositionTokens={(tokenA, tokenB, feeTierIndex) => {
         if (
