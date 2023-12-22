@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { Typography, Popover, Grid, Input, Button } from '@material-ui/core'
 import { NetworkType } from '@consts/static'
-import icons from '@static/icons'
+import { Button, Grid, Input, Popover, Typography } from '@material-ui/core'
 import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
+import icons from '@static/icons'
 import classNames from 'classnames'
-import useStyles from './styles'
+import React, { useState } from 'react'
 import { ISelectNetwork } from '../SelectNetwork/SelectNetwork'
+import useStyles from './styles'
 
 export interface ISelectMainnetRpc {
   networks: ISelectNetwork[]
@@ -56,7 +56,7 @@ export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
             <Grid
               className={classNames(classes.listItem, rpc === activeRPC ? classes.active : null)}
               item
-              key={`networks-${networkType}`}
+              key={`networks-${networkType}-${rpc}`}
               onClick={() => {
                 onSelect(networkType, rpc, rpcName)
                 handleClose()
