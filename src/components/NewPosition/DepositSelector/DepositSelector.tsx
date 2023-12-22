@@ -1,21 +1,22 @@
+import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
 import Select from '@components/Inputs/Select/Select'
-import { SwapToken } from '@selectors/solanaWallet'
-import { getScaleFromString, printBN, printBNtoBN } from '@consts/utils'
-import { Grid, Typography } from '@material-ui/core'
-import React, { useState, useCallback, useEffect } from 'react'
-import FeeSwitch from '../FeeSwitch/FeeSwitch'
-import classNames from 'classnames'
-import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
-import SwapList from '@static/svg/swap-list.svg'
-import useStyles from './style'
-import { PublicKey } from '@solana/web3.js'
 import {
+  ALL_FEE_TIERS_DATA,
   WRAPPED_SOL_ADDRESS,
   WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT,
   WSOL_POOL_INIT_LAMPORTS
 } from '@consts/static'
+import { getScaleFromString, printBN, printBNtoBN } from '@consts/utils'
+import { Grid, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
+import { SwapToken } from '@selectors/solanaWallet'
+import { PublicKey } from '@solana/web3.js'
+import SwapList from '@static/svg/swap-list.svg'
+import classNames from 'classnames'
+import React, { useCallback, useEffect, useState } from 'react'
+import FeeSwitch from '../FeeSwitch/FeeSwitch'
+import useStyles from './style'
 
 export interface InputState {
   value: string
@@ -26,6 +27,9 @@ export interface InputState {
 }
 
 export interface IDepositSelector {
+  tokenFrom: string
+  tokenTo: string
+  feeTier: string
   tokens: SwapToken[]
   setPositionTokens: (
     tokenAIndex: number | null,
@@ -57,6 +61,8 @@ export interface IDepositSelector {
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
+  tokenFrom,
+  tokenTo,
   tokens,
   setPositionTokens,
   onAddLiquidity,
@@ -86,6 +92,33 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
   const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
+
+  const [isLoaded, setIsLoaded] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (isLoaded || tokens.length === 0) {
+      return
+    }
+
+    let tokenAIndexFromPath = null
+    let tokenBIndexFromPath = null
+
+    tokens.forEach((token, index) => {
+      if (token.symbol === tokenFrom) {
+        tokenAIndexFromPath = index
+      }
+
+      if (token.symbol === tokenTo) {
+        tokenBIndexFromPath = index
+      }
+    })
+
+    setTokenAIndex(tokenAIndexFromPath)
+    setTokenBIndex(tokenBIndexFromPath)
+    setIsLoaded(true)
+  }, [tokens])
+
+  console.log(tokens, ALL_FEE_TIERS_DATA)
 
   const getButtonMessage = useCallback(() => {
     if (tokenAIndex === null || tokenBIndex === null) {

@@ -1,24 +1,24 @@
-import React, { useEffect } from 'react'
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
-import { SwapPage } from './SwapPage/SwapPage'
-import { useDispatch, useSelector } from 'react-redux'
-import { ListPage } from './ListPage/ListPage'
+import Footer from '@components/Footer/Footer'
 import { toBlur } from '@consts/uiUtils'
-import { Status as WalletStatus } from '@reducers/solanaWallet'
-import { NewPositionPage } from './NewPositionPage/NewPositionPage'
 import EventsHandlers from '@containers/EventsHandlers'
 import HeaderWrapper from '@containers/HeaderWrapper/HeaderWrapper'
-import solanaConnectionSelector from '@selectors/solanaConnection'
-import { actions as solanaConnectionActions, Status } from '@reducers/solanaConnection'
-import { actions } from '@reducers/positions'
-import { status } from '@selectors/solanaWallet'
-import { SinglePositionPage } from './SinglePositionPage/SinglePositionPage'
-import SingleFarmPage from './SingleFarmPage/SingleFarmPage'
-import Footer from '@components/Footer/Footer'
-import FarmsPage from './FarmsPage/FarmsPage'
-import StatsPage from './StatsPage/StatsPage'
-import BondsPage from './BondsPage/BondsPage'
 import PerformanceWarning from '@containers/PerformanceWarning/PerformanceWarning'
+import { actions } from '@reducers/positions'
+import { Status, actions as solanaConnectionActions } from '@reducers/solanaConnection'
+import { Status as WalletStatus } from '@reducers/solanaWallet'
+import solanaConnectionSelector from '@selectors/solanaConnection'
+import { status } from '@selectors/solanaWallet'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Redirect, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+import BondsPage from './BondsPage/BondsPage'
+import FarmsPage from './FarmsPage/FarmsPage'
+import { ListPage } from './ListPage/ListPage'
+import { NewPositionPage } from './NewPositionPage/NewPositionPage'
+import SingleFarmPage from './SingleFarmPage/SingleFarmPage'
+import { SinglePositionPage } from './SinglePositionPage/SinglePositionPage'
+import StatsPage from './StatsPage/StatsPage'
+import { SwapPage } from './SwapPage/SwapPage'
 
 export const PagesRouter: React.FC = () => {
   const dispatch = useDispatch()
@@ -44,7 +44,16 @@ export const PagesRouter: React.FC = () => {
         <HeaderWrapper />
         <Switch>
           <Route path='/swap' component={SwapPage} />
-          <Route path={'/newPosition'} component={NewPositionPage} />
+          <Route
+            path={'/newPosition/:tokenFrom/:tokenTo/:feeTier'}
+            render={({ match }) => (
+              <NewPositionPage
+                tokenFrom={match.params.tokenFrom}
+                tokenTo={match.params.tokenTo}
+                feeTier={match.params.feeTier}
+              />
+            )}
+          />
           <Route path={'/pool'} component={ListPage} />
           <Route path={'/farms'} component={FarmsPage} />
           <Route
