@@ -178,8 +178,6 @@ export const WrappedSwap = () => {
 
   return (
     <Swap
-      tokenFrom={tokenFrom}
-      tokenTo={tokenTo}
       onSwap={(
         slippage,
         estimatedPriceAfterSwap,

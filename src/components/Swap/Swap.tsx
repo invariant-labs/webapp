@@ -64,8 +64,6 @@ export interface Pools {
 }
 
 export interface ISwap {
-  tokenFrom: PublicKey | null
-  tokenTo: PublicKey | null
   walletStatus: Status
   swapData: SwapData
   tokens: SwapToken[]
@@ -102,8 +100,6 @@ export interface ISwap {
 }
 
 export const Swap: React.FC<ISwap> = ({
-  tokenFrom,
-  tokenTo,
   walletStatus,
   tokens,
   pools,
@@ -454,12 +450,12 @@ export const Swap: React.FC<ISwap> = ({
   }, [detailsOpen, canShowDetails])
 
   const handleRefresh = async () => {
-    if (tokenFrom === null || tokenTo == null) return
+    if (tokenFromIndex === null || tokenToIndex == null) return
 
     dispatch(
       poolsActions.getAllPoolsForPairData({
-        first: tokenFrom,
-        second: tokenTo
+        first: tokens[tokenFromIndex].address,
+        second: tokens[tokenToIndex].address
       })
     )
   }
