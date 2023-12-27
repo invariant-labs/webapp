@@ -103,7 +103,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
     let tokenAIndexFromPath = null
     let tokenBIndexFromPath = null
-    let feeTierIndexFromPath = null
+    let feeTierIndexFromPath = 0
 
     tokens.forEach((token, index) => {
       if (token.assetAddress.toString() === initialTokenFrom) {
@@ -125,10 +125,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
     setTokenAIndex(tokenAIndexFromPath)
     setTokenBIndex(tokenBIndexFromPath)
-
-    if (feeTierIndexFromPath !== null) {
-      setPositionTokens(tokenAIndexFromPath, tokenBIndexFromPath, feeTierIndexFromPath)
-    }
+    setPositionTokens(tokenAIndexFromPath, tokenBIndexFromPath, feeTierIndexFromPath)
 
     setIsLoaded(true)
   }, [tokens])

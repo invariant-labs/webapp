@@ -376,7 +376,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
             if (index1 != null && index2 != null) {
               const address1 = tokens[index1].assetAddress.toString()
-              const address2 = tokens[index1].assetAddress.toString()
+              const address2 = tokens[index2].assetAddress.toString()
               history.push(`/newPosition/${address1}/${address2}/${parsedFee}`)
             } else if (index1 != null) {
               const address = tokens[index1].assetAddress.toString()
