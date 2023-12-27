@@ -45,12 +45,12 @@ export const PagesRouter: React.FC = () => {
         <Switch>
           <Route path='/swap' component={SwapPage} />
           <Route
-            path={'/newPosition/:initialTokenFrom/:initialTokenTo/:initialFee'}
+            path={'/newPosition/:initialTokenFrom?/:initialTokenTo?/:initialFee?'}
             render={({ match }) => (
               <NewPositionPage
-                initialTokenFrom={match.params.initialTokenFrom}
-                initialTokenTo={match.params.initialTokenTo}
-                initialFee={match.params.initialFee}
+                initialTokenFrom={match.params.initialTokenFrom ?? ''}
+                initialTokenTo={match.params.initialTokenTo ?? ''}
+                initialFee={match.params.initialFee ?? ''}
               />
             )}
           />
