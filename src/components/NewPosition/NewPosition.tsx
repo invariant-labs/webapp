@@ -25,7 +25,7 @@ import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
 import { History } from 'history'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 import DepositSelector from './DepositSelector/DepositSelector'
@@ -314,6 +314,31 @@ export const NewPosition: React.FC<INewPosition> = ({
     onSlippageChange(slippage)
   }
 
+  const tokenAliasMap: { [key: string]: string } = {
+    SOL: 'So11111111111111111111111111111111111111112',
+    USDC: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+    USDT: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+    USDH: 'USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX',
+    mSOL: 'mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So',
+    bSOL: 'bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1',
+    stSOL: '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj',
+    SNY: '4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y',
+    ETH: '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs',
+    LFNTY: 'LFNTYraetVioAPnGJht4yNg2aUZFXR776cMeN9VMjXp'
+  }
+
+  const reversedTokenAliasMap = useMemo(() => {
+    return Object.fromEntries(Object.entries(tokenAliasMap).map(([key, value]) => [value, key]))
+  }, [tokenAliasMap])
+
+  const getAlias = (address: string): string => {
+    return reversedTokenAliasMap[address] ?? address
+  }
+
+  const getAddress = (alias: string): string => {
+    return tokenAliasMap[alias] ?? alias
+  }
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Link to='/pool' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
@@ -361,6 +386,7 @@ export const NewPosition: React.FC<INewPosition> = ({
           initialTokenFrom={initialTokenFrom}
           initialTokenTo={initialTokenTo}
           initialFee={initialFee}
+          getAddress={getAddress}
           className={classes.deposit}
           tokens={tokens}
           setPositionTokens={(index1, index2, fee) => {
@@ -375,14 +401,14 @@ export const NewPosition: React.FC<INewPosition> = ({
               parsedFee.slice(0, parsedFee.length - 2) + '_' + parsedFee.slice(parsedFee.length - 2)
 
             if (index1 != null && index2 != null) {
-              const address1 = tokens[index1].assetAddress.toString()
-              const address2 = tokens[index2].assetAddress.toString()
+              const address1 = getAlias(tokens[index1].assetAddress.toString())
+              const address2 = getAlias(tokens[index2].assetAddress.toString())
               history.push(`/newPosition/${address1}/${address2}/${parsedFee}`)
             } else if (index1 != null) {
-              const address = tokens[index1].assetAddress.toString()
+              const address = getAlias(tokens[index1].assetAddress.toString())
               history.push(`/newPosition/${address}/${parsedFee}`)
             } else if (index2 != null) {
-              const address = tokens[index2].assetAddress.toString()
+              const address = getAlias(tokens[index2].assetAddress.toString())
               history.push(`/newPosition/${address}/${parsedFee}`)
             } else if (fee != null) {
               history.push(`/newPosition/${parsedFee}`)

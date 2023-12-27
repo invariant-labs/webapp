@@ -30,6 +30,7 @@ export interface IDepositSelector {
   initialTokenFrom: string
   initialTokenTo: string
   initialFee: string
+  getAddress: (address: string) => string
   tokens: SwapToken[]
   setPositionTokens: (
     tokenAIndex: number | null,
@@ -64,6 +65,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   initialTokenFrom,
   initialTokenTo,
   initialFee,
+  getAddress,
   tokens,
   setPositionTokens,
   onAddLiquidity,
@@ -106,11 +108,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     let feeTierIndexFromPath = 0
 
     tokens.forEach((token, index) => {
-      if (token.assetAddress.toString() === initialTokenFrom) {
+      if (token.assetAddress.toString() === getAddress(initialTokenFrom)) {
         tokenAIndexFromPath = index
       }
 
-      if (token.assetAddress.toString() === initialTokenTo) {
+      if (token.assetAddress.toString() === getAddress(initialTokenTo)) {
         tokenBIndexFromPath = index
       }
     })
