@@ -2,7 +2,7 @@ import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import Slippage from '@components/Modals/Slippage/Slippage'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
-import { BestTier } from '@consts/static'
+import { ALL_FEE_TIERS_DATA, BestTier } from '@consts/static'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import {
   CoingeckoPriceData,
@@ -24,6 +24,7 @@ import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
+import { History } from 'history'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
@@ -36,6 +37,7 @@ export interface INewPosition {
   initialTokenFrom: string
   initialTokenTo: string
   initialFee: string
+  history: History<unknown>
   tokens: SwapToken[]
   data: PlotTickData[]
   midPrice: TickPlotPositionData
@@ -104,6 +106,7 @@ export const NewPosition: React.FC<INewPosition> = ({
   initialTokenFrom,
   initialTokenTo,
   initialFee,
+  history,
   tokens,
   data,
   midPrice,
@@ -364,6 +367,19 @@ export const NewPosition: React.FC<INewPosition> = ({
             setTokenAIndex(index1)
             setTokenBIndex(index2)
             onChangePositionTokens(index1, index2, fee)
+
+            let parsedFee = (+ALL_FEE_TIERS_DATA[fee].tier.fee / Math.pow(10, 8)).toString()
+            parsedFee = parsedFee.padStart(3, '0')
+            parsedFee =
+              parsedFee.slice(0, parsedFee.length - 2) + '_' + parsedFee.slice(parsedFee.length - 2)
+
+            if (index1 && index2) {
+              history.push(
+                `/newPosition/${tokens[index1].assetAddress.toString()}/${tokens[
+                  index2
+                ].assetAddress.toString()}/${parsedFee}`
+              )
+            }
           }}
           onAddLiquidity={() => {
             if (tokenAIndex !== null && tokenBIndex !== null) {
