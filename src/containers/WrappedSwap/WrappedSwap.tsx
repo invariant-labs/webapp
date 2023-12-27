@@ -178,6 +178,19 @@ export const WrappedSwap = () => {
 
   return (
     <Swap
+      isFetchingNewPool={isFetchingNewPool}
+      onRefresh={(tokenFromIndex, tokenToIndex) => {
+        if (tokenFromIndex === null || tokenToIndex == null) {
+          return
+        }
+
+        dispatch(
+          poolsActions.getAllPoolsForPairData({
+            first: tokensList[tokenFromIndex].address,
+            second: tokensList[tokenToIndex].address
+          })
+        )
+      }}
       onSwap={(
         slippage,
         estimatedPriceAfterSwap,

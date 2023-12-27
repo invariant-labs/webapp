@@ -17,10 +17,9 @@ import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { Box, Button, CardMedia, Grid, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
-import { PoolWithAddress, actions as poolsActions } from '@reducers/pools'
+import { PoolWithAddress } from '@reducers/pools'
 import { Status } from '@reducers/solanaWallet'
 import { Swap as SwapData } from '@reducers/swap'
-import { isLoadingLatestPoolsForTransaction } from '@selectors/pools'
 import { PublicKey } from '@solana/web3.js'
 import infoIcon from '@static/svg/info.svg'
 import refreshIcon from '@static/svg/refresh.svg'
@@ -28,7 +27,6 @@ import settingIcon from '@static/svg/settings.svg'
 import SwapArrows from '@static/svg/swap-arrows.svg'
 import classNames from 'classnames'
 import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import ExchangeRate from './ExchangeRate/ExchangeRate'
 import TransactionDetailsBox from './TransactionDetailsBox/TransactionDetailsBox'
 import useStyles from './style'
@@ -64,6 +62,8 @@ export interface Pools {
 }
 
 export interface ISwap {
+  isFetchingNewPool: boolean
+  onRefresh: (tokenFrom: number | null, tokenTo: number | null) => void
   walletStatus: Status
   swapData: SwapData
   tokens: SwapToken[]
@@ -100,6 +100,8 @@ export interface ISwap {
 }
 
 export const Swap: React.FC<ISwap> = ({
+  isFetchingNewPool,
+  onRefresh,
   walletStatus,
   tokens,
   pools,
@@ -129,8 +131,6 @@ export const Swap: React.FC<ISwap> = ({
     FROM = 'from',
     TO = 'to'
   }
-  const dispatch = useDispatch()
-  const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
   const [tokenFromIndex, setTokenFromIndex] = React.useState<number | null>(null)
   const [tokenToIndex, setTokenToIndex] = React.useState<number | null>(null)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
@@ -450,14 +450,7 @@ export const Swap: React.FC<ISwap> = ({
   }, [detailsOpen, canShowDetails])
 
   const handleRefresh = async () => {
-    if (tokenFromIndex === null || tokenToIndex == null) return
-
-    dispatch(
-      poolsActions.getAllPoolsForPairData({
-        first: tokens[tokenFromIndex].address,
-        second: tokens[tokenToIndex].address
-      })
-    )
+    onRefresh(tokenFromIndex, tokenToIndex)
   }
 
   useEffect(() => {
