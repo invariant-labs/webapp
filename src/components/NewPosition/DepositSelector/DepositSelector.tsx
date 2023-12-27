@@ -127,7 +127,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     setTokenBIndex(tokenBIndexFromPath)
 
     if (feeTierIndexFromPath !== null) {
-      setPositionTokens(tokenAIndex, tokenBIndex, feeTierIndexFromPath)
+      setPositionTokens(tokenAIndexFromPath, tokenBIndexFromPath, feeTierIndexFromPath)
     }
 
     setIsLoaded(true)

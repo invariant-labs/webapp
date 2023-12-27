@@ -1,22 +1,22 @@
-import React from 'react'
-import { PublicKey } from '@solana/web3.js'
-import { Grid, CardMedia, Button, Hidden, useMediaQuery, IconButton } from '@material-ui/core'
-import NavbarButton from '@components/Navbar/Button'
 import ChangeWalletButton from '@components/HeaderButton/ChangeWalletButton'
-import { NetworkType, SolanaNetworks } from '@consts/static'
-import { Link } from 'react-router-dom'
-import useButtonStyles from '@components/HeaderButton/style'
-import icons from '@static/icons'
-import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 import SelectNetworkButton from '@components/HeaderButton/SelectNetworkButton'
-import { theme } from '@static/theme'
-import RoutesModal from '@components/Modals/RoutesModal/RoutesModal'
-import { blurContent, unblurContent } from '@consts/uiUtils'
-import Hamburger from '@static/svg/Hamburger.svg'
-import classNames from 'classnames'
-import useStyles from './style'
 import SelectRPCButton from '@components/HeaderButton/SelectRPCButton'
+import useButtonStyles from '@components/HeaderButton/style'
+import RoutesModal from '@components/Modals/RoutesModal/RoutesModal'
 import SelectMainnetRPC from '@components/Modals/SelectMainnetRPC/SelectMainnetRPC'
+import NavbarButton from '@components/Navbar/Button'
+import { NetworkType, SolanaNetworks } from '@consts/static'
+import { blurContent, unblurContent } from '@consts/uiUtils'
+import { Button, CardMedia, Grid, Hidden, IconButton, useMediaQuery } from '@material-ui/core'
+import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
+import { PublicKey } from '@solana/web3.js'
+import icons from '@static/icons'
+import Hamburger from '@static/svg/Hamburger.svg'
+import { theme } from '@static/theme'
+import classNames from 'classnames'
+import React from 'react'
+import { Link } from 'react-router-dom'
+import useStyles from './style'
 
 export interface IHeader {
   address: PublicKey
@@ -54,7 +54,7 @@ export const Header: React.FC<IHeader> = ({
       : ['swap', 'pool', 'stats', 'farms', 'bonds']
 
   const otherRoutesToHighlight: Record<string, RegExp[]> = {
-    pool: [/^newPosition$/, /^position\/*/],
+    pool: [/^newPosition\/*/, /^position\/*/],
     farms: [/^farms$/, /^farm\/*/]
   }
 

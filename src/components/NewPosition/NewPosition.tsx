@@ -368,17 +368,24 @@ export const NewPosition: React.FC<INewPosition> = ({
             setTokenBIndex(index2)
             onChangePositionTokens(index1, index2, fee)
 
-            let parsedFee = (+ALL_FEE_TIERS_DATA[fee].tier.fee / Math.pow(10, 8)).toString()
-            parsedFee = parsedFee.padStart(3, '0')
+            let parsedFee = (+ALL_FEE_TIERS_DATA[fee].tier.fee / Math.pow(10, 8))
+              .toString()
+              .padStart(3, '0')
             parsedFee =
               parsedFee.slice(0, parsedFee.length - 2) + '_' + parsedFee.slice(parsedFee.length - 2)
 
-            if (index1 && index2) {
-              history.push(
-                `/newPosition/${tokens[index1].assetAddress.toString()}/${tokens[
-                  index2
-                ].assetAddress.toString()}/${parsedFee}`
-              )
+            if (index1 != null && index2 != null) {
+              const address1 = tokens[index1].assetAddress.toString()
+              const address2 = tokens[index1].assetAddress.toString()
+              history.push(`/newPosition/${address1}/${address2}/${parsedFee}`)
+            } else if (index1 != null) {
+              const address = tokens[index1].assetAddress.toString()
+              history.push(`/newPosition/${address}/${parsedFee}`)
+            } else if (index2 != null) {
+              const address = tokens[index2].assetAddress.toString()
+              history.push(`/newPosition/${address}/${parsedFee}`)
+            } else if (fee != null) {
+              history.push(`/newPosition/${parsedFee}`)
             }
           }}
           onAddLiquidity={() => {
