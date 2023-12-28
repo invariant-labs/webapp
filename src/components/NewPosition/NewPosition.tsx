@@ -339,6 +339,28 @@ export const NewPosition: React.FC<INewPosition> = ({
     return tokenAliasMap[alias] ?? alias
   }
 
+  const updatePath = (index1: number | null, index2: number | null, fee: number) => {
+    let parsedFee = (+ALL_FEE_TIERS_DATA[fee].tier.fee / Math.pow(10, 8))
+      .toString()
+      .padStart(3, '0')
+    parsedFee =
+      parsedFee.slice(0, parsedFee.length - 2) + '_' + parsedFee.slice(parsedFee.length - 2)
+
+    if (index1 != null && index2 != null) {
+      const address1 = getAlias(tokens[index1].assetAddress.toString())
+      const address2 = getAlias(tokens[index2].assetAddress.toString())
+      history.push(`/newPosition/${address1}/${address2}/${parsedFee}`)
+    } else if (index1 != null) {
+      const address = getAlias(tokens[index1].assetAddress.toString())
+      history.push(`/newPosition/${address}/${parsedFee}`)
+    } else if (index2 != null) {
+      const address = getAlias(tokens[index2].assetAddress.toString())
+      history.push(`/newPosition/${address}/${parsedFee}`)
+    } else if (fee != null) {
+      history.push(`/newPosition/${parsedFee}`)
+    }
+  }
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Link to='/pool' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
@@ -394,25 +416,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             setTokenBIndex(index2)
             onChangePositionTokens(index1, index2, fee)
 
-            let parsedFee = (+ALL_FEE_TIERS_DATA[fee].tier.fee / Math.pow(10, 8))
-              .toString()
-              .padStart(3, '0')
-            parsedFee =
-              parsedFee.slice(0, parsedFee.length - 2) + '_' + parsedFee.slice(parsedFee.length - 2)
-
-            if (index1 != null && index2 != null) {
-              const address1 = getAlias(tokens[index1].assetAddress.toString())
-              const address2 = getAlias(tokens[index2].assetAddress.toString())
-              history.push(`/newPosition/${address1}/${address2}/${parsedFee}`)
-            } else if (index1 != null) {
-              const address = getAlias(tokens[index1].assetAddress.toString())
-              history.push(`/newPosition/${address}/${parsedFee}`)
-            } else if (index2 != null) {
-              const address = getAlias(tokens[index2].assetAddress.toString())
-              history.push(`/newPosition/${address}/${parsedFee}`)
-            } else if (fee != null) {
-              history.push(`/newPosition/${parsedFee}`)
-            }
+            updatePath(index1, index2, fee)
           }}
           onAddLiquidity={() => {
             if (tokenAIndex !== null && tokenBIndex !== null) {
@@ -498,6 +502,8 @@ export const NewPosition: React.FC<INewPosition> = ({
             setTokenAIndex(tokenBIndex)
             setTokenBIndex(pom)
             onChangePositionTokens(tokenBIndex, tokenAIndex, currentFeeIndex)
+
+            updatePath(tokenBIndex, tokenAIndex, currentFeeIndex)
           }}
           poolIndex={poolIndex}
           bestTierIndex={bestTierIndex}
