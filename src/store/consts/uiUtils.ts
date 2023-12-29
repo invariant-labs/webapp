@@ -43,9 +43,8 @@ export const importantStyles = (styleObject: { [key: string]: string | number })
   )
 
 export const parseFeeToPathFee = (fee: BN): string => {
-  let parsedFee = (fee / Math.pow(10, 8)).toString().padStart(3, '0')
-  return (parsedFee =
-    parsedFee.slice(0, parsedFee.length - 2) + '_' + parsedFee.slice(parsedFee.length - 2))
+  const parsedFee = (fee / Math.pow(10, 8)).toString().padStart(3, '0')
+  return parsedFee.slice(0, parsedFee.length - 2) + '_' + parsedFee.slice(parsedFee.length - 2)
 }
 
 export const parsePathFeeToFeeString = (pathFee: string): string => {
