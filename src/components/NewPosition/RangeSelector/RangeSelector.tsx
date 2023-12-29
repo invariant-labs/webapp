@@ -1,23 +1,23 @@
-import { Button, Grid, Tooltip, Typography } from '@material-ui/core'
-import React, { useState, useEffect, useMemo } from 'react'
-import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
+import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
+import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import {
   calcPrice,
   calcTicksAmountInRange,
+  calculateConcentrationRange,
   nearestTickIndex,
-  toMaxNumericPlaces,
-  calculateConcentrationRange
+  toMaxNumericPlaces
 } from '@consts/utils'
-import { PlotTickData } from '@reducers/positions'
 import { MIN_TICK } from '@invariant-labs/sdk'
-import { MAX_TICK } from '@invariant-labs/sdk/src'
-import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
-import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { getConcentrationArray, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
+import { MAX_TICK } from '@invariant-labs/sdk/src'
+import { Button, Grid, Tooltip, Typography } from '@material-ui/core'
+import { PlotTickData } from '@reducers/positions'
 import loader from '@static/gif/loader.gif'
-import useStyles from './style'
 import activeLiquidity from '@static/svg/activeLiquidity.svg'
+import React, { useEffect, useMemo, useState } from 'react'
+import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
+import useStyles from './style'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -256,10 +256,25 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }
 
-  const concentrationArray = useMemo(
-    () => getConcentrationArray(tickSpacing, 2, midPrice.index).sort((a, b) => a - b),
-    [tickSpacing, midPrice.index]
-  )
+  const concentrationArray = useMemo(() => {
+    const concentrationArray = getConcentrationArray(tickSpacing, 2, midPrice.index).sort(
+      (a, b) => a - b
+    )
+    const moreLinearConcentrationArray = []
+
+    let lastElement = 0
+    for (let i = 0; i < concentrationArray.length; i++) {
+      const diff = (concentrationArray[i] - lastElement) / 50 + 1
+      for (let j = 0; j < diff; j++) {
+        moreLinearConcentrationArray.push(concentrationArray[i])
+      }
+      lastElement = concentrationArray[i]
+    }
+
+    return moreLinearConcentrationArray
+  }, [tickSpacing, midPrice.index])
+
+  console.log(concentrationArray.length)
 
   useEffect(() => {
     if (isConcentrated) {
@@ -466,6 +481,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               valueIndex={concentrationIndex}
               values={concentrationArray}
               valueChangeHandler={value => {
+                console.log(value)
                 setConcentrationIndex(value)
                 const { leftRange, rightRange } = calculateConcentrationRange(
                   tickSpacing,
