@@ -9,7 +9,7 @@ import {
 } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { MAX_TICK, getX, getY } from '@invariant-labs/sdk/lib/math'
-import { DECIMAL, calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
+import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
 import { Grid, Typography } from '@material-ui/core'
 import { actions as farmsActions } from '@reducers/farms'
 import { actions } from '@reducers/positions'
@@ -379,7 +379,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             ? undefined
             : tokenYPriceData.price * +printBN(position.tokenY.balance, position.tokenY.decimals)
       }}
-      fee={+printBN(position.poolData.fee.v, DECIMAL - 2)}
+      fee={position.poolData.fee}
       min={min}
       max={max}
       initialIsDiscreteValue={initialIsDiscreteValue}

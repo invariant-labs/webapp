@@ -1,5 +1,9 @@
 import SinglePositionInfo from '@components/PositionDetails/SinglePositionInfo/SinglePositionInfo'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
+import { addressToAlias, parseFeeToPathFee } from '@consts/uiUtils'
+import { printBN } from '@consts/utils'
+import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Hidden, Typography } from '@material-ui/core'
 import { PlotTickData } from '@reducers/positions'
 import { PublicKey } from '@solana/web3.js'
@@ -24,7 +28,7 @@ interface IProps {
   closePosition: (claimFarmRewards?: boolean) => void
   ticksLoading: boolean
   tickSpacing: number
-  fee: number
+  fee: Decimal
   min: number
   max: number
   initialIsDiscreteValue: boolean
@@ -81,7 +85,7 @@ const PositionDetails: React.FC<IProps> = ({
         </Link>
 
         <SinglePositionInfo
-          fee={fee}
+          fee={+printBN(fee.v, DECIMAL - 2)}
           onClickClaimFee={onClickClaimFee}
           closePosition={closePosition}
           tokenX={tokenX}
@@ -104,9 +108,11 @@ const PositionDetails: React.FC<IProps> = ({
             className={classes.button}
             variant='contained'
             onClick={() => {
-              history.push(
-                `/newPosition/${tokenXAddress.toString()}/${tokenYAddress.toString()}/${fee}`
-              )
+              const parsedFee = parseFeeToPathFee(fee.v)
+              const address1 = addressToAlias(tokenXAddress.toString())
+              const address2 = addressToAlias(tokenYAddress.toString())
+
+              history.push(`/newPosition/${address1}/${address2}/${parsedFee}`)
             }}>
             <span className={classes.buttonText}>+ Add Liquidity</span>
           </Button>
