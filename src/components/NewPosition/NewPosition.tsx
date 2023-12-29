@@ -1,38 +1,43 @@
-import { Button, Grid, Typography } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
-import DepositSelector from './DepositSelector/DepositSelector'
-import RangeSelector from './RangeSelector/RangeSelector'
-import { BN } from '@project-serum/anchor'
-import { SwapToken } from '@selectors/solanaWallet'
+import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import Slippage from '@components/Modals/Slippage/Slippage'
+import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
+import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
+import { ALL_FEE_TIERS_DATA, BestTier } from '@consts/static'
+import { blurContent, unblurContent } from '@consts/uiUtils'
 import {
-  calcPrice,
   CoingeckoPriceData,
-  determinePositionTokenBlock,
   PositionTokenBlock,
+  calcPrice,
+  determinePositionTokenBlock,
   printBN,
   printBNtoBN,
   trimLeadingZeros
 } from '@consts/utils'
-import { PublicKey } from '@solana/web3.js'
-import { PlotTickData } from '@reducers/positions'
-import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
-import { Link } from 'react-router-dom'
-import settingIcon from '@static/svg/settings.svg'
-import backIcon from '@static/svg/back-arrow.svg'
-import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { MIN_TICK } from '@invariant-labs/sdk'
-import { MAX_TICK } from '@invariant-labs/sdk/src'
-import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
-import PoolInit from './PoolInit/PoolInit'
-import { BestTier } from '@consts/static'
-import { blurContent, unblurContent } from '@consts/uiUtils'
-import Slippage from '@components/Modals/Slippage/Slippage'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
-import useStyles from './style'
+import { MAX_TICK } from '@invariant-labs/sdk/src'
+import { Button, Grid, Typography } from '@material-ui/core'
+import { BN } from '@project-serum/anchor'
+import { PlotTickData } from '@reducers/positions'
+import { SwapToken } from '@selectors/solanaWallet'
+import { PublicKey } from '@solana/web3.js'
+import backIcon from '@static/svg/back-arrow.svg'
+import settingIcon from '@static/svg/settings.svg'
+import { History } from 'history'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
+import DepositSelector from './DepositSelector/DepositSelector'
+import PoolInit from './PoolInit/PoolInit'
+import RangeSelector from './RangeSelector/RangeSelector'
+import useStyles from './style'
 
 export interface INewPosition {
+  initialTokenFrom: string
+  initialTokenTo: string
+  initialFee: string
+  history: History<unknown>
   tokens: SwapToken[]
   data: PlotTickData[]
   midPrice: TickPlotPositionData
@@ -98,6 +103,10 @@ export interface INewPosition {
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
+  initialTokenFrom,
+  initialTokenTo,
+  initialFee,
+  history,
   tokens,
   data,
   midPrice,
@@ -305,6 +314,53 @@ export const NewPosition: React.FC<INewPosition> = ({
     onSlippageChange(slippage)
   }
 
+  const tokenAliasMap: { [key: string]: string } = {
+    SOL: 'So11111111111111111111111111111111111111112',
+    USDC: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+    USDT: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+    USDH: 'USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX',
+    mSOL: 'mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So',
+    bSOL: 'bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1',
+    stSOL: '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj',
+    SNY: '4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y',
+    ETH: '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs',
+    LFNTY: 'LFNTYraetVioAPnGJht4yNg2aUZFXR776cMeN9VMjXp'
+  }
+
+  const reversedTokenAliasMap = useMemo(() => {
+    return Object.fromEntries(Object.entries(tokenAliasMap).map(([key, value]) => [value, key]))
+  }, [tokenAliasMap])
+
+  const getAlias = (address: string): string => {
+    return reversedTokenAliasMap[address] ?? address
+  }
+
+  const getAddress = (alias: string): string => {
+    return tokenAliasMap[alias] ?? alias
+  }
+
+  const updatePath = (index1: number | null, index2: number | null, fee: number) => {
+    let parsedFee = (+ALL_FEE_TIERS_DATA[fee].tier.fee / Math.pow(10, 8))
+      .toString()
+      .padStart(3, '0')
+    parsedFee =
+      parsedFee.slice(0, parsedFee.length - 2) + '_' + parsedFee.slice(parsedFee.length - 2)
+
+    if (index1 != null && index2 != null) {
+      const address1 = getAlias(tokens[index1].assetAddress.toString())
+      const address2 = getAlias(tokens[index2].assetAddress.toString())
+      history.replace(`/newPosition/${address1}/${address2}/${parsedFee}`)
+    } else if (index1 != null) {
+      const address = getAlias(tokens[index1].assetAddress.toString())
+      history.replace(`/newPosition/${address}/${parsedFee}`)
+    } else if (index2 != null) {
+      const address = getAlias(tokens[index2].assetAddress.toString())
+      history.replace(`/newPosition/${address}/${parsedFee}`)
+    } else if (fee != null) {
+      history.replace(`/newPosition/${parsedFee}`)
+    }
+  }
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Link to='/pool' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
@@ -349,12 +405,18 @@ export const NewPosition: React.FC<INewPosition> = ({
       <Grid container className={classes.row} alignItems='stretch'>
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
+          initialTokenFrom={initialTokenFrom}
+          initialTokenTo={initialTokenTo}
+          initialFee={initialFee}
+          getAddress={getAddress}
           className={classes.deposit}
           tokens={tokens}
           setPositionTokens={(index1, index2, fee) => {
             setTokenAIndex(index1)
             setTokenBIndex(index2)
             onChangePositionTokens(index1, index2, fee)
+
+            updatePath(index1, index2, fee)
           }}
           onAddLiquidity={() => {
             if (tokenAIndex !== null && tokenBIndex !== null) {
@@ -440,6 +502,8 @@ export const NewPosition: React.FC<INewPosition> = ({
             setTokenAIndex(tokenBIndex)
             setTokenBIndex(pom)
             onChangePositionTokens(tokenBIndex, tokenAIndex, currentFeeIndex)
+
+            updatePath(tokenBIndex, tokenAIndex, currentFeeIndex)
           }}
           poolIndex={poolIndex}
           bestTierIndex={bestTierIndex}
