@@ -1,33 +1,33 @@
-import React, { useMemo, useEffect, useState } from 'react'
-import { useHistory } from 'react-router'
-import { useDispatch, useSelector } from 'react-redux'
+import PositionDetails from '@components/PositionDetails/PositionDetails'
+import {
+  CoingeckoPriceData,
+  calcPrice,
+  calcYPerXPrice,
+  createPlaceholderLiquidityPlot,
+  getCoingeckoTokenPrice,
+  printBN
+} from '@consts/utils'
+import { calculatePriceSqrt } from '@invariant-labs/sdk'
+import { MAX_TICK, getX, getY } from '@invariant-labs/sdk/lib/math'
+import { DECIMAL, calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
+import { Grid, Typography } from '@material-ui/core'
+import { actions as farmsActions } from '@reducers/farms'
 import { actions } from '@reducers/positions'
+import { Status } from '@reducers/solanaWallet'
+import { hasFarms, hasUserStakes, stakesForPosition } from '@selectors/farms'
+import { hasTokens, volumeRanges } from '@selectors/pools'
 import {
   currentPositionRangeTicks,
   isLoadingPositionsList,
   plotTicks,
   singlePositionData
 } from '@selectors/positions'
-import PositionDetails from '@components/PositionDetails/PositionDetails'
-import { Grid, Typography } from '@material-ui/core'
-import {
-  calcPrice,
-  calcYPerXPrice,
-  CoingeckoPriceData,
-  createPlaceholderLiquidityPlot,
-  getCoingeckoTokenPrice,
-  printBN
-} from '@consts/utils'
-import { calculatePriceSqrt } from '@invariant-labs/sdk'
-import { calculateClaimAmount, DECIMAL } from '@invariant-labs/sdk/src/utils'
-import { getX, getY, MAX_TICK } from '@invariant-labs/sdk/lib/math'
-import loader from '@static/gif/loader.gif'
-import useStyles from './style'
-import { hasTokens, volumeRanges } from '@selectors/pools'
-import { hasFarms, hasUserStakes, stakesForPosition } from '@selectors/farms'
-import { actions as farmsActions } from '@reducers/farms'
-import { Status } from '@reducers/solanaWallet'
 import { status } from '@selectors/solanaWallet'
+import loader from '@static/gif/loader.gif'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router'
+import useStyles from './style'
 
 export interface IProps {
   id: string
@@ -332,6 +332,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   return !isLoadingList && position ? (
     <PositionDetails
+      tokenXAddress={position.tokenX.assetAddress}
+      tokenYAddress={position.tokenY.assetAddress}
       detailsData={data}
       midPrice={midPrice}
       leftRange={leftRange}

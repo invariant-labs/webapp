@@ -1,15 +1,18 @@
-import React, { useState } from 'react'
 import SinglePositionInfo from '@components/PositionDetails/SinglePositionInfo/SinglePositionInfo'
-import SinglePositionPlot from '@components/PositionDetails/SinglePositionPlot/SinglePositionPlot'
-import { Button, Grid, Hidden, Typography } from '@material-ui/core'
-import { Link, useHistory } from 'react-router-dom'
-import backIcon from '@static/svg/back-arrow.svg'
-import useStyles from './style'
-import { PlotTickData } from '@reducers/positions'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
+import { Button, Grid, Hidden, Typography } from '@material-ui/core'
+import { PlotTickData } from '@reducers/positions'
+import { PublicKey } from '@solana/web3.js'
+import backIcon from '@static/svg/back-arrow.svg'
+import React, { useState } from 'react'
+import { Link, useHistory } from 'react-router-dom'
 import { ILiquidityToken } from './SinglePositionInfo/consts'
+import SinglePositionPlot from './SinglePositionPlot/SinglePositionPlot'
+import useStyles from './style'
 
 interface IProps {
+  tokenXAddress: PublicKey
+  tokenYAddress: PublicKey
   detailsData: PlotTickData[]
   leftRange: TickPlotPositionData
   rightRange: TickPlotPositionData
@@ -37,6 +40,8 @@ interface IProps {
 }
 
 const PositionDetails: React.FC<IProps> = ({
+  tokenXAddress,
+  tokenYAddress,
   detailsData,
   leftRange,
   rightRange,
@@ -99,7 +104,9 @@ const PositionDetails: React.FC<IProps> = ({
             className={classes.button}
             variant='contained'
             onClick={() => {
-              history.push('/newPosition')
+              history.push(
+                `/newPosition/${tokenXAddress.toString()}/${tokenYAddress.toString()}/${fee}`
+              )
             }}>
             <span className={classes.buttonText}>+ Add Liquidity</span>
           </Button>
