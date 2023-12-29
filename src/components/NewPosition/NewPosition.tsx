@@ -349,15 +349,15 @@ export const NewPosition: React.FC<INewPosition> = ({
     if (index1 != null && index2 != null) {
       const address1 = getAlias(tokens[index1].assetAddress.toString())
       const address2 = getAlias(tokens[index2].assetAddress.toString())
-      history.push(`/newPosition/${address1}/${address2}/${parsedFee}`)
+      history.replace(`/newPosition/${address1}/${address2}/${parsedFee}`)
     } else if (index1 != null) {
       const address = getAlias(tokens[index1].assetAddress.toString())
-      history.push(`/newPosition/${address}/${parsedFee}`)
+      history.replace(`/newPosition/${address}/${parsedFee}`)
     } else if (index2 != null) {
       const address = getAlias(tokens[index2].assetAddress.toString())
-      history.push(`/newPosition/${address}/${parsedFee}`)
+      history.replace(`/newPosition/${address}/${parsedFee}`)
     } else if (fee != null) {
-      history.push(`/newPosition/${parsedFee}`)
+      history.replace(`/newPosition/${parsedFee}`)
     }
   }
 
