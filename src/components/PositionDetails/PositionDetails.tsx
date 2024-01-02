@@ -14,9 +14,14 @@ import { ILiquidityToken } from './SinglePositionInfo/consts'
 import SinglePositionPlot from './SinglePositionPlot/SinglePositionPlot'
 import useStyles from './style'
 
+import MarketIdLabel from '@components/NewPosition/MarketIdLabel/MarketIdLabel'
+import { Color } from '@material-ui/lab'
+
 interface IProps {
   tokenXAddress: PublicKey
   tokenYAddress: PublicKey
+  poolAddress: PublicKey
+  copyPoolAddressHandler: (message: string, variant: Color) => void
   detailsData: PlotTickData[]
   leftRange: TickPlotPositionData
   rightRange: TickPlotPositionData
@@ -46,6 +51,8 @@ interface IProps {
 const PositionDetails: React.FC<IProps> = ({
   tokenXAddress,
   tokenYAddress,
+  poolAddress,
+  copyPoolAddressHandler,
   detailsData,
   leftRange,
   rightRange,
@@ -96,6 +103,7 @@ const PositionDetails: React.FC<IProps> = ({
           userHasStakes={userHasStakes}
         />
       </Grid>
+
       <Grid
         container
         item
@@ -117,6 +125,32 @@ const PositionDetails: React.FC<IProps> = ({
             <span className={classes.buttonText}>+ Add Liquidity</span>
           </Button>
         </Hidden>
+        <Grid
+          container
+          item
+          direction='row'
+          alignItems='flex-end'
+          // justifyContent='space-between'
+          style={{ paddingLeft: 20, flexDirection: 'row-reverse' }}
+          className={classes.right}
+          wrap='nowrap'>
+          <Hidden xsDown>
+            <Button
+              className={classes.button}
+              variant='contained'
+              onClick={() => {
+                history.push('/newPosition')
+              }}>
+              <span className={classes.buttonText}>+ Add Liquidity</span>
+            </Button>
+          </Hidden>
+          <MarketIdLabel
+            marketId={poolAddress.toString()}
+            displayLength={9}
+            copyPoolAddressHandler={copyPoolAddressHandler}
+            style={{ paddingBottom: 20, paddingRight: 10 }}
+          />
+        </Grid>
 
         <SinglePositionPlot
           data={

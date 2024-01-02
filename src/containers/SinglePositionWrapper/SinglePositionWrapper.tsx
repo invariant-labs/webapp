@@ -11,8 +11,10 @@ import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { MAX_TICK, getX, getY } from '@invariant-labs/sdk/lib/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
 import { Grid, Typography } from '@material-ui/core'
+import { Color } from '@material-ui/lab'
 import { actions as farmsActions } from '@reducers/farms'
 import { actions } from '@reducers/positions'
+import { actions as snackbarsActions } from '@reducers/snackbars'
 import { Status } from '@reducers/solanaWallet'
 import { hasFarms, hasUserStakes, stakesForPosition } from '@selectors/farms'
 import { hasTokens, volumeRanges } from '@selectors/pools'
@@ -330,10 +332,22 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
   }, [position?.id])
 
+  const copyPoolAddressHandler = (message: string, variant: Color) => {
+    dispatch(
+      snackbarsActions.add({
+        message,
+        variant,
+        persist: false
+      })
+    )
+  }
+
   return !isLoadingList && position ? (
     <PositionDetails
       tokenXAddress={position.tokenX.assetAddress}
       tokenYAddress={position.tokenY.assetAddress}
+      poolAddress={position.poolData.address}
+      copyPoolAddressHandler={copyPoolAddressHandler}
       detailsData={data}
       midPrice={midPrice}
       leftRange={leftRange}

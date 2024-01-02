@@ -72,6 +72,11 @@ export const Header: React.FC<IHeader> = ({
   const mainnetRPCs = [
     {
       networkType: NetworkType.MAINNET,
+      rpc: SolanaNetworks.MAIN_HELLOMOON,
+      rpcName: 'Hello Moon'
+    },
+    {
+      networkType: NetworkType.MAINNET,
       rpc: SolanaNetworks.MAIN_ALCHEMY,
       rpcName: 'Alchemy'
     },
@@ -79,11 +84,6 @@ export const Header: React.FC<IHeader> = ({
       networkType: NetworkType.MAINNET,
       rpc: SolanaNetworks.MAIN_QUICKNODE,
       rpcName: 'Quicknode'
-    },
-    {
-      networkType: NetworkType.MAINNET,
-      rpc: SolanaNetworks.MAIN_HELLOMOON,
-      rpcName: 'Hello Moon'
     },
     { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN, rpcName: 'Solana' }
   ]

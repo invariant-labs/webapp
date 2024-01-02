@@ -17,6 +17,7 @@ import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { feeToTickSpacing } from '@invariant-labs/sdk/src/utils'
+import { Color } from '@material-ui/lab'
 import { BN } from '@project-serum/anchor'
 import { actions as poolsActions } from '@reducers/pools'
 import { actions } from '@reducers/positions'
@@ -271,6 +272,16 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     }
   }
 
+  const copyPoolAddressHandler = (message: string, variant: Color) => {
+    dispatch(
+      snackbarsActions.add({
+        message,
+        variant,
+        persist: false
+      })
+    )
+  }
+
   const initialIsConcentratedValue =
     localStorage.getItem('IS_CONCENTRATED') === 'true' ||
     localStorage.getItem('IS_CONCENTRATED') === null
@@ -379,6 +390,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       initialTokenTo={initialTokenTo}
       initialFee={initialFee}
       history={history}
+      copyPoolAddressHandler={copyPoolAddressHandler}
+      poolAddress={poolIndex !== null ? allPools[poolIndex].address.toString() : ''}
       tokens={tokens}
       onChangePositionTokens={(tokenA, tokenB, feeTierIndex) => {
         if (

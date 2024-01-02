@@ -1,5 +1,5 @@
 import { NetworkType, SolanaNetworks } from '@consts/static'
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { PayloadType } from './types'
 
 export enum Status {
@@ -21,7 +21,7 @@ export const defaultState: ISolanaConnectionStore = {
   message: '',
   network: NetworkType.MAINNET,
   slot: 0,
-  rpcAddress: SolanaNetworks.MAIN_ALCHEMY
+  rpcAddress: SolanaNetworks.MAIN_HELLOMOON
 }
 export const solanaConnectionSliceName = 'solanaConnection'
 const solanaConnectionSlice = createSlice({

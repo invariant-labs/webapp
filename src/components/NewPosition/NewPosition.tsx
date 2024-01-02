@@ -18,6 +18,7 @@ import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import { Button, Grid, Typography } from '@material-ui/core'
+import { Color } from '@material-ui/lab'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { SwapToken } from '@selectors/solanaWallet'
@@ -29,6 +30,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 import DepositSelector from './DepositSelector/DepositSelector'
+import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
@@ -38,6 +40,8 @@ export interface INewPosition {
   initialTokenTo: string
   initialFee: string
   history: History<unknown>
+  poolAddress: string
+  copyPoolAddressHandler: (message: string, variant: Color) => void
   tokens: SwapToken[]
   data: PlotTickData[]
   midPrice: TickPlotPositionData
@@ -107,6 +111,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   initialTokenTo,
   initialFee,
   history,
+  poolAddress,
+  copyPoolAddressHandler,
   tokens,
   data,
   midPrice,
@@ -344,6 +350,14 @@ export const NewPosition: React.FC<INewPosition> = ({
       <Grid container justifyContent='space-between'>
         <Typography className={classes.title}>Add new liquidity position</Typography>
         <Grid container item alignItems='center' className={classes.options}>
+          {poolIndex !== null ? (
+            <MarketIdLabel
+              displayLength={9}
+              marketId={poolAddress}
+              copyPoolAddressHandler={copyPoolAddressHandler}
+            />
+          ) : null}
+
           <ConcentrationTypeSwitch
             onSwitch={val => {
               setIsConcentrated(val)
