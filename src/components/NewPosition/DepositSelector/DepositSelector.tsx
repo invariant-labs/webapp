@@ -7,7 +7,7 @@ import {
   WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT,
   WSOL_POOL_INIT_LAMPORTS
 } from '@consts/static'
-import { aliasToAddress, parsePathFeeToFeeString } from '@consts/uiUtils'
+import { parsePathFeeToFeeString, tickerToAddress } from '@consts/uiUtils'
 import { getScaleFromString, printBN, printBNtoBN } from '@consts/utils'
 import { Grid, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
@@ -107,11 +107,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     let feeTierIndexFromPath = 0
 
     tokens.forEach((token, index) => {
-      if (token.assetAddress.toString() === aliasToAddress(initialTokenFrom)) {
+      if (token.assetAddress.toString() === tickerToAddress(initialTokenFrom)) {
         tokenAIndexFromPath = index
       }
 
-      if (token.assetAddress.toString() === aliasToAddress(initialTokenTo)) {
+      if (token.assetAddress.toString() === tickerToAddress(initialTokenTo)) {
         tokenBIndexFromPath = index
       }
     })

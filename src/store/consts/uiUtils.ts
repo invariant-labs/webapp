@@ -2,7 +2,7 @@ import { BN } from '@project-serum/anchor'
 
 export const toBlur = 'global-blur'
 
-export const addressAliasMap: { [key: string]: string } = {
+export const addressTickerMap: { [key: string]: string } = {
   SOL: 'So11111111111111111111111111111111111111112',
   USDC: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
   USDT: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
@@ -15,8 +15,8 @@ export const addressAliasMap: { [key: string]: string } = {
   LFNTY: 'LFNTYraetVioAPnGJht4yNg2aUZFXR776cMeN9VMjXp'
 }
 
-export const reversedAddressAliasMap = Object.fromEntries(
-  Object.entries(addressAliasMap).map(([key, value]) => [value, key])
+export const reversedAddressTickerMap = Object.fromEntries(
+  Object.entries(addressTickerMap).map(([key, value]) => [value, key])
 )
 
 // could use rewriting to backdrop-filter when browser support is better
@@ -51,10 +51,10 @@ export const parsePathFeeToFeeString = (pathFee: string): string => {
   return (+pathFee.replace('_', '') * Math.pow(10, 8)).toString()
 }
 
-export const aliasToAddress = (alias: string): string => {
-  return addressAliasMap[alias] || alias
+export const tickerToAddress = (alias: string): string => {
+  return addressTickerMap[alias] || alias
 }
 
-export const addressToAlias = (address: string): string => {
-  return reversedAddressAliasMap[address] || address
+export const addressToTicker = (address: string): string => {
+  return reversedAddressTickerMap[address] || address
 }

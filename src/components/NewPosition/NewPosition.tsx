@@ -3,7 +3,7 @@ import Slippage from '@components/Modals/Slippage/Slippage'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import { ALL_FEE_TIERS_DATA, BestTier } from '@consts/static'
-import { addressToAlias, blurContent, parseFeeToPathFee, unblurContent } from '@consts/uiUtils'
+import { addressToTicker, blurContent, parseFeeToPathFee, unblurContent } from '@consts/uiUtils'
 import {
   CoingeckoPriceData,
   PositionTokenBlock,
@@ -318,14 +318,14 @@ export const NewPosition: React.FC<INewPosition> = ({
     const parsedFee = parseFeeToPathFee(+ALL_FEE_TIERS_DATA[fee].tier.fee)
 
     if (index1 != null && index2 != null) {
-      const address1 = addressToAlias(tokens[index1].assetAddress.toString())
-      const address2 = addressToAlias(tokens[index2].assetAddress.toString())
+      const address1 = addressToTicker(tokens[index1].assetAddress.toString())
+      const address2 = addressToTicker(tokens[index2].assetAddress.toString())
       history.replace(`/newPosition/${address1}/${address2}/${parsedFee}`)
     } else if (index1 != null) {
-      const address = addressToAlias(tokens[index1].assetAddress.toString())
+      const address = addressToTicker(tokens[index1].assetAddress.toString())
       history.replace(`/newPosition/${address}/${parsedFee}`)
     } else if (index2 != null) {
-      const address = addressToAlias(tokens[index2].assetAddress.toString())
+      const address = addressToTicker(tokens[index2].assetAddress.toString())
       history.replace(`/newPosition/${address}/${parsedFee}`)
     } else if (fee != null) {
       history.replace(`/newPosition/${parsedFee}`)

@@ -1,6 +1,6 @@
 import SinglePositionInfo from '@components/PositionDetails/SinglePositionInfo/SinglePositionInfo'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
-import { addressToAlias, parseFeeToPathFee } from '@consts/uiUtils'
+import { addressToTicker, parseFeeToPathFee } from '@consts/uiUtils'
 import { printBN } from '@consts/utils'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
@@ -109,8 +109,8 @@ const PositionDetails: React.FC<IProps> = ({
             variant='contained'
             onClick={() => {
               const parsedFee = parseFeeToPathFee(fee.v)
-              const address1 = addressToAlias(tokenXAddress.toString())
-              const address2 = addressToAlias(tokenYAddress.toString())
+              const address1 = addressToTicker(tokenXAddress.toString())
+              const address2 = addressToTicker(tokenYAddress.toString())
 
               history.push(`/newPosition/${address1}/${address2}/${parsedFee}`)
             }}>
