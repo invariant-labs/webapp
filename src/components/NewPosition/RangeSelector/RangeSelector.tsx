@@ -264,7 +264,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
     let lastElement = 0
     for (let i = 0; i < concentrationArray.length; i++) {
-      const diff = (concentrationArray[i] - lastElement) / 50 + 1
+      const diff =
+        i === concentrationArray.length - 1 ? 1 : (concentrationArray[i] - lastElement) / 32 + 1
       for (let j = 0; j < diff; j++) {
         moreLinearConcentrationArray.push(concentrationArray[i])
       }
