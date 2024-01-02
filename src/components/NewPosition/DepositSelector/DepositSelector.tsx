@@ -7,6 +7,7 @@ import {
   WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT,
   WSOL_POOL_INIT_LAMPORTS
 } from '@consts/static'
+import { parsePathFeeToFeeString, tickerToAddress } from '@consts/uiUtils'
 import { getScaleFromString, printBN, printBNtoBN } from '@consts/utils'
 import { Grid, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
@@ -30,7 +31,6 @@ export interface IDepositSelector {
   initialTokenFrom: string
   initialTokenTo: string
   initialFee: string
-  getAddress: (address: string) => string
   tokens: SwapToken[]
   setPositionTokens: (
     tokenAIndex: number | null,
@@ -65,7 +65,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   initialTokenFrom,
   initialTokenTo,
   initialFee,
-  getAddress,
   tokens,
   setPositionTokens,
   onAddLiquidity,
@@ -108,18 +107,18 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     let feeTierIndexFromPath = 0
 
     tokens.forEach((token, index) => {
-      if (token.assetAddress.toString() === getAddress(initialTokenFrom)) {
+      if (token.assetAddress.toString() === tickerToAddress(initialTokenFrom)) {
         tokenAIndexFromPath = index
       }
 
-      if (token.assetAddress.toString() === getAddress(initialTokenTo)) {
+      if (token.assetAddress.toString() === tickerToAddress(initialTokenTo)) {
         tokenBIndexFromPath = index
       }
     })
 
-    ALL_FEE_TIERS_DATA.forEach((feeTierData, index) => {
-      const parsedFee = (+initialFee.replace('_', '') * Math.pow(10, 8)).toString()
+    const parsedFee = parsePathFeeToFeeString(initialFee)
 
+    ALL_FEE_TIERS_DATA.forEach((feeTierData, index) => {
       if (feeTierData.tier.fee.toString() === parsedFee) {
         feeTierIndexFromPath = index
       }

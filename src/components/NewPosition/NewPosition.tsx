@@ -3,7 +3,7 @@ import Slippage from '@components/Modals/Slippage/Slippage'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import { ALL_FEE_TIERS_DATA, BestTier } from '@consts/static'
-import { blurContent, unblurContent } from '@consts/uiUtils'
+import { addressToTicker, blurContent, parseFeeToPathFee, unblurContent } from '@consts/uiUtils'
 import {
   CoingeckoPriceData,
   PositionTokenBlock,
@@ -25,7 +25,7 @@ import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
 import { History } from 'history'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 import DepositSelector from './DepositSelector/DepositSelector'
@@ -314,47 +314,18 @@ export const NewPosition: React.FC<INewPosition> = ({
     onSlippageChange(slippage)
   }
 
-  const tokenAliasMap: { [key: string]: string } = {
-    SOL: 'So11111111111111111111111111111111111111112',
-    USDC: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-    USDT: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
-    USDH: 'USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX',
-    mSOL: 'mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So',
-    bSOL: 'bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1',
-    stSOL: '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj',
-    SNY: '4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y',
-    ETH: '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs',
-    LFNTY: 'LFNTYraetVioAPnGJht4yNg2aUZFXR776cMeN9VMjXp'
-  }
-
-  const reversedTokenAliasMap = useMemo(() => {
-    return Object.fromEntries(Object.entries(tokenAliasMap).map(([key, value]) => [value, key]))
-  }, [tokenAliasMap])
-
-  const getAlias = (address: string): string => {
-    return reversedTokenAliasMap[address] ?? address
-  }
-
-  const getAddress = (alias: string): string => {
-    return tokenAliasMap[alias] ?? alias
-  }
-
   const updatePath = (index1: number | null, index2: number | null, fee: number) => {
-    let parsedFee = (+ALL_FEE_TIERS_DATA[fee].tier.fee / Math.pow(10, 8))
-      .toString()
-      .padStart(3, '0')
-    parsedFee =
-      parsedFee.slice(0, parsedFee.length - 2) + '_' + parsedFee.slice(parsedFee.length - 2)
+    const parsedFee = parseFeeToPathFee(+ALL_FEE_TIERS_DATA[fee].tier.fee)
 
     if (index1 != null && index2 != null) {
-      const address1 = getAlias(tokens[index1].assetAddress.toString())
-      const address2 = getAlias(tokens[index2].assetAddress.toString())
+      const address1 = addressToTicker(tokens[index1].assetAddress.toString())
+      const address2 = addressToTicker(tokens[index2].assetAddress.toString())
       history.replace(`/newPosition/${address1}/${address2}/${parsedFee}`)
     } else if (index1 != null) {
-      const address = getAlias(tokens[index1].assetAddress.toString())
+      const address = addressToTicker(tokens[index1].assetAddress.toString())
       history.replace(`/newPosition/${address}/${parsedFee}`)
     } else if (index2 != null) {
-      const address = getAlias(tokens[index2].assetAddress.toString())
+      const address = addressToTicker(tokens[index2].assetAddress.toString())
       history.replace(`/newPosition/${address}/${parsedFee}`)
     } else if (fee != null) {
       history.replace(`/newPosition/${parsedFee}`)
@@ -408,7 +379,6 @@ export const NewPosition: React.FC<INewPosition> = ({
           initialTokenFrom={initialTokenFrom}
           initialTokenTo={initialTokenTo}
           initialFee={initialFee}
-          getAddress={getAddress}
           className={classes.deposit}
           tokens={tokens}
           setPositionTokens={(index1, index2, fee) => {
