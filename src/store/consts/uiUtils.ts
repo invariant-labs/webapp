@@ -51,8 +51,8 @@ export const parsePathFeeToFeeString = (pathFee: string): string => {
   return (+pathFee.replace('_', '') * Math.pow(10, 8)).toString()
 }
 
-export const tickerToAddress = (alias: string): string => {
-  return addressTickerMap[alias] || alias
+export const tickerToAddress = (ticker: string): string => {
+  return addressTickerMap[ticker] || ticker
 }
 
 export const addressToTicker = (address: string): string => {
