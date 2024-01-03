@@ -111,20 +111,6 @@ const PositionDetails: React.FC<IProps> = ({
         alignItems='flex-end'
         className={classes.right}
         wrap='nowrap'>
-        <Hidden xsDown>
-          <Button
-            className={classes.button}
-            variant='contained'
-            onClick={() => {
-              const parsedFee = parseFeeToPathFee(fee.v)
-              const address1 = addressToTicker(tokenXAddress.toString())
-              const address2 = addressToTicker(tokenYAddress.toString())
-
-              history.push(`/newPosition/${address1}/${address2}/${parsedFee}`)
-            }}>
-            <span className={classes.buttonText}>+ Add Liquidity</span>
-          </Button>
-        </Hidden>
         <Grid
           container
           item
@@ -139,7 +125,11 @@ const PositionDetails: React.FC<IProps> = ({
               className={classes.button}
               variant='contained'
               onClick={() => {
-                history.push('/newPosition')
+                const parsedFee = parseFeeToPathFee(fee.v)
+                const address1 = addressToTicker(tokenXAddress.toString())
+                const address2 = addressToTicker(tokenYAddress.toString())
+
+                history.push(`/newPosition/${address1}/${address2}/${parsedFee}`)
               }}>
               <span className={classes.buttonText}>+ Add Liquidity</span>
             </Button>
