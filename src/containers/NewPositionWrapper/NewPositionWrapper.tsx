@@ -1,42 +1,55 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import NewPosition from '@components/NewPosition/NewPosition'
-import { actions } from '@reducers/positions'
-import { useDispatch, useSelector } from 'react-redux'
-import { swapTokens, status, canCreateNewPool, canCreateNewPosition } from '@selectors/solanaWallet'
-import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
+import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
+import { ALL_FEE_TIERS_DATA, bestTiers, commonTokensForNetworks } from '@consts/static'
 import {
+  CoingeckoPriceData,
   addNewTokenToLocalStorage,
   calcPrice,
   calcYPerXPrice,
-  CoingeckoPriceData,
   createPlaceholderLiquidityPlot,
   getCoingeckoTokenPrice,
   getNewTokenOrThrow,
   printBN
 } from '@consts/utils'
+import { MAX_TICK, Pair, calculatePriceSqrt } from '@invariant-labs/sdk'
+import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
+import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
+import { feeToTickSpacing } from '@invariant-labs/sdk/src/utils'
+import { Color } from '@material-ui/lab'
+import { BN } from '@project-serum/anchor'
+import { actions as poolsActions } from '@reducers/pools'
+import { actions } from '@reducers/positions'
+import { actions as snackbarsActions } from '@reducers/snackbars'
+import { Status } from '@reducers/solanaWallet'
 import {
   isLoadingLatestPoolsForTransaction,
   poolsArraySortedByFees,
   volumeRanges
 } from '@selectors/pools'
-import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
-import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { initPosition, plotTicks } from '@selectors/positions'
-import { BN } from '@project-serum/anchor'
-import { ALL_FEE_TIERS_DATA, bestTiers, commonTokensForNetworks } from '@consts/static'
-import { Status } from '@reducers/solanaWallet'
-import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
-import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
-import { calculatePriceSqrt, MAX_TICK, Pair } from '@invariant-labs/sdk'
-import { feeToTickSpacing } from '@invariant-labs/sdk/src/utils'
-import { actions as poolsActions } from '@reducers/pools'
 import { network } from '@selectors/solanaConnection'
+import { canCreateNewPool, canCreateNewPosition, status, swapTokens } from '@selectors/solanaWallet'
 import { getCurrentSolanaConnection } from '@web3/connection'
-import { actions as snackbarsActions } from '@reducers/snackbars'
 import { openWalletSelectorModal } from '@web3/selector'
-import { Color } from '@material-ui/lab'
+import { History } from 'history'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-export const NewPositionWrapper = () => {
+export interface IProps {
+  initialTokenFrom: string
+  initialTokenTo: string
+  initialFee: string
+  history: History<unknown>
+}
+
+export const NewPositionWrapper: React.FC<IProps> = ({
+  initialTokenFrom,
+  initialTokenTo,
+  initialFee,
+  history
+}) => {
   const dispatch = useDispatch()
 
   const connection = getCurrentSolanaConnection()
@@ -373,6 +386,10 @@ export const NewPositionWrapper = () => {
 
   return (
     <NewPosition
+      initialTokenFrom={initialTokenFrom}
+      initialTokenTo={initialTokenTo}
+      initialFee={initialFee}
+      history={history}
       copyPoolAddressHandler={copyPoolAddressHandler}
       poolAddress={poolIndex !== null ? allPools[poolIndex].address.toString() : ''}
       tokens={tokens}

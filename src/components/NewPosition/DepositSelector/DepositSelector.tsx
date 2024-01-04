@@ -1,21 +1,23 @@
+import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
 import Select from '@components/Inputs/Select/Select'
-import { SwapToken } from '@selectors/solanaWallet'
-import { getScaleFromString, printBN, printBNtoBN } from '@consts/utils'
-import { Grid, Typography } from '@material-ui/core'
-import React, { useState, useCallback, useEffect } from 'react'
-import FeeSwitch from '../FeeSwitch/FeeSwitch'
-import classNames from 'classnames'
-import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
-import SwapList from '@static/svg/swap-list.svg'
-import useStyles from './style'
-import { PublicKey } from '@solana/web3.js'
 import {
+  ALL_FEE_TIERS_DATA,
   WRAPPED_SOL_ADDRESS,
   WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT,
   WSOL_POOL_INIT_LAMPORTS
 } from '@consts/static'
+import { parsePathFeeToFeeString, tickerToAddress } from '@consts/uiUtils'
+import { getScaleFromString, printBN, printBNtoBN } from '@consts/utils'
+import { Grid, Typography } from '@material-ui/core'
 import { BN } from '@project-serum/anchor'
+import { SwapToken } from '@selectors/solanaWallet'
+import { PublicKey } from '@solana/web3.js'
+import SwapList from '@static/svg/swap-list.svg'
+import classNames from 'classnames'
+import React, { useCallback, useEffect, useState } from 'react'
+import FeeSwitch from '../FeeSwitch/FeeSwitch'
+import useStyles from './style'
 
 export interface InputState {
   value: string
@@ -26,6 +28,9 @@ export interface InputState {
 }
 
 export interface IDepositSelector {
+  initialTokenFrom: string
+  initialTokenTo: string
+  initialFee: string
   tokens: SwapToken[]
   setPositionTokens: (
     tokenAIndex: number | null,
@@ -57,6 +62,9 @@ export interface IDepositSelector {
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
+  initialTokenFrom,
+  initialTokenTo,
+  initialFee,
   tokens,
   setPositionTokens,
   onAddLiquidity,
@@ -86,6 +94,42 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
   const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
+
+  const [isLoaded, setIsLoaded] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (isLoaded || tokens.length === 0 || ALL_FEE_TIERS_DATA.length === 0) {
+      return
+    }
+
+    let tokenAIndexFromPath = null
+    let tokenBIndexFromPath = null
+    let feeTierIndexFromPath = 0
+
+    tokens.forEach((token, index) => {
+      if (token.assetAddress.toString() === tickerToAddress(initialTokenFrom)) {
+        tokenAIndexFromPath = index
+      }
+
+      if (token.assetAddress.toString() === tickerToAddress(initialTokenTo)) {
+        tokenBIndexFromPath = index
+      }
+    })
+
+    const parsedFee = parsePathFeeToFeeString(initialFee)
+
+    ALL_FEE_TIERS_DATA.forEach((feeTierData, index) => {
+      if (feeTierData.tier.fee.toString() === parsedFee) {
+        feeTierIndexFromPath = index
+      }
+    })
+
+    setTokenAIndex(tokenAIndexFromPath)
+    setTokenBIndex(tokenBIndexFromPath)
+    setPositionTokens(tokenAIndexFromPath, tokenBIndexFromPath, feeTierIndexFromPath)
+
+    setIsLoaded(true)
+  }, [tokens])
 
   const getButtonMessage = useCallback(() => {
     if (tokenAIndex === null || tokenBIndex === null) {
