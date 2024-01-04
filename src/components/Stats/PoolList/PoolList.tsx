@@ -1,8 +1,8 @@
-import React, { useMemo, useEffect } from 'react'
-import { Grid } from '@material-ui/core'
-import useStyle from './style'
 import { PaginationList } from '@components/Pagination/Pagination'
 import PoolListItem, { SortType } from '@components/Stats/PoolListItem/PoolListItem'
+import { Grid } from '@material-ui/core'
+import React, { useEffect, useMemo } from 'react'
+import useStyle from './style'
 
 interface PoolListInterface {
   data: Array<{
@@ -89,6 +89,7 @@ const PoolList: React.FC<PoolListInterface> = ({ data }) => {
           apy={element.apy}
           hideBottomLine={pages === 1 && index + 1 === data.length}
           apyData={element.apyData}
+          key={`${element.symbolFrom}-${element.symbolTo}-${element.fee}`}
         />
       ))}
       {pages > 1 ? (

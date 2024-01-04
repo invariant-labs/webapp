@@ -1,34 +1,35 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { PublicKey } from '@solana/web3.js'
-import { BN } from '@project-serum/anchor'
+import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import ChangeWalletButton from '@components/HeaderButton/ChangeWalletButton'
+import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
+import Slippage from '@components/Modals/Slippage/Slippage'
+import { WRAPPED_SOL_ADDRESS, WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT } from '@consts/static'
+import { blurContent, unblurContent } from '@consts/uiUtils'
 import {
+  CoingeckoPriceData,
+  findPairs,
+  handleSimulate,
   printBN,
   printBNtoBN,
-  handleSimulate,
-  findPairs,
-  trimLeadingZeros,
-  CoingeckoPriceData
+  trimLeadingZeros
 } from '@consts/utils'
 import { Decimal, Tickmap } from '@invariant-labs/sdk/lib/market'
-import { blurContent, unblurContent } from '@consts/uiUtils'
-import { Grid, Typography, Box, CardMedia, Button } from '@material-ui/core'
-import Slippage from '@components/Modals/Slippage/Slippage'
-import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
-import { WRAPPED_SOL_ADDRESS, WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT } from '@consts/static'
-import { Swap as SwapData } from '@reducers/swap'
-import { Status } from '@reducers/solanaWallet'
-import SwapArrows from '@static/svg/swap-arrows.svg'
-import infoIcon from '@static/svg/info.svg'
-import settingIcon from '@static/svg/settings.svg'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
-import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
-import useStyles from './style'
 import { Tick } from '@invariant-labs/sdk/src/market'
+import { Box, Button, CardMedia, Grid, Typography } from '@material-ui/core'
+import { BN } from '@project-serum/anchor'
 import { PoolWithAddress } from '@reducers/pools'
-import ExchangeRate from './ExchangeRate/ExchangeRate'
+import { Status } from '@reducers/solanaWallet'
+import { Swap as SwapData } from '@reducers/swap'
+import { PublicKey } from '@solana/web3.js'
+import infoIcon from '@static/svg/info.svg'
+import refreshIcon from '@static/svg/refresh.svg'
+import settingIcon from '@static/svg/settings.svg'
+import SwapArrows from '@static/svg/swap-arrows.svg'
 import classNames from 'classnames'
-import ChangeWalletButton from '@components/HeaderButton/ChangeWalletButton'
+import React, { useEffect, useRef, useState } from 'react'
+import ExchangeRate from './ExchangeRate/ExchangeRate'
 import TransactionDetailsBox from './TransactionDetailsBox/TransactionDetailsBox'
+import useStyles from './style'
 
 export interface SwapToken {
   balance: BN
@@ -61,6 +62,8 @@ export interface Pools {
 }
 
 export interface ISwap {
+  isFetchingNewPool: boolean
+  onRefresh: (tokenFrom: number | null, tokenTo: number | null) => void
   walletStatus: Status
   swapData: SwapData
   tokens: SwapToken[]
@@ -97,6 +100,8 @@ export interface ISwap {
 }
 
 export const Swap: React.FC<ISwap> = ({
+  isFetchingNewPool,
+  onRefresh,
   walletStatus,
   tokens,
   pools,
@@ -444,13 +449,26 @@ export const Swap: React.FC<ISwap> = ({
     }
   }, [detailsOpen, canShowDetails])
 
+  const handleRefresh = async () => {
+    onRefresh(tokenFromIndex, tokenToIndex)
+  }
+
+  useEffect(() => {
+    void setSimulateAmount()
+  }, [isFetchingNewPool])
+
   return (
     <Grid container className={classes.swapWrapper} alignItems='center'>
       <Grid container className={classes.header}>
         <Typography component='h1'>Swap tokens</Typography>
-        <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
-          <img src={settingIcon} className={classes.settingsIcon} />
-        </Button>
+        <Box className={classes.swapControls}>
+          <Button onClick={handleRefresh} className={classes.refreshIconBtn}>
+            <img src={refreshIcon} className={classes.refreshIcon} />
+          </Button>
+          <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
+            <img src={settingIcon} className={classes.settingsIcon} />
+          </Button>
+        </Box>
         <Grid className={classes.slippage}>
           <Slippage
             open={settings}

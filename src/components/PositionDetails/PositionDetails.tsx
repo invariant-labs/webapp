@@ -1,15 +1,27 @@
-import React, { useState } from 'react'
 import SinglePositionInfo from '@components/PositionDetails/SinglePositionInfo/SinglePositionInfo'
-import SinglePositionPlot from '@components/PositionDetails/SinglePositionPlot/SinglePositionPlot'
-import { Button, Grid, Hidden, Typography } from '@material-ui/core'
-import { Link, useHistory } from 'react-router-dom'
-import backIcon from '@static/svg/back-arrow.svg'
-import useStyles from './style'
-import { PlotTickData } from '@reducers/positions'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
+import { addressToTicker, parseFeeToPathFee } from '@consts/uiUtils'
+import { printBN } from '@consts/utils'
+import { Decimal } from '@invariant-labs/sdk/lib/market'
+import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
+import { Button, Grid, Hidden, Typography } from '@material-ui/core'
+import { PlotTickData } from '@reducers/positions'
+import { PublicKey } from '@solana/web3.js'
+import backIcon from '@static/svg/back-arrow.svg'
+import React, { useState } from 'react'
+import { Link, useHistory } from 'react-router-dom'
 import { ILiquidityToken } from './SinglePositionInfo/consts'
+import SinglePositionPlot from './SinglePositionPlot/SinglePositionPlot'
+import useStyles from './style'
+
+import MarketIdLabel from '@components/NewPosition/MarketIdLabel/MarketIdLabel'
+import { Color } from '@material-ui/lab'
 
 interface IProps {
+  tokenXAddress: PublicKey
+  tokenYAddress: PublicKey
+  poolAddress: PublicKey
+  copyPoolAddressHandler: (message: string, variant: Color) => void
   detailsData: PlotTickData[]
   leftRange: TickPlotPositionData
   rightRange: TickPlotPositionData
@@ -21,7 +33,7 @@ interface IProps {
   closePosition: (claimFarmRewards?: boolean) => void
   ticksLoading: boolean
   tickSpacing: number
-  fee: number
+  fee: Decimal
   min: number
   max: number
   initialIsDiscreteValue: boolean
@@ -37,6 +49,10 @@ interface IProps {
 }
 
 const PositionDetails: React.FC<IProps> = ({
+  tokenXAddress,
+  tokenYAddress,
+  poolAddress,
+  copyPoolAddressHandler,
   detailsData,
   leftRange,
   rightRange,
@@ -76,7 +92,7 @@ const PositionDetails: React.FC<IProps> = ({
         </Link>
 
         <SinglePositionInfo
-          fee={fee}
+          fee={+printBN(fee.v, DECIMAL - 2)}
           onClickClaimFee={onClickClaimFee}
           closePosition={closePosition}
           tokenX={tokenX}
@@ -87,6 +103,7 @@ const PositionDetails: React.FC<IProps> = ({
           userHasStakes={userHasStakes}
         />
       </Grid>
+
       <Grid
         container
         item
@@ -94,16 +111,36 @@ const PositionDetails: React.FC<IProps> = ({
         alignItems='flex-end'
         className={classes.right}
         wrap='nowrap'>
-        <Hidden xsDown>
-          <Button
-            className={classes.button}
-            variant='contained'
-            onClick={() => {
-              history.push('/newPosition')
-            }}>
-            <span className={classes.buttonText}>+ Add Liquidity</span>
-          </Button>
-        </Hidden>
+        <Grid
+          container
+          item
+          direction='row'
+          alignItems='flex-end'
+          // justifyContent='space-between'
+          style={{ paddingLeft: 20, flexDirection: 'row-reverse' }}
+          className={classes.right}
+          wrap='nowrap'>
+          <Hidden xsDown>
+            <Button
+              className={classes.button}
+              variant='contained'
+              onClick={() => {
+                const parsedFee = parseFeeToPathFee(fee.v)
+                const address1 = addressToTicker(tokenXAddress.toString())
+                const address2 = addressToTicker(tokenYAddress.toString())
+
+                history.push(`/newPosition/${address1}/${address2}/${parsedFee}`)
+              }}>
+              <span className={classes.buttonText}>+ Add Liquidity</span>
+            </Button>
+          </Hidden>
+          <MarketIdLabel
+            marketId={poolAddress.toString()}
+            displayLength={9}
+            copyPoolAddressHandler={copyPoolAddressHandler}
+            style={{ paddingBottom: 20, paddingRight: 10 }}
+          />
+        </Grid>
 
         <SinglePositionPlot
           data={
