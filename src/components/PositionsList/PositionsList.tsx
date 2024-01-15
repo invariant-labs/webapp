@@ -1,15 +1,17 @@
+import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
+import { PaginationList } from '@components/Pagination/Pagination'
+import { Button, Grid, InputAdornment, InputBase, Typography } from '@material-ui/core'
+import loader from '@static/gif/loader.gif'
+import SearchIcon from '@static/svg/lupaDark.svg'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Button, Grid, Typography, InputAdornment, InputBase } from '@material-ui/core'
-import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { ILiquidityItem, PositionItem } from './PositionItem/PositionItem'
-import { PaginationList } from '@components/Pagination/Pagination'
-import SearchIcon from '@static/svg/lupaDark.svg'
-import loader from '@static/gif/loader.gif'
 import useStyle from './style'
-import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
 
 interface IProp {
+  initialPage: number
+  setLastPage: (page: number) => void
   data: ILiquidityItem[]
   onAddPositionClick: () => void
   loading?: boolean
@@ -21,6 +23,8 @@ interface IProp {
 }
 
 export const PositionsList: React.FC<IProp> = ({
+  initialPage,
+  setLastPage,
   data,
   onAddPositionClick,
   loading = false,
@@ -32,13 +36,16 @@ export const PositionsList: React.FC<IProp> = ({
 }) => {
   const classes = useStyle()
   const history = useHistory()
-  const [page, setPage] = useState(1)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+  const [defaultPage, setDefaultPage] = useState(initialPage)
+  const [page, setPage] = useState(initialPage)
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     searchSetValue(e.target.value.toLowerCase())
   }
 
   const handleChangePagination = (page: number): void => {
+    setLastPage(page)
     setPage(page)
   }
 
@@ -59,6 +66,10 @@ export const PositionsList: React.FC<IProp> = ({
   useEffect(() => {
     setPage(1)
   }, [searchValue])
+
+  useEffect(() => {
+    setPage(initialPage)
+  }, [])
 
   return (
     <Grid container direction='column' className={classes.root}>
@@ -123,7 +134,7 @@ export const PositionsList: React.FC<IProp> = ({
       {paginator(page).totalPages > 1 ? (
         <PaginationList
           pages={paginator(page).totalPages}
-          defaultPage={1}
+          defaultPage={defaultPage}
           handleChangePage={handleChangePagination}
           variant='end'
         />
