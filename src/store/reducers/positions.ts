@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { PayloadType } from '@reducers/types'
-import { Position, InitPosition, Tick } from '@invariant-labs/sdk/lib/market'
-import { PublicKey } from '@solana/web3.js'
+import { InitPosition, Position, Tick } from '@invariant-labs/sdk/lib/market'
 import { BN } from '@project-serum/anchor'
+import { PayloadType } from '@reducers/types'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { PublicKey } from '@solana/web3.js'
 
 export interface PositionWithAddress extends Position {
   address: PublicKey
@@ -35,6 +35,7 @@ export interface CurrentPositionRangeTicksStore {
   loading: boolean
 }
 export interface IPositionsStore {
+  lastPage: number
   plotTicks: PlotTicks
   positionsList: PositionsListStore
   currentPositionRangeTicks: CurrentPositionRangeTicksStore
@@ -71,6 +72,7 @@ export interface SetPositionData {
 }
 
 export const defaultState: IPositionsStore = {
+  lastPage: 1,
   plotTicks: {
     data: [],
     loading: false
@@ -95,6 +97,10 @@ const positionsSlice = createSlice({
   name: 'positions',
   initialState: defaultState,
   reducers: {
+    setLastPage(state, action: PayloadAction<number>) {
+      state.lastPage = action.payload
+      return state
+    },
     initPosition(state, _action: PayloadAction<InitPositionData>) {
       state.initPosition.inProgress = true
       return state
