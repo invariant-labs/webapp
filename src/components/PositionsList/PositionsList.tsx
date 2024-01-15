@@ -36,8 +36,7 @@ export const PositionsList: React.FC<IProp> = ({
 }) => {
   const classes = useStyle()
   const history = useHistory()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-  const [defaultPage, setDefaultPage] = useState(initialPage)
+  const [defaultPage] = useState(initialPage)
   const [page, setPage] = useState(initialPage)
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
