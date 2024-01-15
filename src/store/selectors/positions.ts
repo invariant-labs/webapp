@@ -1,16 +1,22 @@
 import { PoolWithAddress } from '@reducers/pools'
 import { createSelector } from 'reselect'
 import { IPositionsStore, positionsSliceName, PositionWithAddress } from '../reducers/positions'
-import { keySelectors, AnyProps } from './helpers'
+import { AnyProps, keySelectors } from './helpers'
 import { poolsArraySortedByFees } from './pools'
 import { SwapToken, swapTokensDict } from './solanaWallet'
 
 const store = (s: AnyProps) => s[positionsSliceName] as IPositionsStore
 
-export const { positionsList, plotTicks, currentPositionRangeTicks, initPosition } = keySelectors(
-  store,
-  ['positionsList', 'plotTicks', 'currentPositionRangeTicks', 'initPosition']
-)
+export const { lastPage, positionsList, plotTicks, currentPositionRangeTicks, initPosition } =
+  keySelectors(store, [
+    'lastPage',
+    'positionsList',
+    'plotTicks',
+    'currentPositionRangeTicks',
+    'initPosition'
+  ])
+
+export const lastPageSelector = createSelector(lastPage, s => s)
 
 export const isLoadingPositionsList = createSelector(positionsList, s => s.loading)
 
