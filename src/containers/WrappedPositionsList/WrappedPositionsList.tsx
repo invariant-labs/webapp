@@ -1,21 +1,28 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import { isLoadingPositionsList, positionsWithPoolsData } from '@selectors/positions'
-import { status } from '@selectors/solanaWallet'
+import { PositionsList } from '@components/PositionsList/PositionsList'
 import { calcYPerXPrice, printBN } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
-import { Status } from '@reducers/solanaWallet'
-import { PositionsList } from '@components/PositionsList/PositionsList'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
+import { actions } from '@reducers/positions'
+import { Status } from '@reducers/solanaWallet'
+import {
+  isLoadingPositionsList,
+  lastPageSelector,
+  positionsWithPoolsData
+} from '@selectors/positions'
+import { status } from '@selectors/solanaWallet'
 import { openWalletSelectorModal } from '@web3/selector'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 export const WrappedPositionsList: React.FC = () => {
   const list = useSelector(positionsWithPoolsData)
   const isLoading = useSelector(isLoadingPositionsList)
+  const lastPage = useSelector(lastPageSelector)
   const walletStatus = useSelector(status)
   const history = useHistory()
+  const dispatch = useDispatch()
 
   const [value, setValue] = useState<string>('')
 
@@ -23,8 +30,14 @@ export const WrappedPositionsList: React.FC = () => {
     setValue(value)
   }
 
+  const setLastPage = (page: number) => {
+    dispatch(actions.setLastPage(page))
+  }
+
   return (
     <PositionsList
+      initialPage={lastPage}
+      setLastPage={setLastPage}
       searchValue={value}
       searchSetValue={handleSearchValue}
       onAddPositionClick={() => {
