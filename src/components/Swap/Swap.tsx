@@ -454,6 +454,10 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   useEffect(() => {
+    onRefresh(tokenFromIndex, tokenToIndex)
+  }, [poolTicks, tickmap])
+
+  useEffect(() => {
     void setSimulateAmount()
   }, [isFetchingNewPool])
 
