@@ -155,7 +155,7 @@ enum SolanaNetworks {
   MAIN_SERUM = 'https://solana-api.projectserum.com',
   MAIN_FIGMENT = 'https://solana--mainnet.datahub.figment.io/apikey/182e93d87a1f1d335c9d74d6c7371388',
   MAIN_GENESYSGO = 'https://ssc-dao.genesysgo.net',
-  MAIN_NIGHTLY = 'https://rpc.nightly.app:8899/',
+  MAIN_NIGHTLY = 'https://rpc.solana.nightly.app',
   MAIN_ALCHEMY = 'https://solana-mainnet.g.alchemy.com/v2/YfX5E62sdlEoytQ9ZEOA_5KIE3QbwUUD',
   MAIN_HELLOMOON = 'https://global.rpc.hellomoon.io/e8a06073-325d-4183-bcad-d69e3e3fc739',
   LOCAL = 'http://127.0.0.1:8899'
