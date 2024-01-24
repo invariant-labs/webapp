@@ -160,7 +160,7 @@ const PoolListItem: React.FC<IProps> = ({
                   onSort?.(SortType.APY_DESC)
                 }
               }}>
-              APY
+              7-days APY
               {sortType === SortType.APY_ASC ? (
                 <ArrowDropUpIcon className={classes.icon} />
               ) : sortType === SortType.APY_DESC ? (
