@@ -12,7 +12,7 @@ import {
 } from '@selectors/positions'
 import { status } from '@selectors/solanaWallet'
 import { openWalletSelectorModal } from '@web3/selector'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
@@ -33,6 +33,12 @@ export const WrappedPositionsList: React.FC = () => {
   const setLastPage = (page: number) => {
     dispatch(actions.setLastPage(page))
   }
+
+  useEffect(() => {
+    if (lastPage > Math.ceil(list.length / 5)) {
+      setLastPage(Math.ceil(list.length / 5))
+    }
+  }, [list])
 
   return (
     <PositionsList
