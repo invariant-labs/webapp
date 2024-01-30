@@ -1,20 +1,13 @@
 import { storiesOf } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
 import { toBlur } from '@consts/uiUtils'
-import Slippage from '@components/Modals/Slippage/Slippage'
 import React from 'react'
+import Priority from './Priority'
 
-storiesOf('newUi/swap', module)
+storiesOf('newUi/priority', module)
   .addDecorator(withKnobs)
-  .add('settings', () => (
+  .add('priority', () => (
     <div style={{ width: 800 }} id={toBlur}>
-      <Slippage
-        open={true}
-        setSlippage={() => {}}
-        handleClose={() => {}}
-        anchorEl={null}
-        defaultSlippage={'1'}
-        initialSlippage='2'
-      />
+      <Priority open={true} handleClose={() => {}} anchorEl={null} />
     </div>
   ))
