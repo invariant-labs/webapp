@@ -158,10 +158,6 @@ export const NewPosition: React.FC<INewPosition> = ({
   onSlippageChange,
   initialSlippage
 }) => {
-  console.log(poolAddress)
-  console.log(poolAddress === '')
-  console.log(tokens)
-  console.log(commonTokens)
   const classes = useStyles()
 
   const [isConcentrated, setIsConcentrated] = useState(initialIsConcentratedValue)
