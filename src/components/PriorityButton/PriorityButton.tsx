@@ -5,20 +5,14 @@ import useStyles from './style'
 
 interface Props {
   content: string
-  disabled?: boolean
-  onClick: () => void
-  className?: string
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-const PriorityButton: React.FC<Props> = ({ content, disabled = false, onClick, className }) => {
+const PriorityButton: React.FC<Props> = ({ content, onClick }) => {
   const classes = useStyles()
 
   return (
-    <Button
-      disabled={disabled}
-      variant='contained'
-      className={classNames(classes.button, className)}
-      onClick={onClick}>
+    <Button className={classNames(classes.button)} onClick={onClick}>
       {content}
     </Button>
   )

@@ -30,6 +30,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import ExchangeRate from './ExchangeRate/ExchangeRate'
 import TransactionDetailsBox from './TransactionDetailsBox/TransactionDetailsBox'
 import useStyles from './style'
+import PriorityButton from '@components/PriorityButton/PriorityButton'
+import Priority from '@components/Modals/Priority/Priority'
 
 export interface SwapToken {
   balance: BN
@@ -145,6 +147,7 @@ export const Swap: React.FC<ISwap> = ({
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
   const [inputRef, setInputRef] = React.useState<string>(inputTarget.FROM)
   const [rateReversed, setRateReversed] = React.useState<boolean>(false)
+  const [priority, setPriority] = React.useState<boolean>(false)
   const [simulateResult, setSimulateResult] = React.useState<{
     amountOut: BN
     poolIndex: number
@@ -457,11 +460,28 @@ export const Swap: React.FC<ISwap> = ({
     void setSimulateAmount()
   }, [isFetchingNewPool])
 
+  const handleClickPriorityModal = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+    blurContent()
+    setPriority(true)
+  }
+  const handleClosePriorityModal = () => {
+    unblurContent()
+    setPriority(false)
+  }
+
   return (
     <Grid container className={classes.swapWrapper} alignItems='center'>
       <Grid container className={classes.header}>
         <Typography component='h1'>Swap tokens</Typography>
         <Box className={classes.swapControls}>
+          <PriorityButton
+            content={'Set priority'}
+            onClick={handleClickPriorityModal}></PriorityButton>
+          <Priority
+            open={priority}
+            handleClose={handleClosePriorityModal}
+            anchorEl={anchorEl}></Priority>
           <Button onClick={handleRefresh} className={classes.refreshIconBtn}>
             <img src={refreshIcon} className={classes.refreshIcon} />
           </Button>
