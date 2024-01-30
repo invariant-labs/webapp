@@ -34,6 +34,8 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
+import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
+import PriorityButton from '@components/PriorityButton/PriorityButton'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -352,12 +354,13 @@ export const NewPosition: React.FC<INewPosition> = ({
         <Grid container item alignItems='center' className={classes.options}>
           {poolIndex !== null ? (
             <MarketIdLabel
-              displayLength={9}
+              displayLength={4}
               marketId={poolAddress}
               copyPoolAddressHandler={copyPoolAddressHandler}
             />
           ) : null}
 
+          <PriorityButton content={'Set priority'} onClick={() => {}}></PriorityButton>
           <ConcentrationTypeSwitch
             onSwitch={val => {
               setIsConcentrated(val)
