@@ -309,14 +309,10 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   useEffect(() => {
     const configurePoolAddress = async () => {
-      if (poolAddress === '') {
-        const configuredAddress = await calculatePoolAddress()
-        setAddress(configuredAddress)
-      } else {
-        setAddress(poolAddress)
-      }
+      const configuredAddress = poolAddress === '' ? await calculatePoolAddress() : poolAddress
+      setAddress(configuredAddress)
     }
-    configurePoolAddress()
+    void configurePoolAddress()
   }, [poolAddress, initialTokenFrom, initialTokenTo])
 
   const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
