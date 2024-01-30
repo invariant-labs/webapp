@@ -38,6 +38,10 @@ export const WrappedPositionsList: React.FC = () => {
     if (list.length === 0) {
       setLastPage(1)
     }
+
+    if (lastPage > Math.ceil(list.length / 5)) {
+      setLastPage(lastPage - 1)
+    }
   }, [list])
 
   return (
