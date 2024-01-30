@@ -34,7 +34,6 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
-import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import PriorityButton from '@components/PriorityButton/PriorityButton'
 import Priority from '@components/Modals/Priority/Priority'
 

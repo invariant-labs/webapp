@@ -16,7 +16,7 @@ storiesOf('buttons/transactionPriorityButton', module)
       {buttonsParams.map((params, index) => {
         return (
           <TransactionPriorityButton
-            selected={0 === index}
+            selected={index === 0}
             index={index}
             label={params.label}
             value={params.value}

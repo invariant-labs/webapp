@@ -3,7 +3,6 @@ import { Typography, Box, Grid, Button, Popover, Input } from '@material-ui/core
 import useStyles from './style'
 import AnimatedButton from '@components/AnimatedButton/AnimatedButton'
 import TransactionPriorityButton from '@components/TransactionPriorityButton/TransactionPriorityButton'
-import { set } from 'remeda'
 
 interface Props {
   open: boolean
@@ -26,7 +25,7 @@ const Priority: React.FC<Props> = ({ open, handleClose, anchorEl }) => {
   const classes = useStyles()
   const inputRef = React.useRef<HTMLInputElement>(null)
   const maxFee = 2
-  const [selectedFee, setSelectedFee] = React.useState<number>(0)
+  const [_selectedFee, setSelectedFee] = React.useState<number>(0)
   const [selectedIndex, setSelectedIndex] = React.useState<number>(-1)
   const [inputValue, setInputValue] = React.useState<string>('0.0000')
 
