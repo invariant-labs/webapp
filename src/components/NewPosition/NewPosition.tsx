@@ -309,7 +309,6 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   useEffect(() => {
     const configurePoolAddress = async () => {
-      console.log(poolAddress)
       if (poolAddress === '') {
         const configuredAddress = await calculatePoolAddress()
         setAddress(configuredAddress)
