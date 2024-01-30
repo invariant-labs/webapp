@@ -139,12 +139,15 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     if (tokenAIndex === tokenBIndex) {
       return 'Select different tokens'
     }
+    console.log(tokenAIndex, tokenBIndex, tokenAInputState.value, tokenBInputState.value, tokens)
+    console.log(poolIndex, canCreateNewPool)
 
-    if (
-      (poolIndex === null && !canCreateNewPool) ||
-      (poolIndex !== null && !canCreateNewPosition)
-    ) {
+    if (poolIndex !== null && !canCreateNewPosition) {
       return 'Insufficient lamports'
+    }
+
+    if (poolIndex === null && !canCreateNewPool) {
+      return 'Create pool'
     }
 
     if (
@@ -398,7 +401,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             onAddLiquidity()
           }
         }}
-        disabled={getButtonMessage() !== 'Add Liquidity'}
+        disabled={getButtonMessage() !== 'Add Liquidity' && getButtonMessage() !== 'Create pool'}
         content={getButtonMessage()}
         progress={progress}
       />

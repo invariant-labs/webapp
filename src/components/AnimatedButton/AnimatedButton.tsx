@@ -30,7 +30,7 @@ const AnimatedButton: React.FC<Props> = ({
   className
 }) => {
   const classes = useStyles()
-
+  console.log(disabled)
   const getMessage = () => {
     if (progress === 'none') {
       return <p className={classes.buttonContent}>{content}</p>
