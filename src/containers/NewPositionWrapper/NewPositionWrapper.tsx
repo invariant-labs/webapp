@@ -12,7 +12,7 @@ import {
   getNewTokenOrThrow,
   printBN
 } from '@consts/utils'
-import { MAX_TICK, Pair, calculatePriceSqrt } from '@invariant-labs/sdk'
+import { MAX_TICK, Pair, calculatePriceSqrt, getMarketAddress } from '@invariant-labs/sdk'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
@@ -29,10 +29,10 @@ import {
   volumeRanges
 } from '@selectors/pools'
 import { initPosition, plotTicks } from '@selectors/positions'
-import { network, rpcAddress } from '@selectors/solanaConnection'
+import { network } from '@selectors/solanaConnection'
 import { canCreateNewPool, canCreateNewPosition, status, swapTokens } from '@selectors/solanaWallet'
-import { getCurrentSolanaConnection } from '@web3/connection'
-import { getMarketProgramSync } from '@web3/programs/amm'
+import { PublicKey } from '@solana/web3.js'
+import { getCurrentSolanaConnection, networkTypetoProgramNetwork } from '@web3/connection'
 import { openWalletSelectorModal } from '@web3/selector'
 import { History } from 'history'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -54,8 +54,6 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const dispatch = useDispatch()
 
   const networkType = useSelector(network)
-  const rpc = useSelector(rpcAddress)
-  const marketProgram = getMarketProgramSync(networkType, rpc)
 
   const connection = getCurrentSolanaConnection()
 
@@ -400,9 +398,10 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       ALL_FEE_TIERS_DATA[feeIndex].tier
     )
 
-    const poolAddress: string = await pair
-      .getAddress(marketProgram.program.programId)
-      .then(address => address.toString())
+    const marketProgramId = new PublicKey(
+      getMarketAddress(networkTypetoProgramNetwork(networkType))
+    )
+    const poolAddress: string = (await pair.getAddress(marketProgramId)).toString()
 
     return poolAddress
   }
