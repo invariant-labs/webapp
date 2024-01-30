@@ -313,7 +313,7 @@ export const NewPosition: React.FC<INewPosition> = ({
       setAddress(configuredAddress)
     }
     void configurePoolAddress()
-  }, [poolAddress, initialTokenFrom, initialTokenTo])
+  }, [initialTokenFrom, initialTokenTo])
 
   const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
