@@ -19,6 +19,7 @@ import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { feeToTickSpacing } from '@invariant-labs/sdk/src/utils'
 import { Color } from '@material-ui/lab'
 import { BN } from '@project-serum/anchor'
+import { token } from '@project-serum/anchor/dist/cjs/utils'
 import { actions as poolsActions } from '@reducers/pools'
 import { actions } from '@reducers/positions'
 import { actions as snackbarsActions } from '@reducers/snackbars'
@@ -29,9 +30,10 @@ import {
   volumeRanges
 } from '@selectors/pools'
 import { initPosition, plotTicks } from '@selectors/positions'
-import { network } from '@selectors/solanaConnection'
+import { network, rpcAddress } from '@selectors/solanaConnection'
 import { canCreateNewPool, canCreateNewPosition, status, swapTokens } from '@selectors/solanaWallet'
 import { getCurrentSolanaConnection } from '@web3/connection'
+import { getMarketProgram, getMarketProgramSync } from '@web3/programs/amm'
 import { openWalletSelectorModal } from '@web3/selector'
 import { History } from 'history'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -51,6 +53,10 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   history
 }) => {
   const dispatch = useDispatch()
+
+  const networkType = useSelector(network)
+  const rpc = useSelector(rpcAddress)
+  const marketProgram = getMarketProgramSync(networkType, rpc)
 
   const connection = getCurrentSolanaConnection()
 
@@ -384,6 +390,24 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     localStorage.setItem('INVARIANT_NEW_POSITION_SLIPPAGE', slippage)
   }
 
+  const calculatePoolAddress = async () => {
+    if (tokenAIndex === null || tokenBIndex === null) {
+      return ''
+    }
+
+    const pair = new Pair(
+      tokens[tokenAIndex].assetAddress,
+      tokens[tokenBIndex].assetAddress,
+      ALL_FEE_TIERS_DATA[feeIndex].tier
+    )
+
+    const poolAddress: string = await pair
+      .getAddress(marketProgram.program.programId)
+      .then(address => address.toString())
+
+    return poolAddress
+  }
+
   return (
     <NewPosition
       initialTokenFrom={initialTokenFrom}
@@ -392,6 +416,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       history={history}
       copyPoolAddressHandler={copyPoolAddressHandler}
       poolAddress={poolIndex !== null ? allPools[poolIndex].address.toString() : ''}
+      calculatePoolAddress={calculatePoolAddress}
       tokens={tokens}
       onChangePositionTokens={(tokenA, tokenB, feeTierIndex) => {
         if (
