@@ -28,10 +28,10 @@ const Priority: React.FC<Props> = ({
   const [inputValue, setInputValue] = React.useState<string>('')
 
   React.useEffect(() => {
-    const index = priorityFeeOptions.findIndex(option => option.value === +recentPriorityFee)
+    const index = priorityFeeOptions.findIndex(option => option.saveValue === +recentPriorityFee)
     setSelectedIndex(index)
     if (index !== -1) {
-      setSelectedFee(priorityFeeOptions[index].value)
+      setSelectedFee(priorityFeeOptions[index].saveValue)
     } else {
       setInputValue(recentPriorityFee)
       setSelectedFee(+recentPriorityFee)
@@ -59,7 +59,7 @@ const Priority: React.FC<Props> = ({
     } else {
       localStorage.setItem(
         'INVARIANT_MAINNET_PRIORITY_FEE',
-        JSON.stringify(priorityFeeOptions[selectedIndex].value)
+        JSON.stringify(priorityFeeOptions[selectedIndex].saveValue)
       )
     }
   }
@@ -93,6 +93,7 @@ const Priority: React.FC<Props> = ({
                     index={index}
                     label={params.label}
                     value={params.value}
+                    saveValue={params.saveValue}
                     description={params.description}
                     onClick={handleClick}
                   />
