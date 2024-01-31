@@ -1,4 +1,8 @@
+import { calculateSellPrice } from '@invariant-labs/bonds-sdk/lib/math'
+import { BondSaleStruct } from '@invariant-labs/bonds-sdk/lib/sale'
 import { calculatePriceSqrt, MAX_TICK, MIN_TICK, Pair } from '@invariant-labs/sdk'
+import { Market, TICK_CROSSES_PER_IX, Tickmap } from '@invariant-labs/sdk/lib/market'
+import { getMaxTick, getMinTick, Range } from '@invariant-labs/sdk/lib/utils'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import {
   calculateTickDelta,
@@ -7,9 +11,16 @@ import {
   simulateSwap,
   SimulationStatus
 } from '@invariant-labs/sdk/src/utils'
+import { Staker } from '@invariant-labs/staker-sdk'
+import { Stake } from '@invariant-labs/staker-sdk/lib/staker'
 import { BN } from '@project-serum/anchor'
+import { ExtendedStake } from '@reducers/farms'
+import { PoolWithAddress } from '@reducers/pools'
 import { PlotTickData, PositionWithAddress } from '@reducers/positions'
 import { Token as SPLToken, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { Connection, Keypair, PublicKey } from '@solana/web3.js'
+import axios, { AxiosResponse } from 'axios'
+import bs58 from 'bs58'
 import {
   BTC_DEV,
   HBB_DEV,
@@ -30,17 +41,6 @@ import {
   WSOL_DEV
 } from './static'
 import mainnetList from './tokenLists/mainnet.json'
-import { Connection, Keypair, PublicKey } from '@solana/web3.js'
-import { PoolWithAddress } from '@reducers/pools'
-import { Market, Tickmap, TICK_CROSSES_PER_IX } from '@invariant-labs/sdk/lib/market'
-import axios, { AxiosResponse } from 'axios'
-import { getMaxTick, getMinTick, Range } from '@invariant-labs/sdk/lib/utils'
-import { Staker } from '@invariant-labs/staker-sdk'
-import { ExtendedStake } from '@reducers/farms'
-import { Stake } from '@invariant-labs/staker-sdk/lib/staker'
-import bs58 from 'bs58'
-import { calculateSellPrice } from '@invariant-labs/bonds-sdk/lib/math'
-import { BondSaleStruct } from '@invariant-labs/bonds-sdk/lib/sale'
 
 export const transformBN = (amount: BN): string => {
   // eslint-disable-next-line new-cap
@@ -1099,4 +1099,11 @@ export const getPoolsVolumeRanges = async (name: string): Promise<Record<string,
   } catch (_err) {
     return {}
   }
+}
+
+const SOL_DENOMINATOR = 9
+const LAMPORT_DENOMINATOR = 6
+
+export const solToMicroLamports = (sol: number) => {
+  return Math.round(sol * 10 ** (SOL_DENOMINATOR * LAMPORT_DENOMINATOR))
 }
