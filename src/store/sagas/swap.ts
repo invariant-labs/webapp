@@ -1,17 +1,18 @@
-import { call, put, select, takeEvery } from 'typed-redux-saga'
+import { WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { solToPriorityFee } from '@consts/utils'
+import { Pair } from '@invariant-labs/sdk'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
-import { swap } from '@selectors/swap'
 import { poolsArraySortedByFees, tokens } from '@selectors/pools'
-import { accounts } from '@selectors/solanaWallet'
-import { createAccount, getWallet } from './wallet'
-import { getMarketProgram } from '@web3/programs/amm'
-import { Pair } from '@invariant-labs/sdk'
-import { getConnection } from './connection'
-import { Keypair, sendAndConfirmRawTransaction, SystemProgram, Transaction } from '@solana/web3.js'
-import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { network, rpcAddress } from '@selectors/solanaConnection'
+import { accounts } from '@selectors/solanaWallet'
+import { swap } from '@selectors/swap'
+import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
+import { Keypair, SystemProgram, Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
+import { getMarketProgram } from '@web3/programs/amm'
+import { call, put, select, takeEvery } from 'typed-redux-saga'
+import { getConnection } from './connection'
+import { createAccount, getWallet } from './wallet'
 
 export function* handleSwapWithSOL(): Generator {
   try {
@@ -72,10 +73,21 @@ export function* handleSwapWithSOL(): Generator {
       wallet.publicKey
     )
 
-    const initialTx =
+    let initialTx =
       allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? new Transaction().add(createIx).add(transferIx).add(initIx)
         : new Transaction().add(createIx).add(initIx)
+
+    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+
+    if (fee) {
+      initialTx = yield* call(
+        [marketProgram, marketProgram.addPriorityFee],
+        solToPriorityFee(+fee),
+        initialTx
+      )
+    }
+
     const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
@@ -106,7 +118,7 @@ export function* handleSwapWithSOL(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, tokenTo)
     }
-    const swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
+    let swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
       pair: new Pair(tokenFrom, tokenTo, {
         fee: allPools[poolIndex].fee.v,
         tickSpacing: allPools[poolIndex].tickSpacing
@@ -120,11 +132,29 @@ export function* handleSwapWithSOL(): Generator {
       byAmountIn: byAmountIn,
       owner: wallet.publicKey
     })
+
+    if (fee) {
+      swapTx = yield* call(
+        [marketProgram, marketProgram.addPriorityFee],
+        solToPriorityFee(+fee),
+        swapTx
+      )
+    }
+
     const swapBlockhash = yield* call([connection, connection.getRecentBlockhash])
     swapTx.recentBlockhash = swapBlockhash.blockhash
     swapTx.feePayer = wallet.publicKey
 
-    const unwrapTx = new Transaction().add(unwrapIx)
+    let unwrapTx = new Transaction().add(unwrapIx)
+
+    if (fee) {
+      unwrapTx = yield* call(
+        [marketProgram, marketProgram.addPriorityFee],
+        solToPriorityFee(+fee),
+        unwrapTx
+      )
+    }
+
     const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
@@ -287,7 +317,7 @@ export function* handleSwap(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, tokenTo)
     }
-    const swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
+    let swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
       pair: new Pair(tokenFrom, tokenTo, {
         fee: allPools[poolIndex].fee.v,
         tickSpacing: allPools[poolIndex].tickSpacing
@@ -305,6 +335,16 @@ export function* handleSwap(): Generator {
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     swapTx.recentBlockhash = blockhash.blockhash
     swapTx.feePayer = wallet.publicKey
+
+    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+
+    if (fee) {
+      swapTx = yield* call(
+        [marketProgram, marketProgram.addPriorityFee],
+        solToPriorityFee(+fee),
+        swapTx
+      )
+    }
 
     const signedTx = yield* call([wallet, wallet.signTransaction], swapTx)
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
