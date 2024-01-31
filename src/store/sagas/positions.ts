@@ -347,6 +347,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       })
     }
 
+    tx = yield* call([marketProgram, marketProgram.addPriorityFee], 5_000_000_000, tx)
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
@@ -661,7 +662,8 @@ export function* handleClaimFee(action: PayloadAction<number>) {
       index: action.payload
     })
 
-    const tx = new Transaction().add(ix)
+    let tx = new Transaction().add(ix)
+    tx = yield* call([marketProgram, marketProgram.addPriorityFee], 5_000_000_000, tx)
 
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
