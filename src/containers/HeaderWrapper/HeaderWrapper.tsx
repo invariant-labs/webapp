@@ -64,7 +64,7 @@ export const HeaderWrapper: React.FC = () => {
   const recentPriorityFee = useMemo(() => {
     const lastFee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
 
-    return lastFee === null ? JSON.stringify(priorityFeeOptions[0]) : lastFee
+    return lastFee === null ? JSON.stringify(priorityFeeOptions[0].value) : lastFee
   }, [])
 
   return (

@@ -29,15 +29,23 @@ const Priority: React.FC<Props> = ({
 
   React.useEffect(() => {
     const index = priorityFeeOptions.findIndex(
-      option => option.label === JSON.parse(recentPriorityFee).label
+      option => option.value === JSON.parse(recentPriorityFee).value
     )
+    console.log(index)
     setSelectedIndex(index)
+    if (index !== -1) {
+      setSelectedFee(priorityFeeOptions[index].value)
+    } else {
+      setInputValue(recentPriorityFee)
+      setSelectedFee(+recentPriorityFee)
+    }
     setSelectedFee(index !== -1 ? priorityFeeOptions[index].value : priorityFeeOptions[0].value)
   }, [recentPriorityFee])
 
   const handleClick = (index: number, value: number) => {
     setSelectedFee(value)
     setSelectedIndex(index)
+    setInputValue('')
   }
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (Number(e.target.value) >= maxFee) {
@@ -48,10 +56,17 @@ const Priority: React.FC<Props> = ({
   }
 
   const onSave = () => {
-    localStorage.setItem(
-      'INVARIANT_MAINNET_PRIORITY_FEE',
-      JSON.stringify(priorityFeeOptions[selectedIndex])
-    )
+    if (+inputValue > 0) {
+      setSelectedFee(+inputValue)
+      setSelectedIndex(-1)
+      localStorage.setItem('INVARIANT_MAINNET_PRIORITY_FEE', inputValue)
+    } else {
+      setInputValue('')
+      localStorage.setItem(
+        'INVARIANT_MAINNET_PRIORITY_FEE',
+        JSON.stringify(priorityFeeOptions[selectedIndex])
+      )
+    }
   }
 
   return (
