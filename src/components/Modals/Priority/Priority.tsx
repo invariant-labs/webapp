@@ -31,7 +31,6 @@ const Priority: React.FC<Props> = ({
     const index = priorityFeeOptions.findIndex(
       option => option.value === JSON.parse(recentPriorityFee).value
     )
-    console.log(index)
     setSelectedIndex(index)
     if (index !== -1) {
       setSelectedFee(priorityFeeOptions[index].value)
@@ -39,7 +38,6 @@ const Priority: React.FC<Props> = ({
       setInputValue(recentPriorityFee)
       setSelectedFee(+recentPriorityFee)
     }
-    setSelectedFee(index !== -1 ? priorityFeeOptions[index].value : priorityFeeOptions[0].value)
   }, [recentPriorityFee])
 
   const handleClick = (index: number, value: number) => {
@@ -61,7 +59,6 @@ const Priority: React.FC<Props> = ({
       setSelectedIndex(-1)
       localStorage.setItem('INVARIANT_MAINNET_PRIORITY_FEE', inputValue)
     } else {
-      setInputValue('')
       localStorage.setItem(
         'INVARIANT_MAINNET_PRIORITY_FEE',
         JSON.stringify(priorityFeeOptions[selectedIndex])
