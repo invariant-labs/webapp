@@ -9,14 +9,13 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     fontWeight: 400,
     background: colors.invariant.newDark,
-    border: `1px solid ${colors.invariant.light}`,
     borderRadius: 16,
     padding: '32px 16px',
     margin: '4px 0px',
-    color: colors.invariant.light,
+    color: colors.invariant.lightGrey,
     overflow: 'hidden',
     '&:hover': {
-      color: colors.invariant.light
+      color: colors.invariant.lightGrey
     }
   },
   selectedButton: {
@@ -26,7 +25,6 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     fontWeight: 400,
     background: colors.invariant.light,
-    border: `1px solid ${colors.invariant.light}`,
     borderRadius: 16,
     padding: '32px 16px',
     margin: '4px 0px',

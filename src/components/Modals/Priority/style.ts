@@ -21,12 +21,21 @@ const useStyles = makeStyles(() => ({
       paddingBottom: 10
     }
   },
+  header: {
+    fontWeight: 700,
+    fontSize: 20,
+    lineHeight: '24px',
+    letterSpacing: '-0.03px'
+  },
   text: {
-    ...typography.body1
+    ...typography.body1,
+    padding: '0px 0px 10px 0px',
+    color: colors.invariant.lightGrey
   },
   label: {
     color: `${colors.invariant.lightGrey} !important`,
-    marginBottom: 8
+    marginBottom: 8,
+    fontWeight: 400
   },
 
   selectTokenClose: {
@@ -54,7 +63,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: colors.invariant.newDark,
     ...typography.heading4,
     fontWeight: 400,
-    padding: 8,
+    padding: 14,
     '&::placeholder': {
       color: colors.invariant.light
     },
@@ -63,7 +72,13 @@ const useStyles = makeStyles(() => ({
     }
   },
   innerInput: {
-    paddingBlock: 0
+    paddingBlock: 0,
+    fontSize: 16,
+    lineHeight: '20px',
+    letterSpacing: '-0.03px'
+  },
+  saveButton: {
+    fontSize: 20
   }
 }))
 

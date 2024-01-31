@@ -78,7 +78,7 @@ const Priority: React.FC<Props> = ({
       }}>
       <Grid container className={classes.detailsWrapper}>
         <Grid container justifyContent='space-between' style={{ marginBottom: 6 }}>
-          <Typography component='h2'>{'Transaction priority'}</Typography>
+          <Typography className={classes.header}>{'Transaction priority'}</Typography>
           <Button className={classes.selectTokenClose} onClick={handleClose} />
         </Grid>
         <Typography className={classes.text}>
@@ -104,7 +104,7 @@ const Priority: React.FC<Props> = ({
           })}
         </Grid>
         <Box>
-          <Grid container justifyContent='space-between' style={{ marginBottom: 6 }}>
+          <Grid container justifyContent='space-between'>
             <Typography className={classes.label}>Set custom priority</Typography>
             <Typography className={classes.label}>MAX: {maxFee} SOL</Typography>
           </Grid>
@@ -126,6 +126,7 @@ const Priority: React.FC<Props> = ({
         <AnimatedButton
           content='Save'
           progress={'none'}
+          className={classes.saveButton}
           onClick={() => {
             onSave()
             handleClose()
