@@ -61,7 +61,7 @@ const Priority: React.FC<Props> = ({
     } else {
       localStorage.setItem(
         'INVARIANT_MAINNET_PRIORITY_FEE',
-        JSON.stringify(priorityFeeOptions[selectedIndex])
+        JSON.stringify(priorityFeeOptions[selectedIndex].value)
       )
     }
   }
@@ -124,7 +124,7 @@ const Priority: React.FC<Props> = ({
         </Box>
         <br />
         <AnimatedButton
-          content='Save settings'
+          content='Save'
           progress={'none'}
           onClick={() => {
             onSave()
