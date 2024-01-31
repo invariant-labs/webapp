@@ -24,13 +24,11 @@ const Priority: React.FC<Props> = ({
   const inputRef = React.useRef<HTMLInputElement>(null)
   const maxFee = 2
   const [_selectedFee, setSelectedFee] = React.useState<number>(0)
-  const [selectedIndex, setSelectedIndex] = React.useState<number>(0)
+  const [selectedIndex, setSelectedIndex] = React.useState<number>(-1)
   const [inputValue, setInputValue] = React.useState<string>('')
 
   React.useEffect(() => {
-    const index = priorityFeeOptions.findIndex(
-      option => option.value === JSON.parse(recentPriorityFee).value
-    )
+    const index = priorityFeeOptions.findIndex(option => option.value === +recentPriorityFee)
     setSelectedIndex(index)
     if (index !== -1) {
       setSelectedFee(priorityFeeOptions[index].value)
