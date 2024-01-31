@@ -3,7 +3,7 @@ import {
   createLiquidityPlot,
   createPlaceholderLiquidityPlot,
   getPositionsAddressesFromRange,
-  solToMicroLamports
+  solToPriorityFee
 } from '@consts/utils'
 import { Pair } from '@invariant-labs/sdk'
 import { Staker } from '@invariant-labs/staker-sdk'
@@ -133,7 +133,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       if (fee) {
         initPositionTx = yield* call(
           [marketProgram, marketProgram.addPriorityFee],
-          solToMicroLamports(+fee),
+          solToPriorityFee(+fee),
           transaction
         )
       } else {
@@ -160,7 +160,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     if (fee) {
       initialTx = yield* call(
         [marketProgram, marketProgram.addPriorityFee],
-        solToMicroLamports(+fee),
+        solToPriorityFee(+fee),
         initialTx
       )
     }
@@ -178,7 +178,7 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     if (fee) {
       unwrapTx = yield* call(
         [marketProgram, marketProgram.addPriorityFee],
-        solToMicroLamports(+fee),
+        solToPriorityFee(+fee),
         unwrapTx
       )
     }
@@ -362,7 +362,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       if (fee) {
         tx = yield* call(
           [marketProgram, marketProgram.addPriorityFee],
-          solToMicroLamports(+fee),
+          solToPriorityFee(+fee),
           transaction
         )
       } else {
@@ -388,7 +388,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     }
 
     if (fee) {
-      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToMicroLamports(+fee), tx)
+      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
     }
 
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
@@ -710,7 +710,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
 
     if (fee) {
-      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToMicroLamports(+fee), tx)
+      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
     }
 
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
@@ -848,7 +848,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
 
     if (fee) {
-      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToMicroLamports(+fee), tx)
+      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
     }
 
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
@@ -977,7 +977,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
 
     if (fee) {
-      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToMicroLamports(+fee), tx)
+      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
     }
 
     const blockhash = yield* call([connection, connection.getRecentBlockhash])

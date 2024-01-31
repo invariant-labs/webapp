@@ -1101,9 +1101,8 @@ export const getPoolsVolumeRanges = async (name: string): Promise<Record<string,
   }
 }
 
-const SOL_DENOMINATOR = 9
-const LAMPORT_DENOMINATOR = 6
+const PRIORITY_FEE_DENOMINATOR = 8
 
-export const solToMicroLamports = (sol: number) => {
-  return Math.round(sol * 10 ** (SOL_DENOMINATOR * LAMPORT_DENOMINATOR))
+export const solToPriorityFee = (sol: number) => {
+  return Math.round(sol * 5 * 10 ** PRIORITY_FEE_DENOMINATOR)
 }
