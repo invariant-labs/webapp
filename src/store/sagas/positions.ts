@@ -603,7 +603,13 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
       index: positionIndex
     })
 
-    const tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
+    let tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
+
+    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+
+    if (fee) {
+      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
+    }
 
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
