@@ -1,41 +1,42 @@
-import { call, put, takeEvery, take, select, all, spawn, takeLatest } from 'typed-redux-saga'
-import { actions as snackbarsActions } from '@reducers/snackbars'
-import { actions as poolsActions, ListPoolsResponse, ListType } from '@reducers/pools'
-import { createAccount, getWallet, sleep } from './wallet'
-import { getMarketProgram } from '@web3/programs/amm'
-import { getConnection } from './connection'
-import {
-  actions,
-  ClosePositionData,
-  GetCurrentTicksData,
-  InitPositionData
-} from '@reducers/positions'
-import { PayloadAction } from '@reduxjs/toolkit'
-import { poolsArraySortedByFees, tokens } from '@selectors/pools'
-import { Pair } from '@invariant-labs/sdk'
+import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import {
   createLiquidityPlot,
   createPlaceholderLiquidityPlot,
-  getPositionsAddressesFromRange
+  getPositionsAddressesFromRange,
+  solToPriorityFee
 } from '@consts/utils'
-import { accounts } from '@selectors/solanaWallet'
-import {
-  Transaction,
-  sendAndConfirmRawTransaction,
-  Keypair,
-  SystemProgram,
-  PublicKey
-} from '@solana/web3.js'
-import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { WRAPPED_SOL_ADDRESS } from '@consts/static'
-import { positionsWithPoolsData, singlePositionData } from '@selectors/positions'
-import { GuardPredicate } from '@redux-saga/types'
-import { createClaimAllPositionRewardsTx } from './farms'
-import { network, rpcAddress } from '@selectors/solanaConnection'
-import { actions as farmsActions } from '@reducers/farms'
-import { stakesForPosition } from '@selectors/farms'
-import { getStakerProgram } from '@web3/programs/staker'
+import { Pair } from '@invariant-labs/sdk'
 import { Staker } from '@invariant-labs/staker-sdk'
+import { actions as farmsActions } from '@reducers/farms'
+import { ListPoolsResponse, ListType, actions as poolsActions } from '@reducers/pools'
+import {
+  ClosePositionData,
+  GetCurrentTicksData,
+  InitPositionData,
+  actions
+} from '@reducers/positions'
+import { actions as snackbarsActions } from '@reducers/snackbars'
+import { GuardPredicate } from '@redux-saga/types'
+import { PayloadAction } from '@reduxjs/toolkit'
+import { stakesForPosition } from '@selectors/farms'
+import { poolsArraySortedByFees, tokens } from '@selectors/pools'
+import { positionsWithPoolsData, singlePositionData } from '@selectors/positions'
+import { network, rpcAddress } from '@selectors/solanaConnection'
+import { accounts } from '@selectors/solanaWallet'
+import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
+import {
+  Keypair,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  sendAndConfirmRawTransaction
+} from '@solana/web3.js'
+import { getMarketProgram } from '@web3/programs/amm'
+import { getStakerProgram } from '@web3/programs/staker'
+import { all, call, put, select, spawn, take, takeEvery, takeLatest } from 'typed-redux-saga'
+import { getConnection } from './connection'
+import { createClaimAllPositionRewardsTx } from './farms'
+import { createAccount, getWallet, sleep } from './wallet'
 
 export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
   try {
@@ -107,6 +108,8 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     let initPositionTx: Transaction
     let poolSigners: Keypair[] = []
 
+    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+
     if (data.initPool) {
       const { transaction, signers } = yield* call(
         [marketProgram, marketProgram.initPoolAndPositionTx],
@@ -127,7 +130,16 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
         }
       )
 
-      initPositionTx = transaction
+      if (fee) {
+        initPositionTx = yield* call(
+          [marketProgram, marketProgram.addPriorityFee],
+          solToPriorityFee(+fee),
+          transaction
+        )
+      } else {
+        initPositionTx = transaction
+      }
+
       poolSigners = signers
     } else {
       initPositionTx = yield* call([marketProgram, marketProgram.initPositionTx], {
@@ -143,7 +155,15 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       })
     }
 
-    const initialTx = new Transaction().add(createIx).add(transferIx).add(initIx)
+    let initialTx = new Transaction().add(createIx).add(transferIx).add(initIx)
+
+    if (fee) {
+      initialTx = yield* call(
+        [marketProgram, marketProgram.addPriorityFee],
+        solToPriorityFee(+fee),
+        initialTx
+      )
+    }
 
     const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
@@ -153,7 +173,16 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     initPositionTx.recentBlockhash = initPositionBlockhash.blockhash
     initPositionTx.feePayer = wallet.publicKey
 
-    const unwrapTx = new Transaction().add(unwrapIx)
+    let unwrapTx = new Transaction().add(unwrapIx)
+
+    if (fee) {
+      unwrapTx = yield* call(
+        [marketProgram, marketProgram.addPriorityFee],
+        solToPriorityFee(+fee),
+        unwrapTx
+      )
+    }
+
     const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
@@ -308,6 +337,8 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     let tx: Transaction
     let poolSigners: Keypair[] = []
 
+    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+
     if (action.payload.initPool) {
       const { transaction, signers } = yield* call(
         [marketProgram, marketProgram.initPoolAndPositionTx],
@@ -345,6 +376,10 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
         slippage: action.payload.slippage,
         knownPrice: action.payload.knownPrice
       })
+    }
+
+    if (fee) {
+      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
     }
 
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
@@ -568,7 +603,13 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
       index: positionIndex
     })
 
-    const tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
+    let tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
+
+    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+
+    if (fee) {
+      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
+    }
 
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
@@ -661,7 +702,13 @@ export function* handleClaimFee(action: PayloadAction<number>) {
       index: action.payload
     })
 
-    const tx = new Transaction().add(ix)
+    let tx = new Transaction().add(ix)
+
+    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+
+    if (fee) {
+      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
+    }
 
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
@@ -795,6 +842,12 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
     }
 
+    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+
+    if (fee) {
+      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
+    }
+
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
@@ -916,6 +969,12 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       tx = claimTx.add(ix)
     } else {
       tx = new Transaction().add(ix)
+    }
+
+    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+
+    if (fee) {
+      tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
     }
 
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
