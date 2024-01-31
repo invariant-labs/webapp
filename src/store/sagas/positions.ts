@@ -142,8 +142,10 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
         knownPrice: data.knownPrice
       })
     }
+    initPositionTx = yield* call([marketProgram, marketProgram.addPriorityFee], 5_000_000_000, initPositionTx)
 
-    const initialTx = new Transaction().add(createIx).add(transferIx).add(initIx)
+    let initialTx = new Transaction().add(createIx).add(transferIx).add(initIx)
+    initialTx = yield* call([marketProgram, marketProgram.addPriorityFee], 5_000_000_000, initialTx)
 
     const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
@@ -153,7 +155,8 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
     initPositionTx.recentBlockhash = initPositionBlockhash.blockhash
     initPositionTx.feePayer = wallet.publicKey
 
-    const unwrapTx = new Transaction().add(unwrapIx)
+    let unwrapTx = new Transaction().add(unwrapIx)
+    unwrapTx = yield* call([marketProgram, marketProgram.addPriorityFee], 5_000_000_000, unwrapTx)
     const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
