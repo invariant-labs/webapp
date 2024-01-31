@@ -8,6 +8,7 @@ interface Props {
   index: number
   label: string
   value: number
+  saveValue: number
   description: string
   onClick: (index: number, value: number) => void
 }
@@ -17,13 +18,14 @@ const TransactionPriorityButton: React.FC<Props> = ({
   index,
   label,
   value,
+  saveValue,
   description,
   onClick
 }) => {
   const classes = useStyles()
 
   const handleClick = () => {
-    onClick(index, value)
+    onClick(index, saveValue)
   }
   return (
     <Button
