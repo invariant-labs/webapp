@@ -70,6 +70,10 @@ export const PositionsList: React.FC<IProp> = ({
     setPage(initialPage)
   }, [])
 
+  useEffect(() => {
+    handleChangePagination(initialPage)
+  }, [initialPage])
+
   return (
     <Grid container direction='column' className={classes.root}>
       <Grid
