@@ -41,6 +41,7 @@ export interface INewPosition {
   initialFee: string
   history: History<unknown>
   poolAddress: string
+  calculatePoolAddress: () => Promise<string>
   copyPoolAddressHandler: (message: string, variant: Color) => void
   tokens: SwapToken[]
   data: PlotTickData[]
@@ -112,6 +113,7 @@ export const NewPosition: React.FC<INewPosition> = ({
   initialFee,
   history,
   poolAddress,
+  calculatePoolAddress,
   copyPoolAddressHandler,
   tokens,
   data,
@@ -169,6 +171,7 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [tokenADeposit, setTokenADeposit] = useState<string>('')
   const [tokenBDeposit, setTokenBDeposit] = useState<string>('')
 
+  const [address, setAddress] = useState<string>(poolAddress)
   const [settings, setSettings] = React.useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
@@ -304,6 +307,14 @@ export const NewPosition: React.FC<INewPosition> = ({
     }
   }, [midPrice.index])
 
+  useEffect(() => {
+    const configurePoolAddress = async () => {
+      const configuredAddress = poolAddress === '' ? await calculatePoolAddress() : poolAddress
+      setAddress(configuredAddress)
+    }
+    void configurePoolAddress()
+  }, [initialTokenFrom, initialTokenTo, initialFee])
+
   const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
     blurContent()
@@ -350,10 +361,10 @@ export const NewPosition: React.FC<INewPosition> = ({
       <Grid container justifyContent='space-between'>
         <Typography className={classes.title}>Add new liquidity position</Typography>
         <Grid container item alignItems='center' className={classes.options}>
-          {poolIndex !== null ? (
+          {address !== '' ? (
             <MarketIdLabel
               displayLength={9}
-              marketId={poolAddress}
+              marketId={address}
               copyPoolAddressHandler={copyPoolAddressHandler}
             />
           ) : null}
