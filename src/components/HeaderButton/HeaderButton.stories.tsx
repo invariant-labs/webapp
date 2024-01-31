@@ -9,6 +9,7 @@ import SelectNetworkButton from './SelectNetworkButton'
 import ChangeWalletButton from './ChangeWalletButton'
 import { NetworkType, SolanaNetworks } from '@consts/static'
 import SelectRPCButton from './SelectRPCButton'
+import SelectPriorityButton from './SelectPriorityButton'
 
 const loremIpsum =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
@@ -22,6 +23,21 @@ storiesOf('buttons/newHeaderButton', module)
         connected={false}
         onConnect={() => action('connect')}
         onDisconnect={action('disconnect')}
+      />
+      <br />
+      <div id={toBlur} style={{ color: '#00F9BB' }}>
+        <Typography variant='body2'>{loremIpsum}</Typography>
+      </div>
+    </div>
+  ))
+  .add('setPriority', () => (
+    <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
+      <SelectPriorityButton
+        content='Set priority'
+        open={true}
+        onClick={() => {}}
+        handleClose={() => {}}
+        anchorEl={null}
       />
       <br />
       <div id={toBlur} style={{ color: '#00F9BB' }}>

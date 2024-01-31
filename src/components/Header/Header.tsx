@@ -17,6 +17,9 @@ import classNames from 'classnames'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import useStyles from './style'
+import SelectPriorityButton from '@components/HeaderButton/SelectPriorityButton'
+import { IPriorityFeeOptions } from '@containers/HeaderWrapper/HeaderWrapper'
+import Priority from '@components/Modals/Priority/Priority'
 
 export interface IHeader {
   address: PublicKey
@@ -29,6 +32,8 @@ export interface IHeader {
   onFaucet?: () => void
   onDisconnectWallet: () => void
   defaultMainnetRPC: string
+  recentPriorityFee: string
+  priorityFeeOptions: IPriorityFeeOptions[]
 }
 
 export const Header: React.FC<IHeader> = ({
@@ -41,7 +46,9 @@ export const Header: React.FC<IHeader> = ({
   rpc,
   onFaucet,
   onDisconnectWallet,
-  defaultMainnetRPC
+  defaultMainnetRPC,
+  recentPriorityFee,
+  priorityFeeOptions
 }) => {
   const classes = useStyles()
   const buttonClasses = useButtonStyles()
@@ -63,11 +70,23 @@ export const Header: React.FC<IHeader> = ({
   const [routesModalOpen, setRoutesModalOpen] = React.useState(false)
   const [mainnetRpcsOpen, setMainnetRpcsOpen] = React.useState(false)
   const [routesModalAnchor, setRoutesModalAnchor] = React.useState<HTMLButtonElement | null>(null)
+  const [priorityModal, setPriorityModal] = React.useState<boolean>(false)
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
 
   React.useEffect(() => {
     // if there will be no redirects, get rid of this
     setActive(landing)
   }, [landing])
+
+  const handleClickPriorityModal = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+    blurContent()
+    setPriorityModal(true)
+  }
+  const handleClosePriorityModal = () => {
+    unblurContent()
+    setPriorityModal(false)
+  }
 
   const mainnetRPCs = [
     {
@@ -147,6 +166,19 @@ export const Header: React.FC<IHeader> = ({
           </Hidden>
           <Hidden xsDown>
             {typeOfNetwork === NetworkType.MAINNET ? (
+              <SelectPriorityButton
+                content='Set priority'
+                open={priorityModal}
+                onClick={handleClickPriorityModal}
+                handleClose={handleClosePriorityModal}
+                anchorEl={anchorEl}
+                recentPriorityFee={recentPriorityFee}
+                priorityFeeOptions={priorityFeeOptions}
+              />
+            ) : null}
+          </Hidden>
+          <Hidden xsDown>
+            {typeOfNetwork === NetworkType.MAINNET ? (
               <SelectRPCButton rpc={rpc} networks={mainnetRPCs} onSelect={onNetworkSelect} />
             ) : null}
           </Hidden>
@@ -222,7 +254,23 @@ export const Header: React.FC<IHeader> = ({
                   }
                 : undefined
             }
+            onPriority={
+              typeOfNetwork === NetworkType.MAINNET && isXsDown
+                ? () => {
+                    setRoutesModalOpen(false)
+                    setPriorityModal(true)
+                  }
+                : undefined
+            }
           />
+          {typeOfNetwork === NetworkType.MAINNET ? (
+            <Priority
+              open={priorityModal}
+              handleClose={handleClosePriorityModal}
+              anchorEl={anchorEl}
+              recentPriorityFee={recentPriorityFee}
+              priorityFeeOptions={priorityFeeOptions}></Priority>
+          ) : null}
           {typeOfNetwork === NetworkType.MAINNET ? (
             <SelectMainnetRPC
               networks={mainnetRPCs}
