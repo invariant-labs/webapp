@@ -359,16 +359,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
         }
       )
 
-      if (fee) {
-        tx = yield* call(
-          [marketProgram, marketProgram.addPriorityFee],
-          solToPriorityFee(+fee),
-          transaction
-        )
-      } else {
-        tx = transaction
-      }
-
+      tx = transaction
       poolSigners = signers
     } else {
       tx = yield* call([marketProgram, marketProgram.initPositionTx], {
