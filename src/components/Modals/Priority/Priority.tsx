@@ -25,7 +25,7 @@ const Priority: React.FC<Props> = ({
   const maxFee = 2
   const [_selectedFee, setSelectedFee] = React.useState<number>(0)
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0)
-  const [inputValue, setInputValue] = React.useState<string>('0.0000')
+  const [inputValue, setInputValue] = React.useState<string>('')
 
   React.useEffect(() => {
     const index = priorityFeeOptions.findIndex(
