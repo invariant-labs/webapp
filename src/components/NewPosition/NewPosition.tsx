@@ -352,7 +352,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         <Grid container item alignItems='center' className={classes.options}>
           {poolIndex !== null ? (
             <MarketIdLabel
-              displayLength={4}
+              displayLength={9}
               marketId={poolAddress}
               copyPoolAddressHandler={copyPoolAddressHandler}
             />

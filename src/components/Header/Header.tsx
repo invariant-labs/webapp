@@ -17,7 +17,6 @@ import classNames from 'classnames'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import useStyles from './style'
-import Priority from '@components/Modals/Priority/Priority'
 import SelectPriorityButton from '@components/HeaderButton/SelectPriorityButton'
 
 export interface IHeader {

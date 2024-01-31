@@ -30,6 +30,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import ExchangeRate from './ExchangeRate/ExchangeRate'
 import TransactionDetailsBox from './TransactionDetailsBox/TransactionDetailsBox'
 import useStyles from './style'
+
 export interface SwapToken {
   balance: BN
   decimals: number
