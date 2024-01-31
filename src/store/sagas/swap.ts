@@ -72,10 +72,13 @@ export function* handleSwapWithSOL(): Generator {
       wallet.publicKey
     )
 
-    const initialTx =
+    let initialTx =
       allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? new Transaction().add(createIx).add(transferIx).add(initIx)
         : new Transaction().add(createIx).add(initIx)
+
+    initialTx = yield* call([marketProgram, marketProgram.addPriorityFee], 5_000_000_000, initialTx)
+
     const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
@@ -106,7 +109,7 @@ export function* handleSwapWithSOL(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, tokenTo)
     }
-    const swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
+    let swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
       pair: new Pair(tokenFrom, tokenTo, {
         fee: allPools[poolIndex].fee.v,
         tickSpacing: allPools[poolIndex].tickSpacing
@@ -120,11 +123,13 @@ export function* handleSwapWithSOL(): Generator {
       byAmountIn: byAmountIn,
       owner: wallet.publicKey
     })
+    swapTx = yield* call([marketProgram, marketProgram.addPriorityFee], 5_000_000_000, swapTx)
     const swapBlockhash = yield* call([connection, connection.getRecentBlockhash])
     swapTx.recentBlockhash = swapBlockhash.blockhash
     swapTx.feePayer = wallet.publicKey
 
-    const unwrapTx = new Transaction().add(unwrapIx)
+    let unwrapTx = new Transaction().add(unwrapIx)
+    unwrapTx = yield* call([marketProgram, marketProgram.addPriorityFee], 5_000_000_000, unwrapTx)
     const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
@@ -287,7 +292,7 @@ export function* handleSwap(): Generator {
     if (toAddress === null) {
       toAddress = yield* call(createAccount, tokenTo)
     }
-    const swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
+    let swapTx = yield* call([marketProgram, marketProgram.swapTransaction], {
       pair: new Pair(tokenFrom, tokenTo, {
         fee: allPools[poolIndex].fee.v,
         tickSpacing: allPools[poolIndex].tickSpacing
@@ -301,6 +306,7 @@ export function* handleSwap(): Generator {
       byAmountIn: byAmountIn,
       owner: wallet.publicKey
     })
+    swapTx = yield* call([marketProgram, marketProgram.addPriorityFee], 5_000_000_000, swapTx)
     const connection = yield* call(getConnection)
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     swapTx.recentBlockhash = blockhash.blockhash
