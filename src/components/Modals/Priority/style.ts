@@ -48,7 +48,7 @@ const useStyles = makeStyles(() => ({
   },
   detailsInfoForm: {
     border: `1px solid ${colors.invariant.component}`,
-    color: colors.invariant.light,
+    color: colors.invariant.text,
     borderRadius: 15,
     width: '100%',
     backgroundColor: colors.invariant.newDark,

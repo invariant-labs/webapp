@@ -9,6 +9,23 @@ import { actions } from '@reducers/solanaConnection'
 import { network, rpcAddress } from '@selectors/solanaConnection'
 import { nightlyConnectAdapter, openWalletSelectorModal } from '@web3/selector'
 
+export interface IPriorityFeeOptions {
+  label: string
+  value: number
+  description: string
+}
+
+const priorityFeeOptions: IPriorityFeeOptions[] = [
+  { label: 'Normal', value: 0.000005, description: '1x Market fee' },
+  {
+    label: 'Market',
+    value: 0.001,
+    description: '85% percentile fees from last 20 blocks'
+  },
+  { label: 'High', value: 0.05, description: '5x Market fee' },
+  { label: 'Turbo', value: 0.1, description: '10x Market fee' }
+]
+
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
   const walletAddress = useSelector(address)
@@ -44,6 +61,12 @@ export const HeaderWrapper: React.FC = () => {
     return lastRPC === null ? SolanaNetworks.MAIN_ALCHEMY : lastRPC
   }, [])
 
+  const recentPriorityFee = useMemo(() => {
+    const lastFee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+
+    return lastFee === null ? JSON.stringify(priorityFeeOptions[0]) : lastFee
+  }, [])
+
   return (
     <Header
       address={walletAddress}
@@ -68,6 +91,8 @@ export const HeaderWrapper: React.FC = () => {
       typeOfNetwork={currentNetwork}
       rpc={currentRpc}
       defaultMainnetRPC={defaultMainnetRPC}
+      recentPriorityFee={recentPriorityFee}
+      priorityFeeOptions={priorityFeeOptions}
     />
   )
 }

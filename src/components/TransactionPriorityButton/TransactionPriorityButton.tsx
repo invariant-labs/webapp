@@ -8,7 +8,7 @@ interface Props {
   index: number
   label: string
   value: number
-  multiplier: number
+  description: string
   onClick: (index: number, value: number) => void
 }
 
@@ -17,7 +17,7 @@ const TransactionPriorityButton: React.FC<Props> = ({
   index,
   label,
   value,
-  multiplier,
+  description,
   onClick
 }) => {
   const classes = useStyles()
@@ -34,7 +34,7 @@ const TransactionPriorityButton: React.FC<Props> = ({
           {label}
           <span className={classNames(classes.maxFee)}>Max. {value} SOL</span>
         </Typography>
-        <Typography className={classNames(classes.marketFee)}>{multiplier}x Market fee</Typography>
+        <Typography className={classNames(classes.marketFee)}>{description}</Typography>
       </Grid>
     </Button>
   )

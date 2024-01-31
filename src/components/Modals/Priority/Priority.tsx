@@ -3,32 +3,37 @@ import { Typography, Box, Grid, Button, Popover, Input } from '@material-ui/core
 import useStyles from './style'
 import AnimatedButton from '@components/AnimatedButton/AnimatedButton'
 import TransactionPriorityButton from '@components/TransactionPriorityButton/TransactionPriorityButton'
+import { IPriorityFeeOptions } from '@containers/HeaderWrapper/HeaderWrapper'
 
 interface Props {
   open: boolean
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
+  recentPriorityFee: string
+  priorityFeeOptions: IPriorityFeeOptions[]
 }
 
-export interface IButtonParams {
-  label: string
-  value: number
-  multiplier: number
-}
-
-const buttonsParams: IButtonParams[] = [
-  { label: 'Normal fee', value: 0.000005, multiplier: 1 },
-  { label: 'High', value: 0.05, multiplier: 5 },
-  { label: 'Turbo', value: 0.1, multiplier: 10 }
-]
-
-const Priority: React.FC<Props> = ({ open, handleClose, anchorEl }) => {
+const Priority: React.FC<Props> = ({
+  open,
+  handleClose,
+  anchorEl,
+  recentPriorityFee,
+  priorityFeeOptions
+}) => {
   const classes = useStyles()
   const inputRef = React.useRef<HTMLInputElement>(null)
   const maxFee = 2
   const [_selectedFee, setSelectedFee] = React.useState<number>(0)
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0)
   const [inputValue, setInputValue] = React.useState<string>('0.0000')
+
+  React.useEffect(() => {
+    const index = priorityFeeOptions.findIndex(
+      option => option.label === JSON.parse(recentPriorityFee).label
+    )
+    setSelectedIndex(index)
+    setSelectedFee(index !== -1 ? priorityFeeOptions[index].value : priorityFeeOptions[0].value)
+  }, [recentPriorityFee])
 
   const handleClick = (index: number, value: number) => {
     setSelectedFee(value)
@@ -40,6 +45,13 @@ const Priority: React.FC<Props> = ({ open, handleClose, anchorEl }) => {
     } else {
       setInputValue(e.target.value)
     }
+  }
+
+  const onSave = () => {
+    localStorage.setItem(
+      'INVARIANT_MAINNET_PRIORITY_FEE',
+      JSON.stringify(priorityFeeOptions[selectedIndex])
+    )
   }
 
   return (
@@ -58,20 +70,20 @@ const Priority: React.FC<Props> = ({ open, handleClose, anchorEl }) => {
           <Button className={classes.selectTokenClose} onClick={handleClose} />
         </Grid>
         <Typography className={classes.text}>
-          Short explanation what transaction priority is solana klaytn decred klaytn flow bitcoin
-          amp. Ren EOS USD terra ethereum.{' '}
+          Solana's fee priority system lets you add an extra fee to your transaction for higher
+          priority in the network's queue. Bidding more increases the chances of quick confirmation.{' '}
         </Typography>
         <Grid container justifyContent='center' style={{ marginBottom: 20 }}>
-          {buttonsParams.map((params, index) => {
+          {priorityFeeOptions.map((params, index) => {
             return (
-              <Grid item>
+              <Grid item key={index}>
                 <Box>
                   <TransactionPriorityButton
                     selected={selectedIndex === index}
                     index={index}
                     label={params.label}
                     value={params.value}
-                    multiplier={params.multiplier}
+                    description={params.description}
                     onClick={handleClick}
                   />
                 </Box>
@@ -102,7 +114,10 @@ const Priority: React.FC<Props> = ({ open, handleClose, anchorEl }) => {
         <AnimatedButton
           content='Save settings'
           progress={'none'}
-          onClick={handleClose}></AnimatedButton>
+          onClick={() => {
+            onSave()
+            handleClose()
+          }}></AnimatedButton>
       </Grid>
     </Popover>
   )

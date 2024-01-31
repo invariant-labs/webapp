@@ -5,8 +5,8 @@ import { colors } from '@static/theme'
 import TransactionPriorityButton from './TransactionPriorityButton'
 
 const buttonsParams = [
-  { label: 'High', value: 0.05, multiplier: 5 },
-  { label: 'Turbo', value: 0.1, multiplier: 10 }
+  { label: 'High', value: 0.05, description: '5x Market fee' },
+  { label: 'Turbo', value: 0.1, description: '10x Market fee' }
 ]
 
 storiesOf('buttons/transactionPriorityButton', module)
@@ -20,7 +20,7 @@ storiesOf('buttons/transactionPriorityButton', module)
             index={index}
             label={params.label}
             value={params.value}
-            multiplier={params.multiplier}
+            description={params.description}
             onClick={() => {}}
           />
         )

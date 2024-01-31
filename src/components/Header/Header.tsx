@@ -18,6 +18,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import useStyles from './style'
 import SelectPriorityButton from '@components/HeaderButton/SelectPriorityButton'
+import { IPriorityFeeOptions } from '@containers/HeaderWrapper/HeaderWrapper'
+import Priority from '@components/Modals/Priority/Priority'
 
 export interface IHeader {
   address: PublicKey
@@ -30,6 +32,8 @@ export interface IHeader {
   onFaucet?: () => void
   onDisconnectWallet: () => void
   defaultMainnetRPC: string
+  recentPriorityFee: string
+  priorityFeeOptions: IPriorityFeeOptions[]
 }
 
 export const Header: React.FC<IHeader> = ({
@@ -42,7 +46,9 @@ export const Header: React.FC<IHeader> = ({
   rpc,
   onFaucet,
   onDisconnectWallet,
-  defaultMainnetRPC
+  defaultMainnetRPC,
+  recentPriorityFee,
+  priorityFeeOptions
 }) => {
   const classes = useStyles()
   const buttonClasses = useButtonStyles()
@@ -166,6 +172,8 @@ export const Header: React.FC<IHeader> = ({
                 onClick={handleClickPriorityModal}
                 handleClose={handleClosePriorityModal}
                 anchorEl={anchorEl}
+                recentPriorityFee={recentPriorityFee}
+                priorityFeeOptions={priorityFeeOptions}
               />
             ) : null}
           </Hidden>
@@ -246,7 +254,23 @@ export const Header: React.FC<IHeader> = ({
                   }
                 : undefined
             }
+            onPriority={
+              typeOfNetwork === NetworkType.MAINNET && isXsDown
+                ? () => {
+                    setRoutesModalOpen(false)
+                    setPriorityModal(true)
+                  }
+                : undefined
+            }
           />
+          {typeOfNetwork === NetworkType.MAINNET ? (
+            <Priority
+              open={priorityModal}
+              handleClose={handleClosePriorityModal}
+              anchorEl={anchorEl}
+              recentPriorityFee={recentPriorityFee}
+              priorityFeeOptions={priorityFeeOptions}></Priority>
+          ) : null}
           {typeOfNetwork === NetworkType.MAINNET ? (
             <SelectMainnetRPC
               networks={mainnetRPCs}

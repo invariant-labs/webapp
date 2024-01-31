@@ -30,10 +30,10 @@ const useStyles = makeStyles(() => ({
     borderRadius: 16,
     padding: '32px 16px',
     margin: '4px 0px',
-    color: colors.invariant.light,
+    color: colors.invariant.text,
     overflow: 'hidden',
     '&:hover': {
-      color: colors.invariant.light
+      color: colors.invariant.text
     }
   },
   marketFee: {
