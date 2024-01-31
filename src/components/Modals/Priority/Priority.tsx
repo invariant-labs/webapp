@@ -17,6 +17,7 @@ export interface IButtonParams {
 }
 
 const buttonsParams: IButtonParams[] = [
+  { label: 'Normal fee', value: 0.000005, multiplier: 1 },
   { label: 'High', value: 0.05, multiplier: 5 },
   { label: 'Turbo', value: 0.1, multiplier: 10 }
 ]
@@ -26,7 +27,7 @@ const Priority: React.FC<Props> = ({ open, handleClose, anchorEl }) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
   const maxFee = 2
   const [_selectedFee, setSelectedFee] = React.useState<number>(0)
-  const [selectedIndex, setSelectedIndex] = React.useState<number>(-1)
+  const [selectedIndex, setSelectedIndex] = React.useState<number>(0)
   const [inputValue, setInputValue] = React.useState<string>('0.0000')
 
   const handleClick = (index: number, value: number) => {

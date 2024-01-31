@@ -34,8 +34,6 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
-import PriorityButton from '@components/PriorityButton/PriorityButton'
-import Priority from '@components/Modals/Priority/Priority'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -172,7 +170,6 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [tokenBDeposit, setTokenBDeposit] = useState<string>('')
 
   const [settings, setSettings] = React.useState<boolean>(false)
-  const [priority, setPriority] = useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const setRangeBlockerInfo = () => {
@@ -323,16 +320,6 @@ export const NewPosition: React.FC<INewPosition> = ({
     onSlippageChange(slippage)
   }
 
-  const handleClickPriorityModal = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget)
-    blurContent()
-    setPriority(true)
-  }
-  const handleClosePriorityModal = () => {
-    unblurContent()
-    setPriority(false)
-  }
-
   const updatePath = (index1: number | null, index2: number | null, fee: number) => {
     const parsedFee = parseFeeToPathFee(+ALL_FEE_TIERS_DATA[fee].tier.fee)
 
@@ -369,17 +356,6 @@ export const NewPosition: React.FC<INewPosition> = ({
               marketId={poolAddress}
               copyPoolAddressHandler={copyPoolAddressHandler}
             />
-          ) : null}
-          {poolIndex !== null ? (
-            <React.Fragment>
-              <PriorityButton
-                content={'Set priority'}
-                onClick={handleClickPriorityModal}></PriorityButton>
-              <Priority
-                open={priority}
-                handleClose={handleClosePriorityModal}
-                anchorEl={anchorEl}></Priority>
-            </React.Fragment>
           ) : null}
           <ConcentrationTypeSwitch
             onSwitch={val => {
