@@ -368,7 +368,6 @@ export const NewPosition: React.FC<INewPosition> = ({
               copyPoolAddressHandler={copyPoolAddressHandler}
             />
           ) : null}
-
           <ConcentrationTypeSwitch
             onSwitch={val => {
               setIsConcentrated(val)
