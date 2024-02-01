@@ -125,7 +125,7 @@ const Priority: React.FC<Props> = ({ open, handleClose, anchorEl, recentPriority
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: 'bottom',
-        horizontal: 'right'
+        horizontal: 'center'
       }}
       transformOrigin={{
         vertical: 'top',
