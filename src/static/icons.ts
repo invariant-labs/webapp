@@ -29,6 +29,16 @@ import activeIcon from './svg/active.svg'
 import inactiveIcon from './svg/inactive.svg'
 import allIcon from './svg/all.svg'
 import docsIcon from './svg/docsCircle.svg'
+import backpackIcon from './png/backpack.png'
+import phantomIcon from './svg/phantom.svg'
+import solletIcon from './svg/sollet.svg'
+import mathIcon from './svg/MathWallet.svg'
+import solflareIcon from './svg/solflare.svg'
+import coin98Icon from './svg/coin98.svg'
+import slope from './svg/slope.svg'
+import clover from './svg/clover.svg'
+import nightlyIcon from './svg/nightly.svg'
+import exodusIcon from './svg/exodus.svg'
 
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
@@ -62,6 +72,16 @@ const icons: { [key: string]: string } = {
   activeIcon: activeIcon,
   inactiveIcon: inactiveIcon,
   allIcon: allIcon,
+  backpack: backpackIcon,
+  phantom: phantomIcon,
+  sollet: solletIcon,
+  'math wallet': mathIcon,
+  solflare: solflareIcon,
+  coin98: coin98Icon,
+  slope: slope,
+  clover: clover,
+  nightly: nightlyIcon,
+  exodus: exodusIcon,
   docsIcon
 }
 
