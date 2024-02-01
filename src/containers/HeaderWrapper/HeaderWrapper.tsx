@@ -1,5 +1,6 @@
 import Header from '@components/Header/Header'
 import { NetworkType, SolanaNetworks } from '@consts/static'
+import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions } from '@reducers/solanaConnection'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
 import { network, rpcAddress } from '@selectors/solanaConnection'
@@ -82,6 +83,15 @@ export const HeaderWrapper: React.FC = () => {
       rpc={currentRpc}
       defaultMainnetRPC={defaultMainnetRPC}
       recentPriorityFee={recentPriorityFee}
+      onPrioritySave={() => {
+        dispatch(
+          snackbarsActions.add({
+            message: 'Priority fee updated',
+            variant: 'success',
+            persist: false
+          })
+        )
+      }}
     />
   )
 }

@@ -32,6 +32,7 @@ export interface IHeader {
   onDisconnectWallet: () => void
   defaultMainnetRPC: string
   recentPriorityFee: string
+  onPrioritySave: () => void
 }
 
 export const Header: React.FC<IHeader> = ({
@@ -45,7 +46,8 @@ export const Header: React.FC<IHeader> = ({
   onFaucet,
   onDisconnectWallet,
   defaultMainnetRPC,
-  recentPriorityFee
+  recentPriorityFee,
+  onPrioritySave
 }) => {
   const classes = useStyles()
   const buttonClasses = useButtonStyles()
@@ -152,7 +154,10 @@ export const Header: React.FC<IHeader> = ({
           </Hidden>
           <Hidden xsDown>
             {typeOfNetwork === NetworkType.MAINNET ? (
-              <SelectPriorityButton recentPriorityFee={recentPriorityFee} />
+              <SelectPriorityButton
+                recentPriorityFee={recentPriorityFee}
+                onPrioritySave={onPrioritySave}
+              />
             ) : null}
           </Hidden>
           <Hidden xsDown>
@@ -250,6 +255,7 @@ export const Header: React.FC<IHeader> = ({
                 unblurContent()
                 setPriorityModal(false)
               }}
+              onPrioritySave={onPrioritySave}
             />
           ) : null}
           {typeOfNetwork === NetworkType.MAINNET ? (

@@ -2,10 +2,8 @@ import AnimatedButton from '@components/AnimatedButton/AnimatedButton'
 import TransactionPriorityButton from '@components/TransactionPriorityButton/TransactionPriorityButton'
 import { IPriorityFeeOptions } from '@containers/HeaderWrapper/HeaderWrapper'
 import { Box, Button, Grid, Input, Popover, Typography } from '@material-ui/core'
-import { actions as snackbarsActions } from '@reducers/snackbars'
 import classNames from 'classnames'
 import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import useStyles from './style'
 
 interface Props {
@@ -13,10 +11,16 @@ interface Props {
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
   recentPriorityFee: string
+  onPrioritySave: () => void
 }
 
-const Priority: React.FC<Props> = ({ open, handleClose, anchorEl, recentPriorityFee }) => {
-  const dispatch = useDispatch()
+const Priority: React.FC<Props> = ({
+  open,
+  handleClose,
+  anchorEl,
+  recentPriorityFee,
+  onPrioritySave
+}) => {
   const classes = useStyles()
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -96,13 +100,7 @@ const Priority: React.FC<Props> = ({ open, handleClose, anchorEl, recentPriority
       )
     }
 
-    dispatch(
-      snackbarsActions.add({
-        message: 'Priority fee updated',
-        variant: 'success',
-        persist: false
-      })
-    )
+    onPrioritySave()
   }
 
   const priorityFeeOptions: IPriorityFeeOptions[] = [
