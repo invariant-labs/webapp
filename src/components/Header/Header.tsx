@@ -20,15 +20,13 @@ import useStyles from './style'
 import SelectPriorityButton from '@components/HeaderButton/SelectPriorityButton'
 import { IPriorityFeeOptions } from '@containers/HeaderWrapper/HeaderWrapper'
 import Priority from '@components/Modals/Priority/Priority'
-import { WalletType } from '@web3/wallet'
 
 export interface IHeader {
   address: PublicKey
   onNetworkSelect: (networkType: NetworkType, rpcAddress: string, rpcName?: string) => void
-  onWalletSelect: (chosen: WalletType) => void
+  onConnectWallet: () => void
   walletConnected: boolean
   landing: string
-  typeOfWallet?: WalletType
   typeOfNetwork: NetworkType
   rpc: string
   onFaucet?: () => void
@@ -41,10 +39,9 @@ export interface IHeader {
 export const Header: React.FC<IHeader> = ({
   address,
   onNetworkSelect,
-  onWalletSelect,
+  onConnectWallet,
   walletConnected,
   landing,
-  typeOfWallet = WalletType.PHANTOM,
   typeOfNetwork,
   rpc,
   onFaucet,
@@ -210,25 +207,12 @@ export const Header: React.FC<IHeader> = ({
                   }`
                 : 'Connect wallet'
             }
-            options={[
-              WalletType.PHANTOM,
-              WalletType.NIGHTLY,
-              WalletType.SOLLET,
-              WalletType.MATH,
-              WalletType.SOLFLARE,
-              WalletType.COIN98,
-              WalletType.SLOPE,
-              WalletType.CLOVER,
-              WalletType.EXODUS,
-              WalletType.BACKPACK
-            ]}
-            onSelect={onWalletSelect}
+            onConnect={onConnectWallet}
             connected={walletConnected}
             onDisconnect={onDisconnectWallet}
             startIcon={
               walletConnected ? <DotIcon className={classes.connectedWalletIcon} /> : undefined
             }
-            activeWallet={walletConnected ? typeOfWallet : undefined}
           />
         </Grid>
 
