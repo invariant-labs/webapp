@@ -9,9 +9,9 @@ import {
   takeLatest
 } from 'typed-redux-saga'
 
-import { actions, ITokenAccount, Status } from '@reducers/solanaWallet'
+import { actions, ITokenAccount, PayloadTypes, Status } from '@reducers/solanaWallet'
 import { getConnection } from './connection'
-import { getSolanaWallet, disconnectWallet } from '@web3/wallet'
+import { getSolanaWallet, connectWallet, disconnectWallet, WalletType } from '@web3/wallet'
 import {
   Account,
   PublicKey,
@@ -25,6 +25,7 @@ import { actions as positionsActions } from '@reducers/positions'
 import { BN } from '@project-serum/anchor'
 import { WalletAdapter } from '@web3/adapters/types'
 import { getTokenDetails } from './token'
+import { PayloadAction } from '@reduxjs/toolkit'
 import { accounts, status } from '@selectors/solanaWallet'
 import { airdropQuantities, airdropTokens, Token as StoreToken } from '@consts/static'
 import airdropAdmin from '@consts/airdropAdmin'
@@ -343,8 +344,9 @@ export function* sendSol(amount: BN, recipient: PublicKey): SagaGenerator<string
   return txid
 }
 
-export function* handleConnect(): Generator {
+export function* handleConnect(action: PayloadAction<PayloadTypes['connect']>): Generator {
   const walletStatus = yield* select(status)
+  let enumWallet = ''
   if (walletStatus === Status.Initialized) {
     yield* put(
       snackbarsActions.add({
@@ -355,12 +357,60 @@ export function* handleConnect(): Generator {
     )
     return
   }
+  try {
+    yield* call(connectWallet, action.payload)
+  } catch (error) {
+    yield put(
+      snackbarsActions.add({
+        message: 'Unable to connect to wallet.',
+        variant: 'error',
+        persist: false
+      })
+    )
+    return
+  }
+  switch (action.payload) {
+    case WalletType.PHANTOM:
+      enumWallet = 'phantom'
+      break
+    case WalletType.SOLLET:
+      enumWallet = 'sollet'
+      break
+    case WalletType.MATH:
+      enumWallet = 'math'
+      break
+    case WalletType.SOLFLARE:
+      enumWallet = 'solflare'
+      break
+    case WalletType.COIN98:
+      enumWallet = 'coin98'
+      break
+    case WalletType.SLOPE:
+      enumWallet = 'slope'
+      break
+    case WalletType.CLOVER:
+      enumWallet = 'clover'
+      break
+    case WalletType.NIGHTLY:
+      enumWallet = 'nightly'
+      break
+    case WalletType.EXODUS:
+      enumWallet = 'exodus'
+      break
+    case WalletType.BACKPACK:
+      enumWallet = 'backpack'
+      break
+    default:
+      enumWallet = 'phantom'
+  }
+  yield call([localStorage, localStorage.setItem], 'INVARIANT_SESSION_WALLET', enumWallet)
   yield* call(init)
 }
 
 export function* handleDisconnect(): Generator {
   try {
     yield* call(disconnectWallet)
+    yield call([localStorage, localStorage.removeItem], 'INVARIANT_SESSION_WALLET')
     yield* put(actions.resetState())
     yield* put(positionsActions.setPositionsList([]))
     yield* put(farmsActions.setUserStakes({}))
