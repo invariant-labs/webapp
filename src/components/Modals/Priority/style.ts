@@ -43,6 +43,9 @@ const useStyles = makeStyles(() => ({
   labelColor: {
     color: `${colors.invariant.pink} !important`
   },
+  labelWhite: {
+    color: 'white !important'
+  },
   closeButton: {
     minWidth: 0,
     background: 'none',

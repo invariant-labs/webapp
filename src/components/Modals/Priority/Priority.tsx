@@ -161,7 +161,10 @@ const Priority: React.FC<Props> = ({ open, handleClose, anchorEl, recentPriority
           })}
         </Grid>
         <Grid container justifyContent='space-between' style={{ marginTop: 24 }}>
-          <Typography className={classes.label}>Set custom priority</Typography>
+          <Typography
+            className={classNames(classes.label, { [classes.labelWhite]: selectedIndex === -1 })}>
+            Set custom priority
+          </Typography>
           <Typography
             className={classNames(classes.label, { [classes.labelColor]: selectedIndex === -1 })}>
             Max: {maxFee} SOL
