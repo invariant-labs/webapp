@@ -31,15 +31,19 @@ const useStyles = makeStyles(() => ({
     ...typography.body1,
     padding: '0px 0px 10px 0px',
     color: colors.invariant.lightGrey,
-    fontWeight: 400
+    fontWeight: 400,
+    fontSize: 14,
+    margin: '24px 0 0 0'
   },
   label: {
     color: `${colors.invariant.lightGrey} !important`,
     marginBottom: 8,
     fontWeight: 400
   },
-
-  selectTokenClose: {
+  labelColor: {
+    color: `${colors.invariant.pink} !important`
+  },
+  closeButton: {
     minWidth: 0,
     background: 'none',
     '&:hover': {
@@ -79,7 +83,19 @@ const useStyles = makeStyles(() => ({
     letterSpacing: '-0.03px'
   },
   saveButton: {
-    fontSize: 20
+    height: 32,
+    width: '100%',
+    fontSize: 14,
+    margin: '24px 0 0 0',
+    borderRadius: 8,
+    background: colors.invariant.greenLinearGradient
+  },
+  saveButtonNotSaved: {
+    background: colors.invariant.pinkLinearGradient
+  },
+  paper: {
+    background: 'transparent',
+    boxShadow: 'none'
   }
 }))
 

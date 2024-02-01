@@ -55,9 +55,11 @@ const useStyles = makeStyles(() => ({
     fontWeight: 400,
     lineHeight: '20px',
     letterSpacing: '-0.03px',
-    color: `${colors.invariant.pink} !important`,
     marginLeft: 12,
     backgroundColor: 'inherit'
+  },
+  maxFeeColored: {
+    color: `${colors.invariant.pink} !important`
   },
   label: {
     fontFamily: 'Mukta',

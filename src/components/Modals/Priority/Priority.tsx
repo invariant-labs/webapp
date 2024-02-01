@@ -3,7 +3,8 @@ import TransactionPriorityButton from '@components/TransactionPriorityButton/Tra
 import { IPriorityFeeOptions } from '@containers/HeaderWrapper/HeaderWrapper'
 import { Box, Button, Grid, Input, Popover, Typography } from '@material-ui/core'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import React from 'react'
+import classNames from 'classnames'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import useStyles from './style'
 
@@ -17,45 +18,81 @@ interface Props {
 const Priority: React.FC<Props> = ({ open, handleClose, anchorEl, recentPriorityFee }) => {
   const dispatch = useDispatch()
   const classes = useStyles()
-  const inputRef = React.useRef<HTMLInputElement>(null)
-  const maxFee = 2
-  const [_selectedFee, setSelectedFee] = React.useState<number>(0)
-  const [selectedIndex, setSelectedIndex] = React.useState<number>(-1)
-  const [inputValue, setInputValue] = React.useState<string>('')
 
-  React.useEffect(() => {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [selectedFee, setSelectedFee] = useState(0)
+  const [selectedIndex, setSelectedIndex] = useState(-1)
+  const [inputValue, setInputValue] = useState('')
+  const [saveButtonContent, setSaveButtonContent] = useState('Save settings')
+  const [timerId, setTimerId] = useState(0)
+
+  const maxFee = 2
+
+  useEffect(() => {
     const index = priorityFeeOptions.findIndex(option => option.saveValue === +recentPriorityFee)
     setSelectedIndex(index)
+
     if (index !== -1) {
       setSelectedFee(priorityFeeOptions[index].saveValue)
     } else {
       setInputValue(recentPriorityFee)
       setSelectedFee(+recentPriorityFee)
     }
-  }, [recentPriorityFee])
+  }, [])
 
-  const handleClick = (index: number, value: number) => {
-    setSelectedFee(value)
-    setSelectedIndex(index)
+  useEffect(() => {
+    if (saveButtonContent === 'Saved') {
+      setTimerId(
+        setTimeout(() => {
+          setSaveButtonContent('Save settings')
+        }, 3000)
+      )
+    }
+  }, [saveButtonContent])
+
+  useEffect(() => {
+    clearTimeout(timerId)
+
+    if (selectedIndex === -1 && inputValue !== selectedFee.toString()) {
+      return setSaveButtonContent('Not saved!')
+    }
+
+    if (selectedIndex !== -1 && priorityFeeOptions[selectedIndex].saveValue !== selectedFee) {
+      return setSaveButtonContent('Not saved!')
+    }
+
+    setSaveButtonContent('Save settings')
+  }, [inputValue, selectedIndex])
+
+  const handleClick = (index: number) => {
     setInputValue('')
+
+    setSelectedIndex(index)
   }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (Number(e.target.value) >= maxFee) {
-      setInputValue('2.0000')
+    setSelectedIndex(-1)
+
+    if (+e.target.value >= maxFee) {
+      setInputValue('2')
     } else {
       setInputValue(e.target.value)
     }
   }
 
   const onSave = () => {
+    if (saveButtonContent === 'Saved') {
+      return
+    }
+
     if (+inputValue > 0) {
       setSelectedFee(+inputValue)
-      setSelectedIndex(-1)
       localStorage.setItem('INVARIANT_MAINNET_PRIORITY_FEE', inputValue)
     } else {
+      setSelectedFee(priorityFeeOptions[selectedIndex].saveValue)
       localStorage.setItem(
         'INVARIANT_MAINNET_PRIORITY_FEE',
-        JSON.stringify(priorityFeeOptions[selectedIndex].saveValue)
+        priorityFeeOptions[selectedIndex].saveValue.toString()
       )
     }
 
@@ -84,7 +121,7 @@ const Priority: React.FC<Props> = ({ open, handleClose, anchorEl, recentPriority
     <Popover
       open={open}
       onClose={handleClose}
-      classes={{ root: classes.root }}
+      classes={{ paper: classes.paper }}
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: 'bottom',
@@ -94,21 +131,22 @@ const Priority: React.FC<Props> = ({ open, handleClose, anchorEl, recentPriority
         vertical: 'top',
         horizontal: 'center'
       }}>
-      <Grid container className={classes.detailsWrapper}>
-        <Grid container justifyContent='space-between' style={{ marginBottom: 6 }}>
-          <Typography className={classes.header}>{'Transaction priority'}</Typography>
-          <Button className={classes.selectTokenClose} onClick={handleClose} />
+      <Grid className={classes.detailsWrapper}>
+        <Grid container justifyContent='space-between'>
+          <Typography className={classes.header}>Transaction priority</Typography>
+          <Button className={classes.closeButton} onClick={handleClose} />
         </Grid>
         <Typography className={classes.text}>
           Solana's fee priority system lets you add an extra fee to your transaction for higher
-          priority in the network's queue. Bidding more increases the chances of quick confirmation.{' '}
+          priority in the network's queue. Bidding more increases the chances of quick confirmation.
         </Typography>
-        <Grid container justifyContent='center' style={{ marginBottom: 20 }}>
+        <Grid container justifyContent='center' style={{ marginTop: 24 }}>
           {priorityFeeOptions.map((params, index) => {
             return (
               <Grid item key={index}>
                 <Box>
                   <TransactionPriorityButton
+                    areButtonsSelected={selectedIndex !== -1}
                     selected={selectedIndex === index}
                     index={index}
                     label={params.label}
@@ -122,34 +160,39 @@ const Priority: React.FC<Props> = ({ open, handleClose, anchorEl, recentPriority
             )
           })}
         </Grid>
-        <Box>
-          <Grid container justifyContent='space-between'>
-            <Typography className={classes.label}>Set custom priority</Typography>
-            <Typography className={classes.label}>MAX: {maxFee} SOL</Typography>
-          </Grid>
-          <Input
-            disableUnderline
-            placeholder='0.0000'
-            className={classes.detailsInfoForm}
-            type={'number'}
-            value={inputValue}
-            onChange={handleInputChange}
-            ref={inputRef}
-            onBlur={() => {}}
-            classes={{
-              input: classes.innerInput
-            }}
-          />
-        </Box>
-        <br />
+        <Grid container justifyContent='space-between' style={{ marginTop: 24 }}>
+          <Typography className={classes.label}>Set custom priority</Typography>
+          <Typography
+            className={classNames(classes.label, { [classes.labelColor]: selectedIndex === -1 })}>
+            Max: {maxFee} SOL
+          </Typography>
+        </Grid>
+        <Input
+          disableUnderline
+          placeholder='0'
+          className={classes.detailsInfoForm}
+          type='number'
+          value={inputValue}
+          onChange={handleInputChange}
+          onFocus={() => {
+            setSelectedIndex(-1)
+          }}
+          ref={inputRef}
+          classes={{
+            input: classes.innerInput
+          }}
+        />
         <AnimatedButton
-          content='Save'
-          progress={'none'}
-          className={classes.saveButton}
+          content={saveButtonContent}
+          progress='none'
+          className={classNames(classes.saveButton, {
+            [classes.saveButtonNotSaved]: saveButtonContent === 'Not saved!'
+          })}
           onClick={() => {
+            setSaveButtonContent('Saved')
             onSave()
-            handleClose()
-          }}></AnimatedButton>
+          }}
+        />
       </Grid>
     </Popover>
   )

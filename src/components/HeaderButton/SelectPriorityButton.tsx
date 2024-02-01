@@ -2,8 +2,7 @@ import Priority from '@components/Modals/Priority/Priority'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { Button } from '@material-ui/core'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
-import classNames from 'classnames'
-import React from 'react'
+import React, { useState } from 'react'
 import useStyles from './style'
 
 export interface Props {
@@ -12,8 +11,9 @@ export interface Props {
 
 export const SelectPriorityButton: React.FC<Props> = ({ recentPriorityFee }) => {
   const classes = useStyles()
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
-  const [priorityModal, setPriorityModal] = React.useState<boolean>(false)
+
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+  const [priorityModal, setPriorityModal] = useState(false)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -29,7 +29,7 @@ export const SelectPriorityButton: React.FC<Props> = ({ recentPriorityFee }) => 
   return (
     <>
       <Button
-        className={classNames(classes.headerButton)}
+        className={classes.headerButton}
         variant='contained'
         endIcon={<KeyboardArrowDownIcon id='downIcon' />}
         onClick={handleClick}>
