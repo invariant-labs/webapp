@@ -1,42 +1,46 @@
-import React from 'react'
-import { Button } from '@material-ui/core'
-import classNames from 'classnames'
-import useStyles from './style'
 import Priority from '@components/Modals/Priority/Priority'
-import { IPriorityFeeOptions } from '@containers/HeaderWrapper/HeaderWrapper'
+import { blurContent, unblurContent } from '@consts/uiUtils'
+import { Button } from '@material-ui/core'
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
+import classNames from 'classnames'
+import React from 'react'
+import useStyles from './style'
 
-interface Props {
-  content: string
-  open: boolean
-  anchorEl: HTMLButtonElement | null
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
-  handleClose: () => void
+export interface Props {
   recentPriorityFee: string
-  priorityFeeOptions: IPriorityFeeOptions[]
 }
 
-const SelectPriorityButton: React.FC<Props> = ({
-  content,
-  open,
-  anchorEl,
-  onClick,
-  handleClose,
-  recentPriorityFee,
-  priorityFeeOptions
-}) => {
+export const SelectPriorityButton: React.FC<Props> = ({ recentPriorityFee }) => {
   const classes = useStyles()
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+  const [priorityModal, setPriorityModal] = React.useState<boolean>(false)
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+    blurContent()
+    setPriorityModal(true)
+  }
+
+  const handleClose = () => {
+    unblurContent()
+    setPriorityModal(false)
+  }
 
   return (
     <>
-      <Button className={classNames(classes.headerButton)} onClick={onClick}>
-        {content}
+      <Button
+        className={classNames(classes.headerButton)}
+        variant='contained'
+        endIcon={<KeyboardArrowDownIcon id='downIcon' />}
+        onClick={handleClick}>
+        Set priority
       </Button>
       <Priority
-        open={open}
-        handleClose={handleClose}
+        open={priorityModal}
         anchorEl={anchorEl}
         recentPriorityFee={recentPriorityFee}
-        priorityFeeOptions={priorityFeeOptions}></Priority>
+        handleClose={handleClose}
+      />
     </>
   )
 }

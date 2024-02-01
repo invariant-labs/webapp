@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo } from 'react'
 import Header from '@components/Header/Header'
+import { NetworkType, SolanaNetworks } from '@consts/static'
+import { actions } from '@reducers/solanaConnection'
+import { Status, actions as walletActions } from '@reducers/solanaWallet'
+import { network, rpcAddress } from '@selectors/solanaConnection'
+import { address, status } from '@selectors/solanaWallet'
+import { nightlyConnectAdapter, openWalletSelectorModal } from '@web3/selector'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { NetworkType, SolanaNetworks } from '@consts/static'
-import { actions as walletActions, Status } from '@reducers/solanaWallet'
-import { address, status } from '@selectors/solanaWallet'
-import { actions } from '@reducers/solanaConnection'
-import { network, rpcAddress } from '@selectors/solanaConnection'
-import { nightlyConnectAdapter, openWalletSelectorModal } from '@web3/selector'
 
 export interface IPriorityFeeOptions {
   label: string
@@ -15,18 +15,6 @@ export interface IPriorityFeeOptions {
   saveValue: number
   description: string
 }
-
-const priorityFeeOptions: IPriorityFeeOptions[] = [
-  { label: 'Normal', value: 0.000005, saveValue: 0, description: '1x Market fee' },
-  {
-    label: 'Market',
-    value: 0.001,
-    saveValue: 0.001,
-    description: '85% percentile fees from last 20 blocks'
-  },
-  { label: 'High', value: 0.05, saveValue: 0.05, description: '5x Market fee' },
-  { label: 'Turbo', value: 0.1, saveValue: 0.1, description: '10x Market fee' }
-]
 
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -94,7 +82,6 @@ export const HeaderWrapper: React.FC = () => {
       rpc={currentRpc}
       defaultMainnetRPC={defaultMainnetRPC}
       recentPriorityFee={recentPriorityFee}
-      priorityFeeOptions={priorityFeeOptions}
     />
   )
 }

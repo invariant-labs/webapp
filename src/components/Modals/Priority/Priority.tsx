@@ -1,25 +1,21 @@
-import React from 'react'
-import { Typography, Box, Grid, Button, Popover, Input } from '@material-ui/core'
-import useStyles from './style'
 import AnimatedButton from '@components/AnimatedButton/AnimatedButton'
 import TransactionPriorityButton from '@components/TransactionPriorityButton/TransactionPriorityButton'
 import { IPriorityFeeOptions } from '@containers/HeaderWrapper/HeaderWrapper'
+import { Box, Button, Grid, Input, Popover, Typography } from '@material-ui/core'
+import { actions as snackbarsActions } from '@reducers/snackbars'
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import useStyles from './style'
 
 interface Props {
   open: boolean
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
   recentPriorityFee: string
-  priorityFeeOptions: IPriorityFeeOptions[]
 }
 
-const Priority: React.FC<Props> = ({
-  open,
-  handleClose,
-  anchorEl,
-  recentPriorityFee,
-  priorityFeeOptions
-}) => {
+const Priority: React.FC<Props> = ({ open, handleClose, anchorEl, recentPriorityFee }) => {
+  const dispatch = useDispatch()
   const classes = useStyles()
   const inputRef = React.useRef<HTMLInputElement>(null)
   const maxFee = 2
@@ -62,7 +58,27 @@ const Priority: React.FC<Props> = ({
         JSON.stringify(priorityFeeOptions[selectedIndex].saveValue)
       )
     }
+
+    dispatch(
+      snackbarsActions.add({
+        message: 'Priority fee updated',
+        variant: 'success',
+        persist: false
+      })
+    )
   }
+
+  const priorityFeeOptions: IPriorityFeeOptions[] = [
+    { label: 'Normal', value: 0.000005, saveValue: 0, description: '1x Market fee' },
+    {
+      label: 'Market',
+      value: 0.001,
+      saveValue: 0.001,
+      description: '85% percentile fees from last 20 blocks'
+    },
+    { label: 'High', value: 0.05, saveValue: 0.05, description: '5x Market fee' },
+    { label: 'Turbo', value: 0.1, saveValue: 0.1, description: '10x Market fee' }
+  ]
 
   return (
     <Popover
@@ -73,6 +89,10 @@ const Priority: React.FC<Props> = ({
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'right'
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'center'
       }}>
       <Grid container className={classes.detailsWrapper}>
         <Grid container justifyContent='space-between' style={{ marginBottom: 6 }}>
