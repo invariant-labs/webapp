@@ -55,7 +55,7 @@ const useStyles = makeStyles(() => ({
     fontWeight: 400,
     lineHeight: '20px',
     letterSpacing: '-0.03px',
-    marginLeft: 12,
+    marginLeft: 6,
     backgroundColor: 'inherit'
   },
   maxFeeColored: {
