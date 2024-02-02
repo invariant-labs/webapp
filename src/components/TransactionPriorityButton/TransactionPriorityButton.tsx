@@ -1,9 +1,10 @@
-import React from 'react'
 import { Button, Grid, Typography } from '@material-ui/core'
 import classNames from 'classnames'
+import React from 'react'
 import useStyles from './style'
 
 interface Props {
+  areButtonsSelected: boolean
   selected: boolean
   index: number
   label: string
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const TransactionPriorityButton: React.FC<Props> = ({
+  areButtonsSelected,
   selected,
   index,
   label,
@@ -27,16 +29,20 @@ const TransactionPriorityButton: React.FC<Props> = ({
   const handleClick = () => {
     onClick(index, saveValue)
   }
+
   return (
     <Button
       className={classNames(classes.button, { [classes.selectedButton]: selected })}
       onClick={handleClick}>
-      <Grid container justifyContent='flex-start' className={classNames(classes.wrapper)}>
-        <Typography className={classNames(classes.label)}>
+      <Grid container justifyContent='flex-start' className={classes.wrapper}>
+        <Typography className={classes.label}>
           {label}
-          <span className={classNames(classes.maxFee)}>Max. {value} SOL</span>
+          <span
+            className={classNames(classes.maxFee, { [classes.maxFeeColored]: areButtonsSelected })}>
+            Max. {value} SOL
+          </span>
         </Typography>
-        <Typography className={classNames(classes.marketFee)}>{description}</Typography>
+        <Typography className={classes.marketFee}>{description}</Typography>
       </Grid>
     </Button>
   )

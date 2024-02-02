@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useMemo } from 'react'
 import Header from '@components/Header/Header'
+import { NetworkType, SolanaNetworks } from '@consts/static'
+import { actions as snackbarsActions } from '@reducers/snackbars'
+import { actions } from '@reducers/solanaConnection'
+import { Status, actions as walletActions } from '@reducers/solanaWallet'
+import { network, rpcAddress } from '@selectors/solanaConnection'
+import { address, status } from '@selectors/solanaWallet'
+import { nightlyConnectAdapter, openWalletSelectorModal } from '@web3/selector'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { WalletType } from '@web3/wallet'
-import { DEFAULT_PUBLICKEY, NetworkType, SolanaNetworks } from '@consts/static'
-import { actions as walletActions, Status } from '@reducers/solanaWallet'
-import { address, status } from '@selectors/solanaWallet'
-import { actions } from '@reducers/solanaConnection'
-import { network, rpcAddress } from '@selectors/solanaConnection'
 
 export interface IPriorityFeeOptions {
   label: string
@@ -15,18 +16,6 @@ export interface IPriorityFeeOptions {
   saveValue: number
   description: string
 }
-
-const priorityFeeOptions: IPriorityFeeOptions[] = [
-  { label: 'Normal', value: 0.000005, saveValue: 0, description: '1x Market fee' },
-  {
-    label: 'Market',
-    value: 0.001,
-    saveValue: 0.001,
-    description: '85% percentile fees from last 20 blocks'
-  },
-  { label: 'High', value: 0.05, saveValue: 0.05, description: '5x Market fee' },
-  { label: 'Turbo', value: 0.1, saveValue: 0.1, description: '10x Market fee' }
-]
 
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -36,59 +25,25 @@ export const HeaderWrapper: React.FC = () => {
   const currentRpc = useSelector(rpcAddress)
   const location = useLocation()
 
-  const [typeOfWallet, setTypeOfWallet] = useState<WalletType>(WalletType.PHANTOM)
   useEffect(() => {
-    let enumWallet = WalletType.PHANTOM
-    const sessionWallet = localStorage.getItem('INVARIANT_SESSION_WALLET')
-    if (
-      sessionWallet === 'phantom' ||
-      sessionWallet === 'sollet' ||
-      sessionWallet === 'math' ||
-      sessionWallet === 'solflare' ||
-      sessionWallet === 'coin98' ||
-      sessionWallet === 'slope' ||
-      sessionWallet === 'clover' ||
-      sessionWallet === 'nightly' ||
-      sessionWallet === 'exodus' ||
-      sessionWallet === 'backpack'
-    ) {
-      switch (sessionWallet) {
-        case 'phantom':
-          enumWallet = WalletType.PHANTOM
-          break
-        case 'sollet':
-          enumWallet = WalletType.SOLLET
-          break
-        case 'math':
-          enumWallet = WalletType.MATH
-          break
-        case 'solflare':
-          enumWallet = WalletType.SOLFLARE
-          break
-        case 'coin98':
-          enumWallet = WalletType.COIN98
-          break
-        case 'slope':
-          enumWallet = WalletType.SLOPE
-          break
-        case 'clover':
-          enumWallet = WalletType.CLOVER
-          break
-        case 'nightly':
-          enumWallet = WalletType.NIGHTLY
-          break
-        case 'exodus':
-          enumWallet = WalletType.EXODUS
-          break
-        case 'backpack':
-          enumWallet = WalletType.BACKPACK
-          break
-        default:
-          enumWallet = WalletType.PHANTOM
-      }
-      setTypeOfWallet(enumWallet)
-      dispatch(walletActions.connect(enumWallet))
+    nightlyConnectAdapter.addListener('connect', () => {
+      dispatch(walletActions.connect())
+    })
+
+    if (nightlyConnectAdapter.connected) {
+      dispatch(walletActions.connect())
     }
+
+    nightlyConnectAdapter.canEagerConnect().then(
+      async canEagerConnect => {
+        if (canEagerConnect) {
+          await nightlyConnectAdapter.connect()
+        }
+      },
+      error => {
+        console.log(error)
+      }
+    )
   }, [])
 
   const defaultMainnetRPC = useMemo(() => {
@@ -115,12 +70,7 @@ export const HeaderWrapper: React.FC = () => {
           dispatch(actions.setNetwork({ network, rpcAddress, rpcName }))
         }
       }}
-      onWalletSelect={chosen => {
-        if (walletAddress.equals(DEFAULT_PUBLICKEY)) {
-          setTypeOfWallet(chosen)
-        }
-        dispatch(walletActions.connect(chosen))
-      }}
+      onConnectWallet={openWalletSelectorModal}
       landing={location.pathname.substr(1)}
       walletConnected={walletStatus === Status.Initialized}
       onFaucet={() => {
@@ -130,11 +80,18 @@ export const HeaderWrapper: React.FC = () => {
         dispatch(walletActions.disconnect())
       }}
       typeOfNetwork={currentNetwork}
-      typeOfWallet={typeOfWallet}
       rpc={currentRpc}
       defaultMainnetRPC={defaultMainnetRPC}
       recentPriorityFee={recentPriorityFee}
-      priorityFeeOptions={priorityFeeOptions}
+      onPrioritySave={() => {
+        dispatch(
+          snackbarsActions.add({
+            message: 'Priority fee updated',
+            variant: 'success',
+            persist: false
+          })
+        )
+      }}
     />
   )
 }

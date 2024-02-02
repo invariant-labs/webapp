@@ -36,7 +36,6 @@
     "connected-react-router": "^6.8.0",
     "cryptocurrency-icons": "^0.17.1",
     "enhanced-resolve": "^5.8.3",
-    "esbuild-linux-64": "^0.15.18",
     "history": "^4.7.2",
     "immer": "^9.0.12",
     "immutable": "^4.0.0-rc.12",
