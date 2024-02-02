@@ -1,7 +1,7 @@
-import { PublicKey } from '@solana/web3.js'
-import { BN } from '@project-serum/anchor'
 import { MOCK_TOKENS } from '@invariant-labs/sdk'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
+import { BN } from '@project-serum/anchor'
+import { PublicKey } from '@solana/web3.js'
 
 declare global {
   interface Window {
@@ -357,4 +357,6 @@ export const ALL_FEE_TIERS_DATA = FEE_TIERS.map((tier, index) => ({
   primaryIndex: index
 })).slice(3, -1) // remove slice if all tiers should be visible
 
-export { SolanaNetworks, DEFAULT_PUBLICKEY, MAX_U64, NetworkType }
+export { DEFAULT_PUBLICKEY, MAX_U64, NetworkType, SolanaNetworks }
+
+export const POSITIONS_PER_PAGE = 5

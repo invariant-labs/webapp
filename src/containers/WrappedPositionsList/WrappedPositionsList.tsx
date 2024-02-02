@@ -1,4 +1,5 @@
 import { PositionsList } from '@components/PositionsList/PositionsList'
+import { POSITIONS_PER_PAGE } from '@consts/static'
 import { calcYPerXPrice, printBN } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
@@ -39,7 +40,7 @@ export const WrappedPositionsList: React.FC = () => {
       setLastPage(1)
     }
 
-    if (lastPage > Math.ceil(list.length / 5)) {
+    if (lastPage > Math.ceil(list.length / POSITIONS_PER_PAGE)) {
       setLastPage(lastPage - 1)
     }
   }, [list])
@@ -133,7 +134,7 @@ export const WrappedPositionsList: React.FC = () => {
         })}
       loading={isLoading}
       showNoConnected={walletStatus !== Status.Initialized}
-      itemsPerPage={5}
+      itemsPerPage={POSITIONS_PER_PAGE}
       noConnectedBlockerProps={{
         onConnect: openWalletSelectorModal,
         descCustomText: 'You have no positions.'
