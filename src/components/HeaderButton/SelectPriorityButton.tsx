@@ -34,7 +34,7 @@ export const SelectPriorityButton: React.FC<Props> = ({ recentPriorityFee, onPri
         variant='contained'
         endIcon={<KeyboardArrowDownIcon id='downIcon' />}
         onClick={handleClick}>
-        Set priority
+        Fee
       </Button>
       <Priority
         open={priorityModal}

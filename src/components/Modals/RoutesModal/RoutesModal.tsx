@@ -1,5 +1,5 @@
+import { Grid, Popover, Typography } from '@material-ui/core'
 import React from 'react'
-import { Typography, Popover, Grid } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import useStyles from './style'
 
@@ -89,7 +89,7 @@ export const RoutesModal: React.FC<IRoutesModal> = ({
         ) : null}
         {typeof onPriority !== 'undefined' ? (
           <Grid item className={classes.listItem} onClick={onPriority}>
-            <Typography className={classes.name}>Set Priority</Typography>
+            <Typography className={classes.name}>Set Fee</Typography>
           </Grid>
         ) : null}
       </Grid>

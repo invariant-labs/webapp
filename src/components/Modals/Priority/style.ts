@@ -29,7 +29,6 @@ const useStyles = makeStyles(() => ({
   },
   text: {
     ...typography.body1,
-    padding: '0px 0px 10px 0px',
     color: colors.invariant.lightGrey,
     fontWeight: 400,
     fontSize: 14,
