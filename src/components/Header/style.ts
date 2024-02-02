@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       minWidth: 350
     },
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xl')]: {
       marginLeft: 0,
       justifyContent: 'center'
     }
