@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     background: colors.invariant.newDark,
     borderRadius: 16,
     padding: '32px 16px',
-    margin: '4px 0px',
+    margin: '0 0 4px 0px',
     color: colors.invariant.lightGrey,
     overflow: 'hidden',
     '&:hover': {
@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
     background: colors.invariant.light,
     borderRadius: 16,
     padding: '32px 16px',
-    margin: '4px 0px',
+    margin: '0 0 4px 0px',
     color: colors.invariant.text,
     overflow: 'hidden',
     '&:hover': {
