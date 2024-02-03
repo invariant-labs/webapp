@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 70,
 
     [theme.breakpoints.down('lg')]: {
-      paddingInline: 103
+      paddingInline: 32
     },
 
     [theme.breakpoints.down('md')]: {
@@ -57,8 +57,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       minWidth: 350
     },
 
-    [theme.breakpoints.down('xl')]: {
-      marginLeft: 0,
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: 0
+    },
+
+    [theme.breakpoints.down('md')]: {
       justifyContent: 'center'
     }
   },
