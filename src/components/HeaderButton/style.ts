@@ -11,8 +11,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.body1,
     lineHeight: '22px',
     height: 40,
-    width: 130,
-    minWidth: 94,
 
     '&:not(:last-child)': {
       marginRight: 12
@@ -62,17 +60,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'none',
     ...typography.body1,
     height: 40,
-    minWidth: 190,
-
-    [theme.breakpoints.only('md')]: {
-      minWidth: 137,
-      width: 190
-    },
-
-    [theme.breakpoints.down('xs')]: {
-      minWidth: 100,
-      width: 130
-    },
 
     '&:hover': {
       background: colors.blue.deep

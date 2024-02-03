@@ -103,17 +103,17 @@ export const Header: React.FC<IHeader> = ({
   return (
     <Grid container>
       <Grid container className={classes.root} direction='row' alignItems='center' wrap='nowrap'>
-        <Hidden lgDown>
+        <Hidden mdDown>
           <Grid container item className={classes.leftSide} justifyContent='flex-start'>
             <CardMedia className={classes.logo} image={icons.LogoTitle} />
           </Grid>
         </Hidden>
 
-        <Hidden xlUp>
+        <Hidden lgUp>
           <CardMedia className={classes.logoShort} image={icons.LogoShort} />
         </Hidden>
 
-        <Hidden lgDown>
+        <Hidden mdDown>
           <Grid container item className={classes.routers} wrap='nowrap'>
             {routes.map(path => (
               <Link key={`path-${path}`} to={`/${path}`} className={classes.link}>
@@ -181,7 +181,7 @@ export const Header: React.FC<IHeader> = ({
           <ChangeWalletButton
             name={
               walletConnected
-                ? `${address.toString().slice(0, 8)}...${
+                ? `${address.toString().slice(0, 4)}...${
                     !isXsDown
                       ? address
                           .toString()
@@ -199,7 +199,7 @@ export const Header: React.FC<IHeader> = ({
           />
         </Grid>
 
-        <Hidden xlUp>
+        <Hidden lgUp>
           <IconButton
             className={classes.menuButton}
             onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
