@@ -232,7 +232,9 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     }
   }, [progress])
 
-  const initialIsDiscreteValue = localStorage.getItem('IS_PLOT_DISCRETE') === 'true'
+  const initialIsDiscreteValue = localStorage.getItem('IS_PLOT_DISCRETE')
+    ? localStorage.getItem('IS_PLOT_DISCRETE') === 'true'
+    : true
 
   const setIsDiscreteValue = (val: boolean) => {
     localStorage.setItem('IS_PLOT_DISCRETE', val ? 'true' : 'false')
