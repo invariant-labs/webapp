@@ -1104,5 +1104,5 @@ export const getPoolsVolumeRanges = async (name: string): Promise<Record<string,
 const PRIORITY_FEE_DENOMINATOR = 9
 
 export const solToPriorityFee = (sol: number) => {
-  return Math.round(sol * 5 * 10 ** PRIORITY_FEE_DENOMINATOR)
+  return Math.round((sol * 5 * 10 ** PRIORITY_FEE_DENOMINATOR) / 10)
 }
