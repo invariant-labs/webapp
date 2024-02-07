@@ -101,6 +101,7 @@ const Priority: React.FC<Props> = ({
     }
 
     onPrioritySave()
+    handleClose()
   }
 
   const priorityFeeOptions: IPriorityFeeOptions[] = [
