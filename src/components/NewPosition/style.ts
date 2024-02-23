@@ -28,11 +28,38 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     color: colors.white.main,
     ...typography.heading4,
-    marginBottom: 18,
 
     [theme.breakpoints.down('xs')]: {
       fontSize: 18
     }
+  },
+  headerWithJupiterIcon: {
+    marginBottom: 14,
+    maxWidth: 464,
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+
+    [theme.breakpoints.down('xs')]: {
+      minWidth: 0,
+      maxWidth: '100%',
+
+      '& .noConnectedInfo': {
+        justifyContent: 'flex-start',
+        paddingTop: 60
+      }
+    }
+  },
+  jupiterIcon: {
+    opacity: 1,
+    pointerEvents: 'none',
+    select: 'none',
+    transition: 'opacity 200ms'
+  },
+  jupiterIconDisabled: {
+    opacity: 0.25,
+    transition: 'opacity 200ms'
   },
   row: {
     minWidth: 464,
@@ -85,7 +112,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   options: {
     width: 'fit-content',
-    marginBottom: 18,
+    marginBottom: 16,
     height: 28
   },
   switch: {
