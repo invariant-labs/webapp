@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     color: colors.white.main,
     ...typography.heading4,
-    marginBottom: 18,
+    marginTop: 4,
 
     [theme.breakpoints.down('xs')]: {
       fontSize: 18
@@ -90,6 +90,39 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   switch: {
     transition: 'opacity 500ms'
+  },
+  headerWrapper: {
+    justifyContent: 'space-between',
+
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'start'
+    }
+  },
+  jupiterLogo: {
+    opacity: 1,
+    cursor: 'pointer',
+    transition: 'opacity 0.3s ease-in-out',
+    paddingLeft: '170px',
+
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 10,
+      marginRight: 10,
+      marginBottom: 10,
+      paddingLeft: '0px'
+    }
+  },
+  jupiterLogoInactive: {
+    opacity: 0.3,
+    cursor: 'pointer',
+    transition: 'opacity 0.3s ease-in-out',
+    paddingLeft: '170px',
+
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 10,
+      marginRight: 10,
+      marginBottom: 10,
+      paddingLeft: '0px'
+    }
   }
 }))
 
