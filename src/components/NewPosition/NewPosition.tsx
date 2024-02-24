@@ -454,18 +454,20 @@ export const NewPosition: React.FC<INewPosition> = ({
               copyPoolAddressHandler={copyPoolAddressHandler}
             />
           ) : null}
-          <ConcentrationTypeSwitch
-            onSwitch={val => {
-              setIsConcentrated(val)
-              onIsConcentratedChange(val)
-            }}
-            initialValue={initialIsConcentratedValue ? 0 : 1}
-            className={classes.switch}
-            style={{
-              opacity: poolIndex !== null ? 1 : 0
-            }}
-            disabled={poolIndex === null}
-          />
+          {poolIndex !== null && (
+            <ConcentrationTypeSwitch
+              onSwitch={val => {
+                setIsConcentrated(val)
+                onIsConcentratedChange(val)
+              }}
+              initialValue={initialIsConcentratedValue ? 0 : 1}
+              className={classes.switch}
+              style={{
+                opacity: poolIndex !== null ? 1 : 0
+              }}
+              disabled={poolIndex === null}
+            />
+          )}
           <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
             <img src={settingIcon} className={classes.settingsIcon} />
           </Button>

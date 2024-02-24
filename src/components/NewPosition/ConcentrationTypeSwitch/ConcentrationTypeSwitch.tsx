@@ -30,8 +30,6 @@ export const ConcentrationTypeSwitch: React.FC<IProps> = ({
     onSwitch(!newValue)
   }
 
-  if (disabled) return null
-
   return (
     <Tabs
       className={className}
