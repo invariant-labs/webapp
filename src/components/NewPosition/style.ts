@@ -5,6 +5,32 @@ const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     width: 952
   },
+  headerWrapper: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'start',
+    flexDirection: 'column',
+    marginBottom: 18,
+    gap: 10,
+    [theme.breakpoints.up('md')]: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 20
+    }
+  },
+  newLiquidityGrid: {
+    width: 'fit-content',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    height: '100%',
+    gap: 10,
+    [theme.breakpoints.up('md')]: {
+      width: '50%'
+    }
+  },
   back: {
     height: 24,
     marginBottom: 18,
@@ -28,7 +54,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     color: colors.white.main,
     ...typography.heading4,
-    marginBottom: 18,
 
     [theme.breakpoints.down('xs')]: {
       fontSize: 18
@@ -90,6 +115,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 0,
     minWidth: 'auto',
     background: 'none',
+    [theme.breakpoints.down('sm')]: {
+      width: 35,
+      height: 35
+    },
 
     '&:hover': {
       backgroundColor: 'none'
@@ -113,10 +142,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     filter: 'brightness(0.2)',
     transition: 'filter 0.2s'
   },
+  indicatorPending: {
+    animation: '$pulse 1s infinite'
+  },
+  '@keyframes pulse': {
+    '0%': { filter: 'brightness(1)' },
+    '50%': { filter: 'brightness(0.5)' },
+    '100%': { filter: 'brightness(1)' }
+  },
   options: {
     width: 'fit-content',
-    marginBottom: 18,
-    height: 28
+    height: '100%',
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 2,
+    justifyContent: 'start',
+    alignItems: 'center',
+    [theme.breakpoints.up('md')]: {
+      width: '50%',
+      justifyContent: 'space-between',
+      flexWrap: 'nowrap'
+    }
   },
   switch: {
     transition: 'opacity 500ms'

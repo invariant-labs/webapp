@@ -199,7 +199,7 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
 
-  const [isIndexActive, setIsIndexActive] = useState<boolean>(false)
+  const [indexPoolState, setIndexPoolState] = useState<'pending' | 'active' | 'inactive'>('pending')
   const [indexedPools, setIndexedPools] = useState<IIndexedPool[]>([])
 
   const [openIndexPoolModal, setOpenIndexPoolModal] = useState<boolean>(false)
@@ -347,6 +347,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   useEffect(() => {
     const getIndexedPools = async () => {
+      setIndexPoolState('pending')
       try {
         const indexedPoolsResponse = await fetch('https://cache.jup.ag/markets?v=3')
         if (!indexedPoolsResponse.ok) {
@@ -364,8 +365,12 @@ export const NewPosition: React.FC<INewPosition> = ({
   }, [])
 
   useEffect(() => {
+    if (indexedPools.length === 0) return
     const isActive = indexedPools.some(({ pubkey }: { pubkey: string }) => pubkey === address)
-    setIsIndexActive(isActive)
+    if (isActive) setIndexPoolState('active')
+    else {
+      setIndexPoolState('inactive')
+    }
   }, [address])
 
   const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -422,21 +427,26 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Button
-        onClick={handleClickIndexPoolModal}
-        className={classes.indicatorIconBtn}
-        disableRipple>
-        <img
-          src={indexingIndicatorIcon}
-          className={`${classes.indicatorIcon} ${
-            isIndexActive ? classes.indicatorActive : classes.indicatorInactive
-          }`}
-        />
-      </Button>
-
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
-        <Grid container item alignItems='center' className={classes.options}>
+      <Grid className={classes.headerWrapper}>
+        <Grid className={classes.newLiquidityGrid}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          <Button
+            disabled={indexPoolState === 'pending'}
+            onClick={handleClickIndexPoolModal}
+            className={classes.indicatorIconBtn}>
+            <img
+              src={indexingIndicatorIcon}
+              className={`${classes.indicatorIcon} ${
+                indexPoolState === 'pending'
+                  ? classes.indicatorPending
+                  : indexPoolState === 'active'
+                  ? classes.indicatorActive
+                  : classes.indicatorInactive
+              }`}
+            />
+          </Button>
+        </Grid>
+        <Grid className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
               displayLength={9}
@@ -474,7 +484,7 @@ export const NewPosition: React.FC<INewPosition> = ({
       />
 
       <IndexPoolModal
-        isIndexActive={isIndexActive}
+        indexPoolState={indexPoolState}
         anchorEl={anchorIndexPool}
         open={openIndexPoolModal}
         handleClose={handleCloseIndexModal}

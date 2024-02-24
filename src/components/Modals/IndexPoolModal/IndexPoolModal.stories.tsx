@@ -8,6 +8,11 @@ storiesOf('newUi/indexPoolModal', module)
   .addDecorator(withKnobs)
   .add('deafult', () => (
     <div style={{ width: 800 }} id={toBlur}>
-      <IndexPoolModal open={true} handleClose={() => {}} anchorEl={null} isIndexActive={true} />
+      <IndexPoolModal
+        open={true}
+        handleClose={() => {}}
+        anchorEl={null}
+        indexPoolState={'active'}
+      />
     </div>
   ))

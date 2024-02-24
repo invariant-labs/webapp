@@ -12,6 +12,9 @@ export const useTabsStyles = makeStyles<Theme, { value: number }>((theme: Theme)
 
     [theme.breakpoints.down('xs')]: {
       width: 90
+    },
+    [theme.breakpoints.up('md')]: {
+      width: 140
     }
   },
   indicator: ({ value }) => ({
@@ -48,6 +51,10 @@ export const useSingleTabStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('xs')]: {
       minWidth: 45,
       width: 45
+    },
+    [theme.breakpoints.up('md')]: {
+      minWidth: 65,
+      width: 65
     }
   },
   selected: {

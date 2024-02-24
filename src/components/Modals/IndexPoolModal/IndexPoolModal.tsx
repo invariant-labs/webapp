@@ -6,18 +6,17 @@ import useStyles from './style'
 export interface IProps {
   open: boolean
   anchorEl: HTMLButtonElement | null
-  isIndexActive: boolean
+  indexPoolState: 'pending' | 'active' | 'inactive'
   handleClose: () => void
 }
 export const IndexPoolModal: React.FC<IProps> = ({
   open,
   handleClose,
   anchorEl,
-  isIndexActive
+  indexPoolState
 }) => {
   const classes = useStyles()
 
-  console.log(isIndexActive)
   return (
     <Popover
       open={open}
@@ -45,7 +44,7 @@ export const IndexPoolModal: React.FC<IProps> = ({
             component={'h3'}
             className={classNames(classes.text, classes.whiteText, classes.marginBottom)}>
             <span>Status:</span>{' '}
-            {isIndexActive ? (
+            {indexPoolState === 'active' ? (
               <span className={classes.indexingActive}>Indexing active</span>
             ) : (
               <span className={classes.indexingInactive}>Indexing inactive</span>
