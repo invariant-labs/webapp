@@ -84,6 +84,20 @@ export function* fetchPoolsDataForList(action: PayloadAction<ListPoolsRequest>) 
   )
 }
 
+export function* fetchIndexedPools() {
+  try {
+    const response = yield* call(fetch, 'https://cache.jup.ag/markets?v=3')
+    const data = yield* call([response, response.json])
+    const indexedPools: Record<string, boolean> = {}
+    data.forEach((pool: any) => {
+      indexedPools[pool.pubkey] = true
+    })
+    yield* put(actions.setIndexedPools(indexedPools))
+  } catch (error) {
+    console.error('Failed to fetch indexed pools', error)
+  }
+}
+
 export function* getPoolsDataForListHandler(): Generator {
   yield* takeEvery(actions.getPoolsDataForList, fetchPoolsDataForList)
 }
@@ -95,9 +109,12 @@ export function* getAllPoolsForPairDataHandler(): Generator {
 export function* getPoolDataHandler(): Generator {
   yield* takeLatest(actions.getPoolData, fetchPoolData)
 }
+export function* watchFetchIndexedPools() {
+  yield takeEvery(actions.startFetchIndexedPools.type, fetchIndexedPools)
+}
 
 export function* poolsSaga(): Generator {
   yield all(
-    [getPoolDataHandler, getAllPoolsForPairDataHandler, getPoolsDataForListHandler].map(spawn)
+    [getPoolDataHandler, getAllPoolsForPairDataHandler, getPoolsDataForListHandler, watchFetchIndexedPools].map(spawn)
   )
 }
