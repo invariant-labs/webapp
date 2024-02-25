@@ -178,8 +178,6 @@ export const NewPosition: React.FC<INewPosition> = ({
   const dispatch = useDispatch()
   const poolsIndexed = useSelector(indexedPools)
 
-  console.log(poolsIndexed)
-
   const [address, setAddress] = useState<string>(poolAddress)
   const [settings, setSettings] = React.useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
