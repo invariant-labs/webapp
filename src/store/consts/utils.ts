@@ -1106,3 +1106,19 @@ const PRIORITY_FEE_DENOMINATOR = 9
 export const solToPriorityFee = (sol: number) => {
   return Math.round((sol * 5 * 10 ** PRIORITY_FEE_DENOMINATOR) / 10)
 }
+
+export interface IndexedJupiterPool {
+  pubkey: string
+}
+
+export const isPoolIndexed = async (poolAddress: string): Promise<boolean> => {
+  try {
+    const { data: indexedPools } = await axios.get<IndexedJupiterPool[]>(
+      'https://cache.jup.ag/markets?v=3'
+    )
+    const isIndexed = Boolean(indexedPools.find(indexedPool => indexedPool.pubkey === poolAddress))
+    return isIndexed
+  } catch (_err) {
+    return false
+  }
+}
