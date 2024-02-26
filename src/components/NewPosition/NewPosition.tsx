@@ -26,7 +26,8 @@ import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
 import { History } from 'history'
-import React, { useEffect, useState } from 'react'
+// import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 import DepositSelector from './DepositSelector/DepositSelector'
@@ -34,6 +35,7 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
+import JupiterIcon from '../../../public/Group.png'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -360,6 +362,14 @@ export const NewPosition: React.FC<INewPosition> = ({
 
       <Grid container justifyContent='space-between'>
         <Typography className={classes.title}>Add new liquidity position</Typography>
+        <img
+          src={JupiterIcon}
+          alt='Jupiter Icon'
+          className={classes.iconJupiter}
+          style={{
+            filter: poolIndex ? 'brightness(1)' : 'brightness(0.5)'
+          }}
+        />
         <Grid container item alignItems='center' className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
