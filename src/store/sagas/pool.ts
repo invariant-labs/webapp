@@ -89,7 +89,7 @@ export function* fetchIndexedPools() {
     const response = yield* call(fetch, 'https://cache.jup.ag/markets?v=3')
     const data = yield* call([response, response.json])
     const indexedPools: Record<string, boolean> = {}
-    data.forEach((pool: any) => {
+    data.forEach((pool: { pubkey: string }) => {
       indexedPools[pool.pubkey] = true
     })
     yield* put(actions.setIndexedPools(indexedPools))
