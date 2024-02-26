@@ -23,6 +23,7 @@ import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
 import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
+import jupiterIcon from '@static/svg/jupiter.svg'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
 import { History } from 'history'
@@ -33,6 +34,8 @@ import DepositSelector from './DepositSelector/DepositSelector'
 import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
+import { JupiterIndexing, IndexPoolState } from './JupiterIndexing/JupiterIndexing'
+import { fetchIndexedPoolsAndCheck, IndexedPool } from '@store/consts/utils'
 import useStyles from './style'
 
 export interface INewPosition {
@@ -175,6 +178,15 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+
+  const [indexPoolState, setIndexPoolState] = useState<IndexPoolState>(IndexPoolState.Pending)
+  const [indexedPools, setIndexedPools] = useState<IndexedPool[]>([])
+
+  const [IndexPoolModal, setIndexPoolModal] = useState<boolean>(false)
+  const [anchorElementIndexPool, setAnchorElementIndexPool] = useState<HTMLButtonElement | null>(
+    null
+  )
+
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -313,7 +325,41 @@ export const NewPosition: React.FC<INewPosition> = ({
       setAddress(configuredAddress)
     }
     void configurePoolAddress()
-  }, [initialTokenFrom, initialTokenTo, initialFee])
+  }, [initialTokenFrom, initialTokenTo, initialFee, indexedPools])
+
+  useEffect(() => {
+    const fetchIndexedPoolsAndCheckPool = async () => {
+      try {
+        const indexedPoolsData = await fetchIndexedPoolsAndCheck()
+        setIndexedPools(indexedPoolsData)
+
+        const isActive = indexedPoolsData.some(indexedPool => indexedPool.pubkey === poolAddress)
+        setIndexPoolState(isActive ? IndexPoolState.Active : IndexPoolState.Inactive)
+      } catch (error) {
+        console.error('Error fetching indexed pools:', error)
+      }
+    }
+
+    void fetchIndexedPoolsAndCheckPool()
+  }, [poolAddress])
+
+  useEffect(() => {
+    if (indexedPools.length > 0 && address) {
+      const isActive = indexedPools.some(pool => pool.pubkey === address)
+      setIndexPoolState(isActive ? IndexPoolState.Active : IndexPoolState.Inactive)
+    }
+  }, [indexedPools, address])
+
+  const OpenIndexPoolModalHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    blurContent()
+    setAnchorElementIndexPool(event.currentTarget)
+    setIndexPoolModal(true)
+  }
+
+  const CloseIndexPoolModalHandler = () => {
+    unblurContent()
+    setIndexPoolModal(false)
+  }
 
   const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -358,34 +404,58 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
-        <Grid container item alignItems='center' className={classes.options}>
-          {address !== '' ? (
+      <JupiterIndexing
+        indexPoolState={indexPoolState}
+        anchorElement={anchorElementIndexPool}
+        open={IndexPoolModal}
+        handleClose={CloseIndexPoolModalHandler}
+      />
+
+      <Grid className={classes.Wrapper}>
+        <Grid className={classes.LiquidityGridLayout}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          {indexPoolState !== IndexPoolState.Pending && (
+            <Button onClick={OpenIndexPoolModalHandler} className={classes.jupiterIconBtn}>
+              <img
+                src={jupiterIcon}
+                className={`${classes.jupiterIcon} ${
+                  indexPoolState === IndexPoolState.Active
+                    ? classes.jupiterIndicatorActive
+                    : classes.jupiterIndicatorInactive
+                }`}
+                alt='Jupiter icon indicating indexing'
+              />
+            </Button>
+          )}
+        </Grid>
+
+        <Grid className={classes.options}>
+          {address !== '' && (
             <MarketIdLabel
               displayLength={9}
               marketId={address}
               copyPoolAddressHandler={copyPoolAddressHandler}
             />
+          )}
+          {poolIndex !== null ? (
+            <ConcentrationTypeSwitch
+              onSwitch={val => {
+                setIsConcentrated(val)
+                onIsConcentratedChange(val)
+              }}
+              initialValue={initialIsConcentratedValue ? 0 : 1}
+              className={classes.switch}
+              style={{
+                opacity: poolIndex !== null ? 1 : 0
+              }}
+              disabled={poolIndex === null}
+            />
           ) : null}
-          <ConcentrationTypeSwitch
-            onSwitch={val => {
-              setIsConcentrated(val)
-              onIsConcentratedChange(val)
-            }}
-            initialValue={initialIsConcentratedValue ? 0 : 1}
-            className={classes.switch}
-            style={{
-              opacity: poolIndex !== null ? 1 : 0
-            }}
-            disabled={poolIndex === null}
-          />
           <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
             <img src={settingIcon} className={classes.settingsIcon} />
           </Button>
         </Grid>
       </Grid>
-
       <Slippage
         open={settings}
         setSlippage={setSlippage}
