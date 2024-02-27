@@ -6,13 +6,30 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PublicKey } from '@solana/web3.js'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { getFullNewTokensData, getPools, getPoolsFromAdresses } from '@consts/utils'
+import {
+  getFullNewTokensData,
+  getJupiterIndexedPools,
+  getPools,
+  getPoolsFromAdresses
+} from '@consts/utils'
 import { tokens } from '@selectors/pools'
 import { getConnection } from './connection'
 import { network, rpcAddress } from '@selectors/solanaConnection'
 
 export interface iTick {
   index: Tick[]
+}
+
+export function* fetchJupiterIndexedPoolsData() {
+  console.log('fetchJupiterIndexedPoolsData')
+  try {
+    const indexedPools = yield* call(getJupiterIndexedPools)
+    const indexedPoolsAdresses = indexedPools.map(pool => pool.pubkey)
+
+    yield* put(actions.addIndexedPools(indexedPoolsAdresses))
+  } catch (error) {
+    yield* put(actions.addIndexedPools([]))
+  }
 }
 
 export function* fetchPoolData(action: PayloadAction<Pair>) {
@@ -96,8 +113,17 @@ export function* getPoolDataHandler(): Generator {
   yield* takeLatest(actions.getPoolData, fetchPoolData)
 }
 
+export function* getJupiterIndexedPoolsDataHandler(): Generator {
+  yield* takeLatest(actions.getIndexedPools, fetchJupiterIndexedPoolsData)
+}
+
 export function* poolsSaga(): Generator {
   yield all(
-    [getPoolDataHandler, getAllPoolsForPairDataHandler, getPoolsDataForListHandler].map(spawn)
+    [
+      getPoolDataHandler,
+      getAllPoolsForPairDataHandler,
+      getPoolsDataForListHandler,
+      getJupiterIndexedPoolsDataHandler
+    ].map(spawn)
   )
 }

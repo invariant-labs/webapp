@@ -684,6 +684,32 @@ export interface PoolSnapshot {
   feeY: SnapshotValueData
 }
 
+export interface JupiterMarketData {
+  pubkey: string
+  lamports: number
+  data: [string, string]
+  owner: string
+  executable: boolean
+  rentEpoch: number
+  space: number
+  params: {
+    addressLookupTableAddress: string
+    vaultLpMint: {
+      a: string
+      b: string
+    }
+    vaultToken: {
+      a: string
+      b: string
+    }
+  }
+}
+
+export const getJupiterIndexedPools = async (): Promise<JupiterMarketData[]> => {
+  const { data } = await axios.get<JupiterMarketData[]>('https://cache.jup.ag/markets?v=3')
+  return data
+}
+
 export const getNetworkStats = async (name: string): Promise<Record<string, PoolSnapshot[]>> => {
   const { data } = await axios.get<Record<string, PoolSnapshot[]>>(
     `https://stats.invariant.app/full/${name}`

@@ -19,6 +19,7 @@ export interface IPoolsStore {
   isLoadingLatestPoolsForTransaction: boolean
   tickMaps: { [key in string]: Tickmap }
   volumeRanges: Record<string, Range[]>
+  indexedPools: { [key in string]: string[] }
 }
 
 export interface UpdatePool {
@@ -54,7 +55,8 @@ export const defaultState: IPoolsStore = {
   poolTicks: {},
   isLoadingLatestPoolsForTransaction: false,
   tickMaps: {},
-  volumeRanges: {}
+  volumeRanges: {},
+  indexedPools: {}
 }
 
 export interface PairTokens {
@@ -155,6 +157,17 @@ const poolsSlice = createSlice({
     },
     updateTickmap(state, action: PayloadAction<UpdateTickmap>) {
       state.tickMaps[action.payload.address].bitmap = action.payload.bitmap
+    },
+    setIndexedPools(state, action: PayloadAction<{ [key in string]: string[] }>) {
+      state.indexedPools = action.payload
+      return state
+    },
+    addIndexedPools(state, action: PayloadAction<string[]>) {
+      state.indexedPools = R.merge(state.indexedPools, action.payload)
+      return state
+    },
+    getIndexedPools(state) {
+      return state
     }
   }
 })

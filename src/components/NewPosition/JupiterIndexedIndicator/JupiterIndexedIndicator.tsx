@@ -27,10 +27,3 @@ const JupiterIndexedIndicator: React.FC<IJupiterIndexedIndicatorProps> = ({
 }
 
 export default JupiterIndexedIndicator
-
-// eslint-disable-next-line no-lone-blocks
-{
-  /* <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
-<img src={settingIcon} className={classes.settingsIcon} />
-</Button> */
-}
