@@ -90,6 +90,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   switch: {
     transition: 'opacity 500ms'
+  },
+  iconJupiter: {
+    width: 35,
+    height: 35,
+    marginLeft: 80
   }
 }))
 
