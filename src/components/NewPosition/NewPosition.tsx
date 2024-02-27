@@ -375,8 +375,10 @@ export const NewPosition: React.FC<INewPosition> = ({
           <Typography className={classes.title}>Add new liquidity position</Typography>
           <img
             src={icons.jupiterIcon}
-            alt='jupitterIcon'
-            className={isPoolIndexed ? classes.jupiterActive : classes.jupiterDisable}
+            alt='jupiterIcon'
+            className={`${classes.jupiterIcon} ${
+              isPoolIndexed ? classes.jupiterActive : classes.jupiterDisable
+            }`}
           />
         </Box>
         <Grid container item alignItems='center' className={classes.options}>

@@ -96,14 +96,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     width: '50%'
   },
+  jupiterIcon: {
+    marginLeft: 'auto',
+    marginBottom: '10px',
+    transition: 'opacity 300ms'
+  },
   jupiterActive: {
-    opacity: 1,
-    marginLeft: 'auto'
+    opactiy: 1
   },
   jupiterDisable: {
-    opacity: 0.25,
-    marginLeft: 'auto'
-
+    opacity: 0.25
   }
 }))
 
