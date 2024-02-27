@@ -84,12 +84,34 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   options: {
-    width: 'fit-content',
+    flex: 1,
+    justifyContent: 'flex-end',
     marginBottom: 18,
-    height: 28
+    height: 28,
+
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-start'
+    }
   },
   switch: {
     transition: 'opacity 500ms'
+  },
+  info: {
+    flex: 1,
+
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-start'
+    }
+  },
+  infoRow: {
+    gap: 24,
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+
+      '& .noConnectedInfo': {
+        justifyContent: 'flex-start'
+      }
+    }
   }
 }))
 
