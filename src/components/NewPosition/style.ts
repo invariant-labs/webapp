@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   jupiterIcon: {
     marginLeft: 'auto',
-    marginBottom: '10px',
+    marginBottom: 10,
     transition: 'opacity 300ms'
   },
   jupiterActive: {
