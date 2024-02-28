@@ -28,6 +28,10 @@ export const poolsArraySortedByFees = createSelector(pools, allPools =>
 
 export const hasTokens = createSelector(tokens, allTokens => !!Object.values(allTokens).length)
 
+export const indexedPoolsAddreses = createSelector(indexedPools, allIndexedPools =>
+  Object.keys(allIndexedPools)
+)
+
 export const poolsSelectors = {
   pools,
   tokens,

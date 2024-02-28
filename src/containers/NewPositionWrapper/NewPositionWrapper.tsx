@@ -24,7 +24,7 @@ import { actions } from '@reducers/positions'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { Status } from '@reducers/solanaWallet'
 import {
-  indexedPools,
+  indexedPoolsAddreses,
   isLoadingLatestPoolsForTransaction,
   poolsArraySortedByFees,
   volumeRanges
@@ -62,7 +62,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const walletStatus = useSelector(status)
   const allPools = useSelector(poolsArraySortedByFees)
   const poolsVolumeRanges = useSelector(volumeRanges)
-  const indexedPoolsData = useSelector(indexedPools)
+  const indexedPoolsAddresses = useSelector(indexedPoolsAddreses)
 
   const canUserCreateNewPool = useSelector(canCreateNewPool)
   const canUserCreateNewPosition = useSelector(canCreateNewPosition)
@@ -168,10 +168,6 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   useEffect(() => {
     dispatch(poolsActions.getIndexedPools())
   }, [])
-
-  // useEffect(() => {
-  //   console.log(indexedPoolsData)
-  // }, [indexedPoolsData])
 
   useEffect(() => {
     if (!isWaitingForNewPool && tokenAIndex !== null && tokenBIndex !== null) {
@@ -634,6 +630,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       currentFeeIndex={feeIndex}
       onSlippageChange={onSlippageChange}
       initialSlippage={initialSlippage}
+      indexedPoolsAddresses={indexedPoolsAddresses}
     />
   )
 }

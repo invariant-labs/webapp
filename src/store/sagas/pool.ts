@@ -7,6 +7,7 @@ import { Tick } from '@invariant-labs/sdk/src/market'
 import { PublicKey } from '@solana/web3.js'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import {
+  JupiterPool,
   getFullNewTokensData,
   getJupiterIndexedPools,
   getPools,
@@ -21,14 +22,22 @@ export interface iTick {
 }
 
 export function* fetchJupiterIndexedPoolsData() {
-  console.log('fetchJupiterIndexedPoolsData')
   try {
-    const indexedPools = yield* call(getJupiterIndexedPools)
-    const indexedPoolsAdresses = indexedPools.map(pool => pool.pubkey)
+    const indexedPoolsArray = yield* call(getJupiterIndexedPools)
+    const indexedPoolsObject = indexedPoolsArray.reduce(
+      (acc: Record<string, JupiterPool[]>, pool: JupiterPool) => {
+        if (!acc[pool.pubkey]) {
+          acc[pool.pubkey] = []
+        }
+        acc[pool.pubkey].push(pool)
 
-    yield* put(actions.addIndexedPools(indexedPoolsAdresses))
+        return acc
+      },
+      {}
+    )
+    yield* put(actions.setIndexedPools(indexedPoolsObject))
   } catch (error) {
-    yield* put(actions.addIndexedPools([]))
+    yield* put(actions.setIndexedPools({}))
   }
 }
 

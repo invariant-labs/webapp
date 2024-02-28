@@ -26,7 +26,7 @@ import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
 import { History } from 'history'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 import DepositSelector from './DepositSelector/DepositSelector'
@@ -107,6 +107,7 @@ export interface INewPosition {
   currentFeeIndex: number
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
+  indexedPoolsAddresses: string[]
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -158,7 +159,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   plotVolumeRange,
   currentFeeIndex,
   onSlippageChange,
-  initialSlippage
+  initialSlippage,
+  indexedPoolsAddresses
 }) => {
   const classes = useStyles()
 
@@ -305,6 +307,11 @@ export const NewPosition: React.FC<INewPosition> = ({
               tier.tokenY.equals(tokens[tokenAIndex].assetAddress))
         )?.bestTierIndex ?? undefined
 
+  const isIndexed = useMemo(() => {
+    if (!address || !indexedPoolsAddresses) return false
+    return indexedPoolsAddresses.includes(address)
+  }, [indexedPoolsAddresses, address])
+
   useEffect(() => {
     if (!ticksLoading && !isConcentrated) {
       onChangeRange(leftRange, rightRange)
@@ -381,7 +388,7 @@ export const NewPosition: React.FC<INewPosition> = ({
           alignItems='center'
           justifyContent='space-between'>
           <Typography className={classes.title}>Add new liquidity position</Typography>
-          <JupiterIndexedIndicator isIndexed={true} onClick={handleClickIndexedIndicator} />
+          <JupiterIndexedIndicator isIndexed={isIndexed} onClick={handleClickIndexedIndicator} />
         </Grid>
         <Grid container item alignItems='center' className={classes.options}>
           {address !== '' ? (
