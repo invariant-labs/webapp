@@ -106,6 +106,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   infoRow: {
     gap: 24,
     [theme.breakpoints.down('sm')]: {
+      gap: 0,
       flexDirection: 'column',
 
       '& .noConnectedInfo': {
