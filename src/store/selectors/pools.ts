@@ -28,11 +28,6 @@ export const poolsArraySortedByFees = createSelector(pools, allPools =>
 
 export const hasTokens = createSelector(tokens, allTokens => !!Object.values(allTokens).length)
 
-export const indexedJupiterAddresses = createSelector(
-  jupiterIndexedAddresses,
-  jupiterIndexedAddresses => jupiterIndexedAddresses
-)
-
 export const poolsSelectors = {
   pools,
   tokens,

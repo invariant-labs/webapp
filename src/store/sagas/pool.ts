@@ -89,7 +89,7 @@ export function* fetchPoolsDataForList(action: PayloadAction<ListPoolsRequest>) 
   )
 }
 
-export function* fetchJupiterIndexedPoolsData() {
+export function* fetchJupiterIndexedAddresses() {
   try {
     const jupiterIndexedPubkeys = yield* call(getJupiterIndexedPubKeys)
 
@@ -112,7 +112,7 @@ export function* getPoolDataHandler(): Generator {
 }
 
 export function* getJupiterIndexedAddressesHandler(): Generator {
-  yield* takeLatest(actions.getJupiterIndexedAddresses, fetchJupiterIndexedPoolsData)
+  yield* takeLatest(actions.getJupiterIndexedAddresses, fetchJupiterIndexedAddresses)
 }
 
 export function* poolsSaga(): Generator {

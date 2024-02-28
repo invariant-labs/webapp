@@ -107,19 +107,22 @@ const useStyles = makeStyles((theme: Theme) => ({
       outline: 'none',
       border: 'none'
     },
+
     [theme.breakpoints.down('sm')]: {
       marginLeft: 15
     }
   },
   subHeader: {
     alignItems: 'center',
+
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'flex-start'
     }
   },
-  half: {
+  leftSideSubHeader: {
     marginBottom: 12,
     width: 'calc(50% - 12px)',
+
     [theme.breakpoints.down('sm')]: {
       flex: 'initial',
       width: 'auto'

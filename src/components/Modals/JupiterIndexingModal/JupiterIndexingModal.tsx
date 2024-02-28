@@ -50,7 +50,9 @@ const JupiterIndexingModal: React.FC<IJupiterIndexingModal> = ({
               Ensure your token exists on-chain with metadata following the{' '}
               <a
                 className={classes.link}
-                href='https://docs.metaplex.com/programs/token-metadata/token-standard'>
+                href='https://docs.metaplex.com/programs/token-metadata/token-standard'
+                target='_blank'
+                rel='noopener noreferrer'>
                 Metaplex Token Metadata
               </a>
             </li>

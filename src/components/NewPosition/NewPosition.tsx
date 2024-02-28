@@ -186,7 +186,7 @@ export const NewPosition: React.FC<INewPosition> = ({
     if (!address || !jupiterAddresses) return false
     return jupiterAddresses.includes(address)
   }, [jupiterAddresses, address])
-  console.warn(isJupiterIndexed)
+
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -393,7 +393,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             item
             alignItems='center'
             justifyContent='space-between'
-            className={classes.half}>
+            className={classes.leftSideSubHeader}>
             <Typography className={classes.title}>Add new liquidity position</Typography>
             <Button onClick={handleClickJupiter} className={classes.iconBtn}>
               <img

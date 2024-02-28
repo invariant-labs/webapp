@@ -1130,7 +1130,7 @@ export interface JupiterPool {
 
 export const getJupiterIndexedPubKeys = async (): Promise<string[]> => {
   const res = await axios.get<JupiterPool[]>('https://cache.jup.ag/markets?v=3')
-  console.log(res)
+
   const { data } = res
   const addresses = data.map(pool => pool.pubkey)
 
