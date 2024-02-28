@@ -2,6 +2,16 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
+  jupiterWrapper: {
+    flexDirection: 'row',
+    width: '49%',
+    [theme.breakpoints.down('sm')]: {
+      paddingRight: '0',
+      width: 'auto',
+      gap: '1rem',
+      marginBottom: '0.5rem'
+    }
+  },
   wrapper: {
     width: 952
   },
@@ -74,6 +84,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: 'none'
     }
   },
+
+  jupiterIconBtn: {
+    padding: 0,
+    margin: 0,
+    minWidth: 'auto',
+    background: 'none',
+    '&:hover': {
+      backgroundColor: 'transparent'
+    }
+  },
+
   settingsIcon: {
     width: 20,
     height: 20,
