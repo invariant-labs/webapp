@@ -35,6 +35,7 @@ import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
 import JupiterIcon from '@static/svg/jupiter.svg'
+import JupiterIndexingModal from '@components/Modals/JupiterIndexingModal/JupiterIndexingModal'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -342,6 +343,17 @@ export const NewPosition: React.FC<INewPosition> = ({
     onSlippageChange(slippage)
   }
 
+  const handleClickJupiter = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+    blurContent()
+    setIsJupiterModalOpen(true)
+  }
+
+  const handleCloseJupiter = () => {
+    unblurContent()
+    setIsJupiterModalOpen(false)
+  }
+
   const updatePath = (index1: number | null, index2: number | null, fee: number) => {
     const parsedFee = parseFeeToPathFee(+ALL_FEE_TIERS_DATA[fee].tier.fee)
 
@@ -361,252 +373,262 @@ export const NewPosition: React.FC<INewPosition> = ({
   }
 
   return (
-    <Grid container className={classes.wrapper} direction='column'>
-      <Link to='/pool' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
-        <Grid className={classes.back} container item alignItems='center'>
-          <img className={classes.backIcon} src={backIcon} />
-          <Typography className={classes.backText}>Back to Liquidity Positions List</Typography>
-        </Grid>
-      </Link>
+    <>
+      <Grid container className={classes.wrapper} direction='column'>
+        <Link to='/pool' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
+          <Grid className={classes.back} container item alignItems='center'>
+            <img className={classes.backIcon} src={backIcon} />
+            <Typography className={classes.backText}>Back to Liquidity Positions List</Typography>
+          </Grid>
+        </Link>
 
-      <Grid
-        container
-        item
-        className={classes.subHeader}
-        alignItems='center'
-        justifyContent='space-between'>
         <Grid
           container
           item
+          className={classes.subHeader}
           alignItems='center'
-          justifyContent='space-between'
-          className={classes.half}>
-          <Typography className={classes.title}>Add new liquidity position</Typography>
-          <Button
-            onClick={() => setIsJupiterModalOpen(true)}
-            className={classes.iconBtn}
-            disabled={!isJupiterIndexed}>
-            <img src={JupiterIcon} style={{ opacity: isJupiterIndexed ? 1 : 0.3 }} alt='Jupiter' />
-          </Button>
-        </Grid>
-        <Grid
-          container
-          item
-          alignItems='center'
-          justifyContent='flex-end'
-          className={classes.options}>
-          {address !== '' ? (
-            <MarketIdLabel
-              displayLength={9}
-              marketId={address}
-              copyPoolAddressHandler={copyPoolAddressHandler}
+          justifyContent='space-between'>
+          <Grid
+            container
+            item
+            alignItems='center'
+            justifyContent='space-between'
+            className={classes.half}>
+            <Typography className={classes.title}>Add new liquidity position</Typography>
+            <Button onClick={handleClickJupiter} className={classes.iconBtn}>
+              <img
+                src={JupiterIcon}
+                style={{ opacity: isJupiterIndexed ? 1 : 0.3 }}
+                alt='Jupiter'
+              />
+            </Button>
+          </Grid>
+          <Grid
+            container
+            item
+            alignItems='center'
+            justifyContent='flex-end'
+            className={classes.options}>
+            {address !== '' ? (
+              <MarketIdLabel
+                displayLength={9}
+                marketId={address}
+                copyPoolAddressHandler={copyPoolAddressHandler}
+              />
+            ) : null}
+            <ConcentrationTypeSwitch
+              onSwitch={val => {
+                setIsConcentrated(val)
+                onIsConcentratedChange(val)
+              }}
+              initialValue={initialIsConcentratedValue ? 0 : 1}
+              className={classes.switch}
+              style={{
+                opacity: poolIndex !== null ? 1 : 0
+              }}
+              disabled={poolIndex === null}
             />
-          ) : null}
-          <ConcentrationTypeSwitch
-            onSwitch={val => {
-              setIsConcentrated(val)
-              onIsConcentratedChange(val)
-            }}
-            initialValue={initialIsConcentratedValue ? 0 : 1}
-            className={classes.switch}
-            style={{
-              opacity: poolIndex !== null ? 1 : 0
-            }}
-            disabled={poolIndex === null}
-          />
-          <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
-            <img src={settingIcon} className={classes.settingsIcon} />
-          </Button>
+            <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
+              <img src={settingIcon} className={classes.settingsIcon} />
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
 
-      <Slippage
-        open={settings}
-        setSlippage={setSlippage}
-        handleClose={handleCloseSettings}
-        anchorEl={anchorEl}
-        defaultSlippage={'1'}
-        initialSlippage={initialSlippage}
-        infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
-        headerText='Position Transaction Settings'
-      />
-
-      <Grid container className={classes.row} alignItems='stretch'>
-        {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
-        <DepositSelector
-          initialTokenFrom={initialTokenFrom}
-          initialTokenTo={initialTokenTo}
-          initialFee={initialFee}
-          className={classes.deposit}
-          tokens={tokens}
-          setPositionTokens={(index1, index2, fee) => {
-            setTokenAIndex(index1)
-            setTokenBIndex(index2)
-            onChangePositionTokens(index1, index2, fee)
-
-            updatePath(index1, index2, fee)
-          }}
-          onAddLiquidity={() => {
-            if (tokenAIndex !== null && tokenBIndex !== null) {
-              addLiquidityHandler(
-                leftRange,
-                rightRange,
-                isXtoY
-                  ? +tokenADeposit * 10 ** tokens[tokenAIndex].decimals
-                  : +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals,
-                isXtoY
-                  ? +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals
-                  : +tokenADeposit * 10 ** tokens[tokenAIndex].decimals,
-                { v: fromFee(new BN(Number(+slippTolerance * 1000))) }
-              )
-            }
-          }}
-          tokenAInputState={{
-            value: tokenADeposit,
-            setValue: value => {
-              if (tokenAIndex === null) {
-                return
-              }
-              setTokenADeposit(value)
-              setTokenBDeposit(
-                getOtherTokenAmount(
-                  printBNtoBN(value, tokens[tokenAIndex].decimals),
-                  leftRange,
-                  rightRange,
-                  true
-                )
-              )
-            },
-            blocked:
-              tokenAIndex !== null &&
-              tokenBIndex !== null &&
-              !isWaitingForNewPool &&
-              determinePositionTokenBlock(
-                currentPriceSqrt,
-                Math.min(leftRange, rightRange),
-                Math.max(leftRange, rightRange),
-                isXtoY
-              ) === PositionTokenBlock.A,
-            blockerInfo: 'Range only for single-asset deposit.',
-            decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimals : 0
-          }}
-          tokenBInputState={{
-            value: tokenBDeposit,
-            setValue: value => {
-              if (tokenBIndex === null) {
-                return
-              }
-              setTokenBDeposit(value)
-              setTokenADeposit(
-                getOtherTokenAmount(
-                  printBNtoBN(value, tokens[tokenBIndex].decimals),
-                  leftRange,
-                  rightRange,
-                  false
-                )
-              )
-            },
-            blocked:
-              tokenAIndex !== null &&
-              tokenBIndex !== null &&
-              !isWaitingForNewPool &&
-              determinePositionTokenBlock(
-                currentPriceSqrt,
-                Math.min(leftRange, rightRange),
-                Math.max(leftRange, rightRange),
-                isXtoY
-              ) === PositionTokenBlock.B,
-            blockerInfo: 'Range only for single-asset deposit.',
-            decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimals : 0
-          }}
-          feeTiers={feeTiers.map(tier => tier.feeValue)}
-          progress={progress}
-          onReverseTokens={() => {
-            if (tokenAIndex === null || tokenBIndex === null) {
-              return
-            }
-
-            const pom = tokenAIndex
-            setTokenAIndex(tokenBIndex)
-            setTokenBIndex(pom)
-            onChangePositionTokens(tokenBIndex, tokenAIndex, currentFeeIndex)
-
-            updatePath(tokenBIndex, tokenAIndex, currentFeeIndex)
-          }}
-          poolIndex={poolIndex}
-          bestTierIndex={bestTierIndex}
-          canCreateNewPool={canCreateNewPool}
-          canCreateNewPosition={canCreateNewPosition}
-          handleAddToken={handleAddToken}
-          commonTokens={commonTokens}
-          initialHideUnknownTokensValue={initialHideUnknownTokensValue}
-          onHideUnknownTokensChange={onHideUnknownTokensChange}
-          percentageChangeA={tokenAPriceData?.priceChange}
-          percentageChangeB={tokenBPriceData?.priceChange}
-          priceA={tokenAPriceData?.price}
-          priceB={tokenBPriceData?.price}
-          priceALoading={priceALoading}
-          priceBLoading={priceBLoading}
-          feeTierIndex={currentFeeIndex}
+        <Slippage
+          open={settings}
+          setSlippage={setSlippage}
+          handleClose={handleCloseSettings}
+          anchorEl={anchorEl}
+          defaultSlippage={'1'}
+          initialSlippage={initialSlippage}
+          infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
+          headerText='Position Transaction Settings'
         />
 
-        {isCurrentPoolExisting ||
-        tokenAIndex === null ||
-        tokenBIndex === null ||
-        tokenAIndex === tokenBIndex ||
-        isWaitingForNewPool ? (
-          <RangeSelector
+        <Grid container className={classes.row} alignItems='stretch'>
+          {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
+          <DepositSelector
+            initialTokenFrom={initialTokenFrom}
+            initialTokenTo={initialTokenTo}
+            initialFee={initialFee}
+            className={classes.deposit}
+            tokens={tokens}
+            setPositionTokens={(index1, index2, fee) => {
+              setTokenAIndex(index1)
+              setTokenBIndex(index2)
+              onChangePositionTokens(index1, index2, fee)
+
+              updatePath(index1, index2, fee)
+            }}
+            onAddLiquidity={() => {
+              if (tokenAIndex !== null && tokenBIndex !== null) {
+                addLiquidityHandler(
+                  leftRange,
+                  rightRange,
+                  isXtoY
+                    ? +tokenADeposit * 10 ** tokens[tokenAIndex].decimals
+                    : +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals,
+                  isXtoY
+                    ? +tokenBDeposit * 10 ** tokens[tokenBIndex].decimals
+                    : +tokenADeposit * 10 ** tokens[tokenAIndex].decimals,
+                  { v: fromFee(new BN(Number(+slippTolerance * 1000))) }
+                )
+              }
+            }}
+            tokenAInputState={{
+              value: tokenADeposit,
+              setValue: value => {
+                if (tokenAIndex === null) {
+                  return
+                }
+                setTokenADeposit(value)
+                setTokenBDeposit(
+                  getOtherTokenAmount(
+                    printBNtoBN(value, tokens[tokenAIndex].decimals),
+                    leftRange,
+                    rightRange,
+                    true
+                  )
+                )
+              },
+              blocked:
+                tokenAIndex !== null &&
+                tokenBIndex !== null &&
+                !isWaitingForNewPool &&
+                determinePositionTokenBlock(
+                  currentPriceSqrt,
+                  Math.min(leftRange, rightRange),
+                  Math.max(leftRange, rightRange),
+                  isXtoY
+                ) === PositionTokenBlock.A,
+              blockerInfo: 'Range only for single-asset deposit.',
+              decimalsLimit: tokenAIndex !== null ? tokens[tokenAIndex].decimals : 0
+            }}
+            tokenBInputState={{
+              value: tokenBDeposit,
+              setValue: value => {
+                if (tokenBIndex === null) {
+                  return
+                }
+                setTokenBDeposit(value)
+                setTokenADeposit(
+                  getOtherTokenAmount(
+                    printBNtoBN(value, tokens[tokenBIndex].decimals),
+                    leftRange,
+                    rightRange,
+                    false
+                  )
+                )
+              },
+              blocked:
+                tokenAIndex !== null &&
+                tokenBIndex !== null &&
+                !isWaitingForNewPool &&
+                determinePositionTokenBlock(
+                  currentPriceSqrt,
+                  Math.min(leftRange, rightRange),
+                  Math.max(leftRange, rightRange),
+                  isXtoY
+                ) === PositionTokenBlock.B,
+              blockerInfo: 'Range only for single-asset deposit.',
+              decimalsLimit: tokenBIndex !== null ? tokens[tokenBIndex].decimals : 0
+            }}
+            feeTiers={feeTiers.map(tier => tier.feeValue)}
+            progress={progress}
+            onReverseTokens={() => {
+              if (tokenAIndex === null || tokenBIndex === null) {
+                return
+              }
+
+              const pom = tokenAIndex
+              setTokenAIndex(tokenBIndex)
+              setTokenBIndex(pom)
+              onChangePositionTokens(tokenBIndex, tokenAIndex, currentFeeIndex)
+
+              updatePath(tokenBIndex, tokenAIndex, currentFeeIndex)
+            }}
             poolIndex={poolIndex}
-            onChangeRange={onChangeRange}
-            blocked={
-              tokenAIndex === null ||
+            bestTierIndex={bestTierIndex}
+            canCreateNewPool={canCreateNewPool}
+            canCreateNewPosition={canCreateNewPosition}
+            handleAddToken={handleAddToken}
+            commonTokens={commonTokens}
+            initialHideUnknownTokensValue={initialHideUnknownTokensValue}
+            onHideUnknownTokensChange={onHideUnknownTokensChange}
+            percentageChangeA={tokenAPriceData?.priceChange}
+            percentageChangeB={tokenBPriceData?.priceChange}
+            priceA={tokenAPriceData?.price}
+            priceB={tokenBPriceData?.price}
+            priceALoading={priceALoading}
+            priceBLoading={priceBLoading}
+            feeTierIndex={currentFeeIndex}
+          />
+
+          {isCurrentPoolExisting ||
+          tokenAIndex === null ||
+          tokenBIndex === null ||
+          tokenAIndex === tokenBIndex ||
+          isWaitingForNewPool ? (
+            <RangeSelector
+              poolIndex={poolIndex}
+              onChangeRange={onChangeRange}
+              blocked={
+                tokenAIndex === null ||
+                tokenBIndex === null ||
+                tokenAIndex === tokenBIndex ||
+                data.length === 0 ||
+                isWaitingForNewPool
+              }
+              blockerInfo={setRangeBlockerInfo()}
+              {...(tokenAIndex === null ||
               tokenBIndex === null ||
-              tokenAIndex === tokenBIndex ||
+              !isCurrentPoolExisting ||
               data.length === 0 ||
               isWaitingForNewPool
-            }
-            blockerInfo={setRangeBlockerInfo()}
-            {...(tokenAIndex === null ||
-            tokenBIndex === null ||
-            !isCurrentPoolExisting ||
-            data.length === 0 ||
-            isWaitingForNewPool
-              ? noRangePlaceholderProps
-              : {
-                  data,
-                  midPrice,
-                  tokenASymbol: tokens[tokenAIndex].symbol,
-                  tokenBSymbol: tokens[tokenBIndex].symbol
-                })}
-            ticksLoading={ticksLoading}
-            isXtoY={isXtoY}
-            tickSpacing={tickSpacing}
-            xDecimal={xDecimal}
-            yDecimal={yDecimal}
-            currentPairReversed={currentPairReversed}
-            initialIsDiscreteValue={initialIsDiscreteValue}
-            onDiscreteChange={onDiscreteChange}
-            isConcentrated={isConcentrated}
-            hasTicksError={hasTicksError}
-            reloadHandler={reloadHandler}
-            volumeRange={plotVolumeRange}
-          />
-        ) : (
-          <PoolInit
-            onChangeRange={onChangeRange}
-            isXtoY={isXtoY}
-            tickSpacing={tickSpacing}
-            xDecimal={xDecimal}
-            yDecimal={yDecimal}
-            tokenASymbol={tokenAIndex !== null ? tokens[tokenAIndex].symbol : 'ABC'}
-            tokenBSymbol={tokenBIndex !== null ? tokens[tokenBIndex].symbol : 'XYZ'}
-            midPrice={midPrice.index}
-            onChangeMidPrice={onChangeMidPrice}
-            currentPairReversed={currentPairReversed}
-          />
-        )}
+                ? noRangePlaceholderProps
+                : {
+                    data,
+                    midPrice,
+                    tokenASymbol: tokens[tokenAIndex].symbol,
+                    tokenBSymbol: tokens[tokenBIndex].symbol
+                  })}
+              ticksLoading={ticksLoading}
+              isXtoY={isXtoY}
+              tickSpacing={tickSpacing}
+              xDecimal={xDecimal}
+              yDecimal={yDecimal}
+              currentPairReversed={currentPairReversed}
+              initialIsDiscreteValue={initialIsDiscreteValue}
+              onDiscreteChange={onDiscreteChange}
+              isConcentrated={isConcentrated}
+              hasTicksError={hasTicksError}
+              reloadHandler={reloadHandler}
+              volumeRange={plotVolumeRange}
+            />
+          ) : (
+            <PoolInit
+              onChangeRange={onChangeRange}
+              isXtoY={isXtoY}
+              tickSpacing={tickSpacing}
+              xDecimal={xDecimal}
+              yDecimal={yDecimal}
+              tokenASymbol={tokenAIndex !== null ? tokens[tokenAIndex].symbol : 'ABC'}
+              tokenBSymbol={tokenBIndex !== null ? tokens[tokenBIndex].symbol : 'XYZ'}
+              midPrice={midPrice.index}
+              onChangeMidPrice={onChangeMidPrice}
+              currentPairReversed={currentPairReversed}
+            />
+          )}
+        </Grid>
       </Grid>
-    </Grid>
+
+      <JupiterIndexingModal
+        anchorEl={anchorEl}
+        open={isJupiterModalOpen}
+        handleClose={handleCloseJupiter}
+        isActive={isJupiterIndexed}
+      />
+    </>
   )
 }
 
