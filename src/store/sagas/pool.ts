@@ -6,7 +6,12 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PublicKey } from '@solana/web3.js'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { getFullNewTokensData, getPools, getPoolsFromAdresses } from '@consts/utils'
+import {
+  getFullNewTokensData,
+  getPools,
+  getPoolsFromAdresses,
+  getJupiterIndexedPubKeys
+} from '@consts/utils'
 import { tokens } from '@selectors/pools'
 import { getConnection } from './connection'
 import { network, rpcAddress } from '@selectors/solanaConnection'
@@ -84,6 +89,16 @@ export function* fetchPoolsDataForList(action: PayloadAction<ListPoolsRequest>) 
   )
 }
 
+export function* fetchJupiterIndexedPoolsData() {
+  try {
+    const jupiterIndexedPubkeys = yield* call(getJupiterIndexedPubKeys)
+
+    yield* put(actions.setJupiterIndexedAddresses(jupiterIndexedPubkeys))
+  } catch (error) {
+    yield* put(actions.setJupiterIndexedAddresses([]))
+  }
+}
+
 export function* getPoolsDataForListHandler(): Generator {
   yield* takeEvery(actions.getPoolsDataForList, fetchPoolsDataForList)
 }
@@ -96,8 +111,17 @@ export function* getPoolDataHandler(): Generator {
   yield* takeLatest(actions.getPoolData, fetchPoolData)
 }
 
+export function* getJupiterIndexedAddressesHandler(): Generator {
+  yield* takeLatest(actions.getJupiterIndexedAddresses, fetchJupiterIndexedPoolsData)
+}
+
 export function* poolsSaga(): Generator {
   yield all(
-    [getPoolDataHandler, getAllPoolsForPairDataHandler, getPoolsDataForListHandler].map(spawn)
+    [
+      getPoolDataHandler,
+      getAllPoolsForPairDataHandler,
+      getPoolsDataForListHandler,
+      getJupiterIndexedAddressesHandler
+    ].map(spawn)
   )
 }

@@ -1106,3 +1106,33 @@ const PRIORITY_FEE_DENOMINATOR = 9
 export const solToPriorityFee = (sol: number) => {
   return Math.round((sol * 5 * 10 ** PRIORITY_FEE_DENOMINATOR) / 10)
 }
+
+export interface JupiterPool {
+  data: [string, string]
+  executable: boolean
+  lamports: number
+  owner: string
+  params: {
+    addressLookupTableAddress: string
+    vaultLpMint: {
+      a: string
+      b: string
+    }
+    vaultToken: {
+      a: string
+      b: string
+    }
+  }
+  pubkey: string
+  rentEpoch: number
+  space: number
+}
+
+export const getJupiterIndexedPubKeys = async (): Promise<string[]> => {
+  const res = await axios.get<JupiterPool[]>('https://cache.jup.ag/markets?v=3')
+  console.log(res)
+  const { data } = res
+  const addresses = data.map(pool => pool.pubkey)
+
+  return addresses
+}

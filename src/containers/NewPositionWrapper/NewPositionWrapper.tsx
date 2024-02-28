@@ -24,6 +24,7 @@ import { actions } from '@reducers/positions'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { Status } from '@reducers/solanaWallet'
 import {
+  jupiterIndexedAddresses,
   isLoadingLatestPoolsForTransaction,
   poolsArraySortedByFees,
   volumeRanges
@@ -69,6 +70,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const { data: ticksData, loading: ticksLoading, hasError: hasTicksError } = useSelector(plotTicks)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
   const currentNetwork = useSelector(network)
+
+  const jupiterAddresses = useSelector(jupiterIndexedAddresses)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
@@ -185,6 +188,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       }
     }
   }, [isWaitingForNewPool])
+
   useEffect(() => {
     if (poolIndex !== null) {
       setMidPrice({
@@ -305,6 +309,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
   const [tokenAPriceData, setTokenAPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
   const [priceALoading, setPriceALoading] = useState(false)
+
   useEffect(() => {
     if (tokenAIndex === null) {
       return
@@ -324,6 +329,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
   const [tokenBPriceData, setTokenBPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
   const [priceBLoading, setPriceBLoading] = useState(false)
+
   useEffect(() => {
     if (tokenBIndex === null) {
       return
@@ -407,6 +413,10 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
     return poolAddress
   }
+
+  useEffect(() => {
+    dispatch(poolsActions.getJupiterIndexedAddresses())
+  }, [])
 
   return (
     <NewPosition
