@@ -634,6 +634,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       currentFeeIndex={feeIndex}
       onSlippageChange={onSlippageChange}
       initialSlippage={initialSlippage}
+      jupiterAddresses={jupiterAddresses}
     />
   )
 }

@@ -26,7 +26,7 @@ import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
 import { History } from 'history'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 import DepositSelector from './DepositSelector/DepositSelector'
@@ -34,6 +34,7 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
+import JupiterIcon from '@static/svg/jupiter.svg'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -105,6 +106,7 @@ export interface INewPosition {
   currentFeeIndex: number
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
+  jupiterAddresses: string[]
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -156,7 +158,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   plotVolumeRange,
   currentFeeIndex,
   onSlippageChange,
-  initialSlippage
+  initialSlippage,
+  jupiterAddresses
 }) => {
   const classes = useStyles()
 
@@ -175,6 +178,14 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+
+  const [isJupiterModalOpen, setIsJupiterModalOpen] = useState<boolean>(false)
+
+  const isJupiterIndexed = useMemo(() => {
+    if (!address || !jupiterAddresses) return false
+    return jupiterAddresses.includes(address)
+  }, [jupiterAddresses, address])
+  console.warn(isJupiterIndexed)
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -358,9 +369,32 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
-        <Grid container item alignItems='center' className={classes.options}>
+      <Grid
+        container
+        item
+        className={classes.subHeader}
+        alignItems='center'
+        justifyContent='space-between'>
+        <Grid
+          container
+          item
+          alignItems='center'
+          justifyContent='space-between'
+          className={classes.half}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          <Button
+            onClick={() => setIsJupiterModalOpen(true)}
+            className={classes.iconBtn}
+            disabled={!isJupiterIndexed}>
+            <img src={JupiterIcon} style={{ opacity: isJupiterIndexed ? 1 : 0.3 }} alt='Jupiter' />
+          </Button>
+        </Grid>
+        <Grid
+          container
+          item
+          alignItems='center'
+          justifyContent='flex-end'
+          className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
               displayLength={9}
