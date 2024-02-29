@@ -34,6 +34,7 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
+import { JupiterIndexedIndicator } from './JupiterIndexedIndicator/JupiterIndexedIndicator'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -359,7 +360,19 @@ export const NewPosition: React.FC<INewPosition> = ({
       </Link>
 
       <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
+        <Grid
+          item
+          xs={10}
+          md={6}
+          justifyContent='space-around'
+          className={classes.jupiterIndicatorWrapper}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          <JupiterIndexedIndicator
+            isCurrentPoolExisting={isCurrentPoolExisting}
+            poolAddress={poolAddress}
+          />
+        </Grid>
+
         <Grid container item alignItems='center' className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel

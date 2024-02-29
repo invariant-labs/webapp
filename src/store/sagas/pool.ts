@@ -1,7 +1,14 @@
 import { call, put, all, spawn, takeEvery, takeLatest, select } from 'typed-redux-saga'
 import { getMarketProgram } from '@web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
-import { actions, ListPoolsRequest, PairTokens, PoolWithAddress } from '@reducers/pools'
+import {
+  actions,
+  JupiterApiData,
+  JupiterIndexedPools,
+  ListPoolsRequest,
+  PairTokens,
+  PoolWithAddress
+} from '@reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PublicKey } from '@solana/web3.js'
@@ -84,6 +91,20 @@ export function* fetchPoolsDataForList(action: PayloadAction<ListPoolsRequest>) 
   )
 }
 
+export function* fetchJupiterIndexedPools(): Generator {
+  try {
+    const response = yield* call(fetch, 'https://cache.jup.ag/markets?v=3')
+    const data: JupiterApiData[] = yield* call([response, response.json])
+    const indexedPools: JupiterIndexedPools = {}
+    data.forEach(pool => {
+      indexedPools[pool.pubkey] = true
+    })
+    yield* put(actions.setJupiterIndexedPools(indexedPools))
+  } catch (error) {
+    yield* put(actions.setErrorJupiterIndexedPools({}))
+  }
+}
+
 export function* getPoolsDataForListHandler(): Generator {
   yield* takeEvery(actions.getPoolsDataForList, fetchPoolsDataForList)
 }
@@ -96,8 +117,17 @@ export function* getPoolDataHandler(): Generator {
   yield* takeLatest(actions.getPoolData, fetchPoolData)
 }
 
+export function* getJupiterIndexedPoolsHandler(): Generator {
+  yield* takeLatest(actions.getJupiterIndexedPools, fetchJupiterIndexedPools)
+}
+
 export function* poolsSaga(): Generator {
   yield all(
-    [getPoolDataHandler, getAllPoolsForPairDataHandler, getPoolsDataForListHandler].map(spawn)
+    [
+      getPoolDataHandler,
+      getAllPoolsForPairDataHandler,
+      getPoolsDataForListHandler,
+      fetchJupiterIndexedPools
+    ].map(spawn)
   )
 }
