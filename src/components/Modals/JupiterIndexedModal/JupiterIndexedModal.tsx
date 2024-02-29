@@ -50,7 +50,7 @@ export const JupiterIndexedModal: React.FC<IJupiterIndexedModal> = ({
           </Typography>
           <List>
             <ListItem>
-              <Typography>
+              <Typography variant='inherit' component='p'>
                 Ensure your token exists on-chain with metadata following the{' '}
                 <Link href='https://developers.metaplex.com/'>Metaplex Token Metadata</Link>
               </Typography>
