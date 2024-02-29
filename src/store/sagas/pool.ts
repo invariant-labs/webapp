@@ -110,7 +110,7 @@ export function* getPoolDataHandler(): Generator {
   yield* takeLatest(actions.getPoolData, fetchPoolData)
 }
 export function* watchFetchIndexedPools() {
-  yield takeEvery(actions.startFetchIndexedPools.type, fetchIndexedPools)
+  yield takeEvery(actions.startFetchIndexedPools, fetchIndexedPools)
 }
 
 export function* poolsSaga(): Generator {

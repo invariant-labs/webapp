@@ -17,7 +17,7 @@ import { MIN_TICK } from '@invariant-labs/sdk'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
-import { Box, Button, Grid, Typography } from '@material-ui/core'
+import { Box, Button, Grid, IconButton, Typography } from '@material-ui/core'
 import { Color } from '@material-ui/lab'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
@@ -38,6 +38,7 @@ import useStyles from './style'
 import { actions } from '@reducers/pools'
 import { useDispatch, useSelector } from 'react-redux'
 import { indexedPools } from '@selectors/pools'
+import { JupiterIndexedModal } from '@components/Modals/JupiterIndexedModal/JupiterIndexedModal'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -174,7 +175,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   const [tokenADeposit, setTokenADeposit] = useState<string>('')
   const [tokenBDeposit, setTokenBDeposit] = useState<string>('')
-
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const poolsIndexed = useSelector(indexedPools)
 
@@ -182,6 +183,10 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+
+  const handleOpenModal = () => setIsModalOpen(true)
+  const handleCloseModal = () => setIsModalOpen(false)
+
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -325,6 +330,7 @@ export const NewPosition: React.FC<INewPosition> = ({
   useEffect(() => {
     dispatch(actions.startFetchIndexedPools())
   }, [dispatch])
+
   const isPoolIndexed = poolsIndexed[poolAddress]
 
   const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -373,12 +379,17 @@ export const NewPosition: React.FC<INewPosition> = ({
       <Grid container justifyContent='space-between'>
         <Box className={classes.jupiterContainer}>
           <Typography className={classes.title}>Add new liquidity position</Typography>
-          <img
-            src={icons.jupiterIcon}
-            alt='jupiterIcon'
-            className={`${classes.jupiterIcon} ${
-              isPoolIndexed ? classes.jupiterActive : classes.jupiterDisable
-            }`}
+          <IconButton onClick={handleOpenModal} className={classes.jupiterIcon}>
+            <img
+              src={icons.jupiterIcon}
+              alt='jupiterIcon'
+              className={isPoolIndexed ? classes.jupiterActive : classes.jupiterDisable}
+            />
+          </IconButton>
+          <JupiterIndexedModal
+            poolIndexed={isPoolIndexed}
+            handleClose={handleCloseModal}
+            open={isModalOpen}
           />
         </Box>
         <Grid container item alignItems='center' className={classes.options}>
