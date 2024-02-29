@@ -3,7 +3,7 @@ import { getMarketProgram } from '@web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
 import {
   actions,
-  JupiterApiData,
+  JupiterFetchedPool,
   JupiterIndexedPools,
   ListPoolsRequest,
   PairTokens,
@@ -94,7 +94,7 @@ export function* fetchPoolsDataForList(action: PayloadAction<ListPoolsRequest>) 
 export function* fetchJupiterIndexedPools(): Generator {
   try {
     const response = yield* call(fetch, 'https://cache.jup.ag/markets?v=3')
-    const data: JupiterApiData[] = yield* call([response, response.json])
+    const data: JupiterFetchedPool[] = yield* call([response, response.json])
     const indexedPools: JupiterIndexedPools = {}
     data.forEach(pool => {
       indexedPools[pool.pubkey] = true

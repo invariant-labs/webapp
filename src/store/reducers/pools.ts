@@ -79,7 +79,7 @@ export interface ListPoolsResponse {
   listType: ListType
 }
 
-export interface JupiterApiData {
+export interface JupiterFetchedPool {
   pubkey: string
 }
 export type JupiterIndexedPools = Record<string, boolean>
