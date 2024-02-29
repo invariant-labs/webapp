@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Fade, IconButton, List, ListItem, Modal, Typography } from '@material-ui/core'
+import { Box, Fade, IconButton, Link, List, ListItem, Modal, Typography } from '@material-ui/core'
 import useStyles from './style'
 import icons from '@static/icons'
 
@@ -50,7 +50,10 @@ export const JupiterIndexedModal: React.FC<IJupiterIndexedModal> = ({
           </Typography>
           <List>
             <ListItem>
-              Ensure your token exists on-chain with metadata following the Metaplex Token Metadata
+              <Typography>
+                Ensure your token exists on-chain with metadata following the{' '}
+                <Link href='https://developers.metaplex.com/'>Metaplex Token Metadata</Link>
+              </Typography>
             </ListItem>
             <ListItem>Maintain at least $250 liquidity on both buy and sell sides.</ListItem>
             <ListItem>
