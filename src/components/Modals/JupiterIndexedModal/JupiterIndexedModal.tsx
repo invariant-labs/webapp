@@ -5,14 +5,14 @@ import icons from '@static/icons'
 
 export interface IJupiterIndexedModal {
   poolIndexed: boolean
-  handleClose: any
-  open: any
+  open: boolean
+  handleClose: () => void
 }
 
 export const JupiterIndexedModal: React.FC<IJupiterIndexedModal> = ({
   poolIndexed,
-  handleClose,
-  open
+  open,
+  handleClose
 }) => {
   const classes = useStyles()
 
