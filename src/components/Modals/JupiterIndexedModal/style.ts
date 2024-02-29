@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
     left: '50%',
     transform: 'translate(-50%, -50%)',
     padding: 16,
-    width: 400,
+    width: 350,
     borderRadius: 20,
     background: colors.invariant.component,
     color: colors.invariant.lightHover
@@ -16,7 +16,8 @@ const useStyles = makeStyles(() => ({
   titleContent: {
     display: 'flex',
     justifyContent: 'space-beetween',
-    alignItems: 'center'
+    alignItems: 'center',
+    color: colors.white.main
   },
   closeButton: {
     marginLeft: 'auto'
