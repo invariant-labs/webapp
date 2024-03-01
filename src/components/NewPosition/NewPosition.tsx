@@ -25,6 +25,7 @@ import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
+// import JupiterIcon from '@static/svg/JupiterIcon.svg'
 import { History } from 'history'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -34,6 +35,8 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
+
+import { JupiterIndexIndicator } from './JupiterIndexIndicator/JupiterIndexIndicator'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -368,6 +371,7 @@ export const NewPosition: React.FC<INewPosition> = ({
               copyPoolAddressHandler={copyPoolAddressHandler}
             />
           ) : null}
+          {/* {console.log(address)} */}
           <ConcentrationTypeSwitch
             onSwitch={val => {
               setIsConcentrated(val)
@@ -385,7 +389,6 @@ export const NewPosition: React.FC<INewPosition> = ({
           </Button>
         </Grid>
       </Grid>
-
       <Slippage
         open={settings}
         setSlippage={setSlippage}
@@ -396,7 +399,9 @@ export const NewPosition: React.FC<INewPosition> = ({
         infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
         headerText='Position Transaction Settings'
       />
-
+      <JupiterIndexIndicator
+        markertId={address}
+      />
       <Grid container className={classes.row} alignItems='stretch'>
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
