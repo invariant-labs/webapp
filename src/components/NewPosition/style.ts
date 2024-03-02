@@ -86,7 +86,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   options: {
     width: 'fit-content',
     marginBottom: 18,
-    height: 28
+    height: 28,
+    flex: 1
+  },
+  optionsWrapper: {
+    gap: 24
+  },
+  spacer: {
+    flex: 1
   },
   switch: {
     transition: 'opacity 500ms'

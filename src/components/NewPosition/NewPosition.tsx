@@ -34,6 +34,7 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
+import JupiterIndicator from './JupiterIndicator/JupiterIndicator'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -358,8 +359,16 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
+      <Grid container justifyContent='space-between' className={classes.optionsWrapper}>
+        <Grid
+          container
+          item
+          alignItems='center'
+          justifyContent='space-between'
+          className={classes.options}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          <JupiterIndicator poolAddress={address} />
+        </Grid>
         <Grid container item alignItems='center' className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
@@ -367,7 +376,9 @@ export const NewPosition: React.FC<INewPosition> = ({
               marketId={address}
               copyPoolAddressHandler={copyPoolAddressHandler}
             />
-          ) : null}
+          ) : (
+            <div className={classes.spacer} />
+          )}
           <ConcentrationTypeSwitch
             onSwitch={val => {
               setIsConcentrated(val)
