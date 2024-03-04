@@ -29,6 +29,7 @@ import activeIcon from './svg/active.svg'
 import inactiveIcon from './svg/inactive.svg'
 import allIcon from './svg/all.svg'
 import docsIcon from './svg/docsCircle.svg'
+import jupiterIcon from './svg/jupiter.svg'
 
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
@@ -62,7 +63,8 @@ const icons: { [key: string]: string } = {
   activeIcon: activeIcon,
   inactiveIcon: inactiveIcon,
   allIcon: allIcon,
-  docsIcon
+  docsIcon,
+  jupiterIcon: jupiterIcon
 }
 
 export default icons
