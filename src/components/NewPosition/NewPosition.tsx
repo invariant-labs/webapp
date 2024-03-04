@@ -17,7 +17,7 @@ import { MIN_TICK } from '@invariant-labs/sdk'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Box, Button, Grid, Typography, Zoom } from '@material-ui/core'
 import { Color } from '@material-ui/lab'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
@@ -34,6 +34,10 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
+
+// My changes
+import jupiterIcon from '../../static/png/jupiter.png'
+import jupiterIconBlank from '../../static/png/jupiter-blank.png'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -359,7 +363,18 @@ export const NewPosition: React.FC<INewPosition> = ({
       </Link>
 
       <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
+        <Grid container justifyContent='space-between' item xs={12} md={6}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          {poolAddress !== '' ? (
+            <Box className={classes.jupiterContainer}>
+              <img src={jupiterIcon} alt='jupiter-icon' />
+            </Box>
+          ) : (
+            <Box className={classes.jupiterContainer}>
+              <img src={jupiterIconBlank} alt='jupiter-icon' />
+            </Box>
+          )}
+        </Grid>
         <Grid container item alignItems='center' className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel

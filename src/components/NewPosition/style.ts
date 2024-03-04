@@ -83,6 +83,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       filter: 'brightness(1.5)'
     }
   },
+  // My changes
+  jupiterContainer: {
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(1)
+    },
+    height: '32px',
+    width: '32px'
+  },
+  //
   options: {
     width: 'fit-content',
     marginBottom: 18,
