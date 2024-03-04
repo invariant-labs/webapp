@@ -25,6 +25,7 @@ import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
+import jupiterIcon from '@static/svg/jupiter.svg'
 import { History } from 'history'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -161,6 +162,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   const classes = useStyles()
 
   const [isConcentrated, setIsConcentrated] = useState(initialIsConcentratedValue)
+
+  const [pubkeyIsIndexed, setPubkeyIsIndexed] = useState<boolean>(false)
 
   const [leftRange, setLeftRange] = useState(MIN_TICK)
   const [rightRange, setRightRange] = useState(MAX_TICK)
@@ -315,6 +318,22 @@ export const NewPosition: React.FC<INewPosition> = ({
     void configurePoolAddress()
   }, [initialTokenFrom, initialTokenTo, initialFee])
 
+  useEffect(() => {
+    const fetchJupiterAPI = async () => {
+      const response = await fetch('https://cache.jup.ag/markets?v=3')
+      const data = await response.json()
+      const isIndexed = data.some(({ pubkey }: { pubkey: string }) => pubkey === address)
+
+      if (isIndexed && address !== '') {
+        setPubkeyIsIndexed(true)
+      } else {
+        setPubkeyIsIndexed(false)
+      }
+    }
+
+    void fetchJupiterAPI()
+  }, [address, pubkeyIsIndexed, bestTierIndex])
+
   const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
     blurContent()
@@ -358,8 +377,12 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
+      <Grid container alignItems={'center'} style={{ width: '100%', display: 'flex', gap: '24px' }}>
+        <div className={classes.headerWithJupiterIcon}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          <img className={pubkeyIsIndexed ? classes.jupiterIcon : classes.jupiterIconDisabled} src={jupiterIcon} />
+        </div>
+
         <Grid container item alignItems='center' className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
