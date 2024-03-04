@@ -361,9 +361,28 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
-        <Grid container item alignItems='center' className={classes.options}>
+      <Grid container xs={12}>
+        <Grid item xs={4} alignItems='center' justifyContent='flex-start'>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+        </Grid>
+        <Grid
+          container
+          item
+          alignItems='center'
+          xs={2}
+          justifyContent='flex-end'
+          style={{ position: 'relative' }}>
+          <JupiterIndexIndicator
+            marketId={address}
+          />
+        </Grid>
+        <Grid
+          container
+          item
+          alignItems='center'
+          justifyContent='flex-end'
+          xs={6}
+          className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
               displayLength={9}
@@ -371,7 +390,6 @@ export const NewPosition: React.FC<INewPosition> = ({
               copyPoolAddressHandler={copyPoolAddressHandler}
             />
           ) : null}
-          {/* {console.log(address)} */}
           <ConcentrationTypeSwitch
             onSwitch={val => {
               setIsConcentrated(val)
@@ -399,9 +417,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
         headerText='Position Transaction Settings'
       />
-      <JupiterIndexIndicator
-        markertId={address}
-      />
+      {/* <JupiterIndexIndicator marketId={address} /> */}
       <Grid container className={classes.row} alignItems='stretch'>
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
