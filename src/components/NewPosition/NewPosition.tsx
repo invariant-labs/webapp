@@ -25,9 +25,11 @@ import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
+import indexingIndicatorIcon from '@static/svg/indexingIndicator.svg'
 import { History } from 'history'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { IndexPoolModal } from '@components/Modals/IndexPoolModal/IndexPoolModal'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 import DepositSelector from './DepositSelector/DepositSelector'
 import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
@@ -107,6 +109,27 @@ export interface INewPosition {
   initialSlippage: string
 }
 
+export interface IIndexedPoolParams {
+  addressLookupTableAddress: string
+  serumAsks: string
+  serumBids: string
+  serumCoinVaultAccount: string
+  serumEventQueue: string
+  serumPcVaultAccount: string
+  serumVaultSigner: string
+}
+
+export interface IIndexedPool {
+  data: [string, string]
+  executable: boolean
+  lamports: number
+  owner: string
+  params: IIndexedPoolParams
+  pubkey: string
+  rentEpoch: number
+  space: number
+}
+
 export const NewPosition: React.FC<INewPosition> = ({
   initialTokenFrom,
   initialTokenTo,
@@ -175,6 +198,13 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+
+  const [indexPoolState, setIndexPoolState] = useState<'pending' | 'active' | 'inactive'>('pending')
+  const [indexedPools, setIndexedPools] = useState<IIndexedPool[]>([])
+
+  const [openIndexPoolModal, setOpenIndexPoolModal] = useState<boolean>(false)
+  const [anchorIndexPool, setAnchorIndexPool] = useState<HTMLButtonElement | null>(null)
+
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -313,7 +343,35 @@ export const NewPosition: React.FC<INewPosition> = ({
       setAddress(configuredAddress)
     }
     void configurePoolAddress()
-  }, [initialTokenFrom, initialTokenTo, initialFee])
+  }, [initialTokenFrom, initialTokenTo, initialFee, indexedPools])
+
+  useEffect(() => {
+    const getIndexedPools = async () => {
+      setIndexPoolState('pending')
+      try {
+        const indexedPoolsResponse = await fetch('https://cache.jup.ag/markets?v=3')
+        if (!indexedPoolsResponse.ok) {
+          throw new Error('Failed to fetch indexed pools')
+        }
+
+        const indexedPoolsData = (await indexedPoolsResponse.json()) as IIndexedPool[]
+        setIndexedPools(indexedPoolsData)
+      } catch (error) {
+        console.error('Error fetching indexed pools:', error)
+      }
+    }
+
+    void getIndexedPools()
+  }, [])
+
+  useEffect(() => {
+    if (indexedPools.length === 0) return
+    const isActive = indexedPools.some(({ pubkey }: { pubkey: string }) => pubkey === address)
+    if (isActive) setIndexPoolState('active')
+    else {
+      setIndexPoolState('inactive')
+    }
+  }, [address])
 
   const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -324,6 +382,17 @@ export const NewPosition: React.FC<INewPosition> = ({
   const handleCloseSettings = () => {
     unblurContent()
     setSettings(false)
+  }
+
+  const handleClickIndexPoolModal = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorIndexPool(event.currentTarget)
+    blurContent()
+    setOpenIndexPoolModal(true)
+  }
+
+  const handleCloseIndexModal = () => {
+    unblurContent()
+    setOpenIndexPoolModal(false)
   }
 
   const setSlippage = (slippage: string): void => {
@@ -353,14 +422,32 @@ export const NewPosition: React.FC<INewPosition> = ({
     <Grid container className={classes.wrapper} direction='column'>
       <Link to='/pool' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
         <Grid className={classes.back} container item alignItems='center'>
-          <img className={classes.backIcon} src={backIcon} />
+          <img className={classes.backIcon} src={backIcon} alt='back icon' />
           <Typography className={classes.backText}>Back to Liquidity Positions List</Typography>
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
-        <Grid container item alignItems='center' className={classes.options}>
+      <Grid className={classes.headerWrapper}>
+        <Grid className={classes.newLiquidityGrid}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          <Button
+            disabled={indexPoolState === 'pending'}
+            onClick={handleClickIndexPoolModal}
+            className={classes.indicatorIconBtn}>
+            <img
+              src={indexingIndicatorIcon}
+              className={`${classes.indicatorIcon} ${
+                indexPoolState === 'pending'
+                  ? classes.indicatorPending
+                  : indexPoolState === 'active'
+                  ? classes.indicatorActive
+                  : classes.indicatorInactive
+              }`}
+              alt='index indicator'
+            />
+          </Button>
+        </Grid>
+        <Grid className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
               displayLength={9}
@@ -368,20 +455,22 @@ export const NewPosition: React.FC<INewPosition> = ({
               copyPoolAddressHandler={copyPoolAddressHandler}
             />
           ) : null}
-          <ConcentrationTypeSwitch
-            onSwitch={val => {
-              setIsConcentrated(val)
-              onIsConcentratedChange(val)
-            }}
-            initialValue={initialIsConcentratedValue ? 0 : 1}
-            className={classes.switch}
-            style={{
-              opacity: poolIndex !== null ? 1 : 0
-            }}
-            disabled={poolIndex === null}
-          />
+          {poolIndex !== null && (
+            <ConcentrationTypeSwitch
+              onSwitch={val => {
+                setIsConcentrated(val)
+                onIsConcentratedChange(val)
+              }}
+              initialValue={initialIsConcentratedValue ? 0 : 1}
+              className={classes.switch}
+              style={{
+                opacity: poolIndex !== null ? 1 : 0
+              }}
+              disabled={poolIndex === null}
+            />
+          )}
           <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
-            <img src={settingIcon} className={classes.settingsIcon} />
+            <img src={settingIcon} className={classes.settingsIcon} alt='settings icon' />
           </Button>
         </Grid>
       </Grid>
@@ -395,6 +484,13 @@ export const NewPosition: React.FC<INewPosition> = ({
         initialSlippage={initialSlippage}
         infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
         headerText='Position Transaction Settings'
+      />
+
+      <IndexPoolModal
+        indexPoolState={indexPoolState}
+        anchorEl={anchorIndexPool}
+        open={openIndexPoolModal}
+        handleClose={handleCloseIndexModal}
       />
 
       <Grid container className={classes.row} alignItems='stretch'>
