@@ -34,6 +34,7 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
+import JupiterIndex from './JupiterIndex/JupiterIndex'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -361,6 +362,7 @@ export const NewPosition: React.FC<INewPosition> = ({
       <Grid container justifyContent='space-between'>
         <Typography className={classes.title}>Add new liquidity position</Typography>
         <Grid container item alignItems='center' className={classes.options}>
+          <JupiterIndex address={poolAddress} />
           {address !== '' ? (
             <MarketIdLabel
               displayLength={9}
