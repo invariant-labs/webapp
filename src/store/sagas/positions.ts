@@ -38,7 +38,16 @@ import { getConnection } from './connection'
 import { createClaimAllPositionRewardsTx } from './farms'
 import { createAccount, getWallet, sleep } from './wallet'
 
-export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
+export function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Generator {
+  const data = action.payload
+
+  if (
+    (data.tokenX.toString() === WRAPPED_SOL_ADDRESS && data.xAmount === 0) ||
+    (data.tokenY.toString() === WRAPPED_SOL_ADDRESS && data.yAmount === 0)
+  ) {
+    return yield* call(handleInitPosition, action)
+  }
+
   try {
     const connection = yield* call(getConnection)
     const wallet = yield* call(getWallet)
@@ -143,7 +152,10 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
       poolSigners = signers
     } else {
       initPositionTx = yield* call([marketProgram, marketProgram.initPositionTx], {
-        pair: new Pair(data.tokenX, data.tokenY, { fee: data.fee, tickSpacing: data.tickSpacing }),
+        pair: new Pair(data.tokenX, data.tokenY, {
+          fee: data.fee,
+          tickSpacing: data.tickSpacing
+        }),
         userTokenX,
         userTokenY,
         lowerTick: data.lowerTick,
@@ -304,10 +316,12 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     const allTokens = yield* select(tokens)
 
     if (
-      allTokens[action.payload.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
-      allTokens[action.payload.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+      (allTokens[action.payload.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS &&
+        action.payload.xAmount !== 0) ||
+      (allTokens[action.payload.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS &&
+        action.payload.yAmount !== 0)
     ) {
-      return yield* call(handleInitPositionWithSOL, action.payload)
+      return yield* call(handleInitPositionWithSOL, action)
     }
 
     const connection = yield* call(getConnection)
