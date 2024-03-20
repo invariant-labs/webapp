@@ -41,12 +41,10 @@ import { createAccount, getWallet, sleep } from './wallet'
 export function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Generator {
   const data = action.payload
 
-  const isNoSOLAmount =
+  if (
     (data.tokenX.toString() === WRAPPED_SOL_ADDRESS && data.xAmount === 0) ||
     (data.tokenY.toString() === WRAPPED_SOL_ADDRESS && data.yAmount === 0)
-  console.log(isNoSOLAmount)
-
-  if (isNoSOLAmount) {
+  ) {
     return yield* call(handleInitPosition, action)
   }
 
