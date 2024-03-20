@@ -375,7 +375,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
       userTokenY = yield* call(createAccount, data.tokenY)
     }
 
-    let poolSigners: Keypair[] = []
+    const poolSigners: Keypair[] = []
 
     let combinedTransaction = new Transaction()
 
