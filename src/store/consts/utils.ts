@@ -1057,7 +1057,7 @@ export const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThresh
   }
 ]
 
-export const getCoingeckoTokenPrice = async (id: string): Promise<TokenPriceData> => {
+export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
   return await axios.get(`https://price.jup.ag/v4/price?ids=${id}&vsToken=USDC`).then(res => {
     return {
       price: res.data.id.price ?? 0

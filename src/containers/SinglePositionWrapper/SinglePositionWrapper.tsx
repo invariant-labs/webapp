@@ -5,7 +5,7 @@ import {
   calcPrice,
   calcYPerXPrice,
   createPlaceholderLiquidityPlot,
-  getCoingeckoTokenPrice,
+  getJupTokenPrice,
   printBN
 } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
@@ -318,7 +318,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
     const xId = position.tokenX.coingeckoId ?? ''
     if (xId.length) {
-      getCoingeckoTokenPrice(xId)
+      getJupTokenPrice(xId)
         .then(data => setTokenXPriceData(data))
         .catch(() => setTokenXPriceData(undefined))
     } else {
@@ -327,7 +327,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
     const yId = position.tokenY.coingeckoId ?? ''
     if (yId.length) {
-      getCoingeckoTokenPrice(yId)
+      getJupTokenPrice(yId)
         .then(data => setTokenYPriceData(data))
         .catch(() => setTokenYPriceData(undefined))
     } else {

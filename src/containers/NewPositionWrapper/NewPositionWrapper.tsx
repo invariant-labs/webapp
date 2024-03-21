@@ -8,7 +8,7 @@ import {
   calcPrice,
   calcYPerXPrice,
   createPlaceholderLiquidityPlot,
-  getCoingeckoTokenPrice,
+  getJupTokenPrice,
   getNewTokenOrThrow,
   printBN
 } from '@consts/utils'
@@ -313,7 +313,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     const id = tokens[tokenAIndex].coingeckoId ?? ''
     if (id.length) {
       setPriceALoading(true)
-      getCoingeckoTokenPrice(id)
+      getJupTokenPrice(id)
         .then(data => setTokenAPriceData(data))
         .catch(() => setTokenAPriceData(undefined))
         .finally(() => setPriceALoading(false))
@@ -332,7 +332,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     const id = tokens[tokenBIndex].coingeckoId ?? ''
     if (id.length) {
       setPriceBLoading(true)
-      getCoingeckoTokenPrice(id)
+      getJupTokenPrice(id)
         .then(data => setTokenBPriceData(data))
         .catch(() => setTokenBPriceData(undefined))
         .finally(() => setPriceBLoading(false))

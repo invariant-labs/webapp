@@ -14,7 +14,7 @@ import { blurContent, unblurContent } from '@consts/uiUtils'
 import { USDC_DEV } from '@consts/static'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { calculateAmountToClaim, getPriceAfterSlippage } from '@invariant-labs/bonds-sdk/lib/math'
-import { calculateBondPrice, TokenPriceData, getCoingeckoTokenPrice, printBN } from '@consts/utils'
+import { calculateBondPrice, TokenPriceData, getJupTokenPrice, printBN } from '@consts/utils'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './styles'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
@@ -178,7 +178,7 @@ export const WrappedBonds: React.FC = () => {
     const quoteId = bond.quoteToken.coingeckoId ?? ''
     if (quoteId.length) {
       setQuotePriceLoading(true)
-      getCoingeckoTokenPrice(quoteId)
+      getJupTokenPrice(quoteId)
         .then(data => setQuoteTokenPriceData(data))
         .catch(() => setQuoteTokenPriceData(undefined))
         .finally(() => setQuotePriceLoading(false))
@@ -189,7 +189,7 @@ export const WrappedBonds: React.FC = () => {
     const bondId = bond.bondToken.coingeckoId ?? ''
     if (bondId.length) {
       setBondPriceLoading(true)
-      getCoingeckoTokenPrice(bondId)
+      getJupTokenPrice(bondId)
         .then(data => setBondTokenPriceData(data))
         .catch(() => setBondTokenPriceData(undefined))
         .finally(() => setBondPriceLoading(false))

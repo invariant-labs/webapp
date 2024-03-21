@@ -4,7 +4,7 @@ import { commonTokensForNetworks } from '@consts/static'
 import {
   addNewTokenToLocalStorage,
   TokenPriceData,
-  getCoingeckoTokenPrice,
+  getJupTokenPrice,
   getNewTokenOrThrow
 } from '@consts/utils'
 import { actions as poolsActions } from '@reducers/pools'
@@ -140,7 +140,7 @@ export const WrappedSwap = () => {
     const id = tokensDict[tokenFrom.toString()].coingeckoId ?? ''
     if (id.length) {
       setPriceFromLoading(true)
-      getCoingeckoTokenPrice(id)
+      getJupTokenPrice(id)
         .then(data => setTokenFromPriceData(data))
         .catch(() => setTokenFromPriceData(undefined))
         .finally(() => setPriceFromLoading(false))
@@ -159,7 +159,7 @@ export const WrappedSwap = () => {
     const id = tokensDict[tokenTo.toString()].coingeckoId ?? ''
     if (id.length) {
       setPriceToLoading(true)
-      getCoingeckoTokenPrice(id)
+      getJupTokenPrice(id)
         .then(data => setTokenToPriceData(data))
         .catch(() => setTokenToPriceData(undefined))
         .finally(() => setPriceToLoading(false))
