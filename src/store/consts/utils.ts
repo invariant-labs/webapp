@@ -1101,6 +1101,32 @@ export const getPoolsVolumeRanges = async (name: string): Promise<Record<string,
   }
 }
 
+export interface IndexedPool {
+  data: string[]
+  executable: boolean
+  lamports: number
+  owner: string
+  pubkey: string
+  rentEpoch: number
+  space: number
+}
+
+export const fetchIndexedPoolsAndCheck = async (): Promise<IndexedPool[]> => {
+  try {
+    const indexedPoolsResponse = await fetch('https://cache.jup.ag/markets?v=3')
+    if (!indexedPoolsResponse.ok) {
+      throw new Error('Something went wrong...')
+    }
+
+    const indexedPoolsData = await indexedPoolsResponse.json()
+    const indexedPools = indexedPoolsData as IndexedPool[]
+    return indexedPools
+  } catch (error) {
+    console.error('Error fetching indexed pools:', error)
+    return []
+  }
+}
+
 const PRIORITY_FEE_DENOMINATOR = 9
 
 export const solToPriorityFee = (sol: number) => {
