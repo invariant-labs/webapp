@@ -14,7 +14,7 @@ import { blurContent, unblurContent } from '@consts/uiUtils'
 import { USDC_DEV } from '@consts/static'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { calculateAmountToClaim, getPriceAfterSlippage } from '@invariant-labs/bonds-sdk/lib/math'
-import { calculateBondPrice, JupPriceData, getCoingeckoTokenPrice, printBN } from '@consts/utils'
+import { calculateBondPrice, TokenPriceData, getCoingeckoTokenPrice, printBN } from '@consts/utils'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './styles'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
@@ -159,11 +159,13 @@ export const WrappedBonds: React.FC = () => {
     }
   }, [allBonds])
 
-  const [quoteTokenPriceData, setQuoteTokenPriceData] = useState<JupPriceData | undefined>(
+  const [quoteTokenPriceData, setQuoteTokenPriceData] = useState<TokenPriceData | undefined>(
     undefined
   )
   const [quotePriceLoading, setQuotePriceLoading] = useState(false)
-  const [bondTokenPriceData, setBondTokenPriceData] = useState<JupPriceData | undefined>(undefined)
+  const [bondTokenPriceData, setBondTokenPriceData] = useState<TokenPriceData | undefined>(
+    undefined
+  )
   const [bondPriceLoading, setBondPriceLoading] = useState(false)
 
   useEffect(() => {

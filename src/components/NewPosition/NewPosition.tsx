@@ -5,7 +5,7 @@ import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import { ALL_FEE_TIERS_DATA, BestTier } from '@consts/static'
 import { addressToTicker, blurContent, parseFeeToPathFee, unblurContent } from '@consts/uiUtils'
 import {
-  JupPriceData,
+  TokenPriceData,
   PositionTokenBlock,
   calcPrice,
   determinePositionTokenBlock,
@@ -92,8 +92,8 @@ export interface INewPosition {
   onIsConcentratedChange: (val: boolean) => void
   initialHideUnknownTokensValue: boolean
   onHideUnknownTokensChange: (val: boolean) => void
-  tokenAPriceData?: JupPriceData
-  tokenBPriceData?: JupPriceData
+  tokenAPriceData?: TokenPriceData
+  tokenBPriceData?: TokenPriceData
   priceALoading?: boolean
   priceBLoading?: boolean
   hasTicksError?: boolean

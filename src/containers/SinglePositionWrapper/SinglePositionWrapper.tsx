@@ -1,7 +1,7 @@
 import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import {
-  JupPriceData,
+  TokenPriceData,
   calcPrice,
   calcYPerXPrice,
   createPlaceholderLiquidityPlot,
@@ -266,8 +266,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     localStorage.setItem('IS_PLOT_DISCRETE', val ? 'true' : 'false')
   }
 
-  const [tokenXPriceData, setTokenXPriceData] = useState<JupPriceData | undefined>(undefined)
-  const [tokenYPriceData, setTokenYPriceData] = useState<JupPriceData | undefined>(undefined)
+  const [tokenXPriceData, setTokenXPriceData] = useState<TokenPriceData | undefined>(undefined)
+  const [tokenYPriceData, setTokenYPriceData] = useState<TokenPriceData | undefined>(undefined)
 
   const currentVolumeRange = useMemo(() => {
     if (!position?.poolData.address) {

@@ -3,7 +3,7 @@ import NewPosition from '@components/NewPosition/NewPosition'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import { ALL_FEE_TIERS_DATA, bestTiers, commonTokensForNetworks } from '@consts/static'
 import {
-  JupPriceData,
+  TokenPriceData,
   addNewTokenToLocalStorage,
   calcPrice,
   calcYPerXPrice,
@@ -303,7 +303,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     localStorage.setItem('HIDE_UNKNOWN_TOKENS', val ? 'true' : 'false')
   }
 
-  const [tokenAPriceData, setTokenAPriceData] = useState<JupPriceData | undefined>(undefined)
+  const [tokenAPriceData, setTokenAPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [priceALoading, setPriceALoading] = useState(false)
   useEffect(() => {
     if (tokenAIndex === null) {
@@ -322,7 +322,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     }
   }, [tokenAIndex])
 
-  const [tokenBPriceData, setTokenBPriceData] = useState<JupPriceData | undefined>(undefined)
+  const [tokenBPriceData, setTokenBPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [priceBLoading, setPriceBLoading] = useState(false)
   useEffect(() => {
     if (tokenBIndex === null) {

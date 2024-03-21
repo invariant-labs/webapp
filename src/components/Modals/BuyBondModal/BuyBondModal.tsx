@@ -9,7 +9,7 @@ import {
   showPrefix,
   trimLeadingZeros,
   getScaleFromString,
-  JupPriceData
+  TokenPriceData
 } from '@consts/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Input, Popover, Typography } from '@material-ui/core'
@@ -31,8 +31,8 @@ interface IBuyBondModal {
   onBuy: (amount: BN, slippage: number) => void
   onAmountChange: (amount: BN, byAmountBond: boolean) => void
   progress: ProgressState
-  quoteTokenPriceData?: JupPriceData
-  bondTokenPriceData?: JupPriceData
+  quoteTokenPriceData?: TokenPriceData
+  bondTokenPriceData?: TokenPriceData
   quotePriceLoading?: boolean
   bondPriceLoading?: boolean
 }

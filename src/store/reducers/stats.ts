@@ -15,6 +15,7 @@ export interface Value24H {
 export interface TokenStatsData {
   address: PublicKey
   price: number
+  priceChange?: number
   volume24: number
   tvl: number
 }

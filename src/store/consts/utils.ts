@@ -740,13 +740,60 @@ interface RawJupApiResponse {
 export interface JupApiPriceData {
   id: string
   price: number
+  price_change_percentage_24h?: number
 }
 
-export interface JupPriceData {
+export interface CoingeckoApiPriceData {
+  id: string
+  current_price: number
+  price_change_percentage_24h: number
+}
+
+export interface TokenPriceData {
   price: number
+  priceChange?: number
 }
 
-export const getJupPricesData = async (ids: string[]): Promise<Record<string, JupPriceData>> => {
+export const getCoingeckoPricesData = async (
+  ids: string[]
+): Promise<Record<string, TokenPriceData>> => {
+  const requests: Array<Promise<AxiosResponse<CoingeckoApiPriceData[]>>> = []
+  for (let i = 0; i < ids.length; i += 250) {
+    const idsSlice = ids.slice(i, i + 250)
+    let idsList = ''
+    idsSlice.forEach((id, index) => {
+      idsList += id + (index < 249 ? ',' : '')
+    })
+    requests.push(
+      axios.get<CoingeckoApiPriceData[]>(
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsList}&per_page=250`
+      )
+    )
+  }
+
+  return await Promise.all(requests).then(responses => {
+    let concatRes: CoingeckoApiPriceData[] = []
+    responses
+      .map(res => res.data)
+      .forEach(data => {
+        concatRes = [...concatRes, ...data]
+      })
+
+    const data: Record<string, TokenPriceData> = {}
+
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    concatRes.forEach(({ id, current_price, price_change_percentage_24h }) => {
+      data[id] = {
+        price: current_price ?? 0,
+        priceChange: price_change_percentage_24h ?? 0
+      }
+    })
+
+    return data
+  })
+}
+
+export const getJupPricesData = async (ids: string[]): Promise<Record<string, TokenPriceData>> => {
   const maxTokensPerRequest = 100
   const requests: Array<Promise<AxiosResponse<RawJupApiResponse>>> = []
   for (let i = 0; i < ids.length; i += maxTokensPerRequest) {
@@ -771,7 +818,7 @@ export const getJupPricesData = async (ids: string[]): Promise<Record<string, Ju
         concatRes = [...concatRes, ...parsedResponse]
       })
 
-    const data: Record<string, JupPriceData> = {}
+    const data: Record<string, TokenPriceData> = {}
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     concatRes.forEach(({ id, price }) => {
@@ -1037,7 +1084,7 @@ export const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThresh
   }
 ]
 
-export const getCoingeckoTokenPrice = async (id: string): Promise<JupPriceData> => {
+export const getCoingeckoTokenPrice = async (id: string): Promise<TokenPriceData> => {
   return await axios.get(`https://price.jup.ag/v4/price?ids=${id}&vsToken=USDC`).then(res => {
     return {
       price: res.data.id.price ?? 0
