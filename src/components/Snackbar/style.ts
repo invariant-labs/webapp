@@ -1,8 +1,9 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
+import { styled } from '@material-ui/core'
+import { MaterialDesignContent } from 'notistack'
 
-const useStyles = makeStyles((theme: Theme) => ({
-  success: {
+export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ theme }) => ({
+  '&.notistack-MuiContent-success': {
     backgroundColor: colors.invariant.component,
     borderStyle: 'solid',
     borderWidth: 1,
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '0px 8px 5px 4px'
     }
   },
-  error: {
+  '&.notistack-MuiContent-error': {
     backgroundColor: colors.invariant.component,
     borderStyle: 'solid',
     borderWidth: 1,
@@ -52,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '0px 8px 5px 4px'
     }
   },
-  info: {
+  '&.notistack-MuiContent-info': {
     backgroundColor: colors.invariant.component,
     borderStyle: 'solid',
     borderWidth: 1,
@@ -77,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '0px 8px 5px 4px'
     }
   },
-  warning: {
+  '&.notistack-MuiContent-warning': {
     backgroundColor: colors.invariant.component,
     borderStyle: 'solid',
     borderWidth: 1,
@@ -103,5 +104,3 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   }
 }))
-
-export default useStyles

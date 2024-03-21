@@ -1,5 +1,5 @@
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
-import { solToPriorityFee } from '@consts/utils'
+import { printBN, solToPriorityFee } from '@consts/utils'
 import { Pair } from '@invariant-labs/sdk'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
@@ -13,8 +13,12 @@ import { getMarketProgram } from '@web3/programs/amm'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { getConnection } from './connection'
 import { createAccount, getWallet } from './wallet'
+import { closeSnackbar } from 'notistack'
+import { addressToTicker } from '@consts/uiUtils'
 
 export function* handleSwapWithSOL(): Generator {
+  const loaderSwappingTokens = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
   try {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(poolsArraySortedByFees)
@@ -45,6 +49,20 @@ export function* handleSwapWithSOL(): Generator {
       return
     }
 
+    const tokenFromAmount = printBN(amountIn, allTokens[tokenFrom.toString()].decimals)
+    const tokenFromName = addressToTicker(tokenFrom.toString())
+
+    const tokenToAmount = printBN(amountOut, allTokens[tokenTo.toString()].decimals)
+    const tokenToName = addressToTicker(tokenTo.toString())
+    yield put(
+      snackbarsActions.add({
+        message: 'Swapping tokens',
+        additionalMessage: `Swapping ${tokenFromAmount} ${tokenFromName} to ${tokenToAmount} ${tokenToName}`,
+        variant: 'pending',
+        persist: true,
+        key: loaderSwappingTokens
+      })
+    )
     const isXtoY = tokenFrom.equals(swapPool.tokenX)
 
     const wrappedSolAccount = Keypair.generate()
@@ -159,6 +177,15 @@ export function* handleSwapWithSOL(): Generator {
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
+    yield put(
+      snackbarsActions.add({
+        message: 'Signing transactions',
+        additionalMessage: 'Waiting for your wallet',
+        variant: 'pending',
+        persist: true,
+        key: loaderSigningTx
+      })
+    )
     const [initialSignedTx, swapSignedTx, unwrapSignedTx] = yield* call(
       [wallet, wallet.signAllTransactions],
       [initialTx, swapTx, unwrapTx]
@@ -250,6 +277,11 @@ export function* handleSwapWithSOL(): Generator {
         })
       )
     }
+
+    closeSnackbar(loaderSwappingTokens)
+    yield put(snackbarsActions.remove(loaderSwappingTokens))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
   } catch (error) {
     console.log(error)
 
@@ -263,10 +295,16 @@ export function* handleSwapWithSOL(): Generator {
         persist: false
       })
     )
+    closeSnackbar(loaderSwappingTokens)
+    yield put(snackbarsActions.remove(loaderSwappingTokens))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
   }
 }
 
 export function* handleSwap(): Generator {
+  const loaderSwappingTokens = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
   try {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(poolsArraySortedByFees)
@@ -281,12 +319,27 @@ export function* handleSwap(): Generator {
       amountOut
     } = yield* select(swap)
 
+    const tokenFromAmount = printBN(amountIn, allTokens[tokenFrom.toString()].decimals)
+    const tokenFromName = addressToTicker(tokenFrom.toString())
+
+    const tokenToAmount = printBN(amountOut, allTokens[tokenTo.toString()].decimals)
+    const tokenToName = addressToTicker(tokenTo.toString())
+
     if (
       allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
       allTokens[tokenTo.toString()].address.toString() === WRAPPED_SOL_ADDRESS
     ) {
       return yield* call(handleSwapWithSOL)
     }
+    yield put(
+      snackbarsActions.add({
+        message: 'Swapping tokens',
+        additionalMessage: `Swapping ${tokenFromAmount} ${tokenFromName} to ${tokenToAmount} ${tokenToName}`,
+        variant: 'pending',
+        persist: true,
+        key: loaderSwappingTokens
+      })
+    )
 
     const wallet = yield* call(getWallet)
     const tokensAccounts = yield* select(accounts)
@@ -346,6 +399,16 @@ export function* handleSwap(): Generator {
       )
     }
 
+    yield put(
+      snackbarsActions.add({
+        message: 'Signing transactions',
+        additionalMessage: 'Waiting for your wallet',
+        variant: 'pending',
+        persist: true,
+        key: loaderSigningTx
+      })
+    )
+
     const signedTx = yield* call([wallet, wallet.signTransaction], swapTx)
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false
@@ -372,6 +435,11 @@ export function* handleSwap(): Generator {
         })
       )
     }
+
+    closeSnackbar(loaderSwappingTokens)
+    yield put(snackbarsActions.remove(loaderSwappingTokens))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
   } catch (error) {
     console.log(error)
 
@@ -384,6 +452,11 @@ export function* handleSwap(): Generator {
         persist: false
       })
     )
+
+    closeSnackbar(loaderSwappingTokens)
+    yield put(snackbarsActions.remove(loaderSwappingTokens))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
   }
 }
 

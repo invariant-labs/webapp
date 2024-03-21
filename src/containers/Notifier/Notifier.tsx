@@ -26,7 +26,16 @@ const Notifier = () => {
 
   React.useEffect(() => {
     notifications.forEach(
-      ({ key = '', message, open, variant, txid, isAccount, persist = true }) => {
+      ({
+        key = '',
+        message,
+        open,
+        variant,
+        txid,
+        isAccount,
+        persist = true,
+        additionalMessage
+      }) => {
         if (!open) {
           // dismiss snackbar using notistack
           closeSnackbar(key)
@@ -83,7 +92,8 @@ const Notifier = () => {
           onExited: (_event, myKey) => {
             dispatch(actions.remove(myKey as string))
             removeDisplayed(myKey as string)
-          }
+          },
+          additionalMessage: additionalMessage
         })
         storeDisplayed(key)
       }

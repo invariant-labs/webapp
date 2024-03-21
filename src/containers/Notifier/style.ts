@@ -48,6 +48,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   detailsWrapper: {
     display: 'flex',
     alignItems: 'center'
+  },
+  pendingContainer: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  pendingMessage: {
+    width: 100
   }
 }))
 
