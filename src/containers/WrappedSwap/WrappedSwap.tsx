@@ -3,7 +3,7 @@ import { Swap } from '@components/Swap/Swap'
 import { commonTokensForNetworks } from '@consts/static'
 import {
   addNewTokenToLocalStorage,
-  CoingeckoPriceData,
+  JupPriceData,
   getCoingeckoTokenPrice,
   getNewTokenOrThrow
 } from '@consts/utils'
@@ -128,9 +128,7 @@ export const WrappedSwap = () => {
     localStorage.setItem('HIDE_UNKNOWN_TOKENS', val ? 'true' : 'false')
   }
 
-  const [tokenFromPriceData, setTokenFromPriceData] = useState<CoingeckoPriceData | undefined>(
-    undefined
-  )
+  const [tokenFromPriceData, setTokenFromPriceData] = useState<JupPriceData | undefined>(undefined)
   const [priceFromLoading, setPriceFromLoading] = useState(false)
   useEffect(() => {
     if (tokenFrom === null) {
@@ -149,9 +147,7 @@ export const WrappedSwap = () => {
     }
   }, [tokenFrom])
 
-  const [tokenToPriceData, setTokenToPriceData] = useState<CoingeckoPriceData | undefined>(
-    undefined
-  )
+  const [tokenToPriceData, setTokenToPriceData] = useState<JupPriceData | undefined>(undefined)
   const [priceToLoading, setPriceToLoading] = useState(false)
   useEffect(() => {
     if (tokenTo === null) {

@@ -723,52 +723,66 @@ export const getPools = async (
   return await getPoolsFromAdresses(addresses, marketProgram)
 }
 
-export interface CoingeckoApiPriceData {
+interface RawJupApiResponse {
+  data: Record<
+    string,
+    {
+      id: string
+      mintSymbol: string
+      vsToken: string
+      vsTokenSymbol: string
+      price: number
+    }
+  >
+  timeTaken: number
+}
+
+export interface JupApiPriceData {
   id: string
-  current_price: number
-  price_change_percentage_24h: number
-}
-
-export interface CoingeckoPriceData {
   price: number
-  priceChange: number
 }
 
-export const getCoingeckoPricesData = async (
-  ids: string[]
-): Promise<Record<string, CoingeckoPriceData>> => {
-  const requests: Array<Promise<AxiosResponse<CoingeckoApiPriceData[]>>> = []
-  for (let i = 0; i < ids.length; i += 250) {
-    const idsSlice = ids.slice(i, i + 250)
+export interface JupPriceData {
+  price: number
+}
+
+export const getJupPricesData = async (ids: string[]): Promise<Record<string, JupPriceData>> => {
+  const maxTokensPerRequest = 100
+  const requests: Array<Promise<AxiosResponse<RawJupApiResponse>>> = []
+  for (let i = 0; i < ids.length; i += maxTokensPerRequest) {
+    const idsSlice = ids.slice(i, i + maxTokensPerRequest)
     let idsList = ''
     idsSlice.forEach((id, index) => {
-      idsList += id + (index < 249 ? ',' : '')
+      idsList += id + (index < maxTokensPerRequest - 1 ? ',' : '')
     })
-    requests.push(
-      axios.get<CoingeckoApiPriceData[]>(
-        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsList}&per_page=250`
-      )
-    )
+    requests.push(axios.get<RawJupApiResponse>(`https://price.jup.ag/v4/price?ids=${idsList}`))
   }
 
+  console.log('Requests', requests)
+
   return await Promise.all(requests).then(responses => {
-    let concatRes: CoingeckoApiPriceData[] = []
+    let concatRes: JupApiPriceData[] = []
     responses
       .map(res => res.data)
       .forEach(data => {
-        concatRes = [...concatRes, ...data]
+        const parsedResponse = Object.values(data.data).map(token => ({
+          id: token.id,
+          price: token.price
+        }))
+
+        concatRes = [...concatRes, ...parsedResponse]
       })
 
-    const data: Record<string, CoingeckoPriceData> = {}
+    const data: Record<string, JupPriceData> = {}
 
-    console.log(concatRes)
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    concatRes.forEach(({ id, current_price, price_change_percentage_24h }) => {
+    concatRes.forEach(({ id, price }) => {
       data[id] = {
-        price: current_price ?? 0,
-        priceChange: price_change_percentage_24h ?? 0
+        price: price ?? 0
       }
     })
+
+    console.log(data)
 
     return data
   })
@@ -1027,17 +1041,12 @@ export const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThresh
   }
 ]
 
-export const getCoingeckoTokenPrice = async (id: string): Promise<CoingeckoPriceData> => {
-  return await axios
-    .get<CoingeckoApiPriceData[]>(
-      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${id}`
-    )
-    .then(res => {
-      return {
-        price: res.data[0].current_price ?? 0,
-        priceChange: res.data[0].price_change_percentage_24h ?? 0
-      }
-    })
+export const getCoingeckoTokenPrice = async (id: string): Promise<JupPriceData> => {
+  return await axios.get(`https://price.jup.ag/v4/price?ids=${id}&vsToken=USDC`).then(res => {
+    return {
+      price: res.data.id.price ?? 0
+    }
+  })
 }
 
 export const getTicksList = async (

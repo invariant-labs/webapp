@@ -5,7 +5,7 @@ import Slippage from '@components/Modals/Slippage/Slippage'
 import { WRAPPED_SOL_ADDRESS, WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT } from '@consts/static'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import {
-  CoingeckoPriceData,
+  JupPriceData,
   findPairs,
   handleSimulate,
   printBN,
@@ -91,8 +91,8 @@ export interface ISwap {
   commonTokens: PublicKey[]
   initialHideUnknownTokensValue: boolean
   onHideUnknownTokensChange: (val: boolean) => void
-  tokenFromPriceData?: CoingeckoPriceData
-  tokenToPriceData?: CoingeckoPriceData
+  tokenFromPriceData?: JupPriceData
+  tokenToPriceData?: JupPriceData
   priceFromLoading?: boolean
   priceToLoading?: boolean
   onSlippageChange: (slippage: string) => void
