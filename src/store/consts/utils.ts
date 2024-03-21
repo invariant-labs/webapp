@@ -758,8 +758,6 @@ export const getJupPricesData = async (ids: string[]): Promise<Record<string, Ju
     requests.push(axios.get<RawJupApiResponse>(`https://price.jup.ag/v4/price?ids=${idsList}`))
   }
 
-  console.log('Requests', requests)
-
   return await Promise.all(requests).then(responses => {
     let concatRes: JupApiPriceData[] = []
     responses
@@ -781,8 +779,6 @@ export const getJupPricesData = async (ids: string[]): Promise<Record<string, Ju
         price: price ?? 0
       }
     })
-
-    console.log(data)
 
     return data
   })
