@@ -304,7 +304,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
     return yield* call(handleInitPosition, action)
   }
 
-  // To initialize both the pool and position, separate transactions are necessary, as a single transaction does not have enough memory to accommodate all instructions for both pool and position creation with SOL.
+  // To initialize both the pool and position, separate transactions are necessary, as a single transaction does not have enough space to accommodate all instructions for both pool and position creation with SOL.
   if (data.initPool) {
     return yield* call(handleInitPositionAndPoolWithSOL, action)
   }
