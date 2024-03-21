@@ -1106,3 +1106,36 @@ const PRIORITY_FEE_DENOMINATOR = 9
 export const solToPriorityFee = (sol: number) => {
   return Math.round((sol * 5 * 10 ** PRIORITY_FEE_DENOMINATOR) / 10)
 }
+
+export interface JupiterAggregatorObject {
+  pubkey: string
+  lamports: number
+  data: string[]
+  owner: string
+  executable: boolean
+  rentEpoch: string
+  space: number
+  params: {
+    addressLookupTableAddress: string
+    serumAsks: string
+    serumBids: string
+    serumCoinVaulrAccount: string
+    serumEventQueue: string
+    serumPcVaultAccount: string
+    serumVaultSigner: string
+  }
+}
+
+export const getJupiter = async (address: string): Promise<JupiterAggregatorObject | undefined> => {
+  try {
+    const response = await axios.get('https://cache.jup.ag/markets?v=3')
+    const markets: JupiterAggregatorObject[] = response.data
+
+    const foundObject = markets.find((market: JupiterAggregatorObject) => market.pubkey === address)
+
+    return foundObject
+  } catch (error) {
+    console.error('Error fetching markets:', error)
+    return undefined
+  }
+}
