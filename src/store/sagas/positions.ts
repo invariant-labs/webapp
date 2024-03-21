@@ -38,7 +38,16 @@ import { getConnection } from './connection'
 import { createClaimAllPositionRewardsTx } from './farms'
 import { createAccount, getWallet, sleep } from './wallet'
 
-export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
+function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionData>): Generator {
+  const data = action.payload
+
+  if (
+    (data.tokenX.toString() === WRAPPED_SOL_ADDRESS && data.xAmount === 0) ||
+    (data.tokenY.toString() === WRAPPED_SOL_ADDRESS && data.yAmount === 0)
+  ) {
+    return yield* call(handleInitPosition, action)
+  }
+
   try {
     const connection = yield* call(getConnection)
     const wallet = yield* call(getWallet)
@@ -110,50 +119,36 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
 
     const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
 
-    if (data.initPool) {
-      const { transaction, signers } = yield* call(
-        [marketProgram, marketProgram.initPoolAndPositionTx],
-        {
-          pair: new Pair(data.tokenX, data.tokenY, {
-            fee: data.fee,
-            tickSpacing: data.tickSpacing
-          }),
-          userTokenX,
-          userTokenY,
-          lowerTick: data.lowerTick,
-          upperTick: data.upperTick,
-          liquidityDelta: data.liquidityDelta,
-          owner: wallet.publicKey,
-          initTick: data.initTick,
-          slippage: data.slippage,
-          knownPrice: data.knownPrice
-        }
-      )
-
-      if (fee) {
-        initPositionTx = yield* call(
-          [marketProgram, marketProgram.addPriorityFee],
-          solToPriorityFee(+fee),
-          transaction
-        )
-      } else {
-        initPositionTx = transaction
-      }
-
-      poolSigners = signers
-    } else {
-      initPositionTx = yield* call([marketProgram, marketProgram.initPositionTx], {
-        pair: new Pair(data.tokenX, data.tokenY, { fee: data.fee, tickSpacing: data.tickSpacing }),
+    const { transaction, signers } = yield* call(
+      [marketProgram, marketProgram.initPoolAndPositionTx],
+      {
+        pair: new Pair(data.tokenX, data.tokenY, {
+          fee: data.fee,
+          tickSpacing: data.tickSpacing
+        }),
         userTokenX,
         userTokenY,
         lowerTick: data.lowerTick,
         upperTick: data.upperTick,
         liquidityDelta: data.liquidityDelta,
         owner: wallet.publicKey,
+        initTick: data.initTick,
         slippage: data.slippage,
         knownPrice: data.knownPrice
-      })
+      }
+    )
+
+    if (fee) {
+      initPositionTx = yield* call(
+        [marketProgram, marketProgram.addPriorityFee],
+        solToPriorityFee(+fee),
+        transaction
+      )
+    } else {
+      initPositionTx = transaction
     }
+
+    poolSigners = signers
 
     let initialTx = new Transaction().add(createIx).add(transferIx).add(initIx)
 
@@ -299,15 +294,188 @@ export function* handleInitPositionWithSOL(data: InitPositionData): Generator {
   }
 }
 
+function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Generator {
+  const data = action.payload
+
+  if (
+    (data.tokenX.toString() === WRAPPED_SOL_ADDRESS && data.xAmount === 0) ||
+    (data.tokenY.toString() === WRAPPED_SOL_ADDRESS && data.yAmount === 0)
+  ) {
+    return yield* call(handleInitPosition, action)
+  }
+
+  // To initialize both the pool and position, separate transactions are necessary, as a single transaction does not have enough space to accommodate all instructions for both pool and position creation with SOL.
+  if (data.initPool) {
+    return yield* call(handleInitPositionAndPoolWithSOL, action)
+  }
+
+  try {
+    const connection = yield* call(getConnection)
+    const wallet = yield* call(getWallet)
+    const networkType = yield* select(network)
+    const rpc = yield* select(rpcAddress)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+
+    const tokensAccounts = yield* select(accounts)
+    const allTokens = yield* select(tokens)
+
+    const wrappedSolAccount = Keypair.generate()
+
+    const createIx = SystemProgram.createAccount({
+      fromPubkey: wallet.publicKey,
+      newAccountPubkey: wrappedSolAccount.publicKey,
+      lamports: yield* call(Token.getMinBalanceRentForExemptAccount, connection),
+      space: 165,
+      programId: TOKEN_PROGRAM_ID
+    })
+
+    const transferIx = SystemProgram.transfer({
+      fromPubkey: wallet.publicKey,
+      toPubkey: wrappedSolAccount.publicKey,
+      lamports:
+        allTokens[data.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+          ? data.xAmount
+          : data.yAmount
+    })
+
+    const initIx = Token.createInitAccountInstruction(
+      TOKEN_PROGRAM_ID,
+      NATIVE_MINT,
+      wrappedSolAccount.publicKey,
+      wallet.publicKey
+    )
+
+    const unwrapIx = Token.createCloseAccountInstruction(
+      TOKEN_PROGRAM_ID,
+      wrappedSolAccount.publicKey,
+      wallet.publicKey,
+      wallet.publicKey,
+      []
+    )
+
+    let userTokenX =
+      allTokens[data.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+        ? wrappedSolAccount.publicKey
+        : tokensAccounts[data.tokenX.toString()]
+        ? tokensAccounts[data.tokenX.toString()].address
+        : null
+
+    if (userTokenX === null) {
+      userTokenX = yield* call(createAccount, data.tokenX)
+    }
+
+    let userTokenY =
+      allTokens[data.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+        ? wrappedSolAccount.publicKey
+        : tokensAccounts[data.tokenY.toString()]
+        ? tokensAccounts[data.tokenY.toString()].address
+        : null
+
+    if (userTokenY === null) {
+      userTokenY = yield* call(createAccount, data.tokenY)
+    }
+
+    const poolSigners: Keypair[] = []
+
+    let combinedTransaction = new Transaction()
+
+    combinedTransaction.add(createIx).add(transferIx).add(initIx)
+
+    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+
+    const initPositionTx = yield* call([marketProgram, marketProgram.initPositionTx], {
+      pair: new Pair(data.tokenX, data.tokenY, {
+        fee: data.fee,
+        tickSpacing: data.tickSpacing
+      }),
+      userTokenX,
+      userTokenY,
+      lowerTick: data.lowerTick,
+      upperTick: data.upperTick,
+      liquidityDelta: data.liquidityDelta,
+      owner: wallet.publicKey,
+      slippage: data.slippage,
+      knownPrice: data.knownPrice
+    })
+
+    combinedTransaction.add(initPositionTx)
+    combinedTransaction.add(unwrapIx)
+
+    if (fee) {
+      combinedTransaction = yield* call(
+        [marketProgram, marketProgram.addPriorityFee],
+        solToPriorityFee(+fee),
+        combinedTransaction
+      )
+    }
+
+    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    combinedTransaction.recentBlockhash = blockhash.blockhash
+    combinedTransaction.feePayer = wallet.publicKey
+
+    const signedTx = yield* call([wallet, wallet.signTransaction], combinedTransaction)
+
+    signedTx.partialSign(wrappedSolAccount)
+
+    if (poolSigners.length) {
+      signedTx.partialSign(...poolSigners)
+    }
+
+    const txId = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+      skipPreflight: false
+    })
+
+    if (!txId.length) {
+      yield put(actions.setInitPositionSuccess(false))
+
+      return yield put(
+        snackbarsActions.add({
+          message: 'Position adding failed. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: txId
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Position added successfully.',
+          variant: 'success',
+          persist: false,
+          txid: txId
+        })
+      )
+
+      yield put(actions.getPositionsList())
+    }
+
+    yield put(actions.setInitPositionSuccess(true))
+  } catch (error) {
+    console.log(error)
+
+    yield put(actions.setInitPositionSuccess(false))
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Failed to send. Please try again.',
+        variant: 'error',
+        persist: false
+      })
+    )
+  }
+}
+
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   try {
     const allTokens = yield* select(tokens)
 
     if (
-      allTokens[action.payload.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS ||
-      allTokens[action.payload.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
+      (allTokens[action.payload.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS &&
+        action.payload.xAmount !== 0) ||
+      (allTokens[action.payload.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS &&
+        action.payload.yAmount !== 0)
     ) {
-      return yield* call(handleInitPositionWithSOL, action.payload)
+      return yield* call(handleInitPositionWithSOL, action)
     }
 
     const connection = yield* call(getConnection)
