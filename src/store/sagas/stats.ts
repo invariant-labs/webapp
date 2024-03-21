@@ -61,10 +61,12 @@ export function* getStats(): Generator {
         coingeckoTokens[key] = val as Required<Token>
       }
     })
+    console.log(coingeckoTokens)
     const coingeckoPricesData = yield* call(
       getCoingeckoPricesData,
       Object.values(coingeckoTokens).map(token => token.coingeckoId)
     )
+    console.log(coingeckoPricesData)
 
     const volume24 = {
       value: 0,

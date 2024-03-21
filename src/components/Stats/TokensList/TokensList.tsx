@@ -10,7 +10,7 @@ export interface ITokensListData {
   name: string
   symbol: string
   price: number
-  priceChange: number
+  // priceChange: number
   volume: number
   TVL: number
 }
@@ -44,10 +44,10 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
         return data.sort((a, b) => a.price - b.price)
       case SortType.PRICE_DESC:
         return data.sort((a, b) => b.price - a.price)
-      case SortType.CHANGE_ASC:
-        return data.sort((a, b) => a.priceChange - b.priceChange)
-      case SortType.CHANGE_DESC:
-        return data.sort((a, b) => b.priceChange - a.priceChange)
+      // case SortType.CHANGE_ASC:
+      //   return data.sort((a, b) => a.priceChange - b.priceChange)
+      // case SortType.CHANGE_DESC:
+      //   return data.sort((a, b) => b.priceChange - a.priceChange)
       case SortType.VOLUME_ASC:
         return data.sort((a, b) => (a.volume === b.volume ? a.TVL - b.TVL : a.volume - b.volume))
       case SortType.VOLUME_DESC:
@@ -95,7 +95,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
             name={token.name}
             symbol={token.symbol}
             price={token.price}
-            priceChange={token.priceChange}
+            // priceChange={token.priceChange}
             volume={token.volume}
             TVL={token.TVL}
             hideBottomLine={pages === 1 && index + 1 === data.length}

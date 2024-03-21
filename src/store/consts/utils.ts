@@ -761,6 +761,7 @@ export const getCoingeckoPricesData = async (
 
     const data: Record<string, CoingeckoPriceData> = {}
 
+    console.log(concatRes)
     // eslint-disable-next-line @typescript-eslint/naming-convention
     concatRes.forEach(({ id, current_price, price_change_percentage_24h }) => {
       data[id] = {
