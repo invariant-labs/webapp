@@ -65,18 +65,18 @@ export function* getStats(): Generator {
     })
 
     let tokensPricesData: Record<string, TokenPriceData> = {}
-    let fromCoingecko = true
+    let fromJupiter = true
 
     try {
       tokensPricesData = yield* call(
-        getCoingeckoPricesData,
-        Object.values(preparedTokens).map(token => token.coingeckoId)
-      )
-    } catch (e) {
-      fromCoingecko = false
-      tokensPricesData = yield* call(
         getJupPricesData,
         Object.values(preparedTokens).map(token => token.address.toString())
+      )
+    } catch (e) {
+      fromJupiter = false
+      tokensPricesData = yield* call(
+        getCoingeckoPricesData,
+        Object.values(preparedTokens).map(token => token.coingeckoId)
       )
     }
 
@@ -111,19 +111,18 @@ export function* getStats(): Generator {
         return
       }
 
-      const tokenXId = fromCoingecko
-        ? preparedTokens?.[poolsDataObject[address].tokenX.toString()]?.coingeckoId ?? ''
-        : preparedTokens?.[poolsDataObject[address].tokenX.toString()]?.address.toString() ?? ''
+      const tokenXId = fromJupiter
+        ? preparedTokens?.[poolsDataObject[address].tokenX.toString()]?.address.toString() ?? ''
+        : preparedTokens?.[poolsDataObject[address].tokenX.toString()]?.coingeckoId ?? ''
 
-      const tokenYId = fromCoingecko
-        ? preparedTokens?.[poolsDataObject[address].tokenY.toString()]?.coingeckoId ?? ''
-        : preparedTokens?.[poolsDataObject[address].tokenY.toString()]?.address.toString() ?? ''
+      const tokenYId = fromJupiter
+        ? preparedTokens?.[poolsDataObject[address].tokenY.toString()]?.address.toString() ?? ''
+        : preparedTokens?.[poolsDataObject[address].tokenY.toString()]?.coingeckoId ?? ''
 
       if (!tokensDataObject[poolsDataObject[address].tokenX.toString()]) {
         tokensDataObject[poolsDataObject[address].tokenX.toString()] = {
           address: poolsDataObject[address].tokenX,
           price: tokensPricesData?.[tokenXId]?.price ?? 0,
-          priceChange: tokensPricesData?.[tokenXId]?.priceChange,
           volume24: 0,
           tvl: 0
         }
@@ -133,7 +132,6 @@ export function* getStats(): Generator {
         tokensDataObject[poolsDataObject[address].tokenY.toString()] = {
           address: poolsDataObject[address].tokenY,
           price: tokensPricesData?.[tokenYId]?.price ?? 0,
-          priceChange: tokensPricesData?.[tokenYId]?.priceChange,
           volume24: 0,
           tvl: 0
         }

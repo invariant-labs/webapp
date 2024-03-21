@@ -11,8 +11,6 @@ export enum SortType {
   NAME_DESC,
   PRICE_ASC,
   PRICE_DESC,
-  CHANGE_ASC,
-  CHANGE_DESC,
   VOLUME_ASC,
   VOLUME_DESC,
   TVL_ASC,
@@ -26,13 +24,11 @@ interface IProps {
   name?: string
   symbol?: string
   price?: number
-  priceChange?: number
   volume?: number
   TVL?: number
   sortType?: SortType
   onSort?: (type: SortType) => void
   hideBottomLine?: boolean
-  isPriceChangeDefined?: boolean
 }
 
 const TokenListItem: React.FC<IProps> = ({
@@ -42,16 +38,13 @@ const TokenListItem: React.FC<IProps> = ({
   name = 'Bitcoin',
   symbol = 'BTCIcon',
   price = 0,
-  priceChange,
   volume = 0,
   TVL = 0,
   sortType,
   onSort,
-  isPriceChangeDefined = false,
   hideBottomLine = false
 }) => {
   const classes = useStyles()
-  const isNegative = priceChange ? priceChange < 0 : false
 
   const isXDown = useMediaQuery(theme.breakpoints.down('sm'))
   const hideName = useMediaQuery(theme.breakpoints.down('xs'))
@@ -62,12 +55,7 @@ const TokenListItem: React.FC<IProps> = ({
           container
           classes={{ container: classes.container, root: classes.tokenList }}
           style={{
-            ...(hideBottomLine ? { border: 'none' } : {}),
-            ...(!priceChange
-              ? { gridTemplateColumns: '5% 45% 17.5% 17.5% 15%' }
-              : {
-                  gridTemplateColumns: '5% 35% 15% 15% 15% 15%'
-                })
+            ...(hideBottomLine ? { border: 'none' } : {})
           }}>
           {!hideName && <Typography component='p'>{itemNumber}</Typography>}
           <Grid className={classes.tokenName}>
@@ -78,11 +66,6 @@ const TokenListItem: React.FC<IProps> = ({
             </Typography>
           </Grid>
           <Typography>{`~$${formatNumbers()(price.toString())}${showPrefix(price)}`}</Typography>
-          {!hideName && priceChange && (
-            <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
-              {isNegative ? `${priceChange.toFixed(2)}%` : `+${priceChange.toFixed(2)}%`}
-            </Typography>
-          )}
           <Typography>{`$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}</Typography>
           <Typography>{`$${formatNumbers()(TVL.toString())}${showPrefix(TVL)}`}</Typography>
         </Grid>
@@ -92,12 +75,7 @@ const TokenListItem: React.FC<IProps> = ({
           classes={{ container: classes.container, root: classes.header }}
           style={{
             color: colors.invariant.textGrey,
-            fontWeight: 400,
-            ...(!isPriceChangeDefined
-              ? { gridTemplateColumns: '5% 45% 17.5% 17.5% 15%' }
-              : {
-                  gridTemplateColumns: '5% 35% 15% 15% 15% 15%'
-                })
+            fontWeight: 400
           }}>
           {!hideName && (
             <Typography style={{ lineHeight: '12px' }}>
@@ -136,24 +114,6 @@ const TokenListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
-          {!hideName && isPriceChangeDefined && (
-            <Typography
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                if (sortType === SortType.CHANGE_ASC) {
-                  onSort?.(SortType.CHANGE_DESC)
-                } else {
-                  onSort?.(SortType.CHANGE_ASC)
-                }
-              }}>
-              Price change
-              {sortType === SortType.CHANGE_ASC ? (
-                <ArrowDropUpIcon className={classes.icon} />
-              ) : sortType === SortType.CHANGE_DESC ? (
-                <ArrowDropDownIcon className={classes.icon} />
-              ) : null}
-            </Typography>
-          )}
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {

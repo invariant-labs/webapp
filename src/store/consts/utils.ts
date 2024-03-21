@@ -19,7 +19,7 @@ import { PoolWithAddress } from '@reducers/pools'
 import { PlotTickData, PositionWithAddress } from '@reducers/positions'
 import { Token as SPLToken, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import bs58 from 'bs58'
 import {
   BTC_DEV,
@@ -740,95 +740,68 @@ interface RawJupApiResponse {
 export interface JupApiPriceData {
   id: string
   price: number
-  price_change_percentage_24h?: number
 }
 
 export interface CoingeckoApiPriceData {
   id: string
   current_price: number
-  price_change_percentage_24h: number
 }
 
 export interface TokenPriceData {
   price: number
-  priceChange?: number
 }
 
 export const getCoingeckoPricesData = async (
   ids: string[]
 ): Promise<Record<string, TokenPriceData>> => {
-  const requests: Array<Promise<AxiosResponse<CoingeckoApiPriceData[]>>> = []
-  for (let i = 0; i < ids.length; i += 250) {
-    const idsSlice = ids.slice(i, i + 250)
-    let idsList = ''
-    idsSlice.forEach((id, index) => {
-      idsList += id + (index < 249 ? ',' : '')
-    })
-    requests.push(
-      axios.get<CoingeckoApiPriceData[]>(
-        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsList}&per_page=250`
-      )
-    )
+  const maxTokensPerRequest = 250
+  const chunkedIds = []
+  for (let i = 0; i < ids.length; i += maxTokensPerRequest) {
+    chunkedIds.push(ids.slice(i, i + maxTokensPerRequest))
   }
 
-  return await Promise.all(requests).then(responses => {
-    let concatRes: CoingeckoApiPriceData[] = []
-    responses
-      .map(res => res.data)
-      .forEach(data => {
-        concatRes = [...concatRes, ...data]
-      })
+  const requests = chunkedIds.map(
+    async idsChunk =>
+      await axios.get<CoingeckoApiPriceData[]>(
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsChunk.join(
+          ','
+        )}&per_page=250`
+      )
+  )
 
-    const data: Record<string, TokenPriceData> = {}
+  const responses = await Promise.all(requests)
+  const concatRes = responses.flatMap(response =>
+    Object.values(response.data).map(({ id, current_price: price }) => ({ id, price }))
+  )
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    concatRes.forEach(({ id, current_price, price_change_percentage_24h }) => {
-      data[id] = {
-        price: current_price ?? 0,
-        priceChange: price_change_percentage_24h ?? 0
-      }
-    })
-
-    return data
-  })
+  return concatRes.reduce<Record<string, TokenPriceData>>((acc, { id, price }) => {
+    acc[id] = { price: price ?? 0 }
+    return acc
+  }, {})
 }
 
 export const getJupPricesData = async (ids: string[]): Promise<Record<string, TokenPriceData>> => {
   const maxTokensPerRequest = 100
-  const requests: Array<Promise<AxiosResponse<RawJupApiResponse>>> = []
+
+  const chunkedIds = []
   for (let i = 0; i < ids.length; i += maxTokensPerRequest) {
-    const idsSlice = ids.slice(i, i + maxTokensPerRequest)
-    let idsList = ''
-    idsSlice.forEach((id, index) => {
-      idsList += id + (index < maxTokensPerRequest - 1 ? ',' : '')
-    })
-    requests.push(axios.get<RawJupApiResponse>(`https://price.jup.ag/v4/price?ids=${idsList}`))
+    chunkedIds.push(ids.slice(i, i + maxTokensPerRequest))
   }
 
-  return await Promise.all(requests).then(responses => {
-    let concatRes: JupApiPriceData[] = []
-    responses
-      .map(res => res.data)
-      .forEach(data => {
-        const parsedResponse = Object.values(data.data).map(token => ({
-          id: token.id,
-          price: token.price
-        }))
+  const requests = chunkedIds.map(
+    async idsChunk =>
+      await axios.get<RawJupApiResponse>(`https://price.jup.ag/v4/price?ids=${idsChunk.join(',')}`)
+  )
 
-        concatRes = [...concatRes, ...parsedResponse]
-      })
+  const responses = await Promise.all(requests)
+  const concatRes = responses.flatMap(response =>
+    Object.values(response.data.data).map(({ id, price }) => ({ id, price }))
+  )
 
-    const data: Record<string, TokenPriceData> = {}
-
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    concatRes.forEach(({ id, price }) => {
-      data[id] = {
-        price: price ?? 0
-      }
-    })
-
-    return data
-  })
+  return concatRes.reduce<Record<string, TokenPriceData>>((acc, { id, price }) => {
+    acc[id] = { price: price ?? 0 }
+    return acc
+  }, {})
 }
 
 export const trimLeadingZeros = (amount: string): string => {
