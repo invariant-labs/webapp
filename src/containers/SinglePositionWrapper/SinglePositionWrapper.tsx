@@ -390,6 +390,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             ? undefined
             : tokenXPriceData.price * +printBN(position.tokenX.balance, position.tokenX.decimals)
       }}
+      tokenXPriceData={tokenXPriceData}
       tokenY={{
         name: position.tokenY.symbol,
         icon: position.tokenY.logoURI,
@@ -402,6 +403,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             ? undefined
             : tokenYPriceData.price * +printBN(position.tokenY.balance, position.tokenY.decimals)
       }}
+      tokenYPriceData={tokenYPriceData}
       fee={position.poolData.fee}
       min={min}
       max={max}

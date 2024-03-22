@@ -8,6 +8,7 @@ import useStyles from './style'
 
 export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue'> {
   value: number
+  price?: number
 }
 
 export const BoxInfo: React.FC<{
@@ -28,7 +29,7 @@ export const BoxInfo: React.FC<{
   showLoader = false
 }) => {
   const classes = useStyles()
-
+  console.log(tokenA, tokenB)
   const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThreshold[] => [
     {
       value: 10,
@@ -135,9 +136,9 @@ export const BoxInfo: React.FC<{
               <Typography className={classes.tokenBalance}>
                 Balance: {tokenA.balance} {tokenA.name}
               </Typography>
-              {typeof tokenA.usdValue !== 'undefined' ? (
+              {typeof tokenA.usdValue !== 'undefined' && tokenA.price ? (
                 <Typography className={classes.tokenUSDValue}>
-                  ~${formatNumbers(usdThresholds)(tokenA.liqValue.toString())}
+                  ~${formatNumbers(usdThresholds)((tokenA.liqValue * tokenA.price).toString())}
                   {showPrefix(tokenA.usdValue)}
                 </Typography>
               ) : null}
@@ -165,9 +166,9 @@ export const BoxInfo: React.FC<{
               <Typography className={classes.tokenBalance}>
                 Balance: {tokenB.balance} {tokenB.name}
               </Typography>
-              {typeof tokenB.usdValue !== 'undefined' ? (
+              {typeof tokenB.usdValue !== 'undefined' && tokenB.price ? (
                 <Typography className={classes.tokenUSDValue}>
-                  ~${formatNumbers(usdThresholds)(tokenB.liqValue.toString())}
+                  ~${formatNumbers(usdThresholds)((tokenB.liqValue * tokenB.price).toString())}
                   {showPrefix(tokenB.usdValue)}
                 </Typography>
               ) : null}

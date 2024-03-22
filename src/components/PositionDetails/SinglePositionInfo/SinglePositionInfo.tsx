@@ -8,13 +8,16 @@ import { useHistory } from 'react-router-dom'
 import { BoxInfo } from './BoxInfo'
 import { ILiquidityToken } from './consts'
 import useStyles from './style'
+import { TokenPriceData } from '@consts/utils'
 
 interface IProp {
   fee: number
   onClickClaimFee: () => void
   closePosition: (claimFarmRewards?: boolean) => void
   tokenX: ILiquidityToken
+  tokenXPriceData?: TokenPriceData
   tokenY: ILiquidityToken
+  tokenYPriceData?: TokenPriceData
   xToY: boolean
   swapHandler: () => void
   showFeesLoader?: boolean
@@ -27,6 +30,8 @@ const SinglePositionInfo: React.FC<IProp> = ({
   closePosition,
   tokenX,
   tokenY,
+  tokenXPriceData,
+  tokenYPriceData,
   xToY,
   swapHandler,
   showFeesLoader = false,
@@ -112,10 +117,14 @@ const SinglePositionInfo: React.FC<IProp> = ({
         <BoxInfo
           title={'Liquidity'}
           tokenA={
-            xToY ? { ...tokenX, value: tokenX.liqValue } : { ...tokenY, value: tokenY.liqValue }
+            xToY
+              ? { ...tokenX, value: tokenX.liqValue, price: tokenXPriceData?.price }
+              : { ...tokenY, value: tokenY.liqValue, price: tokenYPriceData?.price }
           }
           tokenB={
-            xToY ? { ...tokenY, value: tokenY.liqValue } : { ...tokenX, value: tokenX.liqValue }
+            xToY
+              ? { ...tokenY, value: tokenY.liqValue, price: tokenYPriceData?.price }
+              : { ...tokenX, value: tokenX.liqValue, price: tokenXPriceData?.price }
           }
           showBalance
           swapHandler={swapHandler}
@@ -123,10 +132,14 @@ const SinglePositionInfo: React.FC<IProp> = ({
         <BoxInfo
           title={'Unclaimed fees'}
           tokenA={
-            xToY ? { ...tokenX, value: tokenX.claimValue } : { ...tokenY, value: tokenY.claimValue }
+            xToY
+              ? { ...tokenX, value: tokenX.claimValue, price: tokenXPriceData?.price }
+              : { ...tokenY, value: tokenY.claimValue, price: tokenYPriceData?.price }
           }
           tokenB={
-            xToY ? { ...tokenY, value: tokenY.claimValue } : { ...tokenX, value: tokenX.claimValue }
+            xToY
+              ? { ...tokenY, value: tokenY.claimValue, price: tokenYPriceData?.price }
+              : { ...tokenX, value: tokenX.claimValue, price: tokenXPriceData?.price }
           }
           onClickButton={onClickClaimFee}
           showLoader={showFeesLoader}
