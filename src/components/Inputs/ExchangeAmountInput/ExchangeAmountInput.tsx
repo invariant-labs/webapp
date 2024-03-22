@@ -159,7 +159,6 @@ export const AmountInput: React.FC<IProps> = ({
   const tokenIcon = !current ? '' : current.symbol
 
   const usdBalance = tokenPrice && balance ? tokenPrice * +balance : 0
-  // console.log(tokenPrice)
   return (
     <>
       <Grid container alignItems='center' wrap='nowrap' className={classes.exchangeContainer}>
