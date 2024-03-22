@@ -6,7 +6,7 @@ import SwapPosition from '@static/svg/swap-position.svg'
 import loader from '@static/gif/loading2.gif'
 import useStyles from './style'
 
-export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue' | 'liqValue'> {
+export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue'> {
   value: number
 }
 
@@ -137,7 +137,7 @@ export const BoxInfo: React.FC<{
               </Typography>
               {typeof tokenA.usdValue !== 'undefined' ? (
                 <Typography className={classes.tokenUSDValue}>
-                  ~${formatNumbers(usdThresholds)(tokenA.usdValue.toString())}
+                  ~${formatNumbers(usdThresholds)(tokenA.liqValue.toString())}
                   {showPrefix(tokenA.usdValue)}
                 </Typography>
               ) : null}
@@ -167,7 +167,7 @@ export const BoxInfo: React.FC<{
               </Typography>
               {typeof tokenB.usdValue !== 'undefined' ? (
                 <Typography className={classes.tokenUSDValue}>
-                  ~${formatNumbers(usdThresholds)(tokenB.usdValue.toString())}
+                  ~${formatNumbers(usdThresholds)(tokenB.liqValue.toString())}
                   {showPrefix(tokenB.usdValue)}
                 </Typography>
               ) : null}
