@@ -2,7 +2,7 @@ import { colors, typography } from '@static/theme'
 import { CircularProgress, styled, Typography } from '@material-ui/core'
 import { SnackbarContent } from 'notistack'
 
-export const StyledSnackbarContent = styled(SnackbarContent)({
+export const StyledSnackbarContent = styled(SnackbarContent)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: colors.invariant.component,
@@ -12,14 +12,20 @@ export const StyledSnackbarContent = styled(SnackbarContent)({
   borderRadius: 10,
   ...typography.body2,
   maxWidth: 350,
-  padding: '4px 10px',
+  width: 350,
+  padding: 10,
   minWidth: 100,
-  width: 'auto',
 
   '& .MuiCircularProgress-colorPrimary': {
     color: colors.invariant.textGrey
+  },
+
+  [theme.breakpoints.down('xs')]: {
+    maxWidth: 255,
+    maxHeight: 32,
+    padding: '0px 8px 5px 4px'
   }
-})
+}))
 
 export const StyledTitle = styled(Typography)({
   color: colors.invariant.text

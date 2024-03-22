@@ -11,8 +11,8 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
     borderRadius: 10,
     ...typography.body2,
     maxWidth: 350,
-    padding: '6px 16px',
-    maxHeight: 64,
+    width: 350,
+    padding: '6px 10px',
     minWidth: 100,
     '& SVG': {
       color: colors.invariant.green,
@@ -36,8 +36,8 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
     borderRadius: 10,
     padding: 10,
     ...typography.body2,
-    maxWidth: 450,
-    maxHeight: 64,
+    maxWidth: 350,
+    width: 350,
     minWidth: 100,
     '& SVG': {
       color: colors.invariant.Error,
@@ -62,7 +62,7 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
     padding: 10,
     ...typography.body2,
     maxWidth: 350,
-    maxHeight: 64,
+    width: 350,
     minWidth: 100,
     '& SVG': {
       color: colors.invariant.textGrey,
@@ -87,7 +87,7 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
     padding: 10,
     ...typography.body2,
     maxWidth: 350,
-    maxHeight: 64,
+    width: 350,
     minWidth: 100,
     '& SVG': {
       color: colors.invariant.warning,
