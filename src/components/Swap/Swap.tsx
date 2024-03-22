@@ -528,7 +528,6 @@ export const Swap: React.FC<ISwap> = ({
             initialHideUnknownTokensValue={initialHideUnknownTokensValue}
             onHideUnknownTokensChange={onHideUnknownTokensChange}
             tokenPrice={tokenFromPriceData?.price}
-            percentageChange={tokenFromPriceData?.priceChange}
             priceLoading={priceFromLoading}
           />
         </Box>
@@ -605,7 +604,6 @@ export const Swap: React.FC<ISwap> = ({
             initialHideUnknownTokensValue={initialHideUnknownTokensValue}
             onHideUnknownTokensChange={onHideUnknownTokensChange}
             tokenPrice={tokenToPriceData?.price}
-            percentageChange={tokenToPriceData?.priceChange}
             priceLoading={priceToLoading}
           />
         </Box>
