@@ -38,7 +38,6 @@ import { all, call, put, select, spawn, take, takeEvery, takeLatest } from 'type
 import { getConnection } from './connection'
 import { createClaimAllPositionRewardsTx } from './farms'
 import { createAccount, getWallet, sleep } from './wallet'
-import { addressToTicker } from '@consts/uiUtils'
 import { closeSnackbar } from 'notistack'
 
 function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionData>): Generator {
@@ -53,6 +52,16 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
   const loaderCreatePool = (new Date().getMilliseconds() + Math.random()).toString()
   const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
   try {
+    yield put(
+      snackbarsActions.add({
+        message: 'Creating pool',
+        additionalMessage: 'Processing, please wait...',
+        variant: 'pending',
+        persist: true,
+        key: loaderCreatePool
+      })
+    )
+
     const connection = yield* call(getConnection)
     const wallet = yield* call(getWallet)
     const networkType = yield* select(network)
@@ -61,21 +70,6 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
 
     const tokensAccounts = yield* select(accounts)
     const allTokens = yield* select(tokens)
-
-    const tokenXAmount = printBN(data.xAmount, allTokens[data.tokenX.toString()].decimals)
-    const tokenXName = addressToTicker(data.tokenX.toString())
-
-    const tokenYAmount = printBN(data.yAmount, allTokens[data.tokenY.toString()].decimals)
-    const tokenYName = addressToTicker(data.tokenY.toString())
-    yield put(
-      snackbarsActions.add({
-        message: 'Creating pool',
-        additionalMessage: `Processing ${tokenXAmount} ${tokenXName} & ${tokenYAmount} ${tokenYName} in pool creation`,
-        variant: 'pending',
-        persist: true,
-        key: loaderCreatePool
-      })
-    )
 
     const wrappedSolAccount = Keypair.generate()
 
@@ -216,6 +210,9 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       [initialTx, initPositionTx, unwrapTx]
     )
 
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     initialSignedTx.partialSign(wrappedSolAccount)
 
     if (poolSigners.length) {
@@ -255,6 +252,9 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
 
     if (!initPositionTxid.length) {
       yield put(actions.setInitPositionSuccess(false))
+
+      closeSnackbar(loaderCreatePool)
+      yield put(snackbarsActions.remove(loaderCreatePool))
 
       return yield put(
         snackbarsActions.add({
@@ -310,8 +310,6 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
     }
     closeSnackbar(loaderCreatePool)
     yield put(snackbarsActions.remove(loaderCreatePool))
-    closeSnackbar(loaderSigningTx)
-    yield put(snackbarsActions.remove(loaderSigningTx))
   } catch (error) {
     console.log(error)
 
@@ -349,6 +347,16 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
   const loaderCreatePosition = (new Date().getMilliseconds() + Math.random()).toString()
   const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
   try {
+    yield put(
+      snackbarsActions.add({
+        message: 'Creating position',
+        additionalMessage: 'Processing, please wait...',
+        variant: 'pending',
+        persist: true,
+        key: loaderCreatePosition
+      })
+    )
+
     const connection = yield* call(getConnection)
     const wallet = yield* call(getWallet)
     const networkType = yield* select(network)
@@ -357,22 +365,6 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
 
     const tokensAccounts = yield* select(accounts)
     const allTokens = yield* select(tokens)
-
-    const tokenXAmount = printBN(data.xAmount, allTokens[data.tokenX.toString()].decimals)
-    const tokenXName = addressToTicker(data.tokenX.toString())
-
-    const tokenYAmount = printBN(data.yAmount, allTokens[data.tokenY.toString()].decimals)
-    const tokenYName = addressToTicker(data.tokenY.toString())
-
-    yield put(
-      snackbarsActions.add({
-        message: 'Creating position',
-        additionalMessage: `Processing ${tokenXAmount} ${tokenXName} & ${tokenYAmount} ${tokenYName} in position creation`,
-        variant: 'pending',
-        persist: true,
-        key: loaderCreatePosition
-      })
-    )
 
     const wrappedSolAccount = Keypair.generate()
 
@@ -480,6 +472,9 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
 
     const signedTx = yield* call([wallet, wallet.signTransaction], combinedTransaction)
 
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     signedTx.partialSign(wrappedSolAccount)
 
     if (poolSigners.length) {
@@ -492,6 +487,9 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
 
     if (!txId.length) {
       yield put(actions.setInitPositionSuccess(false))
+
+      closeSnackbar(loaderCreatePosition)
+      yield put(snackbarsActions.remove(loaderCreatePosition))
 
       return yield put(
         snackbarsActions.add({
@@ -518,8 +516,6 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
 
     closeSnackbar(loaderCreatePosition)
     yield put(snackbarsActions.remove(loaderCreatePosition))
-    closeSnackbar(loaderSigningTx)
-    yield put(snackbarsActions.remove(loaderSigningTx))
   } catch (error) {
     console.log(error)
 
@@ -556,6 +552,16 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       return yield* call(handleInitPositionWithSOL, action)
     }
 
+    yield put(
+      snackbarsActions.add({
+        message: 'Creating position',
+        additionalMessage: 'Processing, please wait...',
+        variant: 'pending',
+        persist: true,
+        key: loaderCreatePosition
+      })
+    )
+
     const connection = yield* call(getConnection)
     const wallet = yield* call(getWallet)
     const networkType = yield* select(network)
@@ -563,28 +569,6 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     const marketProgram = yield* call(getMarketProgram, networkType, rpc)
 
     const tokensAccounts = yield* select(accounts)
-
-    const tokenXAmount = printBN(
-      action.payload.xAmount,
-      allTokens[action.payload.tokenX.toString()].decimals
-    )
-    const tokenXName = addressToTicker(action.payload.tokenX.toString())
-
-    const tokenYAmount = printBN(
-      action.payload.yAmount,
-      allTokens[action.payload.tokenY.toString()].decimals
-    )
-    const tokenYName = addressToTicker(action.payload.tokenY.toString())
-
-    yield put(
-      snackbarsActions.add({
-        message: 'Creating position',
-        additionalMessage: `Processing ${tokenXAmount} ${tokenXName} & ${tokenYAmount} ${tokenYName} in position creation`,
-        variant: 'pending',
-        persist: true,
-        key: loaderCreatePosition
-      })
-    )
 
     let userTokenX = tokensAccounts[action.payload.tokenX.toString()]
       ? tokensAccounts[action.payload.tokenX.toString()].address
@@ -666,6 +650,9 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     if (poolSigners.length) {
       signedTx.partialSign(...poolSigners)
     }
@@ -699,8 +686,6 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 
     closeSnackbar(loaderCreatePosition)
     yield put(snackbarsActions.remove(loaderCreatePosition))
-    closeSnackbar(loaderSigningTx)
-    yield put(snackbarsActions.remove(loaderSigningTx))
   } catch (error) {
     console.log(error)
 
@@ -825,16 +810,6 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
   const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
 
   try {
-    const connection = yield* call(getConnection)
-    const networkType = yield* select(network)
-    const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
-    const wallet = yield* call(getWallet)
-
-    const allPositionsData = yield* select(positionsWithPoolsData)
-    const tokensAccounts = yield* select(accounts)
-    const allTokens = yield* select(tokens)
-
     yield put(
       snackbarsActions.add({
         message: 'Claiming fee',
@@ -844,6 +819,16 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
         key: loaderClaimFee
       })
     )
+
+    const connection = yield* call(getConnection)
+    const networkType = yield* select(network)
+    const rpc = yield* select(rpcAddress)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const wallet = yield* call(getWallet)
+
+    const allPositionsData = yield* select(positionsWithPoolsData)
+    const tokensAccounts = yield* select(accounts)
+    const allTokens = yield* select(tokens)
 
     const wrappedSolAccount = Keypair.generate()
 
@@ -930,6 +915,9 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
     signedTx.partialSign(wrappedSolAccount)
 
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false
     })
@@ -958,8 +946,6 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 
     closeSnackbar(loaderClaimFee)
     yield put(snackbarsActions.remove(loaderClaimFee))
-    closeSnackbar(loaderSigningTx)
-    yield put(snackbarsActions.remove(loaderSigningTx))
   } catch (error) {
     console.log(error)
 
@@ -994,14 +980,6 @@ export function* handleClaimFee(action: PayloadAction<number>) {
       return yield* call(handleClaimFeeWithSOL, action.payload)
     }
 
-    const connection = yield* call(getConnection)
-    const networkType = yield* select(network)
-    const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
-    const wallet = yield* call(getWallet)
-
-    const tokensAccounts = yield* select(accounts)
-
     yield put(
       snackbarsActions.add({
         message: 'Claiming fee',
@@ -1011,6 +989,14 @@ export function* handleClaimFee(action: PayloadAction<number>) {
         key: loaderClaimFee
       })
     )
+
+    const connection = yield* call(getConnection)
+    const networkType = yield* select(network)
+    const rpc = yield* select(rpcAddress)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const wallet = yield* call(getWallet)
+
+    const tokensAccounts = yield* select(accounts)
 
     let userTokenX = tokensAccounts[positionForIndex.tokenX.toString()]
       ? tokensAccounts[positionForIndex.tokenX.toString()].address
@@ -1063,6 +1049,9 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false
     })
@@ -1091,8 +1080,6 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
     closeSnackbar(loaderClaimFee)
     yield put(snackbarsActions.remove(loaderClaimFee))
-    closeSnackbar(loaderSigningTx)
-    yield put(snackbarsActions.remove(loaderSigningTx))
   } catch (error) {
     console.log(error)
 
@@ -1117,16 +1104,6 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
   const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
 
   try {
-    const connection = yield* call(getConnection)
-    const networkType = yield* select(network)
-    const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
-    const wallet = yield* call(getWallet)
-
-    const allPositionsData = yield* select(positionsWithPoolsData)
-    const tokensAccounts = yield* select(accounts)
-    const allTokens = yield* select(tokens)
-
     yield put(
       snackbarsActions.add({
         message: 'Claiming fee',
@@ -1146,6 +1123,16 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
         key: loaderClosePosition
       })
     )
+
+    const connection = yield* call(getConnection)
+    const networkType = yield* select(network)
+    const rpc = yield* select(rpcAddress)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const wallet = yield* call(getWallet)
+
+    const allPositionsData = yield* select(positionsWithPoolsData)
+    const tokensAccounts = yield* select(accounts)
+    const allTokens = yield* select(tokens)
 
     const wrappedSolAccount = Keypair.generate()
 
@@ -1246,6 +1233,10 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     )
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     signedTx.partialSign(wrappedSolAccount)
 
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
@@ -1283,8 +1274,6 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     yield put(snackbarsActions.remove(loaderClaimFee))
     closeSnackbar(loaderClosePosition)
     yield put(snackbarsActions.remove(loaderClosePosition))
-    closeSnackbar(loaderSigningTx)
-    yield put(snackbarsActions.remove(loaderSigningTx))
   } catch (error) {
     console.log(error)
 
@@ -1330,14 +1319,6 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       return yield* call(handleClosePositionWithSOL, action.payload)
     }
 
-    const connection = yield* call(getConnection)
-    const networkType = yield* select(network)
-    const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
-    const wallet = yield* call(getWallet)
-
-    const tokensAccounts = yield* select(accounts)
-
     yield put(
       snackbarsActions.add({
         message: 'Claiming fee',
@@ -1357,6 +1338,14 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
         key: loaderClosePosition
       })
     )
+
+    const connection = yield* call(getConnection)
+    const networkType = yield* select(network)
+    const rpc = yield* select(rpcAddress)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const wallet = yield* call(getWallet)
+
+    const tokensAccounts = yield* select(accounts)
 
     let userTokenX = tokensAccounts[positionForIndex.tokenX.toString()]
       ? tokensAccounts[positionForIndex.tokenX.toString()].address
@@ -1426,6 +1415,9 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false
     })
@@ -1461,8 +1453,6 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     yield put(snackbarsActions.remove(loaderClaimFee))
     closeSnackbar(loaderClosePosition)
     yield put(snackbarsActions.remove(loaderClosePosition))
-    closeSnackbar(loaderSigningTx)
-    yield put(snackbarsActions.remove(loaderSigningTx))
   } catch (error) {
     console.log(error)
 

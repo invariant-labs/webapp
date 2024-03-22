@@ -22,6 +22,7 @@ import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { BN } from '@project-serum/anchor'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { network, rpcAddress } from '@selectors/solanaConnection'
+import { closeSnackbar } from 'notistack'
 
 export function* handleGetBondsList() {
   try {
@@ -84,7 +85,19 @@ export function* handleGetUserVested() {
 }
 
 export function* handleBuyBondWithWSOL(data: BuyBond) {
+  const loaderBuyBond = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
   try {
+    yield put(
+      snackbarsActions.add({
+        message: 'Buying bond',
+        additionalMessage: 'Processing, please wait...',
+        variant: 'pending',
+        persist: true,
+        key: loaderBuyBond
+      })
+    )
+
     const connection = yield* call(getConnection)
     const wallet = yield* call(getWallet)
     const networkType = yield* select(network)
@@ -148,10 +161,23 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
+    yield put(
+      snackbarsActions.add({
+        message: 'Signing transactions',
+        additionalMessage: 'Waiting for your wallet',
+        variant: 'pending',
+        persist: true,
+        key: loaderSigningTx
+      })
+    )
+
     const [initialSignedTx, bondSignedTx, unwrapSignedTx] = yield* call(
       [wallet, wallet.signAllTransactions],
       [initialTx, bondTx, unwrapTx]
     )
+
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
 
     initialSignedTx.partialSign(wrappedSolAccount)
     bondSignedTx.partialSign(bondKeypair)
@@ -167,6 +193,10 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
 
     if (!initialTxid.length) {
       yield* put(actions.setBuyBondSuccess(false))
+
+      closeSnackbar(loaderBuyBond)
+      yield put(snackbarsActions.remove(loaderBuyBond))
+
       return yield* put(
         snackbarsActions.add({
           message: 'SOL wrapping failed. Please try again.',
@@ -238,9 +268,18 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
         })
       )
     }
+
+    closeSnackbar(loaderBuyBond)
+    yield put(snackbarsActions.remove(loaderBuyBond))
   } catch (error) {
     console.log(error)
     yield* put(actions.setBuyBondSuccess(false))
+
+    closeSnackbar(loaderBuyBond)
+    yield put(snackbarsActions.remove(loaderBuyBond))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     yield* put(
       snackbarsActions.add({
         message: 'Failed to buy bond. Please try again.',
@@ -252,6 +291,9 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
 }
 
 export function* handleBuyBond(action: PayloadAction<BuyBond>) {
+  const loaderBuyBond = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+
   try {
     const allBonds = yield* select(bondsList)
 
@@ -260,6 +302,16 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
     ) {
       return yield* call(handleBuyBondWithWSOL, action.payload)
     }
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Buying bond',
+        additionalMessage: 'Processing, please wait...',
+        variant: 'pending',
+        persist: true,
+        key: loaderBuyBond
+      })
+    )
 
     const connection = yield* call(getConnection)
     const wallet = yield* call(getWallet)
@@ -294,7 +346,22 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Signing transactions',
+        additionalMessage: 'Waiting for your wallet',
+        variant: 'pending',
+        persist: true,
+        key: loaderSigningTx
+      })
+    )
+
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     signedTx.partialSign(bondKeypair)
 
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
@@ -323,10 +390,19 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
       )
 
       yield* put(actions.getUserVested())
+
+      closeSnackbar(loaderBuyBond)
+      yield put(snackbarsActions.remove(loaderBuyBond))
     }
   } catch (error) {
     console.log(error)
     yield* put(actions.setBuyBondSuccess(false))
+
+    closeSnackbar(loaderBuyBond)
+    yield put(snackbarsActions.remove(loaderBuyBond))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     yield* put(
       snackbarsActions.add({
         message: 'Failed to buy bond. Please try again.',
@@ -338,7 +414,20 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
 }
 
 export function* handleRedeemBondWithWSOL(data: RedeemBond) {
+  const loaderRedeemBond = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+
   try {
+    yield put(
+      snackbarsActions.add({
+        message: 'Buying bond',
+        additionalMessage: 'Processing, please wait...',
+        variant: 'pending',
+        persist: true,
+        key: loaderRedeemBond
+      })
+    )
+
     const allUserVested = yield* select(userVested)
 
     const connection = yield* call(getConnection)
@@ -392,10 +481,23 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
+    yield put(
+      snackbarsActions.add({
+        message: 'Signing transactions',
+        additionalMessage: 'Waiting for your wallet',
+        variant: 'pending',
+        persist: true,
+        key: loaderSigningTx
+      })
+    )
+
     const [initialSignedTx, redeemSignedTx, unwrapSignedTx] = yield* call(
       [wallet, wallet.signAllTransactions],
       [initialTx, redeemTx, unwrapTx]
     )
+
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
 
     initialSignedTx.partialSign(wrappedSolAccount)
 
@@ -409,6 +511,9 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
     )
 
     if (!initialTxid.length) {
+      closeSnackbar(loaderRedeemBond)
+      yield put(snackbarsActions.remove(loaderRedeemBond))
+
       return yield* put(
         snackbarsActions.add({
           message: 'SOL wrapping failed. Please try again.',
@@ -480,8 +585,17 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
         })
       )
     }
+
+    closeSnackbar(loaderRedeemBond)
+    yield put(snackbarsActions.remove(loaderRedeemBond))
   } catch (error) {
     console.log(error)
+
+    closeSnackbar(loaderRedeemBond)
+    yield put(snackbarsActions.remove(loaderRedeemBond))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     yield* put(
       snackbarsActions.add({
         message: 'Failed to redeem bond. Please try again.',
@@ -493,6 +607,9 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
 }
 
 export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
+  const loaderRedeemBond = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+
   try {
     const allBonds = yield* select(bondsList)
     const allUserVested = yield* select(userVested)
@@ -500,6 +617,16 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
     if (allBonds[action.payload.bondSale.toString()].tokenBond.toString() === WRAPPED_SOL_ADDRESS) {
       return yield* call(handleRedeemBondWithWSOL, action.payload)
     }
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Buying bond',
+        additionalMessage: 'Processing, please wait...',
+        variant: 'pending',
+        persist: true,
+        key: loaderRedeemBond
+      })
+    )
 
     const connection = yield* call(getConnection)
     const wallet = yield* call(getWallet)
@@ -530,7 +657,21 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
     const blockhash = yield* call([connection, connection.getRecentBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Signing transactions',
+        additionalMessage: 'Waiting for your wallet',
+        variant: 'pending',
+        persist: true,
+        key: loaderSigningTx
+      })
+    )
+
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
 
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false
@@ -562,8 +703,17 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
         yield* put(actions.removeVested(action.payload.vestedAddress))
       }
     }
+
+    closeSnackbar(loaderRedeemBond)
+    yield put(snackbarsActions.remove(loaderRedeemBond))
   } catch (error) {
     console.log(error)
+
+    closeSnackbar(loaderRedeemBond)
+    yield put(snackbarsActions.remove(loaderRedeemBond))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     yield* put(
       snackbarsActions.add({
         message: 'Failed to redeem bond. Please try again.',

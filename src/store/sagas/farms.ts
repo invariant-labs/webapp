@@ -60,6 +60,7 @@ import {
   rewardsAPY
 } from '@invariant-labs/sdk/lib/utils'
 import { PositionWithAddress } from '@reducers/positions'
+import { closeSnackbar } from 'notistack'
 
 export function* getFarmsTotals() {
   try {
@@ -646,6 +647,9 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
 }
 
 export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
+  const loaderWithdrawRewards = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+
   try {
     const allFarms = yield* select(farms)
 
@@ -663,6 +667,16 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     if (typeof positionData === 'undefined') {
       return
     }
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Withdrawing rewards',
+        additionalMessage: 'Processing, please wait...',
+        variant: 'pending',
+        persist: true,
+        key: loaderWithdrawRewards
+      })
+    )
 
     const wrappedSolAccount = Keypair.generate()
 
@@ -730,10 +744,23 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
+    yield put(
+      snackbarsActions.add({
+        message: 'Signing transactions',
+        additionalMessage: 'Waiting for your wallet',
+        variant: 'pending',
+        persist: true,
+        key: loaderSigningTx
+      })
+    )
+
     const [initialSignedTx, withdrawSignedTx, unwrapSignedTx] = yield* call(
       [wallet, wallet.signAllTransactions],
       [initialTx, withdrawTx, unwrapTx]
     )
+
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
 
     initialSignedTx.partialSign(wrappedSolAccount)
 
@@ -747,6 +774,9 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     )
 
     if (!initialTxid.length) {
+      closeSnackbar(loaderWithdrawRewards)
+      yield put(snackbarsActions.remove(loaderWithdrawRewards))
+
       return yield* put(
         snackbarsActions.add({
           message: 'SOL wrapping failed. Please try again.',
@@ -814,8 +844,17 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
         })
       )
     }
+
+    closeSnackbar(loaderWithdrawRewards)
+    yield put(snackbarsActions.remove(loaderWithdrawRewards))
   } catch (error) {
     console.log(error)
+
+    closeSnackbar(loaderWithdrawRewards)
+    yield put(snackbarsActions.remove(loaderWithdrawRewards))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     yield* put(
       snackbarsActions.add({
         message: 'Failed to withdraw rewards. Please try again.',
@@ -827,6 +866,8 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
 }
 
 export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) {
+  const loaderWithdrawRewards = (new Date().getMilliseconds() + Math.random()).toString()
+
   try {
     const tokensAccounts = yield* select(accounts)
     const allFarms = yield* select(farms)
@@ -849,6 +890,16 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
     if (typeof positionData === 'undefined') {
       return
     }
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Withdrawing rewards',
+        additionalMessage: 'Processing, please wait...',
+        variant: 'pending',
+        persist: true,
+        key: loaderWithdrawRewards
+      })
+    )
 
     let ownerTokenAcc = tokensAccounts[rewardToken.toString()]
       ? tokensAccounts[rewardToken.toString()].address
@@ -901,8 +952,15 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
         })
       )
     }
+
+    closeSnackbar(loaderWithdrawRewards)
+    yield put(snackbarsActions.remove(loaderWithdrawRewards))
   } catch (error) {
     console.log(error)
+
+    closeSnackbar(loaderWithdrawRewards)
+    yield put(snackbarsActions.remove(loaderWithdrawRewards))
+
     yield* put(
       snackbarsActions.add({
         message: 'Failed to withdraw rewards. Please try again.',
