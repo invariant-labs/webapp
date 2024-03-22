@@ -1,5 +1,5 @@
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
-import { printBN, solToPriorityFee } from '@consts/utils'
+import { solToPriorityFee } from '@consts/utils'
 import { Pair } from '@invariant-labs/sdk'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'

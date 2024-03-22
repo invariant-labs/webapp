@@ -3,7 +3,6 @@ import {
   createLiquidityPlot,
   createPlaceholderLiquidityPlot,
   getPositionsAddressesFromRange,
-  printBN,
   solToPriorityFee
 } from '@consts/utils'
 import { Pair } from '@invariant-labs/sdk'
