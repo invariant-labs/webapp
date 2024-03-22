@@ -4,14 +4,14 @@ import { typography, colors } from '@static/theme'
 export const useStyles = makeStyles(theme => ({
   container: {
     display: 'grid',
-    gridTemplateColumns: '5% 35% 15% 15% 15% 15%',
+    gridTemplateColumns: '5% 45% 17.5% 17.5% 15%',
     padding: '18px 0 ',
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`,
     whiteSpace: 'nowrap',
 
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '5% 35% 15% 17.5% 16.5% 15%',
+      gridTemplateColumns: '5% 45% 17.5% 17.5% 15%',
       '& p': {
         ...typography.caption2
       }

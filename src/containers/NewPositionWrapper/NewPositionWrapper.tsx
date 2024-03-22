@@ -3,12 +3,12 @@ import NewPosition from '@components/NewPosition/NewPosition'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import { ALL_FEE_TIERS_DATA, bestTiers, commonTokensForNetworks } from '@consts/static'
 import {
-  CoingeckoPriceData,
+  TokenPriceData,
   addNewTokenToLocalStorage,
   calcPrice,
   calcYPerXPrice,
   createPlaceholderLiquidityPlot,
-  getCoingeckoTokenPrice,
+  getJupTokenPrice,
   getNewTokenOrThrow,
   printBN
 } from '@consts/utils'
@@ -303,7 +303,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     localStorage.setItem('HIDE_UNKNOWN_TOKENS', val ? 'true' : 'false')
   }
 
-  const [tokenAPriceData, setTokenAPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
+  const [tokenAPriceData, setTokenAPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [priceALoading, setPriceALoading] = useState(false)
   useEffect(() => {
     if (tokenAIndex === null) {
@@ -313,7 +313,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     const id = tokens[tokenAIndex].coingeckoId ?? ''
     if (id.length) {
       setPriceALoading(true)
-      getCoingeckoTokenPrice(id)
+      getJupTokenPrice(id)
         .then(data => setTokenAPriceData(data))
         .catch(() => setTokenAPriceData(undefined))
         .finally(() => setPriceALoading(false))
@@ -322,7 +322,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     }
   }, [tokenAIndex])
 
-  const [tokenBPriceData, setTokenBPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
+  const [tokenBPriceData, setTokenBPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [priceBLoading, setPriceBLoading] = useState(false)
   useEffect(() => {
     if (tokenBIndex === null) {
@@ -332,7 +332,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     const id = tokens[tokenBIndex].coingeckoId ?? ''
     if (id.length) {
       setPriceBLoading(true)
-      getCoingeckoTokenPrice(id)
+      getJupTokenPrice(id)
         .then(data => setTokenBPriceData(data))
         .catch(() => setTokenBPriceData(undefined))
         .finally(() => setPriceBLoading(false))
