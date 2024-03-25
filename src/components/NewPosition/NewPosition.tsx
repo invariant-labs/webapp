@@ -17,7 +17,7 @@ import { MIN_TICK } from '@invariant-labs/sdk'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Box, Button, Grid, IconButton, Typography } from '@material-ui/core'
 import { Color } from '@material-ui/lab'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
@@ -25,6 +25,7 @@ import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
+import icons from '@static/icons'
 import { History } from 'history'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -34,6 +35,10 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
+import { actions } from '@reducers/pools'
+import { useDispatch, useSelector } from 'react-redux'
+import { indexedPools } from '@selectors/pools'
+import { JupiterIndexedModal } from '@components/Modals/JupiterIndexedModal/JupiterIndexedModal'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -170,11 +175,18 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   const [tokenADeposit, setTokenADeposit] = useState<string>('')
   const [tokenBDeposit, setTokenBDeposit] = useState<string>('')
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const dispatch = useDispatch()
+  const poolsIndexed = useSelector(indexedPools)
 
   const [address, setAddress] = useState<string>(poolAddress)
   const [settings, setSettings] = React.useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+
+  const handleOpenModal = () => setIsModalOpen(true)
+  const handleCloseModal = () => setIsModalOpen(false)
+
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -315,6 +327,12 @@ export const NewPosition: React.FC<INewPosition> = ({
     void configurePoolAddress()
   }, [initialTokenFrom, initialTokenTo, initialFee])
 
+  useEffect(() => {
+    dispatch(actions.startFetchIndexedPools())
+  }, [dispatch])
+
+  const isPoolIndexed = poolsIndexed[poolAddress]
+
   const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
     blurContent()
@@ -359,7 +377,21 @@ export const NewPosition: React.FC<INewPosition> = ({
       </Link>
 
       <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
+        <Box className={classes.jupiterContainer}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          <IconButton onClick={handleOpenModal} className={classes.jupiterIcon}>
+            <img
+              src={icons.jupiterIcon}
+              alt='jupiterIcon'
+              className={isPoolIndexed ? classes.jupiterActive : classes.jupiterDisable}
+            />
+          </IconButton>
+          <JupiterIndexedModal
+            poolIndexed={isPoolIndexed}
+            handleClose={handleCloseModal}
+            open={isModalOpen}
+          />
+        </Box>
         <Grid container item alignItems='center' className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel

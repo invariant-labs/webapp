@@ -90,6 +90,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   switch: {
     transition: 'opacity 500ms'
+  },
+  jupiterContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '50%'
+  },
+  jupiterIcon: {
+    marginLeft: 'auto',
+    transition: 'opacity 300ms'
+  },
+  jupiterActive: {
+    opactiy: 1
+  },
+  jupiterDisable: {
+    opacity: 0.25
   }
 }))
 
