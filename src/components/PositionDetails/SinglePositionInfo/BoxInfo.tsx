@@ -138,7 +138,7 @@ export const BoxInfo: React.FC<{
               </Typography>
               {typeof tokenA.usdValue !== 'undefined' && tokenA.price ? (
                 <Typography className={classes.tokenUSDValue}>
-                  ~${formatNumbers(usdThresholds)((tokenA.liqValue * tokenA.price).toString())}
+                  ~${formatNumbers(usdThresholds)((tokenA.value * tokenA.price).toString())}
                   {showPrefix(tokenA.usdValue)}
                 </Typography>
               ) : null}
@@ -168,7 +168,7 @@ export const BoxInfo: React.FC<{
               </Typography>
               {typeof tokenB.usdValue !== 'undefined' && tokenB.price ? (
                 <Typography className={classes.tokenUSDValue}>
-                  ~${formatNumbers(usdThresholds)((tokenB.liqValue * tokenB.price).toString())}
+                  ~${formatNumbers(usdThresholds)((tokenB.value * tokenB.price).toString())}
                   {showPrefix(tokenB.usdValue)}
                 </Typography>
               ) : null}
