@@ -136,7 +136,7 @@ export const BoxInfo: React.FC<{
           {showBalance ? (
             <Grid className={classes.tokenAreaLowerPart}>
               <Typography className={classes.tokenBalance}>
-                {!showUnclaimedFees ? `Balance: ${tokenB.balance} ${tokenB.name}` : null}
+                {!showUnclaimedFees ? `Balance: ${tokenA.balance} ${tokenA.name}` : null}
               </Typography>
               {typeof tokenA.usdValue !== 'undefined' && tokenA.price ? (
                 <Typography className={classes.tokenUSDValue}>
