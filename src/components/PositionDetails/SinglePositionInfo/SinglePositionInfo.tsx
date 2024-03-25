@@ -142,6 +142,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
               : { ...tokenX, value: tokenX.claimValue, price: tokenXPriceData?.price }
           }
           showBalance
+          showUnclaimedFees
           onClickButton={onClickClaimFee}
           showLoader={showFeesLoader}
         />

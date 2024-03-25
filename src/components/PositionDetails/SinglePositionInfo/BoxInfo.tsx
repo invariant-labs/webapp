@@ -17,6 +17,7 @@ export const BoxInfo: React.FC<{
   tokenA: BoxInfoToken
   tokenB: BoxInfoToken
   showBalance?: boolean
+  showUnclaimedFees?: boolean
   swapHandler?: () => void
   showLoader?: boolean
 }> = ({
@@ -25,6 +26,7 @@ export const BoxInfo: React.FC<{
   tokenB,
   tokenA,
   showBalance = false,
+  showUnclaimedFees = false,
   swapHandler,
   showLoader = false
 }) => {
@@ -134,7 +136,7 @@ export const BoxInfo: React.FC<{
           {showBalance ? (
             <Grid className={classes.tokenAreaLowerPart}>
               <Typography className={classes.tokenBalance}>
-                Balance: {tokenA.balance} {tokenA.name}
+                {!showUnclaimedFees ? `Balance: ${tokenB.balance} ${tokenB.name}` : null}
               </Typography>
               {typeof tokenA.usdValue !== 'undefined' && tokenA.price ? (
                 <Typography className={classes.tokenUSDValue}>
@@ -164,7 +166,7 @@ export const BoxInfo: React.FC<{
           {showBalance ? (
             <Grid className={classes.tokenAreaLowerPart}>
               <Typography className={classes.tokenBalance}>
-                Balance: {tokenB.balance} {tokenB.name}
+                {!showUnclaimedFees ? `Balance: ${tokenB.balance} ${tokenB.name}` : null}
               </Typography>
               {typeof tokenB.usdValue !== 'undefined' && tokenB.price ? (
                 <Typography className={classes.tokenUSDValue}>
