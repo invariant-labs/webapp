@@ -1098,21 +1098,10 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 }
 
 export function* handleClosePositionWithSOL(data: ClosePositionData) {
-  const loaderClaimFee = (new Date().getMilliseconds() + Math.random()).toString()
   const loaderClosePosition = (new Date().getMilliseconds() + Math.random()).toString()
   const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
 
   try {
-    yield put(
-      snackbarsActions.add({
-        message: 'Claiming fee',
-        additionalMessage: 'Processing, please wait...',
-        variant: 'pending',
-        persist: true,
-        key: loaderClaimFee
-      })
-    )
-
     yield put(
       snackbarsActions.add({
         message: 'Closing position',
@@ -1269,15 +1258,11 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
 
     data.onSuccess()
 
-    closeSnackbar(loaderClaimFee)
-    yield put(snackbarsActions.remove(loaderClaimFee))
     closeSnackbar(loaderClosePosition)
     yield put(snackbarsActions.remove(loaderClosePosition))
   } catch (error) {
     console.log(error)
 
-    closeSnackbar(loaderClaimFee)
-    yield put(snackbarsActions.remove(loaderClaimFee))
     closeSnackbar(loaderClosePosition)
     yield put(snackbarsActions.remove(loaderClosePosition))
     closeSnackbar(loaderSigningTx)
@@ -1302,7 +1287,6 @@ const unsub = async (stakerProgram: Staker, key: PublicKey) => {
 }
 
 export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
-  const loaderClaimFee = (new Date().getMilliseconds() + Math.random()).toString()
   const loaderClosePosition = (new Date().getMilliseconds() + Math.random()).toString()
   const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
 
@@ -1317,16 +1301,6 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     ) {
       return yield* call(handleClosePositionWithSOL, action.payload)
     }
-
-    yield put(
-      snackbarsActions.add({
-        message: 'Claiming fee',
-        additionalMessage: 'Processing, please wait...',
-        variant: 'pending',
-        persist: true,
-        key: loaderClaimFee
-      })
-    )
 
     yield put(
       snackbarsActions.add({
@@ -1448,15 +1422,11 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
 
     action.payload.onSuccess()
 
-    closeSnackbar(loaderClaimFee)
-    yield put(snackbarsActions.remove(loaderClaimFee))
     closeSnackbar(loaderClosePosition)
     yield put(snackbarsActions.remove(loaderClosePosition))
   } catch (error) {
     console.log(error)
 
-    closeSnackbar(loaderClaimFee)
-    yield put(snackbarsActions.remove(loaderClaimFee))
     closeSnackbar(loaderClosePosition)
     yield put(snackbarsActions.remove(loaderClosePosition))
     closeSnackbar(loaderSigningTx)
