@@ -31,7 +31,6 @@ export const BoxInfo: React.FC<{
   showLoader = false
 }) => {
   const classes = useStyles()
-  console.log(tokenA, tokenB)
   const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThreshold[] => [
     {
       value: 10,
