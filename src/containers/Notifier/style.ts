@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: '0.2s all cubic-bezier(0.25, 0.46, 0.45, 0.94)',
     backfaceVisibility: 'hidden',
     fontSmoothing: 'subpixel-antialiased',
+    padding: '0 4px',
     '&:hover': {
       transform: 'scale(1.15) translateY(0px)'
     },

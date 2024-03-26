@@ -34,6 +34,7 @@ import { actions as poolsActions } from '@reducers/pools'
 import { actions as farmsActions } from '@reducers/farms'
 import { actions as bondsActions } from '@reducers/bonds'
 import { closeSnackbar } from 'notistack'
+import { createLoaderKey } from '@consts/utils'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
@@ -111,11 +112,10 @@ export function* handleAirdrop(): Generator {
     return
   }
 
-  const loaderKey = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderKey = createLoaderKey()
   yield put(
     snackbarsActions.add({
       message: 'Airdrop in progress',
-      additionalMessage: 'Waiting for transaction',
       variant: 'pending',
       persist: true,
       key: loaderKey

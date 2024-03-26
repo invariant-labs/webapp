@@ -1,5 +1,5 @@
-import { WRAPPED_SOL_ADDRESS } from '@consts/static'
-import { solToPriorityFee } from '@consts/utils'
+import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { createLoaderKey, solToPriorityFee } from '@consts/utils'
 import { Pair } from '@invariant-labs/sdk'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
@@ -16,8 +16,9 @@ import { createAccount, getWallet } from './wallet'
 import { closeSnackbar } from 'notistack'
 
 export function* handleSwapWithSOL(): Generator {
-  const loaderSwappingTokens = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderSwappingTokens = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
+
   try {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(poolsArraySortedByFees)
@@ -51,7 +52,6 @@ export function* handleSwapWithSOL(): Generator {
     yield put(
       snackbarsActions.add({
         message: 'Swapping tokens',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderSwappingTokens
@@ -171,15 +171,8 @@ export function* handleSwapWithSOL(): Generator {
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
+
     const [initialSignedTx, swapSignedTx, unwrapSignedTx] = yield* call(
       [wallet, wallet.signAllTransactions],
       [initialTx, swapTx, unwrapTx]
@@ -304,8 +297,9 @@ export function* handleSwapWithSOL(): Generator {
 }
 
 export function* handleSwap(): Generator {
-  const loaderSwappingTokens = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderSwappingTokens = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
+
   try {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(poolsArraySortedByFees)
@@ -345,7 +339,6 @@ export function* handleSwap(): Generator {
     yield put(
       snackbarsActions.add({
         message: 'Swapping tokens',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderSwappingTokens
@@ -395,15 +388,7 @@ export function* handleSwap(): Generator {
       )
     }
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const signedTx = yield* call([wallet, wallet.signTransaction], swapTx)
 

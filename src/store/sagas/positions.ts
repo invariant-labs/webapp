@@ -1,6 +1,7 @@
-import { WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
 import {
   createLiquidityPlot,
+  createLoaderKey,
   createPlaceholderLiquidityPlot,
   getPositionsAddressesFromRange,
   solToPriorityFee
@@ -48,13 +49,12 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
   ) {
     return yield* call(handleInitPosition, action)
   }
-  const loaderCreatePool = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderCreatePool = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
   try {
     yield put(
       snackbarsActions.add({
         message: 'Creating pool',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderCreatePool
@@ -194,15 +194,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const [initialSignedTx, initPositionSignedTx, unwrapSignedTx] = yield* call(
       [wallet, wallet.signAllTransactions],
@@ -343,13 +335,12 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
     return yield* call(handleInitPositionAndPoolWithSOL, action)
   }
 
-  const loaderCreatePosition = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderCreatePosition = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
   try {
     yield put(
       snackbarsActions.add({
         message: 'Creating position',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderCreatePosition
@@ -459,15 +450,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
     combinedTransaction.recentBlockhash = blockhash.blockhash
     combinedTransaction.feePayer = wallet.publicKey
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const signedTx = yield* call([wallet, wallet.signTransaction], combinedTransaction)
 
@@ -536,8 +519,8 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
 }
 
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
-  const loaderCreatePosition = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderCreatePosition = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
 
   try {
     const allTokens = yield* select(tokens)
@@ -554,7 +537,6 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     yield put(
       snackbarsActions.add({
         message: 'Creating position',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderCreatePosition
@@ -637,15 +619,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
@@ -805,14 +779,13 @@ export function* handleGetPositionsList() {
 }
 
 export function* handleClaimFeeWithSOL(positionIndex: number) {
-  const loaderClaimFee = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderClaimFee = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
 
   try {
     yield put(
       snackbarsActions.add({
         message: 'Claiming fee',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderClaimFee
@@ -901,15 +874,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
     signedTx.partialSign(wrappedSolAccount)
@@ -964,8 +929,8 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 }
 
 export function* handleClaimFee(action: PayloadAction<number>) {
-  const loaderClaimFee = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderClaimFee = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
 
   try {
     const allTokens = yield* select(tokens)
@@ -982,7 +947,6 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     yield put(
       snackbarsActions.add({
         message: 'Claiming fee',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderClaimFee
@@ -1036,15 +1000,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
@@ -1098,14 +1054,13 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 }
 
 export function* handleClosePositionWithSOL(data: ClosePositionData) {
-  const loaderClosePosition = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderClosePosition = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
 
   try {
     yield put(
       snackbarsActions.add({
         message: 'Closing position',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderClosePosition
@@ -1210,15 +1165,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
@@ -1287,8 +1234,8 @@ const unsub = async (stakerProgram: Staker, key: PublicKey) => {
 }
 
 export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
-  const loaderClosePosition = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderClosePosition = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
 
   try {
     const allTokens = yield* select(tokens)
@@ -1305,7 +1252,6 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     yield put(
       snackbarsActions.add({
         message: 'Closing position',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderClosePosition
@@ -1376,15 +1322,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 

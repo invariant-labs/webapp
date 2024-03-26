@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PayloadType } from './types'
 import { SnackbarVariant } from '@components/Snackbar/Snackbar'
+import { createLoaderKey } from '@consts/utils'
 
 export interface ISnackbar {
   message: string
-  additionalMessage?: string
   key?: string
   variant: SnackbarVariant
   open: boolean
@@ -28,9 +28,7 @@ const snackbarsSlice = createSlice({
   reducers: {
     add(state, action: PayloadAction<Omit<ISnackbar, 'open'>>) {
       state.snackbars.push({
-        key: action.payload.key
-          ? action.payload.key
-          : (new Date().getMilliseconds() + Math.random()).toString(),
+        key: action.payload.key ? action.payload.key : createLoaderKey(),
         ...action.payload,
         open: true
       })

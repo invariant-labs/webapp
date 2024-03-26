@@ -3,25 +3,15 @@ import React, { useCallback } from 'react'
 import icons from '@static/icons'
 import { Box, Grid } from '@material-ui/core'
 import {
-  StyledAdditionalMessage,
   StyledCircularProgress,
   StyledCloseButton,
+  StyledContainer,
   StyledSnackbarContent,
   StyledTitle
 } from './style'
 
-interface CustomProps {
-  additionalMessage?: string
-}
-
-interface LoadingSnackbarProps extends CustomContentProps, CustomProps {}
-
-declare module 'notistack' {
-  interface OptionsObject extends CustomProps {}
-}
-
-const LoadingSnackbar = React.forwardRef<HTMLDivElement, LoadingSnackbarProps>(
-  ({ id, message, additionalMessage }, ref) => {
+const LoadingSnackbar = React.forwardRef<HTMLDivElement, CustomContentProps>(
+  ({ id, message }, ref) => {
     const { closeSnackbar } = useSnackbar()
 
     const handleDismiss = useCallback(() => {
@@ -30,21 +20,17 @@ const LoadingSnackbar = React.forwardRef<HTMLDivElement, LoadingSnackbarProps>(
 
     return (
       <StyledSnackbarContent ref={ref} role='alert'>
-        <Grid container justifyContent='space-between' alignItems='center'>
-          <StyledTitle>{message}</StyledTitle>
+        <StyledContainer>
+          <Grid container alignItems='center'>
+            <Box ml={1}>
+              <StyledCircularProgress size={13} />
+            </Box>
+            <StyledTitle>{message}</StyledTitle>
+          </Grid>
           <StyledCloseButton onClick={handleDismiss}>
-            <img src={icons.closeIcon}></img>
+            <img src={icons.closeSmallIcon}></img>
           </StyledCloseButton>
-        </Grid>
-
-        <Grid container alignItems='center'>
-          {additionalMessage && (
-            <StyledAdditionalMessage>{additionalMessage}</StyledAdditionalMessage>
-          )}
-          <Box ml={1}>
-            <StyledCircularProgress size={10} />
-          </Box>
-        </Grid>
+        </StyledContainer>
       </StyledSnackbarContent>
     )
   }

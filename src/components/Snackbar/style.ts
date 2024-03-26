@@ -10,11 +10,12 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
     borderColor: colors.invariant.component,
     borderRadius: 10,
     ...typography.body2,
-    maxWidth: 350,
-    width: 350,
-    padding: '6px 10px',
+    maxWidth: 330,
+    width: 330,
+    padding: '4px 16px',
     minWidth: 100,
     '& SVG': {
+      fontSize: '16px !important',
       color: colors.invariant.green,
       marginTop: -2,
       [theme.breakpoints.down('xs')]: {
@@ -22,10 +23,9 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.body3,
+      ...typography.caption2,
       maxWidth: 255,
-      maxHeight: 32,
-      padding: '0px 8px 5px 4px'
+      padding: '0 6px'
     }
   },
   '&.notistack-MuiContent-error': {
@@ -34,12 +34,13 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
     borderWidth: 1,
     borderColor: colors.invariant.component,
     borderRadius: 10,
-    padding: 10,
     ...typography.body2,
-    maxWidth: 350,
-    width: 350,
+    maxWidth: 330,
+    width: 330,
+    padding: '4px 16px',
     minWidth: 100,
     '& SVG': {
+      fontSize: '16px !important',
       color: colors.invariant.Error,
       marginTop: -2,
       [theme.breakpoints.down('xs')]: {
@@ -47,10 +48,9 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.body3,
+      ...typography.caption2,
       maxWidth: 255,
-      maxHeight: 32,
-      padding: '0px 8px 5px 4px'
+      padding: '0 6px'
     }
   },
   '&.notistack-MuiContent-info': {
@@ -59,12 +59,13 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
     borderWidth: 1,
     borderColor: colors.invariant.component,
     borderRadius: 10,
-    padding: 10,
     ...typography.body2,
-    maxWidth: 350,
-    width: 350,
+    maxWidth: 330,
+    width: 330,
+    padding: '6px 16px',
     minWidth: 100,
     '& SVG': {
+      fontSize: '16px !important',
       color: colors.invariant.textGrey,
       marginTop: -2,
       [theme.breakpoints.down('xs')]: {
@@ -72,10 +73,9 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.body3,
+      ...typography.caption2,
       maxWidth: 255,
-      maxHeight: 32,
-      padding: '0px 8px 5px 4px'
+      padding: '0 6px'
     }
   },
   '&.notistack-MuiContent-warning': {
@@ -84,12 +84,13 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
     borderWidth: 1,
     borderColor: colors.invariant.component,
     borderRadius: 10,
-    padding: 10,
     ...typography.body2,
-    maxWidth: 350,
-    width: 350,
+    maxWidth: 330,
+    width: 330,
+    padding: '6px 16px',
     minWidth: 100,
     '& SVG': {
+      fontSize: '16px !important',
       color: colors.invariant.warning,
       marginTop: -2,
       [theme.breakpoints.down('xs')]: {
@@ -97,10 +98,9 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.body3,
+      ...typography.caption2,
       maxWidth: 255,
-      maxHeight: 32,
-      padding: '0px 8px 5px 4px'
+      padding: '0 6px'
     }
   }
 }))

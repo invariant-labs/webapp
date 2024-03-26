@@ -3,7 +3,7 @@ import { getBondsProgram } from '@web3/programs/bonds'
 import { all, call, put, select, spawn, takeLatest } from 'typed-redux-saga'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { getFullNewTokensData } from '@consts/utils'
+import { createLoaderKey, getFullNewTokensData } from '@consts/utils'
 import { tokens } from '@selectors/pools'
 import { actions as poolsActions } from '@reducers/pools'
 import { getConnection } from './connection'
@@ -17,7 +17,7 @@ import {
 import { accounts, address } from '@selectors/solanaWallet'
 import { createAccount, getWallet } from './wallet'
 import { bondsList, userVested } from '@selectors/bonds'
-import { WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { BN } from '@project-serum/anchor'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
@@ -85,13 +85,12 @@ export function* handleGetUserVested() {
 }
 
 export function* handleBuyBondWithWSOL(data: BuyBond) {
-  const loaderBuyBond = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderBuyBond = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
   try {
     yield put(
       snackbarsActions.add({
         message: 'Buying bond',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderBuyBond
@@ -161,15 +160,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const [initialSignedTx, bondSignedTx, unwrapSignedTx] = yield* call(
       [wallet, wallet.signAllTransactions],
@@ -291,8 +282,8 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
 }
 
 export function* handleBuyBond(action: PayloadAction<BuyBond>) {
-  const loaderBuyBond = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderBuyBond = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
 
   try {
     const allBonds = yield* select(bondsList)
@@ -306,7 +297,6 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
     yield put(
       snackbarsActions.add({
         message: 'Buying bond',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderBuyBond
@@ -347,15 +337,7 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
@@ -414,14 +396,13 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
 }
 
 export function* handleRedeemBondWithWSOL(data: RedeemBond) {
-  const loaderRedeemBond = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderRedeemBond = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
 
   try {
     yield put(
       snackbarsActions.add({
         message: 'Buying bond',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderRedeemBond
@@ -481,15 +462,7 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const [initialSignedTx, redeemSignedTx, unwrapSignedTx] = yield* call(
       [wallet, wallet.signAllTransactions],
@@ -607,8 +580,8 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
 }
 
 export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
-  const loaderRedeemBond = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderRedeemBond = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
 
   try {
     const allBonds = yield* select(bondsList)
@@ -621,7 +594,6 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
     yield put(
       snackbarsActions.add({
         message: 'Buying bond',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderRedeemBond
@@ -658,15 +630,7 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 

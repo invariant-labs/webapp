@@ -38,9 +38,10 @@ import {
 import { farms, stakesForPosition, userStakes } from '@selectors/farms'
 import { accounts } from '@selectors/solanaWallet'
 import { getConnection } from './connection'
-import { WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import {
+  createLoaderKey,
   getCoingeckoTokenPrice,
   getFullNewTokensData,
   getIncentivesRewardData,
@@ -647,8 +648,8 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
 }
 
 export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
-  const loaderWithdrawRewards = (new Date().getMilliseconds() + Math.random()).toString()
-  const loaderSigningTx = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderWithdrawRewards = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
 
   try {
     const allFarms = yield* select(farms)
@@ -671,7 +672,6 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     yield put(
       snackbarsActions.add({
         message: 'Withdrawing rewards',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderWithdrawRewards
@@ -744,15 +744,7 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Signing transactions',
-        additionalMessage: 'Waiting for your wallet',
-        variant: 'pending',
-        persist: true,
-        key: loaderSigningTx
-      })
-    )
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const [initialSignedTx, withdrawSignedTx, unwrapSignedTx] = yield* call(
       [wallet, wallet.signAllTransactions],
@@ -866,7 +858,7 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
 }
 
 export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) {
-  const loaderWithdrawRewards = (new Date().getMilliseconds() + Math.random()).toString()
+  const loaderWithdrawRewards = createLoaderKey()
 
   try {
     const tokensAccounts = yield* select(accounts)
@@ -894,7 +886,6 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
     yield put(
       snackbarsActions.add({
         message: 'Withdrawing rewards',
-        additionalMessage: 'Processing, please wait...',
         variant: 'pending',
         persist: true,
         key: loaderWithdrawRewards

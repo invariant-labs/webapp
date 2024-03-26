@@ -3,6 +3,8 @@ import { SnackbarProvider } from 'notistack'
 import { StyledMaterialDesignContent } from './style'
 import { Color } from '@material-ui/lab/Alert'
 import LoadingSnackbar from './LoadingSnackbar/LoadingSnackbar'
+import { useMediaQuery } from '@material-ui/core'
+import { theme } from '@static/theme'
 
 type ExtraVariants = 'pending'
 
@@ -20,9 +22,12 @@ interface ISnackbarProps {
 }
 
 export const Snackbar: React.FC<ISnackbarProps> = ({ children, maxSnack }) => {
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
+
   return (
     <SnackbarProvider
-      maxSnack={maxSnack}
+      dense
+      maxSnack={isSmall ? 5 : maxSnack}
       Components={{
         success: StyledMaterialDesignContent,
         error: StyledMaterialDesignContent,

@@ -10,11 +10,14 @@ export const StyledSnackbarContent = styled(SnackbarContent)(({ theme }) => ({
   borderWidth: 1,
   borderColor: colors.invariant.component,
   borderRadius: 10,
-  ...typography.body2,
-  maxWidth: 350,
-  width: 350,
-  padding: 10,
+  maxWidth: 330,
+  width: 330,
+  padding: '7px 16px',
   minWidth: 100,
+  ...typography.body2,
+
+  boxShadow:
+    '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
 
   '& .MuiCircularProgress-colorPrimary': {
     color: colors.invariant.textGrey
@@ -22,18 +25,28 @@ export const StyledSnackbarContent = styled(SnackbarContent)(({ theme }) => ({
 
   [theme.breakpoints.down('xs')]: {
     maxWidth: 255,
-    maxHeight: 32,
-    padding: '0px 8px 5px 4px'
+    padding: '0 6px',
+
+    '& p': {
+      ...typography.caption2
+    }
   }
 }))
 
-export const StyledTitle = styled(Typography)({
-  color: colors.invariant.text
+export const StyledContainer = styled('div')({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  width: 'auto',
+  '& div > div': {
+    margin: 0
+  }
 })
 
-export const StyledAdditionalMessage = styled(Typography)({
-  color: colors.invariant.textGrey,
-  ...typography.caption2
+export const StyledTitle = styled(Typography)({
+  marginLeft: 8,
+  color: colors.invariant.text,
+  ...typography.body2
 })
 
 export const StyledCloseButton = styled('button')({
@@ -44,17 +57,23 @@ export const StyledCloseButton = styled('button')({
   justifyContent: 'center',
   height: 30,
   width: 'fit-content',
-  '& img': {
-    width: 16,
-    transition: '.2s all ease-in',
-    cursor: 'pointer',
-    '&:hover': {
-      transform: 'scale(1.1)'
+  cursor: 'pointer',
+  margin: 0,
+  '&:hover': {
+    '& img': {
+      transition: '.2s all ease-in',
+      transform: 'scale(1.2)'
     }
   }
 })
 
 export const StyledCircularProgress = styled(CircularProgress)({
   color: colors.invariant.textGrey,
-  marginTop: 6
+  display: 'flex',
+  alignItems: 'center',
+
+  '& SVG': {
+    width: 13,
+    height: 13
+  }
 })
