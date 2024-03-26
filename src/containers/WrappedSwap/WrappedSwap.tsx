@@ -3,8 +3,8 @@ import { Swap } from '@components/Swap/Swap'
 import { commonTokensForNetworks } from '@consts/static'
 import {
   addNewTokenToLocalStorage,
-  CoingeckoPriceData,
-  getCoingeckoTokenPrice,
+  TokenPriceData,
+  getJupTokenPrice,
   getNewTokenOrThrow
 } from '@consts/utils'
 import { actions as poolsActions } from '@reducers/pools'
@@ -128,7 +128,7 @@ export const WrappedSwap = () => {
     localStorage.setItem('HIDE_UNKNOWN_TOKENS', val ? 'true' : 'false')
   }
 
-  const [tokenFromPriceData, setTokenFromPriceData] = useState<CoingeckoPriceData | undefined>(
+  const [tokenFromPriceData, setTokenFromPriceData] = useState<TokenPriceData | undefined>(
     undefined
   )
   const [priceFromLoading, setPriceFromLoading] = useState(false)
@@ -140,7 +140,7 @@ export const WrappedSwap = () => {
     const id = tokensDict[tokenFrom.toString()].coingeckoId ?? ''
     if (id.length) {
       setPriceFromLoading(true)
-      getCoingeckoTokenPrice(id)
+      getJupTokenPrice(id)
         .then(data => setTokenFromPriceData(data))
         .catch(() => setTokenFromPriceData(undefined))
         .finally(() => setPriceFromLoading(false))
@@ -149,9 +149,7 @@ export const WrappedSwap = () => {
     }
   }, [tokenFrom])
 
-  const [tokenToPriceData, setTokenToPriceData] = useState<CoingeckoPriceData | undefined>(
-    undefined
-  )
+  const [tokenToPriceData, setTokenToPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [priceToLoading, setPriceToLoading] = useState(false)
   useEffect(() => {
     if (tokenTo === null) {
@@ -161,7 +159,7 @@ export const WrappedSwap = () => {
     const id = tokensDict[tokenTo.toString()].coingeckoId ?? ''
     if (id.length) {
       setPriceToLoading(true)
-      getCoingeckoTokenPrice(id)
+      getJupTokenPrice(id)
         .then(data => setTokenToPriceData(data))
         .catch(() => setTokenToPriceData(undefined))
         .finally(() => setPriceToLoading(false))
