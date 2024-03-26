@@ -22,8 +22,7 @@ import { BN } from '@project-serum/anchor'
 import { actions as poolsActions } from '@reducers/pools'
 import { actions } from '@reducers/positions'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import { actions as solanaWallet } from '@reducers/solanaWallet'
-import { Status } from '@reducers/solanaWallet'
+import { Status, actions as solanaWallet } from '@reducers/solanaWallet'
 import {
   isLoadingLatestPoolsForTransaction,
   poolsArraySortedByFees,
