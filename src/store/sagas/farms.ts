@@ -42,7 +42,6 @@ import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import {
   createLoaderKey,
-  getCoingeckoTokenPrice,
   getJupTokenPrice,
   getFullNewTokensData,
   getIncentivesRewardData,
