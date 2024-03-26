@@ -8,17 +8,18 @@ import {
   getJupTokenPrice,
   printBN
 } from '@consts/utils'
-import { calculatePriceSqrt } from '@invariant-labs/sdk'
+import { Pair, calculatePriceSqrt } from '@invariant-labs/sdk'
 import { MAX_TICK, getX, getY } from '@invariant-labs/sdk/lib/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
 import { Grid } from '@material-ui/core'
 import { Color } from '@material-ui/lab'
+import { actions as poolsActions } from '@reducers/pools'
 import { actions as farmsActions } from '@reducers/farms'
 import { actions } from '@reducers/positions'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { Status } from '@reducers/solanaWallet'
 import { hasFarms, hasUserStakes, stakesForPosition } from '@selectors/farms'
-import { hasTokens, volumeRanges } from '@selectors/pools'
+import { hasTokens, poolsArraySortedByFees, volumeRanges } from '@selectors/pools'
 import {
   currentPositionRangeTicks,
   isLoadingPositionsList,
@@ -57,6 +58,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const hasAnyStakes = useSelector(hasUserStakes)
   const walletStatus = useSelector(status)
   const positionStakes = useSelector(stakesForPosition(position?.address))
+  const allPools = useSelector(poolsArraySortedByFees)
 
   const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
 
@@ -351,6 +353,33 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
   }, [position])
 
+  const handleRefresh = () => {
+    setWaitingForTicksData(true)
+    if (position) {
+      dispatch(actions.getSinglePosition(position.positionIndex))
+
+      dispatch(
+        poolsActions.getPoolData(
+          new Pair(position.tokenX.assetAddress, position.tokenY.assetAddress, {
+            fee: position.poolData.fee,
+            tickSpacing: position.poolData.tickSpacing
+          })
+        )
+      )
+
+      dispatch(
+        actions.getCurrentPlotTicks({
+          poolIndex: position.poolData.poolIndex,
+          isXtoY: allPools[position.positionIndex].tokenX.equals(position.tokenX.assetAddress)
+        })
+      )
+
+      dispatch(actions.getCurrentPositionRangeTicks(position.id))
+    }
+
+    setWaitingForTicksData(false)
+  }
+
   return !isLoadingList && position ? (
     <PositionDetails
       tokenXAddress={position.tokenX.assetAddress}
@@ -419,6 +448,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       }}
       plotVolumeRange={currentVolumeRange}
       userHasStakes={!!positionStakes.length}
+      handleRefresh={handleRefresh}
     />
   ) : isLoadingList ? (
     <Grid container>

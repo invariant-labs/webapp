@@ -44,6 +44,12 @@ export function* getBalance(pubKey: PublicKey): SagaGenerator<BN> {
   return new BN(balance)
 }
 
+export function* handleBalance(): Generator {
+  const wallet = yield* call(getWallet)
+  const balance = yield* call(getBalance, wallet.publicKey)
+  yield* put(actions.setBalance(balance))
+}
+
 interface IparsedTokenInfo {
   mint: string
   owner: string
@@ -391,6 +397,12 @@ export function* airdropSaga(): Generator {
 export function* initSaga(): Generator {
   yield takeLeading(actions.initWallet, init)
 }
+
+export function* handleBalanceSaga(): Generator {
+  yield takeLeading(actions.getBalance, handleBalance)
+}
 export function* walletSaga(): Generator {
-  yield all([initSaga, airdropSaga, connectHandler, disconnectHandler].map(spawn))
+  yield all(
+    [initSaga, airdropSaga, connectHandler, disconnectHandler, handleBalanceSaga].map(spawn)
+  )
 }

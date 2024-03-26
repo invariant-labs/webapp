@@ -22,6 +22,7 @@ import { BN } from '@project-serum/anchor'
 import { actions as poolsActions } from '@reducers/pools'
 import { actions } from '@reducers/positions'
 import { actions as snackbarsActions } from '@reducers/snackbars'
+import { actions as solanaWallet } from '@reducers/solanaWallet'
 import { Status } from '@reducers/solanaWallet'
 import {
   isLoadingLatestPoolsForTransaction,
@@ -408,6 +409,72 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     return poolAddress
   }
 
+  const handleRefresh = async () => {
+    if (tokenBIndex === null || tokenAIndex === null || tokenAIndex === tokenBIndex) {
+      return
+    }
+
+    const idA = tokens[tokenAIndex].coingeckoId ?? ''
+    if (idA.length) {
+      setPriceALoading(true)
+      await getJupTokenPrice(idA)
+        .then(data => setTokenAPriceData(data))
+        .catch(() => setTokenAPriceData(undefined))
+        .finally(() => setPriceALoading(false))
+    } else {
+      setTokenAPriceData(undefined)
+    }
+
+    const idB = tokens[tokenBIndex].coingeckoId ?? ''
+    if (idB.length) {
+      setPriceBLoading(true)
+      await getJupTokenPrice(idB)
+        .then(data => setTokenBPriceData(data))
+        .catch(() => setTokenBPriceData(undefined))
+        .finally(() => setPriceBLoading(false))
+    } else {
+      setTokenBPriceData(undefined)
+    }
+
+    dispatch(
+      poolsActions.getAllPoolsForPairData({
+        first: tokens[tokenAIndex].address,
+        second: tokens[tokenBIndex].address
+      })
+    )
+
+    dispatch(
+      poolsActions.getPoolData(
+        new Pair(tokens[tokenAIndex].assetAddress, tokens[tokenBIndex].assetAddress, {
+          fee: ALL_FEE_TIERS_DATA[feeIndex].tier.fee,
+          tickSpacing: ALL_FEE_TIERS_DATA[feeIndex].tier.tickSpacing
+        })
+      )
+    )
+
+    if (tokenAIndex !== null && tokenBIndex !== null) {
+      const index = allPools.findIndex(
+        pool =>
+          pool.fee.v.eq(fee) &&
+          ((pool.tokenX.equals(tokens[tokenAIndex].assetAddress) &&
+            pool.tokenY.equals(tokens[tokenBIndex].assetAddress)) ||
+            (pool.tokenX.equals(tokens[tokenBIndex].assetAddress) &&
+              pool.tokenY.equals(tokens[tokenAIndex].assetAddress)))
+      )
+      setPoolIndex(index !== -1 ? index : null)
+
+      if (index !== -1) {
+        dispatch(
+          actions.getCurrentPlotTicks({
+            poolIndex: index,
+            isXtoY: allPools[index].tokenX.equals(tokens[tokenAIndex].assetAddress)
+          })
+        )
+      }
+    }
+    dispatch(solanaWallet.getBalance())
+  }
+
   return (
     <NewPosition
       initialTokenFrom={initialTokenFrom}
@@ -624,6 +691,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       currentFeeIndex={feeIndex}
       onSlippageChange={onSlippageChange}
       initialSlippage={initialSlippage}
+      handleRefresh={handleRefresh}
     />
   )
 }

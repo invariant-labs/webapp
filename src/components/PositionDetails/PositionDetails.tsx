@@ -13,6 +13,7 @@ import { Link, useHistory } from 'react-router-dom'
 import { ILiquidityToken } from './SinglePositionInfo/consts'
 import SinglePositionPlot from './SinglePositionPlot/SinglePositionPlot'
 import useStyles from './style'
+import refreshIcon from '@static/svg/refresh.svg'
 
 import MarketIdLabel from '@components/NewPosition/MarketIdLabel/MarketIdLabel'
 import { Color } from '@material-ui/lab'
@@ -46,6 +47,7 @@ interface IProps {
     max: number
   }
   userHasStakes?: boolean
+  handleRefresh: () => void
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -73,7 +75,8 @@ const PositionDetails: React.FC<IProps> = ({
   hasTicksError,
   reloadHandler,
   plotVolumeRange,
-  userHasStakes = false
+  userHasStakes = false,
+  handleRefresh
 }) => {
   const classes = useStyles()
 
@@ -108,17 +111,16 @@ const PositionDetails: React.FC<IProps> = ({
         container
         item
         direction='column'
-        alignItems='flex-end'
+        alignItems='center'
         className={classes.right}
         wrap='nowrap'>
         <Grid
           container
           item
           direction='row'
-          alignItems='flex-end'
+          alignItems='center'
           // justifyContent='space-between'
-          style={{ paddingLeft: 20, flexDirection: 'row-reverse' }}
-          className={classes.right}
+          className={classes.rightSubHeader}
           wrap='nowrap'>
           <Hidden xsDown>
             <Button
@@ -134,11 +136,14 @@ const PositionDetails: React.FC<IProps> = ({
               <span className={classes.buttonText}>+ Add Liquidity</span>
             </Button>
           </Hidden>
+          <Button onClick={handleRefresh} className={classes.refreshIconBtn}>
+            <img src={refreshIcon} className={classes.refreshIcon} />
+          </Button>
           <MarketIdLabel
             marketId={poolAddress.toString()}
             displayLength={9}
             copyPoolAddressHandler={copyPoolAddressHandler}
-            style={{ paddingBottom: 20, paddingRight: 10 }}
+            style={{ paddingTop: '6px' }}
           />
         </Grid>
 
