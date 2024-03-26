@@ -78,8 +78,8 @@
     "preview": "vite preview",
     "lint": "eslint --ext .js,.ts,.tsx .",
     "fix": "eslint --fix --fix-type suggestion --ext .js,.ts,.tsx .",
-    "storybook": "start-storybook -p 9009 -c .storybook watch-css -s public",
-    "build-storybook": "build-storybook -s public",
+    "storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider  start-storybook -p 9009  -c .storybook watch-css -s public --no-manager-cache",
+    "build-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider  build-storybook -s public ",
     "build": "vite build",
     "update-mainnet-list": "node ./src/fetchMainnetList.js"
   },
@@ -131,6 +131,7 @@
     "@types/storybook__addon-knobs": "^5.2.1",
     "@types/storybook__react": "^5.2.1",
     "@types/yup": "^0.29.3",
+    "cross-env": "^7.0.3",
     "dotenv-webpack": "^7.0.3",
     "eslint-config-standard-with-typescript": "^21.0.1",
     "prettier": "^2.1.0",
