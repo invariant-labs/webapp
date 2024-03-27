@@ -58,7 +58,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const hasAnyStakes = useSelector(hasUserStakes)
   const walletStatus = useSelector(status)
   const positionStakes = useSelector(stakesForPosition(position?.address))
-  const allPools = useSelector(poolsArraySortedByFees)
 
   const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
 
