@@ -19,7 +19,7 @@ import { actions } from '@reducers/positions'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { Status } from '@reducers/solanaWallet'
 import { hasFarms, hasUserStakes, stakesForPosition } from '@selectors/farms'
-import { hasTokens, poolsArraySortedByFees, volumeRanges } from '@selectors/pools'
+import { hasTokens, volumeRanges } from '@selectors/pools'
 import {
   currentPositionRangeTicks,
   isLoadingPositionsList,
