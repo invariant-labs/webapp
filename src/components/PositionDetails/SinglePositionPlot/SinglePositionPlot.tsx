@@ -175,7 +175,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           xDecimal={tokenX.decimal}
           yDecimal={tokenY.decimal}
           isDiscrete={isPlotDiscrete}
-          coverOnLoading
+          coverOnLoading={true}
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
           volumeRange={volumeRange}

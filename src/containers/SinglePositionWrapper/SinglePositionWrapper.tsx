@@ -223,6 +223,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }, [position])
 
   const [tokenXClaim, tokenYClaim] = useMemo(() => {
+    setShowFeesLoader(true)
+
     if (
       waitingForTicksData === false &&
       position &&
@@ -354,10 +356,17 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }, [position])
 
   const handleRefresh = () => {
-    setWaitingForTicksData(true)
     if (position) {
-      dispatch(actions.getSinglePosition(position.positionIndex))
+      dispatch(actions.getPositionsList())
 
+      setWaitingForTicksData(true)
+      dispatch(actions.getCurrentPositionRangeTicks(id))
+      dispatch(
+        actions.getCurrentPlotTicks({
+          poolIndex: position.poolData.poolIndex,
+          isXtoY: true
+        })
+      )
       dispatch(
         poolsActions.getPoolData(
           new Pair(position.tokenX.assetAddress, position.tokenY.assetAddress, {
@@ -366,21 +375,10 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           })
         )
       )
-
-      dispatch(
-        actions.getCurrentPlotTicks({
-          poolIndex: position.poolData.poolIndex,
-          isXtoY: allPools[position.positionIndex].tokenX.equals(position.tokenX.assetAddress)
-        })
-      )
-
-      dispatch(actions.getCurrentPositionRangeTicks(position.id))
     }
-
-    setWaitingForTicksData(false)
   }
 
-  return !isLoadingList && position ? (
+  return position ? (
     <PositionDetails
       tokenXAddress={position.tokenX.assetAddress}
       tokenYAddress={position.tokenY.assetAddress}
@@ -405,7 +403,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           })
         )
       }}
-      ticksLoading={ticksLoading}
+      ticksLoading={ticksLoading || isLoadingList}
       tickSpacing={position?.poolData.tickSpacing ?? 1}
       tokenX={{
         name: position.tokenX.symbol,
@@ -436,7 +434,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       max={max}
       initialIsDiscreteValue={initialIsDiscreteValue}
       onDiscreteChange={setIsDiscreteValue}
-      showFeesLoader={showFeesLoader}
+      showFeesLoader={showFeesLoader || isLoadingList}
+      showLiquidityLoader={isLoadingList}
       hasTicksError={hasTicksError}
       reloadHandler={() => {
         dispatch(

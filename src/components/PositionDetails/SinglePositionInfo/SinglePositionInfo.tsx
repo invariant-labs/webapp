@@ -18,6 +18,7 @@ interface IProp {
   xToY: boolean
   swapHandler: () => void
   showFeesLoader?: boolean
+  showLiquidityLoader?: boolean
   userHasStakes?: boolean
 }
 
@@ -30,6 +31,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
   xToY,
   swapHandler,
   showFeesLoader = false,
+  showLiquidityLoader = false,
   userHasStakes = false
 }) => {
   const history = useHistory()
@@ -118,6 +120,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
           }
           showBalance
           swapHandler={swapHandler}
+          showLoader={showLiquidityLoader}
         />
         <BoxInfo
           title={'Unclaimed fees'}

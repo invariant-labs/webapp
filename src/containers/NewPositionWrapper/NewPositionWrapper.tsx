@@ -412,6 +412,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     if (tokenBIndex === null || tokenAIndex === null || tokenAIndex === tokenBIndex) {
       return
     }
+    dispatch(solanaWallet.getBalance())
 
     const idA = tokens[tokenAIndex].coingeckoId ?? ''
     if (idA.length) {
@@ -471,7 +472,6 @@ export const NewPositionWrapper: React.FC<IProps> = ({
         )
       }
     }
-    dispatch(solanaWallet.getBalance())
   }
 
   return (

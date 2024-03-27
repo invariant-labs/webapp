@@ -40,6 +40,7 @@ interface IProps {
   initialIsDiscreteValue: boolean
   onDiscreteChange: (val: boolean) => void
   showFeesLoader?: boolean
+  showLiquidityLoader?: boolean
   hasTicksError?: boolean
   reloadHandler: () => void
   plotVolumeRange?: {
@@ -72,6 +73,7 @@ const PositionDetails: React.FC<IProps> = ({
   initialIsDiscreteValue,
   onDiscreteChange,
   showFeesLoader = false,
+  showLiquidityLoader = false,
   hasTicksError,
   reloadHandler,
   plotVolumeRange,
@@ -103,6 +105,7 @@ const PositionDetails: React.FC<IProps> = ({
           xToY={xToY}
           swapHandler={() => setXToY(!xToY)}
           showFeesLoader={showFeesLoader}
+          showLiquidityLoader={showLiquidityLoader}
           userHasStakes={userHasStakes}
         />
       </Grid>
