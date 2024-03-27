@@ -19,6 +19,7 @@ export interface IPoolsStore {
   isLoadingLatestPoolsForTransaction: boolean
   tickMaps: { [key in string]: Tickmap }
   volumeRanges: Record<string, Range[]>
+  jupiterIndexedAddresses: string[]
 }
 
 export interface UpdatePool {
@@ -54,7 +55,8 @@ export const defaultState: IPoolsStore = {
   poolTicks: {},
   isLoadingLatestPoolsForTransaction: false,
   tickMaps: {},
-  volumeRanges: {}
+  volumeRanges: {},
+  jupiterIndexedAddresses: []
 }
 
 export interface PairTokens {
@@ -78,6 +80,7 @@ export interface ListPoolsResponse {
 }
 
 export const poolsSliceName = 'pools'
+
 const poolsSlice = createSlice({
   name: poolsSliceName,
   initialState: defaultState,
@@ -102,6 +105,10 @@ const poolsSlice = createSlice({
     },
     setTicks(state, action: PayloadAction<UpdateTick>) {
       state.poolTicks[action.payload.index] = action.payload.tickStructure
+      return state
+    },
+    setJupiterIndexedAddresses(state, action: PayloadAction<string[]>) {
+      state.jupiterIndexedAddresses = action.payload
       return state
     },
     updatePool(state, action: PayloadAction<UpdatePool>) {
@@ -155,6 +162,9 @@ const poolsSlice = createSlice({
     },
     updateTickmap(state, action: PayloadAction<UpdateTickmap>) {
       state.tickMaps[action.payload.address].bitmap = action.payload.bitmap
+    },
+    getJupiterIndexedAddresses(state) {
+      return state
     }
   }
 })
