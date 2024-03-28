@@ -1131,3 +1131,5 @@ const PRIORITY_FEE_DENOMINATOR = 9
 export const solToPriorityFee = (sol: number) => {
   return Math.round((sol * 5 * 10 ** PRIORITY_FEE_DENOMINATOR) / 10)
 }
+
+export const createLoaderKey = () => (new Date().getMilliseconds() + Math.random()).toString()
