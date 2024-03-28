@@ -22,12 +22,17 @@ interface ISnackbarProps {
 }
 
 export const Snackbar: React.FC<ISnackbarProps> = ({ children, maxSnack }) => {
-  const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
+  const isExSmall = useMediaQuery(theme.breakpoints.down('xs'))
 
   return (
     <SnackbarProvider
       dense
-      maxSnack={isSmall ? 5 : maxSnack}
+      maxSnack={isExSmall ? 5 : maxSnack}
+      anchorOrigin={
+        isExSmall
+          ? { vertical: 'top', horizontal: 'left' }
+          : { vertical: 'bottom', horizontal: 'left' }
+      }
       Components={{
         success: StyledMaterialDesignContent,
         error: StyledMaterialDesignContent,
