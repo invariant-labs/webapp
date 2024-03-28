@@ -33,6 +33,7 @@ import DepositSelector from './DepositSelector/DepositSelector'
 import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
+import refreshIcon from '@static/svg/refresh.svg'
 import useStyles from './style'
 
 export interface INewPosition {
@@ -105,6 +106,7 @@ export interface INewPosition {
   currentFeeIndex: number
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
+  handleRefresh: () => void
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -156,7 +158,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   plotVolumeRange,
   currentFeeIndex,
   onSlippageChange,
-  initialSlippage
+  initialSlippage,
+  handleRefresh
 }) => {
   const classes = useStyles()
 
@@ -358,9 +361,29 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
-        <Grid container item alignItems='center' className={classes.options}>
+      <Grid
+        container
+        item
+        className={classes.subHeader}
+        alignItems='center'
+        justifyContent='space-between'>
+        <Grid
+          container
+          item
+          alignItems='center'
+          justifyContent='space-between'
+          className={classes.leftSideSubHeader}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          <Button onClick={handleRefresh} className={classes.refreshIconBtn}>
+            <img src={refreshIcon} className={classes.refreshIcon} />
+          </Button>
+        </Grid>
+        <Grid
+          container
+          item
+          alignItems='center'
+          justifyContent='flex-end'
+          className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
               displayLength={9}
