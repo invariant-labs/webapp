@@ -17,7 +17,7 @@ import { actions as poolsActions } from '@reducers/pools'
 import { actions as farmsActions } from '@reducers/farms'
 import { actions } from '@reducers/positions'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import { Status } from '@reducers/solanaWallet'
+import { Status, actions as solanaWallet } from '@reducers/solanaWallet'
 import { hasFarms, hasUserStakes, stakesForPosition } from '@selectors/farms'
 import { hasTokens, volumeRanges } from '@selectors/pools'
 import {
@@ -356,6 +356,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const handleRefresh = () => {
     if (position) {
+      dispatch(solanaWallet.getBalance())
+
       dispatch(actions.getPositionsList())
 
       setWaitingForTicksData(true)
