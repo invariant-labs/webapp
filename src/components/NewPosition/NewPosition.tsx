@@ -25,6 +25,7 @@ import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
+// import JupiterIcon from '@static/svg/JupiterIcon.svg'
 import { History } from 'history'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -34,6 +35,8 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
+
+import { JupiterIndexIndicator } from './JupiterIndexIndicator/JupiterIndexIndicator'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -358,9 +361,28 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
-        <Grid container item alignItems='center' className={classes.options}>
+      <Grid container xs={12}>
+        <Grid item xs={4} alignItems='center' justifyContent='flex-start'>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+        </Grid>
+        <Grid
+          container
+          item
+          alignItems='center'
+          xs={2}
+          justifyContent='flex-end'
+          style={{ position: 'relative' }}>
+          <JupiterIndexIndicator
+            marketId={address}
+          />
+        </Grid>
+        <Grid
+          container
+          item
+          alignItems='center'
+          justifyContent='flex-end'
+          xs={6}
+          className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
               displayLength={9}
@@ -385,7 +407,6 @@ export const NewPosition: React.FC<INewPosition> = ({
           </Button>
         </Grid>
       </Grid>
-
       <Slippage
         open={settings}
         setSlippage={setSlippage}
@@ -396,7 +417,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
         headerText='Position Transaction Settings'
       />
-
+      {/* <JupiterIndexIndicator marketId={address} /> */}
       <Grid container className={classes.row} alignItems='stretch'>
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
