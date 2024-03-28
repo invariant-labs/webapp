@@ -7,6 +7,7 @@ import { PublicKey } from '@solana/web3.js'
 import { PayloadType } from './types'
 import * as R from 'remeda'
 import { Range } from '@invariant-labs/sdk/lib/utils'
+import { JupiterPool } from '@consts/utils'
 
 export interface PoolWithAddress extends PoolStructure {
   address: PublicKey
@@ -19,6 +20,7 @@ export interface IPoolsStore {
   isLoadingLatestPoolsForTransaction: boolean
   tickMaps: { [key in string]: Tickmap }
   volumeRanges: Record<string, Range[]>
+  indexedPools: Record<string, JupiterPool[]>
 }
 
 export interface UpdatePool {
@@ -54,7 +56,8 @@ export const defaultState: IPoolsStore = {
   poolTicks: {},
   isLoadingLatestPoolsForTransaction: false,
   tickMaps: {},
-  volumeRanges: {}
+  volumeRanges: {},
+  indexedPools: {}
 }
 
 export interface PairTokens {
@@ -155,6 +158,13 @@ const poolsSlice = createSlice({
     },
     updateTickmap(state, action: PayloadAction<UpdateTickmap>) {
       state.tickMaps[action.payload.address].bitmap = action.payload.bitmap
+    },
+    setIndexedPools(state, action: PayloadAction<Record<string, JupiterPool[]>>) {
+      state.indexedPools = action.payload
+      return state
+    },
+    getIndexedPools(state) {
+      return state
     }
   }
 })

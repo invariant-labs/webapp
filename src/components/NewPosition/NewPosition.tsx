@@ -26,7 +26,7 @@ import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
 import { History } from 'history'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 import DepositSelector from './DepositSelector/DepositSelector'
@@ -34,6 +34,8 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
+import JupiterIndexedIndicator from './JupiterIndexedIndicator/JupiterIndexedIndicator'
+import JupiterIndexed from '@components/Modals/JupiterIndexed/JupiterIndexed'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -105,6 +107,7 @@ export interface INewPosition {
   currentFeeIndex: number
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
+  indexedPoolsAddresses: string[]
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -156,7 +159,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   plotVolumeRange,
   currentFeeIndex,
   onSlippageChange,
-  initialSlippage
+  initialSlippage,
+  indexedPoolsAddresses
 }) => {
   const classes = useStyles()
 
@@ -175,6 +179,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+  const [indexedIndicator, setIndexedIndicator] = useState<boolean>(false)
+
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -301,6 +307,11 @@ export const NewPosition: React.FC<INewPosition> = ({
               tier.tokenY.equals(tokens[tokenAIndex].assetAddress))
         )?.bestTierIndex ?? undefined
 
+  const isIndexed = useMemo(() => {
+    if (!address || !indexedPoolsAddresses) return false
+    return indexedPoolsAddresses.includes(address)
+  }, [indexedPoolsAddresses, address])
+
   useEffect(() => {
     if (!ticksLoading && !isConcentrated) {
       onChangeRange(leftRange, rightRange)
@@ -331,6 +342,17 @@ export const NewPosition: React.FC<INewPosition> = ({
     onSlippageChange(slippage)
   }
 
+  const handleClickIndexedIndicator = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+    blurContent()
+    setIndexedIndicator(true)
+  }
+
+  const handleCloseIndexedIndicator = () => {
+    unblurContent()
+    setIndexedIndicator(false)
+  }
+
   const updatePath = (index1: number | null, index2: number | null, fee: number) => {
     const parsedFee = parseFeeToPathFee(+ALL_FEE_TIERS_DATA[fee].tier.fee)
 
@@ -358,8 +380,16 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
+      <Grid container justifyContent='space-between' className={classes.infoRow}>
+        <Grid
+          container
+          item
+          className={classes.info}
+          alignItems='center'
+          justifyContent='space-between'>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          <JupiterIndexedIndicator isIndexed={isIndexed} onClick={handleClickIndexedIndicator} />
+        </Grid>
         <Grid container item alignItems='center' className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
@@ -395,6 +425,12 @@ export const NewPosition: React.FC<INewPosition> = ({
         initialSlippage={initialSlippage}
         infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
         headerText='Position Transaction Settings'
+      />
+
+      <JupiterIndexed
+        anchorEl={anchorEl}
+        open={indexedIndicator}
+        handleClose={handleCloseIndexedIndicator}
       />
 
       <Grid container className={classes.row} alignItems='stretch'>
