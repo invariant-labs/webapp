@@ -23,9 +23,8 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.caption2,
-      maxWidth: 255,
-      padding: '0 6px'
+      maxWidth: 'none',
+      width: 'auto'
     }
   },
   '&.notistack-MuiContent-error': {
@@ -48,9 +47,8 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.caption2,
-      maxWidth: 255,
-      padding: '0 6px'
+      maxWidth: 'none',
+      width: 'auto'
     }
   },
   '&.notistack-MuiContent-info': {
@@ -73,9 +71,8 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.caption2,
-      maxWidth: 255,
-      padding: '0 6px'
+      maxWidth: 'none',
+      width: 'auto'
     }
   },
   '&.notistack-MuiContent-warning': {
@@ -98,9 +95,8 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.caption2,
-      maxWidth: 255,
-      padding: '0 6px'
+      maxWidth: 'none',
+      width: 'auto'
     }
   }
 }))
