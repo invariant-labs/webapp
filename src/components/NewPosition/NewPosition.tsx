@@ -1,3 +1,5 @@
+import jupiterActive from '@static/svg/jupiterActive.svg'
+import jupiterInactive from '@static/svg/jupiterInactive.svg'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import Slippage from '@components/Modals/Slippage/Slippage'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
@@ -34,7 +36,11 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
-
+import Jupiter from '@components/Modals/Jupiter/Jupiter'
+interface IJupiterPool {
+  pubkey: string
+  [key: string]: any
+}
 export interface INewPosition {
   initialTokenFrom: string
   initialTokenTo: string
@@ -173,6 +179,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   const [address, setAddress] = useState<string>(poolAddress)
   const [settings, setSettings] = React.useState<boolean>(false)
+  const [jupiter, setJupiter] = useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const setRangeBlockerInfo = () => {
@@ -330,7 +337,16 @@ export const NewPosition: React.FC<INewPosition> = ({
     setSlippTolerance(slippage)
     onSlippageChange(slippage)
   }
+  const handleClickJupiter = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+    blurContent()
+    setJupiter(true)
+  }
 
+  const handleCloseJupiter = () => {
+    unblurContent()
+    setJupiter(false)
+  }
   const updatePath = (index1: number | null, index2: number | null, fee: number) => {
     const parsedFee = parseFeeToPathFee(+ALL_FEE_TIERS_DATA[fee].tier.fee)
 
@@ -348,7 +364,25 @@ export const NewPosition: React.FC<INewPosition> = ({
       history.replace(`/newPosition/${parsedFee}`)
     }
   }
-
+  const [jupiterData, setJupiterData] = useState<string[]>([])
+  const [iconActive, setIconActive] = useState(false)
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('https://cache.jup.ag/markets?v=3')
+      if (!response.ok) {
+        throw new Error('Error fetching data')
+      }
+      const data = await response.json()
+      const pubkeys = data.map((obj: IJupiterPool) => obj.pubkey)
+      setJupiterData(pubkeys)
+    }
+    void fetchData()
+  }, [])
+  useEffect(() => {
+    if (jupiterData.length > 0) {
+      setIconActive(jupiterData.includes(address))
+    }
+  }, [address, jupiterData])
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Link to='/pool' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
@@ -359,11 +393,30 @@ export const NewPosition: React.FC<INewPosition> = ({
       </Link>
 
       <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
+        <Grid
+          container
+          className={classes.jupiterWrapper}
+          justifyContent='space-between'
+          alignContent='center'>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          <Button className={classes.jupiterIconBtn} onClick={handleClickJupiter} disableRipple>
+            {iconActive ? (
+              <img src={jupiterActive} alt='jupiter active'></img>
+            ) : (
+              <img src={jupiterInactive} alt='jupiter inactive'></img>
+            )}
+          </Button>{' '}
+        </Grid>
+
+        <Jupiter
+          open={jupiter}
+          handleClose={handleCloseJupiter}
+          anchorEl={anchorEl}
+          active={iconActive}></Jupiter>
         <Grid container item alignItems='center' className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
-              displayLength={9}
+              displayLength={8}
               marketId={address}
               copyPoolAddressHandler={copyPoolAddressHandler}
             />
@@ -385,7 +438,6 @@ export const NewPosition: React.FC<INewPosition> = ({
           </Button>
         </Grid>
       </Grid>
-
       <Slippage
         open={settings}
         setSlippage={setSlippage}
@@ -409,7 +461,6 @@ export const NewPosition: React.FC<INewPosition> = ({
             setTokenAIndex(index1)
             setTokenBIndex(index2)
             onChangePositionTokens(index1, index2, fee)
-
             updatePath(index1, index2, fee)
           }}
           onAddLiquidity={() => {
