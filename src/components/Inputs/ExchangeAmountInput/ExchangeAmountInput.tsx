@@ -29,7 +29,6 @@ interface IProps {
   limit?: number
   initialHideUnknownTokensValue: boolean
   onHideUnknownTokensChange: (val: boolean) => void
-  percentageChange?: number
   tokenPrice?: number
   priceLoading?: boolean
 }
@@ -54,7 +53,6 @@ export const AmountInput: React.FC<IProps> = ({
   limit,
   initialHideUnknownTokensValue,
   onHideUnknownTokensChange,
-  percentageChange = 0,
   tokenPrice,
   priceLoading = false
 }) => {
@@ -161,7 +159,6 @@ export const AmountInput: React.FC<IProps> = ({
   const tokenIcon = !current ? '' : current.symbol
 
   const usdBalance = tokenPrice && balance ? tokenPrice * +balance : 0
-
   return (
     <>
       <Grid container alignItems='center' wrap='nowrap' className={classes.exchangeContainer}>
@@ -218,14 +215,6 @@ export const AmountInput: React.FC<IProps> = ({
               <img src={loadingAnimation} className={classes.loading} />
             ) : tokenPrice ? (
               <>
-                <Typography
-                  className={classNames(
-                    classes.percentage,
-                    percentageChange > 0 ? classes.percentagePositive : classes.percentageNegative
-                  )}>
-                  {percentageChange > 0 ? '+' : ''}
-                  {percentageChange.toFixed(2)}%
-                </Typography>
                 <Typography className={classes.caption2}>
                   ~${formatNumbers(usdThresholds)(usdBalance.toString()) + showPrefix(usdBalance)}
                 </Typography>

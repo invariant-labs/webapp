@@ -43,9 +43,7 @@ export interface IDepositSelector {
   feeTiers: number[]
   className?: string
   progress: ProgressState
-  percentageChangeA?: number
   priceA?: number
-  percentageChangeB?: number
   priceB?: number
   onReverseTokens: () => void
   poolIndex: number | null
@@ -73,9 +71,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   feeTiers,
   className,
   progress,
-  percentageChangeA,
   priceA,
-  percentageChangeB,
   priceB,
   onReverseTokens,
   poolIndex,
@@ -269,7 +265,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
       <Grid container className={classes.sectionWrapper}>
         <DepositAmountInput
-          percentageChange={percentageChangeA}
           tokenPrice={priceA}
           currency={tokenAIndex !== null ? tokens[tokenAIndex].symbol : null}
           currencyIconSrc={tokenAIndex !== null ? tokens[tokenAIndex].logoURI : undefined}
@@ -330,7 +325,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         />
 
         <DepositAmountInput
-          percentageChange={percentageChangeB}
           tokenPrice={priceB}
           currency={tokenBIndex !== null ? tokens[tokenBIndex].symbol : null}
           currencyIconSrc={tokenBIndex !== null ? tokens[tokenBIndex].logoURI : undefined}
