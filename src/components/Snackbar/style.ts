@@ -14,6 +14,11 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
     width: 330,
     padding: '4px 16px',
     minWidth: 100,
+
+    '& > div:first-child': {
+      flex: 1
+    },
+
     '& SVG': {
       fontSize: '16px !important',
       color: colors.invariant.green,
@@ -38,6 +43,11 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
     width: 330,
     padding: '4px 16px',
     minWidth: 100,
+
+    '& > div:first-child': {
+      flex: 1
+    },
+
     '& SVG': {
       fontSize: '16px !important',
       color: colors.invariant.Error,
@@ -62,6 +72,11 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
     width: 330,
     padding: '6px 16px',
     minWidth: 100,
+
+    '& > div:first-child': {
+      flex: 1
+    },
+
     '& SVG': {
       fontSize: '16px !important',
       color: colors.invariant.textGrey,
@@ -86,6 +101,11 @@ export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ them
     width: 330,
     padding: '6px 16px',
     minWidth: 100,
+
+    '& > div:first-child': {
+      flex: 1
+    },
+
     '& SVG': {
       fontSize: '16px !important',
       color: colors.invariant.warning,

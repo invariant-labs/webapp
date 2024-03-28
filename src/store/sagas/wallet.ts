@@ -145,9 +145,6 @@ export function* handleAirdrop(): Generator {
 
   yield* call(getCollateralTokenAirdrop, airdropTokens[networkType], airdropQuantities[networkType])
 
-  closeSnackbar(loaderKey)
-  yield put(snackbarsActions.remove(loaderKey))
-
   yield put(
     snackbarsActions.add({
       message: 'You will soon receive airdrop',
@@ -155,6 +152,9 @@ export function* handleAirdrop(): Generator {
       persist: false
     })
   )
+
+  closeSnackbar(loaderKey)
+  yield put(snackbarsActions.remove(loaderKey))
 }
 
 export function* setEmptyAccounts(collateralsAddresses: PublicKey[]): Generator {
