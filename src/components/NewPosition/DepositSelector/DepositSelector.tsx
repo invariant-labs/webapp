@@ -57,6 +57,10 @@ export interface IDepositSelector {
   priceALoading?: boolean
   priceBLoading?: boolean
   feeTierIndex: number
+  concentrationArray: number[]
+  concentrationIndex: number
+  minimumSliderIndex: number
+  isConcentrated: boolean
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -84,7 +88,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   onHideUnknownTokensChange,
   priceALoading,
   priceBLoading,
-  feeTierIndex
+  feeTierIndex,
+  concentrationArray,
+  concentrationIndex,
+  minimumSliderIndex,
+  isConcentrated
 }) => {
   const classes = useStyles()
 
@@ -170,8 +178,24 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'Liquidity must be greater than 0'
     }
 
+    if (
+      concentrationIndex < minimumSliderIndex &&
+      isConcentrated &&
+      tokenAIndex !== null &&
+      tokenBIndex !== null
+    ) {
+      return `Set concentration to at least ${concentrationArray[minimumSliderIndex]}x`
+    }
+
     return 'Add Liquidity'
-  }, [tokenAIndex, tokenBIndex, tokenAInputState.value, tokenBInputState.value, tokens])
+  }, [
+    tokenAIndex,
+    tokenBIndex,
+    tokenAInputState.value,
+    tokenBInputState.value,
+    tokens,
+    isConcentrated
+  ])
 
   useEffect(() => {
     if (tokenAIndex !== null) {

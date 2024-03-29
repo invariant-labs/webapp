@@ -15,7 +15,7 @@ import {
 } from '@consts/utils'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
-import { fromFee } from '@invariant-labs/sdk/lib/utils'
+import { fromFee, getConcentrationArray } from '@invariant-labs/sdk/lib/utils'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import { Button, Grid, Typography } from '@material-ui/core'
 import { Color } from '@material-ui/lab'
@@ -26,7 +26,7 @@ import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
 import { History } from 'history'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 import DepositSelector from './DepositSelector/DepositSelector'
@@ -175,6 +175,11 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+
+  const [concentrationIndex, setConcentrationIndex] = useState(0)
+
+  const [minimumSliderIndex, setMinimumSliderIndex] = useState<number>(0)
+
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -349,6 +354,11 @@ export const NewPosition: React.FC<INewPosition> = ({
     }
   }
 
+  const concentrationArray = useMemo(
+    () => getConcentrationArray(tickSpacing, 2, midPrice.index).sort((a, b) => a - b),
+    [tickSpacing, midPrice.index]
+  )
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Link to='/pool' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
@@ -512,6 +522,10 @@ export const NewPosition: React.FC<INewPosition> = ({
           priceALoading={priceALoading}
           priceBLoading={priceBLoading}
           feeTierIndex={currentFeeIndex}
+          concentrationArray={concentrationArray}
+          concentrationIndex={concentrationIndex}
+          minimumSliderIndex={minimumSliderIndex}
+          isConcentrated={isConcentrated}
         />
 
         {isCurrentPoolExisting ||
@@ -554,6 +568,11 @@ export const NewPosition: React.FC<INewPosition> = ({
             hasTicksError={hasTicksError}
             reloadHandler={reloadHandler}
             volumeRange={plotVolumeRange}
+            concentrationArray={concentrationArray}
+            setConcentrationIndex={setConcentrationIndex}
+            concentrationIndex={concentrationIndex}
+            setMinimumSliderIndex={setMinimumSliderIndex}
+            minimumSliderIndex={minimumSliderIndex}
           />
         ) : (
           <PoolInit

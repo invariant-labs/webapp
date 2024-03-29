@@ -1,5 +1,5 @@
 import { Button, Grid, Tooltip, Typography } from '@material-ui/core'
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import {
@@ -14,7 +14,7 @@ import { MIN_TICK } from '@invariant-labs/sdk'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
-import { getConcentrationArray, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
+import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import loader from '@static/gif/loader.gif'
 import useStyles from './style'
 import activeLiquidity from '@static/svg/activeLiquidity.svg'
@@ -43,6 +43,11 @@ export interface IRangeSelector {
     min: number
     max: number
   }
+  concentrationArray: number[]
+  minimumSliderIndex: number
+  setMinimumSliderIndex: (val: number) => void
+  concentrationIndex: number
+  setConcentrationIndex: (val: number) => void
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -65,7 +70,12 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   poolIndex,
   hasTicksError,
   reloadHandler,
-  volumeRange
+  volumeRange,
+  concentrationArray,
+  minimumSliderIndex,
+  setMinimumSliderIndex,
+  concentrationIndex,
+  setConcentrationIndex
 }) => {
   const classes = useStyles()
 
@@ -82,8 +92,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [plotMax, setPlotMax] = useState(1)
 
   const [isPlotDiscrete, setIsPlotDiscrete] = useState(initialIsDiscreteValue)
-
-  const [concentrationIndex, setConcentrationIndex] = useState(0)
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -256,10 +264,31 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }
 
-  const concentrationArray = useMemo(
-    () => getConcentrationArray(tickSpacing, 2, midPrice.index).sort((a, b) => a - b),
-    [tickSpacing, midPrice.index]
-  )
+  const getMinSliderIndex = () => {
+    let minimumSliderIndex = 0
+
+    for (let index = 0; index < concentrationArray.length; index++) {
+      const value = concentrationArray[index]
+      const { leftRange, rightRange } = calculateConcentrationRange(
+        tickSpacing,
+        value,
+        2,
+        midPrice.index,
+        isXtoY
+      )
+
+      const leftRangeValue = calcPrice(leftRange, isXtoY, xDecimal, yDecimal)
+      const rightRangeValue = calcPrice(rightRange, isXtoY, xDecimal, yDecimal)
+
+      if (leftRangeValue < data[0].x || rightRangeValue > data[1].x) {
+        minimumSliderIndex = index + 1
+      } else {
+        break
+      }
+    }
+
+    return minimumSliderIndex
+  }
 
   useEffect(() => {
     if (isConcentrated) {
@@ -296,6 +325,13 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       autoZoomHandler(leftRange, rightRange, true)
     }
   }, [midPrice.index, concentrationArray])
+
+  useEffect(() => {
+    if (isConcentrated) {
+      const minimumSliderIndex = getMinSliderIndex()
+      setMinimumSliderIndex(minimumSliderIndex)
+    }
+  }, [poolIndex, midPrice.index, isConcentrated])
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
@@ -480,6 +516,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               dragHandler={value => {
                 setConcentrationIndex(value)
               }}
+              minimumSliderIndex={minimumSliderIndex}
             />
           </Grid>
         ) : (
