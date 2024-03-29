@@ -18,6 +18,7 @@ export type TickPlotPositionData = Omit<PlotTickData, 'y'>
 export interface IPriceRangePlot {
   data: PlotTickData[]
   midPrice?: TickPlotPositionData
+  globalPrice?: number
   leftRange: TickPlotPositionData
   rightRange: TickPlotPositionData
   onChangeRange?: (left: number, right: number) => void
@@ -48,6 +49,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   leftRange,
   rightRange,
   midPrice,
+  globalPrice,
   onChangeRange,
   style,
   className,
@@ -289,6 +291,27 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     )
   }
 
+  const globalPriceLayer: Layer = ({ innerWidth, innerHeight }) => {
+    if (typeof globalPrice === 'undefined') {
+      return null
+    }
+
+    const unitLen = innerWidth / (plotMax - plotMin)
+    return (
+      <svg x={(globalPrice - plotMin) * unitLen - 20} y={0} width={40} height={innerHeight}>
+        <defs>
+          <linearGradient id='currentGradient'>
+            <stop offset='0%' stop-color='black' stop-opacity='0' />
+            <stop offset='50%' stop-color='black' stop-opacity='0.25' />
+            <stop offset='100%' stop-color='black' stop-opacity='0' />
+          </linearGradient>
+        </defs>
+        <rect x={0} y={0} width={40} height={innerHeight} fill='url(#currentGradient)' />
+        <rect x={19} y={0} width={3} height={innerHeight} fill={colors.invariant.blue} />
+      </svg>
+    )
+  }
+
   const volumeRangeLayer: Layer = ({ innerWidth, innerHeight }) => {
     if (typeof volumeRange === 'undefined') {
       return null
@@ -478,6 +501,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'areas',
           'lines',
           lazyLoadingLayer,
+          globalPriceLayer,
           currentLayer,
           volumeRangeLayer,
           brushLayer,
