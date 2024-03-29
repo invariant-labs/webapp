@@ -31,6 +31,7 @@ interface IProps {
   onHideUnknownTokensChange: (val: boolean) => void
   tokenPrice?: number
   priceLoading?: boolean
+  isBalanceLoading: boolean
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -54,7 +55,8 @@ export const AmountInput: React.FC<IProps> = ({
   initialHideUnknownTokensValue,
   onHideUnknownTokensChange,
   tokenPrice,
-  priceLoading = false
+  priceLoading = false,
+  isBalanceLoading
 }) => {
   const classes = useStyles()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -159,6 +161,8 @@ export const AmountInput: React.FC<IProps> = ({
   const tokenIcon = !current ? '' : current.symbol
 
   const usdBalance = tokenPrice && balance ? tokenPrice * +balance : 0
+
+  const formattedBalance = balance ? formatNumbers(thresholds)(balance.toString()) : 0
   return (
     <>
       <Grid container alignItems='center' wrap='nowrap' className={classes.exchangeContainer}>
@@ -196,7 +200,12 @@ export const AmountInput: React.FC<IProps> = ({
         className={classes.bottom}>
         <Grid className={classes.BalanceContainer} onClick={onMaxClick}>
           <Typography className={classes.BalanceTypography}>
-            Balance: {balance ? formatNumbers(thresholds)(balance.toString()) : 0}
+            Balance:
+            {isBalanceLoading ? (
+              <img src={loadingAnimation} className={classes.loadingBalance} />
+            ) : (
+              formattedBalance
+            )}
             {showPrefix(Number(balance))} {tokenIcon.slice(0, 8)}
             {tokenIcon.length > 8 ? '...' : ''}
           </Typography>

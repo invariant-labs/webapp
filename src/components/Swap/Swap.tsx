@@ -97,6 +97,7 @@ export interface ISwap {
   priceToLoading?: boolean
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
+  isBalanceLoading: boolean
 }
 
 export const Swap: React.FC<ISwap> = ({
@@ -124,7 +125,8 @@ export const Swap: React.FC<ISwap> = ({
   priceFromLoading,
   priceToLoading,
   onSlippageChange,
-  initialSlippage
+  initialSlippage,
+  isBalanceLoading
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -529,6 +531,7 @@ export const Swap: React.FC<ISwap> = ({
             onHideUnknownTokensChange={onHideUnknownTokensChange}
             tokenPrice={tokenFromPriceData?.price}
             priceLoading={priceFromLoading}
+            isBalanceLoading={isBalanceLoading}
           />
         </Box>
         <Box className={classes.tokenComponentTextContainer}>
@@ -605,6 +608,7 @@ export const Swap: React.FC<ISwap> = ({
             onHideUnknownTokensChange={onHideUnknownTokensChange}
             tokenPrice={tokenToPriceData?.price}
             priceLoading={priceToLoading}
+            isBalanceLoading={isBalanceLoading}
           />
         </Box>
         <Box className={classes.transactionDetails}>

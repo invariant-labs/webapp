@@ -58,7 +58,9 @@ const useStyles = makeStyles(() => ({
     marginRight: 3,
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis'
+    textOverflow: 'ellipsis',
+    display: 'flex',
+    alignItems: 'center'
   },
   walletBalanace: {
     color: colors.invariant.lightGrey
@@ -90,6 +92,11 @@ const useStyles = makeStyles(() => ({
     cursor: 'default'
   },
   loading: {
+    width: 15,
+    height: 15
+  },
+  loadingBalance: {
+    padding: '0 10px 0 20px',
     width: 15,
     height: 15
   },
