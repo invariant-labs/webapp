@@ -104,7 +104,10 @@ export const PositionsList: React.FC<IProp> = ({
               value={searchValue}
             />
             <Grid>
-              <Button onClick={handleRefresh} className={classes.refreshIconBtn}>
+              <Button
+                disabled={showNoConnected}
+                onClick={showNoConnected ? () => {} : handleRefresh}
+                className={classes.refreshIconBtn}>
                 <img src={refreshIcon} className={classes.refreshIcon} />
               </Button>
               <Button

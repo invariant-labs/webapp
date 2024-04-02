@@ -132,8 +132,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 'auto',
     background: 'none',
     marginRight: 7,
-    '& :hover': {
+    '&:hover': {
       background: 'none'
+    },
+    '&:disabled': {
+      opacity: 0.5
     }
   },
   refreshIcon: {
