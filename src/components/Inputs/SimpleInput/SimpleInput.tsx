@@ -90,7 +90,7 @@ export const AmountInput: React.FC<IProps> = ({
               tooltip: classes.globalPriceTooltip
             }}>
             <Typography className={classes.globalPrice} variant='h4'>
-              {globalPrice > 1 ? globalPrice.toFixed(2) : globalPrice}
+              {globalPrice.toFixed(4)}
             </Typography>
           </Tooltip>
         ) : null
