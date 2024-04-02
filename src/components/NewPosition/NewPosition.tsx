@@ -178,6 +178,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+
+  const [shouldResetPlot, setShouldResetPlot] = useState(true)
+
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -374,7 +377,10 @@ export const NewPosition: React.FC<INewPosition> = ({
           justifyContent='space-between'
           className={classes.leftSideSubHeader}>
           <Typography className={classes.title}>Add new liquidity position</Typography>
-          <Button onClick={handleRefresh} className={classes.refreshIconBtn}>
+          <Button
+            disabled={tokenAIndex === null || tokenBIndex === null}
+            onClick={handleRefresh}
+            className={classes.refreshIconBtn}>
             <img src={refreshIcon} className={classes.refreshIcon} />
           </Button>
         </Grid>
@@ -537,6 +543,7 @@ export const NewPosition: React.FC<INewPosition> = ({
           priceALoading={priceALoading}
           priceBLoading={priceBLoading}
           feeTierIndex={currentFeeIndex}
+          setShouldResetPlot={setShouldResetPlot}
         />
 
         {isCurrentPoolExisting ||
@@ -579,6 +586,8 @@ export const NewPosition: React.FC<INewPosition> = ({
             hasTicksError={hasTicksError}
             reloadHandler={reloadHandler}
             volumeRange={plotVolumeRange}
+            shouldResetPlot={shouldResetPlot}
+            setShouldResetPlot={setShouldResetPlot}
           />
         ) : (
           <PoolInit

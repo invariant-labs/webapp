@@ -59,6 +59,7 @@ export interface IDepositSelector {
   priceALoading?: boolean
   priceBLoading?: boolean
   feeTierIndex: number
+  setShouldResetPlot: (val: boolean) => void
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -88,7 +89,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   onHideUnknownTokensChange,
   priceALoading,
   priceBLoading,
-  feeTierIndex
+  feeTierIndex,
+  setShouldResetPlot
 }) => {
   const classes = useStyles()
 
@@ -206,6 +208,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               tokens={tokens}
               current={tokenAIndex !== null ? tokens[tokenAIndex] : null}
               onSelect={index => {
+                setShouldResetPlot(true)
                 setTokenAIndex(index)
                 setPositionTokens(index, tokenBIndex, feeTierIndex)
               }}
@@ -241,6 +244,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               tokens={tokens}
               current={tokenBIndex !== null ? tokens[tokenBIndex] : null}
               onSelect={index => {
+                setShouldResetPlot(true)
                 setTokenBIndex(index)
                 setPositionTokens(tokenAIndex, index, feeTierIndex)
               }}
@@ -258,6 +262,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         <FeeSwitch
           onSelect={fee => {
             setPositionTokens(tokenAIndex, tokenBIndex, fee)
+            setShouldResetPlot(true)
           }}
           feeTiers={feeTiers}
           showOnlyPercents
