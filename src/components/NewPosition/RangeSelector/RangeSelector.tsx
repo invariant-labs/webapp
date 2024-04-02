@@ -45,7 +45,6 @@ export interface IRangeSelector {
   }
   concentrationArray: number[]
   minimumSliderIndex: number
-  setMinimumSliderIndex: (val: number) => void
   concentrationIndex: number
   setConcentrationIndex: (val: number) => void
 }
@@ -73,7 +72,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   volumeRange,
   concentrationArray,
   minimumSliderIndex,
-  setMinimumSliderIndex,
   concentrationIndex,
   setConcentrationIndex
 }) => {
@@ -264,32 +262,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }
 
-  const getMinSliderIndex = () => {
-    let minimumSliderIndex = 0
-
-    for (let index = 0; index < concentrationArray.length; index++) {
-      const value = concentrationArray[index]
-      const { leftRange, rightRange } = calculateConcentrationRange(
-        tickSpacing,
-        value,
-        2,
-        midPrice.index,
-        isXtoY
-      )
-
-      const leftRangeValue = calcPrice(leftRange, isXtoY, xDecimal, yDecimal)
-      const rightRangeValue = calcPrice(rightRange, isXtoY, xDecimal, yDecimal)
-
-      if (leftRangeValue < data[0].x || rightRangeValue > data[1].x) {
-        minimumSliderIndex = index + 1
-      } else {
-        break
-      }
-    }
-
-    return minimumSliderIndex
-  }
-
   useEffect(() => {
     if (isConcentrated) {
       setConcentrationIndex(0)
@@ -325,13 +297,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       autoZoomHandler(leftRange, rightRange, true)
     }
   }, [midPrice.index, concentrationArray])
-
-  useEffect(() => {
-    if (isConcentrated) {
-      const minimumSliderIndex = getMinSliderIndex()
-      setMinimumSliderIndex(minimumSliderIndex)
-    }
-  }, [poolIndex, midPrice.index, isConcentrated])
 
   return (
     <Grid container className={classes.wrapper} direction='column'>

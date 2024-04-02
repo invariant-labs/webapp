@@ -11,11 +11,12 @@ import {
   determinePositionTokenBlock,
   printBN,
   printBNtoBN,
-  trimLeadingZeros
+  trimLeadingZeros,
+  calculateConcentrationRange
 } from '@consts/utils'
 import { MIN_TICK } from '@invariant-labs/sdk'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
-import { fromFee, getConcentrationArray } from '@invariant-labs/sdk/lib/utils'
+import { fromFee, getConcentrationArray, getMaxTick } from '@invariant-labs/sdk/lib/utils'
 import { MAX_TICK } from '@invariant-labs/sdk/src'
 import { Button, Grid, Typography } from '@material-ui/core'
 import { Color } from '@material-ui/lab'
@@ -34,6 +35,7 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
+import { getMinTick } from '@invariant-labs/sdk/src/utils'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -306,6 +308,44 @@ export const NewPosition: React.FC<INewPosition> = ({
               tier.tokenY.equals(tokens[tokenAIndex].assetAddress))
         )?.bestTierIndex ?? undefined
 
+  const getMinSliderIndex = () => {
+    let minimumSliderIndex = 0
+
+    for (let index = 0; index < concentrationArray.length; index++) {
+      const value = concentrationArray[index]
+
+      const { leftRange, rightRange } = calculateConcentrationRange(
+        tickSpacing,
+        value,
+        2,
+        midPrice.index,
+        isXtoY
+      )
+
+      const leftMax = isXtoY ? getMinTick(tickSpacing) : getMaxTick(tickSpacing)
+      const rightMax = isXtoY ? getMaxTick(tickSpacing) : getMinTick(tickSpacing)
+
+      if (
+        (isXtoY && (leftMax > leftRange || rightMax < rightRange)) ||
+        (!isXtoY && (leftMax < leftRange || rightMax > rightRange))
+      ) {
+        minimumSliderIndex = index + 1
+      } else {
+        break
+      }
+    }
+
+    return minimumSliderIndex
+  }
+
+  useEffect(() => {
+    if (isConcentrated) {
+      const minimumSliderIndex = getMinSliderIndex()
+
+      setMinimumSliderIndex(minimumSliderIndex)
+    }
+  }, [poolIndex, isConcentrated, midPrice.index])
+
   useEffect(() => {
     if (!ticksLoading && !isConcentrated) {
       onChangeRange(leftRange, rightRange)
@@ -571,7 +611,6 @@ export const NewPosition: React.FC<INewPosition> = ({
             concentrationArray={concentrationArray}
             setConcentrationIndex={setConcentrationIndex}
             concentrationIndex={concentrationIndex}
-            setMinimumSliderIndex={setMinimumSliderIndex}
             minimumSliderIndex={minimumSliderIndex}
           />
         ) : (

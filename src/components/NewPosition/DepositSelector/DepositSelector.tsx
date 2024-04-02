@@ -184,7 +184,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       tokenAIndex !== null &&
       tokenBIndex !== null
     ) {
-      return `Set concentration to at least ${concentrationArray[minimumSliderIndex]}x`
+      return concentrationArray[minimumSliderIndex]
+        ? `Set concentration to at least ${concentrationArray[minimumSliderIndex]}x`
+        : 'Set higher fee tier'
     }
 
     return 'Add Liquidity'
