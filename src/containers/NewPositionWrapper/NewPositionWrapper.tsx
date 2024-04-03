@@ -310,7 +310,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       return
     }
 
-    const id = tokens[tokenAIndex].coingeckoId ?? ''
+    const id = tokens[tokenAIndex].assetAddress.toString() ?? ''
     if (id.length) {
       setPriceALoading(true)
       getJupTokenPrice(id)
@@ -329,7 +329,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       return
     }
 
-    const id = tokens[tokenBIndex].coingeckoId ?? ''
+    const id = tokens[tokenBIndex].assetAddress.toString() ?? ''
     if (id.length) {
       setPriceBLoading(true)
       getJupTokenPrice(id)

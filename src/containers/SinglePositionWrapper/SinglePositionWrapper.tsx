@@ -316,7 +316,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       return
     }
 
-    const xId = position.tokenX.coingeckoId ?? ''
+    const xId = position.tokenX.assetAddress.toString() ?? ''
     if (xId.length) {
       getJupTokenPrice(xId)
         .then(data => setTokenXPriceData(data))
@@ -325,7 +325,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       setTokenXPriceData(undefined)
     }
 
-    const yId = position.tokenY.coingeckoId ?? ''
+    const yId = position.tokenY.assetAddress.toString() ?? ''
     if (yId.length) {
       getJupTokenPrice(yId)
         .then(data => setTokenYPriceData(data))
@@ -390,6 +390,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             ? undefined
             : tokenXPriceData.price * +printBN(position.tokenX.balance, position.tokenX.decimals)
       }}
+      tokenXPriceData={tokenXPriceData}
       tokenY={{
         name: position.tokenY.symbol,
         icon: position.tokenY.logoURI,
@@ -402,6 +403,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             ? undefined
             : tokenYPriceData.price * +printBN(position.tokenY.balance, position.tokenY.decimals)
       }}
+      tokenYPriceData={tokenYPriceData}
       fee={position.poolData.fee}
       min={min}
       max={max}
