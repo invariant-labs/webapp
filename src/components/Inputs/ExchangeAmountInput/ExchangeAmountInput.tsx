@@ -227,7 +227,7 @@ export const AmountInput: React.FC<IProps> = ({
                   tooltip: classes.tooltip
                 }}>
                 <Typography className={classes.noData}>
-                  <div className={classes.noDataIcon}>?</div>No data
+                  <span className={classes.noDataIcon}>?</span>No data
                 </Typography>
               </Tooltip>
             )
