@@ -45,12 +45,17 @@ export const WrappedPositionsList: React.FC = () => {
     }
   }, [list])
 
+  const handleRefresh = () => {
+    dispatch(actions.getPositionsList())
+  }
+
   return (
     <PositionsList
       initialPage={lastPage}
       setLastPage={setLastPage}
       searchValue={value}
       searchSetValue={handleSearchValue}
+      handleRefresh={handleRefresh}
       onAddPositionClick={() => {
         history.push('/newPosition')
       }}
