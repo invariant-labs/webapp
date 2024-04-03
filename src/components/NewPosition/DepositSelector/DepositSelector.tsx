@@ -152,6 +152,17 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
 
     if (
+      concentrationIndex < minimumSliderIndex &&
+      isConcentrated &&
+      tokenAIndex !== null &&
+      tokenBIndex !== null
+    ) {
+      return concentrationArray[minimumSliderIndex]
+        ? `Set concentration to at least ${concentrationArray[minimumSliderIndex]}x`
+        : 'Set higher fee tier'
+    }
+
+    if (
       !tokenAInputState.blocked &&
       printBNtoBN(tokenAInputState.value, tokens[tokenAIndex].decimals).gt(
         tokens[tokenAIndex].balance
@@ -176,17 +187,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       +tokenBInputState.value === 0
     ) {
       return 'Liquidity must be greater than 0'
-    }
-
-    if (
-      concentrationIndex < minimumSliderIndex &&
-      isConcentrated &&
-      tokenAIndex !== null &&
-      tokenBIndex !== null
-    ) {
-      return concentrationArray[minimumSliderIndex]
-        ? `Set concentration to at least ${concentrationArray[minimumSliderIndex]}x`
-        : 'Set higher fee tier'
     }
 
     return 'Add Liquidity'
