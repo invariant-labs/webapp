@@ -151,12 +151,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'Insufficient lamports'
     }
 
-    if (
-      concentrationIndex < minimumSliderIndex &&
-      isConcentrated &&
-      tokenAIndex !== null &&
-      tokenBIndex !== null
-    ) {
+    if (concentrationIndex < minimumSliderIndex && isConcentrated) {
       return concentrationArray[minimumSliderIndex]
         ? `Set concentration to at least ${concentrationArray[minimumSliderIndex]}x`
         : 'Set higher fee tier'
@@ -196,7 +191,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     tokenAInputState.value,
     tokenBInputState.value,
     tokens,
-    isConcentrated
+    isConcentrated,
+    concentrationIndex
   ])
 
   useEffect(() => {
