@@ -464,7 +464,15 @@ export const Swap: React.FC<ISwap> = ({
       <Grid container className={classes.header}>
         <Typography component='h1'>Swap tokens</Typography>
         <Box className={classes.swapControls}>
-          <Button onClick={handleRefresh} className={classes.refreshIconBtn}>
+          <Button
+            onClick={handleRefresh}
+            className={classes.refreshIconBtn}
+            disabled={
+              priceFromLoading ||
+              priceToLoading ||
+              isBalanceLoading ||
+              getStateMessage() === 'Loading'
+            }>
             <img src={refreshIcon} className={classes.refreshIcon} />
           </Button>
           <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>

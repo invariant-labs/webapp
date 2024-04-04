@@ -162,7 +162,7 @@ export const AmountInput: React.FC<IProps> = ({
 
   const usdBalance = tokenPrice && balance ? tokenPrice * +balance : 0
 
-  const formattedBalance = balance ? formatNumbers(thresholds)(balance.toString()) : 0
+  const formattedBalance = balance ? ' ' + formatNumbers(thresholds)(balance.toString()) : 0
   return (
     <>
       <Grid container alignItems='center' wrap='nowrap' className={classes.exchangeContainer}>
