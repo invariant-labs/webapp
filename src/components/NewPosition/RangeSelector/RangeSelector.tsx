@@ -345,7 +345,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               tooltip: classes.liquidityTooltip
             }}>
             <Typography className={classes.activeLiquidity}>
-              Active liquidity <div className={classes.activeLiquidityIcon}>i</div>
+              Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
             </Typography>
           </Tooltip>
           <Grid>
