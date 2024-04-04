@@ -1,7 +1,7 @@
 import { colors, typography } from '@static/theme'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   amountInput: {
     background: colors.invariant.newDark,
     color: colors.invariant.light,
@@ -15,19 +15,34 @@ const useStyles = makeStyles(() => ({
     }
   },
   maxButton: {
-    ...typography.caption4,
-    minWidth: 30,
-    height: 15,
-    borderRadius: 3,
-    padding: '7px 0',
-    backgroundColor: colors.invariant.light,
-    marginTop: 0,
-    lineHeight: '13px',
-    cursor: 'pointer',
-    background:
-      'radial-gradient(118.38% 303.54% at 3.96% 118.38%, rgba(119, 72, 216, 0.1) 0%, rgba(119, 72, 216, 0) 100%), radial-gradient(57.34% 103.84% at 50% 0%, rgba(156, 231, 90, 0.1) 0%, rgba(156, 231, 90, 0) 100%)',
+    color: colors.invariant.componentBcg,
+    ...typography.tiny2,
+    borderRadius: 4,
+    width: 26,
+    minWidth: 26,
+    height: 14,
+    textTransform: 'none',
+    marginLeft: 4,
+    background: ' rgba(46, 224, 154, 0.8)',
+    lineHeight: '14px',
+
     '&:hover': {
-      boxShadow: '0px 0px 20px -8px white'
+      background: 'none',
+      backgroundColor: colors.invariant.green,
+      boxShadow: '0px 0px 20px -10px white'
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: 26,
+      minWidth: 26,
+      height: 14,
+      marginTop: 2
+    }
+  },
+  maxButtonNotActive: {
+    backgroundColor: colors.invariant.light,
+    '&:hover': {
+      backgroundColor: colors.invariant.light,
+      cursor: 'default'
     }
   },
   select: {
@@ -44,7 +59,7 @@ const useStyles = makeStyles(() => ({
     top: -1,
     color: colors.invariant.dark
   },
-  BalanceContainer: {
+  balanceContainer: {
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',

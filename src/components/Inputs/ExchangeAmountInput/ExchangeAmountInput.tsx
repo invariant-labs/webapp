@@ -23,7 +23,7 @@ interface IProps {
   onSelect: (index: number) => void
   disabled: boolean
   balance?: string
-  hideBalancesInModal?: boolean
+  hideBalances?: boolean
   handleAddToken: (address: string) => void
   commonTokens: PublicKey[]
   limit?: number
@@ -48,7 +48,7 @@ export const AmountInput: React.FC<IProps> = ({
   onSelect,
   disabled,
   balance,
-  hideBalancesInModal = false,
+  hideBalances = false,
   handleAddToken,
   commonTokens,
   limit,
@@ -172,7 +172,7 @@ export const AmountInput: React.FC<IProps> = ({
           onSelect={onSelect}
           current={current}
           className={classes.select}
-          hideBalancesInModal={hideBalancesInModal}
+          hideBalancesInModal={hideBalances}
           handleAddToken={handleAddToken}
           commonTokens={commonTokens}
           initialHideUnknownTokensValue={initialHideUnknownTokensValue}
@@ -198,16 +198,21 @@ export const AmountInput: React.FC<IProps> = ({
         direction='row'
         wrap='nowrap'
         className={classes.bottom}>
-        <Grid className={classes.BalanceContainer} onClick={onMaxClick}>
+        <Grid className={classes.balanceContainer} onClick={onMaxClick}>
           <Typography className={classes.BalanceTypography}>
             Balance:
-            {isBalanceLoading ? (
-              <img src={loadingAnimation} className={classes.loadingBalance} />
-            ) : (
-              formattedBalance
+            {hideBalances && ' - -'}
+            {!hideBalances && (
+              <>
+                {isBalanceLoading ? (
+                  <img src={loadingAnimation} className={classes.loadingBalance} />
+                ) : (
+                  formattedBalance
+                )}
+                {showPrefix(Number(balance))} {tokenIcon.slice(0, 8)}
+                {tokenIcon.length > 8 ? '...' : ''}
+              </>
             )}
-            {showPrefix(Number(balance))} {tokenIcon.slice(0, 8)}
-            {tokenIcon.length > 8 ? '...' : ''}
           </Typography>
           <OutlinedButton
             name='Max'
@@ -215,7 +220,9 @@ export const AmountInput: React.FC<IProps> = ({
             onClick={onMaxClick}
             className={classes.maxButton}
             labelClassName={classes.label}
-            disabled={disabled && isNaN(Number(balance)) ? disabled : isNaN(Number(balance))}
+            disabled={
+              disabled && isNaN(Number(balance)) ? disabled : isNaN(Number(balance)) || hideBalances
+            }
           />
         </Grid>
         <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>

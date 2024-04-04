@@ -471,7 +471,8 @@ export const Swap: React.FC<ISwap> = ({
               priceFromLoading ||
               priceToLoading ||
               isBalanceLoading ||
-              getStateMessage() === 'Loading'
+              getStateMessage() === 'Loading' ||
+              walletStatus !== Status.Initialized
             }>
             <img src={refreshIcon} className={classes.refreshIcon} />
           </Button>
@@ -531,7 +532,7 @@ export const Swap: React.FC<ISwap> = ({
             current={tokenFromIndex !== null ? tokens[tokenFromIndex] : null}
             onSelect={setTokenFromIndex}
             disabled={tokenFromIndex === null}
-            hideBalancesInModal={walletStatus !== Status.Initialized}
+            hideBalances={walletStatus !== Status.Initialized}
             handleAddToken={handleAddToken}
             commonTokens={commonTokens}
             limit={1e14}
@@ -608,7 +609,7 @@ export const Swap: React.FC<ISwap> = ({
             current={tokenToIndex !== null ? tokens[tokenToIndex] : null}
             onSelect={setTokenToIndex}
             disabled={tokenFromIndex === null}
-            hideBalancesInModal={walletStatus !== Status.Initialized}
+            hideBalances={walletStatus !== Status.Initialized}
             handleAddToken={handleAddToken}
             commonTokens={commonTokens}
             limit={1e14}
