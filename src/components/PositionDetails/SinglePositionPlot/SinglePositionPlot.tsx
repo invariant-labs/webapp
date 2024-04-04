@@ -15,6 +15,7 @@ export interface ISinglePositionPlot {
   leftRange: TickPlotPositionData
   rightRange: TickPlotPositionData
   midPrice: TickPlotPositionData
+  globalPrice?: number
   currentPrice: number
   tokenY: Pick<ILiquidityToken, 'name' | 'decimal'>
   tokenX: Pick<ILiquidityToken, 'name' | 'decimal'>
@@ -38,6 +39,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   leftRange,
   rightRange,
   midPrice,
+  globalPrice,
   currentPrice,
   tokenY,
   tokenX,
@@ -118,7 +120,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         />
       </Grid>
       <Grid className={classes.infoRow} container justifyContent='flex-end'>
-        <Grid>
+        <Grid container direction='column' alignItems='flex-end'>
           <Tooltip
             title={
               <>
@@ -154,7 +156,10 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
               Active liquidity <div className={classes.activeLiquidityIcon}>i</div>
             </Typography>
           </Tooltip>
-          <Typography className={classes.currentPrice}>Current price</Typography>
+          <Grid>
+            <Typography className={classes.currentPrice}>Current price</Typography>
+            <Typography className={classes.globalPrice}>Global price</Typography>
+          </Grid>
         </Grid>
       </Grid>
       <Grid className={classes.plotWrapper}>
@@ -179,6 +184,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
           volumeRange={volumeRange}
+          globalPrice={globalPrice}
         />
       </Grid>
       <Grid className={classes.minMaxInfo}>

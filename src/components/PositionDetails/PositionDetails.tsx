@@ -8,7 +8,7 @@ import { Button, Grid, Hidden, Typography } from '@material-ui/core'
 import { PlotTickData } from '@reducers/positions'
 import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
-import React, { useState } from 'react'
+import React from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { ILiquidityToken } from './SinglePositionInfo/consts'
 import SinglePositionPlot from './SinglePositionPlot/SinglePositionPlot'
@@ -48,6 +48,9 @@ interface IProps {
     max: number
   }
   userHasStakes?: boolean
+  globalPrice?: number
+  setXToY: (val: boolean) => void
+  xToY: boolean
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -77,13 +80,14 @@ const PositionDetails: React.FC<IProps> = ({
   hasTicksError,
   reloadHandler,
   plotVolumeRange,
-  userHasStakes = false
+  userHasStakes = false,
+  globalPrice,
+  setXToY,
+  xToY
 }) => {
   const classes = useStyles()
 
   const history = useHistory()
-
-  const [xToY, setXToY] = useState<boolean>(true)
 
   return (
     <Grid container className={classes.wrapperContainer} wrap='nowrap'>
@@ -184,6 +188,7 @@ const PositionDetails: React.FC<IProps> = ({
                   max: 1 / (plotVolumeRange?.min ?? 1)
                 }
           }
+          globalPrice={globalPrice}
         />
       </Grid>
     </Grid>

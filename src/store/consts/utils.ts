@@ -1064,6 +1064,13 @@ export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
   }
 }
 
+export const getJupTokensRatioPrice = async (id: string, vsId: string): Promise<TokenPriceData> => {
+  const response = await axios.get(`https://price.jup.ag/v4/price?ids=${id}&vsToken=${vsId}`)
+  return {
+    price: response.data.data[id].price ?? 0
+  }
+}
+
 export const getTicksList = async (
   marketProgram: Market,
   data: Array<{ pair: Pair; index: number }>
