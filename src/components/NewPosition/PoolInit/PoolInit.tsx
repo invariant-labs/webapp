@@ -24,6 +24,7 @@ export interface IPoolInit {
   midPrice: number
   onChangeMidPrice: (mid: number) => void
   currentPairReversed: boolean | null
+  globalPrice?: number
 }
 
 export const PoolInit: React.FC<IPoolInit> = ({
@@ -36,7 +37,8 @@ export const PoolInit: React.FC<IPoolInit> = ({
   tickSpacing,
   midPrice,
   onChangeMidPrice,
-  currentPairReversed
+  currentPairReversed,
+  globalPrice
 }) => {
   const classes = useStyles()
 
@@ -132,6 +134,7 @@ export const PoolInit: React.FC<IPoolInit> = ({
           decimal={isXtoY ? xDecimal : yDecimal}
           className={classes.midPrice}
           placeholder='0.0'
+          globalPrice={globalPrice}
         />
 
         <Grid
@@ -140,7 +143,6 @@ export const PoolInit: React.FC<IPoolInit> = ({
           justifyContent='space-between'
           alignItems='center'>
           <Typography className={classes.priceLabel}>{tokenASymbol} starting price: </Typography>
-
           <Typography className={classes.priceValue}>
             <AnimatedNumber
               value={price.toFixed(isXtoY ? xDecimal : yDecimal)}

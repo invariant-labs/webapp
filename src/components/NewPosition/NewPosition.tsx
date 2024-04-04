@@ -105,6 +105,7 @@ export interface INewPosition {
   currentFeeIndex: number
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
+  globalPrice?: number
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -156,7 +157,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   plotVolumeRange,
   currentFeeIndex,
   onSlippageChange,
-  initialSlippage
+  initialSlippage,
+  globalPrice
 }) => {
   const classes = useStyles()
 
@@ -539,6 +541,7 @@ export const NewPosition: React.FC<INewPosition> = ({
               : {
                   data,
                   midPrice,
+                  globalPrice,
                   tokenASymbol: tokens[tokenAIndex].symbol,
                   tokenBSymbol: tokens[tokenBIndex].symbol
                 })}
@@ -567,6 +570,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             midPrice={midPrice.index}
             onChangeMidPrice={onChangeMidPrice}
             currentPairReversed={currentPairReversed}
+            globalPrice={globalPrice}
           />
         )}
       </Grid>
