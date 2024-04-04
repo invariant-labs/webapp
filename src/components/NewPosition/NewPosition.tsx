@@ -223,15 +223,32 @@ export const NewPosition: React.FC<INewPosition> = ({
   }
 
   const onChangeRange = (left: number, right: number) => {
-    setLeftRange(left)
-    setRightRange(right)
+    const leftMax = isXtoY ? getMinTick(tickSpacing) : getMaxTick(tickSpacing)
+    const rightMax = isXtoY ? getMaxTick(tickSpacing) : getMinTick(tickSpacing)
 
-    if (tokenAIndex !== null && (isXtoY ? right > midPrice.index : right < midPrice.index)) {
+    let leftInRange
+    let rightInRange
+
+    if (isXtoY) {
+      leftInRange = left < leftMax && !isConcentrated ? leftMax : left
+      rightInRange = right > rightMax && !isConcentrated ? rightMax : right
+    } else {
+      leftInRange = left > leftMax && !isConcentrated ? leftMax : left
+      rightInRange = right < rightMax && !isConcentrated ? rightMax : right
+    }
+
+    setLeftRange(leftInRange)
+    setRightRange(rightInRange)
+
+    if (
+      tokenAIndex !== null &&
+      (isXtoY ? rightInRange > midPrice.index : rightInRange < midPrice.index)
+    ) {
       const deposit = tokenADeposit
       const amount = getOtherTokenAmount(
         printBNtoBN(deposit, tokens[tokenAIndex].decimals),
-        left,
-        right,
+        leftInRange,
+        rightInRange,
         true
       )
 
@@ -243,12 +260,15 @@ export const NewPosition: React.FC<INewPosition> = ({
       }
     }
 
-    if (tokenBIndex !== null && (isXtoY ? left < midPrice.index : left > midPrice.index)) {
+    if (
+      tokenBIndex !== null &&
+      (isXtoY ? leftInRange < midPrice.index : leftInRange > midPrice.index)
+    ) {
       const deposit = tokenBDeposit
       const amount = getOtherTokenAmount(
         printBNtoBN(deposit, tokens[tokenBIndex].decimals),
-        left,
-        right,
+        leftInRange,
+        rightInRange,
         false
       )
 

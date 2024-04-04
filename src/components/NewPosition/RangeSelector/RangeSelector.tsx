@@ -82,7 +82,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
-
+  console.log(rightRange)
   const [leftInputRounded, setLeftInputRounded] = useState('')
   const [rightInputRounded, setRightInputRounded] = useState('')
 
@@ -140,13 +140,27 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   const changeRangeHandler = (left: number, right: number) => {
-    setLeftRange(left)
-    setRightRange(right)
+    const leftMax = isXtoY ? getMinTick(tickSpacing) : getMaxTick(tickSpacing)
+    const rightMax = isXtoY ? getMaxTick(tickSpacing) : getMinTick(tickSpacing)
 
-    setLeftInputValues(calcPrice(left, isXtoY, xDecimal, yDecimal).toString())
-    setRightInputValues(calcPrice(right, isXtoY, xDecimal, yDecimal).toString())
+    let leftInRange
+    let rightInRange
 
-    onChangeRange(left, right)
+    if (isXtoY) {
+      leftInRange = left < leftMax && !isConcentrated ? leftMax : left
+      rightInRange = right > rightMax && !isConcentrated ? rightMax : right
+    } else {
+      leftInRange = left > leftMax && !isConcentrated ? leftMax : left
+      rightInRange = right < rightMax && !isConcentrated ? rightMax : right
+    }
+
+    setLeftRange(leftInRange)
+    setRightRange(rightInRange)
+
+    setLeftInputValues(calcPrice(leftInRange, isXtoY, xDecimal, yDecimal).toString())
+    setRightInputValues(calcPrice(rightInRange, isXtoY, xDecimal, yDecimal).toString())
+
+    onChangeRange(leftInRange, rightInRange)
   }
 
   const resetPlot = () => {
@@ -275,6 +289,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       )
       changeRangeHandler(leftRange, rightRange)
       autoZoomHandler(leftRange, rightRange, true)
+    } else {
+      changeRangeHandler(leftRange, rightRange)
     }
   }, [isConcentrated])
 
