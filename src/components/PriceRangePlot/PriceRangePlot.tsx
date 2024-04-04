@@ -277,16 +277,14 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
     const unitLen = innerWidth / (plotMax - plotMin)
     return (
-      <svg x={(midPrice.x - plotMin) * unitLen - 20} y={0} width={40} height={innerHeight}>
+      <svg x={(midPrice.x - plotMin) * unitLen - 20} y={0} width={60} height={innerHeight}>
         <defs>
-          <linearGradient id='currentGradient'>
-            <stop offset='0%' stop-color='black' stop-opacity='0' />
-            <stop offset='50%' stop-color='black' stop-opacity='0.25' />
-            <stop offset='100%' stop-color='black' stop-opacity='0' />
-          </linearGradient>
+          <filter id='shadow' x='-10' y='-9' width='20' height={innerHeight}>
+            <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
+          </filter>
         </defs>
-        <rect x={0} y={20} width={40} height={innerHeight} fill='url(#currentGradient)' />
-        <rect x={19} y={20} width={3} height={innerHeight} fill={colors.invariant.yellow} />
+        <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
+        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.yellow} />
       </svg>
     )
   }
@@ -298,16 +296,21 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
     const unitLen = innerWidth / (plotMax - plotMin)
     return (
-      <svg x={(globalPrice - plotMin) * unitLen - 20} y={0} width={40} height={innerHeight}>
+      <svg x={(globalPrice - plotMin) * unitLen - 20} y={-20} width={40} height={innerHeight + 20}>
         <defs>
-          <linearGradient id='currentGradient'>
-            <stop offset='0%' stop-color='black' stop-opacity='0' />
-            <stop offset='50%' stop-color='black' stop-opacity='0.25' />
-            <stop offset='100%' stop-color='black' stop-opacity='0' />
-          </linearGradient>
+          <filter id='shadow-global-price' x='-10' y='-9' width='20' height={innerHeight}>
+            <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
+          </filter>
         </defs>
-        <rect x={0} y={0} width={40} height={innerHeight} fill='url(#currentGradient)' />
-        <rect x={19} y={0} width={3} height={innerHeight} fill={colors.invariant.blue} />
+        <rect
+          x={14}
+          y={20}
+          width='16'
+          height={innerHeight}
+          filter='url(#shadow-global-price)'
+          opacity='0.3'
+        />
+        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.blue} />
       </svg>
     )
   }
