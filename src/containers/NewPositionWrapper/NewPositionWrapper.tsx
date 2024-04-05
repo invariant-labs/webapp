@@ -1,7 +1,12 @@
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import NewPosition from '@components/NewPosition/NewPosition'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
-import { ALL_FEE_TIERS_DATA, bestTiers, commonTokensForNetworks } from '@consts/static'
+import {
+  ALL_FEE_TIERS_DATA,
+  PositionOpeningMethod,
+  bestTiers,
+  commonTokensForNetworks
+} from '@consts/static'
 import {
   TokenPriceData,
   addNewTokenToLocalStorage,
@@ -12,11 +17,11 @@ import {
   getNewTokenOrThrow,
   printBN
 } from '@consts/utils'
-import { MAX_TICK, Pair, calculatePriceSqrt, getMarketAddress } from '@invariant-labs/sdk'
+import { Pair, calculatePriceSqrt, getMarketAddress } from '@invariant-labs/sdk'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
-import { feeToTickSpacing } from '@invariant-labs/sdk/src/utils'
+import { feeToTickSpacing, getMaxTick } from '@invariant-labs/sdk/src/utils'
 import { Color } from '@material-ui/lab'
 import { BN } from '@project-serum/anchor'
 import { actions as poolsActions } from '@reducers/pools'
@@ -287,12 +292,12 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     )
   }
 
-  const initialIsConcentratedValue =
-    localStorage.getItem('IS_CONCENTRATED') === 'true' ||
-    localStorage.getItem('IS_CONCENTRATED') === null
+  const initialIsConcentrationOpening =
+    localStorage.getItem('OPENING_METHOD') === 'concentration' ||
+    localStorage.getItem('OPENING_METHOD') === null
 
-  const setIsConcentratedValue = (val: boolean) => {
-    localStorage.setItem('IS_CONCENTRATED', val ? 'true' : 'false')
+  const setPositionOpeningMethod = (val: PositionOpeningMethod) => {
+    localStorage.setItem('OPENING_METHOD', val)
   }
 
   const initialHideUnknownTokensValue =
@@ -370,7 +375,10 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
     const upperPrice = calcPrice(
       !lowerTicks.length || !upperTicks.length
-        ? Math.min(allPools[poolIndex].currentTickIndex + allPools[poolIndex].tickSpacing, MAX_TICK)
+        ? Math.min(
+            allPools[poolIndex].currentTickIndex + allPools[poolIndex].tickSpacing,
+            getMaxTick(tickSpacing)
+          )
         : Math.max(...upperTicks),
       isXtoY,
       xDecimal,
@@ -599,8 +607,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       canCreateNewPosition={canUserCreateNewPosition}
       handleAddToken={addTokenHandler}
       commonTokens={commonTokensForNetworks[currentNetwork]}
-      initialIsConcentratedValue={initialIsConcentratedValue}
-      onIsConcentratedChange={setIsConcentratedValue}
+      initialOpeningPositionMethod={initialIsConcentrationOpening ? 'concentration' : 'range'}
+      onPositionOpeningMethodChange={setPositionOpeningMethod}
       initialHideUnknownTokensValue={initialHideUnknownTokensValue}
       onHideUnknownTokensChange={setHideUnknownTokensValue}
       tokenAPriceData={tokenAPriceData}

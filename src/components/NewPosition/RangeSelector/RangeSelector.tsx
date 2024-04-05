@@ -10,14 +10,13 @@ import {
   calculateConcentrationRange
 } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
-import { MIN_TICK } from '@invariant-labs/sdk'
-import { MAX_TICK } from '@invariant-labs/sdk/src'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import loader from '@static/gif/loader.gif'
 import useStyles from './style'
 import activeLiquidity from '@static/svg/activeLiquidity.svg'
+import { PositionOpeningMethod } from '@consts/static'
 
 export interface IRangeSelector {
   data: PlotTickData[]
@@ -35,7 +34,7 @@ export interface IRangeSelector {
   currentPairReversed: boolean | null
   initialIsDiscreteValue: boolean
   onDiscreteChange: (val: boolean) => void
-  isConcentrated?: boolean
+  positionOpeningMethod?: PositionOpeningMethod
   poolIndex: number | null
   hasTicksError?: boolean
   reloadHandler: () => void
@@ -47,6 +46,13 @@ export interface IRangeSelector {
   minimumSliderIndex: number
   concentrationIndex: number
   setConcentrationIndex: (val: number) => void
+  getMarkersInsideRange: (
+    left: number,
+    right: number
+  ) => {
+    leftInRange: number
+    rightInRange: number
+  }
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -65,7 +71,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   currentPairReversed,
   initialIsDiscreteValue,
   onDiscreteChange,
-  isConcentrated = false,
+  positionOpeningMethod,
   poolIndex,
   hasTicksError,
   reloadHandler,
@@ -73,16 +79,17 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   concentrationArray,
   minimumSliderIndex,
   concentrationIndex,
-  setConcentrationIndex
+  setConcentrationIndex,
+  getMarkersInsideRange
 }) => {
   const classes = useStyles()
 
-  const [leftRange, setLeftRange] = useState(MIN_TICK)
-  const [rightRange, setRightRange] = useState(MAX_TICK)
+  const [leftRange, setLeftRange] = useState(getMinTick(tickSpacing))
+  const [rightRange, setRightRange] = useState(getMaxTick(tickSpacing))
 
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
-  console.log(rightRange)
+
   const [leftInputRounded, setLeftInputRounded] = useState('')
   const [rightInputRounded, setRightInputRounded] = useState('')
 
@@ -140,19 +147,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   const changeRangeHandler = (left: number, right: number) => {
-    const leftMax = isXtoY ? getMinTick(tickSpacing) : getMaxTick(tickSpacing)
-    const rightMax = isXtoY ? getMaxTick(tickSpacing) : getMinTick(tickSpacing)
-
-    let leftInRange
-    let rightInRange
-
-    if (isXtoY) {
-      leftInRange = left < leftMax && !isConcentrated ? leftMax : left
-      rightInRange = right > rightMax && !isConcentrated ? rightMax : right
-    } else {
-      leftInRange = left > leftMax && !isConcentrated ? leftMax : left
-      rightInRange = right < rightMax && !isConcentrated ? rightMax : right
-    }
+    const { leftInRange, rightInRange } = getMarkersInsideRange(left, right)
 
     setLeftRange(leftInRange)
     setRightRange(rightInRange)
@@ -164,7 +159,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   const resetPlot = () => {
-    if (!isConcentrated) {
+    if (positionOpeningMethod === 'range') {
       const initSideDist = Math.abs(
         midPrice.x -
           calcPrice(
@@ -277,7 +272,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   useEffect(() => {
-    if (isConcentrated) {
+    if (positionOpeningMethod === 'concentration') {
       setConcentrationIndex(0)
 
       const { leftRange, rightRange } = calculateConcentrationRange(
@@ -292,10 +287,10 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     } else {
       changeRangeHandler(leftRange, rightRange)
     }
-  }, [isConcentrated])
+  }, [positionOpeningMethod])
 
   useEffect(() => {
-    if (isConcentrated && !ticksLoading) {
+    if (positionOpeningMethod === 'concentration' && !ticksLoading) {
       const index =
         concentrationIndex > concentrationArray.length - 1
           ? concentrationArray.length - 1
@@ -390,7 +385,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           xDecimal={xDecimal}
           yDecimal={yDecimal}
           isDiscrete={isPlotDiscrete}
-          disabled={isConcentrated}
+          disabled={positionOpeningMethod === 'concentration'}
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
           volumeRange={volumeRange}
@@ -398,7 +393,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>
           <RangeInput
-            disabled={isConcentrated}
+            disabled={positionOpeningMethod === 'concentration'}
             className={classes.input}
             label='Min price'
             tokenFromSymbol={tokenASymbol}
@@ -438,7 +433,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             percentDiff={((+leftInput - midPrice.x) / midPrice.x) * 100}
           />
           <RangeInput
-            disabled={isConcentrated}
+            disabled={positionOpeningMethod === 'concentration'}
             className={classes.input}
             label='Max price'
             tokenFromSymbol={tokenASymbol}
@@ -476,7 +471,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             percentDiff={((+rightInput - midPrice.x) / midPrice.x) * 100}
           />
         </Grid>
-        {isConcentrated ? (
+        {positionOpeningMethod === 'concentration' ? (
           <Grid container className={classes.sliderWrapper}>
             <ConcentrationSlider
               key={poolIndex ?? -1}

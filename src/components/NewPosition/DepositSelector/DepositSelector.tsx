@@ -3,6 +3,7 @@ import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmo
 import Select from '@components/Inputs/Select/Select'
 import {
   ALL_FEE_TIERS_DATA,
+  PositionOpeningMethod,
   WRAPPED_SOL_ADDRESS,
   WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT,
   WSOL_POOL_INIT_LAMPORTS
@@ -60,7 +61,7 @@ export interface IDepositSelector {
   concentrationArray: number[]
   concentrationIndex: number
   minimumSliderIndex: number
-  isConcentrated: boolean
+  positionOpeningMethod: PositionOpeningMethod
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -92,7 +93,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   concentrationArray,
   concentrationIndex,
   minimumSliderIndex,
-  isConcentrated
+  positionOpeningMethod
 }) => {
   const classes = useStyles()
 
@@ -144,17 +145,17 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'Select different tokens'
     }
 
+    if (positionOpeningMethod === 'concentration' && concentrationIndex < minimumSliderIndex) {
+      return concentrationArray[minimumSliderIndex]
+        ? `Set concentration to at least ${concentrationArray[minimumSliderIndex]}x`
+        : 'Set higher fee tier'
+    }
+
     if (
       (poolIndex === null && !canCreateNewPool) ||
       (poolIndex !== null && !canCreateNewPosition)
     ) {
       return 'Insufficient lamports'
-    }
-
-    if (concentrationIndex < minimumSliderIndex && isConcentrated) {
-      return concentrationArray[minimumSliderIndex]
-        ? `Set concentration to at least ${concentrationArray[minimumSliderIndex]}x`
-        : 'Set higher fee tier'
     }
 
     if (
@@ -191,8 +192,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     tokenAInputState.value,
     tokenBInputState.value,
     tokens,
-    isConcentrated,
-    concentrationIndex
+    positionOpeningMethod,
+    concentrationIndex,
+    feeTierIndex,
+    minimumSliderIndex
   ])
 
   useEffect(() => {
