@@ -22,6 +22,7 @@ import activeLiquidity from '@static/svg/activeLiquidity.svg'
 export interface IRangeSelector {
   data: PlotTickData[]
   midPrice: TickPlotPositionData
+  globalPrice?: number
   tokenASymbol: string
   tokenBSymbol: string
   onChangeRange: (leftIndex: number, rightIndex: number) => void
@@ -50,6 +51,7 @@ export interface IRangeSelector {
 export const RangeSelector: React.FC<IRangeSelector> = ({
   data,
   midPrice,
+  globalPrice,
   tokenASymbol,
   tokenBSymbol,
   onChangeRange,
@@ -315,7 +317,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         />
       </Grid>
       <Grid className={classes.infoRow} container justifyContent='flex-end'>
-        <Grid>
+        <Grid container direction='column' alignItems='flex-end'>
           <Tooltip
             title={
               <>
@@ -348,10 +350,13 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               tooltip: classes.liquidityTooltip
             }}>
             <Typography className={classes.activeLiquidity}>
-              Active liquidity <div className={classes.activeLiquidityIcon}>i</div>
+              Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
             </Typography>
           </Tooltip>
-          <Typography className={classes.currentPrice}>Current price</Typography>
+          <Grid>
+            <Typography className={classes.currentPrice}>Current price</Typography>
+            <Typography className={classes.globalPrice}>Global price</Typography>
+          </Grid>
         </Grid>
       </Grid>
       <Grid container className={classes.innerWrapper}>
@@ -368,6 +373,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             x: calcPrice(rightRange, isXtoY, xDecimal, yDecimal)
           }}
           midPrice={midPrice}
+          globalPrice={globalPrice}
           plotMin={plotMin}
           plotMax={plotMax}
           zoomMinus={zoomMinus}

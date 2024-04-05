@@ -38,9 +38,10 @@ import {
 import { farms, stakesForPosition, userStakes } from '@selectors/farms'
 import { accounts } from '@selectors/solanaWallet'
 import { getConnection } from './connection'
-import { WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import {
+  createLoaderKey,
   getJupTokenPrice,
   getFullNewTokensData,
   getIncentivesRewardData,
@@ -60,6 +61,7 @@ import {
   rewardsAPY
 } from '@invariant-labs/sdk/lib/utils'
 import { PositionWithAddress } from '@reducers/positions'
+import { closeSnackbar } from 'notistack'
 
 export function* getFarmsTotals() {
   try {
@@ -176,13 +178,13 @@ export function* getFarmsApy() {
               await marketProgram.getAllPoolLiquidityInTokens(incentive.pool)
           }
 
-          const xId = allTokens?.[poolData.tokenX.toString()]?.coingeckoId ?? ''
+          const xId = allTokens?.[poolData.tokenX.toString()]?.address.toString() ?? ''
 
           if (typeof prices[poolData.tokenX.toString()] === 'undefined' && !!xId.length) {
             prices[poolData.tokenX.toString()] = (await getJupTokenPrice(xId)).price
           }
 
-          const rewardId = allTokens?.[incentive.rewardToken.toString()]?.coingeckoId ?? ''
+          const rewardId = allTokens?.[incentive.rewardToken.toString()]?.address.toString() ?? ''
 
           if (
             typeof prices[incentive.rewardToken.toString()] === 'undefined' &&
@@ -332,13 +334,13 @@ export function* getStakesApy() {
         dailyReward = 0
       } else {
         try {
-          const xId = allTokens?.[poolData.tokenX.toString()]?.coingeckoId ?? ''
+          const xId = allTokens?.[poolData.tokenX.toString()]?.address.toString() ?? ''
 
           if (typeof prices[poolData.tokenX.toString()] === 'undefined' && !!xId.length) {
             prices[poolData.tokenX.toString()] = (await getJupTokenPrice(xId)).price
           }
 
-          const rewardId = allTokens?.[farmData.rewardToken.toString()]?.coingeckoId ?? ''
+          const rewardId = allTokens?.[farmData.rewardToken.toString()]?.address.toString() ?? ''
 
           if (typeof prices[farmData.rewardToken.toString()] === 'undefined' && !!rewardId.length) {
             prices[farmData.rewardToken.toString()] = (await getJupTokenPrice(rewardId)).price
@@ -583,14 +585,14 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
           let xPrice = 0
           let rewardPrice = 0
 
-          const xId = allTokens?.[positionData.poolData.tokenX.toString()]?.coingeckoId ?? ''
+          const xId = allTokens?.[positionData.poolData.tokenX.toString()]?.address.toString() ?? ''
 
           if (xId.length) {
             const data = yield* call(getJupTokenPrice, xId)
             xPrice = data.price
           }
 
-          const rewardId = allTokens?.[farmData.rewardToken.toString()]?.coingeckoId ?? ''
+          const rewardId = allTokens?.[farmData.rewardToken.toString()]?.address.toString() ?? ''
 
           if (rewardId.length) {
             const data = yield* call(getJupTokenPrice, rewardId)
@@ -644,6 +646,9 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
 }
 
 export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
+  const loaderWithdrawRewards = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
+
   try {
     const allFarms = yield* select(farms)
 
@@ -661,6 +666,15 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     if (typeof positionData === 'undefined') {
       return
     }
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Withdrawing rewards',
+        variant: 'pending',
+        persist: true,
+        key: loaderWithdrawRewards
+      })
+    )
 
     const wrappedSolAccount = Keypair.generate()
 
@@ -728,10 +742,15 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
+
     const [initialSignedTx, withdrawSignedTx, unwrapSignedTx] = yield* call(
       [wallet, wallet.signAllTransactions],
       [initialTx, withdrawTx, unwrapTx]
     )
+
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
 
     initialSignedTx.partialSign(wrappedSolAccount)
 
@@ -745,6 +764,9 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     )
 
     if (!initialTxid.length) {
+      closeSnackbar(loaderWithdrawRewards)
+      yield put(snackbarsActions.remove(loaderWithdrawRewards))
+
       return yield* put(
         snackbarsActions.add({
           message: 'SOL wrapping failed. Please try again.',
@@ -812,8 +834,17 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
         })
       )
     }
+
+    closeSnackbar(loaderWithdrawRewards)
+    yield put(snackbarsActions.remove(loaderWithdrawRewards))
   } catch (error) {
     console.log(error)
+
+    closeSnackbar(loaderWithdrawRewards)
+    yield put(snackbarsActions.remove(loaderWithdrawRewards))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     yield* put(
       snackbarsActions.add({
         message: 'Failed to withdraw rewards. Please try again.',
@@ -825,6 +856,8 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
 }
 
 export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) {
+  const loaderWithdrawRewards = createLoaderKey()
+
   try {
     const tokensAccounts = yield* select(accounts)
     const allFarms = yield* select(farms)
@@ -847,6 +880,15 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
     if (typeof positionData === 'undefined') {
       return
     }
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Withdrawing rewards',
+        variant: 'pending',
+        persist: true,
+        key: loaderWithdrawRewards
+      })
+    )
 
     let ownerTokenAcc = tokensAccounts[rewardToken.toString()]
       ? tokensAccounts[rewardToken.toString()].address
@@ -899,8 +941,15 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
         })
       )
     }
+
+    closeSnackbar(loaderWithdrawRewards)
+    yield put(snackbarsActions.remove(loaderWithdrawRewards))
   } catch (error) {
     console.log(error)
+
+    closeSnackbar(loaderWithdrawRewards)
+    yield put(snackbarsActions.remove(loaderWithdrawRewards))
+
     yield* put(
       snackbarsActions.add({
         message: 'Failed to withdraw rewards. Please try again.',

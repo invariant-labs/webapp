@@ -1,5 +1,5 @@
-import { WRAPPED_SOL_ADDRESS } from '@consts/static'
-import { solToPriorityFee } from '@consts/utils'
+import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { createLoaderKey, solToPriorityFee } from '@consts/utils'
 import { Pair } from '@invariant-labs/sdk'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
@@ -13,8 +13,12 @@ import { getMarketProgram } from '@web3/programs/amm'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { getConnection } from './connection'
 import { createAccount, getWallet } from './wallet'
+import { closeSnackbar } from 'notistack'
 
 export function* handleSwapWithSOL(): Generator {
+  const loaderSwappingTokens = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
+
   try {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(poolsArraySortedByFees)
@@ -45,6 +49,14 @@ export function* handleSwapWithSOL(): Generator {
       return
     }
 
+    yield put(
+      snackbarsActions.add({
+        message: 'Swapping tokens',
+        variant: 'pending',
+        persist: true,
+        key: loaderSwappingTokens
+      })
+    )
     const isXtoY = tokenFrom.equals(swapPool.tokenX)
 
     const wrappedSolAccount = Keypair.generate()
@@ -159,10 +171,15 @@ export function* handleSwapWithSOL(): Generator {
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
+
     const [initialSignedTx, swapSignedTx, unwrapSignedTx] = yield* call(
       [wallet, wallet.signAllTransactions],
       [initialTx, swapTx, unwrapTx]
     )
+
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
 
     initialSignedTx.partialSign(wrappedSolAccount)
 
@@ -177,6 +194,9 @@ export function* handleSwapWithSOL(): Generator {
 
     if (!initialTxid.length) {
       yield put(swapActions.setSwapSuccess(false))
+
+      closeSnackbar(loaderSwappingTokens)
+      yield put(snackbarsActions.remove(loaderSwappingTokens))
 
       return yield put(
         snackbarsActions.add({
@@ -199,6 +219,9 @@ export function* handleSwapWithSOL(): Generator {
 
     if (!swapTxid.length) {
       yield put(swapActions.setSwapSuccess(false))
+
+      closeSnackbar(loaderSwappingTokens)
+      yield put(snackbarsActions.remove(loaderSwappingTokens))
 
       return yield put(
         snackbarsActions.add({
@@ -250,6 +273,9 @@ export function* handleSwapWithSOL(): Generator {
         })
       )
     }
+
+    closeSnackbar(loaderSwappingTokens)
+    yield put(snackbarsActions.remove(loaderSwappingTokens))
   } catch (error) {
     console.log(error)
 
@@ -263,10 +289,17 @@ export function* handleSwapWithSOL(): Generator {
         persist: false
       })
     )
+    closeSnackbar(loaderSwappingTokens)
+    yield put(snackbarsActions.remove(loaderSwappingTokens))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
   }
 }
 
 export function* handleSwap(): Generator {
+  const loaderSwappingTokens = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
+
   try {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(poolsArraySortedByFees)
@@ -302,6 +335,15 @@ export function* handleSwap(): Generator {
     if (!swapPool) {
       return
     }
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Swapping tokens',
+        variant: 'pending',
+        persist: true,
+        key: loaderSwappingTokens
+      })
+    )
 
     const isXtoY = tokenFrom.equals(swapPool.tokenX)
 
@@ -346,7 +388,13 @@ export function* handleSwap(): Generator {
       )
     }
 
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
+
     const signedTx = yield* call([wallet, wallet.signTransaction], swapTx)
+
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
     const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
       skipPreflight: false
     })
@@ -372,6 +420,9 @@ export function* handleSwap(): Generator {
         })
       )
     }
+
+    closeSnackbar(loaderSwappingTokens)
+    yield put(snackbarsActions.remove(loaderSwappingTokens))
   } catch (error) {
     console.log(error)
 
@@ -384,6 +435,11 @@ export function* handleSwap(): Generator {
         persist: false
       })
     )
+
+    closeSnackbar(loaderSwappingTokens)
+    yield put(snackbarsActions.remove(loaderSwappingTokens))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
   }
 }
 

@@ -1,19 +1,26 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
+import { styled } from '@material-ui/core'
+import { MaterialDesignContent } from 'notistack'
 
-const useStyles = makeStyles((theme: Theme) => ({
-  success: {
+export const StyledMaterialDesignContent = styled(MaterialDesignContent)(({ theme }) => ({
+  '&.notistack-MuiContent-success': {
     backgroundColor: colors.invariant.component,
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: colors.invariant.component,
     borderRadius: 10,
     ...typography.body2,
-    maxWidth: 350,
-    padding: '6px 16px',
-    maxHeight: 64,
+    maxWidth: 330,
+    width: 330,
+    padding: '4px 16px',
     minWidth: 100,
+
+    '& > div:first-child': {
+      flex: 1
+    },
+
     '& SVG': {
+      fontSize: '16px !important',
       color: colors.invariant.green,
       marginTop: -2,
       [theme.breakpoints.down('xs')]: {
@@ -21,24 +28,28 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.body3,
-      maxWidth: 255,
-      maxHeight: 32,
-      padding: '0px 8px 5px 4px'
+      maxWidth: 'none',
+      width: 'auto'
     }
   },
-  error: {
+  '&.notistack-MuiContent-error': {
     backgroundColor: colors.invariant.component,
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: colors.invariant.component,
     borderRadius: 10,
-    padding: 10,
     ...typography.body2,
-    maxWidth: 450,
-    maxHeight: 64,
+    maxWidth: 330,
+    width: 330,
+    padding: '4px 16px',
     minWidth: 100,
+
+    '& > div:first-child': {
+      flex: 1
+    },
+
     '& SVG': {
+      fontSize: '16px !important',
       color: colors.invariant.Error,
       marginTop: -2,
       [theme.breakpoints.down('xs')]: {
@@ -46,24 +57,28 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.body3,
-      maxWidth: 255,
-      maxHeight: 32,
-      padding: '0px 8px 5px 4px'
+      maxWidth: 'none',
+      width: 'auto'
     }
   },
-  info: {
+  '&.notistack-MuiContent-info': {
     backgroundColor: colors.invariant.component,
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: colors.invariant.component,
     borderRadius: 10,
-    padding: 10,
     ...typography.body2,
-    maxWidth: 350,
-    maxHeight: 64,
+    maxWidth: 330,
+    width: 330,
+    padding: '6px 16px',
     minWidth: 100,
+
+    '& > div:first-child': {
+      flex: 1
+    },
+
     '& SVG': {
+      fontSize: '16px !important',
       color: colors.invariant.textGrey,
       marginTop: -2,
       [theme.breakpoints.down('xs')]: {
@@ -71,24 +86,28 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.body3,
-      maxWidth: 255,
-      maxHeight: 32,
-      padding: '0px 8px 5px 4px'
+      maxWidth: 'none',
+      width: 'auto'
     }
   },
-  warning: {
+  '&.notistack-MuiContent-warning': {
     backgroundColor: colors.invariant.component,
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: colors.invariant.component,
     borderRadius: 10,
-    padding: 10,
     ...typography.body2,
-    maxWidth: 350,
-    maxHeight: 64,
+    maxWidth: 330,
+    width: 330,
+    padding: '6px 16px',
     minWidth: 100,
+
+    '& > div:first-child': {
+      flex: 1
+    },
+
     '& SVG': {
+      fontSize: '16px !important',
       color: colors.invariant.warning,
       marginTop: -2,
       [theme.breakpoints.down('xs')]: {
@@ -96,12 +115,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     [theme.breakpoints.down('xs')]: {
-      ...typography.body3,
-      maxWidth: 255,
-      maxHeight: 32,
-      padding: '0px 8px 5px 4px'
+      maxWidth: 'none',
+      width: 'auto'
     }
   }
 }))
-
-export default useStyles

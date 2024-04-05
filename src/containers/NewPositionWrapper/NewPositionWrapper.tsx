@@ -9,6 +9,7 @@ import {
   calcYPerXPrice,
   createPlaceholderLiquidityPlot,
   getJupTokenPrice,
+  getJupTokensRatioPrice,
   getNewTokenOrThrow,
   printBN
 } from '@consts/utils'
@@ -80,6 +81,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
 
   const [currentPairReversed, setCurrentPairReversed] = useState<boolean | null>(null)
+
+  const [globalPrice, setGlobalPrice] = useState<number | undefined>(undefined)
 
   useEffect(() => {
     setProgress('none')
@@ -310,7 +313,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       return
     }
 
-    const id = tokens[tokenAIndex].coingeckoId ?? ''
+    const id = tokens[tokenAIndex].assetAddress.toString() ?? ''
     if (id.length) {
       setPriceALoading(true)
       getJupTokenPrice(id)
@@ -325,11 +328,28 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const [tokenBPriceData, setTokenBPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [priceBLoading, setPriceBLoading] = useState(false)
   useEffect(() => {
+    if (tokenAIndex === null || tokenBIndex === null) {
+      return
+    }
+
+    const tokenAId = tokens[tokenBIndex].assetAddress.toString() ?? ''
+    const tokenBId = tokens[tokenAIndex].assetAddress.toString() ?? ''
+
+    if (tokenAId.length && tokenBId.length) {
+      getJupTokensRatioPrice(tokenBId, tokenAId)
+        .then(data => setGlobalPrice(data.price))
+        .catch(() => setGlobalPrice(undefined))
+    } else {
+      setGlobalPrice(undefined)
+    }
+  }, [tokenAIndex, tokenBIndex])
+
+  useEffect(() => {
     if (tokenBIndex === null) {
       return
     }
 
-    const id = tokens[tokenBIndex].coingeckoId ?? ''
+    const id = tokens[tokenBIndex].assetAddress.toString() ?? ''
     if (id.length) {
       setPriceBLoading(true)
       getJupTokenPrice(id)
@@ -690,6 +710,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       currentFeeIndex={feeIndex}
       onSlippageChange={onSlippageChange}
       initialSlippage={initialSlippage}
+      globalPrice={globalPrice}
       handleRefresh={handleRefresh}
     />
   )

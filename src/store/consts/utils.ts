@@ -1058,11 +1058,17 @@ export const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThresh
 ]
 
 export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
-  return await axios.get(`https://price.jup.ag/v4/price?ids=${id}&vsToken=USDC`).then(res => {
-    return {
-      price: res.data.id.price ?? 0
-    }
-  })
+  const response = await axios.get(`https://price.jup.ag/v4/price?ids=${id}&vsToken=USDC`)
+  return {
+    price: response.data.data[id].price ?? 0
+  }
+}
+
+export const getJupTokensRatioPrice = async (id: string, vsId: string): Promise<TokenPriceData> => {
+  const response = await axios.get(`https://price.jup.ag/v4/price?ids=${id}&vsToken=${vsId}`)
+  return {
+    price: response.data.data[id].price ?? 0
+  }
 }
 
 export const getTicksList = async (
@@ -1132,3 +1138,5 @@ const PRIORITY_FEE_DENOMINATOR = 9
 export const solToPriorityFee = (sol: number) => {
   return Math.round((sol * 5 * 10 ** PRIORITY_FEE_DENOMINATOR) / 10)
 }
+
+export const createLoaderKey = () => (new Date().getMilliseconds() + Math.random()).toString()

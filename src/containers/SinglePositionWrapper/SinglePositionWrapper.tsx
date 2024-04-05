@@ -6,6 +6,7 @@ import {
   calcYPerXPrice,
   createPlaceholderLiquidityPlot,
   getJupTokenPrice,
+  getJupTokensRatioPrice,
   printBN
 } from '@consts/utils'
 import { Pair, calculatePriceSqrt } from '@invariant-labs/sdk'
@@ -58,6 +59,10 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const hasAnyStakes = useSelector(hasUserStakes)
   const walletStatus = useSelector(status)
   const positionStakes = useSelector(stakesForPosition(position?.address))
+
+  const [xToY, setXToY] = useState<boolean>(true)
+
+  const [globalPrice, setGlobalPrice] = useState<number | undefined>(undefined)
 
   const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
 
@@ -319,7 +324,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       return
     }
 
-    const xId = position.tokenX.coingeckoId ?? ''
+    const xId = position.tokenX.assetAddress.toString() ?? ''
     if (xId.length) {
       getJupTokenPrice(xId)
         .then(data => setTokenXPriceData(data))
@@ -328,7 +333,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       setTokenXPriceData(undefined)
     }
 
-    const yId = position.tokenY.coingeckoId ?? ''
+    const yId = position.tokenY.assetAddress.toString() ?? ''
     if (yId.length) {
       getJupTokenPrice(yId)
         .then(data => setTokenYPriceData(data))
@@ -337,6 +342,29 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       setTokenYPriceData(undefined)
     }
   }, [position?.id])
+
+  useEffect(() => {
+    if (!position) {
+      return
+    }
+
+    const tokenXId = position.tokenX.assetAddress.toString() ?? ''
+    const tokenYId = position.tokenY.assetAddress.toString() ?? ''
+
+    if (tokenXId.length && tokenYId.length) {
+      if (xToY) {
+        getJupTokensRatioPrice(tokenXId, tokenYId)
+          .then(data => setGlobalPrice(data.price))
+          .catch(() => setGlobalPrice(undefined))
+      } else {
+        getJupTokensRatioPrice(tokenYId, tokenXId)
+          .then(data => setGlobalPrice(data.price))
+          .catch(() => setGlobalPrice(undefined))
+      }
+    } else {
+      setGlobalPrice(undefined)
+    }
+  }, [xToY, position?.tokenX, position?.tokenY])
 
   const copyPoolAddressHandler = (message: string, variant: Color) => {
     dispatch(
@@ -418,6 +446,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             ? undefined
             : tokenXPriceData.price * +printBN(position.tokenX.balance, position.tokenX.decimals)
       }}
+      tokenXPriceData={tokenXPriceData}
       tokenY={{
         name: position.tokenY.symbol,
         icon: position.tokenY.logoURI,
@@ -430,6 +459,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             ? undefined
             : tokenYPriceData.price * +printBN(position.tokenY.balance, position.tokenY.decimals)
       }}
+      tokenYPriceData={tokenYPriceData}
       fee={position.poolData.fee}
       min={min}
       max={max}
@@ -448,6 +478,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       }}
       plotVolumeRange={currentVolumeRange}
       userHasStakes={!!positionStakes.length}
+      globalPrice={globalPrice}
+      xToY={xToY}
+      setXToY={setXToY}
       handleRefresh={handleRefresh}
     />
   ) : isLoadingList ? (

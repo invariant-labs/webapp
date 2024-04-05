@@ -273,6 +273,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                 return (
                   <Grid
                     className={classes.tokenItem}
+                    container
                     style={{
                       ...style,
                       width: '90%',
