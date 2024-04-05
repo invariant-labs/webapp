@@ -372,8 +372,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         <text
           x='50%'
           y='50%'
-          dominant-baseline='middle'
-          text-anchor='middle'
+          dominantBaseline='middle'
+          textAnchor='middle'
           className={classes.loadingText}>
           Loading liquidity data...
         </text>
@@ -456,7 +456,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         data={[
           {
             id: 'less than range',
-            data: currentLessThanRange
+            data: currentLessThanRange.length ? currentLessThanRange : [{ x: plotMin, y: 0 }]
           },
           {
             id: 'range',
@@ -464,7 +464,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           },
           {
             id: 'greater than range',
-            data: currentGreaterThanRange
+            data: currentGreaterThanRange.length ? currentGreaterThanRange : [{ x: plotMax, y: 0 }]
           }
         ]}
         curve={isDiscrete ? (isXtoY ? 'stepAfter' : 'stepBefore') : 'basis'}
