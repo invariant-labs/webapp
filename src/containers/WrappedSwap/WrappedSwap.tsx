@@ -280,8 +280,8 @@ export const WrappedSwap = () => {
       onHideUnknownTokensChange={setHideUnknownTokensValue}
       tokenFromPriceData={tokenFromPriceData}
       tokenToPriceData={tokenToPriceData}
-      priceFromLoading={priceFromLoading}
-      priceToLoading={priceToLoading}
+      priceFromLoading={priceFromLoading || isBalanceLoading}
+      priceToLoading={priceToLoading || isBalanceLoading}
       onSlippageChange={onSlippageChange}
       initialSlippage={initialSlippage}
       isBalanceLoading={isBalanceLoading}

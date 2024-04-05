@@ -58,7 +58,7 @@ export const AmountInput: React.FC<IProps> = ({
   priceLoading = false,
   isBalanceLoading
 }) => {
-  const classes = useStyles()
+  const classes = useStyles({ walletDisconnected: hideBalances })
   const inputRef = useRef<HTMLInputElement>(null)
 
   const thresholds: FormatNumberThreshold[] = [
@@ -191,65 +191,64 @@ export const AmountInput: React.FC<IProps> = ({
           onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
         />
       </Grid>
-      <Grid
-        container
-        justifyContent='space-between'
-        alignItems='center'
-        direction='row'
-        wrap='nowrap'
-        className={classes.bottom}>
-        <Grid className={classes.balanceContainer} onClick={onMaxClick}>
-          <Typography className={classes.BalanceTypography}>
-            Balance:
-            {hideBalances && ' - -'}
-            {!hideBalances && (
-              <>
-                {isBalanceLoading ? (
-                  <img src={loadingAnimation} className={classes.loadingBalance} />
-                ) : (
-                  formattedBalance
-                )}
-                {showPrefix(Number(balance))} {tokenIcon.slice(0, 8)}
-                {tokenIcon.length > 8 ? '...' : ''}
-              </>
-            )}
-          </Typography>
-          <OutlinedButton
-            name='Max'
-            color='primary'
-            onClick={onMaxClick}
-            className={classes.maxButton}
-            labelClassName={classes.label}
-            disabled={
-              disabled && isNaN(Number(balance)) ? disabled : isNaN(Number(balance)) || hideBalances
-            }
-          />
+      {!hideBalances && (
+        <Grid
+          container
+          justifyContent='space-between'
+          alignItems='center'
+          direction='row'
+          wrap='nowrap'
+          className={classes.bottom}>
+          <Grid className={classes.balanceContainer} onClick={onMaxClick}>
+            <Typography className={classes.BalanceTypography}>
+              Balance:
+              {isBalanceLoading ? (
+                <img src={loadingAnimation} className={classes.loadingBalance} />
+              ) : (
+                formattedBalance
+              )}
+              {showPrefix(Number(balance))} {tokenIcon.slice(0, 8)}
+              {tokenIcon.length > 8 ? '...' : ''}
+            </Typography>
+            <OutlinedButton
+              name='Max'
+              color='primary'
+              onClick={onMaxClick}
+              className={classes.maxButton}
+              labelClassName={classes.label}
+              disabled={
+                disabled && isNaN(Number(balance))
+                  ? disabled
+                  : isNaN(Number(balance)) || hideBalances
+              }
+            />
+          </Grid>
+          <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>
+            {current ? (
+              priceLoading ? (
+                <img src={loadingAnimation} className={classes.loading} />
+              ) : tokenPrice ? (
+                <>
+                  <Typography className={classes.caption2}>
+                    ~${formatNumbers(usdThresholds)(usdBalance.toString()) + showPrefix(usdBalance)}
+                  </Typography>
+                </>
+              ) : (
+                <Tooltip
+                  title='Cannot fetch price of token'
+                  placement='bottom'
+                  classes={{
+                    tooltip: classes.tooltip
+                  }}>
+                  <Typography className={classes.noData}>
+                    <div className={classes.noDataIcon}>?</div>No data
+                  </Typography>
+                </Tooltip>
+              )
+            ) : null}
+          </Grid>
         </Grid>
-        <Grid className={classes.percentages} container alignItems='center' wrap='nowrap'>
-          {current ? (
-            priceLoading ? (
-              <img src={loadingAnimation} className={classes.loading} />
-            ) : tokenPrice ? (
-              <>
-                <Typography className={classes.caption2}>
-                  ~${formatNumbers(usdThresholds)(usdBalance.toString()) + showPrefix(usdBalance)}
-                </Typography>
-              </>
-            ) : (
-              <Tooltip
-                title='Cannot fetch price of token'
-                placement='bottom'
-                classes={{
-                  tooltip: classes.tooltip
-                }}>
-                <Typography className={classes.noData}>
-                  <div className={classes.noDataIcon}>?</div>No data
-                </Typography>
-              </Tooltip>
-            )
-          ) : null}
-        </Grid>
-      </Grid>
+      )}
     </>
   )
 }

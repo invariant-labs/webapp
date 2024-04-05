@@ -66,11 +66,13 @@ const solanaWalletSlice = createSlice({
     },
     setBalance(state, action: PayloadAction<BN>) {
       state.balance = action.payload
-      state.balanceLoading = false
       return state
     },
     getBalance(state) {
-      state.balanceLoading = true
+      return state
+    },
+    setIsBalanceLoading(state, action: PayloadAction<Boolean>) {
+      action.payload ? (state.balanceLoading = true) : (state.balanceLoading = false)
       return state
     },
     addTokenAccount(state, action: PayloadAction<ITokenAccount>) {

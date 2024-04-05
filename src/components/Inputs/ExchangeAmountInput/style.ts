@@ -1,7 +1,7 @@
 import { colors, typography } from '@static/theme'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles<Theme, { walletDisconnected: boolean }>(theme => ({
   amountInput: {
     background: colors.invariant.newDark,
     color: colors.invariant.light,
@@ -80,10 +80,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   walletBalanace: {
     color: colors.invariant.lightGrey
   },
-  exchangeContainer: {
-    padding: '10px 15px 0  15px ',
+  exchangeContainer: ({ walletDisconnected }) => ({
+    padding: `10px 15px ${walletDisconnected ? '10px' : '0'} 15px `,
     display: 'flex'
-  },
+  }),
   noData: {
     color: colors.invariant.warning,
     ...typography.caption2,

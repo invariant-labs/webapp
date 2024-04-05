@@ -49,10 +49,11 @@ export function* getBalance(pubKey: PublicKey): SagaGenerator<BN> {
 export function* handleBalance(): Generator {
   const wallet = yield* call(getWallet)
   yield* put(actions.setAddress(wallet.publicKey))
+  yield* put(actions.setIsBalanceLoading(true))
   const balance = yield* call(getBalance, wallet.publicKey)
   yield* put(actions.setBalance(balance))
-  yield* put(actions.setStatus(Status.Initialized))
   yield* call(fetchTokensAccounts)
+  yield* put(actions.setIsBalanceLoading(false))
 }
 
 interface IparsedTokenInfo {
@@ -344,10 +345,12 @@ export function* init(): Generator {
   const wallet = yield* call(getWallet)
   // const balance = yield* call(getBalance, wallet.publicKey)
   yield* put(actions.setAddress(wallet.publicKey))
+  yield* put(actions.setIsBalanceLoading(true))
   const balance = yield* call(getBalance, wallet.publicKey)
   yield* put(actions.setBalance(balance))
   yield* put(actions.setStatus(Status.Initialized))
   yield* call(fetchTokensAccounts)
+  yield* put(actions.setIsBalanceLoading(false))
 }
 
 // eslint-disable-next-line @typescript-eslint/promise-function-async
