@@ -343,7 +343,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
   }, [position?.id])
 
-  useEffect(() => {
+  const getGlobalPrice = () => {
     if (!position) {
       return
     }
@@ -364,6 +364,10 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     } else {
       setGlobalPrice(undefined)
     }
+  }
+
+  useEffect(() => {
+    getGlobalPrice()
   }, [xToY, position?.tokenX, position?.tokenY])
 
   const copyPoolAddressHandler = (message: string, variant: Color) => {
@@ -404,6 +408,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           })
         )
       )
+
+      getGlobalPrice()
     }
   }
 

@@ -327,7 +327,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
   const [tokenBPriceData, setTokenBPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [priceBLoading, setPriceBLoading] = useState(false)
-  useEffect(() => {
+
+  const getGlobalPrice = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return
     }
@@ -342,6 +343,10 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     } else {
       setGlobalPrice(undefined)
     }
+  }
+
+  useEffect(() => {
+    getGlobalPrice()
   }, [tokenAIndex, tokenBIndex])
 
   useEffect(() => {
@@ -434,8 +439,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     }
     dispatch(solanaWallet.getBalance())
 
-    const idA = tokens[tokenAIndex].coingeckoId ?? ''
-    if (idA.length) {
+    const idA = tokens[tokenAIndex].assetAddress.toString() ?? ''
+    if (idA) {
       setPriceALoading(true)
       await getJupTokenPrice(idA)
         .then(data => setTokenAPriceData(data))
@@ -445,10 +450,10 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       setTokenAPriceData(undefined)
     }
 
-    const idB = tokens[tokenBIndex].coingeckoId ?? ''
-    if (idB.length) {
+    const idB = tokens[tokenBIndex].assetAddress.toString() ?? ''
+    if (idB) {
       setPriceBLoading(true)
-      await getJupTokenPrice(idB)
+      getJupTokenPrice(idB)
         .then(data => setTokenBPriceData(data))
         .catch(() => setTokenBPriceData(undefined))
         .finally(() => setPriceBLoading(false))
@@ -492,6 +497,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
         )
       }
     }
+
+    getGlobalPrice()
   }
 
   return (

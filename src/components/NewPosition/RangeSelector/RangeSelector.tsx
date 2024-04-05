@@ -214,7 +214,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }, [currentPairReversed])
 
   useEffect(() => {
-    if (poolIndex !== null && shouldResetPlot) {
+    if (ticksLoading && shouldResetPlot && midPrice.index !== 0) {
       resetPlot()
       setShouldResetPlot(false)
     }

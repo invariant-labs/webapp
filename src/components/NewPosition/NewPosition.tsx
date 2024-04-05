@@ -204,8 +204,8 @@ export const NewPosition: React.FC<INewPosition> = ({
       .fill(1)
       .map((_e, index) => ({ x: index, y: index, index })),
     midPrice: {
-      x: 50,
-      index: 50
+      x: 0,
+      index: 0
     },
     tokenASymbol: 'ABC',
     tokenBSymbol: 'XYZ'
