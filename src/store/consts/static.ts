@@ -367,3 +367,5 @@ export const SIGNING_SNACKBAR_CONFIG: Omit<ISnackbar, 'open'> = {
   variant: 'pending',
   persist: true
 }
+
+export const STABLECOIN_SYMBOLS: string[] = ['USDC', 'USDT']
