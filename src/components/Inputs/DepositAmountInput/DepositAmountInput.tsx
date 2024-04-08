@@ -21,6 +21,7 @@ interface IProps {
   balanceValue?: string
   disabled?: boolean
   priceLoading?: boolean
+  isBalanceLoading: boolean
 }
 
 export const DepositAmountInput: React.FC<IProps> = ({
@@ -38,7 +39,8 @@ export const DepositAmountInput: React.FC<IProps> = ({
   tokenPrice,
   balanceValue,
   disabled = false,
-  priceLoading = false
+  priceLoading = false,
+  isBalanceLoading
 }) => {
   const classes = useStyles()
 
@@ -145,6 +147,13 @@ export const DepositAmountInput: React.FC<IProps> = ({
 
   const usdBalance = tokenPrice && balanceValue ? tokenPrice * +balanceValue : 0
 
+  const formattedBalance = currency
+    ? `${
+        balanceValue
+          ? formatNumbers(thresholds)(balanceValue) + showPrefix(Number(balanceValue))
+          : '0'
+      } ${currency}`
+    : '- -'
   return (
     <Grid container className={classes.wrapper} style={style}>
       <div className={classes.root}>
@@ -199,14 +208,11 @@ export const DepositAmountInput: React.FC<IProps> = ({
               <>
                 <Typography className={classes.caption2}>
                   Balance:{' '}
-                  {currency
-                    ? `${
-                        balanceValue
-                          ? formatNumbers(thresholds)(balanceValue) +
-                            showPrefix(Number(balanceValue))
-                          : '0'
-                      } ${currency}`
-                    : '- -'}
+                  {isBalanceLoading ? (
+                    <img src={loadingAnimation} className={classes.loadingBalance} />
+                  ) : (
+                    <>{' '.concat(formattedBalance)}</>
+                  )}
                 </Typography>
                 <Button
                   className={

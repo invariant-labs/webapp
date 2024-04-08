@@ -58,6 +58,7 @@ export interface IDepositSelector {
   priceBLoading?: boolean
   feeTierIndex: number
   setShouldResetPlot: (val: boolean) => void
+  isBalanceLoading: boolean
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -86,7 +87,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   priceALoading,
   priceBLoading,
   feeTierIndex,
-  setShouldResetPlot
+  setShouldResetPlot,
+  isBalanceLoading
 }) => {
   const classes = useStyles()
 
@@ -327,6 +329,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           }}
           {...tokenAInputState}
           priceLoading={priceALoading}
+          isBalanceLoading={isBalanceLoading}
         />
 
         <DepositAmountInput
@@ -384,6 +387,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           }}
           {...tokenBInputState}
           priceLoading={priceBLoading}
+          isBalanceLoading={isBalanceLoading}
         />
       </Grid>
 

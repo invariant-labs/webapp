@@ -108,6 +108,7 @@ export interface INewPosition {
   initialSlippage: string
   globalPrice?: number
   handleRefresh: () => void
+  isBalanceLoading: boolean
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -161,7 +162,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   onSlippageChange,
   initialSlippage,
   globalPrice,
-  handleRefresh
+  handleRefresh,
+  isBalanceLoading
 }) => {
   const classes = useStyles()
 
@@ -544,6 +546,7 @@ export const NewPosition: React.FC<INewPosition> = ({
           priceBLoading={priceBLoading}
           feeTierIndex={currentFeeIndex}
           setShouldResetPlot={setShouldResetPlot}
+          isBalanceLoading={isBalanceLoading}
         />
 
         {isCurrentPoolExisting ||

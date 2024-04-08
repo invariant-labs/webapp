@@ -31,7 +31,13 @@ import {
 } from '@selectors/pools'
 import { initPosition, plotTicks } from '@selectors/positions'
 import { network } from '@selectors/solanaConnection'
-import { canCreateNewPool, canCreateNewPosition, status, swapTokens } from '@selectors/solanaWallet'
+import {
+  canCreateNewPool,
+  canCreateNewPosition,
+  status,
+  swapTokens,
+  balanceLoading
+} from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
 import { getCurrentSolanaConnection, networkTypetoProgramNetwork } from '@web3/connection'
 import { openWalletSelectorModal } from '@web3/selector'
@@ -62,6 +68,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const walletStatus = useSelector(status)
   const allPools = useSelector(poolsArraySortedByFees)
   const poolsVolumeRanges = useSelector(volumeRanges)
+  const isBalanceLoading = useSelector(balanceLoading)
 
   const canUserCreateNewPool = useSelector(canCreateNewPool)
   const canUserCreateNewPosition = useSelector(canCreateNewPosition)
@@ -719,6 +726,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       initialSlippage={initialSlippage}
       globalPrice={globalPrice}
       handleRefresh={handleRefresh}
+      isBalanceLoading={isBalanceLoading}
     />
   )
 }

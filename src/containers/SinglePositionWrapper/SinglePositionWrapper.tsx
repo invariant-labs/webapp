@@ -27,7 +27,7 @@ import {
   plotTicks,
   singlePositionData
 } from '@selectors/positions'
-import { status } from '@selectors/solanaWallet'
+import { status, balanceLoading } from '@selectors/solanaWallet'
 import loader from '@static/gif/loader.gif'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -57,7 +57,10 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const hasAnyTokens = useSelector(hasTokens)
   const hasAnyFarms = useSelector(hasFarms)
   const hasAnyStakes = useSelector(hasUserStakes)
+
   const walletStatus = useSelector(status)
+  const isBalanceLoading = useSelector(balanceLoading)
+
   const positionStakes = useSelector(stakesForPosition(position?.address))
 
   const [xToY, setXToY] = useState<boolean>(true)
@@ -472,7 +475,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       initialIsDiscreteValue={initialIsDiscreteValue}
       onDiscreteChange={setIsDiscreteValue}
       showFeesLoader={showFeesLoader || isLoadingList}
-      showLiquidityLoader={isLoadingList}
+      showLiquidityLoader={isLoadingList || isBalanceLoading}
       hasTicksError={hasTicksError}
       reloadHandler={() => {
         dispatch(
