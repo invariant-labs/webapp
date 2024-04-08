@@ -46,9 +46,10 @@ export interface IRangeSelector {
   minimumSliderIndex: number
   concentrationIndex: number
   setConcentrationIndex: (val: number) => void
-  getMarkersInsideRange: (
+  getTicksInsideRange: (
     left: number,
-    right: number
+    right: number,
+    isXtoY: boolean
   ) => {
     leftInRange: number
     rightInRange: number
@@ -80,7 +81,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   minimumSliderIndex,
   concentrationIndex,
   setConcentrationIndex,
-  getMarkersInsideRange
+  getTicksInsideRange
 }) => {
   const classes = useStyles()
 
@@ -147,15 +148,25 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   const changeRangeHandler = (left: number, right: number) => {
-    const { leftInRange, rightInRange } = getMarkersInsideRange(left, right)
+    let leftRange: number
+    let rightRange: number
 
-    setLeftRange(leftInRange)
-    setRightRange(rightInRange)
+    if (positionOpeningMethod === 'range') {
+      const { leftInRange, rightInRange } = getTicksInsideRange(left, right, isXtoY)
+      leftRange = leftInRange
+      rightRange = rightInRange
+    } else {
+      leftRange = left
+      rightRange = right
+    }
 
-    setLeftInputValues(calcPrice(leftInRange, isXtoY, xDecimal, yDecimal).toString())
-    setRightInputValues(calcPrice(rightInRange, isXtoY, xDecimal, yDecimal).toString())
+    setLeftRange(leftRange)
+    setRightRange(rightRange)
 
-    onChangeRange(leftInRange, rightInRange)
+    setLeftInputValues(calcPrice(leftRange, isXtoY, xDecimal, yDecimal).toString())
+    setRightInputValues(calcPrice(rightRange, isXtoY, xDecimal, yDecimal).toString())
+
+    onChangeRange(leftRange, rightRange)
   }
 
   const resetPlot = () => {

@@ -222,7 +222,7 @@ export const NewPosition: React.FC<INewPosition> = ({
     return trimLeadingZeros(printBN(result, tokens[printIndex].decimals))
   }
 
-  const getMarkersInsideRange = (left: number, right: number) => {
+  const getTicksInsideRange = (left: number, right: number, isXtoY: boolean) => {
     const leftMax = isXtoY ? getMinTick(tickSpacing) : getMaxTick(tickSpacing)
     const rightMax = isXtoY ? getMaxTick(tickSpacing) : getMinTick(tickSpacing)
 
@@ -230,31 +230,41 @@ export const NewPosition: React.FC<INewPosition> = ({
     let rightInRange
 
     if (isXtoY) {
-      leftInRange = left < leftMax && positionOpeningMethod === 'range' ? leftMax : left
-      rightInRange = right > rightMax && positionOpeningMethod === 'range' ? rightMax : right
+      leftInRange = left < leftMax ? leftMax : left
+      rightInRange = right > rightMax ? rightMax : right
     } else {
-      leftInRange = left > leftMax && positionOpeningMethod === 'range' ? leftMax : left
-      rightInRange = right < rightMax && positionOpeningMethod === 'range' ? rightMax : right
+      leftInRange = left > leftMax ? leftMax : left
+      rightInRange = right < rightMax ? rightMax : right
     }
 
     return { leftInRange, rightInRange }
   }
 
   const onChangeRange = (left: number, right: number) => {
-    const { leftInRange, rightInRange } = getMarkersInsideRange(left, right)
+    let leftRange: number
+    let rightRange: number
 
-    setLeftRange(leftInRange)
-    setRightRange(rightInRange)
+    if (positionOpeningMethod === 'range') {
+      const { leftInRange, rightInRange } = getTicksInsideRange(left, right, isXtoY)
+      leftRange = leftInRange
+      rightRange = rightInRange
+    } else {
+      leftRange = left
+      rightRange = right
+    }
+
+    setLeftRange(leftRange)
+    setRightRange(rightRange)
 
     if (
       tokenAIndex !== null &&
-      (isXtoY ? rightInRange > midPrice.index : rightInRange < midPrice.index)
+      (isXtoY ? rightRange > midPrice.index : rightRange < midPrice.index)
     ) {
       const deposit = tokenADeposit
       const amount = getOtherTokenAmount(
         printBNtoBN(deposit, tokens[tokenAIndex].decimals),
-        leftInRange,
-        rightInRange,
+        leftRange,
+        rightRange,
         true
       )
 
@@ -268,13 +278,13 @@ export const NewPosition: React.FC<INewPosition> = ({
 
     if (
       tokenBIndex !== null &&
-      (isXtoY ? leftInRange < midPrice.index : leftInRange > midPrice.index)
+      (isXtoY ? leftRange < midPrice.index : leftRange > midPrice.index)
     ) {
       const deposit = tokenBDeposit
       const amount = getOtherTokenAmount(
         printBNtoBN(deposit, tokens[tokenBIndex].decimals),
-        leftInRange,
-        rightInRange,
+        leftRange,
+        rightRange,
         false
       )
 
@@ -348,13 +358,9 @@ export const NewPosition: React.FC<INewPosition> = ({
         isXtoY
       )
 
-      const leftMax = isXtoY ? getMinTick(tickSpacing) : getMaxTick(tickSpacing)
-      const rightMax = isXtoY ? getMaxTick(tickSpacing) : getMinTick(tickSpacing)
+      const { leftInRange, rightInRange } = getTicksInsideRange(leftRange, rightRange, isXtoY)
 
-      if (
-        (isXtoY && (leftMax > leftRange || rightMax < rightRange)) ||
-        (!isXtoY && (leftMax < leftRange || rightMax > rightRange))
-      ) {
+      if (leftInRange !== leftRange || rightInRange !== rightRange) {
         minimumSliderIndex = index + 1
       } else {
         break
@@ -643,7 +649,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             setConcentrationIndex={setConcentrationIndex}
             concentrationIndex={concentrationIndex}
             minimumSliderIndex={minimumSliderIndex}
-            getMarkersInsideRange={getMarkersInsideRange}
+            getTicksInsideRange={getTicksInsideRange}
           />
         ) : (
           <PoolInit
