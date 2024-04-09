@@ -10,8 +10,6 @@ import {
   calculateConcentrationRange
 } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
-import { MIN_TICK } from '@invariant-labs/sdk'
-import { MAX_TICK } from '@invariant-labs/sdk/src'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { getConcentrationArray, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
@@ -44,6 +42,8 @@ export interface IRangeSelector {
     min: number
     max: number
   }
+  initialLeftRange: string
+  initialRightRange: string
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -67,12 +67,18 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   poolIndex,
   hasTicksError,
   reloadHandler,
-  volumeRange
+  volumeRange,
+  initialLeftRange,
+  initialRightRange
 }) => {
   const classes = useStyles()
 
-  const [leftRange, setLeftRange] = useState(MIN_TICK)
-  const [rightRange, setRightRange] = useState(MAX_TICK)
+  const [leftRange, setLeftRange] = useState(
+    initialLeftRange.length > 0 ? +initialLeftRange : getMinTick(tickSpacing)
+  )
+  const [rightRange, setRightRange] = useState(
+    initialRightRange.length > 0 ? +initialRightRange : getMaxTick(tickSpacing)
+  )
 
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
@@ -135,17 +141,20 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     setRightInputRounded(val)
   }
 
-  const changeRangeHandler = (left: number, right: number) => {
-    setLeftRange(left)
-    setRightRange(right)
+  const changeRangeHandler = (left: number, right: number, isInitialRender: boolean = false) => {
+    const leftRange = initialLeftRange.length > 0 && isInitialRender ? +initialLeftRange : left
+    const rightRange = initialRightRange.length > 0 && isInitialRender ? +initialRightRange : right
 
-    setLeftInputValues(calcPrice(left, isXtoY, xDecimal, yDecimal).toString())
-    setRightInputValues(calcPrice(right, isXtoY, xDecimal, yDecimal).toString())
+    setLeftRange(leftRange)
+    setRightRange(rightRange)
 
-    onChangeRange(left, right)
+    setLeftInputValues(calcPrice(leftRange, isXtoY, xDecimal, yDecimal).toString())
+    setRightInputValues(calcPrice(rightRange, isXtoY, xDecimal, yDecimal).toString())
+
+    onChangeRange(leftRange, rightRange)
   }
 
-  const resetPlot = () => {
+  const resetPlot = (userEventCall: boolean = false) => {
     if (!isConcentrated) {
       const initSideDist = Math.abs(
         midPrice.x -
@@ -163,10 +172,17 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           : Math.min(getMaxTick(tickSpacing), midPrice.index + tickSpacing * 10),
         isXtoY
           ? Math.min(getMaxTick(tickSpacing), midPrice.index + tickSpacing * 10)
-          : Math.max(getMinTick(tickSpacing), midPrice.index - tickSpacing * 10)
+          : Math.max(getMinTick(tickSpacing), midPrice.index - tickSpacing * 10),
+        !userEventCall
       )
       setPlotMin(midPrice.x - initSideDist)
       setPlotMax(midPrice.x + initSideDist)
+
+      if (initialLeftRange.length > 0 && initialRightRange.length > 0 && userEventCall) {
+        autoZoomHandler(leftRange, rightRange)
+      } else if (initialLeftRange.length > 0 && initialRightRange.length > 0) {
+        autoZoomHandler(leftRange, rightRange, true)
+      }
     } else {
       setConcentrationIndex(0)
       const { leftRange, rightRange } = calculateConcentrationRange(
@@ -490,7 +506,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           </Grid>
         ) : (
           <Grid container className={classes.buttons}>
-            <Button className={classes.button} onClick={resetPlot}>
+            <Button className={classes.button} onClick={() => resetPlot(true)}>
               Reset range
             </Button>
             <Button

@@ -31,11 +31,15 @@ export interface IDepositSelector {
   initialTokenFrom: string
   initialTokenTo: string
   initialFee: string
+  initialLeftRange: string
+  initialRightRange: string
   tokens: SwapToken[]
   setPositionTokens: (
     tokenAIndex: number | null,
     tokenBindex: number | null,
-    feeTierIndex: number
+    feeTierIndex: number,
+    leftRange?: string,
+    rightRange?: string
   ) => void
   onAddLiquidity: () => void
   tokenAInputState: InputState
@@ -63,6 +67,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   initialTokenFrom,
   initialTokenTo,
   initialFee,
+  initialLeftRange,
+  initialRightRange,
   tokens,
   setPositionTokens,
   onAddLiquidity,
@@ -122,7 +128,13 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
     setTokenAIndex(tokenAIndexFromPath)
     setTokenBIndex(tokenBIndexFromPath)
-    setPositionTokens(tokenAIndexFromPath, tokenBIndexFromPath, feeTierIndexFromPath)
+    setPositionTokens(
+      tokenAIndexFromPath,
+      tokenBIndexFromPath,
+      feeTierIndexFromPath,
+      initialLeftRange,
+      initialRightRange
+    )
 
     setIsLoaded(true)
   }, [tokens])

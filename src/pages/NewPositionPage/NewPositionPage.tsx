@@ -8,6 +8,8 @@ export interface IProps {
   initialTokenFrom: string
   initialTokenTo: string
   initialFee: string
+  initialLeftRange: string
+  initialRightRange: string
   history: History<unknown>
 }
 
@@ -15,6 +17,8 @@ export const NewPositionPage: React.FC<IProps> = ({
   initialTokenFrom,
   initialTokenTo,
   initialFee,
+  initialLeftRange,
+  initialRightRange,
   history
 }) => {
   const classes = useStyles()
@@ -26,6 +30,8 @@ export const NewPositionPage: React.FC<IProps> = ({
           initialTokenFrom={initialTokenFrom}
           initialTokenTo={initialTokenTo}
           initialFee={initialFee}
+          initialLeftRange={initialLeftRange}
+          initialRightRange={initialRightRange}
           history={history}
         />
       </Grid>

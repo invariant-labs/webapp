@@ -43,6 +43,8 @@ export interface IProps {
   initialTokenFrom: string
   initialTokenTo: string
   initialFee: string
+  initialLeftRange: string
+  initialRightRange: string
   history: History<unknown>
 }
 
@@ -50,6 +52,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   initialTokenFrom,
   initialTokenTo,
   initialFee,
+  initialLeftRange,
+  initialRightRange,
   history
 }) => {
   const dispatch = useDispatch()
@@ -433,6 +437,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       initialTokenFrom={initialTokenFrom}
       initialTokenTo={initialTokenTo}
       initialFee={initialFee}
+      initialLeftRange={initialLeftRange}
+      initialRightRange={initialRightRange}
       history={history}
       copyPoolAddressHandler={copyPoolAddressHandler}
       poolAddress={poolIndex !== null ? allPools[poolIndex].address.toString() : ''}

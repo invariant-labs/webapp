@@ -13,10 +13,8 @@ import {
   printBNtoBN,
   trimLeadingZeros
 } from '@consts/utils'
-import { MIN_TICK } from '@invariant-labs/sdk'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
-import { fromFee } from '@invariant-labs/sdk/lib/utils'
-import { MAX_TICK } from '@invariant-labs/sdk/src'
+import { fromFee, getMinTick, getMaxTick } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Typography } from '@material-ui/core'
 import { Color } from '@material-ui/lab'
 import { BN } from '@project-serum/anchor'
@@ -39,6 +37,8 @@ export interface INewPosition {
   initialTokenFrom: string
   initialTokenTo: string
   initialFee: string
+  initialLeftRange: string
+  initialRightRange: string
   history: History<unknown>
   poolAddress: string
   calculatePoolAddress: () => Promise<string>
@@ -112,6 +112,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   initialTokenFrom,
   initialTokenTo,
   initialFee,
+  initialLeftRange,
+  initialRightRange,
   history,
   poolAddress,
   calculatePoolAddress,
@@ -162,10 +164,16 @@ export const NewPosition: React.FC<INewPosition> = ({
 }) => {
   const classes = useStyles()
 
-  const [isConcentrated, setIsConcentrated] = useState(initialIsConcentratedValue)
+  const [isConcentrated, setIsConcentrated] = useState(
+    initialLeftRange.length > 0 && initialLeftRange.length > 0 ? false : initialIsConcentratedValue
+  )
 
-  const [leftRange, setLeftRange] = useState(MIN_TICK)
-  const [rightRange, setRightRange] = useState(MAX_TICK)
+  const [leftRange, setLeftRange] = useState(
+    initialLeftRange.length > 0 ? +initialLeftRange : getMinTick(tickSpacing)
+  )
+  const [rightRange, setRightRange] = useState(
+    initialRightRange.length > 0 ? +initialRightRange : getMaxTick(tickSpacing)
+  )
 
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
   const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
@@ -333,10 +341,22 @@ export const NewPosition: React.FC<INewPosition> = ({
     onSlippageChange(slippage)
   }
 
-  const updatePath = (index1: number | null, index2: number | null, fee: number) => {
+  const updatePath = (
+    index1: number | null,
+    index2: number | null,
+    fee: number,
+    leftRange?: string,
+    rightRange?: string
+  ) => {
     const parsedFee = parseFeeToPathFee(+ALL_FEE_TIERS_DATA[fee].tier.fee)
 
-    if (index1 != null && index2 != null) {
+    if (index1 != null && index2 != null && leftRange && rightRange) {
+      const address1 = addressToTicker(tokens[index1].assetAddress.toString())
+      const address2 = addressToTicker(tokens[index2].assetAddress.toString())
+      history.replace(
+        `/newPosition/${address1}/${address2}/${parsedFee}/${leftRange}/${rightRange}`
+      )
+    } else if (index1 != null && index2 != null) {
       const address1 = addressToTicker(tokens[index1].assetAddress.toString())
       const address2 = addressToTicker(tokens[index2].assetAddress.toString())
       history.replace(`/newPosition/${address1}/${address2}/${parsedFee}`)
@@ -375,7 +395,7 @@ export const NewPosition: React.FC<INewPosition> = ({
               setIsConcentrated(val)
               onIsConcentratedChange(val)
             }}
-            initialValue={initialIsConcentratedValue ? 0 : 1}
+            initialValue={isConcentrated ? 0 : 1}
             className={classes.switch}
             style={{
               opacity: poolIndex !== null ? 1 : 0
@@ -405,14 +425,16 @@ export const NewPosition: React.FC<INewPosition> = ({
           initialTokenFrom={initialTokenFrom}
           initialTokenTo={initialTokenTo}
           initialFee={initialFee}
+          initialLeftRange={initialLeftRange}
+          initialRightRange={initialRightRange}
           className={classes.deposit}
           tokens={tokens}
-          setPositionTokens={(index1, index2, fee) => {
+          setPositionTokens={(index1, index2, fee, leftRange, rightRange) => {
             setTokenAIndex(index1)
             setTokenBIndex(index2)
             onChangePositionTokens(index1, index2, fee)
 
-            updatePath(index1, index2, fee)
+            updatePath(index1, index2, fee, leftRange, rightRange)
           }}
           onAddLiquidity={() => {
             if (tokenAIndex !== null && tokenBIndex !== null) {
@@ -557,6 +579,8 @@ export const NewPosition: React.FC<INewPosition> = ({
             hasTicksError={hasTicksError}
             reloadHandler={reloadHandler}
             volumeRange={plotVolumeRange}
+            initialLeftRange={initialLeftRange}
+            initialRightRange={initialRightRange}
           />
         ) : (
           <PoolInit
