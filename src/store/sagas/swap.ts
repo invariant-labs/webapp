@@ -1,4 +1,4 @@
-import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { SIGNING_SNACKBAR_CONFIG, TIMEOUT_ERROR_MESSAGE, WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { createLoaderKey, solToPriorityFee } from '@consts/utils'
 import { Pair } from '@invariant-labs/sdk'
 import { actions as snackbarsActions } from '@reducers/snackbars'
@@ -8,7 +8,13 @@ import { network, rpcAddress } from '@selectors/solanaConnection'
 import { accounts } from '@selectors/solanaWallet'
 import { swap } from '@selectors/swap'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
-import { Keypair, SystemProgram, Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
+import {
+  Keypair,
+  SystemProgram,
+  Transaction,
+  TransactionExpiredTimeoutError,
+  sendAndConfirmRawTransaction
+} from '@solana/web3.js'
 import { getMarketProgram } from '@web3/programs/amm'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { getConnection } from './connection'
@@ -281,14 +287,26 @@ export function* handleSwapWithSOL(): Generator {
 
     yield put(swapActions.setSwapSuccess(false))
 
-    yield put(
-      snackbarsActions.add({
-        message:
-          'Failed to send. Please unwrap wrapped SOL in your wallet if you have any and try again.',
-        variant: 'error',
-        persist: false
-      })
-    )
+    if (error instanceof TransactionExpiredTimeoutError) {
+      yield put(
+        snackbarsActions.add({
+          message: TIMEOUT_ERROR_MESSAGE,
+          variant: 'error',
+          persist: true,
+          txid: error.signature
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message:
+            'Failed to send. Please unwrap wrapped SOL in your wallet if you have any and try again.',
+          variant: 'error',
+          persist: false
+        })
+      )
+    }
+
     closeSnackbar(loaderSwappingTokens)
     yield put(snackbarsActions.remove(loaderSwappingTokens))
     closeSnackbar(loaderSigningTx)
@@ -428,13 +446,24 @@ export function* handleSwap(): Generator {
 
     yield put(swapActions.setSwapSuccess(false))
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Failed to send. Please try again.',
-        variant: 'error',
-        persist: false
-      })
-    )
+    if (error instanceof TransactionExpiredTimeoutError) {
+      yield put(
+        snackbarsActions.add({
+          message: TIMEOUT_ERROR_MESSAGE,
+          variant: 'error',
+          persist: true,
+          txid: error.signature
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to send. Please try again.',
+          variant: 'error',
+          persist: false
+        })
+      )
+    }
 
     closeSnackbar(loaderSwappingTokens)
     yield put(snackbarsActions.remove(loaderSwappingTokens))

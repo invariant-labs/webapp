@@ -1,4 +1,4 @@
-import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { SIGNING_SNACKBAR_CONFIG, TIMEOUT_ERROR_MESSAGE, WRAPPED_SOL_ADDRESS } from '@consts/static'
 import {
   createLiquidityPlot,
   createLoaderKey,
@@ -30,6 +30,7 @@ import {
   PublicKey,
   SystemProgram,
   Transaction,
+  TransactionExpiredTimeoutError,
   sendAndConfirmRawTransaction
 } from '@solana/web3.js'
 import { getMarketProgram } from '@web3/programs/amm'
@@ -310,13 +311,24 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Failed to send. Please try again.',
-        variant: 'error',
-        persist: false
-      })
-    )
+    if (error instanceof TransactionExpiredTimeoutError) {
+      yield put(
+        snackbarsActions.add({
+          message: TIMEOUT_ERROR_MESSAGE,
+          variant: 'error',
+          persist: true,
+          txid: error.signature
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to send. Please try again.',
+          variant: 'error',
+          persist: false
+        })
+      )
+    }
   }
 }
 
@@ -508,13 +520,24 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Failed to send. Please try again.',
-        variant: 'error',
-        persist: false
-      })
-    )
+    if (error instanceof TransactionExpiredTimeoutError) {
+      yield put(
+        snackbarsActions.add({
+          message: TIMEOUT_ERROR_MESSAGE,
+          variant: 'error',
+          persist: true,
+          txid: error.signature
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to send. Please try again.',
+          variant: 'error',
+          persist: false
+        })
+      )
+    }
   }
 }
 
@@ -669,13 +692,24 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Failed to send. Please try again.',
-        variant: 'error',
-        persist: false
-      })
-    )
+    if (error instanceof TransactionExpiredTimeoutError) {
+      yield put(
+        snackbarsActions.add({
+          message: TIMEOUT_ERROR_MESSAGE,
+          variant: 'error',
+          persist: true,
+          txid: error.signature
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to send. Please try again.',
+          variant: 'error',
+          persist: false
+        })
+      )
+    }
   }
 }
 
@@ -918,13 +952,24 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Failed to claim fee. Please try again.',
-        variant: 'error',
-        persist: false
-      })
-    )
+    if (error instanceof TransactionExpiredTimeoutError) {
+      yield put(
+        snackbarsActions.add({
+          message: TIMEOUT_ERROR_MESSAGE,
+          variant: 'error',
+          persist: true,
+          txid: error.signature
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to send. Please try again.',
+          variant: 'error',
+          persist: false
+        })
+      )
+    }
   }
 }
 
@@ -1043,13 +1088,24 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Failed to claim fee. Please try again.',
-        variant: 'error',
-        persist: false
-      })
-    )
+    if (error instanceof TransactionExpiredTimeoutError) {
+      yield put(
+        snackbarsActions.add({
+          message: TIMEOUT_ERROR_MESSAGE,
+          variant: 'error',
+          persist: true,
+          txid: error.signature
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to send. Please try again.',
+          variant: 'error',
+          persist: false
+        })
+      )
+    }
   }
 }
 
@@ -1215,13 +1271,24 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Failed to close position. Please try again.',
-        variant: 'error',
-        persist: false
-      })
-    )
+    if (error instanceof TransactionExpiredTimeoutError) {
+      yield put(
+        snackbarsActions.add({
+          message: TIMEOUT_ERROR_MESSAGE,
+          variant: 'error',
+          persist: true,
+          txid: error.signature
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to send. Please try again.',
+          variant: 'error',
+          persist: false
+        })
+      )
+    }
   }
 }
 
@@ -1370,13 +1437,24 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Failed to close position. Please try again.',
-        variant: 'error',
-        persist: false
-      })
-    )
+    if (error instanceof TransactionExpiredTimeoutError) {
+      yield put(
+        snackbarsActions.add({
+          message: TIMEOUT_ERROR_MESSAGE,
+          variant: 'error',
+          persist: true,
+          txid: error.signature
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to send. Please try again.',
+          variant: 'error',
+          persist: false
+        })
+      )
+    }
   }
 }
 
