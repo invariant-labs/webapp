@@ -3,6 +3,7 @@ import React, { useCallback } from 'react'
 import icons from '@static/icons'
 import { Box, Grid } from '@material-ui/core'
 import {
+  StyledButton,
   StyledCircularProgress,
   StyledCloseButton,
   StyledContainer,
@@ -10,8 +11,19 @@ import {
   StyledTitle
 } from './style'
 
-const LoadingSnackbar = React.forwardRef<HTMLDivElement, CustomContentProps>(
-  ({ id, message }, ref) => {
+interface CustomProps {
+  txid?: string
+  currentNetwork?: string
+}
+
+interface LoadingSnackbarProps extends CustomContentProps, CustomProps {}
+
+declare module 'notistack' {
+  interface OptionsObject extends CustomProps {}
+}
+
+const LoadingSnackbar = React.forwardRef<HTMLDivElement, LoadingSnackbarProps>(
+  ({ id, message, txid, currentNetwork }, ref) => {
     const { closeSnackbar } = useSnackbar()
 
     const handleDismiss = useCallback(() => {
@@ -21,12 +33,31 @@ const LoadingSnackbar = React.forwardRef<HTMLDivElement, CustomContentProps>(
     return (
       <StyledSnackbarContent ref={ref} role='alert'>
         <StyledContainer>
-          <Grid container alignItems='center'>
+          <StyledContainer>
             <Box ml={1}>
               <StyledCircularProgress size={13} />
             </Box>
-            <StyledTitle>{message}</StyledTitle>
-          </Grid>
+            <Grid container justifyContent='space-between' alignItems='center'>
+              <StyledTitle>{message}</StyledTitle>
+
+              {txid && (
+                <StyledButton
+                  onClick={() => {
+                    if (currentNetwork !== 'mainnet' && txid !== undefined && currentNetwork) {
+                      window.open('https://solscan.io/tx/' + txid + '?cluster=' + currentNetwork)
+                    } else if (
+                      currentNetwork === 'mainnet' &&
+                      txid !== undefined &&
+                      currentNetwork
+                    ) {
+                      window.open('https://solscan.io/tx/' + txid)
+                    }
+                  }}>
+                  <span>Details</span>
+                </StyledButton>
+              )}
+            </Grid>
+          </StyledContainer>
           <StyledCloseButton onClick={handleDismiss}>
             <img src={icons.closeSmallIcon}></img>
           </StyledCloseButton>

@@ -18,6 +18,7 @@ import { closeSnackbar } from 'notistack'
 export function* handleSwapWithSOL(): Generator {
   const loaderSwappingTokens = createLoaderKey()
   const loaderSigningTx = createLoaderKey()
+  const loaderTxDetails = createLoaderKey()
 
   try {
     const allTokens = yield* select(tokens)
@@ -209,15 +210,29 @@ export function* handleSwapWithSOL(): Generator {
     }
 
     const swapTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
+      [connection, connection.sendRawTransaction],
       swapSignedTx.serialize(),
       {
-        skipPreflight: false
+        skipPreflight: true
       }
     )
 
-    if (!swapTxid.length) {
+    yield put(
+      snackbarsActions.add({
+        message: 'Transaction sending... View details',
+        variant: 'pending',
+        persist: true,
+        txid: swapTxid,
+        key: loaderTxDetails
+      })
+    )
+
+    const confirmedSwapTxid = yield* call([connection, connection.confirmTransaction], swapTxid)
+
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
+
+    if (confirmedSwapTxid.value.err === null) {
       yield put(swapActions.setSwapSuccess(false))
 
       closeSnackbar(loaderSwappingTokens)
@@ -289,6 +304,8 @@ export function* handleSwapWithSOL(): Generator {
         persist: false
       })
     )
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
     closeSnackbar(loaderSwappingTokens)
     yield put(snackbarsActions.remove(loaderSwappingTokens))
     closeSnackbar(loaderSigningTx)
