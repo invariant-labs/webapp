@@ -5,7 +5,7 @@ import { theme } from '@static/theme'
 import SwapList from '@static/svg/swap-list.svg'
 import useStyle from './style'
 import classNames from 'classnames'
-import { initialXtoY } from '@consts/uiUtils'
+import { initialXtoY, tickerToAddress } from '@consts/uiUtils'
 
 export interface ILiquidityItem {
   tokenXName: string
@@ -92,7 +92,9 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
   const isXs = useMediaQuery(theme.breakpoints.down('xs'))
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'))
 
-  const [xToY, setXToY] = useState<boolean>(initialXtoY(tokenXName, tokenYName))
+  const [xToY, setXToY] = useState<boolean>(
+    initialXtoY(tickerToAddress(tokenXName), tickerToAddress(tokenYName))
+  )
 
   const feeFragment = useMemo(
     () => (

@@ -61,7 +61,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const positionStakes = useSelector(stakesForPosition(position?.address))
 
   const [xToY, setXToY] = useState<boolean>(
-    initialXtoY(position?.tokenX.symbol, position?.tokenY.symbol)
+    initialXtoY(position?.tokenX.assetAddress.toString(), position?.tokenY.assetAddress.toString())
   )
 
   const [globalPrice, setGlobalPrice] = useState<number | undefined>(undefined)
