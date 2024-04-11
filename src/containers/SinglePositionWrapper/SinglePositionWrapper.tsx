@@ -373,12 +373,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     )
   }
 
-  useEffect(() => {
-    if (!position) {
-      history.push('/pool')
-    }
-  }, [position])
-
   return !isLoadingList && position ? (
     <PositionDetails
       tokenXAddress={position.tokenX.assetAddress}
@@ -458,7 +452,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       <img src={loader} className={classes.loading} />
     </Grid>
   ) : !position ? (
-    <Grid container justifyContent='center'>
+    <Grid container justifyContent='center' alignItems='center'>
       <EmptyPlaceholder desc='Position does not exist in your list!' />
     </Grid>
   ) : null
