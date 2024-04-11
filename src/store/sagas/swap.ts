@@ -101,7 +101,7 @@ export function* handleSwapWithSOL(): Generator {
       )
     }
 
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const initialBlockhash = yield* call([connection, connection.getLatestBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
@@ -154,7 +154,7 @@ export function* handleSwapWithSOL(): Generator {
       )
     }
 
-    const swapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const swapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     swapTx.recentBlockhash = swapBlockhash.blockhash
     swapTx.feePayer = wallet.publicKey
 
@@ -168,7 +168,7 @@ export function* handleSwapWithSOL(): Generator {
       )
     }
 
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const unwrapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
@@ -213,13 +213,13 @@ export function* handleSwapWithSOL(): Generator {
       [connection, connection.sendRawTransaction],
       swapSignedTx.serialize(),
       {
-        skipPreflight: true
+        skipPreflight: false
       }
     )
 
     yield put(
       snackbarsActions.add({
-        message: 'Transaction sending... View details',
+        message: 'Processing transaction...',
         variant: 'pending',
         persist: true,
         txid: swapTxid,
@@ -227,12 +227,26 @@ export function* handleSwapWithSOL(): Generator {
       })
     )
 
-    const confirmedSwapTxid = yield* call([connection, connection.confirmTransaction], swapTxid)
+    const confirmedSwapTx = yield* call([connection, connection.confirmTransaction], {
+      blockhash: swapBlockhash.blockhash,
+      lastValidBlockHeight: swapBlockhash.lastValidBlockHeight,
+      signature: swapTxid
+    })
 
     closeSnackbar(loaderTxDetails)
     yield put(snackbarsActions.remove(loaderTxDetails))
 
-    if (confirmedSwapTxid.value.err === null) {
+    if (confirmedSwapTx.value.err === null) {
+      yield put(swapActions.setSwapSuccess(true))
+      yield put(
+        snackbarsActions.add({
+          message: 'Tokens swapped successfully.',
+          variant: 'success',
+          persist: false,
+          txid: swapTxid
+        })
+      )
+    } else {
       yield put(swapActions.setSwapSuccess(false))
 
       closeSnackbar(loaderSwappingTokens)
@@ -243,15 +257,6 @@ export function* handleSwapWithSOL(): Generator {
           message:
             'Tokens swapping failed. Please unwrap wrapped SOL in your wallet and try again.',
           variant: 'error',
-          persist: false,
-          txid: swapTxid
-        })
-      )
-    } else {
-      yield put(
-        snackbarsActions.add({
-          message: 'Tokens swapped successfully.',
-          variant: 'success',
           persist: false,
           txid: swapTxid
         })
@@ -316,6 +321,7 @@ export function* handleSwapWithSOL(): Generator {
 export function* handleSwap(): Generator {
   const loaderSwappingTokens = createLoaderKey()
   const loaderSigningTx = createLoaderKey()
+  const loaderTxDetails = createLoaderKey()
 
   try {
     const allTokens = yield* select(tokens)
@@ -391,7 +397,7 @@ export function* handleSwap(): Generator {
       owner: wallet.publicKey
     })
     const connection = yield* call(getConnection)
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     swapTx.recentBlockhash = blockhash.blockhash
     swapTx.feePayer = wallet.publicKey
 
@@ -412,28 +418,48 @@ export function* handleSwap(): Generator {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+    const txid = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false
     })
 
-    yield put(swapActions.setSwapSuccess(!!txid.length))
+    yield put(
+      snackbarsActions.add({
+        message: 'Processing transaction...',
+        variant: 'pending',
+        persist: true,
+        txid: txid,
+        key: loaderTxDetails
+      })
+    )
 
-    if (!txid.length) {
-      yield put(
-        snackbarsActions.add({
-          message: 'Tokens swapping failed. Please try again.',
-          variant: 'error',
-          persist: false,
-          txid
-        })
-      )
-    } else {
+    const confirmedTx = yield* call([connection, connection.confirmTransaction], {
+      blockhash: blockhash.blockhash,
+      lastValidBlockHeight: blockhash.lastValidBlockHeight,
+      signature: txid
+    })
+
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
+
+    if (confirmedTx.value.err === null) {
+      yield put(swapActions.setSwapSuccess(true))
       yield put(
         snackbarsActions.add({
           message: 'Tokens swapped successfully.',
           variant: 'success',
           persist: false,
-          txid
+          txid: txid
+        })
+      )
+    } else {
+      yield put(swapActions.setSwapSuccess(false))
+
+      yield put(
+        snackbarsActions.add({
+          message: 'Tokens swapping failed. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: txid
         })
       )
     }
@@ -453,6 +479,8 @@ export function* handleSwap(): Generator {
       })
     )
 
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
     closeSnackbar(loaderSwappingTokens)
     yield put(snackbarsActions.remove(loaderSwappingTokens))
     closeSnackbar(loaderSigningTx)
