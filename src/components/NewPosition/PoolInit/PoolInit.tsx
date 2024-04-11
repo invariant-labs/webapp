@@ -101,9 +101,30 @@ export const PoolInit: React.FC<IPoolInit> = ({
     changeRangeHandler(leftRange, rightRange)
   }, [midPrice])
 
+  const validateMidPriceInput = (midPriceInput: string) => {
+    let minMidPriceInput = isXtoY
+      ? calcPrice(getMinTick(tickSpacing), isXtoY, xDecimal, yDecimal).toString()
+      : calcPrice(getMaxTick(tickSpacing), isXtoY, xDecimal, yDecimal).toString()
+    let maxMidPriceInput = isXtoY
+      ? calcPrice(getMaxTick(tickSpacing), isXtoY, xDecimal, yDecimal).toString()
+      : calcPrice(getMinTick(tickSpacing), isXtoY, xDecimal, yDecimal).toString()
+
+    let validatedMidPriceInput: string = midPriceInput
+
+    if (+midPriceInput < +minMidPriceInput) {
+      validatedMidPriceInput = minMidPriceInput
+    } else if (+midPriceInput > +maxMidPriceInput) {
+      validatedMidPriceInput = maxMidPriceInput
+    }
+
+    return validatedMidPriceInput
+  }
+
   useEffect(() => {
     if (currentPairReversed !== null) {
-      setMidPriceInput((1 / +midPriceInput).toString())
+      const validatedMidPrice = validateMidPriceInput((1 / +midPriceInput).toString())
+
+      setMidPriceInput(validatedMidPrice)
       changeRangeHandler(rightRange, leftRange)
     }
   }, [currentPairReversed])
@@ -135,6 +156,9 @@ export const PoolInit: React.FC<IPoolInit> = ({
           className={classes.midPrice}
           placeholder='0.0'
           globalPrice={globalPrice}
+          onBlur={e => {
+            setMidPriceInput(validateMidPriceInput(e.target.value))
+          }}
         />
 
         <Grid
