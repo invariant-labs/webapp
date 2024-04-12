@@ -36,7 +36,7 @@ import { PublicKey } from '@solana/web3.js'
 import { getCurrentSolanaConnection, networkTypetoProgramNetwork } from '@web3/connection'
 import { openWalletSelectorModal } from '@web3/selector'
 import { History } from 'history'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 export interface IProps {
@@ -89,6 +89,9 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   }, [poolIndex])
 
   useEffect(() => {
+    let timerId1: any
+    let timerId2: any
+
     if (!inProgress && progress === 'progress') {
       setProgress(success ? 'approvedWithSuccess' : 'approvedWithFail')
 
@@ -104,13 +107,18 @@ export const NewPositionWrapper: React.FC<IProps> = ({
         )
       }
 
-      setTimeout(() => {
+      timerId1 = setTimeout(() => {
         setProgress(success ? 'success' : 'failed')
       }, 1500)
 
-      setTimeout(() => {
+      timerId2 = setTimeout(() => {
         setProgress('none')
       }, 3000)
+    }
+
+    return () => {
+      clearTimeout(timerId1)
+      clearTimeout(timerId2)
     }
   }, [success, inProgress])
 
@@ -427,6 +435,15 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
     return poolAddress
   }
+  const isMountedRef = useRef(false)
+
+  useEffect(() => {
+    // prevent update state on unmounted component
+    isMountedRef.current = true
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
 
   return (
     <NewPosition
@@ -466,14 +483,18 @@ export const NewPositionWrapper: React.FC<IProps> = ({
               fee.eq(ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee)
             )
           ) {
-            setPoolIndex(index !== -1 ? index : null)
-            setCurrentPairReversed(null)
+            if (isMountedRef.current) {
+              setPoolIndex(index !== -1 ? index : null)
+              setCurrentPairReversed(null)
+            }
           } else if (
             tokenAIndex === tokenB &&
             tokenBIndex === tokenA &&
             fee.eq(ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee)
           ) {
-            setCurrentPairReversed(currentPairReversed === null ? true : !currentPairReversed)
+            if (isMountedRef.current) {
+              setCurrentPairReversed(currentPairReversed === null ? true : !currentPairReversed)
+            }
           }
 
           if (index !== -1 && index !== poolIndex) {
