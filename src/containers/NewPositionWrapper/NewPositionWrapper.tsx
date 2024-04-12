@@ -613,8 +613,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
             liquidityDelta: liquidity,
             initPool: poolIndex === null,
             initTick: poolIndex === null ? midPrice.index : undefined,
-            xAmount,
-            yAmount,
+            xAmount: Math.floor(xAmount),
+            yAmount: Math.floor(yAmount),
             slippage,
             tickSpacing,
             knownPrice:
