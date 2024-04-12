@@ -17,7 +17,8 @@ import {
   poolTicks,
   tickMaps
 } from '@selectors/pools'
-import { network } from '@selectors/solanaConnection'
+import { network, timeoutError } from '@selectors/solanaConnection'
+import { actions as connectionActions } from '@reducers/solanaConnection'
 import { status, swapTokens, swapTokensDict, balanceLoading } from '@selectors/solanaWallet'
 import { swap as swapPool } from '@selectors/swap'
 import { PublicKey } from '@solana/web3.js'
@@ -41,7 +42,9 @@ export const WrappedSwap = () => {
   const isBalanceLoading = useSelector(balanceLoading)
   const { success, inProgress } = useSelector(swapPool)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
+
   const networkType = useSelector(network)
+  const isTimeoutError = useSelector(timeoutError)
 
   const [progress, setProgress] = useState<ProgressState>('none')
   const [tokenFrom, setTokenFrom] = useState<PublicKey | null>(null)
@@ -212,6 +215,10 @@ export const WrappedSwap = () => {
     }
   }
 
+  const deleteTimeoutError = () => {
+    dispatch(connectionActions.setTimeoutError(false))
+  }
+
   return (
     <Swap
       isFetchingNewPool={isFetchingNewPool}
@@ -285,6 +292,8 @@ export const WrappedSwap = () => {
       onSlippageChange={onSlippageChange}
       initialSlippage={initialSlippage}
       isBalanceLoading={isBalanceLoading}
+      deleteTimeoutError={deleteTimeoutError}
+      isTimeoutError={isTimeoutError}
     />
   )
 }

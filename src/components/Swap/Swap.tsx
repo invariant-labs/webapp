@@ -98,6 +98,8 @@ export interface ISwap {
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
   isBalanceLoading: boolean
+  deleteTimeoutError: () => void
+  isTimeoutError: boolean
 }
 
 export const Swap: React.FC<ISwap> = ({
@@ -126,7 +128,9 @@ export const Swap: React.FC<ISwap> = ({
   priceToLoading,
   onSlippageChange,
   initialSlippage,
-  isBalanceLoading
+  isBalanceLoading,
+  deleteTimeoutError,
+  isTimeoutError
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -458,6 +462,13 @@ export const Swap: React.FC<ISwap> = ({
   useEffect(() => {
     void setSimulateAmount()
   }, [isFetchingNewPool])
+
+  useEffect(() => {
+    if (isTimeoutError) {
+      onRefresh(tokenFromIndex, tokenToIndex)
+      deleteTimeoutError()
+    }
+  }, [isTimeoutError])
 
   return (
     <Grid container className={classes.swapWrapper} alignItems='center'>

@@ -24,13 +24,14 @@ import { actions as poolsActions } from '@reducers/pools'
 import { actions } from '@reducers/positions'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { Status, actions as solanaWallet } from '@reducers/solanaWallet'
+import { actions as connectionActions } from '@reducers/solanaConnection'
 import {
   isLoadingLatestPoolsForTransaction,
   poolsArraySortedByFees,
   volumeRanges
 } from '@selectors/pools'
 import { initPosition, plotTicks } from '@selectors/positions'
-import { network } from '@selectors/solanaConnection'
+import { network, timeoutError } from '@selectors/solanaConnection'
 import {
   canCreateNewPool,
   canCreateNewPosition,
@@ -63,6 +64,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const networkType = useSelector(network)
 
   const connection = getCurrentSolanaConnection()
+
+  const isTimeoutError = useSelector(timeoutError)
 
   const tokens = useSelector(swapTokens)
   const walletStatus = useSelector(status)
@@ -507,6 +510,13 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
     getGlobalPrice()
   }
+
+  useEffect(() => {
+    if (isTimeoutError) {
+      void handleRefresh()
+      dispatch(connectionActions.setTimeoutError(false))
+    }
+  }, [isTimeoutError])
 
   return (
     <NewPosition

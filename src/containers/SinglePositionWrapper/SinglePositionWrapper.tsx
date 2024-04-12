@@ -19,6 +19,8 @@ import { actions as farmsActions } from '@reducers/farms'
 import { actions } from '@reducers/positions'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { Status, actions as solanaWallet } from '@reducers/solanaWallet'
+import { actions as connectionActions } from '@reducers/solanaConnection'
+import { timeoutError } from '@selectors/solanaConnection'
 import { hasFarms, hasUserStakes, stakesForPosition } from '@selectors/farms'
 import { hasTokens, volumeRanges } from '@selectors/pools'
 import {
@@ -62,6 +64,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const isBalanceLoading = useSelector(balanceLoading)
 
   const positionStakes = useSelector(stakesForPosition(position?.address))
+
+  const isTimeoutError = useSelector(timeoutError)
 
   const [xToY, setXToY] = useState<boolean>(true)
 
@@ -415,6 +419,13 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       getGlobalPrice()
     }
   }
+
+  useEffect(() => {
+    if (isTimeoutError) {
+      handleRefresh()
+      dispatch(connectionActions.setTimeoutError(false))
+    }
+  }, [isTimeoutError])
 
   return position ? (
     <PositionDetails
