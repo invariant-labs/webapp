@@ -424,7 +424,7 @@ export function* handleSwap(): Generator {
 
     yield put(
       snackbarsActions.add({
-        message: 'Confirming swap transaction',
+        message: 'Confirming swap transaction...',
         variant: 'pending',
         persist: true,
         txid: txid,
