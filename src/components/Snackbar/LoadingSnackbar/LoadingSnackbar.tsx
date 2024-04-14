@@ -37,7 +37,7 @@ const LoadingSnackbar = React.forwardRef<HTMLDivElement, LoadingSnackbarProps>(
             <Box ml={1}>
               <StyledCircularProgress size={13} />
             </Box>
-            <Grid container justifyContent='space-between' alignItems='center'>
+            <Grid container justifyContent='space-between' alignItems='center' wrap='nowrap'>
               <StyledTitle>{message}</StyledTitle>
 
               {txid && (

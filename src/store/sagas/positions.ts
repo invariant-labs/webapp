@@ -470,7 +470,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
 
     yield put(
       snackbarsActions.add({
-        message: 'Processing transaction...',
+        message: 'Confirming create position transaction...',
         variant: 'pending',
         persist: true,
         txid: txId,
@@ -659,7 +659,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 
     yield put(
       snackbarsActions.add({
-        message: 'Processing transaction...',
+        message: 'Confirming create position transaction...',
         variant: 'pending',
         persist: true,
         txid: txId,
@@ -939,7 +939,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 
     yield put(
       snackbarsActions.add({
-        message: 'Processing transaction...',
+        message: 'Confirming claim fee transaction...',
         variant: 'pending',
         persist: true,
         txid: txId,
@@ -1086,7 +1086,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
     yield put(
       snackbarsActions.add({
-        message: 'Processing transaction...',
+        message: 'Confirming claim fee transaction...',
         variant: 'pending',
         persist: true,
         txid: txId,
@@ -1273,7 +1273,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
 
     yield put(
       snackbarsActions.add({
-        message: 'Processing transaction...',
+        message: 'Confirming close position transaction...',
         variant: 'pending',
         persist: true,
         txid: txId,
@@ -1450,7 +1450,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
 
     yield put(
       snackbarsActions.add({
-        message: 'Processing transaction...',
+        message: 'Confirming close position transaction...',
         variant: 'pending',
         persist: true,
         txid: txId,

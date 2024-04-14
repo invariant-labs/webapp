@@ -75,6 +75,7 @@ export const StyledCircularProgress = styled(CircularProgress)({
 })
 
 export const StyledButton = styled('button')(({ theme }) => ({
+  marginRight: 6,
   height: 30,
   backgroundColor: 'transparent',
   textTransform: 'uppercase',
