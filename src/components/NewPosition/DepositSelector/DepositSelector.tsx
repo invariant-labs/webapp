@@ -3,6 +3,7 @@ import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmo
 import Select from '@components/Inputs/Select/Select'
 import {
   ALL_FEE_TIERS_DATA,
+  PositionOpeningMethod,
   WRAPPED_SOL_ADDRESS,
   WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT,
   WSOL_POOL_INIT_LAMPORTS
@@ -57,6 +58,10 @@ export interface IDepositSelector {
   priceALoading?: boolean
   priceBLoading?: boolean
   feeTierIndex: number
+  concentrationArray: number[]
+  concentrationIndex: number
+  minimumSliderIndex: number
+  positionOpeningMethod: PositionOpeningMethod
   setShouldResetPlot: (val: boolean) => void
   isBalanceLoading: boolean
 }
@@ -87,6 +92,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   priceALoading,
   priceBLoading,
   feeTierIndex,
+  concentrationArray,
+  concentrationIndex,
+  minimumSliderIndex,
+  positionOpeningMethod,
   setShouldResetPlot,
   isBalanceLoading
 }) => {
@@ -140,6 +149,12 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'Select different tokens'
     }
 
+    if (positionOpeningMethod === 'concentration' && concentrationIndex < minimumSliderIndex) {
+      return concentrationArray[minimumSliderIndex]
+        ? `Set concentration to at least ${concentrationArray[minimumSliderIndex]}x`
+        : 'Set higher fee tier'
+    }
+
     if (
       (poolIndex === null && !canCreateNewPool) ||
       (poolIndex !== null && !canCreateNewPosition)
@@ -175,7 +190,17 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
 
     return 'Add Liquidity'
-  }, [tokenAIndex, tokenBIndex, tokenAInputState.value, tokenBInputState.value, tokens])
+  }, [
+    tokenAIndex,
+    tokenBIndex,
+    tokenAInputState.value,
+    tokenBInputState.value,
+    tokens,
+    positionOpeningMethod,
+    concentrationIndex,
+    feeTierIndex,
+    minimumSliderIndex
+  ])
 
   useEffect(() => {
     if (tokenAIndex !== null) {
