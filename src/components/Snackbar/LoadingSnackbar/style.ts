@@ -33,7 +33,7 @@ export const StyledContainer = styled('div')({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  flex: 1,
+  width: 'auto',
   '& div > div': {
     margin: 0
   }
@@ -73,32 +73,3 @@ export const StyledCircularProgress = styled(CircularProgress)({
     height: 13
   }
 })
-
-export const StyledButton = styled('button')(({ theme }) => ({
-  height: 30,
-  backgroundColor: 'transparent',
-  textTransform: 'uppercase',
-  borderRadius: 6,
-  border: 'none',
-  color: colors.invariant.textGrey,
-  fontSize: 14,
-  fontWeight: 600,
-  cursor: 'pointer',
-  transition: '0.2s all cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-  backfaceVisibility: 'hidden',
-  fontSmoothing: 'subpixel-antialiased',
-  padding: '0 4px',
-  '&:hover': {
-    transform: 'scale(1.15) translateY(0px)'
-  },
-  [theme.breakpoints.down('xs')]: {
-    width: 36,
-    height: 16,
-    fontSize: 9,
-    lineHeight: '14px',
-    marginTop: 2,
-    marginRight: 8,
-    paddingBottom: 17,
-    paddingRight: 36
-  }
-}))
