@@ -65,8 +65,8 @@ export const initialXtoY = (tokenXAddress?: string, tokenYAddress?: string) => {
     return true
   }
 
-  const isTokeXStablecoin = STABLECOIN_ADDRESSES.includes(tokenXAddress)
-  const isTokenYStablecoin = STABLECOIN_ADDRESSES.includes(tokenYAddress)
+  const isTokeXStablecoin = STABLECOIN_ADDRESSES.some(address => address === tokenXAddress)
+  const isTokenYStablecoin = STABLECOIN_ADDRESSES.some(address => address === tokenYAddress)
 
-  return isTokeXStablecoin === isTokenYStablecoin || (!isTokeXStablecoin && !isTokenYStablecoin)
+  return !(!(isTokeXStablecoin && isTokenYStablecoin) && (isTokeXStablecoin || isTokenYStablecoin))
 }
