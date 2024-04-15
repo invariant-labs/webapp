@@ -14,7 +14,6 @@ import {
   printBN
 } from '@consts/utils'
 import { MAX_TICK, Pair, calculatePriceSqrt, getMarketAddress } from '@invariant-labs/sdk'
-import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/src/math'
 import { feeToTickSpacing } from '@invariant-labs/sdk/src/utils'
@@ -73,8 +72,6 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 
-  const [liquidity, setLiquidity] = useState<Decimal>({ v: new BN(0) })
-
   const [progress, setProgress] = useState<ProgressState>('none')
 
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
@@ -83,6 +80,17 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const [currentPairReversed, setCurrentPairReversed] = useState<boolean | null>(null)
 
   const [globalPrice, setGlobalPrice] = useState<number | undefined>(undefined)
+
+  const isMountedRef = useRef(false)
+
+  useEffect(() => {
+    isMountedRef.current = true
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
+
+  const liquidityRef = useRef<any>({ v: new BN(0) })
 
   useEffect(() => {
     setProgress('none')
@@ -435,15 +443,58 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
     return poolAddress
   }
-  const isMountedRef = useRef(false)
 
-  useEffect(() => {
-    // prevent update state on unmounted component
-    isMountedRef.current = true
-    return () => {
-      isMountedRef.current = false
+  const calcAmount = (amount: BN, left: number, right: number, tokenAddress: PublicKey) => {
+    if (tokenAIndex === null || tokenBIndex === null || isNaN(left) || isNaN(right)) {
+      return new BN(0)
     }
-  }, [])
+
+    const byX = tokenAddress.equals(
+      isXtoY ? tokens[tokenAIndex].assetAddress : tokens[tokenBIndex].assetAddress
+    )
+    const lowerTick = Math.min(left, right)
+    const upperTick = Math.max(left, right)
+
+    try {
+      if (byX) {
+        const result = getLiquidityByX(
+          amount,
+          lowerTick,
+          upperTick,
+          poolIndex !== null ? allPools[poolIndex].sqrtPrice : calculatePriceSqrt(midPrice.index),
+          true
+        )
+        if (isMountedRef.current) {
+          liquidityRef.current = result.liquidity
+        }
+        return result.y
+      }
+      const result = getLiquidityByY(
+        amount,
+        lowerTick,
+        upperTick,
+        poolIndex !== null ? allPools[poolIndex].sqrtPrice : calculatePriceSqrt(midPrice.index),
+        true
+      )
+      if (isMountedRef.current) {
+        liquidityRef.current = result.liquidity
+      }
+      return result.x
+    } catch (error) {
+      const result = (byX ? getLiquidityByY : getLiquidityByX)(
+        amount,
+        lowerTick,
+        upperTick,
+        poolIndex !== null ? allPools[poolIndex].sqrtPrice : calculatePriceSqrt(midPrice.index),
+        true
+      )
+      if (isMountedRef.current) {
+        liquidityRef.current = result.liquidity
+      }
+    }
+
+    return new BN(0)
+  }
 
   return (
     <NewPosition
@@ -551,7 +602,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
             fee,
             lowerTick,
             upperTick,
-            liquidityDelta: liquidity,
+            liquidityDelta: liquidityRef.current,
             initPool: poolIndex === null,
             initTick: poolIndex === null ? midPrice.index : undefined,
             xAmount: Math.floor(xAmount),
@@ -566,56 +617,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
         )
       }}
       isCurrentPoolExisting={poolIndex !== null}
-      calcAmount={(amount, left, right, tokenAddress) => {
-        if (tokenAIndex === null || tokenBIndex === null || isNaN(left) || isNaN(right)) {
-          return new BN(0)
-        }
-
-        const byX = tokenAddress.equals(
-          isXtoY ? tokens[tokenAIndex].assetAddress : tokens[tokenBIndex].assetAddress
-        )
-        const lowerTick = Math.min(left, right)
-        const upperTick = Math.max(left, right)
-
-        try {
-          if (byX) {
-            const result = getLiquidityByX(
-              amount,
-              lowerTick,
-              upperTick,
-              poolIndex !== null
-                ? allPools[poolIndex].sqrtPrice
-                : calculatePriceSqrt(midPrice.index),
-              true
-            )
-            setLiquidity(result.liquidity)
-
-            return result.y
-          }
-
-          const result = getLiquidityByY(
-            amount,
-            lowerTick,
-            upperTick,
-            poolIndex !== null ? allPools[poolIndex].sqrtPrice : calculatePriceSqrt(midPrice.index),
-            true
-          )
-          setLiquidity(result.liquidity)
-
-          return result.x
-        } catch (error) {
-          const result = (byX ? getLiquidityByY : getLiquidityByX)(
-            amount,
-            lowerTick,
-            upperTick,
-            poolIndex !== null ? allPools[poolIndex].sqrtPrice : calculatePriceSqrt(midPrice.index),
-            true
-          )
-          setLiquidity(result.liquidity)
-        }
-
-        return new BN(0)
-      }}
+      calcAmount={calcAmount}
       ticksLoading={ticksLoading}
       showNoConnected={walletStatus !== Status.Initialized}
       noConnectedBlockerProps={{

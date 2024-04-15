@@ -1,5 +1,5 @@
 import { Button, Grid, Tooltip, Typography } from '@material-ui/core'
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import {
@@ -86,6 +86,15 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   const [isPlotDiscrete, setIsPlotDiscrete] = useState(initialIsDiscreteValue)
 
   const [concentrationIndex, setConcentrationIndex] = useState(0)
+
+  const isMountedRef = useRef(false)
+
+  useEffect(() => {
+    isMountedRef.current = true
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
@@ -204,13 +213,13 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }
 
   useEffect(() => {
-    if (currentPairReversed !== null) {
+    if (currentPairReversed !== null && isMountedRef.current) {
       reversePlot()
     }
   }, [currentPairReversed])
 
   useEffect(() => {
-    if (ticksLoading) {
+    if (ticksLoading && isMountedRef.current) {
       resetPlot()
     }
   }, [ticksLoading, midPrice])
@@ -264,7 +273,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   )
 
   useEffect(() => {
-    if (isConcentrated) {
+    if (isConcentrated && isMountedRef.current) {
       setConcentrationIndex(0)
 
       const { leftRange, rightRange } = calculateConcentrationRange(
@@ -280,7 +289,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }, [isConcentrated])
 
   useEffect(() => {
-    if (isConcentrated && !ticksLoading) {
+    if (isConcentrated && !ticksLoading && isMountedRef.current) {
       const index =
         concentrationIndex > concentrationArray.length - 1
           ? concentrationArray.length - 1
