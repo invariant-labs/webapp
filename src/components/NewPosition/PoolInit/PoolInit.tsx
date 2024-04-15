@@ -102,10 +102,10 @@ export const PoolInit: React.FC<IPoolInit> = ({
   }, [midPrice])
 
   const validateMidPriceInput = (midPriceInput: string) => {
-    let minMidPriceInput = isXtoY
+    const minMidPriceInput = isXtoY
       ? calcPrice(getMinTick(tickSpacing), isXtoY, xDecimal, yDecimal).toString()
       : calcPrice(getMaxTick(tickSpacing), isXtoY, xDecimal, yDecimal).toString()
-    let maxMidPriceInput = isXtoY
+    const maxMidPriceInput = isXtoY
       ? calcPrice(getMaxTick(tickSpacing), isXtoY, xDecimal, yDecimal).toString()
       : calcPrice(getMinTick(tickSpacing), isXtoY, xDecimal, yDecimal).toString()
 
@@ -117,7 +117,7 @@ export const PoolInit: React.FC<IPoolInit> = ({
       validatedMidPriceInput = maxMidPriceInput
     }
 
-    return validatedMidPriceInput
+    return toMaxNumericPlaces(+validatedMidPriceInput, 5)
   }
 
   useEffect(() => {
