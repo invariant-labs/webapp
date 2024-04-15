@@ -368,4 +368,6 @@ export const SIGNING_SNACKBAR_CONFIG: Omit<ISnackbar, 'open'> = {
   persist: true
 }
 
+export type PositionOpeningMethod = 'range' | 'concentration'
+
 export const TIMEOUT_ERROR_MESSAGE = 'Transaction timed out. Check the details to see if it passed.'
