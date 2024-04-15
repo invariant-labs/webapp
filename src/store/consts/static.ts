@@ -368,6 +368,8 @@ export const SIGNING_SNACKBAR_CONFIG: Omit<ISnackbar, 'open'> = {
   persist: true
 }
 
+export type PositionOpeningMethod = 'range' | 'concentration'
+
 export const STABLECOIN_ADDRESSES: string[] = [
   'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
   'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'
