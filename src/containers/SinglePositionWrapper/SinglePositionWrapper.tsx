@@ -474,11 +474,15 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }
 
   if (
-    isLoadingList ||
+    (isLoadingList && walletStatus === Status.Initialized) ||
     (!position && walletStatus === Status.Uninitialized && !isFinishedDelayRender)
   ) {
     return (
-      <Grid container>
+      <Grid
+        container
+        justifyContent='center'
+        alignItems='center'
+        className={classes.fullHeightContainer}>
         <img src={loader} className={classes.loading} />
       </Grid>
     )
@@ -489,7 +493,11 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }
 
   return (
-    <Grid container justifyContent='center' alignItems='center'>
+    <Grid
+      container
+      justifyContent='center'
+      alignItems='center'
+      className={classes.fullHeightContainer}>
       <EmptyPlaceholder desc='Position does not exist in your list!' />
     </Grid>
   )
