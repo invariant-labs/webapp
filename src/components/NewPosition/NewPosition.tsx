@@ -2,7 +2,7 @@ import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import Slippage from '@components/Modals/Slippage/Slippage'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
-import { ALL_FEE_TIERS_DATA, BestTier } from '@consts/static'
+import { ALL_FEE_TIERS_DATA, BestTier, PositionOpeningMethod } from '@consts/static'
 import { addressToTicker, blurContent, parseFeeToPathFee, unblurContent } from '@consts/uiUtils'
 import {
   TokenPriceData,
@@ -11,12 +11,11 @@ import {
   determinePositionTokenBlock,
   printBN,
   printBNtoBN,
-  trimLeadingZeros
+  trimLeadingZeros,
+  calculateConcentrationRange
 } from '@consts/utils'
-import { MIN_TICK } from '@invariant-labs/sdk'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
-import { fromFee } from '@invariant-labs/sdk/lib/utils'
-import { MAX_TICK } from '@invariant-labs/sdk/src'
+import { fromFee, getConcentrationArray, getMaxTick } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Typography } from '@material-ui/core'
 import { Color } from '@material-ui/lab'
 import { BN } from '@project-serum/anchor'
@@ -26,7 +25,7 @@ import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
 import { History } from 'history'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 import DepositSelector from './DepositSelector/DepositSelector'
@@ -34,6 +33,7 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
+import { getMinTick } from '@invariant-labs/sdk/src/utils'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -88,8 +88,8 @@ export interface INewPosition {
   canCreateNewPosition: boolean
   handleAddToken: (address: string) => void
   commonTokens: PublicKey[]
-  initialIsConcentratedValue: boolean
-  onIsConcentratedChange: (val: boolean) => void
+  initialOpeningPositionMethod: PositionOpeningMethod
+  onPositionOpeningMethodChange: (val: PositionOpeningMethod) => void
   initialHideUnknownTokensValue: boolean
   onHideUnknownTokensChange: (val: boolean) => void
   tokenAPriceData?: TokenPriceData
@@ -144,8 +144,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   canCreateNewPosition,
   handleAddToken,
   commonTokens,
-  initialIsConcentratedValue,
-  onIsConcentratedChange,
+  initialOpeningPositionMethod,
+  onPositionOpeningMethodChange,
   initialHideUnknownTokensValue,
   onHideUnknownTokensChange,
   tokenAPriceData,
@@ -162,10 +162,12 @@ export const NewPosition: React.FC<INewPosition> = ({
 }) => {
   const classes = useStyles()
 
-  const [isConcentrated, setIsConcentrated] = useState(initialIsConcentratedValue)
+  const [positionOpeningMethod, setPositionOpeningMethod] = useState<PositionOpeningMethod>(
+    initialOpeningPositionMethod
+  )
 
-  const [leftRange, setLeftRange] = useState(MIN_TICK)
-  const [rightRange, setRightRange] = useState(MAX_TICK)
+  const [leftRange, setLeftRange] = useState(getMinTick(tickSpacing))
+  const [rightRange, setRightRange] = useState(getMaxTick(tickSpacing))
 
   const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
   const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
@@ -177,6 +179,16 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+
+  const [concentrationIndex, setConcentrationIndex] = useState(0)
+
+  const [minimumSliderIndex, setMinimumSliderIndex] = useState<number>(0)
+
+  const concentrationArray = useMemo(
+    () => getConcentrationArray(tickSpacing, 2, midPrice.index).sort((a, b) => a - b),
+    [tickSpacing]
+  )
+
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -217,16 +229,49 @@ export const NewPosition: React.FC<INewPosition> = ({
     return trimLeadingZeros(printBN(result, tokens[printIndex].decimals))
   }
 
-  const onChangeRange = (left: number, right: number) => {
-    setLeftRange(left)
-    setRightRange(right)
+  const getTicksInsideRange = (left: number, right: number, isXtoY: boolean) => {
+    const leftMax = isXtoY ? getMinTick(tickSpacing) : getMaxTick(tickSpacing)
+    const rightMax = isXtoY ? getMaxTick(tickSpacing) : getMinTick(tickSpacing)
 
-    if (tokenAIndex !== null && (isXtoY ? right > midPrice.index : right < midPrice.index)) {
+    let leftInRange
+    let rightInRange
+
+    if (isXtoY) {
+      leftInRange = left < leftMax ? leftMax : left
+      rightInRange = right > rightMax ? rightMax : right
+    } else {
+      leftInRange = left > leftMax ? leftMax : left
+      rightInRange = right < rightMax ? rightMax : right
+    }
+
+    return { leftInRange, rightInRange }
+  }
+
+  const onChangeRange = (left: number, right: number) => {
+    let leftRange: number
+    let rightRange: number
+
+    if (positionOpeningMethod === 'range') {
+      const { leftInRange, rightInRange } = getTicksInsideRange(left, right, isXtoY)
+      leftRange = leftInRange
+      rightRange = rightInRange
+    } else {
+      leftRange = left
+      rightRange = right
+    }
+
+    setLeftRange(leftRange)
+    setRightRange(rightRange)
+
+    if (
+      tokenAIndex !== null &&
+      (isXtoY ? rightRange > midPrice.index : rightRange < midPrice.index)
+    ) {
       const deposit = tokenADeposit
       const amount = getOtherTokenAmount(
         printBNtoBN(deposit, tokens[tokenAIndex].decimals),
-        left,
-        right,
+        leftRange,
+        rightRange,
         true
       )
 
@@ -238,12 +283,15 @@ export const NewPosition: React.FC<INewPosition> = ({
       }
     }
 
-    if (tokenBIndex !== null && (isXtoY ? left < midPrice.index : left > midPrice.index)) {
+    if (
+      tokenBIndex !== null &&
+      (isXtoY ? leftRange < midPrice.index : leftRange > midPrice.index)
+    ) {
       const deposit = tokenBDeposit
       const amount = getOtherTokenAmount(
         printBNtoBN(deposit, tokens[tokenBIndex].decimals),
-        left,
-        right,
+        leftRange,
+        rightRange,
         false
       )
 
@@ -303,8 +351,42 @@ export const NewPosition: React.FC<INewPosition> = ({
               tier.tokenY.equals(tokens[tokenAIndex].assetAddress))
         )?.bestTierIndex ?? undefined
 
+  const getMinSliderIndex = () => {
+    let minimumSliderIndex = 0
+
+    for (let index = 0; index < concentrationArray.length; index++) {
+      const value = concentrationArray[index]
+
+      const { leftRange, rightRange } = calculateConcentrationRange(
+        tickSpacing,
+        value,
+        2,
+        midPrice.index,
+        isXtoY
+      )
+
+      const { leftInRange, rightInRange } = getTicksInsideRange(leftRange, rightRange, isXtoY)
+
+      if (leftInRange !== leftRange || rightInRange !== rightRange) {
+        minimumSliderIndex = index + 1
+      } else {
+        break
+      }
+    }
+
+    return minimumSliderIndex
+  }
+
   useEffect(() => {
-    if (!ticksLoading && !isConcentrated) {
+    if (positionOpeningMethod === 'concentration') {
+      const minimumSliderIndex = getMinSliderIndex()
+
+      setMinimumSliderIndex(minimumSliderIndex)
+    }
+  }, [poolIndex, positionOpeningMethod, midPrice.index])
+
+  useEffect(() => {
+    if (!ticksLoading && positionOpeningMethod === 'range') {
       onChangeRange(leftRange, rightRange)
     }
   }, [midPrice.index])
@@ -372,10 +454,15 @@ export const NewPosition: React.FC<INewPosition> = ({
           ) : null}
           <ConcentrationTypeSwitch
             onSwitch={val => {
-              setIsConcentrated(val)
-              onIsConcentratedChange(val)
+              if (val) {
+                setPositionOpeningMethod('concentration')
+                onPositionOpeningMethodChange('concentration')
+              } else {
+                setPositionOpeningMethod('range')
+                onPositionOpeningMethodChange('range')
+              }
             }}
-            initialValue={initialIsConcentratedValue ? 0 : 1}
+            initialValue={initialOpeningPositionMethod === 'concentration' ? 0 : 1}
             className={classes.switch}
             style={{
               opacity: poolIndex !== null ? 1 : 0
@@ -514,6 +601,10 @@ export const NewPosition: React.FC<INewPosition> = ({
           priceALoading={priceALoading}
           priceBLoading={priceBLoading}
           feeTierIndex={currentFeeIndex}
+          concentrationArray={concentrationArray}
+          concentrationIndex={concentrationIndex}
+          minimumSliderIndex={minimumSliderIndex}
+          positionOpeningMethod={positionOpeningMethod}
         />
 
         {isCurrentPoolExisting ||
@@ -553,10 +644,15 @@ export const NewPosition: React.FC<INewPosition> = ({
             currentPairReversed={currentPairReversed}
             initialIsDiscreteValue={initialIsDiscreteValue}
             onDiscreteChange={onDiscreteChange}
-            isConcentrated={isConcentrated}
+            positionOpeningMethod={positionOpeningMethod}
             hasTicksError={hasTicksError}
             reloadHandler={reloadHandler}
             volumeRange={plotVolumeRange}
+            concentrationArray={concentrationArray}
+            setConcentrationIndex={setConcentrationIndex}
+            concentrationIndex={concentrationIndex}
+            minimumSliderIndex={minimumSliderIndex}
+            getTicksInsideRange={getTicksInsideRange}
           />
         ) : (
           <PoolInit
