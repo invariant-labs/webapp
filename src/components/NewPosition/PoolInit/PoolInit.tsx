@@ -136,47 +136,48 @@ export const PoolInit: React.FC<IPoolInit> = ({
 
   return (
     <Grid container direction='column' className={classes.wrapper}>
-      <Typography className={classes.header}>Starting price</Typography>
       <Grid
         container
         className={classes.innerWrapper}
         direction='column'
         justifyContent='flex-start'>
-        <Grid className={classes.infoWrapper}>
-          <Typography className={classes.info}>
-            This pool does not exist yet. To create it, select the fee tier, initial price, and
-            enter the amount of tokens. The estimated cost of creating a pool is 0.1 SOL.
-          </Typography>
+        <Grid className={classes.topInnerWrapper}>
+          <Typography className={classes.header}>Starting price</Typography>
+          <Grid className={classes.infoWrapper}>
+            <Typography className={classes.info}>
+              This pool does not exist yet. To create it, select the fee tier, initial price, and
+              enter the amount of tokens. The estimated cost of creating a pool is 0.1 SOL.
+            </Typography>
+          </Grid>
+
+          <SimpleInput
+            setValue={setMidPriceInput}
+            value={midPriceInput}
+            decimal={isXtoY ? xDecimal : yDecimal}
+            className={classes.midPrice}
+            placeholder='0.0'
+            globalPrice={globalPrice}
+            onBlur={e => {
+              setMidPriceInput(validateMidPriceInput(e.target.value))
+            }}
+          />
+
+          <Grid
+            className={classes.priceWrapper}
+            container
+            justifyContent='space-between'
+            alignItems='center'>
+            <Typography className={classes.priceLabel}>{tokenASymbol} starting price: </Typography>
+            <Typography className={classes.priceValue}>
+              <AnimatedNumber
+                value={price.toFixed(isXtoY ? xDecimal : yDecimal)}
+                duration={300}
+                formatValue={formatNumbers()}
+              />
+              {showPrefix(price)} {tokenBSymbol}
+            </Typography>
+          </Grid>
         </Grid>
-
-        <SimpleInput
-          setValue={setMidPriceInput}
-          value={midPriceInput}
-          decimal={isXtoY ? xDecimal : yDecimal}
-          className={classes.midPrice}
-          placeholder='0.0'
-          globalPrice={globalPrice}
-          onBlur={e => {
-            setMidPriceInput(validateMidPriceInput(e.target.value))
-          }}
-        />
-
-        <Grid
-          className={classes.priceWrapper}
-          container
-          justifyContent='space-between'
-          alignItems='center'>
-          <Typography className={classes.priceLabel}>{tokenASymbol} starting price: </Typography>
-          <Typography className={classes.priceValue}>
-            <AnimatedNumber
-              value={price.toFixed(isXtoY ? xDecimal : yDecimal)}
-              duration={300}
-              formatValue={formatNumbers()}
-            />
-            {showPrefix(price)} {tokenBSymbol}
-          </Typography>
-        </Grid>
-
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>
           <RangeInput

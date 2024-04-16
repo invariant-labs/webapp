@@ -4,7 +4,7 @@ import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot
 import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
 import { calcPrice, spacingMultiplicityGte, calcTicksAmountInRange } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
-import { MIN_TICK } from '@invariant-labs/sdk'
+import { getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { ILiquidityToken } from '../SinglePositionInfo/consts'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
 import activeLiquidity from '@static/svg/activeLiquidity.svg'
@@ -66,7 +66,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
       leftRange.x -
         calcPrice(
           Math.max(
-            spacingMultiplicityGte(MIN_TICK, tickSpacing),
+            spacingMultiplicityGte(getMinTick(tickSpacing), tickSpacing),
             leftRange.index - tickSpacing * 15
           ),
           xToY,
