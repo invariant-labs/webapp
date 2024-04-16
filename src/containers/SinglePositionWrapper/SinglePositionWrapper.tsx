@@ -32,6 +32,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 import useStyles from './style'
+import { initialXtoY } from '@consts/uiUtils'
 
 export interface IProps {
   id: string
@@ -59,7 +60,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const walletStatus = useSelector(status)
   const positionStakes = useSelector(stakesForPosition(position?.address))
 
-  const [xToY, setXToY] = useState<boolean>(true)
+  const [xToY, setXToY] = useState<boolean>(
+    initialXtoY(position?.tokenX.assetAddress.toString(), position?.tokenY.assetAddress.toString())
+  )
 
   const [globalPrice, setGlobalPrice] = useState<number | undefined>(undefined)
 
