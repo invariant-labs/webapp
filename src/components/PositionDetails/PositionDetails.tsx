@@ -103,7 +103,6 @@ const PositionDetails: React.FC<IProps> = ({
             <Typography className={classes.backText}>Back to Liquidity Positions List</Typography>
           </Grid>
         </Link>
-
         <SinglePositionInfo
           fee={+printBN(fee.v, DECIMAL - 2)}
           onClickClaimFee={onClickClaimFee}
