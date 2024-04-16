@@ -5,8 +5,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     borderRadius: 10,
     backgroundColor: colors.invariant.component,
-    padding: 24,
-    paddingTop: 16,
+    padding: '16px 24px 8px 24px',
     flex: '1 1 0%'
   },
   headerContainer: {
@@ -21,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.component,
     width: '100%',
     position: 'relative',
-    flex: '1 1 0%'
+    gap: 4
   },
   plot: {
     width: '100%',
@@ -29,11 +28,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   subheader: {
     ...typography.heading4,
-    marginBottom: 10,
-    color: colors.white.main,
-    [theme.breakpoints.down('sm')]: {
-      marginBlock: 16
-    }
+    marginBottom: 14,
+    color: colors.white.main
   },
   inputs: {
     marginBottom: 8,
