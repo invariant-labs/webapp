@@ -102,22 +102,20 @@ export const PoolInit: React.FC<IPoolInit> = ({
   }, [midPrice])
 
   const validateMidPriceInput = (midPriceInput: string) => {
-    const minMidPriceInput = isXtoY
-      ? calcPrice(getMinTick(tickSpacing), isXtoY, xDecimal, yDecimal).toString()
-      : calcPrice(getMaxTick(tickSpacing), isXtoY, xDecimal, yDecimal).toString()
-    const maxMidPriceInput = isXtoY
-      ? calcPrice(getMaxTick(tickSpacing), isXtoY, xDecimal, yDecimal).toString()
-      : calcPrice(getMinTick(tickSpacing), isXtoY, xDecimal, yDecimal).toString()
+    const minTick = getMinTick(tickSpacing)
+    const maxTick = getMaxTick(tickSpacing)
 
-    let validatedMidPriceInput: string = midPriceInput
+    const minPrice = isXtoY
+      ? calcPrice(minTick, isXtoY, xDecimal, yDecimal)
+      : calcPrice(maxTick, isXtoY, xDecimal, yDecimal)
+    const maxPrice = isXtoY
+      ? calcPrice(maxTick, isXtoY, xDecimal, yDecimal)
+      : calcPrice(minTick, isXtoY, xDecimal, yDecimal)
 
-    if (+midPriceInput < +minMidPriceInput) {
-      validatedMidPriceInput = minMidPriceInput
-    } else if (+midPriceInput > +maxMidPriceInput) {
-      validatedMidPriceInput = maxMidPriceInput
-    }
+    const numericMidPriceInput = parseFloat(midPriceInput)
+    const validatedMidPrice = Math.min(Math.max(numericMidPriceInput, minPrice), maxPrice)
 
-    return toMaxNumericPlaces(+validatedMidPriceInput, 5)
+    return toMaxNumericPlaces(validatedMidPrice, 5)
   }
 
   useEffect(() => {
