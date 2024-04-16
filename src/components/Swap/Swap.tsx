@@ -423,9 +423,17 @@ export const Swap: React.FC<ISwap> = ({
     setDetailsOpen(!detailsOpen)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
+    let timerId: any
+
     if (lockAnimation) {
-      setTimeout(() => setLockAnimation(false), 500)
+      timerId = setTimeout(() => setLockAnimation(false), 500)
+    }
+
+    return () => {
+      if (timerId) {
+        clearTimeout(timerId)
+      }
     }
   }, [lockAnimation])
 
