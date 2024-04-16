@@ -370,4 +370,9 @@ export const SIGNING_SNACKBAR_CONFIG: Omit<ISnackbar, 'open'> = {
 
 export type PositionOpeningMethod = 'range' | 'concentration'
 
+export const STABLECOIN_ADDRESSES: string[] = [
+  'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+  'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'
+] // USDC, USDT
+
 export const TIMEOUT_ERROR_MESSAGE = 'Transaction timed out. Check the details to see if it passed.'

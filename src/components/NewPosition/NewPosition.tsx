@@ -184,6 +184,11 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   const [minimumSliderIndex, setMinimumSliderIndex] = useState<number>(0)
 
+  const concentrationArray = useMemo(
+    () => getConcentrationArray(tickSpacing, 2, midPrice.index).sort((a, b) => a - b),
+    [tickSpacing]
+  )
+
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -427,11 +432,6 @@ export const NewPosition: React.FC<INewPosition> = ({
       history.replace(`/newPosition/${parsedFee}`)
     }
   }
-
-  const concentrationArray = useMemo(
-    () => getConcentrationArray(tickSpacing, 2, midPrice.index).sort((a, b) => a - b),
-    [tickSpacing, midPrice.index]
-  )
 
   return (
     <Grid container className={classes.wrapper} direction='column'>

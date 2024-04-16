@@ -52,7 +52,7 @@ const useStyles = makeStyles(() => ({
   },
   addButton: {
     width: '100%',
-    marginTop: 24,
+    margin: '30px 0',
     cursor: 'default'
   },
   hoverButton: {

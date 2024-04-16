@@ -3,7 +3,12 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: '100%'
+    width: '100%',
+    flexGrow: 1,
+
+    display: 'flex',
+    flexDirection: 'column'
+    // justifyContent: 'space-between'
   },
   iconsGrid: {
     display: 'flex',
@@ -100,7 +105,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: colors.invariant.component,
     marginTop: 20,
     padding: 24,
-    borderRadius: 24
+    borderRadius: 24,
+    flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between'
   },
   iconSmall: {
     width: 20,
