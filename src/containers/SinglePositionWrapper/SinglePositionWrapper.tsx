@@ -75,14 +75,14 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const [globalPrice, setGlobalPrice] = useState<number | undefined>(undefined)
 
-  const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
+  const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(false)
 
   const [showFeesLoader, setShowFeesLoader] = useState(true)
 
   const [isFinishedDelayRender, setIsFinishedDelayRender] = useState(false)
 
   useEffect(() => {
-    if (position?.id && waitingForTicksData === null) {
+    if (position?.id && !waitingForTicksData) {
       setWaitingForTicksData(true)
       dispatch(actions.getCurrentPositionRangeTicks(id))
       dispatch(
