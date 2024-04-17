@@ -11,6 +11,9 @@ const useStyles = makeStyles(() => ({
     width: 150,
     height: 150,
     margin: 'auto'
+  },
+  fullHeightContainer: {
+    height: '100%'
   }
 }))
 

@@ -127,7 +127,7 @@ export const PositionsList: React.FC<IProp> = ({
               onClick={() => {
                 history.push(`/position/${element.id}`)
               }}
-              key={index}
+              key={element.id}
               className={classes.itemLink}>
               <PositionItem key={index} {...element} />
             </Grid>
