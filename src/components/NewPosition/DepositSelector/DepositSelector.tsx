@@ -151,7 +151,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
     if (positionOpeningMethod === 'concentration' && concentrationIndex < minimumSliderIndex) {
       return concentrationArray[minimumSliderIndex]
-        ? `Set concentration to at least ${concentrationArray[minimumSliderIndex]}x`
+        ? `Set concentration to at least ${concentrationArray[minimumSliderIndex].toFixed(0)}x`
         : 'Set higher fee tier'
     }
 
