@@ -12,6 +12,7 @@ interface IProps {
   placeholder?: string
   style?: CSSProperties
   globalPrice?: number
+  onBlur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -22,7 +23,8 @@ export const AmountInput: React.FC<IProps> = ({
   decimal,
   placeholder,
   style,
-  globalPrice
+  globalPrice,
+  onBlur
 }) => {
   const classes = useStyles()
 
@@ -95,6 +97,7 @@ export const AmountInput: React.FC<IProps> = ({
           </Tooltip>
         ) : null
       }
+      onBlur={onBlur}
     />
   )
 }

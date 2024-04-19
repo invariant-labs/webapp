@@ -46,6 +46,9 @@ export const StakeTile: React.FC<IProps> = ({
   const [progress, setProgress] = useState<ProgressState>('none')
 
   useEffect(() => {
+    let timeout1: any
+    let timeout2: any
+
     if (typeof stakeStatus === 'undefined') {
       return
     }
@@ -53,15 +56,20 @@ export const StakeTile: React.FC<IProps> = ({
     if (!stakeStatus.inProgress && progress === 'progress') {
       setProgress(stakeStatus.success ? 'approvedWithSuccess' : 'approvedWithFail')
 
-      setTimeout(() => {
+      timeout1 = setTimeout(() => {
         setProgress(stakeStatus.success ? 'success' : 'failed')
       }, 1500)
 
-      setTimeout(() => {
+      timeout2 = setTimeout(() => {
         setProgress('none')
       }, 3000)
     } else if (stakeStatus.inProgress && progress !== 'progress') {
       setProgress('progress')
+    }
+
+    return () => {
+      clearTimeout(timeout1)
+      clearTimeout(timeout2)
     }
   }, [stakeStatus])
 
