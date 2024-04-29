@@ -155,7 +155,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       (poolIndex === null && !canCreateNewPool) ||
       (poolIndex !== null && !canCreateNewPosition)
     ) {
-      return 'Insufficient lamports'
+      return 'Insufficient SOL'
     }
 
     if (
