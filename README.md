@@ -17,7 +17,7 @@ This frontend repository provides the user interface for interacting with the <b
 - Clone repository
 
 ```bash
-git clone https://github.com/invariant-labs/protocol-a0.git
+git clone https://github.com/invariant-labs/webapp.git
 ```
 
 - Install dependencies
