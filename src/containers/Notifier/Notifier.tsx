@@ -46,26 +46,23 @@ const Notifier = () => {
                     !isAccount
                   ) {
                     window.open(
-                      'https://explorer.solana.com/tx/' +
-                        txid +
-                        '?cluster=' +
-                        currentNetwork.toLowerCase()
+                      'https://solscan.io/tx/' + txid + '?cluster=' + currentNetwork.toLowerCase()
                     )
                   } else if (
                     currentNetwork.toLocaleLowerCase() === 'mainnet' &&
                     txid !== undefined &&
                     !isAccount
                   ) {
-                    window.open('https://explorer.solana.com/tx/' + txid)
+                    window.open('https://solscan.io/tx/' + txid)
                   } else if (currentNetwork.toLocaleLowerCase() !== 'mainnet' && isAccount) {
                     window.open(
-                      'https://explorer.solana.com/address/' +
+                      'https://solscan.io/address/' +
                         txid +
                         '?cluster=' +
                         currentNetwork.toLowerCase()
                     )
                   } else if (currentNetwork.toLocaleLowerCase() === 'mainnet' && isAccount) {
-                    window.open('https://explorer.solana.com/address/' + txid)
+                    window.open('https://solscan.io/address/' + txid)
                   }
                 }}>
                 <span>Details</span>

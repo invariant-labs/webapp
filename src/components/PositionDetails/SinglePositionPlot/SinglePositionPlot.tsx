@@ -4,7 +4,7 @@ import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot
 import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
 import { calcPrice, spacingMultiplicityGte, calcTicksAmountInRange } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
-import { MIN_TICK } from '@invariant-labs/sdk'
+import { getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { ILiquidityToken } from '../SinglePositionInfo/consts'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
 import activeLiquidity from '@static/svg/activeLiquidity.svg'
@@ -15,6 +15,7 @@ export interface ISinglePositionPlot {
   leftRange: TickPlotPositionData
   rightRange: TickPlotPositionData
   midPrice: TickPlotPositionData
+  globalPrice?: number
   currentPrice: number
   tokenY: Pick<ILiquidityToken, 'name' | 'decimal'>
   tokenX: Pick<ILiquidityToken, 'name' | 'decimal'>
@@ -38,6 +39,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   leftRange,
   rightRange,
   midPrice,
+  globalPrice,
   currentPrice,
   tokenY,
   tokenX,
@@ -64,7 +66,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
       leftRange.x -
         calcPrice(
           Math.max(
-            spacingMultiplicityGte(MIN_TICK, tickSpacing),
+            spacingMultiplicityGte(getMinTick(tickSpacing), tickSpacing),
             leftRange.index - tickSpacing * 15
           ),
           xToY,
@@ -118,7 +120,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         />
       </Grid>
       <Grid className={classes.infoRow} container justifyContent='flex-end'>
-        <Grid>
+        <Grid container direction='column' alignItems='flex-end'>
           <Tooltip
             title={
               <>
@@ -151,10 +153,13 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
               tooltip: classes.liquidityTooltip
             }}>
             <Typography className={classes.activeLiquidity}>
-              Active liquidity <div className={classes.activeLiquidityIcon}>i</div>
+              Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
             </Typography>
           </Tooltip>
-          <Typography className={classes.currentPrice}>Current price</Typography>
+          <Grid>
+            <Typography className={classes.currentPrice}>Current price</Typography>
+            <Typography className={classes.globalPrice}>Global price</Typography>
+          </Grid>
         </Grid>
       </Grid>
       <Grid className={classes.plotWrapper}>
@@ -179,6 +184,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
           volumeRange={volumeRange}
+          globalPrice={globalPrice}
         />
       </Grid>
       <Grid className={classes.minMaxInfo}>
