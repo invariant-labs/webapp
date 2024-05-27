@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     color: colors.white.main,
     ...typography.heading4,
-    marginBottom: 18,
+    textWrap: 'noWrap',
 
     [theme.breakpoints.down('xs')]: {
       fontSize: 18
@@ -90,6 +90,58 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   switch: {
     transition: 'opacity 500ms'
+  },
+  jupiterIndicatorWrapper: {
+    marginBottom: 18,
+    height: '40px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  jupiterOff: {
+    opacity: 0.3
+  },
+  jupiterIndexedModal: {
+    padding: '16px',
+    width: '312px',
+    height: '390px',
+    backgroundColor: '#202946',
+    borderRadius: '20px',
+    fontSize: '14px',
+    fontWeight: 400,
+    lineHeight: '17px',
+    letterSpacing: '-3%',
+    '& p': {
+      color: '#A9B6BF'
+    }
+  },
+  jupiterIndexedModalStatusOn: {
+    color: '#2EE09A'
+  },
+  jupiterIndexedModalStatusOff: {
+    color: '#ff0000'
+  },
+  list: {
+    paddingLeft: '26'
+  },
+  link: {
+    ...typography.caption2,
+    color: colors.invariant.pink
+  },
+  jupiterIndexedModalHeading: {
+    fontSize: '20px',
+    fontWeight: 700,
+    lineHeight: '24px',
+    letterSpacing: '-0.03px',
+    marginBottom: '24px'
+  },
+  jupiterIndexedModalList: {
+    margin: 0,
+    padding: 0,
+    listStyle: 'bulleted'
+  },
+  marginTop: {
+    marginTop: 12
   }
 }))
 

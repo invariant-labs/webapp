@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 According to the design I made a button that indicates if given pool is indexed by Jupiter
 I used Sagas, because it seemed the app handles side effects mostly using it
 I made the modal with status and handled the possible error
