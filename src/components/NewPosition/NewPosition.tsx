@@ -34,6 +34,8 @@ import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
 import { getMinTick } from '@invariant-labs/sdk/src/utils'
+import { fetchIndexedPools } from '../../services/fetchIndexedPools'
+import { JupiterIcon } from './JupiterIcon/JupiterIcon'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -106,6 +108,7 @@ export interface INewPosition {
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
   globalPrice?: number
+  isIndexed?: boolean
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -183,6 +186,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [concentrationIndex, setConcentrationIndex] = useState(0)
 
   const [minimumSliderIndex, setMinimumSliderIndex] = useState<number>(0)
+
+  const [indexedPools, setIndexedPools] = useState<string[]>([])
+  const [isIndexed, setIsIndexed] = useState<boolean>(false)
 
   const concentrationArray = useMemo(
     () => getConcentrationArray(tickSpacing, 2, midPrice.index).sort((a, b) => a - b),
@@ -399,6 +405,19 @@ export const NewPosition: React.FC<INewPosition> = ({
     void configurePoolAddress()
   }, [initialTokenFrom, initialTokenTo, initialFee, poolAddress, address])
 
+  useEffect(() => {
+    const fetchPools = async () => {
+      const pools = await fetchIndexedPools()
+      setIndexedPools(pools)
+    }
+
+    void fetchPools()
+  }, [])
+
+  useEffect(() => {
+    setIsIndexed(indexedPools.includes(poolAddress))
+  }, [indexedPools, poolAddress])
+
   const handleClickSettings = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
     blurContent()
@@ -442,9 +461,19 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
-        <Grid container item alignItems='center' className={classes.options}>
+      <Grid container justifyContent='space-between' className={classes.columnDirection}>
+        <Grid
+          container
+          justifyContent='space-between'
+          className={`${classes.flexWidth} ${classes.positionHeaderWithIcon}`}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          <JupiterIcon isIndexed={isIndexed} />
+        </Grid>
+        <Grid
+          container
+          item
+          alignItems='center'
+          className={`${classes.options} ${classes.flexWidth}`}>
           {address !== '' ? (
             <MarketIdLabel
               displayLength={9}

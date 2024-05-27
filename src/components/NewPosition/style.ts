@@ -88,6 +88,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 18,
     height: 28
   },
+  flexWidth: {
+    flex: 1
+  },
+  columnDirection: {
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column'
+    }
+  },
+  positionHeaderWithIcon: {
+    marginRight: 24,
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 0
+    }
+  },
   switch: {
     transition: 'opacity 500ms'
   }
