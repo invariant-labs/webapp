@@ -9,13 +9,15 @@ import { JupiterIndexedModal } from './JupiterIndexedModal/JupiterIndexedModal'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 
 interface IProps {
-  isCurrentPoolExisting: boolean
   poolAddress: string
+  isCurrentPoolExisting: boolean
+  showNoConnected: boolean
 }
 
 export const JupiterIndexedIndicator: React.FC<IProps> = ({
+  poolAddress,
   isCurrentPoolExisting,
-  poolAddress
+  showNoConnected
 }) => {
   const dispatch = useDispatch()
   const classes = useStyles()
@@ -26,8 +28,7 @@ export const JupiterIndexedIndicator: React.FC<IProps> = ({
     dispatch(actions.getJupiterIndexedPools())
   }, [dispatch])
 
-  if (!isCurrentPoolExisting) return <></>
-
+  if (!isCurrentPoolExisting || showNoConnected) return <></>
   return (
     <>
       <IconButton

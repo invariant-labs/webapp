@@ -80,7 +80,24 @@ export interface ListPoolsResponse {
 }
 
 export interface JupiterFetchedPool {
+  data: [string, string]
+  executable: boolean
+  lamports: number
+  owner: string
+  params: {
+    addressLookupTableAddress: string
+    vaultLpMint: {
+      a: string
+      b: string
+    }
+    vaultToken: {
+      a: string
+      b: string
+    }
+  }
   pubkey: string
+  rentEpoch: number
+  space: number
 }
 
 export type JupiterIndexedPools = Record<string, boolean>
@@ -164,10 +181,10 @@ const poolsSlice = createSlice({
     updateTickmap(state, action: PayloadAction<UpdateTickmap>) {
       state.tickMaps[action.payload.address].bitmap = action.payload.bitmap
     },
-    setJupiterIndexedPools(state, action: PayloadAction<JupiterIndexedPool>) {
+    setJupiterIndexedPools(state, action: PayloadAction<JupiterIndexedPools>) {
       state.jupiterIndexedPools = action.payload
     },
-    setErrorJupiterIndexedPools(state, action: PayloadAction<JupiterIndexedPool>) {
+    setErrorJupiterIndexedPools(state, action: PayloadAction<JupiterIndexedPools>) {
       state.jupiterIndexedPools = action.payload
       state.jupiterIndexedPools.hasError = true
     },

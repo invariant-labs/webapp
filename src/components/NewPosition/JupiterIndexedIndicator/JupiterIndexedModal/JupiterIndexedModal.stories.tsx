@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import { JupiterIndexedModal } from '@components/NewPosition/JupiterIndexedIndicator/JupiterIndexedModal/JupiterIndexedModal'
+import { JupiterIndexedModal } from './JupiterIndexedModal'
 
-storiesOf('modals/jupiterIndexedModal', module).add('default', () => (
+storiesOf('modals/JupiterIndexedModal', module).add('default', () => (
   <JupiterIndexedModal open={true} hasError={false} handleClose={() => {}} status={true} />
 ))

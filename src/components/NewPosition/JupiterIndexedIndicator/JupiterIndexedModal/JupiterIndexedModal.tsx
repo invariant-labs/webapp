@@ -1,5 +1,5 @@
 import React from 'react'
-import { Popover, Typography } from '@material-ui/core'
+import { Button, Grid, Popover, Typography } from '@material-ui/core'
 import useStyles from '../.././style'
 
 export interface IProps {
@@ -22,21 +22,23 @@ export const JupiterIndexedModal: React.FC<IProps> = ({ open, handleClose, statu
         vertical: 'center',
         horizontal: 'center'
       }}
-      classes={{ paper: classes.jupiterIndexedModal }}
+      classes={{ paper: classes.modal }}
       open={open}
       onClose={handleClose}>
-      <Typography variant='inherit' className={classes.jupiterIndexedModalHeading} component='h1'>
-        Jupiter indexing
-      </Typography>
+      <Grid container justifyContent='space-between'>
+        <Typography variant='inherit' className={classes.header} component='h1'>
+          Jupiter indexing
+        </Typography>
+
+        <Button onClick={handleClose} className={classes.closeBtn} />
+      </Grid>
 
       <Typography variant='inherit'>
         Status:&nbsp;
         <Typography
           component='span'
           variant='inherit'
-          className={
-            status ? classes.jupiterIndexedModalStatusOn : classes.jupiterIndexedModalStatusOff
-          }>
+          className={status ? classes.statusOn : classes.statusOff}>
           {hasError ? 'Error fetching Jupiter API' : status ? 'Indexing active' : 'Not indexed yet'}
         </Typography>
       </Typography>
@@ -52,7 +54,7 @@ export const JupiterIndexedModal: React.FC<IProps> = ({ open, handleClose, statu
 
       <ul className={classes.list}>
         <li>
-          Ensure your token exists on-chain with metadata following the
+          Ensure your token exists on-chain with metadata following the&nbsp;
           <a
             className={classes.link}
             href='https://docs.metaplex.com/programs/token-metadata/token-standard'

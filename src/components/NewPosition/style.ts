@@ -101,44 +101,54 @@ const useStyles = makeStyles((theme: Theme) => ({
   jupiterOff: {
     opacity: 0.3
   },
-  jupiterIndexedModal: {
+  modal: {
     padding: '16px',
     width: '312px',
     height: '390px',
-    backgroundColor: '#202946',
+    letterSpacing: '0',
+    backgroundColor: colors.invariant.component,
     borderRadius: '20px',
-    fontSize: '14px',
-    fontWeight: 400,
-    lineHeight: '17px',
-    letterSpacing: '-3%',
     '& p': {
-      color: '#A9B6BF'
+      color: colors.invariant.lightGrey,
+      ...typography.caption2
     }
   },
-  jupiterIndexedModalStatusOn: {
+  closeBtn: {
+    minWidth: 0,
+    background: 'none',
+    '&:hover': {
+      background: 'none'
+    },
+    cursor: 'pointer',
+    '&:after': {
+      content: '"\u2715"',
+      fontSize: 20,
+      position: 'absolute',
+      color: colors.white.main,
+      top: '40%',
+      transform: 'translateY(-50%)'
+    }
+  },
+
+  statusOn: {
     color: '#2EE09A'
   },
-  jupiterIndexedModalStatusOff: {
-    color: '#ff0000'
+  statusOff: {
+    color: colors.red.main
   },
   list: {
-    paddingLeft: '26'
+    paddingLeft: '12',
+    margin: '0',
+    color: colors.invariant.lightGrey,
+    ...typography.caption2
   },
   link: {
     ...typography.caption2,
     color: colors.invariant.pink
   },
-  jupiterIndexedModalHeading: {
-    fontSize: '20px',
-    fontWeight: 700,
-    lineHeight: '24px',
-    letterSpacing: '-0.03px',
-    marginBottom: '24px'
-  },
-  jupiterIndexedModalList: {
-    margin: 0,
-    padding: 0,
-    listStyle: 'bulleted'
+  header: {
+    marginBottom: '10px',
+    ...typography.heading4
   },
   marginTop: {
     marginTop: 12

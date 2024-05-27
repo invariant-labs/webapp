@@ -444,14 +444,10 @@ export const NewPosition: React.FC<INewPosition> = ({
       </Link>
 
       <Grid container justifyContent='space-between'>
-        <Grid
-          item
-          xs={10}
-          md={6}
-          justifyContent='space-around'
-          className={classes.jupiterIndicatorWrapper}>
+        <Grid item xs={10} md={6} className={classes.jupiterIndicatorWrapper}>
           <Typography className={classes.title}>Add new liquidity position</Typography>
           <JupiterIndexedIndicator
+            showNoConnected={showNoConnected || false}
             isCurrentPoolExisting={isCurrentPoolExisting}
             poolAddress={poolAddress}
           />

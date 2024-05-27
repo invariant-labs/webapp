@@ -96,11 +96,14 @@ export function* fetchJupiterIndexedPools(): Generator {
     const response = yield* call(fetch, 'https://cache.jup.ag/markets?v=3')
     const data: JupiterFetchedPool[] = yield* call([response, response.json])
     const indexedPools: JupiterIndexedPools = {}
+
     data.forEach(pool => {
       indexedPools[pool.pubkey] = true
     })
+
     yield* put(actions.setJupiterIndexedPools(indexedPools))
   } catch (error) {
+    console.log(error)
     yield* put(actions.setErrorJupiterIndexedPools({}))
   }
 }
