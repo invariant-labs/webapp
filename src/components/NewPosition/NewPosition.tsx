@@ -34,6 +34,8 @@ import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
 import { getMinTick } from '@invariant-labs/sdk/src/utils'
+import jupiterLogo from '@static/svg/jupiterLogo.svg'
+import { PopUpIndexInfo } from './PopUpIndexInfo/PopUpIndexInfo'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -106,6 +108,7 @@ export interface INewPosition {
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
   globalPrice?: number
+  indexed?: boolean
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -161,6 +164,10 @@ export const NewPosition: React.FC<INewPosition> = ({
   globalPrice
 }) => {
   const classes = useStyles()
+
+  const [indexed, setIndexed] = useState(false) // State to manage indexed pool
+
+  const [isPopupOpen, setIsPopupOpen] = useState(false) // State to manage pop-up visibility
 
   const [positionOpeningMethod, setPositionOpeningMethod] = useState<PositionOpeningMethod>(
     initialOpeningPositionMethod
@@ -433,6 +440,10 @@ export const NewPosition: React.FC<INewPosition> = ({
     }
   }
 
+  const handlePopUpClick = () => {
+    setIsPopupOpen(true)
+  }
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Link to='/pool' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
@@ -444,12 +455,36 @@ export const NewPosition: React.FC<INewPosition> = ({
 
       <Grid container justifyContent='space-between'>
         <Typography className={classes.title}>Add new liquidity position</Typography>
+
+        {/* 
+  Jupiter logo behavior:
+  The Jupiter logo will "glow" if the pool is indexed (true), and stand unlit if not. 
+  The logo is visible only when both tokens are selected.
+*/}
+        {address !== '' ? (
+          <img
+            className={indexed ? classes.jupiterLogo_glow : classes.jupiterLogo_unlit}
+            src={jupiterLogo}
+            alt='Jupiter Logo'
+            onClick={handlePopUpClick}
+          />
+        ) : null}
+
+        {/* 
+  Pop-up window behavior:
+  The pop-up window is rendered when the Jupiter logo is clicked. 
+  The indexed prop is passed to conditionally render index status information 
+  in the PopUpIndexInfo component.
+*/}
+        {isPopupOpen && <PopUpIndexInfo onClose={() => setIsPopupOpen(false)} indexed={indexed} />}
+
         <Grid container item alignItems='center' className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
               displayLength={9}
               marketId={address}
               copyPoolAddressHandler={copyPoolAddressHandler}
+              setIndexed={setIndexed}
             />
           ) : null}
           <ConcentrationTypeSwitch

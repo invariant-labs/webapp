@@ -90,7 +90,33 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   switch: {
     transition: 'opacity 500ms'
+  },
+ jupiterLogo_unlit: {
+    width: 32,
+    height: 32,
+    cursor: 'pointer',
+    opacity: 0.3,
+    position:'relative',
+    left:'9%'
+  },
+  jupiterLogo_glow: {
+    width: 32,
+    height: 32,
+    cursor: 'pointer',
+    position:'relative',
+    left:'9%',
+    animation: '$fadeGlow 2.0s infinite alternate'
+  },
+  '@keyframes fadeGlow': {
+    '0%': {
+      opacity: 1
+    },
+    '100%': {
+      opacity: 0.4
+    }
   }
 }))
 
 export default useStyles
+
+
