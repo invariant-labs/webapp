@@ -1140,3 +1140,22 @@ export const solToPriorityFee = (sol: number) => {
 }
 
 export const createLoaderKey = () => (new Date().getMilliseconds() + Math.random()).toString()
+
+export const fetchJupiterPoolList = async (): Promise<string[]> => {
+  try {
+    const response = await axios.get('https://cache.jup.ag/markets?v=3')
+
+    if (response.status === 200) {
+      const data = response.data
+
+      console.log(data)
+
+      const list: string[] = data.map((element: any) => element.pubkey)
+      return list
+    } else {
+      throw new Error()
+    }
+  } catch (error) {
+    return []
+  }
+}

@@ -25,10 +25,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     WebkitPaddingBefore: '2px',
     ...typography.body2
   },
+  titleWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 14,
+    flex: '1 1 0%'
+  },
   title: {
     color: colors.white.main,
     ...typography.heading4,
-    marginBottom: 18,
 
     [theme.breakpoints.down('xs')]: {
       fontSize: 18
@@ -83,10 +89,28 @@ const useStyles = makeStyles((theme: Theme) => ({
       filter: 'brightness(1.5)'
     }
   },
+  jupiterBtn: {
+    minWidth: 'auto',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    padding: 0,
+    transition: '.2s all',
+    '&:hover': {
+      transform: 'scale(1.1) rotate(10deg)',
+      background: 'transparent'
+    }
+  },
+  jupiterIcon: {
+    width: 32,
+    height: 32
+  },
   options: {
     width: 'fit-content',
     marginBottom: 18,
-    height: 28
+    height: 28,
+    flex: '1 1 calc(0% + 24px)',
+    justifyContent: 'end'
   },
   switch: {
     transition: 'opacity 500ms'

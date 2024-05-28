@@ -3,6 +3,7 @@ import storage from 'redux-persist/lib/storage'
 import { persistReducer, createTransform, createMigrate, MigrationManifest } from 'redux-persist'
 import { NetworkType, SolanaNetworks } from '@consts/static'
 import { reducer as snackbarsReducer, snackbarsSliceName } from './snackbars'
+import { reducer as jupiterReducer, jupiterSliceName } from './jupiter'
 import { reducer as solanaWalletReducer, solanaWalletSliceName } from './solanaWallet'
 import {
   ISolanaConnectionStore,
@@ -71,6 +72,7 @@ const connectionPersistConfig = {
 }
 
 const combinedReducers = combineReducers({
+  [jupiterSliceName]: jupiterReducer,
   [snackbarsSliceName]: snackbarsReducer,
   [solanaConnectionSliceName]: persistReducer(connectionPersistConfig, solanaConnectionReducer),
   [solanaWalletSliceName]: solanaWalletReducer,

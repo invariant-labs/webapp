@@ -4,6 +4,7 @@ import EventsHandlers from '@containers/EventsHandlers'
 import HeaderWrapper from '@containers/HeaderWrapper/HeaderWrapper'
 import PerformanceWarning from '@containers/PerformanceWarning/PerformanceWarning'
 import { actions } from '@reducers/positions'
+import { actions as jupiterActions } from '@reducers/jupiter'
 import { Status, actions as solanaConnectionActions } from '@reducers/solanaConnection'
 import { Status as WalletStatus } from '@reducers/solanaWallet'
 import solanaConnectionSelector from '@selectors/solanaConnection'
@@ -19,6 +20,7 @@ import SingleFarmPage from './SingleFarmPage/SingleFarmPage'
 import { SinglePositionPage } from './SinglePositionPage/SinglePositionPage'
 import StatsPage from './StatsPage/StatsPage'
 import { SwapPage } from './SwapPage/SwapPage'
+import { fetchJupiterPoolList } from '../store/consts/utils'
 
 export const PagesRouter: React.FC = () => {
   const dispatch = useDispatch()
@@ -35,6 +37,15 @@ export const PagesRouter: React.FC = () => {
       dispatch(actions.getPositionsList())
     }
   }, [signerStatus, walletStatus])
+
+  useEffect(() => {
+    const fetchJupiterData = async () => {
+      const list = await fetchJupiterPoolList()
+      dispatch(jupiterActions.addJupiterList(list))
+    }
+    fetchJupiterData()
+    setInterval(fetchJupiterData, 30 * 60 * 1000) // The cache is updated every 30 minutes
+  }, [])
 
   return (
     <Router>

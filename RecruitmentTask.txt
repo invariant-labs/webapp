@@ -1,0 +1,8 @@
+Bartłomiej Gal
+bartek.gal23@gmail.com
+788 839 684
+
+I've noticed that sometimes data from "https://cache.jup.ag/markets?v=3" take a long time to upload.
+I think it might be caused by servers data update - it is suppose to happen every 30 min.
+
+Hope to hear from you soon :)

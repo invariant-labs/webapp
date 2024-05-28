@@ -24,6 +24,8 @@ import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
+import jupiterIcon from '@static/svg/jupiter.svg'
+import loading from '@static/gif/loading.gif'
 import { History } from 'history'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -34,6 +36,9 @@ import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
 import { getMinTick } from '@invariant-labs/sdk/src/utils'
+import { useSelector } from 'react-redux'
+import jupiterSelectors from '@selectors/jupiter'
+import Jupiter from '@components/Modals/Jupiter/Jupiter'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -183,6 +188,11 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [concentrationIndex, setConcentrationIndex] = useState(0)
 
   const [minimumSliderIndex, setMinimumSliderIndex] = useState<number>(0)
+
+  const [jupiterModal, setJupiterModal] = useState(false)
+  const [isJupiterActivate, setIsJupiterActivate] = useState(false)
+  const jupiterList = useSelector(jupiterSelectors.jupiter)
+  const isJupiterLoaded = useSelector(jupiterSelectors.isLoaded)
 
   const concentrationArray = useMemo(
     () => getConcentrationArray(tickSpacing, 2, midPrice.index).sort((a, b) => a - b),
@@ -433,6 +443,23 @@ export const NewPosition: React.FC<INewPosition> = ({
     }
   }
 
+  const handleClickJupiter = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+    blurContent()
+    setJupiterModal(true)
+  }
+
+  const handleCloseJupiter = () => {
+    unblurContent()
+    setJupiterModal(false)
+  }
+
+  useEffect(() => {
+    if (jupiterList !== undefined) {
+      setIsJupiterActivate(jupiterList.includes(address))
+    }
+  }, [address, jupiterList])
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Link to='/pool' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
@@ -442,8 +469,21 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
+      <Grid container className={classes.row} style={{ minHeight: 'auto' }}>
+        <Grid container className={classes.titleWrapper}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          {isJupiterLoaded ? (
+            <Button className={classes.jupiterBtn} onClick={handleClickJupiter}>
+              <img
+                className={classes.jupiterIcon}
+                src={jupiterIcon}
+                style={{ opacity: isJupiterActivate ? 1 : 0.25 }}
+              />
+            </Button>
+          ) : (
+            <img src={loading} className={classes.jupiterIcon} />
+          )}
+        </Grid>
         <Grid container item alignItems='center' className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
@@ -484,6 +524,14 @@ export const NewPosition: React.FC<INewPosition> = ({
         initialSlippage={initialSlippage}
         infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
         headerText='Position Transaction Settings'
+      />
+
+      <Jupiter
+        open={jupiterModal}
+        handleClose={handleCloseJupiter}
+        headerText='Jupiter indexing'
+        anchorEl={anchorEl}
+        status={isJupiterActivate}
       />
 
       <Grid container className={classes.row} alignItems='stretch'>
