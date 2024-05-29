@@ -3,13 +3,18 @@ import { Button, Grid, Popover, Typography } from '@material-ui/core'
 import useStyles from '../.././style'
 
 export interface IProps {
-  open: boolean
+  isOpen: boolean
   handleClose: () => void
-  status: boolean
+  isIndexed: boolean
   hasError: boolean
 }
 
-export const JupiterIndexedModal: React.FC<IProps> = ({ open, handleClose, status, hasError }) => {
+export const JupiterIndexedModal: React.FC<IProps> = ({
+  isOpen,
+  handleClose,
+  isIndexed,
+  hasError
+}) => {
   const classes = useStyles()
 
   return (
@@ -23,7 +28,7 @@ export const JupiterIndexedModal: React.FC<IProps> = ({ open, handleClose, statu
         horizontal: 'center'
       }}
       classes={{ paper: classes.modal }}
-      open={open}
+      open={isOpen}
       onClose={handleClose}>
       <Grid container justifyContent='space-between'>
         <Typography variant='inherit' className={classes.header} component='h1'>
@@ -38,8 +43,12 @@ export const JupiterIndexedModal: React.FC<IProps> = ({ open, handleClose, statu
         <Typography
           component='span'
           variant='inherit'
-          className={status ? classes.statusOn : classes.statusOff}>
-          {hasError ? 'Error fetching Jupiter API' : status ? 'Indexing active' : 'Not indexed yet'}
+          className={isIndexed ? classes.statusOn : classes.statusOff}>
+          {hasError
+            ? 'Error fetching Jupiter API'
+            : isIndexed
+            ? 'Indexing active'
+            : 'Not indexed yet'}
         </Typography>
       </Typography>
 

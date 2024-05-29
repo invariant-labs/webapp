@@ -56,7 +56,7 @@ export const defaultState: IPoolsStore = {
   isLoadingLatestPoolsForTransaction: false,
   tickMaps: {},
   volumeRanges: {},
-  jupiterIndexedPools: {}
+  jupiterIndexedPools: { data: {}, hasError: false }
 }
 
 export interface PairTokens {
@@ -100,7 +100,10 @@ export interface JupiterFetchedPool {
   space: number
 }
 
-export type JupiterIndexedPools = Record<string, boolean>
+export interface JupiterIndexedPools {
+  data: Record<string, boolean>
+  hasError: boolean
+}
 
 export const poolsSliceName = 'pools'
 const poolsSlice = createSlice({

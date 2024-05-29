@@ -22,13 +22,13 @@ export const JupiterIndexedIndicator: React.FC<IProps> = ({
   const dispatch = useDispatch()
   const classes = useStyles()
   const indexedPools = useSelector(jupiterIndexedPools)
-  const isPoolIndexed = indexedPools[poolAddress]
+  const isPoolIndexed = indexedPools.data[poolAddress]
   const [isModalOpen, setIsModalOpen] = useState(false)
   useEffect(() => {
     dispatch(actions.getJupiterIndexedPools())
   }, [dispatch])
 
-  if (!isCurrentPoolExisting || showNoConnected) return <></>
+  if (!isCurrentPoolExisting || showNoConnected) return null
   return (
     <>
       <IconButton
@@ -43,13 +43,13 @@ export const JupiterIndexedIndicator: React.FC<IProps> = ({
         )}
       </IconButton>
       <JupiterIndexedModal
-        open={isModalOpen}
+        isOpen={isModalOpen}
         hasError={indexedPools.hasError}
         handleClose={() => {
           unblurContent()
           setIsModalOpen(false)
         }}
-        status={isPoolIndexed}
+        isIndexed={isPoolIndexed}
       />
     </>
   )

@@ -3,5 +3,5 @@ import { storiesOf } from '@storybook/react'
 import { JupiterIndexedModal } from './JupiterIndexedModal'
 
 storiesOf('modals/JupiterIndexedModal', module).add('default', () => (
-  <JupiterIndexedModal open={true} hasError={false} handleClose={() => {}} status={true} />
+  <JupiterIndexedModal isOpen={true} hasError={false} handleClose={() => {}} isIndexed={true} />
 ))
