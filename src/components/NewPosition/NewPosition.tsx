@@ -436,10 +436,6 @@ export const NewPosition: React.FC<INewPosition> = ({
     }
   }
 
-  function test(){
-    console.log("dzuaka");
-  }
-
   function checkForIndexedId(){  //rozbicie danych na bajty w celu szybszego pobrania, następnie są sklejane i dekodowane
                                  
     
