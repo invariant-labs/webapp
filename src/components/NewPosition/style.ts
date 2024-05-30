@@ -83,6 +83,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       filter: 'brightness(1.5)'
     }
   },
+  noIndexed:{
+     opacity:0.35,
+     cursor: 'unset',
+  },
+  indexed:{
+    opacity:0.75,
+    '&:hover': {
+      opacity: 1,
+      cursor: 'pointer',
+    }
+  },
+  
   options: {
     width: 'fit-content',
     marginBottom: 18,

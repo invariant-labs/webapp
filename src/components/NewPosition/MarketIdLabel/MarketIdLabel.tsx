@@ -19,6 +19,8 @@ export const MarketIdLabel: React.FC<IProps> = ({
 }) => {
   const classes = useLabelStyles()
 
+  
+
   const copyToClipboard = () => {
     navigator.clipboard
       .writeText(marketId)

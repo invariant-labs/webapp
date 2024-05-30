@@ -1,5 +1,6 @@
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import Slippage from '@components/Modals/Slippage/Slippage'
+import IndexDialog from '@components/Modals/IndexDialog/IndexDialog'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import { ALL_FEE_TIERS_DATA, BestTier, PositionOpeningMethod } from '@consts/static'
@@ -183,6 +184,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [concentrationIndex, setConcentrationIndex] = useState(0)
 
   const [minimumSliderIndex, setMinimumSliderIndex] = useState<number>(0)
+
+  const [indexDialogStatus,setIndexDialogStatus] = useState(false);
 
   const concentrationArray = useMemo(
     () => getConcentrationArray(tickSpacing, 2, midPrice.index).sort((a, b) => a - b),
@@ -433,17 +436,87 @@ export const NewPosition: React.FC<INewPosition> = ({
     }
   }
 
+  function test(){
+    console.log("dzuaka");
+  }
+
+  function checkForIndexedId(){  //rozbicie danych na bajty w celu szybszego pobrania, następnie są sklejane i dekodowane
+                                 
+    
+    let url="https://cache.jup.ag/markets?v=3";
+
+    readData(url);
+
+    async function readData(url: string) {
+
+      const response = await fetch(url);
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder('utf-8'); 
+  
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          console.log("skonczono");
+          return;
+        }
+        const stringValue = decoder.decode(value); 
+          if (stringValue.includes(address)) {
+            
+            document.getElementById("jupiterIcon")?.classList.add(classes.indexed);
+            document.getElementById("jupiterIcon")?.classList.remove(classes.noIndexed);
+            return;
+            
+          }
+          console.log(value);
+      }
+    }
+
+  }
+
+  
+
+  function ShowDialogWithIndexStatus(){
+
+    let iconClassList = document.getElementById("jupiterIcon").classList;
+
+      if(!iconClassList.contains(classes.noIndexed)){
+        
+        setIndexDialogStatus(!indexDialogStatus);
+        blurContent();
+        
+      }
+  }
+
+ function closeIndexDialog(){
+  setIndexDialogStatus(false);
+  unblurContent();
+}
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Link to='/pool' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
         <Grid className={classes.back} container item alignItems='center'>
           <img className={classes.backIcon} src={backIcon} />
+
+          {indexDialogStatus && (
+            <IndexDialog 
+            open={indexDialogStatus}
+            handleClose={closeIndexDialog}
+            anchorEl={document.getElementById("jupiterIcon")}
+            headerText='Jupiter indexing'
+            />
+          )}
+
+
           <Typography className={classes.backText}>Back to Liquidity Positions List</Typography>
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
+      <Grid container justifyContent='space-between' direction='row'>
+        <div style={{width:"50%",display:"flex",flexDirection:"row",alignItems:"center",justifyContent:"space-between"}}>
         <Typography className={classes.title}>Add new liquidity position</Typography>
+        {address !== '' ? (<img onClick={ShowDialogWithIndexStatus} onLoad={checkForIndexedId} id="jupiterIcon" className={classes.noIndexed} style={{marginBottom:"10px"}} width="40px" height="40px" src="https://cryptologos.cc/logos/jupiter-ag-jup-logo.png"/>) : null}
+        </div>
         <Grid container item alignItems='center' className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
