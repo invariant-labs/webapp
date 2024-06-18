@@ -17,6 +17,7 @@ import {
   actions
 } from '@reducers/positions'
 import { actions as snackbarsActions } from '@reducers/snackbars'
+import { actions as connectionActions } from '@reducers/solanaConnection'
 import { GuardPredicate } from '@redux-saga/types'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { stakesForPosition } from '@selectors/farms'
@@ -30,6 +31,7 @@ import {
   PublicKey,
   SystemProgram,
   Transaction,
+  TransactionExpiredTimeoutError,
   sendAndConfirmRawTransaction
 } from '@solana/web3.js'
 import { getMarketProgram } from '@web3/programs/amm'
@@ -500,6 +502,11 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
     yield put(snackbarsActions.remove(loaderCreatePosition))
   } catch (error) {
     console.log(error)
+
+    // TODO finish after merge https://github.com/invariant-labs/webapp/pull/667
+    if (error instanceof TransactionExpiredTimeoutError) {
+      yield put(connectionActions.setTimeoutError(true))
+    }
 
     yield put(actions.setInitPositionSuccess(false))
 

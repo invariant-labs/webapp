@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     color: colors.white.main,
     ...typography.heading4,
-    marginBottom: 18,
 
     [theme.breakpoints.down('xs')]: {
       fontSize: 18
@@ -85,11 +84,56 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   options: {
     width: 'fit-content',
-    marginBottom: 18,
+    marginBottom: 16,
     height: 28
   },
   switch: {
     transition: 'opacity 500ms'
+  },
+  jupiterIcon: {
+    cursor: 'pointer',
+    transition: 'filter 100ms',
+    '&:hover': {
+      filter: 'brightness(1.5)'
+    }
+  },
+  refreshIconBtn: {
+    padding: 0,
+    margin: 0,
+    minWidth: 'auto',
+    background: 'none',
+    marginRight: 7,
+    '&:hover': {
+      background: 'none'
+    },
+    '&:disabled': {
+      opacity: 0.5
+    }
+  },
+  refreshIcon: {
+    width: 26,
+    height: 21,
+    cursor: 'pointer',
+    transition: 'filter 100ms',
+    '&:hover': {
+      filter: 'brightness(1.5)'
+    }
+  },
+  subHeader: {
+    alignItems: 'center',
+
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-start'
+    }
+  },
+  leftSideSubHeader: {
+    marginBottom: 16,
+    width: 'calc(50% - 12px)',
+
+    [theme.breakpoints.down('sm')]: {
+      flex: 'initial',
+      width: 'auto'
+    }
   }
 }))
 

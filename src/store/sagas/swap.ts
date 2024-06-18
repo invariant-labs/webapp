@@ -2,13 +2,20 @@ import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { createLoaderKey, solToPriorityFee } from '@consts/utils'
 import { Pair } from '@invariant-labs/sdk'
 import { actions as snackbarsActions } from '@reducers/snackbars'
+import { actions as connectionActions } from '@reducers/solanaConnection'
 import { actions as swapActions } from '@reducers/swap'
 import { poolsArraySortedByFees, tokens } from '@selectors/pools'
 import { network, rpcAddress } from '@selectors/solanaConnection'
 import { accounts } from '@selectors/solanaWallet'
 import { swap } from '@selectors/swap'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
-import { Keypair, SystemProgram, Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
+import {
+  Keypair,
+  SystemProgram,
+  Transaction,
+  TransactionExpiredTimeoutError,
+  sendAndConfirmRawTransaction
+} from '@solana/web3.js'
 import { getMarketProgram } from '@web3/programs/amm'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { getConnection } from './connection'
@@ -281,6 +288,10 @@ export function* handleSwapWithSOL(): Generator {
 
     yield put(swapActions.setSwapSuccess(false))
 
+    // TODO finish after merge https://github.com/invariant-labs/webapp/pull/667
+    if (error instanceof TransactionExpiredTimeoutError) {
+      yield put(connectionActions.setTimeoutError(true))
+    }
     yield put(
       snackbarsActions.add({
         message:

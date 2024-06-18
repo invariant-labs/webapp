@@ -32,6 +32,7 @@ import DepositSelector from './DepositSelector/DepositSelector'
 import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
+import refreshIcon from '@static/svg/refresh.svg'
 import useStyles from './style'
 import { getMinTick } from '@invariant-labs/sdk/src/utils'
 
@@ -106,6 +107,8 @@ export interface INewPosition {
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
   globalPrice?: number
+  handleRefresh: () => void
+  isBalanceLoading: boolean
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -158,7 +161,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   currentFeeIndex,
   onSlippageChange,
   initialSlippage,
-  globalPrice
+  globalPrice,
+  handleRefresh,
+  isBalanceLoading
 }) => {
   const classes = useStyles()
 
@@ -189,6 +194,8 @@ export const NewPosition: React.FC<INewPosition> = ({
     [tickSpacing]
   )
 
+  const [shouldResetPlot, setShouldResetPlot] = useState(true)
+
   const setRangeBlockerInfo = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return 'Select tokens to set price range.'
@@ -210,8 +217,8 @@ export const NewPosition: React.FC<INewPosition> = ({
       .fill(1)
       .map((_e, index) => ({ x: index, y: index, index })),
     midPrice: {
-      x: 50,
-      index: 50
+      x: 0,
+      index: 0
     },
     tokenASymbol: 'ABC',
     tokenBSymbol: 'XYZ'
@@ -442,9 +449,32 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
-        <Grid container item alignItems='center' className={classes.options}>
+      <Grid
+        container
+        item
+        className={classes.subHeader}
+        alignItems='center'
+        justifyContent='space-between'>
+        <Grid
+          container
+          item
+          alignItems='center'
+          justifyContent='space-between'
+          className={classes.leftSideSubHeader}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          <Button
+            disabled={tokenAIndex === null || tokenBIndex === null}
+            onClick={handleRefresh}
+            className={classes.refreshIconBtn}>
+            <img src={refreshIcon} className={classes.refreshIcon} />
+          </Button>
+        </Grid>
+        <Grid
+          container
+          item
+          alignItems='center'
+          justifyContent='flex-end'
+          className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
               displayLength={9}
@@ -605,6 +635,8 @@ export const NewPosition: React.FC<INewPosition> = ({
           concentrationIndex={concentrationIndex}
           minimumSliderIndex={minimumSliderIndex}
           positionOpeningMethod={positionOpeningMethod}
+          setShouldResetPlot={setShouldResetPlot}
+          isBalanceLoading={isBalanceLoading}
         />
 
         {isCurrentPoolExisting ||
@@ -653,6 +685,8 @@ export const NewPosition: React.FC<INewPosition> = ({
             concentrationIndex={concentrationIndex}
             minimumSliderIndex={minimumSliderIndex}
             getTicksInsideRange={getTicksInsideRange}
+            shouldResetPlot={shouldResetPlot}
+            setShouldResetPlot={setShouldResetPlot}
           />
         ) : (
           <PoolInit

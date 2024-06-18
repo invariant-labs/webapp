@@ -27,15 +27,22 @@ import { BN } from '@project-serum/anchor'
 import { actions as poolsActions } from '@reducers/pools'
 import { actions } from '@reducers/positions'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import { Status } from '@reducers/solanaWallet'
+import { Status, actions as solanaWallet } from '@reducers/solanaWallet'
+import { actions as connectionActions } from '@reducers/solanaConnection'
 import {
   isLoadingLatestPoolsForTransaction,
   poolsArraySortedByFees,
   volumeRanges
 } from '@selectors/pools'
 import { initPosition, plotTicks } from '@selectors/positions'
-import { network } from '@selectors/solanaConnection'
-import { canCreateNewPool, canCreateNewPosition, status, swapTokens } from '@selectors/solanaWallet'
+import { network, timeoutError } from '@selectors/solanaConnection'
+import {
+  canCreateNewPool,
+  canCreateNewPosition,
+  status,
+  swapTokens,
+  balanceLoading
+} from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
 import { getCurrentSolanaConnection, networkTypetoProgramNetwork } from '@web3/connection'
 import { openWalletSelectorModal } from '@web3/selector'
@@ -62,10 +69,13 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
   const connection = getCurrentSolanaConnection()
 
+  const isTimeoutError = useSelector(timeoutError)
+
   const tokens = useSelector(swapTokens)
   const walletStatus = useSelector(status)
   const allPools = useSelector(poolsArraySortedByFees)
   const poolsVolumeRanges = useSelector(volumeRanges)
+  const isBalanceLoading = useSelector(balanceLoading)
 
   const canUserCreateNewPool = useSelector(canCreateNewPool)
   const canUserCreateNewPosition = useSelector(canCreateNewPosition)
@@ -348,7 +358,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
   const [tokenBPriceData, setTokenBPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [priceBLoading, setPriceBLoading] = useState(false)
-  useEffect(() => {
+
+  const getGlobalPrice = () => {
     if (tokenAIndex === null || tokenBIndex === null) {
       return
     }
@@ -363,6 +374,10 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     } else {
       setGlobalPrice(undefined)
     }
+  }
+
+  useEffect(() => {
+    getGlobalPrice()
   }, [tokenAIndex, tokenBIndex])
 
   useEffect(() => {
@@ -503,6 +518,81 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
     return new BN(0)
   }
+
+  const handleRefresh = async () => {
+    if (tokenBIndex === null || tokenAIndex === null || tokenAIndex === tokenBIndex) {
+      return
+    }
+    dispatch(solanaWallet.getBalance())
+
+    const idA = tokens[tokenAIndex].assetAddress.toString() ?? ''
+    if (idA) {
+      setPriceALoading(true)
+      await getJupTokenPrice(idA)
+        .then(data => setTokenAPriceData(data))
+        .catch(() => setTokenAPriceData(undefined))
+        .finally(() => setPriceALoading(false))
+    } else {
+      setTokenAPriceData(undefined)
+    }
+
+    const idB = tokens[tokenBIndex].assetAddress.toString() ?? ''
+    if (idB) {
+      setPriceBLoading(true)
+      getJupTokenPrice(idB)
+        .then(data => setTokenBPriceData(data))
+        .catch(() => setTokenBPriceData(undefined))
+        .finally(() => setPriceBLoading(false))
+    } else {
+      setTokenBPriceData(undefined)
+    }
+
+    dispatch(
+      poolsActions.getAllPoolsForPairData({
+        first: tokens[tokenAIndex].address,
+        second: tokens[tokenBIndex].address
+      })
+    )
+
+    dispatch(
+      poolsActions.getPoolData(
+        new Pair(tokens[tokenAIndex].assetAddress, tokens[tokenBIndex].assetAddress, {
+          fee: ALL_FEE_TIERS_DATA[feeIndex].tier.fee,
+          tickSpacing: ALL_FEE_TIERS_DATA[feeIndex].tier.tickSpacing
+        })
+      )
+    )
+
+    if (tokenAIndex !== null && tokenBIndex !== null) {
+      const index = allPools.findIndex(
+        pool =>
+          pool.fee.v.eq(fee) &&
+          ((pool.tokenX.equals(tokens[tokenAIndex].assetAddress) &&
+            pool.tokenY.equals(tokens[tokenBIndex].assetAddress)) ||
+            (pool.tokenX.equals(tokens[tokenBIndex].assetAddress) &&
+              pool.tokenY.equals(tokens[tokenAIndex].assetAddress)))
+      )
+      setPoolIndex(index !== -1 ? index : null)
+
+      if (index !== -1) {
+        dispatch(
+          actions.getCurrentPlotTicks({
+            poolIndex: index,
+            isXtoY: allPools[index].tokenX.equals(tokens[tokenAIndex].assetAddress)
+          })
+        )
+      }
+    }
+
+    getGlobalPrice()
+  }
+
+  useEffect(() => {
+    if (isTimeoutError) {
+      void handleRefresh()
+      dispatch(connectionActions.setTimeoutError(false))
+    }
+  }, [isTimeoutError])
 
   return (
     <NewPosition
@@ -676,6 +766,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       onSlippageChange={onSlippageChange}
       initialSlippage={initialSlippage}
       globalPrice={globalPrice}
+      handleRefresh={handleRefresh}
+      isBalanceLoading={isBalanceLoading}
     />
   )
 }
