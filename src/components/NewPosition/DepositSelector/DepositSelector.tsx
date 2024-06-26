@@ -3,6 +3,7 @@ import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmo
 import Select from '@components/Inputs/Select/Select'
 import {
   ALL_FEE_TIERS_DATA,
+  PositionOpeningMethod,
   WRAPPED_SOL_ADDRESS,
   WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT,
   WSOL_POOL_INIT_LAMPORTS
@@ -57,6 +58,10 @@ export interface IDepositSelector {
   priceALoading?: boolean
   priceBLoading?: boolean
   feeTierIndex: number
+  concentrationArray: number[]
+  concentrationIndex: number
+  minimumSliderIndex: number
+  positionOpeningMethod: PositionOpeningMethod
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -84,7 +89,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   onHideUnknownTokensChange,
   priceALoading,
   priceBLoading,
-  feeTierIndex
+  feeTierIndex,
+  concentrationArray,
+  concentrationIndex,
+  minimumSliderIndex,
+  positionOpeningMethod
 }) => {
   const classes = useStyles()
 
@@ -136,11 +145,17 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'Select different tokens'
     }
 
+    if (positionOpeningMethod === 'concentration' && concentrationIndex < minimumSliderIndex) {
+      return concentrationArray[minimumSliderIndex]
+        ? `Set concentration to at least ${concentrationArray[minimumSliderIndex].toFixed(0)}x`
+        : 'Set higher fee tier'
+    }
+
     if (
       (poolIndex === null && !canCreateNewPool) ||
       (poolIndex !== null && !canCreateNewPosition)
     ) {
-      return 'Insufficient lamports'
+      return 'Insufficient SOL'
     }
 
     if (
@@ -171,7 +186,17 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
 
     return 'Add Liquidity'
-  }, [tokenAIndex, tokenBIndex, tokenAInputState.value, tokenBInputState.value, tokens])
+  }, [
+    tokenAIndex,
+    tokenBIndex,
+    tokenAInputState.value,
+    tokenBInputState.value,
+    tokens,
+    positionOpeningMethod,
+    concentrationIndex,
+    feeTierIndex,
+    minimumSliderIndex
+  ])
 
   useEffect(() => {
     if (tokenAIndex !== null) {

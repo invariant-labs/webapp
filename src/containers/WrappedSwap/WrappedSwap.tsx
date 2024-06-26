@@ -48,16 +48,24 @@ export const WrappedSwap = () => {
   const [tokenTo, setTokenTo] = useState<PublicKey | null>(null)
 
   useEffect(() => {
+    let timerId1: any
+    let timerId2: any
+
     if (!inProgress && progress === 'progress') {
       setProgress(success ? 'approvedWithSuccess' : 'approvedWithFail')
 
-      setTimeout(() => {
+      timerId1 = setTimeout(() => {
         setProgress(success ? 'success' : 'failed')
       }, 1500)
 
-      setTimeout(() => {
+      timerId2 = setTimeout(() => {
         setProgress('none')
       }, 3000)
+    }
+
+    return () => {
+      clearTimeout(timerId1)
+      clearTimeout(timerId2)
     }
   }, [success, inProgress])
 
