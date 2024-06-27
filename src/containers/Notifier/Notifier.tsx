@@ -83,7 +83,9 @@ const Notifier = () => {
           onExited: (_event, myKey) => {
             dispatch(actions.remove(myKey as string))
             removeDisplayed(myKey as string)
-          }
+          },
+          txid: txid,
+          currentNetwork: currentNetwork.toLowerCase()
         })
         storeDisplayed(key)
       }

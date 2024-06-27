@@ -349,6 +349,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
 
   const loaderCreatePosition = createLoaderKey()
   const loaderSigningTx = createLoaderKey()
+  const loaderTxDetails = createLoaderKey()
   try {
     yield put(
       snackbarsActions.add({
@@ -458,7 +459,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
       )
     }
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     combinedTransaction.recentBlockhash = blockhash.blockhash
     combinedTransaction.feePayer = wallet.publicKey
 
@@ -475,11 +476,41 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
       signedTx.partialSign(...poolSigners)
     }
 
-    const txId = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+    const txId = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false
     })
 
-    if (!txId.length) {
+    yield put(
+      snackbarsActions.add({
+        message: 'Confirming create position transaction...',
+        variant: 'pending',
+        persist: true,
+        txid: txId,
+        key: loaderTxDetails
+      })
+    )
+
+    const confirmedTx = yield* call([connection, connection.confirmTransaction], {
+      blockhash: blockhash.blockhash,
+      lastValidBlockHeight: blockhash.lastValidBlockHeight,
+      signature: txId
+    })
+
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
+
+    if (confirmedTx.value.err === null) {
+      yield put(
+        snackbarsActions.add({
+          message: 'Position added successfully.',
+          variant: 'success',
+          persist: false,
+          txid: txId
+        })
+      )
+
+      yield put(actions.getPositionsList())
+    } else {
       yield put(actions.setInitPositionSuccess(false))
 
       closeSnackbar(loaderCreatePosition)
@@ -493,17 +524,6 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
           txid: txId
         })
       )
-    } else {
-      yield put(
-        snackbarsActions.add({
-          message: 'Position added successfully.',
-          variant: 'success',
-          persist: false,
-          txid: txId
-        })
-      )
-
-      yield put(actions.getPositionsList())
     }
 
     yield put(actions.setInitPositionSuccess(true))
@@ -515,6 +535,8 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
 
     yield put(actions.setInitPositionSuccess(false))
 
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
     closeSnackbar(loaderCreatePosition)
     yield put(snackbarsActions.remove(loaderCreatePosition))
     closeSnackbar(loaderSigningTx)
@@ -544,6 +566,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
 export function* handleInitPosition(action: PayloadAction<InitPositionData>): Generator {
   const loaderCreatePosition = createLoaderKey()
   const loaderSigningTx = createLoaderKey()
+  const loaderTxDetails = createLoaderKey()
 
   try {
     const allTokens = yield* select(tokens)
@@ -638,7 +661,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
     }
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
@@ -652,33 +675,58 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     if (poolSigners.length) {
       signedTx.partialSign(...poolSigners)
     }
-    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+
+    const txId = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false
     })
 
-    yield put(actions.setInitPositionSuccess(!!txid.length))
+    yield put(
+      snackbarsActions.add({
+        message: 'Confirming create position transaction...',
+        variant: 'pending',
+        persist: true,
+        txid: txId,
+        key: loaderTxDetails
+      })
+    )
 
-    if (!txid.length) {
-      yield put(
-        snackbarsActions.add({
-          message: 'Position adding failed. Please try again.',
-          variant: 'error',
-          persist: false,
-          txid
-        })
-      )
-    } else {
+    const confirmedTx = yield* call([connection, connection.confirmTransaction], {
+      blockhash: blockhash.blockhash,
+      lastValidBlockHeight: blockhash.lastValidBlockHeight,
+      signature: txId
+    })
+    console.log(confirmedTx)
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
+
+    if (confirmedTx.value.err === null) {
       yield put(
         snackbarsActions.add({
           message: 'Position added successfully.',
           variant: 'success',
           persist: false,
-          txid
+          txid: txId
         })
       )
 
       yield put(actions.getPositionsList())
+    } else {
+      yield put(actions.setInitPositionSuccess(false))
+
+      closeSnackbar(loaderCreatePosition)
+      yield put(snackbarsActions.remove(loaderCreatePosition))
+
+      return yield put(
+        snackbarsActions.add({
+          message: 'Position adding failed. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: txId
+        })
+      )
     }
+
+    yield put(actions.setInitPositionSuccess(true))
 
     closeSnackbar(loaderCreatePosition)
     yield put(snackbarsActions.remove(loaderCreatePosition))
@@ -687,6 +735,8 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 
     yield put(actions.setInitPositionSuccess(false))
 
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
     closeSnackbar(loaderCreatePosition)
     yield put(snackbarsActions.remove(loaderCreatePosition))
     closeSnackbar(loaderSigningTx)
@@ -815,6 +865,7 @@ export function* handleGetPositionsList() {
 export function* handleClaimFeeWithSOL(positionIndex: number) {
   const loaderClaimFee = createLoaderKey()
   const loaderSigningTx = createLoaderKey()
+  const loaderTxDetails = createLoaderKey()
 
   try {
     yield put(
@@ -904,7 +955,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
       tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
     }
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
@@ -916,26 +967,45 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+    const txId = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false
     })
 
-    if (!txid.length) {
-      yield put(
-        snackbarsActions.add({
-          message: 'Failed to claim fee. Please try again.',
-          variant: 'error',
-          persist: false,
-          txid
-        })
-      )
-    } else {
+    yield put(
+      snackbarsActions.add({
+        message: 'Confirming claim fee transaction...',
+        variant: 'pending',
+        persist: true,
+        txid: txId,
+        key: loaderTxDetails
+      })
+    )
+
+    const confirmedTx = yield* call([connection, connection.confirmTransaction], {
+      blockhash: blockhash.blockhash,
+      lastValidBlockHeight: blockhash.lastValidBlockHeight,
+      signature: txId
+    })
+
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
+
+    if (confirmedTx.value.err === null) {
       yield put(
         snackbarsActions.add({
           message: 'Fee claimed successfully.',
           variant: 'success',
           persist: false,
-          txid
+          txid: txId
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to claim fee. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: txId
         })
       )
     }
@@ -947,6 +1017,8 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
   } catch (error) {
     console.log(error)
 
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
     closeSnackbar(loaderClaimFee)
     yield put(snackbarsActions.remove(loaderClaimFee))
     closeSnackbar(loaderSigningTx)
@@ -976,6 +1048,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 export function* handleClaimFee(action: PayloadAction<number>) {
   const loaderClaimFee = createLoaderKey()
   const loaderSigningTx = createLoaderKey()
+  const loaderTxDetails = createLoaderKey()
 
   try {
     const allTokens = yield* select(tokens)
@@ -1041,7 +1114,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
       tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
     }
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
@@ -1052,26 +1125,45 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+    const txId = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false
     })
 
-    if (!txid.length) {
-      yield put(
-        snackbarsActions.add({
-          message: 'Failed to claim fee. Please try again.',
-          variant: 'error',
-          persist: false,
-          txid
-        })
-      )
-    } else {
+    yield put(
+      snackbarsActions.add({
+        message: 'Confirming claim fee transaction...',
+        variant: 'pending',
+        persist: true,
+        txid: txId,
+        key: loaderTxDetails
+      })
+    )
+
+    const confirmedTx = yield* call([connection, connection.confirmTransaction], {
+      blockhash: blockhash.blockhash,
+      lastValidBlockHeight: blockhash.lastValidBlockHeight,
+      signature: txId
+    })
+
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
+
+    if (confirmedTx.value.err === null) {
       yield put(
         snackbarsActions.add({
           message: 'Fee claimed successfully.',
           variant: 'success',
           persist: false,
-          txid
+          txid: txId
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to claim fee. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: txId
         })
       )
     }
@@ -1112,6 +1204,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 export function* handleClosePositionWithSOL(data: ClosePositionData) {
   const loaderClosePosition = createLoaderKey()
   const loaderSigningTx = createLoaderKey()
+  const loaderTxDetails = createLoaderKey()
 
   try {
     yield put(
@@ -1217,7 +1310,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
     }
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
@@ -1230,28 +1323,47 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
 
     signedTx.partialSign(wrappedSolAccount)
 
-    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+    const txId = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false
     })
 
+    yield put(
+      snackbarsActions.add({
+        message: 'Confirming close position transaction...',
+        variant: 'pending',
+        persist: true,
+        txid: txId,
+        key: loaderTxDetails
+      })
+    )
+
+    const confirmedTx = yield* call([connection, connection.confirmTransaction], {
+      blockhash: blockhash.blockhash,
+      lastValidBlockHeight: blockhash.lastValidBlockHeight,
+      signature: txId
+    })
+
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
+
     yield* call(sleep, 3000)
 
-    if (!txid.length) {
-      yield put(
-        snackbarsActions.add({
-          message: 'Failed to close position. Please try again.',
-          variant: 'error',
-          persist: false,
-          txid
-        })
-      )
-    } else {
+    if (confirmedTx.value.err === null) {
       yield put(
         snackbarsActions.add({
           message: 'Position closed successfully.',
           variant: 'success',
           persist: false,
-          txid
+          txid: txId
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to close position. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: txId
         })
       )
     }
@@ -1266,6 +1378,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
   } catch (error) {
     console.log(error)
 
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
     closeSnackbar(loaderClosePosition)
     yield put(snackbarsActions.remove(loaderClosePosition))
     closeSnackbar(loaderSigningTx)
@@ -1303,6 +1417,7 @@ const unsub = async (stakerProgram: Staker, key: PublicKey) => {
 export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
   const loaderClosePosition = createLoaderKey()
   const loaderSigningTx = createLoaderKey()
+  const loaderTxDetails = createLoaderKey()
 
   try {
     const allTokens = yield* select(tokens)
@@ -1385,7 +1500,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
     }
 
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
@@ -1396,28 +1511,47 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+    const txId = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false
+    })
+
+    yield put(
+      snackbarsActions.add({
+        message: 'Confirming close position transaction...',
+        variant: 'pending',
+        persist: true,
+        txid: txId,
+        key: loaderTxDetails
+      })
+    )
+
+    const confirmedTx = yield* call([connection, connection.confirmTransaction], {
+      blockhash: blockhash.blockhash,
+      lastValidBlockHeight: blockhash.lastValidBlockHeight,
+      signature: txId
     })
 
     yield* call(sleep, 3000)
 
-    if (!txid.length) {
-      yield put(
-        snackbarsActions.add({
-          message: 'Failed to close position. Please try again.',
-          variant: 'error',
-          persist: false,
-          txid
-        })
-      )
-    } else {
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
+
+    if (confirmedTx.value.err === null) {
       yield put(
         snackbarsActions.add({
           message: 'Position closed successfully.',
           variant: 'success',
           persist: false,
-          txid
+          txid: txId
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to close position. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: txId
         })
       )
     }
@@ -1432,6 +1566,8 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
   } catch (error) {
     console.log(error)
 
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
     closeSnackbar(loaderClosePosition)
     yield put(snackbarsActions.remove(loaderClosePosition))
     closeSnackbar(loaderSigningTx)
