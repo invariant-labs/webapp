@@ -80,7 +80,7 @@
     "fix": "eslint --fix --fix-type suggestion --ext .js,.ts,.tsx .",
     "storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider  start-storybook -p 9009  -c .storybook watch-css -s public --no-manager-cache",
     "build-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider  build-storybook -s public ",
-    "build": "node --max-old-space-size=5120 node_modules/.bin/vite build",
+    "build": "node --max-old-space-size=8192 node_modules/.bin/vite build",
     "update-mainnet-list": "node ./src/fetchMainnetList.js"
   },
   "eslintConfig": {
