@@ -139,7 +139,7 @@ export const BoxInfo: React.FC<{
                 {isBalanceLoading ? (
                   <img src={loadingAnimation} className={classes.loadingBalance} alt='Loading' />
                 ) : (
-                  tokenA.balance + tokenA.name
+                  tokenA.balance.toString() + ' ' + tokenA.name
                 )}
               </Typography>
               {typeof tokenA.usdValue !== 'undefined' && tokenA.price ? (
@@ -174,7 +174,7 @@ export const BoxInfo: React.FC<{
                 {isBalanceLoading ? (
                   <img src={loadingAnimation} className={classes.loadingBalance} alt='Loading' />
                 ) : (
-                  tokenB.balance + tokenB.name
+                  tokenB.balance.toString() + ' ' + tokenB.name
                 )}
               </Typography>
               {typeof tokenB.usdValue !== 'undefined' && tokenB.price ? (

@@ -283,7 +283,7 @@ export const Swap: React.FC<ISwap> = ({
       if (refresherTime > 0) {
         setRefresherTime(refresherTime - 1)
       } else {
-        handleRefresh()
+        void handleRefresh()
       }
     }, 1000)
 
@@ -488,7 +488,7 @@ export const Swap: React.FC<ISwap> = ({
 
   useEffect(() => {
     if (isTimeoutError) {
-      handleRefresh()
+      void handleRefresh()
       deleteTimeoutError()
     }
   }, [isTimeoutError])

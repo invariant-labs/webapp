@@ -1,8 +1,7 @@
-import React from 'react'
-import { createRef, useEffect, useState } from 'react'
+import React, { createRef, useEffect, useState } from 'react'
 import useStyles from './style'
 
-type Props = {
+interface Props {
   currentIndex: number
   maxIndex: number
   onClick: () => void
