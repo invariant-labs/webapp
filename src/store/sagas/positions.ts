@@ -16,6 +16,7 @@ import {
   InitPositionData,
   actions
 } from '@reducers/positions'
+import { actions as connectionActions } from '@reducers/solanaConnection'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { GuardPredicate } from '@redux-saga/types'
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -320,6 +321,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -551,6 +553,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -751,6 +754,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -1033,6 +1037,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -1189,6 +1194,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -1394,6 +1400,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -1582,6 +1589,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({

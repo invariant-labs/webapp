@@ -9,15 +9,18 @@ import {
   getJupTokensRatioPrice,
   printBN
 } from '@consts/utils'
-import { calculatePriceSqrt } from '@invariant-labs/sdk'
+import { Pair, calculatePriceSqrt } from '@invariant-labs/sdk'
 import { MAX_TICK, getX, getY } from '@invariant-labs/sdk/lib/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/src/utils'
 import { Grid } from '@material-ui/core'
 import { Color } from '@material-ui/lab'
+import { actions as poolsActions } from '@reducers/pools'
 import { actions as farmsActions } from '@reducers/farms'
 import { actions } from '@reducers/positions'
 import { actions as snackbarsActions } from '@reducers/snackbars'
-import { Status } from '@reducers/solanaWallet'
+import { Status, actions as solanaWallet } from '@reducers/solanaWallet'
+import { actions as connectionActions } from '@reducers/solanaConnection'
+import { timeoutError } from '@selectors/solanaConnection'
 import { hasFarms, hasUserStakes, stakesForPosition } from '@selectors/farms'
 import { hasTokens, volumeRanges } from '@selectors/pools'
 import {
@@ -26,7 +29,7 @@ import {
   plotTicks,
   singlePositionData
 } from '@selectors/positions'
-import { status } from '@selectors/solanaWallet'
+import { balanceLoading, status } from '@selectors/solanaWallet'
 import loader from '@static/gif/loader.gif'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -59,7 +62,11 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const hasAnyFarms = useSelector(hasFarms)
   const hasAnyStakes = useSelector(hasUserStakes)
   const walletStatus = useSelector(status)
+  const isBalanceLoading = useSelector(balanceLoading)
+
   const positionStakes = useSelector(stakesForPosition(position?.address))
+
+  const isTimeoutError = useSelector(timeoutError)
 
   const [xToY, setXToY] = useState<boolean>(
     initialXtoY(position?.tokenX.assetAddress.toString(), position?.tokenY.assetAddress.toString())
@@ -67,14 +74,14 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const [globalPrice, setGlobalPrice] = useState<number | undefined>(undefined)
 
-  const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
+  const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(false)
 
   const [showFeesLoader, setShowFeesLoader] = useState(true)
 
   const [isFinishedDelayRender, setIsFinishedDelayRender] = useState(false)
 
   useEffect(() => {
-    if (position?.id && waitingForTicksData === null) {
+    if (position?.id && !waitingForTicksData) {
       setWaitingForTicksData(true)
       dispatch(actions.getCurrentPositionRangeTicks(id))
       dispatch(
@@ -346,7 +353,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
   }, [position?.id])
 
-  useEffect(() => {
+  const getGlobalPrice = () => {
     if (!position) {
       return
     }
@@ -367,6 +374,10 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     } else {
       setGlobalPrice(undefined)
     }
+  }
+
+  useEffect(() => {
+    getGlobalPrice()
   }, [xToY, position?.tokenX, position?.tokenY])
 
   const copyPoolAddressHandler = (message: string, variant: Color) => {
@@ -395,7 +406,40 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
   }, [walletStatus])
 
-  if (!isLoadingList && position) {
+  const handleRefresh = () => {
+    if (position) {
+      dispatch(solanaWallet.getBalance())
+
+      dispatch(actions.getPositionsList())
+
+      setWaitingForTicksData(true)
+      dispatch(actions.getCurrentPositionRangeTicks(id))
+      dispatch(
+        actions.getCurrentPlotTicks({
+          poolIndex: position.poolData.poolIndex,
+          isXtoY: true
+        })
+      )
+      dispatch(
+        poolsActions.getPoolData(
+          new Pair(position.tokenX.assetAddress, position.tokenY.assetAddress, {
+            fee: position.poolData.fee,
+            tickSpacing: position.poolData.tickSpacing
+          })
+        )
+      )
+
+      getGlobalPrice()
+    }
+  }
+
+  useEffect(() => {
+    if (isTimeoutError) {
+      handleRefresh()
+      dispatch(connectionActions.setTimeoutError(false))
+    }
+  }, [isTimeoutError])
+  if (position) {
     return (
       <PositionDetails
         tokenXAddress={position.tokenX.assetAddress}
@@ -421,7 +465,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             })
           )
         }}
-        ticksLoading={ticksLoading}
+        ticksLoading={ticksLoading || isLoadingList}
         tickSpacing={position?.poolData.tickSpacing ?? 1}
         tokenX={{
           name: position.tokenX.symbol,
@@ -454,7 +498,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         max={max}
         initialIsDiscreteValue={initialIsDiscreteValue}
         onDiscreteChange={setIsDiscreteValue}
-        showFeesLoader={showFeesLoader}
+        showFeesLoader={showFeesLoader || isLoadingList}
+        isBalanceLoading={isBalanceLoading}
         hasTicksError={hasTicksError}
         reloadHandler={() => {
           dispatch(
@@ -469,6 +514,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         globalPrice={globalPrice}
         xToY={xToY}
         setXToY={setXToY}
+        handleRefresh={handleRefresh}
       />
     )
   }

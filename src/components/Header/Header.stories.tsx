@@ -41,6 +41,8 @@ storiesOf('ui/newHeader', module)
             onFaucet={() => {
               console.log('Faucet')
             }}
+            onPrioritySave={() => {}}
+            recentPriorityFee=''
           />
         </div>
       </div>
@@ -72,6 +74,8 @@ storiesOf('ui/newHeader', module)
             typeOfNetwork={NetworkType.DEVNET}
             rpc={SolanaNetworks.DEV}
             defaultMainnetRPC={SolanaNetworks.MAIN_NIGHTLY}
+            onPrioritySave={() => {}}
+            recentPriorityFee=''
           />
         </div>
       </div>

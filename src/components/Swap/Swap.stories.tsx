@@ -174,6 +174,11 @@ storiesOf('newUi/swap', module)
         onHideUnknownTokensChange={() => {}}
         onSlippageChange={() => {}}
         initialSlippage={'1'}
+        deleteTimeoutError={() => {}}
+        isBalanceLoading={false}
+        isFetchingNewPool={false}
+        isTimeoutError={false}
+        onRefresh={() => {}}
       />
     </div>
   ))

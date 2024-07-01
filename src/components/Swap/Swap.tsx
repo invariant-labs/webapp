@@ -103,6 +103,8 @@ export interface ISwap {
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
   isBalanceLoading: boolean
+  deleteTimeoutError: () => void
+  isTimeoutError: boolean
 }
 
 export const Swap: React.FC<ISwap> = ({
@@ -131,7 +133,9 @@ export const Swap: React.FC<ISwap> = ({
   priceToLoading,
   onSlippageChange,
   initialSlippage,
-  isBalanceLoading
+  isBalanceLoading,
+  deleteTimeoutError,
+  isTimeoutError
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -483,6 +487,13 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   useEffect(() => {
+    if (isTimeoutError) {
+      handleRefresh()
+      deleteTimeoutError()
+    }
+  }, [isTimeoutError])
+
+  useEffect(() => {
     setRefresherTime(REFRESHER_INTERVAL)
   }, [tokenFromIndex, tokenToIndex])
 
@@ -679,11 +690,13 @@ export const Swap: React.FC<ISwap> = ({
                 <CardMedia image={infoIcon} className={classes.infoIcon} />
               </Grid>
             </button>
-            <Refresher
-              currentIndex={refresherTime}
-              maxIndex={REFRESHER_INTERVAL}
-              onClick={handleRefresh}
-            />
+            {tokenFromIndex !== null && tokenToIndex !== null && (
+              <Refresher
+                currentIndex={refresherTime}
+                maxIndex={REFRESHER_INTERVAL}
+                onClick={handleRefresh}
+              />
+            )}
           </Grid>
           {canShowDetails ? (
             <ExchangeRate

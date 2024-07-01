@@ -8,14 +8,15 @@ import { Button, Grid, Hidden, Typography } from '@material-ui/core'
 import { PlotTickData } from '@reducers/positions'
 import { PublicKey } from '@solana/web3.js'
 import backIcon from '@static/svg/back-arrow.svg'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { ILiquidityToken } from './SinglePositionInfo/consts'
 import SinglePositionPlot from './SinglePositionPlot/SinglePositionPlot'
 import useStyles from './style'
-
 import MarketIdLabel from '@components/NewPosition/MarketIdLabel/MarketIdLabel'
 import { Color } from '@material-ui/lab'
+import { REFRESHER_INTERVAL } from '@consts/static'
+import Refresher from '@components/Refresher/Refresher'
 
 interface IProps {
   tokenXAddress: PublicKey
@@ -41,6 +42,7 @@ interface IProps {
   initialIsDiscreteValue: boolean
   onDiscreteChange: (val: boolean) => void
   showFeesLoader?: boolean
+  isBalanceLoading?: boolean
   hasTicksError?: boolean
   reloadHandler: () => void
   plotVolumeRange?: {
@@ -51,6 +53,7 @@ interface IProps {
   globalPrice?: number
   setXToY: (val: boolean) => void
   xToY: boolean
+  handleRefresh: () => void
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -77,27 +80,54 @@ const PositionDetails: React.FC<IProps> = ({
   initialIsDiscreteValue,
   onDiscreteChange,
   showFeesLoader = false,
+  isBalanceLoading = false,
   hasTicksError,
   reloadHandler,
   plotVolumeRange,
   userHasStakes = false,
   globalPrice,
   setXToY,
-  xToY
+  xToY,
+  handleRefresh
 }) => {
   const classes = useStyles()
-
+  console.log(fee)
   const history = useHistory()
+
+  const [refresherTime, setRefresherTime] = useState<number>(REFRESHER_INTERVAL)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (refresherTime > 0) {
+        setRefresherTime(refresherTime - 1)
+      } else {
+        handleRefresh()
+        setRefresherTime(REFRESHER_INTERVAL)
+      }
+    }, 1000)
+
+    return () => clearTimeout(timeout)
+  }, [refresherTime])
 
   return (
     <Grid container className={classes.wrapperContainer} wrap='nowrap'>
       <Grid className={classes.positionDetails} container item direction='column'>
-        <Link to='/pool' style={{ textDecoration: 'none' }}>
-          <Grid className={classes.back} container item alignItems='center'>
-            <img className={classes.backIcon} src={backIcon} />
-            <Typography className={classes.backText}>Back to Liquidity Positions List</Typography>
-          </Grid>
-        </Link>
+        <Grid className={classes.backContainer} container>
+          <Link to='/pool' style={{ textDecoration: 'none' }}>
+            <Grid className={classes.back} container item alignItems='center'>
+              <img className={classes.backIcon} src={backIcon} />
+              <Typography className={classes.backText}>Back to Liquidity Positions List</Typography>
+            </Grid>
+          </Link>
+          <Refresher
+            currentIndex={refresherTime}
+            maxIndex={REFRESHER_INTERVAL}
+            onClick={() => {
+              handleRefresh()
+              setRefresherTime(REFRESHER_INTERVAL)
+            }}
+          />
+        </Grid>
         <SinglePositionInfo
           fee={+printBN(fee.v, DECIMAL - 2)}
           onClickClaimFee={onClickClaimFee}
@@ -110,6 +140,7 @@ const PositionDetails: React.FC<IProps> = ({
           swapHandler={() => setXToY(!xToY)}
           showFeesLoader={showFeesLoader}
           userHasStakes={userHasStakes}
+          isBalanceLoading={isBalanceLoading}
         />
       </Grid>
 
@@ -117,17 +148,16 @@ const PositionDetails: React.FC<IProps> = ({
         container
         item
         direction='column'
-        alignItems='flex-end'
+        alignItems='center'
         className={classes.right}
         wrap='nowrap'>
         <Grid
           container
           item
           direction='row'
-          alignItems='flex-end'
-          // justifyContent='space-between'
+          alignItems='center'
           style={{ paddingLeft: 20, flexDirection: 'row-reverse' }}
-          className={classes.right}
+          className={classes.rightSubHeader}
           wrap='nowrap'>
           <Hidden xsDown>
             <Button
@@ -147,7 +177,7 @@ const PositionDetails: React.FC<IProps> = ({
             marketId={poolAddress.toString()}
             displayLength={9}
             copyPoolAddressHandler={copyPoolAddressHandler}
-            style={{ paddingBottom: 20, paddingRight: 10 }}
+            style={{ paddingTop: '6px' }}
           />
         </Grid>
 

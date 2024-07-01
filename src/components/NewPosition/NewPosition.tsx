@@ -2,7 +2,12 @@ import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import Slippage from '@components/Modals/Slippage/Slippage'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
-import { ALL_FEE_TIERS_DATA, BestTier, PositionOpeningMethod } from '@consts/static'
+import {
+  ALL_FEE_TIERS_DATA,
+  BestTier,
+  PositionOpeningMethod,
+  REFRESHER_INTERVAL
+} from '@consts/static'
 import { addressToTicker, blurContent, parseFeeToPathFee, unblurContent } from '@consts/uiUtils'
 import {
   TokenPriceData,
@@ -16,7 +21,7 @@ import {
 } from '@consts/utils'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { fromFee, getConcentrationArray, getMaxTick } from '@invariant-labs/sdk/lib/utils'
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Button, Grid, Hidden, Typography } from '@material-ui/core'
 import { Color } from '@material-ui/lab'
 import { BN } from '@project-serum/anchor'
 import { PlotTickData } from '@reducers/positions'
@@ -34,6 +39,7 @@ import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
 import { getMinTick } from '@invariant-labs/sdk/src/utils'
+import Refresher from '@components/Refresher/Refresher'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -106,6 +112,8 @@ export interface INewPosition {
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
   globalPrice?: number
+  handleRefresh: () => void
+  isBalanceLoading: boolean
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -158,7 +166,9 @@ export const NewPosition: React.FC<INewPosition> = ({
   currentFeeIndex,
   onSlippageChange,
   initialSlippage,
-  globalPrice
+  globalPrice,
+  handleRefresh,
+  isBalanceLoading
 }) => {
   const classes = useStyles()
 
@@ -183,6 +193,27 @@ export const NewPosition: React.FC<INewPosition> = ({
   const [concentrationIndex, setConcentrationIndex] = useState(0)
 
   const [minimumSliderIndex, setMinimumSliderIndex] = useState<number>(0)
+
+  const [shouldResetPlot, setShouldResetPlot] = useState(true)
+
+  const [refresherTime, setRefresherTime] = React.useState<number>(REFRESHER_INTERVAL)
+
+  useEffect(() => {
+    onChangeRange(leftRange, rightRange)
+  }, [currentPriceSqrt])
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (refresherTime > 0 && poolIndex !== null) {
+        setRefresherTime(refresherTime - 1)
+      } else {
+        handleRefresh()
+        setRefresherTime(REFRESHER_INTERVAL)
+      }
+    }, 1000)
+
+    return () => clearTimeout(timeout)
+  }, [refresherTime, poolIndex])
 
   const concentrationArray = useMemo(
     () => getConcentrationArray(tickSpacing, 2, midPrice.index).sort((a, b) => a - b),
@@ -210,8 +241,8 @@ export const NewPosition: React.FC<INewPosition> = ({
       .fill(1)
       .map((_e, index) => ({ x: index, y: index, index })),
     midPrice: {
-      x: 50,
-      index: 50
+      x: 0,
+      index: 0
     },
     tokenASymbol: 'ABC',
     tokenBSymbol: 'XYZ'
@@ -442,8 +473,20 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between'>
-        <Typography className={classes.title}>Add new liquidity position</Typography>
+      <Grid container justifyContent='space-between' alignItems='center'>
+        <Grid className={classes.titleContainer}>
+          <Typography className={classes.title}>Add new liquidity position</Typography>
+          {poolIndex !== null && (
+            <Refresher
+              currentIndex={refresherTime}
+              maxIndex={REFRESHER_INTERVAL}
+              onClick={() => {
+                handleRefresh()
+                setRefresherTime(REFRESHER_INTERVAL)
+              }}
+            />
+          )}
+        </Grid>
         <Grid container item alignItems='center' className={classes.options}>
           {address !== '' ? (
             <MarketIdLabel
@@ -452,29 +495,30 @@ export const NewPosition: React.FC<INewPosition> = ({
               copyPoolAddressHandler={copyPoolAddressHandler}
             />
           ) : null}
-          <ConcentrationTypeSwitch
-            onSwitch={val => {
-              if (val) {
-                setPositionOpeningMethod('concentration')
-                onPositionOpeningMethodChange('concentration')
-              } else {
-                setPositionOpeningMethod('range')
-                onPositionOpeningMethodChange('range')
-              }
-            }}
-            initialValue={initialOpeningPositionMethod === 'concentration' ? 0 : 1}
-            className={classes.switch}
-            style={{
-              opacity: poolIndex !== null ? 1 : 0
-            }}
-            disabled={poolIndex === null}
-          />
+          <Hidden smDown>
+            <ConcentrationTypeSwitch
+              onSwitch={val => {
+                if (val) {
+                  setPositionOpeningMethod('concentration')
+                  onPositionOpeningMethodChange('concentration')
+                } else {
+                  setPositionOpeningMethod('range')
+                  onPositionOpeningMethodChange('range')
+                }
+              }}
+              initialValue={initialOpeningPositionMethod === 'concentration' ? 0 : 1}
+              className={classes.switch}
+              style={{
+                opacity: poolIndex !== null ? 1 : 0
+              }}
+              disabled={poolIndex === null}
+            />
+          </Hidden>
           <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
             <img src={settingIcon} className={classes.settingsIcon} />
           </Button>
         </Grid>
       </Grid>
-
       <Slippage
         open={settings}
         setSlippage={setSlippage}
@@ -485,7 +529,6 @@ export const NewPosition: React.FC<INewPosition> = ({
         infoText='Slippage tolerance is a pricing difference between the price at the confirmation time and the actual price of the transaction users are willing to accept when initializing position.'
         headerText='Position Transaction Settings'
       />
-
       <Grid container className={classes.row} alignItems='stretch'>
         {showNoConnected && <NoConnected {...noConnectedBlockerProps} />}
         <DepositSelector
@@ -498,7 +541,6 @@ export const NewPosition: React.FC<INewPosition> = ({
             setTokenAIndex(index1)
             setTokenBIndex(index2)
             onChangePositionTokens(index1, index2, fee)
-
             updatePath(index1, index2, fee)
           }}
           onAddLiquidity={() => {
@@ -580,12 +622,10 @@ export const NewPosition: React.FC<INewPosition> = ({
             if (tokenAIndex === null || tokenBIndex === null) {
               return
             }
-
             const pom = tokenAIndex
             setTokenAIndex(tokenBIndex)
             setTokenBIndex(pom)
             onChangePositionTokens(tokenBIndex, tokenAIndex, currentFeeIndex)
-
             updatePath(tokenBIndex, tokenAIndex, currentFeeIndex)
           }}
           poolIndex={poolIndex}
@@ -605,8 +645,30 @@ export const NewPosition: React.FC<INewPosition> = ({
           concentrationIndex={concentrationIndex}
           minimumSliderIndex={minimumSliderIndex}
           positionOpeningMethod={positionOpeningMethod}
+          setShouldResetPlot={setShouldResetPlot}
+          isBalanceLoading={isBalanceLoading}
         />
-
+        <Hidden mdUp>
+          <Grid container justifyContent='flex-end' className={classes.desktopConcentrationSwitch}>
+            <ConcentrationTypeSwitch
+              onSwitch={val => {
+                if (val) {
+                  setPositionOpeningMethod('concentration')
+                  onPositionOpeningMethodChange('concentration')
+                } else {
+                  setPositionOpeningMethod('range')
+                  onPositionOpeningMethodChange('range')
+                }
+              }}
+              initialValue={initialOpeningPositionMethod === 'concentration' ? 0 : 1}
+              className={classes.switch}
+              style={{
+                opacity: poolIndex !== null ? 1 : 0
+              }}
+              disabled={poolIndex === null}
+            />
+          </Grid>
+        </Hidden>
         {isCurrentPoolExisting ||
         tokenAIndex === null ||
         tokenBIndex === null ||
@@ -653,6 +715,8 @@ export const NewPosition: React.FC<INewPosition> = ({
             concentrationIndex={concentrationIndex}
             minimumSliderIndex={minimumSliderIndex}
             getTicksInsideRange={getTicksInsideRange}
+            shouldResetPlot={shouldResetPlot}
+            setShouldResetPlot={setShouldResetPlot}
           />
         ) : (
           <PoolInit

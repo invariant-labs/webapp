@@ -14,6 +14,7 @@ export interface ISolanaConnectionStore {
   network: NetworkType
   slot: number
   rpcAddress: string
+  timeoutError: boolean
 }
 
 export const defaultState: ISolanaConnectionStore = {
@@ -21,7 +22,8 @@ export const defaultState: ISolanaConnectionStore = {
   message: '',
   network: NetworkType.MAINNET,
   slot: 0,
-  rpcAddress: SolanaNetworks.MAIN_NIGHTLY
+  rpcAddress: SolanaNetworks.MAIN_NIGHTLY,
+  timeoutError: false
 }
 export const solanaConnectionSliceName = 'solanaConnection'
 const solanaConnectionSlice = createSlice({
@@ -57,6 +59,10 @@ const solanaConnectionSlice = createSlice({
     },
     setSlot(state, action: PayloadAction<number>) {
       state.slot = action.payload
+      return state
+    },
+    setTimeoutError(state, action: PayloadAction<boolean>) {
+      state.timeoutError = action.payload
       return state
     }
   }
