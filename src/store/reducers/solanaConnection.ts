@@ -22,7 +22,7 @@ export const defaultState: ISolanaConnectionStore = {
   message: '',
   network: NetworkType.MAINNET,
   slot: 0,
-  rpcAddress: SolanaNetworks.MAIN_NIGHTLY,
+  rpcAddress: SolanaNetworks.MAIN_HELIUS,
   timeoutError: false
 }
 export const solanaConnectionSliceName = 'solanaConnection'
