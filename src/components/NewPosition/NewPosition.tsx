@@ -477,7 +477,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         container
         justifyContent='space-between'
         alignItems='center'
-        className={classes.topItems}>
+        className={classes.headerContainer}>
         <Grid className={classes.titleContainer}>
           <Typography className={classes.title}>Add new liquidity position</Typography>
           {poolIndex !== null && tokenAIndex !== tokenBIndex && (

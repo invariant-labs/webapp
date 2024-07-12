@@ -107,9 +107,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   desktopConcentrationSwitch: {
     marginBottom: 16
-  },
-  topItems: {
-    columnGap: 24
   }
 }))
 export default useStyles
