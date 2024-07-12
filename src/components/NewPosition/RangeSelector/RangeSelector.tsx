@@ -55,6 +55,8 @@ export interface IRangeSelector {
     leftInRange: number
     rightInRange: number
   }
+  initialLeftRange: string
+  initialRightRange: string
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -79,6 +81,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   hasTicksError,
   reloadHandler,
   volumeRange,
+  initialLeftRange,
+  initialRightRange,
   concentrationArray,
   minimumSliderIndex,
   concentrationIndex,
@@ -87,8 +91,12 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 }) => {
   const classes = useStyles()
 
-  const [leftRange, setLeftRange] = useState(getMinTick(tickSpacing))
-  const [rightRange, setRightRange] = useState(getMaxTick(tickSpacing))
+  const [leftRange, setLeftRange] = useState(
+    initialLeftRange.length > 0 ? +initialLeftRange : getMinTick(tickSpacing)
+  )
+  const [rightRange, setRightRange] = useState(
+    initialRightRange.length > 0 ? +initialRightRange : getMaxTick(tickSpacing)
+  )
 
   const [leftInput, setLeftInput] = useState('')
   const [rightInput, setRightInput] = useState('')
@@ -158,17 +166,26 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     setRightInputRounded(val)
   }
 
-  const changeRangeHandler = (left: number, right: number) => {
+  const changeRangeHandler = (left: number, right: number, isInitialRender: boolean = false) => {
     let leftRange: number
     let rightRange: number
 
+    const validateLeftRange =
+      initialLeftRange.length > 0 && isInitialRender ? +initialLeftRange : left
+    const validateRightRange =
+      initialRightRange.length > 0 && isInitialRender ? +initialRightRange : right
+
     if (positionOpeningMethod === 'range') {
-      const { leftInRange, rightInRange } = getTicksInsideRange(left, right, isXtoY)
+      const { leftInRange, rightInRange } = getTicksInsideRange(
+        validateLeftRange,
+        validateRightRange,
+        isXtoY
+      )
       leftRange = leftInRange
       rightRange = rightInRange
     } else {
-      leftRange = left
-      rightRange = right
+      leftRange = validateLeftRange
+      rightRange = validateRightRange
     }
 
     setLeftRange(leftRange)
@@ -176,11 +193,14 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
     setLeftInputValues(calcPrice(leftRange, isXtoY, xDecimal, yDecimal).toString())
     setRightInputValues(calcPrice(rightRange, isXtoY, xDecimal, yDecimal).toString())
+    setLeftInputValues(calcPrice(leftRange, isXtoY, xDecimal, yDecimal).toString())
+    setRightInputValues(calcPrice(rightRange, isXtoY, xDecimal, yDecimal).toString())
 
+    onChangeRange(leftRange, rightRange)
     onChangeRange(leftRange, rightRange)
   }
 
-  const resetPlot = () => {
+  const resetPlot = (userEventCall: boolean = false) => {
     if (positionOpeningMethod === 'range') {
       const initSideDist = Math.abs(
         midPrice.x -
@@ -198,10 +218,17 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           : Math.min(getMaxTick(tickSpacing), midPrice.index + tickSpacing * 10),
         isXtoY
           ? Math.min(getMaxTick(tickSpacing), midPrice.index + tickSpacing * 10)
-          : Math.max(getMinTick(tickSpacing), midPrice.index - tickSpacing * 10)
+          : Math.max(getMinTick(tickSpacing), midPrice.index - tickSpacing * 10),
+        !userEventCall
       )
       setPlotMin(midPrice.x - initSideDist)
       setPlotMax(midPrice.x + initSideDist)
+
+      if (initialLeftRange.length > 0 && initialRightRange.length > 0 && userEventCall) {
+        autoZoomHandler(leftRange, rightRange)
+      } else if (initialLeftRange.length > 0 && initialRightRange.length > 0) {
+        autoZoomHandler(leftRange, rightRange, true)
+      }
     } else {
       setConcentrationIndex(0)
       const { leftRange, rightRange } = calculateConcentrationRange(
@@ -523,7 +550,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           </Grid>
         ) : (
           <Grid container className={classes.buttons}>
-            <Button className={classes.button} onClick={resetPlot}>
+            <Button className={classes.button} onClick={() => resetPlot(true)}>
               Reset range
             </Button>
             <Button

@@ -45,13 +45,21 @@ export const PagesRouter: React.FC = () => {
         <Switch>
           <Route path='/swap' component={SwapPage} />
           <Route
-            path={'/newPosition/:item1?/:item2?/:item3?'}
+            path={'/newPosition/:item1?/:item2?/:item3?/:item4?/:item5?'}
             render={({ match, history }) => {
               let initialTokenFrom = ''
               let initialTokenTo = ''
               let initialFee = ''
+              let initialLeftRange = ''
+              let initialRightRange = ''
 
-              if (match.params.item3) {
+              if (match.params.item5 && match.params.item4) {
+                initialTokenFrom = match.params.item1 as string
+                initialTokenTo = match.params.item2 as string
+                initialFee = match.params.item3 as string
+                initialLeftRange = match.params.item4
+                initialRightRange = match.params.item5
+              } else if (match.params.item3) {
                 initialTokenFrom = match.params.item1 as string
                 initialTokenTo = match.params.item2 as string
                 initialFee = match.params.item3
@@ -67,6 +75,8 @@ export const PagesRouter: React.FC = () => {
                   initialTokenFrom={initialTokenFrom}
                   initialTokenTo={initialTokenTo}
                   initialFee={initialFee}
+                  initialLeftRange={initialLeftRange}
+                  initialRightRange={initialRightRange}
                   history={history}
                 />
               )

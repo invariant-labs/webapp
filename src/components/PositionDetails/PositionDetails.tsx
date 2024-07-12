@@ -138,7 +138,9 @@ const PositionDetails: React.FC<IProps> = ({
                 const address1 = addressToTicker(tokenXAddress.toString())
                 const address2 = addressToTicker(tokenYAddress.toString())
 
-                history.push(`/newPosition/${address1}/${address2}/${parsedFee}`)
+                history.push(
+                  `/newPosition/${address1}/${address2}/${parsedFee}/${leftRange.index}/${rightRange.index}`
+                )
               }}>
               <span className={classes.buttonText}>+ Add Liquidity</span>
             </Button>
