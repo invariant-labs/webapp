@@ -473,10 +473,14 @@ export const NewPosition: React.FC<INewPosition> = ({
         </Grid>
       </Link>
 
-      <Grid container justifyContent='space-between' alignItems='center'>
+      <Grid
+        container
+        justifyContent='space-between'
+        alignItems='center'
+        className={classes.topItems}>
         <Grid className={classes.titleContainer}>
           <Typography className={classes.title}>Add new liquidity position</Typography>
-          {poolIndex !== null && (
+          {poolIndex !== null && tokenAIndex !== tokenBIndex && (
             <Refresher
               currentIndex={refresherTime}
               maxIndex={REFRESHER_INTERVAL}
@@ -514,9 +518,11 @@ export const NewPosition: React.FC<INewPosition> = ({
               disabled={poolIndex === null}
             />
           </Hidden>
-          <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
-            <img src={settingIcon} className={classes.settingsIcon} />
-          </Button>
+          {poolIndex !== null && (
+            <Button onClick={handleClickSettings} className={classes.settingsIconBtn} disableRipple>
+              <img src={settingIcon} className={classes.settingsIcon} alt='settings' />
+            </Button>
+          )}
         </Grid>
       </Grid>
       <Slippage

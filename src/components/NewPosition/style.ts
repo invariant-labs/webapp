@@ -5,6 +5,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     width: 952
   },
+  headerContainer: {
+    columnGap: 24
+  },
   back: {
     height: 24,
     marginBottom: 18,
@@ -84,26 +87,29 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   options: {
     width: 'fit-content',
-    marginBottom: 16,
+    marginBottom: 18,
     height: 28
   },
   switch: {
     transition: 'opacity 500ms'
   },
   titleContainer: {
-    width: 'calc(50% - 12px)',
+    maxWidth: 464,
     marginBottom: 18,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-
+    flexGrow: 1,
     [theme.breakpoints.down('lg')]: {
-      width: '100%'
+      maxWidth: 'none'
     }
   },
   desktopConcentrationSwitch: {
     marginBottom: 16
+  },
+  topItems: {
+    columnGap: 24
   }
 }))
 export default useStyles
