@@ -36,7 +36,7 @@ import {
 } from '@solana/web3.js'
 import { getMarketProgram } from '@web3/programs/amm'
 import { getStakerProgram } from '@web3/programs/staker'
-import { all, call, put, select, spawn, take, takeEvery, takeLatest } from 'typed-redux-saga'
+import { all, call, put, select, spawn, take, takeEvery, takeLeading } from 'typed-redux-saga'
 import { getConnection } from './connection'
 import { createClaimAllPositionRewardsTx } from './farms'
 import { createAccount, getWallet, sleep } from './wallet'
@@ -1672,10 +1672,10 @@ export function* initPositionHandler(): Generator {
   yield* takeEvery(actions.initPosition, handleInitPosition)
 }
 export function* getCurrentPlotTicksHandler(): Generator {
-  yield* takeLatest(actions.getCurrentPlotTicks, handleGetCurrentPlotTicks)
+  yield* takeLeading(actions.getCurrentPlotTicks, handleGetCurrentPlotTicks)
 }
 export function* getPositionsListHandler(): Generator {
-  yield* takeLatest(actions.getPositionsList, handleGetPositionsList)
+  yield* takeLeading(actions.getPositionsList, handleGetPositionsList)
 }
 export function* claimFeeHandler(): Generator {
   yield* takeEvery(actions.claimFee, handleClaimFee)

@@ -50,9 +50,8 @@ export function* handleBalance(): Generator {
   const wallet = yield* call(getWallet)
   yield* put(actions.setAddress(wallet.publicKey))
   yield* put(actions.setIsBalanceLoading(true))
-  const balance = yield* call(getBalance, wallet.publicKey)
+  const [balance] = yield* all([call(getBalance, wallet.publicKey), call(fetchTokensAccounts)])
   yield* put(actions.setBalance(balance))
-  yield* call(fetchTokensAccounts)
   yield* put(actions.setIsBalanceLoading(false))
 }
 
@@ -421,7 +420,7 @@ export function* initSaga(): Generator {
 }
 
 export function* handleBalanceSaga(): Generator {
-  yield takeLeading(actions.getBalance, handleBalance)
+  yield takeLatest(actions.getBalance, handleBalance)
 }
 
 export function* walletSaga(): Generator {
