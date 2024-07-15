@@ -3,6 +3,7 @@ import { createLoaderKey, solToPriorityFee } from '@consts/utils'
 import { Pair } from '@invariant-labs/sdk'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
+import { actions as connectionActions } from '@reducers/solanaConnection'
 import { poolsArraySortedByFees, tokens } from '@selectors/pools'
 import { network, rpcAddress } from '@selectors/solanaConnection'
 import { accounts } from '@selectors/solanaWallet'
@@ -316,6 +317,7 @@ export function* handleSwapWithSOL(): Generator {
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -498,6 +500,7 @@ export function* handleSwap(): Generator {
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({

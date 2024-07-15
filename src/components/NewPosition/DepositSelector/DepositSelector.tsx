@@ -62,6 +62,8 @@ export interface IDepositSelector {
   concentrationIndex: number
   minimumSliderIndex: number
   positionOpeningMethod: PositionOpeningMethod
+  setShouldResetPlot: (val: boolean) => void
+  isBalanceLoading: boolean
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -93,7 +95,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   concentrationArray,
   concentrationIndex,
   minimumSliderIndex,
-  positionOpeningMethod
+  positionOpeningMethod,
+  setShouldResetPlot,
+  isBalanceLoading
 }) => {
   const classes = useStyles()
 
@@ -227,6 +231,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               tokens={tokens}
               current={tokenAIndex !== null ? tokens[tokenAIndex] : null}
               onSelect={index => {
+                setShouldResetPlot(true)
                 setTokenAIndex(index)
                 setPositionTokens(index, tokenBIndex, feeTierIndex)
               }}
@@ -262,6 +267,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               tokens={tokens}
               current={tokenBIndex !== null ? tokens[tokenBIndex] : null}
               onSelect={index => {
+                setShouldResetPlot(true)
                 setTokenBIndex(index)
                 setPositionTokens(tokenAIndex, index, feeTierIndex)
               }}
@@ -279,6 +285,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         <FeeSwitch
           onSelect={fee => {
             setPositionTokens(tokenAIndex, tokenBIndex, fee)
+            setShouldResetPlot(true)
           }}
           feeTiers={feeTiers}
           showOnlyPercents
@@ -347,6 +354,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           }}
           {...tokenAInputState}
           priceLoading={priceALoading}
+          isBalanceLoading={isBalanceLoading}
         />
 
         <DepositAmountInput
@@ -404,6 +412,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           }}
           {...tokenBInputState}
           priceLoading={priceBLoading}
+          isBalanceLoading={isBalanceLoading}
         />
       </Grid>
 

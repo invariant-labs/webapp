@@ -305,6 +305,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 2,
     filter: 'brightness(0.8)',
     pointerEvents: 'none'
+  },
+  exchangeRateContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 8
   }
 }))
 

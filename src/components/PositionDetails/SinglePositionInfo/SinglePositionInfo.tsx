@@ -21,6 +21,7 @@ interface IProp {
   xToY: boolean
   swapHandler: () => void
   showFeesLoader?: boolean
+  isBalanceLoading?: boolean
   userHasStakes?: boolean
 }
 
@@ -35,6 +36,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
   xToY,
   swapHandler,
   showFeesLoader = false,
+  isBalanceLoading = false,
   userHasStakes = false
 }) => {
   const history = useHistory()
@@ -101,7 +103,6 @@ const SinglePositionInfo: React.FC<IProp> = ({
             Close position
           </Button>
           <Hidden smUp>
-            {' '}
             <Button
               className={classes.button}
               variant='contained'
@@ -128,6 +129,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
           }
           showBalance
           swapHandler={swapHandler}
+          isBalanceLoading={isBalanceLoading}
         />
         <BoxInfo
           title={'Unclaimed fees'}

@@ -62,6 +62,30 @@ storiesOf('inputs/exchangeAmount', module)
         ]}
         initialHideUnknownTokensValue={false}
         onHideUnknownTokensChange={() => {}}
+        isBalanceLoading={false}
+      />
+    </div>
+  ))
+  .add('balance loading', () => (
+    <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
+      <ExchangeAmountInput
+        setValue={() => {}}
+        decimal={6}
+        placeholder={'0.0'}
+        onMaxClick={() => {}}
+        tokens={tokens}
+        current={tokens[0]}
+        onSelect={index => action(`chosen index: ${index}`)()}
+        disabled={false}
+        handleAddToken={() => {}}
+        commonTokens={[
+          new PublicKey('So11111111111111111111111111111111111111112'),
+          new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+          new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
+        ]}
+        initialHideUnknownTokensValue={false}
+        onHideUnknownTokensChange={() => {}}
+        isBalanceLoading={true}
       />
     </div>
   ))

@@ -503,11 +503,11 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'markers',
           'areas',
           'lines',
-          lazyLoadingLayer,
           globalPriceLayer,
           currentLayer,
           volumeRangeLayer,
           brushLayer,
+          lazyLoadingLayer,
           'axes',
           'legends'
         ]}

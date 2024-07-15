@@ -55,6 +55,8 @@ export interface IRangeSelector {
     leftInRange: number
     rightInRange: number
   }
+  shouldResetPlot: boolean
+  setShouldResetPlot: (val: boolean) => void
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -83,7 +85,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   minimumSliderIndex,
   concentrationIndex,
   setConcentrationIndex,
-  getTicksInsideRange
+  getTicksInsideRange,
+  shouldResetPlot,
+  setShouldResetPlot
 }) => {
   const classes = useStyles()
 
@@ -245,10 +249,11 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }, [currentPairReversed])
 
   useEffect(() => {
-    if (ticksLoading && isMountedRef.current) {
+    if (ticksLoading && shouldResetPlot && midPrice.index !== 0 && isMountedRef.current) {
       resetPlot()
+      setShouldResetPlot(false)
     }
-  }, [ticksLoading, midPrice])
+  }, [ticksLoading, midPrice, poolIndex])
 
   const autoZoomHandler = (left: number, right: number, canZoomCloser: boolean = false) => {
     const leftX = calcPrice(left, isXtoY, xDecimal, yDecimal)
