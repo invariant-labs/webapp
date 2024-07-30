@@ -137,8 +137,8 @@ export const WrappedSwap = () => {
       return
     }
 
-    const id = tokensDict[tokenFrom.toString()].coingeckoId ?? ''
-    if (id.length) {
+    const id = tokensDict[tokenFrom.toString()].assetAddress.toString() ?? ''
+    if (id) {
       setPriceFromLoading(true)
       getJupTokenPrice(id)
         .then(data => setTokenFromPriceData(data))
@@ -156,8 +156,8 @@ export const WrappedSwap = () => {
       return
     }
 
-    const id = tokensDict[tokenTo.toString()].coingeckoId ?? ''
-    if (id.length) {
+    const id = tokensDict[tokenTo.toString()].assetAddress.toString() ?? ''
+    if (id) {
       setPriceToLoading(true)
       getJupTokenPrice(id)
         .then(data => setTokenToPriceData(data))

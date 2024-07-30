@@ -8,6 +8,7 @@ import useStyles from './style'
 
 export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue' | 'liqValue'> {
   value: number
+  price?: number
 }
 
 export const BoxInfo: React.FC<{
@@ -135,10 +136,10 @@ export const BoxInfo: React.FC<{
               <Typography className={classes.tokenBalance}>
                 Balance: {tokenA.balance} {tokenA.name}
               </Typography>
-              {typeof tokenA.usdValue !== 'undefined' ? (
+              {typeof tokenA.usdValue !== 'undefined' && tokenA.price ? (
                 <Typography className={classes.tokenUSDValue}>
-                  ~${formatNumbers(usdThresholds)(tokenA.usdValue.toString())}
-                  {showPrefix(tokenA.usdValue)}
+                  ~${formatNumbers(usdThresholds)((tokenA.value * tokenA.price).toString())}
+                  {showPrefix(tokenA.value * tokenA.price)}
                 </Typography>
               ) : null}
             </Grid>
@@ -165,10 +166,10 @@ export const BoxInfo: React.FC<{
               <Typography className={classes.tokenBalance}>
                 Balance: {tokenB.balance} {tokenB.name}
               </Typography>
-              {typeof tokenB.usdValue !== 'undefined' ? (
+              {typeof tokenB.usdValue !== 'undefined' && tokenB.price ? (
                 <Typography className={classes.tokenUSDValue}>
-                  ~${formatNumbers(usdThresholds)(tokenB.usdValue.toString())}
-                  {showPrefix(tokenB.usdValue)}
+                  ~${formatNumbers(usdThresholds)((tokenB.value * tokenB.price).toString())}
+                  {showPrefix(tokenB.value * tokenB.price)}
                 </Typography>
               ) : null}
             </Grid>

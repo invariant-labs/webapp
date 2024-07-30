@@ -29,7 +29,6 @@ interface IProps {
   limit?: number
   initialHideUnknownTokensValue: boolean
   onHideUnknownTokensChange: (val: boolean) => void
-  percentageChange?: number
   tokenPrice?: number
   priceLoading?: boolean
 }
@@ -54,7 +53,6 @@ export const AmountInput: React.FC<IProps> = ({
   limit,
   initialHideUnknownTokensValue,
   onHideUnknownTokensChange,
-  percentageChange = 0,
   tokenPrice,
   priceLoading = false
 }) => {
@@ -217,19 +215,9 @@ export const AmountInput: React.FC<IProps> = ({
             priceLoading ? (
               <img src={loadingAnimation} className={classes.loading} />
             ) : tokenPrice ? (
-              <>
-                <Typography
-                  className={classNames(
-                    classes.percentage,
-                    percentageChange > 0 ? classes.percentagePositive : classes.percentageNegative
-                  )}>
-                  {percentageChange > 0 ? '+' : ''}
-                  {percentageChange.toFixed(2)}%
-                </Typography>
-                <Typography className={classes.caption2}>
-                  ~${formatNumbers(usdThresholds)(usdBalance.toString()) + showPrefix(usdBalance)}
-                </Typography>
-              </>
+              <Typography className={classes.caption2}>
+                ~${formatNumbers(usdThresholds)(usdBalance.toString()) + showPrefix(usdBalance)}
+              </Typography>
             ) : (
               <Tooltip
                 title='Cannot fetch price of token'

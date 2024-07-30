@@ -186,7 +186,7 @@ export const WrappedBonds: React.FC = () => {
       setQuoteTokenPriceData(undefined)
     }
 
-    const bondId = bond.bondToken.coingeckoId ?? ''
+    const bondId = bond.bondToken.assetAddress.toString() ?? ''
     if (bondId.length) {
       setBondPriceLoading(true)
       getJupTokenPrice(bondId)

@@ -176,13 +176,13 @@ export function* getFarmsApy() {
               await marketProgram.getAllPoolLiquidityInTokens(incentive.pool)
           }
 
-          const xId = allTokens?.[poolData.tokenX.toString()]?.coingeckoId ?? ''
+          const xId = allTokens?.[poolData.tokenX.toString()]?.address.toString() ?? ''
 
           if (typeof prices[poolData.tokenX.toString()] === 'undefined' && !!xId.length) {
             prices[poolData.tokenX.toString()] = (await getJupTokenPrice(xId)).price
           }
 
-          const rewardId = allTokens?.[incentive.rewardToken.toString()]?.coingeckoId ?? ''
+          const rewardId = allTokens?.[incentive.rewardToken.toString()]?.address.toString() ?? ''
 
           if (
             typeof prices[incentive.rewardToken.toString()] === 'undefined' &&
@@ -332,7 +332,7 @@ export function* getStakesApy() {
         dailyReward = 0
       } else {
         try {
-          const xId = allTokens?.[poolData.tokenX.toString()]?.coingeckoId ?? ''
+          const xId = allTokens?.[poolData.tokenX.toString()]?.address.toString() ?? ''
 
           if (typeof prices[poolData.tokenX.toString()] === 'undefined' && !!xId.length) {
             prices[poolData.tokenX.toString()] = (await getJupTokenPrice(xId)).price
@@ -583,14 +583,14 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
           let xPrice = 0
           let rewardPrice = 0
 
-          const xId = allTokens?.[positionData.poolData.tokenX.toString()]?.coingeckoId ?? ''
+          const xId = allTokens?.[positionData.poolData.tokenX.toString()]?.address.toString() ?? ''
 
           if (xId.length) {
             const data = yield* call(getJupTokenPrice, xId)
             xPrice = data.price
           }
 
-          const rewardId = allTokens?.[farmData.rewardToken.toString()]?.coingeckoId ?? ''
+          const rewardId = allTokens?.[farmData.rewardToken.toString()]?.address.toString() ?? ''
 
           if (rewardId.length) {
             const data = yield* call(getJupTokenPrice, rewardId)
