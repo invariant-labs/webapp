@@ -5,7 +5,7 @@ import Slippage from '@components/Modals/Slippage/Slippage'
 import { WRAPPED_SOL_ADDRESS, WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT } from '@consts/static'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import {
-  CoingeckoPriceData,
+  TokenPriceData,
   findPairs,
   handleSimulate,
   printBN,
@@ -91,8 +91,8 @@ export interface ISwap {
   commonTokens: PublicKey[]
   initialHideUnknownTokensValue: boolean
   onHideUnknownTokensChange: (val: boolean) => void
-  tokenFromPriceData?: CoingeckoPriceData
-  tokenToPriceData?: CoingeckoPriceData
+  tokenFromPriceData?: TokenPriceData
+  tokenToPriceData?: TokenPriceData
   priceFromLoading?: boolean
   priceToLoading?: boolean
   onSlippageChange: (slippage: string) => void
@@ -528,7 +528,7 @@ export const Swap: React.FC<ISwap> = ({
             initialHideUnknownTokensValue={initialHideUnknownTokensValue}
             onHideUnknownTokensChange={onHideUnknownTokensChange}
             tokenPrice={tokenFromPriceData?.price}
-            percentageChange={tokenFromPriceData?.priceChange}
+            // percentageChange={tokenFromPriceData?.priceChange}
             priceLoading={priceFromLoading}
           />
         </Box>
@@ -605,7 +605,7 @@ export const Swap: React.FC<ISwap> = ({
             initialHideUnknownTokensValue={initialHideUnknownTokensValue}
             onHideUnknownTokensChange={onHideUnknownTokensChange}
             tokenPrice={tokenToPriceData?.price}
-            percentageChange={tokenToPriceData?.priceChange}
+            // percentageChange={tokenToPriceData?.priceChange}
             priceLoading={priceToLoading}
           />
         </Box>
