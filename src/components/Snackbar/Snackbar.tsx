@@ -17,11 +17,9 @@ export const Snackbar: React.FC<ISnackbarProps> = ({ children, maxSnack }) => {
         variantError: classes.error,
         variantWarning: classes.warning,
         variantInfo: classes.info
-      }}
-    >
+      }}>
       {children}
     </SnackbarProvider>
-
   )
 }
 export default Snackbar
