@@ -5,11 +5,13 @@ import icons from '@static/icons'
 import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 import classNames from 'classnames'
 import useStyles from './style'
+
 export interface ISelectNetwork {
   networkType: NetworkType
   rpc: string
   rpcName?: string
 }
+
 export interface ISelectNetworkModal {
   networks: ISelectNetwork[]
   open: boolean
@@ -18,6 +20,7 @@ export interface ISelectNetworkModal {
   handleClose: () => void
   activeNetwork: NetworkType
 }
+
 export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
   networks,
   anchorEl,
@@ -27,6 +30,7 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
   activeNetwork
 }) => {
   const classes = useStyles()
+
   return (
     <Popover
       open={open}
@@ -60,20 +64,19 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
                 src={icons[`${networkType}Icon`]}
                 alt={`${networkType} icon`}
               />
-
               <Typography className={classes.name}>{networkType}</Typography>
               <DotIcon className={classes.dotIcon} />
             </Grid>
           ))}
           <a href='https://eclipse.invariant.app' style={{ textDecoration: 'none' }}>
             <Grid className={classes.listItem} item key='networks-eclipse'>
-              <img className={classes.icon} src={icons.TestnetIcon} alt='testnet'/>
+              <img className={classes.icon} src={icons.TestnetIcon} alt='testnet' />
               <Typography className={classes.name}>Eclipse</Typography>
             </Grid>
           </a>
           <a href='https://azero.invariant.app' style={{ textDecoration: 'none' }}>
             <Grid className={classes.listItem} item key='networks-aleph-zero'>
-              <img className={classes.icon} src={icons.TestnetIcon} alt='testnet'/>
+              <img className={classes.icon} src={icons.TestnetIcon} alt='testnet' />
               <Typography className={classes.name}>Aleph Zero</Typography>
             </Grid>
           </a>
@@ -82,4 +85,5 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
     </Popover>
   )
 }
+
 export default SelectNetwork
