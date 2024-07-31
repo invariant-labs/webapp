@@ -1,7 +1,6 @@
 import { MOCK_TOKENS } from '@invariant-labs/sdk'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
-import { ISnackbar } from '@reducers/snackbars'
 import { PublicKey } from '@solana/web3.js'
 
 declare global {
@@ -152,13 +151,13 @@ enum SolanaNetworks {
   DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',
   MAIN = 'https://api.mainnet-beta.solana.com',
+  MAIN_HELIUS = 'https://mainnet.helius-rpc.com/?api-key=ef843b40-9876-4a02-a181-a1e6d3e61b4c',
   MAIN_QUICKNODE = 'https://tame-ancient-mountain.solana-mainnet.quiknode.pro/6a9a95bf7bbb108aea620e7ee4c1fd5e1b67cc62/',
   MAIN_SERUM = 'https://solana-api.projectserum.com',
   MAIN_FIGMENT = 'https://solana--mainnet.datahub.figment.io/apikey/182e93d87a1f1d335c9d74d6c7371388',
   MAIN_GENESYSGO = 'https://ssc-dao.genesysgo.net',
   MAIN_ALCHEMY = 'https://solana-mainnet.g.alchemy.com/v2/YfX5E62sdlEoytQ9ZEOA_5KIE3QbwUUD',
   MAIN_HELLOMOON = 'https://global.rpc.hellomoon.io/e8a06073-325d-4183-bcad-d69e3e3fc739',
-  MAIN_HELIUS = 'https://mainnet.helius-rpc.com/?api-key=ef843b40-9876-4a02-a181-a1e6d3e61b4c',
   LOCAL = 'http://127.0.0.1:8899'
 }
 
@@ -361,18 +360,3 @@ export const ALL_FEE_TIERS_DATA = FEE_TIERS.map((tier, index) => ({
 export { DEFAULT_PUBLICKEY, MAX_U64, NetworkType, SolanaNetworks }
 
 export const POSITIONS_PER_PAGE = 5
-
-export const SIGNING_SNACKBAR_CONFIG: Omit<ISnackbar, 'open'> = {
-  message: 'Signing transactions',
-  variant: 'pending',
-  persist: true
-}
-
-export type PositionOpeningMethod = 'range' | 'concentration'
-
-export const STABLECOIN_ADDRESSES: string[] = [
-  'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-  'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'
-] // USDC, USDT
-
-export const TIMEOUT_ERROR_MESSAGE = 'Transaction timed out. Check the details to see if it passed.'

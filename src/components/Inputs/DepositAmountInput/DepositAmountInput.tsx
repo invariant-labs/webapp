@@ -236,7 +236,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
                     tooltip: classes.tooltip
                   }}>
                   <Typography className={classes.noData}>
-                    <span className={classes.noDataIcon}>?</span>No data
+                    <div className={classes.noDataIcon}>?</div>No data
                   </Typography>
                 </Tooltip>
               )

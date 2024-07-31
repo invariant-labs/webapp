@@ -1,9 +1,9 @@
-import { NetworkType } from '@consts/static'
-import { Grid, Popover, Typography } from '@material-ui/core'
-import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
-import icons from '@static/icons'
-import classNames from 'classnames'
 import React from 'react'
+import { Typography, Popover, Grid } from '@material-ui/core'
+import { NetworkType } from '@consts/static'
+import icons from '@static/icons'
+import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
+import classNames from 'classnames'
 import useStyles from './style'
 export interface ISelectNetwork {
   networkType: NetworkType
@@ -69,12 +69,6 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
             <Grid className={classes.listItem} item key='networks-eclipse'>
               <img className={classes.icon} src={icons.MainnetIcon} />
               <Typography className={classes.name}>Eclipse</Typography>
-            </Grid>
-          </a>
-          <a href='https://azero.invariant.app' style={{ textDecoration: 'none' }}>
-            <Grid className={classes.listItem} item key='networks-aleph-zero'>
-              <img className={classes.icon} src={icons.MainnetIcon} />
-              <Typography className={classes.name}>Aleph Zero</Typography>
             </Grid>
           </a>
         </Grid>

@@ -96,9 +96,6 @@ storiesOf('positionsList/list', module)
           }}
           searchValue={''}
           searchSetValue={() => {}}
-          handleRefresh={() => {}}
-          initialPage={1}
-          setLastPage={() => {}}
         />
       </Grid>
     )

@@ -24,6 +24,7 @@ interface IProps {
   name?: string
   symbol?: string
   price?: number
+  priceChange?: number
   volume?: number
   TVL?: number
   sortType?: SortType
@@ -48,6 +49,7 @@ const TokenListItem: React.FC<IProps> = ({
 
   const isXDown = useMediaQuery(theme.breakpoints.down('sm'))
   const hideName = useMediaQuery(theme.breakpoints.down('xs'))
+
   return (
     <Grid>
       {displayType === 'tokens' ? (

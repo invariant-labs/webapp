@@ -2,13 +2,13 @@ import { actions, PoolStatsData, TimeData, TokenStatsData } from '@reducers/stat
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { network, rpcAddress } from '@selectors/solanaConnection'
 import {
-  getJupPricesData,
+  getCoingeckoPricesData,
   getFullNewTokensData,
+  getJupPricesData,
   getNetworkStats,
   getPoolsAPY,
   getPoolsFromAdresses,
   printBN,
-  getCoingeckoPricesData,
   TokenPriceData
 } from '@consts/utils'
 import { tokens } from '@selectors/pools'

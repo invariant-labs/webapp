@@ -745,6 +745,7 @@ export interface JupApiPriceData {
 export interface CoingeckoApiPriceData {
   id: string
   current_price: number
+  price_change_percentage_24h: number
 }
 
 export interface TokenPriceData {
@@ -1057,18 +1058,28 @@ export const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThresh
   }
 ]
 
-export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
-  const response = await axios.get(`https://price.jup.ag/v4/price?ids=${id}&vsToken=USDC`)
-  return {
-    price: response.data.data[id].price ?? 0
-  }
+export const getCoingeckoTokenPrice = async (id: string): Promise<TokenPriceData> => {
+  return await axios
+    .get<CoingeckoApiPriceData[]>(
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${id}`
+    )
+    .then(res => {
+      return {
+        price: res.data[0].current_price ?? 0
+      }
+    })
 }
 
-export const getJupTokensRatioPrice = async (id: string, vsId: string): Promise<TokenPriceData> => {
-  const response = await axios.get(`https://price.jup.ag/v4/price?ids=${id}&vsToken=${vsId}`)
-  return {
-    price: response.data.data[id].price ?? 0
-  }
+export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
+  return await axios
+    .get<{ data: Record<string, JupApiPriceData> }>(
+      `https://price.jup.ag/v4/price?ids=${id}&vsToken=USDC`
+    )
+    .then(res => {
+      return {
+        price: res.data.data[id].price ?? 0
+      }
+    })
 }
 
 export const getTicksList = async (
@@ -1138,5 +1149,3 @@ const PRIORITY_FEE_DENOMINATOR = 9
 export const solToPriorityFee = (sol: number) => {
   return Math.round((sol * 5 * 10 ** PRIORITY_FEE_DENOMINATOR) / 10)
 }
-
-export const createLoaderKey = () => (new Date().getMilliseconds() + Math.random()).toString()

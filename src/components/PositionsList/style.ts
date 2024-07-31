@@ -125,28 +125,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   placeholder: {
     margin: 'auto'
-  },
-  refreshIconBtn: {
-    padding: 0,
-    margin: 0,
-    minWidth: 'auto',
-    background: 'none',
-    marginRight: 7,
-    '&:hover': {
-      background: 'none'
-    },
-    '&:disabled': {
-      opacity: 0.5
-    }
-  },
-  refreshIcon: {
-    width: 26,
-    height: 21,
-    cursor: 'pointer',
-    transition: 'filter 100ms',
-    '&:hover': {
-      filter: 'brightness(1.5)'
-    }
   }
 }))
 
