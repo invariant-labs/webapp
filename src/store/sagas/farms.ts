@@ -41,7 +41,7 @@ import { getConnection } from './connection'
 import { WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import {
-  getCoingeckoTokenPrice,
+  getJupTokenPrice,
   getFullNewTokensData,
   getIncentivesRewardData,
   getPoolsAPY,
@@ -176,21 +176,19 @@ export function* getFarmsApy() {
               await marketProgram.getAllPoolLiquidityInTokens(incentive.pool)
           }
 
-          const xId = allTokens?.[poolData.tokenX.toString()]?.coingeckoId ?? ''
+          const xId = allTokens?.[poolData.tokenX.toString()]?.address.toString() ?? ''
 
           if (typeof prices[poolData.tokenX.toString()] === 'undefined' && !!xId.length) {
-            prices[poolData.tokenX.toString()] = (await getCoingeckoTokenPrice(xId)).price
+            prices[poolData.tokenX.toString()] = (await getJupTokenPrice(xId)).price
           }
 
-          const rewardId = allTokens?.[incentive.rewardToken.toString()]?.coingeckoId ?? ''
+          const rewardId = allTokens?.[incentive.rewardToken.toString()]?.address.toString() ?? ''
 
           if (
             typeof prices[incentive.rewardToken.toString()] === 'undefined' &&
             !!rewardId.length
           ) {
-            prices[incentive.rewardToken.toString()] = (
-              await getCoingeckoTokenPrice(rewardId)
-            ).price
+            prices[incentive.rewardToken.toString()] = (await getJupTokenPrice(rewardId)).price
           }
 
           apy = rewardsAPY({
@@ -334,16 +332,16 @@ export function* getStakesApy() {
         dailyReward = 0
       } else {
         try {
-          const xId = allTokens?.[poolData.tokenX.toString()]?.coingeckoId ?? ''
+          const xId = allTokens?.[poolData.tokenX.toString()]?.address.toString() ?? ''
 
           if (typeof prices[poolData.tokenX.toString()] === 'undefined' && !!xId.length) {
-            prices[poolData.tokenX.toString()] = (await getCoingeckoTokenPrice(xId)).price
+            prices[poolData.tokenX.toString()] = (await getJupTokenPrice(xId)).price
           }
 
           const rewardId = allTokens?.[farmData.rewardToken.toString()]?.coingeckoId ?? ''
 
           if (typeof prices[farmData.rewardToken.toString()] === 'undefined' && !!rewardId.length) {
-            prices[farmData.rewardToken.toString()] = (await getCoingeckoTokenPrice(rewardId)).price
+            prices[farmData.rewardToken.toString()] = (await getJupTokenPrice(rewardId)).price
           }
 
           apy = positionsRewardAPY({
@@ -585,17 +583,17 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
           let xPrice = 0
           let rewardPrice = 0
 
-          const xId = allTokens?.[positionData.poolData.tokenX.toString()]?.coingeckoId ?? ''
+          const xId = allTokens?.[positionData.poolData.tokenX.toString()]?.address.toString() ?? ''
 
           if (xId.length) {
-            const data = yield* call(getCoingeckoTokenPrice, xId)
+            const data = yield* call(getJupTokenPrice, xId)
             xPrice = data.price
           }
 
-          const rewardId = allTokens?.[farmData.rewardToken.toString()]?.coingeckoId ?? ''
+          const rewardId = allTokens?.[farmData.rewardToken.toString()]?.address.toString() ?? ''
 
           if (rewardId.length) {
-            const data = yield* call(getCoingeckoTokenPrice, rewardId)
+            const data = yield* call(getJupTokenPrice, rewardId)
             rewardPrice = data.price
           }
 

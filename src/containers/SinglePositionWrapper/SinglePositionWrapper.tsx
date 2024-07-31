@@ -1,11 +1,11 @@
 import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import {
-  CoingeckoPriceData,
+  TokenPriceData,
   calcPrice,
   calcYPerXPrice,
   createPlaceholderLiquidityPlot,
-  getCoingeckoTokenPrice,
+  getJupTokenPrice,
   printBN
 } from '@consts/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
@@ -266,8 +266,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     localStorage.setItem('IS_PLOT_DISCRETE', val ? 'true' : 'false')
   }
 
-  const [tokenXPriceData, setTokenXPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
-  const [tokenYPriceData, setTokenYPriceData] = useState<CoingeckoPriceData | undefined>(undefined)
+  const [tokenXPriceData, setTokenXPriceData] = useState<TokenPriceData | undefined>(undefined)
+  const [tokenYPriceData, setTokenYPriceData] = useState<TokenPriceData | undefined>(undefined)
 
   const currentVolumeRange = useMemo(() => {
     if (!position?.poolData.address) {
@@ -316,18 +316,18 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       return
     }
 
-    const xId = position.tokenX.coingeckoId ?? ''
+    const xId = position.tokenX.assetAddress.toString() ?? ''
     if (xId.length) {
-      getCoingeckoTokenPrice(xId)
+      getJupTokenPrice(xId)
         .then(data => setTokenXPriceData(data))
         .catch(() => setTokenXPriceData(undefined))
     } else {
       setTokenXPriceData(undefined)
     }
 
-    const yId = position.tokenY.coingeckoId ?? ''
+    const yId = position.tokenY.assetAddress.toString() ?? ''
     if (yId.length) {
-      getCoingeckoTokenPrice(yId)
+      getJupTokenPrice(yId)
         .then(data => setTokenYPriceData(data))
         .catch(() => setTokenYPriceData(undefined))
     } else {
@@ -390,6 +390,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             ? undefined
             : tokenXPriceData.price * +printBN(position.tokenX.balance, position.tokenX.decimals)
       }}
+      tokenXPriceData={tokenXPriceData}
       tokenY={{
         name: position.tokenY.symbol,
         icon: position.tokenY.logoURI,
