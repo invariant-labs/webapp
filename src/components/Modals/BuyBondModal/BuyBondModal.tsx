@@ -9,7 +9,7 @@ import {
   showPrefix,
   trimLeadingZeros,
   getScaleFromString,
-  TokenPriceData
+  CoingeckoPriceData
 } from '@consts/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Input, Popover, Typography } from '@material-ui/core'
@@ -31,8 +31,8 @@ interface IBuyBondModal {
   onBuy: (amount: BN, slippage: number) => void
   onAmountChange: (amount: BN, byAmountBond: boolean) => void
   progress: ProgressState
-  quoteTokenPriceData?: TokenPriceData
-  bondTokenPriceData?: TokenPriceData
+  quoteTokenPriceData?: CoingeckoPriceData
+  bondTokenPriceData?: CoingeckoPriceData
   quotePriceLoading?: boolean
   bondPriceLoading?: boolean
 }
@@ -296,7 +296,7 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
             )
           }}
           tokenPrice={quoteTokenPriceData?.price}
-          // percentageChange={quoteTokenPriceData?.priceChange}
+          percentageChange={quoteTokenPriceData?.priceChange}
           priceLoading={quotePriceLoading}
         />
         <DepositAmountInput
@@ -323,7 +323,7 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
             )
           }}
           tokenPrice={bondTokenPriceData?.price}
-          // percentageChange={bondTokenPriceData?.priceChange}
+          percentageChange={bondTokenPriceData?.priceChange}
           priceLoading={bondPriceLoading}
         />
         <AnimatedButton

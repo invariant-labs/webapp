@@ -2,14 +2,12 @@ import { actions, PoolStatsData, TimeData, TokenStatsData } from '@reducers/stat
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { network, rpcAddress } from '@selectors/solanaConnection'
 import {
-  getJupPricesData,
+  getCoingeckoPricesData,
   getFullNewTokensData,
   getNetworkStats,
   getPoolsAPY,
   getPoolsFromAdresses,
-  printBN,
-  getCoingeckoPricesData,
-  TokenPriceData
+  printBN
 } from '@consts/utils'
 import { tokens } from '@selectors/pools'
 import { PublicKey } from '@solana/web3.js'
@@ -57,28 +55,16 @@ export function* getStats(): Generator {
     yield* put(poolsActions.addTokens(newTokens))
     allTokens = yield* select(tokens)
 
-    const preparedTokens: Record<string, Required<Token>> = {}
+    const coingeckoTokens: Record<string, Required<Token>> = {}
     Object.entries(allTokens).forEach(([key, val]) => {
       if (typeof val.coingeckoId !== 'undefined') {
-        preparedTokens[key] = val as Required<Token>
+        coingeckoTokens[key] = val as Required<Token>
       }
     })
-
-    let tokensPricesData: Record<string, TokenPriceData> = {}
-    let fromJupiter = true
-
-    try {
-      tokensPricesData = yield* call(
-        getJupPricesData,
-        Object.values(preparedTokens).map(token => token.address.toString())
-      )
-    } catch (e) {
-      fromJupiter = false
-      tokensPricesData = yield* call(
-        getCoingeckoPricesData,
-        Object.values(preparedTokens).map(token => token.coingeckoId)
-      )
-    }
+    const coingeckoPricesData = yield* call(
+      getCoingeckoPricesData,
+      Object.values(coingeckoTokens).map(token => token.coingeckoId)
+    )
 
     const volume24 = {
       value: 0,
@@ -111,18 +97,16 @@ export function* getStats(): Generator {
         return
       }
 
-      const tokenXId = fromJupiter
-        ? preparedTokens?.[poolsDataObject[address].tokenX.toString()]?.address.toString() ?? ''
-        : preparedTokens?.[poolsDataObject[address].tokenX.toString()]?.coingeckoId ?? ''
-
-      const tokenYId = fromJupiter
-        ? preparedTokens?.[poolsDataObject[address].tokenY.toString()]?.address.toString() ?? ''
-        : preparedTokens?.[poolsDataObject[address].tokenY.toString()]?.coingeckoId ?? ''
+      const coingeckoXId =
+        coingeckoTokens?.[poolsDataObject[address].tokenX.toString()]?.coingeckoId ?? ''
+      const coingeckoYId =
+        coingeckoTokens?.[poolsDataObject[address].tokenY.toString()]?.coingeckoId ?? ''
 
       if (!tokensDataObject[poolsDataObject[address].tokenX.toString()]) {
         tokensDataObject[poolsDataObject[address].tokenX.toString()] = {
           address: poolsDataObject[address].tokenX,
-          price: tokensPricesData?.[tokenXId]?.price ?? 0,
+          price: coingeckoPricesData?.[coingeckoXId]?.price ?? 0,
+          priceChange: coingeckoPricesData?.[coingeckoXId]?.priceChange ?? 0,
           volume24: 0,
           tvl: 0
         }
@@ -131,7 +115,8 @@ export function* getStats(): Generator {
       if (!tokensDataObject[poolsDataObject[address].tokenY.toString()]) {
         tokensDataObject[poolsDataObject[address].tokenY.toString()] = {
           address: poolsDataObject[address].tokenY,
-          price: tokensPricesData?.[tokenYId]?.price ?? 0,
+          price: coingeckoPricesData?.[coingeckoYId]?.price ?? 0,
+          priceChange: coingeckoPricesData?.[coingeckoYId]?.priceChange ?? 0,
           volume24: 0,
           tvl: 0
         }

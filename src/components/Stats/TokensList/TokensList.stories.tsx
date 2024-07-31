@@ -10,6 +10,7 @@ storiesOf('stats/TokenList', module).add('Item', () => {
         name: 'Wrapped SOL',
         symbol: 'SOL',
         price: 123.321321452,
+        priceChange: -2.33,
         volume: 421323423.23,
         TVL: 234413532.43
       },
@@ -18,6 +19,7 @@ storiesOf('stats/TokenList', module).add('Item', () => {
         name: 'USDT',
         symbol: 'USDT',
         price: 1.321452,
+        priceChange: 2.33,
         volume: 421323423.23,
         TVL: 234413532.43
       },
@@ -26,6 +28,7 @@ storiesOf('stats/TokenList', module).add('Item', () => {
         name: 'USD Coin',
         symbol: 'USDC',
         price: 1.0,
+        priceChange: 2.33,
         volume: 421323423.23,
         TVL: 234413532.43
       }

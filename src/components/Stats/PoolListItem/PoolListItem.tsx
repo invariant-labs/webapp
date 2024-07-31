@@ -119,7 +119,7 @@ const PoolListItem: React.FC<IProps> = ({
                 classes={{
                   tooltip: classes.liquidityTooltip
                 }}>
-                <span className={classes.activeLiquidityIcon}>i</span>
+                <div className={classes.activeLiquidityIcon}>i</div>
               </Tooltip>
             </Typography>
           ) : null}

@@ -14,7 +14,12 @@ import { blurContent, unblurContent } from '@consts/uiUtils'
 import { USDC_DEV } from '@consts/static'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { calculateAmountToClaim, getPriceAfterSlippage } from '@invariant-labs/bonds-sdk/lib/math'
-import { calculateBondPrice, TokenPriceData, getJupTokenPrice, printBN } from '@consts/utils'
+import {
+  calculateBondPrice,
+  CoingeckoPriceData,
+  getCoingeckoTokenPrice,
+  printBN
+} from '@consts/utils'
 import { fromFee } from '@invariant-labs/sdk/lib/utils'
 import useStyles from './styles'
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
@@ -159,11 +164,11 @@ export const WrappedBonds: React.FC = () => {
     }
   }, [allBonds])
 
-  const [quoteTokenPriceData, setQuoteTokenPriceData] = useState<TokenPriceData | undefined>(
+  const [quoteTokenPriceData, setQuoteTokenPriceData] = useState<CoingeckoPriceData | undefined>(
     undefined
   )
   const [quotePriceLoading, setQuotePriceLoading] = useState(false)
-  const [bondTokenPriceData, setBondTokenPriceData] = useState<TokenPriceData | undefined>(
+  const [bondTokenPriceData, setBondTokenPriceData] = useState<CoingeckoPriceData | undefined>(
     undefined
   )
   const [bondPriceLoading, setBondPriceLoading] = useState(false)
@@ -175,10 +180,10 @@ export const WrappedBonds: React.FC = () => {
 
     const bond = bondsData[modalBondIndex]
 
-    const quoteId = bond.quoteToken.assetAddress.toString() ?? ''
+    const quoteId = bond.quoteToken.coingeckoId ?? ''
     if (quoteId.length) {
       setQuotePriceLoading(true)
-      getJupTokenPrice(quoteId)
+      getCoingeckoTokenPrice(quoteId)
         .then(data => setQuoteTokenPriceData(data))
         .catch(() => setQuoteTokenPriceData(undefined))
         .finally(() => setQuotePriceLoading(false))
@@ -186,10 +191,10 @@ export const WrappedBonds: React.FC = () => {
       setQuoteTokenPriceData(undefined)
     }
 
-    const bondId = bond.bondToken.assetAddress.toString() ?? ''
+    const bondId = bond.bondToken.coingeckoId ?? ''
     if (bondId.length) {
       setBondPriceLoading(true)
-      getJupTokenPrice(bondId)
+      getCoingeckoTokenPrice(bondId)
         .then(data => setBondTokenPriceData(data))
         .catch(() => setBondTokenPriceData(undefined))
         .finally(() => setBondPriceLoading(false))

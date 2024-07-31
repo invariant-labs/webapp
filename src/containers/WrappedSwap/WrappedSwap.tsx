@@ -3,8 +3,8 @@ import { Swap } from '@components/Swap/Swap'
 import { commonTokensForNetworks } from '@consts/static'
 import {
   addNewTokenToLocalStorage,
-  TokenPriceData,
-  getJupTokenPrice,
+  CoingeckoPriceData,
+  getCoingeckoTokenPrice,
   getNewTokenOrThrow
 } from '@consts/utils'
 import { actions as poolsActions } from '@reducers/pools'
@@ -18,7 +18,7 @@ import {
   tickMaps
 } from '@selectors/pools'
 import { network } from '@selectors/solanaConnection'
-import { status, swapTokens, swapTokensDict, balanceLoading } from '@selectors/solanaWallet'
+import { status, swapTokens, swapTokensDict } from '@selectors/solanaWallet'
 import { swap as swapPool } from '@selectors/swap'
 import { PublicKey } from '@solana/web3.js'
 import { getCurrentSolanaConnection } from '@web3/connection'
@@ -38,7 +38,6 @@ export const WrappedSwap = () => {
   const allPools = useSelector(poolsArraySortedByFees)
   const tokensList = useSelector(swapTokens)
   const tokensDict = useSelector(swapTokensDict)
-  const isBalanceLoading = useSelector(balanceLoading)
   const { success, inProgress } = useSelector(swapPool)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
   const networkType = useSelector(network)
@@ -48,24 +47,16 @@ export const WrappedSwap = () => {
   const [tokenTo, setTokenTo] = useState<PublicKey | null>(null)
 
   useEffect(() => {
-    let timerId1: any
-    let timerId2: any
-
     if (!inProgress && progress === 'progress') {
       setProgress(success ? 'approvedWithSuccess' : 'approvedWithFail')
 
-      timerId1 = setTimeout(() => {
+      setTimeout(() => {
         setProgress(success ? 'success' : 'failed')
       }, 1500)
 
-      timerId2 = setTimeout(() => {
+      setTimeout(() => {
         setProgress('none')
       }, 3000)
-    }
-
-    return () => {
-      clearTimeout(timerId1)
-      clearTimeout(timerId2)
     }
   }, [success, inProgress])
 
@@ -137,7 +128,7 @@ export const WrappedSwap = () => {
     localStorage.setItem('HIDE_UNKNOWN_TOKENS', val ? 'true' : 'false')
   }
 
-  const [tokenFromPriceData, setTokenFromPriceData] = useState<TokenPriceData | undefined>(
+  const [tokenFromPriceData, setTokenFromPriceData] = useState<CoingeckoPriceData | undefined>(
     undefined
   )
   const [priceFromLoading, setPriceFromLoading] = useState(false)
@@ -146,10 +137,10 @@ export const WrappedSwap = () => {
       return
     }
 
-    const id = tokensDict[tokenFrom.toString()].assetAddress.toString() ?? ''
-    if (id) {
+    const id = tokensDict[tokenFrom.toString()].coingeckoId ?? ''
+    if (id.length) {
       setPriceFromLoading(true)
-      getJupTokenPrice(id)
+      getCoingeckoTokenPrice(id)
         .then(data => setTokenFromPriceData(data))
         .catch(() => setTokenFromPriceData(undefined))
         .finally(() => setPriceFromLoading(false))
@@ -158,17 +149,19 @@ export const WrappedSwap = () => {
     }
   }, [tokenFrom])
 
-  const [tokenToPriceData, setTokenToPriceData] = useState<TokenPriceData | undefined>(undefined)
+  const [tokenToPriceData, setTokenToPriceData] = useState<CoingeckoPriceData | undefined>(
+    undefined
+  )
   const [priceToLoading, setPriceToLoading] = useState(false)
   useEffect(() => {
     if (tokenTo === null) {
       return
     }
 
-    const id = tokensDict[tokenTo.toString()].assetAddress.toString() ?? ''
-    if (id) {
+    const id = tokensDict[tokenTo.toString()].coingeckoId ?? ''
+    if (id.length) {
       setPriceToLoading(true)
-      getJupTokenPrice(id)
+      getCoingeckoTokenPrice(id)
         .then(data => setTokenToPriceData(data))
         .catch(() => setTokenToPriceData(undefined))
         .finally(() => setPriceToLoading(false))
@@ -183,47 +176,21 @@ export const WrappedSwap = () => {
     localStorage.setItem('INVARIANT_SWAP_SLIPPAGE', slippage)
   }
 
-  const onRefresh = (tokenFromIndex: number | null, tokenToIndex: number | null) => {
-    dispatch(walletActions.getBalance())
-
-    if (tokenFromIndex === null || tokenToIndex == null || tokenFrom === null || tokenTo === null) {
-      return
-    }
-
-    dispatch(
-      poolsActions.getAllPoolsForPairData({
-        first: tokensList[tokenFromIndex].address,
-        second: tokensList[tokenToIndex].address
-      })
-    )
-
-    const idFrom = tokensDict[tokenFrom.toString()].assetAddress.toString() ?? ''
-    if (idFrom) {
-      setPriceFromLoading(true)
-      getJupTokenPrice(idFrom)
-        .then(data => setTokenFromPriceData(data))
-        .catch(() => setTokenFromPriceData(undefined))
-        .finally(() => setPriceFromLoading(false))
-    } else {
-      setTokenFromPriceData(undefined)
-    }
-
-    const idTo = tokensDict[tokenTo.toString()].assetAddress.toString() ?? ''
-    if (idTo) {
-      setPriceToLoading(true)
-      getJupTokenPrice(idTo)
-        .then(data => setTokenToPriceData(data))
-        .catch(() => setTokenToPriceData(undefined))
-        .finally(() => setPriceToLoading(false))
-    } else {
-      setTokenToPriceData(undefined)
-    }
-  }
-
   return (
     <Swap
       isFetchingNewPool={isFetchingNewPool}
-      onRefresh={onRefresh}
+      onRefresh={(tokenFromIndex, tokenToIndex) => {
+        if (tokenFromIndex === null || tokenToIndex == null) {
+          return
+        }
+
+        dispatch(
+          poolsActions.getAllPoolsForPairData({
+            first: tokensList[tokenFromIndex].address,
+            second: tokensList[tokenToIndex].address
+          })
+        )
+      }}
       onSwap={(
         slippage,
         estimatedPriceAfterSwap,
@@ -288,11 +255,10 @@ export const WrappedSwap = () => {
       onHideUnknownTokensChange={setHideUnknownTokensValue}
       tokenFromPriceData={tokenFromPriceData}
       tokenToPriceData={tokenToPriceData}
-      priceFromLoading={priceFromLoading || isBalanceLoading}
-      priceToLoading={priceToLoading || isBalanceLoading}
+      priceFromLoading={priceFromLoading}
+      priceToLoading={priceToLoading}
       onSlippageChange={onSlippageChange}
       initialSlippage={initialSlippage}
-      isBalanceLoading={isBalanceLoading}
     />
   )
 }

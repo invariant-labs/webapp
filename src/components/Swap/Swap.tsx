@@ -5,7 +5,7 @@ import Slippage from '@components/Modals/Slippage/Slippage'
 import { WRAPPED_SOL_ADDRESS, WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT } from '@consts/static'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import {
-  TokenPriceData,
+  CoingeckoPriceData,
   findPairs,
   handleSimulate,
   printBN,
@@ -91,13 +91,12 @@ export interface ISwap {
   commonTokens: PublicKey[]
   initialHideUnknownTokensValue: boolean
   onHideUnknownTokensChange: (val: boolean) => void
-  tokenFromPriceData?: TokenPriceData
-  tokenToPriceData?: TokenPriceData
+  tokenFromPriceData?: CoingeckoPriceData
+  tokenToPriceData?: CoingeckoPriceData
   priceFromLoading?: boolean
   priceToLoading?: boolean
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
-  isBalanceLoading: boolean
 }
 
 export const Swap: React.FC<ISwap> = ({
@@ -125,8 +124,7 @@ export const Swap: React.FC<ISwap> = ({
   priceFromLoading,
   priceToLoading,
   onSlippageChange,
-  initialSlippage,
-  isBalanceLoading
+  initialSlippage
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -423,17 +421,9 @@ export const Swap: React.FC<ISwap> = ({
     setDetailsOpen(!detailsOpen)
   }
 
-  useEffect(() => {
-    let timerId: any
-
+  React.useEffect(() => {
     if (lockAnimation) {
-      timerId = setTimeout(() => setLockAnimation(false), 500)
-    }
-
-    return () => {
-      if (timerId) {
-        clearTimeout(timerId)
-      }
+      setTimeout(() => setLockAnimation(false), 500)
     }
   }, [lockAnimation])
 
@@ -472,16 +462,7 @@ export const Swap: React.FC<ISwap> = ({
       <Grid container className={classes.header}>
         <Typography component='h1'>Swap tokens</Typography>
         <Box className={classes.swapControls}>
-          <Button
-            onClick={handleRefresh}
-            className={classes.refreshIconBtn}
-            disabled={
-              priceFromLoading ||
-              priceToLoading ||
-              isBalanceLoading ||
-              getStateMessage() === 'Loading' ||
-              walletStatus !== Status.Initialized
-            }>
+          <Button onClick={handleRefresh} className={classes.refreshIconBtn}>
             <img src={refreshIcon} className={classes.refreshIcon} />
           </Button>
           <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
@@ -540,15 +521,15 @@ export const Swap: React.FC<ISwap> = ({
             current={tokenFromIndex !== null ? tokens[tokenFromIndex] : null}
             onSelect={setTokenFromIndex}
             disabled={tokenFromIndex === null}
-            hideBalances={walletStatus !== Status.Initialized}
+            hideBalancesInModal={walletStatus !== Status.Initialized}
             handleAddToken={handleAddToken}
             commonTokens={commonTokens}
             limit={1e14}
             initialHideUnknownTokensValue={initialHideUnknownTokensValue}
             onHideUnknownTokensChange={onHideUnknownTokensChange}
             tokenPrice={tokenFromPriceData?.price}
+            percentageChange={tokenFromPriceData?.priceChange}
             priceLoading={priceFromLoading}
-            isBalanceLoading={isBalanceLoading}
           />
         </Box>
         <Box className={classes.tokenComponentTextContainer}>
@@ -617,15 +598,15 @@ export const Swap: React.FC<ISwap> = ({
             current={tokenToIndex !== null ? tokens[tokenToIndex] : null}
             onSelect={setTokenToIndex}
             disabled={tokenFromIndex === null}
-            hideBalances={walletStatus !== Status.Initialized}
+            hideBalancesInModal={walletStatus !== Status.Initialized}
             handleAddToken={handleAddToken}
             commonTokens={commonTokens}
             limit={1e14}
             initialHideUnknownTokensValue={initialHideUnknownTokensValue}
             onHideUnknownTokensChange={onHideUnknownTokensChange}
             tokenPrice={tokenToPriceData?.price}
+            percentageChange={tokenToPriceData?.priceChange}
             priceLoading={priceToLoading}
-            isBalanceLoading={isBalanceLoading}
           />
         </Box>
         <Box className={classes.transactionDetails}>

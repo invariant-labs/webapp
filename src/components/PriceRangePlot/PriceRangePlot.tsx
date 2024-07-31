@@ -18,7 +18,6 @@ export type TickPlotPositionData = Omit<PlotTickData, 'y'>
 export interface IPriceRangePlot {
   data: PlotTickData[]
   midPrice?: TickPlotPositionData
-  globalPrice?: number
   leftRange: TickPlotPositionData
   rightRange: TickPlotPositionData
   onChangeRange?: (left: number, right: number) => void
@@ -49,7 +48,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   leftRange,
   rightRange,
   midPrice,
-  globalPrice,
   onChangeRange,
   style,
   className,
@@ -277,40 +275,16 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
     const unitLen = innerWidth / (plotMax - plotMin)
     return (
-      <svg x={(midPrice.x - plotMin) * unitLen - 20} y={0} width={60} height={innerHeight}>
+      <svg x={(midPrice.x - plotMin) * unitLen - 20} y={0} width={40} height={innerHeight}>
         <defs>
-          <filter id='shadow' x='-10' y='-9' width='20' height={innerHeight}>
-            <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
-          </filter>
+          <linearGradient id='currentGradient'>
+            <stop offset='0%' stop-color='black' stop-opacity='0' />
+            <stop offset='50%' stop-color='black' stop-opacity='0.25' />
+            <stop offset='100%' stop-color='black' stop-opacity='0' />
+          </linearGradient>
         </defs>
-        <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
-        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.yellow} />
-      </svg>
-    )
-  }
-
-  const globalPriceLayer: Layer = ({ innerWidth, innerHeight }) => {
-    if (typeof globalPrice === 'undefined') {
-      return null
-    }
-
-    const unitLen = innerWidth / (plotMax - plotMin)
-    return (
-      <svg x={(globalPrice - plotMin) * unitLen - 20} y={-20} width={40} height={innerHeight + 20}>
-        <defs>
-          <filter id='shadow-global-price' x='-10' y='-9' width='20' height={innerHeight}>
-            <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
-          </filter>
-        </defs>
-        <rect
-          x={14}
-          y={20}
-          width='16'
-          height={innerHeight}
-          filter='url(#shadow-global-price)'
-          opacity='0.3'
-        />
-        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.blue} />
+        <rect x={0} y={0} width={40} height={innerHeight} fill='url(#currentGradient)' />
+        <rect x={19} y={0} width={3} height={innerHeight} fill={colors.invariant.yellow} />
       </svg>
     )
   }
@@ -372,8 +346,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         <text
           x='50%'
           y='50%'
-          dominantBaseline='middle'
-          textAnchor='middle'
+          dominant-baseline='middle'
+          text-anchor='middle'
           className={classes.loadingText}>
           Loading liquidity data...
         </text>
@@ -456,7 +430,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         data={[
           {
             id: 'less than range',
-            data: currentLessThanRange.length ? currentLessThanRange : [{ x: plotMin, y: 0 }]
+            data: currentLessThanRange
           },
           {
             id: 'range',
@@ -464,7 +438,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           },
           {
             id: 'greater than range',
-            data: currentGreaterThanRange.length ? currentGreaterThanRange : [{ x: plotMax, y: 0 }]
+            data: currentGreaterThanRange
           }
         ]}
         curve={isDiscrete ? (isXtoY ? 'stepAfter' : 'stepBefore') : 'basis'}
@@ -504,7 +478,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'areas',
           'lines',
           lazyLoadingLayer,
-          globalPriceLayer,
           currentLayer,
           volumeRangeLayer,
           brushLayer,

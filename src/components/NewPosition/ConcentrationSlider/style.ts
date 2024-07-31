@@ -37,60 +37,47 @@ export const useThumbStyles = makeStyles(() => ({
   }
 }))
 
-export const useSliderStyles = makeStyles<Theme, { valuesLength: number; disabledRange: number }>(
-  () => ({
-    root: {
-      width: '100%',
-      paddingBlock: 13
+export const useSliderStyles = makeStyles<Theme, { valuesLength: number }>(() => ({
+  root: {
+    width: '100%',
+    paddingBlock: 13
+  },
+  rail: {
+    background: colors.invariant.green,
+    height: 6,
+    opacity: 1
+  },
+  markLabel: ({ valuesLength }) => ({
+    color: colors.invariant.text,
+    ...typography.body1,
+    marginTop: 10,
+    top: 26,
+
+    '&[data-index="0"]': {
+      transform: 'translateX(-30%)'
     },
-    rail: ({ disabledRange }) => ({
-      background:
-        disabledRange > 0
-          ? `linear-gradient(90deg, ${colors.invariant.lightGrey} 0%, ${
-              colors.invariant.lightGrey
-            } ${disabledRange}%, ${colors.invariant.green} ${disabledRange + 1}%, ${
-              colors.invariant.green
-            } 100%)`
-          : colors.invariant.green,
-      height: 6,
-      opacity: 1
-    }),
-    track: {
-      background: colors.invariant.lightGrey,
-      height: 6
+
+    [`&[data-index="${valuesLength - 1}"]`]: {
+      transform: 'translateX(-90%)'
+    }
+  }),
+  mark: ({ valuesLength }) => ({
+    display: 'none',
+
+    [`&[data-index="${valuesLength - 1}"], &[data-index="0"]`]: {
+      display: 'block',
+      width: 14,
+      height: 14,
+      borderRadius: '100%',
+      transform: 'translate(-6px, -4px)'
     },
-    markLabel: ({ valuesLength }) => ({
-      color: colors.invariant.text,
-      ...typography.body1,
-      marginTop: 10,
-      top: 26,
 
-      '&[data-index="0"]': {
-        transform: 'translateX(-30%)'
-      },
+    '&[data-index="0"]': {
+      background: colors.invariant.green
+    },
 
-      [`&[data-index="${valuesLength - 1}"]`]: {
-        transform: 'translateX(-90%)'
-      }
-    }),
-    mark: ({ valuesLength, disabledRange }) => ({
-      display: 'none',
-
-      [`&[data-index="${valuesLength - 1}"], &[data-index="0"]`]: {
-        display: 'block',
-        width: 14,
-        height: 14,
-        borderRadius: '100%',
-        transform: 'translate(-6px, -4px)'
-      },
-
-      '&[data-index="0"]': {
-        background: disabledRange > 0 ? colors.invariant.lightGrey : colors.invariant.green
-      },
-
-      [`&[data-index="${valuesLength - 1}"]`]: {
-        background: colors.invariant.green
-      }
-    })
+    [`&[data-index="${valuesLength - 1}"]`]: {
+      background: colors.invariant.green
+    }
   })
-)
+}))

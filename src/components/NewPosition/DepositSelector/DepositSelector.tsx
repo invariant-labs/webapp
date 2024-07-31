@@ -3,7 +3,6 @@ import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmo
 import Select from '@components/Inputs/Select/Select'
 import {
   ALL_FEE_TIERS_DATA,
-  PositionOpeningMethod,
   WRAPPED_SOL_ADDRESS,
   WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT,
   WSOL_POOL_INIT_LAMPORTS
@@ -44,7 +43,9 @@ export interface IDepositSelector {
   feeTiers: number[]
   className?: string
   progress: ProgressState
+  percentageChangeA?: number
   priceA?: number
+  percentageChangeB?: number
   priceB?: number
   onReverseTokens: () => void
   poolIndex: number | null
@@ -58,10 +59,6 @@ export interface IDepositSelector {
   priceALoading?: boolean
   priceBLoading?: boolean
   feeTierIndex: number
-  concentrationArray: number[]
-  concentrationIndex: number
-  minimumSliderIndex: number
-  positionOpeningMethod: PositionOpeningMethod
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -76,7 +73,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   feeTiers,
   className,
   progress,
+  percentageChangeA,
   priceA,
+  percentageChangeB,
   priceB,
   onReverseTokens,
   poolIndex,
@@ -89,11 +88,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   onHideUnknownTokensChange,
   priceALoading,
   priceBLoading,
-  feeTierIndex,
-  concentrationArray,
-  concentrationIndex,
-  minimumSliderIndex,
-  positionOpeningMethod
+  feeTierIndex
 }) => {
   const classes = useStyles()
 
@@ -145,17 +140,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'Select different tokens'
     }
 
-    if (positionOpeningMethod === 'concentration' && concentrationIndex < minimumSliderIndex) {
-      return concentrationArray[minimumSliderIndex]
-        ? `Set concentration to at least ${concentrationArray[minimumSliderIndex].toFixed(0)}x`
-        : 'Set higher fee tier'
-    }
-
     if (
       (poolIndex === null && !canCreateNewPool) ||
       (poolIndex !== null && !canCreateNewPosition)
     ) {
-      return 'Insufficient SOL'
+      return 'Insufficient lamports'
     }
 
     if (
@@ -186,17 +175,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
 
     return 'Add Liquidity'
-  }, [
-    tokenAIndex,
-    tokenBIndex,
-    tokenAInputState.value,
-    tokenBInputState.value,
-    tokens,
-    positionOpeningMethod,
-    concentrationIndex,
-    feeTierIndex,
-    minimumSliderIndex
-  ])
+  }, [tokenAIndex, tokenBIndex, tokenAInputState.value, tokenBInputState.value, tokens])
 
   useEffect(() => {
     if (tokenAIndex !== null) {
@@ -290,6 +269,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
       <Grid container className={classes.sectionWrapper}>
         <DepositAmountInput
+          percentageChange={percentageChangeA}
           tokenPrice={priceA}
           currency={tokenAIndex !== null ? tokens[tokenAIndex].symbol : null}
           currencyIconSrc={tokenAIndex !== null ? tokens[tokenAIndex].logoURI : undefined}
@@ -350,6 +330,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         />
 
         <DepositAmountInput
+          percentageChange={percentageChangeB}
           tokenPrice={priceB}
           currency={tokenBIndex !== null ? tokens[tokenBIndex].symbol : null}
           currencyIconSrc={tokenBIndex !== null ? tokens[tokenBIndex].logoURI : undefined}

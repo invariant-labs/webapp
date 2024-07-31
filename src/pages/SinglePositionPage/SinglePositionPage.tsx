@@ -12,9 +12,7 @@ export const SinglePositionPage: React.FC<IProps> = ({ id }) => {
 
   return (
     <Grid container className={classes.container} justifyContent='center'>
-      <Grid item>
-        <SinglePositionWrapper id={id} />
-      </Grid>
+      <SinglePositionWrapper id={id} />
     </Grid>
   )
 }

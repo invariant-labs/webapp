@@ -119,39 +119,14 @@ storiesOf('position/newPosition', module)
             new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
             new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
           ]}
-          initialOpeningPositionMethod={'range'}
-          onPositionOpeningMethodChange={() => {}}
+          initialIsConcentratedValue={false}
+          onIsConcentratedChange={() => {}}
           initialHideUnknownTokensValue={false}
           onHideUnknownTokensChange={() => {}}
           reloadHandler={() => {}}
           currentFeeIndex={feeIndex}
           onSlippageChange={() => {}}
           initialSlippage={'1'}
-          calculatePoolAddress={async () => await new Promise(() => {})}
-          copyPoolAddressHandler={() => {}}
-          history={{
-            length: 9,
-            action: 'REPLACE',
-            location: {
-              pathname: '/newPosition/USDC/SOL/0_05',
-              search: '',
-              hash: '',
-              state: undefined,
-              key: 'r2l2vi'
-            },
-            createHref: () => '',
-            push: () => {},
-            replace: () => {},
-            go: () => {},
-            goBack: () => {},
-            goForward: () => {},
-            block: () => () => {},
-            listen: () => () => ''
-          }}
-          initialFee='0_05'
-          initialTokenFrom='USDC'
-          initialTokenTo='SOL'
-          poolAddress=''
         />
       </div>
     )
@@ -220,39 +195,14 @@ storiesOf('position/newPosition', module)
             new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
             new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
           ]}
-          initialOpeningPositionMethod={'range'}
-          onPositionOpeningMethodChange={() => {}}
+          initialIsConcentratedValue={false}
+          onIsConcentratedChange={() => {}}
           initialHideUnknownTokensValue={false}
           onHideUnknownTokensChange={() => {}}
           reloadHandler={() => {}}
           currentFeeIndex={feeIndex}
           onSlippageChange={() => {}}
           initialSlippage={'1'}
-          calculatePoolAddress={async () => await new Promise(() => {})}
-          copyPoolAddressHandler={() => {}}
-          history={{
-            length: 9,
-            action: 'REPLACE',
-            location: {
-              pathname: '/newPosition/USDC/SOL/0_05',
-              search: '',
-              hash: '',
-              state: undefined,
-              key: 'r2l2vi'
-            },
-            createHref: () => '',
-            push: () => {},
-            replace: () => {},
-            go: () => {},
-            goBack: () => {},
-            goForward: () => {},
-            block: () => () => {},
-            listen: () => () => ''
-          }}
-          initialFee='0_05'
-          initialTokenFrom='USDC'
-          initialTokenTo='SOL'
-          poolAddress=''
         />
       </div>
     )

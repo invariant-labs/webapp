@@ -1,5 +1,4 @@
 import { BN } from '@project-serum/anchor'
-import { STABLECOIN_ADDRESSES } from './static'
 
 export const toBlur = 'global-blur'
 
@@ -58,15 +57,4 @@ export const tickerToAddress = (ticker: string): string => {
 
 export const addressToTicker = (address: string): string => {
   return reversedAddressTickerMap[address] || address
-}
-
-export const initialXtoY = (tokenXAddress?: string, tokenYAddress?: string) => {
-  if (!tokenXAddress || !tokenYAddress) {
-    return true
-  }
-
-  const isTokeXStablecoin = STABLECOIN_ADDRESSES.includes(tokenXAddress)
-  const isTokenYStablecoin = STABLECOIN_ADDRESSES.includes(tokenYAddress)
-
-  return isTokeXStablecoin === isTokenYStablecoin || (!isTokeXStablecoin && !isTokenYStablecoin)
 }

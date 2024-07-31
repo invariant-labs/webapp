@@ -12,6 +12,7 @@ storiesOf('stats/TokenListItem', module)
         name='Solana'
         symbol='SOL'
         price={0.000001}
+        priceChange={2.32}
         volume={4324234234}
         TVL={34312345423}
       />

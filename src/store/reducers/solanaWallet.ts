@@ -35,15 +35,13 @@ export interface ISolanaWallet {
   address: PublicKey
   balance: BN
   accounts: { [key in string]: ITokenAccount }
-  balanceLoading: boolean
 }
 
 export const defaultState: ISolanaWallet = {
   status: Status.Uninitialized,
   address: DEFAULT_PUBLICKEY,
   balance: new BN(0),
-  accounts: {},
-  balanceLoading: false
+  accounts: {}
 }
 export const solanaWalletSliceName = 'solanaWallet'
 const solanaWalletSlice = createSlice({
@@ -66,13 +64,6 @@ const solanaWalletSlice = createSlice({
     },
     setBalance(state, action: PayloadAction<BN>) {
       state.balance = action.payload
-      return state
-    },
-    getBalance(state) {
-      return state
-    },
-    setIsBalanceLoading(state, action: PayloadAction<Boolean>) {
-      action.payload ? (state.balanceLoading = true) : (state.balanceLoading = false)
       return state
     },
     addTokenAccount(state, action: PayloadAction<ITokenAccount>) {

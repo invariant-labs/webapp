@@ -21,7 +21,7 @@ export const defaultState: ISolanaConnectionStore = {
   message: '',
   network: NetworkType.MAINNET,
   slot: 0,
-  rpcAddress: SolanaNetworks.MAIN_HELIUS
+  rpcAddress: SolanaNetworks.MAIN_NIGHTLY
 }
 export const solanaConnectionSliceName = 'solanaConnection'
 const solanaConnectionSlice = createSlice({

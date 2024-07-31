@@ -6,9 +6,8 @@ import SwapPosition from '@static/svg/swap-position.svg'
 import loader from '@static/gif/loading2.gif'
 import useStyles from './style'
 
-export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue'> {
+export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue' | 'liqValue'> {
   value: number
-  price?: number
 }
 
 export const BoxInfo: React.FC<{
@@ -29,6 +28,7 @@ export const BoxInfo: React.FC<{
   showLoader = false
 }) => {
   const classes = useStyles()
+
   const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThreshold[] => [
     {
       value: 10,
@@ -135,10 +135,10 @@ export const BoxInfo: React.FC<{
               <Typography className={classes.tokenBalance}>
                 Balance: {tokenA.balance} {tokenA.name}
               </Typography>
-              {typeof tokenA.usdValue !== 'undefined' && tokenA.price ? (
+              {typeof tokenA.usdValue !== 'undefined' ? (
                 <Typography className={classes.tokenUSDValue}>
-                  ~${formatNumbers(usdThresholds)((tokenA.value * tokenA.price).toString())}
-                  {showPrefix(tokenA.value * tokenA.price)}
+                  ~${formatNumbers(usdThresholds)(tokenA.usdValue.toString())}
+                  {showPrefix(tokenA.usdValue)}
                 </Typography>
               ) : null}
             </Grid>
@@ -165,10 +165,10 @@ export const BoxInfo: React.FC<{
               <Typography className={classes.tokenBalance}>
                 Balance: {tokenB.balance} {tokenB.name}
               </Typography>
-              {typeof tokenB.usdValue !== 'undefined' && tokenB.price ? (
+              {typeof tokenB.usdValue !== 'undefined' ? (
                 <Typography className={classes.tokenUSDValue}>
-                  ~${formatNumbers(usdThresholds)((tokenB.value * tokenB.price).toString())}
-                  {showPrefix(tokenB.value * tokenB.price)}
+                  ~${formatNumbers(usdThresholds)(tokenB.usdValue.toString())}
+                  {showPrefix(tokenB.usdValue)}
                 </Typography>
               ) : null}
             </Grid>
