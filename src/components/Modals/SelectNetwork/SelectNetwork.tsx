@@ -67,8 +67,14 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
           ))}
           <a href='https://eclipse.invariant.app' style={{ textDecoration: 'none' }}>
             <Grid className={classes.listItem} item key='networks-eclipse'>
-              <img className={classes.icon} src={icons.MainnetIcon} />
+              <img className={classes.icon} src={icons.TestnetIcon} alt='testnet'/>
               <Typography className={classes.name}>Eclipse</Typography>
+            </Grid>
+          </a>
+          <a href='https://azero.invariant.app' style={{ textDecoration: 'none' }}>
+            <Grid className={classes.listItem} item key='networks-aleph-zero'>
+              <img className={classes.icon} src={icons.TestnetIcon} alt='testnet'/>
+              <Typography className={classes.name}>Aleph Zero</Typography>
             </Grid>
           </a>
         </Grid>
