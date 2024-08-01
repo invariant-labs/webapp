@@ -18,7 +18,7 @@ import {
   tickMaps
 } from '@selectors/pools'
 import { network } from '@selectors/solanaConnection'
-import { status, swapTokens, swapTokensDict, balanceLoading } from '@selectors/solanaWallet'
+import { status, swapTokensDict, balanceLoading } from '@selectors/solanaWallet'
 import { swap as swapPool } from '@selectors/swap'
 import { PublicKey } from '@solana/web3.js'
 import { getCurrentSolanaConnection } from '@web3/connection'
@@ -36,7 +36,6 @@ export const WrappedSwap = () => {
   const tickmap = useSelector(tickMaps)
   const poolTicksArray = useSelector(poolTicks)
   const allPools = useSelector(poolsArraySortedByFees)
-  const tokensList = useSelector(swapTokens)
   const tokensDict = useSelector(swapTokensDict)
   const isBalanceLoading = useSelector(balanceLoading)
   const { success, inProgress } = useSelector(swapPool)
@@ -86,10 +85,7 @@ export const WrappedSwap = () => {
   const initialTokenTo = lastTokenTo ? new PublicKey(lastTokenTo) : null
 
   const addTokenHandler = (address: string) => {
-    if (
-      connection !== null &&
-      tokensList.findIndex(token => token.address.toString() === address) === -1
-    ) {
+    if (connection !== null && !tokensDict[address]) {
       getNewTokenOrThrow(address, connection)
         .then(data => {
           console.log(data)
