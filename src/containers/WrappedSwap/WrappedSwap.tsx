@@ -18,7 +18,7 @@ import {
   tickMaps
 } from '@selectors/pools'
 import { network } from '@selectors/solanaConnection'
-import { status, swapTokens, swapTokensDict, balanceLoading } from '@selectors/solanaWallet'
+import { status, swapTokensDict, balanceLoading } from '@selectors/solanaWallet'
 import { swap as swapPool } from '@selectors/swap'
 import { PublicKey } from '@solana/web3.js'
 import { getCurrentSolanaConnection } from '@web3/connection'
@@ -36,7 +36,6 @@ export const WrappedSwap = () => {
   const tickmap = useSelector(tickMaps)
   const poolTicksArray = useSelector(poolTicks)
   const allPools = useSelector(poolsArraySortedByFees)
-  const tokensList = useSelector(swapTokens)
   const tokensDict = useSelector(swapTokensDict)
   const isBalanceLoading = useSelector(balanceLoading)
   const { success, inProgress } = useSelector(swapPool)
@@ -82,20 +81,11 @@ export const WrappedSwap = () => {
   const lastTokenFrom = localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`)
   const lastTokenTo = localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`)
 
-  const initialTokenFromIndex =
-    lastTokenFrom === null
-      ? null
-      : tokensList.findIndex(token => token.assetAddress.equals(new PublicKey(lastTokenFrom)))
-  const initialTokenToIndex =
-    lastTokenTo === null
-      ? null
-      : tokensList.findIndex(token => token.assetAddress.equals(new PublicKey(lastTokenTo)))
+  const initialTokenFrom = lastTokenFrom ? new PublicKey(lastTokenFrom) : null
+  const initialTokenTo = lastTokenTo ? new PublicKey(lastTokenTo) : null
 
   const addTokenHandler = (address: string) => {
-    if (
-      connection !== null &&
-      tokensList.findIndex(token => token.address.toString() === address) === -1
-    ) {
+    if (connection !== null && !tokensDict[address]) {
       getNewTokenOrThrow(address, connection)
         .then(data => {
           console.log(data)
@@ -183,17 +173,17 @@ export const WrappedSwap = () => {
     localStorage.setItem('INVARIANT_SWAP_SLIPPAGE', slippage)
   }
 
-  const onRefresh = (tokenFromIndex: number | null, tokenToIndex: number | null) => {
+  const onRefresh = (tokenFrom: PublicKey | null, tokenTo: PublicKey | null) => {
     dispatch(walletActions.getBalance())
 
-    if (tokenFromIndex === null || tokenToIndex == null || tokenFrom === null || tokenTo === null) {
+    if (tokenFrom === null || tokenTo == null || tokenFrom === null || tokenTo === null) {
       return
     }
 
     dispatch(
       poolsActions.getAllPoolsForPairData({
-        first: tokensList[tokenFromIndex].address,
-        second: tokensList[tokenToIndex].address
+        first: tokenFrom,
+        second: tokenTo
       })
     )
 
@@ -273,15 +263,15 @@ export const WrappedSwap = () => {
         dispatch(walletActions.disconnect())
       }}
       walletStatus={walletStatus}
-      tokens={tokensList}
+      tokens={tokensDict}
       pools={allPools}
       swapData={swap}
       progress={progress}
       poolTicks={poolTicksArray}
       isWaitingForNewPool={isFetchingNewPool}
       tickmap={tickmap}
-      initialTokenFromIndex={initialTokenFromIndex === -1 ? null : initialTokenFromIndex}
-      initialTokenToIndex={initialTokenToIndex === -1 ? null : initialTokenToIndex}
+      initialTokenFrom={initialTokenFrom}
+      initialTokenTo={initialTokenTo}
       handleAddToken={addTokenHandler}
       commonTokens={commonTokensForNetworks[networkType]}
       initialHideUnknownTokensValue={initialHideUnknownTokensValue}

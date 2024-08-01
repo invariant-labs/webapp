@@ -99,8 +99,13 @@ export function* fetchTokensAccounts(): Generator {
     }
   }
 
-  yield* put(actions.addTokenAccounts(newAccounts))
-  yield* put(poolsActions.addTokens(unknownTokens))
+  if (newAccounts.length) {
+    yield* put(actions.addTokenAccounts(newAccounts))
+  }
+
+  if (unknownTokens.length) {
+    yield* put(poolsActions.addTokens(unknownTokens))
+  }
 }
 
 export function* getToken(tokenAddress: PublicKey): SagaGenerator<Token> {

@@ -388,13 +388,14 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
   const obj: Record<string, Token> = {}
   switch (networkType) {
     case NetworkType.MAINNET:
-      ;(mainnetList as any[]).forEach(token => {
-        obj[token.address] = {
-          ...token,
-          address: new PublicKey(token.address),
-          coingeckoId: token?.extensions?.coingeckoId
+      Object.entries(mainnetList as unknown as Record<string, Token>).forEach(
+        ([address, token]) => {
+          obj[address] = {
+            ...token,
+            address: new PublicKey(address)
+          }
         }
-      })
+      )
       return obj
     case NetworkType.DEVNET:
       return {
