@@ -3,11 +3,11 @@ import React, { CSSProperties, useRef } from 'react'
 import classNames from 'classnames'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import Select from '@components/Inputs/Select/Select'
-import { SwapToken } from '@components/Swap/Swap'
 import { formatNumbers, FormatNumberThreshold, showPrefix } from '@consts/utils'
 import { PublicKey } from '@solana/web3.js'
 import loadingAnimation from '@static/gif/loading.gif'
 import useStyles from './style'
+import { SwapToken } from '@selectors/solanaWallet'
 
 interface IProps {
   setValue: (value: string) => void
@@ -19,8 +19,8 @@ interface IProps {
   style?: CSSProperties
   onMaxClick: () => void
   current: SwapToken | null
-  tokens: SwapToken[]
-  onSelect: (index: number) => void
+  tokens: Record<string, SwapToken>
+  onSelect: (address: PublicKey) => void
   disabled: boolean
   balance?: string
   hideBalances?: boolean
