@@ -6,7 +6,7 @@ import SwapPosition from '@static/svg/swap-position.svg'
 import loader from '@static/gif/loading2.gif'
 import useStyles from './style'
 
-export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue' | 'liqValue'> {
+export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue'> {
   value: number
   price?: number
 }
@@ -29,7 +29,6 @@ export const BoxInfo: React.FC<{
   showLoader = false
 }) => {
   const classes = useStyles()
-
   const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThreshold[] => [
     {
       value: 10,

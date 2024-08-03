@@ -1,4 +1,4 @@
-import { Input } from '@material-ui/core'
+import { Input, Tooltip, Typography } from '@material-ui/core'
 import React, { CSSProperties, useRef } from 'react'
 import classNames from 'classnames'
 import useStyles from './style'
@@ -11,6 +11,8 @@ interface IProps {
   decimal: number
   placeholder?: string
   style?: CSSProperties
+  globalPrice?: number
+  onBlur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>
 }
 
 export const AmountInput: React.FC<IProps> = ({
@@ -20,7 +22,9 @@ export const AmountInput: React.FC<IProps> = ({
   className,
   decimal,
   placeholder,
-  style
+  style,
+  globalPrice,
+  onBlur
 }) => {
   const classes = useStyles()
 
@@ -75,6 +79,25 @@ export const AmountInput: React.FC<IProps> = ({
       disableUnderline={true}
       placeholder={placeholder}
       onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
+      endAdornment={
+        globalPrice ? (
+          <Tooltip
+            title={
+              <Typography className={classes.textGlobalPrice} variant='caption'>
+                Global price
+              </Typography>
+            }
+            placement='right-start'
+            classes={{
+              tooltip: classes.globalPriceTooltip
+            }}>
+            <Typography className={classes.globalPrice} variant='h4'>
+              {globalPrice.toFixed(4)}
+            </Typography>
+          </Tooltip>
+        ) : null
+      }
+      onBlur={onBlur}
     />
   )
 }

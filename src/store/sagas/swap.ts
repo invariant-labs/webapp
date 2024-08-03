@@ -1,5 +1,5 @@
-import { WRAPPED_SOL_ADDRESS } from '@consts/static'
-import { solToPriorityFee } from '@consts/utils'
+import { SIGNING_SNACKBAR_CONFIG, TIMEOUT_ERROR_MESSAGE, WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { createLoaderKey, solToPriorityFee } from '@consts/utils'
 import { Pair } from '@invariant-labs/sdk'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
@@ -8,13 +8,24 @@ import { network, rpcAddress } from '@selectors/solanaConnection'
 import { accounts } from '@selectors/solanaWallet'
 import { swap } from '@selectors/swap'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
-import { Keypair, SystemProgram, Transaction, sendAndConfirmRawTransaction } from '@solana/web3.js'
+import {
+  Keypair,
+  SystemProgram,
+  Transaction,
+  TransactionExpiredTimeoutError,
+  sendAndConfirmRawTransaction
+} from '@solana/web3.js'
 import { getMarketProgram } from '@web3/programs/amm'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { getConnection } from './connection'
 import { createAccount, getWallet } from './wallet'
+import { closeSnackbar } from 'notistack'
 
 export function* handleSwapWithSOL(): Generator {
+  const loaderSwappingTokens = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
+  const loaderTxDetails = createLoaderKey()
+
   try {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(poolsArraySortedByFees)
@@ -45,6 +56,14 @@ export function* handleSwapWithSOL(): Generator {
       return
     }
 
+    yield put(
+      snackbarsActions.add({
+        message: 'Swapping tokens',
+        variant: 'pending',
+        persist: true,
+        key: loaderSwappingTokens
+      })
+    )
     const isXtoY = tokenFrom.equals(swapPool.tokenX)
 
     const wrappedSolAccount = Keypair.generate()
@@ -88,7 +107,7 @@ export function* handleSwapWithSOL(): Generator {
       )
     }
 
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const initialBlockhash = yield* call([connection, connection.getLatestBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
@@ -141,7 +160,7 @@ export function* handleSwapWithSOL(): Generator {
       )
     }
 
-    const swapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const swapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     swapTx.recentBlockhash = swapBlockhash.blockhash
     swapTx.feePayer = wallet.publicKey
 
@@ -155,14 +174,19 @@ export function* handleSwapWithSOL(): Generator {
       )
     }
 
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const unwrapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
+
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const [initialSignedTx, swapSignedTx, unwrapSignedTx] = yield* call(
       [wallet, wallet.signAllTransactions],
       [initialTx, swapTx, unwrapTx]
     )
+
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
 
     initialSignedTx.partialSign(wrappedSolAccount)
 
@@ -178,6 +202,9 @@ export function* handleSwapWithSOL(): Generator {
     if (!initialTxid.length) {
       yield put(swapActions.setSwapSuccess(false))
 
+      closeSnackbar(loaderSwappingTokens)
+      yield put(snackbarsActions.remove(loaderSwappingTokens))
+
       return yield put(
         snackbarsActions.add({
           message: 'SOL wrapping failed. Please try again.',
@@ -189,31 +216,53 @@ export function* handleSwapWithSOL(): Generator {
     }
 
     const swapTxid = yield* call(
-      sendAndConfirmRawTransaction,
-      connection,
+      [connection, connection.sendRawTransaction],
       swapSignedTx.serialize(),
       {
         skipPreflight: false
       }
     )
 
-    if (!swapTxid.length) {
+    yield put(
+      snackbarsActions.add({
+        message: 'Confirming swap transaction...',
+        variant: 'pending',
+        persist: true,
+        txid: swapTxid,
+        key: loaderTxDetails
+      })
+    )
+
+    const confirmedSwapTx = yield* call([connection, connection.confirmTransaction], {
+      blockhash: swapBlockhash.blockhash,
+      lastValidBlockHeight: swapBlockhash.lastValidBlockHeight,
+      signature: swapTxid
+    })
+
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
+
+    if (confirmedSwapTx.value.err === null) {
+      yield put(swapActions.setSwapSuccess(true))
+      yield put(
+        snackbarsActions.add({
+          message: 'Tokens swapped successfully.',
+          variant: 'success',
+          persist: false,
+          txid: swapTxid
+        })
+      )
+    } else {
       yield put(swapActions.setSwapSuccess(false))
+
+      closeSnackbar(loaderSwappingTokens)
+      yield put(snackbarsActions.remove(loaderSwappingTokens))
 
       return yield put(
         snackbarsActions.add({
           message:
             'Tokens swapping failed. Please unwrap wrapped SOL in your wallet and try again.',
           variant: 'error',
-          persist: false,
-          txid: swapTxid
-        })
-      )
-    } else {
-      yield put(
-        snackbarsActions.add({
-          message: 'Tokens swapped successfully.',
-          variant: 'success',
           persist: false,
           txid: swapTxid
         })
@@ -250,23 +299,48 @@ export function* handleSwapWithSOL(): Generator {
         })
       )
     }
+
+    closeSnackbar(loaderSwappingTokens)
+    yield put(snackbarsActions.remove(loaderSwappingTokens))
   } catch (error) {
     console.log(error)
 
     yield put(swapActions.setSwapSuccess(false))
 
-    yield put(
-      snackbarsActions.add({
-        message:
-          'Failed to send. Please unwrap wrapped SOL in your wallet if you have any and try again.',
-        variant: 'error',
-        persist: false
-      })
-    )
+    if (error instanceof TransactionExpiredTimeoutError) {
+      yield put(
+        snackbarsActions.add({
+          message: TIMEOUT_ERROR_MESSAGE,
+          variant: 'error',
+          persist: true,
+          txid: error.signature
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message:
+            'Failed to send. Please unwrap wrapped SOL in your wallet if you have any and try again.',
+          variant: 'error',
+          persist: false
+        })
+      )
+    }
+
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
+    closeSnackbar(loaderSwappingTokens)
+    yield put(snackbarsActions.remove(loaderSwappingTokens))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
   }
 }
 
 export function* handleSwap(): Generator {
+  const loaderSwappingTokens = createLoaderKey()
+  const loaderSigningTx = createLoaderKey()
+  const loaderTxDetails = createLoaderKey()
+
   try {
     const allTokens = yield* select(tokens)
     const allPools = yield* select(poolsArraySortedByFees)
@@ -303,6 +377,15 @@ export function* handleSwap(): Generator {
       return
     }
 
+    yield put(
+      snackbarsActions.add({
+        message: 'Swapping tokens',
+        variant: 'pending',
+        persist: true,
+        key: loaderSwappingTokens
+      })
+    )
+
     const isXtoY = tokenFrom.equals(swapPool.tokenX)
 
     let fromAddress = tokensAccounts[tokenFrom.toString()]
@@ -332,7 +415,7 @@ export function* handleSwap(): Generator {
       owner: wallet.publicKey
     })
     const connection = yield* call(getConnection)
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     swapTx.recentBlockhash = blockhash.blockhash
     swapTx.feePayer = wallet.publicKey
 
@@ -346,44 +429,91 @@ export function* handleSwap(): Generator {
       )
     }
 
+    yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
+
     const signedTx = yield* call([wallet, wallet.signTransaction], swapTx)
-    const txid = yield* call(sendAndConfirmRawTransaction, connection, signedTx.serialize(), {
+
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
+
+    const txid = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false
     })
 
-    yield put(swapActions.setSwapSuccess(!!txid.length))
+    yield put(
+      snackbarsActions.add({
+        message: 'Confirming swap transaction...',
+        variant: 'pending',
+        persist: true,
+        txid: txid,
+        key: loaderTxDetails
+      })
+    )
 
-    if (!txid.length) {
-      yield put(
-        snackbarsActions.add({
-          message: 'Tokens swapping failed. Please try again.',
-          variant: 'error',
-          persist: false,
-          txid
-        })
-      )
-    } else {
+    const confirmedTx = yield* call([connection, connection.confirmTransaction], {
+      blockhash: blockhash.blockhash,
+      lastValidBlockHeight: blockhash.lastValidBlockHeight,
+      signature: txid
+    })
+
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
+
+    if (confirmedTx.value.err === null) {
+      yield put(swapActions.setSwapSuccess(true))
       yield put(
         snackbarsActions.add({
           message: 'Tokens swapped successfully.',
           variant: 'success',
           persist: false,
-          txid
+          txid: txid
+        })
+      )
+    } else {
+      yield put(swapActions.setSwapSuccess(false))
+
+      yield put(
+        snackbarsActions.add({
+          message: 'Tokens swapping failed. Please try again.',
+          variant: 'error',
+          persist: false,
+          txid: txid
         })
       )
     }
+
+    closeSnackbar(loaderSwappingTokens)
+    yield put(snackbarsActions.remove(loaderSwappingTokens))
   } catch (error) {
     console.log(error)
 
     yield put(swapActions.setSwapSuccess(false))
 
-    yield put(
-      snackbarsActions.add({
-        message: 'Failed to send. Please try again.',
-        variant: 'error',
-        persist: false
-      })
-    )
+    if (error instanceof TransactionExpiredTimeoutError) {
+      yield put(
+        snackbarsActions.add({
+          message: TIMEOUT_ERROR_MESSAGE,
+          variant: 'error',
+          persist: true,
+          txid: error.signature
+        })
+      )
+    } else {
+      yield put(
+        snackbarsActions.add({
+          message: 'Failed to send. Please try again.',
+          variant: 'error',
+          persist: false
+        })
+      )
+    }
+
+    closeSnackbar(loaderTxDetails)
+    yield put(snackbarsActions.remove(loaderTxDetails))
+    closeSnackbar(loaderSwappingTokens)
+    yield put(snackbarsActions.remove(loaderSwappingTokens))
+    closeSnackbar(loaderSigningTx)
+    yield put(snackbarsActions.remove(loaderSigningTx))
   }
 }
 
