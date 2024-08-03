@@ -88,7 +88,6 @@ export interface ISwap {
   priceToLoading?: boolean
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
-  isBalanceLoading: boolean
 }
 
 export const Swap: React.FC<ISwap> = ({
@@ -116,8 +115,7 @@ export const Swap: React.FC<ISwap> = ({
   priceFromLoading,
   priceToLoading,
   onSlippageChange,
-  initialSlippage,
-  isBalanceLoading
+  initialSlippage
 }) => {
   const classes = useStyles()
   enum inputTarget {
@@ -403,17 +401,9 @@ export const Swap: React.FC<ISwap> = ({
     setDetailsOpen(!detailsOpen)
   }
 
-  useEffect(() => {
-    let timerId: any
-
+  React.useEffect(() => {
     if (lockAnimation) {
-      timerId = setTimeout(() => setLockAnimation(false), 500)
-    }
-
-    return () => {
-      if (timerId) {
-        clearTimeout(timerId)
-      }
+      setTimeout(() => setLockAnimation(false), 500)
     }
   }, [lockAnimation])
 
@@ -452,16 +442,7 @@ export const Swap: React.FC<ISwap> = ({
       <Grid container className={classes.header}>
         <Typography component='h1'>Swap tokens</Typography>
         <Box className={classes.swapControls}>
-          <Button
-            onClick={handleRefresh}
-            className={classes.refreshIconBtn}
-            disabled={
-              priceFromLoading ||
-              priceToLoading ||
-              isBalanceLoading ||
-              getStateMessage() === 'Loading' ||
-              walletStatus !== Status.Initialized
-            }>
+          <Button onClick={handleRefresh} className={classes.refreshIconBtn}>
             <img src={refreshIcon} className={classes.refreshIcon} />
           </Button>
           <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
@@ -533,7 +514,6 @@ export const Swap: React.FC<ISwap> = ({
             onHideUnknownTokensChange={onHideUnknownTokensChange}
             tokenPrice={tokenFromPriceData?.price}
             priceLoading={priceFromLoading}
-            isBalanceLoading={isBalanceLoading}
           />
         </Box>
         <Box className={classes.tokenComponentTextContainer}>
@@ -612,7 +592,6 @@ export const Swap: React.FC<ISwap> = ({
             onHideUnknownTokensChange={onHideUnknownTokensChange}
             tokenPrice={tokenToPriceData?.price}
             priceLoading={priceToLoading}
-            isBalanceLoading={isBalanceLoading}
           />
         </Box>
         <Box className={classes.transactionDetails}>

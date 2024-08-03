@@ -4,8 +4,8 @@ import { commonTokensForNetworks } from '@consts/static'
 import {
   addNewTokenToLocalStorage,
   TokenPriceData,
-  getJupTokenPrice,
-  getNewTokenOrThrow
+  getNewTokenOrThrow,
+  getJupTokenPrice
 } from '@consts/utils'
 import { actions as poolsActions } from '@reducers/pools'
 import { actions as snackbarsActions } from '@reducers/snackbars'
@@ -37,7 +37,6 @@ export const WrappedSwap = () => {
   const poolTicksArray = useSelector(poolTicks)
   const allPools = useSelector(poolsArraySortedByFees)
   const tokensDict = useSelector(swapTokensDict)
-  const isBalanceLoading = useSelector(balanceLoading)
   const { success, inProgress } = useSelector(swapPool)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
   const networkType = useSelector(network)
@@ -47,24 +46,16 @@ export const WrappedSwap = () => {
   const [tokenTo, setTokenTo] = useState<PublicKey | null>(null)
 
   useEffect(() => {
-    let timerId1: any
-    let timerId2: any
-
     if (!inProgress && progress === 'progress') {
       setProgress(success ? 'approvedWithSuccess' : 'approvedWithFail')
 
-      timerId1 = setTimeout(() => {
+      setTimeout(() => {
         setProgress(success ? 'success' : 'failed')
       }, 1500)
 
-      timerId2 = setTimeout(() => {
+      setTimeout(() => {
         setProgress('none')
       }, 3000)
-    }
-
-    return () => {
-      clearTimeout(timerId1)
-      clearTimeout(timerId2)
     }
   }, [success, inProgress])
 
@@ -213,7 +204,18 @@ export const WrappedSwap = () => {
   return (
     <Swap
       isFetchingNewPool={isFetchingNewPool}
-      onRefresh={onRefresh}
+      onRefresh={(tokenFromIndex, tokenToIndex) => {
+        if (tokenFromIndex === null || tokenToIndex == null) {
+          return
+        }
+
+        dispatch(
+          poolsActions.getAllPoolsForPairData({
+            first: tokensList[tokenFromIndex].address,
+            second: tokensList[tokenToIndex].address
+          })
+        )
+      }}
       onSwap={(
         slippage,
         estimatedPriceAfterSwap,
@@ -278,11 +280,10 @@ export const WrappedSwap = () => {
       onHideUnknownTokensChange={setHideUnknownTokensValue}
       tokenFromPriceData={tokenFromPriceData}
       tokenToPriceData={tokenToPriceData}
-      priceFromLoading={priceFromLoading || isBalanceLoading}
-      priceToLoading={priceToLoading || isBalanceLoading}
+      priceFromLoading={priceFromLoading}
+      priceToLoading={priceToLoading}
       onSlippageChange={onSlippageChange}
       initialSlippage={initialSlippage}
-      isBalanceLoading={isBalanceLoading}
     />
   )
 }

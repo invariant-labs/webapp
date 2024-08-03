@@ -13,12 +13,11 @@ import {
 
 const store = (s: AnyProps) => s[solanaWalletSliceName] as ISolanaWallet
 
-export const { address, balance, accounts, status, balanceLoading } = keySelectors(store, [
+export const { address, balance, accounts, status } = keySelectors(store, [
   'address',
   'balance',
   'accounts',
-  'status',
-  'balanceLoading'
+  'status'
 ])
 
 export const tokenBalance = (tokenAddress: PublicKey) =>
@@ -116,7 +115,6 @@ export const solanaWalletSelectors = {
   balance,
   accounts,
   status,
-  tokenAccount,
-  balanceLoading
+  tokenAccount
 }
 export default solanaWalletSelectors

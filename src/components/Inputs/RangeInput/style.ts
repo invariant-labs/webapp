@@ -84,11 +84,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 10,
     flex: '1 1 0%',
 
-    '& input': {
+    '& $input': {
       textAlign: 'center'
     },
 
-    '& input:disabled': {
+    '& $input:disabled': {
       color: colors.white.main
     },
 

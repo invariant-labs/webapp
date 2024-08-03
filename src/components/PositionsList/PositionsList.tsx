@@ -7,7 +7,6 @@ import SearchIcon from '@static/svg/lupaDark.svg'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { ILiquidityItem, PositionItem } from './PositionItem/PositionItem'
-import refreshIcon from '@static/svg/refresh.svg'
 import useStyle from './style'
 
 interface IProp {
@@ -21,7 +20,6 @@ interface IProp {
   itemsPerPage: number
   searchValue: string
   searchSetValue: (value: string) => void
-  handleRefresh: () => void
 }
 
 export const PositionsList: React.FC<IProp> = ({
@@ -34,8 +32,7 @@ export const PositionsList: React.FC<IProp> = ({
   noConnectedBlockerProps,
   itemsPerPage,
   searchValue,
-  searchSetValue,
-  handleRefresh
+  searchSetValue
 }) => {
   const classes = useStyle()
   const history = useHistory()
@@ -103,31 +100,23 @@ export const PositionsList: React.FC<IProp> = ({
               onChange={handleChangeInput}
               value={searchValue}
             />
-            <Grid>
-              <Button
-                disabled={showNoConnected}
-                onClick={showNoConnected ? () => {} : handleRefresh}
-                className={classes.refreshIconBtn}>
-                <img src={refreshIcon} className={classes.refreshIcon} />
-              </Button>
-              <Button
-                className={showNoConnected ? classes.buttonSelectDisabled : classes.button}
-                variant='contained'
-                onClick={showNoConnected ? () => {} : onAddPositionClick}>
-                <span className={classes.buttonText}>+ Add Position</span>
-              </Button>
-            </Grid>
+            <Button
+              className={showNoConnected ? classes.buttonSelectDisabled : classes.button}
+              variant='contained'
+              onClick={showNoConnected ? () => {} : onAddPositionClick}>
+              <span className={classes.buttonText}>+ Add Position</span>
+            </Button>
           </Grid>
         </Grid>
       </Grid>
       <Grid container direction='column' className={classes.list} justifyContent='flex-start'>
-        {data.length > 0 && !loading ? (
+        {data.length > 0 ? (
           paginator(page).data.map((element, index) => (
             <Grid
               onClick={() => {
                 history.push(`/position/${element.id}`)
               }}
-              key={element.id}
+              key={index}
               className={classes.itemLink}>
               <PositionItem key={index} {...element} />
             </Grid>

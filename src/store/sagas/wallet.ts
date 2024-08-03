@@ -33,8 +33,6 @@ import { tokens } from '@selectors/pools'
 import { actions as poolsActions } from '@reducers/pools'
 import { actions as farmsActions } from '@reducers/farms'
 import { actions as bondsActions } from '@reducers/bonds'
-import { closeSnackbar } from 'notistack'
-import { createLoaderKey } from '@consts/utils'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
@@ -44,16 +42,6 @@ export function* getBalance(pubKey: PublicKey): SagaGenerator<BN> {
   const connection = yield* call(getConnection)
   const balance = yield* call([connection, connection.getBalance], pubKey)
   return new BN(balance)
-}
-
-export function* handleBalance(): Generator {
-  const wallet = yield* call(getWallet)
-  yield* put(actions.setAddress(wallet.publicKey))
-  yield* put(actions.setIsBalanceLoading(true))
-  const balance = yield* call(getBalance, wallet.publicKey)
-  yield* put(actions.setBalance(balance))
-  yield* call(fetchTokensAccounts)
-  yield* put(actions.setIsBalanceLoading(false))
 }
 
 interface IparsedTokenInfo {
@@ -127,16 +115,6 @@ export function* handleAirdrop(): Generator {
     return
   }
 
-  const loaderKey = createLoaderKey()
-  yield put(
-    snackbarsActions.add({
-      message: 'Airdrop in progress',
-      variant: 'pending',
-      persist: true,
-      key: loaderKey
-    })
-  )
-
   const connection = yield* call(getConnection)
   const networkType = yield* select(network)
   const wallet = yield* call(getWallet)
@@ -159,7 +137,6 @@ export function* handleAirdrop(): Generator {
   }
 
   yield* call(getCollateralTokenAirdrop, airdropTokens[networkType], airdropQuantities[networkType])
-
   yield put(
     snackbarsActions.add({
       message: 'You will soon receive airdrop',
@@ -167,9 +144,6 @@ export function* handleAirdrop(): Generator {
       persist: false
     })
   )
-
-  closeSnackbar(loaderKey)
-  yield put(snackbarsActions.remove(loaderKey))
 }
 
 export function* setEmptyAccounts(collateralsAddresses: PublicKey[]): Generator {
@@ -350,12 +324,10 @@ export function* init(): Generator {
   const wallet = yield* call(getWallet)
   // const balance = yield* call(getBalance, wallet.publicKey)
   yield* put(actions.setAddress(wallet.publicKey))
-  yield* put(actions.setIsBalanceLoading(true))
   const balance = yield* call(getBalance, wallet.publicKey)
   yield* put(actions.setBalance(balance))
   yield* put(actions.setStatus(Status.Initialized))
   yield* call(fetchTokensAccounts)
-  yield* put(actions.setIsBalanceLoading(false))
 }
 
 // eslint-disable-next-line @typescript-eslint/promise-function-async
@@ -424,13 +396,6 @@ export function* airdropSaga(): Generator {
 export function* initSaga(): Generator {
   yield takeLeading(actions.initWallet, init)
 }
-
-export function* handleBalanceSaga(): Generator {
-  yield takeLeading(actions.getBalance, handleBalance)
-}
-
 export function* walletSaga(): Generator {
-  yield all(
-    [initSaga, airdropSaga, connectHandler, disconnectHandler, handleBalanceSaga].map(spawn)
-  )
+  yield all([initSaga, airdropSaga, connectHandler, disconnectHandler].map(spawn))
 }

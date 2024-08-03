@@ -1,7 +1,7 @@
 import { colors, typography } from '@static/theme'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
-const useStyles = makeStyles<Theme, { walletDisconnected: boolean }>(theme => ({
+const useStyles = makeStyles(() => ({
   amountInput: {
     background: colors.invariant.newDark,
     color: colors.invariant.light,
@@ -15,34 +15,19 @@ const useStyles = makeStyles<Theme, { walletDisconnected: boolean }>(theme => ({
     }
   },
   maxButton: {
-    color: colors.invariant.componentBcg,
-    ...typography.tiny2,
-    borderRadius: 4,
-    width: 26,
-    minWidth: 26,
-    height: 14,
-    textTransform: 'none',
-    marginLeft: 4,
-    background: ' rgba(46, 224, 154, 0.8)',
-    lineHeight: '14px',
-
-    '&:hover': {
-      background: 'none',
-      backgroundColor: colors.invariant.green,
-      boxShadow: '0px 0px 20px -10px white'
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: 26,
-      minWidth: 26,
-      height: 14,
-      marginTop: 2
-    }
-  },
-  maxButtonNotActive: {
+    ...typography.caption4,
+    minWidth: 30,
+    height: 15,
+    borderRadius: 3,
+    padding: '7px 0',
     backgroundColor: colors.invariant.light,
+    marginTop: 0,
+    lineHeight: '13px',
+    cursor: 'pointer',
+    background:
+      'radial-gradient(118.38% 303.54% at 3.96% 118.38%, rgba(119, 72, 216, 0.1) 0%, rgba(119, 72, 216, 0) 100%), radial-gradient(57.34% 103.84% at 50% 0%, rgba(156, 231, 90, 0.1) 0%, rgba(156, 231, 90, 0) 100%)',
     '&:hover': {
-      backgroundColor: colors.invariant.light,
-      cursor: 'default'
+      boxShadow: '0px 0px 20px -8px white'
     }
   },
   select: {
@@ -59,7 +44,7 @@ const useStyles = makeStyles<Theme, { walletDisconnected: boolean }>(theme => ({
     top: -1,
     color: colors.invariant.dark
   },
-  balanceContainer: {
+  BalanceContainer: {
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
@@ -73,17 +58,15 @@ const useStyles = makeStyles<Theme, { walletDisconnected: boolean }>(theme => ({
     marginRight: 3,
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-    display: 'flex',
-    alignItems: 'center'
+    textOverflow: 'ellipsis'
   },
   walletBalanace: {
     color: colors.invariant.lightGrey
   },
-  exchangeContainer: ({ walletDisconnected }) => ({
-    padding: `10px 15px ${walletDisconnected ? '10px' : '0'} 15px `,
+  exchangeContainer: {
+    padding: '10px 15px 0  15px ',
     display: 'flex'
-  }),
+  },
   noData: {
     color: colors.invariant.warning,
     ...typography.caption2,
@@ -107,11 +90,6 @@ const useStyles = makeStyles<Theme, { walletDisconnected: boolean }>(theme => ({
     cursor: 'default'
   },
   loading: {
-    width: 15,
-    height: 15
-  },
-  loadingBalance: {
-    padding: '0 10px 0 20px',
     width: 15,
     height: 15
   },

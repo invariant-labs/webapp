@@ -112,11 +112,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 0,
     minWidth: 'auto',
     background: 'none',
-    '&:hover': {
+    '& :hover': {
       background: 'none'
-    },
-    '&:disabled': {
-      opacity: 0.5
     }
   },
   settingsIconBtn: {

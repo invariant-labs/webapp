@@ -2,7 +2,6 @@ ServiceWorker.ts
 react-app-env.d.ts
 config-overrides.js
 build
-dist
+dist 
 vite.config.ts
 .eslintrc.js
-storybook-static

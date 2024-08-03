@@ -7,7 +7,6 @@ export interface IProps {
   valueChangeHandler: (value: number) => void
   valueIndex: number
   dragHandler: (value: number) => void
-  minimumSliderIndex: number
 }
 
 interface ThumbProps extends React.HTMLAttributes<HTMLSpanElement> {
@@ -43,15 +42,9 @@ export const ConcentrationSlider: React.FC<IProps> = ({
   values,
   valueChangeHandler,
   valueIndex,
-  dragHandler,
-  minimumSliderIndex
+  dragHandler
 }) => {
-  const disabledPercentageRange = (100 * minimumSliderIndex) / values.length
-
-  const sliderClasses = useSliderStyles({
-    valuesLength: values.length,
-    disabledRange: disabledPercentageRange
-  })
+  const sliderClasses = useSliderStyles({ valuesLength: values.length })
 
   const onChangeCommited = useCallback(
     (_e: ChangeEvent<{}>, value: number | number[]) => {
