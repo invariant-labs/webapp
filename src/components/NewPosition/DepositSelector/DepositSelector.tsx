@@ -131,7 +131,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return 'Select tokens'
     }
 
-    if (tokenA === tokenB) {
+    if (tokenA.equals(tokenB)) {
       return 'Select different tokens'
     }
 
@@ -151,7 +151,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     if (
       !tokenAInputState.blocked &&
       printBNtoBN(tokenAInputState.value, tokens[tokenA.toString()].decimals).gt(
-        tokens[tokenB.toString()].balance
+        tokens[tokenA.toString()].balance
       )
     ) {
       return "You don't have enough token A"
@@ -220,9 +220,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             <Select
               tokens={tokens}
               current={tokenA !== null ? tokens[tokenA.toString()] : null}
-              onSelect={index => {
-                setTokenA(index)
-                setPositionTokens(index, tokenB, feeTierIndex)
+              onSelect={address => {
+                setTokenA(address)
+                setPositionTokens(address, tokenB, feeTierIndex)
               }}
               centered
               className={classes.customSelect}
@@ -255,9 +255,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             <Select
               tokens={tokens}
               current={tokenB !== null ? tokens[tokenB.toString()] : null}
-              onSelect={index => {
-                setTokenB(index)
-                setPositionTokens(tokenA, index, feeTierIndex)
+              onSelect={address => {
+                setTokenB(address)
+                setPositionTokens(tokenA, address, feeTierIndex)
               }}
               centered
               className={classes.customSelect}

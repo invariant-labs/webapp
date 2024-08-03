@@ -194,7 +194,7 @@ export const NewPosition: React.FC<INewPosition> = ({
       return 'Select tokens to set price range.'
     }
 
-    if (tokenA === tokenB) {
+    if (tokenA.equals(tokenB)) {
       return "Token A can't be the same as token B"
     }
 
@@ -602,7 +602,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         {isCurrentPoolExisting ||
         tokenA === null ||
         tokenB === null ||
-        tokenA === tokenB ||
+        tokenA.equals(tokenB) ||
         isWaitingForNewPool ? (
           <RangeSelector
             poolIndex={poolIndex}
@@ -610,7 +610,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             blocked={
               tokenA === null ||
               tokenB === null ||
-              tokenA === tokenB ||
+              tokenA.equals(tokenB) ||
               data.length === 0 ||
               isWaitingForNewPool
             }

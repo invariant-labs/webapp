@@ -348,7 +348,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       return
     }
 
-    getJupTokensRatioPrice(tokenA.toString(), tokenB.toString())
+    getJupTokensRatioPrice(tokenB.toString(), tokenA.toString())
       .then(data => setGlobalPrice(data.price))
       .catch(() => setGlobalPrice(undefined))
   }, [tokenA, tokenB])
@@ -497,8 +497,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
           tokenBKey !== null &&
           !tokenAKey.equals(tokenBKey) &&
           !(
-            tokenA === tokenAKey &&
-            tokenB === tokenBKey &&
+            tokenA?.equals(tokenAKey) &&
+            tokenB?.equals(tokenBKey) &&
             fee.eq(ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee)
           )
         ) {
@@ -512,8 +512,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
           if (
             index !== poolIndex &&
             !(
-              tokenA === tokenBKey &&
-              tokenB === tokenAKey &&
+              tokenA?.equals(tokenBKey) &&
+              tokenB?.equals(tokenAKey) &&
               fee.eq(ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee)
             )
           ) {
@@ -522,8 +522,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
               setCurrentPairReversed(null)
             }
           } else if (
-            tokenA === tokenBKey &&
-            tokenB === tokenAKey &&
+            tokenA?.equals(tokenBKey) &&
+            tokenB?.equals(tokenAKey) &&
             fee.eq(ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee)
           ) {
             if (isMountedRef.current) {
@@ -540,8 +540,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
             )
           } else if (
             !(
-              tokenA === tokenBKey &&
-              tokenB === tokenAKey &&
+              tokenA?.equals(tokenBKey) &&
+              tokenB?.equals(tokenAKey) &&
               fee.eq(ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee)
             )
           ) {
