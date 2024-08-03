@@ -18,17 +18,17 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import AddTokenModal from '@components/Modals/AddTokenModal/AddTokenModal'
 import useStyles from '../style'
 import { SwapToken } from '@selectors/solanaWallet'
-import { PublicKey } from '@solana/web3.js'
 import { theme } from '@static/theme'
+import { PublicKey } from '@solana/web3.js'
 
 export interface ISelectTokenModal {
-  tokens: SwapToken[]
+  tokens: Record<string, SwapToken>
   commonTokens: PublicKey[]
   open: boolean
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
   centered?: boolean
-  onSelect: (index: number) => void
+  onSelect: (address: PublicKey) => void
   hideBalances?: boolean
   handleAddToken: (address: string) => void
   initialHideUnknownTokensValue: boolean
@@ -93,61 +93,70 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
 
   const outerRef = useRef<HTMLElement>(null)
 
-  const tokensWithIndexes = useMemo(
-    () =>
-      tokens.map((token, index) => ({
-        ...token,
-        index,
-        strAddress: token.assetAddress.toString()
-      })),
-    [tokens]
-  )
+  const commonTokensList = useMemo(() => {
+    const commonTokensList: SwapToken[] = []
 
-  const commonTokensList = useMemo(
-    () =>
-      tokensWithIndexes.filter(
-        ({ assetAddress }) => commonTokens.findIndex(key => key.equals(assetAddress)) !== -1
-      ),
-    [tokensWithIndexes, commonTokens]
-  )
+    commonTokens.forEach(assetAddress => {
+      const token = tokens[assetAddress.toString()]
+
+      if (token) {
+        commonTokensList.push({ ...token, assetAddress })
+      }
+    })
+
+    return commonTokensList
+  }, [tokens, commonTokens])
 
   const filteredTokens = useMemo(() => {
-    const list = tokensWithIndexes.filter(token => {
-      return (
+    if (!open) {
+      return []
+    }
+
+    const filteredTokens: SwapToken[] = []
+    for (const [assetAddress, token] of Object.entries(tokens)) {
+      if (
         token.symbol.toLowerCase().includes(value.toLowerCase()) ||
         token.name.toLowerCase().includes(value.toLowerCase()) ||
-        token.strAddress.includes(value)
-      )
-    })
-
-    const sorted = list.sort((a, b) => {
-      const aBalance = +printBN(a.balance, a.decimals)
-      const bBalance = +printBN(b.balance, b.decimals)
-      if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
-        if (value.length) {
-          if (
-            a.symbol.toLowerCase().startsWith(value.toLowerCase()) &&
-            !b.symbol.toLowerCase().startsWith(value.toLowerCase())
-          ) {
-            return -1
-          }
-
-          if (
-            b.symbol.toLowerCase().startsWith(value.toLowerCase()) &&
-            !a.symbol.toLowerCase().startsWith(value.toLowerCase())
-          ) {
-            return 1
-          }
+        assetAddress.includes(value)
+      ) {
+        if (hideUnknown && token.isUnknown) {
+          continue
         }
 
-        return a.symbol.toLowerCase().localeCompare(b.symbol.toLowerCase())
+        filteredTokens.push({ ...token, assetAddress: new PublicKey(assetAddress) })
       }
+    }
 
-      return aBalance === 0 ? 1 : -1
-    })
+    const sortedTokens = value
+      ? filteredTokens.sort((a, b) => {
+          const aBalance = +printBN(a.balance, a.decimals)
+          const bBalance = +printBN(b.balance, b.decimals)
+          if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
+            if (value.length) {
+              if (
+                a.symbol.toLowerCase().startsWith(value.toLowerCase()) &&
+                !b.symbol.toLowerCase().startsWith(value.toLowerCase())
+              ) {
+                return -1
+              }
 
-    return hideUnknown ? sorted.filter(token => !token.isUnknown) : sorted
-  }, [value, tokensWithIndexes, hideUnknown])
+              if (
+                b.symbol.toLowerCase().startsWith(value.toLowerCase()) &&
+                !a.symbol.toLowerCase().startsWith(value.toLowerCase())
+              ) {
+                return 1
+              }
+            }
+
+            return a.symbol.toLowerCase().localeCompare(b.symbol.toLowerCase())
+          }
+
+          return aBalance === 0 ? 1 : -1
+        })
+      : filteredTokens
+
+    return sortedTokens
+  }, [value, tokens, hideUnknown, open])
 
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
@@ -233,7 +242,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                   className={classes.commonTokenItem}
                   key={token.symbol}
                   onClick={() => {
-                    onSelect(token.index)
+                    onSelect(token.assetAddress)
                     setValue('')
                     handleClose()
                   }}>
@@ -273,6 +282,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                 return (
                   <Grid
                     className={classes.tokenItem}
+                    container
                     style={{
                       ...style,
                       width: '90%',
@@ -281,7 +291,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                     alignItems='center'
                     wrap='nowrap'
                     onClick={() => {
-                      onSelect(token.index)
+                      onSelect(token.assetAddress)
                       setValue('')
                       handleClose()
                     }}>

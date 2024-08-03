@@ -4,8 +4,8 @@ import { commonTokensForNetworks } from '@consts/static'
 import {
   addNewTokenToLocalStorage,
   TokenPriceData,
-  getNewTokenOrThrow,
-  getJupTokenPrice
+  getJupTokenPrice,
+  getNewTokenOrThrow
 } from '@consts/utils'
 import { actions as poolsActions } from '@reducers/pools'
 import { actions as snackbarsActions } from '@reducers/snackbars'
@@ -18,7 +18,7 @@ import {
   tickMaps
 } from '@selectors/pools'
 import { network } from '@selectors/solanaConnection'
-import { status, swapTokens, swapTokensDict } from '@selectors/solanaWallet'
+import { status, swapTokensDict, balanceLoading } from '@selectors/solanaWallet'
 import { swap as swapPool } from '@selectors/swap'
 import { PublicKey } from '@solana/web3.js'
 import { getCurrentSolanaConnection } from '@web3/connection'
@@ -36,8 +36,8 @@ export const WrappedSwap = () => {
   const tickmap = useSelector(tickMaps)
   const poolTicksArray = useSelector(poolTicks)
   const allPools = useSelector(poolsArraySortedByFees)
-  const tokensList = useSelector(swapTokens)
   const tokensDict = useSelector(swapTokensDict)
+  const isBalanceLoading = useSelector(balanceLoading)
   const { success, inProgress } = useSelector(swapPool)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
   const networkType = useSelector(network)
@@ -47,16 +47,24 @@ export const WrappedSwap = () => {
   const [tokenTo, setTokenTo] = useState<PublicKey | null>(null)
 
   useEffect(() => {
+    let timerId1: any
+    let timerId2: any
+
     if (!inProgress && progress === 'progress') {
       setProgress(success ? 'approvedWithSuccess' : 'approvedWithFail')
 
-      setTimeout(() => {
+      timerId1 = setTimeout(() => {
         setProgress(success ? 'success' : 'failed')
       }, 1500)
 
-      setTimeout(() => {
+      timerId2 = setTimeout(() => {
         setProgress('none')
       }, 3000)
+    }
+
+    return () => {
+      clearTimeout(timerId1)
+      clearTimeout(timerId2)
     }
   }, [success, inProgress])
 
@@ -73,20 +81,11 @@ export const WrappedSwap = () => {
   const lastTokenFrom = localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`)
   const lastTokenTo = localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`)
 
-  const initialTokenFromIndex =
-    lastTokenFrom === null
-      ? null
-      : tokensList.findIndex(token => token.assetAddress.equals(new PublicKey(lastTokenFrom)))
-  const initialTokenToIndex =
-    lastTokenTo === null
-      ? null
-      : tokensList.findIndex(token => token.assetAddress.equals(new PublicKey(lastTokenTo)))
+  const initialTokenFrom = lastTokenFrom ? new PublicKey(lastTokenFrom) : null
+  const initialTokenTo = lastTokenTo ? new PublicKey(lastTokenTo) : null
 
   const addTokenHandler = (address: string) => {
-    if (
-      connection !== null &&
-      tokensList.findIndex(token => token.address.toString() === address) === -1
-    ) {
+    if (connection !== null && !tokensDict[address]) {
       getNewTokenOrThrow(address, connection)
         .then(data => {
           console.log(data)
@@ -174,21 +173,47 @@ export const WrappedSwap = () => {
     localStorage.setItem('INVARIANT_SWAP_SLIPPAGE', slippage)
   }
 
+  const onRefresh = (tokenFrom: PublicKey | null, tokenTo: PublicKey | null) => {
+    dispatch(walletActions.getBalance())
+
+    if (tokenFrom === null || tokenTo == null || tokenFrom === null || tokenTo === null) {
+      return
+    }
+
+    dispatch(
+      poolsActions.getAllPoolsForPairData({
+        first: tokenFrom,
+        second: tokenTo
+      })
+    )
+
+    const idFrom = tokensDict[tokenFrom.toString()].assetAddress.toString() ?? ''
+    if (idFrom) {
+      setPriceFromLoading(true)
+      getJupTokenPrice(idFrom)
+        .then(data => setTokenFromPriceData(data))
+        .catch(() => setTokenFromPriceData(undefined))
+        .finally(() => setPriceFromLoading(false))
+    } else {
+      setTokenFromPriceData(undefined)
+    }
+
+    const idTo = tokensDict[tokenTo.toString()].assetAddress.toString() ?? ''
+    if (idTo) {
+      setPriceToLoading(true)
+      getJupTokenPrice(idTo)
+        .then(data => setTokenToPriceData(data))
+        .catch(() => setTokenToPriceData(undefined))
+        .finally(() => setPriceToLoading(false))
+    } else {
+      setTokenToPriceData(undefined)
+    }
+  }
+
   return (
     <Swap
       isFetchingNewPool={isFetchingNewPool}
-      onRefresh={(tokenFromIndex, tokenToIndex) => {
-        if (tokenFromIndex === null || tokenToIndex == null) {
-          return
-        }
-
-        dispatch(
-          poolsActions.getAllPoolsForPairData({
-            first: tokensList[tokenFromIndex].address,
-            second: tokensList[tokenToIndex].address
-          })
-        )
-      }}
+      onRefresh={onRefresh}
       onSwap={(
         slippage,
         estimatedPriceAfterSwap,
@@ -238,25 +263,26 @@ export const WrappedSwap = () => {
         dispatch(walletActions.disconnect())
       }}
       walletStatus={walletStatus}
-      tokens={tokensList}
+      tokens={tokensDict}
       pools={allPools}
       swapData={swap}
       progress={progress}
       poolTicks={poolTicksArray}
       isWaitingForNewPool={isFetchingNewPool}
       tickmap={tickmap}
-      initialTokenFromIndex={initialTokenFromIndex === -1 ? null : initialTokenFromIndex}
-      initialTokenToIndex={initialTokenToIndex === -1 ? null : initialTokenToIndex}
+      initialTokenFrom={initialTokenFrom}
+      initialTokenTo={initialTokenTo}
       handleAddToken={addTokenHandler}
       commonTokens={commonTokensForNetworks[networkType]}
       initialHideUnknownTokensValue={initialHideUnknownTokensValue}
       onHideUnknownTokensChange={setHideUnknownTokensValue}
       tokenFromPriceData={tokenFromPriceData}
       tokenToPriceData={tokenToPriceData}
-      priceFromLoading={priceFromLoading}
-      priceToLoading={priceToLoading}
+      priceFromLoading={priceFromLoading || isBalanceLoading}
+      priceToLoading={priceToLoading || isBalanceLoading}
       onSlippageChange={onSlippageChange}
       initialSlippage={initialSlippage}
+      isBalanceLoading={isBalanceLoading}
     />
   )
 }

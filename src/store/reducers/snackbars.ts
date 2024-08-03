@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PayloadType } from './types'
-import { Color } from '@material-ui/lab/Alert'
+import { SnackbarVariant } from '@components/Snackbar/Snackbar'
+import { createLoaderKey } from '@consts/utils'
 
 export interface ISnackbar {
   message: string
   key?: string
-  variant: Color
+  variant: SnackbarVariant
   open: boolean
   action?: (key: number) => JSX.Element
   persist?: boolean
@@ -27,7 +28,7 @@ const snackbarsSlice = createSlice({
   reducers: {
     add(state, action: PayloadAction<Omit<ISnackbar, 'open'>>) {
       state.snackbars.push({
-        key: (new Date().getMilliseconds() + Math.random()).toString(),
+        key: action.payload.key ? action.payload.key : createLoaderKey(),
         ...action.payload,
         open: true
       })
