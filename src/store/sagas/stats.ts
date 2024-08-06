@@ -7,15 +7,12 @@ import {
   getNetworkStats,
   getPoolsAPY,
   getPoolsFromAdresses,
-  printBN,
-  getCoingeckoPricesData,
-  TokenPriceData
+  printBN
 } from '@consts/utils'
 import { tokens } from '@selectors/pools'
 import { PublicKey } from '@solana/web3.js'
 import { getMarketProgram } from '@web3/programs/amm'
 import { PoolWithAddress, actions as poolsActions } from '@reducers/pools'
-import { Token } from '@consts/static'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { getConnection } from './connection'
 
@@ -57,29 +54,6 @@ export function* getStats(): Generator {
     yield* put(poolsActions.addTokens(newTokens))
     allTokens = yield* select(tokens)
 
-    const preparedTokens: Record<string, Required<Token>> = {}
-    Object.entries(allTokens).forEach(([key, val]) => {
-      if (typeof val.coingeckoId !== 'undefined') {
-        preparedTokens[key] = val as Required<Token>
-      }
-    })
-
-    let tokensPricesData: Record<string, TokenPriceData> = {}
-    let fromJupiter = true
-
-    try {
-      tokensPricesData = yield* call(
-        getJupPricesData,
-        Object.values(preparedTokens).map(token => token.address.toString())
-      )
-    } catch (e) {
-      fromJupiter = false
-      tokensPricesData = yield* call(
-        getCoingeckoPricesData,
-        Object.values(preparedTokens).map(token => token.coingeckoId)
-      )
-    }
-
     const volume24 = {
       value: 0,
       change: 0
@@ -111,18 +85,10 @@ export function* getStats(): Generator {
         return
       }
 
-      const tokenXId = fromJupiter
-        ? preparedTokens?.[poolsDataObject[address].tokenX.toString()]?.address.toString() ?? ''
-        : preparedTokens?.[poolsDataObject[address].tokenX.toString()]?.coingeckoId ?? ''
-
-      const tokenYId = fromJupiter
-        ? preparedTokens?.[poolsDataObject[address].tokenY.toString()]?.address.toString() ?? ''
-        : preparedTokens?.[poolsDataObject[address].tokenY.toString()]?.coingeckoId ?? ''
-
       if (!tokensDataObject[poolsDataObject[address].tokenX.toString()]) {
         tokensDataObject[poolsDataObject[address].tokenX.toString()] = {
           address: poolsDataObject[address].tokenX,
-          price: tokensPricesData?.[tokenXId]?.price ?? 0,
+          price: 0,
           volume24: 0,
           tvl: 0
         }
@@ -131,7 +97,7 @@ export function* getStats(): Generator {
       if (!tokensDataObject[poolsDataObject[address].tokenY.toString()]) {
         tokensDataObject[poolsDataObject[address].tokenY.toString()] = {
           address: poolsDataObject[address].tokenY,
-          price: tokensPricesData?.[tokenYId]?.price ?? 0,
+          price: 0,
           volume24: 0,
           tvl: 0
         }
@@ -198,6 +164,12 @@ export function* getStats(): Generator {
           snapshot.liquidityX.usdValue24 + snapshot.liquidityY.usdValue24
         feesForTimestamps[timestamp] += snapshot.feeX.usdValue24 + snapshot.feeY.usdValue24
       })
+    })
+
+    const tokensPricesData = yield* call(getJupPricesData, Object.keys(tokensDataObject))
+
+    Object.entries(tokensPricesData).forEach(([address, token]) => {
+      tokensDataObject[address].price = token.price
     })
 
     const volumePlot: TimeData[] = Object.entries(volumeForTimestamps)
