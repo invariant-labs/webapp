@@ -9,13 +9,12 @@ const run = async () => {
   ).data
 
   const tokensList = {}
-  tokensObject.forEach(({ symbol, address, decimals, name, logoURI, extensions }) => {
+  tokensObject.forEach(({ symbol, address, decimals, name, logoURI }) => {
     tokensList[address] = {
       symbol,
       decimals,
       name,
-      logoURI,
-      ...(extensions?.coingeckoId ? { coingeckoId: extensions.coingeckoId } : {})
+      logoURI
     }
   })
 
