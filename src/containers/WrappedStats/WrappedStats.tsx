@@ -116,9 +116,9 @@ export const WrappedStats: React.FC = () => {
           <Grid container className={classes.row}>
             <TokensList
               data={tokensList.map(tokenData => ({
-                icon: tokenData.tokenDetails.logoURI,
-                name: tokenData.tokenDetails.name,
-                symbol: tokenData.tokenDetails.symbol,
+                icon: tokenData.tokenDetails?.logoURI,
+                name: tokenData.tokenDetails?.name,
+                symbol: tokenData.tokenDetails?.symbol,
                 price: tokenData.price,
                 volume: tokenData.volume24,
                 TVL: tokenData.tvl
@@ -128,10 +128,10 @@ export const WrappedStats: React.FC = () => {
           <Typography className={classes.subheader}>Top pools</Typography>
           <PoolList
             data={poolsList.map(poolData => ({
-              symbolFrom: poolData.tokenXDetails.symbol,
-              symbolTo: poolData.tokenYDetails.symbol,
-              iconFrom: poolData.tokenXDetails.logoURI,
-              iconTo: poolData.tokenYDetails.logoURI,
+              symbolFrom: poolData.tokenXDetails?.symbol,
+              symbolTo: poolData.tokenYDetails?.symbol,
+              iconFrom: poolData.tokenXDetails?.logoURI,
+              iconTo: poolData.tokenYDetails?.logoURI,
               volume: poolData.volume24,
               TVL: poolData.tvl,
               fee: poolData.fee,
