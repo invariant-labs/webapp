@@ -1,5 +1,5 @@
 import { actions, PoolStatsData, TimeData, TokenStatsData } from '@reducers/stats'
-import { call, put, select, takeEvery } from 'typed-redux-saga'
+import { all, call, put, select, takeEvery } from 'typed-redux-saga'
 import { network, rpcAddress } from '@selectors/solanaConnection'
 import {
   getJupPricesData,
@@ -21,8 +21,10 @@ export function* getStats(): Generator {
     const connection = yield* call(getConnection)
     const currentNetwork = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const data = yield* call(getNetworkStats, currentNetwork.toLowerCase())
-    const poolsApy = yield* call(getPoolsAPY, currentNetwork.toLowerCase())
+    const { data, poolsApy } = yield* all({
+      data: call(getNetworkStats, currentNetwork.toLowerCase()),
+      poolsApy: call(getPoolsAPY, currentNetwork.toLowerCase())
+    })
 
     const marketProgram = yield* call(getMarketProgram, currentNetwork, rpc)
 
@@ -35,24 +37,6 @@ export function* getStats(): Generator {
     allPoolsData.forEach(pool => {
       poolsDataObject[pool.address.toString()] = pool
     })
-
-    let allTokens = yield* select(tokens)
-
-    const unknownTokens = new Set<PublicKey>()
-
-    allPoolsData.forEach(pool => {
-      if (!allTokens[pool.tokenX.toString()]) {
-        unknownTokens.add(pool.tokenX)
-      }
-
-      if (!allTokens[pool.tokenY.toString()]) {
-        unknownTokens.add(pool.tokenY)
-      }
-    })
-
-    const newTokens = yield* call(getFullNewTokensData, [...unknownTokens], connection)
-    yield* put(poolsActions.addTokens(newTokens))
-    allTokens = yield* select(tokens)
 
     const volume24 = {
       value: 0,
@@ -116,17 +100,17 @@ export function* getStats(): Generator {
         return
       }
 
-      const tokenX = allTokens[poolsDataObject[address].tokenX.toString()]
-      const tokenY = allTokens[poolsDataObject[address].tokenY.toString()]
+      const tokenX = poolsDataObject[address].tokenX.toString()
+      const tokenY = poolsDataObject[address].tokenY.toString()
 
       const lastSnapshot = snapshots[snapshots.length - 1]
 
-      tokensDataObject[tokenX.address.toString()].volume24 +=
+      tokensDataObject[tokenX].volume24 +=
         lastSnapshot.timestamp === lastTimestamp ? lastSnapshot.volumeX.usdValue24 : 0
-      tokensDataObject[tokenY.address.toString()].volume24 +=
+      tokensDataObject[tokenY].volume24 +=
         lastSnapshot.timestamp === lastTimestamp ? lastSnapshot.volumeY.usdValue24 : 0
-      tokensDataObject[tokenX.address.toString()].tvl += lastSnapshot.liquidityX.usdValue24
-      tokensDataObject[tokenY.address.toString()].tvl += lastSnapshot.liquidityY.usdValue24
+      tokensDataObject[tokenX].tvl += lastSnapshot.liquidityX.usdValue24
+      tokensDataObject[tokenY].tvl += lastSnapshot.liquidityY.usdValue24
 
       poolsData.push({
         volume24:
@@ -218,6 +202,23 @@ export function* getStats(): Generator {
         liquidityPlot
       })
     )
+
+    const allTokens = yield* select(tokens)
+
+    const unknownTokens = new Set<PublicKey>()
+
+    allPoolsData.forEach(pool => {
+      if (!allTokens[pool.tokenX.toString()]) {
+        unknownTokens.add(pool.tokenX)
+      }
+
+      if (!allTokens[pool.tokenY.toString()]) {
+        unknownTokens.add(pool.tokenY)
+      }
+    })
+
+    const newTokens = yield* call(getFullNewTokensData, [...unknownTokens], connection)
+    yield* put(poolsActions.addTokens(newTokens))
   } catch (error) {
     console.log(error)
   }
