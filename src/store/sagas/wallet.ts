@@ -35,6 +35,7 @@ import { actions as farmsActions } from '@reducers/farms'
 import { actions as bondsActions } from '@reducers/bonds'
 import { closeSnackbar } from 'notistack'
 import { createLoaderKey } from '@consts/utils'
+import { handleError } from '.'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
@@ -406,6 +407,8 @@ export function* handleDisconnect(): Generator {
     yield* put(bondsActions.setUserVested({}))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleError, error as Error)
   }
 }
 

@@ -19,6 +19,7 @@ import classNames from 'classnames'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import useStyles from './style'
+import { RpcStatus } from '@reducers/solanaConnection'
 
 export interface IHeader {
   address: PublicKey
@@ -33,6 +34,7 @@ export interface IHeader {
   defaultMainnetRPC: string
   recentPriorityFee: string
   onPrioritySave: () => void
+  rpcStatus: RpcStatus
 }
 
 export const Header: React.FC<IHeader> = ({
@@ -47,7 +49,8 @@ export const Header: React.FC<IHeader> = ({
   onDisconnectWallet,
   defaultMainnetRPC,
   recentPriorityFee,
-  onPrioritySave
+  onPrioritySave,
+  rpcStatus
 }) => {
   const classes = useStyles()
   const buttonClasses = useButtonStyles()
@@ -162,7 +165,12 @@ export const Header: React.FC<IHeader> = ({
           </Hidden>
           <Hidden xsDown>
             {typeOfNetwork === NetworkType.MAINNET ? (
-              <SelectRPCButton rpc={rpc} networks={mainnetRPCs} onSelect={onNetworkSelect} />
+              <SelectRPCButton
+                rpc={rpc}
+                networks={mainnetRPCs}
+                rpcStatus={rpcStatus}
+                onSelect={onNetworkSelect}
+              />
             ) : null}
           </Hidden>
           <SelectNetworkButton
@@ -269,6 +277,7 @@ export const Header: React.FC<IHeader> = ({
                 unblurContent()
               }}
               activeRPC={rpc}
+              rpcStatus={rpcStatus}
             />
           ) : null}
         </Hidden>

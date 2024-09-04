@@ -6,16 +6,20 @@ import { ISelectNetwork } from '@components/Modals/SelectNetwork/SelectNetwork'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import { NetworkType } from '@consts/static'
 import SelectMainnetRPC from '@components/Modals/SelectMainnetRPC/SelectMainnetRPC'
+import { RpcStatus } from '@reducers/solanaConnection'
+import icons from '@static/icons'
 
 export interface IProps {
   rpc: string
   networks: ISelectNetwork[]
+  rpcStatus: RpcStatus
   onSelect: (networkType: NetworkType, rpcAddress: string, rpcName?: string) => void
   disabled?: boolean
 }
 export const SelectRPCButton: React.FC<IProps> = ({
   rpc,
   networks,
+  rpcStatus,
   onSelect,
   disabled = false
 }) => {
@@ -43,6 +47,9 @@ export const SelectRPCButton: React.FC<IProps> = ({
         disabled={disabled}
         endIcon={<KeyboardArrowDownIcon id='downIcon' />}
         onClick={handleClick}>
+        {rpcStatus === RpcStatus.IgnoredWithError && (
+          <img className={classes.warningIcon} src={icons.warningIcon} alt='Warning icon' />
+        )}
         RPC
       </Button>
       <SelectMainnetRPC
@@ -52,6 +59,7 @@ export const SelectRPCButton: React.FC<IProps> = ({
         onSelect={onSelect}
         handleClose={handleClose}
         activeRPC={rpc}
+        rpcStatus={rpcStatus}
       />
     </>
   )

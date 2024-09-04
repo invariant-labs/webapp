@@ -23,6 +23,7 @@ import { BN } from '@project-serum/anchor'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { network, rpcAddress } from '@selectors/solanaConnection'
 import { closeSnackbar } from 'notistack'
+import { handleError } from '.'
 
 export function* handleGetBondsList() {
   try {
@@ -58,6 +59,8 @@ export function* handleGetBondsList() {
     yield* put(actions.setBondsList(bondsObject))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -81,6 +84,8 @@ export function* handleGetUserVested() {
     yield* put(actions.setUserVested(vestedObject))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -278,6 +283,8 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
         persist: false
       })
     )
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -392,6 +399,8 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
         persist: false
       })
     )
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -576,6 +585,8 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
         persist: false
       })
     )
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -685,6 +696,8 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
         persist: false
       })
     )
+
+    yield* call(handleError, error as Error)
   }
 }
 

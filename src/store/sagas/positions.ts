@@ -40,6 +40,7 @@ import { getConnection } from './connection'
 import { createClaimAllPositionRewardsTx } from './farms'
 import { createAccount, getWallet, sleep } from './wallet'
 import { closeSnackbar } from 'notistack'
+import { handleError } from '.'
 
 function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionData>): Generator {
   const data = action.payload
@@ -329,6 +330,8 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
         })
       )
     }
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -560,6 +563,8 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
         })
       )
     }
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -760,6 +765,8 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
         })
       )
     }
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -804,6 +811,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       yDecimal
     )
     yield put(actions.setErrorPlotTicks(data))
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -857,8 +866,10 @@ export function* handleGetPositionsList() {
     yield* take(pattern)
 
     yield* put(actions.setPositionsList(positions))
-  } catch (_error) {
+  } catch (error) {
     yield* put(actions.setPositionsList([]))
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -1042,6 +1053,8 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
         })
       )
     }
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -1198,6 +1211,8 @@ export function* handleClaimFee(action: PayloadAction<number>) {
         })
       )
     }
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -1403,6 +1418,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
         })
       )
     }
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -1591,6 +1608,8 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
         })
       )
     }
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -1617,6 +1636,8 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
     yield put(actions.getCurrentPositionRangeTicks(position.id.toString()))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -1657,6 +1678,8 @@ export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<string
     )
   } catch (error) {
     console.log(error)
+
+    yield* call(handleError, error as Error)
   }
 }
 

@@ -62,6 +62,7 @@ import {
 } from '@invariant-labs/sdk/lib/utils'
 import { PositionWithAddress } from '@reducers/positions'
 import { closeSnackbar } from 'notistack'
+import { handleError } from '.'
 
 export function* getFarmsTotals() {
   try {
@@ -144,6 +145,8 @@ export function* getFarmsTotals() {
     yield* put(actions.updateFarmsTotals(updatesObject))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -222,6 +225,8 @@ export function* getFarmsApy() {
     yield* put(actions.updateFarmsApy(apyObject))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -300,6 +305,8 @@ export function* handleGetFarmsList() {
     yield* fork(getFarmsApy)
   } catch (error) {
     console.log(error)
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -388,6 +395,8 @@ export function* getStakesApy() {
     yield* put(actions.updateStakesRewardData(apyObject))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -439,6 +448,8 @@ export function* handleGetUserStakes() {
     yield* fork(getStakesApy)
   } catch (error) {
     console.log(error)
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -526,6 +537,8 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
         success: false
       })
     )
+
+    yield* call(handleError, error as Error)
   }
 
   try {
@@ -642,6 +655,8 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
     }
   } catch (error) {
     console.log(error)
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -852,6 +867,8 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
         persist: false
       })
     )
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -957,6 +974,8 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
         persist: false
       })
     )
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -1084,6 +1103,8 @@ export function* handleGetNewStakeRangeTicks(action: PayloadAction<string[]>) {
     yield* put(actions.addNewStakeRangeTicks(rangeTicks))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleError, error as Error)
   }
 }
 

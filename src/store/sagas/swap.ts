@@ -20,6 +20,7 @@ import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { getConnection } from './connection'
 import { createAccount, getWallet } from './wallet'
 import { closeSnackbar } from 'notistack'
+import { handleError } from '.'
 
 export function* handleSwapWithSOL(): Generator {
   const loaderSwappingTokens = createLoaderKey()
@@ -333,6 +334,8 @@ export function* handleSwapWithSOL(): Generator {
     yield put(snackbarsActions.remove(loaderSwappingTokens))
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
+
+    yield* call(handleError, error as Error)
   }
 }
 
@@ -514,6 +517,8 @@ export function* handleSwap(): Generator {
     yield put(snackbarsActions.remove(loaderSwappingTokens))
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
+
+    yield* call(handleError, error as Error)
   }
 }
 

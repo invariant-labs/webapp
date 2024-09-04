@@ -6,6 +6,7 @@ import { actions as snackbarsActions } from '@reducers/snackbars'
 import { rpcAddress } from '@selectors/solanaConnection'
 import { Connection } from '@solana/web3.js'
 import { PayloadAction } from '@reduxjs/toolkit'
+import { handleError } from '.'
 
 export function* getConnection(): SagaGenerator<Connection> {
   const rpc = yield* select(rpcAddress)
@@ -41,6 +42,8 @@ export function* initConnection(): Generator {
         persist: false
       })
     )
+
+    yield* call(handleError, error as Error)
   }
 }
 
