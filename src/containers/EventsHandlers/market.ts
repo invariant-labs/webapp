@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { network, rpcAddress, status } from '@selectors/solanaConnection'
-import { Status } from '@reducers/solanaConnection'
 import { actions } from '@reducers/pools'
 import { getMarketProgramSync } from '@web3/programs/amm'
 import { poolsArraySortedByFees, poolTicks, tickMaps } from '@selectors/pools'
@@ -15,7 +14,7 @@ import { swap } from '@selectors/swap'
 import { findTickmapChanges, Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
 import { getCurrentSolanaConnection } from '@web3/connection'
-import { actions as solanaConnectionActions } from '@reducers/solanaConnection'
+import { Status, actions as solanaConnectionActions } from '@reducers/solanaConnection'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -176,7 +175,7 @@ const MarketEvents = () => {
             return
           }
           // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
-          marketProgram.onTickmapChange(new PublicKey(address), tickmap => {
+          void marketProgram.onTickmapChange(new PublicKey(address), tickmap => {
             const changes = findTickmapChanges(
               tickmaps[address].bitmap,
               tickmap.bitmap,
@@ -187,7 +186,7 @@ const MarketEvents = () => {
               if (info === 'added') {
                 try {
                   // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
-                  marketProgram.onTickChange(
+                  void marketProgram.onTickChange(
                     new Pair(pool.tokenX, pool.tokenY, {
                       fee: pool.fee.v,
                       tickSpacing: pool.tickSpacing
@@ -226,14 +225,14 @@ const MarketEvents = () => {
     if (tokenFrom && tokenTo) {
       const pools = findPairs(tokenFrom, tokenTo, allPools)
       for (const pool of pools) {
-        marketProgram
+        void marketProgram
           .getTickmap(
             new Pair(pool.tokenX, pool.tokenY, { fee: pool.fee.v, tickSpacing: pool.tickSpacing })
           )
           .then(res => {
             dispatch(actions.setTickMaps({ index: pool.tickmap.toString(), tickMapStructure: res }))
           })
-        marketProgram
+        void marketProgram
           .getAllTicks(
             new Pair(tokenFrom, tokenTo, { fee: pool.fee.v, tickSpacing: pool.tickSpacing })
           )
