@@ -1,6 +1,6 @@
 import Header from '@components/Header/Header'
 import { RpcErrorModal } from '@components/RpcErrorModal/RpcErrorModal'
-import { NetworkType, SolanaNetworks } from '@consts/static'
+import { NetworkType, RECOMMENDED_RPC_ADDRESS, SolanaNetworks } from '@consts/static'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions, RpcStatus } from '@reducers/solanaConnection'
 import { Status, actions as walletActions } from '@reducers/solanaWallet'
@@ -78,7 +78,7 @@ export const HeaderWrapper: React.FC = () => {
 
   return (
     <>
-      {currentRpcStatus === RpcStatus.Error && (
+      {currentRpcStatus === RpcStatus.Error && currentRpc !== RECOMMENDED_RPC_ADDRESS && (
         <RpcErrorModal
           rpcAddress={currentRpc}
           useDefaultRpc={useDefaultRpc}

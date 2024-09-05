@@ -37,7 +37,7 @@ import {
 } from '@solana/web3.js'
 import { farms, stakesForPosition, userStakes } from '@selectors/farms'
 import { accounts } from '@selectors/solanaWallet'
-import { getConnection } from './connection'
+import { getConnection, handleRpcError } from './connection'
 import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import {
@@ -62,7 +62,6 @@ import {
 } from '@invariant-labs/sdk/lib/utils'
 import { PositionWithAddress } from '@reducers/positions'
 import { closeSnackbar } from 'notistack'
-import { handleError } from '.'
 
 export function* getFarmsTotals() {
   try {
@@ -146,7 +145,7 @@ export function* getFarmsTotals() {
   } catch (error) {
     console.log(error)
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -226,7 +225,7 @@ export function* getFarmsApy() {
   } catch (error) {
     console.log(error)
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -306,7 +305,7 @@ export function* handleGetFarmsList() {
   } catch (error) {
     console.log(error)
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -396,7 +395,7 @@ export function* getStakesApy() {
   } catch (error) {
     console.log(error)
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -449,7 +448,7 @@ export function* handleGetUserStakes() {
   } catch (error) {
     console.log(error)
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -538,7 +537,7 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
       })
     )
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 
   try {
@@ -656,7 +655,7 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
   } catch (error) {
     console.log(error)
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -868,7 +867,7 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
       })
     )
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -975,7 +974,7 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
       })
     )
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1104,7 +1103,7 @@ export function* handleGetNewStakeRangeTicks(action: PayloadAction<string[]>) {
   } catch (error) {
     console.log(error)
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 

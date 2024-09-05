@@ -15,6 +15,7 @@ import { swap } from '@selectors/swap'
 import { findTickmapChanges, Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
 import { getCurrentSolanaConnection } from '@web3/connection'
+import { actions as solanaConnectionActions } from '@reducers/solanaConnection'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -232,9 +233,6 @@ const MarketEvents = () => {
           .then(res => {
             dispatch(actions.setTickMaps({ index: pool.tickmap.toString(), tickMapStructure: res }))
           })
-          .catch(err => {
-            console.log(err)
-          })
         marketProgram
           .getAllTicks(
             new Pair(tokenFrom, tokenTo, { fee: pool.fee.v, tickSpacing: pool.tickSpacing })
@@ -242,10 +240,17 @@ const MarketEvents = () => {
           .then(res => {
             dispatch(actions.setTicks({ index: pool.address.toString(), tickStructure: res }))
           })
-          .catch(err => console.log(err))
       }
     }
   }, [tokenFrom, tokenTo])
+
+  useEffect(() => {
+    window.addEventListener('unhandledrejection', e => {
+      dispatch(solanaConnectionActions.handleRpcError(e))
+    })
+
+    return () => {}
+  }, [])
 
   return null
 }

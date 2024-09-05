@@ -4,7 +4,7 @@ import useStyles from './style'
 import { blurContent, unblurContent } from '@consts/uiUtils'
 import { ISelectNetwork } from '@components/Modals/SelectNetwork/SelectNetwork'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
-import { NetworkType } from '@consts/static'
+import { NetworkType, RECOMMENDED_RPC_ADDRESS } from '@consts/static'
 import SelectMainnetRPC from '@components/Modals/SelectMainnetRPC/SelectMainnetRPC'
 import { RpcStatus } from '@reducers/solanaConnection'
 import icons from '@static/icons'
@@ -47,7 +47,7 @@ export const SelectRPCButton: React.FC<IProps> = ({
         disabled={disabled}
         endIcon={<KeyboardArrowDownIcon id='downIcon' />}
         onClick={handleClick}>
-        {rpcStatus === RpcStatus.IgnoredWithError && (
+        {rpcStatus === RpcStatus.IgnoredWithError && rpc !== RECOMMENDED_RPC_ADDRESS && (
           <img className={classes.warningIcon} src={icons.warningIcon} alt='Warning icon' />
         )}
         RPC

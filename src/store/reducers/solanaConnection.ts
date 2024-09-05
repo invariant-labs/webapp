@@ -77,6 +77,9 @@ const solanaConnectionSlice = createSlice({
     setRpcStatus(state, action: PayloadAction<RpcStatus>) {
       state.rpcStatus = action.payload
       return state
+    },
+    handleRpcError(state, _action: PayloadAction<PromiseRejectionEvent>) {
+      return state
     }
   }
 })

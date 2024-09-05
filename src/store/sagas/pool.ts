@@ -8,9 +8,8 @@ import { PublicKey } from '@solana/web3.js'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { getFullNewTokensData, getPools, getPoolsFromAdresses } from '@consts/utils'
 import { tokens } from '@selectors/pools'
-import { getConnection } from './connection'
+import { handleRpcError, getConnection } from './connection'
 import { network, rpcAddress } from '@selectors/solanaConnection'
-import { handleError } from '.'
 
 export interface iTick {
   index: Tick[]
@@ -38,7 +37,7 @@ export function* fetchPoolData(action: PayloadAction<Pair>) {
   } catch (error) {
     yield* put(actions.addPools([]))
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -54,7 +53,7 @@ export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
   } catch (error) {
     console.log(error)
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 

@@ -54,7 +54,7 @@ export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
       }}>
       <Grid className={classes.root}>
         <Typography className={classes.title}>Select mainnet RPC to use</Typography>
-        {rpcStatus === RpcStatus.IgnoredWithError && (
+        {rpcStatus === RpcStatus.IgnoredWithError && activeRPC !== RECOMMENDED_RPC_ADDRESS && (
           <Box display='flex' sx={{ margin: 10 }}>
             <img className={classes.warningIcon} src={icons.warningIcon} alt='Warning icon' />
             <Typography className={classes.warningText}>

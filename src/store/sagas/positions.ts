@@ -36,11 +36,10 @@ import {
 import { getMarketProgram } from '@web3/programs/amm'
 import { getStakerProgram } from '@web3/programs/staker'
 import { all, call, put, select, spawn, take, takeEvery, takeLatest } from 'typed-redux-saga'
-import { getConnection } from './connection'
+import { getConnection, handleRpcError } from './connection'
 import { createClaimAllPositionRewardsTx } from './farms'
 import { createAccount, getWallet, sleep } from './wallet'
 import { closeSnackbar } from 'notistack'
-import { handleError } from '.'
 
 function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionData>): Generator {
   const data = action.payload
@@ -331,7 +330,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       )
     }
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -564,7 +563,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
       )
     }
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -766,7 +765,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       )
     }
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -812,7 +811,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     )
     yield put(actions.setErrorPlotTicks(data))
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -869,7 +868,7 @@ export function* handleGetPositionsList() {
   } catch (error) {
     yield* put(actions.setPositionsList([]))
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1054,7 +1053,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
       )
     }
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1212,7 +1211,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
       )
     }
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1419,7 +1418,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       )
     }
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1609,7 +1608,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       )
     }
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1637,7 +1636,7 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
   } catch (error) {
     console.log(error)
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1679,7 +1678,7 @@ export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<string
   } catch (error) {
     console.log(error)
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 

@@ -6,7 +6,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { createLoaderKey, getFullNewTokensData } from '@consts/utils'
 import { tokens } from '@selectors/pools'
 import { actions as poolsActions } from '@reducers/pools'
-import { getConnection } from './connection'
+import { getConnection, handleRpcError } from './connection'
 import {
   Keypair,
   PublicKey,
@@ -23,7 +23,6 @@ import { BN } from '@project-serum/anchor'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { network, rpcAddress } from '@selectors/solanaConnection'
 import { closeSnackbar } from 'notistack'
-import { handleError } from '.'
 
 export function* handleGetBondsList() {
   try {
@@ -60,7 +59,7 @@ export function* handleGetBondsList() {
   } catch (error) {
     console.log(error)
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -85,7 +84,7 @@ export function* handleGetUserVested() {
   } catch (error) {
     console.log(error)
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -284,7 +283,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
       })
     )
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -400,7 +399,7 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
       })
     )
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -586,7 +585,7 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
       })
     )
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -697,7 +696,7 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
       })
     )
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 

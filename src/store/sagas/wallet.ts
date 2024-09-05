@@ -10,7 +10,7 @@ import {
 } from 'typed-redux-saga'
 
 import { actions, ITokenAccount, Status } from '@reducers/solanaWallet'
-import { getConnection } from './connection'
+import { getConnection, handleRpcError } from './connection'
 import { getSolanaWallet, disconnectWallet } from '@web3/wallet'
 import {
   Account,
@@ -35,7 +35,6 @@ import { actions as farmsActions } from '@reducers/farms'
 import { actions as bondsActions } from '@reducers/bonds'
 import { closeSnackbar } from 'notistack'
 import { createLoaderKey } from '@consts/utils'
-import { handleError } from '.'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
@@ -408,7 +407,7 @@ export function* handleDisconnect(): Generator {
   } catch (error) {
     console.log(error)
 
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 

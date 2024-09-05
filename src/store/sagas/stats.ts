@@ -14,8 +14,7 @@ import { PublicKey } from '@solana/web3.js'
 import { getMarketProgram } from '@web3/programs/amm'
 import { PoolWithAddress, actions as poolsActions } from '@reducers/pools'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { getConnection } from './connection'
-import { handleError } from '.'
+import { getConnection, handleRpcError } from './connection'
 
 export function* getStats(): Generator {
   try {
@@ -222,7 +221,7 @@ export function* getStats(): Generator {
     yield* put(poolsActions.addTokens(newTokens))
   } catch (error) {
     console.log(error)
-    yield* call(handleError, error as Error)
+    yield* call(handleRpcError, (error as Error).message)
     throw error
   }
 }
