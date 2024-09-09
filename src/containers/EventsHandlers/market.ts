@@ -174,7 +174,6 @@ const MarketEvents = () => {
           if (typeof pool === 'undefined') {
             return
           }
-          // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
           void marketProgram.onTickmapChange(new PublicKey(address), tickmap => {
             const changes = findTickmapChanges(
               tickmaps[address].bitmap,
@@ -185,7 +184,6 @@ const MarketEvents = () => {
             for (const [index, info] of Object.entries(changes)) {
               if (info === 'added') {
                 try {
-                  // trunk-ignore(eslint/@typescript-eslint/no-floating-promises)
                   void marketProgram.onTickChange(
                     new Pair(pool.tokenX, pool.tokenY, {
                       fee: pool.fee.v,
