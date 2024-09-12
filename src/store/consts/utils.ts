@@ -735,7 +735,7 @@ export interface PoolStatsDataWithString {
 }
 
 export const getFullSnap = async (name: string): Promise<FullSnap> => {
-  const { data } = await axios.get<FullSnap>(`http://stats.invariant.app/svm/full_snap/${name}`)
+  const { data } = await axios.get<FullSnap>(`https://stats.invariant.app/svm/full_snap/${name}`)
 
   return data
 }
