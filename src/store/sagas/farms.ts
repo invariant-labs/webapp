@@ -39,7 +39,13 @@ import { farms, stakesForPosition, userStakes } from '@selectors/farms'
 import { accounts } from '@selectors/solanaWallet'
 import { getConnection } from './connection'
 import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
-import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import {
+  createCloseAccountInstruction,
+  createInitializeAccountInstruction,
+  getMinimumBalanceForRentExemptAccount,
+  NATIVE_MINT,
+  TOKEN_PROGRAM_ID
+} from '@solana/spl-token'
 import {
   createLoaderKey,
   getJupTokenPrice,
@@ -681,26 +687,23 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     const createIx = SystemProgram.createAccount({
       fromPubkey: wallet.publicKey,
       newAccountPubkey: wrappedSolAccount.publicKey,
-      lamports: yield* call(Token.getMinBalanceRentForExemptAccount, connection),
+      lamports: yield* call(getMinimumBalanceForRentExemptAccount, connection),
       space: 165,
       programId: TOKEN_PROGRAM_ID
     })
 
-    const initIx = Token.createInitAccountInstruction(
-      TOKEN_PROGRAM_ID,
-      NATIVE_MINT,
+    const initIx = createInitializeAccountInstruction(
+      wallet.publicKey,
       wrappedSolAccount.publicKey,
+      wallet.publicKey,
+      NATIVE_MINT
+    )
+
+    const unwrapIx = createCloseAccountInstruction(
+      wrappedSolAccount.publicKey,
+      wallet.publicKey,
       wallet.publicKey
     )
-
-    const unwrapIx = Token.createCloseAccountInstruction(
-      TOKEN_PROGRAM_ID,
-      wrappedSolAccount.publicKey,
-      wallet.publicKey,
-      wallet.publicKey,
-      []
-    )
-
     const initialTx = new Transaction().add(createIx).add(initIx)
 
     const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
