@@ -49,7 +49,7 @@ storiesOf('inputs/exchangeAmount', module)
         onMaxClick={() => {}}
         tokens={tokens}
         current={tokens[0]}
-        onSelect={index => action(`chosen index: ${index}`)()}
+        onSelect={() => {}}
         disabled={false}
         handleAddToken={() => {}}
         commonTokens={[
@@ -72,7 +72,7 @@ storiesOf('inputs/exchangeAmount', module)
         onMaxClick={() => {}}
         tokens={tokens}
         current={tokens[0]}
-        onSelect={index => action(`chosen index: ${index}`)()}
+        onSelect={() => {}}
         disabled={false}
         handleAddToken={() => {}}
         commonTokens={[
