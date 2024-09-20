@@ -367,4 +367,4 @@ export const STABLECOIN_ADDRESSES: string[] = [
 
 export const TIMEOUT_ERROR_MESSAGE = 'Transaction timed out. Check the details to see if it passed.'
 
-export const REFRESHER_INTERVAL = 20
+export const REFRESHER_INTERVAL = 60
