@@ -41,7 +41,7 @@ import {
   canCreateNewPool,
   canCreateNewPosition,
   status,
-  swapTokens
+  swapTokensDict
 } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
 import { getCurrentSolanaConnection, networkTypetoProgramNetwork } from '@web3/connection'
@@ -69,7 +69,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
   const connection = getCurrentSolanaConnection()
 
-  const tokens = useSelector(swapTokens)
+  const tokens = useSelector(swapTokensDict)
   const walletStatus = useSelector(status)
   const allPools = useSelector(poolsArraySortedByFees)
   const poolsVolumeRanges = useSelector(volumeRanges)
@@ -89,8 +89,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
   const [progress, setProgress] = useState<ProgressState>('none')
 
-  const [tokenAIndex, setTokenAIndex] = useState<number | null>(null)
-  const [tokenBIndex, setTokenBIndex] = useState<number | null>(null)
+  const [tokenA, setTokenA] = useState<PublicKey | null>(null)
+  const [tokenB, setTokenB] = useState<PublicKey | null>(null)
 
   const [currentPairReversed, setCurrentPairReversed] = useState<boolean | null>(null)
 
@@ -118,12 +118,12 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     if (!inProgress && progress === 'progress') {
       setProgress(success ? 'approvedWithSuccess' : 'approvedWithFail')
 
-      if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
+      if (poolIndex !== null && tokenA !== null && tokenB !== null) {
         dispatch(
           actions.getCurrentPlotTicks({
             poolIndex,
             isXtoY: allPools[poolIndex].tokenX.equals(
-              tokens[currentPairReversed === true ? tokenBIndex : tokenAIndex].assetAddress
+              currentPairReversed === true ? tokenB : tokenA
             ),
             disableLoading: true
           })
@@ -146,33 +146,29 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   }, [success, inProgress])
 
   const isXtoY = useMemo(() => {
-    if (tokenAIndex !== null && tokenBIndex !== null) {
-      return (
-        tokens[tokenAIndex].assetAddress.toString() < tokens[tokenBIndex].assetAddress.toString()
-      )
+    if (tokenA !== null && tokenB !== null) {
+      return tokenA.toString() < tokenB.toString()
     }
     return true
-  }, [tokenAIndex, tokenBIndex])
+  }, [tokenA, tokenB])
 
   const xDecimal = useMemo(() => {
-    if (tokenAIndex !== null && tokenBIndex !== null) {
-      return tokens[tokenAIndex].assetAddress.toString() <
-        tokens[tokenBIndex].assetAddress.toString()
-        ? tokens[tokenAIndex].decimals
-        : tokens[tokenBIndex].decimals
+    if (tokenA !== null && tokenB !== null) {
+      return tokenA.toString() < tokenB.toString()
+        ? tokens[tokenA.toString()].decimals
+        : tokens[tokenB.toString()].decimals
     }
     return 0
-  }, [tokenAIndex, tokenBIndex])
+  }, [tokenA, tokenB])
 
   const yDecimal = useMemo(() => {
-    if (tokenAIndex !== null && tokenBIndex !== null) {
-      return tokens[tokenAIndex].assetAddress.toString() <
-        tokens[tokenBIndex].assetAddress.toString()
-        ? tokens[tokenBIndex].decimals
-        : tokens[tokenAIndex].decimals
+    if (tokenA !== null && tokenB !== null) {
+      return tokenA.toString() < tokenB.toString()
+        ? tokens[tokenB.toString()].decimals
+        : tokens[tokenA.toString()].decimals
     }
     return 0
-  }, [tokenAIndex, tokenBIndex])
+  }, [tokenA, tokenB])
 
   const [feeIndex, setFeeIndex] = useState(0)
 
@@ -198,14 +194,12 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   }, [isFetchingNewPool, poolIndex])
 
   useEffect(() => {
-    if (!isWaitingForNewPool && tokenAIndex !== null && tokenBIndex !== null) {
+    if (!isWaitingForNewPool && tokenA !== null && tokenB !== null) {
       const index = allPools.findIndex(
         pool =>
           pool.fee.v.eq(fee) &&
-          ((pool.tokenX.equals(tokens[tokenAIndex].assetAddress) &&
-            pool.tokenY.equals(tokens[tokenBIndex].assetAddress)) ||
-            (pool.tokenX.equals(tokens[tokenBIndex].assetAddress) &&
-              pool.tokenY.equals(tokens[tokenAIndex].assetAddress)))
+          ((pool.tokenX.equals(tokenA) && pool.tokenY.equals(tokenB)) ||
+            (pool.tokenX.equals(tokenB) && pool.tokenY.equals(tokenA)))
       )
       setPoolIndex(index !== -1 ? index : null)
 
@@ -213,7 +207,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
         dispatch(
           actions.getCurrentPlotTicks({
             poolIndex: index,
-            isXtoY: allPools[index].tokenX.equals(tokens[tokenAIndex].assetAddress)
+            isXtoY: allPools[index].tokenX.equals(tokenA)
           })
         )
       }
@@ -251,14 +245,14 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
   useEffect(() => {
     if (
-      tokenAIndex !== null &&
-      tokenBIndex !== null &&
+      tokenA !== null &&
+      tokenB !== null &&
       poolIndex === null &&
       progress === 'approvedWithSuccess'
     ) {
       dispatch(
         poolsActions.getPoolData(
-          new Pair(tokens[tokenAIndex].assetAddress, tokens[tokenBIndex].assetAddress, {
+          new Pair(tokenA, tokenB, {
             fee
           })
         )
@@ -275,10 +269,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   }
 
   const addTokenHandler = (address: string) => {
-    if (
-      connection !== null &&
-      tokens.findIndex(token => token.address.toString() === address) === -1
-    ) {
+    if (connection !== null && !tokens[address]) {
       getNewTokenOrThrow(address, connection)
         .then(data => {
           dispatch(poolsActions.addTokens(data))
@@ -340,62 +331,49 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const [tokenAPriceData, setTokenAPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [priceALoading, setPriceALoading] = useState(false)
   useEffect(() => {
-    if (tokenAIndex === null) {
+    if (tokenA === null) {
       return
     }
 
-    const id = tokens[tokenAIndex].assetAddress.toString() ?? ''
-    if (id.length) {
+    if (tokenA) {
       setPriceALoading(true)
-      getJupTokenPrice(id)
+      getJupTokenPrice(tokenA.toString())
         .then(data => setTokenAPriceData(data))
         .catch(() => setTokenAPriceData(undefined))
         .finally(() => setPriceALoading(false))
     } else {
       setTokenAPriceData(undefined)
     }
-  }, [tokenAIndex])
+  }, [tokenA])
 
   const [tokenBPriceData, setTokenBPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [priceBLoading, setPriceBLoading] = useState(false)
 
   const getGlobalPrice = () => {
-    if (tokenAIndex === null || tokenBIndex === null) {
+    if (tokenA === null || tokenB === null) {
       return
     }
 
-    const tokenAId = tokens[tokenBIndex].assetAddress.toString() ?? ''
-    const tokenBId = tokens[tokenAIndex].assetAddress.toString() ?? ''
-
-    if (tokenAId.length && tokenBId.length) {
-      getJupTokensRatioPrice(tokenBId, tokenAId)
-        .then(data => setGlobalPrice(data.price))
-        .catch(() => setGlobalPrice(undefined))
-    } else {
-      setGlobalPrice(undefined)
-    }
+    getJupTokensRatioPrice(tokenB.toString(), tokenA.toString())
+      .then(data => setGlobalPrice(data.price))
+      .catch(() => setGlobalPrice(undefined))
   }
 
   useEffect(() => {
     getGlobalPrice()
-  }, [tokenAIndex, tokenBIndex])
+  }, [tokenB, tokenA])
 
   useEffect(() => {
-    if (tokenBIndex === null) {
+    if (tokenB === null) {
       return
     }
 
-    const id = tokens[tokenBIndex].assetAddress.toString() ?? ''
-    if (id.length) {
-      setPriceBLoading(true)
-      getJupTokenPrice(id)
-        .then(data => setTokenBPriceData(data))
-        .catch(() => setTokenBPriceData(undefined))
-        .finally(() => setPriceBLoading(false))
-    } else {
-      setTokenBPriceData(undefined)
-    }
-  }, [tokenBIndex])
+    setPriceBLoading(true)
+    getJupTokenPrice(tokenB.toString())
+      .then(data => setTokenBPriceData(data))
+      .catch(() => setTokenBPriceData(undefined))
+      .finally(() => setPriceBLoading(false))
+  }, [tokenB])
 
   const currentVolumeRange = useMemo(() => {
     if (poolIndex === null) {
@@ -449,15 +427,11 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   }
 
   const calculatePoolAddress = async () => {
-    if (tokenAIndex === null || tokenBIndex === null) {
+    if (tokenA === null || tokenB === null) {
       return ''
     }
 
-    const pair = new Pair(
-      tokens[tokenAIndex].assetAddress,
-      tokens[tokenBIndex].assetAddress,
-      ALL_FEE_TIERS_DATA[feeIndex].tier
-    )
+    const pair = new Pair(tokenA, tokenB, ALL_FEE_TIERS_DATA[feeIndex].tier)
 
     const marketProgramId = new PublicKey(
       getMarketAddress(networkTypetoProgramNetwork(networkType))
@@ -468,13 +442,11 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   }
 
   const calcAmount = (amount: BN, left: number, right: number, tokenAddress: PublicKey) => {
-    if (tokenAIndex === null || tokenBIndex === null || isNaN(left) || isNaN(right)) {
+    if (tokenA === null || tokenB === null || isNaN(left) || isNaN(right)) {
       return new BN(0)
     }
 
-    const byX = tokenAddress.equals(
-      isXtoY ? tokens[tokenAIndex].assetAddress : tokens[tokenBIndex].assetAddress
-    )
+    const byX = tokenAddress.equals(isXtoY ? tokenA : tokenB)
     const lowerTick = Math.min(left, right)
     const upperTick = Math.max(left, right)
 
@@ -519,26 +491,24 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     return new BN(0)
   }
   const handleRefresh = async () => {
-    if (tokenBIndex === null || tokenAIndex === null || tokenAIndex === tokenBIndex) {
+    if (tokenB === null || tokenA === null || tokenA === tokenB) {
       return
     }
     dispatch(solanaWallet.getBalance())
 
-    const idA = tokens[tokenAIndex].assetAddress.toString() ?? ''
-    if (idA) {
+    if (tokenA) {
       setPriceALoading(true)
-      await getJupTokenPrice(idA)
+      await getJupTokenPrice(tokenA.toString())
         .then(data => setTokenAPriceData(data))
         .catch(() => setTokenAPriceData(undefined))
         .finally(() => setPriceALoading(false))
     } else {
       setTokenAPriceData(undefined)
     }
-
-    const idB = tokens[tokenBIndex].assetAddress.toString() ?? ''
-    if (idB) {
+    
+    if (tokenB) {
       setPriceBLoading(true)
-      getJupTokenPrice(idB)
+      getJupTokenPrice(tokenB.toString())
         .then(data => setTokenBPriceData(data))
         .catch(() => setTokenBPriceData(undefined))
         .finally(() => setPriceBLoading(false))
@@ -548,28 +518,28 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
     dispatch(
       poolsActions.getAllPoolsForPairData({
-        first: tokens[tokenAIndex].address,
-        second: tokens[tokenBIndex].address
+        first: tokens[tokenA.toString()].assetAddress,
+        second: tokens[tokenB.toString()].assetAddress
       })
     )
 
     dispatch(
       poolsActions.getPoolData(
-        new Pair(tokens[tokenAIndex].assetAddress, tokens[tokenBIndex].assetAddress, {
+        new Pair(tokens[tokenA.toString()].assetAddress, tokens[tokenB.toString()].assetAddress, {
           fee: ALL_FEE_TIERS_DATA[feeIndex].tier.fee,
           tickSpacing: ALL_FEE_TIERS_DATA[feeIndex].tier.tickSpacing
         })
       )
     )
 
-    if (tokenAIndex !== null && tokenBIndex !== null) {
+    if (tokenA !== null && tokenB !== null) {
       const index = allPools.findIndex(
         pool =>
           pool.fee.v.eq(fee) &&
-          ((pool.tokenX.equals(tokens[tokenAIndex].assetAddress) &&
-            pool.tokenY.equals(tokens[tokenBIndex].assetAddress)) ||
-            (pool.tokenX.equals(tokens[tokenBIndex].assetAddress) &&
-              pool.tokenY.equals(tokens[tokenAIndex].assetAddress)))
+          ((pool.tokenX.equals(tokens[tokenA.toString()].assetAddress) &&
+            pool.tokenY.equals(tokens[tokenB.toString()].assetAddress)) ||
+            (pool.tokenX.equals(tokens[tokenB.toString()].assetAddress) &&
+              pool.tokenY.equals(tokens[tokenA.toString()].assetAddress)))
       )
       setPoolIndex(index !== -1 ? index : null)
 
@@ -577,7 +547,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
         dispatch(
           actions.getCurrentPlotTicks({
             poolIndex: index,
-            isXtoY: allPools[index].tokenX.equals(tokens[tokenAIndex].assetAddress)
+            isXtoY: allPools[index].tokenX.equals(tokens[tokenA.toString()].assetAddress)
           })
         )
       }
@@ -602,31 +572,29 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       poolAddress={poolIndex !== null ? allPools[poolIndex].address.toString() : ''}
       calculatePoolAddress={calculatePoolAddress}
       tokens={tokens}
-      onChangePositionTokens={(tokenA, tokenB, feeTierIndex) => {
+      onChangePositionTokens={(tokenAKey, tokenBKey, feeTierIndex) => {
         if (
-          tokenA !== null &&
-          tokenB !== null &&
-          tokenA !== tokenB &&
+          tokenAKey !== null &&
+          tokenBKey !== null &&
+          !tokenAKey.equals(tokenBKey) &&
           !(
-            tokenAIndex === tokenA &&
-            tokenBIndex === tokenB &&
+            tokenA?.equals(tokenAKey) &&
+            tokenB?.equals(tokenBKey) &&
             fee.eq(ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee)
           )
         ) {
           const index = allPools.findIndex(
             pool =>
               pool.fee.v.eq(ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee) &&
-              ((pool.tokenX.equals(tokens[tokenA].assetAddress) &&
-                pool.tokenY.equals(tokens[tokenB].assetAddress)) ||
-                (pool.tokenX.equals(tokens[tokenB].assetAddress) &&
-                  pool.tokenY.equals(tokens[tokenA].assetAddress)))
+              ((pool.tokenX.equals(tokenAKey) && pool.tokenY.equals(tokenBKey)) ||
+                (pool.tokenX.equals(tokenBKey) && pool.tokenY.equals(tokenAKey)))
           )
 
           if (
             index !== poolIndex &&
             !(
-              tokenAIndex === tokenB &&
-              tokenBIndex === tokenA &&
+              tokenA?.equals(tokenBKey) &&
+              tokenB?.equals(tokenAKey) &&
               fee.eq(ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee)
             )
           ) {
@@ -635,8 +603,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
               setCurrentPairReversed(null)
             }
           } else if (
-            tokenAIndex === tokenB &&
-            tokenBIndex === tokenA &&
+            tokenA?.equals(tokenBKey) &&
+            tokenB?.equals(tokenAKey) &&
             fee.eq(ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee)
           ) {
             if (isMountedRef.current) {
@@ -648,19 +616,19 @@ export const NewPositionWrapper: React.FC<IProps> = ({
             dispatch(
               actions.getCurrentPlotTicks({
                 poolIndex: index,
-                isXtoY: allPools[index].tokenX.equals(tokens[tokenA].assetAddress)
+                isXtoY: allPools[index].tokenX.equals(tokenAKey)
               })
             )
           } else if (
             !(
-              tokenAIndex === tokenB &&
-              tokenBIndex === tokenA &&
+              tokenA?.equals(tokenBKey) &&
+              tokenB?.equals(tokenAKey) &&
               fee.eq(ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee)
             )
           ) {
             dispatch(
               poolsActions.getPoolData(
-                new Pair(tokens[tokenA].assetAddress, tokens[tokenB].assetAddress, {
+                new Pair(tokenAKey, tokenBKey, {
                   fee: ALL_FEE_TIERS_DATA[feeTierIndex].tier.fee,
                   tickSpacing: ALL_FEE_TIERS_DATA[feeTierIndex].tier.tickSpacing
                 })
@@ -669,8 +637,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
           }
         }
 
-        setTokenAIndex(tokenA)
-        setTokenBIndex(tokenB)
+        setTokenA(tokenAKey)
+        setTokenB(tokenBKey)
         setFeeIndex(feeTierIndex)
       }}
       feeTiers={ALL_FEE_TIERS_DATA.map(tier => ({
@@ -680,7 +648,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       midPrice={midPrice}
       setMidPrice={setMidPrice}
       addLiquidityHandler={(leftTickIndex, rightTickIndex, xAmount, yAmount, slippage) => {
-        if (tokenAIndex === null || tokenBIndex === null) {
+        if (tokenA === null || tokenB === null) {
           return
         }
 
@@ -693,8 +661,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
         dispatch(
           actions.initPosition({
-            tokenX: tokens[isXtoY ? tokenAIndex : tokenBIndex].assetAddress,
-            tokenY: tokens[isXtoY ? tokenBIndex : tokenAIndex].assetAddress,
+            tokenX: isXtoY ? tokenA : tokenB,
+            tokenY: isXtoY ? tokenB : tokenA,
             fee,
             lowerTick,
             upperTick,
@@ -748,12 +716,12 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       priceBLoading={priceBLoading}
       hasTicksError={hasTicksError}
       reloadHandler={() => {
-        if (poolIndex !== null && tokenAIndex !== null && tokenBIndex !== null) {
+        if (poolIndex !== null && tokenA !== null && tokenB !== null) {
           dispatch(
             actions.getCurrentPlotTicks({
               poolIndex,
               isXtoY: allPools[poolIndex].tokenX.equals(
-                tokens[currentPairReversed === true ? tokenBIndex : tokenAIndex].assetAddress
+                currentPairReversed === true ? tokenB : tokenA
               )
             })
           )

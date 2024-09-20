@@ -388,13 +388,14 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
   const obj: Record<string, Token> = {}
   switch (networkType) {
     case NetworkType.MAINNET:
-      ;(mainnetList as any[]).forEach(token => {
-        obj[token.address] = {
-          ...token,
-          address: new PublicKey(token.address),
-          coingeckoId: token?.extensions?.coingeckoId
+      Object.entries(mainnetList as unknown as Record<string, Token>).forEach(
+        ([address, token]) => {
+          obj[address] = {
+            ...token,
+            address: new PublicKey(address)
+          }
         }
-      })
+      )
       return obj
     case NetworkType.DEVNET:
       return {
@@ -688,6 +689,53 @@ export const getNetworkStats = async (name: string): Promise<Record<string, Pool
   const { data } = await axios.get<Record<string, PoolSnapshot[]>>(
     `https://stats.invariant.app/full/${name}`
   )
+
+  return data
+}
+
+interface FullSnap {
+  volume24: {
+    value: number
+    change: number
+  }
+  tvl24: {
+    value: number
+    change: number
+  }
+  fees24: {
+    value: number
+    change: number
+  }
+  tokensData: TokenStatsDataWithString[]
+  poolsData: PoolStatsDataWithString[]
+  volumePlot: TimeData[]
+  liquidityPlot: TimeData[]
+}
+
+export interface TokenStatsDataWithString {
+  address: string
+  price: number
+  volume24: number
+  tvl: number
+}
+
+export interface TimeData {
+  timestamp: number
+  value: number
+}
+
+export interface PoolStatsDataWithString {
+  poolAddress: string
+  tokenX: string
+  tokenY: string
+  fee: number
+  volume24: number
+  tvl: number
+  apy: number
+}
+
+export const getFullSnap = async (name: string): Promise<FullSnap> => {
+  const { data } = await axios.get<FullSnap>(`https://stats.invariant.app/svm/full_snap/${name}`)
 
   return data
 }

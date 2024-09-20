@@ -19,7 +19,6 @@ export interface Token {
   decimals: number
   name: string
   logoURI: string
-  coingeckoId?: string
   isUnknown?: boolean
 }
 export const PRICE_DECIMAL = 24
@@ -29,8 +28,7 @@ export const USDC_DEV: Token = {
   decimals: 6,
   name: 'USD Coin',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
-  coingeckoId: 'usd-coin'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
 }
 export const USDT_DEV: Token = {
   symbol: 'USDT',
@@ -38,8 +36,7 @@ export const USDT_DEV: Token = {
   decimals: 6,
   name: 'Tether USD',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg',
-  coingeckoId: 'tether'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
 }
 export const SOL_DEV: Token = {
   symbol: 'SOL',
@@ -47,17 +44,15 @@ export const SOL_DEV: Token = {
   decimals: 9,
   name: 'Wrapped Solana',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
-  coingeckoId: 'solana'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
 }
-export const MSOL_DEV = {
+export const MSOL_DEV: Token = {
   symbol: 'mSOL',
   address: new PublicKey(MOCK_TOKENS.MSOL),
   decimals: 9,
   name: 'Marinade Solana',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png',
-  coingeckoId: 'msol'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png'
 }
 export const BTC_DEV: Token = {
   symbol: 'BTC',
@@ -65,8 +60,7 @@ export const BTC_DEV: Token = {
   decimals: 6,
   name: 'Wrapped Bitcoin (Sollet)',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png',
-  coingeckoId: 'bitcoin'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
 }
 export const WSOL_DEV: Token = {
   symbol: 'WSOL',
@@ -74,8 +68,7 @@ export const WSOL_DEV: Token = {
   decimals: 9,
   name: 'Wrapped Solana',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
-  coingeckoId: 'solana'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
 }
 export const RENDOGE_DEV: Token = {
   symbol: 'renDOGE',
@@ -83,8 +76,7 @@ export const RENDOGE_DEV: Token = {
   decimals: 8,
   name: 'renDOGE',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png',
-  coingeckoId: 'rendoge'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU/logo.png'
 }
 
 export const MCK_DEV: Token = {
@@ -134,8 +126,7 @@ export const USDH_DEV: Token = {
   decimals: 6,
   name: 'USDH',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX/usdh.svg',
-  coingeckoId: 'usdh'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX/usdh.svg'
 }
 
 export const HBB_DEV: Token = {
@@ -144,8 +135,7 @@ export const HBB_DEV: Token = {
   decimals: 6,
   name: 'Hubble',
   logoURI:
-    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/HBB111SCo9jkCejsZfz8Ec8nH7T6THF8KEKSnvwT6XK6/logo.svg',
-  coingeckoId: 'hubble'
+    'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/HBB111SCo9jkCejsZfz8Ec8nH7T6THF8KEKSnvwT6XK6/logo.svg'
 }
 
 enum SolanaNetworks {
