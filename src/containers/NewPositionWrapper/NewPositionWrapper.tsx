@@ -505,7 +505,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     } else {
       setTokenAPriceData(undefined)
     }
-    
+
     if (tokenB) {
       setPriceBLoading(true)
       getJupTokenPrice(tokenB.toString())
