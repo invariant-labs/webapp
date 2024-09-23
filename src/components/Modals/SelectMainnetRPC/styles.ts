@@ -113,7 +113,7 @@ const useStyles = makeStyles(() => ({
   },
   warningText: {
     ...typography.caption2,
-    color: colors.invariant.green
+    color: colors.invariant.yellow
   },
   recommendedText: {
     ...typography.caption3,

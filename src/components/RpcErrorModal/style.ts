@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   background: {
     position: 'absolute',
     top: 0,
@@ -24,20 +24,37 @@ const useStyles = makeStyles(() => ({
     zIndex: 52,
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+
+    [theme.breakpoints.down('xs')]: {
+      width: 'calc(100% - 96px)',
+      left: 16,
+      right: 16,
+      transform: 'none'
+    }
   },
   warningIcon: {
     height: 48
   },
   title: {
     ...typography.heading3,
-    marginTop: 16
+    marginTop: 16,
+    textAlign: 'center'
   },
-  currentRpcText: {
+  rpcText: {
     color: colors.invariant.lightGrey,
     fontWeight: 'normal'
   },
-  pinkButton: {
+  currentRpcText: {
+    color: colors.invariant.lightGrey,
+    fontWeight: 'normal',
+    textAlign: 'center'
+  },
+  currentRpc: {
+    color: colors.white.main,
+    fontWeight: 'bold'
+  },
+  mainButton: {
     width: 240,
     height: 40,
     color: colors.invariant.black,
@@ -45,37 +62,35 @@ const useStyles = makeStyles(() => ({
     textTransform: 'none',
     background: colors.invariant.pinkLinearGradientOpacity,
     borderRadius: 14,
-    marginTop: 16,
 
     '&:hover': {
       background: colors.invariant.pinkLinearGradient,
       boxShadow: `0 0 16px ${colors.invariant.pink}`
     }
   },
-  greenButton: {
+  otherButton: {
     width: 240,
     height: 40,
-    color: colors.invariant.newDark,
+    color: colors.white.main,
     ...typography.body1,
     textTransform: 'none',
     background: colors.invariant.light,
     borderRadius: 14,
-    marginTop: 16,
 
     '&:hover': {
       background: colors.invariant.light,
       boxShadow: `0 0 16px ${colors.invariant.light}`
     }
   },
-  input: {
-    width: 320,
-    backgroundColor: colors.invariant.newDark,
-    fontWeight: 'normal',
-    borderRadius: 15,
-    padding: 4
-  },
-  inputDisabled: {
-    color: colors.invariant.lightGrey
+  buttonsContainer: {
+    marginTop: 16,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column'
+    }
   }
 }))
 

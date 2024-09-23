@@ -1,4 +1,4 @@
-import { Box, Button, Input, Typography } from '@material-ui/core'
+import { Box, Button, Typography } from '@material-ui/core'
 import useStyles from './style'
 import icons from '@static/icons'
 import { useState } from 'react'
@@ -20,22 +20,29 @@ export const RpcErrorModal: React.FC<Props> = ({ rpcAddress, useDefaultRpc, useC
       <div className={classes.container}>
         <img className={classes.warningIcon} src={icons.warningIcon} alt='Warning icon' />
         <Typography className={classes.title}>RPC Connection Error</Typography>
-        {/* @ts-expect-error */}
-        <Box display='flex' alignItems='center' sx={{ gap: 8, marginTop: 16 }}>
-          <Typography className={classes.currentRpcText}>Current RPC:</Typography>
-          <Input
-            className={classes.input}
-            classes={{ disabled: classes.inputDisabled }}
-            disabled={true}
-            value={rpc}
-          />
+        <Box
+          display='flex'
+          flexDirection='column'
+          alignItems='center'
+          /* @ts-expect-error */
+          sx={{ gap: 8, marginTop: 16 }}>
+          <Typography className={classes.rpcText}>
+            Your RPC might not be working due to one of the following reasons:
+            <ul>
+              <li>The RPC server is down or not responding.</li>
+              <li>Your RPC subscription expired, causing the server to stop working.</li>
+              <li>Your RPC plan may not support certain calls.</li>
+            </ul>
+          </Typography>
+          <Typography className={classes.currentRpcText}>
+            Current RPC: <span className={classes.currentRpc}>{rpc}</span>
+          </Typography>
         </Box>
-        {/* @ts-expect-error */}
-        <Box display='flex' alignItems='center' sx={{ gap: 8 }}>
-          <Button className={classes.pinkButton} onClick={useDefaultRpc}>
+        <Box className={classes.buttonsContainer}>
+          <Button className={classes.mainButton} onClick={useDefaultRpc}>
             Change to default RPC
           </Button>
-          <Button className={classes.greenButton} onClick={useCurrentRpc}>
+          <Button className={classes.otherButton} onClick={useCurrentRpc}>
             Use current RPC anyway
           </Button>
         </Box>
