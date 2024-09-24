@@ -42,12 +42,11 @@ const useStyles = makeStyles(() => ({
   },
   dotIcon: {
     width: 12,
-    marginLeft: 'auto',
+    marginLeft: 8,
     color: colors.invariant.green,
     display: 'none'
   },
   name: {
-    textTransform: 'capitalize',
     ...typography.body2,
     paddingTop: '1px'
   },
@@ -107,6 +106,18 @@ const useStyles = makeStyles(() => ({
       background: colors.invariant.light,
       color: colors.invariant.black
     }
+  },
+  warningIcon: {
+    height: 16,
+    marginRight: 4
+  },
+  warningText: {
+    ...typography.caption2,
+    color: colors.invariant.yellow
+  },
+  recommendedText: {
+    ...typography.caption3,
+    color: colors.white.main
   }
 }))
 

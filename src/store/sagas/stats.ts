@@ -5,7 +5,7 @@ import { getFullNewTokensData, getFullSnap } from '@consts/utils'
 import { tokens } from '@selectors/pools'
 import { PublicKey } from '@solana/web3.js'
 import { actions as poolsActions } from '@reducers/pools'
-import { getConnection } from './connection'
+import { getConnection, handleRpcError } from './connection'
 
 export function* getStats(): Generator {
   try {
@@ -47,6 +47,8 @@ export function* getStats(): Generator {
     yield* put(poolsActions.addTokens(newTokens))
   } catch (error) {
     console.log(error)
+    yield* call(handleRpcError, (error as Error).message)
+    throw error
   }
 }
 

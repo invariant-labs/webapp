@@ -366,3 +366,5 @@ export const STABLECOIN_ADDRESSES: string[] = [
 ] // USDC, USDT
 
 export const TIMEOUT_ERROR_MESSAGE = 'Transaction timed out. Check the details to see if it passed.'
+
+export const RECOMMENDED_RPC_ADDRESS = SolanaNetworks.MAIN_HELIUS
