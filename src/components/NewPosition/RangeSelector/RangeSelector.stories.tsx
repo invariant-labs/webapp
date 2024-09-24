@@ -1,4 +1,3 @@
-import React from 'react'
 import { storiesOf } from '@storybook/react'
 import RangeSelector from './RangeSelector'
 import { action } from '@storybook/addon-actions'

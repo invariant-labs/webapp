@@ -1,4 +1,3 @@
-import React from 'react'
 import { storiesOf } from '@storybook/react'
 import DepositSelector from './DepositSelector'
 import { SwapToken } from '@selectors/solanaWallet'
@@ -6,8 +5,8 @@ import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { useState } from '@storybook/addons'
 
-const tokens: SwapToken[] = [
-  {
+const tokens: Record<string, SwapToken> = {
+  So11111111111111111111111111111111111111112: {
     balance: new BN(100).mul(new BN(34786)),
     decimals: 6,
     symbol: 'SOL',
@@ -16,7 +15,7 @@ const tokens: SwapToken[] = [
     logoURI:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
   },
-  {
+  '9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E': {
     balance: new BN(100).mul(new BN(126)),
     decimals: 6,
     symbol: 'BTC',
@@ -25,7 +24,7 @@ const tokens: SwapToken[] = [
     logoURI:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
   },
-  {
+  EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v: {
     balance: new BN(10).mul(new BN(5342)),
     decimals: 6,
     symbol: 'USDC',
@@ -34,8 +33,7 @@ const tokens: SwapToken[] = [
     logoURI:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
   }
-]
-
+}
 const concentrationArray = [
   2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
   28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,

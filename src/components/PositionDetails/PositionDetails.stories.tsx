@@ -1,4 +1,3 @@
-import React from 'react'
 import { storiesOf } from '@storybook/react'
 import PositionDetails from './PositionDetails'
 import { MemoryRouter } from 'react-router'

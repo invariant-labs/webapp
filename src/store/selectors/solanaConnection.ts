@@ -12,6 +12,13 @@ export const { network, status, slot, rpcAddress, rpcStatus, timeoutError } = ke
   'timeoutError'
 ])
 
-export const solanaConnectionSelectors = { network, status, slot, rpcAddress, rpcStatus, timeoutError }
+export const solanaConnectionSelectors = {
+  network,
+  status,
+  slot,
+  rpcAddress,
+  rpcStatus,
+  timeoutError
+}
 
 export default solanaConnectionSelectors
