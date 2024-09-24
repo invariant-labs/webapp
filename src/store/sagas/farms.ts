@@ -37,7 +37,7 @@ import {
 } from '@solana/web3.js'
 import { farms, stakesForPosition, userStakes } from '@selectors/farms'
 import { accounts } from '@selectors/solanaWallet'
-import { getConnection } from './connection'
+import { getConnection, handleRpcError } from './connection'
 import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import {
@@ -144,6 +144,8 @@ export function* getFarmsTotals() {
     yield* put(actions.updateFarmsTotals(updatesObject))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -222,6 +224,8 @@ export function* getFarmsApy() {
     yield* put(actions.updateFarmsApy(apyObject))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -300,6 +304,8 @@ export function* handleGetFarmsList() {
     yield* fork(getFarmsApy)
   } catch (error) {
     console.log(error)
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -388,6 +394,8 @@ export function* getStakesApy() {
     yield* put(actions.updateStakesRewardData(apyObject))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -439,6 +447,8 @@ export function* handleGetUserStakes() {
     yield* fork(getStakesApy)
   } catch (error) {
     console.log(error)
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -526,6 +536,8 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
         success: false
       })
     )
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 
   try {
@@ -642,6 +654,8 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
     }
   } catch (error) {
     console.log(error)
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -852,6 +866,8 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
         persist: false
       })
     )
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -957,6 +973,8 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
         persist: false
       })
     )
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1084,6 +1102,8 @@ export function* handleGetNewStakeRangeTicks(action: PayloadAction<string[]>) {
     yield* put(actions.addNewStakeRangeTicks(rangeTicks))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 

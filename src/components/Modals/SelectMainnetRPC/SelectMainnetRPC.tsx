@@ -1,11 +1,12 @@
-import { NetworkType } from '@consts/static'
-import { Button, Grid, Input, Popover, Typography } from '@material-ui/core'
+import { NetworkType, RECOMMENDED_RPC_ADDRESS } from '@consts/static'
+import { Box, Button, Grid, Input, Popover, Typography } from '@material-ui/core'
 import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import React, { useState } from 'react'
 import { ISelectNetwork } from '../SelectNetwork/SelectNetwork'
 import useStyles from './styles'
+import { RpcStatus } from '@reducers/solanaConnection'
 
 export interface ISelectMainnetRpc {
   networks: ISelectNetwork[]
@@ -14,6 +15,7 @@ export interface ISelectMainnetRpc {
   onSelect: (networkType: NetworkType, rpcAddress: string, rpcName?: string) => void
   handleClose: () => void
   activeRPC: string
+  rpcStatus: RpcStatus
 }
 export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
   networks,
@@ -21,7 +23,8 @@ export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
   open,
   onSelect,
   handleClose,
-  activeRPC
+  activeRPC,
+  rpcStatus
 }) => {
   const classes = useStyles()
 
@@ -51,6 +54,14 @@ export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
       }}>
       <Grid className={classes.root}>
         <Typography className={classes.title}>Select mainnet RPC to use</Typography>
+        {rpcStatus === RpcStatus.IgnoredWithError && activeRPC !== RECOMMENDED_RPC_ADDRESS && (
+          <Box display='flex' sx={{ margin: 10 }}>
+            <img className={classes.warningIcon} src={icons.warningIcon} alt='Warning icon' />
+            <Typography className={classes.warningText}>
+              Current RPC might not work properly
+            </Typography>
+          </Box>
+        )}
         <Grid className={classes.list} container alignContent='space-around' direction='column'>
           {networks.map(({ networkType, rpc, rpcName }) => (
             <Grid
@@ -66,8 +77,12 @@ export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
                 src={icons[`${networkType}Icon`]}
                 alt={`${networkType} icon`}
               />
-
-              <Typography className={classes.name}>{rpcName}</Typography>
+              <Box width='100%' display='flex' justifyContent='space-between' alignItems='center'>
+                <Typography className={classes.name}>{rpcName} </Typography>
+                <Typography className={classes.recommendedText}>
+                  {RECOMMENDED_RPC_ADDRESS === rpc && 'RECOMMENDED'}
+                </Typography>
+              </Box>
               <DotIcon className={classes.dotIcon} />
             </Grid>
           ))}
