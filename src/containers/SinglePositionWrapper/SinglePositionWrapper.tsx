@@ -410,8 +410,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (position) {
       dispatch(solanaWallet.getBalance())
 
-      dispatch(actions.getPositionsList())
-
       setWaitingForTicksData(true)
       dispatch(actions.getCurrentPositionRangeTicks(id))
       dispatch(

@@ -91,7 +91,6 @@ const PositionDetails: React.FC<IProps> = ({
   handleRefresh
 }) => {
   const classes = useStyles()
-  console.log(fee)
   const history = useHistory()
 
   const [refresherTime, setRefresherTime] = useState<number>(REFRESHER_INTERVAL)
@@ -108,6 +107,15 @@ const PositionDetails: React.FC<IProps> = ({
 
     return () => clearTimeout(timeout)
   }, [refresherTime])
+
+  const memoizedLeftRange = React.useMemo(
+    () => (xToY ? leftRange : { ...rightRange, x: 1 / rightRange.x }),
+    [leftRange, xToY]
+  )
+  const memoizedRightRange = React.useMemo(
+    () => (xToY ? rightRange : { ...leftRange, x: 1 / leftRange.x }),
+    [rightRange, xToY]
+  )
 
   return (
     <Grid container className={classes.wrapperContainer} wrap='nowrap'>
@@ -191,8 +199,8 @@ const PositionDetails: React.FC<IProps> = ({
                   .fill(1)
                   .map((_e, index) => ({ x: index, y: index, index }))
           }
-          leftRange={xToY ? leftRange : { ...rightRange, x: 1 / rightRange.x }}
-          rightRange={xToY ? rightRange : { ...leftRange, x: 1 / leftRange.x }}
+          leftRange={memoizedLeftRange}
+          rightRange={memoizedRightRange}
           midPrice={{
             ...midPrice,
             x: midPrice.x ** (xToY ? 1 : -1)
