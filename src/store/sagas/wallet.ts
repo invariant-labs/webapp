@@ -10,7 +10,7 @@ import {
 } from 'typed-redux-saga'
 
 import { actions, ITokenAccount, Status } from '@reducers/solanaWallet'
-import { getConnection } from './connection'
+import { getConnection, handleRpcError } from './connection'
 import { getSolanaWallet, disconnectWallet } from '@web3/wallet'
 import {
   Account,
@@ -377,18 +377,22 @@ export function* sendSol(amount: BN, recipient: PublicKey): SagaGenerator<string
 }
 
 export function* handleConnect(): Generator {
-  const walletStatus = yield* select(status)
-  if (walletStatus === Status.Initialized) {
-    yield* put(
-      snackbarsActions.add({
-        message: 'Wallet already connected.',
-        variant: 'info',
-        persist: false
-      })
-    )
-    return
+  try {
+    const walletStatus = yield* select(status)
+    if (walletStatus === Status.Initialized) {
+      yield* put(
+        snackbarsActions.add({
+          message: 'Wallet already connected.',
+          variant: 'info',
+          persist: false
+        })
+      )
+      return
+    }
+    yield* call(init)
+  } catch (error) {
+    yield* call(handleRpcError, (error as Error).message)
   }
-  yield* call(init)
 }
 
 export function* handleDisconnect(): Generator {
@@ -406,6 +410,8 @@ export function* handleDisconnect(): Generator {
     yield* put(bondsActions.setUserVested({}))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 

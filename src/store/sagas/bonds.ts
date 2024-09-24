@@ -6,7 +6,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { createLoaderKey, getFullNewTokensData } from '@consts/utils'
 import { tokens } from '@selectors/pools'
 import { actions as poolsActions } from '@reducers/pools'
-import { getConnection } from './connection'
+import { getConnection, handleRpcError } from './connection'
 import {
   Keypair,
   PublicKey,
@@ -58,6 +58,8 @@ export function* handleGetBondsList() {
     yield* put(actions.setBondsList(bondsObject))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -81,6 +83,8 @@ export function* handleGetUserVested() {
     yield* put(actions.setUserVested(vestedObject))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -278,6 +282,8 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
         persist: false
       })
     )
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -392,6 +398,8 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
         persist: false
       })
     )
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -576,6 +584,8 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
         persist: false
       })
     )
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -685,6 +695,8 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
         persist: false
       })
     )
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 

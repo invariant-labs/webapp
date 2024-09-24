@@ -8,12 +8,26 @@ export enum Status {
   Error = 'error',
   Initialized = 'initalized'
 }
+
+export enum RpcStatus {
+  Uninitialized,
+  Error,
+  Ignored,
+  IgnoredWithError
+}
+
+const RPC_STATUS =
+  localStorage.getItem('IS_RPC_WARNING_IGNORED') === 'true'
+    ? RpcStatus.Ignored
+    : RpcStatus.Uninitialized
+
 export interface ISolanaConnectionStore {
   status: Status
   message: string
   network: NetworkType
   slot: number
   rpcAddress: string
+  rpcStatus: RpcStatus
 }
 
 export const defaultState: ISolanaConnectionStore = {
@@ -21,7 +35,8 @@ export const defaultState: ISolanaConnectionStore = {
   message: '',
   network: NetworkType.MAINNET,
   slot: 0,
-  rpcAddress: SolanaNetworks.MAIN_HELIUS
+  rpcAddress: SolanaNetworks.MAIN_HELIUS,
+  rpcStatus: RPC_STATUS
 }
 export const solanaConnectionSliceName = 'solanaConnection'
 const solanaConnectionSlice = createSlice({
@@ -57,6 +72,13 @@ const solanaConnectionSlice = createSlice({
     },
     setSlot(state, action: PayloadAction<number>) {
       state.slot = action.payload
+      return state
+    },
+    setRpcStatus(state, action: PayloadAction<RpcStatus>) {
+      state.rpcStatus = action.payload
+      return state
+    },
+    handleRpcError(state, _action: PayloadAction<PromiseRejectionEvent>) {
       return state
     }
   }
