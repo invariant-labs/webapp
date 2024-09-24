@@ -18,7 +18,7 @@ import {
 } from '@solana/web3.js'
 import { getMarketProgram } from '@web3/programs/amm'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
-import { getConnection } from './connection'
+import { getConnection, handleRpcError } from './connection'
 import { createAccount, getWallet } from './wallet'
 import { closeSnackbar } from 'notistack'
 
@@ -335,6 +335,8 @@ export function* handleSwapWithSOL(): Generator {
     yield put(snackbarsActions.remove(loaderSwappingTokens))
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -517,6 +519,8 @@ export function* handleSwap(): Generator {
     yield put(snackbarsActions.remove(loaderSwappingTokens))
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 

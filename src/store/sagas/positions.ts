@@ -37,7 +37,7 @@ import {
 import { getMarketProgram } from '@web3/programs/amm'
 import { getStakerProgram } from '@web3/programs/staker'
 import { all, call, put, select, spawn, take, takeEvery, takeLeading } from 'typed-redux-saga'
-import { getConnection } from './connection'
+import { getConnection, handleRpcError } from './connection'
 import { createClaimAllPositionRewardsTx } from './farms'
 import { createAccount, getWallet, sleep } from './wallet'
 import { closeSnackbar } from 'notistack'
@@ -331,6 +331,8 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
         })
       )
     }
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -563,6 +565,8 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
         })
       )
     }
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -764,6 +768,8 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
         })
       )
     }
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -808,6 +814,8 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
       yDecimal
     )
     yield put(actions.setErrorPlotTicks(data))
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -861,8 +869,10 @@ export function* handleGetPositionsList() {
     yield* take(pattern)
 
     yield* put(actions.setPositionsList(positions))
-  } catch (_error) {
+  } catch (error) {
     yield* put(actions.setPositionsList([]))
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1047,6 +1057,8 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
         })
       )
     }
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1204,6 +1216,8 @@ export function* handleClaimFee(action: PayloadAction<number>) {
         })
       )
     }
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1410,6 +1424,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
         })
       )
     }
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1599,6 +1615,8 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
         })
       )
     }
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1625,6 +1643,8 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
     yield put(actions.getCurrentPositionRangeTicks(position.id.toString()))
   } catch (error) {
     console.log(error)
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
@@ -1665,6 +1685,8 @@ export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<string
     )
   } catch (error) {
     console.log(error)
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 

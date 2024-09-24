@@ -8,7 +8,7 @@ import { PublicKey } from '@solana/web3.js'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { getFullNewTokensData, getPools, getPoolsFromAdresses } from '@consts/utils'
 import { tokens } from '@selectors/pools'
-import { getConnection } from './connection'
+import { handleRpcError, getConnection } from './connection'
 import { network, rpcAddress } from '@selectors/solanaConnection'
 
 export interface iTick {
@@ -36,17 +36,25 @@ export function* fetchPoolData(action: PayloadAction<Pair>) {
     )
   } catch (error) {
     yield* put(actions.addPools([]))
+
+    yield* call(handleRpcError, (error as Error).message)
   }
 }
 
 export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
-  const networkType = yield* select(network)
-  const rpc = yield* select(rpcAddress)
-  const marketProgram = yield* call(getMarketProgram, networkType, rpc)
-  const pairs = FEE_TIERS.map(fee => new Pair(action.payload.first, action.payload.second, fee))
-  const pools: PoolWithAddress[] = yield call(getPools, pairs, marketProgram)
+  try {
+    const networkType = yield* select(network)
+    const rpc = yield* select(rpcAddress)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const pairs = FEE_TIERS.map(fee => new Pair(action.payload.first, action.payload.second, fee))
+    const pools: PoolWithAddress[] = yield call(getPools, pairs, marketProgram)
 
-  yield* put(actions.addPools(pools))
+    yield* put(actions.addPools(pools))
+  } catch (error) {
+    console.log(error)
+
+    yield* call(handleRpcError, (error as Error).message)
+  }
 }
 
 export function* fetchPoolsDataForList(action: PayloadAction<ListPoolsRequest>) {
