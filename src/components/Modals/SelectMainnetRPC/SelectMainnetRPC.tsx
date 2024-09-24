@@ -80,7 +80,7 @@ export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
               <Box width='100%' display='flex' justifyContent='space-between' alignItems='center'>
                 <Typography className={classes.name}>{rpcName} </Typography>
                 <Typography className={classes.recommendedText}>
-                  {RECOMMENDED_RPC_ADDRESS === rpc && activeRPC !== rpc && 'RECOMMENDED'}
+                  {RECOMMENDED_RPC_ADDRESS === rpc && 'RECOMMENDED'}
                 </Typography>
               </Box>
               <DotIcon className={classes.dotIcon} />

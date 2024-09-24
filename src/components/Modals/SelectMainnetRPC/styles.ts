@@ -42,7 +42,7 @@ const useStyles = makeStyles(() => ({
   },
   dotIcon: {
     width: 12,
-    marginLeft: 'auto',
+    marginLeft: 8,
     color: colors.invariant.green,
     display: 'none'
   },
