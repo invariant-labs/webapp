@@ -24,9 +24,16 @@ export default defineConfig({
       plugins: [
         inject({
           Buffer: ['buffer/', 'Buffer'],
-          constants: ['constants-browserify', 'default'] // Add constants polyfill
+          process: 'process/browser'
         })
       ]
+    }
+  },
+  resolve: {
+    alias: {
+      crypto: 'crypto-browserify',
+      stream: 'stream-browserify',
+      buffer: 'buffer'
     }
   }
 })
