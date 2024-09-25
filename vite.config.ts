@@ -27,5 +27,10 @@ export default defineConfig({
         })
       ]
     }
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'es2020' // you can also use 'es2020' here
+    }
   }
 })
