@@ -17,7 +17,7 @@ import { BN } from '@project-serum/anchor'
 import { ExtendedStake } from '@reducers/farms'
 import { PoolWithAddress } from '@reducers/pools'
 import { PlotTickData, PositionWithAddress } from '@reducers/positions'
-import { getMint } from '@solana/spl-token'
+import { getMint, Mint } from '@solana/spl-token'
 import { Connection, PublicKey } from '@solana/web3.js'
 import axios from 'axios'
 import bs58 from 'bs58'
@@ -931,7 +931,7 @@ export const getFullNewTokensData = async (
   addresses: PublicKey[],
   connection: Connection
 ): Promise<Record<string, Token>> => {
-  const promises = addresses.map(async address => getMint(connection, address))
+  const promises = addresses.map(async address => await getMint(connection, address))
 
   const tokens: Record<string, Token> = {}
 
