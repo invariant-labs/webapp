@@ -17,6 +17,8 @@ export default defineConfig({
     'process.env.NODE_DEBUG': 'false'
   },
   build: {
+    minify: false,
+    sourcemap: true,
     target: 'esnext',
     rollupOptions: {
       plugins: [inject({ Buffer: ['buffer/', 'Buffer'] })]
