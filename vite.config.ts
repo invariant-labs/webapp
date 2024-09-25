@@ -21,7 +21,9 @@ export default defineConfig({
     rollupOptions: {
       plugins: [
         inject({
-          Buffer: ['buffer/', 'Buffer']
+          Buffer: ['buffer/', 'Buffer'],
+          process: 'process',
+          global: 'global'
         })
       ]
     }
