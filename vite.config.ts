@@ -21,16 +21,14 @@ export default defineConfig({
     rollupOptions: {
       plugins: [
         inject({
-          Buffer: ['buffer/', 'Buffer'],
-          process: 'process',
-          global: 'global'
+          Buffer: ['buffer/', 'Buffer']
         })
       ]
     }
   },
   optimizeDeps: {
     esbuildOptions: {
-      target: 'es2020' // you can also use 'es2020' here
+      target: 'es2020'
     }
   }
 })

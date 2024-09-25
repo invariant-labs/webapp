@@ -34,7 +34,6 @@
     "buffer": "^6.0.3",
     "classnames": "^2.2.6",
     "connected-react-router": "^6.8.0",
-    "constants-browserify": "^1.0.0",
     "cryptocurrency-icons": "^0.17.1",
     "enhanced-resolve": "^5.8.3",
     "history": "^4.7.2",
@@ -141,8 +140,5 @@
     "react-app-rewired": "^2.1.6",
     "storybook-addon-material-ui": "^0.9.0-alpha.24",
     "vite-aliases": "^0.8.2"
-  },
-  "engines": {
-    "node": "18.x"
   }
 }
