@@ -141,5 +141,8 @@
     "react-app-rewired": "^2.1.6",
     "storybook-addon-material-ui": "^0.9.0-alpha.24",
     "vite-aliases": "^0.8.2"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
