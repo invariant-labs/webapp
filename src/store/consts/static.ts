@@ -369,4 +369,4 @@ export const TIMEOUT_ERROR_MESSAGE = 'Transaction timed out. Check the details t
 
 export const RECOMMENDED_RPC_ADDRESS = SolanaNetworks.MAIN_HELIUS
 
-export const REFRESHER_INTERVAL = 60
+export const REFRESHER_INTERVAL = 120
