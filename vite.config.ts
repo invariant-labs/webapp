@@ -13,15 +13,8 @@ export default defineConfig({
     }),
     nodePolyfills()
   ],
-  resolve: {
-    alias: {
-      crypto: 'crypto-browserify'
-    }
-  },
   define: {
-    'process.env.NODE_DEBUG': 'false',
-    'process.env': process.env,
-    'process.browser': true
+    'process.env.NODE_DEBUG': 'false'
   },
   build: {
     target: 'es2020',
