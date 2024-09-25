@@ -24,7 +24,13 @@ import { poolsArraySortedByFees, tokens } from '@selectors/pools'
 import { positionsWithPoolsData, singlePositionData } from '@selectors/positions'
 import { network, rpcAddress } from '@selectors/solanaConnection'
 import { accounts } from '@selectors/solanaWallet'
-import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
+import {
+  createCloseAccountInstruction,
+  createInitializeAccountInstruction,
+  getMinimumBalanceForRentExemptAccount,
+  NATIVE_MINT,
+  TOKEN_PROGRAM_ID
+} from '@solana/spl-token'
 import {
   Keypair,
   PublicKey,
@@ -76,7 +82,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
     const createIx = SystemProgram.createAccount({
       fromPubkey: wallet.publicKey,
       newAccountPubkey: wrappedSolAccount.publicKey,
-      lamports: yield* call(Token.getMinBalanceRentForExemptAccount, connection),
+      lamports: yield* call(getMinimumBalanceForRentExemptAccount, connection),
       space: 165,
       programId: TOKEN_PROGRAM_ID
     })
@@ -90,19 +96,17 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
           : data.yAmount
     })
 
-    const initIx = Token.createInitAccountInstruction(
-      TOKEN_PROGRAM_ID,
-      NATIVE_MINT,
+    const initIx = createInitializeAccountInstruction(
+      wallet.publicKey,
       wrappedSolAccount.publicKey,
-      wallet.publicKey
+      wallet.publicKey,
+      NATIVE_MINT
     )
 
-    const unwrapIx = Token.createCloseAccountInstruction(
-      TOKEN_PROGRAM_ID,
+    const unwrapIx = createCloseAccountInstruction(
       wrappedSolAccount.publicKey,
       wallet.publicKey,
-      wallet.publicKey,
-      []
+      wallet.publicKey
     )
 
     let userTokenX =
@@ -376,7 +380,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
     const createIx = SystemProgram.createAccount({
       fromPubkey: wallet.publicKey,
       newAccountPubkey: wrappedSolAccount.publicKey,
-      lamports: yield* call(Token.getMinBalanceRentForExemptAccount, connection),
+      lamports: yield* call(getMinimumBalanceForRentExemptAccount, connection),
       space: 165,
       programId: TOKEN_PROGRAM_ID
     })
@@ -390,19 +394,17 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
           : data.yAmount
     })
 
-    const initIx = Token.createInitAccountInstruction(
-      TOKEN_PROGRAM_ID,
-      NATIVE_MINT,
+    const initIx = createInitializeAccountInstruction(
+      wallet.publicKey,
       wrappedSolAccount.publicKey,
-      wallet.publicKey
+      wallet.publicKey,
+      NATIVE_MINT
     )
 
-    const unwrapIx = Token.createCloseAccountInstruction(
-      TOKEN_PROGRAM_ID,
+    const unwrapIx = createCloseAccountInstruction(
       wrappedSolAccount.publicKey,
       wallet.publicKey,
-      wallet.publicKey,
-      []
+      wallet.publicKey
     )
 
     let userTokenX =
@@ -902,26 +904,23 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     const createIx = SystemProgram.createAccount({
       fromPubkey: wallet.publicKey,
       newAccountPubkey: wrappedSolAccount.publicKey,
-      lamports: yield* call(Token.getMinBalanceRentForExemptAccount, connection),
+      lamports: yield* call(getMinimumBalanceForRentExemptAccount, connection),
       space: 165,
       programId: TOKEN_PROGRAM_ID
     })
 
-    const initIx = Token.createInitAccountInstruction(
-      TOKEN_PROGRAM_ID,
-      NATIVE_MINT,
+    const initIx = createInitializeAccountInstruction(
+      wallet.publicKey,
       wrappedSolAccount.publicKey,
+      wallet.publicKey,
+      NATIVE_MINT
+    )
+
+    const unwrapIx = createCloseAccountInstruction(
+      wrappedSolAccount.publicKey,
+      wallet.publicKey,
       wallet.publicKey
     )
-
-    const unwrapIx = Token.createCloseAccountInstruction(
-      TOKEN_PROGRAM_ID,
-      wrappedSolAccount.publicKey,
-      wallet.publicKey,
-      wallet.publicKey,
-      []
-    )
-
     const positionForIndex = allPositionsData[positionIndex].poolData
 
     let userTokenX =
@@ -1245,24 +1244,22 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     const createIx = SystemProgram.createAccount({
       fromPubkey: wallet.publicKey,
       newAccountPubkey: wrappedSolAccount.publicKey,
-      lamports: yield* call(Token.getMinBalanceRentForExemptAccount, connection),
+      lamports: yield* call(getMinimumBalanceForRentExemptAccount, connection),
       space: 165,
       programId: TOKEN_PROGRAM_ID
     })
 
-    const initIx = Token.createInitAccountInstruction(
-      TOKEN_PROGRAM_ID,
-      NATIVE_MINT,
+    const initIx = createInitializeAccountInstruction(
+      wallet.publicKey,
       wrappedSolAccount.publicKey,
-      wallet.publicKey
+      wallet.publicKey,
+      NATIVE_MINT
     )
 
-    const unwrapIx = Token.createCloseAccountInstruction(
-      TOKEN_PROGRAM_ID,
+    const unwrapIx = createCloseAccountInstruction(
       wrappedSolAccount.publicKey,
       wallet.publicKey,
-      wallet.publicKey,
-      []
+      wallet.publicKey
     )
 
     const positionForIndex = allPositionsData[data.positionIndex].poolData

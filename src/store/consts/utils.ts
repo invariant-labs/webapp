@@ -17,8 +17,8 @@ import { BN } from '@project-serum/anchor'
 import { ExtendedStake } from '@reducers/farms'
 import { PoolWithAddress } from '@reducers/pools'
 import { PlotTickData, PositionWithAddress } from '@reducers/positions'
-import { Token as SPLToken, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { Connection, Keypair, PublicKey } from '@solana/web3.js'
+import { getMint, Mint } from '@solana/spl-token'
+import { Connection, PublicKey } from '@solana/web3.js'
 import axios from 'axios'
 import bs58 from 'bs58'
 import {
@@ -931,9 +931,7 @@ export const getFullNewTokensData = async (
   addresses: PublicKey[],
   connection: Connection
 ): Promise<Record<string, Token>> => {
-  const promises = addresses
-    .map(address => new SPLToken(connection, address, TOKEN_PROGRAM_ID, new Keypair()))
-    .map(async token => await token.getMintInfo())
+  const promises = addresses.map(async address => await getMint(connection, address))
 
   const tokens: Record<string, Token> = {}
 
@@ -964,11 +962,8 @@ export const getNewTokenOrThrow = async (
   connection: Connection
 ): Promise<Record<string, Token>> => {
   const key = new PublicKey(address)
-  const token = new SPLToken(connection, key, TOKEN_PROGRAM_ID, new Keypair())
 
-  const info = await token.getMintInfo()
-
-  console.log(info)
+  const info = await getMint(connection, key)
 
   return {
     [address.toString()]: generateUnknownTokenDataObject(key, info.decimals)

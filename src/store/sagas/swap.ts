@@ -7,7 +7,13 @@ import { poolsArraySortedByFees, tokens } from '@selectors/pools'
 import { network, rpcAddress } from '@selectors/solanaConnection'
 import { accounts } from '@selectors/solanaWallet'
 import { swap } from '@selectors/swap'
-import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
+import {
+  createCloseAccountInstruction,
+  createInitializeAccountInstruction,
+  getMinimumBalanceForRentExemptAccount,
+  NATIVE_MINT,
+  TOKEN_PROGRAM_ID
+} from '@solana/spl-token'
 import {
   Keypair,
   SystemProgram,
@@ -71,7 +77,7 @@ export function* handleSwapWithSOL(): Generator {
     const createIx = SystemProgram.createAccount({
       fromPubkey: wallet.publicKey,
       newAccountPubkey: wrappedSolAccount.publicKey,
-      lamports: yield* call(Token.getMinBalanceRentForExemptAccount, connection),
+      lamports: yield* call(getMinimumBalanceForRentExemptAccount, connection),
       space: 165,
       programId: TOKEN_PROGRAM_ID
     })
@@ -85,11 +91,11 @@ export function* handleSwapWithSOL(): Generator {
           : 0
     })
 
-    const initIx = Token.createInitAccountInstruction(
-      TOKEN_PROGRAM_ID,
-      NATIVE_MINT,
+    const initIx = createInitializeAccountInstruction(
+      wallet.publicKey,
       wrappedSolAccount.publicKey,
-      wallet.publicKey
+      wallet.publicKey,
+      NATIVE_MINT
     )
 
     let initialTx =
@@ -111,12 +117,10 @@ export function* handleSwapWithSOL(): Generator {
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
-    const unwrapIx = Token.createCloseAccountInstruction(
-      TOKEN_PROGRAM_ID,
+    const unwrapIx = createCloseAccountInstruction(
       wrappedSolAccount.publicKey,
       wallet.publicKey,
-      wallet.publicKey,
-      []
+      wallet.publicKey
     )
 
     let fromAddress =

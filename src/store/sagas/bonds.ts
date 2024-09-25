@@ -18,7 +18,13 @@ import { accounts, address } from '@selectors/solanaWallet'
 import { createAccount, getWallet } from './wallet'
 import { bondsList, userVested } from '@selectors/bonds'
 import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
-import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import {
+  createCloseAccountInstruction,
+  createInitializeAccountInstruction,
+  getMinimumBalanceForRentExemptAccount,
+  NATIVE_MINT,
+  TOKEN_PROGRAM_ID
+} from '@solana/spl-token'
 import { BN } from '@project-serum/anchor'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { network, rpcAddress } from '@selectors/solanaConnection'
@@ -112,7 +118,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
     const createIx = SystemProgram.createAccount({
       fromPubkey: wallet.publicKey,
       newAccountPubkey: wrappedSolAccount.publicKey,
-      lamports: yield* call(Token.getMinBalanceRentForExemptAccount, connection),
+      lamports: yield* call(getMinimumBalanceForRentExemptAccount, connection),
       space: 165,
       programId: TOKEN_PROGRAM_ID
     })
@@ -125,19 +131,17 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
       lamports: solAmount.toNumber()
     })
 
-    const initIx = Token.createInitAccountInstruction(
-      TOKEN_PROGRAM_ID,
-      NATIVE_MINT,
+    const initIx = createInitializeAccountInstruction(
+      wallet.publicKey,
       wrappedSolAccount.publicKey,
-      wallet.publicKey
+      wallet.publicKey,
+      NATIVE_MINT
     )
 
-    const unwrapIx = Token.createCloseAccountInstruction(
-      TOKEN_PROGRAM_ID,
+    const unwrapIx = createCloseAccountInstruction(
       wrappedSolAccount.publicKey,
       wallet.publicKey,
-      wallet.publicKey,
-      []
+      wallet.publicKey
     )
 
     const initialTx = new Transaction().add(createIx).add(transferIx).add(initIx)
@@ -430,24 +434,21 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
     const createIx = SystemProgram.createAccount({
       fromPubkey: wallet.publicKey,
       newAccountPubkey: wrappedSolAccount.publicKey,
-      lamports: yield* call(Token.getMinBalanceRentForExemptAccount, connection),
+      lamports: yield* call(getMinimumBalanceForRentExemptAccount, connection),
       space: 165,
       programId: TOKEN_PROGRAM_ID
     })
 
-    const initIx = Token.createInitAccountInstruction(
-      TOKEN_PROGRAM_ID,
-      NATIVE_MINT,
+    const initIx = createInitializeAccountInstruction(
       wrappedSolAccount.publicKey,
+      NATIVE_MINT,
       wallet.publicKey
     )
 
-    const unwrapIx = Token.createCloseAccountInstruction(
-      TOKEN_PROGRAM_ID,
+    const unwrapIx = createCloseAccountInstruction(
       wrappedSolAccount.publicKey,
       wallet.publicKey,
-      wallet.publicKey,
-      []
+      wallet.publicKey
     )
 
     const initialTx = new Transaction().add(createIx).add(initIx)

@@ -12,14 +12,13 @@ import {
 import { actions, ITokenAccount, Status } from '@reducers/solanaWallet'
 import { getConnection, handleRpcError } from './connection'
 import { getSolanaWallet, disconnectWallet } from '@web3/wallet'
+import { PublicKey, SystemProgram, Transaction, TransactionInstruction } from '@solana/web3.js'
 import {
-  Account,
-  PublicKey,
-  SystemProgram,
-  Transaction,
-  TransactionInstruction
-} from '@solana/web3.js'
-import { Token, ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+  createAssociatedTokenAccountInstruction,
+  createMintToInstruction,
+  getAssociatedTokenAddressSync,
+  TOKEN_PROGRAM_ID
+} from '@solana/spl-token'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as positionsActions } from '@reducers/positions'
 import { BN } from '@project-serum/anchor'
@@ -108,11 +107,11 @@ export function* fetchTokensAccounts(): Generator {
   }
 }
 
-export function* getToken(tokenAddress: PublicKey): SagaGenerator<Token> {
-  const connection = yield* call(getConnection)
-  const token = new Token(connection, tokenAddress, TOKEN_PROGRAM_ID, new Account())
-  return token
-}
+// export function* getToken(tokenAddress: PublicKey): SagaGenerator<Token> {
+//   const connection = yield* call(getConnection)
+//   const token = new Token(connection, tokenAddress, TOKEN_PROGRAM_ID, new Account())
+//   return token
+// }
 
 export function* handleAirdrop(): Generator {
   const walletStatus = yield* select(status)
@@ -176,12 +175,11 @@ export function* setEmptyAccounts(collateralsAddresses: PublicKey[]): Generator 
   const tokensAccounts = yield* select(accounts)
   const acc: PublicKey[] = []
   for (const collateral of collateralsAddresses) {
-    const collateralTokenProgram = yield* call(getToken, collateral)
     const accountAddress = tokensAccounts[collateral.toString()]
       ? tokensAccounts[collateral.toString()].address
       : null
     if (accountAddress == null) {
-      acc.push(collateralTokenProgram.publicKey)
+      acc.push(collateral)
     }
   }
   if (acc.length !== 0) {
@@ -199,12 +197,10 @@ export function* getCollateralTokenAirdrop(
   const tokensAccounts = yield* select(accounts)
   for (const [index, collateral] of collateralsAddresses.entries()) {
     instructions.push(
-      Token.createMintToInstruction(
-        TOKEN_PROGRAM_ID,
+      createMintToInstruction(
         collateral,
         tokensAccounts[collateral.toString()].address,
         airdropAdmin.publicKey,
-        [],
         collateralsQuantities[index]
       )
     )
@@ -238,20 +234,13 @@ export function* signAndSend(wallet: WalletAdapter, tx: Transaction): SagaGenera
 
 export function* createAccount(tokenAddress: PublicKey): SagaGenerator<PublicKey> {
   const wallet = yield* call(getWallet)
-  const associatedAccount = yield* call(
-    Token.getAssociatedTokenAddress,
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
-    tokenAddress,
-    wallet.publicKey
-  )
-  const ix = Token.createAssociatedTokenAccountInstruction(
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    TOKEN_PROGRAM_ID,
-    tokenAddress,
+
+  const associatedAccount = getAssociatedTokenAddressSync(tokenAddress, wallet.publicKey)
+  const ix = createAssociatedTokenAccountInstruction(
+    wallet.publicKey,
     associatedAccount,
     wallet.publicKey,
-    wallet.publicKey
+    tokenAddress
   )
   yield* call(signAndSend, wallet, new Transaction().add(ix))
   const token = yield* call(getTokenDetails, tokenAddress.toString())
@@ -288,21 +277,13 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
   const associatedAccs: PublicKey[] = []
 
   for (const address of tokenAddress) {
-    const associatedAccount = yield* call(
-      Token.getAssociatedTokenAddress,
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      address,
-      wallet.publicKey
-    )
+    const associatedAccount = getAssociatedTokenAddressSync(address, wallet.publicKey)
     associatedAccs.push(associatedAccount)
-    const ix = Token.createAssociatedTokenAccountInstruction(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      address,
+    const ix = createAssociatedTokenAccountInstruction(
+      wallet.publicKey,
       associatedAccount,
       wallet.publicKey,
-      wallet.publicKey
+      address
     )
     ixs.push(ix)
   }
