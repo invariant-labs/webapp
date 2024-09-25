@@ -63,7 +63,6 @@
     "redux-persist-transform-filter": "0.0.20",
     "redux-saga": "^1.1.3",
     "remeda": "0.0.21",
-    "rpc-websockets": "^7.9.0",
     "storybook-builder-vite": "0.1.13",
     "stream-browserify": "^3.0.0",
     "typed-redux-saga": "^1.2.0",
