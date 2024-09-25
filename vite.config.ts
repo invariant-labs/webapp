@@ -17,23 +17,13 @@ export default defineConfig({
     'process.env.NODE_DEBUG': 'false'
   },
   build: {
-    minify: false,
-    sourcemap: true,
     target: 'es2020',
     rollupOptions: {
       plugins: [
         inject({
-          Buffer: ['buffer/', 'Buffer'],
-          process: 'process/browser'
+          Buffer: ['buffer/', 'Buffer']
         })
       ]
-    }
-  },
-  resolve: {
-    alias: {
-      crypto: 'crypto-browserify',
-      stream: 'stream-browserify',
-      buffer: 'buffer'
     }
   }
 })
