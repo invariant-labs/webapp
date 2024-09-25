@@ -19,12 +19,12 @@ export default defineConfig({
   build: {
     minify: false,
     sourcemap: true,
-    target: 'esnext',
+    target: 'es2020',
     rollupOptions: {
       plugins: [
         inject({
           Buffer: ['buffer/', 'Buffer'],
-          constants: ['constants-browserify'] // Or whichever polyfill you are using
+          constants: ['constants-browserify', 'default'] // Add constants polyfill
         })
       ]
     }
