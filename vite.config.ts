@@ -21,7 +21,12 @@ export default defineConfig({
     sourcemap: true,
     target: 'esnext',
     rollupOptions: {
-      plugins: [inject({ Buffer: ['buffer/', 'Buffer'] })]
+      plugins: [
+        inject({
+          Buffer: ['buffer/', 'Buffer'],
+          constants: ['constants-browserify'] // Or whichever polyfill you are using
+        })
+      ]
     }
   }
 })
