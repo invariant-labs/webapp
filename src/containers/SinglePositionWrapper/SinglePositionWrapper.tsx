@@ -83,6 +83,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   useEffect(() => {
     if (position?.id && !waitingForTicksData) {
       setWaitingForTicksData(true)
+      setShowFeesLoader(true)
       dispatch(actions.getCurrentPositionRangeTicks(id))
       dispatch(
         actions.getCurrentPlotTicks({
