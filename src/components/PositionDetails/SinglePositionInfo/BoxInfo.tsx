@@ -5,7 +5,7 @@ import { ILiquidityToken } from './consts'
 import SwapPosition from '@static/svg/swap-position.svg'
 import loader from '@static/gif/loading2.gif'
 import useStyles from './style'
-
+import loadingAnimation from '@static/gif/loading.gif'
 export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue'> {
   value: number
   price?: number
@@ -19,6 +19,7 @@ export const BoxInfo: React.FC<{
   showBalance?: boolean
   swapHandler?: () => void
   showLoader?: boolean
+  isBalanceLoading?: boolean
 }> = ({
   title,
   onClickButton,
@@ -26,7 +27,8 @@ export const BoxInfo: React.FC<{
   tokenA,
   showBalance = false,
   swapHandler,
-  showLoader = false
+  showLoader = false,
+  isBalanceLoading
 }) => {
   const classes = useStyles()
   const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThreshold[] => [
@@ -133,7 +135,12 @@ export const BoxInfo: React.FC<{
           {showBalance ? (
             <Grid className={classes.tokenAreaLowerPart}>
               <Typography className={classes.tokenBalance}>
-                Balance: {tokenA.balance} {tokenA.name}
+                Balance:{' '}
+                {isBalanceLoading ? (
+                  <img src={loadingAnimation} className={classes.loadingBalance} alt='Loading' />
+                ) : (
+                  tokenA.balance.toString() + ' ' + tokenA.name
+                )}
               </Typography>
               {typeof tokenA.usdValue !== 'undefined' && tokenA.price ? (
                 <Typography className={classes.tokenUSDValue}>
@@ -163,7 +170,12 @@ export const BoxInfo: React.FC<{
           {showBalance ? (
             <Grid className={classes.tokenAreaLowerPart}>
               <Typography className={classes.tokenBalance}>
-                Balance: {tokenB.balance} {tokenB.name}
+                Balance:{' '}
+                {isBalanceLoading ? (
+                  <img src={loadingAnimation} className={classes.loadingBalance} alt='Loading' />
+                ) : (
+                  tokenB.balance.toString() + ' ' + tokenB.name
+                )}
               </Typography>
               {typeof tokenB.usdValue !== 'undefined' && tokenB.price ? (
                 <Typography className={classes.tokenUSDValue}>

@@ -28,6 +28,7 @@ export interface ISolanaConnectionStore {
   slot: number
   rpcAddress: string
   rpcStatus: RpcStatus
+  timeoutError: boolean
 }
 
 export const defaultState: ISolanaConnectionStore = {
@@ -36,7 +37,8 @@ export const defaultState: ISolanaConnectionStore = {
   network: NetworkType.MAINNET,
   slot: 0,
   rpcAddress: SolanaNetworks.MAIN_HELIUS,
-  rpcStatus: RPC_STATUS
+  rpcStatus: RPC_STATUS,
+  timeoutError: false
 }
 export const solanaConnectionSliceName = 'solanaConnection'
 const solanaConnectionSlice = createSlice({
@@ -79,6 +81,10 @@ const solanaConnectionSlice = createSlice({
       return state
     },
     handleRpcError(state, _action: PayloadAction<PromiseRejectionEvent>) {
+      return state
+    },
+    setTimeoutError(state, action: PayloadAction<boolean>) {
+      state.timeoutError = action.payload
       return state
     }
   }

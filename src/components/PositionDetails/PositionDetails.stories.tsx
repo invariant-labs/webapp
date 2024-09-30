@@ -1,9 +1,10 @@
-import React from 'react'
 import { storiesOf } from '@storybook/react'
 import PositionDetails from './PositionDetails'
 import { MemoryRouter } from 'react-router'
 import { calcPrice } from '@consts/utils'
-import { MIN_TICK, MAX_TICK } from '@invariant-labs/sdk'
+import { MIN_TICK, MAX_TICK, MOCK_TOKENS } from '@invariant-labs/sdk'
+import { BN } from '@project-serum/anchor'
+import { PublicKey } from '@solana/web3.js'
 
 export interface liqTokens {
   symbol: string
@@ -64,10 +65,18 @@ storiesOf('position wrapper/positionDetailsWrapper', module)
         tickSpacing={1}
         min={2149.6}
         max={149.6}
-        fee={0.01}
+        fee={new BN(100000000)}
         initialIsDiscreteValue={false}
         onDiscreteChange={() => {}}
         reloadHandler={() => {}}
+        copyPoolAddressHandler={() => {}}
+        showFeesLoader={false}
+        handleRefresh={() => {}}
+        poolAddress={new PublicKey('123456789')}
+        setXToY={() => {}}
+        tokenXAddress={new PublicKey(MOCK_TOKENS.USDC)}
+        tokenYAddress={new PublicKey(MOCK_TOKENS.BTC)}
+        xToY={true}
       />
     )
   })

@@ -4,11 +4,12 @@ import { action } from '@storybook/addon-actions'
 import SelectMainnetRPC from './SelectMainnetRPC'
 import { NetworkType, SolanaNetworks } from '@consts/static'
 import { ISelectNetwork } from '../SelectNetwork/SelectNetwork'
+import { RpcStatus } from '@reducers/solanaConnection'
 
 const networks: ISelectNetwork[] = [
   {
     networkType: NetworkType.MAINNET,
-    rpc: SolanaNetworks.MAIN_NIGHTLY,
+    rpc: SolanaNetworks.MAIN_HELIUS,
     rpcName: 'Nightly'
   },
   { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN, rpcName: 'Solana' },
@@ -32,5 +33,6 @@ storiesOf('modals/selectMainnetRpc', module).add('default', () => (
     onSelect={(networkType, rpc) => action('chosen: ' + networkType + ' ' + rpc)()}
     anchorEl={null}
     activeRPC={SolanaNetworks.MAIN_SERUM}
+    rpcStatus={RpcStatus.Uninitialized}
   />
 ))

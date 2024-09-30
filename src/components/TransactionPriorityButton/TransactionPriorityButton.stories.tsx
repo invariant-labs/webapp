@@ -22,6 +22,8 @@ storiesOf('buttons/transactionPriorityButton', module)
             value={params.value}
             description={params.description}
             onClick={() => {}}
+            areButtonsSelected={false}
+            saveValue={0}
           />
         )
       })}
