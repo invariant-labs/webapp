@@ -1,4 +1,3 @@
-import React from 'react'
 import { storiesOf } from '@storybook/react'
 import DepositAmountInput from './DepositAmountInput'
 import { withKnobs } from '@storybook/addon-knobs'
@@ -17,6 +16,7 @@ storiesOf('newInputs/amount', module)
         decimalsLimit={6}
         percentageChange={4.15}
         tokenPrice={205341.43}
+        isBalanceLoading={false}
       />
     </div>
   ))
@@ -32,6 +32,7 @@ storiesOf('newInputs/amount', module)
         percentageChange={4.15}
         tokenPrice={205341.43}
         balanceValue={'-200000000'}
+        isBalanceLoading={false}
       />
     </div>
   ))
@@ -46,6 +47,7 @@ storiesOf('newInputs/amount', module)
         decimalsLimit={6}
         percentageChange={4.15}
         tokenPrice={205341.43}
+        isBalanceLoading={false}
       />
     </div>
   ))
@@ -61,6 +63,23 @@ storiesOf('newInputs/amount', module)
         decimalsLimit={6}
         percentageChange={4.15}
         tokenPrice={205341.43}
+        isBalanceLoading={false}
+      />
+    </div>
+  ))
+  .add('loading balance', () => (
+    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
+      <DepositAmountInput
+        setValue={() => {}}
+        placeholder={'0.0'}
+        currency={null}
+        onMaxClick={() => {}}
+        blocked
+        blockerInfo='Price outside range. Single-asset deposit only.'
+        decimalsLimit={6}
+        percentageChange={4.15}
+        tokenPrice={205341.43}
+        isBalanceLoading={true}
       />
     </div>
   ))

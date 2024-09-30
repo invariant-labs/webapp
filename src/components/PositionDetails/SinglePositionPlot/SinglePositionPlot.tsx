@@ -77,7 +77,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
 
     setPlotMin(leftRange.x - initSideDist)
     setPlotMax(rightRange.x + initSideDist)
-  }, [ticksLoading, leftRange, rightRange])
+  }, [leftRange, rightRange])
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin

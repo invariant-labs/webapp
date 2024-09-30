@@ -17,13 +17,14 @@ import {
   poolTicks,
   tickMaps
 } from '@selectors/pools'
-import { network } from '@selectors/solanaConnection'
+import { network, timeoutError } from '@selectors/solanaConnection'
+import { actions as connectionActions } from '@reducers/solanaConnection'
 import { status, swapTokensDict, balanceLoading } from '@selectors/solanaWallet'
 import { swap as swapPool } from '@selectors/swap'
 import { PublicKey } from '@solana/web3.js'
 import { getCurrentSolanaConnection } from '@web3/connection'
 import { openWalletSelectorModal } from '@web3/selector'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 export const WrappedSwap = () => {
@@ -41,6 +42,7 @@ export const WrappedSwap = () => {
   const { success, inProgress } = useSelector(swapPool)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
   const networkType = useSelector(network)
+  const isTimeoutError = useSelector(timeoutError)
 
   const [progress, setProgress] = useState<ProgressState>('none')
   const [tokenFrom, setTokenFrom] = useState<PublicKey | null>(null)
@@ -210,6 +212,9 @@ export const WrappedSwap = () => {
     }
   }
 
+  const deleteTimeoutError = () => {
+    dispatch(connectionActions.setTimeoutError(false))
+  }
   return (
     <Swap
       isFetchingNewPool={isFetchingNewPool}
@@ -283,6 +288,8 @@ export const WrappedSwap = () => {
       onSlippageChange={onSlippageChange}
       initialSlippage={initialSlippage}
       isBalanceLoading={isBalanceLoading}
+      deleteTimeoutError={deleteTimeoutError}
+      isTimeoutError={isTimeoutError}
     />
   )
 }

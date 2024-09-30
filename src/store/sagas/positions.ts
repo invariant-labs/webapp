@@ -16,6 +16,7 @@ import {
   InitPositionData,
   actions
 } from '@reducers/positions'
+import { actions as connectionActions } from '@reducers/solanaConnection'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { GuardPredicate } from '@redux-saga/types'
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -35,7 +36,7 @@ import {
 } from '@solana/web3.js'
 import { getMarketProgram } from '@web3/programs/amm'
 import { getStakerProgram } from '@web3/programs/staker'
-import { all, call, put, select, spawn, take, takeEvery, takeLatest } from 'typed-redux-saga'
+import { all, call, put, select, spawn, take, takeEvery, takeLeading } from 'typed-redux-saga'
 import { getConnection, handleRpcError } from './connection'
 import { createClaimAllPositionRewardsTx } from './farms'
 import { createAccount, getWallet, sleep } from './wallet'
@@ -320,6 +321,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -553,6 +555,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -755,6 +758,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -1043,6 +1047,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -1201,6 +1206,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -1408,6 +1414,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -1598,6 +1605,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
           txid: error.signature
         })
       )
+      yield put(connectionActions.setTimeoutError(true))
     } else {
       yield put(
         snackbarsActions.add({
@@ -1686,10 +1694,10 @@ export function* initPositionHandler(): Generator {
   yield* takeEvery(actions.initPosition, handleInitPosition)
 }
 export function* getCurrentPlotTicksHandler(): Generator {
-  yield* takeLatest(actions.getCurrentPlotTicks, handleGetCurrentPlotTicks)
+  yield* takeLeading(actions.getCurrentPlotTicks, handleGetCurrentPlotTicks)
 }
 export function* getPositionsListHandler(): Generator {
-  yield* takeLatest(actions.getPositionsList, handleGetPositionsList)
+  yield* takeLeading(actions.getPositionsList, handleGetPositionsList)
 }
 export function* claimFeeHandler(): Generator {
   yield* takeEvery(actions.claimFee, handleClaimFee)

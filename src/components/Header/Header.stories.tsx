@@ -1,4 +1,3 @@
-import React from 'react'
 import { PublicKey } from '@solana/web3.js'
 import { DEFAULT_PUBLICKEY, NetworkType, SolanaNetworks } from '@consts/static'
 import { storiesOf } from '@storybook/react'
@@ -7,6 +6,7 @@ import { withKnobs } from '@storybook/addon-knobs'
 import Header from './Header'
 import { toBlur } from '@consts/uiUtils'
 import { MemoryRouter } from 'react-router'
+import { RpcStatus } from '@reducers/solanaConnection'
 
 storiesOf('ui/newHeader', module)
   .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
@@ -37,10 +37,13 @@ storiesOf('ui/newHeader', module)
             onDisconnectWallet={action('disconnect')}
             typeOfNetwork={NetworkType.DEVNET}
             rpc={SolanaNetworks.DEV}
-            defaultMainnetRPC={SolanaNetworks.MAIN_NIGHTLY}
+            defaultMainnetRPC={SolanaNetworks.MAIN_HELIUS}
             onFaucet={() => {
               console.log('Faucet')
             }}
+            onPrioritySave={() => {}}
+            recentPriorityFee=''
+            rpcStatus={RpcStatus.Uninitialized}
           />
         </div>
       </div>
@@ -71,7 +74,10 @@ storiesOf('ui/newHeader', module)
             onDisconnectWallet={action('disconnect')}
             typeOfNetwork={NetworkType.DEVNET}
             rpc={SolanaNetworks.DEV}
-            defaultMainnetRPC={SolanaNetworks.MAIN_NIGHTLY}
+            defaultMainnetRPC={SolanaNetworks.MAIN_HELIUS}
+            onPrioritySave={() => {}}
+            recentPriorityFee=''
+            rpcStatus={RpcStatus.Uninitialized}
           />
         </div>
       </div>

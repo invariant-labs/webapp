@@ -298,6 +298,7 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
           tokenPrice={quoteTokenPriceData?.price}
           // percentageChange={quoteTokenPriceData?.priceChange}
           priceLoading={quotePriceLoading}
+          isBalanceLoading={false}
         />
         <DepositAmountInput
           value={amountBond}
@@ -325,6 +326,7 @@ const BuyBondModal: React.FC<IBuyBondModal> = ({
           tokenPrice={bondTokenPriceData?.price}
           // percentageChange={bondTokenPriceData?.priceChange}
           priceLoading={bondPriceLoading}
+          isBalanceLoading={false}
         />
         <AnimatedButton
           className={classes.button}
