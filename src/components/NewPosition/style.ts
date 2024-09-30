@@ -5,6 +5,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     width: 952
   },
+  headerContainer: {
+    columnGap: 24
+  },
   back: {
     height: 24,
     marginBottom: 18,
@@ -28,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     color: colors.white.main,
     ...typography.heading4,
-    marginBottom: 18,
 
     [theme.breakpoints.down('xs')]: {
       fontSize: 18
@@ -90,7 +92,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   switch: {
     transition: 'opacity 500ms'
+  },
+  titleContainer: {
+    maxWidth: 464,
+    marginBottom: 18,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexGrow: 1,
+    [theme.breakpoints.down('lg')]: {
+      maxWidth: 'none'
+    }
+  },
+  desktopConcentrationSwitch: {
+    marginBottom: 16
   }
 }))
-
 export default useStyles

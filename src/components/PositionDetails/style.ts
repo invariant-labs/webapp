@@ -29,9 +29,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%'
     }
   },
+  rightSubHeader: {
+    marginBottom: 16,
+    width: '100%',
+    paddingLeft: 20,
+    flexDirection: 'row-reverse',
+    gap: 10
+  },
   back: {
     height: 40,
-    marginBottom: 16,
     width: 'fit-content',
     transition: 'filter 300ms',
 
@@ -72,6 +78,31 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttonText: {
     WebkitPaddingBefore: '2px'
+  },
+  refreshIconBtn: {
+    padding: 0,
+    margin: 0,
+    minWidth: 'auto',
+    background: 'none',
+    marginRight: 7,
+    '& :hover': {
+      background: 'none'
+    }
+  },
+  refreshIcon: {
+    width: 26,
+    height: 21,
+    cursor: 'pointer',
+    transition: 'filter 100ms',
+    '&:hover': {
+      filter: 'brightness(1.5)'
+    }
+  },
+  backContainer: {
+    marginBottom: 16,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }
 }))
 

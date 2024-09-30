@@ -62,6 +62,8 @@ export interface IDepositSelector {
   concentrationIndex: number
   minimumSliderIndex: number
   positionOpeningMethod: PositionOpeningMethod
+  setShouldResetPlot: (val: boolean) => void
+  isBalanceLoading: boolean
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -93,7 +95,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   concentrationArray,
   concentrationIndex,
   minimumSliderIndex,
-  positionOpeningMethod
+  positionOpeningMethod,
+  setShouldResetPlot,
+  isBalanceLoading
 }) => {
   const classes = useStyles()
 
@@ -221,6 +225,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               tokens={tokens}
               current={tokenA !== null ? tokens[tokenA.toString()] : null}
               onSelect={address => {
+                setShouldResetPlot(true)
                 setTokenA(address)
                 setPositionTokens(address, tokenB, feeTierIndex)
               }}
@@ -256,6 +261,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               tokens={tokens}
               current={tokenB !== null ? tokens[tokenB.toString()] : null}
               onSelect={address => {
+                setShouldResetPlot(true)
                 setTokenB(address)
                 setPositionTokens(tokenA, address, feeTierIndex)
               }}
@@ -273,6 +279,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         <FeeSwitch
           onSelect={fee => {
             setPositionTokens(tokenA, tokenB, fee)
+            setShouldResetPlot(true)
           }}
           feeTiers={feeTiers}
           showOnlyPercents
@@ -337,6 +344,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           }}
           {...tokenAInputState}
           priceLoading={priceALoading}
+          isBalanceLoading={isBalanceLoading}
         />
 
         <DepositAmountInput
@@ -390,6 +398,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           }}
           {...tokenBInputState}
           priceLoading={priceBLoading}
+          isBalanceLoading={isBalanceLoading}
         />
       </Grid>
 
