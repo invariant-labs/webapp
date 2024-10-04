@@ -40,7 +40,6 @@ const MarketEvents = () => {
     const getCommonTokens = async () => {
       try {
         const mainnetCommonTokens = await getMainnetCommonTokens()
-
         dispatch(
           walletActions.setCommonTokens({ network: networkType, tokens: mainnetCommonTokens })
         )
@@ -49,7 +48,7 @@ const MarketEvents = () => {
       }
     }
 
-    getCommonTokens()
+    void getCommonTokens()
   }, [networkType])
 
   useEffect(() => {

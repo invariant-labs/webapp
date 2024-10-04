@@ -71,7 +71,16 @@ export const defaultState: ISolanaWallet = {
       MC3_DEV.address,
       USDH_DEV.address
     ],
-    Mainnet: [],
+    Mainnet: [
+      new PublicKey('So11111111111111111111111111111111111111112'),
+      new PublicKey('JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'),
+      new PublicKey('85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ'),
+      new PublicKey('HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3'),
+      new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+      new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'),
+      new PublicKey('EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm'),
+      new PublicKey('CKaKtYvz6dKPyMvYq9Rh3UBrnNqYZAyd7iF4hJtjUvks')
+    ],
     Testnet: [],
     Localnet: []
   }

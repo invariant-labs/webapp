@@ -1190,7 +1190,7 @@ export const solToPriorityFee = (sol: number) => {
 export const createLoaderKey = () => (new Date().getMilliseconds() + Math.random()).toString()
 
 export const getMainnetCommonTokens = async (): Promise<PublicKey[]> => {
-  const { data } = await axios.get(`https://tokens.jup.ag/tokens?tags=verified`)
+  const { data } = await axios.get('https://tokens.jup.ag/tokens?tags=verified')
 
   const commonTokens = data
     .slice(0, 8)
