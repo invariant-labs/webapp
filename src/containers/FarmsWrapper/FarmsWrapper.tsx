@@ -6,7 +6,6 @@ import { Status } from '@reducers/solanaWallet'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   farmsWithUserStakedValues,
-  isLoadingFarms,
   isLoadingFarmsApy,
   isLoadingFarmsTotals,
   userStakes
@@ -25,7 +24,7 @@ export const FarmsWrapper: React.FC = () => {
   const allPools = useSelector(pools)
   const allTokens = useSelector(tokens)
   const allUserStakes = useSelector(userStakes)
-  const farmsLoading = useSelector(isLoadingFarms)
+  const farmsLoading = false
   const { list } = useSelector(positionsList)
   const farmsTotalsLoading = useSelector(isLoadingFarmsTotals)
   const apyLoading = useSelector(isLoadingFarmsApy)
