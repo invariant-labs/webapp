@@ -1,4 +1,17 @@
-import { DEFAULT_PUBLICKEY } from '@consts/static'
+import {
+  BTC_DEV,
+  DEFAULT_PUBLICKEY,
+  MC2_DEV,
+  MC3_DEV,
+  MCK_DEV,
+  MSOL_DEV,
+  NetworkType,
+  RENDOGE_DEV,
+  SOL_DEV,
+  USDC_DEV,
+  USDH_DEV,
+  USDT_DEV
+} from '@consts/static'
 import { BN } from '@project-serum/anchor'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
@@ -36,6 +49,7 @@ export interface ISolanaWallet {
   balance: BN
   accounts: { [key in string]: ITokenAccount }
   balanceLoading: boolean
+  commonTokens: Record<NetworkType, PublicKey[]>
 }
 
 export const defaultState: ISolanaWallet = {
@@ -43,8 +57,35 @@ export const defaultState: ISolanaWallet = {
   address: DEFAULT_PUBLICKEY,
   balance: new BN(0),
   accounts: {},
-  balanceLoading: false
+  balanceLoading: false,
+  commonTokens: {
+    Devnet: [
+      USDC_DEV.address,
+      USDT_DEV.address,
+      SOL_DEV.address,
+      MSOL_DEV.address,
+      BTC_DEV.address,
+      RENDOGE_DEV.address,
+      MCK_DEV.address,
+      MC2_DEV.address,
+      MC3_DEV.address,
+      USDH_DEV.address
+    ],
+    Mainnet: [
+      new PublicKey('So11111111111111111111111111111111111111112'),
+      new PublicKey('JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'),
+      new PublicKey('85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ'),
+      new PublicKey('HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3'),
+      new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+      new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'),
+      new PublicKey('EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm'),
+      new PublicKey('CKaKtYvz6dKPyMvYq9Rh3UBrnNqYZAyd7iF4hJtjUvks')
+    ],
+    Testnet: [],
+    Localnet: []
+  }
 }
+
 export const solanaWalletSliceName = 'solanaWallet'
 const solanaWalletSlice = createSlice({
   name: solanaWalletSliceName,
@@ -87,6 +128,10 @@ const solanaWalletSlice = createSlice({
     },
     setTokenBalance(state, action: PayloadAction<IsetTokenBalance>) {
       state.accounts[action.payload.programId].balance = action.payload.balance
+      return state
+    },
+    setCommonTokens(state, action: PayloadAction<{ network: NetworkType; tokens: PublicKey[] }>) {
+      state.commonTokens[action.payload.network] = action.payload.tokens
       return state
     },
     // Triggers rescan for tokens that we control
