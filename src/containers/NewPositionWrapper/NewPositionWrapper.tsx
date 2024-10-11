@@ -1,12 +1,7 @@
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import NewPosition from '@components/NewPosition/NewPosition'
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
-import {
-  ALL_FEE_TIERS_DATA,
-  PositionOpeningMethod,
-  bestTiers,
-  commonTokensForNetworks
-} from '@consts/static'
+import { ALL_FEE_TIERS_DATA, PositionOpeningMethod, bestTiers } from '@consts/static'
 import {
   TokenPriceData,
   addNewTokenToLocalStorage,
@@ -40,6 +35,7 @@ import {
   balanceLoading,
   canCreateNewPool,
   canCreateNewPosition,
+  commonTokens,
   status,
   swapTokensDict
 } from '@selectors/solanaWallet'
@@ -84,6 +80,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const currentNetwork = useSelector(network)
 
   const isTimeoutError = useSelector(timeoutError)
+
+  const commonTokensForNetworks = useSelector(commonTokens)
 
   const [poolIndex, setPoolIndex] = useState<number | null>(null)
 

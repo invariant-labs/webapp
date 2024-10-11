@@ -2,19 +2,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { network, rpcAddress, status } from '@selectors/solanaConnection'
 import { actions } from '@reducers/pools'
+import { actions as walletActions } from '@reducers/solanaWallet'
 import { getMarketProgramSync } from '@web3/programs/amm'
 import { poolsArraySortedByFees, poolTicks, tickMaps } from '@selectors/pools'
 import {
   getNetworkTokensList,
   findPairs,
   getFullNewTokensData,
-  getPoolsVolumeRanges
+  getPoolsVolumeRanges,
+  getMainnetCommonTokens
 } from '@consts/utils'
 import { swap } from '@selectors/swap'
 import { findTickmapChanges, Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
 import { getCurrentSolanaConnection } from '@web3/connection'
 import { Status, actions as solanaConnectionActions } from '@reducers/solanaConnection'
+import { NetworkType } from '@consts/static'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -29,6 +32,25 @@ const MarketEvents = () => {
   const poolTicksArray = useSelector(poolTicks)
   const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
   const [subscribedTickmap, _setSubscribedTickmap] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    if (networkType !== NetworkType.MAINNET) {
+      return
+    }
+    const getCommonTokens = async () => {
+      try {
+        const mainnetCommonTokens = await getMainnetCommonTokens()
+        dispatch(
+          walletActions.setCommonTokens({ network: networkType, tokens: mainnetCommonTokens })
+        )
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    void getCommonTokens()
+  }, [networkType])
+
   useEffect(() => {
     const connection = getCurrentSolanaConnection()
     if (networkStatus !== Status.Initialized || !connection) {
