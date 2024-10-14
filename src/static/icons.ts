@@ -31,6 +31,11 @@ import allIcon from './svg/all.svg'
 import docsIcon from './svg/docsCircle.svg'
 import closeSmallIcon from './svg/closeSmall.svg'
 import warningIcon from './svg/Warrning.svg'
+import a0Logo from './svg/a0Logo.svg'
+import eclipseLogo from './svg/eclipseLogo.svg'
+import solanaLogo from './svg/solanaLogo.svg'
+import varaLogo from './svg/VaraLogo.svg'
+import alephiumLogo from './svg/alephiumLogo.svg'
 
 const icons: { [key: string]: string } = {
   USDT: USDIcon,
@@ -66,7 +71,12 @@ const icons: { [key: string]: string } = {
   allIcon: allIcon,
   closeSmallIcon: closeSmallIcon,
   docsIcon,
-  warningIcon
+  warningIcon,
+  AlephZero: a0Logo,
+  Eclipse: eclipseLogo,
+  Solana: solanaLogo,
+  Vara: varaLogo,
+  Alephium: alephiumLogo
 }
 
 export default icons
