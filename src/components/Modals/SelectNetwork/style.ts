@@ -56,9 +56,12 @@ const useStyles = makeStyles(() => ({
     boxShadow: 'none'
   },
   icon: {
+    width: 22,
+    height: 22,
     float: 'left',
     marginRight: 8,
-    opacity: 1
+    opacity: 1,
+    filter: 'grayscale(1)'
   },
   active: {
     background: colors.invariant.light,
