@@ -7,7 +7,8 @@ import {
   calcTicksAmountInRange,
   nearestTickIndex,
   toMaxNumericPlaces,
-  calculateConcentrationRange
+  calculateConcentrationRange,
+  TokenPriceData
 } from '@consts/utils'
 import { PlotTickData } from '@reducers/positions'
 import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
@@ -57,6 +58,8 @@ export interface IRangeSelector {
   }
   shouldResetPlot: boolean
   setShouldResetPlot: (val: boolean) => void
+  tokenAPriceData?: TokenPriceData
+  tokenBPriceData?: TokenPriceData
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -87,7 +90,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   setConcentrationIndex,
   getTicksInsideRange,
   shouldResetPlot,
-  setShouldResetPlot
+  setShouldResetPlot,
+  tokenAPriceData,
+  tokenBPriceData
 }) => {
   const classes = useStyles()
 
@@ -388,6 +393,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           <Grid>
             <Typography className={classes.currentPrice}>Current price</Typography>
             <Typography className={classes.globalPrice}>Global price</Typography>
+            <Typography className={classes.buySellPrice}>Buy/sell price</Typography>
           </Grid>
         </Grid>
       </Grid>
@@ -420,6 +426,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
           volumeRange={volumeRange}
+          tokenAPriceData={tokenAPriceData}
+          tokenBPriceData={tokenBPriceData}
         />
         <Typography className={classes.subheader}>Set price range</Typography>
         <Grid container className={classes.inputs}>
