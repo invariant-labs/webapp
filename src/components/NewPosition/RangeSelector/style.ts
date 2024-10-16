@@ -218,6 +218,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.caption2,
     textAlign: 'right',
     marginLeft: 4
+  },
+  buySellPrice: {
+    display: 'inline-block',
+    color: colors.white.main,
+    ...typography.caption2,
+    textAlign: 'right',
+    marginLeft: 4
   }
 }))
 
