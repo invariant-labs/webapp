@@ -717,7 +717,7 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
 
     const initialTx = new Transaction().add(createIx).add(initIx)
 
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const initialBlockhash = yield* call([connection, connection.getLatestBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
@@ -747,12 +747,12 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     })
 
     const withdrawTx = new Transaction().add(updateIx).add(withdrawIx)
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     withdrawTx.recentBlockhash = blockhash.blockhash
     withdrawTx.feePayer = wallet.publicKey
 
     const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const unwrapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
