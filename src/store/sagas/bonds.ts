@@ -142,7 +142,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
 
     const initialTx = new Transaction().add(createIx).add(transferIx).add(initIx)
 
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const initialBlockhash = yield* call([connection, connection.getLatestBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
@@ -155,12 +155,12 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
       },
       bondKeypair.publicKey
     )
-    const bondBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const bondBlockhash = yield* call([connection, connection.getLatestBlockhash])
     bondTx.recentBlockhash = bondBlockhash.blockhash
     bondTx.feePayer = wallet.publicKey
 
     const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const unwrapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
@@ -339,7 +339,7 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
       },
       bondKeypair.publicKey
     )
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
@@ -452,7 +452,7 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
 
     const initialTx = new Transaction().add(createIx).add(initIx)
 
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const initialBlockhash = yield* call([connection, connection.getLatestBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
@@ -461,12 +461,12 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
       bondId: data.bondId,
       ownerBondAccount: wrappedSolAccount.publicKey
     })
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     redeemTx.recentBlockhash = blockhash.blockhash
     redeemTx.feePayer = wallet.publicKey
 
     const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const unwrapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
@@ -636,7 +636,7 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
       bondId: action.payload.bondId,
       ownerBondAccount
     })
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     tx.recentBlockhash = blockhash.blockhash
     tx.feePayer = wallet.publicKey
 
