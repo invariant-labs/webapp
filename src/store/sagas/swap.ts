@@ -1,6 +1,6 @@
 import { SIGNING_SNACKBAR_CONFIG, TIMEOUT_ERROR_MESSAGE, WRAPPED_SOL_ADDRESS } from '@consts/static'
 import { createLoaderKey, solToPriorityFee } from '@consts/utils'
-import { Pair, sleep } from '@invariant-labs/sdk'
+import { Pair } from '@invariant-labs/sdk'
 import { actions as snackbarsActions } from '@reducers/snackbars'
 import { actions as swapActions } from '@reducers/swap'
 import { actions as connectionActions } from '@reducers/solanaConnection'
@@ -181,8 +181,6 @@ export function* handleSwapWithSOL(): Generator {
 
     yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
-    yield* call(sleep, 1000)
-    console.log(1)
     const [initialSignedTx, swapSignedTx, unwrapSignedTx] = yield* call(
       [wallet, wallet.signAllTransactions],
       [initialTx, swapTx, unwrapTx]
@@ -191,12 +189,8 @@ export function* handleSwapWithSOL(): Generator {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    yield* call(sleep, 1000)
-    console.log(2)
     initialSignedTx.partialSign(wrappedSolAccount)
 
-    yield* call(sleep, 1000)
-    console.log(3)
     const initialTxid = yield* call(
       sendAndConfirmRawTransaction,
       connection,
@@ -222,7 +216,6 @@ export function* handleSwapWithSOL(): Generator {
       )
     }
 
-    console.log(4)
     const swapTxid = yield* call(
       [connection, connection.sendRawTransaction],
       swapSignedTx.serialize(),
@@ -241,7 +234,6 @@ export function* handleSwapWithSOL(): Generator {
       })
     )
 
-    console.log(5)
     const confirmedSwapTx = yield* call([connection, connection.confirmTransaction], {
       blockhash: swapBlockhash.blockhash,
       lastValidBlockHeight: swapBlockhash.lastValidBlockHeight,
@@ -278,7 +270,6 @@ export function* handleSwapWithSOL(): Generator {
       )
     }
 
-    console.log(6)
     const unwrapTxid = yield* call(
       sendAndConfirmRawTransaction,
       connection,
