@@ -174,11 +174,11 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       )
     }
 
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const initialBlockhash = yield* call([connection, connection.getLatestBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
-    const initPositionBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const initPositionBlockhash = yield* call([connection, connection.getLatestBlockhash])
     initPositionTx.recentBlockhash = initPositionBlockhash.blockhash
     initPositionTx.feePayer = wallet.publicKey
 
@@ -192,7 +192,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       )
     }
 
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const unwrapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
