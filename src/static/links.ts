@@ -6,4 +6,3 @@ export const social = {
   medium: 'https://medium.com/@invariant_labs',
   docs: 'https://docs.invariant.app'
 }
-  
