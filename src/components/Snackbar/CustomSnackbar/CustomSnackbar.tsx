@@ -76,10 +76,7 @@ const CustomSnackbar = React.forwardRef<HTMLDivElement, CustomContentProps>(
             <Grid display='flex' mx={1} minWidth='fit-content'>
               <StyledDetails
                 onClick={() => {
-                  window.open(
-                    `https://solscan.io/tx/${txid.toString()}${networkUrl}`,
-                    '_blank'
-                  )
+                  window.open(`https://solscan.io/tx/${txid.toString()}${networkUrl}`, '_blank')
                 }}>
                 Details
               </StyledDetails>

@@ -1,8 +1,5 @@
 name: preview
 
-permissions:
-  contents: write
-
 on:
   push:
     branches: [master]
