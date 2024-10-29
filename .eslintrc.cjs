@@ -23,7 +23,6 @@ module.exports = {
     indent: 'off',
     '@typescript-eslint/indent': 'off',
     'multiline-ternary': 'off',
-    'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/prefer-reduce-type-parameter': 'off',
@@ -46,7 +45,6 @@ module.exports = {
       }
     ],
     'no-extra-semi': 'off',
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'no-empty': 'off'
   },
   overrides: [

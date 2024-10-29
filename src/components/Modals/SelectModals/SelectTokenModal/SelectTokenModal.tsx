@@ -332,7 +332,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                         </Typography>
                         <Grid className={classes.tokenAddress} container direction='column'>
                           <a
-                            href={`https://eclipsescan.xyz/token/${token.assetAddress.toString()}${networkUrl}`}
+                            href={`https://solscan.io/token/${token.assetAddress.toString()}${networkUrl}`}
                             target='_blank'
                             rel='noopener noreferrer'
                             onClick={event => {

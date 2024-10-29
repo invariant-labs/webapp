@@ -69,7 +69,7 @@ const SingleToken: React.FC<IProps> = ({ token, network, tokenPrice, copyTokenAd
             {token && (
               <TooltipHover text='Token details'>
                 <a
-                  href={`https://eclipsescan.xyz/token/${token.assetAddress.toString()}${networkUrl}`}
+                  href={`https://solscan.io/token/${token.assetAddress.toString()}${networkUrl}`}
                   target='_blank'
                   rel='noopener noreferrer'
                   onClick={event => {
