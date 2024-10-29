@@ -2,18 +2,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { network, rpcAddress, status } from '@store/selectors/solanaConnection'
 import { actions } from '@store/reducers/pools'
-import { actions as walletActions } from '@store/reducers/solanaWallet'
 import { poolsArraySortedByFees, poolTicks, tickMaps } from '@store/selectors/pools'
 import { swap } from '@store/selectors/swap'
 import { findTickmapChanges, Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
 import { Status, actions as solanaConnectionActions } from '@store/reducers/solanaConnection'
-import { NetworkType } from '@store/consts/static'
 import { getMarketProgramSync } from '@utils/web3/programs/amm'
 import {
   findPairs,
   getFullNewTokensData,
-  getMainnetCommonTokens,
   getNetworkTokensList,
   getPoolsVolumeRanges
 } from '@utils/utils'
@@ -33,23 +30,23 @@ const MarketEvents = () => {
   const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
   const [subscribedTickmap, _setSubscribedTickmap] = useState<Set<string>>(new Set())
 
-  useEffect(() => {
-    if (networkType !== NetworkType.Mainnet) {
-      return
-    }
-    const getCommonTokens = async () => {
-      try {
-        const mainnetCommonTokens = await getMainnetCommonTokens()
-        dispatch(
-          walletActions.setCommonTokens({ network: networkType, tokens: mainnetCommonTokens })
-        )
-      } catch (error) {
-        console.log(error)
-      }
-    }
+  // useEffect(() => {
+  //   if (networkType !== NetworkType.Mainnet) {
+  //     return
+  //   }
+  //   const getCommonTokens = async () => {
+  //     try {
+  //       const mainnetCommonTokens = await getMainnetCommonTokens()
+  //       dispatch(
+  //         walletActions.setCommonTokens({ network: networkType, tokens: mainnetCommonTokens })
+  //       )
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
 
-    void getCommonTokens()
-  }, [networkType])
+  //   void getCommonTokens()
+  // }, [networkType])
 
   useEffect(() => {
     const connection = getCurrentSolanaConnection()

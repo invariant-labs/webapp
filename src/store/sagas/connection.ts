@@ -1,5 +1,4 @@
-import { all, call, put, SagaGenerator, select, takeLeading, spawn, delay } from 'typed-redux-saga'
-
+import { all, call, put, SagaGenerator, select, takeLeading, spawn } from 'typed-redux-saga'
 import { actions, Status, PayloadTypes, RpcStatus } from '@store/reducers/solanaConnection'
 import { getSolanaConnection } from '@utils/web3/connection'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'

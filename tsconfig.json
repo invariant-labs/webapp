@@ -31,11 +31,7 @@
     "noImplicitAny": false
   },
   "include": ["src"],
-  "exclude": [
-    "node_modules/**/*",
-    "src/components/FarmsList/**/*",
-    "src/components/Modals/SelectModals/SortFarmsModal/**/*"
-  ],
+  "exclude": ["node_modules/**/*"],
   "references": [
     {
       "path": "./tsconfig.node.json"

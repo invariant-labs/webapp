@@ -33,8 +33,8 @@ const ExchangeRate: React.FC<iProps> = ({
         {isNaN(amount)
           ? 0
           : formatNumber(amount.toFixed(tokenToDecimals)) === '0'
-          ? '~0'
-          : formatNumber(amount.toFixed(tokenToDecimals))}{' '}
+            ? '~0'
+            : formatNumber(amount.toFixed(tokenToDecimals))}{' '}
         {tokenToSymbol}
       </Typography>
     )

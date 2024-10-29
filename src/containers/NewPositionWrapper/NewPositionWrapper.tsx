@@ -33,14 +33,7 @@ import {
   volumeRanges
 } from '@store/selectors/pools'
 import { initPosition, plotTicks, shouldNotUpdateRange } from '@store/selectors/positions'
-import {
-  balanceLoading,
-  status,
-  balance,
-  swapTokensDict,
-  canCreateNewPool,
-  canCreateNewPosition
-} from '@store/selectors/solanaWallet'
+import { balanceLoading, status, balance, swapTokensDict } from '@store/selectors/solanaWallet'
 import { openWalletSelectorModal } from '@utils/web3/selector'
 import { VariantType } from 'notistack'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
@@ -68,7 +61,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 }) => {
   const dispatch = useDispatch()
   const connection = getCurrentSolanaConnection()
-  const ethBalance = useSelector(balance)
+  const solBalance = useSelector(balance)
   const tokens = useSelector(swapTokensDict)
   const walletStatus = useSelector(status)
   const allPools = useSelector(poolsArraySortedByFees)
@@ -76,8 +69,6 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const loadingTicksAndTickMaps = useSelector(isLoadingTicksAndTickMaps)
   const isBalanceLoading = useSelector(balanceLoading)
 
-  const canUserCreateNewPool = useSelector(canCreateNewPool)
-  const canUserCreateNewPosition = useSelector(canCreateNewPosition)
   const shouldNotUpdatePriceRange = useSelector(shouldNotUpdateRange)
   const currentNetwork = useSelector(network)
   const { success, inProgress } = useSelector(initPosition)
@@ -414,6 +405,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   useEffect(() => {
     getGlobalPrice()
   }, [tokenB, tokenA])
+
   useEffect(() => {
     if (tokenB === null || (tokenB !== null && !tokens[tokenB.toString()])) {
       return
@@ -748,7 +740,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       setOnlyUserPositions={() => {}} //TODO implement logic
       network={currentNetwork}
       isLoadingTokens={isCurrentlyLoadingTokens}
-      ethBalance={ethBalance}
+      solBalance={solBalance}
       walletStatus={walletStatus}
       onConnectWallet={openWalletSelectorModal}
       onDisconnectWallet={() => {
@@ -775,8 +767,6 @@ export const NewPositionWrapper: React.FC<IProps> = ({
           ? allPools[poolIndex].sqrtPrice.v
           : calculatePriceSqrt(midPrice.index).v
       }
-      canCreateNewPool={canUserCreateNewPool}
-      canCreateNewPosition={canUserCreateNewPosition}
       handleAddToken={addTokenHandler}
       commonTokens={commonTokensForNetworks[currentNetwork]}
       initialOpeningPositionMethod={initialIsConcentrationOpening ? 'concentration' : 'range'}
@@ -804,6 +794,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       currentFeeIndex={feeIndex}
       onSlippageChange={onSlippageChange}
       initialSlippage={initialSlippage}
+      globalPrice={globalPrice}
     />
   )
 }

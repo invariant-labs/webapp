@@ -227,6 +227,13 @@ const useStyles = makeStyles()(theme => {
     },
     activeLiquidityContainer: {
       width: 'auto'
+    },
+    globalPrice: {
+      display: 'inline-block',
+      color: colors.invariant.blue,
+      ...typography.caption2,
+      textAlign: 'right',
+      marginLeft: 4
     }
   }
 })

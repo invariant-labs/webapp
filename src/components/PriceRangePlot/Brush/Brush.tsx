@@ -116,8 +116,8 @@ export const Handle: React.FC<HandleProps> = ({
             disabled
               ? colors.invariant.light
               : isHovered
-              ? colors.invariant.lightPink
-              : colors.invariant.pink
+                ? colors.invariant.lightPink
+                : colors.invariant.pink
           }
           textColor={disabled ? colors.invariant.lightHover : colors.invariant.componentBcg}
           isReversed={isReversed()}
@@ -130,8 +130,8 @@ export const Handle: React.FC<HandleProps> = ({
             disabled
               ? colors.invariant.light
               : isHovered
-              ? colors.invariant.lightPink
-              : colors.invariant.pink
+                ? colors.invariant.lightPink
+                : colors.invariant.pink
           }
           textColor={disabled ? colors.invariant.lightHover : colors.invariant.componentBcg}
           isReversed={isReversed()}
@@ -144,8 +144,8 @@ export const Handle: React.FC<HandleProps> = ({
           drag
             ? 0
             : (isStart && !isReversed()) || (!isStart && isReversed())
-            ? currentPosition - 40
-            : currentPosition
+              ? currentPosition - 40
+              : currentPosition
         }
         y={0}
         width={drag ? plotWidth : 42}
@@ -262,18 +262,17 @@ export const Brush =
     plotMax: number,
     disabled: boolean = false
   ): React.FC<CustomLayerProps> =>
-  layerProps =>
-    (
-      <InnerBrush
-        leftPosition={leftPosition}
-        rightPosition={rightPosition}
-        onLeftDrop={onLeftDrop}
-        onRightDrop={onRightDrop}
-        plotMin={plotMin}
-        plotMax={plotMax}
-        disabled={disabled}
-        {...layerProps}
-      />
-    )
+  layerProps => (
+    <InnerBrush
+      leftPosition={leftPosition}
+      rightPosition={rightPosition}
+      onLeftDrop={onLeftDrop}
+      onRightDrop={onRightDrop}
+      plotMin={plotMin}
+      plotMax={plotMax}
+      disabled={disabled}
+      {...layerProps}
+    />
+  )
 
 export default Brush

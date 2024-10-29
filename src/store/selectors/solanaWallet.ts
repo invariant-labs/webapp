@@ -69,7 +69,7 @@ export const swapTokens = createSelector(
       balance:
         token.address.toString() === WRAPPED_SOL_ADDRESS
           ? solBalance
-          : allAccounts[token.address.toString()]?.balance ?? new BN(0)
+          : (allAccounts[token.address.toString()]?.balance ?? new BN(0))
     }))
   }
 )
@@ -88,7 +88,7 @@ export const swapTokensDict = createSelector(
         balance:
           val.address.toString() === WRAPPED_SOL_ADDRESS
             ? solBalance
-            : allAccounts[val.address.toString()]?.balance ?? new BN(0)
+            : (allAccounts[val.address.toString()]?.balance ?? new BN(0))
       }
     })
 

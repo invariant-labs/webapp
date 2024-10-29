@@ -117,3 +117,4 @@
 // }
 
 // export default FarmList
+export default {}

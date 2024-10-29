@@ -40,18 +40,23 @@ module.exports = {
       'error',
       {
         varsIgnorePattern: '^_',
-        argsIgnorePattern: '^_'
+        argsIgnorePattern: '^_',
+        destructuredArrayIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_'
       }
     ],
     'no-extra-semi': 'off',
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'no-empty': 'off'
   },
   overrides: [
     {
       files: ['**/*.stories.tsx'],
       rules: {
         '@typescript-eslint/no-unused-vars': 'off',
-        'import/no-unresolved': 'off'
+        'import/no-unresolved': 'off',
+        'react-hooks/rules-of-hooks': 'off',
+        'storybook/story-exports': 'off'
       }
     }
   ]

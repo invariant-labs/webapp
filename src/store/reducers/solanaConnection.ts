@@ -1,4 +1,4 @@
-import { NetworkType, RECOMMENDED_RPC_ADDRESS, RPC } from '@store/consts/static'
+import { NetworkType, RECOMMENDED_RPC_ADDRESS } from '@store/consts/static'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { PayloadType } from '@store/consts/types'
 

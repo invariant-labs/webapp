@@ -145,8 +145,8 @@ export function* handleSwapWithSOL(): Generator {
       allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[tokenFrom.toString()]
-        ? tokensAccounts[tokenFrom.toString()].address
-        : null
+          ? tokensAccounts[tokenFrom.toString()].address
+          : null
     if (fromAddress === null) {
       fromAddress = yield* call(createAccount, tokenFrom)
     }
@@ -154,8 +154,8 @@ export function* handleSwapWithSOL(): Generator {
       allTokens[tokenTo.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[tokenTo.toString()]
-        ? tokensAccounts[tokenTo.toString()].address
-        : null
+          ? tokensAccounts[tokenTo.toString()].address
+          : null
     if (toAddress === null) {
       toAddress = yield* call(createAccount, tokenTo)
     }

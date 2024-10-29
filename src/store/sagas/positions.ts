@@ -114,8 +114,8 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       allTokens[data.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenX.toString()]
-        ? tokensAccounts[data.tokenX.toString()].address
-        : null
+          ? tokensAccounts[data.tokenX.toString()].address
+          : null
 
     if (userTokenX === null) {
       userTokenX = yield* call(createAccount, data.tokenX)
@@ -125,8 +125,8 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       allTokens[data.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenY.toString()]
-        ? tokensAccounts[data.tokenY.toString()].address
-        : null
+          ? tokensAccounts[data.tokenY.toString()].address
+          : null
 
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, data.tokenY)
@@ -415,8 +415,8 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
       allTokens[data.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenX.toString()]
-        ? tokensAccounts[data.tokenX.toString()].address
-        : null
+          ? tokensAccounts[data.tokenX.toString()].address
+          : null
 
     if (userTokenX === null) {
       userTokenX = yield* call(createAccount, data.tokenX)
@@ -426,8 +426,8 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
       allTokens[data.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenY.toString()]
-        ? tokensAccounts[data.tokenY.toString()].address
-        : null
+          ? tokensAccounts[data.tokenY.toString()].address
+          : null
 
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, data.tokenY)
@@ -936,8 +936,8 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
       allTokens[positionForIndex.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenX.toString()]
-        ? tokensAccounts[positionForIndex.tokenX.toString()].address
-        : null
+          ? tokensAccounts[positionForIndex.tokenX.toString()].address
+          : null
 
     if (userTokenX === null) {
       userTokenX = yield* call(createAccount, positionForIndex.tokenX)
@@ -947,8 +947,8 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
       allTokens[positionForIndex.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenY.toString()]
-        ? tokensAccounts[positionForIndex.tokenY.toString()].address
-        : null
+          ? tokensAccounts[positionForIndex.tokenY.toString()].address
+          : null
 
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
@@ -1281,8 +1281,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       allTokens[positionForIndex.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenX.toString()]
-        ? tokensAccounts[positionForIndex.tokenX.toString()].address
-        : null
+          ? tokensAccounts[positionForIndex.tokenX.toString()].address
+          : null
 
     if (userTokenX === null) {
       userTokenX = yield* call(createAccount, positionForIndex.tokenX)
@@ -1292,8 +1292,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       allTokens[positionForIndex.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenY.toString()]
-        ? tokensAccounts[positionForIndex.tokenY.toString()].address
-        : null
+          ? tokensAccounts[positionForIndex.tokenY.toString()].address
+          : null
 
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)

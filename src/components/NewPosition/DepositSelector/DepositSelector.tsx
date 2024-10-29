@@ -17,7 +17,6 @@ import {
   WSOL_POSITION_INIT_LAMPORTS_TEST
 } from '@store/consts/static'
 import { Status } from '@store/reducers/solanaWallet'
-import { canCreateNewPool, canCreateNewPosition } from '@store/selectors/solanaWallet'
 import {
   convertBalanceToBN,
   getScaleFromString,
@@ -78,7 +77,7 @@ export interface IDepositSelector {
   isGetLiquidityError: boolean
   ticksLoading: boolean
   network: NetworkType
-  ethBalance: BN
+  solBalance: BN
   walletStatus: Status
   onConnectWallet: () => void
   onDisconnectWallet: () => void
@@ -120,7 +119,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   walletStatus,
   onConnectWallet,
   onDisconnectWallet,
-  ethBalance
+  solBalance
 }) => {
   const { classes } = useStyles()
 
@@ -181,12 +180,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         : 'Set higher fee tier'
     }
 
-    if (
-      (poolIndex === null && !canCreateNewPool) ||
-      (poolIndex !== null && !canCreateNewPosition)
-    ) {
-      return 'Insufficient SOL'
-    }
     if (isGetLiquidityError) {
       return 'Provide a smaller amount'
     }
@@ -209,18 +202,24 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       return `Not enough ${tokens[tokenB.toString()].symbol}`
     }
 
-    // const tokenABalance = convertBalanceToBN(tokenAInputState.value, tokens[tokenAIndex].decimals)
-    // const tokenBBalance = convertBalanceToBN(tokenBInputState.value, tokens[tokenBIndex].decimals)
+    const tokenABalance = convertBalanceToBN(
+      tokenAInputState.value,
+      tokens[tokenA.toString()].decimals
+    )
+    const tokenBBalance = convertBalanceToBN(
+      tokenBInputState.value,
+      tokens[tokenB.toString()].decimals
+    )
 
-    // if (
-    //   (tokens[tokenAIndex].assetAddress.toString() === WRAPPED_ETH_ADDRESS &&
-    //     tokens[tokenAIndex].balance.lt(tokenABalance.add(WETH_MIN_FEE_LAMPORTS))) ||
-    //   (tokens[tokenBIndex].assetAddress.toString() === WRAPPED_ETH_ADDRESS &&
-    //     tokens[tokenBIndex].balance.lt(tokenBBalance.add(WETH_MIN_FEE_LAMPORTS))) ||
-    //   ethBalance.lt(WETH_MIN_FEE_LAMPORTS)
-    // ) {
-    //   return `Insufficient ETH`
-    // }
+    if (
+      (tokenA.toString() === WRAPPED_SOL_ADDRESS &&
+        tokens[tokenA.toString()].balance.lt(tokenABalance.add(WSOL_MIN_FEE_LAMPORTS))) ||
+      (tokenB.toString() === WRAPPED_SOL_ADDRESS &&
+        tokens[tokenB.toString()].balance.lt(tokenBBalance.add(WSOL_MIN_FEE_LAMPORTS))) ||
+      solBalance.lt(WSOL_MIN_FEE_LAMPORTS)
+    ) {
+      return `Insufficient SOL`
+    }
 
     if (
       (!tokenAInputState.blocked && +tokenAInputState.value === 0) ||
@@ -362,7 +361,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           tokenPrice={priceA}
           currency={tokenA !== null ? tokens[tokenA.toString()].symbol : null}
           currencyIconSrc={tokenA !== null ? tokens[tokenA.toString()].logoURI : undefined}
-          currencyIsUnknown={tokenA !== null ? tokens[tokenA.toString()].isUnknown ?? false : false}
+          currencyIsUnknown={
+            tokenA !== null ? (tokens[tokenA.toString()].isUnknown ?? false) : false
+          }
           placeholder='0.0'
           onMaxClick={() => {
             if (tokenA === null) {
@@ -413,7 +414,9 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           tokenPrice={priceB}
           currency={tokenB !== null ? tokens[tokenB.toString()].symbol : null}
           currencyIconSrc={tokenB !== null ? tokens[tokenB.toString()].logoURI : undefined}
-          currencyIsUnknown={tokenB !== null ? tokens[tokenB.toString()].isUnknown ?? false : false}
+          currencyIsUnknown={
+            tokenB !== null ? (tokens[tokenB.toString()].isUnknown ?? false) : false
+          }
           placeholder='0.0'
           onMaxClick={() => {
             if (tokenB === null) {

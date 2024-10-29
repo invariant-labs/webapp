@@ -53,10 +53,10 @@ const configureAppStore = (initialState = {}) => {
               typeof value === 'bigint'
                 ? value.toString()
                 : value instanceof PublicKey
-                ? (value as PublicKey).toBase58()
-                : value instanceof BN
-                ? (value as BN).toString()
-                : value,
+                  ? (value as PublicKey).toBase58()
+                  : value instanceof BN
+                    ? (value as BN).toString()
+                    : value,
             options: true
           }
         }

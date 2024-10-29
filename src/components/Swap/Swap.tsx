@@ -946,8 +946,8 @@ export const Swap: React.FC<ISwap> = ({
                   getStateMessage() === 'Connect a wallet'
                     ? `${classes.swapButton}`
                     : getStateMessage() === 'Exchange' && progress === 'none'
-                    ? `${classes.swapButton} ${classes.ButtonSwapActive}`
-                    : classes.swapButton
+                      ? `${classes.swapButton} ${classes.ButtonSwapActive}`
+                      : classes.swapButton
                 }
                 disabled={getStateMessage() !== 'Exchange' || progress !== 'none'}
                 onClick={() => {
@@ -977,8 +977,8 @@ export const Swap: React.FC<ISwap> = ({
               getStateMessage() === 'Connect a wallet'
                 ? `${classes.swapButton}`
                 : getStateMessage() === 'Exchange' && progress === 'none'
-                ? `${classes.swapButton} ${classes.ButtonSwapActive}`
-                : classes.swapButton
+                  ? `${classes.swapButton} ${classes.ButtonSwapActive}`
+                  : classes.swapButton
             }
             disabled={getStateMessage() !== 'Exchange' || progress !== 'none'}
             onClick={() => {

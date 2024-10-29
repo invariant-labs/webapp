@@ -454,6 +454,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             </Tooltip>
             <Grid>
               <Typography className={classes.currentPrice}>Current price ━━━</Typography>
+              <Typography className={classes.globalPrice}>Global price</Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -470,6 +471,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             x: calcPriceByTickIndex(rightRange, isXtoY, xDecimal, yDecimal)
           }}
           midPrice={midPrice}
+          globalPrice={globalPrice}
           plotMin={plotMin}
           plotMax={plotMax}
           zoomMinus={zoomMinus}
@@ -482,6 +484,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           disabled={positionOpeningMethod === 'concentration'}
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
+          volumeRange={volumeRange}
         />
         {/* <FormControlLabel
           control={

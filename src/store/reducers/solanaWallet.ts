@@ -74,7 +74,7 @@ const solanaWalletSlice = createSlice({
     getBalance(state) {
       return state
     },
-    setIsBalanceLoading(state, action: PayloadAction<Boolean>) {
+    setIsBalanceLoading(state, action: PayloadAction<boolean>) {
       action.payload ? (state.balanceLoading = true) : (state.balanceLoading = false)
       return state
     },

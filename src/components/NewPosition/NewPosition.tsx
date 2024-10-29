@@ -91,8 +91,6 @@ export interface INewPosition {
   currentPairReversed: boolean | null
   bestTiers: BestTier[]
   currentPriceSqrt: BN
-  canCreateNewPool: boolean
-  canCreateNewPosition: boolean
   handleAddToken: (address: string) => void
   commonTokens: PublicKey[]
   initialOpeningPositionMethod: PositionOpeningMethod
@@ -112,7 +110,7 @@ export interface INewPosition {
   currentFeeIndex: number
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
-  globalPrice?: number
+  globalPrice: number
   onRefresh: () => void
   isBalanceLoading: boolean
   shouldNotUpdatePriceRange: boolean
@@ -122,7 +120,7 @@ export interface INewPosition {
   setOnlyUserPositions: (val: boolean) => void
   network: NetworkType
   isLoadingTokens: boolean
-  ethBalance: BN
+  solBalance: BN
   walletStatus: Status
   onConnectWallet: () => void
   onDisconnectWallet: () => void
@@ -146,8 +144,6 @@ export const NewPosition: React.FC<INewPosition> = ({
   calcAmount,
   feeTiers,
   ticksLoading,
-  showNoConnected,
-  noConnectedBlockerProps,
   isXtoY,
   xDecimal,
   yDecimal,
@@ -156,8 +152,6 @@ export const NewPosition: React.FC<INewPosition> = ({
   poolIndex,
   currentPairReversed,
   bestTiers,
-  canCreateNewPool,
-  canCreateNewPosition,
   handleAddToken,
   commonTokens,
   initialOpeningPositionMethod,
@@ -185,7 +179,7 @@ export const NewPosition: React.FC<INewPosition> = ({
   setOnlyUserPositions,
   network,
   isLoadingTokens,
-  ethBalance,
+  solBalance,
   walletStatus,
   onConnectWallet,
   onDisconnectWallet
@@ -374,11 +368,11 @@ export const NewPosition: React.FC<INewPosition> = ({
   const bestTierIndex =
     tokenA === null || tokenB === null
       ? undefined
-      : bestTiers.find(
+      : (bestTiers.find(
           tier =>
             (tier.tokenX.equals(tokenA) && tier.tokenY.equals(tokenB)) ||
             (tier.tokenX.equals(tokenB) && tier.tokenY.equals(tokenA))
-        )?.bestTierIndex ?? undefined
+        )?.bestTierIndex ?? undefined)
 
   const getMinSliderIndex = () => {
     let minimumSliderIndex = 0
@@ -724,7 +718,7 @@ export const NewPosition: React.FC<INewPosition> = ({
           isGetLiquidityError={isGetLiquidityError}
           ticksLoading={ticksLoading}
           network={network}
-          ethBalance={ethBalance}
+          solBalance={solBalance}
           walletStatus={walletStatus}
           onConnectWallet={onConnectWallet}
           onDisconnectWallet={onDisconnectWallet}
