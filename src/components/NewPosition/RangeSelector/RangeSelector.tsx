@@ -61,6 +61,8 @@ export interface IRangeSelector {
   unblockUpdatePriceRange: () => void
   onlyUserPositions: boolean
   setOnlyUserPositions: (onlyUserPositions: boolean) => void
+  shouldResetPlot: boolean
+  setShouldResetPlot: (val: boolean) => void
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -88,13 +90,12 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   concentrationIndex,
   setConcentrationIndex,
   getTicksInsideRange,
-
   shouldReversePlot,
   setShouldReversePlot,
   shouldNotUpdatePriceRange,
-  unblockUpdatePriceRange
-  // onlyUserPositions,
-  // setOnlyUserPositions
+  unblockUpdatePriceRange,
+  shouldResetPlot,
+  setShouldResetPlot
 }) => {
   const { classes } = useStyles()
 
@@ -262,11 +263,13 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       isMountedRef.current &&
       poolIndex !== null &&
       currentMidPrice !== midPrice &&
-      !shouldReversePlot
+      !shouldReversePlot &&
+      shouldResetPlot
     ) {
       if (!shouldNotUpdatePriceRange) {
         resetPlot()
         setCurrentMidPrice(midPrice)
+        setShouldResetPlot(false)
       }
     }
   }, [triggerReset])

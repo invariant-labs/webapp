@@ -368,11 +368,11 @@ export const NewPosition: React.FC<INewPosition> = ({
   const bestTierIndex =
     tokenA === null || tokenB === null
       ? undefined
-      : (bestTiers.find(
+      : bestTiers.find(
           tier =>
             (tier.tokenX.equals(tokenA) && tier.tokenY.equals(tokenB)) ||
             (tier.tokenX.equals(tokenB) && tier.tokenY.equals(tokenA))
-        )?.bestTierIndex ?? undefined)
+        )?.bestTierIndex ?? undefined
 
   const getMinSliderIndex = () => {
     let minimumSliderIndex = 0
@@ -787,8 +787,8 @@ export const NewPosition: React.FC<INewPosition> = ({
             concentrationIndex={concentrationIndex}
             minimumSliderIndex={minimumSliderIndex}
             getTicksInsideRange={getTicksInsideRange}
-            // shouldResetPlot={shouldResetPlot}
-            // setShouldResetPlot={setShouldResetPlot}
+            shouldResetPlot={shouldResetPlot}
+            setShouldResetPlot={setShouldResetPlot}
             shouldReversePlot={shouldReversePlot}
             setShouldReversePlot={setShouldReversePlot}
             shouldNotUpdatePriceRange={shouldNotUpdatePriceRange}
