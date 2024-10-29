@@ -1,6 +1,7 @@
 name: preview
 
-permissions: read-all
+permissions:
+  contents: write
 
 on:
   push:
