@@ -12,9 +12,9 @@ import FeeSwitch from '../FeeSwitch/FeeSwitch'
 import {
   NetworkType,
   WSOL_POOL_INIT_LAMPORTS_MAIN,
-  WSOL_POOL_INIT_LAMPORTS_TEST,
+  WSOL_POOL_INIT_LAMPORTS_DEV,
   WSOL_POSITION_INIT_LAMPORTS_MAIN,
-  WSOL_POSITION_INIT_LAMPORTS_TEST
+  WSOL_POSITION_INIT_LAMPORTS_DEV
 } from '@store/consts/static'
 import { Status } from '@store/reducers/solanaWallet'
 import {
@@ -127,8 +127,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   const [tokenB, setTokenB] = useState<PublicKey | null>(null)
 
   const WSOL_MIN_FEE_LAMPORTS = useMemo(() => {
-    if (network === NetworkType.Testnet) {
-      return poolIndex === null ? WSOL_POOL_INIT_LAMPORTS_TEST : WSOL_POSITION_INIT_LAMPORTS_TEST
+    if (network === NetworkType.Devnet) {
+      return poolIndex === null ? WSOL_POOL_INIT_LAMPORTS_DEV : WSOL_POSITION_INIT_LAMPORTS_DEV
     } else {
       return poolIndex === null ? WSOL_POOL_INIT_LAMPORTS_MAIN : WSOL_POSITION_INIT_LAMPORTS_MAIN
     }
@@ -361,9 +361,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           tokenPrice={priceA}
           currency={tokenA !== null ? tokens[tokenA.toString()].symbol : null}
           currencyIconSrc={tokenA !== null ? tokens[tokenA.toString()].logoURI : undefined}
-          currencyIsUnknown={
-            tokenA !== null ? (tokens[tokenA.toString()].isUnknown ?? false) : false
-          }
+          currencyIsUnknown={tokenA !== null ? tokens[tokenA.toString()].isUnknown ?? false : false}
           placeholder='0.0'
           onMaxClick={() => {
             if (tokenA === null) {
@@ -414,9 +412,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           tokenPrice={priceB}
           currency={tokenB !== null ? tokens[tokenB.toString()].symbol : null}
           currencyIconSrc={tokenB !== null ? tokens[tokenB.toString()].logoURI : undefined}
-          currencyIsUnknown={
-            tokenB !== null ? (tokens[tokenB.toString()].isUnknown ?? false) : false
-          }
+          currencyIsUnknown={tokenB !== null ? tokens[tokenB.toString()].isUnknown ?? false : false}
           placeholder='0.0'
           onMaxClick={() => {
             if (tokenB === null) {

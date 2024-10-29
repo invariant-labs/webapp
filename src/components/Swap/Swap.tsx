@@ -14,7 +14,7 @@ import {
   REFRESHER_INTERVAL,
   WRAPPED_SOL_ADDRESS,
   WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT_MAIN,
-  WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT_TEST
+  WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT_DEV
 } from '@store/consts/static'
 import {
   addressToTicker,
@@ -188,8 +188,8 @@ export const Swap: React.FC<ISwap> = ({
   })
 
   const WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT = useMemo(() => {
-    if (network === NetworkType.Testnet) {
-      return WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT_TEST
+    if (network === NetworkType.Devnet) {
+      return WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT_DEV
     } else {
       return WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT_MAIN
     }
