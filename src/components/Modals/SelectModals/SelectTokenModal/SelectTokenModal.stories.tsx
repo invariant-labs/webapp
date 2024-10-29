@@ -6,8 +6,8 @@ import { SwapToken } from '@store/selectors/solanaWallet'
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 
-const tokens: SwapToken[] = [
-  {
+const tokens: Record<string, SwapToken> = {
+  So11111111111111111111111111111111111111112: {
     balance: new BN(100).mul(new BN(34786)),
     decimals: 6,
     symbol: 'SOL',
@@ -16,7 +16,7 @@ const tokens: SwapToken[] = [
     logoURI:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
   },
-  {
+  '9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E': {
     balance: new BN(100).mul(new BN(126)),
     decimals: 6,
     symbol: 'BTC',
@@ -25,7 +25,7 @@ const tokens: SwapToken[] = [
     logoURI:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
   },
-  {
+  EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v: {
     balance: new BN(10).mul(new BN(5342)),
     decimals: 6,
     symbol: 'USDC',
@@ -34,7 +34,7 @@ const tokens: SwapToken[] = [
     logoURI:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
   }
-]
+}
 
 const meta = {
   title: 'Modals/SelectTokenModal',

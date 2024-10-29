@@ -6,7 +6,7 @@ import useStyles from './style'
 import { IPriorityFeeOptions } from '@store/consts/types'
 import { Box, Button, Grid, Input, Popover, Typography } from '@mui/material'
 
-interface Props {
+export interface IPriority {
   open: boolean
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
@@ -14,7 +14,7 @@ interface Props {
   onPrioritySave: () => void
 }
 
-const Priority: React.FC<Props> = ({
+const Priority: React.FC<IPriority> = ({
   open,
   handleClose,
   anchorEl,

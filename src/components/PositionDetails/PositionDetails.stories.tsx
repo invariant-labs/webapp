@@ -3,53 +3,7 @@ import { fn } from '@storybook/test'
 import { MemoryRouter } from 'react-router-dom'
 import PositionDetails from './PositionDetails'
 import { NetworkType } from '@store/consts/static'
-import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
-
-const defaultArgs = {
-  currentPrice: new BN(10000),
-  leftRange: { index: new BN(2), x: new BN(23) },
-  rightRange: { index: new BN(2), x: new BN(45354) },
-  max: 100,
-  min: 0,
-  midPrice: { index: new BN(3), x: new BN(4535) },
-  reloadHandler: fn(),
-  ticksLoading: false,
-  tickSpacing: new BN(1),
-  closePosition: fn(),
-  tokenX: {
-    name: 'BTC',
-    balance: new BN(10000),
-    claimValue: new BN(10000),
-    decimal: new BN(9),
-    icon: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
-    liqValue: new BN(10000),
-    usdValue: new BN(123)
-  },
-  tokenY: {
-    name: 'ETH',
-    balance: new BN(432),
-    claimValue: new BN(21),
-    decimal: new BN(9),
-    icon: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
-    liqValue: new BN(321),
-    usdValue: new BN(3246)
-  },
-  hasTicksError: false,
-  copyPoolAddressHandler: fn(),
-  detailsData: [
-    { x: new BN(12), y: new BN(1234), index: new BN(1) },
-    { x: new BN(123), y: new BN(432), index: new BN(2) }
-  ],
-  fee: new BN(1),
-  onClickClaimFee: fn(),
-  onRefresh: fn(),
-  isBalanceLoading: false,
-  network: NetworkType.Testnet,
-  tokenXAddress: new PublicKey('32'),
-  tokenYAddress: new PublicKey('22'),
-  poolAddress: new PublicKey('32')
-}
 
 const meta = {
   title: 'Components/PositionDetails',
@@ -67,6 +21,120 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Primary: Story = {
-  args: defaultArgs,
-  render: args => <PositionDetails {...args} />
+  args: {
+    currentPrice: 10000 as any,
+    leftRange: {
+      index: 2 as any,
+      x: 23 as any
+    },
+    rightRange: {
+      index: 2 as any,
+      x: 45354 as any
+    },
+    max: 100,
+    min: 0,
+    midPrice: {
+      index: 2 as any,
+      x: 45354 as any
+    },
+    reloadHandler: fn(),
+    ticksLoading: false,
+    tickSpacing: 1 as any,
+    closePosition: fn(),
+    tokenX: {
+      name: 'BTC',
+      balance: 10000,
+      claimValue: 10000,
+      decimal: 9 as any,
+      icon: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
+      liqValue: 10000,
+      usdValue: 123
+    },
+    tokenY: {
+      name: 'ETH',
+      balance: 432,
+      claimValue: 21,
+      decimal: 9 as any,
+      icon: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
+      liqValue: 321,
+      usdValue: 3246
+    },
+    hasTicksError: false,
+    copyPoolAddressHandler: fn(),
+    detailsData: [
+      {
+        x: 12 as any,
+        y: 1234 as any,
+        index: 1 as any
+      },
+      {
+        x: 123 as any,
+        y: 432 as any,
+        index: 2 as any
+      }
+    ],
+    fee: 1 as any,
+    onClickClaimFee: fn(),
+
+    onRefresh: fn(),
+    isBalanceLoading: false,
+    network: NetworkType.Testnet,
+    poolAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+    setXToY: fn(),
+    tokenXAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+    tokenYAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+    xToY: true
+  },
+  render: args => {
+    return (
+      <PositionDetails
+        {...args}
+        currentPrice={1000}
+        leftRange={{
+          index: 2,
+          x: 23
+        }}
+        rightRange={{
+          index: 2,
+          x: 45354
+        }}
+        midPrice={{
+          index: 32,
+          x: 4535
+        }}
+        tokenX={{
+          name: 'BTC',
+          balance: 10000,
+          claimValue: 10000,
+          decimal: 9,
+          icon: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
+          liqValue: 10000,
+          usdValue: 123
+        }}
+        tokenY={{
+          name: 'ETH',
+          balance: 432,
+          claimValue: 21,
+          decimal: 9,
+          icon: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
+          liqValue: 321,
+          usdValue: 3246
+        }}
+        detailsData={[
+          {
+            x: 12,
+            y: 1234,
+            index: 1
+          },
+          {
+            x: 123,
+            y: 432,
+            index: 2
+          }
+        ]}
+        fee={{ v: 1 }}
+        tickSpacing={1}
+      />
+    )
+  }
 }

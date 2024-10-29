@@ -47,7 +47,10 @@ export const Primary: Story = {
     },
     onChainSelect: fn(),
     network: NetworkType.Testnet,
-    defaultDevnetRPC: RPC.DEV_EU,
-    rpcStatus: RpcStatus.Uninitialized
+    defaultDevnetRPC: RPC.DEV,
+    rpcStatus: RpcStatus.Uninitialized,
+    defaultMainnetRPC: RPC.MAIN,
+    onPrioritySave: fn(),
+    recentPriorityFee: '1'
   }
 }

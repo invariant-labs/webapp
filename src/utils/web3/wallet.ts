@@ -1,4 +1,3 @@
-/* eslint-disable no-case-declarations */
 import { WalletAdapter } from './adapters/types'
 import { StandardAdapter } from './adapters/standard'
 

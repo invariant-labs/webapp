@@ -155,7 +155,6 @@ export function* handleAirdrop(): Generator {
       yield* call(sleep, 2000)
       let retries = 30
       for (;;) {
-        // eslint-disable-next-line eqeqeq
         if (0.05 * 1e9 < (yield* call([connection, connection.getBalance], wallet.publicKey))) {
           break
         }
@@ -384,7 +383,6 @@ export function* init(): Generator {
   yield* put(actions.setIsBalanceLoading(false))
 }
 
-// eslint-disable-next-line @typescript-eslint/promise-function-async
 export const sleep = (ms: number) => {
   return new Promise(resolve => setTimeout(resolve, ms))
 }

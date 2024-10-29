@@ -39,9 +39,7 @@ module.exports = {
       'error',
       {
         varsIgnorePattern: '^_',
-        argsIgnorePattern: '^_',
-        destructuredArrayIgnorePattern: '^_',
-        caughtErrorsIgnorePattern: '^_'
+        argsIgnorePattern: '^_'
       }
     ],
     'no-extra-semi': 'off',

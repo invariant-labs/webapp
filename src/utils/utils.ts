@@ -48,7 +48,6 @@ import { CoingeckoPriceData, Token } from '@store/consts/types'
 import { sqrt } from '@invariant-labs/sdk/lib/math'
 
 export const transformBN = (amount: BN): string => {
-  // eslint-disable-next-line new-cap
   return (amount.div(new BN(1e2)).toNumber() / 1e4).toString()
 }
 export const printBN = (amount: BN, decimals: number): string => {
@@ -59,14 +58,12 @@ export const printBN = (amount: BN, decimals: number): string => {
 
   if (balanceString.length <= decimals) {
     return (
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       (isNegative ? '-' : '') + '0.' + '0'.repeat(decimals - balanceString.length) + balanceString
     )
   } else {
     return (
       (isNegative ? '-' : '') +
       trimZeros(
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         balanceString.substring(0, balanceString.length - decimals) +
           '.' +
           balanceString.substring(balanceString.length - decimals)

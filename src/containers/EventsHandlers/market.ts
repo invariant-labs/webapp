@@ -112,7 +112,6 @@ const MarketEvents = () => {
 
     const connectEvents = () => {
       allPools.forEach(pool => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         marketProgram.onPoolChange(pool.tokenX, pool.tokenY, { fee: pool.fee.v }, poolStructure => {
           dispatch(
             actions.updatePool({
@@ -168,7 +167,7 @@ const MarketEvents = () => {
         })
       }
     }
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+
     connectEvents()
   }, [networkStatus, marketProgram, Object.values(poolTicksArray).length])
 
@@ -234,7 +233,7 @@ const MarketEvents = () => {
         })
       }
     }
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+
     connectEvents()
   }, [networkStatus, marketProgram, Object.values(tickmaps).length])
 

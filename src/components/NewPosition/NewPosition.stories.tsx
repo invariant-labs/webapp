@@ -23,8 +23,8 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const tokens: SwapToken[] = [
-  {
+const tokens: Record<string, SwapToken> = {
+  So11111111111111111111111111111111111111112: {
     balance: new BN(100).mul(new BN(34786)),
     decimals: 6,
     symbol: 'SOL',
@@ -33,7 +33,7 @@ const tokens: SwapToken[] = [
     logoURI:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
   },
-  {
+  '9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E': {
     balance: new BN(100).mul(new BN(126)),
     decimals: 6,
     symbol: 'BTC',
@@ -42,7 +42,7 @@ const tokens: SwapToken[] = [
     logoURI:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
   },
-  {
+  EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v: {
     balance: new BN(10).mul(new BN(5342)),
     decimals: 6,
     symbol: 'USDC',
@@ -51,7 +51,7 @@ const tokens: SwapToken[] = [
     logoURI:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
   }
-]
+}
 
 export const Primary: Story = {
   args: {
@@ -106,11 +106,16 @@ export const Primary: Story = {
     setOnlyUserPositions: fn(),
     network: NetworkType.Testnet,
     isLoadingTokens: false,
-    ethBalance: 200000000,
+    solBalance: 200000000,
     walletStatus: Status.Initialized,
     onConnectWallet: () => {},
     onDisconnectWallet: () => {},
-    poolAddress: ''
+    poolAddress: '',
+    calculatePoolAddress: fn(),
+    globalPrice: 1000000,
+    noConnectedBlockerProps: {
+      onConnect: fn()
+    }
   },
   render: () => {
     return (
@@ -166,11 +171,16 @@ export const Primary: Story = {
         setOnlyUserPositions={fn()}
         network={NetworkType.Testnet}
         isLoadingTokens={false}
-        ethBalance={2000000000}
+        solBalance={2000000000}
         walletStatus={Status.Initialized}
         onConnectWallet={() => {}}
         onDisconnectWallet={() => {}}
-        poolAddress=''
+        poolAddress={''}
+        calculatePoolAddress={fn()}
+        globalPrice={1000000}
+        noConnectedBlockerProps={{
+          onConnect: fn()
+        }}
       />
     )
   }

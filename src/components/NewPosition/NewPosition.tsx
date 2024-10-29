@@ -110,7 +110,7 @@ export interface INewPosition {
   currentFeeIndex: number
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
-  globalPrice: number
+  globalPrice?: number
   onRefresh: () => void
   isBalanceLoading: boolean
   shouldNotUpdatePriceRange: boolean
@@ -368,11 +368,11 @@ export const NewPosition: React.FC<INewPosition> = ({
   const bestTierIndex =
     tokenA === null || tokenB === null
       ? undefined
-      : (bestTiers.find(
+      : bestTiers.find(
           tier =>
             (tier.tokenX.equals(tokenA) && tier.tokenY.equals(tokenB)) ||
             (tier.tokenX.equals(tokenB) && tier.tokenY.equals(tokenA))
-        )?.bestTierIndex ?? undefined)
+        )?.bestTierIndex ?? undefined
 
   const getMinSliderIndex = () => {
     let minimumSliderIndex = 0

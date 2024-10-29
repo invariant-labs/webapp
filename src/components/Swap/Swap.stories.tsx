@@ -6,14 +6,14 @@ import { Provider } from 'react-redux'
 import { store } from '@store/index'
 import { MemoryRouter } from 'react-router-dom'
 import { NetworkType } from '@store/consts/static'
-import { DEFAULT_PUBLIC_KEY } from '@invariant-labs/sdk-eclipse/lib/market'
-import { fromFee } from '@invariant-labs/sdk-eclipse/lib/utils'
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { SwapToken } from '@store/selectors/solanaWallet'
+import { fromFee } from '@invariant-labs/sdk/lib/utils'
+import { DEFAULT_PUBLIC_KEY } from '@invariant-labs/sdk/lib/market'
 
-const tokens: SwapToken[] = [
-  {
+const tokens: Record<string, SwapToken> = {
+  So11111111111111111111111111111111111111112: {
     balance: new BN(100).mul(new BN(34786)),
     decimals: 6,
     symbol: 'SOL',
@@ -22,7 +22,7 @@ const tokens: SwapToken[] = [
     logoURI:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png'
   },
-  {
+  '9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E': {
     balance: new BN(100).mul(new BN(126)),
     decimals: 6,
     symbol: 'BTC',
@@ -31,7 +31,7 @@ const tokens: SwapToken[] = [
     logoURI:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
   },
-  {
+  EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v: {
     balance: new BN(10).mul(new BN(5342)),
     decimals: 6,
     symbol: 'USDC',
@@ -40,7 +40,7 @@ const tokens: SwapToken[] = [
     logoURI:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png'
   }
-]
+}
 
 const meta = {
   title: 'PageComponent/Swap',
@@ -70,8 +70,8 @@ export const Primary: Story = {
     initialHideUnknownTokensValue: false,
     onSwap: fn(),
     initialSlippage: '0.5',
-    initialTokenFromIndex: null,
-    initialTokenToIndex: null,
+    initialTokenFrom: null,
+    initialTokenTo: null,
     isBalanceLoading: false,
     isFetchingNewPool: false,
     isWaitingForNewPool: false,
@@ -98,12 +98,10 @@ export const Primary: Story = {
     walletStatus: Status.Initialized,
     copyTokenAddressHandler: fn(),
     network: NetworkType.Testnet,
-    ethBalance: 2000000000,
+    solBalance: 2000000000,
     poolTicks: {},
     priceFromLoading: false,
     priceToLoading: false,
-    unwrapWETH: fn(),
-    wrappedETHAccountExist: true,
     deleteTimeoutError: fn(),
     isTimeoutError: false
   },
