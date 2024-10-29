@@ -452,9 +452,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
               </Typography>
             </Tooltip>
-            <Grid>
+            <Grid container flexDirection='column'>
               <Typography className={classes.currentPrice}>Current price ━━━</Typography>
-              <Typography className={classes.globalPrice}>Global price</Typography>
+              <Typography className={classes.globalPrice}>Global price ━━━</Typography>
             </Grid>
           </Grid>
         </Grid>

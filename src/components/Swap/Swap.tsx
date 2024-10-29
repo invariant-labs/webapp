@@ -656,7 +656,7 @@ export const Swap: React.FC<ISwap> = ({
           <ExchangeAmountInput
             value={amountFrom}
             balance={
-              tokenFrom !== null
+              tokenFrom !== null && tokens[tokenFrom.toString()] !== undefined
                 ? printBN(
                     tokens[tokenFrom.toString()].balance,
                     tokens[tokenFrom.toString()].decimals

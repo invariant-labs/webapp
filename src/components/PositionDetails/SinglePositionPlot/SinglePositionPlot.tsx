@@ -184,8 +184,10 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
               Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
             </Typography>
           </Tooltip>
-          <Typography className={classes.currentPrice}>Current price ━━━</Typography>
-          <Typography className={classes.globalPrice}>Global price</Typography>
+          <Grid container flexDirection='column'>
+            <Typography className={classes.currentPrice}>Current price ━━━</Typography>
+            <Typography className={classes.globalPrice}>Global price ━━━</Typography>
+          </Grid>
         </Grid>
       </Grid>
       <Grid className={classes.plotWrapper}>
