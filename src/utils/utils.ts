@@ -1478,13 +1478,16 @@ export const trimDecimalZeros = (numStr: string): string => {
   const withoutTrailingDot = numStr.replace(/\.$/, '')
 
   if (!withoutTrailingDot.includes('.')) {
-    return withoutTrailingDot
+    return withoutTrailingDot.replace(/^0+/, '') || '0'
   }
 
   const [integerPart, decimalPart] = withoutTrailingDot.split('.')
 
   const trimmedDecimal = decimalPart.replace(/0+$/, '')
-  return trimmedDecimal ? `${integerPart}.${trimmedDecimal}` : integerPart
+
+  const trimmedInteger = integerPart.replace(/^0+/, '')
+
+  return trimmedDecimal ? `${trimmedInteger || '0'}.${trimmedDecimal}` : trimmedInteger || '0'
 }
 
 export const stringToFixed = (string: string, numbersAfterDot: number): string => {
