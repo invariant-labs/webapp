@@ -1,10 +1,10 @@
-import { actions } from '@reducers/stats'
+import { actions } from '@store/reducers/stats'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
-import { network } from '@selectors/solanaConnection'
-import { getFullNewTokensData, getFullSnap } from '@consts/utils'
-import { tokens } from '@selectors/pools'
+import { network } from '@store/selectors/solanaConnection'
+import { getFullNewTokensData, getFullSnap } from '@utils/utils'
+import { tokens } from '@store/selectors/pools'
 import { PublicKey } from '@solana/web3.js'
-import { actions as poolsActions } from '@reducers/pools'
+import { actions as poolsActions } from '@store/reducers/pools'
 import { getConnection, handleRpcError } from './connection'
 
 export function* getStats(): Generator {

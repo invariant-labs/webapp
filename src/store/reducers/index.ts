@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux'
 import storage from 'redux-persist/lib/storage'
 import { persistReducer, createTransform, createMigrate, MigrationManifest } from 'redux-persist'
-import { NetworkType, SolanaNetworks } from '@consts/static'
 import { reducer as snackbarsReducer, snackbarsSliceName } from './snackbars'
 import { reducer as solanaWalletReducer, solanaWalletSliceName } from './solanaWallet'
 import {
@@ -15,6 +14,7 @@ import { positionsSliceName, reducer as positionsReducer } from './positions'
 import { statsSliceName, reducer as statsReducer } from './stats'
 import { farmsSliceName, reducer as farmsReducer } from './farms'
 import { bondsSliceName, reducer as bondsReducer } from './bonds'
+import { NetworkType, RPC } from '@store/consts/static'
 
 const transformNetwork = createTransform(
   (inboundState: any, _key) => {
@@ -22,7 +22,7 @@ const transformNetwork = createTransform(
   },
   (outboundState, key) => {
     if (key === 'network' && !Object.values(NetworkType).includes(outboundState)) {
-      return NetworkType.MAINNET
+      return NetworkType.Mainnet
     }
 
     return outboundState
@@ -35,22 +35,22 @@ const migrations: MigrationManifest = {
     const network =
       typeof state?.network !== 'undefined' && Object.values(NetworkType).includes(state.network)
         ? state.network
-        : NetworkType.MAINNET
+        : NetworkType.Mainnet
 
     let rpcAddress
 
     switch (network) {
-      case NetworkType.DEVNET:
-        rpcAddress = SolanaNetworks.DEV
+      case NetworkType.Devnet:
+        rpcAddress = RPC.DEV
         break
-      case NetworkType.TESTNET:
-        rpcAddress = SolanaNetworks.TEST
+      case NetworkType.Testnet:
+        rpcAddress = RPC.TEST
         break
-      case NetworkType.LOCALNET:
-        rpcAddress = SolanaNetworks.LOCAL
+      case NetworkType.Local:
+        rpcAddress = RPC.LOCAL
         break
-      case NetworkType.MAINNET:
-        rpcAddress = SolanaNetworks.MAIN_ALCHEMY
+      case NetworkType.Mainnet:
+        rpcAddress = RPC.MAIN_ALCHEMY
         break
     }
 

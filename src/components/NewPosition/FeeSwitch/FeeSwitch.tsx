@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { Grid, Tab, Tabs } from '@material-ui/core'
+
 import useStyles, { useSingleTabStyles, useTabsStyles } from './style'
 import classNames from 'classnames'
+import { Grid, Tab, Tabs } from '@mui/material'
 
 export interface IFeeSwitch {
   onSelect: (value: number) => void
@@ -18,14 +19,14 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
   bestTierIndex,
   currentValue
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [blocked, setBlocked] = useState(false)
 
-  const tabsClasses = useTabsStyles()
-  const singleTabClasses = useSingleTabStyles()
+  const { classes: tabsClasses } = useTabsStyles()
+  const { classes: singleTabClasses } = useSingleTabStyles()
 
-  const handleChange = (_: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     if (!blocked) {
       onSelect(newValue)
       setBlocked(true)
@@ -41,7 +42,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
         value={currentValue}
         onChange={handleChange}
         variant='scrollable'
-        scrollButtons='auto'
+        scrollButtons
         TabIndicatorProps={{ children: <span /> }}
         classes={tabsClasses}>
         {feeTiers.map((tier, index) => (

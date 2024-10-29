@@ -1,25 +1,56 @@
 {
-  "short_name": "App",
-  "name": "Invariant App",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "logo192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
-  ],
+  "name": "Invariant - AMM DEX with Concentrated Liquidity",
+  "short_name": "Invariant",
+  "description": "Invariant: The most efficient AMM DEX with concentrated liquidity on Solana",
   "start_url": ".",
   "display": "standalone",
+  "background_color": "#000000",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "icons": [
+    {
+      "src": "./favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "orientation": "portrait",
+  "lang": "en-US",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "related_applications": [
+    "https://azero.invariant.app",
+    "https://eclipse.invariant.app",
+    "https://vara.invariant.app",
+    "https://alph.invariant.app"
+  ],
+  "categories": [
+    "finance",
+    "business",
+    "productivity",
+    "utilities",
+    "cryptocurrency",
+    "defi",
+    "blockchain",
+    "investment",
+    "technology",
+    "dex",
+    "crypto",
+    "concentrated liquidity"
+  ]
 }

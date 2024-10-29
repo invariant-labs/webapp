@@ -1,10 +1,10 @@
 import AnimatedButton from '@components/AnimatedButton/AnimatedButton'
 import TransactionPriorityButton from '@components/TransactionPriorityButton/TransactionPriorityButton'
-import { IPriorityFeeOptions } from '@containers/HeaderWrapper/HeaderWrapper'
-import { Box, Button, Grid, Input, Popover, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 import React, { useEffect, useRef, useState } from 'react'
 import useStyles from './style'
+import { IPriorityFeeOptions } from '@store/consts/types'
+import { Box, Button, Grid, Input, Popover, Typography } from '@mui/material'
 
 interface Props {
   open: boolean
@@ -21,14 +21,14 @@ const Priority: React.FC<Props> = ({
   recentPriorityFee,
   onPrioritySave
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const inputRef = useRef<HTMLInputElement>(null)
   const [selectedFee, setSelectedFee] = useState(0)
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [inputValue, setInputValue] = useState('')
   const [saveButtonContent, setSaveButtonContent] = useState('Save settings')
-  const [timerId, setTimerId] = useState(0)
+  const [timerId, setTimerId] = useState<NodeJS.Timeout>()
 
   const maxFee = 2
 

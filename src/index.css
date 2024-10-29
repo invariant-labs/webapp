@@ -1,9 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&display=swap');
-
 * {
   min-width: 0;
   min-height: 0;
-  max-width: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 body {
   margin: 0;
@@ -15,4 +13,61 @@ body {
   background-color: #010514;
   letter-spacing: -0.03em;
   min-height: 100vh;
+}
+
+@keyframes slide-down {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(60%);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    transform: translateY(0%);
+  }
+  50% {
+    transform: translateY(-70%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes slide-down-xs {
+  0% {
+    transform: translateY(0%);
+  }
+  50% {
+    transform: translateY(90%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes slide-up-xs {
+  0% {
+    transform: translateY(0%);
+  }
+  50% {
+    transform: translateY(-110%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

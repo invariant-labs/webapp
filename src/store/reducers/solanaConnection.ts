@@ -1,6 +1,6 @@
-import { NetworkType, SolanaNetworks } from '@consts/static'
+import { NetworkType, RECOMMENDED_RPC_ADDRESS, RPC } from '@store/consts/static'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { PayloadType } from './types'
+import { PayloadType } from '@store/consts/types'
 
 export enum Status {
   Uninitialized = 'uninitialized',
@@ -31,15 +31,21 @@ export interface ISolanaConnectionStore {
   timeoutError: boolean
 }
 
+const network =
+  NetworkType[localStorage.getItem('INVARIANT_NETWORK_SOLANA') as keyof typeof NetworkType] ??
+  NetworkType.Mainnet
+
 export const defaultState: ISolanaConnectionStore = {
   status: Status.Uninitialized,
   message: '',
-  network: NetworkType.MAINNET,
+  network: network,
   slot: 0,
-  rpcAddress: SolanaNetworks.MAIN_HELIUS,
+  rpcAddress:
+    localStorage.getItem(`INVARIANT_RPC_SOLANA_${network}`) ?? RECOMMENDED_RPC_ADDRESS[network],
   rpcStatus: RPC_STATUS,
   timeoutError: false
 }
+
 export const solanaConnectionSliceName = 'solanaConnection'
 const solanaConnectionSlice = createSlice({
   name: solanaConnectionSliceName,
@@ -57,16 +63,8 @@ const solanaConnectionSlice = createSlice({
       state.message = action.payload
       return state
     },
-    setNetwork(
-      state,
-      action: PayloadAction<{
-        network: NetworkType
-        rpcAddress: string
-        rpcName?: string
-      }>
-    ) {
-      state.network = action.payload.network
-      state.rpcAddress = action.payload.rpcAddress
+    setNetwork(state, action: PayloadAction<NetworkType>) {
+      state.network = action.payload
       return state
     },
     updateSlot(state) {
@@ -74,6 +72,10 @@ const solanaConnectionSlice = createSlice({
     },
     setSlot(state, action: PayloadAction<number>) {
       state.slot = action.payload
+      return state
+    },
+    setRPCAddress(state, action: PayloadAction<string>) {
+      state.rpcAddress = action.payload
       return state
     },
     setRpcStatus(state, action: PayloadAction<RpcStatus>) {

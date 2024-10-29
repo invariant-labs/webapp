@@ -1,32 +1,26 @@
-import React, { useState } from 'react'
-import { Tab, Tabs, useMediaQuery } from '@material-ui/core'
-import { theme } from '@static/theme'
+import React from 'react'
 import { useSingleTabStyles, useTabsStyles } from './style'
+import { Tab, Tabs } from '@mui/material'
 
 export interface IProps {
   onSwitch: (isConcentrated: boolean) => void
-  initialValue: number
   className?: string
   style?: React.CSSProperties
   disabled?: boolean
+  currentValue: number
 }
 
 export const ConcentrationTypeSwitch: React.FC<IProps> = ({
   onSwitch,
-  initialValue,
   className,
   style,
-  disabled = false
+  disabled = false,
+  currentValue
 }) => {
-  const isXs = useMediaQuery(theme.breakpoints.down('xs'))
+  const { classes: tabsClasses } = useTabsStyles({ value: currentValue })
+  const { classes: singleTabClasses } = useSingleTabStyles()
 
-  const [current, setCurrent] = useState(initialValue)
-
-  const tabsClasses = useTabsStyles({ value: current })
-  const singleTabClasses = useSingleTabStyles()
-
-  const handleChange = (_: React.ChangeEvent<{}>, newValue: number) => {
-    setCurrent(newValue)
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     onSwitch(!newValue)
   }
 
@@ -34,15 +28,14 @@ export const ConcentrationTypeSwitch: React.FC<IProps> = ({
     <Tabs
       className={className}
       style={style}
-      value={current}
+      value={currentValue}
       onChange={!disabled ? handleChange : undefined}
       variant='scrollable'
-      scrollButtons='off'
-      TabIndicatorProps={{ children: <span /> }}
+      scrollButtons={false}
       classes={tabsClasses}>
       <Tab
         disableRipple
-        label={isXs ? 'Conc.' : 'Concentr.'}
+        label='Concentration'
         classes={singleTabClasses}
         style={{ cursor: !disabled ? 'pointer' : 'default' }}
       />

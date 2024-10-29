@@ -1,85 +1,53 @@
-import { PublicKey } from '@solana/web3.js'
-import { DEFAULT_PUBLICKEY, NetworkType, SolanaNetworks } from '@consts/static'
-import { storiesOf } from '@storybook/react'
-import { action } from '@storybook/addon-actions'
-import { withKnobs } from '@storybook/addon-knobs'
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
 import Header from './Header'
-import { toBlur } from '@consts/uiUtils'
-import { MemoryRouter } from 'react-router'
-import { RpcStatus } from '@reducers/solanaConnection'
+import { MemoryRouter } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import { store } from '@store/index'
+import { RpcStatus } from '@store/reducers/solanaConnection'
+import { Chain } from '@store/consts/types'
+import { PublicKey } from '@solana/web3.js'
+import { NetworkType, RPC } from '@store/consts/static'
 
-storiesOf('ui/newHeader', module)
-  .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
-  .addDecorator(withKnobs)
-  .add('default', () => {
-    return (
-      // style for testing only
-      <div
-        style={{
-          background: '#0B090D',
-          height: '100vh'
-        }}>
-        <div
-          id={toBlur}
-          style={{
-            background:
-              'radial-gradient(118.38% 303.54% at 3.96% 118.38%, rgba(119, 72, 216, 0.1) 0%, rgba(119, 72, 216, 0) 100%), radial-gradient(57.34% 103.84% at 50% 0%, rgba(156, 231, 90, 0.1) 0%, rgba(156, 231, 90, 0) 100%)',
-            height: '100%'
-          }}>
-          <Header
-            address={DEFAULT_PUBLICKEY}
-            onNetworkSelect={(networkType, rpc) => action('chosen: ' + networkType + ' ' + rpc)()}
-            onConnectWallet={() => {
-              action('connect')
-            }}
-            walletConnected={false}
-            landing='staking'
-            onDisconnectWallet={action('disconnect')}
-            typeOfNetwork={NetworkType.DEVNET}
-            rpc={SolanaNetworks.DEV}
-            defaultMainnetRPC={SolanaNetworks.MAIN_HELIUS}
-            onFaucet={() => {
-              console.log('Faucet')
-            }}
-            onPrioritySave={() => {}}
-            recentPriorityFee=''
-            rpcStatus={RpcStatus.Uninitialized}
-          />
-        </div>
-      </div>
+const meta = {
+  title: 'Layout/Header',
+  component: Header,
+  args: {},
+  decorators: [
+    Story => (
+      <Provider store={store}>
+        <MemoryRouter>
+          <Story />
+        </MemoryRouter>
+      </Provider>
     )
-  })
-  .add('connected', () => {
-    return (
-      <div
-        style={{
-          background: '#0B090D',
-          height: '100vh'
-        }}>
-        <div
-          id={toBlur}
-          style={{
-            background:
-              'radial-gradient(118.38% 303.54% at 3.96% 118.38%, rgba(119, 72, 216, 0.1) 0%, rgba(119, 72, 216, 0) 100%), radial-gradient(57.34% 103.84% at 50% 0%, rgba(156, 231, 90, 0.1) 0%, rgba(156, 231, 90, 0) 100%)',
-            height: '100%'
-          }}>
-          <Header
-            address={new PublicKey(42)}
-            onNetworkSelect={(networkType, rpc) => action('chosen: ' + networkType + ' ' + rpc)()}
-            onConnectWallet={() => {
-              action('connect')
-            }}
-            walletConnected={true}
-            landing='staking'
-            onDisconnectWallet={action('disconnect')}
-            typeOfNetwork={NetworkType.DEVNET}
-            rpc={SolanaNetworks.DEV}
-            defaultMainnetRPC={SolanaNetworks.MAIN_HELIUS}
-            onPrioritySave={() => {}}
-            recentPriorityFee=''
-            rpcStatus={RpcStatus.Uninitialized}
-          />
-        </div>
-      </div>
-    )
-  })
+  ]
+} satisfies Meta<typeof Header>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Primary: Story = {
+  args: {
+    address: new PublicKey(42),
+    defaultTestnetRPC: RPC.TEST,
+    landing: 'exchange',
+    onConnectWallet: fn(),
+    onDisconnectWallet: fn(),
+    onNetworkSelect: fn(),
+    rpc: RPC.TEST,
+    typeOfNetwork: NetworkType.Testnet,
+    walletConnected: true,
+    onFaucet: fn(),
+    onCopyAddress: fn(),
+    onChangeWallet: fn(),
+    activeChain: {
+      name: Chain.Eclipse,
+      address: 'https://exlipse.invariant.app'
+    },
+    onChainSelect: fn(),
+    network: NetworkType.Testnet,
+    defaultDevnetRPC: RPC.DEV_EU,
+    rpcStatus: RpcStatus.Uninitialized
+  }
+}

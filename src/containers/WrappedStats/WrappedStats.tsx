@@ -1,11 +1,9 @@
 import React, { useEffect, useMemo } from 'react'
-import { Grid, Typography } from '@material-ui/core'
-import Liquidity from '@components/Stats/Liquidity/Liquidity'
-import Volume from '@components/Stats/Volume/Volume'
-import VolumeBar from '@components/Stats/volumeBar/volumeBar'
-import TokensList from '@components/Stats/TokensList/TokensList'
-import PoolList from '@components/Stats/PoolList/PoolList'
 import { useDispatch, useSelector } from 'react-redux'
+import loader from '@static/gif/loader.gif'
+import useStyles from './styles'
+import { Grid, Typography } from '@mui/material'
+import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import {
   fees24,
   isLoading,
@@ -15,15 +13,21 @@ import {
   tvl24,
   volume24,
   volumePlot
-} from '@selectors/stats'
-import { actions } from '@reducers/stats'
-import loader from '@static/gif/loader.gif'
-import useStyles from './styles'
-import { farms } from '@selectors/farms'
-import { actions as farmsActions } from '@reducers/farms'
+} from '@store/selectors/stats'
+import { network } from '@store/selectors/solanaConnection'
+import { actions } from '@store/reducers/stats'
+import Volume from '@components/Stats/Volume/Volume'
+import Liquidity from '@components/Stats/Liquidity/Liquidity'
+import VolumeBar from '@components/Stats/volumeBar/VolumeBar'
+import TokensList from '@components/Stats/TokensList/TokensList'
+import PoolList from '@components/Stats/PoolList/PoolList'
+import icons from '@static/icons'
+import { farms } from '@store/selectors/farms'
+import { actions as farmsActions } from '@store/reducers/farms'
+import { shortenAddress } from '@utils/utils'
 
 export const WrappedStats: React.FC = () => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const dispatch = useDispatch()
 
@@ -36,6 +40,7 @@ export const WrappedStats: React.FC = () => {
   const liquidityPlotData = useSelector(liquidityPlot)
   const isLoadingStats = useSelector(isLoading)
   const allFarms = useSelector(farms)
+  const currentNetwork = useSelector(network)
 
   useEffect(() => {
     if (tokensList.length > 0 && Object.values(allFarms).length === 0) {
@@ -84,7 +89,11 @@ export const WrappedStats: React.FC = () => {
   return (
     <Grid container className={classes.wrapper} direction='column'>
       {isLoadingStats ? (
-        <img src={loader} className={classes.loading} />
+        <img src={loader} className={classes.loading} alt='Loading' />
+      ) : liquidityPlotData.length === 0 ? (
+        <Grid container direction='column' alignItems='center' justifyContent='center'>
+          <EmptyPlaceholder desc={'We have not started collecting statistics yet'} />
+        </Grid>
       ) : (
         <>
           <Typography className={classes.subheader}>Overview</Typography>
@@ -116,25 +125,31 @@ export const WrappedStats: React.FC = () => {
           <Grid container className={classes.row}>
             <TokensList
               data={tokensList.map(tokenData => ({
-                icon: tokenData.tokenDetails?.logoURI,
-                name: tokenData.tokenDetails?.name,
-                symbol: tokenData.tokenDetails?.symbol,
+                icon: tokenData.tokenDetails?.logoURI ?? icons.unknownToken,
+                name: tokenData.tokenDetails?.name ?? tokenData.address.toString(),
+                symbol: tokenData.tokenDetails?.symbol ?? tokenData.address.toString(),
                 price: tokenData.price,
+                // priceChange: tokenData.priceChange,
                 volume: tokenData.volume24,
-                TVL: tokenData.tvl
+                TVL: tokenData.tvl,
+                isUnknown: tokenData.tokenDetails?.isUnknown ?? false
               }))}
             />
           </Grid>
           <Typography className={classes.subheader}>Top pools</Typography>
           <PoolList
             data={poolsList.map(poolData => ({
-              symbolFrom: poolData.tokenXDetails?.symbol,
-              symbolTo: poolData.tokenYDetails?.symbol,
-              iconFrom: poolData.tokenXDetails?.logoURI,
-              iconTo: poolData.tokenYDetails?.logoURI,
+              symbolFrom:
+                poolData.tokenXDetails?.symbol ?? shortenAddress(poolData.tokenX.toString()),
+              symbolTo:
+                poolData.tokenYDetails?.symbol ?? shortenAddress(poolData.tokenY.toString()),
+              iconFrom: poolData.tokenXDetails?.logoURI ?? icons.unknownToken,
+              iconTo: poolData.tokenYDetails?.logoURI ?? icons.unknownToken,
               volume: poolData.volume24,
               TVL: poolData.tvl,
               fee: poolData.fee,
+              // addressFrom: poolData.tokenX,
+              // addressTo: poolData.tokenY
               apy:
                 poolData.apy + (accumulatedSingleTickAPY?.[poolData.poolAddress.toString()] ?? 0),
               apyData: {
@@ -142,8 +157,19 @@ export const WrappedStats: React.FC = () => {
                 accumulatedFarmsSingleTick:
                   accumulatedSingleTickAPY?.[poolData.poolAddress.toString()] ?? 0,
                 accumulatedFarmsAvg: accumulatedAverageAPY?.[poolData.poolAddress.toString()] ?? 0
-              }
+              },
+              // apy:
+              //   poolData.apy + (accumulatedSingleTickAPY?.[poolData.poolAddress.toString()] ?? 0),
+              // apyData: {
+              //   fees: poolData.apy,
+              //   accumulatedFarmsSingleTick:
+              //     accumulatedSingleTickAPY?.[poolData.poolAddress.toString()] ?? 0,
+              //   accumulatedFarmsAvg: accumulatedAverageAPY?.[poolData.poolAddress.toString()] ?? 0
+              // }
+              isUnknownFrom: poolData.tokenXDetails?.isUnknown ?? false,
+              isUnknownTo: poolData.tokenYDetails?.isUnknown ?? false
             }))}
+            network={currentNetwork}
           />
         </>
       )}

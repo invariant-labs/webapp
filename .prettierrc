@@ -8,7 +8,7 @@
   "useTabs": false,
   "singleQuote": true,
   "jsxSingleQuote": true,
-  "spaceBeforeFunctionParen": true,
+  "spaceBeforeFunctionParent": true,
   "printWidth": 100,
   "bracketSameLine": true
 }

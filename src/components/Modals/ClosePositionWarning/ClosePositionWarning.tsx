@@ -1,6 +1,6 @@
 import React from 'react'
-import { Typography, Popover, Grid, Button } from '@material-ui/core'
 import useStyles from './styles'
+import { Button, Grid, Popover, Typography } from '@mui/material'
 
 export interface IProps {
   open: boolean
@@ -9,7 +9,7 @@ export interface IProps {
   onClaim: () => void
 }
 export const ClosePositionWarning: React.FC<IProps> = ({ open, onCancel, onClose, onClaim }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   return (
     <Popover

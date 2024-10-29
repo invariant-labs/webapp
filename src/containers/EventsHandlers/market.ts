@@ -1,23 +1,23 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { network, rpcAddress, status } from '@selectors/solanaConnection'
-import { actions } from '@reducers/pools'
-import { actions as walletActions } from '@reducers/solanaWallet'
-import { getMarketProgramSync } from '@web3/programs/amm'
-import { poolsArraySortedByFees, poolTicks, tickMaps } from '@selectors/pools'
-import {
-  getNetworkTokensList,
-  findPairs,
-  getFullNewTokensData,
-  getPoolsVolumeRanges,
-  getMainnetCommonTokens
-} from '@consts/utils'
-import { swap } from '@selectors/swap'
+import { network, rpcAddress, status } from '@store/selectors/solanaConnection'
+import { actions } from '@store/reducers/pools'
+import { actions as walletActions } from '@store/reducers/solanaWallet'
+import { poolsArraySortedByFees, poolTicks, tickMaps } from '@store/selectors/pools'
+import { swap } from '@store/selectors/swap'
 import { findTickmapChanges, Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
-import { getCurrentSolanaConnection } from '@web3/connection'
-import { Status, actions as solanaConnectionActions } from '@reducers/solanaConnection'
-import { NetworkType } from '@consts/static'
+import { Status, actions as solanaConnectionActions } from '@store/reducers/solanaConnection'
+import { NetworkType } from '@store/consts/static'
+import { getMarketProgramSync } from '@utils/web3/programs/amm'
+import {
+  findPairs,
+  getFullNewTokensData,
+  getMainnetCommonTokens,
+  getNetworkTokensList,
+  getPoolsVolumeRanges
+} from '@utils/utils'
+import { getCurrentSolanaConnection } from '@utils/web3/connection'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -34,7 +34,7 @@ const MarketEvents = () => {
   const [subscribedTickmap, _setSubscribedTickmap] = useState<Set<string>>(new Set())
 
   useEffect(() => {
-    if (networkType !== NetworkType.MAINNET) {
+    if (networkType !== NetworkType.Mainnet) {
       return
     }
     const getCommonTokens = async () => {

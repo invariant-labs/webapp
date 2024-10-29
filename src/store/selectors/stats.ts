@@ -1,4 +1,4 @@
-import { Token } from '@consts/static'
+import { Token } from '@store/consts/static'
 import { createSelector } from '@reduxjs/toolkit'
 import { IStatsStore, PoolStatsData, statsSliceName, TokenStatsData } from '../reducers/stats'
 import { keySelectors, AnyProps } from './helpers'

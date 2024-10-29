@@ -1,82 +1,72 @@
-import { storiesOf } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
+import { MemoryRouter } from 'react-router-dom'
 import PositionDetails from './PositionDetails'
-import { MemoryRouter } from 'react-router'
-import { calcPrice } from '@consts/utils'
-import { MIN_TICK, MAX_TICK, MOCK_TOKENS } from '@invariant-labs/sdk'
+import { NetworkType } from '@store/consts/static'
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 
-export interface liqTokens {
-  symbol: string
-  logoURI: string
+const defaultArgs = {
+  currentPrice: new BN(10000),
+  leftRange: { index: new BN(2), x: new BN(23) },
+  rightRange: { index: new BN(2), x: new BN(45354) },
+  max: 100,
+  min: 0,
+  midPrice: { index: new BN(3), x: new BN(4535) },
+  reloadHandler: fn(),
+  ticksLoading: false,
+  tickSpacing: new BN(1),
+  closePosition: fn(),
+  tokenX: {
+    name: 'BTC',
+    balance: new BN(10000),
+    claimValue: new BN(10000),
+    decimal: new BN(9),
+    icon: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
+    liqValue: new BN(10000),
+    usdValue: new BN(123)
+  },
+  tokenY: {
+    name: 'ETH',
+    balance: new BN(432),
+    claimValue: new BN(21),
+    decimal: new BN(9),
+    icon: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
+    liqValue: new BN(321),
+    usdValue: new BN(3246)
+  },
+  hasTicksError: false,
+  copyPoolAddressHandler: fn(),
+  detailsData: [
+    { x: new BN(12), y: new BN(1234), index: new BN(1) },
+    { x: new BN(123), y: new BN(432), index: new BN(2) }
+  ],
+  fee: new BN(1),
+  onClickClaimFee: fn(),
+  onRefresh: fn(),
+  isBalanceLoading: false,
+  network: NetworkType.Testnet,
+  tokenXAddress: new PublicKey('32'),
+  tokenYAddress: new PublicKey('22'),
+  poolAddress: new PublicKey('32')
 }
 
-const data = [
-  {
-    x: calcPrice(MIN_TICK, true, 6, 6),
-    y: 10,
-    index: MIN_TICK
-  },
-  {
-    x: calcPrice(MAX_TICK, true, 6, 6),
-    y: 10,
-    index: MAX_TICK
-  }
-]
-
-storiesOf('position wrapper/positionDetailsWrapper', module)
-  .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
-  .add('default', () => {
-    return (
-      <PositionDetails
-        detailsData={data}
-        leftRange={{
-          x: calcPrice(100, true, 6, 6),
-          index: 100
-        }}
-        rightRange={{
-          x: calcPrice(200, true, 6, 6),
-          index: 200
-        }}
-        midPrice={{
-          x: calcPrice(140, true, 6, 6),
-          index: 140
-        }}
-        currentPrice={300}
-        tokenX={{
-          name: 'BTC',
-          icon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png',
-          decimal: 9,
-          liqValue: 10000.23532,
-          claimValue: 21.37,
-          balance: 9.11
-        }}
-        tokenY={{
-          name: 'SNY',
-          icon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y/logo.png',
-          decimal: 9,
-          liqValue: 10000.23532,
-          claimValue: 21.37,
-          balance: 9.11
-        }}
-        onClickClaimFee={() => console.log('thanks from claiming')}
-        closePosition={() => console.log('close position')}
-        ticksLoading={false}
-        tickSpacing={1}
-        min={2149.6}
-        max={149.6}
-        fee={new BN(100000000)}
-        initialIsDiscreteValue={false}
-        onDiscreteChange={() => {}}
-        reloadHandler={() => {}}
-        copyPoolAddressHandler={() => {}}
-        showFeesLoader={false}
-        handleRefresh={() => {}}
-        poolAddress={new PublicKey('123456789')}
-        setXToY={() => {}}
-        tokenXAddress={new PublicKey(MOCK_TOKENS.USDC)}
-        tokenYAddress={new PublicKey(MOCK_TOKENS.BTC)}
-        xToY={true}
-      />
+const meta = {
+  title: 'Components/PositionDetails',
+  component: PositionDetails,
+  decorators: [
+    Story => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
     )
-  })
+  ]
+} satisfies Meta<typeof PositionDetails>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Primary: Story = {
+  args: defaultArgs,
+  render: args => <PositionDetails {...args} />
+}

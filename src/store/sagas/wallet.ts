@@ -6,12 +6,12 @@ import {
   spawn,
   all,
   select,
-  takeLatest
+  takeLatest,
+  delay
 } from 'typed-redux-saga'
-
-import { actions, ITokenAccount, Status } from '@reducers/solanaWallet'
+import { actions, ITokenAccount, Status } from '@store/reducers/solanaWallet'
 import { getConnection, handleRpcError } from './connection'
-import { getSolanaWallet, disconnectWallet } from '@web3/wallet'
+import { getSolanaWallet, disconnectWallet } from '@utils/web3/wallet'
 import {
   Account,
   PublicKey,
@@ -20,21 +20,23 @@ import {
   TransactionInstruction
 } from '@solana/web3.js'
 import { Token, ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { actions as snackbarsActions } from '@reducers/snackbars'
-import { actions as positionsActions } from '@reducers/positions'
+import { actions as snackbarsActions } from '@store/reducers/snackbars'
+import { actions as positionsActions } from '@store/reducers/positions'
 import { BN } from '@project-serum/anchor'
-import { WalletAdapter } from '@web3/adapters/types'
+import { WalletAdapter } from '@utils/web3/adapters/types'
 import { getTokenDetails } from './token'
-import { accounts, status } from '@selectors/solanaWallet'
-import { airdropQuantities, airdropTokens, Token as StoreToken } from '@consts/static'
-import airdropAdmin from '@consts/airdropAdmin'
-import { network } from '@selectors/solanaConnection'
-import { tokens } from '@selectors/pools'
-import { actions as poolsActions } from '@reducers/pools'
-import { actions as farmsActions } from '@reducers/farms'
-import { actions as bondsActions } from '@reducers/bonds'
+import { accounts, status } from '@store/selectors/solanaWallet'
+import { airdropQuantities, airdropTokens } from '@store/consts/static'
+import { Token as StoreToken } from '@store/consts/types'
+import airdropAdmin from '@store/consts/airdropAdmin'
+import { network } from '@store/selectors/solanaConnection'
+import { tokens } from '@store/selectors/pools'
+import { actions as poolsActions } from '@store/reducers/pools'
+import { actions as farmsActions } from '@store/reducers/farms'
+import { actions as bondsActions } from '@store/reducers/bonds'
 import { closeSnackbar } from 'notistack'
-import { createLoaderKey } from '@consts/utils'
+import { createLoaderKey } from '@utils/utils'
+import { openWalletSelectorModal } from '@utils/web3/selector'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
@@ -115,6 +117,7 @@ export function* getToken(tokenAddress: PublicKey): SagaGenerator<Token> {
 
 export function* handleAirdrop(): Generator {
   const walletStatus = yield* select(status)
+  console.log('walletStatus', walletStatus)
   if (walletStatus !== Status.Initialized) {
     yield put(
       snackbarsActions.add({
@@ -139,25 +142,49 @@ export function* handleAirdrop(): Generator {
   const connection = yield* call(getConnection)
   const networkType = yield* select(network)
   const wallet = yield* call(getWallet)
-  let balance = yield* call([connection, connection.getBalance], wallet.publicKey)
-  if (balance < 0.05 * 1e9) {
-    yield* call([connection, connection.requestAirdrop], wallet.publicKey, 0.1 * 1e9)
+  console.log('connectipon', connection)
+  console.log('wallet', wallet)
+  console.log('networkType', networkType)
+
+  let balance = 0
+  try {
     balance = yield* call([connection, connection.getBalance], wallet.publicKey)
-    yield* call(sleep, 2000)
-    let retries = 30
-    for (;;) {
-      // eslint-disable-next-line eqeqeq
-      if (0.05 * 1e9 < (yield* call([connection, connection.getBalance], wallet.publicKey))) {
-        break
-      }
+    if (balance < 0.05 * 1e9) {
+      yield* call([connection, connection.requestAirdrop], wallet.publicKey, 0.1 * 1e9)
+      balance = yield* call([connection, connection.getBalance], wallet.publicKey)
       yield* call(sleep, 2000)
-      if (--retries <= 0) {
-        break
+      let retries = 30
+      for (;;) {
+        // eslint-disable-next-line eqeqeq
+        if (0.05 * 1e9 < (yield* call([connection, connection.getBalance], wallet.publicKey))) {
+          break
+        }
+        yield* call(sleep, 2000)
+        if (--retries <= 0) {
+          break
+        }
       }
     }
-  }
+    yield* call(
+      getCollateralTokenAirdrop,
+      airdropTokens[networkType],
+      airdropQuantities[networkType]
+    )
+    yield put(
+      snackbarsActions.add({
+        message: 'You will soon receive airdrop',
+        variant: 'success',
+        persist: false
+      })
+    )
 
-  yield* call(getCollateralTokenAirdrop, airdropTokens[networkType], airdropQuantities[networkType])
+    closeSnackbar(loaderKey)
+    yield put(snackbarsActions.remove(loaderKey))
+  } catch (error) {
+    console.log('airdrop error', error)
+    closeSnackbar(loaderKey)
+    yield put(snackbarsActions.remove(loaderKey))
+  }
 
   yield put(
     snackbarsActions.add({
@@ -210,7 +237,7 @@ export function* getCollateralTokenAirdrop(
   }
   const tx = instructions.reduce((tx, ix) => tx.add(ix), new Transaction())
   const connection = yield* call(getConnection)
-  const blockhash = yield* call([connection, connection.getRecentBlockhash])
+  const blockhash = yield* call([connection, connection.getLatestBlockhash])
   tx.feePayer = wallet.publicKey
   tx.recentBlockhash = blockhash.blockhash
   const signedTx = yield* call([wallet, wallet.signTransaction], tx)
@@ -227,7 +254,7 @@ export function* getCollateralTokenAirdrop(
 
 export function* signAndSend(wallet: WalletAdapter, tx: Transaction): SagaGenerator<string> {
   const connection = yield* call(getConnection)
-  const blockhash = yield* call([connection, connection.getRecentBlockhash])
+  const blockhash = yield* call([connection, connection.getLatestBlockhash])
   tx.feePayer = wallet.publicKey
   tx.recentBlockhash = blockhash.blockhash
   const signedTx = yield* call([wallet, wallet.signTransaction], tx)
@@ -414,6 +441,12 @@ export function* handleDisconnect(): Generator {
   }
 }
 
+export function* handleReconnect(): Generator {
+  yield* call(handleDisconnect)
+  yield* delay(100)
+  yield* call(openWalletSelectorModal)
+}
+
 export function* connectHandler(): Generator {
   yield takeLatest(actions.connect, handleConnect)
 }
@@ -434,8 +467,19 @@ export function* handleBalanceSaga(): Generator {
   yield takeLatest(actions.getBalance, handleBalance)
 }
 
+export function* reconnectHandler(): Generator {
+  yield takeLatest(actions.reconnect, handleReconnect)
+}
+
 export function* walletSaga(): Generator {
   yield all(
-    [initSaga, airdropSaga, connectHandler, disconnectHandler, handleBalanceSaga].map(spawn)
+    [
+      initSaga,
+      airdropSaga,
+      connectHandler,
+      disconnectHandler,
+      handleBalanceSaga,
+      reconnectHandler
+    ].map(spawn)
   )
 }

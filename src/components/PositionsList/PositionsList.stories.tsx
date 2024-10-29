@@ -1,11 +1,30 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
+import { BrowserRouter } from 'react-router-dom'
 import { PositionsList } from './PositionsList'
-import { Grid } from '@material-ui/core'
-import { MemoryRouter } from 'react-router-dom'
+import { NetworkType } from '@store/consts/static'
+import { IPositionItem } from './PositionItem/PositionItem'
 
-const data = [
+const meta = {
+  title: 'Components/PositionsList',
+  component: PositionsList,
+  decorators: [
+    Story => (
+      <BrowserRouter>
+        <Story />
+      </BrowserRouter>
+    )
+  ]
+} satisfies Meta<typeof PositionsList>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+const data: IPositionItem[] = [
   {
+    address: 'So11111111111111111111111111111111111111112',
+    currentPrice: 123.234,
+    isFullRange: false,
+    network: NetworkType.Testnet,
     tokenXName: 'BTC',
     tokenYName: 'SNY',
     tokenXIcon:
@@ -22,6 +41,10 @@ const data = [
     id: '1'
   },
   {
+    address: 'So11111111111111111111111111111111111111112',
+    currentPrice: 123.234,
+    isFullRange: false,
+    network: NetworkType.Testnet,
     tokenXName: 'BTC',
     tokenYName: 'SNY',
     tokenXIcon:
@@ -38,6 +61,10 @@ const data = [
     id: '2'
   },
   {
+    address: 'So11111111111111111111111111111111111111112',
+    currentPrice: 123.234,
+    isFullRange: false,
+    network: NetworkType.Testnet,
     tokenXName: 'BTC',
     tokenYName: 'SNY',
     tokenXIcon:
@@ -54,6 +81,10 @@ const data = [
     id: '3'
   },
   {
+    address: 'So11111111111111111111111111111111111111112',
+    currentPrice: 123.234,
+    isFullRange: false,
+    network: NetworkType.Testnet,
     tokenXName: 'BTC',
     tokenYName: 'SNY',
     tokenXIcon:
@@ -71,35 +102,24 @@ const data = [
   }
 ]
 
-storiesOf('positionsList/list', module)
-  .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
-  .add('default', () => {
-    const handleClick = () => {
-      console.log('actionButton add Position')
-    }
-    return (
-      <Grid
-        style={{
-          backgroundColor: '#1C1B1E',
-          justifyContent: 'center',
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'column',
-          paddingInline: 20
-        }}>
-        <PositionsList
-          data={data}
-          onAddPositionClick={handleClick}
-          itemsPerPage={5}
-          noConnectedBlockerProps={{
-            onConnect: () => {}
-          }}
-          searchValue={''}
-          searchSetValue={() => {}}
-          handleRefresh={() => {}}
-          initialPage={1}
-          setLastPage={() => {}}
-        />
-      </Grid>
-    )
-  })
+const handleClick = () => {
+  console.log('actionButton add Position')
+}
+
+export const Primary: Story = {
+  args: {
+    data,
+    onAddPositionClick: handleClick,
+    itemsPerPage: 5,
+    noConnectedBlockerProps: {
+      onConnect: () => {}
+    },
+    searchValue: '',
+    searchSetValue: () => {},
+    handleRefresh: () => {},
+    initialPage: 1,
+    setLastPage: () => {},
+    length: 0,
+    noInitialPositions: false
+  }
+}

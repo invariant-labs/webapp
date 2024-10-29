@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { all, call, fork, put, select, spawn, take, takeLatest, takeEvery } from 'typed-redux-saga'
 import {
   actions,
@@ -9,21 +8,21 @@ import {
   StakeRangeTicks,
   FarmApyUpdate,
   StakeRewardData
-} from '@reducers/farms'
-import { actions as poolsActions, ListPoolsResponse, ListType } from '@reducers/pools'
-import { actions as snackbarsActions } from '@reducers/snackbars'
-import { getStakerProgram } from '@web3/programs/staker'
-import { getMarketProgram } from '@web3/programs/amm'
+} from '@store/reducers/farms'
+import { actions as poolsActions, ListPoolsResponse, ListType } from '@store/reducers/pools'
+import { actions as snackbarsActions } from '@store/reducers/snackbars'
+import { getStakerProgram } from '@utils/web3/programs/staker'
+import { getMarketProgram } from '@utils/web3/programs/amm'
 import { createAccount, getWallet, sleep } from './wallet'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { network, rpcAddress } from '@selectors/solanaConnection'
-import { networkTypetoProgramNetwork } from '@web3/connection'
+import { network, rpcAddress } from '@store/selectors/solanaConnection'
+import { networkTypetoProgramNetwork } from '@utils/web3/connection'
 import {
   positionsList,
   positionsWithPoolsData,
   PositionWithPoolData,
   singlePositionData
-} from '@selectors/positions'
+} from '@store/selectors/positions'
 import { getMarketAddress, Pair } from '@invariant-labs/sdk'
 import {
   AccountInfo,
@@ -35,10 +34,10 @@ import {
   SystemProgram,
   Transaction
 } from '@solana/web3.js'
-import { farms, stakesForPosition, userStakes } from '@selectors/farms'
-import { accounts } from '@selectors/solanaWallet'
+import { farms, stakesForPosition, userStakes } from '@store/selectors/farms'
+import { accounts } from '@store/selectors/solanaWallet'
 import { getConnection, handleRpcError } from './connection'
-import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@store/consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import {
   createLoaderKey,
@@ -50,8 +49,8 @@ import {
   getTicksList,
   getUserStakesForFarm,
   printBN
-} from '@consts/utils'
-import { pools, tokens } from '@selectors/pools'
+} from '@utils/utils'
+import { pools, tokens } from '@store/selectors/pools'
 import { BN } from '@project-serum/anchor'
 import { calculatePriceSqrt, getX, getY } from '@invariant-labs/sdk/lib/math'
 import { GuardPredicate } from '@redux-saga/types'
@@ -60,7 +59,7 @@ import {
   positionsRewardAPY,
   rewardsAPY
 } from '@invariant-labs/sdk/lib/utils'
-import { PositionWithAddress } from '@reducers/positions'
+import { PositionWithAddress } from '@store/reducers/positions'
 import { closeSnackbar } from 'notistack'
 
 export function* getFarmsTotals() {
@@ -717,7 +716,7 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
 
     const initialTx = new Transaction().add(createIx).add(initIx)
 
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const initialBlockhash = yield* call([connection, connection.getLatestBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
@@ -747,12 +746,12 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     })
 
     const withdrawTx = new Transaction().add(updateIx).add(withdrawIx)
-    const blockhash = yield* call([connection, connection.getRecentBlockhash])
+    const blockhash = yield* call([connection, connection.getLatestBlockhash])
     withdrawTx.recentBlockhash = blockhash.blockhash
     withdrawTx.feePayer = wallet.publicKey
 
     const unwrapTx = new Transaction().add(unwrapIx)
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const unwrapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 

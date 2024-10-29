@@ -1,18 +1,14 @@
-import { makeStyles } from '@material-ui/core/styles'
 import { colors, theme, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles()(() => ({
   rateText: {
     color: colors.invariant.lightGrey,
     ...typography.caption2,
     justifyContent: 'center',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    overflow: 'hidden',
-
-    [theme.breakpoints.down('xs')]: {
-      ...typography.tiny2
-    }
+    overflow: 'hidden'
   },
   loadingContainer: {
     width: 20,
@@ -33,7 +29,17 @@ const useStyles = makeStyles(() => ({
     height: 32,
     alignItems: 'center',
     justifyContent: 'center',
-    display: 'flex'
+    display: 'flex',
+    '&:hover': {
+      borderColor: colors.invariant.lightHover,
+      '@media (hover: none)': {
+        borderColor: colors.invariant.light
+      }
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      flex: 1
+    }
   }
 }))
 

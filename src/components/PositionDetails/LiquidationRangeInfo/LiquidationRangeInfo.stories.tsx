@@ -1,16 +1,27 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
-import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
+import LiquidationRangeInfo from './LiquidationRangeInfo'
+import type { Meta, StoryObj } from '@storybook/react'
+import { MemoryRouter } from 'react-router-dom'
 
-storiesOf('singlePosition/rightComponent', module).add('rangeInfo', () => {
-  const fromToken = 'SNY'
-  const toToken = 'xUSD'
-  const label = 'MAX'
-  const amount = 235
+const meta = {
+  title: 'Components/LiquidationRangeInfo',
+  component: LiquidationRangeInfo,
+  decorators: [
+    Story => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    )
+  ]
+} satisfies Meta<typeof LiquidationRangeInfo>
 
-  return (
-    <div style={{ width: 228 }}>
-      <LiquidationRangeInfo label={label} amount={amount} tokenX={toToken} tokenY={fromToken} />
-    </div>
-  )
-})
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Primary: Story = {
+  args: {
+    amount: 123,
+    label: 'MAX',
+    tokenX: 'BTC',
+    tokenY: 'ETH'
+  }
+}

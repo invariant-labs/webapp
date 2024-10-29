@@ -1,30 +1,34 @@
-import { SIGNING_SNACKBAR_CONFIG, TIMEOUT_ERROR_MESSAGE, WRAPPED_SOL_ADDRESS } from '@consts/static'
+import {
+  SIGNING_SNACKBAR_CONFIG,
+  TIMEOUT_ERROR_MESSAGE,
+  WRAPPED_SOL_ADDRESS
+} from '@store/consts/static'
 import {
   createLiquidityPlot,
   createLoaderKey,
   createPlaceholderLiquidityPlot,
   getPositionsAddressesFromRange,
   solToPriorityFee
-} from '@consts/utils'
+} from '@utils/utils'
 import { Pair } from '@invariant-labs/sdk'
 import { Staker } from '@invariant-labs/staker-sdk'
-import { actions as farmsActions } from '@reducers/farms'
-import { ListPoolsResponse, ListType, actions as poolsActions } from '@reducers/pools'
+import { actions as farmsActions } from '@store/reducers/farms'
+import { ListPoolsResponse, ListType, actions as poolsActions } from '@store/reducers/pools'
 import {
   ClosePositionData,
   GetCurrentTicksData,
   InitPositionData,
   actions
-} from '@reducers/positions'
-import { actions as connectionActions } from '@reducers/solanaConnection'
-import { actions as snackbarsActions } from '@reducers/snackbars'
+} from '@store/reducers/positions'
+import { actions as connectionActions } from '@store/reducers/solanaConnection'
+import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { GuardPredicate } from '@redux-saga/types'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { stakesForPosition } from '@selectors/farms'
-import { poolsArraySortedByFees, tokens } from '@selectors/pools'
-import { positionsWithPoolsData, singlePositionData } from '@selectors/positions'
-import { network, rpcAddress } from '@selectors/solanaConnection'
-import { accounts } from '@selectors/solanaWallet'
+import { stakesForPosition } from '@store/selectors/farms'
+import { poolsArraySortedByFees, tokens } from '@store/selectors/pools'
+import { positionsWithPoolsData, singlePositionData } from '@store/selectors/positions'
+import { network, rpcAddress } from '@store/selectors/solanaConnection'
+import { accounts } from '@store/selectors/solanaWallet'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
 import {
   Keypair,
@@ -34,8 +38,8 @@ import {
   TransactionExpiredTimeoutError,
   sendAndConfirmRawTransaction
 } from '@solana/web3.js'
-import { getMarketProgram } from '@web3/programs/amm'
-import { getStakerProgram } from '@web3/programs/staker'
+import { getMarketProgram } from '@utils/web3/programs/amm'
+import { getStakerProgram } from '@utils/web3/programs/staker'
 import { all, call, put, select, spawn, take, takeEvery, takeLeading } from 'typed-redux-saga'
 import { getConnection, handleRpcError } from './connection'
 import { createClaimAllPositionRewardsTx } from './farms'
@@ -110,8 +114,8 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       allTokens[data.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenX.toString()]
-        ? tokensAccounts[data.tokenX.toString()].address
-        : null
+          ? tokensAccounts[data.tokenX.toString()].address
+          : null
 
     if (userTokenX === null) {
       userTokenX = yield* call(createAccount, data.tokenX)
@@ -121,8 +125,8 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       allTokens[data.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenY.toString()]
-        ? tokensAccounts[data.tokenY.toString()].address
-        : null
+          ? tokensAccounts[data.tokenY.toString()].address
+          : null
 
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, data.tokenY)
@@ -174,11 +178,11 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       )
     }
 
-    const initialBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const initialBlockhash = yield* call([connection, connection.getLatestBlockhash])
     initialTx.recentBlockhash = initialBlockhash.blockhash
     initialTx.feePayer = wallet.publicKey
 
-    const initPositionBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const initPositionBlockhash = yield* call([connection, connection.getLatestBlockhash])
     initPositionTx.recentBlockhash = initPositionBlockhash.blockhash
     initPositionTx.feePayer = wallet.publicKey
 
@@ -192,7 +196,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       )
     }
 
-    const unwrapBlockhash = yield* call([connection, connection.getRecentBlockhash])
+    const unwrapBlockhash = yield* call([connection, connection.getLatestBlockhash])
     unwrapTx.recentBlockhash = unwrapBlockhash.blockhash
     unwrapTx.feePayer = wallet.publicKey
 
@@ -411,8 +415,8 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
       allTokens[data.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenX.toString()]
-        ? tokensAccounts[data.tokenX.toString()].address
-        : null
+          ? tokensAccounts[data.tokenX.toString()].address
+          : null
 
     if (userTokenX === null) {
       userTokenX = yield* call(createAccount, data.tokenX)
@@ -422,8 +426,8 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
       allTokens[data.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenY.toString()]
-        ? tokensAccounts[data.tokenY.toString()].address
-        : null
+          ? tokensAccounts[data.tokenY.toString()].address
+          : null
 
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, data.tokenY)
@@ -702,7 +706,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       lastValidBlockHeight: blockhash.lastValidBlockHeight,
       signature: txId
     })
-    console.log(confirmedTx)
+
     closeSnackbar(loaderTxDetails)
     yield put(snackbarsActions.remove(loaderTxDetails))
 
@@ -932,8 +936,8 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
       allTokens[positionForIndex.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenX.toString()]
-        ? tokensAccounts[positionForIndex.tokenX.toString()].address
-        : null
+          ? tokensAccounts[positionForIndex.tokenX.toString()].address
+          : null
 
     if (userTokenX === null) {
       userTokenX = yield* call(createAccount, positionForIndex.tokenX)
@@ -943,8 +947,8 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
       allTokens[positionForIndex.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenY.toString()]
-        ? tokensAccounts[positionForIndex.tokenY.toString()].address
-        : null
+          ? tokensAccounts[positionForIndex.tokenY.toString()].address
+          : null
 
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
@@ -1277,8 +1281,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       allTokens[positionForIndex.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenX.toString()]
-        ? tokensAccounts[positionForIndex.tokenX.toString()].address
-        : null
+          ? tokensAccounts[positionForIndex.tokenX.toString()].address
+          : null
 
     if (userTokenX === null) {
       userTokenX = yield* call(createAccount, positionForIndex.tokenX)
@@ -1288,8 +1292,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       allTokens[positionForIndex.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenY.toString()]
-        ? tokensAccounts[positionForIndex.tokenY.toString()].address
-        : null
+          ? tokensAccounts[positionForIndex.tokenY.toString()].address
+          : null
 
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)

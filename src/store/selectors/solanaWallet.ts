@@ -1,6 +1,6 @@
 import { BN } from '@project-serum/anchor'
 import { createSelector } from '@reduxjs/toolkit'
-import { ISolanaWallet, solanaWalletSliceName, ITokenAccount } from '@reducers/solanaWallet'
+import { ISolanaWallet, solanaWalletSliceName, ITokenAccount } from '@store/reducers/solanaWallet'
 import { keySelectors, AnyProps } from './helpers'
 import { PublicKey } from '@solana/web3.js'
 import { MOCK_TOKENS } from '@invariant-labs/sdk'
@@ -9,14 +9,17 @@ import {
   WRAPPED_SOL_ADDRESS,
   WSOL_POOL_INIT_LAMPORTS,
   WSOL_POSITION_INIT_LAMPORTS
-} from '@consts/static'
+} from '@store/consts/static'
 
 const store = (s: AnyProps) => s[solanaWalletSliceName] as ISolanaWallet
 
-export const { address, balance, accounts, status, balanceLoading, commonTokens } = keySelectors(
-  store,
-  ['address', 'balance', 'accounts', 'status', 'balanceLoading', 'commonTokens']
-)
+export const { address, balance, accounts, status, balanceLoading } = keySelectors(store, [
+  'address',
+  'balance',
+  'accounts',
+  'status',
+  'balanceLoading'
+])
 
 export const tokenBalance = (tokenAddress: PublicKey) =>
   createSelector(accounts, balance, (tokensAccounts, solBalance) => {
@@ -113,7 +116,6 @@ export const solanaWalletSelectors = {
   accounts,
   status,
   tokenAccount,
-  balanceLoading,
-  commonTokens
+  balanceLoading
 }
 export default solanaWalletSelectors

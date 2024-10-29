@@ -1,32 +1,40 @@
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { Swap } from '@components/Swap/Swap'
-import {
-  addNewTokenToLocalStorage,
-  TokenPriceData,
-  getJupTokenPrice,
-  getNewTokenOrThrow
-} from '@consts/utils'
-import { actions as poolsActions } from '@reducers/pools'
-import { actions as snackbarsActions } from '@reducers/snackbars'
-import { actions as walletActions } from '@reducers/solanaWallet'
-import { actions } from '@reducers/swap'
+import { commonTokensForNetworks, DEFAULT_SWAP_SLIPPAGE } from '@store/consts/static'
+import { actions as poolsActions } from '@store/reducers/pools'
+import { actions as snackbarsActions } from '@store/reducers/snackbars'
+import { actions as walletActions } from '@store/reducers/solanaWallet'
+import { actions as connectionActions } from '@store/reducers/solanaConnection'
+import { actions } from '@store/reducers/swap'
 import {
   isLoadingLatestPoolsForTransaction,
   poolsArraySortedByFees,
   poolTicks,
   tickMaps
-} from '@selectors/pools'
-import { network, timeoutError } from '@selectors/solanaConnection'
-import { actions as connectionActions } from '@reducers/solanaConnection'
-import { status, swapTokensDict, balanceLoading, commonTokens } from '@selectors/solanaWallet'
-import { swap as swapPool } from '@selectors/swap'
+} from '@store/selectors/pools'
+import { network, timeoutError } from '@store/selectors/solanaConnection'
+import { status, swapTokensDict, balanceLoading, balance } from '@store/selectors/solanaWallet'
+import { swap as swapPool } from '@store/selectors/swap'
 import { PublicKey } from '@solana/web3.js'
-import { getCurrentSolanaConnection } from '@web3/connection'
-import { openWalletSelectorModal } from '@web3/selector'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import {
+  addNewTokenToLocalStorage,
+  getJupTokenPrice,
+  getNewTokenOrThrow,
+  tickerToAddress
+} from '@utils/utils'
+import { TokenPriceData } from '@store/consts/types'
+import { openWalletSelectorModal } from '@utils/web3/selector'
+import { getCurrentSolanaConnection } from '@utils/web3/connection'
+import { VariantType } from 'notistack'
 
-export const WrappedSwap = () => {
+type Props = {
+  initialTokenFrom: string
+  initialTokenTo: string
+}
+
+export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
   const dispatch = useDispatch()
 
   const connection = getCurrentSolanaConnection()
@@ -41,32 +49,32 @@ export const WrappedSwap = () => {
   const { success, inProgress } = useSelector(swapPool)
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
   const networkType = useSelector(network)
-  const isTimeoutError = useSelector(timeoutError)
-  const commonTokensForNetworks = useSelector(commonTokens)
 
   const [progress, setProgress] = useState<ProgressState>('none')
   const [tokenFrom, setTokenFrom] = useState<PublicKey | null>(null)
   const [tokenTo, setTokenTo] = useState<PublicKey | null>(null)
+  const solBalance = useSelector(balance)
+  const isTimeoutError = useSelector(timeoutError)
 
   useEffect(() => {
-    let timerId1: any
-    let timerId2: any
+    let timeoutId1: NodeJS.Timeout
+    let timeoutId2: NodeJS.Timeout
 
     if (!inProgress && progress === 'progress') {
       setProgress(success ? 'approvedWithSuccess' : 'approvedWithFail')
 
-      timerId1 = setTimeout(() => {
+      timeoutId1 = setTimeout(() => {
         setProgress(success ? 'success' : 'failed')
-      }, 1500)
+      }, 1000)
 
-      timerId2 = setTimeout(() => {
+      timeoutId2 = setTimeout(() => {
         setProgress('none')
       }, 3000)
     }
 
     return () => {
-      clearTimeout(timerId1)
-      clearTimeout(timerId2)
+      clearTimeout(timeoutId1)
+      clearTimeout(timeoutId2)
     }
   }, [success, inProgress])
 
@@ -80,22 +88,29 @@ export const WrappedSwap = () => {
       )
     }
   }, [isFetchingNewPool])
-  const lastTokenFrom = localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`)
-  const lastTokenTo = localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`)
 
-  const initialTokenFrom = lastTokenFrom ? new PublicKey(lastTokenFrom) : null
-  const initialTokenTo = lastTokenTo ? new PublicKey(lastTokenTo) : null
+  const lastTokenFrom =
+    tickerToAddress(networkType, initialTokenFrom) && initialTokenFrom !== '-'
+      ? tickerToAddress(networkType, initialTokenFrom)
+      : localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`)
+
+  const lastTokenTo =
+    tickerToAddress(networkType, initialTokenTo) && initialTokenTo !== '-'
+      ? tickerToAddress(networkType, initialTokenTo)
+      : localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`)
+
+  const initTokenFrom = lastTokenFrom ? new PublicKey(lastTokenFrom) : null
+  const initTokenTo = lastTokenTo ? new PublicKey(lastTokenTo) : null
 
   const addTokenHandler = (address: string) => {
     if (connection !== null && !tokensDict[address]) {
       getNewTokenOrThrow(address, connection)
         .then(data => {
-          console.log(data)
           dispatch(poolsActions.addTokens(data))
           addNewTokenToLocalStorage(address, networkType)
           dispatch(
             snackbarsActions.add({
-              message: 'Token added to your list',
+              message: 'Token added.',
               variant: 'success',
               persist: false
             })
@@ -104,7 +119,7 @@ export const WrappedSwap = () => {
         .catch(() => {
           dispatch(
             snackbarsActions.add({
-              message: 'Token adding failed, check if address is valid and try again',
+              message: 'Token add failed.',
               variant: 'error',
               persist: false
             })
@@ -113,7 +128,7 @@ export const WrappedSwap = () => {
     } else {
       dispatch(
         snackbarsActions.add({
-          message: 'Token already exists on your list',
+          message: 'Token already in list.',
           variant: 'info',
           persist: false
         })
@@ -132,7 +147,9 @@ export const WrappedSwap = () => {
   const [tokenFromPriceData, setTokenFromPriceData] = useState<TokenPriceData | undefined>(
     undefined
   )
+
   const [priceFromLoading, setPriceFromLoading] = useState(false)
+
   useEffect(() => {
     if (tokenFrom === null) {
       return
@@ -152,6 +169,7 @@ export const WrappedSwap = () => {
 
   const [tokenToPriceData, setTokenToPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [priceToLoading, setPriceToLoading] = useState(false)
+
   useEffect(() => {
     if (tokenTo === null) {
       return
@@ -169,7 +187,7 @@ export const WrappedSwap = () => {
     }
   }, [tokenTo])
 
-  const initialSlippage = localStorage.getItem('INVARIANT_SWAP_SLIPPAGE') ?? '1'
+  const initialSlippage = localStorage.getItem('INVARIANT_SWAP_SLIPPAGE') ?? DEFAULT_SWAP_SLIPPAGE
 
   const onSlippageChange = (slippage: string) => {
     localStorage.setItem('INVARIANT_SWAP_SLIPPAGE', slippage)
@@ -178,7 +196,7 @@ export const WrappedSwap = () => {
   const onRefresh = (tokenFrom: PublicKey | null, tokenTo: PublicKey | null) => {
     dispatch(walletActions.getBalance())
 
-    if (tokenFrom === null || tokenTo == null || tokenFrom === null || tokenTo === null) {
+    if (tokenFrom === null || tokenTo == null) {
       return
     }
 
@@ -212,9 +230,34 @@ export const WrappedSwap = () => {
     }
   }
 
-  const deleteTimeoutError = () => {
-    dispatch(connectionActions.setTimeoutError(false))
+  const copyTokenAddressHandler = (message: string, variant: VariantType) => {
+    dispatch(
+      snackbarsActions.add({
+        message,
+        variant,
+        persist: false
+      })
+    )
   }
+
+  // const allAccounts = useSelector(accounts)
+
+  // const wrappedETHAccountExist = useMemo(() => {
+  //   let wrappedETHAccountExist = false
+
+  //   Object.entries(allAccounts).map(([address, token]) => {
+  //     if (address === WRAPPED_SOL_ADDRESS && token.balance.gt(new BN(0))) {
+  //       wrappedETHAccountExist = true
+  //     }
+  //   })
+
+  //   return wrappedETHAccountExist
+  // }, [allAccounts])
+
+  // const unwrapWETH = () => {
+  //   dispatch(walletActions.unwrapWETH())
+  // }
+
   return (
     <Swap
       isFetchingNewPool={isFetchingNewPool}
@@ -275,8 +318,8 @@ export const WrappedSwap = () => {
       poolTicks={poolTicksArray}
       isWaitingForNewPool={isFetchingNewPool}
       tickmap={tickmap}
-      initialTokenFrom={initialTokenFrom}
-      initialTokenTo={initialTokenTo}
+      initialTokenFrom={initTokenFrom}
+      initialTokenTo={initTokenTo}
       handleAddToken={addTokenHandler}
       commonTokens={commonTokensForNetworks[networkType]}
       initialHideUnknownTokensValue={initialHideUnknownTokensValue}
@@ -288,8 +331,15 @@ export const WrappedSwap = () => {
       onSlippageChange={onSlippageChange}
       initialSlippage={initialSlippage}
       isBalanceLoading={isBalanceLoading}
-      deleteTimeoutError={deleteTimeoutError}
+      copyTokenAddressHandler={copyTokenAddressHandler}
+      solBalance={solBalance}
+      network={networkType}
+      // unwrapWETH={unwrapWETH}
+      // wrappedETHAccountExist={wrappedETHAccountExist}
       isTimeoutError={isTimeoutError}
+      deleteTimeoutError={() => {
+        dispatch(connectionActions.setTimeoutError(false))
+      }}
     />
   )
 }

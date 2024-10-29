@@ -1,27 +1,27 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
+import { MemoryRouter } from 'react-router-dom'
 import NewPosition from './NewPosition'
-import { BN } from '@project-serum/anchor'
-import { SwapToken } from '@selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
-import { MemoryRouter } from 'react-router'
-import { calcPrice } from '@consts/utils'
-import { MAX_TICK, MIN_TICK } from '@invariant-labs/sdk'
-import { colors } from '@static/theme'
-import { useState } from '@storybook/addons'
+import { BN } from '@project-serum/anchor'
+import { SwapToken } from '@store/selectors/solanaWallet'
+import { NetworkType } from '@store/consts/static'
+import { Status } from '@store/reducers/solanaWallet'
 
-const data = [
-  {
-    x: calcPrice(MIN_TICK, true, 6, 6),
-    y: 10,
-    index: MIN_TICK
-  },
-  {
-    x: calcPrice(MAX_TICK, true, 6, 6),
-    y: 10,
-    index: MAX_TICK
-  }
-]
+const meta = {
+  title: 'PageComponent/NewPosition',
+  component: NewPosition,
+  decorators: [
+    Story => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    )
+  ]
+} satisfies Meta<typeof NewPosition>
+
+export default meta
+type Story = StoryObj<typeof meta>
 
 const tokens: SwapToken[] = [
   {
@@ -53,207 +53,125 @@ const tokens: SwapToken[] = [
   }
 ]
 
-storiesOf('position/newPosition', module)
-  .addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>)
-  .add('new', () => {
-    const [feeIndex, setFeeIndex] = useState(0)
+export const Primary: Story = {
+  args: {
+    currentPairReversed: false,
+    isXtoY: true,
+    addLiquidityHandler: fn(),
+    midPrice: { x: 1234, index: 23, sqrtPrice: new BN(1111111111123) },
+    bestTiers: [],
+    commonTokens: [],
+    copyPoolAddressHandler: fn(),
+    currentFeeIndex: 0,
+    currentPriceSqrt: 123,
+    data: [],
+    feeTiers: [
+      { feeValue: 0.1 },
+      { feeValue: 0.2 },
+      { feeValue: 0.3 },
+      { feeValue: 0.4 },
+      { feeValue: 0.5 }
+    ],
+    handleAddToken: fn(),
+    initialFee: '0.05',
+    initialHideUnknownTokensValue: false,
+    initialOpeningPositionMethod: 'concentration',
+    initialSlippage: '0.01',
+    initialTokenFrom: 'BTC',
+    initialTokenTo: 'ETH',
+    isCurrentPoolExisting: true,
+    isWaitingForNewPool: false,
+    onChangePositionTokens: fn(),
+    onHideUnknownTokensChange: fn(),
+    onPositionOpeningMethodChange: fn(),
+    onSlippageChange: fn(),
+    poolIndex: 0,
+    progress: 'progress',
+    reloadHandler: fn(),
+    setMidPrice: fn(),
+    ticksLoading: false,
+    tickSpacing: 1,
+    tokens: tokens,
+    xDecimal: 9,
+    yDecimal: 12,
+    hasTicksError: false,
+    calcAmount: fn(),
+    loadingTicksAndTickMaps: false,
+    onRefresh: fn(),
+    isBalanceLoading: false,
+    shouldNotUpdatePriceRange: false,
+    unblockUpdatePriceRange: fn(),
+    isGetLiquidityError: false,
+    onlyUserPositions: false,
+    setOnlyUserPositions: fn(),
+    network: NetworkType.Testnet,
+    isLoadingTokens: false,
+    ethBalance: 200000000,
+    walletStatus: Status.Initialized,
+    onConnectWallet: () => {},
+    onDisconnectWallet: () => {},
+    poolAddress: ''
+  },
+  render: () => {
     return (
-      <div
-        style={{
-          backgroundColor: colors.invariant.componentBcg,
-          padding: 20,
-          width: 'fit-content'
-        }}>
-        <NewPosition
-          tokens={tokens}
-          data={data}
-          midPrice={{
-            x: calcPrice(140, true, 6, 6),
-            index: 140
-          }}
-          setMidPrice={() => {}}
-          addLiquidityHandler={() => {}}
-          onChangePositionTokens={(_a, _b, fee) => {
-            setFeeIndex(fee)
-          }}
-          isCurrentPoolExisting={true}
-          calcAmount={() => new BN(1)}
-          feeTiers={[
-            {
-              feeValue: 0.02
-            },
-            {
-              feeValue: 0.04
-            },
-            {
-              feeValue: 0.1
-            },
-            {
-              feeValue: 0.3
-            },
-            {
-              feeValue: 1
-            }
-          ]}
-          ticksLoading={false}
-          noConnectedBlockerProps={{
-            onConnect: () => {}
-          }}
-          progress='none'
-          xDecimal={6}
-          yDecimal={6}
-          tickSpacing={1}
-          isXtoY={true}
-          isWaitingForNewPool={false}
-          poolIndex={0}
-          currentPairReversed={null}
-          bestTiers={[]}
-          initialIsDiscreteValue={false}
-          onDiscreteChange={() => {}}
-          currentPriceSqrt={new BN(140000000)}
-          canCreateNewPool
-          canCreateNewPosition
-          handleAddToken={() => {}}
-          commonTokens={[
-            new PublicKey('So11111111111111111111111111111111111111112'),
-            new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-            new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
-          ]}
-          initialOpeningPositionMethod={'range'}
-          onPositionOpeningMethodChange={() => {}}
-          initialHideUnknownTokensValue={false}
-          onHideUnknownTokensChange={() => {}}
-          reloadHandler={() => {}}
-          currentFeeIndex={feeIndex}
-          onSlippageChange={() => {}}
-          initialSlippage={'1'}
-          calculatePoolAddress={async () => await new Promise(() => {})}
-          copyPoolAddressHandler={() => {}}
-          history={{
-            length: 9,
-            action: 'REPLACE',
-            location: {
-              pathname: '/newPosition/USDC/SOL/0_05',
-              search: '',
-              hash: '',
-              state: undefined,
-              key: 'r2l2vi'
-            },
-            createHref: () => '',
-            push: () => {},
-            replace: () => {},
-            go: () => {},
-            goBack: () => {},
-            goForward: () => {},
-            block: () => () => {},
-            listen: () => () => ''
-          }}
-          initialFee='0_05'
-          initialTokenFrom='USDC'
-          initialTokenTo='SOL'
-          poolAddress=''
-        />
-      </div>
+      <NewPosition
+        midPrice={{ x: 1234, index: 23, sqrtPrice: 123 }}
+        currentPriceSqrt={123}
+        tickSpacing={1}
+        xDecimal={9}
+        yDecimal={12}
+        commonTokens={[]}
+        handleAddToken={fn()}
+        onChangePositionTokens={fn()}
+        onPositionOpeningMethodChange={fn()}
+        onSlippageChange={fn()}
+        onHideUnknownTokensChange={fn()}
+        copyPoolAddressHandler={fn()}
+        reloadHandler={fn()}
+        setMidPrice={fn()}
+        ticksLoading={false}
+        hasTicksError={false}
+        progress='progress'
+        isCurrentPoolExisting={true}
+        isWaitingForNewPool={false}
+        poolIndex={0}
+        tokens={tokens}
+        bestTiers={[]}
+        currentPairReversed={false}
+        isXtoY={true}
+        initialTokenFrom='BTC'
+        initialTokenTo='ETH'
+        initialFee='0.05'
+        initialSlippage='0.01'
+        initialOpeningPositionMethod='concentration'
+        initialHideUnknownTokensValue={false}
+        data={[]}
+        currentFeeIndex={0}
+        feeTiers={[
+          { feeValue: 0.1 },
+          { feeValue: 0.2 },
+          { feeValue: 0.3 },
+          { feeValue: 0.4 },
+          { feeValue: 0.5 }
+        ]}
+        addLiquidityHandler={fn()}
+        calcAmount={() => 1n}
+        loadingTicksAndTickMaps={false}
+        onRefresh={fn()}
+        isBalanceLoading={false}
+        shouldNotUpdatePriceRange={false}
+        unblockUpdatePriceRange={fn()}
+        isGetLiquidityError={false}
+        onlyUserPositions={false}
+        setOnlyUserPositions={fn()}
+        network={NetworkType.Testnet}
+        isLoadingTokens={false}
+        ethBalance={2000000000}
+        walletStatus={Status.Initialized}
+        onConnectWallet={() => {}}
+        onDisconnectWallet={() => {}}
+        poolAddress=''
+      />
     )
-  })
-  .add('noPool', () => {
-    const [feeIndex, setFeeIndex] = useState(0)
-    return (
-      <div
-        style={{
-          backgroundColor: colors.invariant.componentBcg,
-          padding: 20,
-          width: 'fit-content'
-        }}>
-        <NewPosition
-          tokens={tokens}
-          data={data}
-          midPrice={{
-            x: calcPrice(140, true, 6, 6),
-            index: 140
-          }}
-          setMidPrice={() => {}}
-          addLiquidityHandler={() => {}}
-          onChangePositionTokens={(_a, _b, fee) => {
-            setFeeIndex(fee)
-          }}
-          isCurrentPoolExisting={false}
-          calcAmount={() => new BN(1)}
-          feeTiers={[
-            {
-              feeValue: 0.02
-            },
-            {
-              feeValue: 0.04
-            },
-            {
-              feeValue: 0.1
-            },
-            {
-              feeValue: 0.3
-            },
-            {
-              feeValue: 1
-            }
-          ]}
-          ticksLoading={false}
-          noConnectedBlockerProps={{
-            onConnect: () => {}
-          }}
-          progress='none'
-          xDecimal={6}
-          yDecimal={6}
-          tickSpacing={4}
-          isXtoY={true}
-          isWaitingForNewPool={false}
-          poolIndex={0}
-          currentPairReversed={null}
-          bestTiers={[]}
-          initialIsDiscreteValue={false}
-          onDiscreteChange={() => {}}
-          currentPriceSqrt={new BN(140000000)}
-          canCreateNewPool
-          canCreateNewPosition
-          handleAddToken={() => {}}
-          commonTokens={[
-            new PublicKey('So11111111111111111111111111111111111111112'),
-            new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-            new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
-          ]}
-          initialOpeningPositionMethod={'range'}
-          onPositionOpeningMethodChange={() => {}}
-          initialHideUnknownTokensValue={false}
-          onHideUnknownTokensChange={() => {}}
-          reloadHandler={() => {}}
-          currentFeeIndex={feeIndex}
-          onSlippageChange={() => {}}
-          initialSlippage={'1'}
-          calculatePoolAddress={async () => await new Promise(() => {})}
-          copyPoolAddressHandler={() => {}}
-          history={{
-            length: 9,
-            action: 'REPLACE',
-            location: {
-              pathname: '/newPosition/USDC/SOL/0_05',
-              search: '',
-              hash: '',
-              state: undefined,
-              key: 'r2l2vi'
-            },
-            createHref: () => '',
-            push: () => {},
-            replace: () => {},
-            go: () => {},
-            goBack: () => {},
-            goForward: () => {},
-            block: () => () => {},
-            listen: () => () => ''
-          }}
-          initialFee='0_05'
-          initialTokenFrom='USDC'
-          initialTokenTo='SOL'
-          poolAddress=''
-        />
-      </div>
-    )
-  })
+  }
+}

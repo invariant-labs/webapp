@@ -1,21 +1,22 @@
 import { all, call, put, SagaGenerator, select, takeLeading, spawn, delay } from 'typed-redux-saga'
 
-import { actions, Status, PayloadTypes, RpcStatus } from '@reducers/solanaConnection'
-import { getSolanaConnection } from '@web3/connection'
-import { actions as snackbarsActions } from '@reducers/snackbars'
-import { rpcAddress, rpcStatus } from '@selectors/solanaConnection'
+import { actions, Status, PayloadTypes, RpcStatus } from '@store/reducers/solanaConnection'
+import { getSolanaConnection } from '@utils/web3/connection'
+import { actions as snackbarsActions } from '@store/reducers/snackbars'
+import { network, rpcAddress, rpcStatus } from '@store/selectors/solanaConnection'
 import { Connection } from '@solana/web3.js'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { RECOMMENDED_RPC_ADDRESS } from '@consts/static'
+import { RECOMMENDED_RPC_ADDRESS } from '@store/consts/static'
 
 export function* handleRpcError(error: string): Generator {
   const currentRpc = yield* select(rpcAddress)
   const currentRpcStatus = yield* select(rpcStatus)
+  const networkType = yield* select(network)
 
   console.log(error)
 
   if (
-    currentRpc !== RECOMMENDED_RPC_ADDRESS &&
+    currentRpc !== RECOMMENDED_RPC_ADDRESS[networkType] &&
     (error.includes('Failed to fetch') || error.includes('400') || error.includes('403'))
   ) {
     if (currentRpcStatus === RpcStatus.Uninitialized) {
@@ -39,10 +40,7 @@ export function* getConnection(): SagaGenerator<Connection> {
 export function* initConnection(): Generator {
   try {
     yield* call(getConnection)
-    // TODO: pull state here
 
-    // yield* call(pullUserAccountData)
-    // yield* call(init)
     yield* put(
       snackbarsActions.add({
         message: 'Solana network connected.',
@@ -51,9 +49,6 @@ export function* initConnection(): Generator {
       })
     )
     yield* put(actions.setStatus(Status.Initialized))
-    // yield* call(depositCollateral, new BN(4 * 1e8))
-    // yield* call(mintUsd, new BN(8 * 1e7))
-    // yield* call(handleAirdrop)
   } catch (error) {
     console.log(error)
     yield* put(actions.setStatus(Status.Error))
@@ -70,17 +65,18 @@ export function* initConnection(): Generator {
 }
 
 export function* handleNetworkChange(action: PayloadAction<PayloadTypes['setNetwork']>): Generator {
-  yield* delay(1000)
-  window.location.reload()
+  // yield* delay(1000)
+  // window.location.reload()
   yield* put(
     snackbarsActions.add({
-      message: `You are on network ${action.payload.network}${
-        action.payload?.rpcName ? ' (' + action.payload.rpcName + ')' : ''
-      }.`,
+      message: `You are on network ${action.payload}`,
       variant: 'info',
       persist: false
     })
   )
+
+  localStorage.setItem('INVARIANT_NETWORK_SOLANA', action.payload)
+  window.location.reload()
 }
 
 export function* updateSlot(): Generator {

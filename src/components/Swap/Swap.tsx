@@ -1,41 +1,48 @@
 import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
-import ChangeWalletButton from '@components/HeaderButton/ChangeWalletButton'
+import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import Slippage from '@components/Modals/Slippage/Slippage'
-import {
-  REFRESHER_INTERVAL,
-  WRAPPED_SOL_ADDRESS,
-  WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT
-} from '@consts/static'
-import { blurContent, unblurContent } from '@consts/uiUtils'
-import {
-  TokenPriceData,
-  findPairs,
-  handleSimulate,
-  printBN,
-  printBNtoBN,
-  trimLeadingZeros
-} from '@consts/utils'
-import { Decimal, Tickmap } from '@invariant-labs/sdk/lib/market'
-import { fromFee } from '@invariant-labs/sdk/lib/utils'
-import { Tick } from '@invariant-labs/sdk/src/market'
-import { Box, Button, CardMedia, Grid, Typography } from '@material-ui/core'
+import Refresher from '@components/Refresher/Refresher'
 import { BN } from '@project-serum/anchor'
-import { PoolWithAddress } from '@reducers/pools'
-import { Status } from '@reducers/solanaWallet'
-import { Swap as SwapData } from '@reducers/swap'
-import { PublicKey } from '@solana/web3.js'
-import infoIcon from '@static/svg/info.svg'
+import { Box, Button, Grid, Typography } from '@mui/material'
 import refreshIcon from '@static/svg/refresh.svg'
 import settingIcon from '@static/svg/settings.svg'
 import SwapArrows from '@static/svg/swap-arrows.svg'
+import {
+  DEFAULT_TOKEN_DECIMAL,
+  NetworkType,
+  REFRESHER_INTERVAL,
+  WRAPPED_SOL_ADDRESS,
+  WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT_MAIN,
+  WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT_TEST
+} from '@store/consts/static'
+import {
+  addressToTicker,
+  convertBalanceToBN,
+  findPairs,
+  handleSimulate,
+  printBN,
+  trimDecimalZeros,
+  trimLeadingZeros
+} from '@utils/utils'
+import { Swap as SwapData } from '@store/reducers/swap'
+import { Status } from '@store/reducers/solanaWallet'
+import { SwapToken } from '@store/selectors/solanaWallet'
+import { blurContent, unblurContent } from '@utils/uiUtils'
 import classNames from 'classnames'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import ExchangeRate from './ExchangeRate/ExchangeRate'
 import TransactionDetailsBox from './TransactionDetailsBox/TransactionDetailsBox'
 import useStyles from './style'
-import Refresher from '@components/Refresher/Refresher'
-import { SwapToken } from '@selectors/solanaWallet'
+import { TokenPriceData } from '@store/consts/types'
+import TokensInfo from './TokensInfo/TokensInfo'
+import { VariantType } from 'notistack'
+import { useNavigate } from 'react-router-dom'
+import { PoolWithAddress } from '@store/reducers/pools'
+import { PublicKey } from '@solana/web3.js'
+import { Decimal, Tick, Tickmap } from '@invariant-labs/sdk/lib/market'
+import { fromFee } from '@invariant-labs/sdk/lib/utils'
+import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 
 export interface Pools {
   tokenX: PublicKey
@@ -94,8 +101,13 @@ export interface ISwap {
   onSlippageChange: (slippage: string) => void
   initialSlippage: string
   isBalanceLoading: boolean
-  deleteTimeoutError: () => void
+  copyTokenAddressHandler: (message: string, variant: VariantType) => void
+  network: NetworkType
+  solBalance: BN
+  // unwrapWETH: () => void
+  // wrappedETHAccountExist: boolean
   isTimeoutError: boolean
+  deleteTimeoutError: () => void
 }
 
 export const Swap: React.FC<ISwap> = ({
@@ -125,11 +137,17 @@ export const Swap: React.FC<ISwap> = ({
   onSlippageChange,
   initialSlippage,
   isBalanceLoading,
-  deleteTimeoutError,
-  isTimeoutError
+  copyTokenAddressHandler,
+  network,
+  solBalance,
+  // unwrapWETH,
+  // wrappedETHAccountExist,
+  isTimeoutError,
+  deleteTimeoutError
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   enum inputTarget {
+    DEFAULT = 'default',
     FROM = 'from',
     TO = 'to'
   }
@@ -145,8 +163,12 @@ export const Swap: React.FC<ISwap> = ({
   const [throttle, setThrottle] = React.useState<boolean>(false)
   const [settings, setSettings] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
-  const [inputRef, setInputRef] = React.useState<string>(inputTarget.FROM)
+  const [inputRef, setInputRef] = React.useState<string>(inputTarget.DEFAULT)
   const [rateReversed, setRateReversed] = React.useState<boolean>(false)
+  const [refresherTime, setRefresherTime] = React.useState<number>(REFRESHER_INTERVAL)
+  const [hideUnknownTokens, setHideUnknownTokens] = React.useState<boolean>(
+    initialHideUnknownTokensValue
+  )
   const [simulateResult, setSimulateResult] = React.useState<{
     amountOut: BN
     poolIndex: number
@@ -164,9 +186,34 @@ export const Swap: React.FC<ISwap> = ({
     priceImpact: new BN(0),
     error: []
   })
-  const [refresherTime, setRefresherTime] = React.useState<number>(REFRESHER_INTERVAL)
+
+  const WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT = useMemo(() => {
+    if (network === NetworkType.Testnet) {
+      return WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT_TEST
+    } else {
+      return WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT_MAIN
+    }
+  }, [network])
 
   const timeoutRef = useRef<number>(0)
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isTimeoutError) {
+      onRefresh(tokenFrom, tokenTo)
+      deleteTimeoutError()
+    }
+  }, [isTimeoutError])
+
+  useEffect(() => {
+    navigate(
+      `/exchange/${tokenFrom !== null ? addressToTicker(network, tokens[tokenFrom.toString()].assetAddress.toString()) : '-'}/${tokenTo !== null ? addressToTicker(network, tokens[tokenTo.toString()].assetAddress.toString()) : '-'}`,
+      {
+        replace: true
+      }
+    )
+  }, [tokenFrom, tokenTo])
 
   useEffect(() => {
     if (Object.keys(tokens).length && tokenFrom === null && tokenTo === null) {
@@ -176,6 +223,7 @@ export const Swap: React.FC<ISwap> = ({
       setTokenTo(initialTokenTo)
     }
   }, [Object.keys(tokens).length])
+
 
   useEffect(() => {
     onSetPair(tokenFrom, tokenTo)
@@ -221,7 +269,7 @@ export const Swap: React.FC<ISwap> = ({
       setSimulateAmount().finally(() => {
         setThrottle(false)
       })
-    }, 100)
+    }, 500)
     timeoutRef.current = timeout as unknown as number
   }
 
@@ -230,9 +278,13 @@ export const Swap: React.FC<ISwap> = ({
       if (inputRef === inputTarget.FROM) {
         const amount = getAmountOut(tokens[tokenTo.toString()])
         setAmountTo(+amount === 0 ? '' : trimLeadingZeros(amount))
-      } else {
+      } else if (tokenFrom !== null) {
         const amount = getAmountOut(tokens[tokenFrom.toString()])
         setAmountFrom(+amount === 0 ? '' : trimLeadingZeros(amount))
+      } else if (!tokens[tokenTo.toString()]) {
+        setAmountTo('')
+      } else {
+        setAmountFrom('')
       }
     }
   }, [simulateResult])
@@ -242,10 +294,24 @@ export const Swap: React.FC<ISwap> = ({
   }, [tokenTo, tokenFrom, pools.length])
 
   useEffect(() => {
-    const temp: string = amountFrom
-    setAmountFrom(amountTo)
-    setAmountTo(temp)
-    setInputRef(inputRef === inputTarget.FROM ? inputTarget.TO : inputTarget.FROM)
+    const timeout = setTimeout(() => {
+      if (refresherTime > 0 && tokenFrom !== null && tokenTo !== null) {
+        setRefresherTime(refresherTime - 1)
+      } else {
+        handleRefresh()
+      }
+    }, 1000)
+
+    return () => clearTimeout(timeout)
+  }, [refresherTime, tokenFrom, tokenTo])
+
+  useEffect(() => {
+    if (inputRef !== inputTarget.DEFAULT) {
+      const temp: string = amountFrom
+      setAmountFrom(amountTo)
+      setAmountTo(temp)
+      setInputRef(inputRef === inputTarget.FROM ? inputTarget.TO : inputTarget.FROM)
+    }
   }, [swap])
 
   useEffect(() => {
@@ -257,18 +323,6 @@ export const Swap: React.FC<ISwap> = ({
 
     return amountOut.toFixed(assetFor.decimals)
   }
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (refresherTime > 0) {
-        setRefresherTime(refresherTime - 1)
-      } else {
-        void handleRefresh()
-      }
-    }, 1000)
-
-    return () => clearTimeout(timeout)
-  }, [refresherTime])
 
   const setSimulateAmount = async () => {
     if (tokenFrom !== null && tokenTo !== null) {
@@ -285,6 +339,7 @@ export const Swap: React.FC<ISwap> = ({
         setAmountTo('')
         return
       }
+
       if (inputRef === inputTarget.FROM) {
         setSimulateResult(
           await handleSimulate(
@@ -296,7 +351,7 @@ export const Swap: React.FC<ISwap> = ({
             },
             tokenFrom,
             tokenTo,
-            printBNtoBN(amountFrom, tokens[tokenFrom.toString()].decimals),
+            convertBalanceToBN(amountFrom, tokens[tokenFrom.toString()].decimals),
             true
           )
         )
@@ -311,7 +366,7 @@ export const Swap: React.FC<ISwap> = ({
             },
             tokenFrom,
             tokenTo,
-            printBNtoBN(amountTo, tokens[tokenTo.toString()].decimals),
+            convertBalanceToBN(amountTo, tokens[tokenTo.toString()].decimals),
             false
           )
         )
@@ -339,6 +394,32 @@ export const Swap: React.FC<ISwap> = ({
     return simulateResult.error.some(err => err === error)
   }
 
+  const isEveryPoolEmpty = useMemo(() => {
+    if (tokenFrom !== null && tokenTo !== null) {
+      const pairs = findPairs(tokenFrom, tokenTo, pools)
+
+      let poolEmptyCount = 0
+      for (const pair of pairs) {
+        if (
+          poolTicks[pair.address.toString()] === undefined ||
+          (poolTicks[pair.address.toString()] && !poolTicks[pair.address.toString()].length)
+        ) {
+          poolEmptyCount++
+        }
+      }
+      return poolEmptyCount === pairs.length
+    }
+
+    return true
+  }, [tokenFrom, tokenTo, poolTicks])
+
+  // const isInsufficientLiquidityError = useMemo(
+  //   () =>
+  //     simulateResult.poolKey === null &&
+  //     (isError(SwapError.InsufficientLiquidity) || isError(SwapError.MaxSwapStepsReached)),
+  //   [simulateResult]
+  // )
+
   const getStateMessage = () => {
     if (
       (tokenFrom !== null && tokenTo !== null && throttle) ||
@@ -347,6 +428,7 @@ export const Swap: React.FC<ISwap> = ({
     ) {
       return 'Loading'
     }
+
     if (walletStatus !== Status.Initialized) {
       return 'Connect a wallet'
     }
@@ -360,7 +442,7 @@ export const Swap: React.FC<ISwap> = ({
     }
 
     if (!getIsXToY(tokenFrom, tokenTo)) {
-      return 'No route found'
+      return "Pool doesn't exist."
     }
 
     if (
@@ -372,9 +454,9 @@ export const Swap: React.FC<ISwap> = ({
     }
 
     if (
-      printBNtoBN(amountFrom, tokens[tokenFrom.toString()].decimals).gt(
-        printBNtoBN(
-          printBN(tokens[tokenFrom.toString()].balance, tokens[tokenFrom.toString()].decimals),
+      convertBalanceToBN(amountFrom, tokens[tokenFrom.toString()].decimals).gt(
+        convertBalanceToBN(
+          printBN(tokens[tokenFrom.toString()]?.balance, tokens[tokenFrom.toString()]?.decimals),
           tokens[tokenFrom.toString()].decimals
         )
       )
@@ -383,26 +465,48 @@ export const Swap: React.FC<ISwap> = ({
     }
 
     if (
-      (printBNtoBN(amountFrom, tokens[tokenFrom.toString()].decimals).eqn(0) ||
+      tokenFrom.toString() === WRAPPED_SOL_ADDRESS
+        ? solBalance.lt(
+            convertBalanceToBN(amountFrom, tokens[tokenFrom.toString()].decimals).add(
+              WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT
+            )
+          )
+        : solBalance.lt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+    ) {
+      return `Insufficient Wrapped SOL`
+    }
+
+    if (
+      (convertBalanceToBN(amountFrom, tokens[tokenFrom.toString()].decimals).eqn(0) ||
         isError('Amount out is zero')) &&
       !simulateResult.error.length
     ) {
-      return 'Insufficient volume'
-    }
-    if (isError('Too large amount')) {
-      return 'Exceed single swap limit (split transaction into several)'
+      return 'Insufficient amount'
     }
 
-    return 'Swap tokens'
+    if (isError('Too large amount')) {
+      return 'Not enough liquidity'
+    }
+
+    if (!isEveryPoolEmpty && amountTo === '') {
+      return 'Amount out is zero'
+    }
+
+    if (isEveryPoolEmpty) {
+      return 'RPC connection error'
+    }
+
+    return 'Exchange'
   }
   const hasShowRateMessage = () => {
     return (
       getStateMessage() === 'Insufficient balance' ||
-      getStateMessage() === 'Swap tokens' ||
+      getStateMessage() === 'Exchange' ||
       getStateMessage() === 'Loading' ||
       getStateMessage() === 'Connect a wallet' ||
-      getStateMessage() === 'Exceed single swap limit (split transaction into several)' ||
-      getStateMessage() === 'Insufficient liquidity'
+      getStateMessage() === 'Insufficient liquidity' ||
+      getStateMessage() === 'Not enough liquidity' ||
+      getStateMessage() === 'Insufficient Wrapped SOL'
     )
   }
   const setSlippage = (slippage: string): void => {
@@ -426,15 +530,15 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   useEffect(() => {
-    let timerId: any
+    let timeoutId: NodeJS.Timeout
 
     if (lockAnimation) {
-      timerId = setTimeout(() => setLockAnimation(false), 500)
+      timeoutId = setTimeout(() => setLockAnimation(false), 300)
     }
 
     return () => {
-      if (timerId) {
-        clearTimeout(timerId)
+      if (timeoutId) {
+        clearTimeout(timeoutId)
       }
     }
   }, [lockAnimation])
@@ -467,14 +571,16 @@ export const Swap: React.FC<ISwap> = ({
   }
 
   useEffect(() => {
-    if (isTimeoutError) {
-      void handleRefresh()
-      deleteTimeoutError()
-    }
-  }, [isTimeoutError])
+    void setSimulateAmount()
+  }, [isFetchingNewPool])
 
   useEffect(() => {
     setRefresherTime(REFRESHER_INTERVAL)
+
+    if (tokenFrom !== null && tokenTo !== null && tokenFrom.equals(tokenTo)) {
+      setAmountFrom('')
+      setAmountTo('')
+    }
   }, [tokenFrom, tokenTo])
 
   useEffect(() => {
@@ -483,24 +589,45 @@ export const Swap: React.FC<ISwap> = ({
 
   return (
     <Grid container className={classes.swapWrapper} alignItems='center'>
+      {/* {wrappedETHAccountExist && (
+        <Box className={classes.unwrapContainer}>
+          You have wrapped ETH.{' '}
+          <u className={classes.unwrapNowButton} onClick={unwrapWETH}>
+            Unwrap now.
+          </u>
+        </Box>
+      )} */}
       <Grid container className={classes.header}>
-        <Typography component='h1'>Swap tokens</Typography>
+        <Typography component='h1'>Exchange tokens</Typography>
         <Box className={classes.swapControls}>
-          <Button
-            onClick={handleRefresh}
-            className={classes.refreshIconBtn}
-            disabled={
-              priceFromLoading ||
-              priceToLoading ||
-              isBalanceLoading ||
-              getStateMessage() === 'Loading' ||
-              walletStatus !== Status.Initialized
-            }>
-            <img src={refreshIcon} className={classes.refreshIcon} />
+          <Button className={classes.slippageButton} onClick={e => handleClickSettings(e)}>
+            <p>
+              Slippage: <span className={classes.slippageAmount}>{slippTolerance}%</span>
+            </p>
           </Button>
-          <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
-            <img src={settingIcon} className={classes.settingsIcon} />
-          </Button>
+          <TooltipHover text='Refresh'>
+            <Grid display='flex' alignItems='center'>
+              <Button
+                onClick={handleRefresh}
+                className={classes.refreshIconBtn}
+                disabled={
+                  priceFromLoading ||
+                  priceToLoading ||
+                  isBalanceLoading ||
+                  getStateMessage() === 'Loading' ||
+                  tokenFrom === null ||
+                  tokenTo === null ||
+                  tokenFrom.equals(tokenTo)
+                }>
+                <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+              </Button>
+            </Grid>
+          </TooltipHover>
+          <TooltipHover text='Settings'>
+            <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
+              <img src={settingIcon} className={classes.settingsIcon} alt='Settings' />
+            </Button>
+          </TooltipHover>
         </Box>
         <Grid className={classes.slippage}>
           <Slippage
@@ -508,12 +635,12 @@ export const Swap: React.FC<ISwap> = ({
             setSlippage={setSlippage}
             handleClose={handleCloseSettings}
             anchorEl={anchorEl}
-            defaultSlippage={'1'}
             initialSlippage={initialSlippage}
           />
         </Grid>
       </Grid>
       <Grid container className={classes.root} direction='column'>
+        <Typography className={classes.swapLabel}>Pay</Typography>
         <Box
           className={classNames(
             classes.exchangeRoot,
@@ -529,7 +656,9 @@ export const Swap: React.FC<ISwap> = ({
                   )
                 : '- -'
             }
-            decimal={tokenFrom !== null ? tokens[tokenFrom.toString()].decimals : 6}
+            decimal={
+              tokenFrom !== null ? tokens[tokenFrom.toString()].decimals : DEFAULT_TOKEN_DECIMAL
+            }
             className={classes.amountInput}
             setValue={value => {
               if (value.match(/^\d*\.?\d*$/)) {
@@ -541,15 +670,27 @@ export const Swap: React.FC<ISwap> = ({
             onMaxClick={() => {
               if (tokenFrom !== null) {
                 setInputRef(inputTarget.FROM)
+
+                if (tokenFrom.equals(new PublicKey(WRAPPED_SOL_ADDRESS))) {
+                  setAmountFrom(
+                    trimDecimalZeros(
+                      printBN(
+                        tokens[tokenFrom.toString()].balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
+                          ? tokens[tokenFrom.toString()].balance.sub(
+                              WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT
+                            )
+                          : new BN(0),
+                        tokens[tokenFrom.toString()].decimals
+                      )
+                    )
+                  )
+
+                  return
+                }
+
                 setAmountFrom(
                   printBN(
-                    tokenFrom.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
-                      ? tokens[tokenFrom.toString()].balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
-                        ? tokens[tokenFrom.toString()].balance.sub(
-                            WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT
-                          )
-                        : new BN(0)
-                      : tokens[tokenFrom.toString()].balance,
+                    tokens[tokenFrom.toString()].balance,
                     tokens[tokenFrom.toString()].decimals
                   )
                 )
@@ -558,18 +699,30 @@ export const Swap: React.FC<ISwap> = ({
             tokens={tokens}
             current={tokenFrom !== null ? tokens[tokenFrom.toString()] : null}
             onSelect={setTokenFrom}
-            disabled={tokenFrom === null}
+            disabled={tokenTo === null || !!tokenFrom?.equals(tokenTo)}
             hideBalances={walletStatus !== Status.Initialized}
             handleAddToken={handleAddToken}
             commonTokens={commonTokens}
             limit={1e14}
             initialHideUnknownTokensValue={initialHideUnknownTokensValue}
-            onHideUnknownTokensChange={onHideUnknownTokensChange}
+            onHideUnknownTokensChange={e => {
+              onHideUnknownTokensChange(e)
+              setHideUnknownTokens(e)
+            }}
             tokenPrice={tokenFromPriceData?.price}
             priceLoading={priceFromLoading}
             isBalanceLoading={isBalanceLoading}
+            showMaxButton={true}
+            showBlur={
+              lockAnimation ||
+              (getStateMessage() === 'Loading' &&
+                (inputRef === inputTarget.TO || inputRef === inputTarget.DEFAULT))
+            }
+            hiddenUnknownTokens={hideUnknownTokens}
+            network={network}
           />
         </Box>
+
         <Box className={classes.tokenComponentTextContainer}>
           <Box
             className={classes.swapArrowBox}
@@ -579,9 +732,14 @@ export const Swap: React.FC<ISwap> = ({
               setRotates(rotates + 1)
               swap !== null ? setSwap(!swap) : setSwap(true)
               setTimeout(() => {
+                const tmpAmount = amountTo
+
                 const tmp = tokenFrom
                 setTokenFrom(tokenTo)
                 setTokenTo(tmp)
+
+                setInputRef(inputTarget.FROM)
+                setAmountFrom(tmpAmount)
               }, 50)
             }}>
             <Box className={classes.swapImgRoot}>
@@ -591,10 +749,14 @@ export const Swap: React.FC<ISwap> = ({
                   transform: `rotate(${-rotates * 180}deg)`
                 }}
                 className={classes.swapArrows}
+                alt='Invert tokens'
               />
             </Box>
           </Box>
         </Box>
+        <Typography className={classes.swapLabel} mt={1.5}>
+          Receive
+        </Typography>
         <Box
           className={classNames(
             classes.exchangeRoot,
@@ -609,7 +771,7 @@ export const Swap: React.FC<ISwap> = ({
                 : '- -'
             }
             className={classes.amountInput}
-            decimal={tokenTo !== null ? tokens[tokenTo.toString()].decimals : 6}
+            decimal={tokenTo !== null ? tokens[tokenTo.toString()].decimals : DEFAULT_TOKEN_DECIMAL}
             setValue={value => {
               if (value.match(/^\d*\.?\d*$/)) {
                 setAmountTo(value)
@@ -617,40 +779,53 @@ export const Swap: React.FC<ISwap> = ({
               }
             }}
             placeholder={`0.${'0'.repeat(6)}`}
-            onMaxClick={() => {
-              if (tokenFrom !== null) {
-                setInputRef(inputTarget.FROM)
-                setAmountFrom(
-                  printBN(
-                    tokenFrom.equals(new PublicKey(WRAPPED_SOL_ADDRESS))
-                      ? tokens[tokenFrom.toString()].balance.gt(WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT)
-                        ? tokens[tokenFrom.toString()].balance.sub(
-                            WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT
-                          )
-                        : new BN(0)
-                      : tokens[tokenFrom.toString()].balance,
-                    tokens[tokenFrom.toString()].decimals
-                  )
-                )
-              }
-            }}
+            onMaxClick={() => {}}
             tokens={tokens}
             current={tokenTo !== null ? tokens[tokenTo.toString()] : null}
             onSelect={setTokenTo}
-            disabled={tokenFrom === null}
+            disabled={tokenTo === null || !!tokenFrom?.equals(tokenTo)}
             hideBalances={walletStatus !== Status.Initialized}
             handleAddToken={handleAddToken}
             commonTokens={commonTokens}
             limit={1e14}
             initialHideUnknownTokensValue={initialHideUnknownTokensValue}
-            onHideUnknownTokensChange={onHideUnknownTokensChange}
+            onHideUnknownTokensChange={e => {
+              onHideUnknownTokensChange(e)
+              setHideUnknownTokens(e)
+            }}
             tokenPrice={tokenToPriceData?.price}
             priceLoading={priceToLoading}
             isBalanceLoading={isBalanceLoading}
+            showMaxButton={false}
+            showBlur={
+              lockAnimation ||
+              (getStateMessage() === 'Loading' &&
+                (inputRef === inputTarget.FROM || inputRef === inputTarget.DEFAULT))
+            }
+            hiddenUnknownTokens={hideUnknownTokens}
+            network={network}
           />
         </Box>
+        <Box className={classes.unknownWarningContainer}>
+          {tokens[tokenFrom?.toString() ?? '']?.isUnknown && (
+            <TooltipHover
+              text={`${tokens[tokenFrom?.toString() ?? ''].symbol} is unknown, make sure address is correct before trading`}>
+              <Box className={classes.unknownWarning}>
+                {tokens[tokenFrom?.toString() ?? ''].symbol} is not verified
+              </Box>
+            </TooltipHover>
+          )}
+          {tokens[tokenTo?.toString() ?? '']?.isUnknown && (
+            <TooltipHover
+              text={`${tokens[tokenTo?.toString() ?? ''].symbol} is unknown, make sure address is correct before trading`}>
+              <Box className={classes.unknownWarning}>
+                {tokens[tokenTo?.toString() ?? ''].symbol} is not verified
+              </Box>
+            </TooltipHover>
+          )}
+        </Box>
         <Box className={classes.transactionDetails}>
-          <Grid className={classes.exchangeRateContainer}>
+          <Box className={classes.transactionDetailsInner}>
             <button
               onClick={
                 tokenFrom !== null &&
@@ -661,51 +836,64 @@ export const Swap: React.FC<ISwap> = ({
                   ? handleOpenTransactionDetails
                   : undefined
               }
-              className={
+              className={classNames(
                 tokenFrom !== null &&
-                tokenTo !== null &&
-                hasShowRateMessage() &&
-                amountFrom !== '' &&
-                amountTo !== ''
+                  tokenTo !== null &&
+                  hasShowRateMessage() &&
+                  amountFrom !== '' &&
+                  amountTo !== ''
                   ? classes.HiddenTransactionButton
-                  : classes.transactionDetailDisabled
-              }>
+                  : classes.transactionDetailDisabled,
+                classes.transactionDetailsButton
+              )}>
               <Grid className={classes.transactionDetailsWrapper}>
                 <Typography className={classes.transactionDetailsHeader}>
-                  See transaction details
+                  {detailsOpen && canShowDetails ? 'Hide' : 'Show'} transaction details
                 </Typography>
-                <CardMedia image={infoIcon} className={classes.infoIcon} />
               </Grid>
             </button>
-            {tokenFrom !== null && tokenTo !== null && (
-              <Refresher
-                currentIndex={refresherTime}
-                maxIndex={REFRESHER_INTERVAL}
-                onClick={handleRefresh}
-              />
+            {tokenFrom !== null && tokenTo !== null && tokenFrom !== tokenTo && (
+              <TooltipHover text='Refresh'>
+                <Grid
+                  container
+                  alignItems='center'
+                  justifyContent='center'
+                  width={20}
+                  height={34}
+                  minWidth='fit-content'
+                  ml={1}>
+                  <Refresher
+                    currentIndex={refresherTime}
+                    maxIndex={REFRESHER_INTERVAL}
+                    onClick={handleRefresh}
+                  />
+                </Grid>
+              </TooltipHover>
             )}
-          </Grid>
+          </Box>
           {canShowDetails ? (
-            <ExchangeRate
-              onClick={() => setRateReversed(!rateReversed)}
-              tokenFromSymbol={
-                tokens[rateReversed ? tokenTo.toString() : tokenFrom.toString()].symbol
-              }
-              tokenToSymbol={
-                tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].symbol
-              }
-              amount={rateReversed ? 1 / swapRate : swapRate}
-              tokenToDecimals={
-                tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].decimals
-              }
-              loading={getStateMessage() === 'Loading'}
-            />
+            <Box className={classes.exchangeRateWrapper}>
+              <ExchangeRate
+                onClick={() => setRateReversed(!rateReversed)}
+                tokenFromSymbol={
+                  tokens[rateReversed ? tokenTo.toString() : tokenFrom.toString()].symbol
+                }
+                tokenToSymbol={
+                  tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].symbol
+                }
+                amount={rateReversed ? 1 / swapRate : swapRate}
+                tokenToDecimals={
+                  tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].decimals
+                }
+                loading={getStateMessage() === 'Loading'}
+              />
+            </Box>
           ) : null}
         </Box>
         <TransactionDetailsBox
           open={getStateMessage() !== 'Loading' ? detailsOpen && canShowDetails : prevOpenState}
           fee={{
-            v: canShowDetails ? pools[simulateResult.poolIndex]?.fee.v ?? new BN(0) : new BN(0)
+            v: canShowDetails ? pools[simulateResult.poolIndex].fee.v : new BN(0)
           }}
           exchangeRate={{
             val: rateReversed ? 1 / swapRate : swapRate,
@@ -716,14 +904,17 @@ export const Swap: React.FC<ISwap> = ({
               ? tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].decimals
               : 0
           }}
-          // minimumReceived={{
-          //   val: simulateResult.minimumReceived,
-          //   symbol: canShowDetails ? tokens[tokenToIndex].symbol : '',
-          //   decimal: canShowDetails ? tokens[tokenToIndex].decimals : 0
-          // }}
           priceImpact={simulateResult.priceImpact}
           slippage={+slippTolerance}
           isLoadingRate={getStateMessage() === 'Loading'}
+        />
+        <TokensInfo
+          tokenFrom={tokenFrom !== null ? tokens[tokenFrom.toString()] : null}
+          tokenTo={tokenTo !== null ? tokens[tokenTo.toString()] : null}
+          tokenToPrice={tokenToPriceData?.price}
+          tokenFromPrice={tokenFromPriceData?.price}
+          copyTokenAddressHandler={copyTokenAddressHandler}
+          network={network}
         />
         {walletStatus !== Status.Initialized && getStateMessage() !== 'Loading' ? (
           <ChangeWalletButton
@@ -733,17 +924,52 @@ export const Swap: React.FC<ISwap> = ({
             onDisconnect={onDisconnectWallet}
             className={classes.connectWalletButton}
           />
+        ) : getStateMessage() === 'Insufficient Wrapped SOL' ? (
+          <TooltipHover
+            text='More ETH is required to cover the transaction fee. Obtain more ETH to complete this transaction.'
+            top={-45}>
+            <div>
+              <AnimatedButton
+                content={getStateMessage()}
+                className={
+                  getStateMessage() === 'Connect a wallet'
+                    ? `${classes.swapButton}`
+                    : getStateMessage() === 'Exchange' && progress === 'none'
+                      ? `${classes.swapButton} ${classes.ButtonSwapActive}`
+                      : classes.swapButton
+                }
+                disabled={getStateMessage() !== 'Exchange' || progress !== 'none'}
+                onClick={() => {
+                  if (tokenFrom === null || tokenTo === null) return
+
+                  onSwap(
+                    { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
+                    {
+                      v: simulateResult.estimatedPriceAfterSwap
+                    },
+                    tokenFrom,
+                    tokenTo,
+                    simulateResult.poolIndex,
+                    convertBalanceToBN(amountFrom, tokens[tokenFrom.toString()].decimals),
+                    convertBalanceToBN(amountTo, tokens[tokenTo.toString()].decimals),
+                    inputRef === inputTarget.FROM
+                  )
+                }}
+                progress={progress}
+              />
+            </div>
+          </TooltipHover>
         ) : (
           <AnimatedButton
             content={getStateMessage()}
             className={
               getStateMessage() === 'Connect a wallet'
-                ? `${classes.swapButton} ${classes.buttonSelectDisabled}`
-                : getStateMessage() === 'Swap tokens' && progress === 'none'
-                ? `${classes.swapButton} ${classes.ButtonSwapActive}`
-                : classes.swapButton
+                ? `${classes.swapButton}`
+                : getStateMessage() === 'Exchange' && progress === 'none'
+                  ? `${classes.swapButton} ${classes.ButtonSwapActive}`
+                  : classes.swapButton
             }
-            disabled={getStateMessage() !== 'Swap tokens' || progress !== 'none'}
+            disabled={getStateMessage() !== 'Exchange' || progress !== 'none'}
             onClick={() => {
               if (tokenFrom === null || tokenTo === null) return
 
@@ -755,8 +981,8 @@ export const Swap: React.FC<ISwap> = ({
                 tokenFrom,
                 tokenTo,
                 simulateResult.poolIndex,
-                printBNtoBN(amountFrom, tokens[tokenFrom.toString()].decimals),
-                printBNtoBN(amountTo, tokens[tokenTo.toString()].decimals),
+                convertBalanceToBN(amountFrom, tokens[tokenFrom.toString()].decimals),
+                convertBalanceToBN(amountTo, tokens[tokenTo.toString()].decimals),
                 inputRef === inputTarget.FROM
               )
             }}

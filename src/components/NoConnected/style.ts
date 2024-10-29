@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles()(() => ({
   container: {
     width: '100%',
     height: '370px',
@@ -16,7 +16,10 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     paddingBottom: 25,
     width: '100%',
-    height: '100%'
+    height: '100%',
+    p: {
+      textAlign: 'center'
+    }
   },
   img: {
     paddingBottom: 25
@@ -35,10 +38,10 @@ const useStyles = makeStyles(() => ({
     lineHeight: '20px',
     color: colors.invariant.lightHover
   },
-  button: {
+  buttonPrimary: {
     height: 40,
     width: 200,
-    marginTop: 20,
+    marginTop: 16,
     color: colors.invariant.componentBcg,
     ...typography.body1,
     textTransform: 'none',
@@ -47,9 +50,32 @@ const useStyles = makeStyles(() => ({
 
     '&:hover': {
       background: colors.invariant.pinkLinearGradient,
-      boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)'
+      boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)',
+      '@media (hover: none)': {
+        background: colors.invariant.pinkLinearGradientOpacity,
+        boxShadow: 'none'
+      }
+    }
+  },
+  buttonSecondary: {
+    width: 200,
+    height: 40,
+    marginTop: 12,
+    ...typography.body2,
+    color: colors.white.main,
+    textTransform: 'none',
+    backgroundColor: colors.invariant.light,
+    borderRadius: 14,
+
+    transition: '0.1s',
+    '&:hover': {
+      //
+      boxShadow: '0px 0px 16px rgba(255, 255, 255, 0.1)',
+      backgroundColor: colors.invariant.light,
+      filter: 'brightness(1.2)',
+      '@media (hover: none)': {
+        boxShadow: 'none'
+      }
     }
   }
 }))
-
-export default useStyles

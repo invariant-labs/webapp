@@ -1,6 +1,6 @@
-import React, { ChangeEvent, useCallback } from 'react'
-import { Grid, Slider, Typography } from '@material-ui/core'
+import React, { useCallback } from 'react'
 import { useSliderStyles, useThumbStyles } from './style'
+import { Grid, Slider, SliderThumb } from '@mui/material'
 
 export interface IProps {
   values: number[]
@@ -10,32 +10,18 @@ export interface IProps {
   minimumSliderIndex: number
 }
 
-interface ThumbProps extends React.HTMLAttributes<HTMLSpanElement> {
-  concentrationValues: number[]
-}
+interface ThumbComponentProps extends React.HTMLAttributes<unknown> {}
 
-const Thumb: React.FC<ThumbProps> = ({ concentrationValues, ...props }) => {
-  const classes = useThumbStyles()
-
+function ThumbComponent(props: ThumbComponentProps) {
+  const { classes } = useThumbStyles()
+  const { children, ...other } = props
   return (
-    <Grid
-      {...props}
-      className={classes.root}
-      style={props.style}
-      container
-      item
-      alignItems='center'
-      direction='column'>
-      <Grid className={classes.labelWrapper}>
-        <Typography className={classes.label}>
-          {concentrationValues[props['aria-valuenow'] ?? 0].toFixed(0)}x
-        </Typography>
-      </Grid>
-
+    <SliderThumb {...other} aria-label='slider thumb'>
+      {children}
       <Grid className={classes.outerCircle}>
         <Grid className={classes.innerCircle} />
       </Grid>
-    </Grid>
+    </SliderThumb>
   )
 }
 
@@ -48,20 +34,20 @@ export const ConcentrationSlider: React.FC<IProps> = ({
 }) => {
   const disabledPercentageRange = (100 * minimumSliderIndex) / values.length
 
-  const sliderClasses = useSliderStyles({
+  const { classes } = useSliderStyles({
     valuesLength: values.length,
     disabledRange: disabledPercentageRange
   })
 
-  const onChangeCommited = useCallback(
-    (_e: ChangeEvent<{}>, value: number | number[]) => {
+  const onChangeCommitted = useCallback(
+    (_e: Event | React.SyntheticEvent, value: number | number[]) => {
       valueChangeHandler(value as number)
     },
     [valueChangeHandler]
   )
 
   const onChange = useCallback(
-    (_e: ChangeEvent<{}>, value: number | number[]) => {
+    (_e: Event | React.SyntheticEvent, value: number | number[]) => {
       dragHandler(value as number)
     },
     [dragHandler]
@@ -74,15 +60,17 @@ export const ConcentrationSlider: React.FC<IProps> = ({
 
   return (
     <Slider
-      classes={sliderClasses}
-      onChangeCommitted={onChangeCommited}
+      classes={classes}
       onChange={onChange}
+      onChangeCommitted={onChangeCommitted}
       marks={marks}
       min={0}
       max={values.length - 1}
       value={valueIndex}
-      ThumbComponent={props => <Thumb concentrationValues={values} {...props} />}
+      valueLabelDisplay='on'
       track={false}
+      slots={{ thumb: ThumbComponent }}
+      valueLabelFormat={value => `${values[value].toFixed(0)}x`}
     />
   )
 }

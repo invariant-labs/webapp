@@ -1,14 +1,13 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     width: '100%',
     flexGrow: 1,
-
     display: 'flex',
     flexDirection: 'column'
-    // justifyContent: 'space-between'
   },
   iconsGrid: {
     display: 'flex',
@@ -18,19 +17,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 35,
     borderRadius: '100%',
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: 22
     }
   },
   arrowIcon: {
-    width: 22,
-    marginRight: 8,
-    marginLeft: 8,
+    width: 32,
+    marginRight: 4,
+    marginLeft: 4,
+    height: 32,
+    borderRadius: '100%',
+    padding: 4,
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: 15,
       marginRight: 2,
       marginLeft: 2
+    },
+    '&:hover': {
+      cursor: 'pointer',
+      filter: 'brightness(2)',
+      '@media (hover: none)': {
+        filter: 'none'
+      }
     }
   },
   text: {
@@ -46,14 +55,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   rangeGrid: {
     display: 'flex',
-    flexDirection: 'row',
-    paddingRight: 10
+    flexDirection: 'row'
   },
   header: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'
     }
   },
@@ -61,17 +69,33 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    [theme.breakpoints.down('xs')]: {
+    columnGap: 10,
+    flexBasis: '41%',
+    justifyContent: 'space-between',
+    flexGrow: 0.6,
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'flex-end',
+      flexBasis: 'auto',
+      flexGrow: 'auto'
+    },
+
+    [theme.breakpoints.down('sm')]: {
       justifyContent: 'space-between',
+      flexBasis: 'auto',
       marginTop: 16
     }
   },
   feeText: {
-    marginLeft: 12,
-    minWidth: 90,
+    paddingInline: 6,
+    minWidth: 66,
 
-    [theme.breakpoints.down('xs')]: {
-      minWidth: 84
+    [theme.breakpoints.down('md')]: {
+      minWidth: 84,
+      marginLeft: 16
+    },
+    [theme.breakpoints.down('md')]: {
+      minWidth: 84,
+      marginInline: 12
     }
   },
   closedText: {
@@ -83,21 +107,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft: 8,
+    paddingLeft: 4,
     '& #pause': {
       padding: ' 0px 3px'
     },
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       paddingLeft: 4
     }
   },
   name: {
     ...typography.heading3,
     color: colors.invariant.text,
-    lineHeight: '28px',
-
-    [theme.breakpoints.down('xs')]: {
+    textWrap: 'nowrap',
+    fontSize: 22,
+    [theme.breakpoints.down('sm')]: {
       ...typography.heading4
     }
   },
@@ -109,7 +133,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('sm')]: {
+      padding: '16px 8px  16px 8px '
+    }
   },
   iconSmall: {
     width: 20,
@@ -143,14 +170,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...typography.body1,
     '&:hover': {
       background: colors.invariant.pinkLinearGradient,
-      boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
+      boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)',
+      '@media (hover: none)': {
+        background: colors.invariant.pinkLinearGradientOpacity,
+        boxShadow: 'none'
+      }
     },
     '&:disabled': {
       background: colors.invariant.light,
       color: colors.invariant.dark
     },
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       ...typography.body1,
       maxHeight: 28,
       minWidth: 105
@@ -194,7 +225,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: '8px 13px'
+    padding: '8px 13px',
+    minWidth: 'fit-content'
   },
   tokenName: {
     color: colors.white.main,
@@ -202,10 +234,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 400
   },
   tokenValue: {
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    display: 'block',
+    whiteSpace: 'nowrap',
     color: colors.invariant.lightGrey,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignSelf: 'center',
+
+    '&::-webkit-scrollbar': {
+      display: 'none',
+      scrollbarWidth: 'none',
+      msOverflowStyle: 'none'
+    },
     ...typography.heading2
   },
   tokenBalance: {
@@ -225,22 +265,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.dark,
     background: colors.invariant.greenLinearGradientOpacity,
     height: 36,
-    width: 116,
+    width: 110,
     textTransform: 'none',
     transition: '300ms',
     paddingInline: 0,
     borderRadius: 12,
+    textWrap: 'nowrap',
     ...typography.body1,
 
     '&:hover': {
       background: colors.invariant.greenLinearGradient,
-      boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)'
-    },
-    [theme.breakpoints.down('md')]: {
-      marginRight: 10
+      boxShadow: '0px 0px 16px rgba(46, 224, 154, 0.35)',
+      '@media (hover: none)': {
+        background: colors.invariant.greenLinearGradientOpacity,
+        boxShadow: 'none'
+      }
     },
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '50%',
       ...typography.caption1,
       height: 40
@@ -260,16 +302,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     '&:hover': {
       background: colors.invariant.pinkLinearGradient,
-      boxShadow: `0 0 16px ${colors.invariant.pink}`
+      boxShadow: `0 0 16px ${colors.invariant.pink}`,
+      '@media (hover: none)': {
+        background: colors.invariant.pinkLinearGradientOpacity,
+        boxShadow: 'none'
+      }
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '50%',
       ...typography.caption1
     }
   },
   buttonText: {
     WebkitPaddingBefore: '2px',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       WebkitPaddingBefore: 0
     }
   },
@@ -294,7 +340,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
 
     '&:hover': {
-      filter: 'brightness(2)'
+      filter: 'brightness(2)',
+      '@media (hover: none)': {
+        filter: 'none'
+      }
     }
   },
   cover: {
@@ -314,6 +363,46 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '0 10px 0 20px',
     width: 15,
     height: 15
+  },
+  active: {
+    color: colors.invariant.green,
+    outline: `1px solid ${colors.invariant.green}`
+  },
+  tooltip: {
+    color: colors.invariant.textGrey,
+    ...typography.caption4,
+    lineHeight: '24px',
+    background: colors.black.full,
+    borderRadius: 12
+  },
+  arrows: {
+    width: 32,
+    cursor: 'pointer',
+
+    '&:hover': {
+      filter: 'brightness(2)'
+    }
+  },
+  noData: {
+    color: colors.invariant.warning,
+    ...typography.caption2,
+    cursor: 'default',
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  noDataIcon: {
+    marginRight: 5,
+    height: 9.5,
+    width: 9.5,
+    border: '1px solid #EFD063',
+    color: colors.invariant.warning,
+    borderRadius: '50%',
+    fontSize: 8,
+    lineHeight: '10px',
+    fontWeight: 400,
+    textAlign: 'center',
+    alignSelf: 'center',
+    cursor: 'default'
   }
 }))
 

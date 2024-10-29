@@ -1,52 +1,33 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
-import { withKnobs } from '@storybook/addon-knobs'
-import { useState } from '@storybook/client-api'
-import AnimateButton from '@components/AnimatedButton/AnimatedButton'
-import { ProgressState } from './AnimatedButton'
-import { colors } from '@static/theme'
-import useStyles from './style'
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
+import AnimatedButton from './AnimatedButton'
 
-storiesOf('buttons/AnimatedButtons', module)
-  .addDecorator(withKnobs)
-  .add('primary', () => {
-    const classes = useStyles()
-    const [progress, setProgress] = useState<ProgressState>('none')
-    return (
-      <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
-        <AnimateButton
-          content={'Add liquidity'}
-          progress={progress}
-          onClick={() => setProgress('progress')}
-        />
-        <button
-          className={classes.btnStories}
-          onClick={() => {
-            setProgress('approvedWithSuccess')
-          }}>
-          Approve transaction (success)
-        </button>
-        <button
-          className={classes.btnStories}
-          onClick={() => {
-            setProgress('approvedWithFail')
-          }}>
-          Approve transaction (failes)
-        </button>
-        <button
-          className={classes.btnStories}
-          onClick={() => {
-            setProgress('success')
-          }}>
-          Transaction end(success)
-        </button>
-        <button
-          className={classes.btnStories}
-          onClick={() => {
-            setProgress('failed')
-          }}>
-          Transaction end(failed)
-        </button>
-      </div>
-    )
-  })
+const meta = {
+  title: 'Buttons/AnimatedButton',
+  component: AnimatedButton,
+  args: { onClick: fn(), content: 'Test Button', sx: { width: '300px' } },
+
+  
+} satisfies Meta<typeof AnimatedButton>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Primary: Story = {
+  args: {
+    progress: 'none'
+  }
+}
+export const Progress: Story = {
+  args: {
+    progress: 'progress'
+  }
+}
+
+export const Success: Story = {
+  args: { progress: 'success' }
+}
+
+export const Failed: Story = {
+  args: { progress: 'failed' }
+}

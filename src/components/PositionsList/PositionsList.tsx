@@ -1,19 +1,20 @@
-import EmptyPlaceholder from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
-import { PaginationList } from '@components/Pagination/Pagination'
-import { Button, Grid, InputAdornment, InputBase, Typography } from '@material-ui/core'
+import { Button, Grid, InputAdornment, InputBase, Typography } from '@mui/material'
 import loader from '@static/gif/loader.gif'
 import SearchIcon from '@static/svg/lupaDark.svg'
-import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { ILiquidityItem, PositionItem } from './PositionItem/PositionItem'
 import refreshIcon from '@static/svg/refresh.svg'
-import useStyle from './style'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { IPositionItem, PositionItem } from './PositionItem/PositionItem'
+import { useStyles } from './style'
+import { PaginationList } from '@components/Pagination/Pagination'
+import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 
-interface IProp {
+interface IProps {
   initialPage: number
   setLastPage: (page: number) => void
-  data: ILiquidityItem[]
+  data: IPositionItem[]
   onAddPositionClick: () => void
   loading?: boolean
   showNoConnected?: boolean
@@ -22,9 +23,14 @@ interface IProp {
   searchValue: string
   searchSetValue: (value: string) => void
   handleRefresh: () => void
+  // pageChanged: (page: number) => void
+  length: number
+  // loadedPages: Record<number, boolean>
+  // getRemainingPositions: () => void
+  noInitialPositions: boolean
 }
 
-export const PositionsList: React.FC<IProp> = ({
+export const PositionsList: React.FC<IProps> = ({
   initialPage,
   setLastPage,
   data,
@@ -35,14 +41,23 @@ export const PositionsList: React.FC<IProp> = ({
   itemsPerPage,
   searchValue,
   searchSetValue,
-  handleRefresh
+  handleRefresh,
+  // pageChanged,
+  length,
+  // loadedPages,
+  // getRemainingPositions,
+  noInitialPositions
 }) => {
-  const classes = useStyle()
-  const history = useHistory()
+  const { classes } = useStyles()
+  const navigate = useNavigate()
   const [defaultPage] = useState(initialPage)
   const [page, setPage] = useState(initialPage)
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // if (Object.keys(loadedPages).length * POSITIONS_PER_QUERY < Number(length)) {
+    //   getRemainingPositions()
+    // }
+
     searchSetValue(e.target.value.toLowerCase())
   }
 
@@ -77,6 +92,10 @@ export const PositionsList: React.FC<IProp> = ({
     handleChangePagination(initialPage)
   }, [initialPage])
 
+  // useEffect(() => {
+  //   pageChanged(page)
+  // }, [page])
+
   return (
     <Grid container direction='column' className={classes.root}>
       <Grid
@@ -87,8 +106,10 @@ export const PositionsList: React.FC<IProp> = ({
         alignItems='center'>
         <Grid className={classes.searchRoot}>
           <Grid className={classes.titleBar}>
-            <Typography className={classes.title}>Your Liquidity Positions</Typography>
-            <Typography className={classes.positionsNumber}>{data.length}</Typography>
+            <Typography className={classes.title}>Your Positions</Typography>
+            <TooltipHover text='Total number of your positions'>
+              <Typography className={classes.positionsNumber}>{String(length)}</Typography>
+            </TooltipHover>
           </Grid>
           <Grid className={classes.searchWrapper}>
             <InputBase
@@ -97,23 +118,29 @@ export const PositionsList: React.FC<IProp> = ({
               placeholder='Search position'
               endAdornment={
                 <InputAdornment position='end'>
-                  <img src={SearchIcon} className={classes.searchIcon} />
+                  <img src={SearchIcon} className={classes.searchIcon} alt='Search' />
                 </InputAdornment>
               }
               onChange={handleChangeInput}
               value={searchValue}
+              disabled={noInitialPositions}
             />
-            <Grid>
-              <Button
-                disabled={showNoConnected}
-                onClick={showNoConnected ? () => {} : handleRefresh}
-                className={classes.refreshIconBtn}>
-                <img src={refreshIcon} className={classes.refreshIcon} />
-              </Button>
-              <Button
-                className={showNoConnected ? classes.buttonSelectDisabled : classes.button}
-                variant='contained'
-                onClick={showNoConnected ? () => {} : onAddPositionClick}>
+            <Grid
+              display='flex'
+              columnGap={2}
+              justifyContent='space-between'
+              className={classes.fullWidthWrapper}>
+              <TooltipHover text='Refresh'>
+                <Grid display='flex' alignItems='center'>
+                  <Button
+                    disabled={showNoConnected}
+                    onClick={showNoConnected ? () => {} : handleRefresh}
+                    className={classes.refreshIconBtn}>
+                    <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                  </Button>
+                </Grid>
+              </TooltipHover>
+              <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
                 <span className={classes.buttonText}>+ Add Position</span>
               </Button>
             </Grid>
@@ -125,7 +152,7 @@ export const PositionsList: React.FC<IProp> = ({
           paginator(page).data.map((element, index) => (
             <Grid
               onClick={() => {
-                history.push(`/position/${element.id}`)
+                navigate(`/position/${element.id}`)
               }}
               key={element.id}
               className={classes.itemLink}>
@@ -136,12 +163,18 @@ export const PositionsList: React.FC<IProp> = ({
           <NoConnected {...noConnectedBlockerProps} />
         ) : loading ? (
           <Grid container style={{ flex: 1 }}>
-            <img src={loader} className={classes.loading} />
+            <img src={loader} className={classes.loading} alt='Loader' />
           </Grid>
         ) : (
           <EmptyPlaceholder
-            desc='Add your first position by pressing the button and start earning!'
+            desc={
+              noInitialPositions
+                ? 'Add your first position by pressing the button and start earning!'
+                : 'Did not find any matching positions'
+            }
             className={classes.placeholder}
+            onAction={onAddPositionClick}
+            withButton={noInitialPositions}
           />
         )}
       </Grid>
@@ -151,6 +184,7 @@ export const PositionsList: React.FC<IProp> = ({
           defaultPage={defaultPage}
           handleChangePage={handleChangePagination}
           variant='end'
+          page={page}
         />
       ) : null}
     </Grid>

@@ -1,13 +1,17 @@
-import { SIGNING_SNACKBAR_CONFIG, TIMEOUT_ERROR_MESSAGE, WRAPPED_SOL_ADDRESS } from '@consts/static'
-import { createLoaderKey, solToPriorityFee } from '@consts/utils'
+import {
+  SIGNING_SNACKBAR_CONFIG,
+  TIMEOUT_ERROR_MESSAGE,
+  WRAPPED_SOL_ADDRESS
+} from '@store/consts/static'
+import { createLoaderKey, solToPriorityFee } from '@utils/utils'
 import { Pair } from '@invariant-labs/sdk'
-import { actions as snackbarsActions } from '@reducers/snackbars'
-import { actions as swapActions } from '@reducers/swap'
-import { actions as connectionActions } from '@reducers/solanaConnection'
-import { poolsArraySortedByFees, tokens } from '@selectors/pools'
-import { network, rpcAddress } from '@selectors/solanaConnection'
-import { accounts } from '@selectors/solanaWallet'
-import { swap } from '@selectors/swap'
+import { actions as snackbarsActions } from '@store/reducers/snackbars'
+import { actions as swapActions } from '@store/reducers/swap'
+import { actions as connectionActions } from '@store/reducers/solanaConnection'
+import { poolsArraySortedByFees, tokens } from '@store/selectors/pools'
+import { network, rpcAddress } from '@store/selectors/solanaConnection'
+import { accounts } from '@store/selectors/solanaWallet'
+import { swap } from '@store/selectors/swap'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
 import {
   Keypair,
@@ -16,7 +20,7 @@ import {
   TransactionExpiredTimeoutError,
   sendAndConfirmRawTransaction
 } from '@solana/web3.js'
-import { getMarketProgram } from '@web3/programs/amm'
+import { getMarketProgram } from '@utils/web3/programs/amm'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { getConnection, handleRpcError } from './connection'
 import { createAccount, getWallet } from './wallet'
@@ -52,6 +56,23 @@ export function* handleSwapWithSOL(): Generator {
         (tokenFrom.equals(pool.tokenX) && tokenTo.equals(pool.tokenY)) ||
         (tokenFrom.equals(pool.tokenY) && tokenTo.equals(pool.tokenX))
     )
+    console.log('allTokens', allTokens)
+    console.log('allPools', allPools)
+    console.log('slippage', slippage)
+    console.log('tokenFrom', tokenFrom)
+    console.log('tokenTo', tokenTo)
+    console.log('amountIn', amountIn)
+    console.log('estimatedPriceAfterSwap', estimatedPriceAfterSwap)
+    console.log('poolIndex', poolIndex)
+    console.log('byAmountIn', byAmountIn)
+    console.log('amountOut', amountOut)
+    console.log('wallet', wallet)
+    console.log('tokensAccounts', tokensAccounts)
+    console.log('connection', connection)
+    console.log('networkType', networkType)
+    console.log('rpc', rpc)
+    console.log('marketProgram', marketProgram)
+    console.log('swapPool', swapPool)
 
     if (!swapPool) {
       return
@@ -124,8 +145,8 @@ export function* handleSwapWithSOL(): Generator {
       allTokens[tokenFrom.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[tokenFrom.toString()]
-        ? tokensAccounts[tokenFrom.toString()].address
-        : null
+          ? tokensAccounts[tokenFrom.toString()].address
+          : null
     if (fromAddress === null) {
       fromAddress = yield* call(createAccount, tokenFrom)
     }
@@ -133,8 +154,8 @@ export function* handleSwapWithSOL(): Generator {
       allTokens[tokenTo.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[tokenTo.toString()]
-        ? tokensAccounts[tokenTo.toString()].address
-        : null
+          ? tokensAccounts[tokenTo.toString()].address
+          : null
     if (toAddress === null) {
       toAddress = yield* call(createAccount, tokenTo)
     }
@@ -439,7 +460,7 @@ export function* handleSwap(): Generator {
 
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
-
+    console.log('connection', connection)
     const txid = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false
     })

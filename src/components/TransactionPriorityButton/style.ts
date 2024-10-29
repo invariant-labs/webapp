@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core'
 import { colors } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles()(() => ({
   button: {
     height: 51,
     fontSize: 14,
@@ -71,5 +71,3 @@ const useStyles = makeStyles(() => ({
     letterSpacing: '-0.03px'
   }
 }))
-
-export default useStyles

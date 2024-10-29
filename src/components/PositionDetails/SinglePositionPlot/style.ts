@@ -1,13 +1,17 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     width: '100%',
     backgroundColor: colors.invariant.component,
     padding: 24,
     paddingTop: 18,
-    borderRadius: 24
+    borderRadius: 24,
+    [theme.breakpoints.down('sm')]: {
+      padding: '24px 8px'
+    }
   },
   headerContainer: {
     ...typography.heading4,
@@ -25,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     gridGap: '15px',
     paddingBottom: 16,
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: '1fr',
       gridGap: '8px'
     }
@@ -74,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.component,
     borderRadius: 10,
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       height: 253
     }
   },
@@ -102,7 +106,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     boxSizing: 'border-box',
     paddingTop: 3,
-    cursor: 'default'
+    cursor: 'default',
+    userSelect: 'none'
   },
   liquidityTooltip: {
     background: colors.invariant.component,
@@ -112,7 +117,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 376,
     boxSizing: 'border-box',
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       maxWidth: 360
     }
   },
@@ -136,7 +141,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 16
   },
   currentPrice: {
-    display: 'inline-block',
     color: colors.invariant.yellow,
     ...typography.caption2,
     textAlign: 'right'

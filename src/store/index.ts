@@ -1,31 +1,73 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-import { applyMiddleware, compose, createStore, Store } from 'redux'
-import { middleware, sagaMiddleware } from './middleware'
+import createSagaMiddleware from 'redux-saga'
+import { configureStore, isPlain } from '@reduxjs/toolkit'
 import combinedReducers from './reducers'
 import rootSaga from './sagas'
+import { PublicKey } from '@solana/web3.js'
+import { BN } from '@project-serum/anchor'
 
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: <R>(a: R) => R
-  }
-}
-type AppStore = Store<unknown, any>
+const isLocalhost = window.location.hostname === 'localhost'
 
-const configureStore = (initialState = {}): AppStore => {
-  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?? compose
-  const store = createStore(
-    combinedReducers,
-    initialState,
-    composeEnhancers(applyMiddleware(...middleware))
+const isSerializable = (value: unknown) => {
+  return (
+    typeof value === 'bigint' || isPlain(value) || value instanceof PublicKey || value instanceof BN
   )
-  // if (process.env.NODE_ENV === 'development' && module.hot) {
-  //   module.hot.accept('./reducers', () => {
-  //     const newRootReducer = require('./reducers').default
-  //     store.replaceReducer(newRootReducer)
-  //   })
-  // }
+}
+
+const getEntries = (value: unknown) => {
+  if (typeof value === 'bigint') {
+    return [['bigint', value.toString()]] as [string, unknown][]
+  }
+
+  if (value instanceof PublicKey) {
+    return [['PublicKey', (value as PublicKey).toBase58()]] as [string, unknown][]
+  }
+
+  if (value instanceof BN) {
+    return [['BN', (value as BN).toString()]] as [string, unknown][]
+  }
+
+  return Object.entries(value as Record<string, unknown>)
+}
+
+const configureAppStore = (initialState = {}) => {
+  const reduxSagaMonitorOptions = {}
+  const sagaMiddleware = createSagaMiddleware(reduxSagaMonitorOptions)
+
+  const middleware = [sagaMiddleware]
+
+  const store = configureStore({
+    reducer: combinedReducers,
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          isSerializable,
+          getEntries,
+          ignoredActions: ['positions/closePosition', 'pools/setTickMaps', 'pools/getPoolData']
+        }
+      }).concat(middleware),
+    preloadedState: initialState,
+    devTools: isLocalhost
+      ? {
+          serialize: {
+            replacer: (_key, value) =>
+              typeof value === 'bigint'
+                ? value.toString()
+                : value instanceof PublicKey
+                  ? (value as PublicKey).toBase58()
+                  : value instanceof BN
+                    ? (value as BN).toString()
+                    : value,
+            options: true
+          }
+        }
+      : false
+  })
+
+  sagaMiddleware.run(rootSaga)
   return store
 }
-export const store = configureStore()
 
-export const runSagas = (): unknown => sagaMiddleware.run(rootSaga)
+export const store = configureAppStore()
+
+export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>
