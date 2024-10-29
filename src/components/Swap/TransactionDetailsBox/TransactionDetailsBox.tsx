@@ -39,7 +39,11 @@ const TransactionDetailsBox: React.FC<IProps> = ({
             <Typography className={classes.value}>
               {exchangeRate.val === Infinity
                 ? '-'
-                : `${formatNumber(exchangeRate.val.toFixed(exchangeRate.decimal)) === '0' ? '~0' : formatNumber(exchangeRate.val.toFixed(exchangeRate.decimal))} ${exchangeRate.symbol}`}
+                : `${
+                    formatNumber(exchangeRate.val.toFixed(exchangeRate.decimal)) === '0'
+                      ? '~0'
+                      : formatNumber(exchangeRate.val.toFixed(exchangeRate.decimal))
+                  } ${exchangeRate.symbol}`}
             </Typography>
           )}
         </Grid>

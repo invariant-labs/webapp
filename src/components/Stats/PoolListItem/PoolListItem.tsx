@@ -71,7 +71,9 @@ const PoolListItem: React.FC<IProps> = ({
 
   const handleOpenPosition = () => {
     navigate(
-      `/newPosition/${symbolFrom ?? ''}/${symbolTo ?? ''}/${parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))}`
+      `/newPosition/${symbolFrom ?? ''}/${symbolTo ?? ''}/${parseFeeToPathFee(
+        Math.round(fee * 10 ** (DECIMAL - 2))
+      )}`
     )
   }
 

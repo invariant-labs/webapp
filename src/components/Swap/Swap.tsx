@@ -208,7 +208,15 @@ export const Swap: React.FC<ISwap> = ({
 
   useEffect(() => {
     navigate(
-      `/exchange/${tokenFrom !== null ? addressToTicker(network, tokens[tokenFrom.toString()].assetAddress.toString()) : '-'}/${tokenTo !== null ? addressToTicker(network, tokens[tokenTo.toString()].assetAddress.toString()) : '-'}`,
+      `/exchange/${
+        tokenFrom !== null
+          ? addressToTicker(network, tokens[tokenFrom.toString()].assetAddress.toString())
+          : '-'
+      }/${
+        tokenTo !== null
+          ? addressToTicker(network, tokens[tokenTo.toString()].assetAddress.toString())
+          : '-'
+      }`,
       {
         replace: true
       }
@@ -223,7 +231,6 @@ export const Swap: React.FC<ISwap> = ({
       setTokenTo(initialTokenTo)
     }
   }, [Object.keys(tokens).length])
-
 
   useEffect(() => {
     onSetPair(tokenFrom, tokenTo)
@@ -809,7 +816,9 @@ export const Swap: React.FC<ISwap> = ({
         <Box className={classes.unknownWarningContainer}>
           {tokens[tokenFrom?.toString() ?? '']?.isUnknown && (
             <TooltipHover
-              text={`${tokens[tokenFrom?.toString() ?? ''].symbol} is unknown, make sure address is correct before trading`}>
+              text={`${
+                tokens[tokenFrom?.toString() ?? ''].symbol
+              } is unknown, make sure address is correct before trading`}>
               <Box className={classes.unknownWarning}>
                 {tokens[tokenFrom?.toString() ?? ''].symbol} is not verified
               </Box>
@@ -817,7 +826,9 @@ export const Swap: React.FC<ISwap> = ({
           )}
           {tokens[tokenTo?.toString() ?? '']?.isUnknown && (
             <TooltipHover
-              text={`${tokens[tokenTo?.toString() ?? ''].symbol} is unknown, make sure address is correct before trading`}>
+              text={`${
+                tokens[tokenTo?.toString() ?? ''].symbol
+              } is unknown, make sure address is correct before trading`}>
               <Box className={classes.unknownWarning}>
                 {tokens[tokenTo?.toString() ?? ''].symbol} is not verified
               </Box>
@@ -935,8 +946,8 @@ export const Swap: React.FC<ISwap> = ({
                   getStateMessage() === 'Connect a wallet'
                     ? `${classes.swapButton}`
                     : getStateMessage() === 'Exchange' && progress === 'none'
-                      ? `${classes.swapButton} ${classes.ButtonSwapActive}`
-                      : classes.swapButton
+                    ? `${classes.swapButton} ${classes.ButtonSwapActive}`
+                    : classes.swapButton
                 }
                 disabled={getStateMessage() !== 'Exchange' || progress !== 'none'}
                 onClick={() => {
@@ -966,8 +977,8 @@ export const Swap: React.FC<ISwap> = ({
               getStateMessage() === 'Connect a wallet'
                 ? `${classes.swapButton}`
                 : getStateMessage() === 'Exchange' && progress === 'none'
-                  ? `${classes.swapButton} ${classes.ButtonSwapActive}`
-                  : classes.swapButton
+                ? `${classes.swapButton} ${classes.ButtonSwapActive}`
+                : classes.swapButton
             }
             disabled={getStateMessage() !== 'Exchange' || progress !== 'none'}
             onClick={() => {

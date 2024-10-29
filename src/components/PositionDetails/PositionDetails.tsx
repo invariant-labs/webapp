@@ -230,8 +230,8 @@ const PositionDetails: React.FC<IProps> = ({
                     .fill(1)
                     .map((_e, index) => ({ x: index, y: index, index }))
             }
-          leftRange={memoizedLeftRange}
-          rightRange={memoizedRightRange}
+            leftRange={memoizedLeftRange}
+            rightRange={memoizedRightRange}
             midPrice={{
               ...midPrice,
               x: midPrice.x ** (xToY ? 1 : -1)
