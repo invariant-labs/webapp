@@ -8,6 +8,7 @@ on:
 jobs:
   upload:
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - uses: actions/checkout@master
       - name: Deploy to Staging

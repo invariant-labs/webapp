@@ -718,6 +718,8 @@ export const NewPosition: React.FC<INewPosition> = ({
             getTicksInsideRange={getTicksInsideRange}
             shouldResetPlot={shouldResetPlot}
             setShouldResetPlot={setShouldResetPlot}
+            tokenAPriceData={tokenAPriceData}
+            tokenBPriceData={tokenBPriceData}
           />
         ) : (
           <PoolInit
