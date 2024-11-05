@@ -398,7 +398,7 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
         }
       )
       obj[DOGIN_MAIN.address.toString()] = DOGIN_MAIN
-      
+
       return obj
     case NetworkType.DEVNET:
       return {
