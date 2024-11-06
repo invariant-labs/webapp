@@ -129,6 +129,15 @@ export const HBB_DEV: Token = {
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/HBB111SCo9jkCejsZfz8Ec8nH7T6THF8KEKSnvwT6XK6/logo.svg'
 }
 
+export const DOGIN_MAIN: Token = {
+  symbol: 'DOGIN',
+  address: new PublicKey('DoGinuF39MGaxJDeJ3QDk4qd2vXwkYf5TDYpkdpYjip'),
+  decimals: 5,
+  name: 'DoginHood',
+  logoURI:
+    'https://statics.solscan.io/cdn/imgs/s60?ref=68747470733a2f2f697066732e696f2f697066732f516d5066614a565454534c537a6f566161754d4b416e36586132627337365965564d44455269617934556d583562'
+}
+
 export enum RPC {
   DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',

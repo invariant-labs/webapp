@@ -12,14 +12,14 @@ runtimes:
     - python@3.10.8
 lint:
   enabled:
-    - actionlint@1.7.3
-    - checkov@3.2.270
+    - actionlint@1.7.4
+    - checkov@3.2.278
     - eslint@8.57.0
     - git-diff-check
     - markdownlint@0.42.0
     - oxipng@9.1.2
     - prettier@3.3.3
-    - trufflehog@3.82.13
+    - trufflehog@3.83.2
     - yamllint@1.35.1
 actions:
   disabled:

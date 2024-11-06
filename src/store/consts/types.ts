@@ -86,6 +86,8 @@ export type PositionOpeningMethod = 'range' | 'concentration'
 
 export interface TokenPriceData {
   price: number
+  buyPrice: number
+  sellPrice: number
 }
 
 export interface CoingeckoApiPriceData {

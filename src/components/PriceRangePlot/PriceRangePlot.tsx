@@ -5,7 +5,7 @@ import loader from '@static/gif/loader.gif'
 import ZoomInIcon from '@static/svg/zoom-in-icon.svg'
 import ZoomOutIcon from '@static/svg/zoom-out-icon.svg'
 import { colors, theme } from '@static/theme'
-import { formatNumber, nearestTickIndex } from '@utils/utils'
+import { formatNumber, nearestTickIndex, TokenPriceData } from '@utils/utils'
 import { PlotTickData } from '@store/reducers/positions'
 import classNames from 'classnames'
 import React, { useCallback, useMemo, useRef } from 'react'
@@ -43,6 +43,8 @@ export interface IPriceRangePlot {
     min: number
     max: number
   }
+  tokenAPriceData?: TokenPriceData
+  tokenBPriceData?: TokenPriceData
 }
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
@@ -67,7 +69,9 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   coverOnLoading = false,
   hasError = false,
   reloadHandler,
-  volumeRange
+  volumeRange,
+  tokenAPriceData,
+  tokenBPriceData
 }) => {
   const { classes } = useStyles()
 
@@ -315,6 +319,52 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     )
   }
 
+  const buyPriceLayer: Layer = ({ innerWidth, innerHeight }) => {
+    if (typeof tokenAPriceData === 'undefined' || typeof tokenBPriceData === 'undefined') {
+      return null
+    }
+
+    const unitLen = innerWidth / (plotMax - plotMin)
+    return (
+      <svg
+        x={(tokenAPriceData.buyPrice / tokenBPriceData.price - plotMin) * unitLen}
+        y={0}
+        width={60}
+        height={innerHeight}>
+        <defs>
+          <filter id='shadow' x='-10' y='-9' width='20' height={innerHeight}>
+            <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
+          </filter>
+        </defs>
+        <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
+        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.white.main} />
+      </svg>
+    )
+  }
+
+  const sellPriceLayer: Layer = ({ innerWidth, innerHeight }) => {
+    if (typeof tokenAPriceData === 'undefined' || typeof tokenBPriceData === 'undefined') {
+      return null
+    }
+
+    const unitLen = innerWidth / (plotMax - plotMin)
+    return (
+      <svg
+        x={(tokenAPriceData.sellPrice / tokenBPriceData.price - plotMin) * unitLen}
+        y={0}
+        width={60}
+        height={innerHeight}>
+        <defs>
+          <filter id='shadow' x='-10' y='-9' width='20' height={innerHeight}>
+            <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
+          </filter>
+        </defs>
+        <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
+        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.white.main} />
+      </svg>
+    )
+  }
+
   const volumeRangeLayer: Layer = ({ innerWidth, innerHeight }) => {
     if (typeof volumeRange === 'undefined') {
       return null
@@ -525,6 +575,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           'areas',
           'lines',
           globalPriceLayer,
+          buyPriceLayer,
+          sellPriceLayer,
           currentLayer,
           volumeRangeLayer,
           brushLayer,

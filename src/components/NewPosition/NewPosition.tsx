@@ -795,6 +795,8 @@ export const NewPosition: React.FC<INewPosition> = ({
             unblockUpdatePriceRange={unblockUpdatePriceRange}
             onlyUserPositions={onlyUserPositions}
             setOnlyUserPositions={setOnlyUserPositions}
+            tokenAPriceData={tokenAPriceData}
+            tokenBPriceData={tokenBPriceData}
           />
         ) : (
           <PoolInit

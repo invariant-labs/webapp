@@ -25,6 +25,7 @@ import {
   BTC_DEV,
   getAddressTickerMap,
   getReversedAddressTickerMap,
+  DOGIN_MAIN,
   HBB_DEV,
   MAX_U64,
   MC2_DEV,
@@ -431,6 +432,8 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
           }
         }
       )
+      obj[DOGIN_MAIN.address.toString()] = DOGIN_MAIN
+
       return obj
     case NetworkType.Devnet:
       return {
@@ -936,10 +939,13 @@ interface RawJupApiResponse {
     string,
     {
       id: string
-      mintSymbol: string
-      vsToken: string
-      vsTokenSymbol: string
-      price: number
+      price: string
+      extraInfo?: {
+        quotedPrice: {
+          buyPrice: string
+          sellPrice: string
+        }
+      }
     }
   >
   timeTaken: number
@@ -958,45 +964,43 @@ export interface CoingeckoApiPriceData {
 
 export interface TokenPriceData {
   price: number
+  buyPrice: number
+  sellPrice: number
 }
 
 export const getCoingeckoPricesData = async (
   ids: string[]
-): Promise<Record<string, CoingeckoPriceData>> => {
-  const requests: Array<Promise<AxiosResponse<CoingeckoApiPriceData[]>>> = []
-  for (let i = 0; i < ids.length; i += 250) {
-    const idsSlice = ids.slice(i, i + 250)
-    let idsList = ''
-    idsSlice.forEach((id, index) => {
-      idsList += id + (index < 249 ? ',' : '')
-    })
-    requests.push(
-      axios.get<CoingeckoApiPriceData[]>(
-        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsList}&per_page=250`
-      )
-    )
+): Promise<Record<string, Omit<TokenPriceData, 'buyPrice' | 'sellPrice'>>> => {
+  const maxTokensPerRequest = 250
+  const chunkedIds: string[][] = []
+  for (let i = 0; i < ids.length; i += maxTokensPerRequest) {
+    chunkedIds.push(ids.slice(i, i + maxTokensPerRequest))
   }
 
-  return await Promise.all(requests).then(responses => {
-    let concatRes: CoingeckoApiPriceData[] = []
-    responses
-      .map(res => res.data)
-      .forEach(data => {
-        concatRes = [...concatRes, ...data]
-      })
+  const requests = chunkedIds.map(
+    async idsChunk =>
+      await axios.get<CoingeckoApiPriceData[]>(
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idsChunk.join(
+          ','
+        )}&per_page=250`
+      )
+  )
 
-    const data: Record<string, CoingeckoPriceData> = {}
+  const responses = await Promise.all(requests)
+  const concatRes = responses.flatMap(response =>
+    Object.values(response.data).map(({ id, current_price: price }) => ({ id, price }))
+  )
 
-    concatRes.forEach(({ id, current_price, price_change_percentage_24h }) => {
-      data[id] = {
-        price: current_price ?? 0,
-        priceChange: price_change_percentage_24h ?? 0
-      }
-    })
-
-    return data
-  })
+  return concatRes.reduce<Record<string, Omit<TokenPriceData, 'buyPrice' | 'sellPrice'>>>(
+    (acc, { id, price }) => {
+      acc[id] = { price: price ?? 0 }
+      return acc
+    },
+    {}
+  )
 }
+
+
 
 export const getJupPricesData = async (ids: string[]): Promise<Record<string, TokenPriceData>> => {
   const maxTokensPerRequest = 100
@@ -1008,16 +1012,22 @@ export const getJupPricesData = async (ids: string[]): Promise<Record<string, To
 
   const requests = chunkedIds.map(
     async idsChunk =>
-      await axios.get<RawJupApiResponse>(`https://price.jup.ag/v4/price?ids=${idsChunk.join(',')}`)
+      await axios.get<RawJupApiResponse>(
+        `https://api.jup.ag/price/v2?ids=${idsChunk.join(',')}&showExtraInfo=true`
+      )
   )
 
   const responses = await Promise.all(requests)
   const concatRes = responses.flatMap(response =>
-    Object.values(response.data.data).map(({ id, price }) => ({ id, price }))
+    Object.values(response.data.data).map(({ id, price, extraInfo }) => ({ id, price, extraInfo }))
   )
 
-  return concatRes.reduce<Record<string, TokenPriceData>>((acc, { id, price }) => {
-    acc[id] = { price: price ?? 0 }
+  return concatRes.reduce<Record<string, TokenPriceData>>((acc, { id, price, extraInfo }) => {
+    acc[id] = {
+      price: Number(price),
+      buyPrice: Number(extraInfo?.quotedPrice.buyPrice ?? 0),
+      sellPrice: Number(extraInfo?.quotedPrice.sellPrice ?? 0)
+    }
     return acc
   }, {})
 }
@@ -1276,16 +1286,27 @@ export const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThresh
 ]
 
 export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
-  const response = await axios.get(`https://price.jup.ag/v4/price?ids=${id}&vsToken=USDC`)
+  const response = await axios.get<RawJupApiResponse>(
+    `https://api.jup.ag/price/v2?ids=${id}&showExtraInfo=true`
+  )
+
   return {
-    price: response.data.data[id].price ?? 0
+    price: Number(response.data.data[id].price),
+    buyPrice: Number(response.data.data[id].extraInfo?.quotedPrice.buyPrice ?? 0),
+    sellPrice: Number(response.data.data[id].extraInfo?.quotedPrice.sellPrice ?? 0)
   }
 }
 
-export const getJupTokensRatioPrice = async (id: string, vsId: string): Promise<TokenPriceData> => {
-  const response = await axios.get(`https://price.jup.ag/v4/price?ids=${id}&vsToken=${vsId}`)
+export const getJupTokensRatioPrice = async (
+  id: string,
+  vsId: string
+): Promise<Omit<TokenPriceData, 'buyPrice' | 'sellPrice'>> => {
+  const response = await axios.get<RawJupApiResponse>(
+    `https://api.jup.ag/price/v2?ids=${id}&vsToken=${vsId}`
+  )
+
   return {
-    price: response.data.data[id].price ?? 0
+    price: Number(response.data.data[id].price)
   }
 }
 

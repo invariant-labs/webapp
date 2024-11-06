@@ -16,7 +16,8 @@ import {
   findClosestIndexByValue,
   formatNumber,
   nearestTickIndex,
-  toMaxNumericPlaces
+  toMaxNumericPlaces,
+  TokenPriceData
 } from '@utils/utils'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Tooltip, Typography } from '@mui/material'
@@ -63,6 +64,8 @@ export interface IRangeSelector {
   setOnlyUserPositions: (onlyUserPositions: boolean) => void
   shouldResetPlot: boolean
   setShouldResetPlot: (val: boolean) => void
+  tokenAPriceData?: TokenPriceData
+  tokenBPriceData?: TokenPriceData
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -95,7 +98,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   shouldNotUpdatePriceRange,
   unblockUpdatePriceRange,
   shouldResetPlot,
-  setShouldResetPlot
+  setShouldResetPlot,
+  tokenAPriceData,
+  tokenBPriceData
 }) => {
   const { classes } = useStyles()
 
@@ -458,7 +463,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             <Grid container flexDirection='column'>
               <Typography className={classes.currentPrice}>Current price ━━━</Typography>
               <Typography className={classes.globalPrice}>Global price ━━━</Typography>
+              <Typography className={classes.buySellPrice}>Buy/sell price</Typography>
             </Grid>
+
           </Grid>
         </Grid>
         <PriceRangePlot
@@ -488,6 +495,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
           volumeRange={volumeRange}
+          tokenAPriceData={tokenAPriceData}
+          tokenBPriceData={tokenBPriceData}
         />
         {/* <FormControlLabel
           control={
