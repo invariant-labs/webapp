@@ -1,26 +1,17 @@
 import { MOCK_TOKENS } from '@invariant-labs/sdk'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
-import { ISnackbar } from '@reducers/snackbars'
+import { ISnackbar } from '@store/reducers/snackbars'
 import { PublicKey } from '@solana/web3.js'
+import { BestTier, Chain, PrefixConfig, Token } from './types'
 
-declare global {
-  interface Window {
-    solana: any
-  }
+export enum NetworkType {
+  Local = 'Local',
+  Testnet = 'Testnet',
+  Devnet = 'Devnet',
+  Mainnet = 'Mainnet'
+}
 
-  interface ImportMeta {
-    globEager: (x: string) => { [propertyName: string]: { default: string } }
-  }
-}
-export interface Token {
-  symbol: string
-  address: PublicKey
-  decimals: number
-  name: string
-  logoURI: string
-  isUnknown?: boolean
-}
 export const PRICE_DECIMAL = 24
 export const USDC_DEV: Token = {
   symbol: 'USDC',
@@ -147,7 +138,7 @@ export const DOGIN_MAIN: Token = {
     'https://statics.solscan.io/cdn/imgs/s60?ref=68747470733a2f2f697066732e696f2f697066732f516d5066614a565454534c537a6f566161754d4b416e36586132627337365965564d44455269617934556d583562'
 }
 
-enum SolanaNetworks {
+export enum RPC {
   DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',
   MAIN = 'https://api.mainnet-beta.solana.com',
@@ -161,27 +152,14 @@ enum SolanaNetworks {
   LOCAL = 'http://127.0.0.1:8899'
 }
 
-enum NetworkType {
-  DEVNET = 'Devnet',
-  TESTNET = 'Testnet',
-  LOCALNET = 'Localnet',
-  MAINNET = 'Mainnet'
-}
-
-const DEFAULT_PUBLICKEY = new PublicKey(0)
-const MAX_U64 = new BN('18446744073709551615')
+export const DEFAULT_PUBLICKEY = new PublicKey(0)
+export const MAX_U64 = new BN('18446744073709551615')
 
 export const tokens: Record<NetworkType, Token[]> = {
   Devnet: [USDC_DEV, USDT_DEV, BTC_DEV, MSOL_DEV],
   Mainnet: [],
   Testnet: [],
-  Localnet: []
-}
-
-export interface BestTier {
-  tokenX: PublicKey
-  tokenY: PublicKey
-  bestTierIndex: number
+  Local: []
 }
 
 const mainnetBestTiersCreator = () => {
@@ -282,7 +260,7 @@ export const bestTiers: Record<NetworkType, BestTier[]> = {
   ],
   Testnet: [],
   Mainnet: mainnetBestTiersCreator(),
-  Localnet: []
+  Local: []
 }
 
 export const airdropTokens: Record<NetworkType, PublicKey[]> = {
@@ -300,7 +278,7 @@ export const airdropTokens: Record<NetworkType, PublicKey[]> = {
   ],
   Mainnet: [],
   Testnet: [],
-  Localnet: []
+  Local: []
 }
 
 export const airdropQuantities: Record<NetworkType, number[]> = {
@@ -318,7 +296,7 @@ export const airdropQuantities: Record<NetworkType, number[]> = {
   ],
   Mainnet: [],
   Testnet: [],
-  Localnet: []
+  Local: []
 }
 
 export const WRAPPED_SOL_ADDRESS = 'So11111111111111111111111111111111111111112'
@@ -329,12 +307,19 @@ export const WSOL_POSITION_INIT_LAMPORTS = new BN(6164600)
 
 export const WSOL_POOL_INIT_LAMPORTS = new BN(106000961)
 
+export const WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT_DEV = new BN(9200961)
+export const WSOL_MIN_DEPOSIT_SWAP_FROM_AMOUNT_MAIN = new BN(9200961)
+
+export const WSOL_POSITION_INIT_LAMPORTS_MAIN = new BN(6164600)
+export const WSOL_POSITION_INIT_LAMPORTS_DEV = new BN(6164600)
+
+export const WSOL_POOL_INIT_LAMPORTS_MAIN = new BN(106000961)
+export const WSOL_POOL_INIT_LAMPORTS_DEV = new BN(106000961)
+
 export const ALL_FEE_TIERS_DATA = FEE_TIERS.map((tier, index) => ({
   tier,
   primaryIndex: index
 })).slice(3, -1) // remove slice if all tiers should be visible
-
-export { DEFAULT_PUBLICKEY, MAX_U64, NetworkType, SolanaNetworks }
 
 export const POSITIONS_PER_PAGE = 5
 
@@ -344,15 +329,140 @@ export const SIGNING_SNACKBAR_CONFIG: Omit<ISnackbar, 'open'> = {
   persist: true
 }
 
-export type PositionOpeningMethod = 'range' | 'concentration'
-
 export const STABLECOIN_ADDRESSES: string[] = [
   'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
   'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'
 ] // USDC, USDT
 
-export const TIMEOUT_ERROR_MESSAGE = 'Transaction timed out. Check the details to see if it passed.'
-
-export const RECOMMENDED_RPC_ADDRESS = SolanaNetworks.MAIN_HELIUS
-
 export const REFRESHER_INTERVAL = 120
+
+export const commonTokensForNetworks: Record<NetworkType, PublicKey[]> = {
+  Devnet: [
+    USDC_DEV.address,
+    USDT_DEV.address,
+    SOL_DEV.address,
+    MSOL_DEV.address,
+    BTC_DEV.address,
+    RENDOGE_DEV.address,
+    MCK_DEV.address,
+    MC2_DEV.address,
+    MC3_DEV.address,
+    USDH_DEV.address
+  ],
+  Mainnet: [
+    new PublicKey('So11111111111111111111111111111111111111112'),
+    new PublicKey('JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'),
+    new PublicKey('85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ'),
+    new PublicKey('HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3'),
+    new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+    new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'),
+    new PublicKey('EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm'),
+    new PublicKey('CKaKtYvz6dKPyMvYq9Rh3UBrnNqYZAyd7iF4hJtjUvks')
+  ],
+  Testnet: [],
+  Local: []
+}
+
+export const FormatConfig = {
+  B: 1000000000,
+  M: 1000000,
+  K: 1000,
+  BDecimals: 9,
+  MDecimals: 6,
+  KDecimals: 3,
+  DecimalsAfterDot: 2
+}
+
+export enum PositionTokenBlock {
+  None,
+  A,
+  B
+}
+
+export const subNumbers = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉']
+
+export const defaultPrefixConfig: PrefixConfig = {
+  B: 1000000000,
+  M: 1000000,
+  K: 10000
+}
+
+export const getAddressTickerMap = (network: NetworkType): { [k: string]: string } => {
+  if (network === NetworkType.Mainnet) {
+    return {
+      SOL: 'So11111111111111111111111111111111111111112',
+      USDC: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+      USDT: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+      USDH: 'USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX',
+      mSOL: 'mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So',
+      bSOL: 'bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1',
+      stSOL: '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj',
+      SNY: '4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y',
+      ETH: '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs',
+      LFNTY: 'LFNTYraetVioAPnGJht4yNg2aUZFXR776cMeN9VMjXp'
+    }
+  } else {
+    return {}
+  }
+}
+
+export const getReversedAddressTickerMap = (network: NetworkType) => {
+  return Object.fromEntries(
+    Object.entries(getAddressTickerMap(network)).map(([key, value]) => [value, key])
+  )
+}
+
+export const MINIMAL_POOL_INIT_PRICE = 0.00000001
+
+export const DEFAULT_SWAP_SLIPPAGE = '0.50'
+export const DEFAULT_NEW_POSITION_SLIPPAGE = '0.50'
+
+export const CHAINS = [
+  { name: Chain.Solana, address: 'https://invariant.app/swap' },
+  { name: Chain.AlephZero, address: 'https://azero.invariant.app/exchange' },
+  { name: Chain.Eclipse, address: 'https://eclipse.invariant.app/exchange' },
+  { name: Chain.Vara, address: 'https://vara.invariant.app/exchange' },
+  { name: Chain.Alephium, address: 'https://alph.invariant.app/exchange' }
+]
+
+export const enum SortTypePoolList {
+  NAME_ASC,
+  NAME_DESC,
+  FEE_ASC,
+  FEE_DESC,
+  VOLUME_ASC,
+  VOLUME_DESC,
+  TVL_ASC,
+  TVL_DESC,
+  APY_ASC,
+  APY_DESC
+}
+
+export const enum SortTypeTokenList {
+  NAME_ASC,
+  NAME_DESC,
+  PRICE_ASC,
+  PRICE_DESC,
+  // CHANGE_ASC,
+  // CHANGE_DESC,
+  VOLUME_ASC,
+  VOLUME_DESC,
+  TVL_ASC,
+  TVL_DESC
+}
+
+export const RECOMMENDED_RPC_ADDRESS = {
+  [NetworkType.Testnet]: RPC.TEST,
+  [NetworkType.Mainnet]: RPC.MAIN_HELIUS,
+  [NetworkType.Devnet]: RPC.DEV,
+  [NetworkType.Local]: ''
+}
+
+export const DEFAULT_TOKEN_DECIMAL = 6
+
+export const COINGECKO_QUERY_COOLDOWN = 20 * 60 * 1000
+
+export const DEFAULT_TOKENS = ['ethereum', 'solana', 'usd-coin', 'dogwifhat']
+
+export const TIMEOUT_ERROR_MESSAGE =
+  'Transaction has timed out. Check the details to confirm success.'

@@ -1,66 +1,26 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes slide-down': {
-    '0%': {
-      transform: 'translateY(0%)'
-    },
-    '50%': {
-      transform: 'translateY(60%)'
-    },
-    '100%': {
-      transform: 'translateY(0%)'
-    }
-  },
-  '@keyframes slide-up': {
-    '0%': {
-      transform: 'translateY(0%)'
-    },
-    '50%': {
-      transform: 'translateY(-70%)'
-    },
-    '100%': {
-      transform: 'translateY(0%)'
-    }
-  },
-
-  '@keyframes slide-down-xs': {
-    '0%': {
-      transform: 'translateY(0%)'
-    },
-    '50%': {
-      transform: 'translateY(90%)'
-    },
-    '100%': {
-      transform: 'translateY(0%)'
-    }
-  },
-  '@keyframes slide-up-xs': {
-    '0%': {
-      transform: 'translateY(0%)'
-    },
-    '50%': {
-      transform: 'translateY(-110%)'
-    },
-    '100%': {
-      transform: 'translateY(0%)'
-    }
-  },
+export const useStyles = makeStyles()((theme: Theme) => ({
   swapWrapper: {
+    maxWidth: '100%',
     display: 'flex',
     flexDirection: 'column',
-    [theme.breakpoints.down('xs')]: {
-      padding: '0 16px'
+    [theme.breakpoints.down('sm')]: {
+      padding: '0 8px'
     }
   },
   header: {
+    maxWidth: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     width: 500,
     position: 'relative',
     paddingBottom: 9,
+    rowGap: 8,
+
     '& h1': {
       ...typography.heading4,
       color: colors.white.main
@@ -72,7 +32,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     transition: 'filter 100ms',
     '&:hover': {
-      filter: 'brightness(1.5)'
+      filter: 'brightness(1.5)',
+      '@media (hover: none)': {
+        filter: 'none'
+      }
     }
   },
   settingsIcon: {
@@ -81,7 +44,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     transition: 'filter 100ms',
     '&:hover': {
-      filter: 'brightness(1.5)'
+      filter: 'brightness(1.5)',
+      '@media (hover: none)': {
+        filter: 'none'
+      }
     }
   },
   HiddenTransactionButton: {
@@ -89,9 +55,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: 'none',
     minWidth: 'auto',
     color: colors.invariant.lightHover,
+    padding: 0,
     '&:hover': {
       filter: 'brightness(1.15)',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      '@media (hover: none)': {
+        filter: 'none'
+      }
+    },
+    '@media (max-width: 400px)': {
+      width: '100%'
     }
   },
 
@@ -99,7 +72,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: 'none !important',
     border: 'none',
     minWidth: 'auto',
-    color: colors.invariant.lightHover
+    padding: 0,
+    color: colors.invariant.lightHover,
+    '@media (max-width: 400px)': {
+      width: '100%'
+    }
   },
 
   swapControls: {
@@ -124,7 +101,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 0,
     minWidth: 'auto',
     background: 'none',
-    '& :hover': {
+    '&:hover': {
       background: 'none'
     }
   },
@@ -132,12 +109,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute'
   },
   root: {
+    maxWidth: '100%',
     background: colors.invariant.component,
     borderRadius: 24,
     paddingInline: 24,
     paddingBottom: 22,
     paddingTop: 16,
-    width: 500
+    width: 500,
+    [theme.breakpoints.down('sm')]: {
+      padding: '16px 8px'
+    }
   },
 
   connectWalletButton: {
@@ -145,7 +126,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '16px !important',
     width: '100%',
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100% !important'
     }
   },
@@ -158,19 +139,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative'
   },
   amountInputDown: {
-    animation: '$slide-down 300ms linear',
+    animation: 'slide-down 300ms linear',
 
-    [theme.breakpoints.down('xs')]: {
-      animation: '$slide-down-xs 300ms linear'
+    [theme.breakpoints.down('sm')]: {
+      animation: 'slide-down-xs 300ms linear'
     }
   },
 
   amountInputUp: {
-    animation: '$slide-up 300ms linear',
-
-    [theme.breakpoints.down('xs')]: {
-      animation: '$slide-up-xs 300ms linear'
-    }
+    animation: 'slide-up 300ms linear'
   },
 
   swapArrowBox: {
@@ -185,13 +162,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 2,
     left: '50%',
     top: '0%',
-    transform: 'translateX(-50%) translateY(-40%)',
+    transform: 'translateX(-50%) translateY(-6px)',
     cursor: 'pointer',
-    transition: 'background-color 200ms',
-
-    [theme.breakpoints.down('xs')]: {
-      transform: 'translateX(-50%) translateY(-14%)'
-    }
+    transition: 'background-color 200ms'
   },
   swapImgRoot: {
     background: colors.invariant.newDark,
@@ -202,7 +175,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     borderRadius: 100,
     '&:hover': {
-      backgroundColor: colors.invariant.light
+      backgroundColor: colors.invariant.light,
+      '@media (hover: none)': {
+        backgroundColor: colors.invariant.newDark
+      }
     }
   },
 
@@ -219,33 +195,63 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    flexFlow: 'row nowrap',
-    marginTop: 5,
-    position: 'relative',
+    flexFlow: 'row',
+    flexWrap: 'wrap',
+    marginTop: 12,
+    marginBottom: 12,
     cursor: 'default',
-    filter: 'brightness(0.9)'
+    filter: 'brightness(0.9)',
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column-reverse',
+      gap: 4
+    }
+  },
+  transactionDetailsInner: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    }
+  },
+  transactionDetailsButton: {
+    [theme.breakpoints.down('sm')]: {
+      flexGrow: 1
+    }
   },
   transactionDetailsWrapper: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'center',
     backgroundColor: colors.invariant.light,
-    margin: '16px 0 ',
     paddingInline: 15,
     borderRadius: '10px',
     alignItems: 'center',
-    height: 32
+    height: 34
   },
 
   transactionDetailsHeader: {
     ...typography.caption2,
     whiteSpace: 'nowrap',
     pointerEvents: 'none',
-
-    [theme.breakpoints.down('xs')]: {
-      ...typography.tiny2
-    }
+    color: colors.invariant.lightGrey
   },
 
+  exchangeRateWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    },
+
+    '& svg ': {
+      height: 32 + '!important',
+      width: 20,
+      minWidth: '100%'
+    }
+  },
   swapButton: {
     width: '100%',
     height: 48
@@ -264,29 +270,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '5px 15px 5px 15px'
   },
 
-  transactionBottom: {
-    marginTop: 10,
-
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 36
-    }
-  },
+  transactionBottom: {},
 
   transtactionData: {
     border: `1px solid ${colors.invariant.light}`,
     borderRadius: '10px',
     padding: '5px 15px 5px 15px',
     color: colors.invariant.lightGrey
-  },
-
-  buttonSelectDisabled: {
-    background: `${colors.invariant.pinkLinearGradient} !important`,
-
-    '&:hover': {
-      filter: 'brightness(1.15)',
-      boxShadow:
-        '0px 3px 1px -2px rgba(43, 193, 144, 0.2),0px 1px 2px 0px rgba(45, 168, 128, 0.14),0px 0px 5px 7px rgba(59, 183, 142, 0.12)'
-    }
   },
   ButtonSwapActive: {
     transition: 'filter 0.3s linear',
@@ -299,10 +289,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   infoIcon: {
+    display: 'inline-block',
     width: 10,
     height: 10,
     marginLeft: 4,
-    marginBottom: 2,
+
     filter: 'brightness(0.8)',
     pointerEvents: 'none'
   },
@@ -310,7 +301,63 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8
+    gap: 8,
+    flexWrap: 'wrap'
+  },
+  slippageButton: {
+    height: 27,
+    padding: '0px 8px',
+    borderRadius: 8,
+    backgroundColor: colors.invariant.component,
+    color: colors.invariant.textGrey,
+    fontSize: 14,
+    cursor: 'pointer',
+    userSelect: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    textTransform: 'none',
+
+    '&:hover': {
+      background: colors.invariant.light,
+      color: colors.invariant.text,
+      '@media (hover: none)': {
+        backgroundColor: colors.invariant.component,
+        color: colors.invariant.textGrey
+      }
+    }
+  },
+  slippageAmount: {
+    color: colors.invariant.green
+  },
+  swapLabel: {
+    ...typography.caption1,
+    color: colors.invariant.lightGrey,
+    marginBottom: 8
+  },
+  unwrapContainer: {
+    background: colors.invariant.component,
+    color: colors.white.main,
+    borderRadius: 8,
+    padding: 4,
+    paddingInline: 12,
+    marginBottom: 16
+  },
+  unwrapNowButton: {
+    cursor: 'pointer'
+  },
+  unknownWarningContainer: {
+    marginTop: 12,
+    display: 'flex',
+    gap: 12
+  },
+  unknownWarning: {
+    width: 'fit-content',
+    background: colors.invariant.yellow,
+    color: colors.invariant.black,
+    padding: 4,
+    paddingInline: 8,
+    borderRadius: 8,
+    fontSize: 12
   }
 }))
 

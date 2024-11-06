@@ -1,5 +1,5 @@
-const fs = require('fs')
-const axios = require('axios')
+import * as fs from 'node:fs'
+import axios from 'axios'
 
 const run = async () => {
   const tokensObject = await (

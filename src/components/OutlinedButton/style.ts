@@ -1,7 +1,7 @@
 import { colors, typography, theme } from '@static/theme'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   general: {
     width: 26,
     maxWidth: 26,
@@ -13,10 +13,13 @@ const useStyles = makeStyles(() => ({
     marginTop: 1,
     textTransform: 'none',
     '&:hover': {
-      background: `${colors.invariant.green} !important`
+      background: `${colors.invariant.green} !important`,
+      '@media (hover: none)': {
+        background: 'rgba(46, 224, 154, 0.8)'
+      }
     },
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       ...typography.tiny2,
       width: 26,
       maxWidth: 26,

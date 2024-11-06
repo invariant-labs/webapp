@@ -1,26 +1,27 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { theme } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles()(() => ({
   container: {
     display: 'flex',
     minHeight: '70vh',
     marginTop: '65px',
     justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'transparent',
     paddingInline: 94,
+    maxWidth: '100%',
+
+    [theme.breakpoints.down('lg')]: {
+      paddingInline: 36
+    },
 
     [theme.breakpoints.down('md')]: {
       paddingInline: 40
     },
 
     [theme.breakpoints.down('sm')]: {
-      paddingInline: 24
-    },
-
-    [theme.breakpoints.down('xs')]: {
-      paddingInline: 16
+      paddingInline: 8
     }
   }
 }))
-
-export default useStyles

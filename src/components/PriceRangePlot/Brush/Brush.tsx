@@ -27,10 +27,11 @@ export const Handle: React.FC<HandleProps> = ({
   onStart,
   disabled = false
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const [drag, setDrag] = useState(false)
   const [currentPosition, setCurrentPosition] = useState(position)
   const [offset, setOffset] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
 
   const handleRef = useRef<SVGRectElement>(null)
 
@@ -111,7 +112,13 @@ export const Handle: React.FC<HandleProps> = ({
         <MinHandle
           height={height}
           x={!isReversed() ? currentPosition - 37 : currentPosition}
-          fill={disabled ? colors.invariant.light : colors.invariant.pink}
+          fill={
+            disabled
+              ? colors.invariant.light
+              : isHovered
+                ? colors.invariant.lightPink
+                : colors.invariant.pink
+          }
           textColor={disabled ? colors.invariant.lightHover : colors.invariant.componentBcg}
           isReversed={isReversed()}
         />
@@ -119,7 +126,13 @@ export const Handle: React.FC<HandleProps> = ({
         <MaxHandle
           height={height}
           x={!isReversed() ? currentPosition : currentPosition - 37}
-          fill={disabled ? colors.invariant.light : colors.invariant.pink}
+          fill={
+            disabled
+              ? colors.invariant.light
+              : isHovered
+                ? colors.invariant.lightPink
+                : colors.invariant.pink
+          }
           textColor={disabled ? colors.invariant.lightHover : colors.invariant.componentBcg}
           isReversed={isReversed()}
         />
@@ -131,8 +144,8 @@ export const Handle: React.FC<HandleProps> = ({
           drag
             ? 0
             : (isStart && !isReversed()) || (!isStart && isReversed())
-            ? currentPosition - 40
-            : currentPosition
+              ? currentPosition - 40
+              : currentPosition
         }
         y={0}
         width={drag ? plotWidth : 42}
@@ -145,6 +158,8 @@ export const Handle: React.FC<HandleProps> = ({
         onTouchEnd={!disabled ? endDrag : undefined}
         onTouchMove={!disabled ? dragTouchHandler : undefined}
         onTouchCancel={!disabled ? endDrag : undefined}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseOut={() => setIsHovered(false)}
         fill='transparent'
       />
     </>
@@ -247,18 +262,17 @@ export const Brush =
     plotMax: number,
     disabled: boolean = false
   ): React.FC<CustomLayerProps> =>
-  layerProps =>
-    (
-      <InnerBrush
-        leftPosition={leftPosition}
-        rightPosition={rightPosition}
-        onLeftDrop={onLeftDrop}
-        onRightDrop={onRightDrop}
-        plotMin={plotMin}
-        plotMax={plotMax}
-        disabled={disabled}
-        {...layerProps}
-      />
-    )
+  layerProps => (
+    <InnerBrush
+      leftPosition={leftPosition}
+      rightPosition={rightPosition}
+      onLeftDrop={onLeftDrop}
+      onRightDrop={onRightDrop}
+      plotMin={plotMin}
+      plotMax={plotMax}
+      disabled={disabled}
+      {...layerProps}
+    />
+  )
 
 export default Brush

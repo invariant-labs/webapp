@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core'
 import { colors, typography, theme } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyle = makeStyles(() => ({
+export const useStyles = makeStyles()(() => ({
   container: {
     maxWidth: 1072,
     width: '100%',
@@ -51,5 +51,3 @@ const useStyle = makeStyles(() => ({
     fontWeight: 400
   }
 }))
-
-export default useStyle

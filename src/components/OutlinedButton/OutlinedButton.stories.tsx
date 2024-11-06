@@ -1,35 +1,32 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
-import { withKnobs } from '@storybook/addon-knobs'
-import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
-import { action } from '@storybook/addon-actions'
-import { colors } from '@static/theme'
+import { MemoryRouter } from 'react-router-dom'
+import { OutlinedButton } from './OutlinedButton'
 
-storiesOf('buttons/OutlinedButton', module)
-  .addDecorator(withKnobs)
-  .add('primary', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
-      <OutlinedButton name='Mint' color='primary' onClick={action('clicked')} />
-    </div>
-  ))
-  .add('secondary', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
-      <OutlinedButton name='Mint' color='secondary' onClick={action('clicked')} />
-    </div>
-  ))
-  .add('primary:disabled', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
-      <OutlinedButton name='Mint' disabled={true} color='primary' onClick={action('clicked')} />
-    </div>
-  ))
-  .add('secondary:disabled', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
-      <OutlinedButton name='Mint' disabled={true} color='secondary' onClick={action('clicked')} />
-    </div>
-  ))
-  .add('animated', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
-      <OutlinedButton name='Mint' disabled={false} color='secondary'
-      />
-    </div>
-  ))
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
+import { Provider } from 'react-redux'
+import { store } from '@store/index'
+
+const meta = {
+  title: 'Buttons/OutlinedButton',
+  component: OutlinedButton,
+  decorators: [
+    Story => (
+      <Provider store={store}>
+        <MemoryRouter>
+          <Story />
+        </MemoryRouter>
+      </Provider>
+    )
+  ]
+} satisfies Meta<typeof OutlinedButton>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Primary: Story = {
+  args: {
+    name: 'Connect button',
+    onClick: fn(),
+    disabled: false
+  }
+}

@@ -1,4 +1,3 @@
-import { printBN } from '@consts/utils'
 import { calculatePriceSqrt, getX, getY } from '@invariant-labs/sdk/lib/math'
 import { createSelector } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
@@ -6,6 +5,7 @@ import { IFarmsStore, farmsSliceName, ExtendedIncentive, ExtendedStake } from '.
 import { keySelectors, AnyProps } from './helpers'
 import { pools } from './pools'
 import { positionsList, positionsWithPoolsData } from './positions'
+import { printBN } from '@utils/utils'
 
 const store = (s: AnyProps) => s[farmsSliceName] as IFarmsStore
 

@@ -1,11 +1,13 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
-import { withKnobs } from '@storybook/addon-knobs'
-import { colors } from '@static/theme'
-import Select from '@components/Inputs/Select/Select'
-import { PublicKey } from '@solana/web3.js'
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
+import Select from './Select'
+import { SwapToken } from '@store/selectors/solanaWallet'
 import { BN } from '@project-serum/anchor'
-import { SwapToken } from '@selectors/solanaWallet'
+import { PublicKey } from '@solana/web3.js'
+import { NetworkType } from '@store/consts/static'
+import { Provider } from 'react-redux'
+import { store } from '@store/index'
+import { MemoryRouter } from 'react-router-dom'
 
 const tokens: Record<string, SwapToken> = {
   So11111111111111111111111111111111111111112: {
@@ -37,41 +39,40 @@ const tokens: Record<string, SwapToken> = {
   }
 }
 
-storiesOf('Inputs/select', module)
-  .addDecorator(withKnobs)
-  .add('default - token', () => (
-    <div style={{ backgroundColor: colors.invariant.component, padding: '100px' }}>
-      <Select
-        current={null}
-        commonTokens={[
-          new PublicKey('So11111111111111111111111111111111111111112'),
-          new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-          new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
-        ]}
-        name='Select a token'
-        tokens={tokens}
-        onSelect={() => {}}
-        handleAddToken={() => {}}
-        initialHideUnknownTokensValue={false}
-        onHideUnknownTokensChange={() => {}}
-      />
-    </div>
-  ))
-  .add('chosen - token', () => (
-    <div style={{ backgroundColor: colors.invariant.component, padding: '100px' }}>
-      <Select
-        current={tokens[0]}
-        commonTokens={[
-          new PublicKey('So11111111111111111111111111111111111111112'),
-          new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-          new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
-        ]}
-        name='Select a token'
-        tokens={tokens}
-        onSelect={() => {}}
-        handleAddToken={() => {}}
-        initialHideUnknownTokensValue={false}
-        onHideUnknownTokensChange={() => {}}
-      />
-    </div>
-  ))
+const meta = {
+  title: 'Inputs/Select',
+  component: Select,
+  decorators: [
+    Story => (
+      <Provider store={store}>
+        <MemoryRouter>
+          <Story />
+        </MemoryRouter>
+      </Provider>
+    )
+  ],
+  args: {}
+} satisfies Meta<typeof Select>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Primary: Story = {
+  args: {
+    name: 'Select token',
+    current: null,
+    onSelect: fn(),
+    commonTokens: [
+      new PublicKey('So11111111111111111111111111111111111111112'),
+      new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+      new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
+    ],
+    handleAddToken: fn(),
+    initialHideUnknownTokensValue: false,
+    tokens: tokens,
+    onHideUnknownTokensChange: fn(),
+    centered: false,
+    hiddenUnknownTokens: false,
+    network: NetworkType.Testnet
+  }
+}

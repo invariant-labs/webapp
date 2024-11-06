@@ -1,20 +1,20 @@
-import React from 'react'
-import { Grid } from '@material-ui/core'
 import { SinglePositionWrapper } from '@containers/SinglePositionWrapper/SinglePositionWrapper'
+import { Grid } from '@mui/material'
+import React from 'react'
+import { useParams } from 'react-router-dom'
 import useStyles from './styles'
 
-export interface IProps {
-  id: string
-}
-
-export const SinglePositionPage: React.FC<IProps> = ({ id }) => {
-  const classes = useStyles()
+const SinglePositionPage: React.FC = () => {
+  const { id } = useParams()
+  const { classes } = useStyles()
 
   return (
     <Grid container className={classes.container} justifyContent='center'>
       <Grid item>
-        <SinglePositionWrapper id={id} />
+        <SinglePositionWrapper id={id ?? ''} />
       </Grid>
     </Grid>
   )
 }
+
+export default SinglePositionPage

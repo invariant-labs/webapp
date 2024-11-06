@@ -1,20 +1,26 @@
 import React from 'react'
-import { Typography, Popover, Grid } from '@material-ui/core'
-import { ExitToApp } from '@material-ui/icons'
 import useStyles from './style'
+import { Grid, Popover, Typography } from '@mui/material'
+import copyAddressIcon from '@static/svg/copy-address.svg'
+import walletIcon from '@static/svg/wallet.svg'
+import disconnectIcon from '@static/svg/disconnect.svg'
 export interface IConnectWalletModal {
   open: boolean
   anchorEl: HTMLButtonElement | null
   handleClose: () => void
   callDisconect: () => void
+  callCopyAddress?: () => void
+  callChangeWallet?: () => void
 }
 export const ConnectWallet: React.FC<IConnectWalletModal> = ({
   open,
   anchorEl,
   handleClose,
-  callDisconect
+  callDisconect,
+  callCopyAddress = () => {},
+  callChangeWallet = () => {}
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   return (
     <Popover
@@ -31,8 +37,16 @@ export const ConnectWallet: React.FC<IConnectWalletModal> = ({
         horizontal: 'center'
       }}>
       <Grid className={classes.root} container alignContent='space-around' direction='column'>
+        <Grid item className={classes.listItem} onClick={callCopyAddress}>
+          <img src={copyAddressIcon} className={classes.icon} alt='Copy address icon' />
+          <Typography className={classes.name}>Copy address</Typography>
+        </Grid>
+        <Grid item className={classes.listItem} onClick={callChangeWallet}>
+          <img src={walletIcon} className={classes.icon} alt='Change wallet icon' />
+          <Typography className={classes.name}>Change wallet</Typography>
+        </Grid>
         <Grid item className={classes.listItem} onClick={callDisconect}>
-          <ExitToApp className={classes.icon} />
+          <img src={disconnectIcon} className={classes.icon} alt='Disconnect icon' />
           <Typography className={classes.name}>Disconnect</Typography>
         </Grid>
       </Grid>

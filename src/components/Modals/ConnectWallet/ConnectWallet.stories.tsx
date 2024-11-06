@@ -1,13 +1,21 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
-import { action } from '@storybook/addon-actions'
+import type { Meta, StoryObj } from '@storybook/react'
 import ConnectWallet from './ConnectWallet'
+import { fn } from '@storybook/test'
 
-storiesOf('modals/newconnectWallet', module).add('default', () => (
-  <ConnectWallet
-    open={true}
-    handleClose={() => {}}
-    callDisconect={action('disconnect')}
-    anchorEl={null}
-  />
-))
+const meta = {
+  title: 'Modals/ConnectWallet',
+  component: ConnectWallet,
+  args: {
+    anchorEl: null,
+    callDisconect: () => {},
+    handleClose: () => {},
+    open: true
+  }
+} satisfies Meta<typeof ConnectWallet>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Primary: Story = {
+  args: { open: true, anchorEl: null, handleClose: fn(), callDisconect: fn() }
+}

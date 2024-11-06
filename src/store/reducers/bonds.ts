@@ -2,7 +2,7 @@ import { BondSaleStruct, BondStruct } from '@invariant-labs/bonds-sdk/lib/sale'
 import { BN } from '@project-serum/anchor'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
-import { PayloadType } from './types'
+import { PayloadType } from '@store/consts/types'
 
 export interface BondSaleWithAddress extends BondSaleStruct {
   address: PublicKey

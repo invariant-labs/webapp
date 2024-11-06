@@ -1,13 +1,14 @@
+import { Typography } from '@mui/material'
 import React from 'react'
-import { Typography } from '@material-ui/core'
 import { useLabelStyles } from './style'
-import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined'
-import { Color } from '@material-ui/lab'
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
+import { VariantType } from 'notistack'
+import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 
 export interface IProps {
   displayLength: number
   marketId: string
-  copyPoolAddressHandler: (message: string, variant: Color) => void
+  copyPoolAddressHandler: (message: string, variant: VariantType) => void
   style?: React.CSSProperties
 }
 
@@ -17,7 +18,7 @@ export const MarketIdLabel: React.FC<IProps> = ({
   copyPoolAddressHandler,
   style
 }) => {
-  const classes = useLabelStyles()
+  const { classes } = useLabelStyles()
 
   const copyToClipboard = () => {
     navigator.clipboard
@@ -34,7 +35,9 @@ export const MarketIdLabel: React.FC<IProps> = ({
     <Typography className={classes.marketId} style={style}>
       Market ID: {marketId.slice(0, displayLength)}...
       {marketId.slice(marketId.length - displayLength, marketId.length)}{' '}
-      <FileCopyOutlinedIcon className={classes.clipboardIcon} onClick={copyToClipboard} />
+      <TooltipHover text='Copy'>
+        <FileCopyOutlinedIcon className={classes.clipboardIcon} onClick={copyToClipboard} />
+      </TooltipHover>
     </Typography>
   )
 }

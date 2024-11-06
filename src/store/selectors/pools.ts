@@ -10,14 +10,22 @@ export const {
   poolTicks,
   isLoadingLatestPoolsForTransaction,
   tickMaps,
-  volumeRanges
+  volumeRanges,
+  isLoadingTicksAndTickMaps,
+  isLoadingTokens,
+  isLoadingPathTokens,
+  isLoadingTokensError
 } = keySelectors(store, [
   'pools',
   'tokens',
   'poolTicks',
   'isLoadingLatestPoolsForTransaction',
   'tickMaps',
-  'volumeRanges'
+  'volumeRanges',
+  'isLoadingTicksAndTickMaps',
+  'isLoadingTokens',
+  'isLoadingPathTokens',
+  'isLoadingTokensError'
 ])
 
 export const poolsArraySortedByFees = createSelector(pools, allPools =>
@@ -32,7 +40,11 @@ export const poolsSelectors = {
   poolTicks,
   isLoadingLatestPoolsForTransaction,
   tickMaps,
-  volumeRanges
+  volumeRanges,
+  isLoadingTicksAndTickMaps,
+  isLoadingTokens,
+  isLoadingPathTokens,
+  isLoadingTokensError
 }
 
 export default poolsSelectors

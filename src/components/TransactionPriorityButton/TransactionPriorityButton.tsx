@@ -1,7 +1,7 @@
-import { Button, Grid, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 import React from 'react'
-import useStyles from './style'
+import { Button, Grid, Typography } from '@mui/material'
+import { useStyles } from './style'
 
 interface Props {
   areButtonsSelected: boolean
@@ -24,7 +24,7 @@ const TransactionPriorityButton: React.FC<Props> = ({
   description,
   onClick
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const handleClick = () => {
     onClick(index, saveValue)

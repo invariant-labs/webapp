@@ -1,17 +1,18 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles()((theme: Theme) => ({
   infoTypeLabel: {
     textTransform: 'uppercase',
     color: colors.invariant.lightGrey,
     ...typography.body2,
     lineHeight: '35px',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       ...typography.caption4,
       lineHeight: '35px'
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       ...typography.body2,
       lineHeight: '35px'
     }
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 6,
     width: 61,
     padding: 2,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginRight: 0
     }
   },
@@ -38,7 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     fontSize: 16,
-    width: '100%'
+    width: '100%',
+    padding: '0 4px',
+    textWrap: 'nowrap'
   },
   infoAmount: {
     color: colors.invariant.text,
@@ -58,11 +61,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     lineHeight: '35px',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       ...typography.caption3,
       lineHeight: '35px'
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       ...typography.caption1,
       lineHeight: '35px'
     }

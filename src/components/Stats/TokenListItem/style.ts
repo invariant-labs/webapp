@@ -1,24 +1,21 @@
-import { makeStyles } from '@material-ui/core'
+import { Theme } from '@mui/material'
 import { typography, colors } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()((theme: Theme) => ({
   container: {
     display: 'grid',
-    gridTemplateColumns: '5% 45% 17.5% 17.5% 15%',
+    gridTemplateColumns: '5% 35% 20% 20% 20%',
     padding: '18px 0 ',
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`,
     whiteSpace: 'nowrap',
 
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '5% 45% 17.5% 17.5% 15%',
+      gridTemplateColumns: '30% 22.5% 32.5% 15%',
       '& p': {
-        ...typography.caption2
+        ...typography.caption1
       }
-    },
-
-    [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: '15% 25% 35% 25%'
     }
   },
 
@@ -59,14 +56,6 @@ export const useStyles = makeStyles(theme => ({
       overflow: 'hidden',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis'
-    },
-
-    '& img': {
-      minWidth: 28,
-      maxWidth: 28,
-      height: 28,
-      marginRight: 8,
-      borderRadius: '50%'
     }
   },
 
@@ -78,5 +67,28 @@ export const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('sm')]: {
       marginLeft: -4
     }
+  },
+  imageContainer: {
+    minWidth: 28,
+    maxWidth: 28,
+    height: 28,
+    marginRight: 8,
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center'
+  },
+  tokenIcon: {
+    minWidth: 28,
+    maxWidth: 28,
+    height: 28,
+    marginRight: 8,
+    borderRadius: '50%'
+  },
+  warningIcon: {
+    position: 'absolute',
+    width: 12,
+    height: 12,
+    bottom: -6,
+    right: -6
   }
 }))

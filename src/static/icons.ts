@@ -1,58 +1,43 @@
-import WSOLIcon from './icons/wsol.svg'
-import USDCIcon from './icons/usdc.svg'
-import USDIcon from './svg/xusd-coin.svg'
-import SOLIcon from './svg/solcoin.svg'
-import BTCIcon from './svg/bitcoin.svg'
-import ETHIcon from './svg/ethcoin.svg'
-import FTTIcon from './svg/fttcoin.svg'
-import SNYIcon from './svg/snycoin.svg'
 import clearIcon from './svg/clear.svg'
-import mainnet from './svg/mainnet.svg'
-import devnet from './svg/devnet.svg'
-import testnet from './svg/testnet.svg'
-import dogeIcon from './svg/dogecoin.svg'
+import mainnetIcon from './svg/mainnet.svg'
+import devnetIcon from './svg/devnet.svg'
+import testnetIcon from './svg/testnet.svg'
 import logoTitle from './svg/Logo.svg'
 import logoShort from './svg/LogoShort.svg'
 import arrow from './svg/arrow.svg'
 import NoCon from './svg/no-connected.svg'
-import mainnetIcon from './svg/mainNet.svg'
-import devnetIcon from './svg/devNet.svg'
-import testnetIcon from './svg/testNet.svg'
 import githubIcon from './svg/githubCircle.svg'
 import telegramIcon from './svg/telegramCircle.svg'
-import twitterIcon from './svg/twitterCircle.svg'
 import mediumIcon from './svg/mediumCircle.svg'
 import discordIcon from './svg/discordCircle.svg'
 import closeIcon from './svg/closeIcon.svg'
-import ANAIcon from './icons/ana.svg'
 import activeIcon from './svg/active.svg'
 import inactiveIcon from './svg/inactive.svg'
 import allIcon from './svg/all.svg'
 import docsIcon from './svg/docsCircle.svg'
 import closeSmallIcon from './svg/closeSmall.svg'
-import warningIcon from './svg/Warrning.svg'
+import successIcon from './svg/successIcon.svg'
+import xIcon from './svg/xCircle.svg'
+import unknownToken from './svg/unknownToken.svg'
+import newTab from './svg/newTab.svg'
+import selectToken from './svg/selectToken.svg'
+import copyAddress from './svg/copy-address.svg'
+import emptyIcon from './svg/empty.svg'
+import plusIcon from './svg/plus.svg'
+import horizontalSwapIcon from './svg/horizontalSwapArrows.svg'
+import swapListIcon from './svg/swap-list.svg'
 import a0Logo from './svg/a0Logo.svg'
 import eclipseLogo from './svg/eclipseLogo.svg'
 import solanaLogo from './svg/solanaLogo.svg'
 import varaLogo from './svg/VaraLogo.svg'
+import warningIcon from './svg/Warning.svg'
+import circleDiscord from './svg/circle-discord.svg'
+import circleTelegram from './svg/circle-telegram.svg'
+import eclipse from './svg/eclipse.svg'
 import alephiumLogo from './svg/alephiumLogo.svg'
 
 const icons: { [key: string]: string } = {
-  USDT: USDIcon,
-  stSOL: WSOLIcon,
-  USDC: USDCIcon,
-  ANA: ANAIcon,
   clear: clearIcon,
-  Mainnet: mainnet,
-  Devnet: devnet,
-  Testnet: testnet,
-  DOGE: dogeIcon,
-  SOL: SOLIcon,
-  BTC: BTCIcon,
-  ETH: ETHIcon,
-  FTT: FTTIcon,
-  SNY: SNYIcon,
-  USD: USDIcon,
   LogoShort: logoShort,
   LogoTitle: logoTitle,
   ArrowIcon: arrow,
@@ -62,7 +47,6 @@ const icons: { [key: string]: string } = {
   TestnetIcon: testnetIcon,
   GithubIcon: githubIcon,
   TelegramIcon: telegramIcon,
-  TwitterIcon: twitterIcon,
   DiscordIcon: discordIcon,
   mediumIcon: mediumIcon,
   closeIcon: closeIcon,
@@ -70,13 +54,26 @@ const icons: { [key: string]: string } = {
   inactiveIcon: inactiveIcon,
   allIcon: allIcon,
   closeSmallIcon: closeSmallIcon,
-  docsIcon,
-  warningIcon,
+  docsIcon: docsIcon,
+  successIcon: successIcon,
+  XIcon: xIcon,
+  unknownToken: unknownToken,
+  newTab: newTab,
+  selectToken: selectToken,
+  copyAddress: copyAddress,
+  empty: emptyIcon,
+  plusIcon: plusIcon,
+  horizontalSwapIcon: horizontalSwapIcon,
+  swapListIcon: swapListIcon,
   AlephZero: a0Logo,
   Eclipse: eclipseLogo,
   Solana: solanaLogo,
   Vara: varaLogo,
-  Alephium: alephiumLogo
+  Alephium: alephiumLogo,
+  warningIcon,
+  circleDiscord,
+  circleTelegram,
+  eclipse
 }
 
 export default icons

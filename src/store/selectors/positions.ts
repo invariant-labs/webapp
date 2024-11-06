@@ -1,4 +1,4 @@
-import { PoolWithAddress } from '@reducers/pools'
+import { PoolWithAddress } from '@store/reducers/pools'
 import { createSelector } from 'reselect'
 import { IPositionsStore, positionsSliceName, PositionWithAddress } from '../reducers/positions'
 import { AnyProps, keySelectors } from './helpers'
@@ -7,14 +7,21 @@ import { SwapToken, swapTokensDict } from './solanaWallet'
 
 const store = (s: AnyProps) => s[positionsSliceName] as IPositionsStore
 
-export const { lastPage, positionsList, plotTicks, currentPositionRangeTicks, initPosition } =
-  keySelectors(store, [
-    'lastPage',
-    'positionsList',
-    'plotTicks',
-    'currentPositionRangeTicks',
-    'initPosition'
-  ])
+export const {
+  lastPage,
+  positionsList,
+  plotTicks,
+  currentPositionTicks,
+  initPosition,
+  shouldNotUpdateRange
+} = keySelectors(store, [
+  'lastPage',
+  'positionsList',
+  'plotTicks',
+  'currentPositionTicks',
+  'initPosition',
+  'shouldNotUpdateRange'
+])
 
 export const lastPageSelector = createSelector(lastPage, s => s)
 
@@ -56,15 +63,15 @@ export const positionsWithPoolsData = createSelector(
 
 export const singlePositionData = (id: string) =>
   createSelector(positionsWithPoolsData, positions =>
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     positions.find(position => id === position.id.toString() + '_' + position.pool.toString())
   )
 
 export const positionsSelectors = {
   positionsList,
   plotTicks,
-  currentPositionRangeTicks,
-  initPosition
+  currentPositionTicks,
+  initPosition,
+  shouldNotUpdateRange
 }
 
 export default positionsSelectors

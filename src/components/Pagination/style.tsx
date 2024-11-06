@@ -1,11 +1,14 @@
-import { makeStyles, Theme } from '@material-ui/core'
+import { Theme } from '@mui/material/styles/createTheme'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     width: 1122,
     display: 'flex',
-    [theme.breakpoints.down('md')]: {
+    maxWidth: '100%',
+
+    [theme.breakpoints.down('lg')]: {
       width: '100%'
     },
     '& .MuiPagination-ul': {
@@ -22,7 +25,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
       color: colors.invariant.light,
       '&:hover': {
-        color: colors.invariant.lightGrey
+        color: colors.invariant.lightGrey,
+        '@media (hover: none)': {
+          color: colors.invariant.light
+        }
       }
     },
 
@@ -47,13 +53,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: colors.invariant.green
       }
     },
-    '& li:first-child button': {
+    '& li:first-of-type button': {
       backgroundColor: colors.invariant.green,
       minWidth: 40,
       minHeight: 40,
       opacity: 0.8
     },
-    '& li:first-child button:hover': {
+    '& li:first-of-type button:hover': {
       opacity: 1
     },
 
@@ -73,5 +79,3 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   }
 }))
-
-export default useStyles

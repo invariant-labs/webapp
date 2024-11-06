@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { Grid, Typography, Card, Tooltip } from '@material-ui/core'
-import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
-import { calcPrice, spacingMultiplicityGte, calcTicksAmountInRange } from '@consts/utils'
-import { PlotTickData } from '@reducers/positions'
-import { getMinTick } from '@invariant-labs/sdk/lib/utils'
-import { ILiquidityToken } from '../SinglePositionInfo/consts'
-import PlotTypeSwitch from '@components/PlotTypeSwitch/PlotTypeSwitch'
+import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
+
+import { Card, Grid, Tooltip, Typography } from '@mui/material'
 import activeLiquidity from '@static/svg/activeLiquidity.svg'
+import {
+  calcPriceByTickIndex,
+  calcTicksAmountInRange,
+  numberToString,
+  spacingMultiplicityGte
+} from '@utils/utils'
+import { PlotTickData } from '@store/reducers/positions'
+import React, { useEffect, useState } from 'react'
+import { ILiquidityToken } from '../SinglePositionInfo/consts'
 import useStyles from './style'
+import { getMinTick } from '@invariant-labs/sdk/lib/utils'
 
 export interface ISinglePositionPlot {
   data: PlotTickData[]
@@ -24,8 +29,6 @@ export interface ISinglePositionPlot {
   min: number
   max: number
   xToY: boolean
-  initialIsDiscreteValue: boolean
-  onDiscreteChange: (val: boolean) => void
   hasTicksError?: boolean
   reloadHandler: () => void
   volumeRange?: {
@@ -48,23 +51,34 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   min,
   max,
   xToY,
-  initialIsDiscreteValue,
-  onDiscreteChange,
   hasTicksError,
   reloadHandler,
   volumeRange
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [plotMin, setPlotMin] = useState(0)
   const [plotMax, setPlotMax] = useState(1)
 
-  const [isPlotDiscrete, setIsPlotDiscrete] = useState(initialIsDiscreteValue)
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
+  const [currentXtoY, setCurrentXtoY] = useState(xToY)
+
+  const middle = (Math.abs(leftRange.x) + Math.abs(rightRange.x)) / 2
+
+  const calcZoomScale = (newMaxPlot: number) => {
+    const proportionLength = newMaxPlot - middle
+    const scaleMultiplier = ((rightRange.x - middle) * 100) / proportionLength
+
+    return scaleMultiplier
+  }
+
+  //Proportion between middle of price range and right range in ratio to middle of price range and plotMax
+  const [zoomScale, setZoomScale] = useState(0.7)
 
   useEffect(() => {
     const initSideDist = Math.abs(
       leftRange.x -
-        calcPrice(
+        calcPriceByTickIndex(
           Math.max(
             spacingMultiplicityGte(getMinTick(tickSpacing), tickSpacing),
             leftRange.index - tickSpacing * 15
@@ -75,14 +89,32 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         )
     )
 
-    setPlotMin(leftRange.x - initSideDist)
-    setPlotMax(rightRange.x + initSideDist)
-  }, [leftRange, rightRange])
+    if (currentXtoY !== xToY) {
+      const plotMax = ((rightRange.x - middle) * 100) / zoomScale + middle
+      const plotMin = -(((middle - leftRange.x) * 100) / zoomScale - middle)
+
+      setPlotMax(plotMax)
+      setPlotMin(plotMin)
+      setCurrentXtoY(xToY)
+    }
+
+    if (isInitialLoad) {
+      setIsInitialLoad(false)
+      setPlotMin(leftRange.x - initSideDist)
+      setPlotMax(rightRange.x + initSideDist)
+
+      setZoomScale(calcZoomScale(rightRange.x + initSideDist))
+    }
+  }, [ticksLoading, leftRange, rightRange, isInitialLoad])
 
   const zoomMinus = () => {
     const diff = plotMax - plotMin
     const newMin = plotMin - diff / 4
     const newMax = plotMax + diff / 4
+
+    const zoomMultiplier = calcZoomScale(newMax)
+    setZoomScale(zoomMultiplier)
+
     setPlotMin(newMin)
     setPlotMax(newMax)
   }
@@ -92,14 +124,17 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     const newMin = plotMin + diff / 6
     const newMax = plotMax - diff / 6
 
+    const zoomMultiplier = calcZoomScale(newMax)
+    setZoomScale(zoomMultiplier)
+
     if (
       calcTicksAmountInRange(
         Math.max(newMin, 0),
         newMax,
-        tickSpacing,
+        Number(tickSpacing),
         xToY,
-        tokenX.decimal,
-        tokenY.decimal
+        Number(tokenX.decimal),
+        Number(tokenY.decimal)
       ) >= 4
     ) {
       setPlotMin(newMin)
@@ -111,17 +146,10 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     <Grid item className={classes.root}>
       <Grid className={classes.headerContainer} container justifyContent='space-between'>
         <Typography className={classes.header}>Price range</Typography>
-        <PlotTypeSwitch
-          onSwitch={val => {
-            setIsPlotDiscrete(val)
-            onDiscreteChange(val)
-          }}
-          initialValue={isPlotDiscrete ? 1 : 0}
-        />
-      </Grid>
-      <Grid className={classes.infoRow} container justifyContent='flex-end'>
-        <Grid container direction='column' alignItems='flex-end'>
+        <Grid>
           <Tooltip
+            enterTouchDelay={0}
+            leaveTouchDelay={Number.MAX_SAFE_INTEGER}
             title={
               <>
                 <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
@@ -138,9 +166,9 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
                   <Typography className={classes.liquidityDesc}>
                     The active liquidity range is represented by white, dashed lines in the
                     liquidity chart. Active liquidity is determined by the maximum price range
-                    resulting from the statistical volume of swaps for the last 7 days.
+                    resulting from the statistical volume of exchanges for the last 7 days.
                   </Typography>
-                  <img className={classes.liquidityImg} src={activeLiquidity} />
+                  <img className={classes.liquidityImg} src={activeLiquidity} alt='Liquidity' />
                 </Grid>
                 <Typography className={classes.liquidityNote}>
                   Note: active liquidity borders are always aligned to the nearest initialized
@@ -156,9 +184,9 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
               Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
             </Typography>
           </Tooltip>
-          <Grid>
-            <Typography className={classes.currentPrice}>Current price</Typography>
-            <Typography className={classes.globalPrice}>Global price</Typography>
+          <Grid container flexDirection='column'>
+            <Typography className={classes.currentPrice}>Current price ━━━</Typography>
+            <Typography className={classes.globalPrice}>Global price ━━━</Typography>
           </Grid>
         </Grid>
       </Grid>
@@ -179,7 +207,6 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           tickSpacing={tickSpacing}
           xDecimal={tokenX.decimal}
           yDecimal={tokenY.decimal}
-          isDiscrete={isPlotDiscrete}
           coverOnLoading
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
@@ -207,7 +234,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         </Card>
         <Card className={classes.currentPriceAmonut}>
           <Typography component='p'>
-            <Typography component='span'>{currentPrice}</Typography>
+            <Typography component='span'>{numberToString(currentPrice)}</Typography>
             {xToY ? tokenY.name : tokenX.name} per {xToY ? tokenX.name : tokenY.name}
           </Typography>
         </Card>

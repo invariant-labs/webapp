@@ -1,7 +1,8 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     width: 1122,
 
@@ -42,7 +43,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    flexWrap: 'nowrap'
+    flexWrap: 'wrap',
+    rowGap: '8px',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column-reverse',
+      alignItems: 'flex-start'
+    }
   },
   searchBar: {
     width: 221,
@@ -53,8 +59,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: '1px solid #202946',
     color: colors.invariant.lightGrey,
     ...typography.body2,
-    [theme.breakpoints.down('xs')]: {
-      maxWidth: 200
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      height: 48
     }
   },
   button: {
@@ -65,16 +72,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 40,
     minWidth: 130,
     paddingInline: 0,
-    marginLeft: 16,
     background:
       'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
 
     '&:hover': {
       background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
-      boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)'
+      boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)',
+      '@media (hover: none)': {
+        background:
+          'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+        boxShadow: 'none'
+      }
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
     }
   },
-
+  fullWidthWrapper: {
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      marginBottom: 8,
+      flexDirection: 'row-reverse'
+    }
+  },
   buttonSelectDisabled: {
     ...typography.body1,
     textTransform: 'none',
@@ -83,11 +103,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 130,
     paddingInline: 0,
     cursor: 'auto',
-    marginLeft: 16,
     background: `${colors.invariant.light} !important`,
-
+    display: 'flex',
     '&:hover': {
-      filter: 'brightness(1.15)'
+      filter: 'brightness(1.15)',
+      '@media (hover: none)': {
+        filter: 'none'
+      }
+    },
+    [theme.breakpoints.down('sm')]: {
+      flexGrow: 1
     }
   },
   buttonText: {
@@ -110,7 +135,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'block',
       marginBottom: 20,
 
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginBottom: 16
       }
     }
@@ -137,6 +162,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&:disabled': {
       opacity: 0.5
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 16
     }
   },
   refreshIcon: {
@@ -147,7 +175,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       filter: 'brightness(1.5)'
     }
+  },
+  titleMobileContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+
+    alignItems: 'center'
   }
 }))
-
-export default useStyles

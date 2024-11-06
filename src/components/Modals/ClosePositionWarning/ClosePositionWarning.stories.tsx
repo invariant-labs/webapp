@@ -1,7 +1,21 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
 import ClosePositionWarning from './ClosePositionWarning'
 
-storiesOf('modals/ClosePosition', module).add('default', () => (
-  <ClosePositionWarning open={true} onCancel={() => {}} onClose={() => {}} onClaim={() => {}} />
-))
+const meta = {
+  title: 'Modals/ClosePositionWarning',
+  component: ClosePositionWarning,
+  args: {}
+} satisfies Meta<typeof ClosePositionWarning>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Primary: Story = {
+  args: {
+    open: true,
+    onCancel: fn(),
+    onClaim: fn(),
+    onClose: fn()
+  }
+}

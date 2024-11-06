@@ -1,13 +1,30 @@
 version: 0.1
 cli:
-  version: 0.4.3-beta
+  version: 1.22.8
+plugins:
+  sources:
+    - id: trunk
+      ref: v1.6.4
+      uri: https://github.com/trunk-io/plugins
+runtimes:
+  enabled:
+    - node@18.12.1
+    - python@3.10.8
 lint:
   enabled:
-    - actionlint@1.6.4
-    - eslint@7.32.0
-    - gitleaks@7.6.1
-    - prettier@2.4.1
-  ignore:
-    - linters: [gitleaks, prettier]
-      paths:
-        - src/store/consts/tokenLists/**
+    - actionlint@1.7.4
+    - checkov@3.2.280
+    - eslint@8.57.0
+    - git-diff-check
+    - markdownlint@0.42.0
+    - oxipng@9.1.2
+    - prettier@3.3.3
+    - trufflehog@3.83.3
+    - yamllint@1.35.1
+actions:
+  disabled:
+    - trunk-announce
+    - trunk-check-pre-push
+    - trunk-fmt-pre-commit
+  enabled:
+    - trunk-upgrade-available

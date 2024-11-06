@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core'
 import { colors } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles()(() => ({
   container: {
     maxWidth: 1072,
     padding: '0 24px',

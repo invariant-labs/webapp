@@ -1,7 +1,7 @@
 import { colors, typography } from '@static/theme'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles()(() => ({
   amountInput: {
     background: colors.invariant.dark,
     color: colors.white.main,
@@ -9,15 +9,13 @@ const useStyles = makeStyles(() => ({
     ...typography.heading4,
     width: '100%',
     height: 48,
-    paddingInline: 16,
-    display: 'flex'
+    paddingInline: 16
   },
   input: {
     paddingTop: 4,
     '&:focus': {
       color: colors.white.main
-    },
-    flex: 1
+    }
   },
   globalPrice: {
     color: colors.invariant.blue,
