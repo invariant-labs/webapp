@@ -333,7 +333,7 @@ export function* handleSwapWithSOL(): Generator {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -518,7 +518,7 @@ export function* handleSwap(): Generator {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })

@@ -320,7 +320,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -554,7 +554,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -757,7 +757,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -1041,7 +1041,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -1200,7 +1200,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -1408,7 +1408,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -1599,7 +1599,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })

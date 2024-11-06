@@ -19,7 +19,7 @@ import { PoolWithAddress } from '@store/reducers/pools'
 import { PlotTickData, PositionWithAddress } from '@store/reducers/positions'
 import { Token as SPLToken, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import bs58 from 'bs58'
 import {
   BTC_DEV,
@@ -45,7 +45,7 @@ import {
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
-import { CoingeckoPriceData, Token } from '@store/consts/types'
+import { Token } from '@store/consts/types'
 import { sqrt } from '@invariant-labs/sdk/lib/math'
 
 export const transformBN = (amount: BN): string => {

@@ -24,6 +24,10 @@ export class StandardAdapter implements WalletAdapter {
     return await nightlyConnectAdapter.signTransaction(transaction)
   }
 
+  async signMessage(message: Uint8Array) {
+    return await nightlyConnectAdapter.signMessage(message)
+  }
+
   connect = async () => {
     if (!nightlyConnectAdapter.connected) {
       try {

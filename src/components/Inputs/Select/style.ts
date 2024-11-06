@@ -36,11 +36,25 @@ export const useStyles = makeStyles()((theme: Theme) => {
       top: 1,
       color: colors.white.main
     },
+    imageContainer: {
+      minWidth: 20,
+      maxWidth: 20,
+      height: 20,
+      marginRight: 5,
+      position: 'relative'
+    },
     icon: {
       marginRight: 5,
       minWidth: 20,
       height: 20,
       borderRadius: '100%'
+    },
+    warningIcon: {
+      position: 'absolute',
+      width: 12,
+      height: 12,
+      bottom: -6,
+      right: -6
     }
   }
 })

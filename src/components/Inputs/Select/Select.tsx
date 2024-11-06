@@ -3,7 +3,7 @@ import icons from '@static/icons'
 import classNames from 'classnames'
 import useStyles from './style'
 import { blurContent, unblurContent } from '@utils/uiUtils'
-import { Button } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import SelectTokenModal from '@components/Modals/SelectModals/SelectTokenModal/SelectTokenModal'
 import { SwapToken } from '@store/selectors/solanaWallet'
@@ -75,13 +75,16 @@ export const Select: React.FC<ISelectModal> = ({
         onClick={handleClick}
         startIcon={
           !current ? null : (
-            <img
-              className={classes.icon}
-              src={current.logoURI ?? icons.SNY}
-              alt={current.name + 'logo'}
-              width='20'
-              height='20'
-            />
+            <Box className={classes.imageContainer}>
+              <img
+                className={classes.icon}
+                src={current.logoURI ?? icons.SNY}
+                alt={current.name + 'logo'}
+                width='20'
+                height='20'
+              />
+              {current.isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
+            </Box>
           )
         }
         endIcon={<ExpandMoreIcon />}
