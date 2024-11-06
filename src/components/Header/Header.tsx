@@ -33,6 +33,7 @@ export interface IHeader {
   onDisconnectWallet: () => void
   defaultMainnetRPC: string
   recentPriorityFee: string
+  recentIsDynamic: boolean
   onPrioritySave: () => void
   rpcStatus: RpcStatus
 }
@@ -49,6 +50,7 @@ export const Header: React.FC<IHeader> = ({
   onDisconnectWallet,
   defaultMainnetRPC,
   recentPriorityFee,
+  recentIsDynamic,
   onPrioritySave,
   rpcStatus
 }) => {
@@ -159,6 +161,7 @@ export const Header: React.FC<IHeader> = ({
             {typeOfNetwork === NetworkType.MAINNET ? (
               <SelectPriorityButton
                 recentPriorityFee={recentPriorityFee}
+                recentIsDynamic={recentIsDynamic}
                 onPrioritySave={onPrioritySave}
               />
             ) : null}
@@ -259,6 +262,7 @@ export const Header: React.FC<IHeader> = ({
               open={priorityModal}
               anchorEl={routesModalAnchor}
               recentPriorityFee={recentPriorityFee}
+              recentIsDynamic={recentIsDynamic}
               handleClose={() => {
                 unblurContent()
                 setPriorityModal(false)
