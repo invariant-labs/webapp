@@ -36,7 +36,8 @@ export const Primary: Story = {
     open: true,
     anchorEl: null,
     onPrioritySave: fn(),
-    recentPriorityFee: '1'
+    recentPriorityFee: '1',
+    recentIsDynamic: true
   },
   render: args => <PrimaryComponent {...args} />
 }

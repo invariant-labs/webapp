@@ -277,14 +277,7 @@ export interface PoolStatsDataWithString {
 
 export interface IPriorityFeeOptions {
   label: string
-  value: number
-  saveValue: number
-  description: string
-}
-
-export interface IPriorityFeeOptions {
-  label: string
-  value: number
-  saveValue: number
+  value: number | string
+  saveValue: number | string
   description: string
 }

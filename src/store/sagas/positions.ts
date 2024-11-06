@@ -135,7 +135,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
     let initPositionTx: Transaction
     let poolSigners: Keypair[] = []
 
-    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+    const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
     const { transaction, signers } = yield* call(
       [marketProgram, marketProgram.initPoolAndPositionTx],
@@ -439,7 +439,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
 
     combinedTransaction.add(createIx).add(transferIx).add(initIx)
 
-    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+    const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
     const initPositionTx = yield* call([marketProgram, marketProgram.initPositionTx], {
       pair: new Pair(data.tokenX, data.tokenY, {
@@ -627,7 +627,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     let tx: Transaction
     let poolSigners: Keypair[] = []
 
-    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+    const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
     if (action.payload.initPool) {
       const { transaction, signers } = yield* call(
@@ -962,7 +962,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 
     let tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
 
-    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+    const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
     if (fee) {
       tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
@@ -1124,7 +1124,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
     let tx = new Transaction().add(ix)
 
-    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+    const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
     if (fee) {
       tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
@@ -1323,7 +1323,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
     }
 
-    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+    const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
     if (fee) {
       tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)
@@ -1516,7 +1516,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       tx = new Transaction().add(ix)
     }
 
-    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+    const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
     if (fee) {
       tx = yield* call([marketProgram, marketProgram.addPriorityFee], solToPriorityFee(+fee), tx)

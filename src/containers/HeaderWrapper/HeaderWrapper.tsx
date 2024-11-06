@@ -1,5 +1,7 @@
 import Header from '@components/Header/Header'
+import { RpcErrorModal } from '@components/RpcErrorModal/RpcErrorModal'
 import { RPC, CHAINS, RECOMMENDED_RPC_ADDRESS, NetworkType } from '@store/consts/static'
+import { Chain } from '@store/consts/types'
 import { actions, RpcStatus } from '@store/reducers/solanaConnection'
 import { Status, actions as walletActions } from '@store/reducers/solanaWallet'
 import { network, rpcAddress, rpcStatus } from '@store/selectors/solanaConnection'
@@ -9,8 +11,6 @@ import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
-import { Chain } from '@store/consts/types'
-import { RpcErrorModal } from '@components/RpcErrorModal/RpcErrorModal'
 
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -89,9 +89,15 @@ export const HeaderWrapper: React.FC = () => {
   const activeChain = CHAINS.find(chain => chain.name === Chain.Solana) ?? CHAINS[0]
 
   const recentPriorityFee = useMemo(() => {
-    const lastFee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+    const lastFee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
     return lastFee === null ? '' : lastFee
+  }, [])
+
+  const recentIsDynamic = useMemo(() => {
+    const lastIsDynamic = localStorage.getItem('INVARIANT_IS_DYNAMIC_FEE')
+
+    return lastIsDynamic === null ? true : lastIsDynamic === 'true'
   }, [])
 
   const currentRpcStatus = useSelector(rpcStatus)
@@ -161,6 +167,7 @@ export const HeaderWrapper: React.FC = () => {
         defaultDevnetRPC={defaultDevnetRPC}
         defaultMainnetRPC={defaultMainnetRPC}
         recentPriorityFee={recentPriorityFee}
+        recentIsDynamic={recentIsDynamic}
         onPrioritySave={() => {
           dispatch(
             snackbarsActions.add({

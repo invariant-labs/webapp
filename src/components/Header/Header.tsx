@@ -22,6 +22,7 @@ import RoutesModal from '@components/Modals/RoutesModal/RoutesModal'
 import { PublicKey } from '@solana/web3.js'
 import FaucetButton from './HeaderButton/FaucetButton'
 import SelectPriorityButton from './HeaderButton/SelectPriorityButton'
+import Priority from '@components/Modals/Priority/Priority'
 export interface IHeader {
   address: PublicKey
   onNetworkSelect: (networkType: NetworkType, rpcAddress: string, rpcName?: string) => void
@@ -41,6 +42,7 @@ export interface IHeader {
   defaultDevnetRPC: string
   defaultMainnetRPC: string
   recentPriorityFee: string
+  recentIsDynamic: boolean
   onPrioritySave: () => void
   rpcStatus: RpcStatus
 }
@@ -63,6 +65,7 @@ export const Header: React.FC<IHeader> = ({
   network,
   defaultMainnetRPC,
   recentPriorityFee,
+  recentIsDynamic,
   onPrioritySave,
   rpcStatus
 }) => {
@@ -84,6 +87,7 @@ export const Header: React.FC<IHeader> = ({
   const [RpcsModalOpen, setRpcsModalOpen] = useState(false)
   const [chainSelectOpen, setChainSelectOpen] = useState(false)
   const [routesModalAnchor, setRoutesModalAnchor] = useState<HTMLButtonElement | null>(null)
+  const [priorityModal, setPriorityModal] = useState<boolean>(false)
 
   useEffect(() => {
     setActive(landing)
@@ -208,6 +212,7 @@ export const Header: React.FC<IHeader> = ({
               {typeOfNetwork === NetworkType.Mainnet ? (
                 <SelectPriorityButton
                   recentPriorityFee={recentPriorityFee}
+                  recentIsDynamic={recentIsDynamic}
                   onPrioritySave={onPrioritySave}
                 />
               ) : null}
@@ -318,6 +323,19 @@ export const Header: React.FC<IHeader> = ({
                 : undefined
             }
           />
+          {typeOfNetwork === NetworkType.Mainnet ? (
+            <Priority
+              open={priorityModal}
+              anchorEl={routesModalAnchor}
+              recentPriorityFee={recentPriorityFee}
+              recentIsDynamic={recentIsDynamic}
+              handleClose={() => {
+                unblurContent()
+                setPriorityModal(false)
+              }}
+              onPrioritySave={onPrioritySave}
+            />
+          ) : null}
           {typeOfNetwork === NetworkType.Testnet ? (
             <SelectTestnetRPC
               networks={testnetRPCs}

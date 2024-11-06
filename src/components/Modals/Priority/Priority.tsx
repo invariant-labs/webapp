@@ -11,6 +11,7 @@ export interface IPriority {
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
   recentPriorityFee: string
+  recentIsDynamic: boolean
   onPrioritySave: () => void
 }
 
@@ -19,6 +20,7 @@ const Priority: React.FC<IPriority> = ({
   handleClose,
   anchorEl,
   recentPriorityFee,
+  recentIsDynamic,
   onPrioritySave
 }) => {
   const { classes } = useStyles()
@@ -29,19 +31,31 @@ const Priority: React.FC<IPriority> = ({
   const [inputValue, setInputValue] = useState('')
   const [saveButtonContent, setSaveButtonContent] = useState('Save settings')
   const [timerId, setTimerId] = useState<NodeJS.Timeout>()
+  const [dynamicFee, setDynamicFee] = useState<number | null>(null)
+  const [isDynamic, setIsDynamic] = useState(recentIsDynamic)
 
   const maxFee = 2
 
   useEffect(() => {
-    const index = priorityFeeOptions.findIndex(option => option.saveValue === +recentPriorityFee)
+    const index = priorityFeeOptions.findIndex(option =>
+      isDynamic ? option.saveValue === 'DYNAMIC' : option.saveValue === +recentPriorityFee
+    )
     setSelectedIndex(index)
 
     if (index !== -1) {
-      setSelectedFee(priorityFeeOptions[index].saveValue)
+      if (typeof priorityFeeOptions[index].saveValue === 'string') {
+        setSelectedFee(dynamicFee ?? 0)
+      } else {
+        setSelectedFee(priorityFeeOptions[index].saveValue)
+      }
     } else {
       setInputValue(recentPriorityFee)
       setSelectedFee(+recentPriorityFee)
     }
+
+    console.log(recentPriorityFee.toString(), recentIsDynamic.toString())
+    localStorage.setItem('INVARIANT_PRIORITY_FEE', recentPriorityFee.toString())
+    localStorage.setItem('INVARIANT_IS_DYNAMIC_FEE', recentIsDynamic.toString())
   }, [])
 
   useEffect(() => {
@@ -71,6 +85,11 @@ const Priority: React.FC<IPriority> = ({
   const handleClick = (index: number) => {
     setInputValue('')
 
+    if (index === 4) {
+      setIsDynamic(true)
+    } else {
+      setIsDynamic(false)
+    }
     setSelectedIndex(index)
   }
 
@@ -90,18 +109,53 @@ const Priority: React.FC<IPriority> = ({
     }
 
     if (+inputValue > 0) {
+      setIsDynamic(false)
       setSelectedFee(+inputValue)
-      localStorage.setItem('INVARIANT_MAINNET_PRIORITY_FEE', inputValue)
+      localStorage.setItem('INVARIANT_PRIORITY_FEE', inputValue)
     } else {
-      setSelectedFee(priorityFeeOptions[selectedIndex].saveValue)
-      localStorage.setItem(
-        'INVARIANT_MAINNET_PRIORITY_FEE',
-        priorityFeeOptions[selectedIndex].saveValue.toString()
-      )
+      if (typeof priorityFeeOptions[selectedIndex].saveValue === 'string') {
+        setIsDynamic(true)
+        setSelectedFee(dynamicFee ?? 0)
+        localStorage.setItem('INVARIANT_PRIORITY_FEE', (dynamicFee ?? 0).toString())
+        localStorage.setItem('INVARIANT_IS_DYNAMIC_FEE', 'true')
+      } else {
+        setIsDynamic(false)
+        setSelectedFee(priorityFeeOptions[selectedIndex].saveValue)
+        localStorage.setItem(
+          'INVARIANT_PRIORITY_FEE',
+          priorityFeeOptions[selectedIndex].saveValue.toString()
+        )
+        localStorage.setItem('INVARIANT_IS_DYNAMIC_FEE', 'false')
+      }
     }
 
     onPrioritySave()
     handleClose()
+  }
+
+  useEffect(() => {
+    const loadDynamicFee = async () => {
+      const dynamicFee = await getCurrentDynamicFee()
+      const fee = +(dynamicFee / 10 ** 9).toFixed(9)
+      setDynamicFee(fee)
+
+      if (isDynamic) {
+        localStorage.setItem('INVARIANT_PRIORITY_FEE', fee.toString())
+      }
+    }
+
+    void loadDynamicFee()
+    const interval = setInterval(() => {
+      void loadDynamicFee()
+    }, 60 * 1000)
+
+    return () => clearInterval(interval)
+  })
+
+  const getCurrentDynamicFee = async () => {
+    const response = await fetch('https://solanacompass.com/api/fees')
+    const data = await response.json()
+    return data['15'].avg
   }
 
   const priorityFeeOptions: IPriorityFeeOptions[] = [
@@ -113,7 +167,13 @@ const Priority: React.FC<IPriority> = ({
       description: '85% percentile fees from last 20 blocks'
     },
     { label: 'High', value: 0.05, saveValue: 0.05, description: '5x Market fee' },
-    { label: 'Turbo', value: 0.1, saveValue: 0.1, description: '10x Market fee' }
+    { label: 'Turbo', value: 0.1, saveValue: 0.1, description: '10x Market fee' },
+    {
+      label: 'Dynamic',
+      value: 'DYNAMIC',
+      saveValue: 'DYNAMIC',
+      description: 'Custom fee based on market demand'
+    }
   ]
 
   return (
@@ -146,11 +206,11 @@ const Priority: React.FC<IPriority> = ({
                 <Box>
                   <TransactionPriorityButton
                     areButtonsSelected={selectedIndex !== -1}
-                    selected={selectedIndex === index}
+                    selected={isDynamic ? params.saveValue === 'DYNAMIC' : selectedIndex === index}
                     index={index}
                     label={params.label}
-                    value={params.value}
-                    saveValue={params.saveValue}
+                    value={typeof params.value === 'string' ? dynamicFee ?? 0 : params.value}
+                    saveValue={typeof params.value === 'string' ? dynamicFee ?? 0 : params.value}
                     description={params.description}
                     onClick={handleClick}
                   />
