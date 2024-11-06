@@ -13,8 +13,8 @@ import { useLocation } from 'react-router-dom'
 
 export interface IPriorityFeeOptions {
   label: string
-  value: number
-  saveValue: number
+  value: number | string
+  saveValue: number | string
   description: string
 }
 
@@ -57,6 +57,12 @@ export const HeaderWrapper: React.FC = () => {
     const lastFee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
 
     return lastFee === null ? '' : lastFee
+  }, [])
+
+  const recentIsDynamic = useMemo(() => {
+    const lastIsDynamic = localStorage.getItem('IS_DYNAMIC_FEE')
+
+    return lastIsDynamic === null ? true : lastIsDynamic === 'true'
   }, [])
 
   const currentRpcStatus = useSelector(rpcStatus)
@@ -110,6 +116,7 @@ export const HeaderWrapper: React.FC = () => {
         rpc={currentRpc}
         defaultMainnetRPC={defaultMainnetRPC}
         recentPriorityFee={recentPriorityFee}
+        recentIsDynamic={recentIsDynamic}
         onPrioritySave={() => {
           dispatch(
             snackbarsActions.add({
