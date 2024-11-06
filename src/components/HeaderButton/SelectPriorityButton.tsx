@@ -7,10 +7,15 @@ import useStyles from './style'
 
 export interface Props {
   recentPriorityFee: string
+  recentIsDynamic: boolean
   onPrioritySave: () => void
 }
 
-export const SelectPriorityButton: React.FC<Props> = ({ recentPriorityFee, onPrioritySave }) => {
+export const SelectPriorityButton: React.FC<Props> = ({
+  recentPriorityFee,
+  recentIsDynamic,
+  onPrioritySave
+}) => {
   const classes = useStyles()
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
@@ -40,6 +45,7 @@ export const SelectPriorityButton: React.FC<Props> = ({ recentPriorityFee, onPri
         open={priorityModal}
         anchorEl={anchorEl}
         recentPriorityFee={recentPriorityFee}
+        recentIsDynamic={recentIsDynamic}
         handleClose={handleClose}
         onPrioritySave={onPrioritySave}
       />
