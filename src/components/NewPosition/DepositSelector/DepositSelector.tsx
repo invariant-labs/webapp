@@ -81,6 +81,7 @@ export interface IDepositSelector {
   walletStatus: Status
   onConnectWallet: () => void
   onDisconnectWallet: () => void
+  canNavigate: boolean
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -119,7 +120,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   walletStatus,
   onConnectWallet,
   onDisconnectWallet,
-  solBalance
+  solBalance,
+  canNavigate
 }) => {
   const { classes } = useStyles()
 
@@ -164,6 +166,26 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
     setIsLoaded(true)
   }, [tokens])
+
+  const [wasRunTokenA, setWasRunTokenA] = useState(false)
+  const [wasRunTokenB, setWasRunTokenB] = useState(false)
+
+  useEffect(() => {
+    if (canNavigate) {
+      const tokenA = tokens[tickerToAddress(network, initialTokenFrom)]
+
+      if (!wasRunTokenA && !!tokenA) {
+        setTokenA(tokenA.assetAddress)
+        setWasRunTokenA(true)
+      }
+
+      const tokenB = tokens[tickerToAddress(network, initialTokenTo)]
+      if (!wasRunTokenB && !!tokenB) {
+        setTokenB(tokenB.assetAddress)
+        setWasRunTokenB(true)
+      }
+    }
+  }, [wasRunTokenA, wasRunTokenB, canNavigate, tokens.length])
 
   const getButtonMessage = useCallback(() => {
     if (tokenA === null || tokenB === null) {

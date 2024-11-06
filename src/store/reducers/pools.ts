@@ -6,6 +6,8 @@ import { PublicKey } from '@solana/web3.js'
 import * as R from 'remeda'
 import { Range } from '@invariant-labs/sdk/lib/utils'
 import { PayloadType, Token } from '@store/consts/types'
+import { NetworkType } from '@store/consts/static'
+import { getNetworkTokensList } from '@utils/utils'
 
 export interface PoolWithAddress extends PoolStructure {
   address: PublicKey
@@ -18,6 +20,7 @@ export interface IPoolsStore {
   isLoadingLatestPoolsForTransaction: boolean
   isLoadingTicksAndTickMaps: boolean
   isLoadingTokens: boolean
+  isLoadingPathTokens: boolean
   isLoadingTokensError: boolean
   tickMaps: { [key in string]: Tickmap }
   volumeRanges: Record<string, Range[]>
@@ -50,13 +53,18 @@ export interface UpdateTickmap {
   bitmap: number[]
 }
 
+const network =
+  NetworkType[localStorage.getItem('INVARIANT_NETWORK_ECLIPSE') as keyof typeof NetworkType] ??
+  NetworkType.Mainnet
+
 export const defaultState: IPoolsStore = {
-  tokens: {},
+  tokens: { ...getNetworkTokensList(network) },
   pools: {},
   poolTicks: {},
   isLoadingLatestPoolsForTransaction: false,
   isLoadingTicksAndTickMaps: false,
   isLoadingTokens: false,
+  isLoadingPathTokens: false,
   isLoadingTokensError: false,
   tickMaps: {},
   volumeRanges: {}
@@ -93,6 +101,15 @@ const poolsSlice = createSlice({
         ...action.payload
       }
       state.isLoadingTokens = false
+      return state
+    },
+    addPathTokens(state, action: PayloadAction<Record<string, Token>>) {
+      for (const token in action.payload) {
+        if (!state.tokens[token]) {
+          state.tokens[token] = action.payload[token]
+        }
+      }
+      state.isLoadingPathTokens = false
       return state
     },
     setVolumeRanges(state, action: PayloadAction<Record<string, Range[]>>) {
@@ -161,6 +178,18 @@ const poolsSlice = createSlice({
     },
     updateTickmap(state, action: PayloadAction<UpdateTickmap>) {
       state.tickMaps[action.payload.address].bitmap = action.payload.bitmap
+    },
+    getTokens(state, _action: PayloadAction<string[]>) {
+      state.isLoadingTokens = true
+      return state
+    },
+    getPathTokens(state, _action: PayloadAction<string[]>) {
+      state.isLoadingPathTokens = true
+      return state
+    },
+    setTokensError(state, action: PayloadAction<boolean>) {
+      state.isLoadingTokensError = action.payload
+      return state
     }
   }
 })

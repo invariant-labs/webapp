@@ -117,7 +117,7 @@ export function* getToken(tokenAddress: PublicKey): SagaGenerator<Token> {
 
 export function* handleAirdrop(): Generator {
   const walletStatus = yield* select(status)
-  console.log('walletStatus', walletStatus)
+
   if (walletStatus !== Status.Initialized) {
     yield put(
       snackbarsActions.add({
@@ -142,9 +142,6 @@ export function* handleAirdrop(): Generator {
   const connection = yield* call(getConnection)
   const networkType = yield* select(network)
   const wallet = yield* call(getWallet)
-  console.log('connectipon', connection)
-  console.log('wallet', wallet)
-  console.log('networkType', networkType)
 
   let balance = 0
   try {

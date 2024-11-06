@@ -92,6 +92,24 @@ export function* fetchPoolsDataForList(action: PayloadAction<ListPoolsRequest>) 
   )
 }
 
+export function* handleGetPathTokens(action: PayloadAction<string[]>) {
+  const tokens = action.payload
+  console.log('tokens', tokens)
+  const connection = yield* getConnection()
+
+  try {
+    const tokensData = yield* call(
+      getFullNewTokensData,
+      tokens.map(token => new PublicKey(token)),
+      connection
+    )
+
+    yield* put(actions.addPathTokens(tokensData))
+  } catch (e) {
+    yield* put(actions.setTokensError(true))
+  }
+}
+
 export function* getPoolsDataForListHandler(): Generator {
   yield* takeEvery(actions.getPoolsDataForList, fetchPoolsDataForList)
 }
@@ -104,8 +122,17 @@ export function* getPoolDataHandler(): Generator {
   yield* takeLatest(actions.getPoolData, fetchPoolData)
 }
 
+export function* getPathTokensHandler(): Generator {
+  yield* takeLatest(actions.getPathTokens, handleGetPathTokens)
+}
+
 export function* poolsSaga(): Generator {
   yield all(
-    [getPoolDataHandler, getAllPoolsForPairDataHandler, getPoolsDataForListHandler].map(spawn)
+    [
+      getPoolDataHandler,
+      getAllPoolsForPairDataHandler,
+      getPoolsDataForListHandler,
+      getPathTokensHandler
+    ].map(spawn)
   )
 }

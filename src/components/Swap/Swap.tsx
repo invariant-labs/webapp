@@ -108,6 +108,7 @@ export interface ISwap {
   // wrappedETHAccountExist: boolean
   isTimeoutError: boolean
   deleteTimeoutError: () => void
+  canNavigate: boolean
 }
 
 export const Swap: React.FC<ISwap> = ({
@@ -143,7 +144,8 @@ export const Swap: React.FC<ISwap> = ({
   // unwrapWETH,
   // wrappedETHAccountExist,
   isTimeoutError,
-  deleteTimeoutError
+  deleteTimeoutError,
+  canNavigate
 }) => {
   const { classes } = useStyles()
   enum inputTarget {
@@ -207,30 +209,22 @@ export const Swap: React.FC<ISwap> = ({
   }, [isTimeoutError])
 
   useEffect(() => {
-    navigate(
-      `/exchange/${
-        tokenFrom !== null
-          ? addressToTicker(network, tokens[tokenFrom.toString()].assetAddress.toString())
-          : '-'
-      }/${
-        tokenTo !== null
-          ? addressToTicker(network, tokens[tokenTo.toString()].assetAddress.toString())
-          : '-'
-      }`,
-      {
-        replace: true
-      }
-    )
-  }, [tokenFrom, tokenTo])
+    if (canNavigate) {
+      navigate(
+        `/exchange/${tokenFrom !== null ? addressToTicker(network, tokenFrom.toString()) : '-'}/${tokenTo !== null ? addressToTicker(network, tokenTo.toString()) : '-'}`,
+        {
+          replace: true
+        }
+      )
+    }
+  }, [tokenTo, tokenFrom])
 
   useEffect(() => {
-    if (Object.keys(tokens).length && tokenFrom === null && tokenTo === null) {
-      const firstCommonToken = commonTokens[0] || null
-
-      setTokenFrom(initialTokenFrom !== null ? initialTokenFrom : firstCommonToken)
+    if (!!Object.keys(tokens).length && tokenFrom === null && tokenTo === null && canNavigate) {
+      setTokenFrom(initialTokenFrom)
       setTokenTo(initialTokenTo)
     }
-  }, [Object.keys(tokens).length])
+  }, [tokens.length, canNavigate, initialTokenFrom, initialTokenTo])
 
   useEffect(() => {
     onSetPair(tokenFrom, tokenTo)

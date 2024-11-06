@@ -103,7 +103,8 @@ export const Primary: Story = {
     priceFromLoading: false,
     priceToLoading: false,
     deleteTimeoutError: fn(),
-    isTimeoutError: false
+    isTimeoutError: false,
+    canNavigate: true
   },
   render: args => {
     return <Swap {...args} />

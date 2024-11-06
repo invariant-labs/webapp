@@ -85,7 +85,7 @@ export const convertBalanceToBN = (amount: string, decimals: number): BN => {
   if (balanceString.length !== 2) {
     return new BN(balanceString[0] + '0'.repeat(decimals))
   }
-  // console.log(balanceString[1].length)
+
   if (balanceString[1].length <= decimals) {
     return new BN(
       balanceString[0] + balanceString[1] + '0'.repeat(decimals - balanceString[1].length)
@@ -1115,14 +1115,14 @@ export const getFullNewTokensData = async (
 
   const tokens: Record<string, Token> = {}
 
-  await Promise.allSettled(promises).then(results =>
-    results.forEach((result, index) => {
-      tokens[addresses[index].toString()] = generateUnknownTokenDataObject(
-        addresses[index],
-        result.status === 'fulfilled' ? result.value.decimals : 6
-      )
-    })
-  )
+  const results = await Promise.allSettled(promises)
+
+  for (const [index, result] of results.entries()) {
+    tokens[addresses[index].toString()] = generateUnknownTokenDataObject(
+      addresses[index],
+      result.status === 'fulfilled' ? result.value.decimals : 6
+    )
+  }
 
   return tokens
 }
@@ -1546,4 +1546,4 @@ export const parsePathFeeToFeeString = (pathFee: string): string => {
 }
 
 export const shortenAddress = (address: string, chars = 4) =>
-  `${address.slice(0, chars)}...${address.slice(-chars)}`
+  address.length > 8 ? `${address.slice(0, chars)}...${address.slice(-chars)}` : address

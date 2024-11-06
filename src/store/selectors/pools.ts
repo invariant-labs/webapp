@@ -13,6 +13,7 @@ export const {
   volumeRanges,
   isLoadingTicksAndTickMaps,
   isLoadingTokens,
+  isLoadingPathTokens,
   isLoadingTokensError
 } = keySelectors(store, [
   'pools',
@@ -23,6 +24,7 @@ export const {
   'volumeRanges',
   'isLoadingTicksAndTickMaps',
   'isLoadingTokens',
+  'isLoadingPathTokens',
   'isLoadingTokensError'
 ])
 
@@ -41,6 +43,7 @@ export const poolsSelectors = {
   volumeRanges,
   isLoadingTicksAndTickMaps,
   isLoadingTokens,
+  isLoadingPathTokens,
   isLoadingTokensError
 }
 

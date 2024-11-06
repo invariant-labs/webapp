@@ -42,7 +42,12 @@ const configureAppStore = (initialState = {}) => {
         serializableCheck: {
           isSerializable,
           getEntries,
-          ignoredActions: ['positions/closePosition', 'pools/setTickMaps', 'pools/getPoolData']
+          ignoredActions: [
+            'positions/closePosition',
+            'pools/setTickMaps',
+            'pools/getPoolData',
+            'solanaConnection/handleRpcError'
+          ]
         }
       }).concat(middleware),
     preloadedState: initialState,

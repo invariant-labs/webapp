@@ -126,7 +126,8 @@ export const Primary: Story = {
     walletStatus: Status.Initialized,
     onConnectWallet: () => {},
     onDisconnectWallet: () => {},
-    setShouldResetPlot: fn()
+    setShouldResetPlot: fn(),
+    canNavigate: true
   },
   render: args => <PrimaryComponent {...args} />
 }

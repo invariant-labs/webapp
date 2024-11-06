@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import icons from '@static/icons'
 import { NetworkType, SortTypePoolList } from '@store/consts/static'
 
-import { parseFeeToPathFee } from '@utils/utils'
+import { addressToTicker, parseFeeToPathFee, shortenAddress } from '@utils/utils'
 import { formatNumber } from '@utils/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
@@ -28,7 +28,7 @@ interface IProps {
   hideBottomLine?: boolean
   addressFrom?: string
   addressTo?: string
-  network?: NetworkType
+  network: NetworkType
   apy?: number
   apyData?: {
     fees: number
@@ -52,9 +52,9 @@ const PoolListItem: React.FC<IProps> = ({
   sortType,
   onSort,
   hideBottomLine = false,
-  // addressFrom,
-  // addressTo,
-  // network
+  addressFrom,
+  addressTo,
+  network,
   // apy = 0,
   // apyData = {
   //   fees: 0,
@@ -71,16 +71,17 @@ const PoolListItem: React.FC<IProps> = ({
 
   const handleOpenPosition = () => {
     navigate(
-      `/newPosition/${symbolFrom ?? ''}/${symbolTo ?? ''}/${parseFeeToPathFee(
-        Math.round(fee * 10 ** (DECIMAL - 2))
-      )}`
+      `/newPosition/${addressToTicker(network, addressFrom ?? '')}/${addressToTicker(network, addressTo ?? '')}/${parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))}`,
+      { state: { referer: 'stats' } }
     )
   }
 
   const handleOpenSwap = () => {
-    navigate(`/exchange/${symbolFrom ?? ''}/${symbolTo ?? ''}`)
+    navigate(
+      `/exchange/${addressToTicker(network, addressFrom ?? '')}/${addressToTicker(network, addressTo ?? '')}`,
+      { state: { referer: 'stats' } }
+    )
   }
-
   return (
     <Grid maxWidth='100%'>
       {displayType === 'token' ? (
@@ -104,7 +105,7 @@ const PoolListItem: React.FC<IProps> = ({
             )}
             <Grid className={classes.symbolsContainer}>
               <Typography>
-                {symbolFrom}/{symbolTo}
+                {shortenAddress(symbolFrom ?? '')}/{shortenAddress(symbolTo ?? '')}
               </Typography>
             </Grid>
           </Grid>

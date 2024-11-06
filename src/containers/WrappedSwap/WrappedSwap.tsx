@@ -1,6 +1,10 @@
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import { Swap } from '@components/Swap/Swap'
-import { commonTokensForNetworks, DEFAULT_SWAP_SLIPPAGE } from '@store/consts/static'
+import {
+  commonTokensForNetworks,
+  DEFAULT_SWAP_SLIPPAGE,
+  WRAPPED_SOL_ADDRESS
+} from '@store/consts/static'
 import { actions as poolsActions } from '@store/reducers/pools'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { actions as walletActions } from '@store/reducers/solanaWallet'
@@ -8,6 +12,7 @@ import { actions as connectionActions } from '@store/reducers/solanaConnection'
 import { actions } from '@store/reducers/swap'
 import {
   isLoadingLatestPoolsForTransaction,
+  isLoadingPathTokens,
   poolsArraySortedByFees,
   poolTicks,
   tickMaps
@@ -28,6 +33,7 @@ import { TokenPriceData } from '@store/consts/types'
 import { openWalletSelectorModal } from '@utils/web3/selector'
 import { getCurrentSolanaConnection } from '@utils/web3/connection'
 import { VariantType } from 'notistack'
+import { useLocation } from 'react-router-dom'
 
 type Props = {
   initialTokenFrom: string
@@ -55,6 +61,9 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
   const [tokenTo, setTokenTo] = useState<PublicKey | null>(null)
   const solBalance = useSelector(balance)
   const isTimeoutError = useSelector(timeoutError)
+  const isPathTokensLoading = useSelector(isLoadingPathTokens)
+  const { state } = useLocation()
+  const [block, setBlock] = useState(state?.referer === 'stats')
 
   useEffect(() => {
     let timeoutId1: NodeJS.Timeout
@@ -92,15 +101,37 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
   const lastTokenFrom =
     tickerToAddress(networkType, initialTokenFrom) && initialTokenFrom !== '-'
       ? tickerToAddress(networkType, initialTokenFrom)
-      : localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`)
+      : localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`) ?? WRAPPED_SOL_ADDRESS
 
   const lastTokenTo =
     tickerToAddress(networkType, initialTokenTo) && initialTokenTo !== '-'
       ? tickerToAddress(networkType, initialTokenTo)
-      : localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`)
+      : localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`) ?? ''
 
-  const initTokenFrom = lastTokenFrom ? new PublicKey(lastTokenFrom) : null
-  const initTokenTo = lastTokenTo ? new PublicKey(lastTokenTo) : null
+  const initTokenFrom =
+    lastTokenFrom === null ? null : tokensDict[lastTokenFrom]?.assetAddress ?? null
+
+  const initTokenTo = lastTokenTo === null ? null : tokensDict[lastTokenTo]?.assetAddress ?? null
+
+  useEffect(() => {
+    const tokens: string[] = []
+
+    if (initTokenFrom === null && lastTokenFrom && !tokensDict[lastTokenFrom]) {
+      tokens.push(lastTokenFrom)
+    }
+
+    if (initTokenTo === null && lastTokenTo && !tokensDict[lastTokenTo]) {
+      tokens.push(lastTokenTo)
+    }
+
+    if (tokens.length) {
+      dispatch(poolsActions.getPathTokens(tokens))
+    }
+
+    setBlock(false)
+  }, [tokensDict])
+
+  const canNavigate = connection !== null && !isPathTokensLoading && !block
 
   const addTokenHandler = (address: string) => {
     if (connection !== null && !tokensDict[address]) {
@@ -155,7 +186,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
       return
     }
 
-    const id = tokensDict[tokenFrom.toString()].assetAddress.toString() ?? ''
+    const id = tokensDict[tokenFrom.toString()]?.assetAddress.toString() ?? ''
     if (id) {
       setPriceFromLoading(true)
       getJupTokenPrice(id)
@@ -175,7 +206,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
       return
     }
 
-    const id = tokensDict[tokenTo.toString()].assetAddress.toString() ?? ''
+    const id = tokensDict[tokenTo.toString()]?.assetAddress.toString() ?? ''
     if (id) {
       setPriceToLoading(true)
       getJupTokenPrice(id)
@@ -340,6 +371,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
       deleteTimeoutError={() => {
         dispatch(connectionActions.setTimeoutError(false))
       }}
+      canNavigate={canNavigate}
     />
   )
 }

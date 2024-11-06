@@ -144,25 +144,22 @@ const MarketEvents = () => {
             return
           }
           poolTicksArray[address].forEach(singleTick => {
-            marketProgram
-              .onTickChange(
-                new Pair(pool.tokenX, pool.tokenY, {
-                  fee: pool.fee.v,
-                  tickSpacing: pool.tickSpacing
-                }),
-                singleTick.index,
-                tickObject => {
-                  dispatch(
-                    actions.updateTicks({
-                      address: address,
-                      index: singleTick.index,
-                      tick: tickObject
-                    })
-                  )
-                }
-              )
-              .then(() => {})
-              .catch(() => {})
+            marketProgram.onTickChange(
+              new Pair(pool.tokenX, pool.tokenY, {
+                fee: pool.fee.v,
+                tickSpacing: pool.tickSpacing
+              }),
+              singleTick.index,
+              tickObject => {
+                dispatch(
+                  actions.updateTicks({
+                    address: address,
+                    index: singleTick.index,
+                    tick: tickObject
+                  })
+                )
+              }
+            )
           })
         })
       }

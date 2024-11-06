@@ -56,23 +56,6 @@ export function* handleSwapWithSOL(): Generator {
         (tokenFrom.equals(pool.tokenX) && tokenTo.equals(pool.tokenY)) ||
         (tokenFrom.equals(pool.tokenY) && tokenTo.equals(pool.tokenX))
     )
-    console.log('allTokens', allTokens)
-    console.log('allPools', allPools)
-    console.log('slippage', slippage)
-    console.log('tokenFrom', tokenFrom)
-    console.log('tokenTo', tokenTo)
-    console.log('amountIn', amountIn)
-    console.log('estimatedPriceAfterSwap', estimatedPriceAfterSwap)
-    console.log('poolIndex', poolIndex)
-    console.log('byAmountIn', byAmountIn)
-    console.log('amountOut', amountOut)
-    console.log('wallet', wallet)
-    console.log('tokensAccounts', tokensAccounts)
-    console.log('connection', connection)
-    console.log('networkType', networkType)
-    console.log('rpc', rpc)
-    console.log('marketProgram', marketProgram)
-    console.log('swapPool', swapPool)
 
     if (!swapPool) {
       return

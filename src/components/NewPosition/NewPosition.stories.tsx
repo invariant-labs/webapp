@@ -115,7 +115,8 @@ export const Primary: Story = {
     globalPrice: 1000000,
     noConnectedBlockerProps: {
       onConnect: fn()
-    }
+    },
+    canNavigate: true
   },
   render: () => {
     return (
@@ -181,6 +182,7 @@ export const Primary: Story = {
         noConnectedBlockerProps={{
           onConnect: fn()
         }}
+        canNavigate={true}
       />
     )
   }

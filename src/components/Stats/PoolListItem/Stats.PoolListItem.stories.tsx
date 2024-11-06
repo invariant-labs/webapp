@@ -4,7 +4,7 @@ import PoolListItem from './PoolListItem'
 import { store } from '@store/index'
 import { Provider } from 'react-redux'
 import { fn } from '@storybook/test'
-import { SortTypePoolList } from '@store/consts/static'
+import { NetworkType, SortTypePoolList } from '@store/consts/static'
 
 const meta = {
   title: 'Stats/PoolListItem',
@@ -29,7 +29,8 @@ export const Header: Story = {
   args: {
     displayType: 'header',
     onSort: fn(),
-    sortType: SortTypePoolList.TVL_DESC
+    sortType: SortTypePoolList.TVL_DESC,
+    network: NetworkType.Mainnet
   }
 }
 
@@ -46,6 +47,7 @@ export const Token: Story = {
     fee: 0.3,
     volume: 1000000000,
     TVL: 500000000,
-    hideBottomLine: false
+    hideBottomLine: false,
+    network: NetworkType.Mainnet
   }
 }

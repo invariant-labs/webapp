@@ -124,6 +124,7 @@ export interface INewPosition {
   walletStatus: Status
   onConnectWallet: () => void
   onDisconnectWallet: () => void
+  canNavigate: boolean
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -182,7 +183,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   solBalance,
   walletStatus,
   onConnectWallet,
-  onDisconnectWallet
+  onDisconnectWallet,
+  canNavigate
 }) => {
   const { classes } = useStyles()
   const navigate = useNavigate()
@@ -368,11 +370,11 @@ export const NewPosition: React.FC<INewPosition> = ({
   const bestTierIndex =
     tokenA === null || tokenB === null
       ? undefined
-      : (bestTiers.find(
+      : bestTiers.find(
           tier =>
             (tier.tokenX.equals(tokenA) && tier.tokenY.equals(tokenB)) ||
             (tier.tokenX.equals(tokenB) && tier.tokenY.equals(tokenA))
-        )?.bestTierIndex ?? undefined)
+        )?.bestTierIndex ?? undefined
 
   const getMinSliderIndex = () => {
     let minimumSliderIndex = 0
@@ -444,32 +446,34 @@ export const NewPosition: React.FC<INewPosition> = ({
   }
 
   const updatePath = (address1: PublicKey | null, address2: PublicKey | null, fee: number) => {
-    const parsedFee = parseFeeToPathFee(+ALL_FEE_TIERS_DATA[fee].tier.fee)
+    if (canNavigate) {
+      const parsedFee = parseFeeToPathFee(+ALL_FEE_TIERS_DATA[fee].tier.fee)
 
-    if (address1 != null && address2 != null) {
-      const token1Symbol = addressToTicker(
-        network,
-        tokens[address1.toString()].assetAddress.toString()
-      )
-      const token2Symbol = addressToTicker(
-        network,
-        tokens[address2.toString()].assetAddress.toString()
-      )
-      navigate(`/newPosition/${token1Symbol}/${token2Symbol}/${parsedFee}`, { replace: true })
-    } else if (address1 != null) {
-      const tokenSymbol = addressToTicker(
-        network,
-        tokens[address1.toString()].assetAddress.toString()
-      )
-      navigate(`/newPosition/${tokenSymbol}/${parsedFee}`, { replace: true })
-    } else if (address2 != null) {
-      const tokenSymbol = addressToTicker(
-        network,
-        tokens[address2.toString()].assetAddress.toString()
-      )
-      navigate(`/newPosition/${tokenSymbol}/${parsedFee}`, { replace: true })
-    } else if (fee != null) {
-      navigate(`/newPosition/${parsedFee}`, { replace: true })
+      if (address1 != null && address2 != null) {
+        const token1Symbol = addressToTicker(
+          network,
+          tokens[address1.toString()].assetAddress.toString()
+        )
+        const token2Symbol = addressToTicker(
+          network,
+          tokens[address2.toString()].assetAddress.toString()
+        )
+        navigate(`/newPosition/${token1Symbol}/${token2Symbol}/${parsedFee}`, { replace: true })
+      } else if (address1 != null) {
+        const tokenSymbol = addressToTicker(
+          network,
+          tokens[address1.toString()].assetAddress.toString()
+        )
+        navigate(`/newPosition/${tokenSymbol}/${parsedFee}`, { replace: true })
+      } else if (address2 != null) {
+        const tokenSymbol = addressToTicker(
+          network,
+          tokens[address2.toString()].assetAddress.toString()
+        )
+        navigate(`/newPosition/${tokenSymbol}/${parsedFee}`, { replace: true })
+      } else if (fee != null) {
+        navigate(`/newPosition/${parsedFee}`, { replace: true })
+      }
     }
   }
 
@@ -723,6 +727,7 @@ export const NewPosition: React.FC<INewPosition> = ({
           onConnectWallet={onConnectWallet}
           onDisconnectWallet={onDisconnectWallet}
           setShouldResetPlot={setShouldResetPlot}
+          canNavigate={canNavigate}
         />
         <Hidden mdUp>
           <Grid container justifyContent='end' mb={2}>

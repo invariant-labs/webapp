@@ -4,7 +4,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useStyles } from './style'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
-import { formatNumber } from '@utils/utils'
+import { formatNumber, shortenAddress } from '@utils/utils'
 import { SortTypeTokenList } from '@store/consts/static'
 import icons from '@static/icons'
 
@@ -61,8 +61,10 @@ const TokenListItem: React.FC<IProps> = ({
               </Box>
             )}
             <Typography>
-              {hideName ? symbol : name}
-              {!hideName && <span className={classes.tokenSymbol}>{` (${symbol})`}</span>}
+              {hideName ? shortenAddress(symbol) : name}
+              {!hideName && (
+                <span className={classes.tokenSymbol}>{` (${shortenAddress(symbol)})`}</span>
+              )}
             </Typography>
           </Grid>
           <Typography>{`~$${formatNumber(price)}`}</Typography>
