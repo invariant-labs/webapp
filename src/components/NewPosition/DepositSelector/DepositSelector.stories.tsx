@@ -127,7 +127,8 @@ export const Primary: Story = {
     onConnectWallet: () => {},
     onDisconnectWallet: () => {},
     setShouldResetPlot: fn(),
-    canNavigate: true
+    canNavigate: true,
+    isCurrentPoolExisting: false
   },
   render: args => <PrimaryComponent {...args} />
 }
