@@ -1,7 +1,7 @@
 import React from 'react'
 import { theme } from '@static/theme'
 import { useStyles } from './style'
-import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
+import { Box, Grid, Tooltip, Typography, useMediaQuery } from '@mui/material'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useNavigate } from 'react-router-dom'
@@ -55,12 +55,12 @@ const PoolListItem: React.FC<IProps> = ({
   addressFrom,
   addressTo,
   network,
-  // apy = 0,
-  // apyData = {
-  //   fees: 0,
-  //   accumulatedFarmsAvg: 0,
-  //   accumulatedFarmsSingleTick: 0
-  // }
+  apy = 0,
+  apyData = {
+    fees: 0,
+    accumulatedFarmsAvg: 0,
+    accumulatedFarmsSingleTick: 0
+  },
   isUnknownFrom,
   isUnknownTo
 }) => {
@@ -68,6 +68,7 @@ const PoolListItem: React.FC<IProps> = ({
 
   const navigate = useNavigate()
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
+  const isMd = useMediaQuery(theme.breakpoints.down('md'))
 
   const handleOpenPosition = () => {
     navigate(
@@ -89,7 +90,7 @@ const PoolListItem: React.FC<IProps> = ({
           container
           classes={{ container: classes.container }}
           style={hideBottomLine ? { border: 'none' } : undefined}>
-          {!isSm ? <Typography>{tokenIndex}</Typography> : null}
+          {!isMd ? <Typography>{tokenIndex}</Typography> : null}
           <Grid className={classes.imageContainer}>
             {!isSm && (
               <Box className={classes.iconsWrapper}>
@@ -109,12 +110,10 @@ const PoolListItem: React.FC<IProps> = ({
               </Typography>
             </Grid>
           </Grid>
-          {/* {!isSm ? (
+          {!isSm ? (
             <Typography>
               {`${apy > 1000 ? '>1000' : apy.toFixed(2)}%`}
               <Tooltip
-                enterTouchDelay={0}
-                leaveTouchDelay={Number.MAX_SAFE_INTEGER}
                 title={
                   <>
                     <Typography className={classes.liquidityTitle}>Pool APY</Typography>
@@ -148,7 +147,7 @@ const PoolListItem: React.FC<IProps> = ({
                 <span className={classes.activeLiquidityIcon}>i</span>
               </Tooltip>
             </Typography>
-          ) : null} */}
+          ) : null}
           <Typography>{fee}%</Typography>
           <Typography>{`$${formatNumber(volume)}`}</Typography>
           <Typography>{`$${formatNumber(TVL)}`}</Typography>
@@ -169,7 +168,7 @@ const PoolListItem: React.FC<IProps> = ({
         </Grid>
       ) : (
         <Grid container classes={{ container: classes.container, root: classes.header }}>
-          {!isSm && (
+          {!isMd && (
             <Typography style={{ lineHeight: '11px' }}>
               N<sup>o</sup>
             </Typography>
@@ -190,24 +189,24 @@ const PoolListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
-          {/* {!isXs ? (
+          {!isSm ? (
             <Typography
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                if (sortType === SortType.APY_DESC) {
-                  onSort?.(SortType.APY_ASC)
+                if (sortType === SortTypePoolList.APY_DESC) {
+                  onSort?.(SortTypePoolList.APY_ASC)
                 } else {
-                  onSort?.(SortType.APY_DESC)
+                  onSort?.(SortTypePoolList.APY_DESC)
                 }
               }}>
-              APY
-              {sortType === SortType.APY_ASC ? (
+              7-days APY
+              {sortType === SortTypePoolList.APY_ASC ? (
                 <ArrowDropUpIcon className={classes.icon} />
-              ) : sortType === SortType.APY_DESC ? (
+              ) : sortType === SortTypePoolList.APY_DESC ? (
                 <ArrowDropDownIcon className={classes.icon} />
               ) : null}
             </Typography>
-          ) : null} */}
+          ) : null}
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {

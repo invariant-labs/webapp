@@ -433,9 +433,9 @@ export const enum SortTypePoolList {
   VOLUME_ASC,
   VOLUME_DESC,
   TVL_ASC,
-  TVL_DESC
-  // APY_ASC,
-  // APY_DESC
+  TVL_DESC,
+  APY_ASC,
+  APY_DESC
 }
 
 export const enum SortTypeTokenList {
