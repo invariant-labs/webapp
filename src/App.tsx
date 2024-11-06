@@ -1,33 +1,30 @@
-import React from 'react'
-import { setConfig } from 'react-hot-loader'
 import { Provider } from 'react-redux'
-import { ThemeProvider } from '@material-ui/core'
-
 import { store } from './store'
+import { RouterProvider } from 'react-router-dom'
+import { router } from '@pages/RouterPages'
+import SnackbarProvider from '@components/Snackbar'
 import { theme } from '@static/theme'
-import { PersistGate } from 'redux-persist/integration/react'
-import { persistStore } from 'redux-persist'
+import { ThemeProvider } from '@mui/material/styles'
 import Notifier from '@containers/Notifier/Notifier'
-import PagesRouter from './pages/PagesRouter'
-import Snackbar from '@components/Snackbar/Snackbar'
+// import { filterConsoleMessages, messagesToHide } from './hideErrors'
 
-setConfig({
-  reloadHooks: false
-})
-const App: React.FC = () => {
-  const persistor = persistStore(store)
+// filterConsoleMessages(messagesToHide)
 
+function App() {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+    <>
+      <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <Snackbar maxSnack={99}>
-            <Notifier />
-            <PagesRouter />
-          </Snackbar>
+          <SnackbarProvider maxSnack={99}>
+            <>
+              <Notifier />
+              <RouterProvider router={router} />
+            </>
+          </SnackbarProvider>
         </ThemeProvider>
-      </PersistGate>
-    </Provider>
+      </Provider>
+    </>
   )
 }
+
 export default App

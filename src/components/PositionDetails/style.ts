@@ -1,12 +1,14 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles()((theme: Theme) => ({
   wrapperContainer: {
     width: 1004,
     flexDirection: 'row',
+    maxWidth: '100%',
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: 'column'
     }
   },
@@ -14,27 +16,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 517,
     marginRight: 24,
 
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       width: '100%'
     },
 
-    [theme.breakpoints.down('sm')]: {
-      marginRight: 0,
-      marginBottom: 32
+    [theme.breakpoints.down('md')]: {
+      marginRight: 0
     }
   },
   right: {
     width: 517,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       width: '100%'
     }
-  },
-  rightSubHeader: {
-    marginBottom: 16,
-    width: '100%',
-    paddingLeft: 20,
-    flexDirection: 'row-reverse',
-    gap: 10
   },
   back: {
     height: 40,
@@ -42,7 +36,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: 'filter 300ms',
 
     '&:hover': {
-      filter: 'brightness(2)'
+      filter: 'brightness(2)',
+      '@media (hover: none)': {
+        filter: 'none'
+      }
     }
   },
   backIcon: {
@@ -63,14 +60,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 14,
     height: 40,
     width: 130,
-    marginBottom: 16,
     paddingRight: 9,
     paddingLeft: 9,
     letterSpacing: -0.03,
 
     '&:hover': {
       background: colors.invariant.pinkLinearGradient,
-      boxShadow: `0 0 16px ${colors.invariant.pink}`
+      boxShadow: `0 0 16px ${colors.invariant.pink}`,
+      '@media (hover: none)': {
+        background: colors.invariant.pinkLinearGradientOpacity,
+        boxShadow: 'none'
+      }
     }
   },
   buttonStartIcon: {
@@ -79,31 +79,30 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonText: {
     WebkitPaddingBefore: '2px'
   },
-  refreshIconBtn: {
-    padding: 0,
-    margin: 0,
-    minWidth: 'auto',
-    background: 'none',
-    marginRight: 7,
-    '& :hover': {
-      background: 'none'
-    }
-  },
-  refreshIcon: {
-    width: 26,
-    height: 21,
-    cursor: 'pointer',
-    transition: 'filter 100ms',
-    '&:hover': {
-      filter: 'brightness(1.5)'
-    }
-  },
   backContainer: {
     marginBottom: 16,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
+  },
+  positionPlotWrapper: {
+    width: '100%',
+    marginTop: 30,
+
+    [theme.breakpoints.down('md')]: {
+      marginTop: 0
+    }
+  },
+  marketIdWithRefresher: {
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      justifyContent: 'space-between'
+    }
+  },
+  rightHeaderWrapper: {
+    marginBottom: 20,
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: 0
+    }
   }
 }))
-
-export default useStyles

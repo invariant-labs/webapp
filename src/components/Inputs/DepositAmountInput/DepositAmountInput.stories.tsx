@@ -1,85 +1,61 @@
-import { storiesOf } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
 import DepositAmountInput from './DepositAmountInput'
-import { withKnobs } from '@storybook/addon-knobs'
-import { colors } from '@static/theme'
-import icons from '@static/icons'
+import { useState } from 'react'
+import { Provider } from 'react-redux'
+import { store } from '@store/index'
+import { MemoryRouter } from 'react-router-dom'
 
-storiesOf('newInputs/amount', module)
-  .addDecorator(withKnobs)
-  .add('default', () => (
-    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
+const meta = {
+  title: 'Inputs/DepositAmountInput',
+  component: DepositAmountInput,
+  decorators: [
+    Story => (
+      <Provider store={store}>
+        <MemoryRouter>
+          <Story />
+        </MemoryRouter>
+      </Provider>
+    )
+  ],
+  args: {
+    currency: null,
+    setValue: fn(),
+    value: '0',
+    placeholder: '0.0',
+    onMaxClick: fn(),
+    decimalsLimit: 2,
+    tokenPrice: 100,
+    balanceValue: '1000',
+    priceLoading: false,
+    currencyIconSrc: '',
+    blocked: false,
+    blockerInfo: '',
+    onBlur: fn(),
+    style: {},
+    disabled: false,
+    isBalanceLoading: false,
+    walletUninitialized: true,
+    currencyIsUnknown: true
+  }
+} satisfies Meta<typeof DepositAmountInput>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Null: Story = {}
+
+export const Btc: Story = {
+  render: args => {
+    const [value, setValue] = useState('0')
+    return (
       <DepositAmountInput
-        setValue={() => {}}
-        placeholder={'0.0'}
-        currency={null}
-        onMaxClick={() => {}}
-        decimalsLimit={6}
-        percentageChange={4.15}
-        tokenPrice={205341.43}
-        isBalanceLoading={false}
+        {...args}
+        currency='BTC'
+        setValue={setValue}
+        value={value}
+        currencyIconSrc='https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
       />
-    </div>
-  ))
-  .add('currency', () => (
-    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
-      <DepositAmountInput
-        setValue={() => {}}
-        placeholder={'0.0'}
-        currency={'SNY'}
-        onMaxClick={() => {}}
-        currencyIconSrc={icons.SNY}
-        decimalsLimit={6}
-        percentageChange={4.15}
-        tokenPrice={205341.43}
-        balanceValue={'-200000000'}
-        isBalanceLoading={false}
-      />
-    </div>
-  ))
-  .add('long currency', () => (
-    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
-      <DepositAmountInput
-        setValue={() => {}}
-        placeholder={'0.0'}
-        currency={'AERGO'}
-        onMaxClick={() => {}}
-        currencyIconSrc={icons.SNY}
-        decimalsLimit={6}
-        percentageChange={4.15}
-        tokenPrice={205341.43}
-        isBalanceLoading={false}
-      />
-    </div>
-  ))
-  .add('blocked', () => (
-    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
-      <DepositAmountInput
-        setValue={() => {}}
-        placeholder={'0.0'}
-        currency={null}
-        onMaxClick={() => {}}
-        blocked
-        blockerInfo='Price outside range. Single-asset deposit only.'
-        decimalsLimit={6}
-        percentageChange={4.15}
-        tokenPrice={205341.43}
-        isBalanceLoading={false}
-      />
-    </div>
-  ))
-  .add('loading balance', () => (
-    <div style={{ backgroundColor: colors.invariant.component, padding: '10px', width: 400 }}>
-      <DepositAmountInput
-        setValue={() => {}}
-        placeholder={'0.0'}
-        currency={null}
-        onMaxClick={() => {}}
-        blocked
-        blockerInfo='Price outside range. Single-asset deposit only.'
-        decimalsLimit={6}
-        percentageChange={4.15}
-        tokenPrice={205341.43}
-        isBalanceLoading={true}
-      />
-    </div>
-  ))
+    )
+  }
+}

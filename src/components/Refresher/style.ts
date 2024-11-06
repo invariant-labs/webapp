@@ -1,8 +1,14 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles()(() => ({
   ring: {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    '&:hover': {
+      filter: 'brightness(1.25)',
+      '@media (hover: none)': {
+        filter: 'none'
+      }
+    }
   },
   innerCircle: {
     transition: '0.35s stroke-dashoffset',
@@ -10,5 +16,3 @@ const useStyles = makeStyles(() => ({
     transformOrigin: '50% 50%'
   }
 }))
-
-export default useStyles

@@ -1,15 +1,15 @@
 import { call, put, all, spawn, takeEvery, takeLatest, select } from 'typed-redux-saga'
-import { getMarketProgram } from '@web3/programs/amm'
+import { getMarketProgram } from '@utils/web3/programs/amm'
 import { Pair } from '@invariant-labs/sdk'
-import { actions, ListPoolsRequest, PairTokens, PoolWithAddress } from '@reducers/pools'
+import { actions, ListPoolsRequest, PairTokens, PoolWithAddress } from '@store/reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PublicKey } from '@solana/web3.js'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { getFullNewTokensData, getPools, getPoolsFromAdresses } from '@consts/utils'
-import { tokens } from '@selectors/pools'
+import { getFullNewTokensData, getPools, getPoolsFromAdresses } from '@utils//utils'
+import { tokens } from '@store/selectors/pools'
 import { handleRpcError, getConnection } from './connection'
-import { network, rpcAddress } from '@selectors/solanaConnection'
+import { network, rpcAddress } from '@store/selectors/solanaConnection'
 
 export interface iTick {
   index: Tick[]
@@ -92,6 +92,24 @@ export function* fetchPoolsDataForList(action: PayloadAction<ListPoolsRequest>) 
   )
 }
 
+export function* handleGetPathTokens(action: PayloadAction<string[]>) {
+  const tokens = action.payload
+  console.log('tokens', tokens)
+  const connection = yield* getConnection()
+
+  try {
+    const tokensData = yield* call(
+      getFullNewTokensData,
+      tokens.map(token => new PublicKey(token)),
+      connection
+    )
+
+    yield* put(actions.addPathTokens(tokensData))
+  } catch (e) {
+    yield* put(actions.setTokensError(true))
+  }
+}
+
 export function* getPoolsDataForListHandler(): Generator {
   yield* takeEvery(actions.getPoolsDataForList, fetchPoolsDataForList)
 }
@@ -104,8 +122,17 @@ export function* getPoolDataHandler(): Generator {
   yield* takeLatest(actions.getPoolData, fetchPoolData)
 }
 
+export function* getPathTokensHandler(): Generator {
+  yield* takeLatest(actions.getPathTokens, handleGetPathTokens)
+}
+
 export function* poolsSaga(): Generator {
   yield all(
-    [getPoolDataHandler, getAllPoolsForPairDataHandler, getPoolsDataForListHandler].map(spawn)
+    [
+      getPoolDataHandler,
+      getAllPoolsForPairDataHandler,
+      getPoolsDataForListHandler,
+      getPathTokensHandler
+    ].map(spawn)
   )
 }

@@ -1,23 +1,20 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { network, rpcAddress, status } from '@selectors/solanaConnection'
-import { actions } from '@reducers/pools'
-import { actions as walletActions } from '@reducers/solanaWallet'
-import { getMarketProgramSync } from '@web3/programs/amm'
-import { poolsArraySortedByFees, poolTicks, tickMaps } from '@selectors/pools'
-import {
-  getNetworkTokensList,
-  findPairs,
-  getFullNewTokensData,
-  getPoolsVolumeRanges,
-  getMainnetCommonTokens
-} from '@consts/utils'
-import { swap } from '@selectors/swap'
+import { network, rpcAddress, status } from '@store/selectors/solanaConnection'
+import { actions } from '@store/reducers/pools'
+import { poolsArraySortedByFees, poolTicks, tickMaps } from '@store/selectors/pools'
+import { swap } from '@store/selectors/swap'
 import { findTickmapChanges, Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
-import { getCurrentSolanaConnection } from '@web3/connection'
-import { Status, actions as solanaConnectionActions } from '@reducers/solanaConnection'
-import { NetworkType } from '@consts/static'
+import { Status, actions as solanaConnectionActions } from '@store/reducers/solanaConnection'
+import { getMarketProgramSync } from '@utils/web3/programs/amm'
+import {
+  findPairs,
+  getFullNewTokensData,
+  getNetworkTokensList,
+  getPoolsVolumeRanges
+} from '@utils/utils'
+import { getCurrentSolanaConnection } from '@utils/web3/connection'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -33,23 +30,23 @@ const MarketEvents = () => {
   const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
   const [subscribedTickmap, _setSubscribedTickmap] = useState<Set<string>>(new Set())
 
-  useEffect(() => {
-    if (networkType !== NetworkType.MAINNET) {
-      return
-    }
-    const getCommonTokens = async () => {
-      try {
-        const mainnetCommonTokens = await getMainnetCommonTokens()
-        dispatch(
-          walletActions.setCommonTokens({ network: networkType, tokens: mainnetCommonTokens })
-        )
-      } catch (error) {
-        console.log(error)
-      }
-    }
+  // useEffect(() => {
+  //   if (networkType !== NetworkType.Mainnet) {
+  //     return
+  //   }
+  //   const getCommonTokens = async () => {
+  //     try {
+  //       const mainnetCommonTokens = await getMainnetCommonTokens()
+  //       dispatch(
+  //         walletActions.setCommonTokens({ network: networkType, tokens: mainnetCommonTokens })
+  //       )
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
 
-    void getCommonTokens()
-  }, [networkType])
+  //   void getCommonTokens()
+  // }, [networkType])
 
   useEffect(() => {
     const connection = getCurrentSolanaConnection()
@@ -115,7 +112,6 @@ const MarketEvents = () => {
 
     const connectEvents = () => {
       allPools.forEach(pool => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         marketProgram.onPoolChange(pool.tokenX, pool.tokenY, { fee: pool.fee.v }, poolStructure => {
           dispatch(
             actions.updatePool({
@@ -148,30 +144,27 @@ const MarketEvents = () => {
             return
           }
           poolTicksArray[address].forEach(singleTick => {
-            marketProgram
-              .onTickChange(
-                new Pair(pool.tokenX, pool.tokenY, {
-                  fee: pool.fee.v,
-                  tickSpacing: pool.tickSpacing
-                }),
-                singleTick.index,
-                tickObject => {
-                  dispatch(
-                    actions.updateTicks({
-                      address: address,
-                      index: singleTick.index,
-                      tick: tickObject
-                    })
-                  )
-                }
-              )
-              .then(() => {})
-              .catch(() => {})
+            marketProgram.onTickChange(
+              new Pair(pool.tokenX, pool.tokenY, {
+                fee: pool.fee.v,
+                tickSpacing: pool.tickSpacing
+              }),
+              singleTick.index,
+              tickObject => {
+                dispatch(
+                  actions.updateTicks({
+                    address: address,
+                    index: singleTick.index,
+                    tick: tickObject
+                  })
+                )
+              }
+            )
           })
         })
       }
     }
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+
     connectEvents()
   }, [networkStatus, marketProgram, Object.values(poolTicksArray).length])
 
@@ -237,7 +230,7 @@ const MarketEvents = () => {
         })
       }
     }
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+
     connectEvents()
   }, [networkStatus, marketProgram, Object.values(tickmaps).length])
 

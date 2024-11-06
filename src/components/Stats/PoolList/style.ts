@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core'
 import { colors } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyle = makeStyles(() => ({
+export const useStyles = makeStyles()(() => ({
   container: {
     maxWidth: 1072,
     padding: '0 24px',
@@ -9,8 +9,7 @@ const useStyle = makeStyles(() => ({
     backgroundColor: `${colors.invariant.component} !important`
   },
   pagination: {
-    padding: '20px 0 10px 0'
+    padding: '20px 0 10px 0',
+    maxWidth: '100%'
   }
 }))
-
-export default useStyle

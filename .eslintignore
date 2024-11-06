@@ -6,3 +6,5 @@ dist
 vite.config.ts
 .eslintrc.js
 storybook-static
+vitest.config.ts
+node_modules

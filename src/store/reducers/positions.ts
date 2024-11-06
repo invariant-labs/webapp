@@ -1,8 +1,8 @@
 import { InitPosition, Position, Tick } from '@invariant-labs/sdk/lib/market'
 import { BN } from '@project-serum/anchor'
-import { PayloadType } from '@reducers/types'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
+import { PayloadType } from '@store/consts/types'
 
 export interface PositionWithAddress extends Position {
   address: PublicKey
@@ -29,7 +29,7 @@ export interface InitPositionStore {
   success: boolean
 }
 
-export interface CurrentPositionRangeTicksStore {
+export interface CurrentPositionTicksStore {
   lowerTick?: Tick
   upperTick?: Tick
   loading: boolean
@@ -38,8 +38,9 @@ export interface IPositionsStore {
   lastPage: number
   plotTicks: PlotTicks
   positionsList: PositionsListStore
-  currentPositionRangeTicks: CurrentPositionRangeTicksStore
+  currentPositionTicks: CurrentPositionTicksStore
   initPosition: InitPositionStore
+  shouldNotUpdateRange: boolean
 }
 
 export interface InitPositionData
@@ -58,6 +59,7 @@ export interface GetCurrentTicksData {
   poolIndex: number
   isXtoY: boolean
   disableLoading?: boolean
+  onlyUserPositionsEnabled?: boolean
 }
 
 export interface ClosePositionData {
@@ -81,7 +83,7 @@ export const defaultState: IPositionsStore = {
     list: [],
     loading: true
   },
-  currentPositionRangeTicks: {
+  currentPositionTicks: {
     lowerTick: undefined,
     upperTick: undefined,
     loading: false
@@ -89,7 +91,8 @@ export const defaultState: IPositionsStore = {
   initPosition: {
     inProgress: false,
     success: false
-  }
+  },
+  shouldNotUpdateRange: false
 }
 
 export const positionsSliceName = 'positions'
@@ -146,14 +149,14 @@ const positionsSlice = createSlice({
       return state
     },
     getCurrentPositionRangeTicks(state, _action: PayloadAction<string>) {
-      state.currentPositionRangeTicks.loading = true
+      state.currentPositionTicks.loading = true
       return state
     },
     setCurrentPositionRangeTicks(
       state,
       action: PayloadAction<{ lowerTick?: Tick; upperTick?: Tick }>
     ) {
-      state.currentPositionRangeTicks = {
+      state.currentPositionTicks = {
         ...action.payload,
         loading: false
       }
@@ -167,6 +170,10 @@ const positionsSlice = createSlice({
     },
     resetState(state) {
       state = defaultState
+      return state
+    },
+    setShouldNotUpdateRange(state, action: PayloadAction<boolean>) {
+      state.shouldNotUpdateRange = action.payload
       return state
     }
   }

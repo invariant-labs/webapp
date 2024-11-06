@@ -1,11 +1,17 @@
-import { actions, RedeemBond, BuyBond, BondSaleWithAddress, BondWithAddress } from '@reducers/bonds'
-import { getBondsProgram } from '@web3/programs/bonds'
+import {
+  actions,
+  RedeemBond,
+  BuyBond,
+  BondSaleWithAddress,
+  BondWithAddress
+} from '@store/reducers/bonds'
+import { getBondsProgram } from '@utils/web3/programs/bonds'
 import { all, call, put, select, spawn, takeLatest } from 'typed-redux-saga'
-import { actions as snackbarsActions } from '@reducers/snackbars'
+import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { createLoaderKey, getFullNewTokensData } from '@consts/utils'
-import { tokens } from '@selectors/pools'
-import { actions as poolsActions } from '@reducers/pools'
+import { createLoaderKey, getFullNewTokensData } from '@utils/utils'
+import { tokens } from '@store/selectors/pools'
+import { actions as poolsActions } from '@store/reducers/pools'
 import { getConnection, handleRpcError } from './connection'
 import {
   Keypair,
@@ -14,15 +20,15 @@ import {
   SystemProgram,
   Transaction
 } from '@solana/web3.js'
-import { accounts, address } from '@selectors/solanaWallet'
-import { createAccount, getWallet } from './wallet'
-import { bondsList, userVested } from '@selectors/bonds'
-import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@consts/static'
+import { accounts, address } from '@store/selectors/solanaWallet'
+import { bondsList, userVested } from '@store/selectors/bonds'
+import { SIGNING_SNACKBAR_CONFIG, WRAPPED_SOL_ADDRESS } from '@store/consts/static'
 import { NATIVE_MINT, Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { BN } from '@project-serum/anchor'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { network, rpcAddress } from '@selectors/solanaConnection'
+import { network, rpcAddress } from '@store/selectors/solanaConnection'
 import { closeSnackbar } from 'notistack'
+import { createAccount, getWallet } from './wallet'
 
 export function* handleGetBondsList() {
   try {

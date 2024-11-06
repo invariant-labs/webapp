@@ -1,13 +1,14 @@
-import React from 'react'
-import { Button } from '@material-ui/core'
-import { blurContent, unblurContent } from '@consts/uiUtils'
-import SelectTokenModal from '@components/Modals/SelectModals/SelectTokenModal/SelectTokenModal'
-import { SwapToken } from '@selectors/solanaWallet'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import React, { useEffect } from 'react'
 import icons from '@static/icons'
 import classNames from 'classnames'
 import useStyles from './style'
+import { blurContent, unblurContent } from '@utils/uiUtils'
+import { Box, Button } from '@mui/material'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import SelectTokenModal from '@components/Modals/SelectModals/SelectTokenModal/SelectTokenModal'
+import { SwapToken } from '@store/selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
+import { NetworkType } from '@store/consts/static'
 
 export interface ISelectModal {
   name?: string
@@ -22,6 +23,8 @@ export interface ISelectModal {
   commonTokens: PublicKey[]
   initialHideUnknownTokensValue: boolean
   onHideUnknownTokensChange: (val: boolean) => void
+  hiddenUnknownTokens: boolean
+  network: NetworkType
 }
 
 export const Select: React.FC<ISelectModal> = ({
@@ -36,9 +39,11 @@ export const Select: React.FC<ISelectModal> = ({
   sliceName = false,
   commonTokens,
   initialHideUnknownTokensValue,
-  onHideUnknownTokensChange
+  onHideUnknownTokensChange,
+  hiddenUnknownTokens,
+  network
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
 
@@ -53,6 +58,12 @@ export const Select: React.FC<ISelectModal> = ({
     setOpen(false)
   }
 
+  useEffect(() => {
+    return () => {
+      unblurContent()
+    }
+  }, [])
+
   const displayName = !current ? name : current.symbol
 
   return (
@@ -63,9 +74,20 @@ export const Select: React.FC<ISelectModal> = ({
         variant='contained'
         onClick={handleClick}
         startIcon={
-          !current ? null : <img className={classes.icon} src={current.logoURI ?? icons.SNY} />
+          !current ? null : (
+            <Box className={classes.imageContainer}>
+              <img
+                className={classes.icon}
+                src={current.logoURI ?? icons.SNY}
+                alt={current.name + 'logo'}
+                width='20'
+                height='20'
+              />
+              {current.isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
+            </Box>
+          )
         }
-        endIcon={<ExpandMoreIcon className={classes.endIcon} />}
+        endIcon={<ExpandMoreIcon />}
         classes={{
           endIcon: 'selectArrow'
         }}
@@ -76,8 +98,6 @@ export const Select: React.FC<ISelectModal> = ({
       </Button>
       <SelectTokenModal
         tokens={tokens}
-        // commonTokens={tokens ? tokens.slice(0, 4)
-        //   : [{ symbol: 'SOL', name: 'Solana', logoURI: 'solana' }]}
         open={open}
         centered={centered}
         anchorEl={anchorEl}
@@ -88,8 +108,11 @@ export const Select: React.FC<ISelectModal> = ({
         commonTokens={commonTokens}
         initialHideUnknownTokensValue={initialHideUnknownTokensValue}
         onHideUnknownTokensChange={onHideUnknownTokensChange}
+        hiddenUnknownTokens={hiddenUnknownTokens}
+        network={network}
       />
     </>
   )
 }
+
 export default Select

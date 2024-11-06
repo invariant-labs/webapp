@@ -1,5 +1,6 @@
-import { Box, Grid, Typography } from '@material-ui/core'
+import { Box, Typography } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
+import { formatNumber } from '@utils/utils'
 import React from 'react'
 import useStyles from './style'
 
@@ -20,20 +21,30 @@ const ExchangeRate: React.FC<iProps> = ({
   loading,
   onClick
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const setLoading = () => {
     return loading ? (
-      <Grid className={classes.loadingContainer}>
-        <img src={loadingAnimation} className={classes.loading}></img>
-      </Grid>
+      <Box className={classes.loadingContainer}>
+        <img src={loadingAnimation} className={classes.loading} alt='Loading'></img>
+      </Box>
     ) : (
-      <Typography className={classes.rateText} onClick={onClick}>
-        1 {tokenFromSymbol} = {isNaN(amount) ? 0 : amount.toFixed(tokenToDecimals)} {tokenToSymbol}
+      <Typography className={classes.rateText}>
+        1 {tokenFromSymbol} ={' '}
+        {isNaN(amount)
+          ? 0
+          : formatNumber(amount.toFixed(tokenToDecimals)) === '0'
+            ? '~0'
+            : formatNumber(amount.toFixed(tokenToDecimals))}{' '}
+        {tokenToSymbol}
       </Typography>
     )
   }
 
-  return <Box className={classes.ableToHover}>{setLoading()}</Box>
+  return (
+    <Box className={classes.ableToHover} onClick={onClick}>
+      {setLoading()}
+    </Box>
+  )
 }
 
 export default ExchangeRate

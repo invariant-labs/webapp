@@ -1,21 +1,12 @@
 import React from 'react'
-import { formatNumbers, showPrefix } from '@consts/utils'
-import { Grid, Typography, useMediaQuery } from '@material-ui/core'
 import { colors, theme } from '@static/theme'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useStyles } from './style'
-
-export enum SortType {
-  NAME_ASC,
-  NAME_DESC,
-  PRICE_ASC,
-  PRICE_DESC,
-  VOLUME_ASC,
-  VOLUME_DESC,
-  TVL_ASC,
-  TVL_DESC
-}
+import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
+import { formatNumber, shortenAddress } from '@utils/utils'
+import { SortTypeTokenList } from '@store/consts/static'
+import icons from '@static/icons'
 
 interface IProps {
   displayType: string
@@ -24,11 +15,13 @@ interface IProps {
   name?: string
   symbol?: string
   price?: number
+  // priceChange?: number
   volume?: number
   TVL?: number
-  sortType?: SortType
-  onSort?: (type: SortType) => void
+  sortType?: SortTypeTokenList
+  onSort?: (type: SortTypeTokenList) => void
   hideBottomLine?: boolean
+  isUnknown?: boolean
 }
 
 const TokenListItem: React.FC<IProps> = ({
@@ -38,46 +31,58 @@ const TokenListItem: React.FC<IProps> = ({
   name = 'Bitcoin',
   symbol = 'BTCIcon',
   price = 0,
+  // priceChange = 0,
   volume = 0,
   TVL = 0,
   sortType,
   onSort,
-  hideBottomLine = false
+  hideBottomLine = false,
+  isUnknown
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
+  // const isNegative = priceChange < 0
 
-  const isXDown = useMediaQuery(theme.breakpoints.down('sm'))
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
   const hideName = useMediaQuery(theme.breakpoints.down('xs'))
+
   return (
     <Grid>
       {displayType === 'tokens' ? (
         <Grid
           container
           classes={{ container: classes.container, root: classes.tokenList }}
-          style={{
-            ...(hideBottomLine ? { border: 'none' } : {})
-          }}>
-          {!hideName && <Typography component='p'>{itemNumber}</Typography>}
+          style={hideBottomLine ? { border: 'none' } : undefined}>
+          {!hideName && !isSm && <Typography component='p'>{itemNumber}</Typography>}
           <Grid className={classes.tokenName}>
-            {!isXDown && <img src={icon}></img>}
+            {!isSm && (
+              <Box className={classes.imageContainer}>
+                <img className={classes.tokenIcon} src={icon} alt='Token icon'></img>
+                {isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
+              </Box>
+            )}
             <Typography>
-              {hideName ? symbol : name}
-              {!hideName && <span className={classes.tokenSymbol}>{` (${symbol})`}</span>}
+              {hideName ? shortenAddress(symbol) : name}
+              {!hideName && (
+                <span className={classes.tokenSymbol}>{` (${shortenAddress(symbol)})`}</span>
+              )}
             </Typography>
           </Grid>
-          <Typography>{`~$${formatNumbers()(price.toString())}${showPrefix(price)}`}</Typography>
-          <Typography>{`$${formatNumbers()(volume.toString())}${showPrefix(volume)}`}</Typography>
-          <Typography>{`$${formatNumbers()(TVL.toString())}${showPrefix(TVL)}`}</Typography>
+          <Typography>{`~$${formatNumber(price)}`}</Typography>
+
+          {/* {!hideName && (
+            <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
+              {isNegative ? `${priceChange.toFixed(2)}%` : `+${priceChange.toFixed(2)}%`}
+            </Typography>
+          )} */}
+          <Typography>{`$${formatNumber(volume)}`}</Typography>
+          <Typography>{`$${formatNumber(TVL)}`}</Typography>
         </Grid>
       ) : (
         <Grid
           container
-          classes={{ container: classes.container, root: classes.header }}
-          style={{
-            color: colors.invariant.textGrey,
-            fontWeight: 400
-          }}>
-          {!hideName && (
+          style={{ color: colors.invariant.textGrey, fontWeight: 400 }}
+          classes={{ container: classes.container, root: classes.header }}>
+          {!hideName && !isSm && (
             <Typography style={{ lineHeight: '12px' }}>
               N<sup>o</sup>
             </Typography>
@@ -85,64 +90,82 @@ const TokenListItem: React.FC<IProps> = ({
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              if (sortType === SortType.NAME_ASC) {
-                onSort?.(SortType.NAME_DESC)
+              if (sortType === SortTypeTokenList.NAME_ASC) {
+                onSort?.(SortTypeTokenList.NAME_DESC)
               } else {
-                onSort?.(SortType.NAME_ASC)
+                onSort?.(SortTypeTokenList.NAME_ASC)
               }
             }}>
             Name
-            {sortType === SortType.NAME_ASC ? (
+            {sortType === SortTypeTokenList.NAME_ASC ? (
               <ArrowDropUpIcon className={classes.icon} />
-            ) : sortType === SortType.NAME_DESC ? (
+            ) : sortType === SortTypeTokenList.NAME_DESC ? (
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              if (sortType === SortType.PRICE_ASC) {
-                onSort?.(SortType.PRICE_DESC)
+              if (sortType === SortTypeTokenList.PRICE_ASC) {
+                onSort?.(SortTypeTokenList.PRICE_DESC)
               } else {
-                onSort?.(SortType.PRICE_ASC)
+                onSort?.(SortTypeTokenList.PRICE_ASC)
               }
             }}>
             Price
-            {sortType === SortType.PRICE_ASC ? (
+            {sortType === SortTypeTokenList.PRICE_ASC ? (
               <ArrowDropUpIcon className={classes.icon} />
-            ) : sortType === SortType.PRICE_DESC ? (
+            ) : sortType === SortTypeTokenList.PRICE_DESC ? (
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
+          {/* {!hideName && (
+            <Typography
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                if (sortType === SortTypeTokenList.CHANGE_ASC) {
+                  onSort?.(SortTypeTokenList.CHANGE_DESC)
+                } else {
+                  onSort?.(SortTypeTokenList.CHANGE_ASC)
+                }
+              }}>
+              Price change
+              {sortType === SortTypeTokenList.CHANGE_ASC ? (
+                <ArrowDropUpIcon className={classes.icon} />
+              ) : sortType === SortTypeTokenList.CHANGE_DESC ? (
+                <ArrowDropDownIcon className={classes.icon} />
+              ) : null}
+            </Typography>
+          )} */}
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              if (sortType === SortType.VOLUME_DESC) {
-                onSort?.(SortType.VOLUME_ASC)
+              if (sortType === SortTypeTokenList.VOLUME_DESC) {
+                onSort?.(SortTypeTokenList.VOLUME_ASC)
               } else {
-                onSort?.(SortType.VOLUME_DESC)
+                onSort?.(SortTypeTokenList.VOLUME_DESC)
               }
             }}>
             Volume 24H
-            {sortType === SortType.VOLUME_ASC ? (
+            {sortType === SortTypeTokenList.VOLUME_ASC ? (
               <ArrowDropUpIcon className={classes.icon} />
-            ) : sortType === SortType.VOLUME_DESC ? (
+            ) : sortType === SortTypeTokenList.VOLUME_DESC ? (
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              if (sortType === SortType.TVL_DESC) {
-                onSort?.(SortType.TVL_ASC)
+              if (sortType === SortTypeTokenList.TVL_DESC) {
+                onSort?.(SortTypeTokenList.TVL_ASC)
               } else {
-                onSort?.(SortType.TVL_DESC)
+                onSort?.(SortTypeTokenList.TVL_DESC)
               }
             }}>
             TVL
-            {sortType === SortType.TVL_ASC ? (
+            {sortType === SortTypeTokenList.TVL_ASC ? (
               <ArrowDropUpIcon className={classes.icon} />
-            ) : sortType === SortType.TVL_DESC ? (
+            ) : sortType === SortTypeTokenList.TVL_DESC ? (
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>

@@ -1,15 +1,12 @@
-import { NetworkType } from '@consts/static'
-import { Grid, Popover, Typography } from '@material-ui/core'
-import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
+import React from 'react'
 import icons from '@static/icons'
 import classNames from 'classnames'
-import React from 'react'
 import useStyles from './style'
-export interface ISelectNetwork {
-  networkType: NetworkType
-  rpc: string
-  rpcName?: string
-}
+import { ISelectNetwork } from '@store/consts/types'
+import { Grid, Popover, Typography } from '@mui/material'
+import DotIcon from '@mui/icons-material/FiberManualRecordRounded'
+import { NetworkType } from '@store/consts/static'
+
 export interface ISelectNetworkModal {
   networks: ISelectNetwork[]
   open: boolean
@@ -26,7 +23,7 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
   handleClose,
   activeNetwork
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   return (
     <Popover
       open={open}
@@ -42,7 +39,7 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
         horizontal: 'center'
       }}>
       <Grid className={classes.root}>
-        <Typography className={classes.title}>Select a chain</Typography>
+        <Typography className={classes.title}>Select a network</Typography>
         <Grid className={classes.list} container alignContent='space-around' direction='column'>
           {networks.map(({ networkType, rpc, rpcName }) => (
             <Grid
@@ -55,36 +52,15 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
               onClick={() => {
                 onSelect(networkType, rpc, rpcName)
               }}>
-              <img className={classes.icon} src={icons.Solana} alt={`${networkType} icon`} />
-
+              <img
+                className={classes.icon}
+                src={icons[`${networkType}Icon`]}
+                alt={`${networkType} icon`}
+              />
               <Typography className={classes.name}>{networkType}</Typography>
               <DotIcon className={classes.dotIcon} />
             </Grid>
           ))}
-          <a href='https://eclipse.invariant.app' style={{ textDecoration: 'none' }}>
-            <Grid className={classes.listItem} item key='networks-eclipse'>
-              <img className={classes.icon} src={icons.Eclipse} />
-              <Typography className={classes.name}>Eclipse</Typography>
-            </Grid>
-          </a>
-          <a href='https://azero.invariant.app' style={{ textDecoration: 'none' }}>
-            <Grid className={classes.listItem} item key='networks-aleph-zero'>
-              <img className={classes.icon} src={icons.AlephZero} />
-              <Typography className={classes.name}>Aleph Zero</Typography>
-            </Grid>
-          </a>
-          <a href='https://vara.invariant.app' style={{ textDecoration: 'none' }}>
-            <Grid className={classes.listItem} item key='networks-vara'>
-              <img className={classes.icon} src={icons.Vara} />
-              <Typography className={classes.name}>Vara</Typography>
-            </Grid>
-          </a>
-          <a href='https://alph.invariant.app' style={{ textDecoration: 'none' }}>
-            <Grid className={classes.listItem} item key='networks-alephium'>
-              <img className={classes.icon} src={icons.Alephium} />
-              <Typography className={classes.name}>Alephium</Typography>
-            </Grid>
-          </a>
         </Grid>
       </Grid>
     </Popover>

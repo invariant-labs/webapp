@@ -1,16 +1,16 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-export const useStyles = makeStyles<Theme, { open: boolean }>(() => ({
-  wrapper: ({ open }) => ({
+export const useStyles = makeStyles<{ open: boolean }>()((_theme, { open }) => ({
+  wrapper: {
     borderRadius: 10,
     padding: 0,
     background: colors.invariant.newDark,
     overflow: 'hidden',
     transition: 'max-height 300ms',
     maxHeight: open ? 160 : 0,
-    marginBottom: 16
-  }),
+    marginBottom: open ? 12 : 0
+  },
   innerWrapper: {
     padding: 16,
     minHeight: 132

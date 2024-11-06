@@ -1,7 +1,8 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles()((theme: Theme) => ({
   data: {
     height: 36,
     paddingInline: 8,
@@ -12,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: colors.invariant.light,
     borderRadius: 11,
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       height: 36
     }
   },
@@ -22,10 +23,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 16,
     ...typography.body1,
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       ...typography.body1
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       ...typography.caption3
     }
   },
@@ -36,18 +37,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginInline: 'auto',
       ...typography.body2
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       ...typography.caption3
     }
   },
   controls: {
-    // marginTop: 5,
     backgroundColor: colors.invariant.componentBcg,
-    borderRadius: 10
+    borderRadius: 10,
+    '& input.Mui-disabled': {
+      WebkitTextFillColor: colors.white.main + '!important'
+    }
   },
   button: {
     minWidth: 36,
@@ -60,13 +63,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     '&:hover': {
       backgroundColor: colors.invariant.green,
-      boxShadow: `0 0 10px ${colors.invariant.green}`
-    },
-
-    [theme.breakpoints.down('sm')]: {
-      minWidth: 40,
-      width: 40,
-      height: 40
+      boxShadow: `0 0 10px ${colors.invariant.green}`,
+      '@media (hover: none)': {
+        background: ' rgba(46, 224, 154, 0.8)',
+        boxShadow: 'none'
+      }
     }
   },
   buttonIcon: {
@@ -92,10 +93,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: colors.white.main
     },
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       height: 36
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       ...typography.caption2
     }
   },
@@ -107,15 +108,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   diffLabelWrapper: {
     borderRadius: 11,
     height: 36,
+    flex: '0 0 auto',
     backgroundColor: colors.invariant.light,
     display: 'flex',
     alignItems: 'center',
-    paddingInline: 10
+    paddingInline: 6
   },
   diffLabel: {
     ...typography.caption2,
     color: colors.invariant.text,
-    width: 'fit-content',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap'
@@ -125,7 +126,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 3,
     borderRadius: 5,
     marginInline: 'auto',
-    flex: '0 0 auto'
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    scrollbarWidth: 'none',
+
+    '&::-webkit-scrollbar': {
+      display: 'none',
+      scrollbarWidth: 'none',
+      msOverflowStyle: 'none'
+    }
   }
 }))
 

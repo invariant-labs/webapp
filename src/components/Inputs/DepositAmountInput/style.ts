@@ -1,12 +1,26 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const caption2styles = {
+  ...typography.caption2,
+  color: colors.invariant.lightHover,
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  display: 'flex',
+  alignItems: 'center',
+
+  paddingBlock: 6,
+  flexShrink: 1,
+  marginRight: 6
+}
+export const useStyles = makeStyles<{ isSelected: boolean }>()((theme: Theme, { isSelected }) => ({
   wrapper: {
     position: 'relative',
     marginBottom: 16,
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       minWidth: 0
     }
   },
@@ -20,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputContainer: {
     marginBottom: 6,
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginBottom: 0
     }
   },
@@ -51,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '6px 12px 6px 12px',
     cursor: 'default',
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       height: 36,
       minWidth: 85
     }
@@ -81,11 +95,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: colors.invariant.Error,
     backgroundColor: `${colors.invariant.Error}40`
   },
-  currencyIcon: {
-    minWidth: 20,
+  imageContainer: {
+    width: 20,
     height: 20,
     marginRight: 8,
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  currencyIcon: {
+    width: 20,
+    height: 20,
     borderRadius: '100%'
+  },
+  warningIcon: {
+    position: 'absolute',
+    width: 12,
+    height: 12,
+    bottom: -6,
+    right: -6
   },
   currencySymbol: {
     ...typography.body3,
@@ -94,24 +123,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   noCurrencyText: {
     ...typography.body3,
     color: colors.white.main,
-    cursor: 'default'
+    cursor: 'default',
+    transform: 'scaleX(2)'
   },
   balance: {
     height: 17,
-    cursor: 'pointer',
+    cursor: isSelected ? 'pointer' : '',
     flexShrink: 1,
     marginRight: 10
   },
   caption2: {
-    ...typography.caption2,
-    color: colors.invariant.lightHover,
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
+    ...caption2styles,
 
     '&:hover': {
-      color: colors.white.main
+      color: isSelected ? colors.white.main : '',
+      '@media (hover: none)': {
+        color: colors.invariant.lightHover
+      }
     }
+  },
+  estimatedBalance: {
+    ...caption2styles
   },
   maxButton: {
     color: colors.invariant.componentBcg,
@@ -128,9 +160,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       background: 'none',
       backgroundColor: colors.invariant.green,
-      boxShadow: '0px 0px 20px -10px white'
+      boxShadow: '0px 0px 20px -10px white',
+      '@media (hover: none)': {
+        background: ' rgba(46, 224, 154, 0.8)',
+        boxShadow: 'none'
+      }
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: 26,
       minWidth: 26,
       height: 14,
@@ -191,13 +227,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 15
   },
   tooltip: {
-    background: colors.invariant.componentBcg,
-    border: `1px solid ${colors.invariant.lightGrey}`,
-    borderRadius: 12,
-    padding: 10,
+    color: colors.invariant.textGrey,
     ...typography.caption4,
-    fontSize: 13,
-    color: colors.white.main
+    lineHeight: '24px',
+    background: colors.black.full,
+    borderRadius: 12
   },
   loadingBalance: {
     padding: '0 10px 0 20px',
@@ -205,5 +239,4 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 15
   }
 }))
-
 export default useStyles

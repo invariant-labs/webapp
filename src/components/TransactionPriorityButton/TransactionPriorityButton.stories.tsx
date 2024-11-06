@@ -1,31 +1,36 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
-import { withKnobs } from '@storybook/addon-knobs'
-import { colors } from '@static/theme'
+import type { Meta, StoryObj } from '@storybook/react'
+import { MemoryRouter } from 'react-router-dom'
 import TransactionPriorityButton from './TransactionPriorityButton'
+import { store } from '@store/index'
+import { Provider } from 'react-redux'
+import { fn } from '@storybook/test'
 
-const buttonsParams = [
-  { label: 'High', value: 0.05, description: '5x Market fee' },
-  { label: 'Turbo', value: 0.1, description: '10x Market fee' }
-]
+const meta = {
+  title: 'Buttons/TransactionPriorityButton',
+  component: TransactionPriorityButton,
+  decorators: [
+    Story => (
+      <Provider store={store}>
+        <MemoryRouter>
+          <Story />
+        </MemoryRouter>
+      </Provider>
+    )
+  ]
+} satisfies Meta<typeof TransactionPriorityButton>
 
-storiesOf('buttons/transactionPriorityButton', module)
-  .addDecorator(withKnobs)
-  .add('set priority', () => (
-    <div style={{ backgroundColor: colors.black.header, padding: '100px' }}>
-      {buttonsParams.map((params, index) => {
-        return (
-          <TransactionPriorityButton
-            selected={index === 0}
-            index={index}
-            label={params.label}
-            value={params.value}
-            description={params.description}
-            onClick={() => {}}
-            areButtonsSelected={false}
-            saveValue={0}
-          />
-        )
-      })}
-    </div>
-  ))
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Primary: Story = {
+  args: {
+    areButtonsSelected: false,
+    description: 'mocked description',
+    index: 1,
+    label: 'mocked label',
+    onClick: fn(),
+    saveValue: 8,
+    selected: false,
+    value: 3
+  }
+}

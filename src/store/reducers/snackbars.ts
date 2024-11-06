@@ -1,17 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { PayloadType } from './types'
-import { SnackbarVariant } from '@components/Snackbar/Snackbar'
-import { createLoaderKey } from '@consts/utils'
+import { PayloadType } from '../consts/types'
+import { createLoaderKey } from '@utils/utils'
+import { SnackbarAction, VariantType } from 'notistack'
 
 export interface ISnackbar {
   message: string
   key?: string
-  variant: SnackbarVariant
+  variant: VariantType
   open: boolean
-  action?: (key: number) => JSX.Element
+  action?: SnackbarAction
   persist?: boolean
   txid?: string
   isAccount?: boolean
+  link?: {
+    label: string
+    href: string
+  }
 }
 
 export interface ISnackbarStore {
@@ -32,14 +36,6 @@ const snackbarsSlice = createSlice({
         ...action.payload,
         open: true
       })
-      return state
-    },
-    hide(state, action: PayloadAction<string>) {
-      const index = state.snackbars.findIndex(snack => snack.key === action.payload)
-      if (index === -1) {
-        return state
-      }
-      state.snackbars[index].open = false
       return state
     },
     remove(state, action: PayloadAction<string>) {

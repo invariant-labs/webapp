@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from 'tss-react/mui'
 import { colors, typography } from '@static/theme'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   background: {
     position: 'absolute',
     top: 0,
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     alignItems: 'center',
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: 'calc(100% - 96px)',
       left: 16,
       right: 16,
@@ -88,9 +88,16 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     gap: 8,
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column'
     }
+  },
+  textContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 16
   }
 }))
 
