@@ -23,6 +23,7 @@ import axios from 'axios'
 import bs58 from 'bs58'
 import {
   BTC_DEV,
+  DOGIN_MAIN,
   HBB_DEV,
   MAX_U64,
   MC2_DEV,
@@ -396,6 +397,8 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
           }
         }
       )
+      obj[DOGIN_MAIN.address.toString()] = DOGIN_MAIN
+
       return obj
     case NetworkType.DEVNET:
       return {
