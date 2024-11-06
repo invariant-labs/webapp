@@ -322,6 +322,14 @@ export const Header: React.FC<IHeader> = ({
                   }
                 : undefined
             }
+            onPriority={
+              typeOfNetwork === NetworkType.Mainnet && isMdDown
+                ? () => {
+                    setRoutesModalOpen(false)
+                    setPriorityModal(true)
+                  }
+                : undefined
+            }
           />
           {typeOfNetwork === NetworkType.Mainnet ? (
             <Priority

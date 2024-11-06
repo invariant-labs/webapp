@@ -14,6 +14,7 @@ export interface IRoutesModal {
   onFaucet?: () => void
   onRPC?: () => void
   onChainSelect?: () => void
+  onPriority?: () => void
 }
 export const RoutesModal: React.FC<IRoutesModal> = ({
   routes,
@@ -24,7 +25,8 @@ export const RoutesModal: React.FC<IRoutesModal> = ({
   current,
   onFaucet,
   onRPC,
-  onChainSelect
+  onChainSelect,
+  onPriority
 }) => {
   const { classes } = useStyles()
 
@@ -95,6 +97,11 @@ export const RoutesModal: React.FC<IRoutesModal> = ({
         {typeof onChainSelect !== 'undefined' ? (
           <Grid item className={classes.listItem} onClick={onChainSelect}>
             <Typography className={classes.name}>Change chain</Typography>
+          </Grid>
+        ) : null}
+        {typeof onPriority !== 'undefined' ? (
+          <Grid item className={classes.listItem} onClick={onPriority}>
+            <Typography className={classes.name}>Set Fee</Typography>
           </Grid>
         ) : null}
       </Grid>
