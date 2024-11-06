@@ -728,6 +728,7 @@ export const NewPosition: React.FC<INewPosition> = ({
           onDisconnectWallet={onDisconnectWallet}
           setShouldResetPlot={setShouldResetPlot}
           canNavigate={canNavigate}
+          isCurrentPoolExisting={isCurrentPoolExisting}
         />
         <Hidden mdUp>
           <Grid container justifyContent='end' mb={2}>

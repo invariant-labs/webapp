@@ -82,6 +82,7 @@ export interface IDepositSelector {
   onConnectWallet: () => void
   onDisconnectWallet: () => void
   canNavigate: boolean
+  isCurrentPoolExisting: boolean
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -121,7 +122,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   onConnectWallet,
   onDisconnectWallet,
   solBalance,
-  canNavigate
+  canNavigate,
+  isCurrentPoolExisting
 }) => {
   const { classes } = useStyles()
 
@@ -130,11 +132,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
   const WSOL_MIN_FEE_LAMPORTS = useMemo(() => {
     if (network === NetworkType.Devnet) {
-      return poolIndex === null ? WSOL_POOL_INIT_LAMPORTS_DEV : WSOL_POSITION_INIT_LAMPORTS_DEV
+      return isCurrentPoolExisting ? WSOL_POSITION_INIT_LAMPORTS_DEV : WSOL_POOL_INIT_LAMPORTS_DEV
     } else {
-      return poolIndex === null ? WSOL_POOL_INIT_LAMPORTS_MAIN : WSOL_POSITION_INIT_LAMPORTS_MAIN
+      return isCurrentPoolExisting ? WSOL_POSITION_INIT_LAMPORTS_MAIN : WSOL_POOL_INIT_LAMPORTS_MAIN
     }
-  }, [network])
+  }, [network, isCurrentPoolExisting])
 
   const [hideUnknownTokens, setHideUnknownTokens] = useState<boolean>(initialHideUnknownTokensValue)
 
