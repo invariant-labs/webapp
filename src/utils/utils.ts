@@ -1000,8 +1000,6 @@ export const getCoingeckoPricesData = async (
   )
 }
 
-
-
 export const getJupPricesData = async (ids: string[]): Promise<Record<string, TokenPriceData>> => {
   const maxTokensPerRequest = 100
 

@@ -461,11 +461,10 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               </Typography>
             </Tooltip>
             <Grid container flexDirection='column'>
-              <Typography className={classes.currentPrice}>Current price ━━━</Typography>
-              <Typography className={classes.globalPrice}>Global price ━━━</Typography>
+              <Typography className={classes.currentPrice}>Current price</Typography>
+              <Typography className={classes.globalPrice}>Global price</Typography>
               <Typography className={classes.buySellPrice}>Buy/sell price</Typography>
             </Grid>
-
           </Grid>
         </Grid>
         <PriceRangePlot
