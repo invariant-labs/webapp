@@ -1,28 +1,43 @@
-import { storiesOf } from '@storybook/react'
-import { withKnobs } from '@storybook/addon-knobs'
-import { toBlur } from '@consts/uiUtils'
-import React from 'react'
-import Priority from './Priority'
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
+import Priority, { IPriority } from './Priority'
+import { Provider } from 'react-redux'
+import { MemoryRouter } from 'react-router-dom'
+import { store } from '@store/index'
 
-storiesOf('newUi/priority', module)
-  .addDecorator(withKnobs)
-  .add('priority', () => (
-    <div style={{ width: 800 }} id={toBlur}>
-      <Priority
-        open={true}
-        handleClose={() => {}}
-        anchorEl={null}
-        recentPriorityFee={0.05}
-        priorityFeeOptions={[
-          { label: 'Normal', value: 0.000005, description: '1x Market fee' },
-          {
-            label: 'Market',
-            value: 0.001,
-            description: '85% percentile fees from last 20 blocks'
-          },
-          { label: 'High', value: 0.05, description: '5x Market fee' },
-          { label: 'Turbo', value: 0.1, description: '10x Market fee' }
-        ]}
-      />
-    </div>
-  ))
+const meta = {
+  title: 'Modals/Priority',
+  component: Priority,
+  decorators: [
+    Story => (
+      <Provider store={store}>
+        <MemoryRouter>
+          <Story />
+        </MemoryRouter>
+      </Provider>
+    )
+  ],
+  args: {
+    handleClose: fn(),
+    open: true
+  }
+} satisfies Meta<typeof Priority>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+const PrimaryComponent: React.FC<IPriority> = args => {
+  return <Priority {...args} />
+}
+
+export const Primary: Story = {
+  args: {
+    handleClose: fn(),
+    open: true,
+    anchorEl: null,
+    onPrioritySave: fn(),
+    recentPriorityFee: '1',
+    recentIsDynamic: true
+  },
+  render: args => <PrimaryComponent {...args} />
+}

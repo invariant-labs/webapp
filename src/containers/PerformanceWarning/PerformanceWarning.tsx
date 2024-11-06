@@ -1,15 +1,15 @@
-import { Grid, Typography } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import infoIcon from '@static/svg/infoBlack.svg'
-import { status, network } from '@selectors/solanaConnection'
-import { Status } from '@reducers/solanaConnection'
+import { status, network } from '@store/selectors/solanaConnection'
+import { Status } from '@store/reducers/solanaConnection'
 import { useSelector } from 'react-redux'
 import useStyles from './styles'
 import axios from 'axios'
-import { NetworkType, SolanaNetworks } from '@consts/static'
+import { NetworkType, RPC } from '@store/consts/static'
+import { Grid, Typography } from '@mui/material'
 
 export const PerformanceWarning: React.FC = () => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [showWarning, setShowWarning] = useState(false)
 
@@ -20,7 +20,7 @@ export const PerformanceWarning: React.FC = () => {
     if (networkStatus === Status.Initialized) {
       axios
         .post<{ result: Array<{ numTransactions: number; samplePeriodSecs: number }> }>(
-          networkType === NetworkType.MAINNET ? SolanaNetworks.MAIN_ALCHEMY : SolanaNetworks.DEV,
+          networkType === NetworkType.Mainnet ? RPC.MAIN_ALCHEMY : RPC.DEV,
           {
             jsonrpc: '2.0',
             id: 1,

@@ -1,5 +1,5 @@
 import { ISnackbarStore, snackbarsSliceName } from '../reducers/snackbars'
-import { keySelectors, AnyProps } from './helpers'
+import { AnyProps, keySelectors } from './helpers'
 
 const store = (s: AnyProps) => s[snackbarsSliceName] as ISnackbarStore
 

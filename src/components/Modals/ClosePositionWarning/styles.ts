@@ -1,7 +1,8 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     background: colors.invariant.component,
     width: 480,
@@ -11,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   popover: {
     marginTop: 'calc(50vh - 143px)',
     marginLeft: 'calc(50vw - 241px)',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'flex',
       marginLeft: 'auto',
       justifyContent: 'center'
@@ -73,7 +74,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 10,
 
     '&:hover': {
-      background: colors.invariant.greenLinearGradient
+      background: colors.invariant.greenLinearGradient,
+      '@media (hover: none)': {
+        background: colors.invariant.greenLinearGradientOpacity
+      }
     }
   },
   claimButton: {
@@ -85,7 +89,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 18,
 
     '&:hover': {
-      background: colors.invariant.pinkLinearGradient
+      background: colors.invariant.pinkLinearGradient,
+      '@media (hover: none)': {
+        background: colors.invariant.pinkLinearGradientOpacity
+      }
     }
   },
   cancelButton: {
@@ -98,7 +105,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 10,
 
     '&:hover': {
-      background: colors.invariant.lightHover
+      background: colors.invariant.lightHover,
+      '@media (hover: none)': {
+        background: colors.invariant.light
+      }
     }
   }
 }))

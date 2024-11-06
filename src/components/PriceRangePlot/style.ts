@@ -1,16 +1,18 @@
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material'
 import { colors, typography } from '@static/theme'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles()((theme: Theme) => ({
   container: {
     height: '100%',
+    maxWidth: '100%',
     position: 'relative',
     '& g > text': {
       stroke: 'none',
       fill: '#A9B6BF!important',
       fontFamily: 'Mukta!important',
 
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         fontSize: '8px!important'
       }
     }
@@ -20,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 'auto',
     fill: '#111931',
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: 22
     }
   },
@@ -40,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       boxShadow: `0 0 10px ${colors.invariant.green}`
     },
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: 40,
       height: 40
     }
@@ -54,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 10,
     flexDirection: 'row',
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: 'row',
       maxWidth: 92,
       height: 40

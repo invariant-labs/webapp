@@ -1,28 +1,33 @@
 import ClosePositionWarning from '@components/Modals/ClosePositionWarning/ClosePositionWarning'
-import { blurContent, unblurContent } from '@consts/uiUtils'
-import { Button, Grid, Hidden, Typography } from '@material-ui/core'
-import icons from '@static/icons'
+import { Button, Grid, Hidden, Tooltip, Typography } from '@mui/material'
+import { blurContent, unblurContent } from '@utils/uiUtils'
 import classNames from 'classnames'
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import { BoxInfo } from './BoxInfo'
 import { ILiquidityToken } from './consts'
 import useStyles from './style'
-import { TokenPriceData } from '@consts/utils'
+import { useNavigate } from 'react-router-dom'
+import { TokenPriceData } from '@store/consts/types'
+import icons from '@static/icons'
+import { addressToTicker } from '@utils/utils'
+import { NetworkType } from '@store/consts/static'
+import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 
 interface IProp {
   fee: number
   onClickClaimFee: () => void
   closePosition: (claimFarmRewards?: boolean) => void
   tokenX: ILiquidityToken
-  tokenXPriceData?: TokenPriceData
   tokenY: ILiquidityToken
+  tokenXPriceData?: TokenPriceData
   tokenYPriceData?: TokenPriceData
   xToY: boolean
   swapHandler: () => void
   showFeesLoader?: boolean
-  isBalanceLoading?: boolean
   userHasStakes?: boolean
+  isBalanceLoading: boolean
+  isActive: boolean
+  network: NetworkType
 }
 
 const SinglePositionInfo: React.FC<IProp> = ({
@@ -36,12 +41,16 @@ const SinglePositionInfo: React.FC<IProp> = ({
   xToY,
   swapHandler,
   showFeesLoader = false,
-  isBalanceLoading = false,
-  userHasStakes = false
+  userHasStakes = false,
+  isBalanceLoading,
+  isActive,
+  network
 }) => {
-  const history = useHistory()
+  const navigate = useNavigate()
+
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const classes = useStyles()
+  const { classes } = useStyles()
+
   return (
     <Grid className={classes.root}>
       <ClosePositionWarning
@@ -68,48 +77,116 @@ const SinglePositionInfo: React.FC<IProp> = ({
             src={xToY ? tokenX.icon : tokenY.icon}
             alt={xToY ? tokenX.name : tokenY.name}
           />
-          <img className={classes.arrowIcon} src={icons.ArrowIcon} alt={'Arrow'} />
+          <TooltipHover text='Reverse tokens'>
+            <img
+              className={classes.arrowIcon}
+              src={icons.swapListIcon}
+              alt='Reverse tokens'
+              onClick={swapHandler}
+            />
+          </TooltipHover>
           <img
             className={classes.icon}
             src={xToY ? tokenY.icon : tokenX.icon}
             alt={xToY ? tokenY.name : tokenX.name}
           />
           <Grid className={classes.namesGrid}>
-            <Typography className={classes.name}>{xToY ? tokenX.name : tokenY.name}</Typography>
-            <Typography id='pause' className={classes.name}>
-              -
+            <Typography className={classes.name}>
+              {xToY ? tokenX.name : tokenY.name} - {xToY ? tokenY.name : tokenX.name}
             </Typography>
-            <Typography className={classes.name}>{xToY ? tokenY.name : tokenX.name}</Typography>
           </Grid>
-          <Grid className={classes.rangeGrid}>
-            <Typography className={classNames(classes.text, classes.feeText)}>
-              {fee}% fee
-            </Typography>
+          <Grid className={classes.rangeGrid} sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <Tooltip
+              title={
+                isActive ? (
+                  <>
+                    The position is <b>active</b> and currently <b>earning a fee</b> as long as the
+                    current price is <b>within</b> the position's price range.
+                  </>
+                ) : (
+                  <>
+                    The position is <b>inactive</b> and <b>not earning a fee</b> as long as the
+                    current price is <b>outside</b> the position's price range.
+                  </>
+                )
+              }
+              placement='top'
+              classes={{
+                tooltip: classes.tooltip
+              }}>
+              <Typography
+                className={classNames(
+                  classes.text,
+                  classes.feeText,
+                  isActive ? classes.active : null
+                )}>
+                {fee.toString()}% fee
+              </Typography>
+            </Tooltip>
           </Grid>
         </Grid>
 
         <Grid className={classes.headerButtons}>
-          <Button
-            className={classes.closeButton}
-            variant='contained'
-            onClick={() => {
-              if (!userHasStakes) {
-                closePosition()
-              } else {
-                setIsModalOpen(true)
-                blurContent()
+          <Grid className={classes.rangeGrid} sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Tooltip
+              title={
+                isActive ? (
+                  <>
+                    The position is <b>active</b> and currently <b>earning a fee</b> as long as the
+                    current price is <b>within</b> the position's price range.
+                  </>
+                ) : (
+                  <>
+                    The position is <b>inactive</b> and <b>not earning a fee</b> as long as the
+                    current price is <b>outside</b> the position's price range.
+                  </>
+                )
               }
-            }}>
-            Close position
-          </Button>
+              placement='top'
+              classes={{
+                tooltip: classes.tooltip
+              }}>
+              <Typography
+                className={classNames(
+                  classes.text,
+                  classes.feeText,
+                  isActive ? classes.active : null
+                )}>
+                {fee.toString()}% fee
+              </Typography>
+            </Tooltip>
+          </Grid>
+          <TooltipHover
+            text={
+              tokenX.claimValue > 0 || tokenY.claimValue > 0
+                ? 'Unclaimed fees will be returned when closing the position'
+                : ''
+            }>
+            <Button
+              className={classes.closeButton}
+              variant='contained'
+              onClick={() => {
+                if (!userHasStakes) {
+                  closePosition()
+                } else {
+                  setIsModalOpen(true)
+                  blurContent()
+                }
+              }}>
+              Close position
+            </Button>
+          </TooltipHover>
           <Hidden smUp>
             <Button
               className={classes.button}
               variant='contained'
               onClick={() => {
-                history.push('/newPosition')
+                const address1 = addressToTicker(network, tokenX.name)
+                const address2 = addressToTicker(network, tokenY.name)
+
+                navigate(`/newPosition/${address1}/${address2}/${fee}`)
               }}>
-              <span className={classes.buttonText}>+ Add Liquidity</span>
+              <span className={classes.buttonText}>+ Add Position</span>
             </Button>
           </Hidden>
         </Grid>
@@ -134,17 +211,14 @@ const SinglePositionInfo: React.FC<IProp> = ({
         <BoxInfo
           title={'Unclaimed fees'}
           tokenA={
-            xToY
-              ? { ...tokenX, value: tokenX.claimValue, price: tokenXPriceData?.price }
-              : { ...tokenY, value: tokenY.claimValue, price: tokenYPriceData?.price }
+            xToY ? { ...tokenX, value: tokenX.claimValue } : { ...tokenY, value: tokenY.claimValue }
           }
           tokenB={
-            xToY
-              ? { ...tokenY, value: tokenY.claimValue, price: tokenYPriceData?.price }
-              : { ...tokenX, value: tokenX.claimValue, price: tokenXPriceData?.price }
+            xToY ? { ...tokenY, value: tokenY.claimValue } : { ...tokenX, value: tokenX.claimValue }
           }
           onClickButton={onClickClaimFee}
           showLoader={showFeesLoader}
+          isBalanceLoading={isBalanceLoading}
         />
       </Grid>
     </Grid>

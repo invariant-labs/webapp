@@ -1,16 +1,41 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
+import { useState } from 'react'
+import type { Meta, StoryObj } from '@storybook/react'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch'
+import { fn } from '@storybook/test'
+import { Provider } from 'react-redux'
+import { store } from '@store/index'
+import { MemoryRouter } from 'react-router-dom'
 
-storiesOf('position/concentrationTypeSwitch', module).add('default', () => {
-  return (
-    <div
-      style={{
-        backgroundColor: '#202946',
-        padding: 20,
-        width: 200
-      }}>
-      <ConcentrationTypeSwitch onSwitch={() => {}} initialValue={0} />
-    </div>
-  )
-})
+const meta = {
+  title: 'Components/ConcentrationTypeSwitch',
+  component: ConcentrationTypeSwitch,
+  decorators: [
+    Story => (
+      <Provider store={store}>
+        <MemoryRouter>
+          <Story />
+        </MemoryRouter>
+      </Provider>
+    )
+  ]
+} satisfies Meta<typeof ConcentrationTypeSwitch>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Primary: Story = {
+  render: args => {
+    const [currentValue, setCurrentValue] = useState<number>(args.currentValue)
+
+    const handleSwitch = (isConcentrated: boolean) => {
+      setCurrentValue(isConcentrated ? 0 : 1)
+      args.onSwitch(isConcentrated)
+    }
+
+    return <ConcentrationTypeSwitch {...args} currentValue={currentValue} onSwitch={handleSwitch} />
+  },
+  args: {
+    currentValue: 0,
+    onSwitch: fn()
+  }
+}

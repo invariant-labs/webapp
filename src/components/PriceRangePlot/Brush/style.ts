@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles()(() => ({
   handle: {
     cursor: 'ew-resize'
   }

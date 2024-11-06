@@ -1,15 +1,12 @@
-import { actions } from '@reducers/stats'
+import { actions } from '@store/reducers/stats'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
-import { network } from '@selectors/solanaConnection'
-import { getFullNewTokensData, getFullSnap } from '@consts/utils'
-import { tokens } from '@selectors/pools'
+import { network } from '@store/selectors/solanaConnection'
+import { getFullSnap } from '@utils/utils'
 import { PublicKey } from '@solana/web3.js'
-import { actions as poolsActions } from '@reducers/pools'
-import { getConnection, handleRpcError } from './connection'
+import { handleRpcError } from './connection'
 
 export function* getStats(): Generator {
   try {
-    const connection = yield* call(getConnection)
     const currentNetwork = yield* select(network)
 
     const fullSnap = yield* call(getFullSnap, currentNetwork.toLowerCase())
@@ -28,23 +25,6 @@ export function* getStats(): Generator {
     }
 
     yield* put(actions.setCurrentStats(parsedFullSnap))
-
-    const allTokens = yield* select(tokens)
-
-    const unknownTokens = new Set<PublicKey>()
-
-    parsedFullSnap.poolsData.forEach(pool => {
-      if (!allTokens[pool.tokenX.toString()]) {
-        unknownTokens.add(pool.tokenX)
-      }
-
-      if (!allTokens[pool.tokenY.toString()]) {
-        unknownTokens.add(pool.tokenY)
-      }
-    })
-
-    const newTokens = yield* call(getFullNewTokensData, [...unknownTokens], connection)
-    yield* put(poolsActions.addTokens(newTokens))
   } catch (error) {
     console.log(error)
     yield* call(handleRpcError, (error as Error).message)

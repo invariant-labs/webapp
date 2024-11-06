@@ -1,10 +1,10 @@
-import React from 'react'
-import { storiesOf } from '@storybook/react'
-import { withKnobs } from '@storybook/addon-knobs'
-import SelectTokenModal from '@components/Modals/SelectModals/SelectTokenModal/SelectTokenModal'
-import { PublicKey } from '@solana/web3.js'
+import type { Meta, StoryObj } from '@storybook/react'
+import SelectTokenModal from './SelectTokenModal'
+import { fn } from '@storybook/test'
+import { NetworkType } from '@store/consts/static'
+import { SwapToken } from '@store/selectors/solanaWallet'
 import { BN } from '@project-serum/anchor'
-import { SwapToken } from '@selectors/solanaWallet'
+import { PublicKey } from '@solana/web3.js'
 
 const tokens: Record<string, SwapToken> = {
   So11111111111111111111111111111111111111112: {
@@ -36,22 +36,26 @@ const tokens: Record<string, SwapToken> = {
   }
 }
 
-storiesOf('newModals/selectToken', module)
-  .addDecorator(withKnobs)
-  .add('default', () => (
-    <SelectTokenModal
-      tokens={tokens}
-      commonTokens={[
-        new PublicKey('So11111111111111111111111111111111111111112'),
-        new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-        new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
-      ]}
-      open={true}
-      handleClose={() => {}}
-      anchorEl={null}
-      onSelect={() => {}}
-      handleAddToken={() => {}}
-      initialHideUnknownTokensValue={false}
-      onHideUnknownTokensChange={() => {}}
-    />
-  ))
+const meta = {
+  title: 'Modals/SelectTokenModal',
+  component: SelectTokenModal
+} satisfies Meta<typeof SelectTokenModal>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Primary: Story = {
+  args: {
+    anchorEl: null,
+    handleClose: () => {},
+    onSelect: () => {},
+    open: true,
+    commonTokens: [],
+    handleAddToken: fn(),
+    initialHideUnknownTokensValue: false,
+    onHideUnknownTokensChange: fn(),
+    tokens: tokens,
+    hiddenUnknownTokens: false,
+    network: NetworkType.Testnet
+  }
+}

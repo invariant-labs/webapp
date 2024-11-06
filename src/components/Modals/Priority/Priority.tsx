@@ -1,12 +1,12 @@
 import AnimatedButton from '@components/AnimatedButton/AnimatedButton'
 import TransactionPriorityButton from '@components/TransactionPriorityButton/TransactionPriorityButton'
-import { IPriorityFeeOptions } from '@containers/HeaderWrapper/HeaderWrapper'
-import { Box, Button, Grid, Input, Popover, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 import React, { useEffect, useRef, useState } from 'react'
 import useStyles from './style'
+import { IPriorityFeeOptions } from '@store/consts/types'
+import { Box, Button, Grid, Input, Popover, Typography } from '@mui/material'
 
-interface Props {
+export interface IPriority {
   open: boolean
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
@@ -15,7 +15,7 @@ interface Props {
   onPrioritySave: () => void
 }
 
-const Priority: React.FC<Props> = ({
+const Priority: React.FC<IPriority> = ({
   open,
   handleClose,
   anchorEl,
@@ -23,14 +23,14 @@ const Priority: React.FC<Props> = ({
   recentIsDynamic,
   onPrioritySave
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const inputRef = useRef<HTMLInputElement>(null)
   const [selectedFee, setSelectedFee] = useState(0)
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [inputValue, setInputValue] = useState('')
   const [saveButtonContent, setSaveButtonContent] = useState('Save settings')
-  const [timerId, setTimerId] = useState(0)
+  const [timerId, setTimerId] = useState<NodeJS.Timeout>()
   const [dynamicFee, setDynamicFee] = useState<number | null>(null)
   const [isDynamic, setIsDynamic] = useState(recentIsDynamic)
 
@@ -209,8 +209,8 @@ const Priority: React.FC<Props> = ({
                     selected={isDynamic ? params.saveValue === 'DYNAMIC' : selectedIndex === index}
                     index={index}
                     label={params.label}
-                    value={typeof params.value === 'string' ? dynamicFee ?? 0 : params.value}
-                    saveValue={typeof params.value === 'string' ? dynamicFee ?? 0 : params.value}
+                    value={typeof params.value === 'string' ? (dynamicFee ?? 0) : params.value}
+                    saveValue={typeof params.value === 'string' ? (dynamicFee ?? 0) : params.value}
                     description={params.description}
                     onClick={handleClick}
                   />

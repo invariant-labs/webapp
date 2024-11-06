@@ -1,30 +1,41 @@
-import { Grid, Typography } from '@material-ui/core'
-import React from 'react'
-import empty from '@static/svg/empty.svg'
+import { Button, Grid, Typography } from '@mui/material'
 import classNames from 'classnames'
-import { useStyles } from './styles'
+import React from 'react'
+import { useStyles } from './style'
+import icons from '@static/icons'
 
-export interface IProps {
+export interface IEmptyPlaceholder {
   desc: string
+  onAction?: () => void
   className?: string
   style?: React.CSSProperties
+  withButton?: boolean
+  buttonName?: string
 }
 
-export const EmptyPlaceholder: React.FC<IProps> = ({ desc, className, style }) => {
-  const classes = useStyles()
+export const EmptyPlaceholder: React.FC<IEmptyPlaceholder> = ({
+  desc,
+  onAction,
+  withButton = true,
+  buttonName
+}) => {
+  const { classes } = useStyles()
 
   return (
-    <Grid
-      container
-      direction='column'
-      alignItems='center'
-      className={classNames(classes.wrapper, className)}
-      style={style}>
-      <img src={empty} className={classes.image} />
-      <Typography className={classes.title}>It's empty here...</Typography>
-      <Typography className={classes.desc}>{desc}</Typography>
-    </Grid>
+    <>
+      <Grid className={classNames(classes.blur, 'blurLayer')} />
+      <Grid className={classNames(classes.container, 'blurLayer')}>
+        <Grid className={classNames(classes.root, 'blurInfo')}>
+          <img className={classes.img} src={icons.empty} alt='Not connected' />
+          <Typography className={classes.desc}>It's empty here...</Typography>
+          {desc?.length && <Typography className={classes.desc}>{desc}</Typography>}
+          {withButton && (
+            <Button className={classes.button} onClick={onAction} variant='contained'>
+              {buttonName ? buttonName : 'Add a position'}
+            </Button>
+          )}
+        </Grid>
+      </Grid>
+    </>
   )
 }
-
-export default EmptyPlaceholder

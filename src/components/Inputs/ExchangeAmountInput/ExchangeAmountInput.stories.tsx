@@ -1,10 +1,14 @@
-import { storiesOf } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
 import ExchangeAmountInput from './ExchangeAmountInput'
-import { withKnobs } from '@storybook/addon-knobs'
-import { colors } from '@static/theme'
-import { BN } from '@project-serum/anchor'
+import { useState } from 'react'
+import { Provider } from 'react-redux'
+import { store } from '@store/index'
+import { MemoryRouter } from 'react-router-dom'
+import { SwapToken } from '@store/selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
-import { SwapToken } from '@selectors/solanaWallet'
+import { NetworkType } from '@store/consts/static'
+import { BN } from '@project-serum/anchor'
 
 const tokens: Record<string, SwapToken> = {
   So11111111111111111111111111111111111111112: {
@@ -36,51 +40,68 @@ const tokens: Record<string, SwapToken> = {
   }
 }
 
-storiesOf('inputs/exchangeAmount', module)
-  .addDecorator(withKnobs)
-  .add('token', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
-      <ExchangeAmountInput
-        setValue={() => {}}
-        decimal={6}
-        placeholder={'0.0'}
-        onMaxClick={() => {}}
-        tokens={tokens}
-        current={tokens[0]}
-        onSelect={() => {}}
-        disabled={false}
-        handleAddToken={() => {}}
-        commonTokens={[
-          new PublicKey('So11111111111111111111111111111111111111112'),
-          new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-          new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
-        ]}
-        initialHideUnknownTokensValue={false}
-        onHideUnknownTokensChange={() => {}}
-        isBalanceLoading={false}
-      />
-    </div>
-  ))
-  .add('balance loading', () => (
-    <div style={{ backgroundColor: colors.navy.component, padding: '10px' }}>
-      <ExchangeAmountInput
-        setValue={() => {}}
-        decimal={6}
-        placeholder={'0.0'}
-        onMaxClick={() => {}}
-        tokens={tokens}
-        current={tokens[0]}
-        onSelect={() => {}}
-        disabled={false}
-        handleAddToken={() => {}}
-        commonTokens={[
-          new PublicKey('So11111111111111111111111111111111111111112'),
-          new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-          new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v')
-        ]}
-        initialHideUnknownTokensValue={false}
-        onHideUnknownTokensChange={() => {}}
-        isBalanceLoading={true}
-      />
-    </div>
-  ))
+const meta = {
+  title: 'Inputs/ExchangeAmountInput',
+  component: ExchangeAmountInput,
+  decorators: [
+    Story => (
+      <Provider store={store}>
+        <MemoryRouter>
+          <Story />
+        </MemoryRouter>
+      </Provider>
+    )
+  ],
+  args: {
+    error: null,
+    className: '',
+    decimal: 2,
+    placeholder: '0.0',
+    onMaxClick: fn(),
+    current: null,
+    tokens: tokens,
+    onSelect: fn(),
+    disabled: false,
+    balance: '1000',
+    hideBalances: false,
+    handleAddToken: fn(),
+    commonTokens: [],
+    limit: undefined,
+    initialHideUnknownTokensValue: false,
+    onHideUnknownTokensChange: fn(),
+    tokenPrice: 100,
+    priceLoading: false,
+    isBalanceLoading: false,
+    showMaxButton: true,
+    showBlur: false,
+    hiddenUnknownTokens: false,
+    network: NetworkType.Testnet,
+    percentageChange: 0
+  }
+} satisfies Meta<typeof ExchangeAmountInput>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Primary: Story = {
+  args: {
+    value: '0',
+    setValue: fn()
+  },
+  render: args => {
+    const [value, setValue] = useState('0')
+    return <ExchangeAmountInput {...args} setValue={setValue} value={value} tokens={tokens} />
+  }
+}
+
+export const WithError: Story = {
+  args: {
+    value: '0',
+    setValue: fn(),
+    error: 'Invalid amount'
+  },
+  render: args => {
+    const [value, setValue] = useState('0')
+    return <ExchangeAmountInput {...args} setValue={setValue} value={value} />
+  }
+}

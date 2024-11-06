@@ -1,20 +1,40 @@
-import { storiesOf } from '@storybook/react'
-import { withKnobs } from '@storybook/addon-knobs'
-import { BN } from '@project-serum/anchor'
-import React from 'react'
+import type { Meta, StoryObj } from '@storybook/react'
 import TransactionDetailsBox from './TransactionDetailsBox'
+import { Provider } from 'react-redux'
+import { store } from '@store/index'
+import { MemoryRouter } from 'react-router-dom'
+import { SnackbarProvider } from 'notistack'
+import { BN } from '@project-serum/anchor'
 
-storiesOf('newUi/swap', module)
-  .addDecorator(withKnobs)
-  .add('transaction details box', () => (
-    <div style={{ width: 400 }}>
-      <TransactionDetailsBox
-        open
-        fee={{ v: new BN(1000) }}
-        exchangeRate={{ val: 0.4321, symbol: 'SNY', decimal: 6 }}
-        slippage={0.1}
-        priceImpact={new BN(400000)}
-        // minimumReceived={{ val: new BN(1000000000), symbol: 'BTC', decimal: 6 }}
-      />
-    </div>
-  ))
+const meta = {
+  title: 'Components/TransactionDetailsBox',
+  component: TransactionDetailsBox,
+  decorators: [
+    Story => (
+      <Provider store={store}>
+        <MemoryRouter>
+          <SnackbarProvider maxSnack={99}>
+            <Story />
+          </SnackbarProvider>
+        </MemoryRouter>
+      </Provider>
+    )
+  ]
+} satisfies Meta<typeof TransactionDetailsBox>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Primary: Story = {
+  args: {
+    exchangeRate: { val: 123, symbol: 'ABC', decimal: 12 },
+    slippage: 0.5,
+    priceImpact: new BN(1000000000),
+    fee: { v: new BN(1000000000) },
+    open: true,
+    isLoadingRate: false
+  },
+  render: args => {
+    return <TransactionDetailsBox {...args} />
+  }
+}

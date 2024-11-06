@@ -1,13 +1,16 @@
-import { Grid, Hidden, Tooltip, Typography, useMediaQuery } from '@material-ui/core'
-import React, { useMemo, useState } from 'react'
-import { formatNumbers, FormatNumberThreshold, PrefixConfig, showPrefix } from '@consts/utils'
-import { theme } from '@static/theme'
+import { Grid, Hidden, Tooltip, Typography, useMediaQuery } from '@mui/material'
 import SwapList from '@static/svg/swap-list.svg'
-import useStyle from './style'
+import { theme } from '@static/theme'
+import { formatNumber } from '@utils/utils'
 import classNames from 'classnames'
-import { initialXtoY, tickerToAddress } from '@consts/uiUtils'
+import { useMemo, useState } from 'react'
+import { useStyles } from './style'
 
-export interface ILiquidityItem {
+import { initialXtoY, tickerToAddress } from '@utils/utils'
+import { NetworkType } from '@store/consts/static'
+import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+
+export interface IPositionItem {
   tokenXName: string
   tokenYName: string
   tokenXIcon: string
@@ -20,89 +23,74 @@ export interface ILiquidityItem {
   valueX: number
   valueY: number
   id: string
+  address: string
   isActive?: boolean
+  currentPrice: number
+  network: NetworkType
+  isFullRange: boolean
 }
 
-const shorterThresholds: FormatNumberThreshold[] = [
-  {
-    value: 100,
-    decimals: 2
-  },
-  {
-    value: 1000,
-    decimals: 1
-  },
-  {
-    value: 10000,
-    decimals: 1,
-    divider: 1000
-  },
-  {
-    value: 1000000,
-    decimals: 0,
-    divider: 1000
-  },
-  {
-    value: 10000000,
-    decimals: 1,
-    divider: 1000000
-  },
-  {
-    value: 1000000000,
-    decimals: 0,
-    divider: 1000000
-  },
-  {
-    value: 10000000000,
-    decimals: 1,
-    divider: 1000000000
-  }
-]
-
-const minMaxShorterThresholds: FormatNumberThreshold[] = [
-  {
-    value: 10,
-    decimals: 3
-  },
-  ...shorterThresholds
-]
-
-const shorterPrefixConfig: PrefixConfig = {
-  B: 1000000000,
-  M: 1000000,
-  K: 1000
-}
-
-export const PositionItem: React.FC<ILiquidityItem> = ({
+export const PositionItem: React.FC<IPositionItem> = ({
   tokenXName,
   tokenYName,
   tokenXIcon,
   tokenYIcon,
-  tokenXLiq,
-  tokenYLiq,
   fee,
   min,
   max,
   valueX,
   valueY,
-  isActive = false
+  isActive = false,
+  currentPrice,
+  tokenXLiq,
+  tokenYLiq,
+  network,
+  isFullRange
 }) => {
-  const classes = useStyle()
+  const { classes } = useStyles()
 
   const isXs = useMediaQuery(theme.breakpoints.down('xs'))
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'))
 
   const [xToY, setXToY] = useState<boolean>(
-    initialXtoY(tickerToAddress(tokenXName), tickerToAddress(tokenYName))
+    initialXtoY(tickerToAddress(network, tokenXName), tickerToAddress(network, tokenYName))
   )
+
+  const getPercentageRatio = () => {
+    const firstTokenPercentage =
+      ((tokenXLiq * currentPrice) / (tokenYLiq + tokenXLiq * currentPrice)) * 100
+
+    const tokenXPercentageFloat = xToY ? firstTokenPercentage : 100 - firstTokenPercentage
+    const tokenXPercentage =
+      tokenXPercentageFloat > 50
+        ? Math.floor(tokenXPercentageFloat)
+        : Math.ceil(tokenXPercentageFloat)
+
+    const tokenYPercentage = 100 - tokenXPercentage
+
+    return { tokenXPercentage, tokenYPercentage }
+  }
+
+  const { tokenXPercentage, tokenYPercentage } = getPercentageRatio()
 
   const feeFragment = useMemo(
     () => (
       <Tooltip
+        enterTouchDelay={0}
+        leaveTouchDelay={Number.MAX_SAFE_INTEGER}
+        onClick={e => e.stopPropagation()}
         title={
-          isActive
-            ? 'Position active. Current price is inside range'
-            : 'Position inactive. Current price is outside range'
+          isActive ? (
+            <>
+              The position is <b>active</b> and currently <b>earning a fee</b> as long as the
+              current price is <b>within</b> the position's price range.
+            </>
+          ) : (
+            <>
+              The position is <b>inactive</b> and <b>not earning a fee</b> as long as the current
+              price is <b>outside</b> the position's price range.
+            </>
+          )
         }
         placement='top'
         classes={{
@@ -136,14 +124,7 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
         <Typography className={classNames(classes.infoText, classes.label)}>Value</Typography>
         <Grid className={classes.infoCenter} container item justifyContent='center'>
           <Typography className={classes.greenText}>
-            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(
-              (xToY ? valueX : valueY).toString()
-            )}
-            {showPrefix(
-              xToY ? valueX : valueY,
-              isXs || isDesktop ? shorterPrefixConfig : undefined
-            )}{' '}
-            {xToY ? tokenXName : tokenYName}
+            {formatNumber(xToY ? valueX : valueY)} {xToY ? tokenXName : tokenYName}
           </Typography>
         </Grid>
       </Grid>
@@ -166,15 +147,17 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
               src={xToY ? tokenXIcon : tokenYIcon}
               alt={xToY ? tokenXName : tokenYName}
             />
-            <img
-              className={classes.arrows}
-              src={SwapList}
-              alt='Arrow'
-              onClick={e => {
-                e.stopPropagation()
-                setXToY(!xToY)
-              }}
-            />
+            <TooltipHover text='Reverse tokens'>
+              <img
+                className={classes.arrows}
+                src={SwapList}
+                alt='Arrow'
+                onClick={e => {
+                  e.stopPropagation()
+                  setXToY(!xToY)
+                }}
+              />
+            </TooltipHover>
             <img
               className={classes.tokenIcon}
               src={xToY ? tokenYIcon : tokenXIcon}
@@ -191,8 +174,7 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
       </Grid>
 
       <Grid container item className={classes.mdInfo} direction='row'>
-        <Hidden smDown>{feeFragment}</Hidden>
-
+        <Hidden mdDown>{feeFragment}</Hidden>
         <Grid
           container
           item
@@ -200,26 +182,28 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
           justifyContent='center'
           alignItems='center'>
           <Typography className={classes.infoText}>
-            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(
-              (xToY ? tokenXLiq : tokenYLiq).toString()
+            {tokenXPercentage === 100 && (
+              <span>
+                {tokenXPercentage}
+                {'%'} {xToY ? tokenXName : tokenYName}
+              </span>
             )}
-            {showPrefix(
-              xToY ? tokenXLiq : tokenYLiq,
-              isXs || isDesktop ? shorterPrefixConfig : undefined
-            )}{' '}
-            {xToY ? tokenXName : tokenYName}
-            {' - '}
-            {formatNumbers(isXs || isDesktop ? shorterThresholds : undefined)(
-              (xToY ? tokenYLiq : tokenXLiq).toString()
+            {tokenYPercentage === 100 && (
+              <span>
+                {tokenYPercentage}
+                {'%'} {xToY ? tokenYName : tokenXName}
+              </span>
             )}
-            {showPrefix(
-              xToY ? tokenYLiq : tokenXLiq,
-              isXs || isDesktop ? shorterPrefixConfig : undefined
-            )}{' '}
-            {xToY ? tokenYName : tokenXName}
+
+            {tokenYPercentage !== 100 && tokenXPercentage !== 100 && (
+              <span>
+                {tokenXPercentage}
+                {'%'} {xToY ? tokenXName : tokenYName} {' - '} {tokenYPercentage}
+                {'%'} {xToY ? tokenYName : tokenXName}
+              </span>
+            )}
           </Typography>
         </Grid>
-
         <Hidden mdUp>{valueFragment}</Hidden>
 
         <Grid
@@ -229,32 +213,24 @@ export const PositionItem: React.FC<ILiquidityItem> = ({
           justifyContent='space-between'
           alignItems='center'
           wrap='nowrap'>
-          <Typography className={classNames(classes.greenText, classes.label)}>
-            MIN - MAX
-          </Typography>
-          <Grid className={classes.infoCenter} container item justifyContent='center'>
-            <Typography className={classes.infoText}>
-              {formatNumbers(isXs || isDesktop ? minMaxShorterThresholds : undefined)(
-                (xToY ? min : 1 / max).toString()
-              )}
-              {showPrefix(
-                xToY ? min : 1 / max,
-                isXs || isDesktop ? shorterPrefixConfig : undefined
-              )}
-              {' - '}
-              {formatNumbers(isXs || isDesktop ? minMaxShorterThresholds : undefined)(
-                (xToY ? max : 1 / min).toString()
-              )}
-              {showPrefix(
-                xToY ? max : 1 / min,
-                isXs || isDesktop ? shorterPrefixConfig : undefined
-              )}{' '}
-              {xToY ? tokenYName : tokenXName} per {xToY ? tokenXName : tokenYName}
+          <>
+            <Typography className={classNames(classes.greenText, classes.label)}>
+              MIN - MAX
             </Typography>
-          </Grid>
+            <Grid className={classes.infoCenter} container item justifyContent='center'>
+              {isFullRange ? (
+                <Typography className={classes.infoText}>FULL RANGE</Typography>
+              ) : (
+                <Typography className={classes.infoText}>
+                  {formatNumber(xToY ? min : 1 / max)} - {formatNumber(xToY ? max : 1 / min)}{' '}
+                  {xToY ? tokenYName : tokenXName} per {xToY ? tokenXName : tokenYName}
+                </Typography>
+              )}
+            </Grid>
+          </>
         </Grid>
 
-        <Hidden smDown>{valueFragment}</Hidden>
+        <Hidden mdDown>{valueFragment}</Hidden>
       </Grid>
     </Grid>
   )

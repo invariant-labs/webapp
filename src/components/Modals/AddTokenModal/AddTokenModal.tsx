@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Typography, Popover, Grid, Button, Input } from '@material-ui/core'
 import useStyles from './style'
+import { Button, Grid, Input, Popover, Typography } from '@mui/material'
 
 export interface IProps {
   open: boolean
@@ -8,7 +8,7 @@ export interface IProps {
   addToken: (address: string) => void
 }
 export const AddTokenModal: React.FC<IProps> = ({ open, handleClose, addToken }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [address, setAddress] = useState('')
 
@@ -34,14 +34,9 @@ export const AddTokenModal: React.FC<IProps> = ({ open, handleClose, addToken })
             {'\u2715'}
           </Button>
         </Grid>
-        <Grid
-          className={classes.lowerRow}
-          container
-          direction='row'
-          justifyContent='space-between'
-          wrap='nowrap'>
+        <Grid container direction='row' justifyContent='space-between' wrap='nowrap'>
           <Input
-            className={classes.input}
+            classes={{ input: classes.input }}
             placeholder='Token address'
             onChange={e => setAddress(e.target.value)}
             value={address}

@@ -1,26 +1,28 @@
-import ChangeWalletButton from '@components/HeaderButton/ChangeWalletButton'
-import SelectNetworkButton from '@components/HeaderButton/SelectNetworkButton'
-import SelectPriorityButton from '@components/HeaderButton/SelectPriorityButton'
-import SelectRPCButton from '@components/HeaderButton/SelectRPCButton'
-import useButtonStyles from '@components/HeaderButton/style'
-import Priority from '@components/Modals/Priority/Priority'
-import RoutesModal from '@components/Modals/RoutesModal/RoutesModal'
-import SelectMainnetRPC from '@components/Modals/SelectMainnetRPC/SelectMainnetRPC'
-import NavbarButton from '@components/Navbar/Button'
-import { NetworkType, SolanaNetworks } from '@consts/static'
-import { blurContent, unblurContent } from '@consts/uiUtils'
-import { Button, CardMedia, Grid, Hidden, IconButton, useMediaQuery } from '@material-ui/core'
-import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
-import { PublicKey } from '@solana/web3.js'
+import SelectTestnetRPC from '@components/Modals/SelectTestnetRPC/SelectTestnetRPC'
+import NavbarButton from '@components/Navbar/NavbarButton'
+import DotIcon from '@mui/icons-material/FiberManualRecordRounded'
+import { Box, CardMedia, Grid, IconButton, useMediaQuery } from '@mui/material'
 import icons from '@static/icons'
 import Hamburger from '@static/svg/Hamburger.svg'
 import { theme } from '@static/theme'
-import classNames from 'classnames'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import { RPC, CHAINS, NetworkType } from '@store/consts/static'
+import { blurContent, unblurContent } from '@utils/uiUtils'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import ChangeWalletButton from './HeaderButton/ChangeWalletButton'
+import SelectNetworkButton from './HeaderButton/SelectNetworkButton'
+import SelectRPCButton from './HeaderButton/SelectRPCButton'
 import useStyles from './style'
-import { RpcStatus } from '@reducers/solanaConnection'
-
+import SelectChainButton from './HeaderButton/SelectChainButton'
+import SelectChain from '@components/Modals/SelectChain/SelectChain'
+import SelectMainnetRPC from '@components/Modals/SelectMainnetRPC/SelectMainnetRPC'
+import { ISelectChain, ISelectNetwork } from '@store/consts/types'
+import { RpcStatus } from '@store/reducers/solanaConnection'
+import RoutesModal from '@components/Modals/RoutesModal/RoutesModal'
+import { PublicKey } from '@solana/web3.js'
+import FaucetButton from './HeaderButton/FaucetButton'
+import SelectPriorityButton from './HeaderButton/SelectPriorityButton'
+import Priority from '@components/Modals/Priority/Priority'
 export interface IHeader {
   address: PublicKey
   onNetworkSelect: (networkType: NetworkType, rpcAddress: string, rpcName?: string) => void
@@ -29,8 +31,15 @@ export interface IHeader {
   landing: string
   typeOfNetwork: NetworkType
   rpc: string
-  onFaucet?: () => void
+  onFaucet: () => void
   onDisconnectWallet: () => void
+  defaultTestnetRPC: string
+  onCopyAddress: () => void
+  onChangeWallet: () => void
+  activeChain: ISelectChain
+  onChainSelect: (chain: ISelectChain) => void
+  network: NetworkType
+  defaultDevnetRPC: string
   defaultMainnetRPC: string
   recentPriorityFee: string
   recentIsDynamic: boolean
@@ -48,152 +57,212 @@ export const Header: React.FC<IHeader> = ({
   rpc,
   onFaucet,
   onDisconnectWallet,
+  defaultDevnetRPC,
+  onCopyAddress,
+  onChangeWallet,
+  activeChain,
+  onChainSelect,
+  network,
   defaultMainnetRPC,
   recentPriorityFee,
   recentIsDynamic,
   onPrioritySave,
   rpcStatus
 }) => {
-  const classes = useStyles()
-  const buttonClasses = useButtonStyles()
+  const { classes } = useStyles()
+  const navigate = useNavigate()
 
-  const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
+  const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
 
-  const routes =
-    typeOfNetwork === NetworkType.MAINNET
-      ? ['swap', 'pool', 'stats', 'farms']
-      : ['swap', 'pool', 'stats', 'farms', 'bonds']
+  const routes = ['exchange', 'liquidity', 'statistics']
 
   const otherRoutesToHighlight: Record<string, RegExp[]> = {
-    pool: [/^newPosition\/*/, /^position\/*/],
-    farms: [/^farms$/, /^farm\/*/]
+    liquidity: [/^newPosition\/*/, /^position\/*/],
+    exchange: [/^exchange\/*/]
+    // creator: [/^creator\/*/]
   }
 
-  const [activePath, setActive] = React.useState(landing)
+  const [activePath, setActive] = useState('exchange')
+  const [routesModalOpen, setRoutesModalOpen] = useState(false)
+  const [RpcsModalOpen, setRpcsModalOpen] = useState(false)
+  const [chainSelectOpen, setChainSelectOpen] = useState(false)
+  const [routesModalAnchor, setRoutesModalAnchor] = useState<HTMLButtonElement | null>(null)
+  const [priorityModal, setPriorityModal] = useState<boolean>(false)
 
-  const [routesModalOpen, setRoutesModalOpen] = React.useState(false)
-  const [mainnetRpcsOpen, setMainnetRpcsOpen] = React.useState(false)
-  const [routesModalAnchor, setRoutesModalAnchor] = React.useState<HTMLButtonElement | null>(null)
-  const [priorityModal, setPriorityModal] = React.useState<boolean>(false)
-
-  React.useEffect(() => {
-    // if there will be no redirects, get rid of this
+  useEffect(() => {
     setActive(landing)
   }, [landing])
 
-  const mainnetRPCs = [
+  const testnetRPCs: ISelectNetwork[] = []
+
+  const mainnetRPCs: ISelectNetwork[] = [
     {
-      networkType: NetworkType.MAINNET,
-      rpc: SolanaNetworks.MAIN_HELIUS,
+      networkType: NetworkType.Mainnet,
+      rpc: RPC.MAIN_HELIUS,
       rpcName: 'Helius'
     },
     {
-      networkType: NetworkType.MAINNET,
-      rpc: SolanaNetworks.MAIN_HELLOMOON,
+      networkType: NetworkType.Mainnet,
+      rpc: RPC.MAIN_HELLOMOON,
       rpcName: 'Hello Moon'
     },
     {
-      networkType: NetworkType.MAINNET,
-      rpc: SolanaNetworks.MAIN_ALCHEMY,
+      networkType: NetworkType.Mainnet,
+      rpc: RPC.MAIN_ALCHEMY,
       rpcName: 'Alchemy'
     },
     {
-      networkType: NetworkType.MAINNET,
-      rpc: SolanaNetworks.MAIN_QUICKNODE,
+      networkType: NetworkType.Mainnet,
+      rpc: RPC.MAIN_QUICKNODE,
       rpcName: 'Quicknode'
     },
-    { networkType: NetworkType.MAINNET, rpc: SolanaNetworks.MAIN, rpcName: 'Solana' }
+    { networkType: NetworkType.Mainnet, rpc: RPC.MAIN, rpcName: 'Solana' }
   ]
+
+  const devnetRPCs: ISelectNetwork[] = [
+    {
+      networkType: NetworkType.Devnet,
+      rpc: RPC.DEV,
+      rpcName: 'Devnet'
+    }
+  ]
+
+  const networks = useMemo(() => {
+    switch (network) {
+      case NetworkType.Testnet:
+        return testnetRPCs
+      case NetworkType.Mainnet:
+        return mainnetRPCs
+      case NetworkType.Devnet:
+        return devnetRPCs
+      default:
+        return []
+    }
+  }, [network])
 
   return (
     <Grid container>
       <Grid container className={classes.root} direction='row' alignItems='center' wrap='nowrap'>
-        <Hidden mdDown>
-          <Grid container item className={classes.leftSide} justifyContent='flex-start'>
-            <CardMedia className={classes.logo} image={icons.LogoTitle} />
-          </Grid>
-        </Hidden>
-
-        <Hidden lgUp>
-          <CardMedia className={classes.logoShort} image={icons.LogoShort} />
-        </Hidden>
-
-        <Hidden mdDown>
-          <Grid container item className={classes.routers} wrap='nowrap'>
-            {routes.map(path => (
-              <Link key={`path-${path}`} to={`/${path}`} className={classes.link}>
-                <NavbarButton
-                  name={path}
-                  onClick={() => {
-                    setActive(path)
-                  }}
-                  active={
-                    path === activePath ||
-                    (!!otherRoutesToHighlight[path] &&
-                      otherRoutesToHighlight[path].some(pathRegex => pathRegex.test(activePath)))
-                  }
-                />
-              </Link>
-            ))}
-          </Grid>
-        </Hidden>
-
         <Grid
           container
           item
-          className={classNames(
-            classes.buttons,
-            walletConnected ? classes.buttonsLgConnected : undefined
-          )}
-          wrap='nowrap'>
-          <Hidden xsDown>
-            {typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET ? (
-              <Button
-                className={buttonClasses.headerButton}
-                variant='contained'
-                classes={{ label: buttonClasses.label }}
-                onClick={onFaucet}>
-                Faucet
-              </Button>
-            ) : null}
-          </Hidden>
-          <Hidden xsDown>
-            {typeOfNetwork === NetworkType.MAINNET ? (
-              <SelectPriorityButton
-                recentPriorityFee={recentPriorityFee}
-                recentIsDynamic={recentIsDynamic}
-                onPrioritySave={onPrioritySave}
+          className={classes.leftSide}
+          justifyContent='flex-start'
+          sx={{ display: { xs: 'none', md: 'block' } }}>
+          <CardMedia
+            className={classes.logo}
+            image={icons.LogoTitle}
+            onClick={() => {
+              if (!activePath.startsWith('exchange')) {
+                navigate('/exchange')
+              }
+            }}
+          />
+        </Grid>
+        <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+          <Grid container item className={classes.leftSide} justifyContent='flex-start'>
+            <Grid container>
+              <CardMedia
+                className={classes.logoShort}
+                image={icons.LogoShort}
+                onClick={() => {
+                  if (!activePath.startsWith('exchange')) {
+                    navigate('/exchange')
+                  }
+                }}
               />
-            ) : null}
-          </Hidden>
-          <Hidden xsDown>
-            {typeOfNetwork === NetworkType.MAINNET ? (
+            </Grid>
+          </Grid>
+        </Box>
+        <Grid
+          container
+          item
+          className={classes.routers}
+          wrap='nowrap'
+          sx={{ display: { xs: 'none', lg: 'block' } }}>
+          {routes.map(path => (
+            <Link key={`path-${path}`} to={`/${path}`} className={classes.link}>
+              <NavbarButton
+                name={path}
+                onClick={e => {
+                  if (path === 'exchange' && activePath.startsWith('exchange')) {
+                    e.preventDefault()
+                  }
+
+                  setActive(path)
+                }}
+                active={
+                  path === activePath ||
+                  (!!otherRoutesToHighlight[path] &&
+                    otherRoutesToHighlight[path].some(pathRegex => pathRegex.test(activePath)))
+                }
+              />
+            </Link>
+          ))}
+        </Grid>
+
+        <Grid container item className={classes.buttons} wrap='nowrap'>
+          <Grid container className={classes.leftButtons}>
+            {typeOfNetwork !== NetworkType.Mainnet && (
+              <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                <FaucetButton onFaucet={onFaucet}>Faucet</FaucetButton>
+              </Box>
+            )}
+            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+              {typeOfNetwork === NetworkType.Mainnet ? (
+                <SelectPriorityButton
+                  recentPriorityFee={recentPriorityFee}
+                  recentIsDynamic={recentIsDynamic}
+                  onPrioritySave={onPrioritySave}
+                />
+              ) : null}
+            </Box>
+            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
               <SelectRPCButton
                 rpc={rpc}
-                networks={mainnetRPCs}
-                rpcStatus={rpcStatus}
+                networks={networks}
                 onSelect={onNetworkSelect}
+                network={network}
+                rpcStatus={rpcStatus}
               />
-            ) : null}
-          </Hidden>
-          <SelectNetworkButton
-            name={typeOfNetwork}
-            networks={[
-              {
-                networkType: NetworkType.MAINNET,
-                rpc: defaultMainnetRPC,
-                rpcName:
-                  mainnetRPCs.find(data => data.rpc === defaultMainnetRPC)?.rpcName ?? 'Custom'
-              },
-              { networkType: NetworkType.DEVNET, rpc: SolanaNetworks.DEV }
-            ]}
-            onSelect={onNetworkSelect}
-          />
+            </Box>
+            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+              <SelectChainButton
+                activeChain={activeChain}
+                chains={CHAINS}
+                onSelect={onChainSelect}
+              />
+            </Box>
+            <SelectNetworkButton
+              name={typeOfNetwork}
+              networks={[
+                {
+                  networkType: NetworkType.Mainnet,
+                  rpc: defaultMainnetRPC,
+                  rpcName:
+                    mainnetRPCs.find(data => data.rpc === defaultMainnetRPC)?.rpcName ?? 'Custom'
+                },
+                // {
+                //   networkType: NetworkType.Testnet,
+                //   rpc: defaultTestnetRPC,
+                //   rpcName:
+                //     testnetRPCs.find(data => data.rpc === defaultTestnetRPC)?.rpcName ?? 'Custom'
+                // }
+                {
+                  networkType: NetworkType.Devnet,
+                  rpc: defaultDevnetRPC,
+                  rpcName:
+                    devnetRPCs.find(data => data.rpc === defaultDevnetRPC)?.rpcName ?? 'Custom'
+                }
+              ]}
+              onSelect={onNetworkSelect}
+            />
+          </Grid>
           <ChangeWalletButton
             name={
               walletConnected
                 ? `${address.toString().slice(0, 4)}...${
-                    !isXsDown
+                    !isMdDown
                       ? address
                           .toString()
                           .slice(address.toString().length - 4, address.toString().length)
@@ -207,10 +276,12 @@ export const Header: React.FC<IHeader> = ({
             startIcon={
               walletConnected ? <DotIcon className={classes.connectedWalletIcon} /> : undefined
             }
+            onCopyAddress={onCopyAddress}
+            onChangeWallet={onChangeWallet}
           />
         </Grid>
 
-        <Hidden lgUp>
+        <Grid sx={{ display: { xs: 'block', lg: 'none' } }}>
           <IconButton
             className={classes.menuButton}
             onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
@@ -234,22 +305,25 @@ export const Header: React.FC<IHeader> = ({
               setRoutesModalOpen(false)
               unblurContent()
             }}
-            onFaucet={
-              (typeOfNetwork === NetworkType.DEVNET || typeOfNetwork === NetworkType.TESTNET) &&
-              isXsDown
-                ? onFaucet
-                : undefined
-            }
+            onFaucet={isMdDown && typeOfNetwork === NetworkType.Testnet ? onFaucet : undefined}
             onRPC={
-              typeOfNetwork === NetworkType.MAINNET && isXsDown
+              isMdDown
                 ? () => {
                     setRoutesModalOpen(false)
-                    setMainnetRpcsOpen(true)
+                    setRpcsModalOpen(true)
+                  }
+                : undefined
+            }
+            onChainSelect={
+              isMdDown
+                ? () => {
+                    setRoutesModalOpen(false)
+                    setChainSelectOpen(true)
                   }
                 : undefined
             }
             onPriority={
-              typeOfNetwork === NetworkType.MAINNET && isXsDown
+              typeOfNetwork === NetworkType.Mainnet && isMdDown
                 ? () => {
                     setRoutesModalOpen(false)
                     setPriorityModal(true)
@@ -257,7 +331,7 @@ export const Header: React.FC<IHeader> = ({
                 : undefined
             }
           />
-          {typeOfNetwork === NetworkType.MAINNET ? (
+          {typeOfNetwork === NetworkType.Mainnet ? (
             <Priority
               open={priorityModal}
               anchorEl={routesModalAnchor}
@@ -270,21 +344,45 @@ export const Header: React.FC<IHeader> = ({
               onPrioritySave={onPrioritySave}
             />
           ) : null}
-          {typeOfNetwork === NetworkType.MAINNET ? (
-            <SelectMainnetRPC
-              networks={mainnetRPCs}
-              open={mainnetRpcsOpen}
+          {typeOfNetwork === NetworkType.Testnet ? (
+            <SelectTestnetRPC
+              networks={testnetRPCs}
+              open={RpcsModalOpen}
               anchorEl={routesModalAnchor}
               onSelect={onNetworkSelect}
               handleClose={() => {
-                setMainnetRpcsOpen(false)
+                setRpcsModalOpen(false)
                 unblurContent()
               }}
               activeRPC={rpc}
               rpcStatus={rpcStatus}
             />
-          ) : null}
-        </Hidden>
+          ) : (
+            <SelectMainnetRPC
+              networks={mainnetRPCs}
+              open={RpcsModalOpen}
+              anchorEl={routesModalAnchor}
+              onSelect={onNetworkSelect}
+              handleClose={() => {
+                setRpcsModalOpen(false)
+                unblurContent()
+              }}
+              activeRPC={rpc}
+              rpcStatus={rpcStatus}
+            />
+          )}
+          <SelectChain
+            chains={CHAINS}
+            open={chainSelectOpen}
+            anchorEl={routesModalAnchor}
+            onSelect={onChainSelect}
+            handleClose={() => {
+              setChainSelectOpen(false)
+              unblurContent()
+            }}
+            activeChain={activeChain}
+          />
+        </Grid>
       </Grid>
     </Grid>
   )

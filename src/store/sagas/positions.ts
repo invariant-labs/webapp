@@ -1,30 +1,34 @@
-import { SIGNING_SNACKBAR_CONFIG, TIMEOUT_ERROR_MESSAGE, WRAPPED_SOL_ADDRESS } from '@consts/static'
+import {
+  SIGNING_SNACKBAR_CONFIG,
+  TIMEOUT_ERROR_MESSAGE,
+  WRAPPED_SOL_ADDRESS
+} from '@store/consts/static'
 import {
   createLiquidityPlot,
   createLoaderKey,
   createPlaceholderLiquidityPlot,
   getPositionsAddressesFromRange,
   solToPriorityFee
-} from '@consts/utils'
+} from '@utils/utils'
 import { Pair } from '@invariant-labs/sdk'
 import { Staker } from '@invariant-labs/staker-sdk'
-import { actions as farmsActions } from '@reducers/farms'
-import { ListPoolsResponse, ListType, actions as poolsActions } from '@reducers/pools'
+import { actions as farmsActions } from '@store/reducers/farms'
+import { ListPoolsResponse, ListType, actions as poolsActions } from '@store/reducers/pools'
 import {
   ClosePositionData,
   GetCurrentTicksData,
   InitPositionData,
   actions
-} from '@reducers/positions'
-import { actions as connectionActions } from '@reducers/solanaConnection'
-import { actions as snackbarsActions } from '@reducers/snackbars'
+} from '@store/reducers/positions'
+import { actions as connectionActions } from '@store/reducers/solanaConnection'
+import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { GuardPredicate } from '@redux-saga/types'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { stakesForPosition } from '@selectors/farms'
-import { poolsArraySortedByFees, tokens } from '@selectors/pools'
-import { positionsWithPoolsData, singlePositionData } from '@selectors/positions'
-import { network, rpcAddress } from '@selectors/solanaConnection'
-import { accounts } from '@selectors/solanaWallet'
+import { stakesForPosition } from '@store/selectors/farms'
+import { poolsArraySortedByFees, tokens } from '@store/selectors/pools'
+import { positionsWithPoolsData, singlePositionData } from '@store/selectors/positions'
+import { network, rpcAddress } from '@store/selectors/solanaConnection'
+import { accounts } from '@store/selectors/solanaWallet'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
 import {
   Keypair,
@@ -34,8 +38,8 @@ import {
   TransactionExpiredTimeoutError,
   sendAndConfirmRawTransaction
 } from '@solana/web3.js'
-import { getMarketProgram } from '@web3/programs/amm'
-import { getStakerProgram } from '@web3/programs/staker'
+import { getMarketProgram } from '@utils/web3/programs/amm'
+import { getStakerProgram } from '@utils/web3/programs/staker'
 import { all, call, put, select, spawn, take, takeEvery, takeLeading } from 'typed-redux-saga'
 import { getConnection, handleRpcError } from './connection'
 import { createClaimAllPositionRewardsTx } from './farms'
@@ -110,8 +114,8 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       allTokens[data.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenX.toString()]
-        ? tokensAccounts[data.tokenX.toString()].address
-        : null
+          ? tokensAccounts[data.tokenX.toString()].address
+          : null
 
     if (userTokenX === null) {
       userTokenX = yield* call(createAccount, data.tokenX)
@@ -121,8 +125,8 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       allTokens[data.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenY.toString()]
-        ? tokensAccounts[data.tokenY.toString()].address
-        : null
+          ? tokensAccounts[data.tokenY.toString()].address
+          : null
 
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, data.tokenY)
@@ -316,7 +320,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -411,8 +415,8 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
       allTokens[data.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenX.toString()]
-        ? tokensAccounts[data.tokenX.toString()].address
-        : null
+          ? tokensAccounts[data.tokenX.toString()].address
+          : null
 
     if (userTokenX === null) {
       userTokenX = yield* call(createAccount, data.tokenX)
@@ -422,8 +426,8 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
       allTokens[data.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[data.tokenY.toString()]
-        ? tokensAccounts[data.tokenY.toString()].address
-        : null
+          ? tokensAccounts[data.tokenY.toString()].address
+          : null
 
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, data.tokenY)
@@ -550,7 +554,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -702,7 +706,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       lastValidBlockHeight: blockhash.lastValidBlockHeight,
       signature: txId
     })
-    console.log(confirmedTx)
+
     closeSnackbar(loaderTxDetails)
     yield put(snackbarsActions.remove(loaderTxDetails))
 
@@ -753,7 +757,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -828,20 +832,15 @@ export function* handleGetPositionsList() {
 
     const { head } = yield* call([marketProgram, marketProgram.getPositionList], wallet.publicKey)
 
-    const list = yield* call(
-      [marketProgram, marketProgram.getPositionsFromRange],
-      wallet.publicKey,
-      0,
-      head - 1
-    )
-
-    const addresses = yield* call(
-      getPositionsAddressesFromRange,
-      marketProgram,
-      wallet.publicKey,
-      0,
-      head - 1
-    )
+    const { list, addresses } = yield* all({
+      list: call(
+        [marketProgram, marketProgram.getPositionsFromRange],
+        wallet.publicKey,
+        0,
+        head - 1
+      ),
+      addresses: call(getPositionsAddressesFromRange, marketProgram, wallet.publicKey, 0, head - 1)
+    })
 
     const positions = list.map((position, index) => ({
       ...position,
@@ -932,8 +931,8 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
       allTokens[positionForIndex.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenX.toString()]
-        ? tokensAccounts[positionForIndex.tokenX.toString()].address
-        : null
+          ? tokensAccounts[positionForIndex.tokenX.toString()].address
+          : null
 
     if (userTokenX === null) {
       userTokenX = yield* call(createAccount, positionForIndex.tokenX)
@@ -943,8 +942,8 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
       allTokens[positionForIndex.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenY.toString()]
-        ? tokensAccounts[positionForIndex.tokenY.toString()].address
-        : null
+          ? tokensAccounts[positionForIndex.tokenY.toString()].address
+          : null
 
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
@@ -1042,7 +1041,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -1201,7 +1200,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -1277,8 +1276,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       allTokens[positionForIndex.tokenX.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenX.toString()]
-        ? tokensAccounts[positionForIndex.tokenX.toString()].address
-        : null
+          ? tokensAccounts[positionForIndex.tokenX.toString()].address
+          : null
 
     if (userTokenX === null) {
       userTokenX = yield* call(createAccount, positionForIndex.tokenX)
@@ -1288,8 +1287,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       allTokens[positionForIndex.tokenY.toString()].address.toString() === WRAPPED_SOL_ADDRESS
         ? wrappedSolAccount.publicKey
         : tokensAccounts[positionForIndex.tokenY.toString()]
-        ? tokensAccounts[positionForIndex.tokenY.toString()].address
-        : null
+          ? tokensAccounts[positionForIndex.tokenY.toString()].address
+          : null
 
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
@@ -1409,7 +1408,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -1600,7 +1599,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
-          variant: 'error',
+          variant: 'info',
           persist: true,
           txid: error.signature
         })
@@ -1627,6 +1626,8 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
     const marketProgram = yield* call(getMarketProgram, networkType, rpc)
     const wallet = yield* call(getWallet)
 
+    yield put(actions.getCurrentPositionRangeTicks(action.payload.toString()))
+
     const position = yield* call(
       [marketProgram, marketProgram.getPosition],
       wallet.publicKey,
@@ -1639,8 +1640,6 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
         position
       })
     )
-
-    yield put(actions.getCurrentPositionRangeTicks(position.id.toString()))
   } catch (error) {
     console.log(error)
 
@@ -1665,17 +1664,10 @@ export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<string
       tickSpacing: positionData.poolData.tickSpacing
     })
 
-    const lowerTick = yield* call(
-      [marketProgram, marketProgram.getTick],
-      pair,
-      positionData.lowerTickIndex
-    )
-
-    const upperTick = yield* call(
-      [marketProgram, marketProgram.getTick],
-      pair,
-      positionData.upperTickIndex
-    )
+    const { lowerTick, upperTick } = yield* all({
+      lowerTick: call([marketProgram, marketProgram.getTick], pair, positionData.lowerTickIndex),
+      upperTick: call([marketProgram, marketProgram.getTick], pair, positionData.upperTickIndex)
+    })
 
     yield put(
       actions.setCurrentPositionRangeTicks({

@@ -1,7 +1,8 @@
+import { Theme } from '@mui/material'
 import { colors, typography } from '@static/theme'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles<Theme, { walletDisconnected: boolean }>(theme => ({
+export const useStyles = makeStyles()((theme: Theme) => ({
   amountInput: {
     background: colors.invariant.newDark,
     color: colors.invariant.light,
@@ -29,9 +30,13 @@ const useStyles = makeStyles<Theme, { walletDisconnected: boolean }>(theme => ({
     '&:hover': {
       background: 'none',
       backgroundColor: colors.invariant.green,
-      boxShadow: '0px 0px 20px -10px white'
+      boxShadow: '0px 0px 20px -10px white',
+      '@media (hover: none)': {
+        background: ' rgba(46, 224, 154, 0.8)',
+        boxShadow: 'none'
+      }
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: 26,
       minWidth: 26,
       height: 14,
@@ -46,7 +51,8 @@ const useStyles = makeStyles<Theme, { walletDisconnected: boolean }>(theme => ({
     }
   },
   select: {
-    marginRight: 20
+    marginRight: 20,
+    width: 'min-content'
   },
   input: {
     textAlign: 'right',
@@ -62,15 +68,17 @@ const useStyles = makeStyles<Theme, { walletDisconnected: boolean }>(theme => ({
   balanceContainer: {
     display: 'flex',
     alignItems: 'center',
-    cursor: 'pointer',
     paddingBlock: 6,
     flexShrink: 1,
     marginRight: 10
   },
+  showMaxButton: {
+    cursor: 'pointer'
+  },
   BalanceTypography: {
     color: colors.invariant.lightGrey,
     ...typography.caption2,
-    marginRight: 3,
+    marginRight: 6,
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
@@ -80,10 +88,13 @@ const useStyles = makeStyles<Theme, { walletDisconnected: boolean }>(theme => ({
   walletBalanace: {
     color: colors.invariant.lightGrey
   },
-  exchangeContainer: ({ walletDisconnected }) => ({
-    padding: `10px 15px ${walletDisconnected ? '10px' : '0'} 15px `,
-    display: 'flex'
-  }),
+  exchangeContainer: {
+    height: 65,
+    padding: `10px 15px 0 15px `,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
   noData: {
     color: colors.invariant.warning,
     ...typography.caption2,
@@ -116,13 +127,11 @@ const useStyles = makeStyles<Theme, { walletDisconnected: boolean }>(theme => ({
     height: 15
   },
   tooltip: {
-    background: colors.invariant.componentBcg,
-    border: `1px solid ${colors.invariant.lightGrey}`,
-    borderRadius: 12,
-    padding: 10,
+    color: colors.invariant.textGrey,
     ...typography.caption4,
-    fontSize: 13,
-    color: colors.white.main
+    lineHeight: '24px',
+    background: colors.black.full,
+    borderRadius: 12
   },
   percentages: {
     flexShrink: 0,
@@ -154,15 +163,18 @@ const useStyles = makeStyles<Theme, { walletDisconnected: boolean }>(theme => ({
     color: colors.invariant.lightHover,
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-
-    '&:hover': {
-      color: colors.white.main
-    }
+    textOverflow: 'ellipsis'
   },
   bottom: {
     paddingInline: 15
+  },
+  blur: {
+    width: 120,
+    height: 40,
+    borderRadius: 16,
+    background: `linear-gradient(90deg, ${colors.invariant.component} 25%, ${colors.invariant.light} 50%, ${colors.invariant.component} 75%)`,
+    backgroundSize: '200% 100%',
+    animation: 'shimmer 2s infinite'
   }
 }))
-
 export default useStyles

@@ -1,14 +1,14 @@
-import { NetworkType, RECOMMENDED_RPC_ADDRESS } from '@consts/static'
-import { Box, Button, Grid, Input, Popover, Typography } from '@material-ui/core'
-import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
-import icons from '@static/icons'
+import DotIcon from '@mui/icons-material/FiberManualRecord'
+import { Box, Button, Grid, Input, Popover, Typography } from '@mui/material'
+import { ISelectNetwork } from '@store/consts/types'
 import classNames from 'classnames'
-import React, { useState } from 'react'
-import { ISelectNetwork } from '../SelectNetwork/SelectNetwork'
+import React, { useEffect, useRef, useState } from 'react'
 import useStyles from './styles'
-import { RpcStatus } from '@reducers/solanaConnection'
+import { NetworkType, RECOMMENDED_RPC_ADDRESS } from '@store/consts/static'
+import icons from '@static/icons'
+import { RpcStatus } from '@store/reducers/solanaConnection'
 
-export interface ISelectMainnetRpc {
+export interface ISelectMainnetRPC {
   networks: ISelectNetwork[]
   open: boolean
   anchorEl: HTMLButtonElement | null
@@ -17,7 +17,7 @@ export interface ISelectMainnetRpc {
   activeRPC: string
   rpcStatus: RpcStatus
 }
-export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
+export const SelectMainnetRPC: React.FC<ISelectMainnetRPC> = ({
   networks,
   anchorEl,
   open,
@@ -26,24 +26,50 @@ export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
   activeRPC,
   rpcStatus
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
+  const [activeCustom, setActiveCustom] = useState(false)
+  const [customApplied, setCustomApplied] = useState(false)
+  const [buttonApplied, setButtonApplied] = useState(false)
   const [address, setAddress] = useState(
     networks.some(net => net.rpc === activeRPC) ? '' : activeRPC
   )
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const isAddressValid = () => {
-    const urlRegex = /^https?:\/\/[^.]+\.[^.]+/
-
+    const urlRegex = /^(https?:\/\/|wss?:\/\/)[\w.-]+\.[a-zA-Z]{2,}(:\d+)?(\/.*)?$/
     return urlRegex.test(address)
   }
+
+  useEffect(() => {
+    if (!open && !customApplied) {
+      setAddress('')
+    }
+  }, [open])
+
+  useEffect(() => {
+    if (!networks.some(net => net.rpc === activeRPC)) {
+      setCustomApplied(true)
+      setButtonApplied(true)
+      setActiveCustom(true)
+      setAddress(activeRPC)
+    } else {
+      setCustomApplied(false)
+      setButtonApplied(false)
+      setActiveCustom(false)
+      setAddress('')
+    }
+  }, [activeRPC])
 
   return (
     <Popover
       open={open}
       anchorEl={anchorEl}
       classes={{ paper: classes.paper }}
-      onClose={handleClose}
+      onClose={() => {
+        handleClose()
+        !buttonApplied && setActiveCustom(false)
+      }}
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'center'
@@ -54,38 +80,58 @@ export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
       }}>
       <Grid className={classes.root}>
         <Typography className={classes.title}>Select mainnet RPC to use</Typography>
-        {rpcStatus === RpcStatus.IgnoredWithError && activeRPC !== RECOMMENDED_RPC_ADDRESS && (
-          <Box display='flex' sx={{ margin: 10 }}>
-            <img className={classes.warningIcon} src={icons.warningIcon} alt='Warning icon' />
-            <Typography className={classes.warningText}>
-              Current RPC might not work properly
-            </Typography>
-          </Box>
-        )}
+        {rpcStatus === RpcStatus.IgnoredWithError &&
+          activeRPC !== RECOMMENDED_RPC_ADDRESS[NetworkType.Mainnet] && (
+            <div className={classes.warningContainer}>
+              <img className={classes.warningIcon} src={icons.warningIcon} alt='Warning icon' />
+              <Typography className={classes.warningText}>
+                Current RPC might not work properly
+              </Typography>
+            </div>
+          )}
         <Grid className={classes.list} container alignContent='space-around' direction='column'>
           {networks.map(({ networkType, rpc, rpcName }) => (
             <Grid
-              className={classNames(classes.listItem, rpc === activeRPC ? classes.active : null)}
+              className={classNames(
+                classes.listItem,
+                rpc === activeRPC && !customApplied ? classes.active : null,
+                !activeCustom && rpc === activeRPC ? classes.activeBackground : null
+              )}
               item
               key={`networks-${networkType}-${rpc}`}
               onClick={() => {
                 onSelect(networkType, rpc, rpcName)
+                setActiveCustom(false)
+                setCustomApplied(false)
+                setButtonApplied(false)
                 handleClose()
               }}>
-              <img
-                className={classes.icon}
-                src={icons[`${networkType}Icon`]}
-                alt={`${networkType} icon`}
-              />
               <Box width='100%' display='flex' justifyContent='space-between' alignItems='center'>
                 <Typography className={classes.name}>{rpcName} </Typography>
                 <Typography className={classes.recommendedText}>
-                  {RECOMMENDED_RPC_ADDRESS === rpc && 'RECOMMENDED'}
+                  {RECOMMENDED_RPC_ADDRESS[NetworkType.Mainnet] === rpc && 'RECOMMENDED'}
                 </Typography>
               </Box>
               <DotIcon className={classes.dotIcon} />
             </Grid>
           ))}
+          <Grid
+            className={classNames(
+              classes.listItem,
+              activeCustom && customApplied ? classes.active : null,
+              activeCustom ? classes.activeBackground : null
+            )}
+            item
+            key={`custom-rpc`}
+            onClick={() => {
+              setActiveCustom(true)
+              inputRef.current?.focus()
+            }}>
+            <Box width='100%' display='flex' justifyContent='space-between' alignItems='center'>
+              <Typography className={classes.name}>Custom RPC</Typography>
+            </Box>
+            <DotIcon className={classes.dotIcon} />
+          </Grid>
         </Grid>
         <Grid
           className={classes.lowerRow}
@@ -94,24 +140,32 @@ export const SelectMainnetRPC: React.FC<ISelectMainnetRpc> = ({
           justifyContent='space-between'
           wrap='nowrap'>
           <Input
-            className={classes.input}
+            className={classNames(classes.input, activeCustom ? classes.activePlaceholder : null)}
             classes={{
               input: classes.innerInput
             }}
             placeholder='Custom RPC address'
-            onChange={e => setAddress(e.target.value)}
+            onChange={e => {
+              setButtonApplied(false)
+              setAddress(e.target.value)
+            }}
+            onClick={() => setActiveCustom(true)}
             value={address}
             disableUnderline
+            inputRef={inputRef}
           />
           <Button
-            className={classes.add}
+            className={classNames(classes.add, buttonApplied ? classes.applied : null)}
             onClick={() => {
-              onSelect(NetworkType.MAINNET, address, 'Custom')
+              onSelect(NetworkType.Mainnet, address, 'Custom')
+              setCustomApplied(true)
+              setButtonApplied(true)
               handleClose()
             }}
             disableRipple
-            disabled={!isAddressValid()}>
-            Set
+            disabled={!isAddressValid()}
+            style={{ opacity: !activeCustom ? '0.5' : '1' }}>
+            {buttonApplied ? 'Applied' : 'Apply'}
           </Button>
         </Grid>
       </Grid>

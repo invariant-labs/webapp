@@ -1,9 +1,12 @@
-import { Button, Grid, Input, Typography } from '@material-ui/core'
-import React, { useRef } from 'react'
-import Add from '@material-ui/icons/Add'
-import Remove from '@material-ui/icons/Remove'
+import React, { useEffect, useRef, useState } from 'react'
+import AddIcon from '@mui/icons-material/Add'
+import RemoveIcon from '@mui/icons-material/Remove'
 import useStyles from './style'
 import { colors } from '@static/theme'
+import { Button, Grid, Input, Typography } from '@mui/material'
+import { formatNumbers, showPrefix } from '@utils/utils'
+import AnimatedNumber from '@components/AnimatedNumber/AnimatedNumber'
+import { FormatNumberThreshold } from '@store/consts/types'
 
 export interface IRangeInput {
   label: string
@@ -36,9 +39,17 @@ export const RangeInput: React.FC<IRangeInput> = ({
   percentDiff,
   diffLabel
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const [animatedPercentDiff, setAnimatedPercentDiff] = useState(percentDiff)
+
+  useEffect(() => {
+    if (percentDiff !== animatedPercentDiff) {
+      setAnimatedPercentDiff(percentDiff)
+    }
+  }, [percentDiff])
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const regex = /^\d*\.?\d*$/
@@ -73,6 +84,36 @@ export const RangeInput: React.FC<IRangeInput> = ({
     }
   }
 
+  const percentageThresholds: FormatNumberThreshold[] = [
+    {
+      value: 10,
+      decimals: 2
+    },
+    {
+      value: 1000,
+      decimals: 2
+    },
+    {
+      value: 10000,
+      decimals: 2
+    },
+    {
+      value: 1000000,
+      decimals: 2,
+      divider: 1000
+    },
+    {
+      value: 1000000000,
+      decimals: 2,
+      divider: 1000000
+    },
+    {
+      value: Infinity,
+      decimals: 2,
+      divider: 1000000000
+    }
+  ]
+
   return (
     <Grid className={className} style={style} container direction='column' alignItems='center'>
       <Grid
@@ -94,7 +135,7 @@ export const RangeInput: React.FC<IRangeInput> = ({
         wrap='nowrap'>
         {disabled ? null : (
           <Button className={classes.button} onClick={decreaseValue} disableRipple>
-            <Remove className={classes.buttonIcon} />
+            <RemoveIcon className={classes.buttonIcon} />
           </Button>
         )}
         <Input
@@ -105,10 +146,14 @@ export const RangeInput: React.FC<IRangeInput> = ({
           onBlur={onBlur}
           disableUnderline={true}
           disabled={disabled}
+          inputProps={{
+            inputMode: 'decimal',
+            'aria-label': 'price range'
+          }}
         />
         {disabled ? null : (
           <Button className={classes.button} onClick={increaseValue} disableRipple>
-            <Add className={classes.buttonIcon} />
+            <AddIcon className={classes.buttonIcon} />
           </Button>
         )}
       </Grid>
@@ -127,7 +172,19 @@ export const RangeInput: React.FC<IRangeInput> = ({
             color: percentDiff >= 0 ? colors.invariant.green : colors.invariant.Error
           }}>
           {percentDiff >= 0 ? '+' : ''}
-          {(percentDiff ?? 0).toFixed(2)}%
+          {percentDiff ? (
+            <>
+              <AnimatedNumber
+                start={animatedPercentDiff}
+                finish={percentDiff}
+                format={e => formatNumbers(percentageThresholds)(e.toString())}
+              />
+              {showPrefix(percentDiff)}
+            </>
+          ) : (
+            0
+          )}
+          %
         </Typography>
       </Grid>
     </Grid>

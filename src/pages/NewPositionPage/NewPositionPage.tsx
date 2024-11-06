@@ -1,23 +1,29 @@
-import NewPositionWrapper from '@containers/NewPositionWrapper/NewPositionWrapper'
-import { Grid } from '@material-ui/core'
-import { History } from 'history'
+import { Grid } from '@mui/material'
 import React from 'react'
 import useStyles from './styles'
+import { useParams } from 'react-router-dom'
+import NewPositionWrapper from '@containers/NewPositionWrapper/NewPositionWrapper'
 
-export interface IProps {
-  initialTokenFrom: string
-  initialTokenTo: string
-  initialFee: string
-  history: History<unknown>
-}
+export interface IProps {}
 
-export const NewPositionPage: React.FC<IProps> = ({
-  initialTokenFrom,
-  initialTokenTo,
-  initialFee,
-  history
-}) => {
-  const classes = useStyles()
+const NewPositionPage: React.FC<IProps> = () => {
+  const { classes } = useStyles()
+  const { item1, item2, item3 } = useParams()
+
+  let initialTokenFrom = ''
+  let initialTokenTo = ''
+  let initialFee = ''
+
+  if (item3) {
+    initialTokenFrom = item1 || ''
+    initialTokenTo = item2 || ''
+    initialFee = item3
+  } else if (item2) {
+    initialTokenFrom = item1 || ''
+    initialFee = item2
+  } else if (item1) {
+    initialFee = item1
+  }
 
   return (
     <Grid container className={classes.container}>
@@ -26,9 +32,9 @@ export const NewPositionPage: React.FC<IProps> = ({
           initialTokenFrom={initialTokenFrom}
           initialTokenTo={initialTokenTo}
           initialFee={initialFee}
-          history={history}
         />
       </Grid>
     </Grid>
   )
 }
+export default NewPositionPage

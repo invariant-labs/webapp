@@ -1,4 +1,4 @@
-import { ISolanaConnectionStore, solanaConnectionSliceName } from '@reducers/solanaConnection'
+import { ISolanaConnectionStore, solanaConnectionSliceName } from '@store/reducers/solanaConnection'
 import { keySelectors, AnyProps } from './helpers'
 
 const store = (s: AnyProps) => s[solanaConnectionSliceName] as ISolanaConnectionStore
