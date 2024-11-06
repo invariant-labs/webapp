@@ -54,13 +54,13 @@ export const HeaderWrapper: React.FC = () => {
   }, [])
 
   const recentPriorityFee = useMemo(() => {
-    const lastFee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+    const lastFee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
     return lastFee === null ? '' : lastFee
   }, [])
 
   const recentIsDynamic = useMemo(() => {
-    const lastIsDynamic = localStorage.getItem('IS_DYNAMIC_FEE')
+    const lastIsDynamic = localStorage.getItem('INVARIANT_IS_DYNAMIC_FEE')
 
     return lastIsDynamic === null ? true : lastIsDynamic === 'true'
   }, [])

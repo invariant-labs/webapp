@@ -54,8 +54,8 @@ const Priority: React.FC<Props> = ({
     }
 
     console.log(recentPriorityFee.toString(), recentIsDynamic.toString())
-    localStorage.setItem('INVARIANT_MAINNET_PRIORITY_FEE', recentPriorityFee.toString())
-    localStorage.setItem('IS_DYNAMIC_FEE', recentIsDynamic.toString())
+    localStorage.setItem('INVARIANT_PRIORITY_FEE', recentPriorityFee.toString())
+    localStorage.setItem('INVARIANT_IS_DYNAMIC_FEE', recentIsDynamic.toString())
   }, [])
 
   useEffect(() => {
@@ -111,21 +111,21 @@ const Priority: React.FC<Props> = ({
     if (+inputValue > 0) {
       setIsDynamic(false)
       setSelectedFee(+inputValue)
-      localStorage.setItem('INVARIANT_MAINNET_PRIORITY_FEE', inputValue)
+      localStorage.setItem('INVARIANT_PRIORITY_FEE', inputValue)
     } else {
       if (typeof priorityFeeOptions[selectedIndex].saveValue === 'string') {
         setIsDynamic(true)
         setSelectedFee(dynamicFee ?? 0)
-        localStorage.setItem('INVARIANT_MAINNET_PRIORITY_FEE', (dynamicFee ?? 0).toString())
-        localStorage.setItem('IS_DYNAMIC_FEE', 'true')
+        localStorage.setItem('INVARIANT_PRIORITY_FEE', (dynamicFee ?? 0).toString())
+        localStorage.setItem('INVARIANT_IS_DYNAMIC_FEE', 'true')
       } else {
         setIsDynamic(false)
         setSelectedFee(priorityFeeOptions[selectedIndex].saveValue)
         localStorage.setItem(
-          'INVARIANT_MAINNET_PRIORITY_FEE',
+          'INVARIANT_PRIORITY_FEE',
           priorityFeeOptions[selectedIndex].saveValue.toString()
         )
-        localStorage.setItem('IS_DYNAMIC_FEE', 'false')
+        localStorage.setItem('INVARIANT_IS_DYNAMIC_FEE', 'false')
       }
     }
 
@@ -140,7 +140,7 @@ const Priority: React.FC<Props> = ({
       setDynamicFee(fee)
 
       if (isDynamic) {
-        localStorage.setItem('INVARIANT_MAINNET_PRIORITY_FEE', fee.toString())
+        localStorage.setItem('INVARIANT_PRIORITY_FEE', fee.toString())
       }
     }
 

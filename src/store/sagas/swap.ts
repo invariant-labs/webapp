@@ -98,7 +98,7 @@ export function* handleSwapWithSOL(): Generator {
         ? new Transaction().add(createIx).add(transferIx).add(initIx)
         : new Transaction().add(createIx).add(initIx)
 
-    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+    const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
     if (fee) {
       initialTx = yield* call(
@@ -423,7 +423,7 @@ export function* handleSwap(): Generator {
     swapTx.recentBlockhash = blockhash.blockhash
     swapTx.feePayer = wallet.publicKey
 
-    const fee = localStorage.getItem('INVARIANT_MAINNET_PRIORITY_FEE')
+    const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
     if (fee) {
       swapTx = yield* call(
