@@ -51,6 +51,7 @@ export const Primary: Story = {
     rpcStatus: RpcStatus.Uninitialized,
     defaultMainnetRPC: RPC.MAIN,
     onPrioritySave: fn(),
-    recentPriorityFee: '1'
+    recentPriorityFee: '1',
+    recentIsDynamic: true
   }
 }
