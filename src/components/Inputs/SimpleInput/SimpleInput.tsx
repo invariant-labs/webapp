@@ -2,6 +2,7 @@ import React, { CSSProperties, useRef } from 'react'
 import classNames from 'classnames'
 import useStyles from './style'
 import { Input, Tooltip, Typography } from '@mui/material'
+import { formatNumber } from '@utils/utils'
 
 interface IProps {
   setValue: (value: string) => void
@@ -90,7 +91,7 @@ export const SimpleInput: React.FC<IProps> = ({
               tooltip: classes.globalPriceTooltip
             }}>
             <Typography className={classes.globalPrice} variant='h4'>
-              {globalPrice.toFixed(4)}
+              {formatNumber(globalPrice)}
             </Typography>
           </Tooltip>
         ) : null
