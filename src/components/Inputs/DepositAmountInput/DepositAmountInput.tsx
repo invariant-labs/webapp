@@ -111,7 +111,14 @@ export const DepositAmountInput: React.FC<IProps> = ({
             {currency !== null ? (
               <>
                 <Box className={classes.imageContainer}>
-                  <img alt='currency icon' src={currencyIconSrc} className={classes.currencyIcon} />
+                  <img
+                    alt='currency icon'
+                    src={currencyIconSrc ?? icons.unknownToken}
+                    className={classes.currencyIcon}
+                    onError={e => {
+                      e.currentTarget.src = icons.unknownToken
+                    }}
+                  />
                   {currencyIsUnknown && (
                     <img className={classes.warningIcon} src={icons.warningIcon} />
                   )}

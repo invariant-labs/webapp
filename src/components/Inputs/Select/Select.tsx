@@ -78,10 +78,13 @@ export const Select: React.FC<ISelectModal> = ({
             <Box className={classes.imageContainer}>
               <img
                 className={classes.icon}
-                src={current.logoURI ?? icons.SNY}
+                src={current.logoURI ?? icons.unknownToken}
                 alt={current.name + 'logo'}
                 width='20'
                 height='20'
+                onError={e => {
+                  e.currentTarget.src = icons.unknownToken
+                }}
               />
               {current.isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
             </Box>
