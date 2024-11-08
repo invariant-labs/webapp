@@ -14,6 +14,22 @@ import { Status as WalletStatus } from '@store/reducers/solanaWallet'
 import { actions } from '@store/reducers/positions'
 import PerformanceWarning from '@containers/PerformanceWarning/PerformanceWarning'
 
+const blockedCountries = [
+  'BY',
+  'CF',
+  'CD',
+  'KP',
+  'CU',
+  'IR',
+  'LY',
+  'SO',
+  'SD',
+  'SS',
+  'SY',
+  'YE',
+  'ZW'
+]
+
 const RootPage: React.FC = React.memo(() => {
   const dispatch = useDispatch()
   const signerStatus = useSelector(connectionStatus)
@@ -42,6 +58,22 @@ const RootPage: React.FC = React.memo(() => {
       dispatch(actions.getPositionsList())
     }
   }, [signerStatus, walletStatus])
+
+  useEffect(() => {
+    const validateIP = async () => {
+      const response = await fetch('http://ip-api.com/json')
+      const data = await response.json()
+
+      if (
+        blockedCountries.includes(data.countryCode) ||
+        (data.countryCode === 'UA' && data.region === '43')
+      ) {
+        window.location.assign('https://google.com/')
+      }
+    }
+
+    validateIP()
+  }, [])
 
   return (
     <>
