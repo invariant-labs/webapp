@@ -17,7 +17,8 @@ import {
   PublicKey,
   SystemProgram,
   Transaction,
-  TransactionInstruction
+  TransactionInstruction,
+  VersionedTransaction
 } from '@solana/web3.js'
 import { Token, ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
@@ -26,7 +27,7 @@ import { BN } from '@project-serum/anchor'
 import { WalletAdapter } from '@utils/web3/adapters/types'
 import { getTokenDetails } from './token'
 import { accounts, status } from '@store/selectors/solanaWallet'
-import { airdropQuantities, airdropTokens } from '@store/consts/static'
+import { airdropQuantities, airdropTokens, WRAPPED_SOL_ADDRESS } from '@store/consts/static'
 import { Token as StoreToken } from '@store/consts/types'
 import airdropAdmin from '@store/consts/airdropAdmin'
 import { network } from '@store/selectors/solanaConnection'
@@ -40,6 +41,7 @@ import { openWalletSelectorModal } from '@utils/web3/selector'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
+
   return wallet
 }
 export function* getBalance(pubKey: PublicKey): SagaGenerator<BN> {
@@ -80,6 +82,9 @@ export function* fetchTokensAccounts(): Generator {
   const newAccounts: ITokenAccount[] = []
   const unknownTokens: Record<string, StoreToken> = {}
   for (const account of tokensAccounts.value) {
+    if (account.pubkey.toString() === WRAPPED_SOL_ADDRESS.toString()) {
+      console.log('account', account)
+    }
     const info: IparsedTokenInfo = account.account.data.parsed.info
     newAccounts.push({
       programId: new PublicKey(info.mint),
@@ -237,7 +242,13 @@ export function* getCollateralTokenAirdrop(
   tx.feePayer = wallet.publicKey
   tx.recentBlockhash = blockhash.blockhash
   const signedTx = yield* call([wallet, wallet.signTransaction], tx)
-  signedTx.partialSign(airdropAdmin)
+
+  if (signedTx instanceof Transaction) {
+    signedTx.partialSign(airdropAdmin)
+  } else if (signedTx instanceof VersionedTransaction) {
+    signedTx.sign([airdropAdmin])
+  }
+
   yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
     skipPreflight: true
   })
@@ -369,6 +380,7 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
 
 export function* init(): Generator {
   yield* put(actions.setStatus(Status.Init))
+  console.log('init wallet')
   yield* call(handleBalance)
   yield* put(actions.setStatus(Status.Initialized))
 }

@@ -3,7 +3,7 @@ import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
 import { ISnackbar } from '@store/reducers/snackbars'
 import { PublicKey } from '@solana/web3.js'
-import { BestTier, Chain, PrefixConfig, Token } from './types'
+import { BestTier, Chain, PrefixConfig, Token, WalletType } from './types'
 
 export enum NetworkType {
   Local = 'Local',
@@ -152,7 +152,7 @@ export enum RPC {
   LOCAL = 'http://127.0.0.1:8899'
 }
 
-export const DEFAULT_PUBLICKEY = new PublicKey(0)
+export const DEFAULT_SOL_PUBLICKEY = new PublicKey(0)
 export const MAX_U64 = new BN('18446744073709551615')
 
 export const tokens: Record<NetworkType, Token[]> = {
@@ -466,3 +466,10 @@ export const DEFAULT_TOKENS = ['ethereum', 'solana', 'usd-coin', 'dogwifhat']
 
 export const TIMEOUT_ERROR_MESSAGE =
   'Transaction has timed out. Check the details to confirm success.'
+
+export const walletNames = {
+  [WalletType.PHANTOM]: 'Phantom',
+  [WalletType.BACKPACK]: 'Backpack',
+  [WalletType.NIGHTLY]: 'Nightly',
+  [WalletType.SOLFLARE]: 'Solflare'
+}

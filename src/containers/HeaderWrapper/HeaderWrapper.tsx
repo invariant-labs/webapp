@@ -6,7 +6,7 @@ import { actions, RpcStatus } from '@store/reducers/solanaConnection'
 import { Status, actions as walletActions } from '@store/reducers/solanaWallet'
 import { network, rpcAddress, rpcStatus } from '@store/selectors/solanaConnection'
 import { address, status } from '@store/selectors/solanaWallet'
-import { nightlyConnectAdapter, openWalletSelectorModal } from '@utils/web3/selector'
+import { nightlyConnectAdapter } from '@utils/web3/selector'
 import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -154,7 +154,9 @@ export const HeaderWrapper: React.FC = () => {
             dispatch(actions.setNetwork(network))
           }
         }}
-        onConnectWallet={openWalletSelectorModal}
+        onConnectWallet={() => {
+          dispatch(walletActions.connect())
+        }}
         landing={location.pathname.substring(1)}
         walletConnected={walletStatus === Status.Initialized}
         onDisconnectWallet={() => {

@@ -5,6 +5,7 @@ import { Button, Typography } from '@mui/material'
 import { blurContent, unblurContent } from '@utils/uiUtils'
 import ConnectWallet from '@components/Modals/ConnectWallet/ConnectWallet'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import SelectWalletModal from '@components/Modals/SelectWalletModal/SelectWalletModal'
 
 export interface IProps {
   name: string
@@ -31,15 +32,29 @@ export const ChangeWalletButton: React.FC<IProps> = ({
   const { classes } = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
+  const [isOpenSelectWallet, setIsOpenSelectWallet] = React.useState<boolean>(false)
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!connected) {
-      onConnect()
-      return
+      setIsOpenSelectWallet(true)
+      setAnchorEl(event.currentTarget)
+      blurContent()
+    } else {
+      setAnchorEl(event.currentTarget)
+      blurContent()
+      setOpen(true)
     }
+  }
 
-    setAnchorEl(event.currentTarget)
-    blurContent()
-    setOpen(true)
+  const handleConnect = () => {
+    if (!connected) {
+      onConnect()
+
+      setIsOpenSelectWallet(false)
+      unblurContent()
+    } else {
+      setIsOpenSelectWallet(false)
+    }
   }
 
   const handleClose = () => {
@@ -87,6 +102,15 @@ export const ChangeWalletButton: React.FC<IProps> = ({
         }>
         <Typography className={classes.headerButtonTextEllipsis}>{name}</Typography>
       </Button>
+      <SelectWalletModal
+        anchorEl={anchorEl}
+        handleClose={() => {
+          setIsOpenSelectWallet(false)
+          unblurContent()
+        }}
+        handleConnect={handleConnect}
+        open={isOpenSelectWallet}
+      />
       <ConnectWallet
         open={open}
         anchorEl={anchorEl}
