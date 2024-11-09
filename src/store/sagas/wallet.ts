@@ -17,8 +17,7 @@ import {
   PublicKey,
   SystemProgram,
   Transaction,
-  TransactionInstruction,
-  VersionedTransaction
+  TransactionInstruction
 } from '@solana/web3.js'
 import { Token, ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
@@ -243,11 +242,7 @@ export function* getCollateralTokenAirdrop(
   tx.recentBlockhash = blockhash.blockhash
   const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
-  if (signedTx instanceof Transaction) {
-    signedTx.partialSign(airdropAdmin)
-  } else if (signedTx instanceof VersionedTransaction) {
-    signedTx.sign([airdropAdmin])
-  }
+  signedTx.partialSign(airdropAdmin)
 
   yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
     skipPreflight: true

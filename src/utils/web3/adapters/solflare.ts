@@ -1,4 +1,4 @@
-import { PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js'
+import { PublicKey, Transaction } from '@solana/web3.js'
 import { WalletAdapter } from './types'
 import { DEFAULT_SOL_PUBLICKEY } from '@store/consts/static'
 
@@ -9,9 +9,7 @@ interface SolflareProvider {
   publicKey?: PublicKey
   isConnected?: boolean
   autoApprove?: boolean
-  signTransaction: (
-    transaction: Transaction | VersionedTransaction
-  ) => Promise<Transaction | VersionedTransaction>
+  signTransaction: (transaction: Transaction) => Promise<Transaction>
   signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>
   connect: () => Promise<void>
   disconnect: () => Promise<void>
@@ -45,7 +43,7 @@ export class SolflareWalletAdapter implements WalletAdapter {
     return this._solflareProvider?.publicKey || DEFAULT_SOL_PUBLICKEY
   }
 
-  async signTransaction(transaction: Transaction | VersionedTransaction) {
+  async signTransaction(transaction: Transaction) {
     if (!this._solflareProvider) {
       return transaction
     }

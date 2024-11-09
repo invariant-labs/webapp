@@ -36,7 +36,6 @@ import {
   SystemProgram,
   Transaction,
   TransactionExpiredTimeoutError,
-  VersionedTransaction,
   sendAndConfirmRawTransaction
 } from '@solana/web3.js'
 import { getMarketProgram } from '@utils/web3/programs/amm'
@@ -479,19 +478,9 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    if (signedTx instanceof Transaction) {
-      signedTx.partialSign(wrappedSolAccount)
-    } else if (signedTx instanceof VersionedTransaction) {
-      signedTx.sign([wrappedSolAccount])
-    }
+    signedTx.partialSign(wrappedSolAccount)
 
-    if (poolSigners.length) {
-      if (signedTx instanceof Transaction) {
-        signedTx.partialSign(...poolSigners)
-      } else if (signedTx instanceof VersionedTransaction) {
-        signedTx.sign(poolSigners)
-      }
-    }
+    signedTx.partialSign(...poolSigners)
 
     const txId = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false
@@ -692,13 +681,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    if (poolSigners.length) {
-      if (signedTx instanceof Transaction) {
-        signedTx.partialSign(...poolSigners)
-      } else if (signedTx instanceof VersionedTransaction) {
-        signedTx.sign(poolSigners)
-      }
-    }
+    signedTx.partialSign(...poolSigners)
 
     const txId = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false
@@ -990,11 +973,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
-    if (signedTx instanceof Transaction) {
-      signedTx.partialSign(wrappedSolAccount)
-    } else if (signedTx instanceof VersionedTransaction) {
-      signedTx.sign([wrappedSolAccount])
-    }
+    signedTx.partialSign(wrappedSolAccount)
 
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
@@ -1359,11 +1338,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    if (signedTx instanceof Transaction) {
-      signedTx.partialSign(wrappedSolAccount)
-    } else if (signedTx instanceof VersionedTransaction) {
-      signedTx.sign([wrappedSolAccount])
-    }
+    signedTx.partialSign(wrappedSolAccount)
 
     const txId = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false

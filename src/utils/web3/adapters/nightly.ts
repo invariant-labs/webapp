@@ -1,4 +1,4 @@
-import { Transaction, VersionedTransaction } from '@solana/web3.js'
+import { Transaction } from '@solana/web3.js'
 import { WalletAdapter } from './types'
 import { nightlyConnectAdapter } from '../selector'
 import { DEFAULT_SOL_PUBLICKEY } from '@store/consts/static'
@@ -20,7 +20,7 @@ export class NightlyWalletAdapter implements WalletAdapter {
     return nightlyConnectAdapter.publicKey ?? DEFAULT_SOL_PUBLICKEY
   }
 
-  async signTransaction(transaction: Transaction | VersionedTransaction) {
+  async signTransaction(transaction: Transaction) {
     return await nightlyConnectAdapter.signTransaction(transaction)
   }
 
