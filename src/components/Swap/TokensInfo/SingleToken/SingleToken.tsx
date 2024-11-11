@@ -50,14 +50,24 @@ const SingleToken: React.FC<IProps> = ({ token, network, tokenPrice, copyTokenAd
           <Box className={classes.imageContainer}>
             <img
               className={classes.tokenIcon}
-              src={token.logoURI}
+              src={token.logoURI ?? icons.unknownToken}
               loading='lazy'
               alt={token.name + 'logo'}
+              onError={e => {
+                e.currentTarget.src = icons.unknownToken
+              }}
             />
             {token.isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
           </Box>
         ) : (
-          <img className={classes.tokenIcon} src={icons.selectToken} alt={'Select token'} />
+          <img
+            className={classes.tokenIcon}
+            src={icons.selectToken}
+            alt={'Select token'}
+            onError={e => {
+              e.currentTarget.src = icons.unknownToken
+            }}
+          />
         )}
 
         <Grid>
