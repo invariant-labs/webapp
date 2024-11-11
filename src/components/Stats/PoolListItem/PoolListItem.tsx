@@ -95,11 +95,25 @@ const PoolListItem: React.FC<IProps> = ({
             {!isSm && (
               <Box className={classes.iconsWrapper}>
                 <Box className={classes.iconContainer}>
-                  <img className={classes.tokenIcon} src={iconFrom} alt='Token from' />
+                  <img
+                    className={classes.tokenIcon}
+                    src={iconFrom}
+                    alt='Token from'
+                    onError={e => {
+                      e.currentTarget.src = icons.unknownToken
+                    }}
+                  />
                   {isUnknownFrom && <img className={classes.warningIcon} src={icons.warningIcon} />}
                 </Box>
                 <Box className={classes.iconContainer}>
-                  <img className={classes.tokenIcon} src={iconTo} alt='Token to' />
+                  <img
+                    className={classes.tokenIcon}
+                    src={iconTo}
+                    alt='Token to'
+                    onError={e => {
+                      e.currentTarget.src = icons.unknownToken
+                    }}
+                  />
                   {isUnknownTo && <img className={classes.warningIcon} src={icons.warningIcon} />}
                 </Box>
               </Box>

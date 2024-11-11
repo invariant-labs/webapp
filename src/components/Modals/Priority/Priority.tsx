@@ -53,7 +53,6 @@ const Priority: React.FC<IPriority> = ({
       setSelectedFee(+recentPriorityFee)
     }
 
-    console.log(recentPriorityFee.toString(), recentIsDynamic.toString())
     localStorage.setItem('INVARIANT_PRIORITY_FEE', recentPriorityFee.toString())
     localStorage.setItem('INVARIANT_IS_DYNAMIC_FEE', recentIsDynamic.toString())
   }, [])

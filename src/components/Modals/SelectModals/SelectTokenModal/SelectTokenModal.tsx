@@ -312,9 +312,13 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                     <Box className={classes.imageContainer}>
                       <img
                         className={classes.tokenIcon}
-                        src={token.logoURI}
+                        src={token?.logoURI ?? icons.unknownToken}
                         loading='lazy'
                         alt={token.name + 'logo'}
+                        onError={e => {
+                          e.currentTarget.onerror = null
+                          e.currentTarget.src = icons.unknownToken
+                        }}
                       />
                       {token.isUnknown && (
                         <img className={classes.warningIcon} src={icons.warningIcon} />

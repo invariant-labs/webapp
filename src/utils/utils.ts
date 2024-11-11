@@ -1407,7 +1407,6 @@ export const printSubNumber = (amount: number): string => {
 export const countLeadingZeros = (str: string): number => {
   return (str.match(/^0+/) || [''])[0].length
 }
-
 export const formatNumber = (
   number: number | bigint | string,
   noDecimals?: boolean,
@@ -1475,15 +1474,15 @@ export const formatNumber = (
       String(parseInt(afterDot)).length > decimalsAfterDot
         ? String(parseInt(afterDot)).slice(0, decimalsAfterDot)
         : afterDot
-    formattedNumber = trimZeros(
+
+    formattedNumber =
       beforeDot +
-        '.' +
-        (parsedAfterDot
-          ? leadingZeros > decimalsAfterDot
-            ? '0' + printSubNumber(leadingZeros) + parseInt(parsedAfterDot)
-            : parsedAfterDot
-          : '')
-    )
+      '.' +
+      (parsedAfterDot
+        ? leadingZeros > decimalsAfterDot
+          ? '0' + printSubNumber(leadingZeros) + parseInt(parsedAfterDot)
+          : parsedAfterDot
+        : '')
   }
 
   return isNegative ? '-' + formattedNumber : formattedNumber

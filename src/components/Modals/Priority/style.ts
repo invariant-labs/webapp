@@ -77,6 +77,9 @@ const useStyles = makeStyles()(() => {
       },
       '&:focus': {
         outline: 'none'
+      },
+      '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+        display: 'none'
       }
     },
     innerInput: {
