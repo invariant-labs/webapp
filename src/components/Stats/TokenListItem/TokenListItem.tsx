@@ -56,7 +56,13 @@ const TokenListItem: React.FC<IProps> = ({
           <Grid className={classes.tokenName}>
             {!isSm && (
               <Box className={classes.imageContainer}>
-                <img className={classes.tokenIcon} src={icon} alt='Token icon'></img>
+                <img
+                  className={classes.tokenIcon}
+                  src={icon}
+                  alt='Token icon'
+                  onError={e => {
+                    e.currentTarget.src = icons.unknownToken
+                  }}></img>
                 {isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
               </Box>
             )}

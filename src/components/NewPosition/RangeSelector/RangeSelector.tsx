@@ -3,9 +3,7 @@ import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import activeLiquidity from '@static/svg/activeLiquidity.svg'
 import { PlotTickData } from '@store/reducers/positions'
-
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
-
 import loader from '@static/gif/loader.gif'
 import useStyles from './style'
 import { PositionOpeningMethod } from '@store/consts/types'
