@@ -11,14 +11,33 @@ export interface ISelectWalletModal {
   anchorEl: HTMLButtonElement | null
   handleConnect: () => void
   handleClose: () => void
+  isChangeWallet: boolean
+  onDisconnect: () => void
 }
 export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
   anchorEl,
   open,
   handleConnect,
-  handleClose
+  handleClose,
+  isChangeWallet,
+  onDisconnect
 }) => {
   const { classes } = useStyles()
+
+  const setWallet = (wallet: WalletType) => {
+    localStorage.setItem('WALLET_TYPE', wallet.toString())
+  }
+
+  const handleConnectStaticWallet = async (wallet: WalletType) => {
+    if (isChangeWallet) {
+      await (async () => onDisconnect())()
+      await new Promise(resolve => setTimeout(resolve, 100))
+    }
+
+    await connectStaticWallet(wallet)
+    handleConnect()
+    setWallet(wallet)
+  }
 
   return (
     <Popover
@@ -43,10 +62,14 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
           item
           className={classes.button}
           onClick={async () => {
-            // handleClose()
+            if (isChangeWallet) {
+              await (async () => onDisconnect())()
+              await new Promise(resolve => setTimeout(resolve, 100))
+            }
             changeToNightlyAdapter()
             await openWalletSelectorModal()
             handleConnect()
+            setWallet(WalletType.NIGHTLY)
           }}>
           {/* <img src={copyAddressIcon} className={classes.icon} alt='Copy address icon' /> */}
           <Typography className={classes.buttonName}> {walletNames[WalletType.NIGHTLY]}</Typography>
@@ -56,9 +79,8 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
         <Grid
           item
           className={classes.button}
-          onClick={async () => {
-            await connectStaticWallet(WalletType.PHANTOM)
-            handleConnect()
+          onClick={() => {
+            handleConnectStaticWallet(WalletType.PHANTOM)
           }}>
           {/* <img src={copyAddressIcon} className={classes.icon} alt='Copy address icon' /> */}
           <Typography className={classes.buttonName}> {walletNames[WalletType.PHANTOM]}</Typography>
@@ -68,8 +90,7 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
           item
           className={classes.button}
           onClick={async () => {
-            await connectStaticWallet(WalletType.BACKPACK)
-            handleConnect()
+            handleConnectStaticWallet(WalletType.BACKPACK)
           }}>
           {/* <img src={copyAddressIcon} className={classes.icon} alt='Copy address icon' /> */}
           <Typography className={classes.buttonName}>{walletNames[WalletType.BACKPACK]}</Typography>
@@ -78,8 +99,7 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
           item
           className={classes.button}
           onClick={async () => {
-            await connectStaticWallet(WalletType.SOLFLARE)
-            handleConnect()
+            handleConnectStaticWallet(WalletType.SOLFLARE)
           }}>
           {/* <img src={copyAddressIcon} className={classes.icon} alt='Copy address icon' /> */}
           <Typography className={classes.buttonName}>{walletNames[WalletType.SOLFLARE]}</Typography>

@@ -33,6 +33,7 @@ export const ChangeWalletButton: React.FC<IProps> = ({
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
   const [isOpenSelectWallet, setIsOpenSelectWallet] = React.useState<boolean>(false)
+  const [isChangeWallet, setIsChangeWallet] = React.useState<boolean>(false)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!connected) {
@@ -46,15 +47,11 @@ export const ChangeWalletButton: React.FC<IProps> = ({
     }
   }
 
-  const handleConnect = () => {
-    if (!connected) {
-      onConnect()
-
-      setIsOpenSelectWallet(false)
-      unblurContent()
-    } else {
-      setIsOpenSelectWallet(false)
-    }
+  const handleConnect = async () => {
+    onConnect()
+    setIsOpenSelectWallet(false)
+    unblurContent()
+    setIsChangeWallet(false)
   }
 
   const handleClose = () => {
@@ -66,12 +63,17 @@ export const ChangeWalletButton: React.FC<IProps> = ({
     onDisconnect()
     unblurContent()
     setOpen(false)
+    localStorage.setItem('WALLET_TYPE', '')
   }
 
   const handleChangeWallet = () => {
-    onChangeWallet()
+    setIsChangeWallet(true)
     unblurContent()
     setOpen(false)
+    setIsOpenSelectWallet(true)
+    blurContent()
+
+    localStorage.setItem('WALLET_TYPE', '')
   }
 
   const handleCopyAddress = () => {
@@ -110,6 +112,8 @@ export const ChangeWalletButton: React.FC<IProps> = ({
         }}
         handleConnect={handleConnect}
         open={isOpenSelectWallet}
+        isChangeWallet={isChangeWallet}
+        onDisconnect={handleDisconnect}
       />
       <ConnectWallet
         open={open}
@@ -118,6 +122,7 @@ export const ChangeWalletButton: React.FC<IProps> = ({
         callDisconect={handleDisconnect}
         callCopyAddress={handleCopyAddress}
         callChangeWallet={handleChangeWallet}
+        isChangeWallet={isChangeWallet}
       />
     </>
   )
