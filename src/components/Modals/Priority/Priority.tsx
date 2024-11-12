@@ -208,8 +208,8 @@ const Priority: React.FC<IPriority> = ({
                     selected={isDynamic ? params.saveValue === 'DYNAMIC' : selectedIndex === index}
                     index={index}
                     label={params.label}
-                    value={typeof params.value === 'string' ? dynamicFee ?? 0 : params.value}
-                    saveValue={typeof params.value === 'string' ? dynamicFee ?? 0 : params.value}
+                    value={typeof params.value === 'string' ? (dynamicFee ?? 0) : params.value}
+                    saveValue={typeof params.value === 'string' ? (dynamicFee ?? 0) : params.value}
                     description={params.description}
                     onClick={handleClick}
                   />
