@@ -208,9 +208,6 @@ export const HeaderWrapper: React.FC = () => {
             })
           )
         }}
-        onChangeWallet={() => {
-          dispatch(walletActions.reconnect())
-        }}
         activeChain={activeChain}
         onChainSelect={chain => {
           if (chain.name !== activeChain.name) {

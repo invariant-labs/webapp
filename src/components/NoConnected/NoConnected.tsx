@@ -3,14 +3,21 @@ import icons from '@static/icons'
 import classNames from 'classnames'
 import { useStyles } from './style'
 import { useNavigate } from 'react-router-dom'
+import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 
 export interface INoConnected {
   onConnect: () => void
+  onDisconnect: () => void
   title?: string
   descCustomText?: string
 }
 
-export const NoConnected: React.FC<INoConnected> = ({ onConnect, title, descCustomText }) => {
+export const NoConnected: React.FC<INoConnected> = ({
+  onConnect,
+  title,
+  descCustomText,
+  onDisconnect
+}) => {
   const { classes } = useStyles()
 
   const navigate = useNavigate()
@@ -35,9 +42,14 @@ export const NoConnected: React.FC<INoConnected> = ({ onConnect, title, descCust
             Explore pools
           </Button>
 
-          <Button className={classes.buttonSecondary} onClick={onConnect} variant='contained'>
-            Connect wallet
-          </Button>
+          <ChangeWalletButton
+            name='Connect wallet'
+            onConnect={onConnect}
+            connected={false}
+            onDisconnect={onDisconnect}
+            className={classes.buttonSecondary}
+            textClassName={classes.buttonText}
+          />
         </Grid>
       </Grid>
     </>

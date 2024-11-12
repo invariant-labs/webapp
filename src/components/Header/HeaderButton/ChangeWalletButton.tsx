@@ -16,7 +16,7 @@ export interface IProps {
   hideArrow?: boolean
   className?: string
   onCopyAddress?: () => void
-  onChangeWallet?: () => void
+  textClassName?: string
 }
 export const ChangeWalletButton: React.FC<IProps> = ({
   name,
@@ -27,7 +27,7 @@ export const ChangeWalletButton: React.FC<IProps> = ({
   onDisconnect,
   className,
   onCopyAddress = () => {},
-  onChangeWallet = () => {}
+  textClassName
 }) => {
   const { classes } = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
@@ -36,6 +36,7 @@ export const ChangeWalletButton: React.FC<IProps> = ({
   const [isChangeWallet, setIsChangeWallet] = React.useState<boolean>(false)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('connected', connected)
     if (!connected) {
       setIsOpenSelectWallet(true)
       setAnchorEl(event.currentTarget)
@@ -87,8 +88,8 @@ export const ChangeWalletButton: React.FC<IProps> = ({
       <Button
         id='connect-wallet-button'
         className={classNames(
-          className,
-          connected ? classes.headerButtonConnected : classes.headerButtonConnect
+          connected ? classes.headerButtonConnected : classes.headerButtonConnect,
+          className
         )}
         variant='contained'
         classes={{
@@ -102,7 +103,9 @@ export const ChangeWalletButton: React.FC<IProps> = ({
         endIcon={
           connected && !hideArrow ? <ExpandMoreIcon className={classes.endIcon} /> : undefined
         }>
-        <Typography className={classes.headerButtonTextEllipsis}>{name}</Typography>
+        <Typography className={classNames(classes.headerButtonTextEllipsis, textClassName)}>
+          {name}
+        </Typography>
       </Button>
       <SelectWalletModal
         anchorEl={anchorEl}

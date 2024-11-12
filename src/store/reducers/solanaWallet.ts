@@ -103,8 +103,7 @@ const solanaWalletSlice = createSlice({
     rescanTokens() {},
     airdrop() {},
     connect() {},
-    disconnect() {},
-    reconnect() {}
+    disconnect() {}
   }
 })
 interface IsetTokenBalance {

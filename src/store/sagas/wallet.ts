@@ -6,8 +6,7 @@ import {
   spawn,
   all,
   select,
-  takeLatest,
-  delay
+  takeLatest
 } from 'typed-redux-saga'
 import { actions, ITokenAccount, Status } from '@store/reducers/solanaWallet'
 import { getConnection, handleRpcError } from './connection'
@@ -36,7 +35,6 @@ import { actions as farmsActions } from '@store/reducers/farms'
 import { actions as bondsActions } from '@store/reducers/bonds'
 import { closeSnackbar } from 'notistack'
 import { createLoaderKey } from '@utils/utils'
-import { openWalletSelectorModal } from '@utils/web3/selector'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
@@ -441,12 +439,6 @@ export function* handleDisconnect(): Generator {
   }
 }
 
-export function* handleReconnect(): Generator {
-  yield* call(handleDisconnect)
-  yield* delay(100)
-  yield* call(openWalletSelectorModal)
-}
-
 export function* connectHandler(): Generator {
   yield takeLatest(actions.connect, handleConnect)
 }
@@ -467,19 +459,8 @@ export function* handleBalanceSaga(): Generator {
   yield takeLatest(actions.getBalance, handleBalance)
 }
 
-export function* reconnectHandler(): Generator {
-  yield takeLatest(actions.reconnect, handleReconnect)
-}
-
 export function* walletSaga(): Generator {
   yield all(
-    [
-      initSaga,
-      airdropSaga,
-      connectHandler,
-      disconnectHandler,
-      handleBalanceSaga,
-      reconnectHandler
-    ].map(spawn)
+    [initSaga, airdropSaga, connectHandler, disconnectHandler, handleBalanceSaga].map(spawn)
   )
 }

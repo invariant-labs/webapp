@@ -35,7 +35,6 @@ import {
 } from '@store/selectors/pools'
 import { initPosition, plotTicks, shouldNotUpdateRange } from '@store/selectors/positions'
 import { balanceLoading, status, balance, swapTokensDict } from '@store/selectors/solanaWallet'
-import { openWalletSelectorModal } from '@utils/web3/selector'
 import { VariantType } from 'notistack'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -779,7 +778,9 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       isLoadingTokens={isCurrentlyLoadingTokens}
       solBalance={solBalance}
       walletStatus={walletStatus}
-      onConnectWallet={openWalletSelectorModal}
+      onConnectWallet={() => {
+        dispatch(walletActions.connect())
+      }}
       onDisconnectWallet={() => {
         dispatch(walletActions.disconnect())
       }}
@@ -787,7 +788,9 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       ticksLoading={ticksLoading}
       loadingTicksAndTickMaps={loadingTicksAndTickMaps}
       noConnectedBlockerProps={{
-        onConnect: openWalletSelectorModal,
+        onConnect: () => {
+          dispatch(walletActions.connect())
+        },
         descCustomText: 'Cannot add any liquidity.'
       }}
       progress={progress}
