@@ -480,7 +480,9 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
 
     signedTx.partialSign(wrappedSolAccount)
 
-    signedTx.partialSign(...poolSigners)
+    if (poolSigners.length) {
+      signedTx.partialSign(...poolSigners)
+    }
 
     const txId = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false
@@ -681,7 +683,9 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    signedTx.partialSign(...poolSigners)
+    if (poolSigners.length) {
+      signedTx.partialSign(...poolSigners)
+    }
 
     const txId = yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
       skipPreflight: false
