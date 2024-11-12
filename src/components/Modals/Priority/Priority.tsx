@@ -253,8 +253,8 @@ const Priority: React.FC<IPriority> = ({
                     }
                     index={index}
                     label={params.label}
-                    value={typeof params.value === 'string' ? dynamicFee ?? 0 : params.value}
-                    saveValue={typeof params.value === 'string' ? dynamicFee ?? 0 : params.value}
+                    value={typeof params.value === 'string' ? (dynamicFee ?? 0) : params.value}
+                    saveValue={typeof params.value === 'string' ? (dynamicFee ?? 0) : params.value}
                     description={params.description}
                     onClick={handleClick}
                   />
