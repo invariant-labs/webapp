@@ -40,7 +40,6 @@ export const Primary: Story = {
     walletConnected: true,
     onFaucet: fn(),
     onCopyAddress: fn(),
-    onChangeWallet: fn(),
     activeChain: {
       name: Chain.Eclipse,
       address: 'https://exlipse.invariant.app'

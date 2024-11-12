@@ -7,17 +7,11 @@ import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButt
 
 export interface INoConnected {
   onConnect: () => void
-  onDisconnect: () => void
   title?: string
   descCustomText?: string
 }
 
-export const NoConnected: React.FC<INoConnected> = ({
-  onConnect,
-  title,
-  descCustomText,
-  onDisconnect
-}) => {
+export const NoConnected: React.FC<INoConnected> = ({ onConnect, title, descCustomText }) => {
   const { classes } = useStyles()
 
   const navigate = useNavigate()
@@ -46,7 +40,7 @@ export const NoConnected: React.FC<INoConnected> = ({
             name='Connect wallet'
             onConnect={onConnect}
             connected={false}
-            onDisconnect={onDisconnect}
+            onDisconnect={() => {}}
             className={classes.buttonSecondary}
             textClassName={classes.buttonText}
           />
