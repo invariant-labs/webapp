@@ -3,7 +3,7 @@ import TransactionPriorityButton from '@components/TransactionPriorityButton/Tra
 import classNames from 'classnames'
 import React, { useEffect, useRef, useState } from 'react'
 import useStyles from './style'
-import { IPriorityFeeOptions } from '@store/consts/types'
+import { IPriorityFeeOptions, PriorityMode } from '@store/consts/types'
 import { Box, Button, Grid, Input, Popover, Typography } from '@mui/material'
 
 export interface IPriority {
@@ -11,7 +11,7 @@ export interface IPriority {
   handleClose: () => void
   anchorEl: HTMLButtonElement | null
   recentPriorityFee: string
-  recentIsDynamic: boolean
+  recentPriorityMode: PriorityMode
   onPrioritySave: () => void
 }
 
@@ -20,7 +20,7 @@ const Priority: React.FC<IPriority> = ({
   handleClose,
   anchorEl,
   recentPriorityFee,
-  recentIsDynamic,
+  recentPriorityMode,
   onPrioritySave
 }) => {
   const { classes } = useStyles()
@@ -32,24 +32,24 @@ const Priority: React.FC<IPriority> = ({
   const [saveButtonContent, setSaveButtonContent] = useState('Save settings')
   const [timerId, setTimerId] = useState<NodeJS.Timeout>()
   const [dynamicFee, setDynamicFee] = useState<number | null>(null)
-  const [isDynamic, setIsDynamic] = useState(recentIsDynamic)
+  const [priorityMode, setPriorityMode] = useState<PriorityMode>(recentPriorityMode)
 
   const maxFee = 2
 
   const initialPriorityOptions = [
-    { label: 'Normal', value: 0.000005, saveValue: 0, description: '1x Market fee' },
+    { label: PriorityMode.Normal, value: 0.000005, saveValue: 0, description: '1x Market fee' },
     {
-      label: 'Market',
+      label: PriorityMode.Market,
       value: 0.001,
       saveValue: 0.001,
       description: '85% percentile fees from last 20 blocks'
     },
-    { label: 'High', value: 0.05, saveValue: 0.05, description: '5x Market fee' },
-    { label: 'Turbo', value: 0.1, saveValue: 0.1, description: '10x Market fee' },
+    { label: PriorityMode.High, value: 0.05, saveValue: 0.05, description: '5x Market fee' },
+    { label: PriorityMode.Turbo, value: 0.1, saveValue: 0.1, description: '10x Market fee' },
     {
-      label: 'Dynamic',
+      label: PriorityMode.Dynamic,
       value: 'DYNAMIC',
-      saveValue: 'DYNAMIC',
+      saveValue: 0,
       description: 'Custom fee based on market demand'
     }
   ]
@@ -61,29 +61,34 @@ const Priority: React.FC<IPriority> = ({
     const updatePriorityOptions = () => {
       if (dynamicFee != null) {
         setPriorityFeeOptions([
-          { label: 'Normal', value: 0.000005, saveValue: 0, description: '1x Market fee' },
           {
-            label: 'Market',
+            label: PriorityMode.Normal,
+            value: 0.000005,
+            saveValue: 0,
+            description: '1x Market fee'
+          },
+          {
+            label: PriorityMode.Market,
             value: parseFloat((dynamicFee / 4).toFixed(9)),
             saveValue: parseFloat((dynamicFee / 4).toFixed(9)),
             description: '0.25x Dynamic fee'
           },
           {
-            label: 'High',
+            label: PriorityMode.High,
             value: parseFloat((dynamicFee * 1.5).toFixed(9)),
             saveValue: parseFloat((dynamicFee * 1.5).toFixed(9)),
             description: '1.5x Dynamic fee'
           },
           {
-            label: 'Turbo',
+            label: PriorityMode.Turbo,
             value: parseFloat((dynamicFee * 3).toFixed(9)),
             saveValue: parseFloat((dynamicFee * 3).toFixed(9)),
             description: '3x Dynamic fee'
           },
           {
-            label: 'Dynamic',
+            label: PriorityMode.Dynamic,
             value: 'DYNAMIC',
-            saveValue: 'DYNAMIC',
+            saveValue: dynamicFee,
             description: 'Custom fee based on market demand'
           }
         ])
@@ -96,24 +101,22 @@ const Priority: React.FC<IPriority> = ({
   }, [dynamicFee])
 
   useEffect(() => {
-    const index = priorityFeeOptions.findIndex(option =>
-      isDynamic ? option.saveValue === 'DYNAMIC' : option.saveValue === +recentPriorityFee
-    )
+    const index = priorityFeeOptions.findIndex(option => option.label === recentPriorityMode)
     setSelectedIndex(index)
 
     if (index !== -1) {
-      if (typeof priorityFeeOptions[index].saveValue === 'string') {
-        setSelectedFee(dynamicFee ?? 0)
-      } else {
-        setSelectedFee(priorityFeeOptions[index].saveValue)
-      }
+      setSelectedFee(
+        priorityMode == PriorityMode.Dynamic && dynamicFee
+          ? +dynamicFee
+          : priorityFeeOptions[index].saveValue
+      )
     } else {
       setInputValue(recentPriorityFee)
       setSelectedFee(+recentPriorityFee)
     }
 
     localStorage.setItem('INVARIANT_PRIORITY_FEE', recentPriorityFee.toString())
-    localStorage.setItem('INVARIANT_IS_DYNAMIC_FEE', recentIsDynamic.toString())
+    localStorage.setItem('INVARIANT_PRIORITY_MODE', recentPriorityMode.toString())
   }, [])
 
   useEffect(() => {
@@ -143,17 +146,13 @@ const Priority: React.FC<IPriority> = ({
   const handleClick = (index: number) => {
     setInputValue('')
 
-    if (index === 4) {
-      setIsDynamic(true)
-    } else {
-      setIsDynamic(false)
-    }
+    setPriorityMode(priorityFeeOptions[index].label)
     setSelectedIndex(index)
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedIndex(-1)
-    setIsDynamic(false)
+    setPriorityMode(PriorityMode.Custom)
     if (+e.target.value >= maxFee) {
       setInputValue('2')
     } else {
@@ -167,25 +166,26 @@ const Priority: React.FC<IPriority> = ({
     }
 
     if (+inputValue > 0) {
-      setIsDynamic(false)
+      setPriorityMode(PriorityMode.Custom)
       setSelectedFee(+inputValue)
       localStorage.setItem('INVARIANT_PRIORITY_FEE', inputValue)
-      localStorage.setItem('INVARIANT_IS_DYNAMIC_FEE', 'false')
+      localStorage.setItem('INVARIANT_PRIORITY_MODE', priorityMode.toString())
     } else {
-      if (typeof priorityFeeOptions[selectedIndex].saveValue === 'string') {
-        setIsDynamic(true)
-        setSelectedFee(dynamicFee ?? 0)
-        localStorage.setItem('INVARIANT_PRIORITY_FEE', (dynamicFee ?? 0).toString())
-        localStorage.setItem('INVARIANT_IS_DYNAMIC_FEE', 'true')
-      } else {
-        setIsDynamic(false)
-        setSelectedFee(priorityFeeOptions[selectedIndex].saveValue)
-        localStorage.setItem(
-          'INVARIANT_PRIORITY_FEE',
-          priorityFeeOptions[selectedIndex].saveValue.toString()
-        )
-        localStorage.setItem('INVARIANT_IS_DYNAMIC_FEE', 'false')
-      }
+      setPriorityMode(priorityMode)
+
+      setSelectedFee(
+        priorityMode == PriorityMode.Dynamic
+          ? (dynamicFee ?? 0)
+          : priorityFeeOptions[selectedIndex].saveValue
+      )
+
+      localStorage.setItem(
+        'INVARIANT_PRIORITY_FEE',
+        priorityMode == PriorityMode.Dynamic
+          ? (dynamicFee?.toString() ?? '')
+          : priorityFeeOptions[selectedIndex].saveValue.toString()
+      )
+      localStorage.setItem('INVARIANT_PRIORITY_MODE', priorityMode.toString())
     }
 
     onPrioritySave()
@@ -198,7 +198,7 @@ const Priority: React.FC<IPriority> = ({
       const fee = +(dynamicFee / 10 ** 9).toFixed(9)
       setDynamicFee(fee)
 
-      if (isDynamic) {
+      if (priorityMode === PriorityMode.Dynamic) {
         localStorage.setItem('INVARIANT_PRIORITY_FEE', fee.toString())
       }
     }
@@ -209,7 +209,7 @@ const Priority: React.FC<IPriority> = ({
     }, 60 * 1000)
 
     return () => clearInterval(interval)
-  }, [isDynamic])
+  }, [priorityMode])
 
   const getCurrentDynamicFee = async () => {
     const response = await fetch('https://solanacompass.com/api/fees')
@@ -247,11 +247,7 @@ const Priority: React.FC<IPriority> = ({
                 <Box>
                   <TransactionPriorityButton
                     areButtonsSelected={selectedIndex !== -1}
-                    selected={
-                      isDynamic && selectedIndex !== -1
-                        ? params.saveValue === 'DYNAMIC'
-                        : selectedIndex === index
-                    }
+                    selected={selectedIndex === index}
                     index={index}
                     label={params.label}
                     value={typeof params.value === 'string' ? (dynamicFee ?? 0) : params.value}
