@@ -26,8 +26,11 @@ export class BackpackWalletAdapter implements WalletAdapter {
     return await this._backpackProvider.signAllTransactions(transactions)
   }
   get publicKey() {
-    return this._backpackProvider?.publicKey || DEFAULT_SOL_PUBLICKEY
+    return this._backpackProvider?.publicKey
+      ? new PublicKey(this._backpackProvider?.publicKey?.toString())
+      : DEFAULT_SOL_PUBLICKEY
   }
+
   async signTransaction(transaction: Transaction) {
     if (!this._backpackProvider) {
       return transaction

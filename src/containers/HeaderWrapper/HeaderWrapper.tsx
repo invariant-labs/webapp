@@ -1,7 +1,7 @@
 import Header from '@components/Header/Header'
 import { RpcErrorModal } from '@components/RpcErrorModal/RpcErrorModal'
 import { RPC, CHAINS, RECOMMENDED_RPC_ADDRESS, NetworkType } from '@store/consts/static'
-import { Chain } from '@store/consts/types'
+import { Chain, WalletType } from '@store/consts/types'
 import { actions, RpcStatus } from '@store/reducers/solanaConnection'
 import { Status, actions as walletActions } from '@store/reducers/solanaWallet'
 import { network, rpcAddress, rpcStatus } from '@store/selectors/solanaConnection'
@@ -11,7 +11,7 @@ import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
-import { changeToNightlyAdapter } from '@utils/web3/wallet'
+import { changeToNightlyAdapter, connectStaticWallet } from '@utils/web3/wallet'
 
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -23,33 +23,46 @@ export const HeaderWrapper: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
+    const reconnectStaticWallet = async (wallet: WalletType) => {
+      await connectStaticWallet(wallet)
+      dispatch(walletActions.connect())
+    }
+
     if (currentNetwork === NetworkType.Testnet) {
       dispatch(actions.setNetwork(NetworkType.Devnet))
       dispatch(actions.setRPCAddress(RPC.DEV))
     }
 
-    nightlyConnectAdapter.addListener('connect', () => {
-      changeToNightlyAdapter()
-      dispatch(walletActions.connect())
-    })
+    const walletType = localStorage.getItem('WALLET_TYPE') as WalletType | null
 
-    if (nightlyConnectAdapter.connected) {
-      changeToNightlyAdapter()
-      dispatch(walletActions.connect())
-    }
+    if (walletType !== null && walletType === WalletType.NIGHTLY) {
+      nightlyConnectAdapter.addListener('connect', () => {
+        changeToNightlyAdapter()
+        dispatch(walletActions.connect())
+      })
 
-    nightlyConnectAdapter.canEagerConnect().then(
-      async canEagerConnect => {
-        if (canEagerConnect) {
-          console.log('canEagerConnect')
-          changeToNightlyAdapter()
-          await nightlyConnectAdapter.connect()
-        }
-      },
-      error => {
-        console.log(error)
+      if (nightlyConnectAdapter.connected) {
+        changeToNightlyAdapter()
+        dispatch(walletActions.connect())
       }
-    )
+
+      nightlyConnectAdapter.canEagerConnect().then(
+        async canEagerConnect => {
+          if (canEagerConnect) {
+            changeToNightlyAdapter()
+            await nightlyConnectAdapter.connect()
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    } else {
+      if (!walletType || walletType === null) {
+        return
+      }
+      reconnectStaticWallet(walletType)
+    }
   }, [])
 
   const defaultTestnetRPC = useMemo(() => {

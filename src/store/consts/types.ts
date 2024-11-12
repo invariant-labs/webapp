@@ -283,8 +283,8 @@ export interface IPriorityFeeOptions {
 }
 
 export enum WalletType {
-  NIGHTLY,
-  PHANTOM,
-  BACKPACK,
-  SOLFLARE
+  NIGHTLY = 'NIGHTLY',
+  PHANTOM = 'PHANTOM',
+  BACKPACK = 'BACKPACK',
+  SOLFLARE = 'SOLFLARE'
 }

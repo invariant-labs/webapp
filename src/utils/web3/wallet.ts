@@ -3,13 +3,7 @@ import { NightlyWalletAdapter } from './adapters/nightly'
 import { PhantomWalletAdapter } from './adapters/phantom'
 import { BackpackWalletAdapter } from './adapters/backpack'
 import { SolflareWalletAdapter } from './adapters/solflare'
-
-export enum WalletType {
-  NIGHTLY,
-  PHANTOM,
-  BACKPACK,
-  SOLFLARE
-}
+import { WalletType } from '@store/consts/types'
 
 let _wallet: WalletAdapter
 

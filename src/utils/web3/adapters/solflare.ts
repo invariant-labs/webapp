@@ -40,7 +40,9 @@ export class SolflareWalletAdapter implements WalletAdapter {
   }
 
   get publicKey() {
-    return this._solflareProvider?.publicKey || DEFAULT_SOL_PUBLICKEY
+    return this._solflareProvider?.publicKey
+      ? new PublicKey(this._solflareProvider?.publicKey?.toString())
+      : DEFAULT_SOL_PUBLICKEY
   }
 
   async signTransaction(transaction: Transaction) {
