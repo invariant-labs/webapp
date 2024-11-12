@@ -4,16 +4,17 @@ import React, { useState } from 'react'
 import useStyles from './style'
 import { Button } from '@mui/material'
 import { blurContent, unblurContent } from '@utils/uiUtils'
+import { PriorityMode } from '@store/consts/types'
 
 export interface Props {
   recentPriorityFee: string
-  recentIsDynamic: boolean
+  recentPriorityMode: PriorityMode
   onPrioritySave: () => void
 }
 
 export const SelectPriorityButton: React.FC<Props> = ({
   recentPriorityFee,
-  recentIsDynamic,
+  recentPriorityMode,
   onPrioritySave
 }) => {
   const { classes } = useStyles()
@@ -45,7 +46,7 @@ export const SelectPriorityButton: React.FC<Props> = ({
         open={priorityModal}
         anchorEl={anchorEl}
         recentPriorityFee={recentPriorityFee}
-        recentIsDynamic={recentIsDynamic}
+        recentPriorityMode={recentPriorityMode}
         handleClose={handleClose}
         onPrioritySave={onPrioritySave}
       />

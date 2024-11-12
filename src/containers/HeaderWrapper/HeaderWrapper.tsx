@@ -1,7 +1,7 @@
 import Header from '@components/Header/Header'
 import { RpcErrorModal } from '@components/RpcErrorModal/RpcErrorModal'
 import { RPC, CHAINS, RECOMMENDED_RPC_ADDRESS, NetworkType } from '@store/consts/static'
-import { Chain } from '@store/consts/types'
+import { Chain, PriorityMode } from '@store/consts/types'
 import { actions, RpcStatus } from '@store/reducers/solanaConnection'
 import { Status, actions as walletActions } from '@store/reducers/solanaWallet'
 import { network, rpcAddress, rpcStatus } from '@store/selectors/solanaConnection'
@@ -94,10 +94,10 @@ export const HeaderWrapper: React.FC = () => {
     return lastFee === null ? '' : lastFee
   }, [])
 
-  const recentIsDynamic = useMemo(() => {
-    const lastIsDynamic = localStorage.getItem('INVARIANT_IS_DYNAMIC_FEE')
+  const recentPriorityMode = useMemo(() => {
+    const lastPriorityMode = localStorage.getItem('INVARIANT_PRIORITY_MODE')
 
-    return lastIsDynamic === null ? true : lastIsDynamic === 'true'
+    return lastPriorityMode === null ? PriorityMode.Dynamic : (lastPriorityMode as PriorityMode)
   }, [])
 
   const currentRpcStatus = useSelector(rpcStatus)
@@ -167,7 +167,7 @@ export const HeaderWrapper: React.FC = () => {
         defaultDevnetRPC={defaultDevnetRPC}
         defaultMainnetRPC={defaultMainnetRPC}
         recentPriorityFee={recentPriorityFee}
-        recentIsDynamic={recentIsDynamic}
+        recentPriorityMode={recentPriorityMode}
         onPrioritySave={() => {
           dispatch(
             snackbarsActions.add({

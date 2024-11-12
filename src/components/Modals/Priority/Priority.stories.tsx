@@ -4,6 +4,7 @@ import Priority, { IPriority } from './Priority'
 import { Provider } from 'react-redux'
 import { MemoryRouter } from 'react-router-dom'
 import { store } from '@store/index'
+import { PriorityMode } from '@store/consts/types'
 
 const meta = {
   title: 'Modals/Priority',
@@ -37,7 +38,7 @@ export const Primary: Story = {
     anchorEl: null,
     onPrioritySave: fn(),
     recentPriorityFee: '1',
-    recentIsDynamic: true
+    recentPriorityMode: PriorityMode.Dynamic
   },
   render: args => <PrimaryComponent {...args} />
 }
