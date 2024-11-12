@@ -153,7 +153,7 @@ const Priority: React.FC<IPriority> = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedIndex(-1)
-
+    setIsDynamic(false)
     if (+e.target.value >= maxFee) {
       setInputValue('2')
     } else {
@@ -170,6 +170,7 @@ const Priority: React.FC<IPriority> = ({
       setIsDynamic(false)
       setSelectedFee(+inputValue)
       localStorage.setItem('INVARIANT_PRIORITY_FEE', inputValue)
+      localStorage.setItem('INVARIANT_IS_DYNAMIC_FEE', 'false')
     } else {
       if (typeof priorityFeeOptions[selectedIndex].saveValue === 'string') {
         setIsDynamic(true)
