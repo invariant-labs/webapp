@@ -375,7 +375,6 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
 
 export function* init(): Generator {
   yield* put(actions.setStatus(Status.Init))
-  console.log('init wallet')
   yield* call(handleBalance)
   yield* put(actions.setStatus(Status.Initialized))
 }

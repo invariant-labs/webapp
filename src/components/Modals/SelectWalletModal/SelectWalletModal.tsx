@@ -43,7 +43,7 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
           item
           className={classes.button}
           onClick={async () => {
-            handleClose()
+            // handleClose()
             changeToNightlyAdapter()
             await openWalletSelectorModal()
             handleConnect()

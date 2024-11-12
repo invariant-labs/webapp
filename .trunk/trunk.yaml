@@ -13,13 +13,13 @@ runtimes:
 lint:
   enabled:
     - actionlint@1.7.4
-    - checkov@3.2.280
+    - checkov@3.2.286
     - eslint@8.57.0
     - git-diff-check
     - markdownlint@0.42.0
     - oxipng@9.1.2
     - prettier@3.3.3
-    - trufflehog@3.83.3
+    - trufflehog@3.83.6
     - yamllint@1.35.1
 actions:
   disabled:
