@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import useStyles from './style'
 import { IPriorityFeeOptions, PriorityMode } from '@store/consts/types'
 import { Box, Button, Grid, Input, Popover, Typography } from '@mui/material'
+import { stringToFixed } from '@utils/utils'
 
 export interface IPriority {
   open: boolean
@@ -37,21 +38,21 @@ const Priority: React.FC<IPriority> = ({
   const maxFee = 2
 
   const initialPriorityOptions = [
-    { label: PriorityMode.Normal, value: 0.000005, saveValue: 0, description: '1x Market fee' },
+    { label: PriorityMode.Normal, value: 0.000005, saveValue: 0, description: 'Minimal fee' },
     {
-      label: PriorityMode.Market,
+      label: PriorityMode.Economic,
       value: 0.001,
       saveValue: 0.001,
-      description: '85% percentile fees from last 20 blocks'
+      description: '0.25x Market fee'
     },
-    { label: PriorityMode.High, value: 0.05, saveValue: 0.05, description: '5x Market fee' },
-    { label: PriorityMode.Turbo, value: 0.1, saveValue: 0.1, description: '10x Market fee' },
     {
       label: PriorityMode.Dynamic,
-      value: 'DYNAMIC',
-      saveValue: 0,
+      value: 0.02,
+      saveValue: 0.02,
       description: 'Custom fee based on market demand'
-    }
+    },
+    { label: PriorityMode.High, value: 0.05, saveValue: 0.05, description: '1.5x Market fee' },
+    { label: PriorityMode.Turbo, value: 0.1, saveValue: 0.1, description: '3x Market fee' }
   ]
 
   const [priorityFeeOptions, setPriorityFeeOptions] =
@@ -65,31 +66,31 @@ const Priority: React.FC<IPriority> = ({
             label: PriorityMode.Normal,
             value: 0.000005,
             saveValue: 0,
-            description: '1x Market fee'
+            description: 'Minimal fee'
           },
           {
-            label: PriorityMode.Market,
+            label: PriorityMode.Economic,
             value: parseFloat((dynamicFee / 4).toFixed(9)),
             saveValue: parseFloat((dynamicFee / 4).toFixed(9)),
-            description: '0.25x Dynamic fee'
+            description: '0.25x Market fee'
+          },
+          {
+            label: PriorityMode.Dynamic,
+            value: dynamicFee,
+            saveValue: dynamicFee,
+            description: 'Custom fee based on market demand'
           },
           {
             label: PriorityMode.High,
             value: parseFloat((dynamicFee * 1.5).toFixed(9)),
             saveValue: parseFloat((dynamicFee * 1.5).toFixed(9)),
-            description: '1.5x Dynamic fee'
+            description: '1.5x Market fee'
           },
           {
             label: PriorityMode.Turbo,
             value: parseFloat((dynamicFee * 3).toFixed(9)),
             saveValue: parseFloat((dynamicFee * 3).toFixed(9)),
-            description: '3x Dynamic fee'
-          },
-          {
-            label: PriorityMode.Dynamic,
-            value: 'DYNAMIC',
-            saveValue: dynamicFee,
-            description: 'Custom fee based on market demand'
+            description: '3x Market fee'
           }
         ])
       } else {
@@ -106,7 +107,7 @@ const Priority: React.FC<IPriority> = ({
 
     if (index !== -1) {
       setSelectedFee(
-        priorityMode == PriorityMode.Dynamic && dynamicFee
+        priorityMode === PriorityMode.Dynamic && dynamicFee
           ? +dynamicFee
           : priorityFeeOptions[index].saveValue
       )
@@ -156,7 +157,7 @@ const Priority: React.FC<IPriority> = ({
     if (+e.target.value >= maxFee) {
       setInputValue('2')
     } else {
-      setInputValue(e.target.value)
+      setInputValue(stringToFixed(e.target.value, 9))
     }
   }
 
@@ -286,6 +287,9 @@ const Priority: React.FC<IPriority> = ({
           ref={inputRef}
           classes={{
             input: classes.innerInput
+          }}
+          onBlur={e => {
+            setInputValue(stringToFixed(e.target.value, 9, true))
           }}
         />
         <AnimatedButton
