@@ -82,7 +82,8 @@ const useStyles = makeStyles()(() => {
       }
     },
     activeInput: {
-      outline: `1px solid ${colors.invariant.lightHover}`
+      outline: `1px solid ${colors.invariant.pink}`,
+      backgroundColor: 'rgba(239, 132, 245, 0.1)'
     },
     innerInput: {
       paddingBlock: 0,
