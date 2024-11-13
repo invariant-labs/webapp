@@ -118,7 +118,7 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
           ) : null}
         </>
       ) : (
-        <NotFoundPlaceholder title="It's empty here..." subtitle='No token found' />
+        <NotFoundPlaceholder title='No tokens found...' />
       )}
     </Grid>
   )

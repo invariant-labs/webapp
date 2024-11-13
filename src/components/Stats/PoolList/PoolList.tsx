@@ -124,7 +124,7 @@ const PoolList: React.FC<PoolListInterface> = ({ data, network }) => {
           ) : null}
         </>
       ) : (
-        <NotFoundPlaceholder title="It's empty here..." subtitle='No pools found' />
+        <NotFoundPlaceholder title='No pools found...' />
       )}
     </Grid>
   )
