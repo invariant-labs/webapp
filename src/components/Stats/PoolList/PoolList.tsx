@@ -5,6 +5,7 @@ import { Grid } from '@mui/material'
 import { NetworkType, SortTypePoolList } from '@store/consts/static'
 
 import { PaginationList } from '@components/Pagination/Pagination'
+import NotFoundPlaceholder from '../NotFoundPlaceholder/NotFoundPlaceholder'
 
 interface PoolListInterface {
   data: Array<{
@@ -81,44 +82,50 @@ const PoolList: React.FC<PoolListInterface> = ({ data, network }) => {
 
   return (
     <Grid container direction='column' classes={{ root: classes.container }}>
-      <PoolListItem
-        displayType='header'
-        onSort={setSortType}
-        sortType={sortType}
-        network={network}
-      />
-      {paginator(page).map((element, index) => (
-        <PoolListItem
-          displayType='token'
-          tokenIndex={index + 1 + (page - 1) * 10}
-          symbolFrom={element.symbolFrom}
-          symbolTo={element.symbolTo}
-          iconFrom={element.iconFrom}
-          iconTo={element.iconTo}
-          volume={element.volume}
-          TVL={element.TVL}
-          fee={element.fee}
-          apy={element.apy}
-          hideBottomLine={pages === 1 && index + 1 === data.length}
-          apyData={element.apyData}
-          key={index}
-          addressFrom={element.addressFrom}
-          addressTo={element.addressTo}
-          network={network}
-          isUnknownFrom={element.isUnknownFrom}
-          isUnknownTo={element.isUnknownTo}
-        />
-      ))}
-      {pages > 1 ? (
-        <Grid className={classes.pagination}>
-          <PaginationList
-            pages={pages}
-            defaultPage={1}
-            handleChangePage={handleChangePagination}
-            variant='flex-end'
+      {data.length > 0 ? (
+        <>
+          <PoolListItem
+            displayType='header'
+            onSort={setSortType}
+            sortType={sortType}
+            network={network}
           />
-        </Grid>
-      ) : null}
+          {paginator(page).map((element, index) => (
+            <PoolListItem
+              displayType='token'
+              tokenIndex={index + 1 + (page - 1) * 10}
+              symbolFrom={element.symbolFrom}
+              symbolTo={element.symbolTo}
+              iconFrom={element.iconFrom}
+              iconTo={element.iconTo}
+              volume={element.volume}
+              TVL={element.TVL}
+              fee={element.fee}
+              apy={element.apy}
+              hideBottomLine={pages === 1 && index + 1 === data.length}
+              apyData={element.apyData}
+              key={index}
+              addressFrom={element.addressFrom}
+              addressTo={element.addressTo}
+              network={network}
+              isUnknownFrom={element.isUnknownFrom}
+              isUnknownTo={element.isUnknownTo}
+            />
+          ))}
+          {pages > 1 ? (
+            <Grid className={classes.pagination}>
+              <PaginationList
+                pages={pages}
+                defaultPage={1}
+                handleChangePage={handleChangePagination}
+                variant='flex-end'
+              />
+            </Grid>
+          ) : null}
+        </>
+      ) : (
+        <NotFoundPlaceholder title='No pools found...' />
+      )}
     </Grid>
   )
 }
