@@ -38,21 +38,26 @@ const Priority: React.FC<IPriority> = ({
   const maxFee = 2
 
   const initialPriorityOptions = [
-    { label: PriorityMode.Normal, value: 0.000005, saveValue: 0, description: 'Minimal fee' },
+    {
+      label: PriorityMode.Normal,
+      value: 0.000005,
+      saveValue: 0.000005,
+      description: '0.001x Market fee'
+    },
     {
       label: PriorityMode.Economic,
       value: 0.001,
       saveValue: 0.001,
-      description: '0.25x Market fee'
+      description: '0.2x Market fee'
     },
     {
       label: PriorityMode.Dynamic,
-      value: 0.02,
-      saveValue: 0.02,
+      value: 0.005,
+      saveValue: 0.005,
       description: 'Custom fee based on market demand'
     },
-    { label: PriorityMode.High, value: 0.05, saveValue: 0.05, description: '1.5x Market fee' },
-    { label: PriorityMode.Turbo, value: 0.1, saveValue: 0.1, description: '3x Market fee' }
+    { label: PriorityMode.High, value: 0.02, saveValue: 0.02, description: '4x Market fee' },
+    { label: PriorityMode.Turbo, value: 0.05, saveValue: 0.05, description: '10x Market fee' }
   ]
 
   const [priorityFeeOptions, setPriorityFeeOptions] =
@@ -60,12 +65,12 @@ const Priority: React.FC<IPriority> = ({
 
   useEffect(() => {
     const updatePriorityOptions = () => {
-      if (dynamicFee != null) {
+      if (dynamicFee !== null) {
         setPriorityFeeOptions([
           {
             label: PriorityMode.Normal,
             value: 0.000005,
-            saveValue: 0,
+            saveValue: 0.000005,
             description: 'Minimal fee'
           },
           {
@@ -176,14 +181,14 @@ const Priority: React.FC<IPriority> = ({
 
       setSelectedFee(
         priorityMode == PriorityMode.Dynamic
-          ? (dynamicFee ?? 0)
+          ? dynamicFee ?? 0
           : priorityFeeOptions[selectedIndex].saveValue
       )
 
       localStorage.setItem(
         'INVARIANT_PRIORITY_FEE',
         priorityMode == PriorityMode.Dynamic
-          ? (dynamicFee?.toString() ?? '')
+          ? dynamicFee?.toString() ?? ''
           : priorityFeeOptions[selectedIndex].saveValue.toString()
       )
       localStorage.setItem('INVARIANT_PRIORITY_MODE', priorityMode.toString())
@@ -251,8 +256,8 @@ const Priority: React.FC<IPriority> = ({
                     selected={selectedIndex === index}
                     index={index}
                     label={params.label}
-                    value={typeof params.value === 'string' ? (dynamicFee ?? 0) : params.value}
-                    saveValue={typeof params.value === 'string' ? (dynamicFee ?? 0) : params.value}
+                    value={typeof params.value === 'string' ? dynamicFee ?? 0 : params.value}
+                    saveValue={typeof params.value === 'string' ? dynamicFee ?? 0 : params.value}
                     description={params.description}
                     onClick={handleClick}
                   />
