@@ -152,7 +152,11 @@ export const WrappedStats: React.FC = () => {
               percentFees={fees24h.change}
             />
           </Grid>
-          <Grid display='flex' alignItems='end' justifyContent='space-between'>
+          <Grid
+            display='flex'
+            alignItems='end'
+            justifyContent='space-between'
+            className={classes.rowContainer}>
             <Typography className={classes.subheader} mb={2}>
               Top tokens
             </Typography>
@@ -184,7 +188,11 @@ export const WrappedStats: React.FC = () => {
               }))}
             />
           </Grid>
-          <Grid display='flex' alignItems='end' justifyContent='space-between'>
+          <Grid
+            display='flex'
+            alignItems='end'
+            justifyContent='space-between'
+            className={classes.rowContainer}>
             <Typography className={classes.subheader} mb={2}>
               Top pools
             </Typography>

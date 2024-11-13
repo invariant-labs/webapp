@@ -60,6 +60,12 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   searchIcon: {
     width: 17
+  },
+  rowContainer: {
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start'
+    }
   }
 }))
 
