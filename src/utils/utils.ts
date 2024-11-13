@@ -1508,8 +1508,20 @@ export const trimDecimalZeros = (numStr: string): string => {
   return trimmedDecimal ? `${trimmedInteger || '0'}.${trimmedDecimal}` : trimmedInteger || '0'
 }
 
-export const stringToFixed = (string: string, numbersAfterDot: number): string => {
-  return string.includes('.') ? string.slice(0, string.indexOf('.') + 1 + numbersAfterDot) : string
+export const stringToFixed = (
+  string: string,
+  numbersAfterDot: number,
+  trimZeros?: boolean
+): string => {
+  const toFixedString = string.includes('.')
+    ? string.slice(0, string.indexOf('.') + 1 + numbersAfterDot)
+    : string
+
+  if (trimZeros) {
+    return trimDecimalZeros(toFixedString)
+  } else {
+    return toFixedString
+  }
 }
 
 export const tickerToAddress = (network: NetworkType, ticker: string): string => {

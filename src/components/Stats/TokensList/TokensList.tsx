@@ -5,7 +5,7 @@ import useStyles from './style'
 import { Grid, useMediaQuery } from '@mui/material'
 import { SortTypeTokenList } from '@store/consts/static'
 import { PaginationList } from '@components/Pagination/Pagination'
-
+import NotFoundPlaceholder from '../NotFoundPlaceholder/NotFoundPlaceholder'
 export interface ITokensListData {
   icon: string
   name: string
@@ -85,35 +85,41 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
 
   return (
     <Grid container direction='column' classes={{ root: classes.container }} wrap='nowrap'>
-      <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />
-      {paginator(page).data.map((token, index) => {
-        return (
-          <TokenListItem
-            key={index}
-            displayType='tokens'
-            itemNumber={index + 1 + (page - 1) * 10}
-            icon={token.icon}
-            name={token.name}
-            symbol={token.symbol}
-            price={token.price}
-            // priceChange={token.priceChange}
-            volume={token.volume}
-            TVL={token.TVL}
-            hideBottomLine={pages === 1 && index + 1 === data.length}
-            isUnknown={token.isUnknown}
-          />
-        )
-      })}
-      {pages > 1 ? (
-        <Grid className={classes.pagination}>
-          <PaginationList
-            pages={Math.ceil(data.length / 10)}
-            defaultPage={1}
-            handleChangePage={handleChangePagination}
-            variant='flex-end'
-          />
-        </Grid>
-      ) : null}
+      {data.length > 0 ? (
+        <>
+          <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />
+          {paginator(page).data.map((token, index) => {
+            return (
+              <TokenListItem
+                key={index}
+                displayType='tokens'
+                itemNumber={index + 1 + (page - 1) * 10}
+                icon={token.icon}
+                name={token.name}
+                symbol={token.symbol}
+                price={token.price}
+                // priceChange={token.priceChange}
+                volume={token.volume}
+                TVL={token.TVL}
+                hideBottomLine={pages === 1 && index + 1 === data.length}
+                isUnknown={token.isUnknown}
+              />
+            )
+          })}
+          {pages > 1 ? (
+            <Grid className={classes.pagination}>
+              <PaginationList
+                pages={Math.ceil(data.length / 10)}
+                defaultPage={1}
+                handleChangePage={handleChangePagination}
+                variant='flex-end'
+              />
+            </Grid>
+          ) : null}
+        </>
+      ) : (
+        <NotFoundPlaceholder title='No tokens found...' />
+      )}
     </Grid>
   )
 }

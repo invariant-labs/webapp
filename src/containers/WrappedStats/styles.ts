@@ -9,8 +9,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   subheader: {
     ...typography.heading4,
-    color: colors.white.main,
-    marginBottom: 16
+    color: colors.white.main
   },
   plotsRow: {
     marginBottom: 24,
@@ -42,6 +41,30 @@ export const useStyles = makeStyles()((theme: Theme) => ({
         marginRight: 0,
         marginBottom: 24
       }
+    }
+  },
+  searchBar: {
+    width: 221,
+    height: 32,
+    padding: '7px 12px',
+    borderRadius: 10,
+    background: colors.invariant.black,
+    border: '1px solid #202946',
+    color: colors.invariant.lightGrey,
+    ...typography.body2,
+    marginBottom: 8,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      height: 48
+    }
+  },
+  searchIcon: {
+    width: 17
+  },
+  rowContainer: {
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start'
     }
   }
 }))
