@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { theme } from '@static/theme'
 import { useStyles } from './style'
 import { Box, Grid, Tooltip, Typography, useMediaQuery } from '@mui/material'
@@ -12,6 +12,8 @@ import { addressToTicker, parseFeeToPathFee, shortenAddress } from '@utils/utils
 import { formatNumber } from '@utils/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { VariantType } from 'notistack'
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 
 interface IProps {
   TVL?: number
@@ -37,6 +39,8 @@ interface IProps {
   }
   isUnknownFrom?: boolean
   isUnknownTo?: boolean
+  poolAddress?: string
+  copyAddressHandler?: (message: string, variant: VariantType) => void
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -62,7 +66,9 @@ const PoolListItem: React.FC<IProps> = ({
     accumulatedFarmsSingleTick: 0
   },
   isUnknownFrom,
-  isUnknownTo
+  isUnknownTo,
+  poolAddress,
+  copyAddressHandler
 }) => {
   const { classes } = useStyles()
 
@@ -83,6 +89,34 @@ const PoolListItem: React.FC<IProps> = ({
       { state: { referer: 'stats' } }
     )
   }
+
+  const networkUrl = useMemo(() => {
+    switch (network) {
+      case NetworkType.Mainnet:
+        return ''
+      case NetworkType.Testnet:
+        return '?cluster=testnet'
+      case NetworkType.Devnet:
+        return '?cluster=devnet'
+      default:
+        return ''
+    }
+  }, [network])
+
+  const copyToClipboard = () => {
+    if (!poolAddress || !copyAddressHandler) {
+      return
+    }
+    navigator.clipboard
+      .writeText(poolAddress)
+      .then(() => {
+        copyAddressHandler('Market ID copied to Clipboard', 'success')
+      })
+      .catch(() => {
+        copyAddressHandler('Failed to copy Market ID to Clipboard', 'error')
+      })
+  }
+
   return (
     <Grid maxWidth='100%'>
       {displayType === 'token' ? (
@@ -122,6 +156,12 @@ const PoolListItem: React.FC<IProps> = ({
               <Typography>
                 {shortenAddress(symbolFrom ?? '')}/{shortenAddress(symbolTo ?? '')}
               </Typography>
+              <TooltipHover text='Copy pool address'>
+                <FileCopyOutlinedIcon
+                  onClick={copyToClipboard}
+                  classes={{ root: classes.clipboardIcon }}
+                />
+              </TooltipHover>
             </Grid>
           </Grid>
           {!isSm ? (
@@ -177,6 +217,19 @@ const PoolListItem: React.FC<IProps> = ({
               <TooltipHover text='Add position'>
                 <button className={classes.actionButton} onClick={handleOpenPosition}>
                   <img width={32} height={32} src={icons.plusIcon} alt={'Open'} />
+                </button>
+              </TooltipHover>
+              <TooltipHover text='Open in explorer'>
+                <button
+                  className={classes.actionButton}
+                  onClick={() =>
+                    window.open(
+                      `https://solscan.io/account/${poolAddress}${networkUrl}`,
+                      '_blank',
+                      'noopener,noreferrer'
+                    )
+                  }>
+                  <img width={32} height={32} src={icons.newTabBtn} alt={'Exchange'} />
                 </button>
               </TooltipHover>
             </Box>
