@@ -35,7 +35,10 @@ import circleDiscord from './svg/circle-discord.svg'
 import circleTelegram from './svg/circle-telegram.svg'
 import eclipse from './svg/eclipse.svg'
 import alephiumLogo from './svg/alephiumLogo.svg'
-
+import phantomWalletIcon from './svg/phantom.svg'
+import solflareWalletIcon from './svg/solflare.svg'
+import backpackWalletIcon from './svg/backpack.svg'
+import nightlyConnect from './svg/nightlyGlyph.svg'
 const icons: { [key: string]: string } = {
   clear: clearIcon,
   LogoShort: logoShort,
@@ -70,6 +73,10 @@ const icons: { [key: string]: string } = {
   Solana: solanaLogo,
   Vara: varaLogo,
   Alephium: alephiumLogo,
+  PhantomWallet: phantomWalletIcon,
+  SolflareWallet: solflareWalletIcon,
+  BackpackWallet: backpackWalletIcon,
+  NightlyConnect: nightlyConnect,
   warningIcon,
   circleDiscord,
   circleTelegram,

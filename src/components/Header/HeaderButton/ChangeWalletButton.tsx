@@ -113,6 +113,10 @@ export const ChangeWalletButton: React.FC<IProps> = ({
           setIsOpenSelectWallet(false)
           unblurContent()
         }}
+        setIsOpenSelectWallet={() => {
+          setIsOpenSelectWallet(false)
+          unblurContent()
+        }}
         handleConnect={handleConnect}
         open={isOpenSelectWallet}
         isChangeWallet={isChangeWallet}
