@@ -39,7 +39,7 @@ const useStyles = makeStyles()(() => {
       `,
       width: 490,
       maxWidth: '100%',
-      height: 'fit-content',
+      height: '590px',
       borderRadius: 24,
       padding: '20px 24px',
       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.5)',
