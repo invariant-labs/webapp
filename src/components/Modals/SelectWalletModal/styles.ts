@@ -155,7 +155,7 @@ const useStyles = makeStyles()(() => {
         cursor: 'pointer',
         textDecoration: 'underline'
       },
-      marginTop: '24px',
+      marginTop: '10px',
       borderBottomColor: colors.invariant.light,
       color: colors.invariant.textGrey
     },
