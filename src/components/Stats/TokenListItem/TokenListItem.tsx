@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { colors, theme } from '@static/theme'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useStyles } from './style'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import { formatNumber, shortenAddress } from '@utils/utils'
-import { SortTypeTokenList } from '@store/consts/static'
+import { NetworkType, SortTypeTokenList } from '@store/consts/static'
 import icons from '@static/icons'
+import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 
 interface IProps {
   displayType: string
@@ -21,7 +22,9 @@ interface IProps {
   sortType?: SortTypeTokenList
   onSort?: (type: SortTypeTokenList) => void
   hideBottomLine?: boolean
+  address?: string
   isUnknown?: boolean
+  network?: NetworkType
 }
 
 const TokenListItem: React.FC<IProps> = ({
@@ -37,13 +40,28 @@ const TokenListItem: React.FC<IProps> = ({
   sortType,
   onSort,
   hideBottomLine = false,
-  isUnknown
+  address,
+  isUnknown,
+  network
 }) => {
   const { classes } = useStyles()
   // const isNegative = priceChange < 0
 
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
   const hideName = useMediaQuery(theme.breakpoints.down('xs'))
+
+  const networkUrl = useMemo(() => {
+    switch (network) {
+      case NetworkType.Mainnet:
+        return ''
+      case NetworkType.Testnet:
+        return '?cluster=testnet'
+      case NetworkType.Devnet:
+        return '?cluster=devnet'
+      default:
+        return ''
+    }
+  }, [network])
 
   return (
     <Grid>
@@ -82,6 +100,23 @@ const TokenListItem: React.FC<IProps> = ({
           )} */}
           <Typography>{`$${formatNumber(volume)}`}</Typography>
           <Typography>{`$${formatNumber(TVL)}`}</Typography>
+          {!isSm && (
+            <Box className={classes.action}>
+              <TooltipHover text='Open in explorer'>
+                <button
+                  className={classes.actionButton}
+                  onClick={() =>
+                    window.open(
+                      `https://solscan.io/token/${address}${networkUrl}`,
+                      '_blank',
+                      'noopener,noreferrer'
+                    )
+                  }>
+                  <img width={32} height={32} src={icons.newTabBtn} alt={'Exchange'} />
+                </button>
+              </TooltipHover>
+            </Box>
+          )}
         </Grid>
       ) : (
         <Grid
@@ -175,6 +210,7 @@ const TokenListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
+          {!isSm && <Typography align='right'>Action</Typography>}
         </Grid>
       )}
     </Grid>

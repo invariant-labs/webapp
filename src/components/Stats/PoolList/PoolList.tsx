@@ -26,6 +26,7 @@ interface PoolListInterface {
     }
     isUnknownFrom: boolean
     isUnknownTo: boolean
+    poolAddress: string
   }>
   network: NetworkType
 }
@@ -110,6 +111,7 @@ const PoolList: React.FC<PoolListInterface> = ({ data, network }) => {
               network={network}
               isUnknownFrom={element.isUnknownFrom}
               isUnknownTo={element.isUnknownTo}
+              poolAddress={element.poolAddress}
             />
           ))}
           {pages > 1 ? (

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { theme } from '@static/theme'
 import { useStyles } from './style'
 import { Box, Grid, Tooltip, Typography, useMediaQuery } from '@mui/material'
@@ -37,6 +37,7 @@ interface IProps {
   }
   isUnknownFrom?: boolean
   isUnknownTo?: boolean
+  poolAddress?: string
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -62,7 +63,8 @@ const PoolListItem: React.FC<IProps> = ({
     accumulatedFarmsSingleTick: 0
   },
   isUnknownFrom,
-  isUnknownTo
+  isUnknownTo,
+  poolAddress
 }) => {
   const { classes } = useStyles()
 
@@ -83,6 +85,20 @@ const PoolListItem: React.FC<IProps> = ({
       { state: { referer: 'stats' } }
     )
   }
+
+  const networkUrl = useMemo(() => {
+    switch (network) {
+      case NetworkType.Mainnet:
+        return ''
+      case NetworkType.Testnet:
+        return '?cluster=testnet'
+      case NetworkType.Devnet:
+        return '?cluster=devnet'
+      default:
+        return ''
+    }
+  }, [network])
+
   return (
     <Grid maxWidth='100%'>
       {displayType === 'token' ? (
@@ -177,6 +193,19 @@ const PoolListItem: React.FC<IProps> = ({
               <TooltipHover text='Add position'>
                 <button className={classes.actionButton} onClick={handleOpenPosition}>
                   <img width={32} height={32} src={icons.plusIcon} alt={'Open'} />
+                </button>
+              </TooltipHover>
+              <TooltipHover text='Open in explorer'>
+                <button
+                  className={classes.actionButton}
+                  onClick={() =>
+                    window.open(
+                      `https://solscan.io/account/${poolAddress}${networkUrl}`,
+                      '_blank',
+                      'noopener,noreferrer'
+                    )
+                  }>
+                  <img width={32} height={32} src={icons.newTabBtn} alt={'Exchange'} />
                 </button>
               </TooltipHover>
             </Box>

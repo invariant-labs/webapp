@@ -5,7 +5,7 @@ import { makeStyles } from 'tss-react/mui'
 export const useStyles = makeStyles()((theme: Theme) => ({
   container: {
     display: 'grid',
-    gridTemplateColumns: '5% 35% 20% 20% 20%',
+    gridTemplateColumns: '5% 35% 17.5% auto 12.5% 60px',
     padding: '18px 0 ',
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`,
@@ -90,5 +90,32 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     height: 12,
     bottom: -6,
     right: -6
+  },
+  action: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: 8
+  },
+  actionButton: {
+    height: 32,
+    background: 'none',
+    width: 32,
+    padding: 0,
+    margin: 0,
+    border: 'none',
+
+    color: colors.invariant.black,
+    textTransform: 'none',
+
+    transition: 'filter 0.2s linear',
+
+    '&:hover': {
+      filter: 'brightness(1.2)',
+      cursor: 'pointer',
+      '@media (hover: none)': {
+        filter: 'none'
+      }
+    }
   }
 }))

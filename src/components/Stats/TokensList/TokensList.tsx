@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { theme } from '@static/theme'
 import useStyles from './style'
 import { Grid, useMediaQuery } from '@mui/material'
-import { SortTypeTokenList } from '@store/consts/static'
+import { NetworkType, SortTypeTokenList } from '@store/consts/static'
 import { PaginationList } from '@components/Pagination/Pagination'
 import NotFoundPlaceholder from '../NotFoundPlaceholder/NotFoundPlaceholder'
 export interface ITokensListData {
@@ -13,14 +13,16 @@ export interface ITokensListData {
   price: number
   volume: number
   TVL: number
+  address: string
   isUnknown: boolean
 }
 
 export interface ITokensList {
   data: ITokensListData[]
+  network: NetworkType
 }
 
-const TokensList: React.FC<ITokensList> = ({ data }) => {
+const TokensList: React.FC<ITokensList> = ({ data, network }) => {
   const { classes } = useStyles()
   const [page, setPage] = useState(1)
   const [sortType, setSortType] = React.useState(SortTypeTokenList.VOLUME_DESC)
@@ -102,7 +104,9 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
                 volume={token.volume}
                 TVL={token.TVL}
                 hideBottomLine={pages === 1 && index + 1 === data.length}
+                address={token.address}
                 isUnknown={token.isUnknown}
+                network={network}
               />
             )
           })}
