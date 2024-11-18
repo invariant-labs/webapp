@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Grid, Popover, Typography, Divider, Link, Box } from '@mui/material'
+import { Button, Grid, Popover, Typography, Divider, Box } from '@mui/material'
 import useStyles from './styles'
 import { walletNames } from '@store/consts/static'
 import { WalletType } from '@store/consts/types'
