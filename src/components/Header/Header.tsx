@@ -16,7 +16,7 @@ import useStyles from './style'
 import SelectChainButton from './HeaderButton/SelectChainButton'
 import SelectChain from '@components/Modals/SelectChain/SelectChain'
 import SelectMainnetRPC from '@components/Modals/SelectMainnetRPC/SelectMainnetRPC'
-import { ISelectChain, ISelectNetwork } from '@store/consts/types'
+import { ISelectChain, ISelectNetwork, PriorityMode } from '@store/consts/types'
 import { RpcStatus } from '@store/reducers/solanaConnection'
 import RoutesModal from '@components/Modals/RoutesModal/RoutesModal'
 import { PublicKey } from '@solana/web3.js'
@@ -41,7 +41,7 @@ export interface IHeader {
   defaultDevnetRPC: string
   defaultMainnetRPC: string
   recentPriorityFee: string
-  recentIsDynamic: boolean
+  recentPriorityMode: PriorityMode
   onPrioritySave: () => void
   rpcStatus: RpcStatus
 }
@@ -63,7 +63,7 @@ export const Header: React.FC<IHeader> = ({
   network,
   defaultMainnetRPC,
   recentPriorityFee,
-  recentIsDynamic,
+  recentPriorityMode,
   onPrioritySave,
   rpcStatus
 }) => {
@@ -210,7 +210,7 @@ export const Header: React.FC<IHeader> = ({
               {typeOfNetwork === NetworkType.Mainnet ? (
                 <SelectPriorityButton
                   recentPriorityFee={recentPriorityFee}
-                  recentIsDynamic={recentIsDynamic}
+                  recentPriorityMode={recentPriorityMode}
                   onPrioritySave={onPrioritySave}
                 />
               ) : null}
@@ -333,7 +333,7 @@ export const Header: React.FC<IHeader> = ({
               open={priorityModal}
               anchorEl={routesModalAnchor}
               recentPriorityFee={recentPriorityFee}
-              recentIsDynamic={recentIsDynamic}
+              recentPriorityMode={recentPriorityMode}
               handleClose={() => {
                 unblurContent()
                 setPriorityModal(false)

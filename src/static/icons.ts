@@ -39,6 +39,9 @@ import phantomWalletIcon from './svg/phantom.svg'
 import solflareWalletIcon from './svg/solflare.svg'
 import backpackWalletIcon from './svg/backpack.svg'
 import nightlyConnect from './svg/nightlyGlyph.svg'
+import empty from './svg/empty-icon.svg'
+import newTabBtn from './svg/newTabBtn.svg'
+
 const icons: { [key: string]: string } = {
   clear: clearIcon,
   LogoShort: logoShort,
@@ -80,7 +83,9 @@ const icons: { [key: string]: string } = {
   warningIcon,
   circleDiscord,
   circleTelegram,
-  eclipse
+  eclipse,
+  emptyIcon: empty,
+  newTabBtn
 }
 
 export default icons

@@ -275,10 +275,18 @@ export interface PoolStatsDataWithString {
   apy: number
 }
 
+export enum PriorityMode {
+  Normal = 'Normal',
+  Economic = 'Economic',
+  Dynamic = 'Market',
+  High = 'High',
+  Turbo = 'Turbo',
+  Custom = 'Custom'
+}
 export interface IPriorityFeeOptions {
-  label: string
+  label: PriorityMode
   value: number | string
-  saveValue: number | string
+  saveValue: number
   description: string
 }
 

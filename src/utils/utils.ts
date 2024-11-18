@@ -72,14 +72,17 @@ export const printBN = (amount: BN, decimals: number): string => {
     )
   }
 }
-// Bad solution but i hate regex
-export const trimZeros = (amount: string) => {
-  try {
-    return parseFloat(amount).toString()
-  } catch (error) {
-    return amount
+
+export const trimZeros = (numStr: string): string => {
+  if (!numStr) {
+    return ''
   }
+  return numStr
+    .replace(/(\.\d*?)0+$/, '$1')
+    .replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
+    .replace(/\.$/, '')
 }
+
 export const convertBalanceToBN = (amount: string, decimals: number): BN => {
   const balanceString = amount.split('.')
   if (balanceString.length !== 2) {
@@ -1389,9 +1392,25 @@ export const getMainnetCommonTokens = async (): Promise<PublicKey[]> => {
 }
 
 export const numberToString = (number: number | bigint | string): string => {
-  return String(number).includes('e-')
-    ? Number(number).toFixed(parseInt(String(number).split('e-')[1]))
-    : String(number)
+  if (typeof number === 'bigint') {
+    return number.toString()
+  }
+
+  const numStr = String(number)
+
+  if (numStr.includes('e')) {
+    const [base, exp] = numStr.split('e')
+    const exponent = parseInt(exp, 10)
+
+    if (exponent < 0) {
+      const decimalPlaces = Math.abs(exponent) + base.replace('.', '').length - 1
+      return Number(number).toFixed(decimalPlaces)
+    }
+
+    return Number(number).toString()
+  }
+
+  return numStr
 }
 
 export const containsOnlyZeroes = (string: string): boolean => {
@@ -1415,11 +1434,6 @@ export const formatNumber = (
   const numberAsNumber = Number(number)
   const isNegative = numberAsNumber < 0
   const absNumberAsNumber = Math.abs(numberAsNumber)
-
-  if (absNumberAsNumber.toString().includes('e')) {
-    const exponential = absNumberAsNumber.toExponential(decimalsAfterDot)
-    return isNegative ? `-${exponential}` : exponential
-  }
 
   const absNumberAsString = numberToString(absNumberAsNumber)
 
@@ -1466,6 +1480,7 @@ export const formatNumber = (
     const roundedNumber = numberAsNumber
       .toFixed(countLeadingZeros(afterDot) + decimalsAfterDot + 1)
       .slice(0, -1)
+
     formattedNumber = trimZeros(roundedNumber)
   } else {
     const leadingZeros = afterDot ? countLeadingZeros(afterDot) : 0
@@ -1480,8 +1495,8 @@ export const formatNumber = (
       '.' +
       (parsedAfterDot
         ? leadingZeros > decimalsAfterDot
-          ? '0' + printSubNumber(leadingZeros) + parseInt(parsedAfterDot)
-          : parsedAfterDot
+          ? '0' + printSubNumber(leadingZeros) + trimZeros(parsedAfterDot)
+          : trimZeros(parsedAfterDot)
         : '')
   }
 
@@ -1508,8 +1523,20 @@ export const trimDecimalZeros = (numStr: string): string => {
   return trimmedDecimal ? `${trimmedInteger || '0'}.${trimmedDecimal}` : trimmedInteger || '0'
 }
 
-export const stringToFixed = (string: string, numbersAfterDot: number): string => {
-  return string.includes('.') ? string.slice(0, string.indexOf('.') + 1 + numbersAfterDot) : string
+export const stringToFixed = (
+  string: string,
+  numbersAfterDot: number,
+  trimZeros?: boolean
+): string => {
+  const toFixedString = string.includes('.')
+    ? string.slice(0, string.indexOf('.') + 1 + numbersAfterDot)
+    : string
+
+  if (trimZeros) {
+    return trimDecimalZeros(toFixedString)
+  } else {
+    return toFixedString
+  }
 }
 
 export const tickerToAddress = (network: NetworkType, ticker: string): string => {

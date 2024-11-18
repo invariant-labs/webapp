@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from '@store/index'
 import { RpcStatus } from '@store/reducers/solanaConnection'
-import { Chain } from '@store/consts/types'
+import { Chain, PriorityMode } from '@store/consts/types'
 import { PublicKey } from '@solana/web3.js'
 import { NetworkType, RPC } from '@store/consts/static'
 
@@ -51,6 +51,6 @@ export const Primary: Story = {
     defaultMainnetRPC: RPC.MAIN,
     onPrioritySave: fn(),
     recentPriorityFee: '1',
-    recentIsDynamic: true
+    recentPriorityMode: PriorityMode.Dynamic
   }
 }

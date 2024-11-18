@@ -98,7 +98,6 @@ export function* fetchPoolsDataForList(action: PayloadAction<ListPoolsRequest>) 
 
 export function* handleGetPathTokens(action: PayloadAction<string[]>) {
   const tokens = action.payload
-  console.log('tokens', tokens)
   const connection = yield* getConnection()
 
   try {

@@ -64,7 +64,6 @@ const useStyles = makeStyles()(() => {
       }
     },
     detailsInfoForm: {
-      border: `1px solid ${colors.invariant.component}`,
       color: colors.invariant.text,
       borderRadius: 15,
       width: '100%',
@@ -81,6 +80,10 @@ const useStyles = makeStyles()(() => {
       '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
         display: 'none'
       }
+    },
+    activeInput: {
+      outline: `1px solid ${colors.invariant.pink}`,
+      backgroundColor: 'rgba(239, 132, 245, 0.1)'
     },
     innerInput: {
       paddingBlock: 0,

@@ -415,7 +415,7 @@ export const getReversedAddressTickerMap = (network: NetworkType) => {
 export const MINIMAL_POOL_INIT_PRICE = 0.00000001
 
 export const DEFAULT_SWAP_SLIPPAGE = '0.50'
-export const DEFAULT_NEW_POSITION_SLIPPAGE = '0.50'
+export const DEFAULT_NEW_POSITION_SLIPPAGE = '1.00'
 
 export const CHAINS = [
   { name: Chain.Solana, address: 'https://invariant.app/swap' },
