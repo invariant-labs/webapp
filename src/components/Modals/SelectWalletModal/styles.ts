@@ -57,13 +57,12 @@ const useStyles = makeStyles()(() => {
     },
     title: {
       ...typography.heading1,
-      margin: 10,
+      margin: '15px 10px',
       textAlign: 'center',
       width: '100%'
     },
     footerTitle: {
       ...typography.heading3,
-      marginTop: 5,
       textAlign: 'center',
       color: colors.invariant.green
     },
@@ -89,7 +88,7 @@ const useStyles = makeStyles()(() => {
       width: 200,
       pointerEvents: 'auto',
 
-      marginTop: '14px',
+      marginTop: '5px',
       color: colors.invariant.componentBcg,
       ...typography.body1,
       textTransform: 'none',

@@ -70,9 +70,7 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
           <Typography className={classes.title}>Connect your wallet</Typography>
 
           <Grid className={classes.buttonWrapper}>
-            <Typography className={classes.subTitle}>
-              Connect using available wallets below:
-            </Typography>
+            <Typography className={classes.subTitle}>Connect with popular wallets </Typography>
             <Grid className={classes.buttonList}>
               <Grid
                 item
@@ -116,7 +114,9 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
           <Divider className={classes.divider} />
 
           <Grid className={classes.buttonWrapper}>
-            <Typography className={classes.subTitle}>Connect via Nightly Connect:</Typography>
+            <Typography className={classes.subTitle}>
+              Or connect any wallet using auto-detection with Nightly wallet selector Nightly
+            </Typography>
             <Grid className={classes.buttonList}>
               <Grid
                 item
