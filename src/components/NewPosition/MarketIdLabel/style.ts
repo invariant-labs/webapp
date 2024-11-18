@@ -14,7 +14,8 @@ export const useLabelStyles = makeStyles()(() => {
       paddingRight: 7,
       display: 'flex',
       alignItems: 'center',
-      gap: 4
+      gap: 4,
+      whiteSpace: 'nowrap'
     },
     clipboardIcon: {
       width: 18,
