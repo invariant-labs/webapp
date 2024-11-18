@@ -470,6 +470,6 @@ export const TIMEOUT_ERROR_MESSAGE =
 export const walletNames = {
   [WalletType.PHANTOM]: 'Phantom',
   [WalletType.BACKPACK]: 'Backpack',
-  [WalletType.NIGHTLY]: 'Nightly',
+  [WalletType.NIGHTLY]: 'Wallet Selector',
   [WalletType.SOLFLARE]: 'Solflare'
 }
