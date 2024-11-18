@@ -5,7 +5,7 @@ export const useStyles = makeStyles()(() => ({
   container: {
     color: colors.white.main,
     display: 'grid',
-    gridTemplateColumns: '5% auto 15% 15% 15%  15% 80px',
+    gridTemplateColumns: '5% auto 15% 15% 15%  12.5% 120px',
     padding: '18px 0',
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`,
@@ -23,7 +23,7 @@ export const useStyles = makeStyles()(() => ({
     },
 
     [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: 'auto 15% 15% 15%  15% 80px'
+      gridTemplateColumns: 'auto 15% 15% 15%  12.5%120px'
     },
 
     [theme.breakpoints.down('sm')]: {
@@ -59,6 +59,8 @@ export const useStyles = makeStyles()(() => ({
   },
 
   symbolsContainer: {
+    display: 'flex',
+    alignItems: 'center',
     marginLeft: 10,
     paddingRight: 5,
 
@@ -158,5 +160,18 @@ export const useStyles = makeStyles()(() => ({
     height: 12,
     bottom: -6,
     right: -6
+  },
+  clipboardIcon: {
+    marginLeft: 4,
+    width: 18,
+    cursor: 'pointer',
+    color: colors.invariant.lightHover,
+    '&:hover': {
+      color: colors.invariant.text,
+
+      '@media (hover: none)': {
+        color: colors.invariant.lightHover
+      }
+    }
   }
 }))
