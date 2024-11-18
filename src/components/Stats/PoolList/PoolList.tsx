@@ -3,7 +3,6 @@ import PoolListItem from '@components/Stats/PoolListItem/PoolListItem'
 import { useStyles } from './style'
 import { Grid } from '@mui/material'
 import { NetworkType, SortTypePoolList } from '@store/consts/static'
-
 import { PaginationList } from '@components/Pagination/Pagination'
 import NotFoundPlaceholder from '../NotFoundPlaceholder/NotFoundPlaceholder'
 import { VariantType } from 'notistack'

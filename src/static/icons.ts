@@ -35,6 +35,7 @@ import circleDiscord from './svg/circle-discord.svg'
 import circleTelegram from './svg/circle-telegram.svg'
 import eclipse from './svg/eclipse.svg'
 import alephiumLogo from './svg/alephiumLogo.svg'
+import empty from './svg/empty-icon.svg'
 import newTabBtn from './svg/newTabBtn.svg'
 
 const icons: { [key: string]: string } = {
@@ -75,6 +76,7 @@ const icons: { [key: string]: string } = {
   circleDiscord,
   circleTelegram,
   eclipse,
+  emptyIcon: empty,
   newTabBtn
 }
 

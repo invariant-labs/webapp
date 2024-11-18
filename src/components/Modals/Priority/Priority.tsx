@@ -1,7 +1,7 @@
 import AnimatedButton from '@components/AnimatedButton/AnimatedButton'
 import TransactionPriorityButton from '@components/TransactionPriorityButton/TransactionPriorityButton'
 import classNames from 'classnames'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useStyles from './style'
 import { IPriorityFeeOptions, PriorityMode } from '@store/consts/types'
 import { Box, Button, Grid, Input, Popover, Typography } from '@mui/material'
@@ -26,12 +26,11 @@ const Priority: React.FC<IPriority> = ({
 }) => {
   const { classes } = useStyles()
 
-  const inputRef = useRef<HTMLInputElement>(null)
   const [selectedFee, setSelectedFee] = useState(0)
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [inputValue, setInputValue] = useState('')
   const [saveButtonContent, setSaveButtonContent] = useState('Save settings')
-  const [timerId, setTimerId] = useState<NodeJS.Timeout>()
+  const [timerId, setTimerId] = useState<NodeJS.Timeout | undefined>(undefined)
   const [dynamicFee, setDynamicFee] = useState<number | null>(null)
   const [priorityMode, setPriorityMode] = useState<PriorityMode>(recentPriorityMode)
 
@@ -130,7 +129,7 @@ const Priority: React.FC<IPriority> = ({
       setTimerId(
         setTimeout(() => {
           setSaveButtonContent('Save settings')
-        }, 3000)
+        }, 3000) as unknown as NodeJS.Timeout
       )
     }
   }, [saveButtonContent])
@@ -289,7 +288,6 @@ const Priority: React.FC<IPriority> = ({
           onFocus={() => {
             setSelectedIndex(-1)
           }}
-          ref={inputRef}
           classes={{
             input: classes.innerInput
           }}
