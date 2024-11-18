@@ -8,6 +8,8 @@ import { formatNumber, shortenAddress } from '@utils/utils'
 import { NetworkType, SortTypeTokenList } from '@store/consts/static'
 import icons from '@static/icons'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
+import { VariantType } from 'notistack'
 
 interface IProps {
   displayType: string
@@ -25,6 +27,7 @@ interface IProps {
   address?: string
   isUnknown?: boolean
   network?: NetworkType
+  copyAddressHandler?: (message: string, variant: VariantType) => void
 }
 
 const TokenListItem: React.FC<IProps> = ({
@@ -42,7 +45,8 @@ const TokenListItem: React.FC<IProps> = ({
   hideBottomLine = false,
   address,
   isUnknown,
-  network
+  network,
+  copyAddressHandler
 }) => {
   const { classes } = useStyles()
   // const isNegative = priceChange < 0
@@ -62,6 +66,20 @@ const TokenListItem: React.FC<IProps> = ({
         return ''
     }
   }, [network])
+
+  const copyToClipboard = () => {
+    if (!address || !copyAddressHandler) {
+      return
+    }
+    navigator.clipboard
+      .writeText(address)
+      .then(() => {
+        copyAddressHandler('Token address copied to Clipboard', 'success')
+      })
+      .catch(() => {
+        copyAddressHandler('Failed to copy token address to Clipboard', 'error')
+      })
+  }
 
   return (
     <Grid>
@@ -90,6 +108,12 @@ const TokenListItem: React.FC<IProps> = ({
                 <span className={classes.tokenSymbol}>{` (${shortenAddress(symbol)})`}</span>
               )}
             </Typography>
+            <TooltipHover text='Copy token address'>
+              <FileCopyOutlinedIcon
+                onClick={copyToClipboard}
+                classes={{ root: classes.clipboardIcon }}
+              />
+            </TooltipHover>
           </Grid>
           <Typography>{`~$${formatNumber(price)}`}</Typography>
 

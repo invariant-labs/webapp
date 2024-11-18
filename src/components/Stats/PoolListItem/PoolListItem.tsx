@@ -12,6 +12,8 @@ import { addressToTicker, parseFeeToPathFee, shortenAddress } from '@utils/utils
 import { formatNumber } from '@utils/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { VariantType } from 'notistack'
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 
 interface IProps {
   TVL?: number
@@ -38,6 +40,7 @@ interface IProps {
   isUnknownFrom?: boolean
   isUnknownTo?: boolean
   poolAddress?: string
+  copyAddressHandler?: (message: string, variant: VariantType) => void
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -64,7 +67,8 @@ const PoolListItem: React.FC<IProps> = ({
   },
   isUnknownFrom,
   isUnknownTo,
-  poolAddress
+  poolAddress,
+  copyAddressHandler
 }) => {
   const { classes } = useStyles()
 
@@ -98,6 +102,20 @@ const PoolListItem: React.FC<IProps> = ({
         return ''
     }
   }, [network])
+
+  const copyToClipboard = () => {
+    if (!poolAddress || !copyAddressHandler) {
+      return
+    }
+    navigator.clipboard
+      .writeText(poolAddress)
+      .then(() => {
+        copyAddressHandler('Market ID copied to Clipboard', 'success')
+      })
+      .catch(() => {
+        copyAddressHandler('Failed to copy Market ID to Clipboard', 'error')
+      })
+  }
 
   return (
     <Grid maxWidth='100%'>
@@ -138,6 +156,12 @@ const PoolListItem: React.FC<IProps> = ({
               <Typography>
                 {shortenAddress(symbolFrom ?? '')}/{shortenAddress(symbolTo ?? '')}
               </Typography>
+              <TooltipHover text='Copy pool address'>
+                <FileCopyOutlinedIcon
+                  onClick={copyToClipboard}
+                  classes={{ root: classes.clipboardIcon }}
+                />
+              </TooltipHover>
             </Grid>
           </Grid>
           {!isSm ? (

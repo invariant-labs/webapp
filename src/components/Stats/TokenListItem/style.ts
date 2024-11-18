@@ -117,5 +117,18 @@ export const useStyles = makeStyles()((theme: Theme) => ({
         filter: 'none'
       }
     }
+  },
+  clipboardIcon: {
+    marginLeft: 4,
+    width: 18,
+    cursor: 'pointer',
+    color: colors.invariant.lightHover,
+    '&:hover': {
+      color: colors.invariant.text,
+
+      '@media (hover: none)': {
+        color: colors.invariant.lightHover
+      }
+    }
   }
 }))

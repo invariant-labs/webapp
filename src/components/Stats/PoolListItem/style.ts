@@ -59,6 +59,8 @@ export const useStyles = makeStyles()(() => ({
   },
 
   symbolsContainer: {
+    display: 'flex',
+    alignItems: 'center',
     marginLeft: 10,
     paddingRight: 5,
 
@@ -158,5 +160,18 @@ export const useStyles = makeStyles()(() => ({
     height: 12,
     bottom: -6,
     right: -6
+  },
+  clipboardIcon: {
+    marginLeft: 4,
+    width: 18,
+    cursor: 'pointer',
+    color: colors.invariant.lightHover,
+    '&:hover': {
+      color: colors.invariant.text,
+
+      '@media (hover: none)': {
+        color: colors.invariant.lightHover
+      }
+    }
   }
 }))
