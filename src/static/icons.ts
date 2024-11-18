@@ -35,6 +35,7 @@ import circleDiscord from './svg/circle-discord.svg'
 import circleTelegram from './svg/circle-telegram.svg'
 import eclipse from './svg/eclipse.svg'
 import alephiumLogo from './svg/alephiumLogo.svg'
+import empty from './svg/empty-icon.svg'
 
 const icons: { [key: string]: string } = {
   clear: clearIcon,
@@ -73,7 +74,8 @@ const icons: { [key: string]: string } = {
   warningIcon,
   circleDiscord,
   circleTelegram,
-  eclipse
+  eclipse,
+  emptyIcon: empty
 }
 
 export default icons

@@ -19,7 +19,7 @@ const NotFoundPlaceholder: React.FC<INotFoundPlaceholder> = ({ title, subtitle }
       alignItems='center'
       my={5}
       minHeight='220px'>
-      <img className={classes.img} src={icons.empty} alt='Not connected' />
+      <img className={classes.img} src={icons.emptyIcon} alt='Not connected' />
       <Typography className={classes.title}>{title}</Typography>
       {subtitle && <Typography className={classes.subtitle}>{subtitle}</Typography>}
     </Grid>
