@@ -21,7 +21,8 @@ const useStyles = makeStyles()(() => {
       height: '100%',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      overflow: 'auto'
     },
     paper: {
       position: 'relative',
@@ -39,7 +40,7 @@ const useStyles = makeStyles()(() => {
       `,
       width: 490,
       maxWidth: '100%',
-      height: '590px',
+      height: 'max-content',
       borderRadius: 24,
       padding: '20px 24px',
       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.5)',
@@ -62,12 +63,12 @@ const useStyles = makeStyles()(() => {
     },
     footerTitle: {
       ...typography.heading3,
-      margin: 10,
+      marginTop: 5,
       textAlign: 'center',
       color: colors.invariant.green
     },
     subTitle: {
-      ...typography.body2,
+      ...typography.body3,
       marginTop: 12,
       color: colors.invariant.textGrey,
       textAlign: 'center',
@@ -88,7 +89,7 @@ const useStyles = makeStyles()(() => {
       width: 200,
       pointerEvents: 'auto',
 
-      marginTop: '24px',
+      marginTop: '14px',
       color: colors.invariant.componentBcg,
       ...typography.body1,
       textTransform: 'none',
@@ -126,7 +127,7 @@ const useStyles = makeStyles()(() => {
     button: {
       color: colors.invariant.lightGrey,
       borderRadius: 11,
-      padding: '6px 7px',
+      padding: '20px',
       width: '100%',
       cursor: 'pointer',
       display: 'flex',
@@ -148,6 +149,7 @@ const useStyles = makeStyles()(() => {
         margin: '4px 0'
       }
     },
+
     bottomCloseButton: {
       pointerEvents: 'auto',
       textDecoration: 'none',
@@ -161,7 +163,7 @@ const useStyles = makeStyles()(() => {
     },
     buttonName: {
       textTransform: 'capitalize',
-      ...typography.body1,
+      fontSize: '24px',
       textAlign: 'center',
       fontWeight: 400,
       display: 'flex',

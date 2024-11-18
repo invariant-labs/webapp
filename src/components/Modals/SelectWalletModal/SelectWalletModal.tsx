@@ -82,7 +82,7 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
                 }}>
                 <Typography className={classes.buttonName}>
                   {' '}
-                  <img width={24} src={icons.PhantomWallet} alt='Close'></img>
+                  <img width={45} src={icons.PhantomWallet} alt='Close'></img>
                   {walletNames[WalletType.PHANTOM]}
                 </Typography>
               </Grid>
@@ -93,7 +93,7 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
                   handleConnectStaticWallet(WalletType.BACKPACK)
                 }}>
                 <Typography className={classes.buttonName}>
-                  <img width={13} src={icons.BackpackWallet} alt='Close'></img>
+                  <img width={40} src={icons.BackpackWallet} alt='Close'></img>
 
                   {walletNames[WalletType.BACKPACK]}
                 </Typography>
@@ -105,7 +105,7 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
                   handleConnectStaticWallet(WalletType.SOLFLARE)
                 }}>
                 <Typography className={classes.buttonName}>
-                  <img width={24} src={icons.SolflareWallet} alt='Close'></img>
+                  <img width={45} src={icons.SolflareWallet} alt='Close'></img>
 
                   {walletNames[WalletType.SOLFLARE]}
                 </Typography>
@@ -136,7 +136,7 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
                 }}>
                 <Typography className={classes.buttonName}>
                   {' '}
-                  <img width={20} src={icons.NightlyConnect} alt='Close'></img>
+                  <img width={35} src={icons.NightlyConnect} alt='Close'></img>
                   {walletNames[WalletType.NIGHTLY]}
                 </Typography>
               </Grid>
@@ -146,20 +146,12 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
           <Divider className={classes.divider} />
 
           <Grid className={classes.modalFooter}>
-            <Typography className={classes.footerTitle}>You don't have a wallet yet?</Typography>
-            <Typography className={classes.footerSubtitle}>Get one down below!</Typography>
+            <Typography className={classes.footerTitle}>Don't have a wallet?</Typography>
             <a href={' https://nightly.app/'} target='_blank'>
               <Button className={classes.buttonPrimary} variant='contained'>
-                Get your wallet now!
+                Download now!
               </Button>
             </a>
-            <Link
-              className={classes.bottomCloseButton}
-              onClick={() => {
-                setIsOpenSelectWallet(false)
-              }}>
-              Close
-            </Link>
           </Grid>
         </Box>
       </Popover>
