@@ -5,6 +5,7 @@ import { Grid } from '@mui/material'
 import { NetworkType, SortTypePoolList } from '@store/consts/static'
 import { PaginationList } from '@components/Pagination/Pagination'
 import NotFoundPlaceholder from '../NotFoundPlaceholder/NotFoundPlaceholder'
+import { VariantType } from 'notistack'
 
 interface PoolListInterface {
   data: Array<{
@@ -25,11 +26,13 @@ interface PoolListInterface {
     }
     isUnknownFrom: boolean
     isUnknownTo: boolean
+    poolAddress: string
   }>
   network: NetworkType
+  copyAddressHandler: (message: string, variant: VariantType) => void
 }
 
-const PoolList: React.FC<PoolListInterface> = ({ data, network }) => {
+const PoolList: React.FC<PoolListInterface> = ({ data, network, copyAddressHandler }) => {
   const { classes } = useStyles()
   const [page, setPage] = React.useState(1)
   const [sortType, setSortType] = React.useState(SortTypePoolList.VOLUME_DESC)
@@ -109,6 +112,8 @@ const PoolList: React.FC<PoolListInterface> = ({ data, network }) => {
               network={network}
               isUnknownFrom={element.isUnknownFrom}
               isUnknownTo={element.isUnknownTo}
+              poolAddress={element.poolAddress}
+              copyAddressHandler={copyAddressHandler}
             />
           ))}
           {pages > 1 ? (

@@ -128,6 +128,21 @@ const useStyles = makeStyles()(theme => {
       alignItems: 'center',
       flex: 1,
       justifyContent: 'flex-end'
+    },
+    link: {
+      maxHeight: 14,
+      height: 14,
+      width: 14,
+      '& img': {
+        height: 14,
+        width: 14
+      },
+      '&:hover': {
+        filter: 'brightness(1.2)',
+        '@media (hover: none)': {
+          filter: 'none'
+        }
+      }
     }
   }
 })

@@ -16,6 +16,7 @@ import {
 } from '@store/selectors/stats'
 import { network } from '@store/selectors/solanaConnection'
 import { actions } from '@store/reducers/stats'
+import { actions as snackbarActions } from '@store/reducers/snackbars'
 import Volume from '@components/Stats/Volume/Volume'
 import Liquidity from '@components/Stats/Liquidity/Liquidity'
 import VolumeBar from '@components/Stats/volumeBar/VolumeBar'
@@ -26,6 +27,7 @@ import { farms } from '@store/selectors/farms'
 import { actions as farmsActions } from '@store/reducers/farms'
 import SearchIcon from '@static/svg/lupaDark.svg'
 import { shortenAddress } from '@utils/utils'
+import { VariantType } from 'notistack'
 
 export const WrappedStats: React.FC = () => {
   const { classes } = useStyles()
@@ -125,6 +127,16 @@ export const WrappedStats: React.FC = () => {
     return acc
   }, [allFarms])
 
+  const copyAddressHandler = (message: string, variant: VariantType) => {
+    dispatch(
+      snackbarActions.add({
+        message,
+        variant,
+        persist: false
+      })
+    )
+  }
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
       {isLoadingStats ? (
@@ -192,8 +204,11 @@ export const WrappedStats: React.FC = () => {
                 // priceChange: tokenData.priceChange,
                 volume: tokenData.volume24,
                 TVL: tokenData.tvl,
+                address: tokenData.address.toString(),
                 isUnknown: tokenData.tokenDetails?.isUnknown ?? false
               }))}
+              network={currentNetwork}
+              copyAddressHandler={copyAddressHandler}
             />
           </Grid>
           <Grid
@@ -246,9 +261,11 @@ export const WrappedStats: React.FC = () => {
               //   accumulatedFarmsAvg: accumulatedAverageAPY?.[poolData.poolAddress.toString()] ?? 0
               // }
               isUnknownFrom: poolData.tokenXDetails?.isUnknown ?? false,
-              isUnknownTo: poolData.tokenYDetails?.isUnknown ?? false
+              isUnknownTo: poolData.tokenYDetails?.isUnknown ?? false,
+              poolAddress: poolData.poolAddress.toString()
             }))}
             network={currentNetwork}
+            copyAddressHandler={copyAddressHandler}
           />
         </>
       )}

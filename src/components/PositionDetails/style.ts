@@ -104,5 +104,17 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       marginBottom: 0
     }
+  },
+  link: {
+    maxHeight: 14,
+    height: 14,
+    width: 14,
+
+    '&:hover': {
+      filter: 'brightness(1.2)',
+      '@media (hover: none)': {
+        filter: 'none'
+      }
+    }
   }
 }))
