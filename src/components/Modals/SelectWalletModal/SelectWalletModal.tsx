@@ -115,7 +115,7 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
 
           <Grid className={classes.buttonWrapper}>
             <Typography className={classes.subTitle}>
-              Or connect any wallet using auto-detection with Nightly wallet selector Nightly
+              Or connect using Nightly's auto-detection
             </Typography>
             <Grid className={classes.buttonList}>
               <Grid
@@ -149,7 +149,7 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
             <Typography className={classes.footerTitle}>Don't have a wallet?</Typography>
             <a href={' https://nightly.app/'} target='_blank'>
               <Button className={classes.buttonPrimary} variant='contained'>
-                Download now!
+                Download one!
               </Button>
             </a>
           </Grid>

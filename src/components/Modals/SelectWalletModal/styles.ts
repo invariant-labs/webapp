@@ -128,6 +128,7 @@ const useStyles = makeStyles()(() => {
       borderRadius: 11,
       padding: '20px',
       width: '100%',
+      height: '80px',
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
@@ -167,9 +168,13 @@ const useStyles = makeStyles()(() => {
       fontWeight: 400,
       display: 'flex',
       alignItems: 'center',
+
       justifyContent: 'center',
       img: {
         marginRight: '12px'
+      },
+      [theme.breakpoints.down('sm')]: {
+        ...typography.body3
       }
     }
   }
