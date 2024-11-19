@@ -84,15 +84,15 @@ const PoolList: React.FC<PoolListInterface> = ({ data, network, copyAddressHandl
 
   return (
     <Grid container direction='column' classes={{ root: classes.container }}>
-      {data.length > 0 ? (
-        <>
-          <PoolListItem
-            displayType='header'
-            onSort={setSortType}
-            sortType={sortType}
-            network={network}
-          />
-          {paginator(page).map((element, index) => (
+      <>
+        <PoolListItem
+          displayType='header'
+          onSort={setSortType}
+          sortType={sortType}
+          network={network}
+        />
+        {data.length > 0 ? (
+          paginator(page).map((element, index) => (
             <PoolListItem
               displayType='token'
               tokenIndex={index + 1 + (page - 1) * 10}
@@ -115,21 +115,21 @@ const PoolList: React.FC<PoolListInterface> = ({ data, network, copyAddressHandl
               poolAddress={element.poolAddress}
               copyAddressHandler={copyAddressHandler}
             />
-          ))}
-          {pages > 1 ? (
-            <Grid className={classes.pagination}>
-              <PaginationList
-                pages={pages}
-                defaultPage={1}
-                handleChangePage={handleChangePagination}
-                variant='flex-end'
-              />
-            </Grid>
-          ) : null}
-        </>
-      ) : (
-        <NotFoundPlaceholder title='No pools found...' />
-      )}
+          ))
+        ) : (
+          <NotFoundPlaceholder title='No pools found...' />
+        )}
+        {pages > 1 ? (
+          <Grid className={classes.pagination}>
+            <PaginationList
+              pages={pages}
+              defaultPage={1}
+              handleChangePage={handleChangePagination}
+              variant='flex-end'
+            />
+          </Grid>
+        ) : null}
+      </>
     </Grid>
   )
 }
