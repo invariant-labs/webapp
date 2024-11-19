@@ -1,7 +1,6 @@
-import { Bonds } from '@invariant-labs/bonds-sdk'
+import { Bonds, IWallet } from '@invariant-labs/bonds-sdk'
 import { getSolanaConnection, networkTypetoBondsNetwork } from '../connection'
 import { NetworkType } from '@store/consts/static'
-import { getSolanaWallet } from '../wallet'
 
 let _bonds: Bonds
 export const getCurrentBondsProgram = (): Bonds => {
@@ -10,24 +9,29 @@ export const getCurrentBondsProgram = (): Bonds => {
 
 export const getBondsProgram = async (
   networkType: NetworkType,
-  rpcAddress: string
+  rpcAddress: string,
+  solWallet: IWallet
 ): Promise<Bonds> => {
   if (_bonds) {
     return _bonds
   }
   const net = networkTypetoBondsNetwork(networkType)
 
-  _bonds = await Bonds.build(net, getSolanaWallet(), getSolanaConnection(rpcAddress))
+  _bonds = await Bonds.build(net, solWallet, getSolanaConnection(rpcAddress))
   return _bonds
 }
 
-export const getBondsProgramSync = (networkType: NetworkType, rpcAddress: string): Bonds => {
+export const getBondsProgramSync = (
+  networkType: NetworkType,
+  rpcAddress: string,
+  solWallet: IWallet
+): Bonds => {
   if (_bonds) {
     return _bonds
   }
   const net = networkTypetoBondsNetwork(networkType)
 
-  Bonds.build(net, getSolanaWallet(), getSolanaConnection(rpcAddress))
+  Bonds.build(net, solWallet, getSolanaConnection(rpcAddress))
     .then(market => {
       _bonds = market
     })

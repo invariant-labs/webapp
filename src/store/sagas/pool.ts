@@ -1,6 +1,6 @@
 import { call, put, all, spawn, takeEvery, takeLatest, select } from 'typed-redux-saga'
 import { getMarketProgram } from '@utils/web3/programs/amm'
-import { Pair } from '@invariant-labs/sdk'
+import { IWallet, Pair } from '@invariant-labs/sdk'
 import { actions, ListPoolsRequest, PairTokens, PoolWithAddress } from '@store/reducers/pools'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { Tick } from '@invariant-labs/sdk/src/market'
@@ -10,6 +10,7 @@ import { getFullNewTokensData, getPools, getPoolsFromAdresses } from '@utils//ut
 import { tokens } from '@store/selectors/pools'
 import { handleRpcError, getConnection } from './connection'
 import { network, rpcAddress } from '@store/selectors/solanaConnection'
+import { getWallet } from './wallet'
 
 export interface iTick {
   index: Tick[]
@@ -18,7 +19,8 @@ export interface iTick {
 export function* fetchPoolData(action: PayloadAction<Pair>) {
   const networkType = yield* select(network)
   const rpc = yield* select(rpcAddress)
-  const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+  const wallet = yield* call(getWallet)
+  const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
   try {
     const poolData = yield* call([marketProgram, marketProgram.getPool], action.payload)
     const address = yield* call(
@@ -45,7 +47,8 @@ export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
   try {
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const wallet = yield* call(getWallet)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
     const pairs = FEE_TIERS.map(fee => new Pair(action.payload.first, action.payload.second, fee))
     const pools: PoolWithAddress[] = yield call(getPools, pairs, marketProgram)
 
@@ -61,7 +64,8 @@ export function* fetchPoolsDataForList(action: PayloadAction<ListPoolsRequest>) 
   const connection = yield* call(getConnection)
   const networkType = yield* select(network)
   const rpc = yield* select(rpcAddress)
-  const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+  const wallet = yield* call(getWallet)
+  const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
   const newPools: PoolWithAddress[] = yield* call(
     getPoolsFromAdresses,
     action.payload.addresses.map(addr => new PublicKey(addr)),

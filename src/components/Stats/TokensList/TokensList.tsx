@@ -89,10 +89,10 @@ const TokensList: React.FC<ITokensList> = ({ data, network, copyAddressHandler }
 
   return (
     <Grid container direction='column' classes={{ root: classes.container }} wrap='nowrap'>
-      {data.length > 0 ? (
-        <>
-          <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />
-          {paginator(page).data.map((token, index) => {
+      <>
+        <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />
+        {data.length > 0 ? (
+          paginator(page).data.map((token, index) => {
             return (
               <TokenListItem
                 key={index}
@@ -112,21 +112,21 @@ const TokensList: React.FC<ITokensList> = ({ data, network, copyAddressHandler }
                 copyAddressHandler={copyAddressHandler}
               />
             )
-          })}
-          {pages > 1 ? (
-            <Grid className={classes.pagination}>
-              <PaginationList
-                pages={Math.ceil(data.length / 10)}
-                defaultPage={1}
-                handleChangePage={handleChangePagination}
-                variant='flex-end'
-              />
-            </Grid>
-          ) : null}
-        </>
-      ) : (
-        <NotFoundPlaceholder title='No tokens found...' />
-      )}
+          })
+        ) : (
+          <NotFoundPlaceholder title='No tokens found...' />
+        )}
+        {pages > 1 ? (
+          <Grid className={classes.pagination}>
+            <PaginationList
+              pages={Math.ceil(data.length / 10)}
+              defaultPage={1}
+              handleChangePage={handleChangePagination}
+              variant='flex-end'
+            />
+          </Grid>
+        ) : null}
+      </>
     </Grid>
   )
 }
