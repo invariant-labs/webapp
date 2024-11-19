@@ -128,7 +128,7 @@ const useStyles = makeStyles()(() => {
       borderRadius: 11,
       padding: '20px',
       width: '100%',
-      height: '80px',
+      height: '70px',
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
