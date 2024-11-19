@@ -64,6 +64,7 @@ export const useStyles = makeStyles()(() => ({
     ...typography.body2,
     color: colors.white.main,
     textTransform: 'none',
+    backgroundImage: 'none',
     backgroundColor: colors.invariant.light,
     borderRadius: 14,
 
@@ -77,5 +78,8 @@ export const useStyles = makeStyles()(() => ({
         boxShadow: 'none'
       }
     }
+  },
+  buttonText: {
+    ...typography.body2
   }
 }))

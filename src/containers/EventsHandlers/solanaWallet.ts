@@ -20,6 +20,7 @@ const SolanaWalletEvents = () => {
     if (!publicKey || !connection || networkStatus !== Status.Initialized) {
       return
     }
+
     const connectEvents = () => {
       connection.onAccountChange(new PublicKey(publicKey), (accountInfo: AccountInfo<Buffer>) => {
         dispatch(actions.setBalance(new BN(accountInfo.lamports)))

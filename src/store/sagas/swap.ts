@@ -4,7 +4,7 @@ import {
   WRAPPED_SOL_ADDRESS
 } from '@store/consts/static'
 import { createLoaderKey, solToPriorityFee } from '@utils/utils'
-import { Pair } from '@invariant-labs/sdk'
+import { IWallet, Pair } from '@invariant-labs/sdk'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { actions as swapActions } from '@store/reducers/swap'
 import { actions as connectionActions } from '@store/reducers/solanaConnection'
@@ -50,7 +50,7 @@ export function* handleSwapWithSOL(): Generator {
     const connection = yield* call(getConnection)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
     const swapPool = allPools.find(
       pool =>
         (tokenFrom.equals(pool.tokenX) && tokenTo.equals(pool.tokenY)) ||
@@ -374,7 +374,7 @@ export function* handleSwap(): Generator {
     const tokensAccounts = yield* select(accounts)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
     const swapPool = allPools.find(
       pool =>
         (tokenFrom.equals(pool.tokenX) && tokenTo.equals(pool.tokenY)) ||

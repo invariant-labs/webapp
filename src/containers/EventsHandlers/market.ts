@@ -4,7 +4,7 @@ import { network, rpcAddress, status } from '@store/selectors/solanaConnection'
 import { actions } from '@store/reducers/pools'
 import { poolsArraySortedByFees, poolTicks, tickMaps } from '@store/selectors/pools'
 import { swap } from '@store/selectors/swap'
-import { findTickmapChanges, Pair } from '@invariant-labs/sdk'
+import { findTickmapChanges, IWallet, Pair } from '@invariant-labs/sdk'
 import { PublicKey } from '@solana/web3.js'
 import { Status, actions as solanaConnectionActions } from '@store/reducers/solanaConnection'
 import { getMarketProgramSync } from '@utils/web3/programs/amm'
@@ -15,12 +15,14 @@ import {
   getPoolsVolumeRanges
 } from '@utils/utils'
 import { getCurrentSolanaConnection } from '@utils/web3/connection'
+import { getSolanaWallet } from '@utils/web3/wallet'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
   const networkType = useSelector(network)
   const rpc = useSelector(rpcAddress)
-  const marketProgram = getMarketProgramSync(networkType, rpc)
+  const wallet = getSolanaWallet()
+  const marketProgram = getMarketProgramSync(networkType, rpc, wallet as IWallet)
   const { tokenFrom, tokenTo } = useSelector(swap)
   const networkStatus = useSelector(status)
   const tickmaps = useSelector(tickMaps)

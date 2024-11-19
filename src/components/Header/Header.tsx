@@ -35,7 +35,6 @@ export interface IHeader {
   onDisconnectWallet: () => void
   defaultTestnetRPC: string
   onCopyAddress: () => void
-  onChangeWallet: () => void
   activeChain: ISelectChain
   onChainSelect: (chain: ISelectChain) => void
   network: NetworkType
@@ -59,7 +58,6 @@ export const Header: React.FC<IHeader> = ({
   onDisconnectWallet,
   defaultDevnetRPC,
   onCopyAddress,
-  onChangeWallet,
   activeChain,
   onChainSelect,
   network,
@@ -277,7 +275,6 @@ export const Header: React.FC<IHeader> = ({
               walletConnected ? <DotIcon className={classes.connectedWalletIcon} /> : undefined
             }
             onCopyAddress={onCopyAddress}
-            onChangeWallet={onChangeWallet}
           />
         </Grid>
 

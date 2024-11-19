@@ -6,8 +6,7 @@ import {
   spawn,
   all,
   select,
-  takeLatest,
-  delay
+  takeLatest
 } from 'typed-redux-saga'
 import { actions, ITokenAccount, Status } from '@store/reducers/solanaWallet'
 import { getConnection, handleRpcError } from './connection'
@@ -26,7 +25,7 @@ import { BN } from '@project-serum/anchor'
 import { WalletAdapter } from '@utils/web3/adapters/types'
 import { getTokenDetails } from './token'
 import { accounts, status } from '@store/selectors/solanaWallet'
-import { airdropQuantities, airdropTokens } from '@store/consts/static'
+import { airdropQuantities, airdropTokens, WRAPPED_SOL_ADDRESS } from '@store/consts/static'
 import { Token as StoreToken } from '@store/consts/types'
 import airdropAdmin from '@store/consts/airdropAdmin'
 import { network } from '@store/selectors/solanaConnection'
@@ -36,10 +35,10 @@ import { actions as farmsActions } from '@store/reducers/farms'
 import { actions as bondsActions } from '@store/reducers/bonds'
 import { closeSnackbar } from 'notistack'
 import { createLoaderKey } from '@utils/utils'
-import { openWalletSelectorModal } from '@utils/web3/selector'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
+
   return wallet
 }
 export function* getBalance(pubKey: PublicKey): SagaGenerator<BN> {
@@ -50,6 +49,10 @@ export function* getBalance(pubKey: PublicKey): SagaGenerator<BN> {
 
 export function* handleBalance(): Generator {
   const wallet = yield* call(getWallet)
+  if (wallet.publicKey.toString() === '11111111111111111111111111111111') {
+    yield* put(actions.setStatus(Status.Error))
+    throw new Error('Wallet not connected')
+  }
   yield* put(actions.setAddress(wallet.publicKey))
   yield* put(actions.setIsBalanceLoading(true))
   const [balance] = yield* all([call(getBalance, wallet.publicKey), call(fetchTokensAccounts)])
@@ -80,6 +83,9 @@ export function* fetchTokensAccounts(): Generator {
   const newAccounts: ITokenAccount[] = []
   const unknownTokens: Record<string, StoreToken> = {}
   for (const account of tokensAccounts.value) {
+    if (account.pubkey.toString() === WRAPPED_SOL_ADDRESS.toString()) {
+      console.log('account', account)
+    }
     const info: IparsedTokenInfo = account.account.data.parsed.info
     newAccounts.push({
       programId: new PublicKey(info.mint),
@@ -237,7 +243,9 @@ export function* getCollateralTokenAirdrop(
   tx.feePayer = wallet.publicKey
   tx.recentBlockhash = blockhash.blockhash
   const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+
   signedTx.partialSign(airdropAdmin)
+
   yield* call([connection, connection.sendRawTransaction], signedTx.serialize(), {
     skipPreflight: true
   })
@@ -368,9 +376,11 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
 }
 
 export function* init(): Generator {
-  yield* put(actions.setStatus(Status.Init))
-  yield* call(handleBalance)
-  yield* put(actions.setStatus(Status.Initialized))
+  try {
+    yield* put(actions.setStatus(Status.Init))
+    yield* call(handleBalance)
+    yield* put(actions.setStatus(Status.Initialized))
+  } catch (error) {}
 }
 
 export const sleep = (ms: number) => {
@@ -429,12 +439,6 @@ export function* handleDisconnect(): Generator {
   }
 }
 
-export function* handleReconnect(): Generator {
-  yield* call(handleDisconnect)
-  yield* delay(100)
-  yield* call(openWalletSelectorModal)
-}
-
 export function* connectHandler(): Generator {
   yield takeLatest(actions.connect, handleConnect)
 }
@@ -455,19 +459,8 @@ export function* handleBalanceSaga(): Generator {
   yield takeLatest(actions.getBalance, handleBalance)
 }
 
-export function* reconnectHandler(): Generator {
-  yield takeLatest(actions.reconnect, handleReconnect)
-}
-
 export function* walletSaga(): Generator {
   yield all(
-    [
-      initSaga,
-      airdropSaga,
-      connectHandler,
-      disconnectHandler,
-      handleBalanceSaga,
-      reconnectHandler
-    ].map(spawn)
+    [initSaga, airdropSaga, connectHandler, disconnectHandler, handleBalanceSaga].map(spawn)
   )
 }
