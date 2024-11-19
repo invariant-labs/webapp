@@ -433,7 +433,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       return
     }
 
-    getJupTokensRatioPrice(tokenB.toString(), tokenA.toString())
+    getJupTokensRatioPrice(tokenA.toString(), tokenB.toString())
       .then(data => setGlobalPrice(data.price))
       .catch(() => setGlobalPrice(undefined))
   }
