@@ -29,13 +29,15 @@ import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { network, rpcAddress } from '@store/selectors/solanaConnection'
 import { closeSnackbar } from 'notistack'
 import { createAccount, getWallet } from './wallet'
+import { IWallet } from '@invariant-labs/sdk'
 
 export function* handleGetBondsList() {
   try {
     const connection = yield* call(getConnection)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const bondsProgram = yield* call(getBondsProgram, networkType, rpc)
+    const wallet = yield* call(getWallet)
+    const bondsProgram = yield* call(getBondsProgram, networkType, rpc, wallet as IWallet)
 
     const list = yield* call([bondsProgram, bondsProgram.getAllBondSales])
 
@@ -73,7 +75,8 @@ export function* handleGetUserVested() {
   try {
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const bondsProgram = yield* call(getBondsProgram, networkType, rpc)
+    const wallet = yield* call(getWallet)
+    const bondsProgram = yield* call(getBondsProgram, networkType, rpc, wallet as IWallet)
     const walletAddess = yield* select(address)
 
     const list = yield* call([bondsProgram, bondsProgram.getAllOwnerBonds], walletAddess)
@@ -111,7 +114,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
     const wallet = yield* call(getWallet)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const bondsProgram = yield* call(getBondsProgram, networkType, rpc)
+    const bondsProgram = yield* call(getBondsProgram, networkType, rpc, wallet as IWallet)
 
     const wrappedSolAccount = Keypair.generate()
 
@@ -319,7 +322,7 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
     const wallet = yield* call(getWallet)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const bondsProgram = yield* call(getBondsProgram, networkType, rpc)
+    const bondsProgram = yield* call(getBondsProgram, networkType, rpc, wallet as IWallet)
 
     const tokensAccounts = yield* select(accounts)
 
@@ -429,7 +432,7 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
     const wallet = yield* call(getWallet)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const bondsProgram = yield* call(getBondsProgram, networkType, rpc)
+    const bondsProgram = yield* call(getBondsProgram, networkType, rpc, wallet as IWallet)
 
     const wrappedSolAccount = Keypair.generate()
 
@@ -620,7 +623,7 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
     const wallet = yield* call(getWallet)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const bondsProgram = yield* call(getBondsProgram, networkType, rpc)
+    const bondsProgram = yield* call(getBondsProgram, networkType, rpc, wallet as IWallet)
 
     const tokensAccounts = yield* select(accounts)
 

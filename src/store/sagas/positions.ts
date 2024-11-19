@@ -10,7 +10,7 @@ import {
   getPositionsAddressesFromRange,
   solToPriorityFee
 } from '@utils/utils'
-import { Pair } from '@invariant-labs/sdk'
+import { IWallet, Pair } from '@invariant-labs/sdk'
 import { Staker } from '@invariant-labs/staker-sdk'
 import { actions as farmsActions } from '@store/reducers/farms'
 import { ListPoolsResponse, ListType, actions as poolsActions } from '@store/reducers/pools'
@@ -71,7 +71,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
     const wallet = yield* call(getWallet)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     const tokensAccounts = yield* select(accounts)
     const allTokens = yield* select(tokens)
@@ -372,7 +372,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
     const wallet = yield* call(getWallet)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     const tokensAccounts = yield* select(accounts)
     const allTokens = yield* select(tokens)
@@ -604,7 +604,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     const wallet = yield* call(getWallet)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     const tokensAccounts = yield* select(accounts)
 
@@ -780,7 +780,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicksData>): Generator {
   const allPools = yield* select(poolsArraySortedByFees)
   const allTokens = yield* select(tokens)
-
+  const wallet = yield* call(getWallet)
   const poolIndex = action.payload.poolIndex
 
   const xDecimal = allTokens[allPools[poolIndex].tokenX.toString()].decimals
@@ -789,7 +789,7 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
   try {
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     const rawTicks = yield* call(
       [marketProgram, marketProgram.getAllTicks],
@@ -825,10 +825,10 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
 
 export function* handleGetPositionsList() {
   try {
+    const wallet = yield* call(getWallet)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
-    const wallet = yield* call(getWallet)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     const { head } = yield* call([marketProgram, marketProgram.getPositionList], wallet.publicKey)
 
@@ -893,8 +893,9 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     const connection = yield* call(getConnection)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
     const wallet = yield* call(getWallet)
+
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     const allPositionsData = yield* select(positionsWithPoolsData)
     const tokensAccounts = yield* select(accounts)
@@ -975,6 +976,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
+
     signedTx.partialSign(wrappedSolAccount)
 
     closeSnackbar(loaderSigningTx)
@@ -1090,8 +1092,8 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     const connection = yield* call(getConnection)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
     const wallet = yield* call(getWallet)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     const tokensAccounts = yield* select(accounts)
 
@@ -1238,8 +1240,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     const connection = yield* call(getConnection)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
     const wallet = yield* call(getWallet)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     const allPositionsData = yield* select(positionsWithPoolsData)
     const tokensAccounts = yield* select(accounts)
@@ -1297,7 +1299,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     const positionStakes = yield* select(
       stakesForPosition(allPositionsData[data.positionIndex].address)
     )
-    const stakerProgram = yield* call(getStakerProgram, networkType, rpc)
+    const stakerProgram = yield* call(getStakerProgram, networkType, rpc, wallet as IWallet)
     for (const stake of positionStakes) {
       yield* call(unsub, stakerProgram, stake.address)
     }
@@ -1465,8 +1467,8 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     const connection = yield* call(getConnection)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
     const wallet = yield* call(getWallet)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     const tokensAccounts = yield* select(accounts)
 
@@ -1489,7 +1491,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     const positionStakes = yield* select(
       stakesForPosition(allPositionsData[action.payload.positionIndex].address)
     )
-    const stakerProgram = yield* call(getStakerProgram, networkType, rpc)
+    const stakerProgram = yield* call(getStakerProgram, networkType, rpc, wallet as IWallet)
 
     for (const stake of positionStakes) {
       yield* call(unsub, stakerProgram, stake.address)
@@ -1623,8 +1625,8 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
   try {
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
     const wallet = yield* call(getWallet)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     yield put(actions.getCurrentPositionRangeTicks(action.payload.toString()))
 
@@ -1651,7 +1653,8 @@ export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<string
   try {
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const wallet = yield* call(getWallet)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     const positionData = yield* select(singlePositionData(action.payload))
 

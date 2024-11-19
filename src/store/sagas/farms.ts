@@ -23,7 +23,7 @@ import {
   PositionWithPoolData,
   singlePositionData
 } from '@store/selectors/positions'
-import { getMarketAddress, Pair } from '@invariant-labs/sdk'
+import { getMarketAddress, IWallet, Pair } from '@invariant-labs/sdk'
 import {
   AccountInfo,
   Keypair,
@@ -69,9 +69,10 @@ export function* getFarmsTotals() {
     const allTokens = yield* select(tokens)
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
+    const wallet = yield* call(getWallet)
 
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
-    const stakerProgram = yield* call(getStakerProgram, networkType, rpc)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
+    const stakerProgram = yield* call(getStakerProgram, networkType, rpc, wallet as IWallet)
 
     const updatesObject: Record<string, FarmTotalsUpdate> = {}
 
@@ -153,7 +154,8 @@ export function* getFarmsApy() {
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
 
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const wallet = yield* call(getWallet)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     const allTokens = yield* select(tokens)
     const allPools = yield* select(pools)
@@ -231,8 +233,9 @@ export function* getFarmsApy() {
 export function* handleGetFarmsList() {
   try {
     const currentNetwork = yield* select(network)
+    const wallet = yield* call(getWallet)
     const rpc = yield* select(rpcAddress)
-    const stakerProgram = yield* call(getStakerProgram, currentNetwork, rpc)
+    const stakerProgram = yield* call(getStakerProgram, currentNetwork, rpc, wallet as IWallet)
     const connection = yield* call(getConnection)
 
     const list = yield* call([stakerProgram, stakerProgram.getAllIncentive])
@@ -402,7 +405,8 @@ export function* handleGetUserStakes() {
   try {
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const stakerProgram = yield* call(getStakerProgram, networkType, rpc)
+    const wallet = yield* call(getWallet)
+    const stakerProgram = yield* call(getStakerProgram, networkType, rpc, wallet as IWallet)
 
     const allFarms = yield* select(farms)
     const { list: positions } = yield* select(positionsList)
@@ -454,9 +458,9 @@ export function* handleGetUserStakes() {
 export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
   const currentNetwork = yield* select(network)
   const rpc = yield* select(rpcAddress)
-  const stakerProgram = yield* call(getStakerProgram, currentNetwork, rpc)
-  const marketProgram = yield* call(getMarketProgram, currentNetwork, rpc)
   const wallet = yield* call(getWallet)
+  const stakerProgram = yield* call(getStakerProgram, currentNetwork, rpc, wallet as IWallet)
+  const marketProgram = yield* call(getMarketProgram, currentNetwork, rpc, wallet as IWallet)
 
   const positionData = yield* select(
     singlePositionData(action.payload.id.toString() + '_' + action.payload.pool.toString())
@@ -667,9 +671,9 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
 
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const stakerProgram = yield* call(getStakerProgram, networkType, rpc)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
     const wallet = yield* call(getWallet)
+    const stakerProgram = yield* call(getStakerProgram, networkType, rpc, wallet as IWallet)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
     const connection = yield* call(getConnection)
 
     const positionData = yield* select(
@@ -884,9 +888,9 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
 
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-    const stakerProgram = yield* call(getStakerProgram, networkType, rpc)
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
     const wallet = yield* call(getWallet)
+    const stakerProgram = yield* call(getStakerProgram, networkType, rpc, wallet as IWallet)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     const positionData = yield* select(
       singlePositionData(action.payload.id.toString() + '_' + action.payload.pool.toString())
@@ -980,9 +984,9 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
 export function* createClaimAllPositionRewardsTx(positionIndex: number) {
   const networkType = yield* select(network)
   const rpc = yield* select(rpcAddress)
-  const stakerProgram = yield* call(getStakerProgram, networkType, rpc)
-  const marketProgram = yield* call(getMarketProgram, networkType, rpc)
   const wallet = yield* call(getWallet)
+  const stakerProgram = yield* call(getStakerProgram, networkType, rpc, wallet as IWallet)
+  const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
   const allPositionsData = yield* select(positionsWithPoolsData)
   const positionData = allPositionsData[positionIndex]
@@ -1046,8 +1050,8 @@ export function* handleGetNewStakeRangeTicks(action: PayloadAction<string[]>) {
   try {
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
-
-    const marketProgram = yield* call(getMarketProgram, networkType, rpc)
+    const wallet = yield* call(getWallet)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
     const allStakes = yield* select(userStakes)
     const allPositions = yield* select(positionsWithPoolsData)
@@ -1062,7 +1066,6 @@ export function* handleGetNewStakeRangeTicks(action: PayloadAction<string[]>) {
     action.payload.forEach((address, index) => {
       const stake = allStakes[address]
       const position = positionsDict[stake.position.toString()]
-
       const pair = new Pair(position.poolData.tokenX, position.poolData.tokenY, {
         fee: position.poolData.fee.v,
         tickSpacing: position.poolData.tickSpacing
@@ -1082,7 +1085,7 @@ export function* handleGetNewStakeRangeTicks(action: PayloadAction<string[]>) {
       })
     })
 
-    const ticks = yield* call(getTicksList, marketProgram, ticksData)
+    const ticks = yield* call(getTicksList, marketProgram, ticksData, wallet as IWallet)
 
     const rangeTicks: Record<string, StakeRangeTicks> = {}
 
