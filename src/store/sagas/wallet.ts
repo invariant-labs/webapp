@@ -25,7 +25,7 @@ import { actions as positionsActions } from '@store/reducers/positions'
 import { BN } from '@project-serum/anchor'
 import { WalletAdapter } from '@utils/web3/adapters/types'
 import { getTokenDetails } from './token'
-import { accounts, status } from '@store/selectors/solanaWallet'
+import { accounts, status, status } from '@store/selectors/solanaWallet'
 import { airdropQuantities, airdropTokens, WRAPPED_SOL_ADDRESS } from '@store/consts/static'
 import { Token as StoreToken } from '@store/consts/types'
 import airdropAdmin from '@store/consts/airdropAdmin'
@@ -388,11 +388,15 @@ export function* init(isEagerConnect: boolean): Generator {
     // }
     const wallet2 = yield* call(getWallet)
     yield* put(actions.setStatus(Status.Init))
+    console.log('wallet2.connected', wallet2.connected)
 
     if (!wallet2.connected) {
       yield* put(actions.setStatus(Status.Uninitialized))
       return
     }
+    const statusWallet = yield* select(status)
+    console.log('statusWallet', statusWallet)
+
     if (isEagerConnect) {
       yield* put(
         snackbarsActions.add({
@@ -475,7 +479,7 @@ export function* handleDisconnect(): Generator {
 }
 
 export function* connectHandler(): Generator {
-  yield takeLatest(actions.connect, handleConnect)
+  yield takeLeading(actions.connect, handleConnect)
 }
 
 export function* disconnectHandler(): Generator {
