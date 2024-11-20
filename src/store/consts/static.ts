@@ -144,7 +144,8 @@ export const SNY_MAIN: Token = {
   decimals: 6,
   name: 'Synthetify',
   logoURI:
-    'https://statics.solscan.io/cdn/imgs/s60?ref=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f736f6c616e612d6c6162732f746f6b656e2d6c6973742f6d61696e2f6173736574732f6d61696e6e65742f34646d4b6b584e48646759735871424843754d696b4e515777566f6d5a55526859766b6b58356334705137792f6c6f676f2e706e67'
+    'https://statics.solscan.io/cdn/imgs/s60?ref=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f736f6c616e612d6c6162732f746f6b656e2d6c6973742f6d61696e2f6173736574732f6d61696e6e65742f34646d4b6b584e48646759735871424843754d696b4e515777566f6d5a55526859766b6b58356334705137792f6c6f676f2e706e67',
+  coingeckoId: 'synthetify-token'
 }
 
 export const WEN_MAIN: Token = {
@@ -160,7 +161,8 @@ export const SUI_MAIN: Token = {
   address: new PublicKey('G1vJEgzepqhnVu35BN4jrkv3wVwkujYWFFCxhbEZ1CZr'),
   decimals: 8,
   name: 'Sui (Wormhole)',
-  logoURI: 'https://invariant.app/unknownToken.svg' //TODO add logo
+  logoURI:
+    'https://assets.coingecko.com/coins/images/26375/standard/sui-ocean-square.png?1727791290'
 }
 
 export enum RPC {

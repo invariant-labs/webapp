@@ -7,7 +7,7 @@ import {
   calcPriceByTickIndex,
   calcYPerXPriceBySqrtPrice,
   createPlaceholderLiquidityPlot,
-  getJupTokenPrice,
+  getTokenPrice,
   getJupTokensRatioPrice,
   initialXtoY,
   printBN
@@ -337,7 +337,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
     const xId = position.tokenX.assetAddress.toString() ?? ''
     if (xId.length) {
-      getJupTokenPrice(xId)
+      getTokenPrice(xId, position.tokenX.coingeckoId)
         .then(data => setTokenXPriceData(data))
         .catch(() => setTokenXPriceData(undefined))
     } else {
@@ -346,7 +346,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
     const yId = position.tokenY.assetAddress.toString() ?? ''
     if (yId.length) {
-      getJupTokenPrice(yId)
+      getTokenPrice(yId, position.tokenY.coingeckoId)
         .then(data => setTokenYPriceData(data))
         .catch(() => setTokenYPriceData(undefined))
     } else {
