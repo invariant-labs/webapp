@@ -389,6 +389,8 @@ export function* init(isEagerConnect: boolean): Generator {
     }
 
     const wallet2 = yield* call(getWallet)
+    const walletSTatus = yield* select(status)
+    console.log('walletStatus', walletSTatus)
     yield* put(actions.setStatus(Status.Init))
 
     if (!wallet2.connected) {
