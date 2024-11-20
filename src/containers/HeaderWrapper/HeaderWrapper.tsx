@@ -26,7 +26,7 @@ export const HeaderWrapper: React.FC = () => {
   useEffect(() => {
     const reconnectStaticWallet = async (wallet: WalletType) => {
       await connectStaticWallet(wallet)
-      await sleep(200)
+      // await sleep(200)
       console.log('reconnectStaticWallet', wallet)
       dispatch(walletActions.connect())
     }
@@ -47,7 +47,7 @@ export const HeaderWrapper: React.FC = () => {
       }
     }
     const walletType = localStorage.getItem('WALLET_TYPE') as WalletType | null
-    console.log('walletType', walletType)
+
     if (walletType !== null && walletType === WalletType.NIGHTLY) {
       nightlyConnectAdapter.addListener('connect', () => {
         reconnectNightlyWallet()
@@ -72,7 +72,6 @@ export const HeaderWrapper: React.FC = () => {
       if (!walletType || walletType === null) {
         return
       }
-      console.log('static reconnect')
       reconnectStaticWallet(walletType)
     }
   }, [])

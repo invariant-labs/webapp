@@ -17,7 +17,6 @@ const disconnectWallet = async () => {
 }
 
 const connectStaticWallet = async (wallet: WalletType) => {
-  console.log('connectStaticWallet', wallet)
   switch (wallet) {
     case WalletType.PHANTOM:
       _wallet = new PhantomWalletAdapter()
@@ -34,7 +33,6 @@ const connectStaticWallet = async (wallet: WalletType) => {
   }
 
   await sleep(500)
-  console.log('wallet adapter', _wallet.connected)
   await _wallet.connect()
 }
 
