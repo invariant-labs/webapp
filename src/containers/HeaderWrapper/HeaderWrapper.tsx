@@ -40,7 +40,7 @@ export const HeaderWrapper: React.FC = () => {
         console.log('reconnectNightlyWallet')
         await sleep(500)
         await nightlyConnectAdapter.connect()
-        await sleep(500)
+        // await sleep(500)
       } catch (error) {
       } finally {
       }
@@ -58,7 +58,7 @@ export const HeaderWrapper: React.FC = () => {
           if (canEagerConnect) {
             await reconnectNightlyWallet()
             // await sleep(500)
-            // dispatch(walletActions.connect(true))
+            dispatch(walletActions.connect(true))
           }
         },
         error => {
