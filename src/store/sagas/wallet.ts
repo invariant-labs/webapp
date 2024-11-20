@@ -432,7 +432,9 @@ export function* sendSol(amount: BN, recipient: PublicKey): SagaGenerator<string
 export function* handleConnect(action: PayloadAction<boolean>): Generator {
   try {
     const walletStatus = yield* select(status)
-    if (walletStatus === Status.Initialized) {
+    const wallet = yield* call(getWallet)
+
+    if (walletStatus === Status.Initialized && wallet.connected) {
       yield* put(
         snackbarsActions.add({
           message: 'Wallet already connected.',
