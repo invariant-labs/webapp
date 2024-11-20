@@ -11,8 +11,7 @@ import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
-import { changeToNightlyAdapter, connectStaticWallet } from '@utils/web3/wallet'
-import { sleep } from '@invariant-labs/sdk'
+import { connectStaticWallet } from '@utils/web3/wallet'
 
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
