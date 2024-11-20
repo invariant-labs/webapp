@@ -379,23 +379,22 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
 
 export function* init(isEagerConnect: boolean): Generator {
   try {
+    if (isEagerConnect) {
+      yield* delay(500)
+    }
+
     const wallet = yield* call(getWallet)
     if (!wallet.connected) {
       yield* delay(500)
     }
-    // if (isEagerConnect) {
-    //   yield* delay(500)
-    // }
+
     const wallet2 = yield* call(getWallet)
     yield* put(actions.setStatus(Status.Init))
-    console.log('wallet2.connected', wallet2.connected)
 
     if (!wallet2.connected) {
       yield* put(actions.setStatus(Status.Uninitialized))
       return
     }
-    const statusWallet = yield* select(status)
-    console.log('statusWallet', statusWallet)
 
     if (isEagerConnect) {
       yield* put(
@@ -479,7 +478,7 @@ export function* handleDisconnect(): Generator {
 }
 
 export function* connectHandler(): Generator {
-  yield takeLeading(actions.connect, handleConnect)
+  yield takeLatest(actions.connect, handleConnect)
 }
 
 export function* disconnectHandler(): Generator {
