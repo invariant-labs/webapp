@@ -36,7 +36,6 @@ export const ChangeWalletButton: React.FC<IProps> = ({
   const [isChangeWallet, setIsChangeWallet] = React.useState<boolean>(false)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log('connected', connected)
     if (!connected) {
       setIsOpenSelectWallet(true)
       setAnchorEl(event.currentTarget)

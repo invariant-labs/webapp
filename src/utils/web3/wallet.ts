@@ -4,6 +4,7 @@ import { PhantomWalletAdapter } from './adapters/phantom'
 import { BackpackWalletAdapter } from './adapters/backpack'
 import { SolflareWalletAdapter } from './adapters/solflare'
 import { WalletType } from '@store/consts/types'
+import { sleep } from '@invariant-labs/sdk'
 
 let _wallet: WalletAdapter
 
@@ -30,7 +31,8 @@ const connectStaticWallet = async (wallet: WalletType) => {
       _wallet = new PhantomWalletAdapter()
       break
   }
-  console.log('Connecting wallet')
+
+  await sleep(300)
   await _wallet.connect()
 }
 
