@@ -138,6 +138,31 @@ export const DOGIN_MAIN: Token = {
     'https://statics.solscan.io/cdn/imgs/s60?ref=68747470733a2f2f697066732e696f2f697066732f516d5066614a565454534c537a6f566161754d4b416e36586132627337365965564d44455269617934556d583562'
 }
 
+export const SNY_MAIN: Token = {
+  symbol: 'SNY',
+  address: new PublicKey('4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y'),
+  decimals: 6,
+  name: 'Synthetify',
+  logoURI:
+    'https://statics.solscan.io/cdn/imgs/s60?ref=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f736f6c616e612d6c6162732f746f6b656e2d6c6973742f6d61696e2f6173736574732f6d61696e6e65742f34646d4b6b584e48646759735871424843754d696b4e515777566f6d5a55526859766b6b58356334705137792f6c6f676f2e706e67'
+}
+
+export const WEN_MAIN: Token = {
+  symbol: 'WEN',
+  address: new PublicKey('WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk'),
+  decimals: 5,
+  name: 'Wen',
+  logoURI: 'https://assets.coingecko.com/coins/images/34856/standard/wen-solana.png?1707872119'
+}
+
+export const SUI_MAIN: Token = {
+  symbol: 'SUI',
+  address: new PublicKey('G1vJEgzepqhnVu35BN4jrkv3wVwkujYWFFCxhbEZ1CZr'),
+  decimals: 8,
+  name: 'Sui (Wormhole)',
+  logoURI: 'https://invariant.app/unknownToken.svg' //TODO add logo
+}
+
 export enum RPC {
   DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',
@@ -397,9 +422,12 @@ export const getAddressTickerMap = (network: NetworkType): { [k: string]: string
       mSOL: 'mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So',
       bSOL: 'bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1',
       stSOL: '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj',
-      SNY: '4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y',
       ETH: '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs',
-      LFNTY: 'LFNTYraetVioAPnGJht4yNg2aUZFXR776cMeN9VMjXp'
+      LFNTY: 'LFNTYraetVioAPnGJht4yNg2aUZFXR776cMeN9VMjXp',
+      DOGIN: DOGIN_MAIN.address.toString(),
+      SNY: SNY_MAIN.address.toString(),
+      WEN: WEN_MAIN.address.toString(),
+      SUI: SUI_MAIN.address.toString()
     }
   } else {
     return {}

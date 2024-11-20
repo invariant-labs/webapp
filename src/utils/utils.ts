@@ -41,7 +41,10 @@ import {
   USDT_DEV,
   VEMC2_DEV,
   VEMCK_DEV,
-  WSOL_DEV
+  WSOL_DEV,
+  SNY_MAIN,
+  WEN_MAIN,
+  SUI_MAIN
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
@@ -436,7 +439,9 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
         }
       )
       obj[DOGIN_MAIN.address.toString()] = DOGIN_MAIN
-
+      obj[SNY_MAIN.address.toString()] = SNY_MAIN
+      obj[WEN_MAIN.address.toString()] = WEN_MAIN
+      obj[SUI_MAIN.address.toString()] = SUI_MAIN
       return obj
     case NetworkType.Devnet:
       return {
