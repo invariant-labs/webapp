@@ -37,6 +37,7 @@ export const HeaderWrapper: React.FC = () => {
     const reconnectNightlyWallet = async () => {
       try {
         changeToNightlyAdapter()
+        await sleep(500)
         await nightlyConnectAdapter.connect()
         await sleep(500)
       } catch (error) {
