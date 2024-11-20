@@ -34,16 +34,16 @@ export const HeaderWrapper: React.FC = () => {
       dispatch(actions.setRPCAddress(RPC.DEV))
     }
 
-    const reconnectNightlyWallet = async () => {
-      try {
-        changeToNightlyAdapter()
-        await sleep(500)
-        await nightlyConnectAdapter.connect()
-        await sleep(500)
-      } catch (error) {
-      } finally {
-      }
-    }
+    // const reconnectNightlyWallet = async () => {
+    //   try {
+    //     changeToNightlyAdapter()
+    //     await sleep(500)
+    //     await nightlyConnectAdapter.connect()
+    //     await sleep(500)
+    //   } catch (error) {
+    //   } finally {
+    //   }
+    // }
     const walletType = localStorage.getItem('WALLET_TYPE') as WalletType | null
 
     if (walletType !== null && walletType === WalletType.NIGHTLY) {
