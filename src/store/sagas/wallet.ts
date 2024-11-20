@@ -447,7 +447,9 @@ export function* sendSol(amount: BN, recipient: PublicKey): SagaGenerator<string
   return txid
 }
 
-export function* handleConnect(action: PayloadAction<boolean>): Generator {
+export function* handleConnect(
+  action: PayloadAction<{ eagerConnect: boolean; isNightlySelector?: boolean }>
+): Generator {
   try {
     const walletStatus = yield* select(status)
     const wallet = yield* call(getWallet)
@@ -462,7 +464,15 @@ export function* handleConnect(action: PayloadAction<boolean>): Generator {
       )
       return
     }
-    yield* call(init, action.payload)
+
+    if (action.payload.isNightlySelector) {
+      yield* call(changeToNightlyAdapter)
+      yield* delay(200)
+      yield* call(nightlyConnectAdapter.connect)
+      yield* delay(500)
+    }
+
+    yield* call(init, action.payload.eagerConnect)
   } catch (error) {
     yield* call(handleRpcError, (error as Error).message)
   }

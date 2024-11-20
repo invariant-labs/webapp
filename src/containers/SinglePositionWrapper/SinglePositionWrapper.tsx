@@ -552,7 +552,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         className={classes.fullHeightContainer}>
         <NoConnected
           onConnect={() => {
-            dispatch(walletActions.connect(false))
+            dispatch(walletActions.connect({ eagerConnect: false }))
           }}
           title='Connect a wallet to view your position,'
           descCustomText='or start exploring liquidity pools now!'
