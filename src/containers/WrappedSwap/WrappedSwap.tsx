@@ -337,7 +337,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
         }
       }}
       onConnectWallet={() => {
-        dispatch(walletActions.connect({ eagerConnect: false }))
+        dispatch(walletActions.connect(false))
       }}
       onDisconnectWallet={() => {
         dispatch(walletActions.disconnect())

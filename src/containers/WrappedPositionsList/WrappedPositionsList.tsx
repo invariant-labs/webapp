@@ -153,7 +153,7 @@ export const WrappedPositionsList: React.FC = () => {
       itemsPerPage={POSITIONS_PER_PAGE}
       noConnectedBlockerProps={{
         onConnect: () => {
-          dispatch(walletActions.connect({ eagerConnect: false }))
+          dispatch(walletActions.connect(false))
         },
         title: 'Start exploring liquidity pools right now!',
         descCustomText: 'Or, connect your wallet to see existing positions, and create a new one!'
