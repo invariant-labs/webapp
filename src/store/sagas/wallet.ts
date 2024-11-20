@@ -386,9 +386,13 @@ export function* init(isEagerConnect: boolean): Generator {
     // if (isEagerConnect) {
     //   yield* delay(500)
     // }
-
+    const wallet2 = yield* call(getWallet)
     yield* put(actions.setStatus(Status.Init))
 
+    if (!wallet2.connected) {
+      yield* put(actions.setStatus(Status.Uninitialized))
+      return
+    }
     if (isEagerConnect) {
       yield* put(
         snackbarsActions.add({
