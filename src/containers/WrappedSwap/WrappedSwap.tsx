@@ -3,7 +3,6 @@ import { Swap } from '@components/Swap/Swap'
 import {
   commonTokensForNetworks,
   DEFAULT_SWAP_SLIPPAGE,
-  tokens,
   WRAPPED_SOL_ADDRESS
 } from '@store/consts/static'
 import { actions as poolsActions } from '@store/reducers/pools'
@@ -34,7 +33,6 @@ import { TokenPriceData } from '@store/consts/types'
 import { getCurrentSolanaConnection } from '@utils/web3/connection'
 import { VariantType } from 'notistack'
 import { useLocation } from 'react-router-dom'
-import { getToken } from '@store/sagas/wallet'
 
 type Props = {
   initialTokenFrom: string
@@ -102,17 +100,17 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
   const lastTokenFrom =
     tickerToAddress(networkType, initialTokenFrom) && initialTokenFrom !== '-'
       ? tickerToAddress(networkType, initialTokenFrom)
-      : (localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`) ?? WRAPPED_SOL_ADDRESS)
+      : localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`) ?? WRAPPED_SOL_ADDRESS
 
   const lastTokenTo =
     tickerToAddress(networkType, initialTokenTo) && initialTokenTo !== '-'
       ? tickerToAddress(networkType, initialTokenTo)
-      : (localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`) ?? '')
+      : localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`) ?? ''
 
   const initTokenFrom =
-    lastTokenFrom === null ? null : (tokensDict[lastTokenFrom]?.assetAddress ?? null)
+    lastTokenFrom === null ? null : tokensDict[lastTokenFrom]?.assetAddress ?? null
 
-  const initTokenTo = lastTokenTo === null ? null : (tokensDict[lastTokenTo]?.assetAddress ?? null)
+  const initTokenTo = lastTokenTo === null ? null : tokensDict[lastTokenTo]?.assetAddress ?? null
 
   useEffect(() => {
     const tokens: string[] = []
