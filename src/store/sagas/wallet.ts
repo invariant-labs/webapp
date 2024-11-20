@@ -6,7 +6,8 @@ import {
   spawn,
   all,
   select,
-  takeLatest
+  takeLatest,
+  delay
 } from 'typed-redux-saga'
 import { actions, ITokenAccount, Status } from '@store/reducers/solanaWallet'
 import { getConnection, handleRpcError } from './connection'
@@ -35,6 +36,7 @@ import { actions as farmsActions } from '@store/reducers/farms'
 import { actions as bondsActions } from '@store/reducers/bonds'
 import { closeSnackbar } from 'notistack'
 import { createLoaderKey } from '@utils/utils'
+import { PayloadAction } from '@reduxjs/toolkit'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
@@ -375,9 +377,31 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
   return associatedAccs
 }
 
-export function* init(): Generator {
+export function* init(isEagerConnect: boolean): Generator {
   try {
+    if (isEagerConnect) {
+      yield* delay(500)
+    }
     yield* put(actions.setStatus(Status.Init))
+
+    if (isEagerConnect) {
+      yield* put(
+        snackbarsActions.add({
+          message: 'Wallet reconnected.',
+          variant: 'success',
+          persist: false
+        })
+      )
+    } else {
+      yield* put(
+        snackbarsActions.add({
+          message: 'Wallet connected.',
+          variant: 'success',
+          persist: false
+        })
+      )
+    }
+
     yield* call(handleBalance)
     yield* put(actions.setStatus(Status.Initialized))
   } catch (error) {}
@@ -400,7 +424,7 @@ export function* sendSol(amount: BN, recipient: PublicKey): SagaGenerator<string
   return txid
 }
 
-export function* handleConnect(): Generator {
+export function* handleConnect(action: PayloadAction<boolean>): Generator {
   try {
     const walletStatus = yield* select(status)
     if (walletStatus === Status.Initialized) {
@@ -413,7 +437,7 @@ export function* handleConnect(): Generator {
       )
       return
     }
-    yield* call(init)
+    yield* call(init, action.payload)
   } catch (error) {
     yield* call(handleRpcError, (error as Error).message)
   }
@@ -451,16 +475,10 @@ export function* airdropSaga(): Generator {
   yield takeLeading(actions.airdrop, handleAirdrop)
 }
 
-export function* initSaga(): Generator {
-  yield takeLeading(actions.initWallet, init)
-}
-
 export function* handleBalanceSaga(): Generator {
   yield takeLatest(actions.getBalance, handleBalance)
 }
 
 export function* walletSaga(): Generator {
-  yield all(
-    [initSaga, airdropSaga, connectHandler, disconnectHandler, handleBalanceSaga].map(spawn)
-  )
+  yield all([airdropSaga, connectHandler, disconnectHandler, handleBalanceSaga].map(spawn))
 }

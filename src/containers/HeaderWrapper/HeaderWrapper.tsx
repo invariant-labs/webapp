@@ -26,7 +26,7 @@ export const HeaderWrapper: React.FC = () => {
   useEffect(() => {
     const reconnectStaticWallet = async (wallet: WalletType) => {
       await connectStaticWallet(wallet)
-      dispatch(walletActions.connect())
+      dispatch(walletActions.connect(true))
     }
 
     if (currentNetwork === NetworkType.Testnet) {
@@ -50,14 +50,15 @@ export const HeaderWrapper: React.FC = () => {
     if (walletType !== null && walletType === WalletType.NIGHTLY) {
       nightlyConnectAdapter.addListener('connect', () => {
         reconnectNightlyWallet()
-        dispatch(walletActions.connect())
+        dispatch(walletActions.connect(true))
       })
 
       nightlyConnectAdapter.canEagerConnect().then(
         async canEagerConnect => {
           if (canEagerConnect) {
             await reconnectNightlyWallet()
-            dispatch(walletActions.connect())
+            await sleep(500)
+            dispatch(walletActions.connect(true))
           }
         },
         error => {
@@ -180,7 +181,7 @@ export const HeaderWrapper: React.FC = () => {
           }
         }}
         onConnectWallet={() => {
-          dispatch(walletActions.connect())
+          dispatch(walletActions.connect(false))
         }}
         landing={location.pathname.substring(1)}
         walletConnected={walletStatus === Status.Initialized}
