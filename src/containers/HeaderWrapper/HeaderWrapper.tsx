@@ -45,7 +45,6 @@ export const HeaderWrapper: React.FC = () => {
         await sleep(500)
       } catch (error) {
       } finally {
-        dispatch(walletActions.connect())
       }
     }
     const walletType = localStorage.getItem('WALLET_TYPE') as WalletType | null
@@ -53,17 +52,18 @@ export const HeaderWrapper: React.FC = () => {
     if (walletType !== null && walletType === WalletType.NIGHTLY) {
       nightlyConnectAdapter.addListener('connect', () => {
         reconnectNightlyWallet()
+        dispatch(walletActions.connect())
       })
 
-      if (nightlyConnectAdapter.connected) {
-        reconnectNightlyWallet()
-      }
+      // if (nightlyConnectAdapter.connected) {
+      //   reconnectNightlyWallet()
+      //   dispatch(walletActions.connect())
+      // }
 
       nightlyConnectAdapter.canEagerConnect().then(
         async canEagerConnect => {
           if (canEagerConnect) {
             reconnectNightlyWallet()
-            await nightlyConnectAdapter.connect()
           }
         },
         error => {
