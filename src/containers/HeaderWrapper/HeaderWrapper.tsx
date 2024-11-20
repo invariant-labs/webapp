@@ -41,6 +41,8 @@ export const HeaderWrapper: React.FC = () => {
         changeToNightlyAdapter()
         console.log('reconnectNightlyWallet')
         await sleep(500)
+        await nightlyConnectAdapter.connect()
+        await sleep(500)
       } catch (error) {
       } finally {
         dispatch(walletActions.connect())
