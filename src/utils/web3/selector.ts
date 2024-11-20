@@ -1,6 +1,6 @@
 import { NightlyConnectAdapter } from '@nightlylabs/wallet-selector-solana'
 
-export const nightlyConnectAdapter: NightlyConnectAdapter = NightlyConnectAdapter.buildLazy(
+export const nightlyConnectAdapter: NightlyConnectAdapter = await NightlyConnectAdapter.build(
   {
     appMetadata: {
       name: 'Invariant',
