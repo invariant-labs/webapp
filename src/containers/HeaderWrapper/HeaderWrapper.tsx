@@ -36,24 +36,31 @@ export const HeaderWrapper: React.FC = () => {
       dispatch(actions.setRPCAddress(RPC.DEV))
     }
 
+    const reconnectNightlyWallet = async () => {
+      try {
+        changeToNightlyAdapter()
+        console.log('reconnectNightlyWallet')
+        await sleep(500)
+      } catch (error) {
+      } finally {
+        dispatch(walletActions.connect())
+      }
+    }
     const walletType = localStorage.getItem('WALLET_TYPE') as WalletType | null
     console.log('walletType', walletType)
     if (walletType !== null && walletType === WalletType.NIGHTLY) {
       nightlyConnectAdapter.addListener('connect', () => {
-        changeToNightlyAdapter()
-        dispatch(walletActions.connect())
+        reconnectNightlyWallet()
       })
 
       if (nightlyConnectAdapter.connected) {
-        changeToNightlyAdapter()
-        dispatch(walletActions.connect())
+        reconnectNightlyWallet()
       }
 
       nightlyConnectAdapter.canEagerConnect().then(
         async canEagerConnect => {
           if (canEagerConnect) {
-            changeToNightlyAdapter()
-            await sleep(200)
+            reconnectNightlyWallet()
             await nightlyConnectAdapter.connect()
           }
         },
