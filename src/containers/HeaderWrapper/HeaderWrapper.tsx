@@ -48,10 +48,10 @@ export const HeaderWrapper: React.FC = () => {
     const walletType = localStorage.getItem('WALLET_TYPE') as WalletType | null
 
     if (walletType !== null && walletType === WalletType.NIGHTLY) {
-      nightlyConnectAdapter.addListener('connect', () => {
-        reconnectNightlyWallet()
-        dispatch(walletActions.connect(true))
-      })
+      // nightlyConnectAdapter.addListener('connect', () => {
+      //   reconnectNightlyWallet()
+      //   dispatch(walletActions.connect(true))
+      // })
 
       nightlyConnectAdapter.canEagerConnect().then(
         async canEagerConnect => {
