@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { changeToNightlyAdapter, connectStaticWallet } from '@utils/web3/wallet'
+import { sleep } from '@invariant-labs/sdk'
 
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -24,6 +25,7 @@ export const HeaderWrapper: React.FC = () => {
 
   useEffect(() => {
     const reconnectStaticWallet = async (wallet: WalletType) => {
+      await sleep(200)
       await connectStaticWallet(wallet)
       dispatch(walletActions.connect())
     }
@@ -50,6 +52,7 @@ export const HeaderWrapper: React.FC = () => {
         async canEagerConnect => {
           if (canEagerConnect) {
             changeToNightlyAdapter()
+            await sleep(200)
             await nightlyConnectAdapter.connect()
           }
         },
@@ -61,6 +64,7 @@ export const HeaderWrapper: React.FC = () => {
       if (!walletType || walletType === null) {
         return
       }
+
       reconnectStaticWallet(walletType)
     }
   }, [])
