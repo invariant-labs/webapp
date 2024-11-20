@@ -26,8 +26,6 @@ export const HeaderWrapper: React.FC = () => {
   useEffect(() => {
     const reconnectStaticWallet = async (wallet: WalletType) => {
       await connectStaticWallet(wallet)
-      // await sleep(200)
-      console.log('reconnectStaticWallet', wallet)
       dispatch(walletActions.connect())
     }
 
@@ -55,15 +53,11 @@ export const HeaderWrapper: React.FC = () => {
         dispatch(walletActions.connect())
       })
 
-      // if (nightlyConnectAdapter.connected) {
-      //   reconnectNightlyWallet()
-      //   dispatch(walletActions.connect())
-      // }
-
       nightlyConnectAdapter.canEagerConnect().then(
         async canEagerConnect => {
           if (canEagerConnect) {
-            reconnectNightlyWallet()
+            await reconnectNightlyWallet()
+            dispatch(walletActions.connect())
           }
         },
         error => {

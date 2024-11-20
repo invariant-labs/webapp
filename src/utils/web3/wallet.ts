@@ -32,7 +32,7 @@ const connectStaticWallet = async (wallet: WalletType) => {
       break
   }
 
-  await sleep(500)
+  await sleep(200)
   await _wallet.connect()
 }
 
