@@ -32,7 +32,7 @@ export const HeaderWrapper: React.FC = () => {
     const eagerConnectToNightly = async () => {
       try {
         changeToNightlyAdapter()
-        const nightlyAdapter = getSolanaWallet()
+        let nightlyAdapter = getSolanaWallet()
         await nightlyAdapter.connect()
 
         const maxWaitTime = 2000
@@ -41,6 +41,7 @@ export const HeaderWrapper: React.FC = () => {
         while (!nightlyAdapter.connected && elapsedTime < maxWaitTime) {
           await sleep(interval)
           elapsedTime += interval
+          nightlyAdapter = getSolanaWallet()
           console.log('nightlyAdapter.connected', nightlyAdapter.connected)
         }
 
