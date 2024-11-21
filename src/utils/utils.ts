@@ -41,11 +41,14 @@ import {
   USDT_DEV,
   VEMC2_DEV,
   VEMCK_DEV,
-  WSOL_DEV
+  WSOL_DEV,
+  SNY_MAIN,
+  WEN_MAIN,
+  SUI_MAIN
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
-import { Token } from '@store/consts/types'
+import { CoinGeckoAPIData, Token } from '@store/consts/types'
 import { sqrt } from '@invariant-labs/sdk/lib/math'
 
 export const transformBN = (amount: BN): string => {
@@ -436,7 +439,9 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
         }
       )
       obj[DOGIN_MAIN.address.toString()] = DOGIN_MAIN
-
+      obj[SNY_MAIN.address.toString()] = SNY_MAIN
+      obj[WEN_MAIN.address.toString()] = WEN_MAIN
+      obj[SUI_MAIN.address.toString()] = SUI_MAIN
       return obj
     case NetworkType.Devnet:
       return {
@@ -1286,15 +1291,57 @@ export const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThresh
   }
 ]
 
-export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
-  const response = await axios.get<RawJupApiResponse>(
-    `https://api.jup.ag/price/v2?ids=${id}&showExtraInfo=true`
-  )
+export const getCoinGeckoTokenPrice = async (id: string) => {
+  try {
+    const { data } = await axios.get<CoinGeckoAPIData>(
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${id}`
+    )
+    return data[0]
+  } catch (e) {}
+}
 
-  return {
-    price: Number(response.data.data[id].price),
-    buyPrice: Number(response.data.data[id].extraInfo?.quotedPrice.buyPrice ?? 0),
-    sellPrice: Number(response.data.data[id].extraInfo?.quotedPrice.sellPrice ?? 0)
+export const getTokenPrice = async (
+  address: string,
+  coinGeckoId?: string
+): Promise<TokenPriceData> => {
+  const jupPrice = await getJupTokenPrice(address)
+
+  if (jupPrice.price !== 0) {
+    return jupPrice
+  } else if (coinGeckoId) {
+    const coingeckoPrice = await getCoinGeckoTokenPrice(coinGeckoId)
+
+    return {
+      price: coingeckoPrice?.current_price || 0,
+      buyPrice: coingeckoPrice?.current_price || 0,
+      sellPrice: coingeckoPrice?.current_price || 0
+    }
+  } else {
+    return {
+      price: 0,
+      buyPrice: 0,
+      sellPrice: 0
+    }
+  }
+}
+
+export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
+  try {
+    const response = await axios.get<RawJupApiResponse>(
+      `https://api.jup.ag/price/v2?ids=${id}&showExtraInfo=true`
+    )
+
+    return {
+      price: Number(response.data.data[id].price),
+      buyPrice: Number(response.data.data[id].extraInfo?.quotedPrice.buyPrice ?? 0),
+      sellPrice: Number(response.data.data[id].extraInfo?.quotedPrice.sellPrice ?? 0)
+    }
+  } catch (error) {
+    return {
+      buyPrice: 0,
+      price: 0,
+      sellPrice: 0
+    }
   }
 }
 
