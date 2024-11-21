@@ -31,25 +31,16 @@ export const HeaderWrapper: React.FC = () => {
 
     const eagerConnectToNightly = async () => {
       try {
-        console.log('1')
         changeToNightlyAdapter()
-        console.log('2')
-        await sleep(1000)
-        console.log('3')
-        // await nightlyConnectAdapter.connect()
+        await sleep(500)
         const nightlyAdapter = getSolanaWallet()
         await nightlyAdapter.connect()
-        console.log('4')
-        await sleep(500)
-        console.log('5')
-        console.log('nightlyConnectAdapter.connected', nightlyConnectAdapter.connected)
+        await sleep(1000)
         if (!nightlyAdapter.connected) {
           await nightlyAdapter.connect()
           await sleep(500)
         }
-        console.log('nightlyConnectAdapter.connected2', nightlyConnectAdapter.connected)
         dispatch(walletActions.connect(true))
-        console.log('6')
       } catch (error) {
         console.error('Error during Nightly eager connection:', error)
       }
