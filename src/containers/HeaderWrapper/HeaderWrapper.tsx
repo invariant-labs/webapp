@@ -38,6 +38,7 @@ export const HeaderWrapper: React.FC = () => {
         console.log('3')
         // await nightlyConnectAdapter.connect()
         const nightlyAdapter = getSolanaWallet()
+        await nightlyAdapter.connect()
         console.log('4')
         await sleep(500)
         console.log('5')
