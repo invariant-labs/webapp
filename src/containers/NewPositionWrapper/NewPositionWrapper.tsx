@@ -779,7 +779,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       solBalance={solBalance}
       walletStatus={walletStatus}
       onConnectWallet={() => {
-        dispatch(walletActions.connect())
+        dispatch(walletActions.connect(false))
       }}
       onDisconnectWallet={() => {
         dispatch(walletActions.disconnect())
@@ -789,7 +789,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       loadingTicksAndTickMaps={loadingTicksAndTickMaps}
       noConnectedBlockerProps={{
         onConnect: () => {
-          dispatch(walletActions.connect())
+          dispatch(walletActions.connect(false))
         },
         descCustomText: 'Cannot add any liquidity.'
       }}
