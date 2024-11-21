@@ -50,7 +50,6 @@ export function* getBalance(pubKey: PublicKey): SagaGenerator<BN> {
 }
 
 export function* handleBalance(): Generator {
-  console.log('handleBalance')
   const wallet = yield* call(getWallet)
   if (wallet.publicKey.toString() === '11111111111111111111111111111111') {
     yield* put(actions.setStatus(Status.Error))
@@ -380,26 +379,22 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
 
 export function* init(isEagerConnect: boolean): Generator {
   try {
-    const walletStatus = yield* select(status)
-    console.log('init walletStatus', walletStatus)
     if (isEagerConnect) {
       yield* delay(500)
     }
 
     const wallet = yield* call(getWallet)
-    console.log('init wallet', wallet)
     if (!wallet.connected) {
       yield* delay(500)
     }
 
     const wallet2 = yield* call(getWallet)
-    console.log('init wallet2', wallet)
-    yield* put(actions.setStatus(Status.Init))
 
     if (!wallet2.connected) {
       yield* put(actions.setStatus(Status.Uninitialized))
       return
     }
+    yield* put(actions.setStatus(Status.Init))
 
     if (isEagerConnect) {
       yield* put(
@@ -442,7 +437,6 @@ export function* sendSol(amount: BN, recipient: PublicKey): SagaGenerator<string
 }
 
 export function* handleConnect(action: PayloadAction<boolean>): Generator {
-  console.log('handleConnect')
   try {
     const walletStatus = yield* select(status)
     const wallet = yield* call(getWallet)

@@ -32,10 +32,9 @@ export const HeaderWrapper: React.FC = () => {
     const eagerConnectToNightly = async () => {
       try {
         changeToNightlyAdapter()
-        await sleep(500)
         const nightlyAdapter = getSolanaWallet()
         await nightlyAdapter.connect()
-        await sleep(1000)
+        await sleep(500)
         if (!nightlyAdapter.connected) {
           await nightlyAdapter.connect()
           await sleep(500)
@@ -153,8 +152,6 @@ export const HeaderWrapper: React.FC = () => {
       <Header
         address={walletAddress}
         onNetworkSelect={(network, rpcAddress) => {
-          console.log('network', network)
-          console.log('rpcAddress', rpcAddress)
           if (rpcAddress !== currentRpc) {
             localStorage.setItem(`INVARIANT_RPC_SOLANA_${network}`, rpcAddress)
             dispatch(actions.setRPCAddress(rpcAddress))
