@@ -44,6 +44,7 @@ export const HeaderWrapper: React.FC = () => {
         console.log('5')
         console.log('nightlyConnectAdapter.connected', nightlyConnectAdapter.connected)
         if (!nightlyAdapter.connected) {
+          await nightlyAdapter.connect()
           await sleep(500)
         }
         console.log('nightlyConnectAdapter.connected2', nightlyConnectAdapter.connected)
