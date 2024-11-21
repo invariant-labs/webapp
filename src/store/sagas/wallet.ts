@@ -11,7 +11,7 @@ import {
 } from 'typed-redux-saga'
 import { actions, ITokenAccount, Status } from '@store/reducers/solanaWallet'
 import { getConnection, handleRpcError } from './connection'
-import { getSolanaWallet, disconnectWallet, changeToNightlyAdapter } from '@utils/web3/wallet'
+import { getSolanaWallet, disconnectWallet } from '@utils/web3/wallet'
 import {
   Account,
   PublicKey,
@@ -37,7 +37,6 @@ import { actions as bondsActions } from '@store/reducers/bonds'
 import { closeSnackbar } from 'notistack'
 import { createLoaderKey } from '@utils/utils'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { nightlyConnectAdapter } from '@utils/web3/selector'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
   const wallet = yield* call(getSolanaWallet)
@@ -51,6 +50,7 @@ export function* getBalance(pubKey: PublicKey): SagaGenerator<BN> {
 }
 
 export function* handleBalance(): Generator {
+  console.log('handleBalance')
   const wallet = yield* call(getWallet)
   if (wallet.publicKey.toString() === '11111111111111111111111111111111') {
     yield* put(actions.setStatus(Status.Error))
@@ -381,25 +381,19 @@ export function* createMultipleAccounts(tokenAddress: PublicKey[]): SagaGenerato
 export function* init(isEagerConnect: boolean): Generator {
   try {
     const walletStatus = yield* select(status)
-
-    if (walletStatus == Status.Error) {
-      yield* call(changeToNightlyAdapter)
-      yield* delay(200)
-      yield* call(nightlyConnectAdapter.connect)
-      yield* delay(500)
-    }
-
+    console.log('init walletStatus', walletStatus)
     if (isEagerConnect) {
       yield* delay(500)
     }
 
     const wallet = yield* call(getWallet)
+    console.log('init wallet', wallet)
     if (!wallet.connected) {
       yield* delay(500)
     }
 
     const wallet2 = yield* call(getWallet)
-
+    console.log('init wallet2', wallet)
     yield* put(actions.setStatus(Status.Init))
 
     if (!wallet2.connected) {
@@ -448,6 +442,7 @@ export function* sendSol(amount: BN, recipient: PublicKey): SagaGenerator<string
 }
 
 export function* handleConnect(action: PayloadAction<boolean>): Generator {
+  console.log('handleConnect')
   try {
     const walletStatus = yield* select(status)
     const wallet = yield* call(getWallet)
