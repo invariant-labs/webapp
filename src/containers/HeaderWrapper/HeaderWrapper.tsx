@@ -11,7 +11,7 @@ import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
-import { changeToNightlyAdapter, connectStaticWallet } from '@utils/web3/wallet'
+import { changeToNightlyAdapter, connectStaticWallet, getSolanaWallet } from '@utils/web3/wallet'
 import { sleep } from '@invariant-labs/sdk'
 
 export const HeaderWrapper: React.FC = () => {
@@ -34,14 +34,15 @@ export const HeaderWrapper: React.FC = () => {
         console.log('1')
         changeToNightlyAdapter()
         console.log('2')
-        await sleep(500)
+        await sleep(1000)
         console.log('3')
-        await nightlyConnectAdapter.connect()
+        // await nightlyConnectAdapter.connect()
+        const nightlyAdapter = getSolanaWallet()
         console.log('4')
         await sleep(500)
         console.log('5')
         console.log('nightlyConnectAdapter.connected', nightlyConnectAdapter.connected)
-        if (!nightlyConnectAdapter.connected) {
+        if (!nightlyAdapter.connected) {
           await sleep(500)
         }
         console.log('nightlyConnectAdapter.connected2', nightlyConnectAdapter.connected)
