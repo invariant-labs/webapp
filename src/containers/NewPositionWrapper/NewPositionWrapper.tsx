@@ -12,7 +12,7 @@ import {
   calcPriceBySqrtPrice,
   calcPriceByTickIndex,
   createPlaceholderLiquidityPlot,
-  getJupTokenPrice,
+  getTokenPrice,
   getJupTokensRatioPrice,
   getNewTokenOrThrow,
   printBN,
@@ -413,11 +413,14 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     if (tokenA === null || (tokenA !== null && !tokens[tokenA.toString()])) {
       return
     }
-
+    console.log(tokens[tokenA.toString()])
     if (tokenA) {
       setPriceALoading(true)
-      getJupTokenPrice(tokenA.toString())
-        .then(data => setTokenAPriceData(data))
+      getTokenPrice(tokenA.toString(), tokens[tokenA.toString()]?.coingeckoId)
+        .then(data => {
+          console.log('data', data)
+          return setTokenAPriceData(data)
+        })
         .catch(() => setTokenAPriceData(undefined))
         .finally(() => setPriceALoading(false))
     } else {
@@ -448,7 +451,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     }
 
     setPriceBLoading(true)
-    getJupTokenPrice(tokenB.toString())
+    getTokenPrice(tokenB.toString(), tokens[tokenB.toString()].coingeckoId)
       .then(data => setTokenBPriceData(data))
       .catch(() => setTokenBPriceData(undefined))
       .finally(() => setPriceBLoading(false))
@@ -582,7 +585,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
     if (tokenA) {
       setPriceALoading(true)
-      await getJupTokenPrice(tokenA.toString())
+      await getTokenPrice(tokenA.toString(), tokens[tokenA.toString()].coingeckoId)
         .then(data => setTokenAPriceData(data))
         .catch(() => setTokenAPriceData(undefined))
         .finally(() => setPriceALoading(false))
@@ -592,7 +595,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
     if (tokenB) {
       setPriceBLoading(true)
-      getJupTokenPrice(tokenB.toString())
+      getTokenPrice(tokenB.toString(), tokens[tokenB.toString()].coingeckoId)
         .then(data => setTokenBPriceData(data))
         .catch(() => setTokenBPriceData(undefined))
         .finally(() => setPriceBLoading(false))

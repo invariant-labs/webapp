@@ -25,7 +25,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   addNewTokenToLocalStorage,
-  getJupTokenPrice,
+  getTokenPrice,
   getNewTokenOrThrow,
   tickerToAddress
 } from '@utils/utils'
@@ -188,7 +188,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
     const id = tokensDict[tokenFrom.toString()]?.assetAddress.toString() ?? ''
     if (id) {
       setPriceFromLoading(true)
-      getJupTokenPrice(id)
+      getTokenPrice(id, tokensDict[tokenFrom.toString()].coingeckoId)
         .then(data => setTokenFromPriceData(data))
         .catch(() => setTokenFromPriceData(undefined))
         .finally(() => setPriceFromLoading(false))
@@ -208,7 +208,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
     const id = tokensDict[tokenTo.toString()]?.assetAddress.toString() ?? ''
     if (id) {
       setPriceToLoading(true)
-      getJupTokenPrice(id)
+      getTokenPrice(id, tokensDict[tokenTo.toString()].coingeckoId)
         .then(data => setTokenToPriceData(data))
         .catch(() => setTokenToPriceData(undefined))
         .finally(() => setPriceToLoading(false))
@@ -240,7 +240,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
     const idFrom = tokensDict[tokenFrom.toString()].assetAddress.toString() ?? ''
     if (idFrom) {
       setPriceFromLoading(true)
-      getJupTokenPrice(idFrom)
+      getTokenPrice(idFrom, tokensDict[tokenFrom.toString()].coingeckoId)
         .then(data => setTokenFromPriceData(data))
         .catch(() => setTokenFromPriceData(undefined))
         .finally(() => setPriceFromLoading(false))
@@ -251,7 +251,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
     const idTo = tokensDict[tokenTo.toString()].assetAddress.toString() ?? ''
     if (idTo) {
       setPriceToLoading(true)
-      getJupTokenPrice(idTo)
+      getTokenPrice(idTo, tokensDict[tokenTo.toString()].coingeckoId)
         .then(data => setTokenToPriceData(data))
         .catch(() => setTokenToPriceData(undefined))
         .finally(() => setPriceToLoading(false))
