@@ -1537,14 +1537,18 @@ export const formatNumber = (
         ? String(parseInt(afterDot)).slice(0, decimalsAfterDot)
         : afterDot
 
-    formattedNumber =
-      beforeDot +
-      '.' +
-      (parsedAfterDot
-        ? leadingZeros > decimalsAfterDot
-          ? '0' + printSubNumber(leadingZeros) + trimZeros(parsedAfterDot)
-          : trimZeros(parsedAfterDot)
-        : '')
+    if (parsedAfterDot) {
+      formattedNumber =
+        beforeDot +
+        '.' +
+        (parsedAfterDot
+          ? leadingZeros > decimalsAfterDot
+            ? '0' + printSubNumber(leadingZeros) + trimZeros(parsedAfterDot)
+            : trimZeros(parsedAfterDot)
+          : '')
+    } else {
+      formattedNumber = beforeDot
+    }
   }
 
   return isNegative ? '-' + formattedNumber : formattedNumber
