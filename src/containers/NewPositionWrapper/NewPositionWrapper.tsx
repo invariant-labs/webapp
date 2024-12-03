@@ -282,7 +282,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
         )
       }
     }
-  }, [isWaitingForNewPool, allPools])
+  }, [isWaitingForNewPool, allPools.length])
 
   useEffect(() => {
     if (poolIndex !== null) {
@@ -409,16 +409,16 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
   const [tokenAPriceData, setTokenAPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [priceALoading, setPriceALoading] = useState(false)
+
   useEffect(() => {
     if (tokenA === null || (tokenA !== null && !tokens[tokenA.toString()])) {
       return
     }
-    console.log(tokens[tokenA.toString()])
+
     if (tokenA) {
       setPriceALoading(true)
       getTokenPrice(tokenA.toString(), tokens[tokenA.toString()]?.coingeckoId)
         .then(data => {
-          console.log('data', data)
           return setTokenAPriceData(data)
         })
         .catch(() => setTokenAPriceData(undefined))
