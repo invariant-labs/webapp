@@ -68,9 +68,40 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
             <img width={16} src={icons.closeIcon} alt='Close'></img>
           </Grid>
           <Typography className={classes.title}>Connect your wallet</Typography>
+          <Grid className={classes.buttonWrapper}>
+            <Typography className={classes.subTitle}>
+              Connect using Nightly's auto-detection
+            </Typography>
+            <Grid className={classes.buttonList}>
+              <Grid
+                item
+                className={classes.button}
+                onClick={() => {
+                  setIsOpenSelectWallet(false)
+                  setTimeout(async () => {
+                    if (isChangeWallet) {
+                      await (async () => onDisconnect())()
+                      await new Promise(resolve => setTimeout(resolve, 100))
+                    }
+                    changeToNightlyAdapter()
+                    await openWalletSelectorModal()
+                    handleConnect()
+                    setWallet(WalletType.NIGHTLY)
+                  }, 300)
+                }}>
+                <Typography className={classes.buttonName}>
+                  {' '}
+                  <img width={35} rel='preload' src={icons.NightlyConnect} alt='Close'></img>
+                  {walletNames[WalletType.NIGHTLY]}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Divider className={classes.divider} />
 
           <Grid className={classes.buttonWrapper}>
-            <Typography className={classes.subTitle}>Connect with popular wallets </Typography>
+            <Typography className={classes.subTitle}>Or connect with popular wallets</Typography>
             <Grid className={classes.buttonList}>
               <Grid
                 item
@@ -106,38 +137,6 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
                   <img width={45} rel='preload' src={icons.SolflareWallet} alt='Close'></img>
 
                   {walletNames[WalletType.SOLFLARE]}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Divider className={classes.divider} />
-
-          <Grid className={classes.buttonWrapper}>
-            <Typography className={classes.subTitle}>
-              Or connect using Nightly's auto-detection
-            </Typography>
-            <Grid className={classes.buttonList}>
-              <Grid
-                item
-                className={classes.button}
-                onClick={() => {
-                  setIsOpenSelectWallet(false)
-                  setTimeout(async () => {
-                    if (isChangeWallet) {
-                      await (async () => onDisconnect())()
-                      await new Promise(resolve => setTimeout(resolve, 100))
-                    }
-                    changeToNightlyAdapter()
-                    await openWalletSelectorModal()
-                    handleConnect()
-                    setWallet(WalletType.NIGHTLY)
-                  }, 300)
-                }}>
-                <Typography className={classes.buttonName}>
-                  {' '}
-                  <img width={35} rel='preload' src={icons.NightlyConnect} alt='Close'></img>
-                  {walletNames[WalletType.NIGHTLY]}
                 </Typography>
               </Grid>
             </Grid>
