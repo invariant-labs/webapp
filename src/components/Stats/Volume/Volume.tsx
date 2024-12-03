@@ -128,7 +128,9 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, classNa
                 <Typography className={classes.tooltipDate}>{`${day < 10 ? '0' : ''}${day}/${
                   month < 10 ? '0' : ''
                 }${month}`}</Typography>
-                <Typography className={classes.tooltipValue}>${data.value.toFixed(2)}</Typography>
+                <Typography className={classes.tooltipValue}>
+                  ${formatNumber(data.value)}
+                </Typography>
               </Grid>
             )
           }}

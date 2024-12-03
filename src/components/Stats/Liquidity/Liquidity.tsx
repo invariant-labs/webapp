@@ -151,7 +151,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
                   month < 10 ? '0' : ''
                 }${month}`}</Typography>
                 <Typography className={classes.tooltipValue}>
-                  ${(point.data.y as number).toFixed(2)}
+                  ${formatNumber(point.data.y as number)}
                 </Typography>
               </Grid>
             )
