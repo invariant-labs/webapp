@@ -14,6 +14,7 @@ import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 import { VariantType } from 'notistack'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
+import { apyToApr } from '@utils/uiUtils'
 
 interface IProps {
   TVL?: number
@@ -117,6 +118,8 @@ const PoolListItem: React.FC<IProps> = ({
       })
   }
 
+  const apr = apyToApr(apy)
+
   return (
     <Grid maxWidth='100%'>
       {displayType === 'token' ? (
@@ -165,8 +168,12 @@ const PoolListItem: React.FC<IProps> = ({
             </Grid>
           </Grid>
           {!isSm ? (
-            <Typography>
-              {`${apy > 1000 ? '>1000%' : apy === 0 ? '-' : apy.toFixed(2) + '%'}`}
+            <Typography className={classes.row}>
+              {`${apr > 1000 ? '>1000%' : apr === 0 ? '-' : apr.toFixed(2) + '%'}`}
+              <span
+                className={
+                  classes.apy
+                }>{`${apy > 1000 ? '>1000%' : apy === 0 ? '-' : apy.toFixed(2) + '%'}`}</span>
               {apy !== 0 && (
                 <Tooltip
                   title={
@@ -260,6 +267,7 @@ const PoolListItem: React.FC<IProps> = ({
           </Typography>
           {!isSm ? (
             <Typography
+              className={classes.row}
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 if (sortType === SortTypePoolList.APY_DESC) {
@@ -268,7 +276,7 @@ const PoolListItem: React.FC<IProps> = ({
                   onSort?.(SortTypePoolList.APY_DESC)
                 }
               }}>
-              7-days APY
+              APR <span className={classes.apy}>APY</span>
               {sortType === SortTypePoolList.APY_ASC ? (
                 <ArrowDropUpIcon className={classes.icon} />
               ) : sortType === SortTypePoolList.APY_DESC ? (
