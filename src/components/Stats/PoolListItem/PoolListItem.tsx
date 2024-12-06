@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { theme } from '@static/theme'
 import { useStyles } from './style'
-import { Box, Grid, Tooltip, Typography, useMediaQuery } from '@mui/material'
+import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useNavigate } from 'react-router-dom'
@@ -61,11 +61,6 @@ const PoolListItem: React.FC<IProps> = ({
   addressTo,
   network,
   apy = 0,
-  apyData = {
-    fees: 0,
-    accumulatedFarmsAvg: 0,
-    accumulatedFarmsSingleTick: 0
-  },
   isUnknownFrom,
   isUnknownTo,
   poolAddress,
