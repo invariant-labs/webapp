@@ -182,6 +182,7 @@ export const useStyles = makeStyles()(() => ({
   },
   apy: {
     fontSize: 12,
-    alignSelf: 'flex-end'
+    alignSelf: 'flex-end',
+    color: colors.invariant.textGrey
   }
 }))
