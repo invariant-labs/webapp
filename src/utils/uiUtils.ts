@@ -37,6 +37,6 @@ export const importantStyles = (styleObject: { [key: string]: string | number })
   )
 
 export const apyToApr = (apy: number) => {
-  const dailyRate = Math.pow(1 + apy, 1 / 365) - 1
-  return dailyRate * 365
+  const dailyRate = Math.pow(1 + apy / 100, 1 / 365) - 1
+  return dailyRate * 365 * 100
 }
