@@ -173,42 +173,7 @@ const PoolListItem: React.FC<IProps> = ({
               <span
                 className={
                   classes.apy
-                }>{`${apy > 1000 ? '>1000%' : apy === 0 ? '-' : apy.toFixed(2) + '%'}`}</span>
-              {apy !== 0 && (
-                <Tooltip
-                  title={
-                    <>
-                      <Typography className={classes.liquidityTitle}>Pool APY</Typography>
-                      <Typography className={classes.liquidityDesc}>
-                        Pool fees: {`${apyData.fees > 1000 ? '>1000' : apyData.fees.toFixed(2)}%`}
-                        {apyData.accumulatedFarmsAvg > 0 ? (
-                          <>
-                            <br />+ All farms rewards with single tick position:{' '}
-                            {`${
-                              apyData.accumulatedFarmsSingleTick > 1000
-                                ? '>1000'
-                                : apyData.accumulatedFarmsSingleTick.toFixed(2)
-                            }%`}
-                            <br />
-                            (All farms rewards with average position:{' '}
-                            {`${
-                              apyData.accumulatedFarmsAvg > 1000
-                                ? '>1000'
-                                : apyData.accumulatedFarmsAvg.toFixed(2)
-                            }%`}
-                            )
-                          </>
-                        ) : null}
-                      </Typography>
-                    </>
-                  }
-                  placement='bottom'
-                  classes={{
-                    tooltip: classes.liquidityTooltip
-                  }}>
-                  <span className={classes.activeLiquidityIcon}>i</span>
-                </Tooltip>
-              )}
+                }>{`${apy > 1000 ? '>1000%' : apy === 0 ? '' : apy.toFixed(2) + '%'}`}</span>
             </Typography>
           ) : null}
           <Typography>{fee}%</Typography>
