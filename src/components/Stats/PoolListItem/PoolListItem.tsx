@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { theme } from '@static/theme'
 import { useStyles } from './style'
-import { Box, Grid, Tooltip, Typography, useMediaQuery } from '@mui/material'
+import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useNavigate } from 'react-router-dom'
@@ -14,6 +14,7 @@ import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 import { VariantType } from 'notistack'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
+import { apyToApr } from '@utils/uiUtils'
 
 interface IProps {
   TVL?: number
@@ -60,11 +61,6 @@ const PoolListItem: React.FC<IProps> = ({
   addressTo,
   network,
   apy = 0,
-  apyData = {
-    fees: 0,
-    accumulatedFarmsAvg: 0,
-    accumulatedFarmsSingleTick: 0
-  },
   isUnknownFrom,
   isUnknownTo,
   poolAddress,
@@ -117,6 +113,8 @@ const PoolListItem: React.FC<IProps> = ({
       })
   }
 
+  const apr = apyToApr(apy)
+
   return (
     <Grid maxWidth='100%'>
       {displayType === 'token' ? (
@@ -165,43 +163,12 @@ const PoolListItem: React.FC<IProps> = ({
             </Grid>
           </Grid>
           {!isSm ? (
-            <Typography>
-              {`${apy > 1000 ? '>1000%' : apy === 0 ? '-' : apy.toFixed(2) + '%'}`}
-              {apy !== 0 && (
-                <Tooltip
-                  title={
-                    <>
-                      <Typography className={classes.liquidityTitle}>Pool APY</Typography>
-                      <Typography className={classes.liquidityDesc}>
-                        Pool fees: {`${apyData.fees > 1000 ? '>1000' : apyData.fees.toFixed(2)}%`}
-                        {apyData.accumulatedFarmsAvg > 0 ? (
-                          <>
-                            <br />+ All farms rewards with single tick position:{' '}
-                            {`${
-                              apyData.accumulatedFarmsSingleTick > 1000
-                                ? '>1000'
-                                : apyData.accumulatedFarmsSingleTick.toFixed(2)
-                            }%`}
-                            <br />
-                            (All farms rewards with average position:{' '}
-                            {`${
-                              apyData.accumulatedFarmsAvg > 1000
-                                ? '>1000'
-                                : apyData.accumulatedFarmsAvg.toFixed(2)
-                            }%`}
-                            )
-                          </>
-                        ) : null}
-                      </Typography>
-                    </>
-                  }
-                  placement='bottom'
-                  classes={{
-                    tooltip: classes.liquidityTooltip
-                  }}>
-                  <span className={classes.activeLiquidityIcon}>i</span>
-                </Tooltip>
-              )}
+            <Typography className={classes.row}>
+              {`${apr > 1000 ? '>1000%' : apr === 0 ? '-' : apr.toFixed(2) + '%'}`}
+              <span
+                className={
+                  classes.apy
+                }>{`${apy > 1000 ? '>1000%' : apy === 0 ? '' : apy.toFixed(2) + '%'}`}</span>
             </Typography>
           ) : null}
           <Typography>{fee}%</Typography>
@@ -260,6 +227,7 @@ const PoolListItem: React.FC<IProps> = ({
           </Typography>
           {!isSm ? (
             <Typography
+              className={classes.row}
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 if (sortType === SortTypePoolList.APY_DESC) {
@@ -268,7 +236,7 @@ const PoolListItem: React.FC<IProps> = ({
                   onSort?.(SortTypePoolList.APY_DESC)
                 }
               }}>
-              7-days APY
+              APR <span className={classes.apy}>APY</span>
               {sortType === SortTypePoolList.APY_ASC ? (
                 <ArrowDropUpIcon className={classes.icon} />
               ) : sortType === SortTypePoolList.APY_DESC ? (
