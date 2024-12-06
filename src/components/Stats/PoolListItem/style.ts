@@ -173,5 +173,16 @@ export const useStyles = makeStyles()(() => ({
         color: colors.invariant.lightHover
       }
     }
+  },
+  row: {
+    display: 'flex',
+    gap: 4,
+    fontSize: 30,
+    height: 32
+  },
+  apy: {
+    fontSize: 12,
+    alignSelf: 'flex-end',
+    color: colors.invariant.textGrey
   }
 }))
