@@ -5,6 +5,7 @@ import RootPage from './RootPage'
 import SinglePositionPage from '@pages/SinglePositionPage/SinglePositionPage'
 import StatsPage from '@pages/StatsPage/StatsPage'
 import SwapPage from '@pages/SwapPage/SwapPage'
+import PortfolioPage from './PortfolioPage/PortfolioPage'
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -14,6 +15,7 @@ export const router = createBrowserRouter(
       <Route path='/statistics' element={<StatsPage />} />
       <Route path='/newPosition/:item1?/:item2?/:item3?' element={<NewPositionPage />} />
       <Route path='/position/:id' element={<SinglePositionPage />} />
+      <Route path='/portfolio' element={<PortfolioPage />} />
       <Route path='*' element={<Navigate to='/exchange' replace />} />
     </Route>
   )

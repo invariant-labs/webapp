@@ -55,6 +55,7 @@ export const Primary: Story = {
   args: {
     data: liquidityPlotData,
     liquidityPercent: 12,
-    liquidityVolume: 123
+    liquidityVolume: 123,
+    isLoading: false
   }
 }

@@ -4,6 +4,10 @@ import { BN } from '@project-serum/anchor'
 import { ISnackbar } from '@store/reducers/snackbars'
 import { PublicKey } from '@solana/web3.js'
 import { BestTier, Chain, PrefixConfig, Token, WalletType } from './types'
+import Dog1 from '@static/svg/SolanaCreator/Dog1.svg'
+import Dog2 from '@static/svg/SolanaCreator/Dog2.svg'
+import Cat1 from '@static/svg/SolanaCreator/Cat1.svg'
+import Cat2 from '@static/svg/SolanaCreator/Cat2.svg'
 
 export enum NetworkType {
   Local = 'Local',
@@ -502,4 +506,36 @@ export const walletNames = {
   [WalletType.BACKPACK]: 'Backpack',
   [WalletType.NIGHTLY]: 'Wallet Selector',
   [WalletType.SOLFLARE]: 'Solflare'
+}
+
+export const defaultImages: string[] = [Dog1, Dog2, Cat1, Cat2]
+
+export const getPopularPools = (network: NetworkType) => {
+  switch (network) {
+    case NetworkType.Mainnet:
+      return [
+        {
+          tokenX: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          tokenY: 'So11111111111111111111111111111111111111112',
+          fee: '0.02'
+        },
+        {
+          tokenX: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          tokenY: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+          fee: '0.01'
+        },
+        {
+          tokenX: '27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4',
+          tokenY: 'So11111111111111111111111111111111111111112',
+          fee: '0.01'
+        },
+        {
+          tokenX: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+          tokenY: 'So11111111111111111111111111111111111111112',
+          fee: '0.01'
+        }
+      ]
+    default:
+      return []
+  }
 }
