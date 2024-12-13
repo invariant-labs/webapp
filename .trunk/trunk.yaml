@@ -28,5 +28,3 @@ actions:
   enabled:
     - trunk-upgrade-available
     - trunk-fmt-pre-commit
-  enabled:
-    - trunk-upgrade-available
