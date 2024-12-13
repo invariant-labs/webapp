@@ -59,6 +59,7 @@ export const Primary: Story = {
   args: {
     volume: volume24h.value,
     percentVolume: volume24h.change,
-    data: volumePlotData
+    data: volumePlotData,
+    isLoading: false
   }
 }
