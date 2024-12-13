@@ -17,10 +17,10 @@ export interface PoolListInterface {
     volume: number
     TVL: number
     fee: number
-    lockedX: number
-    lockedY: number
-    liquidityX: number
-    liquidityY: number
+    // lockedX: number
+    // lockedY: number
+    // liquidityX: number
+    // liquidityY: number
     addressFrom: string
     addressTo: string
     apy: number
