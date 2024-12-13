@@ -1,13 +1,12 @@
 import React, { useMemo, useEffect } from 'react'
 import PoolListItem from '@components/Stats/PoolListItem/PoolListItem'
 import { useStyles } from './style'
-import { Grid } from '@mui/material'
+import { Button, Grid, Typography } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
 import { PaginationList } from '@components/Pagination/Pagination'
 import { VariantType } from 'notistack'
-import NotFoundPlaceholder from '../NotFoundPlaceholder/NotFoundPlaceholder'
-import { Keypair } from '@solana/web3.js'
-import classNames from 'classnames'
+import icons from '@static/icons'
+import { useNavigate } from 'react-router-dom'
 
 export interface PoolListInterface {
   data: Array<{
@@ -38,6 +37,9 @@ export interface PoolListInterface {
   copyAddressHandler: (message: string, variant: VariantType) => void
   isLoading: boolean
 }
+
+import { Keypair } from '@solana/web3.js'
+import classNames from 'classnames'
 
 const ITEMS_PER_PAGE = 10
 
@@ -71,7 +73,7 @@ const generateMockData = () => {
   }))
 }
 
-const PoolList: React.FC<PoolListInterface> = ({
+const LiquidityPoolList: React.FC<PoolListInterface> = ({
   data,
   network,
   copyAddressHandler,
@@ -80,6 +82,7 @@ const PoolList: React.FC<PoolListInterface> = ({
   const { classes } = useStyles()
   const [page, setPage] = React.useState(1)
   const [sortType, setSortType] = React.useState(SortTypePoolList.VOLUME_DESC)
+  const navigate = useNavigate()
 
   const sortedData = useMemo(() => {
     if (isLoading) {
@@ -107,10 +110,12 @@ const PoolList: React.FC<PoolListInterface> = ({
         return data.sort((a, b) => (a.TVL === b.TVL ? a.volume - b.volume : a.TVL - b.TVL))
       case SortTypePoolList.TVL_DESC:
         return data.sort((a, b) => (a.TVL === b.TVL ? b.volume - a.volume : b.TVL - a.TVL))
-      case SortTypePoolList.APY_ASC:
-        return data.sort((a, b) => a.apy - b.apy)
-      case SortTypePoolList.APY_DESC:
-        return data.sort((a, b) => b.apy - a.apy)
+      // case SortType.APY_ASC:
+      //   return data.sort((a, b) => a.apy - b.apy)
+      // case SortType.APY_DESC:
+      //   return data.sort((a, b) => b.apy - a.apy)
+      default:
+        return data
     }
   }, [data, sortType])
 
@@ -171,7 +176,19 @@ const PoolList: React.FC<PoolListInterface> = ({
               />
             ))
           ) : (
-            <NotFoundPlaceholder title='No pools found...' />
+            <Grid className={classes.noPoolFoundContainer}>
+              <img className={classes.img} src={icons.empty} alt='Not connected' />
+              <Typography className={classes.noPoolFoundPlaceholder}>No pool found...</Typography>
+              <Typography className={classes.noPoolFoundPlaceholder}>
+                Add pool by pressing the button!
+              </Typography>
+              <Button
+                className={classes.addPoolButton}
+                onClick={() => navigate('/newPosition')}
+                variant='contained'>
+                Add pool
+              </Button>
+            </Grid>
           )}
           {pages > 1 ? (
             <Grid className={classes.pagination}>
@@ -188,4 +205,4 @@ const PoolList: React.FC<PoolListInterface> = ({
     </div>
   )
 }
-export default PoolList
+export default LiquidityPoolList
