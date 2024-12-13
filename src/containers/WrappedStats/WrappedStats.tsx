@@ -1,6 +1,5 @@
 import React, { useDeferredValue, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import loader from '@static/gif/loader.gif'
 import useStyles from './styles'
 import { Grid, InputAdornment, InputBase, Typography } from '@mui/material'
 import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
@@ -137,11 +136,11 @@ export const WrappedStats: React.FC = () => {
     )
   }
 
+  console.log(liquidityPlotData.length, isLoadingStats)
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
-      {isLoadingStats ? (
-        <img src={loader} className={classes.loading} alt='Loading' />
-      ) : liquidityPlotData.length === 0 ? (
+      {liquidityPlotData.length === 0 && !isLoadingStats ? (
         <Grid container direction='column' alignItems='center' justifyContent='center'>
           <EmptyPlaceholder desc={'We have not started collecting statistics yet'} />
         </Grid>
@@ -154,12 +153,14 @@ export const WrappedStats: React.FC = () => {
               percentVolume={volume24h.change}
               data={volumePlotData}
               className={classes.plot}
+              isLoading={isLoadingStats}
             />
             <Liquidity
               liquidityVolume={tvl24h.value}
               liquidityPercent={tvl24h.change}
               data={liquidityPlotData}
               className={classes.plot}
+              isLoading={isLoadingStats}
             />
           </Grid>
           <Grid className={classes.row}>
@@ -170,6 +171,7 @@ export const WrappedStats: React.FC = () => {
               percentTvl={tvl24h.change}
               feesVolume={fees24h.value}
               percentFees={fees24h.change}
+              isLoading={isLoadingStats}
             />
           </Grid>
           <Grid
@@ -209,6 +211,7 @@ export const WrappedStats: React.FC = () => {
               }))}
               network={currentNetwork}
               copyAddressHandler={copyAddressHandler}
+              isLoading={isLoadingStats}
             />
           </Grid>
           <Grid
@@ -266,6 +269,7 @@ export const WrappedStats: React.FC = () => {
             }))}
             network={currentNetwork}
             copyAddressHandler={copyAddressHandler}
+            isLoading={isLoadingStats}
           />
         </>
       )}

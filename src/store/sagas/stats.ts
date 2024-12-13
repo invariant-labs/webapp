@@ -1,5 +1,5 @@
 import { actions } from '@store/reducers/stats'
-import { call, put, select, takeEvery } from 'typed-redux-saga'
+import { call, put, select, takeLeading } from 'typed-redux-saga'
 import { network } from '@store/selectors/solanaConnection'
 import { getFullSnap } from '@utils/utils'
 import { PublicKey } from '@solana/web3.js'
@@ -33,5 +33,5 @@ export function* getStats(): Generator {
 }
 
 export function* statsHandler(): Generator {
-  yield* takeEvery(actions.getCurrentStats, getStats)
+  yield* takeLeading(actions.getCurrentStats, getStats)
 }
