@@ -36,6 +36,7 @@ export const Primary: Story = {
     tvlVolume: tvl24h.value,
     percentTvl: tvl24h.change,
     feesVolume: fees24h.value,
-    percentFees: fees24h.change
+    percentFees: fees24h.change,
+    isLoading: false
   }
 }

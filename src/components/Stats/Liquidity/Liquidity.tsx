@@ -13,13 +13,27 @@ interface LiquidityInterface {
   liquidityVolume: number | null
   data: TimeData[]
   className?: string
+  isLoading: boolean
+}
+
+const GRAPH_ENTRIES = 30
+
+const generateMockData = () => {
+  return Array.from({ length: GRAPH_ENTRIES }, (_, index) => ({
+    timestamp:
+      Math.floor(Date.now() / (1000 * 60 * 60 * 24)) * (1000 * 60 * 60 * 24) +
+      1000 * 60 * 60 * 12 -
+      (GRAPH_ENTRIES - index) * (1000 * 60 * 60 * 24),
+    value: Math.random() * 10000
+  }))
 }
 
 const Liquidity: React.FC<LiquidityInterface> = ({
   liquidityPercent,
   liquidityVolume,
   data,
-  className
+  className,
+  isLoading
 }) => {
   const { classes } = useStyles()
 
@@ -27,14 +41,16 @@ const Liquidity: React.FC<LiquidityInterface> = ({
   liquidityVolume = liquidityVolume ?? 0
 
   const isLower = liquidityPercent < 0
+  const percentage = isLoading ? Math.random() * 200 - 100 : liquidityPercent
 
   return (
-    <Grid className={classNames(classes.container, className)}>
+    <Grid
+      className={classNames(classes.container, className, { [classes.loadingOverlay]: isLoading })}>
       <Grid className={classes.liquidityContainer}>
         <Typography className={classes.liquidityHeader}>Liquidity</Typography>
         <Grid className={classes.volumePercentHeader}>
           <Typography className={classes.volumeLiquidityHeader}>
-            ${formatNumber(liquidityVolume)}
+            ${formatNumber(isLoading ? Math.random() * 10000 : liquidityVolume)}
           </Typography>
           <Grid className={classes.volumeStatusContainer}>
             <Grid
@@ -48,10 +64,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
                   classes.volumeStatusHeader,
                   isLower ? classes.volumeLow : classes.volumeUp
                 )}>
-                {liquidityPercent < 0
-                  ? liquidityPercent.toFixed(2)
-                  : `+${liquidityPercent.toFixed(2)}`}
-                %
+                {percentage < 0 ? percentage.toFixed(2) : `+${percentage.toFixed(2)}`}%
               </Typography>
             </Grid>
           </Grid>
@@ -62,7 +75,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
           data={[
             {
               id: 'liquidity',
-              data: data.map(({ timestamp, value }) => ({
+              data: (isLoading ? generateMockData() : data).map(({ timestamp, value }) => ({
                 x: new Date(timestamp).toLocaleDateString('en-GB'),
                 y: value
               }))

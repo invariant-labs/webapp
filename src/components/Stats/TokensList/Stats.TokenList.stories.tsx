@@ -108,6 +108,7 @@ export const Primary: Story = {
       address: tokenData.tokenDetails.address.toString()
     })),
     copyAddressHandler: fn(),
-    network: NetworkType.Mainnet
+    network: NetworkType.Mainnet,
+    isLoading: false
   }
 }
