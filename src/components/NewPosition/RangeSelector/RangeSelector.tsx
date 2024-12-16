@@ -462,6 +462,10 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               <Typography className={classes.currentPrice}>Current price</Typography>
               <Typography className={classes.globalPrice}>Global price</Typography>
               <Typography className={classes.buySellPrice}>Buy/sell price</Typography>
+              <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>
+              <Typography className={classes.lastGlobalSellPrice}>
+                Last global sell price
+              </Typography>
             </Grid>
           </Grid>
         </Grid>

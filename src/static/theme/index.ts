@@ -87,7 +87,9 @@ export const colors = {
     yellow: '#EFD063',
     blue: '#43BBFF',
     transparentBcg: 'rgba(1, 5, 20, 0.25)',
-    bodyBackground: '#141b2d'
+    bodyBackground: '#141b2d',
+    plotGreen: '#9DD46D',
+    plotRed: '#FB555F'
   }
 }
 
