@@ -392,24 +392,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     )
   }
 
-  console.log(tokenAPriceData, tokenBPriceData)
-
-  if (
-    tokenAPriceData &&
-    tokenAPriceData.lastBuyPrice &&
-    tokenAPriceData.lastSellPrice &&
-    tokenBPriceData
-  ) {
-    console.log(
-      tokenAPriceData.lastSellPrice,
-      tokenBPriceData.price,
-      tokenAPriceData.lastSellPrice / tokenBPriceData.price,
-      tokenAPriceData.lastBuyPrice / tokenBPriceData.price,
-      tokenAPriceData.buyPrice / tokenBPriceData.price,
-      tokenAPriceData.sellPrice / tokenBPriceData.price
-    )
-  }
-
   const lastSellPriceLayer: Layer = ({ innerWidth, innerHeight }) => {
     if (
       typeof tokenAPriceData === 'undefined' ||
