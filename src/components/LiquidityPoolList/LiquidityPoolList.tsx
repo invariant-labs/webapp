@@ -110,10 +110,10 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
         return data.sort((a, b) => (a.TVL === b.TVL ? a.volume - b.volume : a.TVL - b.TVL))
       case SortTypePoolList.TVL_DESC:
         return data.sort((a, b) => (a.TVL === b.TVL ? b.volume - a.volume : b.TVL - a.TVL))
-      // case SortType.APY_ASC:
-      //   return data.sort((a, b) => a.apy - b.apy)
-      // case SortType.APY_DESC:
-      //   return data.sort((a, b) => b.apy - a.apy)
+      case SortTypePoolList.APY_ASC:
+        return data.sort((a, b) => a.apy - b.apy)
+      case SortTypePoolList.APY_DESC:
+        return data.sort((a, b) => b.apy - a.apy)
       default:
         return data
     }
