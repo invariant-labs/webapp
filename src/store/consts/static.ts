@@ -510,7 +510,13 @@ export const walletNames = {
 
 export const defaultImages: string[] = [Dog1, Dog2, Cat1, Cat2]
 
-export const getPopularPools = (network: NetworkType) => {
+type Pool = {
+  tokenX: string
+  tokenY: string
+  fee: string
+}
+
+export const getPopularPools = (network: NetworkType): Pool[] => {
   switch (network) {
     case NetworkType.Mainnet:
       return [
