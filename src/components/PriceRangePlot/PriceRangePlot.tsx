@@ -337,7 +337,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           </filter>
         </defs>
         <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
-        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.white.main} />
+        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.plotGreen} />
       </svg>
     )
   }
@@ -351,60 +351,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     return (
       <svg
         x={(tokenAPriceData.sellPrice / tokenBPriceData.price - plotMin) * unitLen - 20}
-        y={0}
-        width={60}
-        height={innerHeight}>
-        <defs>
-          <filter id='shadow' x='-10' y='-9' width='20' height={innerHeight}>
-            <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
-          </filter>
-        </defs>
-        <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
-        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.white.main} />
-      </svg>
-    )
-  }
-
-  const lastBuyPriceLayer: Layer = ({ innerWidth, innerHeight }) => {
-    if (
-      typeof tokenAPriceData === 'undefined' ||
-      typeof tokenBPriceData === 'undefined' ||
-      !tokenAPriceData.lastBuyPrice
-    ) {
-      return null
-    }
-
-    const unitLen = innerWidth / (plotMax - plotMin)
-    return (
-      <svg
-        x={(tokenAPriceData.lastBuyPrice / tokenBPriceData.price - plotMin) * unitLen - 20}
-        y={0}
-        width={60}
-        height={innerHeight}>
-        <defs>
-          <filter id='shadow' x='-10' y='-9' width='20' height={innerHeight}>
-            <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
-          </filter>
-        </defs>
-        <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
-        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.plotGreen} />
-      </svg>
-    )
-  }
-
-  const lastSellPriceLayer: Layer = ({ innerWidth, innerHeight }) => {
-    if (
-      typeof tokenAPriceData === 'undefined' ||
-      typeof tokenBPriceData === 'undefined' ||
-      !tokenAPriceData.lastSellPrice
-    ) {
-      return null
-    }
-
-    const unitLen = innerWidth / (plotMax - plotMin)
-    return (
-      <svg
-        x={(tokenAPriceData.lastSellPrice / tokenBPriceData.price - plotMin) * unitLen - 20}
         y={0}
         width={60}
         height={innerHeight}>
@@ -631,8 +577,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           globalPriceLayer,
           buyPriceLayer,
           sellPriceLayer,
-          lastBuyPriceLayer,
-          lastSellPriceLayer,
           currentLayer,
           volumeRangeLayer,
           brushLayer,
