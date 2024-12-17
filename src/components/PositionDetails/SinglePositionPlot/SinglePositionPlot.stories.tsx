@@ -49,7 +49,17 @@ export const Primary: Story = {
       decimal: 12
     },
     xToY: true,
-    hasTicksError: false
+    hasTicksError: false,
+    tokenAPriceData: {
+      price: 100000,
+      buyPrice: 105000,
+      sellPrice: 95000
+    },
+    tokenBPriceData: {
+      price: 4000,
+      buyPrice: 4100,
+      sellPrice: 3900
+    }
   },
   render: args => {
     return (
