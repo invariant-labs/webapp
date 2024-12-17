@@ -311,6 +311,8 @@ const PositionDetails: React.FC<IProps> = ({
                   }
             }
             globalPrice={globalPrice}
+            tokenAPriceData={xToY ? tokenXPriceData : tokenYPriceData}
+            tokenBPriceData={xToY ? tokenYPriceData : tokenXPriceData}
           />
         </Grid>
       </Grid>
