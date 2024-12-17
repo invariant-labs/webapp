@@ -5,14 +5,29 @@ import { makeStyles } from 'tss-react/mui'
 export const useStyles = makeStyles()((theme: Theme) => ({
   container: {
     display: 'grid',
-    gridTemplateColumns: '5% 35% 17.5% auto 12.5% 60px',
+    gridTemplateColumns: '30px auto 140px 140px 100px 60px',
     padding: '18px 0 ',
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`,
     whiteSpace: 'nowrap',
 
+    '& p': {
+      ...typography.heading4,
+      display: 'flex',
+      justifyContent: 'flex-start',
+      alignItems: 'center'
+    },
+    '& p:last-child': {
+      justifyContent: 'flex-end'
+    },
+
+    [theme.breakpoints.down('md')]: {
+      gridTemplateColumns: 'auto 140px 80px 120px'
+    },
+
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '30% 22.5% 32.5% 15%',
+      gridTemplateColumns: 'auto 100px 80px 60px',
+
       '& p': {
         ...typography.caption1
       }

@@ -69,7 +69,7 @@ const PoolListItem: React.FC<IProps> = ({
   const { classes } = useStyles()
 
   const navigate = useNavigate()
-  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
+  const isSmd = useMediaQuery('(max-width:780px)')
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
 
   const handleOpenPosition = () => {
@@ -124,32 +124,30 @@ const PoolListItem: React.FC<IProps> = ({
           style={hideBottomLine ? { border: 'none' } : undefined}>
           {!isMd ? <Typography>{tokenIndex}</Typography> : null}
           <Grid className={classes.imageContainer}>
-            {!isSm && (
-              <Box className={classes.iconsWrapper}>
-                <Box className={classes.iconContainer}>
-                  <img
-                    className={classes.tokenIcon}
-                    src={iconFrom}
-                    alt='Token from'
-                    onError={e => {
-                      e.currentTarget.src = icons.unknownToken
-                    }}
-                  />
-                  {isUnknownFrom && <img className={classes.warningIcon} src={icons.warningIcon} />}
-                </Box>
-                <Box className={classes.iconContainer}>
-                  <img
-                    className={classes.tokenIcon}
-                    src={iconTo}
-                    alt='Token to'
-                    onError={e => {
-                      e.currentTarget.src = icons.unknownToken
-                    }}
-                  />
-                  {isUnknownTo && <img className={classes.warningIcon} src={icons.warningIcon} />}
-                </Box>
+            <Box className={classes.iconsWrapper}>
+              <Box className={classes.iconContainer}>
+                <img
+                  className={classes.tokenIcon}
+                  src={iconFrom}
+                  alt='Token from'
+                  onError={e => {
+                    e.currentTarget.src = icons.unknownToken
+                  }}
+                />
+                {isUnknownFrom && <img className={classes.warningIcon} src={icons.warningIcon} />}
               </Box>
-            )}
+              <Box className={classes.iconContainer}>
+                <img
+                  className={classes.tokenIcon}
+                  src={iconTo}
+                  alt='Token to'
+                  onError={e => {
+                    e.currentTarget.src = icons.unknownToken
+                  }}
+                />
+                {isUnknownTo && <img className={classes.warningIcon} src={icons.warningIcon} />}
+              </Box>
+            </Box>
             <Grid className={classes.symbolsContainer}>
               <Typography>
                 {shortenAddress(symbolFrom ?? '')}/{shortenAddress(symbolTo ?? '')}
@@ -162,7 +160,7 @@ const PoolListItem: React.FC<IProps> = ({
               </TooltipHover>
             </Grid>
           </Grid>
-          {!isSm ? (
+          {!isSmd ? (
             <Typography className={classes.row}>
               {`${apr > 1000 ? '>1000%' : apr === 0 ? '-' : apr.toFixed(2) + '%'}`}
               <span
@@ -174,7 +172,7 @@ const PoolListItem: React.FC<IProps> = ({
           <Typography>{fee}%</Typography>
           <Typography>{`$${formatNumber(volume)}`}</Typography>
           <Typography>{`$${formatNumber(TVL)}`}</Typography>
-          {!isSm && (
+          {!isMd && (
             <Box className={classes.action}>
               <TooltipHover text='Exchange'>
                 <button className={classes.actionButton} onClick={handleOpenSwap}>
@@ -225,7 +223,7 @@ const PoolListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
-          {!isSm ? (
+          {!isSmd ? (
             <Typography
               className={classes.row}
               style={{ cursor: 'pointer' }}
@@ -292,7 +290,7 @@ const PoolListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
-          {!isSm && <Typography align='right'>Action</Typography>}
+          {!isMd && <Typography align='right'>Action</Typography>}
         </Grid>
       )}
     </Grid>
