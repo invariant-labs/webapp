@@ -510,30 +510,36 @@ export const walletNames = {
 
 export const defaultImages: string[] = [Dog1, Dog2, Cat1, Cat2]
 
-export const getPopularPools = (network: NetworkType) => {
+type Pool = {
+  tokenX: string
+  tokenY: string
+  fee: string
+}
+
+export const getPopularPools = (network: NetworkType): Pool[] => {
   switch (network) {
     case NetworkType.Mainnet:
       return [
-        {
-          tokenX: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          tokenY: 'So11111111111111111111111111111111111111112',
-          fee: '0.02'
-        },
-        {
-          tokenX: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          tokenY: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
-          fee: '0.01'
-        },
-        {
-          tokenX: '27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4',
-          tokenY: 'So11111111111111111111111111111111111111112',
-          fee: '0.01'
-        },
-        {
-          tokenX: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-          tokenY: 'So11111111111111111111111111111111111111112',
-          fee: '0.01'
-        }
+        // {
+        //   tokenX: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+        //   tokenY: 'So11111111111111111111111111111111111111112',
+        //   fee: '0.02'
+        // },
+        // {
+        //   tokenX: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+        //   tokenY: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+        //   fee: '0.01'
+        // },
+        // {
+        //   tokenX: '27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4',
+        //   tokenY: 'So11111111111111111111111111111111111111112',
+        //   fee: '0.01'
+        // },
+        // {
+        //   tokenX: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+        //   tokenY: 'So11111111111111111111111111111111111111112',
+        //   fee: '0.01'
+        // }
       ]
     default:
       return []
