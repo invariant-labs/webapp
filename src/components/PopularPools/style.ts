@@ -25,7 +25,8 @@ export const useStyles = makeStyles()(() => ({
     '& .slick-slide': {
       display: 'flex',
       justifyContent: 'center'
-    }
+    },
+    height: 344
   },
   dots: {
     position: 'absolute',

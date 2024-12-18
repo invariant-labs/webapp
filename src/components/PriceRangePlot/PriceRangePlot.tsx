@@ -79,7 +79,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const maxVal = useMemo(() => Math.max(...data.map(element => element.y)), [data])
+  const maxVal = useMemo(() => Math.max(...data.map(element => element?.y)), [data])
 
   const pointsOmitter = useCallback(
     (data: Array<{ x: number; y: number }>) => {
@@ -99,7 +99,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           (dataAfterOmit.length > 0 &&
             ((tick.x - dataAfterOmit[dataAfterOmit.length - 1].x) / (plotMax - plotMin) >=
               minXDist ||
-              Math.abs(tick.y - dataAfterOmit[dataAfterOmit.length - 1].y) / maxVal >= minYChange))
+              Math.abs(tick?.y - dataAfterOmit[dataAfterOmit.length - 1]?.y) / maxVal >=
+                minYChange))
         ) {
           dataAfterOmit.push(tick)
         }
@@ -127,7 +128,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     if (rangeData[rangeData.length - 1].x < leftRange.x) {
       rangeData.push({
         x: leftRange.x,
-        y: rangeData[rangeData.length - 1].y
+        y: rangeData[rangeData.length - 1]?.y
       })
     }
 
@@ -136,7 +137,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     if (rangeData[0].x > Math.max(plotMin, data[0].x)) {
       rangeData.unshift({
         x: Math.max(plotMin, data[0].x),
-        y: outData.length > 0 ? outData[outData.length - 1].y : 0
+        y: outData.length > 0 ? outData[outData.length - 1]?.y : 0
       })
     }
 
@@ -159,14 +160,14 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       if (!rangeData.length || rangeData[0].x > Math.max(plotMin, data[0].x)) {
         rangeData.unshift({
           x: Math.max(plotMin, data[0].x),
-          y: outMinData.length > 0 ? outMinData[outMinData.length - 1].y : 0
+          y: outMinData.length > 0 ? outMinData[outMinData.length - 1]?.y : 0
         })
       }
 
       if (rangeData[rangeData.length - 1].x < Math.min(plotMax, data[data.length - 1].x)) {
         rangeData.push({
           x: Math.min(plotMax, data[data.length - 1].x),
-          y: rangeData[rangeData.length - 1].y
+          y: rangeData[rangeData.length - 1]?.y
         })
       }
 
@@ -185,25 +186,25 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     if (!rangeData.length) {
       rangeData.push({
         x: Math.max(leftRange.x, plotMin),
-        y: data[lessThan - 1].y
+        y: data[lessThan - 1]?.y
       })
 
       rangeData.push({
         x: Math.min(rightRange.x, plotMax),
-        y: data[lessThan - 1].y
+        y: data[lessThan - 1]?.y
       })
     } else {
       if (rangeData[0].x > leftRange.x) {
         rangeData.unshift({
           x: leftRange.x,
-          y: rangeData[0].y
+          y: rangeData[0]?.y
         })
       }
 
       if (rangeData[rangeData.length - 1].x < rightRange.x) {
         rangeData.push({
           x: rightRange.x,
-          y: rangeData[rangeData.length - 1].y
+          y: rangeData[rangeData.length - 1]?.y
         })
       }
 
@@ -221,7 +222,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       if (!newRangeData.length || newRangeData[0].x > Math.max(plotMin, rangeData[0].x)) {
         newRangeData.unshift({
           x: Math.max(plotMin, rangeData[0].x),
-          y: outMinData.length > 0 ? outMinData[outMinData.length - 1].y : 0
+          y: outMinData.length > 0 ? outMinData[outMinData.length - 1]?.y : 0
         })
       }
 
@@ -231,7 +232,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       ) {
         newRangeData.push({
           x: Math.min(plotMax, rangeData[rangeData.length - 1].x),
-          y: newRangeData[newRangeData.length - 1].y
+          y: newRangeData[newRangeData.length - 1]?.y
         })
       }
 
@@ -258,7 +259,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     if (rangeData[0].x > rightRange.x) {
       rangeData.unshift({
         x: rightRange.x,
-        y: rangeData[0].y
+        y: rangeData[0]?.y
       })
     }
 
@@ -267,7 +268,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     if (rangeData[rangeData.length - 1].x < Math.min(plotMax, data[data.length - 1].x)) {
       rangeData.push({
         x: Math.min(plotMax, data[data.length - 1].x),
-        y: rangeData[rangeData.length - 1].y
+        y: rangeData[rangeData.length - 1]?.y
       })
     }
 
@@ -469,7 +470,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     disabled
   )
 
-  const isNoPositions = data.every(tick => !(tick.y > 0))
+  const isNoPositions = data.every(tick => !(tick?.y > 0))
 
   return (
     <Grid
