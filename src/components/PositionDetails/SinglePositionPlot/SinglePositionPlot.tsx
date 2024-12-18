@@ -7,7 +7,8 @@ import {
   calcPriceByTickIndex,
   calcTicksAmountInRange,
   numberToString,
-  spacingMultiplicityGte
+  spacingMultiplicityGte,
+  TokenPriceData
 } from '@utils/utils'
 import { PlotTickData } from '@store/reducers/positions'
 import React, { useEffect, useState } from 'react'
@@ -35,6 +36,8 @@ export interface ISinglePositionPlot {
     min: number
     max: number
   }
+  tokenAPriceData: TokenPriceData | undefined
+  tokenBPriceData: TokenPriceData | undefined
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -53,7 +56,9 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   xToY,
   hasTicksError,
   reloadHandler,
-  volumeRange
+  volumeRange,
+  tokenAPriceData,
+  tokenBPriceData
 }) => {
   const { classes } = useStyles()
 
@@ -185,8 +190,10 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
             </Typography>
           </Tooltip>
           <Grid container flexDirection='column'>
-            <Typography className={classes.currentPrice}>Current price ━━━</Typography>
-            <Typography className={classes.globalPrice}>Global price ━━━</Typography>
+            <Typography className={classes.currentPrice}>Current price</Typography>
+            <Typography className={classes.globalPrice}>Global price</Typography>
+            <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>
+            <Typography className={classes.lastGlobalSellPrice}>Last global sell price</Typography>
           </Grid>
         </Grid>
       </Grid>
@@ -212,6 +219,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           reloadHandler={reloadHandler}
           volumeRange={volumeRange}
           globalPrice={globalPrice}
+          tokenAPriceData={tokenAPriceData}
+          tokenBPriceData={tokenBPriceData}
         />
       </Grid>
       <Grid className={classes.minMaxInfo}>

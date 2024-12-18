@@ -131,61 +131,63 @@ const PoolList: React.FC<PoolListInterface> = ({
   const pages = Math.ceil(data.length / 10)
 
   return (
-    <div className={classNames({ [classes.loadingOverlay]: isLoading })}>
-      <Grid container direction='column' classes={{ root: classes.container }}>
-        <>
-          <PoolListItem
-            displayType='header'
-            onSort={setSortType}
-            sortType={sortType}
-            network={network}
-          />
-          {data.length > 0 || isLoading ? (
-            paginator(page).map((element, index) => (
-              <PoolListItem
-                displayType='token'
-                tokenIndex={index + 1 + (page - 1) * 10}
-                symbolFrom={element.symbolFrom}
-                symbolTo={element.symbolTo}
-                iconFrom={element.iconFrom}
-                iconTo={element.iconTo}
-                volume={element.volume}
-                TVL={element.TVL}
-                // lockedX={element.lockedX}
-                // lockedY={element.lockedY}
-                // liquidityX={element.liquidityX}
-                // liquidityY={element.liquidityY}
-                // isLocked={element.lockedX > 0 || element.lockedY > 0}
-                fee={element.fee}
-                apy={element.apy}
-                hideBottomLine={pages === 1 && index + 1 === data.length}
-                apyData={element.apyData}
-                key={index}
-                addressFrom={element.addressFrom}
-                addressTo={element.addressTo}
-                network={network}
-                isUnknownFrom={element.isUnknownFrom}
-                isUnknownTo={element.isUnknownTo}
-                poolAddress={element.poolAddress}
-                copyAddressHandler={copyAddressHandler}
-              />
-            ))
-          ) : (
-            <NotFoundPlaceholder title='No pools found...' />
-          )}
-          {pages > 1 ? (
-            <Grid className={classes.pagination}>
-              <PaginationList
-                pages={pages}
-                defaultPage={1}
-                handleChangePage={handleChangePagination}
-                variant='flex-end'
-              />
-            </Grid>
-          ) : null}
-        </>
-      </Grid>
-    </div>
+    <Grid
+      container
+      direction='column'
+      classes={{ root: classes.container }}
+      className={classNames({ [classes.loadingOverlay]: isLoading })}>
+      <>
+        <PoolListItem
+          displayType='header'
+          onSort={setSortType}
+          sortType={sortType}
+          network={network}
+        />
+        {data.length > 0 || isLoading ? (
+          paginator(page).map((element, index) => (
+            <PoolListItem
+              displayType='token'
+              tokenIndex={index + 1 + (page - 1) * 10}
+              symbolFrom={element.symbolFrom}
+              symbolTo={element.symbolTo}
+              iconFrom={element.iconFrom}
+              iconTo={element.iconTo}
+              volume={element.volume}
+              TVL={element.TVL}
+              // lockedX={element.lockedX}
+              // lockedY={element.lockedY}
+              // liquidityX={element.liquidityX}
+              // liquidityY={element.liquidityY}
+              // isLocked={element.lockedX > 0 || element.lockedY > 0}
+              fee={element.fee}
+              apy={element.apy}
+              hideBottomLine={pages === 1 && index + 1 === data.length}
+              apyData={element.apyData}
+              key={index}
+              addressFrom={element.addressFrom}
+              addressTo={element.addressTo}
+              network={network}
+              isUnknownFrom={element.isUnknownFrom}
+              isUnknownTo={element.isUnknownTo}
+              poolAddress={element.poolAddress}
+              copyAddressHandler={copyAddressHandler}
+            />
+          ))
+        ) : (
+          <NotFoundPlaceholder title='No pools found...' />
+        )}
+        {pages > 1 ? (
+          <Grid className={classes.pagination}>
+            <PaginationList
+              pages={pages}
+              defaultPage={1}
+              handleChangePage={handleChangePagination}
+              variant='flex-end'
+            />
+          </Grid>
+        ) : null}
+      </>
+    </Grid>
   )
 }
 export default PoolList

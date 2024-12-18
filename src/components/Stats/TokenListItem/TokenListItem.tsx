@@ -52,7 +52,7 @@ const TokenListItem: React.FC<IProps> = ({
   // const isNegative = priceChange < 0
 
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
-  const hideName = useMediaQuery(theme.breakpoints.down('xs'))
+  const isMd = useMediaQuery(theme.breakpoints.down('md'))
 
   const networkUrl = useMemo(() => {
     switch (network) {
@@ -81,6 +81,8 @@ const TokenListItem: React.FC<IProps> = ({
       })
   }
 
+  console.log(isSm)
+
   return (
     <Grid>
       {displayType === 'tokens' ? (
@@ -88,24 +90,26 @@ const TokenListItem: React.FC<IProps> = ({
           container
           classes={{ container: classes.container, root: classes.tokenList }}
           style={hideBottomLine ? { border: 'none' } : undefined}>
-          {!hideName && !isSm && <Typography component='p'>{itemNumber}</Typography>}
+          {!isMd && <Typography component='p'>{itemNumber}</Typography>}
           <Grid className={classes.tokenName}>
-            {!isSm && (
-              <Box className={classes.imageContainer}>
-                <img
-                  className={classes.tokenIcon}
-                  src={icon}
-                  alt='Token icon'
-                  onError={e => {
-                    e.currentTarget.src = icons.unknownToken
-                  }}></img>
-                {isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
-              </Box>
-            )}
+            <Box className={classes.imageContainer}>
+              <img
+                className={classes.tokenIcon}
+                src={icon}
+                alt='Token icon'
+                onError={e => {
+                  e.currentTarget.src = icons.unknownToken
+                }}></img>
+              {isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
+            </Box>
             <Typography>
-              {hideName ? shortenAddress(symbol) : name}
-              {!hideName && (
-                <span className={classes.tokenSymbol}>{` (${shortenAddress(symbol)})`}</span>
+              {!isMd ? (
+                <>
+                  <span className={classes.tokenName}>{name}</span>
+                  <span className={classes.tokenSymbol}>({shortenAddress(symbol)})</span>
+                </>
+              ) : (
+                shortenAddress(symbol)
               )}
             </Typography>
             <TooltipHover text='Copy token address'>
@@ -124,7 +128,7 @@ const TokenListItem: React.FC<IProps> = ({
           )} */}
           <Typography>{`$${formatNumber(volume)}`}</Typography>
           <Typography>{`$${formatNumber(TVL)}`}</Typography>
-          {!isSm && (
+          {!isMd && (
             <Box className={classes.action}>
               <TooltipHover text='Open in explorer'>
                 <button
@@ -147,7 +151,7 @@ const TokenListItem: React.FC<IProps> = ({
           container
           style={{ color: colors.invariant.textGrey, fontWeight: 400 }}
           classes={{ container: classes.container, root: classes.header }}>
-          {!hideName && !isSm && (
+          {!isMd && (
             <Typography style={{ lineHeight: '12px' }}>
               N<sup>o</sup>
             </Typography>
@@ -234,7 +238,7 @@ const TokenListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
-          {!isSm && <Typography align='right'>Action</Typography>}
+          {!isMd && <Typography align='right'>Action</Typography>}
         </Grid>
       )}
     </Grid>
