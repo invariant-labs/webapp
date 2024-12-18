@@ -20,7 +20,7 @@ export const useStyles = makeStyles()(() => ({
     ...typography.caption4,
     color: colors.invariant.green,
     textShadow: '0px 0px 5px rgba(46, 224, 154, 1)',
-    fontWeight: 700,
+    fontWeight: 500,
     fontSize: 20
   }
 }))
