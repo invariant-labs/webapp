@@ -91,6 +91,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-end',
     cursor: 'default'
   },
   activeLiquidityIcon: {
@@ -148,6 +149,20 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   globalPrice: {
     display: 'inline-block',
     color: colors.invariant.blue,
+    ...typography.caption2,
+    textAlign: 'right',
+    marginLeft: 4
+  },
+  lastGlobalBuyPrice: {
+    display: 'inline-block',
+    color: colors.invariant.plotGreen,
+    ...typography.caption2,
+    textAlign: 'right',
+    marginLeft: 4
+  },
+  lastGlobalSellPrice: {
+    display: 'inline-block',
+    color: colors.invariant.plotRed,
     ...typography.caption2,
     textAlign: 'right',
     marginLeft: 4

@@ -327,7 +327,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     const unitLen = innerWidth / (plotMax - plotMin)
     return (
       <svg
-        x={(tokenAPriceData.buyPrice / tokenBPriceData.price - plotMin) * unitLen}
+        x={(tokenAPriceData.buyPrice / tokenBPriceData.price - plotMin) * unitLen - 20}
         y={0}
         width={60}
         height={innerHeight}>
@@ -337,7 +337,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           </filter>
         </defs>
         <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
-        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.white.main} />
+        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.plotGreen} />
       </svg>
     )
   }
@@ -350,7 +350,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     const unitLen = innerWidth / (plotMax - plotMin)
     return (
       <svg
-        x={(tokenAPriceData.sellPrice / tokenBPriceData.price - plotMin) * unitLen}
+        x={(tokenAPriceData.sellPrice / tokenBPriceData.price - plotMin) * unitLen - 20}
         y={0}
         width={60}
         height={innerHeight}>
@@ -360,7 +360,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           </filter>
         </defs>
         <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
-        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.white.main} />
+        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.plotRed} />
       </svg>
     )
   }

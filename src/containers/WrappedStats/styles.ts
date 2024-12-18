@@ -9,7 +9,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   subheader: {
     ...typography.heading4,
-    color: colors.white.main
+    color: colors.white.main,
+    marginBottom: 24
   },
   plotsRow: {
     marginBottom: 24,
@@ -44,7 +45,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     }
   },
   searchBar: {
-    width: 221,
+    width: '100%',
+    maxWidth: 221,
     height: 32,
     padding: '7px 12px',
     borderRadius: 10,

@@ -949,6 +949,10 @@ interface RawJupApiResponse {
       id: string
       price: string
       extraInfo?: {
+        lastSwappedPrice: {
+          lastJupiterSellPrice: string
+          lastJupiterBuyPrice: string
+        }
         quotedPrice: {
           buyPrice: string
           sellPrice: string
@@ -974,6 +978,8 @@ export interface TokenPriceData {
   price: number
   buyPrice: number
   sellPrice: number
+  lastBuyPrice?: number
+  lastSellPrice?: number
 }
 
 export const getCoingeckoPricesData = async (
@@ -1032,7 +1038,9 @@ export const getJupPricesData = async (ids: string[]): Promise<Record<string, To
     acc[id] = {
       price: Number(price),
       buyPrice: Number(extraInfo?.quotedPrice.buyPrice ?? 0),
-      sellPrice: Number(extraInfo?.quotedPrice.sellPrice ?? 0)
+      sellPrice: Number(extraInfo?.quotedPrice.sellPrice ?? 0),
+      lastBuyPrice: Number(extraInfo?.lastSwappedPrice.lastJupiterBuyPrice ?? 0),
+      lastSellPrice: Number(extraInfo?.lastSwappedPrice.lastJupiterSellPrice ?? 0)
     }
     return acc
   }, {})
@@ -1334,7 +1342,13 @@ export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
     return {
       price: Number(response.data.data[id].price),
       buyPrice: Number(response.data.data[id].extraInfo?.quotedPrice.buyPrice ?? 0),
-      sellPrice: Number(response.data.data[id].extraInfo?.quotedPrice.sellPrice ?? 0)
+      sellPrice: Number(response.data.data[id].extraInfo?.quotedPrice.sellPrice ?? 0),
+      lastBuyPrice: Number(
+        response.data.data[id].extraInfo?.lastSwappedPrice.lastJupiterBuyPrice ?? 0
+      ),
+      lastSellPrice: Number(
+        response.data.data[id].extraInfo?.lastSwappedPrice.lastJupiterSellPrice ?? 0
+      )
     }
   } catch (error) {
     return {
