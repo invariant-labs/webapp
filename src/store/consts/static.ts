@@ -2,7 +2,7 @@ import { MOCK_TOKENS } from '@invariant-labs/sdk'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
 import { ISnackbar } from '@store/reducers/snackbars'
-import { PublicKey } from '@solana/web3.js'
+import { Keypair, PublicKey } from '@solana/web3.js'
 import { BestTier, Chain, PrefixConfig, Token, WalletType } from './types'
 import Dog1 from '@static/svg/SolanaCreator/Dog1.svg'
 import Dog2 from '@static/svg/SolanaCreator/Dog2.svg'
@@ -515,6 +515,29 @@ type Pool = {
   tokenY: string
   fee: string
 }
+
+export const EMPTY_POOLS = [
+  {
+    tokenX: Keypair.generate().publicKey.toString(),
+    tokenY: Keypair.generate().publicKey.toString(),
+    fee: '0'
+  },
+  {
+    tokenX: Keypair.generate().publicKey.toString(),
+    tokenY: Keypair.generate().publicKey.toString(),
+    fee: '0'
+  },
+  {
+    tokenX: Keypair.generate().publicKey.toString(),
+    tokenY: Keypair.generate().publicKey.toString(),
+    fee: '0'
+  },
+  {
+    tokenX: Keypair.generate().publicKey.toString(),
+    tokenY: Keypair.generate().publicKey.toString(),
+    fee: '0'
+  }
+]
 
 export const getPopularPools = (network: NetworkType): Pool[] => {
   switch (network) {
