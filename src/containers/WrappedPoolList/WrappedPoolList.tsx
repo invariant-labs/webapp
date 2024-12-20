@@ -40,6 +40,10 @@ export const WrappedPoolList: React.FC = () => {
     })
   }, [isLoadingStats, poolsList, deferredSearchPoolsValue])
 
+  const showAPY = useMemo(() => {
+    return filteredPoolsList.some(pool => pool.apy !== 0)
+  }, [filteredPoolsList])
+
   const copyAddressHandler = (message: string, variant: VariantType) => {
     dispatch(
       snackbarActions.add({
@@ -114,6 +118,7 @@ export const WrappedPoolList: React.FC = () => {
         network={currentNetwork}
         copyAddressHandler={copyAddressHandler}
         isLoading={isLoadingStats}
+        showAPY={showAPY}
       />
     </div>
   )
