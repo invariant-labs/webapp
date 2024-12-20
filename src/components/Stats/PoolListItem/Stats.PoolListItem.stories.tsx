@@ -30,7 +30,8 @@ export const Header: Story = {
     displayType: 'header',
     onSort: fn(),
     sortType: SortTypePoolList.TVL_DESC,
-    network: NetworkType.Mainnet
+    network: NetworkType.Mainnet,
+    showAPY: true
   }
 }
 
@@ -48,6 +49,7 @@ export const Token: Story = {
     volume: 1000000000,
     TVL: 500000000,
     hideBottomLine: false,
-    network: NetworkType.Mainnet
+    network: NetworkType.Mainnet,
+    showAPY: true
   }
 }

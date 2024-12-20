@@ -51,7 +51,6 @@ const TokenListItem: React.FC<IProps> = ({
   const { classes } = useStyles()
   // const isNegative = priceChange < 0
 
-  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
 
   const networkUrl = useMemo(() => {
@@ -80,8 +79,6 @@ const TokenListItem: React.FC<IProps> = ({
         copyAddressHandler('Failed to copy token address to Clipboard', 'error')
       })
   }
-
-  console.log(isSm)
 
   return (
     <Grid>

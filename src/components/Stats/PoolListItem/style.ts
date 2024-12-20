@@ -38,7 +38,9 @@ export const useStyles = makeStyles()(() => ({
       }
     }
   },
-
+  containerNoAPY: {
+    gridTemplateColumns: '5% auto 12% 15% 12% 160px'
+  },
   imageContainer: {
     display: 'flex',
     alignItems: 'center'
