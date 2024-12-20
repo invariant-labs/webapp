@@ -37,6 +37,7 @@ export interface PoolListInterface {
   network: NetworkType
   copyAddressHandler: (message: string, variant: VariantType) => void
   isLoading: boolean
+  showAPY: boolean
 }
 
 const ITEMS_PER_PAGE = 10
@@ -75,7 +76,8 @@ const PoolList: React.FC<PoolListInterface> = ({
   data,
   network,
   copyAddressHandler,
-  isLoading
+  isLoading,
+  showAPY
 }) => {
   const { classes } = useStyles()
   const [page, setPage] = React.useState(1)
@@ -142,6 +144,7 @@ const PoolList: React.FC<PoolListInterface> = ({
           onSort={setSortType}
           sortType={sortType}
           network={network}
+          showAPY={showAPY}
         />
         {data.length > 0 || isLoading ? (
           paginator(page).map((element, index) => (
@@ -171,6 +174,7 @@ const PoolList: React.FC<PoolListInterface> = ({
               isUnknownTo={element.isUnknownTo}
               poolAddress={element.poolAddress}
               copyAddressHandler={copyAddressHandler}
+              showAPY={showAPY}
             />
           ))
         ) : (
