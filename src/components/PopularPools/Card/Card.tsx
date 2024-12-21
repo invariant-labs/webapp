@@ -17,6 +17,7 @@ import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 export interface ICard extends PopularPoolData {
   isLoading: boolean
   network: NetworkType
+  showAPY: boolean
 }
 
 const Card: React.FC<ICard> = ({
@@ -34,7 +35,8 @@ const Card: React.FC<ICard> = ({
   symbolFrom,
   symbolTo,
   volume,
-  network
+  network,
+  showAPY
 }) => {
   const { classes } = useStyles()
   const navigate = useNavigate()
@@ -114,7 +116,7 @@ const Card: React.FC<ICard> = ({
                 {shortenAddress(symbolFrom ?? '')} - {shortenAddress(symbolTo ?? '')}
               </Typography>
               <Grid container gap='8px'>
-                {apy !== undefined && (
+                {apy !== undefined && showAPY && (
                   <StatsLabel
                     title='APY'
                     value={`${apy > 1000 ? '>1000%' : apy === 0 ? '-' : apy.toFixed(2) + '%'}`}

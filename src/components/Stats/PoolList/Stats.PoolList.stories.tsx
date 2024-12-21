@@ -99,6 +99,7 @@ export const Primary: Story = {
     data: poolsList,
     network: NetworkType.Local,
     copyAddressHandler: fn(),
-    isLoading: false
+    isLoading: false,
+    showAPY: true
   }
 }
