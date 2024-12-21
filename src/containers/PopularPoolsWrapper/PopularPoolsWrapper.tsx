@@ -89,13 +89,22 @@ export const PopularPoolsWrapper: React.FC = () => {
     return data
   }, [poolsList])
 
+  const showAPY = useMemo(() => {
+    return list.some(pool => pool.apy !== 0)
+  }, [list])
+
   useEffect(() => {
     dispatch(actions.getCurrentStats())
   }, [])
 
   return (
     <Grid container>
-      <PopularPools pools={list} isLoading={isLoadingStats} network={currentNetwork} />
+      <PopularPools
+        pools={list}
+        isLoading={isLoadingStats}
+        network={currentNetwork}
+        showAPY={showAPY}
+      />
     </Grid>
   )
 }

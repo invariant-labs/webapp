@@ -15,6 +15,7 @@ import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 import { VariantType } from 'notistack'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 import { apyToApr } from '@utils/uiUtils'
+import classNames from 'classnames'
 
 interface IProps {
   TVL?: number
@@ -42,6 +43,7 @@ interface IProps {
   isUnknownTo?: boolean
   poolAddress?: string
   copyAddressHandler?: (message: string, variant: VariantType) => void
+  showAPY: boolean
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -64,7 +66,8 @@ const PoolListItem: React.FC<IProps> = ({
   isUnknownFrom,
   isUnknownTo,
   poolAddress,
-  copyAddressHandler
+  copyAddressHandler,
+  showAPY
 }) => {
   const { classes } = useStyles()
 
@@ -120,7 +123,9 @@ const PoolListItem: React.FC<IProps> = ({
       {displayType === 'token' ? (
         <Grid
           container
-          classes={{ container: classes.container }}
+          classes={{
+            container: classNames(classes.container, { [classes.containerNoAPY]: !showAPY })
+          }}
           style={hideBottomLine ? { border: 'none' } : undefined}>
           {!isMd ? <Typography>{tokenIndex}</Typography> : null}
           <Grid className={classes.imageContainer}>
@@ -160,7 +165,7 @@ const PoolListItem: React.FC<IProps> = ({
               </TooltipHover>
             </Grid>
           </Grid>
-          {!isSmd ? (
+          {!isSmd && showAPY ? (
             <Typography className={classes.row}>
               {`${apr > 1000 ? '>1000%' : apr === 0 ? '-' : apr.toFixed(2) + '%'}`}
               <span
@@ -201,7 +206,12 @@ const PoolListItem: React.FC<IProps> = ({
           )}
         </Grid>
       ) : (
-        <Grid container classes={{ container: classes.container, root: classes.header }}>
+        <Grid
+          container
+          classes={{
+            container: classNames(classes.container, { [classes.containerNoAPY]: !showAPY }),
+            root: classes.header
+          }}>
           {!isMd && (
             <Typography style={{ lineHeight: '11px' }}>
               N<sup>o</sup>
@@ -223,7 +233,7 @@ const PoolListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
-          {!isSmd ? (
+          {!isSmd && showAPY ? (
             <Typography
               className={classes.row}
               style={{ cursor: 'pointer' }}

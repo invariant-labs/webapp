@@ -13,9 +13,10 @@ export interface IPopularPools {
   pools: PopularPoolData[]
   isLoading: boolean
   network: NetworkType
+  showAPY: boolean
 }
 
-const PopularPools: React.FC<IPopularPools> = ({ pools, isLoading, network }) => {
+const PopularPools: React.FC<IPopularPools> = ({ pools, isLoading, network, showAPY }) => {
   const { classes } = useStyles()
 
   const isLgDown = useMediaQuery(theme.breakpoints.down('lg'))
@@ -65,6 +66,7 @@ const PopularPools: React.FC<IPopularPools> = ({ pools, isLoading, network }) =>
               isUnknownTo={pool.isUnknownTo}
               isLoading={isLoading}
               network={network}
+              showAPY={showAPY}
             />
           ))}
         </Slider>
