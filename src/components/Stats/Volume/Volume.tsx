@@ -14,9 +14,28 @@ interface StatsInterface {
   volume: number | null
   data: TimeData[]
   className?: string
+  isLoading: boolean
 }
 
-const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, className }) => {
+const GRAPH_ENTRIES = 30
+
+const generateMockData = () => {
+  return Array.from({ length: GRAPH_ENTRIES }, (_, index) => ({
+    timestamp:
+      Math.floor(Date.now() / (1000 * 60 * 60 * 24)) * (1000 * 60 * 60 * 24) +
+      1000 * 60 * 60 * 12 -
+      (GRAPH_ENTRIES - index) * (1000 * 60 * 60 * 24),
+    value: Math.random() * 10000
+  }))
+}
+
+const Volume: React.FC<StatsInterface> = ({
+  percentVolume,
+  volume,
+  data,
+  className,
+  isLoading
+}) => {
   const { classes } = useStyles()
 
   percentVolume = percentVolume ?? 0
@@ -35,13 +54,19 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, classNa
   }
 
   const isLower = percentVolume < 0
+  const percentage = isLoading ? Math.random() * 200 - 100 : percentVolume
 
   return (
-    <Grid className={classNames(classes.container, className)}>
+    <Grid
+      className={classNames(classes.container, className, {
+        [classes.loadingOverlay]: isLoading
+      })}>
       <Box className={classes.volumeContainer}>
         <Typography className={classes.volumeHeader}>Volume</Typography>
         <div className={classes.volumePercentContainer}>
-          <Typography className={classes.volumePercentHeader}>${formatNumber(volume)}</Typography>
+          <Typography className={classes.volumePercentHeader}>
+            ${formatNumber(isLoading ? Math.random() * 10000 : volume)}
+          </Typography>
           <Box className={classes.volumeStatusContainer}>
             <Box
               className={classNames(
@@ -54,7 +79,7 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, classNa
                   classes.volumeStatusHeader,
                   isLower ? classes.volumeLow : classes.volumeUp
                 )}>
-                {percentVolume < 0 ? percentVolume.toFixed(2) : `+${percentVolume.toFixed(2)}`}%
+                {percentage < 0 ? percentage.toFixed(2) : `+${percentage.toFixed(2)}`}%
               </Typography>
             </Box>
           </Box>
@@ -63,7 +88,9 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, classNa
       <div className={classes.barContainer}>
         <ResponsiveBar
           margin={{ top: 30, bottom: 30, left: 30 }}
-          data={data as Array<{ timestamp: number; value: number }>}
+          data={
+            isLoading ? generateMockData() : (data as Array<{ timestamp: number; value: number }>)
+          }
           keys={['value']}
           indexBy='timestamp'
           axisBottom={{
@@ -128,7 +155,9 @@ const Volume: React.FC<StatsInterface> = ({ percentVolume, volume, data, classNa
                 <Typography className={classes.tooltipDate}>{`${day < 10 ? '0' : ''}${day}/${
                   month < 10 ? '0' : ''
                 }${month}`}</Typography>
-                <Typography className={classes.tooltipValue}>${data.value.toFixed(2)}</Typography>
+                <Typography className={classes.tooltipValue}>
+                  ${formatNumber(data.value)}
+                </Typography>
               </Grid>
             )
           }}

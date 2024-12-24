@@ -3,6 +3,8 @@ import { MemoryRouter } from 'react-router-dom'
 import TokensList from './TokensList'
 import { store } from '@store/index'
 import { Provider } from 'react-redux'
+import { fn } from '@storybook/test'
+import { NetworkType } from '@store/consts/static'
 
 const meta = {
   title: 'Stats/TokensList',
@@ -102,7 +104,11 @@ export const Primary: Story = {
       priceChange: tokenData.priceChange,
       volume: tokenData.volume24,
       TVL: tokenData.tvl,
-      isUnknown: true
-    }))
+      isUnknown: true,
+      address: tokenData.tokenDetails.address.toString()
+    })),
+    copyAddressHandler: fn(),
+    network: NetworkType.Mainnet,
+    isLoading: false
   }
 }

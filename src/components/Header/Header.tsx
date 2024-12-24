@@ -35,7 +35,6 @@ export interface IHeader {
   onDisconnectWallet: () => void
   defaultTestnetRPC: string
   onCopyAddress: () => void
-  onChangeWallet: () => void
   activeChain: ISelectChain
   onChainSelect: (chain: ISelectChain) => void
   network: NetworkType
@@ -59,7 +58,6 @@ export const Header: React.FC<IHeader> = ({
   onDisconnectWallet,
   defaultDevnetRPC,
   onCopyAddress,
-  onChangeWallet,
   activeChain,
   onChainSelect,
   network,
@@ -74,11 +72,12 @@ export const Header: React.FC<IHeader> = ({
 
   const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
 
-  const routes = ['exchange', 'liquidity', 'statistics']
+  const routes = ['exchange', 'liquidity', 'portfolio', 'statistics']
 
   const otherRoutesToHighlight: Record<string, RegExp[]> = {
-    liquidity: [/^newPosition\/*/, /^position\/*/],
-    exchange: [/^exchange\/*/]
+    liquidity: [/^liquidity\/*/],
+    exchange: [/^exchange\/*/],
+    portfolio: [/^portfolio\/*/, /^newPosition\/*/, /^position\/*/]
     // creator: [/^creator\/*/]
   }
 
@@ -277,7 +276,6 @@ export const Header: React.FC<IHeader> = ({
               walletConnected ? <DotIcon className={classes.connectedWalletIcon} /> : undefined
             }
             onCopyAddress={onCopyAddress}
-            onChangeWallet={onChangeWallet}
           />
         </Grid>
 

@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { colors, theme } from '@static/theme'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useStyles } from './style'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import { formatNumber, shortenAddress } from '@utils/utils'
-import { SortTypeTokenList } from '@store/consts/static'
+import { NetworkType, SortTypeTokenList } from '@store/consts/static'
 import icons from '@static/icons'
+import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
+import { VariantType } from 'notistack'
 
 interface IProps {
   displayType: string
@@ -21,7 +24,10 @@ interface IProps {
   sortType?: SortTypeTokenList
   onSort?: (type: SortTypeTokenList) => void
   hideBottomLine?: boolean
+  address?: string
   isUnknown?: boolean
+  network?: NetworkType
+  copyAddressHandler?: (message: string, variant: VariantType) => void
 }
 
 const TokenListItem: React.FC<IProps> = ({
@@ -37,13 +43,42 @@ const TokenListItem: React.FC<IProps> = ({
   sortType,
   onSort,
   hideBottomLine = false,
-  isUnknown
+  address,
+  isUnknown,
+  network,
+  copyAddressHandler
 }) => {
   const { classes } = useStyles()
   // const isNegative = priceChange < 0
 
-  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
-  const isXs = useMediaQuery(theme.breakpoints.down('xs'))
+  const isMd = useMediaQuery(theme.breakpoints.down('md'))
+
+  const networkUrl = useMemo(() => {
+    switch (network) {
+      case NetworkType.Mainnet:
+        return ''
+      case NetworkType.Testnet:
+        return '?cluster=testnet'
+      case NetworkType.Devnet:
+        return '?cluster=devnet'
+      default:
+        return ''
+    }
+  }, [network])
+
+  const copyToClipboard = () => {
+    if (!address || !copyAddressHandler) {
+      return
+    }
+    navigator.clipboard
+      .writeText(address)
+      .then(() => {
+        copyAddressHandler('Token address copied to Clipboard', 'success')
+      })
+      .catch(() => {
+        copyAddressHandler('Failed to copy token address to Clipboard', 'error')
+      })
+  }
 
   return (
     <Grid>
@@ -52,28 +87,34 @@ const TokenListItem: React.FC<IProps> = ({
           container
           classes={{ container: classes.container, root: classes.tokenList }}
           style={hideBottomLine ? { border: 'none' } : undefined}>
-          {!isXs && !isSm && <Typography component='p'>{itemNumber}</Typography>}
+          {!isMd && <Typography component='p'>{itemNumber}</Typography>}
           <Grid className={classes.tokenName}>
-            {!isSm && (
-              <Box className={classes.imageContainer}>
-                <img
-                  className={classes.tokenIcon}
-                  src={icon}
-                  alt='Token icon'
-                  onError={e => {
-                    e.currentTarget.src = icons.unknownToken
-                  }}></img>
-                {isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
-              </Box>
-            )}
-            {!isSm && (
-              <Typography>
-                {isXs ? shortenAddress(symbol) : name}
-                {!isXs && (
-                  <span className={classes.tokenSymbol}>{` (${shortenAddress(symbol)})`}</span>
-                )}
-              </Typography>
-            )}
+            <Box className={classes.imageContainer}>
+              <img
+                className={classes.tokenIcon}
+                src={icon}
+                alt='Token icon'
+                onError={e => {
+                  e.currentTarget.src = icons.unknownToken
+                }}></img>
+              {isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
+            </Box>
+            <Typography>
+              {!isMd ? (
+                <>
+                  <span className={classes.tokenName}>{name}</span>
+                  <span className={classes.tokenSymbol}>({shortenAddress(symbol)})</span>
+                </>
+              ) : (
+                shortenAddress(symbol)
+              )}
+            </Typography>
+            <TooltipHover text='Copy token address'>
+              <FileCopyOutlinedIcon
+                onClick={copyToClipboard}
+                classes={{ root: classes.clipboardIcon }}
+              />
+            </TooltipHover>
           </Grid>
           <Typography>{`~$${formatNumber(price)}`}</Typography>
 
@@ -84,13 +125,30 @@ const TokenListItem: React.FC<IProps> = ({
           )} */}
           <Typography>{`$${formatNumber(volume)}`}</Typography>
           <Typography>{`$${formatNumber(TVL)}`}</Typography>
+          {!isMd && (
+            <Box className={classes.action}>
+              <TooltipHover text='Open in explorer'>
+                <button
+                  className={classes.actionButton}
+                  onClick={() =>
+                    window.open(
+                      `https://solscan.io/token/${address}${networkUrl}`,
+                      '_blank',
+                      'noopener,noreferrer'
+                    )
+                  }>
+                  <img width={32} height={32} src={icons.newTabBtn} alt={'Exchange'} />
+                </button>
+              </TooltipHover>
+            </Box>
+          )}
         </Grid>
       ) : (
         <Grid
           container
           style={{ color: colors.invariant.textGrey, fontWeight: 400 }}
           classes={{ container: classes.container, root: classes.header }}>
-          {!isXs && !isSm && (
+          {!isMd && (
             <Typography style={{ lineHeight: '12px' }}>
               N<sup>o</sup>
             </Typography>
@@ -177,6 +235,7 @@ const TokenListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
+          {!isMd && <Typography align='right'>Action</Typography>}
         </Grid>
       )}
     </Grid>

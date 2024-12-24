@@ -4,6 +4,7 @@ import PoolList from './PoolList'
 import { store } from '@store/index'
 import { Provider } from 'react-redux'
 import { NetworkType } from '@store/consts/static'
+import { fn } from '@storybook/test'
 
 const meta = {
   title: 'Stats/PoolList',
@@ -34,6 +35,10 @@ const poolsList = Array(40)
     const randomApyDataFees = Math.random() * 100
     const randomAccumulatedFarmsAvg = Math.random() * 1000
     const randomAccumulatedFarmsSingleTick = Math.random() * 2000
+    const randomLockedX = Math.random() * 1000000000
+    const randomLockedY = Math.random() * 1000000000
+    const randomLiquidityX = Math.random() * 1000000000
+    const randomLiquidityY = Math.random() * 1000000000
 
     return {
       symbolFrom: 'BCT',
@@ -45,6 +50,10 @@ const poolsList = Array(40)
       volume: randomVolume,
       TVL: randomTVL,
       fee: randomFee,
+      lockedX: randomLockedX,
+      lockedY: randomLockedY,
+      liquidityX: randomLiquidityX,
+      liquidityY: randomLiquidityY,
       apy: randomApy,
       apyData: {
         fees: randomApyDataFees,
@@ -80,13 +89,17 @@ const poolsList = Array(40)
       addressFrom: '5Dvb5E8zKU4E9c7YxfNL5VC8YQj4VAFUTCGYY9ayFLnnY3UA',
       addressTo: '5Dvb5E8zKU4E9c7YxfNL5VC8YQj4VAFUTCGYY9ayFLnnY3UA',
       isUnknownFrom: true,
-      isUnknownTo: true
+      isUnknownTo: true,
+      poolAddress: ''
     }
   })
 
 export const Primary: Story = {
   args: {
     data: poolsList,
-    network: NetworkType.Local
+    network: NetworkType.Local,
+    copyAddressHandler: fn(),
+    isLoading: false,
+    showAPY: true
   }
 }

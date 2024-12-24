@@ -2,12 +2,14 @@ import React, { useMemo, useEffect } from 'react'
 import PoolListItem from '@components/Stats/PoolListItem/PoolListItem'
 import { useStyles } from './style'
 import { Grid } from '@mui/material'
-import { NetworkType, SortTypePoolList } from '@store/consts/static'
-
+import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
 import { PaginationList } from '@components/Pagination/Pagination'
+import { VariantType } from 'notistack'
 import NotFoundPlaceholder from '../NotFoundPlaceholder/NotFoundPlaceholder'
+import { Keypair } from '@solana/web3.js'
+import classNames from 'classnames'
 
-interface PoolListInterface {
+export interface PoolListInterface {
   data: Array<{
     symbolFrom: string
     symbolTo: string
@@ -16,6 +18,10 @@ interface PoolListInterface {
     volume: number
     TVL: number
     fee: number
+    // lockedX: number
+    // lockedY: number
+    // liquidityX: number
+    // liquidityY: number
     addressFrom: string
     addressTo: string
     apy: number
@@ -26,16 +32,62 @@ interface PoolListInterface {
     }
     isUnknownFrom: boolean
     isUnknownTo: boolean
+    poolAddress: string
   }>
   network: NetworkType
+  copyAddressHandler: (message: string, variant: VariantType) => void
+  isLoading: boolean
+  showAPY: boolean
 }
 
-const PoolList: React.FC<PoolListInterface> = ({ data, network }) => {
+const ITEMS_PER_PAGE = 10
+
+const tokens = [BTC_DEV, USDC_DEV, SOL_DEV]
+const fees = [0.01, 0.02, 0.1, 0.3, 1]
+
+const generateMockData = () => {
+  return Array.from({ length: ITEMS_PER_PAGE }, (_, index) => ({
+    symbolFrom: tokens[(index * 2) % tokens.length].symbol,
+    symbolTo: tokens[(index * 2 + 1) % tokens.length].symbol,
+    iconFrom: tokens[(index * 2) % tokens.length].logoURI,
+    iconTo: tokens[(index * 2 + 1) % tokens.length].logoURI,
+    volume: Math.random() * 10000,
+    TVL: Math.random() * 10000,
+    fee: fees[index % fees.length],
+    lockedX: Math.random() * 5000,
+    lockedY: Math.random() * 5000,
+    liquidityX: Math.random() * 5000,
+    liquidityY: Math.random() * 5000,
+    addressFrom: tokens[(index * 2) % tokens.length].address,
+    addressTo: tokens[(index * 2 + 1) % tokens.length].address,
+    apy: Math.random() * 100,
+    apyData: {
+      fees: 10,
+      accumulatedFarmsAvg: 10,
+      accumulatedFarmsSingleTick: 10
+    },
+    isUnknownFrom: false,
+    isUnknownTo: false,
+    poolAddress: Keypair.generate().publicKey.toString()
+  }))
+}
+
+const PoolList: React.FC<PoolListInterface> = ({
+  data,
+  network,
+  copyAddressHandler,
+  isLoading,
+  showAPY
+}) => {
   const { classes } = useStyles()
   const [page, setPage] = React.useState(1)
   const [sortType, setSortType] = React.useState(SortTypePoolList.VOLUME_DESC)
 
   const sortedData = useMemo(() => {
+    if (isLoading) {
+      return generateMockData()
+    }
+
     switch (sortType) {
       case SortTypePoolList.NAME_ASC:
         return data.sort((a, b) =>
@@ -81,16 +133,21 @@ const PoolList: React.FC<PoolListInterface> = ({ data, network }) => {
   const pages = Math.ceil(data.length / 10)
 
   return (
-    <Grid container direction='column' classes={{ root: classes.container }}>
-      {data.length > 0 ? (
-        <>
-          <PoolListItem
-            displayType='header'
-            onSort={setSortType}
-            sortType={sortType}
-            network={network}
-          />
-          {paginator(page).map((element, index) => (
+    <Grid
+      container
+      direction='column'
+      classes={{ root: classes.container }}
+      className={classNames({ [classes.loadingOverlay]: isLoading })}>
+      <>
+        <PoolListItem
+          displayType='header'
+          onSort={setSortType}
+          sortType={sortType}
+          network={network}
+          showAPY={showAPY}
+        />
+        {data.length > 0 || isLoading ? (
+          paginator(page).map((element, index) => (
             <PoolListItem
               displayType='token'
               tokenIndex={index + 1 + (page - 1) * 10}
@@ -100,6 +157,11 @@ const PoolList: React.FC<PoolListInterface> = ({ data, network }) => {
               iconTo={element.iconTo}
               volume={element.volume}
               TVL={element.TVL}
+              // lockedX={element.lockedX}
+              // lockedY={element.lockedY}
+              // liquidityX={element.liquidityX}
+              // liquidityY={element.liquidityY}
+              // isLocked={element.lockedX > 0 || element.lockedY > 0}
               fee={element.fee}
               apy={element.apy}
               hideBottomLine={pages === 1 && index + 1 === data.length}
@@ -110,24 +172,26 @@ const PoolList: React.FC<PoolListInterface> = ({ data, network }) => {
               network={network}
               isUnknownFrom={element.isUnknownFrom}
               isUnknownTo={element.isUnknownTo}
+              poolAddress={element.poolAddress}
+              copyAddressHandler={copyAddressHandler}
+              showAPY={showAPY}
             />
-          ))}
-          {pages > 1 ? (
-            <Grid className={classes.pagination}>
-              <PaginationList
-                pages={pages}
-                defaultPage={1}
-                handleChangePage={handleChangePagination}
-                variant='flex-end'
-              />
-            </Grid>
-          ) : null}
-        </>
-      ) : (
-        <NotFoundPlaceholder title='No pools found...' />
-      )}
+          ))
+        ) : (
+          <NotFoundPlaceholder title='No pools found...' />
+        )}
+        {pages > 1 ? (
+          <Grid className={classes.pagination}>
+            <PaginationList
+              pages={pages}
+              defaultPage={1}
+              handleChangePage={handleChangePagination}
+              variant='flex-end'
+            />
+          </Grid>
+        ) : null}
+      </>
     </Grid>
   )
 }
-
 export default PoolList

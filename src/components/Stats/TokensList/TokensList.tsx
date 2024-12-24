@@ -3,9 +3,13 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { theme } from '@static/theme'
 import useStyles from './style'
 import { Grid, useMediaQuery } from '@mui/material'
-import { SortTypeTokenList } from '@store/consts/static'
+import { BTC_DEV, NetworkType, SortTypeTokenList, USDC_DEV, SOL_DEV } from '@store/consts/static'
 import { PaginationList } from '@components/Pagination/Pagination'
 import NotFoundPlaceholder from '../NotFoundPlaceholder/NotFoundPlaceholder'
+import { VariantType } from 'notistack'
+import { Keypair } from '@solana/web3.js'
+import classNames from 'classnames'
+
 export interface ITokensListData {
   icon: string
   name: string
@@ -13,14 +17,35 @@ export interface ITokensListData {
   price: number
   volume: number
   TVL: number
+  address: string
   isUnknown: boolean
 }
 
 export interface ITokensList {
   data: ITokensListData[]
+  network: NetworkType
+  copyAddressHandler: (message: string, variant: VariantType) => void
+  isLoading: boolean
 }
 
-const TokensList: React.FC<ITokensList> = ({ data }) => {
+const ITEMS_PER_PAGE = 10
+
+const tokens = [BTC_DEV, USDC_DEV, SOL_DEV]
+
+const generateMockData = () => {
+  return Array.from({ length: ITEMS_PER_PAGE }, (_, index) => ({
+    icon: tokens[index % tokens.length].logoURI,
+    name: tokens[index % tokens.length].name,
+    symbol: tokens[index % tokens.length].symbol,
+    price: Math.random() * 100,
+    volume: Math.random() * 10000,
+    TVL: Math.random() * 10000,
+    address: Keypair.generate().publicKey.toString(),
+    isUnknown: false
+  }))
+}
+
+const TokensList: React.FC<ITokensList> = ({ data, network, copyAddressHandler, isLoading }) => {
   const { classes } = useStyles()
   const [page, setPage] = useState(1)
   const [sortType, setSortType] = React.useState(SortTypeTokenList.VOLUME_DESC)
@@ -28,6 +53,10 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
 
   const sortedData = useMemo(() => {
+    if (isLoading) {
+      return generateMockData()
+    }
+
     switch (sortType) {
       case SortTypeTokenList.NAME_ASC:
         return data.sort((a, b) =>
@@ -84,11 +113,16 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
   const pages = Math.ceil(data.length / 10)
 
   return (
-    <Grid container direction='column' classes={{ root: classes.container }} wrap='nowrap'>
-      {data.length > 0 ? (
-        <>
-          <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />
-          {paginator(page).data.map((token, index) => {
+    <Grid
+      container
+      direction='column'
+      classes={{ root: classes.container }}
+      wrap='nowrap'
+      className={classNames({ [classes.loadingOverlay]: isLoading })}>
+      <>
+        <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />
+        {data.length > 0 || isLoading ? (
+          paginator(page).data.map((token, index) => {
             return (
               <TokenListItem
                 key={index}
@@ -102,24 +136,27 @@ const TokensList: React.FC<ITokensList> = ({ data }) => {
                 volume={token.volume}
                 TVL={token.TVL}
                 hideBottomLine={pages === 1 && index + 1 === data.length}
+                address={token.address}
                 isUnknown={token.isUnknown}
+                network={network}
+                copyAddressHandler={copyAddressHandler}
               />
             )
-          })}
-          {pages > 1 ? (
-            <Grid className={classes.pagination}>
-              <PaginationList
-                pages={Math.ceil(data.length / 10)}
-                defaultPage={1}
-                handleChangePage={handleChangePagination}
-                variant='flex-end'
-              />
-            </Grid>
-          ) : null}
-        </>
-      ) : (
-        <NotFoundPlaceholder title='No tokens found...' />
-      )}
+          })
+        ) : (
+          <NotFoundPlaceholder title='No tokens found...' />
+        )}
+        {pages > 1 ? (
+          <Grid className={classes.pagination}>
+            <PaginationList
+              pages={Math.ceil(data.length / 10)}
+              defaultPage={1}
+              handleChangePage={handleChangePagination}
+              variant='flex-end'
+            />
+          </Grid>
+        ) : null}
+      </>
     </Grid>
   )
 }

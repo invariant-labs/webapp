@@ -5,7 +5,6 @@ export const useStyles = makeStyles()(() => ({
   container: {
     width: '100%',
     height: '370px',
-    position: 'absolute',
     zIndex: 14
   },
   root: {

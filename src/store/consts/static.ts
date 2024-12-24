@@ -2,8 +2,12 @@ import { MOCK_TOKENS } from '@invariant-labs/sdk'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
 import { ISnackbar } from '@store/reducers/snackbars'
-import { PublicKey } from '@solana/web3.js'
-import { BestTier, Chain, PrefixConfig, Token } from './types'
+import { Keypair, PublicKey } from '@solana/web3.js'
+import { BestTier, Chain, PrefixConfig, Token, WalletType } from './types'
+import Dog1 from '@static/svg/SolanaCreator/Dog1.svg'
+import Dog2 from '@static/svg/SolanaCreator/Dog2.svg'
+import Cat1 from '@static/svg/SolanaCreator/Cat1.svg'
+import Cat2 from '@static/svg/SolanaCreator/Cat2.svg'
 
 export enum NetworkType {
   Local = 'Local',
@@ -138,6 +142,33 @@ export const DOGIN_MAIN: Token = {
     'https://statics.solscan.io/cdn/imgs/s60?ref=68747470733a2f2f697066732e696f2f697066732f516d5066614a565454534c537a6f566161754d4b416e36586132627337365965564d44455269617934556d583562'
 }
 
+export const SNY_MAIN: Token = {
+  symbol: 'SNY',
+  address: new PublicKey('4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y'),
+  decimals: 6,
+  name: 'Synthetify',
+  logoURI:
+    'https://statics.solscan.io/cdn/imgs/s60?ref=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f736f6c616e612d6c6162732f746f6b656e2d6c6973742f6d61696e2f6173736574732f6d61696e6e65742f34646d4b6b584e48646759735871424843754d696b4e515777566f6d5a55526859766b6b58356334705137792f6c6f676f2e706e67',
+  coingeckoId: 'synthetify-token'
+}
+
+export const WEN_MAIN: Token = {
+  symbol: 'WEN',
+  address: new PublicKey('WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk'),
+  decimals: 5,
+  name: 'Wen',
+  logoURI: 'https://assets.coingecko.com/coins/images/34856/standard/wen-solana.png?1707872119'
+}
+
+export const SUI_MAIN: Token = {
+  symbol: 'SUI',
+  address: new PublicKey('G1vJEgzepqhnVu35BN4jrkv3wVwkujYWFFCxhbEZ1CZr'),
+  decimals: 8,
+  name: 'Sui (Wormhole)',
+  logoURI:
+    'https://assets.coingecko.com/coins/images/26375/standard/sui-ocean-square.png?1727791290'
+}
+
 export enum RPC {
   DEV = 'https://api.devnet.solana.com',
   TEST = 'https://api.testnet.solana.com',
@@ -148,11 +179,11 @@ export enum RPC {
   MAIN_GENESYSGO = 'https://ssc-dao.genesysgo.net',
   MAIN_ALCHEMY = 'https://solana-mainnet.g.alchemy.com/v2/YfX5E62sdlEoytQ9ZEOA_5KIE3QbwUUD',
   MAIN_HELLOMOON = 'https://global.rpc.hellomoon.io/e8a06073-325d-4183-bcad-d69e3e3fc739',
-  MAIN_HELIUS = 'https://mainnet.helius-rpc.com/?api-key=6f17ef70-139f-463a-bfaa-85a120eee8d3',
+  MAIN_HELIUS = 'https://mainnet.helius-rpc.com/?api-key=ef843b40-9876-4a02-a181-a1e6d3e61b4c',
   LOCAL = 'http://127.0.0.1:8899'
 }
 
-export const DEFAULT_PUBLICKEY = new PublicKey(0)
+export const DEFAULT_SOL_PUBLICKEY = new PublicKey(0)
 export const MAX_U64 = new BN('18446744073709551615')
 
 export const tokens: Record<NetworkType, Token[]> = {
@@ -397,9 +428,12 @@ export const getAddressTickerMap = (network: NetworkType): { [k: string]: string
       mSOL: 'mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So',
       bSOL: 'bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1',
       stSOL: '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj',
-      SNY: '4dmKkXNHdgYsXqBHCuMikNQWwVomZURhYvkkX5c4pQ7y',
       ETH: '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs',
-      LFNTY: 'LFNTYraetVioAPnGJht4yNg2aUZFXR776cMeN9VMjXp'
+      LFNTY: 'LFNTYraetVioAPnGJht4yNg2aUZFXR776cMeN9VMjXp',
+      DOGIN: DOGIN_MAIN.address.toString(),
+      SNY: SNY_MAIN.address.toString(),
+      WEN: WEN_MAIN.address.toString(),
+      SUI: SUI_MAIN.address.toString()
     }
   } else {
     return {}
@@ -415,13 +449,13 @@ export const getReversedAddressTickerMap = (network: NetworkType) => {
 export const MINIMAL_POOL_INIT_PRICE = 0.00000001
 
 export const DEFAULT_SWAP_SLIPPAGE = '0.50'
-export const DEFAULT_NEW_POSITION_SLIPPAGE = '0.50'
+export const DEFAULT_NEW_POSITION_SLIPPAGE = '1.00'
 
 export const CHAINS = [
   { name: Chain.Solana, address: 'https://invariant.app/swap' },
-  { name: Chain.AlephZero, address: 'https://azero.invariant.app/exchange' },
+  // { name: Chain.AlephZero, address: 'https://azero.invariant.app/exchange' },
   { name: Chain.Eclipse, address: 'https://eclipse.invariant.app/exchange' },
-  { name: Chain.Vara, address: 'https://vara.invariant.app/exchange' },
+  // { name: Chain.Vara, address: 'https://vara.invariant.app/exchange' },
   { name: Chain.Alephium, address: 'https://alph.invariant.app/exchange' }
 ]
 
@@ -466,3 +500,71 @@ export const DEFAULT_TOKENS = ['ethereum', 'solana', 'usd-coin', 'dogwifhat']
 
 export const TIMEOUT_ERROR_MESSAGE =
   'Transaction has timed out. Check the details to confirm success.'
+
+export const walletNames = {
+  [WalletType.PHANTOM]: 'Phantom',
+  [WalletType.BACKPACK]: 'Backpack',
+  [WalletType.NIGHTLY]: 'Wallet Selector',
+  [WalletType.SOLFLARE]: 'Solflare'
+}
+
+export const defaultImages: string[] = [Dog1, Dog2, Cat1, Cat2]
+
+type Pool = {
+  tokenX: string
+  tokenY: string
+  fee: string
+}
+
+export const EMPTY_POOLS = [
+  {
+    tokenX: Keypair.generate().publicKey.toString(),
+    tokenY: Keypair.generate().publicKey.toString(),
+    fee: '0'
+  },
+  {
+    tokenX: Keypair.generate().publicKey.toString(),
+    tokenY: Keypair.generate().publicKey.toString(),
+    fee: '0'
+  },
+  {
+    tokenX: Keypair.generate().publicKey.toString(),
+    tokenY: Keypair.generate().publicKey.toString(),
+    fee: '0'
+  },
+  {
+    tokenX: Keypair.generate().publicKey.toString(),
+    tokenY: Keypair.generate().publicKey.toString(),
+    fee: '0'
+  }
+]
+
+export const getPopularPools = (network: NetworkType): Pool[] => {
+  switch (network) {
+    case NetworkType.Mainnet:
+      return [
+        // {
+        //   tokenX: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+        //   tokenY: 'So11111111111111111111111111111111111111112',
+        //   fee: '0.02'
+        // },
+        // {
+        //   tokenX: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+        //   tokenY: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+        //   fee: '0.01'
+        // },
+        // {
+        //   tokenX: '27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4',
+        //   tokenY: 'So11111111111111111111111111111111111111112',
+        //   fee: '0.01'
+        // },
+        // {
+        //   tokenX: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+        //   tokenY: 'So11111111111111111111111111111111111111112',
+        //   fee: '0.01'
+        // }
+      ]
+    default:
+      return []
+  }
+}

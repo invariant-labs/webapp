@@ -85,7 +85,11 @@ export const colors = {
     pinkLinearGradientOpacity:
       'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
     yellow: '#EFD063',
-    blue: '#43BBFF'
+    blue: '#43BBFF',
+    transparentBcg: 'rgba(1, 5, 20, 0.25)',
+    bodyBackground: '#141b2d',
+    plotGreen: '#9DD46D',
+    plotRed: '#FB555F'
   }
 }
 

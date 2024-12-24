@@ -41,11 +41,14 @@ import {
   USDT_DEV,
   VEMC2_DEV,
   VEMCK_DEV,
-  WSOL_DEV
+  WSOL_DEV,
+  SNY_MAIN,
+  WEN_MAIN,
+  SUI_MAIN
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
-import { Token } from '@store/consts/types'
+import { CoinGeckoAPIData, Token } from '@store/consts/types'
 import { sqrt } from '@invariant-labs/sdk/lib/math'
 
 export const transformBN = (amount: BN): string => {
@@ -72,14 +75,17 @@ export const printBN = (amount: BN, decimals: number): string => {
     )
   }
 }
-// Bad solution but i hate regex
-export const trimZeros = (amount: string) => {
-  try {
-    return parseFloat(amount).toString()
-  } catch (error) {
-    return amount
+
+export const trimZeros = (numStr: string): string => {
+  if (!numStr) {
+    return ''
   }
+  return numStr
+    .replace(/(\.\d*?)0+$/, '$1')
+    .replace(/^0+(\d)|(\d)0+$/gm, '$1$2')
+    .replace(/\.$/, '')
 }
+
 export const convertBalanceToBN = (amount: string, decimals: number): BN => {
   const balanceString = amount.split('.')
   if (balanceString.length !== 2) {
@@ -433,7 +439,9 @@ export const getNetworkTokensList = (networkType: NetworkType): Record<string, T
         }
       )
       obj[DOGIN_MAIN.address.toString()] = DOGIN_MAIN
-
+      obj[SNY_MAIN.address.toString()] = SNY_MAIN
+      obj[WEN_MAIN.address.toString()] = WEN_MAIN
+      obj[SUI_MAIN.address.toString()] = SUI_MAIN
       return obj
     case NetworkType.Devnet:
       return {
@@ -941,6 +949,10 @@ interface RawJupApiResponse {
       id: string
       price: string
       extraInfo?: {
+        lastSwappedPrice: {
+          lastJupiterSellPrice: string
+          lastJupiterBuyPrice: string
+        }
         quotedPrice: {
           buyPrice: string
           sellPrice: string
@@ -966,6 +978,8 @@ export interface TokenPriceData {
   price: number
   buyPrice: number
   sellPrice: number
+  lastBuyPrice?: number
+  lastSellPrice?: number
 }
 
 export const getCoingeckoPricesData = async (
@@ -1024,7 +1038,9 @@ export const getJupPricesData = async (ids: string[]): Promise<Record<string, To
     acc[id] = {
       price: Number(price),
       buyPrice: Number(extraInfo?.quotedPrice.buyPrice ?? 0),
-      sellPrice: Number(extraInfo?.quotedPrice.sellPrice ?? 0)
+      sellPrice: Number(extraInfo?.quotedPrice.sellPrice ?? 0),
+      lastBuyPrice: Number(extraInfo?.lastSwappedPrice.lastJupiterBuyPrice ?? 0),
+      lastSellPrice: Number(extraInfo?.lastSwappedPrice.lastJupiterSellPrice ?? 0)
     }
     return acc
   }, {})
@@ -1283,15 +1299,63 @@ export const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThresh
   }
 ]
 
-export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
-  const response = await axios.get<RawJupApiResponse>(
-    `https://api.jup.ag/price/v2?ids=${id}&showExtraInfo=true`
-  )
+export const getCoinGeckoTokenPrice = async (id: string) => {
+  try {
+    const { data } = await axios.get<CoinGeckoAPIData>(
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${id}`
+    )
+    return data[0]
+  } catch (e) {}
+}
 
-  return {
-    price: Number(response.data.data[id].price),
-    buyPrice: Number(response.data.data[id].extraInfo?.quotedPrice.buyPrice ?? 0),
-    sellPrice: Number(response.data.data[id].extraInfo?.quotedPrice.sellPrice ?? 0)
+export const getTokenPrice = async (
+  address: string,
+  coinGeckoId?: string
+): Promise<TokenPriceData> => {
+  const jupPrice = await getJupTokenPrice(address)
+
+  if (jupPrice.price !== 0) {
+    return jupPrice
+  } else if (coinGeckoId) {
+    const coingeckoPrice = await getCoinGeckoTokenPrice(coinGeckoId)
+
+    return {
+      price: coingeckoPrice?.current_price || 0,
+      buyPrice: coingeckoPrice?.current_price || 0,
+      sellPrice: coingeckoPrice?.current_price || 0
+    }
+  } else {
+    return {
+      price: 0,
+      buyPrice: 0,
+      sellPrice: 0
+    }
+  }
+}
+
+export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
+  try {
+    const response = await axios.get<RawJupApiResponse>(
+      `https://api.jup.ag/price/v2?ids=${id}&showExtraInfo=true`
+    )
+
+    return {
+      price: Number(response.data.data[id].price),
+      buyPrice: Number(response.data.data[id].extraInfo?.quotedPrice.buyPrice ?? 0),
+      sellPrice: Number(response.data.data[id].extraInfo?.quotedPrice.sellPrice ?? 0),
+      lastBuyPrice: Number(
+        response.data.data[id].extraInfo?.lastSwappedPrice.lastJupiterBuyPrice ?? 0
+      ),
+      lastSellPrice: Number(
+        response.data.data[id].extraInfo?.lastSwappedPrice.lastJupiterSellPrice ?? 0
+      )
+    }
+  } catch (error) {
+    return {
+      buyPrice: 0,
+      price: 0,
+      sellPrice: 0
+    }
   }
 }
 
@@ -1389,9 +1453,25 @@ export const getMainnetCommonTokens = async (): Promise<PublicKey[]> => {
 }
 
 export const numberToString = (number: number | bigint | string): string => {
-  return String(number).includes('e-')
-    ? Number(number).toFixed(parseInt(String(number).split('e-')[1]))
-    : String(number)
+  if (typeof number === 'bigint') {
+    return number.toString()
+  }
+
+  const numStr = String(number)
+
+  if (numStr.includes('e')) {
+    const [base, exp] = numStr.split('e')
+    const exponent = parseInt(exp, 10)
+
+    if (exponent < 0) {
+      const decimalPlaces = Math.abs(exponent) + base.replace('.', '').length - 1
+      return Number(number).toFixed(decimalPlaces)
+    }
+
+    return Number(number).toString()
+  }
+
+  return numStr
 }
 
 export const containsOnlyZeroes = (string: string): boolean => {
@@ -1415,11 +1495,6 @@ export const formatNumber = (
   const numberAsNumber = Number(number)
   const isNegative = numberAsNumber < 0
   const absNumberAsNumber = Math.abs(numberAsNumber)
-
-  if (absNumberAsNumber.toString().includes('e')) {
-    const exponential = absNumberAsNumber.toExponential(decimalsAfterDot)
-    return isNegative ? `-${exponential}` : exponential
-  }
 
   const absNumberAsString = numberToString(absNumberAsNumber)
 
@@ -1466,6 +1541,7 @@ export const formatNumber = (
     const roundedNumber = numberAsNumber
       .toFixed(countLeadingZeros(afterDot) + decimalsAfterDot + 1)
       .slice(0, -1)
+
     formattedNumber = trimZeros(roundedNumber)
   } else {
     const leadingZeros = afterDot ? countLeadingZeros(afterDot) : 0
@@ -1475,14 +1551,18 @@ export const formatNumber = (
         ? String(parseInt(afterDot)).slice(0, decimalsAfterDot)
         : afterDot
 
-    formattedNumber =
-      beforeDot +
-      '.' +
-      (parsedAfterDot
-        ? leadingZeros > decimalsAfterDot
-          ? '0' + printSubNumber(leadingZeros) + parseInt(parsedAfterDot)
-          : parsedAfterDot
-        : '')
+    if (parsedAfterDot) {
+      formattedNumber =
+        beforeDot +
+        '.' +
+        (parsedAfterDot
+          ? leadingZeros > decimalsAfterDot
+            ? '0' + printSubNumber(leadingZeros) + trimZeros(parsedAfterDot)
+            : trimZeros(parsedAfterDot)
+          : '')
+    } else {
+      formattedNumber = beforeDot
+    }
   }
 
   return isNegative ? '-' + formattedNumber : formattedNumber

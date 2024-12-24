@@ -35,3 +35,11 @@ export const importantStyles = (styleObject: { [key: string]: string | number })
     }),
     styleObject
   )
+
+export const shortenAddress = (address: string, chars = 4) =>
+  address.length > 8 ? `${address.slice(0, chars)}...${address.slice(-chars)}` : address
+
+export const apyToApr = (apy: number) => {
+  const dailyRate = Math.pow(1 + apy / 100, 1 / 365) - 1
+  return dailyRate * 365 * 100
+}

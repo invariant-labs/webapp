@@ -289,3 +289,10 @@ export interface IPriorityFeeOptions {
   saveValue: number
   description: string
 }
+
+export enum WalletType {
+  NIGHTLY = 'NIGHTLY',
+  PHANTOM = 'PHANTOM',
+  BACKPACK = 'BACKPACK',
+  SOLFLARE = 'SOLFLARE'
+}

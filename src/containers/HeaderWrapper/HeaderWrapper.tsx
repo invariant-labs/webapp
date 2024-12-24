@@ -1,16 +1,18 @@
 import Header from '@components/Header/Header'
 import { RpcErrorModal } from '@components/RpcErrorModal/RpcErrorModal'
 import { RPC, CHAINS, RECOMMENDED_RPC_ADDRESS, NetworkType } from '@store/consts/static'
-import { Chain, PriorityMode } from '@store/consts/types'
+import { Chain, WalletType, PriorityMode } from '@store/consts/types'
 import { actions, RpcStatus } from '@store/reducers/solanaConnection'
 import { Status, actions as walletActions } from '@store/reducers/solanaWallet'
 import { network, rpcAddress, rpcStatus } from '@store/selectors/solanaConnection'
 import { address, status } from '@store/selectors/solanaWallet'
-import { nightlyConnectAdapter, openWalletSelectorModal } from '@utils/web3/selector'
+import { nightlyConnectAdapter } from '@utils/web3/selector'
 import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
+import { changeToNightlyAdapter, connectStaticWallet, getSolanaWallet } from '@utils/web3/wallet'
+import { sleep } from '@invariant-labs/sdk'
 
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -22,69 +24,104 @@ export const HeaderWrapper: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (currentNetwork === NetworkType.Testnet) {
-      dispatch(actions.setNetwork(NetworkType.Devnet))
-      dispatch(actions.setRPCAddress(RPC.DEV))
+    const reconnectStaticWallet = async (wallet: WalletType) => {
+      await connectStaticWallet(wallet)
+      dispatch(walletActions.connect(true))
     }
 
-    nightlyConnectAdapter.addListener('connect', () => {
-      dispatch(walletActions.connect())
-    })
+    const eagerConnectToNightly = async () => {
+      try {
+        changeToNightlyAdapter()
+        const nightlyAdapter = getSolanaWallet()
 
-    if (nightlyConnectAdapter.connected) {
-      dispatch(walletActions.connect())
-    }
-
-    nightlyConnectAdapter.canEagerConnect().then(
-      async canEagerConnect => {
-        if (canEagerConnect) {
-          await nightlyConnectAdapter.connect()
+        await nightlyAdapter.connect()
+        await sleep(500)
+        if (!nightlyAdapter.connected) {
+          await nightlyAdapter.connect()
+          await sleep(500)
         }
-      },
-      error => {
-        console.log(error)
+        dispatch(walletActions.connect(true))
+      } catch (error) {
+        console.error('Error during Nightly eager connection:', error)
       }
-    )
+    }
+
+    ;(async () => {
+      if (currentNetwork === NetworkType.Testnet) {
+        dispatch(actions.setNetwork(NetworkType.Devnet))
+        dispatch(actions.setRPCAddress(RPC.DEV))
+      }
+
+      const walletType = localStorage.getItem('WALLET_TYPE') as WalletType | null
+
+      if (walletType === WalletType.NIGHTLY) {
+        const canEagerConnect = await nightlyConnectAdapter.canEagerConnect().catch(error => {
+          console.error('Error checking eager connect:', error)
+          return false
+        })
+        if (canEagerConnect) {
+          await eagerConnectToNightly()
+        }
+      } else if (walletType) {
+        await reconnectStaticWallet(walletType)
+      }
+    })()
+  }, [])
+
+  const shouldResetRpc = useMemo(() => {
+    const defaultRpcNumber = localStorage.getItem(`INVARIANT_DEFAULT_RPC_NUMBER`)
+
+    const currentRpcNumber =
+      RECOMMENDED_RPC_ADDRESS[NetworkType.Mainnet].slice(-12, -1) +
+      RECOMMENDED_RPC_ADDRESS[NetworkType.Testnet].slice(-15, -5) +
+      RECOMMENDED_RPC_ADDRESS[NetworkType.Devnet].slice(-15, -5)
+
+    if (defaultRpcNumber === null || currentRpcNumber !== defaultRpcNumber) {
+      localStorage.setItem(`INVARIANT_DEFAULT_RPC_NUMBER`, currentRpcNumber)
+      return true
+    } else {
+      return false
+    }
   }, [])
 
   const defaultTestnetRPC = useMemo(() => {
     const lastRPC = localStorage.getItem(`INVARIANT_RPC_SOLANA_${NetworkType.Testnet}`)
 
-    if (lastRPC === null) {
+    if (lastRPC === null || shouldResetRpc) {
       localStorage.setItem(
         `INVARIANT_RPC_SOLANA_${NetworkType.Testnet}`,
         RECOMMENDED_RPC_ADDRESS[NetworkType.Devnet]
       )
     }
 
-    return lastRPC === null ? RPC.TEST : lastRPC
-  }, [])
+    return lastRPC === null || shouldResetRpc ? RPC.TEST : lastRPC
+  }, [shouldResetRpc])
 
   const defaultDevnetRPC = useMemo(() => {
     const lastRPC = localStorage.getItem(`INVARIANT_RPC_SOLANA_${NetworkType.Devnet}`)
 
-    if (lastRPC === null) {
+    if (lastRPC === null || shouldResetRpc) {
       localStorage.setItem(
         `INVARIANT_RPC_SOLANA_${NetworkType.Devnet}`,
         RECOMMENDED_RPC_ADDRESS[NetworkType.Devnet]
       )
     }
 
-    return lastRPC === null ? RPC.DEV : lastRPC
-  }, [])
+    return lastRPC === null || shouldResetRpc ? RPC.DEV : lastRPC
+  }, [shouldResetRpc])
 
   const defaultMainnetRPC = useMemo(() => {
     const lastRPC = localStorage.getItem(`INVARIANT_RPC_SOLANA_${NetworkType.Mainnet}`)
 
-    if (lastRPC === null) {
+    if (lastRPC === null || shouldResetRpc) {
       localStorage.setItem(
         `INVARIANT_RPC_SOLANA_${NetworkType.Mainnet}`,
         RECOMMENDED_RPC_ADDRESS[NetworkType.Mainnet]
       )
     }
 
-    return lastRPC === null ? RPC.MAIN_HELIUS : lastRPC
-  }, [])
+    return lastRPC === null || shouldResetRpc ? RPC.MAIN_HELIUS : lastRPC
+  }, [shouldResetRpc])
 
   const activeChain = CHAINS.find(chain => chain.name === Chain.Solana) ?? CHAINS[0]
 
@@ -132,8 +169,6 @@ export const HeaderWrapper: React.FC = () => {
       <Header
         address={walletAddress}
         onNetworkSelect={(network, rpcAddress) => {
-          console.log('network', network)
-          console.log('rpcAddress', rpcAddress)
           if (rpcAddress !== currentRpc) {
             localStorage.setItem(`INVARIANT_RPC_SOLANA_${network}`, rpcAddress)
             dispatch(actions.setRPCAddress(rpcAddress))
@@ -154,7 +189,9 @@ export const HeaderWrapper: React.FC = () => {
             dispatch(actions.setNetwork(network))
           }
         }}
-        onConnectWallet={openWalletSelectorModal}
+        onConnectWallet={() => {
+          dispatch(walletActions.connect(false))
+        }}
         landing={location.pathname.substring(1)}
         walletConnected={walletStatus === Status.Initialized}
         onDisconnectWallet={() => {
@@ -187,9 +224,6 @@ export const HeaderWrapper: React.FC = () => {
               persist: false
             })
           )
-        }}
-        onChangeWallet={() => {
-          dispatch(walletActions.reconnect())
         }}
         activeChain={activeChain}
         onChainSelect={chain => {

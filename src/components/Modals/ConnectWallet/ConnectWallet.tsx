@@ -11,6 +11,7 @@ export interface IConnectWalletModal {
   callDisconect: () => void
   callCopyAddress?: () => void
   callChangeWallet?: () => void
+  isChangeWallet: boolean
 }
 export const ConnectWallet: React.FC<IConnectWalletModal> = ({
   open,

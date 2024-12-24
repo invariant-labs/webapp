@@ -12,7 +12,7 @@ import {
   calcPriceBySqrtPrice,
   calcPriceByTickIndex,
   createPlaceholderLiquidityPlot,
-  getJupTokenPrice,
+  getTokenPrice,
   getJupTokensRatioPrice,
   getNewTokenOrThrow,
   printBN,
@@ -35,7 +35,6 @@ import {
 } from '@store/selectors/pools'
 import { initPosition, plotTicks, shouldNotUpdateRange } from '@store/selectors/positions'
 import { balanceLoading, status, balance, swapTokensDict } from '@store/selectors/solanaWallet'
-import { openWalletSelectorModal } from '@utils/web3/selector'
 import { VariantType } from 'notistack'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -283,7 +282,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
         )
       }
     }
-  }, [isWaitingForNewPool, allPools])
+  }, [isWaitingForNewPool, allPools.length])
 
   useEffect(() => {
     if (poolIndex !== null) {
@@ -410,6 +409,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
   const [tokenAPriceData, setTokenAPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [priceALoading, setPriceALoading] = useState(false)
+
   useEffect(() => {
     if (tokenA === null || (tokenA !== null && !tokens[tokenA.toString()])) {
       return
@@ -417,8 +417,10 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
     if (tokenA) {
       setPriceALoading(true)
-      getJupTokenPrice(tokenA.toString())
-        .then(data => setTokenAPriceData(data))
+      getTokenPrice(tokenA.toString(), tokens[tokenA.toString()]?.coingeckoId)
+        .then(data => {
+          return setTokenAPriceData(data)
+        })
         .catch(() => setTokenAPriceData(undefined))
         .finally(() => setPriceALoading(false))
     } else {
@@ -434,7 +436,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       return
     }
 
-    getJupTokensRatioPrice(tokenB.toString(), tokenA.toString())
+    getJupTokensRatioPrice(tokenA.toString(), tokenB.toString())
       .then(data => setGlobalPrice(data.price))
       .catch(() => setGlobalPrice(undefined))
   }
@@ -449,7 +451,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     }
 
     setPriceBLoading(true)
-    getJupTokenPrice(tokenB.toString())
+    getTokenPrice(tokenB.toString(), tokens[tokenB.toString()].coingeckoId)
       .then(data => setTokenBPriceData(data))
       .catch(() => setTokenBPriceData(undefined))
       .finally(() => setPriceBLoading(false))
@@ -583,7 +585,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
     if (tokenA) {
       setPriceALoading(true)
-      await getJupTokenPrice(tokenA.toString())
+      await getTokenPrice(tokenA.toString(), tokens[tokenA.toString()].coingeckoId)
         .then(data => setTokenAPriceData(data))
         .catch(() => setTokenAPriceData(undefined))
         .finally(() => setPriceALoading(false))
@@ -593,7 +595,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
 
     if (tokenB) {
       setPriceBLoading(true)
-      getJupTokenPrice(tokenB.toString())
+      getTokenPrice(tokenB.toString(), tokens[tokenB.toString()].coingeckoId)
         .then(data => setTokenBPriceData(data))
         .catch(() => setTokenBPriceData(undefined))
         .finally(() => setPriceBLoading(false))
@@ -779,7 +781,9 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       isLoadingTokens={isCurrentlyLoadingTokens}
       solBalance={solBalance}
       walletStatus={walletStatus}
-      onConnectWallet={openWalletSelectorModal}
+      onConnectWallet={() => {
+        dispatch(walletActions.connect(false))
+      }}
       onDisconnectWallet={() => {
         dispatch(walletActions.disconnect())
       }}
@@ -787,7 +791,9 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       ticksLoading={ticksLoading}
       loadingTicksAndTickMaps={loadingTicksAndTickMaps}
       noConnectedBlockerProps={{
-        onConnect: openWalletSelectorModal,
+        onConnect: () => {
+          dispatch(walletActions.connect(false))
+        },
         descCustomText: 'Cannot add any liquidity.'
       }}
       progress={progress}

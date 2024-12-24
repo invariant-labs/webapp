@@ -5,7 +5,6 @@ export const useStyles = makeStyles()(() => ({
   container: {
     width: '100%',
     height: '370px',
-    position: 'absolute',
     zIndex: 14
   },
   root: {
@@ -64,6 +63,7 @@ export const useStyles = makeStyles()(() => ({
     ...typography.body2,
     color: colors.white.main,
     textTransform: 'none',
+    backgroundImage: 'none',
     backgroundColor: colors.invariant.light,
     borderRadius: 14,
 
@@ -77,5 +77,8 @@ export const useStyles = makeStyles()(() => ({
         boxShadow: 'none'
       }
     }
+  },
+  buttonText: {
+    ...typography.body2
   }
 }))

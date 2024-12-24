@@ -7,7 +7,7 @@ import {
   calcPriceByTickIndex,
   calcYPerXPriceBySqrtPrice,
   createPlaceholderLiquidityPlot,
-  getJupTokenPrice,
+  getTokenPrice,
   getJupTokensRatioPrice,
   initialXtoY,
   printBN
@@ -33,7 +33,6 @@ import { useNavigate } from 'react-router-dom'
 import useStyles from './style'
 import { TokenPriceData } from '@store/consts/types'
 import { NoConnected } from '@components/NoConnected/NoConnected'
-import { openWalletSelectorModal } from '@utils/web3/selector'
 import { hasTokens, volumeRanges } from '@store/selectors/pools'
 import { hasFarms, hasUserStakes, stakesForPosition } from '@store/selectors/farms'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
@@ -338,7 +337,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
     const xId = position.tokenX.assetAddress.toString() ?? ''
     if (xId.length) {
-      getJupTokenPrice(xId)
+      getTokenPrice(xId, position.tokenX.coingeckoId)
         .then(data => setTokenXPriceData(data))
         .catch(() => setTokenXPriceData(undefined))
     } else {
@@ -347,7 +346,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
     const yId = position.tokenY.assetAddress.toString() ?? ''
     if (yId.length) {
-      getJupTokenPrice(yId)
+      getTokenPrice(yId, position.tokenY.coingeckoId)
         .then(data => setTokenYPriceData(data))
         .catch(() => setTokenYPriceData(undefined))
     } else {
@@ -445,7 +444,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       if (position?.positionIndex === undefined && isClosingPosition) {
         setIsClosingPosition(false)
         dispatch(connectionActions.setTimeoutError(false))
-        navigate('/liquidity')
+        navigate('/portfolio')
       } else {
         dispatch(connectionActions.setTimeoutError(false))
         onRefresh()
@@ -475,7 +474,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             actions.closePosition({
               positionIndex: position.positionIndex,
               onSuccess: () => {
-                navigate('/liquidity')
+                navigate('/portfolio')
               },
               claimFarmRewards
             })
@@ -552,7 +551,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         justifyContent='center'
         className={classes.fullHeightContainer}>
         <NoConnected
-          onConnect={openWalletSelectorModal}
+          onConnect={() => {
+            dispatch(walletActions.connect(false))
+          }}
           title='Connect a wallet to view your position,'
           descCustomText='or start exploring liquidity pools now!'
         />
@@ -568,7 +569,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       className={classes.fullHeightContainer}>
       <EmptyPlaceholder
         desc='The position does not exist in your list! '
-        onAction={() => navigate('/liquidity')}
+        onAction={() => navigate('/portfolio')}
         buttonName='Back to positions'
       />
     </Grid>

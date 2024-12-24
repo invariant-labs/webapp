@@ -1,4 +1,4 @@
-import { DEFAULT_PUBLICKEY } from '@store/consts/static'
+import { DEFAULT_SOL_PUBLICKEY } from '@store/consts/static'
 import { BN } from '@project-serum/anchor'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
@@ -42,7 +42,7 @@ export interface ISolanaWallet {
 
 export const defaultState: ISolanaWallet = {
   status: Status.Uninitialized,
-  address: DEFAULT_PUBLICKEY,
+  address: DEFAULT_SOL_PUBLICKEY,
   balance: new BN(0),
   accounts: {},
   balanceLoading: false
@@ -102,9 +102,10 @@ const solanaWalletSlice = createSlice({
     // Triggers rescan for tokens that we control
     rescanTokens() {},
     airdrop() {},
-    connect() {},
-    disconnect() {},
-    reconnect() {}
+    connect(state, _action: PayloadAction<boolean>) {
+      return state
+    },
+    disconnect() {}
   }
 })
 interface IsetTokenBalance {

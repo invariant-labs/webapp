@@ -1,3 +1,4 @@
+import { alpha } from '@mui/material'
 import { typography, colors } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
@@ -88,16 +89,29 @@ export const useStyles = makeStyles()(() => ({
     border: `1px solid ${colors.invariant.lightGrey}`,
     borderRadius: 5,
     width: 100,
-    padding: 5
+    padding: 8
   },
   tooltipDate: {
-    ...typography.caption4,
+    ...typography.caption2,
     color: colors.white.main,
     textAlign: 'center'
   },
   tooltipValue: {
-    ...typography.caption3,
+    ...typography.caption1,
     color: colors.invariant.green,
     textAlign: 'center'
+  },
+  loadingOverlay: {
+    position: 'relative',
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      backgroundColor: alpha(colors.invariant.newDark, 0.7),
+      backdropFilter: 'blur(4px)',
+      zIndex: 1,
+      pointerEvents: 'none',
+      borderRadius: '24px'
+    }
   }
 }))

@@ -5,12 +5,11 @@ export const useStyles = makeStyles()(() => ({
   container: {
     color: colors.white.main,
     display: 'grid',
-    gridTemplateColumns: '5% auto 15% 15% 15%  15% 80px',
+    gridTemplateColumns: '30px auto 160px 80px 140px 100px 120px',
     padding: '18px 0',
     backgroundColor: colors.invariant.component,
     borderBottom: `1px solid ${colors.invariant.light}`,
     whiteSpace: 'nowrap',
-    maxWidth: '100%',
 
     '& p': {
       ...typography.heading4,
@@ -23,11 +22,15 @@ export const useStyles = makeStyles()(() => ({
     },
 
     [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: 'auto 15% 15% 15%  15% 80px'
+      gridTemplateColumns: 'auto 140px 100px 80px 120px'
+    },
+
+    '@media (max-width: 780px)': {
+      gridTemplateColumns: 'auto 100px 140px 80px'
     },
 
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '32.5% 17.5% 35% 15% ',
+      gridTemplateColumns: 'auto 80px 80px 60px',
 
       '& p': {
         justifyContent: 'flex-start',
@@ -35,7 +38,9 @@ export const useStyles = makeStyles()(() => ({
       }
     }
   },
-
+  containerNoAPY: {
+    gridTemplateColumns: '5% auto 12% 15% 12% 160px'
+  },
   imageContainer: {
     display: 'flex',
     alignItems: 'center'
@@ -59,6 +64,8 @@ export const useStyles = makeStyles()(() => ({
   },
 
   symbolsContainer: {
+    display: 'flex',
+    alignItems: 'center',
     marginLeft: 10,
     paddingRight: 5,
 
@@ -139,16 +146,16 @@ export const useStyles = makeStyles()(() => ({
     }
   },
   iconContainer: {
-    minWidth: 28,
-    maxWidth: 28,
-    height: 28,
+    minWidth: 24,
+    maxWidth: 24,
+    height: 24,
     marginRight: 3,
     position: 'relative'
   },
   tokenIcon: {
-    minWidth: 28,
-    maxWidth: 28,
-    height: 28,
+    minWidth: 24,
+    maxWidth: 24,
+    height: 24,
     marginRight: 3,
     borderRadius: '50%'
   },
@@ -158,5 +165,29 @@ export const useStyles = makeStyles()(() => ({
     height: 12,
     bottom: -6,
     right: -6
+  },
+  clipboardIcon: {
+    marginLeft: 4,
+    width: 18,
+    cursor: 'pointer',
+    color: colors.invariant.lightHover,
+    '&:hover': {
+      color: colors.invariant.text,
+
+      '@media (hover: none)': {
+        color: colors.invariant.lightHover
+      }
+    }
+  },
+  row: {
+    display: 'flex',
+    gap: 4,
+    fontSize: 30,
+    height: 32
+  },
+  apy: {
+    fontSize: 12,
+    alignSelf: 'flex-end',
+    color: colors.invariant.textGrey
   }
 }))
