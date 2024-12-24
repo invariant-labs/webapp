@@ -447,9 +447,8 @@ export const Swap: React.FC<ISwap> = ({
     }
 
     if (
-      isError(SimulationStatus.LimitReached) ||
-      isError(SimulationStatus.PriceLimitReached) ||
-      isError(SimulationStatus.TooLargeGap)
+      isError(SimulationStatus.SwapStepLimitReached) ||
+      isError(SimulationStatus.PriceLimitReached)
     ) {
       return 'Insufficient liquidity'
     }
