@@ -52,6 +52,8 @@ const TokenListItem: React.FC<IProps> = ({
   // const isNegative = priceChange < 0
 
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
+  const isXs = useMediaQuery(theme.breakpoints.down('xs'))
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
 
   const networkUrl = useMemo(() => {
     switch (network) {
@@ -99,7 +101,15 @@ const TokenListItem: React.FC<IProps> = ({
                 }}></img>
               {isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
             </Box>
-            <Typography>
+            {!isSm && (
+              <Typography>
+                {isXs ? shortenAddress(symbol) : name}
+                {!isXs && (
+                  <span className={classes.tokenSymbol}>{` (${shortenAddress(symbol)})`}</span>
+                )}
+              </Typography>
+            )}
+            {/* <Typography>
               {!isMd ? (
                 <>
                   <span className={classes.tokenName}>{name}</span>
@@ -108,7 +118,7 @@ const TokenListItem: React.FC<IProps> = ({
               ) : (
                 shortenAddress(symbol)
               )}
-            </Typography>
+            </Typography> */}
             <TooltipHover text='Copy token address'>
               <FileCopyOutlinedIcon
                 onClick={copyToClipboard}
