@@ -43,7 +43,7 @@ const TokenListItem: React.FC<IProps> = ({
   // const isNegative = priceChange < 0
 
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
-  const hideName = useMediaQuery(theme.breakpoints.down('xs'))
+  const isXs = useMediaQuery(theme.breakpoints.down('xs'))
 
   return (
     <Grid>
@@ -52,7 +52,7 @@ const TokenListItem: React.FC<IProps> = ({
           container
           classes={{ container: classes.container, root: classes.tokenList }}
           style={hideBottomLine ? { border: 'none' } : undefined}>
-          {!hideName && !isSm && <Typography component='p'>{itemNumber}</Typography>}
+          {!isXs && !isSm && <Typography component='p'>{itemNumber}</Typography>}
           <Grid className={classes.tokenName}>
             {!isSm && (
               <Box className={classes.imageContainer}>
@@ -66,16 +66,18 @@ const TokenListItem: React.FC<IProps> = ({
                 {isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
               </Box>
             )}
-            <Typography>
-              {hideName ? shortenAddress(symbol) : name}
-              {!hideName && (
-                <span className={classes.tokenSymbol}>{` (${shortenAddress(symbol)})`}</span>
-              )}
-            </Typography>
+            {!isSm && (
+              <Typography>
+                {isXs ? shortenAddress(symbol) : name}
+                {!isXs && (
+                  <span className={classes.tokenSymbol}>{` (${shortenAddress(symbol)})`}</span>
+                )}
+              </Typography>
+            )}
           </Grid>
           <Typography>{`~$${formatNumber(price)}`}</Typography>
 
-          {/* {!hideName && (
+          {/* {!isXs && (
             <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
               {isNegative ? `${priceChange.toFixed(2)}%` : `+${priceChange.toFixed(2)}%`}
             </Typography>
@@ -88,7 +90,7 @@ const TokenListItem: React.FC<IProps> = ({
           container
           style={{ color: colors.invariant.textGrey, fontWeight: 400 }}
           classes={{ container: classes.container, root: classes.header }}>
-          {!hideName && !isSm && (
+          {!isXs && !isSm && (
             <Typography style={{ lineHeight: '12px' }}>
               N<sup>o</sup>
             </Typography>
@@ -125,7 +127,7 @@ const TokenListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
-          {/* {!hideName && (
+          {/* {!isXs && (
             <Typography
               style={{ cursor: 'pointer' }}
               onClick={() => {
