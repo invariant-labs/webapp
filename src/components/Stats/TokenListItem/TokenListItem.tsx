@@ -52,6 +52,8 @@ const TokenListItem: React.FC<IProps> = ({
   // const isNegative = priceChange < 0
 
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
+  const isXs = useMediaQuery(theme.breakpoints.down('xs'))
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
 
   const networkUrl = useMemo(() => {
     switch (network) {
@@ -79,6 +81,7 @@ const TokenListItem: React.FC<IProps> = ({
         copyAddressHandler('Failed to copy token address to Clipboard', 'error')
       })
   }
+  const shouldShowText = icon === icons.unknownToken || !isSm
 
   return (
     <Grid>
@@ -99,7 +102,15 @@ const TokenListItem: React.FC<IProps> = ({
                 }}></img>
               {isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
             </Box>
-            <Typography>
+            {shouldShowText && (
+              <Typography>
+                {isXs ? shortenAddress(symbol) : name}
+                {!isXs && (
+                  <span className={classes.tokenSymbol}>{` (${shortenAddress(symbol)})`}</span>
+                )}
+              </Typography>
+            )}
+            {/* <Typography>
               {!isMd ? (
                 <>
                   <span className={classes.tokenName}>{name}</span>
@@ -108,7 +119,7 @@ const TokenListItem: React.FC<IProps> = ({
               ) : (
                 shortenAddress(symbol)
               )}
-            </Typography>
+            </Typography> */}
             <TooltipHover text='Copy token address'>
               <FileCopyOutlinedIcon
                 onClick={copyToClipboard}
@@ -118,7 +129,7 @@ const TokenListItem: React.FC<IProps> = ({
           </Grid>
           <Typography>{`~$${formatNumber(price)}`}</Typography>
 
-          {/* {!hideName && (
+          {/* {!isXs && (
             <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
               {isNegative ? `${priceChange.toFixed(2)}%` : `+${priceChange.toFixed(2)}%`}
             </Typography>
@@ -185,7 +196,7 @@ const TokenListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
-          {/* {!hideName && (
+          {/* {!isXs && (
             <Typography
               style={{ cursor: 'pointer' }}
               onClick={() => {
