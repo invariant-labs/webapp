@@ -1,7 +1,12 @@
 import { calculateSellPrice } from '@invariant-labs/bonds-sdk/lib/math'
 import { BondSaleStruct } from '@invariant-labs/bonds-sdk/lib/sale'
 import { calculatePriceSqrt, MAX_TICK, MIN_TICK, Pair } from '@invariant-labs/sdk'
-import { Market, TICK_CROSSES_PER_IX, Tickmap } from '@invariant-labs/sdk/lib/market'
+import {
+  Market,
+  TICK_CROSSES_PER_IX,
+  TICK_VIRTUAL_CROSSES_PER_IX,
+  Tickmap
+} from '@invariant-labs/sdk/lib/market'
 import { getMaxTick, getMinTick, PRICE_SCALE, Range } from '@invariant-labs/sdk/lib/utils'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import {
@@ -44,7 +49,9 @@ import {
   WSOL_DEV,
   SNY_MAIN,
   WEN_MAIN,
-  SUI_MAIN
+  SUI_MAIN,
+  WRAPPED_SOL_ADDRESS,
+  NATIVE_TICK_CROSSES_PER_IX
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
@@ -745,6 +752,13 @@ export const handleSimulate = async (
     for (const tick of poolTicks[pool.address.toString()]) {
       ticks.set(tick.index, tick)
     }
+    let maxCrosses = TICK_CROSSES_PER_IX
+    if (
+      fromToken.toString() === WRAPPED_SOL_ADDRESS ||
+      toToken.toString() === WRAPPED_SOL_ADDRESS
+    ) {
+      maxCrosses = NATIVE_TICK_CROSSES_PER_IX
+    }
 
     try {
       const swapSimulateResult = simulateSwap({
@@ -754,11 +768,10 @@ export const handleSimulate = async (
         slippage: slippage,
         pool: pool,
         ticks: ticks,
-        tickmap: tickmaps[pool.tickmap.toString()]
+        tickmap: tickmaps[pool.tickmap.toString()],
+        maxCrosses,
+        maxVirtualCrosses: TICK_VIRTUAL_CROSSES_PER_IX
       })
-      if (swapSimulateResult.amountPerTick.length > TICK_CROSSES_PER_IX) {
-        errorMessage.push('Too large amount')
-      }
 
       if (!byAmountIn) {
         result = swapSimulateResult.accumulatedAmountIn.add(swapSimulateResult.accumulatedFee)
@@ -781,7 +794,11 @@ export const handleSimulate = async (
 
         okChanges += 1
       } else if (
-        byAmountIn ? allFailedData.amountOut.lt(result) : allFailedData.amountOut.gt(result)
+        byAmountIn
+          ? allFailedData.amountOut.lt(result)
+          : allFailedData.amountOut.eq(MAX_U64)
+            ? true
+            : allFailedData.amountOut.lt(result)
       ) {
         allFailedData = {
           amountOut: result,

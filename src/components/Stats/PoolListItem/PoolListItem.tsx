@@ -72,6 +72,7 @@ const PoolListItem: React.FC<IProps> = ({
   const { classes } = useStyles()
 
   const navigate = useNavigate()
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
   const isSmd = useMediaQuery('(max-width:780px)')
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
 
@@ -154,9 +155,11 @@ const PoolListItem: React.FC<IProps> = ({
               </Box>
             </Box>
             <Grid className={classes.symbolsContainer}>
-              <Typography>
-                {shortenAddress(symbolFrom ?? '')}/{shortenAddress(symbolTo ?? '')}
-              </Typography>
+            {!isSm && (
+                <Typography>
+                  {shortenAddress(symbolFrom ?? '')}/{shortenAddress(symbolTo ?? '')}
+                </Typography>
+              )}
               <TooltipHover text='Copy pool address'>
                 <FileCopyOutlinedIcon
                   onClick={copyToClipboard}
