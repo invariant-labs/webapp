@@ -41,7 +41,7 @@ import { useNavigate } from 'react-router-dom'
 import { PoolWithAddress } from '@store/reducers/pools'
 import { PublicKey } from '@solana/web3.js'
 import { Decimal, Tick, Tickmap } from '@invariant-labs/sdk/lib/market'
-import { fromFee } from '@invariant-labs/sdk/lib/utils'
+import { fromFee, SimulationStatus } from '@invariant-labs/sdk/lib/utils'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 
 export interface Pools {
@@ -447,9 +447,8 @@ export const Swap: React.FC<ISwap> = ({
     }
 
     if (
-      isError('At the end of price range') ||
-      isError('Price would cross swap limit') ||
-      isError('Too large liquidity gap')
+      isError(SimulationStatus.SwapStepLimitReached) ||
+      isError(SimulationStatus.PriceLimitReached)
     ) {
       return 'Insufficient liquidity'
     }
@@ -478,9 +477,8 @@ export const Swap: React.FC<ISwap> = ({
     }
 
     if (
-      (convertBalanceToBN(amountFrom, tokens[tokenFrom.toString()].decimals).eqn(0) ||
-        isError('Amount out is zero')) &&
-      !simulateResult.error.length
+      convertBalanceToBN(amountFrom, tokens[tokenFrom.toString()].decimals).eqn(0) ||
+      isError(SimulationStatus.NoGainSwap)
     ) {
       return 'Insufficient amount'
     }
@@ -495,6 +493,11 @@ export const Swap: React.FC<ISwap> = ({
 
     if (isEveryPoolEmpty) {
       return 'RPC connection error'
+    }
+
+    // Fallback error
+    if (simulateResult.error.length !== 0) {
+      return 'Not enough liquidity'
     }
 
     return 'Exchange'
