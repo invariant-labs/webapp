@@ -41,7 +41,7 @@ import { useNavigate } from 'react-router-dom'
 import { PoolWithAddress } from '@store/reducers/pools'
 import { PublicKey } from '@solana/web3.js'
 import { Decimal, Tick, Tickmap } from '@invariant-labs/sdk/lib/market'
-import { fromFee, SimulationStatus } from '@invariant-labs/sdk/lib/utils'
+import { DECIMAL, fromFee, SimulationStatus } from '@invariant-labs/sdk/lib/utils'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 
 export interface Pools {
@@ -591,6 +591,11 @@ export const Swap: React.FC<ISwap> = ({
     void setSimulateAmount()
   }, [isFetchingNewPool])
 
+  const IS_ERROR_LABEL_SHOW =
+    +printBN(simulateResult.priceImpact, DECIMAL - 2) > 25 ||
+    tokens[tokenFrom?.toString() ?? '']?.isUnknown ||
+    tokens[tokenTo?.toString() ?? '']?.isUnknown
+
   return (
     <Grid container className={classes.swapWrapper} alignItems='center'>
       {/* {wrappedETHAccountExist && (
@@ -810,7 +815,16 @@ export const Swap: React.FC<ISwap> = ({
             network={network}
           />
         </Box>
-        <Box className={classes.unknownWarningContainer}>
+        <Box
+          className={classes.unknownWarningContainer}
+          style={{ height: IS_ERROR_LABEL_SHOW ? '34px' : '0px' }}>
+          {+printBN(simulateResult.priceImpact, DECIMAL - 2) > 25 && (
+            <TooltipHover text='Your trade size might be too large'>
+              <Box className={classes.unknownWarning}>
+                {(+printBN(simulateResult.priceImpact, DECIMAL - 2)).toFixed(2)}% Price impact
+              </Box>
+            </TooltipHover>
+          )}
           {tokens[tokenFrom?.toString() ?? '']?.isUnknown && (
             <TooltipHover
               text={`${
@@ -832,6 +846,7 @@ export const Swap: React.FC<ISwap> = ({
             </TooltipHover>
           )}
         </Box>
+
         <Box className={classes.transactionDetails}>
           <Box className={classes.transactionDetailsInner}>
             <button
