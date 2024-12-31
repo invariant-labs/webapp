@@ -23,6 +23,7 @@ import { PublicKey } from '@solana/web3.js'
 import FaucetButton from './HeaderButton/FaucetButton'
 import SelectPriorityButton from './HeaderButton/SelectPriorityButton'
 import Priority from '@components/Modals/Priority/Priority'
+import { YourPointsButton } from './HeaderButton/YourPointsButton'
 export interface IHeader {
   address: PublicKey
   onNetworkSelect: (networkType: NetworkType, rpcAddress: string, rpcName?: string) => void
@@ -257,6 +258,11 @@ export const Header: React.FC<IHeader> = ({
               onSelect={onNetworkSelect}
             />
           </Grid>
+
+          <Grid>
+            <YourPointsButton />
+          </Grid>
+
           <ChangeWalletButton
             name={
               walletConnected

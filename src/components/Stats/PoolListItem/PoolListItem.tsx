@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import icons from '@static/icons'
 import { NetworkType, SortTypePoolList } from '@store/consts/static'
 
-import { addressToTicker, parseFeeToPathFee, shortenAddress } from '@utils/utils'
+import { addressToTicker, initialXtoY, parseFeeToPathFee, shortenAddress } from '@utils/utils'
 import { formatNumber } from '@utils/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
@@ -77,8 +77,17 @@ const PoolListItem: React.FC<IProps> = ({
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
 
   const handleOpenPosition = () => {
+    const revertRatio = initialXtoY(addressFrom ?? '', addressTo ?? '')
+
+    const tokenA = revertRatio
+      ? addressToTicker(network, addressTo ?? '')
+      : addressToTicker(network, addressFrom ?? '')
+    const tokenB = revertRatio
+      ? addressToTicker(network, addressFrom ?? '')
+      : addressToTicker(network, addressTo ?? '')
+
     navigate(
-      `/newPosition/${addressToTicker(network, addressFrom ?? '')}/${addressToTicker(network, addressTo ?? '')}/${parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))}`,
+      `/newPosition/${tokenA}/${tokenB}/${parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))}`,
       { state: { referer: 'stats' } }
     )
   }
@@ -155,7 +164,7 @@ const PoolListItem: React.FC<IProps> = ({
               </Box>
             </Box>
             <Grid className={classes.symbolsContainer}>
-            {!isSm && (
+              {!isSm && (
                 <Typography>
                   {shortenAddress(symbolFrom ?? '')}/{shortenAddress(symbolTo ?? '')}
                 </Typography>
