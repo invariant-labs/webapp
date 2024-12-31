@@ -40,7 +40,6 @@ import {
   NetworkType,
   PRICE_DECIMAL,
   RENDOGE_DEV,
-  STABLECOIN_ADDRESSES,
   USDC_DEV,
   USDH_DEV,
   USDT_DEV,
@@ -51,7 +50,8 @@ import {
   WEN_MAIN,
   SUI_MAIN,
   WRAPPED_SOL_ADDRESS,
-  NATIVE_TICK_CROSSES_PER_IX
+  NATIVE_TICK_CROSSES_PER_IX,
+  ADDRESSES_TO_REVERT_TOKEN_PAIRS
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
@@ -1633,15 +1633,15 @@ export const addressToTicker = (network: NetworkType, address: string): string =
   return getReversedAddressTickerMap(network)[address] || address
 }
 
-export const initialXtoY = (tokenXAddress?: string, tokenYAddress?: string) => {
+export const initialXtoY = (tokenXAddress?: string | null, tokenYAddress?: string | null) => {
   if (!tokenXAddress || !tokenYAddress) {
     return true
   }
 
-  const isTokeXStablecoin = STABLECOIN_ADDRESSES.includes(tokenXAddress)
-  const isTokenYStablecoin = STABLECOIN_ADDRESSES.includes(tokenYAddress)
+  const tokenXIndex = ADDRESSES_TO_REVERT_TOKEN_PAIRS.findIndex(token => token === tokenXAddress)
+  const tokenYIndex = ADDRESSES_TO_REVERT_TOKEN_PAIRS.findIndex(token => token === tokenYAddress)
 
-  return isTokeXStablecoin === isTokenYStablecoin || (!isTokeXStablecoin && !isTokenYStablecoin)
+  return tokenXIndex < tokenYIndex
 }
 
 export const parseFeeToPathFee = (fee: BN): string => {

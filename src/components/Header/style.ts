@@ -6,7 +6,7 @@ const useStyles = makeStyles()((theme: Theme) => {
   return {
     root: {
       margin: 'auto',
-      maxWidth: 1920,
+      maxWidth: 1960,
       paddingInline: 150,
       height: 70,
       display: 'flex',
@@ -64,7 +64,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       gap: 8,
       flexWrap: 'nowrap',
       alignItems: 'center',
-      [theme.breakpoints.up(1600)]: {
+      [theme.breakpoints.up(1800)]: {
         flex: '1 1 0%'
       },
 
@@ -132,7 +132,7 @@ const useStyles = makeStyles()((theme: Theme) => {
     leftSide: {
       width: 'auto',
 
-      [theme.breakpoints.up(1600)]: {
+      [theme.breakpoints.up(1800)]: {
         flex: '1 1 0%'
       }
     }
