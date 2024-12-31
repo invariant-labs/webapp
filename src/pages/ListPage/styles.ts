@@ -9,7 +9,7 @@ const useStyles = makeStyles()(theme => {
       backgroundColor: 'transparent',
       marginTop: 45,
       paddingInline: 40,
-      minHeight: '70vh',
+      minHeight: '60vh',
 
       [theme.breakpoints.down('sm')]: {
         paddingInline: 8

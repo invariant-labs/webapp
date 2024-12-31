@@ -41,6 +41,8 @@ import backpackWalletIcon from './svg/backpack.svg'
 import nightlyConnect from './svg/nightlyGlyph.svg'
 import empty from './svg/empty-icon.svg'
 import newTabBtn from './svg/newTabBtn.svg'
+import airdrop from './svg/airdrop.svg'
+import airdropRainbow from './svg/airdropRainbow.svg'
 
 const icons: { [key: string]: string } = {
   clear: clearIcon,
@@ -85,7 +87,9 @@ const icons: { [key: string]: string } = {
   circleTelegram,
   eclipse,
   emptyIcon: empty,
-  newTabBtn
+  newTabBtn,
+  airdrop,
+  airdropRainbow
 }
 
 export default icons
