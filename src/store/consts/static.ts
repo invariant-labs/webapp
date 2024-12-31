@@ -362,10 +362,12 @@ export const SIGNING_SNACKBAR_CONFIG: Omit<ISnackbar, 'open'> = {
   persist: true
 }
 
-export const STABLECOIN_ADDRESSES: string[] = [
-  'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-  'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'
-] // USDC, USDT
+export const ADDRESSES_TO_REVERT_TOKEN_PAIRS: string[] = [
+  'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // USDC
+  'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', // USDT
+  'So11111111111111111111111111111111111111112', //SOL
+  '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs' //ETH
+]
 
 export const REFRESHER_INTERVAL = 120
 

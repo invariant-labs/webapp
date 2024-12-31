@@ -13,7 +13,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ILiquidityToken } from './SinglePositionInfo/consts'
 import { useStyles } from './style'
 import { TokenPriceData } from '@store/consts/types'
-import { addressToTicker, parseFeeToPathFee, printBN } from '@utils/utils'
+import { addressToTicker, initialXtoY, parseFeeToPathFee, printBN } from '@utils/utils'
 import { PublicKey } from '@solana/web3.js'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
@@ -221,11 +221,19 @@ const PositionDetails: React.FC<IProps> = ({
                 className={classes.button}
                 variant='contained'
                 onClick={() => {
-                  const parsedFee = parseFeeToPathFee(fee.v)
+                  const parsedFee = parseFeeToPathFee(fee)
                   const address1 = addressToTicker(network, tokenXAddress.toString())
                   const address2 = addressToTicker(network, tokenYAddress.toString())
 
-                  navigate(`/newPosition/${address1}/${address2}/${parsedFee}`)
+                  const revertRatio = !initialXtoY(
+                    tokenXAddress.toString() ?? '',
+                    tokenYAddress.toString() ?? ''
+                  )
+
+                  const tokenA = revertRatio ? address1 : address2
+                  const tokenB = revertRatio ? address2 : address1
+
+                  navigate(`/newPosition/${tokenA}/${tokenB}/${parsedFee}`)
                 }}>
                 <span className={classes.buttonText}>+ Add Position</span>
               </Button>

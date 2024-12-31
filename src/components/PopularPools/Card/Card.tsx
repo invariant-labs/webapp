@@ -10,7 +10,7 @@ import RevertIcon from '@static/svg/revert.svg'
 import { shortenAddress } from '@utils/uiUtils'
 import StatsLabel from './StatsLabel/StatsLabel'
 import backIcon from '@static/svg/back-arrow-2.svg'
-import { addressToTicker, formatNumber, parseFeeToPathFee } from '@utils/utils'
+import { addressToTicker, formatNumber, initialXtoY, parseFeeToPathFee } from '@utils/utils'
 import { useNavigate } from 'react-router-dom'
 import { NetworkType } from '@store/consts/static'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
@@ -43,8 +43,18 @@ const Card: React.FC<ICard> = ({
 
   const handleOpenPosition = () => {
     if (fee === undefined) return
+
+    const revertRatio = initialXtoY(addressFrom ?? '', addressTo ?? '')
+
+    const tokenA = revertRatio
+      ? addressToTicker(network, addressTo ?? '')
+      : addressToTicker(network, addressFrom ?? '')
+    const tokenB = revertRatio
+      ? addressToTicker(network, addressFrom ?? '')
+      : addressToTicker(network, addressTo ?? '')
+
     navigate(
-      `/newPosition/${addressToTicker(network, addressFrom ?? '')}/${addressToTicker(network, addressTo ?? '')}/${parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))}`,
+      `/newPosition/${tokenA}/${tokenB}/${parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))}`,
       { state: { referer: 'liquidity' } }
     )
   }
