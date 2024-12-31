@@ -155,7 +155,7 @@ const PoolListItem: React.FC<IProps> = ({
               </Box>
             </Box>
             <Grid className={classes.symbolsContainer}>
-            {!isSm && (
+              {!isSm && (
                 <Typography>
                   {shortenAddress(symbolFrom ?? '')}/{shortenAddress(symbolTo ?? '')}
                 </Typography>
