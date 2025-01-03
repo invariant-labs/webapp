@@ -45,8 +45,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       backgroundColor: colors.invariant.black,
       borderRadius: '10px',
       transition: 'left 300ms',
-      width: 'fit-content',
-      margin: '0 10px 0 10px'
+      width: 'fit-content'
     },
     connectedWalletIcon: {
       minWidth: 21,
@@ -87,6 +86,7 @@ const useStyles = makeStyles()((theme: Theme) => {
     },
     leftButtons: {
       display: 'flex',
+      flexWrap: 'nowrap',
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: colors.invariant.component,
