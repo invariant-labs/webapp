@@ -31,6 +31,7 @@ import { useStyles } from './style'
 import { Grid, Typography } from '@mui/material'
 import { PositionOpeningMethod } from '@store/consts/types'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { createButtonActions } from '@utils/uiUtils'
 
 export interface InputState {
   value: string
@@ -289,6 +290,19 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
   }, [poolIndex])
 
+  const actionsTokenA = createButtonActions({
+    tokens,
+    wrappedTokenAddress: WRAPPED_SOL_ADDRESS,
+    minAmount: WSOL_MIN_FEE_LAMPORTS,
+    onAmountSet: tokenAInputState.setValue
+  })
+  const actionsTokenB = createButtonActions({
+    tokens,
+    wrappedTokenAddress: WRAPPED_SOL_ADDRESS,
+    minAmount: WSOL_MIN_FEE_LAMPORTS,
+    onAmountSet: tokenBInputState.setValue
+  })
+
   return (
     <Grid container direction='column' className={classNames(classes.wrapper, className)}>
       <Typography className={classes.sectionTitle}>Tokens</Typography>
@@ -385,34 +399,48 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           tokenPrice={priceA}
           currency={tokenA !== null ? tokens[tokenA.toString()].symbol : null}
           currencyIconSrc={tokenA !== null ? tokens[tokenA.toString()].logoURI : undefined}
-          currencyIsUnknown={
-            tokenA !== null ? (tokens[tokenA.toString()].isUnknown ?? false) : false
-          }
+          currencyIsUnknown={tokenA !== null ? tokens[tokenA.toString()].isUnknown ?? false : false}
           placeholder='0.0'
-          onMaxClick={() => {
-            if (tokenA === null) {
-              return
+          // onMaxClick={() => {
+          //   if (tokenA === null) {
+          //     return
+          //   }
+
+          //   if (tokenA.equals(new PublicKey(WRAPPED_SOL_ADDRESS))) {
+          //     tokenAInputState.setValue(
+          //       trimDecimalZeros(
+          //         printBN(
+          //           tokens[tokenA.toString()].balance.gt(WSOL_MIN_FEE_LAMPORTS)
+          //             ? tokens[tokenA.toString()].balance.sub(WSOL_MIN_FEE_LAMPORTS)
+          //             : new BN(0),
+          //           tokens[tokenA.toString()].decimals
+          //         )
+          //       )
+          //     )
+
+          //     return
+          //   }
+
+          //   tokenAInputState.setValue(
+          //     printBN(tokens[tokenA.toString()].balance, tokens[tokenA.toString()].decimals)
+          //   )
+          // }}
+          actionButtons={[
+            {
+              label: 'Max',
+              variant: 'max',
+              onClick: () => {
+                actionsTokenA.max(tokenA?.toString())
+              }
+            },
+            {
+              label: '50%',
+              variant: 'half',
+              onClick: () => {
+                actionsTokenA.half(tokenA?.toString())
+              }
             }
-
-            if (tokenA.equals(new PublicKey(WRAPPED_SOL_ADDRESS))) {
-              tokenAInputState.setValue(
-                trimDecimalZeros(
-                  printBN(
-                    tokens[tokenA.toString()].balance.gt(WSOL_MIN_FEE_LAMPORTS)
-                      ? tokens[tokenA.toString()].balance.sub(WSOL_MIN_FEE_LAMPORTS)
-                      : new BN(0),
-                    tokens[tokenA.toString()].decimals
-                  )
-                )
-              )
-
-              return
-            }
-
-            tokenAInputState.setValue(
-              printBN(tokens[tokenA.toString()].balance, tokens[tokenA.toString()].decimals)
-            )
-          }}
+          ]}
           balanceValue={
             tokenA !== null
               ? printBN(tokens[tokenA.toString()].balance, tokens[tokenA.toString()].decimals)
@@ -438,34 +466,24 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           tokenPrice={priceB}
           currency={tokenB !== null ? tokens[tokenB.toString()].symbol : null}
           currencyIconSrc={tokenB !== null ? tokens[tokenB.toString()].logoURI : undefined}
-          currencyIsUnknown={
-            tokenB !== null ? (tokens[tokenB.toString()].isUnknown ?? false) : false
-          }
+          currencyIsUnknown={tokenB !== null ? tokens[tokenB.toString()].isUnknown ?? false : false}
           placeholder='0.0'
-          onMaxClick={() => {
-            if (tokenB === null) {
-              return
+          actionButtons={[
+            {
+              label: 'Max',
+              variant: 'max',
+              onClick: () => {
+                actionsTokenB.max(tokenB?.toString())
+              }
+            },
+            {
+              label: '50%',
+              variant: 'half',
+              onClick: () => {
+                actionsTokenB.half(tokenB?.toString())
+              }
             }
-
-            if (tokenB.equals(new PublicKey(WRAPPED_SOL_ADDRESS))) {
-              tokenBInputState.setValue(
-                trimDecimalZeros(
-                  printBN(
-                    tokens[tokenB.toString()].balance.gt(WSOL_MIN_FEE_LAMPORTS)
-                      ? tokens[tokenB.toString()].balance.sub(WSOL_MIN_FEE_LAMPORTS)
-                      : new BN(0),
-                    tokens[tokenB.toString()].decimals
-                  )
-                )
-              )
-
-              return
-            }
-
-            tokenBInputState.setValue(
-              printBN(tokens[tokenB.toString()].balance, tokens[tokenB.toString()].decimals)
-            )
-          }}
+          ]}
           balanceValue={
             tokenB !== null
               ? printBN(tokens[tokenB.toString()].balance, tokens[tokenB.toString()].decimals)

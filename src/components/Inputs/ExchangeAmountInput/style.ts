@@ -15,17 +15,26 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       textAlign: 'right'
     }
   },
-  maxButton: {
-    color: colors.invariant.componentBcg,
+  actionButton: {
     ...typography.tiny2,
     borderRadius: 4,
     width: 26,
     minWidth: 26,
     height: 14,
+    fontWeight: '600',
+
+    padding: '0px 15px',
     textTransform: 'none',
     marginLeft: 4,
-    background: ' rgba(46, 224, 154, 0.8)',
     lineHeight: '14px',
+    color: colors.invariant.componentBcg,
+
+    [theme.breakpoints.down('md')]: {
+      width: 26,
+      minWidth: 26,
+      height: 14,
+      marginTop: 2
+    },
 
     '&:hover': {
       background: 'none',
@@ -43,7 +52,31 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       marginTop: 2
     }
   },
-  maxButtonNotActive: {
+  maxVariant: {
+    background: `${colors.invariant.green}cc !important`,
+    '&:hover': {
+      background: 'none',
+      backgroundColor: `${colors.invariant.green} !important`,
+      boxShadow: '0px 0px 20px -10px white',
+      '@media (hover: none)': {
+        background: 'rgba(46, 224, 154, 0.8)',
+        boxShadow: 'none'
+      }
+    }
+  },
+  halfVariant: {
+    background: `${colors.invariant.pink}cc !important`,
+    '&:hover': {
+      background: 'none',
+      backgroundColor: `${colors.invariant.pink} !important`,
+      boxShadow: '0px 0px 20px -10px white',
+      '@media (hover: none)': {
+        background: `${colors.invariant.pink}cc`,
+        boxShadow: 'none'
+      }
+    }
+  },
+  actionButtonNotActive: {
     backgroundColor: colors.invariant.light,
     '&:hover': {
       backgroundColor: colors.invariant.light,
