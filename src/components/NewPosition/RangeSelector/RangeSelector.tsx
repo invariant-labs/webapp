@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import activeLiquidity from '@static/svg/activeLiquidity.svg'
@@ -409,6 +409,28 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     autoZoomHandler(leftRange, rightRange, true)
   }, [tokenASymbol, tokenBSymbol])
 
+  const buyPercentageDifference = useMemo(() => {
+    if (
+      tokenAPriceData?.buyPrice === undefined ||
+      globalPrice === undefined ||
+      tokenBPriceData?.price === undefined
+    ) {
+      return
+    }
+    return ((tokenAPriceData.buyPrice / tokenBPriceData?.price - globalPrice) / globalPrice) * 100
+  }, [tokenAPriceData?.buyPrice, globalPrice, tokenBPriceData?.price])
+
+  const sellPercentageDifference = useMemo(() => {
+    if (
+      tokenAPriceData?.sellPrice === undefined ||
+      globalPrice === undefined ||
+      tokenBPriceData?.price === undefined
+    ) {
+      return
+    }
+    return ((tokenAPriceData.sellPrice / tokenBPriceData?.price - globalPrice) / globalPrice) * 100
+  }, [tokenAPriceData?.sellPrice, globalPrice, tokenBPriceData?.price])
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Grid className={classes.topInnerWrapper}>
@@ -432,22 +454,22 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                   )}
                 </div>
                 <div className={classes.priceBlock}>
-                  {tokenAPriceData?.lastBuyPrice && (
+                  {buyPercentageDifference && (
                     <Typography
                       className={classes.currentPrice}
                       style={{ color: colors.invariant.plotGreen }}>
-                      {formatNumber(tokenAPriceData?.lastBuyPrice, false, 4)} {tokenASymbol}/
-                      {tokenBSymbol}
+                      {buyPercentageDifference < 0 ? '-' : '+'}
+                      {formatNumber(Math.abs(buyPercentageDifference), false, 2)}%
                     </Typography>
                   )}
                 </div>
                 <div className={classes.priceBlock}>
-                  {tokenAPriceData?.lastSellPrice && (
+                  {sellPercentageDifference && (
                     <Typography
                       className={classes.currentPrice}
                       style={{ color: colors.invariant.plotRed }}>
-                      {formatNumber(tokenAPriceData?.lastSellPrice, false, 4)} {tokenASymbol}/
-                      {tokenBSymbol}
+                      {sellPercentageDifference < 0 ? '-' : '+'}{' '}
+                      {formatNumber(Math.abs(sellPercentageDifference), false, 2)}%
                     </Typography>
                   )}
                 </div>
