@@ -419,7 +419,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               <>
                 <div className={classes.priceBlock}>
                   <Typography className={classes.currentPrice}>
-                    {formatNumber(midPrice.x, false, 4)} {tokenBSymbol}/{tokenASymbol}
+                    {formatNumber(midPrice.x, false, 4)} {tokenASymbol}/{tokenBSymbol}
                   </Typography>
                 </div>
                 <div className={classes.priceBlock}>
@@ -427,7 +427,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                     <Typography
                       className={classes.currentPrice}
                       style={{ color: colors.invariant.blue }}>
-                      {formatNumber(globalPrice, false, 4)} {tokenBSymbol}/{tokenASymbol}
+                      {formatNumber(globalPrice, false, 4)} {tokenASymbol}/{tokenBSymbol}
                     </Typography>
                   )}
                 </div>
@@ -436,8 +436,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                     <Typography
                       className={classes.currentPrice}
                       style={{ color: colors.invariant.plotGreen }}>
-                      {formatNumber(tokenAPriceData?.lastBuyPrice, false, 4)} {tokenBSymbol}/
-                      {tokenASymbol}
+                      {formatNumber(tokenAPriceData?.lastBuyPrice, false, 4)} {tokenASymbol}/
+                      {tokenBSymbol}
                     </Typography>
                   )}
                 </div>
@@ -446,8 +446,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                     <Typography
                       className={classes.currentPrice}
                       style={{ color: colors.invariant.plotRed }}>
-                      {formatNumber(tokenAPriceData?.lastSellPrice, false, 4)} {tokenBSymbol}/
-                      {tokenASymbol}
+                      {formatNumber(tokenAPriceData?.lastSellPrice, false, 4)} {tokenASymbol}/
+                      {tokenBSymbol}
                     </Typography>
                   )}
                 </div>
