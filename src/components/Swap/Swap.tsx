@@ -782,7 +782,6 @@ export const Swap: React.FC<ISwap> = ({
               }
             }}
             placeholder={`0.${'0'.repeat(6)}`}
-            onMaxClick={() => {}}
             tokens={tokens}
             current={tokenTo !== null ? tokens[tokenTo.toString()] : null}
             onSelect={setTokenTo}
