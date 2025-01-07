@@ -256,6 +256,10 @@ const useStyles = makeStyles()(theme => {
       ...typography.caption2,
       textAlign: 'right',
       marginLeft: 4
+    },
+    priceBlock: {
+      height: 17,
+      margin: 0
     }
   }
 })

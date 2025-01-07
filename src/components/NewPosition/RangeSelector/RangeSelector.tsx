@@ -19,6 +19,7 @@ import {
 } from '@utils/utils'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Tooltip, Typography } from '@mui/material'
+import { colors } from '@static/theme'
 export interface IRangeSelector {
   data: PlotTickData[]
   midPrice: TickPlotPositionData
@@ -415,9 +416,42 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           <Grid>
             <Typography className={classes.header}>Price range</Typography>
             {poolIndex !== null && (
-              <Typography className={classes.currentPrice}>
-                {formatNumber(midPrice.x, false, 4)} {tokenBSymbol} per {tokenASymbol}
-              </Typography>
+              <>
+                <div className={classes.priceBlock}>
+                  <Typography className={classes.currentPrice}>
+                    {formatNumber(midPrice.x, false, 4)} {tokenBSymbol} per {tokenASymbol}
+                  </Typography>
+                </div>
+                <div className={classes.priceBlock}>
+                  {globalPrice && (
+                    <Typography
+                      className={classes.currentPrice}
+                      style={{ color: colors.invariant.blue }}>
+                      {formatNumber(globalPrice, false, 4)} {tokenBSymbol} per {tokenASymbol}
+                    </Typography>
+                  )}
+                </div>
+                <div className={classes.priceBlock}>
+                  {tokenAPriceData?.lastBuyPrice && (
+                    <Typography
+                      className={classes.currentPrice}
+                      style={{ color: colors.invariant.plotGreen }}>
+                      {formatNumber(tokenAPriceData?.lastBuyPrice, false, 4)} {tokenBSymbol} per{' '}
+                      {tokenASymbol}
+                    </Typography>
+                  )}
+                </div>
+                <div className={classes.priceBlock}>
+                  {tokenAPriceData?.lastSellPrice && (
+                    <Typography
+                      className={classes.currentPrice}
+                      style={{ color: colors.invariant.plotRed }}>
+                      {formatNumber(tokenAPriceData?.lastSellPrice, false, 4)} {tokenBSymbol} per{' '}
+                      {tokenASymbol}
+                    </Typography>
+                  )}
+                </div>
+              </>
             )}
           </Grid>
           <Grid className={classes.activeLiquidityContainer} container direction='column'>
