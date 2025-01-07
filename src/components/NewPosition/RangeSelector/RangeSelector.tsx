@@ -419,7 +419,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               <>
                 <div className={classes.priceBlock}>
                   <Typography className={classes.currentPrice}>
-                    {formatNumber(midPrice.x, false, 4)} {tokenBSymbol} per {tokenASymbol}
+                    {formatNumber(midPrice.x, false, 4)} {tokenBSymbol}/{tokenASymbol}
                   </Typography>
                 </div>
                 <div className={classes.priceBlock}>
@@ -427,7 +427,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                     <Typography
                       className={classes.currentPrice}
                       style={{ color: colors.invariant.blue }}>
-                      {formatNumber(globalPrice, false, 4)} {tokenBSymbol} per {tokenASymbol}
+                      {formatNumber(globalPrice, false, 4)} {tokenBSymbol}/{tokenASymbol}
                     </Typography>
                   )}
                 </div>
@@ -436,7 +436,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                     <Typography
                       className={classes.currentPrice}
                       style={{ color: colors.invariant.plotGreen }}>
-                      {formatNumber(tokenAPriceData?.lastBuyPrice, false, 4)} {tokenBSymbol} per{' '}
+                      {formatNumber(tokenAPriceData?.lastBuyPrice, false, 4)} {tokenBSymbol}/
                       {tokenASymbol}
                     </Typography>
                   )}
@@ -446,7 +446,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                     <Typography
                       className={classes.currentPrice}
                       style={{ color: colors.invariant.plotRed }}>
-                      {formatNumber(tokenAPriceData?.lastSellPrice, false, 4)} {tokenBSymbol} per{' '}
+                      {formatNumber(tokenAPriceData?.lastSellPrice, false, 4)} {tokenBSymbol}/
                       {tokenASymbol}
                     </Typography>
                   )}
