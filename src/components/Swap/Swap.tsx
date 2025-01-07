@@ -43,6 +43,7 @@ import { PublicKey } from '@solana/web3.js'
 import { Decimal, Tick, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL, fromFee, SimulationStatus } from '@invariant-labs/sdk/lib/utils'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import icons from '@static/icons'
 
 export interface Pools {
   tokenX: PublicKey
@@ -1013,6 +1014,7 @@ export const Swap: React.FC<ISwap> = ({
           />
         )}
       </Grid>
+      <img src={icons.audit} alt='Audit' style={{ marginTop: '24px' }} width={180} />
     </Grid>
   )
 }
