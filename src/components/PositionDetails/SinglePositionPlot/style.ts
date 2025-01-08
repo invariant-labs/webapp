@@ -15,10 +15,12 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   headerContainer: {
     ...typography.heading4,
-    color: '#FFFFFF'
+    color: '#FFFFFF',
+    paddingBottom: 12
   },
   header: {
-    paddingBottom: 30
+    ...typography.heading4,
+    color: colors.white.main
   },
   plotWrapper: {
     paddingBottom: 29
@@ -86,6 +88,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     marginBottom: 16
   },
   activeLiquidity: {
+    height: 24,
     color: colors.invariant.text,
     ...typography.caption2,
     display: 'flex',
@@ -142,6 +145,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     marginLeft: 16
   },
   currentPrice: {
+    display: 'inline-block',
     color: colors.invariant.yellow,
     ...typography.caption2,
     textAlign: 'right'
@@ -166,6 +170,11 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     ...typography.caption2,
     textAlign: 'right',
     marginLeft: 4
+  },
+  priceBlock: {
+    height: 17,
+    margin: 0,
+    textAlign: 'left'
   }
 }))
 

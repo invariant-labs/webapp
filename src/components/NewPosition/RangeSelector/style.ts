@@ -15,7 +15,7 @@ const useStyles = makeStyles()(theme => {
       }
     },
     headerContainer: {
-      marginBottom: 12
+      paddingBottom: 12
     },
     header: {
       ...typography.heading4,
