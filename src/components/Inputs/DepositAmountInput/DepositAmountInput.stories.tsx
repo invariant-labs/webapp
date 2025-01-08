@@ -23,7 +23,6 @@ const meta = {
     setValue: fn(),
     value: '0',
     placeholder: '0.0',
-    onMaxClick: fn(),
     decimalsLimit: 2,
     tokenPrice: 100,
     balanceValue: '1000',

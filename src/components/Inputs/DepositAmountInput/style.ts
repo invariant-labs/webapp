@@ -145,7 +145,7 @@ export const useStyles = makeStyles<{ isSelected: boolean }>()((theme: Theme, { 
   estimatedBalance: {
     ...caption2styles
   },
-  maxButton: {
+  actionButton: {
     color: colors.invariant.componentBcg,
     ...typography.tiny2,
     borderRadius: 4,
@@ -173,7 +173,31 @@ export const useStyles = makeStyles<{ isSelected: boolean }>()((theme: Theme, { 
       marginTop: 2
     }
   },
-  maxButtonNotActive: {
+  maxVariant: {
+    background: `${colors.invariant.green}cc !important`,
+    '&:hover': {
+      background: 'none',
+      backgroundColor: `${colors.invariant.green} !important`,
+      boxShadow: '0px 0px 20px -10px white',
+      '@media (hover: none)': {
+        background: 'rgba(46, 224, 154, 0.8)',
+        boxShadow: 'none'
+      }
+    }
+  },
+  halfVariant: {
+    background: `${colors.invariant.pink}cc !important`,
+    '&:hover': {
+      background: 'none',
+      backgroundColor: `${colors.invariant.pink} !important`,
+      boxShadow: '0px 0px 20px -10px white',
+      '@media (hover: none)': {
+        background: `${colors.invariant.pink}cc`,
+        boxShadow: 'none'
+      }
+    }
+  },
+  actionButtonNotActive: {
     backgroundColor: colors.invariant.light,
     '&:hover': {
       backgroundColor: colors.invariant.light,
