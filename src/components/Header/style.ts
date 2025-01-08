@@ -45,7 +45,9 @@ const useStyles = makeStyles()((theme: Theme) => {
       backgroundColor: colors.invariant.black,
       borderRadius: '10px',
       transition: 'left 300ms',
-      width: 'fit-content'
+      width: 'fit-content',
+      margin: '0 12px',
+      textWrap: 'nowrap'
     },
     connectedWalletIcon: {
       minWidth: 21,
@@ -92,7 +94,10 @@ const useStyles = makeStyles()((theme: Theme) => {
       backgroundColor: colors.invariant.component,
       borderRadius: 14,
       width: 'auto',
-      padding: 4
+      padding: 4,
+      [theme.breakpoints.down('lg')]: {
+        marginLeft: 12
+      }
     },
     buttonsLgConnected: {
       [theme.breakpoints.up('lg')]: {
