@@ -57,7 +57,6 @@ const meta = {
     className: '',
     decimal: 2,
     placeholder: '0.0',
-    onMaxClick: fn(),
     current: null,
     tokens: tokens,
     onSelect: fn(),
