@@ -43,6 +43,7 @@ import empty from './svg/empty-icon.svg'
 import newTabBtn from './svg/newTabBtn.svg'
 import airdrop from './svg/airdrop.svg'
 import airdropRainbow from './svg/airdropRainbow.svg'
+import audit from './svg/audit.svg'
 
 const icons: { [key: string]: string } = {
   clear: clearIcon,
@@ -89,7 +90,8 @@ const icons: { [key: string]: string } = {
   emptyIcon: empty,
   newTabBtn,
   airdrop,
-  airdropRainbow
+  airdropRainbow,
+  audit
 }
 
 export default icons
