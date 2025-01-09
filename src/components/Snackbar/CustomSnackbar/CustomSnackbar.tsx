@@ -98,6 +98,13 @@ const CustomSnackbar = React.forwardRef<HTMLDivElement, CustomContentProps>(
               </StyledCloseButton>
             </Grid>
           )}
+          {!link && !txid && (
+            <Grid display='flex' mx={1} minWidth='fit-content'>
+              <StyledCloseButton onClick={handleDismiss}>
+                <img width={16} src={icons.closeIcon} alt='Close'></img>
+              </StyledCloseButton>
+            </Grid>
+          )}
         </>
       )
     }
