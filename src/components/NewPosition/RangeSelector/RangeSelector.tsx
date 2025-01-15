@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import activeLiquidity from '@static/svg/activeLiquidity.svg'
@@ -19,6 +19,7 @@ import {
 } from '@utils/utils'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Tooltip, Typography } from '@mui/material'
+import { colors } from '@static/theme'
 export interface IRangeSelector {
   data: PlotTickData[]
   midPrice: TickPlotPositionData
@@ -408,6 +409,28 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     autoZoomHandler(leftRange, rightRange, true)
   }, [tokenASymbol, tokenBSymbol])
 
+  const buyPercentageDifference = useMemo(() => {
+    if (
+      tokenAPriceData?.buyPrice === undefined ||
+      globalPrice === undefined ||
+      tokenBPriceData?.price === undefined
+    ) {
+      return
+    }
+    return ((tokenAPriceData.buyPrice / tokenBPriceData?.price - globalPrice) / globalPrice) * 100
+  }, [tokenAPriceData?.buyPrice, globalPrice, tokenBPriceData?.price])
+
+  const sellPercentageDifference = useMemo(() => {
+    if (
+      tokenAPriceData?.sellPrice === undefined ||
+      globalPrice === undefined ||
+      tokenBPriceData?.price === undefined
+    ) {
+      return
+    }
+    return ((tokenAPriceData.sellPrice / tokenBPriceData?.price - globalPrice) / globalPrice) * 100
+  }, [tokenAPriceData?.sellPrice, globalPrice, tokenBPriceData?.price])
+
   return (
     <Grid container className={classes.wrapper} direction='column'>
       <Grid className={classes.topInnerWrapper}>
@@ -415,9 +438,42 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           <Grid>
             <Typography className={classes.header}>Price range</Typography>
             {poolIndex !== null && (
-              <Typography className={classes.currentPrice}>
-                {formatNumber(midPrice.x, false, 4)} {tokenBSymbol} per {tokenASymbol}
-              </Typography>
+              <>
+                <div className={classes.priceBlock}>
+                  <Typography className={classes.currentPrice}>
+                    {formatNumber(midPrice.x, false, 4)} {tokenASymbol}/{tokenBSymbol}
+                  </Typography>
+                </div>
+                <div className={classes.priceBlock}>
+                  {globalPrice && (
+                    <Typography
+                      className={classes.currentPrice}
+                      style={{ color: colors.invariant.blue }}>
+                      {formatNumber(globalPrice, false, 4)} {tokenASymbol}/{tokenBSymbol}
+                    </Typography>
+                  )}
+                </div>
+                <div className={classes.priceBlock}>
+                  {buyPercentageDifference && (
+                    <Typography
+                      className={classes.currentPrice}
+                      style={{ color: colors.invariant.plotGreen }}>
+                      {buyPercentageDifference < 0 ? '-' : '+'}
+                      {formatNumber(Math.abs(buyPercentageDifference), false, 2)}%
+                    </Typography>
+                  )}
+                </div>
+                <div className={classes.priceBlock}>
+                  {sellPercentageDifference && (
+                    <Typography
+                      className={classes.currentPrice}
+                      style={{ color: colors.invariant.plotRed }}>
+                      {sellPercentageDifference < 0 ? '-' : '+'}{' '}
+                      {formatNumber(Math.abs(sellPercentageDifference), false, 2)}%
+                    </Typography>
+                  )}
+                </div>
+              </>
             )}
           </Grid>
           <Grid className={classes.activeLiquidityContainer} container direction='column'>
