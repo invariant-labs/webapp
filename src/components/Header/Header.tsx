@@ -75,7 +75,6 @@ export const Header: React.FC<IHeader> = ({
   const showRPCBelowBreakpoint = useMediaQuery('@media (max-width:1050px)')
 
   const routes = ['exchange', 'liquidity', 'portfolio', 'statistics']
-  const showRPCBelowBreakpoint = useMediaQuery('@media (max-width:1050px)')
   const otherRoutesToHighlight: Record<string, RegExp[]> = {
     liquidity: [/^liquidity\/*/],
     exchange: [/^exchange\/*/],
