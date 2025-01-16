@@ -72,6 +72,7 @@ export const Header: React.FC<IHeader> = ({
   const navigate = useNavigate()
 
   const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
+  const showRPCBelowBreakpoint = useMediaQuery('@media (max-width:1050px)')
 
   const routes = ['exchange', 'liquidity', 'portfolio', 'statistics']
   const showRPCBelowBreakpoint = useMediaQuery('@media (max-width:1050px)')
