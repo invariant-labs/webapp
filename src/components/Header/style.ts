@@ -46,8 +46,6 @@ const useStyles = makeStyles()((theme: Theme) => {
       borderRadius: '10px',
       transition: 'left 300ms',
       width: 'fit-content'
-      // margin: '0 12px',
-      // textWrap: 'nowrap'
     },
     connectedWalletIcon: {
       minWidth: 21,
@@ -65,9 +63,6 @@ const useStyles = makeStyles()((theme: Theme) => {
       gap: 8,
       flexWrap: 'nowrap',
       alignItems: 'center',
-      // [theme.breakpoints.up(1800)]: {
-      //   flex: '1 1 0%'
-      // },
 
       [theme.breakpoints.up('lg')]: {
         minWidth: 350
@@ -79,7 +74,6 @@ const useStyles = makeStyles()((theme: Theme) => {
 
       [theme.breakpoints.down('md')]: {
         marginLeft: 0
-        //justifyContent: 'center'
       },
 
       [theme.breakpoints.down('sm')]: {
@@ -95,9 +89,6 @@ const useStyles = makeStyles()((theme: Theme) => {
       borderRadius: 14,
       width: 'auto',
       padding: 4
-      // [theme.breakpoints.down('lg')]: {
-      //   marginLeft: 12
-      // }
     },
     buttonsLgConnected: {
       [theme.breakpoints.up('lg')]: {
