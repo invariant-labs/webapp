@@ -65,9 +65,6 @@ const useStyles = makeStyles()((theme: Theme) => {
       gap: 8,
       flexWrap: 'nowrap',
       alignItems: 'center',
-      [theme.breakpoints.up(1800)]: {
-        flex: '1 1 0%'
-      },
 
       [theme.breakpoints.up('lg')]: {
         minWidth: 350
@@ -135,11 +132,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       }
     },
     leftSide: {
-      width: 'auto',
-
-      [theme.breakpoints.up(1800)]: {
-        flex: '1 1 0%'
-      }
+      width: 'auto'
     }
   }
 })
