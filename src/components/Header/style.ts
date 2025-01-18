@@ -45,9 +45,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       backgroundColor: colors.invariant.black,
       borderRadius: '10px',
       transition: 'left 300ms',
-      width: 'fit-content',
-      margin: '0 12px',
-      textWrap: 'nowrap'
+      width: 'fit-content'
     },
     connectedWalletIcon: {
       minWidth: 21,
@@ -65,9 +63,6 @@ const useStyles = makeStyles()((theme: Theme) => {
       gap: 8,
       flexWrap: 'nowrap',
       alignItems: 'center',
-      [theme.breakpoints.up(1800)]: {
-        flex: '1 1 0%'
-      },
 
       [theme.breakpoints.up('lg')]: {
         minWidth: 350
@@ -78,8 +73,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       },
 
       [theme.breakpoints.down('md')]: {
-        marginLeft: 0,
-        justifyContent: 'center'
+        marginLeft: 0
       },
 
       [theme.breakpoints.down('sm')]: {
@@ -94,10 +88,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       backgroundColor: colors.invariant.component,
       borderRadius: 14,
       width: 'auto',
-      padding: 4,
-      [theme.breakpoints.down('lg')]: {
-        marginLeft: 12
-      }
+      padding: 4
     },
     buttonsLgConnected: {
       [theme.breakpoints.up('lg')]: {
@@ -135,11 +126,11 @@ const useStyles = makeStyles()((theme: Theme) => {
       }
     },
     leftSide: {
-      width: 'auto',
+      width: 'auto'
 
-      [theme.breakpoints.up(1800)]: {
-        flex: '1 1 0%'
-      }
+      // [theme.breakpoints.up(1800)]: {
+      //   flex: '1 1 0%'
+      // }
     }
   }
 })
