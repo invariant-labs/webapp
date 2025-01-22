@@ -449,7 +449,7 @@ export const NewPosition: React.FC<INewPosition> = ({
   const updatePath = (address1: PublicKey | null, address2: PublicKey | null, fee: number) => {
     if (canNavigate) {
       const parsedFee = parseFeeToPathFee(+ALL_FEE_TIERS_DATA[fee].tier.fee)
-      console.log(+ALL_FEE_TIERS_DATA[fee].tier.fee)
+
       if (address1 != null && address2 != null) {
         const token1Symbol = addressToTicker(
           network,
