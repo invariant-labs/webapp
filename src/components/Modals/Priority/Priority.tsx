@@ -149,7 +149,7 @@ const Priority: React.FC<IPriority> = ({
   }, [inputValue, selectedIndex])
 
   const handleClick = (index: number) => {
-    setInputValue('')
+    setInputValue(priorityFeeOptions[index].value.toString())
 
     setPriorityMode(priorityFeeOptions[index].label)
     setSelectedIndex(index)
