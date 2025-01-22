@@ -77,7 +77,7 @@ const PoolListItem: React.FC<IProps> = ({
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
 
   const handleOpenPosition = () => {
-    const revertRatio = initialXtoY(addressFrom ?? '', addressTo ?? '')
+    const revertRatio = !initialXtoY(addressFrom ?? '', addressTo ?? '')
 
     const tokenA = revertRatio
       ? addressToTicker(network, addressTo ?? '')

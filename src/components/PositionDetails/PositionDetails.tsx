@@ -225,7 +225,7 @@ const PositionDetails: React.FC<IProps> = ({
                   const address1 = addressToTicker(network, tokenXAddress.toString())
                   const address2 = addressToTicker(network, tokenYAddress.toString())
 
-                  const revertRatio = !initialXtoY(
+                  const revertRatio = initialXtoY(
                     tokenXAddress.toString() ?? '',
                     tokenYAddress.toString() ?? ''
                   )

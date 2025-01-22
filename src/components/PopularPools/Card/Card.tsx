@@ -44,7 +44,7 @@ const Card: React.FC<ICard> = ({
   const handleOpenPosition = () => {
     if (fee === undefined) return
 
-    const revertRatio = initialXtoY(addressFrom ?? '', addressTo ?? '')
+    const revertRatio = !initialXtoY(addressFrom ?? '', addressTo ?? '')
 
     const tokenA = revertRatio
       ? addressToTicker(network, addressTo ?? '')
