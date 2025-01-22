@@ -149,7 +149,7 @@ const Priority: React.FC<IPriority> = ({
   }, [inputValue, selectedIndex])
 
   const handleClick = (index: number) => {
-    setInputValue('')
+    setInputValue(priorityFeeOptions[index].value.toString())
 
     setPriorityMode(priorityFeeOptions[index].label)
     setSelectedIndex(index)
@@ -215,6 +215,19 @@ const Priority: React.FC<IPriority> = ({
 
     return () => clearInterval(interval)
   }, [priorityMode])
+
+  const [firstLoad, setFirstLoad] = useState(true)
+
+  useEffect(() => {
+    if (priorityMode === PriorityMode.Custom) {
+      setFirstLoad(false)
+      return
+    }
+    if (firstLoad && dynamicFee !== null) {
+      setFirstLoad(false)
+      setInputValue(priorityFeeOptions[selectedIndex].saveValue.toString())
+    }
+  }, [priorityFeeOptions])
 
   const getCurrentDynamicFee = async () => {
     const response = await fetch('https://solanacompass.com/api/fees')
