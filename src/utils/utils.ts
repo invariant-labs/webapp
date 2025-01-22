@@ -1641,7 +1641,21 @@ export const initialXtoY = (tokenXAddress?: string | null, tokenYAddress?: strin
   const tokenXIndex = ADDRESSES_ORDER_TO_REVERT.findIndex(token => token === tokenXAddress)
   const tokenYIndex = ADDRESSES_ORDER_TO_REVERT.findIndex(token => token === tokenYAddress)
 
-  return tokenXIndex < tokenYIndex
+  if (tokenXIndex === -1 || tokenYIndex === -1) {
+    return true
+  }
+
+  if (tokenXIndex !== -1 && tokenYIndex !== -1) {
+    if (tokenXIndex < tokenYIndex) {
+      return false
+    } else {
+      return true
+    }
+  } else if (tokenXIndex > tokenYIndex) {
+    return true
+  } else {
+    return false
+  }
 }
 
 export const parseFeeToPathFee = (fee: BN): string => {
