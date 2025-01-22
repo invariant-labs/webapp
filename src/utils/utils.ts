@@ -51,7 +51,7 @@ import {
   SUI_MAIN,
   WRAPPED_SOL_ADDRESS,
   NATIVE_TICK_CROSSES_PER_IX,
-  ADDRESSES_TO_REVERT_TOKEN_PAIRS
+  ADDRESSES_ORDER_TO_REVERT
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
@@ -1638,10 +1638,24 @@ export const initialXtoY = (tokenXAddress?: string | null, tokenYAddress?: strin
     return true
   }
 
-  const tokenXIndex = ADDRESSES_TO_REVERT_TOKEN_PAIRS.findIndex(token => token === tokenXAddress)
-  const tokenYIndex = ADDRESSES_TO_REVERT_TOKEN_PAIRS.findIndex(token => token === tokenYAddress)
+  const tokenXIndex = ADDRESSES_ORDER_TO_REVERT.findIndex(token => token === tokenXAddress)
+  const tokenYIndex = ADDRESSES_ORDER_TO_REVERT.findIndex(token => token === tokenYAddress)
 
-  return tokenXIndex < tokenYIndex
+  if (tokenXIndex === -1 || tokenYIndex === -1) {
+    return true
+  }
+
+  if (tokenXIndex !== -1 && tokenYIndex !== -1) {
+    if (tokenXIndex < tokenYIndex) {
+      return false
+    } else {
+      return true
+    }
+  } else if (tokenXIndex > tokenYIndex) {
+    return true
+  } else {
+    return false
+  }
 }
 
 export const parseFeeToPathFee = (fee: BN): string => {

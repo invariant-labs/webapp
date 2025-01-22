@@ -44,14 +44,14 @@ const Card: React.FC<ICard> = ({
   const handleOpenPosition = () => {
     if (fee === undefined) return
 
-    const revertRatio = initialXtoY(addressFrom ?? '', addressTo ?? '')
+    const isXToY = initialXtoY(addressFrom ?? '', addressTo ?? '')
 
-    const tokenA = revertRatio
-      ? addressToTicker(network, addressTo ?? '')
-      : addressToTicker(network, addressFrom ?? '')
-    const tokenB = revertRatio
+    const tokenA = isXToY
       ? addressToTicker(network, addressFrom ?? '')
       : addressToTicker(network, addressTo ?? '')
+    const tokenB = isXToY
+      ? addressToTicker(network, addressTo ?? '')
+      : addressToTicker(network, addressFrom ?? '')
 
     navigate(
       `/newPosition/${tokenA}/${tokenB}/${parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))}`,
