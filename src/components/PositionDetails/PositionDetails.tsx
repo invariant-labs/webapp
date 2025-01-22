@@ -221,7 +221,7 @@ const PositionDetails: React.FC<IProps> = ({
                 className={classes.button}
                 variant='contained'
                 onClick={() => {
-                  const parsedFee = parseFeeToPathFee(fee)
+                  const parsedFee = parseFeeToPathFee(fee.v)
                   const address1 = addressToTicker(network, tokenXAddress.toString())
                   const address2 = addressToTicker(network, tokenYAddress.toString())
 
