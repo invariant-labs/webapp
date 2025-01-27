@@ -6,15 +6,17 @@ import activeLiquidity from '@static/svg/activeLiquidity.svg'
 import {
   calcPriceByTickIndex,
   calcTicksAmountInRange,
+  formatNumber,
   numberToString,
   spacingMultiplicityGte,
   TokenPriceData
 } from '@utils/utils'
 import { PlotTickData } from '@store/reducers/positions'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { ILiquidityToken } from '../SinglePositionInfo/consts'
 import useStyles from './style'
 import { getMinTick } from '@invariant-labs/sdk/lib/utils'
+import { colors } from '@static/theme'
 
 export interface ISinglePositionPlot {
   data: PlotTickData[]
@@ -147,10 +149,72 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     }
   }
 
+  const buyPercentageDifference = useMemo(() => {
+    if (
+      tokenAPriceData?.buyPrice === undefined ||
+      globalPrice === undefined ||
+      tokenBPriceData?.price === undefined
+    ) {
+      return
+    }
+    return ((tokenAPriceData.buyPrice / tokenBPriceData?.price - globalPrice) / globalPrice) * 100
+  }, [tokenAPriceData?.buyPrice, globalPrice, tokenBPriceData?.price])
+
+  const sellPercentageDifference = useMemo(() => {
+    if (
+      tokenAPriceData?.sellPrice === undefined ||
+      globalPrice === undefined ||
+      tokenBPriceData?.price === undefined
+    ) {
+      return
+    }
+    return ((tokenAPriceData.sellPrice / tokenBPriceData?.price - globalPrice) / globalPrice) * 100
+  }, [tokenAPriceData?.sellPrice, globalPrice, tokenBPriceData?.price])
+
   return (
     <Grid item className={classes.root}>
       <Grid className={classes.headerContainer} container justifyContent='space-between'>
-        <Typography className={classes.header}>Price range</Typography>
+        <Grid>
+          <Typography className={classes.header}>Price range</Typography>
+          {
+            <>
+              <div className={classes.priceBlock}>
+                <Typography className={classes.currentPrice}>
+                  {formatNumber(midPrice.x, false, 4)} {tokenX.name}/{tokenY.name}
+                </Typography>
+              </div>
+              <div className={classes.priceBlock}>
+                {globalPrice && (
+                  <Typography
+                    className={classes.currentPrice}
+                    style={{ color: colors.invariant.blue }}>
+                    {formatNumber(globalPrice, false, 4)} {tokenX.name}/{tokenY.name}
+                  </Typography>
+                )}
+              </div>
+              <div className={classes.priceBlock}>
+                {buyPercentageDifference && (
+                  <Typography
+                    className={classes.currentPrice}
+                    style={{ color: colors.invariant.plotGreen }}>
+                    {buyPercentageDifference < 0 ? '-' : '+'}
+                    {formatNumber(Math.abs(buyPercentageDifference), false, 2)}%
+                  </Typography>
+                )}
+              </div>
+              <div className={classes.priceBlock}>
+                {sellPercentageDifference && (
+                  <Typography
+                    className={classes.currentPrice}
+                    style={{ color: colors.invariant.plotRed }}>
+                    {sellPercentageDifference < 0 ? '-' : '+'}{' '}
+                    {formatNumber(Math.abs(sellPercentageDifference), false, 2)}%
+                  </Typography>
+                )}
+              </div>
+            </>
+          }
+        </Grid>
         <Grid>
           <Tooltip
             enterTouchDelay={0}

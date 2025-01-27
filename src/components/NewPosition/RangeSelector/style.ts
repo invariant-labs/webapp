@@ -15,7 +15,7 @@ const useStyles = makeStyles()(theme => {
       }
     },
     headerContainer: {
-      marginBottom: 12
+      paddingBottom: 12
     },
     header: {
       ...typography.heading4,
@@ -256,6 +256,10 @@ const useStyles = makeStyles()(theme => {
       ...typography.caption2,
       textAlign: 'right',
       marginLeft: 4
+    },
+    priceBlock: {
+      height: 17,
+      margin: 0
     }
   }
 })
