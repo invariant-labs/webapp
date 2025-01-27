@@ -44,14 +44,14 @@ const Card: React.FC<ICard> = ({
   const handleOpenPosition = () => {
     if (fee === undefined) return
 
-    const revertRatio = initialXtoY(addressFrom ?? '', addressTo ?? '')
+    const isXToY = initialXtoY(addressFrom ?? '', addressTo ?? '')
 
-    const tokenA = revertRatio
-      ? addressToTicker(network, addressTo ?? '')
-      : addressToTicker(network, addressFrom ?? '')
-    const tokenB = revertRatio
+    const tokenA = isXToY
       ? addressToTicker(network, addressFrom ?? '')
       : addressToTicker(network, addressTo ?? '')
+    const tokenB = isXToY
+      ? addressToTicker(network, addressTo ?? '')
+      : addressToTicker(network, addressFrom ?? '')
 
     navigate(
       `/newPosition/${tokenA}/${tokenB}/${parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))}`,
@@ -129,7 +129,7 @@ const Card: React.FC<ICard> = ({
                 {apy !== undefined && showAPY && (
                   <StatsLabel
                     title='APY'
-                    value={`${apy > 1000 ? '>1000%' : apy === 0 ? '-' : apy.toFixed(2) + '%'}`}
+                    value={`${apy > 1000 ? '>1000%' : apy === 0 ? '-' : Math.abs(apy).toFixed(2) + '%'}`}
                   />
                 )}
                 <StatsLabel title='Fee' value={fee + '%'} />

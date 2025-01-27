@@ -72,9 +72,9 @@ export const Header: React.FC<IHeader> = ({
   const navigate = useNavigate()
 
   const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
+  const showRPCBelowBreakpoint = useMediaQuery('@media (max-width:1050px)')
 
   const routes = ['exchange', 'liquidity', 'portfolio', 'statistics']
-
   const otherRoutesToHighlight: Record<string, RegExp[]> = {
     liquidity: [/^liquidity\/*/],
     exchange: [/^exchange\/*/],
@@ -179,7 +179,13 @@ export const Header: React.FC<IHeader> = ({
           item
           className={classes.routers}
           wrap='nowrap'
-          sx={{ display: { xs: 'none', lg: 'block' } }}>
+          sx={{
+            display: { lg: 'block' },
+
+            '@media (max-width: 1450px)': {
+              display: 'none'
+            }
+          }}>
           {routes.map(path => (
             <Link key={`path-${path}`} to={`/${path}`} className={classes.link}>
               <NavbarButton
@@ -217,7 +223,14 @@ export const Header: React.FC<IHeader> = ({
                 />
               ) : null}
             </Box>
-            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+            <Box
+              sx={{
+                display: { md: 'block' },
+
+                '@media (max-width: 1050px)': {
+                  display: 'none'
+                }
+              }}>
               <SelectRPCButton
                 rpc={rpc}
                 networks={networks}
@@ -251,7 +264,16 @@ export const Header: React.FC<IHeader> = ({
               ]}
               onSelect={onNetworkSelect}
             />
-            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+            <Box
+              sx={{
+                display: {
+                  md: 'block',
+
+                  '@media (max-width: 1050px)': {
+                    display: 'none'
+                  }
+                }
+              }}>
               <SelectChainButton
                 activeChain={activeChain}
                 chains={CHAINS}
@@ -286,7 +308,16 @@ export const Header: React.FC<IHeader> = ({
           />
         </Grid>
 
-        <Grid sx={{ display: { xs: 'block', lg: 'none' } }}>
+        <Grid
+          sx={{
+            display: {
+              md: 'block',
+
+              '@media (min-width: 1450px)': {
+                display: 'none'
+              }
+            }
+          }}>
           <IconButton
             className={classes.menuButton}
             onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
@@ -312,7 +343,7 @@ export const Header: React.FC<IHeader> = ({
             }}
             onFaucet={isMdDown && typeOfNetwork === NetworkType.Testnet ? onFaucet : undefined}
             onRPC={
-              isMdDown
+              showRPCBelowBreakpoint
                 ? () => {
                     setRoutesModalOpen(false)
                     setRpcsModalOpen(true)
