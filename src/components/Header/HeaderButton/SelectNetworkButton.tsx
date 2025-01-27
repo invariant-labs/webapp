@@ -1,11 +1,12 @@
 import React from 'react'
 import useStyles from './style'
 import { blurContent, unblurContent } from '@utils/uiUtils'
-import { Button } from '@mui/material'
+import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import SelectNetwork from '@components/Modals/SelectNetwork/SelectNetwork'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { ISelectNetwork } from '@store/consts/types'
 import { NetworkType } from '@store/consts/static'
+import { colors, typography } from '@static/theme'
 
 export interface IProps {
   name: NetworkType
@@ -43,7 +44,24 @@ export const SelectNetworkButton: React.FC<IProps> = ({
         disabled={disabled}
         endIcon={<KeyboardArrowDownIcon id='downIcon' />}
         onClick={handleClick}>
-        {name}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            height: '100%'
+          }}>
+          <Box style={{ color: colors.invariant.text, lineHeight: '12px' }}> {name}</Box>
+          <Typography
+            style={{
+              color: colors.invariant.textGrey,
+              ...typography.caption4,
+              marginTop: '4px',
+              textAlign: 'left'
+            }}>
+            Network
+          </Typography>
+        </Box>
       </Button>
       <SelectNetwork
         networks={networks}
