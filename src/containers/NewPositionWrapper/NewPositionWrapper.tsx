@@ -52,12 +52,16 @@ export interface IProps {
   initialTokenFrom: string
   initialTokenTo: string
   initialFee: string
+  initialConcentration: string
+  initialIsRange: boolean | null
 }
 
 export const NewPositionWrapper: React.FC<IProps> = ({
   initialTokenFrom,
   initialTokenTo,
-  initialFee
+  initialFee,
+  initialConcentration,
+  initialIsRange
 }) => {
   const dispatch = useDispatch()
   const connection = getCurrentSolanaConnection()
@@ -99,6 +103,21 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const isMountedRef = useRef(false)
   const navigate = useNavigate()
 
+  const initialIsConcentrationOpening =
+    localStorage.getItem('OPENING_METHOD') === 'concentration' ||
+    localStorage.getItem('OPENING_METHOD') === null
+
+  const [initialOpeningPositionMethod, setInitialOpeningPositionMethod] =
+    useState<PositionOpeningMethod>(
+      initialIsRange !== null
+        ? initialIsRange
+          ? 'range'
+          : 'concentration'
+        : initialIsConcentrationOpening
+          ? 'concentration'
+          : 'range'
+    )
+
   useEffect(() => {
     const pathTokens: string[] = []
 
@@ -133,33 +152,51 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     }
   }, [canNavigate])
 
-  useEffect(() => {
-    if (canNavigate) {
-      const tokenFromAddress = tickerToAddress(currentNetwork, initialTokenFrom)
-      const tokenToAddress = tickerToAddress(currentNetwork, initialTokenTo)
+  const constructNavigationPath = () => {
+    if (!canNavigate) return null
 
-      const tokenFrom = tokens[tokenFromAddress]
+    const tokenFromAddress = tickerToAddress(currentNetwork, initialTokenFrom)
+    const tokenToAddress = tickerToAddress(currentNetwork, initialTokenTo)
 
-      const tokenTo = tokens[tokenToAddress]
+    const tokenFrom = tokens[tokenFromAddress]
+    const tokenTo = tokens[tokenToAddress]
 
-      if (
-        tokenFromAddress !== null &&
-        tokenFrom?.assetAddress &&
-        (tokenToAddress === null || !tokenTo?.assetAddress)
-      ) {
-        navigate(`/newPosition/${initialTokenFrom}/${initialFee}`)
-      } else if (
-        tokenFromAddress !== null &&
-        tokenFrom?.assetAddress &&
-        tokenToAddress !== null &&
-        tokenTo?.assetAddress
-      ) {
-        navigate(`/newPosition/${initialTokenFrom}/${initialTokenTo}/${initialFee}`)
-      } else {
-        navigate(`/newPosition/${initialFee}`)
-      }
+    const concentrationParam = initialConcentration ? `?conc=${initialConcentration}` : ''
+
+    const rangeParam =
+      initialIsRange !== null
+        ? initialIsRange
+          ? `&range=true`
+          : '&range=false'
+        : initialIsConcentrationOpening
+          ? '&range=false'
+          : '&range=true'
+
+    if (rangeParam === '&range=true') {
+      setPositionOpeningMethod('range')
+      setInitialOpeningPositionMethod('range')
+    } else {
+      setPositionOpeningMethod('concentration')
+      setInitialOpeningPositionMethod('concentration')
     }
-  }, [tokens])
+
+    if (tokenFromAddress && tokenFrom?.assetAddress && tokenToAddress && tokenTo?.assetAddress) {
+      return `/newPosition/${initialTokenFrom}/${initialTokenTo}/${initialFee}${concentrationParam}${rangeParam}`
+    }
+
+    if (tokenFromAddress && tokenFrom?.assetAddress) {
+      return `/newPosition/${initialTokenFrom}/${initialFee}`
+    }
+
+    return `/newPosition/${initialFee}`
+  }
+
+  useEffect(() => {
+    const path = constructNavigationPath()
+    if (path) {
+      navigate(path)
+    }
+  }, [tokens, canNavigate])
 
   useEffect(() => {
     isMountedRef.current = true
@@ -390,10 +427,6 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       })
     )
   }
-
-  const initialIsConcentrationOpening =
-    localStorage.getItem('OPENING_METHOD') === 'concentration' ||
-    localStorage.getItem('OPENING_METHOD') === null
 
   const setPositionOpeningMethod = (val: PositionOpeningMethod) => {
     localStorage.setItem('OPENING_METHOD', val)
@@ -655,6 +688,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       initialTokenFrom={initialTokenFrom}
       initialTokenTo={initialTokenTo}
       initialFee={initialFee}
+      initialConcentration={initialConcentration}
       copyPoolAddressHandler={copyPoolAddressHandler}
       poolAddress={poolIndex !== null ? allPools[poolIndex].address.toString() : ''}
       calculatePoolAddress={calculatePoolAddress}
@@ -812,7 +846,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       }
       handleAddToken={addTokenHandler}
       commonTokens={commonTokensForNetworks[currentNetwork]}
-      initialOpeningPositionMethod={initialIsConcentrationOpening ? 'concentration' : 'range'}
+      initialOpeningPositionMethod={initialOpeningPositionMethod}
       onPositionOpeningMethodChange={setPositionOpeningMethod}
       initialHideUnknownTokensValue={initialHideUnknownTokensValue}
       onHideUnknownTokensChange={setHideUnknownTokensValue}

@@ -182,7 +182,6 @@ export const PoolInit: React.FC<IPoolInit> = ({
 
   useEffect(() => {
     if (positionOpeningMethod === 'concentration') {
-      setConcentrationIndex(0)
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[0],
@@ -203,7 +202,7 @@ export const PoolInit: React.FC<IPoolInit> = ({
         concentrationIndex > concentrationArray.length - 1
           ? concentrationArray.length - 1
           : concentrationIndex
-      setConcentrationIndex(index)
+
       const { leftRange, rightRange } = calculateConcentrationRange(
         tickSpacing,
         concentrationArray[index],

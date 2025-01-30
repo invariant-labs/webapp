@@ -1669,3 +1669,22 @@ export const parsePathFeeToFeeString = (pathFee: string): string => {
 
 export const shortenAddress = (address: string, chars = 4) =>
   address.length > 8 ? `${address.slice(0, chars)}...${address.slice(-chars)}` : address
+
+export const getConcentrationIndex = (concentrationArray: number[], neededValue: number = 34) => {
+  let concentrationIndex = 0
+
+  for (let index = 0; index < concentrationArray.length; index++) {
+    const value = +concentrationArray[index].toFixed(0)
+
+    if (value === neededValue) {
+      break
+    } else if (value > neededValue) {
+      concentrationIndex = index - 1
+      break
+    } else {
+      concentrationIndex = index + 1
+    }
+  }
+
+  return concentrationIndex
+}
