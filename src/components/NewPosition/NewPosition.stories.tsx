@@ -116,7 +116,8 @@ export const Primary: Story = {
     noConnectedBlockerProps: {
       onConnect: fn()
     },
-    canNavigate: true
+    canNavigate: true,
+    initialConcentration: '30'
   },
   render: () => {
     return (
@@ -183,6 +184,7 @@ export const Primary: Story = {
           onConnect: fn()
         }}
         canNavigate={true}
+        initialConcentration='30'
       />
     )
   }

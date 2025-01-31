@@ -1,6 +1,7 @@
 import React from 'react'
 import useStyles from './style'
-import { Button } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
+import { colors, typography } from '@static/theme'
 
 export interface IProps {
   onFaucet: () => void
@@ -19,7 +20,26 @@ export const FaucetButton: React.FC<IProps> = ({ onFaucet, disabled = false, chi
         classes={{ disabled: classes.disabled }}
         disabled={disabled}
         onClick={onFaucet}>
-        {children}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            height: '100%'
+          }}>
+          <Box style={{ color: colors.invariant.text, lineHeight: '12px', textAlign: 'left' }}>
+            {children}
+          </Box>
+          <Typography
+            style={{
+              color: colors.invariant.textGrey,
+              ...typography.caption4,
+              marginTop: '4px',
+              textAlign: 'left'
+            }}>
+            Get tokens
+          </Typography>
+        </Box>
       </Button>
     </>
   )
