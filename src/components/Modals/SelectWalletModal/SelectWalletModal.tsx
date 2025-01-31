@@ -91,7 +91,11 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
                 }}>
                 <Typography className={classes.buttonName}>
                   {' '}
-                  <img width={35} rel='preload' src={icons.NightlyConnect} alt='Close'></img>
+                  <img
+                    width={53}
+                    rel='preload'
+                    src={icons.NightlyConnect}
+                    alt='nightly connect logo'></img>
                   {walletNames[WalletType.NIGHTLY]}
                 </Typography>
               </Grid>
@@ -111,7 +115,11 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
                 }}>
                 <Typography className={classes.buttonName}>
                   {' '}
-                  <img width={45} rel='preload' src={icons.PhantomWallet} alt='Close'></img>
+                  <img
+                    width={45}
+                    rel='preload'
+                    src={icons.PhantomWallet}
+                    alt='nightly wallet icon'></img>
                   {walletNames[WalletType.PHANTOM]}
                 </Typography>
               </Grid>
@@ -122,7 +130,11 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
                   handleConnectStaticWallet(WalletType.BACKPACK)
                 }}>
                 <Typography className={classes.buttonName}>
-                  <img width={40} rel='preload' src={icons.BackpackWallet} alt='Close'></img>
+                  <img
+                    width={40}
+                    rel='preload'
+                    src={icons.BackpackWallet}
+                    alt='salamon wallet icon'></img>
 
                   {walletNames[WalletType.BACKPACK]}
                 </Typography>
