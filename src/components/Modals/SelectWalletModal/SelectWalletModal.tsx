@@ -90,7 +90,6 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
                   }, 300)
                 }}>
                 <Typography className={classes.buttonName}>
-                  {' '}
                   <img
                     width={53}
                     rel='preload'
@@ -114,7 +113,6 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
                   handleConnectStaticWallet(WalletType.PHANTOM)
                 }}>
                 <Typography className={classes.buttonName}>
-                  {' '}
                   <img
                     width={45}
                     rel='preload'
