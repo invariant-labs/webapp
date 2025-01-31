@@ -7,7 +7,6 @@ import cardBackgroundBottom from '@static/png/cardBackground1.png'
 import cardBackgroundTop from '@static/png/cardBackground2.png'
 import icons from '@static/icons'
 import RevertIcon from '@static/svg/revert.svg'
-import { shortenAddress } from '@utils/uiUtils'
 import StatsLabel from './StatsLabel/StatsLabel'
 import backIcon from '@static/svg/back-arrow-2.svg'
 import { addressToTicker, formatNumber, initialXtoY, parseFeeToPathFee } from '@utils/utils'
@@ -66,6 +65,9 @@ const Card: React.FC<ICard> = ({
     )
   }
 
+  const shortenAddressName = (address: string) =>
+    address.length > 8 ? `${address.slice(0, 4)}...` : address
+
   return (
     <Grid className={classes.root}>
       {isLoading ? (
@@ -123,7 +125,7 @@ const Card: React.FC<ICard> = ({
               </Grid>
 
               <Typography className={classes.symbolsContainer}>
-                {shortenAddress(symbolFrom ?? '')} - {shortenAddress(symbolTo ?? '')}
+                {shortenAddressName(symbolFrom ?? '')} - {shortenAddressName(symbolTo ?? '')}
               </Typography>
               <Grid container gap='8px'>
                 {apy !== undefined && showAPY && (

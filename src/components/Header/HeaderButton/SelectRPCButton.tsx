@@ -1,7 +1,7 @@
 import React from 'react'
 import useStyles from './style'
 import { blurContent, unblurContent } from '@utils/uiUtils'
-import { Button } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import SelectMainnetRPC from '@components/Modals/SelectMainnetRPC/SelectMainnetRPC'
 import { NetworkType, RECOMMENDED_RPC_ADDRESS } from '@store/consts/static'
@@ -9,6 +9,7 @@ import icons from '@static/icons'
 import { ISelectNetwork } from '@store/consts/types'
 import { RpcStatus } from '@store/reducers/solanaConnection'
 import SelectDevnetRPC from '@components/Modals/SelectDevnetRPC/SelectDevnetRPC'
+import { colors, typography } from '@static/theme'
 
 export interface IProps {
   rpc: string
@@ -41,6 +42,8 @@ export const SelectRPCButton: React.FC<IProps> = ({
     setOpenRpcsModal(false)
   }
 
+  const rpcName = networks.filter(network => network.rpc === rpc)
+
   return (
     <>
       <Button
@@ -53,7 +56,26 @@ export const SelectRPCButton: React.FC<IProps> = ({
         {rpcStatus === RpcStatus.IgnoredWithError && rpc !== RECOMMENDED_RPC_ADDRESS[network] && (
           <img className={classes.warningIcon} src={icons.warningIcon} alt='Warning icon' />
         )}
-        RPC
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            height: '100%'
+          }}>
+          <Box style={{ color: colors.invariant.text, lineHeight: '12px' }}>
+            {rpc && rpcName.length > 0 ? rpcName[0].rpcName : 'Custom'}
+          </Box>
+          <Typography
+            style={{
+              color: colors.invariant.textGrey,
+              ...typography.caption4,
+              marginTop: '4px',
+              textAlign: 'left'
+            }}>
+            RPC
+          </Typography>
+        </Box>
       </Button>
       {network === NetworkType.Devnet ? (
         <SelectDevnetRPC
