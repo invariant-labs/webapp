@@ -140,7 +140,7 @@ const Slippage: React.FC<Props> = ({
               placeholder='0.00'
               className={classNames(
                 classes.detailsInfoForm,
-                tierIndex === -1 && classes.activeForm
+                tierIndex === -1 && classes.customSlippageActive
               )}
               type={'text'}
               value={slippTolerance}
