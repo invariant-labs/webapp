@@ -69,7 +69,9 @@ export const Primary: Story = {
     onlyUserPositions: false,
     setOnlyUserPositions: fn(),
     setShouldResetPlot: fn(),
-    shouldResetPlot: false
+    shouldResetPlot: false,
+    initialConcentration: '40',
+    updatePath: fn()
   },
   render: args => <PrimaryComponent {...args} />
 }
