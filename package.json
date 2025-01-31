@@ -24,7 +24,7 @@
     "@invariant-labs/staker-sdk": "0.2.11",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
-    "@nightlylabs/wallet-selector-solana": "^0.3.1",
+    "@nightlylabs/wallet-selector-solana": "^0.2.7",
     "@nivo/bar": "^0.87.0",
     "@nivo/line": "^0.86.0",
     "@project-serum/anchor": "0.21.0",
