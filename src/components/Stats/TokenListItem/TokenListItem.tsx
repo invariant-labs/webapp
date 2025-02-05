@@ -84,7 +84,7 @@ const TokenListItem: React.FC<IProps> = ({
   const shouldShowText = icon === icons.unknownToken || !isSm
 
   return (
-    <Grid>
+    <Grid maxWidth='100%' className={classes.wrapper}>
       {displayType === 'tokens' ? (
         <Grid
           container
