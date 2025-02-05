@@ -4,14 +4,14 @@ import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()(() => ({
   container: {
-    maxWidth: 1072,
-    padding: '0 24px',
-    borderRadius: '24px',
-    backgroundColor: `${colors.invariant.component} !important`
+    maxWidth: 1072
   },
   pagination: {
-    padding: '20px 0 10px 0',
-    maxWidth: '100%'
+    padding: '20px 24px 10px 0',
+    maxWidth: '100%',
+    backgroundColor: colors.invariant.component,
+    borderBottomLeftRadius: '24px',
+    borderBottomRightRadius: '24px'
   },
   loadingOverlay: {
     position: 'relative',

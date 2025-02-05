@@ -18,7 +18,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     justifyContent: 'space-between',
     width: 500,
     position: 'relative',
-    paddingBottom: 9,
+    paddingBottom: 16,
     rowGap: 8,
 
     '& h1': {

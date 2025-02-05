@@ -70,6 +70,7 @@ export const colors = {
     dark: '#040B22',
     newDark: '#111931',
     component: '#202946',
+    componentDark: '#1c243d',
     componentBcg: '#111931',
     light: '#3A466B',
     lightHover: '#A9B6BF',
