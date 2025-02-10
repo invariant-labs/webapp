@@ -76,15 +76,39 @@ const PoolListItem: React.FC<IProps> = ({
   const isSmd = useMediaQuery('(max-width:780px)')
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
 
-  const handleOpenPosition = () => {
-    const isXtoY = initialXtoY(addressFrom ?? '', addressTo ?? '')
+  const isXtoY = initialXtoY(addressFrom ?? '', addressTo ?? '')
 
-    const tokenA = isXtoY
-      ? addressToTicker(network, addressFrom ?? '')
-      : addressToTicker(network, addressTo ?? '')
-    const tokenB = isXtoY
-      ? addressToTicker(network, addressTo ?? '')
-      : addressToTicker(network, addressFrom ?? '')
+  const tokenAData = isXtoY
+    ? {
+        symbol: symbolFrom,
+        icon: iconFrom,
+        address: addressFrom,
+        isUnknown: isUnknownFrom
+      }
+    : {
+        symbol: symbolTo,
+        icon: iconTo,
+        address: addressTo,
+        isUnknown: isUnknownTo
+      }
+
+  const tokenBData = isXtoY
+    ? {
+        symbol: symbolTo,
+        icon: iconTo,
+        address: addressTo,
+        isUnknown: isUnknownTo
+      }
+    : {
+        symbol: symbolFrom,
+        icon: iconFrom,
+        address: addressFrom,
+        isUnknown: isUnknownFrom
+      }
+
+  const handleOpenPosition = () => {
+    const tokenA = addressToTicker(network, tokenAData.address ?? '')
+    const tokenB = addressToTicker(network, tokenBData.address ?? '')
 
     navigate(
       `/newPosition/${tokenA}/${tokenB}/${parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))}`,
@@ -94,7 +118,7 @@ const PoolListItem: React.FC<IProps> = ({
 
   const handleOpenSwap = () => {
     navigate(
-      `/exchange/${addressToTicker(network, addressFrom ?? '')}/${addressToTicker(network, addressTo ?? '')}`,
+      `/exchange/${addressToTicker(network, tokenAData.address ?? '')}/${addressToTicker(network, tokenBData.address ?? '')}`,
       { state: { referer: 'stats' } }
     )
   }
@@ -143,30 +167,35 @@ const PoolListItem: React.FC<IProps> = ({
               <Box className={classes.iconContainer}>
                 <img
                   className={classes.tokenIcon}
-                  src={iconFrom}
+                  src={tokenAData.icon}
                   alt='Token from'
                   onError={e => {
                     e.currentTarget.src = icons.unknownToken
                   }}
                 />
-                {isUnknownFrom && <img className={classes.warningIcon} src={icons.warningIcon} />}
+                {tokenAData.isUnknown && (
+                  <img className={classes.warningIcon} src={icons.warningIcon} />
+                )}
               </Box>
               <Box className={classes.iconContainer}>
                 <img
                   className={classes.tokenIcon}
-                  src={iconTo}
+                  src={tokenBData.icon}
                   alt='Token to'
                   onError={e => {
                     e.currentTarget.src = icons.unknownToken
                   }}
                 />
-                {isUnknownTo && <img className={classes.warningIcon} src={icons.warningIcon} />}
+                {tokenBData.isUnknown && (
+                  <img className={classes.warningIcon} src={icons.warningIcon} />
+                )}
               </Box>
             </Box>
             <Grid className={classes.symbolsContainer}>
               {!isSm && (
                 <Typography>
-                  {shortenAddress(symbolFrom ?? '')}/{shortenAddress(symbolTo ?? '')}
+                  {shortenAddress(tokenAData.symbol ?? '')}/
+                  {shortenAddress(tokenBData.symbol ?? '')}
                 </Typography>
               )}
               <TooltipHover text='Copy pool address'>

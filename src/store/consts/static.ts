@@ -362,7 +362,7 @@ export const SIGNING_SNACKBAR_CONFIG: Omit<ISnackbar, 'open'> = {
   persist: true
 }
 
-export const ADDRESSES_ORDER_TO_REVERT: string[] = [
+export const ADDRESSES_TO_REVERT_TOKEN_PAIRS: string[] = [
   'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // USDC
   'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', // USDT
   'USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX', // USDH
