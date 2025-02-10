@@ -17,8 +17,6 @@ export interface IPopularPools {
 }
 
 const PopularPools: React.FC<IPopularPools> = ({ pools, isLoading, network, showAPY }) => {
-  const { classes } = useStyles()
-
   const isLgDown = useMediaQuery(theme.breakpoints.down('lg'))
   const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
   const isSmDown = useMediaQuery('@media (max-width:700px)')
@@ -29,6 +27,8 @@ const PopularPools: React.FC<IPopularPools> = ({ pools, isLoading, network, show
     if (isLgDown) return 3
     return 4
   }, [isMdDown, isLgDown, isSmDown])
+
+  const { classes } = useStyles({ showSlider: slidesNumber < 4 })
 
   return (
     <Grid container mb={6}>
@@ -44,12 +44,12 @@ const PopularPools: React.FC<IPopularPools> = ({ pools, isLoading, network, show
           speed={500}
           slidesToShow={slidesNumber}
           slidesToScroll={1}
-          arrows={false}
+          arrows={true}
           className={classes.slider}
           dotsClass={`slick-dots ${classes.dots}`}
           appendDots={dots => <ul>{dots}</ul>}
           rows={1}>
-          {pools.map(pool => (
+          {pools.map((pool, index) => (
             <Card
               addressFrom={pool.addressFrom}
               addressTo={pool.addressTo}
@@ -67,6 +67,7 @@ const PopularPools: React.FC<IPopularPools> = ({ pools, isLoading, network, show
               isLoading={isLoading}
               network={network}
               showAPY={showAPY}
+              key={index}
             />
           ))}
         </Slider>
