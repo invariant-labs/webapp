@@ -1585,6 +1585,32 @@ export const formatNumber = (
   return isNegative ? '-' + formattedNumber : formattedNumber
 }
 
+function trimEndingZeros(num) {
+  return num.toString().replace(/0+$/, '')
+}
+
+export const formatNumber2 = (number: number | bigint | string): string => {
+  const numberAsNumber = Number(number)
+  const isNegative = numberAsNumber < 0
+  const absNumberAsNumber = Math.abs(numberAsNumber)
+
+  const absNumberAsString = numberToString(absNumberAsNumber)
+
+  const [beforeDot, afterDot] = absNumberAsString.split('.')
+
+  const leadingZeros = afterDot ? countLeadingZeros(afterDot) : 0
+
+  const parsedBeforeDot = beforeDot.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  const parsedAfterDot =
+    leadingZeros >= 4 && absNumberAsNumber < 1
+      ? '0' + printSubNumber(leadingZeros) + trimEndingZeros(String(parseInt(afterDot)).slice(0, 3))
+      : trimEndingZeros(String(afterDot).slice(0, absNumberAsNumber >= 1 ? 2 : leadingZeros + 3))
+
+  const formattedNumber = parsedBeforeDot + (afterDot && parsedAfterDot ? '.' + parsedAfterDot : '')
+
+  return isNegative ? '-' + formattedNumber : formattedNumber
+}
+
 export const trimDecimalZeros = (numStr: string): string => {
   if (/^[0.]+$/.test(numStr)) {
     return '0'
