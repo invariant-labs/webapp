@@ -1,7 +1,7 @@
 import { colors, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
-export const useStyles = makeStyles()(() => ({
+export const useStyles = makeStyles<{ showSlider: boolean }>()((theme, { showSlider }) => ({
   title: {
     color: colors.invariant.text,
     ...typography.heading4,
@@ -11,10 +11,14 @@ export const useStyles = makeStyles()(() => ({
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
-    padding: '24px 0px',
+    padding: showSlider ? '24px 48px' : '24px 4px',
     flexWrap: 'nowrap',
     borderRadius: 32,
-    background: colors.invariant.component
+    background: colors.invariant.component,
+
+    [theme.breakpoints.down('sm')]: {
+      padding: '24px 38px'
+    }
   },
   slider: {
     minWidth: '100%',
@@ -25,6 +29,30 @@ export const useStyles = makeStyles()(() => ({
     '& .slick-slide': {
       display: 'flex',
       justifyContent: 'center'
+    },
+    '& .slick-arrow': {
+      height: '40px',
+      [theme.breakpoints.down('sm')]: {
+        height: '30px'
+      }
+    },
+    '& .slick-arrow::before': {
+      fontSize: '40px',
+      [theme.breakpoints.down('sm')]: {
+        fontSize: '34px'
+      }
+    },
+    '& .slick-prev': {
+      left: -40,
+      [theme.breakpoints.down('sm')]: {
+        left: -35
+      }
+    },
+    '& .slick-next': {
+      right: -20,
+      [theme.breakpoints.down('sm')]: {
+        right: -21
+      }
     },
     height: 344
   },

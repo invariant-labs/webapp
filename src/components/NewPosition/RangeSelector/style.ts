@@ -4,7 +4,7 @@ import { makeStyles } from 'tss-react/mui'
 const useStyles = makeStyles()(theme => {
   return {
     wrapper: {
-      borderRadius: 10,
+      borderRadius: 24,
       backgroundColor: colors.invariant.component,
       padding: '16px 24px 16px 24px',
       flex: '1 1 0%',

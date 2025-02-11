@@ -8,8 +8,7 @@ const useStyles = makeStyles()(theme => {
       maxWidth: '100%'
     },
     headerContainer: {
-      columnGap: 24,
-      height: 46
+      columnGap: 24
     },
     back: {
       height: 24,
@@ -96,7 +95,6 @@ const useStyles = makeStyles()(theme => {
     },
     options: {
       width: 'calc(50% - 12px)',
-      marginBottom: 18,
       height: 28,
       display: 'flex',
       flexWrap: 'nowrap',
@@ -113,14 +111,15 @@ const useStyles = makeStyles()(theme => {
     },
     titleContainer: {
       maxWidth: 464,
-      marginBottom: 18,
+      marginBottom: 0,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       flexGrow: 1,
       [theme.breakpoints.down('md')]: {
-        maxWidth: 'none'
+        maxWidth: 'none',
+        marginBottom: 8
       }
     },
     optionsWrapper: {

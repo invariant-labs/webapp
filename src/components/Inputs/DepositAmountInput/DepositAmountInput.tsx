@@ -1,6 +1,6 @@
 import { Box, Grid, Input, Tooltip, Typography } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
-import { formatNumber, getScaleFromString } from '@utils/utils'
+import { formatNumber, formatNumber2, getScaleFromString } from '@utils/utils'
 import React, { CSSProperties, useRef } from 'react'
 import useStyles from './style'
 import icons from '@static/icons'
@@ -213,7 +213,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
                     tooltip: classes.tooltip
                   }}>
                   <Typography className={classes.estimatedBalance}>
-                    ~${formatNumber(usdBalance.toFixed(2))}
+                    ~${formatNumber2(usdBalance)}
                   </Typography>
                 </Tooltip>
               ) : (

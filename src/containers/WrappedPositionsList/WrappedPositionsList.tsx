@@ -1,6 +1,5 @@
 import { PositionsList } from '@components/PositionsList/PositionsList'
-import { NetworkType, POSITIONS_PER_PAGE } from '@store/consts/static'
-
+import { POSITIONS_PER_PAGE } from '@store/consts/static'
 import { actions } from '@store/reducers/positions'
 import { actions as walletActions, Status } from '@store/reducers/solanaWallet'
 import {
@@ -9,7 +8,6 @@ import {
   positionsWithPoolsData
 } from '@store/selectors/positions'
 import { address, status } from '@store/selectors/solanaWallet'
-
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -18,6 +16,7 @@ import { IPositionItem } from '@components/PositionsList/PositionItem/PositionIt
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { DECIMAL, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
+import { network } from '@store/selectors/solanaConnection'
 
 export const WrappedPositionsList: React.FC = () => {
   const walletAddress = useSelector(address)
@@ -25,6 +24,7 @@ export const WrappedPositionsList: React.FC = () => {
   const isLoading = useSelector(isLoadingPositionsList)
   const lastPage = useSelector(lastPageSelector)
   const walletStatus = useSelector(status)
+  const currentNetwork = useSelector(network)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -126,7 +126,7 @@ export const WrappedPositionsList: React.FC = () => {
         currentPrice,
         tokenXLiq,
         tokenYLiq,
-        network: NetworkType.Testnet,
+        network: currentNetwork,
         isFullRange: position.lowerTickIndex === minTick && position.upperTickIndex === maxTick
       }
     })

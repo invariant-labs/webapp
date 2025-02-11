@@ -1,7 +1,7 @@
 import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import Slippage from '@components/Modals/Slippage/Slippage'
 import Refresher from '@components/Refresher/Refresher'
-import { Box, Button, Grid, Hidden, Typography } from '@mui/material'
+import { Box, Button, Grid, Hidden, Typography, useMediaQuery } from '@mui/material'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
 import {
@@ -45,6 +45,7 @@ import { fromFee, getConcentrationArray, getMinTick } from '@invariant-labs/sdk/
 import { getMaxTick } from '@invariant-labs/sdk/src/utils'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 import icons from '@static/icons'
+import { theme } from '@static/theme'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -192,6 +193,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 }) => {
   const { classes } = useStyles()
   const navigate = useNavigate()
+  const isMd = useMediaQuery(theme.breakpoints.down('md'))
 
   const [positionOpeningMethod, setPositionOpeningMethod] = useState<PositionOpeningMethod>(
     initialOpeningPositionMethod
@@ -571,10 +573,11 @@ export const NewPosition: React.FC<INewPosition> = ({
         container
         justifyContent='space-between'
         alignItems='center'
-        className={classes.headerContainer}>
+        className={classes.headerContainer}
+        mb={1}>
         <Box className={classes.titleContainer}>
           <Typography className={classes.title}>Add new position</Typography>
-          {poolIndex !== null && tokenA !== tokenB && (
+          {poolIndex !== null && tokenA !== tokenB && !isMd && (
             <TooltipHover text='Refresh'>
               <Box>
                 <Refresher
@@ -648,6 +651,20 @@ export const NewPosition: React.FC<INewPosition> = ({
                   />
                 )}
               </Hidden>
+              {poolIndex !== null && tokenA !== tokenB && isMd && (
+                <TooltipHover text='Refresh'>
+                  <Box>
+                    <Refresher
+                      currentIndex={refresherTime}
+                      maxIndex={REFRESHER_INTERVAL}
+                      onClick={() => {
+                        onRefresh()
+                        setRefresherTime(REFRESHER_INTERVAL)
+                      }}
+                    />
+                  </Box>
+                </TooltipHover>
+              )}
               {poolIndex !== null && (
                 <TooltipHover text='Settings'>
                   <Button
