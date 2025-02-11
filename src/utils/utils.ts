@@ -51,7 +51,7 @@ import {
   SUI_MAIN,
   WRAPPED_SOL_ADDRESS,
   NATIVE_TICK_CROSSES_PER_IX,
-  ADDRESSES_ORDER_TO_REVERT
+  ADDRESSES_TO_REVERT_TOKEN_PAIRS
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
@@ -1585,6 +1585,32 @@ export const formatNumber = (
   return isNegative ? '-' + formattedNumber : formattedNumber
 }
 
+function trimEndingZeros(num) {
+  return num.toString().replace(/0+$/, '')
+}
+
+export const formatNumber2 = (number: number | bigint | string): string => {
+  const numberAsNumber = Number(number)
+  const isNegative = numberAsNumber < 0
+  const absNumberAsNumber = Math.abs(numberAsNumber)
+
+  const absNumberAsString = numberToString(absNumberAsNumber)
+
+  const [beforeDot, afterDot] = absNumberAsString.split('.')
+
+  const leadingZeros = afterDot ? countLeadingZeros(afterDot) : 0
+
+  const parsedBeforeDot = beforeDot.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  const parsedAfterDot =
+    leadingZeros >= 4 && absNumberAsNumber < 1
+      ? '0' + printSubNumber(leadingZeros) + trimEndingZeros(String(parseInt(afterDot)).slice(0, 3))
+      : trimEndingZeros(String(afterDot).slice(0, absNumberAsNumber >= 1 ? 2 : leadingZeros + 3))
+
+  const formattedNumber = parsedBeforeDot + (afterDot && parsedAfterDot ? '.' + parsedAfterDot : '')
+
+  return isNegative ? '-' + formattedNumber : formattedNumber
+}
+
 export const trimDecimalZeros = (numStr: string): string => {
   if (/^[0.]+$/.test(numStr)) {
     return '0'
@@ -1638,8 +1664,8 @@ export const initialXtoY = (tokenXAddress?: string | null, tokenYAddress?: strin
     return true
   }
 
-  const tokenXIndex = ADDRESSES_ORDER_TO_REVERT.findIndex(token => token === tokenXAddress)
-  const tokenYIndex = ADDRESSES_ORDER_TO_REVERT.findIndex(token => token === tokenYAddress)
+  const tokenXIndex = ADDRESSES_TO_REVERT_TOKEN_PAIRS.findIndex(token => token === tokenXAddress)
+  const tokenYIndex = ADDRESSES_TO_REVERT_TOKEN_PAIRS.findIndex(token => token === tokenYAddress)
 
   if (tokenXIndex === -1 || tokenYIndex === -1) {
     return true

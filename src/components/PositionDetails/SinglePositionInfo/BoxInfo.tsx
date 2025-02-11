@@ -1,7 +1,7 @@
 import { Button, Grid, Tooltip, Typography } from '@mui/material'
 import loader from '@static/gif/loading2.gif'
 import SwapPosition from '@static/svg/swap-position.svg'
-import { formatNumber, formatNumbers, showPrefix } from '@utils/utils'
+import { formatNumber, formatNumber2, formatNumbers, showPrefix } from '@utils/utils'
 import React from 'react'
 import loadingAnimation from '@static/gif/loading.gif'
 import { ILiquidityToken } from './consts'
@@ -133,7 +133,7 @@ export const BoxInfo: React.FC<{
                     tooltip: classes.tooltip
                   }}>
                   <Typography className={classes.tokenUSDValue}>
-                    ~${formatNumber((tokenA.value * tokenA.price).toFixed(2))}
+                    ~${formatNumber2(tokenA.value * tokenA.price)}
                   </Typography>
                 </Tooltip>
               ) : (
@@ -199,7 +199,7 @@ export const BoxInfo: React.FC<{
                     tooltip: classes.tooltip
                   }}>
                   <Typography className={classes.tokenUSDValue}>
-                    ~${formatNumber((tokenB.value * tokenB.price).toFixed(2))}
+                    ~${formatNumber2(tokenB.value * tokenB.price)}
                   </Typography>
                 </Tooltip>
               ) : (
