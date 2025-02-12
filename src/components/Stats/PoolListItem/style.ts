@@ -42,7 +42,7 @@ export const useStyles = makeStyles()(() => ({
     },
 
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: 'auto 80px 80px 60px',
+      gridTemplateColumns: 'auto 60px 60px 60px',
 
       '& p': {
         justifyContent: 'flex-start',
