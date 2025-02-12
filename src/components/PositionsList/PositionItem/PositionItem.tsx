@@ -124,7 +124,7 @@ export const PositionItem: React.FC<IPositionItem> = ({
         <Typography className={classNames(classes.infoText, classes.label)}>Value</Typography>
         <Grid className={classes.infoCenter} container item justifyContent='center'>
           <Typography className={classes.greenText}>
-            {formatNumber(xToY ? valueX : valueY)} {xToY ? tokenXName : tokenYName}
+            {formatNumber(xToY ? valueY : valueX)} {xToY ? tokenYName : tokenXName}
           </Typography>
         </Grid>
       </Grid>
