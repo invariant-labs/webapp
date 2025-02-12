@@ -16,6 +16,7 @@ export const useStyles = makeStyles()(() => ({
     }
   },
   container: {
+    height: 69,
     color: colors.white.main,
     display: 'grid',
     gridTemplateColumns: '30px auto 160px 80px 140px 100px 160px',
