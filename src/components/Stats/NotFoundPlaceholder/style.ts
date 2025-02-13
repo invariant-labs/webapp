@@ -16,6 +16,10 @@ const useStyles = makeStyles()(() => {
     img: {
       paddingBottom: 37,
       paddingRight: 25
+    },
+    container: {
+      background: colors.invariant.component,
+      borderBottom: `1px solid ${colors.invariant.light}`
     }
   }
 })

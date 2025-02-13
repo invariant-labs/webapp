@@ -138,16 +138,16 @@ const PoolList: React.FC<PoolListInterface> = ({
       direction='column'
       classes={{ root: classes.container }}
       className={classNames({ [classes.loadingOverlay]: isLoading })}>
-      <>
-        <PoolListItem
-          displayType='header'
-          onSort={setSortType}
-          sortType={sortType}
-          network={network}
-          showAPY={showAPY}
-        />
-        {data.length > 0 || isLoading ? (
-          paginator(page).map((element, index) => (
+      <PoolListItem
+        displayType='header'
+        onSort={setSortType}
+        sortType={sortType}
+        network={network}
+        showAPY={showAPY}
+      />
+      {data.length > 0 || isLoading ? (
+        <>
+          {paginator(page).map((element, index) => (
             <PoolListItem
               displayType='token'
               tokenIndex={index + 1 + (page - 1) * 10}
@@ -176,21 +176,27 @@ const PoolList: React.FC<PoolListInterface> = ({
               copyAddressHandler={copyAddressHandler}
               showAPY={showAPY}
             />
-          ))
-        ) : (
-          <NotFoundPlaceholder title='No pools found...' />
+          ))}
+          {new Array(10 - paginator(page).length).fill('').map((_, index) => (
+            <div
+              className={classNames(classes.emptyRow, {
+                [classes.emptyRowBorder]: index === 10 - paginator(page).length - 1
+              })}></div>
+          ))}
+        </>
+      ) : (
+        <NotFoundPlaceholder title='No pools found...' isStats />
+      )}
+      <Grid className={classes.pagination}>
+        {pages > 1 && (
+          <PaginationList
+            pages={pages}
+            defaultPage={1}
+            handleChangePage={handleChangePagination}
+            variant='flex-end'
+          />
         )}
-        {pages > 1 ? (
-          <Grid className={classes.pagination}>
-            <PaginationList
-              pages={pages}
-              defaultPage={1}
-              handleChangePage={handleChangePagination}
-              variant='flex-end'
-            />
-          </Grid>
-        ) : null}
-      </>
+      </Grid>
     </Grid>
   )
 }
