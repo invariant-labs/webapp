@@ -8,6 +8,7 @@ export const useStyles = makeStyles()(() => ({
     borderRadius: '24px'
   },
   pagination: {
+    borderTop: `1px solid ${colors.invariant.light}`,
     height: 90,
     padding: '20px 24px 10px 0',
     maxWidth: '100%',
