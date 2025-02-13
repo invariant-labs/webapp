@@ -1,3 +1,4 @@
+import React, { forwardRef, useMemo, useState } from 'react'
 import {
   Autocomplete,
   Box,
@@ -10,9 +11,8 @@ import {
   useMediaQuery
 } from '@mui/material'
 import SearchIcon from '@static/svg/lupaDark.svg'
-import { forwardRef, useMemo, useState } from 'react'
 import { commonTokensForNetworks, NetworkType } from '@store/consts/static'
-import { colors, theme, typography } from '@static/theme'
+import { theme, typography } from '@static/theme'
 import useStyles from './style'
 import { TokenChip } from './Helpers/TokenChip'
 import { TokenOption } from './Helpers/TokenOption'
@@ -20,8 +20,9 @@ import { useSelector } from 'react-redux'
 import { swapTokens } from '@store/selectors/solanaWallet'
 import icons from '@static/icons'
 import { tokensStatsWithTokensDetails } from '@store/selectors/stats'
+import ListboxComponent from './Helpers/ListBoxComponent'
 
-interface ISearchToken {
+export interface ISearchToken {
   icon: string
   name: string
   symbol: string
@@ -49,12 +50,25 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
   const commonTokens = commonTokensForNetworks[networkType]
   const tokensList = useSelector(swapTokens)
 
+  const tokenListMap = useMemo(() => {
+    const map = new Map<string, any>()
+    tokensList.forEach(token => {
+      map.set(token.address.toString(), token)
+    })
+    return map
+  }, [tokensList])
+
+  const commonTokensSet = useMemo(
+    () => new Set(commonTokens.map(token => token.toString())),
+    [commonTokens]
+  )
+
   const mappedTokens = useMemo(() => {
     return tokensListDetails
       .map(tokenData => {
         const details = tokenData.tokenDetails
         const tokenAddress = details?.address?.toString() ?? tokenData.address.toString()
-        const tokenFromList = tokensList.find(token => token.address.toString() === tokenAddress)
+        const tokenFromList = tokenListMap.get(tokenAddress)
         return {
           icon: details?.logoURI ?? icons.unknownToken,
           name: details?.name ?? tokenData.address.toString(),
@@ -67,15 +81,15 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
       .sort((a, b) => {
         const aHasBalance = Number(a.balance) > 0
         const bHasBalance = Number(b.balance) > 0
-        const aIsCommon = commonTokens.some(token => token.toString() === a.address)
-        const bIsCommon = commonTokens.some(token => token.toString() === b.address)
+        const aIsCommon = commonTokensSet.has(a.address)
+        const bIsCommon = commonTokensSet.has(b.address)
         if (aHasBalance && !bHasBalance) return -1
         if (!aHasBalance && bHasBalance) return 1
         if (aIsCommon && !bIsCommon) return -1
         if (!aIsCommon && bIsCommon) return 1
         return 0
       })
-  }, [tokensListDetails, tokensList, commonTokens])
+  }, [tokensListDetails, tokenListMap, commonTokensSet])
 
   const isTokensSelected = selectedFilters.length === filtersAmount
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
@@ -83,14 +97,12 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
   const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
 
-  // Opcje, które nie zostały jeszcze wybrane
   const options: ISearchToken[] = useMemo(() => {
     return mappedTokens.filter(
       token => !selectedFilters.some(selected => selected.address === token.address)
     )
   }, [mappedTokens, selectedFilters])
 
-  // Jeśli isFiltering jest true, nie otwieramy listy opcji
   const shouldOpenPopper = !isTokensSelected && open && !isFiltering
 
   const networkUrl = useMemo(() => {
@@ -106,7 +118,7 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
     }
   }, [networkType])
 
-  const PaperComponent = (paperProps, ref) => {
+  const PaperComponent = (paperProps: any, ref: React.Ref<HTMLDivElement>) => {
     return (
       <Fade in timeout={300}>
         <Paper {...paperProps} ref={ref}>
@@ -116,35 +128,33 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
     )
   }
 
-  const CustomPopper = props => {
-    return <Popper {...props} placement='bottom-start' modifiers={[]} />
+  const CustomPopper = (props: any) => {
+    return <Popper {...props} placement='bottom-start' />
   }
 
   const PaperComponentForward = forwardRef(PaperComponent)
 
-  // Po usunięciu chipa zamykamy listę (analogicznie jak przy dodawaniu)
   const handleRemoveToken = (tokenToRemove: ISearchToken) => {
     setSelectedFilters(prev => prev.filter(token => token.address !== tokenToRemove.address))
     setOpen(false)
   }
 
-  // Po wybraniu tokena zamykamy listę, aby uniknąć migotania
-  const handleAutoCompleteChange = (_event: any, newValue: ISearchToken[]) => {
+  const handleAutoCompleteChange = (_event: React.SyntheticEvent, newValue: ISearchToken[]) => {
     setSelectedFilters(newValue)
     setInputValue('')
     setOpen(false)
   }
 
   return (
-    <Autocomplete
+    <Autocomplete<ISearchToken, true, false, false, 'div'>
       multiple
       disablePortal
-      disableClearable
       id='token-selector'
       disableCloseOnSelect={!isTokensSelected}
       value={selectedFilters}
       popupIcon={null}
       onChange={handleAutoCompleteChange}
+      ListboxComponent={ListboxComponent}
       PopperComponent={CustomPopper}
       PaperComponent={PaperComponentForward}
       options={options}
@@ -162,22 +172,6 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' }
         },
         width: isSmall ? '100%' : 'auto'
-      }}
-      ListboxProps={{
-        autoFocus: true,
-        sx: {
-          '&::-webkit-scrollbar': {
-            width: '6px'
-          },
-          '&::-webkit-scrollbar-track': {
-            background: colors.invariant.newDark
-          },
-          '&::-webkit-scrollbar-thumb': {
-            background: colors.invariant.pink,
-            borderRadius: '3px'
-          }
-        },
-        style: { maxHeight: !isSmall ? '300px' : '540px' }
       }}
       renderTags={(value, getTagProps) =>
         value.map((option, index) => (

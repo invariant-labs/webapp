@@ -33,7 +33,7 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
   },
 
   tokenContainer: {
-    marginBottom: '10px',
+    margin: '5px 0',
     width: '100%',
     display: 'flex',
     alignItems: 'center',
@@ -42,7 +42,7 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
     padding: '8px 10px 8px 6px',
     borderRadius: 24,
     [theme.breakpoints.down('sm')]: {
-      marginBottom: '5px'
+      margin: '5px 0'
     }
   },
 
@@ -124,6 +124,18 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
     color: colors.invariant.textGrey,
     '& p': {
       ...typography.caption2
+    }
+  },
+  fixedList: {
+    '&::-webkit-scrollbar': {
+      width: '6px'
+    },
+    '&::-webkit-scrollbar-track': {
+      background: colors.invariant.newDark
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: colors.invariant.pink,
+      borderRadius: '3px'
     }
   }
 }))

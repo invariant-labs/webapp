@@ -10,7 +10,7 @@ interface ISearchToken {
   name: string
   symbol: string
   address: string
-  balance: any
+  balance: string
   decimals: number
 }
 
@@ -42,7 +42,7 @@ export const TokenOption: React.FC<{
             <Box className={classes.tokenAddress}>
               <a
                 className={classes.addressLink}
-                href={`https://eclipsescan.xyz/token/${option.address.toString()}${networkUrl}`}
+                href={`https://solscan.io/token/${option.address.toString()}${networkUrl}`}
                 target='_blank'
                 rel='noopener noreferrer'
                 onClick={event => event.stopPropagation()}>

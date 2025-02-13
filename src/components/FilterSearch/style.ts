@@ -21,7 +21,6 @@ export const useStyles = makeStyles<{ isSmall: boolean }>()((_theme: Theme, { is
   paper: {
     width: isSmall ? 'calc(100% - 32px)' : 392,
     maxWidth: isSmall ? 'calc(100% - 32px)' : 392,
-    margin: isSmall ? '0 auto' : undefined,
     boxShadow: 'none',
     padding: '16px 16px 10px 16px',
     marginTop: 8,
@@ -62,20 +61,6 @@ export const useStyles = makeStyles<{ isSmall: boolean }>()((_theme: Theme, { is
     padding: '2px 4px 2px 4px'
   },
   addressLabel: {
-    ...typography.caption4,
-    color: colors.invariant.textGrey
-  },
-  feeTierLabel: {
-    display: 'flex',
-    gap: 6,
-    alignItems: 'center'
-  },
-  feeTierProcent: {
-    ...typography.heading3,
-    color: colors.invariant.text
-  },
-  feeTierText: {
-    padding: '2px 4px 2px 4px',
     ...typography.caption4,
     color: colors.invariant.textGrey
   }
