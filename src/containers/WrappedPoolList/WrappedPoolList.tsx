@@ -1,9 +1,7 @@
-import { Grid, InputAdornment, InputBase, Typography } from '@mui/material'
+import { Box, Typography, useMediaQuery } from '@mui/material'
 import { isLoading, poolsStatsWithTokensDetails } from '@store/selectors/stats'
-import { shortenAddress } from '@utils/uiUtils'
-import { useDeferredValue, useEffect, useMemo, useState } from 'react'
+import { useDeferredValue, useEffect, useMemo, useState, useTransition } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import SearchIcon from '@static/svg/lupaDark.svg'
 import useStyles from './styles'
 import icons from '@static/icons'
 import { VariantType } from 'notistack'
@@ -11,34 +9,62 @@ import { actions as snackbarActions } from '@store/reducers/snackbars'
 import { network } from '@store/selectors/solanaConnection'
 import { actions } from '@store/reducers/stats'
 import LiquidityPoolList from '@components/LiquidityPoolList/LiquidityPoolList'
+import { FilterSearch } from '@components/FilterSearch/FilterSearch'
+import { theme } from '@static/theme'
+
+interface ISearchToken {
+  icon: string
+  name: string
+  symbol: string
+  address: string
+  balance: any
+  decimals: number
+}
 
 export const WrappedPoolList: React.FC = () => {
-  const { classes } = useStyles()
-
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'))
+  const { classes } = useStyles({ isXs })
   const dispatch = useDispatch()
   const poolsList = useSelector(poolsStatsWithTokensDetails)
   const currentNetwork = useSelector(network)
-  const [searchPoolsValue, setSearchPoolsValue] = useState<string>('')
-  const deferredSearchPoolsValue = useDeferredValue(searchPoolsValue)
+  const [selectedFilters, setSelectedFilters] = useState<ISearchToken[]>([])
+  const deferredSearchPoolsValue = useDeferredValue(selectedFilters)
   const isLoadingStats = useSelector(isLoading)
 
-  const filteredPoolsList = useMemo(() => {
-    return poolsList.filter(poolData => {
-      const symbolFrom = poolData.tokenXDetails?.symbol ?? poolData.tokenX.toString()
-      const symbolTo = poolData.tokenYDetails?.symbol ?? poolData.tokenY.toString()
+  const [filteredPoolsList, setFilteredPoolsList] = useState(poolsList)
+  const [isFiltering, startTransition] = useTransition()
 
-      const poolName = shortenAddress(symbolFrom ?? '') + '/' + shortenAddress(symbolTo ?? '')
-      const reversedPoolName =
-        shortenAddress(symbolTo ?? '') + '/' + shortenAddress(symbolFrom ?? '')
-      return (
-        poolName.toLowerCase().includes(deferredSearchPoolsValue.toLowerCase()) ||
-        poolData.fee.toString().concat('%').includes(deferredSearchPoolsValue.toLowerCase()) ||
-        reversedPoolName.toLowerCase().includes(deferredSearchPoolsValue.toLowerCase()) ||
-        poolData.tokenX.toString().toLowerCase().includes(deferredSearchPoolsValue.toLowerCase()) ||
-        poolData.tokenY.toString().toLowerCase().includes(deferredSearchPoolsValue.toLowerCase())
-      )
+  useEffect(() => {
+    startTransition(() => {
+      if (!Array.isArray(deferredSearchPoolsValue) || deferredSearchPoolsValue.length === 0) {
+        setFilteredPoolsList(poolsList)
+      } else {
+        const result = poolsList.filter(poolData => {
+          const tokenXSymbol = (
+            poolData.tokenXDetails?.symbol || poolData.tokenX.toString()
+          ).toLowerCase()
+          const tokenYSymbol = (
+            poolData.tokenYDetails?.symbol || poolData.tokenY.toString()
+          ).toLowerCase()
+          const tokenXAddress = poolData.tokenX.toString().toLowerCase()
+          const tokenYAddress = poolData.tokenY.toString().toLowerCase()
+
+          return deferredSearchPoolsValue.every(filter => {
+            const filterSymbol = filter.symbol.toLowerCase()
+            const filterAddress = filter.address.toLowerCase()
+
+            return (
+              tokenXSymbol.includes(filterSymbol) ||
+              tokenYSymbol.includes(filterSymbol) ||
+              tokenXAddress.includes(filterAddress) ||
+              tokenYAddress.includes(filterAddress)
+            )
+          })
+        })
+        setFilteredPoolsList(result)
+      }
     })
-  }, [isLoadingStats, poolsList, deferredSearchPoolsValue])
+  }, [poolsList, deferredSearchPoolsValue])
 
   const showAPY = useMemo(() => {
     return filteredPoolsList.some(pool => pool.apy !== 0)
@@ -56,32 +82,24 @@ export const WrappedPoolList: React.FC = () => {
 
   useEffect(() => {
     dispatch(actions.getCurrentStats())
-  }, [])
+  }, [dispatch])
 
   return (
     <div className={classes.container}>
-      <Grid
-        display='flex'
-        alignItems='end'
-        justifyContent='space-between'
-        className={classes.rowContainer}>
+      <Box className={classes.rowContainer}>
         <Typography className={classes.subheader} mb={2}>
           All pools
         </Typography>
-        <InputBase
-          type={'text'}
-          className={classes.searchBar}
-          placeholder='Search pool'
-          endAdornment={
-            <InputAdornment position='end'>
-              <img src={SearchIcon} className={classes.searchIcon} alt='Search' />
-            </InputAdornment>
-          }
-          onChange={e => setSearchPoolsValue(e.target.value)}
-          value={searchPoolsValue}
-          disabled={poolsList.length === 0}
+
+        <FilterSearch
+          networkType={currentNetwork}
+          selectedFilters={selectedFilters}
+          setSelectedFilters={setSelectedFilters}
+          filtersAmount={2}
+          isFiltering={isFiltering}
         />
-      </Grid>
+      </Box>
+
       <LiquidityPoolList
         data={filteredPoolsList.map(poolData => ({
           symbolFrom: poolData.tokenXDetails?.symbol ?? poolData.tokenX.toString(),
@@ -94,23 +112,11 @@ export const WrappedPoolList: React.FC = () => {
           addressFrom: poolData.tokenX.toString(),
           addressTo: poolData.tokenY.toString(),
           apy: poolData.apy,
-          // lockedX: poolData.lockedX,
-          // lockedY: poolData.lockedY,
-          // liquidityX: poolData.liquidityX,
-          // liquidityY: poolData.liquidityY,
           apyData: {
             fees: poolData.apy,
             accumulatedFarmsSingleTick: 0,
             accumulatedFarmsAvg: 0
           },
-          // apy:
-          //   poolData.apy + (accumulatedSingleTickAPY?.[poolData.poolAddress.toString()] ?? 0),
-          // apyData: {
-          //   fees: poolData.apy,
-          //   accumulatedFarmsSingleTick:
-          //     accumulatedSingleTickAPY?.[poolData.poolAddress.toString()] ?? 0,
-          //   accumulatedFarmsAvg: accumulatedAverageAPY?.[poolData.poolAddress.toString()] ?? 0
-          // }
           isUnknownFrom: poolData.tokenXDetails?.isUnknown ?? false,
           isUnknownTo: poolData.tokenYDetails?.isUnknown ?? false,
           poolAddress: poolData.poolAddress.toString()
