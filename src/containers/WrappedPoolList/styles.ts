@@ -2,7 +2,7 @@ import { Theme } from '@mui/material'
 import { typography, colors } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
-export const useStyles = makeStyles()((theme: Theme) => ({
+export const useStyles = makeStyles<{ isXs: boolean }>()((theme: Theme, { isXs }) => ({
   wrapper: {
     maxWidth: 1072,
     minHeight: '100%'
@@ -43,31 +43,20 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       }
     }
   },
-  searchBar: {
-    width: 221,
-    height: 32,
-    padding: '7px 12px',
-    borderRadius: 10,
-    background: colors.invariant.black,
-    border: '1px solid #202946',
-    color: colors.invariant.lightGrey,
-    ...typography.body2,
-    marginBottom: 8,
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      height: 48
-    }
-  },
+
   searchIcon: {
     width: 17
   },
   rowContainer: {
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-      alignItems: 'flex-start'
-    }
+    display: 'flex',
+    flexDirection: isXs ? 'column' : 'row',
+    alignItems: isXs ? 'flex-start' : 'flex-end',
+    justifyContent: 'space-between',
+    width: '100%'
   },
   container: {
+    display: 'flex',
+    flexDirection: 'column',
     width: '100%'
   }
 }))
