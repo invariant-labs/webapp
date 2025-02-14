@@ -4,15 +4,7 @@ import { shortenAddress } from '@utils/uiUtils'
 import { formatNumber, printBN } from '@utils/utils'
 import { useStyles } from './style'
 import { typography } from '@static/theme'
-
-interface ISearchToken {
-  icon: string
-  name: string
-  symbol: string
-  address: string
-  balance: string
-  decimals: number
-}
+import { ISearchToken } from '../FilterSearch'
 
 export const TokenOption: React.FC<{
   option: ISearchToken
@@ -42,7 +34,7 @@ export const TokenOption: React.FC<{
             <Box className={classes.tokenAddress}>
               <a
                 className={classes.addressLink}
-                href={`https://solscan.io/token/${option.address.toString()}${networkUrl}`}
+                href={`https://eclipsescan.xyz/token/${option.address.toString()}${networkUrl}`}
                 target='_blank'
                 rel='noopener noreferrer'
                 onClick={event => event.stopPropagation()}>

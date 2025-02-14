@@ -1,6 +1,6 @@
 import { Box, Typography, useMediaQuery } from '@mui/material'
 import { isLoading, poolsStatsWithTokensDetails } from '@store/selectors/stats'
-import { useDeferredValue, useEffect, useMemo, useState, useTransition } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useStyles from './styles'
 import icons from '@static/icons'
@@ -9,17 +9,8 @@ import { actions as snackbarActions } from '@store/reducers/snackbars'
 import { network } from '@store/selectors/solanaConnection'
 import { actions } from '@store/reducers/stats'
 import LiquidityPoolList from '@components/LiquidityPoolList/LiquidityPoolList'
-import { FilterSearch } from '@components/FilterSearch/FilterSearch'
+import { FilterSearch, ISearchToken } from '@components/FilterSearch/FilterSearch'
 import { theme } from '@static/theme'
-
-interface ISearchToken {
-  icon: string
-  name: string
-  symbol: string
-  address: string
-  balance: any
-  decimals: number
-}
 
 export const WrappedPoolList: React.FC = () => {
   const isXs = useMediaQuery(theme.breakpoints.down('sm'))
@@ -27,44 +18,30 @@ export const WrappedPoolList: React.FC = () => {
   const dispatch = useDispatch()
   const poolsList = useSelector(poolsStatsWithTokensDetails)
   const currentNetwork = useSelector(network)
-  const [selectedFilters, setSelectedFilters] = useState<ISearchToken[]>([])
-  const deferredSearchPoolsValue = useDeferredValue(selectedFilters)
   const isLoadingStats = useSelector(isLoading)
 
-  const [filteredPoolsList, setFilteredPoolsList] = useState(poolsList)
-  const [isFiltering, startTransition] = useTransition()
+  const [selectedFilters, setSelectedFilters] = useState<ISearchToken[]>([])
 
-  useEffect(() => {
-    startTransition(() => {
-      if (!Array.isArray(deferredSearchPoolsValue) || deferredSearchPoolsValue.length === 0) {
-        setFilteredPoolsList(poolsList)
-      } else {
-        const result = poolsList.filter(poolData => {
-          const tokenXSymbol = (
-            poolData.tokenXDetails?.symbol || poolData.tokenX.toString()
-          ).toLowerCase()
-          const tokenYSymbol = (
-            poolData.tokenYDetails?.symbol || poolData.tokenY.toString()
-          ).toLowerCase()
-          const tokenXAddress = poolData.tokenX.toString().toLowerCase()
-          const tokenYAddress = poolData.tokenY.toString().toLowerCase()
+  const filteredPoolsList = useMemo(() => {
+    return poolsList.filter(poolData => {
+      const isTokenXSelected = selectedFilters.some(
+        token => token.address.toString() === poolData.tokenX.toString()
+      )
+      const isTokenYSelected = selectedFilters.some(
+        token => token.address.toString() === poolData.tokenY.toString()
+      )
 
-          return deferredSearchPoolsValue.every(filter => {
-            const filterSymbol = filter.symbol.toLowerCase()
-            const filterAddress = filter.address.toLowerCase()
-
-            return (
-              tokenXSymbol.includes(filterSymbol) ||
-              tokenYSymbol.includes(filterSymbol) ||
-              tokenXAddress.includes(filterAddress) ||
-              tokenYAddress.includes(filterAddress)
-            )
-          })
-        })
-        setFilteredPoolsList(result)
+      if (selectedFilters.length === 1) {
+        return isTokenXSelected || isTokenYSelected
       }
+
+      if (selectedFilters.length === 2) {
+        if (!(isTokenXSelected && isTokenYSelected)) return false
+      }
+
+      return true
     })
-  }, [poolsList, deferredSearchPoolsValue])
+  }, [isLoadingStats, poolsList, selectedFilters])
 
   const showAPY = useMemo(() => {
     return filteredPoolsList.some(pool => pool.apy !== 0)
@@ -96,7 +73,6 @@ export const WrappedPoolList: React.FC = () => {
           selectedFilters={selectedFilters}
           setSelectedFilters={setSelectedFilters}
           filtersAmount={2}
-          isFiltering={isFiltering}
         />
       </Box>
 

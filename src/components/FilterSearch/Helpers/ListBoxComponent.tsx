@@ -38,7 +38,7 @@ const ListboxComponent = React.forwardRef<HTMLDivElement, ListboxComponentProps>
           height={isSmall ? 486 : 306}
           width='100%'
           itemCount={itemCount}
-          itemSize={isSmall ? 70 : 40}
+          itemSize={isSmall ? 60 : 51}
           itemData={itemData}
           overscanCount={5}>
           {renderRow}

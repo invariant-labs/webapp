@@ -1,4 +1,3 @@
-import React, { forwardRef, useMemo, useState } from 'react'
 import {
   Autocomplete,
   Box,
@@ -11,6 +10,7 @@ import {
   useMediaQuery
 } from '@mui/material'
 import SearchIcon from '@static/svg/lupaDark.svg'
+import { forwardRef, useMemo, useState } from 'react'
 import { commonTokensForNetworks, NetworkType } from '@store/consts/static'
 import { theme, typography } from '@static/theme'
 import useStyles from './style'
@@ -21,13 +21,14 @@ import { swapTokens } from '@store/selectors/solanaWallet'
 import icons from '@static/icons'
 import { tokensStatsWithTokensDetails } from '@store/selectors/stats'
 import ListboxComponent from './Helpers/ListBoxComponent'
+import { BN } from '@project-serum/anchor'
 
 export interface ISearchToken {
   icon: string
   name: string
   symbol: string
   address: string
-  balance: any
+  balance: BN
   decimals: number
 }
 
@@ -36,19 +37,19 @@ interface IFilterSearch {
   selectedFilters: ISearchToken[]
   setSelectedFilters: React.Dispatch<React.SetStateAction<ISearchToken[]>>
   filtersAmount: number
-  isFiltering?: boolean
 }
 
 export const FilterSearch: React.FC<IFilterSearch> = ({
   networkType,
   selectedFilters,
   setSelectedFilters,
-  filtersAmount,
-  isFiltering = false
+  filtersAmount
 }) => {
   const tokensListDetails = useSelector(tokensStatsWithTokensDetails)
   const commonTokens = commonTokensForNetworks[networkType]
   const tokensList = useSelector(swapTokens)
+
+  const [open, setOpen] = useState(false)
 
   const tokenListMap = useMemo(() => {
     const map = new Map<string, any>()
@@ -87,6 +88,11 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
         if (!aHasBalance && bHasBalance) return 1
         if (aIsCommon && !bIsCommon) return -1
         if (!aIsCommon && bIsCommon) return 1
+        const aAddressEqualsName = a.address === a.symbol
+        const bAddressEqualsName = b.address === b.symbol
+        if (aAddressEqualsName && !bAddressEqualsName) return 1
+        if (!aAddressEqualsName && bAddressEqualsName) return -1
+
         return 0
       })
   }, [tokensListDetails, tokenListMap, commonTokensSet])
@@ -94,16 +100,8 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
   const isTokensSelected = selectedFilters.length === filtersAmount
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
   const { classes } = useStyles({ isSmall })
-  const [open, setOpen] = useState(false)
-  const [inputValue, setInputValue] = useState('')
 
-  const options: ISearchToken[] = useMemo(() => {
-    return mappedTokens.filter(
-      token => !selectedFilters.some(selected => selected.address === token.address)
-    )
-  }, [mappedTokens, selectedFilters])
-
-  const shouldOpenPopper = !isTokensSelected && open && !isFiltering
+  const shouldOpenPopper = !isTokensSelected && open
 
   const networkUrl = useMemo(() => {
     switch (networkType) {
@@ -118,7 +116,11 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
     }
   }, [networkType])
 
-  const PaperComponent = (paperProps: any, ref: React.Ref<HTMLDivElement>) => {
+  const options: ISearchToken[] = mappedTokens.filter(
+    token => !selectedFilters.some(selected => selected.address === token.address)
+  )
+
+  const PaperComponent = (paperProps, ref: React.Ref<HTMLDivElement>) => {
     return (
       <Fade in timeout={300}>
         <Paper {...paperProps} ref={ref}>
@@ -128,7 +130,7 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
     )
   }
 
-  const CustomPopper = (props: any) => {
+  const CustomPopper = props => {
     return <Popper {...props} placement='bottom-start' />
   }
 
@@ -136,13 +138,11 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
 
   const handleRemoveToken = (tokenToRemove: ISearchToken) => {
     setSelectedFilters(prev => prev.filter(token => token.address !== tokenToRemove.address))
-    setOpen(false)
   }
 
-  const handleAutoCompleteChange = (_event: React.SyntheticEvent, newValue: ISearchToken[]) => {
+  const handleAutoCompleteChange = (_event: any, newValue: ISearchToken[]) => {
     setSelectedFilters(newValue)
-    setInputValue('')
-    setOpen(false)
+    setOpen(true)
   }
 
   return (
@@ -161,9 +161,7 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
       classes={{ paper: classes.paper }}
       open={shouldOpenPopper}
       getOptionLabel={option => option.symbol}
-      onOpen={() => {
-        if (!isFiltering) setOpen(true)
-      }}
+      onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
       noOptionsText={<Typography className={classes.headerText}>No tokens found</Typography>}
       sx={{
@@ -189,7 +187,6 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
           variant='outlined'
           className={classes.searchBar}
           placeholder={selectedFilters.length === 0 ? 'Search token' : ''}
-          value={inputValue}
           InputProps={
             {
               ...params.InputProps,
@@ -200,7 +197,6 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
                 alignItems: 'center',
                 ...typography.body2
               },
-              readOnly: isTokensSelected || isFiltering,
               endAdornment: (
                 <InputAdornment position='end'>
                   <img src={SearchIcon} className={classes.searchIcon} alt='Search' />
@@ -208,6 +204,7 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
               ),
               inputProps: {
                 ...params.inputProps,
+                readOnly: isTokensSelected,
                 style: { paddingLeft: '12px' }
               },
               onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -215,7 +212,8 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
                   params.inputProps.onKeyDown(event)
                 }
                 if (event.key === 'Backspace' && event.currentTarget.value === '') {
-                  if (selectedFilters.length > 0) {
+                  if (isTokensSelected) {
+                  } else if (selectedFilters.length > 0) {
                     const lastToken = selectedFilters[selectedFilters.length - 1]
                     handleRemoveToken(lastToken)
                   }
@@ -223,9 +221,7 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
               }
             } as any
           }
-          onClick={() => {
-            if (!isTokensSelected && !isFiltering) setOpen(true)
-          }}
+          onClick={() => !isTokensSelected && setOpen(true)}
         />
       )}
     />

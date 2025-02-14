@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material'
-import { typography, colors, theme } from '@static/theme'
+import { typography, colors } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()((_theme: Theme) => ({
@@ -33,17 +33,13 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
   },
 
   tokenContainer: {
-    margin: '5px 0',
     width: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
 
     padding: '8px 10px 8px 6px',
-    borderRadius: 24,
-    [theme.breakpoints.down('sm')]: {
-      margin: '5px 0'
-    }
+    borderRadius: 24
   },
 
   leftSide: {
