@@ -45,6 +45,22 @@ const RootPage: React.FC = React.memo(() => {
 
   const { classes } = useStyles()
 
+  const metaData = new Map([
+    ['/exchange', 'Invariant | Exchange'],
+    ['/liquidity', 'Invariant | Liquidity'],
+    ['/portfolio', 'Invariant | Portfolio'],
+    ['/newPosition', 'Invariant | New Position'],
+    ['/position', 'Invariant | Position Details'],
+    ['/statistics', 'Invariant | Statistics']
+  ])
+
+  useEffect(() => {
+    const title =
+      metaData.get([...metaData.keys()].find(key => location.pathname.startsWith(key))!) ||
+      document.title
+    document.title = title
+  }, [location])
+
   const initConnection = useCallback(() => {
     dispatch(solanaConnectionActions.initSolanaConnection())
   }, [dispatch])
