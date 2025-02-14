@@ -15,7 +15,8 @@ export const useStyles = makeStyles()(() => ({
     borderBottomRightRadius: '24px',
     width: '100%',
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderTop: `1px solid ${colors.invariant.light}`
   },
   loadingOverlay: {
     position: 'relative',
