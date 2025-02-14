@@ -142,7 +142,9 @@ const Slippage: React.FC<Props> = ({
                 classes.detailsInfoForm,
                 tierIndex === -1 && classes.customSlippageActive
               )}
-              type={'text'}
+              inputProps={{
+                inputMode: 'decimal'
+              }}
               value={slippTolerance}
               onChange={e => {
                 allowOnlyDigitsAndTrimUnnecessaryZeros(e)
