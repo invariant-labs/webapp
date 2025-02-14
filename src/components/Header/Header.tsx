@@ -24,6 +24,8 @@ import FaucetButton from './HeaderButton/FaucetButton'
 import SelectPriorityButton from './HeaderButton/SelectPriorityButton'
 import Priority from '@components/Modals/Priority/Priority'
 import { YourPointsButton } from './HeaderButton/YourPointsButton'
+import SocialModal from '@components/Modals/SocialModal/SocialModal'
+
 export interface IHeader {
   address: PublicKey
   onNetworkSelect: (networkType: NetworkType, rpcAddress: string, rpcName?: string) => void
@@ -72,6 +74,8 @@ export const Header: React.FC<IHeader> = ({
   const navigate = useNavigate()
 
   const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
+  const isSmDown = useMediaQuery(theme.breakpoints.down('sm'))
+
   const showRPCBelowBreakpoint = useMediaQuery('@media (max-width:1050px)')
 
   const routes = ['exchange', 'liquidity', 'portfolio', 'statistics']
@@ -88,6 +92,7 @@ export const Header: React.FC<IHeader> = ({
   const [chainSelectOpen, setChainSelectOpen] = useState(false)
   const [routesModalAnchor, setRoutesModalAnchor] = useState<HTMLButtonElement | null>(null)
   const [priorityModal, setPriorityModal] = useState<boolean>(false)
+  const [viewSocialsOpen, setViewSocialsOpen] = useState(false)
 
   useEffect(() => {
     setActive(landing)
@@ -366,6 +371,14 @@ export const Header: React.FC<IHeader> = ({
                   }
                 : undefined
             }
+            onSocials={
+              isSmDown
+                ? () => {
+                    setRoutesModalOpen(false)
+                    setViewSocialsOpen(true)
+                  }
+                : undefined
+            }
           />
           {typeOfNetwork === NetworkType.Mainnet ? (
             <Priority
@@ -417,6 +430,13 @@ export const Header: React.FC<IHeader> = ({
               unblurContent()
             }}
             activeChain={activeChain}
+          />
+          <SocialModal
+            open={viewSocialsOpen}
+            handleClose={() => {
+              setViewSocialsOpen(false)
+              unblurContent()
+            }}
           />
         </Grid>
       </Grid>
