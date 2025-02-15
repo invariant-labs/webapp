@@ -90,7 +90,8 @@ export const colors = {
     transparentBcg: 'rgba(1, 5, 20, 0.25)',
     bodyBackground: '#141b2d',
     plotGreen: '#9DD46D',
-    plotRed: '#FB555F'
+    plotRed: '#FB555F',
+    pinkGreenLinearGradient: 'linear-gradient(90deg, #EF84F5 0%, #2EE09A 100%)'
   }
 }
 
