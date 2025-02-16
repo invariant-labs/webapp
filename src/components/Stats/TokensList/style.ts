@@ -18,7 +18,8 @@ export const useStyles = makeStyles()(() => ({
     justifyContent: 'center',
     [theme.breakpoints.down('lg')]: {
       padding: '20px 12px'
-    }
+    },
+    borderTop: `1px solid ${colors.invariant.light}`
   },
   loadingOverlay: {
     position: 'relative',

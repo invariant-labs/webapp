@@ -72,28 +72,30 @@ const SinglePositionInfo: React.FC<IProp> = ({
       />
       <Grid className={classes.header}>
         <Grid className={classes.iconsGrid}>
-          <img
-            className={classes.icon}
-            src={xToY ? tokenX.icon : tokenY.icon}
-            alt={xToY ? tokenX.name : tokenY.name}
-          />
-          <TooltipHover text='Reverse tokens'>
+          <Grid className={classes.tickerContainer}>
             <img
-              className={classes.arrowIcon}
-              src={icons.swapListIcon}
-              alt='Reverse tokens'
-              onClick={swapHandler}
+              className={classes.icon}
+              src={xToY ? tokenX.icon : tokenY.icon}
+              alt={xToY ? tokenX.name : tokenY.name}
             />
-          </TooltipHover>
-          <img
-            className={classes.icon}
-            src={xToY ? tokenY.icon : tokenX.icon}
-            alt={xToY ? tokenY.name : tokenX.name}
-          />
-          <Grid className={classes.namesGrid}>
-            <Typography className={classes.name}>
-              {xToY ? tokenX.name : tokenY.name} - {xToY ? tokenY.name : tokenX.name}
-            </Typography>
+            <TooltipHover text='Reverse tokens'>
+              <img
+                className={classes.arrowIcon}
+                src={icons.swapListIcon}
+                alt='Reverse tokens'
+                onClick={swapHandler}
+              />
+            </TooltipHover>
+            <img
+              className={classes.icon}
+              src={xToY ? tokenY.icon : tokenX.icon}
+              alt={xToY ? tokenY.name : tokenX.name}
+            />
+            <Grid className={classes.namesGrid}>
+              <Typography className={classes.name}>
+                {xToY ? tokenX.name : tokenY.name} - {xToY ? tokenY.name : tokenX.name}
+              </Typography>
+            </Grid>
           </Grid>
           <Grid className={classes.rangeGrid} sx={{ display: { xs: 'flex', md: 'none' } }}>
             <Tooltip

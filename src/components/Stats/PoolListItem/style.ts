@@ -4,15 +4,16 @@ import { makeStyles } from 'tss-react/mui'
 export const useStyles = makeStyles()(() => ({
   wrapper: {
     '&:nth-of-type(odd)': {
-      background: `${colors.invariant.componentDark}`
+      background: `${colors.invariant.component}`
     },
     '&:nth-of-type(even)': {
-      background: colors.invariant.component
+      background: colors.invariant.componentDark
     },
     '&:first-child': {
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
-      background: colors.invariant.component
+      background: colors.invariant.component,
+      borderBottom: `1px solid ${colors.invariant.light}`
     }
   },
   container: {

@@ -4,6 +4,7 @@ import { theme } from '@static/theme'
 import { useMediaQuery } from '@mui/material'
 import CustomSnackbar from './CustomSnackbar/CustomSnackbar'
 import { NetworkType } from '@store/consts/static'
+import { Global } from '@emotion/react'
 
 type ExtraVariants = 'pending'
 
@@ -37,19 +38,31 @@ const Snackbar: React.FC<ISnackbarProps> = ({ maxSnack = 3, children }) => {
   const isExSmall = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
-    <SnackbarProvider
-      dense
-      maxSnack={isExSmall ? 5 : maxSnack}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-      Components={{
-        success: CustomSnackbar,
-        error: CustomSnackbar,
-        info: CustomSnackbar,
-        warning: CustomSnackbar,
-        pending: CustomSnackbar
-      }}>
-      {children}
-    </SnackbarProvider>
+    <>
+      {isExSmall && (
+        <Global
+          styles={`
+          .custom-snackbar-container {
+            bottom: 90px !important;
+          }
+        `}
+        />
+      )}
+      <SnackbarProvider
+        dense
+        maxSnack={isExSmall ? 5 : maxSnack}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        classes={isExSmall ? { containerAnchorOriginBottomLeft: 'custom-snackbar-container' } : {}}
+        Components={{
+          success: CustomSnackbar,
+          error: CustomSnackbar,
+          info: CustomSnackbar,
+          warning: CustomSnackbar,
+          pending: CustomSnackbar
+        }}>
+        {children}
+      </SnackbarProvider>
+    </>
   )
 }
 
