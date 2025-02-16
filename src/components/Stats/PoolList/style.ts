@@ -1,5 +1,5 @@
 import { alpha } from '@mui/material'
-import { colors } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()(() => ({
@@ -14,7 +14,10 @@ export const useStyles = makeStyles()(() => ({
     maxWidth: '100%',
     backgroundColor: colors.invariant.component,
     borderBottomLeftRadius: '24px',
-    borderBottomRightRadius: '24px'
+    borderBottomRightRadius: '24px',
+    [theme.breakpoints.down('lg')]: {
+      padding: '20px 12px'
+    }
   },
   loadingOverlay: {
     position: 'relative',

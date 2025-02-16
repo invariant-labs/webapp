@@ -22,15 +22,15 @@ export const PaginationList: React.FC<IPaginationList> = ({
   const matches = useMediaQuery(theme.breakpoints.down('xs'))
 
   return (
-    <div className={classes.root} style={{ justifyContent: position ? 'center' : `${variant}` }}>
-      <Pagination
-        count={pages}
-        shape='rounded'
-        defaultPage={defaultPage}
-        onChange={(_e, page) => handleChangePage(page)}
-        siblingCount={matches ? 0 : 1}
-        page={page}
-      />
-    </div>
+    <Pagination
+      className={classes.root}
+      count={pages}
+      shape='rounded'
+      defaultPage={defaultPage}
+      onChange={(_e, page) => handleChangePage(page)}
+      siblingCount={matches ? 0 : 1}
+      page={page}
+      style={{ justifyContent: position ? 'center' : `${variant}` }}
+    />
   )
 }

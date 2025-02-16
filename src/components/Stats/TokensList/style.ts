@@ -1,5 +1,5 @@
 import { alpha } from '@mui/material'
-import { colors } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()(() => ({
@@ -16,6 +16,9 @@ export const useStyles = makeStyles()(() => ({
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.down('lg')]: {
+      padding: '20px 12px'
+    },
     borderTop: `1px solid ${colors.invariant.light}`
   },
   loadingOverlay: {
