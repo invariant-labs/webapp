@@ -1,7 +1,7 @@
-import React, { useDeferredValue, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useStyles from './styles'
-import { Grid, InputAdornment, InputBase, Typography } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import {
   fees24,
@@ -24,9 +24,8 @@ import PoolList from '@components/Stats/PoolList/PoolList'
 import icons from '@static/icons'
 import { farms } from '@store/selectors/farms'
 import { actions as farmsActions } from '@store/reducers/farms'
-import SearchIcon from '@static/svg/lupaDark.svg'
-import { shortenAddress } from '@utils/utils'
 import { VariantType } from 'notistack'
+import { FilterSearch, ISearchToken } from '@components/FilterSearch/FilterSearch'
 
 export const WrappedStats: React.FC = () => {
   const { classes } = useStyles()
@@ -44,11 +43,8 @@ export const WrappedStats: React.FC = () => {
   const allFarms = useSelector(farms)
   const currentNetwork = useSelector(network)
 
-  const [searchTokensValue, setSearchTokensValue] = useState<string>('')
-  const [searchPoolsValue, setSearchPoolsValue] = useState<string>('')
-
-  const deferredSearchTokensValue = useDeferredValue(searchTokensValue)
-  const deferredSearchPoolsValue = useDeferredValue(searchPoolsValue)
+  const [searchTokensValue, setSearchTokensValue] = useState<ISearchToken[]>([])
+  const [searchPoolsValue, setSearchPoolsValue] = useState<ISearchToken[]>([])
 
   useEffect(() => {
     if (tokensList.length > 0 && Object.values(allFarms).length === 0) {
@@ -61,36 +57,48 @@ export const WrappedStats: React.FC = () => {
   }, [])
 
   const filteredTokenList = useMemo(() => {
-    return tokensList.filter(
-      tokenData =>
-        tokenData.tokenDetails?.symbol
-          .toLowerCase()
-          .includes(deferredSearchTokensValue.toLowerCase()) ||
-        tokenData.tokenDetails?.name
-          .toLowerCase()
-          .includes(deferredSearchTokensValue.toLowerCase()) ||
-        tokenData.address.toString().toLowerCase().includes(deferredSearchTokensValue.toLowerCase())
-    )
-  }, [tokensList, deferredSearchTokensValue])
+    if (searchTokensValue.length === 0) {
+      return tokensList
+    }
+
+    return tokensList.filter(tokenData => {
+      const tokenAddress = tokenData.address.toString().toLowerCase()
+      const tokenSymbol = tokenData.tokenDetails?.symbol?.toLowerCase() || ''
+      const tokenName = tokenData.tokenDetails?.name?.toLowerCase() || ''
+
+      return searchTokensValue.some(filterToken => {
+        const filterAddress = filterToken.address?.toLowerCase()
+        const filterSymbol = filterToken.symbol.toLowerCase()
+        const filterName = filterToken.name.toLowerCase()
+
+        if (filterAddress) {
+          return tokenAddress === filterAddress
+        }
+        return tokenSymbol.includes(filterSymbol) || tokenName.includes(filterName)
+      })
+    })
+  }, [tokensList, searchTokensValue])
 
   const filteredPoolsList = useMemo(() => {
     return poolsList.filter(poolData => {
-      const symbolFrom = poolData.tokenXDetails?.symbol ?? poolData.tokenX.toString()
-      const symbolTo = poolData.tokenYDetails?.symbol ?? poolData.tokenY.toString()
-
-      const poolName = shortenAddress(symbolFrom ?? '') + '/' + shortenAddress(symbolTo ?? '')
-      const reversedPoolName =
-        shortenAddress(symbolTo ?? '') + '/' + shortenAddress(symbolFrom ?? '')
-
-      return (
-        poolName.toLowerCase().includes(deferredSearchPoolsValue.toLowerCase()) ||
-        poolData.fee.toString().concat('%').includes(deferredSearchPoolsValue.toLowerCase()) ||
-        reversedPoolName.toLowerCase().includes(deferredSearchPoolsValue.toLowerCase()) ||
-        poolData.tokenX.toString().toLowerCase().includes(deferredSearchPoolsValue.toLowerCase()) ||
-        poolData.tokenY.toString().toLowerCase().includes(deferredSearchPoolsValue.toLowerCase())
+      const isTokenXSelected = searchPoolsValue.some(
+        token => token.address.toString() === poolData.tokenX.toString()
       )
+      const isTokenYSelected = searchPoolsValue.some(
+        token => token.address.toString() === poolData.tokenY.toString()
+      )
+
+      if (searchPoolsValue.length === 1) {
+        return isTokenXSelected || isTokenYSelected
+      }
+
+      if (searchPoolsValue.length === 2) {
+        if (!(isTokenXSelected && isTokenYSelected)) return false
+      }
+
+      return true
     })
-  }, [poolsList, deferredSearchPoolsValue])
+  }, [isLoadingStats, poolsList, searchPoolsValue])
 
   const accumulatedAverageAPY = useMemo(() => {
     const acc: Record<string, number> = {}
@@ -184,18 +192,11 @@ export const WrappedStats: React.FC = () => {
             <Typography className={classes.subheader} mb={2}>
               Top tokens
             </Typography>
-            <InputBase
-              type={'text'}
-              className={classes.searchBar}
-              placeholder='Search token'
-              endAdornment={
-                <InputAdornment position='end'>
-                  <img src={SearchIcon} className={classes.searchIcon} alt='Search' />
-                </InputAdornment>
-              }
-              onChange={e => setSearchTokensValue(e.target.value)}
-              value={searchTokensValue}
-              disabled={tokensList.length === 0}
+            <FilterSearch
+              networkType={currentNetwork}
+              selectedFilters={searchTokensValue}
+              setSelectedFilters={setSearchTokensValue}
+              filtersAmount={3}
             />
           </Grid>
           <Grid container className={classes.row}>
@@ -224,18 +225,12 @@ export const WrappedStats: React.FC = () => {
             <Typography className={classes.subheader} mb={2}>
               Top pools
             </Typography>
-            <InputBase
-              type={'text'}
-              className={classes.searchBar}
-              placeholder='Search pool'
-              endAdornment={
-                <InputAdornment position='end'>
-                  <img src={SearchIcon} className={classes.searchIcon} alt='Search' />
-                </InputAdornment>
-              }
-              onChange={e => setSearchPoolsValue(e.target.value)}
-              value={searchPoolsValue}
-              disabled={poolsList.length === 0}
+
+            <FilterSearch
+              networkType={currentNetwork}
+              setSelectedFilters={setSearchPoolsValue}
+              selectedFilters={searchPoolsValue}
+              filtersAmount={2}
             />
           </Grid>
           <PoolList

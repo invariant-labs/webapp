@@ -122,40 +122,48 @@ const TokensList: React.FC<ITokensList> = ({ data, network, copyAddressHandler, 
       <>
         <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />
         {data.length > 0 || isLoading ? (
-          paginator(page).data.map((token, index) => {
-            return (
-              <TokenListItem
-                key={index}
-                displayType='tokens'
-                itemNumber={index + 1 + (page - 1) * 10}
-                icon={token.icon}
-                name={token.name}
-                symbol={token.symbol}
-                price={token.price}
-                // priceChange={token.priceChange}
-                volume={token.volume}
-                TVL={token.TVL}
-                hideBottomLine={pages === 1 && index + 1 === data.length}
-                address={token.address}
-                isUnknown={token.isUnknown}
-                network={network}
-                copyAddressHandler={copyAddressHandler}
-              />
-            )
-          })
+          <>
+            {paginator(page).data.map((token, index) => {
+              return (
+                <TokenListItem
+                  key={index}
+                  displayType='tokens'
+                  itemNumber={index + 1 + (page - 1) * 10}
+                  icon={token.icon}
+                  name={token.name}
+                  symbol={token.symbol}
+                  price={token.price}
+                  // priceChange={token.priceChange}
+                  volume={token.volume}
+                  TVL={token.TVL}
+                  hideBottomLine={pages === 1 && index + 1 === data.length}
+                  address={token.address}
+                  isUnknown={token.isUnknown}
+                  network={network}
+                  copyAddressHandler={copyAddressHandler}
+                />
+              )
+            })}
+            {new Array(10 - paginator(page).data.length).fill('').map((_, index) => (
+              <div
+                className={classNames(classes.emptyRow, {
+                  [classes.emptyRowBorder]: index === 10 - paginator(page).data.length - 1
+                })}></div>
+            ))}
+          </>
         ) : (
-          <NotFoundPlaceholder title='No tokens found...' />
+          <NotFoundPlaceholder title='No tokens found...' isStats />
         )}
-        {pages > 1 ? (
-          <Grid className={classes.pagination}>
+        <Grid className={classes.pagination}>
+          {pages > 1 && (
             <PaginationList
               pages={Math.ceil(data.length / 10)}
               defaultPage={1}
               handleChangePage={handleChangePagination}
               variant='flex-end'
             />
-          </Grid>
-        ) : null}
+          )}
+        </Grid>
       </>
     </Grid>
   )
