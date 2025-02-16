@@ -1,5 +1,5 @@
 import { alpha } from '@mui/material'
-import { colors, typography } from '@static/theme'
+import { colors, theme, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()(() => ({
@@ -8,11 +8,16 @@ export const useStyles = makeStyles()(() => ({
     borderRadius: '24px'
   },
   pagination: {
+    borderTop: `1px solid ${colors.invariant.light}`,
+    height: 90,
     padding: '20px 24px 10px 0',
     maxWidth: '100%',
     backgroundColor: colors.invariant.component,
     borderBottomLeftRadius: '24px',
-    borderBottomRightRadius: '24px'
+    borderBottomRightRadius: '24px',
+    [theme.breakpoints.down('lg')]: {
+      padding: '20px 12px'
+    }
   },
   noPoolFoundPlaceholder: {
     ...typography.body2,
@@ -40,10 +45,14 @@ export const useStyles = makeStyles()(() => ({
     }
   },
   noPoolFoundContainer: {
+    height: 690,
+    background: colors.invariant.component,
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 32
+    paddingTop: 32,
+    borderBottom: `1px solid ${colors.invariant.light}`
   },
   img: {
     paddingBottom: 25
@@ -60,5 +69,13 @@ export const useStyles = makeStyles()(() => ({
       pointerEvents: 'none',
       borderRadius: '24px'
     }
+  },
+  emptyRow: {
+    height: 69,
+    background: colors.invariant.component
+  },
+  emptyRowBorder: {
+    height: 68,
+    borderBottom: `1px solid ${colors.invariant.light}`
   }
 }))
