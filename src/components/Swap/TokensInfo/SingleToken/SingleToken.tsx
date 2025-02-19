@@ -3,7 +3,7 @@ import { Box, Grid, Typography } from '@mui/material'
 import { useStyles } from './../styles'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import icons from '@static/icons'
-import { formatNumber } from '@utils/utils'
+import { formatNumberWithSuffix } from '@utils/utils'
 import { VariantType } from 'notistack'
 import { NetworkType } from '@store/consts/static'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
@@ -99,7 +99,7 @@ const SingleToken: React.FC<IProps> = ({ token, network, tokenPrice, copyTokenAd
 
       <Grid className={classes.rightItems}>
         <Typography className={classes.price}>
-          {token ? (tokenPrice ? '$' + formatNumber(tokenPrice) : 'No data') : '--'}
+          {token ? (tokenPrice ? '$' + formatNumberWithSuffix(tokenPrice) : 'No data') : '--'}
         </Typography>
         <TooltipHover text='Copy'>
           <Grid className={classes.tokenAddress} onClick={copyToClipboard}>

@@ -1,4 +1,4 @@
-import { formatNumber } from '@utils/utils'
+import { formatNumberWithSuffix } from '@utils/utils'
 import React from 'react'
 import { useSpring, animated } from 'react-spring'
 interface IProps {
@@ -7,7 +7,7 @@ interface IProps {
   format?: (n: number) => string
 }
 
-const AnimatedNumber: React.FC<IProps> = ({ start, finish, format = formatNumber }) => {
+const AnimatedNumber: React.FC<IProps> = ({ start, finish, format = formatNumberWithSuffix }) => {
   const { number } = useSpring({
     from: { number: start },
     number: finish,

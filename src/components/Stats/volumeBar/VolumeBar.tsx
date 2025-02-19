@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { theme } from '@static/theme'
 import { useStyles } from './style'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
-import { formatNumber } from '@utils/utils'
+import { formatNumberWithSuffix } from '@utils/utils'
 
 interface Iprops {
   percentVolume: number | null
@@ -47,7 +47,7 @@ const VolumeBar: React.FC<Iprops> = ({
       <Box className={classes.tokenName}>
         <Typography className={classes.tokenHeader}>Volume 24H:</Typography>
         <Typography className={classes.tokenContent}>
-          ${formatNumber(isLoading ? Math.random() * 10000 : volume)}
+          ${formatNumberWithSuffix(isLoading ? Math.random() * 10000 : volume)}
         </Typography>
         {!isXDown && (
           <Typography
@@ -64,7 +64,7 @@ const VolumeBar: React.FC<Iprops> = ({
       <Box className={classes.tokenName}>
         <Typography className={classes.tokenHeader}>TVL 24H:</Typography>
         <Typography className={classes.tokenContent}>
-          ${formatNumber(isLoading ? Math.random() * 10000 : tvlVolume)}
+          ${formatNumberWithSuffix(isLoading ? Math.random() * 10000 : tvlVolume)}
         </Typography>
         {!isXDown && (
           <Typography
@@ -81,7 +81,7 @@ const VolumeBar: React.FC<Iprops> = ({
       <Box className={classes.tokenName}>
         <Typography className={classes.tokenHeader}>Fees 24H:</Typography>
         <Typography className={classes.tokenContent}>
-          ${formatNumber(isLoading ? Math.random() * 1000 : feesVolume)}
+          ${formatNumberWithSuffix(isLoading ? Math.random() * 1000 : feesVolume)}
         </Typography>
         {!isXDown && (
           <Typography
