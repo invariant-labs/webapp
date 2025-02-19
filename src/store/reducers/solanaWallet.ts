@@ -99,6 +99,9 @@ const solanaWalletSlice = createSlice({
       state.accounts[action.payload.programId].balance = action.payload.balance
       return state
     },
+    changeWalletInExtension(state) {
+      return state
+    },
     // Triggers rescan for tokens that we control
     rescanTokens() {},
     airdrop() {},
