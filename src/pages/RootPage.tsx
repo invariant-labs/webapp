@@ -80,7 +80,8 @@ const RootPage: React.FC = React.memo(() => {
       if (
         !walletAddressRef.current ||
         (walletAddressRef.current === DEFAULT_SOL_PUBLICKEY.toString() &&
-          addr !== DEFAULT_SOL_PUBLICKEY.toString())
+          addr !== DEFAULT_SOL_PUBLICKEY.toString() &&
+          !phantomAccChangeTrigger)
       ) {
         walletAddressRef.current = addr
         return
@@ -89,13 +90,13 @@ const RootPage: React.FC = React.memo(() => {
       if (
         (!document.hasFocus() || phantomAccChangeTrigger) &&
         walletAddressRef.current !== DEFAULT_SOL_PUBLICKEY.toString() &&
+        addr !== DEFAULT_SOL_PUBLICKEY.toString() &&
         walletAddressRef.current !== addr
       ) {
         walletAddressRef.current = addr
-        new Promise(resolve => setTimeout(resolve, 100)).then(() =>
-          dispatch(walletActions.changeWalletInExtension())
-        )
-        setPhantomAccChangeTrigger(false)
+        new Promise(resolve => setTimeout(resolve, 100))
+          .then(() => dispatch(walletActions.changeWalletInExtension()))
+          .finally(() => setPhantomAccChangeTrigger(false))
       }
 
       if (
