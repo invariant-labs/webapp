@@ -1,6 +1,7 @@
 import { PublicKey, Transaction } from '@solana/web3.js'
 import { WalletAdapter } from './types'
 import { DEFAULT_SOL_PUBLICKEY } from '@store/consts/static'
+import { sleep } from '@invariant-labs/sdk'
 
 type PhantomEvent = 'disconnect' | 'connect'
 type PhantomRequestMethod = 'connect' | 'disconnect' | 'signTransaction' | 'signAllTransactions'
@@ -53,6 +54,13 @@ export class PhantomWalletAdapter implements WalletAdapter {
     let provider: PhantomProvider
     if ((window as any)?.solana?.isPhantom) {
       provider = (window as any).solana
+      // @ts-expect-error
+      provider.on('accountChanged', async a => {
+        if (a === null) {
+          await sleep(300)
+          await provider.connect()
+        }
+      })
     } else {
       return
     }

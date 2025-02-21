@@ -66,7 +66,10 @@ const RootPage: React.FC = React.memo(() => {
   const walletAddressRef = useRef('')
   useEffect(() => {
     const intervalId = setInterval(() => {
-      const addr = getSolanaWallet().publicKey.toString()
+      const solanaWallet = getSolanaWallet()
+      if (!solanaWallet || !solanaWallet.publicKey) return
+      const addr = solanaWallet.publicKey.toString()
+
       if (
         !walletAddressRef.current ||
         (walletAddressRef.current === DEFAULT_SOL_PUBLICKEY.toString() &&
