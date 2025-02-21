@@ -59,7 +59,7 @@ export class PhantomWalletAdapter implements WalletAdapter {
         if (a === null) {
           console.log('asd')
           await sleep(300)
-          this._phantomProvider = provider
+          this._phantomProvider?.connect()
         }
       })
     } else {
