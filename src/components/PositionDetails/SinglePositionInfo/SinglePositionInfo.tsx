@@ -99,11 +99,12 @@ const SinglePositionInfo: React.FC<IProp> = ({
           </Grid>
           <Grid className={classes.rangeGrid} sx={{ display: { xs: 'flex', md: 'none' } }}>
             <Tooltip
+              enterTouchDelay={0}
               title={
                 isActive ? (
                   <>
-                    The position is <b>active</b> and currently <b>earning a fee</b> as long as the
-                    current price is <b>within</b> the position's price range.
+                    Thasdasde position is <b>active</b> and currently <b>earning a fee</b> as long
+                    as the current price is <b>within</b> the position's price range.
                   </>
                 ) : (
                   <>
@@ -131,6 +132,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
         <Grid className={classes.headerButtons}>
           <Grid className={classes.rangeGrid} sx={{ display: { xs: 'none', md: 'flex' } }}>
             <Tooltip
+              enterTouchDelay={0}
               title={
                 isActive ? (
                   <>
