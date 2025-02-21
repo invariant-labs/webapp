@@ -100,17 +100,17 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
   const lastTokenFrom =
     tickerToAddress(networkType, initialTokenFrom) && initialTokenFrom !== '-'
       ? tickerToAddress(networkType, initialTokenFrom)
-      : (localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`) ?? WRAPPED_SOL_ADDRESS)
+      : localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`) ?? WRAPPED_SOL_ADDRESS
 
   const lastTokenTo =
     tickerToAddress(networkType, initialTokenTo) && initialTokenTo !== '-'
       ? tickerToAddress(networkType, initialTokenTo)
-      : (localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`) ?? '')
+      : localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`) ?? ''
 
   const initTokenFrom =
-    lastTokenFrom === null ? null : (tokensDict[lastTokenFrom]?.assetAddress ?? null)
+    lastTokenFrom === null ? null : tokensDict[lastTokenFrom]?.assetAddress ?? null
 
-  const initTokenTo = lastTokenTo === null ? null : (tokensDict[lastTokenTo]?.assetAddress ?? null)
+  const initTokenTo = lastTokenTo === null ? null : tokensDict[lastTokenTo]?.assetAddress ?? null
 
   useEffect(() => {
     const tokens: string[] = []
@@ -140,7 +140,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
           addNewTokenToLocalStorage(address, networkType)
           dispatch(
             snackbarsActions.add({
-              message: 'Token added.',
+              message: 'Token added',
               variant: 'success',
               persist: false
             })
@@ -149,7 +149,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
         .catch(() => {
           dispatch(
             snackbarsActions.add({
-              message: 'Token add failed.',
+              message: 'Token add failed',
               variant: 'error',
               persist: false
             })
@@ -158,7 +158,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
     } else {
       dispatch(
         snackbarsActions.add({
-          message: 'Token already in list.',
+          message: 'Token already in list',
           variant: 'info',
           persist: false
         })
