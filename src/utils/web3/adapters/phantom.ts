@@ -54,11 +54,12 @@ export class PhantomWalletAdapter implements WalletAdapter {
     let provider: PhantomProvider
     if ((window as any)?.solana?.isPhantom) {
       provider = (window as any).solana
-      // @ts-expect-error comment: linter crash because no comment after ts expect error so i am gonna write it, by default accountChanged event is not yet in the sindow.solana object although it exists
+      // @ts-expect-error comment: linter crash because no comment after ts expect error so i am gonna write it, by default accountChanged event is not yet in the window.solana object although it exists
       provider.on('accountChanged', async a => {
         if (a === null) {
+          console.log('asd')
           await sleep(300)
-          await provider.connect()
+          this._phantomProvider = provider
         }
       })
     } else {
