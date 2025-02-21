@@ -10,7 +10,7 @@ export const nightlyConnectAdapter: NightlyConnectAdapter = await NightlyConnect
     url: 'https://nc2.nightly.app',
     persistent: true
   },
-  true
+  { initOnConnect: true }
 )
 
 export const openWalletSelectorModal = async () => {
