@@ -436,7 +436,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           <Grid className={classes.activeLiquidityContainer} container direction='column'>
             <Tooltip
               enterTouchDelay={0}
-              leaveTouchDelay={Number.MAX_SAFE_INTEGER}
               title={
                 <>
                   <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
