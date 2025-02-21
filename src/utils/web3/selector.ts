@@ -1,4 +1,6 @@
 import { NightlyConnectAdapter } from '@nightlylabs/wallet-selector-solana'
+import { setPhantomAccChangeTrigger } from './wallet'
+import { sleep } from '@invariant-labs/sdk'
 
 export const nightlyConnectAdapter: NightlyConnectAdapter = await NightlyConnectAdapter.build(
   {
@@ -23,6 +25,8 @@ export const openWalletSelectorModal = async () => {
     if (nightlyConnectAdapter.selectedWallet?.name === 'Phantom') {
       nightlyConnectAdapter.on('change', async a => {
         if (!a || !a.accounts || !a.accounts[0].publicKey) {
+          setPhantomAccChangeTrigger(true)
+          await sleep(300)
           await nightlyConnectAdapter.connectToWallet('Phantom')
         }
       })

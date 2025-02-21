@@ -2,6 +2,8 @@ import { Transaction } from '@solana/web3.js'
 import { WalletAdapter } from './types'
 import { nightlyConnectAdapter } from '../selector'
 import { DEFAULT_SOL_PUBLICKEY } from '@store/consts/static'
+import { setPhantomAccChangeTrigger } from '../wallet'
+import { sleep } from '@invariant-labs/sdk'
 
 export class NightlyWalletAdapter implements WalletAdapter {
   constructor() {
@@ -31,6 +33,8 @@ export class NightlyWalletAdapter implements WalletAdapter {
         if (nightlyConnectAdapter.selectedWallet?.name === 'Phantom') {
           nightlyConnectAdapter.on('change', async a => {
             if (!a || !a.accounts || !a.accounts[0].publicKey) {
+              setPhantomAccChangeTrigger(true)
+              await sleep(300)
               await nightlyConnectAdapter.connectToWallet('Phantom')
             }
           })

@@ -91,7 +91,7 @@ const RootPage: React.FC = React.memo(() => {
       ) {
         if (phantomAccChangeTrigger && addr === DEFAULT_SOL_PUBLICKEY.toString()) return
         walletAddressRef.current = addr
-        new Promise(resolve => setTimeout(resolve, 100))
+        new Promise(resolve => setTimeout(resolve, 300))
           .then(() => dispatch(walletActions.changeWalletInExtension()))
           .finally(() => setPhantomAccChangeTrigger(false))
       }
