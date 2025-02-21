@@ -103,8 +103,8 @@ const SinglePositionInfo: React.FC<IProp> = ({
               title={
                 isActive ? (
                   <>
-                    Thasdasde position is <b>active</b> and currently <b>earning a fee</b> as long
-                    as the current price is <b>within</b> the position's price range.
+                    The position is <b>active</b> and currently <b>earning a fee</b> as long as the
+                    current price is <b>within</b> the position's price range.
                   </>
                 ) : (
                   <>
