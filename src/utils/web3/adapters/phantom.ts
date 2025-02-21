@@ -58,7 +58,6 @@ export class PhantomWalletAdapter implements WalletAdapter {
       // @ts-expect-error comment: linter crash because no comment after ts expect error so i am gonna write it, by default accountChanged event is not yet in the window.solana object although it exists
       provider.on('accountChanged', async a => {
         if (a === null) {
-          console.log('null account')
           setPhantomAccChangeTrigger(true)
           await sleep(300)
           await this._phantomProvider?.connect()

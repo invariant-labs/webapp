@@ -74,9 +74,6 @@ const RootPage: React.FC = React.memo(() => {
       const phantomAccChangeTrigger = getPhantomAccChangeTrigger()
       if (!solanaWallet || !solanaWallet.publicKey) return
       const addr = solanaWallet.publicKey.toString()
-      console.log(
-        `sol wallet: ${addr}, ref addr: ${walletAddressRef.current} trigger: ${phantomAccChangeTrigger}`
-      )
       if (
         !walletAddressRef.current ||
         (walletAddressRef.current === DEFAULT_SOL_PUBLICKEY.toString() &&
@@ -90,9 +87,9 @@ const RootPage: React.FC = React.memo(() => {
       if (
         (!document.hasFocus() || phantomAccChangeTrigger) &&
         walletAddressRef.current !== DEFAULT_SOL_PUBLICKEY.toString() &&
-        addr !== DEFAULT_SOL_PUBLICKEY.toString() &&
         walletAddressRef.current !== addr
       ) {
+        if (phantomAccChangeTrigger && addr === DEFAULT_SOL_PUBLICKEY.toString()) return
         walletAddressRef.current = addr
         new Promise(resolve => setTimeout(resolve, 100))
           .then(() => dispatch(walletActions.changeWalletInExtension()))
