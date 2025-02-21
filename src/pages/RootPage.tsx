@@ -69,7 +69,7 @@ const RootPage: React.FC = React.memo(() => {
       const solanaWallet = getSolanaWallet()
       if (!solanaWallet || !solanaWallet.publicKey) return
       const addr = solanaWallet.publicKey.toString()
-
+      console.log('Current address on provider ' + addr)
       if (
         !walletAddressRef.current ||
         (walletAddressRef.current === DEFAULT_SOL_PUBLICKEY.toString() &&
