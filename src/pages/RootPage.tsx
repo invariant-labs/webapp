@@ -74,6 +74,9 @@ const RootPage: React.FC = React.memo(() => {
       const phantomAccChangeTrigger = getPhantomAccChangeTrigger()
       if (!solanaWallet || !solanaWallet.publicKey) return
       const addr = solanaWallet.publicKey.toString()
+      console.log(
+        `sol wallet: ${addr}, ref addr: ${walletAddressRef.current} trigger: ${phantomAccChangeTrigger}`
+      )
       if (
         !walletAddressRef.current ||
         (walletAddressRef.current === DEFAULT_SOL_PUBLICKEY.toString() &&

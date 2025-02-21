@@ -23,8 +23,7 @@ export const openWalletSelectorModal = async () => {
     if (nightlyConnectAdapter.selectedWallet?.name === 'Phantom') {
       nightlyConnectAdapter.on('change', async a => {
         if (!a || !a.accounts || !a.accounts[0].publicKey) {
-          nightlyConnectAdapter.selectedWallet?.name &&
-            nightlyConnectAdapter.connectToWallet('Phantom')
+          await nightlyConnectAdapter.connectToWallet('Phantom')
         }
       })
     }
