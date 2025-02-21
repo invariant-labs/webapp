@@ -2,6 +2,7 @@ import { PublicKey, Transaction } from '@solana/web3.js'
 import { WalletAdapter } from './types'
 import { DEFAULT_SOL_PUBLICKEY } from '@store/consts/static'
 import { sleep } from '@invariant-labs/sdk'
+import { setPhantomAccChangeTrigger } from '../wallet'
 
 type PhantomEvent = 'disconnect' | 'connect'
 type PhantomRequestMethod = 'connect' | 'disconnect' | 'signTransaction' | 'signAllTransactions'
@@ -57,7 +58,7 @@ export class PhantomWalletAdapter implements WalletAdapter {
       // @ts-expect-error comment: linter crash because no comment after ts expect error so i am gonna write it, by default accountChanged event is not yet in the window.solana object although it exists
       provider.on('accountChanged', async a => {
         if (a === null) {
-          console.log('account change with null triggered')
+          setPhantomAccChangeTrigger(true)
           await sleep(300)
           this._phantomProvider?.connect()
         }

@@ -16,7 +16,11 @@ import { actions as walletActions } from '@store/reducers/solanaWallet'
 import PerformanceWarning from '@containers/PerformanceWarning/PerformanceWarning'
 import { DEFAULT_SOL_PUBLICKEY, NetworkType } from '@store/consts/static'
 import { TopBanner } from '@components/TopBanner/TopBanner'
-import { getSolanaWallet } from '@utils/web3/wallet'
+import {
+  getPhantomAccChangeTrigger,
+  getSolanaWallet,
+  setPhantomAccChangeTrigger
+} from '@utils/web3/wallet'
 
 const BANNER_STORAGE_KEY = 'invariant-banner-state-2'
 const BANNER_HIDE_DURATION = 1000 * 60 * 60 * 24 // 24 hours
@@ -67,9 +71,9 @@ const RootPage: React.FC = React.memo(() => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       const solanaWallet = getSolanaWallet()
+      const phantomAccChangeTrigger = getPhantomAccChangeTrigger()
       if (!solanaWallet || !solanaWallet.publicKey) return
       const addr = solanaWallet.publicKey.toString()
-      console.log('Current address on provider ' + addr)
       if (
         !walletAddressRef.current ||
         (walletAddressRef.current === DEFAULT_SOL_PUBLICKEY.toString() &&
@@ -80,7 +84,7 @@ const RootPage: React.FC = React.memo(() => {
       }
 
       if (
-        !document.hasFocus() &&
+        (!document.hasFocus() || phantomAccChangeTrigger) &&
         walletAddressRef.current !== DEFAULT_SOL_PUBLICKEY.toString() &&
         walletAddressRef.current !== addr
       ) {
@@ -88,10 +92,12 @@ const RootPage: React.FC = React.memo(() => {
         new Promise(resolve => setTimeout(resolve, 100)).then(() =>
           dispatch(walletActions.changeWalletInExtension())
         )
+        setPhantomAccChangeTrigger(false)
       }
 
       if (
         document.hasFocus() &&
+        !phantomAccChangeTrigger &&
         walletAddressRef.current !== DEFAULT_SOL_PUBLICKEY.toString() &&
         walletAddressRef.current !== addr
       ) {
