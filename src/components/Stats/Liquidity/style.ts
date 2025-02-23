@@ -1,5 +1,5 @@
 import { alpha } from '@mui/material'
-import { typography, colors } from '@static/theme'
+import { typography, colors, theme } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()(() => ({
@@ -9,14 +9,20 @@ export const useStyles = makeStyles()(() => ({
     borderRadius: 24,
     paddingBlock: 24,
     paddingLeft: 24,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 6
+    }
   },
   liquidityContainer: {
     dispaly: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
     fontWeight: 'normal',
-    marginLeft: 24
+    marginLeft: 24,
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 6
+    }
   },
 
   liquidityHeader: {
