@@ -99,6 +99,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
           </Grid>
           <Grid className={classes.rangeGrid} sx={{ display: { xs: 'flex', md: 'none' } }}>
             <Tooltip
+              enterTouchDelay={0}
               title={
                 isActive ? (
                   <>
@@ -131,6 +132,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
         <Grid className={classes.headerButtons}>
           <Grid className={classes.rangeGrid} sx={{ display: { xs: 'none', md: 'flex' } }}>
             <Tooltip
+              enterTouchDelay={0}
               title={
                 isActive ? (
                   <>

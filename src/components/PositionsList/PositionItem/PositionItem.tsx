@@ -1,7 +1,7 @@
 import { Grid, Hidden, Tooltip, Typography, useMediaQuery } from '@mui/material'
 import SwapList from '@static/svg/swap-list.svg'
 import { theme } from '@static/theme'
-import { formatNumber } from '@utils/utils'
+import { formatNumberWithSuffix } from '@utils/utils'
 import classNames from 'classnames'
 import { useMemo, useState } from 'react'
 import { useStyles } from './style'
@@ -49,7 +49,7 @@ export const PositionItem: React.FC<IPositionItem> = ({
 }) => {
   const { classes } = useStyles()
 
-  const isXs = useMediaQuery(theme.breakpoints.down('xs'))
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'))
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'))
 
   const [xToY, setXToY] = useState<boolean>(
@@ -70,15 +70,34 @@ export const PositionItem: React.FC<IPositionItem> = ({
 
     return { tokenXPercentage, tokenYPercentage }
   }
-
+  const Overlay = () => (
+    <div
+      onClick={e => {
+        e.preventDefault()
+        e.stopPropagation()
+        setIsFeeTooltipOpen(false)
+      }}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1300,
+        backgroundColor: 'transparent'
+      }}
+    />
+  )
   const { tokenXPercentage, tokenYPercentage } = getPercentageRatio()
+  const [isFeeTooltipOpen, setIsFeeTooltipOpen] = useState(false)
+  const tooltipProps = { open: isFeeTooltipOpen, onClose: () => setIsFeeTooltipOpen(false) }
 
-  const feeFragment = useMemo(
-    () => (
+  const feeFragment = (
+    <>
+      {isXs && isFeeTooltipOpen && <Overlay />}
       <Tooltip
+        {...(isXs ? tooltipProps : {})}
         enterTouchDelay={0}
-        leaveTouchDelay={Number.MAX_SAFE_INTEGER}
-        onClick={e => e.stopPropagation()}
         title={
           isActive ? (
             <>
@@ -97,6 +116,10 @@ export const PositionItem: React.FC<IPositionItem> = ({
           tooltip: classes.tooltip
         }}>
         <Grid
+          onClick={e => {
+            e.stopPropagation()
+            isXs && setIsFeeTooltipOpen(prev => !prev)
+          }}
           container
           item
           className={classNames(classes.fee, isActive ? classes.activeFee : undefined)}
@@ -108,8 +131,7 @@ export const PositionItem: React.FC<IPositionItem> = ({
           </Typography>
         </Grid>
       </Tooltip>
-    ),
-    [fee, classes, isActive]
+    </>
   )
 
   const valueFragment = useMemo(
@@ -124,7 +146,7 @@ export const PositionItem: React.FC<IPositionItem> = ({
         <Typography className={classNames(classes.infoText, classes.label)}>Value</Typography>
         <Grid className={classes.infoCenter} container item justifyContent='center'>
           <Typography className={classes.greenText}>
-            {formatNumber(xToY ? valueY : valueX)} {xToY ? tokenYName : tokenXName}
+            {formatNumberWithSuffix(xToY ? valueY : valueX)} {xToY ? tokenYName : tokenXName}
           </Typography>
         </Grid>
       </Grid>
@@ -222,8 +244,9 @@ export const PositionItem: React.FC<IPositionItem> = ({
                 <Typography className={classes.infoText}>FULL RANGE</Typography>
               ) : (
                 <Typography className={classes.infoText}>
-                  {formatNumber(xToY ? min : 1 / max)} - {formatNumber(xToY ? max : 1 / min)}{' '}
-                  {xToY ? tokenYName : tokenXName} per {xToY ? tokenXName : tokenYName}
+                  {formatNumberWithSuffix(xToY ? min : 1 / max)} -{' '}
+                  {formatNumberWithSuffix(xToY ? max : 1 / min)} {xToY ? tokenYName : tokenXName}{' '}
+                  per {xToY ? tokenXName : tokenYName}
                 </Typography>
               )}
             </Grid>

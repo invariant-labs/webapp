@@ -6,7 +6,7 @@ import { colors, typography } from '@static/theme'
 import { useStyles } from './style'
 import { TimeData } from '@store/reducers/stats'
 import { Grid, Typography } from '@mui/material'
-import { formatNumber, trimZeros } from '@utils/utils'
+import { formatNumberWithSuffix, trimZeros } from '@utils/utils'
 import { formatLargeNumber } from '@utils/formatLargeNumber'
 
 interface LiquidityInterface {
@@ -51,7 +51,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
         <Typography className={classes.liquidityHeader}>Liquidity</Typography>
         <Grid className={classes.volumePercentHeader}>
           <Typography className={classes.volumeLiquidityHeader}>
-            ${formatNumber(isLoading ? Math.random() * 10000 : liquidityVolume)}
+            ${formatNumberWithSuffix(isLoading ? Math.random() * 10000 : liquidityVolume)}
           </Typography>
           <Grid className={classes.volumeStatusContainer}>
             <Grid
@@ -165,7 +165,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
                   month < 10 ? '0' : ''
                 }${month}`}</Typography>
                 <Typography className={classes.tooltipValue}>
-                  ${formatNumber(point.data.y as number)}
+                  ${formatNumberWithSuffix(point.data.y as number)}
                 </Typography>
               </Grid>
             )

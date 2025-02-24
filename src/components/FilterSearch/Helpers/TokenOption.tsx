@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material'
 import icons from '@static/icons'
 import { shortenAddress } from '@utils/uiUtils'
-import { formatNumber, printBN } from '@utils/utils'
+import { formatNumberWithSuffix, printBN } from '@utils/utils'
 import { useStyles } from './style'
 import { typography } from '@static/theme'
 import { ISearchToken } from '../FilterSearch'
@@ -59,7 +59,7 @@ export const TokenOption: React.FC<{
           {Number(option.balance) > 0 && (
             <>
               <Typography>Balance:</Typography>
-              <Typography>&nbsp; {formatNumber(tokenBalance)}</Typography>
+              <Typography>&nbsp; {formatNumberWithSuffix(tokenBalance)}</Typography>
             </>
           )}
         </Box>

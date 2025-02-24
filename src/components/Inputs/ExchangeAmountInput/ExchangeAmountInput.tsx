@@ -2,7 +2,7 @@ import Select from '@components/Inputs/Select/Select'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import { Grid, Input, Tooltip, Typography } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
-import { formatNumber, trimDecimalZeros } from '@utils/utils'
+import { formatNumberWithSuffix, trimDecimalZeros } from '@utils/utils'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import classNames from 'classnames'
 import React, { CSSProperties, useRef } from 'react'
@@ -209,7 +209,7 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
             ) : hideBalance ? (
               <>-</>
             ) : (
-              formatNumber(balance || 0)
+              formatNumberWithSuffix(balance || 0)
             )}{' '}
             {tokenIcon.slice(0, 8)}
             {tokenIcon.length > 8 ? '...' : ''}
@@ -224,20 +224,18 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
             ) : tokenPrice ? (
               <Tooltip
                 enterTouchDelay={0}
-                leaveTouchDelay={Number.MAX_SAFE_INTEGER}
                 title='Estimated USD Value of the Entered Tokens'
                 placement='bottom'
                 classes={{
                   tooltip: classes.tooltip
                 }}>
                 <Typography className={classes.caption2}>
-                  ~${formatNumber(usdBalance.toFixed(2))}
+                  ~${formatNumberWithSuffix(usdBalance.toFixed(2))}
                 </Typography>
               </Tooltip>
             ) : (
               <Tooltip
                 enterTouchDelay={0}
-                leaveTouchDelay={Number.MAX_SAFE_INTEGER}
                 title='Cannot fetch price of token'
                 placement='bottom'
                 classes={{

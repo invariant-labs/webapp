@@ -14,7 +14,7 @@ const useStyles = makeStyles()(() => {
       marginTop: '12px',
       position: 'sticky',
       bottom: 0,
-      zIndex: 1200
+      zIndex: 15
     },
     navbox: {
       maxHeight: 65,
