@@ -5,7 +5,6 @@ const useStyles = makeStyles()((theme: Theme) => {
   return {
     container: {
       backgroundColor: 'transparent',
-      marginTop: 45,
       paddingInline: 138,
       minHeight: '60vh',
 

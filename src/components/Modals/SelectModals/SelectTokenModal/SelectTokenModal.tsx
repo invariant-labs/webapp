@@ -21,7 +21,7 @@ import {
   Typography,
   useMediaQuery
 } from '@mui/material'
-import { formatNumber, printBN } from '@utils/utils'
+import { formatNumberWithSuffix, printBN } from '@utils/utils'
 import { Box } from '@mui/system'
 import icons from '@static/icons'
 
@@ -365,7 +365,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                       {!hideBalances && Number(tokenBalance) > 0 ? (
                         <>
                           <Typography>Balance:</Typography>
-                          <Typography>&nbsp; {formatNumber(tokenBalance)}</Typography>
+                          <Typography>&nbsp; {formatNumberWithSuffix(tokenBalance)}</Typography>
                         </>
                       ) : null}
                     </Grid>

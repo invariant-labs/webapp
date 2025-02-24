@@ -9,7 +9,7 @@ import {
   calculateConcentrationRange,
   calculateSqrtPriceFromBalance,
   calculateTickFromBalance,
-  formatNumber,
+  formatNumberWithSuffix,
   nearestTickIndex,
   toMaxNumericPlaces,
   trimZeros,
@@ -277,7 +277,7 @@ export const PoolInit: React.FC<IPoolInit> = ({
   const [animatedStartingPrice, setAnimatedStartingPrice] = useState(price)
 
   useEffect(() => {
-    if (formatNumber(price) !== formatNumber(animatedStartingPrice)) {
+    if (formatNumberWithSuffix(price) !== formatNumberWithSuffix(animatedStartingPrice)) {
       setAnimatedStartingPrice(price)
     }
   }, [price])
