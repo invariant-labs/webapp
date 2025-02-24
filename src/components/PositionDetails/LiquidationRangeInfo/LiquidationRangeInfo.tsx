@@ -1,5 +1,5 @@
 import { Grid, Typography } from '@mui/material'
-import { formatNumber } from '@utils/utils'
+import { formatNumberWithSuffix } from '@utils/utils'
 import React from 'react'
 import useStyles from './style'
 
@@ -27,7 +27,7 @@ const LiquidationRangeInfo: React.FC<ILiquidationRangeInfo> = ({
         </Grid>
         <Grid className={classes.infoSwap}>
           <Typography component='span' className={classes.infoAmount}>
-            {formatNumber(amount)}
+            {formatNumberWithSuffix(amount)}
           </Typography>
           <Typography component='p' className={classes.infoSwapToken}>
             {tokenY} per {tokenX}

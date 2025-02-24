@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import AnimatedNumber from './AnimatedNumber'
-import { formatNumber } from '@utils/utils'
+import { formatNumberWithSuffix } from '@utils/utils'
 import { Button, TextField } from '@mui/material'
 import { Provider } from 'react-redux'
 import { store } from '@store/index'
@@ -13,7 +13,7 @@ const meta = {
   args: {
     start: 0,
     finish: 100,
-    format: (e: number) => formatNumber(e)
+    format: (e: number) => formatNumberWithSuffix(e)
   },
   decorators: [
     Story => (
@@ -87,6 +87,6 @@ export const Primary: Story = {
     )
   },
   args: {
-    format: (n: number) => formatNumber(n)
+    format: (n: number) => formatNumberWithSuffix(n)
   }
 }

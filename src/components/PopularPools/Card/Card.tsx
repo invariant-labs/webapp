@@ -9,7 +9,12 @@ import icons from '@static/icons'
 import RevertIcon from '@static/svg/revert.svg'
 import StatsLabel from './StatsLabel/StatsLabel'
 import backIcon from '@static/svg/back-arrow-2.svg'
-import { addressToTicker, formatNumber, initialXtoY, parseFeeToPathFee } from '@utils/utils'
+import {
+  addressToTicker,
+  formatNumberWithSuffix,
+  initialXtoY,
+  parseFeeToPathFee
+} from '@utils/utils'
 import { useNavigate } from 'react-router-dom'
 import { NetworkType } from '@store/consts/static'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
@@ -163,9 +168,11 @@ const Card: React.FC<ICard> = ({
                   />
                 )}
                 <StatsLabel title='Fee' value={fee + '%'} />
-                {TVL !== undefined && <StatsLabel title='TVL' value={`$${formatNumber(TVL)}`} />}
+                {TVL !== undefined && (
+                  <StatsLabel title='TVL' value={`$${formatNumberWithSuffix(TVL)}`} />
+                )}
                 {volume !== undefined && (
-                  <StatsLabel title='Volume' value={`$${formatNumber(volume)}`} />
+                  <StatsLabel title='Volume' value={`$${formatNumberWithSuffix(volume)}`} />
                 )}
               </Grid>
               <Grid container justifyContent='space-between' alignItems='center' mt='auto'>

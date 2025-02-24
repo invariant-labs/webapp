@@ -5,7 +5,7 @@ import loader from '@static/gif/loader.gif'
 import ZoomInIcon from '@static/svg/zoom-in-icon.svg'
 import ZoomOutIcon from '@static/svg/zoom-out-icon.svg'
 import { colors, theme } from '@static/theme'
-import { formatNumber, nearestTickIndex, TokenPriceData } from '@utils/utils'
+import { formatNumberWithSuffix, nearestTickIndex, TokenPriceData } from '@utils/utils'
 import { PlotTickData } from '@store/reducers/positions'
 import classNames from 'classnames'
 import React, { useCallback, useMemo, useRef } from 'react'
@@ -549,7 +549,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           tickPadding: 0,
           tickRotation: 0,
           tickValues: 5,
-          format: value => formatNumber(value.toString())
+          format: value => formatNumberWithSuffix(value.toString())
         }}
         xScale={{
           type: 'linear',
