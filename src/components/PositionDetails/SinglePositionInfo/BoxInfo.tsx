@@ -144,7 +144,6 @@ export const BoxInfo: React.FC<{
               ) : (
                 <Tooltip
                   enterTouchDelay={0}
-                  leaveTouchDelay={Number.MAX_SAFE_INTEGER}
                   title='Cannot fetch price of token'
                   placement='bottom'
                   classes={{
@@ -197,7 +196,6 @@ export const BoxInfo: React.FC<{
               {typeof tokenB.usdValue !== 'undefined' && tokenB.price ? (
                 <Tooltip
                   enterTouchDelay={0}
-                  leaveTouchDelay={Number.MAX_SAFE_INTEGER}
                   title="Estimated USD Value of the Position's Tokens"
                   placement='bottom'
                   classes={{
@@ -210,7 +208,6 @@ export const BoxInfo: React.FC<{
               ) : (
                 <Tooltip
                   enterTouchDelay={0}
-                  leaveTouchDelay={Number.MAX_SAFE_INTEGER}
                   title='Cannot fetch price of token'
                   placement='bottom'
                   classes={{

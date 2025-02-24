@@ -49,7 +49,7 @@ export const PositionItem: React.FC<IPositionItem> = ({
 }) => {
   const { classes } = useStyles()
 
-  const isXs = useMediaQuery(theme.breakpoints.down('xs'))
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'))
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'))
 
   const [xToY, setXToY] = useState<boolean>(
@@ -70,15 +70,34 @@ export const PositionItem: React.FC<IPositionItem> = ({
 
     return { tokenXPercentage, tokenYPercentage }
   }
-
+  const Overlay = () => (
+    <div
+      onClick={e => {
+        e.preventDefault()
+        e.stopPropagation()
+        setIsFeeTooltipOpen(false)
+      }}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1300,
+        backgroundColor: 'transparent'
+      }}
+    />
+  )
   const { tokenXPercentage, tokenYPercentage } = getPercentageRatio()
+  const [isFeeTooltipOpen, setIsFeeTooltipOpen] = useState(false)
+  const tooltipProps = { open: isFeeTooltipOpen, onClose: () => setIsFeeTooltipOpen(false) }
 
-  const feeFragment = useMemo(
-    () => (
+  const feeFragment = (
+    <>
+      {isXs && isFeeTooltipOpen && <Overlay />}
       <Tooltip
+        {...(isXs ? tooltipProps : {})}
         enterTouchDelay={0}
-        leaveTouchDelay={Number.MAX_SAFE_INTEGER}
-        onClick={e => e.stopPropagation()}
         title={
           isActive ? (
             <>
@@ -97,6 +116,10 @@ export const PositionItem: React.FC<IPositionItem> = ({
           tooltip: classes.tooltip
         }}>
         <Grid
+          onClick={e => {
+            e.stopPropagation()
+            isXs && setIsFeeTooltipOpen(prev => !prev)
+          }}
           container
           item
           className={classNames(classes.fee, isActive ? classes.activeFee : undefined)}
@@ -108,8 +131,7 @@ export const PositionItem: React.FC<IPositionItem> = ({
           </Typography>
         </Grid>
       </Tooltip>
-    ),
-    [fee, classes, isActive]
+    </>
   )
 
   const valueFragment = useMemo(
