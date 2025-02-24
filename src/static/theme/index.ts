@@ -74,6 +74,7 @@ export const colors = {
     componentBcg: '#111931',
     light: '#3A466B',
     lightHover: '#A9B6BF',
+    lightHover2: '#4B5983',
     black: '#010514',
     textGrey: '#A9B6BF',
     lightGrey: '#bac7d1',

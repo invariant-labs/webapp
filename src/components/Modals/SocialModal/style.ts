@@ -1,4 +1,4 @@
-import { colors, typography } from '@static/theme'
+import { colors, theme, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 const useStyles = makeStyles()(() => {
@@ -32,10 +32,20 @@ const useStyles = makeStyles()(() => {
     },
 
     social: {
+      cursor: 'pointer',
+      borderRadius: '10px',
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      padding: '10px 10px'
+      padding: '10px 10px',
+      [theme.breakpoints.up('sm')]: {
+        '&:hover': {
+          background: colors.invariant.lightHover2,
+          transition: '0.2s'
+        }
+      },
+
+      textDecoration: 'none'
     },
     label: {
       display: 'grid',
@@ -47,21 +57,6 @@ const useStyles = makeStyles()(() => {
         ...typography.body2,
         color: colors.invariant.textGrey,
         textAlign: 'left'
-      }
-    },
-    link: {
-      maxHeight: 14,
-      height: 14,
-      width: 14,
-      '& img': {
-        height: 14,
-        width: 14
-      },
-      '&:hover': {
-        filter: 'brightness(1.2)',
-        '@media (hover: none)': {
-          filter: 'none'
-        }
       }
     }
   }

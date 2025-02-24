@@ -32,19 +32,18 @@ export const SelectSocials: React.FC<ISelectSocialsModal> = ({ open, handleClose
       <DialogContent sx={{ padding: 0 }}>
         <Box className={classes.socialsContainer}>
           {socials.map(social => (
-            <Box key={social.label} className={classes.social}>
+            <Box
+              key={social.label}
+              className={classes.social}
+              component='a'
+              href={social.url}
+              target='_blank'
+              rel='noopener noreferrer'>
               <Box className={classes.label}>
                 <img src={social.icon} alt={social.label} />
                 <Typography>{social.label}</Typography>
               </Box>
-              <a
-                href={social.url}
-                target='_blank'
-                rel='noopener noreferrer'
-                onClick={event => event.stopPropagation()}
-                className={classes.link}>
-                <img src={icons.newTab} alt='Token address' />
-              </a>
+              <img width={14} src={icons.newTab} alt='Token address' />
             </Box>
           ))}
         </Box>
