@@ -157,7 +157,7 @@ const TokenListItem: React.FC<IProps> = ({
       ) : (
         <Grid
           container
-          style={{ color: colors.invariant.textGrey, fontWeight: 400 }}
+          style={{ color: colors.invariant.textGrey }}
           classes={{ container: classes.container, root: classes.header }}>
           {!isMd && (
             <Typography style={{ lineHeight: '12px' }}>
