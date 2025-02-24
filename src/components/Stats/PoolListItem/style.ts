@@ -66,13 +66,14 @@ export const useStyles = makeStyles()(() => ({
   },
 
   header: {
-    '& p': {
+    '& p.MuiTypography-root': {
       color: colors.invariant.textGrey,
       ...typography.heading4,
-      fontWeight: 400,
+      fontWeight: 600,
 
       [theme.breakpoints.down('sm')]: {
-        ...typography.caption2
+        ...typography.caption2,
+        fontWeight: 600
       }
     }
   },

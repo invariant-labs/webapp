@@ -61,16 +61,16 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 
   header: {
-    '& p': {
+    '& p.MuiTypography-root': {
       ...typography.heading4,
-      fontWeight: 400,
+      fontWeight: 600,
       display: 'flex',
       justifyContent: 'start',
-      alignItems: 'center'
-    },
-    [theme.breakpoints.down('sm')]: {
-      '& p': {
-        ...typography.caption2
+      alignItems: 'center',
+
+      [theme.breakpoints.down('sm')]: {
+        ...typography.caption2,
+        fontWeight: 600
       }
     }
   },
