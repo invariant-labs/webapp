@@ -42,7 +42,7 @@ export function* initConnection(): Generator {
 
     yield* put(
       snackbarsActions.add({
-        message: 'Solana network connected.',
+        message: 'Solana network connected',
         variant: 'success',
         persist: false
       })

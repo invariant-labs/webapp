@@ -140,7 +140,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
           addNewTokenToLocalStorage(address, networkType)
           dispatch(
             snackbarsActions.add({
-              message: 'Token added.',
+              message: 'Token added',
               variant: 'success',
               persist: false
             })
@@ -149,7 +149,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
         .catch(() => {
           dispatch(
             snackbarsActions.add({
-              message: 'Token add failed.',
+              message: 'Token add failed',
               variant: 'error',
               persist: false
             })
@@ -158,7 +158,7 @@ export const WrappedSwap = ({ initialTokenFrom, initialTokenTo }: Props) => {
     } else {
       dispatch(
         snackbarsActions.add({
-          message: 'Token already in list.',
+          message: 'Token already in list',
           variant: 'info',
           persist: false
         })

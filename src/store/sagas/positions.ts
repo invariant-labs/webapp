@@ -230,7 +230,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
 
       return yield put(
         snackbarsActions.add({
-          message: 'SOL wrapping failed. Please try again.',
+          message: 'SOL wrapping failed. Please try again',
           variant: 'error',
           persist: false,
           txid: initialTxid
@@ -255,8 +255,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
 
       return yield put(
         snackbarsActions.add({
-          message:
-            'Position adding failed. Please unwrap wrapped SOL in your wallet and try again.',
+          message: 'Position adding failed. Please unwrap wrapped SOL in your wallet and try again',
           variant: 'error',
           persist: false,
           txid: initPositionTxid
@@ -265,7 +264,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Position added successfully.',
+          message: 'Position added successfully',
           variant: 'success',
           persist: false,
           txid: initPositionTxid
@@ -289,7 +288,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
     if (!unwrapTxid.length) {
       yield put(
         snackbarsActions.add({
-          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
+          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet',
           variant: 'warning',
           persist: false,
           txid: unwrapTxid
@@ -298,7 +297,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'SOL unwrapped successfully.',
+          message: 'SOL unwrapped successfully',
           variant: 'success',
           persist: false,
           txid: unwrapTxid
@@ -329,7 +328,7 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Failed to send. Please try again.',
+          message: 'Failed to send. Please try again',
           variant: 'error',
           persist: false
         })
@@ -510,7 +509,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
     if (confirmedTx.value.err === null) {
       yield put(
         snackbarsActions.add({
-          message: 'Position added successfully.',
+          message: 'Position added successfully',
           variant: 'success',
           persist: false,
           txid: txId
@@ -526,7 +525,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
 
       return yield put(
         snackbarsActions.add({
-          message: 'Position adding failed. Please try again.',
+          message: 'Position adding failed. Please try again',
           variant: 'error',
           persist: false,
           txid: txId
@@ -563,7 +562,7 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Failed to send. Please try again.',
+          message: 'Failed to send. Please try again',
           variant: 'error',
           persist: false
         })
@@ -713,7 +712,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     if (confirmedTx.value.err === null) {
       yield put(
         snackbarsActions.add({
-          message: 'Position added successfully.',
+          message: 'Position added successfully',
           variant: 'success',
           persist: false,
           txid: txId
@@ -729,7 +728,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 
       return yield put(
         snackbarsActions.add({
-          message: 'Position adding failed. Please try again.',
+          message: 'Position adding failed. Please try again',
           variant: 'error',
           persist: false,
           txid: txId
@@ -766,7 +765,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Failed to send. Please try again.',
+          message: 'Failed to send. Please try again',
           variant: 'error',
           persist: false
         })
@@ -1008,7 +1007,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     if (confirmedTx.value.err === null) {
       yield put(
         snackbarsActions.add({
-          message: 'Fee claimed successfully.',
+          message: 'Fee claimed successfully',
           variant: 'success',
           persist: false,
           txid: txId
@@ -1017,7 +1016,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Failed to claim fee. Please try again.',
+          message: 'Failed to claim fee. Please try again',
           variant: 'error',
           persist: false,
           txid: txId
@@ -1052,7 +1051,7 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Failed to send. Please try again.',
+          message: 'Failed to send. Please try again',
           variant: 'error',
           persist: false
         })
@@ -1169,7 +1168,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     if (confirmedTx.value.err === null) {
       yield put(
         snackbarsActions.add({
-          message: 'Fee claimed successfully.',
+          message: 'Fee claimed successfully',
           variant: 'success',
           persist: false,
           txid: txId
@@ -1178,7 +1177,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Failed to claim fee. Please try again.',
+          message: 'Failed to claim fee. Please try again',
           variant: 'error',
           persist: false,
           txid: txId
@@ -1211,7 +1210,7 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Failed to send. Please try again.',
+          message: 'Failed to send. Please try again',
           variant: 'error',
           persist: false
         })
@@ -1372,7 +1371,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     if (confirmedTx.value.err === null) {
       yield put(
         snackbarsActions.add({
-          message: 'Position closed successfully.',
+          message: 'Position closed successfully',
           variant: 'success',
           persist: false,
           txid: txId
@@ -1381,7 +1380,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Failed to close position. Please try again.',
+          message: 'Failed to close position. Please try again',
           variant: 'error',
           persist: false,
           txid: txId
@@ -1419,7 +1418,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Failed to send. Please try again.',
+          message: 'Failed to send. Please try again',
           variant: 'error',
           persist: false
         })
@@ -1563,7 +1562,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     if (confirmedTx.value.err === null) {
       yield put(
         snackbarsActions.add({
-          message: 'Position closed successfully.',
+          message: 'Position closed successfully',
           variant: 'success',
           persist: false,
           txid: txId
@@ -1572,7 +1571,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Failed to close position. Please try again.',
+          message: 'Failed to close position. Please try again',
           variant: 'error',
           persist: false,
           txid: txId
@@ -1610,7 +1609,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Failed to send. Please try again.',
+          message: 'Failed to send. Please try again',
           variant: 'error',
           persist: false
         })

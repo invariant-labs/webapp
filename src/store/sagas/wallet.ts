@@ -399,7 +399,7 @@ export function* init(isEagerConnect: boolean): Generator {
     if (isEagerConnect) {
       yield* put(
         snackbarsActions.add({
-          message: 'Wallet reconnected.',
+          message: 'Wallet reconnected',
           variant: 'success',
           persist: false
         })
@@ -407,7 +407,7 @@ export function* init(isEagerConnect: boolean): Generator {
     } else {
       yield* put(
         snackbarsActions.add({
-          message: 'Wallet connected.',
+          message: 'Wallet connected',
           variant: 'success',
           persist: false
         })
@@ -444,7 +444,7 @@ export function* handleConnect(action: PayloadAction<boolean>): Generator {
     if (walletStatus === Status.Initialized && wallet.connected) {
       yield* put(
         snackbarsActions.add({
-          message: 'Wallet already connected.',
+          message: 'Wallet already connected',
           variant: 'info',
           persist: false
         })
