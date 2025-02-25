@@ -7,6 +7,15 @@ import { WalletType } from '@store/consts/types'
 import { sleep } from '@invariant-labs/sdk'
 
 let _wallet: WalletAdapter
+let _phantomAccChangeTrigger: boolean = false
+
+const getPhantomAccChangeTrigger = () => {
+  return _phantomAccChangeTrigger
+}
+
+const setPhantomAccChangeTrigger = (val: boolean) => {
+  _phantomAccChangeTrigger = val
+}
 
 const getSolanaWallet = (): WalletAdapter => {
   return _wallet
@@ -40,4 +49,11 @@ const changeToNightlyAdapter = () => {
   _wallet = new NightlyWalletAdapter()
 }
 
-export { getSolanaWallet, disconnectWallet, connectStaticWallet, changeToNightlyAdapter }
+export {
+  getSolanaWallet,
+  disconnectWallet,
+  connectStaticWallet,
+  changeToNightlyAdapter,
+  getPhantomAccChangeTrigger,
+  setPhantomAccChangeTrigger
+}

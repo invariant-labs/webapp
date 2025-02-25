@@ -436,6 +436,14 @@ export function* sendSol(amount: BN, recipient: PublicKey): SagaGenerator<string
   return txid
 }
 
+export function* handleChangeWalletInExtenstion(): Generator {
+  try {
+    yield* call(init, false)
+  } catch (error) {
+    yield* call(handleRpcError, (error as Error).message)
+  }
+}
+
 export function* handleConnect(action: PayloadAction<boolean>): Generator {
   try {
     const walletStatus = yield* select(status)
@@ -477,6 +485,10 @@ export function* handleDisconnect(): Generator {
   }
 }
 
+export function* changeWalletInExtenstionHandler(): Generator {
+  yield takeLatest(actions.changeWalletInExtension, handleChangeWalletInExtenstion)
+}
+
 export function* connectHandler(): Generator {
   yield takeLatest(actions.connect, handleConnect)
 }
@@ -494,5 +506,13 @@ export function* handleBalanceSaga(): Generator {
 }
 
 export function* walletSaga(): Generator {
-  yield all([airdropSaga, connectHandler, disconnectHandler, handleBalanceSaga].map(spawn))
+  yield all(
+    [
+      airdropSaga,
+      connectHandler,
+      disconnectHandler,
+      handleBalanceSaga,
+      changeWalletInExtenstionHandler
+    ].map(spawn)
+  )
 }
