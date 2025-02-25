@@ -1,7 +1,6 @@
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import icons from '@static/icons'
 import { colors, theme, typography } from '@static/theme'
-import { useNavigate } from 'react-router-dom'
 import useStyles from './styles'
 
 interface INormalBannerProps {
@@ -10,7 +9,6 @@ interface INormalBannerProps {
 }
 
 export const TopBanner = ({ onClose, isHiding }: INormalBannerProps) => {
-  const navigate = useNavigate()
   const bannerHeight = 'fit-content'
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'))
 
