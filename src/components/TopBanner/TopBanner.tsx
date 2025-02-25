@@ -42,7 +42,7 @@ export const TopBanner = ({ onClose, isHiding }: INormalBannerProps) => {
           ...typography.body1
         }}
         onClick={() => {
-          navigate('/exchange/ETH/USDC')
+          window.open('https://eclipse.invariant.app/points', '_blank')
 
           if (isSmallDevice) {
             onClose()
