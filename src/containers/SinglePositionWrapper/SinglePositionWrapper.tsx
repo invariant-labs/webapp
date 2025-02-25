@@ -82,18 +82,24 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const [isFinishedDelayRender, setIsFinishedDelayRender] = useState(false)
 
   const [isClosingPosition, setIsClosingPosition] = useState(false)
+  console.log(lowerTick?.sqrtPrice?.v.toString())
+  console.log(upperTick?.sqrtPrice?.v.toString())
 
   useEffect(() => {
-    if (position?.id && !waitingForTicksData) {
+    if (position?.id) {
+      dispatch(actions.setCurrentPositionId(id))
+
       setWaitingForTicksData(true)
-      setShowFeesLoader(true)
-      dispatch(actions.getCurrentPositionRangeTicks(id))
-      dispatch(
-        actions.getCurrentPlotTicks({
-          poolIndex: position.poolData.poolIndex,
-          isXtoY: true
-        })
-      )
+      dispatch(actions.getCurrentPositionRangeTicks({ id }))
+
+      if (waitingForTicksData === null) {
+        dispatch(
+          actions.getCurrentPlotTicks({
+            poolIndex: position.poolData.poolIndex,
+            isXtoY: true
+          })
+        )
+      }
     }
   }, [position?.id])
 
@@ -254,6 +260,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       typeof lowerTick !== 'undefined' &&
       typeof upperTick !== 'undefined'
     ) {
+      console.log('calculateClaimAmount')
       const [bnX, bnY] = calculateClaimAmount({
         position,
         tickLower: lowerTick,
@@ -409,27 +416,25 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   const onRefresh = () => {
     if (position) {
-      dispatch(walletActions.getBalance())
-
-      setShowFeesLoader(true)
-      setWaitingForTicksData(true)
-      dispatch(actions.getCurrentPositionRangeTicks(id))
-      dispatch(
-        actions.getCurrentPlotTicks({
-          poolIndex: position.poolData.poolIndex,
-          isXtoY: true
-        })
-      )
-      dispatch(
-        poolsActions.getPoolData(
-          new Pair(position.tokenX.assetAddress, position.tokenY.assetAddress, {
-            fee: position.poolData.fee,
-            tickSpacing: position.poolData.tickSpacing
-          })
-        )
-      )
-
-      getGlobalPrice()
+      // dispatch(walletActions.getBalance())
+      // // setShowFeesLoader(true)
+      // setWaitingForTicksData(true)
+      // // dispatch(actions.getCurrentPositionRangeTicks({ id }))
+      // dispatch(
+      //   actions.getCurrentPlotTicks({
+      //     poolIndex: position.poolData.poolIndex,
+      //     isXtoY: true
+      //   })
+      // )
+      // dispatch(
+      //   poolsActions.getPoolData(
+      //     new Pair(position.tokenX.assetAddress, position.tokenY.assetAddress, {
+      //       fee: position.poolData.fee,
+      //       tickSpacing: position.poolData.tickSpacing
+      //     })
+      //   )
+      // )
+      // getGlobalPrice()
     }
   }
 

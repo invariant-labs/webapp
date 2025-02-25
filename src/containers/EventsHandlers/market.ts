@@ -16,6 +16,12 @@ import {
 } from '@utils/utils'
 import { getCurrentSolanaConnection } from '@utils/web3/connection'
 import { getSolanaWallet } from '@utils/web3/wallet'
+import {
+  currentPositionData,
+  currentPositionId,
+  positionsWithPoolsData
+} from '@store/selectors/positions'
+import { actions as positionsActions } from '@store/reducers/positions'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -27,7 +33,9 @@ const MarketEvents = () => {
   const networkStatus = useSelector(status)
   const tickmaps = useSelector(tickMaps)
   const allPools = useSelector(poolsArraySortedByFees)
-
+  const positionsList = useSelector(positionsWithPoolsData)
+  const currentPositionIndex = useSelector(currentPositionId)
+  const currentPosition = useSelector(currentPositionData)
   const poolTicksArray = useSelector(poolTicks)
   const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
   const [subscribedTickmap, _setSubscribedTickmap] = useState<Set<string>>(new Set())
@@ -114,7 +122,82 @@ const MarketEvents = () => {
 
     const connectEvents = () => {
       allPools.forEach(pool => {
+        const positionsInPool = positionsList.filter(position => {
+          return position.poolData.address.toString() === pool.address.toString()
+        })
+
         marketProgram.onPoolChange(pool.tokenX, pool.tokenY, { fee: pool.fee.v }, poolStructure => {
+          // update position list
+          if (pool.currentTickIndex !== poolStructure.currentTickIndex) {
+            positionsInPool.map(position => {
+              if (
+                (pool.currentTickIndex >= position?.lowerTickIndex &&
+                  poolStructure.currentTickIndex < position?.lowerTickIndex) ||
+                (pool.currentTickIndex < position?.lowerTickIndex &&
+                  poolStructure.currentTickIndex >= position?.lowerTickIndex)
+              ) {
+                dispatch(
+                  positionsActions.updatePositionTicksRange({
+                    positionId: position.id.toString() + '_' + position.pool.toString(),
+                    fetchTick: 'lower'
+                  })
+                )
+              } else if (
+                (pool.currentTickIndex < position?.upperTickIndex &&
+                  poolStructure.currentTickIndex >= position?.upperTickIndex) ||
+                (pool.currentTickIndex >= position?.upperTickIndex &&
+                  poolStructure.currentTickIndex < position?.upperTickIndex)
+              ) {
+                dispatch(
+                  positionsActions.updatePositionTicksRange({
+                    positionId: position.id.toString() + '_' + position.pool.toString(),
+                    fetchTick: 'upper'
+                  })
+                )
+              }
+
+              //update current position details
+
+              if (
+                currentPositionIndex === position.id.toString() + '_' + position.pool.toString() &&
+                currentPosition
+              ) {
+                if (
+                  (pool.currentTickIndex >= currentPosition?.lowerTickIndex &&
+                    poolStructure.currentTickIndex < currentPosition?.lowerTickIndex) ||
+                  (pool.currentTickIndex < currentPosition?.lowerTickIndex &&
+                    poolStructure.currentTickIndex >= currentPosition?.lowerTickIndex)
+                ) {
+                  if (pool.address.toString() === '2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC') {
+                    console.log('update lower')
+                  }
+
+                  dispatch(
+                    positionsActions.getCurrentPositionRangeTicks({
+                      id: currentPositionIndex,
+                      fetchTick: 'lower'
+                    })
+                  )
+                } else if (
+                  (pool.currentTickIndex < currentPosition?.upperTickIndex &&
+                    poolStructure.currentTickIndex >= currentPosition?.upperTickIndex) ||
+                  (pool.currentTickIndex >= currentPosition?.upperTickIndex &&
+                    poolStructure.currentTickIndex < currentPosition?.upperTickIndex)
+                ) {
+                  if (pool.address.toString() === '2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC') {
+                    console.log('update upper')
+                  }
+                  dispatch(
+                    positionsActions.getCurrentPositionRangeTicks({
+                      id: currentPositionIndex,
+                      fetchTick: 'upper'
+                    })
+                  )
+                }
+              }
+            })
+          }
+
           dispatch(
             actions.updatePool({
               address: pool.address,
