@@ -1,6 +1,6 @@
 import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
-import { Button, Grid, Typography } from '@mui/material'
+import { Box, Button, Grid, Typography, useMediaQuery } from '@mui/material'
 import loader from '@static/gif/loader.gif'
 import refreshIcon from '@static/svg/refresh.svg'
 import { useEffect, useMemo, useState } from 'react'
@@ -11,6 +11,7 @@ import { PaginationList } from '@components/Pagination/Pagination'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 import { FilterSearch, ISearchToken } from '@components/FilterSearch/FilterSearch'
 import { NetworkType } from '@store/consts/static'
+import { theme } from '@static/theme'
 
 interface IProps {
   initialPage: number
@@ -50,6 +51,7 @@ export const PositionsList: React.FC<IProps> = ({
   const [defaultPage] = useState(initialPage)
   const [page, setPage] = useState(initialPage)
   const [selectedFilters, setSelectedFilters] = useState<ISearchToken[]>([])
+  const isMd = useMediaQuery(theme.breakpoints.only('sm'))
 
   const filteredData = useMemo(() => {
     if (selectedFilters.length === 0) return data
@@ -120,14 +122,38 @@ export const PositionsList: React.FC<IProps> = ({
         justifyContent='space-between'
         alignItems='center'>
         <Grid className={classes.searchRoot}>
-          <Grid className={classes.titleBar}>
-            <Typography className={classes.title}>Your Positions</Typography>
-            <TooltipHover text='Total number of your positions'>
-              <Typography className={classes.positionsNumber}>
-                {' '}
-                {String(filteredData.length)}
-              </Typography>
-            </TooltipHover>
+          <Grid
+            sx={isMd ? { width: '100%', justifyContent: 'space-between' } : {}}
+            className={classes.titleBar}>
+            <Box display='flex' alignItems='center'>
+              <Typography className={classes.title}>Your Positions</Typography>
+              <TooltipHover text='Total number of your positions'>
+                <Typography className={classes.positionsNumber}>
+                  {String(filteredData.length)}
+                </Typography>
+              </TooltipHover>
+            </Box>
+            {isMd && (
+              <Grid
+                display='flex'
+                columnGap={2}
+                justifyContent='space-between'
+                className={classes.fullWidthWrapper}>
+                <TooltipHover text='Refresh'>
+                  <Grid display='flex' alignItems='center'>
+                    <Button
+                      disabled={showNoConnected}
+                      onClick={showNoConnected ? () => {} : handleRefresh}
+                      className={classes.refreshIconBtn}>
+                      <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                    </Button>
+                  </Grid>
+                </TooltipHover>
+                <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
+                  <span className={classes.buttonText}>+ Add Position</span>
+                </Button>
+              </Grid>
+            )}{' '}
           </Grid>
           <Grid className={classes.searchWrapper}>
             <FilterSearch
@@ -138,25 +164,27 @@ export const PositionsList: React.FC<IProps> = ({
               selectedFilters={selectedFilters}
               setSelectedFilters={setSelectedFilters}
             />
-            <Grid
-              display='flex'
-              columnGap={2}
-              justifyContent='space-between'
-              className={classes.fullWidthWrapper}>
-              <TooltipHover text='Refresh'>
-                <Grid display='flex' alignItems='center'>
-                  <Button
-                    disabled={showNoConnected}
-                    onClick={showNoConnected ? () => {} : handleRefresh}
-                    className={classes.refreshIconBtn}>
-                    <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
-                  </Button>
-                </Grid>
-              </TooltipHover>
-              <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
-                <span className={classes.buttonText}>+ Add Position</span>
-              </Button>
-            </Grid>
+            {!isMd && (
+              <Grid
+                display='flex'
+                columnGap={2}
+                justifyContent='space-between'
+                className={classes.fullWidthWrapper}>
+                <TooltipHover text='Refresh'>
+                  <Grid display='flex' alignItems='center'>
+                    <Button
+                      disabled={showNoConnected}
+                      onClick={showNoConnected ? () => {} : handleRefresh}
+                      className={classes.refreshIconBtn}>
+                      <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                    </Button>
+                  </Grid>
+                </TooltipHover>
+                <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
+                  <span className={classes.buttonText}>+ Add Position</span>
+                </Button>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Grid>
