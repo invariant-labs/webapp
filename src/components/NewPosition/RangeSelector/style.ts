@@ -67,6 +67,7 @@ const useStyles = makeStyles()(theme => {
       borderRadius: 11,
 
       '&:hover': {
+        backgroundColor: colors.invariant.lightHover2,
         '@media (hover: none)': {
           backgroundColor: colors.invariant.light
         }
