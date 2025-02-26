@@ -21,7 +21,7 @@ import {
   Typography,
   useMediaQuery
 } from '@mui/material'
-import { formatNumberWithSuffix, printBN } from '@utils/utils'
+import { formatNumberWithSuffix, getTokenPrice, printBN } from '@utils/utils'
 import { Box } from '@mui/system'
 import icons from '@static/icons'
 
@@ -75,7 +75,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
 }) => {
   const { classes } = useStyles()
   const isXs = useMediaQuery(theme.breakpoints.down('sm'))
-
+  const [prices, setPrices] = useState<Record<string, number>>({})
   const [value, setValue] = useState<string>('')
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [hideUnknown, setHideUnknown] = useState(initialHideUnknownTokensValue)
@@ -101,12 +101,43 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
     return commonTokensList
   }, [tokens, commonTokens])
 
+  // Wyciągamy tablicę tokenów z obiektu
+  const tokensArray = useMemo(() => Object.values(tokens), [tokens])
+
+  // Dodajemy indeksy i stringową reprezentację adresu
+  type IndexedSwapToken = SwapToken & {
+    index: number
+    strAddress: string
+  }
+
+  const tokensWithIndexes = useMemo<IndexedSwapToken[]>(() => {
+    return tokensArray.map((token, index) => ({
+      ...token,
+      index,
+      strAddress: token.assetAddress.toString()
+    }))
+  }, [tokensArray])
+
+  useEffect(() => {
+    tokensWithIndexes.forEach(token => {
+      const balanceStr = printBN(token.balance, token.decimals)
+      const balance = Number(balanceStr)
+      if (balance > 0) {
+        const addr = token.assetAddress.toString()
+        if (prices[addr] === undefined) {
+          getTokenPrice(addr, token.coingeckoId).then(priceData => {
+            setPrices(prev => ({ ...prev, [addr]: priceData.price || 0 }))
+          })
+        }
+      }
+    })
+  }, [tokensWithIndexes, prices])
+
   const filteredTokens = useMemo(() => {
     if (!open) {
       return []
     }
-
-    const filteredTokens: SwapToken[] = []
+    const result: SwapToken[] = []
     for (const [assetAddress, token] of Object.entries(tokens)) {
       if (
         token.symbol.toLowerCase().includes(value.toLowerCase()) ||
@@ -116,13 +147,11 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
         if (hideUnknown && token.isUnknown) {
           continue
         }
-
-        filteredTokens.push({ ...token, assetAddress: new PublicKey(assetAddress) })
+        result.push({ ...token, assetAddress: new PublicKey(assetAddress) })
       }
     }
-
-    const sortedTokens = value
-      ? filteredTokens.sort((a, b) => {
+    return value
+      ? result.sort((a, b) => {
           const aBalance = +printBN(a.balance, a.decimals)
           const bBalance = +printBN(b.balance, b.decimals)
           if ((aBalance === 0 && bBalance === 0) || (aBalance > 0 && bBalance > 0)) {
@@ -133,7 +162,6 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
               ) {
                 return -1
               }
-
               if (
                 b.symbol.toLowerCase().startsWith(value.toLowerCase()) &&
                 !a.symbol.toLowerCase().startsWith(value.toLowerCase())
@@ -141,15 +169,11 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                 return 1
               }
             }
-
             return a.symbol.toLowerCase().localeCompare(b.symbol.toLowerCase())
           }
-
           return aBalance === 0 ? 1 : -1
         })
-      : filteredTokens
-
-    return sortedTokens
+      : result
   }, [value, tokens, hideUnknown, open])
 
   const searchToken = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -293,6 +317,8 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
               {({ index, style }: { index: number; style: React.CSSProperties }) => {
                 const token = filteredTokens[index]
                 const tokenBalance = printBN(token.balance, token.decimals)
+                const price = prices[token.assetAddress.toString()]
+                const usdBalance = price ? Number(tokenBalance) * price : 0
 
                 return (
                   <Grid
@@ -343,9 +369,9 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                               event.stopPropagation()
                             }}>
                             <Typography>
-                              {token.assetAddress.toString().slice(0, 4) +
+                              {token.assetAddress.toString().slice(0, isXs ? 3 : 4) +
                                 '...' +
-                                token.assetAddress.toString().slice(-5, -1)}
+                                token.assetAddress.toString().slice(isXs ? -4 : -5, -1)}
                             </Typography>
                             <img width={8} height={8} src={icons.newTab} alt={'Token address'} />
                           </a>
@@ -357,15 +383,15 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                         {token.name.length > (isXs ? 20 : 30) ? '...' : ''}
                       </Typography>
                     </Grid>
-                    <Grid
-                      container
-                      justifyContent='flex-end'
-                      wrap='wrap'
-                      className={classes.tokenBalanceStatus}>
+                    <Grid container alignItems='flex-end' flexDirection='column' wrap='nowrap'>
                       {!hideBalances && Number(tokenBalance) > 0 ? (
                         <>
-                          <Typography>Balance:</Typography>
-                          <Typography>&nbsp; {formatNumberWithSuffix(tokenBalance)}</Typography>
+                          <Typography className={classes.tokenBalanceStatus} noWrap>
+                            {formatNumberWithSuffix(tokenBalance)}
+                          </Typography>
+                          <Typography className={classes.tokenBalanceUSDStatus}>
+                            ${usdBalance.toFixed(2)}
+                          </Typography>
                         </>
                       ) : null}
                     </Grid>
