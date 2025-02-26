@@ -23,7 +23,6 @@ interface IProps {
   itemsPerPage: number
   handleRefresh: () => void
   // pageChanged: (page: number) => void
-  length: number
   // loadedPages: Record<number, boolean>
   // getRemainingPositions: () => void
   noInitialPositions: boolean
@@ -42,7 +41,6 @@ export const PositionsList: React.FC<IProps> = ({
   handleRefresh,
   currentNetwork,
   // pageChanged,
-  length,
   // loadedPages,
   // getRemainingPositions,
   noInitialPositions
