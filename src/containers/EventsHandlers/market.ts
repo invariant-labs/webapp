@@ -157,7 +157,6 @@ const MarketEvents = () => {
               }
 
               //update current position details
-
               if (
                 currentPositionIndex === position.id.toString() + '_' + position.pool.toString() &&
                 currentPosition
@@ -209,7 +208,7 @@ const MarketEvents = () => {
     }
 
     connectEvents()
-  }, [dispatch, allPools.length, networkStatus, marketProgram])
+  }, [dispatch, allPools.length, networkStatus, marketProgram, currentPosition])
 
   useEffect(() => {
     if (networkStatus !== Status.Initialized || !marketProgram || allPools.length === 0) {

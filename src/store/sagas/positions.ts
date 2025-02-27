@@ -1703,11 +1703,13 @@ export function* handleGetCurrentPositionRangeTicks(
         })
       )
     } else {
+      console.log(id)
       const { lowerTick, upperTick } = yield* all({
         lowerTick: call([marketProgram, marketProgram.getTick], pair, positionData.lowerTickIndex),
         upperTick: call([marketProgram, marketProgram.getTick], pair, positionData.upperTickIndex)
       })
-
+      console.log(lowerTick.feeGrowthOutsideX.toString())
+      console.log(upperTick.feeGrowthOutsideX.toString())
       yield put(
         actions.setCurrentPositionRangeTicks({
           lowerTick,
