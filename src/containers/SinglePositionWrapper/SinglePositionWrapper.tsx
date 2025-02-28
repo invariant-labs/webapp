@@ -375,7 +375,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     } else {
       setTokenYPriceData(undefined)
     }
-  }, [position?.id.toString()])
+  }, [position?.id.toString(), current])
 
   const getGlobalPrice = () => {
     if (!position) {
@@ -402,7 +402,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   useEffect(() => {
     getGlobalPrice()
-  }, [xToY, position?.tokenX, position?.tokenY])
+  }, [xToY, position?.tokenX, position?.tokenY, current])
 
   const copyPoolAddressHandler = (message: string, variant: VariantType) => {
     dispatch(
