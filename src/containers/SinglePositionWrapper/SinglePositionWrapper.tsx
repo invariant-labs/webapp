@@ -39,7 +39,6 @@ import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/lib/utils'
 import { MAX_TICK, Pair } from '@invariant-labs/sdk/src'
-import { Tick } from '@invariant-labs/sdk/lib/market'
 
 export interface IProps {
   id: string
