@@ -83,8 +83,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const [isFinishedDelayRender, setIsFinishedDelayRender] = useState(false)
 
   const [isClosingPosition, setIsClosingPosition] = useState(false)
-  const [currentLowerTick, setCurrentLowerTick] = useState<Tick | undefined>(lowerTick)
-  const [currentUpperTick, setCurrentUpperTick] = useState<Tick | undefined>(upperTick)
 
   useEffect(() => {
     if (position?.id) {
