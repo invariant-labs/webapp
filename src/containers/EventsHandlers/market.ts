@@ -114,15 +114,20 @@ const MarketEvents = () => {
 
     const connectEvents = () => {
       allPools.forEach(pool => {
-        marketProgram.onPoolChange(pool.tokenX, pool.tokenY, { fee: pool.fee.v }, poolStructure => {
-          console.log('update pool')
-          // dispatch(
-          //   actions.updatePool({
-          //     address: pool.address,
-          //     poolStructure
-          //   })
-          // )
-        })
+        marketProgram.onPoolChange(
+          pool.tokenX,
+          pool.tokenY,
+          { fee: pool.fee.v },
+          _poolStructure => {
+            console.log('update pool')
+            // dispatch(
+            //   actions.updatePool({
+            //     address: pool.address,
+            //     poolStructure
+            //   })
+            // )
+          }
+        )
       })
     }
 
@@ -153,7 +158,7 @@ const MarketEvents = () => {
                 tickSpacing: pool.tickSpacing
               }),
               singleTick.index,
-              tickObject => {
+              _tickObject => {
                 console.log('update ticks')
                 // dispatch(
                 //   actions.updateTicks({
@@ -209,7 +214,7 @@ const MarketEvents = () => {
                       tickSpacing: pool.tickSpacing
                     }),
                     +index,
-                    tickObject => {
+                    _tickObject => {
                       console.log('update ticks')
                       // dispatch(
                       //   actions.updateTicks({
