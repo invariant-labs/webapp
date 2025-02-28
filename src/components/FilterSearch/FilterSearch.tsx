@@ -22,6 +22,8 @@ import icons from '@static/icons'
 import { tokensStatsWithTokensDetails } from '@store/selectors/stats'
 import ListboxComponent from './Helpers/ListBoxComponent'
 import { BN } from '@project-serum/anchor'
+import { printBN } from '@utils/utils'
+import { PublicKey } from '@solana/web3.js'
 
 export interface ISearchToken {
   icon: string
@@ -30,8 +32,13 @@ export interface ISearchToken {
   address: string
   balance: BN
   decimals: number
+  balanceUSD?: number
 }
-
+interface ITokenBalance {
+  address: PublicKey
+  balance: BN
+  decimals: number
+}
 interface IFilterSearch {
   networkType: string
   selectedFilters: ISearchToken[]
@@ -52,7 +59,7 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
   const [open, setOpen] = useState(false)
 
   const tokenListMap = useMemo(() => {
-    const map = new Map<string, any>()
+    const map = new Map<string, ITokenBalance>()
     tokensList.forEach(token => {
       map.set(token.address.toString(), token)
     })
@@ -70,13 +77,20 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
         const details = tokenData.tokenDetails
         const tokenAddress = details?.address?.toString() ?? tokenData.address.toString()
         const tokenFromList = tokenListMap.get(tokenAddress)
+        const price = tokenData.price
+        const balanceUSD =
+          price && tokenFromList
+            ? +printBN(tokenFromList.balance, tokenData.tokenDetails?.decimals) * price
+            : 0
+
         return {
           icon: details?.logoURI ?? icons.unknownToken,
           name: details?.name ?? tokenData.address.toString(),
           symbol: details?.symbol ?? tokenData.address.toString(),
           address: tokenAddress,
           balance: tokenFromList ? tokenFromList.balance : 0,
-          decimals: tokenFromList ? tokenFromList.decimals : 0
+          decimals: tokenFromList ? tokenFromList.decimals : 0,
+          balanceUSD: balanceUSD
         }
       })
       .sort((a, b) => {
@@ -84,6 +98,8 @@ export const FilterSearch: React.FC<IFilterSearch> = ({
         const bHasBalance = Number(b.balance) > 0
         const aIsCommon = commonTokensSet.has(a.address)
         const bIsCommon = commonTokensSet.has(b.address)
+        if (a.balanceUSD !== b.balanceUSD) return b.balanceUSD - a.balanceUSD
+
         if (aHasBalance && !bHasBalance) return -1
         if (!aHasBalance && bHasBalance) return 1
         if (aIsCommon && !bIsCommon) return -1
