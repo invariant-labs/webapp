@@ -256,6 +256,27 @@ const useStyles = makeStyles()(theme => {
       ...typography.caption2,
       textAlign: 'right',
       marginLeft: 4
+    },
+    rangeConcentration: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.invariant.newDark,
+      gap: 8,
+      borderRadius: 11,
+      padding: '6px 12px',
+
+      '& p:first-of-type': {
+        color: colors.invariant.textGrey,
+        ...typography.body2
+      },
+
+      '& p:last-of-type': {
+        color: colors.invariant.text,
+        ...typography.body3,
+        minWidth: 82,
+        textAlign: 'center'
+      }
     }
   }
 })
