@@ -114,14 +114,20 @@ const MarketEvents = () => {
 
     const connectEvents = () => {
       allPools.forEach(pool => {
-        marketProgram.onPoolChange(pool.tokenX, pool.tokenY, { fee: pool.fee.v }, poolStructure => {
-          dispatch(
-            actions.updatePool({
-              address: pool.address,
-              poolStructure
-            })
-          )
-        })
+        marketProgram.onPoolChange(
+          pool.tokenX,
+          pool.tokenY,
+          { fee: pool.fee.v },
+          _poolStructure => {
+            console.log('update pool')
+            // dispatch(
+            //   actions.updatePool({
+            //     address: pool.address,
+            //     poolStructure
+            //   })
+            // )
+          }
+        )
       })
     }
 
@@ -152,14 +158,15 @@ const MarketEvents = () => {
                 tickSpacing: pool.tickSpacing
               }),
               singleTick.index,
-              tickObject => {
-                dispatch(
-                  actions.updateTicks({
-                    address: address,
-                    index: singleTick.index,
-                    tick: tickObject
-                  })
-                )
+              _tickObject => {
+                console.log('update ticks')
+                // dispatch(
+                //   actions.updateTicks({
+                //     address: address,
+                //     index: singleTick.index,
+                //     tick: tickObject
+                //   })
+                // )
               }
             )
           })
@@ -207,14 +214,15 @@ const MarketEvents = () => {
                       tickSpacing: pool.tickSpacing
                     }),
                     +index,
-                    tickObject => {
-                      dispatch(
-                        actions.updateTicks({
-                          address: pool.address.toString(),
-                          index: +index,
-                          tick: tickObject
-                        })
-                      )
+                    _tickObject => {
+                      console.log('update ticks')
+                      // dispatch(
+                      //   actions.updateTicks({
+                      //     address: pool.address.toString(),
+                      //     index: +index,
+                      //     tick: tickObject
+                      //   })
+                      // )
                     }
                   )
                 } catch (err) {
@@ -222,12 +230,13 @@ const MarketEvents = () => {
                 }
               }
             }
-            dispatch(
-              actions.updateTickmap({
-                address: address,
-                bitmap: tickmap.bitmap
-              })
-            )
+            console.log('update tickmap')
+            // dispatch(
+            //   actions.updateTickmap({
+            //     address: address,
+            //     bitmap: tickmap.bitmap
+            //   })
+            // )
           })
         })
       }
