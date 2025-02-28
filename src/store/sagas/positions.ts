@@ -1633,8 +1633,6 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
     const wallet = yield* call(getWallet)
     const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
-    yield put(actions.getCurrentPositionRangeTicks({ id: action.payload.toString() }))
-
     const position = yield* call(
       [marketProgram, marketProgram.getPosition],
       wallet.publicKey,
@@ -1647,6 +1645,8 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
         position
       })
     )
+    yield* call(sleep, 500)
+    yield put(actions.getCurrentPositionRangeTicks({ id: action.payload.toString() }))
   } catch (error) {
     console.log(error)
 
@@ -1666,6 +1666,10 @@ export function* handleGetCurrentPositionRangeTicks(
     const positionData = yield* select(singlePositionData(id))
     const { lowerTick: lowerTickState, upperTick: upperTickState } =
       yield* select(currentPositionTicks)
+
+    // if (fetchTick) {
+    //   yield* call(sleep, 100)
+    // }
 
     if (typeof positionData === 'undefined') {
       return

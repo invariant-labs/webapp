@@ -171,12 +171,14 @@ const MarketEvents = () => {
                     console.log('update lower')
                   }
 
-                  dispatch(
-                    positionsActions.getCurrentPositionRangeTicks({
-                      id: currentPositionIndex,
-                      fetchTick: 'lower'
-                    })
-                  )
+                  // dispatch(
+                  //   positionsActions.getCurrentPositionRangeTicks({
+                  //     id: currentPositionIndex,
+                  //     fetchTick: 'lower'
+                  //   })
+                  // )
+
+                  dispatch(positionsActions.getSinglePosition(position.positionIndex))
                 } else if (
                   (pool.currentTickIndex < currentPosition?.upperTickIndex &&
                     poolStructure.currentTickIndex >= currentPosition?.upperTickIndex) ||
@@ -186,12 +188,13 @@ const MarketEvents = () => {
                   if (pool.address.toString() === '2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC') {
                     console.log('update upper')
                   }
-                  dispatch(
-                    positionsActions.getCurrentPositionRangeTicks({
-                      id: currentPositionIndex,
-                      fetchTick: 'upper'
-                    })
-                  )
+                  dispatch(positionsActions.getSinglePosition(position.positionIndex))
+                  // dispatch(
+                  //   positionsActions.getCurrentPositionRangeTicks({
+                  //     id: currentPositionIndex,
+                  //     fetchTick: 'upper'
+                  //   })
+                  // )
                 }
               }
             })

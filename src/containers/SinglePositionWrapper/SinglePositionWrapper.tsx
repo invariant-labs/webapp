@@ -39,6 +39,7 @@ import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/lib/utils'
 import { MAX_TICK, Pair } from '@invariant-labs/sdk/src'
+import { Tick } from '@invariant-labs/sdk/lib/market'
 
 export interface IProps {
   id: string
@@ -82,6 +83,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const [isFinishedDelayRender, setIsFinishedDelayRender] = useState(false)
 
   const [isClosingPosition, setIsClosingPosition] = useState(false)
+  const [currentLowerTick, setCurrentLowerTick] = useState<Tick | undefined>(lowerTick)
+  const [currentUpperTick, setCurrentUpperTick] = useState<Tick | undefined>(upperTick)
 
   useEffect(() => {
     if (position?.id) {
@@ -99,7 +102,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         )
       }
     }
-  }, [position?.id])
+    console.log('reload', position?.id.toString())
+  }, [position?.id.toString()])
 
   useEffect(() => {
     if (hasAnyTokens && !hasAnyFarms) {
@@ -111,11 +115,13 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (walletStatus === Status.Initialized && hasAnyFarms && !hasAnyStakes && position?.id) {
       dispatch(farmsActions.getUserStakes())
     }
-  }, [walletStatus, hasAnyFarms, position?.id])
+    console.log('reload')
+  }, [walletStatus, hasAnyFarms, position?.id.toString()])
 
   useEffect(() => {
     if (waitingForTicksData === true && !currentPositionTicksLoading) {
       setWaitingForTicksData(false)
+      console.log('reload')
     }
   }, [currentPositionTicksLoading])
 
@@ -136,7 +142,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       index: 0,
       x: 0
     }
-  }, [position?.id])
+  }, [position?.id, position?.poolData?.sqrtPrice])
 
   const leftRange = useMemo(() => {
     if (position) {
@@ -258,6 +264,18 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       typeof lowerTick !== 'undefined' &&
       typeof upperTick !== 'undefined'
     ) {
+      console.log(position?.poolData.currentTickIndex)
+      console.log(lowerTick?.feeGrowthOutsideX.v.toString())
+      console.log(lowerTick?.feeGrowthOutsideY.v.toString())
+      console.log(upperTick?.feeGrowthOutsideX.v.toString())
+      console.log(upperTick?.feeGrowthOutsideY.v.toString())
+
+      console.log(position?.poolData.feeGrowthGlobalX.v.toString())
+      console.log(position?.poolData.feeGrowthGlobalY.v.toString())
+      console.log(position?.liquidity.v.toString())
+      console.log(position?.feeGrowthInsideX.v.toString())
+      console.log(position?.feeGrowthInsideY.v.toString())
+
       const [bnX, bnY] = calculateClaimAmount({
         position,
         tickLower: lowerTick,
@@ -273,7 +291,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
 
     return [0, 0]
-  }, [position, lowerTick, upperTick, waitingForTicksData])
+  }, [position?.id.toString(), lowerTick, upperTick, waitingForTicksData])
 
   const data = useMemo(() => {
     if (ticksLoading && position) {
@@ -285,9 +303,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         position.tokenY.decimals
       )
     }
-
+    console.log('reload')
     return ticksData
-  }, [ticksData, ticksLoading, position?.id])
+  }, [ticksData, ticksLoading, position?.id.toString()])
 
   const [tokenXPriceData, setTokenXPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [tokenYPriceData, setTokenYPriceData] = useState<TokenPriceData | undefined>(undefined)
@@ -335,6 +353,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   }, [poolsVolumeRanges, position])
 
   useEffect(() => {
+    console.log('reload')
     if (!position) {
       return
     }
@@ -356,7 +375,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     } else {
       setTokenYPriceData(undefined)
     }
-  }, [position?.id])
+  }, [position?.id.toString()])
 
   const getGlobalPrice = () => {
     if (!position) {
@@ -414,9 +433,11 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const onRefresh = () => {
     if (position) {
       dispatch(walletActions.getBalance())
+
       // setShowFeesLoader(true)
       // setWaitingForTicksData(true)
-      // dispatch(actions.getCurrentPositionRangeTicks({ id }))
+      dispatch(actions.getSinglePosition(position.positionIndex))
+
       dispatch(
         actions.getCurrentPlotTicks({
           poolIndex: position.poolData.poolIndex,
