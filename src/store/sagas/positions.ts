@@ -8,9 +8,10 @@ import {
   createLoaderKey,
   createPlaceholderLiquidityPlot,
   getPositionsAddressesFromRange,
+  printBN,
   solToPriorityFee
 } from '@utils/utils'
-import { IWallet, Pair } from '@invariant-labs/sdk'
+import { IWallet, Market, Pair } from '@invariant-labs/sdk'
 import { Staker } from '@invariant-labs/staker-sdk'
 import { actions as farmsActions } from '@store/reducers/farms'
 import { ListPoolsResponse, ListType, actions as poolsActions } from '@store/reducers/pools'
@@ -26,7 +27,7 @@ import { GuardPredicate } from '@redux-saga/types'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { stakesForPosition } from '@store/selectors/farms'
 import { poolsArraySortedByFees, tokens } from '@store/selectors/pools'
-import { positionsWithPoolsData, singlePositionData } from '@store/selectors/positions'
+import { positionsWithPoolsData, prices, singlePositionData } from '@store/selectors/positions'
 import { network, rpcAddress } from '@store/selectors/solanaConnection'
 import { accounts } from '@store/selectors/solanaWallet'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
@@ -45,6 +46,8 @@ import { getConnection, handleRpcError } from './connection'
 import { createClaimAllPositionRewardsTx } from './farms'
 import { createAccount, getWallet, sleep } from './wallet'
 import { closeSnackbar } from 'notistack'
+import { Tick } from '@invariant-labs/sdk/lib/market'
+import { calculateClaimAmount } from '@invariant-labs/sdk/lib/utils'
 
 function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionData>): Generator {
   const data = action.payload
@@ -1684,6 +1687,79 @@ export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<string
   }
 }
 
+function* getTickWithCache(
+  pair: Pair,
+  tickIndex: number,
+  ticksCache: Map<string, Tick>,
+  marketProgram: Market
+): Generator<any, Tick, any> {
+  const cacheKey = `${pair.tokenX.toString()}-${pair.tokenY.toString()}-${tickIndex}`
+
+  if (ticksCache.has(cacheKey)) {
+    return ticksCache.get(cacheKey)!
+  }
+
+  const tick = yield* call([marketProgram, 'getTick'], pair, tickIndex)
+  ticksCache.set(cacheKey, tick)
+  return tick
+}
+
+export function* handleCalculateTotalUnclaimedFees() {
+  try {
+    const positionList = yield* select(positionsWithPoolsData)
+    const pricesData = yield* select(prices)
+    const networkType = yield* select(network)
+    const rpc = yield* select(rpcAddress)
+
+    const wallet = yield* call(getWallet)
+    const marketProgram: Market = yield* call(getMarketProgram, networkType, rpc, wallet)
+
+    const ticksCache: Map<string, Tick> = new Map()
+
+    const ticks: Tick[][] = yield* all(
+      positionList.map(function* (position) {
+        const pair = new Pair(position.poolData.tokenX, position.poolData.tokenY, {
+          fee: position.poolData.fee,
+          tickSpacing: position.poolData.tickSpacing
+        })
+
+        const [lowerTick, upperTick]: Tick[] = yield* all([
+          call(getTickWithCache, pair, position.lowerTickIndex, ticksCache, marketProgram),
+          call(getTickWithCache, pair, position.upperTickIndex, ticksCache, marketProgram)
+        ])
+
+        return [lowerTick, upperTick]
+      })
+    )
+
+    const total = positionList.reduce((acc: number, position, i: number) => {
+      const [lowerTick, upperTick] = ticks[i]
+      const [bnX, bnY] = calculateClaimAmount({
+        position,
+        tickLower: lowerTick,
+        tickUpper: upperTick,
+        tickCurrent: position.poolData.currentTickIndex,
+        feeGrowthGlobalX: position.poolData.feeGrowthGlobalX,
+        feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
+      })
+
+      const xValue =
+        +printBN(bnX, position.tokenX.decimals) *
+        (pricesData.data[position.tokenX.assetAddress.toString()] ?? 0)
+      const yValue =
+        +printBN(bnY, position.tokenY.decimals) *
+        (pricesData.data[position.tokenY.assetAddress.toString()] ?? 0)
+
+      return acc + xValue + yValue
+    }, 0)
+
+    yield* put(actions.setUnclaimedFees(isFinite(total) ? total : 0))
+  } catch (error) {
+    console.error('Error calculating unclaimed fees:', error)
+    yield* put(actions.setUnclaimedFeesError())
+  }
+}
+
 export function* initPositionHandler(): Generator {
   yield* takeEvery(actions.initPosition, handleInitPosition)
 }
@@ -1696,6 +1772,11 @@ export function* getPositionsListHandler(): Generator {
 export function* claimFeeHandler(): Generator {
   yield* takeEvery(actions.claimFee, handleClaimFee)
 }
+
+export function* unclaimedFeesHandler(): Generator {
+  yield* takeEvery(actions.calculateTotalUnclaimedFees, handleCalculateTotalUnclaimedFees)
+}
+
 export function* closePositionHandler(): Generator {
   yield* takeEvery(actions.closePosition, handleClosePosition)
 }

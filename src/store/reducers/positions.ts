@@ -10,6 +10,7 @@ export interface PositionWithAddress extends Position {
 export interface PositionsListStore {
   list: PositionWithAddress[]
   loading: boolean
+  isAllClaimFeesLoading: boolean
 }
 
 export interface PlotTickData {
@@ -41,6 +42,14 @@ export interface IPositionsStore {
   currentPositionTicks: CurrentPositionTicksStore
   initPosition: InitPositionStore
   shouldNotUpdateRange: boolean
+  unclaimedFees: {
+    total: number
+    loading: boolean
+    lastUpdate: number
+  }
+  prices: {
+    data: Record<string, number>
+  }
 }
 
 export interface InitPositionData
@@ -81,6 +90,7 @@ export const defaultState: IPositionsStore = {
   },
   positionsList: {
     list: [],
+    isAllClaimFeesLoading: false,
     loading: true
   },
   currentPositionTicks: {
@@ -92,6 +102,15 @@ export const defaultState: IPositionsStore = {
     inProgress: false,
     success: false
   },
+  unclaimedFees: {
+    total: 0,
+    loading: false,
+    lastUpdate: 0
+  },
+  prices: {
+    data: {}
+  },
+
   shouldNotUpdateRange: false
 }
 
@@ -162,7 +181,38 @@ const positionsSlice = createSlice({
       }
       return state
     },
+    claimAllFee(state) {
+      return state
+    },
     claimFee(state, _action: PayloadAction<number>) {
+      return state
+    },
+    setAllClaimLoader(state, action: PayloadAction<boolean>) {
+      state.positionsList.isAllClaimFeesLoading = action.payload
+    },
+    calculateTotalUnclaimedFees(state) {
+      state.unclaimedFees.loading = true
+      return state
+    },
+    setUnclaimedFees(state, action: PayloadAction<number>) {
+      state.unclaimedFees = {
+        total: action.payload,
+        loading: false,
+        lastUpdate: Date.now()
+      }
+      return state
+    },
+    setPrices(state, action: PayloadAction<Record<string, number>>) {
+      state.prices = {
+        data: action.payload
+      }
+      return state
+    },
+    setUnclaimedFeesError(state) {
+      state.unclaimedFees = {
+        ...state.unclaimedFees,
+        loading: false
+      }
       return state
     },
     closePosition(state, _action: PayloadAction<ClosePositionData>) {

@@ -1589,13 +1589,27 @@ function trimEndingZeros(num) {
   return num.toString().replace(/0+$/, '')
 }
 
-export const formatNumberWithoutSuffix = (number: number | bigint | string): string => {
+export const formatNumberWithoutSuffix = (
+  number: number | bigint | string,
+  options?: { twoDecimals?: boolean }
+): string => {
   const numberAsNumber = Number(number)
   const isNegative = numberAsNumber < 0
   const absNumberAsNumber = Math.abs(numberAsNumber)
 
-  const absNumberAsString = numberToString(absNumberAsNumber)
+  if (options?.twoDecimals) {
+    if (absNumberAsNumber === 0) {
+      return '0'
+    }
+    if (absNumberAsNumber > 0 && absNumberAsNumber < 0.01) {
+      return isNegative ? '-<0.01' : '<0.01'
+    }
+    return isNegative
+      ? '-' + absNumberAsNumber.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      : absNumberAsNumber.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  }
 
+  const absNumberAsString = numberToString(absNumberAsNumber)
   const [beforeDot, afterDot] = absNumberAsString.split('.')
 
   const leadingZeros = afterDot ? countLeadingZeros(afterDot) : 0
@@ -1610,7 +1624,6 @@ export const formatNumberWithoutSuffix = (number: number | bigint | string): str
 
   return isNegative ? '-' + formattedNumber : formattedNumber
 }
-
 export const trimDecimalZeros = (numStr: string): string => {
   if (/^[0.]+$/.test(numStr)) {
     return '0'
