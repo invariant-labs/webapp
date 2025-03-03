@@ -14,11 +14,7 @@ import { StrategyConfig, TokenPool } from '@store/types/userOverview'
 import { useNavigate } from 'react-router-dom'
 import { DEFAULT_FEE_TIER, STRATEGIES } from '@store/consts/userStrategies'
 import icons from '@static/icons'
-import {
-  NetworkType /*USDC_MAIN, USDC_TEST, WETH_MAIN, WETH_TEST*/,
-  SOL_DEV,
-  USDC_DEV
-} from '@store/consts/static'
+import { getAddressTickerMap, NetworkType } from '@store/consts/static'
 import { addressToTicker, formatNumberWithoutSuffix } from '@utils/utils'
 import { useStyles } from './styles'
 import { network } from '@store/selectors/solanaConnection'
@@ -214,7 +210,11 @@ export const YourWallet: React.FC<YourWalletProps> = ({
           className={classes.actionIcon}
           onClick={() => {
             const sourceToken = addressToTicker(currentNetwork, strategy.tokenAddressA)
-            const targetToken = sourceToken === 'SOL' ? SOL_DEV.address : USDC_DEV.address
+            const tickerMap = getAddressTickerMap(currentNetwork)
+            const targetToken = addressToTicker(
+              currentNetwork,
+              sourceToken === 'SOL' ? tickerMap['USDC'] : tickerMap['SOL']
+            )
 
             navigate(
               `/newPosition/${sourceToken}/${addressToTicker(currentNetwork, targetToken.toString())}/${strategy.feeTier}`,
@@ -231,8 +231,11 @@ export const YourWallet: React.FC<YourWalletProps> = ({
           className={classes.actionIcon}
           onClick={() => {
             const sourceToken = addressToTicker(currentNetwork, pool.id.toString())
-            const targetToken = sourceToken === 'SOL' ? SOL_DEV.address : USDC_DEV.address
-
+            const tickerMap = getAddressTickerMap(currentNetwork)
+            const targetToken = addressToTicker(
+              currentNetwork,
+              sourceToken === 'SOL' ? tickerMap['USDC'] : tickerMap['SOL']
+            )
             navigate(
               `/exchange/${sourceToken}/${addressToTicker(currentNetwork, targetToken.toString())}`,
               {
