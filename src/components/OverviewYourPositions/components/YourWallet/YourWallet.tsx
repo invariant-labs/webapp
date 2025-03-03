@@ -146,6 +146,7 @@ export const YourWallet: React.FC<YourWalletProps> = ({
     isLoading,
     isScrollHide: sortedPools.length < 5
   })
+  console.log(pools)
 
   const totalValue = useMemo(
     () => sortedPools.reduce((sum, pool) => sum + pool.value, 0),
@@ -259,11 +260,11 @@ export const YourWallet: React.FC<YourWalletProps> = ({
         <Box
           className={classes.actionIcon}
           onClick={() => {
-            // window.open(
-            //   `https://eclipsescan.xyz/token/${pool.id.toString()}/${networkUrl}`,
-            //   '_blank',
-            //   'noopener,noreferrer'
-            // )
+            window.open(
+              `https://solscan.io/token/${pool.id.toString()}/${networkUrl}`,
+              '_blank',
+              'noopener,noreferrer'
+            )
           }}>
           <img width={24} height={24} src={icons.newTabBtn} alt={'Exchange'} />
         </Box>
@@ -363,7 +364,7 @@ export const YourWallet: React.FC<YourWalletProps> = ({
                         <Box className={classes.statsContainer}>
                           <Typography className={classes.statsValue}>
                             $
-                            {formatNumberWithoutSuffix(pool.value.toFixed(2), {
+                            {formatNumberWithoutSuffix(pool.value, {
                               twoDecimals: true
                             })}
                           </Typography>

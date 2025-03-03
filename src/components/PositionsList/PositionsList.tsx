@@ -1,15 +1,25 @@
-import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
-import { Button, Grid, InputAdornment, InputBase, Typography } from '@mui/material'
-import loader from '@static/gif/loader.gif'
-import SearchIcon from '@static/svg/lupaDark.svg'
+import { Button, Grid, Typography, useMediaQuery } from '@mui/material'
 import refreshIcon from '@static/svg/refresh.svg'
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { IPositionItem, PositionItem } from './PositionItem/PositionItem'
 import { useStyles } from './style'
-import { PaginationList } from '@components/Pagination/Pagination'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { PositionItemMobile } from './PositionItem/variants/PositionMobileCard/PositionItemMobile'
+import { IPositionItem } from './types'
+import { PositionsTable } from './PositionItem/variants/PositionTables/PositionsTable'
+import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import PositionCardsSkeletonMobile from './PositionItem/variants/PositionTables/skeletons/PositionCardsSkeletonMobile'
+import { FilterSearch, ISearchToken } from '@components/FilterSearch/FilterSearch'
+import { NetworkType } from '@store/consts/static'
+import { theme } from '@static/theme'
+import { network } from '@store/selectors/solanaConnection'
+import { useSelector } from 'react-redux'
+
+export enum LiquidityPools {
+  Standard = 'Standard',
+  Locked = 'Locked'
+}
 
 interface IProps {
   initialPage: number
@@ -20,173 +30,226 @@ interface IProps {
   showNoConnected?: boolean
   noConnectedBlockerProps: INoConnected
   itemsPerPage: number
-  searchValue: string
-  searchSetValue: (value: string) => void
   handleRefresh: () => void
-  // pageChanged: (page: number) => void
   length: number
-  // loadedPages: Record<number, boolean>
-  // getRemainingPositions: () => void
   noInitialPositions: boolean
+  currentNetwork: NetworkType
+  handleClosePosition: (index: number) => void
+  handleClaimFee: (index: number) => void
 }
 
 export const PositionsList: React.FC<IProps> = ({
-  initialPage,
-  setLastPage,
   data,
   onAddPositionClick,
   loading = false,
   showNoConnected = false,
   noConnectedBlockerProps,
-  itemsPerPage,
-  searchValue,
-  searchSetValue,
   handleRefresh,
+  currentNetwork,
   // pageChanged,
-  length,
+  // length,
+  // lockedLength,
   // loadedPages,
   // getRemainingPositions,
-  noInitialPositions
+  noInitialPositions,
+  handleClosePosition,
+  handleClaimFee
 }) => {
   const { classes } = useStyles()
   const navigate = useNavigate()
-  const [defaultPage] = useState(initialPage)
-  const [page, setPage] = useState(initialPage)
+  const [selectedFilters, setSelectedFilters] = useState<ISearchToken[]>([])
+  const isLg = useMediaQuery('@media (max-width: 1360px)')
+  const isMd = useMediaQuery(theme.breakpoints.down('md'))
+  console.log('PositionList', data)
+  const filteredData = useMemo(() => {
+    if (selectedFilters.length === 0) return data
 
-  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // if (Object.keys(loadedPages).length * POSITIONS_PER_QUERY < Number(length)) {
-    //   getRemainingPositions()
-    // }
+    return data.filter(position => {
+      const tokenX = position.tokenXName.toLowerCase()
+      const tokenY = position.tokenYName.toLowerCase()
 
-    searchSetValue(e.target.value.toLowerCase())
-  }
+      if (selectedFilters.length === 1) {
+        const filterToken = selectedFilters[0].symbol.toLowerCase()
+        return tokenX === filterToken || tokenY === filterToken
+      }
 
-  const handleChangePagination = (page: number): void => {
-    setLastPage(page)
-    setPage(page)
-  }
+      if (selectedFilters.length === 2) {
+        const filterToken1 = selectedFilters[0].symbol.toLowerCase()
+        const filterToken2 = selectedFilters[1].symbol.toLowerCase()
+        return (
+          (tokenX === filterToken1 && tokenY === filterToken2) ||
+          (tokenX === filterToken2 && tokenY === filterToken1)
+        )
+      }
 
-  const paginator = (currentPage: number) => {
-    const page = currentPage || 1
-    const perPage = itemsPerPage || 10
-    const offset = (page - 1) * perPage
-    const paginatedItems = data.slice(offset).slice(0, itemsPerPage)
-    const totalPages = Math.ceil(data.length / perPage)
+      return true
+    })
+  }, [data, selectedFilters])
 
-    return {
-      page: page,
-      totalPages: totalPages,
-      data: paginatedItems
+  const [allowPropagation, setAllowPropagation] = useState(true)
+
+  const renderContent = () => {
+    if (showNoConnected) {
+      return <NoConnected {...noConnectedBlockerProps} />
     }
+
+    if (!isLg) {
+      return (
+        <PositionsTable
+          positions={filteredData}
+          isLoading={loading}
+          noInitialPositions={noInitialPositions}
+          onAddPositionClick={onAddPositionClick}
+          handleClosePosition={handleClosePosition}
+          handleClaimFee={handleClaimFee}
+        />
+      )
+    } else if (isLg && loading) {
+      return <PositionCardsSkeletonMobile />
+    }
+
+    if (data.length === 0 && !loading) {
+      return (
+        <EmptyPlaceholder
+          newVersion
+          desc={
+            noInitialPositions
+              ? 'Add your first position by pressing the button and start earning!'
+              : 'Did not find any matching positions'
+          }
+          onAction={onAddPositionClick}
+          withButton={noInitialPositions}
+        />
+      )
+    }
+
+    return filteredData.map((element, index) => (
+      <Grid
+        onClick={() => {
+          if (allowPropagation) {
+            navigate(`/position/${element.id}`)
+          }
+        }}
+        key={element.id}
+        className={classes.itemLink}>
+        <PositionItemMobile
+          key={index}
+          {...element}
+          setAllowPropagation={setAllowPropagation}
+          handleClosePosition={handleClosePosition}
+          handleClaimFee={handleClaimFee}
+        />
+      </Grid>
+    ))
   }
-
-  useEffect(() => {
-    setPage(1)
-  }, [searchValue])
-
-  useEffect(() => {
-    setPage(initialPage)
-  }, [])
-
-  useEffect(() => {
-    handleChangePagination(initialPage)
-  }, [initialPage])
-
-  // useEffect(() => {
-  //   pageChanged(page)
-  // }, [page])
 
   return (
     <Grid container direction='column' className={classes.root}>
-      <Grid
-        className={classes.header}
-        container
-        direction='row'
-        justifyContent='space-between'
-        alignItems='center'>
-        <Grid className={classes.searchRoot}>
-          <Grid className={classes.titleBar}>
-            <Typography className={classes.title}>Your Positions</Typography>
-            <TooltipHover text='Total number of your positions'>
-              <Typography className={classes.positionsNumber}>{String(length)}</Typography>
-            </TooltipHover>
-          </Grid>
-          <Grid className={classes.searchWrapper}>
-            <InputBase
-              type={'text'}
-              className={classes.searchBar}
-              placeholder='Search position'
-              endAdornment={
-                <InputAdornment position='end'>
-                  <img src={SearchIcon} className={classes.searchIcon} alt='Search' />
-                </InputAdornment>
-              }
-              onChange={handleChangeInput}
-              value={searchValue}
-              disabled={noInitialPositions}
-            />
-            <Grid
-              display='flex'
-              columnGap={2}
-              justifyContent='space-between'
-              className={classes.fullWidthWrapper}>
-              <TooltipHover text='Refresh'>
-                <Grid display='flex' alignItems='center'>
-                  <Button
-                    disabled={showNoConnected}
-                    onClick={showNoConnected ? () => {} : handleRefresh}
-                    className={classes.refreshIconBtn}>
-                    <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
-                  </Button>
-                </Grid>
+      {!isMd ? (
+        <Grid
+          className={classes.header}
+          container
+          direction='row'
+          justifyContent='space-between'
+          alignItems='center'>
+          <Grid className={classes.searchRoot}>
+            <Grid className={classes.titleBar}>
+              <Typography className={classes.title}>Your Positions</Typography>
+              <TooltipHover text='Total number of your positions'>
+                <Typography className={classes.positionsNumber}>{String(data.length)}</Typography>
               </TooltipHover>
-              <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
-                <span className={classes.buttonText}>+ Add Position</span>
-              </Button>
+            </Grid>
+
+            <Grid className={classes.searchWrapper}>
+              <Grid className={classes.filtersContainer}>
+                <FilterSearch
+                  loading={loading}
+                  bp='md'
+                  networkType={currentNetwork}
+                  filtersAmount={2}
+                  selectedFilters={selectedFilters}
+                  setSelectedFilters={setSelectedFilters}
+                />
+              </Grid>
+
+              <Grid
+                display='flex'
+                columnGap={2}
+                justifyContent='space-between'
+                className={classes.fullWidthWrapper}>
+                <TooltipHover text='Refresh'>
+                  <Grid display='flex' alignItems='center'>
+                    <Button
+                      disabled={showNoConnected}
+                      onClick={showNoConnected ? () => {} : handleRefresh}
+                      className={classes.refreshIconBtn}>
+                      <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                    </Button>
+                  </Grid>
+                </TooltipHover>
+                <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
+                  <span className={classes.buttonText}>+ Add Position</span>
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      <Grid container direction='column' className={classes.list} justifyContent='flex-start'>
-        {data.length > 0 && !loading ? (
-          paginator(page).data.map((element, index) => (
-            <Grid
-              onClick={() => {
-                navigate(`/position/${element.id}`)
-              }}
-              key={element.id}
-              className={classes.itemLink}>
-              <PositionItem key={index} {...element} />
+      ) : (
+        <Grid
+          className={classes.header}
+          container
+          direction='row'
+          justifyContent='space-between'
+          alignItems='center'>
+          <Grid className={classes.searchRoot}>
+            <Grid className={classes.titleBar}>
+              <Typography className={classes.title}>Your Positions</Typography>
+              <TooltipHover text='Total number of your positions'>
+                <Typography className={classes.positionsNumber}>{String(data.length)}</Typography>
+              </TooltipHover>
             </Grid>
-          ))
-        ) : showNoConnected ? (
-          <NoConnected {...noConnectedBlockerProps} />
-        ) : loading ? (
-          <Grid container style={{ flex: 1 }}>
-            <img src={loader} className={classes.loading} alt='Loader' />
+
+            <Grid className={classes.searchWrapper}>
+              <Grid className={classes.filtersContainer}>
+                <Grid
+                  display='flex'
+                  columnGap={2}
+                  justifyContent='space-between'
+                  className={classes.fullWidthWrapper}>
+                  <TooltipHover text='Refresh'>
+                    <Grid display='flex' alignItems='center'>
+                      <Button
+                        disabled={showNoConnected}
+                        onClick={showNoConnected ? () => {} : handleRefresh}
+                        className={classes.refreshIconBtn}>
+                        <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                      </Button>
+                    </Grid>
+                  </TooltipHover>
+                  <Button
+                    className={classes.button}
+                    variant='contained'
+                    onClick={onAddPositionClick}>
+                    <span className={classes.buttonText}>+ Add Position</span>
+                  </Button>
+                </Grid>
+              </Grid>
+
+              <FilterSearch
+                bp='md'
+                loading={loading}
+                networkType={currentNetwork}
+                filtersAmount={2}
+                selectedFilters={selectedFilters}
+                setSelectedFilters={setSelectedFilters}
+              />
+            </Grid>
           </Grid>
-        ) : (
-          <EmptyPlaceholder
-            desc={
-              noInitialPositions
-                ? 'Add your first position by pressing the button and start earning!'
-                : 'Did not find any matching positions'
-            }
-            className={classes.placeholder}
-            onAction={onAddPositionClick}
-            withButton={noInitialPositions}
-          />
-        )}
+        </Grid>
+      )}
+      <Grid container direction='column' className={classes.list} justifyContent='flex-start'>
+        {renderContent()}
       </Grid>
-      {paginator(page).totalPages > 1 ? (
-        <PaginationList
-          pages={paginator(page).totalPages}
-          defaultPage={defaultPage}
-          handleChangePage={handleChangePagination}
-          variant='end'
-          page={page}
-        />
-      ) : null}
     </Grid>
   )
 }

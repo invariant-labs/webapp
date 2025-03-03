@@ -30,8 +30,19 @@ export const WrappedPositionsList: React.FC = () => {
 
   const [value, setValue] = useState<string>('')
 
-  const handleSearchValue = (value: string) => {
-    setValue(value)
+  const handleClosePosition = (index: number) => {
+    dispatch(
+      actions.closePosition({
+        positionIndex: index,
+        onSuccess: () => {
+          navigate('/portfolio')
+        }
+      })
+    )
+  }
+
+  const handleClaimFee = (index: number) => {
+    dispatch(actions.claimFee(index))
   }
 
   const setLastPage = (page: number) => {
@@ -118,6 +129,7 @@ export const WrappedPositionsList: React.FC = () => {
         fee: +printBN(position.poolData.fee.v, DECIMAL - 2),
         min,
         max,
+        position,
         valueX,
         valueY,
         address: walletAddress.toString(),
@@ -141,8 +153,6 @@ export const WrappedPositionsList: React.FC = () => {
     <PositionsList
       initialPage={lastPage}
       setLastPage={setLastPage}
-      searchValue={value}
-      searchSetValue={handleSearchValue}
       handleRefresh={handleRefresh}
       onAddPositionClick={() => {
         navigate('/newPosition')
@@ -151,6 +161,7 @@ export const WrappedPositionsList: React.FC = () => {
       loading={isLoading}
       showNoConnected={walletStatus !== Status.Initialized}
       itemsPerPage={POSITIONS_PER_PAGE}
+      currentNetwork={currentNetwork}
       noConnectedBlockerProps={{
         onConnect: () => {
           dispatch(walletActions.connect(false))
@@ -158,23 +169,9 @@ export const WrappedPositionsList: React.FC = () => {
         title: 'Start exploring liquidity pools right now!',
         descCustomText: 'Or, connect your wallet to see existing positions, and create a new one!'
       }}
-      // pageChanged={page => {
-      //   const index = positionListPageToQueryPage(page)
-
-      //   if (walletStatus === Status.Initialized && walletAddress && !loadedPages[index] && length) {
-      //     dispatch(
-      //       actions.getPositionsListPage({
-      //         index,
-      //         refresh: false
-      //       })
-      //     )
-      //   }
-      // }}
+      handleClosePosition={handleClosePosition}
+      handleClaimFee={handleClaimFee}
       length={list.length}
-      // loadedPages={loadedPages}
-      // getRemainingPositions={() => {
-      //   dispatch(actions.getRemainingPositions({ setLoaded: true }))
-      // }}
       noInitialPositions={list.length === 0}
     />
   )

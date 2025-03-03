@@ -254,6 +254,16 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       typeof lowerTick !== 'undefined' &&
       typeof upperTick !== 'undefined'
     ) {
+      console.log(
+        JSON.stringify({
+          position,
+          tickLower: lowerTick,
+          tickUpper: upperTick,
+          tickCurrent: position.poolData.currentTickIndex,
+          feeGrowthGlobalX: position.poolData.feeGrowthGlobalX,
+          feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
+        })
+      )
       const [bnX, bnY] = calculateClaimAmount({
         position,
         tickLower: lowerTick,

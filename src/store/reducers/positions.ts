@@ -48,7 +48,7 @@ export interface IPositionsStore {
     lastUpdate: number
   }
   prices: {
-    data: Record<string, number>
+    data: Record<string, { price: number; buyPrice: number; sellPrice: number }>
   }
 }
 
@@ -202,7 +202,10 @@ const positionsSlice = createSlice({
       }
       return state
     },
-    setPrices(state, action: PayloadAction<Record<string, number>>) {
+    setPrices(
+      state,
+      action: PayloadAction<Record<string, { price: number; buyPrice: number; sellPrice: number }>>
+    ) {
       state.prices = {
         data: action.payload
       }

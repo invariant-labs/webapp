@@ -33,7 +33,6 @@ export interface ISinglePositionData extends PositionWithAddress {
   tokenX: SwapToken
   tokenY: SwapToken
   positionIndex: number
-  isLocked: boolean
 }
 
 export type EmptyStateClasses = Record<'emptyState' | 'emptyStateText', string>
@@ -46,7 +45,9 @@ export const Overview: React.FC<OverviewProps> = () => {
   const { classes } = useStyles()
   const dispatch = useDispatch()
 
-  const [prices, setPrices] = useState<Record<string, number>>({})
+  const [prices, setPrices] = useState<
+    Record<string, { price: number; buyPrice: number; sellPrice: number }>
+  >({})
   const [logoColors, setLogoColors] = useState<Record<string, string>>({})
   const [pendingColorLoads, setPendingColorLoads] = useState<Set<string>>(new Set())
   const { total: totalUnclaimedFee } = useSelector(unclaimedFees)
@@ -114,14 +115,29 @@ export const Overview: React.FC<OverviewProps> = () => {
       const priceResults = await Promise.all(
         tokenArray.map(async token => ({
           token,
-          price: await getTokenPrice(token)
+          priceData: await getTokenPrice(token)
         }))
       )
-
-      const newPrices = priceResults.reduce(
-        (acc, { token, price }) => ({
+      // console.log('priceResults', priceResults)
+      interface NewPrices {
+        [token: string]: {
+          price: number
+          buyPrice: number
+          sellPrice: number
+          lastBuyPrice: number
+          lastSellPrice: number
+        }
+      }
+      const newPrices: NewPrices = priceResults.reduce(
+        (acc, { token, priceData }) => ({
           ...acc,
-          [token]: price ?? 0
+          [token]: priceData ?? {
+            price: 0,
+            buyPrice: 0,
+            sellPrice: 0,
+            lastBuyPrice: 0,
+            lastSellPrice: 0
+          }
         }),
         {}
       )

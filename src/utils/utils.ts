@@ -51,7 +51,8 @@ import {
   SUI_MAIN,
   WRAPPED_SOL_ADDRESS,
   NATIVE_TICK_CROSSES_PER_IX,
-  ADDRESSES_TO_REVERT_TOKEN_PAIRS
+  ADDRESSES_TO_REVERT_TOKEN_PAIRS,
+  POSITIONS_PER_PAGE
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
@@ -1726,4 +1727,36 @@ export const getConcentrationIndex = (concentrationArray: number[], neededValue:
   }
 
   return concentrationIndex
+}
+
+export const generatePositionTableLoadingData = () => {
+  const getRandomNumber = (min: number, max: number) =>
+    Math.floor(Math.random() * (max - min + 1)) + min
+
+  return Array(POSITIONS_PER_PAGE)
+    .fill(null)
+    .map((_, index) => {
+      const currentPrice = Math.random() * 10000
+
+      return {
+        id: `loading-${index}`,
+        address: `pool-${index}`,
+        tokenXName: 'FOO',
+        tokenYName: 'BAR',
+        tokenXIcon: undefined,
+        tokenYIcon: undefined,
+        currentPrice,
+        fee: getRandomNumber(1, 10) / 10,
+        min: currentPrice * 0.8,
+        max: currentPrice * 1.2,
+        position: getRandomNumber(1000, 10000),
+        valueX: getRandomNumber(1000, 10000),
+        valueY: getRandomNumber(1000, 10000),
+        poolData: {},
+        isActive: Math.random() > 0.5,
+        tokenXLiq: getRandomNumber(100, 1000),
+        tokenYLiq: getRandomNumber(10000, 100000),
+        network: 'mainnet'
+      }
+    })
 }
