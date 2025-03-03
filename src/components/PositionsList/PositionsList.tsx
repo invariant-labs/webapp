@@ -14,11 +14,6 @@ import { FilterSearch, ISearchToken } from '@components/FilterSearch/FilterSearc
 import { NetworkType } from '@store/consts/static'
 import { theme } from '@static/theme'
 
-export enum LiquidityPools {
-  Standard = 'Standard',
-  Locked = 'Locked'
-}
-
 interface IProps {
   initialPage: number
   setLastPage: (page: number) => void

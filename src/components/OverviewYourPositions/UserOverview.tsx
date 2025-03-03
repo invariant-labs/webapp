@@ -27,11 +27,8 @@ import { VariantType } from 'notistack'
 import { network } from '@store/selectors/solanaConnection'
 import { printBN } from '@utils/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
+import { CardSwitcher } from '@store/consts/types'
 
-export enum CardSwitcher {
-  Overview = 'Overview',
-  Wallet = 'Wallet'
-}
 export const UserOverview = () => {
   const { classes } = useStyles()
   const tokensList = useSelector(swapTokens)
