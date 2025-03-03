@@ -47,60 +47,6 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
     singlePositionData(id ?? '')
   )
 
-  // const handlePopoverState = (isOpen: boolean) => {
-  //   if (isOpen) {
-  //     setAllowPropagation(false)
-  //   } else {
-  //     setTimeout(() => {
-  //       setAllowPropagation(true)
-  //     }, 500)
-  //   }
-  // }
-  // const handleInteraction = (event: React.MouseEvent) => {
-  //   event.stopPropagation()
-  //   setIsPromotedPoolPopoverOpen(!isPromotedPoolPopoverOpen)
-  //   setAllowPropagation(false)
-  // }
-  // useEffect(() => {
-  //   const PROPAGATION_ALLOW_TIME = 500
-
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     const isClickInAirdropIcon =
-  //       airdropIconRef.current &&
-  //       (airdropIconRef.current as HTMLElement).contains(event.target as Node)
-  //     const isClickInPromotedPopover = document
-  //       .querySelector('.promoted-pool-popover')
-  //       ?.contains(event.target as Node)
-  //     const isClickInInactivePopover = document
-  //       .querySelector('.promoted-pool-inactive-popover')
-  //       ?.contains(event.target as Node)
-
-  //     if (!isClickInAirdropIcon && !isClickInPromotedPopover && !isClickInInactivePopover) {
-  //       if (isPromotedPoolPopoverOpen) {
-  //         setIsPromotedPoolPopoverOpen(false)
-  //       }
-
-  //       if (isPromotedPoolInactive) {
-  //         setIsPromotedPoolInactive(false)
-  //       }
-
-  //       setTimeout(() => {
-  //         setAllowPropagation(true)
-  //       }, PROPAGATION_ALLOW_TIME)
-  //     }
-  //   }
-
-  //   if (isPromotedPoolPopoverOpen || isPromotedPoolInactive || isLockPositionModalOpen) {
-  //     document.addEventListener('click', handleClickOutside)
-  //   } else {
-  //     document.removeEventListener('click', handleClickOutside)
-  //   }
-
-  //   return () => {
-  //     document.removeEventListener('click', handleClickOutside)
-  //   }
-  // }, [isPromotedPoolPopoverOpen, isPromotedPoolInactive, isLockPositionModalOpen])
-
   const [xToY, setXToY] = useState<boolean>(
     initialXtoY(tickerToAddress(network, tokenXName), tickerToAddress(network, tokenYName))
   )
@@ -189,7 +135,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
               <Box className={sharedClasses.unclaimedFeeContainer}>
                 <Typography className={sharedClasses.infoText}>Unclaimed Fee</Typography>
                 <Typography className={sharedClasses.greenText}>
-                  ${formatNumberWithSuffix(unclaimedFeesInUSD.value.toFixed(2))}
+                  ${formatNumberWithSuffix(unclaimedFeesInUSD.value)}
                 </Typography>
               </Box>
             </Grid>

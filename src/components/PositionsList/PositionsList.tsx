@@ -13,8 +13,6 @@ import PositionCardsSkeletonMobile from './PositionItem/variants/PositionTables/
 import { FilterSearch, ISearchToken } from '@components/FilterSearch/FilterSearch'
 import { NetworkType } from '@store/consts/static'
 import { theme } from '@static/theme'
-import { network } from '@store/selectors/solanaConnection'
-import { useSelector } from 'react-redux'
 
 export enum LiquidityPools {
   Standard = 'Standard',
@@ -60,7 +58,6 @@ export const PositionsList: React.FC<IProps> = ({
   const [selectedFilters, setSelectedFilters] = useState<ISearchToken[]>([])
   const isLg = useMediaQuery('@media (max-width: 1360px)')
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
-  console.log('PositionList', data)
   const filteredData = useMemo(() => {
     if (selectedFilters.length === 0) return data
 

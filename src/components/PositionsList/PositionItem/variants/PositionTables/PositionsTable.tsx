@@ -38,12 +38,6 @@ export const PositionsTable: React.FC<IPositionsTableProps> = ({
 
   const displayData = isLoading ? generatePositionTableLoadingData() : positions
 
-  // if (!displayData) {
-  //   return null
-  // }
-
-  console.log('displayData', displayData)
-
   return (
     <TableContainer className={classes.tableContainer}>
       <Table className={classes.table}>

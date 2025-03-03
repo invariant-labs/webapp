@@ -8,15 +8,15 @@ import {
   positionsWithPoolsData
 } from '@store/selectors/positions'
 import { address, status } from '@store/selectors/solanaWallet'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { calcYPerXPriceBySqrtPrice, printBN } from '@utils/utils'
-import { IPositionItem } from '@components/PositionsList/PositionItem/PositionItem'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { DECIMAL, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { network } from '@store/selectors/solanaConnection'
+import { IPositionItem } from '@components/PositionsList/types'
 
 export const WrappedPositionsList: React.FC = () => {
   const walletAddress = useSelector(address)
@@ -27,8 +27,6 @@ export const WrappedPositionsList: React.FC = () => {
   const currentNetwork = useSelector(network)
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
-  const [value, setValue] = useState<string>('')
 
   const handleClosePosition = (index: number) => {
     dispatch(
@@ -63,91 +61,84 @@ export const WrappedPositionsList: React.FC = () => {
     dispatch(actions.getPositionsList())
   }
 
-  const data: IPositionItem[] = list
-    .map(position => {
-      const lowerPrice = calcYPerXPriceBySqrtPrice(
-        calculatePriceSqrt(position.lowerTickIndex).v,
-        position.tokenX.decimals,
+  const data: IPositionItem[] = list.map(position => {
+    const lowerPrice = calcYPerXPriceBySqrtPrice(
+      calculatePriceSqrt(position.lowerTickIndex).v,
+      position.tokenX.decimals,
+      position.tokenY.decimals
+    )
+    const upperPrice = calcYPerXPriceBySqrtPrice(
+      calculatePriceSqrt(position.upperTickIndex).v,
+      position.tokenX.decimals,
+      position.tokenY.decimals
+    )
+
+    const minTick = getMinTick(position.poolData.tickSpacing)
+    const maxTick = getMaxTick(position.poolData.tickSpacing)
+
+    const min = Math.min(lowerPrice, upperPrice)
+    const max = Math.max(lowerPrice, upperPrice)
+
+    let tokenXLiq, tokenYLiq
+
+    try {
+      tokenXLiq = +printBN(
+        getX(
+          position.liquidity.v,
+          calculatePriceSqrt(position.upperTickIndex).v,
+          position.poolData.sqrtPrice.v,
+          calculatePriceSqrt(position.lowerTickIndex).v
+        ),
+        position.tokenX.decimals
+      )
+    } catch (error) {
+      tokenXLiq = 0
+    }
+
+    try {
+      tokenYLiq = +printBN(
+        getY(
+          position.liquidity.v,
+          calculatePriceSqrt(position.upperTickIndex).v,
+          position.poolData.sqrtPrice.v,
+          calculatePriceSqrt(position.lowerTickIndex).v
+        ),
         position.tokenY.decimals
       )
-      const upperPrice = calcYPerXPriceBySqrtPrice(
-        calculatePriceSqrt(position.upperTickIndex).v,
-        position.tokenX.decimals,
-        position.tokenY.decimals
-      )
+    } catch (error) {
+      tokenYLiq = 0
+    }
 
-      const minTick = getMinTick(position.poolData.tickSpacing)
-      const maxTick = getMaxTick(position.poolData.tickSpacing)
+    const currentPrice = calcYPerXPriceBySqrtPrice(
+      position.poolData.sqrtPrice.v,
+      position.tokenX.decimals,
+      position.tokenY.decimals
+    )
 
-      const min = Math.min(lowerPrice, upperPrice)
-      const max = Math.max(lowerPrice, upperPrice)
+    const valueX = tokenXLiq + tokenYLiq / currentPrice
+    const valueY = tokenYLiq + tokenXLiq * currentPrice
 
-      let tokenXLiq, tokenYLiq
-
-      try {
-        tokenXLiq = +printBN(
-          getX(
-            position.liquidity.v,
-            calculatePriceSqrt(position.upperTickIndex).v,
-            position.poolData.sqrtPrice.v,
-            calculatePriceSqrt(position.lowerTickIndex).v
-          ),
-          position.tokenX.decimals
-        )
-      } catch (error) {
-        tokenXLiq = 0
-      }
-
-      try {
-        tokenYLiq = +printBN(
-          getY(
-            position.liquidity.v,
-            calculatePriceSqrt(position.upperTickIndex).v,
-            position.poolData.sqrtPrice.v,
-            calculatePriceSqrt(position.lowerTickIndex).v
-          ),
-          position.tokenY.decimals
-        )
-      } catch (error) {
-        tokenYLiq = 0
-      }
-
-      const currentPrice = calcYPerXPriceBySqrtPrice(
-        position.poolData.sqrtPrice.v,
-        position.tokenX.decimals,
-        position.tokenY.decimals
-      )
-
-      const valueX = tokenXLiq + tokenYLiq / currentPrice
-      const valueY = tokenYLiq + tokenXLiq * currentPrice
-
-      return {
-        tokenXName: position.tokenX.symbol,
-        tokenYName: position.tokenY.symbol,
-        tokenXIcon: position.tokenX.logoURI,
-        tokenYIcon: position.tokenY.logoURI,
-        fee: +printBN(position.poolData.fee.v, DECIMAL - 2),
-        min,
-        max,
-        position,
-        valueX,
-        valueY,
-        address: walletAddress.toString(),
-        id: position.id.toString() + '_' + position.pool.toString(),
-        isActive: currentPrice >= min && currentPrice <= max,
-        currentPrice,
-        tokenXLiq,
-        tokenYLiq,
-        network: currentNetwork,
-        isFullRange: position.lowerTickIndex === minTick && position.upperTickIndex === maxTick
-      }
-    })
-    .filter(item => {
-      return (
-        item.tokenXName.toLowerCase().includes(value.toLowerCase()) ||
-        item.tokenYName.toLowerCase().includes(value.toLowerCase())
-      )
-    })
+    return {
+      tokenXName: position.tokenX.symbol,
+      tokenYName: position.tokenY.symbol,
+      tokenXIcon: position.tokenX.logoURI,
+      tokenYIcon: position.tokenY.logoURI,
+      fee: +printBN(position.poolData.fee.v, DECIMAL - 2),
+      min,
+      max,
+      position,
+      valueX,
+      valueY,
+      address: walletAddress.toString(),
+      id: position.id.toString() + '_' + position.pool.toString(),
+      isActive: currentPrice >= min && currentPrice <= max,
+      currentPrice,
+      tokenXLiq,
+      tokenYLiq,
+      network: currentNetwork,
+      isFullRange: position.lowerTickIndex === minTick && position.upperTickIndex === maxTick
+    }
+  })
 
   return (
     <PositionsList

@@ -149,12 +149,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   const feeFragment = useMemo(() => {
     if (isItemLoading('feeTier')) {
       return (
-        <Skeleton
-          variant='rectangular'
-          width='60px'
-          height={36}
-          sx={{ borderRadius: '10px', margin: '0 auto', marginRight: '8px' }}
-        />
+        <Skeleton variant='rectangular' width='60px' height={36} sx={{ borderRadius: '10px' }} />
       )
     }
     return (

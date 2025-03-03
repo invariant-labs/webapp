@@ -59,8 +59,6 @@ export const usePositionTicks = ({
         marketProgram.getTick(pair, upperTickIndex)
       ])
 
-      // console.log({ lowerTick, upperTick })
-
       setPositionTicks({
         lowerTick,
         upperTick,

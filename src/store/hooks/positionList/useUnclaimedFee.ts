@@ -12,7 +12,6 @@ import { ISinglePositionData } from '@components/OverviewYourPositions/component
 import { IWallet } from '@invariant-labs/sdk'
 import { Tick } from '@invariant-labs/sdk/lib/market'
 import { calculateClaimAmount } from '@invariant-labs/sdk/lib/utils'
-import { BN } from '@project-serum/anchor'
 
 const UPDATE_INTERVAL = 60000
 
@@ -175,10 +174,6 @@ export const useUnclaimedFee = ({
 
     const totalValueInUSD =
       fees.xAmount * tokenXPriceData.price + fees.yAmount * tokenYPriceData.price
-    console.log(fees)
-
-    console.log(tokenXPriceData, tokenYPriceData)
-    console.log('TOTAL:', totalValueInUSD)
 
     if (Math.abs(totalValueInUSD - previousUnclaimedFees) > 0.000001) {
       setPreviousUnclaimedFees(totalValueInUSD)
