@@ -28,9 +28,9 @@ import { swapTokens } from '@store/selectors/solanaWallet'
 import icons from '@static/icons'
 import { tokensStatsWithTokensDetails } from '@store/selectors/stats'
 import ListboxComponent from './Helpers/ListBoxComponent'
-import { BN } from '@coral-xyz/anchor'
 import { getTokenPrice, printBN } from '@utils/utils'
 import { PublicKey } from '@solana/web3.js'
+import { BN } from '@project-serum/anchor'
 
 type Breakpoint = 'md' | 'sm'
 
@@ -108,7 +108,7 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
         })
         const results = await Promise.all(pricePromises)
         const newPrices: Record<string, number> = {}
-        results.forEach(({ tokenAddress, price }) => {
+        results.forEach(({ tokenAddress, price: { price } }) => {
           if (price !== undefined) {
             newPrices[tokenAddress] = price
           }

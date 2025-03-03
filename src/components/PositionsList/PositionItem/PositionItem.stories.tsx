@@ -2,9 +2,9 @@ import { NetworkType } from '@store/consts/static'
 
 import type { Meta, StoryObj } from '@storybook/react'
 import { Keypair } from '@solana/web3.js'
-import { BN } from '@coral-xyz/anchor'
 import { PositionItemMobile } from './variants/PositionMobileCard/PositionItemMobile'
 import { fn } from '@storybook/test'
+import { BN } from '@project-serum/anchor'
 
 const meta = {
   title: 'Components/PositionItem',
@@ -44,36 +44,6 @@ export const Primary: Story = {
       liquidity: new BN(0)
     },
     valueY: 2137.4,
-    liquidity: new BN(0),
-    poolAddress: Keypair.generate().publicKey,
-
-    poolData: {
-      address: Keypair.generate().publicKey,
-      bump: 0,
-      currentTickIndex: 0,
-      fee: new BN(0),
-      feeGrowthGlobalX: new BN(0),
-      feeProtocolTokenX: new BN(0),
-      feeProtocolTokenY: new BN(0),
-      feeReceiver: Keypair.generate().publicKey,
-      lastTimestamp: new BN(0),
-      oracleAddress: Keypair.generate().publicKey,
-      oracleInitialized: true,
-      liquidity: new BN(0),
-      poolIndex: 0,
-      positionIterator: new BN(0),
-      protocolFee: new BN(0),
-      secondsPerLiquidityGlobal: new BN(0),
-      sqrtPrice: new BN(0),
-      startTimestamp: new BN(0),
-      tickmap: Keypair.generate().publicKey,
-      tickSpacing: 0,
-      tokenX: Keypair.generate().publicKey,
-      tokenY: Keypair.generate().publicKey,
-      tokenXReserve: Keypair.generate().publicKey,
-      tokenYReserve: Keypair.generate().publicKey,
-      feeGrowthGlobalY: new BN(0)
-    },
 
     id: '0',
     address: '',
@@ -82,9 +52,7 @@ export const Primary: Story = {
     currentPrice: 10000,
     network: NetworkType.Testnet,
     isFullRange: false,
-    isLocked: false,
     handleClaimFee: fn(),
-    handleClosePosition: fn(),
-    handleLockPosition: fn()
+    handleClosePosition: fn()
   }
 }
