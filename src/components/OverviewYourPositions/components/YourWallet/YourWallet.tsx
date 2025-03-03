@@ -14,7 +14,11 @@ import { StrategyConfig, TokenPool } from '@store/types/userOverview'
 import { useNavigate } from 'react-router-dom'
 import { DEFAULT_FEE_TIER, STRATEGIES } from '@store/consts/userStrategies'
 import icons from '@static/icons'
-import { NetworkType /*USDC_MAIN, USDC_TEST, WETH_MAIN, WETH_TEST*/ } from '@store/consts/static'
+import {
+  NetworkType /*USDC_MAIN, USDC_TEST, WETH_MAIN, WETH_TEST*/,
+  SOL_DEV,
+  USDC_DEV
+} from '@store/consts/static'
 import { addressToTicker, formatNumberWithoutSuffix } from '@utils/utils'
 import { useStyles } from './styles'
 import { network } from '@store/selectors/solanaConnection'
@@ -146,7 +150,6 @@ export const YourWallet: React.FC<YourWalletProps> = ({
     isLoading,
     isScrollHide: sortedPools.length < 5
   })
-  console.log(pools)
 
   const totalValue = useMemo(
     () => sortedPools.reduce((sum, pool) => sum + pool.value, 0),
@@ -211,15 +214,7 @@ export const YourWallet: React.FC<YourWalletProps> = ({
           className={classes.actionIcon}
           onClick={() => {
             const sourceToken = addressToTicker(currentNetwork, strategy.tokenAddressA)
-            const targetToken = '-'
-            // const targetToken =
-            //   sourceToken === 'ETH'
-            //     ? currentNetwork === NetworkType.Mainnet
-            //       ? USDC_MAIN.address
-            //       : USDC_TEST.address
-            //     : currentNetwork === NetworkType.Mainnet
-            //       ? WETH_MAIN.address
-            //       : WETH_TEST.address
+            const targetToken = sourceToken === 'SOL' ? SOL_DEV.address : USDC_DEV.address
 
             navigate(
               `/newPosition/${sourceToken}/${addressToTicker(currentNetwork, targetToken.toString())}/${strategy.feeTier}`,
@@ -236,16 +231,8 @@ export const YourWallet: React.FC<YourWalletProps> = ({
           className={classes.actionIcon}
           onClick={() => {
             const sourceToken = addressToTicker(currentNetwork, pool.id.toString())
-            const targetToken = '-'
+            const targetToken = sourceToken === 'SOL' ? SOL_DEV.address : USDC_DEV.address
 
-            // const targetToken =
-            //   sourceToken === 'ETH'
-            //     ? currentNetwork === NetworkType.Mainnet
-            //       ? USDC_MAIN.address
-            //       : USDC_TEST.address
-            //     : currentNetwork === NetworkType.Mainnet
-            //       ? WETH_MAIN.address
-            //       : WETH_TEST.address
             navigate(
               `/exchange/${sourceToken}/${addressToTicker(currentNetwork, targetToken.toString())}`,
               {

@@ -142,8 +142,6 @@ export const useUnclaimedFee = ({
       feeGrowthGlobalY: positionSingleData.poolData.feeGrowthGlobalY
     })
 
-    // console.log('uncilaimed: ', bnX, bnY)
-
     return {
       xAmount: +printBN(bnX, positionSingleData.tokenX.decimals),
       yAmount: +printBN(bnY, positionSingleData.tokenY.decimals)
