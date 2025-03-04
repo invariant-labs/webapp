@@ -1809,7 +1809,7 @@ export function* handleClaimAllFees() {
 
     const formattedPositions = allPositionsData.map(position => ({
       pair: new Pair(position.poolData.tokenX, position.poolData.tokenY, {
-        fee: position.poolData.fee,
+        fee: position.poolData.fee.v,
         tickSpacing: position.poolData.tickSpacing
       }),
       index: position.positionIndex,

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Box, Typography, useMediaQuery } from '@mui/material'
 import { HeaderSection } from '../HeaderSection/HeaderSection'
 import { UnclaimedSection } from '../UnclaimedSection/UnclaimedSection'
@@ -48,6 +48,8 @@ export const Overview: React.FC<OverviewProps> = () => {
   const [prices, setPrices] = useState<
     Record<string, { price: number; buyPrice: number; sellPrice: number }>
   >({})
+  const prevPricesRef = useRef(prices)
+
   const [logoColors, setLogoColors] = useState<Record<string, string>>({})
   const [pendingColorLoads, setPendingColorLoads] = useState<Set<string>>(new Set())
   const { total: totalUnclaimedFee } = useSelector(unclaimedFees)
@@ -72,7 +74,6 @@ export const Overview: React.FC<OverviewProps> = () => {
     () => positions.reduce((acc, position) => acc + position.value, 0),
     [positions]
   )
-
   const handleClaimAll = () => {
     dispatch(actions.claimAllFee())
   }
@@ -118,7 +119,6 @@ export const Overview: React.FC<OverviewProps> = () => {
           priceData: await getTokenPrice(token)
         }))
       )
-      // console.log('priceResults', priceResults)
       interface NewPrices {
         [token: string]: {
           price: number
@@ -141,7 +141,6 @@ export const Overview: React.FC<OverviewProps> = () => {
         }),
         {}
       )
-
       setPrices(newPrices)
     }
 
@@ -178,16 +177,21 @@ export const Overview: React.FC<OverviewProps> = () => {
   }, [sortedPositions, getAverageColor, logoColors, pendingColorLoads])
 
   useEffect(() => {
-    if (Object.keys(prices).length > 0) {
+    if (
+      Object.keys(prices).length > 0 &&
+      JSON.stringify(prevPricesRef.current) !== JSON.stringify(prices)
+    ) {
       dispatch(actions.calculateTotalUnclaimedFees())
 
       const interval = setInterval(() => {
         dispatch(actions.calculateTotalUnclaimedFees())
       }, 60000)
 
+      prevPricesRef.current = prices
+
       return () => clearInterval(interval)
     }
-  }, [dispatch, prices])
+  }, [prices, dispatch])
 
   const EmptyState = ({ classes }: { classes: EmptyStateClasses }) => (
     <Box className={classes.emptyState}>
