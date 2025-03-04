@@ -130,6 +130,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   itemLink: {
     textDecoration: 'none',
     cursor: 'pointer',
+    width: '100%',
 
     '&:not(:last-child)': {
       display: 'block',

@@ -45,10 +45,15 @@ const useStyles = makeStyles()(() => {
     activeBox: {
       position: 'absolute',
       width: '100%',
+      padding: '0 1px 0 1px',
       height: 2,
-      top: 0,
-      left: 0,
-      background: colors.invariant.pinkGreenLinearGradient
+      top: -2,
+      left: -1,
+      background: colors.invariant.pinkGreenLinearGradient,
+
+      '&:last-of-type': {
+        padding: '0 0 0 1px'
+      }
     }
   }
 })
