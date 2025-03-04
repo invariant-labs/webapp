@@ -17,6 +17,7 @@ import { DECIMAL, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { network } from '@store/selectors/solanaConnection'
 import { IPositionItem } from '@components/PositionsList/types'
+import { actions as actionsStats } from '@store/reducers/stats'
 
 export const WrappedPositionsList: React.FC = () => {
   const walletAddress = useSelector(address)
@@ -60,6 +61,10 @@ export const WrappedPositionsList: React.FC = () => {
   const handleRefresh = () => {
     dispatch(actions.getPositionsList())
   }
+
+  useEffect(() => {
+    dispatch(actionsStats.getCurrentStats())
+  }, [])
 
   const data: IPositionItem[] = list.map(position => {
     const lowerPrice = calcYPerXPriceBySqrtPrice(
