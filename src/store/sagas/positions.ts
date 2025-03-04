@@ -1746,7 +1746,6 @@ export function* handleCalculateTotalUnclaimedFees() {
         feeGrowthGlobalX: position.poolData.feeGrowthGlobalX,
         feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
       })
-      console.log(position.tokenX)
       const xValue =
         +printBN(bnX, position.tokenX.decimals) *
         (pricesData.data[position.tokenX.assetAddress.toString()].price ?? 0)
@@ -1843,7 +1842,6 @@ export function* handleClaimAllFees() {
       })
 
       if (!txid.length) {
-        console.log('to sie wykonuje')
         yield put(
           snackbarsActions.add({
             message: 'Failed to claim some fees. Please try again.',
