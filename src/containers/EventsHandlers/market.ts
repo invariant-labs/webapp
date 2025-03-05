@@ -127,35 +127,8 @@ const MarketEvents = () => {
         })
 
         marketProgram.onPoolChange(pool.tokenX, pool.tokenY, { fee: pool.fee.v }, poolStructure => {
-          // update position list
           if (pool.currentTickIndex !== poolStructure.currentTickIndex) {
             positionsInPool.map(position => {
-              if (
-                (pool.currentTickIndex >= position?.lowerTickIndex &&
-                  poolStructure.currentTickIndex < position?.lowerTickIndex) ||
-                (pool.currentTickIndex < position?.lowerTickIndex &&
-                  poolStructure.currentTickIndex >= position?.lowerTickIndex)
-              ) {
-                dispatch(
-                  positionsActions.updatePositionTicksRange({
-                    positionId: position.id.toString() + '_' + position.pool.toString(),
-                    fetchTick: 'lower'
-                  })
-                )
-              } else if (
-                (pool.currentTickIndex < position?.upperTickIndex &&
-                  poolStructure.currentTickIndex >= position?.upperTickIndex) ||
-                (pool.currentTickIndex >= position?.upperTickIndex &&
-                  poolStructure.currentTickIndex < position?.upperTickIndex)
-              ) {
-                dispatch(
-                  positionsActions.updatePositionTicksRange({
-                    positionId: position.id.toString() + '_' + position.pool.toString(),
-                    fetchTick: 'upper'
-                  })
-                )
-              }
-
               //update current position details
               if (
                 currentPositionIndex === position.id.toString() + '_' + position.pool.toString() &&
@@ -167,34 +140,24 @@ const MarketEvents = () => {
                   (pool.currentTickIndex < currentPosition?.lowerTickIndex &&
                     poolStructure.currentTickIndex >= currentPosition?.lowerTickIndex)
                 ) {
-                  if (pool.address.toString() === '2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC') {
-                    console.log('update lower')
-                  }
-
-                  // dispatch(
-                  //   positionsActions.getCurrentPositionRangeTicks({
-                  //     id: currentPositionIndex,
-                  //     fetchTick: 'lower'
-                  //   })
-                  // )
-
-                  dispatch(positionsActions.getSinglePosition(position.positionIndex))
+                  dispatch(
+                    positionsActions.getCurrentPositionRangeTicks({
+                      id: currentPositionIndex,
+                      fetchTick: 'lower'
+                    })
+                  )
                 } else if (
                   (pool.currentTickIndex < currentPosition?.upperTickIndex &&
                     poolStructure.currentTickIndex >= currentPosition?.upperTickIndex) ||
                   (pool.currentTickIndex >= currentPosition?.upperTickIndex &&
                     poolStructure.currentTickIndex < currentPosition?.upperTickIndex)
                 ) {
-                  if (pool.address.toString() === '2SgUGxYDczrB6wUzXHPJH65pNhWkEzNMEx3km4xTYUTC') {
-                    console.log('update upper')
-                  }
-                  dispatch(positionsActions.getSinglePosition(position.positionIndex))
-                  // dispatch(
-                  //   positionsActions.getCurrentPositionRangeTicks({
-                  //     id: currentPositionIndex,
-                  //     fetchTick: 'upper'
-                  //   })
-                  // )
+                  dispatch(
+                    positionsActions.getCurrentPositionRangeTicks({
+                      id: currentPositionIndex,
+                      fetchTick: 'upper'
+                    })
+                  )
                 }
               }
             })
