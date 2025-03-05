@@ -415,8 +415,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (position) {
       dispatch(walletActions.getBalance())
 
-      // setShowFeesLoader(true)
-      // setWaitingForTicksData(true)
+      setShowFeesLoader(true)
+      setWaitingForTicksData(true)
       dispatch(actions.getSinglePosition(position.positionIndex))
 
       dispatch(
