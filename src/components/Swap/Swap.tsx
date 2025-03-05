@@ -908,7 +908,11 @@ export const Swap: React.FC<ISwap> = ({
           ) : null}
         </Box>
         <TransactionDetailsBox
-          open={getStateMessage() !== 'Loading' ? detailsOpen && canShowDetails : prevOpenState}
+          open={
+            getStateMessage() !== 'Loading'
+              ? detailsOpen && canShowDetails
+              : detailsOpen && prevOpenState
+          }
           fee={{
             v: canShowDetails ? pools[simulateResult.poolIndex].fee.v : new BN(0)
           }}
