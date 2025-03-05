@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Box, Typography, useMediaQuery } from '@mui/material'
 import { HeaderSection } from '../HeaderSection/HeaderSection'
 import { UnclaimedSection } from '../UnclaimedSection/UnclaimedSection'
@@ -23,6 +23,7 @@ import icons from '@static/icons'
 import { actions, PositionWithAddress } from '@store/reducers/positions'
 import { LegendOverview } from '../LegendOverview/LegendOverview'
 import { SwapToken } from '@store/selectors/solanaWallet'
+import useCalculateTotalUnclaimedFee from '@store/hooks/userOverview/useCalculateTotalUnclaimedFee'
 
 interface OverviewProps {
   poolAssets: ProcessedPool[]
@@ -48,7 +49,6 @@ export const Overview: React.FC<OverviewProps> = () => {
   const [prices, setPrices] = useState<
     Record<string, { price: number; buyPrice: number; sellPrice: number }>
   >({})
-  const prevPricesRef = useRef(prices)
 
   const [logoColors, setLogoColors] = useState<Record<string, string>>({})
   const [pendingColorLoads, setPendingColorLoads] = useState<Set<string>>(new Set())
@@ -176,22 +176,7 @@ export const Overview: React.FC<OverviewProps> = () => {
     })
   }, [sortedPositions, getAverageColor, logoColors, pendingColorLoads])
 
-  useEffect(() => {
-    if (
-      Object.keys(prices).length > 0 &&
-      JSON.stringify(prevPricesRef.current) !== JSON.stringify(prices)
-    ) {
-      dispatch(actions.calculateTotalUnclaimedFees())
-
-      const interval = setInterval(() => {
-        dispatch(actions.calculateTotalUnclaimedFees())
-      }, 60000)
-
-      prevPricesRef.current = prices
-
-      return () => clearInterval(interval)
-    }
-  }, [prices, dispatch])
+  useCalculateTotalUnclaimedFee(prices, dispatch)
 
   const EmptyState = ({ classes }: { classes: EmptyStateClasses }) => (
     <Box className={classes.emptyState}>
