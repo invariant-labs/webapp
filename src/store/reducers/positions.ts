@@ -37,6 +37,7 @@ export interface CurrentPositionTicksStore {
 }
 export interface IPositionsStore {
   lastPage: number
+  currentPoolIndex: number | null
   plotTicks: PlotTicks
   positionsList: PositionsListStore
   currentPositionId: string
@@ -77,6 +78,7 @@ export interface SetPositionData {
 
 export const defaultState: IPositionsStore = {
   lastPage: 1,
+  currentPoolIndex: null,
   plotTicks: {
     data: [],
     loading: false
@@ -129,6 +131,7 @@ const positionsSlice = createSlice({
       return state
     },
     getCurrentPlotTicks(state, action: PayloadAction<GetCurrentTicksData>) {
+      state.currentPoolIndex = action.payload.poolIndex
       state.plotTicks.loading = !action.payload.disableLoading
       return state
     },
