@@ -47,7 +47,6 @@ interface IProps {
     min: number
     max: number
   }
-  userHasStakes?: boolean
   globalPrice?: number
   setXToY: (val: boolean) => void
   onRefresh: () => void
@@ -81,7 +80,6 @@ const PositionDetails: React.FC<IProps> = ({
   hasTicksError,
   reloadHandler,
   plotVolumeRange,
-  userHasStakes = false,
   onRefresh,
   isBalanceLoading,
   globalPrice,
@@ -192,7 +190,6 @@ const PositionDetails: React.FC<IProps> = ({
           xToY={xToY}
           swapHandler={() => setXToY(!xToY)}
           showFeesLoader={showFeesLoader}
-          userHasStakes={userHasStakes}
           isBalanceLoading={isBalanceLoading}
           isActive={isActive}
           network={network}

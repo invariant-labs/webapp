@@ -18,7 +18,6 @@ import { actions } from '@store/reducers/positions'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { Status, actions as walletActions } from '@store/reducers/solanaWallet'
 import { network, timeoutError } from '@store/selectors/solanaConnection'
-import { actions as farmsActions } from '@store/reducers/farms'
 import {
   currentPositionTicks,
   isLoadingPositionsList,
@@ -34,7 +33,6 @@ import useStyles from './style'
 import { TokenPriceData } from '@store/consts/types'
 import { NoConnected } from '@components/NoConnected/NoConnected'
 import { hasTokens, volumeRanges } from '@store/selectors/pools'
-import { hasFarms, hasUserStakes, stakesForPosition } from '@store/selectors/farms'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/lib/utils'
@@ -61,12 +59,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   } = useSelector(currentPositionTicks)
   const poolsVolumeRanges = useSelector(volumeRanges)
   const hasAnyTokens = useSelector(hasTokens)
-  const hasAnyFarms = useSelector(hasFarms)
-  const hasAnyStakes = useSelector(hasUserStakes)
   const walletStatus = useSelector(status)
   const isBalanceLoading = useSelector(balanceLoading)
-
-  const positionStakes = useSelector(stakesForPosition(position?.address))
 
   const isTimeoutError = useSelector(timeoutError)
 
@@ -96,18 +90,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       )
     }
   }, [position?.id])
-
-  useEffect(() => {
-    if (hasAnyTokens && !hasAnyFarms) {
-      dispatch(farmsActions.getFarms())
-    }
-  }, [hasAnyTokens])
-
-  useEffect(() => {
-    if (walletStatus === Status.Initialized && hasAnyFarms && !hasAnyStakes && position?.id) {
-      dispatch(farmsActions.getUserStakes())
-    }
-  }, [walletStatus, hasAnyFarms, position?.id])
 
   useEffect(() => {
     if (waitingForTicksData === true && !currentPositionTicksLoading) {
@@ -525,7 +507,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         onRefresh={onRefresh}
         network={currentNetwork}
         plotVolumeRange={currentVolumeRange}
-        userHasStakes={!!positionStakes.length}
         globalPrice={globalPrice}
         xToY={xToY}
         setXToY={setXToY}

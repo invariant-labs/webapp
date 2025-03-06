@@ -19,9 +19,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@invariant-labs/bonds-sdk": "0.1.0",
     "@invariant-labs/sdk": "^0.9.70",
-    "@invariant-labs/staker-sdk": "0.2.11",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@nightlylabs/wallet-selector-solana": "^0.3.14",
