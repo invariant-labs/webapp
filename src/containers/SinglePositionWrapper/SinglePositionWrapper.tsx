@@ -84,18 +84,22 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const [isClosingPosition, setIsClosingPosition] = useState(false)
 
   useEffect(() => {
-    if (position?.id && !waitingForTicksData) {
+    if (position?.id) {
+      dispatch(actions.setCurrentPositionId(id))
+
       setWaitingForTicksData(true)
-      setShowFeesLoader(true)
-      dispatch(actions.getCurrentPositionRangeTicks(id))
-      dispatch(
-        actions.getCurrentPlotTicks({
-          poolIndex: position.poolData.poolIndex,
-          isXtoY: true
-        })
-      )
+      dispatch(actions.getCurrentPositionRangeTicks({ id }))
+
+      if (waitingForTicksData === null) {
+        dispatch(
+          actions.getCurrentPlotTicks({
+            poolIndex: position.poolData.poolIndex,
+            isXtoY: true
+          })
+        )
+      }
     }
-  }, [position?.id])
+  }, [position?.id.toString()])
 
   useEffect(() => {
     if (hasAnyTokens && !hasAnyFarms) {
@@ -107,7 +111,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (walletStatus === Status.Initialized && hasAnyFarms && !hasAnyStakes && position?.id) {
       dispatch(farmsActions.getUserStakes())
     }
-  }, [walletStatus, hasAnyFarms, position?.id])
+  }, [walletStatus, hasAnyFarms, position?.id.toString()])
 
   useEffect(() => {
     if (waitingForTicksData === true && !currentPositionTicksLoading) {
@@ -132,7 +136,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       index: 0,
       x: 0
     }
-  }, [position?.id])
+  }, [position?.id, position?.poolData?.sqrtPrice])
 
   const leftRange = useMemo(() => {
     if (position) {
@@ -269,7 +273,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
 
     return [0, 0]
-  }, [position, lowerTick, upperTick, waitingForTicksData])
+  }, [position?.poolData, lowerTick, upperTick, waitingForTicksData])
 
   const data = useMemo(() => {
     if (ticksLoading && position) {
@@ -283,7 +287,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
 
     return ticksData
-  }, [ticksData, ticksLoading, position?.id])
+  }, [ticksData, ticksLoading, position?.id.toString()])
 
   const [tokenXPriceData, setTokenXPriceData] = useState<TokenPriceData | undefined>(undefined)
   const [tokenYPriceData, setTokenYPriceData] = useState<TokenPriceData | undefined>(undefined)
@@ -352,7 +356,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     } else {
       setTokenYPriceData(undefined)
     }
-  }, [position?.id])
+  }, [position?.id.toString(), current])
 
   const getGlobalPrice = () => {
     if (!position) {
@@ -379,7 +383,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   useEffect(() => {
     getGlobalPrice()
-  }, [xToY, position?.tokenX, position?.tokenY])
+  }, [xToY, position?.tokenX, position?.tokenY, current])
 
   const copyPoolAddressHandler = (message: string, variant: VariantType) => {
     dispatch(
@@ -413,7 +417,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
       setShowFeesLoader(true)
       setWaitingForTicksData(true)
-      dispatch(actions.getCurrentPositionRangeTicks(id))
+      dispatch(actions.getSinglePosition(position.positionIndex))
+
       dispatch(
         actions.getCurrentPlotTicks({
           poolIndex: position.poolData.poolIndex,
@@ -428,7 +433,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           })
         )
       )
-
       getGlobalPrice()
     }
   }
