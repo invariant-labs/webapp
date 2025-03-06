@@ -58,7 +58,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     loading: currentPositionTicksLoading
   } = useSelector(currentPositionTicks)
   const poolsVolumeRanges = useSelector(volumeRanges)
-  const hasAnyTokens = useSelector(hasTokens)
   const walletStatus = useSelector(status)
   const isBalanceLoading = useSelector(balanceLoading)
 

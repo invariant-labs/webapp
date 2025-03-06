@@ -29,7 +29,6 @@ import { accounts } from '@store/selectors/solanaWallet'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
 import {
   Keypair,
-  PublicKey,
   SystemProgram,
   Transaction,
   TransactionExpiredTimeoutError,
