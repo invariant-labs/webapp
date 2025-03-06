@@ -23,10 +23,7 @@ interface IProps {
   searchValue: string
   searchSetValue: (value: string) => void
   handleRefresh: () => void
-  // pageChanged: (page: number) => void
   length: number
-  // loadedPages: Record<number, boolean>
-  // getRemainingPositions: () => void
   noInitialPositions: boolean
 }
 
@@ -42,10 +39,7 @@ export const PositionsList: React.FC<IProps> = ({
   searchValue,
   searchSetValue,
   handleRefresh,
-  // pageChanged,
   length,
-  // loadedPages,
-  // getRemainingPositions,
   noInitialPositions
 }) => {
   const { classes } = useStyles()
@@ -54,10 +48,6 @@ export const PositionsList: React.FC<IProps> = ({
   const [page, setPage] = useState(initialPage)
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // if (Object.keys(loadedPages).length * POSITIONS_PER_QUERY < Number(length)) {
-    //   getRemainingPositions()
-    // }
-
     searchSetValue(e.target.value.toLowerCase())
   }
 
@@ -91,10 +81,6 @@ export const PositionsList: React.FC<IProps> = ({
   useEffect(() => {
     handleChangePagination(initialPage)
   }, [initialPage])
-
-  // useEffect(() => {
-  //   pageChanged(page)
-  // }, [page])
 
   return (
     <Grid container direction='column' className={classes.root}>
