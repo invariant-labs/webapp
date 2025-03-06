@@ -40,6 +40,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
 
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: 'auto 100px 80px 60px',
+      padding: '18px 8px',
 
       '& p': {
         ...typography.caption1
