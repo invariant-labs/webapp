@@ -47,7 +47,6 @@ const useStyles = makeStyles()(() => {
       position: 'absolute',
       width: '100%',
       padding: '0 1px 0 1px',
-      padding: '0 1px 0 1px',
       height: 2,
       top: -2,
       left: -1,
