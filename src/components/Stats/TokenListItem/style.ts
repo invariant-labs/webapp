@@ -39,8 +39,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     },
 
     [theme.breakpoints.down('sm')]: {
-      padding: '18px 12px',
-
       gridTemplateColumns: 'auto 100px 80px 60px',
       padding: '18px 8px',
 
