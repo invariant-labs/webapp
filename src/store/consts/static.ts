@@ -186,7 +186,7 @@ export enum RPC {
 
 export const DEFAULT_SOL_PUBLICKEY = new PublicKey(0)
 export const MAX_U64 = new BN('18446744073709551615')
-export const PRICE_QUERY_COOLDOWN = 60 * 1000
+export const PRICE_QUERY_COOLDOWN = 120 * 1000
 
 export const tokens: Record<NetworkType, Token[]> = {
   Devnet: [USDC_DEV, USDT_DEV, BTC_DEV, MSOL_DEV],
