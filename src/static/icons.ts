@@ -56,6 +56,7 @@ import telegramFill from './svg/telegramFill.svg'
 import githubFill from './svg/githubFill.svg'
 import mediumFill from './svg/MediumFill.svg'
 import docsFill from './svg/docsFill.svg'
+import boostPoints from './svg/boostPoints.svg'
 
 const icons: { [key: string]: string } = {
   docsFill,
@@ -115,7 +116,8 @@ const icons: { [key: string]: string } = {
   newTabBtn,
   airdrop,
   airdropRainbow,
-  audit
+  audit,
+  boostPoints
 }
 
 export default icons
