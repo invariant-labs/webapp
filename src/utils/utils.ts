@@ -1342,29 +1342,55 @@ export const getCoinGeckoTokenPrice = async (id: string) => {
   } catch (e) {}
 }
 
+export const PRICE_QUERY_COOLDOWN = 60 * 1000
+
 export const getTokenPrice = async (
   address: string,
   coinGeckoId?: string
 ): Promise<TokenPriceData> => {
-  const jupPrice = await getJupTokenPrice(address)
+  const cachedLastQueryTimestamp = localStorage.getItem('TOKEN_PRICE_LAST_QUERY_TIMESTAMP')
 
-  if (jupPrice.price !== 0) {
-    return jupPrice
-  } else if (coinGeckoId) {
-    const coingeckoPrice = await getCoinGeckoTokenPrice(coinGeckoId)
+  const lastQueryTimestamp = cachedLastQueryTimestamp ? Number(cachedLastQueryTimestamp) : 0
+  const cachedPriceData = localStorage.getItem(`TOKEN_PRICE_DATA`)
 
-    return {
-      price: coingeckoPrice?.current_price || 0,
-      buyPrice: coingeckoPrice?.current_price || 0,
-      sellPrice: coingeckoPrice?.current_price || 0
-    }
-  } else {
-    return {
-      price: 0,
-      buyPrice: 0,
-      sellPrice: 0
+  let tokenPriceData
+  if (!cachedPriceData || Number(lastQueryTimestamp) + PRICE_QUERY_COOLDOWN <= Date.now()) {
+    try {
+      const jupPrice = await getJupTokenPrice(address)
+
+      if (jupPrice.price !== 0) {
+        tokenPriceData = jupPrice
+      } else if (coinGeckoId) {
+        const coingeckoPrice = await getCoinGeckoTokenPrice(coinGeckoId)
+        tokenPriceData = {
+          price: coingeckoPrice?.current_price || 0,
+          buyPrice: coingeckoPrice?.current_price || 0,
+          sellPrice: coingeckoPrice?.current_price || 0
+        }
+      } else {
+        tokenPriceData = {
+          price: 0,
+          buyPrice: 0,
+          sellPrice: 0
+        }
+      }
+      localStorage.setItem('TOKEN_PRICE_LAST_QUERY_TIMESTAMP', Date.now().toString())
+    } catch (e: unknown) {
+      console.error(e)
+      localStorage.removeItem('TOKEN_PRICE_LAST_QUERY_TIMESTAMP')
+      localStorage.removeItem('TOKEN_PRICE_DATA')
     }
   }
+
+  const priceData = cachedPriceData ? JSON.parse(cachedPriceData) : {}
+
+  if (!priceData[address]) {
+    priceData[address] = tokenPriceData
+  }
+
+  localStorage.setItem('TOKEN_PRICE_DATA', JSON.stringify(priceData))
+
+  return priceData[address]
 }
 
 export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
