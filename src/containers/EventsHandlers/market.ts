@@ -16,6 +16,12 @@ import {
 } from '@utils/utils'
 import { getCurrentSolanaConnection } from '@utils/web3/connection'
 import { getSolanaWallet } from '@utils/web3/wallet'
+import {
+  currentPositionData,
+  currentPositionId,
+  positionsWithPoolsData
+} from '@store/selectors/positions'
+import { actions as positionsActions } from '@store/reducers/positions'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -27,7 +33,9 @@ const MarketEvents = () => {
   const networkStatus = useSelector(status)
   const tickmaps = useSelector(tickMaps)
   const allPools = useSelector(poolsArraySortedByFees)
-
+  const positionsList = useSelector(positionsWithPoolsData)
+  const currentPositionIndex = useSelector(currentPositionId)
+  const currentPosition = useSelector(currentPositionData)
   const poolTicksArray = useSelector(poolTicks)
   const [subscribedTick, _setSubscribeTick] = useState<Set<string>>(new Set())
   const [subscribedTickmap, _setSubscribedTickmap] = useState<Set<string>>(new Set())
@@ -114,7 +122,47 @@ const MarketEvents = () => {
 
     const connectEvents = () => {
       allPools.forEach(pool => {
+        const positionsInPool = positionsList.filter(position => {
+          return position.poolData.address.toString() === pool.address.toString()
+        })
+
         marketProgram.onPoolChange(pool.tokenX, pool.tokenY, { fee: pool.fee.v }, poolStructure => {
+          if (pool.currentTickIndex !== poolStructure.currentTickIndex) {
+            positionsInPool.map(position => {
+              //update current position details
+              if (
+                currentPositionIndex === position.id.toString() + '_' + position.pool.toString() &&
+                currentPosition
+              ) {
+                if (
+                  (pool.currentTickIndex >= currentPosition?.lowerTickIndex &&
+                    poolStructure.currentTickIndex < currentPosition?.lowerTickIndex) ||
+                  (pool.currentTickIndex < currentPosition?.lowerTickIndex &&
+                    poolStructure.currentTickIndex >= currentPosition?.lowerTickIndex)
+                ) {
+                  dispatch(
+                    positionsActions.getCurrentPositionRangeTicks({
+                      id: currentPositionIndex,
+                      fetchTick: 'lower'
+                    })
+                  )
+                } else if (
+                  (pool.currentTickIndex < currentPosition?.upperTickIndex &&
+                    poolStructure.currentTickIndex >= currentPosition?.upperTickIndex) ||
+                  (pool.currentTickIndex >= currentPosition?.upperTickIndex &&
+                    poolStructure.currentTickIndex < currentPosition?.upperTickIndex)
+                ) {
+                  dispatch(
+                    positionsActions.getCurrentPositionRangeTicks({
+                      id: currentPositionIndex,
+                      fetchTick: 'upper'
+                    })
+                  )
+                }
+              }
+            })
+          }
+
           dispatch(
             actions.updatePool({
               address: pool.address,
@@ -126,7 +174,7 @@ const MarketEvents = () => {
     }
 
     connectEvents()
-  }, [dispatch, allPools.length, networkStatus, marketProgram])
+  }, [dispatch, allPools.length, networkStatus, marketProgram, currentPosition])
 
   useEffect(() => {
     if (networkStatus !== Status.Initialized || !marketProgram || allPools.length === 0) {

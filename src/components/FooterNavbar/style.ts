@@ -11,6 +11,7 @@ const useStyles = makeStyles()(() => {
       width: '100%',
       height: '65px',
       background: colors.invariant.component,
+      borderTop: `2px solid ${colors.invariant.light}`,
       marginTop: '12px',
       position: 'sticky',
       bottom: 0,
@@ -45,6 +46,7 @@ const useStyles = makeStyles()(() => {
     activeBox: {
       position: 'absolute',
       width: '100%',
+      padding: '0 1px 0 1px',
       padding: '0 1px 0 1px',
       height: 2,
       top: -2,

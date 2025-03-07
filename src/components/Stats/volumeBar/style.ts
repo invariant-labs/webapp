@@ -15,7 +15,7 @@ export const useStyles = makeStyles()(() => ({
     justifyContent: 'space-between',
 
     [theme.breakpoints.down('sm')]: {
-      padding: '12px 24px',
+      padding: '12px 8px',
       gap: 8,
       flexDirection: 'column'
     }
