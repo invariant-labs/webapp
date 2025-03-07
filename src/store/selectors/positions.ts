@@ -25,7 +25,7 @@ export const {
   'currentPositionId'
 ])
 
-export const lastPageSelector = createSelector(lastPage, s => s)
+export const lastPageSelector = lastPage
 
 export const isLoadingPositionsList = createSelector(positionsList, s => s.loading)
 

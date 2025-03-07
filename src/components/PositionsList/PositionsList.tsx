@@ -1,15 +1,17 @@
 import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
-import { Button, Grid, InputAdornment, InputBase, Typography } from '@mui/material'
+import { Box, Button, Grid, Typography, useMediaQuery } from '@mui/material'
 import loader from '@static/gif/loader.gif'
-import SearchIcon from '@static/svg/lupaDark.svg'
 import refreshIcon from '@static/svg/refresh.svg'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { IPositionItem, PositionItem } from './PositionItem/PositionItem'
 import { useStyles } from './style'
 import { PaginationList } from '@components/Pagination/Pagination'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { FilterSearch, ISearchToken } from '@components/FilterSearch/FilterSearch'
+import { NetworkType } from '@store/consts/static'
+import { theme } from '@static/theme'
 
 interface IProps {
   initialPage: number
@@ -20,14 +22,12 @@ interface IProps {
   showNoConnected?: boolean
   noConnectedBlockerProps: INoConnected
   itemsPerPage: number
-  searchValue: string
-  searchSetValue: (value: string) => void
   handleRefresh: () => void
   // pageChanged: (page: number) => void
-  length: number
   // loadedPages: Record<number, boolean>
   // getRemainingPositions: () => void
   noInitialPositions: boolean
+  currentNetwork: NetworkType
 }
 
 export const PositionsList: React.FC<IProps> = ({
@@ -39,11 +39,9 @@ export const PositionsList: React.FC<IProps> = ({
   showNoConnected = false,
   noConnectedBlockerProps,
   itemsPerPage,
-  searchValue,
-  searchSetValue,
   handleRefresh,
+  currentNetwork,
   // pageChanged,
-  length,
   // loadedPages,
   // getRemainingPositions,
   noInitialPositions
@@ -52,14 +50,33 @@ export const PositionsList: React.FC<IProps> = ({
   const navigate = useNavigate()
   const [defaultPage] = useState(initialPage)
   const [page, setPage] = useState(initialPage)
+  const [selectedFilters, setSelectedFilters] = useState<ISearchToken[]>([])
+  const isMd = useMediaQuery(theme.breakpoints.only('sm'))
 
-  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // if (Object.keys(loadedPages).length * POSITIONS_PER_QUERY < Number(length)) {
-    //   getRemainingPositions()
-    // }
+  const filteredData = useMemo(() => {
+    if (selectedFilters.length === 0) return data
 
-    searchSetValue(e.target.value.toLowerCase())
-  }
+    return data.filter(position => {
+      const tokenX = position.tokenXName.toLowerCase()
+      const tokenY = position.tokenYName.toLowerCase()
+
+      if (selectedFilters.length === 1) {
+        const filterToken = selectedFilters[0].symbol.toLowerCase()
+        return tokenX === filterToken || tokenY === filterToken
+      }
+
+      if (selectedFilters.length === 2) {
+        const filterToken1 = selectedFilters[0].symbol.toLowerCase()
+        const filterToken2 = selectedFilters[1].symbol.toLowerCase()
+        return (
+          (tokenX === filterToken1 && tokenY === filterToken2) ||
+          (tokenX === filterToken2 && tokenY === filterToken1)
+        )
+      }
+
+      return true
+    })
+  }, [data, selectedFilters])
 
   const handleChangePagination = (page: number): void => {
     setLastPage(page)
@@ -70,8 +87,8 @@ export const PositionsList: React.FC<IProps> = ({
     const page = currentPage || 1
     const perPage = itemsPerPage || 10
     const offset = (page - 1) * perPage
-    const paginatedItems = data.slice(offset).slice(0, itemsPerPage)
-    const totalPages = Math.ceil(data.length / perPage)
+    const paginatedItems = filteredData.slice(offset).slice(0, itemsPerPage)
+    const totalPages = Math.ceil(filteredData.length / perPage)
 
     return {
       page: page,
@@ -82,7 +99,7 @@ export const PositionsList: React.FC<IProps> = ({
 
   useEffect(() => {
     setPage(1)
-  }, [searchValue])
+  }, [selectedFilters])
 
   useEffect(() => {
     setPage(initialPage)
@@ -105,50 +122,74 @@ export const PositionsList: React.FC<IProps> = ({
         justifyContent='space-between'
         alignItems='center'>
         <Grid className={classes.searchRoot}>
-          <Grid className={classes.titleBar}>
-            <Typography className={classes.title}>Your Positions</Typography>
-            <TooltipHover text='Total number of your positions'>
-              <Typography className={classes.positionsNumber}>{String(length)}</Typography>
-            </TooltipHover>
+          <Grid
+            sx={isMd ? { width: '100%', justifyContent: 'space-between' } : {}}
+            className={classes.titleBar}>
+            <Box display='flex' alignItems='center'>
+              <Typography className={classes.title}>Your Positions</Typography>
+              <TooltipHover text='Total number of your positions'>
+                <Typography className={classes.positionsNumber}>
+                  {String(filteredData.length)}
+                </Typography>
+              </TooltipHover>
+            </Box>
+            {isMd && (
+              <Grid
+                display='flex'
+                columnGap={2}
+                justifyContent='space-between'
+                className={classes.fullWidthWrapper}>
+                <TooltipHover text='Refresh'>
+                  <Grid display='flex' alignItems='center'>
+                    <Button
+                      disabled={showNoConnected}
+                      onClick={showNoConnected ? () => {} : handleRefresh}
+                      className={classes.refreshIconBtn}>
+                      <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                    </Button>
+                  </Grid>
+                </TooltipHover>
+                <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
+                  <span className={classes.buttonText}>+ Add Position</span>
+                </Button>
+              </Grid>
+            )}{' '}
           </Grid>
           <Grid className={classes.searchWrapper}>
-            <InputBase
-              type={'text'}
-              className={classes.searchBar}
-              placeholder='Search position'
-              endAdornment={
-                <InputAdornment position='end'>
-                  <img src={SearchIcon} className={classes.searchIcon} alt='Search' />
-                </InputAdornment>
-              }
-              onChange={handleChangeInput}
-              value={searchValue}
-              disabled={noInitialPositions}
+            <FilterSearch
+              loading={loading}
+              bp='md'
+              networkType={currentNetwork}
+              filtersAmount={2}
+              selectedFilters={selectedFilters}
+              setSelectedFilters={setSelectedFilters}
             />
-            <Grid
-              display='flex'
-              columnGap={2}
-              justifyContent='space-between'
-              className={classes.fullWidthWrapper}>
-              <TooltipHover text='Refresh'>
-                <Grid display='flex' alignItems='center'>
-                  <Button
-                    disabled={showNoConnected}
-                    onClick={showNoConnected ? () => {} : handleRefresh}
-                    className={classes.refreshIconBtn}>
-                    <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
-                  </Button>
-                </Grid>
-              </TooltipHover>
-              <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
-                <span className={classes.buttonText}>+ Add Position</span>
-              </Button>
-            </Grid>
+            {!isMd && (
+              <Grid
+                display='flex'
+                columnGap={2}
+                justifyContent='space-between'
+                className={classes.fullWidthWrapper}>
+                <TooltipHover text='Refresh'>
+                  <Grid display='flex' alignItems='center'>
+                    <Button
+                      disabled={showNoConnected}
+                      onClick={showNoConnected ? () => {} : handleRefresh}
+                      className={classes.refreshIconBtn}>
+                      <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                    </Button>
+                  </Grid>
+                </TooltipHover>
+                <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
+                  <span className={classes.buttonText}>+ Add Position</span>
+                </Button>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Grid>
       <Grid container direction='column' className={classes.list} justifyContent='flex-start'>
-        {data.length > 0 && !loading ? (
+        {filteredData.length > 0 && !loading ? (
           paginator(page).data.map((element, index) => (
             <Grid
               onClick={() => {
