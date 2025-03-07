@@ -72,7 +72,9 @@ export const SettingsModal = ({
           )}
         </>
       )}
-      {selectedTab === 'Priority Fee' && <SelectTransactionPriorityFee dynamicFee={dynamicFee} />}
+      {selectedTab === 'Priority Fee' && (
+        <SelectTransactionPriorityFee dynamicFee={dynamicFee} handleClose={handleClose} />
+      )}
     </Modal>
   )
 }

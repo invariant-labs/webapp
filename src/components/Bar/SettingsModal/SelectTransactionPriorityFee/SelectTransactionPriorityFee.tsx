@@ -8,9 +8,10 @@ import classNames from 'classnames'
 
 type Props = {
   dynamicFee: number
+  handleClose: () => void
 }
 
-export const SelectTransactionPriorityFee = ({ dynamicFee }: Props) => {
+export const SelectTransactionPriorityFee = ({ dynamicFee, handleClose }: Props) => {
   const { classes } = useStyles()
 
   const currentPriorityMode = localStorage.getItem('INVARIANT_PRIORITY_MODE') as PriorityMode
@@ -140,27 +141,31 @@ export const SelectTransactionPriorityFee = ({ dynamicFee }: Props) => {
       <Button
         className={classes.button}
         onClick={() => {
-          if (priorityMode === PriorityMode.Custom) {
-            if (customPriorityFee) {
-              localStorage.setItem('INVARIANT_PRIORITY_MODE', PriorityMode.Custom)
-              localStorage.setItem('INVARIANT_PRIORITY_FEE', customPriorityFee)
+          if (isSavable) {
+            if (priorityMode === PriorityMode.Custom) {
+              if (customPriorityFee) {
+                localStorage.setItem('INVARIANT_PRIORITY_MODE', PriorityMode.Custom)
+                localStorage.setItem('INVARIANT_PRIORITY_FEE', customPriorityFee)
+              } else {
+                setPriorityMode(PriorityMode.Market)
+                localStorage.setItem('INVARIANT_PRIORITY_MODE', PriorityMode.Market)
+                localStorage.setItem(
+                  'INVARIANT_PRIORITY_FEE',
+                  calculatePriorityFee(dynamicFee, PriorityMode.Market).toString()
+                )
+              }
             } else {
-              setPriorityMode(PriorityMode.Market)
-              localStorage.setItem('INVARIANT_PRIORITY_MODE', PriorityMode.Market)
+              localStorage.setItem('INVARIANT_PRIORITY_MODE', priorityMode)
               localStorage.setItem(
                 'INVARIANT_PRIORITY_FEE',
-                calculatePriorityFee(dynamicFee, PriorityMode.Market).toString()
+                calculatePriorityFee(dynamicFee, priorityMode).toString()
               )
             }
-          } else {
-            localStorage.setItem('INVARIANT_PRIORITY_MODE', priorityMode)
-            localStorage.setItem(
-              'INVARIANT_PRIORITY_FEE',
-              calculatePriorityFee(dynamicFee, priorityMode).toString()
-            )
-          }
 
-          setIsSavable(false)
+            setIsSavable(false)
+          } else {
+            handleClose()
+          }
         }}>
         {isSavable ? 'Save' : 'Done'}
       </Button>
