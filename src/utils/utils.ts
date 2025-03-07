@@ -1347,17 +1347,16 @@ export const getTokenPrice = async (
   address: string,
   coinGeckoId?: string
 ): Promise<TokenPriceData> => {
-  const cachedLastQueryTimestamp = localStorage.getItem('TOKEN_PRICE_LAST_QUERY_TIMESTAMP')
-
-  const lastQueryTimestamp = cachedLastQueryTimestamp ? Number(cachedLastQueryTimestamp) : 0
   const cachedPriceData = localStorage.getItem(`TOKEN_PRICE_DATA`)
   const priceData = cachedPriceData ? JSON.parse(cachedPriceData) : {}
+  const lastQueryTimestamp = priceData[address]?.timestamp ?? 0
 
   let tokenPriceData = {
     price: 0,
     buyPrice: 0,
     sellPrice: 0
   }
+
   if (!priceData[address] || Number(lastQueryTimestamp) + PRICE_QUERY_COOLDOWN <= Date.now()) {
     try {
       const jupPrice = await getJupTokenPrice(address)
@@ -1372,15 +1371,10 @@ export const getTokenPrice = async (
           sellPrice: coingeckoPrice?.current_price || 0
         }
       }
-      localStorage.setItem('TOKEN_PRICE_LAST_QUERY_TIMESTAMP', Date.now().toString())
+      priceData[address] = { ...tokenPriceData, timestamp: Date.now() }
     } catch (e: unknown) {
       console.error(e)
-      localStorage.removeItem('TOKEN_PRICE_LAST_QUERY_TIMESTAMP')
     }
-  }
-
-  if (!priceData[address]) {
-    priceData[address] = tokenPriceData
   }
 
   localStorage.setItem('TOKEN_PRICE_DATA', JSON.stringify(priceData))
