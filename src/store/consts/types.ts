@@ -278,7 +278,7 @@ export interface PoolStatsDataWithString {
 export enum PriorityMode {
   Normal = 'Normal',
   Economic = 'Economic',
-  Dynamic = 'Market',
+  Market = 'Market',
   High = 'High',
   Turbo = 'Turbo',
   Custom = 'Custom'

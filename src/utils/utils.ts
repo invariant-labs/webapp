@@ -61,7 +61,7 @@ import {
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
-import { CoinGeckoAPIData, Token } from '@store/consts/types'
+import { CoinGeckoAPIData, PriorityMode, Token } from '@store/consts/types'
 import { sqrt } from '@invariant-labs/sdk/lib/math'
 
 export const transformBN = (amount: BN): string => {
@@ -1730,4 +1730,25 @@ export const getConcentrationIndex = (concentrationArray: number[], neededValue:
   }
 
   return concentrationIndex
+}
+
+export const getCurrentDynamicFee = async (): Promise<number> => {
+  const response = await fetch('https://solanacompass.com/api/fees')
+  const data = await response.json()
+  return data['15'].avg
+}
+
+export const calculatePriorityFee = (fee: number, priorityMode: PriorityMode): number => {
+  switch (priorityMode) {
+    case PriorityMode.Economic:
+      return +(fee / 4).toFixed(9)
+    case PriorityMode.Market:
+      return +fee.toFixed(9)
+    case PriorityMode.High:
+      return +(fee * 1.5).toFixed(9)
+    case PriorityMode.Turbo:
+      return +(fee * 3).toFixed(9)
+    default:
+      return 0
+  }
 }
