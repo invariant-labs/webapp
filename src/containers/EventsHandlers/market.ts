@@ -131,7 +131,7 @@ const MarketEvents = () => {
         marketProgram.onPoolChange(
           pool.tokenX,
           pool.tokenY,
-          { fee: pool.fee, tickSpacing: pool.tickSpacing },
+          { fee: pool.fee.v, tickSpacing: pool.tickSpacing },
           poolStructure => {
             dispatch(
               actions.updatePool({
@@ -178,7 +178,7 @@ const MarketEvents = () => {
         marketProgram.onPoolChange(
           pool.tokenX,
           pool.tokenY,
-          { fee: pool.fee, tickSpacing: pool.tickSpacing },
+          { fee: pool.fee.v, tickSpacing: pool.tickSpacing },
           poolStructure => {
             const positionsInPool = positionsList.filter(position =>
               position.pool.equals(pool.address)
@@ -278,7 +278,7 @@ const MarketEvents = () => {
           marketProgram.onPoolChange(
             pool.tokenX,
             pool.tokenY,
-            { fee: pool.fee, tickSpacing: pool.tickSpacing },
+            { fee: pool.fee.v, tickSpacing: pool.tickSpacing },
             poolStructure => {
               dispatch(
                 actions.updatePool({
