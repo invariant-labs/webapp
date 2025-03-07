@@ -120,8 +120,6 @@ const useStyles = makeStyles()((theme: Theme) => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      marginLeft: '12px',
-      marginRight: '12px',
       border: '2px solid transparent',
       backgroundImage: 'linear-gradient(#2A365C, #2A365C), linear-gradient(0deg, #2EE09A, #EF84F5)',
       backgroundOrigin: 'border-box',

@@ -28,7 +28,13 @@ const useStyles = makeStyles()((theme: Theme) => {
     logoShort: {
       minWidth: 40,
       height: 30,
-      marginRight: 8,
+      marginRight: 0,
+      [theme.breakpoints.up(650)]: {
+        display: 'none'
+      },
+      [theme.breakpoints.down('sm')]: {
+        marginRight: 0
+      },
 
       '&:hover': {
         cursor: 'pointer'
@@ -53,7 +59,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       display: 'flex',
       width: 'auto',
       justifyContent: 'flex-end',
-      gap: 16,
+      gap: 12,
       flexWrap: 'nowrap',
       alignItems: 'center',
       [theme.breakpoints.up(1450)]: {
@@ -67,7 +73,8 @@ const useStyles = makeStyles()((theme: Theme) => {
       },
 
       [theme.breakpoints.down('sm')]: {
-        gap: 8
+        justifyContent: 'space-between',
+        gap: 0
       }
     },
     leftButtons: {
@@ -117,6 +124,9 @@ const useStyles = makeStyles()((theme: Theme) => {
     },
     leftSide: {
       width: 'auto',
+      [theme.breakpoints.down(650)]: {
+        display: 'none'
+      },
 
       [theme.breakpoints.up(1450)]: {
         flex: '1 1 0%'
