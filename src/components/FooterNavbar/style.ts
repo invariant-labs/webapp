@@ -50,7 +50,11 @@ const useStyles = makeStyles()(() => {
       height: 2,
       top: -2,
       left: -1,
-      background: colors.invariant.pinkGreenLinearGradient
+      background: colors.invariant.pinkGreenLinearGradient,
+
+      '&:last-of-type': {
+        padding: '0 0 0 1px'
+      }
     }
   }
 })
