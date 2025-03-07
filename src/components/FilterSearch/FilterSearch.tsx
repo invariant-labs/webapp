@@ -33,7 +33,6 @@ import { PublicKey } from '@solana/web3.js'
 
 type Breakpoint = 'md' | 'sm'
 import { printBN } from '@utils/utils'
-import { PublicKey } from '@solana/web3.js'
 
 export interface ISearchToken {
   icon: string
