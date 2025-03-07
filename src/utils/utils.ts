@@ -1351,9 +1351,14 @@ export const getTokenPrice = async (
 
   const lastQueryTimestamp = cachedLastQueryTimestamp ? Number(cachedLastQueryTimestamp) : 0
   const cachedPriceData = localStorage.getItem(`TOKEN_PRICE_DATA`)
+  const priceData = cachedPriceData ? JSON.parse(cachedPriceData) : {}
 
-  let tokenPriceData
-  if (!cachedPriceData || Number(lastQueryTimestamp) + PRICE_QUERY_COOLDOWN <= Date.now()) {
+  let tokenPriceData = {
+    price: 0,
+    buyPrice: 0,
+    sellPrice: 0
+  }
+  if (!priceData[address] || Number(lastQueryTimestamp) + PRICE_QUERY_COOLDOWN <= Date.now()) {
     try {
       const jupPrice = await getJupTokenPrice(address)
 
@@ -1366,29 +1371,19 @@ export const getTokenPrice = async (
           buyPrice: coingeckoPrice?.current_price || 0,
           sellPrice: coingeckoPrice?.current_price || 0
         }
-      } else {
-        tokenPriceData = {
-          price: 0,
-          buyPrice: 0,
-          sellPrice: 0
-        }
       }
       localStorage.setItem('TOKEN_PRICE_LAST_QUERY_TIMESTAMP', Date.now().toString())
     } catch (e: unknown) {
       console.error(e)
       localStorage.removeItem('TOKEN_PRICE_LAST_QUERY_TIMESTAMP')
-      localStorage.removeItem('TOKEN_PRICE_DATA')
     }
   }
-
-  const priceData = cachedPriceData ? JSON.parse(cachedPriceData) : {}
 
   if (!priceData[address]) {
     priceData[address] = tokenPriceData
   }
 
   localStorage.setItem('TOKEN_PRICE_DATA', JSON.stringify(priceData))
-
   return priceData[address]
 }
 
