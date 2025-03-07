@@ -57,7 +57,8 @@ import {
   SUI_MAIN,
   WRAPPED_SOL_ADDRESS,
   NATIVE_TICK_CROSSES_PER_IX,
-  ADDRESSES_TO_REVERT_TOKEN_PAIRS
+  ADDRESSES_TO_REVERT_TOKEN_PAIRS,
+  PRICE_QUERY_COOLDOWN
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
@@ -1341,8 +1342,6 @@ export const getCoinGeckoTokenPrice = async (id: string) => {
     return data[0]
   } catch (e) {}
 }
-
-export const PRICE_QUERY_COOLDOWN = 60 * 1000
 
 export const getTokenPrice = async (
   address: string,
