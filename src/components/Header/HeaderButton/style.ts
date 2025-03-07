@@ -43,9 +43,9 @@ const useStyles = makeStyles()((theme: Theme) => {
       height: 40,
       minWidth: 130,
 
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         minWidth: 100,
-        width: 130
+        width: 100
       },
 
       '&:hover': {
@@ -129,10 +129,10 @@ const useStyles = makeStyles()((theme: Theme) => {
 
       color: colors.invariant.text,
 
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down(450)]: {
         padding: '0px 2px'
       },
-      [theme.breakpoints.between('sm', 'lg')]: {
+      [theme.breakpoints.up(450)]: {
         padding: '0px 20px'
       }
     }
