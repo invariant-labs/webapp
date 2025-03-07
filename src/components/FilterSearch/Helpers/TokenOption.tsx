@@ -32,16 +32,15 @@ export const TokenOption: React.FC<{
           <Box className={classes.symbolAndAddress}>
             <Typography className={classes.tokenLabel}>{shortenAddress(option.symbol)}</Typography>
             <Box className={classes.tokenAddress}>
+              <Typography className={classes.truncatedAddress}>
+                {shortenAddress(option.address)}
+              </Typography>
               <a
                 className={classes.addressLink}
                 href={`https://eclipsescan.xyz/token/${option.address.toString()}${networkUrl}`}
                 target='_blank'
                 rel='noopener noreferrer'
                 onClick={event => event.stopPropagation()}>
-                <Typography className={classes.truncatedAddress}>
-                  {shortenAddress(option.address)}
-                </Typography>
-
                 <img className={classes.newTabIcon} src={icons.newTab} alt='Token address' />
               </a>
             </Box>

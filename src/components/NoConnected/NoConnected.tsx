@@ -21,7 +21,9 @@ export const NoConnected: React.FC<INoConnected> = ({ onConnect, title, descCust
       <Grid className={classNames(classes.blur, 'blurLayer')} />
       <Grid className={classNames(classes.container, 'blurLayer')}>
         <Grid className={classNames(classes.root, 'blurInfo')}>
-          <img className={classes.img} src={icons.NoConnected} alt='Not connected' />
+          <Grid height={104}>
+            <img className={classes.img} src={icons.NoConnected} alt='Not connected' />
+          </Grid>
           {!!title && <Typography className={classes.desc}>{title}</Typography>}
 
           {descCustomText?.length && (

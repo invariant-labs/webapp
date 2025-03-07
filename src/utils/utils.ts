@@ -7,7 +7,13 @@ import {
   TICK_VIRTUAL_CROSSES_PER_IX,
   Tickmap
 } from '@invariant-labs/sdk/lib/market'
-import { getMaxTick, getMinTick, PRICE_SCALE, Range } from '@invariant-labs/sdk/lib/utils'
+import {
+  CONCENTRATION_FACTOR,
+  getMaxTick,
+  getMinTick,
+  PRICE_SCALE,
+  Range
+} from '@invariant-labs/sdk/lib/utils'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import {
   calculateTickDelta,
@@ -1094,8 +1100,11 @@ export const calculateConcentrationRange = (
   isXToY: boolean
 ) => {
   const tickDelta = calculateTickDelta(tickSpacing, minimumRange, concentration)
-  const lowerTick = currentTick - (minimumRange / 2 + tickDelta) * tickSpacing
-  const upperTick = currentTick + (minimumRange / 2 + tickDelta) * tickSpacing
+
+  const parsedTickDelta = Math.abs(tickDelta) === 0 ? 0 : Math.abs(tickDelta) - 1
+
+  const lowerTick = currentTick - (minimumRange / 2 + parsedTickDelta) * tickSpacing
+  const upperTick = currentTick + (minimumRange / 2 + parsedTickDelta) * tickSpacing
 
   return {
     leftRange: isXToY ? lowerTick : upperTick,
@@ -1103,12 +1112,20 @@ export const calculateConcentrationRange = (
   }
 }
 
+export const calculateConcentration = (lowerTick: number, upperTick: number) => {
+  const deltaPrice = Math.pow(1.0001, -Math.abs(lowerTick - upperTick))
+
+  const denominator = 1 - Math.pow(deltaPrice, 1 / 4)
+  const result = 1 / denominator
+
+  return Math.abs(result / CONCENTRATION_FACTOR)
+}
+
 export enum PositionTokenBlock {
   None,
   A,
   B
 }
-
 export const determinePositionTokenBlock = (
   currentSqrtPrice: BN,
   lowerTick: number,
