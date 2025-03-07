@@ -8,8 +8,9 @@ export const useStyles = makeStyles()(() => ({
     borderRadius: 24,
     padding: 24,
     boxSizing: 'border-box',
+
     [theme.breakpoints.down('sm')]: {
-      padding: '24px 12px'
+      padding: '24px 8px'
     }
   },
   volumeContainer: {

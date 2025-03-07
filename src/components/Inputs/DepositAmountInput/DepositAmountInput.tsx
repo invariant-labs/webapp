@@ -1,6 +1,6 @@
 import { Box, Grid, Input, Tooltip, Typography } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
-import { formatNumber, formatNumber2, getScaleFromString } from '@utils/utils'
+import { formatNumberWithSuffix, formatNumberWithoutSuffix, getScaleFromString } from '@utils/utils'
 import React, { CSSProperties, useRef } from 'react'
 import useStyles from './style'
 import icons from '@static/icons'
@@ -193,7 +193,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
               ) : isBalanceLoading ? (
                 <img src={loadingAnimation} className={classes.loadingBalance} alt='loading' />
               ) : (
-                <>{formatNumber(balanceValue || 0)}</>
+                <>{formatNumberWithSuffix(balanceValue || 0)}</>
               )}{' '}
               {currency}
             </Typography>
@@ -206,20 +206,18 @@ export const DepositAmountInput: React.FC<IProps> = ({
               ) : tokenPrice ? (
                 <Tooltip
                   enterTouchDelay={0}
-                  leaveTouchDelay={Number.MAX_SAFE_INTEGER}
                   title='Estimated USD Value of the Entered Tokens'
                   placement='bottom'
                   classes={{
                     tooltip: classes.tooltip
                   }}>
                   <Typography className={classes.estimatedBalance}>
-                    ~${formatNumber2(usdBalance)}
+                    ~${formatNumberWithoutSuffix(usdBalance)}
                   </Typography>
                 </Tooltip>
               ) : (
                 <Tooltip
                   enterTouchDelay={0}
-                  leaveTouchDelay={Number.MAX_SAFE_INTEGER}
                   title='Cannot fetch price of token'
                   placement='bottom'
                   classes={{

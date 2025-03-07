@@ -5,7 +5,6 @@ export const useStyles = makeStyles()(() => ({
   container: {
     display: 'flex',
     minHeight: '60vh',
-    marginTop: '65px',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',

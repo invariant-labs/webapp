@@ -506,7 +506,7 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
     if (!stringTx.length) {
       yield* put(
         snackbarsActions.add({
-          message: 'Failed to stake position. Please try again.',
+          message: 'Failed to stake position. Please try again',
           variant: 'error',
           persist: false,
           txid: stringTx
@@ -515,7 +515,7 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
     } else {
       yield* put(
         snackbarsActions.add({
-          message: 'Position staked successfully.',
+          message: 'Position staked successfully',
           variant: 'success',
           persist: false,
           txid: stringTx
@@ -526,7 +526,7 @@ export function* handleStakePosition(action: PayloadAction<FarmPositionData>) {
     console.log(error)
     yield* put(
       snackbarsActions.add({
-        message: 'Failed to stake position. Please try again.',
+        message: 'Failed to stake position. Please try again',
         variant: 'error',
         persist: false
       })
@@ -786,7 +786,7 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
 
       return yield* put(
         snackbarsActions.add({
-          message: 'SOL wrapping failed. Please try again.',
+          message: 'SOL wrapping failed. Please try again',
           variant: 'error',
           persist: false,
           txid: initialTxid
@@ -806,7 +806,7 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     if (!withdrawTxid.length) {
       yield* put(
         snackbarsActions.add({
-          message: 'Failed to withdraw rewards. Please try again.',
+          message: 'Failed to withdraw rewards. Please try again',
           variant: 'error',
           persist: false,
           txid: withdrawTxid
@@ -815,7 +815,7 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     } else {
       yield* put(
         snackbarsActions.add({
-          message: 'Rewards withdrawn successfully.',
+          message: 'Rewards withdrawn successfully',
           variant: 'success',
           persist: false,
           txid: withdrawTxid
@@ -835,7 +835,7 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     if (!unwrapTxid.length) {
       yield* put(
         snackbarsActions.add({
-          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
+          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet',
           variant: 'warning',
           persist: false,
           txid: unwrapTxid
@@ -844,7 +844,7 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
     } else {
       yield* put(
         snackbarsActions.add({
-          message: 'SOL unwrapped successfully.',
+          message: 'SOL unwrapped successfully',
           variant: 'success',
           persist: false,
           txid: unwrapTxid
@@ -864,7 +864,7 @@ export function* handleWithdrawRewardsWithWSOL(data: FarmPositionData) {
 
     yield* put(
       snackbarsActions.add({
-        message: 'Failed to withdraw rewards. Please try again.',
+        message: 'Failed to withdraw rewards. Please try again',
         variant: 'error',
         persist: false
       })
@@ -944,7 +944,7 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
     if (!stringTx.length) {
       yield* put(
         snackbarsActions.add({
-          message: 'Failed to withdraw rewards. Please try again.',
+          message: 'Failed to withdraw rewards. Please try again',
           variant: 'error',
           persist: false,
           txid: stringTx
@@ -953,7 +953,7 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
     } else {
       yield* put(
         snackbarsActions.add({
-          message: 'Rewards withdrawn successfully.',
+          message: 'Rewards withdrawn successfully',
           variant: 'success',
           persist: false,
           txid: stringTx
@@ -971,7 +971,7 @@ export function* handleWithdrawRewards(action: PayloadAction<FarmPositionData>) 
 
     yield* put(
       snackbarsActions.add({
-        message: 'Failed to withdraw rewards. Please try again.',
+        message: 'Failed to withdraw rewards. Please try again',
         variant: 'error',
         persist: false
       })

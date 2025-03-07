@@ -10,8 +10,9 @@ export const useStyles = makeStyles()(() => ({
     paddingBlock: 24,
     paddingLeft: 24,
     boxSizing: 'border-box',
+
     [theme.breakpoints.down('sm')]: {
-      paddingLeft: 6
+      paddingLeft: 8
     }
   },
   liquidityContainer: {
@@ -20,8 +21,9 @@ export const useStyles = makeStyles()(() => ({
     alignItems: 'flex-start',
     fontWeight: 'normal',
     marginLeft: 24,
+
     [theme.breakpoints.down('sm')]: {
-      marginLeft: 6
+      marginLeft: 8
     }
   },
 

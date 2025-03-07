@@ -4,7 +4,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useStyles } from './style'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
-import { formatNumber, shortenAddress } from '@utils/utils'
+import { formatNumberWithSuffix, shortenAddress } from '@utils/utils'
 import { NetworkType, SortTypeTokenList } from '@store/consts/static'
 import icons from '@static/icons'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
@@ -127,15 +127,15 @@ const TokenListItem: React.FC<IProps> = ({
               />
             </TooltipHover>
           </Grid>
-          <Typography>{`~$${formatNumber(price)}`}</Typography>
+          <Typography>{`~$${formatNumberWithSuffix(price)}`}</Typography>
 
           {/* {!isXs && (
             <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
               {isNegative ? `${priceChange.toFixed(2)}%` : `+${priceChange.toFixed(2)}%`}
             </Typography>
           )} */}
-          <Typography>{`$${formatNumber(volume)}`}</Typography>
-          <Typography>{`$${formatNumber(TVL)}`}</Typography>
+          <Typography>{`$${formatNumberWithSuffix(volume)}`}</Typography>
+          <Typography>{`$${formatNumberWithSuffix(TVL)}`}</Typography>
           {!isMd && (
             <Box className={classes.action}>
               <TooltipHover text='Open in explorer'>
@@ -157,7 +157,7 @@ const TokenListItem: React.FC<IProps> = ({
       ) : (
         <Grid
           container
-          style={{ color: colors.invariant.textGrey, fontWeight: 400 }}
+          style={{ color: colors.invariant.textGrey }}
           classes={{ container: classes.container, root: classes.header }}>
           {!isMd && (
             <Typography style={{ lineHeight: '12px' }}>

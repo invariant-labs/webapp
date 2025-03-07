@@ -203,7 +203,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
 
       return yield* put(
         snackbarsActions.add({
-          message: 'SOL wrapping failed. Please try again.',
+          message: 'SOL wrapping failed. Please try again',
           variant: 'error',
           persist: false,
           txid: initialTxid
@@ -224,7 +224,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
       yield* put(actions.setBuyBondSuccess(false))
       yield* put(
         snackbarsActions.add({
-          message: 'Failed to buy bond. Please unwrap wrapped SOL in your wallet and try again.',
+          message: 'Failed to buy bond. Please unwrap wrapped SOL in your wallet and try again',
           variant: 'error',
           persist: false,
           txid: bondTxid
@@ -234,7 +234,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
       yield* put(actions.setBuyBondSuccess(true))
       yield* put(
         snackbarsActions.add({
-          message: 'Bond bought successfully.',
+          message: 'Bond bought successfully',
           variant: 'success',
           persist: false,
           txid: bondTxid
@@ -256,7 +256,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
     if (!unwrapTxid.length) {
       yield* put(
         snackbarsActions.add({
-          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
+          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet',
           variant: 'warning',
           persist: false,
           txid: unwrapTxid
@@ -265,7 +265,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
     } else {
       yield* put(
         snackbarsActions.add({
-          message: 'SOL unwrapped successfully.',
+          message: 'SOL unwrapped successfully',
           variant: 'success',
           persist: false,
           txid: unwrapTxid
@@ -286,7 +286,7 @@ export function* handleBuyBondWithWSOL(data: BuyBond) {
 
     yield* put(
       snackbarsActions.add({
-        message: 'Failed to buy bond. Please try again.',
+        message: 'Failed to buy bond. Please try again',
         variant: 'error',
         persist: false
       })
@@ -369,7 +369,7 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
       yield* put(actions.setBuyBondSuccess(false))
       yield* put(
         snackbarsActions.add({
-          message: 'Failed to buy bond. Please try again.',
+          message: 'Failed to buy bond. Please try again',
           variant: 'error',
           persist: false,
           txid
@@ -379,7 +379,7 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
       yield* put(actions.setBuyBondSuccess(true))
       yield* put(
         snackbarsActions.add({
-          message: 'Bond bought successfully.',
+          message: 'Bond bought successfully',
           variant: 'success',
           persist: false,
           txid
@@ -402,7 +402,7 @@ export function* handleBuyBond(action: PayloadAction<BuyBond>) {
 
     yield* put(
       snackbarsActions.add({
-        message: 'Failed to buy bond. Please try again.',
+        message: 'Failed to buy bond. Please try again',
         variant: 'error',
         persist: false
       })
@@ -506,7 +506,7 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
 
       return yield* put(
         snackbarsActions.add({
-          message: 'SOL wrapping failed. Please try again.',
+          message: 'SOL wrapping failed. Please try again',
           variant: 'error',
           persist: false,
           txid: initialTxid
@@ -526,7 +526,7 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
     if (!redeemTxid.length) {
       yield* put(
         snackbarsActions.add({
-          message: 'Failed to redeem bond. Please try again.',
+          message: 'Failed to redeem bond. Please try again',
           variant: 'error',
           persist: false,
           txid: redeemTxid
@@ -535,7 +535,7 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
     } else {
       yield* put(
         snackbarsActions.add({
-          message: 'Bond redeemed successfully.',
+          message: 'Bond redeemed successfully',
           variant: 'success',
           persist: false,
           txid: redeemTxid
@@ -559,7 +559,7 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
     if (!unwrapTxid.length) {
       yield* put(
         snackbarsActions.add({
-          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
+          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet',
           variant: 'warning',
           persist: false,
           txid: unwrapTxid
@@ -568,7 +568,7 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
     } else {
       yield* put(
         snackbarsActions.add({
-          message: 'SOL unwrapped successfully.',
+          message: 'SOL unwrapped successfully',
           variant: 'success',
           persist: false,
           txid: unwrapTxid
@@ -588,7 +588,7 @@ export function* handleRedeemBondWithWSOL(data: RedeemBond) {
 
     yield* put(
       snackbarsActions.add({
-        message: 'Failed to redeem bond. Please try again.',
+        message: 'Failed to redeem bond. Please try again',
         variant: 'error',
         persist: false
       })
@@ -663,7 +663,7 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
     if (!txid.length) {
       yield* put(
         snackbarsActions.add({
-          message: 'Failed to redeem bond. Please try again.',
+          message: 'Failed to redeem bond. Please try again',
           variant: 'error',
           persist: false,
           txid
@@ -672,7 +672,7 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
     } else {
       yield* put(
         snackbarsActions.add({
-          message: 'Bond redeemed successfully.',
+          message: 'Bond redeemed successfully',
           variant: 'success',
           persist: false,
           txid
@@ -699,7 +699,7 @@ export function* handleRedeemBond(action: PayloadAction<RedeemBond>) {
 
     yield* put(
       snackbarsActions.add({
-        message: 'Failed to redeem bond. Please try again.',
+        message: 'Failed to redeem bond. Please try again',
         variant: 'error',
         persist: false
       })

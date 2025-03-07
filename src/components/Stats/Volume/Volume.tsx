@@ -7,7 +7,7 @@ import { useStyles } from './style'
 import { TimeData } from '@store/reducers/stats'
 import { Grid, Typography, useMediaQuery } from '@mui/material'
 import { Box } from '@mui/system'
-import { formatNumber, trimZeros } from '@utils/utils'
+import { formatNumberWithSuffix, trimZeros } from '@utils/utils'
 import { formatLargeNumber } from '@utils/formatLargeNumber'
 
 interface StatsInterface {
@@ -67,7 +67,7 @@ const Volume: React.FC<StatsInterface> = ({
         <Typography className={classes.volumeHeader}>Volume</Typography>
         <div className={classes.volumePercentContainer}>
           <Typography className={classes.volumePercentHeader}>
-            ${formatNumber(isLoading ? Math.random() * 10000 : volume)}
+            ${formatNumberWithSuffix(isLoading ? Math.random() * 10000 : volume)}
           </Typography>
           <Box className={classes.volumeStatusContainer}>
             <Box
@@ -156,7 +156,7 @@ const Volume: React.FC<StatsInterface> = ({
                   month < 10 ? '0' : ''
                 }${month}`}</Typography>
                 <Typography className={classes.tooltipValue}>
-                  ${formatNumber(data.value)}
+                  ${formatNumberWithSuffix(data.value)}
                 </Typography>
               </Grid>
             )

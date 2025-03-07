@@ -212,7 +212,7 @@ export function* handleSwapWithSOL(): Generator {
 
       return yield put(
         snackbarsActions.add({
-          message: 'SOL wrapping failed. Please try again.',
+          message: 'SOL wrapping failed. Please try again',
           variant: 'error',
           persist: false,
           txid: initialTxid
@@ -251,7 +251,7 @@ export function* handleSwapWithSOL(): Generator {
       yield put(swapActions.setSwapSuccess(true))
       yield put(
         snackbarsActions.add({
-          message: 'Tokens swapped successfully.',
+          message: 'Tokens swapped successfully',
           variant: 'success',
           persist: false,
           txid: swapTxid
@@ -265,8 +265,7 @@ export function* handleSwapWithSOL(): Generator {
 
       return yield put(
         snackbarsActions.add({
-          message:
-            'Tokens swapping failed. Please unwrap wrapped SOL in your wallet and try again.',
+          message: 'Tokens swapping failed. Please unwrap wrapped SOL in your wallet and try again',
           variant: 'error',
           persist: false,
           txid: swapTxid
@@ -288,7 +287,7 @@ export function* handleSwapWithSOL(): Generator {
     if (!unwrapTxid.length) {
       yield put(
         snackbarsActions.add({
-          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet.',
+          message: 'Wrapped SOL unwrap failed. Try to unwrap it in your wallet',
           variant: 'warning',
           persist: false,
           txid: unwrapTxid
@@ -297,7 +296,7 @@ export function* handleSwapWithSOL(): Generator {
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'SOL unwrapped successfully.',
+          message: 'SOL unwrapped successfully',
           variant: 'success',
           persist: false,
           txid: unwrapTxid
@@ -326,7 +325,7 @@ export function* handleSwapWithSOL(): Generator {
       yield put(
         snackbarsActions.add({
           message:
-            'Failed to send. Please unwrap wrapped SOL in your wallet if you have any and try again.',
+            'Failed to send. Please unwrap wrapped SOL in your wallet if you have any and try again',
           variant: 'error',
           persist: false
         })
@@ -471,7 +470,7 @@ export function* handleSwap(): Generator {
       yield put(swapActions.setSwapSuccess(true))
       yield put(
         snackbarsActions.add({
-          message: 'Tokens swapped successfully.',
+          message: 'Tokens swapped successfully',
           variant: 'success',
           persist: false,
           txid: txid
@@ -482,7 +481,7 @@ export function* handleSwap(): Generator {
 
       yield put(
         snackbarsActions.add({
-          message: 'Tokens swapping failed. Please try again.',
+          message: 'Tokens swapping failed. Please try again',
           variant: 'error',
           persist: false,
           txid: txid
@@ -510,7 +509,7 @@ export function* handleSwap(): Generator {
     } else {
       yield put(
         snackbarsActions.add({
-          message: 'Failed to send. Please try again.',
+          message: 'Failed to send. Please try again',
           variant: 'error',
           persist: false
         })

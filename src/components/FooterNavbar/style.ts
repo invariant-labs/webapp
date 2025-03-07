@@ -11,10 +11,11 @@ const useStyles = makeStyles()(() => {
       width: '100%',
       height: '65px',
       background: colors.invariant.component,
+      borderTop: `2px solid ${colors.invariant.light}`,
       marginTop: '12px',
       position: 'sticky',
       bottom: 0,
-      zIndex: 1200
+      zIndex: 15
     },
     navbox: {
       maxHeight: 65,
@@ -45,10 +46,15 @@ const useStyles = makeStyles()(() => {
     activeBox: {
       position: 'absolute',
       width: '100%',
+      padding: '0 1px 0 1px',
       height: 2,
-      top: 0,
-      left: 0,
-      background: colors.invariant.pinkGreenLinearGradient
+      top: -2,
+      left: -1,
+      background: colors.invariant.pinkGreenLinearGradient,
+
+      '&:last-of-type': {
+        padding: '0 0 0 1px'
+      }
     }
   }
 })

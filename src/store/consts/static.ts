@@ -508,7 +508,7 @@ export const COINGECKO_QUERY_COOLDOWN = 20 * 60 * 1000
 export const DEFAULT_TOKENS = ['ethereum', 'solana', 'usd-coin', 'dogwifhat']
 
 export const TIMEOUT_ERROR_MESSAGE =
-  'Transaction has timed out. Check the details to confirm success.'
+  'Transaction has timed out. Check the details to confirm success'
 
 export const walletNames = {
   [WalletType.PHANTOM]: 'Phantom',
