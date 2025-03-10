@@ -57,7 +57,8 @@ import {
   SUI_MAIN,
   WRAPPED_SOL_ADDRESS,
   NATIVE_TICK_CROSSES_PER_IX,
-  ADDRESSES_TO_REVERT_TOKEN_PAIRS
+  ADDRESSES_TO_REVERT_TOKEN_PAIRS,
+  PRICE_QUERY_COOLDOWN
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
@@ -1346,25 +1347,38 @@ export const getTokenPrice = async (
   address: string,
   coinGeckoId?: string
 ): Promise<TokenPriceData> => {
-  const jupPrice = await getJupTokenPrice(address)
+  const cachedPriceData = localStorage.getItem(`TOKEN_PRICE_DATA`)
+  const priceData = cachedPriceData ? JSON.parse(cachedPriceData) : {}
+  const lastQueryTimestamp = priceData[address]?.timestamp ?? 0
 
-  if (jupPrice.price !== 0) {
-    return jupPrice
-  } else if (coinGeckoId) {
-    const coingeckoPrice = await getCoinGeckoTokenPrice(coinGeckoId)
+  let tokenPriceData = {
+    price: 0,
+    buyPrice: 0,
+    sellPrice: 0
+  }
 
-    return {
-      price: coingeckoPrice?.current_price || 0,
-      buyPrice: coingeckoPrice?.current_price || 0,
-      sellPrice: coingeckoPrice?.current_price || 0
-    }
-  } else {
-    return {
-      price: 0,
-      buyPrice: 0,
-      sellPrice: 0
+  if (!priceData[address] || Number(lastQueryTimestamp) + PRICE_QUERY_COOLDOWN <= Date.now()) {
+    try {
+      const jupPrice = await getJupTokenPrice(address)
+
+      if (jupPrice.price !== 0) {
+        tokenPriceData = jupPrice
+      } else if (coinGeckoId) {
+        const coingeckoPrice = await getCoinGeckoTokenPrice(coinGeckoId)
+        tokenPriceData = {
+          price: coingeckoPrice?.current_price || 0,
+          buyPrice: coingeckoPrice?.current_price || 0,
+          sellPrice: coingeckoPrice?.current_price || 0
+        }
+      }
+      priceData[address] = { ...tokenPriceData, timestamp: Date.now() }
+    } catch (e: unknown) {
+      console.error(e)
     }
   }
+
+  localStorage.setItem('TOKEN_PRICE_DATA', JSON.stringify(priceData))
+  return priceData[address]
 }
 
 export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
