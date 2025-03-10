@@ -39,7 +39,6 @@ export const PositionsList: React.FC<IProps> = ({
   noConnectedBlockerProps,
   handleRefresh,
   currentNetwork,
-  currentNetwork,
   // pageChanged,
   // length,
   // lockedLength,
@@ -155,14 +154,14 @@ export const PositionsList: React.FC<IProps> = ({
 
             <Grid className={classes.searchWrapper}>
               <Grid className={classes.filtersContainer}>
-                {/* <FilterSearch
+                <FilterSearch
                   loading={loading}
                   bp='md'
                   networkType={currentNetwork}
                   filtersAmount={2}
                   selectedFilters={selectedFilters}
                   setSelectedFilters={setSelectedFilters}
-                /> */}
+                />
               </Grid>
 
               <Grid
@@ -228,14 +227,14 @@ export const PositionsList: React.FC<IProps> = ({
                 </Grid>
               </Grid>
 
-              {/* <FilterSearch
+              <FilterSearch
                 bp='md'
                 loading={loading}
                 networkType={currentNetwork}
                 filtersAmount={2}
                 selectedFilters={selectedFilters}
                 setSelectedFilters={setSelectedFilters}
-              /> */}
+              />
             </Grid>
           </Grid>
         </Grid>
