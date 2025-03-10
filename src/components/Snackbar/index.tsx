@@ -44,6 +44,7 @@ const Snackbar: React.FC<ISnackbarProps> = ({ maxSnack = 3, children }) => {
           styles={`
           .custom-snackbar-container {
             bottom: 90px !important;
+            z-index: 100 !important; 
           }
         `}
         />

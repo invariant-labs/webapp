@@ -399,7 +399,7 @@ export function* init(isEagerConnect: boolean): Generator {
     if (isEagerConnect) {
       yield* put(
         snackbarsActions.add({
-          message: 'Wallet reconnected.',
+          message: 'Wallet reconnected',
           variant: 'success',
           persist: false
         })
@@ -407,7 +407,7 @@ export function* init(isEagerConnect: boolean): Generator {
     } else {
       yield* put(
         snackbarsActions.add({
-          message: 'Wallet connected.',
+          message: 'Wallet connected',
           variant: 'success',
           persist: false
         })
@@ -436,6 +436,14 @@ export function* sendSol(amount: BN, recipient: PublicKey): SagaGenerator<string
   return txid
 }
 
+export function* handleChangeWalletInExtenstion(): Generator {
+  try {
+    yield* call(init, false)
+  } catch (error) {
+    yield* call(handleRpcError, (error as Error).message)
+  }
+}
+
 export function* handleConnect(action: PayloadAction<boolean>): Generator {
   try {
     const walletStatus = yield* select(status)
@@ -444,7 +452,7 @@ export function* handleConnect(action: PayloadAction<boolean>): Generator {
     if (walletStatus === Status.Initialized && wallet.connected) {
       yield* put(
         snackbarsActions.add({
-          message: 'Wallet already connected.',
+          message: 'Wallet already connected',
           variant: 'info',
           persist: false
         })
@@ -477,6 +485,10 @@ export function* handleDisconnect(): Generator {
   }
 }
 
+export function* changeWalletInExtenstionHandler(): Generator {
+  yield takeLatest(actions.changeWalletInExtension, handleChangeWalletInExtenstion)
+}
+
 export function* connectHandler(): Generator {
   yield takeLatest(actions.connect, handleConnect)
 }
@@ -494,5 +506,13 @@ export function* handleBalanceSaga(): Generator {
 }
 
 export function* walletSaga(): Generator {
-  yield all([airdropSaga, connectHandler, disconnectHandler, handleBalanceSaga].map(spawn))
+  yield all(
+    [
+      airdropSaga,
+      connectHandler,
+      disconnectHandler,
+      handleBalanceSaga,
+      changeWalletInExtenstionHandler
+    ].map(spawn)
+  )
 }

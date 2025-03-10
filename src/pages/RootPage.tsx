@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useLayoutEffect } from 'react'
+import React, { useEffect, useCallback, useState, useLayoutEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import EventsHandlers from '@containers/EventsHandlers'
@@ -12,9 +12,15 @@ import useStyles from './style'
 import { status } from '@store/selectors/solanaWallet'
 import { Status as WalletStatus } from '@store/reducers/solanaWallet'
 import { actions } from '@store/reducers/positions'
+import { actions as walletActions } from '@store/reducers/solanaWallet'
 import PerformanceWarning from '@containers/PerformanceWarning/PerformanceWarning'
-import { NetworkType } from '@store/consts/static'
+import { DEFAULT_SOL_PUBLICKEY, NetworkType } from '@store/consts/static'
 import { TopBanner } from '@components/TopBanner/TopBanner'
+import {
+  getPhantomAccChangeTrigger,
+  getSolanaWallet,
+  setPhantomAccChangeTrigger
+} from '@utils/web3/wallet'
 
 const BANNER_STORAGE_KEY = 'invariant-banner-state-2'
 const BANNER_HIDE_DURATION = 1000 * 60 * 60 * 24 // 24 hours
@@ -60,6 +66,51 @@ const RootPage: React.FC = React.memo(() => {
       document.title
     document.title = title
   }, [location])
+
+  const walletAddressRef = useRef('')
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const solanaWallet = getSolanaWallet()
+      const phantomAccChangeTrigger = getPhantomAccChangeTrigger()
+      if (!solanaWallet || !solanaWallet.publicKey) return
+      const addr = solanaWallet.publicKey.toString()
+      if (
+        !walletAddressRef.current ||
+        (walletAddressRef.current === DEFAULT_SOL_PUBLICKEY.toString() &&
+          addr !== DEFAULT_SOL_PUBLICKEY.toString() &&
+          !phantomAccChangeTrigger)
+      ) {
+        walletAddressRef.current = addr
+        return
+      }
+
+      if (
+        (!document.hasFocus() || phantomAccChangeTrigger) &&
+        walletAddressRef.current !== DEFAULT_SOL_PUBLICKEY.toString() &&
+        walletAddressRef.current !== addr
+      ) {
+        if (phantomAccChangeTrigger && addr === DEFAULT_SOL_PUBLICKEY.toString()) return
+        walletAddressRef.current = addr
+        new Promise(resolve => setTimeout(resolve, 300))
+          .then(() => {
+            dispatch(walletActions.changeWalletInExtension())
+            dispatch(actions.getPositionsList())
+          })
+          .finally(() => setPhantomAccChangeTrigger(false))
+      }
+
+      if (
+        document.hasFocus() &&
+        !phantomAccChangeTrigger &&
+        walletAddressRef.current !== DEFAULT_SOL_PUBLICKEY.toString() &&
+        walletAddressRef.current !== addr
+      ) {
+        walletAddressRef.current = addr
+      }
+    }, 500)
+
+    return () => clearInterval(intervalId)
+  }, [])
 
   const initConnection = useCallback(() => {
     dispatch(solanaConnectionActions.initSolanaConnection())

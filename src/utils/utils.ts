@@ -7,7 +7,13 @@ import {
   TICK_VIRTUAL_CROSSES_PER_IX,
   Tickmap
 } from '@invariant-labs/sdk/lib/market'
-import { getMaxTick, getMinTick, PRICE_SCALE, Range } from '@invariant-labs/sdk/lib/utils'
+import {
+  CONCENTRATION_FACTOR,
+  getMaxTick,
+  getMinTick,
+  PRICE_SCALE,
+  Range
+} from '@invariant-labs/sdk/lib/utils'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import {
   calculateTickDelta,
@@ -51,7 +57,8 @@ import {
   SUI_MAIN,
   WRAPPED_SOL_ADDRESS,
   NATIVE_TICK_CROSSES_PER_IX,
-  ADDRESSES_TO_REVERT_TOKEN_PAIRS
+  ADDRESSES_TO_REVERT_TOKEN_PAIRS,
+  PRICE_QUERY_COOLDOWN
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
@@ -1094,8 +1101,11 @@ export const calculateConcentrationRange = (
   isXToY: boolean
 ) => {
   const tickDelta = calculateTickDelta(tickSpacing, minimumRange, concentration)
-  const lowerTick = currentTick - (minimumRange / 2 + tickDelta) * tickSpacing
-  const upperTick = currentTick + (minimumRange / 2 + tickDelta) * tickSpacing
+
+  const parsedTickDelta = Math.abs(tickDelta) === 0 ? 0 : Math.abs(tickDelta) - 1
+
+  const lowerTick = currentTick - (minimumRange / 2 + parsedTickDelta) * tickSpacing
+  const upperTick = currentTick + (minimumRange / 2 + parsedTickDelta) * tickSpacing
 
   return {
     leftRange: isXToY ? lowerTick : upperTick,
@@ -1103,12 +1113,20 @@ export const calculateConcentrationRange = (
   }
 }
 
+export const calculateConcentration = (lowerTick: number, upperTick: number) => {
+  const deltaPrice = Math.pow(1.0001, -Math.abs(lowerTick - upperTick))
+
+  const denominator = 1 - Math.pow(deltaPrice, 1 / 4)
+  const result = 1 / denominator
+
+  return Math.abs(result / CONCENTRATION_FACTOR)
+}
+
 export enum PositionTokenBlock {
   None,
   A,
   B
 }
-
 export const determinePositionTokenBlock = (
   currentSqrtPrice: BN,
   lowerTick: number,
@@ -1329,25 +1347,38 @@ export const getTokenPrice = async (
   address: string,
   coinGeckoId?: string
 ): Promise<TokenPriceData> => {
-  const jupPrice = await getJupTokenPrice(address)
+  const cachedPriceData = localStorage.getItem(`TOKEN_PRICE_DATA`)
+  const priceData = cachedPriceData ? JSON.parse(cachedPriceData) : {}
+  const lastQueryTimestamp = priceData[address]?.timestamp ?? 0
 
-  if (jupPrice.price !== 0) {
-    return jupPrice
-  } else if (coinGeckoId) {
-    const coingeckoPrice = await getCoinGeckoTokenPrice(coinGeckoId)
+  let tokenPriceData = {
+    price: 0,
+    buyPrice: 0,
+    sellPrice: 0
+  }
 
-    return {
-      price: coingeckoPrice?.current_price || 0,
-      buyPrice: coingeckoPrice?.current_price || 0,
-      sellPrice: coingeckoPrice?.current_price || 0
-    }
-  } else {
-    return {
-      price: 0,
-      buyPrice: 0,
-      sellPrice: 0
+  if (!priceData[address] || Number(lastQueryTimestamp) + PRICE_QUERY_COOLDOWN <= Date.now()) {
+    try {
+      const jupPrice = await getJupTokenPrice(address)
+
+      if (jupPrice.price !== 0) {
+        tokenPriceData = jupPrice
+      } else if (coinGeckoId) {
+        const coingeckoPrice = await getCoinGeckoTokenPrice(coinGeckoId)
+        tokenPriceData = {
+          price: coingeckoPrice?.current_price || 0,
+          buyPrice: coingeckoPrice?.current_price || 0,
+          sellPrice: coingeckoPrice?.current_price || 0
+        }
+      }
+      priceData[address] = { ...tokenPriceData, timestamp: Date.now() }
+    } catch (e: unknown) {
+      console.error(e)
     }
   }
+
+  localStorage.setItem('TOKEN_PRICE_DATA', JSON.stringify(priceData))
+  return priceData[address]
 }
 
 export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {

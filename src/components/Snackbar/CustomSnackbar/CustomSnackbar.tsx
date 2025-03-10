@@ -79,6 +79,7 @@ const CustomSnackbar = React.forwardRef<HTMLDivElement, CustomContentProps>(
                   window.open(`https://solscan.io/tx/${txid.toString()}${networkUrl}`, '_blank')
                 }}>
                 Details
+                <img alt='new tab' src={icons.newTab} />
               </StyledDetails>
               <StyledCloseButton onClick={handleDismiss}>
                 <img width={16} src={icons.closeIcon} alt='Close'></img>
@@ -92,6 +93,7 @@ const CustomSnackbar = React.forwardRef<HTMLDivElement, CustomContentProps>(
                   window.open(link.href, '_blank')
                 }}>
                 {link.label}
+                <img alt='new tab' src={icons.newTab} />
               </StyledDetails>
               <StyledCloseButton onClick={handleDismiss}>
                 <img width={16} src={icons.closeIcon} alt='Close'></img>
