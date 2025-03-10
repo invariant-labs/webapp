@@ -172,12 +172,13 @@ const handleClick = () => {
 export const Primary: Story = {
   args: {
     data,
+    currentNetwork: NetworkType.Mainnet,
+
     onAddPositionClick: handleClick,
     itemsPerPage: 5,
     noConnectedBlockerProps: {
       onConnect: () => {}
     },
-    currentNetwork: NetworkType.Mainnet,
     handleRefresh: () => {},
     initialPage: 1,
     setLastPage: () => {},

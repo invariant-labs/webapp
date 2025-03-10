@@ -8,7 +8,7 @@ import {
   positionsWithPoolsData
 } from '@store/selectors/positions'
 import { address, status } from '@store/selectors/solanaWallet'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { calcYPerXPriceBySqrtPrice, printBN } from '@utils/utils'
@@ -61,6 +61,10 @@ export const WrappedPositionsList: React.FC = () => {
   const handleRefresh = () => {
     dispatch(actions.getPositionsList())
   }
+
+  useEffect(() => {
+    dispatch(actionsStats.getCurrentStats())
+  }, [])
 
   useEffect(() => {
     dispatch(actionsStats.getCurrentStats())
@@ -148,6 +152,7 @@ export const WrappedPositionsList: React.FC = () => {
   return (
     <PositionsList
       initialPage={lastPage}
+      currentNetwork={currentNetwork}
       setLastPage={setLastPage}
       handleRefresh={handleRefresh}
       onAddPositionClick={() => {

@@ -4,13 +4,20 @@ import {
   AutocompleteRenderGetTagProps,
   AutocompleteRenderInputParams,
   AutocompleteRenderOptionState,
+  AutocompleteOwnerState,
+  AutocompleteRenderGetTagProps,
+  AutocompleteRenderInputParams,
+  AutocompleteRenderOptionState,
   Box,
   Fade,
   InputAdornment,
   InputProps,
+  InputProps,
   Paper,
   PaperProps,
+  PaperProps,
   Popper,
+  PopperProps,
   PopperProps,
   TextField,
   Typography,
@@ -18,9 +25,9 @@ import {
 } from '@mui/material'
 import SearchIcon from '@static/svg/lupaDark.svg'
 import { forwardRef, useMemo, useState, useCallback, memo, useEffect } from 'react'
+import { forwardRef, useMemo, useState, useCallback, memo } from 'react'
 import { commonTokensForNetworks, NetworkType } from '@store/consts/static'
 import { theme, typography } from '@static/theme'
-import useStyles from './styles'
 import { TokenChip } from './Helpers/TokenChip'
 import { TokenOption } from './Helpers/TokenOption'
 import { useSelector } from 'react-redux'
@@ -31,8 +38,11 @@ import ListboxComponent from './Helpers/ListBoxComponent'
 import { getTokenPrice, printBN } from '@utils/utils'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
+import useStyles from './style'
+import { PublicKey } from '@solana/web3.js'
 
 type Breakpoint = 'md' | 'sm'
+import { printBN } from '@utils/utils'
 
 export interface ISearchToken {
   icon: string
@@ -41,6 +51,13 @@ export interface ISearchToken {
   address: string
   balance: BN
   decimals: number
+  balanceUSD?: number
+}
+interface ITokenBalance {
+  address: PublicKey
+  balance: BN
+  decimals: number
+}
   balanceUSD?: number
 }
 interface ITokenBalance {
@@ -80,12 +97,17 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
     loading = false
   }) => {
     const tokensListDetails = useSelector(tokensStatsWithTokensDetails)
-
     const commonTokens = commonTokensForNetworks[networkType]
     const tokensList = useSelector(swapTokens)
     const [open, setOpen] = useState(false)
-    const [prices, setPrices] = useState<Record<string, number>>({})
 
+    const tokenListMap = useMemo(() => {
+      const map = new Map<string, ITokenBalance>()
+      tokensList.forEach(token => {
+        map.set(token.address.toString(), token)
+      })
+      return map
+    }, [tokensList])
     const tokenListMap = useMemo(() => {
       const map = new Map<string, ITokenBalance>()
       tokensList.forEach(token => {
@@ -99,39 +121,16 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
       [commonTokens]
     )
 
-    useEffect(() => {
-      const fetchPrices = async () => {
-        const pricePromises = tokensListDetails.map(async tokenData => {
-          const details = tokenData.tokenDetails
-          const tokenAddress = details?.address?.toString() ?? tokenData.address.toString()
-          const price = await getTokenPrice(tokenAddress)
-          return { tokenAddress, price }
-        })
-        const results = await Promise.all(pricePromises)
-        const newPrices: Record<string, number> = {}
-        results.forEach(({ tokenAddress, price: { price } }) => {
-          if (price !== undefined) {
-            newPrices[tokenAddress] = price
-          }
-        })
-        setPrices(newPrices)
-      }
-      fetchPrices()
-    }, [tokensListDetails])
-
     const mappedTokens = useMemo(() => {
       return tokensListDetails
         .map(tokenData => {
           const details = tokenData.tokenDetails
           const tokenAddress = details?.address?.toString() ?? tokenData.address.toString()
           const tokenFromList = tokenListMap.get(tokenAddress)
-          const tokenPrice = prices[tokenAddress]
+          const price = tokenData.price
           const balanceUSD =
-            tokenPrice && tokenFromList
-              ? +printBN(
-                  tokenFromList.balance,
-                  tokenData.tokenDetails?.decimals ?? tokenData.decimals ?? 0
-                ) * tokenPrice
+            price && tokenFromList
+              ? +printBN(tokenFromList.balance, tokenData.tokenDetails?.decimals) * price
               : 0
 
           return {
@@ -139,9 +138,9 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
             name: details?.name ?? tokenData.address.toString(),
             symbol: details?.symbol ?? tokenData.address.toString(),
             address: tokenAddress,
-            balanceUSD: balanceUSD,
             balance: tokenFromList ? tokenFromList.balance : 0,
-            decimals: tokenFromList ? tokenFromList.decimals : 0
+            decimals: tokenFromList ? tokenFromList.decimals : 0,
+            balanceUSD: balanceUSD
           }
         })
         .sort((a, b) => {
@@ -150,6 +149,7 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
           const aIsCommon = commonTokensSet.has(a.address)
           const bIsCommon = commonTokensSet.has(b.address)
           if (a.balanceUSD !== b.balanceUSD) return b.balanceUSD - a.balanceUSD
+
           if (aHasBalance && !bHasBalance) return -1
           if (!aHasBalance && bHasBalance) return 1
           if (aIsCommon && !bIsCommon) return -1
@@ -162,7 +162,13 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
           return 0
         })
     }, [tokensListDetails, tokenListMap, commonTokensSet])
+          return 0
+        })
+    }, [tokensListDetails, tokenListMap, commonTokensSet])
 
+    const isTokensSelected = selectedFilters.length === filtersAmount
+    const isSmall = useMediaQuery(theme.breakpoints.down(bp))
+    const { classes } = useStyles({ isSmall })
     const isTokensSelected = selectedFilters.length === filtersAmount
     const isSmall = useMediaQuery(theme.breakpoints.down(bp))
     const { classes } = useStyles({ isSmall })
@@ -209,13 +215,13 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
 
     const renderOption = useCallback(
       (
-        optionProps: React.HTMLAttributes<HTMLLIElement> & { key: number },
+        autocompleteProps: React.HTMLAttributes<HTMLLIElement> & { key: number },
         option: ISearchToken,
         _state: AutocompleteRenderOptionState,
         _ownerState: AutocompleteOwnerState<ISearchToken, true, false, false, 'div'>
       ): React.ReactNode => {
         return (
-          <Box component='li' {...optionProps} sx={{ padding: '0 !important' }}>
+          <Box component='li' {...autocompleteProps} sx={{ padding: '0 !important' }}>
             <TokenOption option={option} networkUrl={networkUrl} isSmall={isSmall} />
           </Box>
         )
@@ -323,6 +329,25 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
                   boundary: 'viewport'
                 }
               }
+            ]
+          }
+        }}
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' }
+          },
+          width: isSmall ? '100%' : 'auto'
+        }}
+        renderTags={renderTags}
+        renderOption={renderOption}
+        renderInput={renderInput}
+      />
+    )
+  }
+)
+
+export const MemoizedTokenOption = memo(TokenOption)
             ]
           }
         }}

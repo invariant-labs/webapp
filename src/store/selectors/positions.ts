@@ -13,21 +13,25 @@ export const {
   unclaimedFees,
   prices,
   plotTicks,
+  currentPoolIndex,
   currentPositionTicks,
   initPosition,
-  shouldNotUpdateRange
+  shouldNotUpdateRange,
+  currentPositionId
 } = keySelectors(store, [
   'lastPage',
   'positionsList',
   'unclaimedFees',
   'prices',
   'plotTicks',
+  'currentPoolIndex',
   'currentPositionTicks',
   'initPosition',
-  'shouldNotUpdateRange'
+  'shouldNotUpdateRange',
+  'currentPositionId'
 ])
 
-export const lastPageSelector = createSelector(lastPage, s => s)
+export const lastPageSelector = lastPage
 
 export const isLoadingPositionsList = createSelector(positionsList, s => s.loading)
 
@@ -70,12 +74,24 @@ export const singlePositionData = (id: string) =>
     positions.find(position => id === position.id.toString() + '_' + position.pool.toString())
   )
 
+export const currentPositionData = createSelector(
+  currentPositionId,
+  positionsWithPoolsData,
+  (id, positions) => {
+    if (!id) return undefined
+    return positions.find(
+      position => id === position.id.toString() + '_' + position.pool.toString()
+    )
+  }
+)
+
 export const positionsSelectors = {
   positionsList,
   plotTicks,
   currentPositionTicks,
   initPosition,
-  shouldNotUpdateRange
+  shouldNotUpdateRange,
+  currentPositionId
 }
 
 export default positionsSelectors
