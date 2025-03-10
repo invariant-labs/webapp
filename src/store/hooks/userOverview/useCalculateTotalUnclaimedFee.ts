@@ -36,7 +36,6 @@ const useCalculateTotalUnclaimedFee = (
 
       prevPricesRef.current = prices
 
-      // Cleanup function
       return () => {
         if (intervalRef.current) {
           clearInterval(intervalRef.current)
