@@ -7,7 +7,6 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
     width: '600px',
     backgroundColor: colors.invariant.component,
     borderTopLeftRadius: '24px',
-
     [theme.breakpoints.down('lg')]: {
       borderTopRightRadius: '24px',
       borderRight: `none`,
