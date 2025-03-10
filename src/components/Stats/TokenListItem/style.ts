@@ -49,6 +49,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 
   tokenList: {
+    alignItems: 'center',
     color: colors.white.main,
     '& p': {
       ...typography.heading4

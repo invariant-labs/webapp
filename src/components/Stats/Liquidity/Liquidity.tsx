@@ -2,10 +2,10 @@ import React from 'react'
 import { ResponsiveLine } from '@nivo/line'
 import { linearGradientDef } from '@nivo/core'
 import classNames from 'classnames'
-import { colors, typography } from '@static/theme'
+import { colors, theme, typography } from '@static/theme'
 import { useStyles } from './style'
 import { TimeData } from '@store/reducers/stats'
-import { Grid, Typography } from '@mui/material'
+import { Grid, Typography, useMediaQuery } from '@mui/material'
 import { formatNumberWithSuffix, trimZeros } from '@utils/utils'
 import { formatLargeNumber } from '@utils/formatLargeNumber'
 
@@ -37,6 +37,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
   isLoading
 }) => {
   const { classes } = useStyles()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   liquidityPercent = liquidityPercent ?? 0
   liquidityVolume = liquidityVolume ?? 0
@@ -82,7 +83,11 @@ const Liquidity: React.FC<LiquidityInterface> = ({
               }))
             }
           ]}
-          margin={{ top: 24, bottom: 24, left: 30, right: 24 }}
+          margin={
+            isMobile
+              ? { top: 24, bottom: 24, left: 30, right: 12 }
+              : { top: 24, bottom: 24, left: 30, right: 24 }
+          }
           xScale={{
             type: 'time',
             format: '%d/%m/%Y',
@@ -103,8 +108,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
             tickRotation: 0,
             tickValues: 5,
             renderTick: ({ x, y, value }) => (
-              <g transform={`translate(${x - 30},${y + 4})`}>
-                {' '}
+              <g transform={`translate(${x - (isMobile ? 22 : 30)},${y + 4})`}>
                 <text
                   style={{ fill: colors.invariant.textGrey, ...typography.tiny2 }}
                   textAnchor='start'
