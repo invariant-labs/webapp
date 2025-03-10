@@ -1,7 +1,7 @@
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Button, Grid, Typography, useMediaQuery } from '@mui/material'
 import refreshIcon from '@static/svg/refresh.svg'
-import { useMemo, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStyles } from './style'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'

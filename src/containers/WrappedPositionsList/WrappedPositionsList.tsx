@@ -8,7 +8,7 @@ import {
   positionsWithPoolsData
 } from '@store/selectors/positions'
 import { address, status } from '@store/selectors/solanaWallet'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { calcYPerXPriceBySqrtPrice, printBN } from '@utils/utils'
@@ -162,7 +162,6 @@ export const WrappedPositionsList: React.FC = () => {
       loading={isLoading}
       showNoConnected={walletStatus !== Status.Initialized}
       itemsPerPage={POSITIONS_PER_PAGE}
-      currentNetwork={currentNetwork}
       noConnectedBlockerProps={{
         onConnect: () => {
           dispatch(walletActions.connect(false))
