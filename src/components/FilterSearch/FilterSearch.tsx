@@ -4,27 +4,19 @@ import {
   AutocompleteRenderGetTagProps,
   AutocompleteRenderInputParams,
   AutocompleteRenderOptionState,
-  AutocompleteOwnerState,
-  AutocompleteRenderGetTagProps,
-  AutocompleteRenderInputParams,
-  AutocompleteRenderOptionState,
   Box,
   Fade,
   InputAdornment,
   InputProps,
-  InputProps,
   Paper,
   PaperProps,
-  PaperProps,
   Popper,
-  PopperProps,
   PopperProps,
   TextField,
   Typography,
   useMediaQuery
 } from '@mui/material'
 import SearchIcon from '@static/svg/lupaDark.svg'
-import { forwardRef, useMemo, useState, useCallback, memo, useEffect } from 'react'
 import { forwardRef, useMemo, useState, useCallback, memo } from 'react'
 import { commonTokensForNetworks, NetworkType } from '@store/consts/static'
 import { theme, typography } from '@static/theme'
@@ -35,14 +27,12 @@ import { swapTokens } from '@store/selectors/solanaWallet'
 import icons from '@static/icons'
 import { tokensStatsWithTokensDetails } from '@store/selectors/stats'
 import ListboxComponent from './Helpers/ListBoxComponent'
-import { getTokenPrice, printBN } from '@utils/utils'
-import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import useStyles from './style'
 import { PublicKey } from '@solana/web3.js'
 
 type Breakpoint = 'md' | 'sm'
 import { printBN } from '@utils/utils'
+import useStyles from './styles'
 
 export interface ISearchToken {
   icon: string
@@ -51,13 +41,6 @@ export interface ISearchToken {
   address: string
   balance: BN
   decimals: number
-  balanceUSD?: number
-}
-interface ITokenBalance {
-  address: PublicKey
-  balance: BN
-  decimals: number
-}
   balanceUSD?: number
 }
 interface ITokenBalance {
@@ -101,13 +84,6 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
     const tokensList = useSelector(swapTokens)
     const [open, setOpen] = useState(false)
 
-    const tokenListMap = useMemo(() => {
-      const map = new Map<string, ITokenBalance>()
-      tokensList.forEach(token => {
-        map.set(token.address.toString(), token)
-      })
-      return map
-    }, [tokensList])
     const tokenListMap = useMemo(() => {
       const map = new Map<string, ITokenBalance>()
       tokensList.forEach(token => {
@@ -162,13 +138,7 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
           return 0
         })
     }, [tokensListDetails, tokenListMap, commonTokensSet])
-          return 0
-        })
-    }, [tokensListDetails, tokenListMap, commonTokensSet])
 
-    const isTokensSelected = selectedFilters.length === filtersAmount
-    const isSmall = useMediaQuery(theme.breakpoints.down(bp))
-    const { classes } = useStyles({ isSmall })
     const isTokensSelected = selectedFilters.length === filtersAmount
     const isSmall = useMediaQuery(theme.breakpoints.down(bp))
     const { classes } = useStyles({ isSmall })
@@ -329,25 +299,6 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
                   boundary: 'viewport'
                 }
               }
-            ]
-          }
-        }}
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
-            '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' }
-          },
-          width: isSmall ? '100%' : 'auto'
-        }}
-        renderTags={renderTags}
-        renderOption={renderOption}
-        renderInput={renderInput}
-      />
-    )
-  }
-)
-
-export const MemoizedTokenOption = memo(TokenOption)
             ]
           }
         }}
