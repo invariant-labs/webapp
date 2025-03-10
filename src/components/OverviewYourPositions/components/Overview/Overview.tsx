@@ -23,7 +23,6 @@ import icons from '@static/icons'
 import { actions, PositionWithAddress } from '@store/reducers/positions'
 import { LegendOverview } from '../LegendOverview/LegendOverview'
 import { SwapToken } from '@store/selectors/solanaWallet'
-import useCalculateTotalUnclaimedFee from '@store/hooks/userOverview/useCalculateTotalUnclaimedFee'
 
 interface OverviewProps {
   poolAssets: ProcessedPool[]
@@ -176,7 +175,17 @@ export const Overview: React.FC<OverviewProps> = () => {
     })
   }, [sortedPositions, getAverageColor, logoColors, pendingColorLoads])
 
-  useCalculateTotalUnclaimedFee(prices, dispatch)
+  useEffect(() => {
+    if (Object.keys(prices).length > 0) {
+      dispatch(actions.calculateTotalUnclaimedFees())
+
+      const interval = setInterval(() => {
+        dispatch(actions.calculateTotalUnclaimedFees())
+      }, 60000)
+
+      return () => clearInterval(interval)
+    }
+  }, [dispatch, prices])
 
   const EmptyState = ({ classes }: { classes: EmptyStateClasses }) => (
     <Box className={classes.emptyState}>

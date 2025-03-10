@@ -1783,6 +1783,14 @@ export function* handleCalculateTotalUnclaimedFees() {
         feeGrowthGlobalX: position.poolData.feeGrowthGlobalX,
         feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
       })
+      console.log({
+        tickCurrent: position.poolData.currentTickIndex,
+        feeGrowthGlobalX: position.poolData.feeGrowthGlobalX,
+        feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
+      })
+      console.log({ tickLower: lowerTick, tickUpper: upperTick })
+      console.log({ tokenx: +printBN(bnX, position.tokenX.decimals) })
+      console.log({ tokeny: +printBN(bnY, position.tokenX.decimals) })
       const xValue =
         +printBN(bnX, position.tokenX.decimals) *
         (pricesData.data[position.tokenX.assetAddress.toString()].price ?? 0)
@@ -1889,6 +1897,7 @@ export function* handleClaimAllFees() {
         )
       }
     }
+    yield put(actions.calculateTotalUnclaimedFees())
 
     yield put(
       snackbarsActions.add({
@@ -1908,7 +1917,6 @@ export function* handleClaimAllFees() {
     yield put(snackbarsActions.remove(loaderClaimAllFees))
 
     yield put(actions.getPositionsList())
-    yield put(actions.calculateTotalUnclaimedFees())
 
     yield* put(actions.setAllClaimLoader(false))
   } catch (error) {
