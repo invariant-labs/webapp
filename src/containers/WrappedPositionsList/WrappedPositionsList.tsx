@@ -148,6 +148,7 @@ export const WrappedPositionsList: React.FC = () => {
   return (
     <PositionsList
       initialPage={lastPage}
+      currentNetwork={currentNetwork}
       setLastPage={setLastPage}
       handleRefresh={handleRefresh}
       onAddPositionClick={() => {
@@ -157,7 +158,6 @@ export const WrappedPositionsList: React.FC = () => {
       loading={isLoading}
       showNoConnected={walletStatus !== Status.Initialized}
       itemsPerPage={POSITIONS_PER_PAGE}
-      currentNetwork={currentNetwork}
       noConnectedBlockerProps={{
         onConnect: () => {
           dispatch(walletActions.connect(false))

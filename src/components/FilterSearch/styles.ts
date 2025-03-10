@@ -19,11 +19,10 @@ export const useStyles = makeStyles<{ isSmall: boolean }>()((_theme: Theme, { is
     paddingRight: '10px'
   },
   paper: {
-    width: isSmall ? 'calc(100% - 32px)' : 392,
-    maxWidth: isSmall ? 'calc(100% - 32px)' : 392,
+    width: '100%',
+    maxWidth: '100%',
     margin: isSmall ? '0 auto' : undefined,
     boxShadow: 'none',
-    padding: '16px 16px 10px 16px',
     marginTop: 8,
     borderRadius: '10px',
     background: colors.invariant.component,

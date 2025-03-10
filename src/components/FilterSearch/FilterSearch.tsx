@@ -31,7 +31,6 @@ import ListboxComponent from './Helpers/ListBoxComponent'
 import { getTokenPrice, printBN } from '@utils/utils'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-
 type Breakpoint = 'md' | 'sm'
 
 export interface ISearchToken {

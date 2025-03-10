@@ -15,10 +15,12 @@ import {
   nearestTickIndex,
   toMaxNumericPlaces,
   TokenPriceData,
-  getConcentrationIndex
+  getConcentrationIndex,
+  calculateConcentration
 } from '@utils/utils'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Tooltip, Typography } from '@mui/material'
+import icons from '@static/icons'
 
 export interface IRangeSelector {
   updatePath: (concIndex: number) => void
@@ -526,7 +528,16 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         /> */}
       </Grid>
       <Grid container className={classes.innerWrapper}>
-        <Typography className={classes.subheader}>Set price range</Typography>
+        <Grid container justifyContent='space-between' alignItems='center' minHeight={36}>
+          <Typography className={classes.subheader}>Set price range</Typography>
+          {positionOpeningMethod === 'range' && (
+            <Grid className={classes.rangeConcentration}>
+              <img src={icons.boostPoints} alt='Concentration' width='14px' />
+              <Typography>Concentration </Typography>
+              <Typography>{calculateConcentration(leftRange, rightRange).toFixed(2)}x</Typography>
+            </Grid>
+          )}
+        </Grid>
         <Grid container className={classes.inputs}>
           <RangeInput
             disabled={positionOpeningMethod === 'concentration'}
