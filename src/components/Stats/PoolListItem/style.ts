@@ -45,6 +45,7 @@ export const useStyles = makeStyles()(() => ({
 
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: 'auto 60px 60px 60px',
+      padding: '18px 8px',
 
       '& p': {
         justifyContent: 'flex-start',
@@ -66,13 +67,14 @@ export const useStyles = makeStyles()(() => ({
   },
 
   header: {
-    '& p': {
+    '& p.MuiTypography-root': {
       color: colors.invariant.textGrey,
       ...typography.heading4,
-      fontWeight: 400,
+      fontWeight: 600,
 
       [theme.breakpoints.down('sm')]: {
-        ...typography.caption2
+        ...typography.caption2,
+        fontWeight: 600
       }
     }
   },

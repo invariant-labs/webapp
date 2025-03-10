@@ -16,6 +16,7 @@ import inactiveIcon from './svg/inactive.svg'
 import allIcon from './svg/all.svg'
 import docsIcon from './svg/docsCircle.svg'
 import closeSmallIcon from './svg/closeSmall.svg'
+import closeSmallGreenIcon from './svg/closeSmallGreen.svg'
 import successIcon from './svg/successIcon.svg'
 import xIcon from './svg/xCircle.svg'
 import unknownToken from './svg/unknownToken.svg'
@@ -55,6 +56,7 @@ import telegramFill from './svg/telegramFill.svg'
 import githubFill from './svg/githubFill.svg'
 import mediumFill from './svg/MediumFill.svg'
 import docsFill from './svg/docsFill.svg'
+import boostPoints from './svg/boostPoints.svg'
 
 const icons: { [key: string]: string } = {
   docsFill,
@@ -85,6 +87,7 @@ const icons: { [key: string]: string } = {
   inactiveIcon: inactiveIcon,
   allIcon: allIcon,
   closeSmallIcon: closeSmallIcon,
+  closeSmallGreenIcon: closeSmallGreenIcon,
   docsIcon: docsIcon,
   successIcon: successIcon,
   XIcon: xIcon,
@@ -113,7 +116,8 @@ const icons: { [key: string]: string } = {
   newTabBtn,
   airdrop,
   airdropRainbow,
-  audit
+  audit,
+  boostPoints
 }
 
 export default icons
