@@ -203,6 +203,12 @@ export const YourWallet: React.FC<YourWalletProps> = ({
     </Box>
   )
 
+  const simplifySymbol = (pool: TokenPool) => {
+    const symbol = pool.symbol.length <= 6 ? pool.symbol : shortenAddress(pool.symbol, 2)
+
+    return symbol.length <= 4 ? symbol : symbol.substring(0, 4) + '...'
+  }
+
   const renderActions = (pool: TokenPool, strategy: StrategyConfig) => (
     <>
       <TooltipHover text='Add Position'>
@@ -327,9 +333,7 @@ export const YourWallet: React.FC<YourWalletProps> = ({
                             )}
 
                             <Typography className={classes.tokenSymbol}>
-                              {pool.symbol.length <= 6
-                                ? pool.symbol
-                                : shortenAddress(pool.symbol, 2)}
+                              {simplifySymbol(pool)}
                             </Typography>
                             <TooltipHover text='Copy token address'>
                               <FileCopyOutlinedIcon
