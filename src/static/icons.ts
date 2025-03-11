@@ -12,6 +12,7 @@ import discordIcon from './svg/discordCircle.svg'
 import closeIcon from './svg/closeIcon.svg'
 import docsIcon from './svg/docsCircle.svg'
 import closeSmallIcon from './svg/closeSmall.svg'
+import closeSmallGreenIcon from './svg/closeSmallGreen.svg'
 import xIcon from './svg/xCircle.svg'
 import unknownToken from './svg/unknownToken.svg'
 import newTab from './svg/newTab.svg'
@@ -47,6 +48,7 @@ import telegramFill from './svg/telegramFill.svg'
 import githubFill from './svg/githubFill.svg'
 import mediumFill from './svg/MediumFill.svg'
 import docsFill from './svg/docsFill.svg'
+import boostPoints from './svg/boostPoints.svg'
 
 const icons: { [key: string]: string } = {
   docsFill,
@@ -73,6 +75,7 @@ const icons: { [key: string]: string } = {
   mediumIcon: mediumIcon,
   closeIcon: closeIcon,
   closeSmallIcon: closeSmallIcon,
+  closeSmallGreenIcon: closeSmallGreenIcon,
   docsIcon: docsIcon,
   XIcon: xIcon,
   unknownToken: unknownToken,
@@ -97,7 +100,8 @@ const icons: { [key: string]: string } = {
   newTabBtn,
   airdrop,
   airdropRainbow,
-  audit
+  audit,
+  boostPoints
 }
 
 export default icons

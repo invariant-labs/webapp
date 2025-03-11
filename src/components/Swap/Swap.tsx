@@ -29,7 +29,7 @@ import { Status } from '@store/reducers/solanaWallet'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { blurContent, createButtonActions, unblurContent } from '@utils/uiUtils'
 import classNames from 'classnames'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import ExchangeRate from './ExchangeRate/ExchangeRate'
 import TransactionDetailsBox from './TransactionDetailsBox/TransactionDetailsBox'
 import useStyles from './style'
@@ -561,14 +561,6 @@ export const Swap: React.FC<ISwap> = ({
     amountFrom !== '' &&
     amountTo !== ''
 
-  const [prevOpenState, setPrevOpenState] = useState(detailsOpen && canShowDetails)
-
-  useEffect(() => {
-    if (getStateMessage() !== 'Loading') {
-      setPrevOpenState(detailsOpen && canShowDetails)
-    }
-  }, [detailsOpen, canShowDetails])
-
   const handleRefresh = async () => {
     onRefresh(tokenFrom, tokenTo)
     setRefresherTime(REFRESHER_INTERVAL)
@@ -908,7 +900,7 @@ export const Swap: React.FC<ISwap> = ({
           ) : null}
         </Box>
         <TransactionDetailsBox
-          open={getStateMessage() !== 'Loading' ? detailsOpen && canShowDetails : prevOpenState}
+          open={detailsOpen && canShowDetails}
           fee={{
             v: canShowDetails ? pools[simulateResult.poolIndex].fee.v : new BN(0)
           }}

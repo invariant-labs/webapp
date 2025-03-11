@@ -9,7 +9,7 @@ const getSolanaConnection = (url: string): Connection => {
   if (_connection && _network === url) {
     return _connection
   }
-  _connection = new Connection(url, 'processed')
+  _connection = new Connection(url, 'confirmed')
   _network = url
 
   return _connection

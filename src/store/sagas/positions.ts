@@ -14,6 +14,7 @@ import { IWallet, Pair } from '@invariant-labs/sdk'
 import { ListPoolsResponse, ListType, actions as poolsActions } from '@store/reducers/pools'
 import {
   ClosePositionData,
+  FetchTick,
   GetCurrentTicksData,
   InitPositionData,
   actions
@@ -23,7 +24,11 @@ import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { GuardPredicate } from '@redux-saga/types'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { poolsArraySortedByFees, tokens } from '@store/selectors/pools'
-import { positionsWithPoolsData, singlePositionData } from '@store/selectors/positions'
+import {
+  currentPositionTicks,
+  positionsWithPoolsData,
+  singlePositionData
+} from '@store/selectors/positions'
 import { network, rpcAddress } from '@store/selectors/solanaConnection'
 import { accounts } from '@store/selectors/solanaWallet'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
@@ -1581,7 +1586,7 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
     const wallet = yield* call(getWallet)
     const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
 
-    yield put(actions.getCurrentPositionRangeTicks(action.payload.toString()))
+    yield put(actions.getCurrentPositionRangeTicks({ id: action.payload.toString() }))
 
     const position = yield* call(
       [marketProgram, marketProgram.getPosition],
@@ -1602,14 +1607,18 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
   }
 }
 
-export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<string>) {
+export function* handleGetCurrentPositionRangeTicks(
+  action: PayloadAction<{ id: string; fetchTick?: FetchTick }>
+) {
   try {
+    const { id, fetchTick } = action.payload
     const networkType = yield* select(network)
     const rpc = yield* select(rpcAddress)
     const wallet = yield* call(getWallet)
     const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
-
-    const positionData = yield* select(singlePositionData(action.payload))
+    const positionData = yield* select(singlePositionData(id))
+    const { lowerTick: lowerTickState, upperTick: upperTickState } =
+      yield* select(currentPositionTicks)
 
     if (typeof positionData === 'undefined') {
       return
@@ -1620,17 +1629,44 @@ export function* handleGetCurrentPositionRangeTicks(action: PayloadAction<string
       tickSpacing: positionData.poolData.tickSpacing
     })
 
-    const { lowerTick, upperTick } = yield* all({
-      lowerTick: call([marketProgram, marketProgram.getTick], pair, positionData.lowerTickIndex),
-      upperTick: call([marketProgram, marketProgram.getTick], pair, positionData.upperTickIndex)
-    })
+    if (fetchTick === 'lower') {
+      const lowerTick = yield* call(
+        [marketProgram, marketProgram.getTick],
+        pair,
+        positionData.lowerTickIndex
+      )
 
-    yield put(
-      actions.setCurrentPositionRangeTicks({
-        lowerTick,
-        upperTick
+      yield put(
+        actions.setCurrentPositionRangeTicks({
+          lowerTick,
+          upperTick: upperTickState
+        })
+      )
+    } else if (fetchTick === 'upper') {
+      const upperTick = yield* call(
+        [marketProgram, marketProgram.getTick],
+        pair,
+        positionData.upperTickIndex
+      )
+
+      yield put(
+        actions.setCurrentPositionRangeTicks({
+          lowerTick: lowerTickState,
+          upperTick
+        })
+      )
+    } else {
+      const { lowerTick, upperTick } = yield* all({
+        lowerTick: call([marketProgram, marketProgram.getTick], pair, positionData.lowerTickIndex),
+        upperTick: call([marketProgram, marketProgram.getTick], pair, positionData.upperTickIndex)
       })
-    )
+      yield put(
+        actions.setCurrentPositionRangeTicks({
+          lowerTick,
+          upperTick
+        })
+      )
+    }
   } catch (error) {
     console.log(error)
 
