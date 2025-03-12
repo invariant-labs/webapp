@@ -28,11 +28,11 @@ import icons from '@static/icons'
 import { tokensStatsWithTokensDetails } from '@store/selectors/stats'
 import ListboxComponent from './Helpers/ListBoxComponent'
 import { BN } from '@project-serum/anchor'
-import useStyles from './style'
 import { PublicKey } from '@solana/web3.js'
 
 type Breakpoint = 'md' | 'sm'
 import { printBN } from '@utils/utils'
+import useStyles from './styles'
 
 export interface ISearchToken {
   icon: string
