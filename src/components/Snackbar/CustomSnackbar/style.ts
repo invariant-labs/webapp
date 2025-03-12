@@ -131,7 +131,7 @@ export const StyledDetails = styled('button')({
   fontSize: 14,
   fontWeight: 600,
   cursor: 'pointer',
-  transition: '0.2s all cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  transition: '0.3s all cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   backfaceVisibility: 'hidden',
   fontSmoothing: 'subpixel-antialiased',
   width: 'auto',

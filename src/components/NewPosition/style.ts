@@ -105,7 +105,7 @@ const useStyles = makeStyles()(theme => {
       }
     },
     switch: {
-      transition: 'opacity 500ms',
+      transition: 'opacity 300ms',
       display: 'flex',
       justifyContent: 'flex-end'
     },

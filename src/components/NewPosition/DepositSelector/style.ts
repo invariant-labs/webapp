@@ -74,6 +74,7 @@ export const useStyles = makeStyles()(theme => {
     arrows: {
       width: 32,
       cursor: 'pointer',
+      transition: '300ms',
 
       '&:hover': {
         filter: 'brightness(2)',

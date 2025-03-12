@@ -88,6 +88,7 @@ export const useStyles = makeStyles()(() => {
       cursor: 'pointer',
       marginLeft: 8,
       ...typography.body2,
+      transition: '300ms',
       '&:hover': {
         filter: 'brightness(1.15)',
         transition: ' .4s filter',
@@ -110,6 +111,7 @@ export const useStyles = makeStyles()(() => {
       backgroundColor: colors.invariant.newDark,
       color: colors.invariant.textGrey,
       flex: 1,
+      transition: '300ms',
 
       '&:hover': {
         backgroundColor: colors.invariant.light,

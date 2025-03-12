@@ -65,6 +65,7 @@ const useStyles = makeStyles()(theme => {
       paddingInline: 8,
       backgroundColor: colors.invariant.light,
       borderRadius: 11,
+      transition: '300ms',
 
       '&:hover': {
         backgroundColor: colors.invariant.lightHover2,

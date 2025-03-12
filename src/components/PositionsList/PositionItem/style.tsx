@@ -56,7 +56,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
 
     '&:hover': {
       filter: 'brightness(2)'
-    }
+    },
+    transition: '300ms'
   },
   names: {
     textOverflow: 'ellipsis',

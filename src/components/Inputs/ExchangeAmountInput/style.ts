@@ -28,6 +28,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     marginLeft: 4,
     lineHeight: '14px',
     color: colors.invariant.componentBcg,
+    transition: '300ms',
 
     [theme.breakpoints.down('md')]: {
       width: 26,

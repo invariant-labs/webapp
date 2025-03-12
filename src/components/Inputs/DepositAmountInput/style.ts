@@ -134,6 +134,7 @@ export const useStyles = makeStyles<{ isSelected: boolean }>()((theme: Theme, { 
   },
   caption2: {
     ...caption2styles,
+    transition: '300ms',
 
     '&:hover': {
       color: isSelected ? colors.white.main : '',

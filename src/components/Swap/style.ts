@@ -164,7 +164,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     top: '0%',
     transform: 'translateX(-50%) translateY(-6px)',
     cursor: 'pointer',
-    transition: 'background-color 200ms'
+    transition: 'background-color 300ms'
   },
   swapImgRoot: {
     background: colors.invariant.newDark,
@@ -174,6 +174,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 100,
+    transition: '300ms',
     '&:hover': {
       backgroundColor: colors.invariant.light,
       '@media (hover: none)': {
@@ -218,7 +219,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   transactionDetailsButton: {
     [theme.breakpoints.down('sm')]: {
       flexGrow: 1
-    }
+    },
+    transition: '300ms'
   },
   transactionDetailsWrapper: {
     display: 'flex',
@@ -316,6 +318,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     textTransform: 'none',
+    transition: '300ms',
 
     '&:hover': {
       background: colors.invariant.light,
