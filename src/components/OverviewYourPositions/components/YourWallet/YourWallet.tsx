@@ -276,7 +276,7 @@ export const YourWallet: React.FC<YourWalletProps> = ({
             <Skeleton variant='text' width={100} height={32} sx={{ marginRight: '16px' }} />
           ) : (
             <Typography className={classes.headerText}>
-              ${formatNumberWithoutSuffix(totalValue)}
+              ${formatNumberWithoutSuffix(totalValue, { twoDecimals: true })}
             </Typography>
           )}
         </Box>
