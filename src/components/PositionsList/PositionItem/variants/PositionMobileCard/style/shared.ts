@@ -2,33 +2,10 @@ import { Theme } from '@mui/material'
 import { colors, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
-export const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    background: colors.invariant.component,
-    borderRadius: 24,
-    padding: 20,
-    flexWrap: 'nowrap',
-
-    '&:not(:last-child)': {
-      marginBottom: 20
-    },
-
-    '&:hover': {
-      background: `${colors.invariant.component}B0`
-    },
-
-    [theme.breakpoints.down('lg')]: {
-      padding: 16,
-      flexWrap: 'wrap'
-    },
-    [theme.breakpoints.down('sm')]: {
-      padding: 8
-    }
-  },
+export const useSharedStyles = makeStyles()((theme: Theme) => ({
   icons: {
     marginRight: 12,
     width: 'fit-content',
-
     [theme.breakpoints.down('lg')]: {
       marginRight: 12
     }
@@ -36,24 +13,37 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   tokenIcon: {
     width: 40,
     borderRadius: '100%',
-
     [theme.breakpoints.down('sm')]: {
       width: 28
+    }
+  },
+  actionButton: {
+    background: 'none',
+    padding: 0,
+    margin: 0,
+    border: 'none',
+    position: 'relative',
+    color: colors.invariant.black,
+    textTransform: 'none',
+    transition: 'filter 0.2s linear',
+    '&:hover': {
+      filter: 'brightness(1.2)',
+      cursor: 'pointer',
+      '@media (hover: none)': {
+        filter: 'none'
+      }
     }
   },
   arrows: {
     width: 36,
     marginLeft: 4,
     marginRight: 4,
-
     [theme.breakpoints.down('lg')]: {
       width: 30
     },
-
     [theme.breakpoints.down('sm')]: {
       width: 24
     },
-
     '&:hover': {
       filter: 'brightness(2)'
     }
@@ -64,6 +54,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     ...typography.heading2,
     color: colors.invariant.text,
     lineHeight: '40px',
+    textAlign: 'left',
     whiteSpace: 'nowrap',
     width: 180,
     [theme.breakpoints.down('xl')]: {
@@ -106,7 +97,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     background: colors.invariant.light,
     borderRadius: 11,
     height: 36,
-    width: 170,
     marginRight: 8,
     lineHeight: 20,
     paddingInline: 10,
@@ -114,73 +104,87 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       flex: '1 1 0%'
     }
   },
+  button: {
+    ...typography.body1,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    justifySelf: 'center',
+    maxWidth: '36px',
+    maxHeight: '36px',
+    background: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
+    borderRadius: '16px',
+    fontFamily: 'Mukta',
+    fontStyle: 'normal',
+    textTransform: 'none',
+    color: colors.invariant.dark,
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      background: 'linear-gradient(180deg, #3FF2AB 0%, #25B487 100%)',
+      boxShadow: '0 4px 15px rgba(46, 224, 154, 0.35)'
+    },
+    '&:active': {
+      boxShadow: '0 2px 8px rgba(46, 224, 154, 0.35)'
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    }
+  },
   fee: {
     background: colors.invariant.light,
     borderRadius: 11,
     height: 36,
-    width: 90,
-    marginRight: 8,
+    // [theme.breakpoints.up(1361)]: {
+    //   marginRight: 8
+    // },
+    // [theme.breakpoints.down(1361)]: {
+    //   width: 'auto'
+    // },
 
     [theme.breakpoints.down('md')]: {
       marginRight: 0
     }
   },
+  actionButtonContainer: {
+    marginLeft: '16px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  unclaimedFeeContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    width: '100%',
+    justifyContent: 'center'
+  },
   activeFee: {
-    background: colors.invariant.green
+    background: colors.invariant.greenLinearGradient
   },
   infoCenter: {
     flex: '1 1 0%'
   },
-  minMax: {
-    background: colors.invariant.light,
+  dropdown: {
+    background: colors.invariant.greenLinearGradient,
     borderRadius: 11,
     height: 36,
-    width: 320,
     paddingInline: 10,
-    marginRight: 8,
-
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-      marginRight: 0,
-      marginTop: 8
-    }
+    marginRight: 8
+  },
+  dropdownLocked: {
+    background: colors.invariant.lightHover
+  },
+  dropdownText: {
+    color: colors.invariant.black,
+    width: '100%'
   },
   value: {
     background: colors.invariant.light,
     borderRadius: 11,
     height: 36,
-    width: 160,
     paddingInline: 12,
-
-    [theme.breakpoints.down('sm')]: {
-      width: 144,
-      paddingInline: 6
-    }
-  },
-  mdInfo: {
-    width: 'fit-content',
-    flexWrap: 'nowrap',
-
-    [theme.breakpoints.down('lg')]: {
-      flexWrap: 'nowrap',
-      marginTop: 16,
-      width: '100%'
-    },
-
-    [theme.breakpoints.down('md')]: {
-      flexWrap: 'wrap'
-    }
-  },
-  mdTop: {
-    width: 'fit-content',
-
-    [theme.breakpoints.down('lg')]: {
-      width: '100%',
-      justifyContent: 'space-between'
-    }
-  },
-  iconsAndNames: {
-    width: 'fit-content'
+    marginRight: 8
   },
   label: {
     marginRight: 2
