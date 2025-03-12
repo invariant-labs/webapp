@@ -2,7 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { BrowserRouter } from 'react-router-dom'
 import { PositionsList } from './PositionsList'
 import { NetworkType } from '@store/consts/static'
-import { IPositionItem } from './PositionItem/PositionItem'
+import { Keypair } from '@solana/web3.js'
+import { IPositionItem } from './types'
+import { fn } from '@storybook/test'
+import { BN } from '@project-serum/anchor'
 
 const meta = {
   title: 'Components/PositionsList',
@@ -27,6 +30,21 @@ const data: IPositionItem[] = [
     network: NetworkType.Testnet,
     tokenXName: 'BTC',
     tokenYName: 'SNY',
+    position: {
+      bump: 0,
+      feeGrowthInsideX: new BN(0),
+      feeGrowthInsideY: new BN(0),
+      id: 0,
+      lastSlot: new BN(0),
+      lowerTickIndex: new BN(0),
+      owner: Keypair.generate().publicKey,
+      pool: Keypair.generate().publicKey,
+      secondsPerLiquidityInside: new BN(0),
+      tokensOwedX: new BN(0),
+      tokensOwedY: new BN(0),
+      upperTickIndex: new BN(0),
+      liquidity: new BN(0)
+    },
     tokenXIcon:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
     tokenYIcon:
@@ -47,6 +65,21 @@ const data: IPositionItem[] = [
     network: NetworkType.Testnet,
     tokenXName: 'BTC',
     tokenYName: 'SNY',
+    position: {
+      bump: 0,
+      feeGrowthInsideX: new BN(0),
+      feeGrowthInsideY: new BN(0),
+      id: 0,
+      lastSlot: new BN(0),
+      lowerTickIndex: new BN(0),
+      owner: Keypair.generate().publicKey,
+      pool: Keypair.generate().publicKey,
+      secondsPerLiquidityInside: new BN(0),
+      tokensOwedX: new BN(0),
+      tokensOwedY: new BN(0),
+      upperTickIndex: new BN(0),
+      liquidity: new BN(0)
+    },
     tokenXIcon:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
     tokenYIcon:
@@ -67,6 +100,21 @@ const data: IPositionItem[] = [
     network: NetworkType.Testnet,
     tokenXName: 'BTC',
     tokenYName: 'SNY',
+    position: {
+      bump: 0,
+      feeGrowthInsideX: new BN(0),
+      feeGrowthInsideY: new BN(0),
+      id: 0,
+      lastSlot: new BN(0),
+      lowerTickIndex: new BN(0),
+      owner: Keypair.generate().publicKey,
+      pool: Keypair.generate().publicKey,
+      secondsPerLiquidityInside: new BN(0),
+      tokensOwedX: new BN(0),
+      tokensOwedY: new BN(0),
+      upperTickIndex: new BN(0),
+      liquidity: new BN(0)
+    },
     tokenXIcon:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
     tokenYIcon:
@@ -87,6 +135,21 @@ const data: IPositionItem[] = [
     network: NetworkType.Testnet,
     tokenXName: 'BTC',
     tokenYName: 'SNY',
+    position: {
+      bump: 0,
+      feeGrowthInsideX: new BN(0),
+      feeGrowthInsideY: new BN(0),
+      id: 0,
+      lastSlot: new BN(0),
+      lowerTickIndex: new BN(0),
+      owner: Keypair.generate().publicKey,
+      pool: Keypair.generate().publicKey,
+      secondsPerLiquidityInside: new BN(0),
+      tokensOwedX: new BN(0),
+      tokensOwedY: new BN(0),
+      upperTickIndex: new BN(0),
+      liquidity: new BN(0)
+    },
     tokenXIcon:
       'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png',
     tokenYIcon:
@@ -119,6 +182,9 @@ export const Primary: Story = {
     handleRefresh: () => {},
     initialPage: 1,
     setLastPage: () => {},
-    noInitialPositions: false
+    length: 0,
+    noInitialPositions: false,
+    handleClaimFee: fn(),
+    handleClosePosition: fn()
   }
 }

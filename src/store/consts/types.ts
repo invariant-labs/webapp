@@ -30,6 +30,11 @@ export enum SwapError {
   Unknown
 }
 
+export enum CardSwitcher {
+  Overview = 'Overview',
+  Wallet = 'Wallet'
+}
+
 export interface Token {
   symbol: string
   address: PublicKey
