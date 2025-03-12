@@ -21,8 +21,6 @@ export interface PopularPoolData {
   apy?: number
   apyData?: {
     fees: number
-    accumulatedFarmsAvg: number
-    accumulatedFarmsSingleTick: number
   }
   isUnknownFrom?: boolean
   isUnknownTo?: boolean
@@ -71,9 +69,7 @@ export const PopularPoolsWrapper: React.FC = () => {
           addressTo: poolData.tokenY.toString(),
           apy: poolData.apy,
           apyData: {
-            fees: poolData.apy,
-            accumulatedFarmsSingleTick: 0,
-            accumulatedFarmsAvg: 0
+            fees: poolData.apy
           },
           isUnknownFrom: poolData.tokenXDetails?.isUnknown ?? false,
           isUnknownTo: poolData.tokenYDetails?.isUnknown ?? false

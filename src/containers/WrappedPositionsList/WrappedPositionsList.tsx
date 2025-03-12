@@ -149,22 +149,6 @@ export const WrappedPositionsList: React.FC = () => {
         title: 'Start exploring liquidity pools right now!',
         descCustomText: 'Or, connect your wallet to see existing positions, and create a new one!'
       }}
-      // pageChanged={page => {
-      //   const index = positionListPageToQueryPage(page)
-
-      //   if (walletStatus === Status.Initialized && walletAddress && !loadedPages[index] && length) {
-      //     dispatch(
-      //       actions.getPositionsListPage({
-      //         index,
-      //         refresh: false
-      //       })
-      //     )
-      //   }
-      // }}
-      // loadedPages={loadedPages}
-      // getRemainingPositions={() => {
-      //   dispatch(actions.getRemainingPositions({ setLoaded: true }))
-      // }}
       noInitialPositions={list.length === 0}
     />
   )

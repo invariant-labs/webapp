@@ -89,9 +89,7 @@ export const WrappedPoolList: React.FC = () => {
           addressTo: poolData.tokenY.toString(),
           apy: poolData.apy,
           apyData: {
-            fees: poolData.apy,
-            accumulatedFarmsSingleTick: 0,
-            accumulatedFarmsAvg: 0
+            fees: poolData.apy
           },
           isUnknownFrom: poolData.tokenXDetails?.isUnknown ?? false,
           isUnknownTo: poolData.tokenYDetails?.isUnknown ?? false,

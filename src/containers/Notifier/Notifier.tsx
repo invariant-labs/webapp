@@ -26,11 +26,10 @@ const Notifier = () => {
   React.useEffect(() => {
     notifications.forEach(({ key = '', message, open, variant, txid, persist = true, link }) => {
       if (!open) {
-        // dismiss snackbar using notistack
         closeSnackbar(key)
         return
       }
-      // do nothing if snackbar is already displayed
+
       if (key && displayed.includes(key)) return
 
       enqueueSnackbar(message, {

@@ -33,8 +33,6 @@ const poolsList = Array(40)
     const randomVolume24 = Math.random() * 1000
     const randomTvl24 = Math.random() * 100000
     const randomApyDataFees = Math.random() * 100
-    const randomAccumulatedFarmsAvg = Math.random() * 1000
-    const randomAccumulatedFarmsSingleTick = Math.random() * 2000
     const randomLockedX = Math.random() * 1000000000
     const randomLockedY = Math.random() * 1000000000
     const randomLiquidityX = Math.random() * 1000000000
@@ -56,9 +54,7 @@ const poolsList = Array(40)
       liquidityY: randomLiquidityY,
       apy: randomApy,
       apyData: {
-        fees: randomApyDataFees,
-        accumulatedFarmsAvg: randomAccumulatedFarmsAvg,
-        accumulatedFarmsSingleTick: randomAccumulatedFarmsSingleTick
+        fees: randomApyDataFees
       },
       tokenXDetails: {
         address: '5Dvb5E8zKU4E9c7YxfNL5VC8YQj4VAFUTCGYY9ayFLnnY3UA',

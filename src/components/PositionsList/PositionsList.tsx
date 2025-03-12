@@ -23,9 +23,6 @@ interface IProps {
   noConnectedBlockerProps: INoConnected
   itemsPerPage: number
   handleRefresh: () => void
-  // pageChanged: (page: number) => void
-  // loadedPages: Record<number, boolean>
-  // getRemainingPositions: () => void
   noInitialPositions: boolean
   currentNetwork: NetworkType
 }
@@ -41,9 +38,6 @@ export const PositionsList: React.FC<IProps> = ({
   itemsPerPage,
   handleRefresh,
   currentNetwork,
-  // pageChanged,
-  // loadedPages,
-  // getRemainingPositions,
   noInitialPositions
 }) => {
   const { classes } = useStyles()
@@ -108,10 +102,6 @@ export const PositionsList: React.FC<IProps> = ({
   useEffect(() => {
     handleChangePagination(initialPage)
   }, [initialPage])
-
-  // useEffect(() => {
-  //   pageChanged(page)
-  // }, [page])
 
   return (
     <Grid container direction='column' className={classes.root}>

@@ -403,30 +403,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             tokenA !== null ? (tokens[tokenA.toString()].isUnknown ?? false) : false
           }
           placeholder='0.0'
-          // onMaxClick={() => {
-          //   if (tokenA === null) {
-          //     return
-          //   }
-
-          //   if (tokenA.equals(new PublicKey(WRAPPED_SOL_ADDRESS))) {
-          //     tokenAInputState.setValue(
-          //       trimDecimalZeros(
-          //         printBN(
-          //           tokens[tokenA.toString()].balance.gt(WSOL_MIN_FEE_LAMPORTS)
-          //             ? tokens[tokenA.toString()].balance.sub(WSOL_MIN_FEE_LAMPORTS)
-          //             : new BN(0),
-          //           tokens[tokenA.toString()].decimals
-          //         )
-          //       )
-          //     )
-
-          //     return
-          //   }
-
-          //   tokenAInputState.setValue(
-          //     printBN(tokens[tokenA.toString()].balance, tokens[tokenA.toString()].decimals)
-          //   )
-          // }}
           actionButtons={[
             {
               label: 'Max',

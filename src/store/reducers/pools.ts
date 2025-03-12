@@ -76,8 +76,7 @@ export interface PairTokens {
 }
 
 export enum ListType {
-  POSITIONS,
-  FARMS
+  POSITIONS
 }
 
 export interface ListPoolsRequest {
