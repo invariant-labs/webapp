@@ -91,7 +91,7 @@ export const useStyles = makeStyles()(() => {
       transition: '300ms',
       '&:hover': {
         filter: 'brightness(1.15)',
-        transition: ' .4s filter',
+        transition: ' .3s filter',
         boxShadow:
           '0px 3px 1px -2px rgba(43, 193, 144, 0.2),0px 1px 2px 0px rgba(45, 168, 128, 0.14),0px 0px 5px 7px rgba(59, 183, 142, 0.12)',
         '@media (hover: none)': {

@@ -30,7 +30,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     width: 26,
     height: 21,
     cursor: 'pointer',
-    transition: 'filter 100ms',
+    transition: 'filter 300ms',
     '&:hover': {
       filter: 'brightness(1.5)',
       '@media (hover: none)': {
@@ -42,7 +42,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     width: 20,
     height: 20,
     cursor: 'pointer',
-    transition: 'filter 100ms',
+    transition: 'filter 300ms',
     '&:hover': {
       filter: 'brightness(1.5)',
       '@media (hover: none)': {
@@ -189,7 +189,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     objectFit: 'contain',
     marginBlock: 13,
     marginInline: 6,
-    transition: '.4s all'
+    transition: '.3s all'
   },
 
   transactionDetails: {

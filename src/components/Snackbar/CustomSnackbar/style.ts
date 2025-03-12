@@ -101,7 +101,7 @@ export const StyledCloseButton = styled('button')({
   cursor: 'pointer',
   '&:hover': {
     '& img': {
-      transition: '.2s all ease-in',
+      transition: '.3s all ease-in',
       transform: 'scale(1.2)',
       '@media (hover: none)': {
         transform: 'none'

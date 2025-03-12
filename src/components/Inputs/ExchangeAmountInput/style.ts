@@ -10,7 +10,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     ...typography.heading2,
     width: '100%',
     textAlign: 'right',
-    transition: 'all .4s',
+    transition: 'all .3s',
     '& ::placeholder': {
       textAlign: 'right'
     }

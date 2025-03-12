@@ -44,7 +44,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       height: 30,
       '& img': {
         width: 16,
-        transition: '.2s all ease-in',
+        transition: '.3s all ease-in',
         cursor: 'pointer',
         '&:hover': {
           transform: 'scale(1.1)',
