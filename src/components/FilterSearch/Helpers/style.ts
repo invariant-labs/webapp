@@ -26,7 +26,7 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
   },
   closeIcon: {
     cursor: 'pointer',
-    transition: 'opacity 0.2s ease-in-out',
+    transition: 'opacity 0.3s ease-in-out',
     '&:hover': {
       opacity: 0.7
     }
@@ -41,6 +41,7 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
     borderRadius: 24,
     marginRight: 4,
     border: `1px solid ${colors.invariant.component}`,
+    transition: '300ms',
     '&:hover': {
       background: colors.invariant.light,
       '@media (hover: none)': {

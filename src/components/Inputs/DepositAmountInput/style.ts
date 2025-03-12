@@ -43,7 +43,7 @@ export const useStyles = makeStyles<{ isSelected: boolean }>()((theme: Theme, { 
     ...typography.heading2,
     width: '100%',
     textAlign: 'right',
-    transition: 'all .4s',
+    transition: 'all .3s',
     '& ::placeholder': {
       textAlign: 'right'
     }
@@ -134,6 +134,7 @@ export const useStyles = makeStyles<{ isSelected: boolean }>()((theme: Theme, { 
   },
   caption2: {
     ...caption2styles,
+    transition: '300ms',
 
     '&:hover': {
       color: isSelected ? colors.white.main : '',

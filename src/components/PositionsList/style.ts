@@ -74,6 +74,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     paddingInline: 0,
     background:
       'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    transition: '300ms',
 
     '&:hover': {
       background: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
@@ -172,7 +173,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     width: 26,
     height: 21,
     cursor: 'pointer',
-    transition: 'filter 100ms',
+    transition: 'filter 300ms',
     '&:hover': {
       filter: 'brightness(1.5)'
     }

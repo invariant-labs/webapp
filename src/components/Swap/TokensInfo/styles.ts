@@ -69,6 +69,7 @@ export const useStyles = makeStyles<{ isToken: boolean }>()((_theme, { isToken }
     alignItems: 'center',
     columnGap: 4,
     cursor: isToken ? 'pointer' : 'default',
+    transition: '300ms',
     '&:hover': {
       filter: isToken ? 'brightness(1.2)' : 'none',
       '@media (hover: none)': {
