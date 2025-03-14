@@ -196,7 +196,8 @@ export const WrappedStats: React.FC = () => {
               networkType={currentNetwork}
               selectedFilters={searchTokensValue}
               setSelectedFilters={setSearchTokensValue}
-              filtersAmount={3}
+              filtersAmount={2}
+              closeOnSelect={true}
             />
           </Grid>
           <Grid container className={classes.row}>
