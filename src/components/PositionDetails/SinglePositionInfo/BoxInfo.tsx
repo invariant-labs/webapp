@@ -5,7 +5,8 @@ import {
   formatNumberWithSuffix,
   formatNumberWithoutSuffix,
   formatNumbers,
-  showPrefix
+  showPrefix,
+  trimZeros
 } from '@utils/utils'
 import React from 'react'
 import loadingAnimation from '@static/gif/loading.gif'
@@ -111,8 +112,10 @@ export const BoxInfo: React.FC<{
               <Typography className={classes.tokenName}>{tokenA.name}</Typography>
             </Grid>
             <Typography className={classes.tokenValue}>
-              {formatNumbers(thresholdsWithTokenDecimal(Number(tokenA.decimal)))(
-                `${tokenXPrintValue}`
+              {trimZeros(
+                formatNumbers(thresholdsWithTokenDecimal(Number(tokenA.decimal)))(
+                  `${tokenXPrintValue}`
+                )
               )}
               {showPrefix(tokenXPrintValue, prefixConfig)}
             </Typography>
@@ -176,8 +179,10 @@ export const BoxInfo: React.FC<{
               <Typography className={classes.tokenName}>{tokenB.name}</Typography>
             </Grid>
             <Typography className={classes.tokenValue}>
-              {formatNumbers(thresholdsWithTokenDecimal(Number(tokenB.decimal)))(
-                `${tokenYPrintValue}`
+              {trimZeros(
+                formatNumbers(thresholdsWithTokenDecimal(Number(tokenB.decimal)))(
+                  `${tokenYPrintValue}`
+                )
               )}
               {showPrefix(tokenYPrintValue, prefixConfig)}
             </Typography>
