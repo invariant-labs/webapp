@@ -13,7 +13,8 @@ import {
   addressToTicker,
   formatNumberWithSuffix,
   initialXtoY,
-  parseFeeToPathFee
+  parseFeeToPathFee,
+  ROUTES
 } from '@utils/utils'
 import { useNavigate } from 'react-router-dom'
 import { NetworkType } from '@store/consts/static'
@@ -81,14 +82,21 @@ const Card: React.FC<ICard> = ({
     const tokenB = addressToTicker(network, tokenBData.address ?? '')
 
     navigate(
-      `/newPosition/${tokenA}/${tokenB}/${parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))}`,
+      ROUTES.getNewPositionRoute(
+        tokenA,
+        tokenB,
+        parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))
+      ),
       { state: { referer: 'liquidity' } }
     )
   }
 
   const handleOpenSwap = () => {
     navigate(
-      `/exchange/${addressToTicker(network, addressFrom ?? '')}/${addressToTicker(network, addressTo ?? '')}`,
+      ROUTES.getExchangeRoute(
+        addressToTicker(network, addressFrom ?? ''),
+        addressToTicker(network, addressTo ?? '')
+      ),
       { state: { referer: 'liquidity' } }
     )
   }

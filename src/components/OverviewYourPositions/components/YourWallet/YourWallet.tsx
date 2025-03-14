@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom'
 import { DEFAULT_FEE_TIER, STRATEGIES } from '@store/consts/userStrategies'
 import icons from '@static/icons'
 import { getAddressTickerMap, NetworkType } from '@store/consts/static'
-import { addressToTicker, formatNumberWithoutSuffix } from '@utils/utils'
+import { addressToTicker, formatNumberWithoutSuffix, ROUTES } from '@utils/utils'
 import { useStyles } from './styles'
 import { network } from '@store/selectors/solanaConnection'
 import { MobileCard } from './MobileCard'
@@ -223,7 +223,11 @@ export const YourWallet: React.FC<YourWalletProps> = ({
             )
 
             navigate(
-              `/newPosition/${sourceToken}/${addressToTicker(currentNetwork, targetToken.toString())}/${strategy.feeTier}`,
+              ROUTES.getNewPositionRoute(
+                sourceToken,
+                addressToTicker(currentNetwork, targetToken.toString()),
+                strategy.feeTier
+              ),
               {
                 state: { referer: 'portfolio' }
               }
@@ -243,7 +247,10 @@ export const YourWallet: React.FC<YourWalletProps> = ({
               sourceToken === 'SOL' ? tickerMap['USDC'] : tickerMap['SOL']
             )
             navigate(
-              `/exchange/${sourceToken}/${addressToTicker(currentNetwork, targetToken.toString())}`,
+              ROUTES.getExchangeRoute(
+                sourceToken,
+                addressToTicker(currentNetwork, targetToken.toString())
+              ),
               {
                 state: { referer: 'portfolio' }
               }
