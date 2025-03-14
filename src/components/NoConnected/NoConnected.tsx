@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { useStyles } from './style'
 import { useNavigate } from 'react-router-dom'
 import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
+import { ROUTES } from '@utils/utils'
 
 export interface INoConnected {
   onConnect: () => void
@@ -32,7 +33,7 @@ export const NoConnected: React.FC<INoConnected> = ({ onConnect, title, descCust
           <Button
             className={classes.buttonPrimary}
             onClick={() => {
-              navigate('/newPosition/0_01')
+              navigate(ROUTES.getNewPositionRoute('0_01'))
             }}
             variant='contained'>
             Explore pools

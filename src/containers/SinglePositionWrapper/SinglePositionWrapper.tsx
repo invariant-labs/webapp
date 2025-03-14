@@ -10,7 +10,8 @@ import {
   getTokenPrice,
   getJupTokensRatioPrice,
   initialXtoY,
-  printBN
+  printBN,
+  ROUTES
 } from '@utils/utils'
 import { actions as connectionActions } from '@store/reducers/solanaConnection'
 import { actions as poolsActions } from '@store/reducers/pools'
@@ -461,7 +462,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       if (position?.positionIndex === undefined && isClosingPosition) {
         setIsClosingPosition(false)
         dispatch(connectionActions.setTimeoutError(false))
-        navigate('/portfolio')
+        navigate(ROUTES.PORTFOLIO)
       } else {
         dispatch(connectionActions.setTimeoutError(false))
         onRefresh()
@@ -491,7 +492,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             actions.closePosition({
               positionIndex: position.positionIndex,
               onSuccess: () => {
-                navigate('/portfolio')
+                navigate(ROUTES.PORTFOLIO)
               },
               claimFarmRewards
             })
@@ -585,7 +586,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         className={classes.fullHeightContainer}>
         <EmptyPlaceholder
           desc='The position does not exist in your list! '
-          onAction={() => navigate('/portfolio')}
+          onAction={() => navigate(ROUTES.PORTFOLIO)}
           buttonName='Back to positions'
         />
       </Grid>

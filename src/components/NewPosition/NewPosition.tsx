@@ -19,6 +19,7 @@ import {
   getConcentrationIndex,
   parseFeeToPathFee,
   printBN,
+  ROUTES,
   trimLeadingZeros,
   validConcentrationMidPriceTick
 } from '@utils/utils'
@@ -378,11 +379,11 @@ export const NewPosition: React.FC<INewPosition> = ({
   const bestTierIndex =
     tokenA === null || tokenB === null
       ? undefined
-      : (bestTiers.find(
+      : bestTiers.find(
           tier =>
             (tier.tokenX.equals(tokenA) && tier.tokenY.equals(tokenB)) ||
             (tier.tokenX.equals(tokenB) && tier.tokenY.equals(tokenA))
-        )?.bestTierIndex ?? undefined)
+        )?.bestTierIndex ?? undefined
 
   const getMinSliderIndex = () => {
     let minimumSliderIndex = 0
@@ -491,7 +492,11 @@ export const NewPosition: React.FC<INewPosition> = ({
         )
 
         navigate(
-          `/newPosition/${token1Symbol}/${token2Symbol}/${parsedFee}${concParam}${rangeParam}`,
+          ROUTES.getNewPositionRoute(
+            token1Symbol,
+            token2Symbol,
+            parsedFee + concParam + rangeParam
+          ),
           {
             replace: true
           }
@@ -501,15 +506,15 @@ export const NewPosition: React.FC<INewPosition> = ({
           network,
           tokens[address1.toString()].assetAddress.toString()
         )
-        navigate(`/newPosition/${tokenSymbol}/${parsedFee}`, { replace: true })
+        navigate(ROUTES.getNewPositionRoute(tokenSymbol, parsedFee), { replace: true })
       } else if (address2 != null) {
         const tokenSymbol = addressToTicker(
           network,
           tokens[address2.toString()].assetAddress.toString()
         )
-        navigate(`/newPosition/${tokenSymbol}/${parsedFee}`, { replace: true })
+        navigate(ROUTES.getNewPositionRoute(tokenSymbol, parsedFee), { replace: true })
       } else if (fee != null) {
-        navigate(`/newPosition/${parsedFee}`, { replace: true })
+        navigate(ROUTES.getNewPositionRoute(parsedFee), { replace: true })
       }
     }
   }
@@ -562,7 +567,7 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   return (
     <Grid container className={classes.wrapper} direction='column'>
-      <Link to='/portfolio' style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
+      <Link to={ROUTES.PORTFOLIO} style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
         <Grid className={classes.back} container item alignItems='center'>
           <img className={classes.backIcon} src={backIcon} alt='back' />
           <Typography className={classes.backText}>Positions</Typography>

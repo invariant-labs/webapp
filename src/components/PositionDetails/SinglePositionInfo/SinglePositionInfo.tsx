@@ -9,7 +9,7 @@ import useStyles from './style'
 import { useNavigate } from 'react-router-dom'
 import { TokenPriceData } from '@store/consts/types'
 import icons from '@static/icons'
-import { addressToTicker } from '@utils/utils'
+import { addressToTicker, ROUTES } from '@utils/utils'
 import { NetworkType } from '@store/consts/static'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 
@@ -188,7 +188,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
                 const address1 = addressToTicker(network, tokenX.name)
                 const address2 = addressToTicker(network, tokenY.name)
 
-                navigate(`/newPosition/${address1}/${address2}/${fee}`)
+                navigate(ROUTES.getNewPositionRoute(address1, address2, fee.toString()))
               }}>
               <span className={classes.buttonText}>+ Add Position</span>
             </Button>

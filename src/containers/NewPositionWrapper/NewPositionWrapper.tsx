@@ -16,7 +16,8 @@ import {
   getJupTokensRatioPrice,
   getNewTokenOrThrow,
   printBN,
-  tickerToAddress
+  tickerToAddress,
+  ROUTES
 } from '@utils/utils'
 import { BN } from '@project-serum/anchor'
 import { actions as poolsActions } from '@store/reducers/pools'
@@ -181,14 +182,18 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     }
 
     if (tokenFromAddress && tokenFrom?.assetAddress && tokenToAddress && tokenTo?.assetAddress) {
-      return `/newPosition/${initialTokenFrom}/${initialTokenTo}/${initialFee}${concentrationParam}${rangeParam}`
+      return ROUTES.getNewPositionRoute(
+        initialTokenFrom,
+        initialTokenTo,
+        initialFee + concentrationParam + rangeParam
+      )
     }
 
     if (tokenFromAddress && tokenFrom?.assetAddress) {
-      return `/newPosition/${initialTokenFrom}/${initialFee}`
+      return ROUTES.getNewPositionRoute(initialTokenFrom, initialFee)
     }
 
-    return `/newPosition/${initialFee}`
+    return ROUTES.getNewPositionRoute(initialFee)
   }
 
   useEffect(() => {

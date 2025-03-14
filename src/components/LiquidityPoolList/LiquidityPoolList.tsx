@@ -41,6 +41,7 @@ export interface PoolListInterface {
 
 import { Keypair } from '@solana/web3.js'
 import classNames from 'classnames'
+import { ROUTES } from '@utils/utils'
 
 const ITEMS_PER_PAGE = 10
 
@@ -195,7 +196,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
             </Typography>
             <Button
               className={classes.addPoolButton}
-              onClick={() => navigate('/newPosition')}
+              onClick={() => navigate(ROUTES.NEW_POSITION)}
               variant='contained'>
               Add pool
             </Button>
