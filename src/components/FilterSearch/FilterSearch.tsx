@@ -55,6 +55,7 @@ interface IFilterSearch {
   filtersAmount: number
   bp?: Breakpoint
   loading?: boolean
+  closeOnSelect?: boolean
 }
 
 const CustomPopper = memo((props: PopperProps) => {
@@ -77,7 +78,8 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
     setSelectedFilters,
     filtersAmount,
     bp = 'sm',
-    loading = false
+    loading = false,
+    closeOnSelect = false
   }) => {
     const tokensListDetails = useSelector(tokensStatsWithTokensDetails)
     const commonTokens = commonTokensForNetworks[networkType]
@@ -168,9 +170,9 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
     const handleAutoCompleteChange = useCallback(
       (_event: React.SyntheticEvent, newValue: ISearchToken[]) => {
         setSelectedFilters(newValue)
-        setOpen(true)
+        closeOnSelect ? setOpen(false) : setOpen(true)
       },
-      [setSelectedFilters]
+      [setSelectedFilters, closeOnSelect]
     )
 
     const handleOpenPopper = useCallback(() => {
@@ -276,7 +278,7 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
         disablePortal
         id='token-selector'
         isOptionEqualToValue={(option, value) => option.address === value.address}
-        disableCloseOnSelect={!isTokensSelected || !loading}
+        disableCloseOnSelect={closeOnSelect ? closeOnSelect : !isTokensSelected || !loading}
         value={selectedFilters}
         popupIcon={null}
         onChange={handleAutoCompleteChange}
