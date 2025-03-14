@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { useSliderStyles, useThumbStyles } from './style'
 import { Grid, Slider, SliderThumb } from '@mui/material'
+import { theme } from '@static/theme'
 
 export interface IProps {
   values: number[]
@@ -65,6 +66,19 @@ export const ConcentrationSlider: React.FC<IProps> = ({
       onChangeCommitted={onChangeCommitted}
       marks={marks}
       min={0}
+      sx={{
+        '& .MuiSlider-valueLabel': {
+          transition: 'transform 0.3s ease',
+          [theme.breakpoints.down('md')]: {
+            transform:
+              valueIndex < values.length * 0.05
+                ? 'translateX(30%) translateY(-100%)'
+                : valueIndex > values.length * 0.95
+                  ? 'translateX(-30%) translateY(-100%)'
+                  : 'translateX(0%) translateY(-100%)'
+          }
+        }
+      }}
       max={values.length - 1}
       value={valueIndex}
       valueLabelDisplay='on'
