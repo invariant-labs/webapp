@@ -118,10 +118,7 @@ const useStyles = makeStyles()(() => {
       pointerEvents: 'auto',
       display: 'flex',
       justifyContent: 'flex-end',
-      '&:hover': {
-        cursor: 'pointer',
-        filter: 'brightness(1.5)'
-      }
+      cursor: 'pointer'
     },
     button: {
       color: colors.invariant.lightGrey,

@@ -65,7 +65,7 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
             onClick={() => {
               setIsOpenSelectWallet(false)
             }}>
-            <img width={16} src={icons.closeIcon} alt='Close'></img>
+            <img width={16} src={icons.closeSmallIcon} alt='Close'></img>
           </Grid>
           <Typography className={classes.title}>Connect your wallet</Typography>
           <Grid className={classes.buttonWrapper}>
