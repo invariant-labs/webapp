@@ -1,11 +1,10 @@
 import React, { useMemo, useEffect } from 'react'
 import PoolListItem from '@components/Stats/PoolListItem/PoolListItem'
 import { useStyles } from './style'
-import { Button, Grid, Typography } from '@mui/material'
+import { Grid } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
 import { PaginationList } from '@components/Pagination/Pagination'
 import { VariantType } from 'notistack'
-import icons from '@static/icons'
 import { useNavigate } from 'react-router-dom'
 
 export interface PoolListInterface {
@@ -41,6 +40,8 @@ export interface PoolListInterface {
 
 import { Keypair } from '@solana/web3.js'
 import classNames from 'classnames'
+import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import { colors } from '@static/theme'
 
 const ITEMS_PER_PAGE = 10
 
@@ -187,18 +188,22 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
             ))}
           </>
         ) : (
-          <Grid className={classes.noPoolFoundContainer}>
-            <img className={classes.img} src={icons.empty} alt='Not connected' />
-            <Typography className={classes.noPoolFoundPlaceholder}>No pool found...</Typography>
-            <Typography className={classes.noPoolFoundPlaceholder}>
-              Add pool by pressing the button!
-            </Typography>
-            <Button
-              className={classes.addPoolButton}
-              onClick={() => navigate('/newPosition')}
-              variant='contained'>
-              Add pool
-            </Button>
+          <Grid
+            container
+            sx={{
+              background: colors.invariant.component,
+              borderBottom: `1px solid ${colors.invariant.light}`
+            }}>
+            <EmptyPlaceholder
+              height={690}
+              newVersion
+              mainTitle='Pool not found...'
+              desc={'You can create it yourself!'}
+              desc2={'Or try adjusting your search criteria!'}
+              buttonName='Create Pool'
+              onAction={() => navigate('/newPosition')}
+              withButton={true}
+            />
           </Grid>
         )}
         <Grid className={classes.pagination}>
