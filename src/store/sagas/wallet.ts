@@ -35,7 +35,7 @@ import { actions as poolsActions } from '@store/reducers/pools'
 import { actions as farmsActions } from '@store/reducers/farms'
 import { actions as bondsActions } from '@store/reducers/bonds'
 import { closeSnackbar } from 'notistack'
-import { createLoaderKey } from '@utils/utils'
+import { createLoaderKey, ensureError } from '@utils/utils'
 import { PayloadAction } from '@reduxjs/toolkit'
 
 export function* getWallet(): SagaGenerator<WalletAdapter> {
@@ -416,7 +416,11 @@ export function* init(isEagerConnect: boolean): Generator {
 
     yield* call(handleBalance)
     yield* put(actions.setStatus(Status.Initialized))
-  } catch (error) {}
+  } catch (e) {
+    const error = ensureError(e)
+    console.log(error)
+    yield* call(handleRpcError, error.message)
+  }
 }
 
 export const sleep = (ms: number) => {
@@ -439,8 +443,10 @@ export function* sendSol(amount: BN, recipient: PublicKey): SagaGenerator<string
 export function* handleChangeWalletInExtenstion(): Generator {
   try {
     yield* call(init, false)
-  } catch (error) {
-    yield* call(handleRpcError, (error as Error).message)
+  } catch (e) {
+    const error = ensureError(e)
+    console.log(error)
+    yield* call(handleRpcError, error.message)
   }
 }
 
@@ -460,8 +466,10 @@ export function* handleConnect(action: PayloadAction<boolean>): Generator {
       return
     }
     yield* call(init, action.payload)
-  } catch (error) {
-    yield* call(handleRpcError, (error as Error).message)
+  } catch (e) {
+    const error = ensureError(e)
+    console.log(error)
+    yield* call(handleRpcError, error.message)
   }
 }
 
@@ -478,10 +486,10 @@ export function* handleDisconnect(): Generator {
       })
     )
     yield* put(bondsActions.setUserVested({}))
-  } catch (error) {
+  } catch (e) {
+    const error = ensureError(e)
     console.log(error)
-
-    yield* call(handleRpcError, (error as Error).message)
+    yield* call(handleRpcError, error.message)
   }
 }
 

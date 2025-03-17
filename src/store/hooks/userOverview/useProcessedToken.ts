@@ -1,6 +1,6 @@
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
-import { printBN, getTokenPrice } from '@utils/utils'
+import { printBN, getTokenPrice, ensureError } from '@utils/utils'
 import { useEffect, useState } from 'react'
 
 interface Token {
@@ -45,8 +45,9 @@ export const useProcessedTokens = (tokensList: Token[], isBalanceLoading: boolea
           try {
             const priceData = await getTokenPrice(token.assetAddress.toString() ?? '')
             price = priceData.price ?? 0
-          } catch (error) {
-            console.error(`Failed to fetch price for ${token.symbol}:`, error)
+          } catch (e: unknown) {
+            const error = ensureError(e)
+            console.error(`Failed to fetch price for ${token.symbol}:`, error.message)
           }
           return {
             id: token.address,
