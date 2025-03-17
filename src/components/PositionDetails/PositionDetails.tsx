@@ -13,7 +13,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ILiquidityToken } from './SinglePositionInfo/consts'
 import { useStyles } from './style'
 import { TokenPriceData } from '@store/consts/types'
-import { addressToTicker, initialXtoY, parseFeeToPathFee, printBN } from '@utils/utils'
+import { addressToTicker, initialXtoY, parseFeeToPathFee, printBN, ROUTES } from '@utils/utils'
 import { PublicKey } from '@solana/web3.js'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
@@ -136,7 +136,7 @@ const PositionDetails: React.FC<IProps> = ({
     <Grid container className={classes.wrapperContainer} wrap='nowrap'>
       <Grid className={classes.positionDetails} container item direction='column'>
         <Grid className={classes.backContainer} container>
-          <Link to='/portfolio' style={{ textDecoration: 'none' }}>
+          <Link to={ROUTES.PORTFOLIO} style={{ textDecoration: 'none' }}>
             <Grid className={classes.back} container item alignItems='center'>
               <img className={classes.backIcon} src={backIcon} alt='Back' />
               <Typography className={classes.backText}>Positions</Typography>
@@ -233,7 +233,7 @@ const PositionDetails: React.FC<IProps> = ({
                   const tokenA = isXtoY ? address1 : address2
                   const tokenB = isXtoY ? address2 : address1
 
-                  navigate(`/newPosition/${tokenA}/${tokenB}/${parsedFee}`)
+                  navigate(ROUTES.getNewPositionRoute(tokenA, tokenB, parsedFee))
                 }}>
                 <span className={classes.buttonText}>+ Add Position</span>
               </Button>

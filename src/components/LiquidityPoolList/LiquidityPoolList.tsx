@@ -40,6 +40,7 @@ export interface PoolListInterface {
 
 import { Keypair } from '@solana/web3.js'
 import classNames from 'classnames'
+import { ROUTES } from '@utils/utils'
 import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import { colors } from '@static/theme'
 
@@ -201,7 +202,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
               desc={'You can create it yourself!'}
               desc2={'Or try adjusting your search criteria!'}
               buttonName='Create Pool'
-              onAction={() => navigate('/newPosition')}
+              onAction={() => navigate(ROUTES.NEW_POSITION)}
               withButton={true}
             />
           </Grid>

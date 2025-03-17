@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { changeToNightlyAdapter, connectStaticWallet, getSolanaWallet } from '@utils/web3/wallet'
 import { sleep } from '@invariant-labs/sdk'
+import { ROUTES } from '@utils/utils'
 
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -178,12 +179,12 @@ export const HeaderWrapper: React.FC = () => {
           }
 
           if (network !== currentNetwork) {
-            if (location.pathname.startsWith('/exchange')) {
-              navigate('/exchange')
+            if (location.pathname.startsWith(ROUTES.EXCHANGE)) {
+              navigate(ROUTES.EXCHANGE)
             }
 
-            if (location.pathname.startsWith('/newPosition')) {
-              navigate('/newPosition')
+            if (location.pathname.startsWith(ROUTES.NEW_POSITION)) {
+              navigate(ROUTES.NEW_POSITION)
             }
 
             dispatch(actions.setNetwork(network))
