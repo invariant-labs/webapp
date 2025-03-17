@@ -28,8 +28,9 @@ const PortfolioPage: React.FC = () => {
         ) : (
           <Box className={classes.notConnectedPlaceholder}>
             <img src={icons.empty} height={96} width={96} />
-            <Typography style={{ color: colors.invariant.textGrey, ...typography.body2 }}>
-              Wallet is not connected.
+            <Typography
+              style={{ color: colors.invariant.text, ...typography.heading2, marginBottom: '8px' }}>
+              Wallet is not connected
             </Typography>
             <Typography style={{ color: colors.invariant.textGrey, ...typography.body2 }}>
               No liquidity positions to show.

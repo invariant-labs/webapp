@@ -104,6 +104,8 @@ export const PositionsList: React.FC<IProps> = ({
     if (data.length === 0 && !loading) {
       return (
         <EmptyPlaceholder
+          themeDark
+          roundedCorners
           newVersion
           desc={
             noInitialPositions
