@@ -353,7 +353,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     gap: 12
   },
   unknownWarning: {
-    width: 'fit-content',
+    width: '100%',
     background: alpha(colors.invariant.Error, 0.25),
     border: `1px solid ${colors.invariant.Error}`,
     ...typography.caption2,

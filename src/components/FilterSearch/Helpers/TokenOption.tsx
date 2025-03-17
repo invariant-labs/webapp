@@ -37,7 +37,7 @@ export const TokenOption: React.FC<{
               </Typography>
               <a
                 className={classes.addressLink}
-                href={`https://eclipsescan.xyz/token/${option.address.toString()}${networkUrl}`}
+                href={`https://solscan.io/token/${option.address.toString()}${networkUrl}`}
                 target='_blank'
                 rel='noopener noreferrer'
                 onClick={event => event.stopPropagation()}>

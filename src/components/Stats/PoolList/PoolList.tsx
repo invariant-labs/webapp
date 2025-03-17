@@ -5,9 +5,11 @@ import { Grid } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
 import { PaginationList } from '@components/Pagination/Pagination'
 import { VariantType } from 'notistack'
-import NotFoundPlaceholder from '../NotFoundPlaceholder/NotFoundPlaceholder'
 import { Keypair } from '@solana/web3.js'
 import classNames from 'classnames'
+import { useNavigate } from 'react-router-dom'
+import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import { colors } from '@static/theme'
 
 export interface PoolListInterface {
   data: Array<{
@@ -78,6 +80,7 @@ const PoolList: React.FC<PoolListInterface> = ({
   const { classes } = useStyles()
   const [page, setPage] = React.useState(1)
   const [sortType, setSortType] = React.useState(SortTypePoolList.VOLUME_DESC)
+  const navigate = useNavigate()
 
   const sortedData = useMemo(() => {
     if (isLoading) {
@@ -181,7 +184,23 @@ const PoolList: React.FC<PoolListInterface> = ({
           ))}
         </>
       ) : (
-        <NotFoundPlaceholder title='No pools found...' isStats />
+        <Grid
+          container
+          sx={{
+            background: colors.invariant.component,
+            borderBottom: `1px solid ${colors.invariant.light}`
+          }}>
+          <EmptyPlaceholder
+            newVersion
+            height={690}
+            mainTitle='Pool not found...'
+            desc='You can create it yourself!'
+            desc2='Or try adjusting your search criteria!'
+            onAction={() => navigate('/newPosition')}
+            buttonName='Create Pool'
+            withButton={true}
+          />
+        </Grid>
       )}
       <Grid className={classes.pagination}>
         {pages > 1 && (

@@ -12,11 +12,11 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { calcYPerXPriceBySqrtPrice, printBN } from '@utils/utils'
-import { IPositionItem } from '@components/PositionsList/PositionItem/PositionItem'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { DECIMAL, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { network } from '@store/selectors/solanaConnection'
+import { IPositionItem } from '@components/PositionsList/types'
 import { actions as actionsStats } from '@store/reducers/stats'
 
 export const WrappedPositionsList: React.FC = () => {
@@ -28,6 +28,21 @@ export const WrappedPositionsList: React.FC = () => {
   const currentNetwork = useSelector(network)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  const handleClosePosition = (index: number) => {
+    dispatch(
+      actions.closePosition({
+        positionIndex: index,
+        onSuccess: () => {
+          navigate('/portfolio')
+        }
+      })
+    )
+  }
+
+  const handleClaimFee = (index: number) => {
+    dispatch(actions.claimFee(index))
+  }
 
   const setLastPage = (page: number) => {
     dispatch(actions.setLastPage(page))
@@ -46,6 +61,10 @@ export const WrappedPositionsList: React.FC = () => {
   const handleRefresh = () => {
     dispatch(actions.getPositionsList())
   }
+
+  useEffect(() => {
+    dispatch(actionsStats.getCurrentStats())
+  }, [])
 
   useEffect(() => {
     dispatch(actionsStats.getCurrentStats())
@@ -116,6 +135,7 @@ export const WrappedPositionsList: React.FC = () => {
       fee: +printBN(position.poolData.fee.v, DECIMAL - 2),
       min,
       max,
+      position,
       valueX,
       valueY,
       address: walletAddress.toString(),
@@ -149,6 +169,8 @@ export const WrappedPositionsList: React.FC = () => {
         title: 'Start exploring liquidity pools right now!',
         descCustomText: 'Or, connect your wallet to see existing positions, and create a new one!'
       }}
+      handleClosePosition={handleClosePosition}
+      handleClaimFee={handleClaimFee}
       noInitialPositions={list.length === 0}
     />
   )
