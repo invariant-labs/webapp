@@ -40,10 +40,11 @@ export const useTabsStyles = makeStyles()(() => {
     scrollButtons: {
       width: 24,
       '& svg': {
-        fill: colors.invariant.light
+        fill: colors.invariant.text
       },
       '&:hover svg': {
-        fill: colors.invariant.text
+        transition: '0.3s',
+        opacity: 0.7
       }
     }
   }

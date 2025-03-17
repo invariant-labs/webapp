@@ -28,10 +28,11 @@ import icons from '@static/icons'
 import { tokensStatsWithTokensDetails } from '@store/selectors/stats'
 import ListboxComponent from './Helpers/ListBoxComponent'
 import { BN } from '@project-serum/anchor'
-import useStyles from './style'
 import { PublicKey } from '@solana/web3.js'
 
 type Breakpoint = 'md' | 'sm'
+import { printBN } from '@utils/utils'
+import useStyles from './styles'
 
 export interface ISearchToken {
   icon: string
@@ -40,13 +41,13 @@ export interface ISearchToken {
   address: string
   balance: BN
   decimals: number
+  balanceUSD?: number
 }
 interface ITokenBalance {
   address: PublicKey
   balance: BN
   decimals: number
 }
-
 interface IFilterSearch {
   networkType: string
   selectedFilters: ISearchToken[]
@@ -54,6 +55,7 @@ interface IFilterSearch {
   filtersAmount: number
   bp?: Breakpoint
   loading?: boolean
+  closeOnSelect?: boolean
 }
 
 const CustomPopper = memo((props: PopperProps) => {
@@ -76,7 +78,8 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
     setSelectedFilters,
     filtersAmount,
     bp = 'sm',
-    loading = false
+    loading = false,
+    closeOnSelect = false
   }) => {
     const tokensListDetails = useSelector(tokensStatsWithTokensDetails)
     const commonTokens = commonTokensForNetworks[networkType]
@@ -102,13 +105,20 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
           const details = tokenData.tokenDetails
           const tokenAddress = details?.address?.toString() ?? tokenData.address.toString()
           const tokenFromList = tokenListMap.get(tokenAddress)
+          const price = tokenData.price
+          const balanceUSD =
+            price && tokenFromList
+              ? +printBN(tokenFromList.balance, tokenData.tokenDetails?.decimals) * price
+              : 0
+
           return {
             icon: details?.logoURI ?? icons.unknownToken,
             name: details?.name ?? tokenData.address.toString(),
             symbol: details?.symbol ?? tokenData.address.toString(),
             address: tokenAddress,
             balance: tokenFromList ? tokenFromList.balance : 0,
-            decimals: tokenFromList ? tokenFromList.decimals : 0
+            decimals: tokenFromList ? tokenFromList.decimals : 0,
+            balanceUSD: balanceUSD
           }
         })
         .sort((a, b) => {
@@ -116,6 +126,8 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
           const bHasBalance = Number(b.balance) > 0
           const aIsCommon = commonTokensSet.has(a.address)
           const bIsCommon = commonTokensSet.has(b.address)
+          if (a.balanceUSD !== b.balanceUSD) return b.balanceUSD - a.balanceUSD
+
           if (aHasBalance && !bHasBalance) return -1
           if (!aHasBalance && bHasBalance) return 1
           if (aIsCommon && !bIsCommon) return -1
@@ -158,9 +170,9 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
     const handleAutoCompleteChange = useCallback(
       (_event: React.SyntheticEvent, newValue: ISearchToken[]) => {
         setSelectedFilters(newValue)
-        setOpen(true)
+        closeOnSelect ? setOpen(false) : setOpen(true)
       },
-      [setSelectedFilters]
+      [setSelectedFilters, closeOnSelect]
     )
 
     const handleOpenPopper = useCallback(() => {
@@ -266,7 +278,7 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
         disablePortal
         id='token-selector'
         isOptionEqualToValue={(option, value) => option.address === value.address}
-        disableCloseOnSelect={!isTokensSelected || !loading}
+        disableCloseOnSelect={closeOnSelect ? closeOnSelect : !isTokensSelected || !loading}
         value={selectedFilters}
         popupIcon={null}
         onChange={handleAutoCompleteChange}

@@ -56,6 +56,8 @@ import telegramFill from './svg/telegramFill.svg'
 import githubFill from './svg/githubFill.svg'
 import mediumFill from './svg/MediumFill.svg'
 import docsFill from './svg/docsFill.svg'
+import liquidityEmpty from './svg/liqudity_empty.svg'
+import assetsEmpty from './svg/assets_empty.svg'
 import boostPoints from './svg/boostPoints.svg'
 import settings2 from './svg/settings2.svg'
 import mainnetGlow from './svg/mainnetGlow.svg'
@@ -137,7 +139,9 @@ const icons: { [key: string]: string } = {
   alephiumGlow,
   settings3,
   faucet,
-  solana
+  solana,
+  liquidityEmpty,
+  assetsEmpty
 }
 
 export default icons

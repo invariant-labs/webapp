@@ -1,6 +1,6 @@
 import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
-import { Grid } from '@mui/material'
+import { Grid, useMediaQuery } from '@mui/material'
 import loader from '@static/gif/loader.gif'
 import {
   calcPriceBySqrtPrice,
@@ -32,13 +32,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import useStyles from './style'
 import { TokenPriceData } from '@store/consts/types'
-import { NoConnected } from '@components/NoConnected/NoConnected'
 import { hasTokens, volumeRanges } from '@store/selectors/pools'
 import { hasFarms, hasUserStakes, stakesForPosition } from '@store/selectors/farms'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/lib/utils'
 import { MAX_TICK, Pair } from '@invariant-labs/sdk/src'
+import { theme } from '@static/theme'
+import icons from '@static/icons'
 
 export interface IProps {
   id: string
@@ -73,6 +74,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const [xToY, setXToY] = useState<boolean>(
     initialXtoY(position?.tokenX.assetAddress.toString(), position?.tokenY.assetAddress.toString())
   )
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const [globalPrice, setGlobalPrice] = useState<number | undefined>(undefined)
   const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
@@ -562,17 +564,20 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     )
   } else if (walletStatus !== Status.Initialized) {
     return (
-      <Grid
-        display='flex'
-        position='relative'
-        justifyContent='center'
-        className={classes.fullHeightContainer}>
-        <NoConnected
-          onConnect={() => {
-            dispatch(walletActions.connect(false))
+      <Grid className={classes.emptyContainer}>
+        <EmptyPlaceholder
+          newVersion
+          themeDark
+          style={isMobile ? { paddingTop: 8 } : {}}
+          onAction={() => {
+            navigate('/newPosition/0_01')
           }}
-          title='Connect a wallet to view your position,'
-          descCustomText='or start exploring liquidity pools now!'
+          roundedCorners={true}
+          desc='or start exploring liquidity pools now!'
+          buttonName='Explore pools'
+          connectButton={true}
+          onAction2={() => dispatch(walletActions.connect(false))}
+          img={icons.NoConnected}
         />
       </Grid>
     )
@@ -582,8 +587,12 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         display='flex'
         position='relative'
         justifyContent='center'
-        className={classes.fullHeightContainer}>
+        className={classes.emptyContainer}>
         <EmptyPlaceholder
+          newVersion
+          style={isMobile ? { paddingTop: 5 } : {}}
+          themeDark
+          roundedCorners
           desc='The position does not exist in your list! '
           onAction={() => navigate('/portfolio')}
           buttonName='Back to positions'

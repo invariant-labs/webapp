@@ -57,7 +57,9 @@ import {
   SUI_MAIN,
   WRAPPED_SOL_ADDRESS,
   NATIVE_TICK_CROSSES_PER_IX,
-  ADDRESSES_TO_REVERT_TOKEN_PAIRS
+  ADDRESSES_TO_REVERT_TOKEN_PAIRS,
+  POSITIONS_PER_PAGE,
+  PRICE_QUERY_COOLDOWN
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
@@ -1346,25 +1348,38 @@ export const getTokenPrice = async (
   address: string,
   coinGeckoId?: string
 ): Promise<TokenPriceData> => {
-  const jupPrice = await getJupTokenPrice(address)
+  const cachedPriceData = localStorage.getItem(`TOKEN_PRICE_DATA`)
+  const priceData = cachedPriceData ? JSON.parse(cachedPriceData) : {}
+  const lastQueryTimestamp = priceData[address]?.timestamp ?? 0
 
-  if (jupPrice.price !== 0) {
-    return jupPrice
-  } else if (coinGeckoId) {
-    const coingeckoPrice = await getCoinGeckoTokenPrice(coinGeckoId)
+  let tokenPriceData = {
+    price: 0,
+    buyPrice: 0,
+    sellPrice: 0
+  }
 
-    return {
-      price: coingeckoPrice?.current_price || 0,
-      buyPrice: coingeckoPrice?.current_price || 0,
-      sellPrice: coingeckoPrice?.current_price || 0
-    }
-  } else {
-    return {
-      price: 0,
-      buyPrice: 0,
-      sellPrice: 0
+  if (!priceData[address] || Number(lastQueryTimestamp) + PRICE_QUERY_COOLDOWN <= Date.now()) {
+    try {
+      const jupPrice = await getJupTokenPrice(address)
+
+      if (jupPrice.price !== 0) {
+        tokenPriceData = jupPrice
+      } else if (coinGeckoId) {
+        const coingeckoPrice = await getCoinGeckoTokenPrice(coinGeckoId)
+        tokenPriceData = {
+          price: coingeckoPrice?.current_price || 0,
+          buyPrice: coingeckoPrice?.current_price || 0,
+          sellPrice: coingeckoPrice?.current_price || 0
+        }
+      }
+      priceData[address] = { ...tokenPriceData, timestamp: Date.now() }
+    } catch (e: unknown) {
+      console.error(e)
     }
   }
+
+  localStorage.setItem('TOKEN_PRICE_DATA', JSON.stringify(priceData))
+  return priceData[address]
 }
 
 export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
@@ -1606,13 +1621,27 @@ function trimEndingZeros(num) {
   return num.toString().replace(/0+$/, '')
 }
 
-export const formatNumberWithoutSuffix = (number: number | bigint | string): string => {
+export const formatNumberWithoutSuffix = (
+  number: number | bigint | string,
+  options?: { twoDecimals?: boolean }
+): string => {
   const numberAsNumber = Number(number)
   const isNegative = numberAsNumber < 0
   const absNumberAsNumber = Math.abs(numberAsNumber)
 
-  const absNumberAsString = numberToString(absNumberAsNumber)
+  if (options?.twoDecimals) {
+    if (absNumberAsNumber === 0) {
+      return '0'
+    }
+    if (absNumberAsNumber > 0 && absNumberAsNumber < 0.01) {
+      return isNegative ? '-<0.01' : '<0.01'
+    }
+    return isNegative
+      ? '-' + absNumberAsNumber.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      : absNumberAsNumber.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  }
 
+  const absNumberAsString = numberToString(absNumberAsNumber)
   const [beforeDot, afterDot] = absNumberAsString.split('.')
 
   const leadingZeros = afterDot ? countLeadingZeros(afterDot) : 0
@@ -1627,7 +1656,6 @@ export const formatNumberWithoutSuffix = (number: number | bigint | string): str
 
   return isNegative ? '-' + formattedNumber : formattedNumber
 }
-
 export const trimDecimalZeros = (numStr: string): string => {
   if (/^[0.]+$/.test(numStr)) {
     return '0'
@@ -1751,4 +1779,36 @@ export const calculatePriorityFee = (fee: number, priorityMode: PriorityMode): n
     default:
       return 0
   }
+}
+
+export const generatePositionTableLoadingData = () => {
+  const getRandomNumber = (min: number, max: number) =>
+    Math.floor(Math.random() * (max - min + 1)) + min
+
+  return Array(POSITIONS_PER_PAGE)
+    .fill(null)
+    .map((_, index) => {
+      const currentPrice = Math.random() * 10000
+
+      return {
+        id: `loading-${index}`,
+        address: `pool-${index}`,
+        tokenXName: 'FOO',
+        tokenYName: 'BAR',
+        tokenXIcon: undefined,
+        tokenYIcon: undefined,
+        currentPrice,
+        fee: getRandomNumber(1, 10) / 10,
+        min: currentPrice * 0.8,
+        max: currentPrice * 1.2,
+        position: getRandomNumber(1000, 10000),
+        valueX: getRandomNumber(1000, 10000),
+        valueY: getRandomNumber(1000, 10000),
+        poolData: {},
+        isActive: Math.random() > 0.5,
+        tokenXLiq: getRandomNumber(100, 1000),
+        tokenYLiq: getRandomNumber(10000, 100000),
+        network: 'mainnet'
+      }
+    })
 }

@@ -1,3 +1,4 @@
+import { typography, colors } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 const useStyles = makeStyles()(theme => {
@@ -20,6 +21,46 @@ const useStyles = makeStyles()(theme => {
 
       [theme.breakpoints.down('sm')]: {
         paddingInline: 8
+      }
+    },
+    notConnectedPlaceholder: {
+      marginTop: 65,
+
+      height: '400px',
+      width: '100%',
+      borderTopLeftRadius: '24px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+
+      [theme.breakpoints.down('md')]: {
+        justifyContent: 'flex-start',
+        paddingTop: '90px'
+      },
+      [theme.breakpoints.down('sm')]: {
+        marginTop: 30
+      },
+      flexDirection: 'column',
+      borderTopRightRadius: '24px',
+      background: 'linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%)'
+    },
+    button: {
+      height: 40,
+      width: 200,
+      marginTop: 20,
+      color: colors.invariant.componentBcg,
+      ...typography.body1,
+      textTransform: 'none',
+      borderRadius: 14,
+      background: colors.invariant.pinkLinearGradientOpacity,
+
+      '&:hover': {
+        background: colors.invariant.pinkLinearGradient,
+        boxShadow: '0px 0px 16px rgba(239, 132, 245, 0.35)',
+        '@media (hover: none)': {
+          background: colors.invariant.pinkLinearGradientOpacity,
+          boxShadow: 'none'
+        }
       }
     },
     innerContainer: {
