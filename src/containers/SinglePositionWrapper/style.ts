@@ -1,4 +1,4 @@
-import { colors, typography } from '@static/theme'
+import { colors, theme, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 const useStyles = makeStyles()(() => {
@@ -16,6 +16,18 @@ const useStyles = makeStyles()(() => {
     fullHeightContainer: {
       height: '100%',
       marginTop: 104,
+      [theme.breakpoints.down('sm')]: {
+        marginTop: 30
+      },
+      width: 1122,
+      display: 'flex',
+      maxWidth: '100%'
+    },
+    emptyContainer: {
+      marginTop: 104,
+      [theme.breakpoints.down('sm')]: {
+        marginTop: 30
+      },
       width: 1122,
       display: 'flex',
       maxWidth: '100%'

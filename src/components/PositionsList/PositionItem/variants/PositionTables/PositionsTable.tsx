@@ -64,7 +64,7 @@ export const PositionsTable: React.FC<IPositionsTableProps> = ({
               <Box className={classes.emptyWrapper}>
                 <EmptyPlaceholder
                   newVersion
-                  height='408px'
+                  height={408}
                   desc={
                     noInitialPositions
                       ? 'Add your first position by pressing the button and start earning!'
