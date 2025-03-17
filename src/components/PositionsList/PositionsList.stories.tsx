@@ -182,7 +182,6 @@ export const Primary: Story = {
     handleRefresh: () => {},
     initialPage: 1,
     setLastPage: () => {},
-    length: 0,
     noInitialPositions: false,
     handleClaimFee: fn(),
     handleClosePosition: fn()
