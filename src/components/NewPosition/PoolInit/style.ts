@@ -6,10 +6,12 @@ const useStyles = makeStyles()(theme => {
     wrapper: {
       borderRadius: 24,
       backgroundColor: colors.invariant.component,
-      padding: '16px 24px 16px 24px',
+      padding: '16px 24px 6px 24px',
       flex: '1 1 0%',
-      [theme.breakpoints.down('sm')]: {
-        padding: '16px 8px  16px 8px'
+      minHeight: 615,
+      [theme.breakpoints.down('md')]: {
+        padding: '16px 8px  12px 8px',
+        minHeight: 625
       }
     },
     header: {
@@ -117,12 +119,12 @@ const useStyles = makeStyles()(theme => {
       color: colors.white.main
     },
     sliderWrapper: {
-      paddingTop: 24,
+      paddingTop: 22,
       paddingInline: 8,
       position: 'relative',
-
-      [theme.breakpoints.down('sm')]: {
-        paddingBottom: 24
+      [theme.breakpoints.down('md')]: {
+        paddingTop: 12,
+        paddingInline: 8
       }
     },
     rangeConcentration: {

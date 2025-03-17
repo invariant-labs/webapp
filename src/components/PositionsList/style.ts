@@ -4,7 +4,7 @@ import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()((theme: Theme) => ({
   root: {
-    width: 1122,
+    width: 1210, //merge
 
     [theme.breakpoints.down('md')]: {
       width: '100%'
@@ -13,7 +13,10 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   header: {
     paddingBottom: 16,
     display: 'flex',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'center'
+    }
   },
   titleBar: {
     display: 'flex',
@@ -45,25 +48,15 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     alignItems: 'center',
     flexWrap: 'wrap',
     rowGap: '8px',
+    [theme.breakpoints.down('md')]: {
+      alignItems: 'flex-end',
+      width: '100%'
+    },
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column-reverse',
-      alignItems: 'flex-start'
+      flexDirection: 'column'
     }
   },
-  searchBar: {
-    width: 221,
-    height: 32,
-    padding: '7px 12px',
-    borderRadius: 10,
-    background: colors.invariant.black,
-    border: '1px solid #202946',
-    color: colors.invariant.lightGrey,
-    ...typography.body2,
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      height: 48
-    }
-  },
+
   button: {
     color: colors.invariant.dark,
     ...typography.body1,
@@ -90,9 +83,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     }
   },
   fullWidthWrapper: {
+    marginBottom: 8,
     [theme.breakpoints.down('sm')]: {
       width: '100%',
-      marginBottom: 8,
       flexDirection: 'row-reverse'
     }
   },
@@ -134,12 +127,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     width: '100%',
 
     '&:not(:last-child)': {
-      display: 'block',
-      marginBottom: 20,
-
-      [theme.breakpoints.down('md')]: {
-        marginBottom: 16
-      }
+      display: 'block'
     }
   },
   searchIcon: {
@@ -181,7 +169,85 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   titleMobileContainer: {
     display: 'flex',
     flexDirection: 'row',
-
     alignItems: 'center'
+  },
+  switchPoolsContainer: {
+    position: 'relative',
+    width: 'fit-content',
+    backgroundColor: colors.invariant.component,
+    borderRadius: 10,
+    overflow: 'hidden',
+    display: 'inline-flex',
+    height: 38,
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: 8
+    }
+  },
+  switchPoolsMarker: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: '50%',
+    backgroundColor: colors.invariant.light,
+    borderRadius: 10,
+    transition: 'all 0.3s ease',
+    zIndex: 1
+  },
+  switchPoolsButtonsGroup: { position: 'relative', zIndex: 2, display: 'flex' },
+  switchPoolsButton: {
+    ...typography.body2,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+    flex: 1,
+    textTransform: 'none',
+    border: 'none',
+    borderRadius: 10,
+    zIndex: 2,
+    '&.Mui-selected': {
+      backgroundColor: 'transparent'
+    },
+    '&:hover': {
+      backgroundColor: 'transparent'
+    },
+    '&.Mui-selected:hover': {
+      backgroundColor: 'transparent'
+    },
+    '&:disabled': {
+      color: colors.invariant.componentBcg,
+      pointerEvents: 'auto',
+      transition: 'all 0.2s',
+      '&:hover': {
+        boxShadow: 'none',
+        cursor: 'not-allowed',
+        filter: 'brightness(1.15)',
+        '@media (hover: none)': {
+          filter: 'none'
+        }
+      }
+    },
+    letterSpacing: '-0.03em',
+    paddingTop: 6,
+    paddingBottom: 6,
+    paddingLeft: 12,
+    paddingRight: 12
+  },
+  filtersContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: 12,
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'space-between',
+      width: '100%'
+    },
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column'
+    }
+  },
+  disabledSwitchButton: {
+    color: `${colors.invariant.textGrey} !important`
   }
 }))
