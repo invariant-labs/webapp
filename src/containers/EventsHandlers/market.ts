@@ -47,24 +47,6 @@ const MarketEvents = () => {
 
   const location = useLocation()
 
-  // useEffect(() => {
-  //   if (networkType !== NetworkType.Mainnet) {
-  //     return
-  //   }
-  //   const getCommonTokens = async () => {
-  //     try {
-  //       const mainnetCommonTokens = await getMainnetCommonTokens()
-  //       dispatch(
-  //         walletActions.setCommonTokens({ network: networkType, tokens: mainnetCommonTokens })
-  //       )
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-
-  //   void getCommonTokens()
-  // }, [networkType])
-
   useEffect(() => {
     const connection = getCurrentSolanaConnection()
     if (networkStatus !== Status.Initialized || !connection) {

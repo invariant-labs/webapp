@@ -32,8 +32,6 @@ import airdropAdmin from '@store/consts/airdropAdmin'
 import { network } from '@store/selectors/solanaConnection'
 import { tokens } from '@store/selectors/pools'
 import { actions as poolsActions } from '@store/reducers/pools'
-import { actions as farmsActions } from '@store/reducers/farms'
-import { actions as bondsActions } from '@store/reducers/bonds'
 import { closeSnackbar } from 'notistack'
 import { createLoaderKey, ensureError } from '@utils/utils'
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -478,14 +476,12 @@ export function* handleDisconnect(): Generator {
     yield* call(disconnectWallet)
     yield* put(actions.resetState())
     yield* put(positionsActions.setPositionsList([]))
-    yield* put(farmsActions.setUserStakes({}))
     yield* put(
       positionsActions.setCurrentPositionRangeTicks({
         lowerTick: undefined,
         upperTick: undefined
       })
     )
-    yield* put(bondsActions.setUserVested({}))
   } catch (e) {
     const error = ensureError(e)
     console.log(error)

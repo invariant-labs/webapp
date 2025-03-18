@@ -13,8 +13,6 @@ import {
   solToPriorityFee
 } from '@utils/utils'
 import { IWallet, Market, Pair } from '@invariant-labs/sdk'
-import { Staker } from '@invariant-labs/staker-sdk'
-import { actions as farmsActions } from '@store/reducers/farms'
 import { ListPoolsResponse, ListType, actions as poolsActions } from '@store/reducers/pools'
 import {
   ClosePositionData,
@@ -27,7 +25,6 @@ import { actions as connectionActions } from '@store/reducers/solanaConnection'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { GuardPredicate } from '@redux-saga/types'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { stakesForPosition } from '@store/selectors/farms'
 import { poolsArraySortedByFees, tokens } from '@store/selectors/pools'
 import {
   prices,
@@ -40,17 +37,14 @@ import { accounts } from '@store/selectors/solanaWallet'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
 import {
   Keypair,
-  PublicKey,
   SystemProgram,
   Transaction,
   TransactionExpiredTimeoutError,
   sendAndConfirmRawTransaction
 } from '@solana/web3.js'
 import { getMarketProgram } from '@utils/web3/programs/amm'
-import { getStakerProgram } from '@utils/web3/programs/staker'
 import { all, call, put, select, spawn, take, takeEvery, takeLeading } from 'typed-redux-saga'
 import { getConnection, handleRpcError } from './connection'
-import { createClaimAllPositionRewardsTx } from './farms'
 import { createAccount, getWallet, sleep } from './wallet'
 import { closeSnackbar } from 'notistack'
 import { ClaimAllFee, Tick } from '@invariant-labs/sdk/lib/market'
@@ -1323,14 +1317,6 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
     }
 
-    const positionStakes = yield* select(
-      stakesForPosition(allPositionsData[data.positionIndex].address)
-    )
-    const stakerProgram = yield* call(getStakerProgram, networkType, rpc, wallet as IWallet)
-    for (const stake of positionStakes) {
-      yield* call(unsub, stakerProgram, stake.address)
-    }
-
     const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {
       pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
         fee: positionForIndex.fee.v,
@@ -1344,13 +1330,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
 
     let tx: Transaction
 
-    if (data.claimFarmRewards) {
-      const claimTx = yield* call(createClaimAllPositionRewardsTx, data.positionIndex)
-
-      tx = claimTx.add(createIx).add(initIx).add(ix).add(unwrapIx)
-    } else {
-      tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
-    }
+    tx = new Transaction().add(createIx).add(initIx).add(ix).add(unwrapIx)
 
     const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
@@ -1417,7 +1397,6 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     }
 
     yield put(actions.getPositionsList())
-    yield* put(farmsActions.getUserStakes())
 
     data.onSuccess()
 
@@ -1456,14 +1435,6 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     const error = ensureError(e)
     console.log(error)
     yield* call(handleRpcError, error.message)
-  }
-}
-
-const unsub = async (stakerProgram: Staker, key: PublicKey) => {
-  try {
-    await stakerProgram.program.account.userStake.unsubscribe(key)
-  } catch (error) {
-    console.log(error)
   }
 }
 
@@ -1517,15 +1488,6 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
     }
 
-    const positionStakes = yield* select(
-      stakesForPosition(allPositionsData[action.payload.positionIndex].address)
-    )
-    const stakerProgram = yield* call(getStakerProgram, networkType, rpc, wallet as IWallet)
-
-    for (const stake of positionStakes) {
-      yield* call(unsub, stakerProgram, stake.address)
-    }
-
     const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {
       pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
         fee: positionForIndex.fee.v,
@@ -1539,14 +1501,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
 
     let tx: Transaction
 
-    if (action.payload.claimFarmRewards) {
-      const claimTx = yield* call(createClaimAllPositionRewardsTx, action.payload.positionIndex)
-
-      tx = claimTx.add(ix)
-    } else {
-      tx = new Transaction().add(ix)
-    }
-
+    tx = new Transaction().add(ix)
     const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
     if (fee) {
@@ -1610,7 +1565,6 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     }
 
     yield* put(actions.getPositionsList())
-    yield* put(farmsActions.getUserStakes())
 
     action.payload.onSuccess()
 
