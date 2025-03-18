@@ -1,5 +1,5 @@
 import { Button, Grid, Tooltip, Typography } from '@mui/material'
-import loader from '@static/gif/loading2.gif'
+import loader from '@static/gif/loading.gif'
 import SwapPosition from '@static/svg/swap-position.svg'
 import {
   formatNumberWithSuffix,

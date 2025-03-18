@@ -42,8 +42,6 @@ interface IProps {
   apy?: number
   apyData?: {
     fees: number
-    accumulatedFarmsAvg: number
-    accumulatedFarmsSingleTick: number
   }
   isUnknownFrom?: boolean
   isUnknownTo?: boolean

@@ -25,7 +25,6 @@ interface IProps {
   noConnectedBlockerProps: INoConnected
   itemsPerPage: number
   handleRefresh: () => void
-  length: number
   noInitialPositions: boolean
   currentNetwork: NetworkType
   handleClosePosition: (index: number) => void
@@ -40,11 +39,6 @@ export const PositionsList: React.FC<IProps> = ({
   noConnectedBlockerProps,
   handleRefresh,
   currentNetwork,
-  // pageChanged,
-  // length,
-  // lockedLength,
-  // loadedPages,
-  // getRemainingPositions,
   noInitialPositions,
   handleClosePosition,
   handleClaimFee

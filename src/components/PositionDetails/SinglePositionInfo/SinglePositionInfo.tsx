@@ -1,8 +1,6 @@
-import ClosePositionWarning from '@components/Modals/ClosePositionWarning/ClosePositionWarning'
 import { Button, Grid, Hidden, Tooltip, Typography } from '@mui/material'
-import { blurContent, unblurContent } from '@utils/uiUtils'
 import classNames from 'classnames'
-import React, { useState } from 'react'
+import React from 'react'
 import { BoxInfo } from './BoxInfo'
 import { ILiquidityToken } from './consts'
 import useStyles from './style'
@@ -24,7 +22,6 @@ interface IProp {
   xToY: boolean
   swapHandler: () => void
   showFeesLoader?: boolean
-  userHasStakes?: boolean
   isBalanceLoading: boolean
   isActive: boolean
   network: NetworkType
@@ -41,35 +38,16 @@ const SinglePositionInfo: React.FC<IProp> = ({
   xToY,
   swapHandler,
   showFeesLoader = false,
-  userHasStakes = false,
   isBalanceLoading,
   isActive,
   network
 }) => {
   const navigate = useNavigate()
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const { classes } = useStyles()
 
   return (
     <Grid className={classes.root}>
-      <ClosePositionWarning
-        open={isModalOpen}
-        onCancel={() => {
-          setIsModalOpen(false)
-          unblurContent()
-        }}
-        onClose={() => {
-          closePosition()
-          setIsModalOpen(false)
-          unblurContent()
-        }}
-        onClaim={() => {
-          closePosition(true)
-          setIsModalOpen(false)
-          unblurContent()
-        }}
-      />
       <Grid className={classes.header}>
         <Grid className={classes.iconsGrid}>
           <Grid className={classes.tickerContainer}>
@@ -170,12 +148,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
               className={classes.closeButton}
               variant='contained'
               onClick={() => {
-                if (!userHasStakes) {
-                  closePosition()
-                } else {
-                  setIsModalOpen(true)
-                  blurContent()
-                }
+                closePosition()
               }}>
               Close position
             </Button>

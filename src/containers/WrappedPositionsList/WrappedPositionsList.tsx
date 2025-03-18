@@ -171,7 +171,6 @@ export const WrappedPositionsList: React.FC = () => {
       }}
       handleClosePosition={handleClosePosition}
       handleClaimFee={handleClaimFee}
-      length={list.length}
       noInitialPositions={list.length === 0}
     />
   )
