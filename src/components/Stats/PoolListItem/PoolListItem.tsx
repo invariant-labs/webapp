@@ -8,7 +8,13 @@ import { useNavigate } from 'react-router-dom'
 import icons from '@static/icons'
 import { NetworkType, SortTypePoolList } from '@store/consts/static'
 
-import { addressToTicker, initialXtoY, parseFeeToPathFee, shortenAddress } from '@utils/utils'
+import {
+  addressToTicker,
+  initialXtoY,
+  parseFeeToPathFee,
+  ROUTES,
+  shortenAddress
+} from '@utils/utils'
 import { formatNumberWithSuffix } from '@utils/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
@@ -36,8 +42,6 @@ interface IProps {
   apy?: number
   apyData?: {
     fees: number
-    accumulatedFarmsAvg: number
-    accumulatedFarmsSingleTick: number
   }
   isUnknownFrom?: boolean
   isUnknownTo?: boolean
@@ -111,14 +115,21 @@ const PoolListItem: React.FC<IProps> = ({
     const tokenB = addressToTicker(network, tokenBData.address ?? '')
 
     navigate(
-      `/newPosition/${tokenA}/${tokenB}/${parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))}`,
+      ROUTES.getNewPositionRoute(
+        tokenA,
+        tokenB,
+        parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))
+      ),
       { state: { referer: 'stats' } }
     )
   }
 
   const handleOpenSwap = () => {
     navigate(
-      `/exchange/${addressToTicker(network, tokenAData.address ?? '')}/${addressToTicker(network, tokenBData.address ?? '')}`,
+      ROUTES.getExchangeRoute(
+        addressToTicker(network, tokenAData.address ?? ''),
+        addressToTicker(network, tokenBData.address ?? '')
+      ),
       { state: { referer: 'stats' } }
     )
   }

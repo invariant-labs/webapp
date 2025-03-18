@@ -6,8 +6,6 @@ const EventHandler = () => {
     <>
       <SolanaWalletEvents />
       <MarketEvents />
-      {/* <StakerEvents /> */}
-      {/* <BondsEvents /> */}
     </>
   )
 }

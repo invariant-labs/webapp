@@ -10,7 +10,8 @@ import {
   getTokenPrice,
   getJupTokensRatioPrice,
   initialXtoY,
-  printBN
+  printBN,
+  ROUTES
 } from '@utils/utils'
 import { actions as connectionActions } from '@store/reducers/solanaConnection'
 import { actions as poolsActions } from '@store/reducers/pools'
@@ -18,7 +19,6 @@ import { actions } from '@store/reducers/positions'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { Status, actions as walletActions } from '@store/reducers/solanaWallet'
 import { network, timeoutError } from '@store/selectors/solanaConnection'
-import { actions as farmsActions } from '@store/reducers/farms'
 import {
   currentPositionTicks,
   isLoadingPositionsList,
@@ -32,8 +32,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import useStyles from './style'
 import { TokenPriceData } from '@store/consts/types'
-import { hasTokens, volumeRanges } from '@store/selectors/pools'
-import { hasFarms, hasUserStakes, stakesForPosition } from '@store/selectors/farms'
+import { volumeRanges } from '@store/selectors/pools'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/lib/utils'
@@ -61,13 +60,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     loading: currentPositionTicksLoading
   } = useSelector(currentPositionTicks)
   const poolsVolumeRanges = useSelector(volumeRanges)
-  const hasAnyTokens = useSelector(hasTokens)
-  const hasAnyFarms = useSelector(hasFarms)
-  const hasAnyStakes = useSelector(hasUserStakes)
   const walletStatus = useSelector(status)
   const isBalanceLoading = useSelector(balanceLoading)
-
-  const positionStakes = useSelector(stakesForPosition(position?.address))
 
   const isTimeoutError = useSelector(timeoutError)
 
@@ -103,18 +97,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       }
     }
   }, [position?.id.toString()])
-
-  useEffect(() => {
-    if (hasAnyTokens && !hasAnyFarms) {
-      dispatch(farmsActions.getFarms())
-    }
-  }, [hasAnyTokens])
-
-  useEffect(() => {
-    if (walletStatus === Status.Initialized && hasAnyFarms && !hasAnyStakes && position?.id) {
-      dispatch(farmsActions.getUserStakes())
-    }
-  }, [walletStatus, hasAnyFarms, position?.id.toString()])
 
   useEffect(() => {
     if (waitingForTicksData === true && !currentPositionTicksLoading) {
@@ -463,7 +445,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       if (position?.positionIndex === undefined && isClosingPosition) {
         setIsClosingPosition(false)
         dispatch(connectionActions.setTimeoutError(false))
-        navigate('/portfolio')
+        navigate(ROUTES.PORTFOLIO)
       } else {
         dispatch(connectionActions.setTimeoutError(false))
         onRefresh()
@@ -493,7 +475,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             actions.closePosition({
               positionIndex: position.positionIndex,
               onSuccess: () => {
-                navigate('/portfolio')
+                navigate(ROUTES.PORTFOLIO)
               },
               claimFarmRewards
             })
@@ -544,7 +526,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         onRefresh={onRefresh}
         network={currentNetwork}
         plotVolumeRange={currentVolumeRange}
-        userHasStakes={!!positionStakes.length}
         globalPrice={globalPrice}
         xToY={xToY}
         setXToY={setXToY}
@@ -594,7 +575,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           themeDark
           roundedCorners
           desc='The position does not exist in your list! '
-          onAction={() => navigate('/portfolio')}
+          onAction={() => navigate(ROUTES.PORTFOLIO)}
           buttonName='Back to positions'
         />
       </Grid>

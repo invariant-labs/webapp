@@ -11,7 +11,7 @@ import { address, status } from '@store/selectors/solanaWallet'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { calcYPerXPriceBySqrtPrice, printBN } from '@utils/utils'
+import { calcYPerXPriceBySqrtPrice, printBN, ROUTES } from '@utils/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { DECIMAL, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
@@ -34,7 +34,7 @@ export const WrappedPositionsList: React.FC = () => {
       actions.closePosition({
         positionIndex: index,
         onSuccess: () => {
-          navigate('/portfolio')
+          navigate(ROUTES.PORTFOLIO)
         }
       })
     )
@@ -156,7 +156,7 @@ export const WrappedPositionsList: React.FC = () => {
       setLastPage={setLastPage}
       handleRefresh={handleRefresh}
       onAddPositionClick={() => {
-        navigate('/newPosition')
+        navigate(ROUTES.NEW_POSITION)
       }}
       data={data}
       loading={isLoading}
@@ -171,7 +171,6 @@ export const WrappedPositionsList: React.FC = () => {
       }}
       handleClosePosition={handleClosePosition}
       handleClaimFee={handleClaimFee}
-      length={list.length}
       noInitialPositions={list.length === 0}
     />
   )
