@@ -21,7 +21,7 @@ import {
   getSolanaWallet,
   setPhantomAccChangeTrigger
 } from '@utils/web3/wallet'
-import { ROUTES } from '@utils/utils'
+import { ensureError, ROUTES } from '@utils/utils'
 
 const BANNER_STORAGE_KEY = 'invariant-banner-state-2'
 const BANNER_HIDE_DURATION = 1000 * 60 * 60 * 24 // 24 hours
@@ -160,7 +160,9 @@ const RootPage: React.FC = React.memo(() => {
             localStorage.removeItem(BANNER_STORAGE_KEY)
             setShowHeader(true)
           }
-        } catch (error) {
+        } catch (e: unknown) {
+          const error = ensureError(e)
+
           console.error('Error parsing banner state:', error)
           localStorage.removeItem(BANNER_STORAGE_KEY)
         }

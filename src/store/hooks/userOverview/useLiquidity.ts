@@ -18,6 +18,7 @@ export const useLiquidity = (position: ISinglePositionData | undefined) => {
           position.tokenX.decimals
         )
       } catch (error) {
+        console.log(error)
         return 0
       }
     }

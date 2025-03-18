@@ -6,7 +6,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { Tick } from '@invariant-labs/sdk/src/market'
 import { PublicKey } from '@solana/web3.js'
 import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
-import { getFullNewTokensData, getPools, getPoolsFromAdresses } from '@utils//utils'
+import { ensureError, getFullNewTokensData, getPools, getPoolsFromAdresses } from '@utils//utils'
 import { tokens } from '@store/selectors/pools'
 import { handleRpcError, getConnection } from './connection'
 import { network, rpcAddress } from '@store/selectors/solanaConnection'
@@ -36,7 +36,9 @@ export function* fetchPoolData(action: PayloadAction<Pair>) {
         }
       ])
     )
-  } catch (error) {
+  } catch (e: unknown) {
+    const error = ensureError(e)
+    console.log(error)
     yield* put(actions.addPools([]))
 
     yield* call(handleRpcError, (error as Error).message)
@@ -53,7 +55,8 @@ export function* fetchAllPoolsForPairData(action: PayloadAction<PairTokens>) {
     const pools: PoolWithAddress[] = yield call(getPools, pairs, marketProgram)
 
     yield* put(actions.addPools(pools))
-  } catch (error) {
+  } catch (e: unknown) {
+    const error = ensureError(e)
     console.log(error)
 
     yield* call(handleRpcError, (error as Error).message)
@@ -108,7 +111,9 @@ export function* handleGetPathTokens(action: PayloadAction<string[]>) {
     )
 
     yield* put(actions.addPathTokens(tokensData))
-  } catch (e) {
+  } catch (e: unknown) {
+    const error = ensureError(e)
+    console.log(error)
     yield* put(actions.setTokensError(true))
   }
 }
