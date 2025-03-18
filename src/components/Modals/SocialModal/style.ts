@@ -41,7 +41,7 @@ const useStyles = makeStyles()(() => {
       [theme.breakpoints.up('sm')]: {
         '&:hover': {
           background: colors.invariant.lightHover2,
-          transition: '0.2s'
+          transition: '0.3s'
         }
       },
 

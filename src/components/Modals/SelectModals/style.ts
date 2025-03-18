@@ -111,6 +111,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       padding: '8px 12px',
       marginRight: 6,
       marginBottom: 8,
+      transition: '300ms',
       '& p': {
         ...typography.body3,
         fontWeight: 400
@@ -158,6 +159,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       padding: '0 12px',
       position: 'relative',
       overflow: 'hidden',
+      transition: '300ms',
       [theme.breakpoints.down('sm')]: {
         padding: 0
       },
@@ -194,6 +196,7 @@ const useStyles = makeStyles()((theme: Theme) => {
           gap: '6px'
         },
         textDecoration: 'none',
+        transition: '300ms',
 
         '&:hover': {
           filter: 'brightness(1.2)',

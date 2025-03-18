@@ -94,6 +94,7 @@ const useStyles = makeStyles()(() => {
       textTransform: 'none',
       borderRadius: 14,
       background: colors.invariant.pinkLinearGradientOpacity,
+      transition: '300ms',
 
       '&:hover': {
         background: colors.invariant.pinkLinearGradient,
@@ -131,6 +132,7 @@ const useStyles = makeStyles()(() => {
       alignItems: 'center',
       justifyContent: 'center',
       background: colors.invariant.component,
+      transition: '300ms',
 
       '&:hover': {
         color: colors.white.main,

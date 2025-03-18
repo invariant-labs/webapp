@@ -33,6 +33,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     height: 32,
     borderRadius: '100%',
     padding: 4,
+    transition: '300ms',
 
     [theme.breakpoints.down('sm')]: {
       width: 15,
@@ -347,6 +348,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     top: 'calc(50% - 8px)',
     left: 'calc(50% - 16px)',
     cursor: 'pointer',
+    transition: '300ms',
 
     '&:hover': {
       filter: 'brightness(2)',

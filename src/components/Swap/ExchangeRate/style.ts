@@ -30,6 +30,7 @@ export const useStyles = makeStyles()(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     display: 'flex',
+    transition: '300ms',
     '&:hover': {
       borderColor: colors.invariant.lightHover,
       '@media (hover: none)': {

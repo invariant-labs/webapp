@@ -15,7 +15,7 @@ const useStyles = makeStyles()(() => {
     footerItem: {
       margin: '0 10px',
       opacity: '.5',
-      transition: '.2s all',
+      transition: '.3s all',
       '&:hover': {
         opacity: 1,
         transform: 'scale(1.1) rotate(10deg)',
@@ -28,7 +28,8 @@ const useStyles = makeStyles()(() => {
     footerLink: {
       width: '100%',
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
+      transition: '300ms'
     },
     tooltip: {
       color: colors.invariant.textGrey,
