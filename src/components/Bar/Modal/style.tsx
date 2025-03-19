@@ -13,7 +13,7 @@ export const useStyles = makeStyles<Props>()((_theme, { width }) => {
     },
     popover: {
       width,
-      padding: '16px 8px',
+      padding: 16,
       borderRadius: 24,
       background: colors.invariant.component,
       boxShadow: 'none'
