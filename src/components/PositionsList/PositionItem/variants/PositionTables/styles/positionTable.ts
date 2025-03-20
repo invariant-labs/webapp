@@ -39,7 +39,7 @@ export const usePositionTableStyle = makeStyles<{ isScrollHide: boolean }>()(
     headerCell: {
       fontSize: '20px',
       lineHeight: '24px',
-      borderBottom: `1px solid ${colors.invariant.light}`,
+      borderBottom: `2px solid ${colors.invariant.light}`,
 
       color: colors.invariant.textGrey,
       fontWeight: 600,
@@ -140,7 +140,10 @@ export const usePositionTableStyle = makeStyles<{ isScrollHide: boolean }>()(
         }
       },
       '& > tr:first-of-type td': {
-        borderTop: `1px solid ${colors.invariant.light}`
+        borderTop: `none`
+      },
+      '& > tr:last-of-type td': {
+        borderBottom: `none`
       }
     },
     tableBodyRow: {
@@ -152,7 +155,8 @@ export const usePositionTableStyle = makeStyles<{ isScrollHide: boolean }>()(
     tableFooter: {
       display: 'table',
       width: '100%',
-      tableLayout: 'fixed'
+      tableLayout: 'fixed',
+      borderTop: `1px solid ${colors.invariant.light}`
     },
     footerRow: {
       background: colors.invariant.component,

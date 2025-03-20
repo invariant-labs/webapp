@@ -22,6 +22,7 @@ import {
   findPairs,
   handleSimulate,
   printBN,
+  ROUTES,
   trimLeadingZeros
 } from '@utils/utils'
 import { Swap as SwapData } from '@store/reducers/swap'
@@ -211,7 +212,10 @@ export const Swap: React.FC<ISwap> = ({
   useEffect(() => {
     if (canNavigate) {
       navigate(
-        `/exchange/${tokenFrom !== null ? addressToTicker(network, tokenFrom.toString()) : '-'}/${tokenTo !== null ? addressToTicker(network, tokenTo.toString()) : '-'}`,
+        ROUTES.getExchangeRoute(
+          tokenFrom !== null ? addressToTicker(network, tokenFrom.toString()) : '-',
+          tokenTo !== null ? addressToTicker(network, tokenTo.toString()) : '-'
+        ),
         {
           replace: true
         }
@@ -583,11 +587,6 @@ export const Swap: React.FC<ISwap> = ({
     void setSimulateAmount()
   }, [isFetchingNewPool])
 
-  const IS_ERROR_LABEL_SHOW =
-    +printBN(simulateResult.priceImpact, DECIMAL - 2) > 25 ||
-    tokens[tokenFrom?.toString() ?? '']?.isUnknown ||
-    tokens[tokenTo?.toString() ?? '']?.isUnknown
-
   const actions = createButtonActions({
     tokens,
     wrappedTokenAddress: WRAPPED_SOL_ADDRESS,
@@ -801,13 +800,12 @@ export const Swap: React.FC<ISwap> = ({
             network={network}
           />
         </Box>
-        <Box
-          className={classes.unknownWarningContainer}
-          style={{ height: IS_ERROR_LABEL_SHOW ? '34px' : '0px' }}>
+        <Box className={classes.unknownWarningContainer}>
           {+printBN(simulateResult.priceImpact, DECIMAL - 2) > 25 && (
             <TooltipHover text='Your trade size might be too large'>
               <Box className={classes.unknownWarning}>
-                {(+printBN(simulateResult.priceImpact, DECIMAL - 2)).toFixed(2)}% Price impact
+                High price impact: {(+printBN(simulateResult.priceImpact, DECIMAL - 2)).toFixed(2)}
+                %! This swap will cause a significant price movement.
               </Box>
             </TooltipHover>
           )}

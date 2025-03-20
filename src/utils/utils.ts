@@ -1,5 +1,3 @@
-import { calculateSellPrice } from '@invariant-labs/bonds-sdk/lib/math'
-import { BondSaleStruct } from '@invariant-labs/bonds-sdk/lib/sale'
 import { calculatePriceSqrt, MAX_TICK, MIN_TICK, Pair } from '@invariant-labs/sdk'
 import {
   Market,
@@ -22,10 +20,7 @@ import {
   simulateSwap,
   SimulationStatus
 } from '@invariant-labs/sdk/src/utils'
-import { Staker } from '@invariant-labs/staker-sdk'
-import { Stake } from '@invariant-labs/staker-sdk/lib/staker'
 import { BN } from '@project-serum/anchor'
-import { ExtendedStake } from '@store/reducers/farms'
 import { PoolWithAddress } from '@store/reducers/pools'
 import { PlotTickData, PositionWithAddress } from '@store/reducers/positions'
 import { Token as SPLToken, TOKEN_PROGRAM_ID } from '@solana/spl-token'
@@ -1205,38 +1200,6 @@ export const getNewTokenOrThrow = async (
   }
 }
 
-export const getUserStakesForFarm = async (
-  stakerProgram: Staker,
-  incentive: PublicKey,
-  pool: PublicKey,
-  ids: BN[],
-  positionsAdresses: PublicKey[]
-) => {
-  const promises = ids.map(async id => {
-    const [userStakeAddress] = await stakerProgram.getUserStakeAddressAndBump(incentive, pool, id)
-
-    return userStakeAddress
-  })
-
-  const addresses = await Promise.all(promises)
-
-  const stakes = await stakerProgram.program.account.userStake.fetchMultiple(addresses)
-
-  const fullStakes: ExtendedStake[] = []
-
-  stakes.forEach((stake, index) => {
-    if (stake !== null) {
-      fullStakes.push({
-        ...(stake as Stake),
-        address: addresses[index],
-        position: positionsAdresses[index]
-      })
-    }
-  })
-
-  return fullStakes
-}
-
 export const getPositionsForPool = async (marketProgram: Market, pool: PublicKey) => {
   return (
     await marketProgram.program.account.position.all([
@@ -1271,35 +1234,6 @@ export const getPositionsAddressesFromRange = async (
     data.map(({ positionAddress }) => positionAddress)
   )
 }
-
-export const calculateEstBondPriceForQuoteAmount = (bondSale: BondSaleStruct, amount: BN) => {
-  let lowerBondAmount = new BN(0)
-  let upperBondAmount = MAX_U64
-  let price = calculateSellPrice(bondSale, upperBondAmount)
-
-  while (upperBondAmount.sub(lowerBondAmount).abs().gt(new BN(1))) {
-    const middleBondAmount = upperBondAmount.add(lowerBondAmount).div(new BN(2))
-    price = calculateSellPrice(bondSale, middleBondAmount)
-    const middleQuoteAmount = middleBondAmount.mul(price).div(new BN(10 ** DECIMAL))
-
-    if (middleQuoteAmount.sub(amount).abs().lte(new BN(1))) {
-      break
-    }
-
-    if (middleQuoteAmount.lt(amount)) {
-      lowerBondAmount = middleBondAmount
-    } else {
-      upperBondAmount = middleBondAmount
-    }
-  }
-
-  return price
-}
-
-export const calculateBondPrice = (bondSale: BondSaleStruct, amount: BN, byAmountBond: boolean) =>
-  byAmountBond
-    ? calculateSellPrice(bondSale, amount)
-    : calculateEstBondPriceForQuoteAmount(bondSale, amount)
 
 export const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThreshold[] => [
   {
@@ -1790,4 +1724,28 @@ export const generatePositionTableLoadingData = () => {
         network: 'mainnet'
       }
     })
+}
+export const ROUTES = {
+  ROOT: '/',
+  EXCHANGE: '/exchange',
+  EXCHANGE_WITH_PARAMS: '/exchange/:item1?/:item2?',
+  LIQUIDITY: '/liquidity',
+  STATISTICS: '/statistics',
+  NEW_POSITION: '/newPosition',
+  NEW_POSITION_WITH_PARAMS: '/newPosition/:item1?/:item2?/:item3?',
+  POSITION: '/position',
+  POSITION_WITH_ID: '/position/:id',
+  PORTFOLIO: '/portfolio',
+
+  getExchangeRoute: (item1?: string, item2?: string): string => {
+    const parts = [item1, item2].filter(Boolean)
+    return `${ROUTES.EXCHANGE}${parts.length ? '/' + parts.join('/') : ''}`
+  },
+
+  getNewPositionRoute: (item1?: string, item2?: string, item3?: string): string => {
+    const parts = [item1, item2, item3].filter(Boolean)
+    return `${ROUTES.NEW_POSITION}${parts.length ? '/' + parts.join('/') : ''}`
+  },
+
+  getPositionRoute: (id: string): string => `${ROUTES.POSITION}/${id}`
 }
