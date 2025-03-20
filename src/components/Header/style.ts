@@ -127,10 +127,6 @@ const useStyles = makeStyles()((theme: Theme) => {
     },
     leftSide: {
       width: 'auto'
-
-      // [theme.breakpoints.up(1800)]: {
-      //   flex: '1 1 0%'
-      // }
     }
   }
 })

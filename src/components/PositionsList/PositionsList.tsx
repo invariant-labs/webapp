@@ -13,6 +13,7 @@ import PositionCardsSkeletonMobile from './PositionItem/variants/PositionTables/
 import { FilterSearch, ISearchToken } from '@components/FilterSearch/FilterSearch'
 import { NetworkType } from '@store/consts/static'
 import { theme } from '@static/theme'
+import { ROUTES } from '@utils/utils'
 
 interface IProps {
   initialPage: number
@@ -24,7 +25,6 @@ interface IProps {
   noConnectedBlockerProps: INoConnected
   itemsPerPage: number
   handleRefresh: () => void
-  length: number
   noInitialPositions: boolean
   currentNetwork: NetworkType
   handleClosePosition: (index: number) => void
@@ -39,11 +39,6 @@ export const PositionsList: React.FC<IProps> = ({
   noConnectedBlockerProps,
   handleRefresh,
   currentNetwork,
-  // pageChanged,
-  // length,
-  // lockedLength,
-  // loadedPages,
-  // getRemainingPositions,
   noInitialPositions,
   handleClosePosition,
   handleClaimFee
@@ -103,6 +98,8 @@ export const PositionsList: React.FC<IProps> = ({
     if (data.length === 0 && !loading) {
       return (
         <EmptyPlaceholder
+          themeDark
+          roundedCorners
           newVersion
           desc={
             noInitialPositions
@@ -119,7 +116,7 @@ export const PositionsList: React.FC<IProps> = ({
       <Grid
         onClick={() => {
           if (allowPropagation) {
-            navigate(`/position/${element.id}`)
+            navigate(ROUTES.getPositionRoute(element.id))
           }
         }}
         key={element.id}
