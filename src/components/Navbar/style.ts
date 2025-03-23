@@ -13,6 +13,7 @@ const useStyles = makeStyles()(() => {
       textTransform: 'capitalize',
       boxShadow: 'none',
       margin: '4px',
+      transition: '300ms',
       '&:hover': {
         background: 'transparent',
         color: colors.invariant.lightGrey,

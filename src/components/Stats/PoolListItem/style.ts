@@ -151,7 +151,7 @@ export const useStyles = makeStyles()(() => ({
     color: colors.invariant.black,
     textTransform: 'none',
 
-    transition: 'filter 0.2s linear',
+    transition: 'filter 0.3s linear',
 
     '&:hover': {
       filter: 'brightness(1.2)',
