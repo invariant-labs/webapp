@@ -13,7 +13,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { changeToNightlyAdapter, connectStaticWallet, getSolanaWallet } from '@utils/web3/wallet'
 import { sleep } from '@invariant-labs/sdk'
-import { ROUTES } from '@utils/utils'
+import { ensureError, ROUTES } from '@utils/utils'
 
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -42,7 +42,8 @@ export const HeaderWrapper: React.FC = () => {
           await sleep(500)
         }
         dispatch(walletActions.connect(true))
-      } catch (error) {
+      } catch (e: unknown) {
+        const error = ensureError(e)
         console.error('Error during Nightly eager connection:', error)
       }
     }
