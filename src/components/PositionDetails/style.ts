@@ -63,7 +63,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     paddingRight: 9,
     paddingLeft: 9,
     letterSpacing: -0.03,
-
+    transition: '300ms',
     '&:hover': {
       background: colors.invariant.pinkLinearGradient,
       boxShadow: `0 0 16px ${colors.invariant.pink}`,

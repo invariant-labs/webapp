@@ -24,6 +24,7 @@ const useStyles = makeStyles()(() => {
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
+      transition: '300ms',
       '&:hover': {
         color: colors.white.main,
         background: colors.invariant.light,

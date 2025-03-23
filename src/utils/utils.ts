@@ -1749,3 +1749,14 @@ export const ROUTES = {
 
   getPositionRoute: (id: string): string => `${ROUTES.POSITION}/${id}`
 }
+
+export const ensureError = (value: unknown): Error => {
+  if (value instanceof Error) return value
+
+  let stringified = '[Unable to stringify the thrown value]'
+
+  stringified = JSON.stringify(value)
+
+  const error = new Error(stringified)
+  return error
+}

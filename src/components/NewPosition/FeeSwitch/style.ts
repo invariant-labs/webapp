@@ -65,12 +65,13 @@ export const useSingleTabStyles = makeStyles()(() => {
       marginRight: '7px',
       position: 'relative',
       overflow: 'visible',
+      transition: '300ms',
+      borderRadius: 10,
 
       '&:hover': {
         color: colors.invariant.lightHover,
         backgroundColor: colors.invariant.light,
         height: 36,
-        borderRadius: 10,
         '@media (hover: none)': {
           color: colors.invariant.light
         }
