@@ -7,6 +7,7 @@ import {
   createLiquidityPlot,
   createLoaderKey,
   createPlaceholderLiquidityPlot,
+  ensureError,
   getPositionsAddressesFromRange,
   printBN,
   solToPriorityFee
@@ -309,8 +310,8 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
     }
     closeSnackbar(loaderCreatePool)
     yield put(snackbarsActions.remove(loaderCreatePool))
-  } catch (error) {
-    console.log(error)
+  } catch (e) {
+    console.log(e)
 
     yield put(actions.setInitPositionSuccess(false))
     closeSnackbar(loaderCreatePool)
@@ -318,13 +319,13 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    if (error instanceof TransactionExpiredTimeoutError) {
+    if (e instanceof TransactionExpiredTimeoutError) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
           variant: 'info',
           persist: true,
-          txid: error.signature
+          txid: e.signature
         })
       )
       yield put(connectionActions.setTimeoutError(true))
@@ -338,7 +339,8 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
       )
     }
 
-    yield* call(handleRpcError, (error as Error).message)
+    const error = ensureError(e)
+    yield* call(handleRpcError, error.message)
   }
 }
 
@@ -540,8 +542,8 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
 
     closeSnackbar(loaderCreatePosition)
     yield put(snackbarsActions.remove(loaderCreatePosition))
-  } catch (error) {
-    console.log(error)
+  } catch (e) {
+    console.log(e)
 
     yield put(actions.setInitPositionSuccess(false))
 
@@ -552,13 +554,13 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    if (error instanceof TransactionExpiredTimeoutError) {
+    if (e instanceof TransactionExpiredTimeoutError) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
           variant: 'info',
           persist: true,
-          txid: error.signature
+          txid: e.signature
         })
       )
       yield put(connectionActions.setTimeoutError(true))
@@ -572,7 +574,9 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
       )
     }
 
-    yield* call(handleRpcError, (error as Error).message)
+    const error = ensureError(e)
+    console.log(error)
+    yield* call(handleRpcError, error.message)
   }
 }
 
@@ -743,8 +747,8 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 
     closeSnackbar(loaderCreatePosition)
     yield put(snackbarsActions.remove(loaderCreatePosition))
-  } catch (error) {
-    console.log(error)
+  } catch (e) {
+    console.log(e)
 
     yield put(actions.setInitPositionSuccess(false))
 
@@ -755,13 +759,13 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    if (error instanceof TransactionExpiredTimeoutError) {
+    if (e instanceof TransactionExpiredTimeoutError) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
           variant: 'info',
           persist: true,
-          txid: error.signature
+          txid: e.signature
         })
       )
       yield put(connectionActions.setTimeoutError(true))
@@ -775,7 +779,9 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       )
     }
 
-    yield* call(handleRpcError, (error as Error).message)
+    const error = ensureError(e)
+    console.log(error)
+    yield* call(handleRpcError, error.message)
   }
 }
 
@@ -810,8 +816,11 @@ export function* handleGetCurrentPlotTicks(action: PayloadAction<GetCurrentTicks
     )
 
     yield put(actions.setPlotTicks(ticksData))
-  } catch (error) {
+  } catch (e) {
+    console.log(e)
+    const error = ensureError(e)
     console.log(error)
+
     const data = createPlaceholderLiquidityPlot(
       action.payload.isXtoY,
       10,
@@ -870,10 +879,12 @@ export function* handleGetPositionsList() {
     yield* take(pattern)
 
     yield* put(actions.setPositionsList(positions))
-  } catch (error) {
+  } catch (e: unknown) {
+    const error = ensureError(e)
+
     yield* put(actions.setPositionsList([]))
 
-    yield* call(handleRpcError, (error as Error).message)
+    yield* call(handleRpcError, error.message)
   }
 }
 
@@ -1033,8 +1044,8 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 
     closeSnackbar(loaderClaimFee)
     yield put(snackbarsActions.remove(loaderClaimFee))
-  } catch (error) {
-    console.log(error)
+  } catch (e) {
+    console.log(e)
 
     closeSnackbar(loaderTxDetails)
     yield put(snackbarsActions.remove(loaderTxDetails))
@@ -1043,13 +1054,13 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    if (error instanceof TransactionExpiredTimeoutError) {
+    if (e instanceof TransactionExpiredTimeoutError) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
           variant: 'info',
           persist: true,
-          txid: error.signature
+          txid: e.signature
         })
       )
       yield put(connectionActions.setTimeoutError(true))
@@ -1063,7 +1074,9 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
       )
     }
 
-    yield* call(handleRpcError, (error as Error).message)
+    const error = ensureError(e)
+    console.log(error)
+    yield* call(handleRpcError, error.message)
   }
 }
 
@@ -1196,21 +1209,21 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
     closeSnackbar(loaderClaimFee)
     yield put(snackbarsActions.remove(loaderClaimFee))
-  } catch (error) {
-    console.log(error)
+  } catch (e) {
+    console.log(e)
 
     closeSnackbar(loaderClaimFee)
     yield put(snackbarsActions.remove(loaderClaimFee))
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    if (error instanceof TransactionExpiredTimeoutError) {
+    if (e instanceof TransactionExpiredTimeoutError) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
           variant: 'info',
           persist: true,
-          txid: error.signature
+          txid: e.signature
         })
       )
       yield put(connectionActions.setTimeoutError(true))
@@ -1224,7 +1237,9 @@ export function* handleClaimFee(action: PayloadAction<number>) {
       )
     }
 
-    yield* call(handleRpcError, (error as Error).message)
+    const error = ensureError(e)
+    console.log(error)
+    yield* call(handleRpcError, error.message)
   }
 }
 
@@ -1387,8 +1402,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
 
     closeSnackbar(loaderClosePosition)
     yield put(snackbarsActions.remove(loaderClosePosition))
-  } catch (error) {
-    console.log(error)
+  } catch (e) {
+    console.log(e)
 
     closeSnackbar(loaderTxDetails)
     yield put(snackbarsActions.remove(loaderTxDetails))
@@ -1397,13 +1412,13 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    if (error instanceof TransactionExpiredTimeoutError) {
+    if (e instanceof TransactionExpiredTimeoutError) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
           variant: 'info',
           persist: true,
-          txid: error.signature
+          txid: e.signature
         })
       )
       yield put(connectionActions.setTimeoutError(true))
@@ -1417,7 +1432,9 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
       )
     }
 
-    yield* call(handleRpcError, (error as Error).message)
+    const error = ensureError(e)
+    console.log(error)
+    yield* call(handleRpcError, error.message)
   }
 }
 
@@ -1553,8 +1570,8 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
 
     closeSnackbar(loaderClosePosition)
     yield put(snackbarsActions.remove(loaderClosePosition))
-  } catch (error) {
-    console.log(error)
+  } catch (e) {
+    console.log(e)
 
     closeSnackbar(loaderTxDetails)
     yield put(snackbarsActions.remove(loaderTxDetails))
@@ -1563,13 +1580,13 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    if (error instanceof TransactionExpiredTimeoutError) {
+    if (e instanceof TransactionExpiredTimeoutError) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
           variant: 'info',
           persist: true,
-          txid: error.signature
+          txid: e.signature
         })
       )
       yield put(connectionActions.setTimeoutError(true))
@@ -1583,7 +1600,9 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       )
     }
 
-    yield* call(handleRpcError, (error as Error).message)
+    const error = ensureError(e)
+    console.log(error)
+    yield* call(handleRpcError, error.message)
   }
 }
 
@@ -1608,10 +1627,10 @@ export function* handleGetSinglePosition(action: PayloadAction<number>) {
         position
       })
     )
-  } catch (error) {
-    console.log(error)
+  } catch (e: unknown) {
+    const error = ensureError(e)
 
-    yield* call(handleRpcError, (error as Error).message)
+    yield* call(handleRpcError, error.message)
   }
 }
 
@@ -1675,10 +1694,10 @@ export function* handleGetCurrentPositionRangeTicks(
         })
       )
     }
-  } catch (error) {
-    console.log(error)
+  } catch (e: unknown) {
+    const error = ensureError(e)
 
-    yield* call(handleRpcError, (error as Error).message)
+    yield* call(handleRpcError, error.message)
   }
 }
 
@@ -1864,30 +1883,26 @@ export function* handleClaimAllFees() {
     yield put(snackbarsActions.remove(loaderClaimAllFees))
 
     yield put(actions.getPositionsList())
-
+  } catch (e) {
+    console.log(e)
     yield* put(actions.setAllClaimLoader(false))
-  } catch (error) {
-    yield* put(actions.setAllClaimLoader(false))
-
-    console.log(error)
 
     closeSnackbar(loaderClaimAllFees)
     yield put(snackbarsActions.remove(loaderClaimAllFees))
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    if (error instanceof TransactionExpiredTimeoutError) {
+    if (e instanceof TransactionExpiredTimeoutError) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
           variant: 'info',
           persist: true,
-          txid: error.signature
+          txid: e.signature
         })
       )
       yield put(connectionActions.setTimeoutError(true))
     } else {
-      console.log(error)
       yield put(
         snackbarsActions.add({
           message: 'Failed to claim fees. Please try again.',
@@ -1897,13 +1912,9 @@ export function* handleClaimAllFees() {
       )
     }
 
-    try {
-      if (error instanceof Error) {
-        yield* call(handleRpcError, error.message)
-      }
-    } catch (rpcError) {
-      console.error('RPC error handling failed:', rpcError)
-    }
+    const error = ensureError(e)
+    console.log(error)
+    yield* call(handleRpcError, error.message)
   }
 }
 

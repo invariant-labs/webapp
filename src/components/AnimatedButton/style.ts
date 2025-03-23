@@ -42,7 +42,7 @@ const useStyles = makeStyles()(() => {
       ...typography.body1,
       color: colors.invariant.componentBcg,
       background: colors.invariant.pinkLinearGradient,
-      transition: 'background-color 0ms ease, box-shadow 150ms linear',
+      transition: 'background-color 0ms ease, box-shadow 300ms linear',
       position: 'relative',
       overflow: 'hidden',
       zIndex: 4,
@@ -51,7 +51,7 @@ const useStyles = makeStyles()(() => {
         background: colors.invariant.light,
         color: colors.invariant.componentBcg,
         pointerEvents: 'auto',
-        transition: 'all 0.2s',
+        transition: 'all 0.3s',
         '&:hover': {
           boxShadow: 'none',
           cursor: 'not-allowed',
