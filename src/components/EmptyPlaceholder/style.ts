@@ -49,6 +49,7 @@ export const useStyles = makeStyles<StyleProps>()(
         : 'rgba(12, 11, 13, 0.8)'
     },
     title: {
+      opacity: 0.8,
       ...typography.heading2,
       color: colors.invariant.text
     },

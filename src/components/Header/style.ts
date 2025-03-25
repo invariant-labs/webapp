@@ -126,6 +126,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       }
     },
     leftSide: {
+      justifyContent: 'flex-start',
       width: 'auto'
     }
   }
