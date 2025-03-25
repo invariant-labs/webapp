@@ -25,8 +25,6 @@ export interface PoolListInterface {
     apy: number
     apyData: {
       fees: number
-      accumulatedFarmsAvg: number
-      accumulatedFarmsSingleTick: number
     }
     isUnknownFrom: boolean
     isUnknownTo: boolean
@@ -40,6 +38,7 @@ export interface PoolListInterface {
 
 import { Keypair } from '@solana/web3.js'
 import classNames from 'classnames'
+import { ROUTES } from '@utils/utils'
 import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
 import { colors } from '@static/theme'
 
@@ -65,9 +64,7 @@ const generateMockData = () => {
     addressTo: tokens[(index * 2 + 1) % tokens.length].address,
     apy: Math.random() * 100,
     apyData: {
-      fees: 10,
-      accumulatedFarmsAvg: 10,
-      accumulatedFarmsSingleTick: 10
+      fees: 10
     },
     isUnknownFrom: false,
     isUnknownTo: false,
@@ -201,7 +198,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
               desc={'You can create it yourself!'}
               desc2={'Or try adjusting your search criteria!'}
               buttonName='Create Pool'
-              onAction={() => navigate('/newPosition')}
+              onAction={() => navigate(ROUTES.NEW_POSITION)}
               withButton={true}
             />
           </Grid>

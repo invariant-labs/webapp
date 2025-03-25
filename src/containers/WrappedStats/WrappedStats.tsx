@@ -22,8 +22,6 @@ import VolumeBar from '@components/Stats/volumeBar/VolumeBar'
 import TokensList from '@components/Stats/TokensList/TokensList'
 import PoolList from '@components/Stats/PoolList/PoolList'
 import icons from '@static/icons'
-import { farms } from '@store/selectors/farms'
-import { actions as farmsActions } from '@store/reducers/farms'
 import { VariantType } from 'notistack'
 import { FilterSearch, ISearchToken } from '@components/FilterSearch/FilterSearch'
 
@@ -40,17 +38,10 @@ export const WrappedStats: React.FC = () => {
   const volumePlotData = useSelector(volumePlot)
   const liquidityPlotData = useSelector(liquidityPlot)
   const isLoadingStats = useSelector(isLoading)
-  const allFarms = useSelector(farms)
   const currentNetwork = useSelector(network)
 
   const [searchTokensValue, setSearchTokensValue] = useState<ISearchToken[]>([])
   const [searchPoolsValue, setSearchPoolsValue] = useState<ISearchToken[]>([])
-
-  useEffect(() => {
-    if (tokensList.length > 0 && Object.values(allFarms).length === 0) {
-      dispatch(farmsActions.getFarms())
-    }
-  }, [tokensList.length])
 
   useEffect(() => {
     dispatch(actions.getCurrentStats())
@@ -99,40 +90,6 @@ export const WrappedStats: React.FC = () => {
       return true
     })
   }, [isLoadingStats, poolsList, searchPoolsValue])
-
-  const accumulatedAverageAPY = useMemo(() => {
-    const acc: Record<string, number> = {}
-    const now = Date.now() / 1000
-
-    Object.values(allFarms).forEach(farm => {
-      if (!acc[farm.pool.toString()]) {
-        acc[farm.pool.toString()] = 0
-      }
-
-      if (farm.endTime.v.toNumber() > now) {
-        acc[farm.pool.toString()] += farm.averageApy ?? 0
-      }
-    })
-
-    return acc
-  }, [allFarms])
-
-  const accumulatedSingleTickAPY = useMemo(() => {
-    const acc: Record<string, number> = {}
-    const now = Date.now() / 1000
-
-    Object.values(allFarms).forEach(farm => {
-      if (!acc[farm.pool.toString()]) {
-        acc[farm.pool.toString()] = 0
-      }
-
-      if (farm.endTime.v.toNumber() > now) {
-        acc[farm.pool.toString()] += farm.singleTickApy ?? 0
-      }
-    })
-
-    return acc
-  }, [allFarms])
 
   const showAPY = useMemo(() => {
     return filteredPoolsList.some(pool => pool.apy !== 0)
@@ -245,22 +202,10 @@ export const WrappedStats: React.FC = () => {
               fee: poolData.fee,
               addressFrom: poolData.tokenX.toString(),
               addressTo: poolData.tokenY.toString(),
-              apy:
-                poolData.apy + (accumulatedSingleTickAPY?.[poolData.poolAddress.toString()] ?? 0),
+              apy: poolData.apy,
               apyData: {
-                fees: poolData.apy,
-                accumulatedFarmsSingleTick:
-                  accumulatedSingleTickAPY?.[poolData.poolAddress.toString()] ?? 0,
-                accumulatedFarmsAvg: accumulatedAverageAPY?.[poolData.poolAddress.toString()] ?? 0
+                fees: poolData.apy
               },
-              // apy:
-              //   poolData.apy + (accumulatedSingleTickAPY?.[poolData.poolAddress.toString()] ?? 0),
-              // apyData: {
-              //   fees: poolData.apy,
-              //   accumulatedFarmsSingleTick:
-              //     accumulatedSingleTickAPY?.[poolData.poolAddress.toString()] ?? 0,
-              //   accumulatedFarmsAvg: accumulatedAverageAPY?.[poolData.poolAddress.toString()] ?? 0
-              // }
               isUnknownFrom: poolData.tokenXDetails?.isUnknown ?? false,
               isUnknownTo: poolData.tokenYDetails?.isUnknown ?? false,
               poolAddress: poolData.poolAddress.toString()

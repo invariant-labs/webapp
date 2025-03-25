@@ -24,6 +24,7 @@ import SelectPriorityButton from './HeaderButton/SelectPriorityButton'
 import Priority from '@components/Modals/Priority/Priority'
 import { YourPointsButton } from './HeaderButton/YourPointsButton'
 import SocialModal from '@components/Modals/SocialModal/SocialModal'
+import { ROUTES } from '@utils/utils'
 
 export interface IHeader {
   address: PublicKey
@@ -158,7 +159,7 @@ export const Header: React.FC<IHeader> = ({
             image={icons.LogoTitle}
             onClick={() => {
               if (!activePath.startsWith('exchange')) {
-                navigate('/exchange')
+                navigate(ROUTES.EXCHANGE)
               }
             }}
           />
@@ -171,7 +172,7 @@ export const Header: React.FC<IHeader> = ({
                 image={icons.LogoShort}
                 onClick={() => {
                   if (!activePath.startsWith('exchange')) {
-                    navigate('/exchange')
+                    navigate(ROUTES.EXCHANGE)
                   }
                 }}
               />

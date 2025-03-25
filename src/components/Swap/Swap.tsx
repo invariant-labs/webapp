@@ -20,6 +20,7 @@ import {
   findPairs,
   handleSimulate,
   printBN,
+  ROUTES,
   trimLeadingZeros
 } from '@utils/utils'
 import { Swap as SwapData } from '@store/reducers/swap'
@@ -209,7 +210,10 @@ export const Swap: React.FC<ISwap> = ({
   useEffect(() => {
     if (canNavigate) {
       navigate(
-        `/exchange/${tokenFrom !== null ? addressToTicker(network, tokenFrom.toString()) : '-'}/${tokenTo !== null ? addressToTicker(network, tokenTo.toString()) : '-'}`,
+        ROUTES.getExchangeRoute(
+          tokenFrom !== null ? addressToTicker(network, tokenFrom.toString()) : '-',
+          tokenTo !== null ? addressToTicker(network, tokenTo.toString()) : '-'
+        ),
         {
           replace: true
         }

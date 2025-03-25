@@ -21,6 +21,7 @@ import {
   getSolanaWallet,
   setPhantomAccChangeTrigger
 } from '@utils/web3/wallet'
+import { ensureError, ROUTES } from '@utils/utils'
 
 const BANNER_STORAGE_KEY = 'invariant-banner-state-2'
 const BANNER_HIDE_DURATION = 1000 * 60 * 60 * 24 // 24 hours
@@ -52,12 +53,12 @@ const RootPage: React.FC = React.memo(() => {
   const { classes } = useStyles()
 
   const metaData = new Map([
-    ['/exchange', 'Invariant | Exchange'],
-    ['/liquidity', 'Invariant | Liquidity'],
-    ['/portfolio', 'Invariant | Portfolio'],
-    ['/newPosition', 'Invariant | New Position'],
-    ['/position', 'Invariant | Position Details'],
-    ['/statistics', 'Invariant | Statistics']
+    [ROUTES.EXCHANGE, 'Invariant | Exchange'],
+    [ROUTES.LIQUIDITY, 'Invariant | Liquidity'],
+    [ROUTES.PORTFOLIO, 'Invariant | Portfolio'],
+    [ROUTES.NEW_POSITION, 'Invariant | New Position'],
+    [ROUTES.POSITION, 'Invariant | Position Details'],
+    [ROUTES.STATISTICS, 'Invariant | Statistics']
   ])
 
   useEffect(() => {
@@ -117,8 +118,8 @@ const RootPage: React.FC = React.memo(() => {
   }, [dispatch])
 
   useEffect(() => {
-    if (location.pathname === '/') {
-      navigate('/exchange')
+    if (location.pathname === ROUTES.ROOT) {
+      navigate(ROUTES.EXCHANGE)
     }
   }, [location.pathname, navigate])
 
@@ -159,7 +160,9 @@ const RootPage: React.FC = React.memo(() => {
             localStorage.removeItem(BANNER_STORAGE_KEY)
             setShowHeader(true)
           }
-        } catch (error) {
+        } catch (e: unknown) {
+          const error = ensureError(e)
+
           console.error('Error parsing banner state:', error)
           localStorage.removeItem(BANNER_STORAGE_KEY)
         }

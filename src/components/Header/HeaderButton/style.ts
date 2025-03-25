@@ -12,6 +12,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       textTransform: 'none',
       ...typography.body1,
       height: 32,
+      transition: '300ms',
       boxShadow: 'none',
       '&:hover': {
         background: colors.invariant.light,
@@ -42,6 +43,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       ...typography.body1,
       height: 40,
       minWidth: 130,
+      transition: '300ms',
 
       [theme.breakpoints.down('xs')]: {
         minWidth: 100,
@@ -126,8 +128,8 @@ const useStyles = makeStyles()((theme: Theme) => {
       backgroundImage: 'linear-gradient(#2A365C, #2A365C), linear-gradient(0deg, #2EE09A, #EF84F5)',
       backgroundOrigin: 'border-box',
       backgroundClip: 'padding-box, border-box',
-
       color: colors.invariant.text,
+      transition: '300ms',
 
       [theme.breakpoints.down('sm')]: {
         padding: '0px 2px'

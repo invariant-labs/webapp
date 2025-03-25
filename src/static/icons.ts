@@ -1,4 +1,3 @@
-import clearIcon from './svg/clear.svg'
 import mainnetIcon from './svg/mainnet.svg'
 import devnetIcon from './svg/devnet.svg'
 import testnetIcon from './svg/testnet.svg'
@@ -11,13 +10,9 @@ import telegramIcon from './svg/telegramCircle.svg'
 import mediumIcon from './svg/mediumCircle.svg'
 import discordIcon from './svg/discordCircle.svg'
 import closeIcon from './svg/closeIcon.svg'
-import activeIcon from './svg/active.svg'
-import inactiveIcon from './svg/inactive.svg'
-import allIcon from './svg/all.svg'
 import docsIcon from './svg/docsCircle.svg'
 import closeSmallIcon from './svg/closeSmall.svg'
 import closeSmallGreenIcon from './svg/closeSmallGreen.svg'
-import successIcon from './svg/successIcon.svg'
 import xIcon from './svg/xCircle.svg'
 import unknownToken from './svg/unknownToken.svg'
 import newTab from './svg/newTab.svg'
@@ -32,9 +27,6 @@ import eclipseLogo from './svg/eclipseLogo.svg'
 import solanaLogo from './svg/solanaLogo.svg'
 import varaLogo from './svg/VaraLogo.svg'
 import warningIcon from './svg/Warning.svg'
-import circleDiscord from './svg/circle-discord.svg'
-import circleTelegram from './svg/circle-telegram.svg'
-import eclipse from './svg/eclipse.svg'
 import alephiumLogo from './svg/alephiumLogo.svg'
 import phantomWalletIcon from './svg/phantom.svg'
 import solflareWalletIcon from './svg/solflare.svg'
@@ -112,7 +104,6 @@ const icons = {
   walletIcon,
   liquidityIcon,
   swapArrows,
-  clear: clearIcon,
   LogoShort: logoShort,
   LogoTitle: logoTitle,
   ArrowIcon: arrow,
@@ -125,13 +116,9 @@ const icons = {
   DiscordIcon: discordIcon,
   mediumIcon: mediumIcon,
   closeIcon: closeIcon,
-  activeIcon: activeIcon,
-  inactiveIcon: inactiveIcon,
-  allIcon: allIcon,
   closeSmallIcon: closeSmallIcon,
   closeSmallGreenIcon: closeSmallGreenIcon,
   docsIcon: docsIcon,
-  successIcon: successIcon,
   XIcon: xIcon,
   unknownToken: unknownToken,
   newTab: newTab,
@@ -151,9 +138,6 @@ const icons = {
   BackpackWallet: backpackWalletIcon,
   NightlyConnect: nightlyConnect,
   warningIcon,
-  circleDiscord,
-  circleTelegram,
-  eclipse,
   emptyIcon: empty,
   newTabBtn,
   airdrop,
