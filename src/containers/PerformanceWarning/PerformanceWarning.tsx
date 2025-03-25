@@ -48,7 +48,7 @@ export const PerformanceWarning: React.FC = () => {
     }
   }, [networkStatus])
   return showWarning ? (
-    <Grid container direction='row' justifyContent='center' className={classes.banner}>
+    <Grid container className={classes.banner}>
       <Typography className={classes.text}>
         <img src={infoIcon} className={classes.icon} />
         Solana network is experiencing degraded performance. Transactions may fail to send or
