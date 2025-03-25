@@ -115,8 +115,6 @@ export const useSharedStyles = makeStyles()((theme: Theme) => ({
     maxHeight: '36px',
     background: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
     borderRadius: '16px',
-    fontFamily: 'Mukta',
-    fontStyle: 'normal',
     textTransform: 'none',
     color: colors.invariant.dark,
     transition: 'all 0.3s ease',

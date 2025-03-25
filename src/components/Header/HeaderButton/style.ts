@@ -111,7 +111,6 @@ const useStyles = makeStyles()((theme: Theme) => {
       background: colors.invariant.newDark,
       boxShadow: '0px 0px 5px 5px #2A365C',
       borderRadius: '14px',
-      fontFamily: 'Mukta',
       fontWeight: 700,
       fontSize: '16px',
       lineHeight: '20px',
