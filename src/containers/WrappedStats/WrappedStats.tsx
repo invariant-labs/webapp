@@ -159,6 +159,7 @@ export const WrappedStats: React.FC = () => {
           </Grid>
           <Grid container className={classes.row}>
             <TokensList
+              initialLength={tokensList.length}
               data={filteredTokenList.map(tokenData => ({
                 icon: tokenData.tokenDetails?.logoURI ?? icons.unknownToken,
                 name: tokenData.tokenDetails?.name ?? tokenData.address.toString(),
@@ -192,6 +193,7 @@ export const WrappedStats: React.FC = () => {
             />
           </Grid>
           <PoolList
+            initialLength={poolsList.length}
             data={filteredPoolsList.map(poolData => ({
               symbolFrom: poolData.tokenXDetails?.symbol ?? poolData.tokenX.toString(),
               symbolTo: poolData.tokenYDetails?.symbol ?? poolData.tokenY.toString(),
