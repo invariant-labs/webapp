@@ -34,7 +34,7 @@ const TransactionPriorityButton: React.FC<Props> = ({
     <Button
       className={classNames(classes.button, { [classes.selectedButton]: selected })}
       onClick={handleClick}>
-      <Grid container justifyContent='flex-start' className={classes.wrapper}>
+      <Grid container className={classes.wrapper}>
         <Typography className={classes.label}>
           {label}
           <span

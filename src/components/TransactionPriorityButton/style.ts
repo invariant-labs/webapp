@@ -44,6 +44,7 @@ export const useStyles = makeStyles()(() => ({
     color: 'inherit'
   },
   wrapper: {
+    justifyContent: 'flex-start',
     width: 280,
     textAlign: 'left',
     flexDirection: 'column',

@@ -115,9 +115,7 @@ const TokensList: React.FC<ITokensList> = ({ data, network, copyAddressHandler, 
   return (
     <Grid
       container
-      direction='column'
       classes={{ root: classes.container }}
-      wrap='nowrap'
       className={classNames({ [classes.loadingOverlay]: isLoading })}>
       <>
         <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />

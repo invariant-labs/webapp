@@ -9,7 +9,6 @@ import { Keypair } from '@solana/web3.js'
 import classNames from 'classnames'
 import { useNavigate } from 'react-router-dom'
 import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
-import { colors } from '@static/theme'
 
 export interface PoolListInterface {
   data: Array<{
@@ -134,7 +133,6 @@ const PoolList: React.FC<PoolListInterface> = ({
   return (
     <Grid
       container
-      direction='column'
       classes={{ root: classes.container }}
       className={classNames({ [classes.loadingOverlay]: isLoading })}>
       <PoolListItem
@@ -184,12 +182,7 @@ const PoolList: React.FC<PoolListInterface> = ({
           ))}
         </>
       ) : (
-        <Grid
-          container
-          sx={{
-            background: colors.invariant.component,
-            borderBottom: `1px solid ${colors.invariant.light}`
-          }}>
+        <Grid container className={classes.emptyWrapper}>
           <EmptyPlaceholder
             newVersion
             height={690}
