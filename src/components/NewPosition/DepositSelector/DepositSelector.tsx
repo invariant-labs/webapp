@@ -1,7 +1,6 @@
 import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
 import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
 import Select from '@components/Inputs/Select/Select'
-import SwapList from '@static/svg/swap-list.svg'
 import { ALL_FEE_TIERS_DATA, WRAPPED_SOL_ADDRESS } from '@store/consts/static'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@store/selectors/solanaWallet'
@@ -32,6 +31,7 @@ import { Grid, Typography } from '@mui/material'
 import { PositionOpeningMethod } from '@store/consts/types'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 import { createButtonActions } from '@utils/uiUtils'
+import icons from '@static/icons'
 
 export interface InputState {
   value: string
@@ -336,7 +336,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           <TooltipHover text='Reverse tokens'>
             <img
               className={classes.arrows}
-              src={SwapList}
+              src={icons.swapListIcon}
               alt='Arrow'
               onClick={() => {
                 if (ticksLoading) {
@@ -399,9 +399,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           tokenPrice={priceA}
           currency={tokenA !== null ? tokens[tokenA.toString()].symbol : null}
           currencyIconSrc={tokenA !== null ? tokens[tokenA.toString()].logoURI : undefined}
-          currencyIsUnknown={
-            tokenA !== null ? (tokens[tokenA.toString()].isUnknown ?? false) : false
-          }
+          currencyIsUnknown={tokenA !== null ? tokens[tokenA.toString()].isUnknown ?? false : false}
           placeholder='0.0'
           // onMaxClick={() => {
           //   if (tokenA === null) {
@@ -468,9 +466,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           tokenPrice={priceB}
           currency={tokenB !== null ? tokens[tokenB.toString()].symbol : null}
           currencyIconSrc={tokenB !== null ? tokens[tokenB.toString()].logoURI : undefined}
-          currencyIsUnknown={
-            tokenB !== null ? (tokens[tokenB.toString()].isUnknown ?? false) : false
-          }
+          currencyIsUnknown={tokenB !== null ? tokens[tokenB.toString()].isUnknown ?? false : false}
           placeholder='0.0'
           actionButtons={[
             {

@@ -3,7 +3,6 @@
 // import useStyle from './style'
 // import icons from '@static/icons'
 // import classNames from 'classnames'
-// import Clock from '@static/svg/Clock.svg'
 
 // interface IdoLabelInterface {
 //   sale: string

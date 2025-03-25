@@ -5,9 +5,7 @@ import Slippage from '@components/Modals/Slippage/Slippage'
 import Refresher from '@components/Refresher/Refresher'
 import { BN } from '@project-serum/anchor'
 import { Box, Button, Grid, Typography } from '@mui/material'
-import refreshIcon from '@static/svg/refresh.svg'
-import settingIcon from '@static/svg/settings.svg'
-import SwapArrows from '@static/svg/swap-arrows.svg'
+
 import {
   DEFAULT_TOKEN_DECIMAL,
   NetworkType,
@@ -623,13 +621,13 @@ export const Swap: React.FC<ISwap> = ({
                   tokenTo === null ||
                   tokenFrom.equals(tokenTo)
                 }>
-                <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                <img src={icons.refreshIcon} className={classes.refreshIcon} alt='Refresh' />
               </Button>
             </Grid>
           </TooltipHover>
           <TooltipHover text='Settings'>
             <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
-              <img src={settingIcon} className={classes.settingsIcon} alt='Settings' />
+              <img src={icons.settingIcon} className={classes.settingsIcon} alt='Settings' />
             </Button>
           </TooltipHover>
         </Box>
@@ -735,7 +733,7 @@ export const Swap: React.FC<ISwap> = ({
             }}>
             <Box className={classes.swapImgRoot}>
               <img
-                src={SwapArrows}
+                src={icons.swapArrows}
                 style={{
                   transform: `rotate(${-rotates * 180}deg)`
                 }}

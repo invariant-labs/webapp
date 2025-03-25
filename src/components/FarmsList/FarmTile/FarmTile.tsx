@@ -5,7 +5,6 @@
 // import DotIcon from '@material-ui/icons/FiberManualRecordRounded'
 // import classNames from 'classnames'
 // import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
-// import SwapList from '@static/svg/swap-list.svg'
 // import { formatNumbers, showPrefix, thresholdsWithTokenDecimal } from '@consts/utils'
 // import loadingAnimation from '@static/gif/loading.gif'
 // import useStyle from './style'

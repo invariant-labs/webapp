@@ -1,5 +1,4 @@
 import { Box, Button, Grid, Skeleton, Tooltip, Typography } from '@mui/material'
-import SwapList from '@static/svg/swap-list.svg'
 import { formatNumberWithSuffix } from '@utils/utils'
 import classNames from 'classnames'
 import { useMemo, useRef, useState } from 'react'
@@ -15,6 +14,7 @@ import { MinMaxChart } from '../../components/MinMaxChart/MinMaxChart'
 import { blurContent, unblurContent } from '@utils/uiUtils'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { ISinglePositionData } from '@components/OverviewYourPositions/components/Overview/Overview'
+import icons from '@static/icons'
 
 interface IPositionItemMobile extends IPositionItem {
   setAllowPropagation: React.Dispatch<React.SetStateAction<boolean>>
@@ -253,7 +253,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
               <TooltipHover text='Reverse tokens'>
                 <img
                   className={sharedClasses.arrows}
-                  src={SwapList}
+                  src={icons.swapListIcon}
                   alt='Arrow'
                   onClick={e => {
                     e.stopPropagation()

@@ -1,6 +1,5 @@
 import { Button, Grid, Tooltip, Typography } from '@mui/material'
 import loader from '@static/gif/loading2.gif'
-import SwapPosition from '@static/svg/swap-position.svg'
 import {
   formatNumberWithSuffix,
   formatNumberWithoutSuffix,
@@ -14,6 +13,7 @@ import { ILiquidityToken } from './consts'
 import useStyles from './style'
 import { FormatNumberThreshold, PrefixConfig } from '@store/consts/types'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import icons from '@static/icons'
 
 export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue' | 'liqValue'> {
   value: number
@@ -164,7 +164,7 @@ export const BoxInfo: React.FC<{
         {typeof swapHandler !== 'undefined' ? (
           <TooltipHover text='Reverse tokens'>
             <img
-              src={SwapPosition}
+              src={icons.swapPosition}
               className={classes.arrowsIcon}
               onClick={swapHandler}
               alt='Exchange'
