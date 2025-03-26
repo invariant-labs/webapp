@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import PoolListItem from '@components/Stats/PoolListItem/PoolListItem'
 import { useStyles } from './style'
 import { Grid } from '@mui/material'
@@ -8,6 +8,8 @@ import { VariantType } from 'notistack'
 import { useNavigate } from 'react-router-dom'
 
 export interface PoolListInterface {
+  initialLength: number
+
   data: Array<{
     symbolFrom: string
     symbolTo: string
@@ -75,15 +77,26 @@ const generateMockData = () => {
 const LiquidityPoolList: React.FC<PoolListInterface> = ({
   data,
   network,
+  initialLength,
+
   copyAddressHandler,
   isLoading,
   showAPY
 }) => {
-  const { classes } = useStyles()
+  const [initialDataLength, setInitialDataLength] = useState(initialLength)
+  const { classes } = useStyles({ initialDataLength })
   const [page, setPage] = React.useState(1)
   const [sortType, setSortType] = React.useState(SortTypePoolList.VOLUME_DESC)
   const navigate = useNavigate()
+  useEffect(() => {
+    setInitialDataLength(initialLength)
+  }, [initialLength])
+  const getEmptyRowsCount = () => {
+    const displayedItems = paginator(page).length
+    const rowNumber = initialDataLength < 10 ? initialDataLength : 10
 
+    return Math.max(rowNumber - displayedItems, 0)
+  }
   const sortedData = useMemo(() => {
     if (isLoading) {
       return generateMockData()
@@ -177,12 +190,15 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
                 showAPY={showAPY}
               />
             ))}
-            {new Array(10 - paginator(page).length).fill('').map((_, index) => (
-              <div
-                className={classNames(classes.emptyRow, {
-                  [classes.emptyRowBorder]: index === 10 - paginator(page).length - 1
-                })}></div>
-            ))}
+            {getEmptyRowsCount() > 0 &&
+              new Array(getEmptyRowsCount()).fill('').map((_, index) => (
+                <div
+                  key={`empty-row-${index}`}
+                  className={classNames(classes.emptyRow, {
+                    [classes.emptyRowBorder]: index === getEmptyRowsCount() - 1
+                  })}
+                />
+              ))}
           </>
         ) : (
           <Grid
@@ -192,18 +208,27 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
               borderBottom: `1px solid ${colors.invariant.light}`
             }}>
             <EmptyPlaceholder
-              height={690}
+              height={initialDataLength < 10 ? initialDataLength * 69 : 690}
               newVersion
               mainTitle='Pool not found...'
-              desc={'You can create it yourself!'}
-              desc2={'Or try adjusting your search criteria!'}
+              desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
+              desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
               buttonName='Create Pool'
               onAction={() => navigate(ROUTES.NEW_POSITION)}
               withButton={true}
+              withImg={initialDataLength > 3}
             />
           </Grid>
         )}
-        <Grid className={classes.pagination}>
+        <Grid
+          className={classes.pagination}
+          sx={{
+            height: initialDataLength > 10 ? (page !== pages ? 101 : 101) : 69,
+            borderTop: `
+              ${pages > 1 ? (page !== pages ? 1 : 2) : 2}px solid ${colors.invariant.light}
+            `
+          }}>
+          {' '}
           {pages > 1 && (
             <PaginationList
               pages={pages}

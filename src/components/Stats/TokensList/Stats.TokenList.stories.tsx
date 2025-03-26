@@ -96,6 +96,7 @@ const tokensList = [
 
 export const Primary: Story = {
   args: {
+    initialLength: 2,
     data: tokensList.map(tokenData => ({
       icon: tokenData.tokenDetails.logoURI,
       name: tokenData.tokenDetails.name,
