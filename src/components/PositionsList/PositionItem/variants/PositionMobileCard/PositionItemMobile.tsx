@@ -103,9 +103,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
               className={classNames(
                 sharedClasses.fee,
                 isActive ? sharedClasses.activeFee : undefined
-              )}
-              justifyContent='center'
-              alignItems='center'>
+              )}>
               <Typography
                 className={classNames(
                   sharedClasses.infoText,
@@ -126,12 +124,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
               sx={{ borderRadius: '10px' }}
             />
           ) : (
-            <Grid
-              container
-              justifyContent='center'
-              alignItems='center'
-              className={sharedClasses.fee}
-              sx={{ width: '100%' }}>
+            <Grid container className={sharedClasses.fee} sx={{ width: '100%' }}>
               <Box className={sharedClasses.unclaimedFeeContainer}>
                 <Typography className={sharedClasses.infoText}>Unclaimed Fee</Typography>
                 <Typography className={sharedClasses.greenText}>

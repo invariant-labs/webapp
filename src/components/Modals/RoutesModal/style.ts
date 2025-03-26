@@ -4,6 +4,8 @@ import { makeStyles } from 'tss-react/mui'
 const useStyles = makeStyles()(() => {
   return {
     root: {
+      alignContent: 'space-around',
+      flexDirection: 'column',
       background: colors.invariant.component,
       width: 160,
       borderRadius: 20,

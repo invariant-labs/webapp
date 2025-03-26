@@ -9,6 +9,10 @@ const useStyles = makeStyles()(() => {
         backgroundColor: 'transparent'
       }
     },
+    priorityWrapper: {
+      justifyContent: 'space-between',
+      marginTop: 24
+    },
     detailsWrapper: {
       width: 340,
       display: 'flex',

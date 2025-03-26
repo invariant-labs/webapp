@@ -40,7 +40,6 @@ import { Keypair } from '@solana/web3.js'
 import classNames from 'classnames'
 import { ROUTES } from '@utils/utils'
 import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
-import { colors } from '@static/theme'
 
 const ITEMS_PER_PAGE = 10
 
@@ -137,7 +136,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
 
   return (
     <div className={classNames({ [classes.loadingOverlay]: isLoading })}>
-      <Grid container direction='column' classes={{ root: classes.container }}>
+      <Grid container classes={{ root: classes.container }}>
         <PoolListItem
           displayType='header'
           onSort={setSortType}
@@ -185,12 +184,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
             ))}
           </>
         ) : (
-          <Grid
-            container
-            sx={{
-              background: colors.invariant.component,
-              borderBottom: `1px solid ${colors.invariant.light}`
-            }}>
+          <Grid container className={classes.emptyWrapper}>
             <EmptyPlaceholder
               height={690}
               newVersion

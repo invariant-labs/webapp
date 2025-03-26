@@ -5,6 +5,9 @@ import { makeStyles } from 'tss-react/mui'
 const useStyles = makeStyles()((theme: Theme) => {
   return {
     root: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flexWrap: 'nowrap',
       margin: 'auto',
       maxWidth: 1960,
       paddingInline: 150,
@@ -42,10 +45,15 @@ const useStyles = makeStyles()((theme: Theme) => {
       }
     },
     routers: {
+      flexWrap: 'nowrap',
       backgroundColor: colors.invariant.black,
       borderRadius: '10px',
       transition: 'left 300ms',
-      width: 'fit-content'
+      width: 'fit-content',
+      display: 'block',
+      '@media (max-width: 1450px)': {
+        display: 'none'
+      }
     },
     connectedWalletIcon: {
       minWidth: 21,

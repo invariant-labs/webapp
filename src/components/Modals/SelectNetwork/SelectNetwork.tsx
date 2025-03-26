@@ -40,7 +40,7 @@ export const SelectNetwork: React.FC<ISelectNetworkModal> = ({
       }}>
       <Grid className={classes.root}>
         <Typography className={classes.title}>Select a network</Typography>
-        <Grid className={classes.list} container alignContent='space-around' direction='column'>
+        <Grid className={classes.list} container>
           {networks.map(({ networkType, rpc, rpcName }) => (
             <Grid
               className={classNames(

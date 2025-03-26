@@ -180,14 +180,14 @@ const Priority: React.FC<IPriority> = ({
 
       setSelectedFee(
         priorityMode == PriorityMode.Dynamic
-          ? (dynamicFee ?? 0)
+          ? dynamicFee ?? 0
           : priorityFeeOptions[selectedIndex].saveValue
       )
 
       localStorage.setItem(
         'INVARIANT_PRIORITY_FEE',
         priorityMode == PriorityMode.Dynamic
-          ? (dynamicFee?.toString() ?? '')
+          ? dynamicFee?.toString() ?? ''
           : priorityFeeOptions[selectedIndex].saveValue.toString()
       )
       localStorage.setItem('INVARIANT_PRIORITY_MODE', priorityMode.toString())
@@ -268,8 +268,8 @@ const Priority: React.FC<IPriority> = ({
                     selected={selectedIndex === index}
                     index={index}
                     label={params.label}
-                    value={typeof params.value === 'string' ? (dynamicFee ?? 0) : params.value}
-                    saveValue={typeof params.value === 'string' ? (dynamicFee ?? 0) : params.value}
+                    value={typeof params.value === 'string' ? dynamicFee ?? 0 : params.value}
+                    saveValue={typeof params.value === 'string' ? dynamicFee ?? 0 : params.value}
                     description={params.description}
                     onClick={handleClick}
                   />
@@ -278,7 +278,7 @@ const Priority: React.FC<IPriority> = ({
             )
           })}
         </Grid>
-        <Grid container justifyContent='space-between' style={{ marginTop: 24 }}>
+        <Grid container className={classes.priorityWrapper}>
           <Typography
             className={classNames(classes.label, { [classes.labelWhite]: selectedIndex === -1 })}>
             Set custom priority

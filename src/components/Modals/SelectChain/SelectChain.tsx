@@ -39,7 +39,7 @@ export const SelectChain: React.FC<ISelectChainModal> = ({
       }}>
       <Grid className={classes.root}>
         <Typography className={classes.title}>Select a chain</Typography>
-        <Grid className={classes.list} container alignContent='space-around' direction='column'>
+        <Grid className={classes.list} container>
           {chains.map(chain => (
             <Grid
               className={classNames(

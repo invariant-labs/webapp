@@ -30,7 +30,18 @@ const useStyles = makeStyles()((theme: Theme) => {
         paddingInline: 6
       }
     },
-
+    labelWrapper: {
+      color: colors.invariant.textGrey,
+      ...typography.caption4,
+      marginTop: '4px',
+      textAlign: 'left'
+    },
+    tileWrapper: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      height: '100%'
+    },
     label: {
       WebkitPaddingBefore: '2px'
     },

@@ -148,12 +148,11 @@ export const Header: React.FC<IHeader> = ({
 
   return (
     <Grid container>
-      <Grid container className={classes.root} direction='row' alignItems='center' wrap='nowrap'>
+      <Grid container className={classes.root}>
         <Grid
           container
           item
           className={classes.leftSide}
-          justifyContent='flex-start'
           sx={{ display: { xs: 'none', md: 'block' } }}>
           <CardMedia
             className={classes.logo}
@@ -166,7 +165,7 @@ export const Header: React.FC<IHeader> = ({
           />
         </Grid>
         <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-          <Grid container item className={classes.leftSide} justifyContent='flex-start'>
+          <Grid container item className={classes.leftSide}>
             <Grid container>
               <CardMedia
                 className={classes.logoShort}
@@ -180,18 +179,7 @@ export const Header: React.FC<IHeader> = ({
             </Grid>
           </Grid>
         </Box>
-        <Grid
-          container
-          item
-          className={classes.routers}
-          wrap='nowrap'
-          sx={{
-            display: { lg: 'block' },
-
-            '@media (max-width: 1450px)': {
-              display: 'none'
-            }
-          }}>
+        <Grid container item className={classes.routers}>
           {routes.map(path => (
             <Link key={`path-${path}`} to={`/${path}`} className={classes.link}>
               <NavbarButton
@@ -213,7 +201,7 @@ export const Header: React.FC<IHeader> = ({
           ))}
         </Grid>
 
-        <Grid container item className={classes.buttons} wrap='nowrap'>
+        <Grid container item className={classes.buttons}>
           <Grid container className={classes.leftButtons}>
             {typeOfNetwork !== NetworkType.Mainnet && (
               <Box sx={{ display: { xs: 'none', md: 'block' } }}>

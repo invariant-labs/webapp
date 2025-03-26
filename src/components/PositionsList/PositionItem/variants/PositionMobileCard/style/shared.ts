@@ -4,6 +4,8 @@ import { makeStyles } from 'tss-react/mui'
 
 export const useSharedStyles = makeStyles()((theme: Theme) => ({
   icons: {
+    alignItems: 'center',
+    flexWrap: 'nowrap',
     marginRight: 12,
     width: 'fit-content',
     [theme.breakpoints.down('lg')]: {
@@ -133,6 +135,8 @@ export const useSharedStyles = makeStyles()((theme: Theme) => ({
     }
   },
   fee: {
+    justifyContent: 'center',
+    alignItems: 'center',
     background: colors.invariant.light,
     borderRadius: 11,
     height: 36,
@@ -164,6 +168,7 @@ export const useSharedStyles = makeStyles()((theme: Theme) => ({
     background: colors.invariant.greenLinearGradient
   },
   infoCenter: {
+    justifyContent: 'center',
     flex: '1 1 0%'
   },
   dropdown: {

@@ -12,7 +12,15 @@ const useStyles = makeStyles()(() => {
     },
     list: {
       borderRadius: 5,
-      marginTop: 7
+      marginTop: 7,
+      alignContent: 'space-around',
+      flexDirection: 'column'
+    },
+    labelWrapper: {
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
     },
     listItem: {
       color: colors.invariant.textGrey,
@@ -76,6 +84,8 @@ const useStyles = makeStyles()(() => {
       color: colors.white.main
     },
     lowerRow: {
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
       marginTop: 8,
       display: 'flex',
       justifyContent: 'space-between',

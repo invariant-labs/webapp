@@ -9,7 +9,7 @@ import icons from '@static/icons'
 import { ISelectNetwork } from '@store/consts/types'
 import { RpcStatus } from '@store/reducers/solanaConnection'
 import SelectDevnetRPC from '@components/Modals/SelectDevnetRPC/SelectDevnetRPC'
-import { colors, typography } from '@static/theme'
+import { colors } from '@static/theme'
 
 export interface IProps {
   rpc: string
@@ -56,25 +56,11 @@ export const SelectRPCButton: React.FC<IProps> = ({
         {rpcStatus === RpcStatus.IgnoredWithError && rpc !== RECOMMENDED_RPC_ADDRESS[network] && (
           <img className={classes.warningIcon} src={icons.warningIcon} alt='Warning icon' />
         )}
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            height: '100%'
-          }}>
+        <Box className={classes.tileWrapper}>
           <Box style={{ color: colors.invariant.text, lineHeight: '12px' }}>
             {rpc && rpcName.length > 0 ? rpcName[0].rpcName : 'Custom'}
           </Box>
-          <Typography
-            style={{
-              color: colors.invariant.textGrey,
-              ...typography.caption4,
-              marginTop: '4px',
-              textAlign: 'left'
-            }}>
-            RPC
-          </Typography>
+          <Typography className={classes.labelWrapper}>RPC</Typography>
         </Box>
       </Button>
       {network === NetworkType.Devnet ? (

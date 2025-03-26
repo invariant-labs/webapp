@@ -10,19 +10,17 @@ interface INormalBannerProps {
 
 export const TopBanner = ({ onClose, isHiding }: INormalBannerProps) => {
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'))
-
   const { classes } = useStyles({ isHiding })
 
-  const airdrop = <Box component='img' className={classes.airdrop} src={icons.airdrop} />
+  const airdrop = <Box component='img' src={icons.airdrop} className={classes.airdrop} />
 
   const text = (
     <span>
       Invariant Points are live on Eclipse! Check it out
       <span
-        className={classes.text}
+        className={classes.textLink}
         onClick={() => {
           window.open('https://eclipse.invariant.app/points', '_blank')
-
           if (isSmallDevice) {
             onClose()
           }
@@ -37,7 +35,7 @@ export const TopBanner = ({ onClose, isHiding }: INormalBannerProps) => {
       <Box
         component='img'
         src={isSmallDevice ? icons.closeSmallGreenIcon : icons.closeSmallIcon}
-        className={classes.close}
+        className={classes.closeIcon}
         alt='Close'
       />
     </Box>
@@ -46,11 +44,11 @@ export const TopBanner = ({ onClose, isHiding }: INormalBannerProps) => {
   return (
     <>
       {!isSmallDevice && (
-        <Box>
-          <Box className={classes.innerWrapper}>
-            <Grid className={classes.gridWrapper}>
+        <Box className={classes.topBanner}>
+          <Box className={classes.innerBox}>
+            <Grid display='flex' justifyContent='center' alignItems='center' width='100%' mr={3}>
               {airdrop}
-              <Box className={classes.labelText}>{text}</Box>
+              <Box className={classes.textBox}>{text}</Box>
             </Grid>
           </Box>
           {close}

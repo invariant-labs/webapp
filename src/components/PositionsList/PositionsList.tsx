@@ -218,7 +218,7 @@ export const PositionsList: React.FC<IProps> = ({
           </Grid>
         </Grid>
       )}
-      <Grid container direction='column' className={classes.list} justifyContent='flex-start'>
+      <Grid container className={classes.list}>
         {renderContent()}
       </Grid>
     </Grid>

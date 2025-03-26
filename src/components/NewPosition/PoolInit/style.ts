@@ -4,6 +4,7 @@ import { makeStyles } from 'tss-react/mui'
 const useStyles = makeStyles()(theme => {
   return {
     wrapper: {
+      flexDirection: 'column',
       borderRadius: 24,
       backgroundColor: colors.invariant.component,
       padding: '16px 24px 6px 24px',
@@ -81,6 +82,7 @@ const useStyles = makeStyles()(theme => {
       }
     },
     buttons: {
+      justifyContent: 'center',
       marginTop: 4,
       width: '100%',
       height: 70,
@@ -103,7 +105,14 @@ const useStyles = makeStyles()(theme => {
     midPrice: {
       marginBottom: 8
     },
+    rangeWrapper: {
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      minHeight: 36
+    },
     priceWrapper: {
+      justifyContent: 'space-between',
+      alignItems: 'center',
       backgroundColor: colors.invariant.light,
       paddingInline: 12,
       paddingBlock: 10,
