@@ -59,8 +59,6 @@ export const useStyles = makeStyles<{ isLoading: boolean }>()((_theme: Theme, { 
     marginLeft: '36px',
     background: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
     borderRadius: '12px',
-    fontFamily: 'Mukta',
-    fontStyle: 'normal',
     textTransform: 'none',
     color: colors.invariant.dark,
     transition: 'all 0.3s ease',
