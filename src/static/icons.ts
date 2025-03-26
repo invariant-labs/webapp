@@ -52,7 +52,7 @@ import liquidityEmpty from './svg/liqudity_empty.svg'
 import assetsEmpty from './svg/assets_empty.svg'
 import boostPoints from './svg/boostPoints.svg'
 
-const icons: { [key: string]: string } = {
+const icons = {
   docsFill,
   mediumFill,
   githubFill,

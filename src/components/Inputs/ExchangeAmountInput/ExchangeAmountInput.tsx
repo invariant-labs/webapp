@@ -2,7 +2,7 @@ import Select from '@components/Inputs/Select/Select'
 import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
 import { Grid, Input, Tooltip, Typography } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
-import { formatNumberWithSuffix, trimDecimalZeros } from '@utils/utils'
+import { formatNumberWithoutSuffix, formatNumberWithSuffix, trimDecimalZeros } from '@utils/utils'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import classNames from 'classnames'
 import React, { CSSProperties, useRef } from 'react'
@@ -224,7 +224,7 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
                   tooltip: classes.tooltip
                 }}>
                 <Typography className={classes.caption2}>
-                  ~${formatNumberWithSuffix(usdBalance.toFixed(2))}
+                  ~${formatNumberWithoutSuffix(usdBalance.toFixed(2))}
                 </Typography>
               </Tooltip>
             ) : (

@@ -64,6 +64,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   network,
   loading,
   handleClaimFee,
+  isFullRange,
   handleClosePosition
 }) => {
   const { classes } = usePositionTableRowStyle()
@@ -259,6 +260,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
 
     return (
       <MinMaxChart
+        isFullRange={isFullRange}
         min={Number(xToY ? min : 1 / max)}
         max={Number(xToY ? max : 1 / min)}
         current={

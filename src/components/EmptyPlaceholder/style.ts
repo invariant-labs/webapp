@@ -28,7 +28,6 @@ export const useStyles = makeStyles<StyleProps>()(
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      paddingBottom: 25,
       width: '100%',
       height: '100%',
       p: {

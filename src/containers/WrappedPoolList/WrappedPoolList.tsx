@@ -77,6 +77,7 @@ export const WrappedPoolList: React.FC = () => {
       </Box>
 
       <LiquidityPoolList
+        initialLength={poolsList.length}
         data={filteredPoolsList.map(poolData => ({
           symbolFrom: poolData.tokenXDetails?.symbol ?? poolData.tokenX.toString(),
           symbolTo: poolData.tokenYDetails?.symbol ?? poolData.tokenY.toString(),

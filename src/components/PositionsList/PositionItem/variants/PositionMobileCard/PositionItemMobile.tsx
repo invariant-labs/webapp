@@ -37,6 +37,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
   tokenXLiq,
   tokenYLiq,
   network,
+  isFullRange,
   handleClosePosition,
   handleClaimFee
 }) => {
@@ -201,6 +202,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
     () => (
       <Grid container justifyContent='center' margin={'0 auto'} width={'80%'}>
         <MinMaxChart
+          isFullRange={isFullRange}
           min={Number(xToY ? min : 1 / max)}
           max={Number(xToY ? max : 1 / min)}
           current={
