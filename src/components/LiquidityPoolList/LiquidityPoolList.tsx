@@ -42,6 +42,7 @@ import { Keypair } from '@solana/web3.js'
 import classNames from 'classnames'
 import { ROUTES } from '@utils/utils'
 import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import { colors } from '@static/theme'
 
 const ITEMS_PER_PAGE = 10
 
