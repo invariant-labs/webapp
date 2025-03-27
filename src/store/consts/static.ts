@@ -4,11 +4,8 @@ import { BN } from '@project-serum/anchor'
 import { ISnackbar } from '@store/reducers/snackbars'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { BestTier, Chain, PrefixConfig, Token, WalletType } from './types'
-import Dog1 from '@static/svg/SolanaCreator/Dog1.svg'
-import Dog2 from '@static/svg/SolanaCreator/Dog2.svg'
-import Cat1 from '@static/svg/SolanaCreator/Cat1.svg'
-import Cat2 from '@static/svg/SolanaCreator/Cat2.svg'
 import { TICK_CROSSES_PER_IX } from '@invariant-labs/sdk/lib/market'
+import icons from '@static/icons'
 
 export enum NetworkType {
   Local = 'Local',
@@ -518,7 +515,7 @@ export const walletNames = {
   [WalletType.SOLFLARE]: 'Solflare'
 }
 
-export const defaultImages: string[] = [Dog1, Dog2, Cat1, Cat2]
+export const defaultImages: string[] = [icons.Dog1, icons.Dog2, icons.Cat1, icons.Cat2]
 
 type Pool = {
   tokenX: string

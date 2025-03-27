@@ -3,7 +3,6 @@ import NavbarButton from '@components/Navbar/NavbarButton'
 import DotIcon from '@mui/icons-material/FiberManualRecordRounded'
 import { Box, CardMedia, Grid, IconButton, useMediaQuery } from '@mui/material'
 import icons from '@static/icons'
-import Hamburger from '@static/svg/Hamburger.svg'
 import { theme } from '@static/theme'
 import { RPC, CHAINS, NetworkType } from '@store/consts/static'
 import { blurContent, unblurContent } from '@utils/uiUtils'
@@ -331,7 +330,7 @@ export const Header: React.FC<IHeader> = ({
               setRoutesModalOpen(true)
               blurContent()
             }}>
-            <CardMedia className={classes.menu} image={Hamburger} />
+            <CardMedia className={classes.menu} image={icons.hamburger} />
           </IconButton>
           <RoutesModal
             routes={routes}
