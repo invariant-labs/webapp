@@ -9,6 +9,7 @@ import { Keypair } from '@solana/web3.js'
 import classNames from 'classnames'
 import { useNavigate } from 'react-router-dom'
 import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import { colors } from '@static/theme'
 
 export interface PoolListInterface {
   initialLength: number
