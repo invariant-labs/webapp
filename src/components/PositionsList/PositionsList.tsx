@@ -1,6 +1,5 @@
 import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
 import { Button, Grid, Typography, useMediaQuery } from '@mui/material'
-import refreshIcon from '@static/svg/refresh.svg'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStyles } from './style'
@@ -13,6 +12,7 @@ import PositionCardsSkeletonMobile from './PositionItem/variants/PositionTables/
 import { FilterSearch, ISearchToken } from '@components/FilterSearch/FilterSearch'
 import { NetworkType } from '@store/consts/static'
 import { theme } from '@static/theme'
+import icons from '@static/icons'
 import { ROUTES } from '@utils/utils'
 
 interface IProps {
@@ -163,7 +163,7 @@ export const PositionsList: React.FC<IProps> = ({
                       disabled={showNoConnected}
                       onClick={showNoConnected ? () => {} : handleRefresh}
                       className={classes.refreshIconBtn}>
-                      <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                      <img src={icons.refreshIcon} className={classes.refreshIcon} alt='Refresh' />
                     </Button>
                   </Grid>
                 </TooltipHover>
@@ -193,7 +193,11 @@ export const PositionsList: React.FC<IProps> = ({
                         disabled={showNoConnected}
                         onClick={showNoConnected ? () => {} : handleRefresh}
                         className={classes.refreshIconBtn}>
-                        <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                        <img
+                          src={icons.refreshIcon}
+                          className={classes.refreshIcon}
+                          alt='Refresh'
+                        />
                       </Button>
                     </Grid>
                   </TooltipHover>

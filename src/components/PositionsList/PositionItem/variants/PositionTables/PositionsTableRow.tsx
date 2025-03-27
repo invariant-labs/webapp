@@ -18,13 +18,13 @@ import classNames from 'classnames'
 import { useSelector } from 'react-redux'
 import { useSharedStyles } from '../PositionMobileCard/style/shared'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
-import SwapList from '@static/svg/swap-list.svg'
 import React from 'react'
 import { blurContent, unblurContent } from '@utils/uiUtils'
 import { singlePositionData } from '@store/selectors/positions'
 import { usePositionTableRowStyle } from './styles/positionTableRow'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { useUnclaimedFee } from '@store/hooks/positionList/useUnclaimedFee'
+import icons from '@static/icons'
 
 interface ILoadingStates {
   pairName?: boolean
@@ -115,7 +115,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
           <TooltipHover text='Reverse tokens'>
             <img
               className={sharedClasses.arrows}
-              src={SwapList}
+              src={icons.swapListIcon}
               alt='Arrow'
               onClick={e => {
                 e.stopPropagation()

@@ -4,7 +4,6 @@ import SinglePositionPlot from '@components/PositionDetails/SinglePositionPlot/S
 import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
 import Refresher from '@components/Refresher/Refresher'
 import { Box, Button, Grid, Hidden, Typography } from '@mui/material'
-import backIcon from '@static/svg/back-arrow.svg'
 import { NetworkType, REFRESHER_INTERVAL } from '@store/consts/static'
 import { PlotTickData } from '@store/reducers/positions'
 import { VariantType } from 'notistack'
@@ -136,7 +135,7 @@ const PositionDetails: React.FC<IProps> = ({
         <Grid className={classes.backContainer} container>
           <Link to={ROUTES.PORTFOLIO} style={{ textDecoration: 'none' }}>
             <Grid className={classes.back} container item>
-              <img className={classes.backIcon} src={backIcon} alt='Back' />
+              <img className={classes.backIcon} src={icons.backIcon} alt='Back' />
               <Typography className={classes.backText}>Positions</Typography>
             </Grid>
           </Link>

@@ -6,9 +6,8 @@ import { colors } from '@static/theme'
 import cardBackgroundBottom from '@static/png/cardBackground1.png'
 import cardBackgroundTop from '@static/png/cardBackground2.png'
 import icons from '@static/icons'
-import RevertIcon from '@static/svg/revert.svg'
 import StatsLabel from './StatsLabel/StatsLabel'
-import backIcon from '@static/svg/back-arrow-2.svg'
+
 import {
   addressToTicker,
   formatNumberWithSuffix,
@@ -142,7 +141,7 @@ const Card: React.FC<ICard> = ({
                     <img className={classes.warningIcon} src={icons.warningIcon} />
                   )}
                 </Box>
-                <img className={classes.swapIcon} src={RevertIcon} alt='Token from' />
+                <img className={classes.swapIcon} src={icons.revertIcon} alt='Token from' />
                 <Box className={classes.iconContainer}>
                   <img
                     className={classes.tokenIcon}
@@ -179,7 +178,7 @@ const Card: React.FC<ICard> = ({
               </Grid>
               <Grid container className={classes.backWrapper}>
                 <Grid className={classes.back} container item onClick={handleOpenSwap}>
-                  <img className={classes.backIcon} src={backIcon} alt='Back' />
+                  <img className={classes.backIcon} src={icons.backIcon2} alt='Back' />
                   <Typography className={classes.backText}>Swap</Typography>
                 </Grid>
                 <Button className={classes.button} variant='contained' onClick={handleOpenPosition}>
