@@ -3,7 +3,7 @@ import {
   TIMEOUT_ERROR_MESSAGE,
   WRAPPED_SOL_ADDRESS
 } from '@store/consts/static'
-import { createLoaderKey, solToPriorityFee } from '@utils/utils'
+import { createLoaderKey, ensureError, solToPriorityFee } from '@utils/utils'
 import { IWallet, Pair } from '@invariant-labs/sdk'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { actions as swapActions } from '@store/reducers/swap'
@@ -306,18 +306,18 @@ export function* handleSwapWithSOL(): Generator {
 
     closeSnackbar(loaderSwappingTokens)
     yield put(snackbarsActions.remove(loaderSwappingTokens))
-  } catch (error) {
-    console.log(error)
+  } catch (e) {
+    console.log(e)
 
     yield put(swapActions.setSwapSuccess(false))
 
-    if (error instanceof TransactionExpiredTimeoutError) {
+    if (e instanceof TransactionExpiredTimeoutError) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
           variant: 'info',
           persist: true,
-          txid: error.signature
+          txid: e.signature
         })
       )
       yield put(connectionActions.setTimeoutError(true))
@@ -339,7 +339,9 @@ export function* handleSwapWithSOL(): Generator {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    yield* call(handleRpcError, (error as Error).message)
+    const error = ensureError(e)
+    console.log(error)
+    yield* call(handleRpcError, error.message)
   }
 }
 
@@ -491,18 +493,18 @@ export function* handleSwap(): Generator {
 
     closeSnackbar(loaderSwappingTokens)
     yield put(snackbarsActions.remove(loaderSwappingTokens))
-  } catch (error) {
-    console.log(error)
+  } catch (e) {
+    console.log(e)
 
     yield put(swapActions.setSwapSuccess(false))
 
-    if (error instanceof TransactionExpiredTimeoutError) {
+    if (e instanceof TransactionExpiredTimeoutError) {
       yield put(
         snackbarsActions.add({
           message: TIMEOUT_ERROR_MESSAGE,
           variant: 'info',
           persist: true,
-          txid: error.signature
+          txid: e.signature
         })
       )
       yield put(connectionActions.setTimeoutError(true))
@@ -523,7 +525,8 @@ export function* handleSwap(): Generator {
     closeSnackbar(loaderSigningTx)
     yield put(snackbarsActions.remove(loaderSigningTx))
 
-    yield* call(handleRpcError, (error as Error).message)
+    const error = ensureError(e)
+    yield* call(handleRpcError, error.message)
   }
 }
 

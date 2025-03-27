@@ -1,7 +1,7 @@
 import { actions } from '@store/reducers/stats'
 import { call, put, select, takeLeading } from 'typed-redux-saga'
 import { network } from '@store/selectors/solanaConnection'
-import { getFullSnap } from '@utils/utils'
+import { ensureError, getFullSnap } from '@utils/utils'
 import { PublicKey } from '@solana/web3.js'
 import { handleRpcError } from './connection'
 
@@ -25,9 +25,9 @@ export function* getStats(): Generator {
     }
 
     yield* put(actions.setCurrentStats(parsedFullSnap))
-  } catch (error) {
-    console.log(error)
-    yield* call(handleRpcError, (error as Error).message)
+  } catch (e) {
+    const error = ensureError(e)
+    yield* call(handleRpcError, error.message)
     throw error
   }
 }

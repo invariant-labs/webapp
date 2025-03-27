@@ -35,7 +35,9 @@ const ListboxComponent = React.forwardRef<HTMLDivElement, ListboxComponentProps>
         }}>
         <FixedSizeList
           className={classes.fixedList}
-          height={isSmall ? 470 : 290}
+          height={
+            isSmall ? (itemCount < 8 ? itemCount * 60 : 480) : itemCount < 6 ? itemCount * 51 : 290
+          }
           width='100%'
           itemCount={itemCount}
           itemSize={isSmall ? 60 : 51}

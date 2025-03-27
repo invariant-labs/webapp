@@ -12,10 +12,10 @@ export const useStyles = makeStyles()((theme: Theme) => {
       borderRadius: 12,
       height: 36,
       minWidth: 'auto',
-      fontFamily: 'Mukta',
       backgroundColor: colors.invariant.light,
       ...typography.body3,
       padding: '12px 18px',
+      transition: '300ms',
 
       filter: 'brightness(0.8)',
 
