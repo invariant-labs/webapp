@@ -1711,7 +1711,7 @@ export const calculatePriorityFee = (fee: number, priorityMode: PriorityMode): n
     case PriorityMode.Turbo:
       return +(fee * 3).toFixed(9)
     default:
-      return 0
+      return 0.000005
   }
 }
 

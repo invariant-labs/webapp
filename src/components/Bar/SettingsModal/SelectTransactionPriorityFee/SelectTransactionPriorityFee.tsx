@@ -72,6 +72,14 @@ export const SelectTransactionPriorityFee = ({ dynamicFee, handleClose }: Props)
     )
   }, [currentPriorityMode, currentPriorityFee, priorityMode, customPriorityFee])
 
+  useEffect(() => {
+    if (priorityMode !== PriorityMode.Custom) {
+      const fee = FEES.find(fee => fee.title === priorityMode)
+
+      setCustomPriorityFee(fee?.amount.toString() || '0')
+    }
+  }, [])
+
   return (
     <Box className={classes.container}>
       <Box className={classes.section}>
@@ -92,9 +100,7 @@ export const SelectTransactionPriorityFee = ({ dynamicFee, handleClose }: Props)
             onClick={() => {
               setPriorityMode(title)
 
-              if (title !== PriorityMode.Custom) {
-                setCustomPriorityFee('')
-              }
+              setCustomPriorityFee(amount.toString())
             }}>
             <Box className={classes.feeHeader}>
               <Typography
