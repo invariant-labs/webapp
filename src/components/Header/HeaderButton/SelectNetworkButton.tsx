@@ -6,7 +6,7 @@ import SelectNetwork from '@components/Modals/SelectNetwork/SelectNetwork'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { ISelectNetwork } from '@store/consts/types'
 import { NetworkType } from '@store/consts/static'
-import { typography, colors } from '@static/theme'
+import { colors } from '@static/theme'
 
 export interface IProps {
   name: NetworkType
@@ -45,23 +45,9 @@ export const SelectNetworkButton: React.FC<IProps> = ({
         disabled={disabled}
         endIcon={!hideArrow ? <KeyboardArrowDownIcon id='downIcon' /> : null}
         onClick={handleClick}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            height: '100%'
-          }}>
+        <Box className={classes.tileWrapper}>
           <Box style={{ color: colors.invariant.text, lineHeight: '12px' }}> {name}</Box>
-          <Typography
-            style={{
-              color: colors.invariant.textGrey,
-              ...typography.caption4,
-              marginTop: '4px',
-              textAlign: 'left'
-            }}>
-            Network
-          </Typography>
+          <Typography className={classes.labelWrapper}>Network</Typography>
         </Box>
       </Button>
       <SelectNetwork

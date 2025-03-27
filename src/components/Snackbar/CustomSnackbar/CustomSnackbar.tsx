@@ -10,7 +10,8 @@ import {
   StyledHideContainer,
   StyledIcon,
   StyledSnackbarContent,
-  StyledTitle
+  StyledTitle,
+  useStyles
 } from './style'
 import { Grid } from '@mui/material'
 import { useDispatch } from 'react-redux'
@@ -54,15 +55,12 @@ const CustomSnackbar = React.forwardRef<HTMLDivElement, CustomContentProps>(
       }
     }, [network])
 
+    const { classes } = useStyles()
+
     const Content = () => {
       return (
         <>
-          <Grid
-            display='flex'
-            alignItems='center'
-            ml={2}
-            flexDirection='row'
-            style={{ width: 'fix-content', flexWrap: 'nowrap' }}>
+          <Grid className={classes.wrapper}>
             <Grid ml={1}>
               {variant === 'pending' ? (
                 <StyledCircularProgress size={13} />
@@ -73,7 +71,7 @@ const CustomSnackbar = React.forwardRef<HTMLDivElement, CustomContentProps>(
             <StyledTitle>{message}</StyledTitle>
           </Grid>
           {txid && (
-            <Grid display='flex' mx={1} minWidth='fit-content'>
+            <Grid className={classes.txWrapper}>
               <StyledDetails
                 onClick={() => {
                   window.open(`https://solscan.io/tx/${txid.toString()}${networkUrl}`, '_blank')
@@ -87,7 +85,7 @@ const CustomSnackbar = React.forwardRef<HTMLDivElement, CustomContentProps>(
             </Grid>
           )}
           {link && (
-            <Grid display='flex' mx={1} minWidth='fit-content'>
+            <Grid className={classes.txWrapper}>
               <StyledDetails
                 onClick={() => {
                   window.open(link.href, '_blank')
@@ -101,7 +99,7 @@ const CustomSnackbar = React.forwardRef<HTMLDivElement, CustomContentProps>(
             </Grid>
           )}
           {!link && !txid && (
-            <Grid display='flex' mx={1} minWidth='fit-content'>
+            <Grid className={classes.txWrapper}>
               <StyledCloseButton onClick={handleDismiss}>
                 <img width={16} src={icons.closeIcon} alt='Close'></img>
               </StyledCloseButton>

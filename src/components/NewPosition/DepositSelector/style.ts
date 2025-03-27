@@ -4,6 +4,7 @@ import { makeStyles } from 'tss-react/mui'
 export const useStyles = makeStyles()(theme => {
   return {
     wrapper: {
+      flexDirection: 'column',
       borderRadius: 24,
       backgroundColor: colors.invariant.component,
       padding: '16px 24px 16px 24px',
@@ -31,6 +32,8 @@ export const useStyles = makeStyles()(theme => {
       marginBottom: 3
     },
     selects: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
       gap: 12,
       marginBottom: 10
     },

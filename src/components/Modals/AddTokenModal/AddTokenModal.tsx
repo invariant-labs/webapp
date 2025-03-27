@@ -27,14 +27,14 @@ export const AddTokenModal: React.FC<IProps> = ({ open, handleClose, addToken })
         vertical: 'top',
         horizontal: 'center'
       }}>
-      <Grid container className={classes.root} direction='column' justifyContent='space-between'>
-        <Grid className={classes.upperRow} container direction='row' justifyContent='space-between'>
+      <Grid container className={classes.root}>
+        <Grid className={classes.upperRow} container>
           <Typography>Enter the address of the token</Typography>
           <Button className={classes.close} onClick={handleClose}>
             {'\u2715'}
           </Button>
         </Grid>
-        <Grid container direction='row' justifyContent='space-between' wrap='nowrap'>
+        <Grid container className={classes.inputWrapper}>
           <Input
             classes={{ input: classes.input }}
             placeholder='Token address'

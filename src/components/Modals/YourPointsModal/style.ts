@@ -151,6 +151,21 @@ const useStyles = makeStyles()(() => {
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       textWrap: 'nowrap'
+    },
+    textLive: {
+      color: colors.invariant.pink,
+      textAlign: 'center',
+      textShadow: `0 0 22px ${colors.invariant.pink}`
+    },
+    label: {
+      color: colors.invariant.text,
+      textAlign: 'center'
+    },
+    footer: {
+      color: colors.invariant.textGrey,
+      ...typography.body2,
+      marginTop: '8px',
+      textAlign: 'center'
     }
   }
 })

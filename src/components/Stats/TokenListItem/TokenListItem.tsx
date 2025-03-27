@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { colors, theme } from '@static/theme'
+import { theme } from '@static/theme'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useStyles } from './style'
@@ -84,7 +84,7 @@ const TokenListItem: React.FC<IProps> = ({
   const shouldShowText = icon === icons.unknownToken || !isSm
 
   return (
-    <Grid maxWidth='100%' className={classes.wrapper}>
+    <Grid className={classes.wrapper}>
       {displayType === 'tokens' ? (
         <Grid
           container
@@ -155,10 +155,7 @@ const TokenListItem: React.FC<IProps> = ({
           )}
         </Grid>
       ) : (
-        <Grid
-          container
-          style={{ color: colors.invariant.textGrey }}
-          classes={{ container: classes.container, root: classes.header }}>
+        <Grid container classes={{ container: classes.container, root: classes.header }}>
           {!isMd && (
             <Typography style={{ lineHeight: '12px' }}>
               N<sup>o</sup>

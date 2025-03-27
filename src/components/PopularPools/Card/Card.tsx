@@ -106,13 +106,7 @@ const Card: React.FC<ICard> = ({
   return (
     <Grid className={classes.root}>
       {isLoading ? (
-        <Skeleton
-          variant='rounded'
-          animation='wave'
-          width={220}
-          height={344}
-          style={{ opacity: 0.7, borderRadius: 24 }}
-        />
+        <Skeleton variant='rounded' animation='wave' className={classes.skeletonRect} />
       ) : (
         <Grid>
           <GradientBorder
@@ -132,7 +126,7 @@ const Card: React.FC<ICard> = ({
               className={classes.backgroundImage}
               style={{ bottom: 0, zIndex: -1 }}
             />
-            <Grid container p={'20px'} alignItems='center' flexDirection='column'>
+            <Grid container className={classes.wrapper}>
               <Grid container className={classes.iconsWrapper}>
                 <Box className={classes.iconContainer}>
                   <img
@@ -182,13 +176,8 @@ const Card: React.FC<ICard> = ({
                   <StatsLabel title='Volume' value={`$${formatNumberWithSuffix(volume)}`} />
                 )}
               </Grid>
-              <Grid container justifyContent='space-between' alignItems='center' mt='auto'>
-                <Grid
-                  className={classes.back}
-                  container
-                  item
-                  alignItems='center'
-                  onClick={handleOpenSwap}>
+              <Grid container className={classes.backWrapper}>
+                <Grid className={classes.back} container item onClick={handleOpenSwap}>
                   <img className={classes.backIcon} src={icons.backIcon2} alt='Back' />
                   <Typography className={classes.backText}>Swap</Typography>
                 </Grid>

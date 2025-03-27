@@ -13,9 +13,12 @@ export const useStyles = makeStyles<{ open: boolean }>()((_theme, { open }) => (
   },
   innerWrapper: {
     padding: 16,
-    minHeight: 132
+    minHeight: 132,
+    flexDirection: 'column',
+    flexWrap: 'nowrap'
   },
   row: {
+    justifyContent: 'space-between',
     '&:not(:last-child)': {
       marginBottom: 8
     }

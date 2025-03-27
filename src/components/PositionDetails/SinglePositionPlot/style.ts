@@ -14,8 +14,15 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     }
   },
   headerContainer: {
+    justifyContent: 'space-between',
     ...typography.heading4,
     color: '#FFFFFF'
+  },
+  liquidityWrapper: {
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    alignItems: 'center',
+    marginBottom: 12
   },
   header: {
     paddingBottom: 30

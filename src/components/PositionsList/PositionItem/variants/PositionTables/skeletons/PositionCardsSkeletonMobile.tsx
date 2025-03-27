@@ -8,73 +8,43 @@ const PositionCardsSkeletonMobile = () => {
   return (
     <>
       {cards.map(index => (
-        <Grid key={index} container direction='column' className={classes.card}>
-          <Grid container item direction='row' alignItems='center' justifyContent='space-between'>
+        <Grid key={index} container className={classes.card}>
+          <Grid container item className={classes.headerCard}>
             <Box className={classes.mobileCardSkeletonHeader}>
               <Box className={classes.tokenIcons}>
                 <Skeleton variant='circular' className={classes.circularSkeleton} />
                 <Skeleton variant='circular' className={classes.circularSkeletonSmall} />
                 <Skeleton variant='circular' className={classes.circularSkeleton} />
               </Box>
-              <Skeleton variant='text' width={120} height={24} sx={{ marginLeft: '8px' }} />
+              <Skeleton variant='text' className={classes.skeletonText} />
             </Box>
-            <Skeleton
-              variant='rectangular'
-              width={32}
-              height={32}
-              sx={{ marginLeft: '16px', borderRadius: '12px' }}
-            />
+            <Skeleton variant='rectangular' className={classes.skeleton36x36} />
           </Grid>
 
-          <Grid container justifyContent='space-between' alignItems='center' marginTop='16px'>
+          <Grid container className={classes.wrapper}>
             <Grid item xs={5}>
-              <Skeleton
-                variant='rectangular'
-                width={'100%'}
-                height={36}
-                sx={{ borderRadius: '10px', margin: '0 auto' }}
-              />
+              <Skeleton variant='rectangular' className={classes.skeleton36x100} />
             </Grid>
             <Grid item xs={7} sx={{ paddingLeft: '16px', paddingTop: '0 !important' }}>
-              <Skeleton
-                variant='rectangular'
-                width={'100%'}
-                height={36}
-                sx={{ borderRadius: '10px', margin: '0 auto' }}
-              />
+              <Skeleton variant='rectangular' className={classes.skeleton36x100} />
             </Grid>
           </Grid>
 
           <Grid container spacing={2} sx={{ marginTop: '16px', marginBottom: '16px' }}>
             <Grid item xs={6} sx={{ paddingTop: '0 !important' }}>
               <Grid container justifyContent='center'>
-                <Skeleton
-                  variant='rectangular'
-                  width={'100%'}
-                  height={36}
-                  sx={{ borderRadius: '10px', margin: '0 auto' }}
-                />
+                <Skeleton variant='rectangular' className={classes.skeleton36x100} />
               </Grid>
             </Grid>
             <Grid item xs={6} sx={{ paddingTop: '0 !important' }}>
               <Grid container justifyContent='center'>
-                <Skeleton
-                  variant='rectangular'
-                  width={'100%'}
-                  height={36}
-                  sx={{ borderRadius: '10px', margin: '0 auto' }}
-                />
+                <Skeleton variant='rectangular' className={classes.skeleton36x100} />
               </Grid>
             </Grid>
           </Grid>
 
-          <Grid container justifyContent='center' className={classes.chartContainer}>
-            <Skeleton
-              variant='rectangular'
-              width='100%'
-              height={40}
-              sx={{ borderRadius: '12px', marginTop: '18px' }}
-            />
+          <Grid container className={classes.chartContainer}>
+            <Skeleton variant='rectangular' className={classes.skeleton40x100} />
           </Grid>
         </Grid>
       ))}

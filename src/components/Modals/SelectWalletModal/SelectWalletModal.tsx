@@ -53,12 +53,7 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
           root: classes.popoverRoot,
           paper: classes.paper
         }}
-        onClose={handleClose}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
+        onClose={handleClose}>
         <Box className={classes.root}>
           <Grid
             className={classes.topCloseButton}

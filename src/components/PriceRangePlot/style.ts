@@ -48,6 +48,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     }
   },
   zoomButtonsWrapper: {
+    justifyContent: 'space-between',
     position: 'absolute',
     top: 0,
     right: 8,
@@ -67,6 +68,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     ...typography.heading4
   },
   errorWrapper: {
+    flexDirection: 'column',
+    alignItems: 'center',
     margin: 'auto'
   },
   errorText: {

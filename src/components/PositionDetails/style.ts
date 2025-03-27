@@ -7,6 +7,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     width: 1004,
     flexDirection: 'row',
     maxWidth: '100%',
+    flexWrap: 'nowrap',
 
     [theme.breakpoints.down('md')]: {
       flexDirection: 'column'
@@ -15,7 +16,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   positionDetails: {
     width: 517,
     marginRight: 24,
-
+    flexDirection: 'column',
     [theme.breakpoints.down('lg')]: {
       width: '100%'
     },
@@ -26,12 +27,16 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   right: {
     width: 517,
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    flexWrap: 'nowrap',
     [theme.breakpoints.down('lg')]: {
       width: '100%'
     }
   },
   back: {
     height: 40,
+    alignItems: 'center',
     width: 'fit-content',
     transition: 'filter 300ms',
 
@@ -94,12 +99,34 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     }
   },
   marketIdWithRefresher: {
+    width: 'auto',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
       justifyContent: 'space-between'
     }
   },
+  marketIDWrapper: {
+    display: 'flex',
+    padding: '8px 8px  0 0px',
+    height: '24px',
+    minWidth: '290px'
+  },
+  newTab: {
+    width: 14,
+    height: 14,
+    transform: 'translateY(-2px)'
+  },
+  refreshWrapper: {
+    marginRight: theme.spacing(2),
+    marginLeft: 'auto',
+    display: 'flex',
+    justifyContent: 'center'
+  },
   rightHeaderWrapper: {
+    alignItems: 'center',
+    flexDirection: 'row-reverse',
+    marginTop: '22px',
+    flexWrap: 'nowrap',
     marginBottom: 20,
     [theme.breakpoints.down('sm')]: {
       marginBottom: 0

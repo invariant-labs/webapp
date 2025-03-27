@@ -89,7 +89,7 @@ export const SelectTestnetRPC: React.FC<ISelectTestnetRPC> = ({
               </Typography>
             </div>
           )}
-        <Grid className={classes.list} container alignContent='space-around' direction='column'>
+        <Grid className={classes.list} container>
           {networks.map(({ networkType, rpc, rpcName }) => (
             <Grid
               className={classNames(
@@ -106,7 +106,7 @@ export const SelectTestnetRPC: React.FC<ISelectTestnetRPC> = ({
                 setButtonApplied(false)
                 handleClose()
               }}>
-              <Box width='100%' display='flex' justifyContent='space-between' alignItems='center'>
+              <Box className={classes.labelWrapper}>
                 <Typography className={classes.name}>{rpcName} </Typography>
                 <Typography className={classes.recommendedText}>
                   {RECOMMENDED_RPC_ADDRESS[NetworkType.Testnet] === rpc && 'RECOMMENDED'}
@@ -127,18 +127,13 @@ export const SelectTestnetRPC: React.FC<ISelectTestnetRPC> = ({
               setActiveCustom(true)
               inputRef.current?.focus()
             }}>
-            <Box width='100%' display='flex' justifyContent='space-between' alignItems='center'>
+            <Box className={classes.labelWrapper}>
               <Typography className={classes.name}>Custom RPC</Typography>
             </Box>
             <DotIcon className={classes.dotIcon} />
           </Grid>
         </Grid>
-        <Grid
-          className={classes.lowerRow}
-          container
-          direction='row'
-          justifyContent='space-between'
-          wrap='nowrap'>
+        <Grid className={classes.lowerRow} container>
           <Input
             className={classNames(classes.input, activeCustom ? classes.activePlaceholder : null)}
             classes={{

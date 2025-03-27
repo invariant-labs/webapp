@@ -5,7 +5,7 @@ import useStyles from './style'
 import { Box, Button, Typography } from '@mui/material'
 import { blurContent, unblurContent } from '@utils/uiUtils'
 import { PriorityMode } from '@store/consts/types'
-import { colors, typography } from '@static/theme'
+import { colors } from '@static/theme'
 
 export interface Props {
   recentPriorityFee: string
@@ -41,25 +41,11 @@ export const SelectPriorityButton: React.FC<Props> = ({
         variant='contained'
         endIcon={<KeyboardArrowDownIcon id='downIcon' />}
         onClick={handleClick}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            height: '100%'
-          }}>
+        <Box className={classes.tileWrapper}>
           <Box style={{ color: colors.invariant.text, lineHeight: '12px', textAlign: 'left' }}>
             Fee
           </Box>
-          <Typography
-            style={{
-              color: colors.invariant.textGrey,
-              ...typography.caption4,
-              marginTop: '4px',
-              textAlign: 'left'
-            }}>
-            Set fee
-          </Typography>
+          <Typography className={classes.labelWrapper}>Set fee</Typography>
         </Box>
       </Button>
       <Priority

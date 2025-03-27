@@ -304,11 +304,11 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   })
 
   return (
-    <Grid container direction='column' className={classNames(classes.wrapper, className)}>
+    <Grid container className={classNames(classes.wrapper, className)}>
       <Typography className={classes.sectionTitle}>Tokens</Typography>
 
       <Grid container className={classes.sectionWrapper} style={{ marginBottom: 40 }}>
-        <Grid container className={classes.selects} direction='row' justifyContent='space-between'>
+        <Grid container className={classes.selects}>
           <Grid className={classes.selectWrapper}>
             <Select
               tokens={tokens}

@@ -23,6 +23,10 @@ const useStyles = makeStyles()(theme => {
         paddingInline: 8
       }
     },
+    emptyIcon: {
+      height: 96,
+      width: 96
+    },
     notConnectedPlaceholder: {
       marginTop: 65,
 
@@ -42,7 +46,16 @@ const useStyles = makeStyles()(theme => {
       },
       flexDirection: 'column',
       borderTopRightRadius: '24px',
-      background: 'linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%)'
+      background: 'linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%)',
+      '& h1': {
+        color: colors.invariant.text,
+        ...typography.heading2,
+        marginBottom: '8px'
+      },
+      '& h2': {
+        color: colors.invariant.textGrey,
+        ...typography.body2
+      }
     },
     button: {
       height: 40,

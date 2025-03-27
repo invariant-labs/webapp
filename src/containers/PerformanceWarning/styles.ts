@@ -6,7 +6,9 @@ const useStyles = makeStyles()(() => {
     banner: {
       backgroundColor: colors.invariant.yellow,
       paddingBlock: 12,
-      paddingInline: 16
+      paddingInline: 16,
+      flexDirection: 'row',
+      justifyContent: 'center'
     },
     icon: {
       width: 16,

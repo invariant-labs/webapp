@@ -535,11 +535,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
   if ((isLoadingListDelay && walletStatus === Status.Initialized) || !isFinishedDelayRender) {
     return (
-      <Grid
-        container
-        justifyContent='center'
-        alignItems='center'
-        className={classes.fullHeightContainer}>
+      <Grid container className={classes.fullHeightContainer}>
         <img src={loader} className={classes.loading} alt='Loading' />
       </Grid>
     )
@@ -564,11 +560,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     )
   } else {
     return (
-      <Grid
-        display='flex'
-        position='relative'
-        justifyContent='center'
-        className={classes.emptyContainer}>
+      <Grid className={classes.emptyContainer2}>
         <EmptyPlaceholder
           newVersion
           style={isMobile ? { paddingTop: 5 } : {}}

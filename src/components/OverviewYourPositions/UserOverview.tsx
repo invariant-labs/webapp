@@ -128,10 +128,10 @@ export const UserOverview = () => {
       justifyContent={'space-between'}>
       {isLoadingList ? (
         <>
-          <Skeleton width={120} height={24} />
+          <Skeleton className={classes.skeleton100x24} />
           <Box sx={{ display: 'flex', gap: 1 }}>
-            <Skeleton width={100} height={24} />
-            <Skeleton width={100} height={24} />
+            <Skeleton className={classes.skeleton100x24} />
+            <Skeleton className={classes.skeleton100x24} />
           </Box>
         </>
       ) : (
@@ -155,7 +155,7 @@ export const UserOverview = () => {
   const renderTokensFound = () => (
     <Typography className={classNames(classes.footerText, classes.greyText)}>
       {isBalanceLoading || isLoadingList ? (
-        <Skeleton width={150} height={24} sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)' }} />
+        <Skeleton className={classes.skeleton150x24} />
       ) : (
         `Tokens Found: ${finalTokens.length}`
       )}

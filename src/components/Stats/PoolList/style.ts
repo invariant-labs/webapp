@@ -5,7 +5,12 @@ import { makeStyles } from 'tss-react/mui'
 export const useStyles = makeStyles<{ initialDataLength: number }>()(
   (_theme, { initialDataLength }) => ({
     container: {
-      maxWidth: 1072
+      maxWidth: 1072,
+      flexDirection: 'column'
+    },
+    emptyWrapper: {
+      background: colors.invariant.component,
+      borderBottom: `1px solid ${colors.invariant.light}`
     },
     pagination: {
       padding: '20px 24px 10px 0',

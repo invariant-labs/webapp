@@ -18,6 +18,9 @@ export const usePositionTableRowStyle = makeStyles()((theme: Theme) => ({
     padding: '14px 41px 14px 22px !important'
   },
   itemCellContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'nowrap',
     width: 100,
     [theme.breakpoints.down(1029)]: {
       marginRight: 0
@@ -85,6 +88,7 @@ export const usePositionTableRowStyle = makeStyles()((theme: Theme) => ({
   },
 
   iconsAndNames: {
+    flexWrap: 'nowrap',
     width: 'fit-content',
     display: 'flex',
     alignItems: 'center'
@@ -167,5 +171,40 @@ export const usePositionTableRowStyle = makeStyles()((theme: Theme) => ({
         filter: 'none'
       }
     }
+  },
+  skeleton30Rect: {
+    width: 32,
+    height: 32,
+    borderRadius: '10px',
+    margin: '0 auto'
+  },
+  skeleton36Rect: {
+    width: '100%',
+    height: 36,
+    borderRadius: '10px',
+    margin: '0 auto'
+  },
+  skeleton3660: {
+    width: '60px',
+    height: 36,
+    borderRadius: '10px'
+  },
+  skeleton100x60: {
+    width: 100,
+    height: 36,
+    marginLeft: theme.spacing(1.5),
+    borderRadius: '10px'
+  },
+  skeletonWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px'
+  },
+  label: {
+    color: colors.invariant.lightGrey,
+
+    background: colors.invariant.light,
+    padding: '8px 12px',
+    borderRadius: '12px'
   }
 }))

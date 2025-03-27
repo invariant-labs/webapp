@@ -10,6 +10,10 @@ export const useStyles = makeStyles()(() => {
         backgroundColor: 'transparent'
       }
     },
+    headerWrapper: {
+      justifyContent: 'space-between',
+      marginBottom: 6
+    },
     detailsWrapper: {
       width: 332,
       display: 'flex',

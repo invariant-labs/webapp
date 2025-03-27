@@ -21,6 +21,15 @@ export const useStyles = makeStyles()(() => ({
       marginTop: 8
     }
   },
+  skeleton100x24: {
+    width: 120,
+    height: 24
+  },
+  skeleton150x24: {
+    width: 150,
+    height: 24,
+    background: 'rgba(255, 255, 255, 0.1)'
+  },
   footerItem: {
     width: '100%',
     display: 'flex',

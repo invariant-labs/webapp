@@ -9,7 +9,7 @@ const SinglePositionPage: React.FC = () => {
   const { classes } = useStyles()
 
   return (
-    <Grid container className={classes.container} justifyContent='center'>
+    <Grid container className={classes.container}>
       <Grid item>
         <SinglePositionWrapper id={id ?? ''} />
       </Grid>

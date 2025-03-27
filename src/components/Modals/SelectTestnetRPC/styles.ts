@@ -11,8 +11,16 @@ const useStyles = makeStyles()(() => {
       padding: 8
     },
     list: {
+      alignContent: 'space-around',
+      flexDirection: 'column',
       borderRadius: 5,
       marginTop: 7
+    },
+    labelWrapper: {
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
     },
     listItem: {
       color: colors.invariant.textGrey,
@@ -76,6 +84,8 @@ const useStyles = makeStyles()(() => {
       color: colors.white.main
     },
     lowerRow: {
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
       marginTop: 8,
       display: 'flex',
       justifyContent: 'space-between',

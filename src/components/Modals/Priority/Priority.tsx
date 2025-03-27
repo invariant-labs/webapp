@@ -278,7 +278,7 @@ const Priority: React.FC<IPriority> = ({
             )
           })}
         </Grid>
-        <Grid container justifyContent='space-between' style={{ marginTop: 24 }}>
+        <Grid container className={classes.priorityWrapper}>
           <Typography
             className={classNames(classes.label, { [classes.labelWhite]: selectedIndex === -1 })}>
             Set custom priority

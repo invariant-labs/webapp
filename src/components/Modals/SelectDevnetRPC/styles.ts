@@ -10,9 +10,17 @@ const useStyles = makeStyles()(() => {
       marginTop: 8,
       padding: 8
     },
+    labelWrapper: {
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    },
     list: {
       borderRadius: 5,
-      marginTop: 7
+      marginTop: 7,
+      alignContent: 'space-around',
+      flexDirection: 'column'
     },
     listItem: {
       color: colors.invariant.textGrey,
@@ -76,9 +84,11 @@ const useStyles = makeStyles()(() => {
       color: colors.white.main
     },
     lowerRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      flexWrap: 'nowrap',
       marginTop: 8,
       display: 'flex',
-      justifyContent: 'space-between',
       alignItems: 'center',
       height: 40,
       marginBottom: 10,

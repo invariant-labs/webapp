@@ -42,7 +42,7 @@ export const PositionViewActionPopover: React.FC<IPositionViewActionPopover> = (
         horizontal: 'center'
       }}>
       <Grid className={classes.root}>
-        <Grid className={classes.list} container alignContent='space-around' direction='column'>
+        <Grid className={classes.list} container>
           <Button
             disabled={unclaimedFeesInUSD <= 0}
             className={classNames(classes.listItem)}

@@ -485,7 +485,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       ) : null}
       {!loading && hasError ? (
         <Grid container className={classes.cover}>
-          <Grid className={classes.errorWrapper} container direction='column' alignItems='center'>
+          <Grid className={classes.errorWrapper} container>
             <Typography className={classes.errorText}>Unable to load liquidity chart</Typography>
             <Button className={classes.reloadButton} onClick={reloadHandler}>
               Reload chart
@@ -493,11 +493,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           </Grid>
         </Grid>
       ) : null}
-      <Grid
-        container
-        item
-        className={classNames(classes.zoomButtonsWrapper, 'zoomBtns')}
-        justifyContent='space-between'>
+      <Grid container item className={classNames(classes.zoomButtonsWrapper, 'zoomBtns')}>
         <Button className={classes.zoomButton} onClick={zoomPlus} disableRipple>
           <img src={icons.ZoomInIcon} className={classes.zoomIcon} alt='Zoom in' />
         </Button>

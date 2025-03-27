@@ -13,6 +13,11 @@ const useStyles = makeStyles()((theme: Theme) => {
         justifyContent: 'center'
       }
     },
+    balanceWrapper: {
+      alignItems: 'flex-end',
+      flexDirection: 'column',
+      flexWrap: 'nowrap'
+    },
     container: {
       overflow: 'hidden',
       padding: 24,
@@ -21,7 +26,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       width: 500,
       [theme.breakpoints.down('sm')]: {
         maxWidth: '100vw',
-        padding: '20px 16px'
+        padding: '20px 12px'
       },
       '.MuiFormControlLabel-label': {
         color: colors.invariant.lightGrey,
@@ -60,9 +65,6 @@ const useStyles = makeStyles()((theme: Theme) => {
         top: '50%',
         right: '0%',
         transform: 'translateY(-50%)'
-      },
-      '&:hover': {
-        backgroundColor: '#1B191F'
       }
     },
     selectTokenInput: {
@@ -114,6 +116,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       padding: '8px 12px',
       marginRight: 6,
       marginBottom: 8,
+      transition: '300ms',
       '& p': {
         ...typography.body3,
         fontWeight: 400
@@ -147,16 +150,31 @@ const useStyles = makeStyles()((theme: Theme) => {
     tokenContainer: {
       display: 'flex',
       flexDirection: 'column',
-      minWidth: 'min-content'
+      minWidth: 'min-content',
+      flexGrow: 1,
+      overflow: 'hidden'
     },
-
+    addressWrapper: {
+      flexDirection: 'row',
+      columnGap: '6px',
+      alignItems: 'center',
+      flexWrap: 'nowrap'
+    },
     tokenItem: {
+      alignItems: 'center',
+      flexWrap: 'nowrap',
       display: 'flex',
       justifyContent: 'space-between',
       marginBottom: 4,
       borderRadius: 24,
       cursor: 'pointer',
-      padding: '0 16px ',
+      padding: '0 12px',
+      position: 'relative',
+      overflow: 'hidden',
+      transition: '300ms',
+      [theme.breakpoints.down('sm')]: {
+        padding: 0
+      },
 
       '& > p': {
         whiteSpace: 'nowrap'
@@ -169,7 +187,10 @@ const useStyles = makeStyles()((theme: Theme) => {
     },
     tokenName: {
       color: colors.white.main,
-      ...typography.heading4
+      ...typography.heading3,
+      [theme.breakpoints.down('sm')]: {
+        ...typography.heading4
+      }
     },
     tokenAddress: {
       backgroundColor: colors.invariant.newDark,
@@ -177,12 +198,17 @@ const useStyles = makeStyles()((theme: Theme) => {
       padding: '2px 4px',
       width: 'min-content',
       height: 'min-content',
+      whiteSpace: 'nowrap',
       '& a': {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '12px',
+        [theme.breakpoints.down('sm')]: {
+          gap: '6px'
+        },
         textDecoration: 'none',
+        transition: '300ms',
 
         '&:hover': {
           filter: 'brightness(1.2)',
@@ -197,38 +223,63 @@ const useStyles = makeStyles()((theme: Theme) => {
         }
       }
     },
+
     tokenDescrpiption: {
       color: colors.invariant.textGrey,
+      opacity: 0.5,
       ...typography.caption2,
       lineHeight: '16px',
       whiteSpace: 'nowrap'
     },
     tokenBalanceStatus: {
-      color: colors.invariant.textGrey,
+      color: colors.invariant.text,
       maxHeight: 40,
-      '& p': {
-        ...typography.body2
-      },
-
-      '& p:last-child': {
-        color: colors.invariant.text
-      }
+      opacity: 0.85,
+      ...typography.heading4,
+      whiteSpace: 'nowrap'
     },
 
+    tokenBalanceUSDStatus: {
+      color: colors.invariant.textGrey,
+      opacity: 0.85,
+      maxHeight: 40,
+      whiteSpace: 'nowrap',
+      ...typography.body2
+    },
+
+    imageContainer: {
+      minWidth: 36,
+      maxWidth: 36,
+      height: 36,
+      width: 36,
+      marginRight: 16,
+      [theme.breakpoints.down('sm')]: {
+        marginRight: 12
+      },
+      position: 'relative'
+    },
     tokenIcon: {
       minWidth: 36,
       maxWidth: 36,
       height: 36,
-      marginRight: 12,
+      width: 36,
+      marginRight: 16,
       borderRadius: '50%',
       [theme.breakpoints.up('sm')]: {
         boxShadow: '0px 0px 10px rgba(216, 255, 181, 0.5)'
       }
     },
+    warningIcon: {
+      position: 'absolute',
+      width: 12,
+      height: 12,
+      bottom: -6,
+      right: -6
+    },
     tokenBalance: {
       ...typography.body2,
       color: colors.invariant.textGrey,
-      whiteSpace: 'nowrap'
+      overflow: 'visible'
     },
     searchIcon: {
       color: colors.invariant.light
@@ -370,6 +421,9 @@ const useStyles = makeStyles()((theme: Theme) => {
       position: 'absolute'
     },
     topRow: {
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      alignItems: 'center',
       marginBottom: 20
     },
     addIcon: {

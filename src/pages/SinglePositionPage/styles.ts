@@ -4,6 +4,7 @@ import { makeStyles } from 'tss-react/mui'
 const useStyles = makeStyles()((theme: Theme) => {
   return {
     container: {
+      justifyContent: 'center',
       backgroundColor: 'transparent',
       paddingInline: 138,
       minHeight: '60vh',

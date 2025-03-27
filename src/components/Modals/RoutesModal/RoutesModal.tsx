@@ -53,7 +53,7 @@ export const RoutesModal: React.FC<IRoutesModal> = ({
         vertical: 'top',
         horizontal: 'center'
       }}>
-      <Grid className={classes.root} container alignContent='space-around' direction='column'>
+      <Grid className={classes.root} container>
         {!isSmDown && (
           <>
             {' '}

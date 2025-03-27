@@ -4,6 +4,7 @@ import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()((theme: Theme) => ({
   swapWrapper: {
+    alignItems: 'center',
     maxWidth: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -11,6 +12,15 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       padding: '0 8px'
     }
   },
+  refreshWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 20,
+    height: 34,
+    minWidth: 'fit-content',
+    marginLeft: theme.spacing(1)
+  },
+  refresh: { display: 'flex', alignItems: 'center' },
   header: {
     maxWidth: '100%',
     display: 'flex',
@@ -26,6 +36,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       color: colors.white.main
     }
   },
+
+  audit: { marginTop: '24px', width: 180 },
+
   refreshIcon: {
     width: 26,
     height: 21,
@@ -109,6 +122,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     position: 'absolute'
   },
   root: {
+    flexDirection: 'column',
     maxWidth: '100%',
     background: colors.invariant.component,
     borderRadius: 24,
