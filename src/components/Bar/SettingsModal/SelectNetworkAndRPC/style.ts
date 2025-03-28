@@ -22,6 +22,7 @@ export const useStyles = makeStyles()(() => {
       cursor: 'pointer',
       paddingInline: 8,
       color: colors.invariant.textGrey,
+      transition: '300ms',
 
       '&:hover': {
         background: colors.invariant.light,
@@ -77,6 +78,7 @@ export const useStyles = makeStyles()(() => {
       color: colors.invariant.dark,
       ...typography.body2,
       textTransform: 'none',
+      transition: '300ms',
 
       '&:hover': {
         background: colors.invariant.green

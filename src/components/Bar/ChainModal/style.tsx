@@ -36,6 +36,7 @@ export const useStyles = makeStyles()(() => {
       cursor: 'pointer',
       paddingInline: 8,
       color: colors.invariant.textGrey,
+      transition: '300ms',
 
       '&:hover': {
         background: colors.invariant.light,
