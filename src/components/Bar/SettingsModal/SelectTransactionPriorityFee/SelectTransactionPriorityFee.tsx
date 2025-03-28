@@ -169,11 +169,12 @@ export const SelectTransactionPriorityFee = ({ dynamicFee, handleClose }: Props)
             }
 
             setIsSavable(false)
+            handleClose()
           } else {
             handleClose()
           }
         }}>
-        {isSavable ? 'Save' : 'Done'}
+        {isSavable ? 'Save' : 'Saved'}
       </Button>
     </Box>
   )
