@@ -45,7 +45,11 @@ export const SettingsModal = ({
         handleClose()
         setSelectedTab('RPC')
       }}>
-      <Switch items={['RPC', 'Priority Fee']} onChange={item => setSelectedTab(item)} />
+      <Switch
+        items={['RPC', 'Priority Fee']}
+        onChange={item => setSelectedTab(item)}
+        defalutValue={selectedTab}
+      />
       {selectedTab === 'RPC' && (
         <>
           <SelectNetworkAndRPC

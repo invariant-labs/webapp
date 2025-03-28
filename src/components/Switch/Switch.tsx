@@ -6,12 +6,13 @@ import classNames from 'classnames'
 type Props = {
   items: string[]
   onChange?: (item: string) => void
+  defalutValue?: string
 }
 
-export const Switch = ({ items, onChange }: Props) => {
+export const Switch = ({ items, onChange, defalutValue }: Props) => {
   const { classes } = useStyles()
 
-  const [selectedItem, setSelectedItem] = useState<string>(items[0])
+  const [selectedItem, setSelectedItem] = useState<string>(defalutValue || items[0])
 
   const handleChange = (item: string) => {
     setSelectedItem(item)
