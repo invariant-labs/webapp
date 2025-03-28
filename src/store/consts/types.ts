@@ -162,10 +162,10 @@ export interface ISelectChain {
 
 export enum Chain {
   Solana = 'Solana',
-  AlephZero = 'Aleph Zero',
-  Eclipse = 'Eclipse',
-  Vara = 'Vara',
-  Alephium = 'Alephium'
+  // AlephZero = 'Aleph Zero',
+  Eclipse = 'Eclipse'
+  // Vara = 'Vara',
+  // Alephium = 'Alephium'
 }
 
 export interface SnapshotValueData {

@@ -157,7 +157,7 @@ export const Header: React.FC<IHeader> = ({
           sx={{
             display: { lg: 'block' },
 
-            '@media (max-width: 1200px)': {
+            [theme.breakpoints.down(1200)]: {
               display: 'none'
             }
           }}>
