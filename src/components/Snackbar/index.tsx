@@ -35,11 +35,12 @@ interface ISnackbarProps {
 }
 
 const Snackbar: React.FC<ISnackbarProps> = ({ maxSnack = 3, children }) => {
+  const isNavbarVisible = useMediaQuery(theme.breakpoints.down(1200))
   const isExSmall = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
     <>
-      {isExSmall && (
+      {isNavbarVisible && (
         <Global
           styles={`
           .custom-snackbar-container {
@@ -53,7 +54,9 @@ const Snackbar: React.FC<ISnackbarProps> = ({ maxSnack = 3, children }) => {
         dense
         maxSnack={isExSmall ? 5 : maxSnack}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        classes={isExSmall ? { containerAnchorOriginBottomLeft: 'custom-snackbar-container' } : {}}
+        classes={
+          isNavbarVisible ? { containerAnchorOriginBottomLeft: 'custom-snackbar-container' } : {}
+        }
         Components={{
           success: CustomSnackbar,
           error: CustomSnackbar,
