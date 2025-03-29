@@ -1,7 +1,7 @@
 import { colors, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles()(() => {
+const useStyles = makeStyles()(theme => {
   return {
     footer: {
       width: '100%',
@@ -15,6 +15,11 @@ const useStyles = makeStyles()(() => {
     footerItem: {
       margin: '0 10px',
       opacity: '.5',
+
+      [theme.breakpoints.down(1200)]: {
+        opacity: '.25'
+      },
+
       transition: '.3s all',
       '&:hover': {
         opacity: 1,

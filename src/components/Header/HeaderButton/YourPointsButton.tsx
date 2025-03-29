@@ -10,7 +10,7 @@ export interface IProps {
   disabled?: boolean
 }
 export const YourPointsButton: React.FC<IProps> = ({ disabled = false }) => {
-  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
+  const isXs = useMediaQuery(theme.breakpoints.down(450))
   const { classes } = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [openNetworks, setOpenNetworks] = React.useState<boolean>(false)
@@ -33,7 +33,7 @@ export const YourPointsButton: React.FC<IProps> = ({ disabled = false }) => {
         classes={{ disabled: classes.disabled }}
         disabled={disabled}
         onClick={handleClick}>
-        <>{isSm ? <KeyboardArrowDownIcon id='downIcon' /> : 'Points'}</>
+        <>{isXs ? <KeyboardArrowDownIcon id='downIcon' /> : 'Points'}</>
       </Button>
       <YourPointsModal open={openNetworks} anchorEl={anchorEl} handleClose={handleClose} />
     </>

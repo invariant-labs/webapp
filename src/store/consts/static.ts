@@ -459,11 +459,19 @@ export const DEFAULT_SWAP_SLIPPAGE = '0.50'
 export const DEFAULT_NEW_POSITION_SLIPPAGE = '1.00'
 
 export const CHAINS = [
-  { name: Chain.Solana, address: 'https://invariant.app/swap' },
+  { name: Chain.Solana, address: 'https://invariant.app/swap', iconGlow: 'solanaGlow' },
   // { name: Chain.AlephZero, address: 'https://azero.invariant.app/exchange' },
-  { name: Chain.Eclipse, address: 'https://eclipse.invariant.app/exchange' },
+  {
+    name: Chain.Eclipse,
+    address: 'https://eclipse.invariant.app/exchange',
+    iconGlow: 'eclipseGlow'
+  }
   // { name: Chain.Vara, address: 'https://vara.invariant.app/exchange' },
-  { name: Chain.Alephium, address: 'https://alph.invariant.app/exchange' }
+  // {
+  //   name: Chain.Alephium,
+  //   address: 'https://alph.invariant.app/exchange',
+  //   iconGlow: 'alephiumGlow'
+  // }
 ]
 
 export const enum SortTypePoolList {
@@ -575,3 +583,6 @@ export const getPopularPools = (network: NetworkType): Pool[] => {
       return []
   }
 }
+
+export const MAX_PRIORITY_FEE = 2
+export const DEFAULT_PRIORITY_FEE = 0.0001
