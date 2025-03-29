@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
-import { formatNumberWithSuffix } from '@utils/utils'
+import { formatNumberWithoutSuffix } from '@utils/utils'
 import React from 'react'
 import useStyles from './style'
 
@@ -32,9 +32,9 @@ const ExchangeRate: React.FC<iProps> = ({
         1 {tokenFromSymbol} ={' '}
         {isNaN(amount)
           ? 0
-          : formatNumberWithSuffix(amount.toFixed(tokenToDecimals)) === '0'
+          : formatNumberWithoutSuffix(amount.toFixed(tokenToDecimals)) === '0'
             ? '~0'
-            : formatNumberWithSuffix(amount.toFixed(tokenToDecimals))}{' '}
+            : formatNumberWithoutSuffix(amount.toFixed(tokenToDecimals))}{' '}
         {tokenToSymbol}
       </Typography>
     )

@@ -16,7 +16,6 @@ import {
   Typography,
   useMediaQuery
 } from '@mui/material'
-import SearchIcon from '@static/svg/lupaDark.svg'
 import { forwardRef, useMemo, useState, useCallback, memo } from 'react'
 import { commonTokensForNetworks, NetworkType } from '@store/consts/static'
 import { theme, typography } from '@static/theme'
@@ -240,7 +239,7 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
           },
           endAdornment: (
             <InputAdornment position='end'>
-              <img src={SearchIcon} className={classes.searchIcon} alt='Search' />
+              <img src={icons.searchIcon} className={classes.searchIcon} alt='Search' />
             </InputAdornment>
           ),
           inputProps: {

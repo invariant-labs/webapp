@@ -1,7 +1,7 @@
 import React from 'react'
 import { Grid, Typography } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
-import { formatNumberWithSuffix, printBN } from '@utils/utils'
+import { formatNumberWithoutSuffix, printBN } from '@utils/utils'
 import { useStyles } from './styles'
 import { BN } from '@project-serum/anchor'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
@@ -40,9 +40,10 @@ const TransactionDetailsBox: React.FC<IProps> = ({
               {exchangeRate.val === Infinity
                 ? '-'
                 : `${
-                    formatNumberWithSuffix(exchangeRate.val.toFixed(exchangeRate.decimal)) === '0'
+                    formatNumberWithoutSuffix(exchangeRate.val.toFixed(exchangeRate.decimal)) ===
+                    '0'
                       ? '~0'
-                      : formatNumberWithSuffix(exchangeRate.val.toFixed(exchangeRate.decimal))
+                      : formatNumberWithoutSuffix(exchangeRate.val.toFixed(exchangeRate.decimal))
                   } ${exchangeRate.symbol}`}
             </Typography>
           )}

@@ -1,3 +1,39 @@
+@font-face {
+  font-family: 'Mukta';
+  font-style: normal;
+  font-weight: 400;
+  font-display: fallback;
+  src: url(https://fonts.gstatic.com/s/mukta/v16/iJWKBXyXfDDVXbnBrXw.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+02DA, U+02DC, U+2000-206F, U+2191, U+2193, U+FFFD, U+221E;
+}
+
+@font-face {
+  font-family: 'Mukta';
+  font-style: normal;
+  font-weight: 500;
+  font-display: fallback;
+  src: url(https://fonts.gstatic.com/s/mukta/v16/iJWHBXyXfDDVXbEyjmmd8WA.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+02DA, U+02DC, U+2000-206F, U+2191, U+2193, U+FFFD, U+221E;
+}
+
+@font-face {
+  font-family: 'Mukta';
+  font-style: normal;
+  font-weight: 600;
+  font-display: fallback;
+  src: url(https://fonts.gstatic.com/s/mukta/v16/iJWHBXyXfDDVXbEeiWmd8WA.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+02DA, U+02DC, U+2000-206F, U+2191, U+2193, U+FFFD, U+221E;
+}
+
+@font-face {
+  font-family: 'Mukta';
+  font-style: normal;
+  font-weight: 700;
+  font-display: fallback;
+  src: url(https://fonts.gstatic.com/s/mukta/v16/iJWHBXyXfDDVXbF6iGmd8WA.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+02DA, U+02DC, U+2000-206F, U+2191, U+2193, U+FFFD, U+221E;
+}
+
 * {
   min-width: 0;
   min-height: 0;

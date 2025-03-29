@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useRef, forwardRef, useEffect } from 'react'
-import searchIcon from '@static/svg/lupa.svg'
 import { areEqual, FixedSizeList as List, ListChildComponentProps } from 'react-window'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import AddTokenModal from '@components/Modals/AddTokenModal/AddTokenModal'
@@ -314,7 +313,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                 onChange={searchToken}
                 value={value}
               />
-              <CardMedia image={searchIcon} className={classes.inputIcon} />
+              <CardMedia image={icons.searchIcon} className={classes.inputIcon} />
             </Grid>
             <TooltipHover text='Add token'>
               <AddCircleOutlineIcon

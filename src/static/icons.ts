@@ -51,8 +51,58 @@ import docsFill from './svg/docsFill.svg'
 import liquidityEmpty from './svg/liqudity_empty.svg'
 import assetsEmpty from './svg/assets_empty.svg'
 import boostPoints from './svg/boostPoints.svg'
+import settings2 from './svg/settings2.svg'
+import mainnetGlow from './svg/mainnetGlow.svg'
+import devnetGlow from './svg/devnetGlow.svg'
+import active2 from './svg/active2.svg'
+import solanaGlow from './svg/solanaGlow.svg'
+import eclipseGlow from './svg/eclipseGlow.svg'
+import alephiumGlow from './svg/alephiumGlow.svg'
+import settings3 from './svg/settings3.svg'
+import faucet from './svg/faucet.svg'
+import solana from './svg/solana.svg'
+import searchIcon from './svg/lupaDark.svg'
+import copyAddressIcon from '@static/svg/copy-address.svg'
+import disconnectIcon from '@static/svg/disconnect.svg'
+import hamburger from '@static/svg/Hamburger.svg'
+import backIcon from '@static/svg/back-arrow.svg'
+import settingIcon from '@static/svg/settings.svg'
+import activeLiquidity from '@static/svg/activeLiquidity.svg'
+import revertIcon from '@static/svg/revert.svg'
+import backIcon2 from '@static/svg/back-arrow-2.svg'
+import swapPosition from '@static/svg/swap-position.svg'
+import refreshIcon from '@static/svg/refresh.svg'
+import handleMax from '@static/svg/narrowChartMaxHandle.svg'
+import handleMin from '@static/svg/narrowChartMinHandle.svg'
+import ZoomInIcon from '@static/svg/zoom-in-icon.svg'
+import ZoomOutIcon from '@static/svg/zoom-out-icon.svg'
+import infoIcon from '@static/svg/infoBlack.svg'
+import Dog1 from '@static/svg/SolanaCreator/Dog1.svg'
+import Dog2 from '@static/svg/SolanaCreator/Dog2.svg'
+import Cat1 from '@static/svg/SolanaCreator/Cat1.svg'
+import Cat2 from '@static/svg/SolanaCreator/Cat2.svg'
 
-const icons: { [key: string]: string } = {
+const icons = {
+  Dog1,
+  Dog2,
+  Cat1,
+  Cat2,
+  infoIcon,
+  ZoomInIcon,
+  ZoomOutIcon,
+  handleMax,
+  handleMin,
+  refreshIcon,
+  swapPosition,
+  revertIcon,
+  backIcon2,
+  activeLiquidity,
+  backIcon,
+  settingIcon,
+  hamburger,
+  disconnectIcon,
+  copyAddressIcon,
+  searchIcon,
   docsFill,
   mediumFill,
   githubFill,
@@ -104,6 +154,16 @@ const icons: { [key: string]: string } = {
   airdropRainbow,
   audit,
   boostPoints,
+  settings2,
+  mainnetGlow,
+  devnetGlow,
+  active2,
+  solanaGlow,
+  eclipseGlow,
+  alephiumGlow,
+  settings3,
+  faucet,
+  solana,
   liquidityEmpty,
   assetsEmpty
 }

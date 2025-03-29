@@ -4,11 +4,8 @@ import { BN } from '@project-serum/anchor'
 import { ISnackbar } from '@store/reducers/snackbars'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { BestTier, Chain, PrefixConfig, Token, WalletType } from './types'
-import Dog1 from '@static/svg/SolanaCreator/Dog1.svg'
-import Dog2 from '@static/svg/SolanaCreator/Dog2.svg'
-import Cat1 from '@static/svg/SolanaCreator/Cat1.svg'
-import Cat2 from '@static/svg/SolanaCreator/Cat2.svg'
 import { TICK_CROSSES_PER_IX } from '@invariant-labs/sdk/lib/market'
+import icons from '@static/icons'
 
 export enum NetworkType {
   Local = 'Local',
@@ -462,11 +459,19 @@ export const DEFAULT_SWAP_SLIPPAGE = '0.50'
 export const DEFAULT_NEW_POSITION_SLIPPAGE = '1.00'
 
 export const CHAINS = [
-  { name: Chain.Solana, address: 'https://invariant.app/swap' },
+  { name: Chain.Solana, address: 'https://invariant.app/swap', iconGlow: 'solanaGlow' },
   // { name: Chain.AlephZero, address: 'https://azero.invariant.app/exchange' },
-  { name: Chain.Eclipse, address: 'https://eclipse.invariant.app/exchange' },
+  {
+    name: Chain.Eclipse,
+    address: 'https://eclipse.invariant.app/exchange',
+    iconGlow: 'eclipseGlow'
+  }
   // { name: Chain.Vara, address: 'https://vara.invariant.app/exchange' },
-  { name: Chain.Alephium, address: 'https://alph.invariant.app/exchange' }
+  // {
+  //   name: Chain.Alephium,
+  //   address: 'https://alph.invariant.app/exchange',
+  //   iconGlow: 'alephiumGlow'
+  // }
 ]
 
 export const enum SortTypePoolList {
@@ -518,7 +523,7 @@ export const walletNames = {
   [WalletType.SOLFLARE]: 'Solflare'
 }
 
-export const defaultImages: string[] = [Dog1, Dog2, Cat1, Cat2]
+export const defaultImages: string[] = [icons.Dog1, icons.Dog2, icons.Cat1, icons.Cat2]
 
 type Pool = {
   tokenX: string
@@ -578,3 +583,6 @@ export const getPopularPools = (network: NetworkType): Pool[] => {
       return []
   }
 }
+
+export const MAX_PRIORITY_FEE = 2
+export const DEFAULT_PRIORITY_FEE = 0.0001
