@@ -162,10 +162,10 @@ export interface ISelectChain {
 
 export enum Chain {
   Solana = 'Solana',
-  AlephZero = 'Aleph Zero',
-  Eclipse = 'Eclipse',
-  Vara = 'Vara',
-  Alephium = 'Alephium'
+  // AlephZero = 'Aleph Zero',
+  Eclipse = 'Eclipse'
+  // Vara = 'Vara',
+  // Alephium = 'Alephium'
 }
 
 export interface SnapshotValueData {
@@ -283,7 +283,7 @@ export interface PoolStatsDataWithString {
 export enum PriorityMode {
   Normal = 'Normal',
   Economic = 'Economic',
-  Dynamic = 'Market',
+  Market = 'Market',
   High = 'High',
   Turbo = 'Turbo',
   Custom = 'Custom'

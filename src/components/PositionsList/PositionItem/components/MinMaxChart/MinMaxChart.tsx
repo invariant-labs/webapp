@@ -4,12 +4,12 @@ import { colors, typography } from '@static/theme'
 import { formatNumberWithSuffix } from '@utils/utils'
 import { useMinMaxChartStyles } from './style'
 import { CHART_CONSTANTS } from './consts'
-import handleMax from '@static/svg/narrowChartMaxHandle.svg'
-import handleMin from '@static/svg/narrowChartMinHandle.svg'
+import icons from '@static/icons'
 interface MinMaxChartProps {
   min: number
   max: number
   current: number
+  isFullRange: boolean
 }
 
 interface GradientBoxProps {
@@ -64,26 +64,27 @@ const MinMaxLabels: React.FC<{
   min: number
   max: number
   classes: Record<'minMaxLabels', string>
-}> = ({ min, max, classes }) => (
+  isFullRange: boolean
+}> = ({ min, max, classes, isFullRange }) => (
   <Box className={classes.minMaxLabels}>
     <Typography
       sx={{
         ...typography.caption2,
         color: colors.invariant.lightGrey
       }}>
-      {formatNumberWithSuffix(min)}
+      {isFullRange ? 0 : formatNumberWithSuffix(min)}
     </Typography>
     <Typography
       sx={{
         ...typography.caption2,
         color: colors.invariant.lightGrey
       }}>
-      {formatNumberWithSuffix(max)}
+      {isFullRange ? <span style={{ fontSize: '18px' }}>∞</span> : formatNumberWithSuffix(max)}
     </Typography>
   </Box>
 )
 
-export const MinMaxChart: React.FC<MinMaxChartProps> = ({ min, max, current }) => {
+export const MinMaxChart: React.FC<MinMaxChartProps> = ({ min, max, current, isFullRange }) => {
   const calculateBoundedPosition = () => {
     if (current < min) return -CHART_CONSTANTS.OVERFLOW_LIMIT_LEFT
     if (current > max) return 100 + CHART_CONSTANTS.OVERFLOW_LIMIT_RIGHT / 2
@@ -100,7 +101,7 @@ export const MinMaxChart: React.FC<MinMaxChartProps> = ({ min, max, current }) =
 
       <Box className={classes.chart}>
         <Box className={classes.handleLeft}>
-          <img src={handleMin} alt='MIN' />
+          <img src={icons.handleMin} alt='MIN' />
         </Box>
 
         <GradientBox
@@ -118,11 +119,11 @@ export const MinMaxChart: React.FC<MinMaxChartProps> = ({ min, max, current }) =
         <PriceIndicatorLine position={currentPosition} />
 
         <Box className={classes.handleRight}>
-          <img src={handleMax} alt='MAX' />
+          <img src={icons.handleMax} alt='MAX' />
         </Box>
       </Box>
 
-      <MinMaxLabels min={min} max={max} classes={classes} />
+      <MinMaxLabels min={min} max={max} isFullRange={isFullRange} classes={classes} />
     </Box>
   )
 }

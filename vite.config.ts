@@ -41,6 +41,7 @@ export default defineConfig({
   },
   build: {
     target: 'es2020',
+    assetsInlineLimit: 0,
     rollupOptions: {
       external: ['fs/promises', 'path'],
       plugins: [inject({ Buffer: ['buffer', 'Buffer'] })]

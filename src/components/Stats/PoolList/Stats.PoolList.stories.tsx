@@ -92,6 +92,7 @@ const poolsList = Array(40)
 
 export const Primary: Story = {
   args: {
+    initialLength: 1,
     data: poolsList,
     network: NetworkType.Local,
     copyAddressHandler: fn(),
