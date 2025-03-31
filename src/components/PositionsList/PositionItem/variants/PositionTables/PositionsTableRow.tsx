@@ -3,7 +3,6 @@ import {
   TableRow,
   TableCell,
   Button,
-  Tooltip,
   Typography,
   useMediaQuery,
   Box,
@@ -25,6 +24,7 @@ import { usePositionTableRowStyle } from './styles/positionTableRow'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { useUnclaimedFee } from '@store/hooks/positionList/useUnclaimedFee'
 import icons from '@static/icons'
+import { TooltipInv } from '@components/TooltipHover/TooltipInv'
 
 interface ILoadingStates {
   pairName?: boolean
@@ -112,7 +112,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
             src={xToY ? tokenXIcon : tokenYIcon}
             alt={xToY ? tokenXName : tokenYName}
           />
-          <TooltipHover text='Reverse tokens'>
+          <TooltipHover title='Reverse tokens'>
             <img
               className={sharedClasses.arrows}
               src={icons.swapListIcon}
@@ -142,10 +142,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
       return <Skeleton variant='rectangular' className={classes.skeleton3660} />
     }
     return (
-      <Tooltip
-        enterTouchDelay={0}
-        leaveTouchDelay={Number.MAX_SAFE_INTEGER}
-        onClick={e => e.stopPropagation()}
+      <TooltipInv
         title={
           isActive ? (
             <>
@@ -160,9 +157,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
           )
         }
         placement='top'
-        classes={{
-          tooltip: sharedClasses.tooltip
-        }}>
+        top={1}>
         <Grid
           container
           item
@@ -176,7 +171,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
             {fee}%
           </Typography>
         </Grid>
-      </Tooltip>
+      </TooltipInv>
     )
   }, [fee, classes, isActive])
 

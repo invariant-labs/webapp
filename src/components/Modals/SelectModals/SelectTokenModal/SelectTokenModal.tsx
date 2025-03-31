@@ -305,7 +305,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
               />
               <CardMedia image={icons.searchIcon} className={classes.inputIcon} />
             </Grid>
-            <TooltipHover text='Add token'>
+            <TooltipHover title='Add token'>
               <AddCircleOutlineIcon
                 className={classes.addIcon}
                 onClick={() => setIsAddOpen(true)}

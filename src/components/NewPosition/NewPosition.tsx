@@ -572,7 +572,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         <Box className={classes.titleContainer}>
           <Typography className={classes.title}>Add new position</Typography>
           {poolIndex !== null && tokenA !== tokenB && !isMd && (
-            <TooltipHover text='Refresh'>
+            <TooltipHover title='Refresh'>
               <Box>
                 <Refresher
                   currentIndex={refresherTime}
@@ -596,7 +596,7 @@ export const NewPosition: React.FC<INewPosition> = ({
               />
             ) : null}
             {poolAddress && (
-              <TooltipHover text='Open pool in explorer'>
+              <TooltipHover title='Open pool in explorer'>
                 <Grid width={'12px'} height={'24px'}>
                   <a
                     href={`https://solscan.io/account/${poolAddress}${networkUrl}`}
@@ -646,7 +646,7 @@ export const NewPosition: React.FC<INewPosition> = ({
                 )}
               </Hidden>
               {poolIndex !== null && tokenA !== tokenB && isMd && (
-                <TooltipHover text='Refresh'>
+                <TooltipHover title='Refresh'>
                   <Box>
                     <Refresher
                       currentIndex={refresherTime}
@@ -660,7 +660,7 @@ export const NewPosition: React.FC<INewPosition> = ({
                 </TooltipHover>
               )}
               {poolIndex !== null && (
-                <TooltipHover text='Settings'>
+                <TooltipHover title='Settings'>
                   <Button
                     onClick={handleClickSettings}
                     className={classes.settingsIconBtn}

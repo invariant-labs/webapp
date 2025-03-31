@@ -1,4 +1,4 @@
-import { Button, Grid, Hidden, Tooltip, Typography } from '@mui/material'
+import { Button, Grid, Hidden, Typography } from '@mui/material'
 import classNames from 'classnames'
 import React from 'react'
 import { BoxInfo } from './BoxInfo'
@@ -10,6 +10,7 @@ import icons from '@static/icons'
 import { addressToTicker, ROUTES } from '@utils/utils'
 import { NetworkType } from '@store/consts/static'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipInv } from '@components/TooltipHover/TooltipInv'
 
 interface IProp {
   fee: number
@@ -56,7 +57,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
               src={xToY ? tokenX.icon : tokenY.icon}
               alt={xToY ? tokenX.name : tokenY.name}
             />
-            <TooltipHover text='Reverse tokens'>
+            <TooltipHover title='Reverse tokens'>
               <img
                 className={classes.arrowIcon}
                 src={icons.swapListIcon}
@@ -76,8 +77,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
             </Grid>
           </Grid>
           <Grid className={classes.rangeGrid} sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <Tooltip
-              enterTouchDelay={0}
+            <TooltipInv
               title={
                 isActive ? (
                   <>
@@ -92,9 +92,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
                 )
               }
               placement='top'
-              classes={{
-                tooltip: classes.tooltip
-              }}>
+              top={1}>
               <Typography
                 className={classNames(
                   classes.text,
@@ -103,14 +101,13 @@ const SinglePositionInfo: React.FC<IProp> = ({
                 )}>
                 {fee.toString()}% fee
               </Typography>
-            </Tooltip>
+            </TooltipInv>
           </Grid>
         </Grid>
 
         <Grid className={classes.headerButtons}>
           <Grid className={classes.rangeGrid} sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <Tooltip
-              enterTouchDelay={0}
+            <TooltipInv
               title={
                 isActive ? (
                   <>
@@ -125,9 +122,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
                 )
               }
               placement='top'
-              classes={{
-                tooltip: classes.tooltip
-              }}>
+              top={1}>
               <Typography
                 className={classNames(
                   classes.text,
@@ -136,10 +131,10 @@ const SinglePositionInfo: React.FC<IProp> = ({
                 )}>
                 {fee.toString()}% fee
               </Typography>
-            </Tooltip>
+            </TooltipInv>
           </Grid>
           <TooltipHover
-            text={
+            title={
               tokenX.claimValue > 0 || tokenY.claimValue > 0
                 ? 'Unclaimed fees will be returned when closing the position'
                 : ''

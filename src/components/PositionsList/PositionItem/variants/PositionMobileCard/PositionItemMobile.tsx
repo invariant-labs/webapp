@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Skeleton, Tooltip, Typography } from '@mui/material'
+import { Box, Button, Grid, Skeleton, Typography } from '@mui/material'
 import { formatNumberWithSuffix } from '@utils/utils'
 import classNames from 'classnames'
 import { useMemo, useRef, useState } from 'react'
@@ -15,6 +15,7 @@ import { blurContent, unblurContent } from '@utils/uiUtils'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { ISinglePositionData } from '@components/OverviewYourPositions/components/Overview/Overview'
 import icons from '@static/icons'
+import { TooltipInv } from '@components/TooltipHover/TooltipInv'
 
 interface IPositionItemMobile extends IPositionItem {
   setAllowPropagation: React.Dispatch<React.SetStateAction<boolean>>
@@ -82,10 +83,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
     () => (
       <Grid container sx={{ width: '100%', marginBottom: 2 }}>
         <Grid item xs={5}>
-          <Tooltip
-            enterTouchDelay={0}
-            leaveTouchDelay={Number.MAX_SAFE_INTEGER}
-            onClick={e => e.stopPropagation()}
+          <TooltipInv
             title={
               isActive ? (
                 <>
@@ -97,14 +95,14 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
                 </>
               )
             }
-            placement='top'
-            classes={{ tooltip: sharedClasses.tooltip }}>
+            placement='top'>
             <Grid
               container
               className={classNames(
                 sharedClasses.fee,
                 isActive ? sharedClasses.activeFee : undefined
-              )}>
+              )}
+              onClick={e => e.stopPropagation()}>
               <Typography
                 className={classNames(
                   sharedClasses.infoText,
@@ -113,7 +111,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
                 {fee}% fee
               </Typography>
             </Grid>
-          </Tooltip>
+          </TooltipInv>
         </Grid>
 
         <Grid item xs={7} paddingLeft={'16px'}>
@@ -245,7 +243,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
                 src={xToY ? tokenXIcon : tokenYIcon}
                 alt={xToY ? tokenXName : tokenYName}
               />
-              <TooltipHover text='Reverse tokens'>
+              <TooltipHover title='Reverse tokens'>
                 <img
                   className={sharedClasses.arrows}
                   src={icons.swapListIcon}

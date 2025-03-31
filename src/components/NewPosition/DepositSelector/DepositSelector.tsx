@@ -333,7 +333,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             />
           </Grid>
 
-          <TooltipHover text='Reverse tokens'>
+          <TooltipHover title='Reverse tokens'>
             <img
               className={classes.arrows}
               src={icons.swapListIcon}
@@ -492,7 +492,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         />
       ) : getButtonMessage() === 'Insufficient ETH' ? (
         <TooltipHover
-          text='More ETH is required to cover the transaction fee. Obtain more ETH to complete this transaction.'
+          title='More ETH is required to cover the transaction fee. Obtain more ETH to complete this transaction.'
           top={-10}>
           <div>
             <AnimatedButton
