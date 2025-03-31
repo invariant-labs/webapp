@@ -19,7 +19,6 @@ import {
   GetCurrentTicksData,
   InitPositionData,
   PositionWithAddress,
-  PositionWithoutTicks,
   actions
 } from '@store/reducers/positions'
 import { actions as connectionActions } from '@store/reducers/solanaConnection'
