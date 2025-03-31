@@ -148,7 +148,7 @@ const PositionDetails: React.FC<IProps> = ({
                 style={{ paddingRight: 8 }}
               />
               {poolAddress.toString() && (
-                <TooltipHover text='Open pool in explorer'>
+                <TooltipHover title='Open pool in explorer'>
                   <Grid height={'24px'} mr={'12px'}>
                     <a
                       href={`https://solscan.io/account/${poolAddress.toString()}${networkUrl}`}
@@ -164,7 +164,7 @@ const PositionDetails: React.FC<IProps> = ({
                 </TooltipHover>
               )}
               <Grid flex={1} justifyItems={'flex-end'}>
-                <TooltipHover text='Refresh'>
+                <TooltipHover title='Refresh'>
                   <Refresher
                     currentIndex={refresherTime}
                     maxIndex={REFRESHER_INTERVAL}
@@ -235,7 +235,7 @@ const PositionDetails: React.FC<IProps> = ({
               </Button>
             </Box>
             <Hidden mdDown>
-              <TooltipHover text='Refresh'>
+              <TooltipHover title='Refresh'>
                 <Grid mr={2} ml='auto' display='flex' justifyContent='center'>
                   <Refresher
                     currentIndex={refresherTime}
@@ -256,7 +256,7 @@ const PositionDetails: React.FC<IProps> = ({
                   copyPoolAddressHandler={copyPoolAddressHandler}
                 />
                 {poolAddress.toString() && (
-                  <TooltipHover text='Open pool in explorer'>
+                  <TooltipHover title='Open pool in explorer'>
                     <Grid mr={'12px'}>
                       <a
                         href={`https://solscan.io/account/${poolAddress.toString()}${networkUrl}`}
