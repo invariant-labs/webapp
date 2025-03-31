@@ -202,7 +202,7 @@ export const PositionsList: React.FC<IProps> = ({
                       </MuiButton>
                     </Grid>
                   </TooltipHover>
-                  <Button scheme='pink' onClick={onAddPositionClick}>
+                  <Button width='100%' scheme='pink' onClick={onAddPositionClick}>
                     <span className={classes.buttonText}>+ Add Position</span>
                   </Button>
                 </Grid>

@@ -1,4 +1,4 @@
-import { Box, Grid, Hidden, Typography } from '@mui/material'
+import { Box, Grid, Hidden, Typography, useMediaQuery } from '@mui/material'
 import classNames from 'classnames'
 import React from 'react'
 import { BoxInfo } from './BoxInfo'
@@ -12,6 +12,7 @@ import { NetworkType } from '@store/consts/static'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { TooltipInv } from '@common/TooltipHover/TooltipInv'
 import { Button } from '@common/Button/Button'
+import { theme } from '@static/theme'
 
 interface IProp {
   fee: number
@@ -45,7 +46,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
   network
 }) => {
   const navigate = useNavigate()
-
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
   const { classes } = useStyles()
 
   return (
@@ -140,11 +141,15 @@ const SinglePositionInfo: React.FC<IProp> = ({
                 ? 'Unclaimed fees will be returned when closing the position'
                 : ''
             }>
-            <Box>
+            <Box
+              sx={{
+                width: isSm ? '100%' : 'auto'
+              }}>
               <Button
                 scheme='green'
-                height={36}
+                width='100%'
                 padding='0 6px'
+                height={isSm ? 'auto' : '36px'}
                 borderRadius={14}
                 onClick={() => {
                   closePosition()
@@ -155,6 +160,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
           </TooltipHover>
           <Hidden smUp>
             <Button
+              width={isSm ? '100%' : 'auto'}
               scheme='pink'
               onClick={() => {
                 const address1 = addressToTicker(network, tokenX.name)
