@@ -1,8 +1,11 @@
-import { colors, typography } from '@static/theme'
+import { colors, theme, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 export const useWrapperStyles = makeStyles()(theme => ({
   wrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     margin: '0px 0 24px',
     borderRadius: 16,
     border: `1px solid ${colors.invariant.light}`,
@@ -38,6 +41,19 @@ export const useStyles = makeStyles<{ isToken: boolean }>()((_theme, { isToken }
     height: 30,
     marginRight: 8,
     position: 'relative'
+  },
+  tokenWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: '6px',
+    flexWrap: 'nowrap',
+    paddingRight: theme.spacing(1)
+  },
+  tokenInner: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexWrap: 'nowrap'
   },
   tokenIcon: {
     minWidth: 30,

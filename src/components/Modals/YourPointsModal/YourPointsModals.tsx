@@ -1,7 +1,6 @@
 import React from 'react'
 import useStyles from './style'
 import { Box, Button, Grid, Popover, Typography } from '@mui/material'
-import { colors, typography } from '@static/theme'
 
 export interface ISelectNetworkModal {
   open: boolean
@@ -29,26 +28,10 @@ export const YourPointsModal: React.FC<ISelectNetworkModal> = ({ anchorEl, open,
       <Grid className={classes.root}>
         <Box className={classes.counterContainer}>
           <Box className={classes.counterItem}>
-            <Typography style={{ color: colors.invariant.text, textAlign: 'center' }}>
-              Points Program is{' '}
-              <span
-                style={{
-                  color: colors.invariant.pink,
-                  textAlign: 'center',
-                  textShadow: `0 0 22px ${colors.invariant.pink}`
-                }}>
-                live on Eclipse!
-              </span>
+            <Typography className={classes.label}>
+              Points Program is <span className={classes.textLive}>live on Eclipse!</span>
             </Typography>
-            <Typography
-              style={{
-                color: colors.invariant.textGrey,
-                ...typography.body2,
-                marginTop: '8px',
-                textAlign: 'center'
-              }}>
-              Visit Invariant Eclipse to check it.
-            </Typography>
+            <Typography className={classes.footer}>Visit Invariant Eclipse to check it.</Typography>
             <Button
               style={{ marginTop: '16px' }}
               className={classes.button}

@@ -594,7 +594,7 @@ export const Swap: React.FC<ISwap> = ({
   })
 
   return (
-    <Grid container className={classes.swapWrapper} alignItems='center'>
+    <Grid container className={classes.swapWrapper}>
       {/* {wrappedETHAccountExist && (
         <Box className={classes.unwrapContainer}>
           You have wrapped SOL.{' '}
@@ -612,7 +612,7 @@ export const Swap: React.FC<ISwap> = ({
             </p>
           </Button>
           <TooltipHover text='Refresh'>
-            <Grid display='flex' alignItems='center'>
+            <Grid className={classes.refresh}>
               <Button
                 onClick={handleRefresh}
                 className={classes.refreshIconBtn}
@@ -645,7 +645,7 @@ export const Swap: React.FC<ISwap> = ({
           />
         </Grid>
       </Grid>
-      <Grid container className={classes.root} direction='column'>
+      <Grid container className={classes.root}>
         <Typography className={classes.swapLabel}>Pay</Typography>
         <Box
           className={classNames(
@@ -859,14 +859,7 @@ export const Swap: React.FC<ISwap> = ({
             </button>
             {tokenFrom !== null && tokenTo !== null && tokenFrom !== tokenTo && (
               <TooltipHover text='Refresh'>
-                <Grid
-                  container
-                  alignItems='center'
-                  justifyContent='center'
-                  width={20}
-                  height={34}
-                  minWidth='fit-content'
-                  ml={1}>
+                <Grid container className={classes.refreshWrapper}>
                   <Refresher
                     currentIndex={refresherTime}
                     maxIndex={REFRESHER_INTERVAL}
@@ -995,7 +988,7 @@ export const Swap: React.FC<ISwap> = ({
           />
         )}
       </Grid>
-      <img src={icons.audit} alt='Audit' style={{ marginTop: '24px' }} width={180} />
+      <img src={icons.audit} alt='Audit' className={classes.audit} />
     </Grid>
   )
 }

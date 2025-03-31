@@ -5,6 +5,8 @@ import { makeStyles } from 'tss-react/mui'
 const useStyles = makeStyles()((theme: Theme) => {
   return {
     root: {
+      flexDirection: 'column',
+      justifyContent: 'space-between',
       background: colors.invariant.component,
       width: 480,
       borderRadius: 24,
@@ -28,7 +30,14 @@ const useStyles = makeStyles()((theme: Theme) => {
       background: 'transparent',
       boxShadow: 'none'
     },
+    inputWrapper: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      flexWrap: 'nowrap'
+    },
     upperRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
       flexWrap: 'nowrap',
       marginBottom: 20,
       '& p': {

@@ -234,6 +234,7 @@ export const useStyles = makeStyles<{ isLoading: boolean; isScrollHide: boolean 
       marginBottom: '16px'
     },
     mobileTokenInfo: {
+      position: 'relative',
       display: 'flex',
       alignItems: 'center',
       gap: '8px'

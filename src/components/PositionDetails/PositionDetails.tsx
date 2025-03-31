@@ -130,16 +130,16 @@ const PositionDetails: React.FC<IProps> = ({
   }, [network])
 
   return (
-    <Grid container className={classes.wrapperContainer} wrap='nowrap'>
-      <Grid className={classes.positionDetails} container item direction='column'>
+    <Grid container className={classes.wrapperContainer}>
+      <Grid className={classes.positionDetails} container item>
         <Grid className={classes.backContainer} container>
           <Link to={ROUTES.PORTFOLIO} style={{ textDecoration: 'none' }}>
-            <Grid className={classes.back} container item alignItems='center'>
+            <Grid className={classes.back} container item>
               <img className={classes.backIcon} src={icons.backIcon} alt='Back' />
               <Typography className={classes.backText}>Positions</Typography>
             </Grid>
           </Link>
-          <Grid container width='auto' className={classes.marketIdWithRefresher}>
+          <Grid container className={classes.marketIdWithRefresher}>
             <Hidden mdUp>
               <MarketIdLabel
                 marketId={poolAddress.toString()}
@@ -195,23 +195,9 @@ const PositionDetails: React.FC<IProps> = ({
         />
       </Grid>
 
-      <Grid
-        container
-        item
-        direction='column'
-        alignItems='flex-end'
-        className={classes.right}
-        wrap='nowrap'>
+      <Grid container item className={classes.right}>
         <Grid className={classes.positionPlotWrapper}>
-          <Grid
-            container
-            item
-            direction='row'
-            alignItems='center'
-            flexDirection='row-reverse'
-            className={classes.rightHeaderWrapper}
-            mt='22px'
-            wrap='nowrap'>
+          <Grid container item className={classes.rightHeaderWrapper}>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               <Button
                 className={classes.button}
@@ -236,7 +222,7 @@ const PositionDetails: React.FC<IProps> = ({
             </Box>
             <Hidden mdDown>
               <TooltipHover text='Refresh'>
-                <Grid mr={2} ml='auto' display='flex' justifyContent='center'>
+                <Grid className={classes.refreshWrapper}>
                   <Refresher
                     currentIndex={refresherTime}
                     maxIndex={REFRESHER_INTERVAL}
@@ -247,9 +233,7 @@ const PositionDetails: React.FC<IProps> = ({
                   />
                 </Grid>
               </TooltipHover>
-              <Grid
-                display={'flex'}
-                style={{ padding: '8px 8px  0 0px', height: '24px', minWidth: '290px' }}>
+              <Grid className={classes.marketIDWrapper}>
                 <MarketIdLabel
                   marketId={poolAddress.toString()}
                   displayLength={5}
@@ -266,13 +250,7 @@ const PositionDetails: React.FC<IProps> = ({
                           event.stopPropagation()
                         }}
                         className={classes.link}>
-                        <img
-                          width={14}
-                          height={14}
-                          src={icons.newTab}
-                          alt={'Token address'}
-                          style={{ transform: 'translateY(-2px)' }}
-                        />
+                        <img className={classes.newTab} src={icons.newTab} alt={'Token address'} />
                       </a>
                     </Grid>
                   </TooltipHover>

@@ -6,7 +6,8 @@ export const useStyles = makeStyles<{ initialDataLength: number }>()(
   (_theme, { initialDataLength }) => ({
     container: {
       maxWidth: 1072,
-      borderRadius: '24px'
+      borderRadius: '24px',
+      flexDirection: 'column'
     },
     pagination: {
       padding: '20px 24px 10px 0',
@@ -30,6 +31,10 @@ export const useStyles = makeStyles<{ initialDataLength: number }>()(
         pointerEvents: 'none',
         borderRadius: '24px'
       }
+    },
+    emptyWrapper: {
+      background: colors.invariant.component,
+      borderBottom: `1px solid ${colors.invariant.light}`
     },
     emptyRow: {
       height: 69,

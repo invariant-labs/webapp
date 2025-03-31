@@ -476,12 +476,6 @@ export function* handleDisconnect(): Generator {
     yield* call(disconnectWallet)
     yield* put(actions.resetState())
     yield* put(positionsActions.setPositionsList([]))
-    yield* put(
-      positionsActions.setCurrentPositionRangeTicks({
-        lowerTick: undefined,
-        upperTick: undefined
-      })
-    )
   } catch (e) {
     const error = ensureError(e)
     console.log(error)

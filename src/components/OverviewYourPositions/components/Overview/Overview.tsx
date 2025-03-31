@@ -11,8 +11,8 @@ import {
   isLoadingPositionsList,
   positionsWithPoolsData,
   positionsList as list,
-  unclaimedFees,
-  PoolWithAddressAndIndex
+  PoolWithAddressAndIndex,
+  totalUnlaimedFees
 } from '@store/selectors/positions'
 import { getTokenPrice } from '@utils/utils'
 import MobileOverview from '../MobileOverview/MobileOverview'
@@ -51,7 +51,7 @@ export const Overview: React.FC<OverviewProps> = () => {
 
   const [logoColors, setLogoColors] = useState<Record<string, string>>({})
   const [pendingColorLoads, setPendingColorLoads] = useState<Set<string>>(new Set())
-  const { total: totalUnclaimedFee } = useSelector(unclaimedFees)
+  const { total: unclaimedFees, isLoading: unClaimedFeesLoading } = useSelector(totalUnlaimedFees)
   const { getAverageColor, getTokenColor, tokenColorOverrides } = useAverageLogoColor()
   const { positions } = useAgregatedPositions(positionList, prices)
 
@@ -144,7 +144,7 @@ export const Overview: React.FC<OverviewProps> = () => {
     }
 
     loadPrices()
-  }, [positionList])
+  }, [positionList.length])
 
   useEffect(() => {
     sortedPositions.forEach(position => {
@@ -175,18 +175,6 @@ export const Overview: React.FC<OverviewProps> = () => {
     })
   }, [sortedPositions, getAverageColor, logoColors, pendingColorLoads])
 
-  useEffect(() => {
-    if (Object.keys(prices).length > 0) {
-      dispatch(actions.calculateTotalUnclaimedFees())
-
-      const interval = setInterval(() => {
-        dispatch(actions.calculateTotalUnclaimedFees())
-      }, 60000)
-
-      return () => clearInterval(interval)
-    }
-  }, [dispatch, prices])
-
   const EmptyState = ({ classes }: { classes: EmptyStateClasses }) => (
     <Box className={classes.emptyState}>
       <img src={icons.liquidityEmpty} alt='Empty portfolio' height={80} width={80} />
@@ -208,9 +196,9 @@ export const Overview: React.FC<OverviewProps> = () => {
     <Box className={classes.container}>
       <HeaderSection totalValue={totalAssets} loading={isLoadingList} />
       <UnclaimedSection
-        unclaimedTotal={totalUnclaimedFee}
+        unclaimedTotal={unclaimedFees}
         handleClaimAll={handleClaimAll}
-        loading={isLoadingList || isAllClaimFeesLoading}
+        loading={isLoadingList || isAllClaimFeesLoading || unClaimedFeesLoading}
       />
 
       {isLg ? (

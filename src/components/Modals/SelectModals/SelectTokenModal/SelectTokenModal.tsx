@@ -2,12 +2,12 @@ import React, { useMemo, useState, useRef, forwardRef, useEffect } from 'react'
 import { areEqual, FixedSizeList as List, ListChildComponentProps } from 'react-window'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import AddTokenModal from '@components/Modals/AddTokenModal/AddTokenModal'
-import useStyles from '../style'
+import useStyles from './style'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { theme } from '@static/theme'
 import { PublicKey } from '@solana/web3.js'
 import { NetworkType } from '@store/consts/static'
-import CustomScrollbar from './CustomScrollbar'
+import CustomScrollbar from '../CustromScrollbar/CustomScrollbar'
 import Scrollbars from 'rc-scrollbars'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 import {
@@ -76,14 +76,9 @@ const RowItem: React.FC<ListChildComponentProps<RowItemData>> = React.memo(
 
     return (
       <Grid
+        style={{ ...style, width: 'calc(100% - 50px)' }}
         className={classes.tokenItem}
         container
-        style={{
-          ...style,
-          width: 'calc(100% - 50px)'
-        }}
-        alignItems='center'
-        wrap='nowrap'
         onClick={() => {
           onSelect(token.assetAddress)
         }}>
@@ -101,7 +96,7 @@ const RowItem: React.FC<ListChildComponentProps<RowItemData>> = React.memo(
           {token.isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
         </Box>
         <Grid container className={classes.tokenContainer}>
-          <Grid container direction='row' columnGap='6px' alignItems='center' wrap='nowrap'>
+          <Grid container className={classes.addressWrapper}>
             <Typography className={classes.tokenName}>
               {token.symbol ? token.symbol : 'Unknown'}{' '}
             </Typography>
@@ -128,7 +123,7 @@ const RowItem: React.FC<ListChildComponentProps<RowItemData>> = React.memo(
             {token.name.length > (isXs ? 20 : 30) ? '...' : ''}
           </Typography>
         </Grid>
-        <Grid container alignItems='flex-end' flexDirection='column' wrap='nowrap'>
+        <Grid container className={classes.balanceWrapper}>
           {!hideBalances && Number(tokenBalance) > 0 ? (
             <>
               <Typography className={classes.tokenBalanceStatus} noWrap>
@@ -299,12 +294,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
             <Typography component='h1'>Select a token</Typography>
             <Button className={classes.selectTokenClose} onClick={handleClose} aria-label='Close' />
           </Grid>
-          <Grid
-            className={classes.topRow}
-            container
-            direction='row'
-            wrap='nowrap'
-            alignItems='center'>
+          <Grid className={classes.topRow} container>
             <Grid container className={classes.inputControl}>
               <input
                 ref={inputRef}
