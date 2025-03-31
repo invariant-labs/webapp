@@ -51,6 +51,16 @@ import docsFill from './svg/docsFill.svg'
 import liquidityEmpty from './svg/liqudity_empty.svg'
 import assetsEmpty from './svg/assets_empty.svg'
 import boostPoints from './svg/boostPoints.svg'
+import settings2 from './svg/settings2.svg'
+import mainnetGlow from './svg/mainnetGlow.svg'
+import devnetGlow from './svg/devnetGlow.svg'
+import active2 from './svg/active2.svg'
+import solanaGlow from './svg/solanaGlow.svg'
+import eclipseGlow from './svg/eclipseGlow.svg'
+import alephiumGlow from './svg/alephiumGlow.svg'
+import settings3 from './svg/settings3.svg'
+import faucet from './svg/faucet.svg'
+import solana from './svg/solana.svg'
 import searchIcon from './svg/lupaDark.svg'
 import copyAddressIcon from '@static/svg/copy-address.svg'
 import disconnectIcon from '@static/svg/disconnect.svg'
@@ -144,6 +154,16 @@ const icons = {
   airdropRainbow,
   audit,
   boostPoints,
+  settings2,
+  mainnetGlow,
+  devnetGlow,
+  active2,
+  solanaGlow,
+  eclipseGlow,
+  alephiumGlow,
+  settings3,
+  faucet,
+  solana,
   liquidityEmpty,
   assetsEmpty
 }
