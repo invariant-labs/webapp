@@ -81,7 +81,7 @@ const TokenListItem: React.FC<IProps> = ({
         copyAddressHandler('Failed to copy token address to Clipboard', 'error')
       })
   }
-  const shouldShowText = icon === icons.unknownToken || !isSm
+  const shouldShowText = !isSm
 
   return (
     <Grid className={classes.wrapper}>
@@ -104,7 +104,11 @@ const TokenListItem: React.FC<IProps> = ({
             </Box>
             {shouldShowText && (
               <Typography>
-                {isXs ? shortenAddress(symbol) : name}
+                {isXs
+                  ? shortenAddress(symbol)
+                  : name.length < 25
+                    ? name
+                    : name.slice(0, 13) + '...'}{' '}
                 {!isXs && (
                   <span className={classes.tokenSymbol}>{` (${shortenAddress(symbol)})`}</span>
                 )}
