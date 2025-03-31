@@ -368,7 +368,8 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       dispatch(
         poolsActions.getPoolData(
           new Pair(tokenA, tokenB, {
-            fee
+            fee,
+            tickSpacing
           })
         )
       )

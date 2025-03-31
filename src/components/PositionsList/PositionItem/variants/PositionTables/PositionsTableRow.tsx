@@ -23,7 +23,7 @@ import { blurContent, unblurContent } from '@utils/uiUtils'
 import { singlePositionData } from '@store/selectors/positions'
 import { usePositionTableRowStyle } from './styles/positionTableRow'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
-import { useUnclaimedFee } from '@store/hooks/positionList/useUnclaimedFee'
+import { useTokenValues } from '@store/hooks/positionList/useTokenValues'
 import icons from '@static/icons'
 
 interface ILoadingStates {
@@ -63,6 +63,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   tokenYLiq,
   network,
   loading,
+  unclaimedFeesInUSD = { value: 0, loading: false },
   handleClaimFee,
   isFullRange,
   handleClosePosition
@@ -81,16 +82,15 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
     return loading?.[item] ?? false
   }
 
-  const { tokenValueInUsd, tokenXPercentage, tokenYPercentage, unclaimedFeesInUSD } =
-    useUnclaimedFee({
-      currentPrice,
-      id,
-      position,
-      tokenXLiq,
-      tokenYLiq,
-      positionSingleData,
-      xToY
-    })
+  const { tokenValueInUsd, tokenXPercentage, tokenYPercentage } = useTokenValues({
+    currentPrice,
+    id,
+    position,
+    tokenXLiq,
+    tokenYLiq,
+    positionSingleData,
+    xToY
+  })
 
   const pairNameContent = useMemo(() => {
     if (isItemLoading('pairName')) {
