@@ -9,6 +9,7 @@ import {
   createPlaceholderLiquidityPlot,
   ensureError,
   getPositionsAddressesFromRange,
+  getTicksFromPositions,
   solToPriorityFee
 } from '@utils/utils'
 import { IWallet, Pair } from '@invariant-labs/sdk'
@@ -18,6 +19,7 @@ import {
   GetCurrentTicksData,
   InitPositionData,
   PositionWithAddress,
+  PositionWithoutTicks,
   actions
 } from '@store/reducers/positions'
 import { actions as connectionActions } from '@store/reducers/solanaConnection'
@@ -867,29 +869,41 @@ export function* handleGetPositionsList() {
 
     const positionsWithTicks: PositionWithAddress[] = []
 
-    for (const position of positions) {
-      const pool = poolsList.find(pool => pool.address.toString() === position.pool.toString())
+    const poolMap = new Map(poolsList.map(pool => [pool.address.toString(), pool]))
 
-      if (!pool) {
+    const getTicksData = list
+      .map((position, index) => {
+        const pool = poolMap.get(position.pool.toString())
+        if (!pool) return null
+
+        return {
+          pair: new Pair(pool.tokenX, pool.tokenY, {
+            fee: pool.fee.v,
+            tickSpacing: pool.tickSpacing
+          }),
+          position: { ...position, address: addresses[index] }
+        }
+      })
+      .filter(Boolean) as { pair: Pair; position: PositionWithAddress }[]
+
+    const ticks = yield* call(getTicksFromPositions, marketProgram, getTicksData)
+
+    let offset = 0
+
+    for (let i = 0; i < positions.length; i++) {
+      if (!ticks[i] || !ticks[i + 1]) {
         continue
       }
+      const lowerTick = ticks[offset]!
+      const upperTick = ticks[offset + 1]!
 
-      const pair = new Pair(pool.tokenX, pool.tokenY, {
-        fee: pool.fee.v,
-        tickSpacing: pool.tickSpacing
-      })
-
-      const { lowerTick, upperTick } = yield* all({
-        lowerTick: call([marketProgram, marketProgram.getTick], pair, position.lowerTickIndex),
-        upperTick: call([marketProgram, marketProgram.getTick], pair, position.upperTickIndex)
-      })
-
-      positionsWithTicks.push({
-        ...position,
-        lowerTick,
-        upperTick,
+      positionsWithTicks[i] = {
+        ...positions[i],
+        lowerTick: lowerTick,
+        upperTick: upperTick,
         ticksLoading: false
-      })
+      }
+      offset += 2
     }
 
     yield* put(

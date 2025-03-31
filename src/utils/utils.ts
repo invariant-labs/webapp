@@ -1785,3 +1785,37 @@ export const ensureError = (value: unknown): Error => {
   const error = new Error(stringified)
   return error
 }
+
+export const getTicksFromPositions = async (
+  marketProgram: Market,
+  positionsData: {
+    pair: Pair
+    position: PositionWithoutTicks
+  }[]
+): Promise<(Tick | null)[]> => {
+  try {
+    const tickAddressPromises: Promise<PublicKey>[] = []
+
+    for (const data of positionsData) {
+      tickAddressPromises.push(
+        marketProgram
+          .getTickAddress(data.pair, data.position.lowerTickIndex)
+          .then(res => res.tickAddress),
+        marketProgram
+          .getTickAddress(data.pair, data.position.upperTickIndex)
+          .then(res => res.tickAddress)
+      )
+    }
+
+    const tickAddresses = await Promise.all(tickAddressPromises)
+
+    const ticks = (await marketProgram.program.account.tick.fetchMultiple(
+      tickAddresses
+    )) as Array<Tick | null>
+
+    return ticks
+  } catch (error) {
+    console.log(error)
+    return []
+  }
+}
