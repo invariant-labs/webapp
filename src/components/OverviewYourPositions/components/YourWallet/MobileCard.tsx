@@ -28,7 +28,7 @@ export const MobileCard: React.FC<{
   return (
     <Box className={classes.mobileCard}>
       <Box className={classes.mobileCardHeader}>
-        <Box className={classes.mobileTokenInfo} sx={{ position: 'relative' }}>
+        <Box className={classes.mobileTokenInfo}>
           <img src={pool.icon} className={classes.tokenIcon} alt={pool.symbol} />
           {pool.isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
 

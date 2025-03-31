@@ -36,7 +36,7 @@ export const ConnectWallet: React.FC<IConnectWalletModal> = ({
         vertical: 'top',
         horizontal: 'center'
       }}>
-      <Grid className={classes.root} container alignContent='space-around' direction='column'>
+      <Grid className={classes.root} container>
         <Grid item className={classes.listItem} onClick={callCopyAddress}>
           <img src={icons.copyAddressIcon} className={classes.icon} alt='Copy address icon' />
           <Typography className={classes.name}>Copy address</Typography>

@@ -148,7 +148,6 @@ const PoolList: React.FC<PoolListInterface> = ({
   return (
     <Grid
       container
-      direction='column'
       classes={{ root: classes.container }}
       className={classNames({ [classes.loadingOverlay]: isLoading })}>
       <PoolListItem
@@ -201,12 +200,7 @@ const PoolList: React.FC<PoolListInterface> = ({
             ))}
         </>
       ) : (
-        <Grid
-          container
-          sx={{
-            background: colors.invariant.component,
-            borderBottom: `1px solid ${colors.invariant.light}`
-          }}>
+        <Grid container className={classes.emptyWrapper}>
           <EmptyPlaceholder
             newVersion
             height={initialDataLength < 10 ? initialDataLength * 69 : 690}

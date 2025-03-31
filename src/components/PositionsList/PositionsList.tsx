@@ -133,14 +133,9 @@ export const PositionsList: React.FC<IProps> = ({
   }
 
   return (
-    <Grid container direction='column' className={classes.root}>
+    <Grid container className={classes.root}>
       {!isMd ? (
-        <Grid
-          className={classes.header}
-          container
-          direction='row'
-          justifyContent='space-between'
-          alignItems='center'>
+        <Grid className={classes.header} container>
           <Grid className={classes.searchRoot}>
             <Grid className={classes.titleBar}>
               <Typography className={classes.title}>Your Positions</Typography>
@@ -161,13 +156,9 @@ export const PositionsList: React.FC<IProps> = ({
                 />
               </Grid>
 
-              <Grid
-                display='flex'
-                columnGap={2}
-                justifyContent='space-between'
-                className={classes.fullWidthWrapper}>
+              <Grid className={classes.fullWidthWrapper}>
                 <TooltipHover text='Refresh'>
-                  <Grid display='flex' alignItems='center'>
+                  <Grid className={classes.refreshWrapper}>
                     <Button
                       disabled={showNoConnected}
                       onClick={showNoConnected ? () => {} : handleRefresh}
@@ -184,12 +175,7 @@ export const PositionsList: React.FC<IProps> = ({
           </Grid>
         </Grid>
       ) : (
-        <Grid
-          className={classes.header}
-          container
-          direction='row'
-          justifyContent='space-between'
-          alignItems='center'>
+        <Grid className={classes.header} container>
           <Grid className={classes.searchRoot}>
             <Grid className={classes.titleBar}>
               <Typography className={classes.title}>Your Positions</Typography>
@@ -200,13 +186,9 @@ export const PositionsList: React.FC<IProps> = ({
 
             <Grid className={classes.searchWrapper}>
               <Grid className={classes.filtersContainer}>
-                <Grid
-                  display='flex'
-                  columnGap={2}
-                  justifyContent='space-between'
-                  className={classes.fullWidthWrapper}>
+                <Grid className={classes.fullWidthWrapper}>
                   <TooltipHover text='Refresh'>
-                    <Grid display='flex' alignItems='center'>
+                    <Grid className={classes.refreshWrapper}>
                       <Button
                         disabled={showNoConnected}
                         onClick={showNoConnected ? () => {} : handleRefresh}
@@ -240,7 +222,7 @@ export const PositionsList: React.FC<IProps> = ({
           </Grid>
         </Grid>
       )}
-      <Grid container direction='column' className={classes.list} justifyContent='flex-start'>
+      <Grid container className={classes.list}>
         {renderContent()}
       </Grid>
     </Grid>

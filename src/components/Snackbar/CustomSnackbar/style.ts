@@ -1,7 +1,8 @@
 import { CircularProgress, Typography } from '@mui/material'
 import { styled } from '@mui/system'
-import { colors, typography } from '@static/theme'
+import { colors, theme, typography } from '@static/theme'
 import { SnackbarContent } from 'notistack'
+import { makeStyles } from 'tss-react/mui'
 
 export const StyledSnackbarContent = styled(SnackbarContent)(({ theme }) => ({
   display: 'flex',
@@ -146,3 +147,18 @@ export const StyledDetails = styled('button')({
     width: 10
   }
 })
+export const useStyles = makeStyles()(() => ({
+  wrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: theme.spacing(2),
+    flexDirection: 'row',
+    width: 'fix-content',
+    flexWrap: 'nowrap'
+  },
+  txWrapper: {
+    display: 'flex',
+    minWidth: 'fit-content',
+    marginInline: theme.spacing(1)
+  }
+}))

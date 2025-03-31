@@ -17,7 +17,17 @@ export const useStyles = makeStyles()(() => ({
     display: 'flex',
     alignItems: 'center'
   },
-
+  wrapper: {
+    padding: '20px',
+    alignItems: 'center',
+    flexDirection: 'column'
+  },
+  skeletonRect: {
+    width: 220,
+    height: 344,
+    opacity: 0.7,
+    borderRadius: 24
+  },
   iconsWrapper: {
     display: 'flex',
     justifyContent: 'center',
@@ -55,6 +65,7 @@ export const useStyles = makeStyles()(() => ({
     fontSize: 28
   },
   back: {
+    alignItems: 'center',
     width: 'fit-content',
     transition: 'filter 300ms',
     padding: '6px',
@@ -67,6 +78,7 @@ export const useStyles = makeStyles()(() => ({
       }
     }
   },
+  backWrapper: { justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' },
   backIcon: {
     marginRight: 6
   },

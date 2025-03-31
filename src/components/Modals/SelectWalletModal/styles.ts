@@ -25,6 +25,9 @@ const useStyles = makeStyles()(() => {
       overflow: 'auto'
     },
     paper: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       position: 'relative',
       margin: 'auto',
       maxWidth: '90%',
