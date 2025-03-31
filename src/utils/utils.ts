@@ -22,7 +22,7 @@ import {
 } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PoolWithAddress } from '@store/reducers/pools'
-import { PlotTickData, PositionWithAddress, PositionWithoutTicks } from '@store/reducers/positions'
+import { PlotTickData, PositionWithoutTicks } from '@store/reducers/positions'
 import { Token as SPLToken, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import axios from 'axios'
