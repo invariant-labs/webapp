@@ -18,8 +18,9 @@ import {
   calculateConcentration
 } from '@utils/utils'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
-import { Button, Grid, Tooltip, Typography } from '@mui/material'
+import { Button, Grid, Typography } from '@mui/material'
 import icons from '@static/icons'
+import { TooltipInv } from '@components/TooltipHover/TooltipInv'
 
 export interface IRangeSelector {
   updatePath: (concIndex: number) => void
@@ -435,8 +436,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             )}
           </Grid>
           <Grid className={classes.activeLiquidityContainer} container direction='column'>
-            <Tooltip
-              enterTouchDelay={0}
+            <TooltipInv
               title={
                 <>
                   <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
@@ -468,13 +468,11 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 </>
               }
               placement='bottom'
-              classes={{
-                tooltip: classes.liquidityTooltip
-              }}>
+              top={1}>
               <Typography className={classes.activeLiquidity}>
                 Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
               </Typography>
-            </Tooltip>
+            </TooltipInv>
             <Grid container flexDirection='column'>
               <Typography className={classes.currentPrice}>Current price</Typography>
               <Typography className={classes.globalPrice}>Global price</Typography>

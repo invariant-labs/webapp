@@ -611,7 +611,7 @@ export const Swap: React.FC<ISwap> = ({
               Slippage: <span className={classes.slippageAmount}>{slippTolerance}%</span>
             </p>
           </Button>
-          <TooltipHover text='Refresh'>
+          <TooltipHover title='Refresh'>
             <Grid display='flex' alignItems='center'>
               <Button
                 onClick={handleRefresh}
@@ -629,7 +629,7 @@ export const Swap: React.FC<ISwap> = ({
               </Button>
             </Grid>
           </TooltipHover>
-          <TooltipHover text='Settings'>
+          <TooltipHover title='Settings'>
             <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
               <img src={icons.settingIcon} className={classes.settingsIcon} alt='Settings' />
             </Button>
@@ -800,7 +800,7 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
         <Box className={classes.unknownWarningContainer}>
           {+printBN(simulateResult.priceImpact, DECIMAL - 2) > 25 && (
-            <TooltipHover text='Your trade size might be too large'>
+            <TooltipHover title='Your trade size might be too large'>
               <Box className={classes.unknownWarning}>
                 High price impact: {(+printBN(simulateResult.priceImpact, DECIMAL - 2)).toFixed(2)}
                 %! This swap will cause a significant price movement.
@@ -809,7 +809,7 @@ export const Swap: React.FC<ISwap> = ({
           )}
           {tokens[tokenFrom?.toString() ?? '']?.isUnknown && (
             <TooltipHover
-              text={`${
+              title={`${
                 tokens[tokenFrom?.toString() ?? ''].symbol
               } is unknown, make sure address is correct before trading`}>
               <Box className={classes.unknownWarning}>
@@ -819,7 +819,7 @@ export const Swap: React.FC<ISwap> = ({
           )}
           {tokens[tokenTo?.toString() ?? '']?.isUnknown && (
             <TooltipHover
-              text={`${
+              title={`${
                 tokens[tokenTo?.toString() ?? ''].symbol
               } is unknown, make sure address is correct before trading`}>
               <Box className={classes.unknownWarning}>
@@ -858,7 +858,7 @@ export const Swap: React.FC<ISwap> = ({
               </Grid>
             </button>
             {tokenFrom !== null && tokenTo !== null && tokenFrom !== tokenTo && (
-              <TooltipHover text='Refresh'>
+              <TooltipHover title='Refresh'>
                 <Grid
                   container
                   alignItems='center'
@@ -931,7 +931,7 @@ export const Swap: React.FC<ISwap> = ({
           />
         ) : getStateMessage() === 'Insufficient Wrapped SOL' ? (
           <TooltipHover
-            text='More ETH is required to cover the transaction fee. Obtain more ETH to complete this transaction.'
+            title='More ETH is required to cover the transaction fee. Obtain more ETH to complete this transaction.'
             top={-45}>
             <div>
               <AnimatedButton

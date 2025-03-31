@@ -1,4 +1,4 @@
-import { Button, Grid, Tooltip, Typography } from '@mui/material'
+import { Button, Grid, Typography, useMediaQuery } from '@mui/material'
 import loader from '@static/gif/loading.gif'
 import {
   formatNumberWithSuffix,
@@ -14,6 +14,7 @@ import useStyles from './style'
 import { FormatNumberThreshold, PrefixConfig } from '@store/consts/types'
 import { TooltipHover } from '@components/TooltipHover/TooltipHover'
 import icons from '@static/icons'
+import { theme } from '@static/theme'
 
 export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue' | 'liqValue'> {
   value: number
@@ -40,6 +41,7 @@ export const BoxInfo: React.FC<{
   isBalanceLoading
 }) => {
   const { classes } = useStyles()
+  const isMd = useMediaQuery(theme.breakpoints.up('md'))
 
   const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThreshold[] => [
     {
@@ -132,37 +134,32 @@ export const BoxInfo: React.FC<{
                 {tokenA.name}
               </Typography>
               {typeof tokenA.usdValue !== 'undefined' && tokenA.price ? (
-                <Tooltip
-                  enterTouchDelay={0}
-                  leaveTouchDelay={Number.MAX_SAFE_INTEGER}
+                <TooltipHover
                   title="Estimated USD Value of the Position's Tokens"
                   placement='bottom'
-                  classes={{
-                    tooltip: classes.tooltip
-                  }}>
+                  top={1}
+                  left={isMd ? 'auto' : -90}>
                   <Typography className={classes.tokenUSDValue}>
                     ~${formatNumberWithoutSuffix(tokenA.value * tokenA.price)}
                   </Typography>
-                </Tooltip>
+                </TooltipHover>
               ) : (
-                <Tooltip
-                  enterTouchDelay={0}
+                <TooltipHover
                   title='Cannot fetch price of token'
                   placement='bottom'
-                  classes={{
-                    tooltip: classes.tooltip
-                  }}>
+                  top={1}
+                  left={isMd ? 'auto' : -90}>
                   <Typography className={classes.noData}>
                     <span className={classes.noDataIcon}>?</span>No data
                   </Typography>
-                </Tooltip>
+                </TooltipHover>
               )}
             </Grid>
           ) : null}
         </Grid>
 
         {typeof swapHandler !== 'undefined' ? (
-          <TooltipHover text='Reverse tokens'>
+          <TooltipHover title='Reverse tokens'>
             <img
               src={icons.swapPosition}
               className={classes.arrowsIcon}
@@ -199,29 +196,25 @@ export const BoxInfo: React.FC<{
                 {tokenB.name}
               </Typography>
               {typeof tokenB.usdValue !== 'undefined' && tokenB.price ? (
-                <Tooltip
-                  enterTouchDelay={0}
+                <TooltipHover
                   title="Estimated USD Value of the Position's Tokens"
                   placement='bottom'
-                  classes={{
-                    tooltip: classes.tooltip
-                  }}>
+                  top={1}
+                  left={isMd ? 'auto' : -90}>
                   <Typography className={classes.tokenUSDValue}>
                     ~${formatNumberWithoutSuffix(tokenB.value * tokenB.price)}
                   </Typography>
-                </Tooltip>
+                </TooltipHover>
               ) : (
-                <Tooltip
-                  enterTouchDelay={0}
+                <TooltipHover
                   title='Cannot fetch price of token'
                   placement='bottom'
-                  classes={{
-                    tooltip: classes.tooltip
-                  }}>
+                  top={1}
+                  left={isMd ? 'auto' : -90}>
                   <Typography className={classes.noData}>
                     <span className={classes.noDataIcon}>?</span>No data
                   </Typography>
-                </Tooltip>
+                </TooltipHover>
               )}
             </Grid>
           ) : null}

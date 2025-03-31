@@ -120,7 +120,7 @@ const TokenListItem: React.FC<IProps> = ({
                 shortenAddress(symbol)
               )}
             </Typography> */}
-            <TooltipHover text='Copy token address'>
+            <TooltipHover title='Copy token address'>
               <FileCopyOutlinedIcon
                 onClick={copyToClipboard}
                 classes={{ root: classes.clipboardIcon }}
@@ -138,7 +138,7 @@ const TokenListItem: React.FC<IProps> = ({
           <Typography>{`$${formatNumberWithSuffix(TVL)}`}</Typography>
           {!isMd && (
             <Box className={classes.action}>
-              <TooltipHover text='Open in explorer'>
+              <TooltipHover title='Open in explorer'>
                 <button
                   className={classes.actionButton}
                   onClick={() =>
