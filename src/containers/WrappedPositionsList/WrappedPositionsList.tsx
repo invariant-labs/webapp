@@ -5,15 +5,22 @@ import { actions as walletActions, Status } from '@store/reducers/solanaWallet'
 import {
   isLoadingPositionsList,
   lastPageSelector,
-  positionsWithPoolsData
+  PositionData,
+  positionsWithPoolsData,
+  prices
 } from '@store/selectors/positions'
 import { address, status } from '@store/selectors/solanaWallet'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { calcYPerXPriceBySqrtPrice, printBN, ROUTES } from '@utils/utils'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
-import { DECIMAL, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
+import {
+  calculateClaimAmount,
+  DECIMAL,
+  getMaxTick,
+  getMinTick
+} from '@invariant-labs/sdk/lib/utils'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { network } from '@store/selectors/solanaConnection'
 import { IPositionItem } from '@components/PositionsList/types'
@@ -28,6 +35,7 @@ export const WrappedPositionsList: React.FC = () => {
   const currentNetwork = useSelector(network)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const pricesData = useSelector(prices)
 
   const handleClosePosition = (index: number) => {
     dispatch(
@@ -70,84 +78,112 @@ export const WrappedPositionsList: React.FC = () => {
     dispatch(actionsStats.getCurrentStats())
   }, [])
 
-  const data: IPositionItem[] = list.map(position => {
-    const lowerPrice = calcYPerXPriceBySqrtPrice(
-      calculatePriceSqrt(position.lowerTickIndex).v,
-      position.tokenX.decimals,
-      position.tokenY.decimals
-    )
-    const upperPrice = calcYPerXPriceBySqrtPrice(
-      calculatePriceSqrt(position.upperTickIndex).v,
-      position.tokenX.decimals,
-      position.tokenY.decimals
-    )
+  const calculateUnclaimedFees = (position: PositionData) => {
+    const [bnX, bnY] = calculateClaimAmount({
+      position: position,
+      tickLower: position.lowerTick,
+      tickUpper: position.upperTick,
+      tickCurrent: position.poolData.currentTickIndex,
+      feeGrowthGlobalX: position.poolData.feeGrowthGlobalX,
+      feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
+    })
 
-    const minTick = getMinTick(position.poolData.tickSpacing)
-    const maxTick = getMaxTick(position.poolData.tickSpacing)
+    const xValue =
+      +printBN(bnX, position.tokenX.decimals) *
+      (pricesData.data[position.tokenX.assetAddress.toString()]?.price ?? 0)
+    const yValue =
+      +printBN(bnY, position.tokenY.decimals) *
+      (pricesData.data[position.tokenY.assetAddress.toString()]?.price ?? 0)
 
-    const min = Math.min(lowerPrice, upperPrice)
-    const max = Math.max(lowerPrice, upperPrice)
+    const unclaimedFeesInUSD = xValue + yValue
+    return unclaimedFeesInUSD
+  }
 
-    let tokenXLiq, tokenYLiq
-
-    try {
-      tokenXLiq = +printBN(
-        getX(
-          position.liquidity.v,
+  const data: IPositionItem[] = useMemo(
+    () =>
+      list.map(position => {
+        const lowerPrice = calcYPerXPriceBySqrtPrice(
+          calculatePriceSqrt(position.lowerTickIndex).v,
+          position.tokenX.decimals,
+          position.tokenY.decimals
+        )
+        const upperPrice = calcYPerXPriceBySqrtPrice(
           calculatePriceSqrt(position.upperTickIndex).v,
+          position.tokenX.decimals,
+          position.tokenY.decimals
+        )
+
+        const minTick = getMinTick(position.poolData.tickSpacing)
+        const maxTick = getMaxTick(position.poolData.tickSpacing)
+
+        const min = Math.min(lowerPrice, upperPrice)
+        const max = Math.max(lowerPrice, upperPrice)
+
+        let tokenXLiq, tokenYLiq
+
+        try {
+          tokenXLiq = +printBN(
+            getX(
+              position.liquidity.v,
+              calculatePriceSqrt(position.upperTickIndex).v,
+              position.poolData.sqrtPrice.v,
+              calculatePriceSqrt(position.lowerTickIndex).v
+            ),
+            position.tokenX.decimals
+          )
+        } catch (error) {
+          tokenXLiq = 0
+        }
+
+        try {
+          tokenYLiq = +printBN(
+            getY(
+              position.liquidity.v,
+              calculatePriceSqrt(position.upperTickIndex).v,
+              position.poolData.sqrtPrice.v,
+              calculatePriceSqrt(position.lowerTickIndex).v
+            ),
+            position.tokenY.decimals
+          )
+        } catch (error) {
+          tokenYLiq = 0
+        }
+
+        const currentPrice = calcYPerXPriceBySqrtPrice(
           position.poolData.sqrtPrice.v,
-          calculatePriceSqrt(position.lowerTickIndex).v
-        ),
-        position.tokenX.decimals
-      )
-    } catch (error) {
-      tokenXLiq = 0
-    }
+          position.tokenX.decimals,
+          position.tokenY.decimals
+        )
 
-    try {
-      tokenYLiq = +printBN(
-        getY(
-          position.liquidity.v,
-          calculatePriceSqrt(position.upperTickIndex).v,
-          position.poolData.sqrtPrice.v,
-          calculatePriceSqrt(position.lowerTickIndex).v
-        ),
-        position.tokenY.decimals
-      )
-    } catch (error) {
-      tokenYLiq = 0
-    }
+        const valueX = tokenXLiq + tokenYLiq / currentPrice
+        const valueY = tokenYLiq + tokenXLiq * currentPrice
 
-    const currentPrice = calcYPerXPriceBySqrtPrice(
-      position.poolData.sqrtPrice.v,
-      position.tokenX.decimals,
-      position.tokenY.decimals
-    )
+        const unclaimedFeesInUSD = calculateUnclaimedFees(position)
 
-    const valueX = tokenXLiq + tokenYLiq / currentPrice
-    const valueY = tokenYLiq + tokenXLiq * currentPrice
-
-    return {
-      tokenXName: position.tokenX.symbol,
-      tokenYName: position.tokenY.symbol,
-      tokenXIcon: position.tokenX.logoURI,
-      tokenYIcon: position.tokenY.logoURI,
-      fee: +printBN(position.poolData.fee.v, DECIMAL - 2),
-      min,
-      max,
-      position,
-      valueX,
-      valueY,
-      address: walletAddress.toString(),
-      id: position.id.toString() + '_' + position.pool.toString(),
-      isActive: currentPrice >= min && currentPrice <= max,
-      currentPrice,
-      tokenXLiq,
-      tokenYLiq,
-      network: currentNetwork,
-      isFullRange: position.lowerTickIndex === minTick && position.upperTickIndex === maxTick
-    }
-  })
+        return {
+          tokenXName: position.tokenX.symbol,
+          tokenYName: position.tokenY.symbol,
+          tokenXIcon: position.tokenX.logoURI,
+          tokenYIcon: position.tokenY.logoURI,
+          fee: +printBN(position.poolData.fee.v, DECIMAL - 2),
+          min,
+          max,
+          position,
+          valueX,
+          valueY,
+          address: walletAddress.toString(),
+          id: position.id.toString() + '_' + position.pool.toString(),
+          isActive: currentPrice >= min && currentPrice <= max,
+          currentPrice,
+          tokenXLiq,
+          tokenYLiq,
+          network: currentNetwork,
+          isFullRange: position.lowerTickIndex === minTick && position.upperTickIndex === maxTick,
+          unclaimedFeesInUSD: { value: unclaimedFeesInUSD, loading: position.ticksLoading }
+        }
+      }),
+    [list, pricesData]
+  )
 
   return (
     <PositionsList

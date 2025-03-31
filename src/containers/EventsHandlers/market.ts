@@ -17,13 +17,7 @@ import {
 } from '@utils/utils'
 import { getCurrentSolanaConnection } from '@utils/web3/connection'
 import { getSolanaWallet } from '@utils/web3/wallet'
-import {
-  currentPoolIndex,
-  currentPositionData,
-  currentPositionId,
-  positionsWithPoolsData
-} from '@store/selectors/positions'
-import { actions as positionsActions } from '@store/reducers/positions'
+import { currentPoolIndex } from '@store/selectors/positions'
 import { useLocation } from 'react-router-dom'
 
 const MarketEvents = () => {
@@ -35,12 +29,8 @@ const MarketEvents = () => {
   const { tokenFrom, tokenTo } = useSelector(swap)
   const networkStatus = useSelector(status)
   const allPools = useSelector(poolsArraySortedByFees)
-  const positionsList = useSelector(positionsWithPoolsData)
-  const currentPositionIndex = useSelector(currentPositionId)
-  const currentPosition = useSelector(currentPositionData)
   const newPositionPoolIndex = useSelector(currentPoolIndex)
   const [subscribedSwapPools, _setSubscribedSwapPools] = useState<Set<string>>(new Set())
-  const [subscribedPositionsPools, _setSubscribedPositionsPools] = useState<Set<string>>(new Set())
   const [newPositionSubscribedPool, setNewPositionSubscribedPool] = useState<PublicKey>(
     PublicKey.default
   )
@@ -106,6 +96,14 @@ const MarketEvents = () => {
 
   // New position pool subscription
   useEffect(() => {
+    if (
+      networkStatus !== Status.Initialized ||
+      !marketProgram ||
+      !location.pathname.startsWith(ROUTES.NEW_POSITION)
+    ) {
+      return
+    }
+
     if (newPositionPoolIndex !== null && newPositionPoolIndex !== undefined) {
       const pool = allPools[newPositionPoolIndex]
       if (pool && !pool.address.equals(newPositionSubscribedPool)) {
@@ -127,104 +125,6 @@ const MarketEvents = () => {
       }
     }
   }, [dispatch, networkStatus, newPositionPoolIndex])
-
-  // User position pool subscriptions
-  useEffect(() => {
-    if (
-      networkStatus !== Status.Initialized ||
-      !marketProgram ||
-      (!location.pathname.startsWith(ROUTES.PORTFOLIO) &&
-        !location.pathname.startsWith(ROUTES.POSITION))
-    ) {
-      return
-    }
-
-    const connectEvents = () => {
-      const pools = positionsList.map(position => position.poolData)
-
-      const poolsAddresses = pools.map(pool => pool.address.toBase58())
-      const unsubscribedPools = Array.from(subscribedPositionsPools).filter(
-        pool => !poolsAddresses.includes(pool)
-      )
-
-      for (const pool of unsubscribedPools) {
-        marketProgram.program.account.pool.unsubscribe(new PublicKey(pool))
-        subscribedPositionsPools.delete(pool)
-      }
-
-      for (const pool of pools) {
-        if (subscribedPositionsPools.has(pool.address.toBase58())) {
-          continue
-        }
-
-        subscribedPositionsPools.add(pool.address.toBase58())
-
-        marketProgram.onPoolChange(
-          pool.tokenX,
-          pool.tokenY,
-          { fee: pool.fee.v, tickSpacing: pool.tickSpacing },
-          poolStructure => {
-            const positionsInPool = positionsList.filter(position =>
-              position.pool.equals(pool.address)
-            )
-
-            if (pool.currentTickIndex !== poolStructure.currentTickIndex) {
-              positionsInPool.map(position => {
-                //update current position details
-                if (
-                  currentPositionIndex ===
-                    position.id.toString() + '_' + position.pool.toString() &&
-                  currentPosition
-                ) {
-                  if (
-                    (pool.currentTickIndex >= currentPosition?.lowerTickIndex &&
-                      poolStructure.currentTickIndex < currentPosition?.lowerTickIndex) ||
-                    (pool.currentTickIndex < currentPosition?.lowerTickIndex &&
-                      poolStructure.currentTickIndex >= currentPosition?.lowerTickIndex)
-                  ) {
-                    dispatch(
-                      positionsActions.getCurrentPositionRangeTicks({
-                        id: currentPositionIndex,
-                        fetchTick: 'lower'
-                      })
-                    )
-                  } else if (
-                    (pool.currentTickIndex < currentPosition?.upperTickIndex &&
-                      poolStructure.currentTickIndex >= currentPosition?.upperTickIndex) ||
-                    (pool.currentTickIndex >= currentPosition?.upperTickIndex &&
-                      poolStructure.currentTickIndex < currentPosition?.upperTickIndex)
-                  ) {
-                    dispatch(
-                      positionsActions.getCurrentPositionRangeTicks({
-                        id: currentPositionIndex,
-                        fetchTick: 'upper'
-                      })
-                    )
-                  }
-                }
-              })
-            }
-
-            dispatch(
-              actions.updatePool({
-                address: pool.address,
-                poolStructure
-              })
-            )
-          }
-        )
-      }
-    }
-
-    connectEvents()
-  }, [
-    dispatch,
-    positionsList,
-    networkStatus,
-    marketProgram,
-    currentPositionIndex,
-    location.pathname
-  ])
 
   useEffect(() => {
     if (tokenFrom && tokenTo) {
@@ -301,16 +201,6 @@ const MarketEvents = () => {
     ) {
       marketProgram.program.account.pool.unsubscribe(newPositionSubscribedPool)
       setNewPositionSubscribedPool(PublicKey.default)
-    }
-    // Unsubscribe from position details pools on different pages than portfolio
-    if (
-      !location.pathname.startsWith(ROUTES.PORTFOLIO) &&
-      !location.pathname.startsWith(ROUTES.POSITION)
-    ) {
-      for (const pool of Array.from(subscribedPositionsPools)) {
-        marketProgram.program.account.pool.unsubscribe(new PublicKey(pool))
-        subscribedPositionsPools.delete(pool)
-      }
     }
   }, [location.pathname])
 

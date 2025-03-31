@@ -22,7 +22,7 @@ import {
 } from '@invariant-labs/sdk/src/utils'
 import { BN } from '@project-serum/anchor'
 import { PoolWithAddress } from '@store/reducers/pools'
-import { PlotTickData, PositionWithAddress } from '@store/reducers/positions'
+import { PlotTickData, PositionWithoutTicks } from '@store/reducers/positions'
 import { Token as SPLToken, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import axios from 'axios'
@@ -1210,7 +1210,7 @@ export const getPositionsForPool = async (marketProgram: Market, pool: PublicKey
   ).map(({ account, publicKey }) => ({
     ...account,
     address: publicKey
-  })) as PositionWithAddress[]
+  })) as PositionWithoutTicks[]
 }
 
 export const getPositionsAddressesFromRange = async (
@@ -1628,8 +1628,11 @@ export const stringToFixed = (
 
 export const tickerToAddress = (network: NetworkType, ticker: string): string => {
   try {
-    return getAddressTickerMap(network)[ticker].toString()
-  } catch (error) {
+    return getAddressTickerMap(network)[ticker] || ticker
+  } catch (e: unknown) {
+    const error = ensureError(e)
+    console.log(error)
+
     return ticker
   }
 }
@@ -1742,7 +1745,8 @@ export const generatePositionTableLoadingData = () => {
         isActive: Math.random() > 0.5,
         tokenXLiq: getRandomNumber(100, 1000),
         tokenYLiq: getRandomNumber(10000, 100000),
-        network: 'mainnet'
+        network: NetworkType.Mainnet,
+        unclaimedFeesInUSD: { value: 0, loading: true }
       }
     })
 }
@@ -1780,4 +1784,38 @@ export const ensureError = (value: unknown): Error => {
 
   const error = new Error(stringified)
   return error
+}
+
+export const getTicksFromPositions = async (
+  marketProgram: Market,
+  positionsData: {
+    pair: Pair
+    position: PositionWithoutTicks
+  }[]
+): Promise<(Tick | null)[]> => {
+  try {
+    const tickAddressPromises: Promise<PublicKey>[] = []
+
+    for (const data of positionsData) {
+      tickAddressPromises.push(
+        marketProgram
+          .getTickAddress(data.pair, data.position.lowerTickIndex)
+          .then(res => res.tickAddress),
+        marketProgram
+          .getTickAddress(data.pair, data.position.upperTickIndex)
+          .then(res => res.tickAddress)
+      )
+    }
+
+    const tickAddresses = await Promise.all(tickAddressPromises)
+
+    const ticks = (await marketProgram.program.account.tick.fetchMultiple(
+      tickAddresses
+    )) as Array<Tick | null>
+
+    return ticks
+  } catch (error) {
+    console.log(error)
+    return []
+  }
 }

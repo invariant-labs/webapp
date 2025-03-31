@@ -4,28 +4,26 @@ import { IPositionsStore, positionsSliceName, PositionWithAddress } from '../red
 import { AnyProps, keySelectors } from './helpers'
 import { poolsArraySortedByFees } from './pools'
 import { SwapToken, swapTokensDict } from './solanaWallet'
+import { printBN } from '@utils/utils'
+import { calculateClaimAmount } from '@invariant-labs/sdk/lib/utils'
 
 const store = (s: AnyProps) => s[positionsSliceName] as IPositionsStore
 
 export const {
   lastPage,
   positionsList,
-  unclaimedFees,
   prices,
   plotTicks,
   currentPoolIndex,
-  currentPositionTicks,
   initPosition,
   shouldNotUpdateRange,
   currentPositionId
 } = keySelectors(store, [
   'lastPage',
   'positionsList',
-  'unclaimedFees',
   'prices',
   'plotTicks',
   'currentPoolIndex',
-  'currentPositionTicks',
   'initPosition',
   'shouldNotUpdateRange',
   'currentPositionId'
@@ -45,6 +43,8 @@ export interface PositionWithPoolData extends PositionWithAddress {
   tokenY: SwapToken
   positionIndex: number
 }
+
+export type PositionData = ReturnType<typeof positionsWithPoolsData>[number]
 
 export const positionsWithPoolsData = createSelector(
   poolsArraySortedByFees,
@@ -85,10 +85,39 @@ export const currentPositionData = createSelector(
   }
 )
 
+export const totalUnlaimedFees = createSelector(
+  positionsWithPoolsData,
+  prices,
+  (positions, pricesData) => {
+    const isLoading = positions.some(position => position.ticksLoading)
+
+    const total = positions.reduce((acc: number, position) => {
+      const [bnX, bnY] = calculateClaimAmount({
+        position,
+        tickLower: position.lowerTick,
+        tickUpper: position.upperTick,
+        tickCurrent: position.poolData.currentTickIndex,
+        feeGrowthGlobalX: position.poolData.feeGrowthGlobalX,
+        feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
+      })
+
+      const xValue =
+        +printBN(bnX, position.tokenX.decimals) *
+        (pricesData.data[position.tokenX.assetAddress.toString()]?.price ?? 0)
+      const yValue =
+        +printBN(bnY, position.tokenY.decimals) *
+        (pricesData.data[position.tokenY.assetAddress.toString()]?.price ?? 0)
+
+      return acc + xValue + yValue
+    }, 0)
+
+    return { total, isLoading }
+  }
+)
+
 export const positionsSelectors = {
   positionsList,
   plotTicks,
-  currentPositionTicks,
   initPosition,
   shouldNotUpdateRange,
   currentPositionId

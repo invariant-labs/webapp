@@ -19,12 +19,7 @@ import { actions } from '@store/reducers/positions'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { Status, actions as walletActions } from '@store/reducers/solanaWallet'
 import { network, timeoutError } from '@store/selectors/solanaConnection'
-import {
-  currentPositionTicks,
-  isLoadingPositionsList,
-  plotTicks,
-  singlePositionData
-} from '@store/selectors/positions'
+import { isLoadingPositionsList, plotTicks, singlePositionData } from '@store/selectors/positions'
 import { balanceLoading, status } from '@store/selectors/solanaWallet'
 import { VariantType } from 'notistack'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -54,11 +49,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const position = useSelector(singlePositionData(id))
   const isLoadingList = useSelector(isLoadingPositionsList)
   const { data: ticksData, loading: ticksLoading, hasError: hasTicksError } = useSelector(plotTicks)
-  const {
-    lowerTick,
-    upperTick,
-    loading: currentPositionTicksLoading
-  } = useSelector(currentPositionTicks)
+
   const poolsVolumeRanges = useSelector(volumeRanges)
   const walletStatus = useSelector(status)
   const isBalanceLoading = useSelector(balanceLoading)
@@ -71,7 +62,6 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const [globalPrice, setGlobalPrice] = useState<number | undefined>(undefined)
-  const [waitingForTicksData, setWaitingForTicksData] = useState<boolean | null>(null)
 
   const [showFeesLoader, setShowFeesLoader] = useState(true)
 
@@ -84,25 +74,14 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     if (position?.id) {
       dispatch(actions.setCurrentPositionId(id))
 
-      setWaitingForTicksData(true)
-      dispatch(actions.getCurrentPositionRangeTicks({ id }))
-
-      if (waitingForTicksData === null) {
-        dispatch(
-          actions.getCurrentPlotTicks({
-            poolIndex: position.poolData.poolIndex,
-            isXtoY: true
-          })
-        )
-      }
+      dispatch(
+        actions.getCurrentPlotTicks({
+          poolIndex: position.poolData.poolIndex,
+          isXtoY: true
+        })
+      )
     }
   }, [position?.id.toString()])
-
-  useEffect(() => {
-    if (waitingForTicksData === true && !currentPositionTicksLoading) {
-      setWaitingForTicksData(false)
-    }
-  }, [currentPositionTicksLoading])
 
   const midPrice = useMemo(() => {
     if (position?.poolData) {
@@ -235,18 +214,17 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
 
     return 0
   }, [position])
-
   const [tokenXClaim, tokenYClaim] = useMemo(() => {
     if (
-      waitingForTicksData === false &&
+      position?.ticksLoading === false &&
       position?.poolData &&
-      typeof lowerTick !== 'undefined' &&
-      typeof upperTick !== 'undefined'
+      typeof position?.lowerTick !== 'undefined' &&
+      typeof position?.upperTick !== 'undefined'
     ) {
       const [bnX, bnY] = calculateClaimAmount({
         position,
-        tickLower: lowerTick,
-        tickUpper: upperTick,
+        tickLower: position.lowerTick,
+        tickUpper: position.upperTick,
         tickCurrent: position.poolData.currentTickIndex,
         feeGrowthGlobalX: position.poolData.feeGrowthGlobalX,
         feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
@@ -258,7 +236,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
 
     return [0, 0]
-  }, [position?.poolData, lowerTick, upperTick, waitingForTicksData])
+  }, [position])
 
   const data = useMemo(() => {
     if (ticksLoading && position) {
@@ -413,8 +391,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       dispatch(walletActions.getBalance())
 
       setShowFeesLoader(true)
-      setWaitingForTicksData(true)
-      dispatch(actions.getSinglePosition(position.positionIndex))
+
+      dispatch(actions.getSinglePosition({ index: position.positionIndex }))
 
       dispatch(
         actions.getCurrentPlotTicks({
@@ -425,7 +403,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       dispatch(
         poolsActions.getPoolData(
           new Pair(position.tokenX.assetAddress, position.tokenY.assetAddress, {
-            fee: position.poolData.fee,
+            fee: position.poolData.fee.v,
             tickSpacing: position.poolData.tickSpacing
           })
         )
@@ -481,7 +459,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             })
           )
         }}
-        ticksLoading={ticksLoading || waitingForTicksData || !position}
+        ticksLoading={ticksLoading || !position}
         tickSpacing={position?.poolData.tickSpacing ?? 1}
         tokenX={{
           name: position.tokenX.symbol,
@@ -512,7 +490,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         fee={position.poolData.fee}
         min={min}
         max={max}
-        showFeesLoader={showFeesLoader || isLoadingList}
+        showFeesLoader={showFeesLoader || isLoadingList || position.ticksLoading}
         isBalanceLoading={isBalanceLoading}
         hasTicksError={hasTicksError}
         reloadHandler={() => {

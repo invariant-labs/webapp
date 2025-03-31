@@ -20,4 +20,5 @@ export interface IPositionItem {
   currentPrice: number
   network: NetworkType
   isFullRange: boolean
+  unclaimedFeesInUSD: { value: number; loading: boolean }
 }
