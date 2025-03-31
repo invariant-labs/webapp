@@ -5,15 +5,18 @@ import { makeStyles } from 'tss-react/mui'
 export const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     width: 1210, //merge
+    flexDirection: 'column',
 
     [theme.breakpoints.down('md')]: {
       width: '100%'
     }
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingBottom: 16,
     display: 'flex',
-    alignItems: 'flex-end',
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'center'
     }
@@ -82,7 +85,14 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       width: '100%'
     }
   },
+  refreshWrapper: {
+    display: 'flex',
+    alignItems: 'center'
+  },
   fullWidthWrapper: {
+    display: 'flex',
+    columnGap: theme.spacing(2),
+    justifyContent: 'space-between',
     marginBottom: 8,
     [theme.breakpoints.down('sm')]: {
       width: '100%',
@@ -118,6 +128,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     color: colors.invariant.text
   },
   list: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     position: 'relative',
     flex: 1
   },

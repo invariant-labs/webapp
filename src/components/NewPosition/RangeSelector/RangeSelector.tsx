@@ -423,9 +423,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   }, [tokenASymbol, tokenBSymbol])
 
   return (
-    <Grid container className={classes.wrapper} direction='column'>
+    <Grid container className={classes.wrapper}>
       <Grid className={classes.topInnerWrapper}>
-        <Grid className={classes.headerContainer} container justifyContent='space-between'>
+        <Grid className={classes.headerContainer} container>
           <Grid>
             <Typography className={classes.header}>Price range</Typography>
             {poolIndex !== null && (
@@ -434,7 +434,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               </Typography>
             )}
           </Grid>
-          <Grid className={classes.activeLiquidityContainer} container direction='column'>
+          <Grid className={classes.activeLiquidityContainer} container>
             <Tooltip
               enterTouchDelay={0}
               title={
@@ -444,12 +444,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                     While selecting the price range, note where active liquidity is located. Your
                     liquidity can be inactive and, as a consequence, not generate profits.
                   </Typography>
-                  <Grid
-                    container
-                    direction='row'
-                    wrap='nowrap'
-                    alignItems='center'
-                    style={{ marginBottom: 12 }}>
+                  <Grid container className={classes.liqDescWrapper}>
                     <Typography className={classes.liquidityDesc}>
                       The active liquidity range is represented by white, dashed lines in the
                       liquidity chart. Active liquidity is determined by the maximum price range
@@ -531,7 +526,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         /> */}
       </Grid>
       <Grid container className={classes.innerWrapper}>
-        <Grid container justifyContent='space-between' alignItems='center' minHeight={36}>
+        <Grid container className={classes.conWrapper}>
           <Typography className={classes.subheader}>Set price range</Typography>
           {positionOpeningMethod === 'range' && (
             <Grid className={classes.rangeConcentration}>
@@ -649,7 +644,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             />
           </Grid>
         ) : (
-          <Grid container className={classes.buttons} justifyContent='center' alignItems='center'>
+          <Grid container className={classes.buttons}>
             <Button className={classes.button} onClick={resetPlot}>
               Reset range
             </Button>

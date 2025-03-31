@@ -4,6 +4,7 @@ import { makeStyles } from 'tss-react/mui'
 const useStyles = makeStyles()(theme => {
   return {
     wrapper: {
+      flexDirection: 'column',
       borderRadius: 24,
       backgroundColor: colors.invariant.component,
       padding: '16px 24px 16px 24px',
@@ -17,6 +18,7 @@ const useStyles = makeStyles()(theme => {
       }
     },
     headerContainer: {
+      justifyContent: 'space-between',
       marginBottom: 12
     },
     header: {
@@ -111,6 +113,7 @@ const useStyles = makeStyles()(theme => {
       zIndex: 99
     },
     buttons: {
+      justifyContent: 'center',
       marginTop: 4,
       width: '100%',
       height: 70,
@@ -230,8 +233,20 @@ const useStyles = makeStyles()(theme => {
       fontSize: 14,
       fontWeight: 'normal'
     },
+    liqDescWrapper: {
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      alignItems: 'center',
+      marginBottom: 12
+    },
     activeLiquidityContainer: {
+      flexDirection: 'column',
       width: 'auto'
+    },
+    conWrapper: {
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      minHeight: 36
     },
     globalPrice: {
       display: 'inline-block',

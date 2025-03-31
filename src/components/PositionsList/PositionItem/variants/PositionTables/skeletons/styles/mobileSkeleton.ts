@@ -3,6 +3,7 @@ import { makeStyles } from 'tss-react/mui'
 export const useMobileSkeletonStyles = makeStyles()(() => ({
   card: {
     height: '290px',
+    flexDirection: 'column',
     [theme.breakpoints.between('sm', 'lg')]: {
       padding: '16px',
       paddingTop: '16px'
@@ -15,7 +16,16 @@ export const useMobileSkeletonStyles = makeStyles()(() => ({
     },
     marginBottom: '16px'
   },
-
+  skeletonText: {
+    width: 120,
+    height: 24,
+    marginLeft: '8px'
+  },
+  headerCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
   mobileCardSkeletonHeader: {
     display: 'flex',
     alignItems: 'center',
@@ -41,7 +51,17 @@ export const useMobileSkeletonStyles = makeStyles()(() => ({
       height: '30px'
     }
   },
-
+  skeleton36x100: {
+    width: '100%',
+    height: 36,
+    borderRadius: '10px',
+    margin: '0 auto'
+  },
+  wrapper: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: '16px'
+  },
   tokenIcons: {
     display: 'flex',
     alignItems: 'center',
@@ -49,6 +69,19 @@ export const useMobileSkeletonStyles = makeStyles()(() => ({
   },
   chartContainer: {
     width: '80%',
-    margin: '0 auto'
+    margin: '0 auto',
+    justifyContent: 'center'
+  },
+  skeleton36x36: {
+    width: 32,
+    height: 32,
+    marginLeft: '16px',
+    borderRadius: '12px'
+  },
+  skeleton40x100: {
+    width: '100%',
+    height: 40,
+    borderRadius: '12px',
+    marginTop: '18px'
   }
 }))

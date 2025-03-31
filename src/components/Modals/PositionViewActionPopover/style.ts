@@ -11,6 +11,8 @@ const useStyles = makeStyles()(() => {
       padding: 8
     },
     list: {
+      alignContent: 'space-around',
+      flexDirection: 'column',
       borderRadius: 5,
       marginTop: 7
     },

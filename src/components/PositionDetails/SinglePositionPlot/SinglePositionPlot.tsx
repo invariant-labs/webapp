@@ -148,7 +148,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
 
   return (
     <Grid item className={classes.root}>
-      <Grid className={classes.headerContainer} container justifyContent='space-between'>
+      <Grid className={classes.headerContainer} container>
         <Typography className={classes.header}>Price range</Typography>
         <Grid>
           <Tooltip
@@ -160,12 +160,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
                   While selecting the price range, note where active liquidity is located. Your
                   liquidity can be inactive and, as a consequence, not generate profits.
                 </Typography>
-                <Grid
-                  container
-                  direction='row'
-                  wrap='nowrap'
-                  alignItems='center'
-                  style={{ marginBottom: 12 }}>
+                <Grid container className={classes.liquidityWrapper}>
                   <Typography className={classes.liquidityDesc}>
                     The active liquidity range is represented by white, dashed lines in the
                     liquidity chart. Active liquidity is determined by the maximum price range

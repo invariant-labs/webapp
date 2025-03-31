@@ -56,7 +56,8 @@ const data: IPositionItem[] = [
     tokenYLiq: 300.2,
     valueX: 10000.45,
     valueY: 21370.4,
-    id: '1'
+    id: '1',
+    unclaimedFeesInUSD: { value: 1, loading: false }
   },
   {
     address: 'So11111111111111111111111111111111111111112',
@@ -91,7 +92,8 @@ const data: IPositionItem[] = [
     tokenYLiq: 300.2,
     valueX: 10000.45,
     valueY: 21370.4,
-    id: '2'
+    id: '2',
+    unclaimedFeesInUSD: { value: 1, loading: false }
   },
   {
     address: 'So11111111111111111111111111111111111111112',
@@ -126,7 +128,8 @@ const data: IPositionItem[] = [
     tokenYLiq: 300.2,
     valueX: 10000.45,
     valueY: 21370.4,
-    id: '3'
+    id: '3',
+    unclaimedFeesInUSD: { value: 1, loading: false }
   },
   {
     address: 'So11111111111111111111111111111111111111112',
@@ -161,7 +164,8 @@ const data: IPositionItem[] = [
     tokenYLiq: 300.2,
     valueX: 10000.45,
     valueY: 21370.4,
-    id: '4'
+    id: '4',
+    unclaimedFeesInUSD: { value: 1, loading: false }
   }
 ]
 

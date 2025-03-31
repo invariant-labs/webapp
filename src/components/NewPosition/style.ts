@@ -5,12 +5,16 @@ const useStyles = makeStyles()(theme => {
   return {
     wrapper: {
       width: 952,
+      flexDirection: 'column',
       maxWidth: '100%'
     },
     headerContainer: {
-      columnGap: 24
+      columnGap: 24,
+      justifyContent: 'space-between',
+      alignItems: 'center'
     },
     back: {
+      alignItems: 'center',
       height: 24,
       marginBottom: 18,
       width: 'fit-content',
@@ -94,6 +98,7 @@ const useStyles = makeStyles()(theme => {
       }
     },
     options: {
+      alignItems: 'center',
       width: 'calc(50% - 12px)',
       height: 28,
       display: 'flex',

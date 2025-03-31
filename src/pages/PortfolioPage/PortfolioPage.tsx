@@ -1,7 +1,6 @@
 import { Box, Grid, Typography } from '@mui/material'
 import useStyles from './styles'
 import icons from '@static/icons'
-import { colors, typography } from '@static/theme'
 import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 import { useDispatch, useSelector } from 'react-redux'
 import { Status, actions as walletActions } from '@store/reducers/solanaWallet'
@@ -27,14 +26,9 @@ const PortfolioPage: React.FC = () => {
           </>
         ) : (
           <Box className={classes.notConnectedPlaceholder}>
-            <img src={icons.empty} height={96} width={96} />
-            <Typography
-              style={{ color: colors.invariant.text, ...typography.heading2, marginBottom: '8px' }}>
-              Wallet is not connected
-            </Typography>
-            <Typography style={{ color: colors.invariant.textGrey, ...typography.body2 }}>
-              No liquidity positions to show.
-            </Typography>
+            <img src={icons.empty} className={classes.emptyIcon} />
+            <Typography component='h1'>Wallet is not connected</Typography>
+            <Typography component='h2'>No liquidity positions to show.</Typography>
             <ChangeWalletButton
               name='Connect wallet'
               onConnect={() => {

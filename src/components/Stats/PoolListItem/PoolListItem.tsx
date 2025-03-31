@@ -164,7 +164,7 @@ const PoolListItem: React.FC<IProps> = ({
   const apr = apyToApr(apy)
 
   return (
-    <Grid maxWidth='100%' className={classes.wrapper}>
+    <Grid className={classes.wrapper}>
       {displayType === 'token' ? (
         <Grid
           container

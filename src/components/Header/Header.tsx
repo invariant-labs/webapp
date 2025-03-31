@@ -137,8 +137,8 @@ export const Header: React.FC<IHeader> = ({
 
   return (
     <Grid container>
-      <Grid container className={classes.root} direction='row' alignItems='center' wrap='nowrap'>
-        <Grid container item className={classes.leftSide} justifyContent='flex-start'>
+      <Grid container className={classes.root}>
+        <Grid container item className={classes.leftSide}>
           <CardMedia
             className={classes.logo}
             image={icons.LogoTitle}
@@ -182,7 +182,7 @@ export const Header: React.FC<IHeader> = ({
           ))}
         </Grid>
 
-        <Grid container item className={classes.buttons} wrap='nowrap'>
+        <Grid container item className={classes.buttons}>
           <CardMedia
             className={classes.logoShort}
             image={icons.LogoShort}

@@ -5,7 +5,13 @@ import { makeStyles } from 'tss-react/mui'
 export const useStyles = makeStyles()((theme: Theme) => ({
   wrapper: {
     maxWidth: 1072,
-    minHeight: '100%'
+    minHeight: '100%',
+    flexDirection: 'column'
+  },
+  emptyWrapper: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   subheader: {
     ...typography.heading4,
@@ -63,6 +69,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     width: 17
   },
   rowContainer: {
+    display: 'flex',
+    alignItems: 'end',
+    justifyContent: 'space-between',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       alignItems: 'flex-start'

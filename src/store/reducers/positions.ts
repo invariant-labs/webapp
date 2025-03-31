@@ -5,9 +5,20 @@ import { PublicKey } from '@solana/web3.js'
 import { PayloadType } from '@store/consts/types'
 
 export type FetchTick = 'lower' | 'upper'
-export interface PositionWithAddress extends Position {
+
+export interface PositionWithTicks extends Position {
+  lowerTick: Tick
+  upperTick: Tick
+  ticksLoading: boolean
+}
+export interface PositionWithAddress extends PositionWithTicks {
   address: PublicKey
 }
+
+export interface PositionWithoutTicks extends Position {
+  address: PublicKey
+}
+
 export interface PositionsListStore {
   list: PositionWithAddress[]
   loading: boolean
@@ -31,25 +42,14 @@ export interface InitPositionStore {
   success: boolean
 }
 
-export interface CurrentPositionTicksStore {
-  lowerTick?: Tick
-  upperTick?: Tick
-  loading: boolean
-}
 export interface IPositionsStore {
   lastPage: number
   currentPoolIndex: number | null
   plotTicks: PlotTicks
   positionsList: PositionsListStore
   currentPositionId: string
-  currentPositionTicks: CurrentPositionTicksStore
   initPosition: InitPositionStore
   shouldNotUpdateRange: boolean
-  unclaimedFees: {
-    total: number
-    loading: boolean
-    lastUpdate: number
-  }
   prices: {
     data: Record<string, { price: number; buyPrice: number; sellPrice: number }>
   }
@@ -83,6 +83,8 @@ export interface ClosePositionData {
 export interface SetPositionData {
   index: number
   position: Position
+  lowerTick: Tick
+  upperTick: Tick
 }
 
 export const defaultState: IPositionsStore = {
@@ -98,19 +100,10 @@ export const defaultState: IPositionsStore = {
     loading: true
   },
   currentPositionId: '',
-  currentPositionTicks: {
-    lowerTick: undefined,
-    upperTick: undefined,
-    loading: false
-  },
+
   initPosition: {
     inProgress: false,
     success: false
-  },
-  unclaimedFees: {
-    total: 0,
-    loading: false,
-    lastUpdate: 0
   },
   prices: {
     data: {}
@@ -163,38 +156,24 @@ const positionsSlice = createSlice({
       state.positionsList.loading = true
       return state
     },
-    getSinglePosition(state, _action: PayloadAction<number>) {
+    getSinglePosition(state, action: PayloadAction<{ index: number }>) {
+      if (state.positionsList.list[action.payload.index]) {
+        state.positionsList.list[action.payload.index].ticksLoading = true
+      }
+
       return state
     },
     setSinglePosition(state, action: PayloadAction<SetPositionData>) {
       state.positionsList.list[action.payload.index] = {
         address: state.positionsList.list[action.payload.index].address,
+        lowerTick: action.payload.lowerTick,
+        upperTick: action.payload.upperTick,
+        ticksLoading: false,
         ...action.payload.position
       }
       return state
     },
-    getCurrentPositionRangeTicks(
-      state,
-      _action: PayloadAction<{ id: string; fetchTick?: FetchTick }>
-    ) {
-      state.currentPositionTicks.loading = true
-      return state
-    },
-    setCurrentPositionRangeTicks(
-      state,
-      action: PayloadAction<{ lowerTick?: Tick; upperTick?: Tick }>
-    ) {
-      state.currentPositionTicks = {
-        lowerTick: action.payload.lowerTick
-          ? action.payload.lowerTick
-          : state.currentPositionTicks.lowerTick,
-        upperTick: action.payload.upperTick
-          ? action.payload.upperTick
-          : state.currentPositionTicks.upperTick,
-        loading: false
-      }
-      return state
-    },
+
     claimAllFee(state) {
       return state
     },
@@ -204,31 +183,12 @@ const positionsSlice = createSlice({
     setAllClaimLoader(state, action: PayloadAction<boolean>) {
       state.positionsList.isAllClaimFeesLoading = action.payload
     },
-    calculateTotalUnclaimedFees(state) {
-      state.unclaimedFees.loading = true
-      return state
-    },
-    setUnclaimedFees(state, action: PayloadAction<number>) {
-      state.unclaimedFees = {
-        total: action.payload,
-        loading: false,
-        lastUpdate: Date.now()
-      }
-      return state
-    },
     setPrices(
       state,
       action: PayloadAction<Record<string, { price: number; buyPrice: number; sellPrice: number }>>
     ) {
       state.prices = {
         data: action.payload
-      }
-      return state
-    },
-    setUnclaimedFeesError(state) {
-      state.unclaimedFees = {
-        ...state.unclaimedFees,
-        loading: false
       }
       return state
     },

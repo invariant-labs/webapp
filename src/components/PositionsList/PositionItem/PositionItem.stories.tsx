@@ -53,6 +53,7 @@ export const Primary: Story = {
     network: NetworkType.Testnet,
     isFullRange: false,
     handleClaimFee: fn(),
-    handleClosePosition: fn()
+    handleClosePosition: fn(),
+    unclaimedFeesInUSD: { value: 0, loading: false }
   }
 }

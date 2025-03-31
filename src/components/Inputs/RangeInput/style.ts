@@ -4,6 +4,9 @@ import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()((theme: Theme) => ({
   data: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     height: 36,
     paddingInline: 8,
     flexWrap: 'nowrap',
@@ -46,6 +49,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     }
   },
   controls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'nowrap',
     backgroundColor: colors.invariant.componentBcg,
     borderRadius: 10,
     '& input.Mui-disabled': {
@@ -101,6 +107,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     }
   },
   diffWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'nowrap',
     borderRadius: 11,
     height: 36,
     backgroundColor: colors.invariant.black

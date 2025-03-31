@@ -26,12 +26,7 @@ const TokensInfo: React.FC<IProps> = ({
   const { classes } = useWrapperStyles()
 
   return (
-    <Grid
-      container
-      className={classes.wrapper}
-      direction='row'
-      justifyContent='center'
-      alignItems='center'>
+    <Grid container className={classes.wrapper}>
       <SingleToken
         token={tokenFrom}
         tokenPrice={tokenFromPrice}
