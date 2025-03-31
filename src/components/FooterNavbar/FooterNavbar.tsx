@@ -54,7 +54,8 @@ export const FooterNavbar = () => {
 
   useEffect(() => {
     const resizeHandler = () => {
-      setDisplay(window.innerHeight < window.visualViewport!?.height * 1.1)
+      if (window.visualViewport?.height)
+        setDisplay(window.innerHeight < window.visualViewport?.height * 1.1)
     }
 
     window.visualViewport!.addEventListener('resize', resizeHandler)
