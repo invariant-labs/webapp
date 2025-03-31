@@ -1,5 +1,5 @@
 import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
-import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
+import PriceRangePlot, { TickPlotPositionData } from '@common/PriceRangePlot/PriceRangePlot'
 import { Card, Grid, Typography } from '@mui/material'
 import {
   calcPriceByTickIndex,
@@ -14,7 +14,7 @@ import { ILiquidityToken } from '../SinglePositionInfo/consts'
 import useStyles from './style'
 import { getMinTick } from '@invariant-labs/sdk/lib/utils'
 import icons from '@static/icons'
-import { TooltipInv } from '@components/TooltipHover/TooltipInv'
+import { TooltipInv } from '@common/TooltipHover/TooltipInv'
 
 export interface ISinglePositionPlot {
   data: PlotTickData[]

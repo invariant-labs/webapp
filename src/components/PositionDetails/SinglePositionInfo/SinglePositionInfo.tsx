@@ -1,4 +1,4 @@
-import { Button, Grid, Hidden, Typography } from '@mui/material'
+import { Box, Grid, Hidden, Typography } from '@mui/material'
 import classNames from 'classnames'
 import React from 'react'
 import { BoxInfo } from './BoxInfo'
@@ -9,8 +9,9 @@ import { TokenPriceData } from '@store/consts/types'
 import icons from '@static/icons'
 import { addressToTicker, ROUTES } from '@utils/utils'
 import { NetworkType } from '@store/consts/static'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
-import { TooltipInv } from '@components/TooltipHover/TooltipInv'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
+import { TooltipInv } from '@common/TooltipHover/TooltipInv'
+import { Button } from '@common/Button/Button'
 
 interface IProp {
   fee: number
@@ -139,19 +140,22 @@ const SinglePositionInfo: React.FC<IProp> = ({
                 ? 'Unclaimed fees will be returned when closing the position'
                 : ''
             }>
-            <Button
-              className={classes.closeButton}
-              variant='contained'
-              onClick={() => {
-                closePosition()
-              }}>
-              Close position
-            </Button>
+            <Box>
+              <Button
+                scheme='green'
+                height={36}
+                padding='0 6px'
+                borderRadius={14}
+                onClick={() => {
+                  closePosition()
+                }}>
+                Close position
+              </Button>
+            </Box>
           </TooltipHover>
           <Hidden smUp>
             <Button
-              className={classes.button}
-              variant='contained'
+              scheme='pink'
               onClick={() => {
                 const address1 = addressToTicker(network, tokenX.name)
                 const address2 = addressToTicker(network, tokenY.name)

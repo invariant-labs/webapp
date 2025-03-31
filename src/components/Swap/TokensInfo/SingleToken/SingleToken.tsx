@@ -6,7 +6,7 @@ import icons from '@static/icons'
 import { formatNumberWithSuffix } from '@utils/utils'
 import { VariantType } from 'notistack'
 import { NetworkType } from '@store/consts/static'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 
 interface IProps {
   token: SwapToken | null

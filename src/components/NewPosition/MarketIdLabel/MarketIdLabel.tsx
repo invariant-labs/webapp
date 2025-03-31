@@ -3,7 +3,7 @@ import React from 'react'
 import { useLabelStyles } from './style'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 import { VariantType } from 'notistack'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 
 export interface IProps {
   displayLength: number

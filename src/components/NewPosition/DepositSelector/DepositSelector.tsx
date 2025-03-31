@@ -1,4 +1,4 @@
-import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import AnimatedButton, { ProgressState } from '@common/AnimatedButton/AnimatedButton'
 import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
 import Select from '@components/Inputs/Select/Select'
 import { ALL_FEE_TIERS_DATA, WRAPPED_SOL_ADDRESS } from '@store/consts/static'
@@ -29,7 +29,7 @@ import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButt
 import { useStyles } from './style'
 import { Grid, Typography } from '@mui/material'
 import { PositionOpeningMethod } from '@store/consts/types'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { createButtonActions } from '@utils/uiUtils'
 import icons from '@static/icons'
 
@@ -399,9 +399,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           tokenPrice={priceA}
           currency={tokenA !== null ? tokens[tokenA.toString()].symbol : null}
           currencyIconSrc={tokenA !== null ? tokens[tokenA.toString()].logoURI : undefined}
-          currencyIsUnknown={
-            tokenA !== null ? (tokens[tokenA.toString()].isUnknown ?? false) : false
-          }
+          currencyIsUnknown={tokenA !== null ? tokens[tokenA.toString()].isUnknown ?? false : false}
           placeholder='0.0'
           actionButtons={[
             {
@@ -444,9 +442,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           tokenPrice={priceB}
           currency={tokenB !== null ? tokens[tokenB.toString()].symbol : null}
           currencyIconSrc={tokenB !== null ? tokens[tokenB.toString()].logoURI : undefined}
-          currencyIsUnknown={
-            tokenB !== null ? (tokens[tokenB.toString()].isUnknown ?? false) : false
-          }
+          currencyIsUnknown={tokenB !== null ? tokens[tokenB.toString()].isUnknown ?? false : false}
           placeholder='0.0'
           actionButtons={[
             {
@@ -484,6 +480,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       </Grid>
       {walletStatus !== Status.Initialized ? (
         <ChangeWalletButton
+          margin='30px 0 30px 0'
+          height={48}
           name='Connect wallet'
           onConnect={onConnectWallet}
           connected={false}

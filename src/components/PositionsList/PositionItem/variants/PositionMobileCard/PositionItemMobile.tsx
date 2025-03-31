@@ -3,7 +3,7 @@ import { formatNumberWithSuffix } from '@utils/utils'
 import classNames from 'classnames'
 import { useMemo, useRef, useState } from 'react'
 import { useMobileStyles } from './style/mobile'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { initialXtoY, tickerToAddress } from '@utils/utils'
 import { IPositionItem } from '@components/PositionsList/types'
 import { useSharedStyles } from './style/shared'
@@ -15,7 +15,7 @@ import { blurContent, unblurContent } from '@utils/uiUtils'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { ISinglePositionData } from '@components/OverviewYourPositions/components/Overview/Overview'
 import icons from '@static/icons'
-import { TooltipInv } from '@components/TooltipHover/TooltipInv'
+import { TooltipInv } from '@common/TooltipHover/TooltipInv'
 
 interface IPositionItemMobile extends IPositionItem {
   setAllowPropagation: React.Dispatch<React.SetStateAction<boolean>>

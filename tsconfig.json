@@ -21,6 +21,7 @@
     "paths": {
       "@components/*": ["src/components/*"],
       "@containers/*": ["src/containers/*"],
+      "@common/*": ["src/common/*"],
       "@pages/*": ["src/pages/*"],
       "@static/*": ["src/static/*"],
       "@store/*": ["src/store/*"],

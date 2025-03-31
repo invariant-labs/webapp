@@ -2,7 +2,7 @@ import { social } from '@static/links'
 import icons from '@static/icons'
 import useStyles from './style'
 import { Grid } from '@mui/material'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 
 export const Footer = () => {
   const { classes } = useStyles()

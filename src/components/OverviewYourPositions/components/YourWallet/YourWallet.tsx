@@ -19,7 +19,7 @@ import { addressToTicker, formatNumberWithoutSuffix, ROUTES } from '@utils/utils
 import { useStyles } from './styles'
 import { network } from '@store/selectors/solanaConnection'
 import { MobileCard } from './MobileCard'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 import { shortenAddress } from '@utils/uiUtils'
 import { VariantType } from 'notistack'

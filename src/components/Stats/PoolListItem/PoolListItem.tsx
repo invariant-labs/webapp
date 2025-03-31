@@ -17,7 +17,7 @@ import {
 } from '@utils/utils'
 import { formatNumberWithSuffix } from '@utils/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { VariantType } from 'notistack'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 import { apyToApr } from '@utils/uiUtils'

@@ -1,13 +1,5 @@
-import {
-  Grid,
-  TableRow,
-  TableCell,
-  Button,
-  Typography,
-  useMediaQuery,
-  Box,
-  Skeleton
-} from '@mui/material'
+import { Grid, TableRow, TableCell, Typography, useMediaQuery, Box, Skeleton } from '@mui/material'
+
 import { useMemo, useState } from 'react'
 import { MinMaxChart } from '../../components/MinMaxChart/MinMaxChart'
 import { IPositionItem } from '../../../types'
@@ -16,7 +8,7 @@ import { initialXtoY, tickerToAddress, formatNumberWithoutSuffix } from '@utils/
 import classNames from 'classnames'
 import { useSelector } from 'react-redux'
 import { useSharedStyles } from '../PositionMobileCard/style/shared'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import React from 'react'
 import { blurContent, unblurContent } from '@utils/uiUtils'
 import { singlePositionData } from '@store/selectors/positions'
@@ -24,7 +16,8 @@ import { usePositionTableRowStyle } from './styles/positionTableRow'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { useUnclaimedFee } from '@store/hooks/positionList/useUnclaimedFee'
 import icons from '@static/icons'
-import { TooltipInv } from '@components/TooltipHover/TooltipInv'
+import { TooltipInv } from '@common/TooltipHover/TooltipInv'
+import { Button } from '@common/Button/Button'
 
 interface ILoadingStates {
   pairName?: boolean
@@ -272,7 +265,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
 
     return (
       <Button
-        className={classes.button}
+        scheme='green'
         onClick={e => {
           e.stopPropagation()
           handleClick(e)

@@ -1,4 +1,4 @@
-import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import PositionDetails from '@components/PositionDetails/PositionDetails'
 import { Grid, useMediaQuery } from '@mui/material'
 import loader from '@static/gif/loader.gif'
@@ -38,7 +38,6 @@ import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/lib/utils'
 import { MAX_TICK, Pair } from '@invariant-labs/sdk/src'
 import { theme } from '@static/theme'
-import icons from '@static/icons'
 
 export interface IProps {
   id: string
@@ -546,15 +545,12 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
           newVersion
           themeDark
           style={isMobile ? { paddingTop: 8 } : {}}
-          onAction={() => {
-            navigate('/newPosition/0_01')
-          }}
           roundedCorners={true}
-          desc='or start exploring liquidity pools now!'
-          buttonName='Explore pools'
+          mainTitle='Wallet is not connected'
+          desc='No liquidity positions to show'
+          withButton={false}
           connectButton={true}
           onAction2={() => dispatch(walletActions.connect(false))}
-          img={icons.NoConnected}
         />
       </Grid>
     )

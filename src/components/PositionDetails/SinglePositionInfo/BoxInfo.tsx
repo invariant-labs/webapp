@@ -1,4 +1,4 @@
-import { Button, Grid, Typography, useMediaQuery } from '@mui/material'
+import { Grid, Typography, useMediaQuery } from '@mui/material'
 import loader from '@static/gif/loading.gif'
 import {
   formatNumberWithSuffix,
@@ -12,9 +12,10 @@ import loadingAnimation from '@static/gif/loading.gif'
 import { ILiquidityToken } from './consts'
 import useStyles from './style'
 import { FormatNumberThreshold, PrefixConfig } from '@store/consts/types'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import icons from '@static/icons'
 import { theme } from '@static/theme'
+import { Button } from '@common/Button/Button'
 
 export interface BoxInfoToken extends Omit<ILiquidityToken, 'claimValue' | 'liqValue'> {
   value: number
@@ -89,8 +90,10 @@ export const BoxInfo: React.FC<{
         <Typography className={classes.title}> {title}</Typography>
         {onClickButton ? (
           <Button
-            className={classes.violetButton}
-            variant='contained'
+            scheme='pink'
+            height={32}
+            padding='0 24px'
+            borderRadius={12}
             onClick={onClickButton}
             disabled={
               Math.abs(Number(tokenA.value)) < 10 ** Number(-tokenA.decimal) &&

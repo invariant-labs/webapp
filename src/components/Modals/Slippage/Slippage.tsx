@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import useStyles from './style'
-import { Box, Button, Grid, Input, Popover, Typography } from '@mui/material'
+import { Box, Button as MuiButton, Grid, Input, Popover, Typography } from '@mui/material'
 import classNames from 'classnames'
+import { Button } from '@common/Button/Button'
 
 interface Props {
   open: boolean
@@ -116,12 +117,16 @@ const Slippage: React.FC<Props> = ({
         <Grid container className={classes.detailsWrapper}>
           <Grid container className={classes.headerWrapper}>
             <Typography component='h2'>{headerText ?? 'Exchange Settings'}</Typography>
-            <Button className={classes.selectTokenClose} onClick={handleClose} aria-label='Close' />
+            <MuiButton
+              className={classes.selectTokenClose}
+              onClick={handleClose}
+              aria-label='Close'
+            />
           </Grid>
           <Typography className={classes.label}>Slippage tolerance</Typography>
           <Grid container gap='9px'>
             {slippageTiers.map((tier, index) => (
-              <Button
+              <MuiButton
                 key={tier}
                 className={classNames(classes.slippagePercentageButton, {
                   [classes.slippagePercentageButtonActive]: index === tierIndex
@@ -131,7 +136,7 @@ const Slippage: React.FC<Props> = ({
                   handleClose()
                 }}>
                 {tier}%
-              </Button>
+              </MuiButton>
             ))}
           </Grid>
           <Box marginTop='6px'>
@@ -153,10 +158,12 @@ const Slippage: React.FC<Props> = ({
               ref={inputRef}
               startAdornment='Custom'
               endAdornment={
-                <>
+                <Box className={classes.button}>
                   %
-                  <button
-                    className={classes.detailsInfoBtn}
+                  <Button
+                    height={'28px'}
+                    borderRadius={8}
+                    scheme='green'
                     onClick={() => {
                       setSlippTolerance(Number(slippTolerance).toFixed(2))
                       setSlippage(String(Number(slippTolerance).toFixed(2)))
@@ -164,8 +171,8 @@ const Slippage: React.FC<Props> = ({
                       handleClose()
                     }}>
                     Save
-                  </button>
-                </>
+                  </Button>
+                </Box>
               }
               classes={{
                 input: classes.innerInput,

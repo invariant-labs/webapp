@@ -1,5 +1,5 @@
 import Select from '@components/Inputs/Select/Select'
-import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
+import { OutlinedButton } from '@common/OutlinedButton/OutlinedButton'
 import { Grid, Input, Typography, useMediaQuery } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
 import { formatNumberWithoutSuffix, formatNumberWithSuffix, trimDecimalZeros } from '@utils/utils'
@@ -11,7 +11,7 @@ import { PublicKey } from '@solana/web3.js'
 import { NetworkType } from '@store/consts/static'
 
 import { getButtonClassName } from '@utils/uiUtils'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { theme } from '@static/theme'
 
 interface ActionButton {

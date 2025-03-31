@@ -1,8 +1,8 @@
-import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import AnimatedButton, { ProgressState } from '@common/AnimatedButton/AnimatedButton'
 import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import Slippage from '@components/Modals/Slippage/Slippage'
-import Refresher from '@components/Refresher/Refresher'
+import Refresher from '@common/Refresher/Refresher'
 import { BN } from '@project-serum/anchor'
 import { Box, Button, Grid, Typography } from '@mui/material'
 
@@ -40,7 +40,7 @@ import { PoolWithAddress } from '@store/reducers/pools'
 import { PublicKey } from '@solana/web3.js'
 import { Decimal, Tick, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL, fromFee, SimulationStatus } from '@invariant-labs/sdk/lib/utils'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import icons from '@static/icons'
 
 export interface Pools {
@@ -916,11 +916,11 @@ export const Swap: React.FC<ISwap> = ({
         />
         {walletStatus !== Status.Initialized && getStateMessage() !== 'Loading' ? (
           <ChangeWalletButton
+            height={48}
             name='Connect wallet'
             onConnect={onConnectWallet}
             connected={false}
             onDisconnect={onDisconnectWallet}
-            className={classes.connectWalletButton}
           />
         ) : getStateMessage() === 'Insufficient Wrapped SOL' ? (
           <TooltipHover

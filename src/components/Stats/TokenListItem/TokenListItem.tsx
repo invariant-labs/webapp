@@ -7,7 +7,7 @@ import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import { formatNumberWithSuffix, shortenAddress } from '@utils/utils'
 import { NetworkType, SortTypeTokenList } from '@store/consts/static'
 import icons from '@static/icons'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 import { VariantType } from 'notistack'
 

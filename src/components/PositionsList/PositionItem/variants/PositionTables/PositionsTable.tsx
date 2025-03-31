@@ -13,7 +13,7 @@ import { PositionTableRow } from './PositionsTableRow'
 import { IPositionItem } from '../../../types'
 import { useNavigate } from 'react-router-dom'
 import { usePositionTableStyle } from './styles/positionTable'
-import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { generatePositionTableLoadingData, ROUTES } from '@utils/utils'
 
 interface IPositionsTableProps {

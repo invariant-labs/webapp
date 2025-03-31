@@ -9,7 +9,7 @@ import { PublicKey } from '@solana/web3.js'
 import { NetworkType } from '@store/consts/static'
 import CustomScrollbar from '../CustromScrollbar/CustomScrollbar'
 import Scrollbars from 'rc-scrollbars'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import {
   Button,
   CardMedia,

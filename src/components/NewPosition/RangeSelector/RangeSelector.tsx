@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import PriceRangePlot, { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
+import PriceRangePlot, { TickPlotPositionData } from '@common/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import { PlotTickData } from '@store/reducers/positions'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
@@ -20,7 +20,7 @@ import {
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Typography } from '@mui/material'
 import icons from '@static/icons'
-import { TooltipInv } from '@components/TooltipHover/TooltipInv'
+import { TooltipInv } from '@common/TooltipHover/TooltipInv'
 
 export interface IRangeSelector {
   updatePath: (concIndex: number) => void
