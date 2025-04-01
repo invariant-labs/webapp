@@ -19,6 +19,7 @@ import {
   convertBalanceToBN,
   findPairs,
   handleSimulate,
+  initialXtoY,
   printBN,
   ROUTES,
   trimLeadingZeros
@@ -165,7 +166,10 @@ export const Swap: React.FC<ISwap> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
   const [inputRef, setInputRef] = React.useState<string>(inputTarget.DEFAULT)
-  const [rateReversed, setRateReversed] = React.useState<boolean>(false)
+  const [rateReversed, setRateReversed] = React.useState<boolean>(
+    tokenFrom && tokenTo ? !initialXtoY(tokenFrom.toString(), tokenTo.toString()) : false
+  )
+  const [rateLoading, setRateLoading] = React.useState<boolean>(false)
   const [refresherTime, setRefresherTime] = React.useState<number>(REFRESHER_INTERVAL)
   const [hideUnknownTokens, setHideUnknownTokens] = React.useState<boolean>(
     initialHideUnknownTokensValue
@@ -318,7 +322,10 @@ export const Swap: React.FC<ISwap> = ({
   }, [swap])
 
   useEffect(() => {
-    setRateReversed(false)
+    if (tokenFrom !== null && tokenTo !== null) {
+      setRateReversed(!initialXtoY(tokenFrom.toString(), tokenTo.toString()))
+      setRateLoading(false)
+    }
   }, [tokenFrom, tokenTo])
 
   const getAmountOut = (assetFor: SwapToken) => {
@@ -721,6 +728,7 @@ export const Swap: React.FC<ISwap> = ({
             className={classes.swapArrowBox}
             onClick={() => {
               if (lockAnimation) return
+              setRateLoading(true)
               setLockAnimation(!lockAnimation)
               setRotates(rotates + 1)
               swap !== null ? setSwap(!swap) : setSwap(true)
@@ -883,7 +891,7 @@ export const Swap: React.FC<ISwap> = ({
                 tokenToDecimals={
                   tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].decimals
                 }
-                loading={getStateMessage() === 'Loading'}
+                loading={getStateMessage() === 'Loading' || rateLoading}
               />
             </Box>
           ) : null}
