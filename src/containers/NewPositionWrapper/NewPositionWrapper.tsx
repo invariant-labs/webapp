@@ -3,7 +3,6 @@ import NewPosition from '@components/NewPosition/NewPosition'
 import {
   ALL_FEE_TIERS_DATA,
   DEFAULT_NEW_POSITION_SLIPPAGE,
-  bestTiers,
   commonTokensForNetworks
 } from '@store/consts/static'
 import { PositionOpeningMethod, TokenPriceData } from '@store/consts/types'
@@ -48,7 +47,8 @@ import { InitMidPrice } from '@common/PriceRangePlot/PriceRangePlot'
 import { getMarketAddress, Pair } from '@invariant-labs/sdk'
 import { getLiquidityByX, getLiquidityByY } from '@invariant-labs/sdk/lib/math'
 import { calculatePriceSqrt } from '@invariant-labs/sdk/src'
-
+import { actions as statsActions } from '@store/reducers/stats'
+import { isLoading, poolsStatsWithTokensDetails } from '@store/selectors/stats'
 export interface IProps {
   initialTokenFrom: string
   initialTokenTo: string
@@ -81,6 +81,9 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const { data: ticksData, loading: ticksLoading, hasError: hasTicksError } = useSelector(plotTicks)
 
   const isFetchingNewPool = useSelector(isLoadingLatestPoolsForTransaction)
+
+  const poolsList = useSelector(poolsStatsWithTokensDetails)
+  const isLoadingStats = useSelector(isLoading)
 
   const isTimeoutError = useSelector(timeoutError)
   const isCurrentlyLoadingTokens = useSelector(isLoadingTokens)
@@ -689,6 +692,28 @@ export const NewPositionWrapper: React.FC<IProps> = ({
     }
   }, [isTimeoutError])
 
+  useEffect(() => {
+    dispatch(statsActions.getCurrentStats())
+  }, [])
+
+  const { feeTiersWithTvl, totalTvl } = useMemo(() => {
+    const feeTiersWithTvl: Record<number, number> = {}
+    let totalTvl = 0
+
+    poolsList.map(pool => {
+      if (!tokenA || !tokenB) return
+      if (
+        (pool.tokenX.equals(tokenA) && pool.tokenY.equals(tokenB)) ||
+        (pool.tokenX.equals(tokenB) && pool.tokenY.equals(tokenA))
+      ) {
+        feeTiersWithTvl[pool.fee] = pool.tvl
+        totalTvl += pool.tvl
+      }
+    })
+
+    return { feeTiersWithTvl, totalTvl }
+  }, [poolsList, tokenA, tokenB])
+
   return (
     <NewPosition
       initialTokenFrom={initialTokenFrom}
@@ -844,7 +869,6 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       isWaitingForNewPool={isWaitingForNewPool || initialLoader}
       poolIndex={poolIndex}
       currentPairReversed={currentPairReversed}
-      bestTiers={bestTiers[currentNetwork]}
       currentPriceSqrt={
         poolIndex !== null && !!allPools[poolIndex]
           ? allPools[poolIndex].sqrtPrice.v
@@ -879,6 +903,9 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       initialSlippage={initialSlippage}
       globalPrice={globalPrice}
       canNavigate={canNavigate}
+      feeTiersWithTvl={feeTiersWithTvl}
+      totalTvl={totalTvl}
+      isLoadingStats={isLoadingStats}
     />
   )
 }
