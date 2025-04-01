@@ -1,23 +1,26 @@
 import React, { useState } from 'react'
-
 import useStyles, { useSingleTabStyles, useTabsStyles } from './style'
 import classNames from 'classnames'
-import { Grid, Tab, Tabs } from '@mui/material'
-
+import { Box, Grid, Skeleton, Tab, Tabs, Typography } from '@mui/material'
+import { formatNumberWithSuffix } from '@utils/utils'
 export interface IFeeSwitch {
   onSelect: (value: number) => void
   showOnlyPercents?: boolean
   feeTiers: number[]
-  bestTierIndex?: number
   currentValue: number
+  feeTiersWithTvl: Record<number, number>
+  totalTvl: number
+  isLoadingStats: boolean
 }
 
 export const FeeSwitch: React.FC<IFeeSwitch> = ({
   onSelect,
   showOnlyPercents = false,
   feeTiers,
-  bestTierIndex,
-  currentValue
+  currentValue,
+  feeTiersWithTvl,
+  totalTvl,
+  isLoadingStats
 }) => {
   const { classes } = useStyles()
 
@@ -36,6 +39,10 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
     }
   }
 
+  const bestTierIndex = feeTiers.findIndex(
+    tier => feeTiersWithTvl[tier] === Math.max(...Object.values(feeTiersWithTvl))
+  )
+
   return (
     <Grid className={classes.wrapper}>
       <Tabs
@@ -49,7 +56,37 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
           <Tab
             key={index}
             disableRipple
-            label={showOnlyPercents ? `${tier}%` : `${tier}% fee`}
+            label={
+              <Box className={classes.tabContainer}>
+                {isLoadingStats ? (
+                  <Skeleton height={15} width={60} />
+                ) : (
+                  <Typography
+                    className={classNames(classes.tabTvl, {
+                      [classes.tabSelectedTvl]: currentValue === index || bestTierIndex === index
+                    })}>
+                    TVL{' '}
+                    {feeTiersWithTvl[tier]
+                      ? Math.round((feeTiersWithTvl[tier] / totalTvl) * 100)
+                      : 0}
+                    %
+                  </Typography>
+                )}
+                <Box>{showOnlyPercents ? `${tier}%` : `${tier}% fee`}</Box>
+                {isLoadingStats ? (
+                  <Skeleton height={15} width={60} />
+                ) : (
+                  <Typography
+                    className={classNames(classes.tabTvl, {
+                      [classes.tabSelectedTvl]: currentValue === index || bestTierIndex === index
+                    })}>
+                    {feeTiersWithTvl[tier]
+                      ? `$${+formatNumberWithSuffix(feeTiersWithTvl[tier], true, 18) < 1000 ? (+formatNumberWithSuffix(feeTiersWithTvl[tier], true, 18)).toFixed(2) : formatNumberWithSuffix(feeTiersWithTvl[tier])}`
+                      : 'Not created'}
+                  </Typography>
+                )}
+              </Box>
+            }
             classes={{
               root: classNames(
                 singleTabClasses.root,

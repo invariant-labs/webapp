@@ -3,7 +3,7 @@ import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
 import { ISnackbar } from '@store/reducers/snackbars'
 import { Keypair, PublicKey } from '@solana/web3.js'
-import { BestTier, Chain, PrefixConfig, Token, WalletType } from './types'
+import { Chain, PrefixConfig, Token, WalletType } from './types'
 import { TICK_CROSSES_PER_IX } from '@invariant-labs/sdk/lib/market'
 import icons from '@static/icons'
 
@@ -189,107 +189,6 @@ export const tokens: Record<NetworkType, Token[]> = {
   Devnet: [USDC_DEV, USDT_DEV, BTC_DEV, MSOL_DEV],
   Mainnet: [],
   Testnet: [],
-  Local: []
-}
-
-const mainnetBestTiersCreator = () => {
-  const stableTokens = {
-    USDC: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
-    USDT: new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'),
-    USDH: new PublicKey('USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX'),
-    UXD: new PublicKey('7kbnvuGBxxj8AG9qp8Scn56muWGaRaFqxg1FsRp3PaFT')
-  }
-
-  const unstableTokens = {
-    SOL: new PublicKey('So11111111111111111111111111111111111111112'),
-    stSOL: new PublicKey('7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj'),
-    BTC: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-    ETH: new PublicKey('7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs'),
-    mSOL: new PublicKey('mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So')
-  }
-
-  const bestTiers: BestTier[] = []
-
-  for (let i = 0; i < 4; i++) {
-    const tokenX = Object.values(stableTokens)[i]
-    for (let j = i + 1; j < 4; j++) {
-      const tokenY = Object.values(stableTokens)[j]
-
-      bestTiers.push({
-        tokenX,
-        tokenY,
-        bestTierIndex: 0
-      })
-    }
-  }
-
-  for (let i = 0; i < 5; i++) {
-    const [symbolX, tokenX] = Object.entries(unstableTokens)[i]
-    for (let j = i + 1; j < 5; j++) {
-      const [symbolY, tokenY] = Object.entries(unstableTokens)[j]
-
-      if (symbolX.slice(-3) === 'SOL' && symbolY.slice(-3) === 'SOL') {
-        bestTiers.push({
-          tokenX,
-          tokenY,
-          bestTierIndex: 0
-        })
-      } else {
-        bestTiers.push({
-          tokenX,
-          tokenY,
-          bestTierIndex: 2
-        })
-      }
-    }
-  }
-
-  for (let i = 0; i < 4; i++) {
-    const tokenX = Object.values(stableTokens)[i]
-    for (let j = 0; j < 5; j++) {
-      const tokenY = Object.values(unstableTokens)[j]
-
-      bestTiers.push({
-        tokenX,
-        tokenY,
-        bestTierIndex: 2
-      })
-    }
-  }
-
-  return bestTiers
-}
-
-export const bestTiers: Record<NetworkType, BestTier[]> = {
-  Devnet: [
-    {
-      tokenX: USDC_DEV.address,
-      tokenY: USDT_DEV.address,
-      bestTierIndex: 0
-    },
-    {
-      tokenX: USDC_DEV.address,
-      tokenY: WSOL_DEV.address,
-      bestTierIndex: 2
-    },
-    {
-      tokenX: USDC_DEV.address,
-      tokenY: BTC_DEV.address,
-      bestTierIndex: 2
-    },
-    {
-      tokenX: RENDOGE_DEV.address,
-      tokenY: BTC_DEV.address,
-      bestTierIndex: 4
-    },
-    {
-      tokenX: USDC_DEV.address,
-      tokenY: RENDOGE_DEV.address,
-      bestTierIndex: 4
-    }
-  ],
-  Testnet: [],
-  Mainnet: mainnetBestTiersCreator(),
   Local: []
 }
 
@@ -586,3 +485,5 @@ export const getPopularPools = (network: NetworkType): Pool[] => {
 
 export const MAX_PRIORITY_FEE = 2
 export const DEFAULT_PRIORITY_FEE = 0.0001
+
+export const STATS_CACHE_TIME = 30 * 60 * 1000
