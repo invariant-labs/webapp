@@ -15,6 +15,16 @@ export const useStyles = makeStyles()(() => {
       ...typography.caption1,
       textAlign: 'center',
       top: 40
+    },
+    tabContainer: {
+      display: 'flex',
+      flexDirection: 'column'
+    },
+    tabTvl: {
+      ...typography.caption3
+    },
+    tabSelectedTvl: {
+      color: colors.invariant.textGrey
     }
   }
 })
@@ -23,13 +33,13 @@ export const useTabsStyles = makeStyles()(() => {
   return {
     root: {
       overflow: 'visible',
-      height: 36,
-      minHeight: 36,
+      height: 66,
+      minHeight: 66,
       margin: '4px 4px',
       borderRadius: 10
     },
     indicator: {
-      height: 36,
+      height: 66,
       borderRadius: 10,
       backgroundColor: colors.invariant.light,
       top: 0
@@ -56,27 +66,25 @@ export const useSingleTabStyles = makeStyles()(() => {
       zIndex: 1,
       textTransform: 'none',
       ...typography.body3,
-      height: 36,
-      minHeight: 36,
+      height: 66,
+      minHeight: 66,
       color: colors.invariant.light,
-      paddingInline: 0,
-      minWidth: 65,
-      width: 65,
-      marginRight: '7px',
+      padding: 0,
+      margin: 0,
+      minWidth: 74,
+      width: 74,
+      marginRight: 4,
       position: 'relative',
       overflow: 'visible',
       transition: '300ms',
       borderRadius: 10,
-
       '&:hover': {
         color: colors.invariant.lightHover,
         backgroundColor: colors.invariant.light,
-        height: 36,
         '@media (hover: none)': {
           color: colors.invariant.light
         }
       },
-
       '&:last-of-type': {
         marginRight: 0
       }

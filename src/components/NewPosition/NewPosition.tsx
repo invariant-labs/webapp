@@ -33,7 +33,7 @@ import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
 import PoolInit from './PoolInit/PoolInit'
 import RangeSelector from './RangeSelector/RangeSelector'
 import useStyles from './style'
-import { BestTier, PositionOpeningMethod, TokenPriceData } from '@store/consts/types'
+import { PositionOpeningMethod, TokenPriceData } from '@store/consts/types'
 import { Status } from '@store/reducers/solanaWallet'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { InitMidPrice } from '@common/PriceRangePlot/PriceRangePlot'
@@ -93,7 +93,6 @@ export interface INewPosition {
   isWaitingForNewPool: boolean
   poolIndex: number | null
   currentPairReversed: boolean | null
-  bestTiers: BestTier[]
   currentPriceSqrt: BN
   handleAddToken: (address: string) => void
   commonTokens: PublicKey[]
@@ -129,6 +128,9 @@ export interface INewPosition {
   onConnectWallet: () => void
   onDisconnectWallet: () => void
   canNavigate: boolean
+  feeTiersWithTvl: Record<number, number>
+  totalTvl: number
+  isLoadingStats: boolean
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -157,7 +159,6 @@ export const NewPosition: React.FC<INewPosition> = ({
   isWaitingForNewPool,
   poolIndex,
   currentPairReversed,
-  bestTiers,
   handleAddToken,
   commonTokens,
   initialOpeningPositionMethod,
@@ -189,7 +190,10 @@ export const NewPosition: React.FC<INewPosition> = ({
   walletStatus,
   onConnectWallet,
   onDisconnectWallet,
-  canNavigate
+  canNavigate,
+  feeTiersWithTvl,
+  totalTvl,
+  isLoadingStats
 }) => {
   const { classes } = useStyles()
   const navigate = useNavigate()
@@ -374,15 +378,6 @@ export const NewPosition: React.FC<INewPosition> = ({
       }
     }
   }
-
-  const bestTierIndex =
-    tokenA === null || tokenB === null
-      ? undefined
-      : (bestTiers.find(
-          tier =>
-            (tier.tokenX.equals(tokenA) && tier.tokenY.equals(tokenB)) ||
-            (tier.tokenX.equals(tokenB) && tier.tokenY.equals(tokenA))
-        )?.bestTierIndex ?? undefined)
 
   const getMinSliderIndex = () => {
     let minimumSliderIndex = 0
@@ -809,7 +804,6 @@ export const NewPosition: React.FC<INewPosition> = ({
             }
           }}
           poolIndex={poolIndex}
-          bestTierIndex={bestTierIndex}
           handleAddToken={handleAddToken}
           commonTokens={commonTokens}
           initialHideUnknownTokensValue={initialHideUnknownTokensValue}
@@ -834,6 +828,9 @@ export const NewPosition: React.FC<INewPosition> = ({
           setShouldResetPlot={setShouldResetPlot}
           canNavigate={canNavigate}
           isCurrentPoolExisting={isCurrentPoolExisting}
+          feeTiersWithTvl={feeTiersWithTvl}
+          totalTvl={totalTvl}
+          isLoadingStats={isLoadingStats}
         />
         <Hidden mdUp>
           <Grid container justifyContent='end' mb={2}>

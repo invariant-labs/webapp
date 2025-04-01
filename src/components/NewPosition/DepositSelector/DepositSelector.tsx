@@ -61,7 +61,6 @@ export interface IDepositSelector {
   priceB?: number
   onReverseTokens: () => void
   poolIndex: number | null
-  bestTierIndex?: number
   handleAddToken: (address: string) => void
   commonTokens: PublicKey[]
   initialHideUnknownTokensValue: boolean
@@ -84,6 +83,9 @@ export interface IDepositSelector {
   onDisconnectWallet: () => void
   canNavigate: boolean
   isCurrentPoolExisting: boolean
+  feeTiersWithTvl: Record<number, number>
+  totalTvl: number
+  isLoadingStats: boolean
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -102,7 +104,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   priceB,
   onReverseTokens,
   poolIndex,
-  bestTierIndex,
   handleAddToken,
   commonTokens,
   initialHideUnknownTokensValue,
@@ -124,7 +125,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   onDisconnectWallet,
   solBalance,
   canNavigate,
-  isCurrentPoolExisting
+  isCurrentPoolExisting,
+  feeTiersWithTvl,
+  totalTvl,
+  isLoadingStats
 }) => {
   const { classes } = useStyles()
 
@@ -388,8 +392,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           }}
           feeTiers={feeTiers}
           showOnlyPercents
-          bestTierIndex={bestTierIndex}
           currentValue={feeTierIndex}
+          feeTiersWithTvl={feeTiersWithTvl}
+          totalTvl={totalTvl}
+          isLoadingStats={isLoadingStats}
         />
       </Grid>
 
