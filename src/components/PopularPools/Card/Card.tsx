@@ -78,13 +78,11 @@ const Card: React.FC<ICard> = ({
 
   const handleOpenPosition = () => {
     if (fee === undefined) return
-    const tokenA = addressToTicker(network, tokenAData.address ?? '')
-    const tokenB = addressToTicker(network, tokenBData.address ?? '')
 
     navigate(
       ROUTES.getNewPositionRoute(
-        tokenA,
-        tokenB,
+        tokenAData.symbol,
+        tokenBData.symbol,
         parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))
       ),
       { state: { referer: 'liquidity' } }
@@ -92,13 +90,9 @@ const Card: React.FC<ICard> = ({
   }
 
   const handleOpenSwap = () => {
-    navigate(
-      ROUTES.getExchangeRoute(
-        addressToTicker(network, addressFrom ?? ''),
-        addressToTicker(network, addressTo ?? '')
-      ),
-      { state: { referer: 'liquidity' } }
-    )
+    navigate(ROUTES.getExchangeRoute(tokenAData.symbol, tokenBData.symbol), {
+      state: { referer: 'liquidity' }
+    })
   }
 
   const shortenAddressName = (address: string) =>
