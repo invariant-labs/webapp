@@ -87,18 +87,19 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
   const inputRef = useRef<HTMLInputElement>(null)
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
+    const inputValue = e.target.value.replace(/,/g, '.')
     const onlyNumbersRegex = /^\d*\.?\d*$/
     const trimDecimal = `^\\d*\\.?\\d{0,${decimal}}$`
     const regex = new RegExp(trimDecimal, 'g')
-    if (e.target.value === '' || regex.test(e.target.value)) {
-      if ((typeof limit !== 'undefined' && +e.target.value > limit) || disabled) {
+    if (inputValue === '' || regex.test(inputValue)) {
+      if ((typeof limit !== 'undefined' && +inputValue > limit) || disabled) {
         return
       }
 
-      const startValue = e.target.value
+      const startValue = inputValue
       const caretPosition = e.target.selectionStart
 
-      let parsed = e.target.value
+      let parsed = inputValue
 
       const dotRegex = /^\.\d*$/
       if (dotRegex.test(parsed)) {
@@ -116,10 +117,10 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
           }
         }, 0)
       }
-    } else if (!onlyNumbersRegex.test(e.target.value)) {
+    } else if (!onlyNumbersRegex.test(inputValue)) {
       setValue('')
-    } else if (!regex.test(e.target.value)) {
-      setValue(e.target.value.slice(0, e.target.value.length - 1))
+    } else if (!regex.test(inputValue)) {
+      setValue(inputValue.slice(0, inputValue.length - 1))
     }
   }
 

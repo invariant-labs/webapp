@@ -65,12 +65,13 @@ export const DepositAmountInput: React.FC<IProps> = ({
   const isMd = useMediaQuery(theme.breakpoints.up('md'))
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
+    const inputValue = e.target.value.replace(/,/g, '.')
     const regex = /^\d*\.?\d*$/
-    if (e.target.value === '' || regex.test(e.target.value)) {
-      const startValue = e.target.value
+    if (inputValue === '' || regex.test(inputValue)) {
+      const startValue = inputValue
       const caretPosition = e.target.selectionStart
 
-      let parsed = e.target.value
+      let parsed = inputValue
       const zerosRegex = /^0+\d+\.?\d*$/
       if (zerosRegex.test(parsed)) {
         parsed = parsed.replace(/^0+/, '')
@@ -98,7 +99,7 @@ export const DepositAmountInput: React.FC<IProps> = ({
           }
         }, 0)
       }
-    } else if (!regex.test(e.target.value)) {
+    } else if (!regex.test(inputValue)) {
       setValue('')
     }
   }
