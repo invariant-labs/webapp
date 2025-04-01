@@ -32,14 +32,15 @@ export const SimpleInput: React.FC<IProps> = ({
   const inputRef = useRef<HTMLInputElement>(null)
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
+    const inputValue = e.target.value.replace(/,/g, '.')
     const onlyNumbersRegex = /^\d*\.?\d*$/
     const test = `^\\d*\\.?\\d{0,${decimal}}$`
     const regex = new RegExp(test, 'g')
-    if (e.target.value === '' || regex.test(e.target.value)) {
-      const startValue = e.target.value
+    if (inputValue === '' || regex.test(inputValue)) {
+      const startValue = inputValue
       const caretPosition = e.target.selectionStart
 
-      let parsed = e.target.value
+      let parsed = inputValue
       const zerosRegex = /^0+\d*\.?\d*$/
       if (zerosRegex.test(parsed)) {
         parsed = parsed.replace(/^0+(?!$)/, '')
@@ -61,10 +62,10 @@ export const SimpleInput: React.FC<IProps> = ({
           }
         }, 0)
       }
-    } else if (!onlyNumbersRegex.test(e.target.value)) {
+    } else if (!onlyNumbersRegex.test(inputValue)) {
       return
-    } else if (!regex.test(e.target.value)) {
-      setValue(e.target.value.slice(0, e.target.value.length - 1))
+    } else if (!regex.test(inputValue)) {
+      setValue(inputValue.slice(0, inputValue.length - 1))
     }
   }
   return (
