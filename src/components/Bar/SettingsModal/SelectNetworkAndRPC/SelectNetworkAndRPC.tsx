@@ -5,7 +5,7 @@ import { useStyles } from './style'
 import classNames from 'classnames'
 import { useRef, useState } from 'react'
 import { ISelectNetwork } from '@store/consts/types'
-import { Separator } from '@components/Separator/Separator'
+import { Separator } from '@common/Separator/Separator'
 
 type Props = {
   rpcs: ISelectNetwork[]

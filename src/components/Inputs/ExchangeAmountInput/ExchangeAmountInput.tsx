@@ -1,6 +1,6 @@
 import Select from '@components/Inputs/Select/Select'
-import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
-import { Grid, Input, Tooltip, Typography } from '@mui/material'
+import { OutlinedButton } from '@common/OutlinedButton/OutlinedButton'
+import { Grid, Input, Typography, useMediaQuery } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
 import { formatNumberWithoutSuffix, formatNumberWithSuffix, trimDecimalZeros } from '@utils/utils'
 import { SwapToken } from '@store/selectors/solanaWallet'
@@ -11,6 +11,8 @@ import { PublicKey } from '@solana/web3.js'
 import { NetworkType } from '@store/consts/static'
 
 import { getButtonClassName } from '@utils/uiUtils'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
+import { theme } from '@static/theme'
 
 interface ActionButton {
   label: string
@@ -80,6 +82,8 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
 }) => {
   const hideBalance = balance === '- -' || !balance || hideBalances
   const { classes } = useStyles()
+  const isMd = useMediaQuery(theme.breakpoints.up('md'))
+
   const inputRef = useRef<HTMLInputElement>(null)
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
@@ -216,29 +220,21 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
             priceLoading ? (
               <img src={loadingAnimation} className={classes.loading} alt='loading' />
             ) : tokenPrice ? (
-              <Tooltip
-                enterTouchDelay={0}
+              <TooltipHover
                 title='Estimated USD Value of the Entered Tokens'
                 placement='bottom'
-                classes={{
-                  tooltip: classes.tooltip
-                }}>
+                top={1}
+                left={isMd ? 'auto' : -90}>
                 <Typography className={classes.caption2}>
                   ~${formatNumberWithoutSuffix(usdBalance.toFixed(2))}
                 </Typography>
-              </Tooltip>
+              </TooltipHover>
             ) : (
-              <Tooltip
-                enterTouchDelay={0}
-                title='Cannot fetch price of token'
-                placement='bottom'
-                classes={{
-                  tooltip: classes.tooltip
-                }}>
+              <TooltipHover title='Cannot fetch price of token' placement='bottom' top={1}>
                 <Typography className={classes.noData}>
                   <span className={classes.noDataIcon}>?</span>No data
                 </Typography>
-              </Tooltip>
+              </TooltipHover>
             )
           ) : null}
         </Grid>

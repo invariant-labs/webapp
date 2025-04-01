@@ -5,7 +5,7 @@ import useStyles from './style'
 import { colors } from '@static/theme'
 import { Button, Grid, Input, Typography } from '@mui/material'
 import { formatNumbers, showPrefix } from '@utils/utils'
-import AnimatedNumber from '@components/AnimatedNumber/AnimatedNumber'
+import AnimatedNumber from '@common/AnimatedNumber/AnimatedNumber'
 import { FormatNumberThreshold } from '@store/consts/types'
 
 export interface IRangeInput {

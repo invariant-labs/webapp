@@ -1,8 +1,9 @@
-import { Box, Typography, Button, Skeleton, useMediaQuery } from '@mui/material'
+import { Box, Typography, Skeleton, useMediaQuery } from '@mui/material'
 import { formatNumberWithoutSuffix } from '@utils/utils'
 import { theme } from '@static/theme'
 import loadingAnimation from '@static/gif/loading.gif'
 import { useStyles } from './styles'
+import { Button } from '@common/Button/Button'
 
 interface UnclaimedSectionProps {
   unclaimedTotal: number
@@ -24,22 +25,26 @@ export const UnclaimedSection: React.FC<UnclaimedSectionProps> = ({
         <Box className={classes.container}>
           <Typography className={classes.unclaimedTitle}>Unclaimed fees (total)</Typography>
           {!isLg && (
-            <Button
-              className={classes.claimAllButton}
-              onClick={handleClaimAll}
-              disabled={loading || unclaimedTotal === 0}>
-              {loading ? (
-                <>
-                  <img
-                    src={loadingAnimation}
-                    style={{ height: 25, width: 25, zIndex: 10 }}
-                    alt='loading'
-                  />
-                </>
-              ) : (
-                'Claim All'
-              )}
-            </Button>
+            <Box ml={4}>
+              <Button
+                scheme='green'
+                height={32}
+                padding='0 20px'
+                onClick={handleClaimAll}
+                disabled={loading || unclaimedTotal === 0}>
+                {loading ? (
+                  <>
+                    <img
+                      src={loadingAnimation}
+                      style={{ height: 25, width: 25, zIndex: 10 }}
+                      alt='loading'
+                    />
+                  </>
+                ) : (
+                  'Claim All'
+                )}
+              </Button>
+            </Box>
           )}
         </Box>
 
@@ -52,10 +57,7 @@ export const UnclaimedSection: React.FC<UnclaimedSectionProps> = ({
         )}
       </Box>
       {isLg && (
-        <Button
-          className={classes.claimAllButton}
-          onClick={handleClaimAll}
-          disabled={loading || unclaimedTotal === 0}>
+        <Button scheme='green' height={32} disabled={loading || unclaimedTotal === 0}>
           {loading ? (
             <>
               <img

@@ -1,6 +1,6 @@
-import { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import { ProgressState } from '@common/AnimatedButton/AnimatedButton'
 import Slippage from '@components/Modals/Slippage/Slippage'
-import Refresher from '@components/Refresher/Refresher'
+import Refresher from '@common/Refresher/Refresher'
 import { Box, Button, Grid, Hidden, Typography, useMediaQuery } from '@mui/material'
 
 import {
@@ -36,14 +36,14 @@ import useStyles from './style'
 import { BestTier, PositionOpeningMethod, TokenPriceData } from '@store/consts/types'
 import { Status } from '@store/reducers/solanaWallet'
 import { SwapToken } from '@store/selectors/solanaWallet'
-import { InitMidPrice } from '@components/PriceRangePlot/PriceRangePlot'
+import { InitMidPrice } from '@common/PriceRangePlot/PriceRangePlot'
 import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
-import { INoConnected } from '@components/NoConnected/NoConnected'
+import { INoConnected } from '@common/NoConnected/NoConnected'
 import { fromFee, getConcentrationArray, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { getMaxTick } from '@invariant-labs/sdk/src/utils'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import icons from '@static/icons'
 import { theme } from '@static/theme'
 
@@ -572,7 +572,7 @@ export const NewPosition: React.FC<INewPosition> = ({
         <Box className={classes.titleContainer}>
           <Typography className={classes.title}>Add new position</Typography>
           {poolIndex !== null && tokenA !== tokenB && !isMd && (
-            <TooltipHover text='Refresh'>
+            <TooltipHover title='Refresh'>
               <Box>
                 <Refresher
                   currentIndex={refresherTime}
@@ -596,7 +596,7 @@ export const NewPosition: React.FC<INewPosition> = ({
               />
             ) : null}
             {poolAddress && (
-              <TooltipHover text='Open pool in explorer'>
+              <TooltipHover title='Open pool in explorer'>
                 <Grid width={'12px'} height={'24px'}>
                   <a
                     href={`https://solscan.io/account/${poolAddress}${networkUrl}`}
@@ -646,7 +646,7 @@ export const NewPosition: React.FC<INewPosition> = ({
                 )}
               </Hidden>
               {poolIndex !== null && tokenA !== tokenB && isMd && (
-                <TooltipHover text='Refresh'>
+                <TooltipHover title='Refresh'>
                   <Box>
                     <Refresher
                       currentIndex={refresherTime}
@@ -660,7 +660,7 @@ export const NewPosition: React.FC<INewPosition> = ({
                 </TooltipHover>
               )}
               {poolIndex !== null && (
-                <TooltipHover text='Settings'>
+                <TooltipHover title='Settings'>
                   <Button
                     onClick={handleClickSettings}
                     className={classes.settingsIconBtn}

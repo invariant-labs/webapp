@@ -1,18 +1,19 @@
-import { Box, Grid, Typography } from '@mui/material'
+import { Grid, useMediaQuery } from '@mui/material'
 import useStyles from './styles'
-import icons from '@static/icons'
-import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 import { useDispatch, useSelector } from 'react-redux'
 import { Status, actions as walletActions } from '@store/reducers/solanaWallet'
 import { useMemo } from 'react'
 import { status } from '@store/selectors/solanaWallet'
 import { UserOverview } from '@components/OverviewYourPositions/UserOverview'
 import WrappedPositionsList from '@containers/WrappedPositionsList/WrappedPositionsList'
+import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
+import { theme } from '@static/theme'
 
 const PortfolioPage: React.FC = () => {
   const { classes } = useStyles()
   const dispatch = useDispatch()
   const walletStatus = useSelector(status)
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
 
   const isConnected = useMemo(() => walletStatus === Status.Initialized, [walletStatus])
 
@@ -25,22 +26,19 @@ const PortfolioPage: React.FC = () => {
             <WrappedPositionsList />
           </>
         ) : (
-          <Box className={classes.notConnectedPlaceholder}>
-            <img src={icons.empty} className={classes.emptyIcon} />
-            <Typography component='h1'>Wallet is not connected</Typography>
-            <Typography component='h2'>No liquidity positions to show.</Typography>
-            <ChangeWalletButton
-              name='Connect wallet'
-              onConnect={() => {
-                dispatch(walletActions.connect(false))
-              }}
-              onDisconnect={() => {
-                dispatch(walletActions.disconnect())
-              }}
-              connected={false}
-              className={classes.button}
+          <Grid className={classes.emptyContainer}>
+            <EmptyPlaceholder
+              newVersion
+              themeDark
+              style={isSm ? { paddingTop: 8 } : {}}
+              roundedCorners={true}
+              mainTitle='Wallet is not connected'
+              desc='No liquidity positions to show'
+              withButton={false}
+              connectButton={true}
+              onAction2={() => dispatch(walletActions.connect(false))}
             />
-          </Box>
+          </Grid>
         )}
       </Grid>
     </Grid>
