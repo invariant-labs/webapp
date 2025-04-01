@@ -9,13 +9,7 @@ import icons from '@static/icons'
 import StatsLabel from './StatsLabel/StatsLabel'
 import { Button } from '@common/Button/Button'
 
-import {
-  addressToTicker,
-  formatNumberWithSuffix,
-  initialXtoY,
-  parseFeeToPathFee,
-  ROUTES
-} from '@utils/utils'
+import { formatNumberWithSuffix, initialXtoY, parseFeeToPathFee, ROUTES } from '@utils/utils'
 import { useNavigate } from 'react-router-dom'
 import { NetworkType } from '@store/consts/static'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
@@ -40,7 +34,6 @@ const Card: React.FC<ICard> = ({
   symbolFrom,
   symbolTo,
   volume,
-  network,
   showAPY
 }) => {
   const { classes } = useStyles()
