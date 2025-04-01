@@ -45,6 +45,15 @@ const Liquidity: React.FC<LiquidityInterface> = ({
   const isLower = liquidityPercent < 0
   const percentage = isLoading ? Math.random() * 200 - 100 : liquidityPercent
 
+  const cleanedData = data.length
+    ? data
+        .filter(item => item.value !== null && item.value !== undefined && !isNaN(item.value))
+        .map(({ timestamp, value }) => ({
+          x: new Date(timestamp),
+          y: value
+        }))
+    : [{ x: new Date(), y: 0 }]
+
   return (
     <Grid
       className={classNames(classes.container, className, { [classes.loadingOverlay]: isLoading })}>
@@ -74,15 +83,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
       </Grid>
       <Grid className={classes.barContainer}>
         <ResponsiveLine
-          data={[
-            {
-              id: 'liquidity',
-              data: data.map(({ timestamp, value }) => ({
-                x: new Date(timestamp).toLocaleDateString('en-GB'),
-                y: value
-              }))
-            }
-          ]}
+          data={[{ id: 'liquidity', data: cleanedData }]}
           margin={
             isMobile
               ? { top: 24, bottom: 24, left: 30, right: 12 }
@@ -94,6 +95,17 @@ const Liquidity: React.FC<LiquidityInterface> = ({
             precision: 'day',
             useUTC: false
           }}
+          yScale={{
+            type: 'linear'
+          }}
+          debugMesh={false}
+          areaBlendMode='normal'
+          areaOpacity={0.2}
+          areaBaselineValue={0}
+          enableCrosshair={true}
+          enableSlices={false}
+          debugSlices={false}
+          sliceTooltip={() => null}
           axisBottom={{
             tickSize: 0,
             tickPadding: 10,
@@ -118,10 +130,27 @@ const Liquidity: React.FC<LiquidityInterface> = ({
               </g>
             )
           }}
+          layers={[
+            'grid',
+            'markers',
+            'axes',
+            'areas',
+            'lines',
+            'points',
+            'slices',
+            'mesh',
+            'legends'
+          ]}
+          pointLabel='y'
+          pointSize={6}
           gridYValues={5}
+          enablePointLabel
+          pointBorderColor={{ from: 'color', modifiers: [['darker', 0.3]] }}
+          pointBorderWidth={1}
           legends={[]}
           axisTop={null}
           axisRight={null}
+          pointColor={{ theme: 'background' }}
           curve={'monotoneX'}
           role='aplication'
           enableGridX={false}

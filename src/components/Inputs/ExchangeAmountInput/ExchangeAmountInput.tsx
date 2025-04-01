@@ -213,7 +213,15 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
             {tokenIcon.slice(0, 8)}
             {tokenIcon.length > 8 ? '...' : ''}
           </Typography>
-          {showMaxButton && <>{actionButtons.map(renderActionButton)}</>}
+          {showMaxButton && (
+            <>
+              {actionButtons.map((button, index) => (
+                <React.Fragment key={button.label || index}>
+                  {renderActionButton(button)}
+                </React.Fragment>
+              ))}
+            </>
+          )}
         </Grid>
 
         <Grid className={classes.percentages} container>

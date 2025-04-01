@@ -57,7 +57,7 @@ export const LegendOverview: React.FC<LegendOverviewProps> = ({
             tokenColorOverrides
           )
           return (
-            <Grid item container className={classes.tokenRow}>
+            <Grid key={position.token} item container className={classes.tokenRow}>
               <Grid item xs={2} alignContent='center' className={classes.logoContainer}>
                 <img src={position.logo} alt={`${position.token} logo`} className={classes.logo} />
               </Grid>
