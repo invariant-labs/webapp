@@ -191,8 +191,14 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
         _state: AutocompleteRenderOptionState,
         _ownerState: AutocompleteOwnerState<ISearchToken, true, false, false, 'div'>
       ): React.ReactNode => {
+        const { key, ...autocompletePropsWithoutKey } = autocompleteProps
+
         return (
-          <Box component='li' {...autocompleteProps} sx={{ padding: '0 !important' }}>
+          <Box
+            component='li'
+            key={key}
+            {...autocompletePropsWithoutKey}
+            sx={{ padding: '0 !important' }}>
             <TokenOption option={option} networkUrl={networkUrl} isSmall={isSmall} />
           </Box>
         )
@@ -202,9 +208,17 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
 
     const renderTags = useCallback(
       (value: ISearchToken[], getTagProps: AutocompleteRenderGetTagProps) =>
-        value.map((option, index) => (
-          <TokenChip option={option} onRemove={handleRemoveToken} {...getTagProps({ index })} />
-        )),
+        value.map((option, index) => {
+          const { key, ...tagPropsWithoutKey } = getTagProps({ index })
+          return (
+            <TokenChip
+              key={key}
+              option={option}
+              onRemove={handleRemoveToken}
+              {...tagPropsWithoutKey}
+            />
+          )
+        }),
       [handleRemoveToken]
     )
 

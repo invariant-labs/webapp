@@ -38,7 +38,6 @@ export const PopularPoolsWrapper: React.FC = () => {
 
     let popularPools = getPopularPools(currentNetwork)
     if (popularPools.length === 0) {
-      console.log(2)
       popularPools = poolsList
         .sort((a, b) => b.volume24 - a.volume24)
         .slice(0, 4)

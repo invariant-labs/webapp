@@ -10,7 +10,7 @@ export const useStyles = makeStyles()(() => ({
     '&:nth-of-type(even)': {
       background: colors.invariant.componentDark
     },
-    '&:first-child': {
+    '&:first-of-type': {
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
       background: colors.invariant.component,

@@ -1627,14 +1627,7 @@ export const stringToFixed = (
 }
 
 export const tickerToAddress = (network: NetworkType, ticker: string): string => {
-  try {
-    return getAddressTickerMap(network)[ticker] || ticker
-  } catch (e: unknown) {
-    const error = ensureError(e)
-    console.log(error)
-
-    return ticker
-  }
+  return getAddressTickerMap(network)[ticker] || ticker
 }
 
 export const addressToTicker = (network: NetworkType, address: string): string => {
@@ -1730,8 +1723,8 @@ export const generatePositionTableLoadingData = () => {
       return {
         id: `loading-${index}`,
         address: `pool-${index}`,
-        tokenXName: 'FOO',
-        tokenYName: 'BAR',
+        tokenXName: 'ETH',
+        tokenYName: 'USDC',
         tokenXIcon: undefined,
         tokenYIcon: undefined,
         currentPrice,

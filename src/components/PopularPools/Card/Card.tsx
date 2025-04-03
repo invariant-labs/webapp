@@ -145,10 +145,10 @@ const Card: React.FC<ICard> = ({
                 </Box>
               </Grid>
 
-              <Typography className={classes.symbolsContainer}>
+              <Box className={classes.symbolsContainer}>
                 {shortenAddressName(tokenAData.symbol ?? '')} -{' '}
                 {shortenAddressName(tokenBData.symbol ?? '')}
-              </Typography>
+              </Box>
               <Grid container gap='8px'>
                 {apy !== undefined && showAPY && (
                   <StatsLabel

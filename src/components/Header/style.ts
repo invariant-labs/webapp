@@ -49,10 +49,7 @@ const useStyles = makeStyles()((theme: Theme) => {
       borderRadius: '10px',
       transition: 'left 300ms',
       width: 'fit-content',
-      display: 'block',
-      '@media (max-width: 1450px)': {
-        display: 'none'
-      }
+      display: 'block'
     },
     connectedWalletIcon: {
       minWidth: 21,

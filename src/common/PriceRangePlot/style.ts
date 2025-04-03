@@ -21,27 +21,26 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     width: 18,
     height: 'auto',
     fill: '#111931',
-
     [theme.breakpoints.down('md')]: {
       width: 22
     }
   },
 
   zoomButtonsWrapper: {
-    display: 'flex',
-    alignItems: 'flex-end',
     justifyContent: 'space-between',
     position: 'absolute',
     top: 0,
     right: 8,
-    maxWidth: 21,
     height: 64,
     zIndex: 10,
-    flexDirection: 'row',
+    display: 'flex',
+    alignItems: 'flex-end',
+    flexDirection: 'column',
 
     [theme.breakpoints.down('md')]: {
       flexDirection: 'row',
       maxWidth: 92,
+      gap: 10,
       height: 40
     }
   },

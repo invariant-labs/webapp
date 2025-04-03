@@ -11,7 +11,7 @@ export const useMobileSkeletonStyles = makeStyles()(() => ({
     padding: '8px',
     background: colors.invariant.component,
     borderRadius: '24px',
-    '&:first-child': {
+    '&:first-of-type': {
       marginTop: '16px'
     },
     marginBottom: '16px'

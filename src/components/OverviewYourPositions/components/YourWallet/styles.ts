@@ -116,7 +116,7 @@ export const useStyles = makeStyles<{ isLoading: boolean; isScrollHide: boolean 
       overflowY: 'auto',
       paddingRight: '4px',
       [theme.breakpoints.down('lg')]: {
-        '&:not(:first-child)': {
+        '&:not(:first-of-type)': {
           marginTop: '20px'
         }
       },
@@ -223,7 +223,7 @@ export const useStyles = makeStyles<{ isLoading: boolean; isScrollHide: boolean 
       borderRadius: '16px',
       maxHeight: '107px',
       padding: '16px',
-      '&:not(:first-child)': {
+      '&:not(:first-of-type)': {
         marginTop: '8px'
       }
     },

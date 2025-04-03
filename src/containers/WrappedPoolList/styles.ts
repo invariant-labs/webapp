@@ -27,22 +27,6 @@ export const useStyles = makeStyles<{ isXs: boolean }>()((theme: Theme, { isXs }
     height: 150,
     margin: 'auto'
   },
-  plot: {
-    width: 524,
-
-    '&:first-child': {
-      marginRight: 24
-    },
-
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-
-      '&:first-child': {
-        marginRight: 0,
-        marginBottom: 24
-      }
-    }
-  },
 
   searchIcon: {
     width: 17
