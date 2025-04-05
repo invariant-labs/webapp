@@ -399,7 +399,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           isLoadingStats={isLoadingStats}
         />
       </Grid>
-
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
       <Grid container className={classes.sectionWrapper}>
         <DepositAmountInput
