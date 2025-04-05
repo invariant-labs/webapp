@@ -61,29 +61,33 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
                 {isLoadingStats ? (
                   <Skeleton height={15} width={60} />
                 ) : (
-                  <Typography
-                    className={classNames(classes.tabTvl, {
-                      [classes.tabSelectedTvl]: currentValue === index || bestTierIndex === index
-                    })}>
-                    TVL{' '}
-                    {feeTiersWithTvl[tier]
-                      ? Math.round((feeTiersWithTvl[tier] / totalTvl) * 100)
-                      : 0}
-                    %
-                  </Typography>
+                  currentValue === index && (
+                    <Typography
+                      className={classNames(classes.tabTvl, {
+                        [classes.tabSelectedTvl]: currentValue === index || bestTierIndex === index
+                      })}>
+                      TVL{' '}
+                      {feeTiersWithTvl[tier]
+                        ? Math.round((feeTiersWithTvl[tier] / totalTvl) * 100)
+                        : 0}
+                      %
+                    </Typography>
+                  )
                 )}
                 <Box>{showOnlyPercents ? `${tier}%` : `${tier}% fee`}</Box>
                 {isLoadingStats ? (
                   <Skeleton height={15} width={60} />
                 ) : (
-                  <Typography
-                    className={classNames(classes.tabTvl, {
-                      [classes.tabSelectedTvl]: currentValue === index || bestTierIndex === index
-                    })}>
-                    {feeTiersWithTvl[tier]
-                      ? `$${+formatNumberWithSuffix(feeTiersWithTvl[tier], true, 18) < 1000 ? (+formatNumberWithSuffix(feeTiersWithTvl[tier], true, 18)).toFixed(2) : formatNumberWithSuffix(feeTiersWithTvl[tier])}`
-                      : 'Not created'}
-                  </Typography>
+                  currentValue === index && (
+                    <Typography
+                      className={classNames(classes.tabTvl, {
+                        [classes.tabSelectedTvl]: currentValue === index || bestTierIndex === index
+                      })}>
+                      {feeTiersWithTvl[tier]
+                        ? `$${+formatNumberWithSuffix(feeTiersWithTvl[tier], true, 18) < 1000 ? (+formatNumberWithSuffix(feeTiersWithTvl[tier], true, 18)).toFixed(2) : formatNumberWithSuffix(feeTiersWithTvl[tier])}`
+                        : 'Not created'}
+                    </Typography>
+                  )
                 )}
               </Box>
             }
