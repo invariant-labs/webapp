@@ -386,6 +386,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         </Grid>
 
         <FeeSwitch
+          showTVL={tokenA !== null && tokenB !== null}
           onSelect={fee => {
             setPositionTokens(tokenA, tokenB, fee)
             setShouldResetPlot(true)
@@ -405,9 +406,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           tokenPrice={priceA}
           currency={tokenA !== null ? tokens[tokenA.toString()].symbol : null}
           currencyIconSrc={tokenA !== null ? tokens[tokenA.toString()].logoURI : undefined}
-          currencyIsUnknown={
-            tokenA !== null ? (tokens[tokenA.toString()].isUnknown ?? false) : false
-          }
+          currencyIsUnknown={tokenA !== null ? tokens[tokenA.toString()].isUnknown ?? false : false}
           placeholder='0.0'
           actionButtons={[
             {
@@ -450,9 +449,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           tokenPrice={priceB}
           currency={tokenB !== null ? tokens[tokenB.toString()].symbol : null}
           currencyIconSrc={tokenB !== null ? tokens[tokenB.toString()].logoURI : undefined}
-          currencyIsUnknown={
-            tokenB !== null ? (tokens[tokenB.toString()].isUnknown ?? false) : false
-          }
+          currencyIsUnknown={tokenB !== null ? tokens[tokenB.toString()].isUnknown ?? false : false}
           placeholder='0.0'
           actionButtons={[
             {
