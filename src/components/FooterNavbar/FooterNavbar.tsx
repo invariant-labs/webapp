@@ -50,8 +50,24 @@ export const FooterNavbar = () => {
     portfolio: [/^portfolio\/*/, /^newPosition\/*/, /^position\/*/]
   }
 
+  const [display, setDisplay] = useState(true)
+
+  useEffect(() => {
+    const resizeHandler = () => {
+      if (window.visualViewport?.height)
+        setDisplay(window.innerHeight < window.visualViewport?.height * 1.1)
+    }
+
+    window.visualViewport!.addEventListener('resize', resizeHandler)
+
+    return () => window.visualViewport!.addEventListener('resize', resizeHandler)
+  }, [])
+
   return (
-    <Box component='footer' className={classes.navbar}>
+    <Box
+      component='footer'
+      className={classes.navbar}
+      style={{ display: display ? 'flex' : 'none' }}>
       {links.map(link => {
         const active =
           link.url === activePath ||

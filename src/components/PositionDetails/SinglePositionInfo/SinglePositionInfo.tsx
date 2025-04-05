@@ -1,4 +1,4 @@
-import { Button, Grid, Hidden, Tooltip, Typography } from '@mui/material'
+import { Box, Grid, Hidden, Typography, useMediaQuery } from '@mui/material'
 import classNames from 'classnames'
 import React from 'react'
 import { BoxInfo } from './BoxInfo'
@@ -9,7 +9,10 @@ import { TokenPriceData } from '@store/consts/types'
 import icons from '@static/icons'
 import { addressToTicker, ROUTES } from '@utils/utils'
 import { NetworkType } from '@store/consts/static'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
+import { TooltipInv } from '@common/TooltipHover/TooltipInv'
+import { Button } from '@common/Button/Button'
+import { theme } from '@static/theme'
 
 interface IProp {
   fee: number
@@ -43,7 +46,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
   network
 }) => {
   const navigate = useNavigate()
-
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
   const { classes } = useStyles()
 
   return (
@@ -56,7 +59,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
               src={xToY ? tokenX.icon : tokenY.icon}
               alt={xToY ? tokenX.name : tokenY.name}
             />
-            <TooltipHover text='Reverse tokens'>
+            <TooltipHover title='Reverse tokens'>
               <img
                 className={classes.arrowIcon}
                 src={icons.swapListIcon}
@@ -76,8 +79,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
             </Grid>
           </Grid>
           <Grid className={classes.rangeGrid} sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <Tooltip
-              enterTouchDelay={0}
+            <TooltipInv
               title={
                 isActive ? (
                   <>
@@ -92,9 +94,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
                 )
               }
               placement='top'
-              classes={{
-                tooltip: classes.tooltip
-              }}>
+              top={1}>
               <Typography
                 className={classNames(
                   classes.text,
@@ -103,14 +103,13 @@ const SinglePositionInfo: React.FC<IProp> = ({
                 )}>
                 {fee.toString()}% fee
               </Typography>
-            </Tooltip>
+            </TooltipInv>
           </Grid>
         </Grid>
 
         <Grid className={classes.headerButtons}>
           <Grid className={classes.rangeGrid} sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <Tooltip
-              enterTouchDelay={0}
+            <TooltipInv
               title={
                 isActive ? (
                   <>
@@ -125,9 +124,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
                 )
               }
               placement='top'
-              classes={{
-                tooltip: classes.tooltip
-              }}>
+              top={1}>
               <Typography
                 className={classNames(
                   classes.text,
@@ -136,27 +133,35 @@ const SinglePositionInfo: React.FC<IProp> = ({
                 )}>
                 {fee.toString()}% fee
               </Typography>
-            </Tooltip>
+            </TooltipInv>
           </Grid>
           <TooltipHover
-            text={
+            title={
               tokenX.claimValue > 0 || tokenY.claimValue > 0
                 ? 'Unclaimed fees will be returned when closing the position'
                 : ''
             }>
-            <Button
-              className={classes.closeButton}
-              variant='contained'
-              onClick={() => {
-                closePosition()
+            <Box
+              sx={{
+                width: isSm ? '100%' : 'auto'
               }}>
-              Close position
-            </Button>
+              <Button
+                scheme='green'
+                width='100%'
+                padding='0 6px'
+                height={isSm ? 'auto' : '36px'}
+                borderRadius={14}
+                onClick={() => {
+                  closePosition()
+                }}>
+                Close position
+              </Button>
+            </Box>
           </TooltipHover>
           <Hidden smUp>
             <Button
-              className={classes.button}
-              variant='contained'
+              width={isSm ? '100%' : 'auto'}
+              scheme='pink'
               onClick={() => {
                 const address1 = addressToTicker(network, tokenX.name)
                 const address2 = addressToTicker(network, tokenY.name)

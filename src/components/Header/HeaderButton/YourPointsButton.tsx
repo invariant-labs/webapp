@@ -1,17 +1,16 @@
 import React from 'react'
-import useStyles from './style'
 import { blurContent, unblurContent } from '@utils/uiUtils'
-import { Button, useMediaQuery } from '@mui/material'
+import { useMediaQuery } from '@mui/material'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import YourPointsModal from '@components/Modals/YourPointsModal/YourPointsModals'
 import { theme } from '@static/theme'
+import { Button } from '@common/Button/Button'
 
 export interface IProps {
   disabled?: boolean
 }
 export const YourPointsButton: React.FC<IProps> = ({ disabled = false }) => {
   const isXs = useMediaQuery(theme.breakpoints.down(450))
-  const { classes } = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [openNetworks, setOpenNetworks] = React.useState<boolean>(false)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -28,9 +27,8 @@ export const YourPointsButton: React.FC<IProps> = ({ disabled = false }) => {
   return (
     <>
       <Button
-        className={classes.pointsHeaderButton}
-        variant='contained'
-        classes={{ disabled: classes.disabled }}
+        padding={isXs ? `0 2px` : undefined}
+        scheme='rainbow'
         disabled={disabled}
         onClick={handleClick}>
         <>{isXs ? <KeyboardArrowDownIcon id='downIcon' /> : 'Points'}</>

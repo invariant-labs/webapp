@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Box, Typography } from '@mui/material'
 import { colors, typography } from '@static/theme'
 import { formatNumberWithSuffix } from '@utils/utils'
@@ -23,7 +23,7 @@ const GradientBox: React.FC<GradientBoxProps> = ({ color, width, isOutOfBound })
   <Box
     sx={{
       width,
-      height: '25px',
+      height: '30px',
       borderTop: `1px solid ${color}`,
       background: `linear-gradient(180deg, ${color}B3 0%, ${color}00 100%)`,
       opacity: isOutOfBound ? 0.18 : 0.7
@@ -85,25 +85,41 @@ const MinMaxLabels: React.FC<{
 )
 
 export const MinMaxChart: React.FC<MinMaxChartProps> = ({ min, max, current, isFullRange }) => {
+  const chartRef = useRef<HTMLDivElement>(null)
+
+  const [chartWidth, setChartWidth] = useState(0)
+  useEffect(() => {
+    const updateWidth = () => {
+      if (chartRef.current) {
+        setChartWidth(chartRef.current.getBoundingClientRect().width)
+      }
+    }
+    updateWidth()
+    window.addEventListener('resize', updateWidth)
+    return () => window.removeEventListener('resize', updateWidth)
+  }, [])
+
   const calculateBoundedPosition = () => {
     if (current < min) return -CHART_CONSTANTS.OVERFLOW_LIMIT_LEFT
     if (current > max) return 100 + CHART_CONSTANTS.OVERFLOW_LIMIT_RIGHT / 2
     return ((current - min) / (max - min)) * 100
   }
+  const currentPosition = calculateBoundedPosition()
+  const OFFSET_PX = 3
+  const offsetPercentage = chartWidth ? (OFFSET_PX / chartWidth) * 100 : 0
+  const indicatorPosition = isFullRange ? offsetPercentage : currentPosition
+
   const { classes } = useMinMaxChartStyles()
   const isOutOfBounds = current < min || current > max
 
-  const currentPosition = calculateBoundedPosition()
-
   return (
     <Box className={classes.container}>
-      <CurrentValueIndicator position={currentPosition} value={current} />
+      <CurrentValueIndicator position={indicatorPosition} value={current} />
 
-      <Box className={classes.chart}>
+      <Box className={classes.chart} ref={chartRef}>
         <Box className={classes.handleLeft}>
-          <img src={icons.handleMin} alt='MIN' />
+          <img width={25} src={icons.handleMin} alt='MIN' />
         </Box>
-
         <GradientBox
           isOutOfBound={isOutOfBounds}
           color={colors.invariant.green}
@@ -116,10 +132,9 @@ export const MinMaxChart: React.FC<MinMaxChartProps> = ({ min, max, current, isF
           width={`${100 - currentPosition}%`}
           gradientDirection='left'
         />
-        <PriceIndicatorLine position={currentPosition} />
-
+        <PriceIndicatorLine position={indicatorPosition} />
         <Box className={classes.handleRight}>
-          <img src={icons.handleMax} alt='MAX' />
+          <img width={25} src={icons.handleMax} alt='MAX' />
         </Box>
       </Box>
 

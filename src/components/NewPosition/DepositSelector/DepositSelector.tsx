@@ -1,4 +1,4 @@
-import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import AnimatedButton, { ProgressState } from '@common/AnimatedButton/AnimatedButton'
 import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
 import Select from '@components/Inputs/Select/Select'
 import { ALL_FEE_TIERS_DATA, WRAPPED_SOL_ADDRESS } from '@store/consts/static'
@@ -29,7 +29,7 @@ import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButt
 import { useStyles } from './style'
 import { Grid, Typography } from '@mui/material'
 import { PositionOpeningMethod } from '@store/consts/types'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { createButtonActions } from '@utils/uiUtils'
 import icons from '@static/icons'
 
@@ -61,7 +61,6 @@ export interface IDepositSelector {
   priceB?: number
   onReverseTokens: () => void
   poolIndex: number | null
-  bestTierIndex?: number
   handleAddToken: (address: string) => void
   commonTokens: PublicKey[]
   initialHideUnknownTokensValue: boolean
@@ -84,6 +83,9 @@ export interface IDepositSelector {
   onDisconnectWallet: () => void
   canNavigate: boolean
   isCurrentPoolExisting: boolean
+  feeTiersWithTvl: Record<number, number>
+  totalTvl: number
+  isLoadingStats: boolean
 }
 
 export const DepositSelector: React.FC<IDepositSelector> = ({
@@ -102,7 +104,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   priceB,
   onReverseTokens,
   poolIndex,
-  bestTierIndex,
   handleAddToken,
   commonTokens,
   initialHideUnknownTokensValue,
@@ -124,7 +125,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   onDisconnectWallet,
   solBalance,
   canNavigate,
-  isCurrentPoolExisting
+  isCurrentPoolExisting,
+  feeTiersWithTvl,
+  totalTvl,
+  isLoadingStats
 }) => {
   const { classes } = useStyles()
 
@@ -333,7 +337,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             />
           </Grid>
 
-          <TooltipHover text='Reverse tokens'>
+          <TooltipHover title='Reverse tokens'>
             <img
               className={classes.arrows}
               src={icons.swapListIcon}
@@ -388,8 +392,10 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           }}
           feeTiers={feeTiers}
           showOnlyPercents
-          bestTierIndex={bestTierIndex}
           currentValue={feeTierIndex}
+          feeTiersWithTvl={feeTiersWithTvl}
+          totalTvl={totalTvl}
+          isLoadingStats={isLoadingStats}
         />
       </Grid>
 
@@ -484,6 +490,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
       </Grid>
       {walletStatus !== Status.Initialized ? (
         <ChangeWalletButton
+          margin='30px 0 30px 0'
+          height={48}
           name='Connect wallet'
           onConnect={onConnectWallet}
           connected={false}
@@ -492,7 +500,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         />
       ) : getButtonMessage() === 'Insufficient ETH' ? (
         <TooltipHover
-          text='More ETH is required to cover the transaction fee. Obtain more ETH to complete this transaction.'
+          title='More ETH is required to cover the transaction fee. Obtain more ETH to complete this transaction.'
           top={-10}>
           <div>
             <AnimatedButton

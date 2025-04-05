@@ -20,7 +20,7 @@ import { MINIMAL_POOL_INIT_PRICE } from '@store/consts/static'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { BN } from '@project-serum/anchor'
 import { Button, Grid, Typography } from '@mui/material'
-import AnimatedNumber from '@components/AnimatedNumber/AnimatedNumber'
+import AnimatedNumber from '@common/AnimatedNumber/AnimatedNumber'
 import icons from '@static/icons'
 
 export interface IPoolInit {

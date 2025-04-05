@@ -1,19 +1,20 @@
-import { INoConnected, NoConnected } from '@components/NoConnected/NoConnected'
-import { Button, Grid, Typography, useMediaQuery } from '@mui/material'
+import { INoConnected, NoConnected } from '@common/NoConnected/NoConnected'
+import { Button as MuiButton, Grid, Typography, useMediaQuery } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStyles } from './style'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { PositionItemMobile } from './PositionItem/variants/PositionMobileCard/PositionItemMobile'
 import { IPositionItem } from './types'
 import { PositionsTable } from './PositionItem/variants/PositionTables/PositionsTable'
-import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import PositionCardsSkeletonMobile from './PositionItem/variants/PositionTables/skeletons/PositionCardsSkeletonMobile'
-import { FilterSearch, ISearchToken } from '@components/FilterSearch/FilterSearch'
+import { FilterSearch, ISearchToken } from '@common/FilterSearch/FilterSearch'
 import { NetworkType } from '@store/consts/static'
 import { theme } from '@static/theme'
 import icons from '@static/icons'
 import { ROUTES } from '@utils/utils'
+import { Button } from '@common/Button/Button'
 
 interface IProps {
   initialPage: number
@@ -139,7 +140,7 @@ export const PositionsList: React.FC<IProps> = ({
           <Grid className={classes.searchRoot}>
             <Grid className={classes.titleBar}>
               <Typography className={classes.title}>Your Positions</Typography>
-              <TooltipHover text='Total number of your positions'>
+              <TooltipHover title='Total number of your positions'>
                 <Typography className={classes.positionsNumber}>{String(data.length)}</Typography>
               </TooltipHover>
             </Grid>
@@ -157,17 +158,17 @@ export const PositionsList: React.FC<IProps> = ({
               </Grid>
 
               <Grid className={classes.fullWidthWrapper}>
-                <TooltipHover text='Refresh'>
+                <TooltipHover title='Refresh'>
                   <Grid className={classes.refreshWrapper}>
-                    <Button
+                    <MuiButton
                       disabled={showNoConnected}
                       onClick={showNoConnected ? () => {} : handleRefresh}
                       className={classes.refreshIconBtn}>
                       <img src={icons.refreshIcon} className={classes.refreshIcon} alt='Refresh' />
-                    </Button>
+                    </MuiButton>
                   </Grid>
                 </TooltipHover>
-                <Button className={classes.button} variant='contained' onClick={onAddPositionClick}>
+                <Button scheme='pink' onClick={onAddPositionClick}>
                   <span className={classes.buttonText}>+ Add Position</span>
                 </Button>
               </Grid>
@@ -179,7 +180,7 @@ export const PositionsList: React.FC<IProps> = ({
           <Grid className={classes.searchRoot}>
             <Grid className={classes.titleBar}>
               <Typography className={classes.title}>Your Positions</Typography>
-              <TooltipHover text='Total number of your positions'>
+              <TooltipHover title='Total number of your positions'>
                 <Typography className={classes.positionsNumber}>{String(data.length)}</Typography>
               </TooltipHover>
             </Grid>
@@ -187,9 +188,9 @@ export const PositionsList: React.FC<IProps> = ({
             <Grid className={classes.searchWrapper}>
               <Grid className={classes.filtersContainer}>
                 <Grid className={classes.fullWidthWrapper}>
-                  <TooltipHover text='Refresh'>
+                  <TooltipHover title='Refresh'>
                     <Grid className={classes.refreshWrapper}>
-                      <Button
+                      <MuiButton
                         disabled={showNoConnected}
                         onClick={showNoConnected ? () => {} : handleRefresh}
                         className={classes.refreshIconBtn}>
@@ -198,13 +199,10 @@ export const PositionsList: React.FC<IProps> = ({
                           className={classes.refreshIcon}
                           alt='Refresh'
                         />
-                      </Button>
+                      </MuiButton>
                     </Grid>
                   </TooltipHover>
-                  <Button
-                    className={classes.button}
-                    variant='contained'
-                    onClick={onAddPositionClick}>
+                  <Button width='100%' scheme='pink' onClick={onAddPositionClick}>
                     <span className={classes.buttonText}>+ Add Position</span>
                   </Button>
                 </Grid>

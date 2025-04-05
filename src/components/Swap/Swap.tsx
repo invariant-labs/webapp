@@ -1,8 +1,8 @@
-import AnimatedButton, { ProgressState } from '@components/AnimatedButton/AnimatedButton'
+import AnimatedButton, { ProgressState } from '@common/AnimatedButton/AnimatedButton'
 import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 import ExchangeAmountInput from '@components/Inputs/ExchangeAmountInput/ExchangeAmountInput'
 import Slippage from '@components/Modals/Slippage/Slippage'
-import Refresher from '@components/Refresher/Refresher'
+import Refresher from '@common/Refresher/Refresher'
 import { BN } from '@project-serum/anchor'
 import { Box, Button, Grid, Typography } from '@mui/material'
 
@@ -19,6 +19,7 @@ import {
   convertBalanceToBN,
   findPairs,
   handleSimulate,
+  initialXtoY,
   printBN,
   ROUTES,
   trimLeadingZeros
@@ -40,7 +41,7 @@ import { PoolWithAddress } from '@store/reducers/pools'
 import { PublicKey } from '@solana/web3.js'
 import { Decimal, Tick, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL, fromFee, SimulationStatus } from '@invariant-labs/sdk/lib/utils'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import icons from '@static/icons'
 
 export interface Pools {
@@ -165,7 +166,10 @@ export const Swap: React.FC<ISwap> = ({
   const [settings, setSettings] = React.useState<boolean>(false)
   const [detailsOpen, setDetailsOpen] = React.useState<boolean>(false)
   const [inputRef, setInputRef] = React.useState<string>(inputTarget.DEFAULT)
-  const [rateReversed, setRateReversed] = React.useState<boolean>(false)
+  const [rateReversed, setRateReversed] = React.useState<boolean>(
+    tokenFrom && tokenTo ? !initialXtoY(tokenFrom.toString(), tokenTo.toString()) : false
+  )
+  const [rateLoading, setRateLoading] = React.useState<boolean>(false)
   const [refresherTime, setRefresherTime] = React.useState<number>(REFRESHER_INTERVAL)
   const [hideUnknownTokens, setHideUnknownTokens] = React.useState<boolean>(
     initialHideUnknownTokensValue
@@ -318,7 +322,10 @@ export const Swap: React.FC<ISwap> = ({
   }, [swap])
 
   useEffect(() => {
-    setRateReversed(false)
+    if (tokenFrom !== null && tokenTo !== null) {
+      setRateReversed(!initialXtoY(tokenFrom.toString(), tokenTo.toString()))
+      setRateLoading(false)
+    }
   }, [tokenFrom, tokenTo])
 
   const getAmountOut = (assetFor: SwapToken) => {
@@ -611,7 +618,7 @@ export const Swap: React.FC<ISwap> = ({
               Slippage: <span className={classes.slippageAmount}>{slippTolerance}%</span>
             </p>
           </Button>
-          <TooltipHover text='Refresh'>
+          <TooltipHover title='Refresh'>
             <Grid className={classes.refresh}>
               <Button
                 onClick={handleRefresh}
@@ -629,7 +636,7 @@ export const Swap: React.FC<ISwap> = ({
               </Button>
             </Grid>
           </TooltipHover>
-          <TooltipHover text='Settings'>
+          <TooltipHover title='Settings'>
             <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
               <img src={icons.settingIcon} className={classes.settingsIcon} alt='Settings' />
             </Button>
@@ -721,6 +728,7 @@ export const Swap: React.FC<ISwap> = ({
             className={classes.swapArrowBox}
             onClick={() => {
               if (lockAnimation) return
+              setRateLoading(true)
               setLockAnimation(!lockAnimation)
               setRotates(rotates + 1)
               swap !== null ? setSwap(!swap) : setSwap(true)
@@ -800,7 +808,7 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
         <Box className={classes.unknownWarningContainer}>
           {+printBN(simulateResult.priceImpact, DECIMAL - 2) > 25 && (
-            <TooltipHover text='Your trade size might be too large'>
+            <TooltipHover title='Your trade size might be too large'>
               <Box className={classes.unknownWarning}>
                 High price impact: {(+printBN(simulateResult.priceImpact, DECIMAL - 2)).toFixed(2)}
                 %! This swap will cause a significant price movement.
@@ -809,7 +817,7 @@ export const Swap: React.FC<ISwap> = ({
           )}
           {tokens[tokenFrom?.toString() ?? '']?.isUnknown && (
             <TooltipHover
-              text={`${
+              title={`${
                 tokens[tokenFrom?.toString() ?? ''].symbol
               } is unknown, make sure address is correct before trading`}>
               <Box className={classes.unknownWarning}>
@@ -819,7 +827,7 @@ export const Swap: React.FC<ISwap> = ({
           )}
           {tokens[tokenTo?.toString() ?? '']?.isUnknown && (
             <TooltipHover
-              text={`${
+              title={`${
                 tokens[tokenTo?.toString() ?? ''].symbol
               } is unknown, make sure address is correct before trading`}>
               <Box className={classes.unknownWarning}>
@@ -858,7 +866,7 @@ export const Swap: React.FC<ISwap> = ({
               </Grid>
             </button>
             {tokenFrom !== null && tokenTo !== null && tokenFrom !== tokenTo && (
-              <TooltipHover text='Refresh'>
+              <TooltipHover title='Refresh'>
                 <Grid container className={classes.refreshWrapper}>
                   <Refresher
                     currentIndex={refresherTime}
@@ -883,7 +891,7 @@ export const Swap: React.FC<ISwap> = ({
                 tokenToDecimals={
                   tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].decimals
                 }
-                loading={getStateMessage() === 'Loading'}
+                loading={getStateMessage() === 'Loading' || rateLoading}
               />
             </Box>
           ) : null}
@@ -916,15 +924,15 @@ export const Swap: React.FC<ISwap> = ({
         />
         {walletStatus !== Status.Initialized && getStateMessage() !== 'Loading' ? (
           <ChangeWalletButton
+            height={48}
             name='Connect wallet'
             onConnect={onConnectWallet}
             connected={false}
             onDisconnect={onDisconnectWallet}
-            className={classes.connectWalletButton}
           />
         ) : getStateMessage() === 'Insufficient Wrapped SOL' ? (
           <TooltipHover
-            text='More ETH is required to cover the transaction fee. Obtain more ETH to complete this transaction.'
+            title='More ETH is required to cover the transaction fee. Obtain more ETH to complete this transaction.'
             top={-45}>
             <div>
               <AnimatedButton

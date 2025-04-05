@@ -22,8 +22,8 @@ export const useMinMaxChartStyles = makeStyles()(() => ({
   },
   handleLeft: {
     position: 'absolute',
-    left: 0,
-    top: -2,
+    left: -2,
+    top: -0.3,
     zIndex: 10,
     transform: `translateX(-${CHART_CONSTANTS.CHART_PADDING}px)`
   },
@@ -36,7 +36,7 @@ export const useMinMaxChartStyles = makeStyles()(() => ({
   handleRight: {
     position: 'absolute',
     left: `${CHART_CONSTANTS.MAX_HANDLE_OFFSET}%`,
-    top: -2,
+    top: -0.3,
     zIndex: 10
   },
   currentValueIndicator: {
@@ -44,14 +44,14 @@ export const useMinMaxChartStyles = makeStyles()(() => ({
     color: colors.invariant.yellow,
     position: 'absolute',
     transform: 'translateX(-50%)',
-    top: '-16px',
+    top: '-18px',
     whiteSpace: 'nowrap',
     zIndex: 11
   },
   priceLineIndicator: {
     position: 'absolute',
     width: '2px',
-    height: '25px',
+    height: '30px',
     backgroundColor: colors.invariant.yellow,
     top: '0%',
     transform: 'translateX(-50%)',

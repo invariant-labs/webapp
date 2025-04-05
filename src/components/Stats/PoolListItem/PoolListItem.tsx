@@ -17,7 +17,7 @@ import {
 } from '@utils/utils'
 import { formatNumberWithSuffix } from '@utils/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { VariantType } from 'notistack'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 import { apyToApr } from '@utils/uiUtils'
@@ -209,7 +209,7 @@ const PoolListItem: React.FC<IProps> = ({
                   {shortenAddress(tokenBData.symbol ?? '')}
                 </Typography>
               )}
-              <TooltipHover text='Copy pool address'>
+              <TooltipHover title='Copy pool address'>
                 <FileCopyOutlinedIcon
                   onClick={copyToClipboard}
                   classes={{ root: classes.clipboardIcon }}
@@ -231,17 +231,17 @@ const PoolListItem: React.FC<IProps> = ({
           <Typography>{`$${formatNumberWithSuffix(TVL)}`}</Typography>
           {!isMd && (
             <Box className={classes.action}>
-              <TooltipHover text='Exchange'>
+              <TooltipHover title='Exchange'>
                 <button className={classes.actionButton} onClick={handleOpenSwap}>
                   <img width={32} height={32} src={icons.horizontalSwapIcon} alt={'Exchange'} />
                 </button>
               </TooltipHover>
-              <TooltipHover text='Add position'>
+              <TooltipHover title='Add position'>
                 <button className={classes.actionButton} onClick={handleOpenPosition}>
                   <img width={32} height={32} src={icons.plusIcon} alt={'Open'} />
                 </button>
               </TooltipHover>
-              <TooltipHover text='Open in explorer'>
+              <TooltipHover title='Open in explorer'>
                 <button
                   className={classes.actionButton}
                   onClick={() =>
