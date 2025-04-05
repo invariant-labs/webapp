@@ -14,6 +14,9 @@ export const useStyles = makeStyles<{ isLoading: boolean }>()((_theme: Theme, { 
     flexDirection: 'column',
     gap: '16px',
     minHeight: '32px',
+    [theme.breakpoints.down('lg')]: {
+      maxHeight: '76px'
+    },
 
     [theme.breakpoints.up('lg')]: {
       height: '57.5px',
