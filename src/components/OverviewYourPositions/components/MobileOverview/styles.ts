@@ -20,6 +20,7 @@ export const useStyles = makeStyles()(() => ({
     borderRadius: '8px',
     overflow: 'hidden',
     display: 'flex',
+    inTop: theme.spacing(2),
     marginBottom: theme.spacing(3)
   },
   tokenSection: {

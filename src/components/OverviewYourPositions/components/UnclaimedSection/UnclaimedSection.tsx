@@ -29,6 +29,7 @@ export const UnclaimedSection: React.FC<UnclaimedSectionProps> = ({
               <Button
                 scheme='green'
                 height={32}
+                width={105}
                 padding='0 20px'
                 onClick={handleClaimAll}
                 disabled={loading || unclaimedTotal === 0}>
@@ -57,7 +58,11 @@ export const UnclaimedSection: React.FC<UnclaimedSectionProps> = ({
         )}
       </Box>
       {isLg && (
-        <Button scheme='green' height={32} disabled={loading || unclaimedTotal === 0}>
+        <Button
+          scheme='green'
+          width={'100%'}
+          height={32}
+          disabled={loading || unclaimedTotal === 0}>
           {loading ? (
             <>
               <img
