@@ -24,7 +24,6 @@ import {
   tickerToAddress,
   trimDecimalZeros
 } from '@utils/utils'
-
 import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 import { useStyles } from './style'
 import { Grid, Typography } from '@mui/material'
