@@ -1,9 +1,9 @@
 import MarketIdLabel from '@components/NewPosition/MarketIdLabel/MarketIdLabel'
 import SinglePositionInfo from '@components/PositionDetails/SinglePositionInfo/SinglePositionInfo'
 import SinglePositionPlot from '@components/PositionDetails/SinglePositionPlot/SinglePositionPlot'
-import { TickPlotPositionData } from '@components/PriceRangePlot/PriceRangePlot'
-import Refresher from '@components/Refresher/Refresher'
-import { Box, Button, Grid, Hidden, Typography } from '@mui/material'
+import { TickPlotPositionData } from '@common/PriceRangePlot/PriceRangePlot'
+import Refresher from '@common/Refresher/Refresher'
+import { Box, Grid, Hidden, Typography } from '@mui/material'
 import { NetworkType, REFRESHER_INTERVAL } from '@store/consts/static'
 import { PlotTickData } from '@store/reducers/positions'
 import { VariantType } from 'notistack'
@@ -16,8 +16,10 @@ import { addressToTicker, initialXtoY, parseFeeToPathFee, printBN, ROUTES } from
 import { PublicKey } from '@solana/web3.js'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { TooltipHover } from '@components/TooltipHover/TooltipHover'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import icons from '@static/icons'
+import { Button } from '@common/Button/Button'
+
 interface IProps {
   tokenXAddress: PublicKey
   tokenYAddress: PublicKey
@@ -148,7 +150,7 @@ const PositionDetails: React.FC<IProps> = ({
                 style={{ paddingRight: 8 }}
               />
               {poolAddress.toString() && (
-                <TooltipHover text='Open pool in explorer'>
+                <TooltipHover title='Open pool in explorer'>
                   <Grid height={'24px'} mr={'12px'}>
                     <a
                       href={`https://solscan.io/account/${poolAddress.toString()}${networkUrl}`}
@@ -164,7 +166,7 @@ const PositionDetails: React.FC<IProps> = ({
                 </TooltipHover>
               )}
               <Grid flex={1} justifyItems={'flex-end'}>
-                <TooltipHover text='Refresh'>
+                <TooltipHover title='Refresh'>
                   <Refresher
                     currentIndex={refresherTime}
                     maxIndex={REFRESHER_INTERVAL}
@@ -200,7 +202,7 @@ const PositionDetails: React.FC<IProps> = ({
           <Grid container item className={classes.rightHeaderWrapper}>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               <Button
-                className={classes.button}
+                scheme='pink'
                 variant='contained'
                 onClick={() => {
                   const parsedFee = parseFeeToPathFee(fee.v)
@@ -221,7 +223,7 @@ const PositionDetails: React.FC<IProps> = ({
               </Button>
             </Box>
             <Hidden mdDown>
-              <TooltipHover text='Refresh'>
+              <TooltipHover title='Refresh'>
                 <Grid className={classes.refreshWrapper}>
                   <Refresher
                     currentIndex={refresherTime}
@@ -240,7 +242,7 @@ const PositionDetails: React.FC<IProps> = ({
                   copyPoolAddressHandler={copyPoolAddressHandler}
                 />
                 {poolAddress.toString() && (
-                  <TooltipHover text='Open pool in explorer'>
+                  <TooltipHover title='Open pool in explorer'>
                     <Grid mr={'12px'}>
                       <a
                         href={`https://solscan.io/account/${poolAddress.toString()}${networkUrl}`}

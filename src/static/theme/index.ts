@@ -80,6 +80,7 @@ export const colors = {
     lightGrey: '#bac7d1',
     text: '#FFFFFF',
     Error: '#FB555F',
+    normal: '#2A365C',
     greenLinearGradient: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
     greenLinearGradientOpacity:
       'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)',

@@ -1,6 +1,6 @@
 import Select from '@components/Inputs/Select/Select'
-import { OutlinedButton } from '@components/OutlinedButton/OutlinedButton'
-import { Grid, Input, Tooltip, Typography } from '@mui/material'
+import { OutlinedButton } from '@common/OutlinedButton/OutlinedButton'
+import { Grid, Input, Typography, useMediaQuery } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
 import { formatNumberWithoutSuffix, formatNumberWithSuffix, trimDecimalZeros } from '@utils/utils'
 import { SwapToken } from '@store/selectors/solanaWallet'
@@ -11,6 +11,8 @@ import { PublicKey } from '@solana/web3.js'
 import { NetworkType } from '@store/consts/static'
 
 import { getButtonClassName } from '@utils/uiUtils'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
+import { theme } from '@static/theme'
 
 interface ActionButton {
   label: string
@@ -80,21 +82,24 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
 }) => {
   const hideBalance = balance === '- -' || !balance || hideBalances
   const { classes } = useStyles()
+  const isMd = useMediaQuery(theme.breakpoints.up('md'))
+
   const inputRef = useRef<HTMLInputElement>(null)
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
+    const inputValue = e.target.value.replace(/,/g, '.')
     const onlyNumbersRegex = /^\d*\.?\d*$/
     const trimDecimal = `^\\d*\\.?\\d{0,${decimal}}$`
     const regex = new RegExp(trimDecimal, 'g')
-    if (e.target.value === '' || regex.test(e.target.value)) {
-      if ((typeof limit !== 'undefined' && +e.target.value > limit) || disabled) {
+    if (inputValue === '' || regex.test(inputValue)) {
+      if ((typeof limit !== 'undefined' && +inputValue > limit) || disabled) {
         return
       }
 
-      const startValue = e.target.value
+      const startValue = inputValue
       const caretPosition = e.target.selectionStart
 
-      let parsed = e.target.value
+      let parsed = inputValue
 
       const dotRegex = /^\.\d*$/
       if (dotRegex.test(parsed)) {
@@ -112,10 +117,10 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
           }
         }, 0)
       }
-    } else if (!onlyNumbersRegex.test(e.target.value)) {
+    } else if (!onlyNumbersRegex.test(inputValue)) {
       setValue('')
-    } else if (!regex.test(e.target.value)) {
-      setValue(e.target.value.slice(0, e.target.value.length - 1))
+    } else if (!regex.test(inputValue)) {
+      setValue(inputValue.slice(0, inputValue.length - 1))
     }
   }
 
@@ -216,29 +221,21 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
             priceLoading ? (
               <img src={loadingAnimation} className={classes.loading} alt='loading' />
             ) : tokenPrice ? (
-              <Tooltip
-                enterTouchDelay={0}
+              <TooltipHover
                 title='Estimated USD Value of the Entered Tokens'
                 placement='bottom'
-                classes={{
-                  tooltip: classes.tooltip
-                }}>
+                top={1}
+                left={isMd ? 'auto' : -90}>
                 <Typography className={classes.caption2}>
                   ~${formatNumberWithoutSuffix(usdBalance.toFixed(2))}
                 </Typography>
-              </Tooltip>
+              </TooltipHover>
             ) : (
-              <Tooltip
-                enterTouchDelay={0}
-                title='Cannot fetch price of token'
-                placement='bottom'
-                classes={{
-                  tooltip: classes.tooltip
-                }}>
+              <TooltipHover title='Cannot fetch price of token' placement='bottom' top={1}>
                 <Typography className={classes.noData}>
                   <span className={classes.noDataIcon}>?</span>No data
                 </Typography>
-              </Tooltip>
+              </TooltipHover>
             )
           ) : null}
         </Grid>

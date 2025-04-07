@@ -135,15 +135,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     }
   },
 
-  connectWalletButton: {
-    height: '48px !important',
-    borderRadius: '16px !important',
-    width: '100%',
-
-    [theme.breakpoints.down('sm')]: {
-      width: '100% !important'
-    }
-  },
   tokenComponentTextContainer: {
     display: 'flex',
     justifyContent: 'space-between',

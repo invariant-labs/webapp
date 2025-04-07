@@ -115,7 +115,6 @@ export const Primary: Story = {
       blockerInfo: '',
       decimalsLimit: 12
     },
-    bestTierIndex: 2,
     priceA: 1111,
     priceB: 2222,
     isBalanceLoading: false,
@@ -128,7 +127,10 @@ export const Primary: Story = {
     onDisconnectWallet: () => {},
     setShouldResetPlot: fn(),
     canNavigate: true,
-    isCurrentPoolExisting: false
+    isCurrentPoolExisting: false,
+    feeTiersWithTvl: [],
+    isLoadingStats: false,
+    totalTvl: 0
   },
   render: args => <PrimaryComponent {...args} />
 }

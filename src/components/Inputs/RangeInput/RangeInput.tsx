@@ -5,7 +5,7 @@ import useStyles from './style'
 import { colors } from '@static/theme'
 import { Button, Grid, Input, Typography } from '@mui/material'
 import { formatNumbers, showPrefix } from '@utils/utils'
-import AnimatedNumber from '@components/AnimatedNumber/AnimatedNumber'
+import AnimatedNumber from '@common/AnimatedNumber/AnimatedNumber'
 import { FormatNumberThreshold } from '@store/consts/types'
 
 export interface IRangeInput {
@@ -52,12 +52,13 @@ export const RangeInput: React.FC<IRangeInput> = ({
   }, [percentDiff])
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
+    const inputValue = e.target.value.replace(/,/g, '.')
     const regex = /^\d*\.?\d*$/
-    if (e.target.value === '' || regex.test(e.target.value)) {
-      const startValue = e.target.value
+    if (inputValue === '' || regex.test(inputValue)) {
+      const startValue = inputValue
       const caretPosition = e.target.selectionStart
 
-      let parsed = e.target.value
+      let parsed = inputValue
       const zerosRegex = /^0+\d+\.?\d*$/
       if (zerosRegex.test(parsed)) {
         parsed = parsed.replace(/^0+/, '')
@@ -79,7 +80,7 @@ export const RangeInput: React.FC<IRangeInput> = ({
           }
         }, 0)
       }
-    } else if (!regex.test(e.target.value)) {
+    } else if (!regex.test(inputValue)) {
       setValue('')
     }
   }

@@ -4,9 +4,17 @@ import { network } from '@store/selectors/solanaConnection'
 import { ensureError, getFullSnap } from '@utils/utils'
 import { PublicKey } from '@solana/web3.js'
 import { handleRpcError } from './connection'
+import { lastTimestamp } from '@store/selectors/stats'
+import { STATS_CACHE_TIME } from '@store/consts/static'
 
 export function* getStats(): Generator {
   try {
+    const lastFetchTimestamp = yield* select(lastTimestamp)
+
+    if (+Date.now() < lastFetchTimestamp + STATS_CACHE_TIME) {
+      return yield* put(actions.setLoadingStats(false))
+    }
+
     const currentNetwork = yield* select(network)
 
     const fullSnap = yield* call(getFullSnap, currentNetwork.toLowerCase())
@@ -24,11 +32,15 @@ export function* getStats(): Generator {
       }))
     }
 
+    // @ts-expect-error FIXME: Interface missmatch.
     yield* put(actions.setCurrentStats(parsedFullSnap))
-  } catch (e) {
+  } catch (e: unknown) {
     const error = ensureError(e)
+    console.log(error)
+
+    yield* put(actions.setLoadingStats(false))
+
     yield* call(handleRpcError, error.message)
-    throw error
   }
 }
 

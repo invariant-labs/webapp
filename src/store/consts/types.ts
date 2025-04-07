@@ -56,12 +56,6 @@ export interface PrefixConfig {
   K?: number
 }
 
-export interface BestTier {
-  tokenX: PublicKey
-  tokenY: PublicKey
-  bestTierIndex: number
-}
-
 export type CoinGeckoAPIData = CoinGeckoAPIPriceData[]
 
 export type CoinGeckoAPIPriceData = {
@@ -147,12 +141,6 @@ export interface PoolSnapshot {
 //   coingeckoId?: string
 //   isUnknown?: boolean
 // }
-
-export interface BestTier {
-  tokenX: PublicKey
-  tokenY: PublicKey
-  bestTierIndex: number
-}
 
 export interface ISelectChain {
   name: Chain

@@ -26,6 +26,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@components': '/src/components',
+      '@common': '/src/common',
       '@containers': '/src/containers',
       '@pages': '/src/pages',
       '@static': '/src/static',
