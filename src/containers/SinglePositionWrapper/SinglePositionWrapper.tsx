@@ -33,6 +33,16 @@ import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { calculateClaimAmount } from '@invariant-labs/sdk/lib/utils'
 import { MAX_TICK, Pair } from '@invariant-labs/sdk/src'
 import { theme } from '@static/theme'
+import { isLoading, poolsStatsWithTokensDetails } from '@store/selectors/stats'
+import { actions as statsActions } from '@store/reducers/stats'
+
+export type PoolDetails = {
+  tvl: number
+  volume24: number
+  fee24: number
+  apy: number
+  fee: number
+}
 
 export interface IProps {
   id: string
@@ -54,6 +64,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const isBalanceLoading = useSelector(balanceLoading)
 
   const isTimeoutError = useSelector(timeoutError)
+
+  const isLoadingStats = useSelector(isLoading)
+  const poolsList = useSelector(poolsStatsWithTokensDetails)
 
   const [xToY, setXToY] = useState<boolean>(
     initialXtoY(position?.tokenX.assetAddress.toString(), position?.tokenY.assetAddress.toString())
@@ -430,11 +443,33 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     }
   }, [isLoadingList])
 
+  const poolDetails = useMemo(() => {
+    if (!position) {
+      return null
+    }
+
+    const pool = poolsList.find(pool => pool.poolAddress.equals(position?.poolData.address))
+
+    if (!pool) {
+      return null
+    }
+
+    return {
+      tvl: pool.tvl,
+      volume24: pool.volume24,
+      fee24: (pool.volume24 * pool.fee) / 100,
+      apy: pool.apy,
+      fee: pool.fee
+    }
+  }, [poolsList])
+
+  useEffect(() => {
+    dispatch(statsActions.getCurrentStats())
+  }, [])
+
   if (position) {
     return (
       <PositionDetails
-        tokenXAddress={position.tokenX.assetAddress}
-        tokenYAddress={position.tokenY.assetAddress}
         poolAddress={position.poolData.address}
         copyPoolAddressHandler={copyPoolAddressHandler}
         detailsData={data}
@@ -506,13 +541,20 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         globalPrice={globalPrice}
         xToY={xToY}
         setXToY={setXToY}
+        onGoBackClick={() => navigate(ROUTES.PORTFOLIO)}
+        poolDetails={poolDetails}
+        showPoolDetailsLoader={isLoadingStats}
       />
     )
   }
 
   if ((isLoadingListDelay && walletStatus === Status.Initialized) || !isFinishedDelayRender) {
     return (
-      <Grid container className={classes.fullHeightContainer}>
+      <Grid
+        container
+        justifyContent='center'
+        alignItems='center'
+        className={classes.fullHeightContainer}>
         <img src={loader} className={classes.loading} alt='Loading' />
       </Grid>
     )
@@ -534,7 +576,11 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
     )
   } else {
     return (
-      <Grid className={classes.emptyContainer2}>
+      <Grid
+        display='flex'
+        position='relative'
+        justifyContent='center'
+        className={classes.emptyContainer}>
         <EmptyPlaceholder
           newVersion
           style={isMobile ? { paddingTop: 5 } : {}}

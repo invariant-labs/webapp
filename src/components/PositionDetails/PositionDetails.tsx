@@ -1,28 +1,22 @@
-import MarketIdLabel from '@components/NewPosition/MarketIdLabel/MarketIdLabel'
 import SinglePositionInfo from '@components/PositionDetails/SinglePositionInfo/SinglePositionInfo'
 import SinglePositionPlot from '@components/PositionDetails/SinglePositionPlot/SinglePositionPlot'
 import { TickPlotPositionData } from '@common/PriceRangePlot/PriceRangePlot'
-import Refresher from '@common/Refresher/Refresher'
-import { Box, Grid, Hidden, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import { NetworkType, REFRESHER_INTERVAL } from '@store/consts/static'
 import { PlotTickData } from '@store/reducers/positions'
 import { VariantType } from 'notistack'
 import React, { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { ILiquidityToken } from './SinglePositionInfo/consts'
+import { useNavigate } from 'react-router-dom'
 import { useStyles } from './style'
-import { TokenPriceData } from '@store/consts/types'
-import { addressToTicker, initialXtoY, parseFeeToPathFee, printBN, ROUTES } from '@utils/utils'
+import { ILiquidityToken, TokenPriceData } from '@store/consts/types'
+import { addressToTicker, printBN, ROUTES } from '@utils/utils'
 import { PublicKey } from '@solana/web3.js'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
-import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { TooltipHover } from '@common/TooltipHover/TooltipHover'
-import icons from '@static/icons'
-import { Button } from '@common/Button/Button'
+import { DECIMAL, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
+import { PositionHeader } from './PositionHeader/PositionHeader'
+import { PoolDetails } from '@containers/SinglePositionWrapper/SinglePositionWrapper'
 
 interface IProps {
-  tokenXAddress: PublicKey
-  tokenYAddress: PublicKey
   poolAddress: PublicKey
   copyPoolAddressHandler: (message: string, variant: VariantType) => void
   detailsData: PlotTickData[]
@@ -54,11 +48,12 @@ interface IProps {
   xToY: boolean
   isBalanceLoading: boolean
   network: NetworkType
+  poolDetails: PoolDetails | null
+  onGoBackClick: () => void
+  showPoolDetailsLoader: boolean
 }
 
 const PositionDetails: React.FC<IProps> = ({
-  tokenXAddress,
-  tokenYAddress,
   poolAddress,
   copyPoolAddressHandler,
   detailsData,
@@ -82,11 +77,14 @@ const PositionDetails: React.FC<IProps> = ({
   reloadHandler,
   plotVolumeRange,
   onRefresh,
-  isBalanceLoading,
   globalPrice,
   setXToY,
   xToY,
-  network
+  network,
+  onGoBackClick,
+  poolDetails,
+  showPoolDetailsLoader,
+  isBalanceLoading
 }) => {
   const { classes } = useStyles()
 
@@ -95,6 +93,21 @@ const PositionDetails: React.FC<IProps> = ({
   const [refresherTime, setRefresherTime] = useState<number>(REFRESHER_INTERVAL)
 
   const isActive = midPrice.x >= min && midPrice.x <= max
+
+  const canClosePosition = useMemo(() => {
+    // if (network === NetworkType.Testnet) {
+    //   return ethBalance.gte(WETH_CLOSE_POSITION_LAMPORTS_TEST)
+    // } else {
+    //   return ethBalance.gte(WETH_CLOSE_POSITION_LAMPORTS_MAIN)
+    // }
+    return true
+  }, [network])
+
+  const isFullRange = useMemo(
+    () =>
+      leftRange.index === getMinTick(tickSpacing) && rightRange.index === getMaxTick(tickSpacing),
+    [tickSpacing, leftRange, rightRange]
+  )
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -108,15 +121,6 @@ const PositionDetails: React.FC<IProps> = ({
 
     return () => clearTimeout(timeout)
   }, [refresherTime])
-
-  const memoizedLeftRange = React.useMemo(
-    () => (xToY ? leftRange : { ...rightRange, x: 1 / rightRange.x }),
-    [leftRange, xToY]
-  )
-  const memoizedRightRange = React.useMemo(
-    () => (xToY ? rightRange : { ...leftRange, x: 1 / leftRange.x }),
-    [rightRange, xToY]
-  )
 
   const networkUrl = useMemo(() => {
     switch (network) {
@@ -132,175 +136,111 @@ const PositionDetails: React.FC<IProps> = ({
   }, [network])
 
   return (
-    <Grid container className={classes.wrapperContainer}>
-      <Grid className={classes.positionDetails} container item>
-        <Grid className={classes.backContainer} container>
-          <Link to={ROUTES.PORTFOLIO} style={{ textDecoration: 'none' }}>
-            <Grid className={classes.back} container item>
-              <img className={classes.backIcon} src={icons.backIcon} alt='Back' />
-              <Typography className={classes.backText}>Positions</Typography>
-            </Grid>
-          </Link>
-          <Grid container className={classes.marketIdWithRefresher}>
-            <Hidden mdUp>
-              <MarketIdLabel
-                marketId={poolAddress.toString()}
-                displayLength={5}
-                copyPoolAddressHandler={copyPoolAddressHandler}
-                style={{ paddingRight: 8 }}
-              />
-              {poolAddress.toString() && (
-                <TooltipHover title='Open pool in explorer'>
-                  <Grid height={'24px'} mr={'12px'}>
-                    <a
-                      href={`https://solscan.io/account/${poolAddress.toString()}${networkUrl}`}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      onClick={event => {
-                        event.stopPropagation()
-                      }}
-                      className={classes.link}>
-                      <img width={14} height={14} src={icons.newTab} alt={'Token address'} />
-                    </a>
-                  </Grid>
-                </TooltipHover>
-              )}
-              <Grid flex={1} justifyItems={'flex-end'}>
-                <TooltipHover title='Refresh'>
-                  <Refresher
-                    currentIndex={refresherTime}
-                    maxIndex={REFRESHER_INTERVAL}
-                    onClick={() => {
-                      onRefresh()
-                      setRefresherTime(REFRESHER_INTERVAL)
-                    }}
-                  />
-                </TooltipHover>
-              </Grid>
-            </Hidden>
-          </Grid>
-        </Grid>
-        <SinglePositionInfo
+    <>
+      {/* <Information mb={3} transitionTimeout={300} shouldOpen={showPreviewInfo}>
+        <Box className={classes.information}>
+          <img src={icons.eyeYellow} alt='Eye' style={{ minWidth: 24 }} />
+          {isSm
+            ? `Viewing someone else's position. Wallet actions unavailable.`
+            : `You are currently watching someone else's position. Connect your wallet or go to
+              portfolio to see your positions.`}
+        </Box>
+      </Information> */}
+      <Box className={classes.mainContainer}>
+        <PositionHeader
+          tokenA={
+            xToY
+              ? { icon: tokenX.icon, ticker: tokenY.name }
+              : { icon: tokenY.icon, ticker: tokenX.name }
+          }
+          tokenB={
+            xToY
+              ? { icon: tokenY.icon, ticker: tokenX.name }
+              : { icon: tokenX.icon, ticker: tokenY.name }
+          }
           fee={+printBN(fee.v, DECIMAL - 2)}
-          onClickClaimFee={onClickClaimFee}
-          closePosition={closePosition}
-          tokenX={tokenX}
-          tokenY={tokenY}
-          tokenXPriceData={tokenXPriceData}
-          tokenYPriceData={tokenYPriceData}
-          xToY={xToY}
-          swapHandler={() => setXToY(!xToY)}
-          showFeesLoader={showFeesLoader}
-          isBalanceLoading={isBalanceLoading}
+          poolAddress={poolAddress.toString()}
+          networkUrl={networkUrl}
           isActive={isActive}
-          network={network}
+          canClosePosition={canClosePosition}
+          hasFees={tokenX.claimValue + tokenY.claimValue > 0}
+          onReverseTokensClick={() => setXToY(!xToY)}
+          onClosePositionClick={() => {
+            closePosition()
+          }}
+          onAddPositionClick={() => {
+            const address1 = addressToTicker(network, tokenX.name)
+            const address2 = addressToTicker(network, tokenY.name)
+
+            navigate(ROUTES.getNewPositionRoute(address1, address2, fee.toString()))
+          }}
+          onRefreshClick={() => onRefresh()}
+          onGoBackClick={() => onGoBackClick()}
+          copyPoolAddressHandler={copyPoolAddressHandler}
+          isPreview={false}
         />
-      </Grid>
-
-      <Grid container item className={classes.right}>
-        <Grid className={classes.positionPlotWrapper}>
-          <Grid container item className={classes.rightHeaderWrapper}>
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-              <Button
-                scheme='pink'
-                variant='contained'
-                onClick={() => {
-                  const parsedFee = parseFeeToPathFee(fee.v)
-                  const address1 = addressToTicker(network, tokenXAddress.toString())
-                  const address2 = addressToTicker(network, tokenYAddress.toString())
-
-                  const isXtoY = initialXtoY(
-                    tokenXAddress.toString() ?? '',
-                    tokenYAddress.toString() ?? ''
-                  )
-
-                  const tokenA = isXtoY ? address1 : address2
-                  const tokenB = isXtoY ? address2 : address1
-
-                  navigate(ROUTES.getNewPositionRoute(tokenA, tokenB, parsedFee))
-                }}>
-                <span className={classes.buttonText}>+ Add Position</span>
-              </Button>
-            </Box>
-            <Hidden mdDown>
-              <TooltipHover title='Refresh'>
-                <Grid className={classes.refreshWrapper}>
-                  <Refresher
-                    currentIndex={refresherTime}
-                    maxIndex={REFRESHER_INTERVAL}
-                    onClick={() => {
-                      onRefresh()
-                      setRefresherTime(REFRESHER_INTERVAL)
-                    }}
-                  />
-                </Grid>
-              </TooltipHover>
-              <Grid className={classes.marketIDWrapper}>
-                <MarketIdLabel
-                  marketId={poolAddress.toString()}
-                  displayLength={5}
-                  copyPoolAddressHandler={copyPoolAddressHandler}
-                />
-                {poolAddress.toString() && (
-                  <TooltipHover title='Open pool in explorer'>
-                    <Grid mr={'12px'}>
-                      <a
-                        href={`https://solscan.io/account/${poolAddress.toString()}${networkUrl}`}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        onClick={event => {
-                          event.stopPropagation()
-                        }}
-                        className={classes.link}>
-                        <img className={classes.newTab} src={icons.newTab} alt={'Token address'} />
-                      </a>
-                    </Grid>
-                  </TooltipHover>
-                )}
-              </Grid>
-            </Hidden>
-          </Grid>
-          <SinglePositionPlot
-            data={
-              detailsData.length
-                ? xToY
-                  ? detailsData
-                  : detailsData.map(tick => ({ ...tick, x: 1 / tick.x })).reverse()
-                : Array(100)
-                    .fill(1)
-                    .map((_e, index) => ({ x: index, y: index, index }))
-            }
-            leftRange={memoizedLeftRange}
-            rightRange={memoizedRightRange}
-            midPrice={{
-              ...midPrice,
-              x: midPrice.x ** (xToY ? 1 : -1)
-            }}
-            currentPrice={currentPrice ** (xToY ? 1 : -1)}
-            tokenY={tokenY}
-            tokenX={tokenX}
-            ticksLoading={ticksLoading}
-            tickSpacing={tickSpacing}
-            min={xToY ? min : 1 / max}
-            max={xToY ? max : 1 / min}
-            xToY={xToY}
-            hasTicksError={hasTicksError}
-            reloadHandler={reloadHandler}
-            volumeRange={
-              xToY
-                ? plotVolumeRange
-                : {
-                    min: 1 / (plotVolumeRange?.max ?? 1),
-                    max: 1 / (plotVolumeRange?.min ?? 1)
-                  }
-            }
-            globalPrice={globalPrice}
-            tokenAPriceData={xToY ? tokenXPriceData : tokenYPriceData}
-            tokenBPriceData={xToY ? tokenYPriceData : tokenXPriceData}
-          />
-        </Grid>
-      </Grid>
-    </Grid>
+        <Box className={classes.container}>
+          <Box className={classes.leftSide}>
+            <SinglePositionInfo
+              onClickClaimFee={onClickClaimFee}
+              tokenX={tokenX}
+              tokenY={tokenY}
+              tokenXPriceData={tokenXPriceData}
+              tokenYPriceData={tokenYPriceData}
+              xToY={xToY}
+              showFeesLoader={showFeesLoader}
+              poolDetails={poolDetails}
+              showPoolDetailsLoader={showPoolDetailsLoader}
+              showBalanceLoader={isBalanceLoading}
+              arePointsDistributed={isActive}
+              poolAddress={poolAddress}
+              isPreview={false}
+            />
+          </Box>
+          <Box className={classes.rightSide}>
+            <SinglePositionPlot
+              data={
+                detailsData.length
+                  ? xToY
+                    ? detailsData
+                    : detailsData.map(tick => ({ ...tick, x: 1 / tick.x })).reverse()
+                  : Array(100)
+                      .fill(1)
+                      .map((_e, index) => ({ x: index, y: index, index }))
+              }
+              leftRange={xToY ? leftRange : { ...rightRange, x: 1 / rightRange.x }}
+              rightRange={xToY ? rightRange : { ...leftRange, x: 1 / leftRange.x }}
+              midPrice={{
+                ...midPrice,
+                x: midPrice.x ** (xToY ? 1 : -1)
+              }}
+              currentPrice={currentPrice ** (xToY ? 1 : -1)}
+              tokenY={tokenY}
+              tokenX={tokenX}
+              ticksLoading={ticksLoading}
+              tickSpacing={tickSpacing}
+              min={xToY ? min : 1 / max}
+              max={xToY ? max : 1 / min}
+              xToY={xToY}
+              hasTicksError={hasTicksError}
+              reloadHandler={reloadHandler}
+              isFullRange={isFullRange}
+              globalPrice={globalPrice}
+              tokenAPriceData={xToY ? tokenXPriceData : tokenYPriceData}
+              tokenBPriceData={xToY ? tokenYPriceData : tokenXPriceData}
+              volumeRange={
+                xToY
+                  ? plotVolumeRange
+                  : {
+                      min: 1 / (plotVolumeRange?.max ?? 1),
+                      max: 1 / (plotVolumeRange?.min ?? 1)
+                    }
+              }
+            />
+          </Box>
+        </Box>
+      </Box>{' '}
+    </>
   )
 }
 

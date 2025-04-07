@@ -1,20 +1,26 @@
-import LiquidationRangeInfo from '@components/PositionDetails/LiquidationRangeInfo/LiquidationRangeInfo'
 import PriceRangePlot, { TickPlotPositionData } from '@common/PriceRangePlot/PriceRangePlot'
-import { Card, Grid, Typography } from '@mui/material'
+import { Box, Grid, Typography } from '@mui/material'
 import {
   calcPriceByTickIndex,
   calcTicksAmountInRange,
+  calculateConcentration,
+  formatNumberWithSuffix,
   numberToString,
   spacingMultiplicityGte,
-  TokenPriceData
+  TokenPriceData,
+  truncateString
 } from '@utils/utils'
 import { PlotTickData } from '@store/reducers/positions'
 import React, { useEffect, useState } from 'react'
-import { ILiquidityToken } from '../SinglePositionInfo/consts'
+
 import useStyles from './style'
 import { getMinTick } from '@invariant-labs/sdk/lib/utils'
 import icons from '@static/icons'
-import { TooltipInv } from '@common/TooltipHover/TooltipInv'
+import { ILiquidityToken } from '@store/consts/types'
+import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
+import { RangeIndicator } from './RangeIndicator/RangeIndicator'
+import { Stat } from './Stat/Stat'
+import { colors } from '@static/theme'
 
 export interface ISinglePositionPlot {
   data: PlotTickData[]
@@ -38,6 +44,7 @@ export interface ISinglePositionPlot {
   }
   tokenAPriceData: TokenPriceData | undefined
   tokenBPriceData: TokenPriceData | undefined
+  isFullRange: boolean
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -58,7 +65,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   reloadHandler,
   volumeRange,
   tokenAPriceData,
-  tokenBPriceData
+  tokenBPriceData,
+  isFullRange
 }) => {
   const { classes } = useStyles()
 
@@ -147,103 +155,203 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     }
   }
 
+  const minPercentage = (min / currentPrice - 1) * 100
+  const maxPercentage = (max / currentPrice - 1) * 100
+  const concentration = calculateConcentration(leftRange.index, rightRange.index)
+
   return (
-    <Grid item className={classes.root}>
-      <Grid className={classes.headerContainer} container>
+    <Box className={classes.container}>
+      <Box className={classes.headerContainer}>
         <Typography className={classes.header}>Price range</Typography>
         <Grid>
-          <TooltipInv
-            title={
-              <>
-                <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
-                <Typography className={classes.liquidityDesc} style={{ marginBottom: 12 }}>
-                  While selecting the price range, note where active liquidity is located. Your
-                  liquidity can be inactive and, as a consequence, not generate profits.
-                </Typography>
-                <Grid container className={classes.liquidityWrapper}>
-                  <Typography className={classes.liquidityDesc}>
-                    The active liquidity range is represented by white, dashed lines in the
-                    liquidity chart. Active liquidity is determined by the maximum price range
-                    resulting from the statistical volume of exchanges for the last 7 days.
+          <RangeIndicator inRange={min <= currentPrice && currentPrice <= max} />
+          <Grid gap={1} mt={1} display='flex' flexDirection='column' alignItems='flex-end'>
+            <TooltipGradient
+              title={
+                <>
+                  <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
+                  <Typography className={classes.liquidityDesc} style={{ marginBottom: 12 }}>
+                    While selecting the price range, note where active liquidity is located. Your
+                    liquidity can be inactive and, as a consequence, not generate profits.
                   </Typography>
-                  <img
-                    className={classes.liquidityImg}
-                    src={icons.activeLiquidity}
-                    alt='Liquidity'
-                  />
-                </Grid>
-                <Typography className={classes.liquidityNote}>
-                  Note: active liquidity borders are always aligned to the nearest initialized
-                  ticks.
-                </Typography>
-              </>
-            }
-            placement='bottom'
-            top={1}>
-            <Typography className={classes.activeLiquidity}>
-              Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
-            </Typography>
-          </TooltipInv>
-          <Grid container flexDirection='column'>
+                  <Grid container className={classes.liqWrapper}>
+                    <Typography className={classes.liquidityDesc}>
+                      The active liquidity range is represented by white, dashed lines in the
+                      liquidity chart. Active liquidity is determined by the maximum price range
+                      resulting from the statistical volume of exchanges for the last 7 days.
+                    </Typography>
+                    <img
+                      className={classes.liquidityImg}
+                      src={icons.activeLiquidity}
+                      alt='Liquidity'
+                    />
+                  </Grid>
+                  <Typography className={classes.liquidityNote}>
+                    Note: active liquidity borders are always aligned to the nearest initialized
+                    ticks.
+                  </Typography>
+                </>
+              }
+              placement='bottom'
+              top={1}
+              noGradient>
+              <Typography className={classes.activeLiquidity}>
+                Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
+              </Typography>
+            </TooltipGradient>
             <Typography className={classes.currentPrice}>Current price</Typography>
             <Typography className={classes.globalPrice}>Global price</Typography>
             <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>
             <Typography className={classes.lastGlobalSellPrice}>Last global sell price</Typography>
           </Grid>
         </Grid>
-      </Grid>
-      <Grid className={classes.plotWrapper}>
-        <PriceRangePlot
-          data={data}
-          plotMin={plotMin}
-          plotMax={plotMax}
-          zoomMinus={zoomMinus}
-          zoomPlus={zoomPlus}
-          disabled
-          leftRange={leftRange}
-          rightRange={rightRange}
-          midPrice={midPrice}
-          className={classes.plot}
-          loading={ticksLoading}
-          isXtoY={xToY}
-          tickSpacing={tickSpacing}
-          xDecimal={tokenX.decimal}
-          yDecimal={tokenY.decimal}
-          coverOnLoading
-          hasError={hasTicksError}
-          reloadHandler={reloadHandler}
-          volumeRange={volumeRange}
-          globalPrice={globalPrice}
-          tokenAPriceData={tokenAPriceData}
-          tokenBPriceData={tokenBPriceData}
-        />
-      </Grid>
-      <Grid className={classes.minMaxInfo}>
-        <LiquidationRangeInfo
-          label='min'
-          amount={min}
-          tokenX={xToY ? tokenX.name : tokenY.name}
-          tokenY={xToY ? tokenY.name : tokenX.name}
-        />
-        <LiquidationRangeInfo
-          label='max'
-          amount={max}
-          tokenX={xToY ? tokenX.name : tokenY.name}
-          tokenY={xToY ? tokenY.name : tokenX.name}
-        />
-      </Grid>
-      <Grid className={classes.currentPriceContainer}>
-        <Card className={classes.currentPriceLabel}>
-          <Typography component='p'>current price</Typography>
-        </Card>
-        <Card className={classes.currentPriceAmonut}>
-          <Typography component='p'>
-            <Typography component='span'>{numberToString(currentPrice)}</Typography>
-            {xToY ? tokenY.name : tokenX.name} per {xToY ? tokenX.name : tokenY.name}
-          </Typography>
-        </Card>
-      </Grid>
-    </Grid>
+      </Box>
+      <PriceRangePlot
+        data={data}
+        plotMin={plotMin}
+        plotMax={plotMax}
+        zoomMinus={zoomMinus}
+        zoomPlus={zoomPlus}
+        disabled
+        leftRange={leftRange}
+        rightRange={rightRange}
+        midPrice={midPrice}
+        className={classes.plot}
+        loading={ticksLoading}
+        isXtoY={xToY}
+        tickSpacing={tickSpacing}
+        xDecimal={tokenX.decimal}
+        yDecimal={tokenY.decimal}
+        coverOnLoading
+        hasError={hasTicksError}
+        reloadHandler={reloadHandler}
+        volumeRange={volumeRange}
+        globalPrice={globalPrice}
+        tokenAPriceData={tokenAPriceData}
+        tokenBPriceData={tokenBPriceData}
+      />
+
+      <Box className={classes.statsWrapper}>
+        <Box className={classes.statsContainer}>
+          <Stat
+            name='CURRENT PRICE'
+            value={
+              <Box>
+                <Typography component='span' className={classes.value}>
+                  {numberToString(currentPrice.toFixed(xToY ? tokenY.decimal : tokenX.decimal))}
+                </Typography>{' '}
+                {xToY ? truncateString(tokenY.name, 4) : truncateString(tokenX.name, 4)} {' / '}
+                {xToY ? truncateString(tokenX.name, 4) : truncateString(tokenY.name, 4)}
+              </Box>
+            }
+          />
+          <Stat
+            name={
+              <Box className={classes.concentrationContainer}>
+                <img className={classes.concentrationIcon} src={icons.airdropRainbow} />
+                CONCENTRATION
+              </Box>
+            }
+            value={
+              <Typography className={classes.concentrationValue}>
+                {concentration.toFixed(2)}x
+              </Typography>
+            }
+          />
+        </Box>
+        <Box className={classes.statsContainer}>
+          {isFullRange ? (
+            <Stat
+              value={
+                <Box>
+                  <Typography component='span' className={classes.value}>
+                    FULL RANGE
+                  </Typography>
+                </Box>
+              }
+              isHorizontal
+            />
+          ) : (
+            <>
+              <Stat
+                name='MIN'
+                value={
+                  <Box>
+                    <Typography component='span' className={classes.value}>
+                      {isFullRange ? 0 : formatNumberWithSuffix(min)}
+                    </Typography>{' '}
+                    {!isFullRange &&
+                      (xToY
+                        ? truncateString(tokenY.name, 4)
+                        : truncateString(tokenX.name, 4) + ' / ' + xToY
+                          ? truncateString(tokenX.name, 4)
+                          : truncateString(tokenY.name, 4))}
+                  </Box>
+                }
+                isHorizontal
+              />
+              <Stat
+                name='MAX'
+                value={
+                  <Box>
+                    <Typography component='span' className={classes.value}>
+                      {isFullRange ? (
+                        <span style={{ fontSize: '24px' }}>∞</span>
+                      ) : (
+                        formatNumberWithSuffix(max)
+                      )}
+                    </Typography>{' '}
+                    {!isFullRange &&
+                      (xToY
+                        ? truncateString(tokenY.name, 4)
+                        : truncateString(tokenX.name, 4) + ' / ' + xToY
+                          ? truncateString(tokenX.name, 4)
+                          : truncateString(tokenY.name, 4))}
+                  </Box>
+                }
+                isHorizontal
+              />
+            </>
+          )}
+        </Box>
+        <Box className={classes.statsContainer}>
+          <Stat
+            name='% MIN'
+            value={
+              <Box>
+                <Typography
+                  component='span'
+                  className={classes.value}
+                  style={{
+                    color: minPercentage < 0 ? colors.invariant.Error : colors.invariant.green
+                  }}>
+                  {minPercentage > 0 && '+'}
+                  {minPercentage.toFixed(2)}%
+                </Typography>
+              </Box>
+            }
+            isHorizontal
+          />
+          <Stat
+            name='% MAX'
+            value={
+              <Box>
+                <Typography
+                  component='span'
+                  className={classes.value}
+                  style={{
+                    color: maxPercentage < 0 ? colors.invariant.Error : colors.invariant.green
+                  }}>
+                  {maxPercentage > 0 && '+'}
+                  {maxPercentage.toFixed(2)}%
+                </Typography>
+              </Box>
+            }
+            isHorizontal
+          />
+        </Box>
+      </Box>
+    </Box>
   )
 }
 

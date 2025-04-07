@@ -3,81 +3,35 @@ import { colors, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()((theme: Theme) => ({
-  root: {
-    width: '100%',
+  container: {
+    height: '100%',
     backgroundColor: colors.invariant.component,
     padding: 24,
-    paddingTop: 18,
+    paddingInline: 8,
     borderRadius: 24,
-    [theme.breakpoints.down('sm')]: {
-      padding: '24px 8px'
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    gap: 12,
+
+    [theme.breakpoints.up('sm')]: {
+      paddingInline: 24
     }
   },
-  headerContainer: {
-    justifyContent: 'space-between',
-    ...typography.heading4,
-    color: '#FFFFFF'
-  },
-  liquidityWrapper: {
+  liqWrapper: {
     flexDirection: 'row',
     flexWrap: 'nowrap',
     alignItems: 'center',
-    marginBottom: 12
+    marginBottom: '12px'
+  },
+  headerContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start'
   },
   header: {
-    paddingBottom: 30
-  },
-  plotWrapper: {
-    paddingBottom: 29
-  },
-  minMaxInfo: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gridGap: '15px',
-    paddingBottom: 16,
-
-    [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '1fr',
-      gridGap: '8px'
-    }
-  },
-  currentPriceContainer: {
-    backgroundColor: '#111931',
-    borderRadius: 11
-  },
-  currentPriceLabel: {
-    backgroundColor: colors.invariant.light,
-    color: colors.invariant.lightGrey,
-    textAlign: 'center',
-    borderRadius: '11px!important',
-    '& p': {
-      ...typography.body2,
-      textTransform: 'uppercase',
-      lineHeight: '35px',
-      [theme.breakpoints.only('md')]: {
-        ...typography.caption2,
-        lineHeight: '35px'
-      }
-    }
-  },
-  currentPriceAmonut: {
-    backgroundColor: colors.invariant.dark,
-    textAlign: 'center',
-    borderRadius: '11px!important',
-    '& span': {
-      color: colors.invariant.text,
-      ...typography.body1,
-      lineHeight: '35px',
-      paddingRight: 5
-    },
-    '& p': {
-      color: '#A9B6BF',
-      ...typography.body1,
-      [theme.breakpoints.only('md')]: {
-        ...typography.caption1,
-        lineHeight: '35px'
-      }
-    }
+    ...typography.heading4,
+    color: colors.white.main
   },
   plot: {
     width: '100%',
@@ -89,33 +43,41 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       height: 253
     }
   },
-  infoRow: {
-    marginBottom: 16
-  },
-  activeLiquidity: {
-    color: colors.invariant.text,
-    ...typography.caption2,
+  statsWrapper: {
     display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    cursor: 'default'
+    flexDirection: 'column',
+    gap: 16
   },
-  activeLiquidityIcon: {
-    marginLeft: 5,
-    height: 14,
-    width: 14,
-    border: '1px solid #FFFFFF',
-    color: colors.invariant.text,
-    borderRadius: '50%',
-    fontSize: 8,
-    lineHeight: '10px',
+  statsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
+
+    [theme.breakpoints.up('sm')]: {
+      flexDirection: 'row'
+    }
+  },
+  value: {
+    color: colors.white.main
+  },
+  valuePercentagePlus: {
+    color: colors.invariant.green
+  },
+  valuePercentageMinus: {
+    color: colors.invariant.Error
+  },
+  concentrationContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 4
+  },
+  concentrationValue: {
+    fontSize: 20,
     fontWeight: 400,
-    textAlign: 'center',
-    boxSizing: 'border-box',
-    paddingTop: 3,
-    cursor: 'default',
-    userSelect: 'none'
+    color: colors.white.main
+  },
+  concentrationIcon: {
+    marginBottom: 3
   },
   liquidityTooltip: {
     background: colors.invariant.component,
@@ -152,6 +114,30 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     color: colors.invariant.yellow,
     ...typography.caption2,
     textAlign: 'right'
+  },
+  activeLiquidity: {
+    color: colors.invariant.text,
+    ...typography.caption2,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    cursor: 'default'
+  },
+  activeLiquidityIcon: {
+    marginLeft: 5,
+    height: 14,
+    width: 14,
+    border: '1px solid #FFFFFF',
+    color: colors.invariant.text,
+    borderRadius: '50%',
+    fontSize: 8,
+    lineHeight: '10px',
+    fontWeight: 400,
+    textAlign: 'center',
+    boxSizing: 'border-box',
+    paddingTop: 3,
+    cursor: 'default',
+    userSelect: 'none'
   },
   globalPrice: {
     display: 'inline-block',

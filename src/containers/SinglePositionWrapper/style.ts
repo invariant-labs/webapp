@@ -14,8 +14,6 @@ const useStyles = makeStyles()(() => {
       margin: 'auto'
     },
     fullHeightContainer: {
-      justifyContent: 'center',
-      alignItems: 'center',
       height: '100%',
       marginTop: 104,
       [theme.breakpoints.down('sm')]: {
@@ -32,17 +30,6 @@ const useStyles = makeStyles()(() => {
       },
       width: 1122,
       display: 'flex',
-      maxWidth: '100%'
-    },
-    emptyContainer2: {
-      display: 'flex',
-      position: 'relative',
-      justifyContent: 'center',
-      marginTop: 104,
-      [theme.breakpoints.down('sm')]: {
-        marginTop: 30
-      },
-      width: 1122,
       maxWidth: '100%'
     }
   }
