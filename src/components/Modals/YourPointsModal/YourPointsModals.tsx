@@ -1,6 +1,7 @@
 import React from 'react'
 import useStyles from './style'
-import { Box, Button, Grid, Popover, Typography } from '@mui/material'
+import { Box, Grid, Popover, Typography } from '@mui/material'
+import { Button } from '@common/Button/Button'
 
 export interface ISelectNetworkModal {
   open: boolean
@@ -32,15 +33,17 @@ export const YourPointsModal: React.FC<ISelectNetworkModal> = ({ anchorEl, open,
               Points Program is <span className={classes.textLive}>live on Eclipse!</span>
             </Typography>
             <Typography className={classes.footer}>Visit Invariant Eclipse to check it.</Typography>
-            <Button
-              style={{ marginTop: '16px' }}
-              className={classes.button}
-              onClick={() => {
-                handleClose()
-                window.open('https://eclipse.invariant.app/points', '_blank')
-              }}>
-              Invariant Eclipse Points
-            </Button>
+            <Box className={classes.linkContainer}>
+              <Button
+                scheme='green'
+                height={32}
+                onClick={() => {
+                  handleClose()
+                  window.open('https://eclipse.invariant.app/points', '_blank')
+                }}>
+                <Typography fontSize={13}>Invariant Eclipse Points</Typography>
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Grid>

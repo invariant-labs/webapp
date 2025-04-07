@@ -10,6 +10,12 @@ export const useStyles = makeStyles()(() => {
         backgroundColor: 'transparent'
       }
     },
+    button: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      width: '150px'
+    },
     headerWrapper: {
       justifyContent: 'space-between',
       marginBottom: 6

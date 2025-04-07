@@ -3,7 +3,7 @@ import PoolListItem from '@components/Stats/PoolListItem/PoolListItem'
 import { useStyles } from './style'
 import { Grid } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
-import { PaginationList } from '@components/Pagination/Pagination'
+import { PaginationList } from '@common/Pagination/Pagination'
 import { VariantType } from 'notistack'
 import { useNavigate } from 'react-router-dom'
 
@@ -41,7 +41,7 @@ export interface PoolListInterface {
 import { Keypair } from '@solana/web3.js'
 import classNames from 'classnames'
 import { ROUTES } from '@utils/utils'
-import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { colors } from '@static/theme'
 
 const ITEMS_PER_PAGE = 10

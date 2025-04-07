@@ -9,7 +9,7 @@ import { actions as snackbarActions } from '@store/reducers/snackbars'
 import { network } from '@store/selectors/solanaConnection'
 import { actions } from '@store/reducers/stats'
 import LiquidityPoolList from '@components/LiquidityPoolList/LiquidityPoolList'
-import { FilterSearch, ISearchToken } from '@components/FilterSearch/FilterSearch'
+import { FilterSearch, ISearchToken } from '@common/FilterSearch/FilterSearch'
 import { theme } from '@static/theme'
 
 export const WrappedPoolList: React.FC = () => {

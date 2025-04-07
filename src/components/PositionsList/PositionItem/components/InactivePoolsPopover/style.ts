@@ -11,18 +11,7 @@ const useStyles = makeStyles()(() => {
         padding: '16px'
       }
     },
-    root: {
-      width: '300px',
-      height: 'fit-content',
 
-      color: colors.invariant.textGrey,
-      ...typography.caption4,
-      lineHeight: '24px',
-      background: colors.black.full,
-      borderRadius: 12,
-      padding: 10,
-      fontSize: 14
-    },
     paper: {
       background: 'transparent',
       boxShadow: 'none',

@@ -290,6 +290,17 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
         getOptionLabel={option => option.symbol}
         onOpen={handleOpenPopper}
         onClose={handleClosePopper}
+        filterOptions={(options, { inputValue }) => {
+          const trimmedInput = inputValue.trim().toLowerCase()
+          if (!trimmedInput) return options
+
+          return options.filter(
+            option =>
+              option.symbol.toLowerCase().includes(trimmedInput) ||
+              option.name.toLowerCase().includes(trimmedInput) ||
+              option.address.toLowerCase().includes(trimmedInput)
+          )
+        }}
         noOptionsText={<Typography className={classes.headerText}>No tokens found</Typography>}
         componentsProps={{
           popper: {

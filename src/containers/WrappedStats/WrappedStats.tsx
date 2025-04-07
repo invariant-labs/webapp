@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useStyles from './styles'
 import { Grid, Typography } from '@mui/material'
-import { EmptyPlaceholder } from '@components/EmptyPlaceholder/EmptyPlaceholder'
+import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import {
   fees24,
   isLoading,
@@ -23,7 +23,7 @@ import TokensList from '@components/Stats/TokensList/TokensList'
 import PoolList from '@components/Stats/PoolList/PoolList'
 import icons from '@static/icons'
 import { VariantType } from 'notistack'
-import { FilterSearch, ISearchToken } from '@components/FilterSearch/FilterSearch'
+import { FilterSearch, ISearchToken } from '@common/FilterSearch/FilterSearch'
 
 export const WrappedStats: React.FC = () => {
   const { classes } = useStyles()

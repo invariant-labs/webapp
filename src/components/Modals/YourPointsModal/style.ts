@@ -13,7 +13,14 @@ const useStyles = makeStyles()(() => {
       borderRadius: 5,
       marginTop: 7
     },
-
+    linkContainer: {
+      width: '100%',
+      minHeight: '32px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 16
+    },
     listItem: {
       color: colors.invariant.textGrey,
       background: colors.invariant.component,
