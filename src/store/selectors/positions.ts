@@ -17,7 +17,8 @@ export const {
   currentPoolIndex,
   initPosition,
   shouldNotUpdateRange,
-  currentPositionId
+  currentPositionId,
+  showFeesLoader
 } = keySelectors(store, [
   'lastPage',
   'positionsList',
@@ -26,7 +27,8 @@ export const {
   'currentPoolIndex',
   'initPosition',
   'shouldNotUpdateRange',
-  'currentPositionId'
+  'currentPositionId',
+  'showFeesLoader'
 ])
 
 export const lastPageSelector = lastPage
@@ -120,7 +122,8 @@ export const positionsSelectors = {
   plotTicks,
   initPosition,
   shouldNotUpdateRange,
-  currentPositionId
+  currentPositionId,
+  showFeesLoader
 }
 
 export default positionsSelectors

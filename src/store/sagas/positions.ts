@@ -1090,9 +1090,10 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 
     closeSnackbar(loaderClaimFee)
     yield put(snackbarsActions.remove(loaderClaimFee))
+    yield put(actions.setFeesLoader(false))
   } catch (e) {
     console.log(e)
-
+    yield put(actions.setFeesLoader(false))
     closeSnackbar(loaderTxDetails)
     yield put(snackbarsActions.remove(loaderTxDetails))
     closeSnackbar(loaderClaimFee)
@@ -1255,9 +1256,10 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
     closeSnackbar(loaderClaimFee)
     yield put(snackbarsActions.remove(loaderClaimFee))
+    yield put(actions.setFeesLoader(false))
   } catch (e) {
     console.log(e)
-
+    yield put(actions.setFeesLoader(false))
     closeSnackbar(loaderClaimFee)
     yield put(snackbarsActions.remove(loaderClaimFee))
     closeSnackbar(loaderSigningTx)

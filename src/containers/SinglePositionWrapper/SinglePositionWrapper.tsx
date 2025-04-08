@@ -19,7 +19,12 @@ import { actions } from '@store/reducers/positions'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { Status, actions as walletActions } from '@store/reducers/solanaWallet'
 import { network, timeoutError } from '@store/selectors/solanaConnection'
-import { isLoadingPositionsList, plotTicks, singlePositionData } from '@store/selectors/positions'
+import {
+  isLoadingPositionsList,
+  plotTicks,
+  singlePositionData,
+  showFeesLoader as storeFeesLoader
+} from '@store/selectors/positions'
 import { balance, balanceLoading, status } from '@store/selectors/solanaWallet'
 import { VariantType } from 'notistack'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -65,7 +70,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const solBalance = useSelector(balance)
 
   const isTimeoutError = useSelector(timeoutError)
-
+  const isFeesLoading = useSelector(storeFeesLoader)
   const isLoadingStats = useSelector(isLoading)
   const poolsList = useSelector(poolsStatsWithTokensDetails)
 
@@ -443,6 +448,9 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       }
     }
   }, [isLoadingList])
+  useEffect(() => {
+    setShowFeesLoader(isFeesLoading)
+  }, [isFeesLoading])
 
   const poolDetails = useMemo(() => {
     if (!position) {

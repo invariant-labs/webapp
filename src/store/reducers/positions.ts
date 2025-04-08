@@ -3,6 +3,7 @@ import { BN } from '@project-serum/anchor'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
 import { PayloadType } from '@store/consts/types'
+import { set } from 'remeda'
 
 export type FetchTick = 'lower' | 'upper'
 
@@ -53,6 +54,7 @@ export interface IPositionsStore {
   prices: {
     data: Record<string, { price: number; buyPrice: number; sellPrice: number }>
   }
+  showFeesLoader: boolean
 }
 
 export interface InitPositionData
@@ -108,8 +110,8 @@ export const defaultState: IPositionsStore = {
   prices: {
     data: {}
   },
-
-  shouldNotUpdateRange: false
+  shouldNotUpdateRange: false,
+  showFeesLoader: false
 }
 
 export const positionsSliceName = 'positions'
@@ -178,6 +180,11 @@ const positionsSlice = createSlice({
       return state
     },
     claimFee(state, _action: PayloadAction<number>) {
+      state.showFeesLoader = true
+      return state
+    },
+    setFeesLoader(state, action: PayloadAction<boolean>) {
+      state.showFeesLoader = action.payload
       return state
     },
     setAllClaimLoader(state, action: PayloadAction<boolean>) {
