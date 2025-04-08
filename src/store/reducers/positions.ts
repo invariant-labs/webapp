@@ -3,7 +3,6 @@ import { BN } from '@project-serum/anchor'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
 import { PayloadType } from '@store/consts/types'
-import { set } from 'remeda'
 
 export type FetchTick = 'lower' | 'upper'
 

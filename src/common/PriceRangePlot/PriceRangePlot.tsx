@@ -70,7 +70,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   coverOnLoading = false,
   hasError = false,
   reloadHandler,
-  volumeRange,
   tokenAPriceData,
   tokenBPriceData
 }) => {
@@ -364,40 +363,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
         <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.plotRed} />
       </svg>
-    )
-  }
-
-  const volumeRangeLayer: Layer = ({ innerWidth, innerHeight }) => {
-    if (typeof volumeRange === 'undefined') {
-      return null
-    }
-
-    const unitLen = innerWidth / (plotMax - plotMin)
-    return (
-      <>
-        {volumeRange.min >= plotMin ? (
-          <line
-            x1={(volumeRange.min - plotMin) * unitLen}
-            x2={(volumeRange.min - plotMin) * unitLen}
-            y1={0}
-            strokeWidth={1}
-            y2={innerHeight}
-            stroke={colors.invariant.text}
-            strokeDasharray='16 4'
-          />
-        ) : null}
-        {volumeRange.max <= plotMax ? (
-          <line
-            x1={(volumeRange.max - plotMin) * unitLen}
-            x2={(volumeRange.max - plotMin) * unitLen}
-            y1={0}
-            strokeWidth={1}
-            y2={innerHeight}
-            stroke={colors.invariant.text}
-            strokeDasharray='16 4'
-          />
-        ) : null}
-      </>
     )
   }
 
