@@ -91,7 +91,8 @@ export const Primary: Story = {
       fee: 0.01
     },
     showPoolDetailsLoader: true,
-    solBalance: 0
+    solBalance: 0,
+    isPreview: false
   },
   render: args => {
     return (
