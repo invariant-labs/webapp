@@ -83,6 +83,8 @@ import Cat1 from '@static/svg/SolanaCreator/Cat1.svg'
 import Cat2 from '@static/svg/SolanaCreator/Cat2.svg'
 import reverseTokens from './svg/reverse-tokens.svg'
 import backArrow from '@static/svg/back-arrow.svg'
+import eyeYellow from './svg/eyeYellow.svg'
+import closeYellow from './svg/closeYellow.svg'
 
 const icons = {
   Dog1,
@@ -169,7 +171,9 @@ const icons = {
   liquidityEmpty,
   assetsEmpty,
   reverseTokens,
-  backArrow
+  backArrow,
+  eyeYellow,
+  closeYellow
 }
 
 export default icons

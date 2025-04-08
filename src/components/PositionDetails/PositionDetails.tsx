@@ -1,7 +1,7 @@
 import SinglePositionInfo from '@components/PositionDetails/SinglePositionInfo/SinglePositionInfo'
 import SinglePositionPlot from '@components/PositionDetails/SinglePositionPlot/SinglePositionPlot'
 import { TickPlotPositionData } from '@common/PriceRangePlot/PriceRangePlot'
-import { Box } from '@mui/material'
+import { Box, useMediaQuery } from '@mui/material'
 import {
   NetworkType,
   REFRESHER_INTERVAL,
@@ -21,6 +21,9 @@ import { DECIMAL, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { PositionHeader } from './PositionHeader/PositionHeader'
 import { PoolDetails } from '@containers/SinglePositionWrapper/SinglePositionWrapper'
 import { BN } from '@project-serum/anchor'
+import { theme } from '@static/theme'
+import { Information } from '@common/Information/Information'
+import icons from '@static/icons'
 interface IProps {
   poolAddress: PublicKey
   copyPoolAddressHandler: (message: string, variant: VariantType) => void
@@ -57,6 +60,7 @@ interface IProps {
   onGoBackClick: () => void
   showPoolDetailsLoader: boolean
   solBalance: BN
+  isPreview: boolean
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -91,13 +95,18 @@ const PositionDetails: React.FC<IProps> = ({
   poolDetails,
   showPoolDetailsLoader,
   isBalanceLoading,
-  solBalance
+  solBalance,
+  isPreview
 }) => {
   const { classes } = useStyles()
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
 
   const navigate = useNavigate()
 
   const [refresherTime, setRefresherTime] = useState<number>(REFRESHER_INTERVAL)
+
+  const [showPreviewInfo, setShowPreviewInfo] = useState(false)
+  const [connectWalletDelay, setConnectWalletDelay] = useState(false)
 
   const isActive = midPrice.x >= min && midPrice.x <= max
 
@@ -141,9 +150,25 @@ const PositionDetails: React.FC<IProps> = ({
     }
   }, [network])
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setConnectWalletDelay(true)
+    }, 2000)
+
+    return () => clearTimeout(timeout)
+  }, [])
+
+  useEffect(() => {
+    if (isPreview && connectWalletDelay) {
+      setShowPreviewInfo(true)
+    } else {
+      setShowPreviewInfo(false)
+    }
+  }, [isPreview, connectWalletDelay])
+
   return (
     <>
-      {/* <Information mb={3} transitionTimeout={300} shouldOpen={showPreviewInfo}>
+      <Information mb={3} transitionTimeout={300} shouldOpen={showPreviewInfo}>
         <Box className={classes.information}>
           <img src={icons.eyeYellow} alt='Eye' style={{ minWidth: 24 }} />
           {isSm
@@ -151,7 +176,7 @@ const PositionDetails: React.FC<IProps> = ({
             : `You are currently watching someone else's position. Connect your wallet or go to
               portfolio to see your positions.`}
         </Box>
-      </Information> */}
+      </Information>
       <Box className={classes.mainContainer}>
         <PositionHeader
           tokenA={
@@ -183,7 +208,7 @@ const PositionDetails: React.FC<IProps> = ({
           onRefreshClick={() => onRefresh()}
           onGoBackClick={() => onGoBackClick()}
           copyPoolAddressHandler={copyPoolAddressHandler}
-          isPreview={false}
+          isPreview={showPreviewInfo}
         />
         <Box className={classes.container}>
           <Box className={classes.leftSide}>
@@ -199,7 +224,7 @@ const PositionDetails: React.FC<IProps> = ({
               showPoolDetailsLoader={showPoolDetailsLoader}
               showBalanceLoader={isBalanceLoading}
               poolAddress={poolAddress}
-              isPreview={false}
+              isPreview={showPreviewInfo}
             />
           </Box>
           <Box className={classes.rightSide}>

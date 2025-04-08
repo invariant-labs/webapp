@@ -39,7 +39,8 @@ export const useStyles = makeStyles()(() => ({
     '&:disabled': {
       pointerEvents: 'all',
       background: colors.invariant.light,
-      color: colors.invariant.textGrey
+      color: colors.invariant.textGrey,
+      cursor: 'not-allowed'
     }
   }
 }))

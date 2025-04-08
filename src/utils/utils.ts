@@ -1878,3 +1878,37 @@ export const calculateAPYAndAPR = (
     return { convertedApy: Math.abs(apy), convertedApr: Math.abs(apyToApr(apy)) }
   }
 }
+
+export const getPositionByIdAndPoolAddress = async (
+  marketProgram: Market,
+  id: string,
+  poolAddress: string
+): Promise<PositionWithoutTicks | null> => {
+  const positions = await marketProgram.program.account.position.all([
+    {
+      memcmp: {
+        bytes: bs58.encode(new PublicKey(poolAddress).toBuffer()),
+        offset: 40
+      }
+    },
+    {
+      memcmp: {
+        bytes: bs58.encode(new BN(id).toBuffer('le', 16)),
+        offset: 72
+      }
+    }
+  ])
+
+  return positions[0]
+    ? {
+        ...positions[0].account,
+        feeGrowthInsideX: positions[0].account.feeGrowthInsideX,
+        feeGrowthInsideY: positions[0].account.feeGrowthInsideY,
+        liquidity: positions[0].account.liquidity,
+        secondsPerLiquidityInside: positions[0].account.secondsPerLiquidityInside,
+        tokensOwedX: positions[0].account.tokensOwedX,
+        tokensOwedY: positions[0].account.tokensOwedY,
+        address: positions[0].publicKey
+      }
+    : null
+}
