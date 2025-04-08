@@ -47,8 +47,6 @@ export const Primary: Story = {
       apy: 0,
       fee: 0.01
     },
-    arePointsDistributed: true,
-    points24: 0,
     poolAddress: new PublicKey('0123456789'),
     isPreview: false
   },

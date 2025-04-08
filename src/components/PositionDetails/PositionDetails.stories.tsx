@@ -81,9 +81,17 @@ export const Primary: Story = {
     network: NetworkType.Testnet,
     poolAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
     setXToY: fn(),
-    tokenXAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-    tokenYAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-    xToY: true
+    xToY: true,
+    onGoBackClick: fn(),
+    poolDetails: {
+      tvl: 0,
+      volume24: 0,
+      fee24: 0,
+      apy: 0,
+      fee: 0.01
+    },
+    showPoolDetailsLoader: true,
+    solBalance: 0
   },
   render: args => {
     return (
