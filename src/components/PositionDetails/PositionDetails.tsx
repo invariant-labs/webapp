@@ -14,7 +14,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStyles } from './style'
 import { ILiquidityToken, TokenPriceData } from '@store/consts/types'
-import { addressToTicker, printBN, ROUTES } from '@utils/utils'
+import { addressToTicker, initialXtoY, parseFeeToPathFee, printBN, ROUTES } from '@utils/utils'
 import { PublicKey } from '@solana/web3.js'
 import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
@@ -25,6 +25,8 @@ import { theme } from '@static/theme'
 import { Information } from '@common/Information/Information'
 import icons from '@static/icons'
 interface IProps {
+  tokenXAddress: PublicKey
+  tokenYAddress: PublicKey
   poolAddress: PublicKey
   copyPoolAddressHandler: (message: string, variant: VariantType) => void
   detailsData: PlotTickData[]
@@ -64,6 +66,8 @@ interface IProps {
 }
 
 const PositionDetails: React.FC<IProps> = ({
+  tokenXAddress,
+  tokenYAddress,
   poolAddress,
   copyPoolAddressHandler,
   detailsData,
@@ -165,7 +169,7 @@ const PositionDetails: React.FC<IProps> = ({
       setShowPreviewInfo(false)
     }
   }, [isPreview, connectWalletDelay])
-
+  console.log(tokenX.name)
   return (
     <>
       <Information mb={3} transitionTimeout={300} shouldOpen={showPreviewInfo}>
@@ -200,10 +204,19 @@ const PositionDetails: React.FC<IProps> = ({
             closePosition()
           }}
           onAddPositionClick={() => {
-            const address1 = addressToTicker(network, tokenX.name)
-            const address2 = addressToTicker(network, tokenY.name)
+            const parsedFee = parseFeeToPathFee(fee.v)
+            const address1 = addressToTicker(network, tokenXAddress.toString())
+            const address2 = addressToTicker(network, tokenYAddress.toString())
 
-            navigate(ROUTES.getNewPositionRoute(address1, address2, fee.toString()))
+            const isXtoY = initialXtoY(
+              tokenXAddress.toString() ?? '',
+              tokenYAddress.toString() ?? ''
+            )
+
+            const tokenA = isXtoY ? address1 : address2
+            const tokenB = isXtoY ? address2 : address1
+
+            navigate(ROUTES.getNewPositionRoute(tokenA, tokenB, parsedFee))
           }}
           onRefreshClick={() => onRefresh()}
           onGoBackClick={() => onGoBackClick()}

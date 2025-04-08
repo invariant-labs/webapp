@@ -501,6 +501,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   if (position) {
     return (
       <PositionDetails
+        tokenXAddress={position.tokenX.assetAddress}
+        tokenYAddress={position.tokenY.assetAddress}
         poolAddress={position.poolData.address}
         copyPoolAddressHandler={copyPoolAddressHandler}
         detailsData={data}
