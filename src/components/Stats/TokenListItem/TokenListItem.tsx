@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { colors, theme } from '@static/theme'
+import { theme } from '@static/theme'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useStyles } from './style'
@@ -141,7 +141,7 @@ const TokenListItem: React.FC<IProps> = ({
                   className={classes.actionButton}
                   onClick={() =>
                     window.open(
-                      `https://eclipsescan.xyz/token/${address}${networkUrl}`,
+                      `https://solscan.io/token/${address}${networkUrl}`,
                       '_blank',
                       'noopener,noreferrer'
                     )
@@ -153,10 +153,7 @@ const TokenListItem: React.FC<IProps> = ({
           )}
         </Grid>
       ) : (
-        <Grid
-          container
-          style={{ color: colors.invariant.textGrey, fontWeight: 400 }}
-          classes={{ container: classes.container, root: classes.header }}>
+        <Grid container classes={{ container: classes.container, root: classes.header }}>
           {!isXs && !isSm && (
             <Typography style={{ lineHeight: '12px' }}>
               N<sup>o</sup>

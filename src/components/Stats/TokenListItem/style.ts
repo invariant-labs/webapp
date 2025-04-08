@@ -52,6 +52,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   header: {
     '& p.MuiTypography-root': {
       ...typography.heading4,
+      color: colors.invariant.textGrey,
       fontWeight: 600,
       display: 'flex',
       justifyContent: 'start',
