@@ -1,5 +1,10 @@
 import { PositionsList } from '@components/PositionsList/PositionsList'
-import { POSITIONS_PER_PAGE } from '@store/consts/static'
+import {
+  NetworkType,
+  POSITIONS_PER_PAGE,
+  WSOL_CLOSE_POSITION_LAMPORTS_DEV,
+  WSOL_CLOSE_POSITION_LAMPORTS_MAIN
+} from '@store/consts/static'
 import { actions } from '@store/reducers/positions'
 import { actions as walletActions, Status } from '@store/reducers/solanaWallet'
 import {
@@ -9,7 +14,7 @@ import {
   positionsWithPoolsData,
   prices
 } from '@store/selectors/positions'
-import { address, status } from '@store/selectors/solanaWallet'
+import { address, balance, status } from '@store/selectors/solanaWallet'
 import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -25,6 +30,7 @@ import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { network } from '@store/selectors/solanaConnection'
 import { IPositionItem } from '@components/PositionsList/types'
 import { actions as actionsStats } from '@store/reducers/stats'
+import { actions as snackbarActions } from '@store/reducers/snackbars'
 
 export const WrappedPositionsList: React.FC = () => {
   const walletAddress = useSelector(address)
@@ -36,16 +42,33 @@ export const WrappedPositionsList: React.FC = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const pricesData = useSelector(prices)
+  const solBalance = useSelector(balance)
+
+  const canClosePosition = useMemo(() => {
+    if (currentNetwork === NetworkType.Mainnet) {
+      return solBalance.gte(WSOL_CLOSE_POSITION_LAMPORTS_MAIN)
+    } else {
+      return solBalance.gte(WSOL_CLOSE_POSITION_LAMPORTS_DEV)
+    }
+  }, [currentNetwork, solBalance])
 
   const handleClosePosition = (index: number) => {
-    dispatch(
-      actions.closePosition({
-        positionIndex: index,
-        onSuccess: () => {
-          navigate(ROUTES.PORTFOLIO)
-        }
-      })
-    )
+    canClosePosition
+      ? dispatch(
+          actions.closePosition({
+            positionIndex: index,
+            onSuccess: () => {
+              navigate(ROUTES.PORTFOLIO)
+            }
+          })
+        )
+      : dispatch(
+          snackbarActions.add({
+            message: 'Not enough SOL balance to close position',
+            variant: 'error',
+            persist: false
+          })
+        )
   }
 
   const handleClaimFee = (index: number) => {

@@ -107,7 +107,7 @@ const PositionDetails: React.FC<IProps> = ({
     } else {
       return solBalance.gte(WSOL_CLOSE_POSITION_LAMPORTS_DEV)
     }
-  }, [network])
+  }, [network, solBalance])
 
   const isFullRange = useMemo(
     () =>
