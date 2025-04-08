@@ -9,8 +9,8 @@ const useStyles = makeStyles()(() => {
       color: colors.white.main
     },
     loading: {
-      width: 300,
-      height: 300,
+      width: 200,
+      height: 200,
       [theme.breakpoints.down('sm')]: {
         width: 150,
         height: 150
