@@ -33,7 +33,9 @@ export const PositionStats = ({ value, pendingFees, poolApr, isLoading }: Props)
             <Typography className={classes.statValue}>
               $
               {+formatNumberWithSuffix(pendingFees, true, 18) < 1000
-                ? (+formatNumberWithSuffix(pendingFees, true, 18)).toFixed(2)
+                ? (+formatNumberWithSuffix(pendingFees, true, 18)).toFixed(2) === '0.00'
+                  ? '<0.01'
+                  : (+formatNumberWithSuffix(pendingFees, true, 18)).toFixed(2)
                 : formatNumberWithSuffix(pendingFees)}
             </Typography>
           )}
