@@ -25,7 +25,6 @@ interface IProp {
   poolDetails: PoolDetailsType | null
   showPoolDetailsLoader?: boolean
   showBalanceLoader?: boolean
-  arePointsDistributed: boolean
   poolAddress: PublicKey
   isPreview: boolean
 }
@@ -41,7 +40,6 @@ const SinglePositionInfo: React.FC<IProp> = ({
   showPoolDetailsLoader = false,
   poolDetails,
   showBalanceLoader = false,
-  arePointsDistributed,
   poolAddress,
   isPreview
 }) => {
@@ -80,7 +78,6 @@ const SinglePositionInfo: React.FC<IProp> = ({
             tokenY.claimValue * (tokenYPriceData?.price ?? 0)
           }
           poolApr={convertedApr}
-          arePointsDistributed={arePointsDistributed}
           isLoading={showFeesLoader}
         />
         <Separator size='100%' isHorizontal color={colors.invariant.light} />

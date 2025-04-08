@@ -28,7 +28,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { poolsArraySortedByFees, tokens } from '@store/selectors/pools'
 import { positionsWithPoolsData } from '@store/selectors/positions'
 import { network, rpcAddress } from '@store/selectors/solanaConnection'
-import { accounts } from '@store/selectors/solanaWallet'
+import { accounts, balance } from '@store/selectors/solanaWallet'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
 import {
   Keypair,
@@ -1313,7 +1313,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     const allPositionsData = yield* select(positionsWithPoolsData)
     const tokensAccounts = yield* select(accounts)
     const allTokens = yield* select(tokens)
-
+    const solbalance1 = yield* select(balance)
+    console.log('solbalance1', solbalance1.toString())
     const wrappedSolAccount = Keypair.generate()
 
     const createIx = SystemProgram.createAccount({

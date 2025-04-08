@@ -165,7 +165,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         <Typography className={classes.header}>Price range</Typography>
         <Grid>
           <RangeIndicator inRange={min <= currentPrice && currentPrice <= max} />
-          <Grid gap={1} mt={1} display='flex' flexDirection='column' alignItems='flex-end'>
+          <Grid gap={'2px'} mt={1} display='flex' flexDirection='column' alignItems='flex-end'>
             <TooltipGradient
               title={
                 <>

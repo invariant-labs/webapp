@@ -12,7 +12,10 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    gap: 12,
+
+    [theme.breakpoints.down('md')]: {
+      gap: 20
+    },
 
     [theme.breakpoints.up('sm')]: {
       paddingInline: 24

@@ -1,28 +1,16 @@
 import { Box, Skeleton, Typography } from '@mui/material'
 import { useStyles } from './style'
-import {
-  formatNumberWithCommas,
-  formatNumberWithSuffix,
-  printBN,
-  removeAdditionalDecimals
-} from '@utils/utils'
+import { formatNumberWithSuffix } from '@utils/utils'
 import classNames from 'classnames'
 
 type Props = {
   value: number
   pendingFees: number
   poolApr: number
-  arePointsDistributed: boolean
   isLoading: boolean
 }
 
-export const PositionStats = ({
-  value,
-  pendingFees,
-  poolApr,
-  arePointsDistributed,
-  isLoading
-}: Props) => {
+export const PositionStats = ({ value, pendingFees, poolApr, isLoading }: Props) => {
   const { classes } = useStyles()
 
   return (
@@ -40,7 +28,7 @@ export const PositionStats = ({
         <Box className={classes.statContainer}>
           <Typography className={classes.statName}>Pending fees:</Typography>
           {isLoading ? (
-            <Skeleton variant='rounded' width={36} height={17} />
+            <Skeleton variant='rounded' width={38} height={17} />
           ) : (
             <Typography className={classes.statValue}>
               $
@@ -52,15 +40,6 @@ export const PositionStats = ({
         </Box>
       </Box>
       <Box className={classes.statWrapper}>
-        <Box className={classNames(classes.statContainer, classes.statCOntainerRainbow)}>
-          {arePointsDistributed ? (
-            <>
-              <Typography className={classes.statName}>Points 24H:</Typography>
-            </>
-          ) : (
-            <Typography className={classes.statName}>No points distribution</Typography>
-          )}
-        </Box>
         <Box className={classNames(classes.statContainer, classes.statContainerHiglight)}>
           <Typography className={classes.statName}>Pool APR:</Typography>
           <Typography className={classNames(classes.statValue, classes.statValueHiglight)}>

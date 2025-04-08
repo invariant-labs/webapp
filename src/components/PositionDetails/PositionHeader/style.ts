@@ -128,12 +128,15 @@ export const useStyles = makeStyles()(() => ({
     color: colors.invariant.textGrey
   },
   explorerLink: {
-    height: 14,
+    height: 20,
+    '& img': {
+      height: 14,
 
-    '&:hover': {
-      filter: 'brightness(1.4)',
-      '@media (hover: none)': {
-        filter: 'brightness(1)'
+      '&:hover': {
+        filter: 'brightness(1.4)',
+        '@media (hover: none)': {
+          filter: 'brightness(1)'
+        }
       }
     }
   },

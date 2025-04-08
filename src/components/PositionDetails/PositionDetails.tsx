@@ -2,7 +2,12 @@ import SinglePositionInfo from '@components/PositionDetails/SinglePositionInfo/S
 import SinglePositionPlot from '@components/PositionDetails/SinglePositionPlot/SinglePositionPlot'
 import { TickPlotPositionData } from '@common/PriceRangePlot/PriceRangePlot'
 import { Box } from '@mui/material'
-import { NetworkType, REFRESHER_INTERVAL } from '@store/consts/static'
+import {
+  NetworkType,
+  REFRESHER_INTERVAL,
+  WSOL_CLOSE_POSITION_LAMPORTS_DEV,
+  WSOL_CLOSE_POSITION_LAMPORTS_MAIN
+} from '@store/consts/static'
 import { PlotTickData } from '@store/reducers/positions'
 import { VariantType } from 'notistack'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -15,7 +20,7 @@ import { Decimal } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL, getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { PositionHeader } from './PositionHeader/PositionHeader'
 import { PoolDetails } from '@containers/SinglePositionWrapper/SinglePositionWrapper'
-
+import { BN } from '@project-serum/anchor'
 interface IProps {
   poolAddress: PublicKey
   copyPoolAddressHandler: (message: string, variant: VariantType) => void
@@ -51,6 +56,7 @@ interface IProps {
   poolDetails: PoolDetails | null
   onGoBackClick: () => void
   showPoolDetailsLoader: boolean
+  solBalance: BN
 }
 
 const PositionDetails: React.FC<IProps> = ({
@@ -84,7 +90,8 @@ const PositionDetails: React.FC<IProps> = ({
   onGoBackClick,
   poolDetails,
   showPoolDetailsLoader,
-  isBalanceLoading
+  isBalanceLoading,
+  solBalance
 }) => {
   const { classes } = useStyles()
 
@@ -95,12 +102,11 @@ const PositionDetails: React.FC<IProps> = ({
   const isActive = midPrice.x >= min && midPrice.x <= max
 
   const canClosePosition = useMemo(() => {
-    // if (network === NetworkType.Testnet) {
-    //   return ethBalance.gte(WETH_CLOSE_POSITION_LAMPORTS_TEST)
-    // } else {
-    //   return ethBalance.gte(WETH_CLOSE_POSITION_LAMPORTS_MAIN)
-    // }
-    return true
+    if (network === NetworkType.Mainnet) {
+      return solBalance.gte(WSOL_CLOSE_POSITION_LAMPORTS_MAIN)
+    } else {
+      return solBalance.gte(WSOL_CLOSE_POSITION_LAMPORTS_DEV)
+    }
   }, [network])
 
   const isFullRange = useMemo(
@@ -192,7 +198,6 @@ const PositionDetails: React.FC<IProps> = ({
               poolDetails={poolDetails}
               showPoolDetailsLoader={showPoolDetailsLoader}
               showBalanceLoader={isBalanceLoading}
-              arePointsDistributed={isActive}
               poolAddress={poolAddress}
               isPreview={false}
             />
@@ -239,7 +244,7 @@ const PositionDetails: React.FC<IProps> = ({
             />
           </Box>
         </Box>
-      </Box>{' '}
+      </Box>
     </>
   )
 }

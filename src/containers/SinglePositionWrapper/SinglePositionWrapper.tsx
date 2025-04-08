@@ -20,7 +20,7 @@ import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { Status, actions as walletActions } from '@store/reducers/solanaWallet'
 import { network, timeoutError } from '@store/selectors/solanaConnection'
 import { isLoadingPositionsList, plotTicks, singlePositionData } from '@store/selectors/positions'
-import { balanceLoading, status } from '@store/selectors/solanaWallet'
+import { balance, balanceLoading, status } from '@store/selectors/solanaWallet'
 import { VariantType } from 'notistack'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -62,6 +62,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const poolsVolumeRanges = useSelector(volumeRanges)
   const walletStatus = useSelector(status)
   const isBalanceLoading = useSelector(balanceLoading)
+  const solBalance = useSelector(balance)
 
   const isTimeoutError = useSelector(timeoutError)
 
@@ -544,6 +545,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         onGoBackClick={() => navigate(ROUTES.PORTFOLIO)}
         poolDetails={poolDetails}
         showPoolDetailsLoader={isLoadingStats}
+        solBalance={solBalance}
       />
     )
   }

@@ -121,8 +121,9 @@ export const PositionHeader = ({
         <a
           href={`https://eclipsescan.xyz/account/${poolAddress.toString()}${networkUrl}`}
           target='_blank'
-          rel='noopener noreferrer'>
-          <img className={classes.explorerLink} src={icons.newTab} alt='Explorer link' />
+          rel='noopener noreferrer'
+          className={classes.explorerLink}>
+          <img src={icons.newTab} alt='Explorer link' />
         </a>
       </TooltipHover>
     </Box>
@@ -130,7 +131,7 @@ export const PositionHeader = ({
 
   const refresher = (
     <TooltipHover title='Refresh'>
-      <Box>
+      <Box display='flex' alignItems='center'>
         <Refresher
           currentIndex={refresherTime}
           maxIndex={REFRESHER_INTERVAL}
