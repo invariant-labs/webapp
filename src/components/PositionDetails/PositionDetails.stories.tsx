@@ -92,7 +92,9 @@ export const Primary: Story = {
     },
     showPoolDetailsLoader: true,
     solBalance: 0,
-    isPreview: false
+    isPreview: false,
+    tokenXAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+    tokenYAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E')
   },
   render: args => {
     return (
