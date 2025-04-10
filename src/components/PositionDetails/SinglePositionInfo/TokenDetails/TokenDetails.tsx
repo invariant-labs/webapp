@@ -14,19 +14,10 @@ type Props = {
   amount: number
   decimal: number
   price?: number
-  isLoadingBalance: boolean
-  isLoadingAmount: boolean
+  isLoading: boolean
 }
 
-export const TokenDetails = ({
-  icon,
-  ticker,
-  amount,
-  decimal,
-  price,
-  isLoadingBalance,
-  isLoadingAmount
-}: Props) => {
+export const TokenDetails = ({ icon, ticker, amount, decimal, price, isLoading }: Props) => {
   const { classes } = useStyles()
 
   const parsedTokenAmount = Math.abs(amount) < 10 ** -decimal ? 0 : amount
@@ -35,7 +26,7 @@ export const TokenDetails = ({
     <Box className={classes.tokenContainer}>
       <Box className={classes.tokenLeftSide}>
         <TokenBadge icon={icon} ticker={ticker} />
-        {isLoadingBalance ? (
+        {isLoading ? (
           <Skeleton variant='rounded' height={17} width={32} />
         ) : (
           <Typography className={classes.tokenValue}>
@@ -43,7 +34,7 @@ export const TokenDetails = ({
           </Typography>
         )}
       </Box>
-      {isLoadingAmount ? (
+      {isLoading ? (
         <Skeleton variant='rounded' height={32} width={160} />
       ) : (
         <Typography className={classes.tokenAmount}>

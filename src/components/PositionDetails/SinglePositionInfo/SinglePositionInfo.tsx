@@ -25,7 +25,6 @@ interface IProp {
   showPositionLoader?: boolean
   poolDetails: PoolDetailsType | null
   showPoolDetailsLoader?: boolean
-  showBalanceLoader?: boolean
   poolAddress: PublicKey
   isPreview: boolean
 }
@@ -41,7 +40,6 @@ const SinglePositionInfo: React.FC<IProp> = ({
   showPositionLoader = false,
   showPoolDetailsLoader = false,
   poolDetails,
-  showBalanceLoader = false,
   poolAddress,
   isPreview
 }) => {
@@ -119,8 +117,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
                     price: tokenXPriceData?.price
                   }
             }
-            isLoadingBalance={showBalanceLoader}
-            isLoadingLiquidity={showPositionLoader}
+            isLoading={showPositionLoader}
           />
         </Section>
         <Section

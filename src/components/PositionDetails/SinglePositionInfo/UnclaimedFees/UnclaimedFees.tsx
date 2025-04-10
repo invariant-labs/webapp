@@ -33,8 +33,7 @@ export const UnclaimedFees = ({ tokenA, tokenB, isLoading }: Props) => {
         amount={tokenA.amount}
         decimal={tokenA.decimal}
         price={tokenA.price}
-        isLoadingBalance={isLoading}
-        isLoadingAmount={isLoading}
+        isLoading={isLoading}
       />
       <Separator size='100%' isHorizontal color={colors.invariant.component} />
       <TokenDetails
@@ -43,8 +42,7 @@ export const UnclaimedFees = ({ tokenA, tokenB, isLoading }: Props) => {
         amount={tokenB.amount}
         decimal={tokenB.decimal}
         price={tokenB.price}
-        isLoadingBalance={isLoading}
-        isLoadingAmount={isLoading}
+        isLoading={isLoading}
       />
     </Box>
   )

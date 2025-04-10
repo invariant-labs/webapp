@@ -57,7 +57,6 @@ interface IProps {
   setXToY: (val: boolean) => void
   onRefresh: () => void
   xToY: boolean
-  isBalanceLoading: boolean
   network: NetworkType
   poolDetails: PoolDetails | null
   onGoBackClick: () => void
@@ -100,7 +99,6 @@ const PositionDetails: React.FC<IProps> = ({
   onGoBackClick,
   poolDetails,
   showPoolDetailsLoader,
-  isBalanceLoading,
   solBalance,
   isPreview
 }) => {
@@ -238,7 +236,6 @@ const PositionDetails: React.FC<IProps> = ({
               showPositionLoader={showPositionLoader}
               poolDetails={poolDetails}
               showPoolDetailsLoader={showPoolDetailsLoader}
-              showBalanceLoader={isBalanceLoading}
               poolAddress={poolAddress}
               isPreview={showPreviewInfo}
             />
