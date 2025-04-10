@@ -62,7 +62,7 @@ export const UnclaimedSection: React.FC<UnclaimedSectionProps> = ({
           scheme='green'
           width={'100%'}
           height={'32px'}
-          disabled={true}
+          disabled={loading || unclaimedTotal === 0}
           onClick={handleClaimAll}>
           {loading ? (
             <>
