@@ -32,7 +32,7 @@ export const USDT_DEV: Token = {
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
 }
 export const SOL_DEV: Token = {
-  symbol: 'SOL',
+  symbol: 'SOLNDSANASND',
   address: new PublicKey(MOCK_TOKENS.SOL),
   decimals: 9,
   name: 'Wrapped Solana',
@@ -48,7 +48,7 @@ export const MSOL_DEV: Token = {
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png'
 }
 export const BTC_DEV: Token = {
-  symbol: 'BTC',
+  symbol: 'BTCAAAAAAAAAAA',
   address: new PublicKey(MOCK_TOKENS.BTC),
   decimals: 6,
   name: 'Wrapped Bitcoin (Sollet)',
@@ -56,7 +56,7 @@ export const BTC_DEV: Token = {
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png'
 }
 export const WSOL_DEV: Token = {
-  symbol: 'WSOL',
+  symbol: 'WSOLASDASD',
   address: new PublicKey(MOCK_TOKENS.WSOL),
   decimals: 9,
   name: 'Wrapped Solana',

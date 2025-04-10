@@ -169,12 +169,14 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
     }
 
     const displayTokenYName =
-      tokenYPercentage !== 100 && tokenYName.length > 7
-        ? tokenYName.slice(0, 7) + '...'
+      tokenYPercentage !== 100 && tokenYName.length > 5
+        ? tokenYName.slice(0, 5) + '...'
         : tokenYName
 
     const displayTokenXName =
-      tokenXPercentage !== 100 && tokenXName.length > 7 ? tokenXName.slice(0, 7) : tokenXName
+      tokenXPercentage !== 100 && tokenXName.length > 5
+        ? tokenXName.slice(0, 5) + '...'
+        : tokenXName
 
     return (
       <Typography
