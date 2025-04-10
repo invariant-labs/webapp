@@ -22,6 +22,7 @@ interface IProp {
   tokenYPriceData?: TokenPriceData
   xToY: boolean
   showFeesLoader?: boolean
+  showPositionLoader?: boolean
   poolDetails: PoolDetailsType | null
   showPoolDetailsLoader?: boolean
   showBalanceLoader?: boolean
@@ -37,6 +38,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
   tokenYPriceData,
   xToY,
   showFeesLoader = false,
+  showPositionLoader = false,
   showPoolDetailsLoader = false,
   poolDetails,
   showBalanceLoader = false,
@@ -78,7 +80,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
             tokenY.claimValue * (tokenYPriceData?.price ?? 0)
           }
           poolApr={convertedApr}
-          isLoading={showFeesLoader}
+          isLoading={showPositionLoader}
         />
         <Separator size='100%' isHorizontal color={colors.invariant.light} />
         <Section title='Liquidity'>
@@ -118,6 +120,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
                   }
             }
             isLoadingBalance={showBalanceLoader}
+            isLoadingLiquidity={showPositionLoader}
           />
         </Section>
         <Section

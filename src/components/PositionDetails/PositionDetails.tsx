@@ -46,6 +46,7 @@ interface IProps {
   min: number
   max: number
   showFeesLoader?: boolean
+  showPositionLoader?: boolean
   hasTicksError?: boolean
   reloadHandler: () => void
   plotVolumeRange?: {
@@ -86,7 +87,8 @@ const PositionDetails: React.FC<IProps> = ({
   fee,
   min,
   max,
-  showFeesLoader = false,
+  showFeesLoader,
+  showPositionLoader = false,
   hasTicksError,
   reloadHandler,
   plotVolumeRange,
@@ -233,6 +235,7 @@ const PositionDetails: React.FC<IProps> = ({
               tokenYPriceData={tokenYPriceData}
               xToY={xToY}
               showFeesLoader={showFeesLoader}
+              showPositionLoader={showPositionLoader}
               poolDetails={poolDetails}
               showPoolDetailsLoader={showPoolDetailsLoader}
               showBalanceLoader={isBalanceLoading}

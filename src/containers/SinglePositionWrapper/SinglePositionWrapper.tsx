@@ -562,6 +562,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         min={min}
         max={max}
         showFeesLoader={showFeesLoader || position.ticksLoading}
+        showPositionLoader={position.ticksLoading}
         isBalanceLoading={isBalanceLoading}
         hasTicksError={hasTicksError}
         reloadHandler={() => {

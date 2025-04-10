@@ -18,12 +18,16 @@ export const PositionStats = ({ value, pendingFees, poolApr, isLoading }: Props)
       <Box className={classes.statWrapper}>
         <Box className={classes.statContainer}>
           <Typography className={classes.statName}>Value:</Typography>
-          <Typography className={classes.statValue}>
-            $
-            {+formatNumberWithSuffix(value, true, 18) < 1000
-              ? (+formatNumberWithSuffix(value, true, 18)).toFixed(2)
-              : formatNumberWithSuffix(value)}
-          </Typography>
+          {isLoading ? (
+            <Skeleton variant='rounded' width={38} height={17} />
+          ) : (
+            <Typography className={classes.statValue}>
+              $
+              {+formatNumberWithSuffix(value, true, 18) < 1000
+                ? (+formatNumberWithSuffix(value, true, 18)).toFixed(2)
+                : formatNumberWithSuffix(value)}
+            </Typography>
+          )}
         </Box>
         <Box className={classes.statContainer}>
           <Typography className={classes.statName}>Pending fees:</Typography>
