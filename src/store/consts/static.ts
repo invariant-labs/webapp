@@ -32,7 +32,7 @@ export const USDT_DEV: Token = {
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg'
 }
 export const SOL_DEV: Token = {
-  symbol: 'SOLNDSANASND',
+  symbol: 'SOL',
   address: new PublicKey(MOCK_TOKENS.SOL),
   decimals: 9,
   name: 'Wrapped Solana',
