@@ -47,6 +47,7 @@ export const SelectWalletModal: React.FC<ISelectWalletModal> = ({
   return (
     <div className={classes.modalContainer}>
       <Popover
+        marginThreshold={0}
         open={open}
         anchorReference='none'
         classes={{
