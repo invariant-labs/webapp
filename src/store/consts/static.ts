@@ -177,7 +177,7 @@ export enum RPC {
   MAIN_GENESYSGO = 'https://ssc-dao.genesysgo.net',
   MAIN_ALCHEMY = 'https://solana-mainnet.g.alchemy.com/v2/YfX5E62sdlEoytQ9ZEOA_5KIE3QbwUUD',
   MAIN_HELLOMOON = 'https://global.rpc.hellomoon.io/e8a06073-325d-4183-bcad-d69e3e3fc739',
-  MAIN_HELIUS = 'https://isahella-ntor6x-fast-mainnet.helius-rpc.com',
+  MAIN_HELIUS = 'https://mainnet.helius-rpc.com/?api-key=3403a15b-efe7-40c8-9b87-800b6468c3f9',
   LOCAL = 'http://127.0.0.1:8899'
 }
 
