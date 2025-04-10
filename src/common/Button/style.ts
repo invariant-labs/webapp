@@ -58,12 +58,16 @@ const useStyles = makeStyles<StyleProps>()(
       '&:hover': {
         boxShadow: `0 0 12px ${getStyles(scheme).boxShadow}`,
         ...(scheme === 'rainbow' ? {} : { background: getStyles(scheme).backgroundHover })
+      },
+      '&.Mui-disabled': {
+        pointerEvents: 'auto',
+
+        cursor: 'not-allowed'
       }
     },
     buttonDisabled: {
       color: colors.invariant.textGrey,
       background: colors.invariant.light,
-      cursor: 'not-allowed',
 
       '&:hover': {
         boxShadow: 'none',
