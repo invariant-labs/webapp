@@ -25,11 +25,12 @@ const useStyles = makeStyles()(() => {
       overflow: 'auto'
     },
     paper: {
+      width: '520px',
+      margin: '16px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       position: 'relative',
-      margin: 'auto',
       maxWidth: '90%',
       background: 'transparent',
       boxShadow: 'none',
@@ -48,7 +49,6 @@ const useStyles = makeStyles()(() => {
       padding: '20px 24px',
       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.5)',
       [theme.breakpoints.down('sm')]: {
-        width: 'calc(100% - 32px)',
         padding: '16px 20px'
       }
     },
