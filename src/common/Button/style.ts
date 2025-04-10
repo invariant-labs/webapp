@@ -61,19 +61,13 @@ const useStyles = makeStyles<StyleProps>()(
       },
       '&.Mui-disabled': {
         pointerEvents: 'auto',
-
+        color: colors.invariant.textGrey,
+        boxShadow: 'none',
+        background: colors.invariant.light,
         cursor: 'not-allowed'
       }
     },
-    buttonDisabled: {
-      color: colors.invariant.textGrey,
-      background: colors.invariant.light,
 
-      '&:hover': {
-        boxShadow: 'none',
-        background: colors.invariant.light
-      }
-    },
     buttonRainbowBorder: {
       border: '2px solid transparent',
       backgroundImage: `linear-gradient(${colors.invariant.normal}, ${colors.invariant.normal}), linear-gradient(0deg, ${colors.invariant.green}, ${colors.invariant.pink})`,

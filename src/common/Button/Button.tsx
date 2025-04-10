@@ -30,7 +30,6 @@ export const Button = ({
     <MuiButton
       disabled={disabled}
       className={classNames(classes.button, {
-        [classes.buttonDisabled]: disabled,
         [classes.buttonRainbowBorder]: scheme === 'rainbow'
       })}
       {...props}>
