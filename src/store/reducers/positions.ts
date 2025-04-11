@@ -53,6 +53,11 @@ export interface IPositionsStore {
   prices: {
     data: Record<string, { price: number; buyPrice: number; sellPrice: number }>
   }
+  positionData: {
+    position: PositionWithAddress | null
+    loading: boolean
+  }
+  showFeesLoader: boolean
 }
 
 export interface InitPositionData
@@ -108,8 +113,12 @@ export const defaultState: IPositionsStore = {
   prices: {
     data: {}
   },
-
-  shouldNotUpdateRange: false
+  shouldNotUpdateRange: false,
+  positionData: {
+    position: null,
+    loading: false
+  },
+  showFeesLoader: false
 }
 
 export const positionsSliceName = 'positions'
@@ -147,6 +156,11 @@ const positionsSlice = createSlice({
       state.plotTicks.loading = !action.payload.disableLoading
       return state
     },
+    setPosition(state, action: PayloadAction<PositionWithAddress | null>) {
+      state.positionData.position = action.payload
+      state.positionData.loading = false
+      return state
+    },
     setPositionsList(state, action: PayloadAction<PositionWithAddress[]>) {
       state.positionsList.list = action.payload
       state.positionsList.loading = false
@@ -154,6 +168,10 @@ const positionsSlice = createSlice({
     },
     getPositionsList(state) {
       state.positionsList.loading = true
+      return state
+    },
+    getPreviewPosition(state, _action: PayloadAction<string>) {
+      state.positionData.loading = true
       return state
     },
     getSinglePosition(state, action: PayloadAction<{ index: number }>) {
@@ -178,6 +196,11 @@ const positionsSlice = createSlice({
       return state
     },
     claimFee(state, _action: PayloadAction<number>) {
+      state.showFeesLoader = true
+      return state
+    },
+    setFeesLoader(state, action: PayloadAction<boolean>) {
+      state.showFeesLoader = action.payload
       return state
     },
     setAllClaimLoader(state, action: PayloadAction<boolean>) {

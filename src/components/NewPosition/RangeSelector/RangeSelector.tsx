@@ -20,7 +20,7 @@ import {
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Typography } from '@mui/material'
 import icons from '@static/icons'
-import { TooltipInv } from '@common/TooltipHover/TooltipInv'
+import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
 
 export interface IRangeSelector {
   updatePath: (concIndex: number) => void
@@ -436,7 +436,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             )}
           </Grid>
           <Grid className={classes.activeLiquidityContainer} container>
-            <TooltipInv
+            <TooltipGradient
               title={
                 <>
                   <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
@@ -467,7 +467,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
               <Typography className={classes.activeLiquidity}>
                 Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
               </Typography>
-            </TooltipInv>
+            </TooltipGradient>
             <Grid container flexDirection='column'>
               <Typography className={classes.currentPrice}>Current price</Typography>
               <Typography className={classes.globalPrice}>Global price</Typography>

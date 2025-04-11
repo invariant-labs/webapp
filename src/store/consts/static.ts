@@ -246,6 +246,9 @@ export const WSOL_POSITION_INIT_LAMPORTS_DEV = new BN(6164600)
 export const WSOL_POOL_INIT_LAMPORTS_MAIN = new BN(106000961)
 export const WSOL_POOL_INIT_LAMPORTS_DEV = new BN(106000961)
 
+export const WSOL_CLOSE_POSITION_LAMPORTS_MAIN = new BN(2404056)
+export const WSOL_CLOSE_POSITION_LAMPORTS_DEV = new BN(2404056)
+
 export const ALL_FEE_TIERS_DATA = FEE_TIERS.map((tier, index) => ({
   tier,
   primaryIndex: index

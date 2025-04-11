@@ -7,11 +7,12 @@ interface Props extends TooltipProps {
   left?: number | string
   right?: number | string
   bottom?: number | string
+  fullSpan?: boolean
   children: React.ReactElement<any, any>
 }
 
-export const TooltipHover = ({ top, left, right, bottom, children, ...props }: Props) => {
-  const { classes } = useStyles({ top, left, right, bottom })
+export const TooltipHover = ({ top, left, right, bottom, fullSpan, children, ...props }: Props) => {
+  const { classes } = useStyles({ top, left, right, bottom, fullSpan })
 
   return (
     <Tooltip
@@ -20,7 +21,7 @@ export const TooltipHover = ({ top, left, right, bottom, children, ...props }: P
       TransitionComponent={TooltipTransition}
       enterTouchDelay={0}
       {...props}>
-      {children}
+      <span className={classes.tooltipSpan}>{children}</span>
     </Tooltip>
   )
 }

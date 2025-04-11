@@ -59,7 +59,8 @@ export const Primary: Story = {
       price: 4000,
       buyPrice: 4100,
       sellPrice: 3900
-    }
+    },
+    isFullRange: false
   },
   render: args => {
     return (

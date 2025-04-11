@@ -1,7 +1,6 @@
 import { CustomLayerProps } from '@nivo/line'
 import { colors } from '@static/theme'
-import React, { useState, useEffect, useRef, PointerEventHandler, TouchEventHandler } from 'react'
-import useStyles from './style'
+import React, { useState, useEffect, useRef, TouchEventHandler, useCallback } from 'react'
 import { MaxHandle, MinHandle } from './svgHandles'
 
 export interface HandleProps {
@@ -27,34 +26,79 @@ export const Handle: React.FC<HandleProps> = ({
   onStart,
   disabled = false
 }) => {
-  const { classes } = useStyles()
   const [drag, setDrag] = useState(false)
   const [currentPosition, setCurrentPosition] = useState(position)
   const [offset, setOffset] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
-
   const handleRef = useRef<SVGRectElement>(null)
+  const mousePositionRef = useRef<number | null>(null)
 
   useEffect(() => {
     setCurrentPosition(position)
   }, [position, drag])
 
-  const startDrag: PointerEventHandler<SVGRectElement> = event => {
-    onStart()
-    setDrag(true)
-    if (handleRef.current) {
-      const CTM = handleRef.current.getScreenCTM()
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      if (!drag || disabled) return
 
-      if (CTM) {
-        const ctmX = (event.clientX - CTM.e) / CTM.a
-        setOffset(ctmX - currentPosition)
+      if (handleRef.current) {
+        const CTM = handleRef.current.getScreenCTM()
+        if (CTM) {
+          const ctmX = (event.clientX - CTM.e) / CTM.a
+          const x = ctmX - offset
+
+          if (x >= minPosition && x <= maxPosition) {
+            setCurrentPosition(x)
+            mousePositionRef.current = x
+          }
+        }
       }
     }
-  }
+
+    const handleMouseUp = () => {
+      if (drag) {
+        setDrag(false)
+        if (mousePositionRef.current !== null) {
+          onDrop(mousePositionRef.current)
+          mousePositionRef.current = null
+        }
+      }
+    }
+
+    if (drag) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [drag, offset, minPosition, maxPosition, onDrop, disabled])
+
+  const startDrag = useCallback(
+    (event: React.PointerEvent<SVGRectElement>) => {
+      if (disabled) return
+
+      onStart()
+      setDrag(true)
+
+      if (handleRef.current) {
+        const CTM = handleRef.current.getScreenCTM()
+        if (CTM) {
+          setOffset((event.clientX - CTM.e) / CTM.a - currentPosition)
+        }
+      }
+    },
+    [disabled, onStart, currentPosition]
+  )
 
   const startTouchDrag: TouchEventHandler<SVGRectElement> = event => {
+    if (disabled) return
+
     onStart()
     setDrag(true)
+
     if (handleRef.current) {
       const CTM = handleRef.current.getScreenCTM()
 
@@ -65,46 +109,29 @@ export const Handle: React.FC<HandleProps> = ({
     }
   }
 
-  const endDrag = () => {
-    if (drag) {
-      setDrag(false)
-      onDrop(currentPosition)
-    }
-  }
-
-  const dragHandler: PointerEventHandler<SVGRectElement> = event => {
-    if (drag && handleRef.current) {
-      event.preventDefault()
-      event.stopPropagation()
-      const CTM = handleRef.current.getScreenCTM()
-
-      if (CTM) {
-        const x = (event.clientX - CTM.e) / CTM.a - offset
-
-        if (x >= minPosition && x <= maxPosition) {
-          setCurrentPosition(x)
-        }
-      }
-    }
-  }
-
-  const dragTouchHandler: TouchEventHandler<SVGRectElement> = event => {
-    if (drag && handleRef.current) {
-      event.preventDefault()
-      event.stopPropagation()
-      const CTM = handleRef.current.getScreenCTM()
-
-      if (CTM) {
-        const x = (event.targetTouches[0].clientX - CTM.e) / CTM.a - offset
-
-        if (x >= minPosition && x <= maxPosition) {
-          setCurrentPosition(x)
-        }
-      }
-    }
-  }
-
   const isReversed = () => (isStart ? currentPosition < 37 : plotWidth - currentPosition < 37)
+
+  const handleWidth = 42
+  const handlePadding = 10
+
+  let clickableX: number
+  let clickableWidth: number
+
+  if (drag) {
+    clickableX = 0
+    clickableWidth = plotWidth
+  } else {
+    if ((isStart && !isReversed()) || (!isStart && isReversed())) {
+      clickableX = Math.max(minPosition, currentPosition - 40 - handlePadding)
+      clickableWidth = handleWidth + handlePadding * 2
+    } else {
+      clickableX = Math.max(minPosition, currentPosition - handlePadding)
+      clickableWidth = Math.min(
+        handleWidth + handlePadding * 2,
+        maxPosition - clickableX + handlePadding
+      )
+    }
+  }
 
   return (
     <>
@@ -138,29 +165,17 @@ export const Handle: React.FC<HandleProps> = ({
         />
       )}
       <rect
-        className={!disabled ? classes.handle : undefined}
         ref={handleRef}
-        x={
-          drag
-            ? 0
-            : (isStart && !isReversed()) || (!isStart && isReversed())
-              ? currentPosition - 40
-              : currentPosition
-        }
+        x={clickableX}
         y={0}
-        width={drag ? plotWidth : 42}
+        width={clickableWidth}
         height={height}
         onMouseDown={!disabled ? startDrag : undefined}
-        onMouseUp={!disabled ? endDrag : undefined}
-        onMouseMove={!disabled ? dragHandler : undefined}
-        onMouseLeave={!disabled ? endDrag : undefined}
         onTouchStart={!disabled ? startTouchDrag : undefined}
-        onTouchEnd={!disabled ? endDrag : undefined}
-        onTouchMove={!disabled ? dragTouchHandler : undefined}
-        onTouchCancel={!disabled ? endDrag : undefined}
         onMouseEnter={() => setIsHovered(true)}
         onMouseOut={() => setIsHovered(false)}
         fill='transparent'
+        style={{ cursor: !disabled ? 'ew-resize' : 'default' }}
       />
     </>
   )
@@ -246,7 +261,6 @@ export const InnerBrush: React.FC<InnerBrushProps> = ({
   return (
     <>
       {reverse ? end : start}
-
       {reverse ? start : end}
     </>
   )

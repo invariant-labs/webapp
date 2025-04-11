@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
 import { MemoryRouter } from 'react-router-dom'
 import SinglePositionInfo from './SinglePositionInfo'
-import { NetworkType } from '@store/consts/static'
+import { PublicKey } from '@solana/web3.js'
 
 const meta = {
   title: 'Components/SinglePositionInfo',
@@ -21,10 +21,7 @@ type Story = StoryObj<typeof meta>
 
 export const Primary: Story = {
   args: {
-    closePosition: fn(),
-    fee: 1,
     onClickClaimFee: fn(),
-    swapHandler: fn(),
     tokenX: {
       name: 'BTC',
       icon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png',
@@ -43,15 +40,20 @@ export const Primary: Story = {
     },
     xToY: true,
     showFeesLoader: false,
-    isBalanceLoading: false,
-    isActive: true,
-    network: NetworkType.Testnet
+    poolDetails: {
+      tvl: 0,
+      volume24: 0,
+      fee24: 0,
+      apy: 0,
+      fee: 0.01
+    },
+    poolAddress: new PublicKey('0123456789'),
+    isPreview: false
   },
   render: args => {
     return (
       <SinglePositionInfo
         {...args}
-        fee={1}
         tokenX={{
           name: 'BTC',
           icon: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E/logo.png',
@@ -69,7 +71,6 @@ export const Primary: Story = {
           balance: 9.11
         }}
         xToY={true}
-        closePosition={fn()}
         onClickClaimFee={fn()}
       />
     )
