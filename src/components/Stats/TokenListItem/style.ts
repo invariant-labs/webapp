@@ -11,7 +11,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     '&:nth-of-type(even)': {
       background: colors.invariant.componentDark
     },
-    '&:first-child': {
+    '&:first-of-type': {
       borderBottom: `1px solid ${colors.invariant.light}`,
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
@@ -20,27 +20,13 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   container: {
     display: 'grid',
-    gridTemplateColumns: '5% 35% 17.5% auto 12.5% 60px',
+    gridTemplateColumns: '5% 34% 17.5% auto 12.5% 60px',
     padding: '18px 24px',
     borderBottom: `1px solid ${colors.invariant.light}`,
     whiteSpace: 'nowrap',
 
-    '& p': {
-      ...typography.heading4,
-      display: 'flex',
-      justifyContent: 'flex-start',
-      alignItems: 'center'
-    },
-    '& p:last-child': {
-      justifyContent: 'flex-end'
-    },
-
-    [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: 'auto 140px 80px 120px'
-    },
-
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: 'auto 100px 80px 60px',
+      gridTemplateColumns: '30% 22.5% 32.5% 15%',
       padding: '18px 8px',
 
       '& p': {
@@ -64,9 +50,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 
   header: {
-    color: colors.invariant.textGrey,
     '& p.MuiTypography-root': {
       ...typography.heading4,
+      color: colors.invariant.textGrey,
       fontWeight: 600,
       display: 'flex',
       justifyContent: 'start',
@@ -82,9 +68,10 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   tokenName: {
     display: 'flex',
     alignItems: 'center',
-    paddingRight: 5,
-
+    width: '100%',
     '& p': {
+      paddingRight: 12,
+      maxWidth: 'calc(100% - 80px);',
       overflow: 'hidden',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis'
@@ -151,7 +138,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     }
   },
   clipboardIcon: {
-    marginLeft: 4,
     width: 18,
     cursor: 'pointer',
     color: colors.invariant.lightHover,

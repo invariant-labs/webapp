@@ -10,12 +10,15 @@ export const TooltipTransition: React.FC<
 > = ({ children, ...props }) => {
   const [translate, setTranslate] = useState('translateY(50px)')
   const { classes } = useStyles({ translate })
+
   useEffect(() => {
     setTranslate(props.in ? 'translateY(0)' : 'translateY(50px)')
   }, [props.in])
 
+  const { ownerState: _ownerState, ...rest } = props as any
+
   return (
-    <Fade {...props}>
+    <Fade {...rest}>
       <div>
         <div className={classes.wrapper}>{children}</div>
       </div>

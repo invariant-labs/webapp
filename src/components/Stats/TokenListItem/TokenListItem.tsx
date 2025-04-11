@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { theme } from '@static/theme'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
@@ -51,7 +51,6 @@ const TokenListItem: React.FC<IProps> = ({
   const { classes } = useStyles()
   // const isNegative = priceChange < 0
 
-  const isMd = useMediaQuery(theme.breakpoints.down('md'))
   const isXs = useMediaQuery(theme.breakpoints.down('xs'))
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -81,7 +80,7 @@ const TokenListItem: React.FC<IProps> = ({
         copyAddressHandler('Failed to copy token address to Clipboard', 'error')
       })
   }
-  const shouldShowText = icon === icons.unknownToken || !isSm
+  const shouldShowText = !isSm
 
   return (
     <Grid className={classes.wrapper}>
@@ -90,22 +89,21 @@ const TokenListItem: React.FC<IProps> = ({
           container
           classes={{ container: classes.container, root: classes.tokenList }}
           style={hideBottomLine ? { border: 'none' } : undefined}>
-          {!isMd && <Typography component='p'>{itemNumber}</Typography>}
+          {!isXs && !isSm && <Typography component='p'>{itemNumber}</Typography>}
           <Grid className={classes.tokenName}>
-            <Box className={classes.imageContainer}>
-              <img
-                className={classes.tokenIcon}
-                src={icon}
-                alt='Token icon'
-                onError={e => {
-                  e.currentTarget.src = icons.unknownToken
-                }}></img>
-              {isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
-            </Box>
+            <img
+              className={classes.tokenIcon}
+              src={icon}
+              alt='Token icon'
+              onError={e => {
+                e.currentTarget.src = icons.unknownToken
+              }}
+            />
+            {isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
             {shouldShowText && (
               <Typography>
-                {isXs ? shortenAddress(symbol) : name}
-                {!isXs && (
+                {isXs ? shortenAddress(symbol) : name.length < 25 ? name : name.slice(0, 40)}
+                {!isXs && name.length < 25 && (
                   <span className={classes.tokenSymbol}>{` (${shortenAddress(symbol)})`}</span>
                 )}
               </Typography>
@@ -136,7 +134,7 @@ const TokenListItem: React.FC<IProps> = ({
           )} */}
           <Typography>{`$${formatNumberWithSuffix(volume)}`}</Typography>
           <Typography>{`$${formatNumberWithSuffix(TVL)}`}</Typography>
-          {!isMd && (
+          {!isSm && (
             <Box className={classes.action}>
               <TooltipHover title='Open in explorer'>
                 <button
@@ -156,7 +154,7 @@ const TokenListItem: React.FC<IProps> = ({
         </Grid>
       ) : (
         <Grid container classes={{ container: classes.container, root: classes.header }}>
-          {!isMd && (
+          {!isXs && !isSm && (
             <Typography style={{ lineHeight: '12px' }}>
               N<sup>o</sup>
             </Typography>
@@ -243,7 +241,7 @@ const TokenListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
-          {!isMd && <Typography align='right'>Action</Typography>}
+          {!isSm && <Typography align='right'>Action</Typography>}
         </Grid>
       )}
     </Grid>
