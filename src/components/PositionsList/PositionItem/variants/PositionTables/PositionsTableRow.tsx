@@ -3,11 +3,10 @@ import { Grid, TableRow, TableCell, Typography, useMediaQuery, Box, Skeleton } f
 import { useMemo, useState } from 'react'
 import { MinMaxChart } from '../../components/MinMaxChart/MinMaxChart'
 import { IPositionItem } from '../../../types'
-import { theme } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import { initialXtoY, tickerToAddress, formatNumberWithoutSuffix } from '@utils/utils'
 import classNames from 'classnames'
 import { useSelector } from 'react-redux'
-import { useSharedStyles } from '../PositionMobileCard/style/shared'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import React from 'react'
 import { blurContent, unblurContent } from '@utils/uiUtils'
@@ -62,7 +61,6 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   handleClosePosition
 }) => {
   const { classes } = usePositionTableRowStyle()
-  const { classes: sharedClasses } = useSharedStyles()
   const [xToY, setXToY] = useState<boolean>(
     initialXtoY(tickerToAddress(network, tokenXName), tickerToAddress(network, tokenYName))
   )
@@ -99,15 +97,15 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
 
     return (
       <Grid container item className={classes.iconsAndNames}>
-        <Grid container item className={sharedClasses.icons}>
+        <Grid container item className={classes.iconsShared}>
           <img
-            className={sharedClasses.tokenIcon}
+            className={classes.tokenIcon}
             src={xToY ? tokenXIcon : tokenYIcon}
             alt={xToY ? tokenXName : tokenYName}
           />
           <TooltipHover title='Reverse tokens'>
             <img
-              className={sharedClasses.arrows}
+              className={classes.arrowsShared}
               src={icons.swapListIcon}
               alt='Arrow'
               onClick={e => {
@@ -117,13 +115,13 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
             />
           </TooltipHover>
           <img
-            className={sharedClasses.tokenIcon}
+            className={classes.tokenIcon}
             src={xToY ? tokenYIcon : tokenXIcon}
             alt={xToY ? tokenYName : tokenXName}
           />
         </Grid>
 
-        <Typography className={sharedClasses.names}>
+        <Typography className={classes.names}>
           {xToY ? tokenXName : tokenYName} - {xToY ? tokenYName : tokenXName}
         </Typography>
       </Grid>
@@ -155,12 +153,9 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
           container
           item
           sx={{ width: 65 }}
-          className={classNames(sharedClasses.fee, isActive ? sharedClasses.activeFee : undefined)}>
+          className={classNames(classes.fee, isActive ? classes.activeFee : undefined)}>
           <Typography
-            className={classNames(
-              sharedClasses.infoText,
-              isActive ? sharedClasses.activeInfoText : undefined
-            )}>
+            className={classNames(classes.infoText, isActive ? classes.activeInfoText : undefined)}>
             {fee}%
           </Typography>
         </Grid>
@@ -173,31 +168,57 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
       return <Skeleton variant='rectangular' className={classes.skeleton36Rect} />
     }
 
+    const displayTokenYName =
+      tokenYPercentage !== 100 && tokenYName.length > 5
+        ? tokenYName.slice(0, 5) + '...'
+        : tokenYName
+
+    const displayTokenXName =
+      tokenXPercentage !== 100 && tokenXName.length > 5
+        ? tokenXName.slice(0, 5) + '...'
+        : tokenXName
+
     return (
-      <Typography className={(sharedClasses.infoText, classes.label)}>
+      <Typography
+        className={classes.infoText}
+        style={{
+          background: colors.invariant.light,
+          padding: '8px 12px',
+          borderRadius: '12px'
+        }}>
         {tokenXPercentage === 100 && (
           <span>
             {tokenXPercentage}
-            {'%'} {xToY ? tokenXName : tokenYName}
+            {'%'} {xToY ? displayTokenXName : displayTokenYName}
           </span>
         )}
         {tokenYPercentage === 100 && (
           <span>
             {tokenYPercentage}
-            {'%'} {xToY ? tokenYName : tokenXName}
+            {'%'} {xToY ? displayTokenYName : displayTokenXName}
           </span>
         )}
-
         {tokenYPercentage !== 100 && tokenXPercentage !== 100 && (
           <span>
             {tokenXPercentage}
-            {'%'} {xToY ? tokenXName : tokenYName} {' - '} {tokenYPercentage}
-            {'%'} {xToY ? tokenYName : tokenXName}
+            {'%'} {xToY ? displayTokenXName : displayTokenYName} {' - '}
+            {tokenYPercentage}
+            {'%'} {xToY ? displayTokenYName : displayTokenXName}
           </span>
         )}
       </Typography>
     )
-  }, [tokenXPercentage, tokenYPercentage, xToY, tokenXName, tokenYName, loading])
+  }, [
+    tokenXPercentage,
+    tokenYPercentage,
+    xToY,
+    tokenXName,
+    tokenYName,
+    isItemLoading,
+    classes.infoText,
+    classes.skeleton36Rect,
+    colors.invariant.light
+  ])
 
   const valueFragment = useMemo(() => {
     if (isItemLoading('value') || tokenValueInUsd.loading) {
@@ -205,9 +226,9 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
     }
 
     return (
-      <Grid container item className={`${sharedClasses.value} ${classes.itemCellContainer}`}>
-        <Grid className={sharedClasses.infoCenter} container item>
-          <Typography className={sharedClasses.greenText}>
+      <Grid container item className={`${classes.value} ${classes.itemCellContainer}`}>
+        <Grid className={classes.infoCenter} container item>
+          <Typography className={classes.greenText}>
             {`$${formatNumberWithoutSuffix(tokenValueInUsd.value, { twoDecimals: true })}`}
           </Typography>
         </Grid>
@@ -231,9 +252,9 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
       return <Skeleton className={classes.skeleton36Rect} />
     }
     return (
-      <Grid container item className={`${sharedClasses.value} ${classes.itemCellContainer}`}>
-        <Grid className={sharedClasses.infoCenter} container item>
-          <Typography className={sharedClasses.greenText}>
+      <Grid container item className={`${classes.value} ${classes.itemCellContainer}`}>
+        <Grid className={classes.infoCenter} container item>
+          <Typography className={classes.greenText}>
             ${formatNumberWithoutSuffix(unclaimedFeesInUSD.value, { twoDecimals: true })}
           </Typography>
         </Grid>
