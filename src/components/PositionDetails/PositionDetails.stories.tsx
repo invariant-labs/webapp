@@ -77,7 +77,6 @@ export const Primary: Story = {
     onClickClaimFee: fn(),
 
     onRefresh: fn(),
-    isBalanceLoading: false,
     network: NetworkType.Testnet,
     poolAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
     setXToY: fn(),
