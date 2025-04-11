@@ -21,7 +21,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     width: 18,
     height: 'auto',
     fill: '#111931',
-
     [theme.breakpoints.down('md')]: {
       width: 22
     }

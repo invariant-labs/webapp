@@ -49,7 +49,7 @@ export interface IPriceRangePlot {
 }
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
-  data,
+  data = [],
   leftRange,
   rightRange,
   midPrice,
@@ -79,12 +79,22 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   const isMd = useMediaQuery(theme.breakpoints.up('md'))
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const maxVal = useMemo(() => Math.max(...data.map(element => element?.y)), [data])
+  const safeData = useMemo(() => (Array.isArray(data) ? data : []), [data])
+
+  const maxVal = useMemo(() => {
+    if (!safeData.length) return 1
+    const validYValues = safeData.map(element => element?.y ?? 0).filter(y => !isNaN(y))
+    return validYValues.length ? Math.max(...validYValues) : 1
+  }, [safeData])
 
   const pointsOmitter = useCallback(
-    (data: Array<{ x: number; y: number }>) => {
-      if (containerRef.current === null || data.length <= 1000) {
-        return data
+    (points: Array<{ x: number; y: number }>) => {
+      if (!Array.isArray(points) || points.length === 0) {
+        return []
+      }
+
+      if (containerRef.current === null || points.length <= 1000) {
+        return points
       }
 
       const minXDist = containerRef.current.offsetWidth / 100000
@@ -92,14 +102,15 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
       const dataAfterOmit: Array<{ x: number; y: number }> = []
 
-      data.forEach((tick, index) => {
+      points.forEach((tick, index) => {
         if (
           index === 0 ||
-          index === data.length - 1 ||
+          index === points.length - 1 ||
           (dataAfterOmit.length > 0 &&
             ((tick.x - dataAfterOmit[dataAfterOmit.length - 1].x) / (plotMax - plotMin) >=
               minXDist ||
-              Math.abs(tick?.y - dataAfterOmit[dataAfterOmit.length - 1]?.y) / maxVal >=
+              Math.abs((tick?.y ?? 0) - (dataAfterOmit[dataAfterOmit.length - 1]?.y ?? 0)) /
+                maxVal >=
                 minYChange))
         ) {
           dataAfterOmit.push(tick)
@@ -108,131 +119,154 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
       return dataAfterOmit
     },
-    [containerRef.current, plotMin, plotMax, maxVal]
+    [containerRef, plotMin, plotMax, maxVal]
   )
 
   const currentLessThanRange = useMemo(() => {
-    if (disabled || leftRange.x < Math.max(plotMin, data[0].x)) {
+    if (
+      !safeData.length ||
+      disabled ||
+      leftRange?.x == null ||
+      leftRange.x < Math.max(plotMin, safeData[0]?.x ?? plotMin)
+    ) {
       return []
     }
 
-    let rangeData: Array<{ x: number; y: number }> = data.filter(tick => tick.x <= leftRange.x)
-    const outData: Array<{ x: number; y: number }> = data.filter(
-      tick => tick.x < Math.max(plotMin, data[0].x)
+    let rangeData: Array<{ x: number; y: number }> = safeData.filter(tick => tick.x <= leftRange.x)
+    const outData: Array<{ x: number; y: number }> = safeData.filter(
+      tick => tick.x < Math.max(plotMin, safeData[0]?.x ?? plotMin)
     )
 
     if (!rangeData.length) {
       return []
     }
 
-    if (rangeData[rangeData.length - 1].x < leftRange.x) {
+    if (rangeData[rangeData.length - 1]?.x < leftRange.x) {
       rangeData.push({
         x: leftRange.x,
-        y: rangeData[rangeData.length - 1]?.y
+        y: rangeData[rangeData.length - 1]?.y ?? 0
       })
     }
 
     rangeData = rangeData.slice(outData.length, rangeData.length)
 
-    if (rangeData[0].x > Math.max(plotMin, data[0].x)) {
+    if (rangeData[0]?.x > Math.max(plotMin, safeData[0]?.x ?? plotMin)) {
       rangeData.unshift({
-        x: Math.max(plotMin, data[0].x),
-        y: outData.length > 0 ? outData[outData.length - 1]?.y : 0
+        x: Math.max(plotMin, safeData[0]?.x ?? plotMin),
+        y: outData.length > 0 ? (outData[outData.length - 1]?.y ?? 0) : 0
       })
     }
 
     return pointsOmitter(rangeData)
-  }, [disabled, leftRange, data, plotMin, plotMax, pointsOmitter])
+  }, [disabled, leftRange, safeData, plotMin, plotMax, pointsOmitter])
 
   const currentRange = useMemo(() => {
+    if (!safeData.length) {
+      return []
+    }
+
     if (disabled) {
-      const outMinData: Array<{ x: number; y: number }> = data.filter(
-        tick => tick.x < Math.max(plotMin, data[0].x)
+      const outMinData: Array<{ x: number; y: number }> = safeData.filter(
+        tick => tick.x < Math.max(plotMin, safeData[0]?.x ?? plotMin)
       )
-      const outMaxData: Array<{ x: number; y: number }> = data.filter(
-        tick => tick.x > Math.min(plotMax, data[data.length - 1].x)
+      const outMaxData: Array<{ x: number; y: number }> = safeData.filter(
+        tick => tick.x > Math.min(plotMax, safeData[safeData.length - 1]?.x ?? plotMax)
       )
-      const rangeData: Array<{ x: number; y: number }> = data.slice(
+      const rangeData: Array<{ x: number; y: number }> = safeData.slice(
         outMinData.length,
-        data.length - outMaxData.length
+        safeData.length - outMaxData.length
       )
 
-      if (!rangeData.length || rangeData[0].x > Math.max(plotMin, data[0].x)) {
+      if (
+        !rangeData.length ||
+        (rangeData[0]?.x ?? 0) > Math.max(plotMin, safeData[0]?.x ?? plotMin)
+      ) {
         rangeData.unshift({
-          x: Math.max(plotMin, data[0].x),
-          y: outMinData.length > 0 ? outMinData[outMinData.length - 1]?.y : 0
+          x: Math.max(plotMin, safeData[0]?.x ?? plotMin),
+          y: outMinData.length > 0 ? (outMinData[outMinData.length - 1]?.y ?? 0) : 0
         })
       }
 
-      if (rangeData[rangeData.length - 1].x < Math.min(plotMax, data[data.length - 1].x)) {
+      if (
+        (rangeData[rangeData.length - 1]?.x ?? 0) <
+        Math.min(plotMax, safeData[safeData.length - 1]?.x ?? plotMax)
+      ) {
         rangeData.push({
-          x: Math.min(plotMax, data[data.length - 1].x),
-          y: rangeData[rangeData.length - 1]?.y
+          x: Math.min(plotMax, safeData[safeData.length - 1]?.x ?? plotMax),
+          y: rangeData[rangeData.length - 1]?.y ?? 0
         })
       }
 
       return pointsOmitter(rangeData)
     }
 
-    if (leftRange.x > plotMax || rightRange.x < plotMin) {
+    if (
+      leftRange?.x == null ||
+      rightRange?.x == null ||
+      leftRange.x > plotMax ||
+      rightRange.x < plotMin
+    ) {
       return []
     }
 
-    const lessThan = data.filter(tick => tick.x <= leftRange.x).length
-    let rangeData: Array<{ x: number; y: number }> = data.filter(
+    const lessThan = safeData.filter(tick => tick.x <= leftRange.x).length
+    let rangeData: Array<{ x: number; y: number }> = safeData.filter(
       tick => tick.x >= leftRange.x && tick.x <= rightRange.x
     )
 
     if (!rangeData.length) {
       rangeData.push({
         x: Math.max(leftRange.x, plotMin),
-        y: data[lessThan - 1]?.y
+        y: safeData[lessThan - 1]?.y ?? 0
       })
 
       rangeData.push({
         x: Math.min(rightRange.x, plotMax),
-        y: data[lessThan - 1]?.y
+        y: safeData[lessThan - 1]?.y ?? 0
       })
     } else {
-      if (rangeData[0].x > leftRange.x) {
+      if ((rangeData[0]?.x ?? Infinity) > leftRange.x) {
         rangeData.unshift({
           x: leftRange.x,
-          y: rangeData[0]?.y
+          y: rangeData[0]?.y ?? 0
         })
       }
 
-      if (rangeData[rangeData.length - 1].x < rightRange.x) {
+      if ((rangeData[rangeData.length - 1]?.x ?? -Infinity) < rightRange.x) {
         rangeData.push({
           x: rightRange.x,
-          y: rangeData[rangeData.length - 1]?.y
+          y: rangeData[rangeData.length - 1]?.y ?? 0
         })
       }
 
       const outMinData: Array<{ x: number; y: number }> = rangeData.filter(
-        tick => tick.x < Math.max(plotMin, data[0].x)
+        tick => tick.x < Math.max(plotMin, safeData[0]?.x ?? plotMin)
       )
       const outMaxData: Array<{ x: number; y: number }> = rangeData.filter(
-        tick => tick.x > Math.min(plotMax, data[data.length - 1].x)
+        tick => tick.x > Math.min(plotMax, safeData[safeData.length - 1]?.x ?? plotMax)
       )
       const newRangeData: Array<{ x: number; y: number }> = rangeData.slice(
         outMinData.length,
         rangeData.length - outMaxData.length
       )
 
-      if (!newRangeData.length || newRangeData[0].x > Math.max(plotMin, rangeData[0].x)) {
+      if (
+        !newRangeData.length ||
+        (newRangeData[0]?.x ?? 0) > Math.max(plotMin, rangeData[0]?.x ?? plotMin)
+      ) {
         newRangeData.unshift({
-          x: Math.max(plotMin, rangeData[0].x),
-          y: outMinData.length > 0 ? outMinData[outMinData.length - 1]?.y : 0
+          x: Math.max(plotMin, rangeData[0]?.x ?? plotMin),
+          y: outMinData.length > 0 ? (outMinData[outMinData.length - 1]?.y ?? 0) : 0
         })
       }
 
       if (
-        newRangeData[newRangeData.length - 1].x <
-        Math.min(plotMax, rangeData[rangeData.length - 1].x)
+        (newRangeData[newRangeData.length - 1]?.x ?? 0) <
+        Math.min(plotMax, rangeData[rangeData.length - 1]?.x ?? plotMax)
       ) {
         newRangeData.push({
-          x: Math.min(plotMax, rangeData[rangeData.length - 1].x),
-          y: newRangeData[newRangeData.length - 1]?.y
+          x: Math.min(plotMax, rangeData[rangeData.length - 1]?.x ?? plotMax),
+          y: newRangeData[newRangeData.length - 1]?.y ?? 0
         })
       }
 
@@ -240,115 +274,142 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     }
 
     return pointsOmitter(rangeData)
-  }, [disabled, data, leftRange, rightRange, plotMin, plotMax, pointsOmitter])
+  }, [disabled, safeData, leftRange, rightRange, plotMin, plotMax, pointsOmitter])
 
   const currentGreaterThanRange = useMemo(() => {
-    if (disabled || rightRange.x > plotMax) {
+    if (!safeData.length || disabled || rightRange?.x == null || rightRange.x > plotMax) {
       return []
     }
 
-    let rangeData: Array<{ x: number; y: number }> = data.filter(tick => tick.x >= rightRange.x)
-    const outData: Array<{ x: number; y: number }> = data.filter(
-      tick => tick.x > Math.min(plotMax, data[data.length - 1].x)
+    let rangeData: Array<{ x: number; y: number }> = safeData.filter(tick => tick.x >= rightRange.x)
+    const outData: Array<{ x: number; y: number }> = safeData.filter(
+      tick => tick.x > Math.min(plotMax, safeData[safeData.length - 1]?.x ?? plotMax)
     )
 
     if (!rangeData.length) {
       return []
     }
 
-    if (rangeData[0].x > rightRange.x) {
+    if ((rangeData[0]?.x ?? 0) > rightRange.x) {
       rangeData.unshift({
         x: rightRange.x,
-        y: rangeData[0]?.y
+        y: rangeData[0]?.y ?? 0
       })
     }
 
     rangeData = rangeData.slice(0, rangeData.length - outData.length)
 
-    if (rangeData[rangeData.length - 1].x < Math.min(plotMax, data[data.length - 1].x)) {
+    if (
+      (rangeData[rangeData.length - 1]?.x ?? 0) <
+      Math.min(plotMax, safeData[safeData.length - 1]?.x ?? plotMax)
+    ) {
       rangeData.push({
-        x: Math.min(plotMax, data[data.length - 1].x),
-        y: rangeData[rangeData.length - 1]?.y
+        x: Math.min(plotMax, safeData[safeData.length - 1]?.x ?? plotMax),
+        y: rangeData[rangeData.length - 1]?.y ?? 0
       })
     }
 
     return pointsOmitter(rangeData)
-  }, [disabled, data, rightRange, plotMin, plotMax, pointsOmitter])
+  }, [disabled, safeData, rightRange, plotMin, plotMax, pointsOmitter])
 
-  const currentLayer: Layer = ({ innerWidth, innerHeight }) => {
-    if (typeof midPrice === 'undefined') {
-      return null
-    }
+  const currentLayer: Layer = useCallback(
+    ({ innerWidth, innerHeight }) => {
+      if (typeof midPrice === 'undefined' || midPrice?.x == null) {
+        return null
+      }
 
-    const unitLen = innerWidth / (plotMax - plotMin)
-    return (
-      <svg x={(midPrice.x - plotMin) * unitLen - 20} y={0} width={60} height={innerHeight}>
-        <defs>
-          <filter id='shadow' x='-10' y='-9' width='20' height={innerHeight}>
-            <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
-          </filter>
-        </defs>
-        <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
-        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.yellow} />
-      </svg>
-    )
-  }
+      const unitLen = plotMax !== plotMin ? innerWidth / (plotMax - plotMin) : 0
+      return (
+        <svg x={(midPrice.x - plotMin) * unitLen - 20} y={0} width={60} height={innerHeight}>
+          <defs>
+            <filter id='shadow' x='-10' y='-9' width='20' height={innerHeight}>
+              <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
+            </filter>
+          </defs>
+          <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
+          <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.yellow} />
+        </svg>
+      )
+    },
+    [midPrice, plotMin, plotMax]
+  )
 
-  const globalPriceLayer: Layer = ({ innerWidth, innerHeight }) => {
-    if (typeof globalPrice === 'undefined') {
-      return null
-    }
+  const globalPriceLayer = useCallback(
+    ({ innerWidth, innerHeight }: { innerWidth: number; innerHeight: number }) => {
+      if (typeof globalPrice === 'undefined' || globalPrice == null) {
+        return null
+      }
 
-    const unitLen = innerWidth / (plotMax - plotMin)
-    return (
-      <svg x={(globalPrice - plotMin) * unitLen - 20} y={-20} width={40} height={innerHeight + 20}>
-        <defs>
-          <filter id='shadow-global-price' x='-10' y='-9' width='20' height={innerHeight}>
-            <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
-          </filter>
-        </defs>
-        <rect
-          x={14}
-          y={20}
-          width='16'
-          height={innerHeight}
-          filter='url(#shadow-global-price)'
-          opacity='0.3'
-        />
-        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.blue} />
-      </svg>
-    )
-  }
+      const unitLen = plotMax !== plotMin ? innerWidth / (plotMax - plotMin) : 0
+      return (
+        <svg
+          x={(globalPrice - plotMin) * unitLen - 20}
+          y={-20}
+          width={40}
+          height={innerHeight + 20}>
+          <defs>
+            <filter id='shadow-global-price' x='-10' y='-9' width='20' height={innerHeight}>
+              <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
+            </filter>
+          </defs>
+          <rect
+            x={14}
+            y={20}
+            width='16'
+            height={innerHeight}
+            filter='url(#shadow-global-price)'
+            opacity='0.3'
+          />
+          <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.blue} />
+        </svg>
+      )
+    },
+    [globalPrice, plotMin, plotMax]
+  )
 
-  const buyPriceLayer: Layer = ({ innerWidth, innerHeight }) => {
-    if (typeof tokenAPriceData === 'undefined' || typeof tokenBPriceData === 'undefined') {
-      return null
-    }
+  const buyPriceLayer = useCallback(
+    ({ innerWidth, innerHeight }: { innerWidth: number; innerHeight: number }) => {
+      if (
+        typeof tokenAPriceData === 'undefined' ||
+        typeof tokenBPriceData === 'undefined' ||
+        !tokenAPriceData?.buyPrice ||
+        !tokenBPriceData?.price
+      ) {
+        return null
+      }
 
-    const unitLen = innerWidth / (plotMax - plotMin)
-    return (
-      <svg
-        x={(tokenAPriceData.buyPrice / tokenBPriceData.price - plotMin) * unitLen - 20}
-        y={0}
-        width={60}
-        height={innerHeight}>
-        <defs>
-          <filter id='shadow' x='-10' y='-9' width='20' height={innerHeight}>
-            <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
-          </filter>
-        </defs>
-        <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
-        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.plotGreen} />
-      </svg>
-    )
-  }
+      const unitLen = plotMax !== plotMin ? innerWidth / (plotMax - plotMin) : 0
+      return (
+        <svg
+          x={(tokenAPriceData.buyPrice / tokenBPriceData.price - plotMin) * unitLen - 20}
+          y={0}
+          width={60}
+          height={innerHeight}>
+          <defs>
+            <filter id='shadow' x='-10' y='-9' width='20' height={innerHeight}>
+              <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
+            </filter>
+          </defs>
+          <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
+          <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.plotGreen} />
+        </svg>
+      )
+    },
+    [tokenAPriceData, tokenBPriceData, plotMin, plotMax]
+  )
 
-  const sellPriceLayer: Layer = ({ innerWidth, innerHeight }) => {
-    if (typeof tokenAPriceData === 'undefined' || typeof tokenBPriceData === 'undefined') {
-      return null
-    }
+  const sellPriceLayer = useCallback(
+    ({ innerWidth, innerHeight }: { innerWidth: number; innerHeight: number }) => {
+      if (
+        typeof tokenAPriceData === 'undefined' ||
+        typeof tokenBPriceData === 'undefined' ||
+        !tokenAPriceData?.sellPrice ||
+        !tokenBPriceData?.price
+      ) {
+        return null
+      }
 
-    const unitLen = innerWidth / (plotMax - plotMin)
+      const unitLen = plotMax !== plotMin ? innerWidth / (plotMax - plotMin) : 0
     return (
       <svg
         x={(tokenAPriceData.sellPrice / tokenBPriceData.price - plotMin) * unitLen - 20}
@@ -364,77 +425,103 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.plotRed} />
       </svg>
     )
-  }
+  } ,  [tokenAPriceData, tokenBPriceData, plotMin, plotMax]
+)
 
-  const bottomLineLayer: Layer = ({ innerWidth, innerHeight }) => {
-    const bottomLine = innerHeight
-    return <rect x={0} y={bottomLine} width={innerWidth} height={1} fill={colors.invariant.light} />
-  }
+  const bottomLineLayer = useCallback(
+    ({ innerWidth, innerHeight }: { innerWidth: number; innerHeight: number }) => {
+      const bottomLine = innerHeight
+      return (
+        <rect x={0} y={bottomLine} width={innerWidth} height={1} fill={colors.invariant.light} />
+      )
+    },
+    []
+  )
 
-  const lazyLoadingLayer: Layer = ({ innerWidth, innerHeight }) => {
-    if (!loading || coverOnLoading) {
-      return null
+  const lazyLoadingLayer: Layer = useCallback(
+    ({ innerWidth, innerHeight }) => {
+      if (!loading || coverOnLoading) {
+        return null
+      }
+
+      return (
+        <svg
+          width={innerWidth}
+          height={innerHeight + 5}
+          viewBox={`0 0 ${innerWidth} ${innerHeight + 5}`}
+          fill='none'
+          xmlns='http://www.w3.org/2000/svg'
+          x={0}
+          y={-5}>
+          <rect x={0} y={0} width='100%' height='100%' fill={`${colors.white.main}10`} />
+          <text
+            x='50%'
+            y='50%'
+            dominantBaseline='middle'
+            textAnchor='middle'
+            className={classes.loadingText}>
+            Loading liquidity data...
+          </text>
+        </svg>
+      )
+    },
+    [loading, coverOnLoading, classes.loadingText]
+  )
+
+  const brushLayer = useMemo(() => {
+    if (!leftRange?.x || !rightRange?.x || !leftRange.index || !rightRange.index) {
+      return () => null
     }
 
-    return (
-      <svg
-        width={innerWidth}
-        height={innerHeight + 5}
-        viewBox={`0 0 ${innerWidth} ${innerHeight + 5}`}
-        fill='none'
-        xmlns='http://www.w3.org/2000/svg'
-        x={0}
-        y={-5}>
-        <rect x={0} y={0} width='100%' height='100%' fill={`${colors.white.main}10`} />
-        <text
-          x='50%'
-          y='50%'
-          dominantBaseline='middle'
-          textAnchor='middle'
-          className={classes.loadingText}>
-          Loading liquidity data...
-        </text>
-      </svg>
-    )
-  }
-
-  const brushLayer = Brush(
-    leftRange.x,
-    rightRange.x,
-    position => {
-      const nearest = nearestTickIndex(
-        plotMin + position * (plotMax - plotMin),
-        tickSpacing,
-        isXtoY,
-        xDecimal,
-        yDecimal
-      )
-      onChangeRange?.(
-        isXtoY
-          ? Math.min(rightRange.index - tickSpacing, nearest)
-          : Math.max(rightRange.index + tickSpacing, nearest),
-        rightRange.index
-      )
-    },
-    position => {
-      const nearest = nearestTickIndex(
-        plotMin + position * (plotMax - plotMin),
-        tickSpacing,
-        isXtoY,
-        xDecimal,
-        yDecimal
-      )
-      onChangeRange?.(
-        leftRange.index,
-        isXtoY
-          ? Math.max(leftRange.index + tickSpacing, nearest)
-          : Math.min(leftRange.index - tickSpacing, nearest)
-      )
-    },
-    plotMin,
-    plotMax,
-    disabled
-  )
+    return Brush(
+      leftRange.x,
+      rightRange.x,
+      position => {
+        const nearest = nearestTickIndex(
+          plotMin + position * (plotMax - plotMin),
+          tickSpacing,
+          isXtoY,
+          xDecimal,
+          yDecimal
+        )
+        onChangeRange?.(
+          isXtoY
+            ? Math.min(rightRange.index - tickSpacing, nearest)
+            : Math.max(rightRange.index + tickSpacing, nearest),
+          rightRange.index
+        )
+      },
+      position => {
+        const nearest = nearestTickIndex(
+          plotMin + position * (plotMax - plotMin),
+          tickSpacing,
+          isXtoY,
+          xDecimal,
+          yDecimal
+        )
+        onChangeRange?.(
+          leftRange.index,
+          isXtoY
+            ? Math.max(leftRange.index + tickSpacing, nearest)
+            : Math.min(leftRange.index - tickSpacing, nearest)
+        )
+      },
+      plotMin,
+      plotMax,
+      disabled
+    )  }, [
+      leftRange,
+      rightRange,
+      plotMin,
+      plotMax,
+      tickSpacing,
+      isXtoY,
+      xDecimal,
+      yDecimal,
+      onChangeRange,
+      disabled
+    ])
+  
 
   const highlightLayer = ({ innerWidth, innerHeight }) => {
     const unitLen = innerWidth / (plotMax - plotMin)
@@ -458,7 +545,24 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     )
   }
 
-  const isNoPositions = data.every(tick => !(tick?.y > 0))
+  const isNoPositions = !safeData.length || safeData.every(tick => !(tick?.y > 0))
+
+  const chartData = useMemo(() => {
+    return [
+      {
+        id: 'less than range',
+        data: currentLessThanRange?.length ? currentLessThanRange : [{ x: plotMin, y: 0 }]
+      },
+      {
+        id: 'range',
+        data: currentRange?.length ? currentRange : [{ x: (plotMin + plotMax) / 2, y: 0 }]
+      },
+      {
+        id: 'greater than range',
+        data: currentGreaterThanRange?.length ? currentGreaterThanRange : [{ x: plotMax, y: 0 }]
+      }
+    ]
+  }, [currentLessThanRange, currentRange, currentGreaterThanRange, plotMin, plotMax])
 
   return (
     <Grid
@@ -520,20 +624,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         lineWidth={2}
         pointSize={2}
         areaOpacity={0.2}
-        data={[
-          {
-            id: 'less than range',
-            data: currentLessThanRange.length ? currentLessThanRange : [{ x: plotMin, y: 0 }]
-          },
-          {
-            id: 'range',
-            data: currentRange
-          },
-          {
-            id: 'greater than range',
-            data: currentGreaterThanRange.length ? currentGreaterThanRange : [{ x: plotMax, y: 0 }]
-          }
-        ]}
+        data={chartData}
         curve={isXtoY ? 'stepAfter' : 'stepBefore'}
         margin={{ top: isSmDown ? 55 : 25, bottom: 15 }}
         colors={[colors.invariant.pink, colors.invariant.green, colors.invariant.pink]}
