@@ -1808,6 +1808,7 @@ export function* handleClaimAllFees() {
     yield put(snackbarsActions.remove(loaderClaimAllFees))
 
     yield put(actions.getPositionsList())
+    yield* put(actions.setAllClaimLoader(false))
   } catch (e) {
     console.log(e)
     yield* put(actions.setAllClaimLoader(false))
