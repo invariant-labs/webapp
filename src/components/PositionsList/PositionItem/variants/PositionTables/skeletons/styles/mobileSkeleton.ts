@@ -2,8 +2,11 @@ import { colors, theme } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 export const useMobileSkeletonStyles = makeStyles()(() => ({
   card: {
-    height: '290px',
+    height: '253px',
     flexDirection: 'column',
+    [theme.breakpoints.up('sm')]: {
+      height: '265px'
+    },
     [theme.breakpoints.between('sm', 'lg')]: {
       padding: '16px',
       paddingTop: '16px'
