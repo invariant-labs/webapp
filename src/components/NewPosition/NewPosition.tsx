@@ -691,14 +691,20 @@ export const NewPosition: React.FC<INewPosition> = ({
             setTokenB(address2)
             onChangePositionTokens(address1, address2, fee)
 
-            if (!isLoadingTokens) {
+            if (
+              !isLoadingTokens &&
+              concentrationArray.length > 0 &&
+              concentrationIndex < concentrationArray.length
+            ) {
               updatePath(
                 address1,
                 address2,
                 fee,
-                +concentrationArray[concentrationIndex].toFixed(0)
+                +concentrationArray[concentrationIndex]?.toFixed(0) || 0
               ),
                 positionOpeningMethod === 'range'
+            } else if (!isLoadingTokens) {
+              updatePath(address1, address2, fee)
             }
           }}
           onAddLiquidity={() => {
