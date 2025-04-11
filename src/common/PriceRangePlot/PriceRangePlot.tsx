@@ -410,23 +410,24 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       }
 
       const unitLen = plotMax !== plotMin ? innerWidth / (plotMax - plotMin) : 0
-    return (
-      <svg
-        x={(tokenAPriceData.sellPrice / tokenBPriceData.price - plotMin) * unitLen - 20}
-        y={0}
-        width={60}
-        height={innerHeight}>
-        <defs>
-          <filter id='shadow' x='-10' y='-9' width='20' height={innerHeight}>
-            <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
-          </filter>
-        </defs>
-        <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
-        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.plotRed} />
-      </svg>
-    )
-  } ,  [tokenAPriceData, tokenBPriceData, plotMin, plotMax]
-)
+      return (
+        <svg
+          x={(tokenAPriceData.sellPrice / tokenBPriceData.price - plotMin) * unitLen - 20}
+          y={0}
+          width={60}
+          height={innerHeight}>
+          <defs>
+            <filter id='shadow' x='-10' y='-9' width='20' height={innerHeight}>
+              <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
+            </filter>
+          </defs>
+          <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
+          <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.plotRed} />
+        </svg>
+      )
+    },
+    [tokenAPriceData, tokenBPriceData, plotMin, plotMax]
+  )
 
   const bottomLineLayer = useCallback(
     ({ innerWidth, innerHeight }: { innerWidth: number; innerHeight: number }) => {
@@ -509,19 +510,19 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       plotMin,
       plotMax,
       disabled
-    )  }, [
-      leftRange,
-      rightRange,
-      plotMin,
-      plotMax,
-      tickSpacing,
-      isXtoY,
-      xDecimal,
-      yDecimal,
-      onChangeRange,
-      disabled
-    ])
-  
+    )
+  }, [
+    leftRange,
+    rightRange,
+    plotMin,
+    plotMax,
+    tickSpacing,
+    isXtoY,
+    xDecimal,
+    yDecimal,
+    onChangeRange,
+    disabled
+  ])
 
   const highlightLayer = ({ innerWidth, innerHeight }) => {
     const unitLen = innerWidth / (plotMax - plotMin)
