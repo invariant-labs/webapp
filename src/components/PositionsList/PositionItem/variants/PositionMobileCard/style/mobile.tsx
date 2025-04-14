@@ -5,11 +5,10 @@ import { makeStyles } from 'tss-react/mui'
 export const useMobileStyles = makeStyles()((theme: Theme) => ({
   root: {
     padding: 16,
-    height: '290px',
     marginTop: '16px',
     flexWrap: 'wrap',
     [theme.breakpoints.down('sm')]: {
-      padding: 8
+      padding: '12px 8px '
     },
     background: colors.invariant.component,
     borderRadius: 24,
