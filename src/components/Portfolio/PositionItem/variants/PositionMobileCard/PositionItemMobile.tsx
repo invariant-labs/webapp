@@ -4,7 +4,6 @@ import classNames from 'classnames'
 import { useMemo, useRef, useState } from 'react'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { initialXtoY, tickerToAddress } from '@utils/utils'
-import { IPositionItem } from '@components/PositionsList/types'
 import { useSelector } from 'react-redux'
 import { useTokenValues } from '@store/hooks/positionList/useTokenValues'
 import { singlePositionData } from '@store/selectors/positions'
@@ -15,6 +14,7 @@ import { ISinglePositionData } from '@components/Portfolio/Overview/Overview/Ove
 import icons from '@static/icons'
 import { TooltipInv } from '@common/TooltipHover/TooltipInv'
 import { useMobileStyles } from './style'
+import { IPositionItem } from '@store/consts/types'
 
 interface IPositionItemMobile extends IPositionItem {
   setAllowPropagation: React.Dispatch<React.SetStateAction<boolean>>
