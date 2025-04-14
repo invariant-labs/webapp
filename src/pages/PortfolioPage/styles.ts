@@ -51,15 +51,7 @@ const useStyles = makeStyles()(theme => {
         }
       }
     },
-    emptyContainer: {
-      marginTop: 104,
-      [theme.breakpoints.down('sm')]: {
-        marginTop: 30
-      },
-      width: 1122,
-      display: 'flex',
-      maxWidth: '100%'
-    },
+
     innerContainer: {
       maxWidth: 1210,
       minHeight: '70vh',

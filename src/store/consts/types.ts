@@ -2,6 +2,7 @@ import { ActionCreatorWithPayload } from '@reduxjs/toolkit'
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { NetworkType } from './static'
+import { Position } from '@invariant-labs/sdk/lib/market'
 
 declare global {
   interface Window {
@@ -287,4 +288,25 @@ export enum WalletType {
   PHANTOM = 'PHANTOM',
   BACKPACK = 'BACKPACK',
   SOLFLARE = 'SOLFLARE'
+}
+export interface IPositionItem {
+  tokenXName: string
+  tokenYName: string
+  tokenXIcon: string
+  tokenYIcon: string
+  tokenXLiq: number
+  position: Position
+  tokenYLiq: number
+  fee: number
+  min: number
+  max: number
+  valueX: number
+  valueY: number
+  id: string
+  address: string
+  isActive?: boolean
+  currentPrice: number
+  network: NetworkType
+  isFullRange: boolean
+  unclaimedFeesInUSD: { value: number; loading: boolean }
 }

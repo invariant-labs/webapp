@@ -1,4 +1,4 @@
-import { ISinglePositionData } from '@components/OverviewYourPositions/components/Overview/Overview'
+import { ISinglePositionData } from '@components/Portfolio/Overview/Overview/Overview'
 import { calculatePriceSqrt } from '@invariant-labs/sdk'
 import { getX, getY } from '@invariant-labs/sdk/lib/math'
 import { printBN } from '@utils/utils'

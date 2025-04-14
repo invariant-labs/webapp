@@ -5,18 +5,18 @@ import { makeStyles } from 'tss-react/mui'
 export const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     width: 1210, //merge
-    flexDirection: 'column',
 
     [theme.breakpoints.down('md')]: {
       width: '100%'
     }
   },
   header: {
+    paddingBottom: 16,
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 16,
-    display: 'flex',
+
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'center'
     }
@@ -46,7 +46,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   searchWrapper: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexWrap: 'wrap',
@@ -85,18 +85,15 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       width: '100%'
     }
   },
-  refreshWrapper: {
-    display: 'flex',
-    alignItems: 'center'
-  },
   fullWidthWrapper: {
     display: 'flex',
-    columnGap: theme.spacing(2),
+    gap: theme.spacing(2),
     justifyContent: 'space-between',
     marginBottom: 8,
+    [theme.breakpoints.down('md')]: { flexDirection: 'row-reverse', width: '100%' },
     [theme.breakpoints.down('sm')]: {
       width: '100%',
-      flexDirection: 'row-reverse'
+      gap: theme.spacing(1)
     }
   },
   buttonSelectDisabled: {
@@ -128,8 +125,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     color: colors.invariant.text
   },
   list: {
-    flexDirection: 'column',
     justifyContent: 'flex-start',
+    flexDirection: 'column',
     position: 'relative',
     flex: 1
   },
@@ -229,7 +226,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     '&:disabled': {
       color: colors.invariant.componentBcg,
       pointerEvents: 'auto',
-      transition: 'all 0.2s',
+      transition: 'all 0.3s',
       '&:hover': {
         boxShadow: 'none',
         cursor: 'not-allowed',
@@ -245,8 +242,179 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     paddingLeft: 12,
     paddingRight: 12
   },
-
+  filtersContainer: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex',
+    flexDirection: 'row',
+    gap: 12,
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'space-between',
+      width: '100%'
+    }
+  },
   disabledSwitchButton: {
     color: `${colors.invariant.textGrey} !important`
+  },
+  footer: {
+    maxWidth: 1201,
+    height: 48,
+    width: '100%',
+    borderTop: `1px solid ${colors.invariant.light}`,
+    display: 'flex',
+    justifyContent: 'space-between',
+    background: colors.invariant.component,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    [theme.breakpoints.down('lg')]: {
+      marginBottom: 32
+    },
+    [theme.breakpoints.down('md')]: {
+      borderRadius: 16,
+      border: 'none',
+      marginTop: 8
+    }
+  },
+  footerItem: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    paddingLeft: 16,
+    paddingRight: 16,
+
+    [theme.breakpoints.down('sm')]: {
+      padding: '0px 8px'
+    }
+  },
+  overviewContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginBottom: '24px',
+    width: '100%'
+  },
+  switchPoolsContainerOverview: {
+    position: 'relative',
+    width: '100%',
+    backgroundColor: colors.invariant.component,
+    borderRadius: 10,
+    overflow: 'hidden',
+    display: 'flex',
+    height: 32,
+    marginBottom: '16px'
+  },
+  overviewHeaderTitle: {
+    color: colors.invariant.text,
+    ...typography.heading4,
+    fontWeight: 500
+  },
+
+  switchPoolsButtonsGroupOverview: {
+    position: 'relative',
+    zIndex: 2,
+    display: 'flex',
+    width: '100%'
+  },
+  switchPoolsButtonOverview: {
+    ...typography.body2,
+    display: 'flex',
+    textWrap: 'nowrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+    flex: 1,
+    textTransform: 'none',
+    border: 'none',
+    borderRadius: 10,
+    zIndex: 2,
+    width: '50%',
+    '&.Mui-selected': {
+      backgroundColor: 'transparent'
+    },
+    '&:hover': {
+      backgroundColor: 'transparent'
+    },
+    '&.Mui-selected:hover': {
+      backgroundColor: 'transparent'
+    },
+    '&:disabled': {
+      color: colors.invariant.componentBcg,
+      pointerEvents: 'auto',
+      transition: 'all 0.3s',
+      '&:hover': {
+        boxShadow: 'none',
+        cursor: 'not-allowed',
+        filter: 'brightness(1.15)',
+        '@media (hover: none)': {
+          filter: 'none'
+        }
+      }
+    },
+    letterSpacing: '-0.03em',
+    paddingTop: 6,
+    paddingBottom: 6,
+    paddingLeft: 32,
+    paddingRight: 32
+  },
+  filtersContainerOverview: {
+    display: 'none',
+    width: '100%',
+    [theme.breakpoints.down('md')]: {
+      display: 'flex'
+    }
+  },
+
+  footerCheckboxContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginLeft: 6
+  },
+  checkBoxLabel: {
+    '.MuiFormControlLabel-label': {
+      ...typography.body2,
+      color: `${colors.invariant.text}b6`
+    }
+  },
+  footerText: { ...typography.body2 },
+  footerPositionDetails: {
+    ...typography.body2
+  },
+  whiteText: {
+    color: colors.invariant.text
+  },
+  greenText: {
+    color: `${colors.invariant.green}b2`
+  },
+  pinkText: {
+    color: `${colors.invariant.pink}b2`
+  },
+  greyText: {
+    color: colors.invariant.textGrey
+  },
+  checkBox: {
+    width: 25,
+    height: 25,
+    marginLeft: 3,
+    marginRight: 3,
+    color: colors.invariant.newDark,
+    '&.Mui-checked': {
+      color: colors.invariant.green
+    },
+    '& .MuiSvgIcon-root': {
+      fontSize: 25
+    },
+    padding: 0,
+    '& .MuiIconButton-label': {
+      width: 20,
+      height: 20,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: 0
+    }
   }
 }))
