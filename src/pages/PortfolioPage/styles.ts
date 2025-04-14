@@ -38,6 +38,7 @@ const useStyles = makeStyles()(theme => {
       marginTop: 20,
       color: colors.invariant.componentBcg,
       ...typography.body1,
+
       textTransform: 'none',
       borderRadius: 14,
       background: colors.invariant.pinkLinearGradientOpacity,
