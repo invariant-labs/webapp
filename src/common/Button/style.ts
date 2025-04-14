@@ -58,18 +58,16 @@ const useStyles = makeStyles<StyleProps>()(
       '&:hover': {
         boxShadow: `0 0 12px ${getStyles(scheme).boxShadow}`,
         ...(scheme === 'rainbow' ? {} : { background: getStyles(scheme).backgroundHover })
-      }
-    },
-    buttonDisabled: {
-      color: colors.invariant.textGrey,
-      background: colors.invariant.light,
-      cursor: 'not-allowed',
-
-      '&:hover': {
+      },
+      '&.Mui-disabled': {
+        pointerEvents: 'auto',
+        color: colors.invariant.textGrey,
         boxShadow: 'none',
-        background: colors.invariant.light
+        background: colors.invariant.light,
+        cursor: 'not-allowed'
       }
     },
+
     buttonRainbowBorder: {
       border: '2px solid transparent',
       backgroundImage: `linear-gradient(${colors.invariant.normal}, ${colors.invariant.normal}), linear-gradient(0deg, ${colors.invariant.green}, ${colors.invariant.pink})`,
