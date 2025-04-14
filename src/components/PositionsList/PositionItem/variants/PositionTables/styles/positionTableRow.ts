@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material'
-import { colors } from '@static/theme'
+import { colors, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 export const usePositionTableRowStyle = makeStyles()((theme: Theme) => ({
   cellBase: {
@@ -17,23 +17,24 @@ export const usePositionTableRowStyle = makeStyles()((theme: Theme) => ({
     textAlign: 'left',
     padding: '14px 41px 14px 22px !important'
   },
+  airdropIcon: {
+    flexShrink: '0',
+    height: '32px',
+    width: '32px',
+    opacity: 0.3,
+    filter: 'grayscale(1)'
+  },
   itemCellContainer: {
+    width: 100,
     justifyContent: 'space-between',
     alignItems: 'center',
     flexWrap: 'nowrap',
-    width: 100,
     [theme.breakpoints.down(1029)]: {
       marginRight: 0
     },
     [theme.breakpoints.down('sm')]: {
       width: 144,
       paddingInline: 6
-    }
-  },
-  pointsCell: {
-    width: '8%',
-    '& > div': {
-      justifyContent: 'center'
     }
   },
 
@@ -94,13 +95,6 @@ export const usePositionTableRowStyle = makeStyles()((theme: Theme) => ({
     alignItems: 'center'
   },
 
-  icons: {
-    marginRight: 12,
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px'
-  },
-
   tokenIcon: {
     width: 40,
     borderRadius: '100%',
@@ -109,49 +103,22 @@ export const usePositionTableRowStyle = makeStyles()((theme: Theme) => ({
     }
   },
 
-  arrows: {
+  arrowsShared: {
     width: 36,
-    cursor: 'pointer',
-    transition: 'filter 0.2s',
+    marginLeft: 4,
+    marginRight: 4,
+    [theme.breakpoints.down('lg')]: {
+      width: 30
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: 24
+    },
     '&:hover': {
       filter: 'brightness(2)'
-    }
+    },
+    transition: '300ms'
   },
 
-  button: {
-    minWidth: '36px',
-    width: '36px',
-    height: '36px',
-    padding: 0,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    background: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
-    borderRadius: '12px',
-    color: colors.invariant.dark,
-    transition: 'all 0.3s ease',
-    '&:hover': {
-      background: 'linear-gradient(180deg, #3FF2AB 0%, #25B487 100%)',
-      boxShadow: '0 4px 15px rgba(46, 224, 154, 0.35)'
-    }
-  },
-
-  blur: {
-    width: 120,
-    height: 30,
-    borderRadius: 16,
-    background: `linear-gradient(90deg, ${colors.invariant.component} 25%, ${colors.invariant.light} 50%, ${colors.invariant.component} 75%)`,
-    backgroundSize: '200% 100%',
-    animation: 'shimmer 2s infinite'
-  },
-
-  valueWrapper: {
-    margin: '0 auto',
-    width: '100%',
-    maxWidth: 144,
-    display: 'flex',
-    justifyContent: 'center'
-  },
   actionButton: {
     background: 'none',
     padding: 0,
@@ -162,7 +129,7 @@ export const usePositionTableRowStyle = makeStyles()((theme: Theme) => ({
     color: colors.invariant.black,
     textTransform: 'none',
 
-    transition: 'filter 0.2s linear',
+    transition: 'filter 0.3s linear',
 
     '&:hover': {
       filter: 'brightness(1.2)',
@@ -171,6 +138,89 @@ export const usePositionTableRowStyle = makeStyles()((theme: Theme) => ({
         filter: 'none'
       }
     }
+  },
+
+  iconsShared: {
+    alignItems: 'center',
+    flexWrap: 'nowrap',
+    marginRight: 12,
+    width: 'fit-content',
+    [theme.breakpoints.down('lg')]: {
+      marginRight: 12
+    }
+  },
+
+  names: {
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    ...typography.heading2,
+    color: colors.invariant.text,
+    lineHeight: '40px',
+    textAlign: 'left',
+    whiteSpace: 'nowrap',
+    width: 180,
+    [theme.breakpoints.down('xl')]: {
+      ...typography.heading2
+    },
+    [theme.breakpoints.down('lg')]: {
+      lineHeight: '32px',
+      width: 'unset'
+    },
+    [theme.breakpoints.down('sm')]: {
+      ...typography.heading3,
+      lineHeight: '25px'
+    }
+  },
+  infoText: {
+    ...typography.body1,
+    color: colors.invariant.lightGrey,
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    [theme.breakpoints.down('sm')]: {
+      ...typography.caption1,
+      padding: '0 4px'
+    }
+  },
+  activeInfoText: {
+    color: colors.invariant.black
+  },
+  greenText: {
+    ...typography.body1,
+    color: colors.invariant.green,
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    [theme.breakpoints.down('sm')]: {
+      ...typography.caption1
+    }
+  },
+
+  fee: {
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
+    justifyContent: 'center',
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      marginRight: 0
+    }
+  },
+
+  activeFee: {
+    background: colors.invariant.greenLinearGradient
+  },
+  infoCenter: {
+    flex: '1 1 0%',
+    justifyContent: 'center'
+  },
+
+  value: {
+    background: colors.invariant.light,
+    borderRadius: 11,
+    height: 36,
+    paddingInline: 12,
+    marginRight: 8
   },
   skeleton30Rect: {
     width: 32,
@@ -199,12 +249,5 @@ export const usePositionTableRowStyle = makeStyles()((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     gap: '4px'
-  },
-  label: {
-    color: colors.invariant.lightGrey,
-
-    background: colors.invariant.light,
-    padding: '8px 12px',
-    borderRadius: '12px'
   }
 }))
