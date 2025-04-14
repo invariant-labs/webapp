@@ -290,6 +290,7 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
         borderRadius: 0
       }
     },
+
     emptyStateText: {
       ...typography.heading2,
       color: colors.invariant.text,
