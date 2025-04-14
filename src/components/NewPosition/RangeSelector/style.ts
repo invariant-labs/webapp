@@ -296,6 +296,11 @@ const useStyles = makeStyles()(theme => {
         minWidth: 82,
         textAlign: 'center'
       }
+    },
+    priceBlock: {
+      height: 17,
+      margin: 0,
+      textAlign: 'left'
     }
   }
 })
