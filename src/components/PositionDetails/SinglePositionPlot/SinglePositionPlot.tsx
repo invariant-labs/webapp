@@ -4,7 +4,6 @@ import {
   calcPriceByTickIndex,
   calcTicksAmountInRange,
   calculateConcentration,
-  formatNumberWithoutSuffix,
   formatNumberWithSuffix,
   numberToString,
   spacingMultiplicityGte,
@@ -12,7 +11,7 @@ import {
   truncateString
 } from '@utils/utils'
 import { PlotTickData } from '@store/reducers/positions'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import useStyles from './style'
 import { getMinTick } from '@invariant-labs/sdk/lib/utils'
@@ -160,72 +159,10 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   const maxPercentage = (max / currentPrice - 1) * 100
   const concentration = calculateConcentration(leftRange.index, rightRange.index)
 
-  const buyPercentageDifference = useMemo(() => {
-    if (
-      tokenAPriceData?.buyPrice === undefined ||
-      globalPrice === undefined ||
-      tokenBPriceData?.price === undefined
-    ) {
-      return
-    }
-    return ((tokenAPriceData.buyPrice / tokenBPriceData?.price - globalPrice) / globalPrice) * 100
-  }, [tokenAPriceData?.buyPrice, globalPrice, tokenBPriceData?.price])
-
-  const sellPercentageDifference = useMemo(() => {
-    if (
-      tokenAPriceData?.sellPrice === undefined ||
-      globalPrice === undefined ||
-      tokenBPriceData?.price === undefined
-    ) {
-      return
-    }
-    return ((tokenAPriceData.sellPrice / tokenBPriceData?.price - globalPrice) / globalPrice) * 100
-  }, [tokenAPriceData?.sellPrice, globalPrice, tokenBPriceData?.price])
-
   return (
     <Box className={classes.container}>
       <Box className={classes.headerContainer}>
-        <Grid>
-          <Typography className={classes.header}>Price range</Typography>
-          {
-            <>
-              <div className={classes.priceBlock}>
-                <Typography className={classes.currentPrice}>
-                  {formatNumberWithoutSuffix(midPrice.x)} {tokenX.name}/{tokenY.name}
-                </Typography>
-              </div>
-              <div className={classes.priceBlock}>
-                {globalPrice && (
-                  <Typography
-                    className={classes.currentPrice}
-                    style={{ color: colors.invariant.blue }}>
-                    {formatNumberWithoutSuffix(globalPrice)} {tokenX.name}/{tokenY.name}
-                  </Typography>
-                )}
-              </div>
-              <div className={classes.priceBlock}>
-                {buyPercentageDifference && (
-                  <Typography
-                    className={classes.currentPrice}
-                    style={{ color: colors.invariant.plotGreen }}>
-                    {buyPercentageDifference < 0 ? '-' : '+'}
-                    {formatNumberWithoutSuffix(Math.abs(buyPercentageDifference))}%
-                  </Typography>
-                )}
-              </div>
-              <div className={classes.priceBlock}>
-                {sellPercentageDifference && (
-                  <Typography
-                    className={classes.currentPrice}
-                    style={{ color: colors.invariant.plotRed }}>
-                    {sellPercentageDifference < 0 ? '-' : '+'}{' '}
-                    {formatNumberWithoutSuffix(Math.abs(sellPercentageDifference))}%
-                  </Typography>
-                )}
-              </div>
-            </>
-          }
-        </Grid>
+        <Typography className={classes.header}>Price range</Typography>
         <Grid>
           <RangeIndicator inRange={min <= currentPrice && currentPrice <= max} />
           <Grid gap={'2px'} mt={1} display='flex' flexDirection='column' alignItems='flex-end'>

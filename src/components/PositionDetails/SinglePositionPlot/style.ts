@@ -34,8 +34,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   header: {
     ...typography.heading4,
-    color: colors.white.main,
-    marginBottom: 28
+    color: colors.white.main
   },
   plot: {
     width: '100%',
@@ -115,7 +114,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     marginLeft: 16
   },
   currentPrice: {
-    display: 'inline-block',
     color: colors.invariant.yellow,
     ...typography.caption2,
     textAlign: 'right'
@@ -164,11 +162,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     ...typography.caption2,
     textAlign: 'right',
     marginLeft: 4
-  },
-  priceBlock: {
-    height: 17,
-    margin: 0,
-    textAlign: 'left'
   }
 }))
 

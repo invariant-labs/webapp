@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PriceRangePlot, { TickPlotPositionData } from '@common/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import { PlotTickData } from '@store/reducers/positions'
@@ -21,7 +21,6 @@ import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { Button, Grid, Typography } from '@mui/material'
 import icons from '@static/icons'
 import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
-import { colors } from '@static/theme'
 
 export interface IRangeSelector {
   updatePath: (concIndex: number) => void
@@ -424,28 +423,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     autoZoomHandler(leftRange, rightRange, true)
   }, [tokenASymbol, tokenBSymbol])
 
-  const buyPercentageDifference = useMemo(() => {
-    if (
-      tokenAPriceData?.buyPrice === undefined ||
-      globalPrice === undefined ||
-      tokenBPriceData?.price === undefined
-    ) {
-      return
-    }
-    return ((tokenAPriceData.buyPrice / tokenBPriceData?.price - globalPrice) / globalPrice) * 100
-  }, [tokenAPriceData?.buyPrice, globalPrice, tokenBPriceData?.price])
-
-  const sellPercentageDifference = useMemo(() => {
-    if (
-      tokenAPriceData?.sellPrice === undefined ||
-      globalPrice === undefined ||
-      tokenBPriceData?.price === undefined
-    ) {
-      return
-    }
-    return ((tokenAPriceData.sellPrice / tokenBPriceData?.price - globalPrice) / globalPrice) * 100
-  }, [tokenAPriceData?.sellPrice, globalPrice, tokenBPriceData?.price])
-
   return (
     <Grid container className={classes.wrapper}>
       <Grid className={classes.topInnerWrapper}>
@@ -453,42 +430,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           <Grid>
             <Typography className={classes.header}>Price range</Typography>
             {poolIndex !== null && (
-              <>
-                <div className={classes.priceBlock}>
-                  <Typography className={classes.currentPrice}>
-                    {formatNumberWithoutSuffix(midPrice.x)} {tokenASymbol}/{tokenBSymbol}
-                  </Typography>
-                </div>
-                <div className={classes.priceBlock}>
-                  {globalPrice && (
-                    <Typography
-                      className={classes.currentPrice}
-                      style={{ color: colors.invariant.blue }}>
-                      {formatNumberWithoutSuffix(globalPrice)} {tokenASymbol}/{tokenBSymbol}
-                    </Typography>
-                  )}
-                </div>
-                <div className={classes.priceBlock}>
-                  {buyPercentageDifference && (
-                    <Typography
-                      className={classes.currentPrice}
-                      style={{ color: colors.invariant.plotGreen }}>
-                      {buyPercentageDifference < 0 ? '-' : '+'}
-                      {formatNumberWithoutSuffix(Math.abs(buyPercentageDifference))}%
-                    </Typography>
-                  )}
-                </div>
-                <div className={classes.priceBlock}>
-                  {sellPercentageDifference && (
-                    <Typography
-                      className={classes.currentPrice}
-                      style={{ color: colors.invariant.plotRed }}>
-                      {sellPercentageDifference < 0 ? '-' : '+'}{' '}
-                      {formatNumberWithoutSuffix(Math.abs(sellPercentageDifference))}%
-                    </Typography>
-                  )}
-                </div>
-              </>
+              <Typography className={classes.currentPrice}>
+                {formatNumberWithoutSuffix(midPrice.x)} {tokenBSymbol} per {tokenASymbol}
+              </Typography>
             )}
           </Grid>
           <Grid className={classes.activeLiquidityContainer} container>
@@ -524,7 +468,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
               </Typography>
             </TooltipGradient>
-            <Grid container flexDirection='column' mt={'3px'}>
+            <Grid container flexDirection='column'>
               <Typography className={classes.currentPrice}>Current price</Typography>
               <Typography className={classes.globalPrice}>Global price</Typography>
               <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>
