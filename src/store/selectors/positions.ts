@@ -17,7 +17,9 @@ export const {
   currentPoolIndex,
   initPosition,
   shouldNotUpdateRange,
-  currentPositionId
+  currentPositionId,
+  positionData,
+  showFeesLoader
 } = keySelectors(store, [
   'lastPage',
   'positionsList',
@@ -26,7 +28,9 @@ export const {
   'currentPoolIndex',
   'initPosition',
   'shouldNotUpdateRange',
-  'currentPositionId'
+  'currentPositionId',
+  'positionData',
+  'showFeesLoader'
 ])
 
 export const lastPageSelector = lastPage
@@ -115,12 +119,39 @@ export const totalUnlaimedFees = createSelector(
   }
 )
 
+export const positionWithPoolData = createSelector(
+  poolsArraySortedByFees,
+  positionData,
+  swapTokensDict,
+  (allPools, { position }, tokens) => {
+    const poolsByKey: Record<string, PoolWithAddressAndIndex> = {}
+    allPools.forEach((pool, index) => {
+      poolsByKey[pool.address.toString()] = {
+        ...pool,
+        poolIndex: index
+      }
+    })
+
+    return position && poolsByKey[position.pool.toString()]
+      ? {
+          ...position,
+          poolData: poolsByKey[position.pool.toString()],
+          tokenX: tokens[poolsByKey[position.pool.toString()].tokenX.toString()],
+          tokenY: tokens[poolsByKey[position.pool.toString()].tokenY.toString()],
+          positionIndex: 0
+        }
+      : null
+  }
+)
+
 export const positionsSelectors = {
   positionsList,
   plotTicks,
   initPosition,
   shouldNotUpdateRange,
-  currentPositionId
+  currentPositionId,
+  positionData,
+  showFeesLoader
 }
 
 export default positionsSelectors

@@ -15,8 +15,8 @@ import { usePositionTableRowStyle } from './styles/positionTableRow'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { useTokenValues } from '@store/hooks/positionList/useTokenValues'
 import icons from '@static/icons'
-import { TooltipInv } from '@common/TooltipHover/TooltipInv'
 import { Button } from '@common/Button/Button'
+import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
 
 interface ILoadingStates {
   pairName?: boolean
@@ -133,7 +133,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
       return <Skeleton variant='rectangular' className={classes.skeleton3660} />
     }
     return (
-      <TooltipInv
+      <TooltipGradient
         title={
           isActive ? (
             <>
@@ -159,7 +159,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
             {fee}%
           </Typography>
         </Grid>
-      </TooltipInv>
+      </TooltipGradient>
     )
   }, [fee, classes, isActive])
 

@@ -7,9 +7,10 @@ interface Props extends TooltipProps {
   top?: number
   children: React.ReactElement<any, any>
   title: React.ReactNode
+  noGradient?: boolean
 }
 
-export const TooltipInv = ({ top, children, title, ...props }: Props) => {
+export const TooltipGradient = ({ top, children, noGradient, title, ...props }: Props) => {
   const { classes } = useStyles({ top })
   const [open, setOpen] = useState(false)
   const [childrenHover, setChildrenHover] = useState(false)
@@ -30,7 +31,7 @@ export const TooltipInv = ({ top, children, title, ...props }: Props) => {
 
   return (
     <Tooltip
-      classes={{ tooltip: classes.tooltipNoGradient }}
+      classes={{ tooltip: noGradient ? classes.tooltipNoGradient : classes.tooltipGradient }}
       placement='bottom'
       TransitionComponent={TooltipTransition}
       enterTouchDelay={0}

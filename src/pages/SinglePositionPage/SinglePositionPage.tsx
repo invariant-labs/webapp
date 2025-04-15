@@ -9,10 +9,8 @@ const SinglePositionPage: React.FC = () => {
   const { classes } = useStyles()
 
   return (
-    <Grid container className={classes.container}>
-      <Grid item>
-        <SinglePositionWrapper id={id ?? ''} />
-      </Grid>
+    <Grid className={classes.container}>
+      <SinglePositionWrapper id={id ?? ''} />
     </Grid>
   )
 }

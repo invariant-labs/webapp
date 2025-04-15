@@ -60,6 +60,7 @@ import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
 import { CoinGeckoAPIData, PriorityMode, Token } from '@store/consts/types'
 import { sqrt } from '@invariant-labs/sdk/lib/math'
+import { apyToApr } from './uiUtils'
 
 export const transformBN = (amount: BN): string => {
   return (amount.div(new BN(1e2)).toNumber() / 1e4).toString()
@@ -1811,4 +1812,96 @@ export const getTicksFromPositions = async (
     console.log(error)
     return []
   }
+}
+
+export const truncateString = (str: string, maxLength: number): string => {
+  if (str.length <= maxLength + 1) {
+    return str
+  }
+
+  return str.slice(0, maxLength) + '...'
+}
+
+export const formatNumberWithCommas = (number: string) => {
+  const trimmedNumber = number.replace(/(\.\d*?[1-9])0+$/, '$1').replace(/\.0+$/, '')
+
+  return trimmedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
+export const removeAdditionalDecimals = (value: string, desiredDecimals: number): string => {
+  const dotIndex = value.indexOf('.')
+  if (dotIndex === -1) {
+    return value
+  }
+  const decimals = value.length - dotIndex - 1
+  if (decimals > desiredDecimals) {
+    const sliced = value.slice(0, dotIndex + desiredDecimals + 1)
+    const lastCommaIndex = sliced.lastIndexOf(',')
+
+    if (lastCommaIndex === -1 || lastCommaIndex < dotIndex) {
+      return sliced
+    }
+
+    return value.slice(0, lastCommaIndex) + value.slice(lastCommaIndex + 1, lastCommaIndex + 2)
+  } else {
+    return value
+  }
+}
+
+const poolsToRecalculateAPY = ['']
+
+export const calculateAPYAndAPR = (
+  apy: number,
+  poolAddress?: string,
+  volume?: number,
+  fee?: number,
+  tvl?: number
+) => {
+  if (volume === undefined || fee === undefined || tvl === undefined) {
+    return { convertedApy: Math.abs(apy), convertedApr: Math.abs(apyToApr(apy)) }
+  }
+
+  if (poolsToRecalculateAPY.includes(poolAddress ?? '')) {
+    const parsedApr = ((volume * fee) / tvl) * 365
+
+    const parsedApy = (Math.pow((volume * fee * 0.01) / tvl + 1, 365) - 1) * 100
+
+    return { convertedApy: Math.abs(parsedApy), convertedApr: Math.abs(parsedApr) }
+  } else {
+    return { convertedApy: Math.abs(apy), convertedApr: Math.abs(apyToApr(apy)) }
+  }
+}
+
+export const getPositionByIdAndPoolAddress = async (
+  marketProgram: Market,
+  id: string,
+  poolAddress: string
+): Promise<PositionWithoutTicks | null> => {
+  const positions = await marketProgram.program.account.position.all([
+    {
+      memcmp: {
+        bytes: bs58.encode(new PublicKey(poolAddress).toBuffer()),
+        offset: 40
+      }
+    },
+    {
+      memcmp: {
+        bytes: bs58.encode(new BN(id).toBuffer('le', 16)),
+        offset: 72
+      }
+    }
+  ])
+
+  return positions[0]
+    ? {
+        ...positions[0].account,
+        feeGrowthInsideX: positions[0].account.feeGrowthInsideX,
+        feeGrowthInsideY: positions[0].account.feeGrowthInsideY,
+        liquidity: positions[0].account.liquidity,
+        secondsPerLiquidityInside: positions[0].account.secondsPerLiquidityInside,
+        tokensOwedX: positions[0].account.tokensOwedX,
+        tokensOwedY: positions[0].account.tokensOwedY,
+        address: positions[0].publicKey
+      }
+    : null
 }

@@ -70,7 +70,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   coverOnLoading = false,
   hasError = false,
   reloadHandler,
-  volumeRange,
   tokenAPriceData,
   tokenBPriceData
 }) => {
@@ -430,43 +429,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     [tokenAPriceData, tokenBPriceData, plotMin, plotMax]
   )
 
-  const volumeRangeLayer = useCallback(
-    ({ innerWidth, innerHeight }: { innerWidth: number; innerHeight: number }) => {
-      if (typeof volumeRange === 'undefined') {
-        return null
-      }
-
-      const unitLen = plotMax !== plotMin ? innerWidth / (plotMax - plotMin) : 0
-      return (
-        <>
-          {volumeRange.min >= plotMin ? (
-            <line
-              x1={(volumeRange.min - plotMin) * unitLen}
-              x2={(volumeRange.min - plotMin) * unitLen}
-              y1={0}
-              strokeWidth={1}
-              y2={innerHeight}
-              stroke={colors.invariant.text}
-              strokeDasharray='16 4'
-            />
-          ) : null}
-          {volumeRange.max <= plotMax ? (
-            <line
-              x1={(volumeRange.max - plotMin) * unitLen}
-              x2={(volumeRange.max - plotMin) * unitLen}
-              y1={0}
-              strokeWidth={1}
-              y2={innerHeight}
-              stroke={colors.invariant.text}
-              strokeDasharray='16 4'
-            />
-          ) : null}
-        </>
-      )
-    },
-    [volumeRange, plotMin, plotMax]
-  )
-
   const bottomLineLayer = useCallback(
     ({ innerWidth, innerHeight }: { innerWidth: number; innerHeight: number }) => {
       const bottomLine = innerHeight
@@ -561,6 +523,28 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     onChangeRange,
     disabled
   ])
+
+  const highlightLayer = ({ innerWidth, innerHeight }) => {
+    const unitLen = innerWidth / (plotMax - plotMin)
+
+    return (
+      <svg width='100%' height='100%' pointerEvents={'none'}>
+        <defs>
+          <linearGradient id='gradient1' x1='0%' y1='20%' x2='0%' y2='100%'>
+            <stop offset='0%' style={{ stopColor: `rgba(46, 224, 154, 0)` }} />
+            <stop offset='100%' style={{ stopColor: 'rgba(46, 224, 154, 0.4)' }} />
+          </linearGradient>
+        </defs>
+        <rect
+          x={(leftRange.x - plotMin) * unitLen}
+          y={0}
+          width={(rightRange.x - leftRange.x) * unitLen}
+          height={innerHeight}
+          fill='url(#gradient1)'
+        />
+      </svg>
+    )
+  }
 
   const isNoPositions = !safeData.length || safeData.every(tick => !(tick?.y > 0))
 
@@ -683,11 +667,12 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           buyPriceLayer,
           sellPriceLayer,
           currentLayer,
-          volumeRangeLayer,
-          brushLayer,
           lazyLoadingLayer,
+          currentLayer,
+          brushLayer,
           'axes',
-          'legends'
+          'legends',
+          highlightLayer
         ]}
         defs={[
           linearGradientDef('gradient', [
