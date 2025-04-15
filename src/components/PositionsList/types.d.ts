@@ -1,4 +1,4 @@
-import { Position } from '@invariant-labs/sdk-eclipse/lib/market'
+import { Position } from '@invariant-labs/sdk/lib/market'
 import { NetworkType } from '@store/consts/static'
 
 export interface IPositionItem {
