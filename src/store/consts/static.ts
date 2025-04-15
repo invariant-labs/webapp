@@ -136,8 +136,7 @@ export const DOGIN_MAIN: Token = {
   address: new PublicKey('DoGinuF39MGaxJDeJ3QDk4qd2vXwkYf5TDYpkdpYjip'),
   decimals: 5,
   name: 'DoginHood',
-  logoURI:
-    'https://statics.solscan.io/cdn/imgs/s60?ref=68747470733a2f2f697066732e696f2f697066732f516d5066614a565454534c537a6f566161754d4b416e36586132627337365965564d44455269617934556d583562'
+  logoURI: 'https://ipfs.io/ipfs/QmPfaJVTTSLSzoVaauMKAn6Xa2bs76YeVMDERiay4UmX5b'
 }
 
 export const SNY_MAIN: Token = {
