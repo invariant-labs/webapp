@@ -119,7 +119,7 @@ export const PositionHeader = ({
       />
       <TooltipHover title='Open pool in explorer'>
         <a
-          href={`https://eclipsescan.xyz/account/${poolAddress.toString()}${networkUrl}`}
+          href={`https://solscan.io/account/${poolAddress}${networkUrl}`}
           target='_blank'
           rel='noopener noreferrer'
           className={classes.explorerLink}>
