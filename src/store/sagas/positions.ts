@@ -8,6 +8,7 @@ import {
   createLoaderKey,
   createPlaceholderLiquidityPlot,
   ensureError,
+  getPositionByIdAndPoolAddress,
   getPositionsAddressesFromRange,
   getTicksFromPositions,
   solToPriorityFee
@@ -28,7 +29,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { poolsArraySortedByFees, tokens } from '@store/selectors/pools'
 import { positionsWithPoolsData } from '@store/selectors/positions'
 import { network, rpcAddress } from '@store/selectors/solanaConnection'
-import { accounts } from '@store/selectors/solanaWallet'
+import { accounts, balance } from '@store/selectors/solanaWallet'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
 import {
   Keypair,
@@ -1090,9 +1091,10 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 
     closeSnackbar(loaderClaimFee)
     yield put(snackbarsActions.remove(loaderClaimFee))
+    yield put(actions.setFeesLoader(false))
   } catch (e) {
     console.log(e)
-
+    yield put(actions.setFeesLoader(false))
     closeSnackbar(loaderTxDetails)
     yield put(snackbarsActions.remove(loaderTxDetails))
     closeSnackbar(loaderClaimFee)
@@ -1255,9 +1257,10 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
     closeSnackbar(loaderClaimFee)
     yield put(snackbarsActions.remove(loaderClaimFee))
+    yield put(actions.setFeesLoader(false))
   } catch (e) {
     console.log(e)
-
+    yield put(actions.setFeesLoader(false))
     closeSnackbar(loaderClaimFee)
     yield put(snackbarsActions.remove(loaderClaimFee))
     closeSnackbar(loaderSigningTx)
@@ -1313,7 +1316,8 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     const allPositionsData = yield* select(positionsWithPoolsData)
     const tokensAccounts = yield* select(accounts)
     const allTokens = yield* select(tokens)
-
+    const solbalance1 = yield* select(balance)
+    console.log('solbalance1', solbalance1.toString())
     const wrappedSolAccount = Keypair.generate()
 
     const createIx = SystemProgram.createAccount({
@@ -1844,6 +1848,54 @@ export function* handleClaimAllFees() {
   }
 }
 
+export function* handleGetPreviewPosition(action: PayloadAction<string>) {
+  try {
+    const parts = action.payload.split('_')
+    if (parts.length !== 2) {
+      throw new Error('Invalid position id')
+    }
+    const [id, poolAddress] = parts
+
+    const wallet = yield* call(getWallet)
+    const networkType = yield* select(network)
+    const rpc = yield* select(rpcAddress)
+    const marketProgram = yield* call(getMarketProgram, networkType, rpc, wallet as IWallet)
+
+    const position = yield* call(getPositionByIdAndPoolAddress, marketProgram, id, poolAddress)
+
+    if (position) {
+      yield* put(
+        poolsActions.getPoolsDataForList({
+          addresses: [position.pool.toString()],
+          listType: ListType.POSITIONS
+        })
+      )
+    }
+    const poolsList = yield* select(poolsArraySortedByFees)
+
+    const pool = poolsList.find(pool => pool.address.toString() === poolAddress.toString())
+    if (!pool || !position) {
+      return
+    }
+
+    const pair = new Pair(pool.tokenX, pool.tokenY, {
+      fee: pool.fee.v,
+      tickSpacing: pool.tickSpacing
+    })
+
+    const { lowerTick, upperTick } = yield* all({
+      lowerTick: call([marketProgram, marketProgram.getTick], pair, position.lowerTickIndex),
+      upperTick: call([marketProgram, marketProgram.getTick], pair, position.upperTickIndex)
+    })
+
+    yield* put(actions.setPosition({ ...position, lowerTick, upperTick, ticksLoading: false }))
+  } catch (e) {
+    const error = ensureError(e)
+    console.log(error)
+
+    yield* put(actions.setPosition(null))
+  }
+}
 export function* initPositionHandler(): Generator {
   yield* takeEvery(actions.initPosition, handleInitPosition)
 }
@@ -1868,6 +1920,10 @@ export function* getSinglePositionHandler(): Generator {
   yield* takeEvery(actions.getSinglePosition, handleGetSinglePosition)
 }
 
+export function* getPositionHandler(): Generator {
+  yield* takeEvery(actions.getPreviewPosition, handleGetPreviewPosition)
+}
+
 export function* positionsSaga(): Generator {
   yield all(
     [
@@ -1877,7 +1933,8 @@ export function* positionsSaga(): Generator {
       claimAllFeeHandler,
       claimFeeHandler,
       closePositionHandler,
-      getSinglePositionHandler
+      getSinglePositionHandler,
+      getPositionHandler
     ].map(spawn)
   )
 }

@@ -8,6 +8,7 @@ interface Props extends TooltipProps {
   left?: number | string
   right?: number | string
   bottom?: number | string
+  fullSpan?: boolean
   children: React.ReactElement<any, any>
   removeOnMobile?: boolean
 }
@@ -18,10 +19,11 @@ export const TooltipHover = ({
   right,
   bottom,
   removeOnMobile = false,
+  fullSpan,
   children,
   ...props
 }: Props) => {
-  const { classes } = useStyles({ top, left, right, bottom })
+  const { classes } = useStyles({ top, left, right, bottom, fullSpan })
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
@@ -35,7 +37,7 @@ export const TooltipHover = ({
       TransitionComponent={TooltipTransition}
       enterTouchDelay={0}
       {...props}>
-      {children}
+      <span className={classes.tooltipSpan}>{children}</span>
     </Tooltip>
   )
 }

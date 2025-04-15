@@ -1,5 +1,10 @@
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
-import { POSITIONS_PER_PAGE } from '@store/consts/static'
+import {
+  NetworkType,
+  POSITIONS_PER_PAGE,
+  WSOL_CLOSE_POSITION_LAMPORTS_DEV,
+  WSOL_CLOSE_POSITION_LAMPORTS_MAIN
+} from '@store/consts/static'
 import { actions } from '@store/reducers/positions'
 import { actions as walletActions, Status } from '@store/reducers/solanaWallet'
 import {
@@ -10,7 +15,7 @@ import {
   prices
 } from '@store/selectors/positions'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
-import { address, balanceLoading, status, swapTokens } from '@store/selectors/solanaWallet'
+import { address, balanceLoading, balance, status, swapTokens } from '@store/selectors/solanaWallet'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -49,16 +54,33 @@ const PortfolioWrapper = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const isConnected = useMemo(() => walletStatus === Status.Initialized, [walletStatus])
+  const solBalance = useSelector(balance)
+
+  const canClosePosition = useMemo(() => {
+    if (currentNetwork === NetworkType.Mainnet) {
+      return solBalance.gte(WSOL_CLOSE_POSITION_LAMPORTS_MAIN)
+    } else {
+      return solBalance.gte(WSOL_CLOSE_POSITION_LAMPORTS_DEV)
+    }
+  }, [currentNetwork, solBalance])
 
   const handleClosePosition = (index: number) => {
-    dispatch(
-      actions.closePosition({
-        positionIndex: index,
-        onSuccess: () => {
-          navigate(ROUTES.PORTFOLIO)
-        }
-      })
-    )
+    canClosePosition
+      ? dispatch(
+          actions.closePosition({
+            positionIndex: index,
+            onSuccess: () => {
+              navigate(ROUTES.PORTFOLIO)
+            }
+          })
+        )
+      : dispatch(
+          snackbarsActions.add({
+            message: 'Not enough SOL balance to close position',
+            variant: 'error',
+            persist: false
+          })
+        )
   }
 
   const handleClaimFee = (index: number) => {

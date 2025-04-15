@@ -12,7 +12,7 @@ import { blurContent, unblurContent } from '@utils/uiUtils'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { ISinglePositionData } from '@components/Portfolio/Overview/Overview/Overview'
 import icons from '@static/icons'
-import { TooltipInv } from '@common/TooltipHover/TooltipInv'
+import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
 import { useMobileStyles } from './style'
 import { IPositionItem } from '@store/consts/types'
 
@@ -81,7 +81,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
     () => (
       <Grid container sx={{ width: '100%', marginBottom: 2 }}>
         <Grid item xs={5}>
-          <TooltipInv
+          <TooltipGradient
             title={
               isActive ? (
                 <>
@@ -106,7 +106,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
                 {fee}% fee
               </Typography>
             </Grid>
-          </TooltipInv>
+          </TooltipGradient>
         </Grid>
 
         <Grid item xs={7} paddingLeft={'16px'}>
