@@ -6,7 +6,7 @@ import useStyles from './styles'
 import axios from 'axios'
 import { NetworkType, RPC } from '@store/consts/static'
 import { Grid, Typography } from '@mui/material'
-import icons from '@static/icons'
+import { infoIcon } from '@static/icons'
 
 export const PerformanceWarning: React.FC = () => {
   const { classes } = useStyles()
@@ -50,7 +50,7 @@ export const PerformanceWarning: React.FC = () => {
   return showWarning ? (
     <Grid container className={classes.banner}>
       <Typography className={classes.text}>
-        <img src={icons.infoIcon} className={classes.icon} />
+        <img src={infoIcon} className={classes.icon} />
         Solana network is experiencing degraded performance. Transactions may fail to send or
         confirm.
       </Typography>

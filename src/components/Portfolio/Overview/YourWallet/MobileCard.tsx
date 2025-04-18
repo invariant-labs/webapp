@@ -1,10 +1,10 @@
 import { Box, Typography } from '@mui/material'
-import icons from '@static/icons'
 import { NetworkType } from '@store/consts/static'
 import { TokenPool, StrategyConfig } from '@store/types/userOverview'
 import { formatNumberWithoutSuffix } from '@utils/utils'
 import { useStyles } from './styles'
 import { ActionButtons } from './ActionButtons/ActionButtons'
+import { warningIcon } from '@static/icons'
 
 export const MobileCard: React.FC<{
   pool: TokenPool
@@ -19,7 +19,7 @@ export const MobileCard: React.FC<{
       <Box className={classes.mobileCardHeader}>
         <Box className={classes.mobileTokenInfo}>
           <img src={pool.icon} className={classes.tokenIcon} alt={pool.symbol} />
-          {pool.isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
+          {pool.isUnknown && <img className={classes.warningIcon} src={warningIcon} />}
 
           <Typography className={classes.tokenSymbol}>{pool.symbol}</Typography>
         </Box>

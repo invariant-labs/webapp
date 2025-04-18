@@ -11,10 +11,10 @@ import { MinMaxChart } from '../../components/MinMaxChart/MinMaxChart'
 import { blurContent, unblurContent } from '@utils/uiUtils'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { ISinglePositionData } from '@components/Portfolio/Overview/Overview/Overview'
-import icons from '@static/icons'
 import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
 import { useMobileStyles } from './style'
 import { IPositionItem } from '@store/consts/types'
+import { swapListIcon } from '@static/icons'
 
 interface IPositionItemMobile extends IPositionItem {
   setAllowPropagation: React.Dispatch<React.SetStateAction<boolean>>
@@ -233,7 +233,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
               <TooltipHover title='Reverse tokens'>
                 <img
                   className={classes.arrows}
-                  src={icons.swapListIcon}
+                  src={swapListIcon}
                   alt='Arrow'
                   onClick={e => {
                     e.stopPropagation()

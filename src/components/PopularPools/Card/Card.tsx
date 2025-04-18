@@ -5,7 +5,6 @@ import GradientBorder from '@common/GradientBorder/GradientBorder'
 import { colors } from '@static/theme'
 import cardBackgroundBottom from '@static/png/cardBackground1.png'
 import cardBackgroundTop from '@static/png/cardBackground2.png'
-import icons from '@static/icons'
 import StatsLabel from './StatsLabel/StatsLabel'
 import { Button } from '@common/Button/Button'
 
@@ -13,6 +12,7 @@ import { formatNumberWithSuffix, initialXtoY, parseFeeToPathFee, ROUTES } from '
 import { useNavigate } from 'react-router-dom'
 import { NetworkType } from '@store/consts/static'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
+import { backIcon2, revertIcon, unknownTokenIcon, warningIcon } from '@static/icons'
 export interface ICard extends PopularPoolData {
   isLoading: boolean
   network: NetworkType
@@ -122,25 +122,25 @@ const Card: React.FC<ICard> = ({
                     src={tokenAData.icon}
                     alt='Token from'
                     onError={e => {
-                      e.currentTarget.src = icons.unknownToken
+                      e.currentTarget.src = unknownTokenIcon
                     }}
                   />
                   {tokenAData.isUnknown && (
-                    <img className={classes.warningIcon} src={icons.warningIcon} />
+                    <img className={classes.warningIcon} src={warningIcon} />
                   )}
                 </Box>
-                <img className={classes.swapIcon} src={icons.revertIcon} alt='Token from' />
+                <img className={classes.swapIcon} src={revertIcon} alt='Token from' />
                 <Box className={classes.iconContainer}>
                   <img
                     className={classes.tokenIcon}
                     src={tokenBData.icon}
                     alt='Token to'
                     onError={e => {
-                      e.currentTarget.src = icons.unknownToken
+                      e.currentTarget.src = unknownTokenIcon
                     }}
                   />
                   {tokenBData.isUnknown && (
-                    <img className={classes.warningIcon} src={icons.warningIcon} />
+                    <img className={classes.warningIcon} src={warningIcon} />
                   )}
                 </Box>
               </Grid>
@@ -166,7 +166,7 @@ const Card: React.FC<ICard> = ({
               </Grid>
               <Grid container className={classes.backWrapper}>
                 <Grid className={classes.back} container item onClick={handleOpenSwap}>
-                  <img className={classes.backIcon} src={icons.backIcon2} alt='Back' />
+                  <img className={classes.backIcon} src={backIcon2} alt='Back' />
                   <Typography className={classes.backText}>Swap</Typography>
                 </Grid>
                 <Button

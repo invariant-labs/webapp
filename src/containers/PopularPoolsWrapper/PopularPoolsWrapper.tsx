@@ -2,11 +2,11 @@ import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PopularPools from '@components/PopularPools/PopularPools'
 import { isLoading, poolsStatsWithTokensDetails } from '@store/selectors/stats'
-import icons from '@static/icons'
 import { actions } from '@store/reducers/stats'
 import { Grid } from '@mui/material'
 import { network } from '@store/selectors/solanaConnection'
 import { getPopularPools } from '@store/consts/static'
+import { unknownTokenIcon } from '@static/icons'
 
 export interface PopularPoolData {
   symbolFrom?: string
@@ -59,8 +59,8 @@ export const PopularPoolsWrapper: React.FC = () => {
         data.push({
           symbolFrom: poolData?.tokenXDetails?.symbol ?? pool.tokenX,
           symbolTo: poolData?.tokenYDetails?.symbol ?? pool.tokenY,
-          iconFrom: poolData?.tokenXDetails?.logoURI ?? icons.unknownToken,
-          iconTo: poolData?.tokenYDetails?.logoURI ?? icons.unknownToken,
+          iconFrom: poolData?.tokenXDetails?.logoURI ?? unknownTokenIcon,
+          iconTo: poolData?.tokenYDetails?.logoURI ?? unknownTokenIcon,
           volume: poolData.volume24,
           TVL: poolData.tvl,
           fee: poolData.fee,

@@ -1,12 +1,12 @@
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { Box } from '@mui/material'
-import icons from '@static/icons'
 import { getAddressTickerMap, NetworkType } from '@store/consts/static'
 import { StrategyConfig, TokenPool } from '@store/types/userOverview'
 import { addressToTicker, ROUTES } from '@utils/utils'
 import { useNavigate } from 'react-router-dom'
 import { useStyles } from './styles'
 import { useMemo } from 'react'
+import { horizontalSwapIcon, newTabBtnIcon, plusIcon } from '@static/icons'
 
 interface IActionButtons {
   pool: TokenPool
@@ -55,7 +55,7 @@ export const ActionButtons = ({ pool, strategy, currentNetwork }: IActionButtons
               }
             )
           }}>
-          <img src={icons.plusIcon} height={24} width={24} alt='Add' />
+          <img src={plusIcon} height={24} width={24} alt='Add' />
         </Box>
       </TooltipHover>
       <TooltipHover title='Exchange'>
@@ -78,7 +78,7 @@ export const ActionButtons = ({ pool, strategy, currentNetwork }: IActionButtons
               }
             )
           }}>
-          <img src={icons.horizontalSwapIcon} height={24} width={24} alt='Add' />
+          <img src={horizontalSwapIcon} height={24} width={24} alt='Add' />
         </Box>
       </TooltipHover>
       <TooltipHover title='Open in explorer'>
@@ -91,7 +91,7 @@ export const ActionButtons = ({ pool, strategy, currentNetwork }: IActionButtons
               'noopener,noreferrer'
             )
           }}>
-          <img width={24} height={24} src={icons.newTabBtn} alt={'Exchange'} />
+          <img width={24} height={24} src={newTabBtnIcon} alt={'Exchange'} />
         </Box>
       </TooltipHover>
     </>

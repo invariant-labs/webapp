@@ -4,7 +4,7 @@ import { colors, typography } from '@static/theme'
 import { formatNumberWithSuffix } from '@utils/utils'
 import { useMinMaxChartStyles } from './style'
 import { CHART_CONSTANTS } from './consts'
-import icons from '@static/icons'
+import { handleMaxIcon, handleMinIcon } from '@static/icons'
 interface MinMaxChartProps {
   min: number
   max: number
@@ -118,7 +118,7 @@ export const MinMaxChart: React.FC<MinMaxChartProps> = ({ min, max, current, isF
 
       <Box className={classes.chart} ref={chartRef}>
         <Box className={classes.handleLeft}>
-          <img width={25} src={icons.handleMin} alt='MIN' />
+          <img width={25} src={handleMinIcon} alt='MIN' />
         </Box>
         <GradientBox
           isOutOfBound={isOutOfBounds}
@@ -134,7 +134,7 @@ export const MinMaxChart: React.FC<MinMaxChartProps> = ({ min, max, current, isF
         />
         <PriceIndicatorLine position={indicatorPosition} />
         <Box className={classes.handleRight}>
-          <img width={25} src={icons.handleMax} alt='MAX' />
+          <img width={25} src={handleMaxIcon} alt='MAX' />
         </Box>
       </Box>
 
