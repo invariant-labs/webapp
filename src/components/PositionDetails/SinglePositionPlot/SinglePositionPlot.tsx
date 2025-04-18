@@ -164,7 +164,10 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
       <Box className={classes.headerContainer}>
         <Typography className={classes.header}>Price range</Typography>
         <Grid>
-          <RangeIndicator inRange={min <= currentPrice && currentPrice <= max} />
+          <RangeIndicator
+            isLoading={ticksLoading}
+            inRange={min <= currentPrice && currentPrice <= max}
+          />
           <Grid gap={'2px'} mt={1} display='flex' flexDirection='column' alignItems='flex-end'>
             <TooltipGradient
               title={
@@ -316,6 +319,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         </Box>
         <Box className={classes.statsContainer}>
           <Stat
+            isLoading={ticksLoading}
             name='% MIN'
             value={
               <Box>
@@ -333,6 +337,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
             isHorizontal
           />
           <Stat
+            isLoading={ticksLoading}
             name='% MAX'
             value={
               <Box>
