@@ -2,7 +2,7 @@ import { ProgressState } from '@common/AnimatedButton/AnimatedButton'
 import Slippage from '@components/Modals/Slippage/Slippage'
 import Refresher from '@common/Refresher/Refresher'
 import { Box, Button, Grid, Hidden, Typography, useMediaQuery } from '@mui/material'
-
+import { Button as MuiButton } from '@mui/material'
 import {
   ALL_FEE_TIERS_DATA,
   NetworkType,
@@ -566,18 +566,30 @@ export const NewPosition: React.FC<INewPosition> = ({
       <Grid container className={classes.headerContainer} mb={1}>
         <Box className={classes.titleContainer}>
           <Typography className={classes.title}>Add new position</Typography>
-          {poolIndex !== null && tokenA !== tokenB && !isMd && (
+          {tokenA !== tokenB && !isMd && (
             <TooltipHover title='Refresh'>
-              <Box>
-                <Refresher
-                  currentIndex={refresherTime}
-                  maxIndex={REFRESHER_INTERVAL}
-                  onClick={() => {
-                    onRefresh()
-                    setRefresherTime(REFRESHER_INTERVAL)
-                  }}
-                />
-              </Box>
+              {isCurrentPoolExisting ? (
+                <Box
+                  mr={1}
+                  display='flex'
+                  alignItems='center'
+                  justifyContent='center'
+                  width={26}
+                  height={21}>
+                  <Refresher
+                    currentIndex={refresherTime}
+                    maxIndex={REFRESHER_INTERVAL}
+                    onClick={() => {
+                      onRefresh()
+                      setRefresherTime(REFRESHER_INTERVAL)
+                    }}
+                  />
+                </Box>
+              ) : (
+                <MuiButton onClick={onRefresh} className={classes.refreshIconBtn}>
+                  <img src={icons.refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                </MuiButton>
+              )}
             </TooltipHover>
           )}
         </Box>
@@ -640,18 +652,24 @@ export const NewPosition: React.FC<INewPosition> = ({
                   />
                 )}
               </Hidden>
-              {poolIndex !== null && tokenA !== tokenB && isMd && (
+              {tokenA !== tokenB && isMd && (
                 <TooltipHover title='Refresh'>
-                  <Box>
-                    <Refresher
-                      currentIndex={refresherTime}
-                      maxIndex={REFRESHER_INTERVAL}
-                      onClick={() => {
-                        onRefresh()
-                        setRefresherTime(REFRESHER_INTERVAL)
-                      }}
-                    />
-                  </Box>
+                  {isCurrentPoolExisting ? (
+                    <Box>
+                      <Refresher
+                        currentIndex={refresherTime}
+                        maxIndex={REFRESHER_INTERVAL}
+                        onClick={() => {
+                          onRefresh()
+                          setRefresherTime(REFRESHER_INTERVAL)
+                        }}
+                      />
+                    </Box>
+                  ) : (
+                    <MuiButton onClick={onRefresh} className={classes.refreshIconBtn}>
+                      <img src={icons.refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                    </MuiButton>
+                  )}
                 </TooltipHover>
               )}
               {poolIndex !== null && (
