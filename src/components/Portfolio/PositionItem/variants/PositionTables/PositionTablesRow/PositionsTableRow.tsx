@@ -11,12 +11,12 @@ import { blurContent, unblurContent } from '@utils/uiUtils'
 import { singlePositionData } from '@store/selectors/positions'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { useTokenValues } from '@store/hooks/positionList/useTokenValues'
-import icons from '@static/icons'
 import { Button } from '@common/Button/Button'
 import { IPositionItem } from '@store/consts/types'
 import { MinMaxChart } from '@components/Portfolio/PositionItem/components/MinMaxChart/MinMaxChart'
 import { useStyles } from './style'
 import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
+import { swapListIcon } from '@static/icons'
 
 interface ILoadingStates {
   pairName?: boolean
@@ -106,7 +106,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
           <TooltipHover title='Reverse tokens'>
             <img
               className={classes.arrowsShared}
-              src={icons.swapListIcon}
+              src={swapListIcon}
               alt='Arrow'
               onClick={e => {
                 e.stopPropagation()

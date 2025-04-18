@@ -11,7 +11,6 @@ import {
   TableRow
 } from '@mui/material'
 import { DEFAULT_FEE_TIER, STRATEGIES } from '@store/consts/userStrategies'
-import icons from '@static/icons'
 import { NetworkType } from '@store/consts/static'
 import { addressToTicker, formatNumberWithoutSuffix } from '@utils/utils'
 import { useStyles } from './styles'
@@ -25,6 +24,7 @@ import { EmptyState } from './EmptyState/EmptyState'
 import { SkeletonRow } from './Skeletons/DesktopSkeleton'
 import { ActionButtons } from './ActionButtons/ActionButtons'
 import { MobileSkeletonCard } from './Skeletons/MobileSkeleton'
+import { unknownTokenIcon, warningIcon } from '@static/icons'
 
 interface YourWalletProps {
   pools: TokenPool[]
@@ -75,7 +75,7 @@ export const YourWallet: React.FC<YourWalletProps> = ({
   }
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    e.currentTarget.src = icons.unknownToken
+    e.currentTarget.src = unknownTokenIcon
   }
 
   const simplifySymbol = (pool: TokenPool) => {
@@ -146,7 +146,7 @@ export const YourWallet: React.FC<YourWalletProps> = ({
                               alt={pool.symbol}
                             />
                             {pool.isUnknown && (
-                              <img className={classes.warningIcon} src={icons.warningIcon} />
+                              <img className={classes.warningIcon} src={warningIcon} />
                             )}
 
                             <Typography className={classes.tokenSymbol}>

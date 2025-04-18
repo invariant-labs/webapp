@@ -44,8 +44,8 @@ import { INoConnected } from '@common/NoConnected/NoConnected'
 import { fromFee, getConcentrationArray, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { getMaxTick } from '@invariant-labs/sdk/src/utils'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
-import icons from '@static/icons'
 import { theme } from '@static/theme'
+import { backIcon, newTabIcon, settingIcon } from '@static/icons'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -558,7 +558,7 @@ export const NewPosition: React.FC<INewPosition> = ({
     <Grid container className={classes.wrapper}>
       <Link to={ROUTES.PORTFOLIO} style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
         <Grid className={classes.back} container item>
-          <img className={classes.backIcon} src={icons.backIcon} alt='back' />
+          <img className={classes.backIcon} src={backIcon} alt='back' />
           <Typography className={classes.backText}>Positions</Typography>
         </Grid>
       </Link>
@@ -601,7 +601,7 @@ export const NewPosition: React.FC<INewPosition> = ({
                       event.stopPropagation()
                     }}
                     className={classes.link}>
-                    <img width={8} height={8} src={icons.newTab} alt={'Token address'} />
+                    <img width={8} height={8} src={newTabIcon} alt={'Token address'} />
                   </a>
                 </Grid>
               </TooltipHover>
@@ -660,7 +660,7 @@ export const NewPosition: React.FC<INewPosition> = ({
                     onClick={handleClickSettings}
                     className={classes.settingsIconBtn}
                     disableRipple>
-                    <img src={icons.settingIcon} className={classes.settingsIcon} alt='settings' />
+                    <img src={settingIcon} className={classes.settingsIcon} alt='settings' />
                   </Button>
                 </TooltipHover>
               )}

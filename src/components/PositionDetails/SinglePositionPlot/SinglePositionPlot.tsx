@@ -12,15 +12,14 @@ import {
 } from '@utils/utils'
 import { PlotTickData } from '@store/reducers/positions'
 import React, { useEffect, useState } from 'react'
-
 import useStyles from './style'
 import { getMinTick } from '@invariant-labs/sdk/lib/utils'
-import icons from '@static/icons'
 import { ILiquidityToken } from '@store/consts/types'
 import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
 import { RangeIndicator } from './RangeIndicator/RangeIndicator'
 import { Stat } from './Stat/Stat'
 import { colors } from '@static/theme'
+import { activeLiquidityIcon, airdropRainbowIcon } from '@static/icons'
 
 export interface ISinglePositionPlot {
   data: PlotTickData[]
@@ -182,7 +181,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
                     </Typography>
                     <img
                       className={classes.liquidityImg}
-                      src={icons.activeLiquidity}
+                      src={activeLiquidityIcon}
                       alt='Liquidity'
                     />
                   </Grid>
@@ -248,7 +247,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           <Stat
             name={
               <Box className={classes.concentrationContainer}>
-                <img className={classes.concentrationIcon} src={icons.airdropRainbow} />
+                <img className={classes.concentrationIcon} src={airdropRainbowIcon} />
                 CONCENTRATION
               </Box>
             }

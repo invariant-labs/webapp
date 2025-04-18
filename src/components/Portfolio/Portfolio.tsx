@@ -3,7 +3,6 @@ import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { FilterSearch, ISearchToken } from '@common/FilterSearch/FilterSearch'
 import { INoConnected, NoConnected } from '@common/NoConnected/NoConnected'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
-
 import {
   Box,
   Grid,
@@ -17,19 +16,15 @@ import {
   FormControlLabel,
   Checkbox
 } from '@mui/material'
-import icons from '@static/icons'
 import { theme } from '@static/theme'
 import { NetworkType } from '@store/consts/static'
 import { ROUTES } from '@utils/utils'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStyles } from './style'
-
 import classNames from 'classnames'
-
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { useProcessedTokens } from '@store/hooks/userOverview/useProcessedToken'
-
 import { Overview } from './Overview/Overview/Overview'
 import { YourWallet } from './Overview/YourWallet/YourWallet'
 import { VariantType } from 'notistack'
@@ -37,6 +32,7 @@ import { IPositionItem, OverviewSwitcher } from '@store/consts/types'
 import { PositionsTable } from './PositionItem/variants/PositionTables/PositionTable/PositionsTable'
 import PositionCardsSkeletonMobile from './PositionItem/variants/PositionTables/skeletons/PositionCardsSkeletonMobile'
 import { PositionItemMobile } from './PositionItem/variants/PositionMobileCard/PositionItemMobile'
+import { refreshIcon } from '@static/icons'
 
 interface IProps {
   initialPage: number
@@ -428,11 +424,7 @@ const Portfolio: React.FC<IProps> = ({
                         disabled={showNoConnected}
                         onClick={showNoConnected ? () => {} : handleRefresh}
                         className={classes.refreshIconBtn}>
-                        <img
-                          src={icons.refreshIcon}
-                          className={classes.refreshIcon}
-                          alt='Refresh'
-                        />
+                        <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
                       </MuiButton>
                     </Grid>
                   </TooltipHover>

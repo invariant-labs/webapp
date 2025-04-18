@@ -1,7 +1,6 @@
 import { Box, Typography, useMediaQuery } from '@mui/material'
 import { useStyles } from './style'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
-import icons from '@static/icons'
 import classNames from 'classnames'
 import { theme } from '@static/theme'
 import MarketIdLabel from '@components/NewPosition/MarketIdLabel/MarketIdLabel'
@@ -12,6 +11,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { truncateString } from '@utils/utils'
 import { Button } from '@common/Button/Button'
 import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
+import { backArrowIcon, newTabIcon, reverseTokensIcon } from '@static/icons'
 
 type Props = {
   tokenA: {
@@ -123,7 +123,7 @@ export const PositionHeader = ({
           target='_blank'
           rel='noopener noreferrer'
           className={classes.explorerLink}>
-          <img src={icons.newTab} alt='Explorer link' />
+          <img src={newTabIcon} alt='Explorer link' />
         </a>
       </TooltipHover>
     </Box>
@@ -150,7 +150,7 @@ export const PositionHeader = ({
         <Box
           className={classNames(classes.wrapper, classes.backContainer)}
           onClick={() => onGoBackClick()}>
-          <img src={icons.backArrow} alt='Back arrow' />
+          <img src={backArrowIcon} alt='Back arrow' />
           <Typography className={classes.backText}>Back to portfolio</Typography>
         </Box>
         {isMdDown && (
@@ -167,7 +167,7 @@ export const PositionHeader = ({
               <TooltipHover title='Reverse tokens'>
                 <img
                   className={classes.reverseTokensIcon}
-                  src={icons.reverseTokens}
+                  src={reverseTokensIcon}
                   alt='Reverse tokens'
                   onClick={() => onReverseTokensClick()}
                 />
@@ -185,7 +185,7 @@ export const PositionHeader = ({
                 className={classNames(classes.airdropIcon, {
                   [classes.airdropIconInActive]: !isPromoted
                 })}
-                src={icons.airdropRainbow}
+                src={airdropRainbow}
                 alt='Points'
               />
             </TooltipHover> */}

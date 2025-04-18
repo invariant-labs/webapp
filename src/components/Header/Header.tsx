@@ -1,7 +1,6 @@
 import NavbarButton from '@components/Navbar/NavbarButton'
 import DotIcon from '@mui/icons-material/FiberManualRecordRounded'
 import { CardMedia, Grid, useMediaQuery } from '@mui/material'
-import icons from '@static/icons'
 import { theme } from '@static/theme'
 import { RPC, NetworkType, DEFAULT_PRIORITY_FEE } from '@store/consts/static'
 import { useEffect, useState } from 'react'
@@ -14,6 +13,7 @@ import { PublicKey } from '@solana/web3.js'
 import { YourPointsButton } from './HeaderButton/YourPointsButton'
 import { Bar } from '@components/Bar/Bar'
 import { calculatePriorityFee, getCurrentDynamicFee, ROUTES } from '@utils/utils'
+import { logoShortIcon, logoTitleIcon } from '@static/icons'
 
 export interface IHeader {
   address: PublicKey
@@ -141,7 +141,7 @@ export const Header: React.FC<IHeader> = ({
         <Grid container item className={classes.leftSide}>
           <CardMedia
             className={classes.logo}
-            image={icons.LogoTitle}
+            image={logoTitleIcon}
             onClick={() => {
               if (!activePath.startsWith('exchange')) {
                 navigate(ROUTES.EXCHANGE)
@@ -185,7 +185,7 @@ export const Header: React.FC<IHeader> = ({
         <Grid container item className={classes.buttons}>
           <CardMedia
             className={classes.logoShort}
-            image={icons.LogoShort}
+            image={logoShortIcon}
             onClick={() => {
               if (!activePath.startsWith('exchange')) {
                 navigate('/exchange')

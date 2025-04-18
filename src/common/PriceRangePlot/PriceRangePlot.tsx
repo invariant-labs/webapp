@@ -2,7 +2,6 @@ import { Grid, Typography, useMediaQuery } from '@mui/material'
 import { linearGradientDef } from '@nivo/core'
 import { Layer, ResponsiveLine } from '@nivo/line'
 import loader from '@static/gif/loader.gif'
-
 import { colors, theme } from '@static/theme'
 import { formatNumberWithSuffix, nearestTickIndex, TokenPriceData } from '@utils/utils'
 import { PlotTickData } from '@store/reducers/positions'
@@ -11,8 +10,8 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import Brush from './Brush/Brush'
 import useStyles from './style'
 import { BN } from '@project-serum/anchor'
-import icons from '@static/icons'
 import { Button } from '@common/Button/Button'
+import { zoomInIcon, zoomOutIcon } from '@static/icons'
 
 export type TickPlotPositionData = Omit<PlotTickData, 'y'>
 
@@ -594,7 +593,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           borderRadius={10}
           padding={0}
           onClick={zoomPlus}>
-          <img src={icons.ZoomInIcon} className={classes.zoomIcon} alt='Zoom in' />
+          <img src={zoomInIcon} className={classes.zoomIcon} alt='Zoom in' />
         </Button>
         <Button
           scheme='green'
@@ -603,7 +602,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           borderRadius={10}
           padding={0}
           onClick={zoomMinus}>
-          <img src={icons.ZoomOutIcon} className={classes.zoomIcon} alt='Zoom out' />
+          <img src={zoomOutIcon} className={classes.zoomIcon} alt='Zoom out' />
         </Button>
       </Grid>
       <ResponsiveLine

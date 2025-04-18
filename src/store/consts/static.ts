@@ -5,7 +5,7 @@ import { ISnackbar } from '@store/reducers/snackbars'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { Chain, PrefixConfig, Token, WalletType } from './types'
 import { TICK_CROSSES_PER_IX } from '@invariant-labs/sdk/lib/market'
-import icons from '@static/icons'
+import { cat1Icon, cat2Icon, dog1Icon, dog2Icon } from '@static/icons'
 
 export enum NetworkType {
   Local = 'Local',
@@ -424,7 +424,7 @@ export const walletNames = {
   [WalletType.SOLFLARE]: 'Solflare'
 }
 
-export const defaultImages: string[] = [icons.Dog1, icons.Dog2, icons.Cat1, icons.Cat2]
+export const defaultImages: string[] = [dog1Icon, dog2Icon, cat1Icon, cat2Icon]
 
 type Pool = {
   tokenX: string

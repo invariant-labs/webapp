@@ -2,10 +2,10 @@ import { Grid, Typography, useMediaQuery } from '@mui/material'
 import classNames from 'classnames'
 import React from 'react'
 import { useStyles } from './style'
-import icons from '@static/icons'
 import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 import { Button } from '@common/Button/Button'
 import { theme } from '@static/theme'
+import { emptyIcon } from '@static/icons'
 
 export interface IEmptyPlaceholder {
   desc: string
@@ -37,7 +37,7 @@ export const EmptyPlaceholder: React.FC<IEmptyPlaceholder> = ({
   height,
   newVersion = false,
   roundedCorners = false,
-  img = icons.empty,
+  img = emptyIcon,
   desc2,
   themeDark = false,
   style,

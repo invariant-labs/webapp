@@ -1,5 +1,4 @@
 import { useStyles } from './style'
-import icons from '@static/icons'
 import { Switch } from '@common/Switch/Switch'
 import { SelectNetworkAndRPC } from './SelectNetworkAndRPC/SelectNetworkAndRPC'
 import { NetworkType } from '@store/consts/static'
@@ -10,6 +9,7 @@ import { Separator } from '@common/Separator/Separator'
 import { useModal } from '../Modal/useModal'
 import { useState } from 'react'
 import { SelectTransactionPriorityFee } from './SelectTransactionPriorityFee/SelectTransactionPriorityFee'
+import { settings3Icon } from '@static/icons'
 
 type Props = {
   rpcs: ISelectNetwork[]
@@ -36,7 +36,7 @@ export const SettingsModal = ({
 
   return (
     <Modal
-      icon={<img className={classes.barButtonIcon} src={icons.settings3} alt='Settings icon' />}
+      icon={<img className={classes.barButtonIcon} src={settings3Icon} alt='Settings icon' />}
       title='Settings'
       showTitle
       open={open}
