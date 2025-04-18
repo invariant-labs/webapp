@@ -32,5 +32,11 @@ export const useStyles = makeStyles<Props>()((_theme, { isHorizontal }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  skeleton: {
+    alignSelf: 'center',
+    margin: 'auto',
+    width: 100,
+    height: 27
   }
 }))
