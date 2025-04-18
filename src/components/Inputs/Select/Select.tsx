@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import icons from '@static/icons'
 import classNames from 'classnames'
 import useStyles from './style'
 import { blurContent, unblurContent } from '@utils/uiUtils'
@@ -9,6 +8,7 @@ import SelectTokenModal from '@components/Modals/SelectModals/SelectTokenModal/S
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
 import { NetworkType } from '@store/consts/static'
+import { unknownTokenIcon, warningIcon } from '@static/icons'
 
 export interface ISelectModal {
   name?: string
@@ -78,15 +78,15 @@ export const Select: React.FC<ISelectModal> = ({
             <Box className={classes.imageContainer}>
               <img
                 className={classes.icon}
-                src={current.logoURI ?? icons.unknownToken}
+                src={current.logoURI ?? unknownTokenIcon}
                 alt={current.name + 'logo'}
                 width='20'
                 height='20'
                 onError={e => {
-                  e.currentTarget.src = icons.unknownToken
+                  e.currentTarget.src = unknownTokenIcon
                 }}
               />
-              {current.isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
+              {current.isUnknown && <img className={classes.warningIcon} src={warningIcon} />}
             </Box>
           )
         }

@@ -1,20 +1,7 @@
-import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
+import { SwapToken } from '@store/selectors/solanaWallet'
 import { printBN, getTokenPrice, ensureError } from '@utils/utils'
 import { useEffect, useState } from 'react'
-
-interface Token {
-  assetAddress: PublicKey
-  balance: BN
-  tokenProgram?: PublicKey
-  symbol: string
-  address: PublicKey
-  decimals: number
-  name: string
-  logoURI: string
-  coingeckoId?: string
-  isUnknown?: boolean
-}
 
 interface ProcessedPool {
   id: PublicKey
@@ -26,7 +13,7 @@ interface ProcessedPool {
   amount: number
 }
 
-export const useProcessedTokens = (tokensList: Token[], isBalanceLoading: boolean) => {
+export const useProcessedTokens = (tokensList: SwapToken[], isBalanceLoading: boolean) => {
   const [processedPools, setProcessedPools] = useState<ProcessedPool[]>([])
   const [isProcesing, setIsProcesing] = useState<boolean>(true)
 
@@ -50,7 +37,7 @@ export const useProcessedTokens = (tokensList: Token[], isBalanceLoading: boolea
             console.error(`Failed to fetch price for ${token.symbol}:`, error.message)
           }
           return {
-            id: token.address,
+            id: token.assetAddress,
             symbol: token.symbol,
             icon: token.logoURI,
             isUnknown: token.isUnknown,

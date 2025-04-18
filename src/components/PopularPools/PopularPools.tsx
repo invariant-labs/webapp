@@ -49,7 +49,7 @@ const PopularPools: React.FC<IPopularPools> = ({ pools, isLoading, network, show
           dotsClass={`slick-dots ${classes.dots}`}
           appendDots={dots => <ul>{dots}</ul>}
           rows={1}>
-          {pools.map((pool, index) => (
+          {pools.map(pool => (
             <Card
               addressFrom={pool.addressFrom}
               addressTo={pool.addressTo}
@@ -67,7 +67,7 @@ const PopularPools: React.FC<IPopularPools> = ({ pools, isLoading, network, show
               isLoading={isLoading}
               network={network}
               showAPY={showAPY}
-              key={index}
+              key={pool.addressFrom + pool.addressTo}
             />
           ))}
         </Slider>

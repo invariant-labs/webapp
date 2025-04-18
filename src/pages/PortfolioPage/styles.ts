@@ -38,6 +38,7 @@ const useStyles = makeStyles()(theme => {
       marginTop: 20,
       color: colors.invariant.componentBcg,
       ...typography.body1,
+
       textTransform: 'none',
       borderRadius: 14,
       background: colors.invariant.pinkLinearGradientOpacity,
@@ -51,15 +52,7 @@ const useStyles = makeStyles()(theme => {
         }
       }
     },
-    emptyContainer: {
-      marginTop: 104,
-      [theme.breakpoints.down('sm')]: {
-        marginTop: 30
-      },
-      width: 1122,
-      display: 'flex',
-      maxWidth: '100%'
-    },
+
     innerContainer: {
       maxWidth: 1210,
       minHeight: '70vh',

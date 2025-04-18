@@ -23,7 +23,6 @@ import { TokenChip } from './Helpers/TokenChip'
 import { TokenOption } from './Helpers/TokenOption'
 import { useSelector } from 'react-redux'
 import { swapTokens } from '@store/selectors/solanaWallet'
-import icons from '@static/icons'
 import { tokensStatsWithTokensDetails } from '@store/selectors/stats'
 import ListboxComponent from './Helpers/ListBoxComponent'
 import { BN } from '@project-serum/anchor'
@@ -32,6 +31,7 @@ import { PublicKey } from '@solana/web3.js'
 type Breakpoint = 'md' | 'sm'
 import { printBN } from '@utils/utils'
 import useStyles from './styles'
+import { searchIcon, unknownTokenIcon } from '@static/icons'
 
 export interface ISearchToken {
   icon: string
@@ -111,7 +111,7 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
               : 0
 
           return {
-            icon: details?.logoURI ?? icons.unknownToken,
+            icon: details?.logoURI ?? unknownTokenIcon,
             name: details?.name ?? tokenData.address.toString(),
             symbol: details?.symbol ?? tokenData.address.toString(),
             address: tokenAddress,
@@ -191,8 +191,14 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
         _state: AutocompleteRenderOptionState,
         _ownerState: AutocompleteOwnerState<ISearchToken, true, false, false, 'div'>
       ): React.ReactNode => {
+        const { key, ...autocompletePropsWithoutKey } = autocompleteProps
+
         return (
-          <Box component='li' {...autocompleteProps} sx={{ padding: '0 !important' }}>
+          <Box
+            component='li'
+            key={key}
+            {...autocompletePropsWithoutKey}
+            sx={{ padding: '0 !important' }}>
             <TokenOption option={option} networkUrl={networkUrl} isSmall={isSmall} />
           </Box>
         )
@@ -202,9 +208,17 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
 
     const renderTags = useCallback(
       (value: ISearchToken[], getTagProps: AutocompleteRenderGetTagProps) =>
-        value.map((option, index) => (
-          <TokenChip option={option} onRemove={handleRemoveToken} {...getTagProps({ index })} />
-        )),
+        value.map((option, index) => {
+          const { key, ...tagPropsWithoutKey } = getTagProps({ index })
+          return (
+            <TokenChip
+              key={key}
+              option={option}
+              onRemove={handleRemoveToken}
+              {...tagPropsWithoutKey}
+            />
+          )
+        }),
       [handleRemoveToken]
     )
 
@@ -239,7 +253,7 @@ export const FilterSearch: React.FC<IFilterSearch> = memo(
           },
           endAdornment: (
             <InputAdornment position='end'>
-              <img src={icons.searchIcon} className={classes.searchIcon} alt='Search' />
+              <img src={searchIcon} className={classes.searchIcon} alt='Search' />
             </InputAdornment>
           ),
           inputProps: {

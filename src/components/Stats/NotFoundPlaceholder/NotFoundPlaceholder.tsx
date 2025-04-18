@@ -1,7 +1,7 @@
 import React from 'react'
 import useStyles from './style'
 import { Grid, Typography } from '@mui/material'
-import icons from '@static/icons'
+import { emptyIcon } from '@static/icons'
 
 export interface INotFoundPlaceholder {
   title: string
@@ -18,7 +18,7 @@ const NotFoundPlaceholder: React.FC<INotFoundPlaceholder> = ({
 
   return (
     <Grid container className={classes.container}>
-      <img className={classes.img} src={icons.emptyIcon} alt='Not connected' />
+      <img className={classes.img} src={emptyIcon} alt='Not connected' />
       <Typography className={classes.title}>{title}</Typography>
       {subtitle && <Typography className={classes.subtitle}>{subtitle}</Typography>}
     </Grid>

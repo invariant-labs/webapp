@@ -22,7 +22,7 @@ import {
 } from '@mui/material'
 import { formatNumberWithSuffix, getTokenPrice, printBN } from '@utils/utils'
 import { Box } from '@mui/system'
-import icons from '@static/icons'
+import { emptyIcon, newTabIcon, searchIcon, unknownTokenIcon, warningIcon } from '@static/icons'
 
 export interface ISelectTokenModal {
   tokens: Record<string, SwapToken>
@@ -90,10 +90,10 @@ const RowItem: React.FC<ListChildComponentProps<RowItemData>> = React.memo(
             alt={token.name + 'logo'}
             onError={e => {
               e.currentTarget.onerror = null
-              e.currentTarget.src = icons.unknownToken
+              e.currentTarget.src = unknownTokenIcon
             }}
           />{' '}
-          {token.isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
+          {token.isUnknown && <img className={classes.warningIcon} src={warningIcon} />}
         </Box>
         <Grid container className={classes.tokenContainer}>
           <Grid container className={classes.addressWrapper}>
@@ -102,7 +102,7 @@ const RowItem: React.FC<ListChildComponentProps<RowItemData>> = React.memo(
             </Typography>
             <Grid className={classes.tokenAddress} container direction='column'>
               <a
-                href={`https://eclipsescan.xyz/token/${token.assetAddress.toString()}${networkUrl}`}
+                href={`https://solscan.io/token/${token.assetAddress.toString()}${networkUrl}`}
                 target='_blank'
                 rel='noopener noreferrer'
                 onClick={event => {
@@ -113,7 +113,7 @@ const RowItem: React.FC<ListChildComponentProps<RowItemData>> = React.memo(
                     '...' +
                     token.assetAddress.toString().slice(isXs ? -4 : -5, -1)}
                 </Typography>
-                <img width={8} height={8} src={icons.newTab} alt={'Token address'} />
+                <img width={8} height={8} src={newTabIcon} alt={'Token address'} />
               </a>
             </Grid>
           </Grid>
@@ -303,7 +303,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
                 onChange={searchToken}
                 value={value}
               />
-              <CardMedia image={icons.searchIcon} className={classes.inputIcon} />
+              <CardMedia image={searchIcon} className={classes.inputIcon} />
             </Grid>
             <TooltipHover title='Add token'>
               <AddCircleOutlineIcon
@@ -351,7 +351,7 @@ export const SelectTokenModal: React.FC<ISelectTokenModal> = ({
           <Box className={classes.tokenList}>
             {!filteredTokens.length && (
               <Grid className={classes.noTokenFoundContainer}>
-                <img className={classes.img} src={icons.empty} alt='Not connected' />
+                <img className={classes.img} src={emptyIcon} alt='Not connected' />
                 <Typography className={classes.noTokenFoundPlaceholder}>
                   No token found...
                 </Typography>

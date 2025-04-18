@@ -31,7 +31,7 @@ import { Grid, Typography } from '@mui/material'
 import { PositionOpeningMethod } from '@store/consts/types'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { createButtonActions } from '@utils/uiUtils'
-import icons from '@static/icons'
+import { swapListIcon } from '@static/icons'
 
 export interface InputState {
   value: string
@@ -340,7 +340,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           <TooltipHover title='Reverse tokens'>
             <img
               className={classes.arrows}
-              src={icons.swapListIcon}
+              src={swapListIcon}
               alt='Arrow'
               onClick={() => {
                 if (ticksLoading) {

@@ -1,7 +1,7 @@
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
-import icons from '@static/icons'
 import { theme } from '@static/theme'
 import useStyles from './styles'
+import { airdropIcon, closeSmallGreenIcon, closeSmallIcon } from '@static/icons'
 
 interface INormalBannerProps {
   onClose: () => void
@@ -12,7 +12,7 @@ export const TopBanner = ({ onClose, isHiding }: INormalBannerProps) => {
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'))
   const { classes } = useStyles({ isHiding })
 
-  const airdrop = <Box component='img' src={icons.airdrop} className={classes.airdrop} />
+  const airdrop = <Box component='img' src={airdropIcon} className={classes.airdrop} />
 
   const text = (
     <span>
@@ -34,7 +34,7 @@ export const TopBanner = ({ onClose, isHiding }: INormalBannerProps) => {
     <Box onClick={onClose}>
       <Box
         component='img'
-        src={isSmallDevice ? icons.closeSmallGreenIcon : icons.closeSmallIcon}
+        src={isSmallDevice ? closeSmallGreenIcon : closeSmallIcon}
         className={classes.closeIcon}
         alt='Close'
       />

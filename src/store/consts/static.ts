@@ -5,7 +5,7 @@ import { ISnackbar } from '@store/reducers/snackbars'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { Chain, PrefixConfig, Token, WalletType } from './types'
 import { TICK_CROSSES_PER_IX } from '@invariant-labs/sdk/lib/market'
-import icons from '@static/icons'
+import { cat1Icon, cat2Icon, dog1Icon, dog2Icon } from '@static/icons'
 
 export enum NetworkType {
   Local = 'Local',
@@ -136,8 +136,7 @@ export const DOGIN_MAIN: Token = {
   address: new PublicKey('DoGinuF39MGaxJDeJ3QDk4qd2vXwkYf5TDYpkdpYjip'),
   decimals: 5,
   name: 'DoginHood',
-  logoURI:
-    'https://statics.solscan.io/cdn/imgs/s60?ref=68747470733a2f2f697066732e696f2f697066732f516d5066614a565454534c537a6f566161754d4b416e36586132627337365965564d44455269617934556d583562'
+  logoURI: 'https://ipfs.io/ipfs/QmPfaJVTTSLSzoVaauMKAn6Xa2bs76YeVMDERiay4UmX5b'
 }
 
 export const SNY_MAIN: Token = {
@@ -245,6 +244,9 @@ export const WSOL_POSITION_INIT_LAMPORTS_DEV = new BN(6164600)
 
 export const WSOL_POOL_INIT_LAMPORTS_MAIN = new BN(106000961)
 export const WSOL_POOL_INIT_LAMPORTS_DEV = new BN(106000961)
+
+export const WSOL_CLOSE_POSITION_LAMPORTS_MAIN = new BN(2404056)
+export const WSOL_CLOSE_POSITION_LAMPORTS_DEV = new BN(2404056)
 
 export const ALL_FEE_TIERS_DATA = FEE_TIERS.map((tier, index) => ({
   tier,
@@ -422,7 +424,7 @@ export const walletNames = {
   [WalletType.SOLFLARE]: 'Solflare'
 }
 
-export const defaultImages: string[] = [icons.Dog1, icons.Dog2, icons.Cat1, icons.Cat2]
+export const defaultImages: string[] = [dog1Icon, dog2Icon, cat1Icon, cat2Icon]
 
 type Pool = {
   tokenX: string
