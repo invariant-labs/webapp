@@ -21,9 +21,9 @@ import Liquidity from '@components/Stats/Liquidity/Liquidity'
 import VolumeBar from '@components/Stats/volumeBar/VolumeBar'
 import TokensList from '@components/Stats/TokensList/TokensList'
 import PoolList from '@components/Stats/PoolList/PoolList'
-import icons from '@static/icons'
 import { VariantType } from 'notistack'
 import { FilterSearch, ISearchToken } from '@common/FilterSearch/FilterSearch'
+import { unknownTokenIcon } from '@static/icons'
 
 export const WrappedStats: React.FC = () => {
   const { classes } = useStyles()
@@ -157,7 +157,7 @@ export const WrappedStats: React.FC = () => {
             <TokensList
               initialLength={tokensList.length}
               data={filteredTokenList.map(tokenData => ({
-                icon: tokenData.tokenDetails?.logoURI ?? icons.unknownToken,
+                icon: tokenData.tokenDetails?.logoURI ?? unknownTokenIcon,
                 name: tokenData.tokenDetails?.name ?? tokenData.address.toString(),
                 symbol: tokenData.tokenDetails?.symbol ?? tokenData.address.toString(),
                 price: tokenData.price,
@@ -189,8 +189,8 @@ export const WrappedStats: React.FC = () => {
             data={filteredPoolsList.map(poolData => ({
               symbolFrom: poolData.tokenXDetails?.symbol ?? poolData.tokenX.toString(),
               symbolTo: poolData.tokenYDetails?.symbol ?? poolData.tokenY.toString(),
-              iconFrom: poolData.tokenXDetails?.logoURI ?? icons.unknownToken,
-              iconTo: poolData.tokenYDetails?.logoURI ?? icons.unknownToken,
+              iconFrom: poolData.tokenXDetails?.logoURI ?? unknownTokenIcon,
+              iconTo: poolData.tokenYDetails?.logoURI ?? unknownTokenIcon,
               volume: poolData.volume24,
               TVL: poolData.tvl,
               fee: poolData.fee,

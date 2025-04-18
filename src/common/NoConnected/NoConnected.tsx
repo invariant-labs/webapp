@@ -1,10 +1,10 @@
 import { Button, Grid, Typography } from '@mui/material'
-import icons from '@static/icons'
 import classNames from 'classnames'
 import { useStyles } from './style'
 import { useNavigate } from 'react-router-dom'
 import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 import { ROUTES } from '@utils/utils'
+import { noConnectedIcon } from '@static/icons'
 
 export interface INoConnected {
   onConnect: () => void
@@ -23,7 +23,7 @@ export const NoConnected: React.FC<INoConnected> = ({ onConnect, title, descCust
       <Grid className={classNames(classes.container, 'blurLayer')}>
         <Grid className={classNames(classes.root, 'blurInfo')}>
           <Grid height={104}>
-            <img className={classes.img} src={icons.NoConnected} alt='Not connected' />
+            <img className={classes.img} src={noConnectedIcon} alt='Not connected' />
           </Grid>
           {!!title && <Typography className={classes.desc}>{title}</Typography>}
 

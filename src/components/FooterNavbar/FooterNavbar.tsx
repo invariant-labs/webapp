@@ -1,34 +1,34 @@
 import { Box, Typography } from '@mui/material'
 import { Link, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import icons from '@static/icons'
 import { colors } from '@static/theme'
 import useStyles from './style'
+import { liquidityIcon, statsIcon, swapArrowsIcon, walletIcon } from '@static/icons'
 
 export const FooterNavbar = () => {
   const links = [
     {
       label: 'Swap',
-      icon: icons.swapArrows,
+      icon: swapArrowsIcon,
       url: 'exchange',
       width: 33
     },
     {
       label: 'Liquidity',
-      icon: icons.liquidityIcon,
+      icon: liquidityIcon,
       url: 'liquidity',
       width: 20
     },
     {
       label: 'Portfolio',
-      icon: icons.walletIcon,
+      icon: walletIcon,
       url: 'portfolio',
       width: 26
     },
 
     {
       label: 'Stats',
-      icon: icons.statsIcon,
+      icon: statsIcon,
       url: 'statistics',
       width: 30
     }

@@ -5,7 +5,6 @@ import Slippage from '@components/Modals/Slippage/Slippage'
 import Refresher from '@common/Refresher/Refresher'
 import { BN } from '@project-serum/anchor'
 import { Box, Button, Grid, Typography } from '@mui/material'
-
 import {
   DEFAULT_TOKEN_DECIMAL,
   NetworkType,
@@ -42,8 +41,7 @@ import { PublicKey } from '@solana/web3.js'
 import { Decimal, Tick, Tickmap } from '@invariant-labs/sdk/lib/market'
 import { DECIMAL, fromFee, SimulationStatus } from '@invariant-labs/sdk/lib/utils'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
-import icons from '@static/icons'
-
+import { auditIcon, refreshIcon, settingIcon, swapArrowsIcon } from '@static/icons'
 export interface Pools {
   tokenX: PublicKey
   tokenY: PublicKey
@@ -632,13 +630,13 @@ export const Swap: React.FC<ISwap> = ({
                   tokenTo === null ||
                   tokenFrom.equals(tokenTo)
                 }>
-                <img src={icons.refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
               </Button>
             </Grid>
           </TooltipHover>
           <TooltipHover title='Settings'>
             <Button onClick={handleClickSettings} className={classes.settingsIconBtn}>
-              <img src={icons.settingIcon} className={classes.settingsIcon} alt='Settings' />
+              <img src={settingIcon} className={classes.settingsIcon} alt='Settings' />
             </Button>
           </TooltipHover>
         </Box>
@@ -745,7 +743,7 @@ export const Swap: React.FC<ISwap> = ({
             }}>
             <Box className={classes.swapImgRoot}>
               <img
-                src={icons.swapArrows}
+                src={swapArrowsIcon}
                 style={{
                   transform: `rotate(${-rotates * 180}deg)`
                 }}
@@ -996,7 +994,7 @@ export const Swap: React.FC<ISwap> = ({
           />
         )}
       </Grid>
-      <img src={icons.audit} alt='Audit' className={classes.audit} />
+      <img src={auditIcon} alt='Audit' className={classes.audit} />
     </Grid>
   )
 }

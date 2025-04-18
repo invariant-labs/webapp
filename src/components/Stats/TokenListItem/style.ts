@@ -11,7 +11,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     '&:nth-of-type(even)': {
       background: colors.invariant.componentDark
     },
-    '&:first-child': {
+    '&:first-of-type': {
       borderBottom: `1px solid ${colors.invariant.light}`,
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,

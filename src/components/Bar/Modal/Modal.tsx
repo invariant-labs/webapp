@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { BarButton } from '../BarButton/BarButton'
 import { useStyles } from './style'
 import { Box, Popover, Typography } from '@mui/material'
-import icons from '@static/icons'
+import { closeSmallIcon } from '@static/icons'
 
 type Props = {
   icon: React.ReactNode
@@ -52,7 +52,7 @@ export const Modal = ({
             <Box className={classes.popoverHeader}>
               <Typography className={classes.title}>{title}</Typography>
               <Box className={classes.closeIconContainer} onClick={() => onClose()}>
-                <img className={classes.closeIcon} src={icons.closeSmallIcon} alt='Close icon' />
+                <img className={classes.closeIcon} src={closeSmallIcon} alt='Close icon' />
               </Box>
             </Box>
           )}

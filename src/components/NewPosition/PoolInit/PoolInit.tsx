@@ -21,7 +21,7 @@ import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { BN } from '@project-serum/anchor'
 import { Button, Grid, Typography } from '@mui/material'
 import AnimatedNumber from '@common/AnimatedNumber/AnimatedNumber'
-import icons from '@static/icons'
+import { boostPointsIcon } from '@static/icons'
 
 export interface IPoolInit {
   tokenASymbol: string
@@ -322,7 +322,7 @@ export const PoolInit: React.FC<IPoolInit> = ({
           <Typography className={classes.subheader}>Set price range</Typography>
           {positionOpeningMethod === 'range' && (
             <Grid className={classes.rangeConcentration}>
-              <img src={icons.boostPoints} alt='Concentration' width='14px' />
+              <img src={boostPointsIcon} alt='Concentration' width='14px' />
               <Typography>Concentration </Typography>
               <Typography>{calculateConcentration(leftRange, rightRange).toFixed(2)}x</Typography>
             </Grid>

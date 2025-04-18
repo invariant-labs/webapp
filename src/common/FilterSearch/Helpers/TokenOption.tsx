@@ -1,10 +1,10 @@
 import { Box, Typography } from '@mui/material'
-import icons from '@static/icons'
 import { shortenAddress } from '@utils/uiUtils'
 import { formatNumberWithSuffix, printBN } from '@utils/utils'
 import { useStyles } from './style'
 import { typography } from '@static/theme'
 import { ISearchToken } from '../FilterSearch'
+import { newTabIcon, unknownTokenIcon } from '@static/icons'
 
 export const TokenOption: React.FC<{
   option: ISearchToken
@@ -20,10 +20,10 @@ export const TokenOption: React.FC<{
       <Box className={classes.leftSide}>
         <img
           width={isSmall ? 32 : 24}
-          src={option?.icon ?? icons.unknownToken}
+          src={option?.icon ?? unknownTokenIcon}
           onError={e => {
             e.currentTarget.onerror = null
-            e.currentTarget.src = icons.unknownToken
+            e.currentTarget.src = unknownTokenIcon
           }}
           alt={option.symbol}
           className={classes.searchResultIcon}
@@ -41,7 +41,7 @@ export const TokenOption: React.FC<{
                 target='_blank'
                 rel='noopener noreferrer'
                 onClick={event => event.stopPropagation()}>
-                <img className={classes.newTabIcon} src={icons.newTab} alt='Token address' />
+                <img className={classes.newTabIcon} src={newTabIcon} alt='Token address' />
               </a>
             </Box>
           </Box>

@@ -2,11 +2,17 @@ import React, { useMemo } from 'react'
 import { Box, Grid, Typography } from '@mui/material'
 import { useStyles } from './../styles'
 import { SwapToken } from '@store/selectors/solanaWallet'
-import icons from '@static/icons'
 import { formatNumberWithSuffix } from '@utils/utils'
 import { VariantType } from 'notistack'
 import { NetworkType } from '@store/consts/static'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
+import {
+  copyAddressIcon,
+  newTabIcon,
+  selectTokenIcon,
+  unknownTokenIcon,
+  warningIcon
+} from '@static/icons'
 
 interface IProps {
   token: SwapToken | null
@@ -50,22 +56,22 @@ const SingleToken: React.FC<IProps> = ({ token, network, tokenPrice, copyTokenAd
           <Box className={classes.imageContainer}>
             <img
               className={classes.tokenIcon}
-              src={token.logoURI ?? icons.unknownToken}
+              src={token.logoURI ?? unknownTokenIcon}
               loading='lazy'
               alt={token.name + 'logo'}
               onError={e => {
-                e.currentTarget.src = icons.unknownToken
+                e.currentTarget.src = unknownTokenIcon
               }}
             />
-            {token.isUnknown && <img className={classes.warningIcon} src={icons.warningIcon} />}
+            {token.isUnknown && <img className={classes.warningIcon} src={warningIcon} />}
           </Box>
         ) : (
           <img
             className={classes.tokenIcon}
-            src={icons.selectToken}
+            src={selectTokenIcon}
             alt={'Select token'}
             onError={e => {
-              e.currentTarget.src = icons.unknownToken
+              e.currentTarget.src = unknownTokenIcon
             }}
           />
         )}
@@ -86,7 +92,7 @@ const SingleToken: React.FC<IProps> = ({ token, network, tokenPrice, copyTokenAd
                     event.stopPropagation()
                   }}
                   className={classes.link}>
-                  <img width={8} height={8} src={icons.newTab} alt={'Token address'} />
+                  <img width={8} height={8} src={newTabIcon} alt={'Token address'} />
                 </a>
               </TooltipHover>
             )}
@@ -113,7 +119,7 @@ const SingleToken: React.FC<IProps> = ({ token, network, tokenPrice, copyTokenAd
             <img
               width={8}
               height={8}
-              src={icons.copyAddress}
+              src={copyAddressIcon}
               alt={'Copy address'}
               className={classes.clipboardIcon}
             />

@@ -3,9 +3,9 @@ import { colors, typography } from '@static/theme'
 
 const useStyles = makeStyles()(theme => ({
   background: {
-    position: 'absolute',
+    position: 'fixed',
+    height: '100vh',
     top: 0,
-    bottom: 0,
     left: 0,
     right: 0,
     zIndex: 51,
@@ -13,7 +13,7 @@ const useStyles = makeStyles()(theme => ({
   },
   container: {
     position: 'absolute',
-    top: 300,
+    top: '50%',
     width: 480,
     left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -27,6 +27,7 @@ const useStyles = makeStyles()(theme => ({
     alignItems: 'center',
 
     [theme.breakpoints.down('sm')]: {
+      top: 50,
       width: 'calc(100% - 96px)',
       left: 16,
       right: 16,
@@ -48,7 +49,8 @@ const useStyles = makeStyles()(theme => ({
   currentRpcText: {
     color: colors.invariant.lightGrey,
     fontWeight: 'normal',
-    textAlign: 'center'
+    textAlign: 'center',
+    wordBreak: 'break-word'
   },
   currentRpc: {
     color: colors.white.main,
