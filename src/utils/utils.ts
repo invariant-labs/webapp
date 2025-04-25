@@ -66,6 +66,9 @@ export const transformBN = (amount: BN): string => {
   return (amount.div(new BN(1e2)).toNumber() / 1e4).toString()
 }
 export const printBN = (amount: BN, decimals: number): string => {
+  if (!amount) {
+    return '0'
+  }
   const amountString = amount.toString()
   const isNegative = amountString.length > 0 && amountString[0] === '-'
 

@@ -2,20 +2,16 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PayloadType } from '../consts/types'
 import { createLoaderKey } from '@utils/utils'
 import { SnackbarAction, VariantType } from 'notistack'
+import { CustomProps } from '@common/Snackbar'
 
-export interface ISnackbar {
-  message: string
+export interface ISnackbar extends Omit<CustomProps, 'snackbarId' | 'network'> {
+  message?: string
   key?: string
-  variant: VariantType
+  variant?: VariantType
   open: boolean
   action?: SnackbarAction
   persist?: boolean
-  txid?: string
   isAccount?: boolean
-  link?: {
-    label: string
-    href: string
-  }
 }
 
 export interface ISnackbarStore {
