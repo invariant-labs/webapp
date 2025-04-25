@@ -8,9 +8,11 @@ import {
   createLoaderKey,
   createPlaceholderLiquidityPlot,
   ensureError,
+  formatNumberWithoutSuffix,
   getPositionByIdAndPoolAddress,
   getPositionsAddressesFromRange,
   getTicksFromPositions,
+  printBN,
   solToPriorityFee
 } from '@utils/utils'
 import { IWallet, Pair } from '@invariant-labs/sdk'
@@ -44,6 +46,7 @@ import { getConnection, handleRpcError } from './connection'
 import { createAccount, getWallet, sleep } from './wallet'
 import { closeSnackbar } from 'notistack'
 import { ClaimAllFee } from '@invariant-labs/sdk/lib/market'
+import { BN } from '@project-serum/anchor'
 
 function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionData>): Generator {
   const data = action.payload
@@ -135,14 +138,14 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
     let poolSigners: Keypair[] = []
 
     const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
-
+    const pair = new Pair(data.tokenX, data.tokenY, {
+      fee: data.fee,
+      tickSpacing: data.tickSpacing
+    })
     const { transaction, signers } = yield* call(
       [marketProgram, marketProgram.initPoolAndPositionTx],
       {
-        pair: new Pair(data.tokenX, data.tokenY, {
-          fee: data.fee,
-          tickSpacing: data.tickSpacing
-        }),
+        pair: pair,
         userTokenX,
         userTokenY,
         lowerTick: data.lowerTick,
@@ -269,6 +272,59 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
           txid: initPositionTxid
         })
       )
+      const txDetails = yield* call([connection, connection.getParsedTransaction], initPositionTxid)
+      const nativeX = pair.tokenX.equals(NATIVE_MINT)
+
+      if (txDetails) {
+        const meta = txDetails.meta
+        if (meta?.preTokenBalances && meta.postTokenBalances) {
+          const accountXPredicate = entry =>
+            entry.mint === pair.tokenX.toString() && entry.owner === wallet.publicKey.toString()
+          const accountYPredicate = entry =>
+            entry.mint === pair.tokenY.toString() && entry.owner === wallet.publicKey.toString()
+
+          const preAccountX = meta.preTokenBalances.find(accountXPredicate)
+          const postAccountX = meta.postTokenBalances.find(accountXPredicate)
+          const preAccountY = meta.preTokenBalances.find(accountYPredicate)
+          const postAccountY = meta.postTokenBalances.find(accountYPredicate)
+
+          if (preAccountX && postAccountX && preAccountY && postAccountY) {
+            const preAmountX = preAccountX.uiTokenAmount.amount
+            const preAmountY = preAccountY.uiTokenAmount.amount
+            const postAmountX = postAccountX.uiTokenAmount.amount
+            const postAmountY = postAccountY.uiTokenAmount.amount
+            const { amountIn, amountOut } = nativeX
+              ? {
+                  amountIn: new BN(preAmountX).sub(new BN(postAmountX)),
+                  amountOut: new BN(postAmountY).sub(new BN(preAmountY))
+                }
+              : {
+                  amountIn: new BN(preAmountY).sub(new BN(postAmountY)),
+                  amountOut: new BN(postAmountX).sub(new BN(preAmountX))
+                }
+
+            try {
+              const tokenIn = allTokens[nativeX ? pair.tokenX.toString() : pair.tokenY.toString()]
+              const tokenOut = allTokens[nativeX ? pair.tokenY.toString() : pair.tokenX.toString()]
+
+              yield put(
+                snackbarsActions.add({
+                  tokensDetails: {
+                    ikonType: 'deposit',
+                    tokenXAmount: formatNumberWithoutSuffix(printBN(amountIn, tokenIn.decimals)),
+                    tokenYAmount: formatNumberWithoutSuffix(printBN(amountOut, tokenOut.decimals)),
+                    tokenXIcon: tokenIn.logoURI,
+                    tokenYIcon: tokenOut.logoURI
+                  },
+                  persist: false
+                })
+              )
+            } catch {
+              // Sanity wrapper, should never be triggered
+            }
+          }
+        }
+      }
 
       yield put(actions.getPositionsList())
     }
@@ -439,12 +495,12 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
     combinedTransaction.add(createIx).add(transferIx).add(initIx)
 
     const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
-
+    const pair = new Pair(data.tokenX, data.tokenY, {
+      fee: data.fee,
+      tickSpacing: data.tickSpacing
+    })
     const initPositionTx = yield* call([marketProgram, marketProgram.initPositionTx], {
-      pair: new Pair(data.tokenX, data.tokenY, {
-        fee: data.fee,
-        tickSpacing: data.tickSpacing
-      }),
+      pair,
       userTokenX,
       userTokenY,
       lowerTick: data.lowerTick,
@@ -515,7 +571,53 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
           txid: txId
         })
       )
+      const txDetails = yield* call([connection, connection.getParsedTransaction], txId)
+      if (txDetails) {
+        const meta = txDetails.meta
 
+        if (meta?.preTokenBalances && meta.postTokenBalances) {
+          console.log(meta)
+          const accountXPredicate = entry =>
+            entry.mint === pair.tokenX.toString() && entry.owner !== wallet.publicKey.toString()
+          const accountYPredicate = entry =>
+            entry.mint === pair.tokenY.toString() && entry.owner !== wallet.publicKey.toString()
+
+          const preAccountX = meta.preTokenBalances.find(accountXPredicate)
+          const postAccountX = meta.postTokenBalances.find(accountXPredicate)
+          const preAccountY = meta.preTokenBalances.find(accountYPredicate)
+          const postAccountY = meta.postTokenBalances.find(accountYPredicate)
+
+          if (preAccountX && postAccountX && preAccountY && postAccountY) {
+            const preAmountX = preAccountX.uiTokenAmount.amount
+            const preAmountY = preAccountY.uiTokenAmount.amount
+            const postAmountX = postAccountX.uiTokenAmount.amount
+            const postAmountY = postAccountY.uiTokenAmount.amount
+            const amountX = new BN(preAmountX).sub(new BN(postAmountX))
+            const amountY = new BN(preAmountY).sub(new BN(postAmountY))
+            try {
+              const tokenX = allTokens[pair.tokenX.toString()]
+              const tokenY = allTokens[pair.tokenY.toString()]
+
+              yield put(
+                snackbarsActions.add({
+                  tokensDetails: {
+                    ikonType: 'deposit',
+                    tokenXAmount: formatNumberWithoutSuffix(
+                      Math.abs(+printBN(amountX, tokenX.decimals))
+                    ),
+                    tokenYAmount: formatNumberWithoutSuffix(
+                      Math.abs(+printBN(amountY, tokenY.decimals))
+                    ),
+                    tokenXIcon: tokenX.logoURI,
+                    tokenYIcon: tokenY.logoURI
+                  },
+                  persist: false
+                })
+              )
+            } catch {}
+          }
+        }
+      }
       yield put(actions.getPositionsList())
     } else {
       yield put(actions.setInitPositionSuccess(false))
@@ -627,17 +729,17 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
 
     let tx: Transaction
     let poolSigners: Keypair[] = []
-
+    const pair = new Pair(action.payload.tokenX, action.payload.tokenY, {
+      fee: action.payload.fee,
+      tickSpacing: action.payload.tickSpacing
+    })
     const fee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
 
     if (action.payload.initPool) {
       const { transaction, signers } = yield* call(
         [marketProgram, marketProgram.initPoolAndPositionTx],
         {
-          pair: new Pair(action.payload.tokenX, action.payload.tokenY, {
-            fee: action.payload.fee,
-            tickSpacing: action.payload.tickSpacing
-          }),
+          pair,
           userTokenX,
           userTokenY,
           lowerTick: action.payload.lowerTick,
@@ -654,10 +756,7 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
       poolSigners = signers
     } else {
       tx = yield* call([marketProgram, marketProgram.initPositionTx], {
-        pair: new Pair(action.payload.tokenX, action.payload.tokenY, {
-          fee: action.payload.fee,
-          tickSpacing: action.payload.tickSpacing
-        }),
+        pair,
         userTokenX,
         userTokenY,
         lowerTick: action.payload.lowerTick,
@@ -720,7 +819,53 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
           txid: txId
         })
       )
+      const txDetails = yield* call([connection, connection.getParsedTransaction], txId)
+      if (txDetails) {
+        const meta = txDetails.meta
 
+        if (meta?.preTokenBalances && meta.postTokenBalances) {
+          console.log(meta)
+          const accountXPredicate = entry =>
+            entry.mint === pair.tokenX.toString() && entry.owner !== wallet.publicKey.toString()
+          const accountYPredicate = entry =>
+            entry.mint === pair.tokenY.toString() && entry.owner !== wallet.publicKey.toString()
+
+          const preAccountX = meta.preTokenBalances.find(accountXPredicate)
+          const postAccountX = meta.postTokenBalances.find(accountXPredicate)
+          const preAccountY = meta.preTokenBalances.find(accountYPredicate)
+          const postAccountY = meta.postTokenBalances.find(accountYPredicate)
+
+          if (preAccountX && postAccountX && preAccountY && postAccountY) {
+            const preAmountX = preAccountX.uiTokenAmount.amount
+            const preAmountY = preAccountY.uiTokenAmount.amount
+            const postAmountX = postAccountX.uiTokenAmount.amount
+            const postAmountY = postAccountY.uiTokenAmount.amount
+            const amountX = new BN(preAmountX).sub(new BN(postAmountX))
+            const amountY = new BN(preAmountY).sub(new BN(postAmountY))
+            try {
+              const tokenX = allTokens[pair.tokenX.toString()]
+              const tokenY = allTokens[pair.tokenY.toString()]
+
+              yield put(
+                snackbarsActions.add({
+                  tokensDetails: {
+                    ikonType: 'deposit',
+                    tokenXAmount: formatNumberWithoutSuffix(
+                      Math.abs(+printBN(amountX, tokenX.decimals))
+                    ),
+                    tokenYAmount: formatNumberWithoutSuffix(
+                      Math.abs(+printBN(amountY, tokenY.decimals))
+                    ),
+                    tokenXIcon: tokenX.logoURI,
+                    tokenYIcon: tokenY.logoURI
+                  },
+                  persist: false
+                })
+              )
+            } catch {}
+          }
+        }
+      }
       yield put(actions.getPositionsList())
     } else {
       yield put(actions.setInitPositionSuccess(false))
@@ -1009,12 +1154,12 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
     }
-
+    const pair = new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
+      fee: positionForIndex.fee.v,
+      tickSpacing: positionForIndex.tickSpacing
+    })
     const ix = yield* call([marketProgram, marketProgram.claimFeeInstruction], {
-      pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
-        fee: positionForIndex.fee.v,
-        tickSpacing: positionForIndex.tickSpacing
-      }),
+      pair,
       userTokenX,
       userTokenY,
       owner: wallet.publicKey,
@@ -1076,6 +1221,64 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
           txid: txId
         })
       )
+      const txDetails = yield* call([connection, connection.getParsedTransaction], txId)
+      const nativeX = pair.tokenX.equals(NATIVE_MINT)
+
+      if (txDetails) {
+        const meta = txDetails.meta
+        console.log(meta)
+        if (meta?.preTokenBalances && meta.postTokenBalances) {
+          const accountXPredicate = entry =>
+            entry.mint === pair.tokenX.toString() && entry.owner !== wallet.publicKey.toString()
+          const accountYPredicate = entry =>
+            entry.mint === pair.tokenY.toString() && entry.owner !== wallet.publicKey.toString()
+
+          const preAccountX = meta.preTokenBalances.find(accountXPredicate)
+          const postAccountX = meta.postTokenBalances.find(accountXPredicate)
+          const preAccountY = meta.preTokenBalances.find(accountYPredicate)
+          const postAccountY = meta.postTokenBalances.find(accountYPredicate)
+
+          if (preAccountX && postAccountX && preAccountY && postAccountY) {
+            const preAmountX = preAccountX.uiTokenAmount.amount
+            const preAmountY = preAccountY.uiTokenAmount.amount
+            const postAmountX = postAccountX.uiTokenAmount.amount
+            const postAmountY = postAccountY.uiTokenAmount.amount
+            const { amountIn, amountOut } = nativeX
+              ? {
+                  amountIn: new BN(preAmountX).sub(new BN(postAmountX)),
+                  amountOut: new BN(postAmountY).sub(new BN(preAmountY))
+                }
+              : {
+                  amountIn: new BN(preAmountY).sub(new BN(postAmountY)),
+                  amountOut: new BN(postAmountX).sub(new BN(preAmountX))
+                }
+
+            try {
+              const tokenIn = allTokens[nativeX ? pair.tokenX.toString() : pair.tokenY.toString()]
+              const tokenOut = allTokens[nativeX ? pair.tokenY.toString() : pair.tokenX.toString()]
+
+              yield put(
+                snackbarsActions.add({
+                  tokensDetails: {
+                    ikonType: 'claim',
+                    tokenXAmount: formatNumberWithoutSuffix(
+                      Math.abs(+printBN(amountIn, tokenIn.decimals))
+                    ),
+                    tokenYAmount: formatNumberWithoutSuffix(
+                      Math.abs(+printBN(amountOut, tokenOut.decimals))
+                    ),
+                    tokenXIcon: tokenIn.logoURI,
+                    tokenYIcon: tokenOut.logoURI
+                  },
+                  persist: false
+                })
+              )
+            } catch {
+              // Sanity wrapper, should never be triggered
+            }
+          }
+        }
+      }
     } else {
       yield put(
         snackbarsActions.add({
@@ -1177,12 +1380,12 @@ export function* handleClaimFee(action: PayloadAction<number>) {
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
     }
-
+    const pair = new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
+      fee: positionForIndex.fee.v,
+      tickSpacing: positionForIndex.tickSpacing
+    })
     const ix = yield* call([marketProgram, marketProgram.claimFeeInstruction], {
-      pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
-        fee: positionForIndex.fee.v,
-        tickSpacing: positionForIndex.tickSpacing
-      }),
+      pair,
       userTokenX,
       userTokenY,
       owner: wallet.publicKey,
@@ -1242,6 +1445,65 @@ export function* handleClaimFee(action: PayloadAction<number>) {
           txid: txId
         })
       )
+
+      const txDetails = yield* call([connection, connection.getParsedTransaction], txId)
+      const nativeX = pair.tokenX.equals(NATIVE_MINT)
+
+      if (txDetails) {
+        const meta = txDetails.meta
+        console.log(meta)
+        if (meta?.preTokenBalances && meta.postTokenBalances) {
+          const accountXPredicate = entry =>
+            entry.mint === pair.tokenX.toString() && entry.owner !== wallet.publicKey.toString()
+          const accountYPredicate = entry =>
+            entry.mint === pair.tokenY.toString() && entry.owner !== wallet.publicKey.toString()
+
+          const preAccountX = meta.preTokenBalances.find(accountXPredicate)
+          const postAccountX = meta.postTokenBalances.find(accountXPredicate)
+          const preAccountY = meta.preTokenBalances.find(accountYPredicate)
+          const postAccountY = meta.postTokenBalances.find(accountYPredicate)
+
+          if (preAccountX && postAccountX && preAccountY && postAccountY) {
+            const preAmountX = preAccountX.uiTokenAmount.amount
+            const preAmountY = preAccountY.uiTokenAmount.amount
+            const postAmountX = postAccountX.uiTokenAmount.amount
+            const postAmountY = postAccountY.uiTokenAmount.amount
+            const { amountIn, amountOut } = nativeX
+              ? {
+                  amountIn: new BN(preAmountX).sub(new BN(postAmountX)),
+                  amountOut: new BN(postAmountY).sub(new BN(preAmountY))
+                }
+              : {
+                  amountIn: new BN(preAmountY).sub(new BN(postAmountY)),
+                  amountOut: new BN(postAmountX).sub(new BN(preAmountX))
+                }
+
+            try {
+              const tokenIn = allTokens[nativeX ? pair.tokenX.toString() : pair.tokenY.toString()]
+              const tokenOut = allTokens[nativeX ? pair.tokenY.toString() : pair.tokenX.toString()]
+
+              yield put(
+                snackbarsActions.add({
+                  tokensDetails: {
+                    ikonType: 'claim',
+                    tokenXAmount: formatNumberWithoutSuffix(
+                      Math.abs(+printBN(amountIn, tokenIn.decimals))
+                    ),
+                    tokenYAmount: formatNumberWithoutSuffix(
+                      Math.abs(+printBN(amountOut, tokenOut.decimals))
+                    ),
+                    tokenXIcon: tokenIn.logoURI,
+                    tokenYIcon: tokenOut.logoURI
+                  },
+                  persist: false
+                })
+              )
+            } catch {
+              // Sanity wrapper, should never be triggered
+            }
+          }
+        }
+      }
     } else {
       yield put(
         snackbarsActions.add({
@@ -1366,12 +1628,12 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
     }
-
+    const pair = new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
+      fee: positionForIndex.fee.v,
+      tickSpacing: positionForIndex.tickSpacing
+    })
     const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {
-      pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
-        fee: positionForIndex.fee.v,
-        tickSpacing: positionForIndex.tickSpacing
-      }),
+      pair,
       owner: wallet.publicKey,
       index: data.positionIndex,
       userTokenX,
@@ -1435,6 +1697,64 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
           txid: txId
         })
       )
+      const txDetails = yield* call([connection, connection.getParsedTransaction], txId)
+      const nativeX = pair.tokenX.equals(NATIVE_MINT)
+
+      if (txDetails) {
+        const meta = txDetails.meta
+        console.log(meta)
+        if (meta?.preTokenBalances && meta.postTokenBalances) {
+          const accountXPredicate = entry =>
+            entry.mint === pair.tokenX.toString() && entry.owner !== wallet.publicKey.toString()
+          const accountYPredicate = entry =>
+            entry.mint === pair.tokenY.toString() && entry.owner !== wallet.publicKey.toString()
+
+          const preAccountX = meta.preTokenBalances.find(accountXPredicate)
+          const postAccountX = meta.postTokenBalances.find(accountXPredicate)
+          const preAccountY = meta.preTokenBalances.find(accountYPredicate)
+          const postAccountY = meta.postTokenBalances.find(accountYPredicate)
+
+          if (preAccountX && postAccountX && preAccountY && postAccountY) {
+            const preAmountX = preAccountX.uiTokenAmount.amount
+            const preAmountY = preAccountY.uiTokenAmount.amount
+            const postAmountX = postAccountX.uiTokenAmount.amount
+            const postAmountY = postAccountY.uiTokenAmount.amount
+            const { amountIn, amountOut } = nativeX
+              ? {
+                  amountIn: new BN(preAmountX).sub(new BN(postAmountX)),
+                  amountOut: new BN(postAmountY).sub(new BN(preAmountY))
+                }
+              : {
+                  amountIn: new BN(preAmountY).sub(new BN(postAmountY)),
+                  amountOut: new BN(postAmountX).sub(new BN(preAmountX))
+                }
+
+            try {
+              const tokenIn = allTokens[nativeX ? pair.tokenX.toString() : pair.tokenY.toString()]
+              const tokenOut = allTokens[nativeX ? pair.tokenY.toString() : pair.tokenX.toString()]
+
+              yield put(
+                snackbarsActions.add({
+                  tokensDetails: {
+                    ikonType: 'withdraw',
+                    tokenXAmount: formatNumberWithoutSuffix(
+                      Math.abs(+printBN(amountIn, tokenIn.decimals))
+                    ),
+                    tokenYAmount: formatNumberWithoutSuffix(
+                      Math.abs(+printBN(amountOut, tokenOut.decimals))
+                    ),
+                    tokenXIcon: tokenIn.logoURI,
+                    tokenYIcon: tokenOut.logoURI
+                  },
+                  persist: false
+                })
+              )
+            } catch {
+              // Sanity wrapper, should never be triggered
+            }
+          }
+        }
+      }
     } else {
       yield put(
         snackbarsActions.add({
@@ -1537,12 +1857,12 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     if (userTokenY === null) {
       userTokenY = yield* call(createAccount, positionForIndex.tokenY)
     }
-
+    const pair = new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
+      fee: positionForIndex.fee.v,
+      tickSpacing: positionForIndex.tickSpacing
+    })
     const ix = yield* call([marketProgram, marketProgram.removePositionInstruction], {
-      pair: new Pair(positionForIndex.tokenX, positionForIndex.tokenY, {
-        fee: positionForIndex.fee.v,
-        tickSpacing: positionForIndex.tickSpacing
-      }),
+      pair,
       owner: wallet.publicKey,
       index: action.payload.positionIndex,
       userTokenX,
@@ -1603,6 +1923,64 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
           txid: txId
         })
       )
+      const txDetails = yield* call([connection, connection.getParsedTransaction], txId)
+      const nativeX = pair.tokenX.equals(NATIVE_MINT)
+
+      if (txDetails) {
+        const meta = txDetails.meta
+        console.log(meta)
+        if (meta?.preTokenBalances && meta.postTokenBalances) {
+          const accountXPredicate = entry =>
+            entry.mint === pair.tokenX.toString() && entry.owner !== wallet.publicKey.toString()
+          const accountYPredicate = entry =>
+            entry.mint === pair.tokenY.toString() && entry.owner !== wallet.publicKey.toString()
+
+          const preAccountX = meta.preTokenBalances.find(accountXPredicate)
+          const postAccountX = meta.postTokenBalances.find(accountXPredicate)
+          const preAccountY = meta.preTokenBalances.find(accountYPredicate)
+          const postAccountY = meta.postTokenBalances.find(accountYPredicate)
+
+          if (preAccountX && postAccountX && preAccountY && postAccountY) {
+            const preAmountX = preAccountX.uiTokenAmount.amount
+            const preAmountY = preAccountY.uiTokenAmount.amount
+            const postAmountX = postAccountX.uiTokenAmount.amount
+            const postAmountY = postAccountY.uiTokenAmount.amount
+            const { amountIn, amountOut } = nativeX
+              ? {
+                  amountIn: new BN(preAmountX).sub(new BN(postAmountX)),
+                  amountOut: new BN(postAmountY).sub(new BN(preAmountY))
+                }
+              : {
+                  amountIn: new BN(preAmountY).sub(new BN(postAmountY)),
+                  amountOut: new BN(postAmountX).sub(new BN(preAmountX))
+                }
+
+            try {
+              const tokenIn = allTokens[nativeX ? pair.tokenX.toString() : pair.tokenY.toString()]
+              const tokenOut = allTokens[nativeX ? pair.tokenY.toString() : pair.tokenX.toString()]
+
+              yield put(
+                snackbarsActions.add({
+                  tokensDetails: {
+                    ikonType: 'withdraw',
+                    tokenXAmount: formatNumberWithoutSuffix(
+                      Math.abs(+printBN(amountIn, tokenIn.decimals))
+                    ),
+                    tokenYAmount: formatNumberWithoutSuffix(
+                      Math.abs(+printBN(amountOut, tokenOut.decimals))
+                    ),
+                    tokenXIcon: tokenIn.logoURI,
+                    tokenYIcon: tokenOut.logoURI
+                  },
+                  persist: false
+                })
+              )
+            } catch {
+              // Sanity wrapper, should never be triggered
+            }
+          }
+        }
+      }
     } else {
       yield put(
         snackbarsActions.add({

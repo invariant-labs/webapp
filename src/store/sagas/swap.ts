@@ -21,7 +21,6 @@ import { swap } from '@store/selectors/swap'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
 import {
   Keypair,
-  ParsedInstruction,
   SystemProgram,
   Transaction,
   TransactionExpiredTimeoutError,
@@ -268,48 +267,53 @@ export function* handleSwapWithSOL(): Generator {
 
       if (txDetails) {
         const meta = txDetails.meta
-        if (meta?.innerInstructions && meta.innerInstructions) {
-          try {
-            const nativeAmount = (
-              meta.innerInstructions[0].instructions.find(
-                ix => (ix as ParsedInstruction).parsed.info.amount
-              ) as ParsedInstruction
-            ).parsed.info.amount
+        if (meta?.preTokenBalances && meta.postTokenBalances) {
+          const accountXPredicate = entry =>
+            entry.mint === swapPool.tokenX.toString() && entry.owner === wallet.publicKey.toString()
+          const accountYPredicate = entry =>
+            entry.mint === swapPool.tokenY.toString() && entry.owner === wallet.publicKey.toString()
 
-            const splAmount = (
-              meta.innerInstructions[0].instructions.find(
-                ix => (ix as ParsedInstruction).parsed.info.tokenAmount !== undefined
-              ) as ParsedInstruction
-            ).parsed.info.tokenAmount.amount
+          const preAccountX = meta.preTokenBalances.find(accountXPredicate)
+          const postAccountX = meta.postTokenBalances.find(accountXPredicate)
+          const preAccountY = meta.preTokenBalances.find(accountYPredicate)
+          const postAccountY = meta.postTokenBalances.find(accountYPredicate)
 
-            const tokenIn = isXtoY
-              ? allTokens[swapPool.tokenX.toString()]
-              : allTokens[swapPool.tokenY.toString()]
-            const tokenOut = isXtoY
-              ? allTokens[swapPool.tokenY.toString()]
-              : allTokens[swapPool.tokenX.toString()]
+          if (preAccountX && postAccountX && preAccountY && postAccountY) {
+            const preAmountX = preAccountX.uiTokenAmount.amount
+            const preAmountY = preAccountY.uiTokenAmount.amount
+            const postAmountX = postAccountX.uiTokenAmount.amount
+            const postAmountY = postAccountY.uiTokenAmount.amount
+            const { amountIn, amountOut } = isXtoY
+              ? {
+                  amountIn: new BN(preAmountX).sub(new BN(postAmountX)),
+                  amountOut: new BN(postAmountY).sub(new BN(preAmountY))
+                }
+              : {
+                  amountIn: new BN(preAmountY).sub(new BN(postAmountY)),
+                  amountOut: new BN(postAmountX).sub(new BN(preAmountX))
+                }
 
-            const nativeIn = isXtoY
-              ? swapPool.tokenX.equals(NATIVE_MINT)
-              : swapPool.tokenY.equals(NATIVE_MINT)
+            try {
+              const tokenIn =
+                allTokens[isXtoY ? swapPool.tokenX.toString() : swapPool.tokenY.toString()]
+              const tokenOut =
+                allTokens[isXtoY ? swapPool.tokenY.toString() : swapPool.tokenX.toString()]
 
-            const amountIn = nativeIn ? nativeAmount : splAmount
-            const amountOut = nativeIn ? splAmount : nativeAmount
-
-            yield put(
-              snackbarsActions.add({
-                tokensDetails: {
-                  ikonType: 'swap',
-                  tokenXAmount: formatNumberWithoutSuffix(printBN(amountIn, tokenIn.decimals)),
-                  tokenYAmount: formatNumberWithoutSuffix(printBN(amountOut, tokenOut.decimals)),
-                  tokenXIcon: tokenIn.logoURI,
-                  tokenYIcon: tokenOut.logoURI
-                },
-                persist: false
-              })
-            )
-          } catch {
-            // Should never be triggered
+              yield put(
+                snackbarsActions.add({
+                  tokensDetails: {
+                    ikonType: 'swap',
+                    tokenXAmount: formatNumberWithoutSuffix(printBN(amountIn, tokenIn.decimals)),
+                    tokenYAmount: formatNumberWithoutSuffix(printBN(amountOut, tokenOut.decimals)),
+                    tokenXIcon: tokenIn.logoURI,
+                    tokenYIcon: tokenOut.logoURI
+                  },
+                  persist: false
+                })
+              )
+            } catch {
+              // Sanity wrapper, should never be triggered
+            }
           }
         }
       }
