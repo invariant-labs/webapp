@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useState } from 'react'
 import PoolListItem from '@components/Stats/PoolListItem/PoolListItem'
 import { useStyles } from './style'
-import { Grid } from '@mui/material'
+import { Grid, useMediaQuery } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
 import { PaginationList } from '@common/Pagination/Pagination'
 import { VariantType } from 'notistack'
@@ -42,7 +42,8 @@ import { Keypair } from '@solana/web3.js'
 import classNames from 'classnames'
 import { ROUTES } from '@utils/utils'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
-import { colors } from '@static/theme'
+import { theme } from '@static/theme'
+import { TableBoundsLabel } from '@common/TableBoundsLabel/TableBoundsLabel'
 
 const ITEMS_PER_PAGE = 10
 
@@ -132,10 +133,6 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
     }
   }, [data, sortType])
 
-  useEffect(() => {
-    setPage(1)
-  }, [data])
-
   const handleChangePagination = (currentPage: number) => setPage(currentPage)
 
   const paginator = (currentPage: number) => {
@@ -146,7 +143,19 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
     return sortedData.slice(offest).slice(0, perPage)
   }
 
-  const pages = Math.ceil(data.length / 10)
+  const pages = useMemo(() => Math.ceil(data.length / 10), [data])
+  const isCenterAligment = useMediaQuery(theme.breakpoints.down(1280))
+  const height = useMemo(
+    () => (initialDataLength > ITEMS_PER_PAGE ? (isCenterAligment ? 120 : 90) : 69),
+    [initialDataLength, isCenterAligment]
+  )
+  const totalItems = useMemo(() => sortedData.length, [sortedData])
+  const lowerBound = useMemo(() => (page - 1) * ITEMS_PER_PAGE + 1, [page])
+  const upperBound = useMemo(() => Math.min(page * ITEMS_PER_PAGE, totalItems), [totalItems, page])
+
+  useEffect(() => {
+    setPage(1)
+  }, [data, pages])
 
   return (
     <div className={classNames({ [classes.loadingOverlay]: isLoading })}>
@@ -218,19 +227,22 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
         <Grid
           className={classes.pagination}
           sx={{
-            height: initialDataLength > 10 ? (page !== pages ? 101 : 101) : 69,
-            borderTop: `
-              ${pages > 1 ? (page !== pages ? 1 : 2) : 2}px solid ${colors.invariant.light}
-            `
+            height: height
           }}>
-          {' '}
-          {pages > 1 && (
-            <PaginationList
-              pages={pages}
-              defaultPage={1}
-              handleChangePage={handleChangePagination}
-              variant='flex-end'
-            />
+          {pages > 0 && (
+            <TableBoundsLabel
+              borderTop={false}
+              lowerBound={lowerBound}
+              totalItems={totalItems}
+              upperBound={upperBound}>
+              <PaginationList
+                pages={pages}
+                defaultPage={1}
+                handleChangePage={handleChangePagination}
+                variant='center'
+                page={page}
+              />
+            </TableBoundsLabel>
           )}
         </Grid>
       </Grid>

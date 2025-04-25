@@ -1,6 +1,6 @@
 import TokenListItem from '../TokenListItem/TokenListItem'
 import React, { useEffect, useMemo, useState } from 'react'
-import { colors, theme } from '@static/theme'
+import { theme } from '@static/theme'
 import useStyles from './style'
 import { Grid, useMediaQuery } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypeTokenList, USDC_DEV, SOL_DEV } from '@store/consts/static'
@@ -9,6 +9,7 @@ import NotFoundPlaceholder from '../NotFoundPlaceholder/NotFoundPlaceholder'
 import { VariantType } from 'notistack'
 import { Keypair } from '@solana/web3.js'
 import classNames from 'classnames'
+import { TableBoundsLabel } from '@common/TableBoundsLabel/TableBoundsLabel'
 
 export interface ITokensListData {
   icon: string
@@ -99,10 +100,6 @@ const TokensList: React.FC<ITokensList> = ({
     }
   }, [data, sortType, isXsDown])
 
-  useEffect(() => {
-    setPage(1)
-  }, [data])
-
   const handleChangePagination = (page: number): void => {
     setPage(page)
   }
@@ -126,7 +123,19 @@ const TokensList: React.FC<ITokensList> = ({
 
     return Math.max(rowNumber - displayedItems, 0)
   }
-  const pages = Math.ceil(data.length / 10)
+  const totalItems = useMemo(() => sortedData.length, [sortedData])
+  const lowerBound = useMemo(() => (page - 1) * ITEMS_PER_PAGE + 1, [page])
+  const upperBound = useMemo(() => Math.min(page * ITEMS_PER_PAGE, totalItems), [totalItems, page])
+
+  const pages = useMemo(() => Math.ceil(data.length / ITEMS_PER_PAGE), [data])
+  const isCenterAligment = useMediaQuery(theme.breakpoints.down(1280))
+  const height = useMemo(
+    () => (initialDataLength > ITEMS_PER_PAGE ? (isCenterAligment ? 120 : 90) : 69),
+    [initialDataLength, isCenterAligment]
+  )
+  useEffect(() => {
+    setPage(1)
+  }, [data, pages])
 
   return (
     <Grid
@@ -174,18 +183,22 @@ const TokensList: React.FC<ITokensList> = ({
         <Grid
           className={classes.pagination}
           sx={{
-            height: initialDataLength > 10 ? (page !== pages ? 90 : 91) : 69,
-            borderTop: `
-              ${pages > 1 ? (page !== pages ? 1 : 2) : 2}px solid ${colors.invariant.light}
-            `
+            height: height
           }}>
-          {pages > 1 && (
-            <PaginationList
-              pages={Math.ceil(data.length / 10)}
-              defaultPage={1}
-              handleChangePage={handleChangePagination}
-              variant='flex-end'
-            />
+          {pages > 0 && (
+            <TableBoundsLabel
+              lowerBound={lowerBound}
+              totalItems={totalItems}
+              upperBound={upperBound}
+              borderTop={false}>
+              <PaginationList
+                pages={pages}
+                defaultPage={1}
+                handleChangePage={handleChangePagination}
+                variant='center'
+                page={page}
+              />
+            </TableBoundsLabel>
           )}
         </Grid>
       </>
