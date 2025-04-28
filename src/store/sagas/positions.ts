@@ -31,7 +31,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { poolsArraySortedByFees, tokens } from '@store/selectors/pools'
 import { positionsWithPoolsData } from '@store/selectors/positions'
 import { network, rpcAddress } from '@store/selectors/solanaConnection'
-import { accounts, balance } from '@store/selectors/solanaWallet'
+import { accounts, balance, SwapToken } from '@store/selectors/solanaWallet'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
 import {
   Keypair,
@@ -47,6 +47,7 @@ import { createAccount, getWallet, sleep } from './wallet'
 import { closeSnackbar } from 'notistack'
 import { ClaimAllFee } from '@invariant-labs/sdk/lib/market'
 import { BN } from '@project-serum/anchor'
+import { calculateClaimAmount } from '@invariant-labs/sdk/lib/utils'
 
 function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionData>): Generator {
   const data = action.payload
@@ -2095,12 +2096,40 @@ export function* handleClaimAllFees() {
 
     const allPositionsData = yield* select(positionsWithPoolsData)
     const tokensAccounts = yield* select(accounts)
+    const { filteredPositions, filteredPositionsMapped } = allPositionsData.reduce(
+      (acc, position) => {
+        const [bnX, bnY] = calculateClaimAmount({
+          position: position,
+          tickLower: position.lowerTick,
+          tickUpper: position.upperTick,
+          tickCurrent: position.poolData.currentTickIndex,
+          feeGrowthGlobalX: position.poolData.feeGrowthGlobalX,
+          feeGrowthGlobalY: position.poolData.feeGrowthGlobalY
+        })
 
-    if (allPositionsData.length === 0) {
+        if (!bnX.isZero() || !bnY.isZero()) {
+          acc.filteredPositions.push(position)
+          acc.filteredPositionsMapped.push({
+            tokenX: position.tokenX,
+            tokenY: position.tokenY,
+            bnX,
+            bnY
+          })
+        }
+
+        return acc
+      },
+      {
+        filteredPositions: [] as typeof allPositionsData,
+        filteredPositionsMapped: [] as { tokenX: SwapToken; tokenY: SwapToken; bnX: BN; bnY: BN }[]
+      }
+    )
+
+    if (filteredPositions.length === 0) {
       return
     }
-    if (allPositionsData.length === 1) {
-      const claimFeeAction = actions.claimFee(0)
+    if (filteredPositions.length === 1) {
+      const claimFeeAction = actions.claimFee(filteredPositions[0].positionIndex)
       return yield* call(handleClaimFee, claimFeeAction)
     }
 
@@ -2114,7 +2143,7 @@ export function* handleClaimAllFees() {
       })
     )
 
-    for (const position of allPositionsData) {
+    for (const position of filteredPositions) {
       const pool = allPositionsData[position.positionIndex].poolData
 
       if (!tokensAccounts[pool.tokenX.toString()]) {
@@ -2125,7 +2154,7 @@ export function* handleClaimAllFees() {
       }
     }
 
-    const formattedPositions = allPositionsData.map(position => ({
+    const formattedPositions = filteredPositions.map(position => ({
       pair: new Pair(position.poolData.tokenX, position.poolData.tokenY, {
         fee: position.poolData.fee.v,
         tickSpacing: position.poolData.tickSpacing
@@ -2171,7 +2200,24 @@ export function* handleClaimAllFees() {
         )
       }
     }
-
+    for (const pos of filteredPositionsMapped) {
+      yield put(
+        snackbarsActions.add({
+          tokensDetails: {
+            ikonType: 'claim',
+            tokenXAmount: formatNumberWithoutSuffix(
+              Math.abs(+printBN(pos.bnX, pos.tokenX.decimals))
+            ),
+            tokenYAmount: formatNumberWithoutSuffix(
+              Math.abs(+printBN(pos.bnY, pos.tokenY.decimals))
+            ),
+            tokenXIcon: pos.tokenX.logoURI,
+            tokenYIcon: pos.tokenY.logoURI
+          },
+          persist: false
+        })
+      )
+    }
     yield put(
       snackbarsActions.add({
         message: 'All fees claimed successfully.',
