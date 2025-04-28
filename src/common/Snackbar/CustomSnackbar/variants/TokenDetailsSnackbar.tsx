@@ -15,6 +15,14 @@ import { useMemo } from 'react'
 interface ITokensDetailsSnackbar extends TokensDetailsProps {
   handleDismiss: () => void
 }
+
+const arrow = (
+  <svg width='24' height='17' viewBox='0 0 22 19' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <path d='M21 8.64062H0' stroke='#ffffff' stroke-width='1.2' />
+    <path d='M15 5.14057L22 8.64057L15 12.1406' stroke='#ffffff' stroke-width='1.2' />
+  </svg>
+)
+
 const TokensDetailsSnackbar: React.FC<ITokensDetailsSnackbar> = ({
   ikonType,
   tokenXAmount,
@@ -75,9 +83,8 @@ const TokensDetailsSnackbar: React.FC<ITokensDetailsSnackbar> = ({
                   <StyledText>Swapped</StyledText>
                   <StyledText color={colors.invariant.green}>{tokenXAmountAutoSwap}</StyledText>
                   <img src={tokenXIconAutoSwap} className={classes.tokenIcon} />
-                  <StyledText mb={0.5}>
-                    <span style={{ fontSize: 30, display: 'flex' }}>→</span>
-                  </StyledText>
+                  {arrow}
+
                   <StyledText color={colors.invariant.green}>{tokenYAmountAutoSwap}</StyledText>
                   <img src={tokenYIconAutoSwap} className={classes.tokenIcon} />
                 </Grid>
@@ -100,9 +107,8 @@ const TokensDetailsSnackbar: React.FC<ITokensDetailsSnackbar> = ({
             <StyledText>{title}</StyledText>
             <StyledText color={colors.invariant.green}>{tokenXAmount}</StyledText>
             <img src={tokenXIcon} className={classes.tokenIcon} />
-            <StyledText mb={ikonType === 'swap' ? 0.5 : ''}>
-              {ikonType === 'swap' ? <span style={{ fontSize: 30, display: 'flex' }}>→</span> : '+'}
-            </StyledText>
+            {ikonType === 'swap' ? arrow : <StyledText>+</StyledText>}
+
             <StyledText color={colors.invariant.green}>{tokenYAmount}</StyledText>
             <img src={tokenYIcon} className={classes.tokenIcon} />
           </Grid>
