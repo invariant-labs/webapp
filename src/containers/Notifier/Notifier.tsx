@@ -24,7 +24,7 @@ const Notifier = () => {
   }
 
   React.useEffect(() => {
-    notifications.forEach(({ key = '', message, open, variant, txid, persist = true, link }) => {
+    notifications.forEach(({ key = '', message, open, persist = true, ...props }) => {
       if (!open) {
         closeSnackbar(key)
         return
@@ -32,18 +32,16 @@ const Notifier = () => {
 
       if (key && displayed.includes(key)) return
 
-      enqueueSnackbar(message, {
+      enqueueSnackbar(message || '', {
         key,
-        variant: variant,
         persist: persist,
         onExited: (_event, myKey) => {
           dispatch(actions.remove(myKey as string))
           removeDisplayed(myKey as string)
         },
-        txid: txid,
+        network: currentNetwork,
         snackbarId: key,
-        link: link,
-        network: currentNetwork
+        ...props
       })
       storeDisplayed(key)
     })
