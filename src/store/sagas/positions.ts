@@ -31,7 +31,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { poolsArraySortedByFees, tokens } from '@store/selectors/pools'
 import { positionsWithPoolsData } from '@store/selectors/positions'
 import { network, rpcAddress } from '@store/selectors/solanaConnection'
-import { accounts, balance, SwapToken } from '@store/selectors/solanaWallet'
+import { accounts, SwapToken } from '@store/selectors/solanaWallet'
 import { NATIVE_MINT, TOKEN_PROGRAM_ID, Token } from '@solana/spl-token'
 import {
   Keypair,
@@ -577,7 +577,6 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
         const meta = txDetails.meta
 
         if (meta?.preTokenBalances && meta.postTokenBalances) {
-          console.log(meta)
           const accountXPredicate = entry =>
             entry.mint === pair.tokenX.toString() && entry.owner !== wallet.publicKey.toString()
           const accountYPredicate = entry =>
@@ -825,7 +824,6 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
         const meta = txDetails.meta
 
         if (meta?.preTokenBalances && meta.postTokenBalances) {
-          console.log(meta)
           const accountXPredicate = entry =>
             entry.mint === pair.tokenX.toString() && entry.owner !== wallet.publicKey.toString()
           const accountYPredicate = entry =>
@@ -1227,7 +1225,6 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
 
       if (txDetails) {
         const meta = txDetails.meta
-        console.log(meta)
         if (meta?.preTokenBalances && meta.postTokenBalances) {
           const accountXPredicate = entry =>
             entry.mint === pair.tokenX.toString() && entry.owner !== wallet.publicKey.toString()
@@ -1452,7 +1449,6 @@ export function* handleClaimFee(action: PayloadAction<number>) {
 
       if (txDetails) {
         const meta = txDetails.meta
-        console.log(meta)
         if (meta?.preTokenBalances && meta.postTokenBalances) {
           const accountXPredicate = entry =>
             entry.mint === pair.tokenX.toString() && entry.owner !== wallet.publicKey.toString()
@@ -1579,8 +1575,6 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     const allPositionsData = yield* select(positionsWithPoolsData)
     const tokensAccounts = yield* select(accounts)
     const allTokens = yield* select(tokens)
-    const solbalance1 = yield* select(balance)
-    console.log('solbalance1', solbalance1.toString())
     const wrappedSolAccount = Keypair.generate()
 
     const createIx = SystemProgram.createAccount({
@@ -1703,7 +1697,6 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
 
       if (txDetails) {
         const meta = txDetails.meta
-        console.log(meta)
         if (meta?.preTokenBalances && meta.postTokenBalances) {
           const accountXPredicate = entry =>
             entry.mint === pair.tokenX.toString() && entry.owner !== wallet.publicKey.toString()
@@ -1929,7 +1922,6 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
 
       if (txDetails) {
         const meta = txDetails.meta
-        console.log(meta)
         if (meta?.preTokenBalances && meta.postTokenBalances) {
           const accountXPredicate = entry =>
             entry.mint === pair.tokenX.toString() && entry.owner !== wallet.publicKey.toString()
