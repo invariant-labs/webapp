@@ -27,7 +27,7 @@ import {
 
 import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 import { useStyles } from './style'
-import { Grid, Typography } from '@mui/material'
+import { Box, Grid, Typography } from '@mui/material'
 import { PositionOpeningMethod } from '@store/consts/types'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { createButtonActions } from '@utils/uiUtils'
@@ -488,21 +488,22 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           walletUninitialized={walletStatus !== Status.Initialized}
         />
       </Grid>
-      {walletStatus !== Status.Initialized ? (
-        <ChangeWalletButton
-          margin='30px 0 30px 0'
-          height={48}
-          name='Connect wallet'
-          onConnect={onConnectWallet}
-          connected={false}
-          onDisconnect={onDisconnectWallet}
-          className={classes.connectWalletButton}
-        />
-      ) : getButtonMessage() === 'Insufficient ETH' ? (
-        <TooltipHover
-          title='More ETH is required to cover the transaction fee. Obtain more ETH to complete this transaction.'
-          top={-10}>
-          <div>
+      <Box width='100%'>
+        {walletStatus !== Status.Initialized ? (
+          <ChangeWalletButton
+            margin={'30px 0'}
+            width={'100%'}
+            height={48}
+            name='Connect wallet'
+            onConnect={onConnectWallet}
+            connected={false}
+            onDisconnect={onDisconnectWallet}
+          />
+        ) : getButtonMessage() === 'Insufficient SOL' ? (
+          <TooltipHover
+            fullSpan
+            title='More SOL is required to cover the transaction fee. Obtain more SOL to complete this transaction.'
+            top={-10}>
             <AnimatedButton
               className={classNames(
                 classes.addButton,
@@ -517,24 +518,24 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               content={getButtonMessage()}
               progress={progress}
             />
-          </div>
-        </TooltipHover>
-      ) : (
-        <AnimatedButton
-          className={classNames(
-            classes.addButton,
-            progress === 'none' ? classes.hoverButton : undefined
-          )}
-          onClick={() => {
-            if (progress === 'none') {
-              onAddLiquidity()
-            }
-          }}
-          disabled={getButtonMessage() !== 'Add Position'}
-          content={getButtonMessage()}
-          progress={progress}
-        />
-      )}
+          </TooltipHover>
+        ) : (
+          <AnimatedButton
+            className={classNames(
+              classes.addButton,
+              progress === 'none' ? classes.hoverButton : undefined
+            )}
+            onClick={() => {
+              if (progress === 'none') {
+                onAddLiquidity()
+              }
+            }}
+            disabled={getButtonMessage() !== 'Add Position'}
+            content={getButtonMessage()}
+            progress={progress}
+          />
+        )}
+      </Box>
     </Grid>
   )
 }

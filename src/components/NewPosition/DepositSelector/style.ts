@@ -85,16 +85,6 @@ export const useStyles = makeStyles()(theme => {
           filter: 'none'
         }
       }
-    },
-    connectWalletButton: {
-      height: '48px !important',
-      borderRadius: '16px',
-      width: '100%',
-      margin: '30px 0',
-
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
     }
   }
 })
