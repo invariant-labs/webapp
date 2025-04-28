@@ -927,41 +927,40 @@ export const Swap: React.FC<ISwap> = ({
             onConnect={onConnectWallet}
             connected={false}
             onDisconnect={onDisconnectWallet}
+            isSwap={true}
           />
         ) : getStateMessage() === 'Insufficient Wrapped SOL' ? (
           <TooltipHover
-            title='More ETH is required to cover the transaction fee. Obtain more ETH to complete this transaction.'
+            title='More SOL is required to cover the transaction fee. Obtain more SOL to complete this transaction.'
             top={-45}>
-            <div>
-              <AnimatedButton
-                content={getStateMessage()}
-                className={
-                  getStateMessage() === 'Connect a wallet'
-                    ? `${classes.swapButton}`
-                    : getStateMessage() === 'Exchange' && progress === 'none'
-                      ? `${classes.swapButton} ${classes.ButtonSwapActive}`
-                      : classes.swapButton
-                }
-                disabled={getStateMessage() !== 'Exchange' || progress !== 'none'}
-                onClick={() => {
-                  if (tokenFrom === null || tokenTo === null) return
+            <AnimatedButton
+              content={getStateMessage()}
+              className={
+                getStateMessage() === 'Connect a wallet'
+                  ? `${classes.swapButton}`
+                  : getStateMessage() === 'Exchange' && progress === 'none'
+                    ? `${classes.swapButton} ${classes.ButtonSwapActive}`
+                    : classes.swapButton
+              }
+              disabled={getStateMessage() !== 'Exchange' || progress !== 'none'}
+              onClick={() => {
+                if (tokenFrom === null || tokenTo === null) return
 
-                  onSwap(
-                    { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
-                    {
-                      v: simulateResult.estimatedPriceAfterSwap
-                    },
-                    tokenFrom,
-                    tokenTo,
-                    simulateResult.poolIndex,
-                    convertBalanceToBN(amountFrom, tokens[tokenFrom.toString()].decimals),
-                    convertBalanceToBN(amountTo, tokens[tokenTo.toString()].decimals),
-                    inputRef === inputTarget.FROM
-                  )
-                }}
-                progress={progress}
-              />
-            </div>
+                onSwap(
+                  { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
+                  {
+                    v: simulateResult.estimatedPriceAfterSwap
+                  },
+                  tokenFrom,
+                  tokenTo,
+                  simulateResult.poolIndex,
+                  convertBalanceToBN(amountFrom, tokens[tokenFrom.toString()].decimals),
+                  convertBalanceToBN(amountTo, tokens[tokenTo.toString()].decimals),
+                  inputRef === inputTarget.FROM
+                )
+              }}
+              progress={progress}
+            />
           </TooltipHover>
         ) : (
           <AnimatedButton
