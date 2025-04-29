@@ -54,7 +54,8 @@ import {
   NATIVE_TICK_CROSSES_PER_IX,
   ADDRESSES_TO_REVERT_TOKEN_PAIRS,
   POSITIONS_PER_PAGE,
-  PRICE_QUERY_COOLDOWN
+  PRICE_QUERY_COOLDOWN,
+  BASE_JUPITER_API_URL
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
@@ -1049,7 +1050,7 @@ export const getJupPricesData = async (ids: string[]): Promise<Record<string, To
   const requests = chunkedIds.map(
     async idsChunk =>
       await axios.get<RawJupApiResponse>(
-        `https://api.jup.ag/price/v2?ids=${idsChunk.join(',')}&showExtraInfo=true`
+        `${BASE_JUPITER_API_URL}/price/v2?ids=${idsChunk.join(',')}&showExtraInfo=true`
       )
   )
 
@@ -1323,7 +1324,7 @@ export const getTokenPrice = async (
 export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
   try {
     const response = await axios.get<RawJupApiResponse>(
-      `https://api.jup.ag/price/v2?ids=${id}&showExtraInfo=true`
+      `${BASE_JUPITER_API_URL}/price/v2?ids=${id}&showExtraInfo=true`
     )
 
     return {
@@ -1351,7 +1352,7 @@ export const getJupTokensRatioPrice = async (
   vsId: string
 ): Promise<Omit<TokenPriceData, 'buyPrice' | 'sellPrice'>> => {
   const response = await axios.get<RawJupApiResponse>(
-    `https://api.jup.ag/price/v2?ids=${id}&vsToken=${vsId}`
+    `${BASE_JUPITER_API_URL}/price/v2?ids=${id}&vsToken=${vsId}`
   )
 
   return {
@@ -1430,7 +1431,7 @@ export const solToPriorityFee = (sol: number) => {
 export const createLoaderKey = () => (new Date().getMilliseconds() + Math.random()).toString()
 
 export const getMainnetCommonTokens = async (): Promise<PublicKey[]> => {
-  const { data } = await axios.get('https://tokens.jup.ag/tokens?tags=verified')
+  const { data } = await axios.get(`${BASE_JUPITER_API_URL}/tokens/v1/tagged/verified}`)
 
   const commonTokens = data
     .slice(0, 8)
