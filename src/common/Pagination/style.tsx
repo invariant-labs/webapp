@@ -37,7 +37,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     },
 
     '& .MuiPaginationItem-ellipsis': {
-      color: colors.invariant.light
+      color: colors.invariant.light,
+      ...typography.heading4
     },
 
     '& .Mui-selected': {
