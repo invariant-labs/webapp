@@ -489,3 +489,5 @@ export const MAX_PRIORITY_FEE = 2
 export const DEFAULT_PRIORITY_FEE = 0.0001
 
 export const STATS_CACHE_TIME = 30 * 60 * 1000
+
+export const ITEMS_PER_PAGE = 10
