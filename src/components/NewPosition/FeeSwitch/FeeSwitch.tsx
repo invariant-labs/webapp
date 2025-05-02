@@ -61,7 +61,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
             label={
               <Box className={classes.tabContainer}>
                 {isLoadingStats || !showTVL ? (
-                  <Skeleton height={15} width={60} />
+                  <Skeleton animation={false} height={15} width={60} />
                 ) : (
                   <Typography
                     className={classNames(classes.tabTvl, {
@@ -76,7 +76,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
                 )}
                 <Box>{showOnlyPercents ? `${tier}%` : `${tier}% fee`}</Box>
                 {isLoadingStats || !showTVL ? (
-                  <Skeleton height={15} width={60} />
+                  <Skeleton animation={false} height={15} width={60} />
                 ) : (
                   <Typography
                     className={classNames(classes.tabTvl, {
