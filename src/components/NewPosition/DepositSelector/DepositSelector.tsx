@@ -24,7 +24,6 @@ import {
   tickerToAddress,
   trimDecimalZeros
 } from '@utils/utils'
-
 import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 import { useStyles } from './style'
 import { Box, Grid, Typography } from '@mui/material'
@@ -386,6 +385,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         </Grid>
 
         <FeeSwitch
+          showTVL={tokenA !== null && tokenB !== null}
           onSelect={fee => {
             setPositionTokens(tokenA, tokenB, fee)
             setShouldResetPlot(true)
@@ -398,7 +398,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           isLoadingStats={isLoadingStats}
         />
       </Grid>
-
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
       <Grid container className={classes.sectionWrapper}>
         <DepositAmountInput
