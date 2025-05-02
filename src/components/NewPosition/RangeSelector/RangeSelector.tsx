@@ -285,6 +285,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }, [shouldReversePlot])
 
+  const [lastPoolIndex, setLastPoolIndex] = useState(poolIndex)
+  const [initReset, setInitReset] = useState(true)
   useEffect(() => {
     if (
       !ticksLoading &&
@@ -295,12 +297,18 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       shouldResetPlot
     ) {
       if (!shouldNotUpdatePriceRange) {
-        resetPlot()
         setCurrentMidPrice(midPrice)
-        setShouldResetPlot(false)
+
+        if (poolIndex !== lastPoolIndex || initReset) {
+          resetPlot()
+          setInitReset(false)
+          setShouldResetPlot(false)
+        }
       }
     }
-  }, [triggerReset])
+
+    setLastPoolIndex(poolIndex)
+  }, [triggerReset, initReset])
 
   useEffect(() => {
     if (
@@ -317,6 +325,25 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       unblockUpdatePriceRange()
     }
   }, [ticksLoading, isMountedRef, midPrice.index, poolIndex])
+
+  //Fix in case of reset chart not triggered correctly
+  useEffect(() => {
+    if (initReset === false) {
+      const timeoutId = setTimeout(() => {
+        if (
+          isXtoY
+            ? leftRange > midPrice.index || rightRange < midPrice.index
+            : leftRange < midPrice.index || rightRange > midPrice.index
+        ) {
+          resetPlot()
+        }
+      }, 100)
+
+      return () => {
+        clearTimeout(timeoutId)
+      }
+    }
+  }, [initReset])
 
   const autoZoomHandler = (left: number, right: number, canZoomCloser: boolean = false) => {
     const { leftInRange, rightInRange } = getTicksInsideRange(left, right, isXtoY)
