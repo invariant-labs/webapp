@@ -89,7 +89,7 @@ export const PositionHeader = ({
     return ''
   }, [isPreview, canClosePosition, hasFees])
 
-  const closeButton = (
+  const closeButton = closeButtonTitle ? (
     <TooltipHover title={closeButtonTitle}>
       <Button
         height={36}
@@ -100,6 +100,15 @@ export const PositionHeader = ({
         Close position
       </Button>
     </TooltipHover>
+  ) : (
+    <Button
+      height={36}
+      scheme='green'
+      disabled={!canClosePosition || isPreview}
+      variant='contained'
+      onClick={() => onClosePositionClick()}>
+      Close position
+    </Button>
   )
 
   const addButton = (
