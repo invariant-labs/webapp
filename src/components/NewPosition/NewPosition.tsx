@@ -45,7 +45,7 @@ import { fromFee, getConcentrationArray, getMinTick } from '@invariant-labs/sdk/
 import { getMaxTick } from '@invariant-labs/sdk/src/utils'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { theme } from '@static/theme'
-import { backIcon, newTabIcon, settingIcon } from '@static/icons'
+import { backIcon, newTabIcon, refreshIcon, settingIcon } from '@static/icons'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -587,7 +587,7 @@ export const NewPosition: React.FC<INewPosition> = ({
                 </Box>
               ) : (
                 <MuiButton onClick={onRefresh} className={classes.refreshIconBtn}>
-                  <img src={icons.refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                  <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
                 </MuiButton>
               )}
             </TooltipHover>
@@ -667,7 +667,7 @@ export const NewPosition: React.FC<INewPosition> = ({
                     </Box>
                   ) : (
                     <MuiButton onClick={onRefresh} className={classes.refreshIconBtn}>
-                      <img src={icons.refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                      <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
                     </MuiButton>
                   )}
                 </TooltipHover>
