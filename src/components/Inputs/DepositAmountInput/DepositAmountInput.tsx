@@ -1,4 +1,4 @@
-import { Box, Grid, Input, Typography, useMediaQuery } from '@mui/material'
+import { Box, Grid, Input, Typography } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
 import { formatNumberWithSuffix, formatNumberWithoutSuffix, getScaleFromString } from '@utils/utils'
 import React, { CSSProperties, useRef } from 'react'
@@ -6,7 +6,6 @@ import useStyles from './style'
 import { getButtonClassName } from '@utils/uiUtils'
 import { OutlinedButton } from '@common/OutlinedButton/OutlinedButton'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
-import { theme } from '@static/theme'
 import { unknownTokenIcon, warningIcon } from '@static/icons'
 
 interface ActionButton {
