@@ -15,11 +15,11 @@ import React, { useEffect, useState } from 'react'
 import useStyles from './style'
 import { getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { ILiquidityToken } from '@store/consts/types'
-import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
 import { RangeIndicator } from './RangeIndicator/RangeIndicator'
 import { Stat } from './Stat/Stat'
 import { colors } from '@static/theme'
 import { activeLiquidityIcon, airdropRainbowIcon } from '@static/icons'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 
 export interface ISinglePositionPlot {
   data: PlotTickData[]
@@ -168,7 +168,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
             inRange={min <= currentPrice && currentPrice <= max}
           />
           <Grid gap={'2px'} mt={1} display='flex' flexDirection='column' alignItems='flex-end'>
-            <TooltipGradient
+            <TooltipHover
               title={
                 <>
                   <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
@@ -195,12 +195,11 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
                 </>
               }
               placement='bottom'
-              top={1}
-              noGradient>
+              increasePadding>
               <Typography className={classes.activeLiquidity}>
                 Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
               </Typography>
-            </TooltipGradient>
+            </TooltipHover>
             <Typography className={classes.currentPrice}>Current price</Typography>
             <Typography className={classes.globalPrice}>Global price</Typography>
             <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>

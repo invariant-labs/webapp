@@ -11,7 +11,6 @@ import { MinMaxChart } from '../../components/MinMaxChart/MinMaxChart'
 import { blurContent, unblurContent } from '@utils/uiUtils'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { ISinglePositionData } from '@components/Portfolio/Overview/Overview/Overview'
-import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
 import { useMobileStyles } from './style'
 import { IPositionItem } from '@store/consts/types'
 import { swapListIcon } from '@static/icons'
@@ -81,7 +80,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
     () => (
       <Grid container sx={{ width: '100%', marginBottom: 2 }}>
         <Grid item xs={5}>
-          <TooltipGradient
+          <TooltipHover
             title={
               isActive ? (
                 <>
@@ -93,7 +92,9 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
                 </>
               )
             }
-            placement='top'>
+            placement='top'
+            increasePadding
+            fullSpan>
             <Grid
               container
               className={classNames(classes.fee, isActive ? classes.activeFee : undefined)}
@@ -106,7 +107,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
                 {fee}% fee
               </Typography>
             </Grid>
-          </TooltipGradient>
+          </TooltipHover>
         </Grid>
 
         <Grid item xs={7} paddingLeft={'16px'}>
