@@ -82,7 +82,6 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
 }) => {
   const hideBalance = balance === '- -' || !balance || hideBalances
   const { classes } = useStyles()
-  const isMd = useMediaQuery(theme.breakpoints.up('md'))
 
   const inputRef = useRef<HTMLInputElement>(null)
 

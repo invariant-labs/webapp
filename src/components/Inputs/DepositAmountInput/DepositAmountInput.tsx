@@ -62,7 +62,6 @@ export const DepositAmountInput: React.FC<IProps> = ({
   const { classes } = useStyles({ isSelected: !!currency && !walletUninitialized })
 
   const inputRef = useRef<HTMLInputElement>(null)
-  const isMd = useMediaQuery(theme.breakpoints.up('md'))
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const inputValue = e.target.value.replace(/,/g, '.')
