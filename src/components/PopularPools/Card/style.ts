@@ -16,14 +16,9 @@ export const useStyles = makeStyles()(() => ({
     display: 'flex',
     alignItems: 'center'
   },
-  wrapper: {
-    padding: '20px',
-    alignItems: 'center',
-    flexDirection: 'column'
-  },
-  skeletonRect: {
-    width: 220,
-    height: 344,
+  skeleton: {
+    width: '220px',
+    height: '344px',
     opacity: 0.7,
     borderRadius: 24
   },
@@ -54,14 +49,39 @@ export const useStyles = makeStyles()(() => ({
     right: -6
   },
   symbolsContainer: {
+    position: 'relative',
     color: colors.invariant.text,
-    overflow: 'hidden',
+    display: 'flex',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    display: 'block',
     ...typography.heading4,
     marginBottom: '12px',
-    fontSize: 28
+    fontSize: 28,
+    '& img': {
+      height: '24px',
+      marginLeft: '8px'
+    }
+  },
+  actionButton: {
+    background: 'none',
+    padding: 0,
+    margin: 0,
+    border: 'none',
+    display: 'inline-flex',
+    position: 'relative',
+    color: colors.invariant.black,
+    textTransform: 'none',
+    zIndex: 1000000,
+
+    transition: 'filter 0.3s linear',
+
+    '&:hover': {
+      filter: 'brightness(1.2)',
+      cursor: 'pointer',
+      '@media (hover: none)': {
+        filter: 'none'
+      }
+    }
   },
   back: {
     alignItems: 'center',
@@ -76,12 +96,6 @@ export const useStyles = makeStyles()(() => ({
         filter: 'none'
       }
     }
-  },
-  backWrapper: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 12,
-    flexWrap: 'nowrap'
   },
   backIcon: {
     marginRight: 6
@@ -114,5 +128,15 @@ export const useStyles = makeStyles()(() => ({
         boxShadow: 'none'
       }
     }
+  },
+  cardWrapper: {
+    padding: '20px',
+    alignItems: 'center',
+    flexDirection: 'column'
+  },
+  footerWrapper: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 12
   }
 }))

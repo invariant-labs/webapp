@@ -53,8 +53,7 @@ export const useStyles = makeStyles<{ showSlider: boolean }>()((theme, { showSli
       [theme.breakpoints.down('sm')]: {
         right: -21
       }
-    },
-    height: 344
+    }
   },
   dots: {
     position: 'absolute',
