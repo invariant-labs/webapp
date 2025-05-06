@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom'
 import { NetworkType } from '@store/consts/static'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { backIcon2, revertIcon, unknownTokenIcon, warningIcon } from '@static/icons'
-import { shortenAddress } from '@utils/uiUtils'
 export interface ICard extends PopularPoolData {
   isLoading: boolean
   network: NetworkType
