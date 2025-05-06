@@ -97,8 +97,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
             fullSpan>
             <Grid
               container
-              className={classNames(classes.fee, isActive ? classes.activeFee : undefined)}
-              onClick={e => e.stopPropagation()}>
+              className={classNames(classes.fee, isActive ? classes.activeFee : undefined)}>
               <Typography
                 className={classNames(
                   classes.infoText,
