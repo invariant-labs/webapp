@@ -10,7 +10,6 @@ import { REFRESHER_INTERVAL } from '@store/consts/static'
 import { useEffect, useMemo, useState } from 'react'
 import { truncateString } from '@utils/utils'
 import { Button } from '@common/Button/Button'
-import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
 import { backArrowIcon, newTabIcon, reverseTokensIcon } from '@static/icons'
 
 type Props = {
@@ -89,7 +88,7 @@ export const PositionHeader = ({
     return ''
   }, [isPreview, canClosePosition, hasFees])
 
-  const closeButton = (
+  const closeButton = closeButtonTitle ? (
     <TooltipHover title={closeButtonTitle}>
       <Button
         height={36}
@@ -100,6 +99,15 @@ export const PositionHeader = ({
         Close position
       </Button>
     </TooltipHover>
+  ) : (
+    <Button
+      height={36}
+      scheme='green'
+      disabled={!canClosePosition || isPreview}
+      variant='contained'
+      onClick={() => onClosePositionClick()}>
+      Close position
+    </Button>
   )
 
   const addButton = (
@@ -191,7 +199,7 @@ export const PositionHeader = ({
             </TooltipHover> */}
           </Box>
           <Box className={classes.wrapper}>
-            <TooltipGradient
+            <TooltipHover
               title={
                 isActive ? (
                   <>
@@ -206,15 +214,14 @@ export const PositionHeader = ({
                 )
               }
               placement='top'
-              top={3}
-              noGradient>
+              increasePadding>
               <Box
                 className={classNames(classes.feeContainer, {
                   [classes.feeContainerIsActive]: isActive
                 })}>
                 {fee.toFixed(2)}%
               </Box>
-            </TooltipGradient>
+            </TooltipHover>
             {!isSmDown && closeButton}
             {!isSmDown && isMdDown && <>{addButton}</>}
           </Box>

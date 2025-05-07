@@ -13,10 +13,8 @@ export const TooltipTransition: React.FC<
     setTranslate(props.in ? 'translateY(0)' : 'translateY(50px)')
   }, [props.in])
 
-  const { ownerState: _ownerState, ...rest } = props as any
-
   return (
-    <Fade {...rest}>
+    <Fade {...props}>
       <div>
         <div
           style={{

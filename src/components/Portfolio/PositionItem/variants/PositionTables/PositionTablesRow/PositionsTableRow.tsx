@@ -15,7 +15,6 @@ import { Button } from '@common/Button/Button'
 import { IPositionItem } from '@store/consts/types'
 import { MinMaxChart } from '@components/Portfolio/PositionItem/components/MinMaxChart/MinMaxChart'
 import { useStyles } from './style'
-import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
 import { swapListIcon } from '@static/icons'
 
 interface ILoadingStates {
@@ -133,7 +132,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
       return <Skeleton variant='rectangular' className={classes.skeleton3660} />
     }
     return (
-      <TooltipGradient
+      <TooltipHover
         title={
           isActive ? (
             <>
@@ -148,7 +147,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
           )
         }
         placement='top'
-        top={1}>
+        increasePadding>
         <Grid
           container
           item
@@ -159,7 +158,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
             {fee}%
           </Typography>
         </Grid>
-      </TooltipGradient>
+      </TooltipHover>
     )
   }, [fee, classes, isActive])
 
