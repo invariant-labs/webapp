@@ -3,7 +3,6 @@ import { Grid, TableRow, TableCell, Typography, useMediaQuery, Box, Skeleton } f
 import { useMemo, useState } from 'react'
 import { colors, theme } from '@static/theme'
 import { initialXtoY, tickerToAddress, formatNumberWithoutSuffix } from '@utils/utils'
-import classNames from 'classnames'
 import { useSelector } from 'react-redux'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import React from 'react'
@@ -59,7 +58,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   isFullRange,
   handleClosePosition
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
   const [xToY, setXToY] = useState<boolean>(
     initialXtoY(tickerToAddress(network, tokenXName), tickerToAddress(network, tokenYName))
   )
@@ -152,9 +151,9 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
           container
           item
           sx={{ width: 65 }}
-          className={classNames(classes.fee, isActive ? classes.activeFee : undefined)}>
+          className={cx(classes.fee, isActive ? classes.activeFee : undefined)}>
           <Typography
-            className={classNames(classes.infoText, isActive ? classes.activeInfoText : undefined)}>
+            className={cx(classes.infoText, isActive ? classes.activeInfoText : undefined)}>
             {fee}%
           </Typography>
         </Grid>

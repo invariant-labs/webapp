@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useStyles from './style'
 import { Box, Button as MuiButton, Grid, Input, Popover, Typography } from '@mui/material'
-import classNames from 'classnames'
 import { Button } from '@common/Button/Button'
 
 interface Props {
@@ -23,7 +22,7 @@ const Slippage: React.FC<Props> = ({
   infoText,
   headerText
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
   const [slippTolerance, setSlippTolerance] = React.useState<string>(initialSlippage)
   const inputRef = React.useRef<HTMLInputElement>(null)
 
@@ -127,7 +126,7 @@ const Slippage: React.FC<Props> = ({
             {slippageTiers.map((tier, index) => (
               <MuiButton
                 key={tier}
-                className={classNames(classes.slippagePercentageButton, {
+                className={cx(classes.slippagePercentageButton, {
                   [classes.slippagePercentageButtonActive]: index === tierIndex
                 })}
                 onClick={() => {
@@ -142,7 +141,7 @@ const Slippage: React.FC<Props> = ({
             <Input
               disableUnderline
               placeholder='0.00'
-              className={classNames(
+              className={cx(
                 classes.detailsInfoForm,
                 tierIndex === -1 && classes.customSlippageActive
               )}

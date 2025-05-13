@@ -1,7 +1,6 @@
 import React from 'react'
 import useStyles from './style'
 import { Button } from '@mui/material'
-import classNames from 'classnames'
 
 export interface IProps {
   name: string
@@ -19,10 +18,10 @@ export const NavbarButton: React.FC<IProps> = ({
   disabled = false,
   startIcon
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
   return (
     <Button
-      className={classNames(className, classes.button, active ? classes.active : undefined)}
+      className={cx(className, classes.button, active ? classes.active : undefined)}
       variant='contained'
       classes={{ disabled: classes.disabled }}
       disabled={disabled}

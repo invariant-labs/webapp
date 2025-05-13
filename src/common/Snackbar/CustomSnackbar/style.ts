@@ -1,5 +1,4 @@
-import { CircularProgress, Typography } from '@mui/material'
-import { styled } from '@mui/system'
+import { CircularProgress, styled, Typography } from '@mui/material'
 import { colors, theme, typography } from '@static/theme'
 import { SnackbarContent } from 'notistack'
 import { makeStyles } from 'tss-react/mui'

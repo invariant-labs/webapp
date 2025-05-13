@@ -1,5 +1,4 @@
 import React from 'react'
-import classNames from 'classnames'
 import useStyles from './style'
 import { Button, Grid, Popover, Typography } from '@mui/material'
 
@@ -20,7 +19,7 @@ export const PositionViewActionPopover: React.FC<IPositionViewActionPopover> = (
   closePosition,
   unclaimedFeesInUSD
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   return (
     <Popover
@@ -45,7 +44,7 @@ export const PositionViewActionPopover: React.FC<IPositionViewActionPopover> = (
         <Grid className={classes.list} container>
           <Button
             disabled={unclaimedFeesInUSD <= 0}
-            className={classNames(classes.listItem)}
+            className={cx(classes.listItem)}
             onClick={() => {
               claimFee()
               handleClose()
@@ -53,7 +52,7 @@ export const PositionViewActionPopover: React.FC<IPositionViewActionPopover> = (
             <Typography className={classes.name}>Claim fee</Typography>
           </Button>
           <Button
-            className={classNames(classes.listItem)}
+            className={cx(classes.listItem)}
             // disabled={isLocked}
             onClick={() => {
               closePosition()
@@ -62,15 +61,6 @@ export const PositionViewActionPopover: React.FC<IPositionViewActionPopover> = (
             <Typography className={classes.name}>Close position</Typography>
           </Button>
         </Grid>
-        {/* <Button
-          className={classNames(classes.listItem)}
-          disabled={isLocked}
-          onClick={() => {
-            onLockPosition()
-            handleClose()
-          }}>
-          <Typography className={classes.name}>Lock position</Typography>
-        </Button> */}
       </Grid>
     </Popover>
   )

@@ -1,6 +1,5 @@
 import { Box, Button, Grid, Skeleton, Typography } from '@mui/material'
 import { formatNumberWithSuffix } from '@utils/utils'
-import classNames from 'classnames'
 import { useMemo, useRef, useState } from 'react'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { initialXtoY, tickerToAddress } from '@utils/utils'
@@ -41,7 +40,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
   handleClosePosition,
   handleClaimFee
 }) => {
-  const { classes } = useMobileStyles()
+  const { classes, cx } = useMobileStyles()
   const airdropIconRef = useRef<any>(null)
   const positionSingleData: ISinglePositionData | undefined = useSelector(
     singlePositionData(id ?? '')
@@ -95,14 +94,9 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
             placement='top'
             increasePadding
             fullSpan>
-            <Grid
-              container
-              className={classNames(classes.fee, isActive ? classes.activeFee : undefined)}>
+            <Grid container className={cx(classes.fee, isActive ? classes.activeFee : undefined)}>
               <Typography
-                className={classNames(
-                  classes.infoText,
-                  isActive ? classes.activeInfoText : undefined
-                )}>
+                className={cx(classes.infoText, isActive ? classes.activeInfoText : undefined)}>
                 {fee}% fee
               </Typography>
             </Grid>

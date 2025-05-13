@@ -27,7 +27,6 @@ import { Swap as SwapData } from '@store/reducers/swap'
 import { Status } from '@store/reducers/solanaWallet'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { blurContent, createButtonActions, unblurContent } from '@utils/uiUtils'
-import classNames from 'classnames'
 import React, { useEffect, useMemo, useRef } from 'react'
 import ExchangeRate from './ExchangeRate/ExchangeRate'
 import TransactionDetailsBox from './TransactionDetailsBox/TransactionDetailsBox'
@@ -145,7 +144,7 @@ export const Swap: React.FC<ISwap> = ({
   deleteTimeoutError,
   canNavigate
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
   enum inputTarget {
     DEFAULT = 'default',
     FROM = 'from',
@@ -653,10 +652,7 @@ export const Swap: React.FC<ISwap> = ({
       <Grid container className={classes.root}>
         <Typography className={classes.swapLabel}>Pay</Typography>
         <Box
-          className={classNames(
-            classes.exchangeRoot,
-            lockAnimation ? classes.amountInputDown : undefined
-          )}>
+          className={cx(classes.exchangeRoot, lockAnimation ? classes.amountInputDown : undefined)}>
           <ExchangeAmountInput
             value={amountFrom}
             balance={
@@ -757,7 +753,7 @@ export const Swap: React.FC<ISwap> = ({
           Receive
         </Typography>
         <Box
-          className={classNames(
+          className={cx(
             classes.exchangeRoot,
             classes.transactionBottom,
             lockAnimation ? classes.amountInputUp : undefined
@@ -847,7 +843,7 @@ export const Swap: React.FC<ISwap> = ({
                   ? handleOpenTransactionDetails
                   : undefined
               }
-              className={classNames(
+              className={cx(
                 tokenFrom !== null &&
                   tokenTo !== null &&
                   hasShowRateMessage() &&

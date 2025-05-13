@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import useStyles, { useSingleTabStyles, useTabsStyles } from './style'
-import classNames from 'classnames'
 import { Box, Grid, Skeleton, Tab, Tabs, Typography } from '@mui/material'
 import { formatNumberWithSuffix } from '@utils/utils'
 export interface IFeeSwitch {
@@ -24,7 +23,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
   totalTvl,
   isLoadingStats
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   const [blocked, setBlocked] = useState(false)
 
@@ -64,7 +63,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
                   <Skeleton animation={false} height={15} width={60} />
                 ) : (
                   <Typography
-                    className={classNames(classes.tabTvl, {
+                    className={cx(classes.tabTvl, {
                       [classes.tabSelectedTvl]: currentValue === index || bestTierIndex === index
                     })}>
                     TVL{' '}
@@ -79,7 +78,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
                   <Skeleton animation={false} height={15} width={60} />
                 ) : (
                   <Typography
-                    className={classNames(classes.tabTvl, {
+                    className={cx(classes.tabTvl, {
                       [classes.tabSelectedTvl]: currentValue === index || bestTierIndex === index
                     })}>
                     {feeTiersWithTvl[tier]
@@ -90,7 +89,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
               </Box>
             }
             classes={{
-              root: classNames(
+              root: cx(
                 singleTabClasses.root,
                 index === bestTierIndex ? singleTabClasses.best : undefined
               ),
