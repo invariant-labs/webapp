@@ -1650,6 +1650,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     tx.feePayer = wallet.publicKey
 
     yield put(snackbarsActions.add({ ...SIGNING_SNACKBAR_CONFIG, key: loaderSigningTx }))
+    yield put(actions.setShouldDisable(true))
 
     const signedTx = yield* call([wallet, wallet.signTransaction], tx)
 
@@ -1761,6 +1762,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     }
 
     yield put(actions.getPositionsList())
+    yield put(actions.setShouldDisable(false))
 
     data.onSuccess()
 
@@ -1770,6 +1772,7 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     console.log(e)
 
     closeSnackbar(loaderTxDetails)
+    yield put(actions.setShouldDisable(false))
     yield put(snackbarsActions.remove(loaderTxDetails))
     closeSnackbar(loaderClosePosition)
     yield put(snackbarsActions.remove(loaderClosePosition))
@@ -1818,6 +1821,8 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     ) {
       return yield* call(handleClosePositionWithSOL, action.payload)
     }
+
+    yield put(actions.setShouldDisable(true))
 
     yield put(
       snackbarsActions.add({
@@ -1988,6 +1993,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     yield* put(actions.getPositionsList())
 
     action.payload.onSuccess()
+    yield put(actions.setShouldDisable(false))
 
     closeSnackbar(loaderClosePosition)
     yield put(snackbarsActions.remove(loaderClosePosition))
@@ -1999,6 +2005,7 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
     closeSnackbar(loaderClosePosition)
     yield put(snackbarsActions.remove(loaderClosePosition))
     closeSnackbar(loaderSigningTx)
+    yield put(actions.setShouldDisable(false))
     yield put(snackbarsActions.remove(loaderSigningTx))
 
     if (e instanceof TransactionExpiredTimeoutError) {

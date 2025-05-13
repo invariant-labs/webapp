@@ -25,6 +25,7 @@ import {
   positionData,
   positionWithPoolData,
   singlePositionData,
+  shouldDisable,
   showFeesLoader as storeFeesLoader
 } from '@store/selectors/positions'
 import { balance, status } from '@store/selectors/solanaWallet'
@@ -71,7 +72,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const statsPolsList = useSelector(poolsStatsWithTokensDetails)
   const isLoadingList = useSelector(isLoadingPositionsList)
   const { data: ticksData, loading: ticksLoading, hasError: hasTicksError } = useSelector(plotTicks)
-
+  const disableButton = useSelector(shouldDisable)
   const poolsVolumeRanges = useSelector(volumeRanges)
   const walletStatus = useSelector(status)
   const solBalance = useSelector(balance)
@@ -500,6 +501,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   if (position) {
     return (
       <PositionDetails
+        shouldDisable={disableButton}
         tokenXAddress={position.tokenX.assetAddress}
         tokenYAddress={position.tokenY.assetAddress}
         poolAddress={position.poolData.address}

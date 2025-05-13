@@ -27,6 +27,7 @@ interface IProp {
   showPoolDetailsLoader?: boolean
   poolAddress: PublicKey
   isPreview: boolean
+  isClosing: boolean
 }
 
 const SinglePositionInfo: React.FC<IProp> = ({
@@ -41,7 +42,8 @@ const SinglePositionInfo: React.FC<IProp> = ({
   showPoolDetailsLoader = false,
   poolDetails,
   poolAddress,
-  isPreview
+  isPreview,
+  isClosing
 }) => {
   const [isFeeTooltipOpen, setIsFeeTooltipOpen] = useState(false)
   const { classes } = useStyles()
@@ -127,7 +129,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
               <TooltipHover title={isPreview ? "Can't claim fees in preview" : ''}>
                 <Button
                   className={classes.claimButton}
-                  disabled={tokenX.claimValue + tokenY.claimValue === 0 || isPreview}
+                  disabled={tokenX.claimValue + tokenY.claimValue === 0 || isPreview || isClosing}
                   variant='contained'
                   onClick={() => onClickClaimFee()}>
                   Claim
@@ -136,7 +138,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
             ) : (
               <Button
                 className={classes.claimButton}
-                disabled={tokenX.claimValue + tokenY.claimValue === 0 || isPreview}
+                disabled={tokenX.claimValue + tokenY.claimValue === 0 || isPreview || isClosing}
                 variant='contained'
                 onClick={() => onClickClaimFee()}>
                 Claim
