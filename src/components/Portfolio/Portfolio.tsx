@@ -256,7 +256,7 @@ const Portfolio: React.FC<IProps> = ({
         {isDownLg && !isMd && (
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Overview poolAssets={data} />
+              <Overview shouldDisable={shouldDisable} poolAssets={data} />
               <Box className={classes.footer}>
                 <Box className={classes.footerItem}>{renderPositionDetails()}</Box>
               </Box>
@@ -329,7 +329,7 @@ const Portfolio: React.FC<IProps> = ({
             <Box>
               {activePanel === OverviewSwitcher.Overview && (
                 <>
-                  <Overview poolAssets={data} />
+                  <Overview shouldDisable={shouldDisable} poolAssets={data} />
                   <Box className={classes.footer}>
                     <Box className={classes.footerItem}>{renderPositionDetails()}</Box>
                   </Box>
@@ -372,7 +372,7 @@ const Portfolio: React.FC<IProps> = ({
         {!isDownLg && (
           <>
             <Box display={'flex'}>
-              <Overview poolAssets={data} />
+              <Overview shouldDisable={shouldDisable} poolAssets={data} />
               <YourWallet
                 currentNetwork={currentNetwork}
                 handleSnackbar={handleSnackbar}
