@@ -33,6 +33,7 @@ type Props = {
   onGoBackClick: () => void
   copyPoolAddressHandler: (message: string, variant: VariantType) => void
   isPreview: boolean
+  isClosing: boolean
 }
 
 export const PositionHeader = ({
@@ -50,7 +51,8 @@ export const PositionHeader = ({
   onRefreshClick,
   onGoBackClick,
   copyPoolAddressHandler,
-  isPreview
+  isPreview,
+  isClosing
 }: Props) => {
   const { classes, cx } = useStyles()
 
@@ -92,7 +94,7 @@ export const PositionHeader = ({
       <Button
         height={36}
         scheme='green'
-        disabled={!canClosePosition || isPreview}
+        disabled={!canClosePosition || isPreview || isClosing}
         variant='contained'
         onClick={() => onClosePositionClick()}>
         Close position
@@ -102,7 +104,7 @@ export const PositionHeader = ({
     <Button
       height={36}
       scheme='green'
-      disabled={!canClosePosition || isPreview}
+      disabled={!canClosePosition || isPreview || isClosing}
       variant='contained'
       onClick={() => onClosePositionClick()}>
       Close position

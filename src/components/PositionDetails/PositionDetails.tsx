@@ -62,6 +62,7 @@ interface IProps {
   onGoBackClick: () => void
   showPoolDetailsLoader: boolean
   solBalance: BN
+  shouldDisable: boolean
   isPreview: boolean
 }
 
@@ -100,7 +101,8 @@ const PositionDetails: React.FC<IProps> = ({
   poolDetails,
   showPoolDetailsLoader,
   solBalance,
-  isPreview
+  isPreview,
+  shouldDisable
 }) => {
   const { classes } = useStyles()
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
@@ -183,6 +185,7 @@ const PositionDetails: React.FC<IProps> = ({
       </Information>
       <Box className={classes.mainContainer}>
         <PositionHeader
+          isClosing={shouldDisable}
           tokenA={
             xToY
               ? { icon: tokenX.icon, ticker: tokenY.name }
@@ -226,6 +229,7 @@ const PositionDetails: React.FC<IProps> = ({
         <Box className={classes.container}>
           <Box className={classes.leftSide}>
             <SinglePositionInfo
+              isClosing={shouldDisable}
               onClickClaimFee={onClickClaimFee}
               tokenX={tokenX}
               tokenY={tokenY}

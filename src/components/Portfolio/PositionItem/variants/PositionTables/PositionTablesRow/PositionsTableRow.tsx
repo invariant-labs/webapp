@@ -33,6 +33,7 @@ interface IPositionsTableRow extends IPositionItem {
   handleLockPosition: (index: number) => void
   handleClosePosition: (index: number) => void
   handleClaimFee: (index: number) => void
+  shouldDisable: boolean
 }
 
 export const PositionTableRow: React.FC<IPositionsTableRow> = ({
@@ -56,7 +57,8 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   unclaimedFeesInUSD = { value: 0, loading: false },
   handleClaimFee,
   isFullRange,
-  handleClosePosition
+  handleClosePosition,
+  shouldDisable
 }) => {
   const { classes, cx } = useStyles()
   const [xToY, setXToY] = useState<boolean>(
@@ -312,6 +314,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   return (
     <TableRow>
       <PositionViewActionPopover
+        shouldDisable={shouldDisable}
         anchorEl={anchorEl}
         handleClose={handleClose}
         open={isActionPopoverOpen}
