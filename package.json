@@ -21,7 +21,7 @@
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@nightlylabs/wallet-selector-solana": "^0.3.14",
-    "@nivo/bar": "^0.87.0",
+    "@nivo/bar": "^0.86.0",
     "@nivo/line": "^0.86.0",
     "@nivo/pie": "^0.86.0",
     "@project-serum/anchor": "0.21.0",
