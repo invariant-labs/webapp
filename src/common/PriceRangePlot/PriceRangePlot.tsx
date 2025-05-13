@@ -142,7 +142,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     if (rangeData[0]?.x > Math.max(plotMin, safeData[0]?.x ?? plotMin)) {
       rangeData.unshift({
         x: Math.max(plotMin, safeData[0]?.x ?? plotMin),
-        y: outData.length > 0 ? (outData[outData.length - 1]?.y ?? 0) : 0
+        y: outData.length > 0 ? outData[outData.length - 1]?.y ?? 0 : 0
       })
     }
 
@@ -164,6 +164,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     }
 
     const lessThan = safeData.filter(tick => tick.x <= leftRange.x).length
+
     let rangeData: Array<{ x: number; y: number }> = safeData.filter(
       tick => tick.x >= leftRange.x && tick.x <= rightRange.x
     )
@@ -210,7 +211,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       ) {
         newRangeData.unshift({
           x: Math.max(plotMin, rangeData[0]?.x ?? plotMin),
-          y: outMinData.length > 0 ? (outMinData[outMinData.length - 1]?.y ?? 0) : 0
+          y: outMinData.length > 0 ? outMinData[outMinData.length - 1]?.y ?? 0 : 0
         })
       }
 
