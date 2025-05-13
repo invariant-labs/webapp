@@ -48,7 +48,8 @@ export const Primary: Story = {
       fee: 0.01
     },
     poolAddress: new PublicKey('0123456789'),
-    isPreview: false
+    isPreview: false,
+    isClosing: false
   },
   render: args => {
     return (

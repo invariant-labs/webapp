@@ -93,7 +93,8 @@ export const Primary: Story = {
     solBalance: 0,
     isPreview: false,
     tokenXAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
-    tokenYAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E')
+    tokenYAddress: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
+    shouldDisable: false
   },
   render: args => {
     return (
