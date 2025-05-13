@@ -52,6 +52,7 @@ interface IProps {
   handleSnackbar: (message: string, variant: VariantType) => void
   isBalanceLoading: boolean
   tokensList: SwapToken[]
+  shouldDisable: boolean
 }
 
 const Portfolio: React.FC<IProps> = ({
@@ -67,7 +68,8 @@ const Portfolio: React.FC<IProps> = ({
   currentNetwork,
   handleClosePosition,
   handleClaimFee,
-  tokensList
+  tokensList,
+  shouldDisable
 }) => {
   const { classes } = useStyles()
   const navigate = useNavigate()
@@ -191,6 +193,7 @@ const Portfolio: React.FC<IProps> = ({
     if (!isLg) {
       return (
         <PositionsTable
+          shouldDisable={shouldDisable}
           positions={filteredData}
           isLoading={loading}
           noInitialPositions={noInitialPositions}
@@ -230,6 +233,7 @@ const Portfolio: React.FC<IProps> = ({
         key={element.id}
         className={classes.itemLink}>
         <PositionItemMobile
+          shouldDisable={shouldDisable}
           key={index}
           {...element}
           setAllowPropagation={setAllowPropagation}
@@ -252,7 +256,7 @@ const Portfolio: React.FC<IProps> = ({
         {isDownLg && !isMd && (
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Overview poolAssets={data} />
+              <Overview shouldDisable={shouldDisable} poolAssets={data} />
               <Box className={classes.footer}>
                 <Box className={classes.footerItem}>{renderPositionDetails()}</Box>
               </Box>
@@ -325,7 +329,7 @@ const Portfolio: React.FC<IProps> = ({
             <Box>
               {activePanel === OverviewSwitcher.Overview && (
                 <>
-                  <Overview poolAssets={data} />
+                  <Overview shouldDisable={shouldDisable} poolAssets={data} />
                   <Box className={classes.footer}>
                     <Box className={classes.footerItem}>{renderPositionDetails()}</Box>
                   </Box>
@@ -368,7 +372,7 @@ const Portfolio: React.FC<IProps> = ({
         {!isDownLg && (
           <>
             <Box display={'flex'}>
-              <Overview poolAssets={data} />
+              <Overview shouldDisable={shouldDisable} poolAssets={data} />
               <YourWallet
                 currentNetwork={currentNetwork}
                 handleSnackbar={handleSnackbar}

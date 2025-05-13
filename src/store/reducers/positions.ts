@@ -53,6 +53,7 @@ export interface IPositionsStore {
   prices: {
     data: Record<string, { price: number; buyPrice: number; sellPrice: number }>
   }
+  shouldDisable: boolean
   positionData: {
     position: PositionWithAddress | null
     loading: boolean
@@ -118,7 +119,8 @@ export const defaultState: IPositionsStore = {
     position: null,
     loading: false
   },
-  showFeesLoader: false
+  showFeesLoader: false,
+  shouldDisable: false
 }
 
 export const positionsSliceName = 'positions'
@@ -180,6 +182,9 @@ const positionsSlice = createSlice({
       }
 
       return state
+    },
+    setShouldDisable(state, action: PayloadAction<boolean>) {
+      state.shouldDisable = action.payload
     },
     setSinglePosition(state, action: PayloadAction<SetPositionData>) {
       state.positionsList.list[action.payload.index] = {

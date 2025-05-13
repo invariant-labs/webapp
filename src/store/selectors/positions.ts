@@ -19,11 +19,13 @@ export const {
   shouldNotUpdateRange,
   currentPositionId,
   positionData,
+  shouldDisable,
   showFeesLoader
 } = keySelectors(store, [
   'lastPage',
   'positionsList',
   'prices',
+  'shouldDisable',
   'plotTicks',
   'currentPoolIndex',
   'initPosition',
