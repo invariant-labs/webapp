@@ -43,7 +43,7 @@ import {
 import { getMarketProgram } from '@utils/web3/programs/amm'
 import { all, call, put, select, spawn, take, takeEvery, takeLeading } from 'typed-redux-saga'
 import { getConnection, handleRpcError } from './connection'
-import { createAccount, getWallet, sleep } from './wallet'
+import { createAccount, getWallet } from './wallet'
 import { closeSnackbar } from 'notistack'
 import { ClaimAllFee } from '@invariant-labs/sdk/lib/market'
 import { BN } from '@project-serum/anchor'
@@ -1682,8 +1682,6 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
     closeSnackbar(loaderTxDetails)
     yield put(snackbarsActions.remove(loaderTxDetails))
 
-    yield* call(sleep, 3000)
-
     if (confirmedTx.value.err === null) {
       yield put(
         snackbarsActions.add({
@@ -1907,8 +1905,6 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
       lastValidBlockHeight: blockhash.lastValidBlockHeight,
       signature: txId
     })
-
-    yield* call(sleep, 3000)
 
     closeSnackbar(loaderTxDetails)
     yield put(snackbarsActions.remove(loaderTxDetails))
