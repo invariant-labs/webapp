@@ -43,7 +43,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     borderRadius: 10,
 
     [theme.breakpoints.down('sm')]: {
-      height: 253
+      height: 253,
+      marginBottom: 16
     }
   },
   statsWrapper: {

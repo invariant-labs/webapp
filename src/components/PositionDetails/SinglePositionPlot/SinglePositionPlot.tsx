@@ -13,7 +13,7 @@ import {
 import { PlotTickData } from '@store/reducers/positions'
 import React, { useEffect, useState } from 'react'
 import useStyles from './style'
-import { getMinTick } from '@invariant-labs/sdk/lib/utils'
+import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { ILiquidityToken } from '@store/consts/types'
 import { RangeIndicator } from './RangeIndicator/RangeIndicator'
 import { Stat } from './Stat/Stat'
@@ -115,9 +115,11 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     }
 
     if (isInitialLoad) {
+      const rangeDiff = Math.abs(rightRange.x - leftRange.x)
+
       setIsInitialLoad(false)
-      setPlotMin(leftRange.x - initSideDist)
-      setPlotMax(rightRange.x + initSideDist)
+      setPlotMin(leftRange.x - rangeDiff / 5)
+      setPlotMax(rightRange.x + rangeDiff / 5)
 
       setZoomScale(calcZoomScale(rightRange.x + initSideDist))
     }
@@ -156,6 +158,71 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
       setPlotMin(newMin)
       setPlotMax(newMax)
     }
+  }
+
+  const moveLeft = () => {
+    const diff = plotMax - plotMin
+
+    const minPrice = xToY
+      ? calcPriceByTickIndex(
+          getMinTick(tickSpacing),
+          xToY,
+          Number(tokenX.decimal),
+          Number(tokenY.decimal)
+        )
+      : calcPriceByTickIndex(
+          getMaxTick(tickSpacing),
+          xToY,
+          Number(tokenX.decimal),
+          Number(tokenY.decimal)
+        )
+
+    const newLeft = plotMin - diff / 6
+    const newRight = plotMax - diff / 6
+
+    if (newLeft < minPrice - diff / 2) {
+      setPlotMin(minPrice - diff / 2)
+      setPlotMax(minPrice + diff / 2)
+    } else {
+      setPlotMin(newLeft)
+      setPlotMax(newRight)
+    }
+  }
+
+  const moveRight = () => {
+    const diff = plotMax - plotMin
+
+    const maxPrice = xToY
+      ? calcPriceByTickIndex(
+          getMaxTick(tickSpacing),
+          xToY,
+          Number(tokenX.decimal),
+          Number(tokenY.decimal)
+        )
+      : calcPriceByTickIndex(
+          getMinTick(tickSpacing),
+          xToY,
+          Number(tokenX.decimal),
+          Number(tokenY.decimal)
+        )
+
+    const newLeft = plotMin + diff / 6
+    const newRight = plotMax + diff / 6
+
+    if (newRight > maxPrice + diff / 2) {
+      setPlotMin(maxPrice - diff / 2)
+      setPlotMax(maxPrice + diff / 2)
+    } else {
+      setPlotMin(newLeft)
+      setPlotMax(newRight)
+    }
+  }
+
+  const centerChart = () => {
+    const diff = plotMax - plotMin
+
+    setPlotMin(midPrice.x - diff / 2)
+    setPlotMax(midPrice.x + diff / 2)
   }
 
   const minPercentage = (min / currentPrice - 1) * 100
@@ -198,6 +265,9 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         plotMax={plotMax}
         zoomMinus={zoomMinus}
         zoomPlus={zoomPlus}
+        moveLeft={moveLeft}
+        moveRight={moveRight}
+        centerChart={centerChart}
         disabled
         leftRange={leftRange}
         rightRange={rightRange}
