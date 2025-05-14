@@ -92,7 +92,7 @@ export const PositionHeader = ({
   const closeButton = closeButtonTitle ? (
     <TooltipHover title={closeButtonTitle}>
       <Button
-        height={36}
+        height={40}
         scheme='green'
         disabled={!canClosePosition || isPreview || isClosing}
         variant='contained'
@@ -102,7 +102,7 @@ export const PositionHeader = ({
     </TooltipHover>
   ) : (
     <Button
-      height={36}
+      height={40}
       scheme='green'
       disabled={!canClosePosition || isPreview || isClosing}
       variant='contained'
@@ -112,8 +112,8 @@ export const PositionHeader = ({
   )
 
   const addButton = (
-    <TooltipHover title='Add more liquidity to this pool'>
-      <Button scheme='pink' variant='contained' onClick={() => onAddPositionClick()}>
+    <TooltipHover title='Add more liquidity to this pool' fullSpan={isSmDown}>
+      <Button scheme='pink' variant='contained' onClick={() => onAddPositionClick()} width='100%'>
         + Add position
       </Button>
     </TooltipHover>
@@ -219,13 +219,15 @@ export const PositionHeader = ({
               <>
                 {marketIdLabel}
                 <Box className={classes.wrapper}>
-                  {refresher} {addButton}{' '}
+                  {refresher} {addButton}
                 </Box>
               </>
             ) : (
               <>
                 {closeButton}
-                {addButton}
+                <Box display={'flex'} flexGrow={1}>
+                  {addButton}
+                </Box>
               </>
             )}
           </Box>
