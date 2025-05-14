@@ -14,7 +14,6 @@ import {
 } from '@invariant-labs/sdk/lib/utils'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import {
-  calculateTickDelta,
   DECIMAL,
   parseLiquidityOnTicks,
   simulateSwap,
@@ -62,6 +61,7 @@ import { FormatConfig, subNumbers } from '@store/consts/static'
 import { CoinGeckoAPIData, PriorityMode, Token } from '@store/consts/types'
 import { sqrt } from '@invariant-labs/sdk/lib/math'
 import { apyToApr } from './uiUtils'
+import { alignTickToSpacing } from '@invariant-labs/sdk/src/tick'
 
 export const transformBN = (amount: BN): string => {
   return (amount.div(new BN(1e2)).toNumber() / 1e4).toString()
@@ -1094,6 +1094,25 @@ export const trimLeadingZeros = (amount: string): string => {
   return `${amountParts[0]}.${trimmed}`
 }
 
+export const calculateTickDelta = (
+  tickSpacing: number,
+  minimumRange: number,
+  concentration: number
+) => {
+  const targetValue = 1 / (concentration * CONCENTRATION_FACTOR)
+
+  const base = 1.0001
+  const inner = 1 - targetValue
+  const powered = Math.pow(inner, 4)
+  const tickDiff = -Math.log(powered) / Math.log(base)
+
+  const parsedTickDelta = tickDiff / tickSpacing - minimumRange / 2
+
+  const tickDelta = Math.round(parsedTickDelta + 1)
+
+  return tickDelta
+}
+
 export const calculateConcentrationRange = (
   tickSpacing: number,
   concentration: number,
@@ -1103,10 +1122,12 @@ export const calculateConcentrationRange = (
 ) => {
   const tickDelta = calculateTickDelta(tickSpacing, minimumRange, concentration)
 
-  const parsedTickDelta = Math.abs(tickDelta) === 0 ? 0 : Math.abs(tickDelta) - 1
-
-  const lowerTick = currentTick - (minimumRange / 2 + parsedTickDelta) * tickSpacing
-  const upperTick = currentTick + (minimumRange / 2 + parsedTickDelta) * tickSpacing
+  const lowerTick =
+    tickDelta === 1
+      ? currentTick - alignTickToSpacing((tickDelta * tickSpacing) / 2, tickSpacing)
+      : currentTick - alignTickToSpacing((tickDelta * tickSpacing) / 2, tickSpacing) + tickSpacing
+  const upperTick =
+    currentTick + alignTickToSpacing((tickDelta * tickSpacing) / 2, tickSpacing) + tickSpacing
 
   return {
     leftRange: isXToY ? lowerTick : upperTick,
