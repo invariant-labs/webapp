@@ -4,10 +4,12 @@ import Refresher from '@common/Refresher/Refresher'
 import { Box, Button, Grid, Hidden, Typography, useMediaQuery } from '@mui/material'
 import { Button as MuiButton } from '@mui/material'
 import {
+  ADDRESSES_TO_REVERT_TOKEN_PAIRS,
   ALL_FEE_TIERS_DATA,
   NetworkType,
   PositionTokenBlock,
-  REFRESHER_INTERVAL
+  REFRESHER_INTERVAL,
+  StableCoinsMAIN
 } from '@store/consts/static'
 import {
   addressToTicker,
@@ -17,6 +19,7 @@ import {
   convertBalanceToBN,
   determinePositionTokenBlock,
   getConcentrationIndex,
+  initialXtoY,
   parseFeeToPathFee,
   printBN,
   ROUTES,
@@ -457,7 +460,7 @@ export const NewPosition: React.FC<INewPosition> = ({
     if (canNavigate) {
       const parsedFee = parseFeeToPathFee(+ALL_FEE_TIERS_DATA[fee].tier.fee)
 
-      if (address1 != null && address2 != null) {
+      if (address1 !== null && address2 !== null) {
         const mappedIndex = getConcentrationIndex(concentrationArray, concentration)
 
         const validIndex = Math.max(
@@ -557,6 +560,46 @@ export const NewPosition: React.FC<INewPosition> = ({
         return '?cluster=testnet'
     }
   }, [network])
+
+  const usdcPrice = useMemo(() => {
+    if (tokenA === null || tokenB === null) return null
+
+    const revertDenominator = initialXtoY(
+      tokens[tokenA.toString()].assetAddress.toString(),
+      tokens[tokenB.toString()].assetAddress.toString()
+    )
+
+    if (
+      tokenA.toString() === StableCoinsMAIN.USDC ||
+      tokenB.toString() === StableCoinsMAIN.USDC ||
+      tokenA.toString() === StableCoinsMAIN.USDT ||
+      tokenB.toString() === StableCoinsMAIN.USDT
+    ) {
+      return null
+    }
+
+    const shouldDisplayPrice =
+      ADDRESSES_TO_REVERT_TOKEN_PAIRS.includes(tokenA.toString()) ||
+      ADDRESSES_TO_REVERT_TOKEN_PAIRS.includes(tokenB.toString())
+
+    if (!shouldDisplayPrice) {
+      return null
+    }
+
+    const ratioToDenominator = revertDenominator ? midPrice.x : 1 / midPrice.x
+    const denominatorPrice = revertDenominator ? tokenBPriceData?.price : tokenAPriceData?.price
+
+    if (!denominatorPrice) {
+      return null
+    }
+
+    return {
+      token: revertDenominator
+        ? tokens[tokenA.toString()].symbol
+        : tokens[tokenB.toString()].symbol,
+      price: ratioToDenominator * denominatorPrice
+    }
+  }, [midPrice.x, priceALoading, priceBLoading])
 
   return (
     <Grid container className={classes.wrapper}>
@@ -957,6 +1000,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             setOnlyUserPositions={setOnlyUserPositions}
             tokenAPriceData={tokenAPriceData}
             tokenBPriceData={tokenBPriceData}
+            usdcPrice={usdcPrice}
           />
         ) : (
           <PoolInit
