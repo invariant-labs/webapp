@@ -4,7 +4,6 @@ import { Grid, Input, Typography } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
 import { formatNumberWithoutSuffix, formatNumberWithSuffix, trimDecimalZeros } from '@utils/utils'
 import { SwapToken } from '@store/selectors/solanaWallet'
-import classNames from 'classnames'
 import React, { CSSProperties, useRef } from 'react'
 import useStyles from './style'
 import { PublicKey } from '@solana/web3.js'
@@ -79,7 +78,7 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
   network
 }) => {
   const hideBalance = balance === '- -' || !balance || hideBalances
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -172,7 +171,7 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
           <Input
             inputRef={inputRef}
             error={!!error}
-            className={classNames(classes.amountInput, className)}
+            className={cx(classes.amountInput, className)}
             classes={{ input: classes.input }}
             style={style}
             value={value}
@@ -193,7 +192,7 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
 
       <Grid container className={classes.bottom}>
         <Grid
-          className={classNames(classes.balanceContainer, {
+          className={cx(classes.balanceContainer, {
             [classes.showMaxButton]: showMaxButton
           })}>
           <Typography

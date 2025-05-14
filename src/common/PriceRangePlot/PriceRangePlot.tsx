@@ -5,7 +5,6 @@ import loader from '@static/gif/loader.gif'
 import { colors, theme } from '@static/theme'
 import { formatNumberWithSuffix, nearestTickIndex, TokenPriceData } from '@utils/utils'
 import { PlotTickData } from '@store/reducers/positions'
-import classNames from 'classnames'
 import React, { useCallback, useMemo, useRef } from 'react'
 import Brush from './Brush/Brush'
 import useStyles from './style'
@@ -72,7 +71,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   tokenAPriceData,
   tokenBPriceData
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'))
   const isMd = useMediaQuery(theme.breakpoints.up('md'))
@@ -165,6 +164,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     }
 
     const lessThan = safeData.filter(tick => tick.x <= leftRange.x).length
+
     let rangeData: Array<{ x: number; y: number }> = safeData.filter(
       tick => tick.x >= leftRange.x && tick.x <= rightRange.x
     )
@@ -517,11 +517,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   }, [currentLessThanRange, currentRange, currentGreaterThanRange, plotMin, plotMax])
 
   return (
-    <Grid
-      container
-      className={classNames(classes.container, className)}
-      style={style}
-      ref={containerRef}>
+    <Grid container className={cx(classes.container, className)} style={style} ref={containerRef}>
       {loading && coverOnLoading ? (
         <Grid container className={classes.cover}>
           <img src={loader} className={classes.loader} alt='Loader' />

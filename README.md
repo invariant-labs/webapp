@@ -31,13 +31,3 @@ npm i
 ```bash
 npm run vite
 ```
-
-#### Run storybook
-
-Storybook allows one to check all components and test them in an independent environment.
-
-- Run storybook
-
-```bash
-npm run storybook
-```

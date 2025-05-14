@@ -1,7 +1,6 @@
 import { Box, Skeleton, Typography } from '@mui/material'
 import { useStyles } from './style'
 import { formatNumberWithSuffix } from '@utils/utils'
-import classNames from 'classnames'
 
 type Props = {
   value: number
@@ -11,7 +10,7 @@ type Props = {
 }
 
 export const PositionStats = ({ value, pendingFees, poolApr, isLoading }: Props) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   return (
     <Box className={classes.container}>
@@ -46,9 +45,9 @@ export const PositionStats = ({ value, pendingFees, poolApr, isLoading }: Props)
         </Box>
       </Box>
       <Box className={classes.statWrapper}>
-        <Box className={classNames(classes.statContainer, classes.statContainerHiglight)}>
+        <Box className={cx(classes.statContainer, classes.statContainerHiglight)}>
           <Typography className={classes.statName}>Pool APR:</Typography>
-          <Typography className={classNames(classes.statValue, classes.statValueHiglight)}>
+          <Typography className={cx(classes.statValue, classes.statValueHiglight)}>
             {poolApr.toFixed(2)}%
           </Typography>
         </Box>

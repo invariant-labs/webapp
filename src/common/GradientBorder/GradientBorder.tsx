@@ -1,6 +1,5 @@
 import { Grid } from '@mui/material'
 import { useStyles } from './style'
-import classNames from 'classnames'
 
 export interface IGradientBorder {
   children: React.ReactNode
@@ -21,7 +20,7 @@ const GradientBorder: React.FC<IGradientBorder> = ({
   backgroundColor,
   borderRadius
 }) => {
-  const { classes } = useStyles({
+  const { classes, cx } = useStyles({
     borderWidth,
     borderColor,
     opacity,
@@ -45,17 +44,14 @@ const GradientBorder: React.FC<IGradientBorder> = ({
         <Grid container className={classes.positionAbsolute}>
           <Grid
             container
-            className={classNames(classes.gradientContainer, classes.gradient)}
+            className={cx(classes.gradientContainer, classes.gradient)}
             overflow='hidden'>
             {/* <Content hidden /> */}
           </Grid>
         </Grid>
       </Grid>
       <Grid container>
-        <Grid
-          container
-          className={classNames(classes.gradientContainer, classes.noBackground)}
-          zIndex={1}>
+        <Grid container className={cx(classes.gradientContainer, classes.noBackground)} zIndex={1}>
           <Content hideBackground />
         </Grid>
       </Grid>

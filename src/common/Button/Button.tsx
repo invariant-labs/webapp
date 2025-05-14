@@ -1,5 +1,4 @@
 import { ButtonProps, Button as MuiButton } from '@mui/material'
-import classNames from 'classnames'
 import useStyles from './style'
 
 type Props = {
@@ -24,12 +23,12 @@ export const Button = ({
   children,
   ...props
 }: Props) => {
-  const { classes } = useStyles({ scheme, height, width, borderRadius, padding, margin })
+  const { classes, cx } = useStyles({ scheme, height, width, borderRadius, padding, margin })
 
   return (
     <MuiButton
       disabled={disabled}
-      className={classNames(classes.button, {
+      className={cx(classes.button, {
         [classes.buttonRainbowBorder]: scheme === 'rainbow'
       })}
       {...props}>

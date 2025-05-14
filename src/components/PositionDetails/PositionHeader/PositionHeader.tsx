@@ -1,7 +1,6 @@
 import { Box, Typography, useMediaQuery } from '@mui/material'
 import { useStyles } from './style'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
-import classNames from 'classnames'
 import { theme } from '@static/theme'
 import MarketIdLabel from '@components/NewPosition/MarketIdLabel/MarketIdLabel'
 import { VariantType } from 'notistack'
@@ -55,7 +54,7 @@ export const PositionHeader = ({
   isPreview,
   isClosing
 }: Props) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   const isSmDown = useMediaQuery(theme.breakpoints.down(688))
   const isMdDown = useMediaQuery(theme.breakpoints.down(1040))
@@ -157,9 +156,7 @@ export const PositionHeader = ({
   return (
     <Box className={classes.headerContainer}>
       <Box className={classes.navigation}>
-        <Box
-          className={classNames(classes.wrapper, classes.backContainer)}
-          onClick={() => onGoBackClick()}>
+        <Box className={cx(classes.wrapper, classes.backContainer)} onClick={() => onGoBackClick()}>
           <img src={backArrowIcon} alt='Back arrow' />
           <Typography className={classes.backText}>Back to portfolio</Typography>
         </Box>
@@ -187,18 +184,6 @@ export const PositionHeader = ({
             <Typography className={classes.tickerContainer}>
               {truncateString(tokenA.ticker, 4)} - {truncateString(tokenB.ticker, 4)}
             </Typography>
-            {/* <TooltipHover
-              title={
-                isPromoted ? 'This pool distributes points' : "This pool doesn't distribute points"
-              }>
-              <img
-                className={classNames(classes.airdropIcon, {
-                  [classes.airdropIconInActive]: !isPromoted
-                })}
-                src={airdropRainbow}
-                alt='Points'
-              />
-            </TooltipHover> */}
           </Box>
           <Box className={classes.wrapper}>
             <TooltipHover
@@ -218,7 +203,7 @@ export const PositionHeader = ({
               placement='top'
               increasePadding>
               <Box
-                className={classNames(classes.feeContainer, {
+                className={cx(classes.feeContainer, {
                   [classes.feeContainerIsActive]: isActive
                 })}>
                 {fee.toFixed(2)}%

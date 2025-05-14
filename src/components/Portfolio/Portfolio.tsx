@@ -22,7 +22,6 @@ import { ROUTES } from '@utils/utils'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStyles } from './style'
-import classNames from 'classnames'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { useProcessedTokens } from '@store/hooks/userOverview/useProcessedToken'
 import { Overview } from './Overview/Overview/Overview'
@@ -71,7 +70,7 @@ const Portfolio: React.FC<IProps> = ({
   tokensList,
   shouldDisable
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
   const navigate = useNavigate()
   const [selectedFilters, setSelectedFilters] = useState<ISearchToken[]>([])
   const isLg = useMediaQuery('@media (max-width: 1360px)')
@@ -132,14 +131,14 @@ const Portfolio: React.FC<IProps> = ({
         </>
       ) : (
         <>
-          <Typography className={classNames(classes.greyText, classes.footerPositionDetails)}>
+          <Typography className={cx(classes.greyText, classes.footerPositionDetails)}>
             All Positions: {positionsDetails.positionsAmount}
           </Typography>
           <Box gap={1} display={'flex'}>
-            <Typography className={classNames(classes.greenText, classes.footerPositionDetails)}>
+            <Typography className={cx(classes.greenText, classes.footerPositionDetails)}>
               Within Range: {positionsDetails.inRageAmount}
             </Typography>
-            <Typography className={classNames(classes.pinkText, classes.footerPositionDetails)}>
+            <Typography className={cx(classes.pinkText, classes.footerPositionDetails)}>
               Outside Range: {positionsDetails.outOfRangeAmount}
             </Typography>
           </Box>
@@ -149,7 +148,7 @@ const Portfolio: React.FC<IProps> = ({
   )
 
   const renderTokensFound = () => (
-    <Typography className={classNames(classes.footerText, classes.greyText)}>
+    <Typography className={cx(classes.footerText, classes.greyText)}>
       {isBalanceLoading || loading ? (
         <Skeleton width={100} height={24} sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)' }} />
       ) : (

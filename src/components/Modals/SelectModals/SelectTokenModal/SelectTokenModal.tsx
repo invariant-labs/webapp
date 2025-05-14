@@ -11,6 +11,7 @@ import CustomScrollbar from '../CustromScrollbar/CustomScrollbar'
 import Scrollbars from 'rc-scrollbars'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import {
+  Box,
   Button,
   CardMedia,
   Checkbox,
@@ -21,7 +22,6 @@ import {
   useMediaQuery
 } from '@mui/material'
 import { formatNumberWithSuffix, getTokenPrice, printBN } from '@utils/utils'
-import { Box } from '@mui/system'
 import { emptyIcon, newTabIcon, searchIcon, unknownTokenIcon, warningIcon } from '@static/icons'
 
 export interface ISelectTokenModal {

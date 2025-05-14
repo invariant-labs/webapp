@@ -5,7 +5,6 @@ import { ALL_FEE_TIERS_DATA, WRAPPED_SOL_ADDRESS } from '@store/consts/static'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
-import classNames from 'classnames'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
 import {
@@ -129,7 +128,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   totalTvl,
   isLoadingStats
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   const [tokenA, setTokenA] = useState<PublicKey | null>(null)
   const [tokenB, setTokenB] = useState<PublicKey | null>(null)
@@ -307,7 +306,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   })
 
   return (
-    <Grid container className={classNames(classes.wrapper, className)}>
+    <Grid container className={cx(classes.wrapper, className)}>
       <Typography className={classes.sectionTitle}>Tokens</Typography>
 
       <Grid container className={classes.sectionWrapper} style={{ marginBottom: 40 }}>
@@ -504,7 +503,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
             title='More SOL is required to cover the transaction fee. Obtain more SOL to complete this transaction.'
             top={-10}>
             <AnimatedButton
-              className={classNames(
+              className={cx(
                 classes.addButton,
                 progress === 'none' ? classes.hoverButton : undefined
               )}
@@ -520,10 +519,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           </TooltipHover>
         ) : (
           <AnimatedButton
-            className={classNames(
-              classes.addButton,
-              progress === 'none' ? classes.hoverButton : undefined
-            )}
+            className={cx(classes.addButton, progress === 'none' ? classes.hoverButton : undefined)}
             onClick={() => {
               if (progress === 'none') {
                 onAddLiquidity()

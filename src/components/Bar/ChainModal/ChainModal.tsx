@@ -1,7 +1,6 @@
 import { useStyles } from './style'
 import { Box, Typography } from '@mui/material'
 import { CHAINS } from '@store/consts/static'
-import classNames from 'classnames'
 import { Chain, ISelectChain } from '@store/consts/types'
 import { Modal } from '../Modal/Modal'
 import { useModal } from '../Modal/useModal'
@@ -12,7 +11,7 @@ type Props = {
 }
 
 export const ChainModal = ({ onChainChange }: Props) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   const { open, handleOpen, handleClose } = useModal()
 
@@ -28,7 +27,7 @@ export const ChainModal = ({ onChainChange }: Props) => {
         <Box className={classes.chainContainer}>
           {CHAINS.map(chain => (
             <Box
-              className={classNames(classes.chain, {
+              className={cx(classes.chain, {
                 [classes.chainActive]: chain.name === Chain.Solana
               })}
               key={chain.name}

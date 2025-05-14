@@ -4,8 +4,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:react-hooks/recommended',
-    'plugin:storybook/recommended'
+    'plugin:react-hooks/recommended'
   ],
   ignorePatterns: [
     'dist',
@@ -51,8 +50,7 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-unused-vars': 'off',
         'import/no-unresolved': 'off',
-        'react-hooks/rules-of-hooks': 'off',
-        'storybook/story-exports': 'off'
+        'react-hooks/rules-of-hooks': 'off'
       }
     }
   ]

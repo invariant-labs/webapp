@@ -6,7 +6,6 @@ import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@stor
 import { PaginationList } from '@common/Pagination/Pagination'
 import { VariantType } from 'notistack'
 import { Keypair } from '@solana/web3.js'
-import classNames from 'classnames'
 import { useNavigate } from 'react-router-dom'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { colors } from '@static/theme'
@@ -81,7 +80,7 @@ const PoolList: React.FC<PoolListInterface> = ({
   showAPY
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
-  const { classes } = useStyles({ initialDataLength })
+  const { classes, cx } = useStyles({ initialDataLength })
   const [page, setPage] = React.useState(1)
   const [sortType, setSortType] = React.useState(SortTypePoolList.VOLUME_DESC)
   const navigate = useNavigate()
@@ -149,7 +148,7 @@ const PoolList: React.FC<PoolListInterface> = ({
     <Grid
       container
       classes={{ root: classes.container }}
-      className={classNames({ [classes.loadingOverlay]: isLoading })}>
+      className={cx({ [classes.loadingOverlay]: isLoading })}>
       <PoolListItem
         displayType='header'
         onSort={setSortType}
@@ -193,7 +192,7 @@ const PoolList: React.FC<PoolListInterface> = ({
             new Array(getEmptyRowsCount()).fill('').map((_, index) => (
               <div
                 key={`empty-row-${index}`}
-                className={classNames(classes.emptyRow, {
+                className={cx(classes.emptyRow, {
                   [classes.emptyRowBorder]: index === getEmptyRowsCount() - 1
                 })}
               />

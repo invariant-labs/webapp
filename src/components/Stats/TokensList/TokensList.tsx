@@ -8,7 +8,6 @@ import { PaginationList } from '@common/Pagination/Pagination'
 import NotFoundPlaceholder from '../NotFoundPlaceholder/NotFoundPlaceholder'
 import { VariantType } from 'notistack'
 import { Keypair } from '@solana/web3.js'
-import classNames from 'classnames'
 
 export interface ITokensListData {
   icon: string
@@ -54,7 +53,7 @@ const TokensList: React.FC<ITokensList> = ({
   initialLength
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
-  const { classes } = useStyles({ initialDataLength })
+  const { classes, cx } = useStyles({ initialDataLength })
   const [page, setPage] = useState(1)
   const [sortType, setSortType] = React.useState(SortTypeTokenList.VOLUME_DESC)
 
@@ -132,7 +131,7 @@ const TokensList: React.FC<ITokensList> = ({
     <Grid
       container
       classes={{ root: classes.container }}
-      className={classNames({ [classes.loadingOverlay]: isLoading })}>
+      className={cx({ [classes.loadingOverlay]: isLoading })}>
       <>
         <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />
         {data.length > 0 || isLoading ? (
@@ -162,7 +161,7 @@ const TokensList: React.FC<ITokensList> = ({
               new Array(getEmptyRowsCount()).fill('').map((_, index) => (
                 <div
                   key={`empty-row-${index}`}
-                  className={classNames(classes.emptyRow, {
+                  className={cx(classes.emptyRow, {
                     [classes.emptyRowBorder]: index === getEmptyRowsCount() - 1
                   })}
                 />

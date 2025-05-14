@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import useStyles from './style'
@@ -161,9 +161,9 @@ export const RangeInput: React.FC<IRangeInput> = ({
           {percentDiff ? (
             <>
               <AnimatedNumber
-                start={animatedPercentDiff}
-                finish={percentDiff}
+                value={percentDiff}
                 format={e => formatNumbers(percentageThresholds)(e.toString())}
+                duration={300}
               />
               {showPrefix(percentDiff)}
             </>
