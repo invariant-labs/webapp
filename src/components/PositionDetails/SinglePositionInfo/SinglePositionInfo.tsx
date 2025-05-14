@@ -46,6 +46,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
   isClosing
 }) => {
   const [isFeeTooltipOpen, setIsFeeTooltipOpen] = useState(false)
+
   const { classes } = useStyles()
 
   const Overlay = () => (
