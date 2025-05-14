@@ -9,12 +9,14 @@ interface UnclaimedSectionProps {
   unclaimedTotal: number
   handleClaimAll?: () => void
   loading?: boolean
+  shouldDisable: boolean
 }
 
 export const UnclaimedSection: React.FC<UnclaimedSectionProps> = ({
   unclaimedTotal,
   handleClaimAll,
-  loading = false
+  loading = false,
+  shouldDisable
 }) => {
   const { classes } = useStyles({ isLoading: loading || unclaimedTotal === 0 })
   const isLg = useMediaQuery(theme.breakpoints.down('lg'))
@@ -28,11 +30,11 @@ export const UnclaimedSection: React.FC<UnclaimedSectionProps> = ({
             <Box ml={4}>
               <Button
                 scheme='green'
+                disabled={shouldDisable}
                 height={'32px'}
                 width={'105px'}
                 padding='0 20px'
-                onClick={handleClaimAll}
-                disabled={loading || unclaimedTotal === 0}>
+                onClick={handleClaimAll}>
                 {loading ? (
                   <>
                     <img
@@ -59,10 +61,10 @@ export const UnclaimedSection: React.FC<UnclaimedSectionProps> = ({
       </Box>
       {isLg && (
         <Button
+          disabled={shouldDisable}
           scheme='green'
           width={'100%'}
           height={'32px'}
-          disabled={loading || unclaimedTotal === 0}
           onClick={handleClaimAll}>
           {loading ? (
             <>

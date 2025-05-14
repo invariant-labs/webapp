@@ -2,20 +2,24 @@ import { ProgressState } from '@common/AnimatedButton/AnimatedButton'
 import Slippage from '@components/Modals/Slippage/Slippage'
 import Refresher from '@common/Refresher/Refresher'
 import { Box, Button, Grid, Hidden, Typography, useMediaQuery } from '@mui/material'
-
+import { Button as MuiButton } from '@mui/material'
 import {
+  ADDRESSES_TO_REVERT_TOKEN_PAIRS,
   ALL_FEE_TIERS_DATA,
   NetworkType,
   PositionTokenBlock,
-  REFRESHER_INTERVAL
+  REFRESHER_INTERVAL,
+  StableCoinsMAIN
 } from '@store/consts/static'
 import {
   addressToTicker,
   calcPriceByTickIndex,
+  calculateConcentration,
   calculateConcentrationRange,
   convertBalanceToBN,
   determinePositionTokenBlock,
   getConcentrationIndex,
+  initialXtoY,
   parseFeeToPathFee,
   printBN,
   ROUTES,
@@ -45,7 +49,7 @@ import { fromFee, getConcentrationArray, getMinTick } from '@invariant-labs/sdk/
 import { getMaxTick } from '@invariant-labs/sdk/src/utils'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { theme } from '@static/theme'
-import { backIcon, newTabIcon, settingIcon } from '@static/icons'
+import { backIcon, newTabIcon, refreshIcon, settingIcon } from '@static/icons'
 
 export interface INewPosition {
   initialTokenFrom: string
@@ -225,10 +229,13 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   const [shouldReversePlot, setShouldReversePlot] = useState(false)
 
-  const concentrationArray = useMemo(() => {
+  const concentrationArray: number[] = useMemo(() => {
     const validatedMidPrice = validConcentrationMidPriceTick(midPrice.index, isXtoY, tickSpacing)
 
-    return getConcentrationArray(tickSpacing, 2, validatedMidPrice).sort((a, b) => a - b)
+    const array = getConcentrationArray(tickSpacing, 2, validatedMidPrice).sort((a, b) => a - b)
+    const maxConcentrationArray = [...array, calculateConcentration(0, tickSpacing)]
+
+    return maxConcentrationArray
   }, [tickSpacing, midPrice.index])
 
   const [concentrationIndex, setConcentrationIndex] = useState(
@@ -453,7 +460,7 @@ export const NewPosition: React.FC<INewPosition> = ({
     if (canNavigate) {
       const parsedFee = parseFeeToPathFee(+ALL_FEE_TIERS_DATA[fee].tier.fee)
 
-      if (address1 != null && address2 != null) {
+      if (address1 !== null && address2 !== null) {
         const mappedIndex = getConcentrationIndex(concentrationArray, concentration)
 
         const validIndex = Math.max(
@@ -554,6 +561,46 @@ export const NewPosition: React.FC<INewPosition> = ({
     }
   }, [network])
 
+  const usdcPrice = useMemo(() => {
+    if (tokenA === null || tokenB === null) return null
+
+    const revertDenominator = initialXtoY(
+      tokens[tokenA.toString()].assetAddress.toString(),
+      tokens[tokenB.toString()].assetAddress.toString()
+    )
+
+    if (
+      tokenA.toString() === StableCoinsMAIN.USDC ||
+      tokenB.toString() === StableCoinsMAIN.USDC ||
+      tokenA.toString() === StableCoinsMAIN.USDT ||
+      tokenB.toString() === StableCoinsMAIN.USDT
+    ) {
+      return null
+    }
+
+    const shouldDisplayPrice =
+      ADDRESSES_TO_REVERT_TOKEN_PAIRS.includes(tokenA.toString()) ||
+      ADDRESSES_TO_REVERT_TOKEN_PAIRS.includes(tokenB.toString())
+
+    if (!shouldDisplayPrice) {
+      return null
+    }
+
+    const ratioToDenominator = revertDenominator ? midPrice.x : 1 / midPrice.x
+    const denominatorPrice = revertDenominator ? tokenBPriceData?.price : tokenAPriceData?.price
+
+    if (!denominatorPrice) {
+      return null
+    }
+
+    return {
+      token: revertDenominator
+        ? tokens[tokenA.toString()].symbol
+        : tokens[tokenB.toString()].symbol,
+      price: ratioToDenominator * denominatorPrice
+    }
+  }, [midPrice.x, priceALoading, priceBLoading])
+
   return (
     <Grid container className={classes.wrapper}>
       <Link to={ROUTES.PORTFOLIO} style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
@@ -566,18 +613,30 @@ export const NewPosition: React.FC<INewPosition> = ({
       <Grid container className={classes.headerContainer} mb={1}>
         <Box className={classes.titleContainer}>
           <Typography className={classes.title}>Add new position</Typography>
-          {poolIndex !== null && tokenA !== tokenB && !isMd && (
+          {tokenA !== tokenB && !isMd && (
             <TooltipHover title='Refresh'>
-              <Box>
-                <Refresher
-                  currentIndex={refresherTime}
-                  maxIndex={REFRESHER_INTERVAL}
-                  onClick={() => {
-                    onRefresh()
-                    setRefresherTime(REFRESHER_INTERVAL)
-                  }}
-                />
-              </Box>
+              {isCurrentPoolExisting ? (
+                <Box
+                  mr={1}
+                  display='flex'
+                  alignItems='center'
+                  justifyContent='center'
+                  width={26}
+                  height={21}>
+                  <Refresher
+                    currentIndex={refresherTime}
+                    maxIndex={REFRESHER_INTERVAL}
+                    onClick={() => {
+                      onRefresh()
+                      setRefresherTime(REFRESHER_INTERVAL)
+                    }}
+                  />
+                </Box>
+              ) : (
+                <MuiButton onClick={onRefresh} className={classes.refreshIconBtn}>
+                  <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                </MuiButton>
+              )}
             </TooltipHover>
           )}
         </Box>
@@ -640,18 +699,24 @@ export const NewPosition: React.FC<INewPosition> = ({
                   />
                 )}
               </Hidden>
-              {poolIndex !== null && tokenA !== tokenB && isMd && (
+              {tokenA !== tokenB && isMd && (
                 <TooltipHover title='Refresh'>
-                  <Box>
-                    <Refresher
-                      currentIndex={refresherTime}
-                      maxIndex={REFRESHER_INTERVAL}
-                      onClick={() => {
-                        onRefresh()
-                        setRefresherTime(REFRESHER_INTERVAL)
-                      }}
-                    />
-                  </Box>
+                  {isCurrentPoolExisting ? (
+                    <Box>
+                      <Refresher
+                        currentIndex={refresherTime}
+                        maxIndex={REFRESHER_INTERVAL}
+                        onClick={() => {
+                          onRefresh()
+                          setRefresherTime(REFRESHER_INTERVAL)
+                        }}
+                      />
+                    </Box>
+                  ) : (
+                    <MuiButton onClick={onRefresh} className={classes.refreshIconBtn}>
+                      <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                    </MuiButton>
+                  )}
                 </TooltipHover>
               )}
               {poolIndex !== null && (
@@ -935,6 +1000,7 @@ export const NewPosition: React.FC<INewPosition> = ({
             setOnlyUserPositions={setOnlyUserPositions}
             tokenAPriceData={tokenAPriceData}
             tokenBPriceData={tokenBPriceData}
+            usdcPrice={usdcPrice}
           />
         ) : (
           <PoolInit

@@ -22,7 +22,6 @@ import { ROUTES } from '@utils/utils'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStyles } from './style'
-import classNames from 'classnames'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { useProcessedTokens } from '@store/hooks/userOverview/useProcessedToken'
 import { Overview } from './Overview/Overview/Overview'
@@ -52,6 +51,7 @@ interface IProps {
   handleSnackbar: (message: string, variant: VariantType) => void
   isBalanceLoading: boolean
   tokensList: SwapToken[]
+  shouldDisable: boolean
 }
 
 const Portfolio: React.FC<IProps> = ({
@@ -67,9 +67,10 @@ const Portfolio: React.FC<IProps> = ({
   currentNetwork,
   handleClosePosition,
   handleClaimFee,
-  tokensList
+  tokensList,
+  shouldDisable
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
   const navigate = useNavigate()
   const [selectedFilters, setSelectedFilters] = useState<ISearchToken[]>([])
   const isLg = useMediaQuery('@media (max-width: 1360px)')
@@ -130,14 +131,14 @@ const Portfolio: React.FC<IProps> = ({
         </>
       ) : (
         <>
-          <Typography className={classNames(classes.greyText, classes.footerPositionDetails)}>
+          <Typography className={cx(classes.greyText, classes.footerPositionDetails)}>
             All Positions: {positionsDetails.positionsAmount}
           </Typography>
           <Box gap={1} display={'flex'}>
-            <Typography className={classNames(classes.greenText, classes.footerPositionDetails)}>
+            <Typography className={cx(classes.greenText, classes.footerPositionDetails)}>
               Within Range: {positionsDetails.inRageAmount}
             </Typography>
-            <Typography className={classNames(classes.pinkText, classes.footerPositionDetails)}>
+            <Typography className={cx(classes.pinkText, classes.footerPositionDetails)}>
               Outside Range: {positionsDetails.outOfRangeAmount}
             </Typography>
           </Box>
@@ -147,7 +148,7 @@ const Portfolio: React.FC<IProps> = ({
   )
 
   const renderTokensFound = () => (
-    <Typography className={classNames(classes.footerText, classes.greyText)}>
+    <Typography className={cx(classes.footerText, classes.greyText)}>
       {isBalanceLoading || loading ? (
         <Skeleton width={100} height={24} sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)' }} />
       ) : (
@@ -191,6 +192,7 @@ const Portfolio: React.FC<IProps> = ({
     if (!isLg) {
       return (
         <PositionsTable
+          shouldDisable={shouldDisable}
           positions={filteredData}
           isLoading={loading}
           noInitialPositions={noInitialPositions}
@@ -230,6 +232,7 @@ const Portfolio: React.FC<IProps> = ({
         key={element.id}
         className={classes.itemLink}>
         <PositionItemMobile
+          shouldDisable={shouldDisable}
           key={index}
           {...element}
           setAllowPropagation={setAllowPropagation}
@@ -252,7 +255,7 @@ const Portfolio: React.FC<IProps> = ({
         {isDownLg && !isMd && (
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Overview poolAssets={data} />
+              <Overview shouldDisable={shouldDisable} poolAssets={data} />
               <Box className={classes.footer}>
                 <Box className={classes.footerItem}>{renderPositionDetails()}</Box>
               </Box>
@@ -325,7 +328,7 @@ const Portfolio: React.FC<IProps> = ({
             <Box>
               {activePanel === OverviewSwitcher.Overview && (
                 <>
-                  <Overview poolAssets={data} />
+                  <Overview shouldDisable={shouldDisable} poolAssets={data} />
                   <Box className={classes.footer}>
                     <Box className={classes.footerItem}>{renderPositionDetails()}</Box>
                   </Box>
@@ -368,7 +371,7 @@ const Portfolio: React.FC<IProps> = ({
         {!isDownLg && (
           <>
             <Box display={'flex'}>
-              <Overview poolAssets={data} />
+              <Overview shouldDisable={shouldDisable} poolAssets={data} />
               <YourWallet
                 currentNetwork={currentNetwork}
                 handleSnackbar={handleSnackbar}

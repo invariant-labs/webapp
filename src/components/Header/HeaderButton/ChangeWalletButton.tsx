@@ -1,6 +1,5 @@
 import React from 'react'
 import useStyles from './style'
-import classNames from 'classnames'
 import { Box, Typography } from '@mui/material'
 import { blurContent, unblurContent } from '@utils/uiUtils'
 import ConnectWallet from '@components/Modals/ConnectWallet/ConnectWallet'
@@ -39,7 +38,7 @@ export const ChangeWalletButton: React.FC<IProps> = ({
   onCopyAddress = () => {},
   textClassName
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
   const [isOpenSelectWallet, setIsOpenSelectWallet] = React.useState<boolean>(false)
@@ -107,7 +106,7 @@ export const ChangeWalletButton: React.FC<IProps> = ({
         onClick={isDisabled ? () => {} : handleClick}>
         <Box className={classes.headerButtonContainer}>
           {startIcon && <Box className={classes.startIcon}>{startIcon}</Box>}
-          <Typography className={classNames(classes.headerButtonTextEllipsis, textClassName)}>
+          <Typography className={cx(classes.headerButtonTextEllipsis, textClassName)}>
             {name}
           </Typography>
           {connected && !hideArrow && <ExpandMoreIcon className={classes.endIcon} />}

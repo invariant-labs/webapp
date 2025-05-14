@@ -26,6 +26,7 @@ import { EmptyState } from './EmptyState/EmptyState'
 
 interface OverviewProps {
   poolAssets: IPositionItem[]
+  shouldDisable: boolean
 }
 
 export interface ISinglePositionData extends PositionWithAddress {
@@ -35,7 +36,7 @@ export interface ISinglePositionData extends PositionWithAddress {
   positionIndex: number
 }
 
-export const Overview: React.FC<OverviewProps> = () => {
+export const Overview: React.FC<OverviewProps> = ({ shouldDisable }) => {
   const positionList = useSelector(positionsWithPoolsData)
   const isLg = useMediaQuery(theme.breakpoints.down('lg'))
   const { isAllClaimFeesLoading } = useSelector(list)
@@ -177,7 +178,12 @@ export const Overview: React.FC<OverviewProps> = () => {
     return (
       <Box className={classes.container}>
         <HeaderSection totalValue={0} loading={false} />
-        <UnclaimedSection unclaimedTotal={0} loading={false} handleClaimAll={undefined} />
+        <UnclaimedSection
+          unclaimedTotal={0}
+          loading={false}
+          handleClaimAll={undefined}
+          shouldDisable={shouldDisable}
+        />
         <EmptyState />
       </Box>
     )
@@ -190,6 +196,7 @@ export const Overview: React.FC<OverviewProps> = () => {
         unclaimedTotal={unclaimedFees}
         handleClaimAll={handleClaimAll}
         loading={isLoadingList || isAllClaimFeesLoading || unClaimedFeesLoading}
+        shouldDisable={shouldDisable}
       />
 
       {isLg ? (

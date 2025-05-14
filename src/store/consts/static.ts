@@ -227,6 +227,10 @@ export const airdropQuantities: Record<NetworkType, number[]> = {
   Local: []
 }
 
+export const StableCoinsMAIN = {
+  USDC: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+  USDT: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'
+}
 export const WRAPPED_SOL_ADDRESS = 'So11111111111111111111111111111111111111112'
 export const NATIVE_TICK_CROSSES_PER_IX = TICK_CROSSES_PER_IX - 5
 
@@ -489,5 +493,6 @@ export const MAX_PRIORITY_FEE = 2
 export const DEFAULT_PRIORITY_FEE = 0.0001
 
 export const STATS_CACHE_TIME = 30 * 60 * 1000
+export const BASE_JUPITER_API_URL = 'https://lite-api.jup.ag'
 
 export const ITEMS_PER_PAGE = 10

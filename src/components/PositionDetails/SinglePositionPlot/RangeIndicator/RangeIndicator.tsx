@@ -1,6 +1,5 @@
 import { Box, Skeleton, Typography } from '@mui/material'
 import { useStyles } from './style'
-import classNames from 'classnames'
 
 type Props = {
   inRange: boolean
@@ -8,7 +7,7 @@ type Props = {
 }
 
 export const RangeIndicator = ({ inRange, isLoading }: Props) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   return (
     <Box className={classes.container}>
@@ -16,8 +15,8 @@ export const RangeIndicator = ({ inRange, isLoading }: Props) => {
         <Skeleton variant='rounded' height={17} width={90} />
       ) : (
         <>
-          <Box className={classNames(classes.dot, { [classes.dotInRange]: inRange })} />
-          <Typography className={classNames(classes.text, { [classes.textInRange]: inRange })}>
+          <Box className={cx(classes.dot, { [classes.dotInRange]: inRange })} />
+          <Typography className={cx(classes.text, { [classes.textInRange]: inRange })}>
             {inRange ? 'IN RANGE' : 'OUT OF RANGE'}
           </Typography>
         </>

@@ -39,7 +39,6 @@ export interface PoolListInterface {
 }
 
 import { Keypair } from '@solana/web3.js'
-import classNames from 'classnames'
 import { ROUTES } from '@utils/utils'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { theme } from '@static/theme'
@@ -85,7 +84,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
   showAPY
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
-  const { classes } = useStyles({ initialDataLength })
+  const { classes, cx } = useStyles({ initialDataLength })
   const [page, setPage] = React.useState(1)
   const [sortType, setSortType] = React.useState(SortTypePoolList.VOLUME_DESC)
   const navigate = useNavigate()
@@ -158,7 +157,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
   }, [data, pages])
 
   return (
-    <div className={classNames({ [classes.loadingOverlay]: isLoading })}>
+    <div className={cx({ [classes.loadingOverlay]: isLoading })}>
       <Grid container classes={{ root: classes.container }}>
         <PoolListItem
           displayType='header'
@@ -203,7 +202,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
               new Array(getEmptyRowsCount()).fill('').map((_, index) => (
                 <div
                   key={`empty-row-${index}`}
-                  className={classNames(classes.emptyRow, {
+                  className={cx(classes.emptyRow, {
                     [classes.emptyRowBorder]: index === getEmptyRowsCount() - 1
                   })}
                 />

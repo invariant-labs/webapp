@@ -1,6 +1,5 @@
 import { Box, Button, Grid, Skeleton, Typography } from '@mui/material'
 import { formatNumberWithSuffix } from '@utils/utils'
-import classNames from 'classnames'
 import { useMemo, useRef, useState } from 'react'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { initialXtoY, tickerToAddress } from '@utils/utils'
@@ -11,7 +10,6 @@ import { MinMaxChart } from '../../components/MinMaxChart/MinMaxChart'
 import { blurContent, unblurContent } from '@utils/uiUtils'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { ISinglePositionData } from '@components/Portfolio/Overview/Overview/Overview'
-import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
 import { useMobileStyles } from './style'
 import { IPositionItem } from '@store/consts/types'
 import { swapListIcon } from '@static/icons'
@@ -20,6 +18,7 @@ interface IPositionItemMobile extends IPositionItem {
   setAllowPropagation: React.Dispatch<React.SetStateAction<boolean>>
   handleClosePosition: (index: number) => void
   handleClaimFee: (index: number) => void
+  shouldDisable: boolean
 }
 
 export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
@@ -40,9 +39,10 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
   unclaimedFeesInUSD = { value: 0, loading: false },
   isFullRange,
   handleClosePosition,
-  handleClaimFee
+  handleClaimFee,
+  shouldDisable
 }) => {
-  const { classes } = useMobileStyles()
+  const { classes, cx } = useMobileStyles()
   const airdropIconRef = useRef<any>(null)
   const positionSingleData: ISinglePositionData | undefined = useSelector(
     singlePositionData(id ?? '')
@@ -81,7 +81,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
     () => (
       <Grid container sx={{ width: '100%', marginBottom: 2 }}>
         <Grid item xs={5}>
-          <TooltipGradient
+          <TooltipHover
             title={
               isActive ? (
                 <>
@@ -93,20 +93,16 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
                 </>
               )
             }
-            placement='top'>
-            <Grid
-              container
-              className={classNames(classes.fee, isActive ? classes.activeFee : undefined)}
-              onClick={e => e.stopPropagation()}>
+            placement='top'
+            increasePadding
+            fullSpan>
+            <Grid container className={cx(classes.fee, isActive ? classes.activeFee : undefined)}>
               <Typography
-                className={classNames(
-                  classes.infoText,
-                  isActive ? classes.activeInfoText : undefined
-                )}>
+                className={cx(classes.infoText, isActive ? classes.activeInfoText : undefined)}>
                 {fee}% fee
               </Typography>
             </Grid>
-          </TooltipGradient>
+          </TooltipHover>
         </Grid>
 
         <Grid item xs={7} paddingLeft={'16px'}>
@@ -202,6 +198,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
   return (
     <Grid className={classes.root} container direction='column'>
       <PositionViewActionPopover
+        shouldDisable={shouldDisable}
         anchorEl={anchorEl}
         handleClose={handleClose}
         open={isActionPopoverOpen}

@@ -5,7 +5,6 @@ import { ALL_FEE_TIERS_DATA, WRAPPED_SOL_ADDRESS } from '@store/consts/static'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
-import classNames from 'classnames'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import FeeSwitch from '../FeeSwitch/FeeSwitch'
 import {
@@ -24,10 +23,9 @@ import {
   tickerToAddress,
   trimDecimalZeros
 } from '@utils/utils'
-
 import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 import { useStyles } from './style'
-import { Grid, Typography } from '@mui/material'
+import { Box, Grid, Typography } from '@mui/material'
 import { PositionOpeningMethod } from '@store/consts/types'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { createButtonActions } from '@utils/uiUtils'
@@ -130,7 +128,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   totalTvl,
   isLoadingStats
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   const [tokenA, setTokenA] = useState<PublicKey | null>(null)
   const [tokenB, setTokenB] = useState<PublicKey | null>(null)
@@ -308,7 +306,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
   })
 
   return (
-    <Grid container className={classNames(classes.wrapper, className)}>
+    <Grid container className={cx(classes.wrapper, className)}>
       <Typography className={classes.sectionTitle}>Tokens</Typography>
 
       <Grid container className={classes.sectionWrapper} style={{ marginBottom: 40 }}>
@@ -386,6 +384,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         </Grid>
 
         <FeeSwitch
+          showTVL={tokenA !== null && tokenB !== null}
           onSelect={fee => {
             setPositionTokens(tokenA, tokenB, fee)
             setShouldResetPlot(true)
@@ -398,7 +397,6 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           isLoadingStats={isLoadingStats}
         />
       </Grid>
-
       <Typography className={classes.sectionTitle}>Deposit Amount</Typography>
       <Grid container className={classes.sectionWrapper}>
         <DepositAmountInput
@@ -488,23 +486,24 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
           walletUninitialized={walletStatus !== Status.Initialized}
         />
       </Grid>
-      {walletStatus !== Status.Initialized ? (
-        <ChangeWalletButton
-          margin='30px 0 30px 0'
-          height={48}
-          name='Connect wallet'
-          onConnect={onConnectWallet}
-          connected={false}
-          onDisconnect={onDisconnectWallet}
-          className={classes.connectWalletButton}
-        />
-      ) : getButtonMessage() === 'Insufficient ETH' ? (
-        <TooltipHover
-          title='More ETH is required to cover the transaction fee. Obtain more ETH to complete this transaction.'
-          top={-10}>
-          <div>
+      <Box width='100%'>
+        {walletStatus !== Status.Initialized ? (
+          <ChangeWalletButton
+            margin={'30px 0'}
+            width={'100%'}
+            height={48}
+            name='Connect wallet'
+            onConnect={onConnectWallet}
+            connected={false}
+            onDisconnect={onDisconnectWallet}
+          />
+        ) : getButtonMessage() === 'Insufficient SOL' ? (
+          <TooltipHover
+            fullSpan
+            title='More SOL is required to cover the transaction fee. Obtain more SOL to complete this transaction.'
+            top={-10}>
             <AnimatedButton
-              className={classNames(
+              className={cx(
                 classes.addButton,
                 progress === 'none' ? classes.hoverButton : undefined
               )}
@@ -517,24 +516,21 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
               content={getButtonMessage()}
               progress={progress}
             />
-          </div>
-        </TooltipHover>
-      ) : (
-        <AnimatedButton
-          className={classNames(
-            classes.addButton,
-            progress === 'none' ? classes.hoverButton : undefined
-          )}
-          onClick={() => {
-            if (progress === 'none') {
-              onAddLiquidity()
-            }
-          }}
-          disabled={getButtonMessage() !== 'Add Position'}
-          content={getButtonMessage()}
-          progress={progress}
-        />
-      )}
+          </TooltipHover>
+        ) : (
+          <AnimatedButton
+            className={cx(classes.addButton, progress === 'none' ? classes.hoverButton : undefined)}
+            onClick={() => {
+              if (progress === 'none') {
+                onAddLiquidity()
+              }
+            }}
+            disabled={getButtonMessage() !== 'Add Position'}
+            content={getButtonMessage()}
+            progress={progress}
+          />
+        )}
+      </Box>
     </Grid>
   )
 }

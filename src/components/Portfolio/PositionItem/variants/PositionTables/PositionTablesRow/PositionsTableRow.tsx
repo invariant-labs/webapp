@@ -3,7 +3,6 @@ import { Grid, TableRow, TableCell, Typography, useMediaQuery, Box, Skeleton } f
 import { useMemo, useState } from 'react'
 import { colors, theme } from '@static/theme'
 import { initialXtoY, tickerToAddress, formatNumberWithoutSuffix } from '@utils/utils'
-import classNames from 'classnames'
 import { useSelector } from 'react-redux'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import React from 'react'
@@ -15,7 +14,6 @@ import { Button } from '@common/Button/Button'
 import { IPositionItem } from '@store/consts/types'
 import { MinMaxChart } from '@components/Portfolio/PositionItem/components/MinMaxChart/MinMaxChart'
 import { useStyles } from './style'
-import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
 import { swapListIcon } from '@static/icons'
 
 interface ILoadingStates {
@@ -35,6 +33,7 @@ interface IPositionsTableRow extends IPositionItem {
   handleLockPosition: (index: number) => void
   handleClosePosition: (index: number) => void
   handleClaimFee: (index: number) => void
+  shouldDisable: boolean
 }
 
 export const PositionTableRow: React.FC<IPositionsTableRow> = ({
@@ -58,9 +57,10 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   unclaimedFeesInUSD = { value: 0, loading: false },
   handleClaimFee,
   isFullRange,
-  handleClosePosition
+  handleClosePosition,
+  shouldDisable
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
   const [xToY, setXToY] = useState<boolean>(
     initialXtoY(tickerToAddress(network, tokenXName), tickerToAddress(network, tokenYName))
   )
@@ -133,7 +133,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
       return <Skeleton variant='rectangular' className={classes.skeleton3660} />
     }
     return (
-      <TooltipGradient
+      <TooltipHover
         title={
           isActive ? (
             <>
@@ -148,18 +148,18 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
           )
         }
         placement='top'
-        top={1}>
+        increasePadding>
         <Grid
           container
           item
           sx={{ width: 65 }}
-          className={classNames(classes.fee, isActive ? classes.activeFee : undefined)}>
+          className={cx(classes.fee, isActive ? classes.activeFee : undefined)}>
           <Typography
-            className={classNames(classes.infoText, isActive ? classes.activeInfoText : undefined)}>
+            className={cx(classes.infoText, isActive ? classes.activeInfoText : undefined)}>
             {fee}%
           </Typography>
         </Grid>
-      </TooltipGradient>
+      </TooltipHover>
     )
   }, [fee, classes, isActive])
 
@@ -314,6 +314,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   return (
     <TableRow>
       <PositionViewActionPopover
+        shouldDisable={shouldDisable}
         anchorEl={anchorEl}
         handleClose={handleClose}
         open={isActionPopoverOpen}
