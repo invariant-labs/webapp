@@ -82,65 +82,15 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   concentrationIcon: {
     marginBottom: 3
   },
-  liquidityTooltip: {
-    background: colors.invariant.component,
-    boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.35)',
-    borderRadius: 20,
-    padding: 16,
-    maxWidth: 376,
-    boxSizing: 'border-box',
 
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: 360
-    }
-  },
-  liquidityTitle: {
-    color: colors.invariant.text,
-    ...typography.heading4,
-    marginBottom: 12
-  },
-  liquidityDesc: {
-    color: colors.invariant.text,
-    ...typography.caption2
-  },
-  liquidityNote: {
-    color: colors.invariant.textGrey,
-    ...typography.caption2
-  },
-  liquidityImg: {
-    width: 80,
-    minWidth: 80,
-    height: 60,
-    marginLeft: 16
-  },
   currentPrice: {
     color: colors.invariant.yellow,
-    ...typography.caption2,
-    textAlign: 'right'
+    ...typography.caption2
   },
-  activeLiquidity: {
+  usdcCurrentPrice: {
+    display: 'inline-block',
     color: colors.invariant.text,
-    ...typography.caption2,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    cursor: 'default'
-  },
-  activeLiquidityIcon: {
-    marginLeft: 5,
-    height: 14,
-    width: 14,
-    border: '1px solid #FFFFFF',
-    color: colors.invariant.text,
-    borderRadius: '50%',
-    fontSize: 8,
-    lineHeight: '10px',
-    fontWeight: 400,
-    textAlign: 'center',
-    boxSizing: 'border-box',
-    paddingTop: 3,
-    cursor: 'default',
-    userSelect: 'none'
+    ...typography.body2
   },
   globalPrice: {
     display: 'inline-block',
