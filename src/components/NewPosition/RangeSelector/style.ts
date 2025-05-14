@@ -38,7 +38,11 @@ const useStyles = makeStyles()(theme => {
     },
     plot: {
       width: '100%',
-      height: 185
+      height: 185,
+      [theme.breakpoints.down('md')]: {
+        height: 253,
+        marginBottom: 24
+      }
     },
     subheader: {
       ...typography.heading4,
