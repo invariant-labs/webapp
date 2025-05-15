@@ -20,7 +20,7 @@ export const TopBanner = ({ onClose, isHiding }: INormalBannerProps) => {
       <span
         className={classes.textLink}
         onClick={() => {
-          window.open('https://eclipse.invariant.app/points', '_blank')
+          window.open('https://invariant.app/points', '_blank')
           if (isSmallDevice) {
             onClose()
           }
