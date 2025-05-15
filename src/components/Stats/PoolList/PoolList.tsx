@@ -8,8 +8,9 @@ import { VariantType } from 'notistack'
 import { Keypair } from '@solana/web3.js'
 import { useNavigate } from 'react-router-dom'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
-import { theme } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import { TableBoundsLabel } from '@common/TableBoundsLabel/TableBoundsLabel'
+import { ROUTES } from '@utils/utils'
 
 export interface PoolListInterface {
   initialLength: number
@@ -81,7 +82,7 @@ const PoolList: React.FC<PoolListInterface> = ({
   showAPY
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
-  const { classes, cx } = useStyles({ initialDataLength })
+  const { classes, cx } = useStyles()
   const [page, setPage] = React.useState(1)
   const [sortType, setSortType] = React.useState(SortTypePoolList.VOLUME_DESC)
   const navigate = useNavigate()
@@ -170,8 +171,9 @@ const PoolList: React.FC<PoolListInterface> = ({
         <>
           {paginator(page).map((element, index) => (
             <PoolListItem
+              itemNumber={index + 1 + (page - 1) * ITEMS_PER_PAGE}
               displayType='token'
-              tokenIndex={index + 1 + (page - 1) * 10}
+              tokenIndex={index + 1 + (page - 1) * ITEMS_PER_PAGE}
               symbolFrom={element.symbolFrom}
               symbolTo={element.symbolTo}
               iconFrom={element.iconFrom}
@@ -185,7 +187,6 @@ const PoolList: React.FC<PoolListInterface> = ({
               // isLocked={element.lockedX > 0 || element.lockedY > 0}
               fee={element.fee}
               apy={element.apy}
-              hideBottomLine={pages === 1 && index + 1 === data.length}
               apyData={element.apyData}
               key={index}
               addressFrom={element.addressFrom}
@@ -202,21 +203,25 @@ const PoolList: React.FC<PoolListInterface> = ({
             new Array(getEmptyRowsCount()).fill('').map((_, index) => (
               <div
                 key={`empty-row-${index}`}
-                className={cx(classes.emptyRow, {
-                  [classes.emptyRowBorder]: index === getEmptyRowsCount() - 1
-                })}
+                style={{
+                  borderBottom:
+                    getEmptyRowsCount() - 1 === index
+                      ? `2px solid ${colors.invariant.light}`
+                      : `0px solid ${colors.invariant.light}`
+                }}
+                className={cx(classes.emptyRow)}
               />
             ))}
         </>
       ) : (
-        <Grid container className={classes.emptyWrapper}>
+        <Grid container className={classes.emptyContainer}>
           <EmptyPlaceholder
             newVersion
-            height={initialDataLength < 10 ? initialDataLength * 69 : 690}
+            height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 690}
             mainTitle='Pool not found...'
             desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
             desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
-            onAction={() => navigate('/newPosition')}
+            onAction={() => navigate(ROUTES.NEW_POSITION)}
             buttonName='Create Pool'
             withButton={true}
             withImg={initialDataLength > 3}

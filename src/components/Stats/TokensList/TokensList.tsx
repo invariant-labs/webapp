@@ -1,6 +1,6 @@
 import TokenListItem from '../TokenListItem/TokenListItem'
 import React, { useEffect, useMemo, useState } from 'react'
-import { theme } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import useStyles from './style'
 import { Grid, useMediaQuery } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypeTokenList, USDC_DEV, SOL_DEV } from '@store/consts/static'
@@ -54,7 +54,7 @@ const TokensList: React.FC<ITokensList> = ({
   initialLength
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
-  const { classes, cx } = useStyles({ initialDataLength })
+  const { classes, cx } = useStyles()
   const [page, setPage] = useState(1)
   const [sortType, setSortType] = React.useState(SortTypeTokenList.VOLUME_DESC)
 
@@ -150,7 +150,7 @@ const TokensList: React.FC<ITokensList> = ({
                 <TokenListItem
                   key={index}
                   displayType='tokens'
-                  itemNumber={index + 1 + (page - 1) * 10}
+                  itemNumber={index + 1 + (page - 1) * ITEMS_PER_PAGE}
                   icon={token.icon}
                   name={token.name}
                   symbol={token.symbol}
@@ -158,7 +158,6 @@ const TokensList: React.FC<ITokensList> = ({
                   // priceChange={token.priceChange}
                   volume={token.volume}
                   TVL={token.TVL}
-                  hideBottomLine={pages === 1 && index + 1 === data.length}
                   address={token.address}
                   isUnknown={token.isUnknown}
                   network={network}
@@ -170,9 +169,13 @@ const TokensList: React.FC<ITokensList> = ({
               new Array(getEmptyRowsCount()).fill('').map((_, index) => (
                 <div
                   key={`empty-row-${index}`}
-                  className={cx(classes.emptyRow, {
-                    [classes.emptyRowBorder]: index === getEmptyRowsCount() - 1
-                  })}
+                  style={{
+                    borderBottom:
+                      getEmptyRowsCount() - 1 === index
+                        ? `2px solid ${colors.invariant.light}`
+                        : `0px solid ${colors.invariant.light}`
+                  }}
+                  className={cx(classes.emptyRow)}
                 />
               ))}
           </>

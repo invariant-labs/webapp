@@ -41,7 +41,7 @@ export interface PoolListInterface {
 import { Keypair } from '@solana/web3.js'
 import { ROUTES } from '@utils/utils'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
-import { theme } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import { TableBoundsLabel } from '@common/TableBoundsLabel/TableBoundsLabel'
 
 const ITEMS_PER_PAGE = 10
@@ -84,7 +84,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
   showAPY
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
-  const { classes, cx } = useStyles({ initialDataLength })
+  const { classes, cx } = useStyles()
   const [page, setPage] = React.useState(1)
   const [sortType, setSortType] = React.useState(SortTypePoolList.VOLUME_DESC)
   const navigate = useNavigate()
@@ -157,95 +157,102 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
   }, [data, pages])
 
   return (
-    <div className={cx({ [classes.loadingOverlay]: isLoading })}>
-      <Grid container classes={{ root: classes.container }}>
-        <PoolListItem
-          displayType='header'
-          onSort={setSortType}
-          sortType={sortType}
-          network={network}
-          showAPY={showAPY}
-        />
-        {data.length > 0 || isLoading ? (
-          <>
-            {paginator(page).map((element, index) => (
-              <PoolListItem
-                displayType='token'
-                tokenIndex={index + 1 + (page - 1) * 10}
-                symbolFrom={element.symbolFrom}
-                symbolTo={element.symbolTo}
-                iconFrom={element.iconFrom}
-                iconTo={element.iconTo}
-                volume={element.volume}
-                TVL={element.TVL}
-                // lockedX={element.lockedX}
-                // lockedY={element.lockedY}
-                // liquidityX={element.liquidityX}
-                // liquidityY={element.liquidityY}
-                // isLocked={element.lockedX > 0 || element.lockedY > 0}
-                fee={element.fee}
-                apy={element.apy}
-                hideBottomLine={pages === 1 && index + 1 === data.length}
-                apyData={element.apyData}
-                key={index}
-                addressFrom={element.addressFrom}
-                addressTo={element.addressTo}
-                network={network}
-                isUnknownFrom={element.isUnknownFrom}
-                isUnknownTo={element.isUnknownTo}
-                poolAddress={element.poolAddress}
-                copyAddressHandler={copyAddressHandler}
-                showAPY={showAPY}
+    <Grid
+      container
+      classes={{ root: classes.container }}
+      className={cx({ [classes.loadingOverlay]: isLoading })}>
+      <PoolListItem
+        displayType='header'
+        onSort={setSortType}
+        sortType={sortType}
+        network={network}
+        showAPY={showAPY}
+      />
+      {data.length > 0 || isLoading ? (
+        <>
+          {paginator(page).map((element, index) => (
+            <PoolListItem
+              itemNumber={index + 1 + (page - 1) * ITEMS_PER_PAGE}
+              displayType='token'
+              tokenIndex={index + 1 + (page - 1) * ITEMS_PER_PAGE}
+              symbolFrom={element.symbolFrom}
+              symbolTo={element.symbolTo}
+              iconFrom={element.iconFrom}
+              iconTo={element.iconTo}
+              volume={element.volume}
+              TVL={element.TVL}
+              // lockedX={element.lockedX}
+              // lockedY={element.lockedY}
+              // liquidityX={element.liquidityX}
+              // liquidityY={element.liquidityY}
+              // isLocked={element.lockedX > 0 || element.lockedY > 0}
+              fee={element.fee}
+              apy={element.apy}
+              apyData={element.apyData}
+              key={index}
+              addressFrom={element.addressFrom}
+              addressTo={element.addressTo}
+              network={network}
+              isUnknownFrom={element.isUnknownFrom}
+              isUnknownTo={element.isUnknownTo}
+              poolAddress={element.poolAddress}
+              copyAddressHandler={copyAddressHandler}
+              showAPY={showAPY}
+            />
+          ))}
+          {getEmptyRowsCount() > 0 &&
+            new Array(getEmptyRowsCount()).fill('').map((_, index) => (
+              <div
+                key={`empty-row-${index}`}
+                style={
+                  getEmptyRowsCount() - 1 === index
+                    ? {
+                        borderBottom: `2px solid ${colors.invariant.light}`,
+                        height: 67
+                      }
+                    : {}
+                }
+                className={cx(classes.emptyRow)}
               />
             ))}
-            {getEmptyRowsCount() > 0 &&
-              new Array(getEmptyRowsCount()).fill('').map((_, index) => (
-                <div
-                  key={`empty-row-${index}`}
-                  className={cx(classes.emptyRow, {
-                    [classes.emptyRowBorder]: index === getEmptyRowsCount() - 1
-                  })}
-                />
-              ))}
-          </>
-        ) : (
-          <Grid container className={classes.emptyWrapper}>
-            <EmptyPlaceholder
-              height={initialDataLength < 10 ? initialDataLength * 69 : 690}
-              newVersion
-              mainTitle='Pool not found...'
-              desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
-              desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
-              buttonName='Create Pool'
-              onAction={() => navigate(ROUTES.NEW_POSITION)}
-              withButton={true}
-              withImg={initialDataLength > 3}
-            />
-          </Grid>
-        )}
-        <Grid
-          className={classes.pagination}
-          sx={{
-            height: height
-          }}>
-          {pages > 0 && (
-            <TableBoundsLabel
-              borderTop={false}
-              lowerBound={lowerBound}
-              totalItems={totalItems}
-              upperBound={upperBound}>
-              <PaginationList
-                pages={pages}
-                defaultPage={1}
-                handleChangePage={handleChangePagination}
-                variant='center'
-                page={page}
-              />
-            </TableBoundsLabel>
-          )}
+        </>
+      ) : (
+        <Grid container className={classes.emptyWrapper}>
+          <EmptyPlaceholder
+            height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 690}
+            newVersion
+            mainTitle='Pool not found...'
+            desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
+            desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
+            buttonName='Create Pool'
+            onAction={() => navigate(ROUTES.NEW_POSITION)}
+            withButton={true}
+            withImg={initialDataLength > 3}
+          />
         </Grid>
+      )}
+      <Grid
+        className={classes.pagination}
+        sx={{
+          height: height
+        }}>
+        {pages > 0 && (
+          <TableBoundsLabel
+            borderTop={false}
+            lowerBound={lowerBound}
+            totalItems={totalItems}
+            upperBound={upperBound}>
+            <PaginationList
+              pages={pages}
+              defaultPage={1}
+              handleChangePage={handleChangePagination}
+              variant='center'
+              page={page}
+            />
+          </TableBoundsLabel>
+        )}
       </Grid>
-    </div>
+    </Grid>
   )
 }
 export default LiquidityPoolList
