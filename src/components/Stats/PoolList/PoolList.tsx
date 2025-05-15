@@ -1,14 +1,16 @@
 import React, { useMemo, useEffect, useState } from 'react'
 import PoolListItem from '@components/Stats/PoolListItem/PoolListItem'
 import { useStyles } from './style'
-import { Grid } from '@mui/material'
+import { Grid, useMediaQuery } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
 import { PaginationList } from '@common/Pagination/Pagination'
 import { VariantType } from 'notistack'
 import { Keypair } from '@solana/web3.js'
 import { useNavigate } from 'react-router-dom'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
-import { colors } from '@static/theme'
+import { colors, theme } from '@static/theme'
+import { TableBoundsLabel } from '@common/TableBoundsLabel/TableBoundsLabel'
+import { ROUTES } from '@utils/utils'
 
 export interface PoolListInterface {
   initialLength: number
@@ -80,7 +82,7 @@ const PoolList: React.FC<PoolListInterface> = ({
   showAPY
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
-  const { classes, cx } = useStyles({ initialDataLength })
+  const { classes, cx } = useStyles()
   const [page, setPage] = React.useState(1)
   const [sortType, setSortType] = React.useState(SortTypePoolList.VOLUME_DESC)
   const navigate = useNavigate()
@@ -119,10 +121,6 @@ const PoolList: React.FC<PoolListInterface> = ({
   }, [data, sortType])
 
   useEffect(() => {
-    setPage(1)
-  }, [data])
-
-  useEffect(() => {
     setInitialDataLength(initialLength)
   }, [initialLength])
 
@@ -142,7 +140,20 @@ const PoolList: React.FC<PoolListInterface> = ({
     return sortedData.slice(offest).slice(0, perPage)
   }
 
-  const pages = Math.ceil(data.length / 10)
+  const totalItems = useMemo(() => sortedData.length, [sortedData])
+  const lowerBound = useMemo(() => (page - 1) * ITEMS_PER_PAGE + 1, [page])
+  const upperBound = useMemo(() => Math.min(page * ITEMS_PER_PAGE, totalItems), [totalItems, page])
+
+  const pages = useMemo(() => Math.ceil(data.length / ITEMS_PER_PAGE), [data])
+  const isCenterAligment = useMediaQuery(theme.breakpoints.down(1280))
+  const height = useMemo(
+    () => (initialDataLength > ITEMS_PER_PAGE ? (isCenterAligment ? 120 : 90) : 69),
+    [initialDataLength, isCenterAligment]
+  )
+
+  useEffect(() => {
+    setPage(1)
+  }, [data, pages])
 
   return (
     <Grid
@@ -160,8 +171,9 @@ const PoolList: React.FC<PoolListInterface> = ({
         <>
           {paginator(page).map((element, index) => (
             <PoolListItem
+              itemNumber={index + 1 + (page - 1) * ITEMS_PER_PAGE}
               displayType='token'
-              tokenIndex={index + 1 + (page - 1) * 10}
+              tokenIndex={index + 1 + (page - 1) * ITEMS_PER_PAGE}
               symbolFrom={element.symbolFrom}
               symbolTo={element.symbolTo}
               iconFrom={element.iconFrom}
@@ -175,7 +187,6 @@ const PoolList: React.FC<PoolListInterface> = ({
               // isLocked={element.lockedX > 0 || element.lockedY > 0}
               fee={element.fee}
               apy={element.apy}
-              hideBottomLine={pages === 1 && index + 1 === data.length}
               apyData={element.apyData}
               key={index}
               addressFrom={element.addressFrom}
@@ -192,21 +203,25 @@ const PoolList: React.FC<PoolListInterface> = ({
             new Array(getEmptyRowsCount()).fill('').map((_, index) => (
               <div
                 key={`empty-row-${index}`}
-                className={cx(classes.emptyRow, {
-                  [classes.emptyRowBorder]: index === getEmptyRowsCount() - 1
-                })}
+                style={{
+                  borderBottom:
+                    getEmptyRowsCount() - 1 === index
+                      ? `2px solid ${colors.invariant.light}`
+                      : `0px solid ${colors.invariant.light}`
+                }}
+                className={cx(classes.emptyRow)}
               />
             ))}
         </>
       ) : (
-        <Grid container className={classes.emptyWrapper}>
+        <Grid container className={classes.emptyContainer}>
           <EmptyPlaceholder
             newVersion
-            height={initialDataLength < 10 ? initialDataLength * 69 : 690}
+            height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 690}
             mainTitle='Pool not found...'
             desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
             desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
-            onAction={() => navigate('/newPosition')}
+            onAction={() => navigate(ROUTES.NEW_POSITION)}
             buttonName='Create Pool'
             withButton={true}
             withImg={initialDataLength > 3}
@@ -216,20 +231,22 @@ const PoolList: React.FC<PoolListInterface> = ({
       <Grid
         className={classes.pagination}
         sx={{
-          height: initialDataLength > 10 ? (page !== pages ? 90 : 91) : 69,
-
-          borderTop: `
-              ${pages > 1 ? (page !== pages ? 1 : 2) : 2}px solid ${colors.invariant.light}
-            `
+          height: height
         }}>
-        {' '}
-        {pages > 1 && (
-          <PaginationList
-            pages={pages}
-            defaultPage={1}
-            handleChangePage={handleChangePagination}
-            variant='flex-end'
-          />
+        {pages > 0 && (
+          <TableBoundsLabel
+            borderTop={false}
+            lowerBound={lowerBound}
+            totalItems={totalItems}
+            upperBound={upperBound}>
+            <PaginationList
+              pages={pages}
+              defaultPage={1}
+              handleChangePage={handleChangePagination}
+              variant='center'
+              page={page}
+            />
+          </TableBoundsLabel>
         )}
       </Grid>
     </Grid>

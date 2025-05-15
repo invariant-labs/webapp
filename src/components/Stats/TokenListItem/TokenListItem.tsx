@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
-import { theme } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useStyles } from './style'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import { formatNumberWithSuffix, shortenAddress } from '@utils/utils'
-import { NetworkType, SortTypeTokenList } from '@store/consts/static'
+import { ITEMS_PER_PAGE, NetworkType, SortTypeTokenList } from '@store/consts/static'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 import { VariantType } from 'notistack'
@@ -23,7 +23,6 @@ interface IProps {
   TVL?: number
   sortType?: SortTypeTokenList
   onSort?: (type: SortTypeTokenList) => void
-  hideBottomLine?: boolean
   address?: string
   isUnknown?: boolean
   network?: NetworkType
@@ -42,7 +41,6 @@ const TokenListItem: React.FC<IProps> = ({
   TVL = 0,
   sortType,
   onSort,
-  hideBottomLine = false,
   address,
   isUnknown,
   network,
@@ -88,7 +86,12 @@ const TokenListItem: React.FC<IProps> = ({
         <Grid
           container
           classes={{ container: classes.container, root: classes.tokenList }}
-          style={hideBottomLine ? { border: 'none' } : undefined}>
+          sx={{
+            borderBottom:
+              itemNumber !== 0 && itemNumber % ITEMS_PER_PAGE
+                ? `1px solid ${colors.invariant.light}`
+                : `2px solid ${colors.invariant.light}`
+          }}>
           {!isXs && !isSm && <Typography component='p'>{itemNumber}</Typography>}
           <Grid className={classes.tokenName}>
             <img
@@ -108,16 +111,6 @@ const TokenListItem: React.FC<IProps> = ({
                 )}
               </Typography>
             )}
-            {/* <Typography>
-              {!isMd ? (
-                <>
-                  <span className={classes.tokenName}>{name}</span>
-                  <span className={classes.tokenSymbol}>({shortenAddress(symbol)})</span>
-                </>
-              ) : (
-                shortenAddress(symbol)
-              )}
-            </Typography> */}
             <TooltipHover title='Copy token address'>
               <FileCopyOutlinedIcon
                 onClick={copyToClipboard}
@@ -126,8 +119,7 @@ const TokenListItem: React.FC<IProps> = ({
             </TooltipHover>
           </Grid>
           <Typography>{`~$${formatNumberWithSuffix(price)}`}</Typography>
-
-          {/* {!isXs && (
+          {/* {!hideName && (
             <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
               {isNegative ? `${priceChange.toFixed(2)}%` : `+${priceChange.toFixed(2)}%`}
             </Typography>
@@ -153,7 +145,16 @@ const TokenListItem: React.FC<IProps> = ({
           )}
         </Grid>
       ) : (
-        <Grid container classes={{ container: classes.container, root: classes.header }}>
+        <Grid
+          container
+          style={{ color: colors.invariant.textGrey, fontWeight: 400 }}
+          sx={{
+            borderBottom:
+              itemNumber !== 0 && itemNumber % 10
+                ? `1px solid ${colors.invariant.light}`
+                : `2px solid ${colors.invariant.light}`
+          }}
+          classes={{ container: classes.container, root: classes.header }}>
           {!isXs && !isSm && (
             <Typography style={{ lineHeight: '12px' }}>
               N<sup>o</sup>
@@ -191,7 +192,7 @@ const TokenListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
-          {/* {!isXs && (
+          {/* {!hideName && (
             <Typography
               style={{ cursor: 'pointer' }}
               onClick={() => {

@@ -4,16 +4,20 @@ import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()((theme: Theme) => ({
   root: {
-    width: '100%',
     display: 'flex',
-    maxWidth: '100%',
+    alignItems: 'center',
 
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%'
     },
+
     '& .MuiPagination-ul': {
       flexWrap: 'nowrap',
-      margin: '10px 0 10px'
+      margin: '10px 0',
+      justifyContent: 'space-between',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
     },
 
     '& .MuiPaginationItem-icon': {
@@ -22,8 +26,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
 
     '& .MuiPaginationItem-page': {
       ...typography.heading4,
-
       color: colors.invariant.light,
+      transition: '300ms',
       '&:hover': {
         color: colors.invariant.lightGrey,
         '@media (hover: none)': {
@@ -32,20 +36,15 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       }
     },
 
-    '& .MuiPaginationItem-page:hover': {
-      transition: '300ms',
-      color: colors.invariant.textGrey
-    },
-
     '& .MuiPaginationItem-ellipsis': {
       color: colors.invariant.light
     },
 
     '& .Mui-selected': {
-      color: colors.invariant.green
-    },
-    '& .Mui-selected:hover': {
-      color: `${colors.invariant.green} !important`
+      color: colors.invariant.green,
+      '&:hover': {
+        color: `${colors.invariant.green} !important`
+      }
     },
 
     '& .MuiPaginationItem-page.Mui-selected': {
@@ -54,25 +53,33 @@ export const useStyles = makeStyles()((theme: Theme) => ({
         color: colors.invariant.green
       }
     },
-    '& li:first-of-type button': {
+
+    '& li:first-of-type button, li:last-of-type button': {
       backgroundColor: colors.invariant.green,
       minWidth: 40,
       minHeight: 40,
-      opacity: 0.8
-    },
-    '& li:first-of-type button:hover': {
-      opacity: 1
-    },
+      opacity: 0.8,
+      transition: 'opacity 200ms',
+      '&:hover': {
+        opacity: 1
+      },
+      '&:disabled': {
+        '& .MuiSvgIcon-root': {
+          color: colors.invariant.componentBcg
+        },
 
-    '& li:last-child button': {
-      backgroundColor: colors.invariant.green,
-      minWidth: 40,
-      minHeight: 40,
-      opacity: 0.8
-    },
-
-    '& li:last-child button:hover': {
-      opacity: 1
+        backgroundColor: colors.invariant.light,
+        pointerEvents: 'auto',
+        transition: '300ms',
+        '&:hover': {
+          boxShadow: 'none',
+          cursor: 'not-allowed',
+          filter: 'brightness(1.15)',
+          '@media (hover: none)': {
+            filter: 'none'
+          }
+        }
+      }
     },
 
     '& svg': {

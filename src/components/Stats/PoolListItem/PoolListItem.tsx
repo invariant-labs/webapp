@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react'
-import { theme } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import { useStyles } from './style'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useNavigate } from 'react-router-dom'
-import { NetworkType, SortTypePoolList } from '@store/consts/static'
+import { ITEMS_PER_PAGE, NetworkType, SortTypePoolList } from '@store/consts/static'
 import {
   addressToTicker,
   initialXtoY,
@@ -39,7 +39,6 @@ interface IProps {
   tokenIndex?: number
   sortType?: SortTypePoolList
   onSort?: (type: SortTypePoolList) => void
-  hideBottomLine?: boolean
   addressFrom?: string
   addressTo?: string
   network: NetworkType
@@ -52,6 +51,7 @@ interface IProps {
   poolAddress?: string
   copyAddressHandler?: (message: string, variant: VariantType) => void
   showAPY: boolean
+  itemNumber?: number
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -66,7 +66,6 @@ const PoolListItem: React.FC<IProps> = ({
   tokenIndex,
   sortType,
   onSort,
-  hideBottomLine = false,
   addressFrom,
   addressTo,
   network,
@@ -75,7 +74,8 @@ const PoolListItem: React.FC<IProps> = ({
   isUnknownTo,
   poolAddress,
   copyAddressHandler,
-  showAPY
+  showAPY,
+  itemNumber = 0
 }) => {
   const { classes, cx } = useStyles()
 
@@ -175,7 +175,12 @@ const PoolListItem: React.FC<IProps> = ({
           classes={{
             container: cx(classes.container, { [classes.containerNoAPY]: !showAPY })
           }}
-          style={hideBottomLine ? { border: 'none' } : undefined}>
+          sx={{
+            borderBottom:
+              itemNumber !== 0 && itemNumber % ITEMS_PER_PAGE
+                ? `1px solid ${colors.invariant.light}`
+                : `2px solid ${colors.invariant.light}`
+          }}>
           {!isMd ? <Typography>{tokenIndex}</Typography> : null}
           <Grid className={classes.imageContainer}>
             <Box className={classes.iconsWrapper}>
@@ -218,13 +223,15 @@ const PoolListItem: React.FC<IProps> = ({
             </Grid>
           </Grid>
           {!isSmd && showAPY ? (
-            <Typography className={classes.row}>
-              {`${apr > 1000 ? '>1000%' : apr === 0 ? '-' : Math.abs(apr).toFixed(2) + '%'}`}
-              <span
-                className={
-                  classes.apy
-                }>{`${apy > 1000 ? '>1000%' : apy === 0 ? '' : Math.abs(apy).toFixed(2) + '%'}`}</span>
-            </Typography>
+            <Grid className={classes.row} justifyContent='space-between'>
+              <Typography gap='4px'>
+                {`${apr > 1000 ? '>1000%' : apr === 0 ? '-' : Math.abs(apr).toFixed(2) + '%'}`}
+                <span
+                  className={
+                    classes.apy
+                  }>{`${apr > 1000 ? '>1000%' : apr === 0 ? '' : Math.abs(apr).toFixed(2) + '%'}`}</span>
+              </Typography>
+            </Grid>
           ) : null}
           <Typography>{fee}%</Typography>
           <Typography>{`$${formatNumberWithSuffix(volume)}`}</Typography>
