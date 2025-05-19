@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react'
-import { theme } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import { useStyles } from './style'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useNavigate } from 'react-router-dom'
-import { NetworkType, SortTypePoolList } from '@store/consts/static'
+import { ITEMS_PER_PAGE, NetworkType, SortTypePoolList } from '@store/consts/static'
 import {
   addressToTicker,
   initialXtoY,
@@ -19,7 +19,6 @@ import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { VariantType } from 'notistack'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 import { apyToApr } from '@utils/uiUtils'
-import classNames from 'classnames'
 import {
   horizontalSwapIcon,
   newTabBtnIcon,
@@ -40,7 +39,6 @@ interface IProps {
   tokenIndex?: number
   sortType?: SortTypePoolList
   onSort?: (type: SortTypePoolList) => void
-  hideBottomLine?: boolean
   addressFrom?: string
   addressTo?: string
   network: NetworkType
@@ -53,6 +51,7 @@ interface IProps {
   poolAddress?: string
   copyAddressHandler?: (message: string, variant: VariantType) => void
   showAPY: boolean
+  itemNumber?: number
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -67,7 +66,6 @@ const PoolListItem: React.FC<IProps> = ({
   tokenIndex,
   sortType,
   onSort,
-  hideBottomLine = false,
   addressFrom,
   addressTo,
   network,
@@ -76,9 +74,10 @@ const PoolListItem: React.FC<IProps> = ({
   isUnknownTo,
   poolAddress,
   copyAddressHandler,
-  showAPY
+  showAPY,
+  itemNumber = 0
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   const navigate = useNavigate()
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
@@ -174,9 +173,14 @@ const PoolListItem: React.FC<IProps> = ({
         <Grid
           container
           classes={{
-            container: classNames(classes.container, { [classes.containerNoAPY]: !showAPY })
+            container: cx(classes.container, { [classes.containerNoAPY]: !showAPY })
           }}
-          style={hideBottomLine ? { border: 'none' } : undefined}>
+          sx={{
+            borderBottom:
+              itemNumber !== 0 && itemNumber % ITEMS_PER_PAGE
+                ? `1px solid ${colors.invariant.light}`
+                : `2px solid ${colors.invariant.light}`
+          }}>
           {!isMd ? <Typography>{tokenIndex}</Typography> : null}
           <Grid className={classes.imageContainer}>
             <Box className={classes.iconsWrapper}>
@@ -219,13 +223,15 @@ const PoolListItem: React.FC<IProps> = ({
             </Grid>
           </Grid>
           {!isSmd && showAPY ? (
-            <Typography className={classes.row}>
-              {`${apr > 1000 ? '>1000%' : apr === 0 ? '-' : Math.abs(apr).toFixed(2) + '%'}`}
-              <span
-                className={
-                  classes.apy
-                }>{`${apy > 1000 ? '>1000%' : apy === 0 ? '' : Math.abs(apy).toFixed(2) + '%'}`}</span>
-            </Typography>
+            <Grid className={classes.row} justifyContent='space-between'>
+              <Typography gap='4px'>
+                {`${apr > 1000 ? '>1000%' : apr === 0 ? '-' : Math.abs(apr).toFixed(2) + '%'}`}
+                <span
+                  className={
+                    classes.apy
+                  }>{`${apr > 1000 ? '>1000%' : apr === 0 ? '' : Math.abs(apr).toFixed(2) + '%'}`}</span>
+              </Typography>
+            </Grid>
           ) : null}
           <Typography>{fee}%</Typography>
           <Typography>{`$${formatNumberWithSuffix(volume)}`}</Typography>
@@ -264,7 +270,7 @@ const PoolListItem: React.FC<IProps> = ({
           classes={{
             root: classes.header
           }}
-          className={classNames(classes.container, { [classes.containerNoAPY]: !showAPY })}>
+          className={cx(classes.container, { [classes.containerNoAPY]: !showAPY })}>
           {!isMd && (
             <Typography style={{ lineHeight: '11px' }}>
               N<sup>o</sup>

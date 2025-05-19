@@ -21,6 +21,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     width: 18,
     height: 'auto',
     fill: '#111931',
+
     [theme.breakpoints.down('md')]: {
       width: 22
     }
@@ -28,20 +29,25 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   zoomButtonsWrapper: {
     justifyContent: 'space-between',
     position: 'absolute',
-    bottom: 20,
+    top: 10,
     right: 8,
-    height: 64,
     zIndex: 10,
+    gap: 10,
     display: 'flex',
     alignItems: 'flex-end',
-    flexDirection: 'column',
-
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'row',
-      maxWidth: 92,
-      gap: 10,
-      height: 40
-    }
+    flexDirection: 'column'
+  },
+  leftArrow: {
+    position: 'absolute',
+    bottom: 20,
+    left: 8,
+    zIndex: 10
+  },
+  rightArrow: {
+    position: 'absolute',
+    bottom: 20,
+    right: 8,
+    zIndex: 10
   },
   loadingText: {
     fill: colors.invariant.black,

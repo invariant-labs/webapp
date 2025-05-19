@@ -14,7 +14,6 @@ import {
 } from '@invariant-labs/sdk/lib/utils'
 import { Decimal, PoolStructure, Tick } from '@invariant-labs/sdk/src/market'
 import {
-  calculateTickDelta,
   DECIMAL,
   parseLiquidityOnTicks,
   simulateSwap,
@@ -54,18 +53,23 @@ import {
   NATIVE_TICK_CROSSES_PER_IX,
   ADDRESSES_TO_REVERT_TOKEN_PAIRS,
   POSITIONS_PER_PAGE,
-  PRICE_QUERY_COOLDOWN
+  PRICE_QUERY_COOLDOWN,
+  BASE_JUPITER_API_URL
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
 import { CoinGeckoAPIData, PriorityMode, Token } from '@store/consts/types'
 import { sqrt } from '@invariant-labs/sdk/lib/math'
 import { apyToApr } from './uiUtils'
+import { alignTickToSpacing } from '@invariant-labs/sdk/src/tick'
 
 export const transformBN = (amount: BN): string => {
   return (amount.div(new BN(1e2)).toNumber() / 1e4).toString()
 }
 export const printBN = (amount: BN, decimals: number): string => {
+  if (!amount) {
+    return '0'
+  }
   const amountString = amount.toString()
   const isNegative = amountString.length > 0 && amountString[0] === '-'
 
@@ -1046,7 +1050,7 @@ export const getJupPricesData = async (ids: string[]): Promise<Record<string, To
   const requests = chunkedIds.map(
     async idsChunk =>
       await axios.get<RawJupApiResponse>(
-        `https://api.jup.ag/price/v2?ids=${idsChunk.join(',')}&showExtraInfo=true`
+        `${BASE_JUPITER_API_URL}/price/v2?ids=${idsChunk.join(',')}&showExtraInfo=true`
       )
   )
 
@@ -1090,6 +1094,25 @@ export const trimLeadingZeros = (amount: string): string => {
   return `${amountParts[0]}.${trimmed}`
 }
 
+export const calculateTickDelta = (
+  tickSpacing: number,
+  minimumRange: number,
+  concentration: number
+) => {
+  const targetValue = 1 / (concentration * CONCENTRATION_FACTOR)
+
+  const base = 1.0001
+  const inner = 1 - targetValue
+  const powered = Math.pow(inner, 4)
+  const tickDiff = -Math.log(powered) / Math.log(base)
+
+  const parsedTickDelta = tickDiff / tickSpacing - minimumRange / 2
+
+  const tickDelta = Math.round(parsedTickDelta + 1)
+
+  return tickDelta
+}
+
 export const calculateConcentrationRange = (
   tickSpacing: number,
   concentration: number,
@@ -1099,10 +1122,12 @@ export const calculateConcentrationRange = (
 ) => {
   const tickDelta = calculateTickDelta(tickSpacing, minimumRange, concentration)
 
-  const parsedTickDelta = Math.abs(tickDelta) === 0 ? 0 : Math.abs(tickDelta) - 1
-
-  const lowerTick = currentTick - (minimumRange / 2 + parsedTickDelta) * tickSpacing
-  const upperTick = currentTick + (minimumRange / 2 + parsedTickDelta) * tickSpacing
+  const lowerTick =
+    tickDelta === 1
+      ? currentTick - alignTickToSpacing((tickDelta * tickSpacing) / 2, tickSpacing)
+      : currentTick - alignTickToSpacing((tickDelta * tickSpacing) / 2, tickSpacing) + tickSpacing
+  const upperTick =
+    currentTick + alignTickToSpacing((tickDelta * tickSpacing) / 2, tickSpacing) + tickSpacing
 
   return {
     leftRange: isXToY ? lowerTick : upperTick,
@@ -1320,7 +1345,7 @@ export const getTokenPrice = async (
 export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
   try {
     const response = await axios.get<RawJupApiResponse>(
-      `https://api.jup.ag/price/v2?ids=${id}&showExtraInfo=true`
+      `${BASE_JUPITER_API_URL}/price/v2?ids=${id}&showExtraInfo=true`
     )
 
     return {
@@ -1348,7 +1373,7 @@ export const getJupTokensRatioPrice = async (
   vsId: string
 ): Promise<Omit<TokenPriceData, 'buyPrice' | 'sellPrice'>> => {
   const response = await axios.get<RawJupApiResponse>(
-    `https://api.jup.ag/price/v2?ids=${id}&vsToken=${vsId}`
+    `${BASE_JUPITER_API_URL}/price/v2?ids=${id}&vsToken=${vsId}`
   )
 
   return {
@@ -1427,7 +1452,7 @@ export const solToPriorityFee = (sol: number) => {
 export const createLoaderKey = () => (new Date().getMilliseconds() + Math.random()).toString()
 
 export const getMainnetCommonTokens = async (): Promise<PublicKey[]> => {
-  const { data } = await axios.get('https://tokens.jup.ag/tokens?tags=verified')
+  const { data } = await axios.get(`${BASE_JUPITER_API_URL}/tokens/v1/tagged/verified}`)
 
   const commonTokens = data
     .slice(0, 8)

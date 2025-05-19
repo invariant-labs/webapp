@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import classNames from 'classnames'
 import useStyles from './style'
 import { blurContent, unblurContent } from '@utils/uiUtils'
 import { Box, Button } from '@mui/material'
@@ -43,7 +42,7 @@ export const Select: React.FC<ISelectModal> = ({
   hiddenUnknownTokens,
   network
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = React.useState<boolean>(false)
 
@@ -69,7 +68,7 @@ export const Select: React.FC<ISelectModal> = ({
   return (
     <>
       <Button
-        className={classNames(classes.button, className)}
+        className={cx(classes.button, className)}
         color='primary'
         variant='contained'
         onClick={handleClick}

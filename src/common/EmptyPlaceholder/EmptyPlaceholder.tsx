@@ -1,5 +1,4 @@
 import { Grid, Typography, useMediaQuery } from '@mui/material'
-import classNames from 'classnames'
 import React from 'react'
 import { useStyles } from './style'
 import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
@@ -44,14 +43,14 @@ export const EmptyPlaceholder: React.FC<IEmptyPlaceholder> = ({
   connectButton,
   withImg = true
 }) => {
-  const { classes } = useStyles({ newVersion, themeDark, roundedCorners, height })
+  const { classes, cx } = useStyles({ newVersion, themeDark, roundedCorners, height })
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
     <Grid container className={classes.wrapperContainer}>
-      <Grid className={classNames(classes.blur, 'blurLayer')} />
-      <Grid sx={style} className={classNames(classes.container, 'blurLayer')}>
-        <Grid className={classNames(classes.root, 'blurInfo')} gap='24px'>
+      <Grid className={cx(classes.blur, 'blurLayer')} />
+      <Grid sx={style} className={cx(classes.container, 'blurLayer')}>
+        <Grid className={cx(classes.root, 'blurInfo')} gap='24px'>
           {withImg && <img height={80} src={img} alt='Not connected' />}
           <Grid container flexDirection='column' gap='10px'>
             <Typography className={classes.title}>{mainTitle}</Typography>

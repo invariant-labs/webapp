@@ -8,7 +8,7 @@ export const useMobileStyles = makeStyles()((theme: Theme) => ({
     marginTop: '16px',
     flexWrap: 'wrap',
     [theme.breakpoints.down('sm')]: {
-      padding: '12px 8px '
+      padding: '12px 8px'
     },
     background: colors.invariant.component,
     borderRadius: 24,
@@ -16,8 +16,12 @@ export const useMobileStyles = makeStyles()((theme: Theme) => ({
       marginBottom: 20
     },
     '&:hover': {
-      background: `${colors.invariant.component}B0`
-    }
+      background: `${colors.invariant.component}B0`,
+      '@media (hover: none)': {
+        background: colors.invariant.component
+      }
+    },
+    transition: '300ms'
   },
   actionButton: {
     display: 'flex',
@@ -25,15 +29,7 @@ export const useMobileStyles = makeStyles()((theme: Theme) => ({
     marginRight: '8px',
     alignItems: 'center'
   },
-  minMax: {
-    background: colors.invariant.light,
-    borderRadius: 11,
-    height: 36,
-    paddingInline: 10,
-    width: '100%',
-    marginRight: 0,
-    marginTop: '8px'
-  },
+
   button: {
     minWidth: '36px',
     width: '36px',
@@ -52,16 +48,18 @@ export const useMobileStyles = makeStyles()((theme: Theme) => ({
     }
   },
 
-  mdInfo: {
-    flexWrap: 'wrap',
-    width: '100%'
-  },
   mdTop: {
+    marginBottom: theme.spacing(2),
     justifyContent: 'space-between',
-    width: '100%'
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'nowrap'
   },
   iconsAndNames: {
-    display: 'flex'
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'nowrap'
   },
   icons: {
     alignItems: 'center',
@@ -140,31 +138,13 @@ export const useMobileStyles = makeStyles()((theme: Theme) => ({
       ...typography.caption1
     }
   },
-  liquidity: {
-    background: colors.invariant.light,
-    borderRadius: 11,
-    height: 36,
-    marginRight: 8,
-    lineHeight: 20,
-    paddingInline: 10,
-    [theme.breakpoints.down('lg')]: {
-      flex: '1 1 0%'
-    }
-  },
 
   fee: {
-    justifyContent: 'center',
-    alignItems: 'center',
     background: colors.invariant.light,
     borderRadius: 11,
     height: 36,
-    // [theme.breakpoints.up(1361)]: {
-    //   marginRight: 8
-    // },
-    // [theme.breakpoints.down(1361)]: {
-    //   width: 'auto'
-    // },
-
+    justifyContent: 'center',
+    alignItems: 'center',
     [theme.breakpoints.down('md')]: {
       marginRight: 0
     }
@@ -173,7 +153,8 @@ export const useMobileStyles = makeStyles()((theme: Theme) => ({
     marginLeft: '16px',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    transition: '300ms'
   },
   unclaimedFeeContainer: {
     display: 'flex',
@@ -185,40 +166,12 @@ export const useMobileStyles = makeStyles()((theme: Theme) => ({
   activeFee: {
     background: colors.invariant.greenLinearGradient
   },
-  infoCenter: {
-    justifyContent: 'center',
-    flex: '1 1 0%'
-  },
-  dropdown: {
-    background: colors.invariant.greenLinearGradient,
-    borderRadius: 11,
-    height: 36,
-    paddingInline: 10,
-    marginRight: 8
-  },
-  dropdownLocked: {
-    background: colors.invariant.lightHover
-  },
-  dropdownText: {
-    color: colors.invariant.black,
-    width: '100%'
-  },
+
   value: {
     background: colors.invariant.light,
     borderRadius: 11,
     height: 36,
     paddingInline: 12,
     marginRight: 8
-  },
-  label: {
-    marginRight: 2
-  },
-  tooltip: {
-    color: colors.invariant.textGrey,
-    ...typography.caption4,
-    lineHeight: '24px',
-    background: colors.black.full,
-    borderRadius: 12,
-    fontSize: 14
   }
 }))

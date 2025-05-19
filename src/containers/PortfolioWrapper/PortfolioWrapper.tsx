@@ -12,7 +12,8 @@ import {
   lastPageSelector,
   PositionData,
   positionsWithPoolsData,
-  prices
+  prices,
+  shouldDisable
 } from '@store/selectors/positions'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { address, balanceLoading, balance, status, swapTokens } from '@store/selectors/solanaWallet'
@@ -42,6 +43,7 @@ const PortfolioWrapper = () => {
   const { classes } = useStyles()
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
   const walletAddress = useSelector(address)
+  const disabledButton = useSelector(shouldDisable)
 
   const list = useSelector(positionsWithPoolsData)
   const isLoading = useSelector(isLoadingPositionsList)
@@ -231,6 +233,7 @@ const PortfolioWrapper = () => {
 
   return isConnected ? (
     <Portfolio
+      shouldDisable={disabledButton}
       length={data.length}
       tokensList={tokensList}
       isBalanceLoading={isBalanceLoading}

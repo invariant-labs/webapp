@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import classNames from 'classnames'
 import useStyles from './style'
 import { Button, ButtonOwnProps } from '@mui/material'
 
@@ -23,11 +22,11 @@ export const OutlinedButton: React.FC<IProps> = ({
   startIcon,
   labelClassName
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   return (
     <Button
-      className={classNames(classes.general, !disabled && classes.activeButton, className)}
+      className={cx(classes.general, !disabled && classes.activeButton, className)}
       variant='contained'
       color={color}
       classes={{ disabled: classes.disabled }}
@@ -35,7 +34,7 @@ export const OutlinedButton: React.FC<IProps> = ({
       type={onClick ? 'button' : 'submit'}
       startIcon={startIcon}
       onClick={onClick}
-      sx={{ '& .MuiButton-label': classNames(labelClassName) }}>
+      sx={{ '& .MuiButton-label': cx(labelClassName) }}>
       {name}
     </Button>
   )
