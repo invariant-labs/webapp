@@ -14,16 +14,16 @@ export const useStyles = makeStyles()(() => ({
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
       background: colors.invariant.component,
-      borderBottom: `1px solid ${colors.invariant.light}`
+      borderBottom: `2px solid ${colors.invariant.light}`
     }
   },
+
   container: {
     height: 69,
     color: colors.white.main,
     display: 'grid',
     gridTemplateColumns: '30px auto 160px 80px 140px 100px 160px',
     padding: '18px 24px',
-    borderBottom: `1px solid ${colors.invariant.light}`,
     whiteSpace: 'nowrap',
 
     '& p': {
@@ -45,8 +45,9 @@ export const useStyles = makeStyles()(() => ({
     },
 
     [theme.breakpoints.down('sm')]: {
+      height: 69,
       gridTemplateColumns: 'auto 60px 60px 60px',
-      padding: '18px 8px',
+      padding: '24px 8px',
 
       '& p': {
         justifyContent: 'flex-start',
@@ -54,9 +55,28 @@ export const useStyles = makeStyles()(() => ({
       }
     }
   },
+
   containerNoAPY: {
-    gridTemplateColumns: '5% auto 12% 15% 12% 160px'
+    gridTemplateColumns: '30px auto 80px 140px 100px 160px',
+
+    [theme.breakpoints.down('md')]: {
+      gridTemplateColumns: 'auto 100px 80px 120px'
+    },
+
+    '@media (max-width: 780px)': {
+      gridTemplateColumns: 'auto 100px 140px 80px'
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: 'auto 80px 80px 60px',
+
+      '& p': {
+        justifyContent: 'flex-start',
+        ...typography.caption1
+      }
+    }
   },
+
   imageContainer: {
     display: 'flex',
     alignItems: 'center'
@@ -68,6 +88,7 @@ export const useStyles = makeStyles()(() => ({
   },
 
   header: {
+    height: '69px',
     '& p.MuiTypography-root': {
       color: colors.invariant.textGrey,
       ...typography.heading4,

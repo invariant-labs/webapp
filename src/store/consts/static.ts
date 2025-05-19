@@ -494,3 +494,5 @@ export const DEFAULT_PRIORITY_FEE = 0.0001
 
 export const STATS_CACHE_TIME = 30 * 60 * 1000
 export const BASE_JUPITER_API_URL = 'https://lite-api.jup.ag'
+
+export const ITEMS_PER_PAGE = 10
