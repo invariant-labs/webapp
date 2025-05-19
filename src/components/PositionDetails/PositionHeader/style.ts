@@ -101,7 +101,7 @@ export const useStyles = makeStyles()(() => ({
     }
   },
   feeContainer: {
-    height: 34,
+    height: 40,
     padding: '0 8px',
     background: colors.invariant.component,
     borderRadius: 12,

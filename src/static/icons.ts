@@ -85,6 +85,10 @@ import reverseTokensIcon from './svg/reverse-tokens.svg'
 import backArrowIcon from '@static/svg/back-arrow.svg'
 import eyeYellowIcon from './svg/eyeYellow.svg'
 import closeYellowIcon from './svg/closeYellow.svg'
+import snackbarSwapIcon from './svg/snackbarSwap.svg'
+import circleDolarIcon from './svg/circleDolar.svg'
+import depositIcon from './svg/depositIcon.svg'
+import withdrawIcon from './svg/withdrawIcon.svg'
 
 export {
   dog1Icon,
@@ -173,7 +177,11 @@ export {
   reverseTokensIcon,
   backArrowIcon,
   eyeYellowIcon,
-  closeYellowIcon
+  closeYellowIcon,
+  snackbarSwapIcon,
+  circleDolarIcon,
+  depositIcon,
+  withdrawIcon
 }
 
 export const chainIcons = {

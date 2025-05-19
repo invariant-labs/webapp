@@ -143,71 +143,71 @@ export const WrappedStats: React.FC = () => {
           </Grid>
           <Grid className={classes.rowContainer}>
             <Typography className={classes.subheader} mb={2}>
-              Top tokens
+              Top pools
             </Typography>
             <FilterSearch
               networkType={currentNetwork}
-              selectedFilters={searchTokensValue}
-              setSelectedFilters={setSearchTokensValue}
+              selectedFilters={searchPoolsValue}
+              setSelectedFilters={setSearchPoolsValue}
               filtersAmount={2}
               closeOnSelect={true}
             />
           </Grid>
           <Grid container className={classes.row}>
-            <TokensList
-              initialLength={tokensList.length}
-              data={filteredTokenList.map(tokenData => ({
-                icon: tokenData.tokenDetails?.logoURI ?? unknownTokenIcon,
-                name: tokenData.tokenDetails?.name ?? tokenData.address.toString(),
-                symbol: tokenData.tokenDetails?.symbol ?? tokenData.address.toString(),
-                price: tokenData.price,
-                // priceChange: tokenData.priceChange,
-                volume: tokenData.volume24,
-                TVL: tokenData.tvl,
-                address: tokenData.address.toString(),
-                isUnknown: tokenData.tokenDetails?.isUnknown ?? false
+            <PoolList
+              initialLength={poolsList.length}
+              data={filteredPoolsList.map(poolData => ({
+                symbolFrom: poolData.tokenXDetails?.symbol ?? poolData.tokenX.toString(),
+                symbolTo: poolData.tokenYDetails?.symbol ?? poolData.tokenY.toString(),
+                iconFrom: poolData.tokenXDetails?.logoURI ?? unknownTokenIcon,
+                iconTo: poolData.tokenYDetails?.logoURI ?? unknownTokenIcon,
+                volume: poolData.volume24,
+                TVL: poolData.tvl,
+                fee: poolData.fee,
+                addressFrom: poolData.tokenX.toString(),
+                addressTo: poolData.tokenY.toString(),
+                apy: poolData.apy,
+                apyData: {
+                  fees: poolData.apy
+                },
+                isUnknownFrom: poolData.tokenXDetails?.isUnknown ?? false,
+                isUnknownTo: poolData.tokenYDetails?.isUnknown ?? false,
+                poolAddress: poolData.poolAddress.toString()
               }))}
               network={currentNetwork}
               copyAddressHandler={copyAddressHandler}
               isLoading={isLoadingStats}
+              showAPY={showAPY}
             />
           </Grid>
           <Grid className={classes.rowContainer}>
             <Typography className={classes.subheader} mb={2}>
-              Top pools
+              Top tokens
             </Typography>
 
             <FilterSearch
               networkType={currentNetwork}
-              setSelectedFilters={setSearchPoolsValue}
-              selectedFilters={searchPoolsValue}
+              setSelectedFilters={setSearchTokensValue}
+              selectedFilters={searchTokensValue}
               filtersAmount={2}
             />
           </Grid>
-          <PoolList
-            initialLength={poolsList.length}
-            data={filteredPoolsList.map(poolData => ({
-              symbolFrom: poolData.tokenXDetails?.symbol ?? poolData.tokenX.toString(),
-              symbolTo: poolData.tokenYDetails?.symbol ?? poolData.tokenY.toString(),
-              iconFrom: poolData.tokenXDetails?.logoURI ?? unknownTokenIcon,
-              iconTo: poolData.tokenYDetails?.logoURI ?? unknownTokenIcon,
-              volume: poolData.volume24,
-              TVL: poolData.tvl,
-              fee: poolData.fee,
-              addressFrom: poolData.tokenX.toString(),
-              addressTo: poolData.tokenY.toString(),
-              apy: poolData.apy,
-              apyData: {
-                fees: poolData.apy
-              },
-              isUnknownFrom: poolData.tokenXDetails?.isUnknown ?? false,
-              isUnknownTo: poolData.tokenYDetails?.isUnknown ?? false,
-              poolAddress: poolData.poolAddress.toString()
+          <TokensList
+            initialLength={tokensList.length}
+            data={filteredTokenList.map(tokenData => ({
+              icon: tokenData.tokenDetails?.logoURI ?? unknownTokenIcon,
+              name: tokenData.tokenDetails?.name ?? tokenData.address.toString(),
+              symbol: tokenData.tokenDetails?.symbol ?? tokenData.address.toString(),
+              price: tokenData.price,
+              // priceChange: tokenData.priceChange,
+              volume: tokenData.volume24,
+              TVL: tokenData.tvl,
+              address: tokenData.address.toString(),
+              isUnknown: tokenData.tokenDetails?.isUnknown ?? false
             }))}
             network={currentNetwork}
             copyAddressHandler={copyAddressHandler}
             isLoading={isLoadingStats}
-            showAPY={showAPY}
           />
         </>
       )}

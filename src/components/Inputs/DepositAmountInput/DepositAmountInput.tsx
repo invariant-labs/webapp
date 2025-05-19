@@ -1,4 +1,4 @@
-import { Box, Grid, Input, Typography, useMediaQuery } from '@mui/material'
+import { Box, Grid, Input, Typography } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
 import { formatNumberWithSuffix, formatNumberWithoutSuffix, getScaleFromString } from '@utils/utils'
 import React, { CSSProperties, useRef } from 'react'
@@ -6,7 +6,6 @@ import useStyles from './style'
 import { getButtonClassName } from '@utils/uiUtils'
 import { OutlinedButton } from '@common/OutlinedButton/OutlinedButton'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
-import { theme } from '@static/theme'
 import { unknownTokenIcon, warningIcon } from '@static/icons'
 
 interface ActionButton {
@@ -62,7 +61,6 @@ export const DepositAmountInput: React.FC<IProps> = ({
   const { classes } = useStyles({ isSelected: !!currency && !walletUninitialized })
 
   const inputRef = useRef<HTMLInputElement>(null)
-  const isMd = useMediaQuery(theme.breakpoints.up('md'))
 
   const allowOnlyDigitsAndTrimUnnecessaryZeros: React.ChangeEventHandler<HTMLInputElement> = e => {
     const inputValue = e.target.value.replace(/,/g, '.')
@@ -190,17 +188,13 @@ export const DepositAmountInput: React.FC<IProps> = ({
               priceLoading ? (
                 <img src={loadingAnimation} className={classes.loading} alt='loading' />
               ) : tokenPrice ? (
-                <TooltipHover
-                  title='Estimated USD Value of the Entered Tokens'
-                  placement='bottom'
-                  top={1}
-                  left={isMd ? 'auto' : -90}>
+                <TooltipHover title='Estimated USD Value of the Entered Tokens' placement='bottom'>
                   <Typography className={classes.estimatedBalance}>
                     ~${formatNumberWithoutSuffix(usdBalance)}
                   </Typography>
                 </TooltipHover>
               ) : (
-                <TooltipHover title='Cannot fetch price of token' placement='bottom' top={1}>
+                <TooltipHover title='Cannot fetch price of token' placement='bottom'>
                   <Typography className={classes.noData}>
                     <span className={classes.noDataIcon}>?</span>No data
                   </Typography>

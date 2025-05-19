@@ -2,8 +2,6 @@ import { Button, SxProps, Theme } from '@mui/material'
 import errorGif from '@static/gif/errorAnimation.gif'
 import loadingAnimation from '@static/gif/loading.gif'
 import successGif from '@static/gif/successAnimation.gif'
-import classNames from 'classnames'
-import React from 'react'
 import useStyles from './style'
 
 export type ProgressState =
@@ -33,7 +31,7 @@ const AnimatedButton: React.FC<Props> = ({
   sx,
   type = 'button'
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   const getMessage = () => {
     if (progress === 'none') {
@@ -72,7 +70,7 @@ const AnimatedButton: React.FC<Props> = ({
     <Button
       disabled={disabled}
       variant='contained'
-      className={classNames(
+      className={cx(
         classes.button,
         progress === 'progress' ||
           progress === 'approvedWithSuccess' ||

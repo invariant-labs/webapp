@@ -30,7 +30,7 @@ dist-ssr
 /src/build
 /build
 /dist 
-/storybook-static
+
 # misc
 .DS_Store
 .env.local
@@ -42,4 +42,3 @@ dist-ssr
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-*storybook.log

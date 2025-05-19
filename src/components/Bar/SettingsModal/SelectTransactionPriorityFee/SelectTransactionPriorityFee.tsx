@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { PriorityMode } from '@store/consts/types'
 import { calculatePriorityFee, stringToFixed } from '@utils/utils'
 import { MAX_PRIORITY_FEE } from '@store/consts/static'
-import classNames from 'classnames'
 
 type Props = {
   dynamicFee: number
@@ -12,7 +11,7 @@ type Props = {
 }
 
 export const SelectTransactionPriorityFee = ({ dynamicFee, handleClose }: Props) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   const currentPriorityMode = localStorage.getItem('INVARIANT_PRIORITY_MODE') as PriorityMode
   const currentPriorityFee = localStorage.getItem('INVARIANT_PRIORITY_FEE')
@@ -92,7 +91,7 @@ export const SelectTransactionPriorityFee = ({ dynamicFee, handleClose }: Props)
       <Box className={classes.feeContainer}>
         {FEES.map(({ title, amount, description }) => (
           <Box
-            className={classNames(classes.fee, {
+            className={cx(classes.fee, {
               [classes.feeSelected]:
                 title === priorityMode && !isInputFocused && priorityMode !== PriorityMode.Custom
             })}
@@ -104,7 +103,7 @@ export const SelectTransactionPriorityFee = ({ dynamicFee, handleClose }: Props)
             }}>
             <Box className={classes.feeHeader}>
               <Typography
-                className={classNames(classes.feeTitle, {
+                className={cx(classes.feeTitle, {
                   [classes.feeTitleSelected]:
                     title === priorityMode &&
                     !isInputFocused &&
@@ -115,7 +114,7 @@ export const SelectTransactionPriorityFee = ({ dynamicFee, handleClose }: Props)
               <Typography className={classes.feeAmount}>Max {amount} SOL</Typography>
             </Box>
             <Box
-              className={classNames(classes.feeDescription, {
+              className={cx(classes.feeDescription, {
                 [classes.feeDescriptionSelected]:
                   title === priorityMode && !isInputFocused && priorityMode !== PriorityMode.Custom
               })}>
@@ -130,7 +129,7 @@ export const SelectTransactionPriorityFee = ({ dynamicFee, handleClose }: Props)
           <Typography className={classes.customFeeText}>MAX: {MAX_PRIORITY_FEE} SOL</Typography>
         </Box>
         <Input
-          className={classNames(classes.input, {
+          className={cx(classes.input, {
             [classes.inputSelected]: priorityMode === PriorityMode.Custom
           })}
           placeholder='Custom priority fee'

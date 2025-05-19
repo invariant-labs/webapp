@@ -38,7 +38,11 @@ const useStyles = makeStyles()(theme => {
     },
     plot: {
       width: '100%',
-      height: 185
+      height: 185,
+      [theme.breakpoints.down('md')]: {
+        height: 253,
+        marginBottom: 24
+      }
     },
     subheader: {
       ...typography.heading4,
@@ -165,83 +169,20 @@ const useStyles = makeStyles()(theme => {
     infoRow: {
       marginBottom: 16
     },
-    activeLiquidity: {
-      height: 24,
-      color: colors.invariant.text,
-      ...typography.caption2,
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      cursor: 'default'
-    },
-    activeLiquidityIcon: {
-      marginLeft: 5,
-      height: 14,
-      width: 14,
-      border: '1px solid #FFFFFF',
-      color: colors.invariant.text,
-      borderRadius: '50%',
-      fontSize: 8,
-      lineHeight: '10px',
-      fontWeight: 400,
-      textAlign: 'center',
-      boxSizing: 'border-box',
-      paddingTop: 3,
-      cursor: 'default',
-      userSelect: 'none'
-    },
-    liquidityTooltip: {
-      background: colors.invariant.component,
-      boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.35)',
-      borderRadius: 20,
-      padding: 16,
-      maxWidth: 376,
-      boxSizing: 'border-box',
-
-      [theme.breakpoints.down('sm')]: {
-        maxWidth: 360
-      }
-    },
-    liquidityTitle: {
-      color: colors.invariant.text,
-      ...typography.heading4,
-      marginBottom: 12
-    },
-    liquidityDesc: {
-      color: colors.invariant.text,
-      ...typography.caption2
-    },
-    liquidityNote: {
-      color: colors.invariant.textGrey,
-      ...typography.caption2
-    },
-    liquidityImg: {
-      width: 80,
-      minWidth: 80,
-      height: 60,
-      marginLeft: 16
-    },
     currentPrice: {
       display: 'inline-block',
       color: colors.invariant.yellow,
-      ...typography.caption2,
-      textAlign: 'right'
+      ...typography.caption2
+    },
+    usdcCurrentPrice: {
+      display: 'inline-block',
+      color: colors.invariant.text,
+      ...typography.body2
     },
     checkboxLabel: {
       color: colors.invariant.textGrey,
       fontSize: 14,
       fontWeight: 'normal'
-    },
-    liqDescWrapper: {
-      flexDirection: 'row',
-      flexWrap: 'nowrap',
-      alignItems: 'center',
-      marginBottom: 12
-    },
-    activeLiquidityContainer: {
-      flexDirection: 'column',
-      width: 'auto'
     },
     conWrapper: {
       justifyContent: 'space-between',
@@ -275,6 +216,12 @@ const useStyles = makeStyles()(theme => {
       ...typography.caption2,
       textAlign: 'right',
       marginLeft: 4
+    },
+    priceRangeContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between'
     },
     rangeConcentration: {
       display: 'flex',

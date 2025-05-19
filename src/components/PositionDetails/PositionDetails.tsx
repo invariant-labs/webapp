@@ -3,8 +3,10 @@ import SinglePositionPlot from '@components/PositionDetails/SinglePositionPlot/S
 import { TickPlotPositionData } from '@common/PriceRangePlot/PriceRangePlot'
 import { Box, useMediaQuery } from '@mui/material'
 import {
+  ADDRESSES_TO_REVERT_TOKEN_PAIRS,
   NetworkType,
   REFRESHER_INTERVAL,
+  StableCoinsMAIN,
   WSOL_CLOSE_POSITION_LAMPORTS_DEV,
   WSOL_CLOSE_POSITION_LAMPORTS_MAIN
 } from '@store/consts/static'
@@ -62,6 +64,7 @@ interface IProps {
   onGoBackClick: () => void
   showPoolDetailsLoader: boolean
   solBalance: BN
+  shouldDisable: boolean
   isPreview: boolean
 }
 
@@ -100,7 +103,8 @@ const PositionDetails: React.FC<IProps> = ({
   poolDetails,
   showPoolDetailsLoader,
   solBalance,
-  isPreview
+  isPreview,
+  shouldDisable
 }) => {
   const { classes } = useStyles()
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
@@ -170,6 +174,41 @@ const PositionDetails: React.FC<IProps> = ({
     }
   }, [isPreview, connectWalletDelay])
 
+  const usdcPrice = useMemo(() => {
+    if (tokenX === null || tokenY === null) return null
+
+    const revertDenominator = initialXtoY(tokenXAddress.toString(), tokenYAddress.toString())
+    console.log(tokenXAddress.toString())
+    console.log(tokenYAddress.toString())
+    if (
+      tokenXAddress.toString() === StableCoinsMAIN.USDC ||
+      tokenYAddress.toString() === StableCoinsMAIN.USDC ||
+      tokenXAddress.toString() === StableCoinsMAIN.USDT ||
+      tokenYAddress.toString() === StableCoinsMAIN.USDT
+    ) {
+      return null
+    }
+
+    const shouldDisplayPrice =
+      ADDRESSES_TO_REVERT_TOKEN_PAIRS.includes(tokenXAddress.toString()) ||
+      ADDRESSES_TO_REVERT_TOKEN_PAIRS.includes(tokenYAddress.toString())
+    if (!shouldDisplayPrice) {
+      return null
+    }
+
+    const ratioToDenominator = revertDenominator ? midPrice.x : 1 / midPrice.x
+    const denominatorPrice = revertDenominator ? tokenYPriceData?.price : tokenXPriceData?.price
+    console.log('denominatorPrice', denominatorPrice)
+    if (!denominatorPrice) {
+      return null
+    }
+
+    return {
+      token: revertDenominator ? tokenX.name : tokenY.name,
+      price: ratioToDenominator * denominatorPrice
+    }
+  }, [midPrice.x, tokenXPriceData?.price, tokenYPriceData?.price])
+
   return (
     <>
       <Information mb={3} transitionTimeout={300} shouldOpen={showPreviewInfo}>
@@ -183,6 +222,7 @@ const PositionDetails: React.FC<IProps> = ({
       </Information>
       <Box className={classes.mainContainer}>
         <PositionHeader
+          isClosing={shouldDisable}
           tokenA={
             xToY
               ? { icon: tokenX.icon, ticker: tokenY.name }
@@ -226,6 +266,7 @@ const PositionDetails: React.FC<IProps> = ({
         <Box className={classes.container}>
           <Box className={classes.leftSide}>
             <SinglePositionInfo
+              isClosing={shouldDisable}
               onClickClaimFee={onClickClaimFee}
               tokenX={tokenX}
               tokenY={tokenY}
@@ -268,6 +309,7 @@ const PositionDetails: React.FC<IProps> = ({
               hasTicksError={hasTicksError}
               reloadHandler={reloadHandler}
               isFullRange={isFullRange}
+              usdcPrice={usdcPrice}
               globalPrice={globalPrice}
               tokenAPriceData={xToY ? tokenXPriceData : tokenYPriceData}
               tokenBPriceData={xToY ? tokenYPriceData : tokenXPriceData}

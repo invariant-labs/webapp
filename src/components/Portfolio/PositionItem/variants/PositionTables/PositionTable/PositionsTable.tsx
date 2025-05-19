@@ -24,6 +24,7 @@ interface IPositionsTableProps {
   isLoading?: boolean
   handleClosePosition: (index: number) => void
   handleClaimFee: (index: number) => void
+  shouldDisable: boolean
 }
 
 export const PositionsTable: React.FC<IPositionsTableProps> = ({
@@ -32,7 +33,8 @@ export const PositionsTable: React.FC<IPositionsTableProps> = ({
   onAddPositionClick,
   isLoading = false,
   handleClosePosition,
-  handleClaimFee
+  handleClaimFee,
+  shouldDisable
 }) => {
   const { classes } = usePositionTableStyle({ isScrollHide: positions.length <= 5 || isLoading })
   const navigate = useNavigate()
@@ -89,6 +91,7 @@ export const PositionsTable: React.FC<IPositionsTableProps> = ({
                 key={position.address + index}
                 className={classes.tableBodyRow}>
                 <PositionTableRow
+                  shouldDisable={shouldDisable}
                   {...position}
                   loading={isLoading}
                   handleClosePosition={handleClosePosition}

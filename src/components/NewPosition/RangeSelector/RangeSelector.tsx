@@ -18,9 +18,8 @@ import {
   calculateConcentration
 } from '@utils/utils'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
-import { Button, Grid, Typography } from '@mui/material'
-import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
-import { activeLiquidityIcon, boostPointsIcon } from '@static/icons'
+import { Box, Button, Grid, Typography } from '@mui/material'
+import { boostPointsIcon } from '@static/icons'
 
 export interface IRangeSelector {
   updatePath: (concIndex: number) => void
@@ -69,6 +68,10 @@ export interface IRangeSelector {
   setShouldResetPlot: (val: boolean) => void
   tokenAPriceData?: TokenPriceData
   tokenBPriceData?: TokenPriceData
+  usdcPrice: {
+    token: string
+    price?: number
+  } | null
 }
 
 export const RangeSelector: React.FC<IRangeSelector> = ({
@@ -105,7 +108,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   shouldResetPlot,
   setShouldResetPlot,
   tokenAPriceData,
-  tokenBPriceData
+  tokenBPriceData,
+  usdcPrice
 }) => {
   const { classes } = useStyles()
 
@@ -187,6 +191,51 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       setPlotMin(newMin)
       setPlotMax(newMax)
     }
+  }
+
+  const moveLeft = () => {
+    const diff = plotMax - plotMin
+
+    const minPrice = isXtoY
+      ? calcPriceByTickIndex(getMinTick(tickSpacing), isXtoY, xDecimal, yDecimal)
+      : calcPriceByTickIndex(getMaxTick(tickSpacing), isXtoY, xDecimal, yDecimal)
+
+    const newLeft = plotMin - diff / 6
+    const newRight = plotMax - diff / 6
+
+    if (newLeft < minPrice - diff / 2) {
+      setPlotMin(minPrice - diff / 2)
+      setPlotMax(minPrice + diff / 2)
+    } else {
+      setPlotMin(newLeft)
+      setPlotMax(newRight)
+    }
+  }
+
+  const moveRight = () => {
+    const diff = plotMax - plotMin
+
+    const maxPrice = isXtoY
+      ? calcPriceByTickIndex(getMaxTick(tickSpacing), isXtoY, xDecimal, yDecimal)
+      : calcPriceByTickIndex(getMinTick(tickSpacing), isXtoY, xDecimal, yDecimal)
+
+    const newLeft = plotMin + diff / 6
+    const newRight = plotMax + diff / 6
+
+    if (newRight > maxPrice + diff / 2) {
+      setPlotMin(maxPrice - diff / 2)
+      setPlotMax(maxPrice + diff / 2)
+    } else {
+      setPlotMin(newLeft)
+      setPlotMax(newRight)
+    }
+  }
+
+  const centerChart = () => {
+    const diff = plotMax - plotMin
+
+    setPlotMin(midPrice.x - diff / 2)
+    setPlotMax(midPrice.x + diff / 2)
   }
 
   const setLeftInputValues = (val: string) => {
@@ -285,6 +334,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     }
   }, [shouldReversePlot])
 
+  const [lastPoolIndex, setLastPoolIndex] = useState(poolIndex)
+  const [initReset, setInitReset] = useState(true)
   useEffect(() => {
     if (
       !ticksLoading &&
@@ -295,12 +346,18 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       shouldResetPlot
     ) {
       if (!shouldNotUpdatePriceRange) {
-        resetPlot()
         setCurrentMidPrice(midPrice)
-        setShouldResetPlot(false)
+
+        if (poolIndex !== lastPoolIndex || initReset) {
+          resetPlot()
+          setInitReset(false)
+          setShouldResetPlot(false)
+        }
       }
     }
-  }, [triggerReset])
+
+    setLastPoolIndex(poolIndex)
+  }, [triggerReset, initReset])
 
   useEffect(() => {
     if (
@@ -317,6 +374,25 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       unblockUpdatePriceRange()
     }
   }, [ticksLoading, isMountedRef, midPrice.index, poolIndex])
+
+  //Fix in case of reset chart not triggered correctly
+  useEffect(() => {
+    if (initReset === false) {
+      const timeoutId = setTimeout(() => {
+        if (
+          isXtoY
+            ? leftRange > midPrice.index || rightRange < midPrice.index
+            : leftRange < midPrice.index || rightRange > midPrice.index
+        ) {
+          resetPlot()
+        }
+      }, 100)
+
+      return () => {
+        clearTimeout(timeoutId)
+      }
+    }
+  }, [initReset])
 
   const autoZoomHandler = (left: number, right: number, canZoomCloser: boolean = false) => {
     const { leftInRange, rightInRange } = getTicksInsideRange(left, right, isXtoY)
@@ -427,55 +503,27 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     <Grid container className={classes.wrapper}>
       <Grid className={classes.topInnerWrapper}>
         <Grid className={classes.headerContainer} container>
-          <Grid>
+          <Grid className={classes.priceRangeContainer}>
             <Typography className={classes.header}>Price range</Typography>
             {poolIndex !== null && (
-              <Typography className={classes.currentPrice}>
+              <Typography className={classes.currentPrice} mt={0.5}>
                 {formatNumberWithoutSuffix(midPrice.x)} {tokenBSymbol} per {tokenASymbol}
               </Typography>
             )}
+            {poolIndex !== null && usdcPrice !== null && usdcPrice.price ? (
+              <Typography className={classes.usdcCurrentPrice}>
+                {usdcPrice.token} ${formatNumberWithoutSuffix(usdcPrice.price)}
+              </Typography>
+            ) : (
+              <Box minHeight={20} />
+            )}
           </Grid>
-          <Grid className={classes.activeLiquidityContainer} container>
-            <TooltipGradient
-              title={
-                <>
-                  <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
-                  <Typography className={classes.liquidityDesc} style={{ marginBottom: 12 }}>
-                    While selecting the price range, note where active liquidity is located. Your
-                    liquidity can be inactive and, as a consequence, not generate profits.
-                  </Typography>
-                  <Grid container className={classes.liqDescWrapper}>
-                    <Typography className={classes.liquidityDesc}>
-                      The active liquidity range is represented by white, dashed lines in the
-                      liquidity chart. Active liquidity is determined by the maximum price range
-                      resulting from the statistical volume of exchanges for the last 7 days.
-                    </Typography>
-                    <img
-                      className={classes.liquidityImg}
-                      src={activeLiquidityIcon}
-                      alt='Liquidity'
-                    />
-                  </Grid>
-                  <Typography className={classes.liquidityNote}>
-                    Note: active liquidity borders are always aligned to the nearest initialized
-                    ticks.
-                  </Typography>
-                </>
-              }
-              placement='bottom'
-              top={1}>
-              <Typography className={classes.activeLiquidity}>
-                Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
-              </Typography>
-            </TooltipGradient>
-            <Grid container flexDirection='column'>
-              <Typography className={classes.currentPrice}>Current price</Typography>
-              <Typography className={classes.globalPrice}>Global price</Typography>
-              <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>
-              <Typography className={classes.lastGlobalSellPrice}>
-                Last global sell price
-              </Typography>
-            </Grid>
+
+          <Grid display={'flex'} flexDirection='column' alignItems={'flex-end'}>
+            <Typography className={classes.currentPrice}>Current price</Typography>
+            <Typography className={classes.globalPrice}>Global price</Typography>
+            <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>
+            <Typography className={classes.lastGlobalSellPrice}>Last global sell price</Typography>
           </Grid>
         </Grid>
         <PriceRangePlot
@@ -507,6 +555,9 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           volumeRange={volumeRange}
           tokenAPriceData={tokenAPriceData}
           tokenBPriceData={tokenBPriceData}
+          moveLeft={moveLeft}
+          moveRight={moveRight}
+          centerChart={centerChart}
         />
         {/* <FormControlLabel
           control={

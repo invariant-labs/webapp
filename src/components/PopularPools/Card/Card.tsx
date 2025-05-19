@@ -89,12 +89,12 @@ const Card: React.FC<ICard> = ({
   }
 
   const shortenAddressName = (address: string) =>
-    address.length > 8 ? `${address.slice(0, 4)}...` : address
+    address.length > 5 ? `${address.slice(0, 4)}...` : address
 
   return (
     <Grid className={classes.root}>
       {isLoading ? (
-        <Skeleton variant='rounded' animation='wave' className={classes.skeletonRect} />
+        <Skeleton variant='rounded' animation='wave' className={classes.skeleton} />
       ) : (
         <Grid>
           <GradientBorder
@@ -114,7 +114,7 @@ const Card: React.FC<ICard> = ({
               className={classes.backgroundImage}
               style={{ bottom: 0, zIndex: -1 }}
             />
-            <Grid container className={classes.wrapper}>
+            <Grid container className={classes.cardWrapper}>
               <Grid container className={classes.iconsWrapper}>
                 <Box className={classes.iconContainer}>
                   <img
@@ -164,7 +164,7 @@ const Card: React.FC<ICard> = ({
                   <StatsLabel title='Volume' value={`$${formatNumberWithSuffix(volume)}`} />
                 )}
               </Grid>
-              <Grid container className={classes.backWrapper}>
+              <Grid container className={classes.footerWrapper}>
                 <Grid className={classes.back} container item onClick={handleOpenSwap}>
                   <img className={classes.backIcon} src={backIcon2} alt='Back' />
                   <Typography className={classes.backText}>Swap</Typography>

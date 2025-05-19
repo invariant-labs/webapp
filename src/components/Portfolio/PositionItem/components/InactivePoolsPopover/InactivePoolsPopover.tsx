@@ -1,6 +1,6 @@
 import useStyles from './style'
 import PositionStatusTooltip from '../PositionStatusTooltip/PositionStatusTooltip'
-import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 
 export interface IPromotedPoolPopover {
   isActive?: boolean
@@ -12,15 +12,15 @@ export const InactivePoolsPopover = ({ isActive, isPromoted, children }: IPromot
   const { classes } = useStyles()
 
   return (
-    <TooltipGradient
+    <TooltipHover
       title={
         <div className={classes.container}>
           <PositionStatusTooltip isActive={isActive} isPromoted={isPromoted} />
         </div>
       }
       placement='bottom'
-      top={1}>
+      increasePadding>
       {children}
-    </TooltipGradient>
+    </TooltipHover>
   )
 }

@@ -5,13 +5,15 @@ import loader from '@static/gif/loader.gif'
 import { colors, theme } from '@static/theme'
 import { formatNumberWithSuffix, nearestTickIndex, TokenPriceData } from '@utils/utils'
 import { PlotTickData } from '@store/reducers/positions'
-import classNames from 'classnames'
 import React, { useCallback, useMemo, useRef } from 'react'
 import Brush from './Brush/Brush'
 import useStyles from './style'
 import { BN } from '@project-serum/anchor'
 import { Button } from '@common/Button/Button'
 import { zoomInIcon, zoomOutIcon } from '@static/icons'
+import ArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import ArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
+import VerticalAlignCenterIcon from '@mui/icons-material/VerticalAlignCenter'
 
 export type TickPlotPositionData = Omit<PlotTickData, 'y'>
 
@@ -31,6 +33,9 @@ export interface IPriceRangePlot {
   plotMax: number
   zoomMinus: () => void
   zoomPlus: () => void
+  moveLeft: () => void
+  moveRight: () => void
+  centerChart: () => void
   loading?: boolean
   isXtoY: boolean
   xDecimal: number
@@ -61,6 +66,9 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   plotMax,
   zoomMinus,
   zoomPlus,
+  moveLeft,
+  moveRight,
+  centerChart,
   loading,
   isXtoY,
   xDecimal,
@@ -72,7 +80,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   tokenAPriceData,
   tokenBPriceData
 }) => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
 
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'))
   const isMd = useMediaQuery(theme.breakpoints.up('md'))
@@ -122,15 +130,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   )
 
   const currentLessThanRange = useMemo(() => {
-    if (
-      !safeData.length ||
-      disabled ||
-      leftRange?.x == null ||
-      leftRange.x < Math.max(plotMin, safeData[0]?.x ?? plotMin)
-    ) {
-      return []
-    }
-
     let rangeData: Array<{ x: number; y: number }> = safeData.filter(tick => tick.x <= leftRange.x)
     const outData: Array<{ x: number; y: number }> = safeData.filter(
       tick => tick.x < Math.max(plotMin, safeData[0]?.x ?? plotMin)
@@ -164,41 +163,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       return []
     }
 
-    if (disabled) {
-      const outMinData: Array<{ x: number; y: number }> = safeData.filter(
-        tick => tick.x < Math.max(plotMin, safeData[0]?.x ?? plotMin)
-      )
-      const outMaxData: Array<{ x: number; y: number }> = safeData.filter(
-        tick => tick.x > Math.min(plotMax, safeData[safeData.length - 1]?.x ?? plotMax)
-      )
-      const rangeData: Array<{ x: number; y: number }> = safeData.slice(
-        outMinData.length,
-        safeData.length - outMaxData.length
-      )
-
-      if (
-        !rangeData.length ||
-        (rangeData[0]?.x ?? 0) > Math.max(plotMin, safeData[0]?.x ?? plotMin)
-      ) {
-        rangeData.unshift({
-          x: Math.max(plotMin, safeData[0]?.x ?? plotMin),
-          y: outMinData.length > 0 ? (outMinData[outMinData.length - 1]?.y ?? 0) : 0
-        })
-      }
-
-      if (
-        (rangeData[rangeData.length - 1]?.x ?? 0) <
-        Math.min(plotMax, safeData[safeData.length - 1]?.x ?? plotMax)
-      ) {
-        rangeData.push({
-          x: Math.min(plotMax, safeData[safeData.length - 1]?.x ?? plotMax),
-          y: rangeData[rangeData.length - 1]?.y ?? 0
-        })
-      }
-
-      return pointsOmitter(rangeData)
-    }
-
     if (
       leftRange?.x == null ||
       rightRange?.x == null ||
@@ -209,6 +173,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     }
 
     const lessThan = safeData.filter(tick => tick.x <= leftRange.x).length
+
     let rangeData: Array<{ x: number; y: number }> = safeData.filter(
       tick => tick.x >= leftRange.x && tick.x <= rightRange.x
     )
@@ -276,10 +241,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   }, [disabled, safeData, leftRange, rightRange, plotMin, plotMax, pointsOmitter])
 
   const currentGreaterThanRange = useMemo(() => {
-    if (!safeData.length || disabled || rightRange?.x == null || rightRange.x > plotMax) {
-      return []
-    }
-
     let rangeData: Array<{ x: number; y: number }> = safeData.filter(tick => tick.x >= rightRange.x)
     const outData: Array<{ x: number; y: number }> = safeData.filter(
       tick => tick.x > Math.min(plotMax, safeData[safeData.length - 1]?.x ?? plotMax)
@@ -565,11 +526,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   }, [currentLessThanRange, currentRange, currentGreaterThanRange, plotMin, plotMax])
 
   return (
-    <Grid
-      container
-      className={classNames(classes.container, className)}
-      style={style}
-      ref={containerRef}>
+    <Grid container className={cx(classes.container, className)} style={style} ref={containerRef}>
       {loading && coverOnLoading ? (
         <Grid container className={classes.cover}>
           <img src={loader} className={classes.loader} alt='Loader' />
@@ -588,8 +545,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       <Grid className={classes.zoomButtonsWrapper}>
         <Button
           scheme='green'
-          width={isMd ? 28 : 40}
-          height={isMd ? 28 : 40}
+          width={isMd ? 28 : 36}
+          height={isMd ? 28 : 36}
           borderRadius={10}
           padding={0}
           onClick={zoomPlus}>
@@ -597,12 +554,60 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         </Button>
         <Button
           scheme='green'
-          width={isMd ? 28 : 40}
-          height={isMd ? 28 : 40}
+          width={isMd ? 28 : 36}
+          height={isMd ? 28 : 36}
           borderRadius={10}
           padding={0}
           onClick={zoomMinus}>
           <img src={zoomOutIcon} className={classes.zoomIcon} alt='Zoom out' />
+        </Button>
+        <Button
+          scheme='pink'
+          width={isMd ? 28 : 36}
+          height={isMd ? 28 : 36}
+          borderRadius={10}
+          padding={0}
+          onClick={centerChart}>
+          <VerticalAlignCenterIcon
+            sx={{
+              width: isMd ? 28 : 32,
+              height: isMd ? 28 : 32,
+              transform: 'rotate(90deg)'
+            }}
+          />
+        </Button>
+      </Grid>
+
+      <Grid className={classes.leftArrow}>
+        <Button
+          scheme='pink'
+          width={isMd ? 28 : 36}
+          height={isMd ? 28 : 36}
+          borderRadius={10}
+          padding={0}
+          onClick={moveLeft}>
+          <ArrowLeftIcon
+            sx={{
+              width: isMd ? 28 : 32,
+              height: isMd ? 28 : 32
+            }}
+          />
+        </Button>
+      </Grid>
+      <Grid className={classes.rightArrow}>
+        <Button
+          scheme='pink'
+          width={isMd ? 28 : 36}
+          height={isMd ? 28 : 36}
+          borderRadius={10}
+          padding={0}
+          onClick={moveRight}>
+          <ArrowRightIcon
+            sx={{
+              width: isMd ? 28 : 32,
+              height: isMd ? 28 : 32
+            }}
+          />
         </Button>
       </Grid>
       <ResponsiveLine
@@ -627,7 +632,11 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
         data={chartData}
         curve={isXtoY ? 'stepAfter' : 'stepBefore'}
         margin={{ top: isSmDown ? 55 : 25, bottom: 15 }}
-        colors={[colors.invariant.pink, colors.invariant.green, colors.invariant.pink]}
+        colors={[
+          colors.invariant.chartDisabled,
+          colors.invariant.green,
+          colors.invariant.chartDisabled
+        ]}
         axisTop={null}
         axisRight={null}
         axisLeft={null}
@@ -636,7 +645,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           tickPadding: 0,
           tickRotation: 0,
           tickValues: 5,
-          format: value => formatNumberWithSuffix(value.toString())
+          format: value => (value < 0 ? '' : formatNumberWithSuffix(value.toString()))
         }}
         xScale={{
           type: 'linear',

@@ -1,18 +1,15 @@
 import Select from '@components/Inputs/Select/Select'
 import { OutlinedButton } from '@common/OutlinedButton/OutlinedButton'
-import { Grid, Input, Typography, useMediaQuery } from '@mui/material'
+import { Grid, Input, Typography } from '@mui/material'
 import loadingAnimation from '@static/gif/loading.gif'
 import { formatNumberWithoutSuffix, formatNumberWithSuffix, trimDecimalZeros } from '@utils/utils'
 import { SwapToken } from '@store/selectors/solanaWallet'
-import classNames from 'classnames'
 import React, { CSSProperties, useRef } from 'react'
 import useStyles from './style'
 import { PublicKey } from '@solana/web3.js'
 import { NetworkType } from '@store/consts/static'
-
 import { getButtonClassName } from '@utils/uiUtils'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
-import { theme } from '@static/theme'
 
 interface ActionButton {
   label: string
@@ -81,8 +78,7 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
   network
 }) => {
   const hideBalance = balance === '- -' || !balance || hideBalances
-  const { classes } = useStyles()
-  const isMd = useMediaQuery(theme.breakpoints.up('md'))
+  const { classes, cx } = useStyles()
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -175,7 +171,7 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
           <Input
             inputRef={inputRef}
             error={!!error}
-            className={classNames(classes.amountInput, className)}
+            className={cx(classes.amountInput, className)}
             classes={{ input: classes.input }}
             style={style}
             value={value}
@@ -196,7 +192,7 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
 
       <Grid container className={classes.bottom}>
         <Grid
-          className={classNames(classes.balanceContainer, {
+          className={cx(classes.balanceContainer, {
             [classes.showMaxButton]: showMaxButton
           })}>
           <Typography
@@ -229,17 +225,13 @@ export const ExchangeAmountInput: React.FC<IProps> = ({
             priceLoading ? (
               <img src={loadingAnimation} className={classes.loading} alt='loading' />
             ) : tokenPrice ? (
-              <TooltipHover
-                title='Estimated USD Value of the Entered Tokens'
-                placement='bottom'
-                top={1}
-                left={isMd ? 'auto' : -90}>
+              <TooltipHover title='Estimated USD Value of the Entered Tokens' placement='bottom'>
                 <Typography className={classes.caption2}>
                   ~${formatNumberWithoutSuffix(usdBalance.toFixed(2))}
                 </Typography>
               </TooltipHover>
             ) : (
-              <TooltipHover title='Cannot fetch price of token' placement='bottom' top={1}>
+              <TooltipHover title='Cannot fetch price of token' placement='bottom'>
                 <Typography className={classes.noData}>
                   <span className={classes.noDataIcon}>?</span>No data
                 </Typography>

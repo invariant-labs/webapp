@@ -4,7 +4,7 @@ import {
   calcPriceByTickIndex,
   calcTicksAmountInRange,
   calculateConcentration,
-  formatNumberWithSuffix,
+  formatNumberWithoutSuffix,
   numberToString,
   spacingMultiplicityGte,
   TokenPriceData,
@@ -13,13 +13,12 @@ import {
 import { PlotTickData } from '@store/reducers/positions'
 import React, { useEffect, useState } from 'react'
 import useStyles from './style'
-import { getMinTick } from '@invariant-labs/sdk/lib/utils'
+import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { ILiquidityToken } from '@store/consts/types'
-import { TooltipGradient } from '@common/TooltipHover/TooltipGradient'
 import { RangeIndicator } from './RangeIndicator/RangeIndicator'
 import { Stat } from './Stat/Stat'
 import { colors } from '@static/theme'
-import { activeLiquidityIcon, airdropRainbowIcon } from '@static/icons'
+import { airdropRainbowIcon } from '@static/icons'
 
 export interface ISinglePositionPlot {
   data: PlotTickData[]
@@ -44,6 +43,10 @@ export interface ISinglePositionPlot {
   tokenAPriceData: TokenPriceData | undefined
   tokenBPriceData: TokenPriceData | undefined
   isFullRange: boolean
+  usdcPrice: {
+    token: string
+    price?: number
+  } | null
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -65,7 +68,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   volumeRange,
   tokenAPriceData,
   tokenBPriceData,
-  isFullRange
+  isFullRange,
+  usdcPrice
 }) => {
   const { classes } = useStyles()
 
@@ -111,9 +115,11 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     }
 
     if (isInitialLoad) {
+      const rangeDiff = Math.abs(rightRange.x - leftRange.x)
+
       setIsInitialLoad(false)
-      setPlotMin(leftRange.x - initSideDist)
-      setPlotMax(rightRange.x + initSideDist)
+      setPlotMin(leftRange.x - rangeDiff / 5)
+      setPlotMax(rightRange.x + rangeDiff / 5)
 
       setZoomScale(calcZoomScale(rightRange.x + initSideDist))
     }
@@ -154,6 +160,71 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     }
   }
 
+  const moveLeft = () => {
+    const diff = plotMax - plotMin
+
+    const minPrice = xToY
+      ? calcPriceByTickIndex(
+          getMinTick(tickSpacing),
+          xToY,
+          Number(tokenX.decimal),
+          Number(tokenY.decimal)
+        )
+      : calcPriceByTickIndex(
+          getMaxTick(tickSpacing),
+          xToY,
+          Number(tokenX.decimal),
+          Number(tokenY.decimal)
+        )
+
+    const newLeft = plotMin - diff / 6
+    const newRight = plotMax - diff / 6
+
+    if (newLeft < minPrice - diff / 2) {
+      setPlotMin(minPrice - diff / 2)
+      setPlotMax(minPrice + diff / 2)
+    } else {
+      setPlotMin(newLeft)
+      setPlotMax(newRight)
+    }
+  }
+
+  const moveRight = () => {
+    const diff = plotMax - plotMin
+
+    const maxPrice = xToY
+      ? calcPriceByTickIndex(
+          getMaxTick(tickSpacing),
+          xToY,
+          Number(tokenX.decimal),
+          Number(tokenY.decimal)
+        )
+      : calcPriceByTickIndex(
+          getMinTick(tickSpacing),
+          xToY,
+          Number(tokenX.decimal),
+          Number(tokenY.decimal)
+        )
+
+    const newLeft = plotMin + diff / 6
+    const newRight = plotMax + diff / 6
+
+    if (newRight > maxPrice + diff / 2) {
+      setPlotMin(maxPrice - diff / 2)
+      setPlotMax(maxPrice + diff / 2)
+    } else {
+      setPlotMin(newLeft)
+      setPlotMax(newRight)
+    }
+  }
+
+  const centerChart = () => {
+    const diff = plotMax - plotMin
+
+    setPlotMin(midPrice.x - diff / 2)
+    setPlotMax(midPrice.x + diff / 2)
+  }
+
   const minPercentage = (min / currentPrice - 1) * 100
   const maxPercentage = (max / currentPrice - 1) * 100
   const concentration = calculateConcentration(leftRange.index, rightRange.index)
@@ -161,46 +232,26 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   return (
     <Box className={classes.container}>
       <Box className={classes.headerContainer}>
-        <Typography className={classes.header}>Price range</Typography>
+        <Grid display='flex' flexDirection='column' justifyContent='flex-start'>
+          <Typography className={classes.header}>Price range</Typography>
+
+          <Typography className={classes.currentPrice} mt={1.5}>
+            {formatNumberWithoutSuffix(midPrice.x)} {tokenX.name} per {tokenY.name}
+          </Typography>
+          {usdcPrice !== null && usdcPrice.price ? (
+            <Typography className={classes.usdcCurrentPrice}>
+              {usdcPrice.token} ${formatNumberWithoutSuffix(usdcPrice.price)}
+            </Typography>
+          ) : (
+            <Box minHeight={20} />
+          )}
+        </Grid>
         <Grid>
           <RangeIndicator
             isLoading={ticksLoading}
             inRange={min <= currentPrice && currentPrice <= max}
           />
-          <Grid gap={'2px'} mt={1} display='flex' flexDirection='column' alignItems='flex-end'>
-            <TooltipGradient
-              title={
-                <>
-                  <Typography className={classes.liquidityTitle}>Active liquidity</Typography>
-                  <Typography className={classes.liquidityDesc} style={{ marginBottom: 12 }}>
-                    While selecting the price range, note where active liquidity is located. Your
-                    liquidity can be inactive and, as a consequence, not generate profits.
-                  </Typography>
-                  <Grid container className={classes.liqWrapper}>
-                    <Typography className={classes.liquidityDesc}>
-                      The active liquidity range is represented by white, dashed lines in the
-                      liquidity chart. Active liquidity is determined by the maximum price range
-                      resulting from the statistical volume of exchanges for the last 7 days.
-                    </Typography>
-                    <img
-                      className={classes.liquidityImg}
-                      src={activeLiquidityIcon}
-                      alt='Liquidity'
-                    />
-                  </Grid>
-                  <Typography className={classes.liquidityNote}>
-                    Note: active liquidity borders are always aligned to the nearest initialized
-                    ticks.
-                  </Typography>
-                </>
-              }
-              placement='bottom'
-              top={1}
-              noGradient>
-              <Typography className={classes.activeLiquidity}>
-                Active liquidity <span className={classes.activeLiquidityIcon}>i</span>
-              </Typography>
-            </TooltipGradient>
+          <Grid gap={'2px'} mt={'6px'} display='flex' flexDirection='column' alignItems='flex-end'>
             <Typography className={classes.currentPrice}>Current price</Typography>
             <Typography className={classes.globalPrice}>Global price</Typography>
             <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>
@@ -214,6 +265,9 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         plotMax={plotMax}
         zoomMinus={zoomMinus}
         zoomPlus={zoomPlus}
+        moveLeft={moveLeft}
+        moveRight={moveRight}
+        centerChart={centerChart}
         disabled
         leftRange={leftRange}
         rightRange={rightRange}
@@ -280,7 +334,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
                 value={
                   <Box>
                     <Typography component='span' className={classes.value}>
-                      {isFullRange ? 0 : formatNumberWithSuffix(min)}
+                      {isFullRange ? 0 : formatNumberWithoutSuffix(min)}
                     </Typography>{' '}
                     {!isFullRange &&
                       (xToY
@@ -300,7 +354,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
                       {isFullRange ? (
                         <span style={{ fontSize: '24px' }}>∞</span>
                       ) : (
-                        formatNumberWithSuffix(max)
+                        formatNumberWithoutSuffix(max)
                       )}
                     </Typography>{' '}
                     {!isFullRange &&
