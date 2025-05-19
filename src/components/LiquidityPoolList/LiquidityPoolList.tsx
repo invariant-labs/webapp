@@ -3,7 +3,6 @@ import PoolListItem from '@components/Stats/PoolListItem/PoolListItem'
 import { useStyles } from './style'
 import { Grid, useMediaQuery } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
-import { PaginationList } from '@common/Pagination/Pagination'
 import { VariantType } from 'notistack'
 import { useNavigate } from 'react-router-dom'
 
@@ -43,6 +42,7 @@ import { ROUTES } from '@utils/utils'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { colors, theme } from '@static/theme'
 import { TableBoundsLabel } from '@common/TableBoundsLabel/TableBoundsLabel'
+import { PaginationList } from '@common/Pagination/Pagination/Pagination'
 
 const ITEMS_PER_PAGE = 10
 

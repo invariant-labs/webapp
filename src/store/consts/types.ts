@@ -320,3 +320,12 @@ export interface ILiquidityToken {
   balance: number
   usdValue?: number
 }
+
+export interface INavigatePosition {
+  tokenXName: string
+  tokenYName: string
+  tokenXIcon: string
+  tokenYIcon: string
+  fee: number
+  id: string
+}

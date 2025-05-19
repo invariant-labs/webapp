@@ -1,4 +1,4 @@
-import { theme } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()(() => ({
@@ -34,5 +34,13 @@ export const useStyles = makeStyles()(() => ({
     display: 'flex',
     alignItems: 'center',
     gap: 8
+  },
+  paginationWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    background: colors.invariant.component,
+    marginTop: 16,
+    borderRadius: 24,
+    padding: '4px 16px'
   }
 }))
