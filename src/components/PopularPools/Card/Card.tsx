@@ -7,12 +7,12 @@ import cardBackgroundBottom from '@static/png/cardBackground1.png'
 import cardBackgroundTop from '@static/png/cardBackground2.png'
 import StatsLabel from './StatsLabel/StatsLabel'
 import { Button } from '@common/Button/Button'
-
 import { formatNumberWithSuffix, initialXtoY, parseFeeToPathFee, ROUTES } from '@utils/utils'
 import { useNavigate } from 'react-router-dom'
 import { NetworkType } from '@store/consts/static'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { backIcon2, revertIcon, unknownTokenIcon, warningIcon } from '@static/icons'
+import { backIcon2, unknownTokenIcon, warningIcon } from '@static/icons'
+import { ReverseTokensIcon } from '@static/componentIcon/ReverseTokensIcon'
 export interface ICard extends PopularPoolData {
   isLoading: boolean
   network: NetworkType
@@ -129,7 +129,7 @@ const Card: React.FC<ICard> = ({
                     <img className={classes.warningIcon} src={warningIcon} />
                   )}
                 </Box>
-                <img className={classes.swapIcon} src={revertIcon} alt='Token from' />
+                <ReverseTokensIcon className={classes.swapIcon} />
                 <Box className={classes.iconContainer}>
                   <img
                     className={classes.tokenIcon}
