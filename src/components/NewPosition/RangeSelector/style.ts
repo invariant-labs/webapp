@@ -184,10 +184,11 @@ const useStyles = makeStyles()(theme => {
       fontSize: 14,
       fontWeight: 'normal'
     },
-    conWrapper: {
+    subheaderWrapper: {
       justifyContent: 'space-between',
       alignItems: 'center',
-      minHeight: 36
+      minHeight: 36,
+      rowGap: 16
     },
     globalPrice: {
       display: 'inline-block',
