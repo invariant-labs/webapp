@@ -219,7 +219,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
       ) : (
         <Grid container className={classes.emptyWrapper}>
           <EmptyPlaceholder
-            height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 690}
+            height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
             newVersion
             mainTitle='Pool not found...'
             desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}

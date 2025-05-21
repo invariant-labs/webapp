@@ -35,6 +35,8 @@ export const useStyles = makeStyles()(_theme => ({
   },
 
   emptyWrapper: {
-    background: colors.invariant.component
+    background: colors.invariant.component,
+    borderBottom: `2px solid ${colors.invariant.light}`,
+    boxSizing: 'border-box'
   }
 }))
