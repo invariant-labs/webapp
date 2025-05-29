@@ -10,7 +10,7 @@ import Brush from './Brush/Brush'
 import useStyles from './style'
 import { BN } from '@project-serum/anchor'
 import { Button } from '@common/Button/Button'
-import { centerToRangeIcon, zoomInIcon, zoomOutIcon } from '@static/icons'
+import { zoomInIcon, zoomOutIcon } from '@static/icons'
 import ArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import ArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import VerticalAlignCenterIcon from '@mui/icons-material/VerticalAlignCenter'
@@ -36,7 +36,6 @@ export interface IPriceRangePlot {
   moveLeft: () => void
   moveRight: () => void
   centerChart: () => void
-  centerToRange?: () => void
   loading?: boolean
   isXtoY: boolean
   xDecimal: number
@@ -70,7 +69,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
   moveLeft,
   moveRight,
   centerChart,
-  centerToRange,
   loading,
   isXtoY,
   xDecimal,
@@ -578,22 +576,6 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
             }}
           />
         </Button>
-        {centerToRange && (
-          <Button
-            scheme='pink'
-            width={isMd ? 28 : 36}
-            height={isMd ? 28 : 36}
-            borderRadius={10}
-            padding={0}
-            onClick={centerToRange}>
-            <img
-              src={centerToRangeIcon}
-              alt='Center to range'
-              width={isMd ? 24 : 30}
-              height={isMd ? 24 : 30}
-            />
-          </Button>
-        )}
       </Grid>
 
       <Grid className={classes.leftArrow}>
