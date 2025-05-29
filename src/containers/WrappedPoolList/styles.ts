@@ -4,7 +4,7 @@ import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles<{ isXs: boolean }>()((theme: Theme, { isXs }) => ({
   wrapper: {
-    maxWidth: 1072,
+    maxWidth: 1210,
     minHeight: '100%'
   },
   subheader: {

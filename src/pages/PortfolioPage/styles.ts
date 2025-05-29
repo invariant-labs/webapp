@@ -12,11 +12,7 @@ const useStyles = makeStyles()(theme => {
       minHeight: '60vh',
 
       [theme.breakpoints.down('lg')]: {
-        paddingInline: 80
-      },
-
-      [theme.breakpoints.down('md')]: {
-        paddingInline: 90
+        paddingInline: 40
       },
 
       [theme.breakpoints.down('sm')]: {
