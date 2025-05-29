@@ -33,7 +33,6 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
 
     '& p': {
       ...typography.heading4,
-      display: 'flex',
       justifyContent: 'flex-start',
       alignItems: 'center'
     },
@@ -41,9 +40,6 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
       '& p:last-child': {
         justifyContent: 'flex-end'
       }
-    },
-    '& p:last-child': {
-      justifyContent: 'flex-end'
     },
 
     [theme.breakpoints.down(1160)]: {
@@ -115,7 +111,6 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
       textAlign: 'end'
     }
   },
-
   header: {
     height: '69px',
     '& p.MuiTypography-root': {
