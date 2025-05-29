@@ -17,7 +17,9 @@ export const useStyles = makeStyles()(_theme => ({
     borderBottomRightRadius: '24px'
   },
   emptyContainer: {
-    background: colors.invariant.component
+    background: colors.invariant.component,
+    borderBottom: `2px solid ${colors.invariant.light}`,
+    boxSizing: 'border-box'
   },
   loadingOverlay: {
     position: 'relative',
