@@ -60,7 +60,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   errorText: {
     color: colors.white.main,
-    ...typography.heading4
+    ...typography.heading4,
+    marginBottom: 12
   },
   reloadButton: {
     width: 130,

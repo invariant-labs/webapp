@@ -1,7 +1,7 @@
 import React, { CSSProperties, useRef } from 'react'
 import useStyles from './style'
-import { Input, Tooltip, Typography } from '@mui/material'
-import { formatNumberWithSuffix } from '@utils/utils'
+import { Input } from '@mui/material'
+import { Button } from '@common/Button/Button'
 
 interface IProps {
   setValue: (value: string) => void
@@ -13,6 +13,7 @@ interface IProps {
   style?: CSSProperties
   globalPrice?: number
   onBlur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>
+  formatterFunction: (value: string) => string
 }
 
 export const SimpleInput: React.FC<IProps> = ({
@@ -24,7 +25,8 @@ export const SimpleInput: React.FC<IProps> = ({
   placeholder,
   style,
   globalPrice,
-  onBlur
+  onBlur,
+  formatterFunction
 }) => {
   const { classes, cx } = useStyles()
 
@@ -78,28 +80,22 @@ export const SimpleInput: React.FC<IProps> = ({
       disableUnderline={true}
       placeholder={placeholder}
       onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-      endAdornment={
-        globalPrice ? (
-          <Tooltip
-            title={
-              <Typography className={classes.textGlobalPrice} variant='caption'>
-                Global price
-              </Typography>
-            }
-            placement='right-start'
-            classes={{
-              tooltip: classes.globalPriceTooltip
-            }}>
-            <Typography className={classes.globalPrice} variant='h4'>
-              {formatNumberWithSuffix(globalPrice)}
-            </Typography>
-          </Tooltip>
-        ) : null
-      }
       onBlur={onBlur}
       inputProps={{
         inputMode: 'decimal'
       }}
+      endAdornment={
+        globalPrice ? (
+          <Button
+            scheme='green'
+            height={40}
+            onClick={() => {
+              setValue(formatterFunction(globalPrice.toString()))
+            }}>
+            <p className={classes.suggestedPriceText}>Suggested price</p>
+          </Button>
+        ) : null
+      }
     />
   )
 }

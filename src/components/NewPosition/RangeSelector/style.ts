@@ -169,10 +169,29 @@ const useStyles = makeStyles()(theme => {
     infoRow: {
       marginBottom: 16
     },
+    currentPriceContainer: {
+      marginTop: 23
+    },
     currentPrice: {
       display: 'inline-block',
       color: colors.invariant.yellow,
       ...typography.caption2
+    },
+    priceWarning: {
+      display: 'inline-block',
+      color: colors.invariant.Error,
+      ...typography.body2,
+      marginLeft: 4,
+      marginTop: 2,
+      fontSize: 14
+    },
+    priceWarningIcon: {
+      width: 16,
+      height: 16
+    },
+    priceWarningContainer: {
+      display: 'flex',
+      alignItems: 'center'
     },
     usdcCurrentPrice: {
       display: 'inline-block',
@@ -222,7 +241,7 @@ const useStyles = makeStyles()(theme => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start',
-      justifyContent: 'space-between'
+      minHeight: 87
     },
     rangeConcentration: {
       display: 'flex',
