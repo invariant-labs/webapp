@@ -28,7 +28,7 @@ const PopularPools: React.FC<IPopularPools> = ({ pools, isLoading, network, show
     return 4
   }, [isMdDown, isLgDown, isSmDown])
 
-  const { classes } = useStyles({ showSlider: slidesNumber < 4 })
+  const { classes } = useStyles()
 
   return (
     <Grid container mb={6}>

@@ -1,7 +1,7 @@
 import { colors, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
-export const useStyles = makeStyles<{ showSlider: boolean }>()((theme, { showSlider }) => ({
+export const useStyles = makeStyles()(theme => ({
   title: {
     color: colors.invariant.text,
     ...typography.heading4,
@@ -11,7 +11,7 @@ export const useStyles = makeStyles<{ showSlider: boolean }>()((theme, { showSli
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
-    padding: showSlider ? '24px 48px' : '24px 4px',
+    padding: '24px 51px 24px 51px',
     flexWrap: 'nowrap',
     borderRadius: 32,
     background: colors.invariant.component,
@@ -43,13 +43,13 @@ export const useStyles = makeStyles<{ showSlider: boolean }>()((theme, { showSli
       }
     },
     '& .slick-prev': {
-      left: -40,
+      left: -38,
       [theme.breakpoints.down('sm')]: {
         left: -35
       }
     },
     '& .slick-next': {
-      right: -20,
+      right: -18,
       [theme.breakpoints.down('sm')]: {
         right: -21
       }
@@ -61,7 +61,6 @@ export const useStyles = makeStyles<{ showSlider: boolean }>()((theme, { showSli
     overflow: 'visible',
     zIndex: 10,
 
-    '& li.slick-active button::before': {},
     '& li': {
       borderRadius: '50%',
       height: 12,
