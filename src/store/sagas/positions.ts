@@ -315,7 +315,9 @@ function* handleInitPositionAndPoolWithSOL(action: PayloadAction<InitPositionDat
                     tokenXAmount: formatNumberWithoutSuffix(printBN(amountIn, tokenIn.decimals)),
                     tokenYAmount: formatNumberWithoutSuffix(printBN(amountOut, tokenOut.decimals)),
                     tokenXIcon: tokenIn.logoURI,
-                    tokenYIcon: tokenOut.logoURI
+                    tokenYIcon: tokenOut.logoURI,
+                    tokenXSymbol: tokenIn.symbol ?? tokenIn.address.toString(),
+                    tokenYSymbol: tokenOut.symbol ?? tokenOut.address.toString()
                   },
                   persist: false
                 })
@@ -609,7 +611,9 @@ function* handleInitPositionWithSOL(action: PayloadAction<InitPositionData>): Ge
                       Math.abs(+printBN(amountY, tokenY.decimals))
                     ),
                     tokenXIcon: tokenX.logoURI,
-                    tokenYIcon: tokenY.logoURI
+                    tokenYIcon: tokenY.logoURI,
+                    tokenXSymbol: tokenX.symbol ?? tokenX.address.toString(),
+                    tokenYSymbol: tokenY.symbol ?? tokenY.address.toString()
                   },
                   persist: false
                 })
@@ -856,7 +860,9 @@ export function* handleInitPosition(action: PayloadAction<InitPositionData>): Ge
                       Math.abs(+printBN(amountY, tokenY.decimals))
                     ),
                     tokenXIcon: tokenX.logoURI,
-                    tokenYIcon: tokenY.logoURI
+                    tokenYIcon: tokenY.logoURI,
+                    tokenXSymbol: tokenX.symbol ?? tokenX.address.toString(),
+                    tokenYSymbol: tokenY.symbol ?? tokenY.address.toString()
                   },
                   persist: false
                 })
@@ -1266,7 +1272,9 @@ export function* handleClaimFeeWithSOL(positionIndex: number) {
                       Math.abs(+printBN(amountOut, tokenOut.decimals))
                     ),
                     tokenXIcon: tokenIn.logoURI,
-                    tokenYIcon: tokenOut.logoURI
+                    tokenYIcon: tokenOut.logoURI,
+                    tokenXSymbol: tokenIn.symbol ?? tokenIn.address.toString(),
+                    tokenYSymbol: tokenOut.symbol ?? tokenOut.address.toString()
                   },
                   persist: false
                 })
@@ -1490,7 +1498,9 @@ export function* handleClaimFee(action: PayloadAction<number>) {
                       Math.abs(+printBN(amountOut, tokenOut.decimals))
                     ),
                     tokenXIcon: tokenIn.logoURI,
-                    tokenYIcon: tokenOut.logoURI
+                    tokenYIcon: tokenOut.logoURI,
+                    tokenXSymbol: tokenIn.symbol ?? tokenIn.address.toString(),
+                    tokenYSymbol: tokenOut.symbol ?? tokenOut.address.toString()
                   },
                   persist: false
                 })
@@ -1737,7 +1747,9 @@ export function* handleClosePositionWithSOL(data: ClosePositionData) {
                       Math.abs(+printBN(amountOut, tokenOut.decimals))
                     ),
                     tokenXIcon: tokenIn.logoURI,
-                    tokenYIcon: tokenOut.logoURI
+                    tokenYIcon: tokenOut.logoURI,
+                    tokenXSymbol: tokenIn.symbol ?? tokenIn.address.toString(),
+                    tokenYSymbol: tokenOut.symbol ?? tokenOut.address.toString()
                   },
                   persist: false
                 })
@@ -1964,7 +1976,9 @@ export function* handleClosePosition(action: PayloadAction<ClosePositionData>) {
                       Math.abs(+printBN(amountOut, tokenOut.decimals))
                     ),
                     tokenXIcon: tokenIn.logoURI,
-                    tokenYIcon: tokenOut.logoURI
+                    tokenYIcon: tokenOut.logoURI,
+                    tokenXSymbol: tokenIn.symbol ?? tokenIn.address.toString(),
+                    tokenYSymbol: tokenOut.symbol ?? tokenOut.address.toString()
                   },
                   persist: false
                 })
@@ -2207,7 +2221,9 @@ export function* handleClaimAllFees() {
               Math.abs(+printBN(pos.bnY, pos.tokenY.decimals))
             ),
             tokenXIcon: pos.tokenX.logoURI,
-            tokenYIcon: pos.tokenY.logoURI
+            tokenYIcon: pos.tokenY.logoURI,
+            tokenXSymbol: pos.tokenX.symbol ?? pos.tokenX.assetAddress.toString(),
+            tokenYSymbol: pos.tokenY.symbol ?? pos.tokenY.assetAddress.toString()
           },
           persist: false
         })
