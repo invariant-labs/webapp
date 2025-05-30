@@ -18,6 +18,7 @@ interface IPositionItemMobile extends IPositionItem {
   setAllowPropagation: React.Dispatch<React.SetStateAction<boolean>>
   handleClosePosition: (index: number) => void
   handleClaimFee: (index: number) => void
+  createNewPosition: () => void
   shouldDisable: boolean
 }
 
@@ -40,7 +41,8 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
   isFullRange,
   handleClosePosition,
   handleClaimFee,
-  shouldDisable
+  shouldDisable,
+  createNewPosition
 }) => {
   const { classes, cx } = useMobileStyles()
   const airdropIconRef = useRef<any>(null)
@@ -205,6 +207,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
         unclaimedFeesInUSD={unclaimedFeesInUSD.value}
         claimFee={() => handleClaimFee(positionSingleData?.positionIndex ?? 0)}
         closePosition={() => handleClosePosition(positionSingleData?.positionIndex ?? 0)}
+        createPosition={createNewPosition}
       />
       <Grid
         container

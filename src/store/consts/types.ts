@@ -3,6 +3,7 @@ import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { NetworkType } from './static'
 import { Position } from '@invariant-labs/sdk/lib/market'
+import { PoolWithAddressAndIndex } from '@store/selectors/positions'
 
 declare global {
   interface Window {
@@ -308,6 +309,7 @@ export interface IPositionItem {
   currentPrice: number
   network: NetworkType
   isFullRange: boolean
+  poolData: PoolWithAddressAndIndex
   unclaimedFeesInUSD: { value: number; loading: boolean }
 }
 
