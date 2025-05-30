@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import PriceRangePlot, { TickPlotPositionData } from '@common/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import { PlotTickData } from '@store/reducers/positions'
@@ -19,7 +19,7 @@ import {
 } from '@utils/utils'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { Box, Button, Grid, Typography } from '@mui/material'
-import { boostPointsIcon } from '@static/icons'
+import { boostPointsIcon, warning3 } from '@static/icons'
 
 export interface IRangeSelector {
   updatePath: (concIndex: number) => void
@@ -499,6 +499,12 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     autoZoomHandler(leftRange, rightRange, true)
   }, [tokenASymbol, tokenBSymbol])
 
+  const showPriceWarning = useMemo(() => {
+    const lowerBound = midPrice.x * 0.9
+    const upperBound = midPrice.x * 1.1
+    return (globalPrice ?? 0) < lowerBound || (globalPrice ?? 0) > upperBound
+  }, [globalPrice, midPrice.x])
+
   return (
     <Grid container className={classes.wrapper}>
       <Grid className={classes.topInnerWrapper}>
@@ -510,16 +516,22 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 {formatNumberWithoutSuffix(midPrice.x)} {tokenBSymbol} per {tokenASymbol}
               </Typography>
             )}
-            {poolIndex !== null && usdcPrice !== null && usdcPrice.price ? (
+            {poolIndex !== null && usdcPrice !== null && usdcPrice.price && (
               <Typography className={classes.usdcCurrentPrice}>
                 {usdcPrice.token} ${formatNumberWithoutSuffix(usdcPrice.price)}
               </Typography>
-            ) : (
-              <Box minHeight={20} />
+            )}
+            {showPriceWarning && !blocked && !ticksLoading && (
+              <Box className={classes.priceWarningContainer}>
+                <img className={classes.priceWarningIcon} src={warning3} alt='warning icon' />
+                <Typography className={classes.priceWarning}>
+                  The pool price may differ from the actual price
+                </Typography>
+              </Box>
             )}
           </Grid>
 
-          <Grid display={'flex'} flexDirection='column' alignItems={'flex-end'}>
+          <Grid display={'flex'} flexDirection='column' alignItems={'flex-end'} flexShrink={0}>
             <Typography className={classes.currentPrice}>Current price</Typography>
             <Typography className={classes.globalPrice}>Global price</Typography>
             <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>

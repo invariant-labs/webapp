@@ -8,8 +8,8 @@ export const useStyles = makeStyles()(() => ({
     borderRadius: 15,
     ...typography.heading4,
     width: '100%',
-    height: 48,
-    paddingInline: 16
+    height: 56,
+    paddingInline: 8
   },
   input: {
     paddingTop: 4,
@@ -30,6 +30,11 @@ export const useStyles = makeStyles()(() => ({
   },
   textGlobalPrice: {
     ...typography.caption4
+  },
+  suggestedPriceText: {
+    width: 148,
+    fontSize: 14,
+    lineHeight: 0.8
   }
 }))
 
