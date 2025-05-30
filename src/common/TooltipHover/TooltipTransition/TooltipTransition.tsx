@@ -11,7 +11,7 @@ export const TooltipTransition: React.FC<FadeProps & { children?: React.ReactNod
     setTranslate(props.in ? 'translateY(0)' : 'translateY(50px)')
   }, [props.in])
 
-  const { ownerState, ...rest } = props as any
+  const { _ownerState, ...rest } = props as any
 
   return (
     <Fade {...rest}>
