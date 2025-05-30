@@ -19,7 +19,10 @@ const useStyles = makeStyles()(theme => {
     },
     headerContainer: {
       justifyContent: 'space-between',
-      marginBottom: 12
+      marginBottom: 12,
+      flexDirection: 'row',
+      minHeight: 65,
+      flexWrap: 'nowrap'
     },
     header: {
       ...typography.heading4,
@@ -170,7 +173,9 @@ const useStyles = makeStyles()(theme => {
       marginBottom: 16
     },
     currentPriceContainer: {
-      marginTop: 23
+      marginTop: 23,
+      textWrap: 'nowrap',
+      minWidth: 'fit-content'
     },
     currentPrice: {
       display: 'inline-block',
@@ -187,11 +192,14 @@ const useStyles = makeStyles()(theme => {
     },
     priceWarningIcon: {
       width: 16,
-      height: 16
+      height: 16,
+      flexShrink: 0
     },
     priceWarningContainer: {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
+      flexShrink: 1,
+      marginTop: 2
     },
     usdcCurrentPrice: {
       display: 'inline-block',
@@ -241,7 +249,9 @@ const useStyles = makeStyles()(theme => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start',
-      minHeight: 87
+      minHeight: 87,
+      flexWrap: 'nowrap',
+      flexShrink: 1
     },
     rangeConcentration: {
       display: 'flex',

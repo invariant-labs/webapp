@@ -531,7 +531,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
             )}
           </Grid>
 
-          <Grid display={'flex'} flexDirection='column' alignItems={'flex-end'}>
+          <Grid display={'flex'} flexDirection='column' alignItems={'flex-end'} flexShrink={0}>
             <Typography className={classes.currentPrice}>Current price</Typography>
             <Typography className={classes.globalPrice}>Global price</Typography>
             <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>
