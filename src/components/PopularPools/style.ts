@@ -13,7 +13,7 @@ export const useStyles = makeStyles()(theme => ({
     flexDirection: 'row',
     padding: '24px 51px 24px 51px',
     flexWrap: 'nowrap',
-    borderRadius: 32,
+    borderRadius: 24,
     background: colors.invariant.component,
 
     [theme.breakpoints.down('sm')]: {
