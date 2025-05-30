@@ -384,6 +384,8 @@ export const enum SortTypePoolList {
   NAME_DESC,
   FEE_ASC,
   FEE_DESC,
+  FEE_24_ASC,
+  FEE_24_DESC,
   VOLUME_ASC,
   VOLUME_DESC,
   TVL_ASC,

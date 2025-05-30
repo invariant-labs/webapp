@@ -306,7 +306,9 @@ export function* handleSwapWithSOL(): Generator {
                     tokenXAmount: formatNumberWithoutSuffix(printBN(amountIn, tokenIn.decimals)),
                     tokenYAmount: formatNumberWithoutSuffix(printBN(amountOut, tokenOut.decimals)),
                     tokenXIcon: tokenIn.logoURI,
-                    tokenYIcon: tokenOut.logoURI
+                    tokenYIcon: tokenOut.logoURI,
+                    tokenXSymbol: tokenIn.symbol ?? tokenIn.address.toString(),
+                    tokenYSymbol: tokenOut.symbol ?? tokenOut.address.toString()
                   },
                   persist: false
                 })
@@ -583,7 +585,9 @@ export function* handleSwap(): Generator {
                     tokenXAmount: formatNumberWithoutSuffix(printBN(amountIn, tokenIn.decimals)),
                     tokenYAmount: formatNumberWithoutSuffix(printBN(amountOut, tokenOut.decimals)),
                     tokenXIcon: tokenIn.logoURI,
-                    tokenYIcon: tokenOut.logoURI
+                    tokenYIcon: tokenOut.logoURI,
+                    tokenXSymbol: tokenIn.symbol ?? tokenIn.address.toString(),
+                    tokenYSymbol: tokenOut.symbol ?? tokenOut.address.toString()
                   },
                   persist: false
                 })

@@ -115,6 +115,10 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
         return data.sort((a, b) => a.fee - b.fee)
       case SortTypePoolList.FEE_DESC:
         return data.sort((a, b) => b.fee - a.fee)
+      case SortTypePoolList.FEE_24_ASC:
+        return data.sort((a, b) => a.fee * a.volume - b.fee * b.volume)
+      case SortTypePoolList.FEE_24_DESC:
+        return data.sort((a, b) => b.fee * b.volume - a.fee * a.volume)
       case SortTypePoolList.VOLUME_ASC:
         return data.sort((a, b) => (a.volume === b.volume ? a.TVL - b.TVL : a.volume - b.volume))
       case SortTypePoolList.VOLUME_DESC:
@@ -219,7 +223,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
       ) : (
         <Grid container className={classes.emptyWrapper}>
           <EmptyPlaceholder
-            height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 690}
+            height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
             newVersion
             mainTitle='Pool not found...'
             desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}

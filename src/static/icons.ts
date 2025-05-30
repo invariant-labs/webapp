@@ -88,6 +88,7 @@ import circleDolarIcon from './svg/circleDolar.svg'
 import depositIcon from './svg/depositIcon.svg'
 import withdrawIcon from './svg/withdrawIcon.svg'
 import warning3 from './svg/warning3.svg'
+import centerToRangeIcon from './svg/centerToRange.svg'
 
 export {
   dog1Icon,
@@ -179,7 +180,8 @@ export {
   circleDolarIcon,
   depositIcon,
   withdrawIcon,
-  warning3
+  warning3,
+  centerToRangeIcon
 }
 
 export const chainIcons = {

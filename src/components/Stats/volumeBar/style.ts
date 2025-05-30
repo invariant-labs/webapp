@@ -3,7 +3,7 @@ import { colors, typography, theme } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 export const useStyles = makeStyles()(() => ({
   container: {
-    maxWidth: 1072,
+    maxWidth: 1210,
     width: '100%',
     backgroundColor: colors.invariant.component,
     borderRadius: 22,
