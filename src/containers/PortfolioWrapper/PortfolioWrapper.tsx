@@ -133,7 +133,11 @@ const PortfolioWrapper = () => {
       (pricesData.data[position.tokenY.assetAddress.toString()]?.price ?? 0)
 
     const unclaimedFeesInUSD = xValue + yValue
-    return unclaimedFeesInUSD
+    return {
+      usdValue: unclaimedFeesInUSD,
+      isClaimAvailable:
+        +printBN(bnX, position.tokenX.decimals) > 0 || +printBN(bnY, position.tokenY.decimals) > 0
+    }
   }
 
   const data: IPositionItem[] = useMemo(
@@ -195,7 +199,7 @@ const PortfolioWrapper = () => {
         const valueX = tokenXLiq + tokenYLiq / currentPrice
         const valueY = tokenYLiq + tokenXLiq * currentPrice
 
-        const unclaimedFeesInUSD = calculateUnclaimedFees(position)
+        const { usdValue, isClaimAvailable } = calculateUnclaimedFees(position)
 
         return {
           tokenXName: position.tokenX.symbol,
@@ -216,7 +220,7 @@ const PortfolioWrapper = () => {
           tokenYLiq,
           network: currentNetwork,
           isFullRange: position.lowerTickIndex === minTick && position.upperTickIndex === maxTick,
-          unclaimedFeesInUSD: { value: unclaimedFeesInUSD, loading: position.ticksLoading }
+          unclaimedFeesInUSD: { value: usdValue, loading: position.ticksLoading, isClaimAvailable }
         }
       }),
     [list, pricesData]
