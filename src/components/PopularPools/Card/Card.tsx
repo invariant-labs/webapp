@@ -5,7 +5,7 @@ import GradientBorder from '@common/GradientBorder/GradientBorder'
 import { colors } from '@static/theme'
 import cardBackgroundBottom from '@static/png/cardBackground1.png'
 import cardBackgroundTop from '@static/png/cardBackground2.png'
-import { backIcon2, unknownTokenIcon, warningIcon } from '@static/icons'
+import { backIcon, unknownTokenIcon, warningIcon } from '@static/icons'
 import { shortenAddress } from '@utils/uiUtils'
 import StatsLabel from './StatsLabel/StatsLabel'
 import { formatNumberWithSuffix, initialXtoY, parseFeeToPathFee, ROUTES } from '@utils/utils'
@@ -89,7 +89,7 @@ const Card: React.FC<ICard> = ({
       state: { referer: 'liquidity' }
     })
   }
-  console.log(isLoading)
+
   return (
     <Grid className={classes.root}>
       {isLoading ? (
@@ -164,7 +164,7 @@ const Card: React.FC<ICard> = ({
               </Grid>
               <Grid container className={classes.footerWrapper}>
                 <Grid className={classes.back} container item onClick={handleOpenSwap}>
-                  <img className={classes.backIcon} src={backIcon2} alt='Back' />
+                  <img className={classes.backIcon} src={backIcon} alt='Back' />
                   <Typography className={classes.backText}>Swap</Typography>
                 </Grid>
                 <Button
