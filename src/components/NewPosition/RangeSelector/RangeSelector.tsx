@@ -95,7 +95,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   poolIndex,
   hasTicksError,
   reloadHandler,
-  volumeRange,
   concentrationArray,
   minimumSliderIndex,
   concentrationIndex,
@@ -540,31 +539,30 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         </Grid>
         <PriceRangePlot
           className={classes.plot}
-          data={data}
+          plotData={data}
           onChangeRange={changeRangeHandler}
-          leftRange={{
+          leftRangeData={{
             index: leftRange,
             x: calcPriceByTickIndex(leftRange, isXtoY, xDecimal, yDecimal)
           }}
-          rightRange={{
+          rightRangeData={{
             index: rightRange,
             x: calcPriceByTickIndex(rightRange, isXtoY, xDecimal, yDecimal)
           }}
-          midPrice={midPrice}
+          midPriceData={midPrice}
           globalPrice={globalPrice}
-          plotMin={plotMin}
-          plotMax={plotMax}
+          plotMinData={plotMin}
+          plotMaxData={plotMax}
           zoomMinus={zoomMinus}
           zoomPlus={zoomPlus}
-          loading={ticksLoading}
+          loading={ticksLoading && !blocked}
           isXtoY={isXtoY}
-          tickSpacing={tickSpacing}
+          spacing={tickSpacing}
           xDecimal={xDecimal}
           yDecimal={yDecimal}
           disabled={positionOpeningMethod === 'concentration'}
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
-          volumeRange={volumeRange}
           tokenAPriceData={tokenAPriceData}
           tokenBPriceData={tokenBPriceData}
           moveLeft={moveLeft}

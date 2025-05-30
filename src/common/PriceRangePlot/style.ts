@@ -84,7 +84,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     position: 'absolute',
     zIndex: 11,
     borderRadius: 10,
-    backdropFilter: 'blur(16px)'
+    backdropFilter: 'blur(1px)'
   },
   loader: {
     height: 100,
