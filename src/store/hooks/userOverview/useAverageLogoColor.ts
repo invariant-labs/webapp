@@ -1,3 +1,4 @@
+import { ensureError } from '@utils/utils'
 import { useCallback } from 'react'
 
 export interface TokenColorOverride {
@@ -37,7 +38,30 @@ export const useAverageLogoColor = () => {
       const hex = Math.round(c).toString(16)
       return hex.length === 1 ? '0' + hex : hex
     }
-    return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b)
+    return `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`
+  }
+
+  const hexToRgb = (hex: string): RGBColor | null => {
+    const res = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    return res
+      ? {
+          r: parseInt(res[1], 16),
+          g: parseInt(res[2], 16),
+          b: parseInt(res[3], 16)
+        }
+      : null
+  }
+
+  const relativeLuminance = ({ r, g, b }: RGBColor): number =>
+    (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+
+  const isDark = (rgb: RGBColor): boolean => relativeLuminance(rgb) < 0.4
+
+  const lightenColor = (hex: string, factor): string => {
+    const rgb = hexToRgb(hex)
+    if (!rgb) return hex
+    const lighten = (c: number) => Math.min(255, c + (255 - c) * factor)
+    return rgbToHex({ r: lighten(rgb.r), g: lighten(rgb.g), b: lighten(rgb.b) })
   }
 
   const calculateAverageColor = (imageData: Uint8ClampedArray): string => {
@@ -65,7 +89,9 @@ export const useAverageLogoColor = () => {
       b: totalB / totalPixels
     }
 
-    return rgbToHex(averageColor)
+    const hex = rgbToHex(averageColor)
+
+    return isDark(averageColor) ? lightenColor(hex, 0.3) : hex
   }
 
   const getCorrectImageUrl = (url: string): string => {
@@ -82,7 +108,7 @@ export const useAverageLogoColor = () => {
           const decodedRef = Buffer.from(ref, 'hex').toString()
           return decodedRef
         } catch (e) {
-          console.warn('Failed to decode Solscan URL:', e)
+          console.warn('Failed to decode Solscan URL:', ensureError(e))
         }
       }
     }
@@ -90,8 +116,8 @@ export const useAverageLogoColor = () => {
     return url
   }
 
-  const loadImageWithFallback = (url: string): Promise<HTMLImageElement> => {
-    return new Promise((resolve, reject) => {
+  const loadImageWithFallback = (url: string): Promise<HTMLImageElement> =>
+    new Promise((resolve, reject) => {
       const img = new Image()
       img.crossOrigin = 'anonymous'
       img.referrerPolicy = 'no-referrer'
@@ -106,13 +132,10 @@ export const useAverageLogoColor = () => {
 
       img.src = getCorrectImageUrl(url)
     })
-  }
 
   const getAverageColor = useCallback((logoUrl: string, token: string): Promise<string> => {
     const override = tokenColorOverrides.find(item => item.token === token)
-    if (override) {
-      return Promise.resolve(override.color)
-    }
+    if (override) return Promise.resolve(override.color)
 
     return new Promise(resolve => {
       const timeoutDuration = 5000
@@ -140,7 +163,9 @@ export const useAverageLogoColor = () => {
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data
             const averageColor = calculateAverageColor(imageData)
             resolve(averageColor)
-          } catch (error) {
+          } catch (e) {
+            console.log(ensureError(e))
+
             const tempDiv = document.createElement('div')
             tempDiv.style.position = 'absolute'
             tempDiv.style.visibility = 'hidden'
@@ -157,9 +182,7 @@ export const useAverageLogoColor = () => {
             }
           }
         })
-        .catch(() => {
-          resolve(getTokenColor(token, undefined, tokenColorOverrides))
-        })
+        .catch(() => resolve(getTokenColor(token, undefined, tokenColorOverrides)))
     })
   }, [])
 
