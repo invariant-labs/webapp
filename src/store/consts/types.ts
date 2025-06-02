@@ -310,7 +310,7 @@ export interface IPositionItem {
   network: NetworkType
   isFullRange: boolean
   poolData: PoolWithAddressAndIndex
-  unclaimedFeesInUSD: { value: number; loading: boolean }
+  unclaimedFeesInUSD: { value: number; loading: boolean; isClaimAvailable: boolean }
 }
 
 export interface ILiquidityToken {

@@ -54,7 +54,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
     : [{ x: new Date(), y: 0 }]
 
   return (
-    <Grid className={cx(classes.container, className, { [classes.loadingOverlay]: isLoading })}>
+    <Grid className={cx(classes.container, className)}>
       <Grid className={classes.liquidityContainer}>
         <Typography className={classes.liquidityHeader}>Liquidity</Typography>
         <Grid className={classes.volumePercentHeader}>

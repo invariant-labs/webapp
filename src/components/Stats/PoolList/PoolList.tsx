@@ -3,14 +3,13 @@ import PoolListItem from '@components/Stats/PoolListItem/PoolListItem'
 import { useStyles } from './style'
 import { Grid, useMediaQuery } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
-import { PaginationList } from '@common/Pagination/Pagination/Pagination'
 import { VariantType } from 'notistack'
 import { Keypair } from '@solana/web3.js'
 import { useNavigate } from 'react-router-dom'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { colors, theme } from '@static/theme'
-import { TableBoundsLabel } from '@common/TableBoundsLabel/TableBoundsLabel'
 import { ROUTES } from '@utils/utils'
+import { InputPagination } from '@common/Pagination/InputPagination/InputPagination'
 
 export interface PoolListInterface {
   initialLength: number
@@ -151,7 +150,7 @@ const PoolList: React.FC<PoolListInterface> = ({
   const pages = useMemo(() => Math.ceil(data.length / ITEMS_PER_PAGE), [data])
   const isCenterAligment = useMediaQuery(theme.breakpoints.down(1280))
   const height = useMemo(
-    () => (initialDataLength > ITEMS_PER_PAGE ? (isCenterAligment ? 120 : 90) : 69),
+    () => (initialDataLength > ITEMS_PER_PAGE ? (isCenterAligment ? 176 : 90) : 69),
     [initialDataLength, isCenterAligment]
   )
 
@@ -238,19 +237,19 @@ const PoolList: React.FC<PoolListInterface> = ({
           height: height
         }}>
         {pages > 0 && (
-          <TableBoundsLabel
+          <InputPagination
+            pages={pages}
+            defaultPage={1}
+            handleChangePage={handleChangePagination}
+            variant='center'
+            page={page}
             borderTop={false}
-            lowerBound={lowerBound}
-            totalItems={totalItems}
-            upperBound={upperBound}>
-            <PaginationList
-              pages={pages}
-              defaultPage={1}
-              handleChangePage={handleChangePagination}
-              variant='center'
-              page={page}
-            />
-          </TableBoundsLabel>
+            pagesNumeration={{
+              lowerBound: lowerBound,
+              totalItems: totalItems,
+              upperBound: upperBound
+            }}
+          />
         )}
       </Grid>
     </Grid>

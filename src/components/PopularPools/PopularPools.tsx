@@ -8,7 +8,6 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { theme } from '@static/theme'
 import { useMemo } from 'react'
-
 export interface IPopularPools {
   pools: PopularPoolData[]
   isLoading: boolean
@@ -40,17 +39,19 @@ const PopularPools: React.FC<IPopularPools> = ({ pools, isLoading, network, show
           dots={isLgDown}
           draggable={isLgDown}
           touchMove={isLgDown}
-          infinite={false}
           speed={500}
           slidesToShow={slidesNumber}
           slidesToScroll={1}
           arrows={true}
+          autoplay={true}
+          autoplaySpeed={10000}
           className={classes.slider}
           dotsClass={`slick-dots ${classes.dots}`}
           appendDots={dots => <ul>{dots}</ul>}
           rows={1}>
           {pools.map(pool => (
             <Card
+              key={pool.addressFrom + pool.addressTo}
               addressFrom={pool.addressFrom}
               addressTo={pool.addressTo}
               iconFrom={pool.iconFrom}
@@ -67,7 +68,6 @@ const PopularPools: React.FC<IPopularPools> = ({ pools, isLoading, network, show
               isLoading={isLoading}
               network={network}
               showAPY={showAPY}
-              key={pool.addressFrom + pool.addressTo}
             />
           ))}
         </Slider>

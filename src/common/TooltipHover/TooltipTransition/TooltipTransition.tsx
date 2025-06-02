@@ -1,20 +1,20 @@
-import { Fade } from '@mui/material'
-import { TransitionProps } from 'notistack'
+import { Fade, FadeProps } from '@mui/material'
 import { useEffect, useState } from 'react'
 
-export const TooltipTransition: React.FC<
-  TransitionProps & {
-    children?: React.ReactNode
-  }
-> = ({ children, ...props }) => {
+export const TooltipTransition: React.FC<FadeProps & { children?: React.ReactNode }> = ({
+  children,
+  ...props
+}) => {
   const [translate, setTranslate] = useState('translateY(50px)')
 
   useEffect(() => {
     setTranslate(props.in ? 'translateY(0)' : 'translateY(50px)')
   }, [props.in])
 
+  const { _ownerState, ...rest } = props as any
+
   return (
-    <Fade {...props}>
+    <Fade {...rest}>
       <div>
         <div
           style={{

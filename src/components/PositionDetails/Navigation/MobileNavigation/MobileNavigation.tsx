@@ -18,7 +18,8 @@ export const MobileNavigation = ({ position, direction, onClick }: Props) => {
     <Box
       className={classes.wrapper}
       flexDirection={direction === 'left' ? 'row' : 'row-reverse'}
-      onClick={onClick}>
+      onClick={onClick}
+      minHeight={20}>
       {position ? (
         <>
           <ArrowIcon2

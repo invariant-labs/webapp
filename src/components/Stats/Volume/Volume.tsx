@@ -56,10 +56,7 @@ const Volume: React.FC<StatsInterface> = ({
   const percentage = isLoading ? Math.random() * 200 - 100 : percentVolume
 
   return (
-    <Grid
-      className={cx(classes.container, className, {
-        [classes.loadingOverlay]: isLoading
-      })}>
+    <Grid className={cx(classes.container, className)}>
       <Box className={classes.volumeContainer}>
         <Typography className={classes.volumeHeader}>Volume</Typography>
         <div className={classes.volumePercentContainer}>
