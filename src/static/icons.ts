@@ -89,6 +89,7 @@ import depositIcon from './svg/depositIcon.svg'
 import withdrawIcon from './svg/withdrawIcon.svg'
 import warning3 from './svg/warning3.svg'
 import centerToRangeIcon from './svg/centerToRange.svg'
+import connectWalletIcon from './svg/connectWalletIcon.svg'
 
 export {
   dog1Icon,
@@ -181,7 +182,8 @@ export {
   depositIcon,
   withdrawIcon,
   warning3,
-  centerToRangeIcon
+  centerToRangeIcon,
+  connectWalletIcon
 }
 
 export const chainIcons = {

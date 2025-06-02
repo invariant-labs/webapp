@@ -498,3 +498,6 @@ export const STATS_CACHE_TIME = 30 * 60 * 1000
 export const BASE_JUPITER_API_URL = 'https://lite-api.jup.ag'
 
 export const ITEMS_PER_PAGE = 10
+
+export const ECLIPSE_MAINNET_GENESIS_HASH = 'EAQLJCV2mh23BsK2P9oYpV5CHVLDNHTxYss3URrNmg3s'
+export const SOLANA_MAINNET_GENESIS_HASH = '5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d'
