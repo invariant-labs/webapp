@@ -36,7 +36,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
   tokenXLiq,
   tokenYLiq,
   network,
-  unclaimedFeesInUSD = { value: 0, loading: false },
+  unclaimedFeesInUSD = { value: 0, loading: false, isClaimAvailable: false },
   isFullRange,
   handleClosePosition,
   handleClaimFee,
@@ -202,7 +202,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
         anchorEl={anchorEl}
         handleClose={handleClose}
         open={isActionPopoverOpen}
-        unclaimedFeesInUSD={unclaimedFeesInUSD.value}
+        unclaimedFeesInUSD={unclaimedFeesInUSD}
         claimFee={() => handleClaimFee(positionSingleData?.positionIndex ?? 0)}
         closePosition={() => handleClosePosition(positionSingleData?.positionIndex ?? 0)}
       />
