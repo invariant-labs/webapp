@@ -9,6 +9,7 @@ export interface IPositionViewActionPopover {
   closePosition: () => void
   claimFee: () => void
   handleClose: () => void
+  createPosition: () => void
   shouldDisable: boolean
 }
 
@@ -18,6 +19,7 @@ export const PositionViewActionPopover: React.FC<IPositionViewActionPopover> = (
   handleClose,
   claimFee,
   closePosition,
+  createPosition,
   unclaimedFeesInUSD,
   shouldDisable
 }) => {
@@ -44,6 +46,9 @@ export const PositionViewActionPopover: React.FC<IPositionViewActionPopover> = (
       }}>
       <Grid className={classes.root}>
         <Grid className={classes.list} container>
+          <Button className={cx(classes.listItem)} onClick={createPosition}>
+            <Typography className={classes.name}>Create position</Typography>
+          </Button>
           <Button
             disabled={!unclaimedFeesInUSD.isClaimAvailable || shouldDisable}
             className={cx(classes.listItem)}

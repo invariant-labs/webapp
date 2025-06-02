@@ -220,6 +220,7 @@ const PortfolioWrapper = () => {
           tokenYLiq,
           network: currentNetwork,
           isFullRange: position.lowerTickIndex === minTick && position.upperTickIndex === maxTick,
+          poolData: position.poolData,
           unclaimedFeesInUSD: { value: usdValue, loading: position.ticksLoading, isClaimAvailable }
         }
       }),
