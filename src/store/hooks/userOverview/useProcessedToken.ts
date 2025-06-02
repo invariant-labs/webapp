@@ -3,7 +3,7 @@ import { SwapToken } from '@store/selectors/solanaWallet'
 import { printBN, getTokenPrice, ensureError } from '@utils/utils'
 import { useEffect, useState } from 'react'
 
-interface ProcessedPool {
+interface ProcessedToken {
   id: PublicKey
   symbol: string
   icon: string
@@ -14,7 +14,7 @@ interface ProcessedPool {
 }
 
 export const useProcessedTokens = (tokensList: SwapToken[], isBalanceLoading: boolean) => {
-  const [processedPools, setProcessedPools] = useState<ProcessedPool[]>([])
+  const [processedTokens, setProcessedTokens] = useState<ProcessedToken[]>([])
   const [isProcesing, setIsProcesing] = useState<boolean>(true)
 
   useEffect(() => {
@@ -34,8 +34,9 @@ export const useProcessedTokens = (tokensList: SwapToken[], isBalanceLoading: bo
             price = priceData.price ?? 0
           } catch (e: unknown) {
             const error = ensureError(e)
-            console.error(`Failed to fetch price for ${token.symbol}:`, error.message)
+            console.error(`Failed to fetch price for ${token.symbol}:`, error)
           }
+
           return {
             id: token.assetAddress,
             symbol: token.symbol,
@@ -48,7 +49,7 @@ export const useProcessedTokens = (tokensList: SwapToken[], isBalanceLoading: bo
         })
       )
 
-      setProcessedPools(processed)
+      setProcessedTokens(processed)
       setIsProcesing(false)
     }
     if (isBalanceLoading) return
@@ -57,5 +58,5 @@ export const useProcessedTokens = (tokensList: SwapToken[], isBalanceLoading: bo
     }
   }, [tokensList, isBalanceLoading])
 
-  return { processedPools, isProcesing }
+  return { processedTokens, isProcesing }
 }

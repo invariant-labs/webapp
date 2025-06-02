@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Box, Typography } from '@mui/material'
 import { colors, typography } from '@static/theme'
 import { formatNumberWithSuffix } from '@utils/utils'
 import { useMinMaxChartStyles } from './style'
 import { CHART_CONSTANTS } from './consts'
 import { handleMaxIcon, handleMinIcon } from '@static/icons'
+
 interface MinMaxChartProps {
   min: number
   max: number
@@ -63,8 +64,8 @@ const PriceIndicatorLine: React.FC<{ position: number }> = ({ position }) => {
 const MinMaxLabels: React.FC<{
   min: number
   max: number
-  classes: Record<'minMaxLabels', string>
   isFullRange: boolean
+  classes: Record<'minMaxLabels', string>
 }> = ({ min, max, classes, isFullRange }) => (
   <Box className={classes.minMaxLabels}>
     <Typography
@@ -86,7 +87,6 @@ const MinMaxLabels: React.FC<{
 
 export const MinMaxChart: React.FC<MinMaxChartProps> = ({ min, max, current, isFullRange }) => {
   const chartRef = useRef<HTMLDivElement>(null)
-
   const [chartWidth, setChartWidth] = useState(0)
   useEffect(() => {
     const updateWidth = () => {
@@ -105,12 +105,12 @@ export const MinMaxChart: React.FC<MinMaxChartProps> = ({ min, max, current, isF
     return ((current - min) / (max - min)) * 100
   }
   const currentPosition = calculateBoundedPosition()
+  const { classes } = useMinMaxChartStyles()
+  const isOutOfBounds = current < min || current > max
+
   const OFFSET_PX = 3
   const offsetPercentage = chartWidth ? (OFFSET_PX / chartWidth) * 100 : 0
   const indicatorPosition = isFullRange ? offsetPercentage : currentPosition
-
-  const { classes } = useMinMaxChartStyles()
-  const isOutOfBounds = current < min || current > max
 
   return (
     <Box className={classes.container}>
@@ -120,6 +120,7 @@ export const MinMaxChart: React.FC<MinMaxChartProps> = ({ min, max, current, isF
         <Box className={classes.handleLeft}>
           <img width={25} src={handleMinIcon} alt='MIN' />
         </Box>
+
         <GradientBox
           isOutOfBound={isOutOfBounds}
           color={colors.invariant.green}
@@ -133,6 +134,7 @@ export const MinMaxChart: React.FC<MinMaxChartProps> = ({ min, max, current, isF
           gradientDirection='left'
         />
         <PriceIndicatorLine position={indicatorPosition} />
+
         <Box className={classes.handleRight}>
           <img width={25} src={handleMaxIcon} alt='MAX' />
         </Box>

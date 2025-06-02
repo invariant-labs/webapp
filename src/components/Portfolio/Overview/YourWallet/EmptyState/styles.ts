@@ -7,6 +7,7 @@ export const useStyles = makeStyles()(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     padding: '32px',
+
     gap: '16px',
     border: 'none',
     background: colors.invariant.component,

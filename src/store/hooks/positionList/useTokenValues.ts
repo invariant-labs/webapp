@@ -61,7 +61,11 @@ export const useTokenValues = ({
       setPreviousTokenValueInUsd(totalValue)
     }
 
-    return { loading: false, value: totalValue }
+    return {
+      loading: false,
+      value: totalValue,
+      priceWarning: tokenXPriceData.price === 0 || tokenYPriceData.price === 0
+    }
   }, [tokenXLiquidity, tokenYLiquidity, tokenXPriceData, tokenYPriceData, previousTokenValueInUsd])
 
   return { tokenValueInUsd, tokenXPercentage, tokenYPercentage }
