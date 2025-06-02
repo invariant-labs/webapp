@@ -66,7 +66,6 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   xToY,
   hasTicksError,
   reloadHandler,
-  volumeRange,
   tokenAPriceData,
   tokenBPriceData,
   isFullRange,
@@ -274,9 +273,9 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         </Grid>
       </Box>
       <PriceRangePlot
-        data={data}
-        plotMin={plotMin}
-        plotMax={plotMax}
+        plotData={data}
+        plotMinData={plotMin}
+        plotMaxData={plotMax}
         zoomMinus={zoomMinus}
         zoomPlus={zoomPlus}
         moveLeft={moveLeft}
@@ -284,19 +283,17 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         centerChart={centerChart}
         centerToRange={centerToRange}
         disabled
-        leftRange={leftRange}
-        rightRange={rightRange}
-        midPrice={midPrice}
+        leftRangeData={leftRange}
+        rightRangeData={rightRange}
+        midPriceData={midPrice}
         className={classes.plot}
         loading={ticksLoading}
         isXtoY={xToY}
-        tickSpacing={tickSpacing}
+        spacing={tickSpacing}
         xDecimal={tokenX.decimal}
         yDecimal={tokenY.decimal}
-        coverOnLoading
         hasError={hasTicksError}
         reloadHandler={reloadHandler}
-        volumeRange={volumeRange}
         globalPrice={globalPrice}
         tokenAPriceData={tokenAPriceData}
         tokenBPriceData={tokenBPriceData}

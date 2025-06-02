@@ -21,8 +21,7 @@ const useStyles = makeStyles()(theme => {
       justifyContent: 'space-between',
       marginBottom: 12,
       flexDirection: 'row',
-      minHeight: 65,
-      flexWrap: 'nowrap'
+      minHeight: 65
     },
     header: {
       ...typography.heading4,
