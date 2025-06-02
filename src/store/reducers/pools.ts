@@ -54,8 +54,10 @@ export interface UpdateTickmap {
 }
 
 const network =
-  NetworkType[localStorage.getItem('INVARIANT_NETWORK_ECLIPSE') as keyof typeof NetworkType] ??
-  NetworkType.Mainnet
+  process.env.NODE_ENV === 'development'
+    ? (NetworkType[localStorage.getItem('INVARIANT_NETWORK_SOLANA') as keyof typeof NetworkType] ??
+      NetworkType.Mainnet)
+    : NetworkType.Mainnet
 
 export const defaultState: IPoolsStore = {
   tokens: { ...getNetworkTokensList(network) },

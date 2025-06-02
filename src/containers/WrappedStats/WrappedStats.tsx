@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useStyles from './styles'
-import { Grid, Typography } from '@mui/material'
+import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import {
   fees24,
@@ -24,9 +24,13 @@ import PoolList from '@components/Stats/PoolList/PoolList'
 import { VariantType } from 'notistack'
 import { FilterSearch, ISearchToken } from '@common/FilterSearch/FilterSearch'
 import { unknownTokenIcon } from '@static/icons'
+import { Separator } from '@common/Separator/Separator'
+import { colors, theme } from '@static/theme'
 
 export const WrappedStats: React.FC = () => {
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
+
+  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
 
   const dispatch = useDispatch()
 
@@ -114,21 +118,35 @@ export const WrappedStats: React.FC = () => {
       ) : (
         <>
           <Typography className={classes.subheader}>Overview</Typography>
-          <Grid container className={classes.plotsRow} wrap='nowrap'>
-            <Volume
-              volume={volume24h.value}
-              percentVolume={volume24h.change}
-              data={volumePlotData}
-              className={classes.plot}
-              isLoading={isLoadingStats}
-            />
-            <Liquidity
-              liquidityVolume={tvl24h.value}
-              liquidityPercent={tvl24h.change}
-              data={liquidityPlotData}
-              className={classes.plot}
-              isLoading={isLoadingStats}
-            />
+          <Grid
+            container
+            className={cx(classes.plotsRow, {
+              [classes.loadingOverlay]: isLoadingStats
+            })}>
+            <Box display='flex' gap={'24px'} flexDirection={isSm ? 'column' : 'row'} width='100%'>
+              <Volume
+                volume={volume24h.value}
+                percentVolume={volume24h.change}
+                data={volumePlotData}
+                className={classes.plot}
+                isLoading={isLoadingStats}
+              />
+              {
+                <Separator
+                  color={colors.invariant.light}
+                  margin={isSm ? '0 24px' : '24px 0'}
+                  width={1}
+                  isHorizontal={isSm}
+                />
+              }
+              <Liquidity
+                liquidityVolume={tvl24h.value}
+                liquidityPercent={tvl24h.change}
+                data={liquidityPlotData}
+                className={classes.plot}
+                isLoading={isLoadingStats}
+              />
+            </Box>
           </Grid>
           <Grid className={classes.row}>
             <VolumeBar
