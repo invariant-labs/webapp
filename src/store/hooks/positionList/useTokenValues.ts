@@ -31,11 +31,13 @@ export const useTokenValues = ({
   const { tokenXPriceData, tokenYPriceData } = usePrices({
     tokenX: {
       assetsAddress: positionSingleData?.tokenX.assetAddress.toString(),
-      name: positionSingleData?.tokenX.name
+      name: positionSingleData?.tokenX.name,
+      coingeckoId: positionSingleData?.tokenX.coingeckoId
     },
     tokenY: {
       assetsAddress: positionSingleData?.tokenY.assetAddress.toString(),
-      name: positionSingleData?.tokenY.name
+      name: positionSingleData?.tokenY.name,
+      coingeckoId: positionSingleData?.tokenY.coingeckoId
     }
   })
 

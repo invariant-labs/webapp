@@ -105,17 +105,23 @@ export const Overview: React.FC<OverviewProps> = () => {
 
   useEffect(() => {
     const loadPrices = async () => {
-      const uniqueTokens = new Set<string>()
+      const uniqueTokens = new Set<{ address: string; coingeckoId?: string }>()
       positionList.forEach(position => {
-        uniqueTokens.add(position.tokenX.assetAddress.toString())
-        uniqueTokens.add(position.tokenY.assetAddress.toString())
+        uniqueTokens.add({
+          address: position.tokenX.assetAddress.toString(),
+          coingeckoId: position.tokenX.coingeckoId
+        })
+        uniqueTokens.add({
+          address: position.tokenY.assetAddress.toString(),
+          coingeckoId: position.tokenY.coingeckoId
+        })
       })
 
       const tokenArray = Array.from(uniqueTokens)
       const priceResults = await Promise.all(
         tokenArray.map(async token => ({
           token,
-          priceData: await getTokenPrice(token)
+          priceData: await getTokenPrice(token.address, token.coingeckoId)
         }))
       )
       interface NewPrices {
@@ -130,7 +136,7 @@ export const Overview: React.FC<OverviewProps> = () => {
       const newPrices: NewPrices = priceResults.reduce(
         (acc, { token, priceData }) => ({
           ...acc,
-          [token]: priceData ?? {
+          [token.address]: priceData ?? {
             price: 0,
             buyPrice: 0,
             sellPrice: 0,

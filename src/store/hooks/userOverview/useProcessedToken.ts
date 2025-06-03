@@ -30,7 +30,10 @@ export const useProcessedTokens = (tokensList: SwapToken[], isBalanceLoading: bo
 
           let price = 0
           try {
-            const priceData = await getTokenPrice(token.assetAddress.toString() ?? '')
+            const priceData = await getTokenPrice(
+              token.assetAddress.toString() ?? '',
+              token.coingeckoId
+            )
             price = priceData.price ?? 0
           } catch (e: unknown) {
             const error = ensureError(e)
