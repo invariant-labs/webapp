@@ -345,7 +345,9 @@ export const getAddressTickerMap = (network: NetworkType): { [k: string]: string
       DOGIN: DOGIN_MAIN.address.toString(),
       SNY: SNY_MAIN.address.toString(),
       WEN: WEN_MAIN.address.toString(),
-      SUI: SUI_MAIN.address.toString()
+      SUI: SUI_MAIN.address.toString(),
+      JitoSOL: 'J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn',
+      INF: '5oVNBeEEQvYi1cX3ir8Dx5n1P7pdxydbGF2X4TxVusJm'
     }
   } else {
     return {}
