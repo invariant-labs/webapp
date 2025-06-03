@@ -4,7 +4,7 @@ import { linearGradientDef } from '@nivo/core'
 import { useStyles } from './style'
 import { TimeData } from '@store/reducers/stats'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
-import { formatNumberWithSuffix, trimZeros } from '@utils/utils'
+import { formatNumberWithoutSuffix, trimZeros } from '@utils/utils'
 import { formatLargeNumber } from '@utils/formatLargeNumber'
 
 interface StatsInterface {
@@ -61,7 +61,7 @@ const Volume: React.FC<StatsInterface> = ({
         <Typography className={classes.volumeHeader}>Volume</Typography>
         <div className={classes.volumePercentContainer}>
           <Typography className={classes.volumePercentHeader}>
-            ${formatNumberWithSuffix(isLoading ? Math.random() * 10000 : volume)}
+            ${formatNumberWithoutSuffix(isLoading ? Math.random() * 10000 : volume)}
           </Typography>
           <Box className={classes.volumeStatusContainer}>
             <Box
@@ -150,7 +150,7 @@ const Volume: React.FC<StatsInterface> = ({
                   month < 10 ? '0' : ''
                 }${month}`}</Typography>
                 <Typography className={classes.tooltipValue}>
-                  ${formatNumberWithSuffix(data.value)}
+                  ${formatNumberWithoutSuffix(data.value)}
                 </Typography>
               </Grid>
             )
