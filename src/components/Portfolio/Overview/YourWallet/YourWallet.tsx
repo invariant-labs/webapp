@@ -8,9 +8,12 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  Grid
 } from '@mui/material'
+import { WalletToken } from '@store/types/userOverview'
 import { DEFAULT_FEE_TIER, STRATEGIES } from '@store/consts/userStrategies'
+import { unknownTokenIcon, warning2Icon, warningIcon } from '@static/icons'
 import { NetworkType } from '@store/consts/static'
 import { addressToTicker, formatNumberWithoutSuffix } from '@utils/utils'
 import { useStyles } from './styles'
@@ -19,36 +22,36 @@ import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 import { shortenAddress } from '@utils/uiUtils'
 import { VariantType } from 'notistack'
-import { TokenPool } from '@store/types/userOverview'
+import { SkeletonRow } from './Skeletons/SekeletonRow'
 import { EmptyState } from './EmptyState/EmptyState'
-import { SkeletonRow } from './Skeletons/DesktopSkeleton'
+import { MobileSkeletonCard } from './Skeletons/MobileSkeletonCard'
 import { ActionButtons } from './ActionButtons/ActionButtons'
-import { MobileSkeletonCard } from './Skeletons/MobileSkeleton'
-import { unknownTokenIcon, warningIcon } from '@static/icons'
 
 interface YourWalletProps {
-  pools: TokenPool[]
+  tokens: WalletToken[]
   handleSnackbar: (message: string, variant: VariantType) => void
   isLoading: boolean
   currentNetwork: NetworkType
 }
 
 export const YourWallet: React.FC<YourWalletProps> = ({
-  pools = [],
+  tokens = [],
   isLoading,
   handleSnackbar,
   currentNetwork
 }) => {
-  const sortedPools = useMemo(() => [...pools].sort((a, b) => b.value - a.value), [pools])
+  const sortedTokens = useMemo(() => [...tokens].sort((a, b) => b.value - a.value), [tokens])
   const { classes } = useStyles({
     isLoading,
-    isScrollHide: sortedPools.length < 5
+    isScrollHide: sortedTokens.length < 5
   })
 
-  const totalValue = useMemo(
-    () => sortedPools.reduce((sum, pool) => sum + pool.value, 0),
-    [sortedPools]
-  )
+  const totalValue = useMemo(() => {
+    const value = sortedTokens.reduce((acc, position) => acc + (position.value || 0), 0)
+    const isPriceWarning = sortedTokens.some(token => token.isPriceWarning) && value > 0
+
+    return { value, isPriceWarning }
+  }, [sortedTokens])
 
   const findStrategy = (poolAddress: string) => {
     const poolTicker = addressToTicker(currentNetwork, poolAddress)
@@ -57,7 +60,6 @@ export const YourWallet: React.FC<YourWalletProps> = ({
       const tickerB = s.tokenAddressB ? addressToTicker(currentNetwork, s.tokenAddressB) : undefined
       return tickerA === poolTicker || tickerB === poolTicker
     })
-
     if (!strategy) {
       strategy = {
         tokenAddressA: poolAddress,
@@ -78,12 +80,6 @@ export const YourWallet: React.FC<YourWalletProps> = ({
     e.currentTarget.src = unknownTokenIcon
   }
 
-  const simplifySymbol = (pool: TokenPool) => {
-    const symbol = pool.symbol.length <= 6 ? pool.symbol : shortenAddress(pool.symbol, 2)
-
-    return symbol.length <= 4 ? symbol : symbol.substring(0, 4) + '...'
-  }
-
   return (
     <>
       <Box className={classes.desktopContainer}>
@@ -92,9 +88,11 @@ export const YourWallet: React.FC<YourWalletProps> = ({
           {isLoading ? (
             <Skeleton variant='text' width={100} height={32} sx={{ marginRight: '16px' }} />
           ) : (
-            <Typography className={classes.headerText}>
-              ${formatNumberWithoutSuffix(totalValue, { twoDecimals: true })}
-            </Typography>
+            <Grid display={'flex'} gap={'8px'}>
+              <Typography className={classes.headerText}>
+                ${formatNumberWithoutSuffix(totalValue.value)}
+              </Typography>
+            </Grid>
           )}
         </Box>
 
@@ -123,14 +121,14 @@ export const YourWallet: React.FC<YourWalletProps> = ({
                 Array(4)
                   .fill(0)
                   .map((_, index) => <SkeletonRow key={`skeleton-${index}`} />)
-              ) : sortedPools.length === 0 ? (
+              ) : sortedTokens.length === 0 ? (
                 <TableRow sx={{ background: 'transparent !important' }}>
                   <TableCell colSpan={4} sx={{ border: 'none', padding: 0 }}>
                     <EmptyState />
                   </TableCell>
                 </TableRow>
               ) : (
-                sortedPools.map(pool => {
+                sortedTokens.map(pool => {
                   const poolAddress = pool.id.toString()
                   const strategy = findStrategy(poolAddress)
 
@@ -150,7 +148,9 @@ export const YourWallet: React.FC<YourWalletProps> = ({
                             )}
 
                             <Typography className={classes.tokenSymbol}>
-                              {simplifySymbol(pool)}
+                              {pool.symbol.length <= 6
+                                ? pool.symbol
+                                : shortenAddress(pool.symbol, 2)}
                             </Typography>
                             <TooltipHover title='Copy token address'>
                               <FileCopyOutlinedIcon
@@ -179,10 +179,15 @@ export const YourWallet: React.FC<YourWalletProps> = ({
                         <Box className={classes.statsContainer}>
                           <Typography className={classes.statsValue}>
                             $
-                            {formatNumberWithoutSuffix(pool.value, {
+                            {formatNumberWithoutSuffix(pool.value.toFixed(2), {
                               twoDecimals: true
                             })}
                           </Typography>
+                          {pool.isPriceWarning && (
+                            <TooltipHover title='The price might not be shown correctly'>
+                              <img src={warning2Icon} width={14} />
+                            </TooltipHover>
+                          )}
                         </Box>
                       </TableCell>
                       <TableCell className={classes.tableCell} align='right'>
@@ -200,7 +205,7 @@ export const YourWallet: React.FC<YourWalletProps> = ({
                           pool={pool}
                           strategy={strategy}
                           currentNetwork={currentNetwork}
-                        />{' '}
+                        />
                       </TableCell>
                     </TableRow>
                   )
@@ -216,11 +221,11 @@ export const YourWallet: React.FC<YourWalletProps> = ({
           Array(3)
             .fill(0)
             .map((_, index) => <MobileSkeletonCard key={`skeleton-${index}`} />)
-        ) : sortedPools.length === 0 ? (
+        ) : sortedTokens.length === 0 ? (
           <EmptyState />
         ) : (
           <Box className={classes.mobileCardContainer}>
-            {sortedPools.map(pool => (
+            {sortedTokens.map(pool => (
               <MobileCard
                 key={pool.id.toString()}
                 pool={pool}

@@ -1,9 +1,11 @@
-import { Typography, Box, Skeleton } from '@mui/material'
+import { Typography, Box, Skeleton, Grid } from '@mui/material'
 import { formatNumberWithoutSuffix } from '@utils/utils'
 import { useStyles } from './style'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
+import { warning2Icon } from '@static/icons'
 
 interface HeaderSectionProps {
-  totalValue: number
+  totalValue: { value: number; isPriceWarning: boolean }
   loading?: boolean
 }
 
@@ -19,12 +21,26 @@ export const HeaderSection: React.FC<HeaderSectionProps> = ({ totalValue, loadin
             <Skeleton variant='text' width={100} height={24} />
           </>
         ) : (
-          <Typography className={classes.headerText}>
-            $
-            {Number.isNaN(totalValue)
-              ? 0
-              : formatNumberWithoutSuffix(totalValue, { twoDecimals: true })}
-          </Typography>
+          <Grid display='flex' flexDirection='row' alignItems='center' justifyContent='center'>
+            <Typography className={classes.headerText}>
+              $
+              {Number.isNaN(totalValue)
+                ? 0
+                : formatNumberWithoutSuffix(totalValue.value, { twoDecimals: true })}
+            </Typography>
+
+            {totalValue.isPriceWarning && (
+              <Grid
+                position={'relative'}
+                display={'flex'}
+                alignItems={'center'}
+                justifyContent={'center'}>
+                <TooltipHover title='The total value of assets might not be shown correctly'>
+                  <img src={warning2Icon} className={classes.warning} width={18} />
+                </TooltipHover>
+              </Grid>
+            )}
+          </Grid>
         )}
       </Box>
     </>

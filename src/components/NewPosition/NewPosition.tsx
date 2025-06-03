@@ -700,7 +700,7 @@ export const NewPosition: React.FC<INewPosition> = ({
                 )}
               </Hidden>
               {tokenA !== tokenB && isMd && (
-                <TooltipHover title='Refresh'>
+                <TooltipHover title='Refresh' right={8}>
                   {isCurrentPoolExisting ? (
                     <Box>
                       <Refresher

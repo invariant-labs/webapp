@@ -28,9 +28,8 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
     },
     header: {
       background: colors.invariant.component,
-      width: '100%',
       display: 'flex',
-      padding: '16px 0px',
+      padding: 16,
       [theme.breakpoints.down('lg')]: {
         borderTopLeftRadius: '24px'
       },
@@ -150,7 +149,7 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
       padding: '4px 12px',
       maxHeight: '24px',
       borderRadius: '6px',
-      gap: '16px'
+      gap: '8px'
     },
     statsLabel: {
       ...typography.caption1,
@@ -250,6 +249,10 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
       gap: '8px'
     },
     mobileStatItem: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '8px',
       backgroundColor: colors.invariant.light,
       borderRadius: '10px',
       textAlign: 'center',
@@ -258,8 +261,7 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
     },
     mobileStatLabel: {
       ...typography.caption1,
-      color: colors.invariant.textGrey,
-      marginRight: '8px'
+      color: colors.invariant.textGrey
     },
     mobileStatValue: {
       ...typography.caption1,
@@ -290,7 +292,6 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
         borderRadius: 0
       }
     },
-
     emptyStateText: {
       ...typography.heading2,
       color: colors.invariant.text,

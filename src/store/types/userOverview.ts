@@ -34,13 +34,14 @@ export interface PoolAsset {
   unclaimedFee: number
 }
 
-export interface TokenPool {
+export interface WalletToken {
   id: PublicKey
   symbol: string
   icon: string
   isUnknown?: boolean
   value: number
   amount: number
+  isPriceWarning?: boolean
 }
 
 export interface ProcessedPool {
@@ -56,6 +57,8 @@ export interface ProcessedPool {
 export interface TokenPositionEntry {
   token: string
   value: number
+  name: string
+  logo: string
   positionId: string
-  logo?: string
+  isPriceWarning: boolean
 }

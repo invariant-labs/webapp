@@ -139,6 +139,31 @@ export const useMobileStyles = makeStyles()((theme: Theme) => ({
     }
   },
 
+  buttonShard: {
+    ...typography.body1,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    justifySelf: 'center',
+    maxWidth: '36px',
+    maxHeight: '36px',
+    background: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
+    borderRadius: '16px',
+    textTransform: 'none',
+    color: colors.invariant.dark,
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      background: 'linear-gradient(180deg, #3FF2AB 0%, #25B487 100%)',
+      boxShadow: '0 4px 15px rgba(46, 224, 154, 0.35)'
+    },
+    '&:active': {
+      boxShadow: '0 2px 8px rgba(46, 224, 154, 0.35)'
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    }
+  },
   fee: {
     background: colors.invariant.light,
     borderRadius: 11,
