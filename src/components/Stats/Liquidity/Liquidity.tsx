@@ -100,7 +100,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
           areaBlendMode='normal'
           areaOpacity={0.4}
           areaBaselineValue={0}
-          enableCrosshair={true}
+          enableCrosshair
           enableSlices={false}
           debugSlices={false}
           sliceTooltip={() => null}
@@ -137,7 +137,8 @@ const Liquidity: React.FC<LiquidityInterface> = ({
             'points',
             'slices',
             'mesh',
-            'legends'
+            'legends',
+            'crosshair'
           ]}
           pointLabel='y'
           pointSize={6}
