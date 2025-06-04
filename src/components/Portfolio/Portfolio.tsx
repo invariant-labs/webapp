@@ -443,7 +443,7 @@ const Portfolio: React.FC<IProps> = ({
             <Grid className={classes.searchWrapper}>
               <Grid className={classes.filtersContainer}>
                 <Grid className={classes.fullWidthWrapper}>
-                  <TooltipHover removeOnMobile title='Refresh'>
+                  <TooltipHover title='Refresh'>
                     <Grid width={26} display='flex' alignItems='center'>
                       <MuiButton
                         disabled={showNoConnected}

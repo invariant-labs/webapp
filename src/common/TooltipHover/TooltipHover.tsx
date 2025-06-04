@@ -13,7 +13,6 @@ interface Props extends TooltipProps {
   right?: number | string
   bottom?: number | string
   fullSpan?: boolean
-  removeOnMobile?: boolean
   gradient?: boolean
   increasePadding?: boolean
   allowEnterTooltip?: boolean
