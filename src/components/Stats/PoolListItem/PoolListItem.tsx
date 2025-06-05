@@ -5,7 +5,7 @@ import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useNavigate } from 'react-router-dom'
-import { ITEMS_PER_PAGE, NetworkType, SortTypePoolList } from '@store/consts/static'
+import { Intervals, ITEMS_PER_PAGE, NetworkType, SortTypePoolList } from '@store/consts/static'
 import {
   addressToTicker,
   initialXtoY,
@@ -18,7 +18,7 @@ import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { VariantType } from 'notistack'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
-import { apyToApr } from '@utils/uiUtils'
+import { apyToApr, mapIntervalToString } from '@utils/uiUtils'
 import {
   horizontalSwapIcon,
   newTabBtnIcon,
@@ -52,6 +52,7 @@ interface IProps {
   copyAddressHandler?: (message: string, variant: VariantType) => void
   showAPY: boolean
   itemNumber?: number
+  interval?: Intervals
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -75,11 +76,12 @@ const PoolListItem: React.FC<IProps> = ({
   poolAddress,
   copyAddressHandler,
   showAPY,
-  itemNumber = 0
+  itemNumber = 0,
+  interval = Intervals.Daily
 }) => {
   const [showInfo, setShowInfo] = useState(false)
   const { classes, cx } = useStyles({ showInfo })
-
+  const intervalSuffix = mapIntervalToString(interval)
   const navigate = useNavigate()
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
   const isSmd = useMediaQuery(theme.breakpoints.down('md'))
@@ -312,7 +314,7 @@ const PoolListItem: React.FC<IProps> = ({
             <>
               <>
                 <Typography component='h5' className={classes.extendedRowTitle}>
-                  Fee (24h){' '}
+                  Fee ({intervalSuffix}){' '}
                   <span className={classes.extendedRowContent}>
                     ${formatNumberWithSuffix((fee * 0.01 * volume).toFixed(2))}
                   </span>
@@ -423,7 +425,7 @@ const PoolListItem: React.FC<IProps> = ({
                   onSort?.(SortTypePoolList.FEE_24_DESC)
                 }
               }}>
-              Fee 24H
+              Fee {intervalSuffix}
               {sortType === SortTypePoolList.FEE_24_ASC ? (
                 <ArrowDropUpIcon className={classes.icon} />
               ) : sortType === SortTypePoolList.FEE_24_DESC ? (
@@ -440,7 +442,7 @@ const PoolListItem: React.FC<IProps> = ({
                 onSort?.(SortTypePoolList.VOLUME_DESC)
               }
             }}>
-            Volume 24H
+            Volume {intervalSuffix}
             {sortType === SortTypePoolList.VOLUME_ASC ? (
               <ArrowDropUpIcon className={classes.icon} />
             ) : sortType === SortTypePoolList.VOLUME_DESC ? (
