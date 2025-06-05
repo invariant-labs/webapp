@@ -143,10 +143,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
 
   const [hideUnknownTokens, setHideUnknownTokens] = useState<boolean>(initialHideUnknownTokensValue)
 
-  const [isLoaded, setIsLoaded] = useState<boolean>(false)
-
   useEffect(() => {
-    if (isLoaded || Object.keys(tokens).length === 0 || ALL_FEE_TIERS_DATA.length === 0) {
+    if (Object.keys(tokens).length === 0 || ALL_FEE_TIERS_DATA.length === 0) {
       return
     }
 
@@ -168,9 +166,7 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     setTokenA(tokenAFromPath)
     setTokenB(tokenBFromPath)
     setPositionTokens(tokenAFromPath, tokenBFromPath, feeTierIndexFromPath)
-
-    setIsLoaded(true)
-  }, [tokens])
+  }, [Object.keys(tokens).length])
 
   const [wasRunTokenA, setWasRunTokenA] = useState(false)
   const [wasRunTokenB, setWasRunTokenB] = useState(false)
