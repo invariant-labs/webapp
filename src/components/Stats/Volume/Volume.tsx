@@ -177,7 +177,7 @@ const Volume: React.FC<StatsInterface> = ({
               onMouseLeave={() => {
                 hideTooltip()
               }}
-              style={{ cursor: 'pointer', pointerEvents: 'all' }}
+              style={{ pointerEvents: 'all' }}
             />
           )
         })}
