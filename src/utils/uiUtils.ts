@@ -129,7 +129,7 @@ export const mapIntervalToPrecision = (interval: Intervals): string => {
 export const mapIntervalToString = (interval: Intervals): string => {
   switch (interval) {
     case Intervals.Daily:
-      return '1D'
+      return '24H'
     case Intervals.Weekly:
       return '1W'
     case Intervals.Monthly:

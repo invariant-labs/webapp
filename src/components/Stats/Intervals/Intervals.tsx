@@ -14,7 +14,6 @@ const Intervals: React.FC<IntervalsProps> = ({ interval, setInterval }) => {
 
   const handleIntervalChange = (_: any, newInterval: string) => {
     if (!newInterval) return
-    console.log(newInterval)
     if (newInterval === '1W') {
       setInterval(IntervalsKeys.Weekly)
     } else if (newInterval === '1M') {
