@@ -2,7 +2,14 @@ import React, { useMemo, useEffect, useState } from 'react'
 import PoolListItem from '@components/Stats/PoolListItem/PoolListItem'
 import { useStyles } from './style'
 import { Grid, useMediaQuery } from '@mui/material'
-import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
+import {
+  BTC_DEV,
+  NetworkType,
+  SortTypePoolList,
+  USDC_DEV,
+  SOL_DEV,
+  Intervals
+} from '@store/consts/static'
 import { VariantType } from 'notistack'
 import { Keypair } from '@solana/web3.js'
 import { useNavigate } from 'react-router-dom'
@@ -40,6 +47,7 @@ export interface PoolListInterface {
   copyAddressHandler: (message: string, variant: VariantType) => void
   isLoading: boolean
   showAPY: boolean
+  interval: Intervals
 }
 
 const ITEMS_PER_PAGE = 10
@@ -78,7 +86,8 @@ const PoolList: React.FC<PoolListInterface> = ({
   network,
   copyAddressHandler,
   isLoading,
-  showAPY
+  showAPY,
+  interval
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
   const { classes, cx } = useStyles()
@@ -169,6 +178,7 @@ const PoolList: React.FC<PoolListInterface> = ({
         sortType={sortType}
         network={network}
         showAPY={showAPY}
+        interval={interval}
       />
       {data.length > 0 || isLoading ? (
         <>
@@ -200,6 +210,7 @@ const PoolList: React.FC<PoolListInterface> = ({
               poolAddress={element.poolAddress}
               copyAddressHandler={copyAddressHandler}
               showAPY={showAPY}
+              interval={interval}
             />
           ))}
           {getEmptyRowsCount() > 0 &&

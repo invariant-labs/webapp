@@ -33,6 +33,7 @@ interface IPositionsTableRow extends IPositionItem {
   handleLockPosition: (index: number) => void
   handleClosePosition: (index: number) => void
   handleClaimFee: (index: number) => void
+  createNewPosition: () => void
   shouldDisable: boolean
 }
 
@@ -58,6 +59,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   handleClaimFee,
   isFullRange,
   handleClosePosition,
+  createNewPosition,
   shouldDisable
 }) => {
   const { classes, cx } = useStyles()
@@ -321,6 +323,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
         unclaimedFeesInUSD={unclaimedFeesInUSD}
         claimFee={() => handleClaimFee(positionSingleData?.positionIndex ?? 0)}
         closePosition={() => handleClosePosition(positionSingleData?.positionIndex ?? 0)}
+        createPosition={createNewPosition}
       />
       <TableCell className={`${classes.pairNameCell} ${classes.cellBase}`}>
         {pairNameContent}

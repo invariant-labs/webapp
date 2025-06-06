@@ -15,8 +15,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   subheader: {
     ...typography.heading4,
-    color: colors.white.main,
-    marginBottom: 24
+    color: colors.white.main
   },
   plotsRow: {
     marginBottom: 24,

@@ -3,7 +3,14 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { colors, theme } from '@static/theme'
 import useStyles from './style'
 import { Grid, useMediaQuery } from '@mui/material'
-import { BTC_DEV, NetworkType, SortTypeTokenList, USDC_DEV, SOL_DEV } from '@store/consts/static'
+import {
+  Intervals,
+  BTC_DEV,
+  NetworkType,
+  SortTypeTokenList,
+  USDC_DEV,
+  SOL_DEV
+} from '@store/consts/static'
 import NotFoundPlaceholder from '../NotFoundPlaceholder/NotFoundPlaceholder'
 import { VariantType } from 'notistack'
 import { Keypair } from '@solana/web3.js'
@@ -26,6 +33,7 @@ export interface ITokensList {
   initialLength: number
   copyAddressHandler: (message: string, variant: VariantType) => void
   isLoading: boolean
+  interval: Intervals
 }
 
 const ITEMS_PER_PAGE = 10
@@ -50,7 +58,8 @@ const TokensList: React.FC<ITokensList> = ({
   network,
   copyAddressHandler,
   isLoading,
-  initialLength
+  initialLength,
+  interval
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
   const { classes, cx } = useStyles()
@@ -141,12 +150,18 @@ const TokensList: React.FC<ITokensList> = ({
       classes={{ root: classes.container }}
       className={cx({ [classes.loadingOverlay]: isLoading })}>
       <>
-        <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />
+        <TokenListItem
+          displayType='header'
+          onSort={setSortType}
+          sortType={sortType}
+          interval={interval}
+        />
         {data.length > 0 || isLoading ? (
           <>
             {paginator(page).data.map((token, index) => {
               return (
                 <TokenListItem
+                  interval={interval}
                   key={index}
                   displayType='tokens'
                   itemNumber={index + 1 + (page - 1) * ITEMS_PER_PAGE}

@@ -539,6 +539,28 @@ export const chartPlaceholder = {
   tickSpacing: 10
 }
 
+export enum Intervals {
+  Daily = '24H',
+  Weekly = '1W',
+  Monthly = '1M',
+  Yearly = '1Y'
+}
+
+export const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+]
+
 export const percentageThresholds: FormatNumberThreshold[] = [
   {
     value: 10,
