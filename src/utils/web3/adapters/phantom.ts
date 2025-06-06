@@ -53,8 +53,9 @@ export class PhantomWalletAdapter implements WalletAdapter {
       return
     }
     let provider: PhantomProvider
-    if ((window as any)?.solana?.isPhantom) {
-      provider = (window as any).solana
+    if ((window as any).phantom.solana.isPhantom) {
+      provider = (window as any).phantom.solana
+
       // @ts-expect-error comment: linter crash because no comment after ts expect error so i am gonna write it, by default accountChanged event is not yet in the window.solana object although it exists
       provider.on('accountChanged', async a => {
         if (a === null) {

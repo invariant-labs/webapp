@@ -3,6 +3,7 @@ import NewPosition from '@components/NewPosition/NewPosition'
 import {
   ALL_FEE_TIERS_DATA,
   DEFAULT_NEW_POSITION_SLIPPAGE,
+  Intervals,
   commonTokensForNetworks
 } from '@store/consts/static'
 import { PositionOpeningMethod, TokenPriceData } from '@store/consts/types'
@@ -694,7 +695,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   }, [isTimeoutError])
 
   useEffect(() => {
-    dispatch(statsActions.getCurrentStats())
+    dispatch(statsActions.getCurrentIntervalStats({ interval: Intervals.Daily }))
   }, [])
 
   const { feeTiersWithTvl, totalTvl } = useMemo(() => {

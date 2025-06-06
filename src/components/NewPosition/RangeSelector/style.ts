@@ -19,7 +19,9 @@ const useStyles = makeStyles()(theme => {
     },
     headerContainer: {
       justifyContent: 'space-between',
-      marginBottom: 12
+      marginBottom: 12,
+      flexDirection: 'row',
+      minHeight: 65
     },
     header: {
       ...typography.heading4,
@@ -169,10 +171,34 @@ const useStyles = makeStyles()(theme => {
     infoRow: {
       marginBottom: 16
     },
+    currentPriceContainer: {
+      marginTop: 23,
+      textWrap: 'nowrap',
+      minWidth: 'fit-content'
+    },
     currentPrice: {
       display: 'inline-block',
       color: colors.invariant.yellow,
       ...typography.caption2
+    },
+    priceWarning: {
+      display: 'inline-block',
+      color: colors.invariant.Error,
+      ...typography.body2,
+      marginLeft: 4,
+      marginTop: 2,
+      fontSize: 14
+    },
+    priceWarningIcon: {
+      width: 16,
+      height: 16,
+      flexShrink: 0
+    },
+    priceWarningContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      flexShrink: 1,
+      marginTop: 2
     },
     usdcCurrentPrice: {
       display: 'inline-block',
@@ -184,10 +210,11 @@ const useStyles = makeStyles()(theme => {
       fontSize: 14,
       fontWeight: 'normal'
     },
-    conWrapper: {
+    subheaderWrapper: {
       justifyContent: 'space-between',
       alignItems: 'center',
-      minHeight: 36
+      minHeight: 36,
+      rowGap: 16
     },
     globalPrice: {
       display: 'inline-block',
@@ -221,7 +248,9 @@ const useStyles = makeStyles()(theme => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start',
-      justifyContent: 'space-between'
+      minHeight: 87,
+      flexWrap: 'nowrap',
+      flexShrink: 1
     },
     rangeConcentration: {
       display: 'flex',

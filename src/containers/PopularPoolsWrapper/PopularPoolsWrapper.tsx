@@ -5,9 +5,8 @@ import { isLoading, poolsStatsWithTokensDetails } from '@store/selectors/stats'
 import { actions } from '@store/reducers/stats'
 import { Grid } from '@mui/material'
 import { network } from '@store/selectors/solanaConnection'
-import { getPopularPools } from '@store/consts/static'
+import { getPopularPools, Intervals } from '@store/consts/static'
 import { unknownTokenIcon } from '@static/icons'
-
 export interface PopularPoolData {
   symbolFrom?: string
   symbolTo?: string
@@ -37,6 +36,29 @@ export const PopularPoolsWrapper: React.FC = () => {
     const data: PopularPoolData[] = []
 
     let popularPools = getPopularPools(currentNetwork)
+
+    if (poolsList.length === 0) {
+      const mockPool: PopularPoolData = {
+        addressFrom: 'x',
+        addressTo: 'y',
+        symbolFrom: 'X',
+        symbolTo: 'Y',
+        iconFrom: unknownTokenIcon,
+        iconTo: unknownTokenIcon,
+        volume: 0,
+        TVL: 0,
+        fee: 0,
+        apy: 0,
+        apyData: {
+          fees: 0
+        },
+        isUnknownFrom: true,
+        isUnknownTo: true
+      }
+
+      const mockPools: PopularPoolData[] = Array(4).fill(mockPool)
+      return mockPools
+    }
     if (popularPools.length === 0) {
       popularPools = poolsList
         .sort((a, b) => b.volume24 - a.volume24)
@@ -82,21 +104,21 @@ export const PopularPoolsWrapper: React.FC = () => {
     })
 
     return data
-  }, [poolsList])
+  }, [poolsList, isLoadingStats])
 
   const showAPY = useMemo(() => {
     return list.some(pool => pool.apy !== 0)
   }, [list])
 
   useEffect(() => {
-    dispatch(actions.getCurrentStats())
+    dispatch(actions.getCurrentIntervalStats({ interval: Intervals.Daily }))
   }, [])
 
   return (
     <Grid container>
       <PopularPools
         pools={list}
-        isLoading={isLoadingStats}
+        isLoading={isLoadingStats || list.length === 0}
         network={currentNetwork}
         showAPY={showAPY}
       />
