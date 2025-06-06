@@ -29,6 +29,9 @@ const Volume: React.FC<StatsInterface> = ({
 }) => {
   const { classes, cx } = useStyles()
   const [hoveredBar, setHoveredBar] = useState<any>(null)
+  const [hoveredBarPosition, setHoveredBarPosition] = useState<{ x: number; width: number } | null>(
+    null
+  )
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const chartContainerRef = useRef<HTMLDivElement>(null)
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -45,20 +48,26 @@ const Volume: React.FC<StatsInterface> = ({
 
     if (immediate) {
       setHoveredBar(null)
+      setHoveredBarPosition(null)
     } else {
       hideTimeoutRef.current = setTimeout(() => {
         setHoveredBar(null)
+        setHoveredBarPosition(null)
       }, 50)
     }
   }, [])
 
-  const showTooltip = useCallback((barData: any, event: MouseEvent) => {
-    if (hideTimeoutRef.current) {
-      clearTimeout(hideTimeoutRef.current)
-    }
-    setHoveredBar(barData)
-    setMousePosition({ x: event.clientX, y: event.clientY })
-  }, [])
+  const showTooltip = useCallback(
+    (barData: any, event: MouseEvent, barPosition: { x: number; width: number }) => {
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current)
+      }
+      setHoveredBar(barData)
+      setHoveredBarPosition(barPosition)
+      setMousePosition({ x: event.clientX, y: event.clientY })
+    },
+    []
+  )
 
   const handleGlobalMouseMove = useCallback(
     (event: MouseEvent) => {
@@ -117,6 +126,18 @@ const Volume: React.FC<StatsInterface> = ({
   const CustomHoverLayer = ({ bars, innerHeight, innerWidth }: any) => {
     return (
       <g>
+        {hoveredBarPosition && (
+          <rect
+            x={hoveredBarPosition.x}
+            y={0}
+            width={hoveredBarPosition.width}
+            height={innerHeight}
+            fill='#f075d7'
+            fillOpacity={0.3}
+            style={{ pointerEvents: 'none' }}
+          />
+        )}
+
         <rect
           x={0}
           y={0}
@@ -148,7 +169,7 @@ const Volume: React.FC<StatsInterface> = ({
               height={innerHeight}
               fill='transparent'
               onMouseEnter={event => {
-                showTooltip(barData, event.nativeEvent)
+                showTooltip(barData, event.nativeEvent, { x: bar.x, width: bar.width })
               }}
               onMouseMove={event => {
                 setMousePosition({ x: event.nativeEvent.clientX, y: event.nativeEvent.clientY })
