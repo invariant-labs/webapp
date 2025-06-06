@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import useStyles, { useSingleTabStyles, useTabsStyles } from './style'
 import { Box, Grid, Skeleton, Tab, Tabs, Typography } from '@mui/material'
 import { formatNumberWithSuffix } from '@utils/utils'
@@ -44,6 +44,29 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
     tier => feeTiersWithTvl[tier] === Math.max(...Object.values(feeTiersWithTvl))
   )
 
+  const doesPoolExist = useCallback(
+    (tier: number) => {
+      return Object.prototype.hasOwnProperty.call(feeTiersWithTvl, tier)
+    },
+    [feeTiersWithTvl]
+  )
+
+  const getTvlValue = useCallback(
+    (tier: number) => {
+      const poolExist = doesPoolExist(tier)
+      if (!poolExist || feeTiersWithTvl[tier] === 0) return '0'
+      if (Object.keys(feeTiersWithTvl).length === 1) return '100'
+      const percentage = feeTiersWithTvl[tier]
+        ? Math.round((feeTiersWithTvl[tier] / totalTvl) * 100)
+        : 0
+
+      if (percentage < 1) return '<1'
+      if (percentage > 99) return '>99'
+      return `${percentage}`
+    },
+    [feeTiersWithTvl, totalTvl]
+  )
+
   return (
     <Grid className={classes.wrapper}>
       <Tabs
@@ -66,11 +89,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
                     className={cx(classes.tabTvl, {
                       [classes.tabSelectedTvl]: currentValue === index || bestTierIndex === index
                     })}>
-                    TVL{' '}
-                    {feeTiersWithTvl[tier]
-                      ? Math.round((feeTiersWithTvl[tier] / totalTvl) * 100)
-                      : 0}
-                    %
+                    TVL {getTvlValue(tier)}%
                   </Typography>
                 )}
                 <Box>{showOnlyPercents ? `${tier}%` : `${tier}% fee`}</Box>
@@ -81,7 +100,7 @@ export const FeeSwitch: React.FC<IFeeSwitch> = ({
                     className={cx(classes.tabTvl, {
                       [classes.tabSelectedTvl]: currentValue === index || bestTierIndex === index
                     })}>
-                    {feeTiersWithTvl[tier]
+                    {doesPoolExist(tier)
                       ? `$${+formatNumberWithSuffix(feeTiersWithTvl[tier], true, 18) < 1000 ? (+formatNumberWithSuffix(feeTiersWithTvl[tier], true, 18)).toFixed(2) : formatNumberWithSuffix(feeTiersWithTvl[tier])}`
                       : 'Not created'}
                   </Typography>
