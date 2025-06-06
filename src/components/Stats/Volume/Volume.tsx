@@ -8,7 +8,7 @@ import { formatNumberWithoutSuffix, trimZeros } from '@utils/utils'
 import { formatLargeNumber } from '@utils/formatLargeNumber'
 import { Intervals as IntervalsKeys } from '@store/consts/static'
 import { formatPlotDataLabels, getLabelDate } from '@utils/uiUtils'
-import { useState } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 
 interface StatsInterface {
   volume: number | null
@@ -30,11 +30,79 @@ const Volume: React.FC<StatsInterface> = ({
   const { classes, cx } = useStyles()
   const [hoveredBar, setHoveredBar] = useState<any>(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const chartContainerRef = useRef<HTMLDivElement>(null)
+  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   volume = volume ?? 0
 
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
+  const hideTooltip = useCallback((immediate = false) => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current)
+    }
+
+    if (immediate) {
+      setHoveredBar(null)
+    } else {
+      hideTimeoutRef.current = setTimeout(() => {
+        setHoveredBar(null)
+      }, 50)
+    }
+  }, [])
+
+  const showTooltip = useCallback((barData: any, event: MouseEvent) => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current)
+    }
+    setHoveredBar(barData)
+    setMousePosition({ x: event.clientX, y: event.clientY })
+  }, [])
+
+  const handleGlobalMouseMove = useCallback(
+    (event: MouseEvent) => {
+      if (!chartContainerRef.current || !hoveredBar) return
+
+      const rect = chartContainerRef.current.getBoundingClientRect()
+      const margin = { top: 30, bottom: 30, left: 30, right: 4 } // Same as chart margins
+
+      const barAreaLeft = rect.left + margin.left
+      const barAreaRight = rect.right - margin.right
+      const barAreaTop = rect.top + margin.top
+      const barAreaBottom = rect.bottom - margin.bottom
+
+      const isInsideBarArea =
+        event.clientX >= barAreaLeft &&
+        event.clientX <= barAreaRight &&
+        event.clientY >= barAreaTop &&
+        event.clientY <= barAreaBottom
+
+      if (!isInsideBarArea) {
+        hideTooltip(true)
+      } else {
+        setMousePosition({ x: event.clientX, y: event.clientY })
+      }
+    },
+    [hoveredBar, hideTooltip]
+  )
+
+  useEffect(() => {
+    if (hoveredBar) {
+      document.addEventListener('mousemove', handleGlobalMouseMove)
+      return () => {
+        document.removeEventListener('mousemove', handleGlobalMouseMove)
+      }
+    }
+  }, [hoveredBar, handleGlobalMouseMove])
+
+  useEffect(() => {
+    return () => {
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current)
+      }
+    }
+  }, [])
 
   const Theme = {
     axis: {
@@ -46,9 +114,21 @@ const Volume: React.FC<StatsInterface> = ({
     grid: { line: { stroke: colors.invariant.light } }
   }
 
-  const CustomHoverLayer = ({ bars, innerHeight }: any) => {
+  const CustomHoverLayer = ({ bars, innerHeight, innerWidth }: any) => {
     return (
       <g>
+        <rect
+          x={0}
+          y={0}
+          width={innerWidth}
+          height={innerHeight}
+          fill='transparent'
+          onMouseEnter={() => {
+            hideTooltip()
+          }}
+          style={{ pointerEvents: 'all' }}
+        />
+
         {bars.map((bar: any) => {
           const barData = {
             timestamp: bar.data.indexValue || bar.data.timestamp,
@@ -56,8 +136,8 @@ const Volume: React.FC<StatsInterface> = ({
             ...bar.data
           }
 
-          const hoverWidth = bar.width
-          const hoverX = bar.x + (bar.width - hoverWidth) / 2
+          const hoverWidth = bar.width + 2
+          const hoverX = bar.x - 1
 
           return (
             <rect
@@ -68,16 +148,15 @@ const Volume: React.FC<StatsInterface> = ({
               height={innerHeight}
               fill='transparent'
               onMouseEnter={event => {
-                setHoveredBar(barData)
-                setMousePosition({ x: event.clientX, y: event.clientY })
+                showTooltip(barData, event.nativeEvent)
               }}
               onMouseMove={event => {
-                setMousePosition({ x: event.clientX, y: event.clientY })
+                setMousePosition({ x: event.nativeEvent.clientX, y: event.nativeEvent.clientY })
               }}
               onMouseLeave={() => {
-                setHoveredBar(null)
+                hideTooltip()
               }}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', pointerEvents: 'all' }}
             />
           )
         })}
@@ -89,7 +168,6 @@ const Volume: React.FC<StatsInterface> = ({
     if (!hoveredBar) return null
 
     const timestamp = hoveredBar.timestamp || hoveredBar.indexValue
-
     const date = getLabelDate(interval, timestamp, lastStatsTimestamp)
 
     return (
@@ -127,11 +205,11 @@ const Volume: React.FC<StatsInterface> = ({
         </div>
       </Box>
       <div
+        ref={chartContainerRef}
         className={classes.barContainer}
         style={{ position: 'relative' }}
-        onMouseLeave={() => setHoveredBar(null)}>
+        onMouseLeave={() => hideTooltip(true)}>
         <ResponsiveBar
-          onMouseLeave={() => setHoveredBar(null)}
           layout='vertical'
           key={`${interval}-${isLoading}`}
           animate={false}
@@ -155,7 +233,6 @@ const Volume: React.FC<StatsInterface> = ({
               ? () => <text></text>
               : ({ x, y, value }) => (
                   <g transform={`translate(${x - (isMobile ? 22 : 30)},${y + 4})`}>
-                    {' '}
                     <text
                       style={{ fill: colors.invariant.textGrey, ...typography.tiny2 }}
                       textAnchor='start'
@@ -171,7 +248,7 @@ const Volume: React.FC<StatsInterface> = ({
           enableLabel={false}
           enableGridY={true}
           innerPadding={isXsDown ? 1 : 2}
-          isInteractive
+          isInteractive={false}
           padding={0.03}
           indexScale={{ type: 'band', round: true }}
           defs={[
