@@ -4,13 +4,16 @@ import useStyles from './styles'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import {
-  fees24,
+  currentInterval,
+  fees,
   isLoading,
+  lastInterval,
+  lastSnapTimestamp,
   liquidityPlot,
   poolsStatsWithTokensDetails,
   tokensStatsWithTokensDetails,
-  tvl24,
-  volume24,
+  tvl,
+  volume,
   volumePlot
 } from '@store/selectors/stats'
 import { network } from '@store/selectors/solanaConnection'
@@ -26,6 +29,8 @@ import { FilterSearch, ISearchToken } from '@common/FilterSearch/FilterSearch'
 import { unknownTokenIcon } from '@static/icons'
 import { Separator } from '@common/Separator/Separator'
 import { colors, theme } from '@static/theme'
+import { Intervals as IntervalsKeys } from '@store/consts/static'
+import Intervals from '@components/Stats/Intervals/Intervals'
 
 export const WrappedStats: React.FC = () => {
   const { classes, cx } = useStyles()
@@ -36,20 +41,36 @@ export const WrappedStats: React.FC = () => {
 
   const poolsList = useSelector(poolsStatsWithTokensDetails)
   const tokensList = useSelector(tokensStatsWithTokensDetails)
-  const volume24h = useSelector(volume24)
-  const tvl24h = useSelector(tvl24)
-  const fees24h = useSelector(fees24)
+  const volumeInterval = useSelector(volume)
+  const tvlInterval = useSelector(tvl)
+  const feesInterval = useSelector(fees)
   const volumePlotData = useSelector(volumePlot)
+  const lastStatsTimestamp = useSelector(lastSnapTimestamp)
   const liquidityPlotData = useSelector(liquidityPlot)
   const isLoadingStats = useSelector(isLoading)
   const currentNetwork = useSelector(network)
+
+  const lastUsedInterval = useSelector(currentInterval)
+  const lastFetchedInterval = useSelector(lastInterval)
 
   const [searchTokensValue, setSearchTokensValue] = useState<ISearchToken[]>([])
   const [searchPoolsValue, setSearchPoolsValue] = useState<ISearchToken[]>([])
 
   useEffect(() => {
-    dispatch(actions.getCurrentStats())
-  }, [])
+    if (lastFetchedInterval === lastUsedInterval || !lastUsedInterval) return
+    dispatch(actions.getCurrentIntervalStats({ interval: lastUsedInterval }))
+  }, [lastUsedInterval, lastFetchedInterval])
+
+  useEffect(() => {
+    if (lastUsedInterval) return
+    dispatch(actions.getCurrentIntervalStats({ interval: IntervalsKeys.Daily }))
+    dispatch(actions.setCurrentInterval({ interval: IntervalsKeys.Daily }))
+  }, [lastUsedInterval])
+
+  const updateInterval = (interval: IntervalsKeys) => {
+    dispatch(actions.getCurrentIntervalStats({ interval }))
+    dispatch(actions.setCurrentInterval({ interval }))
+  }
 
   const filteredTokenList = useMemo(() => {
     if (searchTokensValue.length === 0) {
@@ -117,7 +138,13 @@ export const WrappedStats: React.FC = () => {
         </Grid>
       ) : (
         <>
-          <Typography className={classes.subheader}>Overview</Typography>
+          <Box display='flex' justifyContent='space-between' alignItems='center' mb={4}>
+            <Typography className={classes.subheader}>Overview</Typography>
+            <Intervals
+              interval={lastUsedInterval ?? IntervalsKeys.Daily}
+              setInterval={updateInterval}
+            />
+          </Box>
           <Grid
             container
             className={cx(classes.plotsRow, {
@@ -125,11 +152,12 @@ export const WrappedStats: React.FC = () => {
             })}>
             <Box display='flex' gap={'24px'} flexDirection={isSm ? 'column' : 'row'} width='100%'>
               <Volume
-                volume={volume24h.value}
-                percentVolume={volume24h.change}
+                volume={volumeInterval.value}
                 data={volumePlotData}
                 className={classes.plot}
                 isLoading={isLoadingStats}
+                lastStatsTimestamp={lastStatsTimestamp}
+                interval={lastUsedInterval ?? IntervalsKeys.Daily}
               />
               {
                 <Separator
@@ -140,23 +168,25 @@ export const WrappedStats: React.FC = () => {
                 />
               }
               <Liquidity
-                liquidityVolume={tvl24h.value}
-                liquidityPercent={tvl24h.change}
+                liquidityVolume={tvlInterval.value}
                 data={liquidityPlotData}
                 className={classes.plot}
                 isLoading={isLoadingStats}
+                lastStatsTimestamp={lastStatsTimestamp}
+                interval={lastUsedInterval ?? IntervalsKeys.Daily}
               />
             </Box>
           </Grid>
           <Grid className={classes.row}>
             <VolumeBar
-              volume={volume24h.value}
-              percentVolume={volume24h.change}
-              tvlVolume={tvl24h.value}
-              percentTvl={tvl24h.change}
-              feesVolume={fees24h.value}
-              percentFees={fees24h.change}
+              volume={volumeInterval.value}
+              percentVolume={volumeInterval.change}
+              tvlVolume={tvlInterval.value}
+              percentTvl={tvlInterval.change}
+              feesVolume={feesInterval.value}
+              percentFees={feesInterval.change}
               isLoading={isLoadingStats}
+              interval={lastUsedInterval ?? IntervalsKeys.Daily}
             />
           </Grid>
           <Grid className={classes.rowContainer}>
@@ -174,6 +204,7 @@ export const WrappedStats: React.FC = () => {
           <Grid container className={classes.row}>
             <PoolList
               initialLength={poolsList.length}
+              interval={lastUsedInterval ?? IntervalsKeys.Daily}
               data={filteredPoolsList.map(poolData => ({
                 symbolFrom: poolData.tokenXDetails?.symbol ?? poolData.tokenX.toString(),
                 symbolTo: poolData.tokenYDetails?.symbol ?? poolData.tokenY.toString(),
@@ -226,6 +257,7 @@ export const WrappedStats: React.FC = () => {
             network={currentNetwork}
             copyAddressHandler={copyAddressHandler}
             isLoading={isLoadingStats}
+            interval={lastUsedInterval ?? IntervalsKeys.Daily}
           />
         </>
       )}

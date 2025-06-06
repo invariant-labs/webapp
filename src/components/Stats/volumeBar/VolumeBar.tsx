@@ -3,6 +3,8 @@ import { theme } from '@static/theme'
 import { useStyles } from './style'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import { formatNumberWithSuffix } from '@utils/utils'
+import { Intervals } from '@store/consts/static'
+import { mapIntervalToString } from '@utils/uiUtils'
 
 interface Iprops {
   percentVolume: number | null
@@ -12,6 +14,7 @@ interface Iprops {
   feesVolume: number | null
   percentFees: number | null
   isLoading: boolean
+  interval: Intervals
 }
 
 const VolumeBar: React.FC<Iprops> = ({
@@ -21,7 +24,8 @@ const VolumeBar: React.FC<Iprops> = ({
   percentTvl,
   feesVolume,
   percentFees,
-  isLoading
+  isLoading,
+  interval
 }) => {
   const { classes, cx } = useStyles()
 
@@ -35,7 +39,7 @@ const VolumeBar: React.FC<Iprops> = ({
   const volumePercentage = isLoading ? Math.random() * 200 - 100 : percentVolume
   const tvlPercentage = isLoading ? Math.random() * 200 - 100 : percentTvl
   const feesPercentage = isLoading ? Math.random() * 200 - 100 : percentFees
-
+  const intervalSuffix = mapIntervalToString(interval)
   const isXDown = useMediaQuery(theme.breakpoints.down('xs'))
 
   return (
@@ -44,7 +48,8 @@ const VolumeBar: React.FC<Iprops> = ({
       classes={{ container: classes.container }}
       className={cx({ [classes.loadingOverlay]: isLoading })}>
       <Box className={classes.tokenName}>
-        <Typography className={classes.tokenHeader}>Volume 24H:</Typography>
+        <Typography className={classes.tokenHeader}>Volume {intervalSuffix}:</Typography>
+
         <Typography className={classes.tokenContent}>
           ${formatNumberWithSuffix(isLoading ? Math.random() * 10000 : volume)}
         </Typography>
@@ -61,7 +66,8 @@ const VolumeBar: React.FC<Iprops> = ({
         )}
       </Box>
       <Box className={classes.tokenName}>
-        <Typography className={classes.tokenHeader}>TVL 24H:</Typography>
+        <Typography className={classes.tokenHeader}>TVL {intervalSuffix}:</Typography>
+
         <Typography className={classes.tokenContent}>
           ${formatNumberWithSuffix(isLoading ? Math.random() * 10000 : tvlVolume)}
         </Typography>
@@ -77,8 +83,9 @@ const VolumeBar: React.FC<Iprops> = ({
           </Typography>
         )}
       </Box>
+
       <Box className={classes.tokenName}>
-        <Typography className={classes.tokenHeader}>Fees 24H:</Typography>
+        <Typography className={classes.tokenHeader}>Fees {intervalSuffix}:</Typography>
         <Typography className={classes.tokenContent}>
           ${formatNumberWithSuffix(isLoading ? Math.random() * 1000 : feesVolume)}
         </Typography>

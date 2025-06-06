@@ -538,3 +538,25 @@ export const chartPlaceholder = {
   plotMax: 1.0113333501881372,
   tickSpacing: 10
 }
+
+export enum Intervals {
+  Daily = '24H',
+  Weekly = '1W',
+  Monthly = '1M',
+  Yearly = '1Y'
+}
+
+export const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+]
