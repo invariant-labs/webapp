@@ -5,14 +5,16 @@ import GradientBorder from '@common/GradientBorder/GradientBorder'
 import { colors } from '@static/theme'
 import cardBackgroundBottom from '@static/png/cardBackground1.png'
 import cardBackgroundTop from '@static/png/cardBackground2.png'
+import { backIcon, unknownTokenIcon, warningIcon } from '@static/icons'
+import { shortenAddress } from '@utils/uiUtils'
 import StatsLabel from './StatsLabel/StatsLabel'
-import { Button } from '@common/Button/Button'
-
 import { formatNumberWithSuffix, initialXtoY, parseFeeToPathFee, ROUTES } from '@utils/utils'
 import { useNavigate } from 'react-router-dom'
 import { NetworkType } from '@store/consts/static'
+import { Button } from '@common/Button/Button'
+import { ReverseTokensIcon } from '@static/componentIcon/ReverseTokensIcon'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
-import { backIcon2, revertIcon, unknownTokenIcon, warningIcon } from '@static/icons'
+
 export interface ICard extends PopularPoolData {
   isLoading: boolean
   network: NetworkType
@@ -88,9 +90,6 @@ const Card: React.FC<ICard> = ({
     })
   }
 
-  const shortenAddressName = (address: string) =>
-    address.length > 5 ? `${address.slice(0, 4)}...` : address
-
   return (
     <Grid className={classes.root}>
       {isLoading ? (
@@ -129,7 +128,7 @@ const Card: React.FC<ICard> = ({
                     <img className={classes.warningIcon} src={warningIcon} />
                   )}
                 </Box>
-                <img className={classes.swapIcon} src={revertIcon} alt='Token from' />
+                <ReverseTokensIcon className={classes.swapIcon} />
                 <Box className={classes.iconContainer}>
                   <img
                     className={classes.tokenIcon}
@@ -146,8 +145,7 @@ const Card: React.FC<ICard> = ({
               </Grid>
 
               <Box className={classes.symbolsContainer}>
-                {shortenAddressName(tokenAData.symbol ?? '')} -{' '}
-                {shortenAddressName(tokenBData.symbol ?? '')}
+                {shortenAddress(symbolFrom ?? '')} - {shortenAddress(symbolTo ?? '')}
               </Box>
               <Grid container gap='8px'>
                 {apy !== undefined && showAPY && (
@@ -166,7 +164,7 @@ const Card: React.FC<ICard> = ({
               </Grid>
               <Grid container className={classes.footerWrapper}>
                 <Grid className={classes.back} container item onClick={handleOpenSwap}>
-                  <img className={classes.backIcon} src={backIcon2} alt='Back' />
+                  <img className={classes.backIcon} src={backIcon} alt='Back' />
                   <Typography className={classes.backText}>Swap</Typography>
                 </Grid>
                 <Button

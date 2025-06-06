@@ -3,6 +3,7 @@ import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { NetworkType } from './static'
 import { Position } from '@invariant-labs/sdk/lib/market'
+import { PoolWithAddressAndIndex } from '@store/selectors/positions'
 
 declare global {
   interface Window {
@@ -308,7 +309,8 @@ export interface IPositionItem {
   currentPrice: number
   network: NetworkType
   isFullRange: boolean
-  unclaimedFeesInUSD: { value: number; loading: boolean }
+  poolData: PoolWithAddressAndIndex
+  unclaimedFeesInUSD: { value: number; loading: boolean; isClaimAvailable: boolean }
 }
 
 export interface ILiquidityToken {
@@ -319,4 +321,13 @@ export interface ILiquidityToken {
   claimValue: number
   balance: number
   usdValue?: number
+}
+
+export interface INavigatePosition {
+  tokenXName: string
+  tokenYName: string
+  tokenXIcon: string
+  tokenYIcon: string
+  fee: number
+  id: string
 }

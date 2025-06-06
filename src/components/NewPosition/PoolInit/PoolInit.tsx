@@ -297,6 +297,7 @@ export const PoolInit: React.FC<IPoolInit> = ({
           onBlur={e => {
             setMidPriceInput(validateMidPriceInput(e.target.value || '0'))
           }}
+          formatterFunction={validateMidPriceInput}
         />
 
         <Grid className={classes.priceWrapper} container>

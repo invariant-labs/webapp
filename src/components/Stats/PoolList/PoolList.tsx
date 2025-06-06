@@ -2,15 +2,21 @@ import React, { useMemo, useEffect, useState } from 'react'
 import PoolListItem from '@components/Stats/PoolListItem/PoolListItem'
 import { useStyles } from './style'
 import { Grid, useMediaQuery } from '@mui/material'
-import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
-import { PaginationList } from '@common/Pagination/Pagination'
+import {
+  BTC_DEV,
+  NetworkType,
+  SortTypePoolList,
+  USDC_DEV,
+  SOL_DEV,
+  Intervals
+} from '@store/consts/static'
 import { VariantType } from 'notistack'
 import { Keypair } from '@solana/web3.js'
 import { useNavigate } from 'react-router-dom'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { colors, theme } from '@static/theme'
-import { TableBoundsLabel } from '@common/TableBoundsLabel/TableBoundsLabel'
 import { ROUTES } from '@utils/utils'
+import { InputPagination } from '@common/Pagination/InputPagination/InputPagination'
 
 export interface PoolListInterface {
   initialLength: number
@@ -41,6 +47,7 @@ export interface PoolListInterface {
   copyAddressHandler: (message: string, variant: VariantType) => void
   isLoading: boolean
   showAPY: boolean
+  interval: Intervals
 }
 
 const ITEMS_PER_PAGE = 10
@@ -79,7 +86,8 @@ const PoolList: React.FC<PoolListInterface> = ({
   network,
   copyAddressHandler,
   isLoading,
-  showAPY
+  showAPY,
+  interval
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
   const { classes, cx } = useStyles()
@@ -105,6 +113,10 @@ const PoolList: React.FC<PoolListInterface> = ({
         return data.sort((a, b) => a.fee - b.fee)
       case SortTypePoolList.FEE_DESC:
         return data.sort((a, b) => b.fee - a.fee)
+      case SortTypePoolList.FEE_24_ASC:
+        return data.sort((a, b) => a.fee * a.volume - b.fee * b.volume)
+      case SortTypePoolList.FEE_24_DESC:
+        return data.sort((a, b) => b.fee * b.volume - a.fee * a.volume)
       case SortTypePoolList.VOLUME_ASC:
         return data.sort((a, b) => (a.volume === b.volume ? a.TVL - b.TVL : a.volume - b.volume))
       case SortTypePoolList.VOLUME_DESC:
@@ -147,7 +159,7 @@ const PoolList: React.FC<PoolListInterface> = ({
   const pages = useMemo(() => Math.ceil(data.length / ITEMS_PER_PAGE), [data])
   const isCenterAligment = useMediaQuery(theme.breakpoints.down(1280))
   const height = useMemo(
-    () => (initialDataLength > ITEMS_PER_PAGE ? (isCenterAligment ? 120 : 90) : 69),
+    () => (initialDataLength > ITEMS_PER_PAGE ? (isCenterAligment ? 176 : 90) : 69),
     [initialDataLength, isCenterAligment]
   )
 
@@ -166,6 +178,7 @@ const PoolList: React.FC<PoolListInterface> = ({
         sortType={sortType}
         network={network}
         showAPY={showAPY}
+        interval={interval}
       />
       {data.length > 0 || isLoading ? (
         <>
@@ -197,6 +210,7 @@ const PoolList: React.FC<PoolListInterface> = ({
               poolAddress={element.poolAddress}
               copyAddressHandler={copyAddressHandler}
               showAPY={showAPY}
+              interval={interval}
             />
           ))}
           {getEmptyRowsCount() > 0 &&
@@ -217,7 +231,7 @@ const PoolList: React.FC<PoolListInterface> = ({
         <Grid container className={classes.emptyContainer}>
           <EmptyPlaceholder
             newVersion
-            height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 690}
+            height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
             mainTitle='Pool not found...'
             desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
             desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
@@ -234,19 +248,19 @@ const PoolList: React.FC<PoolListInterface> = ({
           height: height
         }}>
         {pages > 0 && (
-          <TableBoundsLabel
+          <InputPagination
+            pages={pages}
+            defaultPage={1}
+            handleChangePage={handleChangePagination}
+            variant='center'
+            page={page}
             borderTop={false}
-            lowerBound={lowerBound}
-            totalItems={totalItems}
-            upperBound={upperBound}>
-            <PaginationList
-              pages={pages}
-              defaultPage={1}
-              handleChangePage={handleChangePagination}
-              variant='center'
-              page={page}
-            />
-          </TableBoundsLabel>
+            pagesNumeration={{
+              lowerBound: lowerBound,
+              totalItems: totalItems,
+              upperBound: upperBound
+            }}
+          />
         )}
       </Grid>
     </Grid>

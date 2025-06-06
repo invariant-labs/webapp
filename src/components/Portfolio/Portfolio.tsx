@@ -18,7 +18,7 @@ import {
 } from '@mui/material'
 import { theme } from '@static/theme'
 import { NetworkType } from '@store/consts/static'
-import { ROUTES } from '@utils/utils'
+import { addressToTicker, initialXtoY, parseFeeToPathFee, ROUTES } from '@utils/utils'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStyles } from './style'
@@ -32,6 +32,7 @@ import { PositionsTable } from './PositionItem/variants/PositionTables/PositionT
 import PositionCardsSkeletonMobile from './PositionItem/variants/PositionTables/skeletons/PositionCardsSkeletonMobile'
 import { PositionItemMobile } from './PositionItem/variants/PositionMobileCard/PositionItemMobile'
 import { refreshIcon } from '@static/icons'
+import { unblurContent } from '@utils/uiUtils'
 
 interface IProps {
   initialPage: number
@@ -182,6 +183,23 @@ const Portfolio: React.FC<IProps> = ({
     })
   }, [data, selectedFilters])
 
+  const createNewPosition = (element: IPositionItem) => {
+    const address1 = addressToTicker(currentNetwork, element.poolData.tokenX.toString())
+    const address2 = addressToTicker(currentNetwork, element.poolData.tokenY.toString())
+    const parsedFee = parseFeeToPathFee(element.poolData.fee.v)
+    const isXtoY = initialXtoY(
+      element.poolData.tokenX.toString(),
+      element.poolData.tokenY.toString()
+    )
+
+    const tokenA = isXtoY ? address1 : address2
+    const tokenB = isXtoY ? address2 : address1
+
+    unblurContent()
+
+    navigate(ROUTES.getNewPositionRoute(tokenA, tokenB, parsedFee))
+  }
+
   const [allowPropagation, setAllowPropagation] = useState(true)
 
   const renderContent = () => {
@@ -199,6 +217,7 @@ const Portfolio: React.FC<IProps> = ({
           onAddPositionClick={onAddPositionClick}
           handleClosePosition={handleClosePosition}
           handleClaimFee={handleClaimFee}
+          createNewPosition={createNewPosition}
         />
       )
     } else if (isLg && loading) {
@@ -238,6 +257,9 @@ const Portfolio: React.FC<IProps> = ({
           setAllowPropagation={setAllowPropagation}
           handleClosePosition={handleClosePosition}
           handleClaimFee={handleClaimFee}
+          createNewPosition={() => {
+            createNewPosition(element)
+          }}
         />
       </Grid>
     ))

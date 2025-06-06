@@ -1,5 +1,6 @@
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import {
+  Intervals,
   NetworkType,
   POSITIONS_PER_PAGE,
   WSOL_CLOSE_POSITION_LAMPORTS_DEV,
@@ -108,11 +109,7 @@ const PortfolioWrapper = () => {
   }
 
   useEffect(() => {
-    dispatch(actionsStats.getCurrentStats())
-  }, [])
-
-  useEffect(() => {
-    dispatch(actionsStats.getCurrentStats())
+    dispatch(actionsStats.getCurrentIntervalStats({ interval: Intervals.Daily }))
   }, [])
 
   const calculateUnclaimedFees = (position: PositionData) => {
@@ -133,7 +130,11 @@ const PortfolioWrapper = () => {
       (pricesData.data[position.tokenY.assetAddress.toString()]?.price ?? 0)
 
     const unclaimedFeesInUSD = xValue + yValue
-    return unclaimedFeesInUSD
+    return {
+      usdValue: unclaimedFeesInUSD,
+      isClaimAvailable:
+        +printBN(bnX, position.tokenX.decimals) > 0 || +printBN(bnY, position.tokenY.decimals) > 0
+    }
   }
 
   const data: IPositionItem[] = useMemo(
@@ -195,7 +196,7 @@ const PortfolioWrapper = () => {
         const valueX = tokenXLiq + tokenYLiq / currentPrice
         const valueY = tokenYLiq + tokenXLiq * currentPrice
 
-        const unclaimedFeesInUSD = calculateUnclaimedFees(position)
+        const { usdValue, isClaimAvailable } = calculateUnclaimedFees(position)
 
         return {
           tokenXName: position.tokenX.symbol,
@@ -216,7 +217,8 @@ const PortfolioWrapper = () => {
           tokenYLiq,
           network: currentNetwork,
           isFullRange: position.lowerTickIndex === minTick && position.upperTickIndex === maxTick,
-          unclaimedFeesInUSD: { value: unclaimedFeesInUSD, loading: position.ticksLoading }
+          poolData: position.poolData,
+          unclaimedFeesInUSD: { value: usdValue, loading: position.ticksLoading, isClaimAvailable }
         }
       }),
     [list, pricesData]

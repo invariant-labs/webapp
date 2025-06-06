@@ -7,15 +7,11 @@ const useStyles = makeStyles()(() => {
       display: 'flex',
       justifyContent: 'center',
       backgroundColor: 'transparent',
-      paddingInline: 200,
+      paddingInline: 185,
       minHeight: '60vh',
 
       [theme.breakpoints.down('lg')]: {
         paddingInline: 40
-      },
-
-      [theme.breakpoints.down('md')]: {
-        paddingInline: 90
       },
 
       [theme.breakpoints.down('sm')]: {

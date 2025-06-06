@@ -10,76 +10,81 @@ import Brush from './Brush/Brush'
 import useStyles from './style'
 import { BN } from '@project-serum/anchor'
 import { Button } from '@common/Button/Button'
-import { zoomInIcon, zoomOutIcon } from '@static/icons'
+import { centerToRangeIcon, zoomInIcon, zoomOutIcon } from '@static/icons'
 import ArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import ArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import VerticalAlignCenterIcon from '@mui/icons-material/VerticalAlignCenter'
+import { chartPlaceholder } from '@store/consts/static'
 
 export type TickPlotPositionData = Omit<PlotTickData, 'y'>
 
 export type InitMidPrice = TickPlotPositionData & { sqrtPrice: BN }
 
 export interface IPriceRangePlot {
-  data: PlotTickData[]
-  midPrice?: TickPlotPositionData
+  plotData: PlotTickData[]
+  midPriceData?: TickPlotPositionData
   globalPrice?: number
-  leftRange: TickPlotPositionData
-  rightRange: TickPlotPositionData
+  leftRangeData: TickPlotPositionData
+  rightRangeData: TickPlotPositionData
   onChangeRange?: (left: number, right: number) => void
   style?: React.CSSProperties
   className?: string
   disabled?: boolean
-  plotMin: number
-  plotMax: number
+  plotMinData: number
+  plotMaxData: number
   zoomMinus: () => void
   zoomPlus: () => void
   moveLeft: () => void
   moveRight: () => void
   centerChart: () => void
+  centerToRange?: () => void
   loading?: boolean
   isXtoY: boolean
   xDecimal: number
   yDecimal: number
-  tickSpacing: number
-  coverOnLoading?: boolean
+  spacing: number
   hasError?: boolean
   reloadHandler: () => void
-  volumeRange?: {
-    min: number
-    max: number
-  }
   tokenAPriceData?: TokenPriceData
   tokenBPriceData?: TokenPriceData
 }
 
 export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
-  data = [],
-  leftRange,
-  rightRange,
-  midPrice,
+  plotData,
+  leftRangeData,
+  rightRangeData,
+  midPriceData,
   globalPrice,
   onChangeRange,
   style,
   className,
   disabled = false,
-  plotMin,
-  plotMax,
+  plotMinData,
+  plotMaxData,
   zoomMinus,
   zoomPlus,
   moveLeft,
   moveRight,
   centerChart,
+  centerToRange,
   loading,
   isXtoY,
   xDecimal,
   yDecimal,
-  tickSpacing,
-  coverOnLoading = false,
+  spacing,
   hasError = false,
   reloadHandler,
   tokenAPriceData,
   tokenBPriceData
 }) => {
+  const data = loading ? chartPlaceholder.tickmaps : plotData
+  const leftRange = loading ? chartPlaceholder.leftRange : leftRangeData
+  const rightRange = loading ? chartPlaceholder.rightRange : rightRangeData
+  const plotMin = loading ? chartPlaceholder.plotMin : plotMinData
+  const plotMax = loading ? chartPlaceholder.plotMax : plotMaxData
+  const midPrice = loading ? chartPlaceholder.midPrice : midPriceData
+  const tickSpacing = loading ? chartPlaceholder.tickSpacing : spacing
+
   const { classes, cx } = useStyles()
 
   const isSmDown = useMediaQuery(theme.breakpoints.down('sm'))
@@ -126,7 +131,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
       return dataAfterOmit
     },
-    [containerRef, plotMin, plotMax, maxVal]
+    [containerRef.current, plotMin, plotMax, maxVal]
   )
 
   const currentLessThanRange = useMemo(() => {
@@ -139,7 +144,7 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
       return []
     }
 
-    if (rangeData[rangeData.length - 1]?.x < leftRange.x) {
+    if (rangeData[rangeData.length - 1]?.x < leftRange?.x) {
       rangeData.push({
         x: leftRange.x,
         y: rangeData[rangeData.length - 1]?.y ?? 0
@@ -198,8 +203,8 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
       if ((rangeData[rangeData.length - 1]?.x ?? -Infinity) < rightRange.x) {
         rangeData.push({
-          x: rightRange.x,
-          y: rangeData[rangeData.length - 1]?.y ?? 0
+          x: rightRange?.x,
+          y: rangeData[rangeData.length - 1]?.y
         })
       }
 
@@ -272,28 +277,31 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     return pointsOmitter(rangeData)
   }, [disabled, safeData, rightRange, plotMin, plotMax, pointsOmitter])
 
-  const currentLayer: Layer = useCallback(
-    ({ innerWidth, innerHeight }) => {
-      if (typeof midPrice === 'undefined' || midPrice?.x == null) {
-        return null
-      }
+  const currentLayer: Layer = ({ innerWidth, innerHeight }) => {
+    if (typeof midPrice === 'undefined') {
+      return null
+    }
 
-      const unitLen = plotMax !== plotMin ? innerWidth / (plotMax - plotMin) : 0
-      return (
-        <svg x={(midPrice.x - plotMin) * unitLen - 20} y={0} width={60} height={innerHeight}>
-          <defs>
-            <filter id='shadow' x='-10' y='-9' width='20' height={innerHeight}>
-              <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
-            </filter>
-          </defs>
-          <rect x={14} y={20} width='16' height={innerHeight} filter='url(#shadow)' opacity='0.3' />
-          <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.yellow} />
-        </svg>
-      )
-    },
-    [midPrice, plotMin, plotMax]
-  )
-
+    const unitLen = innerWidth / (plotMax - plotMin)
+    return (
+      <svg x={(midPrice?.x - plotMin) * unitLen - 20} y={-20} width={40} height={innerHeight + 20}>
+        <defs>
+          <filter id='shadow-global-price' x='-10' y='-9' width='20' height={innerHeight}>
+            <feGaussianBlur in='SourceGraphic' stdDeviation='8' />
+          </filter>
+        </defs>
+        <rect
+          x={14}
+          y={20}
+          width='16'
+          height={innerHeight}
+          filter='url(#shadow-global-price)'
+          opacity='0.3'
+        />
+        <rect x={19} y={20} width='3' height={innerHeight} fill={colors.invariant.yellow} />
+      </svg>
+    )
+  }
   const globalPriceLayer = useCallback(
     ({ innerWidth, innerHeight }: { innerWidth: number; innerHeight: number }) => {
       if (typeof globalPrice === 'undefined' || globalPrice == null) {
@@ -389,103 +397,53 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
     [tokenAPriceData, tokenBPriceData, plotMin, plotMax]
   )
 
-  const bottomLineLayer = useCallback(
-    ({ innerWidth, innerHeight }: { innerWidth: number; innerHeight: number }) => {
-      const bottomLine = innerHeight
-      return (
-        <rect x={0} y={bottomLine} width={innerWidth} height={1} fill={colors.invariant.light} />
+  const bottomLineLayer: Layer = ({ innerWidth, innerHeight }) => {
+    const bottomLine = innerHeight
+    return <rect x={0} y={bottomLine} width={innerWidth} height={1} fill={colors.invariant.light} />
+  }
+
+  const brushLayer = Brush(
+    leftRange?.x,
+    rightRange?.x,
+    position => {
+      const nearest = nearestTickIndex(
+        plotMin + position * (plotMax - plotMin),
+        tickSpacing,
+        isXtoY,
+        xDecimal,
+        yDecimal
+      )
+      onChangeRange?.(
+        isXtoY
+          ? Math.min(rightRange.index - tickSpacing, nearest)
+          : Math.max(rightRange.index + tickSpacing, nearest),
+        rightRange.index
       )
     },
-    []
-  )
-
-  const lazyLoadingLayer: Layer = useCallback(
-    ({ innerWidth, innerHeight }) => {
-      if (!loading || coverOnLoading) {
-        return null
-      }
-
-      return (
-        <svg
-          width={innerWidth}
-          height={innerHeight + 5}
-          viewBox={`0 0 ${innerWidth} ${innerHeight + 5}`}
-          fill='none'
-          xmlns='http://www.w3.org/2000/svg'
-          x={0}
-          y={-5}>
-          <rect x={0} y={0} width='100%' height='100%' fill={`${colors.white.main}10`} />
-          <text
-            x='50%'
-            y='50%'
-            dominantBaseline='middle'
-            textAnchor='middle'
-            className={classes.loadingText}>
-            Loading liquidity data...
-          </text>
-        </svg>
+    position => {
+      const nearest = nearestTickIndex(
+        plotMin + position * (plotMax - plotMin),
+        tickSpacing,
+        isXtoY,
+        xDecimal,
+        yDecimal
+      )
+      onChangeRange?.(
+        leftRange.index,
+        isXtoY
+          ? Math.max(leftRange.index + tickSpacing, nearest)
+          : Math.min(leftRange.index - tickSpacing, nearest)
       )
     },
-    [loading, coverOnLoading, classes.loadingText]
-  )
-
-  const brushLayer = useMemo(() => {
-    if (!leftRange?.x || !rightRange?.x || !leftRange.index || !rightRange.index) {
-      return () => null
-    }
-
-    return Brush(
-      leftRange.x,
-      rightRange.x,
-      position => {
-        const nearest = nearestTickIndex(
-          plotMin + position * (plotMax - plotMin),
-          tickSpacing,
-          isXtoY,
-          xDecimal,
-          yDecimal
-        )
-        onChangeRange?.(
-          isXtoY
-            ? Math.min(rightRange.index - tickSpacing, nearest)
-            : Math.max(rightRange.index + tickSpacing, nearest),
-          rightRange.index
-        )
-      },
-      position => {
-        const nearest = nearestTickIndex(
-          plotMin + position * (plotMax - plotMin),
-          tickSpacing,
-          isXtoY,
-          xDecimal,
-          yDecimal
-        )
-        onChangeRange?.(
-          leftRange.index,
-          isXtoY
-            ? Math.max(leftRange.index + tickSpacing, nearest)
-            : Math.min(leftRange.index - tickSpacing, nearest)
-        )
-      },
-      plotMin,
-      plotMax,
-      disabled
-    )
-  }, [
-    leftRange,
-    rightRange,
     plotMin,
     plotMax,
-    tickSpacing,
-    isXtoY,
-    xDecimal,
-    yDecimal,
-    onChangeRange,
     disabled
-  ])
+  )
 
   const highlightLayer = ({ innerWidth, innerHeight }) => {
     const unitLen = innerWidth / (plotMax - plotMin)
+    const rawWidth = ((rightRange?.x ?? 0) - (leftRange?.x ?? 0)) * unitLen
+    const width = Math.max(0, rawWidth)
 
     return (
       <svg width='100%' height='100%' pointerEvents={'none'}>
@@ -496,9 +454,9 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           </linearGradient>
         </defs>
         <rect
-          x={(leftRange.x - plotMin) * unitLen}
+          x={(leftRange?.x - plotMin) * unitLen > 0 ? (leftRange?.x - plotMin) * unitLen : 0}
           y={0}
-          width={(rightRange.x - leftRange.x) * unitLen}
+          width={width}
           height={innerHeight}
           fill='url(#gradient1)'
         />
@@ -508,26 +466,9 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
 
   const isNoPositions = !safeData.length || safeData.every(tick => !(tick?.y > 0))
 
-  const chartData = useMemo(() => {
-    return [
-      {
-        id: 'less than range',
-        data: currentLessThanRange?.length ? currentLessThanRange : [{ x: plotMin, y: 0 }]
-      },
-      {
-        id: 'range',
-        data: currentRange?.length ? currentRange : [{ x: (plotMin + plotMax) / 2, y: 0 }]
-      },
-      {
-        id: 'greater than range',
-        data: currentGreaterThanRange?.length ? currentGreaterThanRange : [{ x: plotMax, y: 0 }]
-      }
-    ]
-  }, [currentLessThanRange, currentRange, currentGreaterThanRange, plotMin, plotMax])
-
   return (
     <Grid container className={cx(classes.container, className)} style={style} ref={containerRef}>
-      {loading && coverOnLoading ? (
+      {loading ? (
         <Grid container className={classes.cover}>
           <img src={loader} className={classes.loader} alt='Loader' />
         </Grid>
@@ -542,162 +483,196 @@ export const PriceRangePlot: React.FC<IPriceRangePlot> = ({
           </Grid>
         </Grid>
       ) : null}
-      <Grid className={classes.zoomButtonsWrapper}>
-        <Button
-          scheme='green'
-          width={isMd ? 28 : 36}
-          height={isMd ? 28 : 36}
-          borderRadius={10}
-          padding={0}
-          onClick={zoomPlus}>
-          <img src={zoomInIcon} className={classes.zoomIcon} alt='Zoom in' />
-        </Button>
-        <Button
-          scheme='green'
-          width={isMd ? 28 : 36}
-          height={isMd ? 28 : 36}
-          borderRadius={10}
-          padding={0}
-          onClick={zoomMinus}>
-          <img src={zoomOutIcon} className={classes.zoomIcon} alt='Zoom out' />
-        </Button>
-        <Button
-          scheme='pink'
-          width={isMd ? 28 : 36}
-          height={isMd ? 28 : 36}
-          borderRadius={10}
-          padding={0}
-          onClick={centerChart}>
-          <VerticalAlignCenterIcon
-            sx={{
-              width: isMd ? 28 : 32,
-              height: isMd ? 28 : 32,
-              transform: 'rotate(90deg)'
-            }}
-          />
-        </Button>
-      </Grid>
 
-      <Grid className={classes.leftArrow}>
-        <Button
-          scheme='pink'
-          width={isMd ? 28 : 36}
-          height={isMd ? 28 : 36}
-          borderRadius={10}
-          padding={0}
-          onClick={moveLeft}>
-          <ArrowLeftIcon
-            sx={{
-              width: isMd ? 28 : 32,
-              height: isMd ? 28 : 32
-            }}
-          />
-        </Button>
-      </Grid>
-      <Grid className={classes.rightArrow}>
-        <Button
-          scheme='pink'
-          width={isMd ? 28 : 36}
-          height={isMd ? 28 : 36}
-          borderRadius={10}
-          padding={0}
-          onClick={moveRight}>
-          <ArrowRightIcon
-            sx={{
-              width: isMd ? 28 : 32,
-              height: isMd ? 28 : 32
-            }}
-          />
-        </Button>
-      </Grid>
-      <ResponsiveLine
-        sliceTooltip={() => <></>}
-        tooltip={() => <></>}
-        useMesh={false}
-        enableCrosshair={false}
-        enablePointLabel={false}
-        debugSlices={false}
-        enableSlices={false}
-        debugMesh={false}
-        areaBaselineValue={0}
-        pointBorderWidth={0}
-        areaBlendMode='normal'
-        crosshairType='x'
-        pointLabel=''
-        pointBorderColor=''
-        pointColor=''
-        lineWidth={2}
-        pointSize={2}
-        areaOpacity={0.2}
-        data={chartData}
-        curve={isXtoY ? 'stepAfter' : 'stepBefore'}
-        margin={{ top: isSmDown ? 55 : 25, bottom: 15 }}
-        colors={[
-          colors.invariant.chartDisabled,
-          colors.invariant.green,
-          colors.invariant.chartDisabled
-        ]}
-        axisTop={null}
-        axisRight={null}
-        axisLeft={null}
-        axisBottom={{
-          tickSize: 0,
-          tickPadding: 0,
-          tickRotation: 0,
-          tickValues: 5,
-          format: value => (value < 0 ? '' : formatNumberWithSuffix(value.toString()))
-        }}
-        xScale={{
-          type: 'linear',
-          min: plotMin,
-          max: plotMax
-        }}
-        yScale={{
-          type: 'linear',
-          min: 0,
-          max: isNoPositions ? 1 : maxVal
-        }}
-        enableGridX={false}
-        enableGridY={false}
-        enablePoints={false}
-        enableArea={true}
-        legends={[]}
-        isInteractive={false}
-        animate={false}
-        role='application'
-        layers={[
-          bottomLineLayer,
-          'grid',
-          'markers',
-          'areas',
-          'lines',
-          globalPriceLayer,
-          buyPriceLayer,
-          sellPriceLayer,
-          currentLayer,
-          lazyLoadingLayer,
-          currentLayer,
-          brushLayer,
-          'axes',
-          'legends',
-          highlightLayer
-        ]}
-        defs={[
-          linearGradientDef('gradient', [
-            { offset: 0, color: 'inherit' },
-            { offset: 50, color: 'inherit' },
-            { offset: 100, color: 'inherit', opacity: 0 }
-          ])
-        ]}
-        fill={[
-          {
-            match: '*',
-            id: 'gradient'
-          }
-        ]}
-      />
+      <>
+        <Grid className={classes.zoomButtonsWrapper}>
+          <Button
+            scheme='green'
+            width={isMd ? 28 : 36}
+            height={isMd ? 28 : 36}
+            borderRadius={10}
+            padding={0}
+            onClick={zoomPlus}>
+            <img src={zoomInIcon} className={classes.zoomIcon} alt='Zoom in' />
+          </Button>
+          <Button
+            scheme='green'
+            width={isMd ? 28 : 36}
+            height={isMd ? 28 : 36}
+            borderRadius={10}
+            padding={0}
+            onClick={zoomMinus}>
+            <img src={zoomOutIcon} className={classes.zoomIcon} alt='Zoom out' />
+          </Button>
+          <Button
+            scheme='pink'
+            width={isMd ? 28 : 36}
+            height={isMd ? 28 : 36}
+            borderRadius={10}
+            padding={0}
+            onClick={centerChart}>
+            <VerticalAlignCenterIcon
+              sx={{
+                width: isMd ? 28 : 32,
+                height: isMd ? 28 : 32,
+                transform: 'rotate(90deg)'
+              }}
+            />
+          </Button>
+          {centerToRange && (
+            <Button
+              scheme='pink'
+              width={isMd ? 28 : 36}
+              height={isMd ? 28 : 36}
+              borderRadius={10}
+              padding={0}
+              onClick={centerToRange}>
+              <img
+                src={centerToRangeIcon}
+                alt='Center to range'
+                width={isMd ? 24 : 30}
+                height={isMd ? 24 : 30}
+              />
+            </Button>
+          )}
+        </Grid>
+
+        <Grid className={classes.leftArrow}>
+          <Button
+            scheme='pink'
+            width={isMd ? 28 : 36}
+            height={isMd ? 28 : 36}
+            borderRadius={10}
+            padding={0}
+            onClick={moveLeft}>
+            <ArrowLeftIcon
+              sx={{
+                width: isMd ? 28 : 32,
+                height: isMd ? 28 : 32
+              }}
+            />
+          </Button>
+        </Grid>
+        <Grid className={classes.rightArrow}>
+          <Button
+            scheme='pink'
+            width={isMd ? 28 : 36}
+            height={isMd ? 28 : 36}
+            borderRadius={10}
+            padding={0}
+            onClick={moveRight}>
+            <ArrowRightIcon
+              sx={{
+                width: isMd ? 28 : 32,
+                height: isMd ? 28 : 32
+              }}
+            />
+          </Button>
+        </Grid>
+
+        <ResponsiveLine
+          sliceTooltip={() => <></>}
+          tooltip={() => <></>}
+          useMesh={false}
+          enableCrosshair={false}
+          enablePointLabel={false}
+          debugSlices={false}
+          enableSlices={false}
+          debugMesh={false}
+          areaBaselineValue={0}
+          pointBorderWidth={0}
+          areaBlendMode='normal'
+          crosshairType='x'
+          pointLabel=''
+          pointBorderColor=''
+          pointColor=''
+          lineWidth={2}
+          pointSize={2}
+          areaOpacity={0.2}
+          data={[
+            {
+              id: 'less than range',
+              data: currentLessThanRange.length > 0 ? currentLessThanRange : [{ x: plotMin, y: 0 }]
+            },
+            {
+              id: 'range',
+              data: currentRange.length > 0 ? currentRange : [{ x: plotMin, y: plotMax }]
+            },
+            {
+              id: 'greater than range',
+              data:
+                currentGreaterThanRange.length > 0
+                  ? currentGreaterThanRange
+                  : [{ x: plotMax, y: 0 }]
+            }
+          ]}
+          curve={isXtoY ? 'stepAfter' : 'stepBefore'}
+          margin={{ top: isSmDown ? 55 : 25, bottom: 15 }}
+          colors={[
+            colors.invariant.chartDisabled,
+            colors.invariant.green,
+            colors.invariant.chartDisabled
+          ]}
+          axisTop={null}
+          axisRight={null}
+          axisLeft={null}
+          axisBottom={{
+            tickSize: 0,
+            tickPadding: 0,
+            tickRotation: 0,
+            tickValues: 5,
+            format: value => (value < 0 ? '' : formatNumberWithSuffix(value.toString()))
+          }}
+          xScale={{
+            type: 'linear',
+            min: plotMin,
+            max: plotMax
+          }}
+          yScale={{
+            type: 'linear',
+            min: 0,
+            max: isNoPositions ? 1 : maxVal
+          }}
+          enableGridX={false}
+          enableGridY={false}
+          enablePoints={false}
+          enableArea={true}
+          legends={[]}
+          isInteractive={false}
+          animate={false}
+          role='application'
+          layers={[
+            bottomLineLayer,
+            'grid',
+            'markers',
+            'areas',
+            'lines',
+            globalPriceLayer,
+            buyPriceLayer,
+            sellPriceLayer,
+            currentLayer,
+            currentLayer,
+            brushLayer,
+            'axes',
+            'legends',
+            highlightLayer
+          ]}
+          defs={[
+            linearGradientDef('gradient', [
+              { offset: 0, color: 'inherit' },
+              { offset: 50, color: 'inherit' },
+              { offset: 100, color: 'inherit', opacity: 0 }
+            ])
+          ]}
+          fill={[
+            {
+              match: '*',
+              id: 'gradient'
+            }
+          ]}
+        />
+      </>
     </Grid>
   )
 }
-
 export default PriceRangePlot

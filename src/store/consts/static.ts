@@ -3,7 +3,7 @@ import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
 import { ISnackbar } from '@store/reducers/snackbars'
 import { Keypair, PublicKey } from '@solana/web3.js'
-import { Chain, PrefixConfig, Token, WalletType } from './types'
+import { Chain, FormatNumberThreshold, PrefixConfig, Token, WalletType } from './types'
 import { TICK_CROSSES_PER_IX } from '@invariant-labs/sdk/lib/market'
 import { cat1Icon, cat2Icon, dog1Icon, dog2Icon } from '@static/icons'
 
@@ -345,7 +345,9 @@ export const getAddressTickerMap = (network: NetworkType): { [k: string]: string
       DOGIN: DOGIN_MAIN.address.toString(),
       SNY: SNY_MAIN.address.toString(),
       WEN: WEN_MAIN.address.toString(),
-      SUI: SUI_MAIN.address.toString()
+      SUI: SUI_MAIN.address.toString(),
+      JitoSOL: 'J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn',
+      INF: '5oVNBeEEQvYi1cX3ir8Dx5n1P7pdxydbGF2X4TxVusJm'
     }
   } else {
     return {}
@@ -384,6 +386,8 @@ export const enum SortTypePoolList {
   NAME_DESC,
   FEE_ASC,
   FEE_DESC,
+  FEE_24_ASC,
+  FEE_24_DESC,
   VOLUME_ASC,
   VOLUME_DESC,
   TVL_ASC,
@@ -496,3 +500,95 @@ export const STATS_CACHE_TIME = 30 * 60 * 1000
 export const BASE_JUPITER_API_URL = 'https://lite-api.jup.ag'
 
 export const ITEMS_PER_PAGE = 10
+
+export const ECLIPSE_MAINNET_GENESIS_HASH = 'EAQLJCV2mh23BsK2P9oYpV5CHVLDNHTxYss3URrNmg3s'
+export const SOLANA_MAINNET_GENESIS_HASH = '5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d'
+
+export const chartPlaceholder = {
+  tickmaps: [
+    { x: 2.33021324081296e-7, y: 0, index: -221810 },
+    { x: 0.9686056247049151, y: 0, index: -69400 },
+    { x: 0.9695746662960968, y: 6188.340066945488, index: -69390 },
+    { x: 0.9881717681706338, y: 6188.340066945488, index: -69200 },
+    { x: 0.9891603846976637, y: 20119.790531945488, index: -69190 },
+    { x: 0.9911405860036346, y: 20119.790531945488, index: -69170 },
+    { x: 0.9921321727081341, y: 28142.450909473402, index: -69160 },
+    { x: 0.9931247514617308, y: 28142.450909473402, index: -69150 },
+    { x: 0.9941183232608597, y: 30289.879997489374, index: -69140 },
+    { x: 0.9951128890397407, y: 30289.879997489374, index: -69130 },
+    { x: 0.9961084498595902, y: 38407.97691696376, index: -69120 },
+    { x: 0.9971050066563205, y: 40591.04743422989, index: -69110 },
+    { x: 0.9981025604929676, y: 57249.16422040085, index: -69100 },
+    { x: 1.0011012140019244, y: 57249.16422040085, index: -69070 },
+    { x: 1.002102765825214, y: 55066.09370313472, index: -69060 },
+    { x: 1.0031053196378097, y: 46947.99678366034, index: -69050 },
+    { x: 1.00410887650822, y: 44800.567695644364, index: -69040 },
+    { x: 1.0071255750875803, y: 44800.567695644364, index: -69010 },
+    { x: 1.00813315394147, y: 36777.90731811645, index: -69000 },
+    { x: 1.0091417408922565, y: 22846.45685311645, index: -68990 },
+    { x: 1.011161942873156, y: 22846.45685311645, index: -68970 },
+    { x: 1.0121735599903756, y: 6188.340066945488, index: -68960 },
+    { x: 1.0254170502871547, y: 6188.340066945488, index: -68830 },
+    { x: 1.0264429288718113, y: 0, index: -68820 },
+    { x: 1.0274698338137271, y: 0, index: -68810 },
+    { x: 4291452183844.2334, y: 0, index: 221810 }
+  ],
+  midPrice: { x: 1, index: -69090 },
+  leftRange: { index: -69160, x: 0.9921321727081341 },
+  rightRange: { index: -69000, x: 1.00813315394147 },
+  plotMin: 0.988931976461467,
+  plotMax: 1.0113333501881372,
+  tickSpacing: 10
+}
+
+export enum Intervals {
+  Daily = '24H',
+  Weekly = '1W',
+  Monthly = '1M',
+  Yearly = '1Y'
+}
+
+export const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+]
+
+export const percentageThresholds: FormatNumberThreshold[] = [
+  {
+    value: 10,
+    decimals: 2
+  },
+  {
+    value: 1000,
+    decimals: 2
+  },
+  {
+    value: 10000,
+    decimals: 2
+  },
+  {
+    value: 1000000,
+    decimals: 2,
+    divider: 1000
+  },
+  {
+    value: 1000000000,
+    decimals: 2,
+    divider: 1000000
+  },
+  {
+    value: Infinity,
+    decimals: 2,
+    divider: 1000000000
+  }
+]

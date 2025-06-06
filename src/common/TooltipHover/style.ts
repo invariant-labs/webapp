@@ -49,7 +49,11 @@ const useStyles = makeStyles<{
     right: right ? right : 'auto',
     bottom: bottom ? bottom : 'auto',
     boxShadow: `0px 2px 8px ${colors.invariant.black}`,
-    padding: increasePadding ? '16px 24px' : '8px 12px'
+    padding: increasePadding ? '16px 24px' : '8px 12px',
+
+    '.MuiBox-root': {
+      maxWidth: 'none'
+    }
   },
   tooltipSpan: {
     width: fullSpan ? '100%' : 'auto',

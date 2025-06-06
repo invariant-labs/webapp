@@ -3,12 +3,18 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { colors, theme } from '@static/theme'
 import useStyles from './style'
 import { Grid, useMediaQuery } from '@mui/material'
-import { BTC_DEV, NetworkType, SortTypeTokenList, USDC_DEV, SOL_DEV } from '@store/consts/static'
-import { PaginationList } from '@common/Pagination/Pagination'
+import {
+  Intervals,
+  BTC_DEV,
+  NetworkType,
+  SortTypeTokenList,
+  USDC_DEV,
+  SOL_DEV
+} from '@store/consts/static'
 import NotFoundPlaceholder from '../NotFoundPlaceholder/NotFoundPlaceholder'
 import { VariantType } from 'notistack'
 import { Keypair } from '@solana/web3.js'
-import { TableBoundsLabel } from '@common/TableBoundsLabel/TableBoundsLabel'
+import { InputPagination } from '@common/Pagination/InputPagination/InputPagination'
 
 export interface ITokensListData {
   icon: string
@@ -27,6 +33,7 @@ export interface ITokensList {
   initialLength: number
   copyAddressHandler: (message: string, variant: VariantType) => void
   isLoading: boolean
+  interval: Intervals
 }
 
 const ITEMS_PER_PAGE = 10
@@ -51,7 +58,8 @@ const TokensList: React.FC<ITokensList> = ({
   network,
   copyAddressHandler,
   isLoading,
-  initialLength
+  initialLength,
+  interval
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
   const { classes, cx } = useStyles()
@@ -129,7 +137,7 @@ const TokensList: React.FC<ITokensList> = ({
   const pages = useMemo(() => Math.ceil(data.length / ITEMS_PER_PAGE), [data])
   const isCenterAligment = useMediaQuery(theme.breakpoints.down(1280))
   const height = useMemo(
-    () => (initialDataLength > ITEMS_PER_PAGE ? (isCenterAligment ? 120 : 90) : 69),
+    () => (initialDataLength > ITEMS_PER_PAGE ? (isCenterAligment ? 176 : 90) : 69),
     [initialDataLength, isCenterAligment]
   )
   useEffect(() => {
@@ -142,12 +150,18 @@ const TokensList: React.FC<ITokensList> = ({
       classes={{ root: classes.container }}
       className={cx({ [classes.loadingOverlay]: isLoading })}>
       <>
-        <TokenListItem displayType='header' onSort={setSortType} sortType={sortType} />
+        <TokenListItem
+          displayType='header'
+          onSort={setSortType}
+          sortType={sortType}
+          interval={interval}
+        />
         {data.length > 0 || isLoading ? (
           <>
             {paginator(page).data.map((token, index) => {
               return (
                 <TokenListItem
+                  interval={interval}
                   key={index}
                   displayType='tokens'
                   itemNumber={index + 1 + (page - 1) * ITEMS_PER_PAGE}
@@ -188,19 +202,19 @@ const TokensList: React.FC<ITokensList> = ({
             height: height
           }}>
           {pages > 0 && (
-            <TableBoundsLabel
-              lowerBound={lowerBound}
-              totalItems={totalItems}
-              upperBound={upperBound}
-              borderTop={false}>
-              <PaginationList
-                pages={pages}
-                defaultPage={1}
-                handleChangePage={handleChangePagination}
-                variant='center'
-                page={page}
-              />
-            </TableBoundsLabel>
+            <InputPagination
+              pages={pages}
+              defaultPage={1}
+              handleChangePage={handleChangePagination}
+              variant='center'
+              page={page}
+              borderTop={false}
+              pagesNumeration={{
+                lowerBound: lowerBound,
+                totalItems: totalItems,
+                upperBound: upperBound
+              }}
+            />
           )}
         </Grid>
       </>

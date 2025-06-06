@@ -1,6 +1,7 @@
 import { Pagination, useMediaQuery } from '@mui/material'
 import { theme } from '@static/theme'
 import { useStyles } from './style'
+import { useEffect } from 'react'
 
 export interface IPaginationList {
   pages: number
@@ -22,6 +23,12 @@ export const PaginationList: React.FC<IPaginationList> = ({
   const { classes } = useStyles()
   const position = useMediaQuery(theme.breakpoints.down('sm'))
   const matches = useMediaQuery(theme.breakpoints.down('lg'))
+
+  useEffect(() => {
+    if (page) {
+      handleChangePage(page)
+    }
+  }, [page])
 
   return (
     <Pagination

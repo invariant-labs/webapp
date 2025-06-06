@@ -608,7 +608,7 @@ export const Swap: React.FC<ISwap> = ({
         </Box>
       )} */}
       <Grid container className={classes.header}>
-        <Typography component='h1'>Exchange tokens</Typography>
+        <Typography component='h1'>Swap tokens</Typography>
         <Box className={classes.swapControls}>
           <Button className={classes.slippageButton} onClick={e => handleClickSettings(e)}>
             <p>
