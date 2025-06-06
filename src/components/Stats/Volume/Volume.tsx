@@ -8,6 +8,7 @@ import { formatNumberWithoutSuffix, trimZeros } from '@utils/utils'
 import { formatLargeNumber } from '@utils/formatLargeNumber'
 import { Intervals as IntervalsKeys } from '@store/consts/static'
 import { formatPlotDataLabels, getLabelDate } from '@utils/uiUtils'
+import { useState } from 'react'
 
 interface StatsInterface {
   volume: number | null
@@ -18,18 +19,6 @@ interface StatsInterface {
   lastStatsTimestamp: number
 }
 
-// const GRAPH_ENTRIES = 30
-
-// const generateMockData = () => {
-//   return Array.from({ length: GRAPH_ENTRIES }, (_, index) => ({
-//     timestamp:
-//       Math.floor(Date.now() / (1000 * 60 * 60 * 24)) * (1000 * 60 * 60 * 24) +
-//       1000 * 60 * 60 * 12 -
-//       (GRAPH_ENTRIES - index) * (1000 * 60 * 60 * 24),
-//     value: Math.random() * 10000
-//   }))
-// }
-
 const Volume: React.FC<StatsInterface> = ({
   volume,
   data,
@@ -39,6 +28,8 @@ const Volume: React.FC<StatsInterface> = ({
   lastStatsTimestamp
 }) => {
   const { classes, cx } = useStyles()
+  const [hoveredBar, setHoveredBar] = useState<any>(null)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
   volume = volume ?? 0
 
@@ -55,6 +46,74 @@ const Volume: React.FC<StatsInterface> = ({
     grid: { line: { stroke: colors.invariant.light } }
   }
 
+  const CustomHoverLayer = ({ bars, innerHeight }: any) => {
+    return (
+      <g>
+        {bars.map((bar: any) => {
+          const barData = {
+            timestamp: bar.data.indexValue || bar.data.timestamp,
+            value: bar.data.value,
+            ...bar.data
+          }
+
+          const hoverWidth = bar.width
+          const hoverX = bar.x + (bar.width - hoverWidth) / 2
+
+          return (
+            <rect
+              key={bar.key}
+              x={hoverX}
+              y={0}
+              width={hoverWidth}
+              height={innerHeight}
+              fill='transparent'
+              onMouseEnter={event => {
+                setHoveredBar(barData)
+                setMousePosition({ x: event.clientX, y: event.clientY })
+              }}
+              onMouseMove={event => {
+                setMousePosition({ x: event.clientX, y: event.clientY })
+              }}
+              onMouseLeave={() => {
+                setHoveredBar(null)
+              }}
+              style={{ cursor: 'pointer' }}
+            />
+          )
+        })}
+      </g>
+    )
+  }
+
+  const CustomTooltip = () => {
+    if (!hoveredBar) return null
+
+    const timestamp = hoveredBar.timestamp || hoveredBar.indexValue
+
+    const date = getLabelDate(interval, timestamp, lastStatsTimestamp)
+
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          left: mousePosition.x + 10,
+          top: mousePosition.y - 10,
+          borderRadius: '4px',
+          padding: '8px',
+          pointerEvents: 'none',
+          zIndex: 1000,
+          color: 'white'
+        }}>
+        <Grid className={classes.tooltip}>
+          <Typography className={classes.tooltipDate}>{date}</Typography>
+          <Typography className={classes.tooltipValue}>
+            ${formatNumberWithoutSuffix(hoveredBar.value)}
+          </Typography>
+        </Grid>
+      </div>
+    )
+  }
+
   return (
     <Grid className={cx(classes.container, className)}>
       <Box className={classes.volumeContainer}>
@@ -67,8 +126,12 @@ const Volume: React.FC<StatsInterface> = ({
           </Typography>
         </div>
       </Box>
-      <div className={classes.barContainer}>
+      <div
+        className={classes.barContainer}
+        style={{ position: 'relative' }}
+        onMouseLeave={() => setHoveredBar(null)}>
         <ResponsiveBar
+          onMouseLeave={() => setHoveredBar(null)}
           layout='vertical'
           key={`${interval}-${isLoading}`}
           animate={false}
@@ -119,19 +182,9 @@ const Volume: React.FC<StatsInterface> = ({
           ]}
           fill={[{ match: '*', id: 'gradient' }]}
           colors={colors.invariant.pink}
-          tooltip={({ data }) => {
-            const date = getLabelDate(interval, data.timestamp, lastStatsTimestamp)
-
-            return (
-              <Grid className={classes.tooltip}>
-                <Typography className={classes.tooltipDate}>{date}</Typography>
-                <Typography className={classes.tooltipValue}>
-                  ${formatNumberWithoutSuffix(data.value)}
-                </Typography>
-              </Grid>
-            )
-          }}
+          layers={['grid', 'axes', 'bars', 'markers', 'legends', 'annotations', CustomHoverLayer]}
         />
+        <CustomTooltip />
       </div>
     </Grid>
   )
