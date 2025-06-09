@@ -7,9 +7,16 @@ type Props = {
   pendingFees: number
   poolApr: number
   isLoading: boolean
+  showPoolDetailsLoader?: boolean
 }
 
-export const PositionStats = ({ value, pendingFees, poolApr, isLoading }: Props) => {
+export const PositionStats = ({
+  value,
+  pendingFees,
+  poolApr,
+  isLoading,
+  showPoolDetailsLoader = false
+}: Props) => {
   const { classes, cx } = useStyles()
 
   return (
@@ -47,9 +54,13 @@ export const PositionStats = ({ value, pendingFees, poolApr, isLoading }: Props)
       <Box className={classes.statWrapper}>
         <Box className={cx(classes.statContainer, classes.statContainerHiglight)}>
           <Typography className={classes.statName}>Pool APR:</Typography>
-          <Typography className={cx(classes.statValue, classes.statValueHiglight)}>
-            {poolApr.toFixed(2)}%
-          </Typography>
+          {showPoolDetailsLoader ? (
+            <Skeleton height={17} width={36} variant='rounded' />
+          ) : (
+            <Typography className={cx(classes.statValue, classes.statValueHiglight)}>
+              {poolApr.toFixed(2)}%
+            </Typography>
+          )}
         </Box>
       </Box>
     </Box>
