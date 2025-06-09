@@ -123,6 +123,68 @@ const Volume: React.FC<StatsInterface> = ({
     grid: { line: { stroke: colors.invariant.light } }
   }
 
+  const CustomHoverLayer = ({ bars, innerHeight, innerWidth }: any) => {
+    return (
+      <g>
+        {hoveredBarPosition && (
+          <rect
+            x={hoveredBarPosition.x}
+            y={0}
+            width={hoveredBarPosition.width}
+            height={innerHeight}
+            fill='#f075d7'
+            fillOpacity={0.3}
+            style={{ pointerEvents: 'none' }}
+          />
+        )}
+
+        <rect
+          x={0}
+          y={0}
+          width={innerWidth}
+          height={innerHeight}
+          fill='transparent'
+          onMouseEnter={() => {
+            hideTooltip()
+          }}
+          style={{ pointerEvents: 'all' }}
+        />
+
+        {bars.map((bar: any) => {
+          const barData = {
+            timestamp: bar.data.indexValue || bar.data.timestamp,
+            value: bar.data.value,
+            ...bar.data
+          }
+
+          const hoverWidth = bar.width + 2
+          const hoverX = bar.x - 1
+
+          return (
+            <rect
+              key={bar.key}
+              x={hoverX}
+              y={0}
+              width={hoverWidth}
+              height={innerHeight}
+              fill='transparent'
+              onMouseEnter={event => {
+                showTooltip(barData, event.nativeEvent, { x: bar.x, width: bar.width })
+              }}
+              onMouseMove={event => {
+                setMousePosition({ x: event.nativeEvent.clientX, y: event.nativeEvent.clientY })
+              }}
+              onMouseLeave={() => {
+                hideTooltip()
+              }}
+              style={{ pointerEvents: 'all' }}
+            />
+          )
+        })}
+      </g>
+    )
+  }
+
   const CustomTooltip = () => {
     if (!hoveredBar) return null
 
@@ -234,6 +296,7 @@ const Volume: React.FC<StatsInterface> = ({
               </Grid>
             )
           }}
+          layers={['grid', 'axes', 'bars', 'markers', 'legends', 'annotations', CustomHoverLayer]}
         />
         <CustomTooltip />
       </div>
