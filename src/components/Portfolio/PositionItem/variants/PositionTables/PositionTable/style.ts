@@ -59,13 +59,13 @@ export const usePositionTableStyle = makeStyles<{ isScrollHide: boolean }>()(
       }
     },
     tokenRatioCell: {
-      width: '18%',
+      width: '19%',
       '& > div': {
         margin: '0 auto'
       }
     },
     valueCell: {
-      width: '9%',
+      width: '11%',
       '& .MuiGrid-root': {
         justifyContent: 'center'
       }
@@ -83,7 +83,7 @@ export const usePositionTableStyle = makeStyles<{ isScrollHide: boolean }>()(
       }
     },
     actionCell: {
-      width: '8%',
+      width: '6%',
       padding: '14px 8px',
       '& > button': {
         margin: '0 auto'
