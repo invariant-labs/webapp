@@ -25,7 +25,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     filter: 'grayscale(1)'
   },
   itemCellContainer: {
-    width: 100,
+    width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexWrap: 'nowrap',
@@ -50,7 +50,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   tokenRatioCell: {
     paddingLeft: '15px',
 
-    width: '18%',
+    width: '19%',
     '& > .MuiTypography-root': {
       margin: '0 auto',
       maxWidth: '90%'
@@ -59,7 +59,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
 
   valueCell: {
     paddingLeft: 0,
-    width: '10%',
+    width: '11%',
     '& .MuiGrid-root': {
       margin: '0 auto',
       justifyContent: 'center'
@@ -81,7 +81,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 
   actionCell: {
-    width: '8%',
+    width: '6%',
     padding: '14px 8px',
     '& > .MuiButton-root': {
       margin: '0 auto'

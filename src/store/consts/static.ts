@@ -3,7 +3,7 @@ import { FEE_TIERS } from '@invariant-labs/sdk/lib/utils'
 import { BN } from '@project-serum/anchor'
 import { ISnackbar } from '@store/reducers/snackbars'
 import { Keypair, PublicKey } from '@solana/web3.js'
-import { Chain, PrefixConfig, Token, WalletType } from './types'
+import { Chain, FormatNumberThreshold, PrefixConfig, Token, WalletType } from './types'
 import { TICK_CROSSES_PER_IX } from '@invariant-labs/sdk/lib/market'
 import { cat1Icon, cat2Icon, dog1Icon, dog2Icon } from '@static/icons'
 
@@ -345,7 +345,9 @@ export const getAddressTickerMap = (network: NetworkType): { [k: string]: string
       DOGIN: DOGIN_MAIN.address.toString(),
       SNY: SNY_MAIN.address.toString(),
       WEN: WEN_MAIN.address.toString(),
-      SUI: SUI_MAIN.address.toString()
+      SUI: SUI_MAIN.address.toString(),
+      JitoSOL: 'J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn',
+      INF: '5oVNBeEEQvYi1cX3ir8Dx5n1P7pdxydbGF2X4TxVusJm'
     }
   } else {
     return {}
@@ -538,3 +540,55 @@ export const chartPlaceholder = {
   plotMax: 1.0113333501881372,
   tickSpacing: 10
 }
+
+export enum Intervals {
+  Daily = '24H',
+  Weekly = '1W',
+  Monthly = '1M',
+  Yearly = '1Y'
+}
+
+export const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+]
+
+export const percentageThresholds: FormatNumberThreshold[] = [
+  {
+    value: 10,
+    decimals: 2
+  },
+  {
+    value: 1000,
+    decimals: 2
+  },
+  {
+    value: 10000,
+    decimals: 2
+  },
+  {
+    value: 1000000,
+    decimals: 2,
+    divider: 1000
+  },
+  {
+    value: 1000000000,
+    decimals: 2,
+    divider: 1000000
+  },
+  {
+    value: Infinity,
+    decimals: 2,
+    divider: 1000000000
+  }
+]

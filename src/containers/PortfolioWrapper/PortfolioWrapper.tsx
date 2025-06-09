@@ -1,5 +1,6 @@
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import {
+  Intervals,
   NetworkType,
   POSITIONS_PER_PAGE,
   WSOL_CLOSE_POSITION_LAMPORTS_DEV,
@@ -108,11 +109,7 @@ const PortfolioWrapper = () => {
   }
 
   useEffect(() => {
-    dispatch(actionsStats.getCurrentStats())
-  }, [])
-
-  useEffect(() => {
-    dispatch(actionsStats.getCurrentStats())
+    dispatch(actionsStats.getCurrentIntervalStats({ interval: Intervals.Daily }))
   }, [])
 
   const calculateUnclaimedFees = (position: PositionData) => {
