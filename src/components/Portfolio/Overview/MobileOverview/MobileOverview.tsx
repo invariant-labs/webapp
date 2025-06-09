@@ -87,7 +87,7 @@ const MobileOverview: React.FC<MobileOverviewProps> = ({
               <Grid className={classes.tokenGrid}>
                 {segments.map(segment => (
                   <Grid item container key={segment.token} className={classes.tokenGridItem}>
-                    <Grid xs={4} className={classes.tokenLogoContainer}>
+                    <Grid item xs={4} className={classes.tokenLogoContainer}>
                       <img src={segment.logo} alt={'Token logo'} className={classes.tokenLogo} />
                       <Typography className={classes.tokenSymbol} sx={{ color: segment.color }}>
                         {segment.token}:

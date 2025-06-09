@@ -1,4 +1,4 @@
-import { Grid, TableRow, TableCell, Typography, useMediaQuery, Box, Skeleton } from '@mui/material'
+import { Grid, TableCell, Typography, useMediaQuery, Box, Skeleton } from '@mui/material'
 
 import { useMemo, useState } from 'react'
 import { colors, theme } from '@static/theme'
@@ -314,7 +314,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   }
 
   return (
-    <TableRow>
+    <>
       <PositionViewActionPopover
         shouldDisable={shouldDisable}
         anchorEl={anchorEl}
@@ -346,6 +346,6 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
       <TableCell className={`${classes.cellBase} ${classes.actionCell} action-button`}>
         {actionsFragment}
       </TableCell>
-    </TableRow>
+    </>
   )
 }
