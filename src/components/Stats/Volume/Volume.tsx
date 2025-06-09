@@ -280,6 +280,22 @@ const Volume: React.FC<StatsInterface> = ({
           ]}
           fill={[{ match: '*', id: 'gradient' }]}
           colors={colors.invariant.pink}
+          tooltip={({ data }) => {
+            const date = new Date(data.timestamp)
+            const day = date.getDate()
+            const month = date.getMonth() + 1
+
+            return (
+              <Grid className={classes.tooltip}>
+                <Typography className={classes.tooltipDate}>{`${day < 10 ? '0' : ''}${day}/${
+                  month < 10 ? '0' : ''
+                }${month}`}</Typography>
+                <Typography className={classes.tooltipValue}>
+                  ${formatNumberWithoutSuffix(data.value)}
+                </Typography>
+              </Grid>
+            )
+          }}
           layers={['grid', 'axes', 'bars', 'markers', 'legends', 'annotations', CustomHoverLayer]}
         />
         <CustomTooltip />
