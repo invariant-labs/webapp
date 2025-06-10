@@ -489,7 +489,7 @@ const Portfolio: React.FC<IProps> = ({
                 <Grid className={classes.filtersContainer}>
                   <Grid className={classes.fullWidthWrapper}>
                     <Grid width={26} display='flex' alignItems='center'>
-                      <TooltipHover removeOnMobile title='Refresh'>
+                      <TooltipHover title='Refresh'>
                         <MuiButton
                           disabled={showNoConnected}
                           onClick={showNoConnected ? () => {} : handleRefresh}
