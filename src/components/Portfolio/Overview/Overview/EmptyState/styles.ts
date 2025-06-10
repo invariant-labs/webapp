@@ -1,15 +1,16 @@
-import { colors, theme, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
+import { colors, theme, typography } from '@static/theme'
+import { Theme } from '@mui/material'
 
-export const useStyles = makeStyles()(() => ({
+export const useStyles = makeStyles()((_theme: Theme) => ({
   emptyState: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     padding: '32px',
-    height: 112,
     gap: '16px',
+    height: 112,
     backgroundColor: colors.invariant.component,
     marginBottom: 29,
     [theme.breakpoints.up('lg')]: {

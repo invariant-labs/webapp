@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Box, useMediaQuery } from '@mui/material'
 import { HeaderSection } from '../HeaderSection/HeaderSection'
 import { UnclaimedSection } from '../UnclaimedSection/UnclaimedSection'
+import { useStyles } from './styles'
 import { useDispatch, useSelector } from 'react-redux'
 import { theme } from '@static/theme'
 import ResponsivePieChart from '../OverviewPieChart/ResponsivePieChart'
@@ -14,19 +15,17 @@ import {
 } from '@store/selectors/positions'
 import { getTokenPrice } from '@utils/utils'
 import MobileOverview from '../MobileOverview/MobileOverview'
-import LegendSkeleton from './Skeletons/LegendSkeleton'
 import { useAverageLogoColor } from '@store/hooks/userOverview/useAverageLogoColor'
 import { useAgregatedPositions } from '@store/hooks/userOverview/useAgregatedPositions'
 import { actions, PositionWithAddress } from '@store/reducers/positions'
 import { LegendOverview } from '../LegendOverview/LegendOverview'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { IPositionItem } from '@store/consts/types'
-import { useStyles } from './styles'
 import { EmptyState } from './EmptyState/EmptyState'
+import LegendSkeleton from './skeletons/LegendSkeleton'
 
 interface OverviewProps {
   poolAssets: IPositionItem[]
-  shouldDisable: boolean
 }
 
 export interface ISinglePositionData extends PositionWithAddress {
@@ -36,7 +35,7 @@ export interface ISinglePositionData extends PositionWithAddress {
   positionIndex: number
 }
 
-export const Overview: React.FC<OverviewProps> = ({ shouldDisable }) => {
+export const Overview: React.FC<OverviewProps> = () => {
   const positionList = useSelector(positionsWithPoolsData)
   const isLg = useMediaQuery(theme.breakpoints.down('lg'))
   const { isAllClaimFeesLoading } = useSelector(list)
@@ -56,22 +55,23 @@ export const Overview: React.FC<OverviewProps> = ({ shouldDisable }) => {
 
   const isColorsLoading = useMemo(() => pendingColorLoads.size > 0, [pendingColorLoads])
 
-  const sortedPositions = useMemo(() => {
-    return [...positions].sort((a, b) => b.value - a.value)
-  }, [positions])
+  const sortedTokens = useMemo(() => positions.sort((a, b) => b.value - a.value), [positions])
 
   const chartColors = useMemo(
     () =>
-      sortedPositions.map(position =>
+      sortedTokens.map(position =>
         getTokenColor(position.token, logoColors[position.logo ?? ''] ?? '', tokenColorOverrides)
       ),
-    [sortedPositions, logoColors, getTokenColor, tokenColorOverrides]
+    [sortedTokens, logoColors, getTokenColor, tokenColorOverrides]
   )
 
-  const totalAssets = useMemo(
-    () => positions.reduce((acc, position) => acc + position.value, 0),
-    [positions]
-  )
+  const totalAssets = useMemo(() => {
+    const value = positions.reduce((acc, position) => acc + position.value || 0, 0)
+    const isPriceWarning = positions.some(position => position.isPriceWarning)
+
+    return { value, isPriceWarning }
+  }, [positions])
+
   const handleClaimAll = () => {
     dispatch(actions.claimAllFee())
   }
@@ -82,19 +82,20 @@ export const Overview: React.FC<OverviewProps> = ({ shouldDisable }) => {
     if (!isDataReady) return []
 
     const tokens: { label: string; value: number }[] = []
-    sortedPositions.forEach(position => {
+    sortedTokens.forEach(position => {
       const existingToken = tokens.find(token => token.label === position.token)
       if (existingToken) {
         existingToken.value += position.value
       } else {
         tokens.push({
           label: position.name,
-          value: position.value
+          value: position.value || 0
         })
       }
     })
+
     return tokens
-  }, [sortedPositions, isDataReady])
+  }, [sortedTokens, isDataReady])
 
   useEffect(() => {
     if (Object.keys(prices).length > 0) {
@@ -104,17 +105,23 @@ export const Overview: React.FC<OverviewProps> = ({ shouldDisable }) => {
 
   useEffect(() => {
     const loadPrices = async () => {
-      const uniqueTokens = new Set<string>()
+      const uniqueTokens = new Set<{ address: string; coingeckoId?: string }>()
       positionList.forEach(position => {
-        uniqueTokens.add(position.tokenX.assetAddress.toString())
-        uniqueTokens.add(position.tokenY.assetAddress.toString())
+        uniqueTokens.add({
+          address: position.tokenX.assetAddress.toString(),
+          coingeckoId: position.tokenX.coingeckoId
+        })
+        uniqueTokens.add({
+          address: position.tokenY.assetAddress.toString(),
+          coingeckoId: position.tokenY.coingeckoId
+        })
       })
 
       const tokenArray = Array.from(uniqueTokens)
       const priceResults = await Promise.all(
         tokenArray.map(async token => ({
           token,
-          priceData: await getTokenPrice(token)
+          priceData: await getTokenPrice(token.address, token.coingeckoId)
         }))
       )
       interface NewPrices {
@@ -129,7 +136,7 @@ export const Overview: React.FC<OverviewProps> = ({ shouldDisable }) => {
       const newPrices: NewPrices = priceResults.reduce(
         (acc, { token, priceData }) => ({
           ...acc,
-          [token]: priceData ?? {
+          [token.address]: priceData ?? {
             price: 0,
             buyPrice: 0,
             sellPrice: 0,
@@ -139,6 +146,7 @@ export const Overview: React.FC<OverviewProps> = ({ shouldDisable }) => {
         }),
         {}
       )
+
       setPrices(newPrices)
     }
 
@@ -146,7 +154,7 @@ export const Overview: React.FC<OverviewProps> = ({ shouldDisable }) => {
   }, [positionList.length])
 
   useEffect(() => {
-    sortedPositions.forEach(position => {
+    sortedTokens.forEach(position => {
       if (position.logo && !logoColors[position.logo] && !pendingColorLoads.has(position.logo)) {
         setPendingColorLoads(prev => new Set(prev).add(position.logo ?? ''))
 
@@ -172,18 +180,13 @@ export const Overview: React.FC<OverviewProps> = ({ shouldDisable }) => {
           })
       }
     })
-  }, [sortedPositions, getAverageColor, logoColors, pendingColorLoads])
+  }, [sortedTokens, getAverageColor, logoColors, pendingColorLoads])
 
   if (!isLoadingList && positions.length === 0) {
     return (
       <Box className={classes.container}>
-        <HeaderSection totalValue={0} loading={false} />
-        <UnclaimedSection
-          unclaimedTotal={0}
-          loading={false}
-          handleClaimAll={undefined}
-          shouldDisable={shouldDisable}
-        />
+        <HeaderSection totalValue={{ value: 0, isPriceWarning: false }} loading={false} />
+        <UnclaimedSection unclaimedTotal={0} loading={false} handleClaimAll={undefined} />
         <EmptyState />
       </Box>
     )
@@ -196,13 +199,12 @@ export const Overview: React.FC<OverviewProps> = ({ shouldDisable }) => {
         unclaimedTotal={unclaimedFees}
         handleClaimAll={handleClaimAll}
         loading={isLoadingList || isAllClaimFeesLoading || unClaimedFeesLoading}
-        shouldDisable={shouldDisable}
       />
 
       {isLg ? (
         <MobileOverview
           isLoadingList={isLoadingList}
-          positions={sortedPositions}
+          sortedTokens={sortedTokens}
           totalAssets={totalAssets}
           chartColors={chartColors}
         />
@@ -214,7 +216,7 @@ export const Overview: React.FC<OverviewProps> = ({ shouldDisable }) => {
             ) : (
               <LegendOverview
                 logoColors={logoColors}
-                sortedPositions={sortedPositions}
+                sortedTokens={sortedTokens}
                 tokenColorOverrides={tokenColorOverrides}
               />
             )}

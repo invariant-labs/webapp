@@ -212,7 +212,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   infoCenter: {
     flex: '1 1 0%',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 
   value: {
@@ -221,33 +222,5 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     height: 36,
     paddingInline: 12,
     marginRight: 8
-  },
-  skeleton30Rect: {
-    width: 32,
-    height: 32,
-    borderRadius: '10px',
-    margin: '0 auto'
-  },
-  skeleton36Rect: {
-    width: '100%',
-    height: 36,
-    borderRadius: '10px',
-    margin: '0 auto'
-  },
-  skeleton3660: {
-    width: '60px',
-    height: 36,
-    borderRadius: '10px'
-  },
-  skeleton100x60: {
-    width: 100,
-    height: 36,
-    marginLeft: theme.spacing(1.5),
-    borderRadius: '10px'
-  },
-  skeletonWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px'
   }
 }))

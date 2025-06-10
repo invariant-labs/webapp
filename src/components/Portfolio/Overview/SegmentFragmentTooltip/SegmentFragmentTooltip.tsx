@@ -47,7 +47,7 @@ const SegmentFragmentTooltip: React.FC<SegmentFragmentTooltipProps> = ({
     width: `${segment.width}%`,
     height: '100%',
     cursor: 'pointer',
-    transition: 'opacity 0.2s ease-in-out'
+    transition: 'opacity 0.3s ease-in-out'
   })
 
   const handleClick = (e: React.MouseEvent | React.TouchEvent) => {

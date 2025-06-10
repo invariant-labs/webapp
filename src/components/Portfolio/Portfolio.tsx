@@ -22,6 +22,7 @@ import { addressToTicker, initialXtoY, parseFeeToPathFee, ROUTES } from '@utils/
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStyles } from './style'
+
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { useProcessedTokens } from '@store/hooks/userOverview/useProcessedToken'
 import { Overview } from './Overview/Overview/Overview'
@@ -57,6 +58,7 @@ interface IProps {
 
 const Portfolio: React.FC<IProps> = ({
   isBalanceLoading,
+  shouldDisable,
   handleSnackbar,
   data,
   onAddPositionClick,
@@ -68,17 +70,17 @@ const Portfolio: React.FC<IProps> = ({
   currentNetwork,
   handleClosePosition,
   handleClaimFee,
-  tokensList,
-  shouldDisable
+  tokensList
 }) => {
   const { classes, cx } = useStyles()
+
   const navigate = useNavigate()
   const [selectedFilters, setSelectedFilters] = useState<ISearchToken[]>([])
   const isLg = useMediaQuery('@media (max-width: 1360px)')
   const isDownLg = useMediaQuery(theme.breakpoints.down('lg'))
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
-  const isSm = useMediaQuery(theme.breakpoints.down('sm'))
-  const { processedPools, isProcesing } = useProcessedTokens(tokensList, isBalanceLoading)
+  const { processedTokens, isProcesing } = useProcessedTokens(tokensList, isBalanceLoading)
+
   const [activePanel, setActivePanel] = useState<OverviewSwitcher>(OverviewSwitcher.Overview)
 
   const handleToggleChange =
@@ -104,18 +106,18 @@ const Portfolio: React.FC<IProps> = ({
 
   const positionsDetails = useMemo(() => {
     const positionsAmount = data.length
-    const inRageAmount = data.reduce((count, item) => (item.isActive ? count + 1 : count), 0)
+    const inRangeAmount = data.reduce((count, item) => (item.isActive ? count + 1 : count), 0)
 
-    const outOfRangeAmount = positionsAmount - inRageAmount
-    return { positionsAmount, inRageAmount, outOfRangeAmount }
+    const outOfRangeAmount = positionsAmount - inRangeAmount
+    return { positionsAmount, inRangeAmount, outOfRangeAmount }
   }, [data])
 
   const finalTokens = useMemo(() => {
     if (hideUnknownTokens) {
-      return processedPools.filter(item => item.isUnknown !== true)
+      return processedTokens.filter(item => item.isUnknown !== true)
     }
-    return processedPools.filter(item => item.decimal > 0)
-  }, [processedPools, hideUnknownTokens])
+    return processedTokens.filter(item => item.decimal > 0)
+  }, [processedTokens, hideUnknownTokens])
 
   const renderPositionDetails = () => (
     <Box
@@ -137,7 +139,7 @@ const Portfolio: React.FC<IProps> = ({
           </Typography>
           <Box gap={1} display={'flex'}>
             <Typography className={cx(classes.greenText, classes.footerPositionDetails)}>
-              Within Range: {positionsDetails.inRageAmount}
+              Within Range: {positionsDetails.inRangeAmount}
             </Typography>
             <Typography className={cx(classes.pinkText, classes.footerPositionDetails)}>
               Outside Range: {positionsDetails.outOfRangeAmount}
@@ -151,12 +153,14 @@ const Portfolio: React.FC<IProps> = ({
   const renderTokensFound = () => (
     <Typography className={cx(classes.footerText, classes.greyText)}>
       {isBalanceLoading || loading ? (
-        <Skeleton width={100} height={24} sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)' }} />
+        <Skeleton width={150} height={24} sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)' }} />
       ) : (
         `Tokens Found: ${finalTokens.length}`
       )}
     </Typography>
   )
+
+  const hidePlus = useMediaQuery(theme.breakpoints.down(350))
 
   const filteredData = useMemo(() => {
     if (selectedFilters.length === 0) return data
@@ -184,9 +188,9 @@ const Portfolio: React.FC<IProps> = ({
   }, [data, selectedFilters])
 
   const createNewPosition = (element: IPositionItem) => {
-    const address1 = addressToTicker(currentNetwork, element.poolData.tokenX.toString())
+    const address1 = addressToTicker(currentNetwork, element.tokenXName)
     const address2 = addressToTicker(currentNetwork, element.poolData.tokenY.toString())
-    const parsedFee = parseFeeToPathFee(element.poolData.fee.v)
+    const parsedFee = parseFeeToPathFee(element.poolData.fee)
     const isXtoY = initialXtoY(
       element.poolData.tokenX.toString(),
       element.poolData.tokenY.toString()
@@ -201,7 +205,6 @@ const Portfolio: React.FC<IProps> = ({
   }
 
   const [allowPropagation, setAllowPropagation] = useState(true)
-
   const renderContent = () => {
     if (showNoConnected) {
       return <NoConnected {...noConnectedBlockerProps} />
@@ -210,9 +213,9 @@ const Portfolio: React.FC<IProps> = ({
     if (!isLg) {
       return (
         <PositionsTable
-          shouldDisable={shouldDisable}
           positions={filteredData}
           isLoading={loading}
+          shouldDisable={shouldDisable}
           noInitialPositions={noInitialPositions}
           onAddPositionClick={onAddPositionClick}
           handleClosePosition={handleClosePosition}
@@ -277,7 +280,7 @@ const Portfolio: React.FC<IProps> = ({
         {isDownLg && !isMd && (
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Overview shouldDisable={shouldDisable} poolAssets={data} />
+              <Overview poolAssets={data} />
               <Box className={classes.footer}>
                 <Box className={classes.footerItem}>{renderPositionDetails()}</Box>
               </Box>
@@ -286,7 +289,7 @@ const Portfolio: React.FC<IProps> = ({
               <YourWallet
                 currentNetwork={currentNetwork}
                 handleSnackbar={handleSnackbar}
-                pools={finalTokens}
+                tokens={finalTokens}
                 isLoading={loading || isBalanceLoading || isProcesing}
               />
               <Box className={classes.footer}>
@@ -350,7 +353,7 @@ const Portfolio: React.FC<IProps> = ({
             <Box>
               {activePanel === OverviewSwitcher.Overview && (
                 <>
-                  <Overview shouldDisable={shouldDisable} poolAssets={data} />
+                  <Overview poolAssets={data} />
                   <Box className={classes.footer}>
                     <Box className={classes.footerItem}>{renderPositionDetails()}</Box>
                   </Box>
@@ -361,7 +364,7 @@ const Portfolio: React.FC<IProps> = ({
                   <YourWallet
                     handleSnackbar={handleSnackbar}
                     currentNetwork={currentNetwork}
-                    pools={finalTokens}
+                    tokens={finalTokens}
                     isLoading={loading || isBalanceLoading || isProcesing}
                   />
                   <Box className={classes.footer}>
@@ -393,11 +396,11 @@ const Portfolio: React.FC<IProps> = ({
         {!isDownLg && (
           <>
             <Box display={'flex'}>
-              <Overview shouldDisable={shouldDisable} poolAssets={data} />
+              <Overview poolAssets={data} />
               <YourWallet
                 currentNetwork={currentNetwork}
                 handleSnackbar={handleSnackbar}
-                pools={finalTokens}
+                tokens={finalTokens}
                 isLoading={loading || isBalanceLoading || isProcesing}
               />
             </Box>
@@ -429,22 +432,32 @@ const Portfolio: React.FC<IProps> = ({
       </Box>
 
       <Grid container direction='column' className={classes.root}>
-        <Grid className={classes.header} container>
-          <Grid className={classes.searchRoot}>
-            <Grid className={classes.titleBar}>
-              <Typography className={classes.title}>Your Positions</Typography>
-              <TooltipHover title='Total number of your positions'>
-                <Typography className={classes.positionsNumber}>
-                  {String(filteredData.length)}
-                </Typography>
-              </TooltipHover>
-            </Grid>
+        {!isMd ? (
+          <Grid className={classes.header} container>
+            <Grid className={classes.searchRoot}>
+              <Grid className={classes.titleBar}>
+                <Typography className={classes.title}>Your Positions</Typography>
+                <TooltipHover title='Total number of your positions'>
+                  <Typography className={classes.positionsNumber}>
+                    {String(filteredData.length)}
+                  </Typography>
+                </TooltipHover>
+              </Grid>
+              <Grid className={classes.searchWrapper}>
+                <Grid className={classes.filtersContainer}>
+                  <FilterSearch
+                    loading={loading}
+                    bp='md'
+                    networkType={currentNetwork}
+                    filtersAmount={2}
+                    selectedFilters={selectedFilters}
+                    setSelectedFilters={setSelectedFilters}
+                  />
+                </Grid>
 
-            <Grid className={classes.searchWrapper}>
-              <Grid className={classes.filtersContainer}>
                 <Grid className={classes.fullWidthWrapper}>
                   <TooltipHover title='Refresh'>
-                    <Grid width={26} display='flex' alignItems='center'>
+                    <Grid display='flex' alignItems='center'>
                       <MuiButton
                         disabled={showNoConnected}
                         onClick={showNoConnected ? () => {} : handleRefresh}
@@ -453,24 +466,56 @@ const Portfolio: React.FC<IProps> = ({
                       </MuiButton>
                     </Grid>
                   </TooltipHover>
-                  <Button width={isSm ? '100%' : 'auto'} scheme='pink' onClick={onAddPositionClick}>
-                    + Add Position
+                  <Button scheme='pink' onClick={onAddPositionClick}>
+                    <span className={classes.buttonText}>+ Add Position</span>
                   </Button>
                 </Grid>
               </Grid>
-
-              <FilterSearch
-                bp='md'
-                loading={loading}
-                networkType={currentNetwork}
-                filtersAmount={2}
-                selectedFilters={selectedFilters}
-                setSelectedFilters={setSelectedFilters}
-              />
             </Grid>
           </Grid>
-        </Grid>
+        ) : (
+          <Grid className={classes.header} container>
+            <Grid className={classes.searchRoot}>
+              <Grid className={classes.titleBar}>
+                <Typography className={classes.title}>Your Positions</Typography>
+                <TooltipHover title='Total number of your positions'>
+                  <Typography className={classes.positionsNumber}>
+                    {String(filteredData.length)}
+                  </Typography>
+                </TooltipHover>
+              </Grid>
 
+              <Grid className={classes.searchWrapper}>
+                <Grid className={classes.filtersContainer}>
+                  <Grid className={classes.fullWidthWrapper}>
+                    <Grid width={26} display='flex' alignItems='center'>
+                      <TooltipHover title='Refresh'>
+                        <MuiButton
+                          disabled={showNoConnected}
+                          onClick={showNoConnected ? () => {} : handleRefresh}
+                          className={classes.refreshIconBtn}>
+                          <img src={refreshIcon} className={classes.refreshIcon} alt='Refresh' />
+                        </MuiButton>
+                      </TooltipHover>
+                    </Grid>
+                    <Button scheme='pink' onClick={onAddPositionClick}>
+                      <span className={classes.buttonText}>{!hidePlus && '+ '}Add Position</span>
+                    </Button>
+                  </Grid>
+                </Grid>
+
+                <FilterSearch
+                  bp='md'
+                  loading={loading}
+                  networkType={currentNetwork}
+                  filtersAmount={2}
+                  selectedFilters={selectedFilters}
+                  setSelectedFilters={setSelectedFilters}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
         <Grid container className={classes.list}>
           {renderContent()}
         </Grid>

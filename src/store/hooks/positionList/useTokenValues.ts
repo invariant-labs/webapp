@@ -31,11 +31,13 @@ export const useTokenValues = ({
   const { tokenXPriceData, tokenYPriceData } = usePrices({
     tokenX: {
       assetsAddress: positionSingleData?.tokenX.assetAddress.toString(),
-      name: positionSingleData?.tokenX.name
+      name: positionSingleData?.tokenX.name,
+      coingeckoId: positionSingleData?.tokenX.coingeckoId
     },
     tokenY: {
       assetsAddress: positionSingleData?.tokenY.assetAddress.toString(),
-      name: positionSingleData?.tokenY.name
+      name: positionSingleData?.tokenY.name,
+      coingeckoId: positionSingleData?.tokenY.coingeckoId
     }
   })
 
@@ -61,7 +63,13 @@ export const useTokenValues = ({
       setPreviousTokenValueInUsd(totalValue)
     }
 
-    return { loading: false, value: totalValue }
+    return {
+      loading: false,
+      value: totalValue,
+      priceWarning:
+        (tokenXPriceData.price === 0 && tokenXLiquidity > 0) ||
+        (tokenYPriceData.price === 0 && tokenYLiquidity > 0)
+    }
   }, [tokenXLiquidity, tokenYLiquidity, tokenXPriceData, tokenYPriceData, previousTokenValueInUsd])
 
   return { tokenValueInUsd, tokenXPercentage, tokenYPercentage }

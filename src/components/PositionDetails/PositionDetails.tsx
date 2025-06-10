@@ -216,7 +216,7 @@ const PositionDetails: React.FC<IProps> = ({
 
     const ratioToDenominator = revertDenominator ? midPrice.x : 1 / midPrice.x
     const denominatorPrice = revertDenominator ? tokenYPriceData?.price : tokenXPriceData?.price
-    console.log('denominatorPrice', denominatorPrice)
+
     if (!denominatorPrice) {
       return null
     }
