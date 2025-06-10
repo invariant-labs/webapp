@@ -146,7 +146,7 @@ export const Overview: React.FC<OverviewProps> = () => {
         }),
         {}
       )
-      console.log(newPrices)
+
       setPrices(newPrices)
     }
 
