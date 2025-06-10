@@ -56,6 +56,7 @@ import mainnetGlowIcon from './svg/mainnetGlow.svg'
 import devnetGlowIcon from './svg/devnetGlow.svg'
 import active2Icon from './svg/active2.svg'
 import solanaGlowIcon from './svg/solanaGlow.svg'
+import sonicGlowIcon from './svg/sonicGlow.svg'
 import eclipseGlowIcon from './svg/eclipseGlow.svg'
 import alephiumGlowIcon from './svg/alephiumGlow.svg'
 import settings3Icon from './svg/settings3.svg'
@@ -170,6 +171,7 @@ export {
   solanaGlowIcon,
   eclipseGlowIcon,
   alephiumGlowIcon,
+  sonicGlowIcon,
   settings3Icon,
   faucetIcon,
   solanaFlatIcon,
@@ -191,7 +193,8 @@ export {
 export const chainIcons = {
   eclipseGlow: eclipseGlowIcon,
   solanaGlow: solanaGlowIcon,
-  alephiumGlow: alephiumGlowIcon
+  alephiumGlow: alephiumGlowIcon,
+  sonicGlow: sonicGlowIcon
 }
 
 export const netowrkIcons = {

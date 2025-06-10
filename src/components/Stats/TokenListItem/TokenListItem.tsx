@@ -5,11 +5,12 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useStyles } from './style'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import { formatNumberWithSuffix, shortenAddress } from '@utils/utils'
-import { ITEMS_PER_PAGE, NetworkType, SortTypeTokenList } from '@store/consts/static'
+import { Intervals, ITEMS_PER_PAGE, NetworkType, SortTypeTokenList } from '@store/consts/static'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 import { VariantType } from 'notistack'
 import { newTabBtnIcon, unknownTokenIcon, warningIcon } from '@static/icons'
+import { mapIntervalToString } from '@utils/uiUtils'
 
 interface IProps {
   displayType: string
@@ -27,6 +28,7 @@ interface IProps {
   isUnknown?: boolean
   network?: NetworkType
   copyAddressHandler?: (message: string, variant: VariantType) => void
+  interval?: Intervals
 }
 
 const TokenListItem: React.FC<IProps> = ({
@@ -44,7 +46,8 @@ const TokenListItem: React.FC<IProps> = ({
   address,
   isUnknown,
   network,
-  copyAddressHandler
+  copyAddressHandler,
+  interval = Intervals.Daily
 }) => {
   const { classes } = useStyles()
   // const isNegative = priceChange < 0
@@ -79,7 +82,7 @@ const TokenListItem: React.FC<IProps> = ({
       })
   }
   const shouldShowText = !isSm
-
+  const intervalSuffix = mapIntervalToString(interval)
   return (
     <Grid className={classes.wrapper}>
       {displayType === 'tokens' ? (
@@ -219,7 +222,7 @@ const TokenListItem: React.FC<IProps> = ({
                 onSort?.(SortTypeTokenList.VOLUME_DESC)
               }
             }}>
-            Volume 24H
+            Volume {intervalSuffix}
             {sortType === SortTypeTokenList.VOLUME_ASC ? (
               <ArrowDropUpIcon className={classes.icon} />
             ) : sortType === SortTypeTokenList.VOLUME_DESC ? (

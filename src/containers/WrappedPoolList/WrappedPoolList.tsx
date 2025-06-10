@@ -11,6 +11,7 @@ import LiquidityPoolList from '@components/LiquidityPoolList/LiquidityPoolList'
 import { FilterSearch, ISearchToken } from '@common/FilterSearch/FilterSearch'
 import { theme } from '@static/theme'
 import { unknownTokenIcon } from '@static/icons'
+import { Intervals } from '@store/consts/static'
 
 export const WrappedPoolList: React.FC = () => {
   const isXs = useMediaQuery(theme.breakpoints.down('sm'))
@@ -58,7 +59,7 @@ export const WrappedPoolList: React.FC = () => {
   }
 
   useEffect(() => {
-    dispatch(actions.getCurrentStats())
+    dispatch(actions.getCurrentIntervalStats({ interval: Intervals.Daily }))
   }, [dispatch])
 
   return (

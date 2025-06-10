@@ -54,7 +54,8 @@ import {
   ADDRESSES_TO_REVERT_TOKEN_PAIRS,
   POSITIONS_PER_PAGE,
   PRICE_QUERY_COOLDOWN,
-  BASE_JUPITER_API_URL
+  BASE_JUPITER_API_URL,
+  Intervals
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
@@ -1267,21 +1268,16 @@ export const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThresh
     decimals
   },
   {
-    value: 100,
+    value: 10000,
+    decimals: 6
+  },
+  {
+    value: 100000,
     decimals: 4
   },
   {
-    value: 1000,
-    decimals: 2
-  },
-  {
-    value: 10000,
-    decimals: 1
-  },
-  {
     value: 1000000,
-    decimals: 2,
-    divider: 1000
+    decimals: 3
   },
   {
     value: 1000000000,
@@ -1873,7 +1869,7 @@ export const removeAdditionalDecimals = (value: string, desiredDecimals: number)
   }
 }
 
-const poolsToRecalculateAPY = ['']
+const poolsToRecalculateAPY: string[] = []
 
 export const calculateAPYAndAPR = (
   apy: number,
@@ -1948,4 +1944,22 @@ export const calculatePercentageRatio = (
     tokenXPercentage,
     tokenYPercentage: 100 - tokenXPercentage
   }
+}
+
+export const getIntervalsFullSnap = async (
+  name: string,
+  interval: Intervals
+): Promise<FullSnap> => {
+  const parsedInterval =
+    interval === Intervals.Daily
+      ? 'daily'
+      : interval === Intervals.Weekly
+        ? 'weekly'
+        : interval === Intervals.Monthly
+          ? 'monthly'
+          : 'yearly'
+  const { data } = await axios.get<FullSnap>(
+    `https://stats.invariant.app/solana/intervals/solana-${name}?interval=${parsedInterval}`
+  )
+  return data
 }

@@ -44,6 +44,7 @@ import { MAX_TICK, Pair } from '@invariant-labs/sdk/src'
 import { theme } from '@static/theme'
 import { isLoading, poolsStatsWithTokensDetails } from '@store/selectors/stats'
 import { actions as statsActions } from '@store/reducers/stats'
+import { Intervals } from '@store/consts/static'
 
 export type PoolDetails = {
   tvl: number
@@ -533,14 +534,14 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       apy: pool.apy,
       fee: pool.fee
     }
-  }, [poolsList])
+  }, [poolsList, position])
 
   useEffect(() => {
     dispatch(actions.getPreviewPosition(id))
   }, [poolsList.length])
 
   useEffect(() => {
-    dispatch(statsActions.getCurrentStats())
+    dispatch(statsActions.getCurrentIntervalStats({ interval: Intervals.Daily }))
   }, [])
 
   if (position) {

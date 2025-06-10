@@ -424,7 +424,7 @@ export const NewPosition: React.FC<INewPosition> = ({
     if (!ticksLoading && positionOpeningMethod === 'range') {
       onChangeRange(leftRange, rightRange)
     }
-  }, [midPrice.index, leftRange, rightRange])
+  }, [midPrice.index, leftRange, rightRange, currentPriceSqrt.toString()])
 
   useEffect(() => {
     const configurePoolAddress = async () => {
