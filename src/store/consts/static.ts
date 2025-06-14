@@ -372,6 +372,11 @@ export const CHAINS = [
     name: Chain.Eclipse,
     address: 'https://eclipse.invariant.app/exchange',
     iconGlow: 'eclipseGlow'
+  },
+  {
+    name: Chain.Sonic,
+    address: 'https://sonic.invariant.app/exchange',
+    iconGlow: 'sonicGlow'
   }
   // { name: Chain.Vara, address: 'https://vara.invariant.app/exchange' },
   // {

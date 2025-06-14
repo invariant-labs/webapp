@@ -1268,21 +1268,16 @@ export const thresholdsWithTokenDecimal = (decimals: number): FormatNumberThresh
     decimals
   },
   {
-    value: 100,
+    value: 10000,
+    decimals: 6
+  },
+  {
+    value: 100000,
     decimals: 4
   },
   {
-    value: 1000,
-    decimals: 2
-  },
-  {
-    value: 10000,
-    decimals: 1
-  },
-  {
     value: 1000000,
-    decimals: 2,
-    divider: 1000
+    decimals: 3
   },
   {
     value: 1000000000,

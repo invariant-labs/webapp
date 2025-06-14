@@ -10,7 +10,8 @@ const useStyles = makeStyles()((theme: Theme) => {
       [theme.breakpoints.down('sm')]: {
         display: 'flex',
         marginLeft: 'auto',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginTop: 0
       }
     },
     balanceWrapper: {

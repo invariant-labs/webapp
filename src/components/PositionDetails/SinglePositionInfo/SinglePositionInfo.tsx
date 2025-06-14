@@ -82,6 +82,7 @@ const SinglePositionInfo: React.FC<IProp> = ({
           }
           poolApr={convertedApr}
           isLoading={showPositionLoader}
+          showPoolDetailsLoader={showPoolDetailsLoader}
         />
         <Separator size='100%' isHorizontal color={colors.invariant.light} />
         <Section title='Liquidity'>

@@ -85,7 +85,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
   const { classes, cx } = useStyles()
   const [page, setPage] = React.useState(1)
-  const [sortType, setSortType] = React.useState(SortTypePoolList.VOLUME_DESC)
+  const [sortType, setSortType] = React.useState(SortTypePoolList.FEE_24_DESC)
   const navigate = useNavigate()
   useEffect(() => {
     setInitialDataLength(initialLength)
