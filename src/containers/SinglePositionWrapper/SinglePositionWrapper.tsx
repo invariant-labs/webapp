@@ -534,7 +534,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       apy: pool.apy,
       fee: pool.fee
     }
-  }, [poolsList])
+  }, [poolsList, position])
 
   useEffect(() => {
     dispatch(actions.getPreviewPosition(id))

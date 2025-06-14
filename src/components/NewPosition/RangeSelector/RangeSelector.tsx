@@ -156,7 +156,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
       handleUpdateConcentrationFromURL(concentrationValue)
     }
-  }, [poolIndex])
+  }, [])
 
   useEffect(() => {
     isMountedRef.current = true
