@@ -119,7 +119,7 @@ export const useStyles = makeStyles<{
     fontWeight: 700,
     borderRadius: 4,
     appearance: 'textfield !important' as 'textfield',
-    border: `3px solid ${colors.invariant.green}`,
+    border: `3px solid ${colors.invariant.light}`,
     '&::-webkit-inner-spin-button, &::-webkit-outer-spin-button': {
       WebkitAppearance: 'none',
       margin: 0
