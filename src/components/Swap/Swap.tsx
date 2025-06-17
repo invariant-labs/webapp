@@ -716,7 +716,6 @@ export const Swap: React.FC<ISwap> = ({
             network={network}
           />
         </Box>
-
         <Box className={classes.tokenComponentTextContainer}>
           <Box
             className={classes.swapArrowBox}
@@ -830,105 +829,137 @@ export const Swap: React.FC<ISwap> = ({
             </TooltipHover>
           )}
         </Box>
-
-        <Box className={classes.transactionDetails}>
-          <Box className={classes.transactionDetailsInner}>
-            <button
-              onClick={
-                tokenFrom !== null &&
-                tokenTo !== null &&
-                hasShowRateMessage() &&
-                amountFrom !== '' &&
-                amountTo !== ''
-                  ? handleOpenTransactionDetails
-                  : undefined
-              }
-              className={cx(
-                tokenFrom !== null &&
-                  tokenTo !== null &&
-                  hasShowRateMessage() &&
-                  amountFrom !== '' &&
-                  amountTo !== ''
-                  ? classes.HiddenTransactionButton
-                  : classes.transactionDetailDisabled,
-                classes.transactionDetailsButton
-              )}>
-              <Grid className={classes.transactionDetailsWrapper}>
-                <Typography className={classes.transactionDetailsHeader}>
-                  {detailsOpen && canShowDetails ? 'Hide' : 'Show'} transaction details
-                </Typography>
-              </Grid>
-            </button>
-            {tokenFrom !== null && tokenTo !== null && tokenFrom !== tokenTo && (
-              <TooltipHover title='Refresh'>
-                <Grid container className={classes.refreshWrapper}>
-                  <Refresher
-                    currentIndex={refresherTime}
-                    maxIndex={REFRESHER_INTERVAL}
-                    onClick={handleRefresh}
+        <Box className={classes.mobileChangeWrapper}>
+          <Box className={classes.transactionDetails}>
+            <Box className={classes.mobileChangeRatioWrapper}>
+              <Box className={classes.transactionDetailsInner}>
+                <button
+                  onClick={
+                    tokenFrom !== null &&
+                    tokenTo !== null &&
+                    hasShowRateMessage() &&
+                    amountFrom !== '' &&
+                    amountTo !== ''
+                      ? handleOpenTransactionDetails
+                      : undefined
+                  }
+                  className={cx(
+                    tokenFrom !== null &&
+                      tokenTo !== null &&
+                      hasShowRateMessage() &&
+                      amountFrom !== '' &&
+                      amountTo !== ''
+                      ? classes.HiddenTransactionButton
+                      : classes.transactionDetailDisabled,
+                    classes.transactionDetailsButton
+                  )}>
+                  <Grid className={classes.transactionDetailsWrapper}>
+                    <Typography className={classes.transactionDetailsHeader}>
+                      {detailsOpen && canShowDetails ? 'Hide' : 'Show'} transaction details
+                    </Typography>
+                  </Grid>
+                </button>
+                {tokenFrom !== null && tokenTo !== null && tokenFrom !== tokenTo && (
+                  <TooltipHover title='Refresh'>
+                    <Grid container className={classes.refreshWrapper}>
+                      <Refresher
+                        currentIndex={refresherTime}
+                        maxIndex={REFRESHER_INTERVAL}
+                        onClick={handleRefresh}
+                      />
+                    </Grid>
+                  </TooltipHover>
+                )}
+              </Box>
+              {canShowDetails ? (
+                <Box className={classes.exchangeRateWrapper}>
+                  <ExchangeRate
+                    onClick={() => setRateReversed(!rateReversed)}
+                    tokenFromSymbol={
+                      tokens[rateReversed ? tokenTo.toString() : tokenFrom.toString()].symbol
+                    }
+                    tokenToSymbol={
+                      tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].symbol
+                    }
+                    amount={rateReversed ? 1 / swapRate : swapRate}
+                    tokenToDecimals={
+                      tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].decimals
+                    }
+                    loading={getStateMessage() === 'Loading' || rateLoading}
                   />
-                </Grid>
-              </TooltipHover>
-            )}
-          </Box>
-          {canShowDetails ? (
-            <Box className={classes.exchangeRateWrapper}>
-              <ExchangeRate
-                onClick={() => setRateReversed(!rateReversed)}
-                tokenFromSymbol={
-                  tokens[rateReversed ? tokenTo.toString() : tokenFrom.toString()].symbol
-                }
-                tokenToSymbol={
-                  tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].symbol
-                }
-                amount={rateReversed ? 1 / swapRate : swapRate}
-                tokenToDecimals={
-                  tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].decimals
-                }
-                loading={getStateMessage() === 'Loading' || rateLoading}
-              />
+                </Box>
+              ) : null}
             </Box>
-          ) : null}
-        </Box>
-        <TransactionDetailsBox
-          open={detailsOpen && canShowDetails}
-          fee={{
-            v: canShowDetails ? pools[simulateResult.poolIndex].fee.v : new BN(0)
-          }}
-          exchangeRate={{
-            val: rateReversed ? 1 / swapRate : swapRate,
-            symbol: canShowDetails
-              ? tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].symbol
-              : '',
-            decimal: canShowDetails
-              ? tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].decimals
-              : 0
-          }}
-          priceImpact={simulateResult.priceImpact}
-          slippage={+slippTolerance}
-          isLoadingRate={getStateMessage() === 'Loading'}
-        />
-        <TokensInfo
-          tokenFrom={tokenFrom !== null ? tokens[tokenFrom.toString()] : null}
-          tokenTo={tokenTo !== null ? tokens[tokenTo.toString()] : null}
-          tokenToPrice={tokenToPriceData?.price}
-          tokenFromPrice={tokenFromPriceData?.price}
-          copyTokenAddressHandler={copyTokenAddressHandler}
-          network={network}
-        />
-        {walletStatus !== Status.Initialized && getStateMessage() !== 'Loading' ? (
-          <ChangeWalletButton
-            height={48}
-            name='Connect wallet'
-            onConnect={onConnectWallet}
-            connected={false}
-            onDisconnect={onDisconnectWallet}
-            isSwap={true}
-          />
-        ) : getStateMessage() === 'Insufficient Wrapped SOL' ? (
-          <TooltipHover
-            title='More SOL is required to cover the transaction fee. Obtain more SOL to complete this transaction.'
-            top={-45}>
+            <TransactionDetailsBox
+              open={detailsOpen && canShowDetails}
+              fee={{
+                v: canShowDetails ? pools[simulateResult.poolIndex].fee.v : new BN(0)
+              }}
+              exchangeRate={{
+                val: rateReversed ? 1 / swapRate : swapRate,
+                symbol: canShowDetails
+                  ? tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].symbol
+                  : '',
+                decimal: canShowDetails
+                  ? tokens[rateReversed ? tokenFrom.toString() : tokenTo.toString()].decimals
+                  : 0
+              }}
+              priceImpact={simulateResult.priceImpact}
+              slippage={+slippTolerance}
+              isLoadingRate={getStateMessage() === 'Loading'}
+            />
+            <TokensInfo
+              tokenFrom={tokenFrom !== null ? tokens[tokenFrom.toString()] : null}
+              tokenTo={tokenTo !== null ? tokens[tokenTo.toString()] : null}
+              tokenToPrice={tokenToPriceData?.price}
+              tokenFromPrice={tokenFromPriceData?.price}
+              copyTokenAddressHandler={copyTokenAddressHandler}
+              network={network}
+            />
+          </Box>
+          {walletStatus !== Status.Initialized && getStateMessage() !== 'Loading' ? (
+            <ChangeWalletButton
+              height={48}
+              name='Connect wallet'
+              onConnect={onConnectWallet}
+              connected={false}
+              onDisconnect={onDisconnectWallet}
+              isSwap={true}
+            />
+          ) : getStateMessage() === 'Insufficient Wrapped SOL' ? (
+            <TooltipHover
+              title='More SOL is required to cover the transaction fee. Obtain more SOL to complete this transaction.'
+              top={-45}>
+              <AnimatedButton
+                content={getStateMessage()}
+                className={
+                  getStateMessage() === 'Connect a wallet'
+                    ? `${classes.swapButton}`
+                    : getStateMessage() === 'Exchange' && progress === 'none'
+                      ? `${classes.swapButton} ${classes.ButtonSwapActive}`
+                      : classes.swapButton
+                }
+                disabled={getStateMessage() !== 'Exchange' || progress !== 'none'}
+                onClick={() => {
+                  if (tokenFrom === null || tokenTo === null) return
+
+                  onSwap(
+                    { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
+                    {
+                      v: simulateResult.estimatedPriceAfterSwap
+                    },
+                    tokenFrom,
+                    tokenTo,
+                    simulateResult.poolIndex,
+                    convertBalanceToBN(amountFrom, tokens[tokenFrom.toString()].decimals),
+                    convertBalanceToBN(amountTo, tokens[tokenTo.toString()].decimals),
+                    inputRef === inputTarget.FROM
+                  )
+                }}
+                progress={progress}
+              />
+            </TooltipHover>
+          ) : (
             <AnimatedButton
               content={getStateMessage()}
               className={
@@ -957,37 +988,8 @@ export const Swap: React.FC<ISwap> = ({
               }}
               progress={progress}
             />
-          </TooltipHover>
-        ) : (
-          <AnimatedButton
-            content={getStateMessage()}
-            className={
-              getStateMessage() === 'Connect a wallet'
-                ? `${classes.swapButton}`
-                : getStateMessage() === 'Exchange' && progress === 'none'
-                  ? `${classes.swapButton} ${classes.ButtonSwapActive}`
-                  : classes.swapButton
-            }
-            disabled={getStateMessage() !== 'Exchange' || progress !== 'none'}
-            onClick={() => {
-              if (tokenFrom === null || tokenTo === null) return
-
-              onSwap(
-                { v: fromFee(new BN(Number(+slippTolerance * 1000))) },
-                {
-                  v: simulateResult.estimatedPriceAfterSwap
-                },
-                tokenFrom,
-                tokenTo,
-                simulateResult.poolIndex,
-                convertBalanceToBN(amountFrom, tokens[tokenFrom.toString()].decimals),
-                convertBalanceToBN(amountTo, tokens[tokenTo.toString()].decimals),
-                inputRef === inputTarget.FROM
-              )
-            }}
-            progress={progress}
-          />
-        )}
+          )}
+        </Box>
       </Grid>
       <img src={auditIcon} alt='Audit' className={classes.audit} />
     </Grid>
