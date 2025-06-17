@@ -1,18 +1,18 @@
 import { Box, Button, Grid, Skeleton, Typography } from '@mui/material'
 import { formatNumberWithSuffix } from '@utils/utils'
 import { useMemo, useRef, useState } from 'react'
+import { useMobileStyles } from './style'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import { initialXtoY, tickerToAddress } from '@utils/utils'
+import { swapListIcon, warning2Icon } from '@static/icons'
 import { useSelector } from 'react-redux'
 import { useTokenValues } from '@store/hooks/positionList/useTokenValues'
 import { singlePositionData } from '@store/selectors/positions'
-import { MinMaxChart } from '../../components/MinMaxChart/MinMaxChart'
 import { blurContent, unblurContent } from '@utils/uiUtils'
 import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { ISinglePositionData } from '@components/Portfolio/Overview/Overview/Overview'
-import { useMobileStyles } from './style'
 import { IPositionItem } from '@store/consts/types'
-import { swapListIcon } from '@static/icons'
+import { MinMaxChart } from '../../components/MinMaxChart/MinMaxChart'
 
 interface IPositionItemMobile extends IPositionItem {
   setAllowPropagation: React.Dispatch<React.SetStateAction<boolean>>
@@ -32,13 +32,13 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
   max,
   position,
   id,
+  isFullRange,
   isActive = false,
   currentPrice,
   tokenXLiq,
   tokenYLiq,
   network,
   unclaimedFeesInUSD = { value: 0, loading: false, isClaimAvailable: false },
-  isFullRange,
   handleClosePosition,
   handleClaimFee,
   shouldDisable,
@@ -98,7 +98,11 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
             placement='top'
             increasePadding
             fullSpan>
-            <Grid container className={cx(classes.fee, isActive ? classes.activeFee : undefined)}>
+            <Grid
+              container
+              className={cx(classes.fee, isActive ? classes.activeFee : undefined)}
+              justifyContent='center'
+              alignItems='center'>
               <Typography
                 className={cx(classes.infoText, isActive ? classes.activeInfoText : undefined)}>
                 {fee}% fee
@@ -116,11 +120,16 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
               sx={{ borderRadius: '10px' }}
             />
           ) : (
-            <Grid container className={classes.fee} sx={{ width: '100%' }}>
+            <Grid
+              container
+              justifyContent='center'
+              alignItems='center'
+              className={classes.fee}
+              sx={{ width: '100%' }}>
               <Box className={classes.unclaimedFeeContainer}>
                 <Typography className={classes.infoText}>Unclaimed Fee</Typography>
                 <Typography className={classes.greenText}>
-                  ${formatNumberWithSuffix(unclaimedFeesInUSD.value)}
+                  ${formatNumberWithSuffix(unclaimedFeesInUSD.value.toFixed(2))}
                 </Typography>
               </Box>
             </Grid>
@@ -143,14 +152,41 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
               sx={{ borderRadius: '10px' }}
             />
           ) : (
-            <Grid container className={classes.value} alignItems='center' justifyContent='center'>
-              <Box gap={'8px'} display={'flex'} alignItems={'center'}>
-                <Typography className={classes.infoText}>Value</Typography>
-                <Typography className={classes.greenText}>
-                  ${formatNumberWithSuffix(tokenValueInUsd.value)}
-                </Typography>
-              </Box>
-            </Grid>
+            <div>
+              {tokenValueInUsd.priceWarning ? (
+                <TooltipHover title='The price might not be shown correctly' fullSpan>
+                  <Grid
+                    container
+                    className={classes.value}
+                    alignItems='center'
+                    justifyContent='center'>
+                    <Box gap={'8px'} display={'flex'} alignItems={'center'}>
+                      <Typography className={classes.infoText}>Value</Typography>
+
+                      <Typography className={classes.greenText}>
+                        ${formatNumberWithSuffix(tokenValueInUsd.value)}
+                      </Typography>
+
+                      <img src={warning2Icon} width={14} />
+                    </Box>
+                  </Grid>
+                </TooltipHover>
+              ) : (
+                <Grid
+                  container
+                  className={classes.value}
+                  alignItems='center'
+                  justifyContent='center'>
+                  <Box gap={'8px'} display={'flex'} alignItems={'center'}>
+                    <Typography className={classes.infoText}>Value</Typography>
+
+                    <Typography className={classes.greenText}>
+                      ${formatNumberWithSuffix(tokenValueInUsd.value)}
+                    </Typography>
+                  </Box>
+                </Grid>
+              )}
+            </div>
           )}
         </Grid>
 
@@ -209,22 +245,10 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
         closePosition={() => handleClosePosition(positionSingleData?.positionIndex ?? 0)}
         createPosition={createNewPosition}
       />
-      <Grid
-        container
-        item
-        className={classes.mdTop}
-        direction='row'
-        wrap='nowrap'
-        sx={{ marginBottom: 2 }}>
-        <Grid
-          container
-          item
-          className={classes.iconsAndNames}
-          alignItems='center'
-          justifyContent={'space-between'}
-          wrap='nowrap'>
+      <Grid container item className={classes.mdTop}>
+        <Grid container item className={classes.iconsAndNames}>
           <Box display='flex' alignItems={'center'}>
-            <Grid container item className={classes.icons} alignItems='center' wrap='nowrap'>
+            <Grid container item className={classes.icons}>
               <img
                 className={classes.tokenIcon}
                 src={xToY ? tokenXIcon : tokenYIcon}

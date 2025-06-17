@@ -7,15 +7,12 @@ import {
 } from '@store/hooks/userOverview/useAverageLogoColor'
 import { formatNumberWithoutSuffix } from '@utils/utils'
 import { useStyles } from './styles'
-
-interface Position {
-  token: string
-  logo?: string
-  value: number
-}
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
+import { warning2Icon } from '@static/icons'
+import { TokenPositionEntry } from '@store/types/userOverview'
 
 interface LegendOverviewProps {
-  sortedPositions: Position[]
+  sortedTokens: TokenPositionEntry[]
   logoColors: Record<string, string>
   tokenColorOverrides: TokenColorOverride[]
 }
@@ -28,47 +25,56 @@ const getContainerHeight = (length: number): string => {
 }
 
 export const LegendOverview: React.FC<LegendOverviewProps> = ({
-  sortedPositions,
+  sortedTokens,
   logoColors,
   tokenColorOverrides
 }) => {
   const { getTokenColor } = useAverageLogoColor()
   const { classes } = useStyles()
-
   return (
     <Box className={classes.container}>
       <Typography className={classes.tokenHeaderLabel}>Tokens</Typography>
-
       <Grid
         container
         spacing={1}
         className={classes.scrollContainer}
         sx={{
-          height: getContainerHeight(sortedPositions.length),
-          overflowY: sortedPositions.length <= 5 ? 'hidden' : 'auto'
+          height: getContainerHeight(sortedTokens.length),
+          overflowY: sortedTokens.length <= 5 ? 'hidden' : 'auto'
         }}>
-        {sortedPositions.map(position => {
+        {sortedTokens.map(token => {
           const textColor = getTokenColor(
-            position.token,
-            logoColors[position.logo ?? ''] ?? '',
+            token.token,
+            logoColors[token.logo ?? ''] ?? '',
             tokenColorOverrides
           )
           return (
-            <Grid key={position.token} item container className={classes.tokenRow}>
+            <Grid item container className={classes.tokenRow} key={token.token}>
               <Grid item xs={2} alignContent='center' className={classes.logoContainer}>
-                <img src={position.logo} alt={`${position.token} logo`} className={classes.logo} />
+                <img src={token.logo} alt={`${token.token} logo`} className={classes.logo} />
               </Grid>
 
               <Grid item xs={3} alignContent='center'>
                 <Typography style={{ ...typography.heading4, color: textColor }}>
-                  {position.token}
+                  {token.token}
                 </Typography>
               </Grid>
 
-              <Grid item xs={7} alignContent='center'>
+              <Grid
+                display='flex'
+                item
+                justifyContent='flex-end'
+                xs={7}
+                alignContent='center'
+                gap={'8px'}>
                 <Typography className={classes.valueText}>
-                  ${formatNumberWithoutSuffix(position.value, { twoDecimals: true })}
+                  ${formatNumberWithoutSuffix(token.value, { twoDecimals: true })}
                 </Typography>
+                {token.isPriceWarning && (
+                  <TooltipHover title='The price might not be shown correctly'>
+                    <img src={warning2Icon} width={14} />
+                  </TooltipHover>
+                )}
               </Grid>
             </Grid>
           )

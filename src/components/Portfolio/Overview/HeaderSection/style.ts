@@ -23,5 +23,8 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
   headerText: {
     ...typography.heading2,
     color: colors.invariant.text
+  },
+  warning: {
+    marginLeft: '8px'
   }
 }))
