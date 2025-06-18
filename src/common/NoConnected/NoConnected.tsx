@@ -1,10 +1,11 @@
 import { Button, Grid, Typography } from '@mui/material'
 import { useStyles } from './style'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 import { ROUTES } from '@utils/utils'
 import { noConnectedIcon } from '@static/icons'
 import { actions } from '@store/reducers/navigation'
+import { useDispatch } from 'react-redux'
 
 export interface INoConnected {
   onConnect: () => void

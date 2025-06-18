@@ -4,7 +4,7 @@ import { useStyles } from './style'
 import { Grid, useMediaQuery } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
 import { VariantType } from 'notistack'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export interface PoolListInterface {
   initialLength: number
@@ -42,9 +42,12 @@ import { ROUTES } from '@utils/utils'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { colors, theme } from '@static/theme'
 import { InputPagination } from '@common/Pagination/InputPagination/InputPagination'
+import { actions } from '@store/reducers/navigation'
+import { useDispatch } from 'react-redux'
 
 const ITEMS_PER_PAGE = 10
-
+const dispatch = useDispatch()
+const location = useLocation()
 const tokens = [BTC_DEV, USDC_DEV, SOL_DEV]
 const fees = [0.01, 0.02, 0.1, 0.3, 1]
 
@@ -227,7 +230,11 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
             desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
             desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
             buttonName='Create Pool'
-            onAction={() => navigate(ROUTES.NEW_POSITION)}
+            onAction={() => {
+              dispatch(actions.setNavigation({ address: location.pathname }))
+
+              navigate(ROUTES.NEW_POSITION)
+            }}
             withButton={true}
             withImg={initialDataLength > 3}
           />
