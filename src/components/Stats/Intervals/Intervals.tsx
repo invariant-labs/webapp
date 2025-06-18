@@ -7,10 +7,12 @@ import { ToggleButton, ToggleButtonGroup } from '@mui/material'
 interface IntervalsProps {
   interval: string
   setInterval: (interval: IntervalsKeys) => void
+  dark?: boolean
+  fullWidth?: boolean
 }
 
-const Intervals: React.FC<IntervalsProps> = ({ interval, setInterval }) => {
-  const { classes } = useStyles({ interval })
+const Intervals: React.FC<IntervalsProps> = ({ interval, setInterval, dark, fullWidth }) => {
+  const { classes } = useStyles({ interval, dark, fullWidth })
 
   const handleIntervalChange = (_: any, newInterval: string) => {
     if (!newInterval) return
