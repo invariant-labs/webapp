@@ -176,6 +176,10 @@ const PoolListItem: React.FC<IProps> = ({
     }
   }, [isSmd])
 
+  useEffect(() => {
+    setShowInfo(false)
+  }, [itemNumber])
+
   const ActionsButtons = (
     <Box className={classes.action}>
       <button
