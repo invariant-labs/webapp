@@ -54,6 +54,7 @@ const TokenListItem: React.FC<IProps> = ({
 
   const isXs = useMediaQuery(theme.breakpoints.down('xs'))
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
+  const isMd = useMediaQuery(theme.breakpoints.down('md'))
 
   const networkUrl = useMemo(() => {
     switch (network) {
@@ -158,7 +159,7 @@ const TokenListItem: React.FC<IProps> = ({
                 : `2px solid ${colors.invariant.light}`
           }}
           classes={{ container: classes.container, root: classes.header }}>
-          {!isXs && !isSm && (
+          {!isMd && (
             <Typography style={{ lineHeight: '12px' }}>
               N<sup>o</sup>
             </Typography>
@@ -172,7 +173,7 @@ const TokenListItem: React.FC<IProps> = ({
                 onSort?.(SortTypeTokenList.NAME_ASC)
               }
             }}>
-            Name
+            Token
             {sortType === SortTypeTokenList.NAME_ASC ? (
               <ArrowDropUpIcon className={classes.icon} />
             ) : sortType === SortTypeTokenList.NAME_DESC ? (

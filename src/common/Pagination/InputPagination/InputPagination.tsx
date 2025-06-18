@@ -1,6 +1,6 @@
 import { Box, Pagination, Typography, useMediaQuery } from '@mui/material'
 import { useStyles } from './style'
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { theme } from '@static/theme'
 
 export interface IPaginationList {
@@ -47,6 +47,8 @@ export const InputPagination: React.FC<IPaginationList> = ({
       setInputValue(page.toString())
     }
   }, [page])
+
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleInputChange = (value: string) => {
     if (value === '') {
@@ -145,6 +147,8 @@ export const InputPagination: React.FC<IPaginationList> = ({
         <Box display='flex' alignItems='center' justifyContent='center' gap={1} width={240}>
           <Typography className={classes.labelText}> Go to</Typography>
           <input
+            enterKeyHint='done'
+            ref={inputRef}
             className={classes.input}
             style={{ width: inputWidth }}
             value={inputValue}
@@ -156,6 +160,14 @@ export const InputPagination: React.FC<IPaginationList> = ({
                 setInputValue('1')
               } else if (parseInt(inputValue) > pages) {
                 setInputValue(String(pages))
+              }
+            }}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                inputRef.current?.blur()
+
+                handleInputChange(e.currentTarget.value)
+                ;(document.activeElement as HTMLElement)?.blur()
               }
             }}
           />
