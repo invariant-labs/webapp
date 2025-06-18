@@ -13,7 +13,7 @@ import {
 import { PlotTickData } from '@store/reducers/positions'
 import { VariantType } from 'notistack'
 import React, { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useStyles } from './style'
 import { ILiquidityToken, INavigatePosition, TokenPriceData } from '@store/consts/types'
 import { addressToTicker, initialXtoY, parseFeeToPathFee, printBN, ROUTES } from '@utils/utils'
@@ -28,6 +28,8 @@ import { Information } from '@common/Information/Information'
 import { eyeYellowIcon } from '@static/icons'
 import { DesktopNavigation } from './Navigation/DesktopNavigation/DesktopNavigation'
 import { PaginationList } from '@common/Pagination/Pagination/Pagination'
+import { actions } from '@store/reducers/navigation'
+import { useDispatch } from 'react-redux'
 interface IProps {
   tokenXAddress: PublicKey
   tokenYAddress: PublicKey
@@ -227,6 +229,8 @@ const PositionDetails: React.FC<IProps> = ({
     }
   }, [midPrice.x, tokenXPriceData?.price, tokenYPriceData?.price])
 
+  const location = useLocation()
+  const dispatch = useDispatch()
   return (
     <Box display='flex' flexDirection={'column'} flex={1}>
       <Information mb={3} transitionTimeout={300} shouldOpen={showPreviewInfo}>
@@ -285,6 +289,7 @@ const PositionDetails: React.FC<IProps> = ({
 
               const tokenA = isXtoY ? address1 : address2
               const tokenB = isXtoY ? address2 : address1
+              dispatch(actions.setNavigation({ address: location.pathname }))
 
               navigate(ROUTES.getNewPositionRoute(tokenA, tokenB, parsedFee))
             }}

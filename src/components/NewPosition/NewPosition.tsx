@@ -30,7 +30,7 @@ import { PlotTickData } from '@store/reducers/positions'
 import { blurContent, unblurContent } from '@utils/uiUtils'
 import { VariantType } from 'notistack'
 import React, { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import ConcentrationTypeSwitch from './ConcentrationTypeSwitch/ConcentrationTypeSwitch'
 import DepositSelector from './DepositSelector/DepositSelector'
 import MarketIdLabel from './MarketIdLabel/MarketIdLabel'
@@ -135,6 +135,7 @@ export interface INewPosition {
   feeTiersWithTvl: Record<number, number>
   totalTvl: number
   isLoadingStats: boolean
+  handleBack: () => void
 }
 
 export const NewPosition: React.FC<INewPosition> = ({
@@ -197,7 +198,8 @@ export const NewPosition: React.FC<INewPosition> = ({
   canNavigate,
   feeTiersWithTvl,
   totalTvl,
-  isLoadingStats
+  isLoadingStats,
+  handleBack
 }) => {
   const { classes } = useStyles()
   const navigate = useNavigate()
@@ -603,12 +605,10 @@ export const NewPosition: React.FC<INewPosition> = ({
 
   return (
     <Grid container className={classes.wrapper}>
-      <Link to={ROUTES.PORTFOLIO} style={{ textDecoration: 'none', maxWidth: 'fit-content' }}>
-        <Grid className={classes.back} container item>
-          <img className={classes.backIcon} src={backIcon} alt='back' />
-          <Typography className={classes.backText}>Positions</Typography>
-        </Grid>
-      </Link>
+      <Grid onClick={() => handleBack()} className={classes.back} container item>
+        <img className={classes.backIcon} src={backIcon} alt='back' />
+        <Typography className={classes.backText}>Back</Typography>
+      </Grid>
 
       <Grid container className={classes.headerContainer} mb={1}>
         <Box className={classes.titleContainer}>

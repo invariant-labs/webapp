@@ -21,6 +21,7 @@ const useStyles = makeStyles()(theme => {
       transition: 'filter 300ms',
 
       '&:hover': {
+        cursor: 'pointer',
         filter: 'brightness(2)',
         '@media (hover: none)': {
           filter: 'none'

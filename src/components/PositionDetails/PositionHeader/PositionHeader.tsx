@@ -9,11 +9,13 @@ import { REFRESHER_INTERVAL } from '@store/consts/static'
 import { useEffect, useMemo, useState } from 'react'
 import { ROUTES, truncateString } from '@utils/utils'
 import { Button } from '@common/Button/Button'
-import { backArrowIcon, newTabIcon } from '@static/icons'
+import { backIcon, newTabIcon } from '@static/icons'
 import { INavigatePosition } from '@store/consts/types'
 import { ReverseTokensIcon } from '@static/componentIcon/ReverseTokensIcon'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { MobileNavigation } from '../Navigation/MobileNavigation/MobileNavigation'
+import { actions } from '@store/reducers/navigation'
+import { useDispatch } from 'react-redux'
 
 type Props = {
   tokenA: {
@@ -66,6 +68,8 @@ export const PositionHeader = ({
   const isSmDown = useMediaQuery(theme.breakpoints.down(688))
   const isMdDown = useMediaQuery(theme.breakpoints.down(1040))
   const isLgDown = useMediaQuery(theme.breakpoints.down('lg'))
+  const location = useLocation()
+  const dispatch = useDispatch()
 
   const [refresherTime, setRefresherTime] = useState(REFRESHER_INTERVAL)
 
@@ -165,8 +169,8 @@ export const PositionHeader = ({
     <Box className={classes.headerContainer}>
       <Box className={classes.navigation}>
         <Box className={cx(classes.wrapper, classes.backContainer)} onClick={() => onGoBackClick()}>
-          <img src={backArrowIcon} alt='Back arrow' />
-          <Typography className={classes.backText}>Back to portfolio</Typography>
+          <img src={backIcon} alt='Back arrow' />
+          <Typography className={classes.backText}>Back</Typography>
         </Box>
         {isMdDown && (
           <Box className={classes.navigationSide}>
@@ -180,6 +184,8 @@ export const PositionHeader = ({
               direction='left'
               onClick={() => {
                 if (previousPosition) {
+                  dispatch(actions.setNavigation({ address: location.pathname }))
+
                   navigate(ROUTES.getPositionRoute(previousPosition.id))
                 }
               }}
@@ -189,6 +195,8 @@ export const PositionHeader = ({
               direction='right'
               onClick={() => {
                 if (nextPosition) {
+                  dispatch(actions.setNavigation({ address: location.pathname }))
+
                   navigate(ROUTES.getPositionRoute(nextPosition.id))
                 }
               }}
