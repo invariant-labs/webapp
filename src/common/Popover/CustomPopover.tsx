@@ -26,7 +26,6 @@ export const CustomPopover = ({
   right,
   bottom,
   fullSpan = false,
-  gradient = false,
   increasePadding = false,
   maxWidth,
   centerOnScreen = false,
