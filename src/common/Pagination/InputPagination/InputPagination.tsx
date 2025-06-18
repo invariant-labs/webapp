@@ -27,16 +27,26 @@ export const InputPagination: React.FC<IPaginationList> = ({
   squeeze = false,
   pagesNumeration,
   variant,
-  activeInput = true
+  activeInput = true,
+  page
 }) => {
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'))
   const matches = useMediaQuery(theme.breakpoints.down('lg'))
 
   const { classes } = useStyles({ borderTop, isMobile })
-  const [currentPage, setCurrentPage] = useState<number | string>(defaultPage)
-  const [inputValue, setInputValue] = useState<string>(defaultPage.toString())
+  const initialPage = page || defaultPage
+
+  const [currentPage, setCurrentPage] = useState<number | string>(initialPage)
+  const [inputValue, setInputValue] = useState<string>(initialPage.toString())
   const [inputWidth, setInputWidth] = useState<number | string>(0)
+
+  useEffect(() => {
+    if (page && page !== currentPage) {
+      setCurrentPage(page)
+      setInputValue(page.toString())
+    }
+  }, [page])
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -94,14 +104,6 @@ export const InputPagination: React.FC<IPaginationList> = ({
       setInputWidth(1 * 12 + 16)
     }
   }, [inputValue])
-
-  useEffect(() => {
-    if (defaultPage) {
-      setCurrentPage(defaultPage)
-      setInputValue(defaultPage.toString())
-      handleChangePage(defaultPage)
-    }
-  }, [pages])
 
   return (
     <Box className={classes.pagination}>
