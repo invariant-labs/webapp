@@ -81,7 +81,6 @@ import dog1Icon from '@static/svg/SolanaCreator/Dog1.svg'
 import dog2Icon from '@static/svg/SolanaCreator/Dog2.svg'
 import cat1Icon from '@static/svg/SolanaCreator/Cat1.svg'
 import cat2Icon from '@static/svg/SolanaCreator/Cat2.svg'
-import backArrowIcon from '@static/svg/back-arrow.svg'
 import eyeYellowIcon from './svg/eyeYellow.svg'
 import closeYellowIcon from './svg/closeYellow.svg'
 import snackbarSwapIcon from './svg/snackbarSwap.svg'
@@ -177,7 +176,6 @@ export {
   solanaFlatIcon,
   liquidityEmptyIcon,
   assetsEmptyIcon,
-  backArrowIcon,
   eyeYellowIcon,
   closeYellowIcon,
   snackbarSwapIcon,

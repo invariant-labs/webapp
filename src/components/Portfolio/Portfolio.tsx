@@ -20,7 +20,7 @@ import { theme } from '@static/theme'
 import { NetworkType } from '@store/consts/static'
 import { addressToTicker, initialXtoY, parseFeeToPathFee, ROUTES } from '@utils/utils'
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useStyles } from './style'
 
 import { SwapToken } from '@store/selectors/solanaWallet'
@@ -34,6 +34,8 @@ import PositionCardsSkeletonMobile from './PositionItem/variants/PositionTables/
 import { PositionItemMobile } from './PositionItem/variants/PositionMobileCard/PositionItemMobile'
 import { refreshIcon } from '@static/icons'
 import { unblurContent } from '@utils/uiUtils'
+import { actions } from '@store/reducers/navigation'
+import { useDispatch } from 'react-redux'
 
 interface IProps {
   initialPage: number
@@ -80,7 +82,8 @@ const Portfolio: React.FC<IProps> = ({
   const isDownLg = useMediaQuery(theme.breakpoints.down('lg'))
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
   const { processedTokens, isProcesing } = useProcessedTokens(tokensList, isBalanceLoading)
-
+  const dispatch = useDispatch()
+  const location = useLocation()
   const [activePanel, setActivePanel] = useState<OverviewSwitcher>(OverviewSwitcher.Overview)
 
   const handleToggleChange =
@@ -248,6 +251,7 @@ const Portfolio: React.FC<IProps> = ({
       <Grid
         onClick={() => {
           if (allowPropagation) {
+            dispatch(actions.setNavigation({ address: location.pathname }))
             navigate(ROUTES.getPositionRoute(element.id))
           }
         }}

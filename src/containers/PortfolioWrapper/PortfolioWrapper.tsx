@@ -16,6 +16,8 @@ import {
   prices,
   shouldDisable
 } from '@store/selectors/positions'
+import { actions as navigationActions } from '@store/reducers/navigation'
+
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { address, balanceLoading, balance, status, swapTokens } from '@store/selectors/solanaWallet'
 import { useEffect, useMemo } from 'react'
@@ -245,6 +247,7 @@ const PortfolioWrapper = () => {
       setLastPage={setLastPage}
       handleRefresh={handleRefresh}
       onAddPositionClick={() => {
+        dispatch(navigationActions.setNavigation({ address: location.pathname }))
         navigate(ROUTES.NEW_POSITION)
       }}
       data={data}

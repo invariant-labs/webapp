@@ -12,11 +12,13 @@ import {
 } from '@store/consts/static'
 import { VariantType } from 'notistack'
 import { Keypair } from '@solana/web3.js'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { colors, theme } from '@static/theme'
 import { ROUTES } from '@utils/utils'
 import { InputPagination } from '@common/Pagination/InputPagination/InputPagination'
+import { useDispatch } from 'react-redux'
+import { actions } from '@store/reducers/navigation'
 
 export interface PoolListInterface {
   initialLength: number
@@ -152,6 +154,8 @@ const PoolList: React.FC<PoolListInterface> = ({
     return sortedData.slice(offest).slice(0, perPage)
   }
 
+  const location = useLocation()
+  const dispatch = useDispatch()
   const totalItems = useMemo(() => sortedData.length, [sortedData])
   const lowerBound = useMemo(() => (page - 1) * ITEMS_PER_PAGE + 1, [page])
   const upperBound = useMemo(() => Math.min(page * ITEMS_PER_PAGE, totalItems), [totalItems, page])
@@ -235,7 +239,11 @@ const PoolList: React.FC<PoolListInterface> = ({
             mainTitle='Pool not found...'
             desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
             desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
-            onAction={() => navigate(ROUTES.NEW_POSITION)}
+            onAction={() => {
+              dispatch(actions.setNavigation({ address: location.pathname }))
+
+              navigate(ROUTES.NEW_POSITION)
+            }}
             buttonName='Create Pool'
             withButton={true}
             withImg={initialDataLength > 3}

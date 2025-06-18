@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import ChangeWalletButton from '@components/Header/HeaderButton/ChangeWalletButton'
 import { ROUTES } from '@utils/utils'
 import { noConnectedIcon } from '@static/icons'
+import { actions } from '@store/reducers/navigation'
 
 export interface INoConnected {
   onConnect: () => void
@@ -13,7 +14,8 @@ export interface INoConnected {
 
 export const NoConnected: React.FC<INoConnected> = ({ onConnect, title, descCustomText }) => {
   const { classes, cx } = useStyles()
-
+  const dispatch = useDispatch()
+  const location = useLocation()
   const navigate = useNavigate()
 
   return (
@@ -32,6 +34,8 @@ export const NoConnected: React.FC<INoConnected> = ({ onConnect, title, descCust
           <Button
             className={classes.buttonPrimary}
             onClick={() => {
+              dispatch(actions.setNavigation({ address: location.pathname }))
+
               navigate(ROUTES.getNewPositionRoute('0_01'))
             }}
             variant='contained'>
