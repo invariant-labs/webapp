@@ -101,6 +101,7 @@ export const WrappedPoolList: React.FC = () => {
         copyAddressHandler={copyAddressHandler}
         isLoading={isLoadingStats}
         showAPY={showAPY}
+        filteredTokens={selectedFilters}
       />
     </div>
   )
