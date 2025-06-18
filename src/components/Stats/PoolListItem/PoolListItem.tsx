@@ -261,7 +261,7 @@ const PoolListItem: React.FC<IProps> = ({
               />
             </TooltipHover>
           </Grid>
-          <Typography>{fee}%</Typography>
+          {fee && typeof fee === 'number' && <Typography>{fee}%</Typography>}
           {!isSmd && showAPY ? (
             <Grid className={classes.row} sx={{ justifyContent: 'space-between' }}>
               <Grid sx={{ display: 'flex', gap: '4px' }}>

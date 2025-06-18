@@ -1,17 +1,15 @@
 import { Box, Typography, useMediaQuery } from '@mui/material'
 import { isLoading, poolsStatsWithTokensDetails } from '@store/selectors/stats'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useStyles from './styles'
 import { VariantType } from 'notistack'
 import { actions as snackbarActions } from '@store/reducers/snackbars'
 import { network } from '@store/selectors/solanaConnection'
-import { actions } from '@store/reducers/stats'
 import LiquidityPoolList from '@components/LiquidityPoolList/LiquidityPoolList'
 import { FilterSearch, ISearchToken } from '@common/FilterSearch/FilterSearch'
 import { theme } from '@static/theme'
 import { unknownTokenIcon } from '@static/icons'
-import { Intervals } from '@store/consts/static'
 
 export const WrappedPoolList: React.FC = () => {
   const isXs = useMediaQuery(theme.breakpoints.down('sm'))
@@ -57,10 +55,6 @@ export const WrappedPoolList: React.FC = () => {
       })
     )
   }
-
-  useEffect(() => {
-    dispatch(actions.getCurrentIntervalStats({ interval: Intervals.Daily }))
-  }, [dispatch])
 
   return (
     <div className={classes.container}>
