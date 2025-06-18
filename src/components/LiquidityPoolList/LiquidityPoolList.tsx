@@ -46,8 +46,6 @@ import { actions } from '@store/reducers/navigation'
 import { useDispatch } from 'react-redux'
 
 const ITEMS_PER_PAGE = 10
-const dispatch = useDispatch()
-const location = useLocation()
 const tokens = [BTC_DEV, USDC_DEV, SOL_DEV]
 const fees = [0.01, 0.02, 0.1, 0.3, 1]
 
@@ -66,6 +64,7 @@ const generateMockData = () => {
     liquidityY: Math.random() * 5000,
     addressFrom: tokens[(index * 2) % tokens.length].address,
     addressTo: tokens[(index * 2 + 1) % tokens.length].address,
+
     apy: Math.random() * 100,
     apyData: {
       fees: 10
@@ -88,6 +87,8 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
   const { classes, cx } = useStyles()
   const [page, setPage] = React.useState(1)
+  const dispatch = useDispatch()
+  const location = useLocation()
   const [sortType, setSortType] = React.useState(SortTypePoolList.FEE_24_DESC)
   const navigate = useNavigate()
   useEffect(() => {
