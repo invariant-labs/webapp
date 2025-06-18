@@ -6,13 +6,14 @@ export const useWrapperStyles = makeStyles()(theme => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: '0px 0 24px',
+    margin: '12px 0px 24px 0px',
     borderRadius: 16,
     border: `1px solid ${colors.invariant.light}`,
     padding: '8px 12px',
 
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column'
+      flexDirection: 'column',
+      margin: '0px'
     }
   },
   divider: {
