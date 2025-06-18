@@ -1,7 +1,8 @@
-import React, { CSSProperties, useRef } from 'react'
+import React, { CSSProperties, ReactNode, useRef } from 'react'
 import useStyles from './style'
 import { Input } from '@mui/material'
 import { Button } from '@common/Button/Button'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 
 interface IProps {
   setValue: (value: string) => void
@@ -14,6 +15,7 @@ interface IProps {
   globalPrice?: number
   onBlur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>
   formatterFunction: (value: string) => string
+  tooltipTitle?: ReactNode
 }
 
 export const SimpleInput: React.FC<IProps> = ({
@@ -26,7 +28,8 @@ export const SimpleInput: React.FC<IProps> = ({
   style,
   globalPrice,
   onBlur,
-  formatterFunction
+  formatterFunction,
+  tooltipTitle = ''
 }) => {
   const { classes, cx } = useStyles()
 
@@ -86,14 +89,20 @@ export const SimpleInput: React.FC<IProps> = ({
       }}
       endAdornment={
         globalPrice ? (
-          <Button
-            scheme='green'
-            height={40}
-            onClick={() => {
-              setValue(formatterFunction(globalPrice.toString()))
-            }}>
-            <p className={classes.suggestedPriceText}>Suggested price</p>
-          </Button>
+          <TooltipHover title={tooltipTitle} placement='bottom'>
+            <Button
+              scheme='green'
+              height={40}
+              onClick={() => {
+                setValue(formatterFunction(globalPrice.toString()))
+              }}>
+              <p className={classes.suggestedPriceText}>
+                {value?.toString() === formatterFunction(globalPrice.toString())
+                  ? 'Existing price applied'
+                  : 'Use existing price'}
+              </p>
+            </Button>
+          </TooltipHover>
         ) : null
       }
     />

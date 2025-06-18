@@ -156,6 +156,17 @@ const useStyles = makeStyles()(theme => {
         minWidth: 82,
         textAlign: 'center'
       }
+    },
+    suggestedPriceTooltipText: {
+      color: colors.invariant.text,
+      ...typography.caption2,
+      fontWeight: 200
+    },
+    boldedText: {
+      fontWeight: 800
+    },
+    tooltipContainer: {
+      maxWidth: 512
     }
   }
 })

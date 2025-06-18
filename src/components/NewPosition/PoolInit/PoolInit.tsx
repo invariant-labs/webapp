@@ -19,7 +19,7 @@ import {
 import { MINIMAL_POOL_INIT_PRICE } from '@store/consts/static'
 import ConcentrationSlider from '../ConcentrationSlider/ConcentrationSlider'
 import { BN } from '@project-serum/anchor'
-import { Button, Grid, Typography } from '@mui/material'
+import { Box, Button, Grid, Typography } from '@mui/material'
 import AnimatedNumber from '@common/AnimatedNumber/AnimatedNumber'
 import { boostPointsIcon } from '@static/icons'
 
@@ -78,8 +78,39 @@ export const PoolInit: React.FC<IPoolInit> = ({
   const [leftInputRounded, setLeftInputRounded] = useState((+leftInput).toFixed(12))
   const [rightInputRounded, setRightInputRounded] = useState((+rightInput).toFixed(12))
 
+  const validateMidPriceInput = (midPriceInput: string) => {
+    if (positionOpeningMethod === 'concentration') {
+      const validatedMidPrice = validConcentrationMidPrice(midPriceInput)
+
+      const validatedPrice =
+        validatedMidPrice < MINIMAL_POOL_INIT_PRICE ? MINIMAL_POOL_INIT_PRICE : validatedMidPrice
+
+      return trimZeros(validatedPrice.toFixed(8))
+    } else {
+      const minPriceFromTick = isXtoY
+        ? calcPriceByTickIndex(minTick, isXtoY, xDecimal, yDecimal)
+        : calcPriceByTickIndex(maxTick, isXtoY, xDecimal, yDecimal)
+
+      const maxPriceFromTick = isXtoY
+        ? calcPriceByTickIndex(maxTick, isXtoY, xDecimal, yDecimal)
+        : calcPriceByTickIndex(minTick, isXtoY, xDecimal, yDecimal)
+
+      const minimalAllowedInput =
+        minPriceFromTick < MINIMAL_POOL_INIT_PRICE ? MINIMAL_POOL_INIT_PRICE : minPriceFromTick
+
+      const numericMidPriceInput = parseFloat(midPriceInput)
+
+      const validatedMidPrice = Math.min(
+        Math.max(numericMidPriceInput, minimalAllowedInput),
+        maxPriceFromTick
+      )
+
+      return trimZeros(validatedMidPrice.toFixed(8))
+    }
+  }
+
   const [midPriceInput, setMidPriceInput] = useState(
-    calcPriceByTickIndex(midPriceIndex, isXtoY, xDecimal, yDecimal).toFixed(8)
+    validateMidPriceInput(globalPrice?.toString() || '')
   )
 
   const validConcentrationMidPrice = (midPrice: string) => {
@@ -218,37 +249,6 @@ export const PoolInit: React.FC<IPoolInit> = ({
     }
   }, [midPriceInput, concentrationArray, midPriceIndex])
 
-  const validateMidPriceInput = (midPriceInput: string) => {
-    if (positionOpeningMethod === 'concentration') {
-      const validatedMidPrice = validConcentrationMidPrice(midPriceInput)
-
-      const validatedPrice =
-        validatedMidPrice < MINIMAL_POOL_INIT_PRICE ? MINIMAL_POOL_INIT_PRICE : validatedMidPrice
-
-      return trimZeros(validatedPrice.toFixed(8))
-    } else {
-      const minPriceFromTick = isXtoY
-        ? calcPriceByTickIndex(minTick, isXtoY, xDecimal, yDecimal)
-        : calcPriceByTickIndex(maxTick, isXtoY, xDecimal, yDecimal)
-
-      const maxPriceFromTick = isXtoY
-        ? calcPriceByTickIndex(maxTick, isXtoY, xDecimal, yDecimal)
-        : calcPriceByTickIndex(minTick, isXtoY, xDecimal, yDecimal)
-
-      const minimalAllowedInput =
-        minPriceFromTick < MINIMAL_POOL_INIT_PRICE ? MINIMAL_POOL_INIT_PRICE : minPriceFromTick
-
-      const numericMidPriceInput = parseFloat(midPriceInput)
-
-      const validatedMidPrice = Math.min(
-        Math.max(numericMidPriceInput, minimalAllowedInput),
-        maxPriceFromTick
-      )
-
-      return trimZeros(validatedMidPrice.toFixed(8))
-    }
-  }
-
   useEffect(() => {
     if (currentPairReversed !== null) {
       const validatedMidPrice = validateMidPriceInput((1 / +midPriceInput).toString())
@@ -298,6 +298,21 @@ export const PoolInit: React.FC<IPoolInit> = ({
             setMidPriceInput(validateMidPriceInput(e.target.value || '0'))
           }}
           formatterFunction={validateMidPriceInput}
+          tooltipTitle={
+            globalPrice ? (
+              <Box className={classes.tooltipContainer}>
+                <span className={classes.suggestedPriceTooltipText}>
+                  {midPriceInput?.toString() === validateMidPriceInput(globalPrice.toString()) ? (
+                    <p>Initial pool price applied based on the global price</p>
+                  ) : (
+                    <p>Set the initial pool price based on the global price</p>
+                  )}
+                </span>
+              </Box>
+            ) : (
+              ''
+            )
+          }
         />
 
         <Grid className={classes.priceWrapper} container>
