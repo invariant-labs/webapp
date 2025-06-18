@@ -15,6 +15,7 @@ export const useStyles = makeStyles<Props>()((_theme, { isHorizontal }) => ({
   },
   name: {
     height: 40,
+    minWidth: 46,
     color: colors.invariant.textGrey,
     background: colors.invariant.light,
     borderRadius: 12,
