@@ -5,7 +5,8 @@ export const useStyles = makeStyles()(theme => ({
   title: {
     color: colors.invariant.text,
     ...typography.heading4,
-    fontWeight: 700
+    fontWeight: 700,
+    textWrap: 'nowrap'
   },
   cardsContainer: {
     width: '100%',
