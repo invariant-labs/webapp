@@ -239,6 +239,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 
   transactionDetailsHeader: {
+    width: 146,
+    display: 'flex',
+    justifyContent: 'center',
     ...typography.caption2,
     whiteSpace: 'nowrap',
     pointerEvents: 'none',
