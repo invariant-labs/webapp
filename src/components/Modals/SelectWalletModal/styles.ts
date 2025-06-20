@@ -2,19 +2,6 @@ import { colors, theme, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles<{ isMobile: boolean }>()((_theme, { isMobile }) => ({
-  modalContainer: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    pointerEvents: 'none',
-    zIndex: 1300,
-    paddingTop: '25%'
-  },
   popoverRoot: {
     position: 'fixed',
     display: 'flex',
@@ -23,14 +10,25 @@ export const useStyles = makeStyles<{ isMobile: boolean }>()((_theme, { isMobile
     overflow: 'auto'
   },
   paper: {
+    alignContent: 'center',
     position: 'relative',
     width: isMobile ? 298 : '520px',
     margin: '16px',
     background: 'transparent',
     boxShadow: 'none',
-    overflow: 'visible'
+    overflow: 'visible',
+    [theme.breakpoints.down('sm')]: {
+      margin: isMobile ? '16px' : 0,
+      maxWidth: isMobile ? 'auto' : '100%',
+      maxHeight: isMobile ? 'auto' : '100%',
+      height: isMobile ? 'auto' : '100%'
+    }
   },
   root: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+
     background: `
         radial-gradient(49.85% 49.85% at 50% 100%, rgba(46, 224, 154, 0.25) 0%, rgba(46, 224, 154, 0) 75%),
         radial-gradient(50.2% 50.2% at 50% 0%, rgba(239, 132, 245, 0.25) 0%, rgba(239, 132, 245, 0) 75%),
@@ -68,7 +66,11 @@ export const useStyles = makeStyles<{ isMobile: boolean }>()((_theme, { isMobile
     width: '100%'
   },
   buttonList: {
-    marginTop: 12
+    marginTop: 12,
+    [theme.breakpoints.down('sm')]: {
+      display: 'flex',
+      gap: 8
+    }
   },
   modalFooter: {
     display: 'flex',
@@ -128,7 +130,9 @@ export const useStyles = makeStyles<{ isMobile: boolean }>()((_theme, { isMobile
     justifyContent: 'center',
     background: colors.invariant.component,
     transition: '300ms',
-
+    [theme.breakpoints.down('sm')]: {
+      padding: 0
+    },
     '&:hover': {
       color: colors.white.main,
       background: colors.invariant.light,
@@ -140,7 +144,10 @@ export const useStyles = makeStyles<{ isMobile: boolean }>()((_theme, { isMobile
       marginBottom: '4px'
     },
     '&:not(:first-of-type)': {
-      margin: '4px 0'
+      margin: '4px 0',
+      [theme.breakpoints.down('sm')]: {
+        margin: 0
+      }
     }
   },
 
@@ -174,7 +181,10 @@ export const useStyles = makeStyles<{ isMobile: boolean }>()((_theme, { isMobile
   buttonContainer: {
     width: 150,
     display: 'flex',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'center'
+    }
   },
   mobileSubtitle: {
     ...typography.body2,
