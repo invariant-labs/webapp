@@ -3,7 +3,6 @@ import { useStyles } from './styles'
 
 export const SkeletonRow = () => {
   const { classes } = useStyles()
-
   return (
     <TableRow>
       <TableCell className={classes.tableCell}>

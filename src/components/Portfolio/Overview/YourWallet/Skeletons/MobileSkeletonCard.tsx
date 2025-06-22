@@ -3,7 +3,6 @@ import { useStyles } from './styles'
 
 export const MobileSkeletonCard = () => {
   const { classes } = useStyles()
-
   return (
     <Box className={classes.mobileCard}>
       <Box className={classes.mobileCardHeader}>

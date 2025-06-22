@@ -34,8 +34,8 @@ export const useStyles = makeStyles()(() => ({
   tokenGrid: {
     marginTop: theme.spacing(1),
     marginLeft: '0 !important',
-    height: 96,
     overflowY: 'auto',
+    height: 96,
     paddingRight: '8px',
     marginRight: '-4px',
     marginBottom: '5px',
@@ -54,10 +54,10 @@ export const useStyles = makeStyles()(() => ({
     paddingLeft: '0',
     marginLeft: '0',
     display: 'flex',
+    height: '24px',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing(1),
-    height: '24px'
+    marginBottom: theme.spacing(1)
   },
   tokenLogoContainer: {
     display: 'flex',

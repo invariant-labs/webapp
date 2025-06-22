@@ -7,6 +7,7 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
     width: '600px',
     backgroundColor: colors.invariant.component,
     borderTopLeftRadius: '24px',
+
     [theme.breakpoints.down('lg')]: {
       borderTopRightRadius: '24px',
       borderRight: `none`,
@@ -16,6 +17,9 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
     },
     [theme.breakpoints.down('md')]: {
       borderRadius: 24
+    },
+    [theme.breakpoints.down('sm')]: {
+      padding: '0px 8px'
     },
     borderRight: `1px solid  ${colors.invariant.light}`,
     display: 'flex',
@@ -56,6 +60,26 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
     height: '100%',
     position: 'relative',
     cursor: 'pointer',
-    transition: 'all 0.2s'
+    transition: 'all 0.3s'
+  },
+  emptyState: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+
+    justifyContent: 'center',
+    padding: '32px',
+    gap: '16px',
+    backgroundColor: colors.invariant.component,
+    marginBottom: 8,
+    [theme.breakpoints.up('lg')]: {
+      background:
+        'linear-gradient(360deg, rgba(32, 41, 70, 0.8) 0%, rgba(17, 25, 49, 0.8) 100%), linear-gradient(180deg, #010514 0%, rgba(1, 5, 20, 0) 100%)'
+    }
+  },
+  emptyStateText: {
+    ...typography.heading2,
+    color: colors.invariant.text,
+    textAlign: 'center'
   }
 }))
