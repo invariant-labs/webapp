@@ -12,8 +12,8 @@ export const usePrices = ({
   tokenX,
   tokenY
 }: {
-  tokenY: { assetsAddress?: string; name?: string }
-  tokenX: { assetsAddress?: string; name?: string }
+  tokenY: { assetsAddress?: string; name?: string; coingeckoId?: string }
+  tokenX: { assetsAddress?: string; name?: string; coingeckoId?: string }
 }) => {
   const networkType = useSelector(network)
 
@@ -29,7 +29,7 @@ export const usePrices = ({
     if (!tokenX || !tokenY) return
 
     const fetchPrices = async () => {
-      getTokenPrice(tokenX.assetsAddress ?? '')
+      getTokenPrice(tokenX.assetsAddress ?? '', tokenX.coingeckoId)
         .then(price => {
           setTokenXPriceData({ price: price.price ?? 0, loading: false })
         })
@@ -40,7 +40,7 @@ export const usePrices = ({
           })
         })
 
-      getTokenPrice(tokenY.assetsAddress ?? '')
+      getTokenPrice(tokenY.assetsAddress ?? '', tokenY.coingeckoId)
         .then(price => setTokenYPriceData({ price: price.price ?? 0, loading: false }))
         .catch(() => {
           setTokenYPriceData({

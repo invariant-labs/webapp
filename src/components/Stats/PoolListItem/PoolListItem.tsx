@@ -261,6 +261,7 @@ const PoolListItem: React.FC<IProps> = ({
               />
             </TooltipHover>
           </Grid>
+          <Typography>{fee}%</Typography>
           {!isSmd && showAPY ? (
             <Grid className={classes.row} sx={{ justifyContent: 'space-between' }}>
               <Grid sx={{ display: 'flex', gap: '4px' }}>
@@ -274,12 +275,12 @@ const PoolListItem: React.FC<IProps> = ({
               </Grid>
             </Grid>
           ) : null}
-          <Typography>{fee}%</Typography>
+
+          <Typography>{`$${formatNumberWithSuffix(volume)}`}</Typography>
+          <Typography className={classes.selfEnd}>{`$${formatNumberWithSuffix(TVL)}`}</Typography>
           {!isSmd && (
             <Typography> ${formatNumberWithSuffix((fee * 0.01 * volume).toFixed(2))}</Typography>
           )}
-          <Typography>{`$${formatNumberWithSuffix(volume)}`}</Typography>
-          <Typography className={classes.selfEnd}>{`$${formatNumberWithSuffix(TVL)}`}</Typography>
           {isSmd && (
             <ArrowDropDownIcon preserveAspectRatio='none' className={classes.extendedRowIcon} />
           )}
@@ -314,7 +315,7 @@ const PoolListItem: React.FC<IProps> = ({
             <>
               <>
                 <Typography component='h5' className={classes.extendedRowTitle}>
-                  Fee ({intervalSuffix}){' '}
+                  Fees ({intervalSuffix}){' '}
                   <span className={classes.extendedRowContent}>
                     ${formatNumberWithSuffix((fee * 0.01 * volume).toFixed(2))}
                   </span>
@@ -373,13 +374,30 @@ const PoolListItem: React.FC<IProps> = ({
                 onSort?.(SortTypePoolList.NAME_ASC)
               }
             }}>
-            Name
+            Pool
             {sortType === SortTypePoolList.NAME_ASC ? (
               <ArrowDropUpIcon className={classes.icon} />
             ) : sortType === SortTypePoolList.NAME_DESC ? (
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
+          <Typography
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              if (sortType === SortTypePoolList.FEE_ASC) {
+                onSort?.(SortTypePoolList.FEE_DESC)
+              } else {
+                onSort?.(SortTypePoolList.FEE_ASC)
+              }
+            }}>
+            Fee
+            {sortType === SortTypePoolList.FEE_ASC ? (
+              <ArrowDropUpIcon className={classes.icon} />
+            ) : sortType === SortTypePoolList.FEE_DESC ? (
+              <ArrowDropDownIcon className={classes.icon} />
+            ) : null}
+          </Typography>
+
           {!isSmd && showAPY ? (
             <Typography
               className={classes.row}
@@ -402,40 +420,6 @@ const PoolListItem: React.FC<IProps> = ({
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              if (sortType === SortTypePoolList.FEE_ASC) {
-                onSort?.(SortTypePoolList.FEE_DESC)
-              } else {
-                onSort?.(SortTypePoolList.FEE_ASC)
-              }
-            }}>
-            Fee
-            {sortType === SortTypePoolList.FEE_ASC ? (
-              <ArrowDropUpIcon className={classes.icon} />
-            ) : sortType === SortTypePoolList.FEE_DESC ? (
-              <ArrowDropDownIcon className={classes.icon} />
-            ) : null}
-          </Typography>
-          {!isSmd && (
-            <Typography
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                if (sortType === SortTypePoolList.FEE_24_DESC) {
-                  onSort?.(SortTypePoolList.FEE_24_ASC)
-                } else {
-                  onSort?.(SortTypePoolList.FEE_24_DESC)
-                }
-              }}>
-              Fee {intervalSuffix}
-              {sortType === SortTypePoolList.FEE_24_ASC ? (
-                <ArrowDropUpIcon className={classes.icon} />
-              ) : sortType === SortTypePoolList.FEE_24_DESC ? (
-                <ArrowDropDownIcon className={classes.icon} />
-              ) : null}
-            </Typography>
-          )}
-          <Typography
-            style={{ cursor: 'pointer' }}
-            onClick={() => {
               if (sortType === SortTypePoolList.VOLUME_DESC) {
                 onSort?.(SortTypePoolList.VOLUME_ASC)
               } else {
@@ -449,6 +433,7 @@ const PoolListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
+
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {
@@ -465,6 +450,24 @@ const PoolListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
+          {!isSmd && (
+            <Typography
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                if (sortType === SortTypePoolList.FEE_24_DESC) {
+                  onSort?.(SortTypePoolList.FEE_24_ASC)
+                } else {
+                  onSort?.(SortTypePoolList.FEE_24_DESC)
+                }
+              }}>
+              Fees {intervalSuffix}
+              {sortType === SortTypePoolList.FEE_24_ASC ? (
+                <ArrowDropUpIcon className={classes.icon} />
+              ) : sortType === SortTypePoolList.FEE_24_DESC ? (
+                <ArrowDropDownIcon className={classes.icon} />
+              ) : null}
+            </Typography>
+          )}
           {!isMd && <Typography align='right'>Action</Typography>}
         </Grid>
       )}
