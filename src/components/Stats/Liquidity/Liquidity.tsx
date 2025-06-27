@@ -8,7 +8,12 @@ import { Grid, Typography, useMediaQuery } from '@mui/material'
 import { formatNumberWithoutSuffix, trimZeros } from '@utils/utils'
 import { formatLargeNumber } from '@utils/formatLargeNumber'
 import { Intervals as IntervalsKeys } from '@store/consts/static'
-import { formatPlotDataLabels, getLabelDate, mapIntervalToPrecision } from '@utils/uiUtils'
+import {
+  formatPlotDataLabels,
+  getLabelDate,
+  mapIntervalToPrecision,
+  mapIntervalToString
+} from '@utils/uiUtils'
 
 interface LiquidityInterface {
   liquidityVolume: number | null
@@ -40,7 +45,14 @@ const Liquidity: React.FC<LiquidityInterface> = ({
   lastStatsTimestamp
 }) => {
   const { classes, cx } = useStyles()
+
+  const intervalSuffix = mapIntervalToString(interval)
+
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const isMdUp = useMediaQuery(theme.breakpoints.up('md'))
+  const isLgDown = useMediaQuery(theme.breakpoints.down('lg'))
+
+  const isTablet = isMdUp && isLgDown
 
   liquidityVolume = liquidityVolume ?? 0
 
@@ -48,7 +60,7 @@ const Liquidity: React.FC<LiquidityInterface> = ({
     <Grid className={cx(classes.container, className)}>
       <Grid className={classes.liquidityContainer}>
         <Grid container justifyContent={'space-between'} alignItems='center'>
-          <Typography className={classes.liquidityHeader}>Liquidity</Typography>
+          <Typography className={classes.liquidityHeader}>Liquidity {intervalSuffix}</Typography>
         </Grid>
         <Grid className={classes.volumePercentHeader}>
           <Typography className={classes.volumeLiquidityHeader}>
@@ -116,7 +128,9 @@ const Liquidity: React.FC<LiquidityInterface> = ({
             tickPadding: 10,
             tickRotation: 0,
             format: time =>
-              isLoading ? '' : formatPlotDataLabels(time, data.length, interval, isMobile),
+              isLoading
+                ? ''
+                : formatPlotDataLabels(time, data.length, interval, isMobile || isTablet),
             tickValues: isLoading ? [] : mapIntervalToPrecision(interval)
           }}
           axisLeft={{
