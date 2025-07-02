@@ -17,7 +17,14 @@ import {
   shouldDisable
 } from '@store/selectors/positions'
 import { actions as snackbarsActions } from '@store/reducers/snackbars'
-import { address, balanceLoading, balance, status, swapTokens } from '@store/selectors/solanaWallet'
+import {
+  address,
+  balanceLoading,
+  status,
+  swapTokens,
+  balance,
+  overviewSwitch
+} from '@store/selectors/solanaWallet'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -58,6 +65,7 @@ const PortfolioWrapper = () => {
   const dispatch = useDispatch()
   const isConnected = useMemo(() => walletStatus === Status.Initialized, [walletStatus])
   const solBalance = useSelector(balance)
+  const overviewSelectedTab = useSelector(overviewSwitch)
 
   const canClosePosition = useMemo(() => {
     if (currentNetwork === NetworkType.Mainnet) {
@@ -261,6 +269,8 @@ const PortfolioWrapper = () => {
       handleClosePosition={handleClosePosition}
       handleClaimFee={handleClaimFee}
       noInitialPositions={list.length === 0}
+      overviewSelectedTab={overviewSelectedTab}
+      handleOverviewSwitch={option => dispatch(walletActions.setOverviewSwitch(option))}
     />
   ) : (
     <Grid className={classes.emptyContainer}>
