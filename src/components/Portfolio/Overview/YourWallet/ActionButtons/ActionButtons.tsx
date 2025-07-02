@@ -1,5 +1,5 @@
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
-import { Box } from '@mui/material'
+import { Box, useMediaQuery } from '@mui/material'
 import { horizontalSwapIcon, newTabBtnIcon, plusIcon } from '@static/icons'
 import { getAddressTickerMap, NetworkType } from '@store/consts/static'
 import { StrategyConfig, WalletToken } from '@store/types/userOverview'
@@ -7,6 +7,7 @@ import { addressToTicker, ROUTES } from '@utils/utils'
 import { useNavigate } from 'react-router-dom'
 import { useStyles } from './styles'
 import { useMemo } from 'react'
+import { theme } from '@static/theme'
 
 interface IActionButtons {
   pool: WalletToken
@@ -17,6 +18,7 @@ interface IActionButtons {
 export const ActionButtons = ({ pool, strategy, currentNetwork }: IActionButtons) => {
   const navigate = useNavigate()
   const { classes } = useStyles()
+  const isMd = useMediaQuery(theme.breakpoints.down('md'))
 
   const networkUrl = useMemo(() => {
     switch (currentNetwork) {
@@ -55,7 +57,7 @@ export const ActionButtons = ({ pool, strategy, currentNetwork }: IActionButtons
               }
             )
           }}>
-          <img src={plusIcon} height={24} width={24} alt='Add' />
+          <img src={plusIcon} height={isMd ? 30 : 24} width={isMd ? 30 : 24} alt='Add' />
         </Box>
       </TooltipHover>
       <TooltipHover title='Exchange'>
@@ -78,7 +80,7 @@ export const ActionButtons = ({ pool, strategy, currentNetwork }: IActionButtons
               }
             )
           }}>
-          <img src={horizontalSwapIcon} height={24} width={24} alt='Add' />
+          <img src={horizontalSwapIcon} height={isMd ? 30 : 24} width={isMd ? 30 : 24} alt='Add' />
         </Box>
       </TooltipHover>
       <TooltipHover title='Open in explorer'>
@@ -91,7 +93,12 @@ export const ActionButtons = ({ pool, strategy, currentNetwork }: IActionButtons
               'noopener,noreferrer'
             )
           }}>
-          <img width={24} height={24} src={newTabBtnIcon} alt={'Exchange'} />
+          <img
+            height={isMd ? 30 : 24}
+            width={isMd ? 30 : 24}
+            src={newTabBtnIcon}
+            alt={'Exchange'}
+          />
         </Box>
       </TooltipHover>
     </>
