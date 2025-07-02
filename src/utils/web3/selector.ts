@@ -7,7 +7,7 @@ export const nightlyConnectAdapter: NightlyConnectAdapter = await NightlyConnect
     appMetadata: {
       name: 'Invariant',
       description: 'Invariant - AMM DEX provided concentrated liquidity',
-      icon: 'https://invariant.app/favicon-192x192.png'
+      icon: 'https://solana.invariant.app/favicon-192x192.png'
     },
     url: 'https://nc2.nightly.app',
     persistent: true
