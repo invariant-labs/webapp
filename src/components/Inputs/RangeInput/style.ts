@@ -103,7 +103,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       height: 36
     },
     [theme.breakpoints.down('sm')]: {
-      ...typography.caption2
+      ...typography.body2
     }
   },
   diffWrapper: {

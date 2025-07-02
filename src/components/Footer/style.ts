@@ -25,7 +25,7 @@ const useStyles = makeStyles()(theme => {
         opacity: 1,
         transform: 'scale(1.1) rotate(10deg)',
         '@media (hover: none)': {
-          opacity: 0.5,
+          opacity: 0.25,
           transform: 'none'
         }
       }
