@@ -1,8 +1,13 @@
-import { colors, typography } from '@static/theme'
+import { colors, theme, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()(() => {
   return {
+    root: {
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
+    },
     paper: {
       background: 'none',
       backgroundColor: 'transparent',
@@ -31,6 +36,9 @@ export const useStyles = makeStyles()(() => {
       '& h2': {
         ...typography.heading4,
         paddingBottom: 10
+      },
+      [theme.breakpoints.down('sm')]: {
+        width: 'auto'
       }
     },
 
