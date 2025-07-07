@@ -39,7 +39,7 @@ export const YourPointsModal: React.FC<ISelectNetworkModal> = ({ anchorEl, open,
                 height={32}
                 onClick={() => {
                   handleClose()
-                  window.open('https://invariant.app/points', '_blank')
+                  window.open('https://eclipse.invariant.app/points', '_blank')
                 }}>
                 <Typography fontSize={13}>Invariant Eclipse Points</Typography>
               </Button>
