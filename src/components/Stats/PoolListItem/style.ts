@@ -24,7 +24,7 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
     color: colors.white.main,
     display: 'grid',
     alignItems: 'center',
-    gridTemplateColumns: '40px auto  120px 190px 140px  120px 120px 120px',
+    gridTemplateColumns: '70px auto 120px 190px 140px 120px 120px 150px',
     padding: '20px 26px 14px 24px',
     whiteSpace: 'nowrap',
 
@@ -42,13 +42,13 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
     },
 
     [theme.breakpoints.down(1160)]: {
-      gridTemplateColumns: 'auto 120px 190px 140px 120px 100px'
+      gridTemplateColumns: '40px auto 120px 190px 140px 120px 100px'
     },
 
     [theme.breakpoints.down('md')]: {
       height: !showInfo ? 69 : 104,
 
-      gridTemplateColumns: 'auto 100px 130px 80px 24px',
+      gridTemplateColumns: '40px auto 130px 130px 80px 24px',
       rowGap: 25,
       cursor: 'pointer'
     },
@@ -57,28 +57,34 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
       height: !showInfo ? 69 : 143,
 
       rowGap: 20,
-      gridTemplateColumns: 'auto 23% 22% 17% 24px',
+      gridTemplateColumns: '30px auto 23% 22% 17% 24px',
       padding: '20px 4px 16px 8px',
 
       '& p': {
         justifyContent: 'flex-start',
         ...typography.caption1
       },
-      '& > p:nth-of-type(4)': {
+      '& > p:nth-of-type(5)': {
+        justifyContent: 'flex-end'
+      },
+      '& > div:nth-of-type(6)': {
         justifyContent: 'flex-end'
       }
     }
   },
 
   containerNoAPY: {
-    gridTemplateColumns: '30px auto 120px 120px 140px 120px 150px',
+    gridTemplateColumns: '70px auto 120px 140px 120px 120px 150px',
 
     [theme.breakpoints.down(1160)]: {
-      gridTemplateColumns: 'auto 100px 80px 120px'
+      gridTemplateColumns: '40px auto 120px 140px 120px 100px'
     },
 
     [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: 'auto 100px 140px 80px 24px'
+      gridTemplateColumns: '40px auto 130px 130px 80px 24px'
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: '30px auto 23% 22% 17% 24px'
     },
 
     cursor: 'pointer'
@@ -339,5 +345,17 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
     [theme.breakpoints.down('sm')]: {
       ...typography.caption1
     }
+  },
+  tokenIndexContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+
+  tokenIndex: {
+    width: 32
+  },
+
+  favouriteButton: {
+    cursor: 'pointer'
   }
 }))

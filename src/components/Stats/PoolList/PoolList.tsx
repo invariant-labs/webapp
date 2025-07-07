@@ -12,7 +12,7 @@ import {
 } from '@store/consts/static'
 import { VariantType } from 'notistack'
 import { Keypair } from '@solana/web3.js'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { colors, theme } from '@static/theme'
 import { ROUTES } from '@utils/utils'
@@ -20,6 +20,8 @@ import { InputPagination } from '@common/Pagination/InputPagination/InputPaginat
 import { poolSearch } from '@store/selectors/navigation'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@store/reducers/navigation'
+import { shortenAddress } from '@utils/uiUtils'
+import { ISearchToken } from '@common/FilterSearch/FilterSearch'
 
 export interface PoolListInterface {
   initialLength: number
@@ -51,6 +53,9 @@ export interface PoolListInterface {
   isLoading: boolean
   showAPY: boolean
   interval: Intervals
+  filteredTokens: ISearchToken[]
+  switchFavouritePool: (poolAddress: string) => void
+  showFavourites: boolean
 }
 
 const ITEMS_PER_PAGE = 10
@@ -90,10 +95,16 @@ const PoolList: React.FC<PoolListInterface> = ({
   copyAddressHandler,
   isLoading,
   showAPY,
-  interval
+  interval,
+  filteredTokens,
+  switchFavouritePool,
+  showFavourites
 }) => {
   const searchParam = useSelector(poolSearch)
   const dispatch = useDispatch()
+  const location = useLocation()
+  const filteredTokenX = filteredTokens[0] ?? ''
+  const filteredTokenY = filteredTokens[1] ?? ''
 
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
   const { classes, cx } = useStyles()
@@ -225,6 +236,8 @@ const PoolList: React.FC<PoolListInterface> = ({
               copyAddressHandler={copyAddressHandler}
               showAPY={showAPY}
               interval={interval}
+              isFavourite={element.isFavourite}
+              switchFavouritePool={switchFavouritePool}
             />
           ))}
           {getEmptyRowsCount() > 0 &&
@@ -243,17 +256,39 @@ const PoolList: React.FC<PoolListInterface> = ({
         </>
       ) : (
         <Grid container className={classes.emptyContainer}>
-          <EmptyPlaceholder
-            newVersion
-            height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
-            mainTitle='Pool not found...'
-            desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
-            desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
-            onAction={() => navigate(ROUTES.NEW_POSITION)}
-            buttonName='Create Pool'
-            withButton={true}
-            withImg={initialDataLength > 3}
-          />
+          {showFavourites ? (
+            <EmptyPlaceholder
+              height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
+              newVersion
+              mainTitle={`You don't have any favourite pools yet...`}
+              desc={'You can add them by clicking the star icon next to the pool!'}
+              withButton={false}
+            />
+          ) : (
+            <EmptyPlaceholder
+              newVersion
+              height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
+              mainTitle={`The ${shortenAddress(filteredTokenX.symbol ?? '')}/${shortenAddress(filteredTokenY.symbol ?? '')} pool was not found...`}
+              desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
+              desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
+              onAction={() => {
+                dispatch(actions.setNavigation({ address: location.pathname }))
+                navigate(
+                  ROUTES.getNewPositionRoute(
+                    filteredTokenX.address,
+                    filteredTokenY.address,
+                    '0_10'
+                  ),
+                  {
+                    state: { referer: 'stats' }
+                  }
+                )
+              }}
+              buttonName='Create Pool'
+              withButton={true}
+              withImg={initialDataLength > 3}
+            />
+          )}
         </Grid>
       )}
       <Grid

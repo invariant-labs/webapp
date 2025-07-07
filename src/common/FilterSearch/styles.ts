@@ -10,7 +10,7 @@ export const useStyles = makeStyles<{ isSmall: boolean }>()((_theme: Theme, { is
     background: colors.invariant.black,
     border: '1px solid #202946',
     color: colors.invariant.light,
-    width: isSmall ? '100%' : 424,
+    width: isSmall ? '100%' : 350,
     display: 'flex',
     alignItems: 'center'
   },

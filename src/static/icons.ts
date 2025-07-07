@@ -92,8 +92,12 @@ import warning3 from './svg/warning3.svg'
 import centerToRangeIcon from './svg/centerToRange.svg'
 import connectWalletIcon from './svg/connectWalletIcon.svg'
 import warning2Icon from './svg/warning2.svg'
+import star from './svg/star.svg'
+import starFill from './svg/star-fill.svg'
 
 export {
+  star,
+  starFill,
   dog1Icon,
   dog2Icon,
   cat1Icon,

@@ -4,7 +4,7 @@ import { useStyles } from './style'
 import { Grid, useMediaQuery } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
 import { VariantType } from 'notistack'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { liquiditySearch } from '@store/selectors/navigation'
 import { actions } from '@store/reducers/navigation'
@@ -38,6 +38,9 @@ export interface PoolListInterface {
   copyAddressHandler: (message: string, variant: VariantType) => void
   isLoading: boolean
   showAPY: boolean
+  filteredTokens: ISearchToken[]
+  switchFavouritePool: (poolAddress: string) => void
+  showFavourites: boolean
 }
 
 import { Keypair } from '@solana/web3.js'
@@ -45,6 +48,8 @@ import { ROUTES } from '@utils/utils'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { colors, theme } from '@static/theme'
 import { InputPagination } from '@common/Pagination/InputPagination/InputPagination'
+import { ISearchToken } from '@common/FilterSearch/FilterSearch'
+import { shortenAddress } from '@utils/uiUtils'
 
 const ITEMS_PER_PAGE = 10
 
@@ -83,13 +88,19 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
 
   copyAddressHandler,
   isLoading,
-  showAPY
+  showAPY,
+  filteredTokens,
+  switchFavouritePool,
+  showFavourites
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
   const { classes, cx } = useStyles()
   const searchParam = useSelector(liquiditySearch)
   const page = searchParam.pageNumber
   const [sortType, setSortType] = React.useState(searchParam.sortType)
+  const location = useLocation()
+  const filteredTokenX = filteredTokens[0] ?? ''
+  const filteredTokenY = filteredTokens[1] ?? ''
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -173,6 +184,24 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
   const lowerBound = useMemo(() => (page - 1) * ITEMS_PER_PAGE + 1, [page])
   const upperBound = useMemo(() => Math.min(page * ITEMS_PER_PAGE, totalItems), [totalItems, page])
 
+  const favouriteEmptyPlaceholderMainTitle = useMemo(() => {
+    if (filteredTokenX && filteredTokenY) {
+      return `You don't have any favourite ${shortenAddress(filteredTokenX.symbol ?? '')}/${shortenAddress(
+        filteredTokenY.symbol ?? ''
+      )} pools yet...`
+    }
+
+    if (filteredTokenX && !filteredTokenY) {
+      return `You don't have any favourite ${shortenAddress(filteredTokenX.symbol ?? '')} pools yet...`
+    }
+
+    if (!filteredTokenX && filteredTokenY) {
+      return `You don't have any favourite ${shortenAddress(filteredTokenY.symbol ?? '')} pools yet...`
+    }
+
+    return `You don't have any favourite pools yet...`
+  }, [filteredTokenX, filteredTokenY])
+
   return (
     <Grid
       container
@@ -215,6 +244,8 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
               poolAddress={element.poolAddress}
               copyAddressHandler={copyAddressHandler}
               showAPY={showAPY}
+              isFavourite={element.isFavourite}
+              switchFavouritePool={switchFavouritePool}
             />
           ))}
           {getEmptyRowsCount() > 0 &&
@@ -235,17 +266,39 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
         </>
       ) : (
         <Grid container className={classes.emptyWrapper}>
-          <EmptyPlaceholder
-            height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
-            newVersion
-            mainTitle='Pool not found...'
-            desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
-            desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
-            buttonName='Create Pool'
-            onAction={() => navigate(ROUTES.NEW_POSITION)}
-            withButton={true}
-            withImg={initialDataLength > 3}
-          />
+          {showFavourites ? (
+            <EmptyPlaceholder
+              height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
+              newVersion
+              mainTitle={favouriteEmptyPlaceholderMainTitle}
+              desc={'You can add them by clicking the star icon next to the pool!'}
+              withButton={false}
+            />
+          ) : (
+            <EmptyPlaceholder
+              height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
+              newVersion
+              mainTitle={`The ${shortenAddress(filteredTokenX.symbol ?? '')}/${shortenAddress(filteredTokenY.symbol ?? '')} pool was not found...`}
+              desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
+              desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
+              buttonName='Create Pool'
+              onAction={() => {
+                dispatch(actions.setNavigation({ address: location.pathname }))
+                navigate(
+                  ROUTES.getNewPositionRoute(
+                    filteredTokenX.address,
+                    filteredTokenY.address,
+                    '0_10'
+                  ),
+                  {
+                    state: { referer: 'stats' }
+                  }
+                )
+              }}
+              withButton={true}
+              withImg={initialDataLength > 3}
+            />
+          )}
         </Grid>
       )}
       <Grid
