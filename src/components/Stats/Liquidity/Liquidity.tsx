@@ -5,15 +5,23 @@ import { colors, theme, typography } from '@static/theme'
 import { useStyles } from './style'
 import { TimeData } from '@store/reducers/stats'
 import { Grid, Typography, useMediaQuery } from '@mui/material'
-import { formatNumberWithSuffix, trimZeros } from '@utils/utils'
+import { formatNumberWithoutSuffix, trimZeros } from '@utils/utils'
 import { formatLargeNumber } from '@utils/formatLargeNumber'
+import { Intervals as IntervalsKeys } from '@store/consts/static'
+import {
+  formatPlotDataLabels,
+  getLabelDate,
+  mapIntervalToPrecision,
+  mapIntervalToString
+} from '@utils/uiUtils'
 
 interface LiquidityInterface {
-  liquidityPercent: number | null
   liquidityVolume: number | null
   data: TimeData[]
   className?: string
   isLoading: boolean
+  interval: IntervalsKeys
+  lastStatsTimestamp: number
 }
 
 // const GRAPH_ENTRIES = 30
@@ -29,88 +37,101 @@ interface LiquidityInterface {
 // }
 
 const Liquidity: React.FC<LiquidityInterface> = ({
-  liquidityPercent,
   liquidityVolume,
   data,
   className,
-  isLoading
+  isLoading,
+  interval,
+  lastStatsTimestamp
 }) => {
   const { classes, cx } = useStyles()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
-  liquidityPercent = liquidityPercent ?? 0
+  const intervalSuffix = mapIntervalToString(interval)
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const isMdUp = useMediaQuery(theme.breakpoints.up('md'))
+  const isLgDown = useMediaQuery(theme.breakpoints.down('lg'))
+
+  const isTablet = isMdUp && isLgDown
+
   liquidityVolume = liquidityVolume ?? 0
 
-  const isLower = liquidityPercent < 0
-  const percentage = isLoading ? Math.random() * 200 - 100 : liquidityPercent
-
-  const cleanedData = data.length
-    ? data
-        .filter(item => item.value !== null && item.value !== undefined && !isNaN(item.value))
-        .map(({ timestamp, value }) => ({
-          x: new Date(timestamp),
-          y: value
-        }))
-    : [{ x: new Date(), y: 0 }]
-
   return (
-    <Grid className={cx(classes.container, className, { [classes.loadingOverlay]: isLoading })}>
+    <Grid className={cx(classes.container, className)}>
       <Grid className={classes.liquidityContainer}>
-        <Typography className={classes.liquidityHeader}>Liquidity</Typography>
+        <Grid container justifyContent={'space-between'} alignItems='center'>
+          <Typography className={classes.liquidityHeader}>Liquidity {intervalSuffix}</Typography>
+        </Grid>
         <Grid className={classes.volumePercentHeader}>
           <Typography className={classes.volumeLiquidityHeader}>
-            ${formatNumberWithSuffix(isLoading ? Math.random() * 10000 : liquidityVolume)}
+            ${formatNumberWithoutSuffix(isLoading ? Math.random() * 10000 : liquidityVolume)}
           </Typography>
-          <Grid className={classes.volumeStatusContainer}>
-            <Grid
-              className={cx(
-                classes.volumeStatusColor,
-                isLower ? classes.backgroundVolumeLow : classes.backgroundVolumeUp
-              )}>
-              <Typography
-                component='p'
-                className={cx(
-                  classes.volumeStatusHeader,
-                  isLower ? classes.volumeLow : classes.volumeUp
-                )}>
-                {percentage < 0 ? percentage.toFixed(2) : `+${percentage.toFixed(2)}`}%
-              </Typography>
-            </Grid>
-          </Grid>
         </Grid>
       </Grid>
       <Grid className={classes.barContainer}>
         <ResponsiveLine
-          data={[{ id: 'liquidity', data: cleanedData }]}
+          key={`${interval}-${isLoading}`}
+          animate={false}
+          sliceTooltip={() => <></>}
+          enableCrosshair
+          enablePointLabel={false}
+          debugSlices={false}
+          enableSlices={false}
+          debugMesh={false}
+          areaBaselineValue={0}
+          pointBorderWidth={0}
+          areaBlendMode='normal'
+          pointLabel=''
+          pointBorderColor=''
+          pointColor=''
+          areaOpacity={0.4}
+          pointSize={2}
+          yScale={{
+            min: 0,
+            max: 'auto',
+            type: 'linear'
+          }}
+          layers={[
+            'grid',
+            'markers',
+            'areas',
+            'lines',
+            'points',
+            'slices',
+            'mesh',
+            'legends',
+            'axes',
+            'crosshair'
+          ]}
+          data={[
+            {
+              id: 'liquidity',
+              data: data.map(({ timestamp, value }) => ({
+                x: new Date(timestamp),
+                y: value
+              }))
+            }
+          ]}
           margin={
             isMobile
-              ? { top: 24, bottom: 24, left: 30, right: 12 }
+              ? { top: 24, bottom: 24, left: 30, right: 18 }
               : { top: 24, bottom: 24, left: 30, right: 24 }
           }
           xScale={{
             type: 'time',
-            format: '%d/%m/%Y',
+            format: 'native',
             precision: 'day',
             useUTC: false
           }}
-          yScale={{
-            type: 'linear'
-          }}
-          debugMesh={false}
-          areaBlendMode='normal'
-          areaOpacity={0.2}
-          areaBaselineValue={0}
-          enableCrosshair={true}
-          enableSlices={false}
-          debugSlices={false}
-          sliceTooltip={() => null}
           axisBottom={{
             tickSize: 0,
             tickPadding: 10,
             tickRotation: 0,
-            tickValues:
-              data.length >= 24 ? 'every 4 days' : data.length >= 8 ? 'every 2 days' : 'every day',
-            format: '%d/%m'
+            format: time =>
+              isLoading
+                ? ''
+                : formatPlotDataLabels(time, data.length, interval, isMobile || isTablet),
+            tickValues: isLoading ? [] : mapIntervalToPrecision(interval)
           }}
           axisLeft={{
             tickSize: 0,
@@ -128,27 +149,10 @@ const Liquidity: React.FC<LiquidityInterface> = ({
               </g>
             )
           }}
-          layers={[
-            'grid',
-            'markers',
-            'axes',
-            'areas',
-            'lines',
-            'points',
-            'slices',
-            'mesh',
-            'legends'
-          ]}
-          pointLabel='y'
-          pointSize={6}
           gridYValues={5}
-          enablePointLabel
-          pointBorderColor={{ from: 'color', modifiers: [['darker', 0.3]] }}
-          pointBorderWidth={1}
           legends={[]}
           axisTop={null}
           axisRight={null}
-          pointColor={{ theme: 'background' }}
           curve={'monotoneX'}
           role='aplication'
           enableGridX={false}
@@ -157,7 +161,6 @@ const Liquidity: React.FC<LiquidityInterface> = ({
           enableArea={true}
           isInteractive
           useMesh
-          animate
           colors={colors.invariant.green}
           theme={{
             axis: {
@@ -180,23 +183,23 @@ const Liquidity: React.FC<LiquidityInterface> = ({
             linearGradientDef('gradient', [
               { offset: 0, color: 'inherit' },
               { offset: 50, color: 'inherit' },
-              { offset: 100, color: 'inherit', opacity: 0 }
+              { offset: 100, color: 'inherit', opacity: 0.2 }
             ])
           ]}
           fill={[{ match: '*', id: 'gradient' }]}
           crosshairType='bottom'
           tooltip={({ point }) => {
-            const date = point.data.x as Date
-            const day = date.getDate()
-            const month = date.getMonth() + 1
+            const date = getLabelDate(
+              interval,
+              (point.data.x as Date).getTime(),
+              lastStatsTimestamp
+            )
 
             return (
               <Grid className={classes.tooltip}>
-                <Typography className={classes.tooltipDate}>{`${day < 10 ? '0' : ''}${day}/${
-                  month < 10 ? '0' : ''
-                }${month}`}</Typography>
+                <Typography className={classes.tooltipDate}>{date}</Typography>
                 <Typography className={classes.tooltipValue}>
-                  ${formatNumberWithSuffix(point.data.y as number)}
+                  ${formatNumberWithoutSuffix(point.data.y as number)}
                 </Typography>
               </Grid>
             )

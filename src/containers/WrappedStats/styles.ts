@@ -4,7 +4,7 @@ import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()((theme: Theme) => ({
   wrapper: {
-    maxWidth: 1072,
+    maxWidth: 1210,
     minHeight: '100%',
     flexDirection: 'column'
   },
@@ -15,16 +15,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   subheader: {
     ...typography.heading4,
-    color: colors.white.main,
-    marginBottom: 24
-  },
-  plotsRow: {
-    marginBottom: 24,
-    flexDirection: 'row',
-
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column'
-    }
+    color: colors.white.main
   },
   row: {
     marginBottom: 16
@@ -33,22 +24,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     width: 150,
     height: 150,
     margin: 'auto'
-  },
-  plot: {
-    width: 524,
-
-    '&:first-of-type': {
-      marginRight: 24
-    },
-
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-
-      '&:first-of-type': {
-        marginRight: 0,
-        marginBottom: 24
-      }
-    }
   },
   searchBar: {
     width: 221,

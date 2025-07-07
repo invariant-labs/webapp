@@ -1,7 +1,7 @@
 import { colors, theme, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
-export const useStyles = makeStyles()(() => ({
+export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInfo = false }) => ({
   wrapper: {
     maxWidth: '100%',
     '&:nth-of-type(odd)': {
@@ -14,61 +14,107 @@ export const useStyles = makeStyles()(() => ({
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
       background: colors.invariant.component,
-      borderBottom: `1px solid ${colors.invariant.light}`
+      borderBottom: `2px solid ${colors.invariant.light}`
     }
   },
+
   container: {
-    height: 69,
+    transition: 'all 0.3s',
+    height: !showInfo ? 69 : 135,
     color: colors.white.main,
     display: 'grid',
-    gridTemplateColumns: '30px auto 160px 80px 140px 100px 160px',
-    padding: '18px 24px',
-    borderBottom: `1px solid ${colors.invariant.light}`,
+    alignItems: 'center',
+    gridTemplateColumns: '40px auto  120px 190px 140px  120px 120px 120px',
+    padding: '20px 26px 14px 24px',
     whiteSpace: 'nowrap',
+
+    boxSizing: 'border-box',
 
     '& p': {
       ...typography.heading4,
-      display: 'flex',
       justifyContent: 'flex-start',
       alignItems: 'center'
     },
-    '& p:last-child': {
-      justifyContent: 'flex-end'
+    [theme.breakpoints.up(1160)]: {
+      '& p:last-child': {
+        justifyContent: 'flex-end'
+      }
+    },
+
+    [theme.breakpoints.down(1160)]: {
+      gridTemplateColumns: 'auto 120px 190px 140px 120px 100px'
     },
 
     [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: 'auto 140px 100px 80px 120px'
-    },
+      height: !showInfo ? 69 : 104,
 
-    '@media (max-width: 780px)': {
-      gridTemplateColumns: 'auto 100px 140px 80px'
+      gridTemplateColumns: 'auto 100px 130px 80px 24px',
+      rowGap: 25,
+      cursor: 'pointer'
     },
 
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: 'auto 60px 60px 60px',
-      padding: '18px 8px',
+      height: !showInfo ? 69 : 143,
+
+      rowGap: 20,
+      gridTemplateColumns: 'auto 23% 22% 17% 24px',
+      padding: '20px 4px 16px 8px',
 
       '& p': {
         justifyContent: 'flex-start',
         ...typography.caption1
+      },
+      '& > p:nth-of-type(4)': {
+        justifyContent: 'flex-end'
       }
     }
   },
+
   containerNoAPY: {
-    gridTemplateColumns: '5% auto 12% 15% 12% 160px'
+    gridTemplateColumns: '30px auto 120px 120px 140px 120px 150px',
+
+    [theme.breakpoints.down(1160)]: {
+      gridTemplateColumns: 'auto 100px 80px 120px'
+    },
+
+    [theme.breakpoints.down('md')]: {
+      gridTemplateColumns: 'auto 100px 140px 80px 24px'
+    },
+
+    cursor: 'pointer'
   },
+
   imageContainer: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '100%',
+    paddingRight: 12,
+
+    '& p': {
+      maxWidth: 'calc(100% - 80px);',
+
+      paddingRight: 4,
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis'
+    }
   },
 
   iconsWrapper: {
     display: 'flex',
-    height: 28
+    marginRight: 8
   },
-
+  selfEnd: {
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-end',
+      textAlign: 'end'
+    }
+  },
   header: {
+    height: '69px',
     '& p.MuiTypography-root': {
+      display: 'flex',
+
       color: colors.invariant.textGrey,
       ...typography.heading4,
       fontWeight: 600,
@@ -139,19 +185,23 @@ export const useStyles = makeStyles()(() => ({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    gap: 8
+    minWidth: 'max-content',
+    gap: 8,
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-end',
+      visibility: showInfo ? 'visible' : 'hidden',
+      gridColumn: 'span 3'
+    }
   },
   actionButton: {
     height: 32,
-    background: 'none',
     width: 32,
+    background: 'none',
     padding: 0,
     margin: 0,
     border: 'none',
-
     color: colors.invariant.black,
     textTransform: 'none',
-
     transition: 'filter 0.3s linear',
 
     '&:hover': {
@@ -160,6 +210,22 @@ export const useStyles = makeStyles()(() => ({
       '@media (hover: none)': {
         filter: 'none'
       }
+    },
+    [theme.breakpoints.down('sm')]: {
+      height: 28,
+      width: 28
+    }
+  },
+  airdropIcon: {
+    marginRight: 15,
+    marginBottom: 6,
+    [theme.breakpoints.down(1160)]: {
+      marginRight: 25
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 6,
+      marginBottom: 12
     }
   },
   iconContainer: {
@@ -174,7 +240,15 @@ export const useStyles = makeStyles()(() => ({
     maxWidth: 24,
     height: 24,
     marginRight: 3,
-    borderRadius: '50%'
+    borderRadius: '50%',
+    ':last-of-type': {
+      marginRight: 8
+    },
+    [theme.breakpoints.down('sm')]: {
+      ':last-of-type': {
+        marginRight: 0
+      }
+    }
   },
   warningIcon: {
     position: 'absolute',
@@ -198,6 +272,7 @@ export const useStyles = makeStyles()(() => ({
   },
   row: {
     display: 'flex',
+    alignItems: 'center',
     gap: 4,
     fontSize: 30,
     height: 32
@@ -206,5 +281,63 @@ export const useStyles = makeStyles()(() => ({
     fontSize: 12,
     alignSelf: 'flex-end',
     color: colors.invariant.textGrey
+  },
+  apyLabel: {
+    color: colors.invariant.textGrey,
+    marginTop: 4,
+    marginRight: 4,
+    fontSize: '15px !important'
+  },
+  extendedRowIcon: {
+    justifySelf: 'end',
+    alignSelf: 'center',
+    display: 'flex',
+    height: 24,
+    padding: 0,
+    width: 20,
+    fontSize: 10,
+    cursor: 'pointer',
+    fill: colors.invariant.green,
+    transition: 'all 0.3s ease',
+    transform: showInfo ? 'rotate(180deg)' : 'rotate(0deg)'
+  },
+  extendedRowPlaceholder: {
+    flex: '0 0 0',
+    width: 0,
+    height: 0
+  },
+  extendedRowTitle: {
+    visibility: showInfo ? 'visible' : 'hidden',
+    flex: '0 0 auto',
+    ...typography.body3,
+    display: 'flex',
+    flexWrap: 'nowrap',
+    textWrap: 'nowrap',
+    gap: 6,
+
+    color: colors.invariant.textGrey,
+
+    [theme.breakpoints.down('sm')]: {
+      ...typography.caption1
+    },
+    [theme.breakpoints.up('sm')]: {
+      ':last-of-type': {
+        justifySelf: 'end'
+      }
+    }
+  },
+  extendedAPY: {
+    gridColumn: 'span 2'
+  },
+
+  extendedRowContent: {
+    flexWrap: 'nowrap',
+
+    ...typography.body3,
+    fontWeight: 700,
+    color: colors.invariant.text,
+    [theme.breakpoints.down('sm')]: {
+      ...typography.caption1
+    }
   }
 }))

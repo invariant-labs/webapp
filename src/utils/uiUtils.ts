@@ -2,6 +2,7 @@ import { BN } from '@project-serum/anchor'
 import { printBN, trimDecimalZeros } from './utils'
 import { PublicKey } from '@solana/web3.js'
 import { SwapToken } from '@store/selectors/solanaWallet'
+import { Intervals, MONTH_NAMES } from '@store/consts/static'
 
 export const toBlur = 'global-blur'
 export const addressTickerMap: { [key: string]: string } = {
@@ -110,4 +111,146 @@ export const getButtonClassName = ({
 }: GetButtonClassNameParams): string => {
   const variant = variants.find(v => v.label.toLowerCase() === label.toLowerCase())
   return `${defaultClass}  ${variant?.className}`
+}
+
+export const mapIntervalToPrecision = (interval: Intervals): string => {
+  switch (interval) {
+    case Intervals.Daily:
+      return 'every 1 day'
+    case Intervals.Weekly:
+      return 'every 1 week'
+    case Intervals.Monthly:
+      return 'every 1 month'
+    case Intervals.Yearly:
+      return 'every 1 year'
+  }
+}
+
+export const mapIntervalToString = (interval: Intervals): string => {
+  switch (interval) {
+    case Intervals.Daily:
+      return '24H'
+    case Intervals.Weekly:
+      return '1W'
+    case Intervals.Monthly:
+      return '1M'
+    case Intervals.Yearly:
+      return '1Y'
+  }
+}
+export const formatPlotDataLabels = (
+  time: number,
+  entries: number,
+  interval: Intervals,
+  reduceLabels: boolean = false
+): string => {
+  const date = new Date(time)
+  const day = date.getDate()
+  const month = date.getMonth() + 1
+  const year = date.getFullYear()
+  switch (interval) {
+    case Intervals.Monthly: {
+      const monthName = MONTH_NAMES[month - 1].slice(0, 3)
+      const monthMod = month % 3
+      if (monthMod !== 0) return ''
+      return monthName + ' ' + year.toString().slice(-2) + "'"
+    }
+    case Intervals.Daily: {
+      const dayMod =
+        Math.floor(time / (1000 * 60 * 60 * 24)) % (entries >= 8 ? (reduceLabels ? 4 : 3) : 1)
+      return dayMod === 0 ? `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}` : ''
+    }
+    case Intervals.Weekly: {
+      const dayOfWeek = date.getDay() // 0 = Sunday, 1 = Monday, etc.
+      const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek
+      const weekStart = new Date(date)
+      weekStart.setDate(date.getDate() + mondayOffset)
+
+      const weekNumber = Math.floor(weekStart.getTime() / (1000 * 60 * 60 * 24 * 7))
+      const weekMod = weekNumber % (entries >= 8 ? (reduceLabels ? 4 : 2) : 1)
+
+      if (weekMod !== 0) return ''
+
+      const startDay = weekStart.getDate()
+      const startMonth = weekStart.getMonth() + 1
+      return `${startDay < 10 ? '0' : ''}${startDay}/${startMonth < 10 ? '0' : ''}${startMonth}`
+    }
+    case Intervals.Yearly: {
+      return year.toString()
+    }
+  }
+}
+
+export const getLabelDate = (
+  interval: Intervals,
+  timestamp: number,
+  latestTimestamp: number
+): string => {
+  const date = new Date(timestamp)
+  const now = new Date(latestTimestamp)
+  const day = date.getDate()
+  const month = date.getMonth() + 1
+  const year = date.getFullYear()
+  const monthName = MONTH_NAMES[month - 1].slice(0, 3)
+
+  const formatDay = (d: number) => `${d < 10 ? '0' : ''}${d}`
+
+  if (interval === Intervals.Daily) {
+    return `${day < 10 ? '0' : ''}${day} ${monthName}`
+  } else if (interval === Intervals.Weekly) {
+    // Calculate start of week (Monday-based)
+    const dayOfWeek = date.getDay() // 0 = Sunday, 1 = Monday, etc.
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek
+
+    const weekStart = new Date(date)
+    weekStart.setDate(date.getDate() + mondayOffset)
+
+    const weekEnd = new Date(weekStart)
+    weekEnd.setDate(weekStart.getDate() + 6)
+
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const weekStartDate = new Date(
+      weekStart.getFullYear(),
+      weekStart.getMonth(),
+      weekStart.getDate()
+    )
+    const weekEndDate = new Date(weekEnd.getFullYear(), weekEnd.getMonth(), weekEnd.getDate())
+
+    if (weekStartDate <= todayStart && todayStart <= weekEndDate) {
+      weekEnd.setTime(now.getTime())
+    }
+
+    const startDay = weekStart.getDate()
+    const startMonth = weekStart.getMonth()
+    const startMonthName = MONTH_NAMES[startMonth].slice(0, 3)
+
+    const endDay = weekEnd.getDate()
+    const endMonth = weekEnd.getMonth()
+    const endMonthName = MONTH_NAMES[endMonth].slice(0, 3)
+
+    if (startMonth === endMonth && startDay === endDay) {
+      return `${formatDay(startDay)} ${startMonthName}`
+    } else {
+      return `${formatDay(startDay)} ${startMonthName} - ${formatDay(endDay)} ${endMonthName}`
+    }
+  } else if (interval === Intervals.Monthly) {
+    const monthEnd = new Date(year, date.getMonth() + 1, 0)
+
+    if (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
+      monthEnd.setTime(now.getTime())
+      const startDay = 1
+      const endDay = monthEnd.getDate()
+      if (startDay === endDay) {
+        return `${formatDay(startDay)} ${monthName}`
+      }
+
+      return `${formatDay(startDay)} ${monthName} - ${formatDay(endDay)} ${monthName}`
+    } else {
+      return MONTH_NAMES[month - 1] + ' ' + year
+    }
+  } else if (interval === Intervals.Yearly) {
+    return year.toString()
+  }
+
+  return `${day < 10 ? '0' : ''}${day} ${monthName}`
 }

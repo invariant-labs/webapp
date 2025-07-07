@@ -1,20 +1,21 @@
-import { Grid, TableRow, TableCell, Typography, useMediaQuery, Box, Skeleton } from '@mui/material'
+import { Grid, TableCell, Typography, useMediaQuery, Box, Skeleton } from '@mui/material'
 
 import { useMemo, useState } from 'react'
 import { colors, theme } from '@static/theme'
+import { swapListIcon, warning2Icon } from '@static/icons'
 import { initialXtoY, tickerToAddress, formatNumberWithoutSuffix } from '@utils/utils'
 import { useSelector } from 'react-redux'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
+import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import React from 'react'
 import { blurContent, unblurContent } from '@utils/uiUtils'
 import { singlePositionData } from '@store/selectors/positions'
-import PositionViewActionPopover from '@components/Modals/PositionViewActionPopover/PositionViewActionPopover'
 import { useTokenValues } from '@store/hooks/positionList/useTokenValues'
 import { Button } from '@common/Button/Button'
 import { IPositionItem } from '@store/consts/types'
-import { MinMaxChart } from '@components/Portfolio/PositionItem/components/MinMaxChart/MinMaxChart'
 import { useStyles } from './style'
-import { swapListIcon } from '@static/icons'
+import { useSkeletonStyle } from '../skeletons/skeletons'
+import { MinMaxChart } from '@components/Portfolio/PositionItem/components/MinMaxChart/MinMaxChart'
 
 interface ILoadingStates {
   pairName?: boolean
@@ -33,6 +34,7 @@ interface IPositionsTableRow extends IPositionItem {
   handleLockPosition: (index: number) => void
   handleClosePosition: (index: number) => void
   handleClaimFee: (index: number) => void
+  createNewPosition: () => void
   shouldDisable: boolean
 }
 
@@ -42,6 +44,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   tokenXIcon,
   tokenYIcon,
   currentPrice,
+  isFullRange,
   id,
   fee,
   min,
@@ -54,13 +57,14 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   tokenYLiq,
   network,
   loading,
-  unclaimedFeesInUSD = { value: 0, loading: false },
+  unclaimedFeesInUSD = { value: 0, loading: false, isClaimAvailable: false },
   handleClaimFee,
-  isFullRange,
   handleClosePosition,
+  createNewPosition,
   shouldDisable
 }) => {
   const { classes, cx } = useStyles()
+  const { classes: skeletonClasses } = useSkeletonStyle()
   const [xToY, setXToY] = useState<boolean>(
     initialXtoY(tickerToAddress(network, tokenXName), tickerToAddress(network, tokenYName))
   )
@@ -86,11 +90,11 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   const pairNameContent = useMemo(() => {
     if (isItemLoading('pairName')) {
       return (
-        <Box className={classes.skeletonWrapper}>
-          <Skeleton variant='circular' width={40} height={40} />
-          <Skeleton variant='circular' width={36} height={36} />
-          <Skeleton variant='circular' width={40} height={40} />
-          <Skeleton variant='rectangular' className={classes.skeleton100x60} />
+        <Box className={skeletonClasses.skeletonBox}>
+          <Skeleton variant='circular' className={skeletonClasses.skeletonCircle40} />
+          <Skeleton variant='circular' className={skeletonClasses.skeletonCircle36} />
+          <Skeleton variant='circular' className={skeletonClasses.skeletonCircle40} />
+          <Skeleton variant='rectangular' className={skeletonClasses.skeletonRect100x36} />
         </Box>
       )
     }
@@ -130,7 +134,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
 
   const feeFragment = useMemo(() => {
     if (isItemLoading('feeTier')) {
-      return <Skeleton variant='rectangular' className={classes.skeleton3660} />
+      return <Skeleton variant='rectangular' className={skeletonClasses.skeletonRect60x36} />
     }
     return (
       <TooltipHover
@@ -165,18 +169,8 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
 
   const tokenRatioContent = useMemo(() => {
     if (isItemLoading('tokenRatio')) {
-      return <Skeleton variant='rectangular' className={classes.skeleton36Rect} />
+      return <Skeleton variant='rectangular' className={skeletonClasses.skeletonRectFullWidth36} />
     }
-
-    const displayTokenYName =
-      tokenYPercentage !== 100 && tokenYName.length > 5
-        ? tokenYName.slice(0, 5) + '...'
-        : tokenYName
-
-    const displayTokenXName =
-      tokenXPercentage !== 100 && tokenXName.length > 5
-        ? tokenXName.slice(0, 5) + '...'
-        : tokenXName
 
     return (
       <Typography
@@ -189,40 +183,30 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
         {tokenXPercentage === 100 && (
           <span>
             {tokenXPercentage}
-            {'%'} {xToY ? displayTokenXName : displayTokenYName}
+            {'%'} {xToY ? tokenXName : tokenYName}
           </span>
         )}
         {tokenYPercentage === 100 && (
           <span>
             {tokenYPercentage}
-            {'%'} {xToY ? displayTokenYName : displayTokenXName}
+            {'%'} {xToY ? tokenYName : tokenXName}
           </span>
         )}
+
         {tokenYPercentage !== 100 && tokenXPercentage !== 100 && (
           <span>
             {tokenXPercentage}
-            {'%'} {xToY ? displayTokenXName : displayTokenYName} {' - '}
-            {tokenYPercentage}
-            {'%'} {xToY ? displayTokenYName : displayTokenXName}
+            {'%'} {xToY ? tokenXName : tokenYName} {' - '} {tokenYPercentage}
+            {'%'} {xToY ? tokenYName : tokenXName}
           </span>
         )}
       </Typography>
     )
-  }, [
-    tokenXPercentage,
-    tokenYPercentage,
-    xToY,
-    tokenXName,
-    tokenYName,
-    isItemLoading,
-    classes.infoText,
-    classes.skeleton36Rect,
-    colors.invariant.light
-  ])
+  }, [tokenXPercentage, tokenYPercentage, xToY, tokenXName, tokenYName, loading])
 
   const valueFragment = useMemo(() => {
     if (isItemLoading('value') || tokenValueInUsd.loading) {
-      return <Skeleton className={classes.skeleton36Rect} />
+      return <Skeleton variant='rectangular' className={skeletonClasses.skeletonRectFullWidth36} />
     }
 
     return (
@@ -231,6 +215,11 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
           <Typography className={classes.greenText}>
             {`$${formatNumberWithoutSuffix(tokenValueInUsd.value, { twoDecimals: true })}`}
           </Typography>
+          {tokenValueInUsd.priceWarning && (
+            <TooltipHover title='The price might not be shown correctly'>
+              <img src={warning2Icon} style={{ marginLeft: '4px' }} width={14} />
+            </TooltipHover>
+          )}
         </Grid>
       </Grid>
     )
@@ -249,7 +238,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
 
   const unclaimedFee = useMemo(() => {
     if (isItemLoading('unclaimedFee') || unclaimedFeesInUSD.loading) {
-      return <Skeleton className={classes.skeleton36Rect} />
+      return <Skeleton variant='rectangular' className={skeletonClasses.skeletonRectFullWidth36} />
     }
     return (
       <Grid container item className={`${classes.value} ${classes.itemCellContainer}`}>
@@ -264,7 +253,7 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
 
   const chartFragment = useMemo(() => {
     if (isItemLoading('chart')) {
-      return <Skeleton variant='rectangular' />
+      return <Skeleton variant='rectangular' className={skeletonClasses.skeletonRectFullWidth36} />
     }
 
     return (
@@ -281,9 +270,8 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
 
   const actionsFragment = useMemo(() => {
     if (isItemLoading('actions')) {
-      return <Skeleton variant='rectangular' className={classes.skeleton30Rect} />
+      return <Skeleton variant='rectangular' className={skeletonClasses.skeletonRect32x32} />
     }
-
     return (
       <Button
         scheme='green'
@@ -312,15 +300,16 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
   }
 
   return (
-    <TableRow>
+    <>
       <PositionViewActionPopover
         shouldDisable={shouldDisable}
         anchorEl={anchorEl}
         handleClose={handleClose}
         open={isActionPopoverOpen}
-        unclaimedFeesInUSD={unclaimedFeesInUSD.value}
+        unclaimedFeesInUSD={unclaimedFeesInUSD}
         claimFee={() => handleClaimFee(positionSingleData?.positionIndex ?? 0)}
         closePosition={() => handleClosePosition(positionSingleData?.positionIndex ?? 0)}
+        createPosition={createNewPosition}
       />
       <TableCell className={`${classes.pairNameCell} ${classes.cellBase}`}>
         {pairNameContent}
@@ -343,6 +332,6 @@ export const PositionTableRow: React.FC<IPositionsTableRow> = ({
       <TableCell className={`${classes.cellBase} ${classes.actionCell} action-button`}>
         {actionsFragment}
       </TableCell>
-    </TableRow>
+    </>
   )
 }

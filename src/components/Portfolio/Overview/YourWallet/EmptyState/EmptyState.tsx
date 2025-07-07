@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material'
-import { useStyles } from './styles'
 import { assetsEmptyIcon } from '@static/icons'
+import { useStyles } from './styles'
 
 export const EmptyState = () => {
   const { classes } = useStyles()

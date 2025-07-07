@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import PriceRangePlot, { TickPlotPositionData } from '@common/PriceRangePlot/PriceRangePlot'
 import RangeInput from '@components/Inputs/RangeInput/RangeInput'
 import { PlotTickData } from '@store/reducers/positions'
@@ -19,7 +19,7 @@ import {
 } from '@utils/utils'
 import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { Box, Button, Grid, Typography } from '@mui/material'
-import { boostPointsIcon } from '@static/icons'
+import { boostPointsIcon, warning3 } from '@static/icons'
 
 export interface IRangeSelector {
   updatePath: (concIndex: number) => void
@@ -95,7 +95,6 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
   poolIndex,
   hasTicksError,
   reloadHandler,
-  volumeRange,
   concentrationArray,
   minimumSliderIndex,
   concentrationIndex,
@@ -157,7 +156,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
 
       handleUpdateConcentrationFromURL(concentrationValue)
     }
-  }, [poolIndex])
+  }, [])
 
   useEffect(() => {
     isMountedRef.current = true
@@ -191,6 +190,51 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
       setPlotMin(newMin)
       setPlotMax(newMax)
     }
+  }
+
+  const moveLeft = () => {
+    const diff = plotMax - plotMin
+
+    const minPrice = isXtoY
+      ? calcPriceByTickIndex(getMinTick(tickSpacing), isXtoY, xDecimal, yDecimal)
+      : calcPriceByTickIndex(getMaxTick(tickSpacing), isXtoY, xDecimal, yDecimal)
+
+    const newLeft = plotMin - diff / 6
+    const newRight = plotMax - diff / 6
+
+    if (newLeft < minPrice - diff / 2) {
+      setPlotMin(minPrice - diff / 2)
+      setPlotMax(minPrice + diff / 2)
+    } else {
+      setPlotMin(newLeft)
+      setPlotMax(newRight)
+    }
+  }
+
+  const moveRight = () => {
+    const diff = plotMax - plotMin
+
+    const maxPrice = isXtoY
+      ? calcPriceByTickIndex(getMaxTick(tickSpacing), isXtoY, xDecimal, yDecimal)
+      : calcPriceByTickIndex(getMinTick(tickSpacing), isXtoY, xDecimal, yDecimal)
+
+    const newLeft = plotMin + diff / 6
+    const newRight = plotMax + diff / 6
+
+    if (newRight > maxPrice + diff / 2) {
+      setPlotMin(maxPrice - diff / 2)
+      setPlotMax(maxPrice + diff / 2)
+    } else {
+      setPlotMin(newLeft)
+      setPlotMax(newRight)
+    }
+  }
+
+  const centerChart = () => {
+    const diff = plotMax - plotMin
+
+    setPlotMin(midPrice.x - diff / 2)
+    setPlotMax(midPrice.x + diff / 2)
   }
 
   const setLeftInputValues = (val: string) => {
@@ -454,6 +498,12 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
     autoZoomHandler(leftRange, rightRange, true)
   }, [tokenASymbol, tokenBSymbol])
 
+  const showPriceWarning = useMemo(() => {
+    const lowerBound = midPrice.x * 0.9
+    const upperBound = midPrice.x * 1.1
+    return (globalPrice ?? 0) < lowerBound || (globalPrice ?? 0) > upperBound
+  }, [globalPrice, midPrice.x])
+
   return (
     <Grid container className={classes.wrapper}>
       <Grid className={classes.topInnerWrapper}>
@@ -465,16 +515,22 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
                 {formatNumberWithoutSuffix(midPrice.x)} {tokenBSymbol} per {tokenASymbol}
               </Typography>
             )}
-            {poolIndex !== null && usdcPrice !== null && usdcPrice.price ? (
+            {poolIndex !== null && usdcPrice !== null && usdcPrice.price && (
               <Typography className={classes.usdcCurrentPrice}>
                 {usdcPrice.token} ${formatNumberWithoutSuffix(usdcPrice.price)}
               </Typography>
-            ) : (
-              <Box minHeight={20} />
+            )}
+            {showPriceWarning && !blocked && !ticksLoading && (
+              <Box className={classes.priceWarningContainer}>
+                <img className={classes.priceWarningIcon} src={warning3} alt='warning icon' />
+                <Typography className={classes.priceWarning}>
+                  The pool price may differ from the actual price
+                </Typography>
+              </Box>
             )}
           </Grid>
 
-          <Grid display={'flex'} flexDirection='column' alignItems={'flex-end'}>
+          <Grid display={'flex'} flexDirection='column' alignItems={'flex-end'} flexShrink={0}>
             <Typography className={classes.currentPrice}>Current price</Typography>
             <Typography className={classes.globalPrice}>Global price</Typography>
             <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>
@@ -483,33 +539,35 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         </Grid>
         <PriceRangePlot
           className={classes.plot}
-          data={data}
+          plotData={data}
           onChangeRange={changeRangeHandler}
-          leftRange={{
+          leftRangeData={{
             index: leftRange,
             x: calcPriceByTickIndex(leftRange, isXtoY, xDecimal, yDecimal)
           }}
-          rightRange={{
+          rightRangeData={{
             index: rightRange,
             x: calcPriceByTickIndex(rightRange, isXtoY, xDecimal, yDecimal)
           }}
-          midPrice={midPrice}
+          midPriceData={midPrice}
           globalPrice={globalPrice}
-          plotMin={plotMin}
-          plotMax={plotMax}
+          plotMinData={plotMin}
+          plotMaxData={plotMax}
           zoomMinus={zoomMinus}
           zoomPlus={zoomPlus}
-          loading={ticksLoading}
+          loading={ticksLoading && !blocked}
           isXtoY={isXtoY}
-          tickSpacing={tickSpacing}
+          spacing={tickSpacing}
           xDecimal={xDecimal}
           yDecimal={yDecimal}
           disabled={positionOpeningMethod === 'concentration'}
           hasError={hasTicksError}
           reloadHandler={reloadHandler}
-          volumeRange={volumeRange}
           tokenAPriceData={tokenAPriceData}
           tokenBPriceData={tokenBPriceData}
+          moveLeft={moveLeft}
+          moveRight={moveRight}
+          centerChart={centerChart}
         />
         {/* <FormControlLabel
           control={
@@ -527,7 +585,7 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
         /> */}
       </Grid>
       <Grid container className={classes.innerWrapper}>
-        <Grid container className={classes.conWrapper}>
+        <Grid container className={classes.subheaderWrapper}>
           <Typography className={classes.subheader}>Set price range</Typography>
           {positionOpeningMethod === 'range' && (
             <Grid className={classes.rangeConcentration}>

@@ -9,12 +9,11 @@ import {
   TableHead,
   TableRow
 } from '@mui/material'
-
 import { useNavigate } from 'react-router-dom'
-import { usePositionTableStyle } from './style'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { generatePositionTableLoadingData, ROUTES } from '@utils/utils'
 import { IPositionItem } from '@store/consts/types'
+import { usePositionTableStyle } from './style'
 import { PositionTableRow } from '../PositionTablesRow/PositionsTableRow'
 
 interface IPositionsTableProps {
@@ -23,7 +22,8 @@ interface IPositionsTableProps {
   onAddPositionClick?: () => void
   isLoading?: boolean
   handleClosePosition: (index: number) => void
-  handleClaimFee: (index: number) => void
+  handleClaimFee: (index: number, isLocked: boolean) => void
+  createNewPosition: (element: IPositionItem) => void
   shouldDisable: boolean
 }
 
@@ -34,6 +34,7 @@ export const PositionsTable: React.FC<IPositionsTableProps> = ({
   isLoading = false,
   handleClosePosition,
   handleClaimFee,
+  createNewPosition,
   shouldDisable
 }) => {
   const { classes } = usePositionTableStyle({ isScrollHide: positions.length <= 5 || isLoading })
@@ -96,6 +97,7 @@ export const PositionsTable: React.FC<IPositionsTableProps> = ({
                   loading={isLoading}
                   handleClosePosition={handleClosePosition}
                   handleClaimFee={handleClaimFee}
+                  createNewPosition={() => createNewPosition(position)}
                 />
               </TableRow>
             ))}

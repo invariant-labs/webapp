@@ -25,7 +25,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     filter: 'grayscale(1)'
   },
   itemCellContainer: {
-    width: 100,
+    width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexWrap: 'nowrap',
@@ -50,7 +50,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   tokenRatioCell: {
     paddingLeft: '15px',
 
-    width: '18%',
+    width: '19%',
     '& > .MuiTypography-root': {
       margin: '0 auto',
       maxWidth: '90%'
@@ -59,7 +59,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
 
   valueCell: {
     paddingLeft: 0,
-    width: '10%',
+    width: '11%',
     '& .MuiGrid-root': {
       margin: '0 auto',
       justifyContent: 'center'
@@ -81,7 +81,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 
   actionCell: {
-    width: '8%',
+    width: '6%',
     padding: '14px 8px',
     '& > .MuiButton-root': {
       margin: '0 auto'
@@ -212,7 +212,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   infoCenter: {
     flex: '1 1 0%',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 
   value: {
@@ -221,33 +222,5 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     height: 36,
     paddingInline: 12,
     marginRight: 8
-  },
-  skeleton30Rect: {
-    width: 32,
-    height: 32,
-    borderRadius: '10px',
-    margin: '0 auto'
-  },
-  skeleton36Rect: {
-    width: '100%',
-    height: 36,
-    borderRadius: '10px',
-    margin: '0 auto'
-  },
-  skeleton3660: {
-    width: '60px',
-    height: 36,
-    borderRadius: '10px'
-  },
-  skeleton100x60: {
-    width: 100,
-    height: 36,
-    marginLeft: theme.spacing(1.5),
-    borderRadius: '10px'
-  },
-  skeletonWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px'
   }
 }))

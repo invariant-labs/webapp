@@ -1,17 +1,10 @@
-import { alpha } from '@mui/material'
-import { typography, colors, theme } from '@static/theme'
+import { typography, colors } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles()(() => ({
   container: {
-    backgroundColor: colors.invariant.component,
     borderRadius: 24,
-    padding: 24,
-    boxSizing: 'border-box',
-
-    [theme.breakpoints.down('sm')]: {
-      padding: '24px 8px'
-    }
+    boxSizing: 'border-box'
   },
   volumeContainer: {
     display: 'flex',
@@ -82,18 +75,5 @@ export const useStyles = makeStyles()(() => ({
     ...typography.caption1,
     color: colors.invariant.pink,
     textAlign: 'center'
-  },
-  loadingOverlay: {
-    position: 'relative',
-    '&::after': {
-      content: '""',
-      position: 'absolute',
-      inset: 0,
-      backgroundColor: alpha(colors.invariant.newDark, 0.7),
-      backdropFilter: 'blur(4px)',
-      zIndex: 1,
-      pointerEvents: 'none',
-      borderRadius: '24px'
-    }
   }
 }))

@@ -29,6 +29,8 @@ const TokensDetailsSnackbar: React.FC<ITokensDetailsSnackbar> = ({
   tokenYAmount,
   tokenXIcon,
   tokenYIcon,
+  tokenXSymbol,
+  tokenYSymbol,
   handleDismiss,
   tokenXAmountAutoSwap,
   tokenYAmountAutoSwap,
@@ -106,11 +108,19 @@ const TokensDetailsSnackbar: React.FC<ITokensDetailsSnackbar> = ({
             </Grid>
             <StyledText>{title}</StyledText>
             <StyledText color={colors.invariant.green}>{tokenXAmount}</StyledText>
-            <img src={tokenXIcon} className={classes.tokenIcon} />
+            {tokenXIcon === '/unknownToken.svg' ? (
+              <StyledText>{tokenXSymbol}</StyledText>
+            ) : (
+              <img src={tokenXIcon} className={classes.tokenIcon} />
+            )}
             {ikonType === 'swap' ? arrow : <StyledText>+</StyledText>}
 
             <StyledText color={colors.invariant.green}>{tokenYAmount}</StyledText>
-            <img src={tokenYIcon} className={classes.tokenIcon} />
+            {tokenYIcon === '/unknownToken.svg' ? (
+              <StyledText>{tokenYSymbol}</StyledText>
+            ) : (
+              <img src={tokenYIcon} className={classes.tokenIcon} />
+            )}
           </Grid>
         </Grid>
         <Grid className={classes.txWrapper}>

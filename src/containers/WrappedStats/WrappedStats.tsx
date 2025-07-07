@@ -1,29 +1,35 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useStyles from './styles'
 import { Grid, Typography } from '@mui/material'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import {
-  fees24,
+  cumulativeFees,
+  cumulativeVolume,
+  currentInterval,
+  fees,
   isLoading,
+  lastInterval,
+  lastSnapTimestamp,
   liquidityPlot,
   poolsStatsWithTokensDetails,
   tokensStatsWithTokensDetails,
-  tvl24,
-  volume24,
+  tvl,
+  volume,
   volumePlot
 } from '@store/selectors/stats'
 import { network } from '@store/selectors/solanaConnection'
 import { actions } from '@store/reducers/stats'
 import { actions as snackbarActions } from '@store/reducers/snackbars'
-import Volume from '@components/Stats/Volume/Volume'
-import Liquidity from '@components/Stats/Liquidity/Liquidity'
-import VolumeBar from '@components/Stats/volumeBar/VolumeBar'
+import { actions as navigationActions } from '@store/reducers/navigation'
 import TokensList from '@components/Stats/TokensList/TokensList'
 import PoolList from '@components/Stats/PoolList/PoolList'
 import { VariantType } from 'notistack'
 import { FilterSearch, ISearchToken } from '@common/FilterSearch/FilterSearch'
 import { unknownTokenIcon } from '@static/icons'
+import { Intervals as IntervalsKeys } from '@store/consts/static'
+import Overview from '@components/Stats/Overview/Overview'
+import { poolSearch, tokenSearch } from '@store/selectors/navigation'
 
 export const WrappedStats: React.FC = () => {
   const { classes } = useStyles()
@@ -32,20 +38,74 @@ export const WrappedStats: React.FC = () => {
 
   const poolsList = useSelector(poolsStatsWithTokensDetails)
   const tokensList = useSelector(tokensStatsWithTokensDetails)
-  const volume24h = useSelector(volume24)
-  const tvl24h = useSelector(tvl24)
-  const fees24h = useSelector(fees24)
+  const volumeInterval = useSelector(volume)
+  const tvlInterval = useSelector(tvl)
+  const feesInterval = useSelector(fees)
   const volumePlotData = useSelector(volumePlot)
+  const lastStatsTimestamp = useSelector(lastSnapTimestamp)
   const liquidityPlotData = useSelector(liquidityPlot)
   const isLoadingStats = useSelector(isLoading)
   const currentNetwork = useSelector(network)
+  const cumulativeVolumeData = useSelector(cumulativeVolume)
+  const cumulativeFeesData = useSelector(cumulativeFees)
+  const searchParamsPool = useSelector(poolSearch)
+  const searchParamsToken = useSelector(tokenSearch)
 
-  const [searchTokensValue, setSearchTokensValue] = useState<ISearchToken[]>([])
-  const [searchPoolsValue, setSearchPoolsValue] = useState<ISearchToken[]>([])
+  const lastUsedInterval = useSelector(currentInterval)
+  const lastFetchedInterval = useSelector(lastInterval)
+
+  const searchTokensValue = searchParamsToken.filteredTokens
+
+  const setSearchTokensValue = (tokens: ISearchToken[]) => {
+    dispatch(
+      navigationActions.setSearch({
+        section: 'statsTokens',
+        type: 'filteredTokens',
+        filteredTokens: tokens
+      })
+    )
+    dispatch(
+      navigationActions.setSearch({
+        section: 'statsTokens',
+        type: 'pageNumber',
+        pageNumber: 1
+      })
+    )
+  }
+
+  const searchPoolsValue = searchParamsPool.filteredTokens
+  const setSearchPoolsValue = (tokens: ISearchToken[]) => {
+    dispatch(
+      navigationActions.setSearch({
+        section: 'statsPool',
+        type: 'filteredTokens',
+        filteredTokens: tokens
+      })
+    )
+    dispatch(
+      navigationActions.setSearch({
+        section: 'statsPool',
+        type: 'pageNumber',
+        pageNumber: 1
+      })
+    )
+  }
 
   useEffect(() => {
-    dispatch(actions.getCurrentStats())
-  }, [])
+    if (lastFetchedInterval === lastUsedInterval || !lastUsedInterval) return
+    dispatch(actions.getCurrentIntervalStats({ interval: lastUsedInterval }))
+  }, [lastUsedInterval, lastFetchedInterval])
+
+  useEffect(() => {
+    if (lastUsedInterval) return
+    dispatch(actions.getCurrentIntervalStats({ interval: IntervalsKeys.Daily }))
+    dispatch(actions.setCurrentInterval({ interval: IntervalsKeys.Daily }))
+  }, [lastUsedInterval])
+
+  const updateInterval = (interval: IntervalsKeys) => {
+    dispatch(actions.getCurrentIntervalStats({ interval }))
+    dispatch(actions.setCurrentInterval({ interval }))
+  }
 
   const filteredTokenList = useMemo(() => {
     if (searchTokensValue.length === 0) {
@@ -113,34 +173,19 @@ export const WrappedStats: React.FC = () => {
         </Grid>
       ) : (
         <>
-          <Typography className={classes.subheader}>Overview</Typography>
-          <Grid container className={classes.plotsRow} wrap='nowrap'>
-            <Volume
-              volume={volume24h.value}
-              percentVolume={volume24h.change}
-              data={volumePlotData}
-              className={classes.plot}
-              isLoading={isLoadingStats}
-            />
-            <Liquidity
-              liquidityVolume={tvl24h.value}
-              liquidityPercent={tvl24h.change}
-              data={liquidityPlotData}
-              className={classes.plot}
-              isLoading={isLoadingStats}
-            />
-          </Grid>
-          <Grid className={classes.row}>
-            <VolumeBar
-              volume={volume24h.value}
-              percentVolume={volume24h.change}
-              tvlVolume={tvl24h.value}
-              percentTvl={tvl24h.change}
-              feesVolume={fees24h.value}
-              percentFees={fees24h.change}
-              isLoading={isLoadingStats}
-            />
-          </Grid>
+          <Overview
+            feesInterval={feesInterval}
+            isLoadingStats={isLoadingStats}
+            lastStatsTimestamp={lastStatsTimestamp}
+            lastUsedInterval={lastUsedInterval}
+            updateInterval={updateInterval}
+            volumeInterval={volumeInterval}
+            volumePlotData={volumePlotData}
+            liquidityPlotData={liquidityPlotData}
+            tvlInterval={tvlInterval}
+            cumulativeVolume={cumulativeVolumeData}
+            cumulativeFees={cumulativeFeesData}
+          />
           <Grid className={classes.rowContainer}>
             <Typography className={classes.subheader} mb={2}>
               Top pools
@@ -156,6 +201,7 @@ export const WrappedStats: React.FC = () => {
           <Grid container className={classes.row}>
             <PoolList
               initialLength={poolsList.length}
+              interval={lastUsedInterval ?? IntervalsKeys.Daily}
               data={filteredPoolsList.map(poolData => ({
                 symbolFrom: poolData.tokenXDetails?.symbol ?? poolData.tokenX.toString(),
                 symbolTo: poolData.tokenYDetails?.symbol ?? poolData.tokenY.toString(),
@@ -208,6 +254,7 @@ export const WrappedStats: React.FC = () => {
             network={currentNetwork}
             copyAddressHandler={copyAddressHandler}
             isLoading={isLoadingStats}
+            interval={lastUsedInterval ?? IntervalsKeys.Daily}
           />
         </>
       )}

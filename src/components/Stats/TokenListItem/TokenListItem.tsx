@@ -1,15 +1,16 @@
 import { useMemo } from 'react'
-import { theme } from '@static/theme'
+import { colors, theme } from '@static/theme'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import { useStyles } from './style'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import { formatNumberWithSuffix, shortenAddress } from '@utils/utils'
-import { NetworkType, SortTypeTokenList } from '@store/consts/static'
+import { Intervals, ITEMS_PER_PAGE, NetworkType, SortTypeTokenList } from '@store/consts/static'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 import { VariantType } from 'notistack'
 import { newTabBtnIcon, unknownTokenIcon, warningIcon } from '@static/icons'
+import { mapIntervalToString } from '@utils/uiUtils'
 
 interface IProps {
   displayType: string
@@ -23,11 +24,11 @@ interface IProps {
   TVL?: number
   sortType?: SortTypeTokenList
   onSort?: (type: SortTypeTokenList) => void
-  hideBottomLine?: boolean
   address?: string
   isUnknown?: boolean
   network?: NetworkType
   copyAddressHandler?: (message: string, variant: VariantType) => void
+  interval?: Intervals
 }
 
 const TokenListItem: React.FC<IProps> = ({
@@ -42,17 +43,18 @@ const TokenListItem: React.FC<IProps> = ({
   TVL = 0,
   sortType,
   onSort,
-  hideBottomLine = false,
   address,
   isUnknown,
   network,
-  copyAddressHandler
+  copyAddressHandler,
+  interval = Intervals.Daily
 }) => {
   const { classes } = useStyles()
   // const isNegative = priceChange < 0
 
   const isXs = useMediaQuery(theme.breakpoints.down('xs'))
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
+  const isMd = useMediaQuery(theme.breakpoints.down('md'))
 
   const networkUrl = useMemo(() => {
     switch (network) {
@@ -81,14 +83,19 @@ const TokenListItem: React.FC<IProps> = ({
       })
   }
   const shouldShowText = !isSm
-
+  const intervalSuffix = mapIntervalToString(interval)
   return (
     <Grid className={classes.wrapper}>
       {displayType === 'tokens' ? (
         <Grid
           container
           classes={{ container: classes.container, root: classes.tokenList }}
-          style={hideBottomLine ? { border: 'none' } : undefined}>
+          sx={{
+            borderBottom:
+              itemNumber !== 0 && itemNumber % ITEMS_PER_PAGE
+                ? `1px solid ${colors.invariant.light}`
+                : `2px solid ${colors.invariant.light}`
+          }}>
           {!isXs && !isSm && <Typography component='p'>{itemNumber}</Typography>}
           <Grid className={classes.tokenName}>
             <img
@@ -108,16 +115,6 @@ const TokenListItem: React.FC<IProps> = ({
                 )}
               </Typography>
             )}
-            {/* <Typography>
-              {!isMd ? (
-                <>
-                  <span className={classes.tokenName}>{name}</span>
-                  <span className={classes.tokenSymbol}>({shortenAddress(symbol)})</span>
-                </>
-              ) : (
-                shortenAddress(symbol)
-              )}
-            </Typography> */}
             <TooltipHover title='Copy token address'>
               <FileCopyOutlinedIcon
                 onClick={copyToClipboard}
@@ -126,8 +123,7 @@ const TokenListItem: React.FC<IProps> = ({
             </TooltipHover>
           </Grid>
           <Typography>{`~$${formatNumberWithSuffix(price)}`}</Typography>
-
-          {/* {!isXs && (
+          {/* {!hideName && (
             <Typography style={{ color: isNegative ? colors.invariant.Error : colors.green.main }}>
               {isNegative ? `${priceChange.toFixed(2)}%` : `+${priceChange.toFixed(2)}%`}
             </Typography>
@@ -153,8 +149,17 @@ const TokenListItem: React.FC<IProps> = ({
           )}
         </Grid>
       ) : (
-        <Grid container classes={{ container: classes.container, root: classes.header }}>
-          {!isXs && !isSm && (
+        <Grid
+          container
+          style={{ color: colors.invariant.textGrey, fontWeight: 400 }}
+          sx={{
+            borderBottom:
+              itemNumber !== 0 && itemNumber % 10
+                ? `1px solid ${colors.invariant.light}`
+                : `2px solid ${colors.invariant.light}`
+          }}
+          classes={{ container: classes.container, root: classes.header }}>
+          {!isMd && (
             <Typography style={{ lineHeight: '12px' }}>
               N<sup>o</sup>
             </Typography>
@@ -168,7 +173,7 @@ const TokenListItem: React.FC<IProps> = ({
                 onSort?.(SortTypeTokenList.NAME_ASC)
               }
             }}>
-            Name
+            Token
             {sortType === SortTypeTokenList.NAME_ASC ? (
               <ArrowDropUpIcon className={classes.icon} />
             ) : sortType === SortTypeTokenList.NAME_DESC ? (
@@ -191,7 +196,7 @@ const TokenListItem: React.FC<IProps> = ({
               <ArrowDropDownIcon className={classes.icon} />
             ) : null}
           </Typography>
-          {/* {!isXs && (
+          {/* {!hideName && (
             <Typography
               style={{ cursor: 'pointer' }}
               onClick={() => {
@@ -218,7 +223,7 @@ const TokenListItem: React.FC<IProps> = ({
                 onSort?.(SortTypeTokenList.VOLUME_DESC)
               }
             }}>
-            Volume 24H
+            Volume {intervalSuffix}
             {sortType === SortTypeTokenList.VOLUME_ASC ? (
               <ArrowDropUpIcon className={classes.icon} />
             ) : sortType === SortTypeTokenList.VOLUME_DESC ? (

@@ -28,7 +28,7 @@ export const useStyles = makeStyles()(() => ({
     height: 36,
     marginBottom: '16px'
   },
-  swapIcon: { height: 15, margin: '10.5px 6px' },
+  swapIcon: { height: 15, margin: '10.5px 6px', color: colors.invariant.text },
   iconContainer: {
     minWidth: 36,
     maxWidth: 36,
@@ -137,6 +137,7 @@ export const useStyles = makeStyles()(() => ({
   footerWrapper: {
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 12
+    marginTop: 12,
+    flexWrap: 'nowrap'
   }
 }))

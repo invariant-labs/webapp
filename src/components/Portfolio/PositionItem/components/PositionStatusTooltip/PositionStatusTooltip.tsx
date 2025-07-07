@@ -1,7 +1,18 @@
-const PositionStatusTooltip: React.FC<{ isActive?: boolean; isPromoted?: boolean }> = ({
-  isActive,
-  isPromoted
-}) => {
+const PositionStatusTooltip: React.FC<{
+  isActive?: boolean
+  isPromoted?: boolean
+  isLocked?: boolean
+}> = ({ isActive, isPromoted, isLocked }) => {
+  if (isLocked) {
+    return (
+      <p>
+        This position is <b>locked</b> and <b>will not</b> earn points.
+        <br />
+        <br />A locked position does not generate points, even if it is active and the pool is
+        generating points.
+      </p>
+    )
+  }
   if (!isActive && !isPromoted) {
     return (
       <p>

@@ -26,7 +26,8 @@ import {
   positionWithPoolData,
   singlePositionData,
   shouldDisable,
-  showFeesLoader as storeFeesLoader
+  showFeesLoader as storeFeesLoader,
+  positionsNavigationData
 } from '@store/selectors/positions'
 import { balance, status } from '@store/selectors/solanaWallet'
 import { VariantType } from 'notistack'
@@ -43,6 +44,7 @@ import { MAX_TICK, Pair } from '@invariant-labs/sdk/src'
 import { theme } from '@static/theme'
 import { isLoading, poolsStatsWithTokensDetails } from '@store/selectors/stats'
 import { actions as statsActions } from '@store/reducers/stats'
+import { Intervals } from '@store/consts/static'
 
 export type PoolDetails = {
   tvl: number
@@ -81,6 +83,8 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const isFeesLoading = useSelector(storeFeesLoader)
   const isLoadingStats = useSelector(isLoading)
 
+  const navigationData = useSelector(positionsNavigationData)
+
   const [xToY, setXToY] = useState<boolean>(
     initialXtoY(position?.tokenX.assetAddress.toString(), position?.tokenY.assetAddress.toString())
   )
@@ -94,6 +98,48 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
   const [isLoadingListDelay, setIsLoadListDelay] = useState(isLoadingList)
 
   const [isClosingPosition, setIsClosingPosition] = useState(false)
+
+  const previousPosition = useMemo(() => {
+    if (navigationData.length < 2) {
+      return null
+    }
+
+    const currentIndex = navigationData.findIndex(position => position.id.toString() === id)
+
+    if (currentIndex === -1) {
+      return null
+    }
+
+    return navigationData[currentIndex - 1] ?? null
+  }, [navigationData, id])
+
+  const nextPosition = useMemo(() => {
+    if (navigationData.length < 2) {
+      return null
+    }
+
+    const currentIndex = navigationData.findIndex(position => position.id.toString() === id)
+
+    if (currentIndex === -1) {
+      return null
+    }
+
+    return navigationData[currentIndex + 1] ?? null
+  }, [navigationData, id])
+
+  const paginationData = useMemo(() => {
+    const currentIndex = navigationData.findIndex(position => position.id.toString() === id)
+
+    return {
+      totalPages: navigationData.length,
+      currentPage: currentIndex + 1
+    }
+  }, [navigationData, id])
+
+  const handleChangePagination = (currentIndex: number) => {
+    const navigateToData = navigationData[currentIndex - 1]
+    navigate(ROUTES.getPositionRoute(navigateToData.id))
+  }
 
   useEffect(() => {
     if (position?.id) {
@@ -174,7 +220,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             position.tokenY.decimals
           )
         : 0,
-    [position?.lowerTickIndex]
+    [position?.lowerTickIndex, position?.id.toString()]
   )
   const max = useMemo(
     () =>
@@ -185,7 +231,7 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
             position.tokenY.decimals
           )
         : 0,
-    [position?.upperTickIndex]
+    [position?.upperTickIndex, position?.id.toString()]
   )
   const current = useMemo(
     () =>
@@ -488,14 +534,14 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
       apy: pool.apy,
       fee: pool.fee
     }
-  }, [poolsList])
+  }, [poolsList, position])
 
   useEffect(() => {
     dispatch(actions.getPreviewPosition(id))
   }, [poolsList.length])
 
   useEffect(() => {
-    dispatch(statsActions.getCurrentStats())
+    dispatch(statsActions.getCurrentIntervalStats({ interval: Intervals.Daily }))
   }, [])
 
   if (position) {
@@ -584,6 +630,11 @@ export const SinglePositionWrapper: React.FC<IProps> = ({ id }) => {
         showPoolDetailsLoader={isLoadingStats}
         solBalance={solBalance}
         isPreview={isPreview}
+        previousPosition={previousPosition}
+        nextPosition={nextPosition}
+        positionId={id}
+        paginationData={paginationData}
+        handleChangePagination={handleChangePagination}
       />
     )
   }

@@ -1,11 +1,13 @@
 import React, { useMemo, useEffect, useState } from 'react'
 import PoolListItem from '@components/Stats/PoolListItem/PoolListItem'
 import { useStyles } from './style'
-import { Grid } from '@mui/material'
+import { Grid, useMediaQuery } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
-import { PaginationList } from '@common/Pagination/Pagination'
 import { VariantType } from 'notistack'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { liquiditySearch } from '@store/selectors/navigation'
+import { actions } from '@store/reducers/navigation'
 
 export interface PoolListInterface {
   initialLength: number
@@ -41,7 +43,8 @@ export interface PoolListInterface {
 import { Keypair } from '@solana/web3.js'
 import { ROUTES } from '@utils/utils'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
-import { colors } from '@static/theme'
+import { colors, theme } from '@static/theme'
+import { InputPagination } from '@common/Pagination/InputPagination/InputPagination'
 
 const ITEMS_PER_PAGE = 10
 
@@ -83,9 +86,12 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
   showAPY
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
-  const { classes, cx } = useStyles({ initialDataLength })
-  const [page, setPage] = React.useState(1)
-  const [sortType, setSortType] = React.useState(SortTypePoolList.VOLUME_DESC)
+  const { classes, cx } = useStyles()
+  const searchParam = useSelector(liquiditySearch)
+  const page = searchParam.pageNumber
+  const [sortType, setSortType] = React.useState(searchParam.sortType)
+
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   useEffect(() => {
     setInitialDataLength(initialLength)
@@ -96,6 +102,11 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
 
     return Math.max(rowNumber - displayedItems, 0)
   }
+
+  useEffect(() => {
+    dispatch(actions.setSearch({ section: 'liquidityPool', type: 'sortType', sortType }))
+  }, [sortType])
+
   const sortedData = useMemo(() => {
     if (isLoading) {
       return generateMockData()
@@ -114,6 +125,10 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
         return data.sort((a, b) => a.fee - b.fee)
       case SortTypePoolList.FEE_DESC:
         return data.sort((a, b) => b.fee - a.fee)
+      case SortTypePoolList.FEE_24_ASC:
+        return data.sort((a, b) => a.fee * a.volume - b.fee * b.volume)
+      case SortTypePoolList.FEE_24_DESC:
+        return data.sort((a, b) => b.fee * b.volume - a.fee * a.volume)
       case SortTypePoolList.VOLUME_ASC:
         return data.sort((a, b) => (a.volume === b.volume ? a.TVL - b.TVL : a.volume - b.volume))
       case SortTypePoolList.VOLUME_DESC:
@@ -131,11 +146,15 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
     }
   }, [data, sortType])
 
-  useEffect(() => {
-    setPage(1)
-  }, [data])
-
-  const handleChangePagination = (currentPage: number) => setPage(currentPage)
+  const handleChangePagination = (newPage: number) => {
+    dispatch(
+      actions.setSearch({
+        section: 'liquidityPool',
+        type: 'pageNumber',
+        pageNumber: newPage
+      })
+    )
+  }
 
   const paginator = (currentPage: number) => {
     const page = currentPage || 1
@@ -145,95 +164,112 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
     return sortedData.slice(offest).slice(0, perPage)
   }
 
-  const pages = Math.ceil(data.length / 10)
+  const pages = useMemo(() => Math.ceil(data.length / 10), [data])
+  const isCenterAligment = useMediaQuery(theme.breakpoints.down(1280))
+
+  const height = initialDataLength > ITEMS_PER_PAGE ? (isCenterAligment ? 176 : 90) : 69
+
+  const totalItems = useMemo(() => sortedData.length, [sortedData])
+  const lowerBound = useMemo(() => (page - 1) * ITEMS_PER_PAGE + 1, [page])
+  const upperBound = useMemo(() => Math.min(page * ITEMS_PER_PAGE, totalItems), [totalItems, page])
 
   return (
-    <div className={cx({ [classes.loadingOverlay]: isLoading })}>
-      <Grid container classes={{ root: classes.container }}>
-        <PoolListItem
-          displayType='header'
-          onSort={setSortType}
-          sortType={sortType}
-          network={network}
-          showAPY={showAPY}
-        />
-        {data.length > 0 || isLoading ? (
-          <>
-            {paginator(page).map((element, index) => (
-              <PoolListItem
-                displayType='token'
-                tokenIndex={index + 1 + (page - 1) * 10}
-                symbolFrom={element.symbolFrom}
-                symbolTo={element.symbolTo}
-                iconFrom={element.iconFrom}
-                iconTo={element.iconTo}
-                volume={element.volume}
-                TVL={element.TVL}
-                // lockedX={element.lockedX}
-                // lockedY={element.lockedY}
-                // liquidityX={element.liquidityX}
-                // liquidityY={element.liquidityY}
-                // isLocked={element.lockedX > 0 || element.lockedY > 0}
-                fee={element.fee}
-                apy={element.apy}
-                hideBottomLine={pages === 1 && index + 1 === data.length}
-                apyData={element.apyData}
-                key={index}
-                addressFrom={element.addressFrom}
-                addressTo={element.addressTo}
-                network={network}
-                isUnknownFrom={element.isUnknownFrom}
-                isUnknownTo={element.isUnknownTo}
-                poolAddress={element.poolAddress}
-                copyAddressHandler={copyAddressHandler}
-                showAPY={showAPY}
+    <Grid
+      container
+      classes={{ root: classes.container }}
+      className={cx({ [classes.loadingOverlay]: isLoading })}>
+      <PoolListItem
+        displayType='header'
+        onSort={setSortType}
+        sortType={sortType}
+        network={network}
+        showAPY={showAPY}
+      />
+      {data.length > 0 || isLoading ? (
+        <>
+          {paginator(page).map((element, index) => (
+            <PoolListItem
+              itemNumber={index + 1 + (page - 1) * ITEMS_PER_PAGE}
+              displayType='token'
+              tokenIndex={index + 1 + (page - 1) * ITEMS_PER_PAGE}
+              symbolFrom={element.symbolFrom}
+              symbolTo={element.symbolTo}
+              iconFrom={element.iconFrom}
+              iconTo={element.iconTo}
+              volume={element.volume}
+              TVL={element.TVL}
+              // lockedX={element.lockedX}
+              // lockedY={element.lockedY}
+              // liquidityX={element.liquidityX}
+              // liquidityY={element.liquidityY}
+              // isLocked={element.lockedX > 0 || element.lockedY > 0}
+              fee={element.fee}
+              apy={element.apy}
+              apyData={element.apyData}
+              key={index}
+              addressFrom={element.addressFrom}
+              addressTo={element.addressTo}
+              network={network}
+              isUnknownFrom={element.isUnknownFrom}
+              isUnknownTo={element.isUnknownTo}
+              poolAddress={element.poolAddress}
+              copyAddressHandler={copyAddressHandler}
+              showAPY={showAPY}
+            />
+          ))}
+          {getEmptyRowsCount() > 0 &&
+            new Array(getEmptyRowsCount()).fill('').map((_, index) => (
+              <div
+                key={`empty-row-${index}`}
+                style={
+                  getEmptyRowsCount() - 1 === index
+                    ? {
+                        borderBottom: `2px solid ${colors.invariant.light}`,
+                        height: 67
+                      }
+                    : {}
+                }
+                className={cx(classes.emptyRow)}
               />
             ))}
-            {getEmptyRowsCount() > 0 &&
-              new Array(getEmptyRowsCount()).fill('').map((_, index) => (
-                <div
-                  key={`empty-row-${index}`}
-                  className={cx(classes.emptyRow, {
-                    [classes.emptyRowBorder]: index === getEmptyRowsCount() - 1
-                  })}
-                />
-              ))}
-          </>
-        ) : (
-          <Grid container className={classes.emptyWrapper}>
-            <EmptyPlaceholder
-              height={initialDataLength < 10 ? initialDataLength * 69 : 690}
-              newVersion
-              mainTitle='Pool not found...'
-              desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
-              desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
-              buttonName='Create Pool'
-              onAction={() => navigate(ROUTES.NEW_POSITION)}
-              withButton={true}
-              withImg={initialDataLength > 3}
-            />
-          </Grid>
-        )}
-        <Grid
-          className={classes.pagination}
-          sx={{
-            height: initialDataLength > 10 ? (page !== pages ? 101 : 101) : 69,
-            borderTop: `
-              ${pages > 1 ? (page !== pages ? 1 : 2) : 2}px solid ${colors.invariant.light}
-            `
-          }}>
-          {' '}
-          {pages > 1 && (
-            <PaginationList
-              pages={pages}
-              defaultPage={1}
-              handleChangePage={handleChangePagination}
-              variant='flex-end'
-            />
-          )}
+        </>
+      ) : (
+        <Grid container className={classes.emptyWrapper}>
+          <EmptyPlaceholder
+            height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
+            newVersion
+            mainTitle='Pool not found...'
+            desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
+            desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
+            buttonName='Create Pool'
+            onAction={() => navigate(ROUTES.NEW_POSITION)}
+            withButton={true}
+            withImg={initialDataLength > 3}
+          />
         </Grid>
+      )}
+      <Grid
+        className={classes.pagination}
+        sx={{
+          height: height
+        }}>
+        {pages > 0 && (
+          <InputPagination
+            borderTop={false}
+            pages={pages}
+            defaultPage={page}
+            handleChangePage={handleChangePagination}
+            variant='center'
+            page={page}
+            pagesNumeration={{
+              lowerBound: lowerBound,
+              totalItems: totalItems,
+              upperBound: upperBound
+            }}
+          />
+        )}
       </Grid>
-    </div>
+    </Grid>
   )
 }
 export default LiquidityPoolList

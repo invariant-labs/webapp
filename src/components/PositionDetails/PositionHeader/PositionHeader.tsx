@@ -7,9 +7,13 @@ import { VariantType } from 'notistack'
 import Refresher from '@common/Refresher/Refresher'
 import { REFRESHER_INTERVAL } from '@store/consts/static'
 import { useEffect, useMemo, useState } from 'react'
-import { truncateString } from '@utils/utils'
+import { ROUTES, truncateString } from '@utils/utils'
 import { Button } from '@common/Button/Button'
-import { backArrowIcon, newTabIcon, reverseTokensIcon } from '@static/icons'
+import { backArrowIcon, newTabIcon } from '@static/icons'
+import { INavigatePosition } from '@store/consts/types'
+import { ReverseTokensIcon } from '@static/componentIcon/ReverseTokensIcon'
+import { useNavigate } from 'react-router-dom'
+import { MobileNavigation } from '../Navigation/MobileNavigation/MobileNavigation'
 
 type Props = {
   tokenA: {
@@ -34,6 +38,8 @@ type Props = {
   copyPoolAddressHandler: (message: string, variant: VariantType) => void
   isPreview: boolean
   isClosing: boolean
+  previousPosition: INavigatePosition | null
+  nextPosition: INavigatePosition | null
 }
 
 export const PositionHeader = ({
@@ -52,15 +58,18 @@ export const PositionHeader = ({
   onGoBackClick,
   copyPoolAddressHandler,
   isPreview,
-  isClosing
+  isClosing,
+  previousPosition,
+  nextPosition
 }: Props) => {
   const { classes, cx } = useStyles()
-
   const isSmDown = useMediaQuery(theme.breakpoints.down(688))
   const isMdDown = useMediaQuery(theme.breakpoints.down(1040))
-  const isMdUp = useMediaQuery(theme.breakpoints.up(1040))
+  const isLgDown = useMediaQuery(theme.breakpoints.down('lg'))
 
   const [refresherTime, setRefresherTime] = useState(REFRESHER_INTERVAL)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -130,9 +139,8 @@ export const PositionHeader = ({
         <a
           href={`https://solscan.io/account/${poolAddress}${networkUrl}`}
           target='_blank'
-          rel='noopener noreferrer'
-          className={classes.explorerLink}>
-          <img src={newTabIcon} alt='Explorer link' />
+          rel='noopener noreferrer'>
+          <img className={classes.explorerLink} src={newTabIcon} alt='Explorer link' />
         </a>
       </TooltipHover>
     </Box>
@@ -140,7 +148,7 @@ export const PositionHeader = ({
 
   const refresher = (
     <TooltipHover title='Refresh'>
-      <Box display='flex' alignItems='center'>
+      <Box>
         <Refresher
           currentIndex={refresherTime}
           maxIndex={REFRESHER_INTERVAL}
@@ -165,24 +173,66 @@ export const PositionHeader = ({
             {marketIdLabel} {refresher}
           </Box>
         )}
+        {!isMdDown && isLgDown && (previousPosition || nextPosition) && (
+          <Box className={classes.tabletNavigation}>
+            <MobileNavigation
+              position={previousPosition}
+              direction='left'
+              onClick={() => {
+                if (previousPosition) {
+                  navigate(ROUTES.getPositionRoute(previousPosition.id))
+                }
+              }}
+            />
+            <MobileNavigation
+              position={nextPosition}
+              direction='right'
+              onClick={() => {
+                if (nextPosition) {
+                  navigate(ROUTES.getPositionRoute(nextPosition.id))
+                }
+              }}
+            />
+          </Box>
+        )}
       </Box>
+      {isMdDown && (previousPosition || nextPosition) && (
+        <Box display='flex' gap={1}>
+          <MobileNavigation
+            position={previousPosition}
+            direction='left'
+            onClick={() => {
+              if (previousPosition) {
+                navigate(ROUTES.getPositionRoute(previousPosition.id))
+              }
+            }}
+          />
+          <MobileNavigation
+            position={nextPosition}
+            direction='right'
+            onClick={() => {
+              if (nextPosition) {
+                navigate(ROUTES.getPositionRoute(nextPosition.id))
+              }
+            }}
+          />
+        </Box>
+      )}
       <Box className={classes.container}>
         <Box className={classes.upperContainer}>
           <Box className={classes.wrapper}>
             <Box className={classes.iconContainer}>
               <img className={classes.icon} src={tokenA.icon} alt={tokenA.ticker} />
               <TooltipHover title='Reverse tokens'>
-                <img
+                <ReverseTokensIcon
                   className={classes.reverseTokensIcon}
-                  src={reverseTokensIcon}
-                  alt='Reverse tokens'
                   onClick={() => onReverseTokensClick()}
                 />
               </TooltipHover>
               <img className={classes.icon} src={tokenB.icon} alt={tokenB.ticker} />
             </Box>
             <Typography className={classes.tickerContainer}>
-              {truncateString(tokenA.ticker, 4)} - {truncateString(tokenB.ticker, 4)}
+              {truncateString(tokenA.ticker, 3)} - {truncateString(tokenB.ticker, 3)}
             </Typography>
           </Box>
           <Box className={classes.wrapper}>
@@ -213,7 +263,7 @@ export const PositionHeader = ({
             {!isSmDown && isMdDown && <>{addButton}</>}
           </Box>
         </Box>
-        {(isSmDown || isMdUp) && (
+        {(isSmDown || !isMdDown) && (
           <Box className={classes.lowerContainer}>
             {!isMdDown ? (
               <>

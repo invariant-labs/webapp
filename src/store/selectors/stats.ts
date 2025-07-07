@@ -5,33 +5,49 @@ import { tokens } from './pools'
 import { Token } from '@store/consts/types'
 
 const store = (s: AnyProps) => s[statsSliceName] as IStatsStore
-
 export const {
   volumePlot,
   liquidityPlot,
   volume24,
   tvl24,
   fees24,
+  volume,
+  fees,
+  tvl,
   tokensData,
   poolsData,
   isLoading,
-  lastTimestamp
+  lastSnapTimestamp,
+  lastTimestamp,
+  lastInterval,
+  currentInterval,
+  cumulativeFees,
+  cumulativeVolume
 } = keySelectors(store, [
   'volumePlot',
   'liquidityPlot',
   'volume24',
   'tvl24',
   'fees24',
+  'volume',
+  'fees',
+  'tvl',
   'tokensData',
   'poolsData',
   'isLoading',
-  'lastTimestamp'
+  'lastSnapTimestamp',
+  'lastTimestamp',
+  'lastInterval',
+  'currentInterval',
+  'cumulativeFees',
+  'cumulativeVolume'
 ])
 
 export interface ExtendedPoolStatsData extends PoolStatsData {
   tokenXDetails: Token
   tokenYDetails: Token
 }
+
 export const poolsStatsWithTokensDetails = createSelector(
   poolsData,
   tokens,
@@ -62,11 +78,19 @@ export const statsSelectors = {
   volume24,
   tvl24,
   fees24,
+  volume,
+  fees,
+  tvl,
+  lastTimestamp,
+  lastInterval,
   tokensData,
   poolsData,
   poolsStatsWithTokensDetails,
   tokensStatsWithTokensDetails,
-  isLoading
+  isLoading,
+  currentInterval,
+  cumulativeVolume,
+  cumulativeFees
 }
 
 export default statsSelectors

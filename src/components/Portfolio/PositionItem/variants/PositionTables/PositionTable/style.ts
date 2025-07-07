@@ -59,13 +59,13 @@ export const usePositionTableStyle = makeStyles<{ isScrollHide: boolean }>()(
       }
     },
     tokenRatioCell: {
-      width: '18%',
+      width: '19%',
       '& > div': {
         margin: '0 auto'
       }
     },
     valueCell: {
-      width: '9%',
+      width: '11%',
       '& .MuiGrid-root': {
         justifyContent: 'center'
       }
@@ -83,7 +83,7 @@ export const usePositionTableStyle = makeStyles<{ isScrollHide: boolean }>()(
       }
     },
     actionCell: {
-      width: '8%',
+      width: '6%',
       padding: '14px 8px',
       '& > button': {
         margin: '0 auto'
@@ -112,7 +112,7 @@ export const usePositionTableStyle = makeStyles<{ isScrollHide: boolean }>()(
 
       '& > tr:nth-of-type(even)': {
         background: colors.invariant.component,
-        transition: 'filter .05s ease-in-out',
+        transition: 'filter 300ms ease-in-out',
 
         '&:hover': {
           filter: 'brightness(1.1)',
@@ -121,7 +121,7 @@ export const usePositionTableStyle = makeStyles<{ isScrollHide: boolean }>()(
       },
       '& > tr:nth-of-type(odd)': {
         background: `${colors.invariant.componentDark}F0`,
-        transition: 'filter .05s ease-in-out',
+        transition: 'filter 300ms ease-in-out',
         '&:hover': {
           filter: 'brightness(1.1)',
 

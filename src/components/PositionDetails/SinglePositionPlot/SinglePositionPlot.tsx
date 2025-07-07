@@ -4,6 +4,7 @@ import {
   calcPriceByTickIndex,
   calcTicksAmountInRange,
   calculateConcentration,
+  formatNumbers,
   formatNumberWithoutSuffix,
   numberToString,
   spacingMultiplicityGte,
@@ -13,12 +14,13 @@ import {
 import { PlotTickData } from '@store/reducers/positions'
 import React, { useEffect, useState } from 'react'
 import useStyles from './style'
-import { getMinTick } from '@invariant-labs/sdk/lib/utils'
+import { getMaxTick, getMinTick } from '@invariant-labs/sdk/lib/utils'
 import { ILiquidityToken } from '@store/consts/types'
 import { RangeIndicator } from './RangeIndicator/RangeIndicator'
 import { Stat } from './Stat/Stat'
 import { colors } from '@static/theme'
 import { airdropRainbowIcon } from '@static/icons'
+import { percentageThresholds } from '@store/consts/static'
 
 export interface ISinglePositionPlot {
   data: PlotTickData[]
@@ -47,6 +49,7 @@ export interface ISinglePositionPlot {
     token: string
     price?: number
   } | null
+  positionId: string
 }
 
 const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
@@ -65,11 +68,11 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
   xToY,
   hasTicksError,
   reloadHandler,
-  volumeRange,
   tokenAPriceData,
   tokenBPriceData,
   isFullRange,
-  usdcPrice
+  usdcPrice,
+  positionId
 }) => {
   const { classes } = useStyles()
 
@@ -90,6 +93,10 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
 
   //Proportion between middle of price range and right range in ratio to middle of price range and plotMax
   const [zoomScale, setZoomScale] = useState(0.7)
+
+  useEffect(() => {
+    if (!isInitialLoad) setIsInitialLoad(true)
+  }, [positionId])
 
   useEffect(() => {
     const initSideDist = Math.abs(
@@ -115,9 +122,11 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     }
 
     if (isInitialLoad) {
+      const rangeDiff = Math.abs(rightRange.x - leftRange.x)
+
       setIsInitialLoad(false)
-      setPlotMin(leftRange.x - initSideDist)
-      setPlotMax(rightRange.x + initSideDist)
+      setPlotMin(leftRange.x - rangeDiff / 5)
+      setPlotMax(rightRange.x + rangeDiff / 5)
 
       setZoomScale(calcZoomScale(rightRange.x + initSideDist))
     }
@@ -158,8 +167,81 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
     }
   }
 
-  const minPercentage = (min / currentPrice - 1) * 100
-  const maxPercentage = (max / currentPrice - 1) * 100
+  const moveLeft = () => {
+    const diff = plotMax - plotMin
+
+    const minPrice = xToY
+      ? calcPriceByTickIndex(
+          getMinTick(tickSpacing),
+          xToY,
+          Number(tokenX.decimal),
+          Number(tokenY.decimal)
+        )
+      : calcPriceByTickIndex(
+          getMaxTick(tickSpacing),
+          xToY,
+          Number(tokenX.decimal),
+          Number(tokenY.decimal)
+        )
+
+    const newLeft = plotMin - diff / 6
+    const newRight = plotMax - diff / 6
+
+    if (newLeft < minPrice - diff / 2) {
+      setPlotMin(minPrice - diff / 2)
+      setPlotMax(minPrice + diff / 2)
+    } else {
+      setPlotMin(newLeft)
+      setPlotMax(newRight)
+    }
+  }
+
+  const moveRight = () => {
+    const diff = plotMax - plotMin
+
+    const maxPrice = xToY
+      ? calcPriceByTickIndex(
+          getMaxTick(tickSpacing),
+          xToY,
+          Number(tokenX.decimal),
+          Number(tokenY.decimal)
+        )
+      : calcPriceByTickIndex(
+          getMinTick(tickSpacing),
+          xToY,
+          Number(tokenX.decimal),
+          Number(tokenY.decimal)
+        )
+
+    const newLeft = plotMin + diff / 6
+    const newRight = plotMax + diff / 6
+
+    if (newRight > maxPrice + diff / 2) {
+      setPlotMin(maxPrice - diff / 2)
+      setPlotMax(maxPrice + diff / 2)
+    } else {
+      setPlotMin(newLeft)
+      setPlotMax(newRight)
+    }
+  }
+
+  const centerChart = () => {
+    const diff = plotMax - plotMin
+
+    setPlotMin(midPrice.x - diff / 2)
+    setPlotMax(midPrice.x + diff / 2)
+  }
+
+  const centerToRange = () => {
+    const diff = plotMax - plotMin
+    const rangeCenter = (leftRange.x + rightRange.x) / 2
+
+    setPlotMin(rangeCenter - diff / 2)
+    setPlotMax(rangeCenter + diff / 2)
+  }
+
+  const minPercentage = ((+min - currentPrice) / currentPrice) * 100
+  const maxPercentage = ((+max - currentPrice) / currentPrice) * 100
   const concentration = calculateConcentration(leftRange.index, rightRange.index)
 
   return (
@@ -193,25 +275,27 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
         </Grid>
       </Box>
       <PriceRangePlot
-        data={data}
-        plotMin={plotMin}
-        plotMax={plotMax}
+        plotData={data}
+        plotMinData={plotMin}
+        plotMaxData={plotMax}
         zoomMinus={zoomMinus}
         zoomPlus={zoomPlus}
+        moveLeft={moveLeft}
+        moveRight={moveRight}
+        centerChart={centerChart}
+        centerToRange={centerToRange}
         disabled
-        leftRange={leftRange}
-        rightRange={rightRange}
-        midPrice={midPrice}
+        leftRangeData={leftRange}
+        rightRangeData={rightRange}
+        midPriceData={midPrice}
         className={classes.plot}
         loading={ticksLoading}
         isXtoY={xToY}
-        tickSpacing={tickSpacing}
+        spacing={tickSpacing}
         xDecimal={tokenX.decimal}
         yDecimal={tokenY.decimal}
-        coverOnLoading
         hasError={hasTicksError}
         reloadHandler={reloadHandler}
-        volumeRange={volumeRange}
         globalPrice={globalPrice}
         tokenAPriceData={tokenAPriceData}
         tokenBPriceData={tokenBPriceData}
@@ -313,7 +397,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
                     color: minPercentage < 0 ? colors.invariant.Error : colors.invariant.green
                   }}>
                   {minPercentage > 0 && '+'}
-                  {minPercentage.toFixed(2)}%
+                  {formatNumbers(percentageThresholds)(minPercentage.toString())}%
                 </Typography>
               </Box>
             }
@@ -331,7 +415,7 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
                     color: maxPercentage < 0 ? colors.invariant.Error : colors.invariant.green
                   }}>
                   {maxPercentage > 0 && '+'}
-                  {maxPercentage.toFixed(2)}%
+                  {formatNumbers(percentageThresholds)(maxPercentage.toString())}%
                 </Typography>
               </Box>
             }

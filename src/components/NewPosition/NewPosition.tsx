@@ -424,7 +424,7 @@ export const NewPosition: React.FC<INewPosition> = ({
     if (!ticksLoading && positionOpeningMethod === 'range') {
       onChangeRange(leftRange, rightRange)
     }
-  }, [midPrice.index, leftRange, rightRange])
+  }, [midPrice.index, leftRange, rightRange, currentPriceSqrt.toString()])
 
   useEffect(() => {
     const configurePoolAddress = async () => {
@@ -700,7 +700,7 @@ export const NewPosition: React.FC<INewPosition> = ({
                 )}
               </Hidden>
               {tokenA !== tokenB && isMd && (
-                <TooltipHover title='Refresh'>
+                <TooltipHover title='Refresh' right={8}>
                   {isCurrentPoolExisting ? (
                     <Box>
                       <Refresher

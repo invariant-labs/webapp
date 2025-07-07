@@ -1,7 +1,8 @@
-import React, { CSSProperties, useRef } from 'react'
+import React, { CSSProperties, ReactNode, useRef } from 'react'
 import useStyles from './style'
-import { Input, Tooltip, Typography } from '@mui/material'
-import { formatNumberWithSuffix } from '@utils/utils'
+import { Input } from '@mui/material'
+import { Button } from '@common/Button/Button'
+import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 
 interface IProps {
   setValue: (value: string) => void
@@ -13,6 +14,8 @@ interface IProps {
   style?: CSSProperties
   globalPrice?: number
   onBlur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>
+  formatterFunction: (value: string) => string
+  tooltipTitle?: ReactNode
 }
 
 export const SimpleInput: React.FC<IProps> = ({
@@ -24,7 +27,9 @@ export const SimpleInput: React.FC<IProps> = ({
   placeholder,
   style,
   globalPrice,
-  onBlur
+  onBlur,
+  formatterFunction,
+  tooltipTitle = ''
 }) => {
   const { classes, cx } = useStyles()
 
@@ -78,28 +83,28 @@ export const SimpleInput: React.FC<IProps> = ({
       disableUnderline={true}
       placeholder={placeholder}
       onChange={allowOnlyDigitsAndTrimUnnecessaryZeros}
-      endAdornment={
-        globalPrice ? (
-          <Tooltip
-            title={
-              <Typography className={classes.textGlobalPrice} variant='caption'>
-                Global price
-              </Typography>
-            }
-            placement='right-start'
-            classes={{
-              tooltip: classes.globalPriceTooltip
-            }}>
-            <Typography className={classes.globalPrice} variant='h4'>
-              {formatNumberWithSuffix(globalPrice)}
-            </Typography>
-          </Tooltip>
-        ) : null
-      }
       onBlur={onBlur}
       inputProps={{
         inputMode: 'decimal'
       }}
+      endAdornment={
+        globalPrice ? (
+          <TooltipHover title={tooltipTitle} placement='bottom'>
+            <Button
+              scheme='green'
+              height={40}
+              onClick={() => {
+                setValue(formatterFunction(globalPrice.toString()))
+              }}>
+              <p className={classes.suggestedPriceText}>
+                {value?.toString() === formatterFunction(globalPrice.toString())
+                  ? 'Existing price applied'
+                  : 'Use existing price'}
+              </p>
+            </Button>
+          </TooltipHover>
+        ) : null
+      }
     />
   )
 }

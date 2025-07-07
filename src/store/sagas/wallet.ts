@@ -167,11 +167,7 @@ export function* handleAirdrop(): Generator {
         }
       }
     }
-    yield* call(
-      getCollateralTokenAirdrop,
-      airdropTokens[networkType],
-      airdropQuantities[networkType]
-    )
+    yield* call(getTokenAirdrop, airdropTokens[networkType], airdropQuantities[networkType])
     yield put(
       snackbarsActions.add({
         message: 'You will soon receive airdrop',
@@ -200,16 +196,16 @@ export function* handleAirdrop(): Generator {
   yield put(snackbarsActions.remove(loaderKey))
 }
 
-export function* setEmptyAccounts(collateralsAddresses: PublicKey[]): Generator {
+export function* setEmptyAccounts(addresses: PublicKey[]): Generator {
   const tokensAccounts = yield* select(accounts)
   const acc: PublicKey[] = []
-  for (const collateral of collateralsAddresses) {
-    const collateralTokenProgram = yield* call(getToken, collateral)
-    const accountAddress = tokensAccounts[collateral.toString()]
-      ? tokensAccounts[collateral.toString()].address
+  for (const address of addresses) {
+    const tokenProgram = yield* call(getToken, address)
+    const accountAddress = tokensAccounts[address.toString()]
+      ? tokensAccounts[address.toString()].address
       : null
     if (accountAddress == null) {
-      acc.push(collateralTokenProgram.publicKey)
+      acc.push(tokenProgram.publicKey)
     }
   }
   if (acc.length !== 0) {
@@ -217,23 +213,20 @@ export function* setEmptyAccounts(collateralsAddresses: PublicKey[]): Generator 
   }
 }
 
-export function* getCollateralTokenAirdrop(
-  collateralsAddresses: PublicKey[],
-  collateralsQuantities: number[]
-): Generator {
+export function* getTokenAirdrop(addresses: PublicKey[], quantities: number[]): Generator {
   const wallet = yield* call(getWallet)
   const instructions: TransactionInstruction[] = []
-  yield* call(setEmptyAccounts, collateralsAddresses)
+  yield* call(setEmptyAccounts, addresses)
   const tokensAccounts = yield* select(accounts)
-  for (const [index, collateral] of collateralsAddresses.entries()) {
+  for (const [index, address] of addresses.entries()) {
     instructions.push(
       Token.createMintToInstruction(
         TOKEN_PROGRAM_ID,
-        collateral,
-        tokensAccounts[collateral.toString()].address,
+        address,
+        tokensAccounts[address.toString()].address,
         airdropAdmin.publicKey,
         [],
-        collateralsQuantities[index]
+        quantities[index]
       )
     )
   }

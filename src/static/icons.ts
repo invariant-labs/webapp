@@ -56,6 +56,7 @@ import mainnetGlowIcon from './svg/mainnetGlow.svg'
 import devnetGlowIcon from './svg/devnetGlow.svg'
 import active2Icon from './svg/active2.svg'
 import solanaGlowIcon from './svg/solanaGlow.svg'
+import sonicGlowIcon from './svg/sonicGlow.svg'
 import eclipseGlowIcon from './svg/eclipseGlow.svg'
 import alephiumGlowIcon from './svg/alephiumGlow.svg'
 import settings3Icon from './svg/settings3.svg'
@@ -68,7 +69,6 @@ import hamburgerIcon from '@static/svg/Hamburger.svg'
 import backIcon from '@static/svg/back-arrow.svg'
 import settingIcon from '@static/svg/settings.svg'
 import activeLiquidityIcon from '@static/svg/activeLiquidity.svg'
-import revertIcon from '@static/svg/revert.svg'
 import backIcon2 from '@static/svg/back-arrow-2.svg'
 import swapPositionIcon from '@static/svg/swap-position.svg'
 import refreshIcon from '@static/svg/refresh.svg'
@@ -81,7 +81,6 @@ import dog1Icon from '@static/svg/SolanaCreator/Dog1.svg'
 import dog2Icon from '@static/svg/SolanaCreator/Dog2.svg'
 import cat1Icon from '@static/svg/SolanaCreator/Cat1.svg'
 import cat2Icon from '@static/svg/SolanaCreator/Cat2.svg'
-import reverseTokensIcon from './svg/reverse-tokens.svg'
 import backArrowIcon from '@static/svg/back-arrow.svg'
 import eyeYellowIcon from './svg/eyeYellow.svg'
 import closeYellowIcon from './svg/closeYellow.svg'
@@ -89,6 +88,10 @@ import snackbarSwapIcon from './svg/snackbarSwap.svg'
 import circleDolarIcon from './svg/circleDolar.svg'
 import depositIcon from './svg/depositIcon.svg'
 import withdrawIcon from './svg/withdrawIcon.svg'
+import warning3 from './svg/warning3.svg'
+import centerToRangeIcon from './svg/centerToRange.svg'
+import connectWalletIcon from './svg/connectWalletIcon.svg'
+import warning2Icon from './svg/warning2.svg'
 
 export {
   dog1Icon,
@@ -102,7 +105,6 @@ export {
   handleMinIcon,
   refreshIcon,
   swapPositionIcon,
-  revertIcon,
   backIcon2,
   activeLiquidityIcon,
   backIcon,
@@ -169,25 +171,30 @@ export {
   solanaGlowIcon,
   eclipseGlowIcon,
   alephiumGlowIcon,
+  sonicGlowIcon,
   settings3Icon,
   faucetIcon,
   solanaFlatIcon,
   liquidityEmptyIcon,
   assetsEmptyIcon,
-  reverseTokensIcon,
   backArrowIcon,
   eyeYellowIcon,
   closeYellowIcon,
   snackbarSwapIcon,
   circleDolarIcon,
   depositIcon,
-  withdrawIcon
+  withdrawIcon,
+  warning3,
+  centerToRangeIcon,
+  connectWalletIcon,
+  warning2Icon
 }
 
 export const chainIcons = {
   eclipseGlow: eclipseGlowIcon,
   solanaGlow: solanaGlowIcon,
-  alephiumGlow: alephiumGlowIcon
+  alephiumGlow: alephiumGlowIcon,
+  sonicGlow: sonicGlowIcon
 }
 
 export const netowrkIcons = {
