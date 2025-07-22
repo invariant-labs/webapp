@@ -13,6 +13,7 @@ import { swapSliceName, reducer as swapReducer } from './swap'
 import { positionsSliceName, reducer as positionsReducer } from './positions'
 import { statsSliceName, reducer as statsReducer } from './stats'
 import { NetworkType, RPC } from '@store/consts/static'
+import { navigationSliceName, reducer as navigationReducer } from './navigation'
 
 const transformNetwork = createTransform(
   (inboundState: any, _key) => {
@@ -75,7 +76,8 @@ const combinedReducers = combineReducers({
   [poolsSliceName]: poolsReducer,
   [swapSliceName]: swapReducer,
   [positionsSliceName]: positionsReducer,
-  [statsSliceName]: statsReducer
+  [statsSliceName]: statsReducer,
+  [navigationSliceName]: navigationReducer
 })
 
 export default combinedReducers
