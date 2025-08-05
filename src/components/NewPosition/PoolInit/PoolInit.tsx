@@ -152,28 +152,40 @@ export const PoolInit: React.FC<IPoolInit> = ({
   }
 
   useEffect(() => {
-    const midPriceInConcentrationMode = validConcentrationMidPrice(midPriceInput)
+    let priceInput = '0'
 
-    const sqrtPrice = calculateSqrtPriceFromBalance(
-      positionOpeningMethod === 'range' ? +midPriceInput : midPriceInConcentrationMode,
-      tickSpacing,
-      isXtoY,
-      xDecimal,
-      yDecimal
-    )
+    if (Number.isNaN(midPriceInput) || !midPriceInput || midPriceInput === 'NaN') {
+      setMidPriceInput(globalPrice?.toString() || '0')
+    } else {
+      priceInput = midPriceInput
+    }
 
-    // const priceTickIndex = calculateTickFromBalance(
-    //   positionOpeningMethod === 'range' ? +midPriceInput : midPriceInConcentrationMode,
-    //   tickSpacing,
-    //   isXtoY,
-    //   xDecimal,
-    //   yDecimal
-    // )
-    const priceTickIndex = nearestTickIndex(+midPriceInput, tickSpacing, isXtoY, xDecimal, yDecimal)
+    const midPriceInConcentrationMode = validConcentrationMidPrice(priceInput)
 
-    // onChangeMidPrice(priceTickIndex, sqrtPrice)
-    onChangeMidPrice(priceTickIndex, sqrtPrice)
-  }, [midPriceInput])
+    try {
+      const sqrtPrice = calculateSqrtPriceFromBalance(
+        positionOpeningMethod === 'range' ? +priceInput : midPriceInConcentrationMode,
+        tickSpacing,
+        isXtoY,
+        xDecimal,
+        yDecimal
+      )
+
+      // const priceTickIndex = calculateTickFromBalance(
+      //   positionOpeningMethod === 'range' ? +midPriceInput : midPriceInConcentrationMode,
+      //   tickSpacing,
+      //   isXtoY,
+      //   xDecimal,
+      //   yDecimal
+      // )
+      const priceTickIndex = nearestTickIndex(+priceInput, tickSpacing, isXtoY, xDecimal, yDecimal)
+
+      // onChangeMidPrice(priceTickIndex, sqrtPrice)
+      onChangeMidPrice(priceTickIndex, sqrtPrice)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [midPriceInput, globalPrice])
 
   const setLeftInputValues = (val: string) => {
     setLeftInput(val)
