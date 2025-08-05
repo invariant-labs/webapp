@@ -20,6 +20,8 @@ import { InputPagination } from '@common/Pagination/InputPagination/InputPaginat
 import { poolSearch } from '@store/selectors/navigation'
 import { useDispatch, useSelector } from 'react-redux'
 import { actions } from '@store/reducers/navigation'
+import { ISearchToken } from '@common/FilterSearch/FilterSearch'
+import { shortenAddress } from '@utils/uiUtils'
 
 export interface PoolListInterface {
   initialLength: number
@@ -51,6 +53,7 @@ export interface PoolListInterface {
   isLoading: boolean
   showAPY: boolean
   interval: Intervals
+  filteredTokens: ISearchToken[]
 }
 
 const ITEMS_PER_PAGE = 10
@@ -90,6 +93,7 @@ const PoolList: React.FC<PoolListInterface> = ({
   copyAddressHandler,
   isLoading,
   showAPY,
+  filteredTokens,
   interval
 }) => {
   const searchParam = useSelector(poolSearch)
@@ -173,7 +177,8 @@ const PoolList: React.FC<PoolListInterface> = ({
   const totalItems = useMemo(() => sortedData.length, [sortedData])
   const lowerBound = useMemo(() => (page - 1) * ITEMS_PER_PAGE + 1, [page])
   const upperBound = useMemo(() => Math.min(page * ITEMS_PER_PAGE, totalItems), [totalItems, page])
-
+  const filteredTokenX = filteredTokens[0] ?? ''
+  const filteredTokenY = filteredTokens[1] ?? ''
   const pages = useMemo(() => Math.ceil(data.length / ITEMS_PER_PAGE), [data])
   const isCenterAligment = useMediaQuery(theme.breakpoints.down(1280))
   const height = useMemo(
@@ -246,10 +251,17 @@ const PoolList: React.FC<PoolListInterface> = ({
           <EmptyPlaceholder
             newVersion
             height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
-            mainTitle='Pool not found...'
+            mainTitle={`The ${shortenAddress(filteredTokenX.symbol ?? '')}/${shortenAddress(filteredTokenY.symbol ?? '')} pool was not found...`}
             desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
             desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
-            onAction={() => navigate(ROUTES.NEW_POSITION)}
+            onAction={() => {
+              navigate(
+                ROUTES.getNewPositionRoute(filteredTokenX.address, filteredTokenY.address, '0_10'),
+                {
+                  state: { referer: 'stats' }
+                }
+              )
+            }}
             buttonName='Create Pool'
             withButton={true}
             withImg={initialDataLength > 3}

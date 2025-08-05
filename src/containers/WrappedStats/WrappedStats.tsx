@@ -224,6 +224,7 @@ export const WrappedStats: React.FC = () => {
               copyAddressHandler={copyAddressHandler}
               isLoading={isLoadingStats}
               showAPY={showAPY}
+              filteredTokens={searchPoolsValue}
             />
           </Grid>
           <Grid className={classes.rowContainer}>

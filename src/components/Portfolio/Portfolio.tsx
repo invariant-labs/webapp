@@ -90,7 +90,6 @@ const Portfolio: React.FC<IProps> = ({
     newValue: OverviewSwitcher
   ) => {
     if (newValue === null) return
-    console.log(newValue)
     handleOverviewSwitch(newValue)
   }
 
