@@ -204,12 +204,10 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     flexFlow: 'row',
     flexWrap: 'wrap',
     marginTop: 12,
-    marginBottom: 12,
     cursor: 'default',
     filter: 'brightness(0.9)',
     width: '100%',
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column-reverse',
       gap: 4
     }
   },
@@ -239,6 +237,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 
   transactionDetailsHeader: {
+    width: 146,
+    display: 'flex',
+    justifyContent: 'center',
     ...typography.caption2,
     whiteSpace: 'nowrap',
     pointerEvents: 'none',
@@ -369,6 +370,25 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     padding: 8,
     paddingInline: 8,
     borderRadius: 10
+  },
+  mobileChangeWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 12,
+      flexDirection: 'column-reverse'
+    }
+  },
+  mobileChangeRatioWrapper: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    marginBottom: 12,
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column-reverse',
+      gap: 4
+    }
   }
 }))
 
