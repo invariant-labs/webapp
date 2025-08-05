@@ -208,6 +208,7 @@ const Portfolio: React.FC<IProps> = ({
 
     unblurContent()
 
+    dispatch(actions.setNavigation({ address: location.pathname }))
     navigate(ROUTES.getNewPositionRoute(tokenA, tokenB, parsedFee))
   }
 

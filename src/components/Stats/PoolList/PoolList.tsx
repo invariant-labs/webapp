@@ -175,7 +175,6 @@ const PoolList: React.FC<PoolListInterface> = ({
   }
 
   const location = useLocation()
-  const dispatch = useDispatch()
   const totalItems = useMemo(() => sortedData.length, [sortedData])
   const lowerBound = useMemo(() => (page - 1) * ITEMS_PER_PAGE + 1, [page])
   const upperBound = useMemo(() => Math.min(page * ITEMS_PER_PAGE, totalItems), [totalItems, page])
