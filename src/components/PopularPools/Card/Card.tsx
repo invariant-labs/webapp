@@ -149,7 +149,7 @@ const Card: React.FC<ICard> = ({
               </Grid>
 
               <Box className={classes.symbolsContainer}>
-                {shortenAddress(symbolFrom ?? '')} - {shortenAddress(symbolTo ?? '')}
+                {shortenAddress(symbolFrom ?? '', 2)} - {shortenAddress(symbolTo ?? '', 2)}
               </Box>
               <Grid container gap='8px'>
                 {apy !== undefined && showAPY && (

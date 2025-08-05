@@ -7,7 +7,7 @@ import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import { formatNumberWithoutSuffix, trimZeros } from '@utils/utils'
 import { formatLargeNumber } from '@utils/formatLargeNumber'
 import { Intervals as IntervalsKeys } from '@store/consts/static'
-import { formatPlotDataLabels, getLabelDate } from '@utils/uiUtils'
+import { formatPlotDataLabels, getLabelDate, mapIntervalToString } from '@utils/uiUtils'
 import { useState, useRef, useEffect, useCallback } from 'react'
 
 interface StatsInterface {
@@ -36,10 +36,15 @@ const Volume: React.FC<StatsInterface> = ({
   const chartContainerRef = useRef<HTMLDivElement>(null)
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  const intervalSuffix = mapIntervalToString(interval)
+
   volume = volume ?? 0
 
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const isMdUp = useMediaQuery(theme.breakpoints.up('md'))
+  const isLgDown = useMediaQuery(theme.breakpoints.down('lg'))
+  const isTablet = isMdUp && isLgDown
 
   const hideTooltip = useCallback((immediate = false) => {
     if (hideTimeoutRef.current) {
@@ -190,13 +195,38 @@ const Volume: React.FC<StatsInterface> = ({
 
     const timestamp = hoveredBar.timestamp || hoveredBar.indexValue
     const date = getLabelDate(interval, timestamp, lastStatsTimestamp)
+    const getTooltipPosition = () => {
+      if (!isMobile) {
+        return {
+          left: mousePosition.x + 10,
+          top: mousePosition.y + 10
+        }
+      }
 
+      const tooltipWidth = 170
+      const screenWidth = window.innerWidth
+      const margin = -15
+
+      let left = mousePosition.x - 85
+      if (left < margin) {
+        left = margin
+      } else if (left + tooltipWidth > screenWidth - margin) {
+        left = screenWidth - tooltipWidth - margin
+      }
+
+      return {
+        left: left,
+        top: 0
+      }
+    }
+
+    const tooltipPosition = getTooltipPosition()
     return (
       <div
         style={{
-          position: 'fixed',
-          left: mousePosition.x + 10,
-          top: mousePosition.y - 10,
+          position: isMobile ? 'absolute' : 'fixed',
+          left: tooltipPosition.left,
+          top: tooltipPosition.top,
           borderRadius: '4px',
           padding: '8px',
           pointerEvents: 'none',
@@ -217,7 +247,7 @@ const Volume: React.FC<StatsInterface> = ({
     <Grid className={cx(classes.container, className)}>
       <Box className={classes.volumeContainer}>
         <Grid container justifyContent={'space-between'} alignItems='center'>
-          <Typography className={classes.volumeHeader}>Volume</Typography>
+          <Typography className={classes.volumeHeader}>Volume {intervalSuffix}</Typography>
         </Grid>
         <div className={classes.volumePercentContainer}>
           <Typography className={classes.volumePercentHeader}>
@@ -243,7 +273,9 @@ const Volume: React.FC<StatsInterface> = ({
             tickPadding: 10,
             tickRotation: 0,
             format: time =>
-              isLoading ? '' : formatPlotDataLabels(time, data.length, interval, isMobile)
+              isLoading
+                ? ''
+                : formatPlotDataLabels(time, data.length, interval, isMobile || isTablet)
           }}
           axisLeft={{
             tickSize: 0,

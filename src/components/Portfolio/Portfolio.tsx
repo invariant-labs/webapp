@@ -56,6 +56,8 @@ interface IProps {
   isBalanceLoading: boolean
   tokensList: SwapToken[]
   shouldDisable: boolean
+  overviewSelectedTab: OverviewSwitcher
+  handleOverviewSwitch: (panel: OverviewSwitcher) => void
 }
 
 const Portfolio: React.FC<IProps> = ({
@@ -72,7 +74,9 @@ const Portfolio: React.FC<IProps> = ({
   currentNetwork,
   handleClosePosition,
   handleClaimFee,
-  tokensList
+  tokensList,
+  overviewSelectedTab,
+  handleOverviewSwitch
 }) => {
   const { classes, cx } = useStyles()
 
@@ -84,15 +88,15 @@ const Portfolio: React.FC<IProps> = ({
   const { processedTokens, isProcesing } = useProcessedTokens(tokensList, isBalanceLoading)
   const dispatch = useDispatch()
   const location = useLocation()
-  const [activePanel, setActivePanel] = useState<OverviewSwitcher>(OverviewSwitcher.Overview)
 
-  const handleToggleChange =
-    <T,>(setter: React.Dispatch<React.SetStateAction<T>>) =>
-    (_: React.MouseEvent<HTMLElement>, newValue: T | null) => {
-      if (newValue !== null) {
-        setter(newValue)
-      }
-    }
+  const handleToggleChange = (
+    _event: React.MouseEvent<HTMLElement>,
+    newValue: OverviewSwitcher
+  ) => {
+    if (newValue === null) return
+    handleOverviewSwitch(newValue)
+  }
+
   const initialHideUnknownTokensValue =
     localStorage.getItem('HIDE_UNKNOWN_TOKENS') === 'true' ||
     localStorage.getItem('HIDE_UNKNOWN_TOKENS') === null
@@ -327,19 +331,21 @@ const Portfolio: React.FC<IProps> = ({
                 <Box
                   className={classes.switchPoolsMarker}
                   sx={{
-                    left: activePanel === OverviewSwitcher.Overview ? 0 : '50%'
+                    left: overviewSelectedTab === OverviewSwitcher.Overview ? 0 : '50%'
                   }}
                 />
                 <ToggleButtonGroup
-                  value={activePanel}
+                  value={overviewSelectedTab}
                   exclusive
-                  onChange={handleToggleChange(setActivePanel)}
+                  onChange={handleToggleChange}
                   className={classes.switchPoolsButtonsGroupOverview}>
                   <ToggleButton
                     value={OverviewSwitcher.Overview}
                     disableRipple
                     className={classes.switchPoolsButtonOverview}
-                    style={{ fontWeight: activePanel === OverviewSwitcher.Overview ? 700 : 400 }}>
+                    style={{
+                      fontWeight: overviewSelectedTab === OverviewSwitcher.Overview ? 700 : 400
+                    }}>
                     Liquidity
                   </ToggleButton>
                   <ToggleButton
@@ -347,7 +353,9 @@ const Portfolio: React.FC<IProps> = ({
                     disableRipple
                     className={classes.switchPoolsButtonOverview}
                     classes={{ disabled: classes.disabledSwitchButton }}
-                    style={{ fontWeight: activePanel === OverviewSwitcher.Wallet ? 700 : 400 }}>
+                    style={{
+                      fontWeight: overviewSelectedTab === OverviewSwitcher.Wallet ? 700 : 400
+                    }}>
                     Your Wallet
                   </ToggleButton>
                 </ToggleButtonGroup>
@@ -355,7 +363,7 @@ const Portfolio: React.FC<IProps> = ({
             </Grid>
 
             <Box>
-              {activePanel === OverviewSwitcher.Overview && (
+              {overviewSelectedTab === OverviewSwitcher.Overview && (
                 <>
                   <Overview poolAssets={data} />
                   <Box className={classes.footer}>
@@ -363,7 +371,7 @@ const Portfolio: React.FC<IProps> = ({
                   </Box>
                 </>
               )}
-              {activePanel === OverviewSwitcher.Wallet && (
+              {overviewSelectedTab === OverviewSwitcher.Wallet && (
                 <>
                   <YourWallet
                     handleSnackbar={handleSnackbar}

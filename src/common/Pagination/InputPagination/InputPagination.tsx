@@ -1,6 +1,6 @@
 import { Box, Pagination, Typography, useMediaQuery } from '@mui/material'
 import { useStyles } from './style'
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { theme } from '@static/theme'
 
 export interface IPaginationList {
@@ -27,16 +27,28 @@ export const InputPagination: React.FC<IPaginationList> = ({
   squeeze = false,
   pagesNumeration,
   variant,
-  activeInput = true
+  activeInput = true,
+  page
 }) => {
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'))
   const matches = useMediaQuery(theme.breakpoints.down('lg'))
 
   const { classes } = useStyles({ borderTop, isMobile })
-  const [currentPage, setCurrentPage] = useState<number | string>(defaultPage)
-  const [inputValue, setInputValue] = useState<string>(defaultPage.toString())
+  const initialPage = page || defaultPage
+
+  const [currentPage, setCurrentPage] = useState<number | string>(initialPage)
+  const [inputValue, setInputValue] = useState<string>(initialPage.toString())
   const [inputWidth, setInputWidth] = useState<number | string>(0)
+
+  useEffect(() => {
+    if (page && page !== currentPage) {
+      setCurrentPage(page)
+      setInputValue(page.toString())
+    }
+  }, [page])
+
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleInputChange = (value: string) => {
     if (value === '') {
@@ -93,14 +105,6 @@ export const InputPagination: React.FC<IPaginationList> = ({
     }
   }, [inputValue])
 
-  useEffect(() => {
-    if (defaultPage) {
-      setCurrentPage(defaultPage)
-      setInputValue(defaultPage.toString())
-      handleChangePage(defaultPage)
-    }
-  }, [pages])
-
   return (
     <Box className={classes.pagination}>
       {!isMobile && activeInput && (
@@ -143,6 +147,8 @@ export const InputPagination: React.FC<IPaginationList> = ({
         <Box display='flex' alignItems='center' justifyContent='center' gap={1} width={240}>
           <Typography className={classes.labelText}> Go to</Typography>
           <input
+            enterKeyHint='done'
+            ref={inputRef}
             className={classes.input}
             style={{ width: inputWidth }}
             value={inputValue}
@@ -154,6 +160,14 @@ export const InputPagination: React.FC<IPaginationList> = ({
                 setInputValue('1')
               } else if (parseInt(inputValue) > pages) {
                 setInputValue(String(pages))
+              }
+            }}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                inputRef.current?.blur()
+
+                handleInputChange(e.currentTarget.value)
+                ;(document.activeElement as HTMLElement)?.blur()
               }
             }}
           />
