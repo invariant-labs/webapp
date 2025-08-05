@@ -4,7 +4,7 @@ import { useStyles } from './style'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Intervals, ITEMS_PER_PAGE, NetworkType, SortTypePoolList } from '@store/consts/static'
 import {
   addressToTicker,
@@ -13,6 +13,8 @@ import {
   ROUTES,
   shortenAddress
 } from '@utils/utils'
+import { useDispatch } from 'react-redux'
+import { actions } from '@store/reducers/navigation'
 import { formatNumberWithSuffix } from '@utils/utils'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
@@ -86,7 +88,8 @@ const PoolListItem: React.FC<IProps> = ({
   const isSm = useMediaQuery(theme.breakpoints.down('sm'))
   const isSmd = useMediaQuery(theme.breakpoints.down('md'))
   const isMd = useMediaQuery(theme.breakpoints.down(1160))
-
+  const dispatch = useDispatch()
+  const location = useLocation()
   const isXtoY = initialXtoY(addressFrom ?? '', addressTo ?? '')
 
   const tokenAData = isXtoY
@@ -120,7 +123,7 @@ const PoolListItem: React.FC<IProps> = ({
   const handleOpenPosition = () => {
     const tokenA = addressToTicker(network, tokenAData.address ?? '')
     const tokenB = addressToTicker(network, tokenBData.address ?? '')
-
+    dispatch(actions.setNavigation({ address: location.pathname }))
     navigate(
       ROUTES.getNewPositionRoute(
         tokenA,
@@ -175,6 +178,10 @@ const PoolListItem: React.FC<IProps> = ({
       setShowInfo(false)
     }
   }, [isSmd])
+
+  useEffect(() => {
+    setShowInfo(false)
+  }, [itemNumber])
 
   const ActionsButtons = (
     <Box className={classes.action}>

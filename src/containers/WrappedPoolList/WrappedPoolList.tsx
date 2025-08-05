@@ -1,15 +1,17 @@
 import { Box, Typography, useMediaQuery } from '@mui/material'
 import { isLoading, poolsStatsWithTokensDetails } from '@store/selectors/stats'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useStyles from './styles'
 import { VariantType } from 'notistack'
 import { actions as snackbarActions } from '@store/reducers/snackbars'
 import { network } from '@store/selectors/solanaConnection'
+import { actions as navigationActions } from '@store/reducers/navigation'
 import LiquidityPoolList from '@components/LiquidityPoolList/LiquidityPoolList'
 import { FilterSearch, ISearchToken } from '@common/FilterSearch/FilterSearch'
 import { theme } from '@static/theme'
 import { unknownTokenIcon } from '@static/icons'
+import { liquiditySearch } from '@store/selectors/navigation'
 
 export const WrappedPoolList: React.FC = () => {
   const isXs = useMediaQuery(theme.breakpoints.down('sm'))
@@ -17,9 +19,26 @@ export const WrappedPoolList: React.FC = () => {
   const dispatch = useDispatch()
   const poolsList = useSelector(poolsStatsWithTokensDetails)
   const currentNetwork = useSelector(network)
+  const searchParams = useSelector(liquiditySearch)
   const isLoadingStats = useSelector(isLoading)
 
-  const [selectedFilters, setSelectedFilters] = useState<ISearchToken[]>([])
+  const selectedFilters = searchParams.filteredTokens
+  const setSelectedFilters = (tokens: ISearchToken[]) => {
+    dispatch(
+      navigationActions.setSearch({
+        section: 'liquidityPool',
+        type: 'filteredTokens',
+        filteredTokens: tokens
+      })
+    )
+    dispatch(
+      navigationActions.setSearch({
+        section: 'liquidityPool',
+        type: 'pageNumber',
+        pageNumber: 1
+      })
+    )
+  }
 
   const filteredPoolsList = useMemo(() => {
     return poolsList.filter(poolData => {
@@ -95,6 +114,7 @@ export const WrappedPoolList: React.FC = () => {
         copyAddressHandler={copyAddressHandler}
         isLoading={isLoadingStats}
         showAPY={showAPY}
+        filteredTokens={selectedFilters}
       />
     </div>
   )

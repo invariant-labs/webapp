@@ -2,7 +2,7 @@ import { DEFAULT_SOL_PUBLICKEY } from '@store/consts/static'
 import { BN } from '@project-serum/anchor'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
-import { PayloadType } from '@store/consts/types'
+import { OverviewSwitcher, PayloadType } from '@store/consts/types'
 
 export enum Status {
   Uninitialized = 'uninitialized',
@@ -38,6 +38,7 @@ export interface ISolanaWallet {
   balance: BN
   accounts: { [key in string]: ITokenAccount }
   balanceLoading: boolean
+  overviewSwitch: OverviewSwitcher
 }
 
 export const defaultState: ISolanaWallet = {
@@ -45,7 +46,8 @@ export const defaultState: ISolanaWallet = {
   address: DEFAULT_SOL_PUBLICKEY,
   balance: new BN(0),
   accounts: {},
-  balanceLoading: false
+  balanceLoading: false,
+  overviewSwitch: OverviewSwitcher.Overview
 }
 
 export const solanaWalletSliceName = 'solanaWallet'
@@ -100,6 +102,10 @@ const solanaWalletSlice = createSlice({
       return state
     },
     changeWalletInExtension(state) {
+      return state
+    },
+    setOverviewSwitch(state, action: PayloadAction<OverviewSwitcher>) {
+      state.overviewSwitch = action.payload
       return state
     },
     // Triggers rescan for tokens that we control

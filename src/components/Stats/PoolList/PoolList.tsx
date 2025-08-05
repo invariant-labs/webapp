@@ -12,11 +12,16 @@ import {
 } from '@store/consts/static'
 import { VariantType } from 'notistack'
 import { Keypair } from '@solana/web3.js'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { colors, theme } from '@static/theme'
 import { ROUTES } from '@utils/utils'
 import { InputPagination } from '@common/Pagination/InputPagination/InputPagination'
+import { poolSearch } from '@store/selectors/navigation'
+import { useDispatch, useSelector } from 'react-redux'
+import { actions } from '@store/reducers/navigation'
+import { ISearchToken } from '@common/FilterSearch/FilterSearch'
+import { shortenAddress } from '@utils/uiUtils'
 
 export interface PoolListInterface {
   initialLength: number
@@ -48,6 +53,7 @@ export interface PoolListInterface {
   isLoading: boolean
   showAPY: boolean
   interval: Intervals
+  filteredTokens: ISearchToken[]
 }
 
 const ITEMS_PER_PAGE = 10
@@ -87,13 +93,21 @@ const PoolList: React.FC<PoolListInterface> = ({
   copyAddressHandler,
   isLoading,
   showAPY,
+  filteredTokens,
   interval
 }) => {
+  const searchParam = useSelector(poolSearch)
+  const dispatch = useDispatch()
+
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
   const { classes, cx } = useStyles()
-  const [page, setPage] = React.useState(1)
-  const [sortType, setSortType] = React.useState(SortTypePoolList.FEE_24_DESC)
+  const page = searchParam.pageNumber
+  const [sortType, setSortType] = React.useState(searchParam.sortType)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    dispatch(actions.setSearch({ section: 'statsPool', type: 'sortType', sortType }))
+  }, [sortType])
 
   const sortedData = useMemo(() => {
     if (isLoading) {
@@ -142,7 +156,15 @@ const PoolList: React.FC<PoolListInterface> = ({
 
     return Math.max(rowNumber - displayedItems, 0)
   }
-  const handleChangePagination = (currentPage: number) => setPage(currentPage)
+  const handleChangePagination = (newPage: number) => {
+    dispatch(
+      actions.setSearch({
+        section: 'statsPool',
+        type: 'pageNumber',
+        pageNumber: newPage
+      })
+    )
+  }
 
   const paginator = (currentPage: number) => {
     const page = currentPage || 1
@@ -152,20 +174,18 @@ const PoolList: React.FC<PoolListInterface> = ({
     return sortedData.slice(offest).slice(0, perPage)
   }
 
+  const location = useLocation()
   const totalItems = useMemo(() => sortedData.length, [sortedData])
   const lowerBound = useMemo(() => (page - 1) * ITEMS_PER_PAGE + 1, [page])
   const upperBound = useMemo(() => Math.min(page * ITEMS_PER_PAGE, totalItems), [totalItems, page])
-
+  const filteredTokenX = filteredTokens[0] ?? ''
+  const filteredTokenY = filteredTokens[1] ?? ''
   const pages = useMemo(() => Math.ceil(data.length / ITEMS_PER_PAGE), [data])
   const isCenterAligment = useMediaQuery(theme.breakpoints.down(1280))
   const height = useMemo(
     () => (initialDataLength > ITEMS_PER_PAGE ? (isCenterAligment ? 176 : 90) : 69),
     [initialDataLength, isCenterAligment]
   )
-
-  useEffect(() => {
-    setPage(1)
-  }, [data, pages])
 
   return (
     <Grid
@@ -232,10 +252,19 @@ const PoolList: React.FC<PoolListInterface> = ({
           <EmptyPlaceholder
             newVersion
             height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
-            mainTitle='Pool not found...'
+            mainTitle={`The ${shortenAddress(filteredTokenX.symbol ?? '')}/${shortenAddress(filteredTokenY.symbol ?? '')} pool was not found...`}
             desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
             desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
-            onAction={() => navigate(ROUTES.NEW_POSITION)}
+            onAction={() => {
+              dispatch(actions.setNavigation({ address: location.pathname }))
+
+              navigate(
+                ROUTES.getNewPositionRoute(filteredTokenX.address, filteredTokenY.address, '0_10'),
+                {
+                  state: { referer: 'stats' }
+                }
+              )
+            }}
             buttonName='Create Pool'
             withButton={true}
             withImg={initialDataLength > 3}
@@ -250,7 +279,7 @@ const PoolList: React.FC<PoolListInterface> = ({
         {pages > 0 && (
           <InputPagination
             pages={pages}
-            defaultPage={1}
+            defaultPage={page}
             handleChangePage={handleChangePagination}
             variant='center'
             page={page}

@@ -4,7 +4,8 @@ import { useStyles } from './style'
 import { Grid, useMediaQuery } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
 import { VariantType } from 'notistack'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { actions } from '@store/reducers/navigation'
 
 export interface PoolListInterface {
   initialLength: number
@@ -35,6 +36,7 @@ export interface PoolListInterface {
   copyAddressHandler: (message: string, variant: VariantType) => void
   isLoading: boolean
   showAPY: boolean
+  filteredTokens: ISearchToken[]
 }
 
 import { Keypair } from '@solana/web3.js'
@@ -42,9 +44,12 @@ import { ROUTES } from '@utils/utils'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { colors, theme } from '@static/theme'
 import { InputPagination } from '@common/Pagination/InputPagination/InputPagination'
+import { useDispatch, useSelector } from 'react-redux'
+import { liquiditySearch } from '@store/selectors/navigation'
+import { ISearchToken } from '@common/FilterSearch/FilterSearch'
+import { shortenAddress } from '@utils/uiUtils'
 
 const ITEMS_PER_PAGE = 10
-
 const tokens = [BTC_DEV, USDC_DEV, SOL_DEV]
 const fees = [0.01, 0.02, 0.1, 0.3, 1]
 
@@ -63,6 +68,7 @@ const generateMockData = () => {
     liquidityY: Math.random() * 5000,
     addressFrom: tokens[(index * 2) % tokens.length].address,
     addressTo: tokens[(index * 2 + 1) % tokens.length].address,
+
     apy: Math.random() * 100,
     apyData: {
       fees: 10
@@ -77,15 +83,19 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
   data,
   network,
   initialLength,
-
+  filteredTokens,
   copyAddressHandler,
   isLoading,
   showAPY
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
   const { classes, cx } = useStyles()
-  const [page, setPage] = React.useState(1)
-  const [sortType, setSortType] = React.useState(SortTypePoolList.FEE_24_DESC)
+  const searchParam = useSelector(liquiditySearch)
+  const page = searchParam.pageNumber
+  const [sortType, setSortType] = React.useState(searchParam.sortType)
+
+  const dispatch = useDispatch()
+  const location = useLocation()
   const navigate = useNavigate()
   useEffect(() => {
     setInitialDataLength(initialLength)
@@ -96,6 +106,11 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
 
     return Math.max(rowNumber - displayedItems, 0)
   }
+
+  useEffect(() => {
+    dispatch(actions.setSearch({ section: 'liquidityPool', type: 'sortType', sortType }))
+  }, [sortType])
+
   const sortedData = useMemo(() => {
     if (isLoading) {
       return generateMockData()
@@ -135,7 +150,15 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
     }
   }, [data, sortType])
 
-  const handleChangePagination = (currentPage: number) => setPage(currentPage)
+  const handleChangePagination = (newPage: number) => {
+    dispatch(
+      actions.setSearch({
+        section: 'liquidityPool',
+        type: 'pageNumber',
+        pageNumber: newPage
+      })
+    )
+  }
 
   const paginator = (currentPage: number) => {
     const page = currentPage || 1
@@ -149,14 +172,12 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
   const isCenterAligment = useMediaQuery(theme.breakpoints.down(1280))
 
   const height = initialDataLength > ITEMS_PER_PAGE ? (isCenterAligment ? 176 : 90) : 69
+  const filteredTokenX = filteredTokens[0] ?? ''
+  const filteredTokenY = filteredTokens[1] ?? ''
 
   const totalItems = useMemo(() => sortedData.length, [sortedData])
   const lowerBound = useMemo(() => (page - 1) * ITEMS_PER_PAGE + 1, [page])
   const upperBound = useMemo(() => Math.min(page * ITEMS_PER_PAGE, totalItems), [totalItems, page])
-
-  useEffect(() => {
-    setPage(1)
-  }, [data, pages])
 
   return (
     <Grid
@@ -223,11 +244,20 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
           <EmptyPlaceholder
             height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
             newVersion
-            mainTitle='Pool not found...'
+            mainTitle={`The ${shortenAddress(filteredTokenX.symbol ?? '')}/${shortenAddress(filteredTokenY.symbol ?? '')} pool was not found...`}
             desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
             desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
             buttonName='Create Pool'
-            onAction={() => navigate(ROUTES.NEW_POSITION)}
+            onAction={() => {
+              dispatch(actions.setNavigation({ address: location.pathname }))
+
+              navigate(
+                ROUTES.getNewPositionRoute(filteredTokenX.address, filteredTokenY.address, '0_10'),
+                {
+                  state: { referer: 'stats' }
+                }
+              )
+            }}
             withButton={true}
             withImg={initialDataLength > 3}
           />
@@ -242,7 +272,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
           <InputPagination
             borderTop={false}
             pages={pages}
-            defaultPage={1}
+            defaultPage={page}
             handleChangePage={handleChangePagination}
             variant='center'
             page={page}

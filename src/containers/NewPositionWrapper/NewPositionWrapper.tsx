@@ -7,6 +7,8 @@ import {
   commonTokensForNetworks
 } from '@store/consts/static'
 import { PositionOpeningMethod, TokenPriceData } from '@store/consts/types'
+import { address } from '@store/selectors/navigation'
+
 import {
   addNewTokenToLocalStorage,
   calcPriceBySqrtPrice,
@@ -75,6 +77,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
   const poolsVolumeRanges = useSelector(volumeRanges)
   const loadingTicksAndTickMaps = useSelector(isLoadingTicksAndTickMaps)
   const isBalanceLoading = useSelector(balanceLoading)
+  const locationHistory = useSelector(address)
 
   const shouldNotUpdatePriceRange = useSelector(shouldNotUpdateRange)
   const currentNetwork = useSelector(network)
@@ -124,6 +127,10 @@ export const NewPositionWrapper: React.FC<IProps> = ({
           : 'range'
     )
 
+  const handleBack = () => {
+    const path = locationHistory === ROUTES.ROOT ? ROUTES.PORTFOLIO : locationHistory
+    navigate(path)
+  }
   useEffect(() => {
     const pathTokens: string[] = []
 
@@ -907,6 +914,7 @@ export const NewPositionWrapper: React.FC<IProps> = ({
       canNavigate={canNavigate}
       feeTiersWithTvl={feeTiersWithTvl}
       totalTvl={totalTvl}
+      handleBack={handleBack}
       isLoadingStats={isLoadingStats}
     />
   )

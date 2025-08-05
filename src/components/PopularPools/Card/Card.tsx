@@ -9,11 +9,13 @@ import { backIcon, unknownTokenIcon, warningIcon } from '@static/icons'
 import { shortenAddress } from '@utils/uiUtils'
 import StatsLabel from './StatsLabel/StatsLabel'
 import { formatNumberWithSuffix, initialXtoY, parseFeeToPathFee, ROUTES } from '@utils/utils'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { NetworkType } from '@store/consts/static'
 import { Button } from '@common/Button/Button'
 import { ReverseTokensIcon } from '@static/componentIcon/ReverseTokensIcon'
 import { DECIMAL } from '@invariant-labs/sdk/lib/utils'
+import { actions } from '@store/reducers/navigation'
+import { useDispatch } from 'react-redux'
 
 export interface ICard extends PopularPoolData {
   isLoading: boolean
@@ -41,7 +43,8 @@ const Card: React.FC<ICard> = ({
 }) => {
   const { classes } = useStyles()
   const navigate = useNavigate()
-
+  const location = useLocation()
+  const dispatch = useDispatch()
   const isXtoY = initialXtoY(addressFrom ?? '', addressTo ?? '')
 
   const tokenAData = isXtoY
@@ -74,6 +77,7 @@ const Card: React.FC<ICard> = ({
 
   const handleOpenPosition = () => {
     if (fee === undefined) return
+    dispatch(actions.setNavigation({ address: location.pathname }))
 
     navigate(
       ROUTES.getNewPositionRoute(
@@ -146,7 +150,7 @@ const Card: React.FC<ICard> = ({
               </Grid>
 
               <Box className={classes.symbolsContainer}>
-                {shortenAddress(symbolFrom ?? '')} - {shortenAddress(symbolTo ?? '')}
+                {shortenAddress(symbolFrom ?? '', 2)} - {shortenAddress(symbolTo ?? '', 2)}
               </Box>
               <Grid container gap='8px'>
                 {apy !== undefined && showAPY && (
