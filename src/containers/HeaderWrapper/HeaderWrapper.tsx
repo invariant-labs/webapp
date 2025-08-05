@@ -14,6 +14,7 @@ import { actions as snackbarsActions } from '@store/reducers/snackbars'
 import { changeToNightlyAdapter, connectStaticWallet, getSolanaWallet } from '@utils/web3/wallet'
 import { sleep } from '@invariant-labs/sdk'
 import { ensureError, ROUTES } from '@utils/utils'
+import { actions as navigationActions } from '@store/reducers/navigation'
 
 export const HeaderWrapper: React.FC = () => {
   const dispatch = useDispatch()
@@ -118,6 +119,7 @@ export const HeaderWrapper: React.FC = () => {
             }
 
             if (location.pathname.startsWith(ROUTES.NEW_POSITION)) {
+              dispatch(navigationActions.setNavigation({ address: location.pathname }))
               navigate(ROUTES.NEW_POSITION)
             }
 

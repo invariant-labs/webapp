@@ -194,9 +194,30 @@ const Liquidity: React.FC<LiquidityInterface> = ({
               (point.data.x as Date).getTime(),
               lastStatsTimestamp
             )
+            const pointIndex = point.index
+
+            const totalPoints = data.length
+            const relativePosition = pointIndex / (totalPoints - 1)
+
+            let transformStyle
+
+            if (relativePosition < 0.1) {
+              transformStyle = 'translateX(40%)'
+            } else if (relativePosition > 0.85) {
+              transformStyle = 'translateX(-40%)'
+            }
 
             return (
-              <Grid className={classes.tooltip}>
+              <Grid
+                className={classes.tooltip}
+                style={
+                  relativePosition < 0.1 || (relativePosition > 0.85 && isMobile)
+                    ? {
+                        transform: transformStyle,
+                        position: 'relative'
+                      }
+                    : {}
+                }>
                 <Typography className={classes.tooltipDate}>{date}</Typography>
                 <Typography className={classes.tooltipValue}>
                   ${formatNumberWithoutSuffix(point.data.y as number)}
