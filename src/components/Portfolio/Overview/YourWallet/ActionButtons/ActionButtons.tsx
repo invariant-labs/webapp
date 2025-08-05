@@ -4,10 +4,12 @@ import { horizontalSwapIcon, newTabBtnIcon, plusIcon } from '@static/icons'
 import { getAddressTickerMap, NetworkType } from '@store/consts/static'
 import { StrategyConfig, WalletToken } from '@store/types/userOverview'
 import { addressToTicker, ROUTES } from '@utils/utils'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useStyles } from './styles'
 import { useMemo } from 'react'
 import { theme } from '@static/theme'
+import { actions } from '@store/reducers/navigation'
+import { useDispatch } from 'react-redux'
 
 interface IActionButtons {
   pool: WalletToken
@@ -19,7 +21,8 @@ export const ActionButtons = ({ pool, strategy, currentNetwork }: IActionButtons
   const navigate = useNavigate()
   const { classes } = useStyles()
   const isMd = useMediaQuery(theme.breakpoints.down('md'))
-
+  const location = useLocation()
+  const dispatch = useDispatch()
   const networkUrl = useMemo(() => {
     switch (currentNetwork) {
       case NetworkType.Mainnet:
@@ -45,6 +48,7 @@ export const ActionButtons = ({ pool, strategy, currentNetwork }: IActionButtons
               currentNetwork,
               sourceToken === 'SOL' ? tickerMap['USDC'] : tickerMap['SOL']
             )
+            dispatch(actions.setNavigation({ address: location.pathname }))
 
             navigate(
               ROUTES.getNewPositionRoute(

@@ -4,9 +4,7 @@ import { useStyles } from './style'
 import { Grid, useMediaQuery } from '@mui/material'
 import { BTC_DEV, NetworkType, SortTypePoolList, USDC_DEV, SOL_DEV } from '@store/consts/static'
 import { VariantType } from 'notistack'
-import { useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { liquiditySearch } from '@store/selectors/navigation'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { actions } from '@store/reducers/navigation'
 
 export interface PoolListInterface {
@@ -46,11 +44,12 @@ import { ROUTES } from '@utils/utils'
 import { EmptyPlaceholder } from '@common/EmptyPlaceholder/EmptyPlaceholder'
 import { colors, theme } from '@static/theme'
 import { InputPagination } from '@common/Pagination/InputPagination/InputPagination'
+import { useDispatch, useSelector } from 'react-redux'
+import { liquiditySearch } from '@store/selectors/navigation'
 import { ISearchToken } from '@common/FilterSearch/FilterSearch'
 import { shortenAddress } from '@utils/uiUtils'
 
 const ITEMS_PER_PAGE = 10
-
 const tokens = [BTC_DEV, USDC_DEV, SOL_DEV]
 const fees = [0.01, 0.02, 0.1, 0.3, 1]
 
@@ -69,6 +68,7 @@ const generateMockData = () => {
     liquidityY: Math.random() * 5000,
     addressFrom: tokens[(index * 2) % tokens.length].address,
     addressTo: tokens[(index * 2 + 1) % tokens.length].address,
+
     apy: Math.random() * 100,
     apyData: {
       fees: 10
@@ -95,6 +95,7 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
   const [sortType, setSortType] = React.useState(searchParam.sortType)
 
   const dispatch = useDispatch()
+  const location = useLocation()
   const navigate = useNavigate()
   useEffect(() => {
     setInitialDataLength(initialLength)
@@ -248,6 +249,8 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
             desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
             buttonName='Create Pool'
             onAction={() => {
+              dispatch(actions.setNavigation({ address: location.pathname }))
+
               navigate(
                 ROUTES.getNewPositionRoute(filteredTokenX.address, filteredTokenY.address, '0_10'),
                 {
