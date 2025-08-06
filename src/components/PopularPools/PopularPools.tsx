@@ -43,12 +43,23 @@ const PopularPools: React.FC<IPopularPools> = ({
 
   return (
     <Grid container mb={6}>
-      <Box display='flex' alignItems='center' justifyContent='space-between' width='100%' mb={3}>
-        <Typography className={classes.title}>Popular pools</Typography>
-        <Intervals
-          interval={lastUsedInterval ?? IntervalsKeys.Daily}
-          setInterval={updateInterval}
-        />
+      <Box
+        display='flex'
+        alignItems='center'
+        justifyContent='space-between'
+        width='100%'
+        flexWrap='wrap'
+        rowGap={'12px'}
+        mb={3}>
+        <Typography display='flex' className={classes.title}>
+          Popular pools
+        </Typography>
+        <Box display='flex'>
+          <Intervals
+            interval={lastUsedInterval ?? IntervalsKeys.Daily}
+            setInterval={updateInterval}
+          />
+        </Box>
       </Box>
       <div className={classes.cardsContainer}>
         <Slider
