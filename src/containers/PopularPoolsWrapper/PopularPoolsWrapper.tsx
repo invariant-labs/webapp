@@ -67,11 +67,14 @@ export const PopularPoolsWrapper: React.FC<IPopularPoolsWrapper> = ({
       return mockPools
     }
     if (popularPools.length === 0) {
-      popularPools = poolsList.slice(0, 4).map(pool => ({
-        tokenX: pool.tokenX.toString(),
-        tokenY: pool.tokenY.toString(),
-        fee: pool.fee.toString()
-      }))
+      popularPools = poolsList
+        .sort((a, b) => b.volume24 - a.volume24)
+        .slice(0, 4)
+        .map(pool => ({
+          tokenX: pool.tokenX.toString(),
+          tokenY: pool.tokenY.toString(),
+          fee: pool.fee.toString()
+        }))
     }
 
     popularPools.map(pool => {
