@@ -63,6 +63,93 @@ import { CoinGeckoAPIData, PriorityMode, Token } from '@store/consts/types'
 import { sqrt } from '@invariant-labs/sdk/lib/math'
 import { apyToApr } from './uiUtils'
 import { alignTickToSpacing } from '@invariant-labs/sdk/src/tick'
+import {
+  fetchDigitalAsset,
+  mplTokenMetadata,
+  fetchAllDigitalAsset,
+  DigitalAsset
+} from '@metaplex-foundation/mpl-token-metadata'
+import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
+import { publicKey as umiPublicKey } from '@metaplex-foundation/umi'
+
+function resolveUriToHttp(uri?: string | null): string | null {
+  if (!uri) return null
+  if (uri.startsWith('ipfs://')) {
+    return uri.replace('ipfs://', 'https://dweb.link/ipfs/')
+  }
+  if (uri.startsWith('ar://')) {
+    return uri.replace('ar://', 'https://arweave.net/')
+  }
+  if (uri.startsWith('http://') || uri.startsWith('https://')) return uri
+
+  return null
+}
+
+async function fetchJsonSafe(uri?: string | null): Promise<any | null> {
+  try {
+    const url = resolveUriToHttp(uri)
+    if (!url) return null
+
+    const res = await axios.get(url)
+    return res.data ?? null
+  } catch (e) {
+    console.warn('fetchJsonSafe error for', uri, e)
+    return null
+  }
+}
+
+export const getMarketNewTokensData = async (
+  connection: Connection,
+  mints: PublicKey[]
+): Promise<Record<string, Token>> => {
+  const umi = createUmi(connection.rpcEndpoint).use(mplTokenMetadata())
+
+  const umiMints = mints.map(mint => umiPublicKey(mint.toBytes()))
+  const assets = await fetchAllDigitalAsset(umi, umiMints)
+
+  const convertedAssets = await Promise.all(
+    assets.map(async asset => {
+      const metadataJson = await fetchJsonSafe(asset.metadata.uri)
+      const imageField = metadataJson?.image ?? metadataJson?.image_url ?? null
+
+      const logoURI =
+        resolveUriToHttp(imageField) ?? resolveUriToHttp(asset.metadata.uri) ?? '/unknownToken.svg'
+
+      return getTokenMetadata(asset, logoURI)
+    })
+  )
+
+  return convertedAssets.reduce<Record<string, Token>>((acc, token) => {
+    acc[token.address.toString()] = token
+    return acc
+  }, {})
+}
+
+export function getTokenMetadata(asset: DigitalAsset, resolvedImageUrl?: string | null): Token {
+  const address = new PublicKey(asset.publicKey.toString())
+
+  return {
+    address,
+    decimals: asset.mint.decimals,
+    name: asset.metadata.name ?? '',
+    symbol: asset.metadata.symbol ?? '',
+    logoURI: resolvedImageUrl ?? '/unknownToken.svg',
+    isUnknown: true
+  }
+}
+
+export const fetchTokenMetadata = async (
+  connection: Connection,
+  mint: PublicKey
+): Promise<Token> => {
+  const umi = createUmi(connection.rpcEndpoint).use(mplTokenMetadata())
+
+  const umiMint = umiPublicKey(mint.toBytes())
+
+  const asset = await fetchDigitalAsset(umi, umiMint)
+
+  return getTokenMetadata(asset)
+}
 
 export const transformBN = (amount: BN): string => {
   return (amount.div(new BN(1e2)).toNumber() / 1e4).toString()
