@@ -35,7 +35,7 @@
     "@project-serum/sol-wallet-adapter": "^0.2.5",
     "@reduxjs/toolkit": "^2.2.3",
     "@solana/spl-token": "0.1.8",
-    "@solana/spl-token-registry": "^0.2.55",
+    "@solana/spl-token-registry": "^0.2.4574",
     "@solana/web3.js": "1.87.6",
     "@solflare-wallet/utl-aggregator": "^0.0.8",
     "assert": "^2.1.0",

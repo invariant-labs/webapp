@@ -47,7 +47,6 @@ const MarketEvents = () => {
     if (networkStatus !== Status.Initialized || !connection) {
       return
     }
-
     const connectEvents = () => {
       let tokens = getNetworkTokensList(networkType)
 
@@ -69,6 +68,7 @@ const MarketEvents = () => {
         ...currentListBefore,
         ...currentListUnkown.filter(pk => !currentListBefore.some(existing => existing.equals(pk)))
       ]
+
       const lastTokenFrom = localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`)
       const lastTokenTo = localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`)
 
@@ -93,12 +93,6 @@ const MarketEvents = () => {
       )
       const lastTokenFetchAmount =
         lastTokenFetchAmountStr !== null ? JSON.parse(lastTokenFetchAmountStr) : null
-
-      // const tokensToFetch: Record<string, Token> = Object.fromEntries(
-      //   Object.entries(tokens).filter(
-      //     ([, token]) => !token.logoURI || token.logoURI === '/unknownToken.svg'
-      //   )
-      // )
 
       const fetchedTokensStr = localStorage.getItem(`INVARIANT_CACHED_METADATA_${networkType}`)
 
@@ -164,7 +158,6 @@ const MarketEvents = () => {
         const parsedData: Token[] = Object.values(fetchedTokens).map(serialized => ({
           ...serialized,
           address: new PublicKey(serialized.address)
-          // tokenProgram: new PublicKey(serialized.tokenProgram ?? '')
         }))
 
         const parsedTokensMap: Record<string, Token> = parsedData.reduce(

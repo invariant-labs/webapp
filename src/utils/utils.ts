@@ -67,21 +67,19 @@ import {
   fetchDigitalAsset,
   mplTokenMetadata,
   fetchAllDigitalAsset,
-  DigitalAsset
+  DigitalAsset,
+  findMetadataPda,
+  safeFetchMetadata
 } from '@metaplex-foundation/mpl-token-metadata'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { publicKey as umiPublicKey } from '@metaplex-foundation/umi'
+import { TokenListProvider } from '@solana/spl-token-registry'
 
 function resolveUriToHttp(uri?: string | null): string | null {
   if (!uri) return null
-  if (uri.startsWith('ipfs://')) {
-    return uri.replace('ipfs://', 'https://dweb.link/ipfs/')
-  }
-  if (uri.startsWith('ar://')) {
-    return uri.replace('ar://', 'https://arweave.net/')
-  }
+  if (uri.startsWith('ipfs://')) return uri.replace('ipfs://', 'https://dweb.link/ipfs/')
+  if (uri.startsWith('ar://')) return uri.replace('ar://', 'https://arweave.net/')
   if (uri.startsWith('http://') || uri.startsWith('https://')) return uri
-
   return null
 }
 
@@ -89,8 +87,7 @@ async function fetchJsonSafe(uri?: string | null): Promise<any | null> {
   try {
     const url = resolveUriToHttp(uri)
     if (!url) return null
-
-    const res = await axios.get(url)
+    const res = await axios.get(url, { timeout: 10_000 })
     return res.data ?? null
   } catch (e) {
     console.warn('fetchJsonSafe error for', uri, e)
@@ -104,40 +101,63 @@ export const getMarketNewTokensData = async (
 ): Promise<Record<string, Token>> => {
   const umi = createUmi(connection.rpcEndpoint).use(mplTokenMetadata())
 
-  const umiMints = mints.map(mint => umiPublicKey(mint.toBytes()))
+  const tokenListProvider = new TokenListProvider()
+  const tokenListContainer = await tokenListProvider.resolve()
+  const tokenList = tokenListContainer.filterByClusterSlug('mainnet-beta').getList()
+
+  const umiMints = mints.map(m => umiPublicKey(m.toBytes()))
   const assets = await fetchAllDigitalAsset(umi, umiMints)
 
-  const convertedAssets = await Promise.all(
+  const converted = await Promise.all(
     assets.map(async asset => {
-      const metadataJson = await fetchJsonSafe(asset.metadata.uri)
+      const mintAddress = asset.publicKey.toString()
+      const registryEntry = tokenList.find(t => t.address === mintAddress)
+      const registryLogo = registryEntry?.logoURI ?? null
+
+      let uri = asset.metadata.uri?.trim() || null
+
+      if (!uri) {
+        try {
+          const mintUmiPub = umiPublicKey(new PublicKey(mintAddress).toBytes())
+          const metadataPda = findMetadataPda(umi, { mint: mintUmiPub })
+          const onchain = await safeFetchMetadata(umi, metadataPda)
+          const rawUri = (onchain as any)?.data?.uri?.trim()
+          if (rawUri) uri = rawUri
+        } catch (err) {
+          console.log(err)
+        }
+      }
+
+      const metadataJson = await fetchJsonSafe(uri)
       const imageField = metadataJson?.image ?? metadataJson?.image_url ?? null
 
       const logoURI =
-        resolveUriToHttp(imageField) ?? resolveUriToHttp(asset.metadata.uri) ?? '/unknownToken.svg'
+        resolveUriToHttp(imageField) ??
+        resolveUriToHttp(registryLogo) ??
+        resolveUriToHttp(uri) ??
+        '/unknownToken.svg'
 
       return getTokenMetadata(asset, logoURI)
     })
   )
 
-  return convertedAssets.reduce<Record<string, Token>>((acc, token) => {
-    acc[token.address.toString()] = token
+  return converted.reduce<Record<string, Token>>((acc, t) => {
+    acc[t.address.toString()] = t
     return acc
   }, {})
 }
 
 export function getTokenMetadata(asset: DigitalAsset, resolvedImageUrl?: string | null): Token {
   const address = new PublicKey(asset.publicKey.toString())
-
   return {
     address,
-    decimals: asset.mint.decimals,
-    name: asset.metadata.name ?? '',
-    symbol: asset.metadata.symbol ?? '',
+    decimals: asset.mint?.decimals ?? 0,
+    name: asset.metadata?.name ?? '',
+    symbol: asset.metadata?.symbol ?? '',
     logoURI: resolvedImageUrl ?? '/unknownToken.svg',
     isUnknown: true
   }
 }
-
 export const fetchTokenMetadata = async (
   connection: Connection,
   mint: PublicKey
@@ -1306,8 +1326,6 @@ export const getNewTokenOrThrow = async (
   const token = new SPLToken(connection, key, TOKEN_PROGRAM_ID, new Keypair())
 
   const info = await token.getMintInfo()
-
-  console.log(info)
 
   return {
     [address.toString()]: generateUnknownTokenDataObject(key, info.decimals)
