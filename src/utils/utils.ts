@@ -64,7 +64,6 @@ import { sqrt } from '@invariant-labs/sdk/lib/math'
 import { apyToApr } from './uiUtils'
 import { alignTickToSpacing } from '@invariant-labs/sdk/src/tick'
 import {
-  fetchDigitalAsset,
   mplTokenMetadata,
   fetchAllDigitalAsset,
   DigitalAsset,
@@ -157,18 +156,6 @@ export function getTokenMetadata(asset: DigitalAsset, resolvedImageUrl?: string 
     logoURI: resolvedImageUrl ?? '/unknownToken.svg',
     isUnknown: true
   }
-}
-export const fetchTokenMetadata = async (
-  connection: Connection,
-  mint: PublicKey
-): Promise<Token> => {
-  const umi = createUmi(connection.rpcEndpoint).use(mplTokenMetadata())
-
-  const umiMint = umiPublicKey(mint.toBytes())
-
-  const asset = await fetchDigitalAsset(umi, umiMint)
-
-  return getTokenMetadata(asset)
 }
 
 export const transformBN = (amount: BN): string => {
@@ -1322,13 +1309,12 @@ export const getNewTokenOrThrow = async (
   address: string,
   connection: Connection
 ): Promise<Record<string, Token>> => {
-  const key = new PublicKey(address)
-  const token = new SPLToken(connection, key, TOKEN_PROGRAM_ID, new Keypair())
+  const tokens = await getMarketNewTokensData(connection, [new PublicKey(address)])
 
-  const info = await token.getMintInfo()
+  const [tokenAddress, tokenData] = Object.entries(tokens)[0]
 
   return {
-    [address.toString()]: generateUnknownTokenDataObject(key, info.decimals)
+    [tokenAddress]: tokenData
   }
 }
 
