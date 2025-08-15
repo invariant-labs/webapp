@@ -116,8 +116,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     position: 'absolute',
     width: 12,
     height: 12,
-    bottom: -6,
-    right: -6
+    bottom: -3,
+    right: 0
   },
   action: {
     display: 'flex',

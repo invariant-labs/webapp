@@ -63,6 +63,100 @@ import { CoinGeckoAPIData, PriorityMode, Token } from '@store/consts/types'
 import { sqrt } from '@invariant-labs/sdk/lib/math'
 import { apyToApr } from './uiUtils'
 import { alignTickToSpacing } from '@invariant-labs/sdk/src/tick'
+import {
+  mplTokenMetadata,
+  fetchAllDigitalAsset,
+  DigitalAsset,
+  findMetadataPda,
+  safeFetchMetadata
+} from '@metaplex-foundation/mpl-token-metadata'
+import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
+import { publicKey as umiPublicKey } from '@metaplex-foundation/umi'
+import { TokenListProvider } from '@solana/spl-token-registry'
+
+function resolveUriToHttp(uri?: string | null): string | null {
+  if (!uri) return null
+  if (uri.startsWith('ipfs://')) return uri.replace('ipfs://', 'https://dweb.link/ipfs/')
+  if (uri.startsWith('ar://')) return uri.replace('ar://', 'https://arweave.net/')
+  if (uri.startsWith('http://') || uri.startsWith('https://')) return uri
+  return null
+}
+
+async function fetchJsonSafe(uri?: string | null): Promise<any | null> {
+  try {
+    const url = resolveUriToHttp(uri)
+    if (!url) return null
+    const res = await axios.get(url, { timeout: 10_000 })
+    return res.data ?? null
+  } catch (e) {
+    console.warn('fetchJsonSafe error for', uri, e)
+    return null
+  }
+}
+
+export const getMarketNewTokensData = async (
+  connection: Connection,
+  mints: PublicKey[]
+): Promise<Record<string, Token>> => {
+  const umi = createUmi(connection.rpcEndpoint).use(mplTokenMetadata())
+
+  const tokenListProvider = new TokenListProvider()
+  const tokenListContainer = await tokenListProvider.resolve()
+  const tokenList = tokenListContainer.filterByClusterSlug('mainnet-beta').getList()
+
+  const umiMints = mints.map(m => umiPublicKey(m.toBytes()))
+  const assets = await fetchAllDigitalAsset(umi, umiMints)
+
+  const converted = await Promise.all(
+    assets.map(async asset => {
+      const mintAddress = asset.publicKey.toString()
+      const registryEntry = tokenList.find(t => t.address === mintAddress)
+      const registryLogo = registryEntry?.logoURI ?? null
+
+      let uri = asset.metadata.uri?.trim() || null
+
+      if (!uri) {
+        try {
+          const mintUmiPub = umiPublicKey(new PublicKey(mintAddress).toBytes())
+          const metadataPda = findMetadataPda(umi, { mint: mintUmiPub })
+          const onchain = await safeFetchMetadata(umi, metadataPda)
+          const rawUri = (onchain as any)?.data?.uri?.trim()
+          if (rawUri) uri = rawUri
+        } catch (err) {
+          console.log(err)
+        }
+      }
+
+      const metadataJson = await fetchJsonSafe(uri)
+      const imageField = metadataJson?.image ?? metadataJson?.image_url ?? null
+
+      const logoURI =
+        resolveUriToHttp(imageField) ??
+        resolveUriToHttp(registryLogo) ??
+        resolveUriToHttp(uri) ??
+        '/unknownToken.svg'
+
+      return getTokenMetadata(asset, logoURI)
+    })
+  )
+
+  return converted.reduce<Record<string, Token>>((acc, t) => {
+    acc[t.address.toString()] = t
+    return acc
+  }, {})
+}
+
+export function getTokenMetadata(asset: DigitalAsset, resolvedImageUrl?: string | null): Token {
+  const address = new PublicKey(asset.publicKey.toString())
+  return {
+    address,
+    decimals: asset.mint?.decimals ?? 0,
+    name: asset.metadata?.name ?? '',
+    symbol: asset.metadata?.symbol ?? '',
+    logoURI: resolvedImageUrl ?? '/unknownToken.svg',
+    isUnknown: true
+  }
+}
 
 export const transformBN = (amount: BN): string => {
   return (amount.div(new BN(1e2)).toNumber() / 1e4).toString()
@@ -1215,15 +1309,12 @@ export const getNewTokenOrThrow = async (
   address: string,
   connection: Connection
 ): Promise<Record<string, Token>> => {
-  const key = new PublicKey(address)
-  const token = new SPLToken(connection, key, TOKEN_PROGRAM_ID, new Keypair())
+  const tokens = await getMarketNewTokensData(connection, [new PublicKey(address)])
 
-  const info = await token.getMintInfo()
-
-  console.log(info)
+  const [tokenAddress, tokenData] = Object.entries(tokens)[0]
 
   return {
-    [address.toString()]: generateUnknownTokenDataObject(key, info.decimals)
+    [tokenAddress]: tokenData
   }
 }
 

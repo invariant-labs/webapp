@@ -597,3 +597,5 @@ export const percentageThresholds: FormatNumberThreshold[] = [
     divider: 1000000000
   }
 ]
+
+export const TOKEN_FETCH_DELAY = 60 * 1000 * 60 * 24

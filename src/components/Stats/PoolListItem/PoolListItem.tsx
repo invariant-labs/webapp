@@ -235,24 +235,28 @@ const PoolListItem: React.FC<IProps> = ({
           }}>
           {!isMd ? <Typography>{tokenIndex}</Typography> : null}
           <Grid className={classes.imageContainer}>
-            <img
-              className={classes.tokenIcon}
-              src={tokenAData.icon}
-              alt='Token from'
-              onError={e => {
-                e.currentTarget.src = unknownTokenIcon
-              }}
-            />
-            {tokenAData.isUnknown && <img className={classes.warningIcon} src={warningIcon} />}
-            <img
-              className={classes.tokenIcon}
-              src={tokenBData.icon}
-              alt='Token to'
-              onError={e => {
-                e.currentTarget.src = unknownTokenIcon
-              }}
-            />
-            {tokenBData.isUnknown && <img className={classes.warningIcon} src={warningIcon} />}
+            <Box className={classes.iconsWrapper}>
+              <img
+                className={classes.tokenIcon}
+                src={tokenAData.icon}
+                alt='Token from'
+                onError={e => {
+                  e.currentTarget.src = unknownTokenIcon
+                }}
+              />
+              {tokenAData.isUnknown && <img className={classes.warningIcon} src={warningIcon} />}
+            </Box>
+            <Box className={classes.iconsWrapper}>
+              <img
+                className={classes.tokenIcon}
+                src={tokenBData.icon}
+                alt='Token to'
+                onError={e => {
+                  e.currentTarget.src = unknownTokenIcon
+                }}
+              />
+              {tokenBData.isUnknown && <img className={classes.warningIcon} src={warningIcon} />}
+            </Box>
             {!isSm && (
               <Typography>
                 {shortenAddress(tokenAData.symbol ?? '')}/{shortenAddress(tokenBData.symbol ?? '')}
