@@ -1,5 +1,5 @@
 import { actions } from '@store/reducers/stats'
-import { call, put, select, takeLatest } from 'typed-redux-saga'
+import { all, call, put, select, spawn, takeLatest } from 'typed-redux-saga'
 import { network } from '@store/selectors/solanaConnection'
 import { ensureError, getIntervalsFullSnap } from '@utils/utils'
 import { PublicKey } from '@solana/web3.js'
@@ -105,4 +105,7 @@ export function* getIntervalStats(action: PayloadAction<{ interval: Intervals }>
 
 export function* intervalStatsHandler(): Generator {
   yield* takeLatest(actions.getCurrentIntervalStats, getIntervalStats)
+}
+export function* statsSaga(): Generator {
+  yield* all([intervalStatsHandler].map(spawn))
 }
