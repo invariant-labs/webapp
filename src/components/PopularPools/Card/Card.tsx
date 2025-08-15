@@ -8,7 +8,13 @@ import cardBackgroundTop from '@static/png/cardBackground2.png'
 import { backIcon, unknownTokenIcon, warningIcon } from '@static/icons'
 import { shortenAddress } from '@utils/uiUtils'
 import StatsLabel from './StatsLabel/StatsLabel'
-import { formatNumberWithSuffix, initialXtoY, parseFeeToPathFee, ROUTES } from '@utils/utils'
+import {
+  addressToTicker,
+  formatNumberWithSuffix,
+  initialXtoY,
+  parseFeeToPathFee,
+  ROUTES
+} from '@utils/utils'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { NetworkType } from '@store/consts/static'
 import { Button } from '@common/Button/Button'
@@ -29,6 +35,7 @@ const Card: React.FC<ICard> = ({
   TVL,
   apy,
   // apyData,
+  poolAddress,
   isLoading,
   isUnknownFrom,
   fee,
@@ -38,7 +45,8 @@ const Card: React.FC<ICard> = ({
   symbolFrom,
   symbolTo,
   volume,
-  showAPY
+  showAPY,
+  network
 }) => {
   const { classes } = useStyles()
   const navigate = useNavigate()
@@ -74,14 +82,21 @@ const Card: React.FC<ICard> = ({
         isUnknown: isUnknownFrom
       }
 
+  const tokenA = isXtoY
+    ? addressToTicker(network, addressFrom ?? '')
+    : addressToTicker(network, addressTo ?? '')
+  const tokenB = isXtoY
+    ? addressToTicker(network, addressTo ?? '')
+    : addressToTicker(network, addressFrom ?? '')
+
   const handleOpenPosition = () => {
     if (fee === undefined) return
     dispatch(actions.setNavigation({ address: location.pathname }))
 
     navigate(
       ROUTES.getNewPositionRoute(
-        tokenAData.symbol,
-        tokenBData.symbol,
+        tokenA,
+        tokenB,
         parseFeeToPathFee(Math.round(fee * 10 ** (DECIMAL - 2)))
       ),
       { state: { referer: 'liquidity' } }
@@ -89,14 +104,12 @@ const Card: React.FC<ICard> = ({
   }
 
   const handleOpenSwap = () => {
-    navigate(ROUTES.getExchangeRoute(tokenAData.symbol, tokenBData.symbol), {
-      state: { referer: 'liquidity' }
-    })
+    navigate(ROUTES.getExchangeRoute(tokenA, tokenB), { state: { referer: 'liquidity' } })
   }
 
   return (
     <Grid className={classes.root}>
-      {isLoading ? (
+      {isLoading || !poolAddress?.toString() ? (
         <Skeleton variant='rounded' animation='wave' className={classes.skeleton} />
       ) : (
         <Grid>

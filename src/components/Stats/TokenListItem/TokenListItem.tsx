@@ -98,15 +98,17 @@ const TokenListItem: React.FC<IProps> = ({
           }}>
           {!isXs && !isSm && <Typography component='p'>{itemNumber}</Typography>}
           <Grid className={classes.tokenName}>
-            <img
-              className={classes.tokenIcon}
-              src={icon}
-              alt='Token icon'
-              onError={e => {
-                e.currentTarget.src = unknownTokenIcon
-              }}
-            />
-            {isUnknown && <img className={classes.warningIcon} src={warningIcon} />}
+            <Box display='flex' position='relative'>
+              <img
+                className={classes.tokenIcon}
+                src={icon}
+                alt='Token icon'
+                onError={e => {
+                  e.currentTarget.src = unknownTokenIcon
+                }}
+              />
+              {isUnknown && <img className={classes.warningIcon} src={warningIcon} />}
+            </Box>
             {shouldShowText && (
               <Typography>
                 {isXs ? shortenAddress(symbol) : name.length < 25 ? name : name.slice(0, 40)}

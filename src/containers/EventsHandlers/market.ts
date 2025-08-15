@@ -10,7 +10,7 @@ import { Status, actions as solanaConnectionActions } from '@store/reducers/sola
 import { getMarketProgramSync } from '@utils/web3/programs/amm'
 import {
   findPairs,
-  getFullNewTokensData,
+  getMarketNewTokensData,
   getNetworkTokensList,
   getPoolsVolumeRanges,
   ROUTES
@@ -19,6 +19,9 @@ import { getCurrentSolanaConnection } from '@utils/web3/connection'
 import { getSolanaWallet } from '@utils/web3/wallet'
 import { currentPoolIndex } from '@store/selectors/positions'
 import { useLocation } from 'react-router-dom'
+import { tokensData } from '@store/selectors/stats'
+import { Token } from '@store/consts/types'
+import { TOKEN_FETCH_DELAY } from '@store/consts/static'
 
 const MarketEvents = () => {
   const dispatch = useDispatch()
@@ -34,6 +37,8 @@ const MarketEvents = () => {
   const [newPositionSubscribedPool, setNewPositionSubscribedPool] = useState<PublicKey>(
     PublicKey.default
   )
+  const tokenDetails = useSelector(tokensData)
+  const unknownAdresses = tokenDetails.map(item => item.address.toString())
 
   const location = useLocation()
 
@@ -45,16 +50,27 @@ const MarketEvents = () => {
     const connectEvents = () => {
       let tokens = getNetworkTokensList(networkType)
 
+      const currentListUnkown: PublicKey[] =
+        unknownAdresses !== null
+          ? unknownAdresses
+              .filter((address: string) => !tokens[address])
+              .map((address: string) => new PublicKey(address))
+          : []
+
       const currentListStr = localStorage.getItem(`CUSTOM_TOKENS_${networkType}`)
-      const currentList: PublicKey[] =
+      const currentListBefore: PublicKey[] =
         currentListStr !== null
           ? JSON.parse(currentListStr)
               .filter((address: string) => !tokens[address])
               .map((address: string) => new PublicKey(address))
           : []
+      const currentList: PublicKey[] = [
+        ...currentListBefore,
+        ...currentListUnkown.filter(pk => !currentListBefore.some(existing => existing.equals(pk)))
+      ]
 
       const lastTokenFrom = localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`)
-      const lastTokenTo = localStorage.getItem(`INVARIANT_LAST_TOKEN_FROM_${networkType}`)
+      const lastTokenTo = localStorage.getItem(`INVARIANT_LAST_TOKEN_TO_${networkType}`)
 
       if (
         lastTokenFrom !== null &&
@@ -72,16 +88,39 @@ const MarketEvents = () => {
         currentList.push(new PublicKey(lastTokenTo))
       }
 
-      getFullNewTokensData(currentList, connection)
-        .then(data => {
-          tokens = {
-            ...tokens,
-            ...data
-          }
-        })
-        .finally(() => {
-          dispatch(actions.addTokens(tokens))
-        })
+      const lastTokenFetchAmountStr = localStorage.getItem(
+        `INVARIANT_LAST_TOKEN_AMOUNT_${networkType}`
+      )
+      const lastTokenFetchAmount =
+        lastTokenFetchAmountStr !== null ? JSON.parse(lastTokenFetchAmountStr) : null
+
+      const fetchedTokensStr = localStorage.getItem(`INVARIANT_CACHED_METADATA_${networkType}`)
+
+      const fetchedTokens: Record<string, Token> =
+        fetchedTokensStr !== null ? (JSON.parse(fetchedTokensStr) as Record<string, Token>) : {}
+
+      const filteredFetchedTokens: Record<string, Token> = Object.fromEntries(
+        Object.entries(fetchedTokens).filter(
+          ([, token]) => token.logoURI && token.logoURI !== '/unknownToken.svg'
+        )
+      )
+
+      const currentAddressList = currentList.map(k => k.toString())
+
+      const parsedData = Object.values(fetchedTokens).map(serialized => serialized.address)
+      const arraysEqual =
+        JSON.stringify([...currentAddressList].sort()) === JSON.stringify([...parsedData].sort())
+
+      const shouldFetchTokens =
+        lastTokenFetchAmount === null ||
+        !arraysEqual ||
+        (lastTokenFetchAmount !== null &&
+          Number(lastTokenFetchAmount.lastTimestamp) + TOKEN_FETCH_DELAY <= Date.now())
+
+      const addressesToFetch: PublicKey[] = currentAddressList
+        .filter(address => !filteredFetchedTokens[address])
+        .map(address => new PublicKey(address))
+
       getPoolsVolumeRanges(networkType.toLowerCase())
         .then(ranges => {
           dispatch(actions.setVolumeRanges(ranges))
@@ -89,10 +128,56 @@ const MarketEvents = () => {
         .catch(error => {
           console.log(error)
         })
+
+      if (shouldFetchTokens && addressesToFetch.length > 0) {
+        getMarketNewTokensData(connection, addressesToFetch)
+          .then(data => {
+            tokens = {
+              ...tokens,
+              ...data
+            }
+
+            const dataToCashe = { ...fetchedTokens, ...data }
+
+            localStorage.setItem(
+              `INVARIANT_CACHED_METADATA_${networkType}`,
+              JSON.stringify(dataToCashe)
+            )
+            localStorage.setItem(
+              `INVARIANT_LAST_TOKEN_AMOUNT_${networkType}`,
+              JSON.stringify({
+                amount: currentList.length,
+                lastTimestamp: Date.now()
+              })
+            )
+          })
+          .finally(() => {
+            dispatch(actions.addTokens(tokens))
+          })
+      } else {
+        const parsedData: Token[] = Object.values(fetchedTokens).map(serialized => ({
+          ...serialized,
+          address: new PublicKey(serialized.address)
+        }))
+
+        const parsedTokensMap: Record<string, Token> = parsedData.reduce(
+          (map, token) => {
+            map[token.address.toString()] = token
+            return map
+          },
+          {} as Record<string, Token>
+        )
+
+        tokens = {
+          ...tokens,
+          ...parsedTokensMap
+        }
+        dispatch(actions.addTokens(tokens))
+      }
     }
 
     connectEvents()
-  }, [dispatch, networkStatus])
+  }, [dispatch, networkStatus, unknownAdresses.length])
 
   // New position pool subscription
   useEffect(() => {

@@ -102,7 +102,7 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
 
   iconsWrapper: {
     display: 'flex',
-    marginRight: 8
+    position: 'relative'
   },
   selfEnd: {
     [theme.breakpoints.down('sm')]: {
@@ -255,7 +255,7 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
     width: 12,
     height: 12,
     bottom: -6,
-    right: -6
+    right: -2
   },
   clipboardIcon: {
     marginLeft: 4,
