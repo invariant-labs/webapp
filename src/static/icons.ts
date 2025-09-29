@@ -91,6 +91,7 @@ import warning3 from './svg/warning3.svg'
 import centerToRangeIcon from './svg/centerToRange.svg'
 import connectWalletIcon from './svg/connectWalletIcon.svg'
 import warning2Icon from './svg/warning2.svg'
+import fogoGlow from './svg/fogoGlow.svg'
 
 export {
   dog1Icon,
@@ -192,7 +193,8 @@ export const chainIcons = {
   eclipseGlow: eclipseGlowIcon,
   solanaGlow: solanaGlowIcon,
   alephiumGlow: alephiumGlowIcon,
-  sonicGlow: sonicGlowIcon
+  sonicGlow: sonicGlowIcon,
+  fogoGlow: fogoGlow
 }
 
 export const netowrkIcons = {
