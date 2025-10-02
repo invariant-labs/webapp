@@ -378,11 +378,11 @@ export const CHAINS = [
     address: 'https://fogo.invariant.app/exchange',
     iconGlow: 'fogoGlow'
   },
-  {
-    name: Chain.Sonic,
-    address: 'https://sonic.invariant.app/exchange',
-    iconGlow: 'sonicGlow'
-  }
+//   {
+//     name: Chain.Sonic,
+//     address: 'https://sonic.invariant.app/exchange',
+//     iconGlow: 'sonicGlow'
+//   }
   // { name: Chain.Vara, address: 'https://vara.invariant.app/exchange' },
   // {
   //   name: Chain.Alephium,
