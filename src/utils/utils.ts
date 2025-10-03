@@ -1455,14 +1455,14 @@ export const getJupTokensRatioPrice = async (
   id: string,
   vsId: string
 ): Promise<Omit<TokenPriceData, 'buyPrice' | 'sellPrice'>> => {
-  const idResponse = await axios.get<RawJupApiResponse>(
-    `${BASE_JUPITER_API_URL}/price/v3?ids=${id}`
+  const response = await axios.get<RawJupApiResponse>(
+    `${BASE_JUPITER_API_URL}/price/v3?ids=${id + ',' + vsId}`
   )
 
-  const vsIdResponse = await axios.get<RawJupApiResponse>(
-    `${BASE_JUPITER_API_URL}/price/v3?ids=${vsId}`
-  )
-  const tokensRatio = idResponse.data[id].usdPrice / vsIdResponse.data[vsId].usdPrice
+  const idData = response.data[id].usdPrice
+  const vsIdData = response.data[vsId].usdPrice
+
+  const tokensRatio = idData / vsIdData
 
   return {
     price: tokensRatio
