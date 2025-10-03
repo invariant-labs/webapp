@@ -1,20 +1,18 @@
 import * as fs from 'node:fs'
 import axios from 'axios'
-import { BASE_JUPITER_API_URL } from '@store/consts/static.ts'
+
 const run = async () => {
   const tokensObject = await (
-    await axios.default.get(
-      `${BASE_JUPITER_API_URL}/tokens/v1/tagged/verified,community,strict,lst,birdeye-trending,clone,pump`
-    )
+    await axios.default.get(`https://lite-api.jup.ag/tokens/v2/tag?query=verified`)
   ).data
 
   const tokensList = {}
-  tokensObject.forEach(({ symbol, address, decimals, name, logoURI }) => {
-    tokensList[address] = {
+  tokensObject.forEach(({ symbol, id, decimals, name, icon }) => {
+    tokensList[id] = {
       symbol,
       decimals,
       name,
-      logoURI
+      logoURI: icon
     }
   })
 
