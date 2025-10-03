@@ -533,8 +533,8 @@ export const RangeSelector: React.FC<IRangeSelector> = ({
           <Grid display={'flex'} flexDirection='column' alignItems={'flex-end'} flexShrink={0}>
             <Typography className={classes.currentPrice}>Current price</Typography>
             <Typography className={classes.globalPrice}>Global price</Typography>
-            <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>
-            <Typography className={classes.lastGlobalSellPrice}>Last global sell price</Typography>
+            {/* <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>
+            <Typography className={classes.lastGlobalSellPrice}>Last global sell price</Typography> */}
           </Grid>
         </Grid>
         <PriceRangePlot
