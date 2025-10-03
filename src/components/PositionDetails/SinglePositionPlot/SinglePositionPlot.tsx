@@ -269,8 +269,8 @@ const SinglePositionPlot: React.FC<ISinglePositionPlot> = ({
           <Grid gap={'2px'} mt={'6px'} display='flex' flexDirection='column' alignItems='flex-end'>
             <Typography className={classes.currentPrice}>Current price</Typography>
             <Typography className={classes.globalPrice}>Global price</Typography>
-            <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>
-            <Typography className={classes.lastGlobalSellPrice}>Last global sell price</Typography>
+            {/* <Typography className={classes.lastGlobalBuyPrice}>Last global buy price</Typography>
+            <Typography className={classes.lastGlobalSellPrice}>Last global sell price</Typography> */}
           </Grid>
         </Grid>
       </Box>

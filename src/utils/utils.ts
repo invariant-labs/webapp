@@ -1145,22 +1145,22 @@ export const getJupPricesData = async (ids: string[]): Promise<Record<string, To
   const requests = chunkedIds.map(
     async idsChunk =>
       await axios.get<RawJupApiResponse>(
-        `${BASE_JUPITER_API_URL}/price/v2?ids=${idsChunk.join(',')}&showExtraInfo=true`
+        `${BASE_JUPITER_API_URL}/price/v3?ids=${idsChunk.join(',')}&showExtraInfo=true`
       )
   )
 
   const responses = await Promise.all(requests)
   const concatRes = responses.flatMap(response =>
-    Object.values(response.data.data).map(({ id, price, extraInfo }) => ({ id, price, extraInfo }))
+    Object.values(response.data).map(({ id, usdPrice }) => ({ id, usdPrice }))
   )
 
-  return concatRes.reduce<Record<string, TokenPriceData>>((acc, { id, price, extraInfo }) => {
+  return concatRes.reduce<Record<string, TokenPriceData>>((acc, { id, usdPrice }) => {
     acc[id] = {
-      price: Number(price),
-      buyPrice: Number(extraInfo?.quotedPrice.buyPrice ?? 0),
-      sellPrice: Number(extraInfo?.quotedPrice.sellPrice ?? 0),
-      lastBuyPrice: Number(extraInfo?.lastSwappedPrice.lastJupiterBuyPrice ?? 0),
-      lastSellPrice: Number(extraInfo?.lastSwappedPrice.lastJupiterSellPrice ?? 0)
+      price: Number(usdPrice),
+      buyPrice: 0,
+      sellPrice: 0,
+      lastBuyPrice: 0,
+      lastSellPrice: 0
     }
     return acc
   }, {})
@@ -1432,19 +1432,15 @@ export const getTokenPrice = async (
 export const getJupTokenPrice = async (id: string): Promise<TokenPriceData> => {
   try {
     const response = await axios.get<RawJupApiResponse>(
-      `${BASE_JUPITER_API_URL}/price/v2?ids=${id}&showExtraInfo=true`
+      `${BASE_JUPITER_API_URL}/price/v3?ids=${id}`
     )
 
     return {
-      price: Number(response.data.data[id].price),
-      buyPrice: Number(response.data.data[id].extraInfo?.quotedPrice.buyPrice ?? 0),
-      sellPrice: Number(response.data.data[id].extraInfo?.quotedPrice.sellPrice ?? 0),
-      lastBuyPrice: Number(
-        response.data.data[id].extraInfo?.lastSwappedPrice.lastJupiterBuyPrice ?? 0
-      ),
-      lastSellPrice: Number(
-        response.data.data[id].extraInfo?.lastSwappedPrice.lastJupiterSellPrice ?? 0
-      )
+      price: Number(response.data[id].usdPrice),
+      buyPrice: 0,
+      sellPrice: 0,
+      lastBuyPrice: 0,
+      lastSellPrice: 0
     }
   } catch (error) {
     return {
@@ -1460,11 +1456,16 @@ export const getJupTokensRatioPrice = async (
   vsId: string
 ): Promise<Omit<TokenPriceData, 'buyPrice' | 'sellPrice'>> => {
   const response = await axios.get<RawJupApiResponse>(
-    `${BASE_JUPITER_API_URL}/price/v2?ids=${id}&vsToken=${vsId}`
+    `${BASE_JUPITER_API_URL}/price/v3?ids=${id + ',' + vsId}`
   )
 
+  const idData = response.data[id].usdPrice
+  const vsIdData = response.data[vsId].usdPrice
+
+  const tokensRatio = idData / vsIdData
+
   return {
-    price: Number(response.data.data[id].price)
+    price: tokensRatio
   }
 }
 
@@ -1537,16 +1538,6 @@ export const solToPriorityFee = (sol: number) => {
 }
 
 export const createLoaderKey = () => (new Date().getMilliseconds() + Math.random()).toString()
-
-export const getMainnetCommonTokens = async (): Promise<PublicKey[]> => {
-  const { data } = await axios.get(`${BASE_JUPITER_API_URL}/tokens/v1/tagged/verified}`)
-
-  const commonTokens = data
-    .slice(0, 8)
-    .map((token: { address: string }) => new PublicKey(token.address))
-
-  return commonTokens
-}
 
 export const numberToString = (number: number | bigint | string): string => {
   if (typeof number === 'bigint') {
