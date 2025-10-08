@@ -10,7 +10,6 @@ import useStyles from './style'
 import { ISelectChain, ISelectNetwork, PriorityMode } from '@store/consts/types'
 import { RpcStatus } from '@store/reducers/solanaConnection'
 import { PublicKey } from '@solana/web3.js'
-import { YourPointsButton } from './HeaderButton/YourPointsButton'
 import { Bar } from '@components/Bar/Bar'
 import { calculatePriorityFee, getCurrentDynamicFee, ROUTES } from '@utils/utils'
 import { logoShortIcon, logoTitleIcon } from '@static/icons'
@@ -202,9 +201,6 @@ export const Header: React.FC<IHeader> = ({
               onChainChange={onChainSelect}
               onFaucet={onFaucet}
             />
-            <Grid>
-              <YourPointsButton />
-            </Grid>
           </Grid>
           <ChangeWalletButton
             name={
