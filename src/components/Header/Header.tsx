@@ -181,7 +181,7 @@ export const Header: React.FC<IHeader> = ({
           ))}
         </Grid>
 
-        <Grid container item className={classes.buttons}>
+        <Grid container className={classes.buttons}>
           <CardMedia
             className={classes.logoShort}
             image={logoShortIcon}
