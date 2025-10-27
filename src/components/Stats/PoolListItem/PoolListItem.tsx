@@ -25,6 +25,8 @@ import {
   horizontalSwapIcon,
   newTabBtnIcon,
   plusIcon,
+  star,
+  starFill,
   unknownTokenIcon,
   warningIcon
 } from '@static/icons'
@@ -55,6 +57,8 @@ interface IProps {
   showAPY: boolean
   itemNumber?: number
   interval?: Intervals
+  isFavourite?: boolean
+  switchFavouritePool?: (poolAddress: string) => void
 }
 
 const PoolListItem: React.FC<IProps> = ({
@@ -79,7 +83,9 @@ const PoolListItem: React.FC<IProps> = ({
   copyAddressHandler,
   showAPY,
   itemNumber = 0,
-  interval = Intervals.Daily
+  interval = Intervals.Daily,
+  isFavourite,
+  switchFavouritePool
 }) => {
   const [showInfo, setShowInfo] = useState(false)
   const { classes, cx } = useStyles({ showInfo })
@@ -233,7 +239,24 @@ const PoolListItem: React.FC<IProps> = ({
                 ? `1px solid ${colors.invariant.light}`
                 : `2px solid ${colors.invariant.light}`
           }}>
-          {!isMd ? <Typography>{tokenIndex}</Typography> : null}
+          <Box className={classes.tokenIndexContainer}>
+            {!isMd && (
+              <Box className={classes.tokenIndex}>
+                <Typography>{tokenIndex}</Typography>
+              </Box>
+            )}
+            <img
+              className={classes.favouriteButton}
+              src={isFavourite ? starFill : star}
+              onClick={e => {
+                if (poolAddress && switchFavouritePool) {
+                  switchFavouritePool(poolAddress)
+                }
+
+                e.stopPropagation()
+              }}
+            />
+          </Box>{' '}
           <Grid className={classes.imageContainer}>
             <Box className={classes.iconsWrapper}>
               <img
@@ -286,7 +309,6 @@ const PoolListItem: React.FC<IProps> = ({
               </Grid>
             </Grid>
           ) : null}
-
           <Typography>{`$${formatNumberWithSuffix(volume)}`}</Typography>
           <Typography className={classes.selfEnd}>{`$${formatNumberWithSuffix(TVL)}`}</Typography>
           {!isSmd && (
@@ -332,6 +354,7 @@ const PoolListItem: React.FC<IProps> = ({
                   </span>
                 </Typography>
                 <Typography>{''}</Typography>
+                <Typography>{''}</Typography>
 
                 <Typography component='h5' className={classes.extendedRowTitle}>
                   APY{' '}
@@ -358,6 +381,8 @@ const PoolListItem: React.FC<IProps> = ({
                     {shortenAddress(tokenAData.symbol ?? '')}/
                     {shortenAddress(tokenBData.symbol ?? '')}
                   </Typography>
+                  <Typography>{''}</Typography>
+
                   {ActionsButtons}
                 </>
               )}
@@ -371,11 +396,9 @@ const PoolListItem: React.FC<IProps> = ({
             root: classes.header
           }}
           className={cx(classes.container, { [classes.containerNoAPY]: !showAPY })}>
-          {!isMd && (
-            <Typography style={{ lineHeight: '11px' }}>
-              N<sup>o</sup>
-            </Typography>
-          )}
+          <Typography style={{ lineHeight: '11px' }}>
+            N<sup>o</sup>
+          </Typography>
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {

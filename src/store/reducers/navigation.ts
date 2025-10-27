@@ -9,6 +9,7 @@ export interface INavigation {
 }
 
 export interface INavigationState {
+  showFavourites: boolean
   address: string
   liquidityPool: {
     filteredTokens: ISearchToken[]
@@ -41,6 +42,7 @@ export interface SetSearchPayload {
 const defaultStatus: INavigation = {
   navigationState: {
     address: ROUTES.ROOT,
+    showFavourites: false,
     liquidityPool: {
       filteredTokens: [],
       sortType: SortTypePoolList.FEE_24_DESC,
@@ -87,6 +89,10 @@ const navigationSlice = createSlice({
           }
           break
       }
+    },
+    setShowFavourites(state, action: PayloadAction<boolean>) {
+      state.navigationState.showFavourites = action.payload
+      return state
     }
   }
 })

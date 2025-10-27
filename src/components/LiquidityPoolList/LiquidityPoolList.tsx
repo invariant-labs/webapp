@@ -37,6 +37,8 @@ export interface PoolListInterface {
   isLoading: boolean
   showAPY: boolean
   filteredTokens: ISearchToken[]
+  switchFavouritePool: (poolAddress: string) => void
+  showFavourites: boolean
 }
 
 import { Keypair } from '@solana/web3.js'
@@ -86,7 +88,9 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
   filteredTokens,
   copyAddressHandler,
   isLoading,
-  showAPY
+  showAPY,
+  switchFavouritePool,
+  showFavourites
 }) => {
   const [initialDataLength, setInitialDataLength] = useState(initialLength)
   const { classes, cx } = useStyles()
@@ -179,6 +183,24 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
   const lowerBound = useMemo(() => (page - 1) * ITEMS_PER_PAGE + 1, [page])
   const upperBound = useMemo(() => Math.min(page * ITEMS_PER_PAGE, totalItems), [totalItems, page])
 
+  const favouriteEmptyPlaceholderMainTitle = useMemo(() => {
+    if (filteredTokenX && filteredTokenY) {
+      return `You don't have any favourite ${shortenAddress(filteredTokenX.symbol ?? '')}/${shortenAddress(
+        filteredTokenY.symbol ?? ''
+      )} pools yet...`
+    }
+
+    if (filteredTokenX && !filteredTokenY) {
+      return `You don't have any favourite ${shortenAddress(filteredTokenX.symbol ?? '')} pools yet...`
+    }
+
+    if (!filteredTokenX && filteredTokenY) {
+      return `You don't have any favourite ${shortenAddress(filteredTokenY.symbol ?? '')} pools yet...`
+    }
+
+    return `You don't have any favourite pools yet...`
+  }, [filteredTokenX, filteredTokenY])
+
   return (
     <Grid
       container
@@ -221,6 +243,8 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
               poolAddress={element.poolAddress}
               copyAddressHandler={copyAddressHandler}
               showAPY={showAPY}
+              isFavourite={element.isFavourite}
+              switchFavouritePool={switchFavouritePool}
             />
           ))}
           {getEmptyRowsCount() > 0 &&
@@ -241,26 +265,39 @@ const LiquidityPoolList: React.FC<PoolListInterface> = ({
         </>
       ) : (
         <Grid container className={classes.emptyWrapper}>
-          <EmptyPlaceholder
-            height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
-            newVersion
-            mainTitle={`The ${shortenAddress(filteredTokenX.symbol ?? '')}/${shortenAddress(filteredTokenY.symbol ?? '')} pool was not found...`}
-            desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
-            desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
-            buttonName='Create Pool'
-            onAction={() => {
-              dispatch(actions.setNavigation({ address: location.pathname }))
-
-              navigate(
-                ROUTES.getNewPositionRoute(filteredTokenX.address, filteredTokenY.address, '0_10'),
-                {
-                  state: { referer: 'stats' }
-                }
-              )
-            }}
-            withButton={true}
-            withImg={initialDataLength > 3}
-          />
+          {showFavourites ? (
+            <EmptyPlaceholder
+              height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
+              newVersion
+              mainTitle={favouriteEmptyPlaceholderMainTitle}
+              desc={'You can add them by clicking the star icon next to the pool!'}
+              withButton={false}
+            />
+          ) : (
+            <EmptyPlaceholder
+              height={initialDataLength < ITEMS_PER_PAGE ? initialDataLength * 69 : 688}
+              newVersion
+              mainTitle={`The ${shortenAddress(filteredTokenX.symbol ?? '')}/${shortenAddress(filteredTokenY.symbol ?? '')} pool was not found...`}
+              desc={initialDataLength < 3 ? '' : 'You can create it yourself!'}
+              desc2={initialDataLength < 5 ? '' : 'Or try adjusting your search criteria!'}
+              buttonName='Create Pool'
+              onAction={() => {
+                dispatch(actions.setNavigation({ address: location.pathname }))
+                navigate(
+                  ROUTES.getNewPositionRoute(
+                    filteredTokenX.address,
+                    filteredTokenY.address,
+                    '0_10'
+                  ),
+                  {
+                    state: { referer: 'stats' }
+                  }
+                )
+              }}
+              withButton={true}
+              withImg={initialDataLength > 3}
+            />
+          )}
         </Grid>
       )}
       <Grid
