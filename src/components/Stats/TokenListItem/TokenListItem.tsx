@@ -9,7 +9,7 @@ import { Intervals, ITEMS_PER_PAGE, NetworkType, SortTypeTokenList } from '@stor
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined'
 import { VariantType } from 'notistack'
-import { newTabBtnIcon, unknownTokenIcon, warningIcon } from '@static/icons'
+import { newTabBtnIcon, star, starFill, unknownTokenIcon, warningIcon } from '@static/icons'
 import { mapIntervalToString } from '@utils/uiUtils'
 
 interface IProps {
@@ -29,6 +29,8 @@ interface IProps {
   network?: NetworkType
   copyAddressHandler?: (message: string, variant: VariantType) => void
   interval?: Intervals
+  isFavourite?: boolean
+  switchFavouriteTokens?: (tokenAddress: string) => void
 }
 
 const TokenListItem: React.FC<IProps> = ({
@@ -47,7 +49,9 @@ const TokenListItem: React.FC<IProps> = ({
   isUnknown,
   network,
   copyAddressHandler,
-  interval = Intervals.Daily
+  interval = Intervals.Daily,
+  isFavourite = false,
+  switchFavouriteTokens
 }) => {
   const { classes } = useStyles()
   // const isNegative = priceChange < 0
@@ -96,7 +100,24 @@ const TokenListItem: React.FC<IProps> = ({
                 ? `1px solid ${colors.invariant.light}`
                 : `2px solid ${colors.invariant.light}`
           }}>
-          {!isXs && !isSm && <Typography component='p'>{itemNumber}</Typography>}
+          <Box className={classes.tokenIndexContainer}>
+            {!isMd && (
+              <Box className={classes.tokenIndex}>
+                <Typography>{itemNumber}</Typography>
+              </Box>
+            )}
+            <img
+              className={classes.favouriteButton}
+              src={isFavourite ? starFill : star}
+              onClick={e => {
+                if (address && switchFavouriteTokens) {
+                  switchFavouriteTokens(address)
+                }
+
+                e.stopPropagation()
+              }}
+            />
+          </Box>{' '}
           <Grid className={classes.tokenName}>
             <Box display='flex' position='relative'>
               <img
@@ -161,11 +182,9 @@ const TokenListItem: React.FC<IProps> = ({
                 : `2px solid ${colors.invariant.light}`
           }}
           classes={{ container: classes.container, root: classes.header }}>
-          {!isMd && (
-            <Typography style={{ lineHeight: '12px' }}>
-              N<sup>o</sup>
-            </Typography>
-          )}
+          <Typography style={{ lineHeight: '12px' }}>
+            N<sup>o</sup>
+          </Typography>
           <Typography
             style={{ cursor: 'pointer' }}
             onClick={() => {

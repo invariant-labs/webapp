@@ -32,7 +32,8 @@ import Overview from '@components/Stats/Overview/Overview'
 import {
   poolSearch,
   tokenSearch,
-  showFavourites as showFavouritesSelector
+  showFavourites as showFavouritesSelector,
+  showFavouritesTokens as showFavouritesTokensSelector
 } from '@store/selectors/navigation'
 import { theme } from '@static/theme'
 
@@ -59,7 +60,22 @@ export const WrappedStats: React.FC = () => {
 
   const lastUsedInterval = useSelector(currentInterval)
   const lastFetchedInterval = useSelector(lastInterval)
-
+  const [favouriteTokens, setFavouriteTokens] = useState<Set<string>>(
+    new Set(
+      JSON.parse(
+        localStorage.getItem(`INVARIANT_FAVOURITE_TOKENS_Eclipse_${currentNetwork}`) || '[]'
+      )
+    )
+  )
+  const setShowFavouritesTokens = (show: boolean) => {
+    dispatch(navigationActions.setShowFavouritesTokens(show))
+  }
+  useEffect(() => {
+    localStorage.setItem(
+      `INVARIANT_FAVOURITE_TOKENS_Eclipse_${currentNetwork}`,
+      JSON.stringify([...favouriteTokens])
+    )
+  }, [favouriteTokens])
   const searchTokensValue = searchParamsToken.filteredTokens
   const [favouritePools, setFavouritePools] = useState<Set<string>>(
     new Set(
@@ -69,7 +85,18 @@ export const WrappedStats: React.FC = () => {
     )
   )
   const showFavourites = useSelector(showFavouritesSelector)
-
+  const showFavouritesTokens = useSelector(showFavouritesTokensSelector)
+  const switchFavouriteToken = (tokenAddress: string) => {
+    if (favouriteTokens.has(tokenAddress)) {
+      const updatedFavouriteTokens = new Set(favouriteTokens)
+      updatedFavouriteTokens.delete(tokenAddress)
+      setFavouriteTokens(updatedFavouriteTokens)
+    } else {
+      const updatedFavouriteTokens = new Set(favouriteTokens)
+      updatedFavouriteTokens.add(tokenAddress)
+      setFavouriteTokens(updatedFavouriteTokens)
+    }
+  }
   const setShowFavourites = (show: boolean) => {
     dispatch(navigationActions.setShowFavourites(show))
   }
@@ -144,17 +171,25 @@ export const WrappedStats: React.FC = () => {
   }
 
   const filteredTokenList = useMemo(() => {
-    if (searchTokensValue.length === 0) {
-      return tokensList
-    }
+    const tokensListWithFavourites = tokensList.map(tokenData => ({
+      ...tokenData,
+      isFavourite: favouriteTokens.has(tokenData.address.toString())
+    }))
 
-    return tokensList.filter(tokenData => {
+    return tokensListWithFavourites.filter(tokenData => {
+      if (showFavouritesTokens && !tokenData.isFavourite) {
+        return false
+      }
+
+      if (searchTokensValue.length === 0) {
+        return true
+      }
       const tokenAddress = tokenData.address.toString().toLowerCase()
       const tokenSymbol = tokenData.tokenDetails?.symbol?.toLowerCase() || ''
       const tokenName = tokenData.tokenDetails?.name?.toLowerCase() || ''
 
       return searchTokensValue.some(filterToken => {
-        const filterAddress = filterToken.address?.toLowerCase()
+        const filterAddress = filterToken.address?.toLowerCase() || ''
         const filterSymbol = filterToken.symbol.toLowerCase()
         const filterName = filterToken.name.toLowerCase()
 
@@ -164,7 +199,7 @@ export const WrappedStats: React.FC = () => {
         return tokenSymbol.includes(filterSymbol) || tokenName.includes(filterName)
       })
     })
-  }, [tokensList, searchTokensValue])
+  }, [tokensList, searchTokensValue, favouriteTokens, showFavouritesTokens])
 
   const filteredPoolsList = useMemo(() => {
     const poolsListWithFavourites = poolsList.map(poolData => ({
@@ -297,12 +332,35 @@ export const WrappedStats: React.FC = () => {
               Top tokens
             </Typography>
 
-            <FilterSearch
-              networkType={currentNetwork}
-              setSelectedFilters={setSearchTokensValue}
-              selectedFilters={searchTokensValue}
-              filtersAmount={2}
-            />
+            <Box className={classes.headerContainer}>
+              <Button
+                className={classes.showFavouritesButton}
+                onClick={() => {
+                  setShowFavouritesTokens(!showFavouritesTokens)
+                  dispatch(
+                    navigationActions.setSearch({
+                      section: 'statsTokens',
+                      type: 'pageNumber',
+                      pageNumber: 1
+                    })
+                  )
+                }}>
+                <img src={showFavouritesTokens ? starFill : star} />
+                {!isMd && (
+                  <Typography className={classes.showFavouritesText}>
+                    {' '}
+                    {!showFavouritesTokens ? 'Show' : 'Hide'} favourites
+                  </Typography>
+                )}
+              </Button>
+              <FilterSearch
+                networkType={currentNetwork}
+                setSelectedFilters={setSearchTokensValue}
+                selectedFilters={searchTokensValue}
+                filtersAmount={2}
+                closeOnSelect={true}
+              />
+            </Box>
           </Grid>
           <TokensList
             initialLength={tokensList.length}
@@ -315,12 +373,14 @@ export const WrappedStats: React.FC = () => {
               volume: tokenData.volume24,
               TVL: tokenData.tvl,
               address: tokenData.address.toString(),
-              isUnknown: tokenData.tokenDetails?.isUnknown ?? false
+              isUnknown: tokenData.tokenDetails?.isUnknown ?? false,
+              isFavourite: tokenData.isFavourite
             }))}
             network={currentNetwork}
             copyAddressHandler={copyAddressHandler}
             isLoading={isLoadingStats}
             interval={lastUsedInterval ?? IntervalsKeys.Daily}
+            switchFavouriteTokens={switchFavouriteToken}
           />
         </>
       )}
