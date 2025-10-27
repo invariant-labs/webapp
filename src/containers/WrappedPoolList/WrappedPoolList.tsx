@@ -1,26 +1,20 @@
-import { Box, Button, Typography, useMediaQuery } from '@mui/material'
-import { isLoading, poolsStatsWithTokensDetails } from '@store/selectors/stats'
+import { isLoading, lastInterval, poolsStatsWithTokensDetails } from '@store/selectors/stats'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import useStyles from './styles'
 import { VariantType } from 'notistack'
 import { actions as snackbarActions } from '@store/reducers/snackbars'
 import { network } from '@store/selectors/solanaConnection'
 import { actions as navigationActions } from '@store/reducers/navigation'
-import LiquidityPoolList from '@components/LiquidityPoolList/LiquidityPoolList'
-import { FilterSearch, ISearchToken } from '@common/FilterSearch/FilterSearch'
-import { theme } from '@static/theme'
-import { star, starFill, unknownTokenIcon } from '@static/icons'
+import { ISearchToken } from '@common/FilterSearch/FilterSearch'
+import { unknownTokenIcon } from '@static/icons'
 import {
   liquiditySearch,
   showFavourites as showFavouritesSelector
 } from '@store/selectors/navigation'
+import { Intervals, SortTypePoolList } from '@store/consts/static'
+import PoolList from '@components/Stats/PoolList/PoolList'
 
 export const WrappedPoolList: React.FC = () => {
-  const isXs = useMediaQuery(theme.breakpoints.down('sm'))
-  const isMd = useMediaQuery(theme.breakpoints.down('md'))
-
-  const { classes } = useStyles({ isXs })
   const dispatch = useDispatch()
   const poolsList = useSelector(poolsStatsWithTokensDetails)
   const currentNetwork = useSelector(network)
@@ -29,7 +23,7 @@ export const WrappedPoolList: React.FC = () => {
   const isLoadingStats = useSelector(isLoading)
   const [favouritePools, setFavouritePools] = useState<Set<string>>(
     new Set(
-      JSON.parse(localStorage.getItem(`INVARIANT_FAVOURITE_POOLS_Eclipse_${networkType}`) || '[]')
+      JSON.parse(localStorage.getItem(`INVARIANT_FAVOURITE_POOLS_Solana_${networkType}`) || '[]')
     )
   )
 
@@ -41,7 +35,7 @@ export const WrappedPoolList: React.FC = () => {
 
   useEffect(() => {
     localStorage.setItem(
-      `INVARIANT_FAVOURITE_POOLS_Eclipse_${networkType}`,
+      `INVARIANT_FAVOURITE_POOLS_Solana_${networkType}`,
       JSON.stringify([...favouritePools])
     )
   }, [favouritePools])
@@ -75,6 +69,7 @@ export const WrappedPoolList: React.FC = () => {
       })
     )
   }
+  const lastFetchedInterval = useSelector(lastInterval)
 
   const filteredPoolsList = useMemo(() => {
     const poolsListWithFavourites = poolsList.map(poolData => ({
@@ -103,7 +98,7 @@ export const WrappedPoolList: React.FC = () => {
 
       return true
     })
-  }, [isLoadingStats, poolsList, selectedFilters, favouritePools, showFavourites])
+  }, [isLoadingStats, poolsList, selectedFilters, favouritePools, showFavourites, searchParams])
 
   const showAPY = useMemo(() => {
     return filteredPoolsList.some(pool => pool.apy !== 0)
@@ -119,70 +114,71 @@ export const WrappedPoolList: React.FC = () => {
     )
   }
 
+  const handleFavouritesClick = () => {
+    setShowFavourites(!showFavourites)
+    dispatch(
+      navigationActions.setSearch({
+        section: 'liquidityPool',
+        type: 'pageNumber',
+        pageNumber: 1
+      })
+    )
+  }
+
+  const handleChangePagination = (newPage: number) => {
+    dispatch(
+      navigationActions.setSearch({
+        section: 'liquidityPool',
+        type: 'pageNumber',
+        pageNumber: newPage
+      })
+    )
+  }
+
+  const handlePoolsSortType = (sortType: SortTypePoolList) => {
+    dispatch(navigationActions.setSearch({ section: 'liquidityPool', type: 'sortType', sortType }))
+  }
+
   return (
-    <div className={classes.container}>
-      <Box className={classes.rowContainer}>
-        <Typography className={classes.subheader} mb={2}>
-          All pools
-        </Typography>
+    <PoolList
+      initialLength={poolsList.length}
+      interval={lastFetchedInterval || Intervals.Daily}
+      data={filteredPoolsList.map(poolData => ({
+        symbolFrom: poolData.tokenXDetails?.symbol ?? poolData.tokenX.toString(),
+        symbolTo: poolData.tokenYDetails?.symbol ?? poolData.tokenY.toString(),
+        iconFrom: poolData.tokenXDetails?.logoURI ?? unknownTokenIcon,
+        iconTo: poolData.tokenYDetails?.logoURI ?? unknownTokenIcon,
+        volume: poolData.volume24,
+        TVL: poolData.tvl,
+        fee: poolData.fee,
+        addressFrom: poolData.tokenX.toString(),
+        addressTo: poolData.tokenY.toString(),
+        apy: poolData.apy,
 
-        <Box className={classes.headerContainer}>
-          <Button
-            className={classes.showFavouritesButton}
-            onClick={() => {
-              setShowFavourites(!showFavourites)
-              dispatch(
-                navigationActions.setSearch({
-                  section: 'liquidityPool',
-                  type: 'pageNumber',
-                  pageNumber: 1
-                })
-              )
-            }}>
-            <img src={showFavourites ? starFill : star} />
-            {!isMd && (
-              <Typography className={classes.showFavouritesText}>Show favourites</Typography>
-            )}
-          </Button>
+        apyData: {
+          fees: poolData.apy,
+          accumulatedFarmsSingleTick: 0,
+          accumulatedFarmsAvg: 0
+        },
 
-          <FilterSearch
-            networkType={networkType}
-            selectedFilters={selectedFilters}
-            setSelectedFilters={setSelectedFilters}
-            filtersAmount={2}
-          />
-        </Box>
-      </Box>
-
-      <LiquidityPoolList
-        initialLength={poolsList.length}
-        data={filteredPoolsList.map(poolData => ({
-          symbolFrom: poolData.tokenXDetails?.symbol ?? poolData.tokenX.toString(),
-          symbolTo: poolData.tokenYDetails?.symbol ?? poolData.tokenY.toString(),
-          iconFrom: poolData.tokenXDetails?.logoURI ?? unknownTokenIcon,
-          iconTo: poolData.tokenYDetails?.logoURI ?? unknownTokenIcon,
-          volume: poolData.volume24,
-          TVL: poolData.tvl,
-          fee: poolData.fee,
-          addressFrom: poolData.tokenX.toString(),
-          addressTo: poolData.tokenY.toString(),
-          apy: poolData.apy,
-          apyData: {
-            fees: poolData.apy
-          },
-          isUnknownFrom: poolData.tokenXDetails?.isUnknown ?? false,
-          isUnknownTo: poolData.tokenYDetails?.isUnknown ?? false,
-          poolAddress: poolData.poolAddress.toString(),
-          isFavourite: poolData.isFavourite
-        }))}
-        network={currentNetwork}
-        copyAddressHandler={copyAddressHandler}
-        isLoading={isLoadingStats}
-        showAPY={showAPY}
-        switchFavouritePool={switchFavouritePool}
-        showFavourites={showFavourites}
-        filteredTokens={selectedFilters}
-      />
-    </div>
+        isUnknownFrom: poolData.tokenXDetails?.isUnknown ?? false,
+        isUnknownTo: poolData.tokenYDetails?.isUnknown ?? false,
+        poolAddress: poolData.poolAddress.toString(),
+        isFavourite: poolData.isFavourite
+      }))}
+      network={currentNetwork}
+      copyAddressHandler={copyAddressHandler}
+      isLoading={isLoadingStats}
+      showAPY={showAPY}
+      filteredTokens={selectedFilters}
+      switchFavouritePool={switchFavouritePool}
+      showFavourites={showFavourites}
+      handleFavouritesClick={handleFavouritesClick}
+      setSearchPoolsValue={setSelectedFilters}
+      searchPoolsValue={selectedFilters}
+      handleChangePagination={handleChangePagination}
+      handleSortType={handlePoolsSortType}
+      searchParams={searchParams}
+    />
   )
 }

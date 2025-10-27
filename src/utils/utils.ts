@@ -55,11 +55,13 @@ import {
   POSITIONS_PER_PAGE,
   PRICE_QUERY_COOLDOWN,
   BASE_JUPITER_API_URL,
-  Intervals
+  Intervals,
+  AlternativeFormatConfig,
+  NoConfig
 } from '@store/consts/static'
 import mainnetList from '@store/consts/tokenLists/mainnet.json'
 import { FormatConfig, subNumbers } from '@store/consts/static'
-import { CoinGeckoAPIData, PriorityMode, Token } from '@store/consts/types'
+import { CoinGeckoAPIData, PriorityMode, Token, TokenReserve } from '@store/consts/types'
 import { sqrt } from '@invariant-labs/sdk/lib/math'
 import { apyToApr } from './uiUtils'
 import { alignTickToSpacing } from '@invariant-labs/sdk/src/tick'
@@ -73,6 +75,8 @@ import {
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { publicKey as umiPublicKey } from '@metaplex-foundation/umi'
 import { TokenListProvider } from '@solana/spl-token-registry'
+import { PoolSnap } from '@store/reducers/stats'
+import { DEFAULT_FEE_TIER, STRATEGIES } from '@store/consts/userStrategies'
 
 function resolveUriToHttp(uri?: string | null): string | null {
   if (!uri) return null
@@ -1574,11 +1578,38 @@ export const printSubNumber = (amount: number): string => {
 export const countLeadingZeros = (str: string): number => {
   return (str.match(/^0+/) || [''])[0].length
 }
+interface FormatNumberWithSuffixConfig {
+  noDecimals?: boolean
+  decimalsAfterDot?: number
+  alternativeConfig?: boolean
+  noSubNumbers?: boolean
+  noConfig?: boolean
+}
 export const formatNumberWithSuffix = (
   number: number | bigint | string,
-  noDecimals?: boolean,
-  decimalsAfterDot: number = 3
+  config?: FormatNumberWithSuffixConfig
 ): string => {
+  const {
+    noDecimals,
+    decimalsAfterDot,
+    alternativeConfig,
+    noSubNumbers,
+    noConfig
+  }: Required<FormatNumberWithSuffixConfig> = {
+    noDecimals: false,
+    decimalsAfterDot: 3,
+    alternativeConfig: false,
+    noSubNumbers: false,
+    noConfig: false,
+    ...config
+  }
+
+  const formatConfig = noConfig
+    ? NoConfig
+    : alternativeConfig
+      ? AlternativeFormatConfig
+      : FormatConfig
+
   const numberAsNumber = Number(number)
   const isNegative = numberAsNumber < 0
   const absNumberAsNumber = Math.abs(numberAsNumber)
@@ -1593,39 +1624,43 @@ export const formatNumberWithSuffix = (
 
   let formattedNumber
 
-  if (Math.abs(numberAsNumber) >= FormatConfig.B) {
+  if (Math.abs(numberAsNumber) >= formatConfig.B) {
     const formattedDecimals = noDecimals
       ? ''
-      : (FormatConfig.DecimalsAfterDot ? '.' : '') +
-        (beforeDot.slice(-FormatConfig.BDecimals) + (afterDot ? afterDot : '')).slice(
+      : '.' +
+        (beforeDot.slice(-formatConfig.BDecimals) + (afterDot ? afterDot : '')).slice(
           0,
-          FormatConfig.DecimalsAfterDot
+          formatConfig.DecimalsAfterDot
         )
 
     formattedNumber =
-      beforeDot.slice(0, -FormatConfig.BDecimals) + (noDecimals ? '' : formattedDecimals) + 'B'
-  } else if (Math.abs(numberAsNumber) >= FormatConfig.M) {
+      beforeDot.slice(0, -formatConfig.BDecimals) + (noDecimals ? '' : formattedDecimals) + 'B'
+  } else if (Math.abs(numberAsNumber) >= formatConfig.M) {
     const formattedDecimals = noDecimals
       ? ''
-      : (FormatConfig.DecimalsAfterDot ? '.' : '') +
-        (beforeDot.slice(-FormatConfig.MDecimals) + (afterDot ? afterDot : '')).slice(
+      : '.' +
+        (beforeDot.slice(-formatConfig.MDecimals) + (afterDot ? afterDot : '')).slice(
           0,
-          FormatConfig.DecimalsAfterDot
+          formatConfig.DecimalsAfterDot
         )
     formattedNumber =
-      beforeDot.slice(0, -FormatConfig.MDecimals) + (noDecimals ? '' : formattedDecimals) + 'M'
-  } else if (Math.abs(numberAsNumber) >= FormatConfig.K) {
+      beforeDot.slice(0, -formatConfig.MDecimals) + (noDecimals ? '' : formattedDecimals) + 'M'
+  } else if (Math.abs(numberAsNumber) >= formatConfig.K) {
     const formattedDecimals = noDecimals
       ? ''
-      : (FormatConfig.DecimalsAfterDot ? '.' : '') +
-        (beforeDot.slice(-FormatConfig.KDecimals) + (afterDot ? afterDot : '')).slice(
+      : '.' +
+        (beforeDot.slice(-formatConfig.KDecimals) + (afterDot ? afterDot : '')).slice(
           0,
-          FormatConfig.DecimalsAfterDot
+          formatConfig.DecimalsAfterDot
         )
     formattedNumber =
-      beforeDot.slice(0, -FormatConfig.KDecimals) + (noDecimals ? '' : formattedDecimals) + 'K'
+      beforeDot.slice(0, -formatConfig.KDecimals) + (noDecimals ? '' : formattedDecimals) + 'K'
+  } else if (afterDot && noSubNumbers) {
+    const roundedNumber = absNumberAsNumber.toFixed(decimalsAfterDot + 1).slice(0, -1)
+
+    formattedNumber = trimZeros(roundedNumber)
   } else if (afterDot && countLeadingZeros(afterDot) <= decimalsAfterDot) {
-    const roundedNumber = numberAsNumber
+    const roundedNumber = absNumberAsNumber
       .toFixed(countLeadingZeros(afterDot) + decimalsAfterDot + 1)
       .slice(0, -1)
 
@@ -1638,7 +1673,9 @@ export const formatNumberWithSuffix = (
         ? String(parseInt(afterDot)).slice(0, decimalsAfterDot)
         : afterDot
 
-    if (parsedAfterDot) {
+    if (noSubNumbers && afterDot) {
+      formattedNumber = beforeDot + '.' + afterDot
+    } else if (parsedAfterDot && afterDot) {
       formattedNumber =
         beforeDot +
         '.' +
@@ -1858,6 +1895,8 @@ export const ROUTES = {
   POSITION: '/position',
   POSITION_WITH_ID: '/position/:id',
   PORTFOLIO: '/portfolio',
+  POOL_DETAILS: '/poolDetails',
+  POOL_DETAILS_WITH_PARAMS: '/poolDetails/:item1?/:item2?/:item3?',
 
   getExchangeRoute: (item1?: string, item2?: string): string => {
     const parts = [item1, item2].filter(Boolean)
@@ -1867,6 +1906,10 @@ export const ROUTES = {
   getNewPositionRoute: (item1?: string, item2?: string, item3?: string): string => {
     const parts = [item1, item2, item3].filter(Boolean)
     return `${ROUTES.NEW_POSITION}${parts.length ? '/' + parts.join('/') : ''}`
+  },
+  getPoolDetailsRoute: (item1?: string, item2?: string, item3?: string): string => {
+    const parts = [item1, item2, item3].filter(Boolean)
+    return `${ROUTES.POOL_DETAILS}${parts.length ? '/' + parts.join('/') : ''}`
   },
 
   getPositionRoute: (id: string): string => `${ROUTES.POSITION}/${id}`
@@ -2044,4 +2087,64 @@ export const getIntervalsFullSnap = async (
     `https://stats.invariant.app/solana/intervals/solana-${name}?interval=${parsedInterval}`
   )
   return data
+}
+
+export const getIntervalsPoolSnap = async (
+  network: string,
+  interval: Intervals,
+  poolAddress: string
+): Promise<PoolSnap> => {
+  const parsedInterval =
+    interval === Intervals.Daily ? 'daily' : interval === Intervals.Weekly ? 'weekly' : 'monthly'
+  const { data } = await axios.get<PoolSnap>(
+    `https://stats.invariant.app/solana/pools/solana-${network}?interval=${parsedInterval}&address=${poolAddress}`
+  )
+
+  return data
+}
+export const getTokenReserve = async (
+  address: PublicKey,
+  connection: Connection
+): Promise<TokenReserve | null> => {
+  try {
+    const result = await connection.getTokenAccountBalance(address)
+
+    if (!result?.value) return null
+
+    return {
+      amount: result.value.amount,
+      decimals: result.value.decimals,
+      uiAmount: result.value.uiAmount ?? 0,
+      uiAmountString: result.value.uiAmountString || ''
+    }
+  } catch (error) {
+    console.error('Failed to fetch token reserve:', error)
+    return null
+  }
+}
+
+export const findStrategy = (
+  tokenAddress: string,
+  currentNetwork: NetworkType = NetworkType.Mainnet
+) => {
+  const poolTicker = addressToTicker(currentNetwork, tokenAddress)
+  let strategy = STRATEGIES.find(s => {
+    const tickerA = addressToTicker(currentNetwork, s.tokenAddressA)
+    const tickerB = s.tokenAddressB ? addressToTicker(currentNetwork, s.tokenAddressB) : undefined
+    return tickerA === poolTicker || tickerB === poolTicker
+  })
+  if (!strategy) {
+    strategy = {
+      tokenAddressA: tokenAddress,
+      feeTier: DEFAULT_FEE_TIER
+    }
+  }
+
+  return {
+    ...strategy,
+    tokenSymbolA: addressToTicker(currentNetwork, strategy.tokenAddressA),
+    tokenSymbolB: strategy.tokenAddressB
+      ? addressToTicker(currentNetwork, strategy.tokenAddressB)
+      : '-'
+  }
 }

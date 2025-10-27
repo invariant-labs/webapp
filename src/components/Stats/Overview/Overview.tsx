@@ -146,7 +146,7 @@ const Overview: React.FC<IOverview> = ({
           </Box>
         </>
       </Grid>
-      <Grid className={classes.row}>
+      <Grid className={classes.volumeBar}>
         <VolumeBar
           volume={volumeInterval.value}
           percentVolume={volumeInterval.change}

@@ -391,7 +391,7 @@ export const CHAINS = [
   // }
 ]
 
-export const enum SortTypePoolList {
+export enum SortTypePoolList {
   NAME_ASC,
   NAME_DESC,
   FEE_ASC,
@@ -418,6 +418,52 @@ export const enum SortTypeTokenList {
   TVL_ASC,
   TVL_DESC
 }
+export const AlternativeFormatConfig = {
+  B: 1000000000,
+  M: 1000000,
+  K: 10000,
+  BDecimals: 9,
+  MDecimals: 6,
+  KDecimals: 3,
+  DecimalsAfterDot: 2
+}
+
+export const NoConfig = {
+  B: 1000000000000000,
+  M: 1000000000000000,
+  K: 1000000000000000,
+  BDecimals: 100,
+  MDecimals: 100,
+  KDecimals: 100,
+  DecimalsAfterDot: 2
+}
+
+export const disabledPools = [
+  {
+    tokenX: new PublicKey('11111111111111111111111111111111'),
+    tokenY: new PublicKey('11111111111111111111111111111111'),
+    feeTiers: ['0.01']
+  }
+]
+
+export const poolSortGroups = [
+  { label: 'Name', asc: SortTypePoolList.NAME_ASC, desc: SortTypePoolList.NAME_DESC },
+  { label: 'Fee', asc: SortTypePoolList.FEE_ASC, desc: SortTypePoolList.FEE_DESC },
+  { label: 'Fees', asc: SortTypePoolList.FEE_24_ASC, desc: SortTypePoolList.FEE_24_DESC },
+  { label: 'Volume', asc: SortTypePoolList.VOLUME_ASC, desc: SortTypePoolList.VOLUME_DESC },
+  { label: 'TVL', asc: SortTypePoolList.TVL_ASC, desc: SortTypePoolList.TVL_DESC },
+  { label: 'APY', asc: SortTypePoolList.APY_ASC, desc: SortTypePoolList.APY_DESC }
+]
+
+//TODO CHANGE LATER
+export const promotedTiers = []
+
+export const tokenSortGroups = [
+  { label: 'Name', asc: SortTypeTokenList.NAME_ASC, desc: SortTypeTokenList.NAME_DESC },
+  { label: 'Price', asc: SortTypeTokenList.PRICE_ASC, desc: SortTypeTokenList.PRICE_DESC },
+  { label: 'Volume', asc: SortTypeTokenList.VOLUME_ASC, desc: SortTypeTokenList.VOLUME_DESC },
+  { label: 'TVL', asc: SortTypeTokenList.TVL_ASC, desc: SortTypeTokenList.TVL_DESC }
+]
 
 export const RECOMMENDED_RPC_ADDRESS = {
   [NetworkType.Testnet]: RPC.TEST,
