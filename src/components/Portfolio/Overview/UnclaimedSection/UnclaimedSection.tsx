@@ -5,23 +5,17 @@ import loadingAnimation from '@static/gif/loading.gif'
 import { useStyles } from './styles'
 import { Button } from '@common/Button/Button'
 
-interface IUnclaimed {
-  totalUnlocked: number
-  totalLocked: number
-}
-
 interface UnclaimedSectionProps {
-  unclaimedTotal: IUnclaimed
+  unclaimedAmount: number
   handleClaimAll?: () => void
   loading?: boolean
 }
 
 export const UnclaimedSection: React.FC<UnclaimedSectionProps> = ({
-  unclaimedTotal,
+  unclaimedAmount,
   handleClaimAll,
   loading = false
 }) => {
-  const total = unclaimedTotal.totalLocked + unclaimedTotal.totalUnlocked
   const { classes } = useStyles()
   const isMd = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -38,7 +32,7 @@ export const UnclaimedSection: React.FC<UnclaimedSectionProps> = ({
               width={105}
               padding='0 20px'
               onClick={handleClaimAll}
-              disabled={loading || unclaimedTotal.totalUnlocked === 0}>
+              disabled={loading || unclaimedAmount === 0}>
               {loading ? (
                 <>
                   <img
@@ -58,7 +52,7 @@ export const UnclaimedSection: React.FC<UnclaimedSectionProps> = ({
           <Skeleton variant='text' width={100} height={30} className={classes.unclaimedAmount} />
         ) : (
           <Typography className={classes.unclaimedAmount}>
-            ${formatNumberWithoutSuffix(total ? total : 0, { twoDecimals: true })}
+            ${formatNumberWithoutSuffix(unclaimedAmount, { twoDecimals: true })}
           </Typography>
         )}
       </Box>
@@ -68,7 +62,7 @@ export const UnclaimedSection: React.FC<UnclaimedSectionProps> = ({
           height={32}
           width={'100%'}
           onClick={handleClaimAll}
-          disabled={loading || unclaimedTotal.totalUnlocked === 0}>
+          disabled={loading || unclaimedAmount === 0}>
           {loading ? (
             <>
               <img

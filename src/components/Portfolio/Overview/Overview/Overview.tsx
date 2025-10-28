@@ -186,7 +186,7 @@ export const Overview: React.FC<OverviewProps> = () => {
     return (
       <Box className={classes.container}>
         <HeaderSection totalValue={{ value: 0, isPriceWarning: false }} loading={false} />
-        <UnclaimedSection unclaimedTotal={0} loading={false} handleClaimAll={undefined} />
+        <UnclaimedSection unclaimedAmount={0} loading={false} handleClaimAll={undefined} />
         <EmptyState />
       </Box>
     )
@@ -196,7 +196,7 @@ export const Overview: React.FC<OverviewProps> = () => {
     <Box className={classes.container}>
       <HeaderSection totalValue={totalAssets} loading={isLoadingList} />
       <UnclaimedSection
-        unclaimedTotal={unclaimedFees}
+        unclaimedAmount={unclaimedFees}
         handleClaimAll={handleClaimAll}
         loading={isLoadingList || isAllClaimFeesLoading || unClaimedFeesLoading}
       />
