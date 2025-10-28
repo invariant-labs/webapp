@@ -18,7 +18,6 @@ export const PositionStats = ({
   showPoolDetailsLoader = false
 }: Props) => {
   const { classes, cx } = useStyles()
-
   return (
     <Box className={classes.container}>
       <Box className={classes.statWrapper}>
