@@ -352,7 +352,7 @@ const PoolListItem: React.FC<IProps> = ({
         )}
         {!isTablet && (
           <ItemValue
-            minWidth={192}
+            minWidth={152}
             style={{ flexGrow: 0 }}
             title='Action'
             value={

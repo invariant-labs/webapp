@@ -2095,7 +2095,13 @@ export const getIntervalsPoolSnap = async (
   poolAddress: string
 ): Promise<PoolSnap> => {
   const parsedInterval =
-    interval === Intervals.Daily ? 'daily' : interval === Intervals.Weekly ? 'weekly' : 'monthly'
+    interval === Intervals.Daily
+      ? 'daily'
+      : interval === Intervals.Weekly
+        ? 'weekly'
+        : interval === Intervals.Monthly
+          ? 'monthly'
+          : 'yearly'
   const { data } = await axios.get<PoolSnap>(
     `https://stats.invariant.app/solana/pools/solana-${network}?interval=${parsedInterval}&address=${poolAddress}`
   )
