@@ -157,8 +157,8 @@ export const PoolDetailsWrapper: React.FC<IProps> = ({
     const loadPrices = async () => {
       if (!tokenX || !tokenY) return
       const priceResults = await Promise.all([
-        await getTokenPrice(currentNetwork, tokenX?.assetAddress.toString()),
-        await getTokenPrice(currentNetwork, tokenY?.assetAddress.toString())
+        await getTokenPrice(tokenX?.assetAddress.toString(), tokenX?.coingeckoId),
+        await getTokenPrice(tokenY?.assetAddress.toString(), tokenY?.coingeckoId)
       ])
 
       const tokenXPrice = priceResults[0]
