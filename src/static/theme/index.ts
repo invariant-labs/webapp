@@ -94,7 +94,8 @@ export const colors = {
     bodyBackground: '#141b2d',
     plotGreen: '#9DD46D',
     plotRed: '#FB555F',
-    pinkGreenLinearGradient: 'linear-gradient(90deg, #EF84F5 0%, #2EE09A 100%)'
+    pinkGreenLinearGradient: 'linear-gradient(90deg, #EF84F5 0%, #2EE09A 100%)',
+    darkGradient: 'linear-gradient(180deg,rgba(17, 25, 49, 0) 0%, rgba(17, 25, 49, 1) 100%)'
   }
 }
 
@@ -198,7 +199,7 @@ export const theme = createTheme({
   },
   breakpoints: {
     values: {
-      xs: 0,
+      xs: 460,
       sm: 600,
       md: 960,
       lg: 1280,

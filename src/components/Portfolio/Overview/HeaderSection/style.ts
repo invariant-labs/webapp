@@ -6,14 +6,14 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
   headerSkeleton: {
     background: colors.invariant.light,
     ...typography.heading1,
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down(850)]: {
       marginTop: '16px'
     }
   },
   headerRow: {
     display: 'flex',
     alignItems: 'center',
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up(850)]: {
       padding: '16px 24px'
     },
     padding: '16px 0px',
@@ -21,10 +21,14 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
     justifyContent: 'space-between'
   },
   headerText: {
-    ...typography.heading2,
-    color: colors.invariant.text
+    ...typography.heading3,
+    color: colors.invariant.text,
+
+    [theme.breakpoints.down(850)]: {
+      ...typography.heading4
+    }
   },
   warning: {
-    marginLeft: '8px'
+    marginRight: '8px'
   }
 }))

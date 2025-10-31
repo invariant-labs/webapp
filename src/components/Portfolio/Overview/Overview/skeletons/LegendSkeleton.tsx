@@ -6,7 +6,7 @@ const LegendSkeleton: React.FC = () => {
   const { classes } = useDesktopSkeleton()
 
   return (
-    <Box className={classes.container}>
+    <Box className={classes.container} sx={{ marginRight: '8px' }}>
       <Typography className={classes.tokenText}>Tokens</Typography>
 
       <Grid container className={classes.gridContainer}>

@@ -4,14 +4,23 @@ import { Theme } from '@mui/material'
 
 export const useStyles = makeStyles()((_theme: Theme) => ({
   container: {
-    marginTop: '16px'
+    marginTop: '16px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: '',
+    width: '100%',
+    flexShrink: 1
   },
   scrollContainer: {
-    width: '97%',
+    boxSizing: 'border-box',
+    maxWidth: 400,
+    flexShrink: 1,
+    alignSelf: 'flex-end',
+    width: '100%',
+    marginRight: 10,
     marginTop: '8px',
     marginLeft: '0 !important',
     '&::-webkit-scrollbar': {
-      padding: '4px',
       width: '4px'
     },
     '&::-webkit-scrollbar-track': {
@@ -27,27 +36,51 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
     color: colors.invariant.textGrey
   },
   tokenRow: {
-    paddingLeft: '0 !important',
+    paddingTop: '6px !important',
+    paddingBottom: '6px !important',
+    marginRight: 10,
     display: 'flex',
     paddingRight: '10px',
-    maxHeight: '32px',
-    [theme.breakpoints.down('lg')]: {
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
       justifyContent: 'space-between'
     },
-    justifyContent: 'flex-start'
+    '&:nth-child(1)': {
+      borderTopLeftRadius: 12,
+      borderTopRightRadius: 12
+    },
+    '&:nth-child(odd)': {
+      backgroundColor: '#11193199'
+    },
+    '&:nth-child(even)': {
+      backgroundColor: '#1119314D'
+    },
+    '&:last-child': {
+      borderBottomLeftRadius: 12,
+      borderBottomRightRadius: 12,
+      borderBottom: `0px ${colors.invariant.light} solid`
+    },
+    borderBottom: `1px ${colors.invariant.light} solid`
   },
   logoContainer: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    position: 'relative'
   },
   logo: {
-    width: '24px',
-    height: '24px',
+    width: '25px',
+    height: '25px',
     borderRadius: '100%'
   },
   valueText: {
     ...typography.heading4,
     color: colors.invariant.text,
     textAlign: 'right'
+  },
+  warningIcon: {
+    width: 12,
+    position: 'absolute',
+    bottom: -3,
+    left: 16
   }
 }))

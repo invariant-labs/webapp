@@ -20,6 +20,7 @@ interface IPositionItemMobile extends IPositionItem {
   handleClaimFee: (index: number) => void
   createNewPosition: () => void
   shouldDisable: boolean
+  openPoolDetails: () => void
 }
 
 export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
@@ -42,7 +43,8 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
   handleClosePosition,
   handleClaimFee,
   shouldDisable,
-  createNewPosition
+  createNewPosition,
+  openPoolDetails
 }) => {
   const { classes, cx } = useMobileStyles()
   const airdropIconRef = useRef<any>(null)
@@ -236,6 +238,7 @@ export const PositionItemMobile: React.FC<IPositionItemMobile> = ({
   return (
     <Grid className={classes.root} container direction='column'>
       <PositionViewActionPopover
+        openPoolDetails={openPoolDetails}
         shouldDisable={shouldDisable}
         anchorEl={anchorEl}
         handleClose={handleClose}

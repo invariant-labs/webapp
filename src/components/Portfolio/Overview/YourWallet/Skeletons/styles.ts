@@ -2,11 +2,18 @@ import { makeStyles } from 'tss-react/mui'
 import { colors, theme } from '@static/theme'
 export const useStyles = makeStyles()(() => ({
   tableCell: {
+    display: 'flex',
     borderBottom: `1px solid ${colors.invariant.light}`,
-    padding: '12px !important',
-    textAlign: 'center'
+    textAlign: 'center',
+    paddingLeft: 8,
+    alignItems: 'center',
+    height: 57,
+    justifyContent: 'center',
+    boxSizing: 'border-box',
+    width: '100%'
   },
   tokenContainer: {
+    paddingLeft: 8,
     display: 'flex',
     alignItems: 'center',
     gap: '8px',

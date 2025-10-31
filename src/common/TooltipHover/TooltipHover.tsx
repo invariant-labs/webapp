@@ -7,6 +7,7 @@ import useIsMobile from '@store/hooks/isMobile'
 
 interface Props extends TooltipProps {
   title: React.ReactNode
+  disabled?: boolean
   children: React.ReactElement<any, any>
   top?: number | string
   left?: number | string
@@ -30,6 +31,7 @@ export const TooltipHover = ({
   increasePadding = false,
   allowEnterTooltip = true,
   title,
+  disabled,
   textAlign = 'left',
   ...props
 }: Props) => {
@@ -92,7 +94,7 @@ export const TooltipHover = ({
     }
   }, [allowEnterTooltip])
 
-  if (!title) return children
+  if (!title || disabled) return children
 
   return (
     <Tooltip

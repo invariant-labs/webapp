@@ -4,15 +4,14 @@ import { Theme } from '@mui/material'
 export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolean }>()(
   (_theme: Theme, { isLoading, isScrollHide }) => ({
     container: {
-      minWidth: '50%',
-      overflowX: 'hidden'
-    },
-    divider: {
+      maxWidth: 600,
+      boxSizing: 'border-box',
       width: '100%',
-      height: '1px',
-      backgroundColor: colors.invariant.light,
-      margin: '24px 0'
+      [theme.breakpoints.down(850)]: {
+        maxWidth: '100%'
+      }
     },
+
     clipboardIcon: {
       marginLeft: 4,
       width: 18,
@@ -27,10 +26,12 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
       }
     },
     header: {
+      boxSizing: 'border-box',
       background: colors.invariant.component,
       display: 'flex',
       padding: 16,
-      [theme.breakpoints.down('lg')]: {
+      height: 61,
+      [theme.breakpoints.down(850)]: {
         borderTopLeftRadius: '24px'
       },
       borderTopLeftRadius: 0,
@@ -40,17 +41,16 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
       borderBottom: `1px solid ${colors.invariant.light}`
     },
     headerText: {
-      ...typography.heading2,
-      paddingInline: '16px',
+      ...typography.heading3,
+
       color: colors.invariant.text
     },
     tableContainer: {
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
       backgroundColor: colors.invariant.component,
-      height: '287px',
+      height: '228px',
       overflowY: 'scroll',
-      overflowX: 'hidden',
 
       '&::-webkit-scrollbar': {
         width: '4px',
@@ -66,16 +66,14 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
         borderRadius: '4px'
       }
     },
-    tableCell: {
-      borderBottom: `1px solid ${colors.invariant.light}`,
-      padding: '12px !important',
-      textAlign: 'center'
-    },
-    headerCell: {
-      fontSize: '20px',
 
+    headerCell: {
+      flexGrow: 1,
+      textAlign: 'center',
+      ...typography.heading4,
+      fontSize: 18,
+      padding: '17px 0',
       textWrap: 'nowrap',
-      fontWeight: 600,
       color: colors.invariant.textGrey,
       borderBottom: `1px solid ${colors.invariant.light}`,
       backgroundColor: colors.invariant.component,
@@ -83,13 +81,27 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
       top: 0,
       zIndex: 1
     },
+    headerCellTokenName: {
+      display: 'flex',
+      boxSizing: 'border-box',
+      textAlign: 'left',
+      ...typography.heading4,
+      fontSize: 18,
+      padding: '17px 0',
+      paddingLeft: '16px !important',
+      textWrap: 'nowrap',
+      color: colors.invariant.textGrey,
+      borderBottom: `1px solid ${colors.invariant.light}`,
+      backgroundColor: colors.invariant.component
+    },
     tokenContainer: {
       display: 'flex',
+      boxSizing: 'border-box',
+      padding: '12px 0 12px 12px',
       alignItems: 'center',
       gap: '8px',
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down(850)]: {
         gap: '16px',
-        width: '100%',
         flexDirection: 'column',
         justifyContent: 'center'
       }
@@ -97,18 +109,28 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
     tokenInfo: {
       display: 'flex',
       alignItems: 'center',
-      gap: '8px'
+      gap: '8px',
+      [theme.breakpoints.down('md')]: {
+        gap: 0
+      }
     },
     tokenIcon: {
-      minWidth: 28,
-      maxWidth: 28,
-      height: 28,
+      minWidth: 26,
+      maxWidth: 26,
+      height: 26,
       borderRadius: '50%',
       objectFit: 'cover'
     },
     tokenSymbol: {
       ...typography.heading4,
-      color: colors.invariant.text
+      fontSize: 18,
+      color: colors.invariant.text,
+      [theme.breakpoints.down('md')]: {
+        display: 'none'
+      },
+      [theme.breakpoints.down(850)]: {
+        display: 'flex'
+      }
     },
     mobileCardContainer: {
       display: 'flex',
@@ -132,7 +154,7 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
     },
     valueSkeleton: {
       borderRadius: '6px',
-      [theme.breakpoints.down('lg')]: {
+      [theme.breakpoints.down(850)]: {
         width: '98%'
       },
       width: '114%'
@@ -140,12 +162,9 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
     statsContainer: {
       backgroundColor: colors.invariant.light,
       display: 'inline-flex',
-      width: '90%',
       justifyContent: 'center',
       alignItems: 'center',
-      [theme.breakpoints.down('lg')]: {
-        padding: '4px 6px'
-      },
+      width: '100%',
       padding: '4px 12px',
       maxHeight: '24px',
       borderRadius: '6px',
@@ -180,15 +199,10 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
         }
       }
     },
-    zebraRow: {
-      '& > tr:nth-of-type(odd)': {
-        background: `${colors.invariant.componentDark}`
-      }
-    },
 
     mobileActionContainer: {
       display: 'none',
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down(850)]: {
         display: 'flex',
         gap: '8px',
         padding: '12px 16px',
@@ -198,20 +212,20 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
     desktopActionCell: {
       padding: '17px',
 
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('sm')]: {
         display: 'none'
       }
     },
     mobileActions: {
       display: 'none',
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down(850)]: {
         display: 'flex',
         gap: '8px'
       }
     },
     mobileContainer: {
       display: 'none',
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down(850)]: {
         display: 'flex',
         flexDirection: 'column',
         gap: '9px'
@@ -268,12 +282,10 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
       color: colors.invariant.green
     },
     desktopContainer: {
-      width: '600px',
-      [theme.breakpoints.down('md')]: {
+      maxWidth: '600px',
+      width: '100%',
+      [theme.breakpoints.down(850)]: {
         display: 'none'
-      },
-      [theme.breakpoints.down('lg')]: {
-        width: 'auto'
       }
     },
     emptyState: {
@@ -302,9 +314,26 @@ export const useStyles = makeStyles<{ isLoading?: boolean; isScrollHide?: boolea
       width: 12,
       height: 12,
       bottom: -4,
-      right: '67%',
-      [theme.breakpoints.down('lg')]: {
-        right: '53%'
+      right: -4
+    },
+
+    zebraRow: {
+      display: 'grid',
+      background: 'white',
+
+      gridTemplateColumns: 'auto 1fr 1fr 110px',
+
+      '& > *': {
+        display: 'contents'
+      },
+      '& > *:nth-of-type(odd) > *': {
+        backgroundColor: colors.invariant.componentDark
+      },
+      '& > *:nth-of-type(even) > *': {
+        backgroundColor: `${colors.invariant.component}`
+      },
+      '& > * > *': {
+        borderBottom: `1px solid ${colors.invariant.light}`
       }
     }
   })

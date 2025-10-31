@@ -4,22 +4,18 @@ import { Theme } from '@mui/material'
 
 export const useStyles = makeStyles()((_theme: Theme) => ({
   container: {
-    width: '600px',
+    boxSizing: 'border-box',
+    maxWidth: '600px',
+    width: '100%',
     backgroundColor: colors.invariant.component,
     borderTopLeftRadius: '24px',
 
-    [theme.breakpoints.down('lg')]: {
-      borderTopRightRadius: '24px',
-      borderRight: `none`,
-      maxHeight: 'fit-content',
-      width: 'auto',
-      padding: '0px 16px 0px 16px'
-    },
-    [theme.breakpoints.down('md')]: {
-      borderRadius: 24
-    },
-    [theme.breakpoints.down('sm')]: {
-      padding: '0px 8px'
+    [theme.breakpoints.down(850)]: {
+      borderRadius: 24,
+      maxWidth: '960px',
+      padding: '0 16px 0 16px',
+      borderRight: `0px solid  ${colors.invariant.light}`,
+      height: 345
     },
     borderRight: `1px solid  ${colors.invariant.light}`,
     display: 'flex',
@@ -34,15 +30,19 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
   subtitle: {
     ...typography.body2,
     color: colors.invariant.textGrey,
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down(850)]: {
       marginTop: '16px'
     }
   },
 
   pieChartSection: {
-    flex: '1 1 100%',
+    flex: '1 0 100%',
+    maxWidth: 222,
+    width: '100%',
+    display: 'flex',
+    flexWrap: 'nowrap',
     minHeight: 'fit-content',
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down(850)]: {
       marginTop: '100px'
     }
   },
@@ -50,7 +50,7 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'row-reverse',
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down(850)]: {
       justifyContent: 'center',
       flexDirection: 'column'
     }
@@ -72,7 +72,7 @@ export const useStyles = makeStyles()((_theme: Theme) => ({
     gap: '16px',
     backgroundColor: colors.invariant.component,
     marginBottom: 8,
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up(850)]: {
       background:
         'linear-gradient(360deg, rgba(32, 41, 70, 0.8) 0%, rgba(17, 25, 49, 0.8) 100%), linear-gradient(180deg, #010514 0%, rgba(1, 5, 20, 0) 100%)'
     }

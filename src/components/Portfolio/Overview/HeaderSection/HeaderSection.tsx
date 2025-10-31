@@ -22,13 +22,6 @@ export const HeaderSection: React.FC<HeaderSectionProps> = ({ totalValue, loadin
           </>
         ) : (
           <Grid display='flex' flexDirection='row' alignItems='center' justifyContent='center'>
-            <Typography className={classes.headerText}>
-              $
-              {Number.isNaN(totalValue)
-                ? 0
-                : formatNumberWithoutSuffix(totalValue.value, { twoDecimals: true })}
-            </Typography>
-
             {totalValue.isPriceWarning && (
               <Grid
                 position={'relative'}
@@ -40,6 +33,12 @@ export const HeaderSection: React.FC<HeaderSectionProps> = ({ totalValue, loadin
                 </TooltipHover>
               </Grid>
             )}
+            <Typography className={classes.headerText}>
+              $
+              {Number.isNaN(totalValue)
+                ? 0
+                : formatNumberWithoutSuffix(totalValue.value, { twoDecimals: true })}
+            </Typography>
           </Grid>
         )}
       </Box>

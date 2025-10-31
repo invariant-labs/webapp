@@ -1,13 +1,58 @@
 import { alpha } from '@mui/material'
-import { colors } from '@static/theme'
+import { colors, theme, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
-export const useStyles = makeStyles()(_theme => ({
+export const useStyles = makeStyles()(() => ({
+  headerWrapper: {
+    display: 'flex',
+    flexShrink: 1,
+    background: colors.invariant.component,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: '12px 16px',
+    marginTop: 12,
+    borderBottom: `1px solid ${colors.invariant.light}`,
+    [theme.breakpoints.down('sm')]: {
+      padding: '12px 8px'
+    }
+  },
+  tableHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+    flexWrap: 'nowrap'
+  },
+  headerRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 12
+  },
+  headerContainer: {
+    display: 'flex',
+    gap: 14,
+    [theme.breakpoints.down('sm')]: {
+      flex: 1,
+      justifyContent: 'flex-end',
+      marginBottom: 8
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      flex: 1,
+      justifyContent: 'flex-end'
+      // maxWidth: 315
+    }
+  },
+  subheader: {
+    ...typography.heading4,
+    color: colors.white.main,
+    display: 'flex'
+  },
   container: {
     flexDirection: 'column',
     maxWidth: 1210,
     flexWrap: 'nowrap',
-    position: 'relative',
     overflow: 'hidden'
   },
   pagination: {
@@ -35,8 +80,48 @@ export const useStyles = makeStyles()(_theme => ({
     }
   },
   emptyRow: {
-    height: 69,
+    height: 79,
     background: colors.invariant.component,
     boxSizing: 'border-box'
+  },
+  showFavouritesButton: {
+    height: 40,
+    background: colors.invariant.component,
+    borderRadius: 9,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    textTransform: 'none',
+    width: 170,
+    textAlign: 'right',
+    padding: 0,
+    border: `1px solid ${colors.invariant.light}`,
+    '&:hover': {
+      background: colors.invariant.component,
+      boxShadow: 'none',
+      filter: 'brightness(1.2)'
+    },
+
+    [theme.breakpoints.down('md')]: {
+      minWidth: 40,
+      width: 40
+    }
+  },
+  showFavouritesText: {
+    ...typography.body2,
+    color: colors.invariant.textGrey,
+    marginTop: 2,
+    width: 108
+  },
+  sortWrapper: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    flexShrink: 1,
+
+    [theme.breakpoints.down('sm')]: {
+      margin: 0,
+      flex: 'none'
+    }
   }
 }))

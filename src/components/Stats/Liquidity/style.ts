@@ -39,51 +39,7 @@ export const useStyles = makeStyles()(() => ({
     display: 'flex',
     alignItems: 'center'
   },
-  volumeStatusContainer: {
-    marginLeft: 10,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minWidth: 'auto'
-  },
-  volumeStatusColor: {
-    minWidth: 'auto',
-    padding: '5px 15px 5px 15px',
-    borderRadius: 6
-  },
 
-  volumeStatusHeader: {
-    ...typography.caption3,
-    filter: 'brightness(1.2)'
-  },
-
-  volumeLow: {
-    color: colors.invariant.Error
-  },
-
-  backgroundVolumeLow: {
-    backgroundColor: 'rgba(251,85,95,0.2)'
-  },
-
-  backgroundVolumeUp: {
-    backgroundColor: 'rgba(46, 224, 149,0.2)'
-  },
-
-  volumeUp: {
-    color: colors.invariant.green
-  },
-
-  LineKeys: {
-    marginLeft: 10,
-    display: 'flex',
-    width: '100%'
-  },
-
-  keyPTag: {
-    width: '100%',
-    color: colors.invariant.textGrey,
-    ...typography.caption4
-  },
   tooltip: {
     background: colors.invariant.component,
     border: `1px solid ${colors.invariant.lightGrey}`,

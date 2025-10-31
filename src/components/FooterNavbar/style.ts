@@ -13,7 +13,7 @@ const useStyles = makeStyles()(() => {
       background: colors.invariant.component,
       borderTop: `2px solid ${colors.invariant.light}`,
       marginTop: '12px',
-      position: 'sticky',
+      position: 'fixed',
       bottom: 0,
       zIndex: 100
     },

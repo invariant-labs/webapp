@@ -42,7 +42,7 @@ const PopularPools: React.FC<IPopularPools> = ({
   const { classes } = useStyles()
 
   return (
-    <Grid container mb={6}>
+    <Grid container>
       <Box
         display='flex'
         alignItems='center'

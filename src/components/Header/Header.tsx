@@ -52,7 +52,7 @@ export const Header: React.FC<IHeader> = ({
 
   const routes = ['exchange', 'liquidity', 'portfolio', 'statistics']
   const otherRoutesToHighlight: Record<string, RegExp[]> = {
-    liquidity: [/^liquidity\/*/],
+    liquidity: [/^liquidity\/*/, /^poolDetails\/*/],
     exchange: [/^exchange\/*/],
     portfolio: [/^portfolio\/*/, /^newPosition\/*/, /^position\/*/]
     // creator: [/^creator\/*/]

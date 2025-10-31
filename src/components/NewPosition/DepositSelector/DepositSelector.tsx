@@ -1,7 +1,7 @@
 import AnimatedButton, { ProgressState } from '@common/AnimatedButton/AnimatedButton'
 import DepositAmountInput from '@components/Inputs/DepositAmountInput/DepositAmountInput'
 import Select from '@components/Inputs/Select/Select'
-import { ALL_FEE_TIERS_DATA, WRAPPED_SOL_ADDRESS } from '@store/consts/static'
+import { ALL_FEE_TIERS_DATA, disabledPools, WRAPPED_SOL_ADDRESS } from '@store/consts/static'
 import { BN } from '@project-serum/anchor'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { PublicKey } from '@solana/web3.js'
@@ -288,6 +288,18 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
     }
   }, [poolIndex])
 
+  const disabledFeeTiers = useMemo(() => {
+    if (tokenA === null || tokenB === null) return []
+
+    return disabledPools
+      .filter(
+        pool =>
+          (pool.tokenX.equals(tokenA) && pool.tokenY.equals(tokenB)) ||
+          (pool.tokenX.equals(tokenB) && pool.tokenY.equals(tokenA))
+      )
+      .flatMap(p => p.feeTiers)
+  }, [tokenA, tokenB, tokens, disabledPools])
+
   const actionsTokenA = createButtonActions({
     tokens,
     wrappedTokenAddress: WRAPPED_SOL_ADDRESS,
@@ -380,6 +392,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
         </Grid>
 
         <FeeSwitch
+          promotedPoolTierIndex={undefined}
+          disabledFeeTiers={disabledFeeTiers}
           showTVL={tokenA !== null && tokenB !== null}
           onSelect={fee => {
             setPositionTokens(tokenA, tokenB, fee)

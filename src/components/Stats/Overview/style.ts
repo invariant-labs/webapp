@@ -42,9 +42,7 @@ export const useStyles = makeStyles()(() => ({
       width: '100%'
     }
   },
-  row: {
-    marginBottom: 16
-  },
+
   label: {
     ...typography.body3,
     color: colors.invariant.textGrey,
@@ -52,6 +50,11 @@ export const useStyles = makeStyles()(() => ({
     [theme.breakpoints.down('md')]: {
       ...typography.body2
     }
+  },
+  volumeBar: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%'
   },
   value: {
     ...typography.heading4,

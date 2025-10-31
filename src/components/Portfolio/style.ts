@@ -23,7 +23,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
   titleBar: {
     display: 'flex',
-    marginBottom: 20
+    marginBottom: 16
   },
   title: {
     color: colors.invariant.text,
@@ -212,10 +212,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     background: colors.invariant.component,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
-    [theme.breakpoints.down('lg')]: {
-      marginBottom: 32
-    },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down(850)]: {
       borderRadius: 16,
       border: 'none',
       marginTop: 8
@@ -238,7 +235,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   overviewContainer: {
     display: 'flex',
     flexDirection: 'column',
-    marginBottom: '24px',
+    marginBottom: '72px',
     width: '100%'
   },
   switchPoolsContainerOverview: {
@@ -321,12 +318,15 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   checkBoxLabel: {
     '.MuiFormControlLabel-label': {
       ...typography.body2,
+      fontSize: 15,
+
       color: `${colors.invariant.text}b6`
     }
   },
-  footerText: { ...typography.body2 },
+  footerText: { ...typography.body2, fontSize: 15 },
   footerPositionDetails: {
-    ...typography.body2
+    ...typography.body2,
+    fontSize: 15
   },
   whiteText: {
     color: colors.invariant.text
@@ -350,7 +350,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       color: colors.invariant.green
     },
     '& .MuiSvgIcon-root': {
-      fontSize: 25
+      fontSize: 20
     },
     padding: 0,
     '& .MuiIconButton-label': {

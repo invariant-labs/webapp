@@ -22,8 +22,11 @@ export const PoolDetails = ({ tvl, volume24, fee24, showPoolDetailsLoader }: Pro
           ) : (
             <>
               $
-              {+formatNumberWithSuffix(tvl, true, 18) < 1000
-                ? (+formatNumberWithSuffix(tvl, true, 18)).toFixed(2)
+              {+formatNumberWithSuffix(tvl, { noDecimals: true, decimalsAfterDot: 18 }) < 1000
+                ? (+formatNumberWithSuffix(tvl, {
+                    noDecimals: true,
+                    decimalsAfterDot: 18
+                  })).toFixed(2)
                 : formatNumberWithSuffix(tvl)}
             </>
           )}
@@ -37,8 +40,11 @@ export const PoolDetails = ({ tvl, volume24, fee24, showPoolDetailsLoader }: Pro
           ) : (
             <>
               $
-              {+formatNumberWithSuffix(volume24, true, 18) < 1000
-                ? (+formatNumberWithSuffix(volume24, true, 18)).toFixed(2)
+              {+formatNumberWithSuffix(volume24, { noDecimals: true, decimalsAfterDot: 18 }) < 1000
+                ? (+formatNumberWithSuffix(volume24, {
+                    noDecimals: true,
+                    decimalsAfterDot: 18
+                  })).toFixed(2)
                 : formatNumberWithSuffix(volume24)}
             </>
           )}
@@ -52,8 +58,11 @@ export const PoolDetails = ({ tvl, volume24, fee24, showPoolDetailsLoader }: Pro
           ) : (
             <>
               $
-              {+formatNumberWithSuffix(fee24, true, 18) < 1000
-                ? (+formatNumberWithSuffix(fee24, true, 18)).toFixed(2)
+              {+formatNumberWithSuffix(fee24, { noDecimals: true, decimalsAfterDot: 18 }) < 1000
+                ? (+formatNumberWithSuffix(fee24, {
+                    noDecimals: true,
+                    decimalsAfterDot: 18
+                  })).toFixed(2)
                 : formatNumberWithSuffix(fee24)}
             </>
           )}
