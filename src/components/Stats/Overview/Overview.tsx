@@ -1,6 +1,6 @@
 import { colors, theme } from '@static/theme'
 import { CumulativeValue, TimeData, Value24H } from '@store/reducers/stats'
-import { Intervals as IntervalsKeys } from '@store/consts/static'
+import { ChartSwitch, Intervals as IntervalsKeys } from '@store/consts/static'
 import { useStyles } from './style'
 import { Grid, Typography, Box, useMediaQuery } from '@mui/material'
 import Intervals from '../Intervals/Intervals'
@@ -18,10 +18,12 @@ interface IOverview {
   isLoadingStats: boolean
   lastStatsTimestamp: number
   liquidityPlotData: TimeData[]
+  feesPlotData: TimeData[]
   tvlInterval: Value24H
   feesInterval: Value24H
   cumulativeVolume: CumulativeValue
   cumulativeFees: CumulativeValue
+  setChartType: (type: ChartSwitch) => void
 }
 
 const Overview: React.FC<IOverview> = ({
@@ -35,7 +37,9 @@ const Overview: React.FC<IOverview> = ({
   tvlInterval,
   feesInterval,
   cumulativeVolume,
-  cumulativeFees
+  cumulativeFees,
+  feesPlotData,
+  setChartType
 }) => {
   const { classes, cx } = useStyles()
 
@@ -121,11 +125,14 @@ const Overview: React.FC<IOverview> = ({
             mt={isMd ? '24px' : 0}>
             <Volume
               volume={volumeInterval.value}
-              data={volumePlotData}
+              fees={feesInterval.value}
+              volumeData={volumePlotData}
+              feesData={feesPlotData}
               className={classes.plot}
               isLoading={isLoadingStats}
               lastStatsTimestamp={lastStatsTimestamp}
               interval={lastUsedInterval ?? IntervalsKeys.Daily}
+              setChartType={setChartType}
             />
 
             <Separator

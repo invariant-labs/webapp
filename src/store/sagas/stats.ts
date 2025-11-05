@@ -105,6 +105,7 @@ export function* getIntervalStats(action: PayloadAction<{ interval: Intervals }>
       lastSnapTimestamp: fullSnap.timestamp,
       volumePlot: fullSnap.volumePlot.reverse(),
       liquidityPlot: fullSnap.liquidityPlot.reverse(),
+      feesPlot: fullSnap.feesPlot.reverse(),
       tokensData: fullSnap.tokensData.map(token => ({
         ...token,
         address: new PublicKey(token.address),

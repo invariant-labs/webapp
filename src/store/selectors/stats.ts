@@ -8,6 +8,7 @@ const store = (s: AnyProps) => s[statsSliceName] as IStatsStore
 export const {
   volumePlot,
   liquidityPlot,
+  feesPlot,
   volume24,
   tvl24,
   fees24,
@@ -21,6 +22,7 @@ export const {
   lastTimestamp,
   lastInterval,
   currentInterval,
+  columnChartType,
   cumulativeFees,
   cumulativeVolume,
   currentPoolData,
@@ -28,6 +30,7 @@ export const {
 } = keySelectors(store, [
   'volumePlot',
   'liquidityPlot',
+  'feesPlot',
   'volume24',
   'tvl24',
   'fees24',
@@ -40,6 +43,7 @@ export const {
   'lastSnapTimestamp',
   'lastTimestamp',
   'lastInterval',
+  'columnChartType',
   'currentInterval',
   'cumulativeFees',
   'cumulativeVolume',
@@ -79,6 +83,7 @@ export const tokensStatsWithTokensDetails = createSelector(
 export const statsSelectors = {
   volumePlot,
   liquidityPlot,
+  feesPlot,
   volume24,
   tvl24,
   fees24,
@@ -92,9 +97,12 @@ export const statsSelectors = {
   poolsStatsWithTokensDetails,
   tokensStatsWithTokensDetails,
   isLoading,
+  columnChartType,
   currentInterval,
   cumulativeVolume,
-  cumulativeFees
+  cumulativeFees,
+  currentPoolData,
+  poolDetailsChartType
 }
 
 export default statsSelectors

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
-import { Intervals } from '@store/consts/static'
+import { ChartSwitch, Intervals } from '@store/consts/static'
 import { PayloadType, PoolChartSwitch } from '@store/consts/types'
 
 export interface TimeData {
@@ -47,6 +47,7 @@ export interface CumulativeValue {
 export interface IStatsStore {
   volumePlot: TimeData[]
   liquidityPlot: TimeData[]
+  feesPlot: TimeData[]
   volume24: Value24H
   tvl24: Value24H
   fees24: Value24H
@@ -62,6 +63,7 @@ export interface IStatsStore {
   currentInterval: Intervals | null
   cumulativeVolume: CumulativeValue
   cumulativeFees: CumulativeValue
+  columnChartType: ChartSwitch
   currentPoolData: PoolSnap
   poolDetailsChartType: PoolChartSwitch
 }
@@ -69,6 +71,7 @@ export interface IStatsStore {
 export const defaultState: IStatsStore = {
   volumePlot: [],
   liquidityPlot: [],
+  feesPlot: [],
   volume24: {
     value: 0,
     change: 0
@@ -100,6 +103,7 @@ export const defaultState: IStatsStore = {
   lastSnapTimestamp: 0,
   lastInterval: null,
   currentInterval: null,
+  columnChartType: ChartSwitch.volume,
   cumulativeVolume: {
     value: 0,
     change: null
@@ -135,6 +139,7 @@ const statsSlice = createSlice({
         isLoading: false,
         lastTimestamp: +Date.now(),
         currentInterval: state.currentInterval,
+        columnChartType: state.columnChartType,
         poolDetailsChartType: state.poolDetailsChartType,
         currentPoolData: state.currentPoolData
       }
@@ -171,6 +176,11 @@ const statsSlice = createSlice({
     },
     getCurrentIntervalStats(state, _action: PayloadAction<{ interval: Intervals }>) {
       state.isLoading = true
+      return state
+    },
+    setChartType(state, action: PayloadAction<ChartSwitch>) {
+      state.columnChartType = action.payload
+
       return state
     },
     setLoadingStats(state, action: PayloadAction<boolean>) {

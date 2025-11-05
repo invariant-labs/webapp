@@ -650,3 +650,8 @@ export const percentageThresholds: FormatNumberThreshold[] = [
 ]
 
 export const TOKEN_FETCH_DELAY = 60 * 1000 * 60 * 24
+
+export enum ChartSwitch {
+  volume = 'Volume',
+  fees = 'Fees'
+}

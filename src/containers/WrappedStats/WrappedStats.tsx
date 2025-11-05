@@ -8,6 +8,7 @@ import {
   cumulativeVolume,
   currentInterval,
   fees,
+  feesPlot,
   isLoading,
   lastInterval,
   lastSnapTimestamp,
@@ -49,6 +50,7 @@ export const WrappedStats: React.FC = () => {
   const volumePlotData = useSelector(volumePlot)
   const lastStatsTimestamp = useSelector(lastSnapTimestamp)
   const liquidityPlotData = useSelector(liquidityPlot)
+  const feesPlotData = useSelector(feesPlot)
   const isLoadingStats = useSelector(isLoading)
   const currentNetwork = useSelector(network)
   const cumulativeVolumeData = useSelector(cumulativeVolume)
@@ -292,9 +294,11 @@ export const WrappedStats: React.FC = () => {
             volumeInterval={volumeInterval}
             volumePlotData={volumePlotData}
             liquidityPlotData={liquidityPlotData}
+            feesPlotData={feesPlotData}
             tvlInterval={tvlInterval}
             cumulativeVolume={cumulativeVolumeData}
             cumulativeFees={cumulativeFeesData}
+            setChartType={e => dispatch(actions.setChartType(e))}
           />
 
           <PoolList
