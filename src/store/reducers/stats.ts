@@ -1,13 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PublicKey } from '@solana/web3.js'
-import { Intervals } from '@store/consts/static'
-import { PayloadType } from '@store/consts/types'
+import { ChartSwitch, Intervals } from '@store/consts/static'
+import { PayloadType, PoolChartSwitch } from '@store/consts/types'
 
 export interface TimeData {
   timestamp: number
   value: number
 }
-
+export interface PoolSnap {
+  timestamp: number
+  volumePlot: TimeData[]
+  liquidityPlot: TimeData[]
+  feesPlot: TimeData[]
+  volume: number
+  tvl: number
+  fees: number
+  apy: number
+}
 export interface Value24H {
   value: number
   change: number
@@ -38,6 +47,7 @@ export interface CumulativeValue {
 export interface IStatsStore {
   volumePlot: TimeData[]
   liquidityPlot: TimeData[]
+  feesPlot: TimeData[]
   volume24: Value24H
   tvl24: Value24H
   fees24: Value24H
@@ -53,11 +63,15 @@ export interface IStatsStore {
   currentInterval: Intervals | null
   cumulativeVolume: CumulativeValue
   cumulativeFees: CumulativeValue
+  columnChartType: ChartSwitch
+  currentPoolData: PoolSnap
+  poolDetailsChartType: PoolChartSwitch
 }
 
 export const defaultState: IStatsStore = {
   volumePlot: [],
   liquidityPlot: [],
+  feesPlot: [],
   volume24: {
     value: 0,
     change: 0
@@ -89,6 +103,7 @@ export const defaultState: IStatsStore = {
   lastSnapTimestamp: 0,
   lastInterval: null,
   currentInterval: null,
+  columnChartType: ChartSwitch.volume,
   cumulativeVolume: {
     value: 0,
     change: null
@@ -96,7 +111,18 @@ export const defaultState: IStatsStore = {
   cumulativeFees: {
     value: 0,
     change: null
-  }
+  },
+  currentPoolData: {
+    feesPlot: [],
+    liquidityPlot: [],
+    volumePlot: [],
+    timestamp: 0,
+    volume: 0,
+    tvl: 0,
+    fees: 0,
+    apy: 0
+  },
+  poolDetailsChartType: PoolChartSwitch.volume
 }
 
 export const statsSliceName = 'stats'
@@ -112,8 +138,31 @@ const statsSlice = createSlice({
         ...action.payload,
         isLoading: false,
         lastTimestamp: +Date.now(),
-        currentInterval: state.currentInterval
+        currentInterval: state.currentInterval,
+        columnChartType: state.columnChartType,
+        poolDetailsChartType: state.poolDetailsChartType,
+        currentPoolData: state.currentPoolData
       }
+      return state
+    },
+    setPoolStats(state, action: PayloadAction<PoolSnap>) {
+      state.currentPoolData = {
+        ...action.payload
+      }
+
+      state.isLoading = false
+      state.lastTimestamp = +Date.now()
+      return state
+    },
+    getCurrentIntervalPoolStats(
+      state,
+      _action: PayloadAction<{ interval: Intervals; poolAddress: string }>
+    ) {
+      state.isLoading = true
+      return state
+    },
+    setPoolDetailsChartType(state, action: PayloadAction<PoolChartSwitch>) {
+      state.poolDetailsChartType = action.payload
       return state
     },
     setCurrentInterval(state, action: PayloadAction<{ interval: Intervals }>) {
@@ -127,6 +176,11 @@ const statsSlice = createSlice({
     },
     getCurrentIntervalStats(state, _action: PayloadAction<{ interval: Intervals }>) {
       state.isLoading = true
+      return state
+    },
+    setChartType(state, action: PayloadAction<ChartSwitch>) {
+      state.columnChartType = action.payload
+
       return state
     },
     setLoadingStats(state, action: PayloadAction<boolean>) {

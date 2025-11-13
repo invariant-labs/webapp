@@ -1,7 +1,7 @@
 import { actions } from '@store/reducers/stats'
 import { all, call, put, select, spawn, takeLatest } from 'typed-redux-saga'
 import { network } from '@store/selectors/solanaConnection'
-import { ensureError, getIntervalsFullSnap } from '@utils/utils'
+import { ensureError, getIntervalsFullSnap, getIntervalsPoolSnap } from '@utils/utils'
 import { PublicKey } from '@solana/web3.js'
 import { lastInterval, lastTimestamp } from '@store/selectors/stats'
 import { Intervals, STATS_CACHE_TIME } from '@store/consts/static'
@@ -44,7 +44,41 @@ import { handleRpcError } from './connection'
 //     yield* call(handleRpcError, error.message)
 //   }
 // }
+export function* getIntervalPoolStats(
+  action: PayloadAction<{ interval: Intervals; poolAddress: string }>
+): Generator {
+  try {
+    const currentNetwork = yield* select(network)
 
+    const poolSnap = yield* call(
+      getIntervalsPoolSnap,
+      currentNetwork.toLowerCase(),
+      action.payload.interval,
+      action.payload.poolAddress
+    )
+
+    const parsedPoolSnap = {
+      ...poolSnap,
+      volumePlot: poolSnap.volumePlot.reverse(),
+      liquidityPlot: poolSnap.liquidityPlot.reverse(),
+      feesPlot: poolSnap.feesPlot.reverse()
+    }
+
+    const payload = {
+      ...parsedPoolSnap,
+      lastInterval: action.payload.interval
+    }
+
+    yield* put(actions.setPoolStats(payload))
+  } catch (e: unknown) {
+    const error = ensureError(e)
+    console.log(error)
+
+    yield* put(actions.setLoadingStats(false))
+
+    yield* call(handleRpcError, error.message)
+  }
+}
 export function* getIntervalStats(action: PayloadAction<{ interval: Intervals }>): Generator {
   try {
     const lastFetchTimestamp = yield* select(lastTimestamp)
@@ -71,6 +105,7 @@ export function* getIntervalStats(action: PayloadAction<{ interval: Intervals }>
       lastSnapTimestamp: fullSnap.timestamp,
       volumePlot: fullSnap.volumePlot.reverse(),
       liquidityPlot: fullSnap.liquidityPlot.reverse(),
+      feesPlot: fullSnap.feesPlot.reverse(),
       tokensData: fullSnap.tokensData.map(token => ({
         ...token,
         address: new PublicKey(token.address),
@@ -102,10 +137,12 @@ export function* getIntervalStats(action: PayloadAction<{ interval: Intervals }>
     yield* call(handleRpcError, error.message)
   }
 }
-
+export function* intervalPoolStatsHandler(): Generator {
+  yield* takeLatest(actions.getCurrentIntervalPoolStats, getIntervalPoolStats)
+}
 export function* intervalStatsHandler(): Generator {
   yield* takeLatest(actions.getCurrentIntervalStats, getIntervalStats)
 }
 export function* statsSaga(): Generator {
-  yield* all([intervalStatsHandler].map(spawn))
+  yield* all([intervalStatsHandler, intervalPoolStatsHandler].map(spawn))
 }

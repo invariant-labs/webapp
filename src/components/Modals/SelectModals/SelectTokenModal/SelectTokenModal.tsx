@@ -25,7 +25,7 @@ import { formatNumberWithSuffix, getTokenPrice, printBN } from '@utils/utils'
 import { emptyIcon, newTabIcon, searchIcon, unknownTokenIcon, warningIcon } from '@static/icons'
 
 export interface ISelectTokenModal {
-  tokens: Record<string, SwapToken>
+  tokens: Record<string, SwapToken> | SwapToken[]
   commonTokens: PublicKey[]
   open: boolean
   handleClose: () => void

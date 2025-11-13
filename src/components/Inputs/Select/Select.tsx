@@ -13,7 +13,7 @@ export interface ISelectModal {
   name?: string
   current: SwapToken | null
   centered?: boolean
-  tokens: Record<string, SwapToken>
+  tokens: Record<string, SwapToken> | SwapToken[]
   onSelect: (address: PublicKey) => void
   className?: string
   hideBalancesInModal?: boolean

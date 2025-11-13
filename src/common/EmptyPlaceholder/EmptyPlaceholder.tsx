@@ -10,14 +10,13 @@ export interface IEmptyPlaceholder {
   desc: string
   onAction?: () => void
   onAction2?: () => void
-
   className?: string
   style?: React.CSSProperties
   withButton?: boolean
   mainTitle?: string
   roundedCorners?: boolean
   buttonName?: string
-  height?: number
+  height?: number | string
   newVersion?: boolean
   img?: string
   desc2?: string

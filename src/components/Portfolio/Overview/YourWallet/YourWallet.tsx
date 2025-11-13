@@ -1,21 +1,9 @@
 import React, { useMemo } from 'react'
-import {
-  Box,
-  Typography,
-  Skeleton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Grid
-} from '@mui/material'
+import { Box, Typography, Skeleton, Grid, useMediaQuery } from '@mui/material'
 import { WalletToken } from '@store/types/userOverview'
-import { DEFAULT_FEE_TIER, STRATEGIES } from '@store/consts/userStrategies'
 import { unknownTokenIcon, warning2Icon, warningIcon } from '@static/icons'
 import { NetworkType } from '@store/consts/static'
-import { addressToTicker, formatNumberWithoutSuffix } from '@utils/utils'
+import { findStrategy, formatNumberWithoutSuffix } from '@utils/utils'
 import { useStyles } from './styles'
 import { MobileCard } from './MobileCard'
 import { TooltipHover } from '@common/TooltipHover/TooltipHover'
@@ -26,6 +14,7 @@ import { SkeletonRow } from './Skeletons/SekeletonRow'
 import { EmptyState } from './EmptyState/EmptyState'
 import { MobileSkeletonCard } from './Skeletons/MobileSkeletonCard'
 import { ActionButtons } from './ActionButtons/ActionButtons'
+import { theme } from '@static/theme'
 
 interface YourWalletProps {
   tokens: WalletToken[]
@@ -40,6 +29,7 @@ export const YourWallet: React.FC<YourWalletProps> = ({
   handleSnackbar,
   currentNetwork
 }) => {
+  const isMd = useMediaQuery(theme.breakpoints.down('md'))
   const sortedTokens = useMemo(() => [...tokens].sort((a, b) => b.value - a.value), [tokens])
   const { classes } = useStyles({
     isLoading,
@@ -52,29 +42,6 @@ export const YourWallet: React.FC<YourWalletProps> = ({
 
     return { value, isPriceWarning }
   }, [sortedTokens])
-
-  const findStrategy = (poolAddress: string) => {
-    const poolTicker = addressToTicker(currentNetwork, poolAddress)
-    let strategy = STRATEGIES.find(s => {
-      const tickerA = addressToTicker(currentNetwork, s.tokenAddressA)
-      const tickerB = s.tokenAddressB ? addressToTicker(currentNetwork, s.tokenAddressB) : undefined
-      return tickerA === poolTicker || tickerB === poolTicker
-    })
-    if (!strategy) {
-      strategy = {
-        tokenAddressA: poolAddress,
-        feeTier: DEFAULT_FEE_TIER
-      }
-    }
-
-    return {
-      ...strategy,
-      tokenSymbolA: addressToTicker(currentNetwork, strategy.tokenAddressA),
-      tokenSymbolB: strategy.tokenAddressB
-        ? addressToTicker(currentNetwork, strategy.tokenAddressB)
-        : '-'
-    }
-  }
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     e.currentTarget.src = unknownTokenIcon
@@ -95,125 +62,115 @@ export const YourWallet: React.FC<YourWalletProps> = ({
             </Grid>
           )}
         </Box>
+        <Grid display='flex' justifyContent='space-between'>
+          <Typography className={classes.headerCellTokenName}>Token {!isMd && 'Name'}</Typography>
+          <Typography className={classes.headerCell}>Value</Typography>
+          <Typography className={classes.headerCell}>Amount</Typography>
+          <Typography className={classes.headerCell}>Action</Typography>
+        </Grid>
+        <Grid className={classes.tableContainer}>
+          {isLoading ? (
+            <Grid className={classes.zebraRow}>
+              {Array(4)
+                .fill(0)
+                .map((_, index) => (
+                  <SkeletonRow key={`skeleton-${index}`} />
+                ))}
+            </Grid>
+          ) : sortedTokens.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <Grid className={classes.zebraRow}>
+              {sortedTokens.map(token => {
+                const poolAddress = token.id.toString()
+                const strategy = findStrategy(poolAddress)
 
-        <TableContainer className={classes.tableContainer}>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell className={classes.headerCell} sx={{ width: '25%' }} align='left'>
-                  Token Name
-                </TableCell>
-                <TableCell className={classes.headerCell} sx={{ width: '22%' }} align='left'>
-                  Value
-                </TableCell>
-                <TableCell className={classes.headerCell} sx={{ width: '37%' }} align='left'>
-                  Amount
-                </TableCell>
-                <TableCell
-                  className={`${classes.headerCell} ${classes.desktopActionCell}`}
-                  align='right'>
-                  Action
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody className={classes.zebraRow}>
-              {isLoading ? (
-                Array(4)
-                  .fill(0)
-                  .map((_, index) => <SkeletonRow key={`skeleton-${index}`} />)
-              ) : sortedTokens.length === 0 ? (
-                <TableRow sx={{ background: 'transparent !important' }}>
-                  <TableCell colSpan={4} sx={{ border: 'none', padding: 0 }}>
-                    <EmptyState />
-                  </TableCell>
-                </TableRow>
-              ) : (
-                sortedTokens.map(pool => {
-                  const poolAddress = pool.id.toString()
-                  const strategy = findStrategy(poolAddress)
-
-                  return (
-                    <TableRow key={pool.id.toString()}>
-                      <TableCell className={classes.tableCell}>
-                        <Box className={classes.tokenContainer}>
-                          <Box className={classes.tokenInfo} sx={{ position: 'relative' }}>
-                            <img
-                              src={pool.icon}
-                              className={classes.tokenIcon}
-                              onError={handleImageError}
-                              alt={pool.symbol}
-                            />
-                            {pool.isUnknown && (
-                              <img className={classes.warningIcon} src={warningIcon} />
-                            )}
-
-                            <Typography className={classes.tokenSymbol}>
-                              {pool.symbol.length <= 6
-                                ? pool.symbol
-                                : shortenAddress(pool.symbol, 2)}
-                            </Typography>
-                            <TooltipHover title='Copy token address'>
-                              <FileCopyOutlinedIcon
-                                onClick={() => {
-                                  navigator.clipboard.writeText(poolAddress)
-
-                                  handleSnackbar('Token address copied.', 'success')
-                                }}
-                                classes={{ root: classes.clipboardIcon }}
-                              />
-                            </TooltipHover>
-                          </Box>
-                          <Box className={classes.mobileActions}>
-                            <ActionButtons
-                              pool={pool}
-                              strategy={strategy}
-                              currentNetwork={currentNetwork}
-                            />
-                          </Box>
-                        </Box>
-                      </TableCell>
-                      <TableCell
-                        className={classes.tableCell}
-                        align='right'
-                        sx={{ width: '102px' }}>
-                        <Box className={classes.statsContainer}>
-                          <Typography className={classes.statsValue}>
-                            $
-                            {formatNumberWithoutSuffix(pool.value.toFixed(2), {
-                              twoDecimals: true
-                            })}
-                          </Typography>
-                          {pool.isPriceWarning && (
-                            <TooltipHover title='The price might not be shown correctly'>
-                              <img src={warning2Icon} width={14} />
-                            </TooltipHover>
+                return (
+                  <Grid>
+                    <Box className={classes.tokenContainer}>
+                      <Box className={classes.tokenInfo}>
+                        <Box display='flex' position='relative'>
+                          <img
+                            src={token.icon}
+                            className={classes.tokenIcon}
+                            onError={handleImageError}
+                            alt={token.symbol}
+                          />
+                          {token.isUnknown && (
+                            <img className={classes.warningIcon} src={warningIcon} />
                           )}
                         </Box>
-                      </TableCell>
-                      <TableCell className={classes.tableCell} align='right'>
-                        <Box className={classes.statsContainer}>
-                          <Typography className={classes.statsValue}>
-                            {formatNumberWithoutSuffix(pool.amount)}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell
-                        className={`${classes.tableCell} ${classes.desktopActionCell}`}
-                        align='right'
-                        sx={{ display: 'flex' }}>
+
+                        <Typography className={classes.tokenSymbol}>
+                          {token.symbol.length <= 6
+                            ? token.symbol
+                            : shortenAddress(token.symbol, 2)}
+                        </Typography>
+                        <TooltipHover title='Copy token address'>
+                          <FileCopyOutlinedIcon
+                            onClick={() => {
+                              navigator.clipboard.writeText(poolAddress)
+
+                              handleSnackbar('Token address copied.', 'success')
+                            }}
+                            classes={{ root: classes.clipboardIcon }}
+                          />
+                        </TooltipHover>
+                      </Box>
+                      <Box className={classes.mobileActions}>
                         <ActionButtons
-                          pool={pool}
+                          pool={token}
                           strategy={strategy}
                           currentNetwork={currentNetwork}
                         />
-                      </TableCell>
-                    </TableRow>
-                  )
-                })
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                      </Box>
+                    </Box>
+                    <Grid display='flex' flex={'1'} padding='12px 4px 12px 8px'>
+                      <Box className={classes.statsContainer}>
+                        <Typography className={classes.statsValue}>
+                          $
+                          {formatNumberWithoutSuffix((token.value || 0).toFixed(2), {
+                            twoDecimals: true
+                          })}
+                        </Typography>
+                        {token.isPriceWarning && (
+                          <TooltipHover title='The price might not be shown correctly'>
+                            <img src={warning2Icon} width={14} />
+                          </TooltipHover>
+                        )}
+                      </Box>
+                    </Grid>
+                    <Grid
+                      display='flex'
+                      flex={'1'}
+                      padding='12px 8px 12px 4px'
+                      justifyContent='center'>
+                      <Box className={classes.statsContainer}>
+                        <Typography className={classes.statsValue}>
+                          {formatNumberWithoutSuffix(token.amount)}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid
+                      display='flex'
+                      width={110}
+                      boxSizing='border-box'
+                      padding='12px 0'
+                      justifyContent='flex-end'
+                      paddingRight='12px'
+                      gap='4px'>
+                      <ActionButtons
+                        pool={token}
+                        strategy={strategy}
+                        currentNetwork={currentNetwork}
+                      />
+                    </Grid>
+                  </Grid>
+                )
+              })}
+            </Grid>
+          )}
+        </Grid>
       </Box>
 
       <Box className={classes.mobileContainer}>
@@ -225,11 +182,11 @@ export const YourWallet: React.FC<YourWalletProps> = ({
           <EmptyState />
         ) : (
           <Box className={classes.mobileCardContainer}>
-            {sortedTokens.map(pool => (
+            {sortedTokens.map(token => (
               <MobileCard
-                key={pool.id.toString()}
-                pool={pool}
-                getStrategy={() => findStrategy(pool.id.toString())}
+                key={token.id.toString()}
+                pool={token}
+                getStrategy={() => findStrategy(token.id.toString())}
                 currentNetwork={currentNetwork}
               />
             ))}

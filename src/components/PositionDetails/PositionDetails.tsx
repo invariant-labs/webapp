@@ -228,7 +228,19 @@ const PositionDetails: React.FC<IProps> = ({
       price: ratioToDenominator * denominatorPrice
     }
   }, [midPrice.x, tokenXPriceData?.price, tokenYPriceData?.price])
+  const openPoolDetails = () => {
+    const address1 = addressToTicker(network, tokenXAddress.toString())
+    const address2 = addressToTicker(network, tokenYAddress.toString())
+    const parsedFee = parseFeeToPathFee(fee)
+    const isXtoY = initialXtoY(tokenXAddress.toString(), tokenYAddress.toString())
 
+    const tokenA = isXtoY ? address1 : address2
+    const tokenB = isXtoY ? address2 : address1
+
+    dispatch(actions.setNavigation({ address: location.pathname }))
+
+    navigate(ROUTES.getPoolDetailsRoute(tokenA, tokenB, parsedFee))
+  }
   const location = useLocation()
   const dispatch = useDispatch()
   return (
@@ -256,6 +268,7 @@ const PositionDetails: React.FC<IProps> = ({
         )}
         <Box className={classes.mainContainer}>
           <PositionHeader
+            openPoolDetails={openPoolDetails}
             isClosing={shouldDisable}
             tokenA={
               xToY

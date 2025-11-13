@@ -37,7 +37,7 @@ export interface ISinglePositionData extends PositionWithAddress {
 
 export const Overview: React.FC<OverviewProps> = () => {
   const positionList = useSelector(positionsWithPoolsData)
-  const isLg = useMediaQuery(theme.breakpoints.down('lg'))
+  const isLg = useMediaQuery(theme.breakpoints.down('md'))
   const { isAllClaimFeesLoading } = useSelector(list)
   const isLoadingList = useSelector(isLoadingPositionsList)
   const { classes } = useStyles()
@@ -186,7 +186,7 @@ export const Overview: React.FC<OverviewProps> = () => {
     return (
       <Box className={classes.container}>
         <HeaderSection totalValue={{ value: 0, isPriceWarning: false }} loading={false} />
-        <UnclaimedSection unclaimedTotal={0} loading={false} handleClaimAll={undefined} />
+        <UnclaimedSection unclaimedAmount={0} loading={false} handleClaimAll={undefined} />
         <EmptyState />
       </Box>
     )
@@ -196,7 +196,7 @@ export const Overview: React.FC<OverviewProps> = () => {
     <Box className={classes.container}>
       <HeaderSection totalValue={totalAssets} loading={isLoadingList} />
       <UnclaimedSection
-        unclaimedTotal={unclaimedFees}
+        unclaimedAmount={unclaimedFees}
         handleClaimAll={handleClaimAll}
         loading={isLoadingList || isAllClaimFeesLoading || unClaimedFeesLoading}
       />
@@ -210,7 +210,7 @@ export const Overview: React.FC<OverviewProps> = () => {
         />
       ) : (
         <Box className={classes.legendSection}>
-          <Box sx={{ width: '850px' }}>
+          <Box display='flex' flexShrink={1} justifyContent='flex-end' sx={{ width: '850px' }}>
             {!isDataReady ? (
               <LegendSkeleton />
             ) : (

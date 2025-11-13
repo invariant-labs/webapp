@@ -15,6 +15,15 @@ export const useStyles = makeStyles()(() => ({
       flexDirection: 'column'
     }
   },
+  poolStats: {
+    '&:hover': {
+      filter: 'brightness(1.4)',
+      cursor: 'pointer',
+      '@media (hover: none)': {
+        filter: 'brightness(1)'
+      }
+    }
+  },
   navigation: {
     display: 'flex',
     justifyContent: 'space-between',
