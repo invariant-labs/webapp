@@ -92,8 +92,23 @@ import centerToRangeIcon from './svg/centerToRange.svg'
 import connectWalletIcon from './svg/connectWalletIcon.svg'
 import warning2Icon from './svg/warning2.svg'
 import fogoGlow from './svg/fogoGlow.svg'
-
+import star from './svg/star.svg'
+import starFill from './svg/star-fill.svg'
+import poolStatsBtnIcon from './svg/poolStatsBtn.svg'
+import arrowUpIcon from './svg/arrowUp.svg'
+import arrowDownIcon from './svg/arrowDown.svg'
+import plusDisabled from './svg/plusDisabled.svg'
+import dropdownIcon from './svg/dropdown.svg'
+import dropdownReverseIcon from './svg/dropdownReverse.svg'
 export {
+  dropdownIcon,
+  dropdownReverseIcon,
+  plusDisabled,
+  arrowUpIcon,
+  arrowDownIcon,
+  poolStatsBtnIcon,
+  star,
+  starFill,
   dog1Icon,
   dog2Icon,
   cat1Icon,

@@ -6,39 +6,48 @@ import { TimeData } from '@store/reducers/stats'
 import { Box, Grid, Typography, useMediaQuery } from '@mui/material'
 import { formatNumberWithoutSuffix, trimZeros } from '@utils/utils'
 import { formatLargeNumber } from '@utils/formatLargeNumber'
-import { Intervals as IntervalsKeys } from '@store/consts/static'
+import { ChartSwitch, Intervals as IntervalsKeys } from '@store/consts/static'
 import { formatPlotDataLabels, getLabelDate, mapIntervalToString } from '@utils/uiUtils'
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import { columnChartType } from '@store/selectors/stats'
+import Switcher from '@common/Switcher/Switcher'
 
 interface StatsInterface {
   volume: number | null
-  data: TimeData[]
+  fees: number | null
+  volumeData: TimeData[]
+  feesData: TimeData[]
   className?: string
   isLoading: boolean
   interval: IntervalsKeys
   lastStatsTimestamp: number
+  setChartType: (type: ChartSwitch) => void
 }
 
 const Volume: React.FC<StatsInterface> = ({
-  volume,
-  data,
+  volume = 0,
+  fees = 0,
+  volumeData,
+  feesData,
   className,
   isLoading,
   interval,
-  lastStatsTimestamp
+  lastStatsTimestamp,
+  setChartType
 }) => {
   const { classes, cx } = useStyles()
   const [hoveredBar, setHoveredBar] = useState<any>(null)
   const [hoveredBarPosition, setHoveredBarPosition] = useState<{ x: number; width: number } | null>(
     null
   )
+
+  const chartType = useSelector(columnChartType)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const chartContainerRef = useRef<HTMLDivElement>(null)
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const intervalSuffix = mapIntervalToString(interval)
-
-  volume = volume ?? 0
 
   const isXsDown = useMediaQuery(theme.breakpoints.down('xs'))
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
@@ -243,15 +252,31 @@ const Volume: React.FC<StatsInterface> = ({
     )
   }
 
+  const [data, value] = useMemo(() => {
+    if (chartType === ChartSwitch.volume) {
+      return [volumeData, volume || 0]
+    } else {
+      return [feesData, fees || 0]
+    }
+  }, [chartType, volume, fees])
+
   return (
     <Grid className={cx(classes.container, className)}>
       <Box className={classes.volumeContainer}>
-        <Grid container justifyContent={'space-between'} alignItems='center'>
-          <Typography className={classes.volumeHeader}>Volume {intervalSuffix}</Typography>
+        <Grid container display='flex' justifyContent={'space-between'} alignItems='center'>
+          <Typography className={classes.volumeHeader}>
+            {chartType === ChartSwitch.volume ? 'Volume' : 'Fees'} {intervalSuffix}
+          </Typography>
+          <Switcher
+            value={chartType}
+            onChange={setChartType}
+            options={[ChartSwitch.volume, ChartSwitch.fees]}
+            dark
+          />
         </Grid>
         <div className={classes.volumePercentContainer}>
           <Typography className={classes.volumePercentHeader}>
-            ${formatNumberWithoutSuffix(isLoading ? Math.random() * 10000 : volume)}
+            ${formatNumberWithoutSuffix(isLoading ? Math.random() * 10000 : value)}
           </Typography>
         </div>
       </Box>

@@ -19,9 +19,8 @@ interface LegendOverviewProps {
 
 const getContainerHeight = (length: number): string => {
   if (length <= 2) return '70px'
-  if (length <= 3) return '100px'
-  if (length <= 4) return '130px'
-  return '160px'
+  if (length <= 3) return '114px'
+  return '151px'
 }
 
 export const LegendOverview: React.FC<LegendOverviewProps> = ({
@@ -40,7 +39,7 @@ export const LegendOverview: React.FC<LegendOverviewProps> = ({
         className={classes.scrollContainer}
         sx={{
           height: getContainerHeight(sortedTokens.length),
-          overflowY: sortedTokens.length <= 5 ? 'hidden' : 'auto'
+          overflowY: sortedTokens.length <= 4 ? 'hidden' : 'auto'
         }}>
         {sortedTokens.map(token => {
           const textColor = getTokenColor(
@@ -55,7 +54,7 @@ export const LegendOverview: React.FC<LegendOverviewProps> = ({
               </Grid>
 
               <Grid item xs={3} alignContent='center'>
-                <Typography style={{ ...typography.heading4, color: textColor }}>
+                <Typography style={{ ...typography.heading4, color: textColor, fontSize: 18 }}>
                   {token.token}
                 </Typography>
               </Grid>
@@ -67,14 +66,14 @@ export const LegendOverview: React.FC<LegendOverviewProps> = ({
                 xs={7}
                 alignContent='center'
                 gap={'8px'}>
-                <Typography className={classes.valueText}>
-                  ${formatNumberWithoutSuffix(token.value, { twoDecimals: true })}
-                </Typography>
                 {token.isPriceWarning && (
                   <TooltipHover title='The price might not be shown correctly'>
                     <img src={warning2Icon} width={14} />
                   </TooltipHover>
                 )}
+                <Typography className={classes.valueText}>
+                  ${formatNumberWithoutSuffix(token.value, { twoDecimals: true })}
+                </Typography>
               </Grid>
             </Grid>
           )

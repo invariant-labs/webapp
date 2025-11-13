@@ -1,5 +1,5 @@
 import { BN } from '@project-serum/anchor'
-import { printBN, trimDecimalZeros } from './utils'
+import { printBN, trimDecimalZeros, trimZeros } from './utils'
 import { PublicKey } from '@solana/web3.js'
 import { SwapToken } from '@store/selectors/solanaWallet'
 import { Intervals, MONTH_NAMES } from '@store/consts/static'
@@ -253,4 +253,29 @@ export const getLabelDate = (
   }
 
   return `${day < 10 ? '0' : ''}${day} ${monthName}`
+}
+
+type RateType = 'APY' | 'APR'
+
+export const convertAPYValue = (apy: number, type: RateType) => {
+  return apy > 9999
+    ? '>9999%'
+    : apy === 0
+      ? type === 'APY'
+        ? '-'
+        : ''
+      : Math.abs(apy).toFixed(2) + '%'
+}
+
+export const formatLargeNumber = (number: number) => {
+  const suffixes = ['', 'K', 'M', 'B', 'T', 'Q']
+
+  if (number < 1000) {
+    return number.toFixed(1)
+  }
+
+  const suffixIndex = Math.floor(Math.log10(number) / 3)
+  const scaledNumber = number / Math.pow(1000, suffixIndex)
+
+  return `${trimZeros(scaledNumber.toFixed(1))}${suffixes[suffixIndex]}`
 }

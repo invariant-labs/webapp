@@ -12,7 +12,7 @@ const MobileOverviewSkeleton: React.FC = () => {
   }
 
   return (
-    <Box className={classes.container}>
+    <Box className={classes.container} sx={{ height: 195 }}>
       <Box className={classes.chartContainer}>
         {segments.map((_, index) => (
           <Skeleton
