@@ -18,7 +18,6 @@ export const PositionStats = ({
   showPoolDetailsLoader = false
 }: Props) => {
   const { classes, cx } = useStyles()
-
   return (
     <Box className={classes.container}>
       <Box className={classes.statWrapper}>
@@ -29,8 +28,11 @@ export const PositionStats = ({
           ) : (
             <Typography className={classes.statValue}>
               $
-              {+formatNumberWithSuffix(value, true, 18) < 1000
-                ? (+formatNumberWithSuffix(value, true, 18)).toFixed(2)
+              {+formatNumberWithSuffix(value, { noDecimals: true, decimalsAfterDot: 18 }) < 1000
+                ? (+formatNumberWithSuffix(value, {
+                    noDecimals: true,
+                    decimalsAfterDot: 18
+                  })).toFixed(2)
                 : formatNumberWithSuffix(value)}
             </Typography>
           )}
@@ -42,10 +44,12 @@ export const PositionStats = ({
           ) : (
             <Typography className={classes.statValue}>
               $
-              {+formatNumberWithSuffix(pendingFees, true, 18) < 1000
-                ? (+formatNumberWithSuffix(pendingFees, true, 18)).toFixed(2) === '0.00'
-                  ? '<0.01'
-                  : (+formatNumberWithSuffix(pendingFees, true, 18)).toFixed(2)
+              {+formatNumberWithSuffix(pendingFees, { noDecimals: true, decimalsAfterDot: 18 }) <
+              1000
+                ? (+formatNumberWithSuffix(pendingFees, {
+                    noDecimals: true,
+                    decimalsAfterDot: 18
+                  })).toFixed(2)
                 : formatNumberWithSuffix(pendingFees)}
             </Typography>
           )}

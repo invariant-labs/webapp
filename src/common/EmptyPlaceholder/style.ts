@@ -3,7 +3,7 @@ import { makeStyles } from 'tss-react/mui'
 
 interface StyleProps {
   newVersion?: boolean
-  height?: number
+  height?: number | string
   roundedCorners?: boolean
   themeDark: boolean
 }

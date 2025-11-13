@@ -1,12 +1,12 @@
 import { makeStyles } from 'tss-react/mui'
 import { colors, theme, typography } from '@static/theme'
-import { Theme } from '@mui/material'
 
-export const useStyles = makeStyles<{ isLoading: boolean }>()((_theme: Theme, { isLoading }) => ({
+export const useStyles = makeStyles()(() => ({
   container: {
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: 251
   },
   unclaimedSection: {
     display: 'flex',
@@ -14,11 +14,12 @@ export const useStyles = makeStyles<{ isLoading: boolean }>()((_theme: Theme, { 
     flexDirection: 'column',
     gap: '16px',
     minHeight: '32px',
-    [theme.breakpoints.down('lg')]: {
-      maxHeight: '76px'
+    [theme.breakpoints.down(850)]: {
+      maxHeight: '58px',
+      gap: '8px'
     },
 
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up(850)]: {
       height: '57.5px',
       padding: '0px 24px 0px 24px',
       borderTop: `1px solid  ${colors.invariant.light}`,
@@ -37,7 +38,7 @@ export const useStyles = makeStyles<{ isLoading: boolean }>()((_theme: Theme, { 
     gap: '16px',
     justifyContent: 'space-between',
 
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up(850)]: {
       gap: 'auto',
       flex: 1
     }
@@ -45,45 +46,19 @@ export const useStyles = makeStyles<{ isLoading: boolean }>()((_theme: Theme, { 
 
   unclaimedTitle: {
     ...typography.heading4,
-    color: colors.invariant.textGrey
+    fontSize: 18,
+    color: colors.invariant.textGrey,
+    [theme.breakpoints.down(850)]: {
+      fontSize: 16
+    }
   },
 
   unclaimedAmount: {
-    ...typography.heading3,
-    color: colors.invariant.text
-  },
-  claimAllButton: {
-    ...typography.body1,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minWidth: '100px',
-    height: '32px',
-    marginLeft: '36px',
-    background: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
-    borderRadius: '12px',
-    textTransform: 'none',
-    color: colors.invariant.dark,
-    transition: 'all 0.3s ease',
-
-    '&:hover': {
-      background: 'linear-gradient(180deg, #3FF2AB 0%, #25B487 100%)',
-      boxShadow: isLoading ? 'none' : '0 4px 15px rgba(46, 224, 154, 0.35)'
-    },
-
-    '&:active': {
-      boxShadow: isLoading ? 'none' : '0 2px 8px rgba(46, 224, 154, 0.35)'
-    },
-
-    [theme.breakpoints.down('lg')]: {
-      width: '100%',
-      marginLeft: 0
-    },
-
-    '&:disabled': {
-      background: colors.invariant.light,
-      color: colors.invariant.dark
+    ...typography.heading4,
+    fontSize: 18,
+    color: colors.invariant.text,
+    [theme.breakpoints.down(850)]: {
+      fontSize: 16
     }
   }
 }))

@@ -58,7 +58,8 @@ const RootPage: React.FC = React.memo(() => {
     [ROUTES.PORTFOLIO, 'Invariant | Portfolio'],
     [ROUTES.NEW_POSITION, 'Invariant | New Position'],
     [ROUTES.POSITION, 'Invariant | Position Details'],
-    [ROUTES.STATISTICS, 'Invariant | Statistics']
+    [ROUTES.STATISTICS, 'Invariant | Statistics'],
+    [ROUTES.POOL_DETAILS, 'Invariant | Pool Details']
   ])
 
   useEffect(() => {
@@ -177,6 +178,8 @@ const RootPage: React.FC = React.memo(() => {
       {signerStatus === Status.Initialized && <EventsHandlers />}
       <div id={toBlur}>
         <Grid className={classes.root}>
+          <div className={classes.background} />
+
           <PerformanceWarning />
           {/* {showHeader && currentNetwork === NetworkType.Mainnet && (
             <>
