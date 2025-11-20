@@ -67,7 +67,7 @@ export const colors = {
     lightPink: '#f29df7',
     violet: '#9C3EBD',
     green: '#2EE09A',
-    chartDisabled: '#545a5e',
+    greenOpacity: '#256964',
     dark: '#040B22',
     newDark: '#111931',
     component: '#202946',
@@ -78,24 +78,40 @@ export const colors = {
     lightHover2: '#4B5983',
     black: '#010514',
     textGrey: '#A9B6BF',
+    chartDisabled: '#545a5e',
     lightGrey: '#bac7d1',
     text: '#FFFFFF',
+    silver: '#C6C5C7',
+    bronze: '#C48643',
     Error: '#FB555F',
+    offWhite: '#FBFBFB',
+    goldenYellow: '#FFD15C',
     normal: '#2A365C',
+    lightBlue: '#00D9FF',
+    errorTransparent: 'rgba(251, 85, 95, 0.2)',
     greenLinearGradient: 'linear-gradient(180deg, #2EE09A 0%, #21A47C 100%)',
+    greyLinearGradinet: 'linear-gradient(180deg,#A9B6BF 0%, #3A466B 100%)',
     greenLinearGradientOpacity:
       'linear-gradient(180deg, rgba(46, 224, 154, 0.8) 0%, rgba(33, 164, 124, 0.8) 100%)',
     pinkLinearGradient: 'linear-gradient(180deg, #EF84F5 0%, #9C3EBD 100%)',
     pinkLinearGradientOpacity:
       'linear-gradient(180deg, rgba(239, 132, 245, 0.8) 0%, rgba(156, 62, 189, 0.8) 100%)',
+    mixedLinearGradient:
+      'radial-gradient(50.2% 50.2% at 50% 0%, rgba(239, 132, 245, 0.25) 0%, rgba(239, 132, 245, 0) 75%), radial-gradient(49.8% 49.8% at 50% 100%, rgba(46, 224, 154, 0.25) 0%, rgba(46, 224, 154, 0) 75%)',
     yellow: '#EFD063',
     blue: '#43BBFF',
     transparentBcg: 'rgba(1, 5, 20, 0.25)',
     bodyBackground: '#141b2d',
-    plotGreen: '#9DD46D',
-    plotRed: '#FB555F',
+    warningTransparent: 'rgba(239, 208, 99, 0.2)',
     pinkGreenLinearGradient: 'linear-gradient(90deg, #EF84F5 0%, #2EE09A 100%)',
-    darkGradient: 'linear-gradient(180deg,rgba(17, 25, 49, 0) 0%, rgba(17, 25, 49, 1) 100%)'
+    pinkGreenLinearGradientOpacity:
+      'linear-gradient(90deg, rgba(46, 224, 154, 0.15) 0%, rgba(46, 224, 154, 0) 50%), linear-gradient(90deg, rgba(239, 132, 245, 0) 50%, rgba(239, 132, 245, 0.15) 100%), #202946;',
+    darkPinkGradient:
+      'linear-gradient(180deg, rgba(239, 132, 245, 0.00) 0%, rgba(239, 132, 245, 0.10) 100%), #111931',
+    darkGreenGradient:
+      'linear-gradient(180deg, rgba(46, 224, 154, 0.00) 0%, rgba(46, 224, 154, 0.10) 100%), #111931',
+    darkGradient: 'linear-gradient(180deg,rgba(17, 25, 49, 0) 0%, rgba(17, 25, 49, 1) 100%)',
+    esToken: '#A0FEA0'
   }
 }
 
