@@ -63,6 +63,8 @@ export const colors = {
   },
   invariant: {
     warning: '#EFD063',
+    plotGreen: '#9DD46D',
+    plotRed: '#FB555F',
     pink: '#EF84F5',
     lightPink: '#f29df7',
     violet: '#9C3EBD',
