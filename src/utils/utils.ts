@@ -1898,6 +1898,7 @@ export const ROUTES = {
   PORTFOLIO: '/portfolio',
   POOL_DETAILS: '/poolDetails',
   POOL_DETAILS_WITH_PARAMS: '/poolDetails/:item1?/:item2?/:item3?',
+  TERMS: '/terms',
 
   getExchangeRoute: (item1?: string, item2?: string): string => {
     const parts = [item1, item2].filter(Boolean)
