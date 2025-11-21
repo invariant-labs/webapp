@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef } from 'react'
+import React, { useEffect, useCallback, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import EventsHandlers from '@containers/EventsHandlers'
@@ -22,6 +22,9 @@ import {
   setPhantomAccChangeTrigger
 } from '@utils/web3/wallet'
 import { ROUTES } from '@utils/utils'
+import TermsOfUse from '@components/TermsOfUse/TermsOfUse'
+
+const TERMS_OF_USE_KEY = 'invariant-terms-of-use-v1'
 
 // const BANNER_STORAGE_KEY = 'invariant-banner-state-2'
 // const BANNER_HIDE_DURATION = 1000 * 60 * 60 * 24 // 24 hours
@@ -61,6 +64,22 @@ const RootPage: React.FC = React.memo(() => {
     [ROUTES.STATISTICS, 'Invariant | Statistics'],
     [ROUTES.POOL_DETAILS, 'Invariant | Pool Details']
   ])
+
+  const [showTermsOfUse, setShowTermsOfUse] = useState(() => {
+    const storedData = localStorage.getItem(TERMS_OF_USE_KEY)
+    if (storedData) {
+      return false
+    }
+    return true
+  })
+
+  const handleCloseModal = () => {
+    setShowTermsOfUse(false)
+    localStorage.setItem(TERMS_OF_USE_KEY, 'true')
+  }
+  const handleOpenTerms = () => {
+    window.open(ROUTES.TERMS, '_blank', 'noopener,noreferrer')
+  }
 
   useEffect(() => {
     const title =
@@ -181,6 +200,9 @@ const RootPage: React.FC = React.memo(() => {
           <div className={classes.background} />
 
           <PerformanceWarning />
+          {showTermsOfUse && location.pathname !== ROUTES.TERMS && (
+            <TermsOfUse openTerms={handleOpenTerms} handleContinue={handleCloseModal} />
+          )}
           {/* {showHeader && currentNetwork === NetworkType.Mainnet && (
             <>
               <TopBanner onClose={handleBannerClose} isHiding={isHiding} />
