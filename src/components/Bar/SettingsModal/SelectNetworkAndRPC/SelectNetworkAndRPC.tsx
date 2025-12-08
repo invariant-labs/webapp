@@ -25,7 +25,10 @@ export const SelectNetworkAndRPC = ({ rpcs, activeNetwork, activeRPC, onNetworkC
     customAddress
   )
 
-  const networks = [NetworkType.Mainnet, NetworkType.Devnet]
+  const networks = [
+    NetworkType.Mainnet
+    // NetworkType.Devnet
+  ]
 
   return (
     <>
