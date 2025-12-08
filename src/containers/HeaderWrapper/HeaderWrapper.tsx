@@ -50,9 +50,9 @@ export const HeaderWrapper: React.FC = () => {
     }
 
     ;(async () => {
-      if (currentNetwork === NetworkType.Testnet) {
-        dispatch(actions.setNetwork(NetworkType.Devnet))
-        dispatch(actions.setRPCAddress(RPC.DEV))
+      if (currentNetwork !== NetworkType.Mainnet) {
+        dispatch(actions.setNetwork(NetworkType.Mainnet))
+        dispatch(actions.setRPCAddress(RPC.MAIN))
       }
 
       const walletType = localStorage.getItem('WALLET_TYPE') as WalletType | null
