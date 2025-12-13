@@ -213,6 +213,7 @@ export const TermsPage: React.FC = () => {
               <ul className={classes.list}>
                 <li>United States of America and its territories</li>
                 <li>Canada</li>
+                <li>European Union (27 member states)</li>
                 <li>United Kingdom</li>
                 <li>People’s Republic of China</li>
                 <li>Hong Kong SAR</li>
