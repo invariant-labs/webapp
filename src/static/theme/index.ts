@@ -95,7 +95,9 @@ export const colors = {
     plotGreen: '#9DD46D',
     plotRed: '#FB555F',
     pinkGreenLinearGradient: 'linear-gradient(90deg, #EF84F5 0%, #2EE09A 100%)',
-    darkGradient: 'linear-gradient(180deg,rgba(17, 25, 49, 0) 0%, rgba(17, 25, 49, 1) 100%)'
+    darkGradient: 'linear-gradient(180deg,rgba(17, 25, 49, 0) 0%, rgba(17, 25, 49, 1) 100%)',
+    pinkGreenLinearGradientOpacityVertical:
+      'linear-gradient(0deg, rgba(46, 224, 154, 0.15) 0%, rgba(46, 224, 154, 0) 50%), linear-gradient(0deg, rgba(239, 132, 245, 0) 50%, rgba(239, 132, 245, 0.15) 100%), #202946;'
   }
 }
 
