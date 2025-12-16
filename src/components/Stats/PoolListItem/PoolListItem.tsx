@@ -221,7 +221,9 @@ const PoolListItem: React.FC<IProps> = ({
       onClick={e => {
         e.stopPropagation()
 
-        if (isTablet) setShowInfo(prev => !prev)
+        if (isTablet) {
+          window.requestAnimationFrame(() => setShowInfo(prev => !prev))
+        }
       }}
       container
       classes={{
