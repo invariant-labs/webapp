@@ -1,7 +1,7 @@
-import { colors, typography } from '@static/theme'
+import { colors, theme, typography } from '@static/theme'
 import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles()(theme => {
+const useStyles = makeStyles()(() => {
   return {
     footer: {
       width: '100%',
@@ -10,7 +10,11 @@ const useStyles = makeStyles()(theme => {
       justifyContent: 'center',
       padding: '35px 0',
       position: 'relative',
-      zIndex: 50
+      zIndex: 50,
+      flexDirection: 'column',
+      [theme.breakpoints.down(1200)]: {
+        marginBottom: 48
+      }
     },
     footerItem: {
       margin: '0 10px',
@@ -25,7 +29,7 @@ const useStyles = makeStyles()(theme => {
         opacity: 1,
         transform: 'scale(1.1) rotate(10deg)',
         '@media (hover: none)': {
-          opacity: 0.25,
+          opacity: '.25',
           transform: 'none'
         }
       }
@@ -50,6 +54,16 @@ const useStyles = makeStyles()(theme => {
     icon: {
       height: 40,
       width: 40
+    },
+    link: {
+      color: colors.invariant.lightGrey,
+      cursor: 'pointer',
+      marginTop: 1,
+      textDecoration: 'underline',
+      ...typography.caption2,
+      p: {
+        ...typography.caption2
+      }
     }
   }
 })
