@@ -366,7 +366,7 @@ export const DEFAULT_SWAP_SLIPPAGE = '0.50'
 export const DEFAULT_NEW_POSITION_SLIPPAGE = '1.00'
 
 export const CHAINS = [
-  { name: Chain.Solana, address: 'https://invariant.app/swap', iconGlow: 'solanaGlow' },
+  { name: Chain.Solana, address: 'https://solana.invariant.app/swap', iconGlow: 'solanaGlow' },
   // { name: Chain.AlephZero, address: 'https://azero.invariant.app/exchange' },
   {
     name: Chain.Eclipse,
