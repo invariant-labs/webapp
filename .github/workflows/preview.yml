@@ -13,9 +13,9 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - name: install
-        run: npm i
+        run: npm ci
       - name: Trunk Check
         uses: trunk-io/trunk-action@v0.3.0-beta
       - name: build
@@ -23,18 +23,24 @@ jobs:
 
   upload:
     runs-on: ubuntu-latest
-    permissions: write-all
+    needs: lint
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install Vercel CLI
-        run: npm install -g vercel@22.0.1
-      - name: Deploy to Vercel Action
-        uses: BetaHuhn/deploy-to-vercel-action@latest
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          node-version: '22'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+      - name: Deploy Preview to Vercel
+        run: vercel deploy --yes --token=${{ secrets.VERCEL_TOKEN }}
+        env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_SCOPE: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          PRODUCTION: false
