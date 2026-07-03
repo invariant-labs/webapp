@@ -522,7 +522,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
                   onAddLiquidity()
                 }
               }}
-              disabled={getButtonMessage() !== 'Add Position'}
+              // disabled={getButtonMessage() !== 'Add Position'}
+              disabled={true}
               content={getButtonMessage()}
               progress={progress}
             />
@@ -535,7 +536,8 @@ export const DepositSelector: React.FC<IDepositSelector> = ({
                 onAddLiquidity()
               }
             }}
-            disabled={getButtonMessage() !== 'Add Position'}
+            // disabled={getButtonMessage() !== 'Add Position'}
+            disabled={true}
             content={getButtonMessage()}
             progress={progress}
           />

@@ -10,31 +10,43 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
+          cache: 'npm'
+
       - name: install
-        run: npm i
+        run: npm ci
+
       - name: Trunk Check
         uses: trunk-io/trunk-action@v0.3.0-beta
+
       - name: build
         run: npm run build
 
   upload:
     runs-on: ubuntu-latest
-    permissions: write-all
+    needs: lint
+
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      deployments: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install Vercel CLI
-        run: npm install -g vercel@22.0.1
-      - name: Deploy to Vercel Action
-        uses: BetaHuhn/deploy-to-vercel-action@latest
+
+      - name: Deploy Preview to Vercel
+        uses: amondnet/vercel-action@v42
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_SCOPE: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          PRODUCTION: false
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-version: latest
+          github-comment: true
+          github-deployment: true
