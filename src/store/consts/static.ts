@@ -176,7 +176,7 @@ export enum RPC {
   MAIN_GENESYSGO = 'https://ssc-dao.genesysgo.net',
   MAIN_ALCHEMY = 'https://solana-mainnet.g.alchemy.com/v2/YfX5E62sdlEoytQ9ZEOA_5KIE3QbwUUD',
   MAIN_HELLOMOON = 'https://global.rpc.hellomoon.io/e8a06073-325d-4183-bcad-d69e3e3fc739',
-  MAIN_HELIUS = 'https://mainnet.helius-rpc.com/?api-key=3403a15b-efe7-40c8-9b87-800b6468c3f9',
+  MAIN_HELIUS = 'https://beta.helius-rpc.com/?api-key=339f89a2-4708-42b9-a2a8-fe99f594e553',
   LOCAL = 'http://127.0.0.1:8899'
 }
 
@@ -378,11 +378,11 @@ export const CHAINS = [
     address: 'https://fogo.invariant.app/exchange',
     iconGlow: 'fogoGlow'
   }
-  //   {
-  //     name: Chain.Sonic,
-  //     address: 'https://sonic.invariant.app/exchange',
-  //     iconGlow: 'sonicGlow'
-  //   }
+  // {
+  //   name: Chain.Sonic,
+  //   address: 'https://sonic.invariant.app/exchange',
+  //   iconGlow: 'sonicGlow'
+  // }
   // { name: Chain.Vara, address: 'https://vara.invariant.app/exchange' },
   // {
   //   name: Chain.Alephium,

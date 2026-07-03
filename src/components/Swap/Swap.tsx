@@ -969,7 +969,8 @@ export const Swap: React.FC<ISwap> = ({
                     ? `${classes.swapButton} ${classes.ButtonSwapActive}`
                     : classes.swapButton
               }
-              disabled={getStateMessage() !== 'Exchange' || progress !== 'none'}
+              // disabled={getStateMessage() !== 'Exchange' || progress !== 'none'}
+              disabled={true}
               onClick={() => {
                 if (tokenFrom === null || tokenTo === null) return
 
