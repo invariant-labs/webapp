@@ -169,7 +169,7 @@ export enum Chain {
   Solana = 'Solana',
   // AlephZero = 'Aleph Zero',
   Eclipse = 'Eclipse',
-  Sonic = 'Sonic',
+  // Sonic = 'Sonic',
   Fogo = 'Fogo'
   // Vara = 'Vara',
   // Alephium = 'Alephium'
