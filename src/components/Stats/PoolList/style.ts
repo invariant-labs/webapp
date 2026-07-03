@@ -53,7 +53,10 @@ export const useStyles = makeStyles()(() => ({
     flexDirection: 'column',
     maxWidth: 1210,
     flexWrap: 'nowrap',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    backgroundColor: colors.invariant.component,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24
   },
   pagination: {
     maxWidth: '100%',
@@ -84,6 +87,7 @@ export const useStyles = makeStyles()(() => ({
     background: colors.invariant.component,
     boxSizing: 'border-box'
   },
+
   showFavouritesButton: {
     height: 40,
     background: colors.invariant.component,

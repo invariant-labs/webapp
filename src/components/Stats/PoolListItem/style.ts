@@ -3,7 +3,8 @@ import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInfo = false }) => ({
   container: {
-    transition: 'all 0.3s',
+    transition: 'background, height 0.28s ease, box-shadow 0.3s ease',
+    willChange: 'background, height',
     rowGap: 12,
     color: colors.white.main,
     display: 'flex',
@@ -28,9 +29,14 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
   },
 
   info: {
-    visibility: showInfo ? 'visible' : 'hidden',
-    width: '100%'
+    opacity: showInfo ? 1 : 0,
+    overflow: 'hidden',
+    transition: 'opacity 180ms linear',
+    willChange: 'opacity',
+    width: '100%',
+    pointerEvents: showInfo ? 'auto' : 'none'
   },
+
   symbolsWrapper: {
     display: 'flex',
     flexWrap: 'nowrap',
@@ -41,7 +47,6 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
     alignItems: 'center',
     flexWrap: 'nowrap',
     paddingBottom: 12,
-
     borderBottom: '4px solid transparent',
     borderImage: `repeating-linear-gradient(
       to right,
@@ -61,6 +66,7 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
     position: 'relative',
     display: 'flex'
   },
+
   action: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -68,7 +74,6 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
     minWidth: 'max-content',
     gap: 8,
     [theme.breakpoints.down('md')]: {
-      visibility: showInfo ? 'visible' : 'hidden',
       justifyContent: 'flex-end',
       width: 137,
       marginLeft: 7,
@@ -91,7 +96,8 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
     border: 'none',
     color: colors.invariant.black,
     textTransform: 'none',
-    transition: 'filter 0.3s linear',
+    transition: 'filter 0.3s linear, transform 0.3s linear',
+    willChange: 'transform, filter',
 
     '&:hover': {
       filter: 'brightness(1.2)',
@@ -185,8 +191,9 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
     fontSize: 10,
     cursor: 'pointer',
     fill: colors.invariant.green,
-    transition: 'all 0.3s ease',
-    transform: showInfo ? 'rotate(180deg)' : 'rotate(0deg)'
+    transition: 'transform 0.3s ease',
+    transform: showInfo ? 'rotate(180deg)' : 'rotate(0deg)',
+    willChange: 'transform'
   },
   favouriteButton: {
     cursor: 'pointer',

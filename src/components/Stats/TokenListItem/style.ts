@@ -3,7 +3,8 @@ import { makeStyles } from 'tss-react/mui'
 
 export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInfo = false }) => ({
   container: {
-    transition: 'all 0.3s',
+    transition: 'background, height 0.3s ease, box-shadow 0.3s ease',
+    willChange: 'background, height',
     rowGap: 12,
     color: colors.white.main,
     display: 'flex',
@@ -43,8 +44,12 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
     borderImageWidth: '0 0 1px 0'
   },
   info: {
-    visibility: showInfo ? 'visible' : 'hidden',
-    width: '100%'
+    opacity: showInfo ? 1 : 0,
+    overflow: 'hidden',
+    transition: 'opacity 180ms linear',
+    willChange: 'opacity',
+    width: '100%',
+    pointerEvents: showInfo ? 'auto' : 'none'
   },
   extendedRowIcon: {
     justifySelf: 'end',
@@ -56,8 +61,9 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
     fontSize: 10,
     cursor: 'pointer',
     fill: colors.invariant.green,
-    transition: 'all 0.3s ease',
-    transform: showInfo ? 'rotate(180deg)' : 'rotate(0deg)'
+    transition: 'transform 0.3s ease',
+    transform: showInfo ? 'rotate(180deg)' : 'rotate(0deg)',
+    willChange: 'transform'
   },
   tokenSymbol: {
     color: colors.invariant.textGrey,
@@ -99,11 +105,10 @@ export const useStyles = makeStyles<{ showInfo?: boolean }>()((_theme, { showInf
     padding: 0,
     margin: 0,
     border: 'none',
-
     color: colors.invariant.black,
     textTransform: 'none',
-
-    transition: 'filter 0.3s linear',
+    transition: 'filter 0.3s linear, transform 0.3s linear',
+    willChange: 'transform, filter',
 
     '&:hover': {
       filter: 'brightness(1.2)',
