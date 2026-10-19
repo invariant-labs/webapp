@@ -19,5 +19,5 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           alias-domains: |
-            staging.invariant.app
+            staging.solana.invariant.app
           scope: ${{ secrets.VERCEL_ORG_ID }}

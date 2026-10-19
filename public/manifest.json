@@ -33,12 +33,7 @@
   "lang": "en-US",
   "dir": "ltr",
   "prefer_related_applications": false,
-  "related_applications": [
-    "https://azero.invariant.app",
-    "https://eclipse.invariant.app",
-    "https://vara.invariant.app",
-    "https://alph.invariant.app"
-  ],
+  "related_applications": ["https://eclipse.invariant.app", "https://sonic.invariant.app"],
   "categories": [
     "finance",
     "business",
